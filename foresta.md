@@ -84,6 +84,7 @@ Il codice si divide in due parti, che si parlano attraverso un bus eventi publis
 | [`modificatori_temporanei.md`](modificatori_temporanei.md) | Piano per i modificatori di attributo a tempo (turni o locazioni) e per le armi che li applicano al bersaglio |
 | [`bardo.md`](bardo.md) | I tre canti innati del Bardo (curativo, ipnotico, di valore) e il Viandante e i non combattenti come classi a sé |
 | [`GrammarBean.md`](GrammarBean.md) | Manuale e assessment del motore di grammatiche |
+| [`nomi.md`](nomi.md) | Piano dei nomi dei personaggi non combattenti: `nomi.txt` condiviso, enumerato dei ruoli nominati e registro dei residenti |
 | [`assessment.md`](assessment.md) | Valutazione dello stato del progetto e prossimi passi |
 | [`todo.md`](todo.md) | Cose da fare generali e bug noti |
 | [`revisione_documentazione.md`](revisione_documentazione.md) | Piano e avanzamento della revisione della documentazione |

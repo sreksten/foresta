@@ -46,24 +46,24 @@ public class ProduttoreDiTestiCasuale {
 
 	static {
 		try {
-			fiabe = new GrammarBean(
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/fiabe.txt"),
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
+			fiabe = GrammarBean.fromResource(ProduttoreDiTestiCasuale.class,
+					"/com/threeamigos/foresta/motore/fiabe.txt",
+					"/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt");
 			oroscopi = new GrammarBean(
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/oroscopo.txt"),
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
-			locande = new GrammarBean(
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/locande.txt"),
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
+			locande = GrammarBean.fromResource(ProduttoreDiTestiCasuale.class,
+					"/com/threeamigos/foresta/motore/locande.txt",
+					"/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt");
 			templi = new GrammarBean(
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/templi.txt"),
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
 			rovine = new GrammarBean(
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/rovine.txt"),
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
-			missioni = new GrammarBean(
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/missioni.txt"),
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
+			missioni = GrammarBean.fromResource(ProduttoreDiTestiCasuale.class,
+					"/com/threeamigos/foresta/motore/missioni.txt",
+					"/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt");
 			leggendari = new GrammarBean(
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/leggendari.txt"), null);
 			sfide = new GrammarBean(
@@ -144,27 +144,38 @@ public class ProduttoreDiTestiCasuale {
 	 * Il nome di un ostaggio da liberare (vedi missioni.txt).
 	 */
 	public static String nomeOstaggio() {
-		return missioni.produce("NOME_OSTAGGIO").get(0).trim();
+		return produciDaMissioni("NOME_OSTAGGIO");
 	}
 
 	/**
 	 * Il nome di un bardo (vedi missioni.txt).
 	 */
 	public static String nomeBardo() {
-		return missioni.produce("NOME_BARDO").get(0).trim();
+		return produciDaMissioni("NOME_BARDO");
 	}
 
 	/**
 	 * Il nome di un pellegrino (vedi missioni.txt).
 	 */
 	public static String nomePellegrino() {
-		return missioni.produce("NOME_PELLEGRINO").get(0).trim();
+		return produciDaMissioni("NOME_PELLEGRINO");
 	}
 
 	/**
 	 * Una riga di una produzione di missioni.txt (gli incarichi di combattimento, le sorveglianze...).
 	 */
 	public static String rigaDiMissioni(String produzione) {
+		return produciDaMissioni(produzione);
+	}
+
+	/**
+	 * Una riga di una produzione di missioni.txt. I nomi di persona (nomi.txt) sono one-shot e condivisi: se si sono
+	 * esauriti (e con loro le produzioni che li usano) si azzerano le sezioni statiche e si riparte.
+	 */
+	private static String produciDaMissioni(String produzione) {
+		if (!missioni.canProduce(produzione)) {
+			GrammarBean.resetStaticProductions();
+		}
 		return missioni.produce(produzione).get(0).trim();
 	}
 

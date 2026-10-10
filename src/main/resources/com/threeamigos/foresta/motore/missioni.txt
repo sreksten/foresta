@@ -8,115 +8,27 @@
 // Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
 
 // ---------------------------------------------------------------------------------------------
-// Ostaggi (vedi IlRapimento)
+// Ostaggi (vedi IlRapimento), bardi (vedi NonSparateSulPianista) e pellegrini (vedi IlPellegrino): un nome maschile
 // ---------------------------------------------------------------------------------------------
 
 NOME_OSTAGGIO
-    Armando
-    Gervasio
-    Ottone
-    Bonifacio
-    Teodoro
-    Ermanno
-    Pancrazio
-    Aldobrando
-    Ruggero
-    Tancredi
-    Ubaldo
-    Gualberto
-    Ildebrando
-    Settimio
-    Fulgenzio
-    Nazzareno
-
-// ---------------------------------------------------------------------------------------------
-// Bardi (vedi NonSparateSulPianista)
-// ---------------------------------------------------------------------------------------------
+    [NOME_MASCHILE]
 
 NOME_BARDO
-    Ugolino
-    Fiorello
-    Gualtiero
-    Lapo
-    Cecco
-    Folchetto
-    Rambaldo
-    Bertoldo
-    Arnaldo
-    Rinaldino
-    Cantarello
-    Melchiorre
-    Zeffirino
-    Liutprando
-    Felicino
-
-// ---------------------------------------------------------------------------------------------
-// Pellegrini (vedi IlPellegrino)
-// ---------------------------------------------------------------------------------------------
+    [NOME_MASCHILE]
 
 NOME_PELLEGRINO
-    Anselmo
-    Benedetto
-    Romualdo
-    Pasquale
-    Serafino
-    Celestino
-    Gaudenzio
-    Eusebio
-    Prospero
-    Taddeo
-    Clemente
-    Bernardino
-    Saturnino
-    Ireneo
+    [NOME_MASCHILE]
 
 // ---------------------------------------------------------------------------------------------
-// Sfidanti dei duelli (vedi IncaricoDiCombattimento, CAPO=NOME_CAMPIONE o CAPO=NOME_CAMPIONESSA): nome ed epiteto
+// Sfidanti dei duelli (vedi IncaricoDiCombattimento, CAPO=NOME_CAMPIONE o CAPO=NOME_CAMPIONESSA): nome ed epiteto (le liste sono in nomi.txt)
 // ---------------------------------------------------------------------------------------------
 
 NOME_CAMPIONE
     [NOME_DI_CAMPIONE] [EPITETO_DI_CAMPIONE]
 
-NOME_DI_CAMPIONE
-    Baldovino
-    Ser Galeazzo
-    Ferraguto
-    Uberto
-    Rinaldo
-    Corrado
-    Brunoro
-    Alardo
-
-EPITETO_DI_CAMPIONE
-    il Fiero
-    l'Invitto
-    il Tremendo
-    Braccio di Ferro
-    lo Spaccascudi
-    il Bello
-    il Lungo
-
 NOME_CAMPIONESSA
     [NOME_DI_CAMPIONESSA] [EPITETO_DI_CAMPIONESSA]
-
-NOME_DI_CAMPIONESSA
-    Bradamante
-    Marfisa
-    Ermengarda
-    Matilde
-    Clorinda
-    Gualdrada
-    Isotta
-    Brunilde
-
-EPITETO_DI_CAMPIONESSA
-    la Fiera
-    l'Invitta
-    la Tremenda
-    Braccio di Ferro
-    la Spaccascudi
-    la Bella
-    la Lunga
 
 // ---------------------------------------------------------------------------------------------
 // Briganti e maghi (vedi CAPO=NOME_BRIGANTE e CAPO=NOME_MAGO): capi di bande di ladri, maghi rivali
@@ -125,68 +37,16 @@ EPITETO_DI_CAMPIONESSA
 NOME_BRIGANTE
     [NOME_DI_BRIGANTE] [SOPRANNOME_DI_BRIGANTE]
 
-NOME_DI_BRIGANTE
-    Bastiano
-    Cecco
-    Tonio
-    Rocco
-    Gaspare
-    Nando
-    Biagio
-    Menico
-
-SOPRANNOME_DI_BRIGANTE
-    lo Sfregiato
-    Mezzaluna
-    Coltello
-    il Rosso
-    il Monco
-    Tagliaborse
-    Gambalesta
-
 NOME_MAGO
-    Mastro Ezechiele
-    Mastro Pandolfo
-    Mastro Gaudenzio
-    Mastro Arcibaldo
-    Mastro Tiburzio
-    Mastro Ermete
+    Mastro [NOME_MASCHILE]
 
 // ---------------------------------------------------------------------------------------------
-// Capibanda di goblin e hobgoblin (vedi LaTagliaSullaBanda e IlRapimento): a volte con un soprannome
+// Capibanda di goblin e hobgoblin (vedi LaTagliaSullaBanda e IlRapimento): a volte con un soprannome (le liste sono in nomi.txt)
 // ---------------------------------------------------------------------------------------------
 
 NOME_CAPOBANDA
     [^3] [NOME_GOBLIN]
     [^1] [NOME_GOBLIN] [SOPRANNOME_GOBLIN]
-
-NOME_GOBLIN
-    Sgranf
-    Ghignazzo
-    Grumolo
-    Sbrodolo
-    Mordicchio
-    Raspone
-    Bavoso
-    Grattachiodi
-    Muffo
-    Rognaccio
-    Tarlo
-    Sgnaffo
-    Zannagrossa
-    Ruttolo
-    Spigolo
-    Fetecchio
-
-SOPRANNOME_GOBLIN
-    il Guercio
-    lo Sdentato
-    Tre Dita
-    il Puzzolente
-    Mezzorecchio
-    il Ladro di Galline
-    il Terribile, o quasi
-    Pancia Molle
 
 // ---------------------------------------------------------------------------------------------
 // Richieste di materiali (vedi RichiestaDiMateriali e MaterialeRichiesto)
@@ -1787,3 +1647,5 @@ COLPO
     SCOPERTI=I goblin di %CAPO% vi hanno sorpresi davanti all'idolo: adesso lo sorvegliano giorno e notte. Il colpo è fallito.;\
     RINGRAZIAMENTO=I goblin non escono più dalla grotta: credono che il loro dio sia offeso. Lo sarei anch'io, con quei baffi.;\
     RICORDO=In questa grotta c'era un idolo dei goblin, con i baffi e un secchio in testa.
+
+#include_static <nomi.txt>

@@ -5,7 +5,6 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -27,14 +26,26 @@ class BugMappaReimpostataTest {
 		RegistroArtefatti.registrati();
 		RegistroMissioni.registrati();
 
-		// Partita 1
+		// Partita 1: si rivela tutta la mappa
 		Foresta.reimposta();
-		CoordinateMD lontana = new CoordinateMD(Foresta.getDimensioneX() - 1, Foresta.getDimensioneY() - 1);
-		Foresta.setLocazioneConosciuta(lontana);
-		assertTrue(Foresta.isLocazioneConosciuta(lontana), "la casella dovrebbe essere conosciuta nella partita 1");
+		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
+			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
+				Foresta.setLocazioneConosciuta(new CoordinateMD(x, y));
+			}
+		}
+		assertTrue(Foresta.isLocazioneConosciuta(new CoordinateMD(0, 0)), "la mappa dovrebbe essere conosciuta nella partita 1");
 
-		// Partita 2, come dopo aver perso e ricominciato (stesso processo, stesse istanze statiche)
+		// Partita 2, come dopo aver perso e ricominciato (stesso processo, stesse istanze statiche): all'inizio ci sono
+		// caselle già conosciute (le locazioni uniche, la zona di partenza) ma non tutte, qualunque sia il seme
 		Foresta.reimposta();
-		assertFalse(Foresta.isLocazioneConosciuta(lontana), "la casella non dovrebbe essere ancora conosciuta nella partita 2");
+		boolean esisteUnaCasellaSconosciuta = false;
+		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
+			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
+				if (!Foresta.isLocazioneConosciuta(new CoordinateMD(x, y))) {
+					esisteUnaCasellaSconosciuta = true;
+				}
+			}
+		}
+		assertTrue(esisteUnaCasellaSconosciuta, "la conoscenza della mappa non dovrebbe sopravvivere alla partita 2");
 	}
 }

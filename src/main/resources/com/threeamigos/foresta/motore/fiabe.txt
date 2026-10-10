@@ -1,6 +1,6 @@
 FIABA
 	[PROEMIO] [RACCONTO]
-	[RACCONTO_BREVE]
+//	[RACCONTO_BREVE]
 
 PROEMIO
 	^[TEMPO_PROEMIO] [LUOGO_PROEMIO] [FATTO_PROEMIO].
@@ -349,32 +349,11 @@ CREAZIONE_PROTAGONISTA
 PROTAGONISTA
 	[*NOME_PROTAGONISTA] | [*SOPRANNOME_PROTAGONISTA]
 
-COGNOME_STOPPIONI
-    Stoppioni | Scoppioni | Scorpioni | Scarponi
-
 NOME_PROTAGONISTA
-	Fabrizio | Ottavio | Ottaviano | Learco | Telemaco | Ulisse | Romualdo | Aurelio | Aureliano | Tedaldo
-	Aniceto | Aristofane | Asdrubale | Baldomero | Bonaventura | Crisostomo | Cuniberto | Dagoberto | Ermenegildo
-	Eustachio | Filiberto | Gaudenzio | Leocadio | Ninfidio | Odorico | Pancrazio | Pantaleone | Pellegrino
-	Teodorico | Teodolindo | Tristano | Valeriano | Zaccaria
+	[NOME_MASCHILE]
+
 COGNOME_PROTAGONISTA
-	Sganga | Panzeri | Sbrodoloni | Sgangheroni | Sbrindelloni | Pupazzi
-    Barbagianni | Bellimbusti | Bertucca | Boccaloni | Capocotta | Carciofani | Cataratta | Cazzabubboli
-    Chiappalepri | Ciarlatano | Ciafardoni | Girelloni | Inciampati | Mangiapasta | Maremmani | Masticabrodo
-    Paciocchi | Pannoloni | Pantofolai | Paparazzi | Pappalardo | Patatracchi | Pasticciotti | Pizzicagnoli
-    Sbrindellati | Schiaccianoci | Sciancati | Scorramani | Smandrappati | Spaccatutto | Sparafrasche | Strambelli
-    Stropicciati | Tagliabrodo | Zampalesta
-
-SOPRANNOME_PROTAGONISTA
-	lo sventrapapere | il torvo | il losco | il Porco Gordo | il Massimo Fattore | il furtivendolo
-	il battipaglia | l'insegnante di zerbinaggio | il professore del furto | il laido | il guercio | lo zoppo
-	il tritaporci | lo scannamuli | lo squartatore di gatti | il ladro di polli | il molestapaperi | lo spaventapassere
-	il ribaldo | il trombategami | il campione di bruttezza | il Signore delle Scorregge | il Signore del Male
-	l'autonominatosi Imperatore Galattico | il puzzone | Brancabeone da Norcia
-	il [TITOLO_NOBILIARE] { dei Piedi Sporchi | degli Spiccioli | della Sbronza | di Nessun Luogo }
-
-TITOLO_NOBILIARE
-    Cavaliere | Barone | Conte | Visconte | Duca | Marchese | Re
+	[COGNOME]
 
 RACCONTO
 	^[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_3] [RACCONTO_P_4] [RACCONTO_P_5] [MORALE]
@@ -845,16 +824,6 @@ CREA_NOME_PRINCIPESSA
 NOME_PRINCIPESSA
     [NOME_SEMPLICE_PRINCIPESSA]
 
-NOME_SEMPLICE_PRINCIPESSA$
-	Ermenegilda | Guendalina | Genoveffa | Bacheca | Rasperonzola | Guidrigilda | Brigitta | Beppina | Ortensia
-	Mafalda | Abelarda | Barbargilda | Brunilde | Gisella | Clotilde | Isolde | Teodolinda | Brigida | Gualberta
-	Ermantina | Amabilia | Eustachia | Eulalia | Labilia | Zelinda | Aurelia | Seraphina | Vincenza | Clementina
-	Elettra | Filomena | Aglaia | Zita | Lalla | Gisla | Tullia | Fausta | Onoria | Berta | Demetria | Ermina
-	Gaudenzia | Irene | Lidia | Matilde | Rina | Gisberta | Ermelinda | Ermengarda | Sigfrida
-    Sardina | Scarpina | Serratura | Sferruccola | Zavorra
-    Rantastruzza | Masticarda | Sgrattina | Pizzicarda | Sgusciola | Ruvidilda | Stuccata | Grugnita | Sventola
-    Zampata | Rantola
-
 SVOLGIMENTO_PRINCIPESSA
 	Il nostro [*NOME_PROTAGONISTA] ovviamente se ne fregò e la poverina fece una { finaccia | triste fine | misera fine }.
 	Dopo innumerevoli peripezie [*NOME_PROTAGONISTA] { riuscì a salvare | salvò } \
@@ -891,3 +860,5 @@ SVOLGIMENTO_PRINCIPESSA_2
 	30 denari | una forma di cacio | un tozzo di pane | una somma considerevole di denaro | una mandria di buoi
 	un sacchetto di monete | una fornitura a vita di { [SOSTANZA_ALCOOLICA_MASCHILE] | [SOSTANZA_ALCOOLICA_FEMMINILE] }
 	un pezzo di pane | un soldo bucato | una cassa di ottimo vino | un pagherò mai onorato
+
+#include <nomi.txt>

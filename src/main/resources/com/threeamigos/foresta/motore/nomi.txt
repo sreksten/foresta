@@ -1,0 +1,483 @@
+// I nomi di persona di tutte le grammatiche (locande, fiabe, missioni). Le grammatiche delle locande e delle
+// missioni lo includono con #include_static (sezione condivisa), quella delle fiabe con #include normale.
+// Qui stanno le liste (NOME_MASCHILE e COGNOME sono le liste comuni di nomi maschili e cognomi); le produzioni che le combinano
+// (NOME_CASUALE, NOME_CAMPIONE...) restano nelle grammatiche.
+// Se due grammatiche avessero una produzione con lo stesso nome, la seconda porterebbe in coda il nome della grammatica di
+// origine (oggi solo DEGLI_LOCANDE: le sue note sono pensate per i locandieri).
+//
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+
+// ---------------------------------------------------------------------------------------------
+// Nomi di persona maschili, uno per riga, in ordine alfabetico: la somma dei nomi di locandieri, protagonisti
+// delle fiabe, ostaggi, bardi, pellegrini e maghi (senza "Mastro", che mette NOME_MAGO)
+// ---------------------------------------------------------------------------------------------
+
+NOME_MASCHILE$
+    Adelmo
+    Aldobrando
+    Amilcare
+    Anacleto
+    Aniceto
+    Anselmo
+    Archimede
+    Arcibaldo
+    Aristofane
+    Aristogitone
+    Armando
+    Arnaldo
+    Aroldo
+    Asdrubale
+    Aureliano
+    Aurelio
+    Baldomero
+    Baldovino
+    Benedetto
+    Bernardino
+    Bertoldo
+    Bonaventura
+    Bonifacio
+    Celestino
+    Clemente
+    Clodoveo
+    Crisostomo
+    Cuniberto
+    Dagoberto
+    Doroteo
+    Ennodio
+    Ermanno
+    Ermenegildo
+    Ermete
+    Eusebio
+    Eustachio
+    Ezechiele
+    Felicino
+    Filiberto
+    Fiorello
+    Folchetto
+    Fulgenzio
+    Gaspare
+    Gaudenzio
+    Gervasio
+    Gualberto
+    Gualtiero
+    Ildebrando
+    Ireneo
+    Lapo
+    Learco
+    Leocadio
+    Liutprando
+    Lucrezio
+    Melchiorre
+    Nazzareno
+    Nepomuceno
+    Ninfidio
+    Odoacre
+    Odorico
+    Onofrio
+    Oronzo
+    Osvaldo
+    Ottaviano
+    Ottavio
+    Ottone
+    Pancrazio
+    Pandolfo
+    Pantaleone
+    Pasquale
+    Pellegrino
+    Prospero
+    Rambaldo
+    Rinaldino
+    Romualdo
+    Ruggero
+    Saturnino
+    Serafino
+    Settimio
+    Sulpicio
+    Taddeo
+    Tancredi
+    Tedaldo
+    Telemaco
+    Teodolindo
+    Teodorico
+    Teodoro
+    Teofilo
+    Tiburzio
+    Torquato
+    Tristano
+    Ubaldo
+    Ugolino
+    Ulisse
+    Valeriano
+    Vespasiano
+    Zaccaria
+    Zeffirino
+
+// ---------------------------------------------------------------------------------------------
+// Cognomi, uno per riga, in ordine alfabetico: la somma dei cognomi dei locandieri e dei protagonisti delle fiabe
+// ---------------------------------------------------------------------------------------------
+
+COGNOME$
+    Barbagianni
+    Barlafus
+    Bellimbusti
+    Bertucca
+    Boccaloni
+    Broccolo
+    Caciotta
+    Capocotta
+    Carciofani
+    Cataratta
+    Cazzabubboli
+    Chiappalepri
+    Ciafardoni
+    Ciarlatano
+    Fagioli
+    Girelloni
+    Inciampati
+    Mangiapasta
+    Maremmani
+    Masticabrodo
+    Paciocchi
+    Paciocconi
+    Pannocchia
+    Pannoloni
+    Pantofolai
+    Panzeri
+    Paparazzi
+    Pappalardo
+    Pastafrolla
+    Pasticciotti
+    Patatracchi
+    Pizzicagnoli
+    Pupazzi
+    Sbrindellati
+    Sbrindelloni
+    Sbrodolati
+    Sbrodoloni
+    Scatarozzi
+    Schiaccianoci
+    Sciancati
+    Scorramani
+    Scorramano
+    Sganga
+    Sganganelli
+    Sgangheroni
+    Sgorbati
+    Smandrappati
+    Spaccatutto
+    Sparafrasche
+    Strambelli
+    Stropicciati
+    Tagliabrodo
+    Trinciapolli
+    Zampalesta
+
+// ---------------------------------------------------------------------------------------------
+// Dalle locande (locande.txt)
+// ---------------------------------------------------------------------------------------------
+
+ATTRIBUTO_POSITIVO$
+    l'Affabile
+    l'Arguto
+    il Brillante
+    il Compito
+    il Cordiale
+    il Cortese
+    il Dignitoso
+    il Distinto
+    l'Elegante
+    il Galante
+    il Garbato
+    il Generoso
+    il Gentile
+    il Gioviale
+    l'Impeccabile
+    l'Inappuntabile
+    il Leale
+    il Liberale
+    il Lungimirante
+    il Magnanimo
+    il Magniloquente
+    il Munifico
+    l'Onesto
+    l'Ospitale
+    il Paziente
+    il Premuroso
+    il Pulito
+    il Raffinato
+    il Rispettabile
+    il Servizievole
+    il Solerte
+    il Sollecito
+    il Sorridente
+    lo Splendido
+    lo Squisito
+
+ATTRIBUTO_NEGATIVO$
+    l'Avaro
+    il Bisbetico
+    il Borioso
+    il Brontolone
+    il Bugiardo
+    il Cialtrone
+    il Collerico
+    l'Incompetente
+    il Latitante
+    il Lercio
+    il Losco
+    il Maleducato
+    il Melenso
+    il Mellifluo
+    il Pasticcione
+    il Pettegolo
+    il Pigro
+    il Puzzolente
+    il Rissoso
+    il Rozzo
+    lo Sciatto
+    lo Scurrile
+    lo Sgangherato
+    lo Sgarbato
+    il Sospettoso
+    lo Spilorcio
+    il Sudicio
+    il Taccagno
+    il Tirchio
+    il Trasandato
+    il Truffaldino
+    l'Ubriacone
+    il Villano
+    lo Zozzo
+    lo Zozzone
+
+TITOLO$
+    l'Abate
+    l'Arciduca
+    l'Arcivescovo
+    il Balivo
+    il Barone
+    il Baronetto
+    il Cancelliere
+    il Castellano
+    il Cavaliere
+    il Ciambellano
+    il Commendatore
+    il Console
+    il Conte
+    il Custode
+    il Duca
+    il Governatore
+    il Granduca
+    il Magnifico Rettore
+    il Marchese
+    il Maresciallo
+    il Margravio
+    il Paladino
+    il Prelato
+    il Principe
+    il Priore
+    il Reggente
+    lo Scudiero
+    il Siniscalco
+    il Sire
+    il Soprintendente
+    il Tesoriere
+    il Vescovo
+    il Vicario
+    il Viceré
+    il Visconte
+
+DEGLI_LOCANDE$
+    delle Mezze Maniche (Risparmia sulla stoffa delle divise)
+    dello Sbrindello (Sempre vestito di stracci finissimi)
+    del Bellimbusto (Specchi ovunque, servizio pessimo)
+    del Tagliabrodo (Famoso per diluire il brodo con l'acqua)
+    del Cazzabubbolo (Gestisce taverne minuscole ma caotiche)
+    dei Ciarlatani (Promette birre magiche, vende sidro sgasato)
+    degli Smandrappati (Il re dei locandieri squattrinati)
+    della Pantofola (Non si alza mai dalla sedia dietro al bancone)
+    dei Pizzicagnoli (Specializzato in taglieri durissimi)
+    dello Scorramano (Accetta scommesse clandestine sui dadi)
+    dei Barbagianni (Ha una collezione di gufi impagliati polverosi)
+    dello Schiaccianoci (Apre le noci direttamente con la testa)
+    delle Mezze Cartucce (Oste burbero che odia i clienti bassi)
+    dell'Inciampo (Cade sempre mentre porta i vassoi di ferro)
+    del Sacro Patatrac (Nel suo locale si spacca un boccale al minuto)
+    delle Stramberie (Serve lo stufato dentro vecchi stivali)
+    delle Paludi (La sua birra sa visibilmente di fango)
+    della Pasticciata (Sbaglia regolarmente i conti del resto)
+    dei Boccaloni (Si fida di chiunque, soprattutto di chi non paga)
+    delle Tavolacce (I suoi tavoli sono più vecchi del regno)
+    del Botteghino (Fa pagare anche l'ingresso alla latrina)
+    dei Fornelli Spenti (Il suo stufato è sempre quello di ieri)
+    dello Spillatore (Spilla più schiuma che birra)
+    della Mescita (Annacqua tutto, perfino l'acqua)
+    dei Pidocchi (Letti di paglia con servizio di ospiti inclusi)
+    degli Sbadigli (Si addormenta durante le ordinazioni)
+    del Boccale Rotto (Serve ogni bevanda in un recipiente diverso e crepato)
+    dello Sgabello (Ha una sola sedia e la tiene per sé)
+    della Cantina Allagata (Il suo vino è sempre un po' bagnato)
+    dei Tre Bicchieri (Ne ha solo tre e li lava una volta l'anno)
+    del Bancone Appiccicoso (Chi appoggia un gomito se lo ritrova a vita)
+    della Brace (Ha bruciato ogni arrosto dal giorno dell'apertura)
+    dei Conti Sbagliati (Arrotonda sempre per eccesso, sempre a suo favore)
+    del Mestolo Bucato (La zuppa arriva a tavola per metà)
+    delle Candele Corte (Risparmia sull'illuminazione, soprattutto la sera)
+
+// ---------------------------------------------------------------------------------------------
+// Per il borgomastro: casate e luoghi altisonanti, senza note (la parte dopo il nome: "Astolfo dei Signori della Luna")
+// ---------------------------------------------------------------------------------------------
+
+DEGLI_ALTISONANTE$
+    dell'Alta Marca
+    di Altomonte
+    degli Altopiani
+    degli Antichi Re
+    delle Aquile Grigie
+    dell'Aurora Boreale
+    della Casa Vermiglia
+    di Castelfalco
+    del Cavaliere Errante
+    dei Cavalieri del Sole
+    dei Cento Stendardi
+    del Cielo Stellato
+    delle Cime Nevose
+    dei Conti di Valleombrosa
+    della Corona di Ferro
+    delle Corone Spezzate
+    dei Custodi del Faro
+    dei Dodici Ponti
+    dei Duchi di Roccanera
+    del Falco Pellegrino
+    del Gran Concilio
+    dei Grandi Laghi
+    dei Granduchi di Valsole
+    delle Guglie d'Argento
+    del Leone Rampante
+    dei Marchesi di Terrabruna
+    delle Nove Spade
+    dell'Ordine del Grifone
+    dei Principi di Altaselva
+    della Rosa d'Oro
+    dei Signori della Luna
+    della Stirpe Regale
+    della Torre Bianca
+    dei Venti Castelli
+    dei Vessilli Azzurri
+
+// ---------------------------------------------------------------------------------------------
+// Dalle fiabe (fiabe.txt)
+// ---------------------------------------------------------------------------------------------
+
+COGNOME_STOPPIONI
+    Stoppioni | Scoppioni | Scorpioni | Scarponi
+
+SOPRANNOME_PROTAGONISTA
+	lo sventrapapere | il torvo | il losco | il Porco Gordo | il Massimo Fattore | il furtivendolo
+	il battipaglia | l'insegnante di zerbinaggio | il professore del furto | il laido | il guercio | lo zoppo
+	il tritaporci | lo scannamuli | lo squartatore di gatti | il ladro di polli | il molestapaperi | lo spaventapassere
+	il ribaldo | il trombategami | il campione di bruttezza | il Signore delle Scorregge | il Signore del Male
+	l'autonominatosi Imperatore Galattico | il puzzone | Brancabeone da Norcia
+	il [TITOLO_NOBILIARE] { dei Piedi Sporchi | degli Spiccioli | della Sbronza | di Nessun Luogo }
+
+TITOLO_NOBILIARE
+    Cavaliere | Barone | Conte | Visconte | Duca | Marchese | Re
+
+NOME_SEMPLICE_PRINCIPESSA$
+    Abelarda | Aglaia | Amabilia | Aurelia | Bacheca | Barbargilda | Beppina | Berta | Brigida
+    Brigitta | Brunilde | Clementina | Clotilde | Demetria | Elettra | Ermantina | Ermelinda | Ermenegilda
+    Ermengarda | Ermina | Eulalia | Eustachia | Fausta | Filomena | Gaudenzia | Genoveffa | Gisberta
+    Gisella | Gisla | Grugnita | Gualberta | Guendalina | Guidrigilda | Irene | Isolde | Labilia
+    Lalla | Lidia | Mafalda | Masticarda | Matilde | Onoria | Ortensia | Petunia | Pizzicarda | Rantastruzza
+    Rantola | Rasperonzola | Rina | Ruvidilda | Sardina | Scarpina | Seraphina | Serratura | Sferruccola
+    Sgrattina | Sgusciola | Sigfrida | Stuccata | Sventola | Teodolinda | Tullia | Vincenza | Zampata
+    Zavorra | Zelinda | Zita
+
+// ---------------------------------------------------------------------------------------------
+// Dalle missioni (missioni.txt): ostaggi, bardi, pellegrini, campioni, briganti, maghi, goblin
+// ---------------------------------------------------------------------------------------------
+
+NOME_DI_CAMPIONE
+    Baldovino
+    Ser Galeazzo
+    Ferraguto
+    Uberto
+    Rinaldo
+    Corrado
+    Brunoro
+    Alardo
+
+EPITETO_DI_CAMPIONE
+    il Fiero
+    l'Invitto
+    il Tremendo
+    Braccio di Ferro
+    lo Spaccascudi
+    il Bello
+    il Lungo
+
+NOME_DI_CAMPIONESSA
+    Bradamante
+    Marfisa
+    Ermengarda
+    Matilde
+    Clorinda
+    Gualdrada
+    Isotta
+    Brunilde
+
+EPITETO_DI_CAMPIONESSA
+    la Fiera
+    l'Invitta
+    la Tremenda
+    Braccio di Ferro
+    la Spaccascudi
+    la Bella
+    la Lunga
+
+NOME_DI_BRIGANTE
+    Bastiano
+    Cecco
+    Tonio
+    Rocco
+    Gaspare
+    Nando
+    Biagio
+    Menico
+
+SOPRANNOME_DI_BRIGANTE
+    lo Sfregiato
+    Mezzaluna
+    Coltello
+    il Rosso
+    il Monco
+    Tagliaborse
+    Gambalesta
+
+NOME_GOBLIN
+    Sgranf
+    Ghignazzo
+    Grumolo
+    Sbrodolo
+    Mordicchio
+    Raspone
+    Bavoso
+    Grattachiodi
+    Muffo
+    Rognaccio
+    Tarlo
+    Sgnaffo
+    Zannagrossa
+    Ruttolo
+    Spigolo
+    Fetecchio
+
+SOPRANNOME_GOBLIN
+    il Guercio
+    lo Sdentato
+    Tre Dita
+    il Puzzolente
+    Mezzorecchio
+    il Ladro di Galline
+    il Terribile, o quasi
+    Pancia Molle

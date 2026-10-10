@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Riproduzione del bug in todo.md passando per la cache statica di DisegnatoreMappa
@@ -31,20 +31,30 @@ class BugCacheMappaGeneraleTest {
 		RegistroArtefatti.registrati();
 		RegistroMissioni.registrati();
 
-		// Partita 1: si rivela una casella lontana e si disegna la mappa generale
+		// Partita 1: si rivela tutta la mappa e si disegna la mappa generale
 		Foresta.reimposta();
-		CoordinateMD lontana = new CoordinateMD(Foresta.getDimensioneX() - 1, Foresta.getDimensioneY() - 1);
-		Foresta.setLocazioneConosciuta(lontana);
+		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
+			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
+				Foresta.setLocazioneConosciuta(new CoordinateMD(x, y));
+			}
+		}
 		AccessoMappaGeneralePerTest.mappaGenerale();
 
-		// Partita 2, come dopo aver perso e ricominciato: stessa casella non ancora rivelata
+		// Partita 2, come dopo aver perso e ricominciato: alcune caselle (non tutte, qualunque sia il seme) non sono ancora rivelate
 		Foresta.reimposta();
 		BufferedImage mappaPartita2 = AccessoMappaGeneralePerTest.mappaGenerale();
-		int pixelDopoReset = mappaPartita2.getRGB(
-				lontana.getX() * AccessoMappaGeneralePerTest.larghezzaIcona(),
-				lontana.getY() * AccessoMappaGeneralePerTest.altezzaIcona());
-
-		// Trasparente (alpha 0): la casella non è ancora conosciuta nella partita 2
-		assertEquals(0, pixelDopoReset >>> 24, "la casella dovrebbe apparire sconosciuta nella partita 2, pixel=" + Integer.toHexString(pixelDopoReset));
+		boolean esisteUnaCasellaSconosciuta = false;
+		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
+			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
+				int pixel = mappaPartita2.getRGB(
+						x * AccessoMappaGeneralePerTest.larghezzaIcona(),
+						y * AccessoMappaGeneralePerTest.altezzaIcona());
+				// Trasparente (alpha 0): la casella non è ancora conosciuta nella partita 2
+				if ((pixel >>> 24) == 0) {
+					esisteUnaCasellaSconosciuta = true;
+				}
+			}
+		}
+		assertTrue(esisteUnaCasellaSconosciuta, "la mappa generale dovrebbe avere caselle sconosciute nella partita 2");
 	}
 }
