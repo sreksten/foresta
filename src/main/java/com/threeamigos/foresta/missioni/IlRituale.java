@@ -105,11 +105,11 @@ public class IlRituale extends IncaricoInCitta {
 	}
 
 	private String getMandanteDiCitta() {
-		return getRituale().getMandante() + " di " + getNomeCitta();
+		return mandanteDiCitta(getRituale().getMandante());
 	}
 
 	private String getAttesa() {
-		return Misc.inizialeMaiuscola(getRituale().getMandante()) + " aspetta a " + getNomeCitta() + ".";
+		return Misc.inizialeMaiuscola(mandante(getRituale().getMandante())) + " aspetta a " + getNomeCitta() + ".";
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class IlRituale extends IncaricoInCitta {
 		MaterialeRichiesto ingrediente = rituale.getIngrediente();
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return "Fatto: torna " + Misc.conPreposizione("da", rituale.getMandante()) + " a " + getNomeCitta() + " a riscuotere.";
+			return "Fatto: torna " + Misc.conPreposizione("da", mandante(rituale.getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
 		}
 		if (GUARDIANO.equals(passo)) {
 			return "Il rito è cominciato: sconfiggi chi è venuto a disturbarlo, nel posto segnato sulla mappa.";
@@ -260,7 +260,7 @@ public class IlRituale extends IncaricoInCitta {
 
 	@Override
 	protected String testoRicompensa() {
-		return Misc.inizialeMaiuscola(getRituale().getMandante()) + " paga le " + getRicompensa() + " monete promesse.";
+		return Misc.inizialeMaiuscola(mandante(getRituale().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

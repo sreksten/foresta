@@ -116,7 +116,7 @@ public abstract class IncaricoDiCombattimentoBase extends IncaricoInCitta {
 	}
 
 	private String getMandanteDiCitta() {
-		return getIncarico().getMandante() + " di " + getNomeCitta();
+		return mandanteDiCitta(getIncarico().getMandante());
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public abstract class IncaricoDiCombattimentoBase extends IncaricoInCitta {
 			return testo(RITORNO.equals(getPassoCorrente()) ? incarico.getDescrizioneAlRitorno() : incarico.getDescrizione());
 		}
 		if (RITORNO.equals(getPassoCorrente())) {
-			return "Fatto: torna " + Misc.conPreposizione("da", getIncarico().getMandante()) + " a " + getNomeCitta() + " a riscuotere.";
+			return "Fatto: torna " + Misc.conPreposizione("da", mandante(getIncarico().getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
 		}
 		return Misc.inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di sconfiggere " + getNomeDeiNemici()
 				+ (getIncarico().getNumero() == 1 ? ", che si trova" : ", che si trovano") + " nel posto segnato sulla mappa.";
@@ -169,7 +169,7 @@ public abstract class IncaricoDiCombattimentoBase extends IncaricoInCitta {
 			case CACCIA:
 				return combatti(this::getCovo, getNemici())
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testo(incarico.getVittoria()) + " "
-								+ Misc.inizialeMaiuscola(incarico.getMandante()) + " aspetta a " + getNomeCitta() + ".")))
+								+ Misc.inizialeMaiuscola(mandante(incarico.getMandante())) + " aspetta a " + getNomeCitta() + ".")))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -202,7 +202,7 @@ public abstract class IncaricoDiCombattimentoBase extends IncaricoInCitta {
 
 	@Override
 	protected String testoRicompensa() {
-		return Misc.inizialeMaiuscola(getIncarico().getMandante()) + " paga le " + getRicompensa() + " monete promesse.";
+		return Misc.inizialeMaiuscola(mandante(getIncarico().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

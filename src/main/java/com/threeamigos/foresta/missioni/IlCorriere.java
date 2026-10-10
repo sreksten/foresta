@@ -216,7 +216,7 @@ public class IlCorriere extends IncaricoInCitta {
 								+ Misc.conPreposizione("a", getDestinatarioDiCitta()) + ".")
 						.falliscoSe(() -> isDiNascosto() && haCombattutoNelPassoCorrente(), () -> "La voce del combattimento si è sparsa: "
 								+ spedizione.getDestinatario() + " non vorrà più saperne " + Misc.conPreposizione("di", spedizione.getOggettoConArticolo())
-								+ ", e " + spedizione.getMittente() + " nemmeno di voi.")
+								+ ", e " + mandante(spedizione.getMittente()) + " nemmeno di voi.")
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -262,7 +262,7 @@ public class IlCorriere extends IncaricoInCitta {
 	protected String testoAccettazione() {
 		Spedizione spedizione = getSpedizione();
 		String testo = Misc.inizialeMaiuscola(getDestinatarioDiCitta()) + " pagherà " + getRicompensa() + " monete per "
-				+ spedizione.getOggettoConArticolo() + " che manda " + spedizione.getMittente();
+				+ spedizione.getOggettoConArticolo() + " che manda " + mandanteSenzaVirgolaFinale(spedizione.getMittente());
 		if (spedizione.isUrgente()) {
 			return testo + ", se arriva entro " + getOreConcesse() + " ore.";
 		}

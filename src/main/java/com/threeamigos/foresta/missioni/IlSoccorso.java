@@ -52,7 +52,7 @@ public class IlSoccorso extends LaLiberazione {
 	}
 
 	private String getMandanteDiCitta() {
-		return getSoccorso().getMandante() + " di " + getNomeCitta();
+		return mandanteDiCitta(getSoccorso().getMandante());
 	}
 
 	/**
@@ -115,10 +115,10 @@ public class IlSoccorso extends LaLiberazione {
 			return nome + " è salvo ma debole: riportalo vivo a " + getNomeCitta() + ", e proteggilo per strada.";
 		}
 		if (RITORNO.equals(passo)) {
-			return nome + " è a casa: " + mandante + " ti aspetta a " + getNomeCitta() + ".";
+			return nome + " è a casa: " + mandante(mandante) + " ti aspetta a " + getNomeCitta() + ".";
 		}
 		if (LUTTO.equals(passo) || FALLIMENTO.equals(passo)) {
-			return nome + " è morto: devi dare la notizia " + Misc.conPreposizione("a", mandante) + ", a " + getNomeCitta() + ".";
+			return nome + " è morto: devi dare la notizia " + Misc.conPreposizione("a", mandanteSenzaVirgolaFinale(mandante)) + ", a " + getNomeCitta() + ".";
 		}
 		return Misc.inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di salvare " + getNomeEPersona()
 				+ ", dal posto segnato sulla mappa, dove " + (getSoccorso().getNumero() == 1 ? "lo minaccia " : "lo minacciano ")
@@ -142,13 +142,13 @@ public class IlSoccorso extends LaLiberazione {
 
 	@Override
 	protected String testoMorto() {
-		return getNomeDellaPersona() + " non ce l'ha fatta. Bisogna dirlo " + Misc.conPreposizione("a", getSoccorso().getMandante())
+		return getNomeDellaPersona() + " non ce l'ha fatta. Bisogna dirlo " + Misc.conPreposizione("a", mandanteSenzaVirgolaFinale(getSoccorso().getMandante()))
 				+ ", a " + getNomeCitta() + ".";
 	}
 
 	@Override
 	protected String testoPortaChiusa() {
-		return Misc.inizialeMaiuscola(getSoccorso().getMandante()) + " chiude la porta senza dire una parola.";
+		return Misc.inizialeMaiuscola(mandante(getSoccorso().getMandante())) + " chiude la porta senza dire una parola.";
 	}
 
 	@Override
@@ -185,7 +185,7 @@ public class IlSoccorso extends LaLiberazione {
 
 	@Override
 	protected String testoRicompensa() {
-		return Misc.inizialeMaiuscola(getSoccorso().getMandante()) + " paga le " + getRicompensa() + " monete promesse.";
+		return Misc.inizialeMaiuscola(mandante(getSoccorso().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

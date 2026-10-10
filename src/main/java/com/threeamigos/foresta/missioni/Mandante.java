@@ -18,7 +18,7 @@ public enum Mandante {
 			"Ehi, voi! Mi serve del materiale per la forgia, e voi avete l'aria di chi non ha paura di sporcarsi.",
 			"che %s soppesa con l'occhio del mestiere"),
 	CAPITANO("RICHIESTA_CAPITANO", "il capitano delle guardie", ScenaInCitta::conCapitano,
-			"Voi avete l'aria di chi sa usare una spada. Sono il capitano delle guardie, e ho bisogno di prove.",
+			"Voi avete l'aria di chi sa usare una spada. Sono il capitano delle guardie%s e ho bisogno di prove.",
 			"che %s conta per bene"),
 	LOCANDIERE("RICHIESTA_LOCANDIERE", "il locandiere", ScenaInCitta::conLocandiere,
 			"Viaggiatori! Le mie zuppe di palude sono famose in tutta la foresta, ma la palude non me la porta più nessuno.",
@@ -57,10 +57,11 @@ public enum Mandante {
 	}
 
 	/**
-	 * La prima battuta del mandante nell'intermezzo dell'incarico.
+	 * La prima battuta del mandante nell'intermezzo dell'incarico. Il capitano si presenta anche con il suo nome, se c'è
+	 * ("Sono il capitano delle guardie, Rodolfo, e ho bisogno di prove").
 	 */
-	public String getApertura() {
-		return apertura;
+	public String getApertura(String nomeProprio) {
+		return String.format(apertura, nomeProprio == null ? "," : ", " + nomeProprio + ",");
 	}
 
 	/**

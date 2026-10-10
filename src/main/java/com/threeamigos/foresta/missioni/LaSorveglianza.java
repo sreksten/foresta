@@ -93,7 +93,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 	}
 
 	private String getMandanteDiCitta() {
-		return getSorveglianza().getMandante() + " di " + getNomeCitta();
+		return mandanteDiCitta(getSorveglianza().getMandante());
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 	}
 
 	private String getAttesa() {
-		return Misc.inizialeMaiuscola(getSorveglianza().getMandante()) + " aspetta a " + getNomeCitta() + ".";
+		return Misc.inizialeMaiuscola(mandante(getSorveglianza().getMandante())) + " aspetta a " + getNomeCitta() + ".";
 	}
 
 	@Override
@@ -142,12 +142,12 @@ public class LaSorveglianza extends IncaricoInCitta {
 	public String getDescrizione() {
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return "Fatto: torna " + Misc.conPreposizione("da", getSorveglianza().getMandante()) + " a " + getNomeCitta()
+			return "Fatto: torna " + Misc.conPreposizione("da", mandante(getSorveglianza().getMandante())) + " a " + getNomeCitta()
 					+ " a riscuotere.";
 		}
 		if (AGGUATO.equals(passo)) {
 			return "Sconfiggi " + getNomeDeiNemici() + " nel posto segnato sulla mappa, poi torna "
-					+ Misc.conPreposizione("da", getSorveglianza().getMandante()) + " a " + getNomeCitta() + ".";
+					+ Misc.conPreposizione("da", mandante(getSorveglianza().getMandante())) + " a " + getNomeCitta() + ".";
 		}
 		String descrizione = Misc.inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di sorvegliare il posto segnato sulla mappa";
 		if (SORVEGLIA.equals(passo) && getVisiteNelPassoCorrente() > 0) {
@@ -233,7 +233,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 
 	@Override
 	protected String testoRicompensa() {
-		return Misc.inizialeMaiuscola(getSorveglianza().getMandante()) + " paga le " + getRicompensa() + " monete promesse.";
+		return Misc.inizialeMaiuscola(mandante(getSorveglianza().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

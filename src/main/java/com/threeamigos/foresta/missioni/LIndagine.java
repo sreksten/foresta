@@ -121,11 +121,11 @@ public class LIndagine extends IncaricoInCitta {
 	}
 
 	private String getMandanteDiCitta() {
-		return getIndagine().getMandante() + " di " + getNomeCitta();
+		return mandanteDiCitta(getIndagine().getMandante());
 	}
 
 	private String getAttesa() {
-		return Misc.inizialeMaiuscola(getIndagine().getMandante()) + " aspetta a " + getNomeCitta() + ".";
+		return Misc.inizialeMaiuscola(mandante(getIndagine().getMandante())) + " aspetta a " + getNomeCitta() + ".";
 	}
 
 	private boolean nelPosto() {
@@ -149,11 +149,11 @@ public class LIndagine extends IncaricoInCitta {
 		IndagineRichiesta indagine = getIndagine();
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return "Fatto: torna " + Misc.conPreposizione("da", indagine.getMandante()) + " a " + getNomeCitta() + " a riscuotere.";
+			return "Fatto: torna " + Misc.conPreposizione("da", mandante(indagine.getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
 		}
 		if (NASCONDIGLIO.equals(passo) || CATTURA.equals(passo)) {
 			return "Hai scoperto il colpevole: sconfiggilo nel suo nascondiglio, segnato sulla mappa, poi torna "
-					+ Misc.conPreposizione("da", indagine.getMandante()) + " a " + getNomeCitta() + ".";
+					+ Misc.conPreposizione("da", mandante(indagine.getMandante())) + " a " + getNomeCitta() + ".";
 		}
 		StringBuilder descrizione = new StringBuilder();
 		int trovati = getIndiziTrovati();
@@ -262,7 +262,7 @@ public class LIndagine extends IncaricoInCitta {
 
 	@Override
 	protected String testoRicompensa() {
-		return Misc.inizialeMaiuscola(getIndagine().getMandante()) + " paga le " + getRicompensa() + " monete promesse.";
+		return Misc.inizialeMaiuscola(mandante(getIndagine().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

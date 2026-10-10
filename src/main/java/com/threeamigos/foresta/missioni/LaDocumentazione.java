@@ -67,7 +67,7 @@ public class LaDocumentazione extends IncaricoInCitta {
 	}
 
 	private String getMandanteDiCitta() {
-		return getDocumentazione().getMandante() + " di " + getNomeCitta();
+		return mandanteDiCitta(getDocumentazione().getMandante());
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class LaDocumentazione extends IncaricoInCitta {
 		int trovati = getRepertiTrovati();
 		StringBuilder descrizione = new StringBuilder();
 		if (RITORNO.equals(getPassoCorrente())) {
-			descrizione.append("Hai documentato tutto: torna ").append(Misc.conPreposizione("da", documentazione.getMandante()))
+			descrizione.append("Hai documentato tutto: torna ").append(Misc.conPreposizione("da", mandante(documentazione.getMandante())))
 					.append(" a ").append(getNomeCitta()).append(" a consegnare le note.");
 		} else {
 			descrizione.append(Misc.inizialeMaiuscola(getMandanteDiCitta())).append(" ti ha chiesto di documentare ")
@@ -124,7 +124,7 @@ public class LaDocumentazione extends IncaricoInCitta {
 			boolean ultimo = numero == reperti.size();
 			return Passo.quando(MomentoControllo.IN_LOCAZIONE, this::nelPosto)
 					.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(reperti.get(numero - 1).getTesto()
-							+ (ultimo ? " Le note sono complete: " + documentazione.getMandante() + " aspetta a " + getNomeCitta() + "." : ""))))
+							+ (ultimo ? " Le note sono complete: " + mandante(documentazione.getMandante()) + " aspetta a " + getNomeCitta() + "." : ""))))
 					.poi(ultimo ? RITORNO : TRACCIA + (numero + 1));
 		}
 		throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -156,7 +156,7 @@ public class LaDocumentazione extends IncaricoInCitta {
 
 	@Override
 	protected String testoRicompensa() {
-		return Misc.inizialeMaiuscola(getDocumentazione().getMandante()) + " paga le " + getRicompensa() + " monete promesse.";
+		return Misc.inizialeMaiuscola(mandante(getDocumentazione().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

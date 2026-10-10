@@ -67,7 +67,7 @@ public class IlColpo extends IncaricoInCitta {
 	}
 
 	private String getMandanteDiCitta() {
-		return getColpo().getMandante() + " di " + getNomeCitta();
+		return mandanteDiCitta(getColpo().getMandante());
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class IlColpo extends IncaricoInCitta {
 	@Override
 	public String getDescrizione() {
 		if (RITORNO.equals(getPassoCorrente())) {
-			return "Il colpo è riuscito: torna " + Misc.conPreposizione("da", getColpo().getMandante()) + " a " + getNomeCitta() + " a riscuotere.";
+			return "Il colpo è riuscito: torna " + Misc.conPreposizione("da", mandante(getColpo().getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
 		}
 		return Misc.inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto un colpo nel posto segnato sulla mappa, sorvegliato da "
 				+ getNomeDelleGuardie() + ": passa inosservato. Se combatti lì, il colpo fallisce.";
@@ -135,7 +135,7 @@ public class IlColpo extends IncaricoInCitta {
 						.affronta(this::getPosto, getGuardie())
 						.falliscoSe(this::haCombattutoNelPosto, () -> testo(colpo.getScoperti()))
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testo(colpo.getColpo()) + " "
-								+ Misc.inizialeMaiuscola(colpo.getMandante()) + " aspetta a " + getNomeCitta() + ".")))
+								+ Misc.inizialeMaiuscola(mandante(colpo.getMandante())) + " aspetta a " + getNomeCitta() + ".")))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -169,7 +169,7 @@ public class IlColpo extends IncaricoInCitta {
 
 	@Override
 	protected String testoRicompensa() {
-		return Misc.inizialeMaiuscola(getColpo().getMandante()) + " paga le " + getRicompensa() + " monete promesse.";
+		return Misc.inizialeMaiuscola(mandante(getColpo().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

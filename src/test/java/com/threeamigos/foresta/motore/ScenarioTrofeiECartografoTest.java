@@ -8,6 +8,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,8 @@ class ScenarioTrofeiECartografoTest {
                     "M/F;orecchio di goblin;orecchie di goblin;NEMICI GOBLIN;3-4;6;Prove? Non vi fidate di noi?;Mi fido delle prove.", 3);
             prendiLIncarico(capitano);
             assertEquals("Il capitano delle guardie e le orecchie di goblin", capitano.getNome());
-            assertTrue(capitano.getDescrizione().contains("ti ha chiesto tre orecchie di goblin, che si prendono sconfiggendo i Goblin"),
+            String nomeDelCapitano = RegistroPersonaggi.getResidente(PersonaggioNoto.CAPITANO, TipoLocazione.CITTA_NYENA).getNome();
+            assertTrue(capitano.getDescrizione().startsWith("Il capitano delle guardie di Nyena, " + nomeDelCapitano + ", ti ha chiesto tre orecchie di goblin, che si prendono sconfiggendo i Goblin"),
                     capitano.getDescrizione());
 
             // Le orecchie le portano i goblin
@@ -76,7 +78,7 @@ class ScenarioTrofeiECartografoTest {
             assertEquals(monete + 6 * 3 + 5, partita.gruppo().getMonete());
             assertTrue(capitano.isCompleta());
             List<String> testi = partita.testi();
-            assertTrue(testi.contains("Le tre orecchie di goblin passano al capitano delle guardie, che le conta per bene."), String.valueOf(testi));
+            assertTrue(testi.contains("Le tre orecchie di goblin passano al capitano delle guardie, " + nomeDelCapitano + ", che le conta per bene."), String.valueOf(testi));
         }
     }
 
