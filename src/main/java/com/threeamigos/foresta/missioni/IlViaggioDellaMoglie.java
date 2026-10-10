@@ -116,7 +116,7 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		switch (id) {
 			case INCARICO:
-				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> isDisponibile() && isRitornoInUnaLocanda() && getPrimaCittaDelBardo().isPresent()
+				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> isRitornoInUnaLocanda() && getPrimaCittaDelBardo().isPresent()
 								&& !altreCitta().isEmpty() && isVisitaTranquilla())
 						.esegui(() -> {
 							TipoLocazione partenza = getPrimaCittaDelBardo().orElseThrow(IllegalStateException::new);
@@ -216,7 +216,7 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 	}
 
 	/**
-	 * La città in cui il gruppo ha riportato il bardo la prima volta (la prima missione NonSparateSulPianista completata).
+	 * La città in cui il gruppo ha riportato il bardo (la missione NonSparateSulPianista completata, che si fa una volta sola).
 	 */
 	private static Optional<TipoLocazione> getPrimaCittaDelBardo() {
 		return RegistroMissioni.getMissioniCompletate().stream()

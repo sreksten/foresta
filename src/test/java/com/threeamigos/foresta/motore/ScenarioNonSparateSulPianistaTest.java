@@ -93,6 +93,8 @@ class ScenarioNonSparateSulPianistaTest {
             assertTrue(partita.testi().contains(moglie + ", la moglie di " + pianista.getBardo() + ", paga 20 monete e trascina il marito in casa per un orecchio."),
                     String.valueOf(partita.testi()));
             assertTrue(partita.gruppo().getOspiti().isEmpty(), "il bardo è a casa");
+            assertEquals(1, RegistroMissioni.getTutteLeMissioni().stream().filter(NonSparateSulPianista.class::isInstance).count(),
+                    "la missione si fa una volta sola: non ne lascia una nuova");
         }
     }
 

@@ -22,7 +22,8 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
  * bardo viaggia con il gruppo come ospite, ma **non vulnerabile**: è così ubriaco che i mostri non si curano di lui, quindi
  * non viene attaccato e non può morire. Arrivati, sua moglie paga e se lo porta in casa. Se la città viene distrutta, la
  * missione fallisce. Il bardo è il BardoLocanda, lo stesso in tutto il mondo (vedi
- * RegistroPersonaggi): la missione si ripete, in altre locande, sempre con lui.
+ * RegistroPersonaggi). Si fa una volta sola: finita, bene o male, non ne lascia una nuova (poi il bardo chiede un altro favore,
+ * vedi IlViaggioDellaMoglie).
  * <ol>
  * <li>INCARICO, a inizio locazione, in una locanda nel bosco alla terza visita: l'intermezzo con il locandiere;</li>
  * <li>ACCETTAZIONE, in locazione, nella stessa locanda: il bardo si unisce al gruppo e la missione si ricorda la
@@ -63,11 +64,6 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	@Override
-	protected boolean isRipetibile() {
-		return true;
-	}
-
-	@Override
 	public String getDescrizione() {
 		return getBardo() + " il bardo ha bevuto troppo: riportalo sano e salvo a casa, " + Misc.conPreposizione("in", getNomeCitta())
 				+ ", e proteggilo per strada.";
@@ -100,7 +96,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		switch (id) {
 			case INCARICO:
-				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> isDisponibile() && isTerzaVisitaAUnaLocanda() && cittaPiuVicina() != null && isVisitaTranquilla())
+				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> isTerzaVisitaAUnaLocanda() && cittaPiuVicina() != null && isVisitaTranquilla())
 						.esegui(() -> {
 							getBardo();
 							CoordinateMD locanda = gruppo.getCoordinate();
