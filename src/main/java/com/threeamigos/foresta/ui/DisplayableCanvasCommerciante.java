@@ -49,6 +49,16 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
     }
 
     @Override
+    protected TipoPersonaggio getMestiereAlCentro() {
+        return negozio == TipoNegozio.VENDITORE_DI_PERGAMENE ? TipoPersonaggio.VENDITORE_DI_PERGAMENE : TipoPersonaggio.ARMAIOLO;
+    }
+
+    @Override
+    protected String getEtichettaMestiere() {
+        return negozio.getNome();
+    }
+
+    @Override
     protected String aiutoDoppioClickSinistra() {
         return "Doppio click: vendi";
     }
@@ -66,14 +76,11 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
 
     void disegnaColonnaPersonaggio(Graphics2D graphics) {
 
-        Image doomdark;
         int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
         DoomdarkColorModel.Color coloreTestata = DoomdarkColorModel.Color.LIGHT_GRAY;
 
-        // Nome personaggio
-        doomdark = ImageCache.get(negozio.getNome(), coloreTestata);
-        graphics.drawImage(doomdark, (width - doomdark.getWidth(null)) / 2, y, null);
-        y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+        // Nome del negoziante (e sotto il mestiere)
+        y = disegnaIntestazioneCentrale(graphics, y, coloreTestata) + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         // Immagine personaggio
         BufferedImage immaginePersonaggio = negozio == TipoNegozio.VENDITORE_DI_PERGAMENE

@@ -27,9 +27,10 @@ abstract class DisplayableCanvasScambiatore implements Finestra {
     protected static final int SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI = 20;
 
     /**
-     * Le coordinate del fumetto sono a comune perché tutte le sottoclassi disegnano un personaggio a metà schermo
+     * Fra una riga e l'altra del nome del negoziante, e fra il nome e il mestiere scritto in piccolo sotto
      */
-    protected static CoordinateFumetto COORDINATE_FUMETTO;
+    protected static final int INTERLINEA_DEL_NOME = 2;
+    protected static final int SPAZIO_FRA_NOME_E_MESTIERE = 4;
 
     /**
      * Larghezza della cornice inventario
@@ -148,7 +149,70 @@ abstract class DisplayableCanvasScambiatore implements Finestra {
      * in disegnaColonnaPersonaggio, usata per ancorare gli sprite locali a quella riga.
      */
     protected int yRigaMonete() {
-        return 3 * SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + fontHeight + ALTEZZA_LADRO;
+        return 3 * SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + altezzaIntestazioneCentrale() + ALTEZZA_LADRO;
+    }
+
+    /**
+     * Il mestiere del negoziante al centro della schermata (armaiolo, alchimista...): serve a cercarne il nome. Null se
+     * al centro c'è un altro personaggio, che si intitola come prima.
+     */
+    protected TipoPersonaggio getMestiereAlCentro() {
+        return null;
+    }
+
+    /**
+     * Il mestiere come si scrive sotto il nome del negoziante ("Armaiolo"), o al posto del nome se non c'è.
+     */
+    protected String getEtichettaMestiere() {
+        return null;
+    }
+
+    /**
+     * Il nome del negoziante spezzato in righe che stiano fra le due cornici; vuota se non c'è un negoziante o un nome.
+     */
+    private List<String> righeDelNomeAlCentro() {
+        TipoPersonaggio mestiere = getMestiereAlCentro();
+        String nome = mestiere == null ? null : vistaPartita.getNomeDelPersonaggioDiCitta(mestiere);
+        if (nome == null) {
+            return new ArrayList<>();
+        }
+        return FontTool.split(font, nome, xMassimaZonaCentrale - xMinimaZonaCentrale);
+    }
+
+    /**
+     * L'altezza dell'intestazione della colonna centrale: una riga per chi non è un negoziante, per il negoziante il nome
+     * su una o più righe e sotto il mestiere in carattere piccolo.
+     */
+    protected int altezzaIntestazioneCentrale() {
+        List<String> righe = righeDelNomeAlCentro();
+        if (righe.isEmpty()) {
+            return fontHeight;
+        }
+        return righe.size() * (fontHeight + INTERLINEA_DEL_NOME) - INTERLINEA_DEL_NOME + SPAZIO_FRA_NOME_E_MESTIERE + fontSmall.getHeight();
+    }
+
+    /**
+     * Disegna in alto nella colonna centrale l'intestazione del negoziante: il nome, centrato e spezzato su più righe se
+     * non sta fra le cornici, e sotto il mestiere in carattere piccolo. Senza nome c'è solo il mestiere, come prima.
+     *
+     * @return la quota sotto l'intestazione
+     */
+    protected int disegnaIntestazioneCentrale(Graphics2D graphics, int y, DoomdarkColorModel.Color colore) {
+        List<String> righe = righeDelNomeAlCentro();
+        if (righe.isEmpty()) {
+            Image mestiere = ImageCache.get(getEtichettaMestiere(), colore);
+            graphics.drawImage(mestiere, (width - mestiere.getWidth(null)) / 2, y, null);
+            return y + fontHeight;
+        }
+        for (String riga : righe) {
+            Image nome = ImageCache.get(riga, font, colore);
+            graphics.drawImage(nome, (width - nome.getWidth(null)) / 2, y, null);
+            y += fontHeight + INTERLINEA_DEL_NOME;
+        }
+        y += SPAZIO_FRA_NOME_E_MESTIERE - INTERLINEA_DEL_NOME;
+        Image mestiere = ImageCache.get(getEtichettaMestiere(), fontSmall, colore);
+        graphics.drawImage(mestiere, (width - mestiere.getWidth(null)) / 2, y, null);
+        return y + fontSmall.getHeight();
     }
 
     protected DisplayableCanvasScambiatore(int width, int height, VistaPartita vistaPartita) {
@@ -171,19 +235,18 @@ abstract class DisplayableCanvasScambiatore implements Finestra {
      * Restituisce le coordinate alle quali disegnare il fumetto
      */
     CoordinateFumetto getCoordinateFumetto() {
-        if (COORDINATE_FUMETTO == null) {
-            Image ladro = ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.LADRO);
-            int larghezzaImmagine = ladro.getWidth(null);
-            int altezzaImmagine = ladro.getHeight(null);
+        // L'intestazione cambia con il nome del negoziante (più righe se è lungo), quindi le coordinate non si ricordano
+        Image ladro = ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.LADRO);
+        int larghezzaImmagine = ladro.getWidth(null);
+        int altezzaImmagine = ladro.getHeight(null);
+        int yIntestazione = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + altezzaIntestazioneCentrale() + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
-            COORDINATE_FUMETTO = new CoordinateFumetto(
-                    width / 2 + larghezzaImmagine + SPACING,
-                    SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + altezzaImmagine / 2,
-                    width / 2 + ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.ARMAIOLO).getWidth() / 3,
-                    SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + altezzaImmagine / 3
-            );
-        }
-        return COORDINATE_FUMETTO;
+        return new CoordinateFumetto(
+                width / 2 + larghezzaImmagine + SPACING,
+                yIntestazione + altezzaImmagine / 2,
+                width / 2 + ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.ARMAIOLO).getWidth() / 3,
+                yIntestazione + altezzaImmagine / 3
+        );
     }
 
     /**

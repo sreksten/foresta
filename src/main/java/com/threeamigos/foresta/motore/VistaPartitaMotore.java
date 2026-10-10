@@ -97,6 +97,11 @@ public class VistaPartitaMotore implements VistaPartita {
 	}
 
 	@Override
+	public String getNomeDelPersonaggioDiCitta(TipoPersonaggio mestiere) {
+		return RegistroPersonaggi.getNomeDelPersonaggioDiCitta(mestiere);
+	}
+
+	@Override
 	public String getNomeSingolare(TipoPersonaggio tipoPersonaggio) {
 		return FabbricaPersonaggi.nomeSingolare(tipoPersonaggio);
 	}

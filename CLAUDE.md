@@ -33,7 +33,7 @@ Lo stato della partita la UI lo legge da `…/interfacce/VistaPartita` (sola let
 Panoramica in `motore_grafico.md`.
 
 - Inventario del personaggio e del gruppo: `DisplayableCanvasInventario`; logica in `…/motore/AutomaInventario`, che la UI vede come `…/interfacce/VistaScambio` e comanda con `ComandoScambioArtefatto`; apertura con `…/eventi/richieste/RichiestaAperturaInventarioGruppo`.
-- Armaiolo e venditore di pergamene: `DisplayableCanvasCommerciante`; alchimista: `DisplayableCanvasScambiatoreConsumabili`.
+- Armaiolo e venditore di pergamene: `DisplayableCanvasCommerciante`; alchimista: `DisplayableCanvasScambiatoreConsumabili`. In tutte e tre e nell'incantatore la colonna centrale porta il nome del negoziante (`disegnaIntestazioneCentrale` in `DisplayableCanvasScambiatore`), spezzato su più righe, con il mestiere in piccolo sotto.
 - Inventario, commerciante e incantatore estendono `DisplayableCanvasScambiatoreArtefatti` (astratta, due liste di oggetti affiancate), che estende `DisplayableCanvasScambiatore`: un comportamento comune alle tre schermate va lì.
 - Incantatore: `DisplayableCanvasIncantatore` (+ `…/motore/AutomaIncantatore`, `BancoDiLavoro`).
 - Trofei: `DisplayableCanvasTrofei`. Intermezzi: `DisplayableCanvasIntermezzo`, `AnimazioniIntermezzo`.
@@ -53,6 +53,6 @@ Panoramica in `motore_grafico.md`.
 
 ## Build e test
 
-`mvn test` esegue tutti i test (JUnit 5, in `src/test/java`); al 2026-10-10 sono 930, tutti verdi (16 saltati).
+`mvn test` esegue tutti i test (JUnit 5, in `src/test/java`); al 2026-10-10 sono 938, tutti verdi (16 saltati).
 `ui/DipendenzeUITest` controlla che la UI non importi motore e dominio, `eventi/DipendenzeEventiTest` che gli eventi non portino classi del dominio, `ui/DipendenzeVersoLaUITest` che nessuno fuori da `ui` la importi: le dipendenze che restano da togliere sono nelle loro `ECCEZIONI` (per la UI oggi nessuna).
 Le cose da fare generali sono in `todo.md`; i `TODO`/`FIXME` puntuali restano nel codice.

@@ -3,7 +3,7 @@
 Piano per dare un nome coerente ai personaggi non combattenti e tenerne traccia in un registro. Stato: **fatti** le liste
 one-shot in `nomi.txt`, la generazione dei nomi in `Foresta.reimposta`, l'enumerato `PersonaggioNoto`, il registro dei residenti
 (`RegistroPersonaggi`, `ResidenteMD`) e i campioni delle sfide; **da fare** i tipi e le immagini di borgomastro e levatrice,
-l'uso del nome nelle scene e nei testi delle missioni, e le altre voci di §6. `GrammarBean` ha `#include` e `#include_static`
+l'uso del nome nelle scene (i testi che dicono "il capitano delle guardie" lo hanno già, con il nome) e le altre voci di §6. `GrammarBean` ha `#include` e `#include_static`
 (vedi [`GrammarBean.md`](GrammarBean.md) §4.11, §4.12 e §4.7 per le produzioni one-shot).
 
 ## 1. Com'è oggi
@@ -50,8 +50,8 @@ l'uso del nome nelle scene e nei testi delle missioni, e le altre voci di §6. `
 - **Non combattenti**: `TipoPersonaggio` ha già `LOCANDIERE`, `ARMAIOLO`, `ALCHIMISTA`, `VENDITORE_DI_PERGAMENE`,
   `INCANTATORE`, `MOGLIE_DEL_BARDO`, `BARDO_LOCANDA`, `CAPITANO_DELLE_GUARDIE` e `VIANDANTE`, ma nessuno ha un nome: le
   scene (`ScenaInCitta.con…`) usano un modello senza nome, e un personaggio senza nome lancia `IllegalStateException` in
-  `getNome`. Il Viandante delle missioni di scorta prende il nome dalla missione. Il borgomastro e la levatrice non
-  hanno né tipo né immagine (vedi "Mandanti senza personaggio proprio" in `todo.md`).
+  `getNome`. Il Viandante delle missioni di scorta prende il nome dalla missione. Il borgomastro e la levatrice sono un
+  `UOMO` e una `DONNA` (vedi "Mandanti senza personaggio proprio" in `todo.md`).
 - **`RegistroPersonaggiMD`** conosce l'elenco iniziale dei compagni, i personaggi in attesa nelle locazioni e i residenti.
 - **`GrammarBean.resetStaticProductions()`** azzera **tutte** le sezioni statiche insieme, e non una sola; ogni grammatica
   che ne include una ricostruisce al prossimo uso anche le proprie produzioni one-shot (non il suo stato fisso). Oggi lo chiama
@@ -197,8 +197,13 @@ nome della sua locanda.
 3. **Fatto** — enumerato, mappa in `RegistroPersonaggiMD`, generazione in `Foresta.reimposta` (città, poi bardo e moglie, senza
    reset in mezzo).
 4. **Fatto** — la missione del bardo legge il nome dal registro; i campioni sono nel registro.
-5. Da fare — le scene (`ScenaInCitta` & C.) e i testi dei mandanti che dicono "il capitano delle guardie" usano il nome
-   completo; borgomastro e levatrice con tipo e immagine; la levatrice (e le altre comparse) nelle scene che le chiedono.
+5. **Fatto in parte** — i testi dei mandanti che dicono "il capitano delle guardie" lo scrivono con il nome ("il capitano delle
+   guardie, Rodolfo,": `IncaricoInCitta.mandante`, `mandanteDiCitta`, `Mandante.getApertura(nome)`, e il mittente di
+   `IlCorriere`); borgomastro e levatrice hanno i tipi `UOMO` e `DONNA`, con l'immagine e il verso del locandiere e della
+   moglie del bardo; le schermate di armaiolo, venditore di pergamene, alchimista e incantatore mostrano il nome del
+   negoziante (spezzato su più righe) al posto del mestiere, che va sotto in carattere piccolo.
+6. Da fare — il nome completo del borgomastro e degli altri mandanti ("il borgomastro" nei testi), la levatrice (e le
+   altre comparse) nelle scene che le chiedono, immagini e tipi propri per borgomastro e levatrice.
 
 ## 4. Test
 
@@ -231,7 +236,7 @@ non dipendono dal seme).
 
 ## 6. Da fare / idee aperte
 
-- Tipi e immagini per borgomastro e levatrice.
+- Immagini e tipi propri per borgomastro e levatrice (oggi `UOMO` e `DONNA`, con l'aspetto del locandiere e della moglie del bardo).
 - Decidere cosa fare delle note di `DEGLI_LOCANDE` nel dialogo (tolte in post-produzione o spostate nella recensione).
 - Scartare, in `produciDaMissioni`, i nomi già in uso nel registro (vedi §3.3).
 - Le scene e i testi che nominano il capitano, l'armaiolo, l'alchimista... con il nome completo (vedi §3.8, punto 5).

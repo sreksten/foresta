@@ -177,6 +177,23 @@ public class RegistroPersonaggi {
 	}
 
 	/**
+	 * Il nome completo del personaggio di quel mestiere (armaiolo, alchimista...) della città in cui è il gruppo; null se
+	 * il gruppo non è in una città o nessuna voce di PersonaggioNoto ha quel mestiere.
+	 */
+	public static String getNomeDelPersonaggioDiCitta(TipoPersonaggio mestiere) {
+		TipoLocazione luogo = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
+		if (luogo == null || luogo.getNomeDellaCitta() == null) {
+			return null;
+		}
+		for (PersonaggioNoto noto : PersonaggioNoto.values()) {
+			if (noto.getAmbito() == PersonaggioNoto.Ambito.PER_CITTA && noto.getTipo() == mestiere) {
+				return getNomeCompleto(getResidente(noto, luogo));
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Il personaggio di chi ha una classe, con il suo nome proprio (non la provenienza), a livello 1 e senza equipaggiamento:
 	 * per le scene e per le missioni che lo portano con il gruppo.
 	 */

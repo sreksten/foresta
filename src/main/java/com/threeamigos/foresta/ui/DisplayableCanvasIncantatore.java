@@ -61,15 +61,23 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         disegnaIntestazioniInventarioImpl(graphics, "Inventario gruppo", "Banco di lavoro");
     }
 
+    @Override
+    protected TipoPersonaggio getMestiereAlCentro() {
+        return TipoPersonaggio.INCANTATORE;
+    }
+
+    @Override
+    protected String getEtichettaMestiere() {
+        return "Incantatore";
+    }
+
     void disegnaColonnaPersonaggio(Graphics2D graphics) {
 
-        Image doomdark;
         int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
         DoomdarkColorModel.Color coloreTestata = DoomdarkColorModel.Color.LIGHT_GRAY;
 
-        doomdark = ImageCache.get("Incantatore", coloreTestata);
-        graphics.drawImage(doomdark, (width - doomdark.getWidth(null)) / 2, y, null);
-        y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+        // Nome dell'incantatore (e sotto il mestiere)
+        y = disegnaIntestazioneCentrale(graphics, y, coloreTestata) + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         BufferedImage immaginePersonaggio = ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.INCANTATORE);
 

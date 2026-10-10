@@ -86,16 +86,23 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         disegnaIntestazioniInventarioImpl(graphics, "Inventario gruppo", "Inventario alchimista");
     }
 
+    @Override
+    protected TipoPersonaggio getMestiereAlCentro() {
+        return TipoPersonaggio.ALCHIMISTA;
+    }
+
+    @Override
+    protected String getEtichettaMestiere() {
+        return "Alchimista";
+    }
+
     void disegnaColonnaPersonaggio(Graphics2D graphics) {
 
-        Image doomdark;
         int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
         DoomdarkColorModel.Color coloreTestata = DoomdarkColorModel.Color.LIGHT_GRAY;
 
-        // Nome personaggio
-        doomdark = ImageCache.get("Alchimista", coloreTestata);
-        graphics.drawImage(doomdark, (width - doomdark.getWidth(null)) / 2, y, null);
-        y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+        // Nome dell'alchimista (e sotto il mestiere)
+        y = disegnaIntestazioneCentrale(graphics, y, coloreTestata) + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         // Immagine personaggio
         BufferedImage immaginePersonaggio = ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.ALCHIMISTA);

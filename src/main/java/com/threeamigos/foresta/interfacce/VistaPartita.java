@@ -53,6 +53,12 @@ public interface VistaPartita {
 	int getProgressoTrofeo(TipoTrofeo trofeo);
 
 	/**
+	 * Il nome, con la provenienza, del personaggio di quel mestiere (armaiolo, alchimista, venditore di pergamene,
+	 * incantatore...) della città in cui è il gruppo: "Mastro Ferruccio da Ruuna". Null se il gruppo non è in una città.
+	 */
+	String getNomeDelPersonaggioDiCitta(TipoPersonaggio mestiere);
+
+	/**
 	 * Il nome di un personaggio di quel tipo ("goblin"), per le statistiche
 	 */
 	String getNomeSingolare(TipoPersonaggio tipoPersonaggio);

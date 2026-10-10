@@ -35,7 +35,7 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 
 ## Personaggi non combattenti
 
-- **Mandanti senza personaggio proprio** (borgomastro, mugnaio, mercante, fabbro, notaio, vedove...): usano l'aspetto del locandiere (`ASPETTO=QUALUNQUE`) o della moglie del bardo (`DONNA`) in `AspettoDelMandante`; servono immagini loro e i relativi tipi.
+- **Mandanti senza personaggio proprio** (borgomastro, mugnaio, mercante, fabbro, notaio, vedove...): sono un `Uomo` (`ASPETTO=QUALUNQUE`) o una `Donna` (`DONNA`) in `AspettoDelMandante`, con l'immagine e il verso del locandiere e della moglie del bardo; servono immagini loro e, dove ne hanno bisogno, tipi propri.
 - Le **missioni di scorta** ("salva il locandiere", "salva la moglie del bardo", "salva l'alchimista"...) con `MissioneAPassi.prendiInScorta`, al posto del Viandante: servirà dar loro un nome proprio, perché un personaggio senza nome lancia `IllegalStateException` in `getNome` (come il Viandante);
 
 ## Grafica e immagini
