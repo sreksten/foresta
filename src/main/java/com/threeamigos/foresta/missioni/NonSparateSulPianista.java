@@ -127,7 +127,8 @@ public class NonSparateSulPianista extends MissioneAPassi {
 						.poi(ARRIVO);
 			case ARRIVO:
 				return ricompensa(MomentoControllo.IN_LOCAZIONE, getRicompensa(),
-								() -> "La moglie di " + getBardo() + " paga " + getRicompensa() + " monete e trascina il marito in casa per un orecchio.")
+								() -> RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome() + ", la moglie di " + getBardo() + ", paga "
+										+ getRicompensa() + " monete e trascina il marito in casa per un orecchio.")
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);

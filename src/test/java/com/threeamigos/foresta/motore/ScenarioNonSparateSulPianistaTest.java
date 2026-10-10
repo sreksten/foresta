@@ -89,6 +89,9 @@ class ScenarioNonSparateSulPianistaTest {
             pianista.controllaInLocazione();
             assertEquals(monete + 20, partita.gruppo().getMonete());
             assertTrue(pianista.isCompleta());
+            String moglie = RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome();
+            assertTrue(partita.testi().contains(moglie + ", la moglie di " + pianista.getBardo() + ", paga 20 monete e trascina il marito in casa per un orecchio."),
+                    String.valueOf(partita.testi()));
             assertTrue(partita.gruppo().getOspiti().isEmpty(), "il bardo è a casa");
         }
     }
