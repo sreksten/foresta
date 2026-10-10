@@ -30,6 +30,7 @@ I tre **canti** innati del Bardo e della Cantastorie (e del bardo della locanda)
 | Canto curativo | Cura il solo personaggio **più ferito** del gruppo (quello con la quota di salute più bassa). Circa 30 × √livello, aumentato dalla sola Saggezza (fonte di conoscenza; il Carisma non c'entra). |
 | Canto ipnotico | Applica a caso `SPAVENTATO` o `CONFUSO` a **fino a `NUMERO_BERSAGLI`** avversari vivi, con la Soggezione del Bardo contro il Coraggio di ciascuno. |
 | Canto di valore | **+% di coraggio e di precisione** a tutto il gruppo, per qualche turno; il bonus è **20% + 2,5% per livello** del Bardo, con un tetto del **50%**, e non dipende dal suo Carisma. Solo un bonus, mai un malus. |
+| Urlo della Banshee | Il canto ipnotico potenziato, **non noto all'inizio**: lo insegna il bardo della locanda al gruppo (intermezzo `IntermezzoUrloDellaBanshee`, la prima volta in una locanda nel bosco dopo aver **completato con successo** `IlViaggioDellaMoglie`; non è di ripiego, scatta una volta sola e non se la missione fallisce). Costa `CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO` (6) `MAGIA`, stessi bersagli del canto ipnotico, ma la Soggezione del cantore vale **×1,5** contro il Coraggio (`CANTO_URLO_DELLA_BANSHEE_MOLTIPLICATORE_SOGGEZIONE`) e chi cede, con **un solo tiro**, prende **sia `SPAVENTATO` sia `CONFUSO`**. Il Bardo e la Cantastorie lo conoscono da quando l'intermezzo è scattato (`CantoDelBardo.isUrloDellaBansheeAppreso`, che legge `RegistroIntermezzi`: vale per tutto il gruppo, anche per chi viene reclutato dopo); il `BardoLocanda` lo sa sempre. Classe `UrloDellaBanshee`, `TipoCanto.URLO_DELLA_BANSHEE`, `Comando.URLO_DELLA_BANSHEE`, icona `UrloDellaBanshee.gif`. |
 | Il canto di valore è un effetto di stato | Un `TipoEffettoDiStato` nuovo e proprio (nome provvisorio `ISPIRATO`), **non** un modificatore a tempo. |
 | Alba Sacra | Non cambia: toglie tutti gli effetti di stato, `ISPIRATO` compreso, e tutti i modificatori a tempo (§6). |
 | Viandante | Classe a sé: smette di estendere `Bardo`. |
@@ -83,5 +84,5 @@ Non cambia. `AlbaSacra.formula` toglie tutti gli effetti di stato (`rimuoviTutti
 
 - Tarare costi, cura, durata e intensità. Con il tetto al 50% e il +22,5% già a livello 1 il canto di valore è molto forte nei primi livelli: va misurato.
 - Insegnare al `GiocatoreAutomatico` a cantare.
-- Un quarto canto (per esempio uno di scherno che abbassa le difese) è fuori da questo lavoro.
+- Un altro canto (per esempio uno di scherno che abbassa le difese) è fuori da questo lavoro; l'Urlo della Banshee è già il quarto, e si impara in gioco.
 - Tarare insieme anche la probabilità di cedere del canto ipnotico e il valore dei `VIANDANTE_*` e `NON_COMBATTENTE_*`, ora uguali a quelli del bardo.

@@ -6,6 +6,8 @@ import com.threeamigos.foresta.incantesimi.CantoDelBardo;
 import com.threeamigos.foresta.incantesimi.CantoDiValore;
 import com.threeamigos.foresta.incantesimi.CantoIpnotico;
 import com.threeamigos.foresta.incantesimi.FabbricaCanti;
+import com.threeamigos.foresta.incantesimi.UrloDellaBanshee;
+import com.threeamigos.foresta.intermezzi.IntermezzoUrloDellaBanshee;
 import com.threeamigos.foresta.incantesimi.TipoCanto;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
@@ -44,6 +46,9 @@ class CantiDelBardoTest {
         };
     }
 
+    // I canti che il Bardo e la Cantastorie sanno subito: l'Urlo della Banshee lo imparano dopo (vedi IntermezzoUrloDellaBanshee)
+    private static final List<TipoCanto> CANTI_DI_BASE = Arrays.asList(TipoCanto.CURATIVO, TipoCanto.IPNOTICO, TipoCanto.DI_VALORE);
+
     private static Bardo bardo() {
         Bardo bardo = new Bardo("Orfeo", 5);
         bardo.addMagia(1000);
@@ -67,7 +72,7 @@ class CantiDelBardoTest {
                 assertFalse(CantoDelBardo.conosciutoDa(classe), classe.name());
             }
         }
-        for (TipoCanto tipo : TipoCanto.values()) {
+        for (TipoCanto tipo : CANTI_DI_BASE) {
             assertTrue(CantoDelBardo.puoCantare(bardo(), tipo));
             assertTrue(CantoDelBardo.puoCantare(cantastorie(), tipo));
             assertFalse(CantoDelBardo.puoCantare(new Viandante("Anselmo", 5), tipo));
@@ -80,6 +85,8 @@ class CantiDelBardoTest {
     void ancheIlBardoDellaLocandaCanta() {
         BardoLocanda bardoDellaLocanda = new BardoLocanda("Orfeo", 5);
         bardoDellaLocanda.addMagia(1000);
+        // L'Urlo della Banshee lo sa a prescindere, anche se il gruppo non l'ha imparato
+        assertFalse(CantoDelBardo.isUrloDellaBansheeAppreso());
         assertEquals(Arrays.asList(TipoCanto.values()), CantoDelBardo.cantiPossibili(bardoDellaLocanda));
     }
 
@@ -92,7 +99,7 @@ class CantiDelBardoTest {
     @Test
     void servonoLaMagiaEUnaVoceLibera() {
         Bardo bardo = bardo();
-        assertEquals(Arrays.asList(TipoCanto.values()), CantoDelBardo.cantiPossibili(bardo));
+        assertEquals(CANTI_DI_BASE, CantoDelBardo.cantiPossibili(bardo));
 
         // Con poca magia si canta solo quello che costa poco
         bardo.subMagia(bardo.getMagia() - Costanti.CANTO_IPNOTICO_COSTO_LANCIO);
@@ -172,6 +179,75 @@ class CantiDelBardoTest {
         assertFalse(CantoCurativo.piuFerito(compagni).isPresent());
         assertFalse(FabbricaCanti.crea(TipoCanto.CURATIVO, bardo).canta(bardo, compagni, avversari));
         assertEquals(magia, bardo.getMagia());
+    }
+
+    // --- Urlo della Banshee
+
+    @Test
+    void l_UrloDellaBansheeSiImparaDalBardoDellaLocanda() {
+        assertFalse(CantoDelBardo.isUrloDellaBansheeAppreso());
+        assertFalse(CantoDelBardo.puoCantare(bardo(), TipoCanto.URLO_DELLA_BANSHEE));
+        assertFalse(CantoDelBardo.puoCantare(cantastorie(), TipoCanto.URLO_DELLA_BANSHEE));
+        BardoLocanda bardoDellaLocanda = new BardoLocanda("Orfeo", 5);
+        bardoDellaLocanda.addMagia(1000);
+        assertTrue(CantoDelBardo.puoCantare(bardoDellaLocanda, TipoCanto.URLO_DELLA_BANSHEE), "lui lo sa a prescindere");
+
+        RegistroIntermezzi.segnaScattato(new IntermezzoUrloDellaBanshee());
+
+        assertTrue(CantoDelBardo.isUrloDellaBansheeAppreso());
+        assertTrue(CantoDelBardo.puoCantare(bardo(), TipoCanto.URLO_DELLA_BANSHEE));
+        assertTrue(CantoDelBardo.puoCantare(cantastorie(), TipoCanto.URLO_DELLA_BANSHEE));
+        assertEquals(Arrays.asList(TipoCanto.values()), CantoDelBardo.cantiPossibili(bardo()));
+        // Chi non sa cantare non lo impara
+        assertFalse(CantoDelBardo.puoCantare(new Mago("Merlino", 5), TipoCanto.URLO_DELLA_BANSHEE));
+        assertFalse(CantoDelBardo.puoCantare(new Viandante("Anselmo", 5), TipoCanto.URLO_DELLA_BANSHEE));
+    }
+
+    @Test
+    void l_UrloDellaBansheeCostaDiPiuEUsaIlSuoCanto() {
+        Bardo bardo = bardo();
+        assertEquals(Costanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.URLO_DELLA_BANSHEE, bardo).getCostoLancio());
+        assertTrue(Costanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO > Costanti.CANTO_IPNOTICO_COSTO_LANCIO);
+        assertTrue(FabbricaCanti.crea(TipoCanto.URLO_DELLA_BANSHEE, bardo) instanceof UrloDellaBanshee);
+    }
+
+    @Test
+    void l_UrloDellaBansheeFaCedereConPiuProbabilitaDelCantoIpnotico() {
+        Bardo bardo = bardo();
+        Goblin goblin = new Goblin(1);
+        fissa(bardo, TipoAttributo.SOGGEZIONE, 10);
+        fissa(goblin, TipoAttributo.CORAGGIO, 10);
+        assertEquals(50.0, CantoIpnotico.probabilitaDiCedere(bardo, goblin), 0.0001);
+        assertEquals(100.0 * 15 / 25, UrloDellaBanshee.probabilitaDiCedere(bardo, goblin), 0.0001);
+        assertTrue(UrloDellaBanshee.probabilitaDiCedere(bardo, goblin) > CantoIpnotico.probabilitaDiCedere(bardo, goblin));
+        // Con soggezione nulla non cede nessuno, con coraggio nullo cedono sempre
+        fissa(bardo, TipoAttributo.SOGGEZIONE, 0);
+        assertEquals(0.0, UrloDellaBanshee.probabilitaDiCedere(bardo, goblin));
+    }
+
+    @Test
+    void chiCedeAll_UrloPrendeSpaventatoEConfusoInsieme() {
+        Bardo bardo = bardo();
+        fissa(bardo, TipoAttributo.NUMERO_BERSAGLI, 2);
+        Goblin uno = new Goblin(1);
+        Goblin due = new Goblin(1);
+        Goblin tre = new Goblin(1);
+        tuttiCedono(bardo, uno, due, tre);
+        int magia = bardo.getMagia();
+
+        assertTrue(FabbricaCanti.crea(TipoCanto.URLO_DELLA_BANSHEE, bardo).canta(bardo, compagni, avversari));
+
+        long colpiti = Arrays.asList(uno, due, tre).stream()
+                .filter(g -> g.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO) && g.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)).count();
+        assertEquals(2, colpiti, "fino al numero di bersagli, ognuno con tutti e due gli stati");
+        assertEquals(2, Arrays.asList(uno, due, tre).stream().filter(CantiDelBardoTest::haSpaventatoOConfuso).count(), "nessuno ha uno stato solo");
+        assertEquals(magia - Costanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO, bardo.getMagia());
+    }
+
+    @Test
+    void senzaAvversariL_UrloNonSiCanta() {
+        Bardo bardo = bardo();
+        assertFalse(FabbricaCanti.crea(TipoCanto.URLO_DELLA_BANSHEE, bardo).canta(bardo, compagni, avversari));
     }
 
     // --- Canto ipnotico

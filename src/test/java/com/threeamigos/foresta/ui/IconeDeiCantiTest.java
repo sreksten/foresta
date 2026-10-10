@@ -24,7 +24,7 @@ class IconeDeiCantiTest {
 			assertSame(tipo, TipoCanto.ofComando(comando));
 			assertNotNull(ClasseIcona.ofComando(comando).getIcona(), comando.name());
 		}
-		assertEquals(3, comandi.size());
+		assertEquals(4, comandi.size());
 	}
 
 	@Test

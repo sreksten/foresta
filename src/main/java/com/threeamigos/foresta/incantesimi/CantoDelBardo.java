@@ -1,8 +1,10 @@
 package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.motore.Gruppo;
+import com.threeamigos.foresta.motore.RegistroIntermezzi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
@@ -26,10 +28,29 @@ public final class CantoDelBardo {
 	}
 
 	/**
-	 * @return true se il personaggio è vivo, sa cantare, non è {@code SILENZIATO} e ha la MAGIA per quel canto
+	 * Se il gruppo ha imparato l'Urlo della Banshee: dal giorno in cui il bardo della locanda glielo insegna, con
+	 * l'intermezzo che segue il viaggio della moglie (vedi IntermezzoUrloDellaBanshee).
+	 */
+	public static boolean isUrloDellaBansheeAppreso() {
+		return RegistroIntermezzi.isScattato(TipoIntermezzo.INTERMEZZO_URLO_DELLA_BANSHEE);
+	}
+
+	/**
+	 * Se la classe conosce quel canto: i canti di base li conosce chi sa cantare; l'Urlo della Banshee il bardo della
+	 * locanda sempre, il Bardo e la Cantastorie solo da quando il gruppo l'ha imparato.
+	 */
+	public static boolean conosciutoDa(TipoPersonaggio classe, TipoCanto tipo) {
+		if (!conosciutoDa(classe)) {
+			return false;
+		}
+		return tipo != TipoCanto.URLO_DELLA_BANSHEE || classe == TipoPersonaggio.BARDO_LOCANDA || isUrloDellaBansheeAppreso();
+	}
+
+	/**
+	 * @return true se il personaggio è vivo, sa cantare quel canto, non è {@code SILENZIATO} e ha la MAGIA per cantarlo
 	 */
 	public static boolean puoCantare(Personaggio personaggio, TipoCanto tipo) {
-		return personaggio.isVivo() && conosciutoDa(personaggio.getClasse())
+		return personaggio.isVivo() && conosciutoDa(personaggio.getClasse(), tipo)
 				&& !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)
 				&& personaggio.getMagia() >= FabbricaCanti.crea(tipo, personaggio).getCostoLancio();
 	}

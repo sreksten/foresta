@@ -41,7 +41,15 @@ public class CantoIpnotico implements Canto {
 	 * chi ascolta. Con un coraggio nullo cede sempre, con una soggezione nulla mai.
 	 */
 	public static double probabilitaDiCedere(Personaggio cantore, Personaggio avversario) {
-		double soggezione = Math.max(0, cantore.getSoggezione());
+		return probabilitaDiCedere(cantore, avversario, 1.0d);
+	}
+
+	/**
+	 * Come {@link #probabilitaDiCedere(Personaggio, Personaggio)}, con la SOGGEZIONE del cantore moltiplicata (vedi
+	 * UrloDellaBanshee).
+	 */
+	public static double probabilitaDiCedere(Personaggio cantore, Personaggio avversario, double moltiplicatoreSoggezione) {
+		double soggezione = Math.max(0, cantore.getSoggezione()) * moltiplicatoreSoggezione;
 		double coraggio = Math.max(0, avversario.getCoraggio());
 		if (soggezione + coraggio <= 0) {
 			return 0.0d;

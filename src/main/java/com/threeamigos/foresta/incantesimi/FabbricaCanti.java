@@ -18,6 +18,8 @@ public final class FabbricaCanti {
 				return new CantoIpnotico(cantore);
 			case DI_VALORE:
 				return new CantoDiValore(cantore);
+			case URLO_DELLA_BANSHEE:
+				return new UrloDellaBanshee(cantore);
 			default:
 				throw new IllegalArgumentException("TipoCanto non gestito: " + tipo);
 		}

@@ -57,6 +57,8 @@ public enum Comando {
 	CANTO_CURATIVO("Canta il Canto Curativo"),
 	CANTO_IPNOTICO("Canta il Canto Ipnotico"),
 	CANTO_DI_VALORE("Canta il Canto di Valore"),
+	// Il canto che il bardo della locanda insegna al gruppo (vedi IntermezzoUrloDellaBanshee)
+	URLO_DELLA_BANSHEE("Canta l'Urlo della Banshee"),
 	// Annulla la scelta di un incantesimo
 	NO_INCANTESIMO("Annulla il lancio di un incantesimo"),
 

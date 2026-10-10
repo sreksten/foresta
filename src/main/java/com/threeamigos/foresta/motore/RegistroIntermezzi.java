@@ -96,6 +96,13 @@ public class RegistroIntermezzi {
 	}
 
 	/**
+	 * Se l'intermezzo fisso di quel tipo è già scattato (una volta sola per partita, vedi IntermezziMD).
+	 */
+	public static boolean isScattato(TipoIntermezzo tipo) {
+		return getIntermezziMD().isScattato(tipo.name());
+	}
+
+	/**
 	 * Ricorda che l'intermezzo è scattato: quelli dei passi nella loro missione, gli altri in IntermezziMD.
 	 */
 	public static void segnaScattato(Intermezzo intermezzo) {
