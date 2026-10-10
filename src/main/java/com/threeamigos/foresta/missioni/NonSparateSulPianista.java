@@ -19,8 +19,9 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 /**
  * Non sparate sul pianista: alla terza visita a una locanda nel bosco, a una visita tranquilla, il locandiere chiede
  * di riportare a casa un bardo che ha preso una sbronza solenne e non si regge in piedi, nella città più vicina. Il
- * bardo viaggia con il gruppo come ospite vulnerabile: arrivati, sua moglie paga e se lo porta in casa. Se per strada
- * muore, o la città viene distrutta, la missione fallisce. Il bardo è il BardoLocanda, lo stesso in tutto il mondo (vedi
+ * bardo viaggia con il gruppo come ospite, ma **non vulnerabile**: è così ubriaco che i mostri non si curano di lui, quindi
+ * non viene attaccato e non può morire. Arrivati, sua moglie paga e se lo porta in casa. Se la città viene distrutta, la
+ * missione fallisce. Il bardo è il BardoLocanda, lo stesso in tutto il mondo (vedi
  * RegistroPersonaggi): la missione si ripete, in altre locande, sempre con lui.
  * <ol>
  * <li>INCARICO, a inizio locazione, in una locanda nel bosco alla terza visita: l'intermezzo con il locandiere;</li>
@@ -110,18 +111,17 @@ public class NonSparateSulPianista extends MissioneAPassi {
 			case ACCETTAZIONE:
 				return prendiInScorta(MomentoControllo.IN_LOCAZIONE, this::nellaLocanda,
 								() -> RegistroPersonaggi.costruisciPersonaggio(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO),
-										EquipaggiamentoIniziale.livelloCasualeDalMondo()), true)
+										EquipaggiamentoIniziale.livelloCasualeDalMondo()), false)
 						.esegui(() -> {
 							aggiungiProprieta(CITTA, cittaPiuVicina().name());
 							aggiungiProprieta(LIVELLO_DELL_INCARICO, String.valueOf(Statistiche.getLivello()));
 							BusEventi.pubblica(new NotificaTestoParagrafo(getBardo() + " il bardo, che non si regge in piedi, si unisce al gruppo: va riportato a casa, "
-									+ Misc.conPreposizione("in", getNomeCitta()) + "."));
+									+ Misc.conPreposizione("in", getNomeCitta()) + ". È così ubriaco che i mostri non si curano nemmeno di lui."));
 							attivaMissione();
 						})
 						.poi(VIAGGIO);
 			case VIAGGIO:
-				return scorta(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getCoordinateLocazioneUnica(getCitta()),
-								() -> getBardo() + " il bardo non ce l'ha fatta: a casa non arriverà mai. Il locandiere non ve lo perdonerà.", false)
+				return scorta(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getCoordinateLocazioneUnica(getCitta()), false)
 						.falliscoSe(this::isCittaDistrutta, () -> getNomeCitta() + " è stata distrutta: " + getBardo() + " non ha più una casa a cui tornare.")
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaDellaMoglie().getPagine())
 						.poi(ARRIVO);

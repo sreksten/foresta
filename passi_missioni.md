@@ -110,7 +110,7 @@ Le ricompense in monete di questo catalogo sono le paghe del primo livello del m
 | `IlRapimento` | una donna chiede di liberare il marito, rapito da 4 goblin e tenuto in una grotta; 35 monete; nomi di ostaggio e capobanda dalla grammatica |
 | `IlSoccorso` | riportare a casa un ferito o un prigioniero fra i nemici (il taglialegna fra le arpie, il minatore e il troll…), da righe di `SOCCORSO` (`SoccorsoRichiesto`); è ripetibile |
 | `IlPellegrino` | accompagnare un pellegrino a un tempio (rivendicato, segnato, **sicuro**: niente avversari né oggetti a caso all'arrivo) e tornare dalla sorella; `PARTENZA`, `VIAGGIO`, `META`; 25 monete |
-| `NonSparateSulPianista` | alla **terza visita** a una locanda nel bosco, a una visita tranquilla, il locandiere affida il bardo ubriaco da riportare a casa nella città più vicina, come ospite vulnerabile; `INCARICO`, `ACCETTAZIONE`, `VIAGGIO`, `ARRIVO`; 20 monete; se muore per strada o la città è distrutta, fallisce; è su `MissioneAPassi` e non su `IncaricoInCitta` perché nasce in una locanda |
+| `NonSparateSulPianista` | alla **terza visita** a una locanda nel bosco, a una visita tranquilla, il locandiere affida il bardo ubriaco da riportare a casa nella città più vicina; il bardo è il `BardoLocanda` del registro dei personaggi, con il suo nome, e viaggia come ospite **non vulnerabile** (è così ubriaco che i mostri non si curano di lui: non viene attaccato e non può morire); `INCARICO`, `ACCETTAZIONE`, `VIAGGIO`, `ARRIVO`; 20 monete; se la città è distrutta, fallisce; è su `MissioneAPassi` e non su `IncaricoInCitta` perché nasce in una locanda |
 
 ### Raccolta e consegna
 

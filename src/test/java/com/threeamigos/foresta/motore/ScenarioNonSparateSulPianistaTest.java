@@ -66,7 +66,7 @@ class ScenarioNonSparateSulPianistaTest {
             assertEquals(pianista.getBardo(), ugolino.getNome());
             assertEquals(TipoPersonaggio.BARDO_LOCANDA, ugolino.getClasse());
             assertEquals(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome(), ugolino.getNome(), "è il bardo della locanda, con il suo nome");
-            assertTrue(partita.gruppo().isOspiteVulnerabile(ugolino));
+            assertFalse(partita.gruppo().isOspiteVulnerabile(ugolino), "è troppo ubriaco perché i mostri se ne curino");
 
             // La città è la più vicina alla locanda
             TipoLocazione citta = pianista.getCitta();
@@ -97,18 +97,20 @@ class ScenarioNonSparateSulPianistaTest {
     }
 
     @Test
-    void seIlBardoMuorePerStradaLaMissioneFallisce() {
+    void ilBardoNonSiPuoFerireNePerStradaNeInCombattimento() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(152)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             NonSparateSulPianista pianista = pianista();
             entraNellaLocanda(partita, pianista, unaLocandaNelBosco(), 2);
             Personaggio ugolino = pianista.getScortato().orElseThrow(AssertionError::new);
 
-            ugolino.muore("un lupo affamato");
-            pianista.controllaPreLocazione();
-            assertTrue(pianista.isFallita());
-            assertTrue(partita.gruppo().getOspiti().isEmpty());
-            assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith(pianista.getBardo() + " il bardo non ce l'ha fatta")), String.valueOf(partita.testi()));
+            assertFalse(partita.gruppo().isOspiteVulnerabile(ugolino));
+            // Gli avversari non lo scelgono mai come bersaglio, per quanti attacchi facciano
+            for (int i = 0; i < 500; i++) {
+                assertFalse(partita.gruppo().scegliOspiteBersaglio().isPresent(), "un avversario ha attaccato il bardo ubriaco");
+            }
+            assertTrue(ugolino.isVivo());
+            assertTrue(partita.testi().stream().anyMatch(t -> t.contains("i mostri non si curano nemmeno di lui")), String.valueOf(partita.testi()));
         }
     }
 
