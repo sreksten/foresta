@@ -70,6 +70,14 @@ SPADONE_LEGGENDARIO$
     LEGGENDA=Un giorno lo perse fra gli alberi e non se ne accorse nemmeno.;\
     LEGGENDA=Per un uomo è uno spadone che spacca le montagne. Per un gigante, una scheggia.
 
+    TIPO=SPADONE;NOME=la Falce del Tristo Mietitore;CHIAVE=FALCE_DEL_TRISTO_MIETITORE;BREVE=la Falce del Tristo Mietitore;\
+    DESCRIZIONE=che miete anche chi non è ancora maturo;LIVELLO=5;DANNI=20;COSTO=60;PESO=4;\
+    MOD=CORAGGIO +10%;MOD=SOGGEZIONE +3;\
+    INCANTAMENTO=MALEDIZIONE 12 0.15 Ombra sul Raccolto;INCANTAMENTO=NECROTICO 12 0.15 Mietitura d'Anima;\
+    LEGGENDA=Il Tristo Mietitore non si è mai concesso un giorno di ferie, e la sua falce non ha mai avuto bisogno di una passata di cote.;\
+    LEGGENDA=Chi ne viene sfiorato si sente addosso un'ombra, e chi è già in ombra non fa a tempo a stupirsene.;\
+    LEGGENDA=Dicono che i caduti si rialzino al suo passaggio, per qualche giorno, a dare una mano con il raccolto.
+
 MAZZA_LEGGENDARIA$
     TIPO=MAZZA;NOME=la Mazza dell'Oste Furioso;CHIAVE=MAZZA_DELL_OSTE;BREVE=la Mazza dell'Oste Furioso;SET=RECUPERO_CREDITI;\
     DESCRIZIONE=che ricorda a tutti di pagare il conto;LIVELLO=5;DANNI=17;COSTO=60;PESO=3;\

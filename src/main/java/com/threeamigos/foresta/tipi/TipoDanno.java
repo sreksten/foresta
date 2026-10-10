@@ -44,7 +44,7 @@ public enum TipoDanno {
     // L'assenza di tutto, la gravità o l'energia delle stelle. Astrazione spaziale che disintegra la materia.
     VUOTO(SupertipoDanno.MAGICO, "Vuoto"), // Void/Cosmic
     // Corruzione e influssi maligni. Può ridurre i punti vita o intaccare le statistiche massime dei personaggi.
-    MALEDIZIONE(SupertipoDanno.MAGICO, "Maledizione"), // Curse
+    MALEDIZIONE(SupertipoDanno.MAGICO, "Maledizione", TipoEffettoDiStato.MALEDETTO), // Curse
     ;
 
     private final SupertipoDanno superTipo;

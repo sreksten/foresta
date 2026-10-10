@@ -50,6 +50,9 @@ import java.util.stream.Collectors;
 
 public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, VistaGruppoGiocatore {
 
+	// Il leggendario che la modalità di prova mette nell'inventario del gruppo (vedi leggendari.txt)
+	private static final String CHIAVE_FALCE_DI_PROVA = "FALCE_DEL_TRISTO_MIETITORE";
+
 	public static GruppoGiocatore of(GruppoGiocatoreMD gruppoGiocatoreMD) {
 		return new GruppoGiocatore(gruppoGiocatoreMD);
 	}
@@ -200,6 +203,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			md.setPozioniSaluteGrande(99);
 			md.setPozioniMagia(99);
 			md.setPozioniMagiaGrande(99);
+			// La Falce del Tristo Mietitore, per provare la Mietitura
+			CatalogoLeggendari.getLeggendario(CHIAVE_FALCE_DI_PROVA).ifPresent(falce -> addArtefatto(falce.costruisci()));
 			Foresta.ottieniMappa();
 		}
 	}

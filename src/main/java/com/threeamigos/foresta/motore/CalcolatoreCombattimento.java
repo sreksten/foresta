@@ -403,8 +403,7 @@ public class CalcolatoreCombattimento {
                 Logger.log("Con difensore già MALEDETTO");
                 if (tipoDanno == TipoDanno.NECROTICO) {
                     // La SAGGEZZA del difensore riduce l'efficacia dei danni NECROTICO su un bersaglio MALEDETTO
-                    double moltiplicatoreMaledetto = Math.max(1.0d, 2.0d - (difensore.getSaggezza() / 100.0));
-                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * moltiplicatoreMaledetto;
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * moltiplicatoreMietitura(difensore);
                     dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.MIETITURA);
                     dannoRisultante.setMietituraAttiva(true);
                 } else if (tipoDanno == TipoDanno.SACRO) {
@@ -583,6 +582,15 @@ public class CalcolatoreCombattimento {
                     dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.VAPORIZZAZIONE);
                 }
 
+                // Un incantamento NECROTICO su un bersaglio MALEDETTO miete come un'arma necrotica: moltiplica il suo
+                // danno (non quello dell'arma) e, se il bersaglio è un minion quasi morto, lo fa risvegliare scheletro
+                if (elementoMagico == TipoDanno.NECROTICO && tipoDanno != TipoDanno.NECROTICO
+                        && difensore.hasEffettoDiStato(TipoEffettoDiStato.MALEDETTO)) {
+                    dannoQuestoIncantamento = dannoQuestoIncantamento * moltiplicatoreMietitura(difensore);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.MIETITURA);
+                    dannoRisultante.setMietituraAttiva(true);
+                }
+
                 // SOMMA i danni invece di sovrascriverli
                 dannoElementaleFinale += dannoQuestoIncantamento;
                 Logger.log(String.format("[INCANTAMENTO] Danno bonus accumulato da %s: %.2f", elementoMagico, dannoQuestoIncantamento));
@@ -690,6 +698,14 @@ public class CalcolatoreCombattimento {
         }
 
         return dannoRisultante;
+    }
+
+    /**
+     * Di quanto la Mietitura moltiplica il danno necrotico su un bersaglio MALEDETTO: la SAGGEZZA del difensore ne
+     * riduce l'efficacia.
+     */
+    private static double moltiplicatoreMietitura(Personaggio difensore) {
+        return Math.max(1.0d, 2.0d - (difensore.getSaggezza() / 100.0));
     }
 
     /**

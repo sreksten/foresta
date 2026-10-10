@@ -617,14 +617,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 
 		if (risultato.isMietituraAttiva() && isServitoreAvversario() && getSalute() * 5 < getSaluteMassima()) {
+			// A gruppo pieno il minion muore lo stesso, ma lo scheletro non ha posto
+			boolean cePosto = GruppoGiocatore.getIstanza().getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE;
 			if (isVivo()) {
-				muore("è stato mietuto e si è risvegliato come scheletro");
+				muore(cePosto ? "è stato mietuto e si è risvegliato come scheletro" : "è stato mietuto");
 			}
 			GruppoAvversario.getIstanza().rimuoviPersonaggio(this);
-			Scheletro scheletro = new Scheletro(getLivello());
-			scheletro.setMotivoNelGruppo(TipoMotivoNelGruppo.MIETITURA);
-			scheletro.setTempo(Costanti.MIETITURA_DURATA_TURNI + 1);
-			GruppoGiocatore.getIstanza().aggiungiPersonaggio(scheletro);
+			if (cePosto) {
+				Scheletro scheletro = new Scheletro(getLivello());
+				scheletro.setMotivoNelGruppo(TipoMotivoNelGruppo.MIETITURA);
+				scheletro.setTempo(Costanti.MIETITURA_DURATA_TURNI + 1);
+				GruppoGiocatore.getIstanza().aggiungiPersonaggio(scheletro);
+			}
 		}
 	}
 
