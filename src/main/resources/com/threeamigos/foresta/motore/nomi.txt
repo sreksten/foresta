@@ -112,6 +112,16 @@ NOME_MASCHILE$
     Zaccaria
     Zeffirino
 
+NOME_FEMMINILE$
+    Abelarda | Aglaia | Amabilia | Aurelia | Bacheca | Barbargilda | Beppina | Berta | Brigida
+    Brigitta | Brunilde | Clementina | Clotilde | Demetria | Elettra | Ermantina | Ermelinda | Ermenegilda
+    Ermengarda | Ermina | Eulalia | Eustachia | Fausta | Filomena | Gaudenzia | Genoveffa | Gisberta
+    Gisella | Gisla | Grugnita | Gualberta | Guendalina | Guidrigilda | Irene | Isolde | Labilia
+    Lalla | Lidia | Mafalda | Masticarda | Matilde | Onoria | Ortensia | Petunia | Pizzicarda | Rantastruzza
+    Rantola | Rasperonzola | Rina | Ruvidilda | Sardina | Scarpina | Seraphina | Serratura | Sferruccola
+    Sgrattina | Sgusciola | Sigfrida | Stuccata | Sventola | Teodolinda | Tullia | Vincenza | Zampata
+    Zavorra | Zelinda | Zita
+
 // ---------------------------------------------------------------------------------------------
 // Cognomi, uno per riga, in ordine alfabetico: la somma dei cognomi dei locandieri e dei protagonisti delle fiabe
 // ---------------------------------------------------------------------------------------------
@@ -366,6 +376,27 @@ DEGLI_ALTISONANTE$
     dei Vessilli Azzurri
 
 // ---------------------------------------------------------------------------------------------
+// I nomi dei personaggi non combattenti del mondo (vedi tipi.PersonaggioNoto e motore.RegistroPersonaggi)
+// ---------------------------------------------------------------------------------------------
+
+NOME_MASTRO
+    Mastro [NOME_MASCHILE]
+
+NOME_CAPITANO
+    [NOME_MASCHILE]
+
+NOME_ALTISONANTE
+    [NOME_MASCHILE] [DEGLI_ALTISONANTE]
+
+NOME_MOGLIE
+    [NOME_FEMMINILE]
+
+// Chi compare al volo (la levatrice...): un gruppo di nomi che si ripete, non one-shot
+NOME_COMPARSA
+    Adalgisa | Agnese | Berenice | Cesira | Dorotea | Fiorenza | Gelsomina | Ilaria | Ludovica | Marzia | Nerina | Olimpia
+    Palmira | Quirina | Rosalinda | Speranza | Tecla | Ursula | Violante | Zenobia
+
+// ---------------------------------------------------------------------------------------------
 // Dalle fiabe (fiabe.txt)
 // ---------------------------------------------------------------------------------------------
 
@@ -382,16 +413,6 @@ SOPRANNOME_PROTAGONISTA
 
 TITOLO_NOBILIARE
     Cavaliere | Barone | Conte | Visconte | Duca | Marchese | Re
-
-NOME_SEMPLICE_PRINCIPESSA$
-    Abelarda | Aglaia | Amabilia | Aurelia | Bacheca | Barbargilda | Beppina | Berta | Brigida
-    Brigitta | Brunilde | Clementina | Clotilde | Demetria | Elettra | Ermantina | Ermelinda | Ermenegilda
-    Ermengarda | Ermina | Eulalia | Eustachia | Fausta | Filomena | Gaudenzia | Genoveffa | Gisberta
-    Gisella | Gisla | Grugnita | Gualberta | Guendalina | Guidrigilda | Irene | Isolde | Labilia
-    Lalla | Lidia | Mafalda | Masticarda | Matilde | Onoria | Ortensia | Petunia | Pizzicarda | Rantastruzza
-    Rantola | Rasperonzola | Rina | Ruvidilda | Sardina | Scarpina | Seraphina | Serratura | Sferruccola
-    Sgrattina | Sgusciola | Sigfrida | Stuccata | Sventola | Teodolinda | Tullia | Vincenza | Zampata
-    Zavorra | Zelinda | Zita
 
 // ---------------------------------------------------------------------------------------------
 // Dalle missioni (missioni.txt): ostaggi, bardi, pellegrini, campioni, briganti, maghi, goblin

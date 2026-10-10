@@ -7,6 +7,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroMissioni;
+import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseMissione;
@@ -113,7 +114,10 @@ public class IlCampione extends MissioneAPassi {
 			case SFIDA:
 				return Passo.quando(MomentoControllo.POST_LOCAZIONE, this::sfidaVinta)
 						.affronta(this::getPosto, getIncontro())
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(getCampione() + " è battuto.")))
+						.esegui(() -> {
+							RegistroPersonaggi.segnaCampioneSconfitto(getCampione());
+							BusEventi.pubblica(new NotificaTestoParagrafo(getCampione() + " è battuto."));
+						})
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);

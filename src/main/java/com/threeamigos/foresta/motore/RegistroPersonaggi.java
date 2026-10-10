@@ -4,11 +4,17 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.modellodati.RegistroPersonaggiMD;
+import com.threeamigos.foresta.modellodati.ResidenteMD;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
+import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.tipi.PersonaggioNoto;
+import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RegistroPersonaggi {
 
@@ -103,6 +109,114 @@ public class RegistroPersonaggi {
 		getRegistroMD().rimuoviPersonaggioInLocazione(coordinate);
 	}
 	
+	// -- I personaggi del mondo con un nome proprio (vedi tipi.PersonaggioNoto e nomi.md) --
+
+	/**
+	 * Alla creazione del mondo: il borgomastro, il capitano delle guardie e i quattro artigiani di quella città, ognuno con
+	 * il suo nome (tutti diversi fra loro e da quelli già usciti) e la provenienza.
+	 */
+	static void creaIResidentiDellaCitta(TipoLocazione citta) {
+		for (PersonaggioNoto noto : PersonaggioNoto.values()) {
+			if (noto.getAmbito() == PersonaggioNoto.Ambito.PER_CITTA) {
+				getResidente(noto, citta);
+			}
+		}
+	}
+
+	/**
+	 * Alla creazione del mondo: il bardo della locanda, che viaggia di locanda in locanda ma è sempre lui, e sua moglie.
+	 */
+	static void creaIlBardoESuaMoglie() {
+		getResidente(PersonaggioNoto.BARDO);
+		getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO);
+	}
+
+	/**
+	 * Chi è nel mondo in un solo esemplare o compare al volo (il bardo, sua moglie, la levatrice): se non c'è ancora gli
+	 * si dà un nome.
+	 */
+	public static ResidenteMD getResidente(PersonaggioNoto noto) {
+		if (noto.getAmbito() != PersonaggioNoto.Ambito.GLOBALE && noto.getAmbito() != PersonaggioNoto.Ambito.COMPARSA) {
+			throw new IllegalArgumentException(noto + " non è unico: serve la città (vedi getResidente(PersonaggioNoto, TipoLocazione))");
+		}
+		return residente(noto, null, null);
+	}
+
+	/**
+	 * Chi è di una città (il borgomastro, il capitano, l'alchimista, l'armaiolo, il venditore di pergamene, l'incantatore).
+	 */
+	public static ResidenteMD getResidente(PersonaggioNoto noto, TipoLocazione citta) {
+		if (noto.getAmbito() != PersonaggioNoto.Ambito.PER_CITTA) {
+			throw new IllegalArgumentException(noto + " non è di una città");
+		}
+		return residente(noto, citta.name(), citta.getNomeDellaCitta());
+	}
+
+	private static ResidenteMD residente(PersonaggioNoto noto, String dettaglio, String provenienza) {
+		String chiave = noto.chiave(dettaglio);
+		ResidenteMD residente = getRegistroMD().getResidente(chiave);
+		if (residente == null) {
+			if (noto.getProduzioneNomi() == null) {
+				throw new IllegalStateException(noto + " non ha un nome da nomi.txt: lo decide chi lo crea");
+			}
+			residente = new ResidenteMD(ProduttoreDiTestiCasuale.nomeDiPersonaggioNoto(noto.getProduzioneNomi()),
+					noto.isConProvenienza() ? provenienza : null, noto.getTipo());
+			getRegistroMD().aggiungiResidente(chiave, residente);
+		}
+		return residente;
+	}
+
+	/**
+	 * Il nome come lo si legge nelle scene: "Mastro Ferruccio da Ruuna" per chi è di una città, il solo nome per gli altri.
+	 */
+	public static String getNomeCompleto(ResidenteMD residente) {
+		if (residente.getProvenienza() == null) {
+			return residente.getNome();
+		}
+		return residente.getNome() + " " + Misc.conPreposizione("da", residente.getProvenienza());
+	}
+
+	/**
+	 * Il personaggio di chi ha una classe, con il suo nome proprio (non la provenienza), a livello 1 e senza equipaggiamento:
+	 * per le scene e per le missioni che lo portano con il gruppo.
+	 */
+	public static Personaggio costruisciPersonaggio(ResidenteMD residente) {
+		if (residente.getClasse() == null) {
+			throw new IllegalStateException(residente.getNome() + " non ha ancora una classe");
+		}
+		Personaggio personaggio = FabbricaPersonaggi.crea(residente.getClasse(), 1);
+		personaggio.getModelloDati().setNome(residente.getNome());
+		return personaggio;
+	}
+
+	/**
+	 * Un campione di una sfida (vedi LaSfidaDeiCampioni), con il nome e l'epiteto che gli ha dato la missione. Resta nel
+	 * registro anche dopo essere stato battuto.
+	 */
+	public static void registraCampione(String nome, TipoPersonaggio classe) {
+		getRegistroMD().aggiungiResidente(PersonaggioNoto.CAMPIONE.chiave(nome), new ResidenteMD(nome, null, classe));
+	}
+
+	public static void segnaCampioneSconfitto(String nome) {
+		ResidenteMD campione = getRegistroMD().getResidente(PersonaggioNoto.CAMPIONE.chiave(nome));
+		if (campione != null) {
+			campione.setSconfitto(true);
+		}
+	}
+
+	/**
+	 * I campioni incontrati finora, nell'ordine in cui sono stati registrati.
+	 */
+	public static List<ResidenteMD> getCampioni() {
+		List<ResidenteMD> campioni = new ArrayList<>();
+		for (Map.Entry<String, ResidenteMD> voce : getRegistroMD().getResidenti().entrySet()) {
+			if (voce.getKey().startsWith(PersonaggioNoto.CAMPIONE.chiave(""))) {
+				campioni.add(voce.getValue());
+			}
+		}
+		return campioni;
+	}
+
 	private static void aggiungiPersonaggio(Personaggio personaggio) {
 		getRegistroMD().aggiungiPersonaggio(personaggio.getModelloDati());
 	}

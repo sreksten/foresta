@@ -14,6 +14,7 @@ import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
@@ -55,10 +56,10 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	/**
-	 * Il nome del bardo, da missioni.txt.
+	 * Il nome del bardo: quello del bardo della locanda, che è lo stesso in tutto il mondo (vedi RegistroPersonaggi).
 	 */
 	public String getBardo() {
-		return parametro(BARDO, ProduttoreDiTestiCasuale::nomeBardo);
+		return parametro(BARDO, () -> RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome());
 	}
 
 	@Override

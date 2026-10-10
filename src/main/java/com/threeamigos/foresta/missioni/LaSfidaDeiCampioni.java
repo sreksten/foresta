@@ -7,6 +7,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
@@ -187,6 +188,7 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 			TipoLocazione luogo = luoghi.remove(Dado.tiraAncheAUnaFaccia(luoghi.size()) - 1);
 			boolean donna = FabbricaPersonaggi.modello(classe).getSesso() == Personaggio.Sesso.FEMMINA;
 			String nome = ProduttoreDiTestiCasuale.rigaDiMissioni(donna ? "NOME_CAMPIONESSA" : "NOME_CAMPIONE");
+			RegistroPersonaggi.registraCampione(nome, classe);
 			campioni.add(IlCampione.di(classe, nome, luogo));
 		}
 		return campioni;

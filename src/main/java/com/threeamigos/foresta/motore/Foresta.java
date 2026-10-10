@@ -160,6 +160,8 @@ public class Foresta {
 		List<ProduttoreDiTestiCasuale.DatiLocanda> poolDatiLocanda = ProduttoreDiTestiCasuale.getDatiLocanda(numeroCitta + numeroLocandeMax);
 
 		costruisciCittaEPosizionaPersonaggi(poolDatiLocanda);
+		// Dopo i locandieri e le persone delle città, e senza azzerare i nomi: nessuno ha il nome di un altro
+		RegistroPersonaggi.creaIlBardoESuaMoglie();
 		// I castelli degli alleati del Drago non si costruiscono qui: li rivendica ciascuno la propria missione
 		// all'inizio della partita (vedi RegistroMissioni.rivendicaPerLocazioneUnica)
 		costruisciLocandeEPosizionaPersonaggi(poolDatiLocanda);
@@ -258,6 +260,7 @@ public class Foresta {
 						? costruisciLocazioneUnica(tipoLocazione, false)
 						: costruisciLocazioneUnica(tipoLocazione, getCoordinateLibere(quadranti.remove(0)), false);
 				Locanda.impostaDatiLocanda(getLocazioneMD(coordinate), poolDatiLocanda.remove(0));
+				RegistroPersonaggi.creaIResidentiDellaCitta(tipoLocazione);
 				RegistroArtefatti.riempiMagazzini(coordinate, GeneratoreArtefatti.istanza());
 				Personaggio personaggioDisponibile = RegistroPersonaggi.getPersonaggioDisponibile();
 				if (personaggioDisponibile != null) {

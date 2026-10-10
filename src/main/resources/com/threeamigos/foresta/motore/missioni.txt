@@ -8,13 +8,10 @@
 // Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
 
 // ---------------------------------------------------------------------------------------------
-// Ostaggi (vedi IlRapimento), bardi (vedi NonSparateSulPianista) e pellegrini (vedi IlPellegrino): un nome maschile
+// Ostaggi (vedi IlRapimento) e pellegrini (vedi IlPellegrino): un nome maschile (il bardo ha quello del registro dei personaggi)
 // ---------------------------------------------------------------------------------------------
 
 NOME_OSTAGGIO
-    [NOME_MASCHILE]
-
-NOME_BARDO
     [NOME_MASCHILE]
 
 NOME_PELLEGRINO

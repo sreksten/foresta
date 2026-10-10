@@ -1,0 +1,87 @@
+package com.threeamigos.foresta.tipi;
+
+/**
+ * I personaggi non combattenti del mondo che hanno un nome proprio e che il registro dei personaggi tiene in conto
+ * (vedi RegistroPersonaggi.getResidente): ognuno dice di che classe è, a quale ambito appartiene e da quale produzione di
+ * nomi.txt prende il nome. Il piano è in nomi.md.
+ * <p>
+ * Il locandiere è qui per completezza, ma il suo nome non sta nel registro: lo decide la locanda (vedi
+ * Locanda.LOCANDA_NOME_LOCANDIERE). Il campione di una sfida ha un nome ed epiteto scelti dalla missione e la classe
+ * che gli ha dato.
+ */
+public enum PersonaggioNoto {
+
+	BARDO(TipoPersonaggio.BARDO_LOCANDA, Ambito.GLOBALE, "NOME_MASCHILE", false),
+	MOGLIE_DEL_BARDO(TipoPersonaggio.MOGLIE_DEL_BARDO, Ambito.GLOBALE, "NOME_MOGLIE", false),
+
+	BORGOMASTRO(null, Ambito.PER_CITTA, "NOME_ALTISONANTE", true),
+	CAPITANO(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, Ambito.PER_CITTA, "NOME_CAPITANO", true),
+	ALCHIMISTA(TipoPersonaggio.ALCHIMISTA, Ambito.PER_CITTA, "NOME_MASTRO", true),
+	ARMAIOLO(TipoPersonaggio.ARMAIOLO, Ambito.PER_CITTA, "NOME_MASTRO", true),
+	VENDITORE_DI_PERGAMENE(TipoPersonaggio.VENDITORE_DI_PERGAMENE, Ambito.PER_CITTA, "NOME_MASTRO", true),
+	INCANTATORE(TipoPersonaggio.INCANTATORE, Ambito.PER_CITTA, "NOME_MASTRO", true),
+
+	LOCANDIERE(TipoPersonaggio.LOCANDIERE, Ambito.PER_LOCANDA, null, false),
+
+	LEVATRICE(null, Ambito.COMPARSA, "NOME_COMPARSA", false),
+
+	CAMPIONE(null, Ambito.PER_SFIDA, null, false);
+
+	public enum Ambito {
+		/** Uno solo in tutto il mondo (il bardo e sua moglie). */
+		GLOBALE,
+		/** Uno per città: la chiave è il personaggio più la città. */
+		PER_CITTA,
+		/** Uno per locanda: il nome sta nella locanda. */
+		PER_LOCANDA,
+		/** Compare al volo, alla prima richiesta, con un nome da un gruppo che si ripete. */
+		COMPARSA,
+		/** Uno per sfida: nome e classe li dà la missione. */
+		PER_SFIDA
+	}
+
+	private final TipoPersonaggio tipo;
+	private final Ambito ambito;
+	private final String produzioneNomi;
+	private final boolean conProvenienza;
+
+	PersonaggioNoto(TipoPersonaggio tipo, Ambito ambito, String produzioneNomi, boolean conProvenienza) {
+		this.tipo = tipo;
+		this.ambito = ambito;
+		this.produzioneNomi = produzioneNomi;
+		this.conProvenienza = conProvenienza;
+	}
+
+	/**
+	 * La classe del personaggio, o null se non ne ha ancora una (il borgomastro, la levatrice) o la dà la missione
+	 * (il campione).
+	 */
+	public TipoPersonaggio getTipo() {
+		return tipo;
+	}
+
+	public Ambito getAmbito() {
+		return ambito;
+	}
+
+	/**
+	 * La produzione di nomi.txt da cui prende il nome, o null se il nome lo decide un altro.
+	 */
+	public String getProduzioneNomi() {
+		return produzioneNomi;
+	}
+
+	/**
+	 * Se il suo nome completo porta la provenienza: "Mastro Ferruccio da Ruuna".
+	 */
+	public boolean isConProvenienza() {
+		return conProvenienza;
+	}
+
+	/**
+	 * La chiave con cui il registro lo ricorda: la voce, e per chi ha un ambito più stretto il luogo o la sfida.
+	 */
+	public String chiave(String dettaglio) {
+		return dettaglio == null ? name() : name() + ":" + dettaglio;
+	}
+}

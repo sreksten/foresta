@@ -11,9 +11,25 @@ public class RegistroPersonaggiMD implements Serializzabile {
 
 	private final Map<CoordinateMD, PersonaggioMD> personaggiInLocazione = new HashMap<>();
 
+	// Chi ha un nome nel mondo senza stare in una locazione (vedi tipi.PersonaggioNoto), per chiave
+	private final Map<String, ResidenteMD> residenti = new LinkedHashMap<>();
+
 	public void reimposta() {
 		elencoIniziale.clear();
 		personaggiInLocazione.clear();
+		residenti.clear();
+	}
+
+	public final ResidenteMD getResidente(String chiave) {
+		return residenti.get(chiave);
+	}
+
+	public final void aggiungiResidente(String chiave, ResidenteMD residente) {
+		residenti.put(chiave, residente);
+	}
+
+	public final Map<String, ResidenteMD> getResidenti() {
+		return Collections.unmodifiableMap(residenti);
 	}
 
 	public void aggiungiPersonaggio(PersonaggioMD personaggioMD) {
@@ -56,6 +72,10 @@ public class RegistroPersonaggiMD implements Serializzabile {
 			stream.println(entry.getKey().getY());
 			entry.getValue().salva(stream);
 		}
+		stream.println(residenti.size());
+		for (Map.Entry<String, ResidenteMD> entry : residenti.entrySet()) {
+			entry.getValue().salva(stream, entry.getKey());
+		}
 	}
 
 	@Override
@@ -69,6 +89,13 @@ public class RegistroPersonaggiMD implements Serializzabile {
 			PersonaggioMD personaggio = new PersonaggioMD();
 			personaggio.leggi(stream);
 			personaggiInLocazione.put(coordinate, personaggio);
+		}
+		residenti.clear();
+		int numeroResidenti = Integer.parseInt(stream.readLine());
+		for (int i = 0; i < numeroResidenti; i++) {
+			LettoreCampi campi = new LettoreCampi(stream.readLine());
+			String chiave = campi.testo();
+			residenti.put(chiave, ResidenteMD.leggi(campi));
 		}
 	}
 }

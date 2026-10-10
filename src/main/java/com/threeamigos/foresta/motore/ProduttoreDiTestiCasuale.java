@@ -148,10 +148,11 @@ public class ProduttoreDiTestiCasuale {
 	}
 
 	/**
-	 * Il nome di un bardo (vedi missioni.txt).
+	 * Un nome di nomi.txt per un personaggio del mondo (vedi tipi.PersonaggioNoto): "Mastro Ferruccio", "Gualtiero"...
+	 * I nomi one-shot sono quelli della partita: non si ripetono finché non si azzerano le sezioni statiche.
 	 */
-	public static String nomeBardo() {
-		return produciDaMissioni("NOME_BARDO");
+	public static String nomeDiPersonaggioNoto(String produzione) {
+		return produciDaMissioni(produzione);
 	}
 
 	/**

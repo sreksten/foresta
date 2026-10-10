@@ -819,10 +819,10 @@ ATTRIBUTO_PRINCIPESSA
 	goffa | permalosa | dotata di un caratteraccio leggendario
 
 CREA_NOME_PRINCIPESSA
-	[*NOME_PRINCIPESSA] | [*NOME_PRINCIPESSA] [NOME_SEMPLICE_PRINCIPESSA]
+	[*NOME_PRINCIPESSA] | [*NOME_PRINCIPESSA] [NOME_FEMMINILE]
 
 NOME_PRINCIPESSA
-    [NOME_SEMPLICE_PRINCIPESSA]
+    [NOME_FEMMINILE]
 
 SVOLGIMENTO_PRINCIPESSA
 	Il nostro [*NOME_PROTAGONISTA] ovviamente se ne fregò e la poverina fece una { finaccia | triste fine | misera fine }.

@@ -1,0 +1,232 @@
+package com.threeamigos.foresta.motore;
+
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.missioni.NonSparateSulPianista;
+import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.RegistroPersonaggiMD;
+import com.threeamigos.foresta.modellodati.ResidenteMD;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.PersonaggioNoto;
+import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * I nomi dei personaggi non combattenti del mondo (vedi nomi.md): il bardo e sua moglie, le persone di ogni città e i
+ * campioni delle sfide, creati con il mondo, diversi fra loro e uguali dopo un salvataggio.
+ */
+class NomiDeiPersonaggiDelMondoTest {
+
+	@BeforeEach
+	void nuovaPartita() {
+		BusEventi.azzera();
+		Dado.ripristina();
+		Dado.impostaSeme(7);
+		ModelloDati.setIstanza(new ModelloDati());
+		GruppoGiocatore.azzeraIstanza();
+		GruppoAvversario.azzeraIstanza();
+		Notizie.registrati();
+		Statistiche.registrati();
+		RegistroArtefatti.registrati();
+		RegistroMissioni.registrati();
+		Foresta.reimposta();
+	}
+
+	private static List<TipoLocazione> citta() {
+		List<TipoLocazione> citta = new ArrayList<>();
+		for (TipoLocazione tipo : TipoLocazione.values()) {
+			if (tipo.getCategoria() == CategoriaLocazione.CITTA) {
+				citta.add(tipo);
+			}
+		}
+		return citta;
+	}
+
+	@Test
+	void ogniCittaHaIlSuoPersonaleConLaProvenienza() {
+		for (TipoLocazione citta : citta()) {
+			for (PersonaggioNoto noto : PersonaggioNoto.values()) {
+				if (noto.getAmbito() == PersonaggioNoto.Ambito.PER_CITTA) {
+					ResidenteMD residente = RegistroPersonaggi.getResidente(noto, citta);
+					assertNotNull(residente.getNome(), noto + " di " + citta);
+					assertEquals(citta.getNomeDellaCitta(), residente.getProvenienza());
+					assertTrue(RegistroPersonaggi.getNomeCompleto(residente).endsWith(" da " + citta.getNomeDellaCitta()),
+							RegistroPersonaggi.getNomeCompleto(residente));
+				}
+			}
+		}
+	}
+
+	@Test
+	void gliArtigianiSonoMastri() {
+		for (TipoLocazione citta : citta()) {
+			assertTrue(RegistroPersonaggi.getResidente(PersonaggioNoto.ARMAIOLO, citta).getNome().startsWith("Mastro "));
+			assertTrue(RegistroPersonaggi.getResidente(PersonaggioNoto.INCANTATORE, citta).getNome().startsWith("Mastro "));
+		}
+	}
+
+	@Test
+	void ilBardoELaMoglieNonHannoProvenienza() {
+		ResidenteMD bardo = RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO);
+		ResidenteMD moglie = RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO);
+		assertNull(bardo.getProvenienza());
+		assertNull(moglie.getProvenienza());
+		assertEquals(TipoPersonaggio.BARDO_LOCANDA, bardo.getClasse());
+		assertEquals(TipoPersonaggio.MOGLIE_DEL_BARDO, moglie.getClasse());
+		assertEquals(bardo.getNome(), RegistroPersonaggi.getNomeCompleto(bardo));
+	}
+
+	@Test
+	void nessunNomeDelMondoSiRipete() {
+		Set<String> nomi = new HashSet<>();
+		int quanti = 0;
+		for (TipoLocazione citta : citta()) {
+			for (PersonaggioNoto noto : PersonaggioNoto.values()) {
+				if (noto.getAmbito() == PersonaggioNoto.Ambito.PER_CITTA) {
+					nomi.add(RegistroPersonaggi.getResidente(noto, citta).getNome());
+					quanti++;
+				}
+			}
+		}
+		nomi.add(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome());
+		nomi.add(RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome());
+		assertEquals(quanti + 2, nomi.size(), "i nomi del mondo dovrebbero essere tutti diversi: " + nomi);
+	}
+
+	@Test
+	void nessunNomeDiBattesimoDelMondoVieneDaiLocandieri() {
+		Set<String> paroleDeiLocandieri = new HashSet<>();
+		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
+			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
+				String locandiere = Foresta.getLocazioneMD(new CoordinateMD(x, y)).ottieniProprieta(Locanda.LOCANDA_NOME_LOCANDIERE);
+				if (locandiere != null) {
+					for (String parola : locandiere.split("[ ']")) {
+						paroleDeiLocandieri.add(parola);
+					}
+				}
+			}
+		}
+		assertFalse(paroleDeiLocandieri.isEmpty(), "dovrebbero esserci dei locandieri");
+		List<ResidenteMD> residenti = new ArrayList<>();
+		for (TipoLocazione citta : citta()) {
+			for (PersonaggioNoto noto : PersonaggioNoto.values()) {
+				if (noto.getAmbito() == PersonaggioNoto.Ambito.PER_CITTA) {
+					residenti.add(RegistroPersonaggi.getResidente(noto, citta));
+				}
+			}
+		}
+		residenti.add(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO));
+		residenti.add(RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO));
+		for (ResidenteMD residente : residenti) {
+			String nomeDiBattesimo = residente.getNome().replaceFirst("^Mastro ", "").split(" ")[0];
+			assertFalse(paroleDeiLocandieri.contains(nomeDiBattesimo), nomeDiBattesimo + " è anche di un locandiere");
+		}
+	}
+
+	@Test
+	void nessunNomeSiRipeteConMoltiSemi() {
+		for (int seme = 1; seme <= 40; seme++) {
+			Dado.impostaSeme(seme);
+			Foresta.reimposta();
+			Set<String> nomi = new HashSet<>();
+			int quanti = 0;
+			for (TipoLocazione citta : citta()) {
+				for (PersonaggioNoto noto : PersonaggioNoto.values()) {
+					if (noto.getAmbito() == PersonaggioNoto.Ambito.PER_CITTA) {
+						nomi.add(RegistroPersonaggi.getResidente(noto, citta).getNome());
+						quanti++;
+					}
+				}
+			}
+			nomi.add(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome());
+			nomi.add(RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome());
+			assertEquals(quanti + 2, nomi.size(), "seme " + seme + ": " + nomi);
+		}
+	}
+
+	@Test
+	void ilBardoDellaMissioneEQuelloDellaLocanda() {
+		String nome = RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome();
+		assertEquals(nome, new NonSparateSulPianista().getBardo());
+	}
+
+	@Test
+	void ilPersonaggioCostruitoHaIlNomeDelResidente() {
+		ResidenteMD bardo = RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO);
+		Personaggio personaggio = RegistroPersonaggi.costruisciPersonaggio(bardo);
+		assertEquals(TipoPersonaggio.BARDO_LOCANDA, personaggio.getClasse());
+		assertEquals(bardo.getNome(), personaggio.getNomeProprio().orElse(null));
+	}
+
+	@Test
+	void ilBorgomastroNonHaAncoraUnaClasse() {
+		ResidenteMD borgomastro = RegistroPersonaggi.getResidente(PersonaggioNoto.BORGOMASTRO, citta().get(0));
+		assertNull(borgomastro.getClasse());
+		assertThrows(IllegalStateException.class, () -> RegistroPersonaggi.costruisciPersonaggio(borgomastro));
+	}
+
+	@Test
+	void laLevataceCompareAlVoloEResta() {
+		ResidenteMD levatrice = RegistroPersonaggi.getResidente(PersonaggioNoto.LEVATRICE);
+		assertNotNull(levatrice.getNome());
+		assertSame(levatrice, RegistroPersonaggi.getResidente(PersonaggioNoto.LEVATRICE));
+	}
+
+	@Test
+	void iCampioniRestanoNelRegistroDopoLaSconfitta() {
+		RegistroPersonaggi.registraCampione("Bradamante la Fulva", TipoPersonaggio.GUERRIERA);
+		assertEquals(1, RegistroPersonaggi.getCampioni().size());
+		assertFalse(RegistroPersonaggi.getCampioni().get(0).isSconfitto());
+		RegistroPersonaggi.segnaCampioneSconfitto("Bradamante la Fulva");
+		assertTrue(RegistroPersonaggi.getCampioni().get(0).isSconfitto());
+		assertEquals("Bradamante la Fulva", RegistroPersonaggi.getCampioni().get(0).getNome());
+	}
+
+	@Test
+	void iResidentiSopravvivonoAlSalvataggio() throws IOException {
+		RegistroPersonaggi.registraCampione("Ferraguto il Tremendo", TipoPersonaggio.GUERRIERO);
+		RegistroPersonaggi.segnaCampioneSconfitto("Ferraguto il Tremendo");
+		RegistroPersonaggiMD originale = ModelloDati.getIstanza().getRegistroPersonaggiMD();
+
+		StringWriter scritto = new StringWriter();
+		PrintWriter stream = new PrintWriter(scritto);
+		originale.salva(stream);
+		stream.flush();
+		RegistroPersonaggiMD riletto = new RegistroPersonaggiMD();
+		riletto.leggi(new BufferedReader(new StringReader(scritto.toString())));
+
+		assertEquals(originale.getResidenti().keySet(), riletto.getResidenti().keySet());
+		for (String chiave : originale.getResidenti().keySet()) {
+			ResidenteMD prima = originale.getResidente(chiave);
+			ResidenteMD dopo = riletto.getResidente(chiave);
+			assertEquals(prima.getNome(), dopo.getNome(), chiave);
+			assertEquals(prima.getProvenienza(), dopo.getProvenienza(), chiave);
+			assertEquals(prima.getClasse(), dopo.getClasse(), chiave);
+			assertEquals(prima.isSconfitto(), dopo.isSconfitto(), chiave);
+		}
+		assertTrue(riletto.getResidente(PersonaggioNoto.CAMPIONE.chiave("Ferraguto il Tremendo")).isSconfitto());
+	}
+
+	@Test
+	void unaNuovaPartitaDimenticaIResidenti() {
+		RegistroPersonaggi.registraCampione("Uberto l'Invitto", TipoPersonaggio.GUERRIERO);
+		Foresta.reimposta();
+		assertTrue(RegistroPersonaggi.getCampioni().isEmpty());
+	}
+}

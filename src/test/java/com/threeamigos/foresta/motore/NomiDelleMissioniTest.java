@@ -9,14 +9,13 @@ import java.util.function.Supplier;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * La grammatica missioni.txt dà i nomi di ostaggi, bardi e capibanda.
+ * La grammatica missioni.txt dà i nomi di ostaggi e capibanda.
  */
 class NomiDelleMissioniTest {
 
     @Test
-    void ostaggiBardiECapibandaHannoNomiVari() {
+    void ostaggiECapibandaHannoNomiVari() {
         verificaNomi(ProduttoreDiTestiCasuale::nomeOstaggio, 10);
-        verificaNomi(ProduttoreDiTestiCasuale::nomeBardo, 10);
         verificaNomi(ProduttoreDiTestiCasuale::nomeCapobanda, 15);
     }
 

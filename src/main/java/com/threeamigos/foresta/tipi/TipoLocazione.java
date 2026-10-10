@@ -53,6 +53,18 @@ public enum TipoLocazione {
 		return nomeProprio;
 	}
 
+	/**
+	 * Il nome di una città senza articolo né "la città di": "Ruuna"; null per le altre locazioni. È la provenienza dei
+	 * suoi abitanti ("Mastro Ferruccio da Ruuna").
+	 */
+	public String getNomeDellaCitta() {
+		if (categoria != CategoriaLocazione.CITTA || nomeProprio == null) {
+			return null;
+		}
+		String prefisso = "la città di ";
+		return nomeProprio.startsWith(prefisso) ? nomeProprio.substring(prefisso.length()) : nomeProprio;
+	}
+
 	public CategoriaLocazione getCategoria() {
 		return categoria;
 	}
