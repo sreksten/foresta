@@ -8,6 +8,7 @@ import com.threeamigos.foresta.motore.GrammarBean.InvalidGrammarException;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.Misc;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -218,6 +219,17 @@ public class ProduttoreDiTestiCasuale {
 			}
 		}
 		return Optional.empty();
+	}
+
+	/**
+	 * La prima battuta della leggenda, che dice di quale oggetto si parla (vedi INTRODUZIONE_LEGGENDA in leggendari.txt).
+	 *
+	 * @param nomeBreve il nome breve dell'oggetto, con l'articolo: "lo Scudo Fiscale"
+	 */
+	public static synchronized String introduzioneDellaLeggenda(String nomeBreve) {
+		leggendari.addFixedProduction("DELL_OGGETTO", Misc.conPreposizione("di", nomeBreve));
+		leggendari.addFixedProduction("L_OGGETTO", nomeBreve);
+		return leggendari.produce("INTRODUZIONE_LEGGENDA").get(0).trim();
 	}
 
 	/**

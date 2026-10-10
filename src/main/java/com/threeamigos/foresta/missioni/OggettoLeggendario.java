@@ -168,6 +168,15 @@ public final class OggettoLeggendario {
 	}
 
 	/**
+	 * Se la prima battuta della leggenda nomina già l'oggetto ("Conoscete la storia dello Scudo Fiscale?"), e quindi non
+	 * serve un'introduzione.
+	 */
+	public boolean laLeggendaNominaLOggetto() {
+		String nomeSenzaArticolo = nomeBreve.replaceFirst("^(il|lo|la|gli|le|i) |^l'", "");
+		return leggenda.get(0).toLowerCase().contains(nomeSenzaArticolo.toLowerCase());
+	}
+
+	/**
 	 * La chiave del set di cui è un pezzo (vedi SetLeggendario), o null.
 	 */
 	public String getSet() {

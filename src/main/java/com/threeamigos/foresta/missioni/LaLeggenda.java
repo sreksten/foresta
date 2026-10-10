@@ -16,6 +16,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.Comparator;
@@ -240,6 +241,10 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 	private List<PaginaIntermezzo> getPagineDelRacconto() {
 		OggettoLeggendario leggendario = getLeggendario();
 		Racconto racconto = nuovoRacconto();
+		// Si dice subito di quale oggetto si parla, se la leggenda non lo fa da sé
+		if (!leggendario.laLeggendaNominaLOggetto()) {
+			racconto.narra(ProduttoreDiTestiCasuale.introduzioneDellaLeggenda(leggendario.getNomeBreve()));
+		}
 		// Se è un altro pezzo di un set già cominciato, il narratore lo dice subito
 		PescaLeggendaria.battutaDelSet(leggendario, giaPescati()).ifPresent(racconto::narra);
 		leggendario.getLeggenda().forEach(racconto::narra);

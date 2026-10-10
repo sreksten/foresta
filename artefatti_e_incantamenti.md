@@ -41,7 +41,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 
 ### Contenuti nuovi
 
-- [x] **Artefatti leggendari**, scritti a mano, da mettere nei templi e come premi delle missioni (§2, "Rarità"). Stanno in `leggendari.txt`, una riga per leggendario con le sue proprietà e la sua leggenda (la Spada della Morte, lo Scudo Fiscale e una ventina d'altri, di ogni tipo), e sono i premi delle leggende dell'armaiolo e del locandiere (vedi passi_missioni.md, "Le leggende"). Per aggiungerne basta una riga.
+- [x] **Artefatti leggendari**, scritti a mano, da mettere nei templi e come premi delle missioni (§2, "Rarità"). Stanno in `leggendari.txt`, una riga per leggendario con le sue proprietà e la sua leggenda (la Spada della Morte, lo Scudo Fiscale e una ventina d'altri, di ogni tipo), e sono i premi delle leggende dell'armaiolo e del locandiere (vedi passi_missioni.md, "Le leggende"). Per aggiungerne basta una riga. Se la prima `LEGGENDA` di un oggetto non ne nomina il nome breve, la leggenda comincia con una frase di `INTRODUZIONE_LEGGENDA` (stesso file; sette varianti: «Avete mai sentito parlare dello Scudo Fiscale?», «Conoscete la storia…»), prodotta da `ProduttoreDiTestiCasuale.introduzioneDellaLeggenda` e messa in testa al racconto da `LaLeggenda`; oggi la saltano 6 oggetti su 30 (`OggettoLeggendario.laLeggendaNominaLOggetto`).
 - [ ] **Negozi sparsi nella foresta:** un paio per tipo, tra armaiolo, alchimista e incantatore.
 - [ ] **Grammatica per `GeneratoreArtefatti`:** formato definito (§7); spada, armatura, veste, elmo, scudo e schinieri vengono da lì per metà. Da fare:
   - [ ] **Stesso attributo due volte** (es. `SOGGEZIONE` +2 e +1): sommarli in `generaDaGrammatica` o evitarli nella grammatica.
