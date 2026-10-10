@@ -17,6 +17,9 @@ import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Un incarico preso in una città: un mandante chiede un servizio, il gruppo lo fa e torna in quella città a
  * riscuotere.
@@ -153,51 +156,94 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 		return nomeDellaCitta(getCitta());
 	}
 
-	private static final String IL_CAPITANO_DELLE_GUARDIE = "il capitano delle guardie";
+	/**
+	 * I mandanti che nel mondo hanno un nome proprio (vedi RegistroPersonaggi e tipi.PersonaggioNoto), come li scrivono le righe
+	 * delle missioni. Il locandiere non c'è: il suo nome sta nella locanda.
+	 */
+	private static final Map<String, PersonaggioNoto> MANDANTI_CON_NOME = new HashMap<>();
+
+	static {
+		MANDANTI_CON_NOME.put("il capitano delle guardie", PersonaggioNoto.CAPITANO);
+		MANDANTI_CON_NOME.put("l'alchimista", PersonaggioNoto.ALCHIMISTA);
+		MANDANTI_CON_NOME.put("l'armaiolo", PersonaggioNoto.ARMAIOLO);
+		MANDANTI_CON_NOME.put("il venditore di pergamene", PersonaggioNoto.VENDITORE_DI_PERGAMENE);
+		MANDANTI_CON_NOME.put("l'incantatore", PersonaggioNoto.INCANTATORE);
+		MANDANTI_CON_NOME.put("il borgomastro", PersonaggioNoto.BORGOMASTRO);
+		MANDANTI_CON_NOME.put("il Borgomastro", PersonaggioNoto.BORGOMASTRO);
+		MANDANTI_CON_NOME.put("la levatrice", PersonaggioNoto.LEVATRICE);
+	}
 
 	/**
-	 * Il mandante come lo dice la riga della missione, ma se è il capitano delle guardie con il suo nome, fra virgole:
-	 * "il capitano delle guardie, Rodolfo,". Gli altri mandanti restano come sono.
+	 * Il mandante come lo dice la riga della missione, ma se ha un nome proprio (il capitano delle guardie, l'alchimista,
+	 * l'armaiolo, il borgomastro...) lo scrive con il nome, fra virgole: "il capitano delle guardie, Rodolfo,". Gli altri
+	 * mandanti restano come sono.
 	 */
 	protected final String mandante(String mandante) {
-		String nome = nomeDelCapitano(mandante);
-		return nome == null ? mandante : mandante + ", " + nome + ",";
+		return conNome(mandante, mandante, getCitta(), true);
 	}
 
 	/**
 	 * Come {@link #mandante}, ma senza la virgola finale: per quando il mandante è seguito da un segno di punteggiatura.
 	 */
 	protected final String mandanteSenzaVirgolaFinale(String mandante) {
-		String nome = nomeDelCapitano(mandante);
-		return nome == null ? mandante : mandante + ", " + nome;
+		return conNome(mandante, mandante, getCitta(), false);
 	}
 
 	/**
-	 * Il mandante e la città dell'incarico: "l'armaiolo di Ruuna", "il capitano delle guardie di Ruuna, Rodolfo,".
+	 * Il mandante e la città dell'incarico: "il fabbro di Ruuna", "l'armaiolo di Ruuna, Mastro Ferruccio,".
 	 */
 	protected final String mandanteDiCitta(String mandante) {
-		String nome = nomeDelCapitano(mandante);
-		String conLaCitta = mandante + " di " + getNomeCitta();
-		return nome == null ? conLaCitta : conLaCitta + ", " + nome + ",";
+		return conNome(mandante, mandante + " di " + getNomeCitta(), getCitta(), true);
 	}
 
 	/**
 	 * Come {@link #mandanteDiCitta}, ma senza la virgola finale: per quando il mandante è seguito da un segno di punteggiatura.
 	 */
 	protected final String mandanteDiCittaSenzaVirgolaFinale(String mandante) {
-		String nome = nomeDelCapitano(mandante);
-		String conLaCitta = mandante + " di " + getNomeCitta();
-		return nome == null ? conLaCitta : conLaCitta + ", " + nome;
+		return conNome(mandante, mandante + " di " + getNomeCitta(), getCitta(), false);
 	}
 
 	/**
-	 * Il nome del capitano delle guardie della città dell'incarico, o null se il mandante è un altro o la città non c'è.
+	 * Come {@link #mandante}, ma di una città qualunque, per esempio quella a cui si porta qualcosa.
 	 */
-	protected final String nomeDelCapitano(String mandante) {
-		if (!IL_CAPITANO_DELLE_GUARDIE.equals(mandante) || getCitta() == null) {
+	protected final String mandanteIn(String mandante, TipoLocazione citta) {
+		return conNome(mandante, mandante, citta, true);
+	}
+
+	/**
+	 * Come {@link #mandanteIn}, ma senza la virgola finale.
+	 */
+	protected final String mandanteInSenzaVirgolaFinale(String mandante, TipoLocazione citta) {
+		return conNome(mandante, mandante, citta, false);
+	}
+
+	private static String conNome(String mandante, String testo, TipoLocazione citta, boolean virgolaFinale) {
+		String nome = nomeDelMandante(mandante, citta);
+		if (nome == null) {
+			return testo;
+		}
+		return testo + ", " + nome + (virgolaFinale ? "," : "");
+	}
+
+	/**
+	 * Il nome proprio del mandante in quella città, o null se non ne ha uno nel registro (o la città non c'è).
+	 */
+	private static String nomeDelMandante(String mandante, TipoLocazione citta) {
+		PersonaggioNoto noto = MANDANTI_CON_NOME.get(mandante);
+		if (noto == null) {
 			return null;
 		}
-		return RegistroPersonaggi.getResidente(PersonaggioNoto.CAPITANO, getCitta()).getNome();
+		if (noto.getAmbito() == PersonaggioNoto.Ambito.PER_CITTA) {
+			return citta == null ? null : RegistroPersonaggi.getResidente(noto, citta).getNome();
+		}
+		return RegistroPersonaggi.getResidente(noto).getNome();
+	}
+
+	/**
+	 * Il nome proprio del mandante nella città dell'incarico, o null se non ne ha uno nel registro o la città non c'è.
+	 */
+	protected final String nomeDelMandante(String mandante) {
+		return nomeDelMandante(mandante, getCitta());
 	}
 
 	/**

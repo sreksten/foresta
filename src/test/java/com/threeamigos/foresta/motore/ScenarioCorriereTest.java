@@ -9,6 +9,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -72,7 +73,8 @@ class ScenarioCorriereTest {
             consegnaA(partita, corriere, ruuna);
             assertEquals(monete + 14 + distanza / 2, partita.gruppo().getMonete());
             List<String> testi = partita.testi();
-            assertTrue(testi.contains("La lettera sigillata passa al borgomastro."), String.valueOf(testi));
+            String borgomastro = RegistroPersonaggi.getResidente(PersonaggioNoto.BORGOMASTRO, TipoLocazione.CITTA_RUUNA).getNome();
+            assertTrue(testi.contains("La lettera sigillata passa al borgomastro, " + borgomastro + "."), String.valueOf(testi));
             assertTrue(corriere.isCompleta());
 
             // Il prossimo corriere porterà altro, altrove
@@ -119,7 +121,8 @@ class ScenarioCorriereTest {
             LineaTemporale.setCittaDistrutta(TipoLocazione.CITTA_RUUNA);
             corriere.controllaPreLocazione();
             assertTrue(corriere.isFallita());
-            assertTrue(partita.testi().contains("Ruuna è stata distrutta: la lettera sigillata non arriverà più al borgomastro."),
+            String borgomastro = RegistroPersonaggi.getResidente(PersonaggioNoto.BORGOMASTRO, TipoLocazione.CITTA_RUUNA).getNome();
+            assertTrue(partita.testi().contains("Ruuna è stata distrutta: la lettera sigillata non arriverà più al borgomastro, " + borgomastro + "."),
                     String.valueOf(partita.testi()));
         }
     }

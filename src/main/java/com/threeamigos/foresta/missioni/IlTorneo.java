@@ -156,7 +156,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 		TorneoRichiesto torneo = getTorneo();
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return "Hai vinto il torneo: torna " + Misc.conPreposizione("da", torneo.getMandante()) + " a " + getNomeCitta()
+			return "Hai vinto il torneo: torna " + Misc.conPreposizione("da", mandante(torneo.getMandante())) + " a " + getNomeCitta()
 					+ " per la borsa del vincitore.";
 		}
 		String chi;
@@ -235,12 +235,12 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 
 	@Override
 	protected String testoAccettazione() {
-		return Misc.inizialeMaiuscola(getTorneo().getMandante()) + " di " + getNomeCitta() + " ha iscritto il gruppo al torneo: in palio " + inPalio() + ".";
+		return Misc.inizialeMaiuscola(mandanteDiCitta(getTorneo().getMandante())) + " ha iscritto il gruppo al torneo: in palio " + inPalio() + ".";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Misc.inizialeMaiuscola(getTorneo().getMandante()) + " consegna la borsa del vincitore: " + getRicompensa() + " monete.";
+		return Misc.inizialeMaiuscola(mandante(getTorneo().getMandante())) + " consegna la borsa del vincitore: " + getRicompensa() + " monete.";
 	}
 
 	@Override

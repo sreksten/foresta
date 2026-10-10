@@ -128,7 +128,7 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 	protected ScenaInCitta scenaIncarico() {
 		MaterialeRichiesto materiale = getMateriale();
 		return mandante.nuovaScena()
-				.parlaIlMandante(mandante.getApertura(nomeDelCapitano(mandante.getNome())))
+				.parlaIlMandante(mandante.getApertura(nomeDelMandante(mandante.getNome())))
 				.parlaIlMandante("Mi servono " + materiale.quanti(getQuantita()) + ". " + Misc.inizialeMaiuscola(materiale.getDaDoveViene()) + ".")
 				.parlaIlCapo(materiale.getBattutaDelCapo())
 				.parlaIlMandante(materiale.getRispostaDelMandante() + " Ve " + materiale.getPronome() + " pago "

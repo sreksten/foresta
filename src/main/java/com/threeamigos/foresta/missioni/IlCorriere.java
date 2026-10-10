@@ -215,7 +215,7 @@ public class IlCorriere extends IncaricoInCitta {
 						.falliscoSe(this::isInRitardo, () -> "Troppo tardi: " + spedizione.getOggettoConArticolo() + " non arriverà più in tempo "
 								+ Misc.conPreposizione("a", getDestinatarioDiCitta()) + ".")
 						.falliscoSe(() -> isDiNascosto() && haCombattutoNelPassoCorrente(), () -> "La voce del combattimento si è sparsa: "
-								+ spedizione.getDestinatario() + " non vorrà più saperne " + Misc.conPreposizione("di", spedizione.getOggettoConArticolo())
+								+ mandanteIn(spedizione.getDestinatario(), getDestinazione()) + " non vorrà più saperne " + Misc.conPreposizione("di", spedizione.getOggettoConArticolo())
 								+ ", e " + mandante(spedizione.getMittente()) + " nemmeno di voi.")
 						.poi(RITORNO);
 			default:
@@ -231,7 +231,7 @@ public class IlCorriere extends IncaricoInCitta {
 	@Override
 	protected String testoConsegna() {
 		Spedizione spedizione = getSpedizione();
-		return Misc.inizialeMaiuscola(spedizione.getOggettoConArticolo()) + " passa " + Misc.conPreposizione("a", spedizione.getDestinatario()) + ".";
+		return Misc.inizialeMaiuscola(spedizione.getOggettoConArticolo()) + " passa " + Misc.conPreposizione("a", mandanteInSenzaVirgolaFinale(spedizione.getDestinatario(), getDestinazione())) + ".";
 	}
 
 	@Override
@@ -271,13 +271,13 @@ public class IlCorriere extends IncaricoInCitta {
 
 	@Override
 	protected String testoRicompensa() {
-		return Misc.inizialeMaiuscola(getSpedizione().getDestinatario()) + " paga le " + getRicompensa() + " monete promesse.";
+		return Misc.inizialeMaiuscola(mandanteIn(getSpedizione().getDestinatario(), getDestinazione())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override
 	protected String testoCittaDistrutta() {
 		return getNomeDestinazione() + " è stata distrutta: " + getSpedizione().getOggettoConArticolo() + " non arriverà più "
-				+ Misc.conPreposizione("a", getSpedizione().getDestinatario()) + ".";
+				+ Misc.conPreposizione("a", mandanteInSenzaVirgolaFinale(getSpedizione().getDestinatario(), getDestinazione())) + ".";
 	}
 
 	/**

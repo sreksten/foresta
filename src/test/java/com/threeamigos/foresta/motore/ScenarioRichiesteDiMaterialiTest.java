@@ -9,6 +9,7 @@ import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -81,7 +82,8 @@ class ScenarioRichiesteDiMaterialiTest {
             armaiolo.controllaInLocazione();
             assertTrue(armaiolo.isAttiva());
             assertEquals("L'armaiolo e le scaglie di viverna", armaiolo.getNome());
-            assertTrue(armaiolo.getDescrizione().contains("L'armaiolo di Nyena ti ha chiesto due scaglie di viverna, che si prendono sconfiggendo le Viverne"),
+            String mastro = RegistroPersonaggi.getResidente(PersonaggioNoto.ARMAIOLO, TipoLocazione.CITTA_NYENA).getNome();
+            assertTrue(armaiolo.getDescrizione().contains("L'armaiolo di Nyena, " + mastro + ", ti ha chiesto due scaglie di viverna, che si prendono sconfiggendo le Viverne"),
                     armaiolo.getDescrizione());
 
             // Le scaglie le portano le viverne, dovunque siano
@@ -100,7 +102,7 @@ class ScenarioRichiesteDiMaterialiTest {
             armaiolo.controllaInLocazione();
             assertEquals(monete + 12 * 2 + 5, partita.gruppo().getMonete());
             List<String> testi = partita.testi();
-            assertTrue(testi.contains("Le due scaglie di viverna passano all'armaiolo, che le soppesa con l'occhio del mestiere."),
+            assertTrue(testi.contains("Le due scaglie di viverna passano all'armaiolo, " + mastro + ", che le soppesa con l'occhio del mestiere."),
                     String.valueOf(testi));
             assertTrue(armaiolo.isCompleta());
 
@@ -136,7 +138,8 @@ class ScenarioRichiesteDiMaterialiTest {
             alchimista.controllaInLocazione();
             assertEquals(monete + 6 * 3 + 5, partita.gruppo().getMonete());
             List<String> testi = partita.testi();
-            assertTrue(testi.contains("I tre fiori di aconito passano all'alchimista, che li annusa soddisfatto."), String.valueOf(testi));
+            String nomeDellAlchimista = RegistroPersonaggi.getResidente(PersonaggioNoto.ALCHIMISTA, TipoLocazione.CITTA_NYENA).getNome();
+            assertTrue(testi.contains("I tre fiori di aconito passano all'alchimista, " + nomeDellAlchimista + ", che li annusa soddisfatto."), String.valueOf(testi));
             assertTrue(testi.stream().anyMatch(t -> t.startsWith("I fiori di aconito ci sono tutti")), String.valueOf(testi));
         }
     }

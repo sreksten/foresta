@@ -11,6 +11,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -145,8 +146,9 @@ class ScenarioCombattiScortaConsegnaTest {
             assertEquals(monete + 25, partita.gruppo().getMonete());
             assertTrue(mandragola.isCompleta());
             List<String> testi = partita.testi();
-            int consegna = indice(testi, "radici di mandragola passano all'alchimista");
-            int ricompensa = indice(testi, "L'alchimista paga");
+            String nomeDellAlchimista = RegistroPersonaggi.getResidente(PersonaggioNoto.ALCHIMISTA, TipoLocazione.CITTA_NYENA).getNome();
+            int consegna = indice(testi, "radici di mandragola passano all'alchimista, " + nomeDellAlchimista + ",");
+            int ricompensa = indice(testi, "L'alchimista, " + nomeDellAlchimista + ", paga");
             assertTrue(consegna >= 0 && ricompensa > consegna, String.valueOf(testi));
             assertTrue(testi.get(consegna).startsWith("Le quattro radici"), testi.get(consegna));
         }

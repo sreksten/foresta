@@ -4,8 +4,10 @@ import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.List;
@@ -29,6 +31,15 @@ public class LaLeggendaDellArmaiolo extends LaLeggenda {
 	@Override
 	protected String getNarratore() {
 		return "l'armaiolo";
+	}
+
+	@Override
+	protected String getNarratoreConNome() {
+		TipoLocazione citta = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
+		if (citta == null || citta.getCategoria() != CategoriaLocazione.CITTA) {
+			return getNarratore();
+		}
+		return getNarratore() + ", " + RegistroPersonaggi.getResidente(PersonaggioNoto.ARMAIOLO, citta).getNome() + ",";
 	}
 
 	@Override

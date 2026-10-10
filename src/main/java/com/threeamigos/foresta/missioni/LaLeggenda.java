@@ -80,6 +80,14 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 	 */
 	protected abstract String getNarratore();
 
+	/**
+	 * Il narratore con il suo nome proprio, se ne ha uno nella città in cui è il gruppo: "l'armaiolo, Mastro Ferruccio,".
+	 * Per chi non ne ha uno nel registro è solo il narratore.
+	 */
+	protected String getNarratoreConNome() {
+		return getNarratore();
+	}
+
 	protected abstract Racconto nuovoRacconto();
 
 	@Override
@@ -190,7 +198,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 								() -> nelPosto() && RegistroMissioni.cercaOCostruisci(TipoLocazione.BOSCO, this).isPresent())
 						.esegui(() -> {
 							RegistroArtefatti.custodisciInUnTempioNuovo(getLeggendario().costruisci(), getTempio());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(getNarratore()) + " segna sulla mappa "
+							BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(getNarratoreConNome()) + " segna sulla mappa "
 									+ Tempio.getNome(getTempio()) + ", dove " + getNomeDeiGuardiani() + " custodiscono "
 									+ getLeggendario().getNomeBreve() + "."));
 							attivaMissione();
