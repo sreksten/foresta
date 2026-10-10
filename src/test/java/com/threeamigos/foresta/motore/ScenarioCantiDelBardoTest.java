@@ -164,7 +164,7 @@ class ScenarioCantiDelBardoTest {
                 assertTrue(menu.contains(Comando.CANTO_IPNOTICO), String.valueOf(menu));
                 assertTrue(menu.contains(Comando.CANTO_DI_VALORE), String.valueOf(menu));
                 assertFalse(menu.contains(Comando.CANTO_CURATIVO), String.valueOf(menu));
-                assertTrue(menu.contains(Comando.NO_INCANTESIMO), String.valueOf(menu));
+                assertTrue(menu.contains(Comando.ANNULLA), String.valueOf(menu));
             }
         }
         assertTrue(provato, "nessun seme ha dato un bosco con degli avversari");

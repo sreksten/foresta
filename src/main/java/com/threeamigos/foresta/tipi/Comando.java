@@ -51,6 +51,7 @@ public enum Comando {
 	MORTE("Lancia un incantesimo di Morte"),
 	RESURREZIONE("Lancia un incantesimo di Resurrezione"),
 	ALBA_SACRA("Lancia un incantesimo di Alba Sacra"),
+	SILENZIO("Lancia un incantesimo del Silenzio"),
 	// L'incantesimo innato di Mago ed Elfo, che non consuma pergamene
 	DARDO_ARCANO("Lancia un Dardo Arcano"),
 	// I canti innati del Bardo e della Cantastorie, che non consumano pergamene
@@ -59,8 +60,6 @@ public enum Comando {
 	CANTO_DI_VALORE("Canta il Canto di Valore"),
 	// Il canto che il bardo della locanda insegna al gruppo (vedi IntermezzoUrloDellaBanshee)
 	URLO_DELLA_BANSHEE("Canta l'Urlo della Banshee"),
-	// Annulla la scelta di un incantesimo
-	NO_INCANTESIMO("Annulla il lancio di un incantesimo"),
 
 	// Direzione verso la quale muoversi
 	NORD("Muove verso Nord"),

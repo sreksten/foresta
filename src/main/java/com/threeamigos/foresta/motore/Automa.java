@@ -1006,7 +1006,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				comandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
 			}
 		}
-		comandiPossibili.add(Comando.NO_INCANTESIMO);
+		comandiPossibili.add(Comando.ANNULLA);
 		BusEventi.pubblica(new RichiestaSelezioneIncantesimoDaLanciare(comandiPossibili));
 		stato = Stato.INCANTESIMO_SCELTO;
 		return Esito.FERMATI;
@@ -1017,7 +1017,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 			comandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
 		}
-		comandiPossibili.add(Comando.NO_INCANTESIMO);
+		comandiPossibili.add(Comando.ANNULLA);
 		BusEventi.pubblica(new RichiestaSelezioneIncantesimoDaLanciare(comandiPossibili));
 		stato = Stato.INCANTESIMO_SCELTO;
 		return Esito.FERMATI;

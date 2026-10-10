@@ -208,6 +208,9 @@ public class Costanti {
     public static final int INCANTESIMO_ALBA_SACRA_COSTO_ACQUISTO = 5;
     public static final int INCANTESIMO_ALBA_SACRA_COSTO_LANCIO = 5;
 
+    public static final int INCANTESIMO_SILENZIO_COSTO_ACQUISTO = 5;
+    public static final int INCANTESIMO_SILENZIO_COSTO_LANCIO = 5;
+
     public static final int INCANTESIMO_TERRA_COSTO_ACQUISTO = 5;
     public static final int INCANTESIMO_TERRA_COSTO_LANCIO = 2;
     public static final int INCANTESIMO_TERRA_DANNI = 50;

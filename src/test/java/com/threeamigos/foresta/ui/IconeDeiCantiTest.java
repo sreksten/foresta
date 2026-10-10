@@ -31,6 +31,6 @@ class IconeDeiCantiTest {
 	void glAltriComandiNonSonoCanti() {
 		assertNull(TipoCanto.ofComando(Comando.DARDO_ARCANO));
 		assertNull(TipoCanto.ofComando(Comando.ALBA_SACRA));
-		assertNull(TipoCanto.ofComando(Comando.NO_INCANTESIMO));
+		assertNull(TipoCanto.ofComando(Comando.ANNULLA));
 	}
 }

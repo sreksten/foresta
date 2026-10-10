@@ -683,7 +683,7 @@ final class GiocatoreAutomatico {
 			return voluto;
 		}
 		incantesimiFalliti++;
-		return comandi.contains(Comando.NO_INCANTESIMO) ? Comando.NO_INCANTESIMO : primoDi(comandi);
+		return comandi.contains(Comando.ANNULLA) ? Comando.ANNULLA : primoDi(comandi);
 	}
 
 	// ---------------------------------------------------------------------------------------------------------

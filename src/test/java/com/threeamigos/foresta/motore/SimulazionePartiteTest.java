@@ -318,7 +318,7 @@ class SimulazionePartiteTest {
 				Comando comando = giocatore.scegli();
 				if (comando == Comando.POZIONE_SALUTE || comando == Comando.POZIONE_SALUTE_GRANDE) {
 					risultato.pozioniBevute++;
-				} else if (stato == Stato.INCANTESIMO_SCELTO && comando != null && comando != Comando.NO_INCANTESIMO) {
+				} else if (stato == Stato.INCANTESIMO_SCELTO && comando != null && comando != Comando.ANNULLA) {
 					risultato.incantesimiLanciati++;
 				}
 				boolean fuga = stato == Stato.ATTESA_SI_NO && comando == Comando.SI;
@@ -429,7 +429,7 @@ class SimulazionePartiteTest {
 			}
 			if (stato == Stato.IN_COMBATTIMENTO && comando == null) {
 				scontro.round++;
-			} else if (stato == Stato.INCANTESIMO_SCELTO && comando != null && comando != Comando.NO_INCANTESIMO) {
+			} else if (stato == Stato.INCANTESIMO_SCELTO && comando != null && comando != Comando.ANNULLA) {
 				scontro.round++;
 			}
 		}

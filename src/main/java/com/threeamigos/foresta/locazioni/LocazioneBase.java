@@ -501,7 +501,7 @@ public abstract class LocazioneBase implements Locazione {
 
 			case QUALE_FORMULA:
 				Logger.log("LocazioneBase.QUALE_FORMULA: " + azione);
-				if (azione == Comando.NO_INCANTESIMO) {
+				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
 				} else if (TipoCanto.ofComando(azione) != null) {
 					Stato statoDopoIlCanto = cantaUnCanto(gruppo.getFormulante(), TipoCanto.ofComando(azione), gruppo, gruppoAvversario);

@@ -38,7 +38,7 @@ Gli acquisti nei negozi hanno uno sconto dovuto alla Contrattazione, di solito l
 | Pozione della salute / grande | 5 / 15 | alchimista |
 | Pozione della magia / grande | 10 / 30 | alchimista |
 | Aumento della magia massima | 10 per uno; 10 + 7,5 × (n − 1) per il gruppo | alchimista |
-| Pergamena d'incantesimo | 5; Fulmine e Resurrezione 15 | alchimista |
+| Pergamena d'incantesimo (Silenzio compreso) | 5; Fulmine e Resurrezione 15 | alchimista |
 | Mappa di una zona / di tutta la foresta | 10 / 20 | alchimista; la mappa intera anche come offerta |
 | Artefatto dell'armaiolo | 5 + 5 × livello, spadone × 1,5 | più il listino degli effetti se incantato |
 | Ingrediente magico | 2-180 secondo tipo e livello | listino nuovo, vedi la tabella sotto |

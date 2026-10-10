@@ -28,6 +28,7 @@ public final class FabbricaIncantesimi {
 		COSTRUTTORI.put(ClasseIncantesimo.MORTE, Morte::new);
 		COSTRUTTORI.put(ClasseIncantesimo.RESURREZIONE, Resurrezione::new);
 		COSTRUTTORI.put(ClasseIncantesimo.ALBA_SACRA, AlbaSacra::new);
+		COSTRUTTORI.put(ClasseIncantesimo.SILENZIO, Silenzio::new);
 		COSTI_ACQUISTO.put(ClasseIncantesimo.ARIA, Costanti.INCANTESIMO_ARIA_COSTO_ACQUISTO);
 		COSTI_ACQUISTO.put(ClasseIncantesimo.ACQUA, Costanti.INCANTESIMO_ACQUA_COSTO_ACQUISTO);
 		COSTI_ACQUISTO.put(ClasseIncantesimo.TERRA, Costanti.INCANTESIMO_TERRA_COSTO_ACQUISTO);
@@ -38,6 +39,7 @@ public final class FabbricaIncantesimi {
 		COSTI_ACQUISTO.put(ClasseIncantesimo.MORTE, Costanti.INCANTESIMO_MORTE_COSTO_ACQUISTO);
 		COSTI_ACQUISTO.put(ClasseIncantesimo.RESURREZIONE, Costanti.INCANTESIMO_RESURREZIONE_COSTO_ACQUISTO);
 		COSTI_ACQUISTO.put(ClasseIncantesimo.ALBA_SACRA, Costanti.INCANTESIMO_ALBA_SACRA_COSTO_ACQUISTO);
+		COSTI_ACQUISTO.put(ClasseIncantesimo.SILENZIO, Costanti.INCANTESIMO_SILENZIO_COSTO_ACQUISTO);
 	}
 
 	private FabbricaIncantesimi() {
