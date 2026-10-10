@@ -378,6 +378,16 @@ public class ProduttoreDiTestiCasuale {
 		GrammarBean.resetStaticProductions();
 	}
 
+	/**
+	 * Estrae i dati di tante locande (nome, locandiere, dialogo, recensione), una volta per tutte, alla creazione del mondo
+	 * (vedi Foresta.reimposta): i nomi dei locandieri si pescano dalle liste one-shot di nomi.txt, che si azzerano con
+	 * {@link #resetProduzioni()}.
+	 * <p>
+	 * <b>Non va più chiamato a partita iniziata.</b> A partita avviata le sezioni statiche di nomi.txt si azzerano ogni volta che
+	 * i nomi delle missioni finiscono (vedi {@code produciDaMissioni}), e con loro si ricostruiscono le locande one-shot di
+	 * locande.txt: nuove locande potrebbero ripetere il nome di una già estratta o il nome di un residente (vedi
+	 * RegistroPersonaggi).
+	 */
 	public static List<DatiLocanda> getDatiLocanda(int quantita) {
 		List<DatiLocanda> datiLocanda = new ArrayList<>();
 		for (int i = 0; i < quantita; i++) {

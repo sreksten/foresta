@@ -14,7 +14,7 @@ degli altri mandanti nei testi, le immagini proprie di borgomastro e levatrice e
   loro copia è sempre piena). Contiene:
   - `NOME_MASCHILE` (98, uno per riga, in ordine alfabetico: è la somma dei nomi di locandieri, protagonisti delle fiabe,
     ostaggi, bardi, pellegrini e maghi), `COGNOME` (54), `ATTRIBUTO_POSITIVO` (35), `ATTRIBUTO_NEGATIVO` (35), `TITOLO` (35),
-    `DEGLI_LOCANDE` (35, con le note tra parentesi pensate per i locandieri; è l'unica che porta in coda la grammatica di
+    `DEGLI_LOCANDE` (35, con le note tra parentesi che descrivono il locandiere: restano così; è l'unica che porta in coda la grammatica di
     origine, per non confondersi con un `DEGLI` generico) e `DEGLI_ALTISONANTE` (35, senza note, ordinata ignorando la
     preposizione: "dei Signori della Luna", "di Altomonte"…), per il borgomastro;
   - dalle fiabe: `COGNOME_STOPPIONI`, `SOPRANNOME_PROTAGONISTA`, `TITOLO_NOBILIARE` e `NOME_FEMMINILE$` (67 nomi
@@ -138,11 +138,9 @@ Quanti ne servono: 21 nomi maschili per i locandieri, 4 × 6 = 24 per le città,
   "Mastro Ferruccio da Ruuna"), come un locandiere o come il bardo. Conviene che `produciDaMissioni` scarti un nome già in uso
   nel registro dei residenti (qualche tentativo, poi si accetta il doppione).
 - **Il reset azzera anche le locande.** Ricostruisce le one-shot delle locande (`CINGHIALE_VEGANO$`…): dopo la creazione del
-  mondo non importa (le 21 sono già estratte), ma `getDatiLocanda` non va richiamato a partita avviata.
+  mondo non importa (le 21 sono già estratte), ma `getDatiLocanda` non va richiamato a partita avviata (c'è l'avviso nel suo javadoc).
 - **Il bardo delle missioni (fatto).** Il bardo della locanda è registrato a inizio partita, e `NonSparateSulPianista.getBardo()`
   ne legge il nome dal registro; `NOME_BARDO` e `nomeBardo()` sono stati tolti.
-- **Le note di `DEGLI_LOCANDE`** finiscono oggi nel testo del dialogo (per esempio "Filiberto del Tagliabrodo (Famoso per
-  diluire il brodo con l'acqua)"): da decidere se vanno tolte in post-produzione o spostate nella recensione.
 
 ### 3.4 L'enumerato `PersonaggioNoto`
 
@@ -248,7 +246,6 @@ cambia con chi pesca (è già successo con `BugMappaReimpostataTest` e `BugCache
 
 - Immagini proprie per borgomastro e levatrice (oggi `UOMO` e `DONNA`, con l'aspetto del locandiere e della moglie del bardo).
 - Il nome degli altri mandanti nei testi delle missioni (armaiolo, alchimista, borgomastro...), come già per il capitano.
-- Decidere cosa fare delle note di `DEGLI_LOCANDE` nel dialogo (tolte in post-produzione o spostate nella recensione).
 - Scartare, in `produciDaMissioni`, i nomi già in uso nel registro (vedi §3.3). Per ora un ostaggio può avere il nome di un
   residente, e ce ne facciamo una ragione.
 - Albo dei campioni incontrati (schermata o voce nel registro dei trofei?).
