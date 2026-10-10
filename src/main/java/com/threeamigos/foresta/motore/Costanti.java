@@ -890,10 +890,110 @@ public class Costanti {
 
     // I personaggi non combattenti (locandiere, armaiolo, alchimista, venditore di pergamene, incantatore, moglie del
     // bardo): come il bardo ma un poco meno, e senza capacità proprie (vedi PersonaggioNonCombattente)
-    public static final double NON_COMBATTENTE_FATTORE_STATISTICHE = 0.85;
     public static final int NON_COMBATTENTE_SALUTE_BASE = 90;
     public static final int NON_COMBATTENTE_MAGIA_BASE = 30;
     public static final int NON_COMBATTENTE_LIVELLAMENTO_MAGIA = 14;
+
+    // Le caratteristiche dei non combattenti: erano quelle del bardo (le massime per 0,85); ora sono tutte loro
+    public static final double NON_COMBATTENTE_MAX_CARISMA = 6.8;
+    public static final double NON_COMBATTENTE_MAX_FORZA = 25.5;
+    public static final double NON_COMBATTENTE_MAX_DESTREZZA = 29.75;
+    public static final double NON_COMBATTENTE_MAX_COSTITUZIONE = 29.75;
+    public static final double NON_COMBATTENTE_MAX_INTELLIGENZA = 29.75;
+    public static final double NON_COMBATTENTE_MAX_SAGGEZZA = 29.75;
+    public static final double NON_COMBATTENTE_MAX_FORTUNA = 12.75;
+    public static final int NON_COMBATTENTE_MAX_NUMERO = 1;
+    public static final int NON_COMBATTENTE_PUNTI_ESPERIENZA = 25;
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_CARICO = 0.9;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_CARICO_NOTA = "Struttura slanciata ed elegante. Predilige la mobilità e l'armatura leggera rispetto alla pura massa da trasporto.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_CRITICO = 1.1;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_CRITICO_NOTA = "Opportunista sul campo di battaglia; sa leggere il ritmo del duello e colpire quando il nemico si scopre per un errore.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_PRECISIONE = 1.0;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_PRECISIONE_NOTA = "Precisione umana standard; si affida al tempismo e alla coordinazione base.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_VELOCITA = 1.1;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_VELOCITA_NOTA = "Più scattante della media umana; si affida alla mobilità per muoversi tra le retrovie del campo di battaglia.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_FURTIVITA = 1.1;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_FURTIVITA_NOTA = "Abile nell'arte del camuffamento e del depistaggio; sa come passare inosservato tra la folla o muoversi con passo leggero.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_PARATA = 1.0;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_PARATA_NOTA = "Linea di Base Umana. Addestrato all'uso di armi da scherma leggere o piccoli buckler.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Ottimo osservatore del comportamento umano; nota subito i dettagli fuori posto, i sussurri e i movimenti sospetti.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_PERCEZIONE = 1.1;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_PERCEZIONE_NOTA = "Ottimo osservatore del comportamento; nota subito i dettagli fuori posto, i sussurri e i movimenti sospetti nel party o tra i nemici.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_SOGGEZIONE = 1.2;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Fascino e magnetismo eccezionali. Emana una maestosità teatrale che ammalia gli alleati e soggioga i nemici.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_FURIA = 1.1;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_FURIA_NOTA = "Affascinato dalle ballate eroiche e dalle gesta epiche; è propenso a compiere azioni plateali e coraggiose per salvare i compagni.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_CORAGGIO = 1.1;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_CORAGGIO_NOTA = "Ha una forte personalità; abituato a stare al centro dell'attenzione e a sfidare il pubblico, non si lascia intimidire dalle minacce fisiche.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_VALORE = 1.1;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_VALORE_NOTA = "Affascinato dalle ballate eroiche e dall'epica; è incline a compiere azioni plateali e coraggiose per proteggere il party.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_CONTRATTAZIONE = 1.2;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Parlantina da palcoscenico: tra una rima e un complimento, il mercante si ritrova a fare lo sconto senza sapere perché.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "La sua musica o le sue parole si propagano nell'aria, permettendogli di influenzare più bersagli contemporaneamente.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_STANCHEZZA = 1.0;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_STANCHEZZA_NOTA = "Standard umano; muoversi e cantare contemporaneamente lo mantiene nella media.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_DANNI_MAGICI = 1.1;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Canalizza la magia attraverso l'arte e la musica; i suoi incantesimi d'attacco sono discreti, ma eccelle nei buff.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_DANNI_FISICI = 0.9;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Si allena nel movimento e nella coordinazione, ma non focalizza il suo stile sullo sviluppo della forza bruta.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "La sua stessa musica e il controllo del ritmo respiratorio ne accelerano leggermente il relax muscolare.";
+    public static final double NON_COMBATTENTE_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
+    public static final String NON_COMBATTENTE_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "La sua stessa musica funge da catalizzatore meditativo, accelerando il recupero energetico del party e di se stesso.";
+
+    // Il Viandante: un ospite di missione con le caratteristiche del bardo (all'inizio le stesse; ora si tarano da sole)
+    public static final int VIANDANTE_MAX_CARISMA = 8;
+    public static final int VIANDANTE_MAX_FORZA = 30;
+    public static final int VIANDANTE_MAX_DESTREZZA = 35;
+    public static final int VIANDANTE_MAX_COSTITUZIONE = 35;
+    public static final int VIANDANTE_MAX_INTELLIGENZA = 35;
+    public static final int VIANDANTE_MAX_SAGGEZZA = 35;
+    public static final int VIANDANTE_MAX_FORTUNA = 15;
+    public static final int VIANDANTE_MAX_NUMERO = 1;
+    public static final int VIANDANTE_PUNTI_ESPERIENZA = 25;
+    public static final int VIANDANTE_SALUTE_BASE = 105;
+    public static final int VIANDANTE_MAGIA_BASE = 40;
+    public static final int VIANDANTE_LIVELLAMENTO_MAGIA = 18;
+    public static final double VIANDANTE_MOLTIPLICATORE_CARICO = 0.9;
+    public static final String VIANDANTE_MOLTIPLICATORE_CARICO_NOTA = "Struttura slanciata ed elegante. Predilige la mobilità e l'armatura leggera rispetto alla pura massa da trasporto.";
+    public static final double VIANDANTE_MOLTIPLICATORE_CRITICO = 1.1;
+    public static final String VIANDANTE_MOLTIPLICATORE_CRITICO_NOTA = "Opportunista sul campo di battaglia; sa leggere il ritmo del duello e colpire quando il nemico si scopre per un errore.";
+    public static final double VIANDANTE_MOLTIPLICATORE_PRECISIONE = 1.0;
+    public static final String VIANDANTE_MOLTIPLICATORE_PRECISIONE_NOTA = "Precisione umana standard; si affida al tempismo e alla coordinazione base.";
+    public static final double VIANDANTE_MOLTIPLICATORE_VELOCITA = 1.1;
+    public static final String VIANDANTE_MOLTIPLICATORE_VELOCITA_NOTA = "Più scattante della media umana; si affida alla mobilità per muoversi tra le retrovie del campo di battaglia.";
+    public static final double VIANDANTE_MOLTIPLICATORE_FURTIVITA = 1.1;
+    public static final String VIANDANTE_MOLTIPLICATORE_FURTIVITA_NOTA = "Abile nell'arte del camuffamento e del depistaggio; sa come passare inosservato tra la folla o muoversi con passo leggero.";
+    public static final double VIANDANTE_MOLTIPLICATORE_PARATA = 1.0;
+    public static final String VIANDANTE_MOLTIPLICATORE_PARATA_NOTA = "Linea di Base Umana. Addestrato all'uso di armi da scherma leggere o piccoli buckler.";
+    public static final double VIANDANTE_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+    public static final String VIANDANTE_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Ottimo osservatore del comportamento umano; nota subito i dettagli fuori posto, i sussurri e i movimenti sospetti.";
+    public static final double VIANDANTE_MOLTIPLICATORE_PERCEZIONE = 1.1;
+    public static final String VIANDANTE_MOLTIPLICATORE_PERCEZIONE_NOTA = "Ottimo osservatore del comportamento; nota subito i dettagli fuori posto, i sussurri e i movimenti sospetti nel party o tra i nemici.";
+    public static final double VIANDANTE_MOLTIPLICATORE_SOGGEZIONE = 1.2;
+    public static final String VIANDANTE_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Fascino e magnetismo eccezionali. Emana una maestosità teatrale che ammalia gli alleati e soggioga i nemici.";
+    public static final double VIANDANTE_MOLTIPLICATORE_FURIA = 1.1;
+    public static final String VIANDANTE_MOLTIPLICATORE_FURIA_NOTA = "Affascinato dalle ballate eroiche e dalle gesta epiche; è propenso a compiere azioni plateali e coraggiose per salvare i compagni.";
+    public static final double VIANDANTE_MOLTIPLICATORE_CORAGGIO = 1.1;
+    public static final String VIANDANTE_MOLTIPLICATORE_CORAGGIO_NOTA = "Ha una forte personalità; abituato a stare al centro dell'attenzione e a sfidare il pubblico, non si lascia intimidire dalle minacce fisiche.";
+    public static final double VIANDANTE_MOLTIPLICATORE_VALORE = 1.1;
+    public static final String VIANDANTE_MOLTIPLICATORE_VALORE_NOTA = "Affascinato dalle ballate eroiche e dall'epica; è incline a compiere azioni plateali e coraggiose per proteggere il party.";
+    public static final double VIANDANTE_MOLTIPLICATORE_CONTRATTAZIONE = 1.2;
+    public static final String VIANDANTE_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Parlantina da palcoscenico: tra una rima e un complimento, il mercante si ritrova a fare lo sconto senza sapere perché.";
+    public static final double VIANDANTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
+    public static final String VIANDANTE_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "La sua musica o le sue parole si propagano nell'aria, permettendogli di influenzare più bersagli contemporaneamente.";
+    public static final double VIANDANTE_MOLTIPLICATORE_STANCHEZZA = 1.0;
+    public static final String VIANDANTE_MOLTIPLICATORE_STANCHEZZA_NOTA = "Standard umano; muoversi e cantare contemporaneamente lo mantiene nella media.";
+    public static final double VIANDANTE_MOLTIPLICATORE_DANNI_MAGICI = 1.1;
+    public static final String VIANDANTE_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Canalizza la magia attraverso l'arte e la musica; i suoi incantesimi d'attacco sono discreti, ma eccelle nei buff.";
+    public static final double VIANDANTE_MOLTIPLICATORE_DANNI_FISICI = 0.9;
+    public static final String VIANDANTE_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Si allena nel movimento e nella coordinazione, ma non focalizza il suo stile sullo sviluppo della forza bruta.";
+    public static final double VIANDANTE_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
+    public static final String VIANDANTE_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "La sua stessa musica e il controllo del ritmo respiratorio ne accelerano leggermente il relax muscolare.";
+    public static final double VIANDANTE_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
+    public static final String VIANDANTE_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "La sua stessa musica funge da catalizzatore meditativo, accelerando il recupero energetico del party e di se stesso.";
 
     // Personaggio giocabile segreto per test
 

@@ -51,7 +51,6 @@ Oggi il Bardo non ha nessuna capacità propria ed è la classe più debole (vedi
 
 - **Mandanti senza personaggio proprio** (borgomastro, mugnaio, mercante, fabbro, notaio, vedove...): usano l'aspetto del locandiere (`ASPETTO=QUALUNQUE`) o della moglie del bardo (`DONNA`) in `AspettoDelMandante`; servono immagini loro e i relativi tipi.
 - Le **missioni di scorta** ("salva il locandiere", "salva la moglie del bardo", "salva l'alchimista"...) con `MissioneAPassi.prendiInScorta`, al posto del Viandante: servirà dar loro un nome proprio, perché un personaggio senza nome lancia `IllegalStateException` in `getNome` (come il Viandante);
-- **Viandante**: estende `Bardo` ed è amichevole, e per questo `LaSfidaDeiCampioni.classiAmichevoli()` lo include fra i possibili campioni: valutare se farlo estendere `PersonaggioNonCombattente` (le sue caratteristiche scenderebbero) o escluderlo.
 
 ## Grafica e immagini
 
