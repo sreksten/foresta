@@ -28,6 +28,42 @@ class NomiDelleMissioniTest {
         assertTrue(conSoprannome);
     }
 
+    /**
+     * I nomi maschili sono one-shot e condivisi (nomi.txt): finché ce ne sono non si ripetono, e quando sono finiti
+     * ProduttoreDiTestiCasuale azzera le sezioni statiche e riparte, invece di lanciare IllegalArgumentException.
+     */
+    @Test
+    void quandoINomiFinisconoSiRipartePerNonLanciare() {
+        ProduttoreDiTestiCasuale.resetProduzioni();
+        try {
+            Set<String> visti = new HashSet<>();
+            int primaRipetizione = -1;
+            for (int i = 0; i < 500; i++) {
+                String nome = ProduttoreDiTestiCasuale.nomeOstaggio();
+                if (!visti.add(nome) && primaRipetizione < 0) {
+                    primaRipetizione = i;
+                }
+            }
+            assertTrue(primaRipetizione > 50, "i nomi dovrebbero finire prima di ripetersi, non subito: " + primaRipetizione);
+            assertEquals(visti.size(), primaRipetizione, "nessun nome si ripete finché ce ne sono di nuovi");
+        } finally {
+            ProduttoreDiTestiCasuale.resetProduzioni();
+        }
+    }
+
+    @Test
+    void ancheIMaghiSiRiprendonoDopoLEsaurimento() {
+        ProduttoreDiTestiCasuale.resetProduzioni();
+        try {
+            for (int i = 0; i < 500; i++) {
+                String nome = ProduttoreDiTestiCasuale.rigaDiMissioni("NOME_MAGO");
+                assertTrue(nome.startsWith("Mastro "), nome);
+            }
+        } finally {
+            ProduttoreDiTestiCasuale.resetProduzioni();
+        }
+    }
+
     private static void verificaNomi(Supplier<String> generatore, int diversiAlmeno) {
         Set<String> nomi = new HashSet<>();
         for (int i = 0; i < 300; i++) {
