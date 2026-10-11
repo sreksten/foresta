@@ -367,6 +367,8 @@ non morti": la condizione del cambio d'arma, §5) e il momento del cambio.
      moltiplicatore non è 1. Prima
      per il danno vero non compariva niente: `ForestaUI.gestisciEventoInterazione` non elencava `DANNO_VERO` e il `default` lanciava
      un'`IllegalArgumentException` (registrata nel log da `BusEventi`, senza fermare il gioco).
+   - **La tabella** (le voci per classe e categoria, con le ragioni) è in `debolezze_e_resistenze.md`; il colore del testo ha dieci
+     sfumature per parte (dal grigio verso il verde per la debolezza, verso il rosso per la resistenza, rosso acceso per l'immunità).
    - **Gli altri assi restano a parte**: le immunità a un incantesimo (Morte non ha un tipo di danno) e a uno stato (Sanguinamento,
      Infettato...) non sono tipi di danno.
 

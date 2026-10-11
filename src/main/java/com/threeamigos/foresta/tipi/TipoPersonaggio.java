@@ -73,22 +73,61 @@ public enum TipoPersonaggio {
 	private final Map<TipoDanno, Double> dannoSubito = new EnumMap<>(TipoDanno.class);
 
 	// Le debolezze e le resistenze della classe (quelle comuni a una categoria stanno in CategoriaPersonaggio)
+	// Tabella provvisoria, con le sue ragioni in debolezze_e_resistenze.md
 	static {
+		// Gli spiriti incorporei: aria e terra li attraversano, i colpi fisici fanno la metà, sono creature del gelo e
+		// l'energia necrotica non li ferisce (con la categoria NON_MORTO, che li rende deboli al sacro e immuni al veleno)
 		for (TipoPersonaggio fantasma : EnumSet.of(FANTASMA, OMBRA_NERA, SPETTRO, SPIRITO)) {
 			fantasma.moltiplicaIlDannoSubito(TipoDanno.ARIA, 0.0d);
 			fantasma.moltiplicaIlDannoSubito(TipoDanno.TERRA, 0.0d);
+			fantasma.moltiplicaIlDannoSubito(TipoDanno.NECROTICO, 0.0d);
+			fantasma.moltiplicaIlDannoSubito(TipoDanno.GELO, 0.5d);
+			fantasma.moltiplicaIlDannoSubito(TipoDanno.CONTUNDENTE, 0.5d);
+			fantasma.moltiplicaIlDannoSubito(TipoDanno.PERFORANTE, 0.5d);
+			fantasma.moltiplicaIlDannoSubito(TipoDanno.TAGLIENTE, 0.5d);
 		}
+		// Lo scheletro: le ossa si spezzano a bastonate, ma lame e punte trovano poco da tagliare
+		SCHELETRO.moltiplicaIlDannoSubito(TipoDanno.CONTUNDENTE, 1.5d);
+		SCHELETRO.moltiplicaIlDannoSubito(TipoDanno.PERFORANTE, 0.5d);
+		SCHELETRO.moltiplicaIlDannoSubito(TipoDanno.TAGLIENTE, 0.75d);
+		// Il lich è un negromante che si è fatto di ghiaccio e di tempesta
+		LICH.moltiplicaIlDannoSubito(TipoDanno.GELO, 0.5d);
+		LICH.moltiplicaIlDannoSubito(TipoDanno.FULMINE, 0.5d);
+		// I draghi: il fuoco è casa loro, il gelo li ferisce
 		DRAGO.moltiplicaIlDannoSubito(TipoDanno.FUOCO, 0.0d);
+		DRAGO.moltiplicaIlDannoSubito(TipoDanno.GELO, 1.5d);
 		CHIMERA_DRAGO.moltiplicaIlDannoSubito(TipoDanno.FUOCO, 0.0d);
+		CHIMERA_DRAGO.moltiplicaIlDannoSubito(TipoDanno.GELO, 1.5d);
+		CHIMERA_DRAGO.moltiplicaIlDannoSubito(TipoDanno.VELENO, 0.5d);
+		CHIMERA.moltiplicaIlDannoSubito(TipoDanno.FUOCO, 0.5d);
+		CHIMERA.moltiplicaIlDannoSubito(TipoDanno.VELENO, 0.5d);
+		// La viverna è velenosa
+		VIVERNA.moltiplicaIlDannoSubito(TipoDanno.VELENO, 0.0d);
+		// L'idra: palude e veleno; il fuoco e l'acido impediscono alle teste di ricrescere
 		IDRA.moltiplicaIlDannoSubito(TipoDanno.TERRA, 0.0d);
 		IDRA.moltiplicaIlDannoSubito(TipoDanno.ACQUA, 0.0d);
 		IDRA.moltiplicaIlDannoSubito(TipoDanno.ARIA, 0.0d);
-		// Il gargoyle è di pietra: subisce solo il danno fisico
+		IDRA.moltiplicaIlDannoSubito(TipoDanno.VELENO, 0.0d);
+		IDRA.moltiplicaIlDannoSubito(TipoDanno.FUOCO, 1.5d);
+		IDRA.moltiplicaIlDannoSubito(TipoDanno.ACIDO, 1.5d);
+		// Il troll si rigenera, ma non dal fuoco e dall'acido
+		TROLL.moltiplicaIlDannoSubito(TipoDanno.FUOCO, 1.5d);
+		TROLL.moltiplicaIlDannoSubito(TipoDanno.ACIDO, 1.5d);
+		// Il gargoyle è di pietra: subisce solo il danno fisico, e la pietra si spacca a martellate
 		for (TipoDanno tipoDanno : TipoDanno.values()) {
 			if (tipoDanno.getSuperTipo() != SupertipoDanno.FISICO) {
 				GARGOYLE.moltiplicaIlDannoSubito(tipoDanno, 0.0d);
 			}
 		}
+		GARGOYLE.moltiplicaIlDannoSubito(TipoDanno.CONTUNDENTE, 1.5d);
+		GARGOYLE.moltiplicaIlDannoSubito(TipoDanno.PERFORANTE, 0.75d);
+		GARGOYLE.moltiplicaIlDannoSubito(TipoDanno.TAGLIENTE, 0.75d);
+		// La strega: al rogo, e le maledizioni sono il suo mestiere
+		STREGA.moltiplicaIlDannoSubito(TipoDanno.FUOCO, 1.5d);
+		STREGA.moltiplicaIlDannoSubito(TipoDanno.MALEDIZIONE, 0.5d);
+		// Il folletto teme il ferro: lame e punte lo feriscono di più
+		FOLLETTO.moltiplicaIlDannoSubito(TipoDanno.TAGLIENTE, 1.25d);
+		FOLLETTO.moltiplicaIlDannoSubito(TipoDanno.PERFORANTE, 1.25d);
 	}
 
 	TipoPersonaggio(CategoriaPersonaggio... categorie) {

@@ -1055,7 +1055,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	/**
 	 * Un testo che sale sopra il personaggio, come il nome di un'interazione
 	 */
-	public void aggiungiTestoSulPersonaggio(VistaPersonaggio personaggio, String testo, DoomdarkColorModel.Color colore) {
+	public void aggiungiTestoSulPersonaggio(VistaPersonaggio personaggio, String testo, java.awt.Color colore) {
 		aggiungiSprite(riquadroLocazione.aggiungiTestoSulPersonaggio(personaggio, testo, colore));
 	}
 

@@ -328,6 +328,22 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 	}
 
 	SpriteInterface aggiungiTestoSulPersonaggio(VistaPersonaggio personaggio, String testo, DoomdarkColorModel.Color colore) {
+		return aggiungiTestoSulPersonaggio(personaggio, testo, (x, y) ->
+				new SpriteEffetto(testo, DoomdarkFontMedium.getInstance(), colore, x, y));
+	}
+
+	/**
+	 * Come sopra, con un colore costruito al volo (non uno dei colori fissi di DoomdarkColorModel)
+	 */
+	SpriteInterface aggiungiTestoSulPersonaggio(VistaPersonaggio personaggio, String testo, java.awt.Color colore) {
+		BufferedImage pattern = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+		pattern.setRGB(0, 0, colore.getRGB());
+		return aggiungiTestoSulPersonaggio(personaggio, testo, (x, y) ->
+				new SpriteEffetto(testo, DoomdarkFontMedium.getInstance(), pattern, x, y));
+	}
+
+	private SpriteInterface aggiungiTestoSulPersonaggio(VistaPersonaggio personaggio, String testo,
+														java.util.function.BiFunction<Integer, Integer, SpriteEffetto> costruttore) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
 		if (coordinate == null) {
 			return null;
@@ -335,8 +351,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		BufferedImage image = mappaImmagini.get(personaggio);
 		int x = xEffetto(personaggio, coordinate, image);
 		int yIniziale = coordinate.getY() + image.getHeight() * 2 / 3 - SOLLEVAMENTO_ANCORA;
-		SpriteEffetto sprite = new SpriteEffetto(testo, DoomdarkFontMedium.getInstance(),
-				colore, x, yIniziale + calcolaOffsetVerticale(yIniziale));
+		SpriteEffetto sprite = costruttore.apply(x, yIniziale + calcolaOffsetVerticale(yIniziale));
 		effettiAttivi.add(new EffettoAttivo(yIniziale, sprite));
 		return sprite;
 	}

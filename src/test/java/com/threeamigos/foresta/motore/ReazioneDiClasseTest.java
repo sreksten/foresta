@@ -76,7 +76,7 @@ class ReazioneDiClasseTest {
     @Test
     void ancheGliIncantamentiDellArmaContano() {
         colpisci(FabbricaPersonaggi.crea(TipoPersonaggio.SCHELETRO, 5),
-                arma(TipoDanno.TAGLIENTE, new IncantamentoMD("Luce", TipoDanno.SACRO, 5, 0.1d)));
+                arma(TipoDanno.FUOCO, new IncantamentoMD("Luce", TipoDanno.SACRO, 5, 0.1d)));
         assertEquals(1, notifiche.size());
         assertEquals(TipoDanno.SACRO, notifiche.get(0).getTipoDanno());
     }
@@ -84,7 +84,7 @@ class ReazioneDiClasseTest {
     @Test
     void senzaDebolezzeNonParteNiente() {
         colpisci(FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 5), arma(TipoDanno.SACRO));
-        colpisci(FabbricaPersonaggi.crea(TipoPersonaggio.SCHELETRO, 5), arma(TipoDanno.TAGLIENTE));
+        colpisci(FabbricaPersonaggi.crea(TipoPersonaggio.SCHELETRO, 5), arma(TipoDanno.FUOCO));
         assertTrue(notifiche.isEmpty(), String.valueOf(notifiche));
     }
 }

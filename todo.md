@@ -31,6 +31,24 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
   se ce n'è già uno vicino e attivo, il nuovo parte più in basso (`primoPostoLibero`), e le variazioni nulle non ne creano. 
   Da guardare in partita: i mostri molto larghi (Drago, 454 px su 390) vengono coperti dal gruppo.
 - Fumetto che attende la chiusura.
+- **Tabella delle debolezze e resistenze (provvisoria).** Le voci per classe e categoria in `TipoPersonaggio` e `CategoriaPersonaggio` sono un primo giro dalla tradizione fantasy (vedi [`debolezze_e_resistenze.md`](debolezze_e_resistenze.md)): vanno provate in partita, ritoccate e completate per le classi che non hanno ancora voci (Arpia, Centauro, Minotauro, Gigante, Titano, Goblin, Hobgoblin).
+- **Incantesimo `LUCE_BENEDETTA` contro i non morti.** Oggi nessun incantesimo fa danno `SACRO` (le pergamene sono Aria, Acqua, Terra, Fuoco, Fulmine, Gelo, Veleno, Morte, Resurrezione, Alba Sacra, Silenzio), anche se i non morti subiscono il doppio dal sacro (categoria `NON_MORTO`, vedi [`debolezze_e_resistenze.md`](debolezze_e_resistenze.md)) e la SAGGEZZA potenzia i danni sacri (`CalcolatoreCombattimento`). Andrebbe aggiunto un incantesimo `LUCE_BENEDETTA` di tipo `SACRO` contro i non morti, magari anche come **caratteristica innata di Sacerdote e Sacerdotessa** (come il Dardo arcano per Mago ed Elfo e l'Alba Sacra per loro: senza pergamene, per poca MAGIA). Si lega alla voce qui sotto sulla Resurrezione e ai non morti.
+- **Incantesimi che mancano per i tipi di danno non fisici.** Ogni `TipoDanno` non fisico dovrebbe avere almeno un incantesimo che lo infligge. Oggi (`ClasseIncantesimo`, più il Dardo arcano e i canti) la situazione è questa:
+
+  | Tipo di danno | Incantesimo oggi | Manca? | Effetto di stato nativo (`TipoDanno.getEffetti`) |
+  | :--- | :--- | :--- | :--- |
+  | Aria, Acqua, Terra, Fuoco, Fulmine, Gelo, Veleno | Aria, Acqua, Terra, Fuoco, Fulmine, Gelo, Veleno | no | atterrato, bagnato, immobilizzato o accecato, bruciato, stordito, rallentato o congelato, avvelenato |
+  | **Acido** | nessuno | **sì** | nessuno (interagisce con `AVVELENATO`: Reazione Tossica) |
+  | **Sonico** | nessuno | **sì** | assordato (interagisce con `ASSORDATO`: Disorientamento) |
+  | **Necrotico** | solo Morte, che non fa danno ma uccide chi è sotto un quarto della salute | **sì**, un incantesimo che faccia danno necrotico | infettato (interagisce con `MALEDETTO`: Mietitura) |
+  | **Sacro** | nessuno (vedi `LUCE_BENEDETTA` sopra) | **sì** | accecato (interagisce con `MALEDETTO`, `INFETTATO`: Rigetto, Purificazione) |
+  | **Psichico** | nessuno | **sì** | confuso o spaventato (interagisce con `SILENZIATO`: Isolamento Sensoriale) |
+  | **Arcano** | solo il Dardo arcano (innato di Mago ed Elfo) e Silenzio (che mette `SILENZIATO` senza danno) | **sì**, una pergamena che faccia danno arcano | silenziato (interagisce con `INFETTATO`, `SILENZIATO`, `SPAVENTATO`/`CONFUSO`) |
+  | **Vuoto** | nessuno | **sì** (non c'è) | nessuno (interagisce con `CONFUSO`, `MALEDETTO`: Follia Cosmica, Collasso Entropico) |
+  | **Maledizione** | nessuno | **sì** | maledetto |
+
+  Quindi mancano sei incantesimi: **Acido, Sonico, Sacro, Psichico, Vuoto, Maledizione**, più un incantesimo **necrotico** e una pergamena **arcana** che facciano danno. Il Vuoto e la Maledizione sono i più rari e potenti, da tenere per i livelli alti, per boss o per ricompense (non per tutte le alchimie). Ognuno richiede costi, prezzo, icona (`ClasseIcona`, `img/icone`) e voce in `ClasseIncantesimo` (vedi come si è aggiunto il Silenzio).
+
 - **Resurrezione e non morti (da sistemare).** Il testo di `ClasseIncantesimo.RESURREZIONE` dice che l'incantesimo fa danno ai non morti ("rigetto rigenerativo alle creature d'ombra e ai non-morti"), e la tabella delle azioni di `tattiche_di_combattimento_automatiche.md` lo ripeteva, ma nel codice non è così: `Resurrezione.formula` non guarda se il bersaglio è un non morto (categoria `NON_MORTO`), e l'incantesimo si lancia solo su un compagno del gruppo (`SINGOLO_QUALSIASI`, benefico), quindi quel caso oggi non esiste. O si corregge il testo, o si implementa l'effetto (avrebbe senso solo con un bersaglio avversario, quindi con la scelta del bersaglio delle tattiche).
 - **Boss come Ondate (da valutare).** I boss (Lich, Minotauro Gigante, Strega...) si incontrano da soli e il gioco non distingue un avversario "di rango": trasformare quegli incontri in Ondate (`Ondata`) darebbe un modo naturale di riconoscerli, per il selettore "boss" delle tattiche (vedi [`tattiche_di_combattimento_automatiche.md`](tattiche_di_combattimento_automatiche.md) §6.1).
 - Come ci sono locande sparse per la foresta, anche qualche negozio (armaiolo, alchimista, venditore di pergamene, incantatore).

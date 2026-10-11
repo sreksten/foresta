@@ -30,9 +30,19 @@ public enum CategoriaPersonaggio {
 	// Quanto danno subisce, per tipo di danno, chi è di questa categoria: i tipi che mancano valgono 1
 	private final Map<TipoDanno, Double> dannoSubito = new EnumMap<>(TipoDanno.class);
 
+	// Le debolezze e le resistenze comuni a una categoria (quelle di una sola classe stanno in TipoPersonaggio). Tabella
+	// provvisoria, con le sue ragioni in debolezze_e_resistenze.md
 	static {
+		// I non morti: la luce sacra li brucia, il veleno non li tocca (non hanno un corpo che vive) e l'energia necrotica li
+		// rafforza più che ferirli
 		NON_MORTO.moltiplicaIlDannoSubito(TipoDanno.SACRO, 2.0d);
 		NON_MORTO.moltiplicaIlDannoSubito(TipoDanno.VELENO, 0.0d);
+		NON_MORTO.moltiplicaIlDannoSubito(TipoDanno.NECROTICO, 0.5d);
+		// Chi vola è fuori dalla portata di ciò che scuote il terreno
+		VOLANTE.moltiplicaIlDannoSubito(TipoDanno.TERRA, 0.5d);
+		// Ciò che è fabbricato non respira, non ha una mente e non ha sangue
+		COSTRUTTO.moltiplicaIlDannoSubito(TipoDanno.VELENO, 0.0d);
+		COSTRUTTO.moltiplicaIlDannoSubito(TipoDanno.PSICHICO, 0.0d);
 	}
 
 	CategoriaPersonaggio(String nome) {

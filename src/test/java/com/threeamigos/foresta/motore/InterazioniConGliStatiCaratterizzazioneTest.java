@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Caratterizzazione di CalcolatoreCombattimento.calcolaDannoRisultante per le interazioni fra tipi di danno e stati del
- * difensore (vedi TipoInterazioneConEffettiDiStato): per ogni difensore, ogni stato (da solo e a coppie) e ogni tipo di
+ * difensore (vedi TipoInterazioneConEffettiDiStato): per ogni difensore (un guerriero, un goblin e un mago), ogni stato (da solo e a coppie) e ogni tipo di
  * danno, con i dadi a seme fisso, si scrive tutto quello che il calcolo produce (danno, interazioni, stati aggiunti e
  * tolti, bandiere) e se ne confronta l'impronta con quella registrata. Serve a poter riscrivere il calcolo senza cambiarne
  * il comportamento; se lo si cambia di proposito, l'impronta si rigenera.
@@ -49,7 +49,7 @@ class InterazioniConGliStatiCaratterizzazioneTest {
      * il danno vero dei non morti non è più fra le interazioni ma nel campo {@code classe} (SACRO=2.0), con lo stesso
      * effetto sul danno.
      */
-    private static final String IMPRONTA_ATTESA = "22d6002df19ae8b47cf9e00963c714ac7d38496d0b983d95459e6b84a8183b35";
+    private static final String IMPRONTA_ATTESA = "eb1a9b6ae6dfcfbaea53462ea77d503512aca5f90426526c39ee0d0b8281e1ea";
 
     private static final TipoEffettoDiStato[] STATI = {
             TipoEffettoDiStato.BAGNATO, TipoEffettoDiStato.BRUCIATO, TipoEffettoDiStato.AVVELENATO, TipoEffettoDiStato.SANGUINAMENTO,
@@ -57,7 +57,8 @@ class InterazioniConGliStatiCaratterizzazioneTest {
             TipoEffettoDiStato.ATTERRATO, TipoEffettoDiStato.RALLENTATO, TipoEffettoDiStato.IMMOBILIZZATO, TipoEffettoDiStato.SPAVENTATO,
             TipoEffettoDiStato.CONFUSO, TipoEffettoDiStato.ACCECATO, TipoEffettoDiStato.ASSORDATO, TipoEffettoDiStato.SILENZIATO,
             TipoEffettoDiStato.MENTE_FRATTURATA};
-    private static final TipoPersonaggio[] DIFENSORI = {TipoPersonaggio.GUERRIERO, TipoPersonaggio.SCHELETRO, TipoPersonaggio.FANTASMA};
+    // Classi senza debolezze né resistenze nella tabella (TipoPersonaggio), così un ritocco della tabella non cambia l'impronta
+    private static final TipoPersonaggio[] DIFENSORI = {TipoPersonaggio.GUERRIERO, TipoPersonaggio.GOBLIN, TipoPersonaggio.MAGO};
 
     @BeforeEach
     void prepara() {
