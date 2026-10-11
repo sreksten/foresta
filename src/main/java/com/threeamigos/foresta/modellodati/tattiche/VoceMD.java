@@ -109,7 +109,7 @@ public final class VoceMD {
 
 	/**
 	 * Gli errori della voce per quel lato (un mio personaggio o un mostro): azioni di portate diverse, una rosa che nessuna azione accetta
-	 * o che non vale per il lato. Vuota se la voce è a posto: la lettura rifiuta una tattica con problemi.
+	 * o che non vale per il lato. Vuota se la voce è a posto. La rilettura non rifiuta una tattica con problemi: la disabilita (TatticaMD.problemiPerQualsiasiLato).
 	 */
 	public List<String> problemi(boolean attoreDelGiocatore) {
 		List<String> problemi = new ArrayList<>();

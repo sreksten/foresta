@@ -122,7 +122,7 @@ class SalvataggioTatticheTest {
         String testo = scrivi(TatticaMD.di(VoceMD.su(new SelettoreMD(TipoRosa.AVVERSARI,
                 Collections.singletonList(FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BAGNATO)), OrdinamentoMD.di(TipoOrdinamento.PRIMO)),
                 AzioneMD.di(TipoAzione.FULMINE))));
-        assertEquals("TATTICA|1\nVOCE|true|true|0|1\nSELETTORE|AVVERSARI|PRIMO||1\nFILTRO|STATO|false||0|BAGNATO|||\nAZIONE|FULMINE||false|\n",
+        assertEquals("TATTICA|1|0\nVOCE|true|true|0|1\nSELETTORE|AVVERSARI|PRIMO||1\nFILTRO|STATO|false||0|BAGNATO|||\nAZIONE|FULMINE||false|\n",
                 testo.replace("\r\n", "\n"));
     }
 
@@ -133,11 +133,11 @@ class SalvataggioTatticheTest {
         assertThrows(IOException.class, () -> rileggi(buono.replace("SELETTORE|", "SELEZIONE|")), "elemento atteso e non trovato");
         assertThrows(IOException.class, () -> rileggi(buono.replace("|SILENZIO|", "|NON_ESISTE|")), "azione sconosciuta");
         assertThrows(IOException.class, () -> rileggi(buono.substring(0, buono.length() / 2)), "salvataggio troncato");
-        assertThrows(IOException.class, () -> rileggi("TATTICA|1\nVOCE|true|false|0|0\n"), "una voce senza azioni");
+        assertThrows(IOException.class, () -> rileggi("TATTICA|1|0\nVOCE|true|false|0|0\n"), "una voce senza azioni");
         // Un filtro di classe senza la classe
-        assertThrows(IOException.class, () -> rileggi("TATTICA|1\nVOCE|true|true|0|1\nSELETTORE|AVVERSARI|PRIMO||1\nFILTRO|CLASSE|false||0||||\nAZIONE|ATTACCO_FISICO||false|\n"));
+        assertThrows(IOException.class, () -> rileggi("TATTICA|1|0\nVOCE|true|true|0|1\nSELETTORE|AVVERSARI|PRIMO||1\nFILTRO|CLASSE|false||0||||\nAZIONE|ATTACCO_FISICO||false|\n"));
         // Un ordinamento che vuole un tipo di danno, senza
-        assertThrows(IOException.class, () -> rileggi("TATTICA|1\nVOCE|true|true|0|1\nSELETTORE|AVVERSARI|PIU_DEBOLE_A||0\nAZIONE|ATTACCO_FISICO||false|\n"));
+        assertThrows(IOException.class, () -> rileggi("TATTICA|1|0\nVOCE|true|true|0|1\nSELETTORE|AVVERSARI|PIU_DEBOLE_A||0\nAZIONE|ATTACCO_FISICO||false|\n"));
     }
 
     @Test

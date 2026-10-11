@@ -22,7 +22,7 @@ public final class RisultatoSelezione {
 	}
 
 	/**
-	 * Il bersaglio, o null se non è rimasto nessun candidato (la voce non è eseguibile)
+	 * Il bersaglio, o null se non è stato scelto nessuno (la voce non è eseguibile)
 	 */
 	public Personaggio getScelto() {
 		return scelto;
@@ -35,8 +35,12 @@ public final class RisultatoSelezione {
 		return rimasti;
 	}
 
+	/**
+	 * Se nessun candidato è stato scelto: non ne è rimasto nessuno dopo i filtri, o l'ordinamento voleva un personaggio preciso (chi ha attaccato per ultimo,
+	 * l'ultimo scelto) che non c'è fra i rimasti
+	 */
 	public boolean isVuoto() {
-		return rimasti.isEmpty();
+		return scelto == null;
 	}
 
 	/**

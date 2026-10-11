@@ -171,6 +171,8 @@ class ScenarioDuelliTest {
             Guerriero compagno = new Guerriero("Compagno", 1);
             partita.gruppo().aggiungiPersonaggio(compagno);
             compagno.getModelloDati().set(TipoAttributo.SALUTE, 1);
+            // Senza pozioni né altro: con la tattica predefinita del guerriero si curerebbe, e il duello non sarebbe perso
+            compagno.setTattica(com.threeamigos.foresta.modellodati.tattiche.TatticaMD.VUOTA);
             entraNelCovo(partita, sfida.getCovo());
             partita.comando(Comando.PERSONAGGIO_2);
 

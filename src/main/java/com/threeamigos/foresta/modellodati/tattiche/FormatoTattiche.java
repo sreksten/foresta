@@ -10,7 +10,7 @@ import java.io.IOException;
  * {@link com.threeamigos.foresta.modellodati.Serializzabile#PIPE}, la prima parola dice di che elemento si tratta. I campi che possono mancare
  * restano vuoti; gli elementi che ne contengono altri dicono quanti sono, e questi seguono nelle righe successive.
  * <pre>
- * TATTICA|numero di voci
+ * TATTICA|numero di voci|disabilitata (0 o 1)
  * VOCE|attiva|ha un selettore|numero di condizioni|numero di azioni
  * SELETTORE|rosa|ordinamento|tipo di danno dell'ordinamento|numero di filtri       (seguono i filtri)
  * FILTRO|tipo|negato|confronto|numero|stato|classe|categoria|tipo di danno

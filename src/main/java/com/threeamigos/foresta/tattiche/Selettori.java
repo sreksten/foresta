@@ -66,7 +66,7 @@ public final class Selettori {
 			candidati = rimasti;
 			passi.add(filtro + ": " + candidati.size() + nomi(candidati));
 		}
-		Personaggio scelto = Ordinamenti.scegli(candidati, selettore.getOrdinamento());
+		Personaggio scelto = Ordinamenti.scegli(candidati, selettore.getOrdinamento(), contesto);
 		String misure = Ordinamenti.descriviLeMisure(candidati, selettore.getOrdinamento());
 		passi.add(selettore.getOrdinamento() + (misure.isEmpty() ? "" : " (" + misure + ")") + ": " + (scelto == null ? "nessuno" : scelto.getNome()));
 		return new RisultatoSelezione(scelto, candidati, passi);

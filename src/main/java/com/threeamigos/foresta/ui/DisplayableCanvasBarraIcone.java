@@ -165,7 +165,12 @@ class DisplayableCanvasBarraIcone implements Finestra {
 
 	private BufferedImage getIcona(Comando comando) {
 		if (comando.isPersonaggio()) {
-			return getIconaPersonaggio(comando.ordinal() - Comando.PERSONAGGIO_1.ordinal()).getIcona();
+			int indice = comando.ordinal() - Comando.PERSONAGGIO_1.ordinal();
+			ClasseIcona icona = getIconaPersonaggio(indice);
+			// Il capo si riconosce dallo sfondo rosso
+			VistaPersonaggio capo = vistaPartita.getGruppoGiocatore().getCapo();
+			boolean isCapo = capo != null && capo.getUuid().equals(vistaPartita.getGruppoGiocatore().getPersonaggio(indice).getUuid());
+			return isCapo ? icona.getIconaCapo() : icona.getIcona();
 		}
 		return ClasseIcona.ofComando(comando).getIcona();
 	}

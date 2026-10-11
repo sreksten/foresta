@@ -892,15 +892,17 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
-	 * La tattica con cui agisce un personaggio: la sua; se non ne ha una, per i miei quella vuota (attaccano il primo avversario in campo, come
-	 * prima) e per un mostro quella base della sua classe (RegistroTattiche: oggi la replica di come i mostri sceglievano prima delle tattiche).
+	 * La tattica con cui agisce un personaggio: la sua; se non ne ha una, per i miei quella predefinita del suo ruolo e per un mostro quella
+	 * base della sua classe (RegistroTattiche, che le prende da TatticheBase).
 	 */
 	private TatticaMD tatticaDi(Personaggio personaggio) {
 		TatticaMD tattica = personaggio.getTattica();
-		if (tattica != null) {
+		// Una tattica disabilitata (con errori, letta da un salvataggio) è come se non ci fosse, finché il giocatore non la corregge
+		if (tattica != null && !tattica.isDisabilitata()) {
 			return tattica;
 		}
-		return gruppo.contiene(personaggio) ? TatticaMD.VUOTA : RegistroTattiche.perClasse(personaggio.getClasse());
+		return gruppo.contiene(personaggio) ? RegistroTattiche.predefinitaDelGiocabile(personaggio.getClasse())
+				: RegistroTattiche.perClasse(personaggio.getClasse());
 	}
 
 	/**

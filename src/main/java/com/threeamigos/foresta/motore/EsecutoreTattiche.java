@@ -126,10 +126,24 @@ public final class EsecutoreTattiche {
 				canta(attore, TipoCanto.DI_VALORE, null, gruppoDellAttore, gruppoNemico);
 				break;
 			case POZIONE_SALUTE:
-				beviLaPozioneDellaSalute(attore, bersaglio, gruppoDellAttore);
+				annuncia(attore, null);
+				gruppoDellAttore.consumaPozioneSalute(bersaglio);
+				stato.registraAlleato(attore, bersaglio);
+				break;
+			case POZIONE_SALUTE_GRANDE:
+				annuncia(attore, null);
+				gruppoDellAttore.consumaPozioneSaluteGrande(bersaglio);
+				stato.registraAlleato(attore, bersaglio);
 				break;
 			case POZIONE_MAGIA:
-				beviLaPozioneDellaMagia(attore, bersaglio, gruppoDellAttore);
+				annuncia(attore, null);
+				gruppoDellAttore.consumaPozioneMagia(bersaglio);
+				stato.registraAlleato(attore, bersaglio);
+				break;
+			case POZIONE_MAGIA_GRANDE:
+				annuncia(attore, null);
+				gruppoDellAttore.consumaPozioneMagiaGrande(bersaglio);
+				stato.registraAlleato(attore, bersaglio);
 				break;
 			case CAMBIA_ARMA:
 				cambiaArma(attore, decisione);
@@ -221,35 +235,6 @@ public final class EsecutoreTattiche {
 			stato.registraIncantesimoLanciato(cantore);
 			annuncia(cantore, null);
 		}
-	}
-
-	/**
-	 * Beve la pozione grande se manca almeno quanto ne ridà (o se non c'è altra), altrimenti la normale
-	 */
-	private void beviLaPozioneDellaSalute(Personaggio attore, Personaggio bevitore, Gruppo gruppoDellAttore) {
-		annuncia(attore, null);
-		boolean grande = gruppoDellAttore.getPozioniSaluteGrande() > 0;
-		boolean normale = gruppoDellAttore.getPozioniSalute() > 0;
-		int mancante = bevitore.getSaluteMassima() - bevitore.getSalute();
-		if (grande && (mancante >= Costanti.RECUPERO_DA_POZIONE_SALUTE_GRANDE || !normale)) {
-			gruppoDellAttore.consumaPozioneSaluteGrande(bevitore);
-		} else if (normale) {
-			gruppoDellAttore.consumaPozioneSalute(bevitore);
-		}
-		stato.registraAlleato(attore, bevitore);
-	}
-
-	private void beviLaPozioneDellaMagia(Personaggio attore, Personaggio bevitore, Gruppo gruppoDellAttore) {
-		annuncia(attore, null);
-		boolean grande = gruppoDellAttore.getPozioniMagiaGrande() > 0;
-		boolean normale = gruppoDellAttore.getPozioniMagia() > 0;
-		int mancante = bevitore.getMagiaMassima() - bevitore.getMagia();
-		if (grande && (mancante >= Costanti.RECUPERO_DA_POZIONE_MAGIA_GRANDE || !normale)) {
-			gruppoDellAttore.consumaPozioneMagiaGrande(bevitore);
-		} else if (normale) {
-			gruppoDellAttore.consumaPozioneMagia(bevitore);
-		}
-		stato.registraAlleato(attore, bevitore);
 	}
 
 	/**

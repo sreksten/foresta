@@ -101,6 +101,7 @@ public class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(RichiestaAperturaInventarioFornitore.class, this::gestisciEventoRichiestaAperturaInventarioFornitore);
 		BusEventi.iscriviti(RichiestaAperturaInventarioGruppo.class, this::gestisciEventoRichiestaAperturaInventarioGruppo);
 		BusEventi.iscriviti(RichiestaAperturaTrofei.class, this::gestisciEventoRichiestaAperturaTrofei);
+		BusEventi.iscriviti(RichiestaAperturaTattiche.class, this::gestisciEventoRichiestaAperturaTattiche);
 		BusEventi.iscriviti(InternoRichiestaChiusuraFinestraCombattimento.class, this::gestisciEventoRichiestaChiusuraFinestraCombattimento);
 		BusEventi.iscriviti(InternoSfidaCartaForbiciSasso.class, this::gestisciEventoSfidaCartaForbiciSasso);
 		BusEventi.iscriviti(NotificaRaccoltaOggetti.class, this::gestisciEventoRaccoltaOggetti);
@@ -363,6 +364,11 @@ public class ForestaUI implements Temporizzabile {
 	private void gestisciEventoRichiestaAperturaTrofei(RichiestaAperturaTrofei evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.trofei();
+	}
+
+	private void gestisciEventoRichiestaAperturaTattiche(RichiestaAperturaTattiche evento) {
+		impostaAzioni(evento.getPossibilita());
+		displayableCanvas.tattiche(evento.getPersonaggio(), evento.getTattica(), evento.getTatticaPredefinita(), evento.getAzioniPossibili());
 	}
 
 	private void gestisciEventoSfidaCartaForbiciSasso(InternoSfidaCartaForbiciSasso evento) {

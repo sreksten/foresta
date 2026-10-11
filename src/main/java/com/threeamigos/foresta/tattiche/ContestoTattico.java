@@ -133,12 +133,22 @@ public final class ContestoTattico {
 		return gruppoDegliAlleati == null ? 0 : gruppoDegliAlleati.getIncantesimi(classe);
 	}
 
+	/** Le pozioni della Salute normali (le grandi sono un'altra azione) */
 	public int getPozioniSalute() {
-		return gruppoDegliAlleati == null ? 0 : gruppoDegliAlleati.getPozioniSalute() + gruppoDegliAlleati.getPozioniSaluteGrande();
+		return gruppoDegliAlleati == null ? 0 : gruppoDegliAlleati.getPozioniSalute();
 	}
 
+	public int getPozioniSaluteGrandi() {
+		return gruppoDegliAlleati == null ? 0 : gruppoDegliAlleati.getPozioniSaluteGrande();
+	}
+
+	/** Le pozioni della Magia normali (le grandi sono un'altra azione) */
 	public int getPozioniMagia() {
-		return gruppoDegliAlleati == null ? 0 : gruppoDegliAlleati.getPozioniMagia() + gruppoDegliAlleati.getPozioniMagiaGrande();
+		return gruppoDegliAlleati == null ? 0 : gruppoDegliAlleati.getPozioniMagia();
+	}
+
+	public int getPozioniMagiaGrandi() {
+		return gruppoDegliAlleati == null ? 0 : gruppoDegliAlleati.getPozioniMagiaGrande();
 	}
 
 	public Personaggio getAttore() {

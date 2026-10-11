@@ -104,12 +104,17 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		capo = null;
 		personaggi.clear();
 		List<PersonaggioMD> personaggiDaAggiungere = new ArrayList<>(gruppoGiocatoreMD.getPersonaggiMD());
+		int indiceCapo = gruppoGiocatoreMD.getIndiceCapo();
 		gruppoGiocatoreMD.getPersonaggiMD().clear();
 		for (PersonaggioMD personaggioMD : personaggiDaAggiungere) {
 			Personaggio personaggio = FabbricaPersonaggi.crea(personaggioMD.getClasse(), 1);
 			personaggio.setModelloDati(personaggioMD);
 			aggiungiPersonaggioSenzaNotificare(personaggio);
 		}
+		if (indiceCapo >= 0 && indiceCapo < personaggi.size()) {
+			capo = personaggi.get(indiceCapo);
+		}
+		allineaIndiceCapo();
 		ospiti.clear();
 		for (PersonaggioMD ospiteMD : gruppoGiocatoreMD.getOspitiMD()) {
 			Personaggio ospite = FabbricaPersonaggi.crea(ospiteMD.getClasse(), 1);
@@ -247,11 +252,36 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		String nome = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		BusEventi.pubblica(new NotificaTestoFrase(nome + " è felice di poter far parte del gruppo."));
 		md.addPersonaggioMD(personaggio.getModelloDati());
+		allineaIndiceCapo();
 	}
 
 	public final void aggiungiPersonaggioSenzaNotificare(Personaggio personaggio) {
 		super.aggiungiPersonaggio(personaggio);
 		md.addPersonaggioMD(personaggio.getModelloDati());
+		allineaIndiceCapo();
+	}
+
+	/**
+	 * Come {@link Gruppo#spostaPersonaggio}, e anche l'ordine del modello dati, che è quello che si salva.
+	 */
+	@Override
+	public boolean spostaPersonaggio(Personaggio p, int direzione) {
+		if (!super.spostaPersonaggio(p, direzione)) {
+			return false;
+		}
+		md.getPersonaggiMD().clear();
+		for (Personaggio personaggio : personaggi) {
+			md.addPersonaggioMD(personaggio.getModelloDati());
+		}
+		allineaIndiceCapo();
+		return true;
+	}
+
+	/**
+	 * Il modello dati ricorda dove sta il capo, che si salva con la partita.
+	 */
+	private void allineaIndiceCapo() {
+		md.setIndiceCapo(Math.max(0, personaggi.indexOf(capo)));
 	}
 
 	@Override
@@ -259,6 +289,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		super.rimuoviPersonaggio(p);
 		// Anche dal modello dati, altrimenti ricomparirebbe dopo un salvataggio
 		md.getPersonaggiMD().remove(p.getModelloDati());
+		allineaIndiceCapo();
 		String nome = p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		if (p.getMotivoNelGruppo() == TipoMotivoNelGruppo.MIETITURA) {
 			// Non se ne va: è finito l'effetto della Mietitura che lo teneva in piedi

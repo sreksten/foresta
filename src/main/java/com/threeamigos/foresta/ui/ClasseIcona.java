@@ -125,6 +125,7 @@ public enum ClasseIcona {
 	AIUTO(Comando.AIUTO, "icone/Aiuto.gif", Sfondo.VERDE),
 	NO_AIUTO(Comando.NO_AIUTO, "icone/Aiuto.gif", Sfondo.ROSSO),
 	MOSTRA_TROFEI(Comando.MOSTRA_TROFEI, "icone/Trofei.gif", Sfondo.VERDE),
+	MOSTRA_TATTICHE(Comando.MOSTRA_TATTICHE, "icone/TatticheAttacco.gif", Sfondo.VERDE),
 	PERGAMENA(Comando.PERGAMENA, "icone/Pergamena.gif", Sfondo.GRIGIO),
 
 	SU(Comando.SU, "icone/Su.gif", Sfondo.VERDE),
@@ -145,6 +146,7 @@ public enum ClasseIcona {
 	private final Sfondo sfondo;
 	// Caricata al primo uso, o da precarica(): cosi' la dimensione della finestra si calcola senza caricarle tutte
 	private volatile BufferedImage icona;
+	private volatile BufferedImage iconaCapo;
 	private static int altezzaMassima = -1;
 
 	ClasseIcona(Comando comando, String nomeRisorsa, Sfondo sfondo) {
@@ -201,6 +203,24 @@ public enum ClasseIcona {
 					BufferedImage composta = componi(sfondo.getImmagine(), BufferedImageBuilder.buildBufferedImage(nomeRisorsa));
 					caricata = BufferedImageBuilder.ingrandisci(composta, LivelloDiZoom.valore());
 					icona = caricata;
+				}
+			}
+		}
+		return caricata;
+	}
+
+	/**
+	 * L'icona del personaggio che è il capo del gruppo: la stessa, con lo sfondo rosso.
+	 */
+	public BufferedImage getIconaCapo() {
+		BufferedImage caricata = iconaCapo;
+		if (caricata == null) {
+			synchronized (this) {
+				caricata = iconaCapo;
+				if (caricata == null) {
+					BufferedImage composta = componi(Sfondo.ROSSO.getImmagine(), BufferedImageBuilder.buildBufferedImage(nomeRisorsa));
+					caricata = BufferedImageBuilder.ingrandisci(composta, LivelloDiZoom.valore());
+					iconaCapo = caricata;
 				}
 			}
 		}

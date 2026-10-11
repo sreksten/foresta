@@ -31,16 +31,18 @@ public enum TipoAzione {
 	 * scelgono i mostri oggi (RegistroTattiche); un giocatore usa piuttosto le azioni dei singoli incantesimi o INCANTESIMO_DI_DANNO
 	 */
 	INCANTESIMO_DEL_REPERTORIO("Incantesimo del repertorio", PortataAzione.AVVERSARIO, null),
-	DARDO_ARCANO("Dardo arcano", PortataAzione.AVVERSARIO, null),
+	DARDO_ARCANO("Dardo Arcano", PortataAzione.AVVERSARIO, null),
 	RESURREZIONE("Resurrezione", PortataAzione.ALLEATO_CADUTO, ClasseIncantesimo.RESURREZIONE),
-	ALBA_SACRA("Alba sacra", PortataAzione.GRUPPO_ALLEATI, ClasseIncantesimo.ALBA_SACRA),
-	CANTO_CURATIVO("Canto curativo", PortataAzione.ALLEATO, null),
-	CANTO_IPNOTICO("Canto ipnotico", PortataAzione.GRUPPO_AVVERSARI, null),
+	ALBA_SACRA("Alba Sacra", PortataAzione.GRUPPO_ALLEATI, ClasseIncantesimo.ALBA_SACRA),
+	CANTO_CURATIVO("Canto Curativo", PortataAzione.ALLEATO, null),
+	CANTO_IPNOTICO("Canto Ipnotico", PortataAzione.GRUPPO_AVVERSARI, null),
 	URLO_DELLA_BANSHEE("Urlo della Banshee", PortataAzione.GRUPPO_AVVERSARI, null),
-	CANTO_DI_VALORE("Canto di valore", PortataAzione.GRUPPO_ALLEATI, null),
+	CANTO_DI_VALORE("Canto di Valore", PortataAzione.GRUPPO_ALLEATI, null),
 	POZIONE_SALUTE("Pozione della Salute", PortataAzione.ALLEATO, null),
 	POZIONE_MAGIA("Pozione della Magia", PortataAzione.ALLEATO, null),
-	CAMBIA_ARMA("Cambia arma", PortataAzione.ARMA, null);
+	POZIONE_SALUTE_GRANDE("Pozione della Salute grande", PortataAzione.ALLEATO, null),
+	POZIONE_MAGIA_GRANDE("Pozione della Magia grande", PortataAzione.ALLEATO, null),
+	CAMBIA_ARMA("Cambia Arma", PortataAzione.ARMA, null);
 
 	private final String descrizione;
 	private final PortataAzione portata;

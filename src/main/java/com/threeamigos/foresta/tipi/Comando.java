@@ -109,6 +109,8 @@ public enum Comando {
 
 	// Dall'inventario, la pagina dei trofei
 	MOSTRA_TROFEI("Mostra i trofei vinti"),
+	// Dall'inventario, la schermata delle tattiche di combattimento
+	MOSTRA_TATTICHE("Mostra le tattiche di combattimento"),
 
 	// Usata per chiedere conferma all'utente prima di andare avanti
 	PERGAMENA("Avanti"),

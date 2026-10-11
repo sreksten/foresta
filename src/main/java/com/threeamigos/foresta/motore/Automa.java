@@ -5,6 +5,8 @@ import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
+import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
+import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.incantesimi.CantoDelBardo;
 import com.threeamigos.foresta.incantesimi.TipoCanto;
@@ -107,6 +109,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Personaggio personaggio;
 	// Ultimo personaggio scelto nella schermata inventario: non salvato, si azzera a ogni avvio.
 	private int indicePersonaggioInventario = 0;
+	// Il personaggio di cui la schermata delle tattiche mostra la tattica (posizione nel gruppo)
+	private int indicePersonaggioTattiche = 0;
 	private Locazione locazioneCorrente;
 	private Comando direzione; // serve a memorizzare la direzione prima di chiedere il numero di passi
 	private Collection<Comando> comandiPossibiliPerNumeroPassi; // i passi consentiti in quella direzione, più ANNULLA
@@ -180,6 +184,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// Gli spostamenti di artefatti nella schermata di scambio aperta: li fa lo scambio stesso
 		BusEventi.iscriviti(ComandoScambioArtefatto.class, AutomaScambiatoreArtefatti::esegui);
 		BusEventi.iscriviti(ComandoSpesaPuntoAbilita.class, this::onComandoSpesaPuntoAbilita);
+		BusEventi.iscriviti(ComandoImpostaTattica.class, this::onComandoImpostaTattica);
+		BusEventi.iscriviti(ComandoSpostaPersonaggio.class, this::onComandoSpostaPersonaggio);
 		BusEventi.iscriviti(ComandoCommutazioneElenco.class, Automa::onComandoCommutazioneElenco);
 		// L'interruttore dell'aiuto vale in ogni stato: non passa dalla macchina a stati
 		BusEventi.iscriviti(ComandoImpostazioneAiuto.class,
@@ -221,6 +227,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriIngresso.put(Stato.MAPPA, this::entraInStatoMappa);
 		gestoriIngresso.put(Stato.INVENTARIO, this::entraInStatoInventario);
 		gestoriIngresso.put(Stato.TROFEI, this::entraInStatoTrofei);
+		gestoriIngresso.put(Stato.TATTICHE, this::entraInStatoTattiche);
 		// Uscendo da MAPPA o INVENTARIO aperti mentre si era IN_LOCAZIONE si torna qui
 		// tramite CONTINUA_CON_INGRESSO (statoPrecedente vale IN_LOCAZIONE), con comando
 		// nullo: bisogna ripubblicare i comandi della locazione, altrimenti restano quelli
@@ -268,6 +275,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.MAPPA, this::gestisciComandoInStatoMappa);
 		gestoriComando.put(Stato.INVENTARIO, this::gestisciComandoInStatoInventario);
 		gestoriComando.put(Stato.TROFEI, this::gestisciComandoInStatoTrofei);
+		gestoriComando.put(Stato.TATTICHE, this::gestisciComandoInStatoTattiche);
 		gestoriComando.put(Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE, this::gestisciComandoInStatoSelezioneSalvataggioDaScrivere);
 		gestoriComando.put(Stato.CONFERMA_USCITA, this::gestisciComandoInStatoConfermaUscita);
 		gestoriComando.put(Stato.GIOCO_PERSO, this::gestisciComandoInStatoGiocoPerso);
@@ -1401,6 +1409,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case MOSTRA_TROFEI:
 				stato = Stato.TROFEI;
 				return Esito.CONTINUA_CON_INGRESSO;
+			case MOSTRA_TATTICHE:
+				stato = Stato.TATTICHE;
+				return Esito.CONTINUA_CON_INGRESSO;
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -1420,6 +1431,98 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 		stato = Stato.INVENTARIO;
 		return Esito.CONTINUA_CON_INGRESSO;
+	}
+
+	/**
+	 * La schermata delle tattiche: i comandi sono i personaggi permanenti del gruppo (anche i caduti), che scelgono di chi
+	 * mostrare la tattica, e ANNULLA, che torna all'inventario. Le modifiche arrivano come eventi (ComandoImpostaTattica,
+	 * ComandoSpostaPersonaggio).
+	 */
+	private Esito entraInStatoTattiche() {
+		Logger.log("Stato TATTICHE, azione null");
+		richiediAperturaTattiche();
+		return Esito.FERMATI;
+	}
+
+	private Esito gestisciComandoInStatoTattiche(Comando comando) {
+		Logger.log("Stato TATTICHE, azione " + comando);
+		switch (comando) {
+			case ANNULLA:
+				stato = Stato.INVENTARIO;
+				return Esito.CONTINUA_CON_INGRESSO;
+			case PERSONAGGIO_1:
+			case PERSONAGGIO_2:
+			case PERSONAGGIO_3:
+			case PERSONAGGIO_4:
+			case PERSONAGGIO_5:
+			case PERSONAGGIO_6:
+			case PERSONAGGIO_7:
+			case PERSONAGGIO_8:
+				indicePersonaggioTattiche = comando.ordinal() - Comando.PERSONAGGIO_1.ordinal();
+				richiediAperturaTattiche();
+				return Esito.FERMATI;
+			default:
+				throw new IllegalArgumentException();
+		}
+	}
+
+	private void richiediAperturaTattiche() {
+		Collection<Comando> comandiPossibili = new ArrayList<>();
+		int primoDelGruppo = -1;
+		int l = gruppo.getNumeroPersonaggi();
+		for (int i = 0; i < l; i++) {
+			if (isDelGruppoPerInventario(gruppo.getPersonaggio(i))) {
+				comandiPossibili.add(Comando.ofPersonaggio(i));
+				if (primoDelGruppo < 0) {
+					primoDelGruppo = i;
+				}
+			}
+		}
+		comandiPossibili.add(Comando.ANNULLA);
+		if (indicePersonaggioTattiche < 0 || indicePersonaggioTattiche >= l
+				|| !isDelGruppoPerInventario(gruppo.getPersonaggio(indicePersonaggioTattiche))) {
+			indicePersonaggioTattiche = Math.max(0, primoDelGruppo);
+		}
+		Personaggio scelto = gruppo.getPersonaggio(indicePersonaggioTattiche);
+		// Chi non ne ha una sua agisce con quella predefinita della classe: è quella che la schermata mostra
+		TatticaMD tattica = scelto.getTattica();
+		TatticaMD predefinita = RegistroTattiche.predefinitaDelGiocabile(scelto.getClasse());
+		BusEventi.pubblica(new RichiestaAperturaTattiche(comandiPossibili, scelto, tattica != null ? tattica : predefinita,
+				predefinita, RegistroTattiche.azioniPossibili(scelto.getClasse())));
+	}
+
+	/**
+	 * Il personaggio permanente del gruppo con quell'uuid, se la schermata delle tattiche è aperta (altrove i comandi si ignorano:
+	 * in combattimento le tattiche non si toccano).
+	 */
+	private Optional<Personaggio> personaggioPerLeTattiche(String uuid) {
+		if (stato != Stato.TATTICHE || uuid == null) {
+			return Optional.empty();
+		}
+		return gruppo.getPersonaggi().stream()
+				.filter(p -> isDelGruppoPerInventario(p) && p.getUuid().equals(uuid))
+				.findFirst();
+	}
+
+	private void onComandoImpostaTattica(ComandoImpostaTattica comando) {
+		if (comando.getTattica() == null || !comando.getTattica().problemi(true).isEmpty()) {
+			Logger.log("Tattica rifiutata: " + (comando.getTattica() == null ? "nulla" : comando.getTattica().problemi(true)));
+			return;
+		}
+		personaggioPerLeTattiche(comando.getUuidPersonaggio()).ifPresent(p -> {
+			p.setTattica(comando.getTattica());
+			indicePersonaggioTattiche = gruppo.getPersonaggi().indexOf(p);
+			richiediAperturaTattiche();
+		});
+	}
+
+	private void onComandoSpostaPersonaggio(ComandoSpostaPersonaggio comando) {
+		personaggioPerLeTattiche(comando.getUuidPersonaggio()).ifPresent(p -> {
+			if (gruppo.spostaPersonaggio(p, comando.isVersoDestra() ? 1 : -1)) {
+				indicePersonaggioTattiche = gruppo.getPersonaggi().indexOf(p);
+				richiediAperturaTattiche();
+			}
+		});
 	}
 
 	/**
@@ -1996,6 +2099,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			}
 		}
 		comandiPossibili.add(Comando.MOSTRA_TROFEI);
+		comandiPossibili.add(Comando.MOSTRA_TATTICHE);
 		comandiPossibili.add(Comando.ANNULLA);
 
 		// Ultimo personaggio selezionato, se è ancora uno di quelli dell'inventario

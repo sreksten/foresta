@@ -83,7 +83,7 @@ I nomi di questi personaggi sono fatti (liste, registro, testi delle missioni, s
 
 ## TODO e FIXME nel codice
 
-Gli altri `TODO`/`FIXME` restano nel codice, accanto al punto a cui si riferiscono (diciotto, sparsi fra `PersonaggioBase`, `LocazioneBase`, `DisplayableCanvas`, `GruppoGiocatore` e altri). Per ritrovarli:
+Gli altri `TODO`/`FIXME` restano nel codice, accanto al punto a cui si riferiscono (venti, sparsi fra `PersonaggioBase`, `LocazioneBase`, `DisplayableCanvas`, `GruppoGiocatore`, `TatticheBase` e altri; in `TatticheBase` gli elenchi delle classi magiche, con Silenzio e con Morte da tenere allineati con le classi, e le abilità proprie dei mostri: rigenerazione del Troll, teste dell'Idra, canto dell'Arpia). Per ritrovarli:
 
 - in IntelliJ, la finestra **TODO** (View → Tool Windows → TODO, oppure ⌘6) li elenca tutti con file e riga sempre aggiornati, e un click porta al punto esatto;
 - da terminale: `grep -rn "TODO\|FIXME" src/main/java`.

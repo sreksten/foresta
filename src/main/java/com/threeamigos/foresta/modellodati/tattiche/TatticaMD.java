@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * La tattica di un personaggio: una lista ordinata di voci (nessun tetto), di cui si esegue la prima eseguibile. Immutabile.
+ * Può essere <b>disabilitata</b>: succede a una tattica letta da un salvataggio che ha errori (voci incoerenti), che non si esegue ma si conserva perché il
+ * giocatore la corregga nella schermata delle tattiche; chi la esegue la tratta come se non ci fosse.
  * Vedi tattiche_di_combattimento_automatiche.md §11.
  */
 public final class TatticaMD {
@@ -22,9 +24,26 @@ public final class TatticaMD {
 	public static final TatticaMD VUOTA = new TatticaMD(Collections.emptyList());
 
 	private final List<VoceMD> voci;
+	private final boolean disabilitata;
 
 	public TatticaMD(List<VoceMD> voci) {
+		this(voci, false);
+	}
+
+	private TatticaMD(List<VoceMD> voci, boolean disabilitata) {
 		this.voci = Collections.unmodifiableList(new ArrayList<>(voci));
+		this.disabilitata = disabilitata;
+	}
+
+	/**
+	 * La stessa tattica, disabilitata: non si esegue finché non è corretta e confermata di nuovo
+	 */
+	public TatticaMD disabilitata() {
+		return disabilitata ? this : new TatticaMD(voci, true);
+	}
+
+	public boolean isDisabilitata() {
+		return disabilitata;
 	}
 
 	public static TatticaMD di(VoceMD... voci) {
@@ -48,16 +67,25 @@ public final class TatticaMD {
 		return problemi;
 	}
 
+	/**
+	 * Gli errori che la tattica ha per tutti e due i lati: vuota se per almeno uno (i miei personaggi o i mostri) è a posto. La rilettura non sa di chi è
+	 * la tattica, e una rosa che vale solo per i mostri non è un errore per un mostro.
+	 */
+	public List<String> problemiPerQualsiasiLato() {
+		List<String> perIMiei = problemi(true);
+		return perIMiei.isEmpty() || problemi(false).isEmpty() ? Collections.emptyList() : perIMiei;
+	}
+
 	@Override
 	public String toString() {
-		return voci.toString();
+		return (disabilitata ? "(disabilitata) " : "") + voci.toString();
 	}
 
 	/**
 	 * Scrive la tattica e le sue voci (vedi FormatoTattiche)
 	 */
 	public void salva(PrintWriter stream) {
-		stream.println("TATTICA" + Serializzabile.PIPE + voci.size());
+		stream.println("TATTICA" + Serializzabile.PIPE + voci.size() + Serializzabile.PIPE + (disabilitata ? 1 : 0));
 		for (VoceMD voce : voci) {
 			voce.salva(stream);
 		}
@@ -77,11 +105,14 @@ public final class TatticaMD {
 		try {
 			LettoreCampi campi = FormatoTattiche.controlla(new LettoreCampi(intestazione), "TATTICA");
 			int numeroVoci = campi.intero();
+			boolean disabilitata = campi.intero() != 0;
 			List<VoceMD> voci = new ArrayList<>();
 			for (int i = 0; i < numeroVoci; i++) {
 				voci.add(VoceMD.leggi(stream));
 			}
-			return new TatticaMD(voci);
+			TatticaMD letta = new TatticaMD(voci, disabilitata);
+			// Una tattica incoerente non fa fallire il caricamento della partita: si disabilita, e il giocatore la corregge nella schermata delle tattiche
+			return letta.problemiPerQualsiasiLato().isEmpty() ? letta : letta.disabilitata();
 		} catch (IllegalArgumentException e) {
 			// Un nome di enumerato sconosciuto o un numero scritto male
 			throw new IOException("Salvataggio delle tattiche incoerente: " + e.getMessage(), e);
@@ -90,11 +121,11 @@ public final class TatticaMD {
 
 	@Override
 	public boolean equals(Object altro) {
-		return altro instanceof TatticaMD && voci.equals(((TatticaMD) altro).voci);
+		return altro instanceof TatticaMD && voci.equals(((TatticaMD) altro).voci) && disabilitata == ((TatticaMD) altro).disabilitata;
 	}
 
 	@Override
 	public int hashCode() {
-		return voci.hashCode();
+		return voci.hashCode() * 2 + (disabilitata ? 1 : 0);
 	}
 }

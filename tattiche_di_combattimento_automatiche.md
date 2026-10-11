@@ -177,18 +177,15 @@ attacchi del giro dopo; uno ancora più furbo cerca di mettere a tacere un mago.
 - *stratega* (Strega, Lich, Drago): "se la mia astuzia è almeno 31 silenzio subito il magico con più `MAGIA`", poi il bersaglio quello con meno
   salute e l'incantesimo più adatto.
 
-Le tattiche base sono dati (un file di risorse per classe, nello stesso formato di quelle del giocatore: il motore che le esegue è lo
-stesso), non codice: il comportamento di oggi si riproduce esprimendolo come tattica base, e si controlla con un test che le decisioni
-siano le stesse. **I boss hanno la loro**, perché le classi sono già distinte (Strega, Lich, Drago, Minotauro Gigante sono ciascuno un
-`TipoPersonaggio`).
+Le tattiche base sono dati (voci come quelle del giocatore: il motore che le esegue è lo stesso), scritte in `tattiche/TatticheBase` (§11.16) e non in un file di risorse: in Java si controllano a compilazione e si ripetono fra classi senza copiarle. I boss hanno la loro, perché le classi sono già distinte.
 
 **La tattica generale è quella di classe**, e non cambia per livello del mondo o per luogo: l'astuzia (intelligenza di classe con una rampa sul livello) e le
 condizioni dentro la lista fanno già variare il comportamento, e i boss hanno la loro intelligenza. Una **singola istanza** può però portarne una
 diversa, per esempio in una missione un goblin più furbo degli altri con una tattica tutta sua; la tattica dell'istanza si salva con la partita (§1, §8).
 
 **L'astuzia e le soglie** (decise). Le soglie dei quattro livelli sono: 1 = da 0 a 11, 2 = da 12 a 19, 3 = da 20 a 30, 4 = da 31. Il **Folletto** si alza
-sopra il Goblin (a 8, fra il Goblin e l'Hobgoblin) e l'**Ombra Nera** passa da 30 a 31, per entrare nel quarto livello ed essere più competitiva (sono due
-ritocchi a `*_MAX_INTELLIGENZA` in `Costanti`, da fare insieme alle liste: la costante serve anche a calcolare l'INTELLIGENZA vera dei due, quindi li cambia
+sopra il Goblin (a 8, fra il Goblin e l'Hobgoblin) e l'**Ombra Nera** passa da 30 a 31, per entrare nel quarto livello ed essere più competitiva (**fatti**: due
+ritocchi a `*_MAX_INTELLIGENZA` in `Costanti`: la costante serve anche a calcolare l'INTELLIGENZA vera dei due, quindi li cambia
 anche come lanciatori di incantesimi).
 
 L'**astuzia** parte dal **massimo di classe** (`*_MAX_INTELLIGENZA`) ed è ridotta, per i mostri "tonti" di partenza, da una **rampa sul livello**: l'Ombra Nera
@@ -236,10 +233,10 @@ La tabella dell'INTELLIGENZA attuale (media a livello 1 / 5 / 10 / 20, oltre il 
 | Elfo, Elfa | 45 | 9 / 12 / 15 / 20 |
 | Mago, Maga | 55 | 18 / 22 / 27 / 39 |
 | Goblin | 4 | 6 / 7 / 8 / 11 |
-| Folletto | 3 (da alzare, deve essere più furbo del Goblin) | 6 / 8 / 10 / 15 |
+| Folletto | 8 (era 3: più furbo del Goblin) | 6 / 8 / 10 / 15 |
 | Troll | 10 | 5 / 6 / 7 / 9 |
 | Fantasma | 15 | 6 / 8 / 10 / 15 |
-| Ombra Nera | 30 (da portare a 31) | 6 / 7 / 8 / 11 |
+| Ombra Nera | 31 (era 30) | 6 / 7 / 8 / 11 |
 | Idra | 25 | 9 / 9 / 10 / 13 |
 | Drago | 80 | 19 / 22 / 26 / 34 |
 | Strega | 65 | 29 / 33 / 40 / 52 |
@@ -771,15 +768,15 @@ Che cosa dice la spiegazione (la costruisce il `Valutatore`, i selettori e `Scel
 
 Oggi la spiegazione si costruisce sempre (qualche stringa per decisione): se pesasse, si costruirà solo con un ascoltatore o il log acceso. Ha sostituito il vecchio evento dei mostri senza tattica (`InternoRisultatoValutazionePersonaggioAttaccante`, rimosso con il suo enum).
 
-La UI potrà mostrare la spiegazione al giocatore per aiutarlo a mettere a punto le sue tattiche (la schermata del giocatore, ancora da fare).
+La UI potrà mostrare la spiegazione al giocatore per aiutarlo a mettere a punto le sue tattiche (la schermata del giocatore, §11.15).
 
 ## 8. Che cosa manca
 
 Il modello, il motore, il valutatore, il salvataggio, il registro delle decisioni e le tattiche base dei mostri (nella versione "replica di oggi", §11.13) ci sono. Restano:
 
-- **Le tattiche base vere dei mostri**, una per classe (§4): oggi tutti hanno `RegistroTattiche.tatticaDiOggi()`. Si scrivono con le fasce di astuzia al posto dell'`INTELLIGENZA` (§4, §11.10), i ritocchi alle intelligenze massime del Folletto (a 8) e dell'Ombra Nera (a 31), le abilità
-  proprie (Silenzio sui magici, cure per chi ha le pozioni, ecc.), e in un file di risorse per classe nello stesso formato di §11.12, caricato dal registro. Una singola istanza può già averne una sua (`setTattica`, salvata con il personaggio).
-- **La scheda del giocatore**: la schermata per modificare la tattica di ogni personaggio (elenco di voci, editor di selettore, condizioni e azioni, menu e valori guidati, modelli per classe) e il comando che la manda al motore.
+- **Tarare le tattiche base** (§11.16): sono una prima versione, scritta dai manuali di tattica e dal codice; vanno provate in partita e con le simulazioni (`TestScontriDiGruppo`), soprattutto la Strega contro gruppi piccoli e il Drago, e per i personaggi giocabili manca una tattica base per fascia di livello.
+- **Mostri con abilità proprie**: oggi le tattiche usano solo attacco e incantesimi; nessun mostro ha azioni speciali (la rigenerazione del Troll, le teste dell'Idra, il canto dell'Arpia).
+- **Rifinire la schermata del giocatore** (§11.15): le tattiche base per classe da proporre con "Predefinita" (oggi è la tattica vuota), le righe che non stanno nella linea, l'aiuto con la spiegazione dell'ultima decisione (`InternoDecisioneTattica`) e le modifiche dei parametri che oggi si fanno solo con più e meno.
 - **L'esito delle azioni con effetti che non si applicano** (un Silenzio a segno che non mette `SILENZIATO`) come "mancata", oggi non registrato.
 - Il **costo della spiegazione** delle decisioni, se pesasse (§7.7).
 
@@ -1065,8 +1062,7 @@ le armi sul bersaglio scelto, incantesimi di danno con il `GruppoDiBersagli` per
 e controlla la fine dello scontro; non gestisce il round. Gli esiti degli incantesimi (colpito, mancato, immune) e del dardo si registrano nello `StatoDelCombattimento` (`IncantesimoMaleficoImpl.colpisci`, `scagliaIlDardo`); l'attacco fisico non ne registra
 (non si abbandona mai). Le azioni manuali del giocatore (barra dei comandi) non sono cambiate.
 
-**Da fare**: le tattiche base dei mostri e le fasce di astuzia (compresi i ritocchi alle intelligenze massime del Folletto, a 8, e dell'Ombra Nera, a 31); la scheda del
-giocatore; l'esito di un'azione con effetti che non si applicano (un Silenzio a segno che non mette `SILENZIATO`) come "mancata".
+**Da fare**: l'esito di un'azione con effetti che non si applicano (un Silenzio a segno che non mette `SILENZIATO`) come "mancata".
 
 ### 11.11 Dove stanno i dati e la logica
 
@@ -1080,12 +1076,14 @@ può importare la UI (`DipendenzeUITest`, che ora riconosce anche i sottopacchet
 ### 11.12 Il salvataggio
 
 **Fatto** (`SalvataggioTatticheTest`, `CombattimentoConTatticheTest`). La tattica sta nel `PersonaggioMD` (`getTattica`/`setTattica`, `PersonaggioBase` ne è solo la porta) e passa dal salvataggio con il personaggio: dopo il suo record una riga vuota (nessuna tattica: i mostri, per ora) oppure la tattica. Una
-tattica vuota (`TatticaMD.VUOTA`) resta una tattica vuota e non diventa "nessuna tattica": sono due cose diverse (i miei personaggi senza tattica usano la vuota, i mostri senza usano quella della classe, `RegistroTattiche.perClasse`).
+tattica vuota (`TatticaMD.VUOTA`) resta una tattica vuota e non diventa "nessuna tattica": sono due cose diverse (i miei personaggi senza tattica usano la predefinita del loro ruolo, i mostri quella della classe, `RegistroTattiche.perClasse`).
+
+**Una tattica incoerente non fa fallire il caricamento.** I dati malformati (un nome sconosciuto, un numero scritto male, una voce senza azioni) fanno ancora fallire la rilettura; ma una tattica ben formata con errori di coerenza (un attacco sugli alleati, una rosa che le azioni non accettano: `TatticaMD.problemiPerQualsiasiLato`, che non sa se è di un mostro o di un mio personaggio) viene **disabilitata** (`TatticaMD.disabilitata`, il flag si salva) e conservata. Chi agisce la tratta come se non ci fosse (`LocazioneBase.tatticaDi`: la predefinita del ruolo), e la schermata delle tattiche la mostra con un avviso in rosso e gli errori, perché il giocatore li corregga e confermi. Il motore non accetta dalla schermata una tattica con errori (`ComandoImpostaTattica`).
 
 Il formato, nello stile del resto del modello dati (una riga per elemento, campi separati da `|`, enumerati per nome, campi mancanti vuoti, gli elementi che ne contengono altri dicono quanti sono):
 
 ```
-TATTICA|numero di voci
+TATTICA|numero di voci|disabilitata (0 o 1)
 VOCE|attiva|ha un selettore|numero di condizioni|numero di azioni
 SELETTORE|rosa|ordinamento|tipo di danno dell'ordinamento|numero di filtri       (seguono i filtri)
 FILTRO|tipo|negato|confronto|numero|stato|classe|categoria|tipo di danno
@@ -1120,6 +1118,62 @@ caduto il capo. Gli avversari messi fuori combattimento dai miei li comunica a u
 
 Lo usano `LocazioneBase` (che gli passa i suoi gruppi e lo stato e tiene per sé il round, le opzioni di corruzione e amicizia, e le azioni manuali del giocatore, che per l'attacco e il dardo passano dalle sue stesse primitive) e `RoundASimulato`, quindi `TestScontriDiGruppo` e `TestLogoramentoInizioPartita`: **i mostri
 delle simulazioni agiscono con le stesse tattiche del gioco**, non più con una copia della logica di scelta. `ContestoTattico.per(attore, giocatore, mostri)` lo costruisce da gruppi qualunque.
+
+### 11.15 La schermata del giocatore
+
+**Fatto** (`ui/DisplayableCanvasTattiche`, `BozzaTattica`, `CasellaADiscesa`, `TestoTattica`; `DisplayableCanvasTatticheTest`, `BozzaTatticaTest`, `ScenarioSchermataTatticheTest`). Si apre dall'inventario con l'icona `MOSTRA_TATTICHE` (stato `Stato.TATTICHE`, come la pagina dei trofei) e si lascia con `ANNULLA`. I comandi della barra sono i personaggi permanenti del gruppo, anche i caduti
+(non gli ospiti e chi è a tempo); il capo ha lo sfondo rosso. Due colonne con la cornice dell'inventario e il personaggio al centro:
+
+- **A sinistra la tattica**, un `ComponenteScorrevole` ricostruito a ogni disegno. Ogni voce ha una riga (numero, rosa, ordinamento; a destra su, giù, togli), poi i suoi **filtri** (`con`), le **condizioni** (`se`, con i filtri di `QUANTI` più indentati) e le **azioni** (`fai`); in coda a ogni gruppo una riga "(aggiungi...)" con un
+  menu. Il numero della voce la accende e la spegne: verde se è attiva, rosso se è disattivata (e viene saltata); una voce disattivata ha tutta la riga, e le sue righe sotto, in grigio scuro. In fondo "Nuova voce", che aggiunge una voce **completamente vuota** (né rosa né azioni: la rosa arriva con la prima azione, o si sceglie, e le azioni proposte sono quelle che la accettano; finché non ha un'azione la bozza non si conferma), e l'attacco fisico di riserva, che c'è sempre e non si tocca. Le righe lunghe vanno a capo.
+- **Ogni riga è fatta di pezzi** (`Token`): testo fisso, testo che apre un menu a discesa, `-` e `+` per i numeri, icone. Le scelte valide dipendono dalla voce: le rose le accettano tutte le sue azioni (`BozzaTattica.roseAmmesse`), le azioni sono della stessa portata (`azioniAmmesse`); aggiungendo un'azione che non accetta la rosa la voce passa alla prima che va bene.
+- **Ognuno ha solo le azioni che sa fare** (`RegistroTattiche.azioniPossibili`, che il motore manda con la richiesta di apertura): i canti solo il bardo, il dardo arcano maghi ed elfi, l'Alba sacra i sacerdoti; le pergamene, le pozioni e l'attacco chiunque. Su che cosa agisce una voce dipende dalle sue azioni (un attacco solo sugli avversari): con una sola rosa possibile il nome non è un menu, e passandoci sopra il mouse dice perché.
+- **"Quanti" non conta su se stessi**: la rosa di una condizione `QUANTI` non propone "Se stesso" (un candidato solo); se una tattica letta l'ha già, resta e si vede.
+- **Niente "non" sui numeri**: i filtri numerici (salute, salute %, magia, livello, livello rispetto al mio) e le condizioni non hanno l'interruttore di negazione; il confronto offre tre relazioni (minore di, uguale a, maggiore di): con numeri interi "al massimo 50" è "minore di 51", e si va a grandi passi. Una tattica letta che ha un rovescio ("almeno", "al massimo") lo mostra comunque. Per gli altri filtri la parola "con" è l'interruttore: "con" o "senza".
+- **Le condizioni `ASTUZIA` e `INTELLIGENZA` non si propongono**: servono a dividere i mostri in fasce di furbizia (§4, §11.16), non hanno senso per i personaggi del gruppo (`BozzaTattica.predicatiAmmessi`).
+- **Chi mi ha attaccato per ultimo e l'ultimo scelto sono ordinamenti**, non filtri, e solo fra gli avversari (`ULTIMO_ATTACCANTE`, `ULTIMO_SCELTO`): si scelgono accanto a "il primo", "con meno salute"... Scelgono **solo** quel personaggio: se non è fra i candidati (non c'è, o è caduto) la voce non si esegue e si passa alla successiva. I filtri con lo stesso nome (e "il capo", "me stesso") esistono ancora nei dati ma non si propongono: contando o scegliendo fra gli alleati non hanno senso.
+- **Cosa si può scegliere dipende dalla rosa**: su "Se stesso" non compaiono il menu dell'ordinamento né i filtri per classe, categoria, livello rispetto al mio, il capo, me stesso, scelto l'ultima volta, mi ha attaccato per ultimo, debole all'azione (`BozzaTattica.filtriAmmessi`): il candidato è uno solo e già deciso.
+- **Il menu a discesa** (`CasellaADiscesa`) è un popup nel font Doomdark con un `ComponenteScorrevole` (rotella e frecce se è lungo), che si apre sotto o sopra la riga e cattura i click finché è aperto.
+- **Al centro** il personaggio, le frecce che lo spostano nel gruppo (`ComandoSpostaPersonaggio`, subito, anche il capo: il gruppo ricorda chi è il capo e il suo posto si salva, `GruppoMD.indiceCapo`), **Sì** e **No** (solo se la bozza è diversa dalla tattica del motore; Sì solo se non ci sono problemi) e **Predefinita**, che rimette la tattica vuota
+  nella bozza (da confermare).
+- **A destra la spiegazione**. Prima dell'elemento sotto il mouse: la rosa, il filtro, la condizione, l'azione, l'ordinamento, il confronto (`TestoTattica.spiega`), e con un menu aperto quella della scelta su cui si passa, o del pezzo che lo ha aperto; poi come si legge la voce a cui appartiene (`TestoTattica.spiegazione`) e, in rosso, i problemi che impediscono di confermare (`BozzaTattica.problemi`). Il filtro che si chiamava "Magico" ora è "Magie abilitate".
+
+La bozza (`BozzaTattica`) tiene le voci in liste modificabili, perché i dati `*MD` sono immutabili: solo con Sì si costruisce la `TatticaMD` e la si manda con `ComandoImpostaTattica(uuid, tattica)`; il motore la accetta solo con la schermata aperta, quindi **mai in combattimento**, e per un personaggio permanente del gruppo. Cambiando personaggio le modifiche non confermate si perdono. Aprendo una tattica, i confronti rovesciati sui numeri ("almeno 50") diventano quelli equivalenti senza rovescio ("maggiore di 49"): `BozzaTattica.normalizza`.
+
+### 11.16 Le tattiche base dei mostri e le predefinite dei giocabili
+
+**Fatto** (`tattiche/TatticheBase`, `RegistroTattiche.perClasse` e `predefinitaDelGiocabile`, `TatticheBaseTest`). Sono scritte con le voci che il giocatore scrive nella schermata (§11.15) e salvano e rileggono come ogni tattica. Le fonti: il codice del gioco (che cosa sa fare ogni classe: repertorio, categoria, intelligenza, debolezze) e i
+manuali di tattica per il gioco di ruolo, che legano il comportamento dei mostri alla loro intelligenza (sotto una certa soglia agiscono d'istinto, contro il più vicino o chi li ha colpiti; più su scelgono i bersagli deboli, poi gli incantatori, infine coordinano le mosse), per esempio *The Monsters Know What They're Doing* di Keith Ammann.
+
+**Mostri: una lista per classe, a fasce di astuzia** (le soglie di §4: 12, 20, 31), dalla più alta alla più bassa; ogni fascia comincia con `NON ASTUZIA MINORE soglia`, e un mostro ha solo le fasce che la sua astuzia massima raggiunge. La prima voce eseguibile vince, quindi se una voce della fascia alta non si può eseguire
+(niente MAGIA, Silenzio già riuscito) si scende alle voci più semplici, fino all'ultima, che attacca sempre.
+
+| Fascia | Come si comporta |
+| :--- | :--- |
+| **Bruto** (sotto 12) | Se è vendicativo (bestie, Troll, Minotauro, Goblin) nel 50% dei casi colpisce chi l'ha colpito per ultimo; altrimenti uno a caso fra avversari e ospiti. Se sa fare magie ne lancia una a caso (50%, Folletto 80%), altrimenti attacca. |
+| **Astuto** (da 12) | Finisce chi è sotto il 30% della salute; poi (Hobgoblin) continua sul bersaglio dell'ultima volta; poi un incantatore a caso (i giganti, non magici, il più forte), poi il più ferito; la magia solo se rende più dell'attacco con le armi. |
+| **Esperto** (da 20) | Sui feriti (sotto il 35%) l'incantesimo più economico che basta a ucciderli; il Silenzio sull'incantatore con più magia dove lo ha; poi l'incantesimo più adatto al bersaglio. I giganti vanno sul più forte. |
+| **Stratega** (da 31) | La Morte sul quasi caduto (sotto il 25%, dove uccide: altrimenti si ritorcerebbe contro chi la lancia, `Morte.colpisci`); il Silenzio sull'incantatore con più magia; il colpo finale; gli incantesimi più adatti conoscendo l'equipaggiamento (`PIU_ADATTO_ESPERTO`). |
+
+Che cosa fa cosa dipende da tre elenchi in `TatticheBase`, da tenere allineati con il codice (`PersonaggioBase.getRepertorioIncantesimi` e le classi): chi è magico, chi ha il Silenzio, chi ha la Morte (i boss). **Da fare** (c'è un `TODO` in `TatticheBase`): derivarli dal codice, o almeno un test che li confronti con le classi vere. Come i mostri salgono di fascia col livello del mondo lo dice la rampa dell'astuzia (§4): il Drago è stratega fin dal primo livello, la Strega e il Lich dal terzo, l'Ombra Nera
+dal nono; le bestie e i bruti restano bruti.
+
+**Personaggi giocabili: una tattica predefinita per ruolo** (uguale per i due generi), che la schermata propone col pulsante "Predefinita". Un personaggio **senza tattica propria agisce con la predefinita del suo ruolo** (`LocazioneBase.tatticaDi`, e la schermata mostra quella); una tattica vuota esplicita (`TatticaMD.VUOTA`) vuol dire invece "solo l'attacco di riserva".
+
+| Ruolo | Tattica |
+| :--- | :--- |
+| **Guerriero** | Si cura da solo sotto il 30% (pozione della Salute); finisce i feriti (sotto il 50%); poi i maghi nemici; poi il primo. |
+| **Ladro** | Si cura da solo sotto il 30%; i feriti, poi chi ha meno salute. |
+| **Mago** | Pozioni della Salute (25%) e della Magia (sotto 20 di MAGIA); Silenzio sui maghi nemici (60%); sui feriti (sotto il 40%) l'incantesimo più economico che basta, il dardo arcano, l'attacco; poi contro il più forte l'incantesimo più adatto (se rende più dell'attacco), il dardo. |
+| **Elfo** | Come il guerriero per le cure; dardo arcano e incantesimo solo dove rendono più dell'attacco; i maghi nemici per primi. |
+| **Sacerdote** | Cura gli altri (anche gli ospiti) sotto il 40%; risuscita i caduti; Alba sacra se qualcuno ha uno stato da togliere; pozione della Magia; poi colpisce il più ferito. |
+| **Bardo** | Pozione (25%); canto curativo sotto il 60%; canto di valore a chi non è ispirato; Urlo della Banshee o canto ipnotico contro più di un avversario; poi colpisce il più ferito. |
+
+**Le pozioni** sono quattro azioni (Salute e Magia, normale e grande, ognuna beve solo la sua): le predefinite hanno due voci per tipo, la prima con la grande quando manca molto (sotto la metà della soglia), la seconda con la normale e, se non ce n'è, la grande.
+
+Le azioni a costo (pergamene, MAGIA, pozioni) le verificano i requisiti (§11.7): una voce che non si può eseguire cede alla successiva, quindi le predefinite funzionano anche con le scorte vuote. Le predefinite non conoscono ancora il livello del personaggio né la scorta rimasta (per esempio "risparmia le pergamene").
+
+**Verifica**: una simulazione manuale (`TestScontriDiGruppo`) con le nuove tattiche dei mostri dà gruppi completi che vincono quasi sempre e il Drago che mette in difficoltà i gruppi di tre; i numeri non si confrontano con quelli delle versioni precedenti.
 
 ### 11.10 Il criterio di scelta dell'incantesimo di danno
 

@@ -18,6 +18,11 @@ public interface VistaGruppo {
 	 */
 	VistaPersonaggio getPersonaggio(int numero);
 
+	/**
+	 * Il capo: il primo personaggio entrato nel gruppo, che resta tale anche se lo si sposta (se muore la partita è persa).
+	 */
+	VistaPersonaggio getCapo();
+
 	boolean contiene(VistaPersonaggio personaggio);
 
 }

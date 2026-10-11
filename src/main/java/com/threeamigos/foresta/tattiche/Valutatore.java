@@ -60,7 +60,8 @@ public final class Valutatore {
 		if (portata == PortataAzione.GRUPPO_ALLEATI || portata == PortataAzione.GRUPPO_AVVERSARI) {
 			// Il selettore è solo un test di esistenza; l'azione agisce su tutto il gruppo
 			RisultatoSelezione esistenza = Selettori.seleziona(selettore, contesto.conAzione(voce.getAzioni().get(0).getTipo()));
-			if (esistenza.isVuoto()) {
+			// Per un'azione su un gruppo intero il selettore è solo un test di esistenza: conta che resti qualcuno, non chi sceglierebbe l'ordinamento
+			if (esistenza.getRimasti().isEmpty()) {
 				spiegazione.add(numero + ": nessun candidato " + esistenza.getPassi());
 				return null;
 			}

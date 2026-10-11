@@ -11,6 +11,7 @@ import com.threeamigos.foresta.interfacce.VistaOffertaConsumabile;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.modellodati.MessaggioMD;
+import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -53,6 +54,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		STATO_PUNTEGGI,
 		STATO_INVENTARIO,
 		STATO_TROFEI,
+		STATO_TATTICHE,
 		STATO_COMMERCIANTE,
 		STATO_ALCHIMISTA,
 		STATO_INCANTATORE,
@@ -79,6 +81,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasMappaATuttoSchermo mappaATuttoSchermo;
 	private final transient DisplayableCanvasInventario inventario;
 	private final transient DisplayableCanvasTrofei paginaTrofei;
+	private final transient DisplayableCanvasTattiche tattiche;
 	// Armaiolo e venditore di pergamene: una sola schermata, che cambia secondo il negozio
 	private final transient DisplayableCanvasCommerciante commerciante;
 	private final transient DisplayableCanvasScambiatoreConsumabili alchimista;
@@ -262,6 +265,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		paginaTrofei = new DisplayableCanvasTrofei(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		mappaCoordinateElementiGrafici.put(paginaTrofei, new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto));
+
+		tattiche = new DisplayableCanvasTattiche(larghezzaContenuto, altezzaContenuto, vistaPartita);
+		mappaCoordinateElementiGrafici.put(tattiche, new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto));
 
 		commerciante = new DisplayableCanvasCommerciante(larghezzaContenuto, altezzaContenuto, vistaPartita);
 
@@ -449,6 +455,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO || stato == StatoDisplayableCanvas.STATO_MAPPA
 					|| stato == StatoDisplayableCanvas.STATO_INTRO
 					|| stato == StatoDisplayableCanvas.STATO_INVENTARIO || stato == StatoDisplayableCanvas.STATO_COMMERCIANTE
+					|| stato == StatoDisplayableCanvas.STATO_TATTICHE
 					|| stato == StatoDisplayableCanvas.STATO_ALCHIMISTA
 					|| stato == StatoDisplayableCanvas.STATO_INCANTATORE
 					|| stato == StatoDisplayableCanvas.STATO_INTERMEZZO
@@ -682,6 +689,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			disegnaFumetto(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_TROFEI) {
 			paginaTrofei.disegna(graphics);
+		} else if (stato == StatoDisplayableCanvas.STATO_TATTICHE) {
+			tattiche.disegna(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_COMMERCIANTE) {
 			commerciante.disegnaInventario(graphics);
 			disegnaFumetto(graphics);
@@ -738,6 +747,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 		if (stato == StatoDisplayableCanvas.STATO_TROFEI) {
 			return paginaTrofei;
+		}
+		if (stato == StatoDisplayableCanvas.STATO_TATTICHE) {
+			return tattiche;
 		}
 		if (stato == StatoDisplayableCanvas.STATO_COMMERCIANTE) {
 			return commerciante;
@@ -811,6 +823,16 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	public void trofei() {
 		paginaTrofei.apri();
 		stato = StatoDisplayableCanvas.STATO_TROFEI;
+		repaint();
+	}
+
+	/**
+	 * La schermata delle tattiche, aperta dall'inventario; arriva di nuovo quando cambia il personaggio scelto o l'ordine del gruppo.
+	 */
+	public void tattiche(VistaPersonaggio personaggio, TatticaMD tattica, TatticaMD tatticaPredefinita,
+						 java.util.Set<com.threeamigos.foresta.tipi.tattiche.TipoAzione> azioniPossibili) {
+		tattiche.impostaTattica(personaggio, tattica, tatticaPredefinita, azioniPossibili);
+		stato = StatoDisplayableCanvas.STATO_TATTICHE;
 		repaint();
 	}
 

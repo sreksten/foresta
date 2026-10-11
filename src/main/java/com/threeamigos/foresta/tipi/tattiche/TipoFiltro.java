@@ -23,13 +23,13 @@ public enum TipoFiltro {
 	/** Ha quell'effetto di stato */
 	STATO("Stato", TipoParametro.STATO),
 	/** Sa fare magie in questo momento (vedi tattiche.Filtri) */
-	MAGICO("Magico", TipoParametro.NESSUNO),
+	MAGICO("Magie abilitate", TipoParametro.NESSUNO),
 	/** È debole a quel tipo di danno: il moltiplicatore di classe e di stati è maggiore di 1 */
-	DEBOLE_A("Debole a", TipoParametro.TIPO_DANNO),
+	DEBOLE_A("Debolezza verso", TipoParametro.TIPO_DANNO),
 	/** È debole al tipo di danno dell'azione che si sta valutando */
-	DEBOLE_ALL_AZIONE("Debole all'azione", TipoParametro.NESSUNO),
+	DEBOLE_ALL_AZIONE("Debolezza contro", TipoParametro.NESSUNO),
 	/** È immune a quel tipo di danno */
-	IMMUNE_A("Immune a", TipoParametro.TIPO_DANNO),
+	IMMUNE_A("Immunità da", TipoParametro.TIPO_DANNO),
 	/** È il capo del suo gruppo */
 	IL_CAPO("Il capo", TipoParametro.NESSUNO),
 	/** È chi decide */

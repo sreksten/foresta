@@ -20,10 +20,23 @@ public final class Ordinamenti {
 	 * @return il candidato scelto, o null se non ce ne sono
 	 */
 	public static Personaggio scegli(List<Personaggio> candidati, OrdinamentoMD ordinamento) {
+		return scegli(candidati, ordinamento, null);
+	}
+
+	/**
+	 * Come {@link #scegli(List, OrdinamentoMD)}, con il contesto che serve a chi guarda la storia di chi decide (ULTIMO_ATTACCANTE, ULTIMO_SCELTO): lì
+	 * sceglie solo quel personaggio, se è fra i candidati, altrimenti nessuno.
+	 */
+	public static Personaggio scegli(List<Personaggio> candidati, OrdinamentoMD ordinamento, ContestoTattico contesto) {
 		if (candidati.isEmpty()) {
 			return null;
 		}
 		switch (ordinamento.getTipo()) {
+			case ULTIMO_ATTACCANTE:
+				return fra(candidati, contesto.getStato().getUltimoAttaccante(contesto.getAttore()));
+			case ULTIMO_SCELTO:
+				Personaggio avversario = fra(candidati, contesto.getStato().getUltimoAvversario(contesto.getAttore()));
+				return avversario != null ? avversario : fra(candidati, contesto.getStato().getUltimoAlleato(contesto.getAttore()));
 			case PRIMO:
 				return candidati.get(0);
 			case A_CASO:
@@ -31,6 +44,10 @@ public final class Ordinamenti {
 			default:
 				return conLaMisuraMigliore(candidati, ordinamento);
 		}
+	}
+
+	private static Personaggio fra(List<Personaggio> candidati, Personaggio cercato) {
+		return cercato != null && candidati.contains(cercato) ? cercato : null;
 	}
 
 	private static Personaggio conLaMisuraMigliore(List<Personaggio> candidati, OrdinamentoMD ordinamento) {
@@ -52,7 +69,9 @@ public final class Ordinamenti {
 	 */
 	public static String descriviLeMisure(List<Personaggio> candidati, OrdinamentoMD ordinamento) {
 		if (ordinamento.getTipo() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.PRIMO
-				|| ordinamento.getTipo() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.A_CASO) {
+				|| ordinamento.getTipo() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.A_CASO
+				|| ordinamento.getTipo() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.ULTIMO_ATTACCANTE
+				|| ordinamento.getTipo() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.ULTIMO_SCELTO) {
 			return "";
 		}
 		StringBuilder sb = new StringBuilder();

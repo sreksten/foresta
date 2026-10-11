@@ -231,6 +231,30 @@ class SelezioneTest {
     }
 
     @Test
+    void chiMiHaAttaccatoELUltimoSceltoSonoOrdinamentiCheSceglieSoloLui() {
+        ContestoTattico contesto = perIMiei(guerriero);
+        OrdinamentoMD attaccante = OrdinamentoMD.di(TipoOrdinamento.ULTIMO_ATTACCANTE);
+        OrdinamentoMD scelto = OrdinamentoMD.di(TipoOrdinamento.ULTIMO_SCELTO);
+        List<Personaggio> candidati = Arrays.asList(goblin1, goblin2);
+        assertNull(Ordinamenti.scegli(candidati, attaccante, contesto), "nessuno l'ha ancora attaccato");
+        assertNull(Ordinamenti.scegli(candidati, scelto, contesto));
+        StatoDelCombattimento.getIstanza().registraColpo(new DannoRisultante(guerriero, goblin2));
+        StatoDelCombattimento.getIstanza().registraColpo(new DannoRisultante(goblin2, guerriero));
+        // Non il primo dell'elenco: proprio lui
+        assertSame(goblin2, Ordinamenti.scegli(candidati, attaccante, contesto));
+        assertSame(goblin2, Ordinamenti.scegli(candidati, scelto, contesto));
+        // Se non è fra i candidati, nessuno: la voce non si esegue e si passa alla successiva
+        assertNull(Ordinamenti.scegli(Collections.singletonList(goblin1), attaccante, contesto));
+        assertNull(Ordinamenti.scegli(Collections.singletonList(goblin1), scelto, contesto));
+        // Dentro un selettore: la voce non ha bersaglio
+        SelettoreMD selettore = new SelettoreMD(TipoRosa.AVVERSARI, Collections.emptyList(), attaccante);
+        assertSame(goblin2, Selettori.seleziona(selettore, contesto).getScelto());
+        goblin2.getModelloDati().setSalute(0);
+        goblin2.subSalute(1_000_000, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
+        assertTrue(Selettori.seleziona(selettore, contesto).isVuoto(), "è caduto: non c'è più nessuno da vendicare");
+    }
+
+    @Test
     void lArmaCheDaUnTipoDiDanno() {
         ContestoTattico contesto = perIMiei(guerriero);
         TipoDanno daLei = goblin1.getArmaEquipaggiata().getTipoDanno();
@@ -258,6 +282,9 @@ class SelezioneTest {
     @Test
     void ogniTipoDiOrdinamentoSceglieUnCandidato() {
         for (TipoOrdinamento tipo : TipoOrdinamento.values()) {
+            if (tipo == TipoOrdinamento.ULTIMO_ATTACCANTE || tipo == TipoOrdinamento.ULTIMO_SCELTO) {
+                continue; // guardano la storia di chi decide: si provano a parte
+            }
             OrdinamentoMD ordinamento = tipo.getParametro() == com.threeamigos.foresta.tipi.tattiche.TipoParametro.NESSUNO
                     ? OrdinamentoMD.di(tipo) : OrdinamentoMD.di(tipo, TipoDanno.SACRO);
             assertNotNull(scegli(ordinamento, goblin1, goblin2), tipo.name());

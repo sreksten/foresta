@@ -59,6 +59,11 @@ public interface VistaPersonaggio {
 	 */
 	String getCausaTrapasso();
 
+	/**
+	 * Se è nel gruppo solo per qualche turno (un aiuto): non ha inventario né tattiche proprie
+	 */
+	boolean isATempo();
+
 	int getLivello();
 
 	/**

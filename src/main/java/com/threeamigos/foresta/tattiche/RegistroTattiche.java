@@ -46,16 +46,33 @@ public final class RegistroTattiche {
 
 	private static final TatticaMD DI_OGGI = costruisciLaTatticaDiOggi();
 	private static final Map<TipoPersonaggio, TatticaMD> PER_CLASSE = new EnumMap<>(TipoPersonaggio.class);
+	private static final Map<TipoPersonaggio, TatticaMD> BASE_DEI_MOSTRI = new java.util.concurrent.ConcurrentHashMap<>();
 
 	private RegistroTattiche() {
 	}
 
 	/**
-	 * La tattica base di una classe di mostri: quella registrata, altrimenti quella di oggi. Non è mai null.
+	 * La tattica base di una classe di mostri: quella registrata, altrimenti quella scritta in {@link TatticheBase} per la classe, altrimenti
+	 * (per le classi che non ne hanno una) quella di oggi. Non è mai null.
 	 */
 	public static TatticaMD perClasse(TipoPersonaggio classe) {
 		TatticaMD registrata = PER_CLASSE.get(classe);
-		return registrata != null ? registrata : DI_OGGI;
+		if (registrata != null) {
+			return registrata;
+		}
+		return BASE_DEI_MOSTRI.computeIfAbsent(classe, c -> {
+			TatticaMD base = TatticheBase.deiMostri(c);
+			return base != null ? base : DI_OGGI;
+		});
+	}
+
+	/**
+	 * La tattica predefinita di un personaggio giocabile, da cui il giocatore può partire (vedi {@link TatticheBase#deiGiocabili}); per le altre classi
+	 * la tattica vuota, che attacca il primo avversario.
+	 */
+	public static TatticaMD predefinitaDelGiocabile(TipoPersonaggio classe) {
+		TatticaMD predefinita = TatticheBase.deiGiocabili(classe);
+		return predefinita != null ? predefinita : TatticaMD.VUOTA;
 	}
 
 	/**
@@ -67,6 +84,27 @@ public final class RegistroTattiche {
 		} else {
 			PER_CLASSE.put(classe, tattica);
 		}
+	}
+
+	/**
+	 * Le azioni che un personaggio di quella classe può avere nella tattica: tutte tranne quelle che sono una caratteristica di altre classi (i canti del
+	 * bardo, il dardo arcano di maghi ed elfi, l'Alba sacra dei sacerdoti) e quelle solo dei mostri. Gli incantesimi in generale si lanciano da pergamena,
+	 * quindi li può avere chiunque. I canti sono di chi sa cantare; l'Urlo della Banshee lo si impara, ma resta fra le azioni (se non si conosce ancora, i requisiti lo saltano).
+	 */
+	public static java.util.Set<TipoAzione> azioniPossibili(TipoPersonaggio classe) {
+		java.util.Set<TipoAzione> possibili = java.util.EnumSet.allOf(TipoAzione.class);
+		possibili.remove(TipoAzione.INCANTESIMO_DEL_REPERTORIO);
+		if (!com.threeamigos.foresta.incantesimi.CantoDelBardo.conosciutoDa(classe)) {
+			possibili.removeAll(java.util.EnumSet.of(TipoAzione.CANTO_CURATIVO, TipoAzione.CANTO_IPNOTICO, TipoAzione.CANTO_DI_VALORE,
+					TipoAzione.URLO_DELLA_BANSHEE));
+		}
+		if (!com.threeamigos.foresta.incantesimi.DardoArcano.conosciutoDa(classe)) {
+			possibili.remove(TipoAzione.DARDO_ARCANO);
+		}
+		if (!com.threeamigos.foresta.incantesimi.AlbaSacra.conosciutaDa(classe)) {
+			possibili.remove(TipoAzione.ALBA_SACRA);
+		}
+		return possibili;
 	}
 
 	/**

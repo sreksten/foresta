@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaIncantatore;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioFornitore;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioGruppo;
+import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaTattiche;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaTrofei;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.RichiestaConComandi;
@@ -95,6 +96,7 @@ final class PartitaDiTest implements AutoCloseable {
 		BusEventi.iscriviti(RichiestaAperturaIncantatore.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaAperturaInventarioGruppo.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaAperturaTrofei.class, this::aggiornaComandi);
+		BusEventi.iscriviti(RichiestaAperturaTattiche.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneSiNo.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneMissione.class, this::aggiornaComandi);

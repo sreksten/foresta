@@ -19,6 +19,16 @@ public class GruppoMD implements Serializzabile {
 	protected int pozioniSaluteGrande;
 	protected int pozioniMagia;
 	protected int pozioniMagiaGrande;
+	// La posizione del capo fra i personaggi: il capo è il primo che è entrato nel gruppo, e non cambia se lo si sposta
+	protected int indiceCapo;
+
+	public int getIndiceCapo() {
+		return indiceCapo;
+	}
+
+	public void setIndiceCapo(int indiceCapo) {
+		this.indiceCapo = indiceCapo;
+	}
 
 	public void setIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
 		incantesimi.put(classeIncantesimo, quantita);
@@ -70,6 +80,7 @@ public class GruppoMD implements Serializzabile {
 
 	public void reimposta() {
 		personaggiMD.clear();
+		indiceCapo = 0;
 		incantesimi.clear();
 		pozioniSalute = 0;
 		pozioniSaluteGrande = 0;
@@ -79,7 +90,7 @@ public class GruppoMD implements Serializzabile {
 
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		stream.println(personaggiMD.size());
+		stream.println(personaggiMD.size() + PIPE + indiceCapo);
 		for (PersonaggioMD personaggio : personaggiMD) {
 			personaggio.salva(stream);
 		}
@@ -87,8 +98,9 @@ public class GruppoMD implements Serializzabile {
 
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
-		String line = stream.readLine();
-		int numeroPersonaggi = Integer.parseInt(line);
+		LettoreCampi campi = new LettoreCampi(stream.readLine());
+		int numeroPersonaggi = campi.intero();
+		indiceCapo = campi.intero();
 		for (int i = 0; i < numeroPersonaggi; i++) {
 			PersonaggioMD personaggioMD = new PersonaggioMD();
 			personaggioMD.leggi(stream);

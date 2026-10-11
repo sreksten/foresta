@@ -1404,7 +1404,7 @@ public class Costanti {
     public static final int FOLLETTO_MAX_FORZA = 5;
     public static final int FOLLETTO_MAX_DESTREZZA = 8;
     public static final int FOLLETTO_MAX_COSTITUZIONE = 5;
-    public static final int FOLLETTO_MAX_INTELLIGENZA = 3;
+    public static final int FOLLETTO_MAX_INTELLIGENZA = 8;
     public static final int FOLLETTO_MAX_SAGGEZZA = 4;
     public static final int FOLLETTO_MAX_FORTUNA = 2;
     public static final int FOLLETTO_PUNTI_ESPERIENZA = 15;
@@ -1712,7 +1712,7 @@ public class Costanti {
     public static final int OMBRANERA_MAX_FORZA = 35;
     public static final int OMBRANERA_MAX_DESTREZZA = 35;
     public static final int OMBRANERA_MAX_COSTITUZIONE = 35;
-    public static final int OMBRANERA_MAX_INTELLIGENZA = 30;
+    public static final int OMBRANERA_MAX_INTELLIGENZA = 31;
     public static final int OMBRANERA_MAX_SAGGEZZA = 30;
     public static final int OMBRANERA_MAX_FORTUNA = 20;
     public static final int OMBRANERA_PUNTI_ESPERIENZA = 40;

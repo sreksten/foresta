@@ -282,6 +282,30 @@ public abstract class Gruppo implements VistaGruppo {
 		return Collections.emptyList();
 	}
 
+	/**
+	 * Sposta un personaggio permanente di un posto a sinistra (-1) o a destra (+1), scambiandolo con il permanente
+	 * vicino (chi è a tempo non conta). Il capo resta quello che era.
+	 *
+	 * @return false se non si può: il personaggio non c'è, è a tempo, o è già al margine
+	 */
+	public boolean spostaPersonaggio(Personaggio p, int direzione) {
+		int da = personaggi.indexOf(p);
+		if (da < 0 || p.isATempo() || (direzione != -1 && direzione != 1)) {
+			return false;
+		}
+		int a = da + direzione;
+		while (a >= 0 && a < personaggi.size() && personaggi.get(a).isATempo()) {
+			a += direzione;
+		}
+		if (a < 0 || a >= personaggi.size()) {
+			return false;
+		}
+		Personaggio altro = personaggi.get(a);
+		personaggi.set(a, p);
+		personaggi.set(da, altro);
+		return true;
+	}
+
 	public void rimuoviPersonaggi() {
 		personaggi.clear();
 		capo = null;

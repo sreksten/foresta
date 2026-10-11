@@ -70,7 +70,8 @@ class RegistroTatticheTest {
     }
 
     private static Decisione decidi(Personaggio mostro, ContestoTattico contesto) {
-        return Valutatore.decidi(RegistroTattiche.perClasse(mostro.getClasse()), contesto);
+        // La replica di come sceglievano i mostri prima delle tattiche; le tattiche base vere sono in TatticheBaseTest
+        return Valutatore.decidi(RegistroTattiche.tatticaDiOggi(), contesto);
     }
 
     private static void fissa(Personaggio p, TipoAttributo attributo, double valore) {
@@ -84,9 +85,9 @@ class RegistroTatticheTest {
         TatticaMD tattica = RegistroTattiche.tatticaDiOggi();
         assertEquals(20, tattica.getVoci().size());
         assertEquals(Collections.emptyList(), tattica.problemi(false), "valida per un mostro");
-        for (TipoPersonaggio classe : Arrays.asList(TipoPersonaggio.GOBLIN, TipoPersonaggio.STREGA, TipoPersonaggio.DRAGO)) {
-            assertSame(tattica, RegistroTattiche.perClasse(classe), "tutti i mostri hanno la tattica di oggi");
-        }
+        // Le classi senza una tattica base scritta (non sono mostri) ripiegano su quella di oggi
+        assertSame(tattica, RegistroTattiche.perClasse(TipoPersonaggio.UOMO));
+        assertSame(tattica, RegistroTattiche.perClasse(TipoPersonaggio.LOCANDIERE));
     }
 
     @Test
@@ -97,9 +98,9 @@ class RegistroTatticheTest {
                 com.threeamigos.foresta.modellodati.tattiche.AzioneMD.di(TipoAzione.ATTACCO_FISICO)));
         RegistroTattiche.registra(TipoPersonaggio.GOBLIN, sua);
         assertSame(sua, RegistroTattiche.perClasse(TipoPersonaggio.GOBLIN));
-        assertSame(RegistroTattiche.tatticaDiOggi(), RegistroTattiche.perClasse(TipoPersonaggio.TROLL));
+        assertEquals(TatticheBase.deiMostri(TipoPersonaggio.TROLL), RegistroTattiche.perClasse(TipoPersonaggio.TROLL));
         RegistroTattiche.registra(TipoPersonaggio.GOBLIN, null);
-        assertSame(RegistroTattiche.tatticaDiOggi(), RegistroTattiche.perClasse(TipoPersonaggio.GOBLIN));
+        assertEquals(TatticheBase.deiMostri(TipoPersonaggio.GOBLIN), RegistroTattiche.perClasse(TipoPersonaggio.GOBLIN));
     }
 
     // ---- chi colpire: il Mago più potente, poi il Sacerdote, l'Elfo, il Bardo, poi a caso ----

@@ -35,6 +35,14 @@ public enum TipoEvento {
      */
     COMANDO_SPESA_PUNTO_ABILITA,
     /**
+     * Il giocatore imposta la tattica di un personaggio del gruppo
+     */
+    COMANDO_IMPOSTA_TATTICA,
+    /**
+     * Il giocatore sposta un personaggio a sinistra o a destra nel gruppo
+     */
+    COMANDO_SPOSTA_PERSONAGGIO,
+    /**
      * Il giocatore sposta un artefatto da una parte all'altra di uno scambio aperto
      */
     COMANDO_SCAMBIO_ARTEFATTO,
@@ -65,6 +73,10 @@ public enum TipoEvento {
      * Richiesta di vedere la pagina dei trofei, dall'inventario
      */
     RICHIESTA_APERTURA_TROFEI,
+    /**
+     * Richiesta di vedere la schermata delle tattiche, dall'inventario
+     */
+    RICHIESTA_APERTURA_TATTICHE,
     /**
      * Richiede di visualizzare la mappa conosciuta della foresta a schermo intero
      */

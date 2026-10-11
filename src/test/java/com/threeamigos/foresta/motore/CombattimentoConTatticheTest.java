@@ -308,10 +308,45 @@ class CombattimentoConTatticheTest {
     }
 
     @Test
+    void unPersonaggioSenzaTatticaAgisceConLaPredefinitaDelSuoRuolo() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(608)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            Locazione locazione = preparaLo(partita, 1);
+            assertNull(partita.gruppo().getCapo().getTattica());
+            partita.eventi().ascolta(InternoDecisioneTattica.class);
+            iniziaLaMischia(locazione, partita);
+            scatta(locazione, partita, 1);
+            InternoDecisioneTattica decisione = partita.eventi().tutti(InternoDecisioneTattica.class).get(0);
+            assertSame(partita.gruppo().getCapo(), decisione.getPersonaggio());
+            assertFalse(decisione.isRipiego(), "ha una voce: la predefinita del guerriero");
+            assertEquals(4, decisione.getIndiceVoce(), "sano e senza maghi davanti: l'ultima voce, il primo avversario");
+        }
+    }
+
+    @Test
+    void unaTatticaDisabilitataEComeSeNonCiFosse() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(608)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            Locazione locazione = preparaLo(partita, 1);
+            // Una tattica che farebbe solo un'azione impossibile: disabilitata, si usa la predefinita
+            partita.gruppo().getCapo().setTattica(TatticaMD.VUOTA.disabilitata());
+            partita.eventi().ascolta(InternoDecisioneTattica.class);
+            iniziaLaMischia(locazione, partita);
+            scatta(locazione, partita, 1);
+            InternoDecisioneTattica decisione = partita.eventi().tutti(InternoDecisioneTattica.class).get(0);
+            assertSame(partita.gruppo().getCapo(), decisione.getPersonaggio());
+            assertFalse(decisione.isRipiego(), "la vuota disabilitata non conta: vale la predefinita del guerriero");
+            assertEquals(4, decisione.getIndiceVoce());
+        }
+    }
+
+    @Test
     void ilRipiegoSiAnnunciaSenzaVoce() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(608)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             Locazione locazione = preparaLo(partita, 1);
+            // Una tattica vuota esplicita: senza, il personaggio userebbe quella predefinita del suo ruolo
+            partita.gruppo().getCapo().setTattica(TatticaMD.VUOTA);
             partita.eventi().ascolta(InternoDecisioneTattica.class);
             iniziaLaMischia(locazione, partita);
             scatta(locazione, partita, 1);
@@ -363,7 +398,7 @@ class CombattimentoConTatticheTest {
             assertNotNull(decisione, "un goblin ha deciso con la tattica base");
             assertEquals(TipoAzione.ATTACCO_FISICO, decisione.getAzione());
             assertSame(capo, decisione.getBersaglio(), "chi altro?");
-            assertEquals(19, decisione.getIndiceVoce(), "l'ultima voce: senza caster fra i miei, uno a caso (la ventesima)");
+            assertEquals(1, decisione.getIndiceVoce(), "l'ultima voce del goblin, che è un bruto: uno a caso (non l'ha colpito nessuno)");
             String perche = String.join("\n", decisione.getSpiegazione());
             assertTrue(perche.contains("AVVERSARI_E_OSPITI"), perche);
         }

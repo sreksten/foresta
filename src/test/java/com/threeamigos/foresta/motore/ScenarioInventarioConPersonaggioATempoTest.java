@@ -37,7 +37,7 @@ class ScenarioInventarioConPersonaggioATempoTest {
             partita.comando(Comando.INVENTARIO);
 
             assertEquals(Arrays.asList(Comando.PERSONAGGIO_1, Comando.PERSONAGGIO_2, Comando.PERSONAGGIO_3,
-                    Comando.PERSONAGGIO_4, Comando.PERSONAGGIO_5, Comando.MOSTRA_TROFEI, Comando.ANNULLA),
+                    Comando.PERSONAGGIO_4, Comando.PERSONAGGIO_5, Comando.MOSTRA_TROFEI, Comando.MOSTRA_TATTICHE, Comando.ANNULLA),
                     partita.comandiDisponibili());
         }
     }
@@ -51,7 +51,7 @@ class ScenarioInventarioConPersonaggioATempoTest {
             partita.comando(Comando.ESCI_DA_CITTA);
             partita.comando(Comando.INVENTARIO);
 
-            List<Comando> attesi = Arrays.asList(Comando.PERSONAGGIO_1, Comando.PERSONAGGIO_3, Comando.MOSTRA_TROFEI, Comando.ANNULLA);
+            List<Comando> attesi = Arrays.asList(Comando.PERSONAGGIO_1, Comando.PERSONAGGIO_3, Comando.MOSTRA_TROFEI, Comando.MOSTRA_TATTICHE, Comando.ANNULLA);
             assertEquals(attesi, partita.comandiDisponibili());
             partita.comando(Comando.PERSONAGGIO_3);
             partita.assertStato(Stato.INVENTARIO);

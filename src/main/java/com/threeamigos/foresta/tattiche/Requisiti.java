@@ -93,6 +93,16 @@ public final class Requisiti {
 					return "il gruppo non ha pozioni della Magia";
 				}
 				return bersaglio != null && bersaglio.isVivo() && bersaglio.getMagia() < bersaglio.getMagiaMassima() ? null : "il bersaglio ha la MAGIA piena";
+			case POZIONE_SALUTE_GRANDE:
+				if (contesto.getPozioniSaluteGrandi() <= 0) {
+					return "il gruppo non ha pozioni della Salute grandi";
+				}
+				return bersaglio != null && bersaglio.isVivo() && bersaglio.getSalute() < bersaglio.getSaluteMassima() ? null : "il bersaglio non è ferito";
+			case POZIONE_MAGIA_GRANDE:
+				if (contesto.getPozioniMagiaGrandi() <= 0) {
+					return "il gruppo non ha pozioni della Magia grandi";
+				}
+				return bersaglio != null && bersaglio.isVivo() && bersaglio.getMagia() < bersaglio.getMagiaMassima() ? null : "il bersaglio ha la MAGIA piena";
 			case CAMBIA_ARMA:
 				if (!(contesto.getGruppoDegliAlleati() instanceof GruppoGiocatore)) {
 					return "solo i personaggi del giocatore cambiano arma";
