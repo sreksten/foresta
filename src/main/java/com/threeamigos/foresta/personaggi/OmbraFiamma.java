@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
@@ -19,7 +19,7 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 
 	public String getNomeSingolare() { return "OmbraFiamma"; }
 	public String getNomePlurale() { return "OmbreFiamma"; }
-	public String getPronome() { return Misc.EGLI; }
+	public String getPronome() { return Misc.ELLA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
 	public OmbraFiamma(int livello) {

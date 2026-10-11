@@ -54,6 +54,14 @@ class DisplayableCanvasRiquadroCombattimento implements Finestra {
 		this.visible = visible;
 	}
 
+	VistaPersonaggio getCombattente() {
+		return combattente;
+	}
+
+	VistaPersonaggio getAvversario() {
+		return avversario;
+	}
+
 	/** Larghezza a disposizione del nome: la cornice meno lo spazio per "salute/massima". */
 	private int larghezzaMassimaNome() {
 		return cornice.getWidth() - 30 - FontTool.getWidth(fontMedium, "000/000");

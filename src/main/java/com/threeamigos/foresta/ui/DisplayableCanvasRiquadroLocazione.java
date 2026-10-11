@@ -30,11 +30,11 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 	/**
 	 * Di quanto si sposta di lato e sale ogni personaggio rispetto al precedente nel suo gruppo
 	 */
-	private static final int PASSO_ORIZZONTALE = 20;
+	private static final int PASSO_ORIZZONTALE = 40;
 	/**
 	 * Il gruppo del giocatore sta più largo degli avversari: ogni personaggio è più distante dal precedente
 	 */
-	private static final int PASSO_ORIZZONTALE_GRUPPO = 40;
+	private static final int PASSO_ORIZZONTALE_GRUPPO = 50;
 	private static final int PASSO_VERTICALE = 6;
 	/**
 	 * Due sprite a tempo (salute, magia, livello) più vicini di così in orizzontale si sovrappongono, e se lo sono
@@ -164,13 +164,24 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		return posizioni;
 	}
 
-	void disegnaLocazione(Graphics2D graphics) {
+	/**
+	 * @param agente chi sta agendo (null se non c'è): gli appare una freccia sopra la testa
+	 * @param bersaglio il suo bersaglio, se c'è: anche a lui
+	 */
+	void disegnaLocazione(Graphics2D graphics, VistaPersonaggio agente, VistaPersonaggio bersaglio) {
 		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
 		VistaGruppo gng = vistaPartita.getGruppoAvversario();
 		TipoLocazione tipoLocazione = g.getTipoLocazioneCorrente();
 		BufferedImage locazione = ImageCache.locazioni.get(tipoLocazione);
 		int locXOffset = topLeftX;
 		graphics.drawImage(locazione, locXOffset, topLeftY, null);
+
+		// L'oggetto si disegna per primo: i personaggi lo coprono
+		TipoOggetto tipoOggetto = g.getTipoOggettoInLocazione();
+		if (tipoOggetto != null && tipoOggetto != TipoOggetto.ARTEFATTO) {
+			BufferedImage d = ClassiOggettoImmagine.getImmagine(tipoOggetto);
+			graphics.drawImage(d, xOggetto(locazione, d), yOggetto(locazione, d), null);
+		}
 
 		// Lista invertita
 		List<VistaPersonaggio> avversariDaDisegnare = new ArrayList<>();
@@ -179,7 +190,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		for (VistaPersonaggio personaggioCorrente : avversariDaDisegnare) {
 			BufferedImage d = mappaImmagini.get(personaggioCorrente);
 			CoordinateMD coordinate = mappaCoordinate.get(personaggioCorrente);
-			graphics.drawImage(d, coordinate.getX(), coordinate.getY(), null);
+			disegnaPersonaggio(graphics, personaggioCorrente, d, coordinate.getX(), coordinate.getY(), agente, bersaglio);
 		}
 
 		// Il gruppo, dall'ultimo al primo: il capo sta più in basso e copre gli altri
@@ -189,17 +200,20 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 			CoordinateMD coordinate = mappaCoordinate.get(gruppoDaDisegnare.get(i));
 			BufferedImage d = mappaImmagini.get(gruppoDaDisegnare.get(i));
 			if (coordinate != null && d != null) {
-				graphics.drawImage(d, coordinate.getX(), coordinate.getY(), null);
+				disegnaPersonaggio(graphics, gruppoDaDisegnare.get(i), d, coordinate.getX(), coordinate.getY(), agente, bersaglio);
 			}
-		}
-
-		TipoOggetto tipoOggetto = g.getTipoOggettoInLocazione();
-		if (tipoOggetto != null && tipoOggetto != TipoOggetto.ARTEFATTO) {
-			BufferedImage d = ClassiOggettoImmagine.getImmagine(tipoOggetto);
-			graphics.drawImage(d, xOggetto(locazione, d), yOggetto(locazione, d), null);
 		}
 	}
 	
+	private void disegnaPersonaggio(Graphics2D graphics, VistaPersonaggio personaggio, BufferedImage immagine, int x, int y,
+			VistaPersonaggio agente, VistaPersonaggio bersaglio) {
+		graphics.drawImage(immagine, x, y, null);
+		if (personaggio.equals(agente) || personaggio.equals(bersaglio)) {
+			BufferedImage freccia = ImageCache.frecciaGiuPersonaggioAttivo;
+			graphics.drawImage(freccia, x + ((immagine.getWidth() - freccia.getWidth()) >> 1), y - freccia.getHeight(), null);
+		}
+	}
+
 	SpriteInterface notificaMorte(VistaPersonaggio personaggio) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
 		if (coordinate == null) {

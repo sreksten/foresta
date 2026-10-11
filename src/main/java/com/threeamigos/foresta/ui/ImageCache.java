@@ -98,6 +98,7 @@ public class ImageCache {
 	static BufferedImage missioneGallo;
 	static BufferedImage componenteScorrevoleFrecciaSu;
 	static BufferedImage componenteScorrevoleFrecciaGiu;
+	static BufferedImage frecciaGiuPersonaggioAttivo;
 
 
 	private static final Map<String, BufferedImage> imageMap = new HashMap<>();
@@ -287,6 +288,7 @@ public class ImageCache {
 
 		componenteScorrevoleFrecciaSu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaSu.gif");
 		componenteScorrevoleFrecciaGiu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaGiu.gif");
+		frecciaGiuPersonaggioAttivo = BufferedImageBuilder.buildBufferedImage("icone/Giu.gif");
 
 		// Avvia il reaper in background ogni minuto
 		avviaReaper(1, TimeUnit.MINUTES);

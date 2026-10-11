@@ -522,7 +522,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				riquadroStatistiche.disegnaStatistiche(graphics);
 				break;
 			case GRAFICA:
-				riquadroLocazione.disegnaLocazione(graphics);
+				boolean inCombattimento = riquadroCombattimento.isVisibile();
+				riquadroLocazione.disegnaLocazione(graphics,
+						inCombattimento ? riquadroCombattimento.getCombattente() : null,
+						inCombattimento ? riquadroCombattimento.getAvversario() : null);
 				break;
 			case STATO:
 				riquadroGruppo.disegnaStatus(graphics);

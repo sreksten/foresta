@@ -2,9 +2,10 @@ package com.threeamigos.foresta.ui;
 
 import org.junit.jupiter.api.Test;
 
-import java.awt.Point;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,7 +43,7 @@ class GruppoInLocazioneTest {
 		// Il bordo destro di ognuno arretra sempre dello stesso passo; il fondo sale sempre dello stesso passo
 		int bordoDestroCapo = posizioni.get(0).x + 112;
 		int bordoDestroSecondo = posizioni.get(1).x + 56;
-		assertEquals(40, bordoDestroCapo - bordoDestroSecondo);
+		assertEquals(50, bordoDestroCapo - bordoDestroSecondo);
 		int fondoCapo = posizioni.get(0).y + 142;
 		int fondoSecondo = posizioni.get(1).y + 138;
 		assertEquals(6, fondoCapo - fondoSecondo);
@@ -50,7 +51,7 @@ class GruppoInLocazioneTest {
 
 	@Test
 	void unGruppoVuotoNonHaPosizioni() {
-		assertTrue(DisplayableCanvasRiquadroLocazione.disponiGruppo(0, 390, 320, Arrays.<BufferedImage>asList()).isEmpty());
+		assertTrue(DisplayableCanvasRiquadroLocazione.disponiGruppo(0, 390, 320, Collections.emptyList()).isEmpty());
 	}
 
 	@Test
@@ -74,23 +75,23 @@ class GruppoInLocazioneTest {
 	void unoSpriteATempoNonSiSovrapponeAQuelliVicini() {
 		int passo = 30;
 		// Nessuno prima: parte dove deve
-		assertEquals(100, DisplayableCanvasRiquadroLocazione.primoPostoLibero(Arrays.<Point>asList(), 200, 100, passo));
+		assertEquals(100, DisplayableCanvasRiquadroLocazione.primoPostoLibero(Collections.emptyList(), 200, 100, passo));
 		// Uno già lì: il secondo parte più in basso, il terzo ancora più in basso
-		List<Point> occupati = Arrays.asList(new Point(200, 100));
+		List<Point> occupati = Collections.singletonList(new Point(200, 100));
 		assertEquals(130, DisplayableCanvasRiquadroLocazione.primoPostoLibero(occupati, 200, 100, passo));
 		occupati = Arrays.asList(new Point(200, 100), new Point(200, 130));
 		assertEquals(160, DisplayableCanvasRiquadroLocazione.primoPostoLibero(occupati, 200, 100, passo));
 		// Anche se è un po' più a lato, finché è vicino (un compagno dietro, 20 px più in là): parte subito sotto di lui
-		assertEquals(124, DisplayableCanvasRiquadroLocazione.primoPostoLibero(Arrays.asList(new Point(220, 94)), 200, 100, passo));
+		assertEquals(124, DisplayableCanvasRiquadroLocazione.primoPostoLibero(Collections.singletonList(new Point(220, 94)), 200, 100, passo));
 	}
 
 	@Test
 	void glISpriteLontaniODistantiInVerticaleNonSiSpostano() {
 		int passo = 30;
 		// Troppo lontano in orizzontale
-		assertEquals(100, DisplayableCanvasRiquadroLocazione.primoPostoLibero(Arrays.asList(new Point(400, 100)), 200, 100, passo));
+		assertEquals(100, DisplayableCanvasRiquadroLocazione.primoPostoLibero(Collections.singletonList(new Point(400, 100)), 200, 100, passo));
 		// Già abbastanza più in basso, o più in alto, di un passo intero
-		assertEquals(100, DisplayableCanvasRiquadroLocazione.primoPostoLibero(Arrays.asList(new Point(200, 130)), 200, 100, passo));
-		assertEquals(100, DisplayableCanvasRiquadroLocazione.primoPostoLibero(Arrays.asList(new Point(200, 70)), 200, 100, passo));
+		assertEquals(100, DisplayableCanvasRiquadroLocazione.primoPostoLibero(Collections.singletonList(new Point(200, 130)), 200, 100, passo));
+		assertEquals(100, DisplayableCanvasRiquadroLocazione.primoPostoLibero(Collections.singletonList(new Point(200, 70)), 200, 100, passo));
 	}
 }
