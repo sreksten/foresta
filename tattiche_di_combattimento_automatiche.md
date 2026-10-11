@@ -112,6 +112,38 @@ ne subisce tre. **La regola "si disimpegna e attacca" esce dal codice**: è solo
 numero delle coppie si calcola a inizio round e non si ricalcola quando qualcuno cade: le azioni che non hanno più un attore o una
 risposta si saltano. Le risposte "in più" (nessuna mia azione) scelgono il bersaglio con la tattica dell'avversario, come le altre.
 
+### 3.3 Il round e lo stato del combattimento
+
+**Che cos'è un round** (deciso): un **giro completo** dei personaggi **dei due gruppi**. Il round finisce quando tutti i personaggi vivi del giocatore *e* tutti
+gli avversari vivi hanno fatto la propria mossa (il giocatore con la sua azione, l'avversario con la sua risposta). Il numero del round **riparte da 1 a ogni inizio
+locazione** e **continua** quando arriva la prossima ondata: il combattimento e la locazione non sono cambiati, sono solo apparsi nuovi mostri. All'inizio di ogni
+round il motore pubblica un evento **`InternoInizioRound`** (con il numero), per la UI, i log e chi tiene la memoria del combattimento.
+
+**Lo `StatoDelCombattimento`** (deciso nel nome): un oggetto che raccoglie in un posto solo tutto ciò che le tattiche devono ricordare di un combattimento. Si crea
+(o si azzera) a ogni inizio locazione, insieme alla preparazione del gruppo avversario. Contiene:
+
+- **del combattimento**: il numero del round, e il registro di chi ha già agito nel round corrente;
+- **per ogni personaggio** (una scheda, indicizzata per identità del personaggio): l'ultimo avversario e l'ultimo alleato scelti (F8); chi lo ha attaccato per
+  ultimo (F9); se ha già lanciato un incantesimo (la regola del "magico", F3); quanti cambi d'arma ha fatto; le armi del gruppo già valutate; le voci già
+  usate; e, volendo, le statistiche (danni inflitti e subiti, incantesimi lanciati, colpi a segno e mancati);
+- **la conoscenza accumulata sulle reazioni** (S4): per ogni coppia (personaggio colpito, tipo di danno), quanto il danno vero è stato diverso da quello previsto,
+  che fa scoprire le resistenze date dall'equipaggiamento.
+
+Regole (decise):
+
+- **Non si salva**: un combattimento non si interrompe mai per salvare (il comando non è disponibile), quindi lo stato è transitorio e si perde con il
+  combattimento. Le tattiche di ogni personaggio, invece, sì (§1).
+- **La conoscenza è pubblica**: vale per i personaggi del giocatore e per i mostri, e quello che si è imparato sul comportamento di un personaggio lo sa chiunque, in
+  entrambi i gruppi.
+- **La scheda di un personaggio non si dimentica quando cade**: un compagno potrebbe farlo risorgere, e la conoscenza sulle sue reazioni deve valere ancora. Si
+  azzera solo con l'inizio della locazione; i mostri di una nuova ondata partono con una scheda vuota.
+- **Non è il modello dati**: è la memoria tattica. La aggiornano il motore e la locazione (o l'oggetto stesso, ascoltando gli eventi come `InternoInizioRound`);
+  le tattiche la *leggono* e basta, come vuole il prerequisito del §1.
+
+**Una conseguenza da tenere presente.** Nel gioco di oggi il giocatore sceglie ogni volta chi agisce, e può far agire sempre lo stesso personaggio: con questa
+definizione il round non avanza finché gli altri non hanno agito. Il contatore diventa significativo quando entra il round-robin del §3 (il puntatore fa
+agire tutti a turno); prima, il numero del round può restare fermo a lungo.
+
 ## 4. Le tattiche degli avversari
 
 **Lo stesso modello.** Ogni avversario ha una tattica fatta di voci (bersaglio, condizione, azione), valutata come quella dei compagni:
@@ -582,9 +614,23 @@ ha senso qui (**no**).
 | Numero di compagni vivi, o sono l'unico vivo | FFXII (*alone*) | **sì**: `getNumeroPersonaggiVivi()` |
 | Ci sono avversari di una classe o categoria | DA:O (*any enemy of type...*) | **sì** per le classi e per le categorie (§6.1) |
 | Il gruppo avversario è più numeroso (o meno) del mio | (specifico) | **sì**: serve a decidere, per esempio, se curarsi o attaccare |
-| Il numero del turno (da N in poi, ogni N turni) | BG (*round time*), DA:O (cooldown) | **da aggiungere**: oggi non c'è un contatore del round |
-| Una volta per scontro / non più di una volta | DA:O (cooldown), FFXII (*once*) | **da aggiungere**: un insieme "voci già usate in questo scontro" nello stato del combattimento |
+| Il **numero del round** (è il round `n`, da `n` in poi, ogni `n` round) | BG (*round time*), DA:O (cooldown) | **da aggiungere**: il contatore è nello `StatoDelCombattimento` (§3.3), con l'evento `InternoInizioRound` |
+| **Una volta per scontro** / non più di `n` volte / non prima di `n` round dall'ultima | DA:O (cooldown), FFXII (*once*) | **da aggiungere**: le "voci già usate" (e in che round) nello `StatoDelCombattimento`; vedi sotto a che cosa serve e a che cosa **no** |
 | Duello, combattimento fino alla resa, ondata successiva | (specifico) | **sì**: sono flag del personaggio (`isFinoAllaResa`, `isSfidante`) e dello scontro (ondate) |
+
+**A che cosa serve "una volta per scontro" (e a che cosa no).** Con le azioni di oggi i casi veri sono pochi:
+
+- **Il cambio d'arma** (§5): al massimo uno, al più due per personaggio. È un contatore per personaggio, il caso più chiaro.
+- **Le abilità forti dei mostri, che oggi non esistono** e che questa condizione prepara: il fiato di fuoco del Drago, l'urlo di una banshee, una morte che si ritorce
+  contro chi la lancia. Vanno usate "una volta per scontro" oppure "non prima di `n` round dall'ultima" (un *cooldown*, come in DA:O), con il round dell'ultimo uso.
+- **Una mossa d'apertura** ("a inizio scontro"): più semplice come condizione sul numero del round (`round = 1`), senza un contatore.
+
+**Non** serve, e non va usato, per le azioni che si possono già controllare con una condizione sullo stato, che dicono meglio *perché* non ripeterle:
+
+- il **Canto di valore** non è "una volta per scontro" ma "se nessun compagno è `ISPIRATO`" (dura qualche turno, e a scadenza può avere senso ripeterlo);
+- l'**Alba Sacra** innata del Sacerdote non è "una volta" ma "se un compagno ha uno stato negativo o un modificatore temporaneo da togliere" (costa 5 `MAGIA`);
+- il **Silenzio** è "se il bersaglio non è `SILENZIATO`", il **canto ipnotico** e l'**Urlo della Banshee** "se il bersaglio non è `SPAVENTATO` o `CONFUSO`";
+- una **Resurrezione** è "se c'è un compagno caduto".
 
 ### 7.3 Risorse e contesto
 
@@ -827,7 +873,8 @@ Quasi tutto è già leggibile (§6 e §7). Quello che manca:
 
 - il **puntatore di rotazione** di ogni gruppo (chi ha agito per ultimo) e il **round** (§3): oggi il `Gruppo` non li ha, e
   `LocazioneBase` agisce su un solo `combattente`;
-- uno **stato del combattimento**: il numero del round, l'ultimo bersaglio di ogni personaggio, le voci già usate;
+- lo **`StatoDelCombattimento`** (§3.3): il numero del round (con l'evento `InternoInizioRound`), l'ultimo bersaglio di ogni personaggio, le voci già usate, i cambi d'arma,
+  le armi valutate, chi ha lanciato, la conoscenza sulle reazioni;
 - (il riconoscimento di un **boss** per ora non serve, §6.1; le **categorie di creatura** ci sono già);
 - le **debolezze e resistenze di classe** come dato e la **difesa per elemento**, se si vorranno (§6.3, lavoro 4 e "Da decidere"): la composizione
   delle debolezze in un fattore senza effetti collaterali c'è già (`moltiplicatoreAtteso`);
