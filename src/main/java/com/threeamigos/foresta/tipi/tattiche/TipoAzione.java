@@ -47,6 +47,18 @@ public enum TipoAzione {
 		this.classeIncantesimo = classeIncantesimo;
 	}
 
+	/**
+	 * L'azione che lancia quell'incantesimo, o null se l'incantesimo non ne ha una
+	 */
+	public static TipoAzione di(ClasseIncantesimo classe) {
+		for (TipoAzione azione : values()) {
+			if (azione.classeIncantesimo == classe) {
+				return azione;
+			}
+		}
+		return null;
+	}
+
 	public String getDescrizione() {
 		return descrizione;
 	}

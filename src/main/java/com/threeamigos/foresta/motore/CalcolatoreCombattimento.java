@@ -195,6 +195,31 @@ public class CalcolatoreCombattimento {
     }
 
     /**
+     * Il danno che un colpo con quest'arma farebbe in media a quel difensore, senza dadi: la probabilità di colpire per il danno base
+     * dell'arma ({@link #dannoAttesoDellArma}) per il fattore di danno atteso contro quel difensore ({@link #moltiplicatoreAtteso}: difesa,
+     * debolezze e resistenze di classe e di stati). 0 se è immune a quel tipo di danno. Lo usano le tattiche per confrontare le azioni.
+     */
+    public static double dannoAtteso(Personaggio attaccante, Personaggio difensore, Arma arma) {
+        return dannoAtteso(attaccante, difensore, arma, 1.0d);
+    }
+
+    private static double dannoAtteso(Personaggio attaccante, Personaggio difensore, Arma arma, double fattoreDellaFase) {
+        double probabilita = calcolaProbabilitaDiColpire(attaccante, difensore, arma.getTipoDanno().getSuperTipo()) / 100.0d;
+        return probabilita * dannoAttesoDellArma(attaccante, arma) * fattoreDellaFase * moltiplicatoreAtteso(difensore, arma.getTipoDanno());
+    }
+
+    /**
+     * Il danno medio di un attacco con le armi (tutte le fasi, la seconda arma compresa) contro quel difensore, senza dadi
+     */
+    public static double dannoAttesoDellaMischia(Personaggio attaccante, Personaggio difensore) {
+        double totale = 0;
+        for (FaseDiAttacco fase : fasiDiAttacco(attaccante, difensore)) {
+            totale += dannoAtteso(attaccante, difensore, fase.getArma(), fase.getFattore());
+        }
+        return totale;
+    }
+
+    /**
      * Le fasi di attacco di un turno: l'arma principale e, per chi combatte con due armi, quella nella
      * mano secondaria, al 40% (Costanti.DOPPIA_ARMA_FATTORE_SECONDA_ARMA).
      */

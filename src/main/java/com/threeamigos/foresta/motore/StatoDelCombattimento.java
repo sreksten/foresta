@@ -5,11 +5,14 @@ import com.threeamigos.foresta.eventi.interni.InternoInizioRound;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
+import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import com.threeamigos.foresta.strumenti.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -76,6 +79,7 @@ public class StatoDelCombattimento {
 	private final Map<Gruppo, Puntatore> puntatori = new IdentityHashMap<>();
 	private final Map<Personaggio, Scheda> schede = new IdentityHashMap<>();
 	private final Map<Personaggio, Map<TipoDanno, Double>> reazioniNote = new IdentityHashMap<>();
+	private final Map<Personaggio, Set<TipoAzione>> immunitaScoperte = new IdentityHashMap<>();
 
 	/** Che cosa si ricorda di un personaggio */
 	private static final class Scheda {
@@ -86,6 +90,7 @@ public class StatoDelCombattimento {
 		private int cambiDArma;
 		private final Map<String, Integer> vociUsate = new HashMap<>();
 		private final Map<String, Integer> usiDelleVoci = new HashMap<>();
+		private final Map<Personaggio, Map<TipoAzione, Integer>> tentativiFalliti = new IdentityHashMap<>();
 		private final Map<Artefatto, Boolean> armiValutate = new IdentityHashMap<>();
 	}
 
@@ -103,6 +108,7 @@ public class StatoDelCombattimento {
 		puntatori.clear();
 		schede.clear();
 		reazioniNote.clear();
+		immunitaScoperte.clear();
 		BusEventi.pubblica(new InternoInizioRound(round));
 	}
 
@@ -382,6 +388,39 @@ public class StatoDelCombattimento {
 		Scheda scheda = schede.get(personaggio);
 		Integer usata = scheda == null ? null : scheda.vociUsate.get(voce);
 		return usata == null ? 0 : usata;
+	}
+
+	/**
+	 * Registra com'è andata un'azione di un personaggio contro un bersaglio (vedi EsitoAzione): una riuscita azzera i tentativi falliti, una
+	 * mancata li aumenta, un'immunità o resistenza scoperta si ricorda per tutti (conoscenza pubblica, come quella sulle reazioni).
+	 */
+	public void registraEsitoAzione(Personaggio attore, Personaggio bersaglio, TipoAzione azione, EsitoAzione esito) {
+		Map<TipoAzione, Integer> falliti = scheda(attore).tentativiFalliti.computeIfAbsent(bersaglio, b -> new EnumMap<>(TipoAzione.class));
+		switch (esito) {
+			case RIUSCITA:
+				falliti.remove(azione);
+				break;
+			case MANCATA:
+				falliti.merge(azione, 1, Integer::sum);
+				break;
+			default:
+				immunitaScoperte.computeIfAbsent(bersaglio, b -> EnumSet.noneOf(TipoAzione.class)).add(azione);
+				break;
+		}
+	}
+
+	/** Quante volte di fila l'attore ha fallito per caso quell'azione contro quel bersaglio */
+	public int getTentativiFalliti(Personaggio attore, Personaggio bersaglio, TipoAzione azione) {
+		Scheda scheda = schede.get(attore);
+		Map<TipoAzione, Integer> falliti = scheda == null ? null : scheda.tentativiFalliti.get(bersaglio);
+		Integer volte = falliti == null ? null : falliti.get(azione);
+		return volte == null ? 0 : volte;
+	}
+
+	/** Se si è scoperto che il bersaglio è immune a quell'azione o le resiste (lo sa chiunque) */
+	public boolean isImmunitaScoperta(Personaggio bersaglio, TipoAzione azione) {
+		Set<TipoAzione> scoperte = immunitaScoperte.get(bersaglio);
+		return scoperte != null && scoperte.contains(azione);
 	}
 
 	/** Registra che il personaggio ha già valutato quell'arma, e se può usarla */

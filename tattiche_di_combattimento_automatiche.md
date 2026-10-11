@@ -1082,12 +1082,29 @@ azione per azione, con i comandi manuali di oggi che continuano a funzionare com
 
 ### 11.9bis Stato dell'implementazione
 
-**Fatto** (`…/tattiche`, `…/tipi/tattiche`, con `RosaTest`, `ContestoTatticoTest`, `SelezioneTest`, `PredicatiTest`): le rose; il contesto (attore, gruppi, ospiti, capi, `StatoDelCombattimento`, azione e voce in valutazione); `Confronto`, `TipoParametro`, `TipoFiltro` e
-`Filtro` (immutabile, con i parametri controllati) con la logica in `Filtri`; `TipoOrdinamento`, `Ordinamento` e `Ordinamenti`; `Selettore` (rosa, filtri, ordinamento) con `RisultatoSelezione` (scelto, rimasti, percorso per il registro);
-`TipoAzione` e `PortataAzione`; `TipoPersonaggio.getRuolo`; i predicati (`TipoPredicato`, `Predicato`, `Predicati`: `QUANTI`, `ROUND`, `ASTUZIA`, `PROBABILITA`, `VOCE_USATA`, `ROUND_DALL_ULTIMO_USO`); l'astuzia (`Astuzia.di`, con
-`Costanti.ASTUZIA_PARTENZA` e `ASTUZIA_PER_LIVELLO`); il conteggio degli usi di una voce nello `StatoDelCombattimento` (`getUsiDellaVoce`). Un `ROUND_DALL_ULTIMO_USO` di una voce mai usata vale "moltissimi" (l'attesa è finita).
-**Da fare**: le azioni con i requisiti e il criterio dell'incantesimo, la voce e la tattica, il valutatore, il salvataggio, il collegamento al motore (bersaglio scelto); i ritocchi alle intelligenze massime del Folletto (a 8) e dell'Ombra Nera (a 31), che
-fanno parte della ripartizione delle fasce (§4).
+**Fatto** (`…/tattiche`, `…/tipi/tattiche`; test `RosaTest`, `ContestoTatticoTest`, `SelezioneTest`, `PredicatiTest`, `ValutatoreTest`):
+
+- **Il "SU"**: le rose, i filtri (`Filtro`, `Filtri`), gli ordinamenti (`Ordinamento`, `Ordinamenti`), il `Selettore` con il suo `RisultatoSelezione` (scelto, rimasti, percorso). Il selettore accetta un'`Ammissione`: restano nella rosa solo i candidati su cui
+  un'azione della voce si può fare, e i filtri che dipendono dall'azione la valutano per quella che si farebbe su ciascuno.
+- **Le condizioni**: `TipoPredicato`, `Predicato`, `Predicati`, l'astuzia (`Astuzia`, con `Costanti.ASTUZIA_PARTENZA` e `ASTUZIA_PER_LIVELLO`), il conteggio degli usi di una voce. Un `ROUND_DALL_ULTIMO_USO` di una voce mai usata vale "moltissimi".
+- **Le azioni**: `TipoAzione`, `PortataAzione`, `Azione` (con i parametri controllati), `Requisiti` (quando si può fare ciascuna, con il motivo del no), `CriterioIncantesimo` e `SceltaIncantesimo` (S1-S4 e `PIU_ECONOMICO_CHE_BASTA`, con il confronto con l'attacco),
+  `CalcolatoreCombattimento.dannoAtteso` e `dannoAttesoDellaMischia` (senza dadi).
+- **La voce e la tattica**: `Voce` (selettore opzionale con quello di base della portata, condizioni, azioni, attiva/disattiva, `problemi(lato)` che la lettura deve rifiutare), `Tattica` (lista piatta, `problemi(lato)`), `Decisione` (azione, bersaglio, perché),
+  `Valutatore.decidi` (la prima voce eseguibile; ripiego sull'attacco fisico al primo avversario).
+- **La memoria dello scontro**: `StatoDelCombattimento.registraEsitoAzione` (riuscita, mancata, immune), `getTentativiFalliti` (si rinuncia dopo `Costanti.MAX_TENTATIVI_FALLITI_PER_AZIONE` = 2) e `isImmunitaScoperta` (pubblica); le immunità di classe si conoscono subito.
+
+**Scelte dei requisiti** (da rivedere se non convincono): un incantesimo si può lanciare se il personaggio non è silenziato, ha la `MAGIA` e ha una pergamena nel gruppo, oppure è un mostro magico che lo ha nel repertorio; l'Alba sacra serve se un alleato ha uno
+stato diverso da `ISPIRATO` (i modificatori temporanei, oggi, non si leggono dal personaggio); i canti ipnotico e dell'Urlo servono se c'è un avversario né `SPAVENTATO` né `CONFUSO`; il Canto di valore se c'è un alleato non `ISPIRATO`; le pozioni vogliono una scorta nel
+gruppo e un bersaglio ferito (Salute) o con poca `MAGIA`; il cambio d'arma solo per i miei, se c'è un'arma da prendere (`armiPerCambio`).
+
+**Collegato al motore** (`LocazioneBase`, test `CombattimentoConTatticheTest`): a ogni scatto del TIMER il personaggio di turno agisce con la sua tattica (`Personaggio.getTattica`, oggi non salvata): i miei senza tattica hanno `Tattica.VUOTA` (attaccano
+il primo avversario, come prima), i mostri senza tattica scelgono ancora con `PersonaggioBase.attacca(Gruppo)` (finché non ci sono le tattiche base). `agisciConLaTattica` decide con il `Valutatore`, esegue la `Decisione` (`eseguiLaDecisione`: attacco con
+le armi sul bersaglio scelto, incantesimi di danno con il `GruppoDiBersagli` per i `MULTIPLO`, dardo arcano, benefici, canti — il curativo sul bersaglio scelto, `Canto.cantaSu` —, pozioni con la scelta fra normale e grande, cambio d'arma), registra l'uso della voce
+e controlla la fine dello scontro; non gestisce il round. Gli esiti degli incantesimi (colpito, mancato, immune) e del dardo si registrano nello `StatoDelCombattimento` (`IncantesimoMaleficoImpl.colpisci`, `scagliaIlDardo`); l'attacco fisico non ne registra
+(non si abbandona mai). Le azioni manuali del giocatore (barra dei comandi) non sono cambiate.
+
+**Da fare**: il salvataggio e la rilettura (formato, `PersonaggioMD`); le tattiche base dei mostri e le fasce di astuzia (compresi i ritocchi alle intelligenze massime del Folletto, a 8, e dell'Ombra Nera, a 31); l'evento `InternoDecisioneTattica` (§7.7); la scheda del
+giocatore (§12); l'esito di un'azione con effetti che non si applicano (un Silenzio a segno che non mette `SILENZIATO`) come "mancata".
 
 ### 11.10 Il criterio di scelta dell'incantesimo di danno
 
@@ -1116,7 +1133,7 @@ attacco con le armi sullo stesso bersaglio; altrimenti non lo è, e la sequenza 
 **Come ripartire le fasce di astuzia nella tattica base di un mostro magico** (da tarare con le simulazioni): la prima fascia (0-11) `PROBABILITA 67 → INCANTESIMO_DI_DANNO A_CASO`, la seconda (12-19) `PIU_POTENTE`, la terza (20-30) `PIU_ADATTO` con
 `soloSePiuForteDellAttacco`, la quarta (da 31) `PIU_ADATTO_ESPERTO` con `soloSePiuForteDellAttacco`; sempre seguite da `ATTACCO_FISICO`.
 
-**Da fare nel codice**: una funzione deterministica del danno atteso di un'azione contro un bersaglio (`CalcolatoreCombattimento.dannoAtteso(attaccante, difensore, arma)`: probabilità di colpire × `dannoAttesoDellArma` × `moltiplicatoreAtteso`, e
-la variante con gli stati futuri), l'elenco degli incantesimi lanciabili da un personaggio, e i criteri; il registro delle decisioni (§7.7) deve riportare i danni attesi confrontati ("Gelo 14, Fulmine 31: Fulmine").
+**Fatto** (§11.9bis): `CalcolatoreCombattimento.dannoAtteso`, l'elenco dei lanciabili e i criteri (`SceltaIncantesimo`). Il registro delle decisioni (§7.7) deve riportare i danni attesi confrontati ("Gelo 14, Fulmine 31: Fulmine"): oggi la spiegazione dice solo
+quale incantesimo sceglie.
 
 **Da decidere:** il parametro di `PIU_ECONOMICO_CHE_BASTA` (basta se il danno atteso è almeno la salute attuale del bersaglio? o un margine?) e l'esatta ripartizione delle fasce, entrambi da tarare con le simulazioni.

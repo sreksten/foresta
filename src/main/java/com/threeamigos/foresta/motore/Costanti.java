@@ -249,6 +249,11 @@ public class Costanti {
     public static final int PROBABILITA_PERGAMENA_PER_AVVERSARIO = 20;
     // Quante volte, al massimo, un personaggio cambia arma in un combattimento (vedi tattiche_di_combattimento_automatiche.md §5)
     public static final int MAX_CAMBI_ARMA_PER_COMBATTIMENTO = 2;
+    /**
+     * Dopo quanti tentativi falliti per caso (un Silenzio mancato) una tattica smette di provare la stessa azione su quel bersaglio
+     * (tattiche_di_combattimento_automatiche.md §11.7)
+     */
+    public static final int MAX_TENTATIVI_FALLITI_PER_AZIONE = 2;
     // ...e, se è un umanoide, la probabilità di una pozione della Salute
     public static final int PROBABILITA_POZIONE_SALUTE_PER_AVVERSARIO_UMANOIDE = 20;
     public static final int RECUPERO_DA_POZIONE_MAGIA_GRANDE = 20;

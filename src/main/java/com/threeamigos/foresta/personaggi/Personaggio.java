@@ -93,6 +93,19 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
     boolean isMagico();
 
     /**
+     * La tattica del personaggio (tattiche_di_combattimento_automatiche.md §11), o null se non ne ha una (oggi i mostri, che scelgono ancora con le
+     * regole di PersonaggioBase.attacca(Gruppo)). Non si salva ancora.
+     */
+    com.threeamigos.foresta.tattiche.Tattica getTattica();
+
+    void setTattica(com.threeamigos.foresta.tattiche.Tattica tattica);
+
+    /**
+     * Un attacco con le sue armi (la seconda arma compresa) contro quel bersaglio, senza incantesimi, finché il bersaglio resta in combattimento
+     */
+    void attaccaConLeArmi(Personaggio bersaglio);
+
+    /**
      * Gli incantesimi malefici che il personaggio sa lanciare per natura quando attacca (vedi PersonaggioBase): non servono
      * pergamene, li paga con la MAGIA. Vale per chi è magico (isMagico).
      */

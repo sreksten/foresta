@@ -58,7 +58,16 @@ public class CantoCurativo implements Canto {
 
 	@Override
 	public boolean canta(Personaggio cantore, Gruppo gruppo, Gruppo gruppoAvversario) {
-		Optional<Personaggio> ferito = piuFerito(gruppo);
+		return cantaSu(cantore, piuFerito(gruppo).orElse(null), gruppo, gruppoAvversario);
+	}
+
+	/**
+	 * Cura il bersaglio scelto (se è ferito); {@link #canta} sceglie il più ferito del gruppo
+	 */
+	@Override
+	public boolean cantaSu(Personaggio cantore, Personaggio scelto, Gruppo gruppo, Gruppo gruppoAvversario) {
+		Optional<Personaggio> ferito = Optional.ofNullable(scelto)
+				.filter(p -> p.isVivo() && p.getSalute() < p.getSaluteMassima());
 		String nomeCantore = cantore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		if (!ferito.isPresent()) {

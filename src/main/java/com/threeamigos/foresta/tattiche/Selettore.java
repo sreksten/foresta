@@ -1,11 +1,14 @@
 package com.threeamigos.foresta.tattiche;
 
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Chi è il bersaglio di una voce: una rosa di candidati, i filtri che li restringono (in AND, l'ordine non conta) e l'ordinamento che sceglie
@@ -37,16 +40,46 @@ public final class Selettore {
 	}
 
 	/**
+	 * Quali azioni si possono fare su un candidato: per ogni candidato della rosa l'azione della voce che si farebbe su di lui (la prima
+	 * applicabile), o null se nessuna si può fare e il candidato non entra nel selettore
+	 */
+	public interface Ammissione {
+		TipoAzione azioneSu(Personaggio candidato);
+	}
+
+	/**
 	 * Applica la rosa, i filtri e l'ordinamento. Non cambia niente; tira il dado solo con l'ordinamento A_CASO.
 	 */
 	public RisultatoSelezione seleziona(ContestoTattico contesto) {
+		return seleziona(contesto, null);
+	}
+
+	/**
+	 * Come {@link #seleziona(ContestoTattico)}, ma restano nella rosa solo i candidati su cui un'azione della voce si può fare
+	 * ({@link Ammissione}), e i filtri che dipendono dall'azione (DEBOLE_ALL_AZIONE) la valutano per quella che si farebbe su ciascuno
+	 */
+	public RisultatoSelezione seleziona(ContestoTattico contesto, Ammissione ammissione) {
 		List<String> passi = new ArrayList<>();
 		List<Personaggio> candidati = Rose.di(rosa).candidati(contesto);
 		passi.add(rosa + ": " + candidati.size());
+		Map<Personaggio, TipoAzione> azioni = new IdentityHashMap<>();
+		if (ammissione != null) {
+			List<Personaggio> applicabili = new ArrayList<>();
+			for (Personaggio candidato : candidati) {
+				TipoAzione azione = ammissione.azioneSu(candidato);
+				if (azione != null) {
+					azioni.put(candidato, azione);
+					applicabili.add(candidato);
+				}
+			}
+			candidati = applicabili;
+			passi.add("azione applicabile: " + candidati.size());
+		}
 		for (Filtro filtro : filtri) {
 			List<Personaggio> rimasti = new ArrayList<>();
 			for (Personaggio candidato : candidati) {
-				if (Filtri.ammette(filtro, candidato, contesto)) {
+				ContestoTattico perIlCandidato = azioni.containsKey(candidato) ? contesto.conAzione(azioni.get(candidato)) : contesto;
+				if (Filtri.ammette(filtro, candidato, perIlCandidato)) {
 					rimasti.add(candidato);
 				}
 			}

@@ -26,4 +26,12 @@ public interface Canto {
 	 * @return true se il canto ha avuto luogo (e ha quindi consumato MAGIA), false se non c'era nessuno su cui farlo
 	 */
 	boolean canta(Personaggio cantore, Gruppo gruppo, Gruppo gruppoAvversario);
+
+	/**
+	 * Come {@link #canta}, ma per un canto che ha un bersaglio (il curativo) lo sceglie chi canta, per esempio una tattica; gli altri canti
+	 * agiscono su un gruppo e lo ignorano
+	 */
+	default boolean cantaSu(Personaggio cantore, Personaggio bersaglio, Gruppo gruppo, Gruppo gruppoAvversario) {
+		return canta(cantore, gruppo, gruppoAvversario);
+	}
 }

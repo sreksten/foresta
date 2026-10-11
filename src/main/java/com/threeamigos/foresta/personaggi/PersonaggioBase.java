@@ -161,6 +161,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		this.corrompibile = corrompibile;
 	}
 	
+	private com.threeamigos.foresta.tattiche.Tattica tattica;
+
+	@Override
+	public com.threeamigos.foresta.tattiche.Tattica getTattica() {
+		return tattica;
+	}
+
+	@Override
+	public void setTattica(com.threeamigos.foresta.tattiche.Tattica tattica) {
+		this.tattica = tattica;
+	}
+
 	public boolean isAmichevole() {
 		return amichevole;
 	}
@@ -579,6 +591,19 @@ public abstract class PersonaggioBase implements Personaggio {
 			incantesimoScelto.formula(this, bersaglio, null);
 			return;
 		}
+		attaccaConLeArmi(bersaglio, annunciaAttacco);
+	}
+
+	/**
+	 * Un attacco con le sue armi contro quel bersaglio (come quando un mostro non lancia un incantesimo), senza incantesimi
+	 */
+	@Override
+	public void attaccaConLeArmi(Personaggio bersaglio) {
+		BusEventi.pubblica(new InternoAzioneInCombattimento(this, bersaglio));
+		attaccaConLeArmi(bersaglio, true);
+	}
+
+	private void attaccaConLeArmi(Personaggio bersaglio, boolean annunciaAttacco) {
 		if (annunciaAttacco) {
 			// Gli avversari della stessa specie si distinguono per il numero ("La viverna 2"), quindi sempre l'articolo determinativo
 			String messaggio = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA) +

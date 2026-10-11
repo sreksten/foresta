@@ -1,9 +1,11 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public final class ContestoTattico {
 	private final StatoDelCombattimento stato;
 	private final TipoAzione azioneInValutazione;
 	private final String identificativoVoce;
+	private final Gruppo gruppoDegliAlleati;
 
 	/**
 	 * @param alleati           tutti i membri del gruppo dell'attore, nell'ordine del gruppo; il primo è il capo
@@ -38,12 +41,12 @@ public final class ContestoTattico {
 	public ContestoTattico(Personaggio attore, boolean attoreDelGiocatore, List<Personaggio> alleati, List<Personaggio> avversari,
 						   List<Personaggio> ospitiVulnerabili) {
 		this(attore, attoreDelGiocatore, alleati, avversari, ospitiVulnerabili, primo(alleati), primo(avversari),
-				StatoDelCombattimento.getIstanza(), null, null);
+				StatoDelCombattimento.getIstanza(), null, null, null);
 	}
 
 	private ContestoTattico(Personaggio attore, boolean attoreDelGiocatore, List<Personaggio> alleati, List<Personaggio> avversari,
 							List<Personaggio> ospitiVulnerabili, Personaggio capoDegliAlleati, Personaggio capoDegliAvversari,
-							StatoDelCombattimento stato, TipoAzione azioneInValutazione, String identificativoVoce) {
+							StatoDelCombattimento stato, TipoAzione azioneInValutazione, String identificativoVoce, Gruppo gruppoDegliAlleati) {
 		this.attore = attore;
 		this.attoreDelGiocatore = attoreDelGiocatore;
 		this.alleati = Collections.unmodifiableList(new ArrayList<>(alleati));
@@ -54,6 +57,7 @@ public final class ContestoTattico {
 		this.stato = stato;
 		this.azioneInValutazione = azioneInValutazione;
 		this.identificativoVoce = identificativoVoce;
+		this.gruppoDegliAlleati = gruppoDegliAlleati;
 	}
 
 	private static Personaggio primo(List<Personaggio> personaggi) {
@@ -74,7 +78,7 @@ public final class ContestoTattico {
 				giocatore.getOspitiBersaglio(),
 				(delGiocatore ? giocatore : mostri).getCapo(),
 				(delGiocatore ? mostri : giocatore).getCapo(),
-				StatoDelCombattimento.getIstanza(), null, null);
+				StatoDelCombattimento.getIstanza(), null, null, delGiocatore ? giocatore : mostri);
 	}
 
 	/**
@@ -82,7 +86,7 @@ public final class ContestoTattico {
 	 */
 	public ContestoTattico conAzione(TipoAzione azione) {
 		return new ContestoTattico(attore, attoreDelGiocatore, alleati, avversari, ospitiVulnerabili, capoDegliAlleati, capoDegliAvversari,
-				stato, azione, identificativoVoce);
+				stato, azione, identificativoVoce, gruppoDegliAlleati);
 	}
 
 	/**
@@ -90,7 +94,7 @@ public final class ContestoTattico {
 	 */
 	public ContestoTattico conVoce(String identificativo) {
 		return new ContestoTattico(attore, attoreDelGiocatore, alleati, avversari, ospitiVulnerabili, capoDegliAlleati, capoDegliAvversari,
-				stato, azioneInValutazione, identificativo);
+				stato, azioneInValutazione, identificativo, gruppoDegliAlleati);
 	}
 
 	/**
@@ -98,7 +102,38 @@ public final class ContestoTattico {
 	 */
 	public ContestoTattico conStato(StatoDelCombattimento altroStato) {
 		return new ContestoTattico(attore, attoreDelGiocatore, alleati, avversari, ospitiVulnerabili, capoDegliAlleati, capoDegliAvversari,
-				altroStato, azioneInValutazione, identificativoVoce);
+				altroStato, azioneInValutazione, identificativoVoce, gruppoDegliAlleati);
+	}
+
+	/**
+	 * Lo stesso contesto con il gruppo dell'attore, da cui si leggono le scorte (pergamene e pozioni); senza, il gruppo non ha scorte.
+	 * Con {@link #per(Personaggio)} c'è già.
+	 */
+	public ContestoTattico conGruppoDegliAlleati(Gruppo gruppo) {
+		return new ContestoTattico(attore, attoreDelGiocatore, alleati, avversari, ospitiVulnerabili, capoDegliAlleati, capoDegliAvversari,
+				stato, azioneInValutazione, identificativoVoce, gruppo);
+	}
+
+	/**
+	 * Il gruppo dell'attore (dei miei o dei mostri), o null se il contesto non lo conosce
+	 */
+	public Gruppo getGruppoDegliAlleati() {
+		return gruppoDegliAlleati;
+	}
+
+	/**
+	 * Le pergamene di quell'incantesimo che il gruppo dell'attore ha con sé
+	 */
+	public int getPergamene(ClasseIncantesimo classe) {
+		return gruppoDegliAlleati == null ? 0 : gruppoDegliAlleati.getIncantesimi(classe);
+	}
+
+	public int getPozioniSalute() {
+		return gruppoDegliAlleati == null ? 0 : gruppoDegliAlleati.getPozioniSalute() + gruppoDegliAlleati.getPozioniSaluteGrande();
+	}
+
+	public int getPozioniMagia() {
+		return gruppoDegliAlleati == null ? 0 : gruppoDegliAlleati.getPozioniMagia() + gruppoDegliAlleati.getPozioniMagiaGrande();
 	}
 
 	public Personaggio getAttore() {

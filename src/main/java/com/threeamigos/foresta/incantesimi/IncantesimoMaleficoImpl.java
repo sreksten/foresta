@@ -9,6 +9,8 @@ import com.threeamigos.foresta.motore.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
+import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
+import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import com.threeamigos.foresta.strumenti.Logger;
 
 import java.util.List;
@@ -83,14 +85,19 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 	}
 
 	protected void colpisci(Personaggio formulante, Personaggio personaggioBersaglio) {
+		TipoAzione azione = TipoAzione.di(getClasse());
+		StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
 		if (personaggioBersaglio.isImmuneAIncantesimo(getClasse())) {
 			Logger.log("Bersaglio immune all'incantesimo");
+			stato.registraEsitoAzione(formulante, personaggioBersaglio, azione, EsitoAzione.IMMUNE);
 			return;
 		}
 		if (!CalcolatoreCombattimento.colpisce(formulante, personaggioBersaglio, getTipoDanno().getSuperTipo())) {
 			Logger.log("L'incantesimo non va a segno");
+			stato.registraEsitoAzione(formulante, personaggioBersaglio, azione, EsitoAzione.MANCATA);
 			return;
 		}
+		stato.registraEsitoAzione(formulante, personaggioBersaglio, azione, EsitoAzione.RIUSCITA);
 		DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(formulante, personaggioBersaglio, this);
 		personaggioBersaglio.applicaRisultatoCombattimento(risultato);
 	}
