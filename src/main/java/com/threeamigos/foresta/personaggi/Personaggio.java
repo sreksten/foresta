@@ -94,7 +94,7 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 
     /**
      * La tattica del personaggio (tattiche_di_combattimento_automatiche.md §11), o null se non ne ha una (oggi i mostri, che scelgono ancora con le
-     * regole di PersonaggioBase.attacca(Gruppo)). Si salva con il personaggio (PersonaggioMD).
+     * tattica base della sua classe, RegistroTattiche). Si salva con il personaggio (PersonaggioMD).
      */
     com.threeamigos.foresta.modellodati.tattiche.TatticaMD getTattica();
 
@@ -265,14 +265,6 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 * Il personaggio fugge
 	 */
     void fugge();
-	/**
-	 * Il personaggio attacca un avversario; questa viene chiamata per i PNG
-	 */
-    void attacca(Personaggio bersaglio);
-	/**
-	 * Il personaggio attacca un gruppo avversario; questa viene chiamata per i PNG
-	 */
-    void attacca(Gruppo bersaglio);
 
 	/**
 	 * Alcuni PNG possono decidere di aggregarsi al gruppo di un giocatore per

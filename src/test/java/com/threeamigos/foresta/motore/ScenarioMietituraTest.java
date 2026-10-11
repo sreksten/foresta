@@ -69,7 +69,7 @@ class ScenarioMietituraTest {
     }
 
     private static final String FALCE = "FALCE_DEL_TRISTO_MIETITORE";
-    private static final int DADI_DEL_COLPO = 6;
+    private static final int DADI_DEL_COLPO = 5;
 
     private static DannoRisultante colpoDellaFalce(PartitaDiTest partita, Personaggio bersaglio) {
         Personaggio capo = partita.gruppo().getCapo();
@@ -97,7 +97,7 @@ class ScenarioMietituraTest {
 
     /**
      * I dadi truccati a 1 fanno andare a segno ogni lancio contro una probabilità: il colpo arriva, e anche gli
-     * incantamenti applicano il loro stato. Un colpo della Falce lancia sei dadi (contati provando); se un giorno ne
+     * incantamenti applicano il loro stato. Un colpo della Falce lancia cinque dadi (contati provando; prima del tiro che decideva se lanciare un incantesimo erano sei); se un giorno ne
      * lancia di più o di meno il test se ne accorge.
      */
     private static void colpisciConDadiTruccati(Personaggio attaccante, Personaggio bersaglio, int lanci) {
@@ -105,7 +105,7 @@ class ScenarioMietituraTest {
         Arrays.fill(unoDopoUno, 1);
         Dado.trucca(unoDopoUno);
         try {
-            attaccante.attacca(bersaglio);
+            attaccante.attaccaConLeArmi(bersaglio);
             assertEquals(0, Dado.trucchiRimasti(), "il colpo lancia meno dadi di quelli previsti");
         } finally {
             Dado.ripristina();

@@ -5,11 +5,9 @@ import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.eventi.interni.InternoCreazionePersonaggio;
 import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.eventi.interni.InternoPersonaggioArreso;
-import com.threeamigos.foresta.eventi.interni.InternoRisultatoValutazionePersonaggioAttaccante;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
-import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.ModificatoreAttivo;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
@@ -180,7 +178,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	/**
-	 * Gli incantesimi malefici che il personaggio sa lanciare quando attacca (vedi scegliIncantesimoContro): i boss
+	 * Gli incantesimi malefici che il personaggio sa lanciare quando attacca (vedi RegistroTattiche e Requisiti): i boss
 	 * tutti, Morte compresa; gli altri tutti tranne Morte. Le classi di mostri con un carattere preciso lo
 	 * restringono (l'Arpia l'Aria, i non morti il Gelo...).
 	 */
@@ -515,85 +513,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	/**
-	 * Chi attacca un gruppo: il Mago o la Maga più potenti (di livello più alto, a parità il primo), altrimenti il
-	 * Sacerdote o la Sacerdotessa più potenti, altrimenti l'Elfo o l'Elfa più potenti, altrimenti il Bardo o la
-	 * Cantastorie più potenti, altrimenti uno a caso fra tutti i personaggi vivi e gli ospiti vulnerabili vivi (vedi {@link Gruppo#getOspitiBersaglio()}), tutti con la stessa probabilità.
-	 */
-	public void attacca(Gruppo gruppoBersaglio) {
-		Personaggio bersaglio = scegliBersaglio(gruppoBersaglio);
-		if (bersaglio != null) {
-			attacca(bersaglio);
-		}
-	}
-
-	/**
-	 * @return null se non c'è nessuno da attaccare
-	 */
-	static Personaggio scegliBersaglio(Gruppo gruppoBersaglio) {
-		List<Personaggio> personaggiPossibili = gruppoBersaglio.getPersonaggiVivi();
-		if (personaggiPossibili.isEmpty()) {
-			// Sono tutti in panchina (si sono arresi): non c'è più nessuno da attaccare
-			return null;
-		}
-		Personaggio bersaglio = piuPotenteTra(personaggiPossibili, TipoPersonaggio.MAGO, TipoPersonaggio.MAGA);
-		if (bersaglio == null) {
-			bersaglio = piuPotenteTra(personaggiPossibili, TipoPersonaggio.SACERDOTE, TipoPersonaggio.SACERDOTESSA);
-		}
-		if (bersaglio == null) {
-			bersaglio = piuPotenteTra(personaggiPossibili, TipoPersonaggio.ELFO, TipoPersonaggio.ELFA);
-		}
-		if (bersaglio == null) {
-			bersaglio = piuPotenteTra(personaggiPossibili, TipoPersonaggio.BARDO, TipoPersonaggio.CANTASTORIE);
-		}
-		if (bersaglio == null) {
-			List<Personaggio> candidati = new ArrayList<>(personaggiPossibili);
-			candidati.addAll(gruppoBersaglio.getOspitiBersaglio());
-			bersaglio = candidati.get(Dado.tiraAncheAUnaFaccia(candidati.size()) - 1);
-		}
-		return bersaglio;
-	}
-
-	/**
-	 * Il personaggio di una delle classi indicate con il livello più alto (a parità il primo), null se non ce ne sono
-	 */
-	private static Personaggio piuPotenteTra(List<Personaggio> personaggi, TipoPersonaggio primaClasse, TipoPersonaggio secondaClasse) {
-		Personaggio piuPotente = null;
-		for (Personaggio personaggio : personaggi) {
-			TipoPersonaggio classe = personaggio.getClasse();
-			if ((classe == primaClasse || classe == secondaClasse)
-					&& (piuPotente == null || personaggio.getLivello() > piuPotente.getLivello())) {
-				piuPotente = personaggio;
-			}
-		}
-		return piuPotente;
-	}
-
-	/**
-	 * Annuncia l'azione alla finestra del combattimento, poi (vedi attacca(Personaggio, boolean)) lancia un incantesimo se sa farlo,
-	 * altrimenti attacca con le armi.
-	 */
-	public void attacca(Personaggio bersaglio) {
-		BusEventi.pubblica(new InternoAzioneInCombattimento(this, bersaglio));
-		attacca(bersaglio, true);
-	}
-
-	/**
-	 * Chi sa la magia sceglie se lanciare un incantesimo (scegliIncantesimoContro, che tiene conto di SILENZIATO);
-	 * altrimenti attacca con le sue fasi di attacco (la seconda arma compresa), ognuna sull'asse del suo tipo di
-	 * danno, finché il bersaglio resta in combattimento
-	 */
-	private void attacca(Personaggio bersaglio, boolean annunciaAttacco) {
-		Logger.log(getNome() + " attacca " + bersaglio.getNome());
-		Incantesimo incantesimoScelto = scegliIncantesimoContro(bersaglio);
-		if (incantesimoScelto != null) {
-			incantesimoScelto.formula(this, bersaglio, null);
-			return;
-		}
-		attaccaConLeArmi(bersaglio, annunciaAttacco);
-	}
-
-	/**
-	 * Un attacco con le sue armi contro quel bersaglio (come quando un mostro non lancia un incantesimo), senza incantesimi
+	 * Un attacco con le sue armi (la seconda arma compresa) contro quel bersaglio, ognuna sull'asse del suo tipo di danno, finché il bersaglio resta
+	 * in combattimento. Lo esegue l'EsecutoreTattiche per i mostri; chi lancia incantesimi e sceglie il bersaglio lo decide la tattica.
 	 */
 	@Override
 	public void attaccaConLeArmi(Personaggio bersaglio) {
@@ -602,6 +523,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	private void attaccaConLeArmi(Personaggio bersaglio, boolean annunciaAttacco) {
+		Logger.log(getNome() + " attacca " + bersaglio.getNome());
 		if (annunciaAttacco) {
 			// Gli avversari della stessa specie si distinguono per il numero ("La viverna 2"), quindi sempre l'articolo determinativo
 			String messaggio = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
@@ -734,94 +656,6 @@ public abstract class PersonaggioBase implements Personaggio {
 				.filter(a -> slotAmmessi.contains(RegoleEquipaggiamento.slotOccupato(a)))
 				.findFirst()
 				.map(a -> (Arma) Artefatto.di(a));
-	}
-
-	private Incantesimo scegliIncantesimoContro(Personaggio personaggioBersaglio) {
-		// Se il personaggio non sa usare la magia, non lancio incantesimo
-		if (!isMagico()) {
-			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					TipoRisultatoValutazioneAttaccante.NON_USA_MAGIA));
-			return null;
-		}
-
-		// Se il personaggio è stato silenziato, non può lanciare incantesimi
-		if (hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)) {
-			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					TipoRisultatoValutazioneAttaccante.SILENZIATO));
-			return null;
-		}
-
-		// Se il personaggio non ha magia a sua disposizione, non lancio incantesimo
-		int magiaCorrente = getMagia();
-		if (getMagia() == 0) {
-			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					TipoRisultatoValutazioneAttaccante.SENZA_MAGIA_A_DISPOSIZIONE));
-			return null;
-		}
-
-		List<IncantesimoMalefico> incantesimiDisponibili = Arrays.stream(ClasseIncantesimo.values())
-				.filter(i -> FabbricaIncantesimi.costoLancio(i) <= magiaCorrente && i.getTipo() == TipoIncantesimo.MALEFICO)
-				.filter(getRepertorioIncantesimi()::contains)
-				.map(i -> FabbricaIncantesimi.crea(i, getLivello()))
-				.map(IncantesimoMalefico.class::cast)
-				.collect(Collectors.toList());
-
-		// Se non ci sono incantesimi possibili, non lancio incantesimo
-		if (incantesimiDisponibili.isEmpty()) {
-			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					TipoRisultatoValutazioneAttaccante.SENZA_INCANTESIMI_A_DISPOSIZIONE));
-			return null;
-		}
-
-		// Per qualche motivo suo il mostro potrebbe decidere di non tirare incantesimi
-		if (Dado.tira(3) == 1) {
-			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					TipoRisultatoValutazioneAttaccante.CASUALMENTE_NON_LANCIA_INCANTESIMO));
-			return null;
-		}
-
-		int intelligenza = getIntelligenza();
-		// Un mostro stupido non sa mai cosa fare, quindi sceglie un incantesimo a caso
-		if (intelligenza < 5) {
-			Incantesimo incantesimo = incantesimiDisponibili.get(Dado.tiraAncheAUnaFaccia(incantesimiDisponibili.size()) - 1);
-			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					TipoRisultatoValutazioneAttaccante.SCEGLIE_A_CASO, incantesimo));
-			return incantesimo;
-		}
-
-		incantesimiDisponibili.sort(Comparator.comparing(IncantesimoMalefico::getDanni).reversed());
-		IncantesimoMalefico piuPotente = incantesimiDisponibili.get(0);
-		if (intelligenza < 7) {
-			// Usa l'incantesimo più potente a disposizione
-			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					TipoRisultatoValutazioneAttaccante.SCEGLIE_IL_PIU_POTENTE, piuPotente));
-			return piuPotente;
-		}
-
-		// Ancora più intelligente, controlla se farebbe più danni tra fisico e non
-
-		int probabilitaDiColpireMagico = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(
-				this, personaggioBersaglio, SupertipoDanno.MAGICO);
-        Arma arma = getArmaEquipaggiata();
-		// L'attacco con l'arma, sull'asse del suo tipo di danno (l'arma naturale del Lich, per esempio, è magica)
-		int probabilitaDiColpireFisico = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(
-				this, personaggioBersaglio, arma.getTipoDanno().getSuperTipo());
-
-		int possibiliDanniMagici = CalcolatoreCombattimento.calcolaDannoRisultante(this, personaggioBersaglio, piuPotente).getDanno();
-
-		int possibiliDanniFisici = CalcolatoreCombattimento.calcolaDannoRisultante(this, personaggioBersaglio, arma).getDanno();
-
-		if (probabilitaDiColpireMagico * possibiliDanniMagici > probabilitaDiColpireFisico * possibiliDanniFisici) {
-			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					TipoRisultatoValutazioneAttaccante.PREFERISCE_ATTACCO_MAGICO, piuPotente,
-					probabilitaDiColpireFisico, probabilitaDiColpireMagico, possibiliDanniFisici, possibiliDanniMagici));
-			return piuPotente;
-		} else {
-			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					TipoRisultatoValutazioneAttaccante.PREFERISCE_ATTACCO_FISICO, piuPotente,
-					probabilitaDiColpireFisico, probabilitaDiColpireMagico, possibiliDanniFisici, possibiliDanniMagici));
-			return null;
-		}
 	}
 
 	public boolean isATempo() {

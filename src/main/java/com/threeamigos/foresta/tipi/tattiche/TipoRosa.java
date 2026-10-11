@@ -21,7 +21,7 @@ public enum TipoRosa {
 	OSPITI("Ospiti", true, true),
 	/** Gli alleati e poi gli ospiti vulnerabili: solo per i miei personaggi (per le cure) */
 	ALLEATI_E_OSPITI("Alleati e ospiti", true, false),
-	/** Gli avversari e poi gli ospiti vulnerabili: solo per i mostri (la scelta a caso di oggi, PersonaggioBase.scegliBersaglio) */
+	/** Gli avversari e poi gli ospiti vulnerabili: solo per i mostri (la scelta a caso dei mostri, RegistroTattiche) */
 	AVVERSARI_E_OSPITI("Avversari e ospiti", false, true);
 
 	private final String descrizione;

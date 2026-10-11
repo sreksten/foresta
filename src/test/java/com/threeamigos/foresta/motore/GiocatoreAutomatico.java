@@ -1029,7 +1029,7 @@ final class GiocatoreAutomatico {
 	/**
 	 * Stima a valore atteso degli scontri di una locazione, con il round a coppie del gioco (vedi RoundASimulato): tutti i miei
 	 * agiscono a turno, ognuno con l'azione che fa più danni, e a ogni avversario che tocca il bersaglio lo sceglie lui
-	 * (PersonaggioBase.scegliBersaglio: prima i maghi, i sacerdoti, gli elfi e i bardi più potenti, altrimenti a caso). I danni medi di
+	 * (la tattica base dei mostri, RegistroTattiche: prima i maghi, i sacerdoti, gli elfi e i bardi più potenti, altrimenti a caso). I danni medi di
 	 * ogni coppia attaccante-difensore-arma si campionano una volta sola per locazione (calcolaDannoRisultante tira i dadi del gioco:
 	 * prelevare qualche numero in più dalla sorgente non ne altera la distribuzione); la probabilità di colpire, che dipende da
 	 * stanchezza ed effetti di stato, si ricalcola ogni volta.
@@ -1238,7 +1238,7 @@ final class GiocatoreAutomatico {
 		}
 
 		/**
-		 * Un avversario attacca il gruppo (Personaggio.attacca(Gruppo)): se c'è un mago, un sacerdote, un elfo o un bardo prende il
+		 * Un avversario attacca il gruppo (con la tattica base dei mostri, RegistroTattiche): se c'è un mago, un sacerdote, un elfo o un bardo prende il
 		 * più potente di loro, altrimenti ognuno dei vivi con la stessa probabilità (qui, a valore atteso, una quota del danno ciascuno).
 		 */
 		private void subisce(Personaggio avversario, double[] magiaAvversari, int posizione, List<Personaggio> miei,
@@ -1340,7 +1340,7 @@ final class GiocatoreAutomatico {
 		}
 
 		/**
-		 * I danni attesi di Personaggio.attacca (PersonaggioBase.scegliIncantesimoContro): chi ha magia lancia
+		 * I danni attesi di un attacco di un mostro (la tattica base dei mostri, RegistroTattiche): chi ha magia lancia
 		 * due volte su tre un incantesimo malefico che può permettersi (il più potente, o a caso se è poco
 		 * intelligente, o solo se rende più dell'arma se è molto intelligente), altrimenti colpisce con l'arma.
 		 *

@@ -47,7 +47,7 @@ class ScenarioCorrezioniTest {
 		int salutePrima = guerriero.getSalute();
 		for (int i = 0; i < 20 && guerriero.getSalute() == salutePrima; i++) {
 			Dado.trucca(1); // il tiro per colpire (d100): con 1 si colpisce sempre
-			troll.attacca(guerriero);
+			troll.attaccaConLeArmi(guerriero);
 			Dado.ripristina();
 		}
 		assertTrue(guerriero.getSalute() < salutePrima, "il troll non ha mai fatto danno");

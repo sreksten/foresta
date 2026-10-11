@@ -1,24 +1,59 @@
-package com.threeamigos.foresta.personaggi;
+package com.threeamigos.foresta.tattiche;
 
 import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.StatoDelCombattimento;
+import com.threeamigos.foresta.personaggi.Bardo;
+import com.threeamigos.foresta.personaggi.Cantastorie;
+import com.threeamigos.foresta.personaggi.Elfa;
+import com.threeamigos.foresta.personaggi.Elfo;
+import com.threeamigos.foresta.personaggi.Guerriero;
+import com.threeamigos.foresta.personaggi.Ladro;
+import com.threeamigos.foresta.personaggi.Maga;
+import com.threeamigos.foresta.personaggi.Mago;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.personaggi.Sacerdote;
+import com.threeamigos.foresta.personaggi.Sacerdotessa;
+import com.threeamigos.foresta.personaggi.Troll;
+import com.threeamigos.foresta.personaggi.Viandante;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Chi attacca un mostro: il Mago o la Maga più potenti, poi il Sacerdote o la Sacerdotessa più potenti, poi l'Elfo o l'Elfa più potenti, poi il Bardo o la Cantastorie più potenti, poi uno a
- * caso fra i personaggi vivi e gli ospiti vulnerabili.
+ * Chi attacca un mostro con la sua tattica base (RegistroTattiche): il Mago o la Maga più potenti, poi il Sacerdote o la Sacerdotessa più potenti, poi l'Elfo o l'Elfa più potenti, poi il Bardo
+ * o la Cantastorie più potenti, poi uno a caso fra i personaggi vivi e gli ospiti vulnerabili. Con i gruppi veri della partita (con gli ospiti).
  */
-class SceltaDelBersaglioDeiMostriTest {
+class BersaglioDeiMostriTest {
 
     private GruppoGiocatore gruppo;
+    private Personaggio mostro;
+    private Gruppo gruppoDeiMostri;
 
     @BeforeEach
     void preparaGruppo() {
         ModelloDati.setIstanza(new ModelloDati());
+        StatoDelCombattimento.getIstanza().reimposta();
         gruppo = new GruppoGiocatore();
+        mostro = new Troll(1);
+        gruppoDeiMostri = new Gruppo() {
+            @Override
+            public boolean isGruppoGiocatore() {
+                return false;
+            }
+        };
+        gruppoDeiMostri.rimuoviPersonaggi();
+        gruppoDeiMostri.aggiungiPersonaggio(mostro);
+    }
+
+    /**
+     * Chi sceglie un mostro come bersaglio, o null se non c'è nessuno da attaccare
+     */
+    private Personaggio scegliBersaglio(GruppoGiocatore miei) {
+        Decisione decisione = Valutatore.decidi(RegistroTattiche.tatticaDiOggi(), ContestoTattico.per(mostro, miei, gruppoDeiMostri));
+        return decisione == null ? null : decisione.getBersaglio();
     }
 
     @Test
@@ -33,7 +68,7 @@ class SceltaDelBersaglioDeiMostriTest {
         gruppo.aggiungiPersonaggio(sacerdote);
         gruppo.aggiungiOspite(new Viandante("Ottone", 1), true);
         for (int i = 0; i < 100; i++) {
-            assertSame(maga, PersonaggioBase.scegliBersaglio(gruppo));
+            assertSame(maga, scegliBersaglio(gruppo));
         }
     }
 
@@ -47,7 +82,7 @@ class SceltaDelBersaglioDeiMostriTest {
         gruppo.aggiungiPersonaggio(sacerdotessa);
         gruppo.aggiungiOspite(new Viandante("Ottone", 1), true);
         for (int i = 0; i < 100; i++) {
-            assertSame(sacerdotessa, PersonaggioBase.scegliBersaglio(gruppo));
+            assertSame(sacerdotessa, scegliBersaglio(gruppo));
         }
     }
 
@@ -61,7 +96,7 @@ class SceltaDelBersaglioDeiMostriTest {
         gruppo.aggiungiPersonaggio(elfa);
         gruppo.aggiungiOspite(new Viandante("Ottone", 1), true);
         for (int i = 0; i < 100; i++) {
-            assertSame(elfa, PersonaggioBase.scegliBersaglio(gruppo));
+            assertSame(elfa, scegliBersaglio(gruppo));
         }
     }
 
@@ -75,7 +110,7 @@ class SceltaDelBersaglioDeiMostriTest {
         gruppo.aggiungiPersonaggio(cantastorie);
         gruppo.aggiungiOspite(new Viandante("Ottone", 1), true);
         for (int i = 0; i < 100; i++) {
-            assertSame(cantastorie, PersonaggioBase.scegliBersaglio(gruppo));
+            assertSame(cantastorie, scegliBersaglio(gruppo));
         }
     }
 
@@ -85,7 +120,7 @@ class SceltaDelBersaglioDeiMostriTest {
         Personaggio elfa = new Elfa("F", 1);
         gruppo.aggiungiPersonaggio(bardo);
         gruppo.aggiungiPersonaggio(elfa);
-        assertSame(elfa, PersonaggioBase.scegliBersaglio(gruppo));
+        assertSame(elfa, scegliBersaglio(gruppo));
     }
 
     @Test
@@ -95,7 +130,7 @@ class SceltaDelBersaglioDeiMostriTest {
         gruppo.aggiungiPersonaggio(guerriero);
         gruppo.aggiungiPersonaggio(mago);
         mago.muore("di prova");
-        assertSame(guerriero, PersonaggioBase.scegliBersaglio(gruppo));
+        assertSame(guerriero, scegliBersaglio(gruppo));
     }
 
     @Test
@@ -110,7 +145,7 @@ class SceltaDelBersaglioDeiMostriTest {
         gruppo.aggiungiOspite(pellegrino);
         int[] scelti = new int[3];
         for (int i = 0; i < 3000; i++) {
-            Personaggio bersaglio = PersonaggioBase.scegliBersaglio(gruppo);
+            Personaggio bersaglio = scegliBersaglio(gruppo);
             assertNotSame(pellegrino, bersaglio);
             scelti[bersaglio == guerriero ? 0 : bersaglio == ladro ? 1 : 2]++;
         }
@@ -121,6 +156,6 @@ class SceltaDelBersaglioDeiMostriTest {
 
     @Test
     void conTuttiInPanchinaNonCeNessunoDaAttaccare() {
-        assertNull(PersonaggioBase.scegliBersaglio(gruppo));
+        assertNull(scegliBersaglio(gruppo));
     }
 }

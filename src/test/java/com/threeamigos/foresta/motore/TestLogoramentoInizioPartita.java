@@ -463,7 +463,7 @@ public class TestLogoramentoInizioPartita {
      * Il round a coppie del gioco (RoundASimulato) con il protagonista da solo: G A A... (agisce lui, poi ognuno dei mostri attacca lui,
      * uno dopo l'altro). Il protagonista attacca il primo mostro vivo (con il dardo arcano se gli conviene, o beve una pozione se è sotto
      * il 35% della salute e ne ha: bere è la sua azione), i mostri attaccano con le armi o, se sanno la magia, con un incantesimo
-     * (Personaggio.attacca). Chi è atterrato, congelato o stordito salta il turno e a fine round passa un turno di effetti di stato.
+     * (la tattica base dei mostri, RegistroTattiche). Chi è atterrato, congelato o stordito salta il turno e a fine round passa un turno di effetti di stato.
      * L'esperienza dei mostri uccisi va al protagonista, come in LocazioneBase. Vero se vince.
      */
     private static boolean scontro(Personaggio pg, List<Personaggio> mostri, int[] pozioni) {

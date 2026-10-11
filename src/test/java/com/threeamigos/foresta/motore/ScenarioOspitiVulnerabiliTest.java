@@ -80,8 +80,14 @@ class ScenarioOspitiVulnerabiliTest {
             Viandante ostaggio = new Viandante("Ottone", 1);
             partita.gruppo().aggiungiOspite(ostaggio, true);
             Personaggio goblin = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1);
+            GruppoAvversario avversari = GruppoAvversario.getIstanza();
+            avversari.reimposta();
+            avversari.aggiungiPersonaggio(goblin);
+            // Il goblin agisce con la tattica base dei mostri, come in combattimento
+            EsecutoreTattiche esecutore = new EsecutoreTattiche(partita.gruppo(), avversari, StatoDelCombattimento.getIstanza(), (uccisore, vittima) -> {
+            });
             for (int i = 0; i < 50 && partita.testi().stream().noneMatch(t -> t.contains("attacca Ottone")); i++) {
-                goblin.attacca(partita.gruppo());
+                esecutore.agisci(goblin, com.threeamigos.foresta.tattiche.RegistroTattiche.perClasse(goblin.getClasse()));
                 partita.gruppo().getCapo().addSalute(partita.gruppo().getCapo().getSaluteMassima());
                 ostaggio.addSalute(ostaggio.getSaluteMassima());
             }

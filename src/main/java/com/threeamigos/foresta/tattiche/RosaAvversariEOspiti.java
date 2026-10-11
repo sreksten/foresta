@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Gli avversari e poi gli ospiti vulnerabili: vale solo per i mostri, e riproduce la scelta a caso di PersonaggioBase.scegliBersaglio.
+ * Gli avversari e poi gli ospiti vulnerabili: vale solo per i mostri, e riproduce la scelta a caso dei mostri fra i miei personaggi e gli ospiti (RegistroTattiche).
  */
 final class RosaAvversariEOspiti implements Rosa {
 

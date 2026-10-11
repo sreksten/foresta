@@ -199,7 +199,7 @@ public final class SceltaIncantesimo {
 	public static List<Personaggio> bersagli(Personaggio attore, Personaggio principale, ClasseIncantesimo classe, ContestoTattico contesto) {
 		List<Personaggio> bersagli = new ArrayList<>();
 		bersagli.add(principale);
-		// Un mostro colpisce solo il bersaglio scelto, come oggi (PersonaggioBase.attacca)
+		// Un mostro colpisce solo il bersaglio scelto, anche con un incantesimo a più bersagli (come sempre)
 		if (classe.getPortata() == PortataIncantesimo.MULTIPLO && !contesto.isMostro(attore)) {
 			for (Personaggio altro : contesto.getAvversari()) {
 				if (bersagli.size() >= Math.max(1, attore.getBersagli())) {

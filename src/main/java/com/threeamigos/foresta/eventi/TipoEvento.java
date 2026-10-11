@@ -465,10 +465,6 @@ public enum TipoEvento {
      */
     INTERNO_RICHIESTA_REINIZIALIZZAZIONE_UI,
     /**
-     * Un PNG prende una decisione riguardante un combattimento
-     */
-    INTERNO_RISULTATO_VALUTAZIONE_PERSONAGGIO_ATTACCANTE,
-    /**
      * Mostra al giocatore o chiude la finestra del combattimento
      */
     INTERNO_STATO_FINESTRA_COMBATTIMENTO,

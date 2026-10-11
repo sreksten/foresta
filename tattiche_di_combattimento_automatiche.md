@@ -51,18 +51,16 @@ L'elenco deve essere salvabile e ripristinabile anche come **modello** da riappl
 Vedi [`motore_di_gioco.md`](motore_di_gioco.md) §7. Quello che conta per le tattiche:
 
 - Il combattimento procede **per round a coppie** (§3, **fatto**): a ogni `TIMER` agisce una sola volta il prossimo del piano del round, un mio personaggio e poi un
-  avversario a turno, e i personaggi in più di un gruppo agiscono da soli. Chi dei miei agisce in automatico attacca con le armi il primo avversario vivo (finché non ci sono le
-  tattiche); l'avversario che tocca attacca il mio gruppo scegliendo il bersaglio da sé (`PersonaggioBase.attacca(Gruppo)`: armi o, per chi sa la magia, un incantesimo a caso del suo
-  repertorio, che rinuncia se è `SILENZIATO`). Non c'è più una "risposta" a chi ha agito, né il "si disimpegna e attacca".
+  avversario a turno, e i personaggi in più di un gruppo agiscono da soli. Chi agisce in automatico, dei miei o avversario, lo fa con la sua tattica (§11.14); i miei senza tattica attaccano con le armi il primo
+  avversario vivo, i mostri senza una tattica sua usano quella della classe. Non c'è più una "risposta" a chi ha agito, né il "si disimpegna e attacca".
 - Gli **incantesimi** e le **pozioni** sono del gruppo: le pergamene e le pozioni stanno nell'inventario del gruppo
   (`GruppoGiocatore.getIncantesimi(classe)`, `getPozioniSalute()`...), e chi li usa lo sceglie il giocatore (o il motore: `getFormulante`).
   Gli incantesimi **innati** (dardo arcano, alba sacra, i tre canti) non consumano pergamene.
-- La risposta avversaria ha già un embrione di tattica, scritto nel codice (`PersonaggioBase.attacca(Gruppo)` e `scegliIncantesimoContro`):
-  chi colpire, se lanciare un incantesimo, quale, e se conviene più la magia o l'attacco fisico. Vedi §4.
+- La risposta avversaria è una tattica (`RegistroTattiche.tatticaDiOggi()`): chi colpire, se lanciare un incantesimo, quale, e se conviene più la magia o l'attacco fisico. Vedi §4.
 - Non c'è **posizione**: né distanza, né mischia contro distanza, né linea di vista. Non c'è un turno di preparazione degli
   incantesimi (sono istantanei) né cooldown. Gli avversari non hanno un "bersaglio" persistente: rispondono a chi ha appena agito.
-- **Gli ospiti vulnerabili sono bersaglio di ogni azione degli avversari**: l'avversario che agisce sceglie sempre con `PersonaggioBase.attacca(Gruppo)`, dove la scelta a caso comprende
-  gli ospiti vulnerabili vivi (prima i maghi, i sacerdoti, gli elfi e i bardi). Con le tattiche la scelta sarà della tattica dell'avversario (§4), e la scelta a caso li comprenderà ancora.
+- **Gli ospiti vulnerabili sono bersaglio di ogni azione degli avversari**: la scelta spetta alla tattica dell'avversario (§4), e la scelta a caso (`AVVERSARI_E_OSPITI`)
+  comprende gli ospiti vulnerabili vivi (prima i maghi, i sacerdoti, gli elfi e i bardi).
 
 ## 3. Il round-robin dei due gruppi
 
@@ -160,9 +158,9 @@ Regole (decise):
 la prima voce eseguibile vince. Le azioni sono quelle del suo repertorio (attacco con l'arma o l'arma naturale, i suoi incantesimi
 malefici); i selettori sono gli stessi di §6, letti dal punto di vista dell'avversario (per lui i "nemici" sono i miei personaggi).
 
-**Che cosa c'è già, nel codice.** Una versione molto semplice, che le tattiche renderebbero esplicita e parametrizzabile:
+**Che cosa c'era, nel codice** (oggi tradotto in `RegistroTattiche.tatticaDiOggi()`, §11.13). Una versione molto semplice, che le tattiche hanno reso esplicita e parametrizzabile:
 
-| Decisione | Oggi (`PersonaggioBase`) | Come voce di tattica |
+| Decisione | Prima (`PersonaggioBase`, rimosso) | Come voce di tattica |
 | :--- | :--- | :--- |
 | **Chi colpire** (`attacca(Gruppo)`) | il **Mago o la Maga più potenti** (livello più alto, a parità il primo); poi il **Sacerdote o la Sacerdotessa più potenti**; poi l'**Elfo o l'Elfa più potenti**; poi il **Bardo o la Cantastorie più potenti**; altrimenti **a caso** fra i personaggi vivi e gli ospiti vulnerabili vivi, tutti con la stessa probabilità (`PersonaggioBase.scegliBersaglio`) | un selettore: "un avversario magico", "il più debole", "il primo", "a caso" |
 | **Se lanciare un incantesimo** (`scegliIncantesimoContro`) | no se non è magico (`isMagico`), è `SILENZIATO`, ha 0 `MAGIA` o non può pagarne nessuno; poi **una volta su tre non lancia** | le condizioni "magia sufficiente" e "probabilità del n%" |
@@ -771,9 +769,7 @@ Che cosa dice la spiegazione (la costruisce il `Valutatore`, i selettori e `Scel
 - **il criterio dell'incantesimo di danno** con i danni attesi confrontati: "PIU_ADATTO: FUOCO 4.2, FULMINE 9.8", con il danno delle armi se l'azione lo confronta; per `PIU_ECONOMICO_CHE_BASTA` se ognuno basta a uccidere;
 - **il ripiego**: "nessuna voce eseguibile: attacco fisico al primo avversario".
 
-Oggi la spiegazione si costruisce sempre (qualche stringa per decisione): se pesasse, si costruirà solo con un ascoltatore o il log acceso. **Non sostituisce ancora** `InternoRisultatoValutazionePersonaggioAttaccante`, che registra la decisione dei mostri senza tattica in
-`PersonaggioBase.scegliIncantesimoContro` (otto punti di pubblicazione): quando ci saranno le tattiche base dei mostri quel codice e quell'evento spariscono (con l'enum `TipoRisultatoValutazioneAttaccante` e le sue nove etichette, che diventano frasi della spiegazione), e
-`InternoRisultatoValutazionePersonaggioAttaccante` esce dalle eccezioni di `DipendenzeEventiTest`.
+Oggi la spiegazione si costruisce sempre (qualche stringa per decisione): se pesasse, si costruirà solo con un ascoltatore o il log acceso. Ha sostituito il vecchio evento dei mostri senza tattica (`InternoRisultatoValutazionePersonaggioAttaccante`, rimosso con il suo enum).
 
 La UI potrà mostrare la spiegazione al giocatore per aiutarlo a mettere a punto le sue tattiche (la schermata del giocatore, ancora da fare).
 
@@ -783,9 +779,6 @@ Il modello, il motore, il valutatore, il salvataggio, il registro delle decision
 
 - **Le tattiche base vere dei mostri**, una per classe (§4): oggi tutti hanno `RegistroTattiche.tatticaDiOggi()`. Si scrivono con le fasce di astuzia al posto dell'`INTELLIGENZA` (§4, §11.10), i ritocchi alle intelligenze massime del Folletto (a 8) e dell'Ombra Nera (a 31), le abilità
   proprie (Silenzio sui magici, cure per chi ha le pozioni, ecc.), e in un file di risorse per classe nello stesso formato di §11.12, caricato dal registro. Una singola istanza può già averne una sua (`setTattica`, salvata con il personaggio).
-- **Togliere il vecchio codice di scelta dei mostri**: `PersonaggioBase.attacca(Gruppo)` e `attacca(Personaggio)`, `scegliBersaglio`, `scegliIncantesimoContro`, `InternoRisultatoValutazionePersonaggioAttaccante` (e la sua riga nelle eccezioni di `DipendenzeEventiTest`, il suo gestore nello sniffer e il valore di `TipoEvento`)
-  e `TipoRisultatoValutazioneAttaccante` (§7.7). Il combattimento e le simulazioni di gruppo non li usano più (usano l'`EsecutoreTattiche`, §11.14); li usano ancora quattro test (`SceltaDelBersaglioDeiMostriTest`, `ScenarioOspitiVulnerabiliTest`, `ScenarioMietituraTest`, `ScenarioCorrezioniTest`), da portare
-  all'esecutore, e qualche commento che li nomina.
 - **La scheda del giocatore**: la schermata per modificare la tattica di ogni personaggio (elenco di voci, editor di selettore, condizioni e azioni, menu e valori guidati, modelli per classe) e il comando che la manda al motore.
 - **L'esito delle azioni con effetti che non si applicano** (un Silenzio a segno che non mette `SILENZIATO`) come "mancata", oggi non registrato.
 - Il **costo della spiegazione** delle decisioni, se pesasse (§7.7).
@@ -810,7 +803,7 @@ Non ha senso importare: posizione e distanza, mischia contro distanza, linea di 
     sopportabile, in combattimento fuggire sopra 0,3) sono state cercate con una griglia di partite.
   - **Partite intere (30 per classe, giocatore tarato).** Il Guerriero arriva al limite di passi in 28 partite su 30 (livello 7), Ladro e Elfo in più di metà; il Mago muore
     quasi sempre (27 su 30, livello 4-5), il Sacerdote in 21. Il capo muore soprattutto per l'Eremita (livello 1-3) e, per Mago e Sacerdote, per Chimere e Chimere Drago.
-  - **Da bilanciare.** Mago e Sacerdote sono i bersagli preferiti (`PersonaggioBase.scegliBersaglio`) e muoiono presto; l'Eremita resta il killer dei livelli bassi.
+  - **Da bilanciare.** Mago e Sacerdote sono i bersagli preferiti (la tattica di oggi) e muoiono presto; l'Eremita resta il killer dei livelli bassi.
 
 ## 10. Da fare / idee aperte
 
@@ -891,7 +884,7 @@ interface Rosa {                                   // una classe per valore, sen
 | `AVVERSARI` | i vivi e in campo dell'altro gruppo | tutti |
 | `OSPITI` | gli **ospiti vulnerabili** vivi del gruppo del giocatore (`getOspitiBersaglio`) | tutti: per i miei sono da proteggere, per i mostri bersagli |
 | `ALLEATI_E_OSPITI` | alleati poi ospiti | **solo i miei personaggi** |
-| `AVVERSARI_E_OSPITI` | avversari poi ospiti | **solo i mostri**: riproduce la scelta a caso di oggi (`PersonaggioBase.scegliBersaglio`) |
+| `AVVERSARI_E_OSPITI` | avversari poi ospiti | **solo i mostri**: riproduce la scelta a caso di prima |
 
 Regole:
 
@@ -1087,7 +1080,7 @@ può importare la UI (`DipendenzeUITest`, che ora riconosce anche i sottopacchet
 ### 11.12 Il salvataggio
 
 **Fatto** (`SalvataggioTatticheTest`, `CombattimentoConTatticheTest`). La tattica sta nel `PersonaggioMD` (`getTattica`/`setTattica`, `PersonaggioBase` ne è solo la porta) e passa dal salvataggio con il personaggio: dopo il suo record una riga vuota (nessuna tattica: i mostri, per ora) oppure la tattica. Una
-tattica vuota (`TatticaMD.VUOTA`) resta una tattica vuota e non diventa "nessuna tattica": sono due cose diverse (i miei personaggi senza tattica usano la vuota, i mostri senza usano ancora le regole di `PersonaggioBase.attacca(Gruppo)`).
+tattica vuota (`TatticaMD.VUOTA`) resta una tattica vuota e non diventa "nessuna tattica": sono due cose diverse (i miei personaggi senza tattica usano la vuota, i mostri senza usano quella della classe, `RegistroTattiche.perClasse`).
 
 Il formato, nello stile del resto del modello dati (una riga per elemento, campi separati da `|`, enumerati per nome, campi mancanti vuoti, gli elementi che ne contengono altri dicono quanti sono):
 
@@ -1107,7 +1100,7 @@ altro salva e ricarica una partita vera e controlla che il personaggio rilegga l
 ### 11.13 Le tattiche base dei mostri: la replica di oggi
 
 **Fatto** (`RegistroTattiche`, `RegistroTatticheTest`, `CombattimentoConTatticheTest`). Ogni mostro senza una tattica sua agisce con quella della sua classe (`RegistroTattiche.perClasse`, `LocazioneBase.tatticaDi`): oggi è per tutti `tatticaDiOggi()`, la **trasposizione voce per voce** di come i
-mostri sceglievano prima (`PersonaggioBase.attacca(Gruppo)` e `scegliIncantesimoContro`), con venti voci generate dal codice. Il registro non copia la tattica nei personaggi (non si salva con ogni mostro): la cerca quando serve, e un'istanza ne può avere una sua.
+mostri sceglievano prima (il vecchio `PersonaggioBase.attacca(Gruppo)`, ora rimosso), con venti voci generate dal codice. Il registro non copia la tattica nei personaggi (non si salva con ogni mostro): la cerca quando serve, e un'istanza ne può avere una sua.
 
 - **Chi colpire**, cinque selettori: il Mago o la Maga di livello più alto (`CLASSE MAGO` con `LIVELLO_PIU_ALTO`, a parità il primo), altrimenti il Sacerdote, l'Elfo, il Bardo (ognuno nel ruolo, con la variante di genere), altrimenti uno a caso fra i miei personaggi vivi e gli ospiti vulnerabili (`AVVERSARI_E_OSPITI`, `A_CASO`).
 - **Se e quale incantesimo**, quattro voci per ogni bersaglio, nell'ordine: (1) poco intelligente (`INTELLIGENZA` sotto 5): `INCANTESIMO_DEL_REPERTORIO` a caso; (2) da 5 a 6: il più potente (`PIU_POTENTE`, il danno base più alto); (3) da 7: il più potente solo se rende più dell'attacco con le armi
@@ -1130,7 +1123,7 @@ delle simulazioni agiscono con le stesse tattiche del gioco**, non più con una 
 
 ### 11.10 Il criterio di scelta dell'incantesimo di danno
 
-Vale per `INCANTESIMO_DI_DANNO` (§11.9), la sola azione che sceglie *quale* incantesimo lanciare. Nasce da `PersonaggioBase.scegliIncantesimoContro`, che oggi sceglie così: se non è magico, è `SILENZIATO`, ha 0 `MAGIA` o non può pagare
+Vale per `INCANTESIMO_DI_DANNO` (§11.9), la sola azione che sceglie *quale* incantesimo lanciare. Nasce da `PersonaggioBase.scegliIncantesimoContro` (rimosso), che sceglieva così: se non è magico, è `SILENZIATO`, ha 0 `MAGIA` o non può pagare
 nessun incantesimo del repertorio, non lancia; una volta su tre rinuncia; poi, con `INTELLIGENZA` sotto 5 sceglie a caso, da 5 a 6 il più potente (il `getDanni()` più alto, senza guardare il bersaglio), da 7 il più potente solo se probabilità di
 colpire per danno batte quella dell'arma (con `calcolaDannoRisultante`, che tira i dadi). Nelle tattiche:
 

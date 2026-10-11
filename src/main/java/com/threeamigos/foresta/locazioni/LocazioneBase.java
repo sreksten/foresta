@@ -1095,7 +1095,7 @@ public abstract class LocazioneBase implements Locazione {
 	// Il combattimento procede per round (vedi StatoDelCombattimento): un piano di coppie, il mio personaggio e poi un avversario, e
 	// i personaggi in più di un gruppo agiscono da soli. Non c'è una "risposta" agli attacchi del giocatore: gli avversari agiscono
 	// quando il piano tocca a loro, in round-robin, e chi non è in grado di farlo (atterrato, congelato, stordito) salta il turno.
-	// Il bersaglio lo sceglie l'avversario (PersonaggioBase.attacca(Gruppo)).
+	// Il bersaglio lo sceglie l'avversario con la sua tattica (la base della sua classe, RegistroTattiche).
 
 	/**
 	 * Un personaggio del giocatore ha compiuto la sua azione (un attacco, un incantesimo, un canto, una pozione): consuma il suo posto nel

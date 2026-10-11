@@ -29,7 +29,7 @@ import java.util.List;
  * <li>i due gruppi agiscono a turno secondo il piano del round (max(n, m) coppie: un mio personaggio e poi un avversario), e a
  * ogni posto agisce il prossimo vivo di quel gruppo, in round-robin: <b>tutti i miei agiscono a ogni round</b>, uno solo ciascuno;</li>
  * <li>non c'è una "risposta": l'avversario che tocca attacca il gruppo scegliendo il bersaglio da sé (prima il Mago, poi il
- * Sacerdote, l'Elfo, il Bardo, altrimenti a caso), con le armi o, se sa la magia, con un incantesimo (Personaggio.attacca(Gruppo));
+ * Sacerdote, l'Elfo, il Bardo, altrimenti a caso), con le armi o, se sa la magia, con un incantesimo (la tattica base dei mostri, RegistroTattiche);
  * un compagno solo contro più avversari li subisce tutti;</li>
  * <li>a fine round passa un turno di effetti di stato per tutti; se muore il capo (il primo del gruppo) è sconfitta.</li>
  * </ul>

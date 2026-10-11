@@ -45,7 +45,6 @@ class DipendenzeEventiTest {
 			"interni/InternoOggettoRaccolto.java",
 			"interni/InternoPersonaggioArreso.java",
 			"interni/InternoPrelievoArtefatto.java",
-			"interni/InternoRisultatoValutazionePersonaggioAttaccante.java",
 			"interni/InternoSpostamentoArtefatto.java",
 			"interni/InternoStoccaggioArtefatto.java",
 			"interni/InternoVenditaArtefatto.java"));

@@ -114,7 +114,6 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, this::onEventoSelezioneIncantesimoDaLanciare);
         BusEventi.iscriviti(RichiestaSelezioneSiNo.class, this::onEventoSelezioneSiNo);
         BusEventi.iscriviti(InternoFaseDiGioco.class, this::onEventoFaseDiGioco);
-        BusEventi.iscriviti(InternoRisultatoValutazionePersonaggioAttaccante.class, this::onEventoValutazioneAttaccante);
         BusEventi.iscriviti(NotificaVariazioneEffettoDiStatoPersonaggio.class, this::onEventoVariazioneEffettoDiStato);
         BusEventi.iscriviti(NotificaVariazioneDisponibilitaPreziosi.class, this::onEventoVariazionePreziosi);
         BusEventi.iscriviti(NotificaVariazioneDisponibilitaIncantesimi.class, this::onEventoVariazioneIncantesimi);
@@ -474,11 +473,6 @@ public class SnifferBusEventi {
 
     private void onEventoFaseDiGioco(InternoFaseDiGioco evento) {
         Logger.log(headerEvento(evento) + evento.getFase().toString());
-    }
-
-    private void onEventoValutazioneAttaccante(InternoRisultatoValutazionePersonaggioAttaccante evento) {
-        VistaPersonaggio p = evento.getPersonaggio();
-        Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getRisultatoValutazione());
     }
 
     private void onEventoVariazioneEffettoDiStato(NotificaVariazioneEffettoDiStatoPersonaggio evento) {

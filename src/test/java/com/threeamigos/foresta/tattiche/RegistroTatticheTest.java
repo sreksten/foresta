@@ -30,7 +30,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * La tattica base dei mostri, che replica come scegliavano prima delle tattiche (PersonaggioBase.attacca(Gruppo) e scegliIncantesimoContro).
+ * La tattica base dei mostri, che replica come scegliavano prima delle tattiche (che era in PersonaggioBase: chi colpire e se e quale incantesimo lanciare).
  */
 class RegistroTatticheTest {
 
@@ -102,7 +102,7 @@ class RegistroTatticheTest {
         assertSame(RegistroTattiche.tatticaDiOggi(), RegistroTattiche.perClasse(TipoPersonaggio.GOBLIN));
     }
 
-    // ---- chi colpire: come scegliBersaglio ----
+    // ---- chi colpire: il Mago più potente, poi il Sacerdote, l'Elfo, il Bardo, poi a caso ----
 
     @Test
     void ilMagoPiuPotenteEIlBersagliodiTutti() {
@@ -144,7 +144,7 @@ class RegistroTatticheTest {
         assertSame(sacerdote, decidi(goblin, contesto(goblin, mago3, guerriero, sacerdote)).getBersaglio());
     }
 
-    // ---- se e quale incantesimo: come scegliIncantesimoContro ----
+    // ---- se e quale incantesimo: secondo l'intelligenza, con una rinuncia su tre ----
     // (il bersaglio è un Mago, la prima voce dei bersagli: così il dado della rinuncia si tira una volta sola)
 
     private ContestoTattico dellaStrega() {

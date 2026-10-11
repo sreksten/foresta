@@ -27,18 +27,18 @@ import java.util.Map;
  * Le tattiche base dei mostri (tattiche_di_combattimento_automatiche.md §4): quella di una classe è la sua, se qualcuno gliene ha registrata una, altrimenti
  * {@link #tatticaDiOggi()}.
  * <p>
- * <b>La tattica di oggi</b> è la trasposizione, voce per voce, di come un mostro sceglieva chi colpire e come (<code>PersonaggioBase.attacca(Gruppo)</code>
- * e <code>scegliIncantesimoContro</code>), che le tattiche sostituiscono:
+ * <b>La tattica di oggi</b> è la trasposizione, voce per voce, di come un mostro sceglieva chi colpire e come prima delle tattiche (quel codice, in
+ * <code>PersonaggioBase</code>, non c'è più):
  * <ul>
- * <li><b>Chi colpire</b> (<code>scegliBersaglio</code>): il Mago o la Maga più potenti (di livello più alto, a parità il primo); altrimenti il Sacerdote o la
+ * <li><b>Chi colpire</b>: il Mago o la Maga più potenti (di livello più alto, a parità il primo); altrimenti il Sacerdote o la
  * Sacerdotessa; altrimenti l'Elfo o l'Elfa; altrimenti il Bardo o la Cantastorie; altrimenti uno a caso fra tutti i personaggi vivi e gli ospiti vulnerabili.
  * Sono cinque selettori.</li>
- * <li><b>Se e quale incantesimo</b> (<code>scegliIncantesimoContro</code>), per ognuno di quei bersagli: non lancia se non è magico (cioè se non lo è, è
+ * <li><b>Se e quale incantesimo</b>, per ognuno di quei bersagli: non lancia se non è magico (cioè se non lo è, è
  * silenziato o ha 0 MAGIA); poi una volta su tre rinuncia (<code>PROBABILITA 67</code>); poi, secondo l'<b>INTELLIGENZA</b>: sotto 5 un incantesimo del repertorio
  * a caso, da 5 a 6 il più potente (il danno base più alto), da 7 il più potente solo se rende più dell'attacco con le armi (qui con i danni attesi, senza dadi);
  * se non ne ha uno che può pagare, o se l'incantesimo non conviene, attacca con le armi.</li>
  * </ul>
- * Quattro voci per ogni bersaglio (tre fasce di intelligenza e l'attacco semplice), venti in tutto. Differenze dalla logica di prima: i mostri non lanciano
+ * Quattro voci per ogni bersaglio (tre fasce di intelligenza e l'attacco semplice), venti in tutto. Rispetto a come sceglievano prima i mostri non lanciano
  * un incantesimo a cui il bersaglio è immune per la sua classe, né il Silenzio su chi è già silenziato; il confronto con l'attacco usa i danni attesi e non i tiri.
  * È una replica brutale, da sostituire con le tattiche vere di ogni classe (con l'astuzia al posto dell'INTELLIGENZA, §4).
  */
