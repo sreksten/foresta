@@ -728,6 +728,9 @@ public class CalcolatoreCombattimento {
             return Collections.emptyList();
         }
         List<TipoInterazioneConEffettiDiStato> attive = new ArrayList<>();
+        // Il danno vero è la debolezza della classe a quel tipo di danno (il SACRO sui non morti): non dipende da uno stato, e
+        // quindi non rientra nel ciclo qui sotto. Si mette per primo come nel calcolo di sempre; non ha effetti (moltiplica
+        // il danno e basta), per cui l'ordine non cambia il risultato, solo la posizione nella lista
         if (difensore.haInterazioneCon(tipoDanno) == TipoInterazioneConEffettiDiStato.DANNO_VERO) {
             attive.add(TipoInterazioneConEffettiDiStato.DANNO_VERO);
         }

@@ -141,6 +141,14 @@ public enum TipoInterazioneConEffettiDiStato {
     ISOLAMENTO_SENSORIALE(TipoEffettoDiStato.SILENZIATO, TipoDanno.PSICHICO, "Isolamento Sensoriale", 1.5d),
 
     // Interazioni particolari che dipendono dalla classe del Personaggio
+    // DANNO_VERO: la debolezza di una classe a un tipo di danno (oggi il SACRO sui non morti, vedi
+    // PersonaggioBase.haInterazioneCon). Nonostante il nome non ignora la difesa: il danno, già ridotto dalla difesa, si
+    // moltiplica per 2 (il "danno puro" che ignora la difesa è un'altra cosa: il bonus della RISONANZA_SIGILLATA).
+    // Non ha stati né tipi di danno da controllare (liste vuote), quindi non scatta mai da solo nel ciclo di
+    // CalcolatoreCombattimento.interazioniAttive, che lo aggiunge a parte.
+    // Si dichiara per ultimo perché non dipende da uno stato, ma si applica per primo, come nel calcolo del danno di sempre;
+    // l'ordine non cambia il risultato (moltiplica e basta, senza stati né dadi), cambia solo la posizione nella lista delle
+    // interazioni.
     DANNO_VERO(Collections.emptyList(), Collections.emptyList(), "Danno Vero", 2.0d);
 
     private final Collection<TipoEffettoDiStato> precondizioni;
