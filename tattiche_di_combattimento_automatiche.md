@@ -234,7 +234,7 @@ selettore). Per i giochi di riferimento vale la nota in testa a §7.
 | Quello con **salute sotto una soglia** (%) | DA:O (*Health < n%*), FFXII | **sì**: `getSalute() / getSaluteMassima()` |
 | Di livello più alto o più basso del mio | FFXII (*level*) | **sì**: `getLivello()` |
 | **Di una classe** (un mago, un ladro...) | DA:O (*class/type*) | **sì**: `getClasse()` |
-| **Magico**, che sa lanciare incantesimi (per silenziarlo o colpirlo per primo) | DA:O (*Mage*), FFXII | **parziale**: `isMagico()` (livellamento magia > 0) dice che ha la magia; il repertorio (`getRepertorioIncantesimi`) è protetto e va esposto. Sono magici anche boss, arpie, folletti... non solo i maghi |
+| **Magico**, che sa lanciare incantesimi (per silenziarlo o colpirlo per primo) | DA:O (*Mage*), FFXII | **sì**: `isMagico()` (livellamento magia > 0) dice che ha la magia, e `getMagia()` quanta gliene resta. Sono magici anche boss, arpie, folletti... non solo i maghi |
 | Di una **categoria** (non morto, bestia, umanoide, volante, draconico, gigantesco, ibrido, costrutto) | DA:O (*creature type*), FFXII (*undead, flying*) | **sì**: `TipoPersonaggio.getCategorie()` / `isDellaCategoria` (`tipi/CategoriaPersonaggio`). Una classe ha una o più categorie (Spirito e Ombra Nera sono non morti e volanti, la Chimera bestia e ibrida, il Minotauro Gigante umanoide, ibrido e gigantesco), quindi il selettore "di categoria X" vale per chi ne ha anche solo una |
 | Un **boss** / di rango elevato | DA:O (*rank*) | **per ora non serve**: non c'è una distinzione vera, perché i boss (Lich, Minotauro Gigante, Strega...) si incontrano di solito da soli, quindi non c'è un "altro" da scegliere. Se servisse, il modo più semplice è trasformare quegli incontri in **Ondate** (da valutare: è in `todo.md`) |
 | Con un certo **effetto di stato** (stordito, avvelenato, congelato...) | DA:O, FFXII (*status*) | **sì**: `hasEffettoDiStato(tipo)`, 19 tipi (`TipoEffettoDiStato`) |
@@ -324,9 +324,10 @@ non morti": la condizione del cambio d'arma, §5) e il momento del cambio.
 2. **`moltiplicatoreAtteso(difensore, tipoDanno)`**, estratto da `calcolaDannoRisultante` e **senza effetti collaterali** (non
    aggiunge stati né interazioni al `DannoRisultante`). Lo usano sia il danno vero sia le tattiche, altrimenti le due versioni divergono. È
    il pezzo grosso: la catena va rivista e riordinata, non solo spostata.
-3. **`Arma.daTipoDanno(TipoDanno)`**: dice se un'arma "dà" quel danno, cioè se è il suo `getTipoDanno()` o quello di uno dei suoi
+3. **`Arma.daTipoDanno(TipoDanno)`** — **fatto.** Dice se un'arma "dà" quel danno, cioè se è il suo `getTipoDanno()` o quello di uno dei suoi
    `getIncantamenti()` (`getTipoDannoElementale`). Non passa dai **modificatori** (`ModificatoreAttributoMD` cambia un attributo, non il
-   tipo di danno). Serve al cambio d'arma (§5).
+   tipo di danno). Serve al cambio d'arma (§5). Il test `ArmaDaTipoDannoTest` lo copre (anche con la Spada della Morte, NECROTICO per il suo
+   incantamento).
 4. **Debolezze e resistenze di classe come dato**, e una difesa per elemento (o per famiglia di elementi) al posto delle due difese di oggi:
    da decidere, vedi sotto.
 
@@ -358,7 +359,7 @@ ha senso qui (**no**).
 | Sotto un effetto di stato (silenziato, stordito, spaventato...) | DA:O, FFXII (*Self: status*) | **sì**: `hasEffettoDiStato(tipo)`; `SILENZIATO` impedisce gli incantesimi |
 | Con un modificatore temporaneo attivo | DA:O (buff attivi) | **sì**: `getModificatoriTemporanei()` |
 | Della classe X / di livello ≥ N | (selettori di gruppo) | **sì**: `getClasse()`, `getLivello()` |
-| Con una certa arma | DA:O (*weapon set*) | **sì**: `getArmaEquipaggiata()`, `getArmaSecondaria()`; il tipo di danno e gli incantamenti dicono se "dà SACRO" (`getTipoDanno()`, `getIncantamenti()`). L'arma si può cambiare con l'azione del turno (§5) |
+| Con una certa arma | DA:O (*weapon set*) | **sì**: `getArmaEquipaggiata()`, `getArmaSecondaria()`; `Arma.daTipoDanno(tipo)` dice se "dà SACRO" (tipo di danno dell'arma o di uno dei suoi incantamenti). L'arma si può cambiare con l'azione del turno (§5) |
 | In panchina / fuori combattimento | — | **sì**: `isInPanchina()`, `isFuoriCombattimento()` (il personaggio non agisce) |
 
 ### 7.2 Sul gruppo e sullo scontro
@@ -379,7 +380,7 @@ ha senso qui (**no**).
 | :--- | :--- | :--- |
 | Ho una pozione (della Salute, della Magia, grande) | DA:O (*item*), FFXII (*item*) | **sì**: `getPozioniSalute()`, `getPozioniSaluteGrande()`, `getPozioniMagia()`, `getPozioniMagiaGrande()` |
 | Quante pergamene di un incantesimo restano | (specifico) | **sì**: `getIncantesimi(classe)` |
-| **Nell'inventario del gruppo c'è un'arma** che dà un tipo di danno (SACRO contro i non morti), con un certo modificatore, o più forte della mia | DA:O (*weapon set*) | **parziale**: l'inventario del gruppo si legge (`getArtefatti()`) e `puoEquipaggiare` dice se il personaggio la può impugnare; manca la ricerca "per tipo di danno" (§8) |
+| **Nell'inventario del gruppo c'è un'arma** che dà un tipo di danno (SACRO contro i non morti), con un certo modificatore, o più forte della mia | DA:O (*weapon set*) | **quasi tutto**: l'inventario del gruppo si legge (`getArtefatti()`), `Arma.daTipoDanno(tipo)` dice se un'arma dà quel danno e `puoEquipaggiare` se il personaggio la può impugnare; manca solo il filtro sull'inventario che li mette insieme (§8) |
 | Con una probabilità del n% | BG (*RandomNum*) | **sì**: `Dado` |
 | Tipo di locazione, ora del giorno | BG | **sì**: `getTipoLocazioneCorrente()`, `LineaTemporale`; utile solo per tattiche speciali |
 | Variabili e contatori definiti dall'utente | BG (*script*) | **no**: va oltre lo scopo |
@@ -399,7 +400,6 @@ Quasi tutto è già leggibile (§6 e §7). Quello che manca:
   `LocazioneBase` agisce su un solo `combattente`;
 - uno **stato del combattimento**: il numero del round, l'ultimo bersaglio di ogni personaggio, le voci già usate;
 - (il riconoscimento di un **boss** per ora non serve, §6.1; le **categorie di creatura** ci sono già);
-- l'accesso al **repertorio di incantesimi** di un avversario (oggi protetto) per il selettore "magico";
 - le **debolezze elementali**, per il selettore "debole al fuoco" (§6.3): oggi sono sparse in tre posti (le classi, la catena di `if` dei
   moltiplicatori di stato, `difesaContro`) e vanno composte in un fattore di danno atteso senza effetti collaterali;
 - la **risposta** come azione a sé degli avversari (oggi è `rispondiInMischia` sul combattente, con la logica fissa di §4);
@@ -411,8 +411,8 @@ Quasi tutto è già leggibile (§6 e §7). Quello che manca:
   `IN_COMBATTIMENTO`). Va **spezzato in due**: un controllo (`puoEquipaggiare`, che c'è già sul personaggio, con in più la
   variante per il cambio che guarda la situazione senza l'arma che esce) e l'esecuzione (`equipaggia`, che sposta e basta, senza
   rifare il controllo), pubblici sul gruppo e usabili dalla tattica; le schermate dell'inventario usano gli stessi due passi. Serve poi
-  la ricerca di un'arma nel gruppo "che dà un tipo di danno" (tipo di danno dell'arma e degli incantamenti) per il personaggio che
-  deve impugnarla, e, nello stato del combattimento, il **contatore dei cambi** di ogni personaggio e **l'elenco delle armi già valutate** (utilizzabili o no);
+  il filtro sull'inventario del gruppo che cerca un'arma che dà un tipo di danno (`Arma.daTipoDanno`, già fatto) e che il personaggio
+  può impugnare, e, nello stato del combattimento, il **contatore dei cambi** di ogni personaggio e **l'elenco delle armi già valutate** (utilizzabili o no);
 - un **criterio di scelta** dell'incantesimo (a caso, il più potente, il più conveniente) come parametro dell'azione, e la
   condizione **"probabilità del n%"** (oggi "una volta su tre non lancia" è una costante).
 
