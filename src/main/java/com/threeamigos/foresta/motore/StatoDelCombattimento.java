@@ -2,7 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoInizioRound;
-import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.strumenti.Logger;
@@ -74,7 +74,7 @@ public class StatoDelCombattimento {
 		private boolean haLanciato;
 		private int cambiDArma;
 		private final Map<String, Integer> vociUsate = new HashMap<>();
-		private final Map<Arma, Boolean> armiValutate = new IdentityHashMap<>();
+		private final Map<Artefatto, Boolean> armiValutate = new IdentityHashMap<>();
 	}
 
 	private StatoDelCombattimento() {
@@ -229,8 +229,11 @@ public class StatoDelCombattimento {
 		return scheda != null && scheda.haLanciato;
 	}
 
+	/** Registra un cambio d'arma; le valutazioni delle armi del personaggio non valgono più (carico e mani sono cambiati) e si scartano */
 	public void registraCambioArma(Personaggio personaggio) {
-		scheda(personaggio).cambiDArma++;
+		Scheda scheda = scheda(personaggio);
+		scheda.cambiDArma++;
+		scheda.armiValutate.clear();
 	}
 
 	public int getCambiDArma(Personaggio personaggio) {
@@ -255,12 +258,12 @@ public class StatoDelCombattimento {
 	}
 
 	/** Registra che il personaggio ha già valutato quell'arma, e se può usarla */
-	public void registraArmaValutata(Personaggio personaggio, Arma arma, boolean utilizzabile) {
+	public void registraArmaValutata(Personaggio personaggio, Artefatto arma, boolean utilizzabile) {
 		scheda(personaggio).armiValutate.put(arma, utilizzabile);
 	}
 
 	/** Se il personaggio ha valutato l'arma, se è utilizzabile; null se non l'ha ancora valutata */
-	public Boolean getValutazioneArma(Personaggio personaggio, Arma arma) {
+	public Boolean getValutazioneArma(Personaggio personaggio, Artefatto arma) {
 		Scheda scheda = schede.get(personaggio);
 		return scheda == null ? null : scheda.armiValutate.get(arma);
 	}

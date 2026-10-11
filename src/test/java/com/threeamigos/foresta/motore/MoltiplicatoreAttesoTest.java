@@ -40,7 +40,7 @@ class MoltiplicatoreAttesoTest {
 
     private static Personaggio difensore(TipoPersonaggio tipo) {
         Personaggio difensore = FabbricaPersonaggi.crea(tipo, 5);
-        // Le statistiche si tirano con un generatore che non segue il seme: si fissano
+        // Le statistiche seguono il seme, ma qui si fissano comunque, così il test non dipende da come si tirano
         for (TipoAttributo attributo : new TipoAttributo[] {TipoAttributo.FORZA, TipoAttributo.DESTREZZA, TipoAttributo.COSTITUZIONE,
                 TipoAttributo.INTELLIGENZA, TipoAttributo.SAGGEZZA, TipoAttributo.CARISMA, TipoAttributo.FORTUNA}) {
             ((PersonaggioBase) difensore).addModificatore(new ModificatoreAttributoMD(attributo, TipoModificatore.QUANTITA_ASSOLUTA, 12));

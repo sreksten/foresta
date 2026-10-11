@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -10,7 +11,9 @@ import com.threeamigos.foresta.tipi.TipoMotivoRifiutoEquipaggiamento;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.EnumSet;
 import java.util.Optional;
 import java.util.Set;
@@ -192,12 +195,91 @@ public final class RegoleEquipaggiamento {
 	}
 
 	/**
+	 * Gli oggetti che escono dalle mani del personaggio per far posto a un'arma nuova (il cambio d'arma, vedi
+	 * tattiche_di_combattimento_automatiche.md §5): per un'arma da mano principale quella che occupa lo slot (o l'arma a due mani
+	 * che occupa entrambi); per un'arma a due mani tutto quello che ha in mano. Lo scudo (e ciò che non è un'arma) non esce mai.
+	 *
+	 * @return gli artefatti che uscirebbero (anche nessuno), oppure vuoto se non si può fare perché in mano c'è qualcosa che non è un'arma
+	 */
+	private static Optional<List<ArtefattoMD>> chiEsce(Personaggio personaggio, ArtefattoMD nuova) {
+		Collection<ArtefattoMD> equipaggiati = personaggio.getModelloDati().getArtefatti();
+		TipoSlotArtefatto slotNuova = nuova.getTipo().getSlotArtefatto();
+		List<ArtefattoMD> uscenti = new ArrayList<>();
+		if (slotNuova == TipoSlotArtefatto.MANO_PRINCIPALE) {
+			Optional<ArtefattoMD> occupante = occupato(equipaggiati, TipoSlotArtefatto.ENTRAMBE_LE_MANI);
+			if (!occupante.isPresent()) {
+				occupante = occupato(equipaggiati, TipoSlotArtefatto.MANO_PRINCIPALE);
+			}
+			Optional<ArtefattoMD> secondaria = occupato(equipaggiati, TipoSlotArtefatto.MANO_SECONDARIA);
+			// Con la doppia arma esce la più debole delle due (a parità la secondaria), purché la nuova possa stare nella secondaria
+			if (occupante.isPresent() && secondaria.isPresent() && occupante.get().getTipo().getSupertipo() == SupertipoArtefatto.ARMA
+					&& secondaria.get().getTipo().getSupertipo() == SupertipoArtefatto.ARMA
+					&& isArmaDaManoSecondaria(nuova.getTipo()) && puoImpugnareDueArmi(personaggio.getClasse())
+					&& dannoAtteso(personaggio, secondaria.get()) <= dannoAtteso(personaggio, occupante.get())) {
+				occupante = secondaria;
+			}
+			occupante.ifPresent(uscenti::add);
+		} else {
+			for (TipoSlotArtefatto slot : new TipoSlotArtefatto[] {TipoSlotArtefatto.ENTRAMBE_LE_MANI,
+					TipoSlotArtefatto.MANO_PRINCIPALE, TipoSlotArtefatto.MANO_SECONDARIA}) {
+				occupato(equipaggiati, slot).ifPresent(uscenti::add);
+			}
+		}
+		for (ArtefattoMD uscente : uscenti) {
+			if (uscente.getTipo().getSupertipo() != SupertipoArtefatto.ARMA) {
+				return Optional.empty();
+			}
+		}
+		return Optional.of(uscenti);
+	}
+
+	/**
+	 * Il controllo preventivo del cambio d'arma: la nuova arma si potrebbe impugnare una volta usciti gli oggetti che le fanno posto? Guarda
+	 * la situazione "senza l'arma che esce" (carico, mani libere), che {@link #valuta} da sola non vede perché guarda l'equipaggiamento
+	 * com'è adesso. Non cambia niente: gli artefatti che escono si tolgono solo per un attimo dall'elenco del personaggio e si rimettono
+	 * dov'erano, senza ricalcoli né notifiche (a differenza di removeArtefatto, che riduce salute e MAGIA se l'arma ne dava il massimo).
+	 *
+	 * @param nuova un'arma da mano principale o a due mani
+	 * @return lo slot che occuperebbe, o il motivo per cui il cambio non si può fare
+	 */
+	public static EsitoControlloRichiestaEquipaggiamento valutaCambioArma(Personaggio personaggio, ArtefattoMD nuova) {
+		TipoSlotArtefatto slotNuova = nuova.getTipo().getSlotArtefatto();
+		if (slotNuova != TipoSlotArtefatto.MANO_PRINCIPALE && slotNuova != TipoSlotArtefatto.ENTRAMBE_LE_MANI) {
+			throw new IllegalArgumentException("Non è un'arma da mano principale o a due mani: " + nuova.getTipo());
+		}
+		Collection<ArtefattoMD> equipaggiati = personaggio.getModelloDati().getArtefatti();
+		Optional<List<ArtefattoMD>> uscenti = chiEsce(personaggio, nuova);
+		if (!uscenti.isPresent()) {
+			return EsitoControlloRichiestaEquipaggiamento.rifiuto(personaggio, TipoMotivoRifiutoEquipaggiamento.MANI_OCCUPATE_PER_ARMA_A_DUE_MANI);
+		}
+		List<ArtefattoMD> prima = new ArrayList<>(equipaggiati);
+		try {
+			equipaggiati.removeAll(uscenti.get());
+			return valuta(personaggio, nuova);
+		} finally {
+			equipaggiati.clear();
+			equipaggiati.addAll(prima);
+		}
+	}
+
+	/**
+	 * Gli artefatti che uscirebbero dalle mani del personaggio se prendesse quell'arma (vuoto se nessuno, o se il cambio non si può fare).
+	 */
+	public static List<ArtefattoMD> uscentiPerCambioArma(Personaggio personaggio, ArtefattoMD nuova) {
+		return chiEsce(personaggio, nuova).orElse(new ArrayList<>());
+	}
+
+	/**
 	 * Lo slot che un artefatto equipaggiato occupa. Se slotEquipaggiamento manca (artefatto aggiunto
 	 * senza passare dalle regole) si ripiega sullo slot del suo tipo.
 	 */
 	public static TipoSlotArtefatto slotOccupato(ArtefattoMD artefatto) {
 		TipoSlotArtefatto slot = artefatto.getSlotEquipaggiamento();
 		return slot != null ? slot : artefatto.getTipo().getSlotArtefatto();
+	}
+
+	private static double dannoAtteso(Personaggio personaggio, ArtefattoMD arma) {
+		return CalcolatoreCombattimento.dannoAttesoDellArma(personaggio, (Arma) Artefatto.di(arma));
 	}
 
 	private static Optional<ArtefattoMD> occupato(Collection<ArtefattoMD> equipaggiati, TipoSlotArtefatto slot) {

@@ -216,7 +216,7 @@ public class LanciatoreDeiDadi {
         poolMutazione += (int) (foGrezzo - fortunaInt);
 
         // 3. Ridistribuzione del pool casuale (Gestito interamente a numeri INTERI)
-        java.util.Random random = new java.util.Random();
+        java.util.Random random = Dado.sorgente();
         while (poolMutazione > 0) {
             int statisticaCasuale = random.nextInt(7);
             switch (statisticaCasuale) {

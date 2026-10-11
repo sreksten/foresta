@@ -122,7 +122,7 @@ finito e il round non avanza. Il numero del round **riparte da 1 a ogni inizio l
 sono cambiati, sono solo apparsi nuovi mostri (che non hanno ancora agito: il round si allunga). All'inizio di ogni
 round il motore pubblica un evento **`InternoInizioRound`** (con il numero), per la UI, i log e chi tiene la memoria del combattimento.
 
-**Lo `StatoDelCombattimento`** (deciso nel nome; **fatto**: il round con `InternoInizioRound`, chi ha agito nel round, i puntatori dei due gruppi e il round-robin della risposta, le schede dei personaggi e la conoscenza pubblica sulle reazioni; restano da collegare solo le fonti che dipendono dalle tattiche: le voci usate, le armi valutate e i cambi d'arma): un oggetto che raccoglie in un posto solo tutto ciò che le tattiche devono ricordare di un combattimento. Si crea
+**Lo `StatoDelCombattimento`** (deciso nel nome; **fatto**: il round con `InternoInizioRound`, chi ha agito nel round, i puntatori dei due gruppi e il round-robin della risposta, le schede dei personaggi e la conoscenza pubblica sulle reazioni; resta da collegare solo la fonte che dipende dalle tattiche: le voci usate): un oggetto che raccoglie in un posto solo tutto ciò che le tattiche devono ricordare di un combattimento. Si crea
 (o si azzera) a ogni inizio locazione, insieme alla preparazione del gruppo avversario. Contiene:
 
 - **del combattimento**: il numero del round, il registro di chi ha già agito nel round corrente e, per **ogni gruppo**, il **puntatore** all'ultimo personaggio che ha agito
@@ -141,7 +141,7 @@ round il motore pubblica un evento **`InternoInizioRound`** (con il numero), per
 
 Regole (decise):
 
-- **Che cosa è fatto e dove si aggiorna**: i colpi (ultimo avversario, ultimo attaccante, reazione) in `applicaRisultatoCombattimento`; "ha lanciato" in `formula` degli incantesimi, nel canto e nel dardo arcano; l'ultimo alleato nella Resurrezione. Le voci usate, i cambi d'arma e le armi valutate hanno già i metodi (`registraUsoVoce`, `registraCambioArma`, `registraArmaValutata`) ma li chiamerà il motore delle tattiche.
+- **Che cosa è fatto e dove si aggiorna**: i colpi (ultimo avversario, ultimo attaccante, reazione) in `applicaRisultatoCombattimento`; "ha lanciato" in `formula` degli incantesimi, nel canto e nel dardo arcano; l'ultimo alleato nella Resurrezione. I cambi d'arma e le armi valutate li registra `GruppoGiocatore.cambiaArma` / `puoCambiareArma` (§5); le voci usate hanno già il metodo (`registraUsoVoce`) ma lo chiamerà il motore delle tattiche.
 - **Non si salva**: un combattimento non si interrompe mai per salvare (il comando non è disponibile), quindi lo stato è transitorio e si perde con il
   combattimento. Le tattiche di ogni personaggio, invece, sì (§1).
 - **La conoscenza è pubblica**: vale per i personaggi del giocatore e per i mostri, e quello che si è imparato sul comportamento di un personaggio lo sa chiunque, in
@@ -333,32 +333,37 @@ ce n'è una che posso usare; azione: cambia arma, scegliendo una che dà SACRO".
   (`TROPPO_CARICO`), se non è utilizzabile dalla classe (`NON_ADATTO_ALLA_CLASSE`), se manca la forza o il livello, se la mano è
   occupata, se è a due mani e non si hanno le mani libere, se non è da mano secondaria... In quel caso l'arma di prima non viene
   nemmeno tolta.
-- **Il controllo deve guardare il dopo-cambio.** `valuta` guarda l'equipaggiamento *com'è adesso*, con l'arma di prima ancora in
+- **Il controllo deve guardare il dopo-cambio** — **fatto** (`RegoleEquipaggiamento.valutaCambioArma`, `GruppoGiocatore.controllaCambioArma`). `valuta` guarda l'equipaggiamento *com'è adesso*, con l'arma di prima ancora in
   mano e nel carico. Per il cambio, a mano, il giocatore prima toglie la vecchia e poi prende la nuova: se la tattica chiamasse
   `puoEquipaggiare` prima di togliere, i risultati sarebbero sbagliati in entrambe le direzioni. Una spada nuova verrebbe respinta
-  perché la mano principale è occupata (`ARMA_NON_DA_MANO_SECONDARIA`), un'arma troppo pesante per il carico di adesso entrerebbe
+  perché la seconda arma non è consentita (o la mano principale è occupata), un'arma troppo pesante per il carico di adesso entrerebbe
   una volta uscita la vecchia, e un pugnale verrebbe accettato nella mano secondaria, che non è un cambio. Per questo il controllo
-  si fa sulla situazione "senza l'arma che esce" (per esempio togliendola, chiamando `valuta` e rimettendola a posto se dice di no,
-  che è sicuro perché nel turno agisce uno solo), mentre i blocchi di `valuta` restano gli stessi. Un tentativo che viene
-  rifiutato (si toglie la vecchia, la nuova non va, si riprende la vecchia) è un'azione **senza effetto**: non consuma il turno e si
-  passa alla voce successiva.
+  si fa sulla situazione "senza l'arma che esce": gli artefatti che escono si tolgono **solo dall'elenco** del personaggio (non con `removeArtefatto`,
+  che ricalcola gli attributi e riduce salute e MAGIA se l'arma ne dava il massimo, e pubblica notifiche), si chiama `valuta` e si rimettono nello stesso ordine,
+  senza effetti né notifiche. Un cambio che non passa è un'azione **senza effetto**: non consuma il turno e si passa alla voce successiva.
+- **Chi esce** (regola provvisoria, finché non c'è il criterio della doppia arma): per un'arma da mano principale, quella che occupa lo slot (o l'arma a due mani che occupa entrambi); per un'arma a due mani, tutto quello che ha in mano.
+  **Lo scudo, e ogni cosa che non sia un'arma, non esce mai**: con lo scudo in mano un'arma a due mani non si può prendere (`MANI_OCCUPATE_PER_ARMA_A_DUE_MANI`).
 - **Ogni arma si valuta una volta sola.** Chi ha provato un'arma e ha visto che non può impugnarla se lo ricorda, per non rifare le
   prove a ogni turno e a ogni voce. In teoria il personaggio potrebbe valutare tutte le armi dell'inventario del gruppo, ma lo fa
   **una volta sola** e si segna quali può usare (e quali no), per quel combattimento. La valutazione dipende da chi la fa (classe,
   livello, forza, carico) e da quello che ha in mano: se uno di questi cambia (un'arma nuova nell'inventario, un cambio d'arma, un
-  livello, un effetto che cambia il carico) le valutazioni vanno rifatte o scartate. Il dato sta nello stato del combattimento (§8).
-- **Con la doppia arma, quale esce** (da valutare bene): dovrebbe uscire l'arma **meno conveniente da usare in quel momento**, forse
-  quella che fa meno danni o che applica meno effetti di stato o modificatori (a parità, la secondaria). Non c'è ancora un criterio:
-  va stabilito, magari con la stessa misura del "più conveniente" fra incantesimo e attacco fisico (probabilità di colpire × danno atteso),
-  a cui sommare gli effetti di stato e i modificatori che l'arma applica. Finché non c'è, il cambio vale per l'arma che occupa lo slot
-  dell'arma nuova.
+  livello, un effetto che cambia il carico) le valutazioni vanno rifatte o scartate. Il dato sta nello stato del combattimento (§8): `registraArmaValutata` / `getValutazioneArma`, usati da `GruppoGiocatore.puoCambiareArma`; un cambio d'arma del personaggio scarta le sue valutazioni, e si azzerano a ogni locazione.
+- **Con la doppia arma, quale esce** (**fatto**, versione semplice): si confrontano le due armi che il personaggio ha in mano e **esce quella che infligge meno danno**;
+  a parità, la secondaria. Il danno è `CalcolatoreCombattimento.dannoAttesoDellArma`: danni base per il livello di combattimento dell'arma, più per ogni incantamento il bonus fisso
+  e la quota dell'INTELLIGENZA; senza dadi né critici, **contro un bersaglio neutro** e al pieno anche per la secondaria. La nuova arma prende lo slot di quella che esce, quindi deve poterci stare:
+  una lancia (solo mano principale) fa uscire la principale anche se è la più forte. Vale solo per chi impugna due armi (Ladro, Elfo) e se in mano ci sono due armi (non uno scudo). **Da affinare**: il confronto
+  contro il bersaglio vero (`moltiplicatoreAtteso` per il tipo di danno di ciascuna arma), gli effetti di stato e i modificatori che l'arma applica, e la probabilità di colpire (§10).
+  Se l'arma più debole è proprio quella che dà il tipo di danno voluto, lo evita la condizione della voce ("non ho già un'arma che dà quel danno"), non il controllo.
 - **Un massimo di cambi per combattimento, per personaggio**: **uno, al più due** (una costante in `Costanti`), per fermare i continui
-  cambi anche quando le condizioni lo permettono. Si conta nello stato del combattimento (§8) e ricade fra le condizioni della voce
+  cambi anche quando le condizioni lo permettono. Il massimo è `Costanti.MAX_CAMBI_ARMA_PER_COMBATTIMENTO` (2). Si conta nello stato del combattimento (§8: `registraCambioArma`, `getCambiDArma`) e ricade fra le condizioni della voce
   ("non ho ancora cambiato arma").
-- **Come si esegue**: l'azione fa i due passi, uno dopo l'altro e nello stesso turno, **come se il giocatore equipaggiasse a mano**:
-  stocca l'arma di prima nell'inventario del gruppo (`InternoStoccaggioArtefatto`) e preleva la nuova (`InternoPrelievoArtefatto`).
-  Siccome il cambio avviene nel turno di quel personaggio e agisce uno alla volta, due personaggi non possono cambiare arma insieme: è
-  un'**azione atomica**, già validata dal controllo preventivo e dal `GruppoGiocatore`, che non deve temere un rifiuto a metà.
+- **Come si esegue** (**fatto**: `GruppoGiocatore.cambiaArma`): non passa dagli eventi `InternoStoccaggioArtefatto` / `InternoPrelievoArtefatto`, che sono richieste della
+  schermata dell'inventario con una notifica di ritorno: è una valutazione del motore, e serve un esito certo nello stesso istante. L'azione chiama direttamente i due passi
+  pubblici del gruppo, `stocca` (l'arma di prima nell'inventario del gruppo) ed `equipaggia` (la nuova al personaggio), dopo `puoCambiareArma` (massimo di cambi più controllo
+  preventivo); poi conta il cambio. Gli stessi due passi li usano ora anche gli handler degli eventi della schermata dell'inventario, dopo `controllaPrelievo`.
+  Il cambio non consuma il turno da solo: lo fa chi lo chiama (il motore delle tattiche). È un'**azione atomica**: già validata dal controllo preventivo, non teme un rifiuto a metà.
+- **Il filtro sull'inventario** (**fatto**: `GruppoGiocatore.armiPerCambio(personaggio, tipoDanno)`): le armi da mano principale o a due mani del gruppo che danno quel tipo di danno
+  (`Arma.daTipoDanno`) e che il personaggio può prendere al posto di quelle che ha in mano.
 - **Si torna indietro con un'altra voce**, altrimenti l'arma sacra resterebbe in mano anche dopo i non morti: "condizione: non ci sono
   non morti tra gli avversari e ho in mano un'arma sacra e nel gruppo c'è quella di prima; azione: cambia arma". Quel cambio conta nel
   massimo, quindi con un solo cambio possibile non si torna indietro: per questo il limite è uno, al più due. Servono anche condizioni
@@ -876,20 +881,14 @@ Quasi tutto è già leggibile (§6 e §7). Quello che manca:
   I salvataggi non devono restare compatibili con le versioni precedenti, quindi non serve alcuna conversione. Serve un **test di andata e ritorno**:
   una tattica complessa (blocchi nidificati, nomi, condizioni composte) scritta e riletta torna uguale, e un personaggio caricato agisce come prima del
   salvataggio.
-- lo **`StatoDelCombattimento`** (§3.3) — **fatto** quasi tutto (round, puntatori, schede, conoscenza pubblica sulle reazioni). Mancano solo i **chiamanti** di `registraUsoVoce`, `registraCambioArma` e `registraArmaValutata`, che arrivano con il motore delle tattiche e con il cambio d'arma. Il gruppo del giocatore ha il suo puntatore ma non lo usa ancora (`LocazioneBase` fa agire un solo `combattente`, scelto dal giocatore);
+- lo **`StatoDelCombattimento`** (§3.3) — **fatto** quasi tutto (round, puntatori, schede, conoscenza pubblica sulle reazioni). Manca solo il chiamante di `registraUsoVoce`, che arriva con il motore delle tattiche. Il gruppo del giocatore ha il suo puntatore ma non lo usa ancora (`LocazioneBase` fa agire un solo `combattente`, scelto dal giocatore);
 - la **risposta** come azione a sé degli avversari: oggi chi risponde è già scelto in round-robin, ma l'azione è ancora `rispondiInMischia` sul combattente, con la logica fissa di §4;
 - le **tattiche base dei mostri**: un file di risorse per classe (§4), nello stesso formato di quelle del giocatore, e il modo di assegnarle a
   un avversario quando nasce (`FabbricaPersonaggi`), con la possibilità che **una singola istanza abbia una tattica sua** al posto di quella di classe (una
   missione può portare un goblin più furbo degli altri con la sua), e che questa sia salvata con la partita; e il motore che le esegue, con le **azioni di controllo** `SE / ALTRIMENTI / FINE`
   nidificate (§7.6), che oggi non esistono: la lista di voci non è più piatta ma un albero;
-- il **cambio d'arma** come azione sola e con un controllo preventivo (§5), **tra le prime cose da fare**: oggi il `GruppoGiocatore`
-  fa il controllo e lo spostamento insieme, dentro il gestore dell'evento di prelievo (`suEventoRichiestaPrelievoArtefatto`:
-  `puoEquipaggiare` e poi `removeArtefatto` / `addArtefatto`), e non sono disponibili in combattimento (`INVENTARIO` non è nei comandi di
-  `IN_COMBATTIMENTO`). Va **spezzato in due**: un controllo (`puoEquipaggiare`, che c'è già sul personaggio, con in più la
-  variante per il cambio che guarda la situazione senza l'arma che esce) e l'esecuzione (`equipaggia`, che sposta e basta, senza
-  rifare il controllo), pubblici sul gruppo e usabili dalla tattica; le schermate dell'inventario usano gli stessi due passi. Serve poi
-  il filtro sull'inventario del gruppo che cerca un'arma che dà un tipo di danno (`Arma.daTipoDanno`, già fatto) e che il personaggio
-  può impugnare, e, nello stato del combattimento, il **contatore dei cambi** di ogni personaggio e **l'elenco delle armi già valutate** (utilizzabili o no);
+- il **cambio d'arma** come azione sola (§5) — **fatto** (controllo preventivo senza effetti, `controllaPrelievo` / `equipaggia` / `stocca` / `cambiaArma` / `armiPerCambio` sul `GruppoGiocatore`, contatore dei cambi e armi valutate nello stato del combattimento).
+  Manca solo il chiamante (il motore delle tattiche); il criterio di quale arma esce con la doppia arma c'è, in versione semplice (§5); `INVENTARIO` non è nei comandi di `IN_COMBATTIMENTO` e per ora non serve;
 - un **criterio di scelta** dell'incantesimo (a caso, il più potente, il più conveniente) come parametro dell'azione, e la
   condizione **"probabilità del n%"** (oggi "una volta su tre non lancia" è una costante).
 
@@ -916,5 +915,5 @@ Domande aperte:
   personaggio (elenco ordinabile con aggiungi, togli, sposta su e giù, attiva/disattiva).
 - **Livello di dettaglio dei controlli** per la prima versione (probabilmente: sempre, salute e magia sotto una soglia, stati, classe,
   numero di avversari, risorse, probabilità; poi le categorie di creatura, già nei dati).
-- **Cambiare arma** (§5): quale arma esce con la doppia arma, cioè quale è "la meno conveniente da usare in quel momento" (danni, effetti di stato, modificatori; vedi sopra)? Per quanto tempo valgono le valutazioni già fatte delle armi del gruppo? Le voci per tornare all'arma di prima le scrive il giocatore o le propone il sistema in coppia con la prima?
+- **Cambiare arma** (§5): affinare quale arma esce con la doppia arma (oggi la più debole per danno atteso, contro un bersaglio neutro): contro il bersaglio vero, con gli effetti di stato, i modificatori e la probabilità di colpire? Per quanto tempo valgono le valutazioni già fatte delle armi del gruppo? Le voci per tornare all'arma di prima le scrive il giocatore o le propone il sistema in coppia con la prima?
 - **Il round a coppie** (§3.2): quando rivederlo, e se i personaggi in più possono agire senza risposta anche dopo il primo giro.

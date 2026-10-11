@@ -31,25 +31,35 @@ class RiduzioneDegliEffettiTest {
 
     private static final int PROVE = 4000;
 
+    // Il seme con cui si tirano le statistiche dell'attaccante: senza, variavano da una corsa all'altra e con loro le probabilità
+    // (vedi ilModificatoreDellArmaSulBersaglioSegueLaResistenza)
+    private static final long SEME_ATTACCANTE = 1L;
+
     @BeforeEach
     void prepara() {
         ModelloDati.setIstanza(new ModelloDati());
+        // Nessun lancio truccato lasciato da un altro test
+        Dado.ripristina();
     }
 
     /** Un guerriero che per il tipo di danno indicato ha quel moltiplicatore */
     private static Personaggio difensore(TipoDanno tipoDanno, double moltiplicatore) {
+        return difensore(tipoDanno, moltiplicatore, 100);
+    }
+
+    private static Personaggio difensore(TipoDanno tipoDanno, double moltiplicatore, int forza) {
         Personaggio guerriero = new Guerriero("Difensore", 5) {
             @Override
             public double getMoltiplicatoreDannoSubito(TipoDanno tipo) {
                 return tipo == tipoDanno ? moltiplicatore : super.getMoltiplicatoreDannoSubito(tipo);
             }
         };
-        // Le statistiche si tirano con un generatore che non segue il seme: si fissano. La FORZA è alta perché la probabilità
+        // Le statistiche seguono il seme, ma qui si fissano comunque, così il test non dipende da come si tirano. La FORZA è alta perché la probabilità
         // degli stati nativi è il danno contro la FORZA del difensore, e deve restare lontana dal 100%
         for (TipoAttributo attributo : new TipoAttributo[] {TipoAttributo.FORZA, TipoAttributo.DESTREZZA, TipoAttributo.COSTITUZIONE,
                 TipoAttributo.INTELLIGENZA, TipoAttributo.SAGGEZZA, TipoAttributo.CARISMA, TipoAttributo.FORTUNA}) {
             ((PersonaggioBase) guerriero).addModificatore(new ModificatoreAttributoMD(attributo, TipoModificatore.QUANTITA_ASSOLUTA,
-                    attributo == TipoAttributo.FORZA ? 100 : 12));
+                    attributo == TipoAttributo.FORZA ? forza : 12));
         }
         return guerriero;
     }
@@ -71,10 +81,16 @@ class RiduzioneDegliEffettiTest {
     /** Quante volte su PROVE il colpo ha quell'esito, con un difensore che per il tipo di danno ha quel moltiplicatore */
     private static int quante(TipoDanno resistenza, double moltiplicatore, TipoDanno tipoDanno, TipoEffettoDiStato statoDelDifensore,
                               Arma arma, Prova prova) {
+        return quante(resistenza, moltiplicatore, 100, tipoDanno, statoDelDifensore, arma, prova);
+    }
+
+    private static int quante(TipoDanno resistenza, double moltiplicatore, int forzaDifensore, TipoDanno tipoDanno,
+                              TipoEffettoDiStato statoDelDifensore, Arma arma, Prova prova) {
+        Dado.impostaSeme(SEME_ATTACCANTE);
         Personaggio attaccante = FabbricaPersonaggi.crea(TipoPersonaggio.LADRO, 5);
         int riuscite = 0;
         for (int i = 1; i <= PROVE; i++) {
-            Personaggio difensore = difensore(resistenza, moltiplicatore);
+            Personaggio difensore = difensore(resistenza, moltiplicatore, forzaDifensore);
             if (statoDelDifensore != null) {
                 difensore.addEffettoDiStato(statoDelDifensore, 3, 0);
             }
@@ -171,9 +187,12 @@ class RiduzioneDegliEffettiTest {
             }
         };
         Prova modificatore = r -> !r.getModificatoriDaAggiungere().isEmpty();
-        int normale = quante(TipoDanno.GELO, 1.0d, TipoDanno.GELO, null, conModificatore, modificatore);
-        int resistente = quante(TipoDanno.GELO, 0.5d, TipoDanno.GELO, null, conModificatore, modificatore);
-        assertTrue(normale > PROVE / 10 && normale < PROVE * 8 / 10, "senza resistenza: " + normale);
-        assertEquals(normale / 2.0d, resistente, PROVE * 0.04d, "con resistenza 0,5: " + resistente + " contro " + normale);
+        // La probabilità del modificatore è (danno × 100 / FORZA del difensore) + INTELLIGENZA di chi colpisce; il danno, con la resistenza,
+        // si dimezza anch'esso, quindi il rapporto fra le due prove è un mezzo solo se il primo termine è trascurabile: con un difensore
+        // forte (FORZA 1000) lo è, e resta l'INTELLIGENZA dell'attaccante (fissata dal seme)
+        int normale = quante(TipoDanno.GELO, 1.0d, 1000, TipoDanno.GELO, null, conModificatore, modificatore);
+        int resistente = quante(TipoDanno.GELO, 0.5d, 1000, TipoDanno.GELO, null, conModificatore, modificatore);
+        assertTrue(normale > PROVE / 20 && normale < PROVE * 8 / 10, "senza resistenza: " + normale);
+        assertEquals(normale / 2.0d, resistente, PROVE * 0.02d, "con resistenza 0,5: " + resistente + " contro " + normale);
     }
 }

@@ -178,6 +178,21 @@ public class CalcolatoreCombattimento {
     }
 
     /**
+     * Quanto vale un'arma per chi la impugna, senza dadi, critici né bersaglio (come contro un difensore neutro, e al pieno del
+     * danno anche se è la seconda arma): danni base per il livello di combattimento dell'arma, più per ogni incantamento il bonus fisso
+     * e la quota dell'INTELLIGENZA. Serve a confrontare due armi (il cambio d'arma con la doppia arma); non guarda gli effetti di stato
+     * né i modificatori che l'arma applica.
+     */
+    public static double dannoAttesoDellArma(Personaggio attaccante, Arma arma) {
+        double danno = arma.getDanni() * livelloDiCombattimento(arma.getLivello());
+        for (IncantamentoMD incantamento : arma.getIncantamenti()) {
+            danno += incantamento.getDannoBonusFisso() * arma.getLivello()
+                    + attaccante.getIntelligenza() * incantamento.getCoefficienteScala() * attaccante.getMoltiplicatoreDanniMagici();
+        }
+        return danno;
+    }
+
+    /**
      * Le fasi di attacco di un turno: l'arma principale e, per chi combatte con due armi, quella nella
      * mano secondaria, al 40% (Costanti.DOPPIA_ARMA_FATTORE_SECONDA_ARMA).
      */

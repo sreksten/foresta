@@ -112,7 +112,7 @@ class InterazioniConGliStatiCaratterizzazioneTest {
                 for (TipoDanno tipoDanno : TipoDanno.values()) {
                     Personaggio attaccante = FabbricaPersonaggi.crea(TipoPersonaggio.LADRO, 5);
                     Personaggio difensore = FabbricaPersonaggi.crea(tipoDifensore, 5);
-                    // Le statistiche dei personaggi si tirano con un generatore che non segue il seme: si fissano
+                    // Le statistiche dei personaggi seguono il seme, ma qui si fissano comunque, così il test non dipende da come si tirano
                     fissaPrimari(attaccante);
                     fissaPrimari(difensore);
                     for (TipoEffettoDiStato stato : stati) {

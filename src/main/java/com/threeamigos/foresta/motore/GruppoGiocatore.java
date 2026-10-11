@@ -14,6 +14,7 @@ import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.locazioni.Locazione;
+import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.GruppoGiocatoreMD;
@@ -25,6 +26,8 @@ import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.strumenti.CostruttoreArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -623,23 +626,116 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		md.getArtefatti().remove(artefatto.getModelloDati());
 	}
 
+	/**
+	 * Il controllo di un prelievo dall'inventario del gruppo: il personaggio può equipaggiare quell'artefatto, così com'è adesso?
+	 * Lo usano la schermata dell'inventario (tramite l'evento di prelievo) e le tattiche.
+	 *
+	 * @return il motivo del rifiuto, oppure vuoto se si può
+	 */
+	public Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> controllaPrelievo(Personaggio personaggio, Artefatto artefatto) {
+		return personaggio.puoEquipaggiare(artefatto);
+	}
+
+	/**
+	 * Il passaggio di un artefatto dall'inventario del gruppo al personaggio, senza controlli (vanno fatti prima con
+	 * {@link #controllaPrelievo}) e senza notifiche.
+	 */
+	public void equipaggia(Personaggio personaggio, Artefatto artefatto) {
+		removeArtefatto(artefatto);
+		personaggio.addArtefatto(artefatto);
+	}
+
+	/**
+	 * Il passaggio di un artefatto dal personaggio all'inventario del gruppo (non ha controlli: si può sempre togliere).
+	 */
+	public void stocca(ScambiatoreArtefatti personaggio, Artefatto artefatto) {
+		personaggio.removeArtefatto(artefatto);
+		addArtefatto(artefatto);
+	}
+
+	/**
+	 * Il controllo preventivo del cambio d'arma, sulla situazione "senza l'arma che esce" (vedi RegoleEquipaggiamento.valutaCambioArma);
+	 * non cambia niente e non pubblica niente. Include il massimo dei cambi per combattimento.
+	 *
+	 * @param nuova un'arma dell'inventario del gruppo, da mano principale o a due mani
+	 * @return vuoto se il cambio si può fare, altrimenti il motivo
+	 */
+	public Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> controllaCambioArma(Personaggio personaggio, Artefatto nuova) {
+		RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento esito =
+				RegoleEquipaggiamento.valutaCambioArma(personaggio, nuova.getModelloDati());
+		return esito.getMotivo() == null ? Optional.empty() : Optional.of(esito);
+	}
+
+	/**
+	 * Se il personaggio può ancora cambiare arma in questo combattimento (Costanti.MAX_CAMBI_ARMA_PER_COMBATTIMENTO) e con quest'arma;
+	 * ricorda l'esito della valutazione nello stato del combattimento, così non si rifà (vedi {@link StatoDelCombattimento}).
+	 */
+	public boolean puoCambiareArma(Personaggio personaggio, Artefatto nuova) {
+		StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
+		if (stato.getCambiDArma(personaggio) >= Costanti.MAX_CAMBI_ARMA_PER_COMBATTIMENTO) {
+			return false;
+		}
+		Boolean valutata = stato.getValutazioneArma(personaggio, nuova);
+		if (valutata != null) {
+			return valutata;
+		}
+		boolean utilizzabile = !controllaCambioArma(personaggio, nuova).isPresent();
+		stato.registraArmaValutata(personaggio, nuova, utilizzabile);
+		return utilizzabile;
+	}
+
+	/**
+	 * Il cambio d'arma come azione sola: se si può (puoCambiareArma) toglie dalle mani le armi che fanno posto, le mette nell'inventario
+	 * del gruppo e impugna la nuova; conta il cambio nello stato del combattimento. È atomico: il controllo è già fatto, quindi non teme
+	 * rifiuti a metà. Non consuma il turno: lo fa chi lo chiama. Niente notifiche di inventario, la UI vede le variazioni dei personaggi.
+	 *
+	 * @return true se il cambio è avvenuto
+	 */
+	public boolean cambiaArma(Personaggio personaggio, Artefatto nuova) {
+		if (!puoCambiareArma(personaggio, nuova)) {
+			return false;
+		}
+		for (ArtefattoMD uscente : RegoleEquipaggiamento.uscentiPerCambioArma(personaggio, nuova.getModelloDati())) {
+			stocca(personaggio, Artefatto.di(uscente));
+		}
+		equipaggia(personaggio, nuova);
+		StatoDelCombattimento.getIstanza().registraCambioArma(personaggio);
+		return true;
+	}
+
+	/**
+	 * Le armi dell'inventario del gruppo che il personaggio può prendere al posto di quelle che ha in mano e che danno quel tipo di
+	 * danno (Arma.daTipoDanno); servono a una tattica come "un'arma sacra contro i non morti".
+	 */
+	public List<Artefatto> armiPerCambio(Personaggio personaggio, TipoDanno tipoDanno) {
+		List<Artefatto> trovate = new ArrayList<>();
+		for (Artefatto artefatto : getInventario()) {
+			TipoSlotArtefatto slot = artefatto.getTipo().getSlotArtefatto();
+			if (!(artefatto instanceof Arma) || (slot != TipoSlotArtefatto.MANO_PRINCIPALE && slot != TipoSlotArtefatto.ENTRAMBE_LE_MANI)) {
+				continue;
+			}
+			if (((Arma) artefatto).daTipoDanno(tipoDanno) && puoCambiareArma(personaggio, artefatto)) {
+				trovate.add(artefatto);
+			}
+		}
+		return trovate;
+	}
+
 	private void suEventoRichiestaStoccaggioArtefatto(InternoStoccaggioArtefatto eventoRichiestaStoccaggio) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaStoccaggio.getOggettoDaSpostare();
-		eventoRichiestaStoccaggio.getParteAttiva().removeArtefatto(artefatto);
-		addArtefatto(artefatto);
+		stocca(eventoRichiestaStoccaggio.getParteAttiva(), artefatto);
 		BusEventi.pubblica(new NotificaApprovazioneStoccaggioArtefatto(eventoRichiestaStoccaggio));
 	}
 
 	private void suEventoRichiestaPrelievoArtefatto(InternoPrelievoArtefatto eventoRichiestaPrelievoArtefatto) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaPrelievoArtefatto.getOggettoDaSpostare();
 		Personaggio personaggio = (Personaggio) eventoRichiestaPrelievoArtefatto.getParteAttiva();
-		Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> motivoRifiuto = personaggio.puoEquipaggiare(artefatto);
+		Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> motivoRifiuto = controllaPrelievo(personaggio, artefatto);
 		if (motivoRifiuto.isPresent()) {
 			RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento esito = motivoRifiuto.get();
 			BusEventi.pubblica(new NotificaRifiutoPrelievoArtefatto(eventoRichiestaPrelievoArtefatto, esito.getFumetto()));
 		} else {
-			removeArtefatto(artefatto);
-			personaggio.addArtefatto(artefatto);
+			equipaggia(personaggio, artefatto);
 			BusEventi.pubblica(new NotificaApprovazionePrelievoArtefatto(eventoRichiestaPrelievoArtefatto));
 		}
 	}
