@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 
@@ -18,8 +19,9 @@ import java.util.List;
  * <li>Chi agisce lo decide il round-robin di ogni gruppo: dopo l'ultimo che ha agito, il prossimo vivo (il puntatore non si azzera fra un
  * round e l'altro).</li>
  * <li>Chi è atterrato, congelato o stordito salta il turno, ma il suo posto nel piano è usato.</li>
- * <li>Non c'è una "risposta": l'avversario che tocca attacca il gruppo del giocatore, scegliendo il bersaglio da sé
- * ({@code Personaggio.attacca(Gruppo)}: prima il Mago, poi il Sacerdote, l'Elfo, il Bardo, altrimenti uno a caso).</li>
+ * <li>Non c'è una "risposta": l'avversario che tocca agisce con la sua tattica, la stessa del gioco (la sua o quella base della classe,
+ * {@link com.threeamigos.foresta.tattiche.RegistroTattiche}), eseguita da {@link EsecutoreTattiche}: sceglie da sé il bersaglio (prima il Mago, poi
+ * il Sacerdote, l'Elfo, il Bardo, altrimenti uno a caso) e se lanciare un incantesimo.</li>
  * <li>Se muore il capo (il primo dei miei) la partita è persa; se cade l'ultimo avversario lo scontro è vinto e nessuno agisce più.</li>
  * </ul>
  * Chi decide che cosa fa un mio personaggio quando tocca a lui è un {@link Decisore}.
@@ -51,6 +53,13 @@ final class RoundASimulato {
             return true;
         }
     };
+    private final Gruppo gruppoDegliAvversari = new Gruppo() {
+        @Override
+        public boolean isGruppoGiocatore() {
+            return false;
+        }
+    };
+    private final EsecutoreTattiche esecutore;
     private Personaggio ultimoMio;
     private Personaggio ultimoAvversario;
     private int round = 0;
@@ -65,6 +74,12 @@ final class RoundASimulato {
         this.avversari = avversari;
         gruppoDeiMiei.personaggi.addAll(miei);
         gruppoDeiMiei.capo = miei.get(0);
+        gruppoDegliAvversari.personaggi.addAll(avversari);
+        gruppoDegliAvversari.capo = avversari.isEmpty() ? null : avversari.get(0);
+        // Uno scontro nuovo: la memoria dello scontro (tentativi falliti, immunità scoperte, voci usate) riparte da zero
+        StatoDelCombattimento.getIstanza().reimposta();
+        esecutore = new EsecutoreTattiche(gruppoDeiMiei, gruppoDegliAvversari, StatoDelCombattimento.getIstanza(), (uccisore, vittima) -> {
+        });
     }
 
     /**
@@ -151,7 +166,7 @@ final class RoundASimulato {
         ultimoAvversario = chi;
         if (!isIncapaceDiAgire(chi) && !mieiVivi().isEmpty()) {
             azioni++;
-            chi.attacca(gruppoDeiMiei);
+            esecutore.agisci(chi, chi.getTattica() != null ? chi.getTattica() : RegistroTattiche.perClasse(chi.getClasse()));
             decisore.dopoOgniAzione(this);
         }
         return esito();

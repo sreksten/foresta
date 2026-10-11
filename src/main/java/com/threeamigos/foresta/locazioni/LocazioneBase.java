@@ -16,14 +16,8 @@ import com.threeamigos.foresta.oggetti.FabbricaOggetti;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tattiche.ContestoTattico;
-import com.threeamigos.foresta.tattiche.Decisione;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
-import com.threeamigos.foresta.tattiche.SceltaIncantesimo;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.tattiche.Valutatore;
-import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.missioni.LaSfidaDeiCampioni;
@@ -879,7 +873,7 @@ public abstract class LocazioneBase implements Locazione {
 		if (bersaglio == null || !DardoArcano.puoLanciarlo(formulante)) {
 			return null;
 		}
-		scagliaIlDardo(formulante, bersaglio);
+		esecutore().scagliaIlDardo(formulante, bersaglio);
 		if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
 			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
@@ -887,28 +881,15 @@ public abstract class LocazioneBase implements Locazione {
 		return dopoAzioneDelGiocatore(formulante);
 	}
 
-	/**
-	 * Il dardo arcano contro un bersaglio (costa MAGIA): l'esito si ricorda per le tattiche
-	 */
-	private void scagliaIlDardo(Personaggio formulante, Personaggio bersaglio) {
-		DardoArcano dardo = new DardoArcano(formulante);
-		annunciaAzione(formulante, bersaglio);
-		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " scaglia un dardo arcano contro "
-				+ bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + "."));
-		if (CalcolatoreCombattimento.colpisce(formulante, bersaglio, dardo.getTipoDanno().getSuperTipo())) {
-			statoDelCombattimento.registraEsitoAzione(formulante, bersaglio, TipoAzione.DARDO_ARCANO, EsitoAzione.RIUSCITA);
-			bersaglio.applicaRisultatoCombattimento(CalcolatoreCombattimento.calcolaDannoRisultante(formulante, bersaglio, dardo));
-			registraUccisione(formulante, bersaglio);
-		} else {
-			statoDelCombattimento.registraEsitoAzione(formulante, bersaglio, TipoAzione.DARDO_ARCANO, EsitoAzione.MANCATA);
-		}
-		formulante.subMagia(dardo.getCostoLancio());
-		statoDelCombattimento.registraIncantesimoLanciato(formulante);
-	}
-
 	// La tattica di un personaggio (tattiche_di_combattimento_automatiche.md §11): in combattimento automatico agiscono con quella i miei personaggi e i
-	// mostri che ne hanno una; gli altri mostri scelgono ancora con le regole di PersonaggioBase.attacca(Gruppo). Le azioni manuali del giocatore non cambiano.
+	// mostri (la sua, o quella base della loro classe, RegistroTattiche). Le azioni manuali del giocatore (la barra dei comandi) non passano di qui.
+
+	/**
+	 * Chi esegue le decisioni delle tattiche, con i gruppi e lo stato di questa locazione; registra gli uccisi come le azioni manuali
+	 */
+	private EsecutoreTattiche esecutore() {
+		return new EsecutoreTattiche(gruppo, gruppoAvversario, statoDelCombattimento, this::registraUccisione);
+	}
 
 	/**
 	 * La tattica con cui agisce un personaggio: la sua; se non ne ha una, per i miei quella vuota (attaccano il primo avversario in campo, come
@@ -923,15 +904,14 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
-	 * L'azione di un personaggio decisa dalla sua tattica: la esegue, ricorda l'uso della voce e controlla se lo scontro o la partita sono finiti. Non
+	 * L'azione di un personaggio decisa dalla sua tattica (vedi EsecutoreTattiche): la esegue e controlla se lo scontro o la partita sono finiti. Non
 	 * gestisce il round (lo fa chi la chiama).
 	 *
 	 * @return lo stato in cui passare se lo scontro o la partita sono finiti, altrimenti vuoto
 	 */
 	private Optional<Stato> agisciConLaTattica(Personaggio attore, TatticaMD tattica) {
 		boolean deiMiei = gruppo.contiene(attore);
-		Decisione decisione = Valutatore.decidi(tattica, ContestoTattico.per(attore));
-		if (decisione == null) {
+		if (esecutore().agisci(attore, tattica) == null) {
 			// Nessun bersaglio: per i miei vuol dire che gli avversari sono finiti
 			if (deiMiei && gruppoAvversario.getPersonaggiVivi().isEmpty()) {
 				setCompleta(true);
@@ -939,11 +919,9 @@ public abstract class LocazioneBase implements Locazione {
 			}
 			return Optional.empty();
 		}
-		BusEventi.pubblica(new InternoDecisioneTattica(attore, decisione.getBersaglio(), decisione.getTipoEseguito(), decisione.getIndiceVoce(),
-				decisione.getSpiegazione()));
-		eseguiLaDecisione(attore, decisione);
-		if (!decisione.isRipiego()) {
-			statoDelCombattimento.registraUsoVoce(attore, decisione.getIdentificativoVoce());
+		if (deiMiei) {
+			opzioneCorruzioneDisponibile = false;
+			opzioneAmiciziaDisponibile = false;
 		}
 		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {
 			setCompleta(true);
@@ -953,139 +931,6 @@ public abstract class LocazioneBase implements Locazione {
 			return Optional.of(Stato.GIOCO_PERSO);
 		}
 		return Optional.empty();
-	}
-
-	private void eseguiLaDecisione(Personaggio attore, Decisione decisione) {
-		boolean deiMiei = gruppo.contiene(attore);
-		Gruppo gruppoDellAttore = deiMiei ? gruppo : gruppoAvversario;
-		Gruppo gruppoNemico = deiMiei ? gruppoAvversario : gruppo;
-		Personaggio bersaglio = decisione.getBersaglio();
-		switch (decisione.getTipoEseguito()) {
-			case ATTACCO_FISICO:
-				if (deiMiei) {
-					attaccaConLeArmi(attore, bersaglio);
-				} else {
-					attore.attaccaConLeArmi(bersaglio);
-				}
-				break;
-			case DARDO_ARCANO:
-				scagliaIlDardo(attore, bersaglio);
-				break;
-			case RESURREZIONE:
-				annunciaAzione(attore, bersaglio);
-				FabbricaIncantesimi.crea(ClasseIncantesimo.RESURREZIONE, attore.getLivello()).formula(attore, bersaglio, null);
-				consumaLaPergamena(gruppoDellAttore, ClasseIncantesimo.RESURREZIONE);
-				break;
-			case ALBA_SACRA:
-				annunciaAzione(attore, null);
-				FabbricaIncantesimi.crea(ClasseIncantesimo.ALBA_SACRA, attore.getLivello()).formula(attore, null, gruppoDellAttore);
-				// Chi la conosce per natura (Sacerdote, Sacerdotessa) non consuma pergamene
-				if (!AlbaSacra.conosciutaDa(attore.getClasse())) {
-					consumaLaPergamena(gruppoDellAttore, ClasseIncantesimo.ALBA_SACRA);
-				}
-				break;
-			case CANTO_CURATIVO:
-				cantaConLaTattica(attore, TipoCanto.CURATIVO, bersaglio, gruppoDellAttore, gruppoNemico);
-				break;
-			case CANTO_IPNOTICO:
-				cantaConLaTattica(attore, TipoCanto.IPNOTICO, null, gruppoDellAttore, gruppoNemico);
-				break;
-			case URLO_DELLA_BANSHEE:
-				cantaConLaTattica(attore, TipoCanto.URLO_DELLA_BANSHEE, null, gruppoDellAttore, gruppoNemico);
-				break;
-			case CANTO_DI_VALORE:
-				cantaConLaTattica(attore, TipoCanto.DI_VALORE, null, gruppoDellAttore, gruppoNemico);
-				break;
-			case POZIONE_SALUTE:
-				beviLaPozioneDellaSalute(attore, bersaglio, gruppoDellAttore);
-				break;
-			case POZIONE_MAGIA:
-				beviLaPozioneDellaMagia(attore, bersaglio, gruppoDellAttore);
-				break;
-			case CAMBIA_ARMA:
-				cambiaArmaConLaTattica(attore, decisione);
-				break;
-			default:
-				lanciaUnIncantesimoDiDanno(attore, decisione, gruppoDellAttore);
-				break;
-		}
-	}
-
-	/**
-	 * Un incantesimo di danno, la Morte o il Silenzio contro il bersaglio scelto; con più bersagli (MULTIPLO) il principale e i successivi vivi.
-	 * Il lancio, costo in MAGIA compreso, lo fa l'incantesimo; la pergamena si consuma se il gruppo ne ha una (altrimenti è il repertorio di un mostro).
-	 */
-	private void lanciaUnIncantesimoDiDanno(Personaggio attore, Decisione decisione, Gruppo gruppoDellAttore) {
-		ClasseIncantesimo classe = decisione.getIncantesimo();
-		Personaggio bersaglio = decisione.getBersaglio();
-		Incantesimo incantesimo = FabbricaIncantesimi.crea(classe, attore.getLivello());
-		annunciaAzione(attore, bersaglio);
-		List<Personaggio> colpiti = Collections.singletonList(bersaglio);
-		if (classe.getPortata() == PortataIncantesimo.MULTIPLO) {
-			colpiti = SceltaIncantesimo.bersagli(attore, bersaglio, classe, ContestoTattico.per(attore));
-			incantesimo.formula(attore, null, new GruppoDiBersagli(colpiti));
-		} else {
-			incantesimo.formula(attore, bersaglio, null);
-		}
-		for (Personaggio colpito : colpiti) {
-			registraUccisione(attore, colpito);
-		}
-		consumaLaPergamena(gruppoDellAttore, classe);
-	}
-
-	private static void consumaLaPergamena(Gruppo gruppoDellAttore, ClasseIncantesimo classe) {
-		if (gruppoDellAttore.getIncantesimi(classe) > 0) {
-			gruppoDellAttore.subIncantesimi(classe, 1);
-		}
-	}
-
-	private void cantaConLaTattica(Personaggio cantore, TipoCanto tipo, Personaggio bersaglio, Gruppo gruppoDelCantore, Gruppo gruppoNemico) {
-		opzioneCorruzioneDisponibile = false;
-		opzioneAmiciziaDisponibile = false;
-		if (FabbricaCanti.crea(tipo, cantore).cantaSu(cantore, bersaglio, gruppoDelCantore, gruppoNemico)) {
-			statoDelCombattimento.registraIncantesimoLanciato(cantore);
-			annunciaAzione(cantore, null);
-		}
-	}
-
-	/**
-	 * Beve la pozione grande se manca almeno quanto ne ridà (o se non c'è altra), altrimenti la normale
-	 */
-	private void beviLaPozioneDellaSalute(Personaggio attore, Personaggio bevitore, Gruppo gruppoDellAttore) {
-		annunciaAzione(attore, null);
-		boolean grande = gruppoDellAttore.getPozioniSaluteGrande() > 0;
-		boolean normale = gruppoDellAttore.getPozioniSalute() > 0;
-		int mancante = bevitore.getSaluteMassima() - bevitore.getSalute();
-		if (grande && (mancante >= Costanti.RECUPERO_DA_POZIONE_SALUTE_GRANDE || !normale)) {
-			gruppoDellAttore.consumaPozioneSaluteGrande(bevitore);
-		} else if (normale) {
-			gruppoDellAttore.consumaPozioneSalute(bevitore);
-		}
-		statoDelCombattimento.registraAlleato(attore, bevitore);
-	}
-
-	private void beviLaPozioneDellaMagia(Personaggio attore, Personaggio bevitore, Gruppo gruppoDellAttore) {
-		annunciaAzione(attore, null);
-		boolean grande = gruppoDellAttore.getPozioniMagiaGrande() > 0;
-		boolean normale = gruppoDellAttore.getPozioniMagia() > 0;
-		int mancante = bevitore.getMagiaMassima() - bevitore.getMagia();
-		if (grande && (mancante >= Costanti.RECUPERO_DA_POZIONE_MAGIA_GRANDE || !normale)) {
-			gruppoDellAttore.consumaPozioneMagiaGrande(bevitore);
-		} else if (normale) {
-			gruppoDellAttore.consumaPozioneMagia(bevitore);
-		}
-		statoDelCombattimento.registraAlleato(attore, bevitore);
-	}
-
-	/**
-	 * Il cambio d'arma è l'azione del turno (tattiche_di_combattimento_automatiche.md §5): prende la prima arma del gruppo che dia il tipo di danno voluto
-	 */
-	private void cambiaArmaConLaTattica(Personaggio attore, Decisione decisione) {
-		List<Artefatto> armi = gruppo.armiPerCambio(attore, decisione.getAzione().getArmaDi());
-		if (!armi.isEmpty()) {
-			annunciaAzione(attore, null);
-			gruppo.cambiaArma(attore, armi.get(0));
-		}
 	}
 
 	private void impostaComandiPossibili() {
@@ -1539,29 +1384,10 @@ public abstract class LocazioneBase implements Locazione {
 			setCompleta(true);
 			return Optional.of(Stato.FINE_LOCAZIONE);
 		}
-
-		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(attore, bersaglio));
-		annunciaAzione(attore, bersaglio);
-
-		Logger.log(attore.getNome() + " attacca " + bersaglio.getNome());
-
-		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(attore, bersaglio)) {
-			Arma arma = fase.getArma();
-			boolean colpisce = CalcolatoreCombattimento.colpisce(attore, bersaglio, arma.getTipoDanno().getSuperTipo());
-			if (colpisce) {
-				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(attore, bersaglio, arma, fase.getFattore());
-				bersaglio.applicaRisultatoCombattimento(risultato);
-				if (bersaglio.isFuoriCombattimento()) {
-					registraUccisione(attore, bersaglio);
-					Personaggio nuovoBersaglio = gruppoAvversario.getPersonaggioVivo();
-					if (nuovoBersaglio != null) {
-						bersaglio = nuovoBersaglio;
-					} else {
-						setCompleta(true);
-						return Optional.of(Stato.FINE_LOCAZIONE);
-					}
-				}
-			}
+		esecutore().attaccaConLeArmi(attore, bersaglio);
+		if (gruppoAvversario.getPersonaggioVivo() == null) {
+			setCompleta(true);
+			return Optional.of(Stato.FINE_LOCAZIONE);
 		}
 		return Optional.empty();
 	}

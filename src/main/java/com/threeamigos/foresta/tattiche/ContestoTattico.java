@@ -69,8 +69,13 @@ public final class ContestoTattico {
 	 * personaggi, altrimenti sono i mostri.
 	 */
 	public static ContestoTattico per(Personaggio attore) {
-		GruppoGiocatore giocatore = GruppoGiocatore.getIstanza();
-		GruppoAvversario mostri = GruppoAvversario.getIstanza();
+		return per(attore, GruppoGiocatore.getIstanza(), GruppoAvversario.getIstanza());
+	}
+
+	/**
+	 * Come {@link #per(Personaggio)}, ma con i gruppi dati (le simulazioni non usano quelli della partita)
+	 */
+	public static ContestoTattico per(Personaggio attore, Gruppo giocatore, Gruppo mostri) {
 		boolean delGiocatore = giocatore.contiene(attore);
 		return new ContestoTattico(attore, delGiocatore,
 				(delGiocatore ? giocatore : mostri).getPersonaggi(),

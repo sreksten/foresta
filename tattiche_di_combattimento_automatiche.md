@@ -783,8 +783,9 @@ Il modello, il motore, il valutatore, il salvataggio, il registro delle decision
 
 - **Le tattiche base vere dei mostri**, una per classe (§4): oggi tutti hanno `RegistroTattiche.tatticaDiOggi()`. Si scrivono con le fasce di astuzia al posto dell'`INTELLIGENZA` (§4, §11.10), i ritocchi alle intelligenze massime del Folletto (a 8) e dell'Ombra Nera (a 31), le abilità
   proprie (Silenzio sui magici, cure per chi ha le pozioni, ecc.), e in un file di risorse per classe nello stesso formato di §11.12, caricato dal registro. Una singola istanza può già averne una sua (`setTattica`, salvata con il personaggio).
-- **Togliere il vecchio codice di scelta dei mostri**: `PersonaggioBase.attacca(Gruppo)`, `scegliBersaglio`, `scegliIncantesimoContro`, `InternoRisultatoValutazionePersonaggioAttaccante` e `TipoRisultatoValutazioneAttaccante` (§7.7). Oggi il combattimento non li usa più, ma li usano ancora le
-  simulazioni (`RoundASimulato`, `TestLogoramentoInizioPartita`): vanno portate a eseguire le decisioni del `Valutatore` (l'esecutore sta in `LocazioneBase`: va tirato fuori in una classe del motore che le simulazioni possano usare).
+- **Togliere il vecchio codice di scelta dei mostri**: `PersonaggioBase.attacca(Gruppo)` e `attacca(Personaggio)`, `scegliBersaglio`, `scegliIncantesimoContro`, `InternoRisultatoValutazionePersonaggioAttaccante` (e la sua riga nelle eccezioni di `DipendenzeEventiTest`, il suo gestore nello sniffer e il valore di `TipoEvento`)
+  e `TipoRisultatoValutazioneAttaccante` (§7.7). Il combattimento e le simulazioni di gruppo non li usano più (usano l'`EsecutoreTattiche`, §11.14); li usano ancora quattro test (`SceltaDelBersaglioDeiMostriTest`, `ScenarioOspitiVulnerabiliTest`, `ScenarioMietituraTest`, `ScenarioCorrezioniTest`), da portare
+  all'esecutore, e qualche commento che li nomina.
 - **La scheda del giocatore**: la schermata per modificare la tattica di ogni personaggio (elenco di voci, editor di selettore, condizioni e azioni, menu e valori guidati, modelli per classe) e il comando che la manda al motore.
 - **L'esito delle azioni con effetti che non si applicano** (un Silenzio a segno che non mette `SILENZIATO`) come "mancata", oggi non registrato.
 - Il **costo della spiegazione** delle decisioni, se pesasse (§7.7).
@@ -1117,6 +1118,15 @@ mostri sceglievano prima (`PersonaggioBase.attacca(Gruppo)` e `scegliIncantesimo
 - **Un mostro colpisce solo il bersaglio scelto**, anche con un incantesimo a più bersagli, come prima (`SceltaIncantesimo.bersagli`).
 - **Le differenze dalla logica di prima**: un mostro non lancia un incantesimo a cui il bersaglio è immune per la sua classe né il Silenzio su chi è già silenziato (prima sprecava il turno); il confronto fra incantesimo e armi usa i danni attesi e non i tiri dei dadi; il dado della rinuncia si tira una volta per voce che ha un bersaglio, non una sola per decisione (la
   probabilità di lanciare resta due su tre). Le simulazioni di partita (30 per classe) danno risultati simili a prima.
+
+### 11.14 L'esecutore condiviso
+
+**Fatto** (`motore/EsecutoreTattiche`, `EsecutoreTatticheTest`). Il valutatore sceglie, l'esecutore fa: un attacco con le armi sul bersaglio scelto, un incantesimo (con il `GruppoDiBersagli` per i `MULTIPLO`, la pergamena consumata, l'esito registrato), il dardo arcano, i benefici, i canti, le pozioni, il
+cambio d'arma. `agisci(attore, tattica)` decide, pubblica l'`InternoDecisioneTattica`, esegue e ricorda l'uso della voce, e restituisce la decisione (null se non c'era niente da fare). Non gestisce il round né la fine dello scontro: chi lo chiama guarda se gli avversari sono finiti o se è
+caduto il capo. Gli avversari messi fuori combattimento dai miei li comunica a un `RegistroUccisioni` (nel gioco danno esperienza e punti, `LocazioneBase.registraUccisione`; nelle simulazioni niente).
+
+Lo usano `LocazioneBase` (che gli passa i suoi gruppi e lo stato e tiene per sé il round, le opzioni di corruzione e amicizia, e le azioni manuali del giocatore, che per l'attacco e il dardo passano dalle sue stesse primitive) e `RoundASimulato`, quindi `TestScontriDiGruppo` e `TestLogoramentoInizioPartita`: **i mostri
+delle simulazioni agiscono con le stesse tattiche del gioco**, non più con una copia della logica di scelta. `ContestoTattico.per(attore, giocatore, mostri)` lo costruisce da gruppi qualunque.
 
 ### 11.10 Il criterio di scelta dell'incantesimo di danno
 
