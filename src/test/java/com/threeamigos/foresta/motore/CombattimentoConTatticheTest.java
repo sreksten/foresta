@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
+import com.threeamigos.foresta.eventi.interni.InternoDecisioneTattica;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
@@ -55,7 +56,8 @@ class CombattimentoConTatticheTest {
     }
 
     private static void resistente(Personaggio p) {
-        p.addModificatore(new ModificatoreAttributoMD(TipoAttributo.COSTITUZIONE, TipoModificatore.QUANTITA_ASSOLUTA, 1000));
+        // La salute massima sale davvero (senza, addSalute si ferma al massimo di prima e uno scontro finirebbe al primo incantesimo)
+        p.addSaluteMassima(1_000_000, "prova");
         p.addSalute(1_000_000);
     }
 
@@ -194,12 +196,16 @@ class CombattimentoConTatticheTest {
             Personaggio capo = partita.gruppo().getCapo();
             assertNull(capo.getTattica());
             Personaggio primo = GruppoAvversario.getIstanza().getPersonaggi().get(0);
+            java.util.Map<Personaggio, Integer> saluteIniziale = new java.util.IdentityHashMap<>();
+            for (Personaggio p : GruppoAvversario.getIstanza().getPersonaggi()) {
+                saluteIniziale.put(p, p.getSalute());
+            }
             // Molti attacchi: il primo si fa male, e almeno uno degli altri no finché il primo è vivo (resistentissimo)
             iniziaLaMischia(locazione, partita);
             scatta(locazione, partita, 12);
             for (Personaggio altro : GruppoAvversario.getIstanza().getPersonaggi()) {
                 if (altro != primo) {
-                    assertEquals(altro.getSaluteMassima(), salute(altro), "il primo avversario è l'unico colpito: gli altri sono interi");
+                    assertEquals(saluteIniziale.get(altro).intValue(), salute(altro), "il primo avversario è l'unico colpito: gli altri sono interi");
                 }
             }
         }
@@ -252,5 +258,82 @@ class CombattimentoConTatticheTest {
             scatta(locazione, partita, 1);
             assertEquals(1, partita.gruppo().getIncantesimi(ClasseIncantesimo.FULMINE), "ha lanciato il fulmine della sua tattica");
         }
+    }
+
+    @Test
+    void ogniDecisioneSiAnnunciaConIlPerche() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(607)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.MAGO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            Locazione locazione = preparaLo(partita, 3);
+            Personaggio mago = partita.gruppo().getCapo();
+            mago.addMagia(mago.getMagiaMassima());
+            svuotaLePergamene(partita.gruppo());
+            partita.gruppo().addIncantesimi(ClasseIncantesimo.FULMINE, 1);
+            Personaggio bagnato = GruppoAvversario.getIstanza().getPersonaggi().get(1);
+            bagnato.addEffettoDiStato(TipoEffettoDiStato.BAGNATO, 5, 0);
+            mago.setTattica(TatticaMD.di(
+                    VoceMD.su(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO, FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BAGNATO)),
+                            AzioneMD.di(TipoAzione.FULMINE)),
+                    VoceMD.su(su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), AzioneMD.di(TipoAzione.ATTACCO_FISICO))));
+            partita.eventi().ascolta(InternoDecisioneTattica.class);
+            iniziaLaMischia(locazione, partita);
+            // G A A A G A A A: la prima azione è il fulmine sul bagnato, la seconda (la pergamena è finita) l'attacco al più ferito
+            scatta(locazione, partita, 5);
+            java.util.List<InternoDecisioneTattica> decisioni = partita.eventi().tutti(InternoDecisioneTattica.class);
+            assertEquals(2, decisioni.size(), "una per ogni azione di chi ha una tattica (i goblin non ne hanno)");
+
+            InternoDecisioneTattica fulmine = decisioni.get(0);
+            assertSame(mago, fulmine.getPersonaggio());
+            assertSame(bagnato, fulmine.getBersaglio());
+            assertEquals(TipoAzione.FULMINE, fulmine.getAzione());
+            assertEquals(0, fulmine.getIndiceVoce());
+            assertFalse(fulmine.isRipiego());
+            String spiegazione = String.join("\n", fulmine.getSpiegazione());
+            assertTrue(spiegazione.contains("STATO BAGNATO: 1 ["), spiegazione);
+            assertTrue(spiegazione.contains("AVVERSARI: 3 ["), "la rosa, con i nomi dei candidati: " + spiegazione);
+
+            InternoDecisioneTattica attacco = decisioni.get(1);
+            assertEquals(TipoAzione.ATTACCO_FISICO, attacco.getAzione());
+            assertEquals(1, attacco.getIndiceVoce());
+            String perche = String.join("\n", attacco.getSpiegazione());
+            assertTrue(perche.contains("voce 1: nessun bersaglio") && perche.contains("azione applicabile: 0"), "la pergamena è finita: " + perche);
+            assertTrue(perche.contains("MENO_SALUTE ("), "le misure dell'ordinamento: " + perche);
+        }
+    }
+
+    @Test
+    void ilRipiegoSiAnnunciaSenzaVoce() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(608)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            Locazione locazione = preparaLo(partita, 1);
+            partita.eventi().ascolta(InternoDecisioneTattica.class);
+            iniziaLaMischia(locazione, partita);
+            scatta(locazione, partita, 1);
+            InternoDecisioneTattica decisione = partita.eventi().ultimo(InternoDecisioneTattica.class);
+            assertTrue(decisione.isRipiego());
+            assertEquals(-1, decisione.getIndiceVoce());
+            assertEquals(TipoAzione.ATTACCO_FISICO, decisione.getAzione());
+            assertSame(GruppoAvversario.getIstanza().getPersonaggi().get(0), decisione.getBersaglio());
+        }
+    }
+
+    @Test
+    void loSnifferScriveLaDecisioneNelLogConIlSuoTipoPerIlGrep() {
+        java.io.ByteArrayOutputStream catturato = new java.io.ByteArrayOutputStream();
+        java.io.PrintStream originale = System.out;
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(609)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            new com.threeamigos.foresta.eventi.SnifferBusEventi();
+            System.setOut(new java.io.PrintStream(catturato, true));
+            Personaggio capo = partita.gruppo().getCapo();
+            com.threeamigos.foresta.eventi.BusEventi.pubblica(new InternoDecisioneTattica(capo, null, TipoAzione.CANTO_DI_VALORE, 2,
+                    Arrays.asList("voce 1: disattivata", "voce 3: CANTO_DI_VALORE su tutto il gruppo")));
+        } finally {
+            System.setOut(originale);
+        }
+        String riga = new String(catturato.toByteArray(), java.nio.charset.StandardCharsets.UTF_8);
+        assertTrue(riga.contains("INTERNO_DECISIONE_TATTICA"), riga);
+        assertTrue(riga.contains("decide CANTO_DI_VALORE (voce 3)"), riga);
+        assertTrue(riga.contains("voce 1: disattivata | voce 3: CANTO_DI_VALORE su tutto il gruppo"), riga);
     }
 }

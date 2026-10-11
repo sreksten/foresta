@@ -58,6 +58,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoNotificaViaFumettoATempo.class, this::onEventoFumetto);
         BusEventi.iscriviti(InternoInizioRound.class, this::onEventoInizioRound);
         BusEventi.iscriviti(InternoAzioneInCombattimento.class, this::onEventoAzioneInCombattimento);
+        BusEventi.iscriviti(InternoDecisioneTattica.class, this::onEventoDecisioneTattica);
         BusEventi.iscriviti(NotificaInterazionePersonaggio.class, this::onEventoInterazione);
         BusEventi.iscriviti(NotificaReazioneDiClassePersonaggio.class, this::onEventoReazioneDiClasse);
         BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, this::onEventoInterfacciaUtentePronta);
@@ -244,6 +245,12 @@ public class SnifferBusEventi {
     private void onEventoAzioneInCombattimento(InternoAzioneInCombattimento evento) {
         Logger.log(headerEvento(evento) + "Agisce " + formattaStatistichePersonaggio(evento.getPersonaggio()) +
                 (evento.getBersaglio() == null ? " (senza bersaglio)" : " contro " + formattaStatistichePersonaggio(evento.getBersaglio())));
+    }
+
+    private void onEventoDecisioneTattica(InternoDecisioneTattica evento) {
+        Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(evento.getPersonaggio()) + "decide " + evento.getAzione()
+                + (evento.getBersaglio() == null ? "" : " contro " + formattaStatistichePersonaggio(evento.getBersaglio()))
+                + (evento.isRipiego() ? " (ripiego)" : " (voce " + (evento.getIndiceVoce() + 1) + ")") + " - " + String.join(" | ", evento.getSpiegazione()));
     }
 
     private void onEventoInizioRound(InternoInizioRound evento) {

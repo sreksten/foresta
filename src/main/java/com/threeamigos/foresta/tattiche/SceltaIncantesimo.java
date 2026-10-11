@@ -86,6 +86,43 @@ public final class SceltaIncantesimo {
 		}
 	}
 
+	/**
+	 * Come l'incantesimo è stato scelto, per il registro delle decisioni (tattiche_di_combattimento_automatiche.md §7.7): i lanciabili con la misura del
+	 * criterio, per esempio "PIU_ADATTO: FUOCO 4.2, FULMINE 9.8"
+	 */
+	public static String descrivi(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
+		List<ClasseIncantesimo> lanciabili = lanciabiliContro(attore, bersaglio, contesto);
+		StringBuilder sb = new StringBuilder(azione.getCriterio().name()).append(": ");
+		for (int i = 0; i < lanciabili.size(); i++) {
+			ClasseIncantesimo classe = lanciabili.get(i);
+			if (i > 0) {
+				sb.append(", ");
+			}
+			sb.append(classe);
+			switch (azione.getCriterio()) {
+				case A_CASO:
+					break;
+				case PIU_POTENTE:
+					sb.append(' ').append(((IncantesimoMalefico) FabbricaIncantesimi.crea(classe, attore.getLivello())).getDanni());
+					break;
+				case PIU_ADATTO:
+					sb.append(String.format(" %.1f", danniTotali(attore, bersaglio, classe, contesto)));
+					break;
+				case PIU_ADATTO_ESPERTO:
+					sb.append(String.format(" %.2f", misuraEsperta(attore, bersaglio, classe, contesto)));
+					break;
+				default:
+					double danno = dannoConLaConoscenza(attore, bersaglio, classe, contesto);
+					sb.append(String.format(" %.1f (%s)", danno, danno >= bersaglio.getSalute() ? "basta" : "non basta"));
+					break;
+			}
+		}
+		if (azione.isSoloSePiuForteDellAttacco()) {
+			sb.append("; attacco con le armi ").append(String.format("%.1f", CalcolatoreCombattimento.dannoAttesoDellaMischia(attore, bersaglio)));
+		}
+		return sb.toString();
+	}
+
 	private interface Misura {
 		double di(ClasseIncantesimo classe);
 	}

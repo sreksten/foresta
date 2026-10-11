@@ -41,7 +41,7 @@ public final class Selettori {
 	public static RisultatoSelezione seleziona(SelettoreMD selettore, ContestoTattico contesto, Ammissione ammissione) {
 		List<String> passi = new ArrayList<>();
 		List<Personaggio> candidati = Rose.di(selettore.getRosa()).candidati(contesto);
-		passi.add(selettore.getRosa() + ": " + candidati.size());
+		passi.add(selettore.getRosa() + ": " + candidati.size() + nomi(candidati));
 		Map<Personaggio, TipoAzione> azioni = new IdentityHashMap<>();
 		if (ammissione != null) {
 			List<Personaggio> applicabili = new ArrayList<>();
@@ -53,7 +53,7 @@ public final class Selettori {
 				}
 			}
 			candidati = applicabili;
-			passi.add("azione applicabile: " + candidati.size());
+			passi.add("azione applicabile: " + candidati.size() + nomi(candidati));
 		}
 		for (FiltroMD filtro : selettore.getFiltri()) {
 			List<Personaggio> rimasti = new ArrayList<>();
@@ -64,10 +64,25 @@ public final class Selettori {
 				}
 			}
 			candidati = rimasti;
-			passi.add(filtro + ": " + candidati.size());
+			passi.add(filtro + ": " + candidati.size() + nomi(candidati));
 		}
 		Personaggio scelto = Ordinamenti.scegli(candidati, selettore.getOrdinamento());
-		passi.add(selettore.getOrdinamento() + ": " + (scelto == null ? "nessuno" : scelto.getNome()));
+		String misure = Ordinamenti.descriviLeMisure(candidati, selettore.getOrdinamento());
+		passi.add(selettore.getOrdinamento() + (misure.isEmpty() ? "" : " (" + misure + ")") + ": " + (scelto == null ? "nessuno" : scelto.getNome()));
 		return new RisultatoSelezione(scelto, candidati, passi);
+	}
+
+	/**
+	 * I nomi dei candidati rimasti, per il registro delle decisioni
+	 */
+	private static String nomi(List<Personaggio> candidati) {
+		StringBuilder sb = new StringBuilder(" [");
+		for (Personaggio candidato : candidati) {
+			if (sb.length() > 2) {
+				sb.append(", ");
+			}
+			sb.append(candidato.getNome());
+		}
+		return sb.append(']').toString();
 	}
 }

@@ -935,7 +935,8 @@ public abstract class LocazioneBase implements Locazione {
 			}
 			return Optional.empty();
 		}
-		Logger.log(attore.getNome() + " decide: " + decisione + " " + decisione.getSpiegazione());
+		BusEventi.pubblica(new InternoDecisioneTattica(attore, decisione.getBersaglio(), decisione.getTipoEseguito(), decisione.getIndiceVoce(),
+				decisione.getSpiegazione()));
 		eseguiLaDecisione(attore, decisione);
 		if (!decisione.isRipiego()) {
 			statoDelCombattimento.registraUsoVoce(attore, decisione.getIdentificativoVoce());

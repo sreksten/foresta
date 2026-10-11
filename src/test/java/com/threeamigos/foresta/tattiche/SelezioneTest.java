@@ -322,8 +322,8 @@ class SelezioneTest {
         assertSame(goblin2, risultato.getScelto());
         assertEquals(Arrays.asList(goblin1, goblin2), risultato.getRimasti());
         assertEquals(3, risultato.getPassi().size());
-        assertEquals("AVVERSARI: 3", risultato.getPassi().get(0));
-        assertTrue(risultato.getPassi().get(1).endsWith(": 2"), risultato.getPassi().get(1));
+        assertTrue(risultato.getPassi().get(0).startsWith("AVVERSARI: 3 ["), risultato.getPassi().get(0));
+        assertTrue(risultato.getPassi().get(1).contains(": 2 ["), risultato.getPassi().get(1));
         assertFalse(risultato.isVuoto());
     }
 

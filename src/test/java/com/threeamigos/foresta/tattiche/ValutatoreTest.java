@@ -395,4 +395,37 @@ class ValutatoreTest {
         assertTrue(tattica.problemi(true).get(0).startsWith("voce 2"));
         assertEquals(Collections.emptyList(), TatticaMD.di(voce(null, TipoAzione.ATTACCO_FISICO)).problemi(true), "il selettore di base");
     }
+
+    @Test
+    void laSpiegazioneDiUnIncantesimoDiDannoRiportaIDanniAttesiConfrontati() {
+        pergameneDelleTre();
+        goblin1.addEffettoDiStato(TipoEffettoDiStato.BAGNATO, 3, 0);
+        ContestoTattico contesto = perIMiei(mago, goblin1);
+        Decisione decisione = conCriterio(CriterioIncantesimo.PIU_ADATTO, mago, contesto);
+        assertEquals(TipoAzione.FULMINE, decisione.getTipoEseguito());
+        String spiegazione = String.join("\n", decisione.getSpiegazione());
+        assertTrue(spiegazione.contains("PIU_ADATTO: FUOCO "), spiegazione);
+        assertTrue(spiegazione.contains(", FULMINE "), spiegazione);
+        assertTrue(spiegazione.contains("sceglie FULMINE"), spiegazione);
+        // Con il confronto con l'attacco, anche il danno delle armi
+        Decisione conConfronto = Valutatore.decidi(TatticaMD.di(new VoceMD(null, Collections.emptyList(), Collections.singletonList(
+                AzioneMD.incantesimoDiDanno(CriterioIncantesimo.PIU_ADATTO, true)))), contesto);
+        if (!conConfronto.isRipiego()) {
+            assertTrue(String.join("\n", conConfronto.getSpiegazione()).contains("attacco con le armi"));
+        }
+    }
+
+    @Test
+    void ilSelettoreRiportaLeMisureDellOrdinamento() {
+        ferisciLievemente(goblin2);
+        Decisione decisione = Valutatore.decidi(TatticaMD.di(voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), TipoAzione.ATTACCO_FISICO)),
+                perIMiei(guerriero, goblin1, goblin2));
+        String spiegazione = String.join("\n", decisione.getSpiegazione());
+        assertTrue(spiegazione.contains("MENO_SALUTE (" + goblin1.getNome() + " " + goblin1.getSalute() + ", " + goblin2.getNome() + " " + goblin2.getSalute() + ")"),
+                spiegazione);
+    }
+
+    private static void ferisciLievemente(Personaggio p) {
+        p.subSalute(1, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
+    }
 }

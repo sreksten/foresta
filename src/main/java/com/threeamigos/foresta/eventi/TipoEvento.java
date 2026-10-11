@@ -332,6 +332,10 @@ public enum TipoEvento {
      */
     INTERNO_AZIONE_IN_COMBATTIMENTO,
     /**
+     * Un personaggio ha deciso che cosa fare scorrendo la sua tattica, con il perché (voce scelta, voci saltate, candidati, danni attesi)
+     */
+    INTERNO_DECISIONE_TATTICA,
+    /**
      * Un salvataggio è stato riletto con successo: porta gli ultimi messaggi da ripristinare nel pannello di testo
      */
     INTERNO_CARICAMENTO_COMPLETATO,

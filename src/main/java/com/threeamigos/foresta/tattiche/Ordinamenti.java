@@ -47,6 +47,26 @@ public final class Ordinamenti {
 	}
 
 	/**
+	 * Le misure con cui l'ordinamento ha confrontato i candidati, per il registro delle decisioni: "Mira 12, Orfeo 4" (il valore vero, non il suo opposto).
+	 * Vuota per gli ordinamenti che non misurano (il primo, a caso).
+	 */
+	public static String descriviLeMisure(List<Personaggio> candidati, OrdinamentoMD ordinamento) {
+		if (ordinamento.getTipo() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.PRIMO
+				|| ordinamento.getTipo() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.A_CASO) {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder();
+		for (Personaggio candidato : candidati) {
+			if (sb.length() > 0) {
+				sb.append(", ");
+			}
+			double valore = Math.abs(misura(candidato, ordinamento));
+			sb.append(candidato.getNome()).append(' ').append(valore == Math.rint(valore) ? String.valueOf((long) valore) : String.format("%.2f", valore));
+		}
+		return sb.toString();
+	}
+
+	/**
 	 * Il valore che l'ordinamento massimizza (per i "meno", il suo opposto)
 	 */
 	private static double misura(Personaggio candidato, OrdinamentoMD ordinamento) {

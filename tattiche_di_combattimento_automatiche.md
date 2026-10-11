@@ -759,70 +759,34 @@ Lo stesso formato serve per **salvare** le tattiche del giocatore e per i **mode
 
 ### 7.7 Il registro delle decisioni
 
-Ogni volta che un personaggio sceglie che cosa fare scorrendo la sua tattica, il motore pubblica sul bus un evento **`InternoDecisioneTattica`**
-(`eventi/interni`, tipo `INTERNO_DECISIONE_TATTICA`). Porta il **personaggio** (come `VistaPersonaggio`) e una **sintesi dettagliata del perché**.
-Lo registra `SnifferBusEventi` come ogni altro evento, e il suo tipo nella riga di log (`headerEvento`) permette a un filtro sui log (un
-`grep INTERNO_DECISIONE_TATTICA` sul file di `-Dforesta.log=...`) di tirare fuori subito le sole decisioni tattiche, per mettere a punto le tattiche e
-per leggere le partite.
+Ogni volta che un personaggio sceglie che cosa fare scorrendo la sua tattica, il motore pubblica sul bus l'evento **`InternoDecisioneTattica`** (`eventi/interni`, tipo `INTERNO_DECISIONE_TATTICA`), **prima** che l'azione si esegua. Porta il personaggio e il bersaglio (come
+`VistaPersonaggio`), l'azione scelta (per l'incantesimo di danno, quello scelto), la posizione della voce (−1 per il ripiego sull'attacco fisico) e la **spiegazione**, una riga per passo. `SnifferBusEventi` lo scrive nel log con il suo tipo nella riga (`headerEvento`), quindi un
+`grep INTERNO_DECISIONE_TATTICA` sul file di `-Dforesta.log=...` tira fuori le sole decisioni tattiche, per mettere a punto le tattiche e per leggere le partite. **Fatto** (`CombattimentoConTatticheTest`, `ValutatoreTest`).
 
-Che cosa deve dire la sintesi (**dettagliata**):
+Che cosa dice la spiegazione (la costruisce il `Valutatore`, i selettori e `SceltaIncantesimo`):
 
-- **la voce scelta** e il suo percorso nella lista (con i blocchi `SE / ALTRIMENTI` attraversati: "voce 3, dentro il `SE ASTUZIA>=20`");
-- **le condizioni valutate** con i valori ("ASTUZIA 24 ≥ 20: vero", "`MAGIA` 3 < 5: falso") e le voci **saltate** con il motivo ("nessun magico non
-  silenziato", "`MAGIA` insufficiente per il Silenzio");
-- **i candidati considerati** per il bersaglio, con la misura usata ("magici: Mira, Orfeo; ordine per `MAGIA`: Mira 12, Orfeo 4 → Mira");
-- **l'azione** e, per un incantesimo, il **criterio** (S1–S4) con i **danni attesi** confrontati ("Gelo 14, Fulmine 31: Fulmine"); per un cambio d'arma, l'arma
-  presa e il perché;
-- il caso **di ripiego** ("nessuna voce eseguibile: attacco fisico").
+- **le voci saltate** con il motivo ("voce 1: disattivata", "voce 2: le condizioni non sono tutte vere [...]", "voce 3: nessun bersaglio", "FULMINE scartata: manca la pergamena...");
+- **il percorso del selettore** con i candidati che restano dopo ogni passo, con i nomi: "AVVERSARI: 3 [Goblin 1, Goblin 2, Goblin 3]", "azione applicabile: 1 [Goblin 2]", "STATO BAGNATO: 1 [Goblin 2]";
+- **le misure dell'ordinamento**: "MENO_SALUTE (Goblin 1 60, Goblin 2 14): Goblin 2";
+- **il criterio dell'incantesimo di danno** con i danni attesi confrontati: "PIU_ADATTO: FUOCO 4.2, FULMINE 9.8", con il danno delle armi se l'azione lo confronta; per `PIU_ECONOMICO_CHE_BASTA` se ognuno basta a uccidere;
+- **il ripiego**: "nessuna voce eseguibile: attacco fisico al primo avversario".
 
-**Non è un evento nuovo da aggiungere accanto a uno esistente: è l'evoluzione di `InternoRisultatoValutazionePersonaggioAttaccante`**
-(`INTERNO_RISULTATO_VALUTAZIONE_PERSONAGGIO_ATTACCANTE`). Oggi quell'evento registra già la decisione dell'avversario sull'incantesimo da lanciare
-(`PersonaggioBase.scegliIncantesimoContro`, otto punti di pubblicazione, registrata da `SnifferBusEventi.onEventoValutazioneAttaccante`): porta il
-bersaglio, un `TipoRisultatoValutazioneAttaccante` (`NON_USA_MAGIA`, `SILENZIATO`, `SENZA_MAGIA_A_DISPOSIZIONE`, `SENZA_INCANTESIMI_A_DISPOSIZIONE`,
-`CASUALMENTE_NON_LANCIA_INCANTESIMO`, `SCEGLIE_A_CASO`, `SCEGLIE_IL_PIU_POTENTE`, `PREFERISCE_ATTACCO_MAGICO`, `PREFERISCE_ATTACCO_FISICO`), l'incantesimo, le
-probabilità di colpire e i possibili danni. Con le tattiche diventerebbe un **doppione** di `InternoDecisioneTattica`, quindi basta **rinominarlo** e
-**aggiungere quel che manca**, senza tenere due eventi:
+Oggi la spiegazione si costruisce sempre (qualche stringa per decisione): se pesasse, si costruirà solo con un ascoltatore o il log acceso. **Non sostituisce ancora** `InternoRisultatoValutazionePersonaggioAttaccante`, che registra la decisione dei mostri senza tattica in
+`PersonaggioBase.scegliIncantesimoContro` (otto punti di pubblicazione): quando ci saranno le tattiche base dei mostri quel codice e quell'evento spariscono (con l'enum `TipoRisultatoValutazioneAttaccante` e le sue nove etichette, che diventano frasi della spiegazione), e
+`InternoRisultatoValutazionePersonaggioAttaccante` esce dalle eccezioni di `DipendenzeEventiTest`.
 
-- il **bersaglio**, l'**incantesimo**, le **probabilità di colpire** e i **danni** diventano parte della sintesi (il confronto "attacco fisico contro magico" di oggi è
-  il criterio S3 con il confronto con l'attacco);
-- il **tipo di risultato** (l'enum) si sostituisce con il testo del perché, con la voce, le condizioni, i candidati e le voci saltate (l'enum e le sue nove
-  etichette spariscono: i motivi diventano frasi);
-- quel che manca: la voce scelta e il percorso nei blocchi, le condizioni valutate con i valori, i candidati e le misure, le voci saltate;
-- l'evento porta un `VistaPersonaggio` e una stringa, non più `Personaggio` e `Incantesimo`, e così esce dalle **eccezioni** di
-  `DipendenzeEventiTest` (gli eventi non portano classi del dominio);
-- finché il motore delle tattiche non c'è, l'evento resta com'è e le otto pubblicazioni in `scegliIncantesimoContro` continuano; quando entra il motore
-  le sostituisce.
+La UI potrà mostrare la spiegazione al giocatore per aiutarlo a mettere a punto le sue tattiche (la schermata del giocatore, ancora da fare).
 
-Per non pesare sul gioco, la sintesi si costruisce solo se serve (con il log acceso, o in un test), e non a ogni turno di ogni mostro. I test sulle tattiche dei
-mostri la leggono per verificare che il mostro abbia deciso per la ragione giusta, e la UI potrebbe mostrarla al giocatore per aiutarlo a mettere a punto le
-sue.
+## 8. Che cosa manca
 
-## 8. Che cosa manca nel modello dati
+Il modello, il motore, il valutatore, il salvataggio e il registro delle decisioni ci sono (§11). Restano:
 
-**Prerequisito** (§1): tutto quello che segue serve a *leggere* e a *scegliere*; il motore delle tattiche non modifica il modello, impartisce comandi che esegue l'automa.
-
-Quasi tutto è già leggibile (§6 e §7). Quello che manca:
-
-- **L'evento `InternoDecisioneTattica`** (§7.7): è `InternoRisultatoValutazionePersonaggioAttaccante` **rinominato e completato** (classe in `eventi/interni`, il valore
-  `INTERNO_DECISIONE_TATTICA` in `TipoEvento` al posto di `INTERNO_RISULTATO_VALUTAZIONE_PERSONAGGIO_ATTACCANTE`, la riga di registro in `SnifferBusEventi`), non un
-  evento in più; il motore delle tattiche costruisce la sintesi dettagliata mentre sceglie la voce e sostituisce le otto pubblicazioni di `scegliIncantesimoContro`.
-- **Il salvataggio delle tattiche con il personaggio** (requisito fondamentale, vedi §1). La tattica di ogni personaggio sta nel suo modello dati
-  (`PersonaggioMD`, che si scrive e si legge in testo con `scrivi` / `leggi`) e passa dal salvataggio (`GestoreSalvataggiSuFile`) e dalla rilettura
-  (`RiletturaPartita`). Il formato è quello di §7.6, scritto in modo che si rilegga identico: le voci, i blocchi `SE / ALTRIMENTI / FINE` nidificati
-  e le condizioni con E, O, NON e parentesi. I **blocchi con nome** usati da una lista vanno **salvati dentro la tattica** (o espansi), e non
-  solo richiamati per nome dal file comune: così un cambio del file comune in una versione successiva non altera le tattiche di una partita già salvata.
-  I salvataggi non devono restare compatibili con le versioni precedenti, quindi non serve alcuna conversione. Serve un **test di andata e ritorno**:
-  una tattica complessa (blocchi nidificati, nomi, condizioni composte) scritta e riletta torna uguale, e un personaggio caricato agisce come prima del
-  salvataggio.
-- lo **`StatoDelCombattimento`** (§3.3) — **fatto** quasi tutto (round, puntatori, schede, conoscenza pubblica sulle reazioni). Manca solo il chiamante di `registraUsoVoce`, che arriva con il motore delle tattiche.
-- le **tattiche base dei mostri**: un file di risorse per classe (§4), nello stesso formato di quelle del giocatore, e il modo di assegnarle a
-  un avversario quando nasce (`FabbricaPersonaggi`), con la possibilità che **una singola istanza abbia una tattica sua** al posto di quella di classe (una
-  missione può portare un goblin più furbo degli altri con la sua), e che questa sia salvata con la partita; e il motore che le esegue, con le **azioni di controllo** `SE / ALTRIMENTI / FINE`
-  nidificate (§7.6), che oggi non esistono: la lista di voci non è più piatta ma un albero;
-- il **cambio d'arma** come azione sola (§5) — **fatto** (controllo preventivo senza effetti, `controllaPrelievo` / `equipaggia` / `stocca` / `cambiaArma` / `armiPerCambio` sul `GruppoGiocatore`, contatore dei cambi e armi valutate nello stato del combattimento).
-  Manca solo il chiamante (il motore delle tattiche); il criterio di quale arma esce con la doppia arma c'è, in versione semplice (§5); `INVENTARIO` non è nei comandi di `IN_COMBATTIMENTO` e per ora non serve;
-- un **criterio di scelta** dell'incantesimo (a caso, il più potente, il più conveniente) come parametro dell'azione, e la
-  condizione **"probabilità del n%"** (oggi "una volta su tre non lancia" è una costante).
+- **Le tattiche base dei mostri**: un elemento per classe (§4) nello stesso formato di quelle del giocatore (§11.12), in un file di risorse per classe, e il modo di assegnarle a un avversario quando nasce (`FabbricaPersonaggi`), con la possibilità che
+  una singola istanza ne abbia una sua al posto di quella di classe (si salva già con il personaggio). Con le tattiche base spariscono `PersonaggioBase.scegliIncantesimoContro`, `InternoRisultatoValutazionePersonaggioAttaccante` e `TipoRisultatoValutazioneAttaccante` (§7.7).
+  Prima, le fasce di astuzia (§4, §11.10) e i ritocchi alle intelligenze massime del Folletto (a 8) e dell'Ombra Nera (a 31).
+- **La scheda del giocatore**: la schermata per modificare la tattica di ogni personaggio (elenco di voci, editor di selettore, condizioni e azioni, menu e valori guidati, modelli per classe) e il comando che la manda al motore.
+- **L'esito delle azioni con effetti che non si applicano** (un Silenzio a segno che non mette `SILENZIATO`) come "mancata", oggi non registrato.
+- Il **costo della spiegazione** delle decisioni, se pesasse (§7.7).
 
 Non ha senso importare: posizione e distanza, mischia contro distanza, linea di vista, incantesimi con tempo di lancio, movimento.
 
@@ -1106,8 +1070,8 @@ le armi sul bersaglio scelto, incantesimi di danno con il `GruppoDiBersagli` per
 e controlla la fine dello scontro; non gestisce il round. Gli esiti degli incantesimi (colpito, mancato, immune) e del dardo si registrano nello `StatoDelCombattimento` (`IncantesimoMaleficoImpl.colpisci`, `scagliaIlDardo`); l'attacco fisico non ne registra
 (non si abbandona mai). Le azioni manuali del giocatore (barra dei comandi) non sono cambiate.
 
-**Da fare**: le tattiche base dei mostri e le fasce di astuzia (compresi i ritocchi alle intelligenze massime del Folletto, a 8, e dell'Ombra Nera, a 31); l'evento `InternoDecisioneTattica` (§7.7); la scheda del
-giocatore (§12); l'esito di un'azione con effetti che non si applicano (un Silenzio a segno che non mette `SILENZIATO`) come "mancata".
+**Da fare**: le tattiche base dei mostri e le fasce di astuzia (compresi i ritocchi alle intelligenze massime del Folletto, a 8, e dell'Ombra Nera, a 31); la scheda del
+giocatore; l'esito di un'azione con effetti che non si applicano (un Silenzio a segno che non mette `SILENZIATO`) come "mancata".
 
 ### 11.11 Dove stanno i dati e la logica
 

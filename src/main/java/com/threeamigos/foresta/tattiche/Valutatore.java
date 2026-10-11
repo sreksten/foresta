@@ -102,7 +102,7 @@ public final class Valutatore {
 		if (tipo == TipoAzione.INCANTESIMO_DI_DANNO) {
 			classe = SceltaIncantesimo.scegli(azione, attore, bersaglio, contesto);
 			tipo = TipoAzione.di(classe);
-			spiegazione.add("voce " + (indice + 1) + ": " + azione + " sceglie " + classe);
+			spiegazione.add("voce " + (indice + 1) + ": " + azione + " sceglie " + classe + " (" + SceltaIncantesimo.descrivi(azione, attore, bersaglio, contesto) + ")");
 		} else {
 			spiegazione.add("voce " + (indice + 1) + ": " + azione + " su " + (bersaglio == null ? "nessuno" : bersaglio.getNome()));
 		}
