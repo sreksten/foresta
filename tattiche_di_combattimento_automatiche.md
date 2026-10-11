@@ -189,7 +189,7 @@ selettore). Per i giochi di riferimento vale la nota in testa a §7.
 | Di livello più alto o più basso del mio | FFXII (*level*) | **sì**: `getLivello()` |
 | **Di una classe** (un mago, un ladro...) | DA:O (*class/type*) | **sì**: `getClasse()` |
 | **Magico**, che sa lanciare incantesimi (per silenziarlo o colpirlo per primo) | DA:O (*Mage*), FFXII | **parziale**: `isMagico()` (livellamento magia > 0) dice che ha la magia; il repertorio (`getRepertorioIncantesimi`) è protetto e va esposto. Sono magici anche boss, arpie, folletti... non solo i maghi |
-| Di una **categoria** (non morto, bestia, umanoide, volante, drago) | DA:O (*creature type*), FFXII (*undead, flying*) | **da aggiungere**: le classi non hanno una categoria; i non morti sono noti (Fantasma, Ombra Nera, Spettro, Spirito, Scheletro) ma vanno elencati in una tabella |
+| Di una **categoria** (non morto, bestia, umanoide, volante, draconico, gigantesco, ibrido, costrutto) | DA:O (*creature type*), FFXII (*undead, flying*) | **sì**: `TipoPersonaggio.getCategorie()` / `isDellaCategoria` (`tipi/CategoriaPersonaggio`). Una classe ha una o più categorie (Spirito e Ombra Nera sono non morti e volanti, la Chimera bestia e ibrida, il Minotauro Gigante umanoide, ibrido e gigantesco), quindi il selettore "di categoria X" vale per chi ne ha anche solo una |
 | Un **boss** / di rango elevato | DA:O (*rank*) | **da aggiungere**: non c'è un flag; si può derivare da un elenco di classi (Drago, Strega, Lich, Idra, Minotauro...: i guardiani dei castelli) |
 | Con un certo **effetto di stato** (stordito, avvelenato, congelato...) | DA:O, FFXII (*status*) | **sì**: `hasEffettoDiStato(tipo)`, 19 tipi (`TipoEffettoDiStato`) |
 | **Senza** un certo effetto (non ancora silenziato, non ancora avvelenato) | FFXII (*status ≠*) | **sì**: `!hasEffettoDiStato(tipo)` |
@@ -200,6 +200,23 @@ selettore). Per i giochi di riferimento vale la nota in testa a §7.
 | Quello che **attacca me / un alleato** | DA:O (*targeting*), FFXII | **parziale**: oggi si risponde a chi ha agito; per un "bersaglio dell'avversario" persistente va ricordato l'ultimo bersaglio di ognuno |
 | Che sta **lanciando** un incantesimo | DA:O, FFXII | **no**: gli incantesimi sono istantanei |
 | A distanza o in mischia | DA:O, FFXII | **no**: non c'è posizione, né armi a distanza (spada, mazza, ascia, spadone, lancia, bastone magico) |
+
+**Le categorie di creatura** (`tipi/CategoriaPersonaggio`, assegnate in `TipoPersonaggio`; `getCategorie()` e `isDellaCategoria`). Una
+classe ne ha una o più, e un selettore "di categoria X" prende chi ne ha anche solo una:
+
+| Categoria | Che cosa vuol dire | Classi |
+| :--- | :--- | :--- |
+| **Umanoide** | forma umana | giocanti, non combattenti, Viandante, Eremita, Strega, Goblin, Hobgoblin, Troll, Folletto, Gigante, Titano, Arpia, Centauro, Minotauro, Minotauro Gigante |
+| **Bestia** | animale o bestia | Chimera, Chimera Drago, Drago, Idra, Viverna |
+| **Draconico** | un drago o un suo parente | Drago, Chimera Drago, Viverna |
+| **Non morto** | morto che continua ad agire (non è mai umanoide) | Fantasma, Spettro, Spirito, Ombra Nera, Lich, Scheletro |
+| **Volante** | si muove in volo | Arpia, Drago, Viverna, Folletto, Gargoyle, Fantasma, Spettro, Spirito, Ombra Nera |
+| **Gigantesco** | **taglia** esagerata, non la razza dei giganti | Gigante, Titano, Troll, Idra, Drago, Minotauro Gigante |
+| **Ibrido** | corpo fatto di più creature | Arpia, Centauro, Minotauro, Minotauro Gigante, Chimera, Chimera Drago |
+| **Costrutto** | creatura fabbricata o animata (un giorno i golem) | Gargoyle |
+
+Le classi con più categorie sono la regola per i mostri più strani: Spirito e Ombra Nera sono non morti e volanti, la Chimera Drago è
+bestia, ibrida e draconica. La Chimera Drago non è volante, il Gargoyle non è umanoide.
 
 **Le misure di "più forte" e "più debole".** Per un avversario "debole" è naturale la **salute attuale più bassa** (finirlo presto); "forte" può
 essere il **livello più alto**, la **salute massima** più alta o la salute attuale più alta. Meglio offrire poche scelte esplicite
@@ -246,7 +263,7 @@ ha senso qui (**no**).
 | :--- | :--- | :--- |
 | Numero di avversari vivi ≥ N, o uno solo | DA:O (*enemies in range ≥ n*) | **sì**: `gruppoAvversario.getNumeroPersonaggiVivi()` |
 | Numero di compagni vivi, o sono l'unico vivo | FFXII (*alone*) | **sì**: `getNumeroPersonaggiVivi()` |
-| Ci sono avversari di una classe o categoria | DA:O (*any enemy of type...*) | **sì** per le classi, **da aggiungere** per le categorie (§6.1) |
+| Ci sono avversari di una classe o categoria | DA:O (*any enemy of type...*) | **sì** per le classi e per le categorie (§6.1) |
 | Il gruppo avversario è più numeroso (o meno) del mio | (specifico) | **sì**: serve a decidere, per esempio, se curarsi o attaccare |
 | Il numero del turno (da N in poi, ogni N turni) | BG (*round time*), DA:O (cooldown) | **da aggiungere**: oggi non c'è un contatore del round |
 | Una volta per scontro / non più di una volta | DA:O (cooldown), FFXII (*once*) | **da aggiungere**: un insieme "voci già usate in questo scontro" nello stato del combattimento |
@@ -276,7 +293,7 @@ Quasi tutto è già leggibile (§6 e §7). Quello che manca:
 - il **puntatore di rotazione** di ogni gruppo (chi ha agito per ultimo) e il **round** (§3): oggi il `Gruppo` non li ha, e
   `LocazioneBase` agisce su un solo `combattente`;
 - uno **stato del combattimento**: il numero del round, l'ultimo bersaglio di ogni personaggio, le voci già usate;
-- una **categoria di creatura** e il riconoscimento di un **boss**: tabelle per classe;
+- il riconoscimento di un **boss**: una tabella per classe (le **categorie di creatura** ci sono già, §6.1);
 - l'accesso al **repertorio di incantesimi** di un avversario (oggi protetto) per il selettore "magico";
 - le **debolezze elementali** come dato esplicito, se si vuole il selettore "debole al fuoco" (oggi si ricava da `difesaContro` e
   dalle interazioni con gli stati);
@@ -324,7 +341,7 @@ Domande per il piano:
 - **Il formato** salvabile (testo semplice nel salvataggio e in un file di modelli per classe) e la **scheda** secondaria del
   personaggio (elenco ordinabile con aggiungi, togli, sposta su e giù, attiva/disattiva).
 - **Livello di dettaglio dei controlli** per la prima versione (probabilmente: sempre, salute e magia sotto una soglia, stati, classe,
-  numero di avversari, risorse, probabilità; poi categorie di creatura e boss).
+  numero di avversari, risorse, probabilità; poi categorie di creatura, già nei dati, e boss).
 - **Il round a coppie** (§3.2): quando rivederlo, e se i personaggi in più possono agire senza risposta anche dopo il primo giro.
 - Il **registro del turno**: dire in una riga perché il personaggio ha scelto quell'azione ("Mira lancia Gelo su Strega: la sola
   maga"), utile al giocatore per mettere a punto le tattiche, e ai test sulle tattiche dei mostri.
