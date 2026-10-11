@@ -118,6 +118,9 @@ final class GiocatoreAutomatico {
 	private Locazione locazione;
 	private Valutatore valutatore;
 	private Personaggio combattente;
+	// La prima stima dello scontro in questa locazione, per confrontarla con com'è andata (taratura della stima)
+	Stima stimaIniziale;
+	Locazione locazioneDellaStima;
 	// Chi dei miei ha agito per ultimo in combattimento, per sapere a chi tocca (la rotazione di StatoDelCombattimento)
 	private Personaggio ultimoChiHaAgito;
 	private Personaggio scelto;
@@ -528,6 +531,10 @@ final class GiocatoreAutomatico {
 		}
 		Stima stima = valutatore.stima(gruppo, avversari);
 		traccia(stima);
+		if (stimaIniziale == null) {
+			stimaIniziale = stima;
+			locazioneDellaStima = locazione;
+		}
 		Decisione decisione = decidi(gruppo, comandi, stima);
 		switch (decisione) {
 			case CORROMPI:
@@ -562,17 +569,20 @@ final class GiocatoreAutomatico {
 	 * Combattere, corrompere, fare amicizia o fuggire, secondo la stima dello scontro.
 	 */
 	Decisione decidi(GruppoGiocatore gruppo, Collection<Comando> comandi, Stima stima) {
+		if (sempreInCombattimento) {
+			return Decisione.COMBATTI;
+		}
 		double carico = stima.caricoCapo;
-		if (carico < 0.5 && stima.compagniPersi == 0) {
+		if (carico < SOGLIA_COMBATTI && stima.compagniPersi == 0) {
 			return Decisione.COMBATTI;
 		}
 		if (comandi.contains(Comando.CORRUZIONE) && gruppo.getMonete() >= gruppo.getNumeroPersonaggi() * 2) {
 			return Decisione.CORROMPI;
 		}
-		if (comandi.contains(Comando.AMICIZIA) && carico >= 0.7 && probabilitaAmicizia(gruppo) >= 0.5) {
+		if (comandi.contains(Comando.AMICIZIA) && probabilitaAmicizia(gruppo) >= 0.5) {
 			return Decisione.AMICIZIA;
 		}
-		if (carico < 0.9 || !comandi.contains(Comando.FUGA)) {
+		if (!comandi.contains(Comando.FUGA)) {
 			return Decisione.COMBATTI;
 		}
 		return convieneFuggire(gruppo.getCapo(), carico) ? Decisione.FUGGI : Decisione.COMBATTI;
@@ -585,15 +595,27 @@ final class GiocatoreAutomatico {
 	static boolean convieneFuggire(Personaggio capo, double carico) {
 		double vittoria = probabilitaVittoria(carico);
 		double fuga = sopravvivenzaAllaFuga(capo);
-		return fuga >= 0.9d ? vittoria < 0.3d : fuga > vittoria + 0.3d;
+		return fuga >= 0.9d ? vittoria < SOGLIA_VITTORIA : fuga > vittoria + 0.3d;
 	}
 
 	/**
-	 * Dal carico atteso del capo (1 = lo scontro gli costa tutta la salute e le pozioni) a una probabilità di
-	 * vincerlo, a occhio: 0.7 → 77%, 1 → 50%, 1.4 → 17%.
+	 * Dal carico atteso del capo (1 = lo scontro gli costa tutta la salute e le pozioni) alla probabilità che il capo sopravviva allo
+	 * scontro, misurata con la stima tarata (SimulazionePartiteTest, "Taratura della stima", giocando sempre fino in fondo): il capo muore
+	 * nel 3% degli scontri previsti sotto 0,1, nel 8% fra 0,15 e 0,3, nel 21% fra 0,3 e 0,5, nel 24% fra 0,5 e 0,8, nel 49% fra 0,8 e 1,2 e
+	 * nel 61% sopra (dove sono anche gli scontri giudicati impossibili).
 	 */
 	static double probabilitaVittoria(double carico) {
-		return 1.0d / (1.0d + Math.exp(4.0d * (carico - 1.0d)));
+		double[][] misure = {{0, 0.97}, {0.1, 0.94}, {0.25, 0.9}, {0.4, 0.79}, {0.65, 0.76}, {1.0, 0.51}, {1.5, 0.39}};
+		if (carico >= misure[misure.length - 1][0]) {
+			return misure[misure.length - 1][1];
+		}
+		for (int i = 1; i < misure.length; i++) {
+			if (carico <= misure[i][0]) {
+				double t = (carico - misure[i - 1][0]) / (misure[i][0] - misure[i - 1][0]);
+				return misure[i - 1][1] + t * (misure[i][1] - misure[i - 1][1]);
+			}
+		}
+		return misure[0][1];
 	}
 
 	/**
@@ -659,8 +681,12 @@ final class GiocatoreAutomatico {
 		}
 		Stima stima = valutatore.stima(gruppo, avversari);
 		traccia(stima);
+		if (stimaIniziale == null) {
+			stimaIniziale = stima;
+			locazioneDellaStima = locazione;
+		}
 		// Stima disperata: si fugge se la fuga lascia più speranze
-		if (comandi.contains(Comando.FUGA) && stima.caricoCapo >= 1.2 && convieneFuggire(capo, stima.caricoCapo)) {
+		if (!sempreInCombattimento && comandi.contains(Comando.FUGA) && stima.caricoCapo >= SOGLIA_FUGA_IN_COMBATTIMENTO && convieneFuggire(capo, stima.caricoCapo)) {
 			fugaChiesta = true;
 			return Comando.FUGA;
 		}
@@ -829,6 +855,8 @@ final class GiocatoreAutomatico {
 			locazione = corrente;
 			valutatore = new Valutatore(gruppo);
 			combattente = null;
+			ultimoChiHaAgito = null;
+			stimaIniziale = null;
 			fugaChiesta = false;
 			negoziFatti = false;
 			armaioloFatto = false;
@@ -846,6 +874,36 @@ final class GiocatoreAutomatico {
 	 * Dove scrivere le stime degli scontri mentre si mette a punto la strategia (null: da nessuna parte)
 	 */
 	static java.io.PrintStream traccia;
+
+	/**
+	 * Per tarare la stima: combatte sempre, senza corrompere, fare amicizia né fuggire, così si vede com'è andata anche per gli scontri
+	 * che la stima giudica perduti
+	 */
+	static boolean sempreInCombattimento;
+
+	/**
+	 * Sotto questo carico atteso del capo (e senza compagni persi) si combatte senza nemmeno provare a evitare lo scontro
+	 */
+	static double SOGLIA_COMBATTI = Double.parseDouble(System.getProperty("foresta.sogliaCombatti", "0.1"));
+	/**
+	 * Le soglie sono state scelte con una griglia di partite (30 per classe, vedi SimulazionePartiteTest): più prudenza = più sopravvissuti
+	 * fino a un massimo (circa la metà delle partite arriva al limite di passi); oltre, fuggire sempre costa troppo. Sono modificabili con
+	 * -Dforesta.sogliaCombatti, -Dforesta.sogliaVittoria e -Dforesta.sogliaFugaInCombattimento per rifare la ricerca.
+	 * <p>
+	 * In combattimento si fugge se la stima rifatta a ogni azione supera questo carico (e la fuga conviene)
+	 */
+	static double SOGLIA_FUGA_IN_COMBATTIMENTO = Double.parseDouble(System.getProperty("foresta.sogliaFugaInCombattimento", "0.3"));
+	/**
+	 * Se la fuga lascia il capo in piedi, si fugge quando la probabilità che sopravviva allo scontro è sotto questa
+	 */
+	static double SOGLIA_VITTORIA = Double.parseDouble(System.getProperty("foresta.sogliaVittoria", "0.95"));
+
+	/**
+	 * Taratura della stima: i danni attesi degli avversari, calcolati come valore medio, erano 2,4 volte quelli veri
+	 * (vedi la tabella "Taratura della stima" di SimulazionePartiteTest, in modalità sempreInCombattimento); con 0,45 il carico previsto
+	 * del capo coincide con quello vero fino a circa 0,4 e sopra lo supera ancora un poco (cautela)
+	 */
+	static double FATTORE_DANNI_AVVERSARI = Double.parseDouble(System.getProperty("foresta.fattoreDanni", "0.45"));
 
 	private void traccia(Stima stima) {
 		if (traccia != null) {
@@ -941,6 +999,22 @@ final class GiocatoreAutomatico {
 		 * I danni attesi su ciascuno in rapporto alla sua salute, per la traccia
 		 */
 		String dettaglio = "";
+		/**
+		 * La salute del capo più le pozioni che la stima gli conta, il denominatore del carico (per tarare la stima)
+		 */
+		double saluteCapo;
+		/**
+		 * I round che lo scontro dovrebbe durare e i danni che dovrebbe costare al gruppo intero (per tarare la stima)
+		 */
+		int round;
+		double danniGruppo;
+		/**
+		 * La situazione di partenza: salute del gruppo, quanti sono i miei e gli avversari, la salute degli avversari
+		 */
+		double saluteGruppo;
+		int mieiVivi;
+		int numeroAvversari;
+		double saluteAvversari;
 	}
 
 	/**
@@ -1011,8 +1085,10 @@ final class GiocatoreAutomatico {
 			int ultimoMio = -1;
 			int ultimoAvversario = -1;
 			int senzaDanni = 0;
+			int roundFatti = 0;
 			round:
 			for (int round = 0; round < ROUND_MASSIMI; round++) {
+				roundFatti = round + 1;
 				int nn = contaVivi(vivo);
 				int mm = contaVivi(saluteA);
 				if (mm == 0 || nn == 0 || !vivo[indiceCapo]) {
@@ -1059,7 +1135,20 @@ final class GiocatoreAutomatico {
 				}
 			}
 			stima.dettaglio = dettaglio.toString();
-			stima.caricoCapo = danni[indiceCapo] / Math.max(1, saluteEffettiva(capo, true));
+			stima.round = roundFatti;
+			for (Personaggio p : miei) {
+				stima.saluteGruppo += p.getSalute();
+			}
+			stima.mieiVivi = n;
+			stima.numeroAvversari = avversari.size();
+			for (double d : saluteAvversari) {
+				stima.saluteAvversari += d;
+			}
+			for (double d : danni) {
+				stima.danniGruppo += d;
+			}
+			stima.saluteCapo = Math.max(1, saluteEffettiva(capo, true));
+			stima.caricoCapo = danni[indiceCapo] / stima.saluteCapo;
 			if (!vivo[indiceCapo] || impossibile) {
 				stima.caricoCapo = Math.max(stima.caricoCapo, 1.5d);
 			}
@@ -1162,8 +1251,8 @@ final class GiocatoreAutomatico {
 					continue;
 				}
 				double[] colpo = attacco(avversario, miei.get(i), magiaAvversari[posizione]);
-				danni[i] += colpo[0] / quanti;
-				salute[i] -= colpo[0] / quanti;
+				danni[i] += FATTORE_DANNI_AVVERSARI * colpo[0] / quanti;
+				salute[i] -= FATTORE_DANNI_AVVERSARI * colpo[0] / quanti;
 				magiaAvversari[posizione] -= colpo[1] / quanti;
 				if (salute[i] <= 0) {
 					vivo[i] = false;

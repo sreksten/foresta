@@ -75,6 +75,12 @@ class SimulazionePartiteTest {
 		 */
 		int round;
 		int azioni;
+		/**
+		 * Per tarare la stima del giocatore: la previsione iniziale e com'è andata (danni al capo, compagni persi)
+		 */
+		GiocatoreAutomatico.Stima stima;
+		int danniCapo;
+		int compagniPersi;
 		boolean mortoUnPersonaggio;
 		boolean fuga;
 		boolean vinto;
@@ -189,6 +195,8 @@ class SimulazionePartiteTest {
 			List<Risultato> tutti = new ArrayList<>();
 			perClasse.values().forEach(tutti::addAll);
 			stampaAvversari(out, tutti);
+			out.println();
+			stampaCalibrazione(out, tutti);
 			perClasse.forEach((classe, risultati) -> risultati.stream()
 					.filter(r -> r.esito == Esito.BLOCCATO || r.esito == Esito.ERRORE_DEL_GIOCO).limit(3)
 					.forEach(r -> out.println(classe + " " + r.esito + ": " + r.ultimoStato)));
@@ -282,6 +290,42 @@ class SimulazionePartiteTest {
 		});
 	}
 
+	/**
+	 * La stima del giocatore contro com'è andata: negli scontri combattuti fino in fondo (senza fuga), per fasce di carico previsto del
+	 * capo, il carico previsto e quello vero (danni al capo sulla salute più le pozioni che la stima gli conta) e i compagni persi
+	 */
+	private static void stampaCalibrazione(PrintStream out, List<Risultato> risultati) {
+		double[] fasce = {0, 0.1, 0.3, 0.5, 0.8, 1.2, Double.MAX_VALUE};
+		out.println("Taratura della stima (scontri senza fuga, per fascia di carico previsto del capo)");
+		out.printf("%-12s %7s %9s %9s %9s %9s %8s %7s %7s %8s %8s%n", "Prevista", "Scontri", "Carico pr", "Carico vero", "Persi pr", "Persi vero", "%capo morto",
+				"Rnd pr", "Rnd vero", "Dan pr", "Dan vero");
+		for (int f = 0; f + 1 < fasce.length; f++) {
+			final double da = fasce[f];
+			final double a = fasce[f + 1];
+			List<Scontro> scelti = new ArrayList<>();
+			for (Risultato r : risultati) {
+				for (Scontro s : r.scontri) {
+					if (s.stima != null && !s.fuga && s.stima.caricoCapo >= da && s.stima.caricoCapo < a) {
+						scelti.add(s);
+					}
+				}
+			}
+			if (scelti.isEmpty()) {
+				continue;
+			}
+			out.printf("%-12s %7d %9.2f %9.2f %9.2f %9.2f %7.1f%% %7.1f %7.1f %8.1f %8.1f%n", String.format("%.1f-%s", da, a == Double.MAX_VALUE ? "inf" : String.format("%.1f", a)),
+					scelti.size(), scelti.stream().mapToDouble(s -> s.stima.caricoCapo).average().orElse(0),
+					scelti.stream().mapToDouble(s -> s.danniCapo / s.stima.saluteCapo).average().orElse(0),
+					scelti.stream().mapToDouble(s -> s.stima.compagniPersi).average().orElse(0),
+					scelti.stream().mapToDouble(s -> s.compagniPersi).average().orElse(0),
+					100.0 * scelti.stream().filter(s -> !s.vinto && s.mortoUnPersonaggio).count() / scelti.size(),
+					scelti.stream().mapToDouble(s -> s.stima.round).average().orElse(0),
+					scelti.stream().mapToDouble(s -> s.round).average().orElse(0),
+					scelti.stream().mapToDouble(s -> s.stima.danniGruppo).average().orElse(0),
+					scelti.stream().mapToDouble(s -> s.danni).average().orElse(0));
+		}
+	}
+
 	private static long conta(List<Risultato> risultati, Esito esito) {
 		return risultati.stream().filter(r -> r.esito == esito).count();
 	}
@@ -310,7 +354,7 @@ class SimulazionePartiteTest {
 			partita.iniziaCon("Prova", Comando.MASCHIO, classe, () -> {
 			});
 			GiocatoreAutomatico giocatore = new GiocatoreAutomatico(partita, new Random(seme));
-			Osservatore osservatore = new Osservatore(partita, risultato);
+			Osservatore osservatore = new Osservatore(partita, risultato, giocatore);
 			boolean eraInCombattimento = false;
 			for (int passo = 0; passo < PASSI_MASSIMI; passo++) {
 				Stato stato = partita.stato();
@@ -395,9 +439,12 @@ class SimulazionePartiteTest {
 		private int personaggiPrima;
 		private int viviPrima;
 
-		Osservatore(PartitaDiTest partita, Risultato risultato) {
+		private final GiocatoreAutomatico giocatore;
+
+		Osservatore(PartitaDiTest partita, Risultato risultato, GiocatoreAutomatico giocatore) {
 			this.partita = partita;
 			this.risultato = risultato;
+			this.giocatore = giocatore;
 			BusEventi.iscriviti(InternoAzioneInCombattimento.class, e -> {
 				if (scontro != null) {
 					scontro.azioni++;
@@ -458,6 +505,15 @@ class SimulazionePartiteTest {
 				}
 			} else if (scontro != null) {
 				scontro.danni += danni;
+				Personaggio capo = gruppo.getCapo();
+				Integer saluteCapoPrima = salutePrima.get(capo);
+				if (saluteCapoPrima != null) {
+					scontro.danniCapo += Math.max(0, saluteCapoPrima - capo.getSalute());
+				}
+			}
+			if (scontro != null && scontro.stima == null && giocatore.stimaIniziale != null
+					&& giocatore.locazioneDellaStima == locazione) {
+				scontro.stima = giocatore.stimaIniziale;
 			}
 			if (scontro != null && locazione == partita.gruppo().getLocazioneCorrente()) {
 				scontro.round = Math.max(scontro.round, StatoDelCombattimento.getIstanza().getRound());
@@ -470,6 +526,7 @@ class SimulazionePartiteTest {
 				}
 				if (scontro != null) {
 					scontro.mortoUnPersonaggio = true;
+					scontro.compagniPersi += morti - (gruppo.getCapo().isVivo() ? 0 : 1);
 				}
 			}
 			if (!gruppo.getCapo().isVivo() && risultato.causaMorte == null) {

@@ -364,6 +364,10 @@ public class Locanda extends LocazioneBase {
 	 */
 	private void generaNotizia() {
 		NotiziaMD notizia = ProduttoreDiTestiCasuale.getNotiziaLocanda(getIdentificativo(), getNome(), getNomeLocandiere());
+		if (notizia == null) {
+			// Niente di applicabile al gruppo nel repertorio della locanda: stavolta non c'è niente da raccontare
+			return;
+		}
 		BusEventi.pubblica(new NotificaTestoParagrafo(notizia.getCorpo()));
 		Notizie.aggiungiNotizia(notizia);
 	}

@@ -834,11 +834,14 @@ Non ha senso importare: posizione e distanza, mischia contro distanza, linea di 
   - **Gruppi.** Con tutti che agiscono a ogni round, i gruppi di 4-5 personaggi vincono molto di più di prima (contro il Drago a livello 3: 20% → 62% col gruppo di cinque), e i gruppi
     senza maghi non crollano più; un personaggio **da solo** è invece cambiato poco (`TestLogoramentoInizioPartita`: il piano è "agisce lui, poi tutti i mostri"), tranne contro chi
     atterra o stordisce, perché ora salta il turno (Folletto da solo: 91% → 75%). Reclutare conviene quindi ancora di più.
-  - **Partite intere.** Il giocatore automatico, che gioca col nuovo ritmo, passa da una morte certa a livello 2-3 (circa 27 spostamenti) a vivere molto di più: livello 4-6, 100-300
-    spostamenti, e circa la metà dei Guerrieri arriva al limite di passi senza morire. Il capo muore soprattutto per l'Eremita (da solo o in gruppo) e per la fuga.
-  - **Da bilanciare.** La stima del giocatore automatico è pessimista (prevede la perdita di tutto il gruppo contro 3-4 avversari grossi e fugge in un incontro su due contro Arpie e
-    Chimere, che poi si vincono quasi sempre); l'Eremita resta il killer del livello 1-3; il Mago e il Sacerdote muoiono presto perché sono i bersagli preferiti
-    (`PersonaggioBase.scegliBersaglio`).
+  - **Stima del giocatore automatico: tarata.** Giocando sempre fino in fondo (`GiocatoreAutomatico.sempreInCombattimento`) e confrontando previsione e realtà
+    (tabella "Taratura della stima" di `SimulazionePartiteTest`) la stima aveva buon potere predittivo (correlazione 0,6-0,7) ma prevedeva 2,4 volte i danni veri: ora i danni
+    degli avversari sono scalati di 0,45 (`FATTORE_DANNI_AVVERSARI`) e la probabilità che il capo sopravviva è quella misurata (`probabilitaVittoria`). Con la stima
+    esatta il giocatore moriva prima (la vecchia pessimismo era una prudenza utile): le soglie (combattere sotto carico 0,1, fuggire se la vittoria è sotto il 95% e la fuga è
+    sopportabile, in combattimento fuggire sopra 0,3) sono state cercate con una griglia di partite.
+  - **Partite intere (30 per classe, giocatore tarato).** Il Guerriero arriva al limite di passi in 28 partite su 30 (livello 7), Ladro e Elfo in più di metà; il Mago muore
+    quasi sempre (27 su 30, livello 4-5), il Sacerdote in 21. Il capo muore soprattutto per l'Eremita (livello 1-3) e, per Mago e Sacerdote, per Chimere e Chimere Drago.
+  - **Da bilanciare.** Mago e Sacerdote sono i bersagli preferiti (`PersonaggioBase.scegliBersaglio`) e muoiono presto; l'Eremita resta il killer dei livelli bassi.
 
 ## 10. Da fare / idee aperte
 

@@ -272,29 +272,47 @@ public class ProduttoreDiTestiCasuale {
 		return oroscopo;
 	}
 
+	/**
+	 * Una notizia della locanda, fra quelle del suo repertorio (NOTIZIE_ + identificativo, in locande.txt) che si applicano al gruppo
+	 * (vedi {@link #validaNotizia}) e che non sono fra le ultime già pubblicate (MASSIMO_NOTIZIE_RICORDATE, in tutto il mondo).
+	 * <p>
+	 * Il repertorio di una locanda è piccolo (cinque notizie): in una partita lunga, tornandoci spesso, o con un gruppo a cui si
+	 * applicano poche notizie, si possono esaurire. In quel caso la grammatica delle locande si <b>azzera</b> (le sue produzioni one-shot
+	 * tornano intere) e si ammettono anche le notizie recenti, ripetere una notizia è meglio che non averne. Se nemmeno così ce n'è una
+	 * applicabile (tutte parlano di classi che nel gruppo non ci sono) non c'è nessuna notizia e il metodo restituisce null: la locanda
+	 * non ha niente da raccontare. Non solleva eccezioni per questo.
+	 *
+	 * @return la notizia, o null se la locanda non ne ha una applicabile
+	 */
 	public static NotiziaMD getNotiziaLocanda(String identificativoLocanda, String nomeLocanda, String nomeLocandiere) {
-		return getNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere, 0);
+		NotiziaMD notizia = cercaNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere, true);
+		if (notizia == null) {
+			locande.reset();
+			notizia = cercaNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere, false);
+		}
+		return notizia;
 	}
 
-	private static NotiziaMD getNotiziaLocanda(String identificativoLocanda, String nomeLocanda, String nomeLocandiere, int tentativo) {
-		if (tentativo >= MASSIMO_TENTATIVI_NOTIZIA_LOCANDA) {
-			throw new IllegalStateException("Non è stato possibile trovare una notizia applicabile e non recente per la locanda " + identificativoLocanda);
+	private static NotiziaMD cercaNotiziaLocanda(String identificativoLocanda, String nomeLocanda, String nomeLocandiere,
+												 boolean escludiLeRecenti) {
+		for (int tentativo = 0; tentativo < MASSIMO_TENTATIVI_NOTIZIA_LOCANDA; tentativo++) {
+			List<String> notizie = locande.produce("NOTIZIE_" + identificativoLocanda);
+			String notizia = notizie.get(0);
+			int posizioneSeparatore = notizia.indexOf("-");
+			String identificativo = notizia.substring(0, posizioneSeparatore);
+			if (escludiLeRecenti && ModelloDati.getIstanza().getNotizieMD().getUltimeNotizie().stream().anyMatch(n -> n.getId().equals(identificativo))) {
+				// La notizia è già stata pubblicata tra le ultime, ne scegliamo un'altra
+				continue;
+			}
+			String contenuto = validaNotizia(notizia.substring(posizioneSeparatore + 1));
+			if (contenuto == null) {
+				continue;
+			}
+			contenuto = contenuto.replace("NOME_LOCANDA", nomeLocanda);
+			contenuto = contenuto.replace("NOME_LOCANDIERE", nomeLocandiere);
+			return new NotiziaMD(identificativo, contenuto);
 		}
-		List<String> notizie = locande.produce("NOTIZIE_" + identificativoLocanda);
-		String notizia = notizie.get(0);
-		int posizioneSeparatore = notizia.indexOf("-");
-		String identificativo = notizia.substring(0, posizioneSeparatore);
-		if (ModelloDati.getIstanza().getNotizieMD().getUltimeNotizie().stream().anyMatch(n -> n.getId().equals(identificativo))) {
-			// La notizia è già stata pubblicata tra le ultime, ne scegliamo un'altra
-			return getNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere, tentativo + 1);
-		}
-		String contenuto = validaNotizia(notizia.substring(posizioneSeparatore + 1));
-		if (contenuto == null) {
-			return getNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere, tentativo + 1);
-		}
-		contenuto = contenuto.replace("NOME_LOCANDA", nomeLocanda);
-		contenuto = contenuto.replace("NOME_LOCANDIERE", nomeLocandiere);
-		return new NotiziaMD(identificativo, contenuto);
+		return null;
 	}
 
 	/**
