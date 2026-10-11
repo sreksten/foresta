@@ -30,6 +30,8 @@ public class DannoRisultante {
     private final Collection<EffettoDiStatoMD> effettiDiStatoDaAggiungere = new ArrayList<>();
     private final Collection<ModificatoreAttributoMD> modificatoriDaAggiungere = new ArrayList<>();
     private final Collection<TipoEffettoDiStato> effettiDiStatoDaRimuovere = new ArrayList<>();
+    // Quanto il danno è cambiato per l'equipaggiamento difensivo del bersaglio (1 se non conta, meno di 1 se lo protegge)
+    private double fattoreEquipaggiamento = 1.0d;
     private boolean colpoDiGrazia = false;
     private int curaAdArea = 0;
     private int sifoneVitale = 0;
@@ -113,6 +115,14 @@ public class DannoRisultante {
 
     public Collection<TipoEffettoDiStato> getEffettiDiStatoDaRimuovere() {
         return effettiDiStatoDaRimuovere;
+    }
+
+    public double getFattoreEquipaggiamento() {
+        return fattoreEquipaggiamento;
+    }
+
+    public void setFattoreEquipaggiamento(double fattoreEquipaggiamento) {
+        this.fattoreEquipaggiamento = fattoreEquipaggiamento;
     }
 
     public boolean isColpoDiGrazia() {

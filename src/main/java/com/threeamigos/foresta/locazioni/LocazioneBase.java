@@ -822,6 +822,7 @@ public abstract class LocazioneBase implements Locazione {
 		if (!FabbricaCanti.crea(tipo, cantore).canta(cantore, gruppo, gruppoAvversario)) {
 			return null;
 		}
+		statoDelCombattimento.registraIncantesimoLanciato(cantore);
 		if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
 			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
@@ -854,6 +855,7 @@ public abstract class LocazioneBase implements Locazione {
 			registraUccisione(formulante, bersaglio);
 		}
 		formulante.subMagia(dardo.getCostoLancio());
+		statoDelCombattimento.registraIncantesimoLanciato(formulante);
 		if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
 			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;

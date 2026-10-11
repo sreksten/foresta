@@ -2,10 +2,14 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoInizioRound;
+import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.strumenti.Logger;
 
 import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +25,16 @@ import java.util.Set;
  * continua con le ondate. Ogni round che comincia pubblica un {@link InternoInizioRound};</li>
  * <li>chi ha già agito nel round (di entrambi i gruppi);</li>
  * <li>per ogni gruppo, il <b>puntatore</b> al personaggio che ha agito per ultimo, per il round-robin. Si ricorda il
- * personaggio e non solo la sua posizione, perché la lista di un gruppo cambia durante lo scontro.</li>
+ * personaggio e non solo la sua posizione, perché la lista di un gruppo cambia durante lo scontro;</li>
+ * <li>per ogni personaggio una <b>scheda</b> (indicizzata per identità, e non dimenticata quando cade: un compagno potrebbe
+ * farlo risorgere): l'ultimo avversario e l'ultimo alleato scelti, chi lo ha attaccato per ultimo, se ha già lanciato un
+ * incantesimo, i cambi d'arma, le voci della tattica già usate (e in quale round) e le armi già valutate;</li>
+ * <li>la <b>conoscenza sulle reazioni</b>, che invece è di <b>pubblico dominio</b> e non è legata a nessuno: in combattimento
+ * tutti vedono che cosa succede, nel bene o nel male, anche di sfuggita. Per ogni coppia (personaggio colpito, tipo di danno)
+ * si sa di quanto l'equipaggiamento difensivo ha cambiato il danno (il resto, classe e stati, lo si prevede già con
+ * {@code CalcolatoreCombattimento.moltiplicatoreAtteso}).</li>
  * </ul>
+ * Chi lo aggiorna è il motore (i colpi li registra {@code PersonaggioBase.applicaRisultatoCombattimento}); le tattiche lo leggono e basta.
  */
 public class StatoDelCombattimento {
 
@@ -51,6 +63,19 @@ public class StatoDelCombattimento {
 	private int round = 1;
 	private final Set<Personaggio> hannoAgitoNelRound = Collections.newSetFromMap(new IdentityHashMap<>());
 	private final Map<Gruppo, Puntatore> puntatori = new IdentityHashMap<>();
+	private final Map<Personaggio, Scheda> schede = new IdentityHashMap<>();
+	private final Map<Personaggio, Map<TipoDanno, Double>> reazioniNote = new IdentityHashMap<>();
+
+	/** Che cosa si ricorda di un personaggio */
+	private static final class Scheda {
+		private Personaggio ultimoAvversario;
+		private Personaggio ultimoAlleato;
+		private Personaggio ultimoAttaccante;
+		private boolean haLanciato;
+		private int cambiDArma;
+		private final Map<String, Integer> vociUsate = new HashMap<>();
+		private final Map<Arma, Boolean> armiValutate = new IdentityHashMap<>();
+	}
 
 	private StatoDelCombattimento() {
 	}
@@ -62,6 +87,8 @@ public class StatoDelCombattimento {
 		round = 1;
 		hannoAgitoNelRound.clear();
 		puntatori.clear();
+		schede.clear();
+		reazioniNote.clear();
 		BusEventi.pubblica(new InternoInizioRound(round));
 	}
 
@@ -145,5 +172,118 @@ public class StatoDelCombattimento {
 			}
 		}
 		return true;
+	}
+
+	private Scheda scheda(Personaggio personaggio) {
+		return schede.computeIfAbsent(personaggio, p -> new Scheda());
+	}
+
+	/**
+	 * Registra un colpo andato a segno: ricorda chi ha colpito chi (l'ultimo avversario di chi attacca e l'ultimo attaccante di chi
+	 * è colpito) e che cosa si è visto della sua reazione al tipo di danno.
+	 */
+	public void registraColpo(DannoRisultante risultato) {
+		Personaggio attaccante = risultato.getAttaccante();
+		Personaggio difensore = risultato.getDifensore();
+		if (difensore == null) {
+			return;
+		}
+		if (attaccante != null && attaccante != difensore) {
+			scheda(attaccante).ultimoAvversario = difensore;
+			scheda(difensore).ultimoAttaccante = attaccante;
+		}
+		if (risultato.getTipoDanno() != null) {
+			registraReazione(difensore, risultato.getTipoDanno(), risultato.getFattoreEquipaggiamento());
+		}
+	}
+
+	/** L'ultimo avversario scelto (colpito) da questo personaggio, o null; se è ancora valido lo decide chi lo legge */
+	public Personaggio getUltimoAvversario(Personaggio personaggio) {
+		Scheda scheda = schede.get(personaggio);
+		return scheda == null ? null : scheda.ultimoAvversario;
+	}
+
+	/** Registra l'alleato scelto da questo personaggio (per una cura, una resurrezione, una pozione) */
+	public void registraAlleato(Personaggio personaggio, Personaggio alleato) {
+		scheda(personaggio).ultimoAlleato = alleato;
+	}
+
+	public Personaggio getUltimoAlleato(Personaggio personaggio) {
+		Scheda scheda = schede.get(personaggio);
+		return scheda == null ? null : scheda.ultimoAlleato;
+	}
+
+	/** Chi ha agito contro questo personaggio per ultimo, o null */
+	public Personaggio getUltimoAttaccante(Personaggio personaggio) {
+		Scheda scheda = schede.get(personaggio);
+		return scheda == null ? null : scheda.ultimoAttaccante;
+	}
+
+	/** Registra che il personaggio ha lanciato un incantesimo o cantato (la regola del "magico") */
+	public void registraIncantesimoLanciato(Personaggio personaggio) {
+		scheda(personaggio).haLanciato = true;
+	}
+
+	public boolean haLanciatoUnIncantesimo(Personaggio personaggio) {
+		Scheda scheda = schede.get(personaggio);
+		return scheda != null && scheda.haLanciato;
+	}
+
+	public void registraCambioArma(Personaggio personaggio) {
+		scheda(personaggio).cambiDArma++;
+	}
+
+	public int getCambiDArma(Personaggio personaggio) {
+		Scheda scheda = schede.get(personaggio);
+		return scheda == null ? 0 : scheda.cambiDArma;
+	}
+
+	/** Registra che il personaggio ha usato una voce della sua tattica, nel round corrente */
+	public void registraUsoVoce(Personaggio personaggio, String voce) {
+		scheda(personaggio).vociUsate.put(voce, round);
+	}
+
+	public boolean haUsatoLaVoce(Personaggio personaggio, String voce) {
+		return getRoundUltimoUsoVoce(personaggio, voce) > 0;
+	}
+
+	/** Il round in cui il personaggio ha usato la voce per l'ultima volta, o 0 se non l'ha ancora usata */
+	public int getRoundUltimoUsoVoce(Personaggio personaggio, String voce) {
+		Scheda scheda = schede.get(personaggio);
+		Integer usata = scheda == null ? null : scheda.vociUsate.get(voce);
+		return usata == null ? 0 : usata;
+	}
+
+	/** Registra che il personaggio ha già valutato quell'arma, e se può usarla */
+	public void registraArmaValutata(Personaggio personaggio, Arma arma, boolean utilizzabile) {
+		scheda(personaggio).armiValutate.put(arma, utilizzabile);
+	}
+
+	/** Se il personaggio ha valutato l'arma, se è utilizzabile; null se non l'ha ancora valutata */
+	public Boolean getValutazioneArma(Personaggio personaggio, Arma arma) {
+		Scheda scheda = schede.get(personaggio);
+		return scheda == null ? null : scheda.armiValutate.get(arma);
+	}
+
+	/**
+	 * Registra che si è visto un colpo di quel tipo di danno sul personaggio: <code>fattoreEquipaggiamento</code> è il rapporto fra il danno
+	 * subito e quello che avrebbe subito senza l'equipaggiamento difensivo (1 se non conta, meno di 1 se lo protegge). È un dato
+	 * pubblico: non dipende da chi ha colpito né da chi guarda. L'ultima osservazione sostituisce la precedente.
+	 */
+	public void registraReazione(Personaggio colpito, TipoDanno tipoDanno, double fattoreEquipaggiamento) {
+		reazioniNote.computeIfAbsent(colpito, p -> new EnumMap<>(TipoDanno.class)).put(tipoDanno, fattoreEquipaggiamento);
+	}
+
+	/** Se si è già visto che cosa fa quel tipo di danno a quel personaggio */
+	public boolean isReazioneNota(Personaggio colpito, TipoDanno tipoDanno) {
+		Map<TipoDanno, Double> reazioni = reazioniNote.get(colpito);
+		return reazioni != null && reazioni.containsKey(tipoDanno);
+	}
+
+	/** Il fattore dell'equipaggiamento visto per quel tipo di danno; 1 se non si è ancora visto niente */
+	public double getFattoreEquipaggiamentoNoto(Personaggio colpito, TipoDanno tipoDanno) {
+		Map<TipoDanno, Double> reazioni = reazioniNote.get(colpito);
+		Double fattore = reazioni == null ? null : reazioni.get(tipoDanno);
+		return fattore == null ? 1.0d : fattore;
 	}
 }

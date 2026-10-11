@@ -243,6 +243,8 @@ public class CalcolatoreCombattimento {
         // Determina la difesa del bersaglio (COSTITUZIONE + PARATA per Fisico, RESISTENZA_MAGICA per Magico/Elementale),
         // con le resistenze di elmo, scudo, armatura e schinieri contro questo tipo di danno
         double statDifensiva = difesaContro(difensore, tipoDanno);
+        // Quanto l'equipaggiamento difensivo ha cambiato il danno rispetto a un difensore senza: lo vedono tutti (StatoDelCombattimento)
+        dannoRisultante.setFattoreEquipaggiamento((100.0d + difesaBaseContro(difensore, tipoDanno)) / (100.0d + statDifensiva));
 
         if (dannoNonFisico && difensore.hasEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA)) {
             statDifensiva = statDifensiva * 0.8d;
@@ -836,8 +838,7 @@ public class CalcolatoreCombattimento {
      * RESISTENZA_MAGICA per quello elementale o magico.
      */
     public static double difesaContro(Personaggio difensore, TipoDanno tipoDanno) {
-        boolean fisico = tipoDanno.getSuperTipo() == SupertipoDanno.FISICO;
-        double difesaBase = fisico ? difensore.getCostituzione() + difensore.getParata() : difensore.getResistenzaMagica();
+        double difesaBase = difesaBaseContro(difensore, tipoDanno);
         double fisso = 0.0d;
         double percentuale = 0.0d;
         for (Artefatto pezzo : difensore.getInventario()) {
@@ -856,6 +857,14 @@ public class CalcolatoreCombattimento {
         Logger.log(String.format("difesa contro %s = (base %.0f + fisso %.0f) x (1 + %.3f) = %.2f",
                 tipoDanno, difesaBase, fisso, percentuale, difesa));
         return difesa;
+    }
+
+    /**
+     * La difesa del personaggio senza i pezzi dell'equipaggiamento: COSTITUZIONE + PARATA per il fisico, RESISTENZA_MAGICA per il resto
+     */
+    public static double difesaBaseContro(Personaggio difensore, TipoDanno tipoDanno) {
+        boolean fisico = tipoDanno.getSuperTipo() == SupertipoDanno.FISICO;
+        return fisico ? difensore.getCostituzione() + difensore.getParata() : difensore.getResistenzaMagica();
     }
 
     /**

@@ -602,6 +602,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public void applicaRisultatoCombattimento(DannoRisultante risultato) {
+		StatoDelCombattimento.getIstanza().registraColpo(risultato);
 		subSalute(risultato.getDanno(), risultato.getAttaccante(), Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
 
 		// Il risultato del combattimento potrebbe cercare di applicare più di una volta lo stesso effetto di stato;

@@ -122,7 +122,7 @@ finito e il round non avanza. Il numero del round **riparte da 1 a ogni inizio l
 sono cambiati, sono solo apparsi nuovi mostri (che non hanno ancora agito: il round si allunga). All'inizio di ogni
 round il motore pubblica un evento **`InternoInizioRound`** (con il numero), per la UI, i log e chi tiene la memoria del combattimento.
 
-**Lo `StatoDelCombattimento`** (deciso nel nome; **fatti**: il round con `InternoInizioRound`, chi ha agito nel round, i puntatori dei due gruppi e il round-robin della risposta; il resto arriva con le tattiche): un oggetto che raccoglie in un posto solo tutto ciò che le tattiche devono ricordare di un combattimento. Si crea
+**Lo `StatoDelCombattimento`** (deciso nel nome; **fatto**: il round con `InternoInizioRound`, chi ha agito nel round, i puntatori dei due gruppi e il round-robin della risposta, le schede dei personaggi e la conoscenza pubblica sulle reazioni; restano da collegare solo le fonti che dipendono dalle tattiche: le voci usate, le armi valutate e i cambi d'arma): un oggetto che raccoglie in un posto solo tutto ciò che le tattiche devono ricordare di un combattimento. Si crea
 (o si azzera) a ogni inizio locazione, insieme alla preparazione del gruppo avversario. Contiene:
 
 - **del combattimento**: il numero del round, il registro di chi ha già agito nel round corrente e, per **ogni gruppo**, il **puntatore** all'ultimo personaggio che ha agito
@@ -132,11 +132,16 @@ round il motore pubblica un evento **`InternoInizioRound`** (con il numero), per
 - **per ogni personaggio** (una scheda, indicizzata per identità del personaggio): l'ultimo avversario e l'ultimo alleato scelti (F8); chi lo ha attaccato per
   ultimo (F9); se ha già lanciato un incantesimo (la regola del "magico", F3); quanti cambi d'arma ha fatto; le armi del gruppo già valutate; le voci già
   usate; e, volendo, le statistiche (danni inflitti e subiti, incantesimi lanciati, colpi a segno e mancati);
-- **la conoscenza accumulata sulle reazioni** (S4): per ogni coppia (personaggio colpito, tipo di danno), quanto il danno vero è stato diverso da quello previsto,
-  che fa scoprire le resistenze date dall'equipaggiamento.
+- **la conoscenza accumulata sulle reazioni** (S4), **di pubblico dominio e non legata a un personaggio**: in combattimento tutti vedono quel che succede, nel bene e nel male, anche di
+  sfuggita, quindi la sa chiunque e non ha un osservatore. Per ogni coppia (personaggio colpito, tipo di danno) si ricorda di quanto l'**equipaggiamento difensivo** ha cambiato il
+  danno (`DannoRisultante.getFattoreEquipaggiamento`: il rapporto fra la mitigazione con i pezzi e quella con la sola difesa di base, `difesaContro` / `difesaBaseContro`; 1 se
+  non conta, meno di 1 se protegge). È la parte che le tattiche non possono prevedere: classe e stati li dà già `moltiplicatoreAtteso`, e il fattore osservato si moltiplica per
+  quello. Lo registra ogni colpo andato a segno (`PersonaggioBase.applicaRisultatoCombattimento` → `registraColpo`; le previsioni delle tattiche, che chiamano il calcolo senza
+  applicarlo, non lasciano tracce); una nuova osservazione sostituisce la vecchia; `getFattoreEquipaggiamentoNoto` dà 1 se non si è visto niente.
 
 Regole (decise):
 
+- **Che cosa è fatto e dove si aggiorna**: i colpi (ultimo avversario, ultimo attaccante, reazione) in `applicaRisultatoCombattimento`; "ha lanciato" in `formula` degli incantesimi, nel canto e nel dardo arcano; l'ultimo alleato nella Resurrezione. Le voci usate, i cambi d'arma e le armi valutate hanno già i metodi (`registraUsoVoce`, `registraCambioArma`, `registraArmaValutata`) ma li chiamerà il motore delle tattiche.
 - **Non si salva**: un combattimento non si interrompe mai per salvare (il comando non è disponibile), quindi lo stato è transitorio e si perde con il
   combattimento. Le tattiche di ogni personaggio, invece, sì (§1).
 - **La conoscenza è pubblica**: vale per i personaggi del giocatore e per i mostri, e quello che si è imparato sul comportamento di un personaggio lo sa chiunque, in
@@ -501,12 +506,9 @@ Il comportamento del danno non è cambiato, con **una sola differenza voluta**: 
 colpi (3 difensori, ogni stato da solo e a coppie, ogni tipo di danno) con quello registrato prima del riordino; `MoltiplicatoreAttesoTest`
 verifica la funzione nuova.
 
-Altri due limiti, da rivedere insieme:
-
-- **Nessuna resistenza parziale per classe.** Si è immuni, deboli ×2 o niente: un Troll non può essere "resistente al fuoco ×0,5" né
-  un Golem "debole al contundente ×1,5" senza codice nuovo.
-- **La distinzione fisico / non fisico è troppo grossa.** Sono solo due difese: `COSTITUZIONE + PARATA` e `RESISTENZA_MAGICA`. Fra il fuoco e
-  il gelo, o fra il tagliente e il contundente, un mostro non ha differenze se non quelle dei punti 1 e 2.
+**Limite accettato.** La distinzione di difesa è solo fisico / non fisico (`COSTITUZIONE + PARATA` e `RESISTENZA_MAGICA`): fra il fuoco e il gelo, o fra il
+tagliente e il contundente, un mostro non ha differenze di difesa se non quelle dei punti 1 e 2 (tabella di classe e stati); vedi il lavoro 5. Le resistenze
+parziali per classe, che erano un limite, ci sono ora (lavoro 4).
 
 **Fattore di danno atteso.** Si calcola, per un avversario e un tipo di danno T, **senza tirare i dadi**:
 
@@ -577,14 +579,17 @@ non morti": la condizione del cambio d'arma, §5) e il momento del cambio.
    Test: `RiduzioneDegliEffettiTest`. `moltiplicatoreAtteso` non tiene conto della probabilità ridotta delle reazioni (le conta come se
    scattassero).
 
-5. **Una difesa per elemento** (o per famiglia di elementi) al posto delle due di oggi (`COSTITUZIONE + PARATA` e `RESISTENZA_MAGICA`): da decidere,
-   vedi sotto.
+5. **Una difesa per elemento** (o per famiglia di elementi) al posto delle due di oggi (`COSTITUZIONE + PARATA` e `RESISTENZA_MAGICA`) — **non
+   necessaria per le tattiche, non si fa.** Le tattiche leggono `moltiplicatoreAtteso`, che è già completo; la varietà fra gli elementi viene dalla
+   tabella di classe (lavoro 4) e dalle interazioni con gli stati, e gli incantamenti dei pezzi difensivi valgono già per il loro solo elemento
+   (`difesaContro`). Se mai servisse una differenza di difesa per famiglia, si ottiene con poco: una terza base per gli elementi (per esempio una media di
+   `RESISTENZA_MAGICA` e `COSTITUZIONE`) o ritoccando la tabella di classe, senza attributi nuovi (che toccherebbero modello dati, progressione e salvataggi).
 
 **Da decidere**
 
 - **Resistenze parziali per classe e debolezze nuove:** sì, con lo schema del lavoro 4 (una tabella per categoria e per classe, al posto degli
   override nelle classi); restano i punti sopra su effetti e testo.
-- **Difesa per elemento:** si resta con fisico / non fisico, o si distingue per famiglia (tagliente, contundente, fuoco, gelo...)?
+- **Difesa per elemento:** **si resta con fisico / non fisico** (lavoro 5): la varietà sta nella tabella di classe e negli stati.
 - **Che cosa vuol dire "debole":** solo moltiplicatore > 1, oppure anche "meno resistente degli altri elementi"?
 - **Stati attivi adesso o anche futuri:** il selettore guarda solo gli stati di adesso, o anche quelli che l'azione stessa può causare (il
   Gelo che prima bagna e poi congela)?
@@ -860,13 +865,6 @@ sue.
 
 Quasi tutto è già leggibile (§6 e §7). Quello che manca:
 
-- **La scorta di incantesimi e pozioni anche per il gruppo avversario** — **la struttura è fatta**: le pergamene e le pozioni (della Salute e della Magia, normali e
-  grandi) stanno ora in `GruppoMD` e le gestisce `Gruppo` (`getIncantesimi`, `addPozioniSalute`, `consumaPozioneSalute`...); le variazioni del gruppo del giocatore si
-  annunciano alla UI, quelle del gruppo avversario no, e le sue scorte si azzerano a ogni locazione. I mostri però conoscono ancora per natura un **repertorio fisso**
-  di incantesimi malefici (`getRepertorioIncantesimi`, filtrato per tipo `MALEFICO`) e li pagano con la `MAGIA`, senza pergamene. **Fatto anche il bottino** (`BottinoDegliAvversari`): quando il gruppo avversario si popola (all'inizio della locazione o quando arriva un'ondata), per **ogni avversario** c'è il 20%
-  (`Costanti.PROBABILITA_PERGAMENA_PER_AVVERSARIO`) di aggiungere una pergamena: se è un **umanoide** (categoria `UMANOIDE`), un incantesimo qualsiasi (anche se è magico: ha la precedenza); altrimenti, se è magico (`isMagico`),
-  una del suo repertorio (uno spirito: Gelo). Per ogni umanoide c'è inoltre il 20% (`Costanti.PROBABILITA_POZIONE_SALUTE_PER_AVVERSARIO_UMANOIDE`) di una pozione della Salute normale. Vinto lo scontro, tutto ciò che resta delle scorte degli avversari passa al giocatore, con un messaggio (le notifiche di variazione delle scorte ci sono già).
-  Oggi i mostri non leggono le pergamene, quindi arrivano tutte al giocatore. **Resta da fare**: far usare pozioni e pergamene dalle tattiche (solo agli umanoidi; le voci A5 e C2/C7 del catalogo, §7.5).
 - **L'evento `InternoDecisioneTattica`** (§7.7): è `InternoRisultatoValutazionePersonaggioAttaccante` **rinominato e completato** (classe in `eventi/interni`, il valore
   `INTERNO_DECISIONE_TATTICA` in `TipoEvento` al posto di `INTERNO_RISULTATO_VALUTAZIONE_PERSONAGGIO_ATTACCANTE`, la riga di registro in `SnifferBusEventi`), non un
   evento in più; il motore delle tattiche costruisce la sintesi dettagliata mentre sceglie la voce e sostituisce le otto pubblicazioni di `scegliIncantesimoContro`.
@@ -878,13 +876,7 @@ Quasi tutto è già leggibile (§6 e §7). Quello che manca:
   I salvataggi non devono restare compatibili con le versioni precedenti, quindi non serve alcuna conversione. Serve un **test di andata e ritorno**:
   una tattica complessa (blocchi nidificati, nomi, condizioni composte) scritta e riletta torna uguale, e un personaggio caricato agisce come prima del
   salvataggio.
-- lo **`StatoDelCombattimento`** (§3.3) — **fatti**: il numero del round (con l'evento `InternoInizioRound`), chi ha agito nel round e il puntatore di rotazione di ogni
-  gruppo, con il round-robin della risposta avversaria e della risposta nella mischia; il puntatore non è più nel `Gruppo`. **Mancano**, per personaggio: l'ultimo bersaglio
-  (avversario e alleato), chi lo ha attaccato per ultimo, chi ha lanciato un incantesimo, le voci già usate (e il round dell'ultimo uso), i cambi d'arma, le armi valutate; e la
-  conoscenza sulle reazioni. Il gruppo del giocatore ha il suo puntatore ma non lo usa ancora (`LocazioneBase` fa agire un solo `combattente`, scelto dal giocatore);
-- (il riconoscimento di un **boss** per ora non serve, §6.1; le **categorie di creatura** ci sono già);
-- la **difesa per elemento**, se si vorrà (§6.3, lavoro 5 e "Da decidere"): le debolezze e resistenze di classe sono già un dato (`getMoltiplicatoreDannoSubito`) e la
-  loro composizione in un fattore senza effetti collaterali c'è già (`moltiplicatoreAtteso`);
+- lo **`StatoDelCombattimento`** (§3.3) — **fatto** quasi tutto (round, puntatori, schede, conoscenza pubblica sulle reazioni). Mancano solo i **chiamanti** di `registraUsoVoce`, `registraCambioArma` e `registraArmaValutata`, che arrivano con il motore delle tattiche e con il cambio d'arma. Il gruppo del giocatore ha il suo puntatore ma non lo usa ancora (`LocazioneBase` fa agire un solo `combattente`, scelto dal giocatore);
 - la **risposta** come azione a sé degli avversari: oggi chi risponde è già scelto in round-robin, ma l'azione è ancora `rispondiInMischia` sul combattente, con la logica fissa di §4;
 - le **tattiche base dei mostri**: un file di risorse per classe (§4), nello stesso formato di quelle del giocatore, e il modo di assegnarle a
   un avversario quando nasce (`FabbricaPersonaggi`), con la possibilità che **una singola istanza abbia una tattica sua** al posto di quella di classe (una
