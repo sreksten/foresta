@@ -5,7 +5,6 @@ import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
 
@@ -274,31 +273,21 @@ public class Fantasma extends PersonaggioBase implements Personaggio {
 
 	@Override
 	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
-		return classeIncantesimo == ClasseIncantesimo.ARIA ||
-				classeIncantesimo == ClasseIncantesimo.TERRA ||
-				classeIncantesimo == ClasseIncantesimo.MORTE ||
-				classeIncantesimo == ClasseIncantesimo.VELENO;
+		return super.isImmuneAIncantesimo(classeIncantesimo) ||
+				classeIncantesimo == ClasseIncantesimo.ARIA ||
+				classeIncantesimo == ClasseIncantesimo.TERRA;
 	}
 
 	@Override
 	public boolean isImmuneATipoDanno(TipoDanno tipoDanno) {
-		return tipoDanno == TipoDanno.ARIA ||
-				tipoDanno == TipoDanno.TERRA ||
-				tipoDanno == TipoDanno.VELENO;
-	}
-
-	@Override
-	public TipoInterazioneConEffettiDiStato haInterazioneCon(TipoDanno tipoDanno) {
-		if (tipoDanno == TipoDanno.SACRO) {
-			return TipoInterazioneConEffettiDiStato.DANNO_VERO;
-		}
-		return null;
+		return super.isImmuneATipoDanno(tipoDanno) ||
+				tipoDanno == TipoDanno.ARIA ||
+				tipoDanno == TipoDanno.TERRA;
 	}
 
 	@Override
 	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
-		return effettoStato == TipoEffettoDiStato.SANGUINAMENTO ||
-				effettoStato == TipoEffettoDiStato.INFETTATO ||
+		return super.isImmuneAEffetto(effettoStato) ||
 				effettoStato == TipoEffettoDiStato.ATTERRATO;
 	}
 }

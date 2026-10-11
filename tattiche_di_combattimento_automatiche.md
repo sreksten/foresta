@@ -147,7 +147,7 @@ una scelta del giocatore (vedi sopra) e passare inosservati non è possibile dop
 | **Incantesimo maleficio** (Aria, Acqua, Terra, Fuoco, Fulmine, Gelo, Veleno; Silenzio sotto) | chi `puoFormulare(classe)` | almeno una pergamena della classe nel gruppo, `MAGIA` per il costo, non `SILENZIATO` | un avversario; l'incantesimo `MULTIPLO` colpisce fino a `NUMERO_BERSAGLI` avversari (oggi i primi vivi) | va scelta la classe di incantesimo |
 | **Silenzio** | idem | idem; 5 `MAGIA` | un avversario: sul gruppo il primo vivo non silenziato, altrimenti col silenzio più corto; su un personaggio proprio lui | mette `SILENZIATO`, senza danni; con le tattiche: "un avversario magico non silenziato" |
 | **Morte** | idem | idem; solo sui vivi | un avversario (`SINGOLO_SOLO_VIVI`) | |
-| **Resurrezione** | chi la sa | pergamena e `MAGIA` | un solo bersaglio, anche morto (`SINGOLO_QUALSIASI`); contro i non morti fa danno | su un alleato caduto o su un non morto |
+| **Resurrezione** | chi la sa | pergamena e `MAGIA` | un solo bersaglio, anche morto (`SINGOLO_QUALSIASI`), ma oggi solo un compagno del gruppo; il testo dice che contro i non morti fa danno, ma non è implementato (`todo.md`) | su un alleato caduto |
 | **Alba sacra** | Sacerdote/Sacerdotessa (innata) e chi ha la pergamena | `MAGIA` | tutto il gruppo (toglie stati e modificatori temporanei) | tipicamente se qualcuno ha uno stato negativo |
 | **Dardo arcano** | Mago, Maga, Elfo, Elfa (innato) | `MAGIA` | un avversario | |
 | **Canto curativo** | Bardo, Cantastorie, bardo della locanda | `MAGIA` (4); solo se qualcuno è ferito | il più ferito | |
@@ -156,6 +156,7 @@ una scelta del giocatore (vedi sopra) e passare inosservati non è possibile dop
 | **Canto di valore** | idem | `MAGIA` (5) | tutto il gruppo (`ISPIRATO`) | a inizio scontro |
 | **Pozione della Salute** (normale, grande) | tutti | almeno una nel gruppo | un personaggio del gruppo (chi beve) | |
 | **Pozione della Magia** (normale, grande) | tutti | almeno una nel gruppo | un personaggio del gruppo | |
+| **Cambiare arma** | chi può usare quell'arma (`puoEquipaggiare`) | un'arma nell'inventario del gruppo, che il personaggio possa impugnare e che non sia quella che ha già; il controllo preventivo del cambio riesce; non si è già al massimo di cambi | l'arma stessa (non un avversario) | **è l'azione del turno**: il personaggio cambia arma e basta; l'attacco c'è dal turno dopo (§5, "Cambiare arma") |
 
 **Un incantesimo "del repertorio".** Oltre a una classe precisa, la voce può dire "un incantesimo malefico qualsiasi" con un **criterio di
 scelta**: *a caso*, *il più potente* o *il più conveniente* (probabilità di colpire × danno atteso, contro l'attacco fisico): sono le tre
@@ -166,7 +167,52 @@ tipo **arcano** (il Dardo arcano di Mago ed Elfo, l'arma naturale del Lich, gli 
 "azione: Silenzio" su un avversario magico non ancora silenziato, e subito dopo, per chi non ha la pergamena o la `MAGIA`, "azione:
 Dardo arcano" sullo stesso bersaglio.
 
-Nei giochi di riferimento ci sono azioni che qui non esistono: **muoversi, seguire, mantenere la posizione, cambiare set di armi,
+**Cambiare arma è un'azione.** Un personaggio può decidere, per esempio, di prendere dall'inventario del gruppo un'arma che dà danno
+`SACRO` se tra gli avversari ci sono dei non morti: "condizione: c'è un avversario non morto e non ho già un'arma sacra e nel gruppo
+ce n'è una che posso usare; azione: cambia arma, scegliendo una che dà SACRO". Alcune regole, da fissare in questo modo:
+
+- **Il cambio è tutta l'azione del turno**: il personaggio sceglie l'arma, la impugna e il suo turno finisce lì, senza attaccare;
+  l'attacco col nuovo equipaggiamento viene dal turno dopo. Vale anche con la doppia arma (Ladro, Elfo): un cambio singolo, della
+  principale o della secondaria, è comunque tutto il turno, e per cambiarle entrambe servono due turni di combattimento senza attaccare.
+- **Se il cambio non è possibile, l'azione non c'è**: la voce non si esegue e si passa alla successiva dell'elenco, come per un
+  incantesimo senza `MAGIA`. Il controllo è **preventivo** (prima di toccare niente) e **riusa i blocchi che ci sono già** per
+  l'equipaggiamento, senza regole nuove: `RegoleEquipaggiamento.valuta` dice di no se l'arma è troppo pesante per il carico
+  (`TROPPO_CARICO`), se non è utilizzabile dalla classe (`NON_ADATTO_ALLA_CLASSE`), se manca la forza o il livello, se la mano è
+  occupata, se è a due mani e non si hanno le mani libere, se non è da mano secondaria... In quel caso l'arma di prima non viene
+  nemmeno tolta.
+- **Il controllo deve guardare il dopo-cambio.** `valuta` guarda l'equipaggiamento *com'è adesso*, con l'arma di prima ancora in
+  mano e nel carico. Per il cambio, a mano, il giocatore prima toglie la vecchia e poi prende la nuova: se la tattica chiamasse
+  `puoEquipaggiare` prima di togliere, i risultati sarebbero sbagliati in entrambe le direzioni. Una spada nuova verrebbe respinta
+  perché la mano principale è occupata (`ARMA_NON_DA_MANO_SECONDARIA`), un'arma troppo pesante per il carico di adesso entrerebbe
+  una volta uscita la vecchia, e un pugnale verrebbe accettato nella mano secondaria, che non è un cambio. Per questo il controllo
+  si fa sulla situazione "senza l'arma che esce" (per esempio togliendola, chiamando `valuta` e rimettendola a posto se dice di no,
+  che è sicuro perché nel turno agisce uno solo), mentre i blocchi di `valuta` restano gli stessi. Un tentativo che viene
+  rifiutato (si toglie la vecchia, la nuova non va, si riprende la vecchia) è un'azione **senza effetto**: non consuma il turno e si
+  passa alla voce successiva.
+- **Ogni arma si valuta una volta sola.** Chi ha provato un'arma e ha visto che non può impugnarla se lo ricorda, per non rifare le
+  prove a ogni turno e a ogni voce. In teoria il personaggio potrebbe valutare tutte le armi dell'inventario del gruppo, ma lo fa
+  **una volta sola** e si segna quali può usare (e quali no), per quel combattimento. La valutazione dipende da chi la fa (classe,
+  livello, forza, carico) e da quello che ha in mano: se uno di questi cambia (un'arma nuova nell'inventario, un cambio d'arma, un
+  livello, un effetto che cambia il carico) le valutazioni vanno rifatte o scartate. Il dato sta nello stato del combattimento (§8).
+- **Con la doppia arma, quale esce** (da valutare bene): dovrebbe uscire l'arma **meno conveniente da usare in quel momento**, forse
+  quella che fa meno danni o che applica meno effetti di stato o modificatori (a parità, la secondaria). Non c'è ancora un criterio:
+  va stabilito, magari con la stessa misura del "più conveniente" fra incantesimo e attacco fisico (probabilità di colpire × danno atteso),
+  a cui sommare gli effetti di stato e i modificatori che l'arma applica. Finché non c'è, il cambio vale per l'arma che occupa lo slot
+  dell'arma nuova.
+- **Un massimo di cambi per combattimento, per personaggio**: **uno, al più due** (una costante in `Costanti`), per fermare i continui
+  cambi anche quando le condizioni lo permettono. Si conta nello stato del combattimento (§8) e ricade fra le condizioni della voce
+  ("non ho ancora cambiato arma").
+- **Come si esegue**: l'azione fa i due passi, uno dopo l'altro e nello stesso turno, **come se il giocatore equipaggiasse a mano**:
+  stocca l'arma di prima nell'inventario del gruppo (`InternoStoccaggioArtefatto`) e preleva la nuova (`InternoPrelievoArtefatto`).
+  Siccome il cambio avviene nel turno di quel personaggio e agisce uno alla volta, due personaggi non possono cambiare arma insieme: è
+  un'**azione atomica**, già validata dal controllo preventivo e dal `GruppoGiocatore`, che non deve temere un rifiuto a metà.
+- **Si torna indietro con un'altra voce**, altrimenti l'arma sacra resterebbe in mano anche dopo i non morti: "condizione: non ci sono
+  non morti tra gli avversari e ho in mano un'arma sacra e nel gruppo c'è quella di prima; azione: cambia arma". Quel cambio conta nel
+  massimo, quindi con un solo cambio possibile non si torna indietro: per questo il limite è uno, al più due. Servono anche condizioni
+  che evitino di cambiare a ogni turno ("non ho già un'arma che dà quel danno").
+- **Per i mostri non si applica**: usano l'arma naturale e non hanno un inventario.
+
+Nei giochi di riferimento ci sono azioni che qui non esistono: **muoversi, seguire, mantenere la posizione,
 parare, rubare, usare un oggetto di scena**. Un'azione **"passa il turno"** non c'è oggi, ma potrebbe servire come ultimo passo
 alternativo per chi non deve combattere (per esempio un curatore senza magia).
 
@@ -190,10 +236,10 @@ selettore). Per i giochi di riferimento vale la nota in testa a §7.
 | **Di una classe** (un mago, un ladro...) | DA:O (*class/type*) | **sì**: `getClasse()` |
 | **Magico**, che sa lanciare incantesimi (per silenziarlo o colpirlo per primo) | DA:O (*Mage*), FFXII | **parziale**: `isMagico()` (livellamento magia > 0) dice che ha la magia; il repertorio (`getRepertorioIncantesimi`) è protetto e va esposto. Sono magici anche boss, arpie, folletti... non solo i maghi |
 | Di una **categoria** (non morto, bestia, umanoide, volante, draconico, gigantesco, ibrido, costrutto) | DA:O (*creature type*), FFXII (*undead, flying*) | **sì**: `TipoPersonaggio.getCategorie()` / `isDellaCategoria` (`tipi/CategoriaPersonaggio`). Una classe ha una o più categorie (Spirito e Ombra Nera sono non morti e volanti, la Chimera bestia e ibrida, il Minotauro Gigante umanoide, ibrido e gigantesco), quindi il selettore "di categoria X" vale per chi ne ha anche solo una |
-| Un **boss** / di rango elevato | DA:O (*rank*) | **da aggiungere**: non c'è un flag; si può derivare da un elenco di classi (Drago, Strega, Lich, Idra, Minotauro...: i guardiani dei castelli) |
+| Un **boss** / di rango elevato | DA:O (*rank*) | **per ora non serve**: non c'è una distinzione vera, perché i boss (Lich, Minotauro Gigante, Strega...) si incontrano di solito da soli, quindi non c'è un "altro" da scegliere. Se servisse, il modo più semplice è trasformare quegli incontri in **Ondate** (da valutare: è in `todo.md`) |
 | Con un certo **effetto di stato** (stordito, avvelenato, congelato...) | DA:O, FFXII (*status*) | **sì**: `hasEffettoDiStato(tipo)`, 19 tipi (`TipoEffettoDiStato`) |
 | **Senza** un certo effetto (non ancora silenziato, non ancora avvelenato) | FFXII (*status ≠*) | **sì**: `!hasEffettoDiStato(tipo)` |
-| **Debole a un elemento** | DA:O (*vulnerability*), FFXII (*weak to element*) | **parziale**: `difesaContro(tipoDanno)` e `haInterazioneCon(tipoDanno)` (per esempio `BAGNATO` + fulmine); non c'è una lista di debolezze già pronta |
+| **Debole a un elemento** | DA:O (*vulnerability*), FFXII (*weak to element*) | **parziale**, in tre pezzi che vanno composti (§6.3): la debolezza fissa di classe (`haInterazioneCon`: oggi solo il `SACRO` sui non morti), quella momentanea per stato (`BAGNATO` + fulmine...) e la difesa numerica (`difesaContro`); non c'è una lista di debolezze già pronta |
 | Non **immune** a quell'incantesimo, tipo di danno o stato (per non sprecare la magia) | DA:O, FFXII | **sì**: `isImmuneAIncantesimo`, `isImmuneATipoDanno`, `isImmuneAEffetto` |
 | Con una certa **armatura** (pesante, leggera) | DA:O (*armor*) | **parziale**: i personaggi hanno elmo, scudo, armatura e schinieri con resistenze; i mostri combattono con l'arma naturale |
 | **Lo stesso del turno precedente / del compagno** (fuoco concentrato) | FFXII (*last target, leader's target*) | **da aggiungere**: basta uno stato del combattimento con l'ultimo bersaglio di ogni personaggio |
@@ -235,6 +281,62 @@ essere il **livello più alto**, la **salute massima** più alta o la salute att
 | Un alleato di una certa **classe** | DA:O | **sì**: `getClasse()` |
 | Un **ospite** da proteggere | (specifico: missioni di scorta) | **no**: gli ospiti non combattono e non sono mai bersaglio delle tattiche |
 
+### 6.3 "Debole a un elemento": che cosa c'è e che cosa manca
+
+Un avversario "debole al fuoco" non è un dato solo: nel codice la debolezza ha **tre origini** diverse, e il selettore deve metterle
+insieme. Qui "elemento" vuol dire **tipo di danno** (`TipoDanno`: fisici, elementali e magici; per esempio anche `SACRO` e `ARCANO`).
+
+**1. La debolezza fissa della classe.** `Personaggio.haInterazioneCon(tipoDanno)` dice se la classe ha un'interazione sempre attiva con
+quel danno. Oggi l'unica è `DANNO_VERO` (danno ×2) per il `SACRO` sui sei non morti: Scheletro, Fantasma, Lich, Ombra Nera, Spettro e
+Spirito. È una regola della categoria `NON_MORTO` e sta in `PersonaggioBase`, non più ripetuta nelle sei classi (che aggiungono solo le
+loro immunità). Il suo opposto sono le **immunità** (`isImmuneATipoDanno`, già nel selettore "non immune"): tutti i non morti al
+veleno, i fantasmi (Fantasma, Ombra Nera, Spettro, Spirito) anche ad aria e terra, il Drago e la Chimera Drago al fuoco, l'Idra a terra, acqua e aria, il Gargoyle a tutto ciò
+che non è fisico. **Non esistono resistenze parziali** né altre debolezze per classe: si è immuni, deboli ×2 o niente.
+
+**2. La debolezza momentanea per stato.** Quando il bersaglio ha un certo effetto di stato, alcuni tipi di danno fanno di più o
+scatenano una reazione (`TipoInterazioneConEffettiDiStato`, vedi `interazioni_effetti_di_stato.md`): un `BAGNATO` è debole al fulmine
+(×1,5), un `CONGELATO` al contundente e al fuoco, un `BRUCIATO` all'aria, un `MALEDETTO` al sacro e al necrotico, e così via, per una
+trentina di coppie *(stato, tipo di danno)*. Non sono solo debolezze: ci sono anche **resistenze momentanee** (il `BAGNATO` subisce il
+fuoco ×0,5 e smette di essere bagnato). La coppia è un dato (l'enum), ma **il moltiplicatore e l'effetto no**: stanno dentro una
+lunga catena di `if` in `CalcolatoreCombattimento.calcolaDannoRisultante`, insieme a effetti che non sono un moltiplicatore (la reazione
+toglie lo stato, ne mette un altro, aggiunge danno puro...). Per questo la debolezza di un avversario cambia da un turno all'altro:
+"debole al fulmine" è vero finché dura il `BAGNATO`.
+
+**3. La difesa numerica.** `CalcolatoreCombattimento.difesaContro(difensore, tipoDanno)` (pubblica) dà la difesa contro quel danno:
+`COSTITUZIONE + PARATA` per il fisico, `RESISTENZA_MAGICA` per l'elementale e il magico, più le resistenze degli incantamenti di elmo,
+scudo, armatura e schinieri di quel tipo. Il danno è poi ridotto di `100 / (100 + difesa)`. Per i **mostri**, che non portano pezzi,
+la difesa distingue quindi solo fisico e non fisico: tutti gli elementi hanno la stessa difesa. La differenza fra un elemento e l'altro
+la fanno solo i punti 1 e 2, e per i **personaggi del giocatore** anche gli incantamenti dei pezzi.
+
+**Che cosa dire con "debole a T".** La proposta è di non inventare un dato nuovo ma di calcolare, per un avversario e un tipo di
+danno T, un **fattore di danno atteso** *senza tirare i dadi*, componendo le tre origini:
+
+> fattore = 0 se è immune a T; altrimenti `100 / (100 + difesaContro)` × il moltiplicatore della classe (×2 per `DANNO_VERO`) × i
+> moltiplicatori degli stati attivi per T.
+
+Da lì i selettori sono semplici: **"debole a T"** = il moltiplicatore (classe × stati) di T è maggiore di 1; **"resistente a T"** =
+minore di 1 (un `BAGNATO` col fuoco, ×0,5); **"immune"** = 0; **"il più debole fra questi elementi"** = il fattore più alto.
+Servono a tre scelte: *quale bersaglio* ("il più debole al fuoco"), *quale incantesimo o arma* ("il Gelo contro un `BAGNATO`", "un'arma
+sacra contro i non morti": è proprio la condizione del cambio d'arma, §5) e *quando cambiare* (il `BAGNATO` passa, la debolezza anche).
+Il fattore atteso dell'incantesimo va poi moltiplicato per probabilità di colpire e danno, come nel criterio "il più conveniente".
+
+**Che cosa manca**, in ordine di lavoro:
+
+- **Estrarre il calcolo dei moltiplicatori** da `calcolaDannoRisultante` in una funzione che non ha effetti collaterali (oggi la catena
+  aggiunge interazioni e stati al `DannoRisultante` mentre calcola): serve un `moltiplicatoreAtteso(difensore, tipoDanno)`, usato sia dal
+  danno vero sia dalle tattiche, altrimenti le due versioni divergono. È il pezzo grosso.
+- **Sapere quali coppie (stato, tipo di danno) sono debolezze o resistenze** e non solo reazioni: nell'enum non c'è il verso né il
+  valore (il `BAGNATO` col fuoco è ×0,5, col fulmine ×1,5). Basta un campo `moltiplicatore` nell'enum, che sostituisce le costanti
+  sparse; gli effetti che non sono moltiplicatori (togliere o mettere uno stato) restano dove sono.
+- **Le debolezze di classe come dato** (e non come override in sei classi), se si vorrà dare ai mostri delle debolezze nuove (un
+  Troll al fuoco, un Golem ai colpi contundenti) o delle resistenze parziali. Per ora basta leggere `haInterazioneCon`.
+- **L'insieme dei tipi di danno** di un'arma o di un'azione: oggi `Arma.getTipoDanno()` e gli incantamenti (`getIncantamenti()`), per
+  poter dire "questa arma dà SACRO".
+
+**Da decidere:** se la prima versione si ferma al punto 1 e agli stati (senza la difesa numerica, che per i mostri non distingue gli
+elementi) o se fa subito il fattore intero; se "debole" vale solo > 1 o anche "meno resistente degli altri elementi"; e se i selettori
+guardano gli stati attivi *adesso* (più precisi) o anche quelli che l'azione stessa può causare (il Gelo che prima bagna e poi congela).
+
 ## 7. Le condizioni
 
 Gli elenchi dei giochi sono quelli che ricordo, **indicativi**: i nomi esatti cambiano da gioco a gioco. La colonna a destra dice se
@@ -254,7 +356,7 @@ ha senso qui (**no**).
 | Sotto un effetto di stato (silenziato, stordito, spaventato...) | DA:O, FFXII (*Self: status*) | **sì**: `hasEffettoDiStato(tipo)`; `SILENZIATO` impedisce gli incantesimi |
 | Con un modificatore temporaneo attivo | DA:O (buff attivi) | **sì**: `getModificatoriTemporanei()` |
 | Della classe X / di livello ≥ N | (selettori di gruppo) | **sì**: `getClasse()`, `getLivello()` |
-| Con una certa arma | DA:O (*weapon set*) | **sì**: `getArmaEquipaggiata()`, `getArmaSecondaria()`; non si cambia in combattimento |
+| Con una certa arma | DA:O (*weapon set*) | **sì**: `getArmaEquipaggiata()`, `getArmaSecondaria()`; il tipo di danno e gli incantamenti dicono se "dà SACRO" (`getTipoDanno()`, `getIncantamenti()`). L'arma si può cambiare con l'azione del turno (§5) |
 | In panchina / fuori combattimento | — | **sì**: `isInPanchina()`, `isFuoriCombattimento()` (il personaggio non agisce) |
 
 ### 7.2 Sul gruppo e sullo scontro
@@ -275,6 +377,7 @@ ha senso qui (**no**).
 | :--- | :--- | :--- |
 | Ho una pozione (della Salute, della Magia, grande) | DA:O (*item*), FFXII (*item*) | **sì**: `getPozioniSalute()`, `getPozioniSaluteGrande()`, `getPozioniMagia()`, `getPozioniMagiaGrande()` |
 | Quante pergamene di un incantesimo restano | (specifico) | **sì**: `getIncantesimi(classe)` |
+| **Nell'inventario del gruppo c'è un'arma** che dà un tipo di danno (SACRO contro i non morti), con un certo modificatore, o più forte della mia | DA:O (*weapon set*) | **parziale**: l'inventario del gruppo si legge (`getArtefatti()`) e `puoEquipaggiare` dice se il personaggio la può impugnare; manca la ricerca "per tipo di danno" (§8) |
 | Con una probabilità del n% | BG (*RandomNum*) | **sì**: `Dado` |
 | Tipo di locazione, ora del giorno | BG | **sì**: `getTipoLocazioneCorrente()`, `LineaTemporale`; utile solo per tattiche speciali |
 | Variabili e contatori definiti dall'utente | BG (*script*) | **no**: va oltre lo scopo |
@@ -293,18 +396,25 @@ Quasi tutto è già leggibile (§6 e §7). Quello che manca:
 - il **puntatore di rotazione** di ogni gruppo (chi ha agito per ultimo) e il **round** (§3): oggi il `Gruppo` non li ha, e
   `LocazioneBase` agisce su un solo `combattente`;
 - uno **stato del combattimento**: il numero del round, l'ultimo bersaglio di ogni personaggio, le voci già usate;
-- il riconoscimento di un **boss**: una tabella per classe (le **categorie di creatura** ci sono già, §6.1);
+- (il riconoscimento di un **boss** per ora non serve, §6.1; le **categorie di creatura** ci sono già);
 - l'accesso al **repertorio di incantesimi** di un avversario (oggi protetto) per il selettore "magico";
-- le **debolezze elementali** come dato esplicito, se si vuole il selettore "debole al fuoco" (oggi si ricava da `difesaContro` e
-  dalle interazioni con gli stati);
+- le **debolezze elementali**, per il selettore "debole al fuoco" (§6.3): oggi sono sparse in tre posti (le classi, la catena di `if` dei
+  moltiplicatori di stato, `difesaContro`) e vanno composte in un fattore di danno atteso senza effetti collaterali;
 - la **risposta** come azione a sé degli avversari (oggi è `rispondiInMischia` sul combattente, con la logica fissa di §4);
 - le **tattiche base dei mostri**: un set per classe o per fascia di intelligenza, in un file di risorse, e il modo di assegnarlo a
   un avversario quando nasce (`FabbricaPersonaggi`);
+- il **cambio d'arma** come azione sola e con un controllo preventivo (§5), **tra le prime cose da fare**: oggi il `GruppoGiocatore`
+  fa il controllo e lo spostamento insieme, dentro il gestore dell'evento di prelievo (`suEventoRichiestaPrelievoArtefatto`:
+  `puoEquipaggiare` e poi `removeArtefatto` / `addArtefatto`), e non sono disponibili in combattimento (`INVENTARIO` non è nei comandi di
+  `IN_COMBATTIMENTO`). Va **spezzato in due**: un controllo (`puoEquipaggiare`, che c'è già sul personaggio, con in più la
+  variante per il cambio che guarda la situazione senza l'arma che esce) e l'esecuzione (`equipaggia`, che sposta e basta, senza
+  rifare il controllo), pubblici sul gruppo e usabili dalla tattica; le schermate dell'inventario usano gli stessi due passi. Serve poi
+  la ricerca di un'arma nel gruppo "che dà un tipo di danno" (tipo di danno dell'arma e degli incantamenti) per il personaggio che
+  deve impugnarla, e, nello stato del combattimento, il **contatore dei cambi** di ogni personaggio e **l'elenco delle armi già valutate** (utilizzabili o no);
 - un **criterio di scelta** dell'incantesimo (a caso, il più potente, il più conveniente) come parametro dell'azione, e la
   condizione **"probabilità del n%"** (oggi "una volta su tre non lancia" è una costante).
 
-Non ha senso importare: posizione e distanza, mischia contro distanza, linea di vista, incantesimi con tempo di lancio, cambio di set di
-armi in combattimento, movimento.
+Non ha senso importare: posizione e distanza, mischia contro distanza, linea di vista, incantesimi con tempo di lancio, movimento.
 
 ## 9. Osservazioni
 
@@ -341,7 +451,8 @@ Domande per il piano:
 - **Il formato** salvabile (testo semplice nel salvataggio e in un file di modelli per classe) e la **scheda** secondaria del
   personaggio (elenco ordinabile con aggiungi, togli, sposta su e giù, attiva/disattiva).
 - **Livello di dettaglio dei controlli** per la prima versione (probabilmente: sempre, salute e magia sotto una soglia, stati, classe,
-  numero di avversari, risorse, probabilità; poi categorie di creatura, già nei dati, e boss).
+  numero di avversari, risorse, probabilità; poi le categorie di creatura, già nei dati).
+- **Cambiare arma** (§5): quale arma esce con la doppia arma, cioè quale è "la meno conveniente da usare in quel momento" (danni, effetti di stato, modificatori; vedi sopra)? Per quanto tempo valgono le valutazioni già fatte delle armi del gruppo? Le voci per tornare all'arma di prima le scrive il giocatore o le propone il sistema in coppia con la prima?
 - **Il round a coppie** (§3.2): quando rivederlo, e se i personaggi in più possono agire senza risposta anche dopo il primo giro.
 - Il **registro del turno**: dire in una riga perché il personaggio ha scelto quell'azione ("Mira lancia Gelo su Strega: la sola
   maga"), utile al giocatore per mettere a punto le tattiche, e ai test sulle tattiche dei mostri.

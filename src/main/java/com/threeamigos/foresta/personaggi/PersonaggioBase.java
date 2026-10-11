@@ -196,20 +196,40 @@ public abstract class PersonaggioBase implements Personaggio {
 		return new TipoOfferta[0];
 	}
 	
+	/**
+	 * Se è un non morto (categoria NON_MORTO): le immunità e la debolezza comuni a tutti i non morti stanno qui sotto,
+	 * le altre nelle singole classi, che ridefiniscono questi metodi aggiungendo le proprie e chiamando super.
+	 */
+	private boolean isNonMorto() {
+		return getClasse().isDellaCategoria(CategoriaPersonaggio.NON_MORTO);
+	}
+
+	/**
+	 * I non morti sono immuni a Morte e Veleno
+	 */
 	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
-		return false;
+		return isNonMorto() && (classeIncantesimo == ClasseIncantesimo.MORTE || classeIncantesimo == ClasseIncantesimo.VELENO);
 	}
 
+	/**
+	 * I non morti sono immuni al danno da Veleno
+	 */
 	public boolean isImmuneATipoDanno(TipoDanno tipoDanno) {
-		return false;
+		return isNonMorto() && tipoDanno == TipoDanno.VELENO;
 	}
 
+	/**
+	 * I non morti sono deboli al Sacro: danno vero
+	 */
 	public TipoInterazioneConEffettiDiStato haInterazioneCon(TipoDanno tipoDanno) {
-		return null;
+		return isNonMorto() && tipoDanno == TipoDanno.SACRO ? TipoInterazioneConEffettiDiStato.DANNO_VERO : null;
 	}
 
+	/**
+	 * I non morti non sanguinano e non si infettano
+	 */
 	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
-		return false;
+		return isNonMorto() && (effettoStato == TipoEffettoDiStato.SANGUINAMENTO || effettoStato == TipoEffettoDiStato.INFETTATO);
 	}
 	
 	/**
