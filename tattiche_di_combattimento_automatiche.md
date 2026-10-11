@@ -779,11 +779,12 @@ La UI potrà mostrare la spiegazione al giocatore per aiutarlo a mettere a punto
 
 ## 8. Che cosa manca
 
-Il modello, il motore, il valutatore, il salvataggio e il registro delle decisioni ci sono (§11). Restano:
+Il modello, il motore, il valutatore, il salvataggio, il registro delle decisioni e le tattiche base dei mostri (nella versione "replica di oggi", §11.13) ci sono. Restano:
 
-- **Le tattiche base dei mostri**: un elemento per classe (§4) nello stesso formato di quelle del giocatore (§11.12), in un file di risorse per classe, e il modo di assegnarle a un avversario quando nasce (`FabbricaPersonaggi`), con la possibilità che
-  una singola istanza ne abbia una sua al posto di quella di classe (si salva già con il personaggio). Con le tattiche base spariscono `PersonaggioBase.scegliIncantesimoContro`, `InternoRisultatoValutazionePersonaggioAttaccante` e `TipoRisultatoValutazioneAttaccante` (§7.7).
-  Prima, le fasce di astuzia (§4, §11.10) e i ritocchi alle intelligenze massime del Folletto (a 8) e dell'Ombra Nera (a 31).
+- **Le tattiche base vere dei mostri**, una per classe (§4): oggi tutti hanno `RegistroTattiche.tatticaDiOggi()`. Si scrivono con le fasce di astuzia al posto dell'`INTELLIGENZA` (§4, §11.10), i ritocchi alle intelligenze massime del Folletto (a 8) e dell'Ombra Nera (a 31), le abilità
+  proprie (Silenzio sui magici, cure per chi ha le pozioni, ecc.), e in un file di risorse per classe nello stesso formato di §11.12, caricato dal registro. Una singola istanza può già averne una sua (`setTattica`, salvata con il personaggio).
+- **Togliere il vecchio codice di scelta dei mostri**: `PersonaggioBase.attacca(Gruppo)`, `scegliBersaglio`, `scegliIncantesimoContro`, `InternoRisultatoValutazionePersonaggioAttaccante` e `TipoRisultatoValutazioneAttaccante` (§7.7). Oggi il combattimento non li usa più, ma li usano ancora le
+  simulazioni (`RoundASimulato`, `TestLogoramentoInizioPartita`): vanno portate a eseguire le decisioni del `Valutatore` (l'esecutore sta in `LocazioneBase`: va tirato fuori in una classe del motore che le simulazioni possano usare).
 - **La scheda del giocatore**: la schermata per modificare la tattica di ogni personaggio (elenco di voci, editor di selettore, condizioni e azioni, menu e valori guidati, modelli per classe) e il comando che la manda al motore.
 - **L'esito delle azioni con effetti che non si applicano** (un Silenzio a segno che non mette `SILENZIATO`) come "mancata", oggi non registrato.
 - Il **costo della spiegazione** delle decisioni, se pesasse (§7.7).
@@ -1065,7 +1066,7 @@ stato diverso da `ISPIRATO` (i modificatori temporanei, oggi, non si leggono dal
 gruppo e un bersaglio ferito (Salute) o con poca `MAGIA`; il cambio d'arma solo per i miei, se c'è un'arma da prendere (`armiPerCambio`).
 
 **Collegato al motore** (`LocazioneBase`, test `CombattimentoConTatticheTest`): a ogni scatto del TIMER il personaggio di turno agisce con la sua tattica (`Personaggio.getTattica`, salvata con il personaggio, §11.12): i miei senza tattica hanno `TatticaMD.VUOTA` (attaccano
-il primo avversario, come prima), i mostri senza tattica scelgono ancora con `PersonaggioBase.attacca(Gruppo)` (finché non ci sono le tattiche base). `agisciConLaTattica` decide con il `Valutatore`, esegue la `Decisione` (`eseguiLaDecisione`: attacco con
+il primo avversario, come prima), i mostri senza tattica quella base della loro classe (§11.13). `agisciConLaTattica` decide con il `Valutatore`, esegue la `Decisione` (`eseguiLaDecisione`: attacco con
 le armi sul bersaglio scelto, incantesimi di danno con il `GruppoDiBersagli` per i `MULTIPLO`, dardo arcano, benefici, canti — il curativo sul bersaglio scelto, `Canto.cantaSu` —, pozioni con la scelta fra normale e grande, cambio d'arma), registra l'uso della voce
 e controlla la fine dello scontro; non gestisce il round. Gli esiti degli incantesimi (colpito, mancato, immune) e del dardo si registrano nello `StatoDelCombattimento` (`IncantesimoMaleficoImpl.colpisci`, `scagliaIlDardo`); l'attacco fisico non ne registra
 (non si abbandona mai). Le azioni manuali del giocatore (barra dei comandi) non sono cambiate.
@@ -1101,6 +1102,21 @@ AZIONE|tipo|criterio|solo se più forte dell'attacco|tipo di danno dell'arma
 Gli elementi sono immutabili, quindi non implementano `Serializzabile` (che rilegge dentro un oggetto): hanno `salva(PrintWriter)` e un `leggi(BufferedReader)` statico che li costruisce con le stesse fabbriche che li controllano. Un salvataggio incoerente (un'etichetta sbagliata, un enumerato sconosciuto, un parametro mancante, una voce senza azioni,
 il file troncato) è rifiutato con una `IOException`. Il test di andata e ritorno scrive una tattica con almeno un esemplare di ogni forma di filtro, predicato e azione e controlla che torni uguale (le classi hanno `equals`) e che riscrivere dia lo stesso testo; un
 altro salva e ricarica una partita vera e controlla che il personaggio rilegga la tattica e agisca come impostato. I salvataggi precedenti non si leggono più, come per ogni cambio di formato.
+
+### 11.13 Le tattiche base dei mostri: la replica di oggi
+
+**Fatto** (`RegistroTattiche`, `RegistroTatticheTest`, `CombattimentoConTatticheTest`). Ogni mostro senza una tattica sua agisce con quella della sua classe (`RegistroTattiche.perClasse`, `LocazioneBase.tatticaDi`): oggi è per tutti `tatticaDiOggi()`, la **trasposizione voce per voce** di come i
+mostri sceglievano prima (`PersonaggioBase.attacca(Gruppo)` e `scegliIncantesimoContro`), con venti voci generate dal codice. Il registro non copia la tattica nei personaggi (non si salva con ogni mostro): la cerca quando serve, e un'istanza ne può avere una sua.
+
+- **Chi colpire**, cinque selettori: il Mago o la Maga di livello più alto (`CLASSE MAGO` con `LIVELLO_PIU_ALTO`, a parità il primo), altrimenti il Sacerdote, l'Elfo, il Bardo (ognuno nel ruolo, con la variante di genere), altrimenti uno a caso fra i miei personaggi vivi e gli ospiti vulnerabili (`AVVERSARI_E_OSPITI`, `A_CASO`).
+- **Se e quale incantesimo**, quattro voci per ogni bersaglio, nell'ordine: (1) poco intelligente (`INTELLIGENZA` sotto 5): `INCANTESIMO_DEL_REPERTORIO` a caso; (2) da 5 a 6: il più potente (`PIU_POTENTE`, il danno base più alto); (3) da 7: il più potente solo se rende più dell'attacco con le armi
+  (`soloSePiuForteDellAttacco`, con i danni attesi); (4) l'attacco con le armi. Le prime tre hanno le condizioni `QUANTI SE_STESSO [MAGICO] MAGGIORE 0` (non lancia se non è magico, è silenziato o ha 0 `MAGIA`: e non tira nemmeno il dado) e `PROBABILITA 67` (una volta su tre rinuncia), e
+  l'attacco con le armi come ripiego nella loro sequenza di azioni.
+- **Per fare questo sono state aggiunte**: l'azione `INCANTESIMO_DEL_REPERTORIO` (un incantesimo malefico qualsiasi del repertorio **compresi la Morte e il Silenzio**, come oggi; l'`INCANTESIMO_DI_DANNO` del giocatore resta sugli elementali) e il predicato `INTELLIGENZA` (l'intelligenza attuale: le soglie di oggi, 5 e 7, sono sua e
+  non dell'astuzia).
+- **Un mostro colpisce solo il bersaglio scelto**, anche con un incantesimo a più bersagli, come prima (`SceltaIncantesimo.bersagli`).
+- **Le differenze dalla logica di prima**: un mostro non lancia un incantesimo a cui il bersaglio è immune per la sua classe né il Silenzio su chi è già silenziato (prima sprecava il turno); il confronto fra incantesimo e armi usa i danni attesi e non i tiri dei dadi; il dado della rinuncia si tira una volta per voce che ha un bersaglio, non una sola per decisione (la
+  probabilità di lanciare resta due su tre). Le simulazioni di partita (30 per classe) danno risultati simili a prima.
 
 ### 11.10 Il criterio di scelta dell'incantesimo di danno
 

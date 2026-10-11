@@ -31,6 +31,7 @@ public final class Predicati {
 						ctx).getRimasti().size(), p.getNumero()));
 		VERIFICHE.put(TipoPredicato.ROUND, (p, ctx) -> p.getConfronto().vale(ctx.getStato().getRound(), p.getNumero()));
 		VERIFICHE.put(TipoPredicato.ASTUZIA, (p, ctx) -> p.getConfronto().vale(Astuzia.di(ctx.getAttore()), p.getNumero()));
+		VERIFICHE.put(TipoPredicato.INTELLIGENZA, (p, ctx) -> p.getConfronto().vale(ctx.getAttore().getIntelligenza(), p.getNumero()));
 		VERIFICHE.put(TipoPredicato.PROBABILITA, (p, ctx) -> Dado.tira(100) <= p.getNumero());
 		VERIFICHE.put(TipoPredicato.VOCE_USATA, (p, ctx) -> p.getConfronto().vale(
 				ctx.getStato().getUsiDellaVoce(ctx.getAttore(), voce(ctx)), p.getNumero()));

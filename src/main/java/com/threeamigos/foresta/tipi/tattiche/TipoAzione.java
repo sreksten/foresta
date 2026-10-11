@@ -26,6 +26,11 @@ public enum TipoAzione {
 	SILENZIO("Silenzio", PortataAzione.AVVERSARIO, ClasseIncantesimo.SILENZIO),
 	/** Uno dei sette incantesimi elementali, scelto con un criterio (non la Morte, non il Silenzio) */
 	INCANTESIMO_DI_DANNO("Incantesimo di danno", PortataAzione.AVVERSARIO, null),
+	/**
+	 * Uno qualsiasi degli incantesimi malefici (anche la Morte e il Silenzio) che il personaggio può lanciare, scelto con un criterio: la replica di come
+	 * scelgono i mostri oggi (RegistroTattiche); un giocatore usa piuttosto le azioni dei singoli incantesimi o INCANTESIMO_DI_DANNO
+	 */
+	INCANTESIMO_DEL_REPERTORIO("Incantesimo del repertorio", PortataAzione.AVVERSARIO, null),
 	DARDO_ARCANO("Dardo arcano", PortataAzione.AVVERSARIO, null),
 	RESURREZIONE("Resurrezione", PortataAzione.ALLEATO_CADUTO, ClasseIncantesimo.RESURREZIONE),
 	ALBA_SACRA("Alba sacra", PortataAzione.GRUPPO_ALLEATI, ClasseIncantesimo.ALBA_SACRA),

@@ -99,7 +99,7 @@ public final class Valutatore {
 										 List<String> spiegazione) {
 		TipoAzione tipo = azione.getTipo();
 		ClasseIncantesimo classe = tipo.getClasseIncantesimo();
-		if (tipo == TipoAzione.INCANTESIMO_DI_DANNO) {
+		if (tipo == TipoAzione.INCANTESIMO_DI_DANNO || tipo == TipoAzione.INCANTESIMO_DEL_REPERTORIO) {
 			classe = SceltaIncantesimo.scegli(azione, attore, bersaglio, contesto);
 			tipo = TipoAzione.di(classe);
 			spiegazione.add("voce " + (indice + 1) + ": " + azione + " sceglie " + classe + " (" + SceltaIncantesimo.descrivi(azione, attore, bersaglio, contesto) + ")");

@@ -12,6 +12,8 @@ public enum TipoPredicato {
 	ROUND("Round", TipoParametro.CONFRONTO_E_NUMERO),
 	/** L'astuzia di chi decide */
 	ASTUZIA("Astuzia", TipoParametro.CONFRONTO_E_NUMERO),
+	/** L'INTELLIGENZA attuale di chi decide (non l'astuzia: le soglie di oggi dei mostri, 5 e 7, sono sull'INTELLIGENZA) */
+	INTELLIGENZA("Intelligenza", TipoParametro.CONFRONTO_E_NUMERO),
 	/** Vero nel n% dei casi */
 	PROBABILITA("Probabilità", TipoParametro.NUMERO),
 	/** Quante volte chi decide ha usato questa voce nello scontro */

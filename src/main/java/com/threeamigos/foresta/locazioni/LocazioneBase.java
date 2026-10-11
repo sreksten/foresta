@@ -18,6 +18,7 @@ import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tattiche.Decisione;
+import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.tattiche.SceltaIncantesimo;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.tattiche.Valutatore;
@@ -910,12 +911,15 @@ public abstract class LocazioneBase implements Locazione {
 	// mostri che ne hanno una; gli altri mostri scelgono ancora con le regole di PersonaggioBase.attacca(Gruppo). Le azioni manuali del giocatore non cambiano.
 
 	/**
-	 * La tattica con cui agisce un personaggio: la sua; i miei, se non ne hanno, quella vuota (attaccano il primo avversario in campo, come
-	 * prima); un mostro senza, nessuna.
+	 * La tattica con cui agisce un personaggio: la sua; se non ne ha una, per i miei quella vuota (attaccano il primo avversario in campo, come
+	 * prima) e per un mostro quella base della sua classe (RegistroTattiche: oggi la replica di come i mostri sceglievano prima delle tattiche).
 	 */
 	private TatticaMD tatticaDi(Personaggio personaggio) {
 		TatticaMD tattica = personaggio.getTattica();
-		return tattica != null || !gruppo.contiene(personaggio) ? tattica : TatticaMD.VUOTA;
+		if (tattica != null) {
+			return tattica;
+		}
+		return gruppo.contiene(personaggio) ? TatticaMD.VUOTA : RegistroTattiche.perClasse(personaggio.getClasse());
 	}
 
 	/**
@@ -1329,12 +1333,7 @@ public abstract class LocazioneBase implements Locazione {
 		if (isIncapaceDiAgire(avversario) || gruppo.getNumeroPersonaggiVivi() == 0) {
 			return;
 		}
-		TatticaMD tattica = tatticaDi(avversario);
-		if (tattica != null) {
-			agisciConLaTattica(avversario, tattica);
-		} else {
-			avversario.attacca(gruppo);
-		}
+		agisciConLaTattica(avversario, tatticaDi(avversario));
 	}
 
 	/**

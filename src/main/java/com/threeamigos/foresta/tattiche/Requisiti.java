@@ -50,8 +50,9 @@ public final class Requisiti {
 			case ATTACCO_FISICO:
 				return bersaglio == null || bersaglio.isFuoriCombattimento() ? "nessun bersaglio" : null;
 			case INCANTESIMO_DI_DANNO:
+			case INCANTESIMO_DEL_REPERTORIO:
 				return SceltaIncantesimo.scegli(azione, attore, bersaglio, contesto) == null
-						? "nessun incantesimo di danno adatto da lanciare contro " + nome(bersaglio) : null;
+						? "nessun incantesimo adatto da lanciare contro " + nome(bersaglio) : null;
 			case DARDO_ARCANO:
 				if (!DardoArcano.puoLanciarlo(attore)) {
 					return "il dardo arcano non si può lanciare (classe, MAGIA o silenzio)";

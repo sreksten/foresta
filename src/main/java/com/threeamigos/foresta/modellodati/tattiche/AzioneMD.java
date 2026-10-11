@@ -34,7 +34,7 @@ public final class AzioneMD {
 	 * Un'azione senza parametri (ogni tipo tranne INCANTESIMO_DI_DANNO e CAMBIA_ARMA)
 	 */
 	public static AzioneMD di(TipoAzione tipo) {
-		if (tipo == TipoAzione.INCANTESIMO_DI_DANNO || tipo == TipoAzione.CAMBIA_ARMA) {
+		if (tipo == TipoAzione.INCANTESIMO_DI_DANNO || tipo == TipoAzione.INCANTESIMO_DEL_REPERTORIO || tipo == TipoAzione.CAMBIA_ARMA) {
 			throw new IllegalArgumentException(tipo + " vuole dei parametri");
 		}
 		return new AzioneMD(tipo, null, false, null);
@@ -47,6 +47,13 @@ public final class AzioneMD {
 		return new AzioneMD(TipoAzione.INCANTESIMO_DI_DANNO, Objects.requireNonNull(criterio), soloSePiuForteDellAttacco, null);
 	}
 
+	/**
+	 * L'incantesimo del repertorio (anche Morte e Silenzio) con un criterio: come scelgono i mostri oggi
+	 */
+	public static AzioneMD incantesimoDelRepertorio(CriterioIncantesimo criterio, boolean soloSePiuForteDellAttacco) {
+		return new AzioneMD(TipoAzione.INCANTESIMO_DEL_REPERTORIO, Objects.requireNonNull(criterio), soloSePiuForteDellAttacco, null);
+	}
+
 	public static AzioneMD cambiaArma(TipoDanno armaDi) {
 		return new AzioneMD(TipoAzione.CAMBIA_ARMA, null, false, Objects.requireNonNull(armaDi));
 	}
@@ -57,6 +64,9 @@ public final class AzioneMD {
 	public AzioneMD soloSePiuForteDellAttacco() {
 		if (tipo == TipoAzione.INCANTESIMO_DI_DANNO) {
 			return incantesimoDiDanno(criterio, true);
+		}
+		if (tipo == TipoAzione.INCANTESIMO_DEL_REPERTORIO) {
+			return incantesimoDelRepertorio(criterio, true);
 		}
 		if (!faDanno(tipo)) {
 			throw new IllegalArgumentException(tipo + " non fa danno da confrontare con l'attacco");
@@ -116,6 +126,9 @@ public final class AzioneMD {
 		try {
 			if (tipo == TipoAzione.INCANTESIMO_DI_DANNO) {
 				return incantesimoDiDanno(criterio, solo);
+			}
+			if (tipo == TipoAzione.INCANTESIMO_DEL_REPERTORIO) {
+				return incantesimoDelRepertorio(criterio, solo);
 			}
 			if (tipo == TipoAzione.CAMBIA_ARMA) {
 				return cambiaArma(armaDi);

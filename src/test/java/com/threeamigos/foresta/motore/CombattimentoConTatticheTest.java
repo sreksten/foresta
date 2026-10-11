@@ -279,8 +279,14 @@ class CombattimentoConTatticheTest {
             iniziaLaMischia(locazione, partita);
             // G A A A G A A A: la prima azione è il fulmine sul bagnato, la seconda (la pergamena è finita) l'attacco al più ferito
             scatta(locazione, partita, 5);
-            java.util.List<InternoDecisioneTattica> decisioni = partita.eventi().tutti(InternoDecisioneTattica.class);
-            assertEquals(2, decisioni.size(), "una per ogni azione di chi ha una tattica (i goblin non ne hanno)");
+            java.util.List<InternoDecisioneTattica> decisioni = new java.util.ArrayList<>();
+            for (InternoDecisioneTattica d : partita.eventi().tutti(InternoDecisioneTattica.class)) {
+                // Anche i goblin decidono, con la tattica base: qui interessano quelle del mago (i goblin colpiti dal fulmine possono essere storditi)
+                if (d.getPersonaggio() == mago) {
+                    decisioni.add(d);
+                }
+            }
+            assertEquals(2, decisioni.size(), "una per ogni azione del mago");
 
             InternoDecisioneTattica fulmine = decisioni.get(0);
             assertSame(mago, fulmine.getPersonaggio());
@@ -309,7 +315,8 @@ class CombattimentoConTatticheTest {
             partita.eventi().ascolta(InternoDecisioneTattica.class);
             iniziaLaMischia(locazione, partita);
             scatta(locazione, partita, 1);
-            InternoDecisioneTattica decisione = partita.eventi().ultimo(InternoDecisioneTattica.class);
+            InternoDecisioneTattica decisione = partita.eventi().tutti(InternoDecisioneTattica.class).get(0);
+            assertSame(partita.gruppo().getCapo(), decisione.getPersonaggio());
             assertTrue(decisione.isRipiego());
             assertEquals(-1, decisione.getIndiceVoce());
             assertEquals(TipoAzione.ATTACCO_FISICO, decisione.getAzione());
@@ -335,5 +342,30 @@ class CombattimentoConTatticheTest {
         assertTrue(riga.contains("INTERNO_DECISIONE_TATTICA"), riga);
         assertTrue(riga.contains("decide CANTO_DI_VALORE (voce 3)"), riga);
         assertTrue(riga.contains("voce 1: disattivata | voce 3: CANTO_DI_VALORE su tutto il gruppo"), riga);
+    }
+
+    @Test
+    void iMostriSenzaTatticaAgisconoConQuellaBaseDellaLoroClasse() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(610)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            Locazione locazione = preparaLo(partita, 2);
+            Personaggio capo = partita.gruppo().getCapo();
+            partita.eventi().ascolta(InternoDecisioneTattica.class);
+            iniziaLaMischia(locazione, partita);
+            // Piano G A G..: due scatti bastano a far agire un goblin
+            scatta(locazione, partita, 2);
+            InternoDecisioneTattica decisione = null;
+            for (InternoDecisioneTattica d : partita.eventi().tutti(InternoDecisioneTattica.class)) {
+                if (GruppoAvversario.getIstanza().getPersonaggi().contains(d.getPersonaggio())) {
+                    decisione = d;
+                }
+            }
+            assertNotNull(decisione, "un goblin ha deciso con la tattica base");
+            assertEquals(TipoAzione.ATTACCO_FISICO, decisione.getAzione());
+            assertSame(capo, decisione.getBersaglio(), "chi altro?");
+            assertEquals(19, decisione.getIndiceVoce(), "l'ultima voce: senza caster fra i miei, uno a caso (la ventesima)");
+            String perche = String.join("\n", decisione.getSpiegazione());
+            assertTrue(perche.contains("AVVERSARI_E_OSPITI"), perche);
+        }
     }
 }

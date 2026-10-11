@@ -30,6 +30,28 @@ public final class SceltaIncantesimo {
 	static final List<ClasseIncantesimo> ELEMENTALI = Arrays.asList(ClasseIncantesimo.ARIA, ClasseIncantesimo.ACQUA, ClasseIncantesimo.TERRA,
 			ClasseIncantesimo.FUOCO, ClasseIncantesimo.FULMINE, ClasseIncantesimo.GELO, ClasseIncantesimo.VELENO);
 
+	/**
+	 * Gli incantesimi che "del repertorio" comprende: tutti i malefici, anche la Morte e il Silenzio (come scelgono i mostri oggi)
+	 */
+	static final List<ClasseIncantesimo> REPERTORIO = repertorio();
+
+	private static List<ClasseIncantesimo> repertorio() {
+		List<ClasseIncantesimo> malefici = new ArrayList<>();
+		for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
+			if (classe.getTipo() == com.threeamigos.foresta.tipi.TipoIncantesimo.MALEFICO) {
+				malefici.add(classe);
+			}
+		}
+		return malefici;
+	}
+
+	/**
+	 * Fra quali incantesimi sceglie l'azione: gli elementali per INCANTESIMO_DI_DANNO, tutti i malefici per INCANTESIMO_DEL_REPERTORIO
+	 */
+	private static List<ClasseIncantesimo> elencoDi(AzioneMD azione) {
+		return azione.getTipo() == TipoAzione.INCANTESIMO_DEL_REPERTORIO ? REPERTORIO : ELEMENTALI;
+	}
+
 	private SceltaIncantesimo() {
 	}
 
@@ -38,11 +60,22 @@ public final class SceltaIncantesimo {
 	 * scoperta) e che non sono già falliti troppe volte
 	 */
 	public static List<ClasseIncantesimo> lanciabiliContro(Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
+		return lanciabiliContro(attore, bersaglio, contesto, ELEMENTALI);
+	}
+
+	private static List<ClasseIncantesimo> lanciabiliContro(Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
+															List<ClasseIncantesimo> elenco) {
 		List<ClasseIncantesimo> lanciabili = new ArrayList<>();
 		if (bersaglio == null || bersaglio.isFuoriCombattimento()) {
 			return lanciabili;
 		}
-		for (ClasseIncantesimo classe : ELEMENTALI) {
+		for (ClasseIncantesimo classe : elenco) {
+			// Il Silenzio non si lancia su chi è già silenziato o è immune al silenzio
+			if (classe == ClasseIncantesimo.SILENZIO
+					&& (bersaglio.hasEffettoDiStato(com.threeamigos.foresta.tipi.TipoEffettoDiStato.SILENZIATO)
+					|| bersaglio.isImmuneAEffetto(com.threeamigos.foresta.tipi.TipoEffettoDiStato.SILENZIATO))) {
+				continue;
+			}
 			TipoAzione azione = TipoAzione.di(classe);
 			if (Requisiti.puoLanciare(attore, classe, contesto)
 					&& !bersaglio.isImmuneAIncantesimo(classe) && !bersaglio.isImmuneATipoDanno(classe.getTipoDanno())
@@ -58,7 +91,7 @@ public final class SceltaIncantesimo {
 	 * L'incantesimo scelto, o null se non se ne può lanciare nessuno (o, con <code>soloSePiuForteDellAttacco</code>, se le armi rendono di più)
 	 */
 	public static ClasseIncantesimo scegli(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
-		List<ClasseIncantesimo> lanciabili = lanciabiliContro(attore, bersaglio, contesto);
+		List<ClasseIncantesimo> lanciabili = lanciabiliContro(attore, bersaglio, contesto, elencoDi(azione));
 		if (lanciabili.isEmpty()) {
 			return null;
 		}
@@ -91,7 +124,7 @@ public final class SceltaIncantesimo {
 	 * criterio, per esempio "PIU_ADATTO: FUOCO 4.2, FULMINE 9.8"
 	 */
 	public static String descrivi(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
-		List<ClasseIncantesimo> lanciabili = lanciabiliContro(attore, bersaglio, contesto);
+		List<ClasseIncantesimo> lanciabili = lanciabiliContro(attore, bersaglio, contesto, elencoDi(azione));
 		StringBuilder sb = new StringBuilder(azione.getCriterio().name()).append(": ");
 		for (int i = 0; i < lanciabili.size(); i++) {
 			ClasseIncantesimo classe = lanciabili.get(i);
@@ -166,7 +199,8 @@ public final class SceltaIncantesimo {
 	public static List<Personaggio> bersagli(Personaggio attore, Personaggio principale, ClasseIncantesimo classe, ContestoTattico contesto) {
 		List<Personaggio> bersagli = new ArrayList<>();
 		bersagli.add(principale);
-		if (classe.getPortata() == PortataIncantesimo.MULTIPLO) {
+		// Un mostro colpisce solo il bersaglio scelto, come oggi (PersonaggioBase.attacca)
+		if (classe.getPortata() == PortataIncantesimo.MULTIPLO && !contesto.isMostro(attore)) {
 			for (Personaggio altro : contesto.getAvversari()) {
 				if (bersagli.size() >= Math.max(1, attore.getBersagli())) {
 					break;
