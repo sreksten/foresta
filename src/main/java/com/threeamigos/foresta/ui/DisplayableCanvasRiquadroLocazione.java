@@ -324,6 +324,10 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 	}
 
 	SpriteInterface aggiungiInterazione(VistaPersonaggio personaggio, TipoInterazioneConEffettiDiStato interazione) {
+		return aggiungiTestoSulPersonaggio(personaggio, interazione.getDescrizione(), DoomdarkColorModel.Color.GREEN);
+	}
+
+	SpriteInterface aggiungiTestoSulPersonaggio(VistaPersonaggio personaggio, String testo, DoomdarkColorModel.Color colore) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
 		if (coordinate == null) {
 			return null;
@@ -331,8 +335,8 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		BufferedImage image = mappaImmagini.get(personaggio);
 		int x = xEffetto(personaggio, coordinate, image);
 		int yIniziale = coordinate.getY() + image.getHeight() * 2 / 3 - SOLLEVAMENTO_ANCORA;
-		SpriteEffetto sprite = new SpriteEffetto(interazione.getDescrizione(), DoomdarkFontMedium.getInstance(),
-				DoomdarkColorModel.Color.GREEN, x, yIniziale + calcolaOffsetVerticale(yIniziale));
+		SpriteEffetto sprite = new SpriteEffetto(testo, DoomdarkFontMedium.getInstance(),
+				colore, x, yIniziale + calcolaOffsetVerticale(yIniziale));
 		effettiAttivi.add(new EffettoAttivo(yIniziale, sprite));
 		return sprite;
 	}

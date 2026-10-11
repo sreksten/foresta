@@ -43,11 +43,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class InterazioniConGliStatiCaratterizzazioneTest {
 
     /**
-     * L'impronta SHA-256 del testo prodotto dal calcolo come era prima del riordino della catena delle interazioni, con
-     * una sola differenza voluta: un difensore insieme SPAVENTATO e CONFUSO colpito da danno VUOTO subisce la Follia Cosmica
-     * (prima no, perché contava solo lo SPAVENTATO). Sono 2 righe su 8316.
+     * L'impronta SHA-256 del testo prodotto dal calcolo. Rispetto a come era prima del riordino della catena delle interazioni
+     * (e del danno vero, diventato la debolezza di classe) ci sono due differenze volute: un difensore insieme SPAVENTATO e
+     * CONFUSO colpito da danno VUOTO subisce la Follia Cosmica (prima no, perché contava solo lo SPAVENTATO; 2 righe su 8316);
+     * il danno vero dei non morti non è più fra le interazioni ma nel campo {@code classe} (SACRO=2.0), con lo stesso
+     * effetto sul danno.
      */
-    private static final String IMPRONTA_ATTESA = "f56adc1950c42934d47f1e9c660345552acd2f841b200791a96b7db58242e182";
+    private static final String IMPRONTA_ATTESA = "22d6002df19ae8b47cf9e00963c714ac7d38496d0b983d95459e6b84a8183b35";
 
     private static final TipoEffettoDiStato[] STATI = {
             TipoEffettoDiStato.BAGNATO, TipoEffettoDiStato.BRUCIATO, TipoEffettoDiStato.AVVELENATO, TipoEffettoDiStato.SANGUINAMENTO,
@@ -120,6 +122,7 @@ class InterazioniConGliStatiCaratterizzazioneTest {
                     testo.append(tipoDifensore).append('|').append(Arrays.toString(stati)).append('|').append(tipoDanno)
                             .append(" -> danno=").append(r.getDanno())
                             .append(" interazioni=[").append(descrivi(r.getInterazioni())).append(']')
+                            .append(" classe=").append(r.getReazioniDiClasse())
                             .append(" aggiunti=[").append(descriviEffetti(r.getEffettiDiStatoDaAggiungere())).append(']')
                             .append(" tolti=[").append(descrivi(r.getEffettiDiStatoDaRimuovere())).append(']')
                             .append(" grazia=").append(r.isColpoDiGrazia())

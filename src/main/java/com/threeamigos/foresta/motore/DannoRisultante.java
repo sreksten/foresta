@@ -10,6 +10,9 @@ import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -22,6 +25,8 @@ public class DannoRisultante {
     private TipoDanno tipoDanno;
     private int danno;
     private final Collection<TipoInterazioneConEffettiDiStato> interazioni = new ArrayList<>();
+    // Le debolezze, resistenze e immunità di classe a un tipo di danno che hanno contato nel colpo (moltiplicatore diverso da 1)
+    private final Map<TipoDanno, Double> reazioniDiClasse = new LinkedHashMap<>();
     private final Collection<EffettoDiStatoMD> effettiDiStatoDaAggiungere = new ArrayList<>();
     private final Collection<ModificatoreAttributoMD> modificatoriDaAggiungere = new ArrayList<>();
     private final Collection<TipoEffettoDiStato> effettiDiStatoDaRimuovere = new ArrayList<>();
@@ -63,6 +68,20 @@ public class DannoRisultante {
 
     public void addInterazione(TipoInterazioneConEffettiDiStato tipoInterazione) {
         interazioni.add(tipoInterazione);
+    }
+
+    /**
+     * Registra che il difensore, per la sua classe, è debole, resiste o è immune a quel tipo di danno; non fa niente se il
+     * moltiplicatore è 1, né se per quel tipo di danno l'aveva già registrato
+     */
+    public void addReazioneDiClasse(TipoDanno tipoDanno, double moltiplicatore) {
+        if (moltiplicatore != 1.0d) {
+            reazioniDiClasse.putIfAbsent(tipoDanno, moltiplicatore);
+        }
+    }
+
+    public Map<TipoDanno, Double> getReazioniDiClasse() {
+        return Collections.unmodifiableMap(reazioniDiClasse);
     }
 
     public Collection<TipoInterazioneConEffettiDiStato> getInterazioni() {

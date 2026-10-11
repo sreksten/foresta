@@ -161,6 +161,10 @@ public enum TipoEvento {
      */
     NOTIFICA_INTERAZIONE_PERSONAGGIO,
     /**
+     * Un Personaggio, per la sua classe, è debole, resiste o è immune a un tipo di danno che ha appena subito
+     */
+    NOTIFICA_REAZIONE_DI_CLASSE_PERSONAGGIO,
+    /**
      * Mostra la finestra con i migliori 10 giocatori di tutti i tempi
      */
     NOTIFICA_MOSTRA_PUNTEGGI_MIGLIORI,

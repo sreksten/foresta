@@ -80,8 +80,9 @@ class MoltiplicatoreAttesoTest {
         Personaggio scheletro = difensore(TipoPersonaggio.SCHELETRO);
         assertEquals(0.0d, CalcolatoreCombattimento.moltiplicatoreAtteso(scheletro, TipoDanno.VELENO), DELTA);
         assertTrue(CalcolatoreCombattimento.interazioniAttive(scheletro, TipoDanno.VELENO).isEmpty());
-        assertEquals(Collections.singletonList(TipoInterazioneConEffettiDiStato.DANNO_VERO),
-                CalcolatoreCombattimento.interazioniAttive(scheletro, TipoDanno.SACRO));
+        // La debolezza della classe non è un'interazione con uno stato: è nel moltiplicatore del danno subito
+        assertTrue(CalcolatoreCombattimento.interazioniAttive(scheletro, TipoDanno.SACRO).isEmpty());
+        assertEquals(2.0d, scheletro.getMoltiplicatoreDannoSubito(TipoDanno.SACRO), DELTA);
         assertEquals(2.0d * mitigazione(scheletro, TipoDanno.SACRO),
                 CalcolatoreCombattimento.moltiplicatoreAtteso(scheletro, TipoDanno.SACRO), DELTA);
         assertEquals(mitigazione(scheletro, TipoDanno.FUOCO), CalcolatoreCombattimento.moltiplicatoreAtteso(scheletro, TipoDanno.FUOCO), DELTA);

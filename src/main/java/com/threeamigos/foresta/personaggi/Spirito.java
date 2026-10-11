@@ -3,7 +3,6 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
@@ -278,13 +277,6 @@ public class Spirito extends PersonaggioBase implements Personaggio {
 		return super.isImmuneAIncantesimo(classeIncantesimo) ||
 				classeIncantesimo == ClasseIncantesimo.ARIA ||
 				classeIncantesimo == ClasseIncantesimo.TERRA;
-	}
-
-	@Override
-	public boolean isImmuneATipoDanno(TipoDanno tipoDanno) {
-		return super.isImmuneATipoDanno(tipoDanno) ||
-				tipoDanno == TipoDanno.ARIA ||
-				tipoDanno == TipoDanno.TERRA;
 	}
 
 	@Override

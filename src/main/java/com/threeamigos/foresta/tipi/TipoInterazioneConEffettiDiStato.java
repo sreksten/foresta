@@ -7,8 +7,8 @@ import java.util.Collections;
 /**
  * Le reazioni fra un tipo di danno e uno stato del difensore: una reazione scatta se il difensore ha almeno uno degli stati
  * delle precondizioni e riceve uno dei tipi di danno degli innescanti (vedi CalcolatoreCombattimento.interazioniAttive, che
- * le prova in sequenza). <b>L'ordine di dichiarazione è l'ordine in cui le reazioni si applicano</b>, per stato; DANNO_VERO,
- * che dipende dalla classe del personaggio e non da uno stato, è l'ultima e si applica per prima.
+ * le prova in sequenza). <b>L'ordine di dichiarazione è l'ordine in cui le reazioni si applicano</b>, per stato. (Le debolezze
+ * e le resistenze della classe a un tipo di danno non sono qui: vedi TipoPersonaggio.getMoltiplicatoreDannoSubito.)
  *
  * @author Stefano Reksten
  */
@@ -138,18 +138,7 @@ public enum TipoInterazioneConEffettiDiStato {
     RISONANZA_SIGILLATA(TipoEffettoDiStato.SILENZIATO, TipoDanno.ARCANO, "Risonanza Sigillata"),
     // + PSICHICO
     // +50% danno, estende anche ACCECATO
-    ISOLAMENTO_SENSORIALE(TipoEffettoDiStato.SILENZIATO, TipoDanno.PSICHICO, "Isolamento Sensoriale", 1.5d),
-
-    // Interazioni particolari che dipendono dalla classe del Personaggio
-    // DANNO_VERO: la debolezza di una classe a un tipo di danno (oggi il SACRO sui non morti, vedi
-    // PersonaggioBase.haInterazioneCon). Nonostante il nome non ignora la difesa: il danno, già ridotto dalla difesa, si
-    // moltiplica per 2 (il "danno puro" che ignora la difesa è un'altra cosa: il bonus della RISONANZA_SIGILLATA).
-    // Non ha stati né tipi di danno da controllare (liste vuote), quindi non scatta mai da solo nel ciclo di
-    // CalcolatoreCombattimento.interazioniAttive, che lo aggiunge a parte.
-    // Si dichiara per ultimo perché non dipende da uno stato, ma si applica per primo, come nel calcolo del danno di sempre;
-    // l'ordine non cambia il risultato (moltiplica e basta, senza stati né dadi), cambia solo la posizione nella lista delle
-    // interazioni.
-    DANNO_VERO(Collections.emptyList(), Collections.emptyList(), "Danno Vero", 2.0d);
+    ISOLAMENTO_SENSORIALE(TipoEffettoDiStato.SILENZIATO, TipoDanno.PSICHICO, "Isolamento Sensoriale", 1.5d);
 
     private final Collection<TipoEffettoDiStato> precondizioni;
     private final Collection<TipoDanno> innescanti;

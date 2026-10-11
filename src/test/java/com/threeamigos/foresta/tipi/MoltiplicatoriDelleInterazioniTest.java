@@ -17,7 +17,6 @@ class MoltiplicatoriDelleInterazioniTest {
     @Test
     void ogniInterazioneHaIlSuoMoltiplicatore() {
         Map<TipoInterazioneConEffettiDiStato, Double> attesi = new EnumMap<>(TipoInterazioneConEffettiDiStato.class);
-        attesi.put(DANNO_VERO, 2.0);
         attesi.put(ELETTROCUZIONE, 1.5);
         attesi.put(VAPORIZZAZIONE, 0.5);
         attesi.put(ALIMENTAZIONE_FIAMMA, 1.5);

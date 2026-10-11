@@ -3,7 +3,6 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
@@ -275,13 +274,6 @@ public class Idra extends PersonaggioBase implements Personaggio {
 		return classeIncantesimo == ClasseIncantesimo.TERRA ||
 				classeIncantesimo == ClasseIncantesimo.ACQUA ||
 				classeIncantesimo == ClasseIncantesimo.ARIA;
-	}
-
-	@Override
-	public boolean isImmuneATipoDanno(TipoDanno tipoDanno) {
-		return tipoDanno == TipoDanno.TERRA ||
-				tipoDanno == TipoDanno.ACQUA ||
-				tipoDanno == TipoDanno.ARIA;
 	}
 
 	@Override

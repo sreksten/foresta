@@ -81,6 +81,7 @@ public class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(NotificaFineGioco.class, this::gestisciEventoFineGioco);
 		BusEventi.iscriviti(InternoNotificaViaFumettoATempo.class, this::gestisciEventoFumetto);
 		BusEventi.iscriviti(NotificaInterazionePersonaggio.class, this::gestisciEventoInterazione);
+		BusEventi.iscriviti(NotificaReazioneDiClassePersonaggio.class, this::gestisciEventoReazioneDiClasse);
 		BusEventi.iscriviti(NotificaTestoFrase.class, this::gestisciEventoMessaggio);
 		BusEventi.iscriviti(InternoMostraFinestraStato.class, evento -> mostraFinestra(TipoFinestra.STATO));
 		BusEventi.iscriviti(InternoMostraFinestraStatistiche.class, evento -> mostraFinestra(TipoFinestra.STATISTICHE));
@@ -506,6 +507,12 @@ public class ForestaUI implements Temporizzabile {
 		} else {
 			displayableCanvas.perso();
 		}
+	}
+
+	private void gestisciEventoReazioneDiClasse(NotificaReazioneDiClassePersonaggio evento) {
+		displayableCanvas.aggiungiTestoSulPersonaggio(evento.getPersonaggio(),
+				TestoReazioneDiClasse.di(evento.getTipoDanno(), evento.getMoltiplicatore()),
+				TestoReazioneDiClasse.colore(evento.getMoltiplicatore()));
 	}
 
 	private void gestisciEventoInterazione(NotificaInterazionePersonaggio evento) {

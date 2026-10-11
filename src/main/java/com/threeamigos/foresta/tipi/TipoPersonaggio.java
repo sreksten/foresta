@@ -2,7 +2,9 @@ package com.threeamigos.foresta.tipi;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -67,6 +69,27 @@ public enum TipoPersonaggio {
 	VIANDANTE(CategoriaPersonaggio.UMANOIDE);
 
 	private final Set<CategoriaPersonaggio> categorie;
+	// Quanto danno subisce, per tipo di danno, questa classe in più di quanto dicono le sue categorie: i tipi che mancano valgono 1
+	private final Map<TipoDanno, Double> dannoSubito = new EnumMap<>(TipoDanno.class);
+
+	// Le debolezze e le resistenze della classe (quelle comuni a una categoria stanno in CategoriaPersonaggio)
+	static {
+		for (TipoPersonaggio fantasma : EnumSet.of(FANTASMA, OMBRA_NERA, SPETTRO, SPIRITO)) {
+			fantasma.moltiplicaIlDannoSubito(TipoDanno.ARIA, 0.0d);
+			fantasma.moltiplicaIlDannoSubito(TipoDanno.TERRA, 0.0d);
+		}
+		DRAGO.moltiplicaIlDannoSubito(TipoDanno.FUOCO, 0.0d);
+		CHIMERA_DRAGO.moltiplicaIlDannoSubito(TipoDanno.FUOCO, 0.0d);
+		IDRA.moltiplicaIlDannoSubito(TipoDanno.TERRA, 0.0d);
+		IDRA.moltiplicaIlDannoSubito(TipoDanno.ACQUA, 0.0d);
+		IDRA.moltiplicaIlDannoSubito(TipoDanno.ARIA, 0.0d);
+		// Il gargoyle è di pietra: subisce solo il danno fisico
+		for (TipoDanno tipoDanno : TipoDanno.values()) {
+			if (tipoDanno.getSuperTipo() != SupertipoDanno.FISICO) {
+				GARGOYLE.moltiplicaIlDannoSubito(tipoDanno, 0.0d);
+			}
+		}
+	}
 
 	TipoPersonaggio(CategoriaPersonaggio... categorie) {
 		this.categorie = Collections.unmodifiableSet(EnumSet.copyOf(Arrays.asList(categorie)));
@@ -81,5 +104,21 @@ public enum TipoPersonaggio {
 
 	public boolean isDellaCategoria(CategoriaPersonaggio categoria) {
 		return categorie.contains(categoria);
+	}
+
+	private void moltiplicaIlDannoSubito(TipoDanno tipoDanno, double moltiplicatore) {
+		dannoSubito.put(tipoDanno, moltiplicatore);
+	}
+
+	/**
+	 * Per quanto si moltiplica il danno di quel tipo contro questa classe: il prodotto del valore della classe e di quelli delle
+	 * sue categorie. 1 se non cambia, 0 se è immune, tra 0 e 1 se resiste, più di 1 se è debole.
+	 */
+	public double getMoltiplicatoreDannoSubito(TipoDanno tipoDanno) {
+		double moltiplicatore = dannoSubito.getOrDefault(tipoDanno, 1.0d);
+		for (CategoriaPersonaggio categoria : categorie) {
+			moltiplicatore = moltiplicatore * categoria.getMoltiplicatoreDannoSubito(tipoDanno);
+		}
+		return moltiplicatore;
 	}
 }

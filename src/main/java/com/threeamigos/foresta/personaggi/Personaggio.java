@@ -300,10 +300,11 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
 	boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato);
 	/**
-	 * Un personaggio è particolarmente debole contro un tipo di danno. Nel caso dei non morti per esempio
-	 * sacro o resurrezione provocano Danno Vero (True Damage)
+	 * Per quanto si moltiplica il danno di quel tipo contro il personaggio: 1 se non cambia, 0 se è immune, tra 0 e 1 se
+	 * resiste, più di 1 se è debole (i non morti subiscono il doppio dal SACRO). Lo dicono la sua classe e le sue categorie
+	 * (vedi TipoPersonaggio.getMoltiplicatoreDannoSubito).
 	 */
-	TipoInterazioneConEffettiDiStato haInterazioneCon(TipoDanno tipoDanno);
+	double getMoltiplicatoreDannoSubito(TipoDanno tipoDanno);
 	/**
 	 * Restituisce il modello dati del personaggio.
 	 */

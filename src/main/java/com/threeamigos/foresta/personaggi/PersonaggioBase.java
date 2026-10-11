@@ -197,8 +197,9 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 	
 	/**
-	 * Se è un non morto (categoria NON_MORTO): le immunità e la debolezza comuni a tutti i non morti stanno qui sotto,
-	 * le altre nelle singole classi, che ridefiniscono questi metodi aggiungendo le proprie e chiamando super.
+	 * Se è un non morto (categoria NON_MORTO): le immunità agli incantesimi e agli stati comuni a tutti i non morti stanno
+	 * qui sotto, le altre nelle singole classi, che ridefiniscono questi metodi aggiungendo le proprie e chiamando super.
+	 * (Le debolezze e le immunità ai tipi di danno stanno in CategoriaPersonaggio e TipoPersonaggio.)
 	 */
 	private boolean isNonMorto() {
 		return getClasse().isDellaCategoria(CategoriaPersonaggio.NON_MORTO);
@@ -212,17 +213,17 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	/**
-	 * I non morti sono immuni al danno da Veleno
+	 * Immune a un tipo di danno: non lo sente proprio (moltiplicatore 0)
 	 */
 	public boolean isImmuneATipoDanno(TipoDanno tipoDanno) {
-		return isNonMorto() && tipoDanno == TipoDanno.VELENO;
+		return getMoltiplicatoreDannoSubito(tipoDanno) == 0.0d;
 	}
 
 	/**
-	 * I non morti sono deboli al Sacro: danno vero
+	 * Debolezze e resistenze della classe e delle sue categorie ai tipi di danno
 	 */
-	public TipoInterazioneConEffettiDiStato haInterazioneCon(TipoDanno tipoDanno) {
-		return isNonMorto() && tipoDanno == TipoDanno.SACRO ? TipoInterazioneConEffettiDiStato.DANNO_VERO : null;
+	public double getMoltiplicatoreDannoSubito(TipoDanno tipoDanno) {
+		return getClasse().getMoltiplicatoreDannoSubito(tipoDanno);
 	}
 
 	/**
@@ -622,6 +623,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		for (TipoInterazioneConEffettiDiStato interazione : risultato.getInterazioni()) {
 			BusEventi.pubblica(new NotificaInterazionePersonaggio(this, interazione));
+		}
+		for (Map.Entry<TipoDanno, Double> reazione : risultato.getReazioniDiClasse().entrySet()) {
+			BusEventi.pubblica(new NotificaReazioneDiClassePersonaggio(this, reazione.getKey(), reazione.getValue()));
 		}
 
 		if (risultato.getCuraAdArea() > 0) {

@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.tipi;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 /**
  * Il genere di creatura di un personaggio, per scegliere chi colpire o a chi rivolgere un'azione "per categoria" (un
  * non morto, un volante...). Una classe (TipoPersonaggio) ne ha una o più: lo Spirito è sia NON_MORTO sia VOLANTE.
@@ -24,9 +27,28 @@ public enum CategoriaPersonaggio {
 	COSTRUTTO("Costrutto");
 
 	private final String nome;
+	// Quanto danno subisce, per tipo di danno, chi è di questa categoria: i tipi che mancano valgono 1
+	private final Map<TipoDanno, Double> dannoSubito = new EnumMap<>(TipoDanno.class);
+
+	static {
+		NON_MORTO.moltiplicaIlDannoSubito(TipoDanno.SACRO, 2.0d);
+		NON_MORTO.moltiplicaIlDannoSubito(TipoDanno.VELENO, 0.0d);
+	}
 
 	CategoriaPersonaggio(String nome) {
 		this.nome = nome;
+	}
+
+	private void moltiplicaIlDannoSubito(TipoDanno tipoDanno, double moltiplicatore) {
+		dannoSubito.put(tipoDanno, moltiplicatore);
+	}
+
+	/**
+	 * Per quanto si moltiplica il danno di quel tipo contro chi è di questa categoria: 1 se non cambia, 0 se è immune, tra 0
+	 * e 1 se resiste, più di 1 se è debole (i non morti subiscono il doppio dal SACRO e sono immuni al VELENO).
+	 */
+	public double getMoltiplicatoreDannoSubito(TipoDanno tipoDanno) {
+		return dannoSubito.getOrDefault(tipoDanno, 1.0d);
 	}
 
 	/**

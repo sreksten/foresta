@@ -5,7 +5,6 @@ import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,8 +39,8 @@ class ImmunitaDeiNonMortiTest {
             assertTrue(p.isImmuneATipoDanno(TipoDanno.VELENO), tipo.name());
             assertTrue(p.isImmuneAEffetto(TipoEffettoDiStato.SANGUINAMENTO), tipo.name());
             assertTrue(p.isImmuneAEffetto(TipoEffettoDiStato.INFETTATO), tipo.name());
-            assertEquals(TipoInterazioneConEffettiDiStato.DANNO_VERO, p.haInterazioneCon(TipoDanno.SACRO), tipo.name());
-            assertNull(p.haInterazioneCon(TipoDanno.FUOCO), tipo.name());
+            assertEquals(2.0d, p.getMoltiplicatoreDannoSubito(TipoDanno.SACRO), 1e-9, tipo.name());
+            assertEquals(1.0d, p.getMoltiplicatoreDannoSubito(TipoDanno.FUOCO), 1e-9, tipo.name());
             assertFalse(p.isImmuneAIncantesimo(ClasseIncantesimo.FUOCO), tipo.name());
         }
         assertEquals(6, controllati);
@@ -53,7 +52,7 @@ class ImmunitaDeiNonMortiTest {
             Personaggio p = crea(tipo);
             assertFalse(p.isImmuneAIncantesimo(ClasseIncantesimo.MORTE), tipo.name());
             assertFalse(p.isImmuneAEffetto(TipoEffettoDiStato.SANGUINAMENTO), tipo.name());
-            assertNull(p.haInterazioneCon(TipoDanno.SACRO), tipo.name());
+            assertEquals(1.0d, p.getMoltiplicatoreDannoSubito(TipoDanno.SACRO), 1e-9, tipo.name());
         }
         // Il Drago ha le sue immunità e basta
         assertTrue(crea(TipoPersonaggio.DRAGO).isImmuneATipoDanno(TipoDanno.FUOCO));

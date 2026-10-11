@@ -212,6 +212,7 @@ public class CalcolatoreCombattimento {
         dannoRisultante.setTipoDanno(tipoDanno);
 
         boolean immuneATipoDannoBase = difensore.isImmuneATipoDanno(tipoDanno);
+        dannoRisultante.addReazioneDiClasse(tipoDanno, difensore.getMoltiplicatoreDannoSubito(tipoDanno));
         if (immuneATipoDannoBase) {
             BusEventi.pubblica(new InternoMessaggio(difensore.getNome() + " è immune al tipo di danno " + tipoDanno));
         }
@@ -300,13 +301,14 @@ public class CalcolatoreCombattimento {
             // che usano le tattiche (interazioniAttive, moltiplicatoreDelleInterazioni, fattoreDifesaDaStati): qui si
             // applicano solo i loro effetti, nell'ordine in cui scattano
             List<TipoInterazioneConEffettiDiStato> interazioni = interazioniAttive(difensore, tipoDanno);
-            moltiplicatoreDannoStato = moltiplicatoreDelleInterazioni(difensore, interazioni);
+            // Chi resiste a questo tipo di danno subisce meno anche le reazioni con i suoi stati: ognuna scatta con quella probabilità
+            interazioni = interazioniCheScattano(interazioni, fattoreEffetti(difensore, tipoDanno));
+            moltiplicatoreDannoStato = moltiplicatoreDelleInterazioni(difensore, tipoDanno, interazioni);
             statDifensiva = statDifensiva * fattoreDifesaDaStati(difensore, tipoDanno, interazioni);
 
             for (TipoInterazioneConEffettiDiStato interazione : interazioni) {
                 switch (interazione) {
                     // Cambiano solo il danno, e questo l'ha già fatto moltiplicatoreDelleInterazioni
-                    case DANNO_VERO:
                     case ELETTROCUZIONE:
                     case ALIMENTAZIONE_FIAMMA:
                         dannoRisultante.addInterazione(interazione);
@@ -534,6 +536,8 @@ public class CalcolatoreCombattimento {
             for (IncantamentoMD inc : arma.getIncantamenti()) {
                 TipoDanno elementoMagico = inc.getTipoDannoElementale();
 
+                double moltiplicatoreDannoSubito = difensore.getMoltiplicatoreDannoSubito(elementoMagico);
+                dannoRisultante.addReazioneDiClasse(elementoMagico, moltiplicatoreDannoSubito);
                 if (difensore.isImmuneATipoDanno(elementoMagico)) {
                     Logger.log(String.format("[INCANTAMENTO] %s è immune a %s: incantamento senza effetto",
                             difensore.getNome(), elementoMagico));
@@ -543,10 +547,8 @@ public class CalcolatoreCombattimento {
                 double dannoQuestoIncantamento = dannoIncantamento(attaccante, difensore, inc, arma.getLivello(),
                         fattore * moltiplicatoreSet, 1.0d);
 
-                if (difensore.haInterazioneCon(elementoMagico) == TipoInterazioneConEffettiDiStato.DANNO_VERO) {
-                    dannoQuestoIncantamento = dannoQuestoIncantamento * TipoInterazioneConEffettiDiStato.DANNO_VERO.getMoltiplicatore();
-                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DANNO_VERO);
-                }
+                // La debolezza o resistenza della classe a questo elemento
+                dannoQuestoIncantamento = dannoQuestoIncantamento * moltiplicatoreDannoSubito;
 
                 // Se il bersaglio era BAGNATO e la spada è di FUOCO, si attiva l'interazione Vaporizzazione
                 if (elementoMagico == TipoDanno.FUOCO && difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
@@ -609,7 +611,7 @@ public class CalcolatoreCombattimento {
             // --- TRAGUARDO 1: Stato dell'arma Principale (es. TAGLIENTE ➔ SANGUINAMENTO) ---
             if (!immuneATipoDannoBase && tipoDanno.hasEffettiDiStato()) {
                 double probStatoFisico = ((dannoMitigato * 100.0d) / difensore.getForza()) + (attaccante.getFuria() * 2.0d);
-                if (Dado.tira(100) <= probStatoFisico) {
+                if (Dado.tira(100) <= probStatoFisico * fattoreEffetti(difensore, tipoDanno)) {
                     TipoEffettoDiStato effettoFisico = effettoDiStatoCasuale(tipoDanno);
                     if (effettoFisico != null) {
                         dannoRisultante.addEffettoDiStato(effettoFisico, calcolaDurataStato(difensore, effettoFisico),
@@ -640,7 +642,7 @@ public class CalcolatoreCombattimento {
                         // un mago con INTELLIGENZA 20 e un bastone +20% ne aggiunge 24.
                         double contributoMagico = attaccante.getIntelligenza() * attaccante.getPotereMagico() / 100.0d;
                         double probStatoMagico = ((dannoQuestoIncantamentoProc * 100.0d) / difensore.getForza()) + contributoMagico;
-                        if (Dado.tira(100) <= probStatoMagico) {
+                        if (Dado.tira(100) <= probStatoMagico * fattoreEffetti(difensore, elemento)) {
                             TipoEffettoDiStato effettoMagico = effettoDiStatoCasuale(elemento);
                             if (effettoMagico != null) {
                                 dannoRisultante.addEffettoDiStato(effettoMagico, calcolaDurataStato(difensore, effettoMagico),
@@ -662,7 +664,7 @@ public class CalcolatoreCombattimento {
                     double probModificatore = difensore.getForza() > 0
                             ? ((dannoTotaleCombinato * 100.0d) / difensore.getForza()) + contributoMagico
                             : 100.0d;
-                    if (Dado.tira(100) <= probModificatore) {
+                    if (Dado.tira(100) <= probModificatore * fattoreEffetti(difensore, tipoDanno)) {
                         dannoRisultante.addModificatoreDaAggiungere(modificatore.suPortatore());
                         Logger.log("L'arma applica il modificatore: " + modificatore.getTipoAttributo() + " " + modificatore.getQuantita());
                     }
@@ -715,9 +717,38 @@ public class CalcolatoreCombattimento {
     }
 
     /**
-     * Le interazioni fra il tipo di danno e il difensore che scattano, nell'ordine in cui il calcolo del danno le applica:
-     * quella della classe (DANNO_VERO) e poi quelle degli stati che il difensore ha già, nell'ordine di dichiarazione di
-     * TipoInterazioneConEffettiDiStato: ognuna scatta se il difensore ha uno dei suoi stati e riceve uno dei suoi tipi di danno.
+     * Quanto reggono gli effetti di un tipo di danno (stati, modificatori, reazioni con gli stati) contro un difensore: il
+     * moltiplicatore del danno subito (vedi Personaggio.getMoltiplicatoreDannoSubito) se è minore di 1, cioè se il difensore
+     * resiste, altrimenti 1. Chi è debole subisce più danno ma non più effetti. Per chi è immune (0) non scatta niente, ma
+     * l'immunità l'ha già esclusa il calcolo del danno.
+     */
+    static double fattoreEffetti(Personaggio difensore, TipoDanno tipoDanno) {
+        return Math.min(1.0d, difensore.getMoltiplicatoreDannoSubito(tipoDanno));
+    }
+
+    /**
+     * Le interazioni che scattano davvero: ognuna scatta con probabilità <code>fattoreEffetti</code>. Con 1 (nessuna resistenza)
+     * le tiene tutte senza tirare i dadi.
+     */
+    private static List<TipoInterazioneConEffettiDiStato> interazioniCheScattano(List<TipoInterazioneConEffettiDiStato> interazioni,
+                                                                                double fattoreEffetti) {
+        if (fattoreEffetti >= 1.0d) {
+            return interazioni;
+        }
+        List<TipoInterazioneConEffettiDiStato> scattate = new ArrayList<>();
+        for (TipoInterazioneConEffettiDiStato interazione : interazioni) {
+            if (Dado.tira(100) <= fattoreEffetti * 100.0d) {
+                scattate.add(interazione);
+            }
+        }
+        return scattate;
+    }
+
+    /**
+     * Le interazioni fra il tipo di danno e gli stati che il difensore ha già che scattano, nell'ordine di dichiarazione di
+     * TipoInterazioneConEffettiDiStato (che è quello in cui il calcolo del danno le applica): ognuna scatta se il difensore ha
+     * uno dei suoi stati e riceve uno dei suoi tipi di danno. (La debolezza o resistenza della sua classe a quel danno non è
+     * un'interazione: vedi Personaggio.getMoltiplicatoreDannoSubito.)
      * Non cambia niente e non tira i dadi; un difensore immune a quel danno non ne ha.
      * <p>
      * È l'unico punto che decide quando un'interazione scatta: il calcolo del danno vero e le tattiche (per sapere se un
@@ -728,12 +759,6 @@ public class CalcolatoreCombattimento {
             return Collections.emptyList();
         }
         List<TipoInterazioneConEffettiDiStato> attive = new ArrayList<>();
-        // Il danno vero è la debolezza della classe a quel tipo di danno (il SACRO sui non morti): non dipende da uno stato, e
-        // quindi non rientra nel ciclo qui sotto. Si mette per primo come nel calcolo di sempre; non ha effetti (moltiplica
-        // il danno e basta), per cui l'ordine non cambia il risultato, solo la posizione nella lista
-        if (difensore.haInterazioneCon(tipoDanno) == TipoInterazioneConEffettiDiStato.DANNO_VERO) {
-            attive.add(TipoInterazioneConEffettiDiStato.DANNO_VERO);
-        }
         for (TipoInterazioneConEffettiDiStato interazione : TipoInterazioneConEffettiDiStato.values()) {
             if (interazione.getInnescanti().contains(tipoDanno)
                     && interazione.getPrecondizioni().stream().anyMatch(difensore::hasEffettoDiStato)) {
@@ -751,12 +776,14 @@ public class CalcolatoreCombattimento {
     }
 
     /**
-     * Per quanto le interazioni attive (vedi {@link #interazioniAttive}) moltiplicano il danno: il prodotto dei loro
-     * moltiplicatori (TipoInterazioneConEffettiDiStato.getMoltiplicatore), più la MIETITURA, che dipende dalla SAGGEZZA del
-     * difensore. Meno di 1 vuol dire che il difensore resiste, più di 1 che è debole.
+     * Per quanto il difensore moltiplica il danno di quel tipo: quello della sua classe (debolezza, resistenza o immunità: vedi
+     * Personaggio.getMoltiplicatoreDannoSubito) per i moltiplicatori delle interazioni attive (vedi {@link #interazioniAttive};
+     * TipoInterazioneConEffettiDiStato.getMoltiplicatore, più la MIETITURA, che dipende dalla SAGGEZZA del difensore). Meno di 1
+     * vuol dire che il difensore resiste, più di 1 che è debole.
      */
-    public static double moltiplicatoreDelleInterazioni(Personaggio difensore, List<TipoInterazioneConEffettiDiStato> interazioni) {
-        double moltiplicatore = 1.0d;
+    public static double moltiplicatoreDelleInterazioni(Personaggio difensore, TipoDanno tipoDanno,
+                                                        List<TipoInterazioneConEffettiDiStato> interazioni) {
+        double moltiplicatore = difensore.getMoltiplicatoreDannoSubito(tipoDanno);
         for (TipoInterazioneConEffettiDiStato interazione : interazioni) {
             moltiplicatore = moltiplicatore * (interazione == TipoInterazioneConEffettiDiStato.MIETITURA ?
                     moltiplicatoreMietitura(difensore) : interazione.getMoltiplicatore());
@@ -785,6 +812,9 @@ public class CalcolatoreCombattimento {
      * interazioni attive (la debolezza della classe e quelle degli stati: vedi {@link #interazioniAttive}). Più di quello di un
      * altro tipo di danno vuol dire che il difensore è più debole a questo. Lo usano le tattiche; il calcolo del danno
      * vero usa le stesse funzioni.
+     * <p>
+     * Non tiene conto della probabilità ridotta con cui scattano le reazioni con gli stati e gli stati nativi contro chi resiste
+     * a quel tipo di danno (vedi {@link #fattoreEffetti}): conta le reazioni come se scattassero.
      */
     public static double moltiplicatoreAtteso(Personaggio difensore, TipoDanno tipoDanno) {
         if (difensore.isImmuneATipoDanno(tipoDanno)) {
@@ -796,7 +826,7 @@ public class CalcolatoreCombattimento {
             difesa = difesa * 0.8d;
         }
         difesa = difesa * fattoreDifesaDaStati(difensore, tipoDanno, interazioni);
-        return 100.0d / (100.0d + difesa) * moltiplicatoreDelleInterazioni(difensore, interazioni);
+        return 100.0d / (100.0d + difesa) * moltiplicatoreDelleInterazioni(difensore, tipoDanno, interazioni);
     }
 
     /**
