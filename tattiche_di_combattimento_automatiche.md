@@ -50,10 +50,10 @@ L'elenco deve essere salvabile e ripristinabile anche come **modello** da riappl
 
 Vedi [`motore_di_gioco.md`](motore_di_gioco.md) §7. Quello che conta per le tattiche:
 
-- Un solo **combattente**, scelto dal giocatore (`PERSONAGGIO_n`), attacca a ogni `TIMER` il primo avversario vivo
-  (`GruppoAvversario.getPersonaggioVivo`); poi l'avversario **risponde sul combattente** (`rispondiInMischia`: armi o, per chi sa la
-  magia, un incantesimo a caso del suo repertorio, che rinuncia se è `SILENZIATO`). Gli altri personaggi non fanno niente. Se gli
-  avversari sono più numerosi dei compagni ne arriva un altro, "si disimpegna e attacca" (`LocazioneBase.eseguiSingoloAttacco`).
+- Il combattimento procede **per round a coppie** (§3, **fatto**): a ogni `TIMER` agisce una sola volta il prossimo del piano del round, un mio personaggio e poi un
+  avversario a turno, e i personaggi in più di un gruppo agiscono da soli. Chi dei miei agisce in automatico attacca con le armi il primo avversario vivo (finché non ci sono le
+  tattiche); l'avversario che tocca attacca il mio gruppo scegliendo il bersaglio da sé (`PersonaggioBase.attacca(Gruppo)`: armi o, per chi sa la magia, un incantesimo a caso del suo
+  repertorio, che rinuncia se è `SILENZIATO`). Non c'è più una "risposta" a chi ha agito, né il "si disimpegna e attacca".
 - Gli **incantesimi** e le **pozioni** sono del gruppo: le pergamene e le pozioni stanno nell'inventario del gruppo
   (`GruppoGiocatore.getIncantesimi(classe)`, `getPozioniSalute()`...), e chi li usa lo sceglie il giocatore (o il motore: `getFormulante`).
   Gli incantesimi **innati** (dardo arcano, alba sacra, i tre canti) non consumano pergamene.
@@ -61,10 +61,8 @@ Vedi [`motore_di_gioco.md`](motore_di_gioco.md) §7. Quello che conta per le tat
   chi colpire, se lanciare un incantesimo, quale, e se conviene più la magia o l'attacco fisico. Vedi §4.
 - Non c'è **posizione**: né distanza, né mischia contro distanza, né linea di vista. Non c'è un turno di preparazione degli
   incantesimi (sono istantanei) né cooldown. Gli avversari non hanno un "bersaglio" persistente: rispondono a chi ha appena agito.
-- **Gli ospiti vulnerabili sono bersaglio solo in due casi** (un limite del combattimento di oggi): la risposta avversaria colpisce il personaggio che ha appena agito
-  (`rispostaAvversaria`) o il combattente scelto (`rispondiInMischia`), non uno a caso; si arriva a `PersonaggioBase.attacca(Gruppo)`, dove la scelta a caso
-  comprende gli ospiti vulnerabili vivi, solo quando il gruppo avversario è più numeroso ("si disimpegna e attacca") o quando chi ha agito è già caduto. Con le tattiche la
-  risposta sceglie il bersaglio con la tattica dell'avversario (§3, §4), e la scelta a caso li comprende sempre.
+- **Gli ospiti vulnerabili sono bersaglio di ogni azione degli avversari**: l'avversario che agisce sceglie sempre con `PersonaggioBase.attacca(Gruppo)`, dove la scelta a caso comprende
+  gli ospiti vulnerabili vivi (prima i maghi, i sacerdoti, gli elfi e i bardi). Con le tattiche la scelta sarà della tattica dell'avversario (§4), e la scelta a caso li comprenderà ancora.
 
 ## 3. Il round-robin dei due gruppi
 
@@ -73,12 +71,10 @@ Il turno a rotazione vale per **tutti e due i gruppi**, e va tracciato in questo
 **Il puntatore.** Ogni gruppo ricorda **chi ha agito per ultimo** e passa la mano al **successivo personaggio vivo** (saltando chi è
 caduto o in panchina). Il puntatore di ogni gruppo avanza **sempre**, a ogni azione, e non si azzera fra uno scontro e l'altro dentro la
 stessa locazione. **Fatto** (`StatoDelCombattimento.getProssimoAttaccante`, §3.3): il puntatore sta nello stato e non più nel `Gruppo`; la risposta avversaria (`rispostaAvversaria`) e la risposta nella mischia (`eseguiSingoloAttacco`)
-lo usano per far rispondere il prossimo avversario vivo, saltando il turno a chi è incapace di agire (atterrato, congelato, stordito). Il gruppo del giocatore ha il suo puntatore, ma non lo usa ancora: è il giocatore a scegliere chi agisce.
+lo usano per far agire il prossimo avversario vivo, saltando il turno a chi è incapace di agire (atterrato, congelato, stordito). Il gruppo del giocatore ha il suo puntatore: lo usa il combattimento automatico (agiscono tutti i miei, a turno), e le azioni manuali lo spostano su chi ha agito.
 
-**La risposta.** A ogni azione del giocatore **risponde il prossimo avversario vivo** del gruppo avversario, quello a cui tocca nel suo
-round-robin. Se faccio un attacco singolo, c'è una risposta sola; se lancio un incantesimo, c'è una risposta sola; se faccio un
-combattimento in cui agisce tutto il gruppo, ogni azione del gruppo ha la sua risposta. **Chi colpire non è una regola fissa**: lo
-decide la tattica dell'avversario (§4), come per i miei personaggi.
+**Non c'è una "risposta".** Quando un mio personaggio agisce, gli avversari **non rispondono**: ognuno **agisce quando il piano del round tocca a lui** (§3.1), in round-robin, e attacca
+a sua volta scegliendo il bersaglio da sé. **Chi colpire non è una regola fissa**: lo decide la tattica dell'avversario (§4), come per i miei personaggi.
 
 **Azioni manuali.** Agisce il personaggio scelto dal giocatore (`PERSONAGGIO_n`, come oggi); fa **una** azione, e il puntatore del
 gruppo passa **al successivo** vivo rispetto a lui.
@@ -90,39 +86,44 @@ agisce più); se cade il capo del giocatore la partita è persa, come oggi.
 **Interruzione.** La **fuga** resta del giocatore: è un'interruzione manuale del combattimento (`INTERRUZIONE_COMBATTIMENTO`, o il
 bottone di fuga) che rimette la scelta alle sue mani. Le tattiche non fuggono.
 
-### 3.1 Prima fase: attacchi singoli
+### 3.1 Il round a coppie (fatto)
 
-Si comincia dagli **attacchi singoli**: ogni azione di un personaggio, scelta dal giocatore o dalla sua tattica, ha **una** risposta, e
-basta. È una semplificazione che **penalizza il gruppo più numeroso**: tre compagni contro un avversario solo agiscono tre volte
-ognuno con la propria risposta, cioè l'avversario agisce tre volte per giro (e subisce, certo, tre azioni). Va rivista con la fase
-seguente. Intanto i test che contano i round e le simulazioni di bilanciamento continuano a fare combattere un personaggio alla volta.
+A inizio round si contano i personaggi **in grado di agire** dei due gruppi (*n* i miei, *m* gli avversari: vivi e non in panchina) e si costruisce il **piano del round**
+(`StatoDelCombattimento.getPiano`): **max(n, m) coppie**, alla coppia *k* agisce il mio *k*-esimo (se *k* < *n*) e poi l'avversario *k*-esimo (se *k* < *m*). Il piano è la
+sequenza dei **lati**, non dei personaggi: chi agisce davvero lo decide, al momento, il round-robin di ogni gruppo.
 
-### 3.2 Seconda fase (da rivedere): il round a coppie
+| Caso | Piano | Che cosa succede |
+| :--- | :--- | :--- |
+| 3 miei contro 2 avversari | G A G A G | due coppie, e il mio terzo agisce **senza avversario** |
+| 1 mio contro 3 avversari | G A A A | il mio agisce e poi **attaccano uno dopo l'altro** tutti e tre gli avversari: il mio personaggio ne subisce tre |
+| 2 contro 2 | G A G A | due coppie |
 
-Nel combattimento a turni di tutto il gruppo, a inizio round si contano i vivi dei due gruppi (*n* i miei, *m* gli avversari) e si
-fanno **max(n, m) coppie**: alla coppia *k* agisce il mio personaggio *k* (se *k* < *n*) e risponde l'avversario *k* (se *k* < *m*).
+È l'effetto voluto: un avversario solo contro tre compagni agisce una volta e subisce più azioni; un compagno solo contro tre avversari ne subisce tre. **La regola "si disimpegna e
+attacca" è uscita dal codice**, così come la "risposta" al combattente. Il piano si calcola a inizio round e **non si ricalcola quando qualcuno cade**: il posto di chi non c'è più
+si salta (`registraAzioneSaltata`), e chi è incapace di agire (atterrato, congelato, stordito) salta il turno ma il suo posto è usato. Quando arriva un'**ondata** il piano si rifà con
+i nuovi arrivati (`nuovaOndata`), senza cambiare il numero del round.
 
-| Caso | Che cosa succede |
-| :--- | :--- |
-| 3 miei contro 2 avversari | il mio primo agisce e risponde il primo avversario; il mio secondo agisce e risponde il secondo; il mio terzo agisce **senza risposta** |
-| 1 mio contro 3 avversari | il mio agisce e risponde il primo avversario; poi **attaccano anche il secondo e il terzo**, senza una mia azione in mezzo: il mio personaggio ne subisce tre |
-| 2 contro 2 | due coppie |
+### 3.2 Combattimento automatico e azioni manuali
 
-È l'effetto voluto: un avversario solo contro tre compagni agisce una volta e subisce più danni; un compagno solo contro tre avversari
-ne subisce tre. **La regola "si disimpegna e attacca" esce dal codice**: è solo il caso in cui il gruppo avversario è più numeroso. Il
-numero delle coppie si calcola a inizio round e non si ricalcola quando qualcuno cade: le azioni che non hanno più un attore o una
-risposta si saltano. Le risposte "in più" (nessuna mia azione) scelgono il bersaglio con la tattica dell'avversario, come le altre.
+- **Automatico** (a ogni scatto del `TIMER`): **una sola azione per scatto**, del prossimo del piano, un mio personaggio o un avversario. Agiscono **tutti i miei vivi**, in rotazione
+  (con il comando `COMBATTIMENTO` il giocatore sceglie chi comincia, `faAgirePerPrimo`); la finestra del combattimento mostra **chi sta agendo e il bersaglio** (`InternoAzioneInCombattimento`;
+  senza bersaglio se l'azione non lo ha: una pozione, l'Alba Sacra, un canto). Ogni scatto è quindi mezzo scambio, e un round ne fa tanti quanti sono i posti del piano.
+- **Manuale** (attacco singolo, incantesimo, dardo, canto, pozione): il giocatore sceglie chi e che cosa; l'azione occupa il **primo posto libero dei miei** nel piano, e subito dopo gli
+  avversari agiscono finché il piano non torna a un mio personaggio o il round non finisce. Il puntatore dei miei passa al successivo rispetto a chi ha agito. Con un avversario solo
+  contro tre miei, la prima azione ha l'avversario e le altre due no.
+- **Bere una pozione è un'azione del personaggio** e consuma il suo turno (prima non faceva agire nessuno), e interrompe ancora la mischia automatica, come l'incantesimo.
+- **Gli effetti di stato scorrono alla fine del round** (quando il piano è finito), non a ogni azione: con 3 miei contro 1 durano di più in azioni del giocatore. Fuori dal piano (un
+  tentativo di corruzione o di amicizia fallito, senza avversari) il turno passa come prima.
+- **Gli avversari che attaccano per primi** (un passaggio inosservato fallito) sono fuori dal piano: uno solo attacca.
 
 ### 3.3 Il round e lo stato del combattimento
 
-**Che cos'è un round** (deciso): finisce quando **tutti gli avversari vivi hanno fatto la propria mossa**. Così il round arriva sempre a una fine, anche se il
-giocatore continua con azioni manuali facendo agire sempre lo stesso personaggio, e i mostri ruotano comunque in round-robin (una risposta per ogni azione del giocatore). Chi ha
-agito nel round si registra per entrambi i gruppi (`haAgitoNelRound`), ma per chiudere il round contano solo gli avversari; se non ce ne sono più il combattimento è
-finito e il round non avanza. Il numero del round **riparte da 1 a ogni inizio locazione** e **continua** quando arriva la prossima ondata: il combattimento e la locazione non
-sono cambiati, sono solo apparsi nuovi mostri (che non hanno ancora agito: il round si allunga). All'inizio di ogni
-round il motore pubblica un evento **`InternoInizioRound`** (con il numero), per la UI, i log e chi tiene la memoria del combattimento.
+**Che cos'è un round** (deciso, **fatto**): finisce quando il **piano del round** (§3.1) è finito, cioè quando hanno agito (o saltato) tutti i posti, dei due gruppi. Il numero del round **riparte da 1 a ogni
+inizio locazione** e **continua** quando arriva la prossima ondata: il combattimento e la locazione non sono cambiati, sono solo apparsi nuovi mostri. Se non ci sono più avversari
+il combattimento è finito e il round non avanza. All'inizio di ogni round il motore pubblica un evento **`InternoInizioRound`** (con il numero), per la UI, i log e chi tiene la
+memoria del combattimento; a fine round passano gli effetti di stato.
 
-**Lo `StatoDelCombattimento`** (deciso nel nome; **fatto**: il round con `InternoInizioRound`, chi ha agito nel round, i puntatori dei due gruppi e il round-robin della risposta, le schede dei personaggi e la conoscenza pubblica sulle reazioni; resta da collegare solo la fonte che dipende dalle tattiche: le voci usate): un oggetto che raccoglie in un posto solo tutto ciò che le tattiche devono ricordare di un combattimento. Si crea
+**Lo `StatoDelCombattimento`** (deciso nel nome; **fatto**: il piano del round con `InternoInizioRound`, chi ha agito nel round, i puntatori dei due gruppi e il round-robin, le schede dei personaggi e la conoscenza pubblica sulle reazioni; resta da collegare solo la fonte che dipende dalle tattiche: le voci usate): un oggetto che raccoglie in un posto solo tutto ciò che le tattiche devono ricordare di un combattimento. Si crea
 (o si azzera) a ogni inizio locazione, insieme alla preparazione del gruppo avversario. Contiene:
 
 - **del combattimento**: il numero del round, il registro di chi ha già agito nel round corrente e, per **ogni gruppo**, il **puntatore** all'ultimo personaggio che ha agito
@@ -151,8 +152,7 @@ Regole (decise):
 - **Non è il modello dati**: è la memoria tattica. La aggiornano il motore e la locazione (o l'oggetto stesso, ascoltando gli eventi come `InternoInizioRound`);
   le tattiche la *leggono* e basta, come vuole il prerequisito del §1.
 
-**Una conseguenza:** con più compagni che avversari il round è più corto di un giro completo del gruppo del giocatore (un avversario solo: un round a ogni risposta). Le condizioni sul round e i
-cooldown dei mostri contano quindi "giri degli avversari", e arrivano a una fine anche in manuale.
+**Una conseguenza:** il round è lungo quanto il piano (max(n, m) coppie), non un giro di un gruppo solo. Le condizioni sul round e i cooldown contano quindi "giri completi dei due gruppi".
 
 ## 4. Le tattiche degli avversari
 
@@ -881,8 +881,7 @@ Quasi tutto è già leggibile (§6 e §7). Quello che manca:
   I salvataggi non devono restare compatibili con le versioni precedenti, quindi non serve alcuna conversione. Serve un **test di andata e ritorno**:
   una tattica complessa (blocchi nidificati, nomi, condizioni composte) scritta e riletta torna uguale, e un personaggio caricato agisce come prima del
   salvataggio.
-- lo **`StatoDelCombattimento`** (§3.3) — **fatto** quasi tutto (round, puntatori, schede, conoscenza pubblica sulle reazioni). Manca solo il chiamante di `registraUsoVoce`, che arriva con il motore delle tattiche. Il gruppo del giocatore ha il suo puntatore ma non lo usa ancora (`LocazioneBase` fa agire un solo `combattente`, scelto dal giocatore);
-- la **risposta** come azione a sé degli avversari: oggi chi risponde è già scelto in round-robin, ma l'azione è ancora `rispondiInMischia` sul combattente, con la logica fissa di §4;
+- lo **`StatoDelCombattimento`** (§3.3) — **fatto** quasi tutto (round, puntatori, schede, conoscenza pubblica sulle reazioni). Manca solo il chiamante di `registraUsoVoce`, che arriva con il motore delle tattiche.
 - le **tattiche base dei mostri**: un file di risorse per classe (§4), nello stesso formato di quelle del giocatore, e il modo di assegnarle a
   un avversario quando nasce (`FabbricaPersonaggi`), con la possibilità che **una singola istanza abbia una tattica sua** al posto di quella di classe (una
   missione può portare un goblin più furbo degli altri con la sua), e che questa sia salvata con la partita; e il motore che le esegue, con le **azioni di controllo** `SE / ALTRIMENTI / FINE`
@@ -898,13 +897,9 @@ Non ha senso importare: posizione e distanza, mischia contro distanza, linea di 
 
 - Oggi la scelta del **bersaglio** non esiste (si attacca sempre il primo avversario vivo): le tattiche la introducono per tutte le
   azioni singole.
-- Il round-robin cambia il **bilanciamento**: oggi un compagno solo contro più avversari ne subisce uno in più al massimo ("si
-  disimpegna e attacca"); nello schema nuovo li subisce tutti, e un gruppo numeroso contro un avversario solo gli dà più azioni. Va
-  riverificato con le simulazioni (`SimulazionePartiteTest`, i test di bilanciamento) e con i test di scenario che contano i round.
-- I test che oggi fanno combattere un solo personaggio andranno riscritti: con la prima fase (attacchi singoli, §3.1) restano
-  quasi tutti validi; si riscrivono con il round a coppie (§3.2).
-- Le tattiche dei mostri rendono parametrizzabile ciò che oggi è sparso in `PersonaggioBase` (§4): resta il rischio di cambiare il
-  comportamento dei mostri senza accorgersene, da coprire con un test sulle decisioni di oggi.
+- Il round a coppie cambia il **bilanciamento** (§3.1): un compagno solo contro più avversari li subisce tutti, e un gruppo numeroso contro un avversario solo gli dà più azioni; il
+  bersaglio dell'avversario non è più chi ha appena agito. Va riverificato con le simulazioni (`SimulazionePartiteTest`) e con i programmi `TestScontriDiGruppo` e
+  `TestLogoramentoInizioPartita`, che simulano ancora il combattimento di prima e non sono stati portati al piano del round (`todo.md`).
 
 ## 10. Da fare / idee aperte
 
@@ -916,4 +911,4 @@ Domande aperte:
 - **Livello di dettaglio dei controlli** per la prima versione (probabilmente: sempre, salute e magia sotto una soglia, stati, classe,
   numero di avversari, risorse, probabilità; poi le categorie di creatura, già nei dati).
 - **Cambiare arma** (§5): affinare quale arma esce con la doppia arma (oggi la più debole per danno atteso, contro un bersaglio neutro): contro il bersaglio vero, con gli effetti di stato, i modificatori e la probabilità di colpire? Per quanto tempo valgono le valutazioni già fatte delle armi del gruppo? Le voci per tornare all'arma di prima le scrive il giocatore o le propone il sistema in coppia con la prima?
-- **Il round a coppie** (§3.2): quando rivederlo, e se i personaggi in più possono agire senza risposta anche dopo il primo giro.
+- **Il round a coppie** (§3.1, fatto): rimisurare il bilanciamento, e decidere se ridurre l'annuncio "X attacca Y" a ogni azione (oggi sempre, anche per aiutare a leggere il log); la velocità del `TIMER` (ogni scatto è mezzo scambio) è rimasta com'era.

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.eventi.interni.InternoCreazionePersonaggio;
 import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.eventi.interni.InternoPersonaggioArreso;
@@ -557,12 +558,13 @@ public abstract class PersonaggioBase implements Personaggio {
 		return piuPotente;
 	}
 
+	/**
+	 * Annuncia l'azione alla finestra del combattimento, poi (vedi attacca(Personaggio, boolean)) lancia un incantesimo se sa farlo,
+	 * altrimenti attacca con le armi.
+	 */
 	public void attacca(Personaggio bersaglio) {
+		BusEventi.pubblica(new InternoAzioneInCombattimento(this, bersaglio));
 		attacca(bersaglio, true);
-	}
-
-	public void rispondiInMischia(Personaggio bersaglio) {
-		attacca(bersaglio, false);
 	}
 
 	/**
@@ -578,10 +580,8 @@ public abstract class PersonaggioBase implements Personaggio {
 			return;
 		}
 		if (annunciaAttacco) {
-			OpzioniGetNome articoloDaIncludere = GruppoAvversario.getIstanza().getNumeroPersonaggiVivi() == 1 ?
-					OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE :
-					OpzioniGetNome.INCLUDI_ARTICOLO_INDETERMINATIVO_SINGOLARE;
-			String messaggio = getNome(articoloDaIncludere, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+			// Gli avversari della stessa specie si distinguono per il numero ("La viverna 2"), quindi sempre l'articolo determinativo
+			String messaggio = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
 					" attacca " + bersaglio.getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.';
 			BusEventi.pubblica(new NotificaTestoFrase(messaggio));
 		}
@@ -909,10 +909,29 @@ public abstract class PersonaggioBase implements Personaggio {
 			sb.append(getDeS());
 		}
 		sb.append(getNomeSingolare());
+		sb.append(suffissoOrdinale());
 		if (inizialeMaiuscola) {
 			sb.replace(0, 1, sb.substring(0, 1).toUpperCase());
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Il numero che distingue un avversario dagli altri della stessa specie nel suo gruppo ("Viverna 2"): la sua posizione nel gruppo
+	 * (vedi GruppoAvversario.aggiungiPersonaggio), e solo se ce n'è più d'uno con lo stesso nome; altrimenti niente. Non cambia quando
+	 * qualcuno cade, così un mostro si riconosce per tutto lo scontro.
+	 */
+	private String suffissoOrdinale() {
+		if (ordinale <= 0) {
+			return "";
+		}
+		GruppoAvversario avversari = GruppoAvversario.getIstanza();
+		if (!avversari.contiene(this)) {
+			return "";
+		}
+		String specie = getNomeSingolare();
+		long dellaStessaSpecie = avversari.getPersonaggi().stream().filter(p -> specie.equals(p.getNomeSingolare())).count();
+		return dellaStessaSpecie > 1 ? " " + ordinale : "";
 	}
 
 	@Override

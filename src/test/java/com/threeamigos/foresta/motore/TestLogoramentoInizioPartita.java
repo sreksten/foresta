@@ -494,10 +494,10 @@ public class TestLogoramentoInizioPartita {
             for (Personaggio mostro : mostri) {
                 if (pg.isVivo()) {
                     // Come nel gioco: con le armi o, se sa la magia, con un incantesimo
-                    mostro.rispondiInMischia(pg);
+                    mostro.attacca(pg);
                 }
             }
-            // A fine round passa un turno di effetti di stato per tutti (LocazioneBase.dopoIlRound)
+            // A fine round passa un turno di effetti di stato per tutti (a fine round, LocazioneBase.trascorriTurnoEffettiDiStato)
             if (pg.isVivo()) {
                 pg.applicaDanniDaEffettiDiStato();
                 pg.riduciEffettiDiStato();

@@ -70,6 +70,16 @@ public class GruppoAvversario extends Gruppo {
 		return false;
 	}
 
+	/**
+	 * L'avversario prende come ordinale la sua posizione nel gruppo, che serve a distinguere i mostri della stessa specie (vedi
+	 * PersonaggioBase.getNome); i gruppi misti (specie diverse insieme) funzionano allo stesso modo.
+	 */
+	@Override
+	public void aggiungiPersonaggio(Personaggio p) {
+		p.setOrdinale(getNumeroPersonaggi() + 1);
+		super.aggiungiPersonaggio(p);
+	}
+
 	public Personaggio getPersonaggioVivo() {
 		for (Personaggio personaggio : personaggi) {
 			if (!personaggio.isFuoriCombattimento()) {

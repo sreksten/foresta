@@ -95,6 +95,7 @@ public class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(InternoPreparazioneLocazione.class, this::gestisciEventoPreparazioneLocazione);
 		BusEventi.iscriviti(InternoAssegnaCoordinateAPersonaggi.class, evento -> displayableCanvas.assegnaCoordinateAPersonaggi());
 		BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, this::gestisciEventoRichiestaAperturaFinestraCombattimento);
+		BusEventi.iscriviti(InternoAzioneInCombattimento.class, this::gestisciEventoAzioneInCombattimento);
 		BusEventi.iscriviti(RichiestaAperturaInventarioCommerciante.class, this::gestisciEventoRichiestaAperturaInventarioCommerciante);
 		BusEventi.iscriviti(RichiestaAperturaIncantatore.class, this::gestisciEventoRichiestaAperturaIncantatore);
 		BusEventi.iscriviti(RichiestaAperturaInventarioFornitore.class, this::gestisciEventoRichiestaAperturaInventarioFornitore);
@@ -403,6 +404,17 @@ public class ForestaUI implements Temporizzabile {
 		DisplayableCanvasRiquadroCombattimento infoCombattimento = displayableCanvas.getRiquadroCombattimento();
 		infoCombattimento.setCombattente(evento.getPersonaggio());
 		infoCombattimento.setAvversario(evento.getAvversario());
+		infoCombattimento.setVisible(true);
+		rinfresca();
+	}
+
+	/**
+	 * Chi sta agendo e, se c'è, il bersaglio: sono dell'uno o dell'altro gruppo, a turno
+	 */
+	private void gestisciEventoAzioneInCombattimento(InternoAzioneInCombattimento evento) {
+		DisplayableCanvasRiquadroCombattimento infoCombattimento = displayableCanvas.getRiquadroCombattimento();
+		infoCombattimento.setCombattente(evento.getPersonaggio());
+		infoCombattimento.setAvversario(evento.getBersaglio());
 		infoCombattimento.setVisible(true);
 		rinfresca();
 	}

@@ -117,8 +117,64 @@ class StatoDelCombattimentoTest {
         assertNull(stato.getProssimoAttaccante(avversari));
     }
 
+    private static StatoDelCombattimento.Lato G = StatoDelCombattimento.Lato.GIOCATORE;
+    private static StatoDelCombattimento.Lato A = StatoDelCombattimento.Lato.AVVERSARI;
+
     @Test
-    void ilRoundFinisceQuandoTuttiGliAvversariHannoAgito() {
+    void ilPianoFaLeCoppieEPoiChiAvanzaAgisceDaSolo() {
+        // 3 miei contro 2 avversari: due coppie, e il terzo dei miei senza risposta
+        nelGiocatore(TipoPersonaggio.GUERRIERO);
+        nelGiocatore(TipoPersonaggio.MAGO);
+        nelGiocatore(TipoPersonaggio.LADRO);
+        negliAvversari();
+        negliAvversari();
+        stato.reimposta();
+        assertEquals(java.util.Arrays.asList(G, A, G, A, G), stato.getPiano());
+
+        // 1 mio contro 3 avversari: il mio, e poi i tre avversari uno dietro l'altro
+        StatoDelCombattimento.azzeraIstanza();
+        GruppoGiocatore.azzeraIstanza();
+        GruppoAvversario.azzeraIstanza();
+        giocatore = GruppoGiocatore.getIstanza();
+        avversari = GruppoAvversario.getIstanza();
+        stato = StatoDelCombattimento.getIstanza();
+        nelGiocatore(TipoPersonaggio.GUERRIERO);
+        negliAvversari();
+        negliAvversari();
+        negliAvversari();
+        assertEquals(java.util.Arrays.asList(G, A, A, A), stato.getPiano());
+    }
+
+    @Test
+    void ilPianoNonContaChiNonPuoAgire() {
+        nelGiocatore(TipoPersonaggio.GUERRIERO);
+        Personaggio panchina = nelGiocatore(TipoPersonaggio.MAGO);
+        panchina.setInPanchina(true);
+        Personaggio caduto = nelGiocatore(TipoPersonaggio.LADRO);
+        caduto.muore("di prova");
+        negliAvversari();
+        assertEquals(java.util.Arrays.asList(G, A), stato.getPiano());
+    }
+
+    @Test
+    void ilProssimoLatoSegueIlPiano() {
+        Personaggio g1 = nelGiocatore(TipoPersonaggio.GUERRIERO);
+        Personaggio g2 = nelGiocatore(TipoPersonaggio.MAGO);
+        Personaggio a1 = negliAvversari();
+        Personaggio a2 = negliAvversari();
+        stato.reimposta();
+        assertEquals(G, stato.getProssimoLato());
+        assertFalse(stato.registraAzione(g1));
+        assertEquals(A, stato.getProssimoLato());
+        assertFalse(stato.registraAzione(a1));
+        assertEquals(G, stato.getProssimoLato());
+        assertFalse(stato.registraAzione(g2));
+        assertEquals(A, stato.getProssimoLato());
+        assertTrue(stato.registraAzione(a2), "con l'ultimo posto il round finisce");
+    }
+
+    @Test
+    void ilRoundFinisceQuandoIlPianoESuperato() {
         Personaggio g1 = nelGiocatore(TipoPersonaggio.GUERRIERO);
         nelGiocatore(TipoPersonaggio.MAGO);
         Personaggio a1 = negliAvversari();
@@ -129,25 +185,29 @@ class StatoDelCombattimentoTest {
         // Il giocatore fa agire sempre lo stesso personaggio: il round arriva comunque a una fine
         stato.registraAzione(g1);
         stato.registraAzione(a1);
-        assertEquals(1, stato.getRound(), "a2 non ha ancora agito");
+        assertEquals(1, stato.getRound(), "il piano non è finito");
         assertTrue(stato.haAgitoNelRound(g1));
         stato.registraAzione(g1);
         stato.registraAzione(a2);
         assertEquals(2, stato.getRound());
         assertEquals(java.util.Collections.singletonList(2), roundAnnunciati);
         assertFalse(stato.haAgitoNelRound(g1), "nel round nuovo nessuno ha ancora agito");
+        assertEquals(java.util.Arrays.asList(G, A, G, A), stato.getPiano(), "il piano si rifà a ogni round");
     }
 
     @Test
-    void chiCadeNonVieneAspettatoPerFinireIlRound() {
+    void chiCadeLasciaUnPostoCheSiSalta() {
         Personaggio g1 = nelGiocatore(TipoPersonaggio.GUERRIERO);
         Personaggio a1 = negliAvversari();
         Personaggio a2 = negliAvversari();
         stato.reimposta();
+        assertEquals(java.util.Arrays.asList(G, A, A), stato.getPiano());
         stato.registraAzione(g1);
         stato.registraAzione(a1);
+        // Il piano non si rifà quando qualcuno cade: il posto di chi non c'è più si salta
         a2.muore("di prova");
-        stato.registraAzione(g1);
+        assertEquals(A, stato.getProssimoLato());
+        assertTrue(stato.registraAzioneSaltata(A));
         assertEquals(2, stato.getRound());
     }
 
@@ -163,7 +223,32 @@ class StatoDelCombattimentoTest {
     }
 
     @Test
-    void conUnaNuovaOndataIlRoundContinua() {
+    void leAzioniManualiFannoAgirePoiIlSuccessivo() {
+        Personaggio g1 = nelGiocatore(TipoPersonaggio.GUERRIERO);
+        Personaggio g2 = nelGiocatore(TipoPersonaggio.MAGO);
+        Personaggio g3 = nelGiocatore(TipoPersonaggio.LADRO);
+        negliAvversari();
+        stato.reimposta();
+        // Il giocatore sceglie il secondo: il giro automatico riparte dal terzo
+        stato.registraAzione(g2);
+        assertSame(g3, stato.getProssimoAttaccante(giocatore));
+        assertSame(g1, stato.getProssimoAttaccante(giocatore));
+    }
+
+    @Test
+    void faAgirePerPrimoSceglieDaChiRicominciare() {
+        Personaggio g1 = nelGiocatore(TipoPersonaggio.GUERRIERO);
+        nelGiocatore(TipoPersonaggio.MAGO);
+        Personaggio g3 = nelGiocatore(TipoPersonaggio.LADRO);
+        stato.faAgirePerPrimo(giocatore, g3);
+        assertSame(g3, stato.getProssimoAttaccante(giocatore));
+        assertSame(g1, stato.getProssimoAttaccante(giocatore));
+        stato.faAgirePerPrimo(giocatore, g1);
+        assertSame(g1, stato.getProssimoAttaccante(giocatore));
+    }
+
+    @Test
+    void conUnaNuovaOndataIlPianoSiRifaEIlRoundContinua() {
         Personaggio g = nelGiocatore(TipoPersonaggio.GUERRIERO);
         Personaggio a1 = negliAvversari();
         stato.reimposta();
@@ -172,12 +257,11 @@ class StatoDelCombattimentoTest {
         assertEquals(2, stato.getRound());
         // I mostri sconfitti se ne vanno e ne arrivano di nuovi: il round non riparte
         a1.muore("di prova");
-        Personaggio a2 = negliAvversari();
+        negliAvversari();
+        negliAvversari();
+        stato.nuovaOndata();
         assertEquals(2, stato.getRound());
-        stato.registraAzione(g);
-        assertEquals(2, stato.getRound(), "il nuovo mostro non ha ancora agito");
-        stato.registraAzione(a2);
-        assertEquals(3, stato.getRound());
+        assertEquals(java.util.Arrays.asList(G, A, A), stato.getPiano());
     }
 
     @Test

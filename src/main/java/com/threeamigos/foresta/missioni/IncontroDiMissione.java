@@ -216,7 +216,6 @@ public final class IncontroDiMissione {
 			if (capo) {
 				avversario.getModelloDati().setNome(nomeDelCapo);
 			}
-			avversario.setOrdinale(i + 1);
 			avversario.setFinoAllaResa(finoAllaResa);
 			avversario.setSfidante(aDuello);
 			avversario.setSfidanteACartaForbiciSasso(aCartaForbiciSasso);
@@ -226,7 +225,6 @@ public final class IncontroDiMissione {
 		if (classeDelCapo != null) {
 			Personaggio capo = FabbricaPersonaggi.crea(classeDelCapo, livello + 1);
 			capo.getModelloDati().setNome(nomeDelCapo);
-			capo.setOrdinale(1);
 			capo.setFinoAllaResa(finoAllaResa);
 			capo.setDaAffrontare(!aggirabile);
 			avversari.add(capo);

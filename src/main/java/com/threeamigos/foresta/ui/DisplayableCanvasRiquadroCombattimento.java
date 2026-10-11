@@ -5,7 +5,6 @@ import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Optional;
 
 class DisplayableCanvasRiquadroCombattimento implements Finestra {
 
@@ -71,18 +70,8 @@ class DisplayableCanvasRiquadroCombattimento implements Finestra {
 	void setAvversario(VistaPersonaggio avversario) {
 		this.avversario = avversario;
 		if (avversario != null) {
-			Optional<String> nomeOpt = avversario.getNomeProprio();
-			if (nomeOpt.isPresent()) {
-				nomeAvversario = nomeOpt.get();
-			} else {
-				nomeAvversario = avversario.getNomeSingolare();
-				if (vistaPartita.getGruppoAvversario().getNumeroPersonaggi() > 1) {
-					int l = avversario.getOrdinale();
-					if (l > 0) {
-						nomeAvversario += " " + l;
-					}
-				}
-			}
+			// Il nome porta già il numero ("Viverna 2") quando ce n'è più d'uno della stessa specie
+			nomeAvversario = avversario.getNome(VistaPersonaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 			int l = larghezzaMassimaNome();
 			while (FontTool.getWidth(fontMedium, nomeAvversario) > l) {
 				nomeAvversario = nomeAvversario.substring(0, nomeAvversario.length() - 2);

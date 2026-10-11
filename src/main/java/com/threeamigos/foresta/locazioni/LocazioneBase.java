@@ -125,6 +125,10 @@ public abstract class LocazioneBase implements Locazione {
     private Incantesimo incantesimo;
 	private Gruppo gruppoBersaglio;
 
+	// Il turno di un'azione del giocatore è già stato chiuso da dopoAzioneDelGiocatore (che a fine round fa trascorrere gli effetti di
+	// stato): il passaggio generico di impostaAzioniImpl non deve farli trascorrere una seconda volta
+	private boolean turnoGestitoDalRound;
+
 	private enum StatoLocazione {
 		NUOVA_LOCAZIONE,
 		IN_LOCAZIONE,
@@ -268,7 +272,6 @@ public abstract class LocazioneBase implements Locazione {
 				Personaggio p;
 				for (int i = 0; i < numero; i++) {
 					p = FabbricaPersonaggi.crea(classePersonaggio, Statistiche.getLivello());
-					p.setOrdinale(i + 1);
 					avversario.aggiungiPersonaggio(p);
 				}
 			} else {
@@ -340,6 +343,7 @@ public abstract class LocazioneBase implements Locazione {
 		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 		Ondata ondata = gruppoAvversario.prossimaOndata();
 		BottinoDegliAvversari.fornisciLeScorte(gruppoAvversario, ondata.getAvversari());
+		statoDelCombattimento.nuovaOndata();
 		combattente = null;
 		statoLocazione = StatoLocazione.IN_LOCAZIONE;
 		opzioneCorruzioneDisponibile = false;
@@ -405,6 +409,7 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	private Stato impostaAzioniImpl(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario, Comando azione) {
+		turnoGestitoDalRound = false;
 		if (isAzione(azione)) {
 			passaggioEscluso = true;
 		}
@@ -465,9 +470,8 @@ public abstract class LocazioneBase implements Locazione {
 					return annullaScelta();
 				}
 				gruppo.consumaPozioneSalute(azione);
-				// Bere la pozione fa trascorrere un turno: il suo esito (per esempio la morte del
-				// capo o dell'ultimo avversario per un effetto di stato) va restituito all'automa.
-				return impostaAzioni(gruppo, gruppoAvversario, null);
+				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
+				return dopoUnaPozione(gruppo.getPersonaggio(azione));
 
 			case CHI_BEVE_POZIONE_SALUTE_GRANDE:
 				Logger.log("LocazioneBase.CHI_BEVE_POZIONE_SALUTE_GRANDE");
@@ -476,7 +480,8 @@ public abstract class LocazioneBase implements Locazione {
 					return annullaScelta();
 				}
 				gruppo.consumaPozioneSaluteGrande(azione);
-				return impostaAzioni(gruppo, gruppoAvversario, null);
+				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
+				return dopoUnaPozione(gruppo.getPersonaggio(azione));
 
 			case CHI_BEVE_POZIONE_MAGIA:
 				Logger.log("LocazioneBase.CHI_BEVE_POZIONE_MAGIA");
@@ -485,7 +490,8 @@ public abstract class LocazioneBase implements Locazione {
 					return annullaScelta();
 				}
 				gruppo.consumaPozioneMagia(azione);
-				return impostaAzioni(gruppo, gruppoAvversario, null);
+				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
+				return dopoUnaPozione(gruppo.getPersonaggio(azione));
 
 			case CHI_BEVE_POZIONE_MAGIA_GRANDE:
 				Logger.log("LocazioneBase.CHI_BEVE_POZIONE_MAGIA_GRANDE");
@@ -494,7 +500,8 @@ public abstract class LocazioneBase implements Locazione {
 					return annullaScelta();
 				}
 				gruppo.consumaPozioneMagiaGrande(azione);
-				return impostaAzioni(gruppo, gruppoAvversario, null);
+				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
+				return dopoUnaPozione(gruppo.getPersonaggio(azione));
 
 			case CHI_FORMULA:
 				Logger.log("LocazioneBase.CHI_FORMULA");
@@ -536,8 +543,12 @@ public abstract class LocazioneBase implements Locazione {
 								" non permette di formulare questo incantesimo.";
 						BusEventi.pubblica(new NotificaTestoFrase(sb));
 
-						statoDelCombattimento.registraAzione(formulante);
-						rispostaAvversaria(null, gruppo, gruppoAvversario);
+						{
+							Stato dopoLAzione = dopoAzioneDelGiocatore(formulante);
+							if (dopoLAzione != null) {
+								return dopoLAzione;
+							}
+						}
 
 						if (!gruppo.getCapo().isVivo()) {
 							return Stato.GIOCO_PERSO;
@@ -549,6 +560,8 @@ public abstract class LocazioneBase implements Locazione {
 
 					PortataIncantesimo tipo = classeIncantesimo.getPortata();
 					boolean suUnSoloBersaglio = tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI || tipo == PortataIncantesimo.SINGOLO_QUALSIASI;
+					annunciaAzione(formulante, suUnSoloBersaglio && classeIncantesimo.getTipo() != TipoIncantesimo.BENEFICO
+							? gruppoAvversario.getPersonaggioVivo() : null);
 					// Un incantesimo benefico su un solo bersaglio (Resurrezione) si formula su un personaggio del gruppo,
 					// e occorre chiedere quale sia
 					if (suUnSoloBersaglio && classeIncantesimo.getTipo() == TipoIncantesimo.BENEFICO) {
@@ -583,7 +596,12 @@ public abstract class LocazioneBase implements Locazione {
 							gruppo.subIncantesimi(incantesimo.getClasse(), 1);
 						}
 
-						rispostaAvversaria(formulante, gruppo, gruppoAvversario);
+						{
+							Stato dopoLAzione = dopoAzioneDelGiocatore(formulante);
+							if (dopoLAzione != null) {
+								return dopoLAzione;
+							}
+						}
 
 						if (!gruppo.getCapo().isVivo()) {
 							return Stato.GIOCO_PERSO;
@@ -620,7 +638,12 @@ public abstract class LocazioneBase implements Locazione {
 						return Stato.FINE_LOCAZIONE;
 					}
 
-					rispostaAvversaria(formulante, gruppo, gruppoAvversario);
+					{
+						Stato dopoLAzione = dopoAzioneDelGiocatore(formulante);
+						if (dopoLAzione != null) {
+							return dopoLAzione;
+						}
+					}
 
 					if (!gruppo.getCapo().isVivo()) {
 						return Stato.GIOCO_PERSO;
@@ -638,12 +661,15 @@ public abstract class LocazioneBase implements Locazione {
 				}
 				Personaggio personaggioBersaglio = gruppoBersaglio.getPersonaggio(azione);
 				Personaggio formulanteScelto = gruppo.getFormulante();
+				annunciaAzione(formulanteScelto, personaggioBersaglio);
 				incantesimo.formula(formulanteScelto, personaggioBersaglio, null);
 				registraUccisione(formulanteScelto, personaggioBersaglio);
 				gruppo.subIncantesimi(incantesimo.getClasse(), 1);
-				rispostaAvversaria(formulanteScelto, gruppo, gruppoAvversario);
-				if (!gruppo.getCapo().isVivo()) {
-					return Stato.GIOCO_PERSO;
+				{
+					Stato dopoLAzione = dopoAzioneDelGiocatore(formulanteScelto);
+					if (dopoLAzione != null) {
+						return dopoLAzione;
+					}
 				}
 				statoLocazione = StatoLocazione.IN_LOCAZIONE;
 				break;
@@ -776,9 +802,11 @@ public abstract class LocazioneBase implements Locazione {
 				}
 		}
 
-		Stato dopoGliEffetti = trascorriTurnoEffettiDiStato();
-		if (dopoGliEffetti != null) {
-			return dopoGliEffetti;
+		if (!turnoGestitoDalRound) {
+			Stato dopoGliEffetti = trascorriTurnoEffettiDiStato();
+			if (dopoGliEffetti != null) {
+				return dopoGliEffetti;
+			}
 		}
 
 		Logger.log("LocazioneBase.impostaAzioni() continua...");
@@ -823,15 +851,12 @@ public abstract class LocazioneBase implements Locazione {
 			return null;
 		}
 		statoDelCombattimento.registraIncantesimoLanciato(cantore);
+		annunciaAzione(cantore, null);
 		if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
 			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
 		}
-		rispostaAvversaria(cantore, gruppo, gruppoAvversario);
-		if (!gruppo.getCapo().isVivo()) {
-			return Stato.GIOCO_PERSO;
-		}
-		return null;
+		return dopoAzioneDelGiocatore(cantore);
 	}
 
 	/**
@@ -847,6 +872,7 @@ public abstract class LocazioneBase implements Locazione {
 			return null;
 		}
 		DardoArcano dardo = new DardoArcano(formulante);
+		annunciaAzione(formulante, bersaglio);
 		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " scaglia un dardo arcano contro "
 				+ bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + "."));
@@ -860,11 +886,7 @@ public abstract class LocazioneBase implements Locazione {
 			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
 		}
-		rispostaAvversaria(formulante, gruppo, gruppoAvversario);
-		if (!gruppo.getCapo().isVivo()) {
-			return Stato.GIOCO_PERSO;
-		}
-		return null;
+		return dopoAzioneDelGiocatore(formulante);
 	}
 
 	private void impostaComandiPossibili() {
@@ -1026,27 +1048,111 @@ public abstract class LocazioneBase implements Locazione {
 		return sb.toString();
 	}
 
-	// La metodologia usata ora è un round-robin. Questo fa si che se il personaggio che dovrebbe attaccare non è in
-	// grado di farlo, salta il turno - e questo da un senso agli effetti di stato.
-	private void rispostaAvversaria(Personaggio personaggioBersaglio, GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
+	// Il combattimento procede per round (vedi StatoDelCombattimento): un piano di coppie, il mio personaggio e poi un avversario, e
+	// i personaggi in più di un gruppo agiscono da soli. Non c'è una "risposta" agli attacchi del giocatore: gli avversari agiscono
+	// quando il piano tocca a loro, in round-robin, e chi non è in grado di farlo (atterrato, congelato, stordito) salta il turno.
+	// Il bersaglio lo sceglie l'avversario (PersonaggioBase.attacca(Gruppo)).
 
-		// Chi ha appena agito (se c'è) e chi risponde hanno fatto la loro mossa del round, anche se chi risponde è incapace di agire
-		statoDelCombattimento.registraAzione(personaggioBersaglio);
-		Personaggio avversarioAttaccante = statoDelCombattimento.getProssimoAttaccante(gruppoAvversario);
-		statoDelCombattimento.registraAzione(avversarioAttaccante);
-		if (avversarioAttaccante == null || isIncapaceDiAgire(avversarioAttaccante)) {
+	/**
+	 * Un personaggio del giocatore ha compiuto la sua azione (un attacco, un incantesimo, un canto, una pozione): consuma il suo posto nel
+	 * piano del round, e poi gli avversari agiscono finché il piano non torna a un mio personaggio o il round non finisce; alla fine del
+	 * round passa un turno di effetti di stato. Senza avversari vivi non c'è piano: passa solo il turno degli effetti, come fuori dal
+	 * combattimento.
+	 *
+	 * @return lo stato in cui passare se la partita o lo scontro sono finiti, altrimenti null
+	 */
+	private Stato dopoAzioneDelGiocatore(Personaggio chi) {
+		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {
+			return null;
+		}
+		turnoGestitoDalRound = true;
+		boolean fineRound = statoDelCombattimento.registraAzione(chi);
+		while (!fineRound && statoDelCombattimento.getProssimoLato() == StatoDelCombattimento.Lato.AVVERSARI) {
+			Personaggio avversario = statoDelCombattimento.getProssimoAttaccante(gruppoAvversario);
+			if (avversario == null) {
+				fineRound = statoDelCombattimento.registraAzioneSaltata(StatoDelCombattimento.Lato.AVVERSARI);
+				continue;
+			}
+			agisceUnAvversario(avversario);
+			if (!gruppo.getCapo().isVivo()) {
+				return Stato.GIOCO_PERSO;
+			}
+			fineRound = statoDelCombattimento.registraAzione(avversario);
+		}
+		if (!gruppo.getCapo().isVivo()) {
+			return Stato.GIOCO_PERSO;
+		}
+		return fineRound ? trascorriTurnoEffettiDiStato() : null;
+	}
+
+	/**
+	 * Bere una pozione è l'azione del personaggio: consuma il suo turno nel round (e interrompe la mischia, come l'incantesimo).
+	 */
+	private Stato dopoUnaPozione(Personaggio chiHaBevuto) {
+		annunciaAzione(chiHaBevuto, null);
+		Stato dopoLAzione = dopoAzioneDelGiocatore(chiHaBevuto);
+		if (dopoLAzione != null) {
+			return dopoLAzione;
+		}
+		if (!turnoGestitoDalRound) {
+			// Senza avversari non c'è il piano del round: passa solo il turno degli effetti di stato
+			dopoLAzione = trascorriTurnoEffettiDiStato();
+			if (dopoLAzione != null) {
+				return dopoLAzione;
+			}
+		}
+		if (isCompleta()) {
+			return Stato.FINE_LOCAZIONE;
+		}
+		impostaComandiPossibili();
+		return Stato.IN_LOCAZIONE;
+	}
+
+	/**
+	 * Come dopoUnaPozione, ma la mischia continua (se non è finita): bere l'ultima pozione di un personaggio solo non la interrompe.
+	 */
+	private Stato dopoUnaPozioneNellaMischia(Personaggio chiHaBevuto) {
+		annunciaAzione(chiHaBevuto, null);
+		Stato dopoLAzione = dopoAzioneDelGiocatore(chiHaBevuto);
+		if (dopoLAzione != null) {
+			return dopoLAzione;
+		}
+		if (!turnoGestitoDalRound) {
+			dopoLAzione = trascorriTurnoEffettiDiStato();
+			if (dopoLAzione != null) {
+				return dopoLAzione;
+			}
+		}
+		return Stato.IN_COMBATTIMENTO;
+	}
+
+	/**
+	 * L'azione di un avversario: attacca il gruppo del giocatore, scegliendo da sé il bersaglio. Chi non è in grado di agire salta il
+	 * turno.
+	 */
+	private void agisceUnAvversario(Personaggio avversario) {
+		if (isIncapaceDiAgire(avversario) || gruppo.getNumeroPersonaggiVivi() == 0) {
 			return;
 		}
-		if (gruppo.getNumeroPersonaggiVivi() == 0) {
-			return;
+		avversario.attacca(gruppo);
+	}
+
+	/**
+	 * Gli avversari si sono accorti del gruppo e attaccano per primi (un passaggio inosservato fallito): uno solo attacca, fuori dal piano
+	 * del round.
+	 */
+	private void gliAvversariAttaccanoPerPrimi() {
+		Personaggio avversario = statoDelCombattimento.getProssimoAttaccante(gruppoAvversario);
+		if (avversario != null) {
+			agisceUnAvversario(avversario);
 		}
-		// Chi ha appena agito può essere morto (es. un Morte che gli si è ritorto contro): allora il mostro
-		// sceglie fra i vivi del gruppo
-		if (personaggioBersaglio == null || personaggioBersaglio.isFuoriCombattimento()) {
-			avversarioAttaccante.attacca(gruppo);
-		} else {
-			avversarioAttaccante.attacca(personaggioBersaglio);
-		}
+	}
+
+	/**
+	 * Dice alla finestra del combattimento chi sta per agire e, se c'è, contro chi
+	 */
+	private void annunciaAzione(Personaggio attore, Personaggio bersaglio) {
+		BusEventi.pubblica(new InternoAzioneInCombattimento(attore, bersaglio));
 	}
 
 	/**
@@ -1216,28 +1322,12 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
-	 * Alla fine di un round di mischia passa anche un turno di effetti di stato (altrimenti, dato che il
-	 * combattimento non esce mai da gestisciCombattimento, veleni e stordimenti non avanzerebbero mai). Se ne muore
-	 * il combattente la mischia si interrompe, come quando lo uccide un colpo.
+	 * L'attacco con le armi di un personaggio del giocatore contro il primo avversario vivo (con la seconda arma, se ce l'ha, sullo stesso
+	 * bersaglio o sul prossimo vivo se la prima l'ha ucciso).
 	 *
-	 * @return lo stato con cui chiudere il round, oppure null se il combattimento continua
+	 * @return FINE_LOCAZIONE se non resta nessun avversario, altrimenti vuoto
 	 */
-	private Stato dopoIlRound() {
-		Stato dopoGliEffetti = trascorriTurnoEffettiDiStato();
-		if (dopoGliEffetti != null) {
-			return dopoGliEffetti;
-		}
-		if (combattente.isFuoriCombattimento()) {
-			statoLocazione = StatoLocazione.IN_LOCAZIONE;
-			return Stato.IN_LOCAZIONE;
-		}
-		if (!gruppo.getCapo().isVivo()) {
-			return Stato.GIOCO_PERSO;
-		}
-		return null;
-	}
-
-	private Optional<Stato> eseguiSingoloAttacco() {
+	private Optional<Stato> attaccaConLeArmi(Personaggio attore) {
 
 		Personaggio bersaglio = gruppoAvversario.getPersonaggioVivo();
 		if (bersaglio == null) {
@@ -1245,21 +1335,19 @@ public abstract class LocazioneBase implements Locazione {
 			return Optional.of(Stato.FINE_LOCAZIONE);
 		}
 
-		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(combattente, bersaglio));
+		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(attore, bersaglio));
+		annunciaAzione(attore, bersaglio);
 
-		Logger.log(combattente.getNome() + " attacca " + bersaglio.getNome());
+		Logger.log(attore.getNome() + " attacca " + bersaglio.getNome());
 
-		Logger.log("Valutazione combattente -> bersaglio");
-		// Chi combatte con due armi ha una seconda fase, con l'arma secondaria, sullo stesso bersaglio
-		// (o sul prossimo vivo, se la prima l'ha ucciso)
-		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(combattente, bersaglio)) {
+		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(attore, bersaglio)) {
 			Arma arma = fase.getArma();
-			boolean colpisce = CalcolatoreCombattimento.colpisce(combattente, bersaglio, arma.getTipoDanno().getSuperTipo());
+			boolean colpisce = CalcolatoreCombattimento.colpisce(attore, bersaglio, arma.getTipoDanno().getSuperTipo());
 			if (colpisce) {
-				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(combattente, bersaglio, arma, fase.getFattore());
+				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(attore, bersaglio, arma, fase.getFattore());
 				bersaglio.applicaRisultatoCombattimento(risultato);
 				if (bersaglio.isFuoriCombattimento()) {
-					registraUccisione(combattente, bersaglio);
+					registraUccisione(attore, bersaglio);
 					Personaggio nuovoBersaglio = gruppoAvversario.getPersonaggioVivo();
 					if (nuovoBersaglio != null) {
 						bersaglio = nuovoBersaglio;
@@ -1270,41 +1358,74 @@ public abstract class LocazioneBase implements Locazione {
 				}
 			}
 		}
-		Logger.log("Valutazione bersaglio -> combattente");
+		return Optional.empty();
+	}
 
-		// Il combattente ha agito; risponde sul combattente il prossimo avversario in round-robin (che salta il turno se è incapace
-		// di agire): con le armi o, se sa la magia, con un incantesimo
-		statoDelCombattimento.registraAzione(combattente);
-		Personaggio rispondente = statoDelCombattimento.getProssimoAttaccante(gruppoAvversario);
-		statoDelCombattimento.registraAzione(rispondente);
-		if (rispondente != null && !isIncapaceDiAgire(rispondente)) {
-			rispondente.rispondiInMischia(combattente);
+	/**
+	 * Un attacco scelto dal giocatore per un suo personaggio (SINGOLO_ATTACCO): è la sua azione nel round, e gli avversari agiscono
+	 * finché il piano non torna a un mio personaggio.
+	 */
+	private Optional<Stato> eseguiSingoloAttacco() {
+		Optional<Stato> fine = attaccaConLeArmi(combattente);
+		if (fine.isPresent()) {
+			return fine;
 		}
-		if (combattente.isFuoriCombattimento()) {
-			if (gruppo.getCapo().isVivo()) {
-				statoLocazione = StatoLocazione.IN_LOCAZIONE;
-				return Optional.of(Stato.IN_LOCAZIONE);
-			} else {
-				return Optional.of(Stato.GIOCO_PERSO);
+		Stato dopoLAzione = dopoAzioneDelGiocatore(combattente);
+		if (dopoLAzione != null) {
+			return Optional.of(dopoLAzione);
+		}
+		if (!turnoGestitoDalRound) {
+			dopoLAzione = trascorriTurnoEffettiDiStato();
+			if (dopoLAzione != null) {
+				return Optional.of(dopoLAzione);
 			}
 		}
+		return Optional.empty();
+	}
 
-		if (gruppoAvversario.getNumeroPersonaggiVivi() > gruppo.getNumeroPersonaggiVivi()) {
-			bersaglio = gruppoAvversario.getPersonaggioVivo();
-			String sb = bersaglio.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
-					" si disimpegna e attacca!";
-			BusEventi.pubblica(new NotificaTestoFrase(sb));
-			statoDelCombattimento.registraAzione(bersaglio);
-			bersaglio.attacca(gruppo);
+	/**
+	 * Un passo della mischia automatica (a ogni scatto del TIMER): agisce una sola volta il prossimo del piano del round, un mio personaggio
+	 * o un avversario, in round-robin. I personaggi in più di un gruppo agiscono da soli di seguito. A fine round passa un turno di effetti
+	 * di stato. Chi dei miei agisce attacca con le armi il primo avversario vivo.
+	 *
+	 * @return lo stato in cui passare se lo scontro o la partita sono finiti, altrimenti vuoto
+	 */
+	private Optional<Stato> eseguiPassoDellaMischia() {
+		if (gruppoAvversario.getPersonaggioVivo() == null) {
+			setCompleta(true);
+			return Optional.of(Stato.FINE_LOCAZIONE);
 		}
-		if (!gruppo.getCapo().isVivo()) {
-			return Optional.of(Stato.GIOCO_PERSO);
+		StatoDelCombattimento.Lato lato = statoDelCombattimento.getProssimoLato();
+		boolean fineRound;
+		if (lato == StatoDelCombattimento.Lato.AVVERSARI) {
+			Personaggio avversario = statoDelCombattimento.getProssimoAttaccante(gruppoAvversario);
+			if (avversario == null) {
+				fineRound = statoDelCombattimento.registraAzioneSaltata(StatoDelCombattimento.Lato.AVVERSARI);
+			} else {
+				agisceUnAvversario(avversario);
+				if (!gruppo.getCapo().isVivo()) {
+					return Optional.of(Stato.GIOCO_PERSO);
+				}
+				fineRound = statoDelCombattimento.registraAzione(avversario);
+			}
+		} else {
+			Personaggio attore = statoDelCombattimento.getProssimoAttaccante(gruppo);
+			if (attore == null) {
+				fineRound = statoDelCombattimento.registraAzioneSaltata(StatoDelCombattimento.Lato.GIOCATORE);
+			} else {
+				combattente = attore;
+				if (!isIncapaceDiAgire(attore)) {
+					Optional<Stato> fine = attaccaConLeArmi(attore);
+					if (fine.isPresent()) {
+						return fine;
+					}
+				}
+				fineRound = statoDelCombattimento.registraAzione(attore);
+			}
 		}
-		Stato dopoIlRound = dopoIlRound();
-		if (dopoIlRound != null) {
-			return Optional.of(dopoIlRound);
+		if (fineRound) {
+			return Optional.ofNullable(trascorriTurnoEffettiDiStato());
 		}
-
 		return Optional.empty();
 	}
 
@@ -1317,7 +1438,9 @@ public abstract class LocazioneBase implements Locazione {
 			return Stato.IN_LOCAZIONE;
 		}
 		if (azione.isPersonaggio()) {
+			// Il giocatore sceglie chi agisce per primo fra i suoi: poi la rotazione prosegue
 			combattente = gruppo.getPersonaggio(azione);
+			statoDelCombattimento.faAgirePerPrimo(gruppo, combattente);
 			impostaComandiPossibili();
 			return Stato.IN_COMBATTIMENTO;
 		}
@@ -1332,7 +1455,7 @@ public abstract class LocazioneBase implements Locazione {
 			return Stato.IN_COMBATTIMENTO;
 		}
 		if (azione == Comando.COMBATTIMENTO || azione == Comando.TIMER) {
-			Optional<Stato> stato = eseguiSingoloAttacco();
+			Optional<Stato> stato = eseguiPassoDellaMischia();
 			if (stato.isPresent()) {
 				return stato.get();
 			}
@@ -1350,8 +1473,9 @@ public abstract class LocazioneBase implements Locazione {
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				gruppo.consumaPozioneSalute(gruppo.getPersonaggiVivi().get(0));
-				return Stato.IN_COMBATTIMENTO;
+				Personaggio unico = gruppo.getPersonaggiVivi().get(0);
+				gruppo.consumaPozioneSalute(unico);
+				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}
 		if (azione == Comando.POZIONE_SALUTE_GRANDE) {
@@ -1361,8 +1485,9 @@ public abstract class LocazioneBase implements Locazione {
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE_GRANDE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				gruppo.consumaPozioneSaluteGrande(gruppo.getPersonaggiVivi().get(0));
-				return Stato.IN_COMBATTIMENTO;
+				Personaggio unico = gruppo.getPersonaggiVivi().get(0);
+				gruppo.consumaPozioneSaluteGrande(unico);
+				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}
 		if (azione == Comando.POZIONE_MAGIA) {
@@ -1372,8 +1497,9 @@ public abstract class LocazioneBase implements Locazione {
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				gruppo.consumaPozioneMagia(gruppo.getPersonaggiVivi().get(0));
-				return Stato.IN_COMBATTIMENTO;
+				Personaggio unico = gruppo.getPersonaggiVivi().get(0);
+				gruppo.consumaPozioneMagia(unico);
+				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}
 		if (azione == Comando.POZIONE_MAGIA_GRANDE) {
@@ -1383,8 +1509,9 @@ public abstract class LocazioneBase implements Locazione {
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA_GRANDE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				gruppo.consumaPozioneMagiaGrande(gruppo.getPersonaggiVivi().get(0));
-				return Stato.IN_COMBATTIMENTO;
+				Personaggio unico = gruppo.getPersonaggiVivi().get(0);
+				gruppo.consumaPozioneMagiaGrande(unico);
+				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}
 		if (azione == Comando.INCANTESIMO) {
@@ -1548,7 +1675,7 @@ public abstract class LocazioneBase implements Locazione {
 			return Stato.FINE_LOCAZIONE;
 		}
 		BusEventi.pubblica(new NotificaTestoParagrafo("Un rametto si spezza: gli avversari vi hanno visti, e attaccano per primi!"));
-		rispostaAvversaria(null, gruppo, gruppoAvversario);
+		gliAvversariAttaccanoPerPrimi();
 		if (!gruppo.getCapo().isVivo()) {
 			return Stato.GIOCO_PERSO;
 		}
@@ -1726,6 +1853,9 @@ public abstract class LocazioneBase implements Locazione {
 		String nome = combattente.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 		BusEventi.pubblica(new NotificaTestoFrase(nome + " inizia il combattimento."));
 		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(combattente, gruppoAvversario.getPersonaggioVivo()));
+		annunciaAzione(combattente, gruppoAvversario.getPersonaggioVivo());
+		// Il personaggio scelto agisce per primo, poi si alternano tutti
+		statoDelCombattimento.faAgirePerPrimo(gruppo, combattente);
 		opzioneAmiciziaDisponibile = false;
 		opzioneCorruzioneDisponibile = false;
 		statoLocazione = StatoLocazione.IN_COMBATTIMENTO;

@@ -7,6 +7,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.strumenti.Logger;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -18,11 +19,13 @@ import java.util.Set;
 /**
  * La memoria di un combattimento, che le tattiche leggono (vedi tattiche_di_combattimento_automatiche.md §3.3): non fa
  * parte del modello dati, non si salva (un combattimento non si interrompe mai per salvare) e si azzera a ogni inizio
- * locazione. Per ora tiene:
+ * locazione. Tiene:
  * <ul>
- * <li>il <b>numero del round</b>: finisce quando tutti gli avversari vivi hanno agito, così arriva comunque a una fine anche se il
- * giocatore continua con azioni manuali (e fa agire sempre lo stesso personaggio). Riparte da 1 a ogni inizio locazione e
- * continua con le ondate. Ogni round che comincia pubblica un {@link InternoInizioRound};</li>
+ * <li>il <b>piano del round</b>: a inizio round si contano i personaggi in grado di agire dei due gruppi (<i>n</i> i miei, <i>m</i> gli
+ * avversari) e si fanno max(<i>n</i>, <i>m</i>) coppie, alla coppia <i>k</i> agisce il mio <i>k</i>-esimo e poi l'avversario <i>k</i>-esimo;
+ * chi non ha un compagno nell'altro gruppo agisce da solo, di seguito. Il piano è la sequenza dei lati ({@link Lato}), non dei
+ * personaggi: chi agisce davvero lo decide il round-robin di ogni gruppo al momento. Il round finisce quando il piano è finito
+ * (e ne comincia un altro, con un {@link InternoInizioRound}); il suo numero riparte da 1 a ogni inizio locazione e continua con le ondate;</li>
  * <li>chi ha già agito nel round (di entrambi i gruppi);</li>
  * <li>per ogni gruppo, il <b>puntatore</b> al personaggio che ha agito per ultimo, per il round-robin. Si ricorda il
  * personaggio e non solo la sua posizione, perché la lista di un gruppo cambia durante lo scontro;</li>
@@ -60,7 +63,15 @@ public class StatoDelCombattimento {
 		private int posizione = -1;
 	}
 
+	/** I due lati del combattimento: il gruppo del giocatore e quello degli avversari */
+	public enum Lato {
+		GIOCATORE, AVVERSARI
+	}
+
 	private int round = 1;
+	// Il piano del round, che si costruisce quando serve (null: da costruire) e quanti posti ne sono già stati usati
+	private List<Lato> piano;
+	private int postiUsati;
 	private final Set<Personaggio> hannoAgitoNelRound = Collections.newSetFromMap(new IdentityHashMap<>());
 	private final Map<Gruppo, Puntatore> puntatori = new IdentityHashMap<>();
 	private final Map<Personaggio, Scheda> schede = new IdentityHashMap<>();
@@ -85,6 +96,8 @@ public class StatoDelCombattimento {
 	 */
 	public void reimposta() {
 		round = 1;
+		piano = null;
+		postiUsati = 0;
 		hannoAgitoNelRound.clear();
 		puntatori.clear();
 		schede.clear();
@@ -145,32 +158,136 @@ public class StatoDelCombattimento {
 	}
 
 	/**
-	 * Registra che il personaggio ha agito. Quando tutti gli avversari in grado di agire hanno agito il round è finito e ne
-	 * comincia un altro (se non ce ne sono più, il combattimento è finito e il round non avanza).
+	 * Quanti personaggi di un gruppo sono in grado di agire in un round (vivi e non in panchina)
 	 */
-	public void registraAzione(Personaggio personaggio) {
-		if (personaggio == null) {
-			return;
-		}
-		hannoAgitoNelRound.add(personaggio);
-		if (roundCompleto()) {
-			round++;
-			hannoAgitoNelRound.clear();
-			BusEventi.pubblica(new InternoInizioRound(round));
-		}
-	}
-
-	private boolean roundCompleto() {
-		Gruppo avversari = GruppoAvversario.getIstanza();
-		return !avversari.getPersonaggiVivi().isEmpty() && tuttiHannoAgito(avversari);
-	}
-
-	private boolean tuttiHannoAgito(Gruppo gruppo) {
+	private static int quantiAgiscono(Gruppo gruppo) {
+		int quanti = 0;
 		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
-			if (!personaggio.isFuoriCombattimento() && !hannoAgitoNelRound.contains(personaggio)) {
-				return false;
+			if (!personaggio.isFuoriCombattimento()) {
+				quanti++;
 			}
 		}
+		return quanti;
+	}
+
+	private void assicuraIlPiano() {
+		if (piano != null) {
+			return;
+		}
+		int mieiPersonaggi = quantiAgiscono(GruppoGiocatore.getIstanza());
+		int avversariPersonaggi = quantiAgiscono(GruppoAvversario.getIstanza());
+		piano = new ArrayList<>();
+		postiUsati = 0;
+		for (int k = 0; k < Math.max(mieiPersonaggi, avversariPersonaggi); k++) {
+			if (k < mieiPersonaggi) {
+				piano.add(Lato.GIOCATORE);
+			}
+			if (k < avversariPersonaggi) {
+				piano.add(Lato.AVVERSARI);
+			}
+		}
+	}
+
+	/**
+	 * Un'altra ondata di avversari: il piano del round in corso si rifà con i nuovi arrivati. Il numero del round non cambia.
+	 */
+	public void nuovaOndata() {
+		piano = null;
+	}
+
+	/**
+	 * A chi tocca adesso nel piano del round.
+	 *
+	 * @return il lato che deve agire, oppure null se nessuno può farlo (un gruppo senza nessuno e l'altro nemmeno)
+	 */
+	public Lato getProssimoLato() {
+		assicuraIlPiano();
+		return postiUsati < piano.size() ? piano.get(postiUsati) : null;
+	}
+
+	/**
+	 * Il piano del round, per i test e il log: i lati nell'ordine in cui agiscono (anche quelli già passati)
+	 */
+	public List<Lato> getPiano() {
+		assicuraIlPiano();
+		return Collections.unmodifiableList(piano);
+	}
+
+	/**
+	 * Registra che il personaggio ha agito, nel gruppo in cui sta. Se è del giocatore il suo gruppo riparte dal successivo
+	 * (le azioni manuali scelgono chi agisce). Consuma il prossimo posto del suo lato nel piano; se il piano è finito il round è
+	 * finito e ne comincia un altro.
+	 *
+	 * @return true se con questa azione il round è finito
+	 */
+	public boolean registraAzione(Personaggio personaggio) {
+		if (personaggio == null) {
+			return false;
+		}
+		hannoAgitoNelRound.add(personaggio);
+		Lato lato = GruppoAvversario.getIstanza().contiene(personaggio) ? Lato.AVVERSARI : Lato.GIOCATORE;
+		if (lato == Lato.GIOCATORE) {
+			ricordaChiHaAgito(GruppoGiocatore.getIstanza(), personaggio);
+		}
+		return consuma(lato);
+	}
+
+	/**
+	 * Registra che il lato doveva agire ma nessuno ne era in grado: il posto nel piano è usato lo stesso
+	 *
+	 * @return true se con questo il round è finito
+	 */
+	public boolean registraAzioneSaltata(Lato lato) {
+		return consuma(lato);
+	}
+
+	/**
+	 * Fa in modo che il prossimo a agire in quel gruppo, nel suo round-robin, sia questo personaggio (il giocatore ha scelto chi comincia).
+	 */
+	public void faAgirePerPrimo(Gruppo gruppo, Personaggio personaggio) {
+		List<Personaggio> personaggi = gruppo.getPersonaggi();
+		int posizione = personaggi.indexOf(personaggio);
+		if (posizione < 0) {
+			return;
+		}
+		int precedente = (posizione - 1 + personaggi.size()) % personaggi.size();
+		Puntatore puntatore = puntatori.computeIfAbsent(gruppo, g -> new Puntatore());
+		puntatore.personaggio = personaggi.get(precedente);
+		puntatore.posizione = precedente;
+	}
+
+	private void ricordaChiHaAgito(Gruppo gruppo, Personaggio personaggio) {
+		int posizione = gruppo.getPersonaggi().indexOf(personaggio);
+		if (posizione < 0) {
+			return;
+		}
+		Puntatore puntatore = puntatori.computeIfAbsent(gruppo, g -> new Puntatore());
+		puntatore.personaggio = personaggio;
+		puntatore.posizione = posizione;
+	}
+
+	private boolean consuma(Lato lato) {
+		if (quantiAgiscono(GruppoAvversario.getIstanza()) == 0) {
+			// Senza avversari il combattimento è finito: il round non avanza
+			return false;
+		}
+		assicuraIlPiano();
+		int posto = postiUsati;
+		while (posto < piano.size() && piano.get(posto) != lato) {
+			posto++;
+		}
+		if (posto >= piano.size()) {
+			// Un'azione fuori dal piano (per esempio il lato non ha più posti): non consuma niente
+			return false;
+		}
+		postiUsati = posto + 1;
+		if (postiUsati < piano.size()) {
+			return false;
+		}
+		round++;
+		hannoAgitoNelRound.clear();
+		piano = null;
+		BusEventi.pubblica(new InternoInizioRound(round));
 		return true;
 	}
 

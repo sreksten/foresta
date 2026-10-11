@@ -66,8 +66,14 @@ class ScenarioCorrezioniTest {
 
 			partita.assertStato(Stato.IN_COMBATTIMENTO);
 			assertEquals(4, durata(capo, TipoEffettoDiStato.RALLENTATO), "l'effetto non e' sceso durante il round");
-			partita.scatta();
+			// Ogni scatto è una sola azione: gli effetti scendono quando finisce il round, cioè quando hanno agito tutti
+			int round = StatoDelCombattimento.getIstanza().getRound();
+			for (int i = 0; i < 20 && partita.stato() == Stato.IN_COMBATTIMENTO && StatoDelCombattimento.getIstanza().getRound() == round; i++) {
+				assertEquals(4, durata(capo, TipoEffettoDiStato.RALLENTATO), "l'effetto e' sceso prima della fine del round");
+				partita.scatta();
+			}
 			if (partita.stato() == Stato.IN_COMBATTIMENTO) {
+				assertEquals(round + 1, StatoDelCombattimento.getIstanza().getRound());
 				assertEquals(3, durata(capo, TipoEffettoDiStato.RALLENTATO));
 			}
 		}

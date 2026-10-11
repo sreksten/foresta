@@ -69,7 +69,6 @@ public class Tempio extends LocazioneBase {
 		Personaggio p;
 		for (int i = 0; i < nViverne; i++) {
 			p = FabbricaPersonaggi.crea(TipoPersonaggio.VIVERNA, Statistiche.getLivello());
-			p.setOrdinale(i + 1);
 			gng.aggiungiPersonaggio(p);
 		}
 	}

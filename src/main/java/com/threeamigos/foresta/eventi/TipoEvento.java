@@ -328,6 +328,10 @@ public enum TipoEvento {
      */
     INTERNO_INIZIO_ROUND,
     /**
+     * Un personaggio sta per compiere la sua azione in combattimento: la finestra del combattimento mostra chi agisce e il bersaglio
+     */
+    INTERNO_AZIONE_IN_COMBATTIMENTO,
+    /**
      * Un salvataggio è stato riletto con successo: porta gli ultimi messaggi da ripristinare nel pannello di testo
      */
     INTERNO_CARICAMENTO_COMPLETATO,

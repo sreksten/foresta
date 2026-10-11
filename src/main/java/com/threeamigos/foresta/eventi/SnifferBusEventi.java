@@ -57,6 +57,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(NotificaFineGioco.class, this::onEventoFineGioco);
         BusEventi.iscriviti(InternoNotificaViaFumettoATempo.class, this::onEventoFumetto);
         BusEventi.iscriviti(InternoInizioRound.class, this::onEventoInizioRound);
+        BusEventi.iscriviti(InternoAzioneInCombattimento.class, this::onEventoAzioneInCombattimento);
         BusEventi.iscriviti(NotificaInterazionePersonaggio.class, this::onEventoInterazione);
         BusEventi.iscriviti(NotificaReazioneDiClassePersonaggio.class, this::onEventoReazioneDiClasse);
         BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, this::onEventoInterfacciaUtentePronta);
@@ -238,6 +239,11 @@ public class SnifferBusEventi {
 
     private void onEventoFumetto(InternoNotificaViaFumettoATempo evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getTesto()));
+    }
+
+    private void onEventoAzioneInCombattimento(InternoAzioneInCombattimento evento) {
+        Logger.log(headerEvento(evento) + "Agisce " + formattaStatistichePersonaggio(evento.getPersonaggio()) +
+                (evento.getBersaglio() == null ? " (senza bersaglio)" : " contro " + formattaStatistichePersonaggio(evento.getBersaglio())));
     }
 
     private void onEventoInizioRound(InternoInizioRound evento) {

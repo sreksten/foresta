@@ -24,12 +24,15 @@ import java.util.List;
 import java.util.Random;
 
 /**
+ * ATTENZIONE: simula il combattimento <b>precedente al round a coppie</b> (una risposta per ogni azione del giocatore, il disimpegno); non
+ * è stata portata al piano del round di StatoDelCombattimento (vedi todo.md), quindi i suoi numeri non valgono per il gioco di oggi.
+ * <p>
  * Scontri di un gruppo di personaggi giocanti (ognuno con la sua prima dotazione tipica, del suo livello) contro boss
  * e mostri comuni, con le regole di LocazioneBase:
  * <ul>
  * <li>a ogni round il gruppo fa una sola azione: un attacco in mischia del combattente scelto (eseguiSingoloAttacco),
  * un dardo arcano o una pergamena della scorta del gruppo (lanciaDardoArcano, CHI_FORMULA), o una pozione;</li>
- * <li>in mischia risponde il primo avversario vivo, sul combattente (Personaggio.rispondiInMischia: con le armi o, se
+ * <li>in mischia risponde il primo avversario vivo, sul combattente (Personaggio.attacca: con le armi o, se
  * sa la magia, con un incantesimo); se gli avversari vivi
  * sono più dei personaggi vivi, uno "si disimpegna e attacca" il gruppo (Personaggio.attacca(Gruppo): prima il Mago,
  * poi l'Elfo, altrimenti uno a caso);</li>
@@ -242,7 +245,7 @@ public class TestScontriDiGruppo {
             return;
         }
         // Come nel gioco: con le armi o, se sa la magia, con un incantesimo
-        bersaglio.rispondiInMischia(combattente);
+        bersaglio.attacca(combattente);
         if (vivi(avversari).size() > vivi(gruppo).size()) {
             Personaggio chiSiDisimpegna = primoVivo(avversari);
             Personaggio preso = bersaglioDelGruppo(gruppo);
