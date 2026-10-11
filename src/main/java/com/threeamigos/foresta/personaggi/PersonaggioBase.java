@@ -505,8 +505,8 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	/**
 	 * Chi attacca un gruppo: il Mago o la Maga più potenti (di livello più alto, a parità il primo), altrimenti il
-	 * Sacerdote o la Sacerdotessa più potenti, altrimenti uno a caso fra tutti i personaggi vivi e gli ospiti
-	 * vulnerabili vivi (vedi {@link Gruppo#getOspitiBersaglio()}), tutti con la stessa probabilità.
+	 * Sacerdote o la Sacerdotessa più potenti, altrimenti l'Elfo o l'Elfa più potenti, altrimenti il Bardo o la
+	 * Cantastorie più potenti, altrimenti uno a caso fra tutti i personaggi vivi e gli ospiti vulnerabili vivi (vedi {@link Gruppo#getOspitiBersaglio()}), tutti con la stessa probabilità.
 	 */
 	public void attacca(Gruppo gruppoBersaglio) {
 		Personaggio bersaglio = scegliBersaglio(gruppoBersaglio);
@@ -530,6 +530,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		if (bersaglio == null) {
 			bersaglio = piuPotenteTra(personaggiPossibili, TipoPersonaggio.ELFO, TipoPersonaggio.ELFA);
+		}
+		if (bersaglio == null) {
+			bersaglio = piuPotenteTra(personaggiPossibili, TipoPersonaggio.BARDO, TipoPersonaggio.CANTASTORIE);
 		}
 		if (bersaglio == null) {
 			List<Personaggio> candidati = new ArrayList<>(personaggiPossibili);

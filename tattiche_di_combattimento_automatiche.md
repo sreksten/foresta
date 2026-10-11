@@ -61,6 +61,10 @@ Vedi [`motore_di_gioco.md`](motore_di_gioco.md) §7. Quello che conta per le tat
   chi colpire, se lanciare un incantesimo, quale, e se conviene più la magia o l'attacco fisico. Vedi §4.
 - Non c'è **posizione**: né distanza, né mischia contro distanza, né linea di vista. Non c'è un turno di preparazione degli
   incantesimi (sono istantanei) né cooldown. Gli avversari non hanno un "bersaglio" persistente: rispondono a chi ha appena agito.
+- **Gli ospiti vulnerabili sono bersaglio solo in due casi** (un limite del combattimento di oggi): la risposta avversaria colpisce il personaggio che ha appena agito
+  (`rispostaAvversaria`) o il combattente scelto (`rispondiInMischia`), non uno a caso; si arriva a `PersonaggioBase.attacca(Gruppo)`, dove la scelta a caso
+  comprende gli ospiti vulnerabili vivi, solo quando il gruppo avversario è più numeroso ("si disimpegna e attacca") o quando chi ha agito è già caduto. Con le tattiche la
+  risposta sceglie il bersaglio con la tattica dell'avversario (§3, §4), e la scelta a caso li comprende sempre.
 
 ## 3. Il round-robin dei due gruppi
 
@@ -118,7 +122,7 @@ malefici); i selettori sono gli stessi di §6, letti dal punto di vista dell'avv
 
 | Decisione | Oggi (`PersonaggioBase`) | Come voce di tattica |
 | :--- | :--- | :--- |
-| **Chi colpire** (`attacca(Gruppo)`) | il **Mago o la Maga più potenti** (livello più alto, a parità il primo); poi il **Sacerdote o la Sacerdotessa più potenti**; poi l'**Elfo o l'Elfa più potenti**; altrimenti **a caso** fra i personaggi vivi e gli ospiti vulnerabili vivi, tutti con la stessa probabilità (`PersonaggioBase.scegliBersaglio`) | un selettore: "un avversario magico", "il più debole", "il primo", "a caso" |
+| **Chi colpire** (`attacca(Gruppo)`) | il **Mago o la Maga più potenti** (livello più alto, a parità il primo); poi il **Sacerdote o la Sacerdotessa più potenti**; poi l'**Elfo o l'Elfa più potenti**; poi il **Bardo o la Cantastorie più potenti**; altrimenti **a caso** fra i personaggi vivi e gli ospiti vulnerabili vivi, tutti con la stessa probabilità (`PersonaggioBase.scegliBersaglio`) | un selettore: "un avversario magico", "il più debole", "il primo", "a caso" |
 | **Se lanciare un incantesimo** (`scegliIncantesimoContro`) | no se non è magico (`isMagico`), è `SILENZIATO`, ha 0 `MAGIA` o non può pagarne nessuno; poi **una volta su tre non lancia** | le condizioni "magia sufficiente" e "probabilità del n%" |
 | **Quale incantesimo** | `INTELLIGENZA` < 5: **a caso**; < 7: **il più potente**; da 7: **il più conveniente** fra incantesimo e attacco fisico, confrontando probabilità di colpire × danno atteso | un **criterio di scelta** dell'azione: a caso, il più potente, il più conveniente |
 | **Magia o attacco fisico** | solo per `INTELLIGENZA` ≥ 7, con quel confronto | idem: l'ultima voce è comunque l'attacco fisico |
@@ -263,8 +267,11 @@ logiche che oggi usano i mostri in base all'intelligenza (§4). Vale anche per i
   proprie** della tattica, non partecipano al "più potente" fra gli incantesimi che fanno danno. Il **Silenzio** va usato **subito** su maghi,
   sacerdoti, elfi e bardi (i personaggi magici di cui sopra) quando c'è.
 - **Il costo**: si considerano **solo gli incantesimi che si possono lanciare in quel momento** (`MAGIA` sufficiente, non silenziato). I mostri non
-  recuperano `MAGIA`; un personaggio può bere una pozione della Magia (una voce a sé, "se la MAGIA è sotto la soglia") e il turno dopo avere a
-  disposizione quelli più costosi.
+  recuperano `MAGIA` **a meno che non siano umanoidi e abbiano nel loro gruppo qualche pozione della Magia a disposizione**; un personaggio può bere una
+  pozione della Magia (una voce a sé, "se la `MAGIA` è sotto la soglia") e il turno dopo avere a disposizione quelli più costosi. La stessa
+  considerazione vale per le **pozioni della Salute** e per gli **incantesimi curativi** (Alba Sacra, Resurrezione, canto curativo): oggi gli avversari non li usano
+  perché non hanno nessuna scorta (né pozioni né pergamene) e il loro repertorio comprende solo incantesimi **malefici**, pagati soltanto con la loro `MAGIA`; il
+  difetto è nel **modello dati** (§8).
 
 **Il silenzio è un'azione.** Lo stato `SILENZIATO` lo mette l'incantesimo del Silenzio (riga sopra), o con una probabilità un attacco di
 tipo **arcano** (il Dardo arcano di Mago ed Elfo, l'arma naturale del Lich, gli incantamenti arcani). Una voce "silenzia il mago" è
@@ -424,7 +431,7 @@ sotto il n%" (una soglia), "**debole a** `<tipo>`" (moltiplicatore di classe e s
 | Un alleato con un certo **stato** (avvelenato, confuso...) | DA:O, FFXII | **sì**: `hasEffettoDiStato` |
 | Un alleato con **poca magia** (per la pozione della Magia) | FFXII (*MP < n%*) | **sì**: `getMagia() / getMagiaMassima()` |
 | Un alleato di una certa **classe** | DA:O | **sì**: `getClasse()` |
-| Un **ospite** da proteggere | (specifico: missioni di scorta) | **no**: gli ospiti non combattono e non sono mai bersaglio delle tattiche |
+| Un **ospite vulnerabile** da proteggere | (specifico: missioni di scorta) | **sì, come alleato da proteggere**: un ospite vulnerabile vivo (`GruppoGiocatore.getOspitiBersaglio`) è fra i bersagli *possibili* del suo gruppo, e può esserlo di una cura o di una protezione (da decidere quali selettori lo comprendono). Un ospite non vulnerabile non lo è mai. Non combatte e non agisce, quindi non ha una tattica |
 
 ### 6.3 "Debole a un elemento"
 
@@ -611,7 +618,7 @@ diventa più ostica. La formula è la rampa del §4 (B).
 
 | Sigla | Filtro | Definizione |
 | :--- | :--- | :--- |
-| F1 | **vivo e in combattimento** | sempre: non morto, non in panchina, non fuori combattimento |
+| F1 | **vivo e in combattimento** | sempre: non morto, non in panchina, non fuori combattimento. Per un gruppo avversario che sceglie nel gruppo del giocatore i **bersagli possibili** sono i personaggi vivi **e gli ospiti vulnerabili vivi** (`getOspitiBersaglio`); i filtri sulla classe e sulla magia non li comprendono mai |
 | F2 | **di classe / di categoria** `<X>` | `getClasse()`; `isDellaCategoria` (basta una delle categorie) |
 | F3 | **magico** | prima chi ha abilità innate (Dardo arcano: Mago, Maga, Elfo, Elfa; Alba Sacra: Sacerdote, Sacerdotessa; canti: Bardo, Cantastorie) non silenziato e con la `MAGIA` per almeno una; poi i **mostri** di una classe con `isMagico()` (Strega, Lich, Drago...), non silenziati e con `MAGIA` > 0, **fin da subito**; poi gli altri solo se `MAGIA` > 0, non silenziati e che hanno già lanciato in questo combattimento |
 | F4 | **con / senza lo stato** `<X>` | `hasEffettoDiStato` |
@@ -799,6 +806,13 @@ sue.
 
 Quasi tutto è già leggibile (§6 e §7). Quello che manca:
 
+- **La scorta di incantesimi e pozioni anche per il gruppo avversario** (da correggere nel modello dati): oggi le pergamene e le pozioni (della Salute e della
+  Magia, normali e grandi) sono solo del gruppo del giocatore (`GruppoGiocatoreMD`: `incantesimi`, `pozioniSalute`, `pozioniSaluteGrande`, `pozioniMagia`,
+  `pozioniMagiaGrande`); `Gruppo` e `GruppoAvversario` non le hanno: i mostri non consumano pergamene, conoscono per natura un **repertorio fisso** di incantesimi malefici
+  (`getRepertorioIncantesimi`, filtrato per tipo `MALEFICO`) e li pagano con la `MAGIA`. Vanno spostate in una base comune (`GruppoMD`) e rese disponibili anche agli avversari, con le
+  stesse regole di consumo: una voce "bevi la pozione" o "lancia l'incantesimo curativo" diventa eseguibile per un mostro solo se il suo gruppo ne ha. Beve la
+  pozione (della Magia, della Salute) solo un **umanoide** (§6.1, categoria). Da decidere: da dove vengono le scorte di un gruppo avversario (generate con
+  l'incontro?), e se quelle non usate passano al giocatore quando vince (loot).
 - **L'evento `InternoDecisioneTattica`** (§7.7): è `InternoRisultatoValutazionePersonaggioAttaccante` **rinominato e completato** (classe in `eventi/interni`, il valore
   `INTERNO_DECISIONE_TATTICA` in `TipoEvento` al posto di `INTERNO_RISULTATO_VALUTAZIONE_PERSONAGGIO_ATTACCANTE`, la riga di registro in `SnifferBusEventi`), non un
   evento in più; il motore delle tattiche costruisce la sintesi dettagliata mentre sceglie la voce e sostituisce le otto pubblicazioni di `scegliIncantesimoContro`.
