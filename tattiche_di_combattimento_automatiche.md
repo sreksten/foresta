@@ -875,7 +875,7 @@ Qui si fissano le decisioni sul **modello** (come sono fatte una tattica, una vo
 
 ```
 Voce      { Selettore selettore?; List<Predicato> condizioni; List<Azione> azioni }       (la prima azione applicabile vince, §11.7)
-Azione    { TipoAzione tipo; ClasseIncantesimo classe?; CriterioScelta criterio?; TipoDanno armaDi? }
+Azione    { TipoAzione tipo; CriterioIncantesimo criterio?; boolean soloSePiuForteDellAttacco; TipoDanno armaDi? }   (§11.9, §11.10)
 Selettore { TipoRosa rosa; List<Filtro> filtri; TipoOrdinamento ordinamento }
 Filtro    { TipoFiltro tipo; boolean negato; parametro? }                   (§11.5)
 Predicato { TipoPredicato tipo; boolean negato; parametri? }                (§11.8; le condizioni sono in AND, lista vuota = sempre)
@@ -1033,4 +1033,81 @@ per tornare all'arma di prima, `QUANTI AVVERSARI [CATEGORIA NON_MORTO] UGUALE 0`
 **Fuori dalla prima versione** (si aggiungono dopo, sono solo valori in più dell'enumerato): la stanchezza, i modificatori temporanei attivi, il tipo di locazione e l'ora, il duello, l'ondata successiva, il confronto fra il numero
 degli avversari e dei miei compagni.
 
-**Da decidere:** l'elenco dei `TipoAzione` con i loro requisiti e portate, e i criteri di scelta dell'incantesimo (S1-S4).
+### 11.9 Le azioni: l'elenco
+
+Le azioni sono un enumerato `TipoAzione` con il **nome piatto**, uno per incantesimo (`FULMINE`, non `INCANTESIMO` con un parametro): così una voce si legge come la si pensa, `SU AVVERSARI [STATO BAGNATO] → FULMINE`.
+Ogni valore dichiara la sua **portata** (§11.2), le **rose che accetta** e i suoi **requisiti**. Sono ventidue:
+
+| Gruppo | `TipoAzione` | Portata | Rose accettate |
+| :--- | :--- | :--- | :--- |
+| Mischia | `ATTACCO_FISICO` | un avversario | `AVVERSARI`; per i mostri anche `AVVERSARI_E_OSPITI` e `OSPITI` |
+| Incantesimi di danno | `ARIA`, `ACQUA`, `TERRA`, `FUOCO`, `FULMINE`, `GELO`, `VELENO` | un avversario | come l'attacco |
+| | `MORTE` | un avversario vivo | come l'attacco |
+| | `SILENZIO` | un avversario | come l'attacco |
+| Incantesimo "del repertorio" | `INCANTESIMO_DI_DANNO` (parametro: criterio S1-S4, §7.5) | un avversario | come l'attacco |
+| Innato | `DARDO_ARCANO` | un avversario | come l'attacco |
+| Benefici | `RESURREZIONE` | un alleato caduto | `ALLEATI_CADUTI` |
+| | `ALBA_SACRA` | tutto il gruppo | il selettore è solo un test di esistenza |
+| Canti | `CANTO_CURATIVO` | un alleato | `SE_STESSO`, `ALLEATI`, `OSPITI`, `ALLEATI_E_OSPITI` |
+| | `CANTO_IPNOTICO`, `URLO_DELLA_BANSHEE` | tutti gli avversari (fino a `NUMERO_BERSAGLI`) | test di esistenza |
+| | `CANTO_DI_VALORE` | tutto il gruppo | test di esistenza |
+| Pozioni | `POZIONE_SALUTE`, `POZIONE_MAGIA` | un alleato (di solito sé) | come `CANTO_CURATIVO` |
+| Equipaggiamento | `CAMBIA_ARMA` (parametro: tipo di danno voluto) | un'arma | nessuna |
+
+Escluse (§5): fuga, corruzione, amicizia, passare inosservati. **Non c'è un'azione "passa il turno"**: se nessuna azione di una lista è applicabile, il personaggio fa un attacco fisico (§7.6, il ripiego).
+
+**I requisiti** (li porta l'azione, §11.7; il giocatore non li scrive):
+
+- **Incantesimi di danno, `SILENZIO`, `MORTE`:** la pergamena della classe nel gruppo, la `MAGIA` per il costo, non essere `SILENZIATO`. Il bersaglio non deve essere immune a quel tipo di danno (`SILENZIO`: all'effetto `SILENZIATO`, e non già
+  silenziato); `MORTE` vuole un bersaglio vivo.
+- **`DARDO_ARCANO`, canti:** la `MAGIA`, e la classe che li sa (Mago, Maga, Elfo, Elfa; Bardo, Cantastorie, il bardo della locanda). `CANTO_CURATIVO` vuole qualcuno ferito, `CANTO_IPNOTICO` e `URLO_DELLA_BANSHEE` avversari vivi
+  non già `SPAVENTATO` o `CONFUSO`, e l'Urlo che il gruppo l'abbia imparato.
+- **`ALBA_SACRA`:** usa quella innata se il personaggio ce l'ha (Sacerdote, Sacerdotessa), altrimenti la pergamena; vuole almeno un alleato con uno stato negativo o un modificatore temporaneo da togliere.
+- **`RESURREZIONE`:** la pergamena, la `MAGIA`, un compagno caduto (non in panchina).
+- **Pozioni:** una nel gruppo; la Salute vuole un ferito, la Magia chi ha poca `MAGIA`.
+- **`CAMBIA_ARMA`:** il controllo preventivo del cambio e il massimo di cambi (§5).
+- Tutte: il bersaglio non è un'immunità **nota** (di classe o scoperta, §11.7) e non ha già `N` tentativi falliti.
+
+**Decisioni:**
+
+- **`INCANTESIMO_DI_DANNO`** sceglie fra i sette incantesimi elementali che il personaggio può lanciare adesso; **non comprende `MORTE`** (può ritorcersi contro chi la lancia), `SILENZIO` e i benefici, che restano azioni esplicite.
+  Il criterio (S1-S4) è un parametro dell'azione.
+- **Pozioni:** una sola azione per tipo; la scelta fra normale e grande la fa il valutatore (la grande se la salute mancante è almeno quella che dà la grande, altrimenti la normale).
+- **Incantesimi a più bersagli** (`MULTIPLO`, fino a `NUMERO_BERSAGLI`): il selettore sceglie il **bersaglio principale** e gli altri sono i successivi vivi dell'elenco degli avversari.
+- **Un test** controlla che ogni valore di `ClasseIncantesimo` abbia il suo `TipoAzione` (un nuovo incantesimo senza azione fa fallire il test).
+
+**Da fare nel motore: il bersaglio scelto, per tutte le azioni.** Oggi ogni azione sceglie da sola il bersaglio: l'attacco colpisce il primo avversario vivo (`LocazioneBase.attaccaConLeArmi`), gli incantesimi i primi vivi, il dardo il primo, il Silenzio
+il primo non silenziato (`Silenzio.scegliBersaglio`), il canto curativo il più ferito. Perché la tattica comandi davvero, ognuna deve accettare un **bersaglio scelto dall'esterno** (e, per i `MULTIPLO`, il principale): la modifica va fatta
+azione per azione, con i comandi manuali di oggi che continuano a funzionare come ora (senza bersaglio scelto, il comportamento di sempre). Le pozioni accettano già chi beve (`consumaPozioneSalute(Personaggio)`).
+
+### 11.10 Il criterio di scelta dell'incantesimo di danno
+
+Vale per `INCANTESIMO_DI_DANNO` (§11.9), la sola azione che sceglie *quale* incantesimo lanciare. Nasce da `PersonaggioBase.scegliIncantesimoContro`, che oggi sceglie così: se non è magico, è `SILENZIATO`, ha 0 `MAGIA` o non può pagare
+nessun incantesimo del repertorio, non lancia; una volta su tre rinuncia; poi, con `INTELLIGENZA` sotto 5 sceglie a caso, da 5 a 6 il più potente (il `getDanni()` più alto, senza guardare il bersaglio), da 7 il più potente solo se probabilità di
+colpire per danno batte quella dell'arma (con `calcolaDannoRisultante`, che tira i dadi). Nelle tattiche:
+
+- **Quelli che può lanciare adesso**: per un mostro il suo repertorio di incantesimi elementali che può pagare con la `MAGIA`; per un mio personaggio le pergamene della scorta del gruppo (`getIncantesimi(classe) > 0`) che sa
+  formulare (`puoFormulare`) e può pagare. Non `SILENZIATO`. Si scartano gli incantesimi a cui il bersaglio è immune per una conoscenza **nota** (§11.7) e quelli con troppi tentativi falliti. Se non ne resta nessuno l'azione non è applicabile.
+- **"Una volta su tre non lancia"** è la condizione `PROBABILITA 67` della voce.
+- **Le soglie di `INTELLIGENZA`** (5 e 7) non si riproducono: le tattiche base dei mostri usano le fasce di astuzia (§4, 0-11, 12-19, 20-30, da 31) e si **ritoccano le fasce**, accettando che qualche decisione cambi rispetto a oggi.
+
+Il **criterio** (`CriterioIncantesimo`) è un parametro dell'azione:
+
+| Valore | Sigla | Che cosa sceglie |
+| :--- | :--- | :--- |
+| `A_CASO` | S1 | uno a caso fra quelli lanciabili |
+| `PIU_POTENTE` | S2 | quello con più danno base (`getDanni()`, come oggi), senza resistenze né debolezze; con più bersagli conta il danno a uno solo |
+| `PIU_ADATTO` | S3 | quello con il **danno atteso** più alto su *quel* bersaglio: probabilità di colpire × `dannoAttesoDellArma` × `moltiplicatoreAtteso` (debolezze e resistenze di classe e stati, §6.3); con più bersagli il danno totale |
+| `PIU_ADATTO_ESPERTO` | S4 | come S3, moltiplicato per il fattore dell'equipaggiamento **osservato** (`getFattoreEquipaggiamentoNoto`, §3.3); con più bersagli conta anche chi verrebbe portato vicino alla fine (la quota di salute tolta a ogni bersaglio, al massimo 1, sommata) |
+| `PIU_ECONOMICO_CHE_BASTA` | — | per chi ha poche pergamene: fra quelli il cui danno atteso (come S4) basta a **uccidere** il bersaglio, il meno caro (il prezzo della pergamena per i miei, il costo di lancio in `MAGIA` per i mostri); se nessuno basta, il `PIU_ADATTO_ESPERTO` |
+
+**Il confronto con l'attacco fisico** è un secondo parametro, `soloSePiuForteDellAttacco`: se vero, l'incantesimo scelto è applicabile solo se il suo danno atteso (probabilità di colpire × danno × `moltiplicatoreAtteso`) è maggiore di quello delle fasi di
+attacco con le armi sullo stesso bersaglio; altrimenti non lo è, e la sequenza passa all'azione successiva (di solito `ATTACCO_FISICO`). Il danno atteso dell'arma si calcola senza dadi come quello dell'incantesimo (oggi il confronto tira i dadi).
+
+**Come ripartire le fasce di astuzia nella tattica base di un mostro magico** (da tarare con le simulazioni): la prima fascia (0-11) `PROBABILITA 67 → INCANTESIMO_DI_DANNO A_CASO`, la seconda (12-19) `PIU_POTENTE`, la terza (20-30) `PIU_ADATTO` con
+`soloSePiuForteDellAttacco`, la quarta (da 31) `PIU_ADATTO_ESPERTO` con `soloSePiuForteDellAttacco`; sempre seguite da `ATTACCO_FISICO`.
+
+**Da fare nel codice**: una funzione deterministica del danno atteso di un'azione contro un bersaglio (`CalcolatoreCombattimento.dannoAtteso(attaccante, difensore, arma)`: probabilità di colpire × `dannoAttesoDellArma` × `moltiplicatoreAtteso`, e
+la variante con gli stati futuri), l'elenco degli incantesimi lanciabili da un personaggio, e i criteri; il registro delle decisioni (§7.7) deve riportare i danni attesi confrontati ("Gelo 14, Fulmine 31: Fulmine").
+
+**Da decidere:** il parametro di `PIU_ECONOMICO_CHE_BASTA` (basta se il danno atteso è almeno la salute attuale del bersaglio? o un margine?) e l'esatta ripartizione delle fasce, entrambi da tarare con le simulazioni.
