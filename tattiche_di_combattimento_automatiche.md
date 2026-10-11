@@ -284,21 +284,33 @@ essere il **livello più alto**, la **salute massima** più alta o la salute att
 ### 6.3 "Debole a un elemento"
 
 "Elemento" qui è il **tipo di danno** (`TipoDanno`: fisico, elementale o magico). Oggi la debolezza di un avversario nasce in tre
-punti diversi del codice, e nessuno si può interrogare da solo:
+punti diversi del codice, che ora si possono interrogare insieme con `CalcolatoreCombattimento.moltiplicatoreAtteso`:
 
 | Origine | Dove sta | Che cosa dà | Limite |
 | :--- | :--- | :--- | :--- |
 | **1. Classe** | `haInterazioneCon`, `isImmuneATipoDanno` (in `PersonaggioBase`, con le aggiunte delle classi) | solo **immune** o **danno ×2** (il `SACRO` sui non morti, regola della categoria `NON_MORTO`) | niente resistenze parziali, nessun'altra debolezza |
-| **2. Stato (momentanea)** | `TipoInterazioneConEffettiDiStato` (34 interazioni, quasi tutte coppie *stato, tipo di danno*) **e una catena di `if` in `CalcolatoreCombattimento.calcolaDannoRisultante`** | moltiplicatori del danno, deboli (×1,5 il fulmine su un `BAGNATO`) o resistenti (×0,5 il fuoco su un `BAGNATO`), che durano quanto lo stato | vedi sotto |
+| **2. Stato (momentanea)** | `TipoInterazioneConEffettiDiStato` (34 interazioni, quasi tutte coppie *stato, tipo di danno*, con il loro moltiplicatore) e `CalcolatoreCombattimento.interazioniAttive` (quando scattano) | moltiplicatori del danno, deboli (×1,5 il fulmine su un `BAGNATO`) o resistenti (×0,5 il fuoco su un `BAGNATO`), che durano quanto lo stato | la debolezza cambia da un turno all'altro: "debole al fulmine" vale finché dura il `BAGNATO` |
 | **3. Difesa numerica** | `CalcolatoreCombattimento.difesaContro` | `COSTITUZIONE + PARATA` per il fisico, `RESISTENZA_MAGICA` per tutto il resto, più gli incantamenti dei pezzi | per un mostro tutti gli elementi hanno la stessa difesa |
 
-**Il nodo è il punto 2.** L'enum dice *quali* coppie esistono e, da quando c'è `getMoltiplicatore()`, anche il loro **moltiplicatore**
-(×0,5, ×1,3, ×1,5, ×2...; prima erano 25 numeri scritti nel codice). Ma *quando* scatta un'interazione lo decide ancora la catena di `if`
-(`if (difensore.hasEffettoDiStato(BAGNATO)) { if (tipoDanno == FULMINE) { moltiplicatoreDannoStato *= ...; ... } }`), in una
-quindicina di blocchi mescolati a effetti che non sono moltiplicatori (toglie lo stato, ne mette un altro, aggiunge danno puro, rende il
-colpo critico, cambia la difesa). Per sapere quanto fa male un fulmine a un `BAGNATO` oggi
-l'unico modo è calcolare un colpo vero. Quindi la debolezza **cambia da un turno all'altro** ("debole al fulmine" vale finché dura il
-`BAGNATO`) e non si può chiedere senza tirare i dadi.
+**Com'era e com'è ora il punto 2.** Prima l'enum diceva solo *quali* coppie esistevano: il moltiplicatore (25 numeri) e *quando* un'interazione
+scattava stavano in una catena di `if` dentro `calcolaDannoRisultante` (una quindicina di blocchi, mescolati agli effetti: togliere o
+mettere uno stato, danno puro, critico, difesa), e per sapere quanto fa male un fulmine a un `BAGNATO` si poteva solo calcolare un colpo vero.
+Dopo il riordino:
+
+- `interazioniAttive(difensore, tipoDanno)` è **l'unico punto che decide quando scatta un'interazione**: DANNO_VERO della classe e poi un ciclo
+  sulle interazioni dell'enum, ognuna scatta se il difensore ha uno dei suoi stati (`getPrecondizioni`) e riceve uno dei suoi tipi di danno
+  (`getInnescanti`). L'**ordine di dichiarazione dell'enum è l'ordine di applicazione** degli effetti (per stato, come nella vecchia catena);
+  vuota se il difensore è immune;
+- `moltiplicatoreDelleInterazioni` ne fa il prodotto dei moltiplicatori dell'enum (più la MIETITURA, che dipende dalla SAGGEZZA), e
+  `fattoreDifesaDaStati` dà il cambio di difesa (guscio di ghiaccio ×1,5, superconduzione ×0,7);
+- `calcolaDannoRisultante` chiama queste funzioni e **applica solo gli effetti** di ogni interazione (`switch`): così danno vero e tattiche
+  non possono divergere;
+- `moltiplicatoreAtteso(difensore, tipoDanno)` le compone con la difesa, senza dadi e senza cambiare niente.
+
+Il comportamento del danno non è cambiato, con **una sola differenza voluta**: un difensore insieme SPAVENTATO e CONFUSO colpito da danno
+`VUOTO` ora subisce la Follia Cosmica (prima no, perché per le interazioni contava solo lo SPAVENTATO). Il test `InterazioniConGliStatiCaratterizzazioneTest` confronta, a seme fisso, l'esito di 8316
+colpi (3 difensori, ogni stato da solo e a coppie, ogni tipo di danno) con quello registrato prima del riordino; `MoltiplicatoreAttesoTest`
+verifica la funzione nuova.
 
 Altri due limiti, da rivedere insieme:
 
@@ -309,21 +321,23 @@ Altri due limiti, da rivedere insieme:
 
 **Fattore di danno atteso.** Si calcola, per un avversario e un tipo di danno T, **senza tirare i dadi**:
 
-> fattore = 0 se immune a T; altrimenti `100 / (100 + difesaContro)` × il moltiplicatore di classe × i moltiplicatori degli stati attivi per T.
+> fattore = 0 se immune a T; altrimenti `100 / (100 + difesa)` × il moltiplicatore di classe × i moltiplicatori degli stati attivi per T
+> (la difesa è `difesaContro`, con gli stati che la cambiano) — **`CalcolatoreCombattimento.moltiplicatoreAtteso`, già fatto**.
 
 Da lì: **debole** = moltiplicatore > 1, **resistente** = < 1, **immune** = 0, e "il più debole fra questi elementi" = il fattore più alto.
 Serve a scegliere il bersaglio ("il più debole al fuoco"), l'incantesimo o l'arma ("il Gelo contro un `BAGNATO`", "un'arma sacra contro i
 non morti": la condizione del cambio d'arma, §5) e il momento del cambio.
 
-**Lavori, in ordine** (i primi tre sono preliminari e utili anche senza le tattiche):
+**Lavori, in ordine** (i primi tre sono preliminari e utili anche senza le tattiche, e sono fatti):
 
 1. **Il moltiplicatore nell'enum** — **fatto.** Un campo `moltiplicatore` in `TipoInterazioneConEffettiDiStato` (il verso è nel valore: >1
    debolezza, <1 resistenza), al posto dei numeri nella catena; vale 1 per le interazioni che non cambiano il danno. Restano fuori solo la
    MIETITURA (dipende dalla SAGGEZZA del difensore) e i bonus che non sono un moltiplicatore (il danno puro della RISONANZA_SIGILLATA, la
    difesa del guscio di ghiaccio). Il test `MoltiplicatoriDelleInterazioniTest` fissa i valori.
-2. **`moltiplicatoreAtteso(difensore, tipoDanno)`**, estratto da `calcolaDannoRisultante` e **senza effetti collaterali** (non
-   aggiunge stati né interazioni al `DannoRisultante`). Lo usano sia il danno vero sia le tattiche, altrimenti le due versioni divergono. È
-   il pezzo grosso: la catena va rivista e riordinata, non solo spostata.
+2. **`moltiplicatoreAtteso(difensore, tipoDanno)`** — **fatto.** Estratto da `calcolaDannoRisultante` e **senza effetti collaterali** né dadi, con
+   `interazioniAttive` come unico punto che decide quando un'interazione scatta (vedi sopra). Restano nel calcolo del danno gli effetti di
+   ogni interazione (stati tolti o messi, danno puro, critico), che non sono moltiplicatori; i bonus degli *incantamenti* dell'arma
+   (DANNO_VERO, VAPORIZZAZIONE, MIETITURA) hanno ancora una versione ridotta a parte, in `calcolaDannoRisultante`.
 3. **`Arma.daTipoDanno(TipoDanno)`** — **fatto.** Dice se un'arma "dà" quel danno, cioè se è il suo `getTipoDanno()` o quello di uno dei suoi
    `getIncantamenti()` (`getTipoDannoElementale`). Non passa dai **modificatori** (`ModificatoreAttributoMD` cambia un attributo, non il
    tipo di danno). Serve al cambio d'arma (§5). Il test `ArmaDaTipoDannoTest` lo copre (anche con la Spada della Morte, NECROTICO per il suo
@@ -400,8 +414,8 @@ Quasi tutto è già leggibile (§6 e §7). Quello che manca:
   `LocazioneBase` agisce su un solo `combattente`;
 - uno **stato del combattimento**: il numero del round, l'ultimo bersaglio di ogni personaggio, le voci già usate;
 - (il riconoscimento di un **boss** per ora non serve, §6.1; le **categorie di creatura** ci sono già);
-- le **debolezze elementali**, per il selettore "debole al fuoco" (§6.3): oggi sono sparse in tre posti (le classi, la catena di `if` dei
-  moltiplicatori di stato, `difesaContro`) e vanno composte in un fattore di danno atteso senza effetti collaterali;
+- le **debolezze e resistenze di classe** come dato e la **difesa per elemento**, se si vorranno (§6.3, lavoro 4 e "Da decidere"): la composizione
+  delle debolezze in un fattore senza effetti collaterali c'è già (`moltiplicatoreAtteso`);
 - la **risposta** come azione a sé degli avversari (oggi è `rispondiInMischia` sul combattente, con la logica fissa di §4);
 - le **tattiche base dei mostri**: un set per classe o per fascia di intelligenza, in un file di risorse, e il modo di assegnarlo a
   un avversario quando nasce (`FabbricaPersonaggi`);

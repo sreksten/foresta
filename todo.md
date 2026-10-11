@@ -13,6 +13,7 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 - **Combattimento.** Personaggi di livello 5 pesantemente armati non riescono nemmeno a scalfire un boss come la Strega o il Lich.
 - **Modalità VERTICALE.** `DisplayableCanvasBarraIcone` avanza di 32 px con icone alte 64, e la finestra è larga al massimo 400 px (vedi [`motore_grafico.md`](motore_grafico.md) §12).
 - **Schermi alti meno di 804 px.** La barra delle icone copre il fondo del riquadro delle missioni.
+- **Statistiche dei personaggi non influenzabili da `Dado`.** `LanciatoreDeiDadi` ridistribuisce il pool di mutazione con un `new java.util.Random()` locale (riga ~219), che ignora il seme di `Dado.impostaSeme` e i trucchi di `Dado.trucca`: due personaggi creati con lo stesso seme hanno statistiche diverse, quindi le partite e i test che le usano non sono ripetibili. Va usato `Dado.sorgente()`. Nei test (`InterazioniConGliStatiCaratterizzazioneTest`, `MoltiplicatoreAttesoTest`) oggi si aggira fissando gli attributi primari.
 
 ## Architettura
 

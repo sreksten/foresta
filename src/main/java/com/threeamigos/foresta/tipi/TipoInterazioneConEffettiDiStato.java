@@ -5,6 +5,10 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
+ * Le reazioni fra un tipo di danno e uno stato del difensore: una reazione scatta se il difensore ha almeno uno degli stati
+ * delle precondizioni e riceve uno dei tipi di danno degli innescanti (vedi CalcolatoreCombattimento.interazioniAttive, che
+ * le prova in sequenza). <b>L'ordine di dichiarazione è l'ordine in cui le reazioni si applicano</b>, per stato; DANNO_VERO,
+ * che dipende dalla classe del personaggio e non da uno stato, è l'ultima e si applica per prima.
  *
  * @author Stefano Reksten
  */
@@ -27,6 +31,22 @@ public enum TipoInterazioneConEffettiDiStato {
     SCIOGLIMENTO_TERMICO(TipoEffettoDiStato.BRUCIATO, TipoDanno.GELO, "Scioglimento termico", 1.5d),
     // + VELENO
     ESPLOSIONE_DI_GAS(TipoEffettoDiStato.BRUCIATO, TipoDanno.VELENO, "Esplosione di gas", 1.3d),
+
+    // Interazioni con AVVELENATO
+    // + FUOCO
+    // Il veleno si incendia: rimuove AVVELENATO, applica BRUCIATO, piccolo bonus di danno (effetto simile a Esplosione di gas, ma nel verso opposto)
+    VAMPATA_TOSSICA(TipoEffettoDiStato.AVVELENATO, TipoDanno.FUOCO, "Vampata Tossica", 1.3d),
+    // + ACIDO
+    // +15% danno (non gestiamo corrosione/usura dell'armatura, vedi nota nel roadmap)
+    REAZIONE_TOSSICA(TipoEffettoDiStato.AVVELENATO, TipoDanno.ACIDO, "Reazione Tossica", 1.15d),
+
+    // Interazioni con SANGUINAMENTO
+    // + ACQUA
+    // Riduce il danno periodico da sanguinamento, piccolo bonus di danno
+    DILUIZIONE_EMATICA(TipoEffettoDiStato.SANGUINAMENTO, TipoDanno.ACQUA, "Diluizione Ematica", 1.05d),
+    // + GELO
+    // Rimuove SANGUINAMENTO, applica RALLENTATO, piccolo bonus di danno
+    COAGULAZIONE_FORZATA(TipoEffettoDiStato.SANGUINAMENTO, TipoDanno.GELO, "Coagulazione Forzata", 1.05d),
 
     // Interazioni con CONGELATO
     // + CONTUNDENTE
@@ -72,6 +92,16 @@ public enum TipoInterazioneConEffettiDiStato {
             Arrays.asList(TipoDanno.TERRA, TipoDanno.CONTUNDENTE),
             "Inciampo", 1.3d),
 
+    // Interazioni con IMMOBILIZZATO
+    // + FUOCO
+    // Il fuoco distrugge all'istante l'immobilizzazione: rimuove IMMOBILIZZATO, +50% danno
+    INCENDIO_LIBERATORIO(TipoEffettoDiStato.IMMOBILIZZATO, TipoDanno.FUOCO, "Incendio Liberatorio", 1.5d),
+    // + CONTUNDENTE / TERRA
+    // Il bersaglio non può assecondare il colpo muovendo le gambe: +30% danno
+    IMPATTO_RIGIDO(Collections.singletonList(TipoEffettoDiStato.IMMOBILIZZATO),
+            Arrays.asList(TipoDanno.CONTUNDENTE, TipoDanno.TERRA),
+            "Impatto Rigido", 1.3d),
+
     // Interazioni con SPAVENTATO / CONFUSO
     // + ARCANO
     // Trasforma lo stato in uno STORDITO pesante (1-2 turni)
@@ -109,32 +139,6 @@ public enum TipoInterazioneConEffettiDiStato {
     // + PSICHICO
     // +50% danno, estende anche ACCECATO
     ISOLAMENTO_SENSORIALE(TipoEffettoDiStato.SILENZIATO, TipoDanno.PSICHICO, "Isolamento Sensoriale", 1.5d),
-
-    // Interazioni con AVVELENATO
-    // + FUOCO
-    // Il veleno si incendia: rimuove AVVELENATO, applica BRUCIATO, piccolo bonus di danno (effetto simile a Esplosione di gas, ma nel verso opposto)
-    VAMPATA_TOSSICA(TipoEffettoDiStato.AVVELENATO, TipoDanno.FUOCO, "Vampata Tossica", 1.3d),
-    // + ACIDO
-    // +15% danno (non gestiamo corrosione/usura dell'armatura, vedi nota nel roadmap)
-    REAZIONE_TOSSICA(TipoEffettoDiStato.AVVELENATO, TipoDanno.ACIDO, "Reazione Tossica", 1.15d),
-
-    // Interazioni con IMMOBILIZZATO
-    // + FUOCO
-    // Il fuoco distrugge all'istante l'immobilizzazione: rimuove IMMOBILIZZATO, +50% danno
-    INCENDIO_LIBERATORIO(TipoEffettoDiStato.IMMOBILIZZATO, TipoDanno.FUOCO, "Incendio Liberatorio", 1.5d),
-    // + CONTUNDENTE / TERRA
-    // Il bersaglio non può assecondare il colpo muovendo le gambe: +30% danno
-    IMPATTO_RIGIDO(Collections.singletonList(TipoEffettoDiStato.IMMOBILIZZATO),
-            Arrays.asList(TipoDanno.CONTUNDENTE, TipoDanno.TERRA),
-            "Impatto Rigido", 1.3d),
-
-    // Interazioni con SANGUINAMENTO
-    // + ACQUA
-    // Riduce il danno periodico da sanguinamento, piccolo bonus di danno
-    DILUIZIONE_EMATICA(TipoEffettoDiStato.SANGUINAMENTO, TipoDanno.ACQUA, "Diluizione Ematica", 1.05d),
-    // + GELO
-    // Rimuove SANGUINAMENTO, applica RALLENTATO, piccolo bonus di danno
-    COAGULAZIONE_FORZATA(TipoEffettoDiStato.SANGUINAMENTO, TipoDanno.GELO, "Coagulazione Forzata", 1.05d),
 
     // Interazioni particolari che dipendono dalla classe del Personaggio
     DANNO_VERO(Collections.emptyList(), Collections.emptyList(), "Danno Vero", 2.0d);
