@@ -281,61 +281,63 @@ essere il **livello più alto**, la **salute massima** più alta o la salute att
 | Un alleato di una certa **classe** | DA:O | **sì**: `getClasse()` |
 | Un **ospite** da proteggere | (specifico: missioni di scorta) | **no**: gli ospiti non combattono e non sono mai bersaglio delle tattiche |
 
-### 6.3 "Debole a un elemento": che cosa c'è e che cosa manca
+### 6.3 "Debole a un elemento"
 
-Un avversario "debole al fuoco" non è un dato solo: nel codice la debolezza ha **tre origini** diverse, e il selettore deve metterle
-insieme. Qui "elemento" vuol dire **tipo di danno** (`TipoDanno`: fisici, elementali e magici; per esempio anche `SACRO` e `ARCANO`).
+"Elemento" qui è il **tipo di danno** (`TipoDanno`: fisico, elementale o magico). Oggi la debolezza di un avversario nasce in tre
+punti diversi del codice, e nessuno si può interrogare da solo:
 
-**1. La debolezza fissa della classe.** `Personaggio.haInterazioneCon(tipoDanno)` dice se la classe ha un'interazione sempre attiva con
-quel danno. Oggi l'unica è `DANNO_VERO` (danno ×2) per il `SACRO` sui sei non morti: Scheletro, Fantasma, Lich, Ombra Nera, Spettro e
-Spirito. È una regola della categoria `NON_MORTO` e sta in `PersonaggioBase`, non più ripetuta nelle sei classi (che aggiungono solo le
-loro immunità). Il suo opposto sono le **immunità** (`isImmuneATipoDanno`, già nel selettore "non immune"): tutti i non morti al
-veleno, i fantasmi (Fantasma, Ombra Nera, Spettro, Spirito) anche ad aria e terra, il Drago e la Chimera Drago al fuoco, l'Idra a terra, acqua e aria, il Gargoyle a tutto ciò
-che non è fisico. **Non esistono resistenze parziali** né altre debolezze per classe: si è immuni, deboli ×2 o niente.
+| Origine | Dove sta | Che cosa dà | Limite |
+| :--- | :--- | :--- | :--- |
+| **1. Classe** | `haInterazioneCon`, `isImmuneATipoDanno` (in `PersonaggioBase`, con le aggiunte delle classi) | solo **immune** o **danno ×2** (il `SACRO` sui non morti, regola della categoria `NON_MORTO`) | niente resistenze parziali, nessun'altra debolezza |
+| **2. Stato (momentanea)** | `TipoInterazioneConEffettiDiStato` (34 interazioni, quasi tutte coppie *stato, tipo di danno*) **e una catena di `if` in `CalcolatoreCombattimento.calcolaDannoRisultante`** | moltiplicatori del danno, deboli (×1,5 il fulmine su un `BAGNATO`) o resistenti (×0,5 il fuoco su un `BAGNATO`), che durano quanto lo stato | vedi sotto |
+| **3. Difesa numerica** | `CalcolatoreCombattimento.difesaContro` | `COSTITUZIONE + PARATA` per il fisico, `RESISTENZA_MAGICA` per tutto il resto, più gli incantamenti dei pezzi | per un mostro tutti gli elementi hanno la stessa difesa |
 
-**2. La debolezza momentanea per stato.** Quando il bersaglio ha un certo effetto di stato, alcuni tipi di danno fanno di più o
-scatenano una reazione (`TipoInterazioneConEffettiDiStato`, vedi `interazioni_effetti_di_stato.md`): un `BAGNATO` è debole al fulmine
-(×1,5), un `CONGELATO` al contundente e al fuoco, un `BRUCIATO` all'aria, un `MALEDETTO` al sacro e al necrotico, e così via, per una
-trentina di coppie *(stato, tipo di danno)*. Non sono solo debolezze: ci sono anche **resistenze momentanee** (il `BAGNATO` subisce il
-fuoco ×0,5 e smette di essere bagnato). La coppia è un dato (l'enum), ma **il moltiplicatore e l'effetto no**: stanno dentro una
-lunga catena di `if` in `CalcolatoreCombattimento.calcolaDannoRisultante`, insieme a effetti che non sono un moltiplicatore (la reazione
-toglie lo stato, ne mette un altro, aggiunge danno puro...). Per questo la debolezza di un avversario cambia da un turno all'altro:
-"debole al fulmine" è vero finché dura il `BAGNATO`.
+**Il nodo è il punto 2.** L'enum dice *quali* coppie esistono e, da quando c'è `getMoltiplicatore()`, anche il loro **moltiplicatore**
+(×0,5, ×1,3, ×1,5, ×2...; prima erano 25 numeri scritti nel codice). Ma *quando* scatta un'interazione lo decide ancora la catena di `if`
+(`if (difensore.hasEffettoDiStato(BAGNATO)) { if (tipoDanno == FULMINE) { moltiplicatoreDannoStato *= ...; ... } }`), in una
+quindicina di blocchi mescolati a effetti che non sono moltiplicatori (toglie lo stato, ne mette un altro, aggiunge danno puro, rende il
+colpo critico, cambia la difesa). Per sapere quanto fa male un fulmine a un `BAGNATO` oggi
+l'unico modo è calcolare un colpo vero. Quindi la debolezza **cambia da un turno all'altro** ("debole al fulmine" vale finché dura il
+`BAGNATO`) e non si può chiedere senza tirare i dadi.
 
-**3. La difesa numerica.** `CalcolatoreCombattimento.difesaContro(difensore, tipoDanno)` (pubblica) dà la difesa contro quel danno:
-`COSTITUZIONE + PARATA` per il fisico, `RESISTENZA_MAGICA` per l'elementale e il magico, più le resistenze degli incantamenti di elmo,
-scudo, armatura e schinieri di quel tipo. Il danno è poi ridotto di `100 / (100 + difesa)`. Per i **mostri**, che non portano pezzi,
-la difesa distingue quindi solo fisico e non fisico: tutti gli elementi hanno la stessa difesa. La differenza fra un elemento e l'altro
-la fanno solo i punti 1 e 2, e per i **personaggi del giocatore** anche gli incantamenti dei pezzi.
+Altri due limiti, da rivedere insieme:
 
-**Che cosa dire con "debole a T".** La proposta è di non inventare un dato nuovo ma di calcolare, per un avversario e un tipo di
-danno T, un **fattore di danno atteso** *senza tirare i dadi*, componendo le tre origini:
+- **Nessuna resistenza parziale per classe.** Si è immuni, deboli ×2 o niente: un Troll non può essere "resistente al fuoco ×0,5" né
+  un Golem "debole al contundente ×1,5" senza codice nuovo.
+- **La distinzione fisico / non fisico è troppo grossa.** Sono solo due difese: `COSTITUZIONE + PARATA` e `RESISTENZA_MAGICA`. Fra il fuoco e
+  il gelo, o fra il tagliente e il contundente, un mostro non ha differenze se non quelle dei punti 1 e 2.
 
-> fattore = 0 se è immune a T; altrimenti `100 / (100 + difesaContro)` × il moltiplicatore della classe (×2 per `DANNO_VERO`) × i
-> moltiplicatori degli stati attivi per T.
+**Fattore di danno atteso.** Si calcola, per un avversario e un tipo di danno T, **senza tirare i dadi**:
 
-Da lì i selettori sono semplici: **"debole a T"** = il moltiplicatore (classe × stati) di T è maggiore di 1; **"resistente a T"** =
-minore di 1 (un `BAGNATO` col fuoco, ×0,5); **"immune"** = 0; **"il più debole fra questi elementi"** = il fattore più alto.
-Servono a tre scelte: *quale bersaglio* ("il più debole al fuoco"), *quale incantesimo o arma* ("il Gelo contro un `BAGNATO`", "un'arma
-sacra contro i non morti": è proprio la condizione del cambio d'arma, §5) e *quando cambiare* (il `BAGNATO` passa, la debolezza anche).
-Il fattore atteso dell'incantesimo va poi moltiplicato per probabilità di colpire e danno, come nel criterio "il più conveniente".
+> fattore = 0 se immune a T; altrimenti `100 / (100 + difesaContro)` × il moltiplicatore di classe × i moltiplicatori degli stati attivi per T.
 
-**Che cosa manca**, in ordine di lavoro:
+Da lì: **debole** = moltiplicatore > 1, **resistente** = < 1, **immune** = 0, e "il più debole fra questi elementi" = il fattore più alto.
+Serve a scegliere il bersaglio ("il più debole al fuoco"), l'incantesimo o l'arma ("il Gelo contro un `BAGNATO`", "un'arma sacra contro i
+non morti": la condizione del cambio d'arma, §5) e il momento del cambio.
 
-- **Estrarre il calcolo dei moltiplicatori** da `calcolaDannoRisultante` in una funzione che non ha effetti collaterali (oggi la catena
-  aggiunge interazioni e stati al `DannoRisultante` mentre calcola): serve un `moltiplicatoreAtteso(difensore, tipoDanno)`, usato sia dal
-  danno vero sia dalle tattiche, altrimenti le due versioni divergono. È il pezzo grosso.
-- **Sapere quali coppie (stato, tipo di danno) sono debolezze o resistenze** e non solo reazioni: nell'enum non c'è il verso né il
-  valore (il `BAGNATO` col fuoco è ×0,5, col fulmine ×1,5). Basta un campo `moltiplicatore` nell'enum, che sostituisce le costanti
-  sparse; gli effetti che non sono moltiplicatori (togliere o mettere uno stato) restano dove sono.
-- **Le debolezze di classe come dato** (e non come override in sei classi), se si vorrà dare ai mostri delle debolezze nuove (un
-  Troll al fuoco, un Golem ai colpi contundenti) o delle resistenze parziali. Per ora basta leggere `haInterazioneCon`.
-- **L'insieme dei tipi di danno** di un'arma o di un'azione: oggi `Arma.getTipoDanno()` e gli incantamenti (`getIncantamenti()`), per
-  poter dire "questa arma dà SACRO".
+**Lavori, in ordine** (i primi tre sono preliminari e utili anche senza le tattiche):
 
-**Da decidere:** se la prima versione si ferma al punto 1 e agli stati (senza la difesa numerica, che per i mostri non distingue gli
-elementi) o se fa subito il fattore intero; se "debole" vale solo > 1 o anche "meno resistente degli altri elementi"; e se i selettori
-guardano gli stati attivi *adesso* (più precisi) o anche quelli che l'azione stessa può causare (il Gelo che prima bagna e poi congela).
+1. **Il moltiplicatore nell'enum** — **fatto.** Un campo `moltiplicatore` in `TipoInterazioneConEffettiDiStato` (il verso è nel valore: >1
+   debolezza, <1 resistenza), al posto dei numeri nella catena; vale 1 per le interazioni che non cambiano il danno. Restano fuori solo la
+   MIETITURA (dipende dalla SAGGEZZA del difensore) e i bonus che non sono un moltiplicatore (il danno puro della RISONANZA_SIGILLATA, la
+   difesa del guscio di ghiaccio). Il test `MoltiplicatoriDelleInterazioniTest` fissa i valori.
+2. **`moltiplicatoreAtteso(difensore, tipoDanno)`**, estratto da `calcolaDannoRisultante` e **senza effetti collaterali** (non
+   aggiunge stati né interazioni al `DannoRisultante`). Lo usano sia il danno vero sia le tattiche, altrimenti le due versioni divergono. È
+   il pezzo grosso: la catena va rivista e riordinata, non solo spostata.
+3. **`Arma.daTipoDanno(TipoDanno)`**: dice se un'arma "dà" quel danno, cioè se è il suo `getTipoDanno()` o quello di uno dei suoi
+   `getIncantamenti()` (`getTipoDannoElementale`). Non passa dai **modificatori** (`ModificatoreAttributoMD` cambia un attributo, non il
+   tipo di danno). Serve al cambio d'arma (§5).
+4. **Debolezze e resistenze di classe come dato**, e una difesa per elemento (o per famiglia di elementi) al posto delle due difese di oggi:
+   da decidere, vedi sotto.
+
+**Da decidere**
+
+- **Resistenze parziali per classe e debolezze nuove:** le vogliamo? Se sì, come dato (una tabella per classe o per categoria, §6.1) al posto
+  degli override nelle classi.
+- **Difesa per elemento:** si resta con fisico / non fisico, o si distingue per famiglia (tagliente, contundente, fuoco, gelo...)?
+- **Che cosa vuol dire "debole":** solo moltiplicatore > 1, oppure anche "meno resistente degli altri elementi"?
+- **Stati attivi adesso o anche futuri:** il selettore guarda solo gli stati di adesso, o anche quelli che l'azione stessa può causare (il
+  Gelo che prima bagna e poi congela)?
 
 ## 7. Le condizioni
 

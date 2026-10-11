@@ -519,7 +519,7 @@ public class ForestaUI implements Temporizzabile {
 			case ESTINZIONE:
 			case SCIOGLIMENTO_TERMICO:
 			case ESPLOSIONE_DI_GAS:
-			case FRANTUMAZIONE_DEL_GHIACCO:
+			case FRANTUMAZIONE_DEL_GHIACCIO:
 			case DISGELO_VIOLENTO:
 			case SUPERCONDUZIONE:
 			case MIETITURA:
