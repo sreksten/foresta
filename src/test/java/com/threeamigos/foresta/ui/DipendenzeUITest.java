@@ -45,7 +45,7 @@ class DipendenzeUITest {
 	 */
 	private static final Set<String> ECCEZIONI = new TreeSet<>();
 
-	private static final Pattern RIFERIMENTO = Pattern.compile("\\bcom\\.threeamigos\\.foresta\\.([a-z]+)\\.([A-Z]\\w*|\\*)");
+	private static final Pattern RIFERIMENTO = Pattern.compile("\\bcom\\.threeamigos\\.foresta\\.([a-z]+)((?:\\.[a-z]+)*)\\.([A-Z]\\w*|\\*)");
 
 	@Test
 	void laUIDipendeSoloDaPacchettiAmmessi() throws IOException {
@@ -97,7 +97,7 @@ class DipendenzeUITest {
 		Set<String> riferimenti = new TreeSet<>();
 		Matcher m = RIFERIMENTO.matcher(codice);
 		while (m.find()) {
-			riferimenti.add(m.group(1) + "." + m.group(2));
+			riferimenti.add(m.group(1) + m.group(2) + "." + m.group(3));
 		}
 		return riferimenti;
 	}

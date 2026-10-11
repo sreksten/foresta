@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
@@ -15,13 +16,13 @@ import java.util.List;
 public final class Decisione {
 
 	private final int indiceVoce;
-	private final Azione azione;
+	private final AzioneMD azione;
 	private final TipoAzione tipoEseguito;
 	private final ClasseIncantesimo incantesimo;
 	private final Personaggio bersaglio;
 	private final List<String> spiegazione;
 
-	Decisione(int indiceVoce, Azione azione, TipoAzione tipoEseguito, ClasseIncantesimo incantesimo, Personaggio bersaglio, List<String> spiegazione) {
+	Decisione(int indiceVoce, AzioneMD azione, TipoAzione tipoEseguito, ClasseIncantesimo incantesimo, Personaggio bersaglio, List<String> spiegazione) {
 		this.indiceVoce = indiceVoce;
 		this.azione = azione;
 		this.tipoEseguito = tipoEseguito;
@@ -51,7 +52,7 @@ public final class Decisione {
 	/**
 	 * L'azione scritta nella voce
 	 */
-	public Azione getAzione() {
+	public AzioneMD getAzione() {
 		return azione;
 	}
 

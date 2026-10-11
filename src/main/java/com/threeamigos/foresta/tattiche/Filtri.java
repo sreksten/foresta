@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.incantesimi.CantoDelBardo;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
@@ -21,7 +22,7 @@ import java.util.Map;
 public final class Filtri {
 
 	private interface Verifica {
-		boolean ammette(Filtro filtro, Personaggio candidato, ContestoTattico contesto);
+		boolean ammette(FiltroMD filtro, Personaggio candidato, ContestoTattico contesto);
 	}
 
 	private static final Map<TipoFiltro, Verifica> VERIFICHE = new EnumMap<>(TipoFiltro.class);
@@ -59,7 +60,7 @@ public final class Filtri {
 	/**
 	 * Se il candidato passa il filtro (tenendo conto della negazione)
 	 */
-	public static boolean ammette(Filtro filtro, Personaggio candidato, ContestoTattico contesto) {
+	public static boolean ammette(FiltroMD filtro, Personaggio candidato, ContestoTattico contesto) {
 		return VERIFICHE.get(filtro.getTipo()).ammette(filtro, candidato, contesto) != filtro.isNegato();
 	}
 

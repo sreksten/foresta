@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tattiche;
+package com.threeamigos.foresta.modellodati.tattiche;
 
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
@@ -14,7 +14,7 @@ import java.util.Objects;
  * Un filtro di un selettore: il tipo, il parametro (del tipo che il tipo di filtro dichiara) e se è negato (<code>NON</code>). Immutabile.
  * Si costruisce con i metodi statici, che controllano che il parametro sia quello giusto. Vedi tattiche_di_combattimento_automatiche.md §11.5.
  */
-public final class Filtro {
+public final class FiltroMD {
 
 	private final TipoFiltro tipo;
 	private final boolean negato;
@@ -25,7 +25,7 @@ public final class Filtro {
 	private final CategoriaPersonaggio categoria;
 	private final TipoDanno tipoDanno;
 
-	private Filtro(TipoFiltro tipo, boolean negato, Confronto confronto, int numero, TipoEffettoDiStato stato, TipoPersonaggio classe,
+	private FiltroMD(TipoFiltro tipo, boolean negato, Confronto confronto, int numero, TipoEffettoDiStato stato, TipoPersonaggio classe,
 				   CategoriaPersonaggio categoria, TipoDanno tipoDanno) {
 		this.tipo = tipo;
 		this.negato = negato;
@@ -37,47 +37,47 @@ public final class Filtro {
 		this.tipoDanno = tipoDanno;
 	}
 
-	private static Filtro crea(TipoFiltro tipo, TipoParametro atteso, Confronto confronto, int numero, TipoEffettoDiStato stato,
+	private static FiltroMD crea(TipoFiltro tipo, TipoParametro atteso, Confronto confronto, int numero, TipoEffettoDiStato stato,
 							   TipoPersonaggio classe, CategoriaPersonaggio categoria, TipoDanno tipoDanno) {
 		if (tipo.getParametro() != atteso) {
 			throw new IllegalArgumentException("Il filtro " + tipo + " vuole un parametro " + tipo.getParametro() + ", non " + atteso);
 		}
-		return new Filtro(tipo, false, confronto, numero, stato, classe, categoria, tipoDanno);
+		return new FiltroMD(tipo, false, confronto, numero, stato, classe, categoria, tipoDanno);
 	}
 
-	public static Filtro senzaParametro(TipoFiltro tipo) {
+	public static FiltroMD senzaParametro(TipoFiltro tipo) {
 		return crea(tipo, TipoParametro.NESSUNO, null, 0, null, null, null, null);
 	}
 
-	public static Filtro conConfrontoENumero(TipoFiltro tipo, Confronto confronto, int numero) {
+	public static FiltroMD conConfrontoENumero(TipoFiltro tipo, Confronto confronto, int numero) {
 		return crea(tipo, TipoParametro.CONFRONTO_E_NUMERO, Objects.requireNonNull(confronto), numero, null, null, null, null);
 	}
 
-	public static Filtro conConfronto(TipoFiltro tipo, Confronto confronto) {
+	public static FiltroMD conConfronto(TipoFiltro tipo, Confronto confronto) {
 		return crea(tipo, TipoParametro.CONFRONTO, Objects.requireNonNull(confronto), 0, null, null, null, null);
 	}
 
-	public static Filtro conStato(TipoFiltro tipo, TipoEffettoDiStato stato) {
+	public static FiltroMD conStato(TipoFiltro tipo, TipoEffettoDiStato stato) {
 		return crea(tipo, TipoParametro.STATO, null, 0, Objects.requireNonNull(stato), null, null, null);
 	}
 
-	public static Filtro conClasse(TipoFiltro tipo, TipoPersonaggio classe) {
+	public static FiltroMD conClasse(TipoFiltro tipo, TipoPersonaggio classe) {
 		return crea(tipo, TipoParametro.CLASSE, null, 0, null, Objects.requireNonNull(classe), null, null);
 	}
 
-	public static Filtro conCategoria(TipoFiltro tipo, CategoriaPersonaggio categoria) {
+	public static FiltroMD conCategoria(TipoFiltro tipo, CategoriaPersonaggio categoria) {
 		return crea(tipo, TipoParametro.CATEGORIA, null, 0, null, null, Objects.requireNonNull(categoria), null);
 	}
 
-	public static Filtro conTipoDanno(TipoFiltro tipo, TipoDanno tipoDanno) {
+	public static FiltroMD conTipoDanno(TipoFiltro tipo, TipoDanno tipoDanno) {
 		return crea(tipo, TipoParametro.TIPO_DANNO, null, 0, null, null, null, Objects.requireNonNull(tipoDanno));
 	}
 
 	/**
 	 * Lo stesso filtro con il risultato rovesciato (<code>NON</code>)
 	 */
-	public Filtro negato() {
-		return new Filtro(tipo, !negato, confronto, numero, stato, classe, categoria, tipoDanno);
+	public FiltroMD negato() {
+		return new FiltroMD(tipo, !negato, confronto, numero, stato, classe, categoria, tipoDanno);
 	}
 
 	public TipoFiltro getTipo() {

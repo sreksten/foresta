@@ -19,7 +19,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tattiche.Decisione;
 import com.threeamigos.foresta.tattiche.SceltaIncantesimo;
-import com.threeamigos.foresta.tattiche.Tattica;
+import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.tattiche.Valutatore;
 import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
@@ -913,9 +913,9 @@ public abstract class LocazioneBase implements Locazione {
 	 * La tattica con cui agisce un personaggio: la sua; i miei, se non ne hanno, quella vuota (attaccano il primo avversario in campo, come
 	 * prima); un mostro senza, nessuna.
 	 */
-	private Tattica tatticaDi(Personaggio personaggio) {
-		Tattica tattica = personaggio.getTattica();
-		return tattica != null || !gruppo.contiene(personaggio) ? tattica : Tattica.VUOTA;
+	private TatticaMD tatticaDi(Personaggio personaggio) {
+		TatticaMD tattica = personaggio.getTattica();
+		return tattica != null || !gruppo.contiene(personaggio) ? tattica : TatticaMD.VUOTA;
 	}
 
 	/**
@@ -924,7 +924,7 @@ public abstract class LocazioneBase implements Locazione {
 	 *
 	 * @return lo stato in cui passare se lo scontro o la partita sono finiti, altrimenti vuoto
 	 */
-	private Optional<Stato> agisciConLaTattica(Personaggio attore, Tattica tattica) {
+	private Optional<Stato> agisciConLaTattica(Personaggio attore, TatticaMD tattica) {
 		boolean deiMiei = gruppo.contiene(attore);
 		Decisione decisione = Valutatore.decidi(tattica, ContestoTattico.per(attore));
 		if (decisione == null) {
@@ -1328,7 +1328,7 @@ public abstract class LocazioneBase implements Locazione {
 		if (isIncapaceDiAgire(avversario) || gruppo.getNumeroPersonaggiVivi() == 0) {
 			return;
 		}
-		Tattica tattica = tatticaDi(avversario);
+		TatticaMD tattica = tatticaDi(avversario);
 		if (tattica != null) {
 			agisciConLaTattica(avversario, tattica);
 		} else {

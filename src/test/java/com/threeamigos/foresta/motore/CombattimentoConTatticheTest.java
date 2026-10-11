@@ -7,13 +7,13 @@ import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
-import com.threeamigos.foresta.tattiche.Azione;
-import com.threeamigos.foresta.tattiche.Filtro;
-import com.threeamigos.foresta.tattiche.Ordinamento;
-import com.threeamigos.foresta.tattiche.Predicato;
-import com.threeamigos.foresta.tattiche.Selettore;
-import com.threeamigos.foresta.tattiche.Tattica;
-import com.threeamigos.foresta.tattiche.Voce;
+import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
+import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
+import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
+import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
+import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
+import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
+import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoAttributo;
@@ -91,8 +91,8 @@ class CombattimentoConTatticheTest {
         }
     }
 
-    private static Selettore su(TipoRosa rosa, TipoOrdinamento ordinamento, Filtro... filtri) {
-        return new Selettore(rosa, Arrays.asList(filtri), Ordinamento.di(ordinamento));
+    private static SelettoreMD su(TipoRosa rosa, TipoOrdinamento ordinamento, FiltroMD... filtri) {
+        return new SelettoreMD(rosa, Arrays.asList(filtri), OrdinamentoMD.di(ordinamento));
     }
 
     private static int salute(Personaggio p) {
@@ -129,8 +129,8 @@ class CombattimentoConTatticheTest {
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             Personaggio bagnato = avversari.getPersonaggi().get(1);
             bagnato.addEffettoDiStato(TipoEffettoDiStato.BAGNATO, 5, 0);
-            mago.setTattica(Tattica.di(Voce.su(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO, Filtro.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BAGNATO)),
-                    Azione.di(TipoAzione.FULMINE))));
+            mago.setTattica(TatticaMD.di(VoceMD.su(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO, FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BAGNATO)),
+                    AzioneMD.di(TipoAzione.FULMINE))));
             partita.eventi().ascolta(InternoAzioneInCombattimento.class);
             int magiaPrima = mago.getMagia();
             iniziaLaMischia(locazione, partita);
@@ -156,9 +156,9 @@ class CombattimentoConTatticheTest {
             svuotaLePergamene(partita.gruppo());
             partita.gruppo().addIncantesimi(ClasseIncantesimo.FUOCO, 5);
             // "Una volta per scontro" un incantesimo, poi sempre l'attacco fisico (il ripiego)
-            Voce unaVolta = new Voce(null, Collections.singletonList(Predicato.conConfrontoENumero(TipoPredicato.VOCE_USATA, Confronto.UGUALE, 0)),
-                    Collections.singletonList(Azione.incantesimoDiDanno(CriterioIncantesimo.PIU_POTENTE, false)));
-            mago.setTattica(Tattica.di(unaVolta));
+            VoceMD unaVolta = new VoceMD(null, Collections.singletonList(PredicatoMD.conConfrontoENumero(TipoPredicato.VOCE_USATA, Confronto.UGUALE, 0)),
+                    Collections.singletonList(AzioneMD.incantesimoDiDanno(CriterioIncantesimo.PIU_POTENTE, false)));
+            mago.setTattica(TatticaMD.di(unaVolta));
             iniziaLaMischia(locazione, partita);
             // Piano G A: tre azioni mie in sei scatti
             scatta(locazione, partita, 6);
@@ -176,8 +176,8 @@ class CombattimentoConTatticheTest {
             capo.subSalute(capo.getSalute() * 7 / 10, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
             svuotaLePergamene(partita.gruppo());
             partita.gruppo().addPozioniSalute(2);
-            capo.setTattica(Tattica.di(Voce.su(su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO,
-                    Filtro.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, Confronto.MINORE, 50)), Azione.di(TipoAzione.POZIONE_SALUTE))));
+            capo.setTattica(TatticaMD.di(VoceMD.su(su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO,
+                    FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, Confronto.MINORE, 50)), AzioneMD.di(TipoAzione.POZIONE_SALUTE))));
             int pozioniPrima = partita.gruppo().getPozioniSalute();
             iniziaLaMischia(locazione, partita);
             scatta(locazione, partita, 1);
@@ -213,7 +213,7 @@ class CombattimentoConTatticheTest {
             Personaggio ostaggio = new Viandante("Ottone", 1);
             partita.gruppo().aggiungiOspite(ostaggio, true);
             Personaggio goblin = GruppoAvversario.getIstanza().getPersonaggi().get(0);
-            goblin.setTattica(Tattica.di(Voce.su(su(TipoRosa.OSPITI, TipoOrdinamento.PRIMO), Azione.di(TipoAzione.ATTACCO_FISICO))));
+            goblin.setTattica(TatticaMD.di(VoceMD.su(su(TipoRosa.OSPITI, TipoOrdinamento.PRIMO), AzioneMD.di(TipoAzione.ATTACCO_FISICO))));
             int salutePrima = salute(ostaggio);
             iniziaLaMischia(locazione, partita);
             // Il piano è G A: dopo due scatti ha agito anche il goblin

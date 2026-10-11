@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
+import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
+import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
 import com.threeamigos.foresta.motore.DannoRisultante;
@@ -76,7 +79,7 @@ class SelezioneTest {
                 Collections.singletonList(ostaggio));
     }
 
-    private static boolean passa(Filtro filtro, Personaggio candidato, ContestoTattico contesto) {
+    private static boolean passa(FiltroMD filtro, Personaggio candidato, ContestoTattico contesto) {
         return Filtri.ammette(filtro, candidato, contesto);
     }
 
@@ -95,24 +98,24 @@ class SelezioneTest {
 
     @Test
     void ilParametroDeveEssereQuelloDelTipoDiFiltro() {
-        assertThrows(IllegalArgumentException.class, () -> Filtro.senzaParametro(TipoFiltro.SALUTE));
-        assertThrows(IllegalArgumentException.class, () -> Filtro.conStato(TipoFiltro.CLASSE, TipoEffettoDiStato.BAGNATO));
-        assertThrows(IllegalArgumentException.class, () -> Filtro.conConfronto(TipoFiltro.MAGICO, Confronto.MINORE));
-        assertDoesNotThrow(() -> Filtro.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 50));
+        assertThrows(IllegalArgumentException.class, () -> FiltroMD.senzaParametro(TipoFiltro.SALUTE));
+        assertThrows(IllegalArgumentException.class, () -> FiltroMD.conStato(TipoFiltro.CLASSE, TipoEffettoDiStato.BAGNATO));
+        assertThrows(IllegalArgumentException.class, () -> FiltroMD.conConfronto(TipoFiltro.MAGICO, Confronto.MINORE));
+        assertDoesNotThrow(() -> FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 50));
     }
 
     @Test
     void laSaluteInPuntiEInPercentuale() {
         ContestoTattico contesto = perIMiei(guerriero);
         int salute = goblin1.getSalute();
-        assertTrue(passa(Filtro.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.UGUALE, salute), goblin1, contesto));
-        assertTrue(passa(Filtro.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MAGGIORE, salute - 1), goblin1, contesto));
-        assertFalse(passa(Filtro.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, salute), goblin1, contesto));
+        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.UGUALE, salute), goblin1, contesto));
+        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MAGGIORE, salute - 1), goblin1, contesto));
+        assertFalse(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, salute), goblin1, contesto));
         // "Almeno" è NON MINORE
-        assertTrue(passa(Filtro.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, salute).negato(), goblin1, contesto));
+        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, salute).negato(), goblin1, contesto));
 
         ferisci(goblin2, goblin2.getSaluteMassima() / 2 + 1);
-        Filtro menoDellaMeta = Filtro.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, Confronto.MINORE, 50);
+        FiltroMD menoDellaMeta = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, Confronto.MINORE, 50);
         assertTrue(passa(menoDellaMeta, goblin2, contesto));
         assertFalse(passa(menoDellaMeta, goblin1, contesto));
     }
@@ -121,19 +124,19 @@ class SelezioneTest {
     void ilLivelloAssolutoERispettoAlMio() {
         Personaggio goblinForte = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 3);
         ContestoTattico contesto = perIMiei(guerriero);
-        assertTrue(passa(Filtro.conConfrontoENumero(TipoFiltro.LIVELLO, Confronto.UGUALE, 3), goblinForte, contesto));
-        assertTrue(passa(Filtro.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, Confronto.MAGGIORE), goblinForte, contesto));
-        assertFalse(passa(Filtro.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, Confronto.MAGGIORE), goblin1, contesto));
-        assertTrue(passa(Filtro.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, Confronto.UGUALE), goblin1, contesto));
+        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.LIVELLO, Confronto.UGUALE, 3), goblinForte, contesto));
+        assertTrue(passa(FiltroMD.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, Confronto.MAGGIORE), goblinForte, contesto));
+        assertFalse(passa(FiltroMD.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, Confronto.MAGGIORE), goblin1, contesto));
+        assertTrue(passa(FiltroMD.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, Confronto.UGUALE), goblin1, contesto));
     }
 
     @Test
     void laClasseEIlRuoloEMagoEMagaSonoLaStessaCosa() {
         ContestoTattico contesto = perIMiei(guerriero);
-        Filtro mago = Filtro.conClasse(TipoFiltro.CLASSE, TipoPersonaggio.MAGO);
+        FiltroMD mago = FiltroMD.conClasse(TipoFiltro.CLASSE, TipoPersonaggio.MAGO);
         assertTrue(passa(mago, maga, contesto));
         assertFalse(passa(mago, ladro, contesto));
-        assertTrue(passa(Filtro.conClasse(TipoFiltro.CLASSE, TipoPersonaggio.MAGA), FabbricaPersonaggi.crea(TipoPersonaggio.MAGO, 1), contesto));
+        assertTrue(passa(FiltroMD.conClasse(TipoFiltro.CLASSE, TipoPersonaggio.MAGA), FabbricaPersonaggi.crea(TipoPersonaggio.MAGO, 1), contesto));
         assertTrue(TipoPersonaggio.BARDO.stessoRuoloDi(TipoPersonaggio.CANTASTORIE));
         assertFalse(TipoPersonaggio.BARDO.stessoRuoloDi(TipoPersonaggio.MAGO));
     }
@@ -141,10 +144,10 @@ class SelezioneTest {
     @Test
     void laCategoriaElOStato() {
         ContestoTattico contesto = perIMiei(guerriero);
-        Filtro nonMorto = Filtro.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.NON_MORTO);
+        FiltroMD nonMorto = FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.NON_MORTO);
         assertTrue(passa(nonMorto, fantasma, contesto));
         assertFalse(passa(nonMorto, goblin1, contesto));
-        Filtro bagnato = Filtro.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BAGNATO);
+        FiltroMD bagnato = FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BAGNATO);
         assertFalse(passa(bagnato, goblin1, contesto));
         goblin1.addEffettoDiStato(TipoEffettoDiStato.BAGNATO, 3, 0);
         assertTrue(passa(bagnato, goblin1, contesto));
@@ -154,7 +157,7 @@ class SelezioneTest {
     @Test
     void ilFiltroMagicoSegueLeTreRegole() {
         ContestoTattico contesto = perIMiei(guerriero);
-        Filtro magico = Filtro.senzaParametro(TipoFiltro.MAGICO);
+        FiltroMD magico = FiltroMD.senzaParametro(TipoFiltro.MAGICO);
         // Una classe con un'abilità innata (il dardo arcano): magica se ha la magia e non è silenziata
         assertTrue(maga.getMagia() > 0);
         assertTrue(passa(magico, maga, contesto));
@@ -177,20 +180,20 @@ class SelezioneTest {
     @Test
     void ilFiltroDeboleEImmune() {
         ContestoTattico contesto = perIMiei(guerriero);
-        Filtro debole = Filtro.conTipoDanno(TipoFiltro.DEBOLE_A, TipoDanno.SACRO);
+        FiltroMD debole = FiltroMD.conTipoDanno(TipoFiltro.DEBOLE_A, TipoDanno.SACRO);
         assertTrue(passa(debole, fantasma, contesto));
         assertFalse(passa(debole, goblin1, contesto));
         // Un immune non è debole, e "debole" non guarda la difesa
         Personaggio drago = FabbricaPersonaggi.crea(TipoPersonaggio.DRAGO, 1);
-        assertTrue(passa(Filtro.conTipoDanno(TipoFiltro.IMMUNE_A, TipoDanno.FUOCO), drago, contesto));
-        assertFalse(passa(Filtro.conTipoDanno(TipoFiltro.DEBOLE_A, TipoDanno.FUOCO), drago, contesto));
-        assertFalse(passa(Filtro.conTipoDanno(TipoFiltro.IMMUNE_A, TipoDanno.FUOCO), goblin1, contesto));
+        assertTrue(passa(FiltroMD.conTipoDanno(TipoFiltro.IMMUNE_A, TipoDanno.FUOCO), drago, contesto));
+        assertFalse(passa(FiltroMD.conTipoDanno(TipoFiltro.DEBOLE_A, TipoDanno.FUOCO), drago, contesto));
+        assertFalse(passa(FiltroMD.conTipoDanno(TipoFiltro.IMMUNE_A, TipoDanno.FUOCO), goblin1, contesto));
     }
 
     @Test
     void deboleAllAzioneGuardaIlTipoDiDannoDellAzioneInValutazione() {
         goblin1.addEffettoDiStato(TipoEffettoDiStato.BAGNATO, 3, 0);
-        Filtro debole = Filtro.senzaParametro(TipoFiltro.DEBOLE_ALL_AZIONE);
+        FiltroMD debole = FiltroMD.senzaParametro(TipoFiltro.DEBOLE_ALL_AZIONE);
         // Fuori da una voce non c'è azione; il fulmine su un bagnato pesa di più, il fuoco no
         assertFalse(passa(debole, goblin1, perIMiei(guerriero)));
         assertTrue(passa(debole, goblin1, perIMiei(guerriero).conAzione(TipoAzione.FULMINE)));
@@ -202,19 +205,19 @@ class SelezioneTest {
     @Test
     void ilCapoEMeStesso() {
         ContestoTattico contesto = perIMiei(maga);
-        assertTrue(passa(Filtro.senzaParametro(TipoFiltro.IL_CAPO), guerriero, contesto), "il primo dei miei");
-        assertTrue(passa(Filtro.senzaParametro(TipoFiltro.IL_CAPO), goblin1, contesto), "il primo dei mostri");
-        assertFalse(passa(Filtro.senzaParametro(TipoFiltro.IL_CAPO), ladro, contesto));
-        assertTrue(passa(Filtro.senzaParametro(TipoFiltro.ME_STESSO), maga, contesto));
-        assertFalse(passa(Filtro.senzaParametro(TipoFiltro.ME_STESSO), guerriero, contesto));
-        assertTrue(passa(Filtro.senzaParametro(TipoFiltro.ME_STESSO).negato(), guerriero, contesto), "un altro che me");
+        assertTrue(passa(FiltroMD.senzaParametro(TipoFiltro.IL_CAPO), guerriero, contesto), "il primo dei miei");
+        assertTrue(passa(FiltroMD.senzaParametro(TipoFiltro.IL_CAPO), goblin1, contesto), "il primo dei mostri");
+        assertFalse(passa(FiltroMD.senzaParametro(TipoFiltro.IL_CAPO), ladro, contesto));
+        assertTrue(passa(FiltroMD.senzaParametro(TipoFiltro.ME_STESSO), maga, contesto));
+        assertFalse(passa(FiltroMD.senzaParametro(TipoFiltro.ME_STESSO), guerriero, contesto));
+        assertTrue(passa(FiltroMD.senzaParametro(TipoFiltro.ME_STESSO).negato(), guerriero, contesto), "un altro che me");
     }
 
     @Test
     void ilBersaglioDellUltimaVoltaEChiMiHaAttaccato() {
         ContestoTattico contesto = perIMiei(guerriero);
-        Filtro scelto = Filtro.senzaParametro(TipoFiltro.SCELTO_L_ULTIMA_VOLTA);
-        Filtro attaccante = Filtro.senzaParametro(TipoFiltro.MI_HA_ATTACCATO_PER_ULTIMO);
+        FiltroMD scelto = FiltroMD.senzaParametro(TipoFiltro.SCELTO_L_ULTIMA_VOLTA);
+        FiltroMD attaccante = FiltroMD.senzaParametro(TipoFiltro.MI_HA_ATTACCATO_PER_ULTIMO);
         assertFalse(passa(scelto, goblin2, contesto));
         assertFalse(passa(attaccante, goblin1, contesto));
         StatoDelCombattimento.getIstanza().registraColpo(new DannoRisultante(guerriero, goblin2));
@@ -231,79 +234,79 @@ class SelezioneTest {
     void lArmaCheDaUnTipoDiDanno() {
         ContestoTattico contesto = perIMiei(guerriero);
         TipoDanno daLei = goblin1.getArmaEquipaggiata().getTipoDanno();
-        assertTrue(passa(Filtro.conTipoDanno(TipoFiltro.ARMA_CHE_DA, daLei), goblin1, contesto));
+        assertTrue(passa(FiltroMD.conTipoDanno(TipoFiltro.ARMA_CHE_DA, daLei), goblin1, contesto));
         TipoDanno altro = daLei == TipoDanno.SACRO ? TipoDanno.FUOCO : TipoDanno.SACRO;
-        assertFalse(passa(Filtro.conTipoDanno(TipoFiltro.ARMA_CHE_DA, altro), goblin1, contesto));
+        assertFalse(passa(FiltroMD.conTipoDanno(TipoFiltro.ARMA_CHE_DA, altro), goblin1, contesto));
     }
 
     @Test
     void gliOspitiNonPassanoMaiIFiltriDiClasseECategoria() {
         ContestoTattico contesto = perIMostri(goblin1);
-        assertFalse(passa(Filtro.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.UMANOIDE), ostaggio, contesto));
-        assertFalse(passa(Filtro.conClasse(TipoFiltro.CLASSE, TipoPersonaggio.VIANDANTE), ostaggio, contesto));
-        assertFalse(passa(Filtro.senzaParametro(TipoFiltro.MAGICO), ostaggio, contesto));
+        assertFalse(passa(FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.UMANOIDE), ostaggio, contesto));
+        assertFalse(passa(FiltroMD.conClasse(TipoFiltro.CLASSE, TipoPersonaggio.VIANDANTE), ostaggio, contesto));
+        assertFalse(passa(FiltroMD.senzaParametro(TipoFiltro.MAGICO), ostaggio, contesto));
         // I filtri su salute e stati li comprendono
-        assertTrue(passa(Filtro.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MAGGIORE, 0), ostaggio, contesto));
+        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MAGGIORE, 0), ostaggio, contesto));
     }
 
     // ---- gli ordinamenti ----
 
-    private static Personaggio scegli(Ordinamento ordinamento, Personaggio... candidati) {
+    private static Personaggio scegli(OrdinamentoMD ordinamento, Personaggio... candidati) {
         return Ordinamenti.scegli(Arrays.asList(candidati), ordinamento);
     }
 
     @Test
     void ogniTipoDiOrdinamentoSceglieUnCandidato() {
         for (TipoOrdinamento tipo : TipoOrdinamento.values()) {
-            Ordinamento ordinamento = tipo.getParametro() == com.threeamigos.foresta.tipi.tattiche.TipoParametro.NESSUNO
-                    ? Ordinamento.di(tipo) : Ordinamento.di(tipo, TipoDanno.SACRO);
+            OrdinamentoMD ordinamento = tipo.getParametro() == com.threeamigos.foresta.tipi.tattiche.TipoParametro.NESSUNO
+                    ? OrdinamentoMD.di(tipo) : OrdinamentoMD.di(tipo, TipoDanno.SACRO);
             assertNotNull(scegli(ordinamento, goblin1, goblin2), tipo.name());
             assertNull(Ordinamenti.scegli(Collections.emptyList(), ordinamento), tipo.name());
         }
-        assertThrows(IllegalArgumentException.class, () -> Ordinamento.di(TipoOrdinamento.PIU_DEBOLE_A));
-        assertThrows(IllegalArgumentException.class, () -> Ordinamento.di(TipoOrdinamento.PRIMO, TipoDanno.SACRO));
+        assertThrows(IllegalArgumentException.class, () -> OrdinamentoMD.di(TipoOrdinamento.PIU_DEBOLE_A));
+        assertThrows(IllegalArgumentException.class, () -> OrdinamentoMD.di(TipoOrdinamento.PRIMO, TipoDanno.SACRO));
     }
 
     @Test
     void ilPrimoEAParitaVinceIlPrimo() {
-        assertSame(goblin1, scegli(Ordinamento.di(TipoOrdinamento.PRIMO), goblin1, goblin2));
-        assertSame(goblin1, scegli(Ordinamento.di(TipoOrdinamento.MENO_SALUTE), goblin1, goblin2), "a parità il primo");
-        assertSame(goblin1, scegli(Ordinamento.di(TipoOrdinamento.PIU_SALUTE), goblin1, goblin2), "a parità il primo");
+        assertSame(goblin1, scegli(OrdinamentoMD.di(TipoOrdinamento.PRIMO), goblin1, goblin2));
+        assertSame(goblin1, scegli(OrdinamentoMD.di(TipoOrdinamento.MENO_SALUTE), goblin1, goblin2), "a parità il primo");
+        assertSame(goblin1, scegli(OrdinamentoMD.di(TipoOrdinamento.PIU_SALUTE), goblin1, goblin2), "a parità il primo");
     }
 
     @Test
     void laSaluteEIlLivello() {
         ferisci(goblin1, 3);
-        assertSame(goblin1, scegli(Ordinamento.di(TipoOrdinamento.MENO_SALUTE), goblin2, goblin1));
-        assertSame(goblin2, scegli(Ordinamento.di(TipoOrdinamento.PIU_SALUTE), goblin1, goblin2));
+        assertSame(goblin1, scegli(OrdinamentoMD.di(TipoOrdinamento.MENO_SALUTE), goblin2, goblin1));
+        assertSame(goblin2, scegli(OrdinamentoMD.di(TipoOrdinamento.PIU_SALUTE), goblin1, goblin2));
         Personaggio goblinForte = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 3);
-        assertSame(goblinForte, scegli(Ordinamento.di(TipoOrdinamento.LIVELLO_PIU_ALTO), goblin1, goblinForte));
-        assertSame(goblin1, scegli(Ordinamento.di(TipoOrdinamento.LIVELLO_PIU_BASSO), goblinForte, goblin1));
+        assertSame(goblinForte, scegli(OrdinamentoMD.di(TipoOrdinamento.LIVELLO_PIU_ALTO), goblin1, goblinForte));
+        assertSame(goblin1, scegli(OrdinamentoMD.di(TipoOrdinamento.LIVELLO_PIU_BASSO), goblinForte, goblin1));
     }
 
     @Test
     void ilPiuDeboleEIlPiuResistente() {
         Personaggio drago = FabbricaPersonaggi.crea(TipoPersonaggio.DRAGO, 1);
         // Il fantasma è debole al sacro, il Drago non lo è: il goblin sta in mezzo
-        assertSame(fantasma, scegli(Ordinamento.di(TipoOrdinamento.PIU_DEBOLE_A, TipoDanno.SACRO), goblin1, drago, fantasma));
+        assertSame(fantasma, scegli(OrdinamentoMD.di(TipoOrdinamento.PIU_DEBOLE_A, TipoDanno.SACRO), goblin1, drago, fantasma));
         // Il Drago è immune al fuoco: è il più resistente
-        assertSame(drago, scegli(Ordinamento.di(TipoOrdinamento.PIU_RESISTENTE_A, TipoDanno.FUOCO), goblin1, drago, fantasma));
+        assertSame(drago, scegli(OrdinamentoMD.di(TipoOrdinamento.PIU_RESISTENTE_A, TipoDanno.FUOCO), goblin1, drago, fantasma));
     }
 
     @Test
     void laMagia() {
         goblin1.subMagia(goblin1.getMagia());
-        assertSame(maga, scegli(Ordinamento.di(TipoOrdinamento.PIU_MAGIA), guerriero, maga, goblin1));
-        assertSame(goblin1, scegli(Ordinamento.di(TipoOrdinamento.MENO_MAGIA), guerriero, maga, goblin1));
+        assertSame(maga, scegli(OrdinamentoMD.di(TipoOrdinamento.PIU_MAGIA), guerriero, maga, goblin1));
+        assertSame(goblin1, scegli(OrdinamentoMD.di(TipoOrdinamento.MENO_MAGIA), guerriero, maga, goblin1));
     }
 
     @Test
     void aCasoSceglieFraTuttiEConIlSemeERipetibile() {
         List<Personaggio> candidati = Arrays.asList(goblin1, goblin2, fantasma);
         Dado.impostaSeme(7);
-        Personaggio primo = Ordinamenti.scegli(candidati, Ordinamento.di(TipoOrdinamento.A_CASO));
+        Personaggio primo = Ordinamenti.scegli(candidati, OrdinamentoMD.di(TipoOrdinamento.A_CASO));
         Dado.impostaSeme(7);
-        assertSame(primo, Ordinamenti.scegli(candidati, Ordinamento.di(TipoOrdinamento.A_CASO)));
+        assertSame(primo, Ordinamenti.scegli(candidati, OrdinamentoMD.di(TipoOrdinamento.A_CASO)));
         assertTrue(candidati.contains(primo));
     }
 
@@ -312,10 +315,10 @@ class SelezioneTest {
     @Test
     void ilSelettoreApplicaLaRosaIFiltriEL_Ordinamento() {
         ferisci(goblin2, 2);
-        Selettore selettore = new Selettore(TipoRosa.AVVERSARI,
-                Collections.singletonList(Filtro.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.UMANOIDE)),
-                Ordinamento.di(TipoOrdinamento.MENO_SALUTE));
-        RisultatoSelezione risultato = selettore.seleziona(perIMiei(maga));
+        SelettoreMD selettore = new SelettoreMD(TipoRosa.AVVERSARI,
+                Collections.singletonList(FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.UMANOIDE)),
+                OrdinamentoMD.di(TipoOrdinamento.MENO_SALUTE));
+        RisultatoSelezione risultato = Selettori.seleziona(selettore, perIMiei(maga));
         assertSame(goblin2, risultato.getScelto());
         assertEquals(Arrays.asList(goblin1, goblin2), risultato.getRimasti());
         assertEquals(3, risultato.getPassi().size());
@@ -326,40 +329,40 @@ class SelezioneTest {
 
     @Test
     void senzaCandidatiLaVoceNonEEseguibile() {
-        Selettore selettore = new Selettore(TipoRosa.AVVERSARI,
-                Collections.singletonList(Filtro.conStato(TipoFiltro.STATO, TipoEffettoDiStato.SILENZIATO)),
-                Ordinamento.di(TipoOrdinamento.PRIMO));
-        RisultatoSelezione risultato = selettore.seleziona(perIMiei(maga));
+        SelettoreMD selettore = new SelettoreMD(TipoRosa.AVVERSARI,
+                Collections.singletonList(FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.SILENZIATO)),
+                OrdinamentoMD.di(TipoOrdinamento.PRIMO));
+        RisultatoSelezione risultato = Selettori.seleziona(selettore, perIMiei(maga));
         assertNull(risultato.getScelto());
         assertTrue(risultato.isVuoto());
         // Con lo stato sui nemici e la negazione ("non ancora silenziato") rimangono tutti
-        Selettore nonSilenziati = new Selettore(TipoRosa.AVVERSARI,
-                Collections.singletonList(Filtro.conStato(TipoFiltro.STATO, TipoEffettoDiStato.SILENZIATO).negato()),
-                Ordinamento.di(TipoOrdinamento.PRIMO));
-        assertEquals(3, nonSilenziati.seleziona(perIMiei(maga)).getRimasti().size());
+        SelettoreMD nonSilenziati = new SelettoreMD(TipoRosa.AVVERSARI,
+                Collections.singletonList(FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.SILENZIATO).negato()),
+                OrdinamentoMD.di(TipoOrdinamento.PRIMO));
+        assertEquals(3, Selettori.seleziona(nonSilenziati, perIMiei(maga)).getRimasti().size());
     }
 
     @Test
     void ilCantoDiValoreSiSaltaQuandoTuttiSonoIspirati() {
-        Selettore senzaIspirazione = new Selettore(TipoRosa.ALLEATI,
-                Collections.singletonList(Filtro.conStato(TipoFiltro.STATO, TipoEffettoDiStato.ISPIRATO).negato()),
-                Ordinamento.di(TipoOrdinamento.PRIMO));
+        SelettoreMD senzaIspirazione = new SelettoreMD(TipoRosa.ALLEATI,
+                Collections.singletonList(FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.ISPIRATO).negato()),
+                OrdinamentoMD.di(TipoOrdinamento.PRIMO));
         ContestoTattico contesto = perIMiei(maga);
-        assertFalse(senzaIspirazione.seleziona(contesto).isVuoto());
+        assertFalse(Selettori.seleziona(senzaIspirazione, contesto).isVuoto());
         for (Personaggio p : Arrays.asList(guerriero, maga, ladro)) {
             p.addEffettoDiStato(TipoEffettoDiStato.ISPIRATO, 3, 0);
         }
-        assertTrue(senzaIspirazione.seleziona(contesto).isVuoto());
+        assertTrue(Selettori.seleziona(senzaIspirazione, contesto).isVuoto());
     }
 
     @Test
     void ilMostroSceglieFraIMieiEGliOspitiConLaStessaRosaDiOggi() {
-        Selettore selettore = new Selettore(TipoRosa.AVVERSARI_E_OSPITI, Collections.emptyList(), Ordinamento.di(TipoOrdinamento.MENO_SALUTE));
-        RisultatoSelezione risultato = selettore.seleziona(perIMostri(goblin1));
+        SelettoreMD selettore = new SelettoreMD(TipoRosa.AVVERSARI_E_OSPITI, Collections.emptyList(), OrdinamentoMD.di(TipoOrdinamento.MENO_SALUTE));
+        RisultatoSelezione risultato = Selettori.seleziona(selettore, perIMostri(goblin1));
         assertEquals(4, risultato.getRimasti().size());
         assertTrue(risultato.getRimasti().contains(ostaggio));
         assertThrows(IllegalStateException.class,
-                () -> new Selettore(TipoRosa.AVVERSARI_E_OSPITI, Collections.emptyList(), Ordinamento.di(TipoOrdinamento.PRIMO)).seleziona(perIMiei(maga)));
+                () -> Selettori.seleziona(new SelettoreMD(TipoRosa.AVVERSARI_E_OSPITI, Collections.emptyList(), OrdinamentoMD.di(TipoOrdinamento.PRIMO)), perIMiei(maga)));
     }
 
     // ---- i tipi di azione ----

@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tattiche;
+package com.threeamigos.foresta.modellodati.tattiche;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,24 +8,24 @@ import java.util.List;
  * La tattica di un personaggio: una lista ordinata di voci (nessun tetto), di cui si esegue la prima eseguibile. Immutabile.
  * Vedi tattiche_di_combattimento_automatiche.md §11.
  */
-public final class Tattica {
+public final class TatticaMD {
 
 	/**
 	 * Nessuna voce: si attacca sempre il primo avversario in campo (il ripiego). È la tattica dei miei personaggi finché il giocatore non ne scrive una.
 	 */
-	public static final Tattica VUOTA = new Tattica(Collections.emptyList());
+	public static final TatticaMD VUOTA = new TatticaMD(Collections.emptyList());
 
-	private final List<Voce> voci;
+	private final List<VoceMD> voci;
 
-	public Tattica(List<Voce> voci) {
+	public TatticaMD(List<VoceMD> voci) {
 		this.voci = Collections.unmodifiableList(new ArrayList<>(voci));
 	}
 
-	public static Tattica di(Voce... voci) {
-		return new Tattica(java.util.Arrays.asList(voci));
+	public static TatticaMD di(VoceMD... voci) {
+		return new TatticaMD(java.util.Arrays.asList(voci));
 	}
 
-	public List<Voce> getVoci() {
+	public List<VoceMD> getVoci() {
 		return voci;
 	}
 

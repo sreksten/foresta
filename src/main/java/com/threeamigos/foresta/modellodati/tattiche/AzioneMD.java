@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tattiche;
+package com.threeamigos.foresta.modellodati.tattiche;
 
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
@@ -11,14 +11,14 @@ import java.util.Objects;
  * (INCANTESIMO_DI_DANNO), se rinunciare quando l'attacco con le armi rende di più, il tipo di danno dell'arma voluta (CAMBIA_ARMA).
  * Immutabile. Vedi tattiche_di_combattimento_automatiche.md §11.9 e §11.10.
  */
-public final class Azione {
+public final class AzioneMD {
 
 	private final TipoAzione tipo;
 	private final CriterioIncantesimo criterio;
 	private final boolean soloSePiuForteDellAttacco;
 	private final TipoDanno armaDi;
 
-	private Azione(TipoAzione tipo, CriterioIncantesimo criterio, boolean soloSePiuForteDellAttacco, TipoDanno armaDi) {
+	private AzioneMD(TipoAzione tipo, CriterioIncantesimo criterio, boolean soloSePiuForteDellAttacco, TipoDanno armaDi) {
 		this.tipo = tipo;
 		this.criterio = criterio;
 		this.soloSePiuForteDellAttacco = soloSePiuForteDellAttacco;
@@ -28,35 +28,35 @@ public final class Azione {
 	/**
 	 * Un'azione senza parametri (ogni tipo tranne INCANTESIMO_DI_DANNO e CAMBIA_ARMA)
 	 */
-	public static Azione di(TipoAzione tipo) {
+	public static AzioneMD di(TipoAzione tipo) {
 		if (tipo == TipoAzione.INCANTESIMO_DI_DANNO || tipo == TipoAzione.CAMBIA_ARMA) {
 			throw new IllegalArgumentException(tipo + " vuole dei parametri");
 		}
-		return new Azione(tipo, null, false, null);
+		return new AzioneMD(tipo, null, false, null);
 	}
 
 	/**
 	 * L'incantesimo di danno con un criterio; con <code>soloSePiuForteDellAttacco</code> è applicabile solo se rende più dell'attacco con le armi
 	 */
-	public static Azione incantesimoDiDanno(CriterioIncantesimo criterio, boolean soloSePiuForteDellAttacco) {
-		return new Azione(TipoAzione.INCANTESIMO_DI_DANNO, Objects.requireNonNull(criterio), soloSePiuForteDellAttacco, null);
+	public static AzioneMD incantesimoDiDanno(CriterioIncantesimo criterio, boolean soloSePiuForteDellAttacco) {
+		return new AzioneMD(TipoAzione.INCANTESIMO_DI_DANNO, Objects.requireNonNull(criterio), soloSePiuForteDellAttacco, null);
 	}
 
-	public static Azione cambiaArma(TipoDanno armaDi) {
-		return new Azione(TipoAzione.CAMBIA_ARMA, null, false, Objects.requireNonNull(armaDi));
+	public static AzioneMD cambiaArma(TipoDanno armaDi) {
+		return new AzioneMD(TipoAzione.CAMBIA_ARMA, null, false, Objects.requireNonNull(armaDi));
 	}
 
 	/**
 	 * La stessa azione che si applica solo se rende più dell'attacco con le armi: per gli incantesimi e il dardo che fanno danno
 	 */
-	public Azione soloSePiuForteDellAttacco() {
+	public AzioneMD soloSePiuForteDellAttacco() {
 		if (tipo == TipoAzione.INCANTESIMO_DI_DANNO) {
 			return incantesimoDiDanno(criterio, true);
 		}
 		if (!faDanno(tipo)) {
 			throw new IllegalArgumentException(tipo + " non fa danno da confrontare con l'attacco");
 		}
-		return new Azione(tipo, null, true, null);
+		return new AzioneMD(tipo, null, true, null);
 	}
 
 	private static boolean faDanno(TipoAzione tipo) {

@@ -874,11 +874,12 @@ Qui si fissano le decisioni sul **modello** (come sono fatte una tattica, una vo
 ### 11.2 La voce
 
 ```
-Voce      { Selettore selettore?; List<Predicato> condizioni; List<Azione> azioni }       (la prima azione applicabile vince, §11.7)
-Azione    { TipoAzione tipo; CriterioIncantesimo criterio?; boolean soloSePiuForteDellAttacco; TipoDanno armaDi? }   (§11.9, §11.10)
-Selettore { TipoRosa rosa; List<Filtro> filtri; TipoOrdinamento ordinamento }
-Filtro    { TipoFiltro tipo; boolean negato; parametro? }                   (§11.5)
-Predicato { TipoPredicato tipo; boolean negato; parametri? }                (§11.8; le condizioni sono in AND, lista vuota = sempre)
+VoceMD      { SelettoreMD selettore?; List<PredicatoMD> condizioni; List<AzioneMD> azioni; boolean attiva }   (la prima azione applicabile vince, §11.7)
+AzioneMD    { TipoAzione tipo; CriterioIncantesimo criterio?; boolean soloSePiuForteDellAttacco; TipoDanno armaDi? }   (§11.9, §11.10)
+SelettoreMD { TipoRosa rosa; List<FiltroMD> filtri; OrdinamentoMD ordinamento }
+FiltroMD    { TipoFiltro tipo; boolean negato; parametro? }                   (§11.5)
+PredicatoMD { TipoPredicato tipo; boolean negato; parametri? }                (§11.8; le condizioni sono in AND, lista vuota = sempre)
+TatticaMD   { List<VoceMD> voci }
 ```
 
 Ogni `TipoAzione` dichiara la sua **portata**, e quindi se e come usa il selettore:
@@ -1082,14 +1083,16 @@ azione per azione, con i comandi manuali di oggi che continuano a funzionare com
 
 ### 11.9bis Stato dell'implementazione
 
+**Dove stanno i dati e la logica** (§11.11): i dati in `…/modellodati/tattiche`, la logica in `…/tattiche`, i tipi in `…/tipi/tattiche`.
+
 **Fatto** (`…/tattiche`, `…/tipi/tattiche`; test `RosaTest`, `ContestoTatticoTest`, `SelezioneTest`, `PredicatiTest`, `ValutatoreTest`):
 
-- **Il "SU"**: le rose, i filtri (`Filtro`, `Filtri`), gli ordinamenti (`Ordinamento`, `Ordinamenti`), il `Selettore` con il suo `RisultatoSelezione` (scelto, rimasti, percorso). Il selettore accetta un'`Ammissione`: restano nella rosa solo i candidati su cui
+- **Il "SU"**: le rose, i filtri (`Filtro`, `Filtri`), gli ordinamenti (`OrdinamentoMD`, `Ordinamenti`), il `SelettoreMD` applicato da `Selettori` con il suo `RisultatoSelezione` (scelto, rimasti, percorso). Il selettore accetta un'`Ammissione`: restano nella rosa solo i candidati su cui
   un'azione della voce si può fare, e i filtri che dipendono dall'azione la valutano per quella che si farebbe su ciascuno.
-- **Le condizioni**: `TipoPredicato`, `Predicato`, `Predicati`, l'astuzia (`Astuzia`, con `Costanti.ASTUZIA_PARTENZA` e `ASTUZIA_PER_LIVELLO`), il conteggio degli usi di una voce. Un `ROUND_DALL_ULTIMO_USO` di una voce mai usata vale "moltissimi".
-- **Le azioni**: `TipoAzione`, `PortataAzione`, `Azione` (con i parametri controllati), `Requisiti` (quando si può fare ciascuna, con il motivo del no), `CriterioIncantesimo` e `SceltaIncantesimo` (S1-S4 e `PIU_ECONOMICO_CHE_BASTA`, con il confronto con l'attacco),
+- **Le condizioni**: `TipoPredicato`, `PredicatoMD`, `Predicati`, l'astuzia (`Astuzia`, con `Costanti.ASTUZIA_PARTENZA` e `ASTUZIA_PER_LIVELLO`), il conteggio degli usi di una voce. Un `ROUND_DALL_ULTIMO_USO` di una voce mai usata vale "moltissimi".
+- **Le azioni**: `TipoAzione`, `PortataAzione`, `AzioneMD` (con i parametri controllati), `Requisiti` (quando si può fare ciascuna, con il motivo del no), `CriterioIncantesimo` e `SceltaIncantesimo` (S1-S4 e `PIU_ECONOMICO_CHE_BASTA`, con il confronto con l'attacco),
   `CalcolatoreCombattimento.dannoAtteso` e `dannoAttesoDellaMischia` (senza dadi).
-- **La voce e la tattica**: `Voce` (selettore opzionale con quello di base della portata, condizioni, azioni, attiva/disattiva, `problemi(lato)` che la lettura deve rifiutare), `Tattica` (lista piatta, `problemi(lato)`), `Decisione` (azione, bersaglio, perché),
+- **La voce e la tattica**: `VoceMD` (selettore opzionale con quello di base della portata, condizioni, azioni, attiva/disattiva, `problemi(lato)` che la lettura deve rifiutare), `TatticaMD` (lista piatta, `problemi(lato)`), `Decisione` (azione, bersaglio, perché),
   `Valutatore.decidi` (la prima voce eseguibile; ripiego sull'attacco fisico al primo avversario).
 - **La memoria dello scontro**: `StatoDelCombattimento.registraEsitoAzione` (riuscita, mancata, immune), `getTentativiFalliti` (si rinuncia dopo `Costanti.MAX_TENTATIVI_FALLITI_PER_AZIONE` = 2) e `isImmunitaScoperta` (pubblica); le immunità di classe si conoscono subito.
 
@@ -1097,7 +1100,7 @@ azione per azione, con i comandi manuali di oggi che continuano a funzionare com
 stato diverso da `ISPIRATO` (i modificatori temporanei, oggi, non si leggono dal personaggio); i canti ipnotico e dell'Urlo servono se c'è un avversario né `SPAVENTATO` né `CONFUSO`; il Canto di valore se c'è un alleato non `ISPIRATO`; le pozioni vogliono una scorta nel
 gruppo e un bersaglio ferito (Salute) o con poca `MAGIA`; il cambio d'arma solo per i miei, se c'è un'arma da prendere (`armiPerCambio`).
 
-**Collegato al motore** (`LocazioneBase`, test `CombattimentoConTatticheTest`): a ogni scatto del TIMER il personaggio di turno agisce con la sua tattica (`Personaggio.getTattica`, oggi non salvata): i miei senza tattica hanno `Tattica.VUOTA` (attaccano
+**Collegato al motore** (`LocazioneBase`, test `CombattimentoConTatticheTest`): a ogni scatto del TIMER il personaggio di turno agisce con la sua tattica (`Personaggio.getTattica`, oggi non salvata): i miei senza tattica hanno `TatticaMD.VUOTA` (attaccano
 il primo avversario, come prima), i mostri senza tattica scelgono ancora con `PersonaggioBase.attacca(Gruppo)` (finché non ci sono le tattiche base). `agisciConLaTattica` decide con il `Valutatore`, esegue la `Decisione` (`eseguiLaDecisione`: attacco con
 le armi sul bersaglio scelto, incantesimi di danno con il `GruppoDiBersagli` per i `MULTIPLO`, dardo arcano, benefici, canti — il curativo sul bersaglio scelto, `Canto.cantaSu` —, pozioni con la scelta fra normale e grande, cambio d'arma), registra l'uso della voce
 e controlla la fine dello scontro; non gestisce il round. Gli esiti degli incantesimi (colpito, mancato, immune) e del dardo si registrano nello `StatoDelCombattimento` (`IncantesimoMaleficoImpl.colpisci`, `scagliaIlDardo`); l'attacco fisico non ne registra
@@ -1105,6 +1108,15 @@ e controlla la fine dello scontro; non gestisce il round. Gli esiti degli incant
 
 **Da fare**: il salvataggio e la rilettura (formato, `PersonaggioMD`); le tattiche base dei mostri e le fasce di astuzia (compresi i ritocchi alle intelligenze massime del Folletto, a 8, e dell'Ombra Nera, a 31); l'evento `InternoDecisioneTattica` (§7.7); la scheda del
 giocatore (§12); l'esito di un'azione con effetti che non si applicano (un Silenzio a segno che non mette `SILENZIATO`) come "mancata".
+
+### 11.11 Dove stanno i dati e la logica
+
+Le classi che descrivono una tattica sono **dati puri**: immutabili, fatti solo di enumerati (`tipi/tattiche`), numeri e liste. Stanno in **`…/modellodati/tattiche`**, con il suffisso `MD` come il resto del modello dati
+(`TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`). Il motivo è che la stessa classe serve a tre cose: la **UI** le legge e le modifica (può importare `modellodati` e `tipi`, non il motore né il dominio), il **salvataggio**
+le scrive con il personaggio (`PersonaggioMD`, §8) e il **motore** le valuta. Un test (`DipendenzeTatticheTest`) controlla che dipendano solo da `tipi` e fra loro.
+
+La **logica** sta in `…/tattiche`: le rose (`Rosa`, `Rose`), `Filtri`, `Ordinamenti`, `Predicati`, `Selettori` (applica un `SelettoreMD`), `Requisiti`, `SceltaIncantesimo`, `Astuzia`, `Valutatore`, il `ContestoTattico` e i risultati (`RisultatoSelezione`, `Decisione`). Non la
+può importare la UI (`DipendenzeUITest`, che ora riconosce anche i sottopacchetti).
 
 ### 11.10 Il criterio di scelta dell'incantesimo di danno
 

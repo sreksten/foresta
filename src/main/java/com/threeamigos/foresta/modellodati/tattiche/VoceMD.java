@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tattiche;
+package com.threeamigos.foresta.modellodati.tattiche;
 
 import com.threeamigos.foresta.tipi.tattiche.PortataAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
@@ -12,11 +12,11 @@ import java.util.List;
  * vince). Senza selettore vale quello di base della portata delle azioni. Si può disattivare senza toglierla. Immutabile.
  * Vedi tattiche_di_combattimento_automatiche.md §11.2.
  */
-public final class Voce {
+public final class VoceMD {
 
-	private final Selettore selettore;
-	private final List<Predicato> condizioni;
-	private final List<Azione> azioni;
+	private final SelettoreMD selettore;
+	private final List<PredicatoMD> condizioni;
+	private final List<AzioneMD> azioni;
 	private final boolean attiva;
 
 	/**
@@ -24,7 +24,7 @@ public final class Voce {
 	 * @param condizioni quando (in AND); vuota vale sempre
 	 * @param azioni     almeno una; la prima applicabile vince
 	 */
-	public Voce(Selettore selettore, List<Predicato> condizioni, List<Azione> azioni, boolean attiva) {
+	public VoceMD(SelettoreMD selettore, List<PredicatoMD> condizioni, List<AzioneMD> azioni, boolean attiva) {
 		if (azioni.isEmpty()) {
 			throw new IllegalArgumentException("Una voce ha almeno un'azione");
 		}
@@ -34,26 +34,26 @@ public final class Voce {
 		this.attiva = attiva;
 	}
 
-	public Voce(Selettore selettore, List<Predicato> condizioni, List<Azione> azioni) {
+	public VoceMD(SelettoreMD selettore, List<PredicatoMD> condizioni, List<AzioneMD> azioni) {
 		this(selettore, condizioni, azioni, true);
 	}
 
 	/**
 	 * Una voce attiva, senza condizioni, con le azioni indicate
 	 */
-	public static Voce su(Selettore selettore, Azione... azioni) {
-		return new Voce(selettore, Collections.emptyList(), java.util.Arrays.asList(azioni));
+	public static VoceMD su(SelettoreMD selettore, AzioneMD... azioni) {
+		return new VoceMD(selettore, Collections.emptyList(), java.util.Arrays.asList(azioni));
 	}
 
-	public Voce disattivata() {
-		return new Voce(selettore, condizioni, azioni, false);
+	public VoceMD disattivata() {
+		return new VoceMD(selettore, condizioni, azioni, false);
 	}
 
 	/**
 	 * Il selettore di base per la portata delle azioni: avversari (il primo) per un attacco, se stesso per una cura o una pozione, i caduti per la
 	 * Resurrezione, gli alleati o gli avversari tutti per un'azione di gruppo, se stesso per il cambio d'arma
 	 */
-	static Selettore selettoreDiBase(PortataAzione portata) {
+	static SelettoreMD selettoreDiBase(PortataAzione portata) {
 		TipoRosa rosa;
 		switch (portata) {
 			case AVVERSARIO:
@@ -70,8 +70,8 @@ public final class Voce {
 				rosa = TipoRosa.SE_STESSO;
 				break;
 		}
-		return new Selettore(rosa, Collections.emptyList(),
-				Ordinamento.di(com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.PRIMO));
+		return new SelettoreMD(rosa, Collections.emptyList(),
+				OrdinamentoMD.di(com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.PRIMO));
 	}
 
 	/**
@@ -81,19 +81,19 @@ public final class Voce {
 		return azioni.get(0).getTipo().getPortata();
 	}
 
-	public Selettore getSelettore() {
+	public SelettoreMD getSelettore() {
 		return selettore;
 	}
 
-	public Selettore selettoreEffettivo() {
+	public SelettoreMD selettoreEffettivo() {
 		return selettore != null ? selettore : selettoreDiBase(getPortata());
 	}
 
-	public List<Predicato> getCondizioni() {
+	public List<PredicatoMD> getCondizioni() {
 		return condizioni;
 	}
 
-	public List<Azione> getAzioni() {
+	public List<AzioneMD> getAzioni() {
 		return azioni;
 	}
 
@@ -108,16 +108,16 @@ public final class Voce {
 	public List<String> problemi(boolean attoreDelGiocatore) {
 		List<String> problemi = new ArrayList<>();
 		PortataAzione portata = getPortata();
-		for (Azione azione : azioni) {
+		for (AzioneMD azione : azioni) {
 			if (azione.getTipo().getPortata() != portata) {
 				problemi.add("le azioni di una voce devono avere la stessa portata: " + azione.getTipo() + " non è " + portata);
 			}
 		}
-		Selettore effettivo = selettoreEffettivo();
+		SelettoreMD effettivo = selettoreEffettivo();
 		if (!effettivo.getRosa().valePer(attoreDelGiocatore)) {
 			problemi.add("la rosa " + effettivo.getRosa() + " non vale per " + (attoreDelGiocatore ? "i personaggi del giocatore" : "i mostri"));
 		}
-		for (Azione azione : azioni) {
+		for (AzioneMD azione : azioni) {
 			if (!azione.getTipo().roseAmmesse(attoreDelGiocatore).contains(effettivo.getRosa())) {
 				problemi.add(azione.getTipo() + " non accetta la rosa " + effettivo.getRosa());
 			}

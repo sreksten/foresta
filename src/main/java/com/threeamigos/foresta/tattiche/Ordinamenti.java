@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
 import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -7,7 +8,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import java.util.List;
 
 /**
- * Sceglie uno fra i candidati con un {@link Ordinamento} (tattiche_di_combattimento_automatiche.md §11.6). A parità di misura vince il primo
+ * Sceglie uno fra i candidati con un {@link OrdinamentoMD} (tattiche_di_combattimento_automatiche.md §11.6). A parità di misura vince il primo
  * dell'elenco, quindi la scelta è ripetibile; solo A_CASO tira il dado.
  */
 public final class Ordinamenti {
@@ -18,7 +19,7 @@ public final class Ordinamenti {
 	/**
 	 * @return il candidato scelto, o null se non ce ne sono
 	 */
-	public static Personaggio scegli(List<Personaggio> candidati, Ordinamento ordinamento) {
+	public static Personaggio scegli(List<Personaggio> candidati, OrdinamentoMD ordinamento) {
 		if (candidati.isEmpty()) {
 			return null;
 		}
@@ -32,7 +33,7 @@ public final class Ordinamenti {
 		}
 	}
 
-	private static Personaggio conLaMisuraMigliore(List<Personaggio> candidati, Ordinamento ordinamento) {
+	private static Personaggio conLaMisuraMigliore(List<Personaggio> candidati, OrdinamentoMD ordinamento) {
 		Personaggio migliore = candidati.get(0);
 		double misuraMigliore = misura(migliore, ordinamento);
 		for (int i = 1; i < candidati.size(); i++) {
@@ -48,7 +49,7 @@ public final class Ordinamenti {
 	/**
 	 * Il valore che l'ordinamento massimizza (per i "meno", il suo opposto)
 	 */
-	private static double misura(Personaggio candidato, Ordinamento ordinamento) {
+	private static double misura(Personaggio candidato, OrdinamentoMD ordinamento) {
 		switch (ordinamento.getTipo()) {
 			case MENO_SALUTE:
 				return -candidato.getSalute();
@@ -67,7 +68,7 @@ public final class Ordinamenti {
 			case MENO_MAGIA:
 				return -candidato.getMagia();
 			default:
-				throw new IllegalStateException("Ordinamento senza misura: " + ordinamento);
+				throw new IllegalStateException("OrdinamentoMD senza misura: " + ordinamento);
 		}
 	}
 }

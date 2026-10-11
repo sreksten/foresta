@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
@@ -56,7 +57,7 @@ public final class SceltaIncantesimo {
 	/**
 	 * L'incantesimo scelto, o null se non se ne può lanciare nessuno (o, con <code>soloSePiuForteDellAttacco</code>, se le armi rendono di più)
 	 */
-	public static ClasseIncantesimo scegli(Azione azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
+	public static ClasseIncantesimo scegli(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
 		List<ClasseIncantesimo> lanciabili = lanciabiliContro(attore, bersaglio, contesto);
 		if (lanciabili.isEmpty()) {
 			return null;
@@ -69,7 +70,7 @@ public final class SceltaIncantesimo {
 		return scelto;
 	}
 
-	private static ClasseIncantesimo secondoIlCriterio(Azione azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
+	private static ClasseIncantesimo secondoIlCriterio(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
 													   List<ClasseIncantesimo> lanciabili) {
 		switch (azione.getCriterio()) {
 			case A_CASO:

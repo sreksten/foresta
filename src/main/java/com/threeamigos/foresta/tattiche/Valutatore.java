@@ -1,5 +1,9 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
+import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
+import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
+import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.PortataAzione;
@@ -25,11 +29,11 @@ public final class Valutatore {
 	/**
 	 * @return la decisione, o null se non c'è nessun avversario in campo da attaccare e nessuna voce è eseguibile
 	 */
-	public static Decisione decidi(Tattica tattica, ContestoTattico contesto) {
+	public static Decisione decidi(TatticaMD tattica, ContestoTattico contesto) {
 		List<String> spiegazione = new ArrayList<>();
-		List<Voce> voci = tattica.getVoci();
+		List<VoceMD> voci = tattica.getVoci();
 		for (int i = 0; i < voci.size(); i++) {
-			Voce voce = voci.get(i);
+			VoceMD voce = voci.get(i);
 			String numero = "voce " + (i + 1);
 			if (!voce.isAttiva()) {
 				spiegazione.add(numero + ": disattivata");
@@ -48,19 +52,19 @@ public final class Valutatore {
 		return ripiego(contesto, spiegazione);
 	}
 
-	private static Decisione valutaLaVoce(Voce voce, int indice, ContestoTattico contesto, List<String> spiegazione) {
+	private static Decisione valutaLaVoce(VoceMD voce, int indice, ContestoTattico contesto, List<String> spiegazione) {
 		String numero = "voce " + (indice + 1);
 		Personaggio attore = contesto.getAttore();
-		Selettore selettore = voce.selettoreEffettivo();
+		SelettoreMD selettore = voce.selettoreEffettivo();
 		PortataAzione portata = voce.getPortata();
 		if (portata == PortataAzione.GRUPPO_ALLEATI || portata == PortataAzione.GRUPPO_AVVERSARI) {
 			// Il selettore è solo un test di esistenza; l'azione agisce su tutto il gruppo
-			RisultatoSelezione esistenza = selettore.seleziona(contesto.conAzione(voce.getAzioni().get(0).getTipo()));
+			RisultatoSelezione esistenza = Selettori.seleziona(selettore, contesto.conAzione(voce.getAzioni().get(0).getTipo()));
 			if (esistenza.isVuoto()) {
 				spiegazione.add(numero + ": nessun candidato " + esistenza.getPassi());
 				return null;
 			}
-			for (Azione azione : voce.getAzioni()) {
+			for (AzioneMD azione : voce.getAzioni()) {
 				String motivo = Requisiti.motivoDelNo(azione, attore, null, contesto);
 				if (motivo == null) {
 					spiegazione.add(numero + ": " + azione + " su tutto il gruppo");
@@ -70,14 +74,14 @@ public final class Valutatore {
 			}
 			return null;
 		}
-		RisultatoSelezione risultato = selettore.seleziona(contesto, candidato -> primaAzioneApplicabile(voce, attore, candidato, contesto));
+		RisultatoSelezione risultato = Selettori.seleziona(selettore, contesto, candidato -> primaAzioneApplicabile(voce, attore, candidato, contesto));
 		if (risultato.isVuoto()) {
 			spiegazione.add(numero + ": nessun bersaglio " + risultato.getPassi());
 			return null;
 		}
 		Personaggio bersaglio = risultato.getScelto();
 		spiegazione.add(numero + ": bersaglio " + bersaglio.getNome() + " " + risultato.getPassi());
-		for (Azione azione : voce.getAzioni()) {
+		for (AzioneMD azione : voce.getAzioni()) {
 			String motivo = Requisiti.motivoDelNo(azione, attore, bersaglio, contesto);
 			if (motivo != null) {
 				spiegazione.add(numero + ": " + azione.getTipo() + " scartata: " + motivo);
@@ -91,7 +95,7 @@ public final class Valutatore {
 	/**
 	 * L'azione di tipo INCANTESIMO_DI_DANNO diventa l'incantesimo scelto; le altre restano come sono. Per il cambio d'arma non c'è un bersaglio.
 	 */
-	private static Decisione decisioneSu(int indice, Azione azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
+	private static Decisione decisioneSu(int indice, AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
 										 List<String> spiegazione) {
 		TipoAzione tipo = azione.getTipo();
 		ClasseIncantesimo classe = tipo.getClasseIncantesimo();
@@ -109,8 +113,8 @@ public final class Valutatore {
 	/**
 	 * La prima azione della voce che si può fare su quel candidato (per il selettore), o null
 	 */
-	private static TipoAzione primaAzioneApplicabile(Voce voce, Personaggio attore, Personaggio candidato, ContestoTattico contesto) {
-		for (Azione azione : voce.getAzioni()) {
+	private static TipoAzione primaAzioneApplicabile(VoceMD voce, Personaggio attore, Personaggio candidato, ContestoTattico contesto) {
+		for (AzioneMD azione : voce.getAzioni()) {
 			if (Requisiti.motivoDelNo(azione, attore, candidato, contesto) == null) {
 				return azione.getTipo();
 			}
@@ -128,6 +132,6 @@ public final class Valutatore {
 			return null;
 		}
 		spiegazione.add("nessuna voce eseguibile: attacco fisico al primo avversario");
-		return new Decisione(-1, Azione.di(TipoAzione.ATTACCO_FISICO), TipoAzione.ATTACCO_FISICO, null, avversari.get(0), spiegazione);
+		return new Decisione(-1, AzioneMD.di(TipoAzione.ATTACCO_FISICO), TipoAzione.ATTACCO_FISICO, null, avversari.get(0), spiegazione);
 	}
 }

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.incantesimi.CantoDelBardo;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
@@ -31,7 +32,7 @@ public final class Requisiti {
 	 * @param bersaglio il bersaglio scelto; null per le azioni su un gruppo intero (si guarda il gruppo) e per il cambio d'arma
 	 * @return null se l'azione si può fare, altrimenti il motivo
 	 */
-	public static String motivoDelNo(Azione azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
+	public static String motivoDelNo(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
 		TipoAzione tipo = azione.getTipo();
 		StatoDelCombattimento stato = contesto.getStato();
 		PortataAzione portata = tipo.getPortata();
@@ -105,7 +106,7 @@ public final class Requisiti {
 	/**
 	 * Gli incantesimi di una classe precisa: ARIA, ACQUA, TERRA, FUOCO, FULMINE, GELO, VELENO, MORTE, SILENZIO
 	 */
-	private static String incantesimoSingolo(Azione azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
+	private static String incantesimoSingolo(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
 		ClasseIncantesimo classe = azione.getTipo().getClasseIncantesimo();
 		if (classe == null) {
 			return "azione sconosciuta " + azione.getTipo();
@@ -136,7 +137,7 @@ public final class Requisiti {
 	/**
 	 * Un bersaglio immune a quel tipo di danno (di classe) non si colpisce; lo stesso per un'azione che confronta il suo danno con le armi
 	 */
-	private static String contro(Azione azione, Personaggio attore, Personaggio bersaglio, TipoDanno tipoDanno, ContestoTattico contesto) {
+	private static String contro(AzioneMD azione, Personaggio attore, Personaggio bersaglio, TipoDanno tipoDanno, ContestoTattico contesto) {
 		if (bersaglio == null || bersaglio.isFuoriCombattimento()) {
 			return "nessun bersaglio";
 		}

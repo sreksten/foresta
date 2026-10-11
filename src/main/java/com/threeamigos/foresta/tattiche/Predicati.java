@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
+import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
+import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.motore.StatoDelCombattimento;
@@ -17,15 +20,15 @@ import java.util.Map;
 public final class Predicati {
 
 	private interface Verifica {
-		boolean vale(Predicato predicato, ContestoTattico contesto);
+		boolean vale(PredicatoMD predicato, ContestoTattico contesto);
 	}
 
 	private static final Map<TipoPredicato, Verifica> VERIFICHE = new EnumMap<>(TipoPredicato.class);
 
 	static {
 		VERIFICHE.put(TipoPredicato.QUANTI, (p, ctx) -> p.getConfronto().vale(
-				new Selettore(p.getRosa(), p.getFiltri(), Ordinamento.di(com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.PRIMO))
-						.seleziona(ctx).getRimasti().size(), p.getNumero()));
+				Selettori.seleziona(new SelettoreMD(p.getRosa(), p.getFiltri(), OrdinamentoMD.di(com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.PRIMO)),
+						ctx).getRimasti().size(), p.getNumero()));
 		VERIFICHE.put(TipoPredicato.ROUND, (p, ctx) -> p.getConfronto().vale(ctx.getStato().getRound(), p.getNumero()));
 		VERIFICHE.put(TipoPredicato.ASTUZIA, (p, ctx) -> p.getConfronto().vale(Astuzia.di(ctx.getAttore()), p.getNumero()));
 		VERIFICHE.put(TipoPredicato.PROBABILITA, (p, ctx) -> Dado.tira(100) <= p.getNumero());
@@ -40,15 +43,15 @@ public final class Predicati {
 	/**
 	 * Se il predicato è vero (tenendo conto della negazione)
 	 */
-	public static boolean vale(Predicato predicato, ContestoTattico contesto) {
+	public static boolean vale(PredicatoMD predicato, ContestoTattico contesto) {
 		return VERIFICHE.get(predicato.getTipo()).vale(predicato, contesto) != predicato.isNegato();
 	}
 
 	/**
 	 * Se tutti i predicati sono veri (le condizioni di una voce sono in AND; nessuna condizione vale sempre)
 	 */
-	public static boolean valgonoTutti(java.util.List<Predicato> predicati, ContestoTattico contesto) {
-		for (Predicato predicato : predicati) {
+	public static boolean valgonoTutti(java.util.List<PredicatoMD> predicati, ContestoTattico contesto) {
+		for (PredicatoMD predicato : predicati) {
 			if (!vale(predicato, contesto)) {
 				return false;
 			}

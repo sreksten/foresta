@@ -96,9 +96,9 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
      * La tattica del personaggio (tattiche_di_combattimento_automatiche.md §11), o null se non ne ha una (oggi i mostri, che scelgono ancora con le
      * regole di PersonaggioBase.attacca(Gruppo)). Non si salva ancora.
      */
-    com.threeamigos.foresta.tattiche.Tattica getTattica();
+    com.threeamigos.foresta.modellodati.tattiche.TatticaMD getTattica();
 
-    void setTattica(com.threeamigos.foresta.tattiche.Tattica tattica);
+    void setTattica(com.threeamigos.foresta.modellodati.tattiche.TatticaMD tattica);
 
     /**
      * Un attacco con le sue armi (la seconda arma compresa) contro quel bersaglio, senza incantesimi, finché il bersaglio resta in combattimento
