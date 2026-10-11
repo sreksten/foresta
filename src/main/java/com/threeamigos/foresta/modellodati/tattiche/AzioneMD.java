@@ -1,5 +1,10 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
+import com.threeamigos.foresta.modellodati.Serializzabile;
+import com.threeamigos.foresta.modellodati.LettoreCampi;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.BufferedReader;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
@@ -95,5 +100,44 @@ public final class AzioneMD {
 			sb.append(" SOLO_SE_PIU_FORTE_DELL_ATTACCO");
 		}
 		return sb.toString();
+	}
+
+	public void salva(PrintWriter stream) {
+		stream.println(String.join(Serializzabile.PIPE, "AZIONE", tipo.name(), Serializzabile.facoltativo(criterio), String.valueOf(soloSePiuForteDellAttacco),
+				Serializzabile.facoltativo(armaDi)));
+	}
+
+	public static AzioneMD leggi(BufferedReader stream) throws IOException {
+		LettoreCampi campi = FormatoTattiche.riga(stream, "AZIONE");
+		TipoAzione tipo = campi.enumerato(TipoAzione.class);
+		CriterioIncantesimo criterio = campi.enumeratoFacoltativo(CriterioIncantesimo.class);
+		boolean solo = campi.booleano();
+		TipoDanno armaDi = campi.enumeratoFacoltativo(TipoDanno.class);
+		try {
+			if (tipo == TipoAzione.INCANTESIMO_DI_DANNO) {
+				return incantesimoDiDanno(criterio, solo);
+			}
+			if (tipo == TipoAzione.CAMBIA_ARMA) {
+				return cambiaArma(armaDi);
+			}
+			AzioneMD azione = di(tipo);
+			return solo ? azione.soloSePiuForteDellAttacco() : azione;
+		} catch (NullPointerException | IllegalArgumentException e) {
+			throw new IOException("Azione " + tipo + " incoerente nel salvataggio", e);
+		}
+	}
+
+	@Override
+	public boolean equals(Object altro) {
+		if (!(altro instanceof AzioneMD)) {
+			return false;
+		}
+		AzioneMD a = (AzioneMD) altro;
+		return tipo == a.tipo && criterio == a.criterio && soloSePiuForteDellAttacco == a.soloSePiuForteDellAttacco && armaDi == a.armaDi;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(tipo, criterio, soloSePiuForteDellAttacco, armaDi);
 	}
 }

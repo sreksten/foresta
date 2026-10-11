@@ -161,16 +161,14 @@ public abstract class PersonaggioBase implements Personaggio {
 		this.corrompibile = corrompibile;
 	}
 	
-	private com.threeamigos.foresta.modellodati.tattiche.TatticaMD tattica;
-
 	@Override
 	public com.threeamigos.foresta.modellodati.tattiche.TatticaMD getTattica() {
-		return tattica;
+		return md.getTattica();
 	}
 
 	@Override
 	public void setTattica(com.threeamigos.foresta.modellodati.tattiche.TatticaMD tattica) {
-		this.tattica = tattica;
+		md.setTattica(tattica);
 	}
 
 	public boolean isAmichevole() {

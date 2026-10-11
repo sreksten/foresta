@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.tipi.*;
 
 import java.io.BufferedReader;
@@ -80,6 +81,7 @@ public class PersonaggioMD implements Serializzabile {
 	 * Modificatori permanenti agli attributi dei personaggi
 	 */
 	private Collection<ModificatoreAttributoMD> modificatori = new ArrayList<>();
+	private TatticaMD tattica;
 	/**
 	 * Effetti di stato applicati al personaggio
 	 */
@@ -621,6 +623,17 @@ public class PersonaggioMD implements Serializzabile {
 		this.artefatti = artefatti;
 	}
 
+	/**
+	 * La tattica del personaggio (tattiche_di_combattimento_automatiche.md §11), o null se non ne ha una (oggi i mostri); si salva con lui
+	 */
+	public TatticaMD getTattica() {
+		return tattica;
+	}
+
+	public void setTattica(TatticaMD tattica) {
+		this.tattica = tattica;
+	}
+
 	public Collection<ModificatoreAttributoMD> getModificatori() {
 		return modificatori;
 	}
@@ -657,6 +670,13 @@ public class PersonaggioMD implements Serializzabile {
 		stream.println(valoriAttributi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
 		stream.println(modificatori.stream().map(m -> m.getTipoAttributo().name() + MappaProprieta.SEPARATORE + m.getTipoModificatoreAttributo().name() + MappaProprieta.SEPARATORE + m.getQuantita() + MappaProprieta.SEPARATORE + m.getUnitaDurata().name() + MappaProprieta.SEPARATORE + m.getDurata() + MappaProprieta.SEPARATORE + m.getBersaglio().name() + MappaProprieta.SEPARATORE + m.getNote()).collect(Collectors.joining(PIPE)));
 		stream.println(effettiDiStato.stream().map(e -> e.getTipoEffettoDiStato().name() + MappaProprieta.SEPARATORE + e.getDurata() + MappaProprieta.SEPARATORE + e.getDanniNelTempo() + MappaProprieta.SEPARATORE + e.getIntensita()).collect(Collectors.joining(PIPE)));
+
+		// La tattica: una riga vuota se non ce n'è una, altrimenti la tattica con le sue voci
+		if (tattica == null) {
+			stream.println();
+		} else {
+			tattica.salva(stream);
+		}
 
 		for (ArtefattoMD artefatto : artefatti) {
 			artefatto.salva(stream);
@@ -710,6 +730,12 @@ public class PersonaggioMD implements Serializzabile {
 					Double.parseDouble(attributoValore[3]));
 			effettiDiStato.add(effettoDiStato);
 		}
+
+		String intestazioneTattica = stream.readLine();
+		if (intestazioneTattica == null) {
+			throw new IOException("Fine del salvataggio inattesa");
+		}
+		tattica = intestazioneTattica.isEmpty() ? null : TatticaMD.leggi(intestazioneTattica, stream);
 
 		artefatti.clear();
 		for (int i = 0; i < numeroArtefatti; i++) {

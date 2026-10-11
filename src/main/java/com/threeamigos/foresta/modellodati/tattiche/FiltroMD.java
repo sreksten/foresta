@@ -1,5 +1,10 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
+import com.threeamigos.foresta.modellodati.Serializzabile;
+import com.threeamigos.foresta.modellodati.LettoreCampi;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.BufferedReader;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
@@ -130,5 +135,78 @@ public final class FiltroMD {
 			sb.append(' ').append(parametro);
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Scrive il filtro su una riga (vedi FormatoTattiche)
+	 */
+	public void salva(PrintWriter stream) {
+		stream.println(String.join(Serializzabile.PIPE, "FILTRO", tipo.name(), String.valueOf(negato), Serializzabile.facoltativo(confronto),
+				String.valueOf(numero), Serializzabile.facoltativo(stato), Serializzabile.facoltativo(classe), Serializzabile.facoltativo(categoria),
+				Serializzabile.facoltativo(tipoDanno)));
+	}
+
+	/**
+	 * Rilegge un filtro scritto da {@link #salva}; i parametri passano dalle fabbriche, che li controllano
+	 */
+	public static FiltroMD leggi(BufferedReader stream) throws IOException {
+		LettoreCampi campi = FormatoTattiche.riga(stream, "FILTRO");
+		TipoFiltro tipo = campi.enumerato(TipoFiltro.class);
+		boolean negato = campi.booleano();
+		Confronto confronto = campi.enumeratoFacoltativo(Confronto.class);
+		int numero = campi.intero();
+		TipoEffettoDiStato stato = campi.enumeratoFacoltativo(TipoEffettoDiStato.class);
+		TipoPersonaggio classe = campi.enumeratoFacoltativo(TipoPersonaggio.class);
+		CategoriaPersonaggio categoria = campi.enumeratoFacoltativo(CategoriaPersonaggio.class);
+		TipoDanno tipoDanno = campi.enumeratoFacoltativo(TipoDanno.class);
+		FiltroMD filtro;
+		try {
+			switch (tipo.getParametro()) {
+				case NESSUNO:
+					filtro = senzaParametro(tipo);
+					break;
+				case CONFRONTO_E_NUMERO:
+					filtro = conConfrontoENumero(tipo, confronto, numero);
+					break;
+				case CONFRONTO:
+					filtro = conConfronto(tipo, confronto);
+					break;
+				case STATO:
+					filtro = conStato(tipo, stato);
+					break;
+				case CLASSE:
+					filtro = conClasse(tipo, classe);
+					break;
+				case CATEGORIA:
+					filtro = conCategoria(tipo, categoria);
+					break;
+				case TIPO_DANNO:
+					filtro = conTipoDanno(tipo, tipoDanno);
+					break;
+				default:
+					throw new IOException("Parametro di filtro sconosciuto: " + tipo.getParametro());
+			}
+		} catch (NullPointerException e) {
+			throw new IOException("Filtro " + tipo + " senza il suo parametro", e);
+		}
+		return negato ? filtro.negato() : filtro;
+	}
+
+	@Override
+	public boolean equals(Object altro) {
+		if (this == altro) {
+			return true;
+		}
+		if (!(altro instanceof FiltroMD)) {
+			return false;
+		}
+		FiltroMD f = (FiltroMD) altro;
+		return tipo == f.tipo && negato == f.negato && confronto == f.confronto && numero == f.numero && stato == f.stato && classe == f.classe
+				&& categoria == f.categoria && tipoDanno == f.tipoDanno;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(tipo, negato, confronto, numero, stato, classe, categoria, tipoDanno);
 	}
 }

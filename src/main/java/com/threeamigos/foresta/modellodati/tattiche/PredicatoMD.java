@@ -1,5 +1,10 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
+import com.threeamigos.foresta.modellodati.Serializzabile;
+import com.threeamigos.foresta.modellodati.LettoreCampi;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.BufferedReader;
 import com.threeamigos.foresta.tipi.tattiche.Confronto;
 import com.threeamigos.foresta.tipi.tattiche.TipoParametro;
 import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
@@ -111,5 +116,63 @@ public final class PredicatoMD {
 		}
 		sb.append(' ').append(numero);
 		return sb.toString();
+	}
+
+	/**
+	 * Scrive il predicato e, per QUANTI, i suoi filtri (vedi FormatoTattiche)
+	 */
+	public void salva(PrintWriter stream) {
+		stream.println(String.join(Serializzabile.PIPE, "PREDICATO", tipo.name(), String.valueOf(negato), Serializzabile.facoltativo(confronto),
+				String.valueOf(numero), Serializzabile.facoltativo(rosa), String.valueOf(filtri.size())));
+		for (FiltroMD filtro : filtri) {
+			filtro.salva(stream);
+		}
+	}
+
+	public static PredicatoMD leggi(BufferedReader stream) throws IOException {
+		LettoreCampi campi = FormatoTattiche.riga(stream, "PREDICATO");
+		TipoPredicato tipo = campi.enumerato(TipoPredicato.class);
+		boolean negato = campi.booleano();
+		Confronto confronto = campi.enumeratoFacoltativo(Confronto.class);
+		int numero = campi.intero();
+		TipoRosa rosa = campi.enumeratoFacoltativo(TipoRosa.class);
+		int numeroFiltri = campi.intero();
+		List<FiltroMD> filtri = new ArrayList<>();
+		for (int i = 0; i < numeroFiltri; i++) {
+			filtri.add(FiltroMD.leggi(stream));
+		}
+		PredicatoMD predicato;
+		try {
+			switch (tipo.getParametro()) {
+				case SELEZIONE_CONFRONTO_E_NUMERO:
+					predicato = quanti(rosa, filtri, confronto, numero);
+					break;
+				case CONFRONTO_E_NUMERO:
+					predicato = conConfrontoENumero(tipo, confronto, numero);
+					break;
+				case NUMERO:
+					predicato = probabilita(numero);
+					break;
+				default:
+					throw new IOException("Parametro di predicato sconosciuto: " + tipo.getParametro());
+			}
+		} catch (NullPointerException e) {
+			throw new IOException("Predicato " + tipo + " senza il suo parametro", e);
+		}
+		return negato ? predicato.negato() : predicato;
+	}
+
+	@Override
+	public boolean equals(Object altro) {
+		if (!(altro instanceof PredicatoMD)) {
+			return false;
+		}
+		PredicatoMD p = (PredicatoMD) altro;
+		return tipo == p.tipo && negato == p.negato && confronto == p.confronto && numero == p.numero && rosa == p.rosa && filtri.equals(p.filtri);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(tipo, negato, confronto, numero, rosa, filtri);
 	}
 }

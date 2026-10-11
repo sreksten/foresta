@@ -94,7 +94,7 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 
     /**
      * La tattica del personaggio (tattiche_di_combattimento_automatiche.md §11), o null se non ne ha una (oggi i mostri, che scelgono ancora con le
-     * regole di PersonaggioBase.attacca(Gruppo)). Non si salva ancora.
+     * regole di PersonaggioBase.attacca(Gruppo)). Si salva con il personaggio (PersonaggioMD).
      */
     com.threeamigos.foresta.modellodati.tattiche.TatticaMD getTattica();
 

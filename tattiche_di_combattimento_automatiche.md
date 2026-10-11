@@ -1100,13 +1100,13 @@ azione per azione, con i comandi manuali di oggi che continuano a funzionare com
 stato diverso da `ISPIRATO` (i modificatori temporanei, oggi, non si leggono dal personaggio); i canti ipnotico e dell'Urlo servono se c'è un avversario né `SPAVENTATO` né `CONFUSO`; il Canto di valore se c'è un alleato non `ISPIRATO`; le pozioni vogliono una scorta nel
 gruppo e un bersaglio ferito (Salute) o con poca `MAGIA`; il cambio d'arma solo per i miei, se c'è un'arma da prendere (`armiPerCambio`).
 
-**Collegato al motore** (`LocazioneBase`, test `CombattimentoConTatticheTest`): a ogni scatto del TIMER il personaggio di turno agisce con la sua tattica (`Personaggio.getTattica`, oggi non salvata): i miei senza tattica hanno `TatticaMD.VUOTA` (attaccano
+**Collegato al motore** (`LocazioneBase`, test `CombattimentoConTatticheTest`): a ogni scatto del TIMER il personaggio di turno agisce con la sua tattica (`Personaggio.getTattica`, salvata con il personaggio, §11.12): i miei senza tattica hanno `TatticaMD.VUOTA` (attaccano
 il primo avversario, come prima), i mostri senza tattica scelgono ancora con `PersonaggioBase.attacca(Gruppo)` (finché non ci sono le tattiche base). `agisciConLaTattica` decide con il `Valutatore`, esegue la `Decisione` (`eseguiLaDecisione`: attacco con
 le armi sul bersaglio scelto, incantesimi di danno con il `GruppoDiBersagli` per i `MULTIPLO`, dardo arcano, benefici, canti — il curativo sul bersaglio scelto, `Canto.cantaSu` —, pozioni con la scelta fra normale e grande, cambio d'arma), registra l'uso della voce
 e controlla la fine dello scontro; non gestisce il round. Gli esiti degli incantesimi (colpito, mancato, immune) e del dardo si registrano nello `StatoDelCombattimento` (`IncantesimoMaleficoImpl.colpisci`, `scagliaIlDardo`); l'attacco fisico non ne registra
 (non si abbandona mai). Le azioni manuali del giocatore (barra dei comandi) non sono cambiate.
 
-**Da fare**: il salvataggio e la rilettura (formato, `PersonaggioMD`); le tattiche base dei mostri e le fasce di astuzia (compresi i ritocchi alle intelligenze massime del Folletto, a 8, e dell'Ombra Nera, a 31); l'evento `InternoDecisioneTattica` (§7.7); la scheda del
+**Da fare**: le tattiche base dei mostri e le fasce di astuzia (compresi i ritocchi alle intelligenze massime del Folletto, a 8, e dell'Ombra Nera, a 31); l'evento `InternoDecisioneTattica` (§7.7); la scheda del
 giocatore (§12); l'esito di un'azione con effetti che non si applicano (un Silenzio a segno che non mette `SILENZIATO`) come "mancata".
 
 ### 11.11 Dove stanno i dati e la logica
@@ -1117,6 +1117,26 @@ le scrive con il personaggio (`PersonaggioMD`, §8) e il **motore** le valuta. U
 
 La **logica** sta in `…/tattiche`: le rose (`Rosa`, `Rose`), `Filtri`, `Ordinamenti`, `Predicati`, `Selettori` (applica un `SelettoreMD`), `Requisiti`, `SceltaIncantesimo`, `Astuzia`, `Valutatore`, il `ContestoTattico` e i risultati (`RisultatoSelezione`, `Decisione`). Non la
 può importare la UI (`DipendenzeUITest`, che ora riconosce anche i sottopacchetti).
+
+### 11.12 Il salvataggio
+
+**Fatto** (`SalvataggioTatticheTest`, `CombattimentoConTatticheTest`). La tattica sta nel `PersonaggioMD` (`getTattica`/`setTattica`, `PersonaggioBase` ne è solo la porta) e passa dal salvataggio con il personaggio: dopo il suo record una riga vuota (nessuna tattica: i mostri, per ora) oppure la tattica. Una
+tattica vuota (`TatticaMD.VUOTA`) resta una tattica vuota e non diventa "nessuna tattica": sono due cose diverse (i miei personaggi senza tattica usano la vuota, i mostri senza usano ancora le regole di `PersonaggioBase.attacca(Gruppo)`).
+
+Il formato, nello stile del resto del modello dati (una riga per elemento, campi separati da `|`, enumerati per nome, campi mancanti vuoti, gli elementi che ne contengono altri dicono quanti sono):
+
+```
+TATTICA|numero di voci
+VOCE|attiva|ha un selettore|numero di condizioni|numero di azioni
+SELETTORE|rosa|ordinamento|tipo di danno dell'ordinamento|numero di filtri       (seguono i filtri)
+FILTRO|tipo|negato|confronto|numero|stato|classe|categoria|tipo di danno
+PREDICATO|tipo|negato|confronto|numero|rosa|numero di filtri                     (seguono i filtri)
+AZIONE|tipo|criterio|solo se più forte dell'attacco|tipo di danno dell'arma
+```
+
+Gli elementi sono immutabili, quindi non implementano `Serializzabile` (che rilegge dentro un oggetto): hanno `salva(PrintWriter)` e un `leggi(BufferedReader)` statico che li costruisce con le stesse fabbriche che li controllano. Un salvataggio incoerente (un'etichetta sbagliata, un enumerato sconosciuto, un parametro mancante, una voce senza azioni,
+il file troncato) è rifiutato con una `IOException`. Il test di andata e ritorno scrive una tattica con almeno un esemplare di ogni forma di filtro, predicato e azione e controlla che torni uguale (le classi hanno `equals`) e che riscrivere dia lo stesso testo; un
+altro salva e ricarica una partita vera e controlla che il personaggio rilegga la tattica e agisca come impostato. I salvataggi precedenti non si leggono più, come per ogni cambio di formato.
 
 ### 11.10 Il criterio di scelta dell'incantesimo di danno
 

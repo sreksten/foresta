@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * I dati delle tattiche (<code>modellodati/tattiche</code>: TatticaMD, VoceMD, SelettoreMD, FiltroMD, PredicatoMD, AzioneMD, OrdinamentoMD) sono solo dati: la UI li legge e li
- * modifica, il salvataggio li scrive, quindi non devono dipendere dal motore né dal dominio, ma solo dai tipi (<code>tipi</code>) e fra loro. La logica che li applica sta
+ * modifica, il salvataggio li scrive, quindi non devono dipendere dal motore né dal dominio, ma solo dai tipi (<code>tipi</code>), dal resto del modello dati (<code>modellodati</code>, per il formato di salvataggio) e fra loro. La logica che li applica sta
  * in <code>tattiche</code> (tattiche_di_combattimento_automatiche.md §11.11).
  */
 class DipendenzeTatticheTest {
@@ -38,7 +38,8 @@ class DipendenzeTatticheTest {
 			Matcher m = RIFERIMENTO.matcher(codice);
 			while (m.find()) {
 				String pacchetto = m.group(1) + m.group(2);
-				if (!pacchetto.equals("tipi") && !pacchetto.startsWith("tipi.") && !pacchetto.equals("modellodati.tattiche")) {
+				if (!pacchetto.equals("tipi") && !pacchetto.startsWith("tipi.") && !pacchetto.equals("modellodati")
+						&& !pacchetto.equals("modellodati.tattiche")) {
 					vietati.add(sorgente.getFileName() + " -> " + pacchetto + "." + m.group(3));
 				}
 			}

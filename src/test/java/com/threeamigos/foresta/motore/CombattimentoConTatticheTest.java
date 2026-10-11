@@ -221,4 +221,36 @@ class CombattimentoConTatticheTest {
             assertTrue(salute(ostaggio) < salutePrima, "il goblin con la sua tattica attacca l'ostaggio (con tanti colpi almeno uno va a segno)");
         }
     }
+
+    @Test
+    void dopoUnCaricamentoIlPersonaggioAgisceComeImpostato() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(606)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.MAGO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            Personaggio compagno = new com.threeamigos.foresta.personaggi.Guerriero("Compagno", 1);
+            partita.gruppo().aggiungiPersonaggio(compagno);
+            TatticaMD tattica = TatticaMD.di(VoceMD.su(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO, FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BAGNATO)),
+                    AzioneMD.di(TipoAzione.FULMINE), AzioneMD.di(TipoAzione.ATTACCO_FISICO)));
+            TatticaMD dellAltro = TatticaMD.di(VoceMD.su(su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO), AzioneMD.di(TipoAzione.POZIONE_SALUTE)));
+            partita.gruppo().getCapo().setTattica(tattica);
+            compagno.setTattica(dellAltro);
+            assertTrue(partita.salva(Comando.NUMERO_1));
+            partita.gruppo().getCapo().setTattica(TatticaMD.VUOTA);
+            compagno.setTattica(null);
+            assertTrue(partita.leggi(Comando.NUMERO_1));
+
+            Personaggio capo = partita.gruppo().getCapo();
+            assertEquals(tattica, capo.getTattica(), "la tattica del capo torna uguale");
+            assertEquals(dellAltro, partita.gruppo().getPersonaggio(1).getTattica(), "e quella del compagno");
+
+            // Il personaggio rilegge e agisce davvero come impostato
+            Locazione locazione = preparaLo(partita, 3);
+            capo.addMagia(capo.getMagiaMassima());
+            svuotaLePergamene(partita.gruppo());
+            partita.gruppo().addIncantesimi(ClasseIncantesimo.FULMINE, 2);
+            GruppoAvversario.getIstanza().getPersonaggi().get(2).addEffettoDiStato(TipoEffettoDiStato.BAGNATO, 5, 0);
+            iniziaLaMischia(locazione, partita);
+            scatta(locazione, partita, 1);
+            assertEquals(1, partita.gruppo().getIncantesimi(ClasseIncantesimo.FULMINE), "ha lanciato il fulmine della sua tattica");
+        }
+    }
 }

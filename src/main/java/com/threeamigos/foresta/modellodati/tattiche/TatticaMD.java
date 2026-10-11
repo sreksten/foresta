@@ -1,5 +1,11 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
+import java.util.Objects;
+import com.threeamigos.foresta.modellodati.Serializzabile;
+import com.threeamigos.foresta.modellodati.LettoreCampi;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,5 +51,50 @@ public final class TatticaMD {
 	@Override
 	public String toString() {
 		return voci.toString();
+	}
+
+	/**
+	 * Scrive la tattica e le sue voci (vedi FormatoTattiche)
+	 */
+	public void salva(PrintWriter stream) {
+		stream.println("TATTICA" + Serializzabile.PIPE + voci.size());
+		for (VoceMD voce : voci) {
+			voce.salva(stream);
+		}
+	}
+
+	/**
+	 * Rilegge una tattica scritta da {@link #salva}
+	 */
+	public static TatticaMD leggi(BufferedReader stream) throws IOException {
+		return leggi(stream.readLine(), stream);
+	}
+
+	/**
+	 * Come {@link #leggi(BufferedReader)}, con la prima riga (l'intestazione) già letta da chi doveva sapere se la tattica c'è
+	 */
+	public static TatticaMD leggi(String intestazione, BufferedReader stream) throws IOException {
+		try {
+			LettoreCampi campi = FormatoTattiche.controlla(new LettoreCampi(intestazione), "TATTICA");
+			int numeroVoci = campi.intero();
+			List<VoceMD> voci = new ArrayList<>();
+			for (int i = 0; i < numeroVoci; i++) {
+				voci.add(VoceMD.leggi(stream));
+			}
+			return new TatticaMD(voci);
+		} catch (IllegalArgumentException e) {
+			// Un nome di enumerato sconosciuto o un numero scritto male
+			throw new IOException("Salvataggio delle tattiche incoerente: " + e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public boolean equals(Object altro) {
+		return altro instanceof TatticaMD && voci.equals(((TatticaMD) altro).voci);
+	}
+
+	@Override
+	public int hashCode() {
+		return voci.hashCode();
 	}
 }

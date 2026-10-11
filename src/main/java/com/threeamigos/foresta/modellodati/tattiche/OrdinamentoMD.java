@@ -1,5 +1,10 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
+import com.threeamigos.foresta.modellodati.Serializzabile;
+import com.threeamigos.foresta.modellodati.LettoreCampi;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.BufferedReader;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
 import com.threeamigos.foresta.tipi.tattiche.TipoParametro;
@@ -44,5 +49,15 @@ public final class OrdinamentoMD {
 	@Override
 	public String toString() {
 		return tipoDanno == null ? tipo.name() : tipo + " " + tipoDanno;
+	}
+
+	@Override
+	public boolean equals(Object altro) {
+		return altro instanceof OrdinamentoMD && tipo == ((OrdinamentoMD) altro).tipo && tipoDanno == ((OrdinamentoMD) altro).tipoDanno;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(tipo, tipoDanno);
 	}
 }

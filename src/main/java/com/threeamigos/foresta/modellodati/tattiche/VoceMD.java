@@ -1,5 +1,11 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
+import java.util.Objects;
+import com.threeamigos.foresta.modellodati.Serializzabile;
+import com.threeamigos.foresta.modellodati.LettoreCampi;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.BufferedReader;
 import com.threeamigos.foresta.tipi.tattiche.PortataAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 
@@ -129,5 +135,57 @@ public final class VoceMD {
 	public String toString() {
 		return (selettore == null ? "" : selettore + " ") + (condizioni.isEmpty() ? "" : "SE " + condizioni + " ") + "→ " + azioni
 				+ (attiva ? "" : " (disattivata)");
+	}
+
+	/**
+	 * Scrive la voce, il suo selettore (se c'è), le condizioni e le azioni (vedi FormatoTattiche)
+	 */
+	public void salva(PrintWriter stream) {
+		stream.println(String.join(Serializzabile.PIPE, "VOCE", String.valueOf(attiva), String.valueOf(selettore != null),
+				String.valueOf(condizioni.size()), String.valueOf(azioni.size())));
+		if (selettore != null) {
+			selettore.salva(stream);
+		}
+		for (PredicatoMD condizione : condizioni) {
+			condizione.salva(stream);
+		}
+		for (AzioneMD azione : azioni) {
+			azione.salva(stream);
+		}
+	}
+
+	public static VoceMD leggi(BufferedReader stream) throws IOException {
+		LettoreCampi campi = FormatoTattiche.riga(stream, "VOCE");
+		boolean attiva = campi.booleano();
+		boolean haSelettore = campi.booleano();
+		int numeroCondizioni = campi.intero();
+		int numeroAzioni = campi.intero();
+		SelettoreMD selettore = haSelettore ? SelettoreMD.leggi(stream) : null;
+		List<PredicatoMD> condizioni = new ArrayList<>();
+		for (int i = 0; i < numeroCondizioni; i++) {
+			condizioni.add(PredicatoMD.leggi(stream));
+		}
+		List<AzioneMD> azioni = new ArrayList<>();
+		for (int i = 0; i < numeroAzioni; i++) {
+			azioni.add(AzioneMD.leggi(stream));
+		}
+		if (azioni.isEmpty()) {
+			throw new IOException("Una voce senza azioni nel salvataggio");
+		}
+		return new VoceMD(selettore, condizioni, azioni, attiva);
+	}
+
+	@Override
+	public boolean equals(Object altro) {
+		if (!(altro instanceof VoceMD)) {
+			return false;
+		}
+		VoceMD v = (VoceMD) altro;
+		return attiva == v.attiva && Objects.equals(selettore, v.selettore) && condizioni.equals(v.condizioni) && azioni.equals(v.azioni);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(selettore, condizioni, azioni, attiva);
 	}
 }
