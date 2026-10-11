@@ -689,6 +689,9 @@ I livelli di intelligenza di questi esempi (12, 20, 31) sono le soglie proposte 
 
 ### 7.6 I blocchi SE / ALTRIMENTI / FINE
 
+> **Superato dal §11:** i blocchi (e i blocchi con nome) sono stati tolti dal modello; la tattica è una lista piatta di voci, ciascuna con la sua condizione. Resta qui
+> la sintassi di esempio, utile solo come idea del formato a campi.
+
 Una voce non è sempre un'azione vera: può essere un'**azione di controllo** che ne contiene altre. Serve per mettere la fascia di intelligenza
 dentro la lista di una classe, e anche il giocatore la può usare.
 
@@ -854,3 +857,89 @@ Domande aperte:
   numero di avversari, risorse, probabilità; poi le categorie di creatura, già nei dati).
 - **Cambiare arma** (§5): affinare quale arma esce con la doppia arma (oggi la più debole per danno atteso, contro un bersaglio neutro): contro il bersaglio vero, con gli effetti di stato, i modificatori e la probabilità di colpire? Per quanto tempo valgono le valutazioni già fatte delle armi del gruppo? Le voci per tornare all'arma di prima le scrive il giocatore o le propone il sistema in coppia con la prima?
 - **Il round a coppie** (§3.1, fatto): rimisurare il bilanciamento, e decidere se ridurre l'annuncio "X attacca Y" a ogni azione (oggi sempre, anche per aiutare a leggere il log); la velocità del `TIMER` (ogni scatto è mezzo scambio) è rimasta com'era.
+
+## 11. Il modello dati delle tattiche
+
+Qui si fissano le decisioni sul **modello** (come sono fatte una tattica, una voce, un bersaglio); la sintassi del file viene di conseguenza. Le classi stanno nel pacchetto `…/tattiche` (i tipi, che servono anche alla UI, in `…/tipi/tattiche`).
+
+### 11.1 Principi (decisi)
+
+- **Tutto a enumerati**: azioni, rosa, filtri, ordinamenti, predicati. Nel file e nel salvataggio una voce usa il **nome dell'enumerato** (`CANTO_DI_VALORE`, `SALUTE_SOTTO`...).
+- **Lista piatta, niente blocchi.** Una tattica è una lista ordinata di voci; la prima eseguibile vince. I blocchi `SE / ALTRIMENTI / FINE` e i blocchi con nome sono **tolti**: complicano la scheda
+  del giocatore senza aggiungere nulla (un blocco equivale alla sua condizione in AND su ogni voce interna). La fascia di astuzia è una condizione della voce (`ASTUZIA_ALMENO n`);
+  se due classi hanno la stessa tattica, si **copia**.
+- **La tattica sceglie, non esegue** (§1): il valutatore restituisce una decisione (azione, bersaglio) che l'automa trasforma nei comandi di sempre.
+- **Il bersaglio non è un campo fisso della voce**: lo decide l'azione (§11.2).
+
+### 11.2 La voce
+
+```
+Voce      { Selettore selettore?; Condizione condizione?; Azione azione }
+Azione    { TipoAzione tipo; ClasseIncantesimo classe?; CriterioScelta criterio?; TipoDanno armaDi? }
+Selettore { TipoRosa rosa; List<Filtro> filtri; Ordinamento ordinamento }
+Filtro    { TipoFiltro tipo; Confronto op?; valore? }
+Condizione = Predicato | E | O | NON      (assente = sempre)
+```
+
+Ogni `TipoAzione` dichiara la sua **portata**, e quindi se e come usa il selettore:
+
+| Portata | Esempi | Il selettore |
+| :--- | :--- | :--- |
+| un avversario | `ATTACCO_FISICO`, `INCANTESIMO_DANNO`, `SILENZIO`, `DARDO_ARCANO` | sceglie il bersaglio |
+| un alleato | `POZIONE_SALUTE`, `CANTO_CURATIVO` | sceglie il bersaglio |
+| un alleato caduto | `RESURREZIONE` | sceglie il bersaglio (rosa `ALLEATI_CADUTI`) |
+| tutto il gruppo alleato | `CANTO_DI_VALORE`, `ALBA_SACRA` | **non sceglie nessuno**: è solo un test di esistenza ("c'è almeno un candidato?") |
+| tutti gli avversari | `CANTO_IPNOTICO`, `URLO_BANSHEE` | idem |
+| un'arma | `CAMBIA_ARMA` | assente: l'azione ha il suo parametro (`armaDi`, il tipo di danno voluto) |
+
+**Il selettore è anche una condizione**: se non resta nessun candidato la voce non è eseguibile. Così "c'è un alleato con meno di 50 punti" è il selettore stesso, e non servono variabili locali.
+Esempi: `SU ALLEATI [SENZA_STATO ISPIRATO] → CANTO_DI_VALORE` (si salta da sola quando tutti sono ispirati, e riparte quando l'ispirazione scade);
+`SU SE_STESSO [SALUTE_SOTTO 50] → POZIONE_SALUTE`; `SU ALLEATI_E_OSPITI ordine MENO_SALUTE → POZIONE_SALUTE`.
+
+Le **condizioni** (`Condizione`) restano per ciò che non riguarda un bersaglio: `PRIMO_ROUND`, `ASTUZIA_ALMENO`, `AVVERSARI_ALMENO`, `HO_POZIONE`... Lo stesso `Predicato` (per esempio `SALUTE_SOTTO`) può stare in
+un filtro (si applica al candidato) o in una condizione (si applica all'attore o a chi indica).
+
+### 11.3 La rosa dei candidati
+
+La rosa è l'insieme da cui il selettore pesca, prima dei filtri. Il suo nome è un enumerato (`tipi/tattiche/TipoRosa`, che serve anche alla UI), e chi calcola i candidati è la classe
+corrispondente (`tattiche/Rosa`, una per valore: `RosaAlleati`, `RosaOspiti`..., si trovano con `Rose.di(tipo)`); il metodo restituisce una **`List<Personaggio>`** (non uno `Stream`: il registro delle decisioni, §7.7, deve
+poter dire quanti candidati c'erano e quanti ne sono rimasti dopo ogni filtro; le liste sono piccole).
+
+```java
+enum TipoRosa { SE_STESSO, ALLEATI, ALLEATI_CADUTI, AVVERSARI, OSPITI, ALLEATI_E_OSPITI, AVVERSARI_E_OSPITI }
+
+interface Rosa {                                   // una classe per valore, senza stato
+    TipoRosa getTipo();
+    List<Personaggio> candidati(ContestoTattico contesto);   // lista nuova, non modificabile
+}
+```
+**Fatto** (con `RosaTest` e `ContestoTatticoTest`); `TipoRosa.valePer(attoreDelGiocatore)` dice per quale lato vale ogni rosa, e `candidati` solleva `IllegalStateException` se usato dal lato sbagliato.
+
+| Rosa | Candidati | Per chi vale |
+| :--- | :--- | :--- |
+| `SE_STESSO` | l'attore | tutti |
+| `ALLEATI` | i compagni vivi e in campo (l'attore compreso) | tutti |
+| `ALLEATI_CADUTI` | i compagni caduti (non in panchina) | solo le azioni che lo dichiarano (`RESURREZIONE`) |
+| `AVVERSARI` | i vivi e in campo dell'altro gruppo | tutti |
+| `OSPITI` | gli **ospiti vulnerabili** vivi del gruppo del giocatore (`getOspitiBersaglio`) | tutti: per i miei sono da proteggere, per i mostri bersagli |
+| `ALLEATI_E_OSPITI` | alleati poi ospiti | **solo i miei personaggi** |
+| `AVVERSARI_E_OSPITI` | avversari poi ospiti | **solo i mostri**: riproduce la scelta a caso di oggi (`PersonaggioBase.scegliBersaglio`) |
+
+Regole:
+
+- Una rosa restituisce **solo chi è in grado di essere scelto** (vivo e in campo, il filtro F1 del §7.5 è qui dentro), tranne `ALLEATI_CADUTI`. Nell'ordine del gruppo, così "il primo" e le parità sono ripetibili; nelle
+  unioni prima i personaggi, poi gli ospiti.
+- **Gli ospiti** non agiscono e non hanno una tattica: sono solo candidati. Solo quelli **vulnerabili** vivi entrano nelle rose; i filtri su classe e magia non li comprendono mai (§7.5, F1), quelli su salute e stati sì.
+- Ogni azione dichiara **quali rose accetta** (un attacco: `AVVERSARI` o `AVVERSARI_E_OSPITI` per i mostri, `OSPITI`; una cura: `SE_STESSO`, `ALLEATI`, `OSPITI`, `ALLEATI_E_OSPITI`); un uso che non torna
+  (un mio personaggio che attacca gli ospiti, un mostro con `ALLEATI_E_OSPITI`) si rifiuta alla lettura.
+- Ogni voce ha **una sola rosa**; l'unione di più insiemi è una rosa a sé.
+
+### 11.4 Il contesto tattico
+
+Tutto ciò che una rosa, un filtro, un predicato o un ordinamento deve poter *leggere* per decidere, raccolto in un oggetto **di sola lettura** creato per ogni decisione e buttato dopo. Porta: l'**attore**, il suo
+gruppo e quello degli avversari (e quindi di che lato è), gli **ospiti vulnerabili**, lo **`StatoDelCombattimento`** (round, schede, conoscenza sulle reazioni, §3.3) e le **scorte del gruppo**
+(pozioni, pergamene). È l'unico modo in cui gli enumerati toccano il gioco: così restano senza stato, e lo stesso enumerato serve a un personaggio e a un mostro, perché il contesto sa chi è "alleato" e chi "avversario"
+per l'attore. Non modifica niente (§1): chi cambia il modello è l'automa, dopo.
+
+**Da decidere:** l'elenco dei filtri (`TipoFiltro`), degli ordinamenti e dei predicati (§7.5 ne è la base) con i loro parametri; come si
+scrivono i confronti (`SALUTE_SOTTO 50` o `SALUTE MINORE 50`).

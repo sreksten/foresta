@@ -16,6 +16,7 @@ Sorgenti in `src/main/java/com/threeamigos/foresta` (abbreviato `…/` sotto), r
 | Debolezze, resistenze e immunità di classe ai tipi di danno | `…/tipi/CategoriaPersonaggio`, `TipoPersonaggio` (tabelle), `…/personaggi/PersonaggioBase` (`getMoltiplicatoreDannoSubito`), `…/motore/CalcolatoreCombattimento`, `…/ui/TestoReazioneDiClasse` | `debolezze_e_resistenze.md` |
 | Modificatori di attributo a tempo, armi che li mettono sul bersaglio | `…/modellodati/ModificatoreAttributoMD`, `…/missioni/ModificatoreDelTesto`, `PersonaggioBase`, `CalcolatoreCombattimento` | `modificatori_temporanei.md` |
 | Canti del Bardo (curativo, ipnotico, di valore), effetto di stato `ISPIRATO` | `…/incantesimi/Canto*`, `TipoCanto`, `FabbricaCanti`, `…/locazioni/LocazioneBase` (`cantaUnCanto`), `…/motore/Automa` | `bardo.md` |
+| Tattiche di combattimento (modello dati: rose di candidati, contesto; il resto è in studio) | `…/tattiche`, `…/tipi/tattiche` | `tattiche_di_combattimento_automatiche.md` §11 |
 | Personaggi e gruppi | `…/personaggi`, `…/motore/Gruppo*`, `GestoreProgressione` | `motore_di_gioco.md` §8 |
 | Oggetti, artefatti, incantatore | `…/oggetti`, `…/motore/Automa{Inventario,AcquistiArtefatti,Incantatore,ScambiatoreArtefatti}`, `Regole*` | `artefatti_e_incantamenti.md` |
 | Negozi ed economia | `…/offerte`, `…/motore/RegoleContrattazione`, `OfferteAlchimista` | `economia.md` |
