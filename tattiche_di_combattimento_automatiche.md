@@ -72,7 +72,9 @@ Il turno a rotazione vale per **tutti e due i gruppi**, e va tracciato in questo
 
 **Il puntatore.** Ogni gruppo ricorda **chi ha agito per ultimo** e passa la mano al **successivo personaggio vivo** (saltando chi è
 caduto o in panchina). Il puntatore di ogni gruppo avanza **sempre**, a ogni azione, e non si azzera fra uno scontro e l'altro dentro la
-stessa locazione. Oggi il `Gruppo` non lo ha.
+stessa locazione. Oggi esiste solo in parte: `Gruppo.getProssimoAttaccante()` fa già il giro (un indice, `ultimoIndiceSelezionato`, nel `Gruppo`), ma lo usa soltanto la
+risposta del gruppo avversario (`LocazioneBase.rispostaAvversaria`); il gruppo del giocatore non ha un puntatore, perché è il giocatore a scegliere chi agisce. Con le tattiche
+il puntatore va a tutti e due i gruppi (§3.3).
 
 **La risposta.** A ogni azione del giocatore **risponde il prossimo avversario vivo** del gruppo avversario, quello a cui tocca nel suo
 round-robin. Se faccio un attacco singolo, c'è una risposta sola; se lancio un incantesimo, c'è una risposta sola; se faccio un
@@ -122,7 +124,10 @@ round il motore pubblica un evento **`InternoInizioRound`** (con il numero), per
 **Lo `StatoDelCombattimento`** (deciso nel nome): un oggetto che raccoglie in un posto solo tutto ciò che le tattiche devono ricordare di un combattimento. Si crea
 (o si azzera) a ogni inizio locazione, insieme alla preparazione del gruppo avversario. Contiene:
 
-- **del combattimento**: il numero del round, e il registro di chi ha già agito nel round corrente;
+- **del combattimento**: il numero del round, il registro di chi ha già agito nel round corrente e, per **ogni gruppo**, il **puntatore** all'ultimo personaggio che ha agito
+  (§3: passa al successivo vivo, saltando i caduti e la panchina). Il puntatore esce dal `Gruppo` (dove è un indice, `ultimoIndiceSelezionato`) per stare qui: è memoria
+  del combattimento e non modello, e vive come lo stato (azzerato a inizio locazione, non fra uno scontro e l'altro nella stessa locazione). Meglio che sia
+  il **personaggio** e non l'indice, perché la lista del gruppo cambia (un compagno cade, esce, un nuovo mostro arriva) e un indice slitterebbe;
 - **per ogni personaggio** (una scheda, indicizzata per identità del personaggio): l'ultimo avversario e l'ultimo alleato scelti (F8); chi lo ha attaccato per
   ultimo (F9); se ha già lanciato un incantesimo (la regola del "magico", F3); quanti cambi d'arma ha fatto; le armi del gruppo già valutate; le voci già
   usate; e, volendo, le statistiche (danni inflitti e subiti, incantesimi lanciati, colpi a segno e mancati);
