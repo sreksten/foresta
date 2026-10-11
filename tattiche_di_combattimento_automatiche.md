@@ -874,11 +874,11 @@ Qui si fissano le decisioni sul **modello** (come sono fatte una tattica, una vo
 ### 11.2 La voce
 
 ```
-Voce      { Selettore selettore?; Condizione condizione?; Azione azione }
+Voce      { Selettore selettore?; List<Predicato> condizioni; List<Azione> azioni }       (la prima azione applicabile vince, §11.7)
 Azione    { TipoAzione tipo; ClasseIncantesimo classe?; CriterioScelta criterio?; TipoDanno armaDi? }
-Selettore { TipoRosa rosa; List<Filtro> filtri; Ordinamento ordinamento }
-Filtro    { TipoFiltro tipo; Confronto op?; valore? }
-Condizione = Predicato | E | O | NON      (assente = sempre)
+Selettore { TipoRosa rosa; List<Filtro> filtri; TipoOrdinamento ordinamento }
+Filtro    { TipoFiltro tipo; boolean negato; parametro? }                   (§11.5)
+Predicato { TipoPredicato tipo; boolean negato; parametri? }                (§11.8; le condizioni sono in AND, lista vuota = sempre)
 ```
 
 Ogni `TipoAzione` dichiara la sua **portata**, e quindi se e come usa il selettore:
@@ -894,9 +894,10 @@ Ogni `TipoAzione` dichiara la sua **portata**, e quindi se e come usa il seletto
 
 **Il selettore è anche una condizione**: se non resta nessun candidato la voce non è eseguibile. Così "c'è un alleato con meno di 50 punti" è il selettore stesso, e non servono variabili locali.
 Esempi: `SU ALLEATI [SENZA_STATO ISPIRATO] → CANTO_DI_VALORE` (si salta da sola quando tutti sono ispirati, e riparte quando l'ispirazione scade);
-`SU SE_STESSO [SALUTE_SOTTO 50] → POZIONE_SALUTE`; `SU ALLEATI_E_OSPITI ordine MENO_SALUTE → POZIONE_SALUTE`.
+`SU SE_STESSO [SALUTE MINORE 50] → POZIONE_SALUTE`; `SU ALLEATI_E_OSPITI ordine MENO_SALUTE → POZIONE_SALUTE`;
+`SU AVVERSARI [MAGICO] ordine PIU_MAGIA → SILENZIO, FULMINE, ATTACCO_FISICO` (§11.7).
 
-Le **condizioni** (`Condizione`) restano per ciò che non riguarda un bersaglio: `PRIMO_ROUND`, `ASTUZIA_ALMENO`, `AVVERSARI_ALMENO`, `HO_POZIONE`... Lo stesso `Predicato` (per esempio `SALUTE_SOTTO`) può stare in
+Le **condizioni** (§11.8) restano per ciò che non riguarda un bersaglio: `ROUND`, `ASTUZIA`, `QUANTI`... Lo stesso controllo (per esempio la salute) può stare in
 un filtro (si applica al candidato) o in una condizione (si applica all'attore o a chi indica).
 
 ### 11.3 La rosa dei candidati
@@ -941,5 +942,95 @@ gruppo e quello degli avversari (e quindi di che lato è), gli **ospiti vulnerab
 (pozioni, pergamene). È l'unico modo in cui gli enumerati toccano il gioco: così restano senza stato, e lo stesso enumerato serve a un personaggio e a un mostro, perché il contesto sa chi è "alleato" e chi "avversario"
 per l'attore. Non modifica niente (§1): chi cambia il modello è l'automa, dopo.
 
-**Da decidere:** l'elenco dei filtri (`TipoFiltro`), degli ordinamenti e dei predicati (§7.5 ne è la base) con i loro parametri; come si
-scrivono i confronti (`SALUTE_SOTTO 50` o `SALUTE MINORE 50`).
+Il contesto espone anche, durante la valutazione di una voce, l'**azione che si sta considerando** (per i filtri che dipendono da essa, `DEBOLE_ALL_AZIONE`).
+
+### 11.5 I filtri
+
+Un filtro è una domanda a cui un candidato risponde sì o no: `ammette(candidato, contesto, parametro)`. Regole (decise):
+
+- **Pipeline.** Parte la rosa, si applicano i filtri uno dopo l'altro (sono in AND, quindi l'ordine non conta), poi l'ordinamento (§11.6) sceglie *uno* fra i rimasti. Se non resta nessuno la voce non è
+  eseguibile. Il registro delle decisioni (§7.7) annota quanti candidati restano dopo ogni passo.
+- **Senza stato**: enumerati come le rose. Quello che serve ricordare (l'ultimo bersaglio, chi ha già lanciato) lo leggono dalle schede dello `StatoDelCombattimento` attraverso il contesto.
+- **Negazione**: ogni filtro ha un flag `negato` (nel file `NON`): "senza lo stato X" è `NON STATO X`, "non immune a Y" è `NON IMMUNE_A Y`. Niente coppie di enumerati.
+- **Parametri tipizzati**: ogni `TipoFiltro` dichiara il tipo del suo parametro (`NESSUNO`, `NUMERO`, `STATO`, `CLASSE`, `CATEGORIA`, `TIPO_DANNO`); la lettura controlla che ci sia e sia giusto, e la scheda del giocatore mostra l'editor
+  adatto. I filtri numerici prendono un `Confronto` (`MINORE`, `UGUALE` o `MAGGIORE`: con `NON` si ottengono "almeno" e "al massimo") e un numero: `SALUTE MINORE 50`.
+- **La classe è il ruolo**: `MAGO` e `MAGA` sono due `TipoPersonaggio`, ma il filtro `CLASSE` ammette entrambe le varianti (Mago/Maga, Elfo/Elfa, Ladro/Ladra, Guerriero/Guerriera, Bardo/Cantastorie,
+  Sacerdote/Sacerdotessa): serve una piccola mappa delle coppie in `TipoPersonaggio` (oggi `ProduttoreDiTestiCasuale` le gestisce a mano).
+- **Il giocatore sceglie i filtri tattici, l'azione porta i suoi requisiti** (§11.7): per scartare gli immuni o i già silenziati non serve scrivere un filtro.
+
+| Filtro | Parametro | Ammette |
+| :--- | :--- | :--- |
+| `SALUTE` | Confronto + punti | salute attuale in punti |
+| `SALUTE_PERCENTUALE` | Confronto + % | salute su massima |
+| `MAGIA` | Confronto + punti | `MAGIA` attuale |
+| `LIVELLO` | Confronto + numero | livello assoluto |
+| `LIVELLO_RISPETTO_AL_MIO` | Confronto | livello più alto, uguale o più basso di quello dell'attore |
+| `ARMA_CHE_DA` | tipo di danno | ha in mano un'arma che dà quel danno (`Arma.daTipoDanno`): "ho un'arma sacra" |
+| `CLASSE` | classe (il ruolo) | `getClasse()`, entrambe le varianti |
+| `CATEGORIA` | categoria | `isDellaCategoria` (basta una) |
+| `STATO` | stato | `hasEffettoDiStato` |
+| `MAGICO` | nessuno | F3 (§7.5): abilità innate, mostri magici, chi ha già lanciato |
+| `DEBOLE_A` | tipo di danno | `moltiplicatoreAtteso` maggiore di 1 ("debole" è solo questo, §6.3) |
+| `DEBOLE_ALL_AZIONE` | nessuno | come `DEBOLE_A` per il tipo di danno dell'azione che si sta valutando, contando anche gli stati che essa può causare (`moltiplicatoreAttesoDopo`) |
+| `IMMUNE_A` | tipo di danno | moltiplicatore 0 (con `NON`: "non immune") |
+| `IL_CAPO` | nessuno | `getCapo()` del gruppo |
+| `ME_STESSO` | nessuno | solo l'attore (con `NON`: "un altro che me") |
+| `SCELTO_L_ULTIMA_VOLTA` | nessuno | F8: l'ultimo bersaglio di questo personaggio, se ancora valido |
+| `MI_HA_ATTACCATO_PER_ULTIMO` | nessuno | F9 |
+
+### 11.6 Gli ordinamenti
+
+Un enumerato a parte (`TipoOrdinamento`), che sceglie *uno* fra i candidati rimasti; a parità vince il primo della rosa (ripetibile). Valori: `PRIMO`, `A_CASO` (usa il `Dado`, quindi si fissa col seme nei test), `MENO_SALUTE`,
+`PIU_SALUTE`, `LIVELLO_PIU_BASSO`, `LIVELLO_PIU_ALTO`, `PIU_DEBOLE_A` e `PIU_RESISTENTE_A` (tipo di danno), `PIU_MAGIA`, `MENO_MAGIA`. **Niente `PRIORITA_DI_CLASSE`**: la scelta di oggi dei mostri (il Mago più potente, poi il
+Sacerdote, l'Elfo, il Bardo, poi a caso) si ottiene con più voci, una per classe; sono tattiche di mostri, che il giocatore non modifica.
+
+### 11.7 Le azioni: sequenze, requisiti e fallimenti
+
+**Una voce può avere più azioni**, in sequenza: `SU AVVERSARI [MAGICO] ordine PIU_MAGIA → SILENZIO, FULMINE, ATTACCO_FISICO` vuol dire "silenziarlo se posso, altrimenti un fulmine, altrimenti attaccarlo". Il selettore sceglie
+*un* bersaglio e si esegue la prima azione della lista **applicabile a lui**; un candidato entra nella rosa solo se almeno una delle azioni si può fare su di lui. È equivalente a più voci con lo stesso selettore, ma il bersaglio
+si sceglie una volta sola e la scheda resta corta.
+
+**I requisiti dell'azione.** Ogni `TipoAzione` dichiara quando è applicabile a un candidato, e il valutatore li applica da sé (come filtri automatici): il Silenzio scarta silenziati e immuni, una cura scarta chi ha la
+salute piena, la Resurrezione vuole un caduto, un'azione con costo vuole la `MAGIA` o la pergamena. Il giocatore scrive solo i filtri tattici.
+
+**Che cosa si sa delle immunità** (deciso):
+
+- **Le immunità e resistenze di classe si conoscono fin da subito**, per tutti (giocatore e mostri): sono nei dati (`getMoltiplicatoreDannoSubito`, `isImmuneAIncantesimo`, `isImmuneAEffetto` di classe), e scartano l'azione prima di
+  provarla. Un mostro non lancia il Silenzio sul Lich, che ne è immune.
+- **Quelle date da un artefatto non si conoscono**: si **scoprono**. La prima volta che un'azione va a vuoto per immunità o resistenza (la reazione "Immune a X", "Resiste a X" che la UI già mostra) lo `StatoDelCombattimento` se la
+  ricorda, e da lì in poi si tiene conto: è conoscenza **pubblica**, come quella sulle reazioni dell'equipaggiamento (§3.3), e vale per tutti i personaggi dei due gruppi. Va per (personaggio colpito, tipo di danno o azione).
+  Un'immunità scoperta scarta subito l'azione, senza altri tentativi.
+
+**Quando il tiro fallisce per caso** (un Silenzio mancato) non c'è nessuna scoperta, ma non si riprova all'infinito: lo `StatoDelCombattimento` ricorda i **tentativi falliti** per (attore, bersaglio, azione), perché il tiro dipende da chi
+lancia; dopo **2** fallimenti (`Costanti`, per cominciare) l'azione non è più applicabile a quel bersaglio per quell'attore e la sequenza passa alla successiva. Il conto riparte a ogni locazione, come il resto dello stato. Un'azione
+riuscita azzera il conto.
+
+**Da fare nel motore** per questo: l'azione deve riferire il suo **esito** alla scheda (`colpito`, `mancato`, `immune`/`resistito`), dove oggi si registra solo il colpo andato a segno (`applicaRisultatoCombattimento` →
+`registraColpo`); servono `registraEsito(attore, bersaglio, azione, esito)` e le due letture (tentativi falliti, immunità scoperta).
+
+### 11.8 Le condizioni
+
+Una voce ha una **lista di condizioni** (`Predicato`), tutte in **AND**; ognuna ha il flag `negato` (`NON`), come i filtri. Niente alberi con E, O e parentesi: l'O si ottiene con due voci (deciso, per tenere la scheda una lista).
+Lista vuota = sempre. Le condizioni servono per ciò che **non è un controllo su un personaggio**: quelli sono filtri (§11.5) di un selettore (`SU SE_STESSO [SALUTE MINORE 50]`), e i requisiti dell'azione (la magia, la pozione, la
+pergamena, l'arma da prendere) li porta l'azione (§11.7), quindi non servono né `HO_POZIONE` né `PERGAMENE`. Come per i filtri, ogni `TipoPredicato` dichiara il tipo del parametro e la lettura lo controlla.
+
+`Confronto` ha tre valori, `MINORE`, `UGUALE`, `MAGGIORE`, ed è lo stesso dei filtri numerici: "almeno 3" è `NON MINORE 3`, "al massimo 3" è `NON MAGGIORE 3`.
+
+| Predicato | Parametro | Significato |
+| :--- | :--- | :--- |
+| `QUANTI` | rosa + filtri + Confronto + numero | quanti candidati ci sono nella rosa dopo i filtri |
+| `ROUND` | Confronto + numero | il numero del round (`StatoDelCombattimento.getRound`) |
+| `ASTUZIA` | Confronto + numero | l'astuzia di chi decide (§4, rampa sul livello) |
+| `PROBABILITA` | percentuale | tira il `Dado`: vero nel n% dei casi |
+| `VOCE_USATA` | Confronto + numero | quante volte questa voce è stata usata da questo personaggio nello scontro (`registraUsoVoce`) |
+| `ROUND_DALL_ULTIMO_USO` | Confronto + numero | i round passati dall'ultimo uso di questa voce (il *cooldown* delle future abilità forti) |
+
+`QUANTI` è un piccolo selettore dentro una condizione (la scheda riusa l'editor dei filtri) e copre l'esistenza e i conteggi: "c'è un non morto fra gli avversari" è `QUANTI AVVERSARI [CATEGORIA NON_MORTO] MAGGIORE 0`
+(con `NON`: "non ce ne sono"); "gli avversari sono almeno 3" è `NON MINORE 3` con `QUANTI AVVERSARI`; "sono l'unico vivo" è `QUANTI ALLEATI UGUALE 1`; un controllo sui propri stati è `QUANTI SE_STESSO [STATO X] UGUALE 1`.
+Gli esempi: la mossa d'apertura è `ROUND UGUALE 1`; "una volta per scontro" è `VOCE_USATA UGUALE 0`; "una volta su tre" è `PROBABILITA 33`; la voce di una fascia di astuzia è `NON ASTUZIA MINORE 20`;
+per tornare all'arma di prima, `QUANTI AVVERSARI [CATEGORIA NON_MORTO] UGUALE 0` e `SU SE_STESSO [ARMA_CHE_DA SACRO] → CAMBIA_ARMA`.
+
+**Fuori dalla prima versione** (si aggiungono dopo, sono solo valori in più dell'enumerato): la stanchezza, i modificatori temporanei attivi, il tipo di locazione e l'ora, il duello, l'ondata successiva, il confronto fra il numero
+degli avversari e dei miei compagni.
+
+**Da decidere:** l'elenco dei `TipoAzione` con i loro requisiti e portate, e i criteri di scelta dell'incantesimo (S1-S4).
