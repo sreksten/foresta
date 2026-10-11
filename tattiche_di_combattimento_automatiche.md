@@ -771,6 +771,24 @@ Che cosa deve dire la sintesi (**dettagliata**):
   presa e il perché;
 - il caso **di ripiego** ("nessuna voce eseguibile: attacco fisico").
 
+**Non è un evento nuovo da aggiungere accanto a uno esistente: è l'evoluzione di `InternoRisultatoValutazionePersonaggioAttaccante`**
+(`INTERNO_RISULTATO_VALUTAZIONE_PERSONAGGIO_ATTACCANTE`). Oggi quell'evento registra già la decisione dell'avversario sull'incantesimo da lanciare
+(`PersonaggioBase.scegliIncantesimoContro`, otto punti di pubblicazione, registrata da `SnifferBusEventi.onEventoValutazioneAttaccante`): porta il
+bersaglio, un `TipoRisultatoValutazioneAttaccante` (`NON_USA_MAGIA`, `SILENZIATO`, `SENZA_MAGIA_A_DISPOSIZIONE`, `SENZA_INCANTESIMI_A_DISPOSIZIONE`,
+`CASUALMENTE_NON_LANCIA_INCANTESIMO`, `SCEGLIE_A_CASO`, `SCEGLIE_IL_PIU_POTENTE`, `PREFERISCE_ATTACCO_MAGICO`, `PREFERISCE_ATTACCO_FISICO`), l'incantesimo, le
+probabilità di colpire e i possibili danni. Con le tattiche diventerebbe un **doppione** di `InternoDecisioneTattica`, quindi basta **rinominarlo** e
+**aggiungere quel che manca**, senza tenere due eventi:
+
+- il **bersaglio**, l'**incantesimo**, le **probabilità di colpire** e i **danni** diventano parte della sintesi (il confronto "attacco fisico contro magico" di oggi è
+  il criterio S3 con il confronto con l'attacco);
+- il **tipo di risultato** (l'enum) si sostituisce con il testo del perché, con la voce, le condizioni, i candidati e le voci saltate (l'enum e le sue nove
+  etichette spariscono: i motivi diventano frasi);
+- quel che manca: la voce scelta e il percorso nei blocchi, le condizioni valutate con i valori, i candidati e le misure, le voci saltate;
+- l'evento porta un `VistaPersonaggio` e una stringa, non più `Personaggio` e `Incantesimo`, e così esce dalle **eccezioni** di
+  `DipendenzeEventiTest` (gli eventi non portano classi del dominio);
+- finché il motore delle tattiche non c'è, l'evento resta com'è e le otto pubblicazioni in `scegliIncantesimoContro` continuano; quando entra il motore
+  le sostituisce.
+
 Per non pesare sul gioco, la sintesi si costruisce solo se serve (con il log acceso, o in un test), e non a ogni turno di ogni mostro. I test sulle tattiche dei
 mostri la leggono per verificare che il mostro abbia deciso per la ragione giusta, e la UI potrebbe mostrarla al giocatore per aiutarlo a mettere a punto le
 sue.
@@ -781,8 +799,9 @@ sue.
 
 Quasi tutto è già leggibile (§6 e §7). Quello che manca:
 
-- **L'evento `InternoDecisioneTattica`** (§7.7): una classe in `eventi/interni`, un valore `INTERNO_DECISIONE_TATTICA` in `TipoEvento` e la riga di
-  registro in `SnifferBusEventi`; il motore delle tattiche costruisce la sintesi dettagliata mentre sceglie la voce.
+- **L'evento `InternoDecisioneTattica`** (§7.7): è `InternoRisultatoValutazionePersonaggioAttaccante` **rinominato e completato** (classe in `eventi/interni`, il valore
+  `INTERNO_DECISIONE_TATTICA` in `TipoEvento` al posto di `INTERNO_RISULTATO_VALUTAZIONE_PERSONAGGIO_ATTACCANTE`, la riga di registro in `SnifferBusEventi`), non un
+  evento in più; il motore delle tattiche costruisce la sintesi dettagliata mentre sceglie la voce e sostituisce le otto pubblicazioni di `scegliIncantesimoContro`.
 - **Il salvataggio delle tattiche con il personaggio** (requisito fondamentale, vedi §1). La tattica di ogni personaggio sta nel suo modello dati
   (`PersonaggioMD`, che si scrive e si legge in testo con `scrivi` / `leggi`) e passa dal salvataggio (`GestoreSalvataggiSuFile`) e dalla rilettura
   (`RiletturaPartita`). Il formato è quello di §7.6, scritto in modo che si rilegga identico: le voci, i blocchi `SE / ALTRIMENTI / FINE` nidificati
