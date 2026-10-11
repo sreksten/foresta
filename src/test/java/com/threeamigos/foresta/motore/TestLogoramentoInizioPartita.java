@@ -34,7 +34,9 @@ import java.util.Random;
  * 90% delle volte, sempre alla prima locazione); a fine locazione la stanchezza cresce di 1 e la salute recupera
  * getRigenerazioneSalute(), come in Automa; l'esperienza dei mostri uccisi fa salire di livello.
  * <p>
- * Non simula gli effetti di stato (che nel gioco rendono gli scontri più duri), la fuga, la corruzione e l'amicizia.
+ * Gli scontri seguono il round a coppie del gioco ({@link RoundASimulato}); il protagonista è solo, quindi il piano è sempre "agisce lui,
+ * poi attaccano uno dopo l'altro tutti i mostri". Gli effetti di stato dei colpi ci sono (a fine round passa un turno), ma non si
+ * simulano la fuga, la corruzione e l'amicizia.
  * Vedi risorse_e_documenti_vari/analisi_logoramento.md.
  */
 public class TestLogoramentoInizioPartita {
@@ -458,58 +460,51 @@ public class TestLogoramentoInizioPartita {
     }
 
     /**
-     * Come in CombatSimulatorMatrix: il protagonista attacca il primo mostro vivo (con il dardo arcano se gli
-     * conviene, o beve una pozione se è sotto il 35% della salute e ne ha), poi ogni mostro vivo attacca lui.
+     * Il round a coppie del gioco (RoundASimulato) con il protagonista da solo: G A A... (agisce lui, poi ognuno dei mostri attacca lui,
+     * uno dopo l'altro). Il protagonista attacca il primo mostro vivo (con il dardo arcano se gli conviene, o beve una pozione se è sotto
+     * il 35% della salute e ne ha: bere è la sua azione), i mostri attaccano con le armi o, se sanno la magia, con un incantesimo
+     * (Personaggio.attacca). Chi è atterrato, congelato o stordito salta il turno e a fine round passa un turno di effetti di stato.
      * L'esperienza dei mostri uccisi va al protagonista, come in LocazioneBase. Vero se vince.
      */
     private static boolean scontro(Personaggio pg, List<Personaggio> mostri, int[] pozioni) {
-        for (int turno = 0; turno < CombatSimulatorMatrix.TURNI_MASSIMI; turno++) {
-            Personaggio bersaglio = mostri.get(0);
-            if (pozioni[0] > 0 && pg.getSalute() * 100 < pg.getSaluteMassima() * 35) {
-                // Bere costa il turno, come nel gioco
-                pozioni[0]--;
-                pg.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE);
-            } else if (CombatSimulatorMatrix.conviene(pg, bersaglio)) {
-                DardoArcano dardo = new DardoArcano(pg);
-                colpisci(pg, bersaglio, dardo, 1.0d);
-                pg.subMagia(dardo.getCostoLancio());
-            } else {
-                for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(pg)) {
-                    Personaggio vivo = primoVivo(mostri);
-                    if (vivo == null) {
-                        break;
+        RoundASimulato round = new RoundASimulato(Collections.singletonList(pg), mostri);
+        List<Personaggio> premiati = new ArrayList<>();
+        RoundASimulato.Decisore protagonista = new RoundASimulato.Decisore() {
+            @Override
+            public void agisce(Personaggio chi, RoundASimulato r) {
+                Personaggio bersaglio = r.primoAvversarioVivo();
+                if (pozioni[0] > 0 && pg.getSalute() * 100 < pg.getSaluteMassima() * 35) {
+                    pozioni[0]--;
+                    pg.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE);
+                } else if (CombatSimulatorMatrix.conviene(pg, bersaglio)) {
+                    DardoArcano dardo = new DardoArcano(pg);
+                    colpisci(pg, bersaglio, dardo, 1.0d);
+                    pg.subMagia(dardo.getCostoLancio());
+                } else {
+                    for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(pg)) {
+                        Personaggio vivo = r.primoAvversarioVivo();
+                        if (vivo == null) {
+                            break;
+                        }
+                        colpisci(pg, vivo, fase.getArma(), fase.getFattore());
                     }
-                    colpisci(pg, vivo, fase.getArma(), fase.getFattore());
                 }
             }
-            for (Personaggio mostro : new ArrayList<>(mostri)) {
-                if (!mostro.isVivo()) {
-                    mostri.remove(mostro);
-                    pg.addPuntiEsperienza(mostro.getPuntiEsperienza());
+
+            @Override
+            public void dopoOgniAzione(RoundASimulato r) {
+                for (Personaggio mostro : mostri) {
+                    if (!mostro.isVivo() && !premiati.contains(mostro)) {
+                        premiati.add(mostro);
+                        pg.addPuntiEsperienza(mostro.getPuntiEsperienza());
+                    }
                 }
             }
-            if (mostri.isEmpty()) {
-                return true;
-            }
-            for (Personaggio mostro : mostri) {
-                if (pg.isVivo()) {
-                    // Come nel gioco: con le armi o, se sa la magia, con un incantesimo
-                    mostro.attacca(pg);
-                }
-            }
-            // A fine round passa un turno di effetti di stato per tutti (a fine round, LocazioneBase.trascorriTurnoEffettiDiStato)
-            if (pg.isVivo()) {
-                pg.applicaDanniDaEffettiDiStato();
-                pg.riduciEffettiDiStato();
-            }
-            for (Personaggio mostro : mostri) {
-                if (mostro.isVivo()) {
-                    mostro.applicaDanniDaEffettiDiStato();
-                    mostro.riduciEffettiDiStato();
-                }
-            }
-            if (!pg.isVivo()) {
-                return false;
+        };
+        for (int turno = 0; turno < CombatSimulatorMatrix.TURNI_MASSIMI; turno++) {
+            RoundASimulato.Esito esito = round.eseguiRound(protagonista);
+            if (esito != RoundASimulato.Esito.IN_CORSO) {
+                return esito == RoundASimulato.Esito.VITTORIA;
             }
         }
         return false;

@@ -512,8 +512,8 @@ colpi (3 difensori, ogni stato da solo e a coppie, ogni tipo di danno) con quell
 verifica la funzione nuova.
 
 **Limite accettato.** La distinzione di difesa è solo fisico / non fisico (`COSTITUZIONE + PARATA` e `RESISTENZA_MAGICA`): fra il fuoco e il gelo, o fra il
-tagliente e il contundente, un mostro non ha differenze di difesa se non quelle dei punti 1 e 2 (tabella di classe e stati); vedi il lavoro 5. Le resistenze
-parziali per classe, che erano un limite, ci sono ora (lavoro 4).
+tagliente e il contundente, un mostro non ha differenze di difesa se non quelle dei punti 1 e 2 (tabella di classe e stati). Le resistenze
+parziali per classe ci sono (`debolezze_e_resistenze.md`).
 
 **Fattore di danno atteso.** Si calcola, per un avversario e un tipo di danno T, **senza tirare i dadi**:
 
@@ -524,80 +524,10 @@ Da lì: **debole** = moltiplicatore > 1, **resistente** = < 1, **immune** = 0, e
 Serve a scegliere il bersaglio ("il più debole al fuoco"), l'incantesimo o l'arma ("il Gelo contro un `BAGNATO`", "un'arma sacra contro i
 non morti": la condizione del cambio d'arma, §5) e il momento del cambio.
 
-**Lavori, in ordine** (i primi tre sono preliminari e utili anche senza le tattiche, e sono fatti):
-
-1. **Il moltiplicatore nell'enum** — **fatto.** Un campo `moltiplicatore` in `TipoInterazioneConEffettiDiStato` (il verso è nel valore: >1
-   debolezza, <1 resistenza), al posto dei numeri nella catena; vale 1 per le interazioni che non cambiano il danno. Restano fuori solo la
-   MIETITURA (dipende dalla SAGGEZZA del difensore) e i bonus che non sono un moltiplicatore (il danno puro della RISONANZA_SIGILLATA, la
-   difesa del guscio di ghiaccio). Il test `MoltiplicatoriDelleInterazioniTest` fissa i valori.
-2. **`moltiplicatoreAtteso(difensore, tipoDanno)`** — **fatto.** Estratto da `calcolaDannoRisultante` e **senza effetti collaterali** né dadi, con
-   `interazioniAttive` come unico punto che decide quando un'interazione scatta (vedi sopra). Restano nel calcolo del danno gli effetti di
-   ogni interazione (stati tolti o messi, danno puro, critico), che non sono moltiplicatori; i bonus degli *incantamenti* dell'arma
-   (VAPORIZZAZIONE, MIETITURA) hanno ancora una versione ridotta a parte, in `calcolaDannoRisultante` (la debolezza di classe invece
-   vale già anche per loro).
-3. **`Arma.daTipoDanno(TipoDanno)`** — **fatto.** Dice se un'arma "dà" quel danno, cioè se è il suo `getTipoDanno()` o quello di uno dei suoi
-   `getIncantamenti()` (`getTipoDannoElementale`). Non passa dai **modificatori** (`ModificatoreAttributoMD` cambia un attributo, non il
-   tipo di danno). Serve al cambio d'arma (§5). Il test `ArmaDaTipoDannoTest` lo copre (anche con la Spada della Morte, NECROTICO per il suo
-   incantamento).
-4. **Debolezze e resistenze di classe come dato** — **fatto.** Il danno vero (`DANNO_VERO`, il `SACRO` sui non morti ×2) era l'unico caso
-   scritto a mano di una cosa più generale, ed è stato generalizzato (e `DANNO_VERO` è sparito):
-
-   - **Una tabella `tipo di danno → moltiplicatore`**, per categoria (`CategoriaPersonaggio`) e per classe (`TipoPersonaggio`); per un
-     personaggio il moltiplicatore (`Personaggio.getMoltiplicatoreDannoSubito`) è il prodotto del valore della classe e di quelli delle sue
-     categorie. Il significato dei valori è unico:
-
-     | Valore | Significato |
-     | :--- | :--- |
-     | 0 | **immune** |
-     | tra 0 e 1 | **resistente** |
-     | 1 | niente |
-     | maggiore di 1 | **debole** |
-
-   - Le regole di prima sono righe: NON_MORTO = SACRO ×2 e VELENO ×0; i fantasmi (classe) ARIA e TERRA ×0; il Drago e la Chimera Drago
-     FUOCO ×0; l'Idra TERRA, ACQUA e ARIA ×0; il Gargoyle ogni danno non fisico ×0. Una debolezza o resistenza nuova (il Troll resistente al
-     fuoco, un Golem debole al contundente) è una riga in più, non codice. Sono spariti `haInterazioneCon` e gli override di
-     `isImmuneATipoDanno` (ora vale `getMoltiplicatoreDannoSubito == 0`). `moltiplicatoreAtteso` e `calcolaDannoRisultante` leggono la
-     tabella, anche per gli incantamenti dell'arma.
-   - **Il messaggio all'utente**: la UI scrive sopra il bersaglio "Debole a Sacro" (verde), "Resiste a Fuoco" e "Immune a Aria" (rosso)
-     (nuovo evento `NotificaReazioneDiClassePersonaggio`, testo e colore in `ui/TestoReazioneDiClasse`), a ogni colpo in cui il
-     moltiplicatore non è 1. Prima
-     per il danno vero non compariva niente: `ForestaUI.gestisciEventoInterazione` non elencava `DANNO_VERO` e il `default` lanciava
-     un'`IllegalArgumentException` (registrata nel log da `BusEventi`, senza fermare il gioco).
-   - **La tabella** (le voci per classe e categoria, con le ragioni) è in `debolezze_e_resistenze.md`; il colore del testo ha dieci
-     sfumature per parte (dal grigio verso il verde per la debolezza, verso il rosso per la resistenza, rosso acceso per l'immunità).
-   - **Gli altri assi restano a parte**: le immunità a un incantesimo (Morte non ha un tipo di danno) e a uno stato (Sanguinamento,
-     Infettato...) non sono tipi di danno.
-
-   **Le resistenze parziali e gli effetti ridotti.** *Immune* (0) vuol dire che quel tipo di danno non lo sente proprio: si salta **tutto**
-   quello che riguarda il bersaglio (danno, stati nativi, interazioni), perché è un caso a parte (l'acqua scorre sopra a un immune
-   all'acqua, quindi non può esserci elettrocuzione). *Resistente* (tra 0 e 1) vuol dire che regge bene quel danno: il danno si moltiplica
-   per il valore, e anche gli **effetti** si riducono con lo stesso moltiplicatore, come **probabilità** (`CalcolatoreCombattimento.fattoreEffetti`:
-   il moltiplicatore se è minore di 1, altrimenti 1; un debole ha più danno ma non più effetti):
-
-   - gli **stati nativi** del tipo di danno (e quelli degli incantamenti, ognuno col fattore del suo elemento) e i **modificatori dell'arma
-     sul bersaglio** scattano con la loro probabilità di sempre per il fattore;
-   - ogni **reazione con uno stato** (`interazioniAttive`) scatta con probabilità pari al fattore, un tiro per reazione: se non scatta
-     non ha né i suoi effetti né il suo moltiplicatore del danno;
-   - la **durata** degli stati non cambia;
-   - senza resistenze (il fattore vale 1) non si tira nessun dado in più, quindi il calcolo di oggi non cambia.
-
-   Test: `RiduzioneDegliEffettiTest`. `moltiplicatoreAtteso` non tiene conto della probabilità ridotta delle reazioni (le conta come se
-   scattassero).
-
-5. **Una difesa per elemento** (o per famiglia di elementi) al posto delle due di oggi (`COSTITUZIONE + PARATA` e `RESISTENZA_MAGICA`) — **non
-   necessaria per le tattiche, non si fa.** Le tattiche leggono `moltiplicatoreAtteso`, che è già completo; la varietà fra gli elementi viene dalla
-   tabella di classe (lavoro 4) e dalle interazioni con gli stati, e gli incantamenti dei pezzi difensivi valgono già per il loro solo elemento
-   (`difesaContro`). Se mai servisse una differenza di difesa per famiglia, si ottiene con poco: una terza base per gli elementi (per esempio una media di
-   `RESISTENZA_MAGICA` e `COSTITUZIONE`) o ritoccando la tabella di classe, senza attributi nuovi (che toccherebbero modello dati, progressione e salvataggi).
-
-**Da decidere**
-
-- **Resistenze parziali per classe e debolezze nuove:** sì, con lo schema del lavoro 4 (una tabella per categoria e per classe, al posto degli
-  override nelle classi); restano i punti sopra su effetti e testo.
-- **Difesa per elemento:** **si resta con fisico / non fisico** (lavoro 5): la varietà sta nella tabella di classe e negli stati.
-- **Che cosa vuol dire "debole":** solo moltiplicatore > 1, oppure anche "meno resistente degli altri elementi"?
-- **Stati attivi adesso o anche futuri:** il selettore guarda solo gli stati di adesso, o anche quelli che l'azione stessa può causare (il
-  Gelo che prima bagna e poi congela)?
+**Decisioni.** "Debole" vuol dire solo moltiplicatore > 1 (non "meno resistente degli altri elementi"). Il selettore e la scelta dell'azione guardano gli stati
+di adesso **e anche quelli che l'azione stessa può causare** (il Gelo che prima bagna e poi congela, quindi con i moltiplicatori della reazione che ne seguirebbe).
+**Fatto:** `CalcolatoreCombattimento.statiCausabili(difensore, arma)` (stati nativi del tipo di danno e degli incantamenti, esclusi tipi di danno e stati a cui è immune) e
+`moltiplicatoreAttesoDopo(difensore, tipoDanno, arma | stati)`, il fattore del colpo che segue l'azione: gli stati si contano come se fossero scattati (come le reazioni).
 
 ## 7. Le condizioni
 
@@ -898,8 +828,17 @@ Non ha senso importare: posizione e distanza, mischia contro distanza, linea di 
 - Oggi la scelta del **bersaglio** non esiste (si attacca sempre il primo avversario vivo): le tattiche la introducono per tutte le
   azioni singole.
 - Il round a coppie cambia il **bilanciamento** (§3.1): un compagno solo contro più avversari li subisce tutti, e un gruppo numeroso contro un avversario solo gli dà più azioni; il
-  bersaglio dell'avversario non è più chi ha appena agito. Va riverificato con le simulazioni (`SimulazionePartiteTest`) e con i programmi `TestScontriDiGruppo` e
-  `TestLogoramentoInizioPartita`, che simulano ancora il combattimento di prima e non sono stati portati al piano del round (`todo.md`).
+  bersaglio dell'avversario non è più chi ha appena agito. Le simulazioni (`SimulazionePartiteTest` con `GiocatoreAutomatico`, `TestScontriDiGruppo`,
+  `TestLogoramentoInizioPartita`) sono state **portate al piano del round** (`RoundASimulato` lo replica per quelle che lavorano su liste di personaggi) e
+  hanno dato questi numeri (ottobre 2026, 30 partite per classe):
+  - **Gruppi.** Con tutti che agiscono a ogni round, i gruppi di 4-5 personaggi vincono molto di più di prima (contro il Drago a livello 3: 20% → 62% col gruppo di cinque), e i gruppi
+    senza maghi non crollano più; un personaggio **da solo** è invece cambiato poco (`TestLogoramentoInizioPartita`: il piano è "agisce lui, poi tutti i mostri"), tranne contro chi
+    atterra o stordisce, perché ora salta il turno (Folletto da solo: 91% → 75%). Reclutare conviene quindi ancora di più.
+  - **Partite intere.** Il giocatore automatico, che gioca col nuovo ritmo, passa da una morte certa a livello 2-3 (circa 27 spostamenti) a vivere molto di più: livello 4-6, 100-300
+    spostamenti, e circa la metà dei Guerrieri arriva al limite di passi senza morire. Il capo muore soprattutto per l'Eremita (da solo o in gruppo) e per la fuga.
+  - **Da bilanciare.** La stima del giocatore automatico è pessimista (prevede la perdita di tutto il gruppo contro 3-4 avversari grossi e fugge in un incontro su due contro Arpie e
+    Chimere, che poi si vincono quasi sempre); l'Eremita resta il killer del livello 1-3; il Mago e il Sacerdote muoiono presto perché sono i bersagli preferiti
+    (`PersonaggioBase.scegliBersaglio`).
 
 ## 10. Da fare / idee aperte
 

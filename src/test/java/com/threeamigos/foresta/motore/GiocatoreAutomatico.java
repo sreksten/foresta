@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
+import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
@@ -21,6 +23,7 @@ import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoNegozio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;
 
@@ -29,21 +32,21 @@ import java.util.*;
  * mandando all'Automa, tramite {@link PartitaDiTest}, gli stessi comandi della UI. La priorità è sopravvivere.
  * <p>
  * <b>Combattimento.</b> Prima di agire in una locazione con avversari stima lo scontro a valore atteso
- * ({@link Valutatore}): per ogni personaggio vivo calcola quanti danni fa per round (probabilità di colpire di
- * CalcolatoreCombattimento per la media di qualche tiro di calcolaDannoRisultante, in mischia, col dardo arcano o
- * con le pergamene) e quanti ne riceve, e ne ricava il <i>carico del capo</i>: la frazione della salute del capo
- * (più le pozioni) che lo scontro dovrebbe costargli, dopo che i compagni hanno fatto la loro parte (i compagni
- * combattono per primi: se muore il capo la partita è persa). Poi:
+ * ({@link Valutatore}) con il round a coppie del gioco (tattiche_di_combattimento_automatiche.md §3): tutti i personaggi vivi agiscono a
+ * turno, ognuno con l'azione che fa più danni (mischia, dardo arcano o pergamene), e a ogni avversario che tocca il bersaglio lo sceglie
+ * lui (prima i maghi, i sacerdoti, gli elfi e i bardi più potenti, altrimenti a caso). Ne ricava il <i>carico del capo</i>: la frazione
+ * della salute del capo (più le pozioni) che lo scontro dovrebbe costargli, e quanti compagni si prevede di perdere. Poi:
  * <ul>
- * <li>carico basso: combatte, col personaggio che rischia meno, preferendo i compagni al capo;</li>
+ * <li>carico basso e nessun compagno perso: combatte;</li>
  * <li>altrimenti prova a corrompere (se gli avversari lo permettono e ci sono le monete) o a fare amicizia (se
  * c'è qualcuno con abbastanza carisma);</li>
  * <li>se lo scontro resta sfavorevole fugge, ma solo se la fuga (da 50 a 100 danni a ogni vivo, vedi
  * GruppoGiocatore.fugge) lascia più speranze del combattimento; altrimenti combatte comunque.</li>
  * </ul>
- * Chi combatte usa mischia, dardo arcano o pergamene di danno, secondo cosa fa più danni attesi. Durante la
- * mischia il capo beve una pozione sotto un terzo della salute, un compagno ferito lascia il posto a un altro, e
- * se la stima rifatta a ogni round diventa disperata e la fuga è sopportabile si fugge.
+ * In combattimento a ogni scatto agisce uno solo: quando tocca agli avversari lascia passare il tempo; quando tocca a uno dei suoi (il
+ * prossimo della rotazione) lo fa agire con l'azione che rende di più (la mischia è quella che fa il temporizzatore; dardo e pergamene si
+ * ordinano a mano), fa bere una pozione al capo sotto un terzo della salute (o a un compagno sotto un quarto, se le pozioni abbondano),
+ * oppure, se la stima rifatta a ogni azione diventa disperata e la fuga è sopportabile, fugge.
  * <p>
  * <b>Fuori dal combattimento</b> (scelta della direzione): spende i punti abilità (Forza, Destrezza e
  * Costituzione a turno, Intelligenza per i maghi), risuscita i compagni con la Resurrezione, beve pozioni
@@ -115,6 +118,8 @@ final class GiocatoreAutomatico {
 	private Locazione locazione;
 	private Valutatore valutatore;
 	private Personaggio combattente;
+	// Chi dei miei ha agito per ultimo in combattimento, per sapere a chi tocca (la rotazione di StatoDelCombattimento)
+	private Personaggio ultimoChiHaAgito;
 	private Personaggio scelto;
 	private Attesa attesa = Attesa.NESSUNA;
 	private Comando incantesimoScelto;
@@ -133,6 +138,11 @@ final class GiocatoreAutomatico {
 	GiocatoreAutomatico(PartitaDiTest partita, Random random) {
 		this.partita = partita;
 		this.random = random;
+		BusEventi.iscriviti(InternoAzioneInCombattimento.class, e -> {
+			if (partita.gruppo().contiene(e.getPersonaggio())) {
+				ultimoChiHaAgito = (Personaggio) e.getPersonaggio();
+			}
+		});
 	}
 
 	/**
@@ -616,20 +626,34 @@ final class GiocatoreAutomatico {
 		return migliore;
 	}
 
+	/**
+	 * Un passo del combattimento a round (a ogni scatto agisce uno solo, vedi StatoDelCombattimento): quando tocca agli avversari si
+	 * lascia passare il tempo; quando tocca a uno dei miei, il prossimo della rotazione, lo si fa agire con l'azione che rende di più
+	 * (la mischia è quella che fa l'impulso del temporizzatore: null), si beve una pozione per chi è messo male o si fugge.
+	 */
 	private Comando scegliInCombattimento(GruppoGiocatore gruppo, Collection<Comando> comandi) {
 		List<Personaggio> avversari = GruppoAvversario.getIstanza().getPersonaggiVivi();
 		Personaggio capo = gruppo.getCapo();
-		if (avversari.isEmpty()) {
+		if (avversari.isEmpty()
+				|| StatoDelCombattimento.getIstanza().getProssimoLato() != StatoDelCombattimento.Lato.GIOCATORE) {
 			return null;
 		}
-		if (combattente == null || !combattente.isVivo()) {
-			combattente = capo;
-		}
-		// Il capo sotto un terzo della salute beve (da solo la pozione non costa il round)
+		// Il capo sotto un terzo della salute beve (bere è l'azione di chi beve); poi i compagni sotto un quarto, se le pozioni abbondano
+		Personaggio daCurare = null;
 		if (frazioneSalute(capo) < 0.34) {
-			Comando pozione = pozioneSalutePer(capo, comandi);
+			daCurare = capo;
+		} else if (gruppo.getPozioniSalute() + gruppo.getPozioniSaluteGrande() > 2) {
+			for (Personaggio p : gruppo.getPersonaggiVivi()) {
+				if (frazioneSalute(p) < 0.25) {
+					daCurare = p;
+					break;
+				}
+			}
+		}
+		if (daCurare != null) {
+			Comando pozione = pozioneSalutePer(daCurare, comandi);
 			if (pozione != null) {
-				preparaScelta(Attesa.BEVITORE, capo);
+				preparaScelta(Attesa.BEVITORE, daCurare);
 				return pozione;
 			}
 		}
@@ -640,23 +664,31 @@ final class GiocatoreAutomatico {
 			fugaChiesta = true;
 			return Comando.FUGA;
 		}
-		// Chi combatte è malconcio e c'è di meglio: cambio
-		Double caricoCombattente = stima.carichi.get(combattente);
-		boolean malconcio = frazioneSalute(combattente) < 0.35 || caricoCombattente == null
-				|| Valutatore.rischioPesato(combattente, capo, stima.carichi)
-				> 1.5d * Valutatore.rischioPesato(stima.attore, capo, stima.carichi);
-		if (comandi.contains(Comando.COMBATTIMENTO) && stima.attore != combattente && malconcio) {
-			preparaScelta(Attesa.COMBATTENTE, stima.attore);
-			combattente = stima.attore;
-			return Comando.COMBATTIMENTO;
-		}
-		// Un mago non resta in mischia se ha di meglio da fare
-		if (stima.incantesimo != null && comandi.contains(Comando.INCANTESIMO) && incantesimiFalliti < 3) {
-			incantesimoScelto = stima.incantesimo;
-			preparaScelta(Attesa.FORMULANTE, stima.attore);
+		Personaggio attore = prossimoDellaRotazione(gruppo);
+		double[] salute = avversari.stream().mapToDouble(Personaggio::getSalute).toArray();
+		Azione azione = valutatore.scegliAzione(attore, avversari, salute, attore.getMagia(), valutatore.pergameneDelGruppo());
+		if (azione.scelta != null && comandi.contains(Comando.INCANTESIMO) && incantesimiFalliti < 3) {
+			incantesimoScelto = azione.scelta;
+			preparaScelta(Attesa.FORMULANTE, attore);
 			return Comando.INCANTESIMO;
 		}
 		return null;
+	}
+
+	/**
+	 * Chi agirà per primo fra i miei se si lascia passare il tempo: il successivo vivo a chi ha agito per ultimo (gli annunci
+	 * delle azioni dicono chi è)
+	 */
+	private Personaggio prossimoDellaRotazione(GruppoGiocatore gruppo) {
+		List<Personaggio> personaggi = gruppo.getPersonaggi();
+		int partenza = personaggi.indexOf(ultimoChiHaAgito);
+		for (int i = 1; i <= personaggi.size(); i++) {
+			Personaggio candidato = personaggi.get((partenza + i + personaggi.size()) % personaggi.size());
+			if (!candidato.isFuoriCombattimento()) {
+				return candidato;
+			}
+		}
+		return gruppo.getCapo();
 	}
 
 	private Comando scegliPersonaggio(GruppoGiocatore gruppo, Collection<Comando> comandi) {
@@ -817,7 +849,8 @@ final class GiocatoreAutomatico {
 
 	private void traccia(Stima stima) {
 		if (traccia != null) {
-			traccia.printf("      stima: attore %s azione %s caricoCapo %.2f compagniPersi %d dettaglio %s%n",
+			traccia.printf("      stima contro %s: attore %s azione %s caricoCapo %.2f compagniPersi %d dettaglio %s%n",
+					GruppoAvversario.getIstanza().getPersonaggiVivi().stream().map(p -> p.getClasse() + "(" + p.getSalute() + ")").collect(java.util.stream.Collectors.toList()),
 					stima.attore.getClasse(), stima.incantesimo, stima.caricoCapo, stima.compagniPersi, stima.dettaglio);
 		}
 	}
@@ -885,11 +918,11 @@ final class GiocatoreAutomatico {
 	// Stima degli scontri
 
 	/**
-	 * Il risultato di una stima: chi deve agire e come, e quanto dovrebbe costare lo scontro al capo.
+	 * Il risultato di una stima: chi deve cominciare e come, e quanto dovrebbe costare lo scontro al capo.
 	 */
 	static final class Stima {
 		/**
-		 * Chi agisce per primo (in mischia o con un incantesimo)
+		 * Chi comincia lo scontro: chi ha l'azione che fa più danni
 		 */
 		Personaggio attore;
 		/**
@@ -905,24 +938,36 @@ final class GiocatoreAutomatico {
 		 */
 		int compagniPersi;
 		/**
-		 * Il carico di ciascuno se combattesse da solo, per la traccia
+		 * I danni attesi su ciascuno in rapporto alla sua salute, per la traccia
 		 */
 		String dettaglio = "";
-		/**
-		 * Il carico di ciascun vivo se combattesse da solo
-		 */
-		Map<Personaggio, Double> carichi = Collections.emptyMap();
 	}
 
 	/**
-	 * Stima a valore atteso degli scontri di una locazione. I danni medi di ogni coppia attaccante-difensore-arma
-	 * si campionano una volta sola per locazione (calcolaDannoRisultante tira i dadi del gioco: prelevare qualche
-	 * numero in più dalla sorgente non ne altera la distribuzione); la probabilità di colpire, che dipende da
+	 * L'azione che un personaggio sceglie quando tocca a lui: la mischia (scelta == null), il dardo arcano o una pergamena di danno
+	 */
+	static final class Azione {
+		Comando scelta;
+		ClasseIncantesimo classe;
+		double danno;
+	}
+
+	/**
+	 * Stima a valore atteso degli scontri di una locazione, con il round a coppie del gioco (vedi RoundASimulato): tutti i miei
+	 * agiscono a turno, ognuno con l'azione che fa più danni, e a ogni avversario che tocca il bersaglio lo sceglie lui
+	 * (PersonaggioBase.scegliBersaglio: prima i maghi, i sacerdoti, gli elfi e i bardi più potenti, altrimenti a caso). I danni medi di
+	 * ogni coppia attaccante-difensore-arma si campionano una volta sola per locazione (calcolaDannoRisultante tira i dadi del gioco:
+	 * prelevare qualche numero in più dalla sorgente non ne altera la distribuzione); la probabilità di colpire, che dipende da
 	 * stanchezza ed effetti di stato, si ricalcola ogni volta.
 	 */
 	static final class Valutatore {
 
 		private static final int CAMPIONI = 5;
+		private static final int ROUND_MASSIMI = 40;
+		/**
+		 * Sotto questa salute (a valore atteso, i danni sono frazioni) un avversario conta come sconfitto
+		 */
+		private static final double SALUTE_MINIMA = 0.5d;
 		private final Map<Personaggio, Map<Personaggio, Map<String, Double>>> danniMedi = new IdentityHashMap<>();
 		private final GruppoGiocatore gruppo;
 
@@ -932,60 +977,101 @@ final class GiocatoreAutomatico {
 
 		Stima stima(GruppoGiocatore gruppo, List<Personaggio> avversari) {
 			Personaggio capo = gruppo.getCapo();
-			List<Personaggio> vivi = gruppo.getPersonaggiVivi();
+			List<Personaggio> miei = gruppo.getPersonaggiVivi();
+			Stima stima = new Stima();
 			double[] saluteAvversari = avversari.stream().mapToDouble(Personaggio::getSalute).toArray();
 
-			// Il carico di ogni personaggio se combattesse da solo fino alla fine
-			Map<Personaggio, Double> carico = new IdentityHashMap<>();
-			Map<Personaggio, Comando> azione = new IdentityHashMap<>();
-			for (Personaggio p : vivi) {
-				Scontro scontro = scontro(p, avversari, saluteAvversari, vivi.size(), p == capo);
-				carico.put(p, scontro.danniSubiti / Math.max(1, saluteEffettiva(p, p == capo)));
-				azione.put(p, scontro.primaAzione);
+			// Chi comincia: chi ha l'azione che fa più danni subito
+			double migliore = -1;
+			for (Personaggio p : miei) {
+				Azione azione = scegliAzione(p, avversari, saluteAvversari, p.getMagia(), pergameneDelGruppo());
+				if (azione.danno > migliore) {
+					migliore = azione.danno;
+					stima.attore = p;
+					stima.incantesimo = azione.scelta;
+				}
+			}
+
+			// Lo scontro a round, fino alla fine
+			int n = miei.size();
+			double[] salute = new double[n];
+			double[] danni = new double[n];
+			double[] magia = new double[n];
+			boolean[] vivo = new boolean[n];
+			int indiceCapo = miei.indexOf(capo);
+			for (int i = 0; i < n; i++) {
+				salute[i] = saluteEffettiva(miei.get(i), miei.get(i) == capo);
+				magia[i] = miei.get(i).getMagia();
+				vivo[i] = true;
+			}
+			double[] saluteA = saluteAvversari.clone();
+			double[] magiaA = avversari.stream().mapToDouble(Personaggio::getMagia).toArray();
+			Map<ClasseIncantesimo, Integer> pergamene = pergameneDelGruppo();
+			boolean impossibile = false;
+			int ultimoMio = -1;
+			int ultimoAvversario = -1;
+			int senzaDanni = 0;
+			round:
+			for (int round = 0; round < ROUND_MASSIMI; round++) {
+				int nn = contaVivi(vivo);
+				int mm = contaVivi(saluteA);
+				if (mm == 0 || nn == 0 || !vivo[indiceCapo]) {
+					break;
+				}
+				for (int k = 0; k < Math.max(nn, mm); k++) {
+					if (k < nn) {
+						ultimoMio = prossimoVivo(vivo, ultimoMio);
+						if (ultimoMio >= 0) {
+							Azione azione = scegliAzione(miei.get(ultimoMio), avversari, saluteA, magia[ultimoMio], pergamene);
+							if (azione.danno > 0.5d) {
+								magia[ultimoMio] -= eseguiAzione(miei.get(ultimoMio), azione, avversari, saluteA, pergamene);
+								senzaDanni = 0;
+							} else if (++senzaDanni >= contaVivi(vivo)) {
+								// Nessuno scalfisce gli avversari: lo scontro non si vince
+								impossibile = true;
+								break round;
+							}
+						}
+						if (contaVivi(saluteA) == 0) {
+							break round;
+						}
+					}
+					if (k < mm) {
+						ultimoAvversario = prossimoVivo(saluteA, ultimoAvversario);
+						if (ultimoAvversario >= 0) {
+							subisce(avversari.get(ultimoAvversario), magiaA, ultimoAvversario, miei, salute, danni, vivo);
+						}
+						if (!vivo[indiceCapo]) {
+							break round;
+						}
+					}
+				}
+			}
+			if (contaVivi(saluteA) > 0) {
+				impossibile = true;
 			}
 			StringBuilder dettaglio = new StringBuilder();
-			for (Personaggio p : vivi) {
-				dettaglio.append(p.getClasse()).append('=').append(String.format("%.2f", carico.get(p))).append(' ');
-			}
-			// I compagni combattono per primi, a cominciare da chi rischia meno; il capo per ultimo
-			List<Personaggio> ordine = new ArrayList<>(vivi);
-			ordine.remove(capo);
-			ordine.sort((a, b) -> Double.compare(carico.get(a), carico.get(b)));
-			ordine.add(capo);
-
-			Stima stima = new Stima();
-			stima.dettaglio = dettaglio.toString();
-			stima.carichi = carico;
-			// Apre lo scontro chi rischia meno, contando il capo una volta e mezza (se muore lui è finita)
-			for (Personaggio p : vivi) {
-				if (stima.attore == null || rischioPesato(p, capo, carico) < rischioPesato(stima.attore, capo, carico)) {
-					stima.attore = p;
-					stima.incantesimo = azione.get(p);
-				}
-			}
-			double restante = 1.0d; // la frazione dello scontro ancora da combattere
-			for (Personaggio p : ordine) {
-				double c = carico.get(p);
-				if (p == capo) {
-					stima.caricoCapo = restante * c;
-					break;
-				}
-				if (c <= 0.8) {
-					restante = 0;
-				} else {
-					restante = Math.max(0, restante - 0.8d / c);
+			for (int i = 0; i < n; i++) {
+				double carico = danni[i] / Math.max(1, saluteEffettiva(miei.get(i), miei.get(i) == capo));
+				dettaglio.append(miei.get(i).getClasse()).append('=').append(String.format("%.2f", carico)).append(' ');
+				if (i != indiceCapo && !vivo[i]) {
 					stima.compagniPersi++;
 				}
-				if (restante <= 0) {
-					stima.caricoCapo = 0;
-					break;
-				}
+			}
+			stima.dettaglio = dettaglio.toString();
+			stima.caricoCapo = danni[indiceCapo] / Math.max(1, saluteEffettiva(capo, true));
+			if (!vivo[indiceCapo] || impossibile) {
+				stima.caricoCapo = Math.max(stima.caricoCapo, 1.5d);
 			}
 			return stima;
 		}
 
-		static double rischioPesato(Personaggio p, Personaggio capo, Map<Personaggio, Double> carico) {
-			return carico.get(p) * (p == capo ? 1.5d : 1.0d);
+		Map<ClasseIncantesimo, Integer> pergameneDelGruppo() {
+			Map<ClasseIncantesimo, Integer> pergamene = new HashMap<>();
+			for (ClasseIncantesimo classe : INCANTESIMI_DI_DANNO) {
+				pergamene.put(classe, gruppo.getIncantesimi(classe));
+			}
+			return pergamene;
 		}
 
 		private double saluteEffettiva(Personaggio p, boolean capo) {
@@ -999,115 +1085,144 @@ final class GiocatoreAutomatico {
 		}
 
 		/**
-		 * Uno scontro simulato a valori attesi: l'attore contro tutti gli avversari, azione per azione
-		 * (la più dannosa fra un round di mischia, il dardo arcano e le pergamene), finché muoiono gli avversari
-		 * o il conto dei danni subiti diventa insostenibile.
-		 * <p>
-		 * Come risponde il gioco: in un round di mischia il bersaglio risponde con le armi (LocazioneBase,
-		 * gestisciCombattimento) e, se gli avversari sono più dei vivi del gruppo, uno di loro "si disimpegna e
-		 * attacca" con Personaggio.attacca; a un incantesimo o a un dardo risponde un avversario con attacca
-		 * (rispostaAvversaria). E attacca, per chi ha magia, vuol dire spesso un incantesimo, senza pergamene.
+		 * L'azione che fa più danni attesi al primo avversario vivo (o a quelli che raggiunge): la mischia, o il dardo arcano
+		 * e le pergamene se rendono di più e il personaggio ha la magia per lanciarli.
+		 *
+		 * @param saluteAvversari la salute di ciascun avversario (i morti hanno 0 o meno)
 		 */
-		private Scontro scontro(Personaggio attore, List<Personaggio> avversari, double[] saluteIniziale, int vivi, boolean capo) {
-			double[] salute = saluteIniziale.clone();
-			double[] magiaAvversari = avversari.stream().mapToDouble(Personaggio::getMagia).toArray();
-			double magia = attore.getMagia();
-			Map<ClasseIncantesimo, Integer> pergamene = new HashMap<>();
+		Azione scegliAzione(Personaggio attore, List<Personaggio> avversari, double[] saluteAvversari, double magia,
+							Map<ClasseIncantesimo, Integer> pergamene) {
+			Azione azione = new Azione();
+			int primo = primoVivo(saluteAvversari);
+			if (primo < 0) {
+				return azione;
+			}
+			Personaggio bersaglio = avversari.get(primo);
+			azione.danno = Math.min(saluteAvversari[primo], mischia(attore, bersaglio));
 			for (ClasseIncantesimo classe : INCANTESIMI_DI_DANNO) {
-				pergamene.put(classe, gruppo.getIncantesimi(classe));
-			}
-			boolean dardo = DardoArcano.conosciutoDa(attore.getClasse());
-			double costoDardo = attore.getClasse().name().startsWith("MAG")
-					? Costanti.DARDO_ARCANO_COSTO_LANCIO_MAGO : Costanti.DARDO_ARCANO_COSTO_LANCIO_ELFO;
-			Scontro scontro = new Scontro();
-			double limite = saluteEffettiva(attore, capo) * 4;
-			int prossimoAttaccante = 0;
-			for (int azioni = 0; azioni < 100 && scontro.danniSubiti < limite; azioni++) {
-				int primo = primoVivo(salute);
-				if (primo < 0) {
-					break;
+				Incantesimo incantesimo = FabbricaIncantesimi.crea(classe, attore.getLivello());
+				if (pergamene.get(classe) <= 0 || magia < incantesimo.getCostoLancio() || !(incantesimo instanceof Arma)) {
+					continue;
 				}
-				int avversariVivi = contaVivi(salute);
-				Personaggio bersaglio = avversari.get(primo);
-				double mischia = mischia(attore, bersaglio);
-				double migliore = mischia;
-				Comando scelta = null;
-				ClasseIncantesimo classeScelta = null;
-				for (ClasseIncantesimo classe : INCANTESIMI_DI_DANNO) {
-					Incantesimo incantesimo = FabbricaIncantesimi.crea(classe, attore.getLivello());
-					if (pergamene.get(classe) <= 0 || magia < incantesimo.getCostoLancio()
-							|| !(incantesimo instanceof Arma)) {
-						continue;
-					}
-					double danno = dannoIncantesimo(attore, avversari, salute, classe, false);
-					if (danno > migliore) {
-						migliore = danno;
-						classeScelta = classe;
-						scelta = classe.getComandoDiAttivazione();
-					}
-				}
-				if (dardo && magia >= costoDardo) {
-					double danno = Math.min(salute[primo], atteso(attore, bersaglio, new DardoArcano(attore), 1.0d, "DARDO"));
-					if (danno > migliore) {
-						migliore = danno;
-						classeScelta = null;
-						scelta = Comando.DARDO_ARCANO;
-					}
-				}
-				// La risposta: alla mischia il bersaglio con le armi (più chi si disimpegna), agli incantesimi
-				// il prossimo avversario con attacca
-				double rispostaMischia = mischia(bersaglio, attore);
-				double[] disimpegno = null;
-				if (avversariVivi > vivi) {
-					disimpegno = attacco(bersaglio, attore, magiaAvversari[primo]);
-					rispostaMischia += disimpegno[0];
-				}
-				int chiRisponde = prossimoVivo(salute, prossimoAttaccante);
-				double[] rispostaIncantesimo = attacco(avversari.get(chiRisponde), attore, magiaAvversari[chiRisponde]);
-				// La mischia costa meno risposte magiche: un incantesimo deve valerne la pena
-				if (scelta != null && migliore / Math.max(1, rispostaIncantesimo[0]) < 1.1d * mischia / Math.max(1, rispostaMischia)
-						&& migliore < primoSalute(salute)) {
-					scelta = null;
-					classeScelta = null;
-					migliore = mischia;
-				}
-				if (azioni == 0) {
-					scontro.primaAzione = scelta;
-				}
-				if (migliore <= 0.5d) {
-					// Non si scalfisce nessuno: lo scontro non si vince
-					scontro.danniSubiti = Math.max(scontro.danniSubiti, limite);
-					break;
-				}
-				if (scelta == null) {
-					salute[primo] -= mischia;
-					scontro.danniSubiti += rispostaMischia;
-					if (disimpegno != null) {
-						magiaAvversari[primo] -= disimpegno[1];
-					}
-				} else {
-					if (classeScelta != null) {
-						pergamene.put(classeScelta, pergamene.get(classeScelta) - 1);
-						magia -= FabbricaIncantesimi.crea(classeScelta, attore.getLivello()).getCostoLancio();
-						dannoIncantesimo(attore, avversari, salute, classeScelta, true);
-					} else {
-						magia -= costoDardo;
-						salute[primo] -= atteso(attore, bersaglio, new DardoArcano(attore), 1.0d, "DARDO");
-					}
-					scontro.danniSubiti += rispostaIncantesimo[0];
-					magiaAvversari[chiRisponde] -= rispostaIncantesimo[1];
-					prossimoAttaccante = chiRisponde + 1;
+				double danno = dannoIncantesimo(attore, avversari, saluteAvversari, classe, false);
+				if (danno > azione.danno) {
+					azione.danno = danno;
+					azione.classe = classe;
+					azione.scelta = classe.getComandoDiAttivazione();
 				}
 			}
-			if (primoVivo(salute) >= 0) {
-				scontro.danniSubiti = Math.max(scontro.danniSubiti, limite);
+			if (DardoArcano.conosciutoDa(attore.getClasse()) && magia >= costoDardo(attore)) {
+				double danno = Math.min(saluteAvversari[primo], atteso(attore, bersaglio, new DardoArcano(attore), 1.0d, "DARDO"));
+				if (danno > azione.danno) {
+					azione.danno = danno;
+					azione.classe = null;
+					azione.scelta = Comando.DARDO_ARCANO;
+				}
 			}
-			return scontro;
+			return azione;
 		}
 
-		private static double primoSalute(double[] salute) {
+		private static double costoDardo(Personaggio attore) {
+			return attore.getClasse().name().startsWith("MAG")
+					? Costanti.DARDO_ARCANO_COSTO_LANCIO_MAGO : Costanti.DARDO_ARCANO_COSTO_LANCIO_ELFO;
+		}
+
+		/**
+		 * Toglie dalla salute degli avversari i danni attesi dell'azione
+		 *
+		 * @return la magia consumata
+		 */
+		private double eseguiAzione(Personaggio attore, Azione azione, List<Personaggio> avversari, double[] salute,
+									Map<ClasseIncantesimo, Integer> pergamene) {
 			int primo = primoVivo(salute);
-			return primo < 0 ? 0 : salute[primo];
+			if (azione.scelta == null) {
+				salute[primo] -= mischia(attore, avversari.get(primo));
+				return 0;
+			}
+			if (azione.classe != null) {
+				pergamene.put(azione.classe, pergamene.get(azione.classe) - 1);
+				dannoIncantesimo(attore, avversari, salute, azione.classe, true);
+				return FabbricaIncantesimi.crea(azione.classe, attore.getLivello()).getCostoLancio();
+			}
+			salute[primo] -= atteso(attore, avversari.get(primo), new DardoArcano(attore), 1.0d, "DARDO");
+			return costoDardo(attore);
+		}
+
+		/**
+		 * Un avversario attacca il gruppo (Personaggio.attacca(Gruppo)): se c'è un mago, un sacerdote, un elfo o un bardo prende il
+		 * più potente di loro, altrimenti ognuno dei vivi con la stessa probabilità (qui, a valore atteso, una quota del danno ciascuno).
+		 */
+		private void subisce(Personaggio avversario, double[] magiaAvversari, int posizione, List<Personaggio> miei,
+							 double[] salute, double[] danni, boolean[] vivo) {
+			int fisso = bersaglioPreferito(miei, vivo);
+			int quanti = fisso >= 0 ? 1 : contaVivi(vivo);
+			boolean[] eraVivo = vivo.clone();
+			for (int i = 0; i < miei.size(); i++) {
+				if (!eraVivo[i] || (fisso >= 0 && i != fisso)) {
+					continue;
+				}
+				double[] colpo = attacco(avversario, miei.get(i), magiaAvversari[posizione]);
+				danni[i] += colpo[0] / quanti;
+				salute[i] -= colpo[0] / quanti;
+				magiaAvversari[posizione] -= colpo[1] / quanti;
+				if (salute[i] <= 0) {
+					vivo[i] = false;
+				}
+			}
+		}
+
+		/**
+		 * Chi viene attaccato di preferenza (l'indice), o -1 se nessuno
+		 */
+		private static int bersaglioPreferito(List<Personaggio> miei, boolean[] vivo) {
+			TipoPersonaggio[][] ordine = {{TipoPersonaggio.MAGO, TipoPersonaggio.MAGA},
+					{TipoPersonaggio.SACERDOTE, TipoPersonaggio.SACERDOTESSA}, {TipoPersonaggio.ELFO, TipoPersonaggio.ELFA},
+					{TipoPersonaggio.BARDO, TipoPersonaggio.CANTASTORIE}};
+			for (TipoPersonaggio[] classi : ordine) {
+				int migliore = -1;
+				for (int i = 0; i < miei.size(); i++) {
+					TipoPersonaggio classe = miei.get(i).getClasse();
+					if (vivo[i] && (classe == classi[0] || classe == classi[1])
+							&& (migliore < 0 || miei.get(i).getLivello() > miei.get(migliore).getLivello())) {
+						migliore = i;
+					}
+				}
+				if (migliore >= 0) {
+					return migliore;
+				}
+			}
+			return -1;
+		}
+
+		private static int contaVivi(boolean[] vivo) {
+			int vivi = 0;
+			for (boolean v : vivo) {
+				if (v) {
+					vivi++;
+				}
+			}
+			return vivi;
+		}
+
+		/**
+		 * Il prossimo vivo dopo quello indicato, in round-robin (-1 se non ce n'è)
+		 */
+		private static int prossimoVivo(boolean[] vivo, int dopo) {
+			for (int i = 1; i <= vivo.length; i++) {
+				int indice = (dopo + i + vivo.length) % vivo.length;
+				if (vivo[indice]) {
+					return indice;
+				}
+			}
+			return -1;
+		}
+
+		private static int prossimoVivo(double[] salute, int dopo) {
+			boolean[] vivo = new boolean[salute.length];
+			for (int i = 0; i < salute.length; i++) {
+				vivo[i] = salute[i] > SALUTE_MINIMA;
+			}
+			return prossimoVivo(vivo, dopo);
 		}
 
 		/**
@@ -1119,7 +1234,7 @@ final class GiocatoreAutomatico {
 			double danno = 0;
 			int bersagli = 0;
 			for (int i = 0; i < salute.length; i++) {
-				if (salute[i] <= 0 || avversari.get(i).isImmuneAIncantesimo(classe)) {
+				if (salute[i] <= SALUTE_MINIMA || avversari.get(i).isImmuneAIncantesimo(classe)) {
 					continue;
 				}
 				if (classe.getPortata() == PortataIncantesimo.MULTIPLO && bersagli >= attore.getBersagli()) {
@@ -1133,16 +1248,6 @@ final class GiocatoreAutomatico {
 				}
 			}
 			return danno;
-		}
-
-		private static int prossimoVivo(double[] salute, int da) {
-			for (int i = 0; i < salute.length; i++) {
-				int indice = (da + i) % salute.length;
-				if (salute[indice] > 0) {
-					return indice;
-				}
-			}
-			return 0;
 		}
 
 		/**
@@ -1193,7 +1298,7 @@ final class GiocatoreAutomatico {
 
 		private static int primoVivo(double[] salute) {
 			for (int i = 0; i < salute.length; i++) {
-				if (salute[i] > 0) {
+				if (salute[i] > SALUTE_MINIMA) {
 					return i;
 				}
 			}
@@ -1203,7 +1308,7 @@ final class GiocatoreAutomatico {
 		private static int contaVivi(double[] salute) {
 			int vivi = 0;
 			for (double s : salute) {
-				if (s > 0) {
+				if (s > SALUTE_MINIMA) {
 					vivi++;
 				}
 			}
@@ -1240,11 +1345,6 @@ final class GiocatoreAutomatico {
 			}
 			return probabilita * medio;
 		}
-	}
-
-	private static final class Scontro {
-		double danniSubiti;
-		Comando primaAzione;
 	}
 
 	// ---------------------------------------------------------------------------------------------------------

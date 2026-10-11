@@ -1,10 +1,13 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
+import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
@@ -139,5 +142,47 @@ class MoltiplicatoreAttesoTest {
         assertEquals(primo, Dado.tira(1000), "il calcolo ha usato i dadi");
         assertTrue(guerriero.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO) && guerriero.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO));
         assertEquals(2, guerriero.getEffettiDiStato().size());
+    }
+
+    @Test
+    void ilFulmineDopoLAcquaTrovaUnBagnatoEPesaDiPiu() {
+        Personaggio guerriero = difensore(TipoPersonaggio.GUERRIERO);
+        Arma acqua = (Arma) FabbricaIncantesimi.crea(ClasseIncantesimo.ACQUA, 5);
+        assertEquals(java.util.EnumSet.of(TipoEffettoDiStato.BAGNATO), CalcolatoreCombattimento.statiCausabili(guerriero, acqua));
+        double adesso = CalcolatoreCombattimento.moltiplicatoreAtteso(guerriero, TipoDanno.FULMINE);
+        double dopo = CalcolatoreCombattimento.moltiplicatoreAttesoDopo(guerriero, TipoDanno.FULMINE, acqua);
+        assertEquals(adesso * TipoInterazioneConEffettiDiStato.ELETTROCUZIONE.getMoltiplicatore(), dopo, DELTA);
+        // Il difensore non è cambiato
+        assertFalse(guerriero.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO));
+    }
+
+    @Test
+    void ilGeloPuoCausareIlCongelamentoEQuindiIlGuscioDiGhiaccio() {
+        Personaggio guerriero = difensore(TipoPersonaggio.GUERRIERO);
+        Arma gelo = (Arma) FabbricaIncantesimi.crea(ClasseIncantesimo.GELO, 5);
+        assertTrue(CalcolatoreCombattimento.statiCausabili(guerriero, gelo).contains(TipoEffettoDiStato.CONGELATO));
+        // Un CONGELATO ha un guscio che para i colpi di lama (x1,5 di difesa): il colpo che segue fa meno danno
+        double adesso = CalcolatoreCombattimento.moltiplicatoreAtteso(guerriero, TipoDanno.TAGLIENTE);
+        double dopo = CalcolatoreCombattimento.moltiplicatoreAttesoDopo(guerriero, TipoDanno.TAGLIENTE,
+                java.util.EnumSet.of(TipoEffettoDiStato.CONGELATO));
+        assertTrue(dopo > 0 && dopo < adesso, adesso + " -> " + dopo);
+    }
+
+    @Test
+    void chiEImmuneAUnStatoOAUnTipoDiDannoNonLoRiceveDaiStatiCausabili() {
+        Personaggio drago = difensore(TipoPersonaggio.DRAGO);
+        Arma fuoco = (Arma) FabbricaIncantesimi.crea(ClasseIncantesimo.FUOCO, 5);
+        assertTrue(CalcolatoreCombattimento.statiCausabili(drago, fuoco).isEmpty(), "il Drago è immune al fuoco");
+    }
+
+    @Test
+    void senzaStatiFuturiLaVarianteDaLoStessoRisultato() {
+        Personaggio guerriero = difensore(TipoPersonaggio.GUERRIERO);
+        guerriero.addEffettoDiStato(TipoEffettoDiStato.BAGNATO, 3, 0);
+        for (TipoDanno tipoDanno : TipoDanno.values()) {
+            assertEquals(CalcolatoreCombattimento.moltiplicatoreAtteso(guerriero, tipoDanno),
+                    CalcolatoreCombattimento.moltiplicatoreAttesoDopo(guerriero, tipoDanno, java.util.EnumSet.noneOf(TipoEffettoDiStato.class)),
+                    DELTA, tipoDanno.name());
+        }
     }
 }

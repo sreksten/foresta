@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
@@ -34,8 +36,9 @@ import java.util.function.ToDoubleFunction;
  * <p>
  * I danni subiti si misurano sul gruppo del giocatore (compagni compresi) come somma delle perdite di salute di
  * ogni personaggio fra un comando e l'altro: le cure non li compensano. Uno scontro è una visita a una locazione
- * con avversari (non locande né città), dal primo sguardo alla scelta della direzione; i round sono gli impulsi
- * della mischia più le azioni a cui gli avversari rispondono (incantesimi, dardi). I danni della fuga si contano
+ * con avversari (non locande né città), dal primo sguardo alla scelta della direzione; i round sono quelli del
+ * combattimento a coppie (StatoDelCombattimento: il piano di max(n, m) coppie, vedi tattiche_di_combattimento_automatiche.md §3) e le
+ * azioni quelle compiute da tutti e due i gruppi. I danni della fuga si contano
  * a parte.
  */
 class SimulazionePartiteTest {
@@ -45,7 +48,7 @@ class SimulazionePartiteTest {
 	/**
 	 * Oltre questi passi (comandi e impulsi) la partita si considera bloccata o infinita e si interrompe
 	 */
-	private static final int PASSI_MASSIMI = 60_000;
+	private static final int PASSI_MASSIMI = 200_000;
 
 	@Disabled("Da eseguire manualmente per avere i numeri del bilanciamento")
 	@Test
@@ -67,7 +70,11 @@ class SimulazionePartiteTest {
 		final TipoPersonaggio avversario;
 		final boolean inCastello;
 		int danni;
+		/**
+		 * I round cominciati (il numero di StatoDelCombattimento a fine scontro) e le azioni compiute da tutti e due i gruppi
+		 */
 		int round;
+		int azioni;
 		boolean mortoUnPersonaggio;
 		boolean fuga;
 		boolean vinto;
@@ -138,6 +145,10 @@ class SimulazionePartiteTest {
 
 		int roundNegliScontri() {
 			return scontri.stream().mapToInt(s -> s.round).sum();
+		}
+
+		int azioniNegliScontri() {
+			return scontri.stream().mapToInt(s -> s.azioni).sum();
 		}
 	}
 
@@ -257,13 +268,14 @@ class SimulazionePartiteTest {
 			}
 		}
 		out.println("Scontri per classe di avversario (tutte le partite): danni subiti dal gruppo");
-		out.printf("%-26s %7s %9s %8s %8s %8s %7s %7s%n", "Avversario", "Scontri", "Dan/comb", "Dan/rnd", "Rnd/comb",
+		out.printf("%-26s %7s %9s %8s %8s %8s %8s %7s %7s%n", "Avversario", "Scontri", "Dan/comb", "Dan/rnd", "Rnd/comb", "Azi/comb",
 				"%morto", "%fuga", "%vinti");
 		perAvversario.forEach((nome, scontri) -> {
 			double danni = scontri.stream().mapToInt(s -> s.danni).sum();
 			double round = scontri.stream().mapToInt(s -> s.round).sum();
-			out.printf("%-26s %7d %9.1f %8.1f %8.1f %7.0f%% %6.0f%% %6.0f%%%n", nome, scontri.size(),
+			out.printf("%-26s %7d %9.1f %8.1f %8.1f %8.1f %7.0f%% %6.0f%% %6.0f%%%n", nome, scontri.size(),
 					danni / scontri.size(), round == 0 ? 0 : danni / round, round / scontri.size(),
+					scontri.stream().mapToInt(x -> x.azioni).sum() / (double) scontri.size(),
 					100.0 * scontri.stream().filter(s -> s.mortoUnPersonaggio).count() / scontri.size(),
 					100.0 * scontri.stream().filter(s -> s.fuga).count() / scontri.size(),
 					100.0 * scontri.stream().filter(s -> s.vinto).count() / scontri.size());
@@ -386,6 +398,11 @@ class SimulazionePartiteTest {
 		Osservatore(PartitaDiTest partita, Risultato risultato) {
 			this.partita = partita;
 			this.risultato = risultato;
+			BusEventi.iscriviti(InternoAzioneInCombattimento.class, e -> {
+				if (scontro != null) {
+					scontro.azioni++;
+				}
+			});
 		}
 
 		void primaDelPasso(Stato stato) {
@@ -424,14 +441,6 @@ class SimulazionePartiteTest {
 		}
 
 		void comando(Stato stato, Comando comando) {
-			if (scontro == null) {
-				return;
-			}
-			if (stato == Stato.IN_COMBATTIMENTO && comando == null) {
-				scontro.round++;
-			} else if (stato == Stato.INCANTESIMO_SCELTO && comando != null && comando != Comando.ANNULLA) {
-				scontro.round++;
-			}
 		}
 
 		void dopoIlPasso(boolean fuga) {
@@ -449,6 +458,9 @@ class SimulazionePartiteTest {
 				}
 			} else if (scontro != null) {
 				scontro.danni += danni;
+			}
+			if (scontro != null && locazione == partita.gruppo().getLocazioneCorrente()) {
+				scontro.round = Math.max(scontro.round, StatoDelCombattimento.getIstanza().getRound());
 			}
 			int viviDopo = gruppo.getNumeroPersonaggiVivi();
 			if (viviDopo < viviPrima) {

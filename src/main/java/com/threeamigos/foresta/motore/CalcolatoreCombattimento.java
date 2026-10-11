@@ -17,8 +17,10 @@ import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  *
@@ -772,17 +774,57 @@ public class CalcolatoreCombattimento {
      * avversario è debole a un elemento) usano questo.
      */
     public static List<TipoInterazioneConEffettiDiStato> interazioniAttive(Personaggio difensore, TipoDanno tipoDanno) {
+        return interazioniAttive(difensore, tipoDanno, Collections.emptySet());
+    }
+
+    /**
+     * Come {@link #interazioniAttive(Personaggio, TipoDanno)}, ma il difensore ha anche gli stati indicati (quelli che un'azione
+     * precedente può avergli causato): per le tattiche, che guardano oltre l'azione di adesso.
+     */
+    static List<TipoInterazioneConEffettiDiStato> interazioniAttive(Personaggio difensore, TipoDanno tipoDanno,
+                                                                   Set<TipoEffettoDiStato> statiFuturi) {
         if (difensore.isImmuneATipoDanno(tipoDanno)) {
             return Collections.emptyList();
         }
         List<TipoInterazioneConEffettiDiStato> attive = new ArrayList<>();
         for (TipoInterazioneConEffettiDiStato interazione : TipoInterazioneConEffettiDiStato.values()) {
             if (interazione.getInnescanti().contains(tipoDanno)
-                    && interazione.getPrecondizioni().stream().anyMatch(difensore::hasEffettoDiStato)) {
+                    && interazione.getPrecondizioni().stream().anyMatch(stato -> haLoStato(difensore, statiFuturi, stato))) {
                 attive.add(interazione);
             }
         }
         return attive;
+    }
+
+    private static boolean haLoStato(Personaggio difensore, Set<TipoEffettoDiStato> statiFuturi, TipoEffettoDiStato stato) {
+        return difensore.hasEffettoDiStato(stato) || statiFuturi.contains(stato);
+    }
+
+    /**
+     * Gli effetti di stato che un'arma (o un incantesimo) può causare a un difensore: quelli nativi del suo tipo di danno e
+     * quelli dei tipi elementali dei suoi incantamenti, escludendo i tipi di danno a cui il difensore è immune e gli stati a cui
+     * è immune. Non cambia niente e non tira i dadi; non dice con che probabilità scattano (vedi {@link #fattoreEffetti}).
+     */
+    public static Set<TipoEffettoDiStato> statiCausabili(Personaggio difensore, Arma arma) {
+        Set<TipoEffettoDiStato> stati = EnumSet.noneOf(TipoEffettoDiStato.class);
+        aggiungiStatiCausabili(stati, difensore, arma.getTipoDanno());
+        if (arma.isIncantata()) {
+            for (IncantamentoMD incantamento : arma.getIncantamenti()) {
+                aggiungiStatiCausabili(stati, difensore, incantamento.getTipoDannoElementale());
+            }
+        }
+        return stati;
+    }
+
+    private static void aggiungiStatiCausabili(Set<TipoEffettoDiStato> stati, Personaggio difensore, TipoDanno tipoDanno) {
+        if (difensore.isImmuneATipoDanno(tipoDanno)) {
+            return;
+        }
+        for (TipoEffettoDiStato stato : tipoDanno.getEffetti()) {
+            if (!difensore.isImmuneAEffetto(stato)) {
+                stati.add(stato);
+            }
+        }
     }
 
     /**
@@ -813,10 +855,15 @@ public class CalcolatoreCombattimento {
      * para i colpi di lama e di punta (×1,5), ma la SUPERCONDUZIONE la riduce (×0,7); 1 se non cambia.
      */
     static double fattoreDifesaDaStati(Personaggio difensore, TipoDanno tipoDanno, List<TipoInterazioneConEffettiDiStato> interazioni) {
+        return fattoreDifesaDaStati(difensore, tipoDanno, interazioni, Collections.emptySet());
+    }
+
+    private static double fattoreDifesaDaStati(Personaggio difensore, TipoDanno tipoDanno, List<TipoInterazioneConEffettiDiStato> interazioni,
+                                               Set<TipoEffettoDiStato> statiFuturi) {
         if (interazioni.contains(TipoInterazioneConEffettiDiStato.SUPERCONDUZIONE)) {
             return 0.7d;
         }
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.CONGELATO) && tipoDanno.getSuperTipo() == SupertipoDanno.FISICO
+        if (haLoStato(difensore, statiFuturi, TipoEffettoDiStato.CONGELATO) && tipoDanno.getSuperTipo() == SupertipoDanno.FISICO
                 && tipoDanno != TipoDanno.CONTUNDENTE) {
             return 1.5d;
         }
@@ -834,15 +881,36 @@ public class CalcolatoreCombattimento {
      * a quel tipo di danno (vedi {@link #fattoreEffetti}): conta le reazioni come se scattassero.
      */
     public static double moltiplicatoreAtteso(Personaggio difensore, TipoDanno tipoDanno) {
+        return moltiplicatoreAtteso(difensore, tipoDanno, Collections.emptySet());
+    }
+
+    /**
+     * Come {@link #moltiplicatoreAtteso(Personaggio, TipoDanno)}, ma per un colpo che arriva <b>dopo</b> un'azione che ha causato al
+     * difensore gli stati indicati (vedi {@link #statiCausabili}): il Gelo che prima bagna e poi congela, il fulmine che colpisce
+     * un BAGNATO. Gli stati si contano come se fossero scattati (come le reazioni, vedi sopra). Non cambia niente e non tira i dadi.
+     */
+    public static double moltiplicatoreAttesoDopo(Personaggio difensore, TipoDanno tipoDanno, Set<TipoEffettoDiStato> statiFuturi) {
+        return moltiplicatoreAtteso(difensore, tipoDanno, statiFuturi);
+    }
+
+    /**
+     * Il fattore del colpo di tipo <code>tipoDanno</code> che segue un'azione fatta con l'arma indicata, contando anche gli stati che
+     * l'arma può causare al difensore ({@link #statiCausabili}). Per scegliere il bersaglio o l'azione guardando oltre il colpo di adesso.
+     */
+    public static double moltiplicatoreAttesoDopo(Personaggio difensore, TipoDanno tipoDanno, Arma azione) {
+        return moltiplicatoreAtteso(difensore, tipoDanno, statiCausabili(difensore, azione));
+    }
+
+    private static double moltiplicatoreAtteso(Personaggio difensore, TipoDanno tipoDanno, Set<TipoEffettoDiStato> statiFuturi) {
         if (difensore.isImmuneATipoDanno(tipoDanno)) {
             return 0.0d;
         }
-        List<TipoInterazioneConEffettiDiStato> interazioni = interazioniAttive(difensore, tipoDanno);
+        List<TipoInterazioneConEffettiDiStato> interazioni = interazioniAttive(difensore, tipoDanno, statiFuturi);
         double difesa = difesaContro(difensore, tipoDanno);
-        if (tipoDanno.getSuperTipo() != SupertipoDanno.FISICO && difensore.hasEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA)) {
+        if (tipoDanno.getSuperTipo() != SupertipoDanno.FISICO && haLoStato(difensore, statiFuturi, TipoEffettoDiStato.MENTE_FRATTURATA)) {
             difesa = difesa * 0.8d;
         }
-        difesa = difesa * fattoreDifesaDaStati(difensore, tipoDanno, interazioni);
+        difesa = difesa * fattoreDifesaDaStati(difensore, tipoDanno, interazioni, statiFuturi);
         return 100.0d / (100.0d + difesa) * moltiplicatoreDelleInterazioni(difensore, tipoDanno, interazioni);
     }
 

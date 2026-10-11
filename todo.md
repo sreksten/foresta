@@ -11,7 +11,7 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 ## Bug noti
 
 - **Combattimento.** Personaggi di livello 5 pesantemente armati non riescono nemmeno a scalfire un boss come la Strega o il Lich.
-- **Simulazioni di combattimento da portare al round a coppie.** `TestScontriDiGruppo` e `TestLogoramentoInizioPartita` (e il loro confronto con `SimulazionePartiteTest`) simulano ancora il combattimento di prima (una risposta per ogni azione, il disimpegno): vanno portati al piano del round (`StatoDelCombattimento`) e il bilanciamento va rimisurato, perché con il round a coppie un compagno solo contro più avversari li subisce tutti.
+- **Bilanciamento col round a coppie.** Le simulazioni (`SimulazionePartiteTest`, `TestScontriDiGruppo`, `TestLogoramentoInizioPartita`) sono portate al piano del round e i numeri sono in [`tattiche_di_combattimento_automatiche.md`](tattiche_di_combattimento_automatiche.md) §9: restano da tarare la stima del giocatore automatico (fugge troppo), l'Eremita a livello 1-3 e il bersaglio preferito che uccide presto maghi e sacerdoti.
 - **Modalità VERTICALE.** `DisplayableCanvasBarraIcone` avanza di 32 px con icone alte 64, e la finestra è larga al massimo 400 px (vedi [`motore_grafico.md`](motore_grafico.md) §12).
 - **Schermi alti meno di 804 px.** La barra delle icone copre il fondo del riquadro delle missioni.
 
