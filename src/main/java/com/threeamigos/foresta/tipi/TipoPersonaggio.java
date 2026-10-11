@@ -160,4 +160,31 @@ public enum TipoPersonaggio {
 		}
 		return moltiplicatore;
 	}
+
+	/**
+	 * Il ruolo della classe, a meno del genere: Mago e Maga, Elfo e Elfa, Ladro e Ladra, Guerriero e Guerriera, Bardo e Cantastorie,
+	 * Sacerdote e Sacerdotessa sono lo stesso ruolo (le tattiche non devono distinguerli); ogni altra classe ha il suo.
+	 */
+	public TipoPersonaggio getRuolo() {
+		switch (this) {
+			case MAGA:
+				return MAGO;
+			case ELFA:
+				return ELFO;
+			case LADRA:
+				return LADRO;
+			case GUERRIERA:
+				return GUERRIERO;
+			case CANTASTORIE:
+				return BARDO;
+			case SACERDOTESSA:
+				return SACERDOTE;
+			default:
+				return this;
+		}
+	}
+
+	public boolean stessoRuoloDi(TipoPersonaggio altra) {
+		return getRuolo() == altra.getRuolo();
+	}
 }

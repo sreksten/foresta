@@ -971,7 +971,7 @@ Un filtro è una domanda a cui un candidato risponde sì o no: `ammette(candidat
 | `STATO` | stato | `hasEffettoDiStato` |
 | `MAGICO` | nessuno | F3 (§7.5): abilità innate, mostri magici, chi ha già lanciato |
 | `DEBOLE_A` | tipo di danno | `moltiplicatoreAtteso` maggiore di 1 ("debole" è solo questo, §6.3) |
-| `DEBOLE_ALL_AZIONE` | nessuno | come `DEBOLE_A` per il tipo di danno dell'azione che si sta valutando, contando anche gli stati che essa può causare (`moltiplicatoreAttesoDopo`) |
+| `DEBOLE_ALL_AZIONE` | nessuno | come `DEBOLE_A` per il tipo di danno dell'azione della voce che si sta valutando (il contesto la espone con `conAzione`); l'attacco fisico non ne ha uno fisso, quindi non passa. Gli stati che l'azione stessa può causare (`moltiplicatoreAttesoDopo`) non contano per il suo stesso colpo: servono a chi sceglie l'azione *seguente* |
 | `IMMUNE_A` | tipo di danno | moltiplicatore 0 (con `NON`: "non immune") |
 | `IL_CAPO` | nessuno | `getCapo()` del gruppo |
 | `ME_STESSO` | nessuno | solo l'attore (con `NON`: "un altro che me") |
@@ -1052,7 +1052,7 @@ Ogni valore dichiara la sua **portata** (§11.2), le **rose che accetta** e i su
 | | `CANTO_IPNOTICO`, `URLO_DELLA_BANSHEE` | tutti gli avversari (fino a `NUMERO_BERSAGLI`) | test di esistenza |
 | | `CANTO_DI_VALORE` | tutto il gruppo | test di esistenza |
 | Pozioni | `POZIONE_SALUTE`, `POZIONE_MAGIA` | un alleato (di solito sé) | come `CANTO_CURATIVO` |
-| Equipaggiamento | `CAMBIA_ARMA` (parametro: tipo di danno voluto) | un'arma | nessuna |
+| Equipaggiamento | `CAMBIA_ARMA` (parametro: tipo di danno voluto) | un'arma | `SE_STESSO` (chi cambia arma) |
 
 Escluse (§5): fuga, corruzione, amicizia, passare inosservati. **Non c'è un'azione "passa il turno"**: se nessuna azione di una lista è applicabile, il personaggio fa un attacco fisico (§7.6, il ripiego).
 
@@ -1079,6 +1079,12 @@ Escluse (§5): fuga, corruzione, amicizia, passare inosservati. **Non c'è un'az
 **Da fare nel motore: il bersaglio scelto, per tutte le azioni.** Oggi ogni azione sceglie da sola il bersaglio: l'attacco colpisce il primo avversario vivo (`LocazioneBase.attaccaConLeArmi`), gli incantesimi i primi vivi, il dardo il primo, il Silenzio
 il primo non silenziato (`Silenzio.scegliBersaglio`), il canto curativo il più ferito. Perché la tattica comandi davvero, ognuna deve accettare un **bersaglio scelto dall'esterno** (e, per i `MULTIPLO`, il principale): la modifica va fatta
 azione per azione, con i comandi manuali di oggi che continuano a funzionare come ora (senza bersaglio scelto, il comportamento di sempre). Le pozioni accettano già chi beve (`consumaPozioneSalute(Personaggio)`).
+
+### 11.9bis Stato dell'implementazione
+
+**Fatto** (`…/tattiche`, `…/tipi/tattiche`, con `RosaTest`, `ContestoTatticoTest`, `SelezioneTest`): le rose; il contesto (attore, gruppi, ospiti, capi, `StatoDelCombattimento`, azione in valutazione); `Confronto`, `TipoParametro`, `TipoFiltro` e
+`Filtro` (immutabile, con i parametri controllati) con la logica in `Filtri`; `TipoOrdinamento`, `Ordinamento` e `Ordinamenti`; `Selettore` (rosa, filtri, ordinamento) con `RisultatoSelezione` (scelto, rimasti, percorso per il registro);
+`TipoAzione` e `PortataAzione`; `TipoPersonaggio.getRuolo`. **Da fare**: i predicati delle condizioni, le azioni con i requisiti e il criterio dell'incantesimo, la voce e la tattica, il valutatore, il salvataggio, il collegamento al motore (bersaglio scelto).
 
 ### 11.10 Il criterio di scelta dell'incantesimo di danno
 

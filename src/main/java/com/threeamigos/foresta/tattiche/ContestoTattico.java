@@ -2,7 +2,9 @@ package com.threeamigos.foresta.tattiche;
 
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,19 +24,38 @@ public final class ContestoTattico {
 	private final List<Personaggio> alleati;
 	private final List<Personaggio> avversari;
 	private final List<Personaggio> ospitiVulnerabili;
+	private final Personaggio capoDegliAlleati;
+	private final Personaggio capoDegliAvversari;
+	private final StatoDelCombattimento stato;
+	private final TipoAzione azioneInValutazione;
 
 	/**
-	 * @param alleati           tutti i membri del gruppo dell'attore, nell'ordine del gruppo
-	 * @param avversari         tutti i membri dell'altro gruppo
+	 * @param alleati           tutti i membri del gruppo dell'attore, nell'ordine del gruppo; il primo è il capo
+	 * @param avversari         tutti i membri dell'altro gruppo; il primo è il capo
 	 * @param ospitiVulnerabili gli ospiti vulnerabili vivi del gruppo del giocatore
 	 */
 	public ContestoTattico(Personaggio attore, boolean attoreDelGiocatore, List<Personaggio> alleati, List<Personaggio> avversari,
 						   List<Personaggio> ospitiVulnerabili) {
+		this(attore, attoreDelGiocatore, alleati, avversari, ospitiVulnerabili, primo(alleati), primo(avversari),
+				StatoDelCombattimento.getIstanza(), null);
+	}
+
+	private ContestoTattico(Personaggio attore, boolean attoreDelGiocatore, List<Personaggio> alleati, List<Personaggio> avversari,
+							List<Personaggio> ospitiVulnerabili, Personaggio capoDegliAlleati, Personaggio capoDegliAvversari,
+							StatoDelCombattimento stato, TipoAzione azioneInValutazione) {
 		this.attore = attore;
 		this.attoreDelGiocatore = attoreDelGiocatore;
 		this.alleati = Collections.unmodifiableList(new ArrayList<>(alleati));
 		this.avversari = Collections.unmodifiableList(new ArrayList<>(avversari));
 		this.ospitiVulnerabili = Collections.unmodifiableList(new ArrayList<>(ospitiVulnerabili));
+		this.capoDegliAlleati = capoDegliAlleati;
+		this.capoDegliAvversari = capoDegliAvversari;
+		this.stato = stato;
+		this.azioneInValutazione = azioneInValutazione;
+	}
+
+	private static Personaggio primo(List<Personaggio> personaggi) {
+		return personaggi.isEmpty() ? null : personaggi.get(0);
 	}
 
 	/**
@@ -48,7 +69,26 @@ public final class ContestoTattico {
 		return new ContestoTattico(attore, delGiocatore,
 				(delGiocatore ? giocatore : mostri).getPersonaggi(),
 				(delGiocatore ? mostri : giocatore).getPersonaggi(),
-				giocatore.getOspitiBersaglio());
+				giocatore.getOspitiBersaglio(),
+				(delGiocatore ? giocatore : mostri).getCapo(),
+				(delGiocatore ? mostri : giocatore).getCapo(),
+				StatoDelCombattimento.getIstanza(), null);
+	}
+
+	/**
+	 * Lo stesso contesto mentre si valuta una voce con quest'azione (per i filtri che ne dipendono, come DEBOLE_ALL_AZIONE)
+	 */
+	public ContestoTattico conAzione(TipoAzione azione) {
+		return new ContestoTattico(attore, attoreDelGiocatore, alleati, avversari, ospitiVulnerabili, capoDegliAlleati, capoDegliAvversari,
+				stato, azione);
+	}
+
+	/**
+	 * Lo stesso contesto che legge le schede di un altro stato del combattimento (per i test)
+	 */
+	public ContestoTattico conStato(StatoDelCombattimento altroStato) {
+		return new ContestoTattico(attore, attoreDelGiocatore, alleati, avversari, ospitiVulnerabili, capoDegliAlleati, capoDegliAvversari,
+				altroStato, azioneInValutazione);
 	}
 
 	public Personaggio getAttore() {
@@ -81,5 +121,34 @@ public final class ContestoTattico {
 	 */
 	public List<Personaggio> getOspitiVulnerabili() {
 		return ospitiVulnerabili;
+	}
+
+	public StatoDelCombattimento getStato() {
+		return stato;
+	}
+
+	/**
+	 * L'azione della voce che si sta valutando, o null fuori da una voce
+	 */
+	public TipoAzione getAzioneInValutazione() {
+		return azioneInValutazione;
+	}
+
+	/**
+	 * Se il personaggio è il capo del suo gruppo (dei miei o dei mostri)
+	 */
+	public boolean isCapo(Personaggio personaggio) {
+		return personaggio == capoDegliAlleati || personaggio == capoDegliAvversari;
+	}
+
+	public boolean isOspite(Personaggio personaggio) {
+		return ospitiVulnerabili.contains(personaggio);
+	}
+
+	/**
+	 * Se il personaggio è un mostro (e non uno dei miei): sta nel gruppo dei mostri, che per l'attore è il suo o quello avversario
+	 */
+	public boolean isMostro(Personaggio personaggio) {
+		return attoreDelGiocatore ? avversari.contains(personaggio) : alleati.contains(personaggio);
 	}
 }
