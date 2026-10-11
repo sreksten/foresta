@@ -17,5 +17,9 @@ public enum TipoParametro {
 	/** Una categoria di creatura (<code>CategoriaPersonaggio</code>) */
 	CATEGORIA,
 	/** Un tipo di danno (<code>TipoDanno</code>) */
-	TIPO_DANNO
+	TIPO_DANNO,
+	/** Un numero (una percentuale) */
+	NUMERO,
+	/** Una rosa, dei filtri, un confronto e un numero: quanti candidati restano (<code>QUANTI AVVERSARI [CATEGORIA NON_MORTO] MAGGIORE 0</code>) */
+	SELEZIONE_CONFRONTO_E_NUMERO
 }

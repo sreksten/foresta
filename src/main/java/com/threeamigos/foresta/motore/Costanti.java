@@ -225,6 +225,16 @@ public class Costanti {
 
     // Pozioni
     // Le pozioni di salute con cui il gruppo parte
+    /**
+     * L'astuzia di un personaggio per le tattiche (tattiche_di_combattimento_automatiche.md §4): l'intelligenza massima della sua classe per
+     * una rampa sul livello, che parte da questa frazione al livello 1 e arriva al pieno al livello 9
+     */
+    public static final double ASTUZIA_PARTENZA = 0.4d;
+    /**
+     * Quanto sale la frazione dell'astuzia a ogni livello
+     */
+    public static final double ASTUZIA_PER_LIVELLO = 0.075d;
+
     public static final int POZIONI_SALUTE_INIZIALI = 2;
     // Con cosa comincia una partita: le monete bastano a un'arma nuova per tutti dopo i primi pasti (vedi economia.md)
     public static final int MONETE_INIZIALI = 150;

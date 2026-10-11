@@ -85,6 +85,7 @@ public class StatoDelCombattimento {
 		private boolean haLanciato;
 		private int cambiDArma;
 		private final Map<String, Integer> vociUsate = new HashMap<>();
+		private final Map<String, Integer> usiDelleVoci = new HashMap<>();
 		private final Map<Artefatto, Boolean> armiValutate = new IdentityHashMap<>();
 	}
 
@@ -360,7 +361,16 @@ public class StatoDelCombattimento {
 
 	/** Registra che il personaggio ha usato una voce della sua tattica, nel round corrente */
 	public void registraUsoVoce(Personaggio personaggio, String voce) {
-		scheda(personaggio).vociUsate.put(voce, round);
+		Scheda scheda = scheda(personaggio);
+		scheda.vociUsate.put(voce, round);
+		scheda.usiDelleVoci.merge(voce, 1, Integer::sum);
+	}
+
+	/** Quante volte il personaggio ha usato la voce in questo combattimento */
+	public int getUsiDellaVoce(Personaggio personaggio, String voce) {
+		Scheda scheda = schede.get(personaggio);
+		Integer usi = scheda == null ? null : scheda.usiDelleVoci.get(voce);
+		return usi == null ? 0 : usi;
 	}
 
 	public boolean haUsatoLaVoce(Personaggio personaggio, String voce) {

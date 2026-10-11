@@ -1082,9 +1082,12 @@ azione per azione, con i comandi manuali di oggi che continuano a funzionare com
 
 ### 11.9bis Stato dell'implementazione
 
-**Fatto** (`…/tattiche`, `…/tipi/tattiche`, con `RosaTest`, `ContestoTatticoTest`, `SelezioneTest`): le rose; il contesto (attore, gruppi, ospiti, capi, `StatoDelCombattimento`, azione in valutazione); `Confronto`, `TipoParametro`, `TipoFiltro` e
+**Fatto** (`…/tattiche`, `…/tipi/tattiche`, con `RosaTest`, `ContestoTatticoTest`, `SelezioneTest`, `PredicatiTest`): le rose; il contesto (attore, gruppi, ospiti, capi, `StatoDelCombattimento`, azione e voce in valutazione); `Confronto`, `TipoParametro`, `TipoFiltro` e
 `Filtro` (immutabile, con i parametri controllati) con la logica in `Filtri`; `TipoOrdinamento`, `Ordinamento` e `Ordinamenti`; `Selettore` (rosa, filtri, ordinamento) con `RisultatoSelezione` (scelto, rimasti, percorso per il registro);
-`TipoAzione` e `PortataAzione`; `TipoPersonaggio.getRuolo`. **Da fare**: i predicati delle condizioni, le azioni con i requisiti e il criterio dell'incantesimo, la voce e la tattica, il valutatore, il salvataggio, il collegamento al motore (bersaglio scelto).
+`TipoAzione` e `PortataAzione`; `TipoPersonaggio.getRuolo`; i predicati (`TipoPredicato`, `Predicato`, `Predicati`: `QUANTI`, `ROUND`, `ASTUZIA`, `PROBABILITA`, `VOCE_USATA`, `ROUND_DALL_ULTIMO_USO`); l'astuzia (`Astuzia.di`, con
+`Costanti.ASTUZIA_PARTENZA` e `ASTUZIA_PER_LIVELLO`); il conteggio degli usi di una voce nello `StatoDelCombattimento` (`getUsiDellaVoce`). Un `ROUND_DALL_ULTIMO_USO` di una voce mai usata vale "moltissimi" (l'attesa è finita).
+**Da fare**: le azioni con i requisiti e il criterio dell'incantesimo, la voce e la tattica, il valutatore, il salvataggio, il collegamento al motore (bersaglio scelto); i ritocchi alle intelligenze massime del Folletto (a 8) e dell'Ombra Nera (a 31), che
+fanno parte della ripartizione delle fasce (§4).
 
 ### 11.10 Il criterio di scelta dell'incantesimo di danno
 

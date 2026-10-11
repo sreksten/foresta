@@ -28,6 +28,7 @@ public final class ContestoTattico {
 	private final Personaggio capoDegliAvversari;
 	private final StatoDelCombattimento stato;
 	private final TipoAzione azioneInValutazione;
+	private final String identificativoVoce;
 
 	/**
 	 * @param alleati           tutti i membri del gruppo dell'attore, nell'ordine del gruppo; il primo è il capo
@@ -37,12 +38,12 @@ public final class ContestoTattico {
 	public ContestoTattico(Personaggio attore, boolean attoreDelGiocatore, List<Personaggio> alleati, List<Personaggio> avversari,
 						   List<Personaggio> ospitiVulnerabili) {
 		this(attore, attoreDelGiocatore, alleati, avversari, ospitiVulnerabili, primo(alleati), primo(avversari),
-				StatoDelCombattimento.getIstanza(), null);
+				StatoDelCombattimento.getIstanza(), null, null);
 	}
 
 	private ContestoTattico(Personaggio attore, boolean attoreDelGiocatore, List<Personaggio> alleati, List<Personaggio> avversari,
 							List<Personaggio> ospitiVulnerabili, Personaggio capoDegliAlleati, Personaggio capoDegliAvversari,
-							StatoDelCombattimento stato, TipoAzione azioneInValutazione) {
+							StatoDelCombattimento stato, TipoAzione azioneInValutazione, String identificativoVoce) {
 		this.attore = attore;
 		this.attoreDelGiocatore = attoreDelGiocatore;
 		this.alleati = Collections.unmodifiableList(new ArrayList<>(alleati));
@@ -52,6 +53,7 @@ public final class ContestoTattico {
 		this.capoDegliAvversari = capoDegliAvversari;
 		this.stato = stato;
 		this.azioneInValutazione = azioneInValutazione;
+		this.identificativoVoce = identificativoVoce;
 	}
 
 	private static Personaggio primo(List<Personaggio> personaggi) {
@@ -72,7 +74,7 @@ public final class ContestoTattico {
 				giocatore.getOspitiBersaglio(),
 				(delGiocatore ? giocatore : mostri).getCapo(),
 				(delGiocatore ? mostri : giocatore).getCapo(),
-				StatoDelCombattimento.getIstanza(), null);
+				StatoDelCombattimento.getIstanza(), null, null);
 	}
 
 	/**
@@ -80,7 +82,15 @@ public final class ContestoTattico {
 	 */
 	public ContestoTattico conAzione(TipoAzione azione) {
 		return new ContestoTattico(attore, attoreDelGiocatore, alleati, avversari, ospitiVulnerabili, capoDegliAlleati, capoDegliAvversari,
-				stato, azione);
+				stato, azione, identificativoVoce);
+	}
+
+	/**
+	 * Lo stesso contesto mentre si valuta la voce con quell'identificativo (per i predicati che ne guardano gli usi)
+	 */
+	public ContestoTattico conVoce(String identificativo) {
+		return new ContestoTattico(attore, attoreDelGiocatore, alleati, avversari, ospitiVulnerabili, capoDegliAlleati, capoDegliAvversari,
+				stato, azioneInValutazione, identificativo);
 	}
 
 	/**
@@ -88,7 +98,7 @@ public final class ContestoTattico {
 	 */
 	public ContestoTattico conStato(StatoDelCombattimento altroStato) {
 		return new ContestoTattico(attore, attoreDelGiocatore, alleati, avversari, ospitiVulnerabili, capoDegliAlleati, capoDegliAvversari,
-				altroStato, azioneInValutazione);
+				altroStato, azioneInValutazione, identificativoVoce);
 	}
 
 	public Personaggio getAttore() {
@@ -132,6 +142,13 @@ public final class ContestoTattico {
 	 */
 	public TipoAzione getAzioneInValutazione() {
 		return azioneInValutazione;
+	}
+
+	/**
+	 * L'identificativo della voce che si sta valutando (con cui lo stato del combattimento ricorda gli usi), o null fuori da una voce
+	 */
+	public String getIdentificativoVoce() {
+		return identificativoVoce;
 	}
 
 	/**
