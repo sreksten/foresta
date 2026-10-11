@@ -72,9 +72,8 @@ Il turno a rotazione vale per **tutti e due i gruppi**, e va tracciato in questo
 
 **Il puntatore.** Ogni gruppo ricorda **chi ha agito per ultimo** e passa la mano al **successivo personaggio vivo** (saltando chi è
 caduto o in panchina). Il puntatore di ogni gruppo avanza **sempre**, a ogni azione, e non si azzera fra uno scontro e l'altro dentro la
-stessa locazione. Oggi esiste solo in parte: `Gruppo.getProssimoAttaccante()` fa già il giro (un indice, `ultimoIndiceSelezionato`, nel `Gruppo`), ma lo usa soltanto la
-risposta del gruppo avversario (`LocazioneBase.rispostaAvversaria`); il gruppo del giocatore non ha un puntatore, perché è il giocatore a scegliere chi agisce. Con le tattiche
-il puntatore va a tutti e due i gruppi (§3.3).
+stessa locazione. **Fatto** (`StatoDelCombattimento.getProssimoAttaccante`, §3.3): il puntatore sta nello stato e non più nel `Gruppo`; la risposta avversaria (`rispostaAvversaria`) e la risposta nella mischia (`eseguiSingoloAttacco`)
+lo usano per far rispondere il prossimo avversario vivo, saltando il turno a chi è incapace di agire (atterrato, congelato, stordito). Il gruppo del giocatore ha il suo puntatore, ma non lo usa ancora: è il giocatore a scegliere chi agisce.
 
 **La risposta.** A ogni azione del giocatore **risponde il prossimo avversario vivo** del gruppo avversario, quello a cui tocca nel suo
 round-robin. Se faccio un attacco singolo, c'è una risposta sola; se lancio un incantesimo, c'è una risposta sola; se faccio un
@@ -116,12 +115,14 @@ risposta si saltano. Le risposte "in più" (nessuna mia azione) scelgono il bers
 
 ### 3.3 Il round e lo stato del combattimento
 
-**Che cos'è un round** (deciso): un **giro completo** dei personaggi **dei due gruppi**. Il round finisce quando tutti i personaggi vivi del giocatore *e* tutti
-gli avversari vivi hanno fatto la propria mossa (il giocatore con la sua azione, l'avversario con la sua risposta). Il numero del round **riparte da 1 a ogni inizio
-locazione** e **continua** quando arriva la prossima ondata: il combattimento e la locazione non sono cambiati, sono solo apparsi nuovi mostri. All'inizio di ogni
+**Che cos'è un round** (deciso): finisce quando **tutti gli avversari vivi hanno fatto la propria mossa**. Così il round arriva sempre a una fine, anche se il
+giocatore continua con azioni manuali facendo agire sempre lo stesso personaggio, e i mostri ruotano comunque in round-robin (una risposta per ogni azione del giocatore). Chi ha
+agito nel round si registra per entrambi i gruppi (`haAgitoNelRound`), ma per chiudere il round contano solo gli avversari; se non ce ne sono più il combattimento è
+finito e il round non avanza. Il numero del round **riparte da 1 a ogni inizio locazione** e **continua** quando arriva la prossima ondata: il combattimento e la locazione non
+sono cambiati, sono solo apparsi nuovi mostri (che non hanno ancora agito: il round si allunga). All'inizio di ogni
 round il motore pubblica un evento **`InternoInizioRound`** (con il numero), per la UI, i log e chi tiene la memoria del combattimento.
 
-**Lo `StatoDelCombattimento`** (deciso nel nome): un oggetto che raccoglie in un posto solo tutto ciò che le tattiche devono ricordare di un combattimento. Si crea
+**Lo `StatoDelCombattimento`** (deciso nel nome; **fatti**: il round con `InternoInizioRound`, chi ha agito nel round, i puntatori dei due gruppi e il round-robin della risposta; il resto arriva con le tattiche): un oggetto che raccoglie in un posto solo tutto ciò che le tattiche devono ricordare di un combattimento. Si crea
 (o si azzera) a ogni inizio locazione, insieme alla preparazione del gruppo avversario. Contiene:
 
 - **del combattimento**: il numero del round, il registro di chi ha già agito nel round corrente e, per **ogni gruppo**, il **puntatore** all'ultimo personaggio che ha agito
@@ -145,9 +146,8 @@ Regole (decise):
 - **Non è il modello dati**: è la memoria tattica. La aggiornano il motore e la locazione (o l'oggetto stesso, ascoltando gli eventi come `InternoInizioRound`);
   le tattiche la *leggono* e basta, come vuole il prerequisito del §1.
 
-**Una conseguenza da tenere presente.** Nel gioco di oggi il giocatore sceglie ogni volta chi agisce, e può far agire sempre lo stesso personaggio: con questa
-definizione il round non avanza finché gli altri non hanno agito. Il contatore diventa significativo quando entra il round-robin del §3 (il puntatore fa
-agire tutti a turno); prima, il numero del round può restare fermo a lungo.
+**Una conseguenza:** con più compagni che avversari il round è più corto di un giro completo del gruppo del giocatore (un avversario solo: un round a ogni risposta). Le condizioni sul round e i
+cooldown dei mostri contano quindi "giri degli avversari", e arrivano a una fine anche in manuale.
 
 ## 4. Le tattiche degli avversari
 
@@ -715,7 +715,7 @@ Per gli **alleati** (cure, resurrezioni, pozioni) valgono gli stessi, più: se s
 | A2 | **un incantesimo che fa danno** (una classe precisa, o "del repertorio") | criterio S: a caso, il più potente, il più adatto, o il più adatto con apprendimento |
 | A3 | **Silenzio** | su un bersaglio F3 non silenziato (O6: Mago, Sacerdote, Elfo, Bardo) |
 | A4 | **Morte, Resurrezione, Alba Sacra, Dardo arcano, canti** | le voci proprie di ciascuno |
-| A5 | **pozione** della Salute o della Magia | chi beve: O3 fra i compagni |
+| A5 | **pozione** della Salute o della Magia | chi beve: O3 fra i compagni (di solito sé stessi) |
 | A6 | **cambia arma** | un'arma di tipo `<X>` (F5/C7); conta come azione e come cambio |
 
 **Il criterio S di scelta dell'incantesimo** (per A2)
@@ -740,6 +740,9 @@ per ogni coppia (personaggio, tipo di danno) quanto è andato diverso dal previs
   ne sceglie uno a caso e attacca lui.
 - **Un mostro magico di media intelligenza** (per esempio uno Spirito): *[C1 ASTUZIA ≥ 12; F3 magico, O2 a caso] → A2 con S1*; poi *[O1 il primo] → A1*.
 - **Un mostro furbo** (per esempio l'Idra, il Folletto più sveglio): *[C1 ASTUZIA ≥ 20; O6 Mago, Sacerdote, Elfo, Bardo; non silenziato; C2 MAGIA sufficiente] → A3 Silenzio*; poi *[O6; C2] → A2 con S2*; poi *[O3 con meno salute] → A1*.
+- **Chi si cura da solo** (tipicamente un umanoide che ha trovato o portato pozioni): *[C2 la mia salute è sotto il 30%; C7 ho una pozione della Salute] → A5 Salute, su di me* (se c'è la grande e il danno è molto, la grande).
+- **Chi ricarica la magia**: *[C2 la mia `MAGIA` è sotto `n` punti; C7 ho una pozione della Magia; posso ancora lanciare incantesimi, cioè ho pergamene disponibili o un repertorio / abilità innate] → A5 Magia, su di me*. L'ultima condizione evita di sprecare la pozione quando
+  non ci sarebbe niente da lanciare; "posso lanciare" si legge da `getIncantesimi(classe)` e da `puoFormulare`/`getRepertorioIncantesimi`. Queste due voci vanno in cima alla lista, prima degli attacchi.
 - **Uno stratega** (Strega, Lich, Drago): *[C1 ASTUZIA ≥ 31; F3 magico non silenziato, O7 con più MAGIA, poi O6] → A3*; *[O5 più debole al suo elemento] → A2 con S3 o S4*; se la `MAGIA` è sotto la soglia e ha una pozione → A5; *[O3] → A1*.
 
 I livelli di intelligenza di questi esempi (12, 20, 31) sono le soglie proposte (§10): sono parametri della voce, non categorie del mostro.
@@ -857,13 +860,13 @@ sue.
 
 Quasi tutto è già leggibile (§6 e §7). Quello che manca:
 
-- **La scorta di incantesimi e pozioni anche per il gruppo avversario** (da correggere nel modello dati): oggi le pergamene e le pozioni (della Salute e della
-  Magia, normali e grandi) sono solo del gruppo del giocatore (`GruppoGiocatoreMD`: `incantesimi`, `pozioniSalute`, `pozioniSaluteGrande`, `pozioniMagia`,
-  `pozioniMagiaGrande`); `Gruppo` e `GruppoAvversario` non le hanno: i mostri non consumano pergamene, conoscono per natura un **repertorio fisso** di incantesimi malefici
-  (`getRepertorioIncantesimi`, filtrato per tipo `MALEFICO`) e li pagano con la `MAGIA`. Vanno spostate in una base comune (`GruppoMD`) e rese disponibili anche agli avversari, con le
-  stesse regole di consumo: una voce "bevi la pozione" o "lancia l'incantesimo curativo" diventa eseguibile per un mostro solo se il suo gruppo ne ha. Beve la
-  pozione (della Magia, della Salute) solo un **umanoide** (§6.1, categoria). Da decidere: da dove vengono le scorte di un gruppo avversario (generate con
-  l'incontro?), e se quelle non usate passano al giocatore quando vince (loot).
+- **La scorta di incantesimi e pozioni anche per il gruppo avversario** — **la struttura è fatta**: le pergamene e le pozioni (della Salute e della Magia, normali e
+  grandi) stanno ora in `GruppoMD` e le gestisce `Gruppo` (`getIncantesimi`, `addPozioniSalute`, `consumaPozioneSalute`...); le variazioni del gruppo del giocatore si
+  annunciano alla UI, quelle del gruppo avversario no, e le sue scorte si azzerano a ogni locazione. I mostri però conoscono ancora per natura un **repertorio fisso**
+  di incantesimi malefici (`getRepertorioIncantesimi`, filtrato per tipo `MALEFICO`) e li pagano con la `MAGIA`, senza pergamene. **Fatto anche il bottino** (`BottinoDegliAvversari`): quando il gruppo avversario si popola (all'inizio della locazione o quando arriva un'ondata), per **ogni avversario** c'è il 20%
+  (`Costanti.PROBABILITA_PERGAMENA_PER_AVVERSARIO`) di aggiungere una pergamena: se è un **umanoide** (categoria `UMANOIDE`), un incantesimo qualsiasi (anche se è magico: ha la precedenza); altrimenti, se è magico (`isMagico`),
+  una del suo repertorio (uno spirito: Gelo). Per ogni umanoide c'è inoltre il 20% (`Costanti.PROBABILITA_POZIONE_SALUTE_PER_AVVERSARIO_UMANOIDE`) di una pozione della Salute normale. Vinto lo scontro, tutto ciò che resta delle scorte degli avversari passa al giocatore, con un messaggio (le notifiche di variazione delle scorte ci sono già).
+  Oggi i mostri non leggono le pergamene, quindi arrivano tutte al giocatore. **Resta da fare**: far usare pozioni e pergamene dalle tattiche (solo agli umanoidi; le voci A5 e C2/C7 del catalogo, §7.5).
 - **L'evento `InternoDecisioneTattica`** (§7.7): è `InternoRisultatoValutazionePersonaggioAttaccante` **rinominato e completato** (classe in `eventi/interni`, il valore
   `INTERNO_DECISIONE_TATTICA` in `TipoEvento` al posto di `INTERNO_RISULTATO_VALUTAZIONE_PERSONAGGIO_ATTACCANTE`, la riga di registro in `SnifferBusEventi`), non un
   evento in più; il motore delle tattiche costruisce la sintesi dettagliata mentre sceglie la voce e sostituisce le otto pubblicazioni di `scegliIncantesimoContro`.
@@ -875,15 +878,14 @@ Quasi tutto è già leggibile (§6 e §7). Quello che manca:
   I salvataggi non devono restare compatibili con le versioni precedenti, quindi non serve alcuna conversione. Serve un **test di andata e ritorno**:
   una tattica complessa (blocchi nidificati, nomi, condizioni composte) scritta e riletta torna uguale, e un personaggio caricato agisce come prima del
   salvataggio.
-
-- il **puntatore di rotazione** di ogni gruppo (chi ha agito per ultimo) e il **round** (§3): oggi il `Gruppo` non li ha, e
-  `LocazioneBase` agisce su un solo `combattente`;
-- lo **`StatoDelCombattimento`** (§3.3): il numero del round (con l'evento `InternoInizioRound`), l'ultimo bersaglio di ogni personaggio, le voci già usate, i cambi d'arma,
-  le armi valutate, chi ha lanciato, la conoscenza sulle reazioni;
+- lo **`StatoDelCombattimento`** (§3.3) — **fatti**: il numero del round (con l'evento `InternoInizioRound`), chi ha agito nel round e il puntatore di rotazione di ogni
+  gruppo, con il round-robin della risposta avversaria e della risposta nella mischia; il puntatore non è più nel `Gruppo`. **Mancano**, per personaggio: l'ultimo bersaglio
+  (avversario e alleato), chi lo ha attaccato per ultimo, chi ha lanciato un incantesimo, le voci già usate (e il round dell'ultimo uso), i cambi d'arma, le armi valutate; e la
+  conoscenza sulle reazioni. Il gruppo del giocatore ha il suo puntatore ma non lo usa ancora (`LocazioneBase` fa agire un solo `combattente`, scelto dal giocatore);
 - (il riconoscimento di un **boss** per ora non serve, §6.1; le **categorie di creatura** ci sono già);
-- le **debolezze e resistenze di classe** come dato e la **difesa per elemento**, se si vorranno (§6.3, lavoro 4 e "Da decidere"): la composizione
-  delle debolezze in un fattore senza effetti collaterali c'è già (`moltiplicatoreAtteso`);
-- la **risposta** come azione a sé degli avversari (oggi è `rispondiInMischia` sul combattente, con la logica fissa di §4);
+- la **difesa per elemento**, se si vorrà (§6.3, lavoro 5 e "Da decidere"): le debolezze e resistenze di classe sono già un dato (`getMoltiplicatoreDannoSubito`) e la
+  loro composizione in un fattore senza effetti collaterali c'è già (`moltiplicatoreAtteso`);
+- la **risposta** come azione a sé degli avversari: oggi chi risponde è già scelto in round-robin, ma l'azione è ancora `rispondiInMischia` sul combattente, con la logica fissa di §4;
 - le **tattiche base dei mostri**: un file di risorse per classe (§4), nello stesso formato di quelle del giocatore, e il modo di assegnarle a
   un avversario quando nasce (`FabbricaPersonaggi`), con la possibilità che **una singola istanza abbia una tattica sua** al posto di quella di classe (una
   missione può portare un goblin più furbo degli altri con la sua), e che questa sia salvata con la partita; e il motore che le esegue, con le **azioni di controllo** `SE / ALTRIMENTI / FINE`

@@ -35,6 +35,8 @@ public class GruppoAvversario extends Gruppo {
 	@Override
 	protected void reimposta() {
 		super.reimposta();
+		// Le scorte che i mostri avevano con sé (vedi Gruppo.getGruppoMD) se ne vanno con loro
+		getGruppoMD().reimposta();
 		ondateSuccessive.clear();
 	}
 

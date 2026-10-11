@@ -707,6 +707,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito entraInStatoPreparazioneLocazione() {
 		gruppoAvversario.reimposta();
+		// Il round torna a 1 e la memoria del combattimento si azzera (vedi StatoDelCombattimento)
+		StatoDelCombattimento.getIstanza().reimposta();
 		gruppo.svuotaPanchina();
 		// Chi è nel gruppo per un motivo che finisce con la sua morte (lo Scheletro della Mietitura) se ne va
 		for (Personaggio personaggioCorrente : new ArrayList<>(gruppo.getPersonaggi())) {
@@ -741,6 +743,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 								Foresta.isLocazioneVisitata(gruppo.getCoordinate()))
 						.ifPresent(locazioneCorrente::collocaOggettoMissione);
 			}
+		}
+		// Gli avversari portano con sé qualche pergamena (se non le usano, a scontro vinto diventano bottino)
+		if (!gruppoAvversario.isSfidaACartaForbiciSasso()) {
+			BottinoDegliAvversari.fornisciLeScorte(gruppoAvversario, gruppoAvversario.getPersonaggi());
 		}
 		BusEventi.pubblica(new InternoPreparazioneLocazione());
 		BusEventi.pubblica(new NotificaTestoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));

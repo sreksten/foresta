@@ -173,7 +173,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * tutti, Morte compresa; gli altri tutti tranne Morte. Le classi di mostri con un carattere preciso lo
 	 * restringono (l'Arpia l'Aria, i non morti il Gelo...).
 	 */
-	protected Set<ClasseIncantesimo> getRepertorioIncantesimi() {
+	public Set<ClasseIncantesimo> getRepertorioIncantesimi() {
 		Set<ClasseIncantesimo> repertorio = EnumSet.noneOf(ClasseIncantesimo.class);
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 			if (classeIncantesimo.getTipo() == TipoIncantesimo.MALEFICO

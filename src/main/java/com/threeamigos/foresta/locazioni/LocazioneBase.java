@@ -67,6 +67,7 @@ public abstract class LocazioneBase implements Locazione {
 
 	private final GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 	private final GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
+	private final StatoDelCombattimento statoDelCombattimento = StatoDelCombattimento.getIstanza();
 
 	/**
 	 * Lo stato durevole della casella: nome, visitata, conosciuta, completa.
@@ -320,8 +321,12 @@ public abstract class LocazioneBase implements Locazione {
 			return perdiIlDuello();
 		}
 		// Non si guarda se la locazione è completa: quando l'ultimo avversario muore per un veleno non lo è ancora
-		if (stato == Stato.FINE_LOCAZIONE && gruppoAvversario.getPersonaggiVivi().isEmpty() && gruppoAvversario.hasOndateSuccessive()) {
-			return arrivaLaProssimaOndata();
+		if (stato == Stato.FINE_LOCAZIONE && gruppoAvversario.getPersonaggiVivi().isEmpty()) {
+			if (gruppoAvversario.hasOndateSuccessive()) {
+				return arrivaLaProssimaOndata();
+			}
+			// Vinto lo scontro: le scorte che gli avversari non hanno usato sono bottino
+			BottinoDegliAvversari.raccogli(gruppo, gruppoAvversario);
 		}
 		return stato;
 	}
@@ -334,6 +339,7 @@ public abstract class LocazioneBase implements Locazione {
 	private Stato arrivaLaProssimaOndata() {
 		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 		Ondata ondata = gruppoAvversario.prossimaOndata();
+		BottinoDegliAvversari.fornisciLeScorte(gruppoAvversario, ondata.getAvversari());
 		combattente = null;
 		statoLocazione = StatoLocazione.IN_LOCAZIONE;
 		opzioneCorruzioneDisponibile = false;
@@ -530,6 +536,7 @@ public abstract class LocazioneBase implements Locazione {
 								" non permette di formulare questo incantesimo.";
 						BusEventi.pubblica(new NotificaTestoFrase(sb));
 
+						statoDelCombattimento.registraAzione(formulante);
 						rispostaAvversaria(null, gruppo, gruppoAvversario);
 
 						if (!gruppo.getCapo().isVivo()) {
@@ -1021,11 +1028,11 @@ public abstract class LocazioneBase implements Locazione {
 	// grado di farlo, salta il turno - e questo da un senso agli effetti di stato.
 	private void rispostaAvversaria(Personaggio personaggioBersaglio, GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 
-		Personaggio avversarioAttaccante = gruppoAvversario.getProssimoAttaccante();
-		if (avversarioAttaccante == null ||
-				avversarioAttaccante.hasEffettoDiStato(TipoEffettoDiStato.ATTERRATO) ||
-				avversarioAttaccante.hasEffettoDiStato(TipoEffettoDiStato.CONGELATO) ||
-				avversarioAttaccante.hasEffettoDiStato(TipoEffettoDiStato.STORDITO)) {
+		// Chi ha appena agito (se c'è) e chi risponde hanno fatto la loro mossa del round, anche se chi risponde è incapace di agire
+		statoDelCombattimento.registraAzione(personaggioBersaglio);
+		Personaggio avversarioAttaccante = statoDelCombattimento.getProssimoAttaccante(gruppoAvversario);
+		statoDelCombattimento.registraAzione(avversarioAttaccante);
+		if (avversarioAttaccante == null || isIncapaceDiAgire(avversarioAttaccante)) {
 			return;
 		}
 		if (gruppo.getNumeroPersonaggiVivi() == 0) {
@@ -1038,6 +1045,15 @@ public abstract class LocazioneBase implements Locazione {
 		} else {
 			avversarioAttaccante.attacca(personaggioBersaglio);
 		}
+	}
+
+	/**
+	 * Se per un effetto di stato il personaggio salta il turno
+	 */
+	private static boolean isIncapaceDiAgire(Personaggio personaggio) {
+		return personaggio.hasEffettoDiStato(TipoEffettoDiStato.ATTERRATO) ||
+				personaggio.hasEffettoDiStato(TipoEffettoDiStato.CONGELATO) ||
+				personaggio.hasEffettoDiStato(TipoEffettoDiStato.STORDITO);
 	}
 
 	protected void setOggetto(Oggetto oggetto) {
@@ -1254,8 +1270,14 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		Logger.log("Valutazione bersaglio -> combattente");
 
-		// L'avversario risponde sul combattente: con le armi o, se sa la magia, con un incantesimo
-		bersaglio.rispondiInMischia(combattente);
+		// Il combattente ha agito; risponde sul combattente il prossimo avversario in round-robin (che salta il turno se è incapace
+		// di agire): con le armi o, se sa la magia, con un incantesimo
+		statoDelCombattimento.registraAzione(combattente);
+		Personaggio rispondente = statoDelCombattimento.getProssimoAttaccante(gruppoAvversario);
+		statoDelCombattimento.registraAzione(rispondente);
+		if (rispondente != null && !isIncapaceDiAgire(rispondente)) {
+			rispondente.rispondiInMischia(combattente);
+		}
 		if (combattente.isFuoriCombattimento()) {
 			if (gruppo.getCapo().isVivo()) {
 				statoLocazione = StatoLocazione.IN_LOCAZIONE;
@@ -1270,6 +1292,7 @@ public abstract class LocazioneBase implements Locazione {
 			String sb = bersaglio.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
 					" si disimpegna e attacca!";
 			BusEventi.pubblica(new NotificaTestoFrase(sb));
+			statoDelCombattimento.registraAzione(bersaglio);
 			bersaglio.attacca(gruppo);
 		}
 		if (!gruppo.getCapo().isVivo()) {

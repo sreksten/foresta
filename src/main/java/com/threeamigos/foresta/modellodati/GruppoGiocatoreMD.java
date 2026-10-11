@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,11 +16,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
 	private int monete;
 	private int preziosi;
-	private final Map<ClasseIncantesimo, Integer> incantesimi = new EnumMap<>(ClasseIncantesimo.class);
-	private int pozioniSalute;
-	private int pozioniSaluteGrande;
-	private int pozioniMagia;
-	private int pozioniMagiaGrande;
 	// Coordinate all'interno della Foresta
 	private CoordinateMD coordinate;
 	// Artefatti disponibili al gruppo ma non in uso da un personaggio specifico
@@ -65,38 +59,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		this.preziosi = preziosi;
 	}
 
-	public int getPozioniSalute() {
-		return pozioniSalute;
-	}
-
-	public void setPozioniSalute(int pozioniSalute) {
-		this.pozioniSalute = pozioniSalute;
-	}
-
-	public int getPozioniSaluteGrande() {
-		return pozioniSaluteGrande;
-	}
-
-	public void setPozioniSaluteGrande(int pozioniSaluteGrande) {
-		this.pozioniSaluteGrande = pozioniSaluteGrande;
-	}
-
-	public int getPozioniMagia() {
-		return pozioniMagia;
-	}
-
-	public void setPozioniMagia(int pozioniMagia) {
-		this.pozioniMagia = pozioniMagia;
-	}
-
-	public int getPozioniMagiaGrande() {
-		return pozioniMagiaGrande;
-	}
-
-	public void setPozioniMagiaGrande(int pozioniMagiaGrande) {
-		this.pozioniMagiaGrande = pozioniMagiaGrande;
-	}
-
 	public CoordinateMD getCoordinate() {
 		return coordinate;
 	}
@@ -113,24 +75,11 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
 	public void reimposta() {
 		super.reimposta();
-		incantesimi.clear();
 		monete = 0;
 		preziosi = 0;
-		pozioniSalute = 0;
-		pozioniSaluteGrande = 0;
-		pozioniMagia = 0;
-		pozioniMagiaGrande = 0;
 		artefatti.clear();
 		ospiti.clear();
 		ospitiVulnerabili.clear();
-	}
-
-	public void setIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
-		incantesimi.put(classeIncantesimo, quantita);
-	}
-
-	public int getIncantesimi(ClasseIncantesimo classeIncantesimo) {
-		return incantesimi.getOrDefault(classeIncantesimo, 0);
 	}
 
 	@Override

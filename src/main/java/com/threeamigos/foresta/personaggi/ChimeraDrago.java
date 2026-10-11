@@ -64,7 +64,7 @@ public class ChimeraDrago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected Set<ClasseIncantesimo> getRepertorioIncantesimi() {
+	public Set<ClasseIncantesimo> getRepertorioIncantesimi() {
 		return EnumSet.of(ClasseIncantesimo.FUOCO, ClasseIncantesimo.VELENO);
 	}
 

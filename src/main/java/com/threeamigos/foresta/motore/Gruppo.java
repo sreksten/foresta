@@ -1,10 +1,13 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.notifiche.*;
+import com.threeamigos.foresta.modellodati.GruppoMD;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.interfacce.VistaGruppo;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.strumenti.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,44 +23,164 @@ public abstract class Gruppo implements VistaGruppo {
 	// Caratteristiche del gruppo
 	protected List<Personaggio> personaggi = new ArrayList<>();
 	protected Personaggio capo;
-	private int ultimoIndiceSelezionato;
 
 	protected void reimposta() {
 		personaggi.clear();
 		capo = null;
-		ultimoIndiceSelezionato = -1;
 	}
 
+	// Il modello dati di un gruppo che non è quello del giocatore (il gruppo avversario): ha solo le scorte, e si perdono con la locazione
+	private final GruppoMD gruppoMD = new GruppoMD();
+
 	/**
-	 * Seleziona in round-robin il prossimo personaggio idoneo o incapace a causa di stati alterati.
-	 * Esclude i personaggi morti/sconfitti.
-	 * @return Il Personaggio che deve agire in questo tick del timer, oppure null se sono tutti morti
+	 * Il modello dati del gruppo: le scorte di incantesimi e di pozioni stanno lì (nel gruppo del giocatore anche tutto il
+	 * resto, e si salvano)
 	 */
-	public Personaggio getProssimoAttaccante() {
-		int dimensioneLista = personaggi.size();
+	protected GruppoMD getGruppoMD() {
+		return gruppoMD;
+	}
 
-		// Verifichiamo prima se c'è almeno un personaggio vivo nel gruppo per evitare loop infiniti
-		boolean almenoUnoVivo = !getPersonaggiVivi().isEmpty();
-		if (!almenoUnoVivo) {
-			Logger.log("[ROUND-ROBIN] Tutti i personaggi del gruppo sono stati sconfitti.");
-			return null;
+	// LE SCORTE DEL GRUPPO: le pergamene degli incantesimi e le pozioni. Le variazioni del gruppo del giocatore si
+	// annunciano alla UI; quelle del gruppo avversario no (sono scorte che i mostri hanno con sé, e che a scontro finito
+	// possono diventare bottino)
+
+	public final int getIncantesimi(ClasseIncantesimo classeIncantesimo) {
+		return getGruppoMD().getIncantesimi(classeIncantesimo);
+	}
+
+	public final void addIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
+		int valorePrecedente = getGruppoMD().getIncantesimi(classeIncantesimo);
+		int valoreAttuale = valorePrecedente + quantita;
+		getGruppoMD().setIncantesimi(classeIncantesimo, valoreAttuale);
+		if (isGruppoGiocatore()) {
+			BusEventi.pubblica(new NotificaVariazioneDisponibilitaIncantesimi(classeIncantesimo, valorePrecedente, valoreAttuale));
 		}
+	}
 
-		// Cerchiamo il prossimo personaggio vivo facendo scorrere l'indice in cerchio (modulo)
-		for (int i = 0; i < dimensioneLista; i++) {
-			ultimoIndiceSelezionato = (ultimoIndiceSelezionato + 1) % dimensioneLista;
-			Personaggio candidato = personaggi.get(ultimoIndiceSelezionato);
+	public final void subIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
+		addIncantesimi(classeIncantesimo, -quantita);
+	}
+	
+	public final int getPozioniSalute() {
+		return getGruppoMD().getPozioniSalute();
+	}
 
-			// Se il personaggio è morto o in panchina, viene saltato istantaneamente e si passa al prossimo
-			if (candidato.isFuoriCombattimento()) {
-				continue;
-			}
-
-			// Se è vivo, è lui il personaggio designato dal round-robin per questo turno.
-			// Il motore comunque deve tenere di conto degli effeti di stato.
-			return candidato;
+	public final void addPozioniSalute(int quantita) {
+		int valorePrecedente = getGruppoMD().getPozioniSalute();
+		int valoreAttuale = valorePrecedente + quantita;
+		getGruppoMD().setPozioniSalute(valoreAttuale);
+		if (isGruppoGiocatore()) {
+			BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniSalute(valorePrecedente, valoreAttuale));
 		}
-		return null;
+	}
+
+	public final void subPozioniSalute(int quantita) {
+		addPozioniSalute(-quantita);
+	}
+
+	public final void consumaPozioneSalute(Comando azione) {
+		consumaPozioneSalute(getPersonaggio(azione));
+	}
+
+	public final void consumaPozioneSalute(Personaggio personaggio) {
+		subPozioniSalute(1);
+		personaggio.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE);
+		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
+				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+				" ha bevuto una pozione che fa riacquistare salute."));
+	}
+
+	public final int getPozioniSaluteGrande() {
+		return getGruppoMD().getPozioniSaluteGrande();
+	}
+	
+	public final void addPozioniSaluteGrande(int quantita) {
+		int valorePrecedente = getGruppoMD().getPozioniSaluteGrande();
+		int valoreAttuale = valorePrecedente + quantita;
+		getGruppoMD().setPozioniSaluteGrande(valoreAttuale);
+		if (isGruppoGiocatore()) {
+			BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniSaluteGrandi(valorePrecedente, valoreAttuale));
+		}
+	}
+
+	public final void subPozioniSaluteGrande(int quantita) {
+		addPozioniSaluteGrande(-quantita);
+	}
+
+	public final void consumaPozioneSaluteGrande(Comando azione) {
+		consumaPozioneSaluteGrande(getPersonaggio(azione));
+	}
+
+	public final void consumaPozioneSaluteGrande(Personaggio personaggio) {
+		subPozioniSaluteGrande(1);
+		personaggio.addSaluteMassima(Costanti.AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE, "POZIONE_SALUTE_GRANDE");
+		personaggio.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE_GRANDE);
+		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
+				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+				" ha bevuto una pozione che recupera e fa aumentare la salute massima!"));
+	}
+
+	public final int getPozioniMagia() {
+		return getGruppoMD().getPozioniMagia();
+	}
+
+	public final void addPozioniMagia(int quantita) {
+		int valorePrecedente = getGruppoMD().getPozioniMagia();
+		int valoreAttuale = valorePrecedente + quantita;
+		getGruppoMD().setPozioniMagia(valoreAttuale);
+		if (isGruppoGiocatore()) {
+			BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniMagia(valorePrecedente, valoreAttuale));
+		}
+	}
+
+	public final void subPozioniMagia(int quantita) {
+		addPozioniMagia(-quantita);
+	}
+
+	public final void consumaPozioneMagia(Comando azione) {
+		consumaPozioneMagia(getPersonaggio(azione));
+	}
+
+	public final void consumaPozioneMagia(Personaggio personaggio) {
+		subPozioniMagia(1);
+		personaggio.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA);
+		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
+				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+				" ha bevuto una pozione che fa riacquistare magia."));
+	}
+
+	public final int getPozioniMagiaGrande() {
+		return getGruppoMD().getPozioniMagiaGrande();
+	}
+
+	public final void addPozioniMagiaGrande(int quantita) {
+		int valorePrecedente = getGruppoMD().getPozioniMagiaGrande();
+		int valoreAttuale = valorePrecedente + quantita;
+		getGruppoMD().setPozioniMagiaGrande(valoreAttuale);
+		if (isGruppoGiocatore()) {
+			BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniMagiaGrandi(valorePrecedente, valoreAttuale));
+		}
+	}
+
+	public final void subPozioniMagiaGrande(int quantita) {
+		addPozioniMagiaGrande(-quantita);
+	}
+
+	public final void consumaPozioneMagiaGrande(Comando azione) {
+		consumaPozioneMagiaGrande(getPersonaggio(azione));
+	}
+
+	public final void consumaPozioneMagiaGrande(Personaggio personaggio) {
+		subPozioniMagiaGrande(1);
+		personaggio.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "POZIONE_MAGIA_GRANDE");
+		personaggio.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA_GRANDE);
+		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
+				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+				" ha bevuto una pozione che recupera e fa aumentare la magia massima!"));
 	}
 
 	/**

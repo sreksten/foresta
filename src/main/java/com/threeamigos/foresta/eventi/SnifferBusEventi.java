@@ -56,6 +56,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoException.class, this::onEventoException);
         BusEventi.iscriviti(NotificaFineGioco.class, this::onEventoFineGioco);
         BusEventi.iscriviti(InternoNotificaViaFumettoATempo.class, this::onEventoFumetto);
+        BusEventi.iscriviti(InternoInizioRound.class, this::onEventoInizioRound);
         BusEventi.iscriviti(NotificaInterazionePersonaggio.class, this::onEventoInterazione);
         BusEventi.iscriviti(NotificaReazioneDiClassePersonaggio.class, this::onEventoReazioneDiClasse);
         BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, this::onEventoInterfacciaUtentePronta);
@@ -237,6 +238,10 @@ public class SnifferBusEventi {
 
     private void onEventoFumetto(InternoNotificaViaFumettoATempo evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getTesto()));
+    }
+
+    private void onEventoInizioRound(InternoInizioRound evento) {
+        Logger.log(headerEvento(evento) + "Round " + evento.getNumeroRound());
     }
 
     private void onEventoReazioneDiClasse(NotificaReazioneDiClassePersonaggio evento) {

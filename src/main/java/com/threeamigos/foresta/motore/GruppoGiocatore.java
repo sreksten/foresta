@@ -17,6 +17,7 @@ import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.GruppoGiocatoreMD;
+import com.threeamigos.foresta.modellodati.GruppoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.missioni.ModificatoreDelTesto;
@@ -170,6 +171,11 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	}
 
 	private GruppoGiocatoreMD md = ModelloDati.getIstanza().getGruppoGiocatoreMD();
+
+	@Override
+	protected GruppoMD getGruppoMD() {
+		return md;
+	}
 	private final List<Personaggio> ospiti = new ArrayList<>();
 	private Locazione locazioneCorrente;
 
@@ -326,135 +332,6 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 
 	public final void subPreziosi(int quantita) {
 		addPreziosi(-quantita);
-	}
-
-	public final int getIncantesimi(ClasseIncantesimo classeIncantesimo) {
-		return md.getIncantesimi(classeIncantesimo);
-	}
-
-	public final void addIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
-		int valorePrecedente = md.getIncantesimi(classeIncantesimo);
-		int valoreAttuale = valorePrecedente + quantita;
-		md.setIncantesimi(classeIncantesimo, valoreAttuale);
-		BusEventi.pubblica(new NotificaVariazioneDisponibilitaIncantesimi(classeIncantesimo, valorePrecedente, valoreAttuale));
-	}
-
-	public final void subIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
-		addIncantesimi(classeIncantesimo, -quantita);
-	}
-	
-	public final int getPozioniSalute() {
-		return md.getPozioniSalute();
-	}
-
-	public final void addPozioniSalute(int quantita) {
-		int valorePrecedente = md.getPozioniSalute();
-		int valoreAttuale = valorePrecedente + quantita;
-		md.setPozioniSalute(valoreAttuale);
-		BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniSalute(valorePrecedente, valoreAttuale));
-	}
-
-	public final void subPozioniSalute(int quantita) {
-		addPozioniSalute(-quantita);
-	}
-
-	public final void consumaPozioneSalute(Comando azione) {
-		consumaPozioneSalute(getPersonaggio(azione));
-	}
-
-	public final void consumaPozioneSalute(Personaggio personaggio) {
-		subPozioniSalute(1);
-		personaggio.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE);
-		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
-				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" ha bevuto una pozione che fa riacquistare salute."));
-	}
-
-	public final int getPozioniSaluteGrande() {
-		return md.getPozioniSaluteGrande();
-	}
-	
-	public final void addPozioniSaluteGrande(int quantita) {
-		int valorePrecedente = md.getPozioniSaluteGrande();
-		int valoreAttuale = valorePrecedente + quantita;
-		md.setPozioniSaluteGrande(valoreAttuale);
-		BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniSaluteGrandi(valorePrecedente, valoreAttuale));
-	}
-
-	public final void subPozioniSaluteGrande(int quantita) {
-		addPozioniSaluteGrande(-quantita);
-	}
-
-	public final void consumaPozioneSaluteGrande(Comando azione) {
-		consumaPozioneSaluteGrande(getPersonaggio(azione));
-	}
-
-	public final void consumaPozioneSaluteGrande(Personaggio personaggio) {
-		subPozioniSaluteGrande(1);
-		personaggio.addSaluteMassima(Costanti.AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE, "POZIONE_SALUTE_GRANDE");
-		personaggio.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE_GRANDE);
-		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
-				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" ha bevuto una pozione che recupera e fa aumentare la salute massima!"));
-	}
-
-	public final int getPozioniMagia() {
-		return md.getPozioniMagia();
-	}
-
-	public final void addPozioniMagia(int quantita) {
-		int valorePrecedente = md.getPozioniMagia();
-		int valoreAttuale = valorePrecedente + quantita;
-		md.setPozioniMagia(valoreAttuale);
-		BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniMagia(valorePrecedente, valoreAttuale));
-	}
-
-	public final void subPozioniMagia(int quantita) {
-		addPozioniMagia(-quantita);
-	}
-
-	public final void consumaPozioneMagia(Comando azione) {
-		consumaPozioneMagia(getPersonaggio(azione));
-	}
-
-	public final void consumaPozioneMagia(Personaggio personaggio) {
-		subPozioniMagia(1);
-		personaggio.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA);
-		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
-				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" ha bevuto una pozione che fa riacquistare magia."));
-	}
-
-	public final int getPozioniMagiaGrande() {
-		return md.getPozioniMagiaGrande();
-	}
-
-	public final void addPozioniMagiaGrande(int quantita) {
-		int valorePrecedente = md.getPozioniMagiaGrande();
-		int valoreAttuale = valorePrecedente + quantita;
-		md.setPozioniMagiaGrande(valoreAttuale);
-		BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniMagiaGrandi(valorePrecedente, valoreAttuale));
-	}
-
-	public final void subPozioniMagiaGrande(int quantita) {
-		addPozioniMagiaGrande(-quantita);
-	}
-
-	public final void consumaPozioneMagiaGrande(Comando azione) {
-		consumaPozioneMagiaGrande(getPersonaggio(azione));
-	}
-
-	public final void consumaPozioneMagiaGrande(Personaggio personaggio) {
-		subPozioniMagiaGrande(1);
-		personaggio.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "POZIONE_MAGIA_GRANDE");
-		personaggio.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA_GRANDE);
-		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
-				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" ha bevuto una pozione che recupera e fa aumentare la magia massima!"));
 	}
 
 	public final void setCoordinate(CoordinateMD coordinate) {

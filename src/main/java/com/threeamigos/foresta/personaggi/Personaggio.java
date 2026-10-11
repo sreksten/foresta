@@ -92,6 +92,12 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
     boolean isMagico();
 
+    /**
+     * Gli incantesimi malefici che il personaggio sa lanciare per natura quando attacca (vedi PersonaggioBase): non servono
+     * pergamene, li paga con la MAGIA. Vale per chi è magico (isMagico).
+     */
+    java.util.Set<com.threeamigos.foresta.tipi.ClasseIncantesimo> getRepertorioIncantesimi();
+
 	/**
 	 * Indica se questo personaggio sia un personaggio non giocante ossia
 	 * controllato dal computer

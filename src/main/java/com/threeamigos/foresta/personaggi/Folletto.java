@@ -67,7 +67,7 @@ public class Folletto extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected Set<ClasseIncantesimo> getRepertorioIncantesimi() {
+	public Set<ClasseIncantesimo> getRepertorioIncantesimi() {
 		return EnumSet.of(ClasseIncantesimo.ACQUA, ClasseIncantesimo.GELO, ClasseIncantesimo.ARIA);
 	}
 

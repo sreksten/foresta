@@ -324,6 +324,10 @@ public enum TipoEvento {
      */
     INTERNO_PASSAGGIO_INOSSERVATO,
     /**
+     * Comincia un round di combattimento: un giro completo dei personaggi dei due gruppi
+     */
+    INTERNO_INIZIO_ROUND,
+    /**
      * Un salvataggio è stato riletto con successo: porta gli ultimi messaggi da ripristinare nel pannello di testo
      */
     INTERNO_CARICAMENTO_COMPLETATO,
