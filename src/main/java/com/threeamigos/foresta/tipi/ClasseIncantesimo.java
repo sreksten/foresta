@@ -42,7 +42,7 @@ public enum ClasseIncantesimo {
 	RESURREZIONE(TipoIncantesimo.BENEFICO, PortataIncantesimo.SINGOLO_QUALSIASI, null,
 			"Resurrezione", "incantesimo della Resurrezione", "incantesimi della Resurrezione",
 			Comando.RESURREZIONE,
-			"Inverte il flusso del fato infliggendo un devastante rigetto rigenerativo alle creature d'ombra e ai non-morti."),
+			"Richiama un compagno caduto dal regno dei morti, restituendogli un decimo della sua salute; se è ancora vivo lo risana del tutto."),
 	ALBA_SACRA(TipoIncantesimo.BENEFICO, PortataIncantesimo.GRUPPO, null,
 			"Alba Sacra", "incantesimo dell'Alba Sacra", "incantesimi dell'Alba Sacra",
 			Comando.ALBA_SACRA,

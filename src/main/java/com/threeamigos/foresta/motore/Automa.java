@@ -1013,7 +1013,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		for (TipoCanto canto : CantoDelBardo.cantiUtili(formulante, gruppo, gruppoAvversario)) {
 			comandiPossibili.add(canto.getComando());
 		}
-		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
+		// Il Silenzio per primo, subito dopo le abilità innate: ultimo, prima di ANNULLA, si confondeva con lui
+		List<ClasseIncantesimo> inOrdine = new ArrayList<>(Arrays.asList(ClasseIncantesimo.values()));
+		inOrdine.remove(ClasseIncantesimo.SILENZIO);
+		inOrdine.add(0, ClasseIncantesimo.SILENZIO);
+		for (ClasseIncantesimo classeIncantesimo : inOrdine) {
 			if ((albaSacraInnata && classeIncantesimo == ClasseIncantesimo.ALBA_SACRA)
 					|| (luceDivinaInnata && classeIncantesimo == ClasseIncantesimo.LUCE_DIVINA)) {
 				// Già fra i comandi, anche se il gruppo ha delle pergamene
