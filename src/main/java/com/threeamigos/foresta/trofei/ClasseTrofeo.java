@@ -6,6 +6,7 @@ import com.threeamigos.foresta.eventi.interni.InternoCorruzioneRiuscita;
 import com.threeamigos.foresta.eventi.interni.InternoMissioneCompletata;
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.interni.InternoPastoConsumatoInLocanda;
+import com.threeamigos.foresta.eventi.interni.InternoScheletroRisvegliato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
@@ -34,6 +35,9 @@ public enum ClasseTrofeo {
 	// Chi viene respinto dall'oste per mancanza di monete non mangia, e non conta
 	SBEVAZZONE(() -> new TrofeoAContatore<>(TipoTrofeo.SBEVAZZONE,
 			InternoPastoConsumatoInLocanda.class, evento -> 1, 100)),
+	// Lo scheletro che la mietitura porta dalla parte del gruppo: a gruppo pieno non c'è posto e non conta
+	NECROMANTE(() -> new TrofeoAContatore<>(TipoTrofeo.NECROMANTE,
+			InternoScheletroRisvegliato.class, evento -> 1, 1)),
 	AMMAZZAGOBLIN(() -> new TrofeoAContatore<>(TipoTrofeo.AMMAZZAGOBLIN,
 			InternoAvversarioSconfitto.class, evento -> evento.getClasse() == TipoPersonaggio.GOBLIN ? 1 : 0, 100)),
 	AMICO_DI_TUTTI(() -> new TrofeoAContatore<>(TipoTrofeo.AMICO_DI_TUTTI,

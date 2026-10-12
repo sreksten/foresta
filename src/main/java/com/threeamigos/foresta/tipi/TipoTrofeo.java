@@ -34,6 +34,7 @@ public enum TipoTrofeo {
 	TRAFFICONE("Trafficone", "Incanta 50 artefatti dall'incantatore", SupertipoTrofeo.ACQUISTO),
 	AMICO_DI_TUTTI("Amico di tutti", "Fai amicizia 100 volte", SupertipoTrofeo.DIPLOMAZIA),
 	CORRUTTORE("Corruttore", "Porta a termine 100 tentativi di corruzione", SupertipoTrofeo.DIPLOMAZIA),
+	NECROMANTE("Necromante", "Recluta un aiuto dall'aldilà", SupertipoTrofeo.VARIE),
 	SBEVAZZONE("Sbevazzone", "Visita 100 locande nella foresta o in città", SupertipoTrofeo.VARIE);
 
 	private final String nome;

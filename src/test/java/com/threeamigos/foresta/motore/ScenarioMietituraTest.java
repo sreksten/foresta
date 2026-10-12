@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -10,6 +11,7 @@ import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.TipoTrofeo;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -54,6 +56,18 @@ class ScenarioMietituraTest {
     }
 
     @Test
+    void loScheletroRisvegliatoFaVincereIlNecromante() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(256)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
+            Personaggio goblin = minionQuasiMorto(partita);
+            goblin.applicaRisultatoCombattimento(mietitura(partita.gruppo().getCapo(), goblin));
+            partita.pubblica(new InternoFineLocazione());
+
+            assertTrue(RegistroTrofei.isVinto(TipoTrofeo.NECROMANTE));
+        }
+    }
+
+    @Test
     void agruppoPienoIlMinionMuoreSenzaScheletro() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(252)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
@@ -65,6 +79,8 @@ class ScenarioMietituraTest {
 
             assertFalse(goblin.isVivo());
             assertEquals(Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE, partita.gruppo().getNumeroPersonaggi());
+            partita.pubblica(new InternoFineLocazione());
+            assertFalse(RegistroTrofei.isVinto(TipoTrofeo.NECROMANTE), "senza scheletro non c'è nessun aiuto dall'aldilà");
         }
     }
 

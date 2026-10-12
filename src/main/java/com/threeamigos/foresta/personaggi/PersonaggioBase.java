@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.eventi.interni.InternoCreazionePersonaggio;
 import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.eventi.interni.InternoPersonaggioArreso;
+import com.threeamigos.foresta.eventi.interni.InternoScheletroRisvegliato;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
@@ -628,6 +629,7 @@ public abstract class PersonaggioBase implements Personaggio {
 				scheletro.setMotivoNelGruppo(TipoMotivoNelGruppo.MIETITURA);
 				scheletro.setTempo(Costanti.MIETITURA_DURATA_TURNI + 1);
 				GruppoGiocatore.getIstanza().aggiungiPersonaggio(scheletro);
+				BusEventi.pubblica(new InternoScheletroRisvegliato());
 			}
 		}
 	}

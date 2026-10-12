@@ -83,6 +83,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoPastoConsumatoInLocanda.class, this::onEventoPastoConsumatoInLocanda);
         BusEventi.iscriviti(InternoAmiciziaStretta.class, this::onEventoAmiciziaStretta);
         BusEventi.iscriviti(InternoCorruzioneRiuscita.class, this::onEventoCorruzioneRiuscita);
+        BusEventi.iscriviti(InternoScheletroRisvegliato.class, this::onEventoScheletroRisvegliato);
         BusEventi.iscriviti(InternoOggettoRaccolto.class, this::onEventoOggettoRaccolto);
         BusEventi.iscriviti(InternoMissioneCompletata.class, this::onEventoMissioneCompletata);
         BusEventi.iscriviti(InternoAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
@@ -342,6 +343,10 @@ public class SnifferBusEventi {
 
     private void onEventoCorruzioneRiuscita(InternoCorruzioneRiuscita evento) {
         Logger.log(headerEvento(evento) + "Corrotti: " + evento.getAvversari());
+    }
+
+    private void onEventoScheletroRisvegliato(InternoScheletroRisvegliato evento) {
+        Logger.log(headerEvento(evento) + "Uno scheletro si è risvegliato dalla parte del gruppo");
     }
 
     private void onEventoMissioneCompletata(InternoMissioneCompletata evento) {
