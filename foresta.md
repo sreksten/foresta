@@ -86,7 +86,7 @@ Il codice si divide in due parti, che si parlano attraverso un bus eventi publis
 | [`bardo.md`](bardo.md) | I tre canti innati del Bardo (curativo, ipnotico, di valore) e il Viandante e i non combattenti come classi a sé |
 | [`GrammarBean.md`](GrammarBean.md) | Manuale e assessment del motore di grammatiche |
 | [`nomi.md`](nomi.md) | Piano dei nomi dei personaggi non combattenti: `nomi.txt` condiviso, enumerato dei ruoli nominati e registro dei residenti |
-| [`tattiche_di_combattimento_automatiche.md`](tattiche_di_combattimento_automatiche.md) | Idea del combattimento automatico a tattiche (round-robin e elenco di azioni per personaggio): azioni possibili, controlli dei giochi di riferimento e cosa del modello dati è già leggibile |
+| [`tattiche_di_combattimento_automatiche.md`](tattiche_di_combattimento_automatiche.md) | Il combattimento a round e le tattiche automatiche di personaggi e mostri: round a coppie, azioni, bersagli e condizioni (con i giochi di riferimento), modello dati, salvataggio, tattiche base e schermata del giocatore |
 | [`assessment.md`](assessment.md) | Valutazione dello stato del progetto e prossimi passi |
 | [`todo.md`](todo.md) | Cose da fare generali e bug noti |
 | [`revisione_documentazione.md`](revisione_documentazione.md) | Piano e avanzamento della revisione della documentazione |

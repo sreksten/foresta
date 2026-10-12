@@ -152,8 +152,8 @@ public final class TatticheBase {
 		return AzioneMD.incantesimoDelRepertorio(criterio, soloSePiuForte);
 	}
 
-	private static VoceMD voce(SelettoreMD selettore, List<PredicatoMD> condizioni, AzioneMD... azioni) {
-		return new VoceMD(selettore, condizioni, Arrays.asList(azioni));
+	private static VoceMD voce(String nome, SelettoreMD selettore, List<PredicatoMD> condizioni, AzioneMD... azioni) {
+		return new VoceMD(selettore, condizioni, Arrays.asList(azioni), true, nome);
 	}
 
 	private static List<PredicatoMD> condizioni(PredicatoMD primo, PredicatoMD... altre) {
@@ -203,13 +203,13 @@ public final class TatticheBase {
 		SelettoreMD aCaso = su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.A_CASO);
 		if (vendicativo) {
 			SelettoreMD chiMhaColpito = su(TipoRosa.AVVERSARI, TipoOrdinamento.ULTIMO_ATTACCANTE);
-			voci.add(magico ? voce(chiMhaColpito, condizioni(probabilita(50)), repertorio(CriterioIncantesimo.A_CASO, false), attacco())
-					: voce(chiMhaColpito, condizioni(probabilita(50)), attacco()));
+			voci.add(magico ? voce("Bruto: vendetta", chiMhaColpito, condizioni(probabilita(50)), repertorio(CriterioIncantesimo.A_CASO, false), attacco())
+					: voce("Bruto: vendetta", chiMhaColpito, condizioni(probabilita(50)), attacco()));
 		}
 		if (magico) {
-			voci.add(voce(aCaso, condizioni(probabilita(incantesimo)), repertorio(CriterioIncantesimo.A_CASO, false), attacco()));
+			voci.add(voce("Bruto: magia a caso", aCaso, condizioni(probabilita(incantesimo)), repertorio(CriterioIncantesimo.A_CASO, false), attacco()));
 		}
-		voci.add(voce(aCaso, condizioni(null), attacco()));
+		voci.add(voce("Bruto: attacco a caso", aCaso, condizioni(null), attacco()));
 		return voci;
 	}
 
@@ -223,20 +223,20 @@ public final class TatticheBase {
 		SelettoreMD piuFerito = su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.MENO_SALUTE);
 		AzioneMD magia = repertorio(CriterioIncantesimo.PIU_POTENTE, true);
 
-		voci.add(magico ? voce(ferito, condizioni(fascia), magia, attacco()) : voce(ferito, condizioni(fascia), attacco()));
+		voci.add(magico ? voce("Astuto: finisce i feriti", ferito, condizioni(fascia), magia, attacco()) : voce("Astuto: finisce i feriti", ferito, condizioni(fascia), attacco()));
 		if (classe == TipoPersonaggio.HOBGOBLIN) {
-			voci.add(voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.ULTIMO_SCELTO), condizioni(fascia), attacco()));
+			voci.add(voce("Astuto: tiene il bersaglio", su(TipoRosa.AVVERSARI, TipoOrdinamento.ULTIMO_SCELTO), condizioni(fascia), attacco()));
 		}
 		SelettoreMD preferito = cacciatoreDelPiuForte ? su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.LIVELLO_PIU_ALTO)
 				: su(TipoRosa.AVVERSARI, TipoOrdinamento.A_CASO, magico());
 		if (cacciatoreDelPiuForte) {
-			voci.add(voce(preferito, condizioni(fascia, probabilita(60)), attacco()));
+			voci.add(voce("Astuto: caccia il più forte", preferito, condizioni(fascia, probabilita(60)), attacco()));
 		} else {
-			voci.add(magico ? voce(preferito, condizioni(fascia, probabilita(incantesimo)), magia, attacco())
-					: voce(preferito, condizioni(fascia, probabilita(60)), attacco()));
+			voci.add(magico ? voce("Astuto: cerca gli incantatori", preferito, condizioni(fascia, probabilita(incantesimo)), magia, attacco())
+					: voce("Astuto: cerca gli incantatori", preferito, condizioni(fascia, probabilita(60)), attacco()));
 		}
-		voci.add(magico ? voce(piuFerito, condizioni(fascia, probabilita(incantesimo)), magia, attacco())
-				: voce(piuFerito, condizioni(fascia), attacco()));
+		voci.add(magico ? voce("Astuto: il più ferito", piuFerito, condizioni(fascia, probabilita(incantesimo)), magia, attacco())
+				: voce("Astuto: il più ferito", piuFerito, condizioni(fascia), attacco()));
 		return voci;
 	}
 
@@ -252,19 +252,19 @@ public final class TatticheBase {
 		AzioneMD adatto = danno(CriterioIncantesimo.PIU_ADATTO, false);
 
 		if (magico) {
-			voci.add(voce(ferito, condizioni(fascia), danno(CriterioIncantesimo.PIU_ECONOMICO_CHE_BASTA, false), attacco()));
+			voci.add(voce("Esperto: colpo economico sui feriti", ferito, condizioni(fascia), danno(CriterioIncantesimo.PIU_ECONOMICO_CHE_BASTA, false), attacco()));
 			if (CON_SILENZIO.contains(classe)) {
-				voci.add(voce(incantatore, condizioni(fascia, probabilita(50)), AzioneMD.di(TipoAzione.SILENZIO)));
+				voci.add(voce("Esperto: Silenzio sull'incantatore", incantatore, condizioni(fascia, probabilita(50)), AzioneMD.di(TipoAzione.SILENZIO)));
 			}
-			voci.add(voce(incantatore, condizioni(fascia, probabilita(incantesimo)), adatto, attacco()));
-			voci.add(voce(piuFerito, condizioni(fascia, probabilita(incantesimo)), adatto, attacco()));
+			voci.add(voce("Esperto: incantesimo sull'incantatore", incantatore, condizioni(fascia, probabilita(incantesimo)), adatto, attacco()));
+			voci.add(voce("Esperto: incantesimo sul più ferito", piuFerito, condizioni(fascia, probabilita(incantesimo)), adatto, attacco()));
 		} else {
-			voci.add(voce(ferito, condizioni(fascia), attacco()));
+			voci.add(voce("Esperto: finisce i feriti", ferito, condizioni(fascia), attacco()));
 			if (cacciatoreDelPiuForte) {
-				voci.add(voce(su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.LIVELLO_PIU_ALTO), condizioni(fascia, probabilita(60)), attacco()));
+				voci.add(voce("Esperto: caccia il più forte", su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.LIVELLO_PIU_ALTO), condizioni(fascia, probabilita(60)), attacco()));
 			}
 		}
-		voci.add(voce(piuFerito, condizioni(fascia), attacco()));
+		voci.add(voce("Esperto: il più ferito", piuFerito, condizioni(fascia), attacco()));
 		return voci;
 	}
 
@@ -282,17 +282,17 @@ public final class TatticheBase {
 		AzioneMD esperto = danno(CriterioIncantesimo.PIU_ADATTO_ESPERTO, false);
 
 		if (CON_MORTE.contains(classe)) {
-			voci.add(voce(quasiCaduto, condizioni(fascia), AzioneMD.di(TipoAzione.MORTE)));
+			voci.add(voce("Stratega: Colpo di Morte sul quasi caduto", quasiCaduto, condizioni(fascia), AzioneMD.di(TipoAzione.MORTE)));
 		}
 		if (CON_SILENZIO.contains(classe)) {
-			voci.add(voce(incantatore, condizioni(fascia), AzioneMD.di(TipoAzione.SILENZIO)));
+			voci.add(voce("Stratega: Silenzio sull'incantatore", incantatore, condizioni(fascia), AzioneMD.di(TipoAzione.SILENZIO)));
 		}
 		if (magico) {
-			voci.add(voce(ferito, condizioni(fascia), danno(CriterioIncantesimo.PIU_ECONOMICO_CHE_BASTA, false), attacco()));
-			voci.add(voce(incantatore, condizioni(fascia, probabilita(incantesimo)), esperto, attacco()));
-			voci.add(voce(piuFerito, condizioni(fascia, probabilita(incantesimo)), esperto, attacco()));
+			voci.add(voce("Stratega: colpo economico sui feriti", ferito, condizioni(fascia), danno(CriterioIncantesimo.PIU_ECONOMICO_CHE_BASTA, false), attacco()));
+			voci.add(voce("Stratega: incantesimo sull'incantatore", incantatore, condizioni(fascia, probabilita(incantesimo)), esperto, attacco()));
+			voci.add(voce("Stratega: incantesimo sul più ferito", piuFerito, condizioni(fascia, probabilita(incantesimo)), esperto, attacco()));
 		}
-		voci.add(voce(piuFerito, condizioni(fascia), attacco()));
+		voci.add(voce("Stratega: il più ferito", piuFerito, condizioni(fascia), attacco()));
 		return voci;
 	}
 
@@ -331,8 +331,8 @@ public final class TatticheBase {
 		AzioneMD grande = AzioneMD.di(TipoAzione.POZIONE_SALUTE_GRANDE);
 		TipoOrdinamento ordinamento = ancheGliAltri ? TipoOrdinamento.MENO_SALUTE : TipoOrdinamento.PRIMO;
 		return Arrays.asList(
-				voce(su(rosa, ordinamento, sotto(percentuale / 2)), condizioni(null), grande, normale),
-				voce(su(rosa, ordinamento, sotto(percentuale)), condizioni(null), normale, grande));
+				voce("Pozione di salute grande", su(rosa, ordinamento, sotto(percentuale / 2)), condizioni(null), grande, normale),
+				voce("Pozione di salute", su(rosa, ordinamento, sotto(percentuale)), condizioni(null), normale, grande));
 	}
 
 	/**
@@ -342,9 +342,9 @@ public final class TatticheBase {
 		AzioneMD normale = AzioneMD.di(TipoAzione.POZIONE_MAGIA);
 		AzioneMD grande = AzioneMD.di(TipoAzione.POZIONE_MAGIA_GRANDE);
 		return Arrays.asList(
-				voce(su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO, FiltroMD.conConfrontoENumero(TipoFiltro.MAGIA, Confronto.MINORE, sottoQuanto / 2)),
+				voce("Pozione di magia grande", su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO, FiltroMD.conConfrontoENumero(TipoFiltro.MAGIA, Confronto.MINORE, sottoQuanto / 2)),
 						condizioni(null), grande, normale),
-				voce(su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO, FiltroMD.conConfrontoENumero(TipoFiltro.MAGIA, Confronto.MINORE, sottoQuanto)),
+				voce("Pozione di magia", su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO, FiltroMD.conConfrontoENumero(TipoFiltro.MAGIA, Confronto.MINORE, sottoQuanto)),
 						condizioni(null), normale, grande));
 	}
 
@@ -371,9 +371,9 @@ public final class TatticheBase {
 	private static TatticaMD guerriero() {
 		return tattica(
 				pozioniDiSalute(30, false),
-				voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE, sotto(50)), condizioni(null), attacco()),
-				voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.LIVELLO_PIU_ALTO, magico()), condizioni(null), attacco()),
-				voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO), condizioni(null), attacco()));
+				voce("Finisce i feriti", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE, sotto(50)), condizioni(null), attacco()),
+				voce("Colpisce i maghi", su(TipoRosa.AVVERSARI, TipoOrdinamento.LIVELLO_PIU_ALTO, magico()), condizioni(null), attacco()),
+				voce("Attacca il primo", su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO), condizioni(null), attacco()));
 	}
 
 	/**
@@ -382,8 +382,8 @@ public final class TatticheBase {
 	private static TatticaMD ladro() {
 		return tattica(
 				pozioniDiSalute(30, false),
-				voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE, sotto(50)), condizioni(null), attacco()),
-				voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), attacco()));
+				voce("Finisce i feriti", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE, sotto(50)), condizioni(null), attacco()),
+				voce("Attacca il più ferito", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), attacco()));
 	}
 
 	/**
@@ -395,10 +395,10 @@ public final class TatticheBase {
 		return tattica(
 				pozioniDiSalute(25, false),
 				pozioniDiMagia(20),
-				voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.PIU_MAGIA, magico()), condizioni(probabilita(60)), AzioneMD.di(TipoAzione.SILENZIO)),
-				voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE, sotto(40)), condizioni(null),
+				voce("Silenzio sui maghi", su(TipoRosa.AVVERSARI, TipoOrdinamento.PIU_MAGIA, magico()), condizioni(probabilita(60)), AzioneMD.di(TipoAzione.SILENZIO)),
+				voce("Colpo economico sui feriti", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE, sotto(40)), condizioni(null),
 						danno(CriterioIncantesimo.PIU_ECONOMICO_CHE_BASTA, false), dardo, attacco()),
-				voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.LIVELLO_PIU_ALTO), condizioni(null),
+				voce("Incantesimo sul più forte", su(TipoRosa.AVVERSARI, TipoOrdinamento.LIVELLO_PIU_ALTO), condizioni(null),
 						danno(CriterioIncantesimo.PIU_ADATTO_ESPERTO, true), dardo, attacco()));
 	}
 
@@ -410,8 +410,8 @@ public final class TatticheBase {
 		return tattica(
 				pozioniDiSalute(30, false),
 				pozioniDiMagia(15),
-				voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.PIU_MAGIA, magico()), condizioni(null), dardo, attacco()),
-				voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), danno(CriterioIncantesimo.PIU_ADATTO, true), dardo,
+				voce("Dardo sui maghi", su(TipoRosa.AVVERSARI, TipoOrdinamento.PIU_MAGIA, magico()), condizioni(null), dardo, attacco()),
+				voce("Magia sul più ferito", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), danno(CriterioIncantesimo.PIU_ADATTO, true), dardo,
 						attacco()));
 	}
 
@@ -421,10 +421,10 @@ public final class TatticheBase {
 	private static TatticaMD sacerdote() {
 		return tattica(
 				pozioniDiSalute(40, true),
-				voce(su(TipoRosa.ALLEATI_CADUTI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.RESURREZIONE)),
-				voce(su(TipoRosa.ALLEATI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.ALBA_SACRA)),
+				voce("Resurrezione dei caduti", su(TipoRosa.ALLEATI_CADUTI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.RESURREZIONE)),
+				voce("Alba sacra", su(TipoRosa.ALLEATI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.ALBA_SACRA)),
 				pozioniDiMagia(20),
-				voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), danno(CriterioIncantesimo.PIU_ADATTO, true), attacco()));
+				voce("Colpisce il più ferito", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), danno(CriterioIncantesimo.PIU_ADATTO, true), attacco()));
 	}
 
 	/**
@@ -435,11 +435,11 @@ public final class TatticheBase {
 		PredicatoMD piuDiUnAvversario = PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.emptyList(), Confronto.MAGGIORE, 1);
 		return tattica(
 				pozioniDiSalute(25, false),
-				voce(su(TipoRosa.ALLEATI_E_OSPITI, TipoOrdinamento.MENO_SALUTE, sotto(60)), condizioni(null), AzioneMD.di(TipoAzione.CANTO_CURATIVO)),
-				voce(su(TipoRosa.ALLEATI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.CANTO_DI_VALORE)),
-				voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO), condizioni(piuDiUnAvversario), AzioneMD.di(TipoAzione.URLO_DELLA_BANSHEE),
+				voce("Canto curativo", su(TipoRosa.ALLEATI_E_OSPITI, TipoOrdinamento.MENO_SALUTE, sotto(60)), condizioni(null), AzioneMD.di(TipoAzione.CANTO_CURATIVO)),
+				voce("Canto di valore", su(TipoRosa.ALLEATI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.CANTO_DI_VALORE)),
+				voce("Urlo e canto ipnotico", su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO), condizioni(piuDiUnAvversario), AzioneMD.di(TipoAzione.URLO_DELLA_BANSHEE),
 						AzioneMD.di(TipoAzione.CANTO_IPNOTICO)),
 				pozioniDiMagia(20),
-				voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), danno(CriterioIncantesimo.PIU_ADATTO, true), attacco()));
+				voce("Colpisce il più ferito", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), danno(CriterioIncantesimo.PIU_ADATTO, true), attacco()));
 	}
 }

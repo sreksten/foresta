@@ -1,90 +1,76 @@
 # Tattiche di combattimento automatiche
 
-Stato: **idea in studio, niente è ancora nel codice.** Questo documento raccoglie le basi per il piano: l'idea, il nuovo
-funzionamento a turni dei due gruppi (round-robin), le azioni possibili, i bersagli e le condizioni che i giochi di riferimento
-offrono, con un commento per ognuno su quanto è già leggibile dal modello dati di Foresta. Il piano vero (formato delle tattiche,
-motore, scheda del personaggio, salvataggio) viene dopo, a partire da qui.
+Stato: **fatto**. Il documento descrive il combattimento a round e le tattiche automatiche, dei personaggi del giocatore e dei mostri, come stanno nel codice: il round a coppie (§3), le tattiche dei mostri (§4), le azioni (§5), i bersagli e le condizioni (§6, §7) e il modello dati con la schermata del giocatore (§11). Le tabelle di §6 e §7 confrontano ogni voce con i giochi di riferimento (*Dragon Age: Origins*, DA:O; *Final Fantasy XII*, FFXII; *Baldur's Gate*, BG) e dicono se il dato si legge dal modello di Foresta; quali siano diventati filtri, ordinamenti e condizioni lo dice §11.
 
 ## 1. L'idea
 
-Oggi in combattimento agisce un solo personaggio, scelto dal giocatore, e l'avversario gli risponde. Si vuole invece che **tutto il
-gruppo agisca a turno** (round-robin), e che ogni personaggio decida da solo che cosa fare scorrendo la propria **tattica**: un
-elenco ordinato di **voci**, che il giocatore modifica in una scheda secondaria del personaggio (come le *Tactics* di *Dragon Age:
-Origins* o i *Gambit* di *Final Fantasy XII*).
+In combattimento **tutto il gruppo agisce a turno** (round-robin) e ogni personaggio decide da solo che cosa fare scorrendo la propria **tattica**: un elenco ordinato di **voci**, che il giocatore modifica nella schermata delle tattiche (§11.15), come le *Tactics* di *Dragon Age: Origins* o i *Gambit* di *Final Fantasy XII*. Le stesse tattiche valgono per i mostri (§4).
 
-Ogni **voce** ha tre campi:
+Ogni **voce** ha:
 
-- il **bersaglio**: chi colpire o curare (un selettore: "un avversario magico", "il capo avversario", "con meno salute", "l'alleato più
-  ferito"...);
-- una **condizione** facoltativa ("se ho abbastanza magia", "se il bersaglio non è già silenziato"; vuota vale "sempre");
-- l'**azione**: che cosa fare (attacco, un incantesimo, una pozione...).
+- un **selettore**, che dice su chi agire: una rosa di candidati ("gli avversari", "gli alleati", "se stesso"), dei filtri che la restringono ("magico", "con meno del 50% di salute") e un ordinamento che ne sceglie uno ("il primo", "con meno salute");
+- delle **condizioni** facoltative, tutte in AND, su ciò che non riguarda un bersaglio ("al round 1", "con probabilità del 60%"; nessuna vale "sempre");
+- una sequenza di **azioni** (attacco, un incantesimo, una pozione...): si esegue la prima che si può fare sul bersaglio scelto.
 
 Il flusso è sempre lo stesso:
 
 1. si scorre l'elenco dall'alto: l'ordine è la **priorità**;
-2. la **prima voce che si può davvero eseguire** (c'è un bersaglio che corrisponde, la condizione è vera, c'è abbastanza magia, il
+2. la **prima voce che si può davvero eseguire** (c'è un bersaglio che corrisponde, le condizioni sono vere, c'è abbastanza magia, il
    personaggio ha l'incantesimo scelto...) viene eseguita, e l'azione del personaggio finisce lì;
 3. se una voce non si può eseguire, si passa alla successiva;
-4. l'ultima voce è sempre un **attacco fisico**, che non fallisce mai.
+4. se nessuna voce si può eseguire, il valutatore ripiega sull'**attacco fisico** al primo avversario, che non fallisce mai (nella schermata è l'ultima riga, che non si tocca).
 
-Per esempio: "bersaglio: un avversario magico; azione: Dardo arcano (se ho la magia)" e subito dopo "bersaglio: lo stesso; azione: attacco".
-Dopo l'azione c'è la **risposta del gruppo avversario**, e si passa al personaggio successivo (§3). **Le stesse tattiche valgono per
-gli avversari** (§4): ogni mostro ha un set di tattiche base.
+Per esempio: "su un avversario magico: Dardo arcano" e subito dopo "sullo stesso: attacco". Dopo l'azione si passa al personaggio successivo (§3): gli avversari non rispondono, agiscono quando tocca a loro.
 
 > **Requisito fondamentale: le tattiche si salvano e si rileggono con il personaggio.** Il giocatore le personalizza per ognuno dei suoi
 > personaggi, e questa personalizzazione **è parte del personaggio**: finisce nel salvataggio con lui e, caricando la partita, ogni
-> personaggio agisce esattamente come era stato impostato, senza perdere una voce o un blocco. Lo stesso vale per la tattica diversa che una singola
-> istanza di un mostro può portare (§4). Ne segue come si costruisce tutto il resto (§7.6 per il formato, §8 per il modello dati).
+> personaggio agisce esattamente come era stato impostato, senza perdere una voce. Lo stesso vale per la tattica diversa che una singola
+> istanza di un mostro può portare (§4). Il formato è in §11.12.
 
-> **Prerequisito: le tattiche non cambiano il modello dati, scelgono soltanto.** Oggi il giocatore sceglie per conto proprio e impartisce un comando;
-> è l'**automa** (`Automa`, la locazione) a eseguire l'azione e a cambiare il modello. Con le tattiche **chi sceglie al posto del giocatore** è la
-> tattica, ma quello che fa è lo stesso: **impartire il comando che avrebbe impartito il giocatore**, e l'automa lo esegue come sempre. Una tattica quindi
-> *legge* lo stato (condizioni e selettori chiedono lo stato attuale, senza cambiarlo) e *produce un comando*; non toglie salute, non consuma pergamene,
-> non sposta oggetti, non aggiunge stati. Le azioni sono quelle già eseguibili oggi (§5) e le regole del danno non cambiano. Vale per i personaggi del giocatore
+> **Prerequisito: le tattiche non cambiano il modello dati, scelgono soltanto.** È l'**automa** (`Automa`, la locazione) a eseguire l'azione e a cambiare il modello.
+> Con le tattiche **chi sceglie al posto del giocatore** è la tattica, ma quello che fa è lo stesso: **impartire il comando che avrebbe impartito il giocatore**, e
+> l'automa lo esegue come sempre. Una tattica quindi *legge* lo stato (condizioni e selettori chiedono lo stato attuale, senza cambiarlo) e *produce una decisione*; non toglie salute, non consuma pergamene,
+> non sposta oggetti, non aggiunge stati. Le azioni sono quelle eseguibili anche a mano (§5) e le regole del danno non cambiano. Vale per i personaggi del giocatore
 > e per i mostri, e vale anche per le azioni a più passi: il cambio d'arma (§5) fa le due richieste di stoccaggio e di prelievo come le farebbe il giocatore
 > a mano.
 
-L'elenco deve essere salvabile e ripristinabile anche come **modello** da riapplicare ad altri personaggi.
-
-## 2. Com'è oggi il combattimento
+## 2. Il combattimento, per le tattiche
 
 Vedi [`motore_di_gioco.md`](motore_di_gioco.md) §7. Quello che conta per le tattiche:
 
-- Il combattimento procede **per round a coppie** (§3, **fatto**): a ogni `TIMER` agisce una sola volta il prossimo del piano del round, un mio personaggio e poi un
-  avversario a turno, e i personaggi in più di un gruppo agiscono da soli. Chi agisce in automatico, dei miei o avversario, lo fa con la sua tattica (§11.14); i miei senza tattica attaccano con le armi il primo
-  avversario vivo, i mostri senza una tattica sua usano quella della classe. Non c'è più una "risposta" a chi ha agito, né il "si disimpegna e attacca".
+- Il combattimento procede **per round a coppie** (§3): a ogni `TIMER` agisce una sola volta il prossimo del piano del round, un mio personaggio e poi un
+  avversario a turno, e i personaggi in più di un gruppo agiscono da soli. Chi agisce in automatico, dei miei o avversario, lo fa con la sua tattica (§11.14). I miei senza tattica
+  propria usano la predefinita del loro ruolo, i mostri senza una tattica sua quella della classe (§11.16, `RegistroTattiche`). Non c'è una "risposta" a chi ha agito.
 - Gli **incantesimi** e le **pozioni** sono del gruppo: le pergamene e le pozioni stanno nell'inventario del gruppo
   (`GruppoGiocatore.getIncantesimi(classe)`, `getPozioniSalute()`...), e chi li usa lo sceglie il giocatore (o il motore: `getFormulante`).
   Gli incantesimi **innati** (dardo arcano, alba sacra, i tre canti) non consumano pergamene.
-- La risposta avversaria è una tattica (`RegistroTattiche.tatticaDiOggi()`): chi colpire, se lanciare un incantesimo, quale, e se conviene più la magia o l'attacco fisico. Vedi §4.
 - Non c'è **posizione**: né distanza, né mischia contro distanza, né linea di vista. Non c'è un turno di preparazione degli
-  incantesimi (sono istantanei) né cooldown. Gli avversari non hanno un "bersaglio" persistente: rispondono a chi ha appena agito.
+  incantesimi (sono istantanei) né cooldown. Il bersaglio "persistente" è nella memoria dello scontro (l'ultimo scelto e chi ha attaccato per ultimo, §3.3).
 - **Gli ospiti vulnerabili sono bersaglio di ogni azione degli avversari**: la scelta spetta alla tattica dell'avversario (§4), e la scelta a caso (`AVVERSARI_E_OSPITI`)
   comprende gli ospiti vulnerabili vivi (prima i maghi, i sacerdoti, gli elfi e i bardi).
 
 ## 3. Il round-robin dei due gruppi
 
-Il turno a rotazione vale per **tutti e due i gruppi**, e va tracciato in questo piano perché le tattiche ne dipendono.
+Il turno a rotazione vale per **tutti e due i gruppi**.
 
-**Il puntatore.** Ogni gruppo ricorda **chi ha agito per ultimo** e passa la mano al **successivo personaggio vivo** (saltando chi è
-caduto o in panchina). Il puntatore di ogni gruppo avanza **sempre**, a ogni azione, e non si azzera fra uno scontro e l'altro dentro la
-stessa locazione. **Fatto** (`StatoDelCombattimento.getProssimoAttaccante`, §3.3): il puntatore sta nello stato e non più nel `Gruppo`; la risposta avversaria (`rispostaAvversaria`) e la risposta nella mischia (`eseguiSingoloAttacco`)
-lo usano per far agire il prossimo avversario vivo, saltando il turno a chi è incapace di agire (atterrato, congelato, stordito). Il gruppo del giocatore ha il suo puntatore: lo usa il combattimento automatico (agiscono tutti i miei, a turno), e le azioni manuali lo spostano su chi ha agito.
+**Il puntatore.** Ogni gruppo ricorda **chi ha agito per ultimo** (`StatoDelCombattimento.getProssimoAttaccante`, §3.3) e passa la mano al **successivo personaggio vivo**, saltando chi è
+caduto o in panchina e chi è incapace di agire (atterrato, congelato, stordito: perde il turno). Il puntatore di ogni gruppo avanza **sempre**, a ogni azione, e non si azzera fra uno scontro e l'altro dentro la
+stessa locazione. Il gruppo del giocatore ha il suo: lo usa il combattimento automatico (agiscono tutti i miei, a turno), e le azioni manuali lo spostano su chi ha agito.
 
 **Non c'è una "risposta".** Quando un mio personaggio agisce, gli avversari **non rispondono**: ognuno **agisce quando il piano del round tocca a lui** (§3.1), in round-robin, e attacca
 a sua volta scegliendo il bersaglio da sé. **Chi colpire non è una regola fissa**: lo decide la tattica dell'avversario (§4), come per i miei personaggi.
 
-**Azioni manuali.** Agisce il personaggio scelto dal giocatore (`PERSONAGGIO_n`, come oggi); fa **una** azione, e il puntatore del
+**Azioni manuali.** Agisce il personaggio scelto dal giocatore (`PERSONAGGIO_n`); fa **una** azione, e il puntatore del
 gruppo passa **al successivo** vivo rispetto a lui.
 
 **Eventi a metà round.** Chi muore durante il round non agisce più, e il puntatore salta i caduti: se cade un compagno che doveva ancora
 agire, la rotazione passa al personaggio successivo. Se cade l'ultimo avversario il round finisce lì (lo scontro è vinto, nessuno
-agisce più); se cade il capo del giocatore la partita è persa, come oggi.
+agisce più); se cade il capo del giocatore la partita è persa.
 
 **Interruzione.** La **fuga** resta del giocatore: è un'interruzione manuale del combattimento (`INTERRUZIONE_COMBATTIMENTO`, o il
 bottone di fuga) che rimette la scelta alle sue mani. Le tattiche non fuggono.
 
-### 3.1 Il round a coppie (fatto)
+### 3.1 Il round a coppie
 
 A inizio round si contano i personaggi **in grado di agire** dei due gruppi (*n* i miei, *m* gli avversari: vivi e non in panchina) e si costruisce il **piano del round**
 (`StatoDelCombattimento.getPiano`): **max(n, m) coppie**, alla coppia *k* agisce il mio *k*-esimo (se *k* < *n*) e poi l'avversario *k*-esimo (se *k* < *m*). Il piano è la
@@ -96,8 +82,8 @@ sequenza dei **lati**, non dei personaggi: chi agisce davvero lo decide, al mome
 | 1 mio contro 3 avversari | G A A A | il mio agisce e poi **attaccano uno dopo l'altro** tutti e tre gli avversari: il mio personaggio ne subisce tre |
 | 2 contro 2 | G A G A | due coppie |
 
-È l'effetto voluto: un avversario solo contro tre compagni agisce una volta e subisce più azioni; un compagno solo contro tre avversari ne subisce tre. **La regola "si disimpegna e
-attacca" è uscita dal codice**, così come la "risposta" al combattente. Il piano si calcola a inizio round e **non si ricalcola quando qualcuno cade**: il posto di chi non c'è più
+È l'effetto voluto: un avversario solo contro tre compagni agisce una volta e subisce più azioni; un compagno solo contro tre avversari ne subisce tre. La regola "si disimpegna e
+attacca" non esiste. Il piano si calcola a inizio round e **non si ricalcola quando qualcuno cade**: il posto di chi non c'è più
 si salta (`registraAzioneSaltata`), e chi è incapace di agire (atterrato, congelato, stordito) salta il turno ma il suo posto è usato. Quando arriva un'**ondata** il piano si rifà con
 i nuovi arrivati (`nuovaOndata`), senza cambiare il numero del round.
 
@@ -109,41 +95,39 @@ i nuovi arrivati (`nuovaOndata`), senza cambiare il numero del round.
 - **Manuale** (attacco singolo, incantesimo, dardo, canto, pozione): il giocatore sceglie chi e che cosa; l'azione occupa il **primo posto libero dei miei** nel piano, e subito dopo gli
   avversari agiscono finché il piano non torna a un mio personaggio o il round non finisce. Il puntatore dei miei passa al successivo rispetto a chi ha agito. Con un avversario solo
   contro tre miei, la prima azione ha l'avversario e le altre due no.
-- **Bere una pozione è un'azione del personaggio** e consuma il suo turno (prima non faceva agire nessuno), e interrompe ancora la mischia automatica, come l'incantesimo.
+- **Bere una pozione è un'azione del personaggio** e consuma il suo turno, e interrompe la mischia automatica, come l'incantesimo.
 - **Gli effetti di stato scorrono alla fine del round** (quando il piano è finito), non a ogni azione: con 3 miei contro 1 durano di più in azioni del giocatore. Fuori dal piano (un
   tentativo di corruzione o di amicizia fallito, senza avversari) il turno passa come prima.
 - **Gli avversari che attaccano per primi** (un passaggio inosservato fallito) sono fuori dal piano: uno solo attacca.
-
 ### 3.3 Il round e lo stato del combattimento
 
-**Che cos'è un round** (deciso, **fatto**): finisce quando il **piano del round** (§3.1) è finito, cioè quando hanno agito (o saltato) tutti i posti, dei due gruppi. Il numero del round **riparte da 1 a ogni
+**Che cos'è un round**: finisce quando il **piano del round** (§3.1) è finito, cioè quando hanno agito (o saltato) tutti i posti, dei due gruppi. Il numero del round **riparte da 1 a ogni
 inizio locazione** e **continua** quando arriva la prossima ondata: il combattimento e la locazione non sono cambiati, sono solo apparsi nuovi mostri. Se non ci sono più avversari
 il combattimento è finito e il round non avanza. All'inizio di ogni round il motore pubblica un evento **`InternoInizioRound`** (con il numero), per la UI, i log e chi tiene la
 memoria del combattimento; a fine round passano gli effetti di stato.
 
-**Lo `StatoDelCombattimento`** (deciso nel nome; **fatto**: il piano del round con `InternoInizioRound`, chi ha agito nel round, i puntatori dei due gruppi e il round-robin, le schede dei personaggi e la conoscenza pubblica sulle reazioni; resta da collegare solo la fonte che dipende dalle tattiche: le voci usate): un oggetto che raccoglie in un posto solo tutto ciò che le tattiche devono ricordare di un combattimento. Si crea
+**Lo `StatoDelCombattimento`**: un oggetto che raccoglie in un posto solo tutto ciò che le tattiche devono ricordare di un combattimento. Si crea
 (o si azzera) a ogni inizio locazione, insieme alla preparazione del gruppo avversario. Contiene:
 
 - **del combattimento**: il numero del round, il registro di chi ha già agito nel round corrente e, per **ogni gruppo**, il **puntatore** all'ultimo personaggio che ha agito
-  (§3: passa al successivo vivo, saltando i caduti e la panchina). Il puntatore esce dal `Gruppo` (dove è un indice, `ultimoIndiceSelezionato`) per stare qui: è memoria
-  del combattimento e non modello, e vive come lo stato (azzerato a inizio locazione, non fra uno scontro e l'altro nella stessa locazione). Meglio che sia
-  il **personaggio** e non l'indice, perché la lista del gruppo cambia (un compagno cade, esce, un nuovo mostro arriva) e un indice slitterebbe;
+  (§3: passa al successivo vivo, saltando i caduti e la panchina). È memoria del combattimento e non modello, e vive come lo stato (azzerato a inizio locazione, non fra uno scontro e
+  l'altro nella stessa locazione). Il puntatore è il **personaggio** e non un indice, perché la lista del gruppo cambia (un compagno cade, esce, un nuovo mostro arriva) e un indice slitterebbe;
 - **per ogni personaggio** (una scheda, indicizzata per identità del personaggio): l'ultimo avversario e l'ultimo alleato scelti (F8); chi lo ha attaccato per
   ultimo (F9); se ha già lanciato un incantesimo (la regola del "magico", F3); quanti cambi d'arma ha fatto; le armi del gruppo già valutate; le voci già
-  usate; e, volendo, le statistiche (danni inflitti e subiti, incantesimi lanciati, colpi a segno e mancati);
+  usate (quante volte e in che round); i tentativi falliti per (bersaglio, azione), §11.7;
 - **la conoscenza accumulata sulle reazioni** (S4), **di pubblico dominio e non legata a un personaggio**: in combattimento tutti vedono quel che succede, nel bene e nel male, anche di
   sfuggita, quindi la sa chiunque e non ha un osservatore. Per ogni coppia (personaggio colpito, tipo di danno) si ricorda di quanto l'**equipaggiamento difensivo** ha cambiato il
   danno (`DannoRisultante.getFattoreEquipaggiamento`: il rapporto fra la mitigazione con i pezzi e quella con la sola difesa di base, `difesaContro` / `difesaBaseContro`; 1 se
   non conta, meno di 1 se protegge). È la parte che le tattiche non possono prevedere: classe e stati li dà già `moltiplicatoreAtteso`, e il fattore osservato si moltiplica per
   quello. Lo registra ogni colpo andato a segno (`PersonaggioBase.applicaRisultatoCombattimento` → `registraColpo`; le previsioni delle tattiche, che chiamano il calcolo senza
-  applicarlo, non lasciano tracce); una nuova osservazione sostituisce la vecchia; `getFattoreEquipaggiamentoNoto` dà 1 se non si è visto niente.
+  applicarlo, non lasciano tracce); una nuova osservazione sostituisce la vecchia; `getFattoreEquipaggiamentoNoto` dà 1 se non si è visto niente. Pubbliche sono anche le **immunità scoperte** (`isImmunitaScoperta`, §11.7).
 
 Regole (decise):
 
-- **Che cosa è fatto e dove si aggiorna**: i colpi (ultimo avversario, ultimo attaccante, reazione) in `applicaRisultatoCombattimento`; "ha lanciato" in `formula` degli incantesimi, nel canto e nel dardo arcano; l'ultimo alleato nella Resurrezione. I cambi d'arma e le armi valutate li registra `GruppoGiocatore.cambiaArma` / `puoCambiareArma` (§5); le voci usate hanno già il metodo (`registraUsoVoce`) ma lo chiamerà il motore delle tattiche.
+- **Che cosa è fatto e dove si aggiorna**: i colpi (ultimo avversario, ultimo attaccante, reazione) in `applicaRisultatoCombattimento`; "ha lanciato" in `formula` degli incantesimi, nel canto e nel dardo arcano; l'ultimo alleato nella Resurrezione. I cambi d'arma e le armi valutate li registra `GruppoGiocatore.cambiaArma` / `puoCambiareArma` (§5); le voci usate le registra l'`EsecutoreTattiche` (`registraUsoVoce`, §11.14), gli esiti delle azioni (`registraEsitoAzione`) gli incantesimi e il dardo.
 - **Non si salva**: un combattimento non si interrompe mai per salvare (il comando non è disponibile), quindi lo stato è transitorio e si perde con il
   combattimento. Le tattiche di ogni personaggio, invece, sì (§1).
-- **La conoscenza è pubblica**: vale per i personaggi del giocatore e per i mostri, e quello che si è imparato sul comportamento di un personaggio lo sa chiunque, in
+- **La conoscenza è pubblica**, anche quella sulle immunità scoperte (§11.7): vale per i personaggi del giocatore e per i mostri, e quello che si è imparato sul comportamento di un personaggio lo sa chiunque, in
   entrambi i gruppi.
 - **La scheda di un personaggio non si dimentica quando cade**: un compagno potrebbe farlo risorgere, e la conoscenza sulle sue reazioni deve valere ancora. Si
   azzera solo con l'inizio della locazione; i mostri di una nuova ondata partono con una scheda vuota.
@@ -154,113 +138,57 @@ Regole (decise):
 
 ## 4. Le tattiche degli avversari
 
-**Lo stesso modello.** Ogni avversario ha una tattica fatta di voci (bersaglio, condizione, azione), valutata come quella dei compagni:
-la prima voce eseguibile vince. Le azioni sono quelle del suo repertorio (attacco con l'arma o l'arma naturale, i suoi incantesimi
-malefici); i selettori sono gli stessi di §6, letti dal punto di vista dell'avversario (per lui i "nemici" sono i miei personaggi).
+**Lo stesso modello.** Ogni mostro agisce con una tattica fatta di voci, valutata come quella dei compagni: la prima voce eseguibile vince. Le azioni sono quelle del suo repertorio
+(l'attacco con l'arma naturale, i suoi incantesimi malefici: `INCANTESIMO_DEL_REPERTORIO`); le rose sono quelle dei mostri (`AVVERSARI`, `AVVERSARI_E_OSPITI`...), letti dal punto di vista
+dell'avversario (per lui gli "avversari" sono i miei personaggi).
 
-**Che cosa c'era, nel codice** (oggi tradotto in `RegistroTattiche.tatticaDiOggi()`, §11.13). Una versione molto semplice, che le tattiche hanno reso esplicita e parametrizzabile:
+**Mostri stupidi e mostri intelligenti.** Un mostro stupido colpisce il primo che trova o chi l'ha colpito; uno intelligente finisce i feriti, per ridurre gli attacchi del giro dopo; uno ancora più furbo mette a tacere un mago.
+Ogni mostro ha la sua **tattica base**, **per classe** (`TipoPersonaggio`): la lista è una sola, e le **fasce di astuzia** sono condizioni delle voci (`NON ASTUZIA MINORE soglia`, §11.8), non blocchi. Per esempio:
 
-| Decisione | Prima (`PersonaggioBase`, rimosso) | Come voce di tattica |
-| :--- | :--- | :--- |
-| **Chi colpire** (`attacca(Gruppo)`) | il **Mago o la Maga più potenti** (livello più alto, a parità il primo); poi il **Sacerdote o la Sacerdotessa più potenti**; poi l'**Elfo o l'Elfa più potenti**; poi il **Bardo o la Cantastorie più potenti**; altrimenti **a caso** fra i personaggi vivi e gli ospiti vulnerabili vivi, tutti con la stessa probabilità (`PersonaggioBase.scegliBersaglio`) | un selettore: "un avversario magico", "il più debole", "il primo", "a caso" |
-| **Se lanciare un incantesimo** (`scegliIncantesimoContro`) | no se non è magico (`isMagico`), è `SILENZIATO`, ha 0 `MAGIA` o non può pagarne nessuno; poi **una volta su tre non lancia** | le condizioni "magia sufficiente" e "probabilità del n%" |
-| **Quale incantesimo** | `INTELLIGENZA` < 5: **a caso**; < 7: **il più potente**; da 7: **il più conveniente** fra incantesimo e attacco fisico, confrontando probabilità di colpire × danno atteso | un **criterio di scelta** dell'azione: a caso, il più potente, il più conveniente |
-| **Magia o attacco fisico** | solo per `INTELLIGENZA` ≥ 7, con quel confronto | idem: l'ultima voce è comunque l'attacco fisico |
-
-**Mostri stupidi e mostri intelligenti.** Un mostro stupido colpisce il primo che trova; uno intelligente quello con meno salute, per ridurre gli
-attacchi del giro dopo; uno ancora più furbo cerca di mettere a tacere un mago. Ogni mostro ha le sue **tattiche base**, **per classe**
-(`TipoPersonaggio`) **e per fascia di intelligenza insieme**: la lista è una sola per classe, e le fasce sono dei blocchi `SE la mia astuzia
-è maggiore di ... ALLORA ... ALTRIMENTI ... FINE` (§7.6). Per esempio:
-
-- *bruto* (Minotauro, Goblin, Scheletro, Troll...): una voce o poche, "scelgo il primo, attacco fisico, punto";
-- *astuto* (Arpia, Hobgoblin, Chimera...): in più "se c'è un magico ne scelgo uno a caso", e un incantesimo a caso se ha la `MAGIA`;
-- *stratega* (Strega, Lich, Drago): "se la mia astuzia è almeno 31 silenzio subito il magico con più `MAGIA`", poi il bersaglio quello con meno
-  salute e l'incantesimo più adatto.
+- *bruto* (Minotauro, Goblin, Scheletro, Troll...): poche voci, "scelgo a caso, attacco fisico, punto";
+- *astuto* (Arpia, Hobgoblin, Chimera...): in più "finisco chi è quasi caduto, cerco un magico", e un incantesimo se ha la `MAGIA`;
+- *stratega* (Strega, Lich, Drago): "silenzio subito il magico con più `MAGIA`", la Morte sul quasi caduto, poi l'incantesimo più adatto al bersaglio.
 
 Le tattiche base sono dati (voci come quelle del giocatore: il motore che le esegue è lo stesso), scritte in `tattiche/TatticheBase` (§11.16) e non in un file di risorse: in Java si controllano a compilazione e si ripetono fra classi senza copiarle. I boss hanno la loro, perché le classi sono già distinte.
 
-**La tattica generale è quella di classe**, e non cambia per livello del mondo o per luogo: l'astuzia (intelligenza di classe con una rampa sul livello) e le
+**La tattica generale è quella di classe** (`RegistroTattiche.perClasse`), e non cambia per livello del mondo o per luogo: l'astuzia (intelligenza di classe con una rampa sul livello) e le
 condizioni dentro la lista fanno già variare il comportamento, e i boss hanno la loro intelligenza. Una **singola istanza** può però portarne una
-diversa, per esempio in una missione un goblin più furbo degli altri con una tattica tutta sua; la tattica dell'istanza si salva con la partita (§1, §8).
+diversa (`Personaggio.getTattica`), per esempio in una missione un goblin più furbo degli altri con una tattica tutta sua; la tattica dell'istanza si salva con la partita (§1, §11.12).
 
-**L'astuzia e le soglie** (decise). Le soglie dei quattro livelli sono: 1 = da 0 a 11, 2 = da 12 a 19, 3 = da 20 a 30, 4 = da 31. Il **Folletto** si alza
-sopra il Goblin (a 8, fra il Goblin e l'Hobgoblin) e l'**Ombra Nera** passa da 30 a 31, per entrare nel quarto livello ed essere più competitiva (**fatti**: due
-ritocchi a `*_MAX_INTELLIGENZA` in `Costanti`: la costante serve anche a calcolare l'INTELLIGENZA vera dei due, quindi li cambia
-anche come lanciatori di incantesimi).
+**L'astuzia e le soglie.** Le soglie dei quattro livelli sono: 1 = da 0 a 11, 2 = da 12 a 19, 3 = da 20 a 30, 4 = da 31 (`SOGLIA_ASTUTO`, `SOGLIA_ESPERTO` e `SOGLIA_STRATEGA` in `TatticheBase`). Il **Folletto** (massimo 8)
+sta fra il Goblin e l'Hobgoblin e l'**Ombra Nera** (31) nel quarto livello. Il massimo sta in `*_MAX_INTELLIGENZA` di `Costanti`, che serve anche a calcolare l'INTELLIGENZA vera: cambiarlo
+cambia anche i lanciatori di incantesimi.
 
-L'**astuzia** parte dal **massimo di classe** (`*_MAX_INTELLIGENZA`) ed è ridotta, per i mostri "tonti" di partenza, da una **rampa sul livello**: l'Ombra Nera
-dev'essere tonta all'inizio e diventare più ostica col salire del mondo. Il massimo di classe non è un tetto dell'INTELLIGENZA vera: è un valore base che la
-formula del livello fa crescere (`getAttributoAdeguatoALivello`) e che la distribuzione casuale dei punti sposta, quindi l'attuale può essere molto sotto (Mago:
-55 contro 18 a livello 1) o sopra (Goblin: 4 contro 6–11).
+L'**astuzia** (`Astuzia.di`) parte dal **massimo di classe** ed è ridotta da una **rampa sul livello** (quello del personaggio, che nei mostri è del mondo):
+`astuzia = massimo × min(1, ASTUZIA_PARTENZA + ASTUZIA_PER_LIVELLO × (livello − 1))`, con `Costanti.ASTUZIA_PARTENZA` = 0,4 e `ASTUZIA_PER_LIVELLO` = 0,075: il 40% del massimo al livello 1, pieno al livello 9. Un'Ombra Nera
+è così tonta all'inizio e diventa più ostica col salire del mondo, e i boss al livello 1 sono un po' meno furbi (Strega e Lich al terzo livello). Il massimo di classe non è un tetto dell'INTELLIGENZA vera: è un valore base che la
+formula del livello fa crescere (`getAttributoAdeguatoALivello`) e che la distribuzione casuale dei punti sposta, quindi l'attuale può essere molto sotto (Mago: 55 contro 18 a livello 1) o sopra (Goblin: 4 contro 6–11): per questo
+non si parte dall'INTELLIGENZA attuale, che fra i livelli 1 e 9 cresce troppo poco perché l'astuzia si muova.
 
-**Il campo da gioco è il livello 1–9**: difficilmente si arriva al 10, quindi i confronti qui sotto sono sui livelli 1, 3, 5, 7 e 9. Tre formule considerate (**scelta la B**) e i
-livelli di astuzia che ne escono:
+**Il campo da gioco è il livello 1–9**: difficilmente si arriva al 10. Livello di astuzia (1–4) ai livelli 1 / 3 / 5 / 7 / 9:
 
-- **A, dall'INTELLIGENZA attuale:** `astuzia = massimo − k × max(0, massimo − INTELLIGENZA attuale)`. L'INTELLIGENZA cresce molto poco fra i livelli 1 e 9
-  (Ombra Nera: 6, 7, 7, 7, 8), quindi **l'astuzia quasi non si muove** (con k = 0,8 l'Ombra Nera resta nel primo livello fino all'ultimo, il Mago passa dal 3 al 4 al 7),
-  e anche i mostri con un massimo vicino all'INTELLIGENZA (l'Hobgoblin, massimo 12) sono tonti da subito.
-- **B, una rampa sul livello del mondo (scelta):** `astuzia = massimo × min(1, 0,4 + 0,075 × (livello − 1))`: il 40% del massimo al livello 1, pieno al livello 9.
-  L'Ombra Nera passa da 12 a 31 (livelli 2, 2, 3, 3, 4), il Mago da 22 a 55, la Strega da 26 a 65 (dal livello 3 è strateghessa).
-- **C, nessun malus:** `astuzia = massimo`. Ogni classe ha il suo livello fisso; l'Ombra Nera a 31 è subito del quarto livello. È la più semplice, ma niente
-  "tonta all'inizio".
+| Classe (massimo) | Livello di astuzia |
+| :--- | :--- |
+| Goblin (4), Folletto (8) | 1 / 1 / 1 / 1 / 1 |
+| Hobgoblin (12) | 1 / 1 / 1 / 1 / 2 |
+| Guerriero (15), Fantasma (15) | 1 / 1 / 1 / 2 / 2 |
+| Idra (25) | 1 / 2 / 2 / 3 / 3 |
+| Ladro (30) | 2 / 2 / 3 / 3 / 3 |
+| Ombra Nera (31) | 2 / 2 / 3 / 3 / 4 |
+| Mago (55) | 3 / 3 / 4 / 4 / 4 |
+| Strega (65), Lich (70) | 3 / 4 / 4 / 4 / 4 |
+| Drago (80) | 4 / 4 / 4 / 4 / 4 |
 
-Livello di astuzia (1–4) ai livelli 1 / 3 / 5 / 7 / 9:
+Il massimo di classe di chi gioca: Guerriero e Guerriera 15, Ladro e Ladra 30, Bardo e Cantastorie 35, Sacerdote e Sacerdotessa 40, Elfo e Elfa 45, Mago e Maga 55; fra i mostri Troll 10, Fantasma 15, Idra 25.
 
-| Classe (massimo) | **A** (k = 0,8) | **B** (rampa) | **C** (solo il massimo) |
-| :--- | :--- | :--- | :--- |
-| Ombra Nera (31) | 1 / 1 / 1 / 1 / 2 | 2 / 2 / 3 / 3 / 4 | 4 |
-| Goblin (4), Folletto (8) | 1 | 1 | 1 |
-| Hobgoblin (12) | 1 | 1 / 1 / 1 / 1 / 2 | 2 |
-| Guerriero (15) | 1 | 1 / 1 / 1 / 2 / 2 | 2 |
-| Idra (25) | 2 / 1 / 2 / 2 / 2 | 1 / 2 / 2 / 3 / 3 | 3 |
-| Ladro (30) | 2 | 2 / 2 / 3 / 3 / 3 | 3 |
-| Mago (55) | 3 / 3 / 3 / 4 / 4 | 3 / 4 / 4 / 4 / 4 | 4 |
-| Strega (65), Lich (70) | 4 | 3 / 4 / 4 / 4 / 4 | 4 |
-| Drago (80) | 4 | 4 | 4 |
-
-Con **B** gli avversari "salgono" davvero insieme al mondo in questo campo da gioco, ma i boss al livello 1 sono un po' meno furbi (Strega e Lich al terzo livello);
-con **A** la classe decide quasi tutto. **Si usa la B**: l'astuzia è `massimo × min(1, 0,4 + 0,075 × (livello − 1))`, con il livello del personaggio (che nei
-mostri è quello del mondo), la partenza al 40% (`ASTUZIA_PARTENZA`) e il passo di 0,075 per livello (`ASTUZIA_PER_LIVELLO`) come costanti in `Costanti`, da regolare.
-
-La tabella dell'INTELLIGENZA attuale (media a livello 1 / 5 / 10 / 20, oltre il campo da gioco ma utile per i valori di base):
-
-| Classe | Massimo di classe | INTELLIGENZA attuale, media a livello 1 / 5 / 10 / 20 |
-| :--- | :--- | :--- |
-| Guerriero, Guerriera | 15 | 7 / 8 / 10 / 13 |
-| Ladro, Ladra | 30 | 8 / 9 / 11 / 16 |
-| Bardo, Cantastorie | 35 | 9 / 12 / 14 / 20 |
-| Sacerdote, Sacerdotessa | 40 | 11 / 14 / 19 / 25 |
-| Elfo, Elfa | 45 | 9 / 12 / 15 / 20 |
-| Mago, Maga | 55 | 18 / 22 / 27 / 39 |
-| Goblin | 4 | 6 / 7 / 8 / 11 |
-| Folletto | 8 (era 3: più furbo del Goblin) | 6 / 8 / 10 / 15 |
-| Troll | 10 | 5 / 6 / 7 / 9 |
-| Fantasma | 15 | 6 / 8 / 10 / 15 |
-| Ombra Nera | 31 (era 30) | 6 / 7 / 8 / 11 |
-| Idra | 25 | 9 / 9 / 10 / 13 |
-| Drago | 80 | 19 / 22 / 26 / 34 |
-| Strega | 65 | 29 / 33 / 40 / 52 |
-| Lich | 70 | 33 / 38 / 47 / 61 |
-
-
-**Il silenzio.** `SILENZIATO` lo dà l'**incantesimo del Silenzio** (`incantesimi/Silenzio`: malefico, arcano, pergamena a 5 monete
-dall'alchimista, 5 `MAGIA` a lancio, durata di `calcolaDurataStato`), ma anche, con una probabilità, ogni attacco di tipo **arcano**
-(il Dardo arcano, l'arma naturale del Lich, gli incantamenti arcani; `TipoDanno.ARCANO`). Il Silenzio ha comunque il tiro per colpire
-e l'immunità del bersaglio, quindi non è una garanzia. "Silenziare un mago" è una voce come "bersaglio: un avversario magico non
-silenziato; azione: Silenzio" (con il Dardo arcano o un attacco arcano come ripiego). Oggi, senza tattiche, il Silenzio è fra i
-malefici del repertorio dei mostri come gli altri, quindi lo lanciano a caso (e silenziano chi stanno attaccando), mentre il giocatore
-lo lancia sul gruppo avversario e il codice sceglie il bersaglio: il primo vivo non ancora silenziato, altrimenti quello col
-silenzio più corto (`Silenzio.scegliBersaglio`). Lanciato su un personaggio silenzia proprio lui: con i selettori delle tattiche
-sarà la voce a sceglierlo.
-
-**Gli ospiti vulnerabili** non hanno più una regola a parte: sono fra i candidati dell'ultima scelta, quella a caso (`Gruppo.getOspitiBersaglio`), quindi un mago o un sacerdote vivo li protegge. Un ospite non vulnerabile non è mai un bersaglio.
+**Gli ospiti vulnerabili** non hanno una regola a parte: sono fra i candidati dell'ultima scelta, quella a caso (`AVVERSARI_E_OSPITI`, `GruppoGiocatore.getOspitiBersaglio`), quindi un mago o un sacerdote vivo li protegge. Un ospite non vulnerabile non è mai un bersaglio.
 
 ## 5. Le azioni possibili
 
 Un personaggio può compiere solo le azioni già disponibili nella barra dei comandi in combattimento (`LocazioneBase.impostaComandiPossibili`).
 **Corruzione, amicizia, fuga e passare inosservati sono escluse**: le prime due non sono nemmeno più disponibili appena si combatte
 (le loro opzioni si spengono all'inizio dello scontro, `opzioneCorruzioneDisponibile` e `opzioneAmiciziaDisponibile`), la fuga è
-una scelta del giocatore (vedi sopra) e passare inosservati non è possibile dopo una vera azione. Per le altre:
+una scelta del giocatore (§3) e passare inosservati non è possibile dopo una vera azione. Per le altre:
 
 | Azione | Chi | Serve | Bersaglio | Note |
 | :--- | :--- | :--- | :--- | :--- |
@@ -275,49 +203,48 @@ una scelta del giocatore (vedi sopra) e passare inosservati non è possibile dop
 | **Canto ipnotico** | idem | `MAGIA` (3); solo contro avversari vivi | fino a `NUMERO_BERSAGLI` avversari (`SPAVENTATO` o `CONFUSO`) | |
 | **Urlo della Banshee** | idem, ma solo dopo che il gruppo l'ha imparato (il bardo della locanda lo sa sempre) | `MAGIA` (6); solo contro avversari vivi | fino a `NUMERO_BERSAGLI` avversari: chi cede prende `SPAVENTATO` e `CONFUSO` insieme | un'alternativa più forte al canto ipnotico |
 | **Canto di valore** | idem | `MAGIA` (5) | tutto il gruppo (`ISPIRATO`) | a inizio scontro |
-| **Pozione della Salute** (normale, grande) | tutti | almeno una nel gruppo | un personaggio del gruppo (chi beve) | |
-| **Pozione della Magia** (normale, grande) | tutti | almeno una nel gruppo | un personaggio del gruppo | |
-| **Cambiare arma** | chi può usare quell'arma (`puoEquipaggiare`) | un'arma nell'inventario del gruppo, che il personaggio possa impugnare e che non sia quella che ha già; il controllo preventivo del cambio riesce; non si è già al massimo di cambi | l'arma stessa (non un avversario) | **è l'azione del turno**: il personaggio cambia arma e basta; l'attacco c'è dal turno dopo (§5, "Cambiare arma") |
+| **Pozione della Salute** (normale, grande) | tutti | almeno una del tipo nel gruppo; il bersaglio è ferito | un personaggio del gruppo (chi beve) | sono due azioni (`POZIONE_SALUTE`, `POZIONE_SALUTE_GRANDE`) |
+| **Pozione della Magia** (normale, grande) | tutti | almeno una del tipo nel gruppo; il bersaglio non ha la `MAGIA` piena | un personaggio del gruppo | sono due azioni (`POZIONE_MAGIA`, `POZIONE_MAGIA_GRANDE`) |
+| **Cambiare arma** | chi può usare quell'arma (`puoEquipaggiare`) | un'arma nell'inventario del gruppo, che il personaggio possa impugnare e che non sia quella che ha già; il controllo preventivo del cambio riesce; non si è già al massimo di cambi | l'arma stessa (non un avversario) | **è l'azione del turno**: il personaggio cambia arma e basta; l'attacco c'è dal turno dopo (vedi sotto, "Cambiare arma") |
+
 
 **Un incantesimo "del repertorio".** Oltre a una classe precisa, la voce può dire "un incantesimo malefico qualsiasi" con un **criterio di
-scelta**: *a caso*, *il più potente* o *il più conveniente* (probabilità di colpire × danno atteso, contro l'attacco fisico): sono le tre
-logiche che oggi usano i mostri in base all'intelligenza (§4). Vale anche per i personaggi del giocatore.
+scelta** (`CriterioIncantesimo`, §11.10): *a caso*, *il più potente*, *il più adatto al bersaglio* e così via. Sono le logiche che prima usavano i mostri in base all'intelligenza (§4). L'azione `INCANTESIMO_DI_DANNO`
+vale per i personaggi del giocatore (solo i sette elementali), `INCANTESIMO_DEL_REPERTORIO` per i mostri (compresi la Morte e il Silenzio).
 
-**Il criterio di scelta dell'incantesimo** (deciso; i quattro livelli S1–S4 sono nel §7.5)
+**Il criterio di scelta dell'incantesimo** (§11.10) dice quale incantesimo lanciare e **dipende dall'intelligenza di chi sceglie**, in quattro livelli:
 
-- **"Il più potente"** (criterio di scelta dell'incantesimo) — l'incantesimo che farebbe **più danni** a un personaggio, stimati con un **danno atteso**
-  (una media, senza dadi), e **dipende dall'intelligenza di chi sceglie**, in quattro livelli:
-  1. **poco intelligente**: un incantesimo **a caso**;
-  2. **mediamente furbo**: quello che potrebbe fare più danni, **senza** tener conto delle resistenze e delle debolezze del bersaglio e di
-     eventuali modificatori di armi e armature;
-  3. **furbo**: quello più adatto a fare più danni **a quel personaggio**, con le resistenze e le debolezze di classe (il conto di
-     `moltiplicatoreAtteso`);
-  4. **molto intelligente**: come il furbo, e in più **impara** dai lanci: se un incantesimo ha avuto un effetto diverso dal previsto contro un
-     personaggio equipaggiato con oggetti che aumentano (o riducono) le sue resistenze, se ne ricorda e ne tiene conto (lo scopre solo dopo il
-     primo lancio, quindi va ricordato per personaggio e tipo di danno).
+1. **poco intelligente**: un incantesimo **a caso**;
+2. **mediamente furbo**: quello che potrebbe fare più danni, **senza** tener conto delle resistenze e delle debolezze del bersaglio e di
+   eventuali modificatori di armi e armature;
+3. **furbo**: quello più adatto a fare più danni **a quel personaggio**, con le resistenze e le debolezze di classe (il conto di
+   `moltiplicatoreAtteso`);
+4. **molto intelligente**: come il furbo, e in più **impara** dai lanci: se un incantesimo ha avuto un effetto diverso dal previsto contro un
+   personaggio equipaggiato con oggetti che aumentano (o riducono) le sue resistenze, se ne ricorda e ne tiene conto (lo scopre solo dopo il
+   primo lancio, quindi è ricordato per personaggio e tipo di danno: §3.3).
+
 - **Incantesimi a più bersagli** (`MULTIPLO`): per i mostri poco intelligenti e mediamente furbi conta il **danno massimo a un bersaglio** (il
   resto è danno collaterale); per i furbi conta il **danno totale**; per i molto intelligenti si guarda anche **chi verrebbe portato vicino alla
-  fine** (o ucciso). Esempio: un incantesimo che lascia un personaggio a 50 punti e altri due a 35 è peggio di uno che lo lascia a 60 e gli altri
-  due a 15, perché con un secondo lancio si finiscono probabilmente gli altri due. (Una misura possibile: per ogni bersaglio, la quota della salute
-  attuale che l'incantesimo toglie, al massimo 1 se lo uccide, sommata; da confermare.)
-- **Quali incantesimi partecipano**: dipende da cosa ha il gruppo. Se un gruppo ha Resurrezione, Alba Sacra o Silenzio li usa, ma sono **voci
-  proprie** della tattica, non partecipano al "più potente" fra gli incantesimi che fanno danno. Il **Silenzio** va usato **subito** su maghi,
+  fine** (o ucciso): per ogni bersaglio, la quota della salute attuale che l'incantesimo toglie, al massimo 1 se lo uccide, sommata. Un incantesimo che lascia un personaggio a 50 punti e altri due a 35 è peggio di uno
+  che lo lascia a 60 e gli altri due a 15, perché con un secondo lancio si finiscono probabilmente gli altri due.
+- **Quali incantesimi partecipano**: dipende da cosa ha il gruppo. Resurrezione, Alba Sacra e Silenzio sono **voci
+  proprie** della tattica e non partecipano al "più potente" fra gli incantesimi che fanno danno. Il **Silenzio** va usato **subito** su maghi,
   sacerdoti, elfi e bardi (i personaggi magici di cui sopra) quando c'è.
 - **Il costo**: si considerano **solo gli incantesimi che si possono lanciare in quel momento** (`MAGIA` sufficiente, non silenziato). I mostri non
   recuperano `MAGIA` **a meno che non siano umanoidi e abbiano nel loro gruppo qualche pozione della Magia a disposizione**; un personaggio può bere una
   pozione della Magia (una voce a sé, "se la `MAGIA` è sotto la soglia") e il turno dopo avere a disposizione quelli più costosi. La stessa
-  considerazione vale per le **pozioni della Salute** e per gli **incantesimi curativi** (Alba Sacra, Resurrezione, canto curativo): oggi gli avversari non li usano
-  perché non hanno nessuna scorta (né pozioni né pergamene) e il loro repertorio comprende solo incantesimi **malefici**, pagati soltanto con la loro `MAGIA`; il
-  difetto è nel **modello dati** (§8).
+  considerazione vale per le **pozioni della Salute** e per gli **incantesimi curativi** (Alba Sacra, Resurrezione, canto curativo): gli avversari non li usano
+  perché non hanno nessuna scorta (né pozioni né pergamene) e il loro repertorio comprende solo incantesimi **malefici**, pagati soltanto con la loro `MAGIA`; i mostri non hanno scorte nel modello dati (§8).
 
-**Il silenzio è un'azione.** Lo stato `SILENZIATO` lo mette l'incantesimo del Silenzio (riga sopra), o con una probabilità un attacco di
-tipo **arcano** (il Dardo arcano di Mago ed Elfo, l'arma naturale del Lich, gli incantamenti arcani). Una voce "silenzia il mago" è
-"azione: Silenzio" su un avversario magico non ancora silenziato, e subito dopo, per chi non ha la pergamena o la `MAGIA`, "azione:
-Dardo arcano" sullo stesso bersaglio.
+**Il silenzio è un'azione.** Lo stato `SILENZIATO` lo mette l'incantesimo del Silenzio (`incantesimi/Silenzio`: malefico, arcano, pergamena a 5 monete
+dall'alchimista, 5 `MAGIA` a lancio, durata di `calcolaDurataStato`) o, con una probabilità, ogni attacco di tipo **arcano** (il Dardo arcano di Mago ed Elfo,
+l'arma naturale del Lich, gli incantamenti arcani; `TipoDanno.ARCANO`). Il Silenzio ha comunque il tiro per colpire e l'immunità del bersaglio, quindi non è una garanzia.
+Una voce "silenzia il mago" è `SU AVVERSARI [MAGICO] ordine PIU_MAGIA → SILENZIO, DARDO_ARCANO, ATTACCO_FISICO` (§11.7): il Silenzio su un avversario magico non ancora silenziato e, per chi non ha la pergamena o la `MAGIA`,
+il Dardo arcano sullo stesso bersaglio. L'azione manuale del giocatore sceglie il bersaglio da sé: il primo vivo non ancora silenziato, altrimenti quello col silenzio più corto (`Silenzio.scegliBersaglio`); lanciato su un personaggio silenzia proprio lui.
 
 **Cambiare arma è un'azione.** Un personaggio può decidere, per esempio, di prendere dall'inventario del gruppo un'arma che dà danno
 `SACRO` se tra gli avversari ci sono dei non morti: "condizione: c'è un avversario non morto e non ho già un'arma sacra e nel gruppo
-ce n'è una che posso usare; azione: cambia arma, scegliendo una che dà SACRO". Alcune regole, da fissare in questo modo:
+ce n'è una che posso usare; azione: cambia arma, scegliendo una che dà SACRO". Le regole:
 
 - **Il cambio è tutta l'azione del turno**: il personaggio sceglie l'arma, la impugna e il suo turno finisce lì, senza attaccare;
   l'attacco col nuovo equipaggiamento viene dal turno dopo. Vale anche con la doppia arma (Ladro, Elfo): un cambio singolo, della
@@ -327,37 +254,32 @@ ce n'è una che posso usare; azione: cambia arma, scegliendo una che dà SACRO".
   l'equipaggiamento, senza regole nuove: `RegoleEquipaggiamento.valuta` dice di no se l'arma è troppo pesante per il carico
   (`TROPPO_CARICO`), se non è utilizzabile dalla classe (`NON_ADATTO_ALLA_CLASSE`), se manca la forza o il livello, se la mano è
   occupata, se è a due mani e non si hanno le mani libere, se non è da mano secondaria... In quel caso l'arma di prima non viene
-  nemmeno tolta.
-- **Il controllo deve guardare il dopo-cambio** — **fatto** (`RegoleEquipaggiamento.valutaCambioArma`, `GruppoGiocatore.controllaCambioArma`). `valuta` guarda l'equipaggiamento *com'è adesso*, con l'arma di prima ancora in
-  mano e nel carico. Per il cambio, a mano, il giocatore prima toglie la vecchia e poi prende la nuova: se la tattica chiamasse
-  `puoEquipaggiare` prima di togliere, i risultati sarebbero sbagliati in entrambe le direzioni. Una spada nuova verrebbe respinta
+  nemmeno tolta. Un cambio che non passa è un'azione **senza effetto**: non consuma il turno e si passa alla voce successiva.
+- **Il controllo guarda il dopo-cambio** (`RegoleEquipaggiamento.valutaCambioArma`, `GruppoGiocatore.controllaCambioArma`). `valuta` guarda l'equipaggiamento *com'è adesso*, con l'arma di prima ancora in
+  mano e nel carico, mentre a mano il giocatore prima toglie la vecchia e poi prende la nuova: chiamare `puoEquipaggiare` prima di togliere darebbe risultati sbagliati in entrambe le direzioni. Una spada nuova verrebbe respinta
   perché la seconda arma non è consentita (o la mano principale è occupata), un'arma troppo pesante per il carico di adesso entrerebbe
   una volta uscita la vecchia, e un pugnale verrebbe accettato nella mano secondaria, che non è un cambio. Per questo il controllo
   si fa sulla situazione "senza l'arma che esce": gli artefatti che escono si tolgono **solo dall'elenco** del personaggio (non con `removeArtefatto`,
   che ricalcola gli attributi e riduce salute e MAGIA se l'arma ne dava il massimo, e pubblica notifiche), si chiama `valuta` e si rimettono nello stesso ordine,
-  senza effetti né notifiche. Un cambio che non passa è un'azione **senza effetto**: non consuma il turno e si passa alla voce successiva.
-- **Chi esce** (regola provvisoria, finché non c'è il criterio della doppia arma): per un'arma da mano principale, quella che occupa lo slot (o l'arma a due mani che occupa entrambi); per un'arma a due mani, tutto quello che ha in mano.
+  senza effetti né notifiche.
+- **Chi esce** (`RegoleEquipaggiamento.chiEsce`): per un'arma da mano principale, quella che occupa lo slot (o l'arma a due mani che occupa entrambi); per un'arma a due mani, tutto quello che ha in mano.
   **Lo scudo, e ogni cosa che non sia un'arma, non esce mai**: con lo scudo in mano un'arma a due mani non si può prendere (`MANI_OCCUPATE_PER_ARMA_A_DUE_MANI`).
+  Con la **doppia arma** (Ladro, Elfo, due armi in mano, non uno scudo) si confrontano le due armi e **esce quella che infligge meno danno**, a parità la secondaria: il danno è `CalcolatoreCombattimento.dannoAttesoDellArma`
+  (danni base per il livello di combattimento dell'arma, più per ogni incantamento il bonus fisso e la quota dell'INTELLIGENZA; senza dadi né critici, **contro un bersaglio neutro** e al pieno anche per la secondaria).
+  La nuova arma prende lo slot di quella che esce, quindi deve poterci stare: una lancia (solo mano principale) fa uscire la principale anche se è la più forte. Se l'arma più debole è proprio quella che dà
+  il tipo di danno voluto, lo evita la condizione della voce ("non ho già un'arma che dà quel danno"), non il controllo. Il confronto si può affinare (§10).
 - **Ogni arma si valuta una volta sola.** Chi ha provato un'arma e ha visto che non può impugnarla se lo ricorda, per non rifare le
-  prove a ogni turno e a ogni voce. In teoria il personaggio potrebbe valutare tutte le armi dell'inventario del gruppo, ma lo fa
-  **una volta sola** e si segna quali può usare (e quali no), per quel combattimento. La valutazione dipende da chi la fa (classe,
-  livello, forza, carico) e da quello che ha in mano: se uno di questi cambia (un'arma nuova nell'inventario, un cambio d'arma, un
-  livello, un effetto che cambia il carico) le valutazioni vanno rifatte o scartate. Il dato sta nello stato del combattimento (§8): `registraArmaValutata` / `getValutazioneArma`, usati da `GruppoGiocatore.puoCambiareArma`; un cambio d'arma del personaggio scarta le sue valutazioni, e si azzerano a ogni locazione.
-- **Con la doppia arma, quale esce** (**fatto**, versione semplice): si confrontano le due armi che il personaggio ha in mano e **esce quella che infligge meno danno**;
-  a parità, la secondaria. Il danno è `CalcolatoreCombattimento.dannoAttesoDellArma`: danni base per il livello di combattimento dell'arma, più per ogni incantamento il bonus fisso
-  e la quota dell'INTELLIGENZA; senza dadi né critici, **contro un bersaglio neutro** e al pieno anche per la secondaria. La nuova arma prende lo slot di quella che esce, quindi deve poterci stare:
-  una lancia (solo mano principale) fa uscire la principale anche se è la più forte. Vale solo per chi impugna due armi (Ladro, Elfo) e se in mano ci sono due armi (non uno scudo). **Da affinare**: il confronto
-  contro il bersaglio vero (`moltiplicatoreAtteso` per il tipo di danno di ciascuna arma), gli effetti di stato e i modificatori che l'arma applica, e la probabilità di colpire (§10).
-  Se l'arma più debole è proprio quella che dà il tipo di danno voluto, lo evita la condizione della voce ("non ho già un'arma che dà quel danno"), non il controllo.
-- **Un massimo di cambi per combattimento, per personaggio**: **uno, al più due** (una costante in `Costanti`), per fermare i continui
-  cambi anche quando le condizioni lo permettono. Il massimo è `Costanti.MAX_CAMBI_ARMA_PER_COMBATTIMENTO` (2). Si conta nello stato del combattimento (§8: `registraCambioArma`, `getCambiDArma`) e ricade fra le condizioni della voce
+  prove a ogni turno e a ogni voce. La valutazione dipende da chi la fa (classe, livello, forza, carico) e da quello che ha in mano: se uno di questi cambia
+  (un'arma nuova nell'inventario, un cambio d'arma, un livello, un effetto che cambia il carico) le valutazioni vanno rifatte o scartate. Il dato sta nello stato del combattimento (§3.3): `registraArmaValutata` / `getValutazioneArma`, usati da `GruppoGiocatore.puoCambiareArma`; un cambio d'arma del personaggio scarta le sue valutazioni, e si azzerano a ogni locazione.
+- **Un massimo di cambi per combattimento, per personaggio**: `Costanti.MAX_CAMBI_ARMA_PER_COMBATTIMENTO` (2), per fermare i continui
+  cambi anche quando le condizioni lo permettono. Si conta nello stato del combattimento (`registraCambioArma`, `getCambiDArma`) e ricade fra le condizioni della voce
   ("non ho ancora cambiato arma").
-- **Come si esegue** (**fatto**: `GruppoGiocatore.cambiaArma`): non passa dagli eventi `InternoStoccaggioArtefatto` / `InternoPrelievoArtefatto`, che sono richieste della
+- **Come si esegue** (`GruppoGiocatore.cambiaArma`): non passa dagli eventi `InternoStoccaggioArtefatto` / `InternoPrelievoArtefatto`, che sono richieste della
   schermata dell'inventario con una notifica di ritorno: è una valutazione del motore, e serve un esito certo nello stesso istante. L'azione chiama direttamente i due passi
   pubblici del gruppo, `stocca` (l'arma di prima nell'inventario del gruppo) ed `equipaggia` (la nuova al personaggio), dopo `puoCambiareArma` (massimo di cambi più controllo
-  preventivo); poi conta il cambio. Gli stessi due passi li usano ora anche gli handler degli eventi della schermata dell'inventario, dopo `controllaPrelievo`.
-  Il cambio non consuma il turno da solo: lo fa chi lo chiama (il motore delle tattiche). È un'**azione atomica**: già validata dal controllo preventivo, non teme un rifiuto a metà.
-- **Il filtro sull'inventario** (**fatto**: `GruppoGiocatore.armiPerCambio(personaggio, tipoDanno)`): le armi da mano principale o a due mani del gruppo che danno quel tipo di danno
+  preventivo); poi conta il cambio. Gli stessi due passi li usano anche gli handler degli eventi della schermata dell'inventario, dopo `controllaPrelievo`.
+  Il cambio non consuma il turno da solo: lo fa chi lo chiama (l'`EsecutoreTattiche`). È un'**azione atomica**: già validata dal controllo preventivo, non teme un rifiuto a metà.
+- **Il filtro sull'inventario** (`GruppoGiocatore.armiPerCambio(personaggio, tipoDanno)`): le armi da mano principale o a due mani del gruppo che danno quel tipo di danno
   (`Arma.daTipoDanno`) e che il personaggio può prendere al posto di quelle che ha in mano.
 - **Si torna indietro con un'altra voce**, altrimenti l'arma sacra resterebbe in mano anche dopo i non morti: "condizione: non ci sono
   non morti tra gli avversari e ho in mano un'arma sacra e nel gruppo c'è quella di prima; azione: cambia arma". Quel cambio conta nel
@@ -368,7 +290,6 @@ ce n'è una che posso usare; azione: cambia arma, scegliendo una che dà SACRO".
 Nei giochi di riferimento ci sono azioni che qui non esistono: **muoversi, seguire, mantenere la posizione,
 parare, rubare, usare un oggetto di scena**. Un'azione **"passa il turno"** non c'è oggi, ma potrebbe servire come ultimo passo
 alternativo per chi non deve combattere (per esempio un curatore senza magia).
-
 ## 6. Il bersaglio: un campo della voce
 
 Il bersaglio è scelto da un **selettore**, che sta nella voce. Dipende dal tipo di azione: gli attacchi e i malefici vogliono un
@@ -393,11 +314,11 @@ selettore). Per i giochi di riferimento vale la nota in testa a §7.
 | Un **boss** / di rango elevato | DA:O (*rank*) | **per ora non serve**: non c'è una distinzione vera, perché i boss (Lich, Minotauro Gigante, Strega...) si incontrano di solito da soli, quindi non c'è un "altro" da scegliere. Se servisse, il modo più semplice è trasformare quegli incontri in **Ondate** (da valutare: è in `todo.md`) |
 | Con un certo **effetto di stato** (stordito, avvelenato, congelato...) | DA:O, FFXII (*status*) | **sì**: `hasEffettoDiStato(tipo)`, 19 tipi (`TipoEffettoDiStato`) |
 | **Senza** un certo effetto (non ancora silenziato, non ancora avvelenato) | FFXII (*status ≠*) | **sì**: `!hasEffettoDiStato(tipo)` |
-| **Debole a un elemento** | DA:O (*vulnerability*), FFXII (*weak to element*) | **parziale**, in tre pezzi che vanno composti (§6.3): la debolezza di classe (`Personaggio.getMoltiplicatoreDannoSubito`: il `SACRO` sui non morti ×2, le immunità), quella momentanea per stato (`BAGNATO` + fulmine...) e la difesa numerica (`difesaContro`); non c'è una lista di debolezze già pronta |
+| **Debole a un elemento** | DA:O (*vulnerability*), FFXII (*weak to element*) | **sì**, in tre pezzi che il calcolatore compone (§6.3): la debolezza di classe (`Personaggio.getMoltiplicatoreDannoSubito`: il `SACRO` sui non morti ×2, le immunità), quella momentanea per stato (`BAGNATO` + fulmine...) e la difesa numerica (`difesaContro`): filtro `DEBOLE_A` e ordinamento `PIU_DEBOLE_A` |
 | Non **immune** a quell'incantesimo, tipo di danno o stato (per non sprecare la magia) | DA:O, FFXII | **sì**: `isImmuneAIncantesimo`, `isImmuneATipoDanno`, `isImmuneAEffetto` |
 | Con una certa **armatura** (pesante, leggera) | DA:O (*armor*) | **parziale**: i personaggi hanno elmo, scudo, armatura e schinieri con resistenze; i mostri combattono con l'arma naturale |
-| **Lo stesso del turno precedente / del compagno** (fuoco concentrato) | FFXII (*last target, leader's target*) | **da aggiungere**: basta uno stato del combattimento con l'ultimo bersaglio di ogni personaggio |
-| Quello che **attacca me / un alleato** | DA:O (*targeting*), FFXII | **parziale**: oggi si risponde a chi ha agito; per un "bersaglio dell'avversario" persistente va ricordato l'ultimo bersaglio di ognuno |
+| **Lo stesso del turno precedente / del compagno** (fuoco concentrato) | FFXII (*last target, leader's target*) | **sì**: lo stato del combattimento ricorda l'ultimo bersaglio di ogni personaggio (ordinamento `ULTIMO_SCELTO`, §3.3) |
+| Quello che **attacca me / un alleato** | DA:O (*targeting*), FFXII | **sì**: lo stato del combattimento ricorda chi ha attaccato per ultimo (ordinamento `ULTIMO_ATTACCANTE`, §3.3) |
 | Che sta **lanciando** un incantesimo | DA:O, FFXII | **no**: gli incantesimi sono istantanei |
 | A distanza o in mischia | DA:O, FFXII | **no**: non c'è posizione, né armi a distanza (spada, mazza, ascia, spadone, lancia, bastone magico) |
 
@@ -418,8 +339,7 @@ classe ne ha una o più, e un selettore "di categoria X" prende chi ne ha anche 
 Le classi con più categorie sono la regola per i mostri più strani: Spirito e Ombra Nera sono non morti e volanti, la Chimera Drago è
 bestia, ibrida e draconica. La Chimera Drago non è volante, il Gargoyle non è umanoide.
 
-**Le misure: "più forte" e "più debole" non si usano.** Sono parole ambigue (forte per che cosa?): ogni voce dice la misura. Sono sei
-selettori di ordinamento, che scelgono, fra i candidati, quello che ha il valore più alto o più basso:
+**Le misure: "più forte" e "più debole" non si usano.** Sono parole ambigue (forte per che cosa?): ogni voce dice la misura. Gli ordinamenti che confrontano un valore (più `PIU_MAGIA` e `MENO_MAGIA` per la `MAGIA`, §11.6) scelgono, fra i candidati, quello che ha il valore più alto o più basso:
 
 | Selettore | Misura | Note |
 | :--- | :--- | :--- |
@@ -433,9 +353,9 @@ sotto il n%" (una soglia), "**debole a** `<tipo>`" (moltiplicatore di classe e s
 
 **Regole comuni dei selettori** (decise)
 
-- **I selettori di ordinamento** sono: salute attuale (più bassa o più alta), livello (più basso o più alto), più debole o più
-  resistente a un tipo di danno. **Niente** percentuale di salute né salute massima: la salute assoluta basta (chi ha meno punti ha più
-  probabilità di morire al prossimo scontro). Per un alleato "il più ferito" vuol dire proprio "con meno salute".
+- **Gli ordinamenti** sono: salute attuale (più bassa o più alta), livello (più basso o più alto), più debole o più
+  resistente a un tipo di danno, `MAGIA`, chi ha attaccato per ultimo, l'ultimo scelto. **Niente** percentuale di salute né salute massima come ordinamento: la salute assoluta basta (chi ha meno punti ha più
+  probabilità di morire al prossimo scontro); la percentuale è un filtro (`SALUTE_PERCENTUALE`). Per un alleato "il più ferito" vuol dire proprio "con meno salute".
 - **A parità di valore** si sceglie il **primo dell'elenco** del gruppo (ripetibile, anche nei test); "a caso" è un selettore a parte.
   *"Il primo"* è la posizione nell'elenco dei vivi, che cambia quando qualcuno cade o va in panchina.
 - **"Lo stesso del turno precedente"**: è il bersaglio che *questo* personaggio ha scelto la volta prima, se è ancora vivo e in
@@ -471,7 +391,7 @@ sotto il n%" (una soglia), "**debole a** `<tipo>`" (moltiplicatore di classe e s
 | L'alleato **con meno salute** (il "più ferito", per salute attuale) / con salute sotto una soglia | DA:O (*Ally: health < n%*), FFXII | **sì**: sui personaggi vivi |
 | Un alleato **caduto** (per la resurrezione) | DA:O (*dead*), FFXII (*KO'd*) | **sì**: `!isVivo()`; il gruppo dà i vivi, i caduti si ricavano dall'elenco |
 | Un alleato con un certo **stato** (avvelenato, confuso...) | DA:O, FFXII | **sì**: `hasEffettoDiStato` |
-| Un alleato con **poca magia** (per la pozione della Magia) | FFXII (*MP < n%*) | **sì**: `getMagia() / getMagiaMassima()` |
+| Un alleato con **poca magia** (per la pozione della Magia) | FFXII (*MP < n%*) | **sì**: filtro `MAGIA` (in punti) |
 | Un alleato di una certa **classe** | DA:O | **sì**: `getClasse()` |
 | Un **ospite vulnerabile** da proteggere | (specifico: missioni di scorta) | **sì, come alleato da proteggere**: un ospite vulnerabile vivo (`GruppoGiocatore.getOspitiBersaglio`) è fra i bersagli *possibili* del suo gruppo, e può esserlo di una cura o di una protezione (da decidere quali selettori lo comprendono). Un ospite non vulnerabile non lo è mai. Non combatte e non agisce, quindi non ha una tattica |
 
@@ -482,38 +402,27 @@ punti diversi del codice, che ora si possono interrogare insieme con `Calcolator
 
 | Origine | Dove sta | Che cosa dà | Limite |
 | :--- | :--- | :--- | :--- |
-| **1. Classe** | `getMoltiplicatoreDannoSubito(tipoDanno)` (`PersonaggioBase`), che legge la tabella di `TipoPersonaggio` e `CategoriaPersonaggio`; `isImmuneATipoDanno` è lo stesso valore uguale a 0 | **immune** (0) o **debole** (>1: il `SACRO` sui non morti ×2); e le resistenze (tra 0 e 1: danno ridotto e meno effetti), per ora senza nessuna classe che ne abbia | niente: nessuna classe ha ancora una resistenza parziale, e la tabella è pronta |
-| **2. Stato (momentanea)** | `TipoInterazioneConEffettiDiStato` (34 interazioni, quasi tutte coppie *stato, tipo di danno*, con il loro moltiplicatore) e `CalcolatoreCombattimento.interazioniAttive` (quando scattano) | moltiplicatori del danno, deboli (×1,5 il fulmine su un `BAGNATO`) o resistenti (×0,5 il fuoco su un `BAGNATO`), che durano quanto lo stato | la debolezza cambia da un turno all'altro: "debole al fulmine" vale finché dura il `BAGNATO` |
+| **1. Classe** | `getMoltiplicatoreDannoSubito(tipoDanno)` (`PersonaggioBase`), che legge la tabella di `TipoPersonaggio` e `CategoriaPersonaggio`; `isImmuneATipoDanno` è lo stesso valore uguale a 0 | **immune** (0) o **debole** (>1: il `SACRO` sui non morti ×2); e le resistenze (tra 0 e 1: danno ridotto e meno effetti) | i valori per classe sono in `debolezze_e_resistenze.md` |
+| **2. Stato (momentanea)** | `TipoInterazioneConEffettiDiStato` (le interazioni, quasi tutte coppie *stato, tipo di danno*, con il loro moltiplicatore) e `CalcolatoreCombattimento.interazioniAttive` (quando scattano) | moltiplicatori del danno, deboli (×1,5 il fulmine su un `BAGNATO`) o resistenti (×0,5 il fuoco su un `BAGNATO`), che durano quanto lo stato | la debolezza cambia da un turno all'altro: "debole al fulmine" vale finché dura il `BAGNATO` |
 | **3. Difesa numerica** | `CalcolatoreCombattimento.difesaContro` | `COSTITUZIONE + PARATA` per il fisico, `RESISTENZA_MAGICA` per tutto il resto, più gli incantamenti dei pezzi | per un mostro tutti gli elementi hanno la stessa difesa |
 
-**Com'era e com'è ora il punto 2.** Prima l'enum diceva solo *quali* coppie esistevano: il moltiplicatore (25 numeri) e *quando* un'interazione
-scattava stavano in una catena di `if` dentro `calcolaDannoRisultante` (una quindicina di blocchi, mescolati agli effetti: togliere o
-mettere uno stato, danno puro, critico, difesa), e per sapere quanto fa male un fulmine a un `BAGNATO` si poteva solo calcolare un colpo vero.
-Dopo il riordino:
-
-- `interazioniAttive(difensore, tipoDanno)` è **l'unico punto che decide quando scatta un'interazione con uno stato**: un ciclo
-  sulle interazioni dell'enum, ognuna scatta se il difensore ha uno dei suoi stati (`getPrecondizioni`) e riceve uno dei suoi tipi di danno
-  (`getInnescanti`). L'**ordine di dichiarazione dell'enum è l'ordine di applicazione** degli effetti (per stato, come nella vecchia catena);
-  vuota se il difensore è immune;
-- `moltiplicatoreDelleInterazioni` parte dal moltiplicatore della classe (`getMoltiplicatoreDannoSubito`) e lo moltiplica per quelli dell'enum (più la MIETITURA, che dipende dalla SAGGEZZA), e
-  `fattoreDifesaDaStati` dà il cambio di difesa (guscio di ghiaccio ×1,5, superconduzione ×0,7);
-- `calcolaDannoRisultante` chiama queste funzioni e **applica solo gli effetti** di ogni interazione (`switch`): così il danno vero e le tattiche
-  non possono divergere;
-- `moltiplicatoreAtteso(difensore, tipoDanno)` le compone con la difesa, senza dadi e senza cambiare niente.
-
-Il comportamento del danno non è cambiato, con **una sola differenza voluta**: un difensore insieme SPAVENTATO e CONFUSO colpito da danno
-`VUOTO` ora subisce la Follia Cosmica (prima no, perché per le interazioni contava solo lo SPAVENTATO). Il test `InterazioniConGliStatiCaratterizzazioneTest` confronta, a seme fisso, l'esito di 8316
-colpi (3 difensori, ogni stato da solo e a coppie, ogni tipo di danno) con quello registrato prima del riordino; `MoltiplicatoreAttesoTest`
-verifica la funzione nuova.
+**Il punto 2** si legge così: `interazioniAttive(difensore, tipoDanno)` è **l'unico punto che decide quando scatta un'interazione con uno stato**: un ciclo
+sulle interazioni dell'enum, ognuna scatta se il difensore ha uno dei suoi stati (`getPrecondizioni`) e riceve uno dei suoi tipi di danno
+(`getInnescanti`); vuota se il difensore è immune. L'**ordine di dichiarazione dell'enum è l'ordine di applicazione** degli effetti (per stato).
+`moltiplicatoreDelleInterazioni` parte dal moltiplicatore della classe (`getMoltiplicatoreDannoSubito`) e lo moltiplica per quelli dell'enum (più la MIETITURA, che dipende dalla SAGGEZZA), e
+`fattoreDifesaDaStati` dà il cambio di difesa (guscio di ghiaccio ×1,5, superconduzione ×0,7). `calcolaDannoRisultante` chiama queste funzioni e **applica solo gli effetti** di ogni interazione (`switch`): così il danno vero e le tattiche
+non possono divergere. `moltiplicatoreAtteso(difensore, tipoDanno)` le compone con la difesa, senza dadi e senza cambiare niente.
+Il test `InterazioniConGliStatiCaratterizzazioneTest` confronta, a seme fisso, l'esito di 8316 colpi (3 difensori, ogni stato da solo e a coppie, ogni tipo di danno) con quello registrato prima del riordino di queste funzioni; `MoltiplicatoreAttesoTest`
+verifica `moltiplicatoreAtteso`.
 
 **Limite accettato.** La distinzione di difesa è solo fisico / non fisico (`COSTITUZIONE + PARATA` e `RESISTENZA_MAGICA`): fra il fuoco e il gelo, o fra il
 tagliente e il contundente, un mostro non ha differenze di difesa se non quelle dei punti 1 e 2 (tabella di classe e stati). Le resistenze
-parziali per classe ci sono (`debolezze_e_resistenze.md`).
+parziali per classe sono in `debolezze_e_resistenze.md`.
 
 **Fattore di danno atteso.** Si calcola, per un avversario e un tipo di danno T, **senza tirare i dadi**:
 
 > fattore = 0 se immune a T; altrimenti `100 / (100 + difesa)` × il moltiplicatore di classe × i moltiplicatori degli stati attivi per T
-> (la difesa è `difesaContro`, con gli stati che la cambiano) — **`CalcolatoreCombattimento.moltiplicatoreAtteso`, già fatto**.
+> (la difesa è `difesaContro`, con gli stati che la cambiano) — `CalcolatoreCombattimento.moltiplicatoreAtteso`.
 
 Da lì: **debole** = moltiplicatore > 1, **resistente** = < 1, **immune** = 0, e "il più debole fra questi elementi" = il fattore più alto.
 Serve a scegliere il bersaglio ("il più debole al fuoco"), l'incantesimo o l'arma ("il Gelo contro un `BAGNATO`", "un'arma sacra contro i
@@ -521,14 +430,13 @@ non morti": la condizione del cambio d'arma, §5) e il momento del cambio.
 
 **Decisioni.** "Debole" vuol dire solo moltiplicatore > 1 (non "meno resistente degli altri elementi"). Il selettore e la scelta dell'azione guardano gli stati
 di adesso **e anche quelli che l'azione stessa può causare** (il Gelo che prima bagna e poi congela, quindi con i moltiplicatori della reazione che ne seguirebbe).
-**Fatto:** `CalcolatoreCombattimento.statiCausabili(difensore, arma)` (stati nativi del tipo di danno e degli incantamenti, esclusi tipi di danno e stati a cui è immune) e
+`CalcolatoreCombattimento.statiCausabili(difensore, arma)` (stati nativi del tipo di danno e degli incantamenti, esclusi tipi di danno e stati a cui è immune) e
 `moltiplicatoreAttesoDopo(difensore, tipoDanno, arma | stati)`, il fattore del colpo che segue l'azione: gli stati si contano come se fossero scattati (come le reazioni).
-
 ## 7. Le condizioni
 
 Gli elenchi dei giochi sono quelli che ricordo, **indicativi**: i nomi esatti cambiano da gioco a gioco. La colonna a destra dice se
-la cosa si legge già in Foresta (**sì**), solo in parte o va derivata (**parziale**), richiede un dato nuovo (**da aggiungere**) o non
-ha senso qui (**no**).
+la cosa si legge dal modello di Foresta (**sì**), solo in parte o va derivata (**parziale**) o non ha senso qui (**no**). Che cosa è diventato un filtro,
+un ordinamento o una condizione delle voci lo dicono §11.5, §11.6 e §11.8.
 
 ### 7.1 Su di sé
 
@@ -537,7 +445,7 @@ ha senso qui (**no**).
 | Sempre (nessuna condizione) | tutti | **sì** |
 | Salute sotto/sopra una percentuale | DA:O, FFXII (*Self: HP < n%*) | **sì**: `getSalute() / getSaluteMassima()` |
 | Magia sotto/sopra una percentuale o un valore | DA:O (*mana/stamina*), FFXII (*MP*) | **sì**: `getMagia() / getMagiaMassima()` |
-| Stanchezza oltre una soglia | (specifico: abbassa la probabilità di colpire) | **sì**: `getStanchezza()` |
+| Stanchezza oltre una soglia | (specifico: abbassa la probabilità di colpire) | **sì**: `getStanchezza()`; non è ancora una condizione (§11.8) |
 | **Magia sufficiente per quell'incantesimo** | DA:O, FFXII (l'abilità non parte se mancano le risorse) | **sì**: `getCostoLancio()` contro `getMagia()`; è ciò che fa passare alla voce successiva |
 | **Ha quell'incantesimo** a disposizione | DA:O/FFXII (la licenza, l'abilità) | **sì**: `puoFormulare(classe)` e `getIncantesimi(classe) > 0`, oppure l'innato (`DardoArcano.puoLanciarlo`, `AlbaSacra.puoLanciarlaInnata`, `CantoDelBardo.cantiUtili`) |
 | Sotto un effetto di stato (silenziato, stordito, spaventato...) | DA:O, FFXII (*Self: status*) | **sì**: `hasEffettoDiStato(tipo)`; `SILENZIATO` impedisce gli incantesimi |
@@ -554,14 +462,14 @@ ha senso qui (**no**).
 | Numero di compagni vivi, o sono l'unico vivo | FFXII (*alone*) | **sì**: `getNumeroPersonaggiVivi()` |
 | Ci sono avversari di una classe o categoria | DA:O (*any enemy of type...*) | **sì** per le classi e per le categorie (§6.1) |
 | Il gruppo avversario è più numeroso (o meno) del mio | (specifico) | **sì**: serve a decidere, per esempio, se curarsi o attaccare |
-| Il **numero del round** (è il round `n`, da `n` in poi, ogni `n` round) | BG (*round time*), DA:O (cooldown) | **da aggiungere**: il contatore è nello `StatoDelCombattimento` (§3.3), con l'evento `InternoInizioRound` |
-| **Una volta per scontro** / non più di `n` volte / non prima di `n` round dall'ultima | DA:O (cooldown), FFXII (*once*) | **da aggiungere**: le "voci già usate" (e in che round) nello `StatoDelCombattimento`; vedi sotto a che cosa serve e a che cosa **no** |
+| Il **numero del round** (è il round `n`, da `n` in poi, ogni `n` round) | BG (*round time*), DA:O (cooldown) | **sì**: il contatore è nello `StatoDelCombattimento` (§3.3), con l'evento `InternoInizioRound`; condizione `ROUND` |
+| **Una volta per scontro** / non più di `n` volte / non prima di `n` round dall'ultima | DA:O (cooldown), FFXII (*once*) | **sì**: le voci già usate (e in che round) sono nello `StatoDelCombattimento`; condizioni `VOCE_USATA` e `ROUND_DALL_ULTIMO_USO`; vedi sotto a che cosa serve e a che cosa **no** |
 | Duello, combattimento fino alla resa, ondata successiva | (specifico) | **sì**: sono flag del personaggio (`isFinoAllaResa`, `isSfidante`) e dello scontro (ondate) |
 
 **A che cosa serve "una volta per scontro" (e a che cosa no).** Con le azioni di oggi i casi veri sono pochi:
 
 - **Il cambio d'arma** (§5): al massimo uno, al più due per personaggio. È un contatore per personaggio, il caso più chiaro.
-- **Le abilità forti dei mostri, che oggi non esistono** e che questa condizione prepara: il fiato di fuoco del Drago, l'urlo di una banshee, una morte che si ritorce
+- **Le abilità forti dei mostri, che oggi non esistono** e che queste condizioni preparano: il fiato di fuoco del Drago, l'urlo di una banshee, una morte che si ritorce
   contro chi la lancia. Vanno usate "una volta per scontro" oppure "non prima di `n` round dall'ultima" (un *cooldown*, come in DA:O), con il round dell'ultimo uso.
 - **Una mossa d'apertura** ("a inizio scontro"): più semplice come condizione sul numero del round (`round = 1`), senza un contatore.
 
@@ -578,27 +486,23 @@ ha senso qui (**no**).
 | :--- | :--- | :--- |
 | Ho una pozione (della Salute, della Magia, grande) | DA:O (*item*), FFXII (*item*) | **sì**: `getPozioniSalute()`, `getPozioniSaluteGrande()`, `getPozioniMagia()`, `getPozioniMagiaGrande()` |
 | Quante pergamene di un incantesimo restano | (specifico) | **sì**: `getIncantesimi(classe)` |
-| **Nell'inventario del gruppo c'è un'arma** che dà un tipo di danno (SACRO contro i non morti), con un certo modificatore, o più forte della mia | DA:O (*weapon set*) | **quasi tutto**: l'inventario del gruppo si legge (`getArtefatti()`), `Arma.daTipoDanno(tipo)` dice se un'arma dà quel danno e `puoEquipaggiare` se il personaggio la può impugnare; manca solo il filtro sull'inventario che li mette insieme (§8) |
-| Con una probabilità del n% | BG (*RandomNum*) | **sì**: `Dado` |
+| **Nell'inventario del gruppo c'è un'arma** che dà un tipo di danno (SACRO contro i non morti), con un certo modificatore, o più forte della mia | DA:O (*weapon set*) | **sì**: l'inventario del gruppo si legge (`getArtefatti()`), `Arma.daTipoDanno(tipo)` dice se un'arma dà quel danno e `puoEquipaggiare` se il personaggio la può impugnare; li mette insieme `GruppoGiocatore.armiPerCambio` (§5), che il requisito di `CAMBIA_ARMA` usa |
+| Con una probabilità del n% | BG (*RandomNum*) | **sì**: `Dado`; condizione `PROBABILITA` |
 | Tipo di locazione, ora del giorno | BG | **sì**: `getTipoLocazioneCorrente()`, `LineaTemporale`; utile solo per tattiche speciali |
 | Variabili e contatori definiti dall'utente | BG (*script*) | **no**: va oltre lo scopo |
-
 ### 7.4 Modelli già pronti
 
 Alcuni giochi non chiedono di scrivere le regole ma di scegliere uno **stile** (i *Tactics* di *Dragon Quest*: *combatti con giudizio,
-niente pietà, risparmia magia*; i *Behavior* di DA:O: aggressivo, difensivo, passivo). In Foresta sarebbero **tattiche precompilate per
-classe** (il Mago apre con il suo incantesimo più forte, il Sacerdote cura chi è sotto il 50%, il Guerriero attacca il più debole) che
-il giocatore applica e poi ritocca: stesse voci, già scritte.
+niente pietà, risparmia magia*; i *Behavior* di DA:O: aggressivo, difensivo, passivo). In Foresta sono le **tattiche predefinite per
+ruolo** (§11.16): il Mago apre con il suo incantesimo più forte, il Sacerdote cura chi sta male, il Guerriero attacca i feriti; il giocatore le propone con il pulsante "Predefinita" e poi le ritocca: stesse voci, già scritte.
 
 ### 7.5 Il catalogo: le parole delle voci
 
-Riassunto con sigle di tutto ciò che una voce può dire (i dettagli sono in §5, §6 e §7). Una **voce** è: *[bersaglio] + [condizioni] + [azione
+Riassunto con sigle di tutto ciò che una voce può dire (i dettagli sono in §5, §6 e §7, i nomi veri degli enumerati in §11). Una **voce** è: *[bersaglio] + [condizioni] + [azioni
 (con un criterio)]*; il personaggio esegue la **prima voce che si può davvero eseguire**. Le voci per personaggio sono **illimitate** (nessun tetto). Ogni mostro ha la sua lista di voci: un bruto
-(il Minotauro) una molto semplice, uno più intelligente ne ha di più, con le domande giuste. **L'astuzia stessa può essere una condizione
+(il Minotauro) una molto semplice, uno più intelligente ne ha di più, con le domande giuste. **L'astuzia stessa è una condizione
 della voce** (`ASTUZIA ≥ n`, sigla C1): così la lista di una classe è una sola, e le voci più furbe si accendono quando l'astuzia basta; le
-soglie sono un parametro di ogni voce e non un livello globale. **L'astuzia** per le strategie (**deciso**) parte dall'**intelligenza massima
-di classe** (`*_MAX_INTELLIGENZA`) ed è ridotta da una **rampa sul livello**: un'Ombra Nera di livello basso è "tonta", e col salire del livello del mondo
-diventa più ostica. La formula è la rampa del §4 (B).
+soglie sono un parametro di ogni voce e non un livello globale. La formula dell'astuzia è la rampa del §4.
 
 **Bersagli: i filtri** (restringono i candidati; si possono mettere insieme)
 
@@ -611,8 +515,8 @@ diventa più ostica. La formula è la rampa del §4 (B).
 | F5 | **debole a** `<tipo di danno>` | moltiplicatore di classe e stati maggiore di 1 (senza la difesa); **non immune a** `<tipo>`: moltiplicatore maggiore di 0 |
 | F6 | **salute sotto / sopra il** `n%` | salute attuale su massima |
 | F7 | **di livello più alto / più basso del mio** | un confronto con chi sceglie |
-| F8 | **lo stesso del turno precedente** | il bersaglio che questo personaggio ha scelto l'ultima volta (uno per avversari e uno per alleati), se è ancora valido |
-| F9 | **che mi ha attaccato per ultimo** | l'avversario che ha agito contro di me per ultimo |
+| F8 | **lo stesso del turno precedente** | il bersaglio che questo personaggio ha scelto l'ultima volta (uno per avversari e uno per alleati), se è ancora valido (nella schermata è l'ordinamento `ULTIMO_SCELTO`, §11.15) |
+| F9 | **che mi ha attaccato per ultimo** | l'avversario che ha agito contro di me per ultimo (nella schermata è l'ordinamento `ULTIMO_ATTACCANTE`) |
 | F10 | **il capo** | `getCapo()` del gruppo avversario |
 
 **Bersagli: gli ordinamenti** (scelgono *uno* fra i candidati; a parità vince il primo dell'elenco)
@@ -624,8 +528,8 @@ diventa più ostica. La formula è la rampa del §4 (B).
 | O3 | **con meno salute / con più salute** | salute attuale, in punti |
 | O4 | **di livello più basso / più alto** | `getLivello()` |
 | O5 | **più debole / più resistente a** `<tipo di danno>` | il fattore di danno atteso (`moltiplicatoreAtteso`), più alto o più basso; un immune è 0 |
-| O6 | **per priorità di classe** `<lista>` | il primo che appartiene alla prima classe della lista che ha candidati: per esempio Mago, Maga, Sacerdote, Sacerdotessa, Elfo, Elfa, Bardo, Cantastorie |
-| O7 | **con più / con meno `MAGIA`** | la `MAGIA` attuale: chi ne ha di più è il più pericoloso. Un mostro molto furbo può preferirlo a O6 (far fuori chi ha più `MAGIA` anche se è di una classe "di seconda scelta"): basta mettere la voce con O7 prima di quella con O6 |
+| O6 | **per priorità di classe** `<lista>` | **non c'è**: si ottiene con più voci, una per classe (§11.6) |
+| O7 | **con più / con meno `MAGIA`** | la `MAGIA` attuale: chi ne ha di più è il più pericoloso |
 
 Per gli **alleati** (cure, resurrezioni, pozioni) valgono gli stessi, più: se stesso, il capo, un caduto, con poca `MAGIA`; "il più ferito" è O3 (con meno salute).
 
@@ -646,9 +550,9 @@ Per gli **alleati** (cure, resurrezioni, pozioni) valgono gli stessi, più: se s
 
 | Sigla | Azione | Criterio |
 | :--- | :--- | :--- |
-| A1 | **attacco fisico** | l'ultima voce di ogni lista; non fallisce mai |
+| A1 | **attacco fisico** | il ripiego di ogni tattica; non fallisce mai |
 | A2 | **un incantesimo che fa danno** (una classe precisa, o "del repertorio") | criterio S: a caso, il più potente, il più adatto, o il più adatto con apprendimento |
-| A3 | **Silenzio** | su un bersaglio F3 non silenziato (O6: Mago, Sacerdote, Elfo, Bardo) |
+| A3 | **Silenzio** | su un bersaglio F3 non silenziato |
 | A4 | **Morte, Resurrezione, Alba Sacra, Dardo arcano, canti** | le voci proprie di ciascuno |
 | A5 | **pozione** della Salute o della Magia | chi beve: O3 fra i compagni (di solito sé stessi) |
 | A6 | **cambia arma** | un'arma di tipo `<X>` (F5/C7); conta come azione e come cambio |
@@ -662,101 +566,24 @@ Per gli **alleati** (cure, resurrezioni, pozioni) valgono gli stessi, più: se s
 | S3 | **il più adatto** a quel bersaglio: danno atteso con `moltiplicatoreAtteso` | il danno totale |
 | S4 | come S3, ricordando i lanci fatti: se contro quel personaggio un incantesimo ha avuto un effetto diverso (oggetti che cambiano le resistenze), se ne tiene conto | anche chi verrebbe portato vicino alla fine o ucciso (somma della quota di salute tolta a ogni bersaglio, al massimo 1) |
 
-Il "più conveniente" di oggi (probabilità di colpire × danno atteso, contro l'attacco fisico) è S3 con in più il confronto con l'attacco.
+Il "più conveniente" di oggi (probabilità di colpire × danno atteso, contro l'attacco fisico) è S3 con in più il confronto con l'attacco (`soloSePiuForteDellAttacco`, §11.10). A questi si aggiunge `PIU_ECONOMICO_CHE_BASTA`, fuori dai quattro livelli.
 
-**Che cosa serve ricordare** durante lo scontro, oltre allo stato di oggi: il numero del turno; l'ultimo avversario e l'ultimo alleato scelti da ogni
+**Che cosa serve ricordare** durante lo scontro, oltre allo stato dei personaggi: il numero del turno; l'ultimo avversario e l'ultimo alleato scelti da ogni
 personaggio (F8); chi mi ha attaccato per ultimo (F9); chi ha già lanciato un incantesimo (F3); le voci già usate e i cambi d'arma (C6); per S4,
-per ogni coppia (personaggio, tipo di danno) quanto è andato diverso dal previsto.
+per ogni coppia (personaggio, tipo di danno) quanto è andato diverso dal previsto. È tutto nello `StatoDelCombattimento` (§3.3).
 
-**Esempi di liste** (la prima voce eseguibile vince):
+Esempi di liste complete, con le fasce di astuzia, sono le tattiche base dei mostri e le predefinite dei giocabili (§11.16).
 
-- **Minotauro** (bruto): *[O1 il primo] → A1 attacco fisico*.
-- **Goblin / Hobgoblin**: come il Minotauro; il Hobgoblin, un po' più furbo, può aggiungere in cima *[F3 magico, O2 a caso] → A1*: sa che maghi, bardi, sacerdoti ed elfi fanno danni magici,
-  ne sceglie uno a caso e attacca lui.
-- **Un mostro magico di media intelligenza** (per esempio uno Spirito): *[C1 ASTUZIA ≥ 12; F3 magico, O2 a caso] → A2 con S1*; poi *[O1 il primo] → A1*.
-- **Un mostro furbo** (per esempio l'Idra, il Folletto più sveglio): *[C1 ASTUZIA ≥ 20; O6 Mago, Sacerdote, Elfo, Bardo; non silenziato; C2 MAGIA sufficiente] → A3 Silenzio*; poi *[O6; C2] → A2 con S2*; poi *[O3 con meno salute] → A1*.
-- **Chi si cura da solo** (tipicamente un umanoide che ha trovato o portato pozioni): *[C2 la mia salute è sotto il 30%; C7 ho una pozione della Salute] → A5 Salute, su di me* (se c'è la grande e il danno è molto, la grande).
-- **Chi ricarica la magia**: *[C2 la mia `MAGIA` è sotto `n` punti; C7 ho una pozione della Magia; posso ancora lanciare incantesimi, cioè ho pergamene disponibili o un repertorio / abilità innate] → A5 Magia, su di me*. L'ultima condizione evita di sprecare la pozione quando
-  non ci sarebbe niente da lanciare; "posso lanciare" si legge da `getIncantesimi(classe)` e da `puoFormulare`/`getRepertorioIncantesimi`. Queste due voci vanno in cima alla lista, prima degli attacchi.
-- **Uno stratega** (Strega, Lich, Drago): *[C1 ASTUZIA ≥ 31; F3 magico non silenziato, O7 con più MAGIA, poi O6] → A3*; *[O5 più debole al suo elemento] → A2 con S3 o S4*; se la `MAGIA` è sotto la soglia e ha una pozione → A5; *[O3] → A1*.
+### 7.6 Niente blocchi
 
-I livelli di intelligenza di questi esempi (12, 20, 31) sono le soglie proposte (§10): sono parametri della voce, non categorie del mostro.
-
-### 7.6 I blocchi SE / ALTRIMENTI / FINE
-
-> **Superato dal §11:** i blocchi (e i blocchi con nome) sono stati tolti dal modello; la tattica è una lista piatta di voci, ciascuna con la sua condizione. Resta qui
-> la sintassi di esempio, utile solo come idea del formato a campi.
-
-Una voce non è sempre un'azione vera: può essere un'**azione di controllo** che ne contiene altre. Serve per mettere la fascia di intelligenza
-dentro la lista di una classe, e anche il giocatore la può usare.
-
-```
-SE <condizione>          ← una o più condizioni del catalogo (C1–C8), per esempio C1 ASTUZIA ≥ 31
-    <voce>                ← azioni vere, o altri blocchi SE (nidificati)
-    <voce>
-ALTRIMENTI                ← facoltativo
-    <voce>
-FINE
-```
-
-Regole (proposta):
-
-- Un blocco contiene una **lista ordinata di voci**, che sono azioni vere o altri blocchi, a qualunque profondità. Non c'è un tetto al numero di voci, nidificate comprese.
-- Se la condizione è vera si esegue il ramo `SE`, altrimenti il ramo `ALTRIMENTI` (se c'è): è la **condizione** a scegliere il ramo, non il
-  fatto che le voci dentro si possano eseguire.
-- Dentro il ramo vale la regola di sempre: la **prima voce eseguibile vince** e il turno finisce.
-- Un blocco è **trasparente** (deciso): se nel ramo scelto non c'è nessuna voce eseguibile (o manca l'`ALTRIMENTI` e la condizione è falsa), si
-  prosegue con la voce che segue il blocco. Se alla fine della lista nessuna condizione o azione è applicabile, il personaggio fa un **attacco
-  fisico** e, al peggio, un **incantesimo a caso**: un turno non resta mai senza un'azione.
-- Alla lettura si controlla che i `SE` e i `FINE` siano bilanciati e che i nomi esistano.
-
-**Le condizioni del `SE`** (deciso): le condizioni del catalogo (C1–C8, e i filtri sui bersagli) si combinano con **E**, **O** e **NON**, con le **parentesi**.
-Per esempio `ASTUZIA>=20 E (MAGICO O NON_SILENZIATO) E NON PRIMO_TURNO`. Come mostrarle graficamente al giocatore è un altro discorso, da fare con la scheda
-delle tattiche. Potrebbero servire anche delle **variabili locali** (un valore calcolato una volta e usato più volte nella lista, per esempio "il bersaglio
-scelto"); se ne riparla quando saranno chiare le liste, per ora non ci sono.
-
-**Blocchi con nome, per condividere i pezzi** (deciso nella sostanza): un gruppo di voci può avere un **nome** e essere usato da più liste e da più classi,
-per esempio "tutti i non morti cominciano così" o "il Silenzio sui magici". Una proposta di sintassi:
-
-```
-BLOCCO SilenzioSuiMagici          ← definizione (in un file di blocchi comuni, o nel file della classe)
-    FILTRO=MAGICO,NON_SILENZIATO;ORDINE=MAGIA_PIU;AZIONE=SILENZIO
-FINE
-
-// nella lista di una classe
-SE ASTUZIA>=31
-    USA SilenzioSuiMagici         ← vale le voci del blocco, nello stesso punto
-FINE
-```
-
-Un blocco con nome vale come le sue voci scritte lì (e come ogni blocco è trasparente). Le regole (decise): i blocchi comuni stanno in un **file comune**
-da cui le liste attingono (se dovesse diventare ingestibile si ripiega su un file unico). Un blocco **non può usare se stesso, nemmeno
-indirettamente**: le **dipendenze circolari** si rilevano alla lettura e il file è rifiutato con un errore (come fa `GrammarBean` con i cicli:
-vedi `GrammarBean.md` §5.5). Con questo una lista termina sempre, e non occorre un tetto al numero di voci.
-
-Il **file** (**uno per `TipoPersonaggio`**, per leggibilità; i boss ne hanno uno proprio) usa lo stesso stile di `leggendari.txt` e `missioni.txt`: una
-voce per riga, campi `CHIAVE=valore` separati da `;`. Un esempio, solo per dare l'idea (la sintassi vera è da definire):
-
-```
-// Strega
-SE ASTUZIA>=31
-    FILTRO=MAGICO,NON_SILENZIATO;ORDINE=MAGIA_PIU;AZIONE=SILENZIO
-    AZIONE=INCANTESIMO;CRITERIO=S3
-ALTRIMENTI
-    SE ASTUZIA>=20
-        FILTRO=MAGICO;ORDINE=CLASSE:MAGO,SACERDOTE,ELFO,BARDO;AZIONE=INCANTESIMO;CRITERIO=S2
-    FINE
-FINE
-ORDINE=MENO_SALUTE;AZIONE=ATTACCO_FISICO
-```
-
-Lo stesso formato serve per **salvare** le tattiche del giocatore e per i **modelli per classe** del §7.4.
+Non ci sono: la tattica è una lista piatta di voci, ciascuna con le sue condizioni in AND, e la fascia di astuzia è una condizione della voce (§11.1). Le condizioni con E, O e parentesi si ottengono con più voci
+(§11.8); un pezzo comune a più classi si copia nel codice (`TatticheBase` lo ripete con metodi privati), senza blocchi con nome né file di risorse.
 
 ### 7.7 Il registro delle decisioni
 
 Ogni volta che un personaggio sceglie che cosa fare scorrendo la sua tattica, il motore pubblica sul bus l'evento **`InternoDecisioneTattica`** (`eventi/interni`, tipo `INTERNO_DECISIONE_TATTICA`), **prima** che l'azione si esegua. Porta il personaggio e il bersaglio (come
 `VistaPersonaggio`), l'azione scelta (per l'incantesimo di danno, quello scelto), la posizione della voce (−1 per il ripiego sull'attacco fisico) e la **spiegazione**, una riga per passo. `SnifferBusEventi` lo scrive nel log con il suo tipo nella riga (`headerEvento`), quindi un
-`grep INTERNO_DECISIONE_TATTICA` sul file di `-Dforesta.log=...` tira fuori le sole decisioni tattiche, per mettere a punto le tattiche e per leggere le partite. **Fatto** (`CombattimentoConTatticheTest`, `ValutatoreTest`).
+`grep INTERNO_DECISIONE_TATTICA` sul file di `-Dforesta.log=...` tira fuori le sole decisioni tattiche, per mettere a punto le tattiche e per leggere le partite. Lo coprono `CombattimentoConTatticheTest` e `ValutatoreTest`.
 
 Che cosa dice la spiegazione (la costruisce il `Valutatore`, i selettori e `SceltaIncantesimo`):
 
@@ -766,30 +593,30 @@ Che cosa dice la spiegazione (la costruisce il `Valutatore`, i selettori e `Scel
 - **il criterio dell'incantesimo di danno** con i danni attesi confrontati: "PIU_ADATTO: FUOCO 4.2, FULMINE 9.8", con il danno delle armi se l'azione lo confronta; per `PIU_ECONOMICO_CHE_BASTA` se ognuno basta a uccidere;
 - **il ripiego**: "nessuna voce eseguibile: attacco fisico al primo avversario".
 
-Oggi la spiegazione si costruisce sempre (qualche stringa per decisione): se pesasse, si costruirà solo con un ascoltatore o il log acceso. Ha sostituito il vecchio evento dei mostri senza tattica (`InternoRisultatoValutazionePersonaggioAttaccante`, rimosso con il suo enum).
-
-La UI potrà mostrare la spiegazione al giocatore per aiutarlo a mettere a punto le sue tattiche (la schermata del giocatore, §11.15).
+La spiegazione si costruisce sempre (qualche stringa per decisione): se pesasse, si costruirà solo con un ascoltatore o il log acceso.
 
 ## 8. Che cosa manca
 
-Il modello, il motore, il valutatore, il salvataggio, il registro delle decisioni e le tattiche base dei mostri (nella versione "replica di oggi", §11.13) ci sono. Restano:
+Il modello, il motore, il valutatore, il salvataggio, il registro delle decisioni, le tattiche base dei mostri, le predefinite dei giocabili e la schermata del giocatore ci sono. Restano:
 
 - **Tarare le tattiche base** (§11.16): sono una prima versione, scritta dai manuali di tattica e dal codice; vanno provate in partita e con le simulazioni (`TestScontriDiGruppo`), soprattutto la Strega contro gruppi piccoli e il Drago, e per i personaggi giocabili manca una tattica base per fascia di livello.
-- **Mostri con abilità proprie**: oggi le tattiche usano solo attacco e incantesimi; nessun mostro ha azioni speciali (la rigenerazione del Troll, le teste dell'Idra, il canto dell'Arpia).
-- **Rifinire la schermata del giocatore** (§11.15): le tattiche base per classe da proporre con "Predefinita" (oggi è la tattica vuota), le righe che non stanno nella linea, l'aiuto con la spiegazione dell'ultima decisione (`InternoDecisioneTattica`) e le modifiche dei parametri che oggi si fanno solo con più e meno.
-- **L'esito delle azioni con effetti che non si applicano** (un Silenzio a segno che non mette `SILENZIATO`) come "mancata", oggi non registrato.
+- **Derivare dal codice i tre elenchi** di `TatticheBase` (chi è magico, chi ha il Silenzio, chi ha la Morte): oggi sono scritti a mano (c'è un `TODO`) e vanno tenuti allineati con `PersonaggioBase.getRepertorioIncantesimi`, o almeno confrontati da un test con le classi vere.
+- **Mostri con abilità proprie**: le tattiche usano solo attacco e incantesimi; nessun mostro ha azioni speciali (la rigenerazione del Troll, le teste dell'Idra, il canto dell'Arpia: c'è un `TODO` in `TatticheBase`). Vanno prima create come azioni (`TipoAzione`).
+- **Scorte per i mostri**: non hanno pozioni né pergamene nel modello dati, quindi non si curano e non lanciano benefici (§5).
+- **L'esito delle azioni con effetti che non si applicano** (un Silenzio a segno che non mette `SILENZIATO`) come "mancata", oggi non registrato (§11.7).
+- **Rifinire la schermata del giocatore** (§11.15): l'aiuto con la spiegazione dell'ultima decisione (`InternoDecisioneTattica`, §7.7) e le modifiche dei parametri che oggi si fanno solo con più e meno.
+- **Copiare una tattica** da un personaggio a un altro (un "modello" da riapplicare): oggi c'è solo la predefinita del ruolo.
 - Il **costo della spiegazione** delle decisioni, se pesasse (§7.7).
 
 Non ha senso importare: posizione e distanza, mischia contro distanza, linea di vista, incantesimi con tempo di lancio, movimento.
 
 ## 9. Osservazioni
 
-- Oggi la scelta del **bersaglio** non esiste (si attacca sempre il primo avversario vivo): le tattiche la introducono per tutte le
-  azioni singole.
+- Il **bersaglio** lo sceglie la tattica per tutte le azioni singole; le azioni manuali del giocatore scelgono ancora da sole (il primo avversario vivo, il più ferito...: §11.9).
 - Il round a coppie cambia il **bilanciamento** (§3.1): un compagno solo contro più avversari li subisce tutti, e un gruppo numeroso contro un avversario solo gli dà più azioni; il
   bersaglio dell'avversario non è più chi ha appena agito. Le simulazioni (`SimulazionePartiteTest` con `GiocatoreAutomatico`, `TestScontriDiGruppo`,
   `TestLogoramentoInizioPartita`) sono state **portate al piano del round** (`RoundASimulato` lo replica per quelle che lavorano su liste di personaggi) e
-  hanno dato questi numeri (ottobre 2026, 30 partite per classe):
+  hanno dato questi numeri (ottobre 2026, 30 partite per classe, con i mostri che usavano ancora la replica del vecchio comportamento, §11.13):
   - **Gruppi.** Con tutti che agiscono a ogni round, i gruppi di 4-5 personaggi vincono molto di più di prima (contro il Drago a livello 3: 20% → 62% col gruppo di cinque), e i gruppi
     senza maghi non crollano più; un personaggio **da solo** è invece cambiato poco (`TestLogoramentoInizioPartita`: il piano è "agisce lui, poi tutti i mostri"), tranne contro chi
     atterra o stordisce, perché ora salta il turno (Folletto da solo: 91% → 75%). Reclutare conviene quindi ancora di più.
@@ -800,25 +627,24 @@ Non ha senso importare: posizione e distanza, mischia contro distanza, linea di 
     sopportabile, in combattimento fuggire sopra 0,3) sono state cercate con una griglia di partite.
   - **Partite intere (30 per classe, giocatore tarato).** Il Guerriero arriva al limite di passi in 28 partite su 30 (livello 7), Ladro e Elfo in più di metà; il Mago muore
     quasi sempre (27 su 30, livello 4-5), il Sacerdote in 21. Il capo muore soprattutto per l'Eremita (livello 1-3) e, per Mago e Sacerdote, per Chimere e Chimere Drago.
-  - **Da bilanciare.** Mago e Sacerdote sono i bersagli preferiti (la tattica di oggi) e muoiono presto; l'Eremita resta il killer dei livelli bassi.
+  - **Da bilanciare.** Mago e Sacerdote sono i bersagli preferiti dei mostri e muoiono presto; l'Eremita resta il killer dei livelli bassi.
 
 ## 10. Da fare / idee aperte
 
 Domande aperte:
 
-- **La sintassi vera** del formato delle tattiche (§7.6) e le **variabili locali**, se serviranno.
-- **Il formato** salvabile (testo semplice nel salvataggio, con le tattiche di ogni personaggio e le sue personalizzazioni — vedi il requisito in §1 — e in un file di modelli per classe) e la **scheda** secondaria del
-  personaggio (elenco ordinabile con aggiungi, togli, sposta su e giù, attiva/disattiva).
-- **Livello di dettaglio dei controlli** per la prima versione (probabilmente: sempre, salute e magia sotto una soglia, stati, classe,
-  numero di avversari, risorse, probabilità; poi le categorie di creatura, già nei dati).
 - **Cambiare arma** (§5): affinare quale arma esce con la doppia arma (oggi la più debole per danno atteso, contro un bersaglio neutro): contro il bersaglio vero, con gli effetti di stato, i modificatori e la probabilità di colpire? Per quanto tempo valgono le valutazioni già fatte delle armi del gruppo? Le voci per tornare all'arma di prima le scrive il giocatore o le propone il sistema in coppia con la prima?
-- **Il round a coppie** (§3.1, fatto): rimisurare il bilanciamento, e decidere se ridurre l'annuncio "X attacca Y" a ogni azione (oggi sempre, anche per aiutare a leggere il log); la velocità del `TIMER` (ogni scatto è mezzo scambio) è rimasta com'era.
+- **Il round a coppie** (§3.1): rimisurare il bilanciamento, e decidere se ridurre l'annuncio "X attacca Y" a ogni azione (oggi sempre, anche per aiutare a leggere il log); la velocità del `TIMER` (ogni scatto è mezzo scambio) è rimasta com'era.
+- **`PIU_ECONOMICO_CHE_BASTA`** (§11.10): basta se il danno atteso è almeno la salute attuale del bersaglio, o serve un margine? E l'esatta ripartizione delle fasce di astuzia nelle tattiche dei mostri magici: entrambi da tarare con le simulazioni.
+- **Variabili locali** (un valore calcolato una volta e usato più volte nella lista, per esempio "il bersaglio scelto"): non servono finché il selettore è anche una condizione (§11.2); se ne riparla se serviranno.
+
+Le altre cose da fare sono in §8.
 
 ## 11. Il modello dati delle tattiche
 
-Qui si fissano le decisioni sul **modello** (come sono fatte una tattica, una voce, un bersaglio); la sintassi del file viene di conseguenza. Le classi stanno nel pacchetto `…/tattiche` (i tipi, che servono anche alla UI, in `…/tipi/tattiche`).
+Qui sta il **modello** (come sono fatte una tattica, una voce, un bersaglio) e come lo usano il motore e la schermata. Le classi stanno nel pacchetto `…/tattiche` (i tipi, che servono anche alla UI, in `…/tipi/tattiche`).
 
-### 11.1 Principi (decisi)
+### 11.1 Principi
 
 - **Tutto a enumerati**: azioni, rosa, filtri, ordinamenti, predicati. Nel file e nel salvataggio una voce usa il **nome dell'enumerato** (`CANTO_DI_VALORE`, `SALUTE_SOTTO`...).
 - **Lista piatta, niente blocchi.** Una tattica è una lista ordinata di voci; la prima eseguibile vince. I blocchi `SE / ALTRIMENTI / FINE` e i blocchi con nome sono **tolti**: complicano la scheda
@@ -830,12 +656,12 @@ Qui si fissano le decisioni sul **modello** (come sono fatte una tattica, una vo
 ### 11.2 La voce
 
 ```
-VoceMD      { SelettoreMD selettore?; List<PredicatoMD> condizioni; List<AzioneMD> azioni; boolean attiva }   (la prima azione applicabile vince, §11.7)
+VoceMD      { SelettoreMD selettore?; List<PredicatoMD> condizioni; List<AzioneMD> azioni; boolean attiva; String nome? }   (la prima azione applicabile vince, §11.7)
 AzioneMD    { TipoAzione tipo; CriterioIncantesimo criterio?; boolean soloSePiuForteDellAttacco; TipoDanno armaDi? }   (§11.9, §11.10)
 SelettoreMD { TipoRosa rosa; List<FiltroMD> filtri; OrdinamentoMD ordinamento }
 FiltroMD    { TipoFiltro tipo; boolean negato; parametro? }                   (§11.5)
 PredicatoMD { TipoPredicato tipo; boolean negato; parametri? }                (§11.8; le condizioni sono in AND, lista vuota = sempre)
-TatticaMD   { List<VoceMD> voci }
+TatticaMD   { List<VoceMD> voci; boolean disabilitata }                              (§11.12)
 ```
 
 Ogni `TipoAzione` dichiara la sua **portata**, e quindi se e come usa il selettore:
@@ -846,7 +672,7 @@ Ogni `TipoAzione` dichiara la sua **portata**, e quindi se e come usa il seletto
 | un alleato | `POZIONE_SALUTE`, `CANTO_CURATIVO` | sceglie il bersaglio |
 | un alleato caduto | `RESURREZIONE` | sceglie il bersaglio (rosa `ALLEATI_CADUTI`) |
 | tutto il gruppo alleato | `CANTO_DI_VALORE`, `ALBA_SACRA` | **non sceglie nessuno**: è solo un test di esistenza ("c'è almeno un candidato?") |
-| tutti gli avversari | `CANTO_IPNOTICO`, `URLO_BANSHEE` | idem |
+| tutti gli avversari | `CANTO_IPNOTICO`, `URLO_DELLA_BANSHEE` | idem |
 | un'arma | `CAMBIA_ARMA` | assente: l'azione ha il suo parametro (`armaDi`, il tipo di danno voluto) |
 
 **Il selettore è anche una condizione**: se non resta nessun candidato la voce non è eseguibile. Così "c'è un alleato con meno di 50 punti" è il selettore stesso, e non servono variabili locali.
@@ -856,6 +682,9 @@ Esempi: `SU ALLEATI [SENZA_STATO ISPIRATO] → CANTO_DI_VALORE` (si salta da sol
 
 Le **condizioni** (§11.8) restano per ciò che non riguarda un bersaglio: `ROUND`, `ASTUZIA`, `QUANTI`... Lo stesso controllo (per esempio la salute) può stare in
 un filtro (si applica al candidato) o in una condizione (si applica all'attore o a chi indica).
+
+Il **nome** è dato dal giocatore (nella schermata, §11.15) o dalle tattiche base (§11.16), si salva con la voce e serve a riconoscerla; vale null per una voce scritta senza nome (la schermata le dà "Tattica" e il numero).
+Il **selettore** può mancare (`null`): vale allora quello di base della portata delle azioni (`VoceMD.selettoreEffettivo`): gli avversari (il primo) per un attacco, se stesso per una cura o una pozione, i caduti per la Resurrezione, gli alleati o gli avversari tutti per un'azione di gruppo.
 
 ### 11.3 La rosa dei candidati
 
@@ -871,7 +700,7 @@ interface Rosa {                                   // una classe per valore, sen
     List<Personaggio> candidati(ContestoTattico contesto);   // lista nuova, non modificabile
 }
 ```
-**Fatto** (con `RosaTest` e `ContestoTatticoTest`); `TipoRosa.valePer(attoreDelGiocatore)` dice per quale lato vale ogni rosa, e `candidati` solleva `IllegalStateException` se usato dal lato sbagliato.
+Lo coprono `RosaTest` e `ContestoTatticoTest`; `TipoRosa.valePer(attoreDelGiocatore)` dice per quale lato vale ogni rosa, e `candidati` solleva `IllegalStateException` se usato dal lato sbagliato.
 
 | Rosa | Candidati | Per chi vale |
 | :--- | :--- | :--- |
@@ -909,10 +738,10 @@ Un filtro è una domanda a cui un candidato risponde sì o no: `ammette(candidat
   eseguibile. Il registro delle decisioni (§7.7) annota quanti candidati restano dopo ogni passo.
 - **Senza stato**: enumerati come le rose. Quello che serve ricordare (l'ultimo bersaglio, chi ha già lanciato) lo leggono dalle schede dello `StatoDelCombattimento` attraverso il contesto.
 - **Negazione**: ogni filtro ha un flag `negato` (nel file `NON`): "senza lo stato X" è `NON STATO X`, "non immune a Y" è `NON IMMUNE_A Y`. Niente coppie di enumerati.
-- **Parametri tipizzati**: ogni `TipoFiltro` dichiara il tipo del suo parametro (`NESSUNO`, `NUMERO`, `STATO`, `CLASSE`, `CATEGORIA`, `TIPO_DANNO`); la lettura controlla che ci sia e sia giusto, e la scheda del giocatore mostra l'editor
+- **Parametri tipizzati**: ogni `TipoFiltro` dichiara il tipo del suo parametro (`TipoParametro`: `NESSUNO`, `CONFRONTO`, `CONFRONTO_E_NUMERO`, `STATO`, `CLASSE`, `CATEGORIA`, `TIPO_DANNO`; per le condizioni anche `NUMERO` e `SELEZIONE_CONFRONTO_E_NUMERO`); la lettura controlla che ci sia e sia giusto, e la scheda del giocatore mostra l'editor
   adatto. I filtri numerici prendono un `Confronto` (`MINORE`, `UGUALE` o `MAGGIORE`: con `NON` si ottengono "almeno" e "al massimo") e un numero: `SALUTE MINORE 50`.
 - **La classe è il ruolo**: `MAGO` e `MAGA` sono due `TipoPersonaggio`, ma il filtro `CLASSE` ammette entrambe le varianti (Mago/Maga, Elfo/Elfa, Ladro/Ladra, Guerriero/Guerriera, Bardo/Cantastorie,
-  Sacerdote/Sacerdotessa): serve una piccola mappa delle coppie in `TipoPersonaggio` (oggi `ProduttoreDiTestiCasuale` le gestisce a mano).
+  Sacerdote/Sacerdotessa): la coppia la dà `TipoPersonaggio.getRuolo()`.
 - **Il giocatore sceglie i filtri tattici, l'azione porta i suoi requisiti** (§11.7): per scartare gli immuni o i già silenziati non serve scrivere un filtro.
 
 | Filtro | Parametro | Ammette |
@@ -938,7 +767,7 @@ Un filtro è una domanda a cui un candidato risponde sì o no: `ammette(candidat
 ### 11.6 Gli ordinamenti
 
 Un enumerato a parte (`TipoOrdinamento`), che sceglie *uno* fra i candidati rimasti; a parità vince il primo della rosa (ripetibile). Valori: `PRIMO`, `A_CASO` (usa il `Dado`, quindi si fissa col seme nei test), `MENO_SALUTE`,
-`PIU_SALUTE`, `LIVELLO_PIU_BASSO`, `LIVELLO_PIU_ALTO`, `PIU_DEBOLE_A` e `PIU_RESISTENTE_A` (tipo di danno), `PIU_MAGIA`, `MENO_MAGIA`. **Niente `PRIORITA_DI_CLASSE`**: la scelta di oggi dei mostri (il Mago più potente, poi il
+`PIU_SALUTE`, `LIVELLO_PIU_BASSO`, `LIVELLO_PIU_ALTO`, `PIU_DEBOLE_A` e `PIU_RESISTENTE_A` (tipo di danno), `ULTIMO_ATTACCANTE` e `ULTIMO_SCELTO` (la memoria dello scontro, §3.3: scelgono *solo* quel personaggio se è fra i candidati), `PIU_MAGIA`, `MENO_MAGIA`. **Niente `PRIORITA_DI_CLASSE`**: la scelta di oggi dei mostri (il Mago più potente, poi il
 Sacerdote, l'Elfo, il Bardo, poi a caso) si ottiene con più voci, una per classe; sono tattiche di mostri, che il giocatore non modifica.
 
 ### 11.7 Le azioni: sequenze, requisiti e fallimenti
@@ -950,7 +779,7 @@ si sceglie una volta sola e la scheda resta corta.
 **I requisiti dell'azione.** Ogni `TipoAzione` dichiara quando è applicabile a un candidato, e il valutatore li applica da sé (come filtri automatici): il Silenzio scarta silenziati e immuni, una cura scarta chi ha la
 salute piena, la Resurrezione vuole un caduto, un'azione con costo vuole la `MAGIA` o la pergamena. Il giocatore scrive solo i filtri tattici.
 
-**Che cosa si sa delle immunità** (deciso):
+**Che cosa si sa delle immunità**:
 
 - **Le immunità e resistenze di classe si conoscono fin da subito**, per tutti (giocatore e mostri): sono nei dati (`getMoltiplicatoreDannoSubito`, `isImmuneAIncantesimo`, `isImmuneAEffetto` di classe), e scartano l'azione prima di
   provarla. Un mostro non lancia il Silenzio sul Lich, che ne è immune.
@@ -962,12 +791,11 @@ salute piena, la Resurrezione vuole un caduto, un'azione con costo vuole la `MAG
 lancia; dopo **2** fallimenti (`Costanti`, per cominciare) l'azione non è più applicabile a quel bersaglio per quell'attore e la sequenza passa alla successiva. Il conto riparte a ogni locazione, come il resto dello stato. Un'azione
 riuscita azzera il conto.
 
-**Da fare nel motore** per questo: l'azione deve riferire il suo **esito** alla scheda (`colpito`, `mancato`, `immune`/`resistito`), dove oggi si registra solo il colpo andato a segno (`applicaRisultatoCombattimento` →
-`registraColpo`); servono `registraEsito(attore, bersaglio, azione, esito)` e le due letture (tentativi falliti, immunità scoperta).
+Lo registrano `StatoDelCombattimento.registraEsitoAzione(attore, bersaglio, azione, esito)` (colpito, mancato, immune o resistito; `EsitoAzione`) e le due letture, `getTentativiFalliti` e `isImmunitaScoperta`, che `Requisiti` e `SceltaIncantesimo` consultano. Gli esiti degli incantesimi e del dardo li registrano `IncantesimoMaleficoImpl.colpisci` e `scagliaIlDardo`; l'attacco fisico non ne registra (non si abbandona mai). Manca l'esito delle azioni con effetti che non si applicano (§8).
 
 ### 11.8 Le condizioni
 
-Una voce ha una **lista di condizioni** (`Predicato`), tutte in **AND**; ognuna ha il flag `negato` (`NON`), come i filtri. Niente alberi con E, O e parentesi: l'O si ottiene con due voci (deciso, per tenere la scheda una lista).
+Una voce ha una **lista di condizioni** (`Predicato`), tutte in **AND**; ognuna ha il flag `negato` (`NON`), come i filtri. Niente alberi con E, O e parentesi: l'O si ottiene con due voci (per tenere la scheda una lista).
 Lista vuota = sempre. Le condizioni servono per ciò che **non è un controllo su un personaggio**: quelli sono filtri (§11.5) di un selettore (`SU SE_STESSO [SALUTE MINORE 50]`), e i requisiti dell'azione (la magia, la pozione, la
 pergamena, l'arma da prendere) li porta l'azione (§11.7), quindi non servono né `HO_POZIONE` né `PERGAMENE`. Come per i filtri, ogni `TipoPredicato` dichiara il tipo del parametro e la lettura lo controlla.
 
@@ -978,6 +806,7 @@ pergamena, l'arma da prendere) li porta l'azione (§11.7), quindi non servono n�
 | `QUANTI` | rosa + filtri + Confronto + numero | quanti candidati ci sono nella rosa dopo i filtri |
 | `ROUND` | Confronto + numero | il numero del round (`StatoDelCombattimento.getRound`) |
 | `ASTUZIA` | Confronto + numero | l'astuzia di chi decide (§4, rampa sul livello) |
+| `INTELLIGENZA` | Confronto + numero | l'intelligenza attuale di chi decide (non l'astuzia: sono le soglie con cui i mostri sceglievano un tempo, usate da `RegistroTattiche.tatticaDiOggi`, §11.13) |
 | `PROBABILITA` | percentuale | tira il `Dado`: vero nel n% dei casi |
 | `VOCE_USATA` | Confronto + numero | quante volte questa voce è stata usata da questo personaggio nello scontro (`registraUsoVoce`) |
 | `ROUND_DALL_ULTIMO_USO` | Confronto + numero | i round passati dall'ultimo uso di questa voce (il *cooldown* delle future abilità forti) |
@@ -987,13 +816,13 @@ pergamena, l'arma da prendere) li porta l'azione (§11.7), quindi non servono n�
 Gli esempi: la mossa d'apertura è `ROUND UGUALE 1`; "una volta per scontro" è `VOCE_USATA UGUALE 0`; "una volta su tre" è `PROBABILITA 33`; la voce di una fascia di astuzia è `NON ASTUZIA MINORE 20`;
 per tornare all'arma di prima, `QUANTI AVVERSARI [CATEGORIA NON_MORTO] UGUALE 0` e `SU SE_STESSO [ARMA_CHE_DA SACRO] → CAMBIA_ARMA`.
 
-**Fuori dalla prima versione** (si aggiungono dopo, sono solo valori in più dell'enumerato): la stanchezza, i modificatori temporanei attivi, il tipo di locazione e l'ora, il duello, l'ondata successiva, il confronto fra il numero
+**Non ci sono** (si aggiungono come valori in più dell'enumerato): la stanchezza, i modificatori temporanei attivi, il tipo di locazione e l'ora, il duello, l'ondata successiva, il confronto fra il numero
 degli avversari e dei miei compagni.
 
 ### 11.9 Le azioni: l'elenco
 
 Le azioni sono un enumerato `TipoAzione` con il **nome piatto**, uno per incantesimo (`FULMINE`, non `INCANTESIMO` con un parametro): così una voce si legge come la si pensa, `SU AVVERSARI [STATO BAGNATO] → FULMINE`.
-Ogni valore dichiara la sua **portata** (§11.2), le **rose che accetta** e i suoi **requisiti**. Sono ventidue:
+Ogni valore dichiara la sua **portata** (§11.2), le **rose che accetta** e i suoi **requisiti**. Sono ventiquattro:
 
 | Gruppo | `TipoAzione` | Portata | Rose accettate |
 | :--- | :--- | :--- | :--- |
@@ -1001,17 +830,18 @@ Ogni valore dichiara la sua **portata** (§11.2), le **rose che accetta** e i su
 | Incantesimi di danno | `ARIA`, `ACQUA`, `TERRA`, `FUOCO`, `FULMINE`, `GELO`, `VELENO` | un avversario | come l'attacco |
 | | `MORTE` | un avversario vivo | come l'attacco |
 | | `SILENZIO` | un avversario | come l'attacco |
-| Incantesimo "del repertorio" | `INCANTESIMO_DI_DANNO` (parametro: criterio S1-S4, §7.5) | un avversario | come l'attacco |
+| Incantesimo "del repertorio" | `INCANTESIMO_DI_DANNO` (parametro: criterio, §11.10): i sette elementali, per i miei | un avversario | come l'attacco |
+| | `INCANTESIMO_DEL_REPERTORIO`: un malefico qualsiasi, **Morte e Silenzio compresi**, solo per i mostri | un avversario | come l'attacco |
 | Innato | `DARDO_ARCANO` | un avversario | come l'attacco |
 | Benefici | `RESURREZIONE` | un alleato caduto | `ALLEATI_CADUTI` |
 | | `ALBA_SACRA` | tutto il gruppo | il selettore è solo un test di esistenza |
 | Canti | `CANTO_CURATIVO` | un alleato | `SE_STESSO`, `ALLEATI`, `OSPITI`, `ALLEATI_E_OSPITI` |
 | | `CANTO_IPNOTICO`, `URLO_DELLA_BANSHEE` | tutti gli avversari (fino a `NUMERO_BERSAGLI`) | test di esistenza |
 | | `CANTO_DI_VALORE` | tutto il gruppo | test di esistenza |
-| Pozioni | `POZIONE_SALUTE`, `POZIONE_MAGIA` | un alleato (di solito sé) | come `CANTO_CURATIVO` |
+| Pozioni | `POZIONE_SALUTE`, `POZIONE_SALUTE_GRANDE`, `POZIONE_MAGIA`, `POZIONE_MAGIA_GRANDE` | un alleato (di solito sé) | come `CANTO_CURATIVO` |
 | Equipaggiamento | `CAMBIA_ARMA` (parametro: tipo di danno voluto) | un'arma | `SE_STESSO` (chi cambia arma) |
 
-Escluse (§5): fuga, corruzione, amicizia, passare inosservati. **Non c'è un'azione "passa il turno"**: se nessuna azione di una lista è applicabile, il personaggio fa un attacco fisico (§7.6, il ripiego).
+Escluse (§5): fuga, corruzione, amicizia, passare inosservati. **Non c'è un'azione "passa il turno"**: se nessuna azione di una lista è applicabile, il personaggio fa un attacco fisico (§1, il ripiego).
 
 **I requisiti** (li porta l'azione, §11.7; il giocatore non li scrive):
 
@@ -1019,63 +849,69 @@ Escluse (§5): fuga, corruzione, amicizia, passare inosservati. **Non c'è un'az
   silenziato); `MORTE` vuole un bersaglio vivo.
 - **`DARDO_ARCANO`, canti:** la `MAGIA`, e la classe che li sa (Mago, Maga, Elfo, Elfa; Bardo, Cantastorie, il bardo della locanda). `CANTO_CURATIVO` vuole qualcuno ferito, `CANTO_IPNOTICO` e `URLO_DELLA_BANSHEE` avversari vivi
   non già `SPAVENTATO` o `CONFUSO`, e l'Urlo che il gruppo l'abbia imparato.
-- **`ALBA_SACRA`:** usa quella innata se il personaggio ce l'ha (Sacerdote, Sacerdotessa), altrimenti la pergamena; vuole almeno un alleato con uno stato negativo o un modificatore temporaneo da togliere.
+- **`ALBA_SACRA`:** usa quella innata se il personaggio ce l'ha (Sacerdote, Sacerdotessa), altrimenti la pergamena; vuole almeno un alleato con uno stato diverso da `ISPIRATO` (i modificatori temporanei non si leggono dal personaggio).
 - **`RESURREZIONE`:** la pergamena, la `MAGIA`, un compagno caduto (non in panchina).
-- **Pozioni:** una nel gruppo; la Salute vuole un ferito, la Magia chi ha poca `MAGIA`.
-- **`CAMBIA_ARMA`:** il controllo preventivo del cambio e il massimo di cambi (§5).
+- **Pozioni:** una del tipo nel gruppo; la Salute vuole un ferito, la Magia chi non ha la `MAGIA` piena.
+- **`CAMBIA_ARMA`:** solo per i miei personaggi, se c'è un'arma da prendere (`armiPerCambio`), il controllo preventivo del cambio e il massimo di cambi (§5).
 - Tutte: il bersaglio non è un'immunità **nota** (di classe o scoperta, §11.7) e non ha già `N` tentativi falliti.
 
 **Decisioni:**
 
 - **`INCANTESIMO_DI_DANNO`** sceglie fra i sette incantesimi elementali che il personaggio può lanciare adesso; **non comprende `MORTE`** (può ritorcersi contro chi la lancia), `SILENZIO` e i benefici, che restano azioni esplicite.
-  Il criterio (S1-S4) è un parametro dell'azione.
-- **Pozioni:** una sola azione per tipo; la scelta fra normale e grande la fa il valutatore (la grande se la salute mancante è almeno quella che dà la grande, altrimenti la normale).
+  Il criterio è un parametro dell'azione. `INCANTESIMO_DEL_REPERTORIO` riproduce invece la scelta dei mostri di un tempo (§11.13).
+- **Pozioni:** quattro azioni (Salute e Magia, normale e grande: ognuna beve solo la sua); la scelta fra normale e grande la scrive la voce, con l'ordine delle azioni (§11.16).
 - **Incantesimi a più bersagli** (`MULTIPLO`, fino a `NUMERO_BERSAGLI`): il selettore sceglie il **bersaglio principale** e gli altri sono i successivi vivi dell'elenco degli avversari.
 - **Un test** controlla che ogni valore di `ClasseIncantesimo` abbia il suo `TipoAzione` (un nuovo incantesimo senza azione fa fallire il test).
 
-**Da fare nel motore: il bersaglio scelto, per tutte le azioni.** Oggi ogni azione sceglie da sola il bersaglio: l'attacco colpisce il primo avversario vivo (`LocazioneBase.attaccaConLeArmi`), gli incantesimi i primi vivi, il dardo il primo, il Silenzio
-il primo non silenziato (`Silenzio.scegliBersaglio`), il canto curativo il più ferito. Perché la tattica comandi davvero, ognuna deve accettare un **bersaglio scelto dall'esterno** (e, per i `MULTIPLO`, il principale): la modifica va fatta
-azione per azione, con i comandi manuali di oggi che continuano a funzionare come ora (senza bersaglio scelto, il comportamento di sempre). Le pozioni accettano già chi beve (`consumaPozioneSalute(Personaggio)`).
+**Il bersaglio scelto, per tutte le azioni.** L'`EsecutoreTattiche` (§11.14) esegue ogni azione sul bersaglio scelto dal valutatore (per i `MULTIPLO` il principale). Le azioni manuali del giocatore (barra dei comandi) continuano a scegliere da sole: l'attacco colpisce il primo avversario vivo (`PersonaggioBase.attaccaConLeArmi`),
+gli incantesimi i primi vivi, il dardo il primo, il Silenzio il primo non silenziato (`Silenzio.scegliBersaglio`), il canto curativo il più ferito.
 
-### 11.9bis Stato dell'implementazione
+### 11.10 Il criterio di scelta dell'incantesimo di danno
 
-**Dove stanno i dati e la logica** (§11.11): i dati in `…/modellodati/tattiche`, la logica in `…/tattiche`, i tipi in `…/tipi/tattiche`.
+Vale per `INCANTESIMO_DI_DANNO` (§11.9), la sola azione che sceglie *quale* incantesimo lanciare. Le sue tre logiche (a caso, il più potente, il più conveniente) sono quelle con cui i mostri sceglievano un tempo in base all'`INTELLIGENZA` (sotto 5, da 5 a 6, da 7: §11.13). Nelle tattiche:
 
-**Fatto** (`…/tattiche`, `…/tipi/tattiche`; test `RosaTest`, `ContestoTatticoTest`, `SelezioneTest`, `PredicatiTest`, `ValutatoreTest`):
+- **Quelli che può lanciare adesso**: per un mostro il suo repertorio di incantesimi elementali che può pagare con la `MAGIA`; per un mio personaggio le pergamene della scorta del gruppo (`getIncantesimi(classe) > 0`) che sa
+  formulare (`puoFormulare`) e può pagare. Non `SILENZIATO`. Si scartano gli incantesimi a cui il bersaglio è immune per una conoscenza **nota** (§11.7) e quelli con troppi tentativi falliti. Se non ne resta nessuno l'azione non è applicabile.
+- **"Una volta su tre non lancia"** è la condizione `PROBABILITA 67` della voce.
+- **Le soglie di `INTELLIGENZA`** (5 e 7) valgono solo per la replica di §11.13: le tattiche base dei mostri usano le fasce di astuzia (§4, 0-11, 12-19, 20-30, da 31).
 
-- **Il "SU"**: le rose, i filtri (`Filtro`, `Filtri`), gli ordinamenti (`OrdinamentoMD`, `Ordinamenti`), il `SelettoreMD` applicato da `Selettori` con il suo `RisultatoSelezione` (scelto, rimasti, percorso). Il selettore accetta un'`Ammissione`: restano nella rosa solo i candidati su cui
-  un'azione della voce si può fare, e i filtri che dipendono dall'azione la valutano per quella che si farebbe su ciascuno.
-- **Le condizioni**: `TipoPredicato`, `PredicatoMD`, `Predicati`, l'astuzia (`Astuzia`, con `Costanti.ASTUZIA_PARTENZA` e `ASTUZIA_PER_LIVELLO`), il conteggio degli usi di una voce. Un `ROUND_DALL_ULTIMO_USO` di una voce mai usata vale "moltissimi".
-- **Le azioni**: `TipoAzione`, `PortataAzione`, `AzioneMD` (con i parametri controllati), `Requisiti` (quando si può fare ciascuna, con il motivo del no), `CriterioIncantesimo` e `SceltaIncantesimo` (S1-S4 e `PIU_ECONOMICO_CHE_BASTA`, con il confronto con l'attacco),
-  `CalcolatoreCombattimento.dannoAtteso` e `dannoAttesoDellaMischia` (senza dadi).
-- **La voce e la tattica**: `VoceMD` (selettore opzionale con quello di base della portata, condizioni, azioni, attiva/disattiva, `problemi(lato)` che la lettura deve rifiutare), `TatticaMD` (lista piatta, `problemi(lato)`), `Decisione` (azione, bersaglio, perché),
-  `Valutatore.decidi` (la prima voce eseguibile; ripiego sull'attacco fisico al primo avversario).
-- **La memoria dello scontro**: `StatoDelCombattimento.registraEsitoAzione` (riuscita, mancata, immune), `getTentativiFalliti` (si rinuncia dopo `Costanti.MAX_TENTATIVI_FALLITI_PER_AZIONE` = 2) e `isImmunitaScoperta` (pubblica); le immunità di classe si conoscono subito.
+Il **criterio** (`CriterioIncantesimo`) è un parametro dell'azione:
 
-**Scelte dei requisiti** (da rivedere se non convincono): un incantesimo si può lanciare se il personaggio non è silenziato, ha la `MAGIA` e ha una pergamena nel gruppo, oppure è un mostro magico che lo ha nel repertorio; l'Alba sacra serve se un alleato ha uno
-stato diverso da `ISPIRATO` (i modificatori temporanei, oggi, non si leggono dal personaggio); i canti ipnotico e dell'Urlo servono se c'è un avversario né `SPAVENTATO` né `CONFUSO`; il Canto di valore se c'è un alleato non `ISPIRATO`; le pozioni vogliono una scorta nel
-gruppo e un bersaglio ferito (Salute) o con poca `MAGIA`; il cambio d'arma solo per i miei, se c'è un'arma da prendere (`armiPerCambio`).
+| Valore | Sigla | Che cosa sceglie |
+| :--- | :--- | :--- |
+| `A_CASO` | S1 | uno a caso fra quelli lanciabili |
+| `PIU_POTENTE` | S2 | quello con più danno base (`getDanni()`, come oggi), senza resistenze né debolezze; con più bersagli conta il danno a uno solo |
+| `PIU_ADATTO` | S3 | quello con il **danno atteso** più alto su *quel* bersaglio: probabilità di colpire × `dannoAttesoDellArma` × `moltiplicatoreAtteso` (debolezze e resistenze di classe e stati, §6.3); con più bersagli il danno totale |
+| `PIU_ADATTO_ESPERTO` | S4 | come S3, moltiplicato per il fattore dell'equipaggiamento **osservato** (`getFattoreEquipaggiamentoNoto`, §3.3); con più bersagli conta anche chi verrebbe portato vicino alla fine (la quota di salute tolta a ogni bersaglio, al massimo 1, sommata) |
+| `PIU_ECONOMICO_CHE_BASTA` | — | per chi ha poche pergamene: fra quelli il cui danno atteso (come S4) basta a **uccidere** il bersaglio, il meno caro (il prezzo della pergamena per i miei, il costo di lancio in `MAGIA` per i mostri); se nessuno basta, il `PIU_ADATTO_ESPERTO` |
 
-**Collegato al motore** (`LocazioneBase`, test `CombattimentoConTatticheTest`): a ogni scatto del TIMER il personaggio di turno agisce con la sua tattica (`Personaggio.getTattica`, salvata con il personaggio, §11.12): i miei senza tattica hanno `TatticaMD.VUOTA` (attaccano
-il primo avversario, come prima), i mostri senza tattica quella base della loro classe (§11.13). `agisciConLaTattica` decide con il `Valutatore`, esegue la `Decisione` (`eseguiLaDecisione`: attacco con
-le armi sul bersaglio scelto, incantesimi di danno con il `GruppoDiBersagli` per i `MULTIPLO`, dardo arcano, benefici, canti — il curativo sul bersaglio scelto, `Canto.cantaSu` —, pozioni con la scelta fra normale e grande, cambio d'arma), registra l'uso della voce
-e controlla la fine dello scontro; non gestisce il round. Gli esiti degli incantesimi (colpito, mancato, immune) e del dardo si registrano nello `StatoDelCombattimento` (`IncantesimoMaleficoImpl.colpisci`, `scagliaIlDardo`); l'attacco fisico non ne registra
-(non si abbandona mai). Le azioni manuali del giocatore (barra dei comandi) non sono cambiate.
+**Il confronto con l'attacco fisico** è un secondo parametro, `soloSePiuForteDellAttacco`: se vero, l'incantesimo scelto è applicabile solo se il suo danno atteso (probabilità di colpire × danno × `moltiplicatoreAtteso`) è maggiore di quello delle fasi di
+attacco con le armi sullo stesso bersaglio; altrimenti non lo è, e la sequenza passa all'azione successiva (di solito `ATTACCO_FISICO`). Il danno atteso dell'arma si calcola senza dadi come quello dell'incantesimo.
 
-**Da fare**: l'esito di un'azione con effetti che non si applicano (un Silenzio a segno che non mette `SILENZIATO`) come "mancata".
+**Le fasce di astuzia nella tattica base di un mostro magico** (§11.16): la prima fascia (0-11) lancia a caso (`A_CASO`, con una probabilità), la seconda (12-19) il `PIU_POTENTE` solo se rende più dell'attacco, la terza (20-30) il `PIU_ADATTO`, la quarta (da 31) il `PIU_ADATTO_ESPERTO`; sempre seguite da `ATTACCO_FISICO`. I valori sono da tarare con le simulazioni (§8).
+
+Il registro delle decisioni (§7.7) riporta i danni attesi confrontati ("PIU_ADATTO: FUOCO 4.2, FULMINE 9.8"). Lo coprono `ValutatoreTest` e `TatticheBaseTest`.
 
 ### 11.11 Dove stanno i dati e la logica
 
 Le classi che descrivono una tattica sono **dati puri**: immutabili, fatti solo di enumerati (`tipi/tattiche`), numeri e liste. Stanno in **`…/modellodati/tattiche`**, con il suffisso `MD` come il resto del modello dati
 (`TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`). Il motivo è che la stessa classe serve a tre cose: la **UI** le legge e le modifica (può importare `modellodati` e `tipi`, non il motore né il dominio), il **salvataggio**
-le scrive con il personaggio (`PersonaggioMD`, §8) e il **motore** le valuta. Un test (`DipendenzeTatticheTest`) controlla che dipendano solo da `tipi` e fra loro.
+le scrive con il personaggio (`PersonaggioMD`, §11.12) e il **motore** le valuta. Un test (`DipendenzeTatticheTest`) controlla che dipendano solo da `tipi` e fra loro.
 
 La **logica** sta in `…/tattiche`: le rose (`Rosa`, `Rose`), `Filtri`, `Ordinamenti`, `Predicati`, `Selettori` (applica un `SelettoreMD`), `Requisiti`, `SceltaIncantesimo`, `Astuzia`, `Valutatore`, il `ContestoTattico` e i risultati (`RisultatoSelezione`, `Decisione`). Non la
 può importare la UI (`DipendenzeUITest`, che ora riconosce anche i sottopacchetti).
 
+Il valutatore e il contesto: `Valutatore.decidi` (la prima voce eseguibile; ripiego sull'attacco fisico al primo avversario) restituisce una `Decisione` (azione, bersaglio, perché). Il `Selettore` accetta un'`Ammissione`: restano nella rosa solo i candidati su cui un'azione della voce si può fare, e i filtri che dipendono dall'azione la valutano per quella che si farebbe su ciascuno.
+`Requisiti` dice quando si può fare ciascuna azione, con il motivo del no; `Astuzia` calcola l'astuzia (§4); `SceltaIncantesimo` e `CriterioIncantesimo` scelgono l'incantesimo (§11.10), con `CalcolatoreCombattimento.dannoAtteso` e `dannoAttesoDellaMischia` (senza dadi).
+Un `ROUND_DALL_ULTIMO_USO` di una voce mai usata vale "moltissimi". I test sono `RosaTest`, `ContestoTatticoTest`, `SelezioneTest`, `PredicatiTest` e `ValutatoreTest`.
+
+**Scelte dei requisiti** (da rivedere se non convincono): un incantesimo si può lanciare se il personaggio non è silenziato, ha la `MAGIA` e ha una pergamena nel gruppo, oppure è un mostro magico che lo ha nel repertorio; l'Alba sacra serve se un alleato ha uno
+stato diverso da `ISPIRATO`; i canti ipnotico e dell'Urlo servono se c'è un avversario né `SPAVENTATO` né `CONFUSO`; il Canto di valore se c'è un alleato non `ISPIRATO`; le pozioni vogliono una scorta nel
+gruppo e un bersaglio ferito (Salute) o senza la `MAGIA` piena; il cambio d'arma solo per i miei, se c'è un'arma da prendere (`armiPerCambio`).
+
 ### 11.12 Il salvataggio
 
-**Fatto** (`SalvataggioTatticheTest`, `CombattimentoConTatticheTest`). La tattica sta nel `PersonaggioMD` (`getTattica`/`setTattica`, `PersonaggioBase` ne è solo la porta) e passa dal salvataggio con il personaggio: dopo il suo record una riga vuota (nessuna tattica: i mostri, per ora) oppure la tattica. Una
+La tattica (`SalvataggioTatticheTest`, `CombattimentoConTatticheTest`) sta nel `PersonaggioMD` (`getTattica`/`setTattica`, `PersonaggioBase` ne è solo la porta) e passa dal salvataggio con il personaggio: dopo il suo record una riga vuota (nessuna tattica: i mostri) oppure la tattica. Una
 tattica vuota (`TatticaMD.VUOTA`) resta una tattica vuota e non diventa "nessuna tattica": sono due cose diverse (i miei personaggi senza tattica usano la predefinita del loro ruolo, i mostri quella della classe, `RegistroTattiche.perClasse`).
 
 **Una tattica incoerente non fa fallire il caricamento.** I dati malformati (un nome sconosciuto, un numero scritto male, una voce senza azioni) fanno ancora fallire la rilettura; ma una tattica ben formata con errori di coerenza (un attacco sugli alleati, una rosa che le azioni non accettano: `TatticaMD.problemiPerQualsiasiLato`, che non sa se è di un mostro o di un mio personaggio) viene **disabilitata** (`TatticaMD.disabilitata`, il flag si salva) e conservata. Chi agisce la tratta come se non ci fosse (`LocazioneBase.tatticaDi`: la predefinita del ruolo), e la schermata delle tattiche la mostra con un avviso in rosso e gli errori, perché il giocatore li corregga e confermi. Il motore non accetta dalla schermata una tattica con errori (`ComandoImpostaTattica`).
@@ -1093,35 +929,35 @@ AZIONE|tipo|criterio|solo se più forte dell'attacco|tipo di danno dell'arma
 
 Gli elementi sono immutabili, quindi non implementano `Serializzabile` (che rilegge dentro un oggetto): hanno `salva(PrintWriter)` e un `leggi(BufferedReader)` statico che li costruisce con le stesse fabbriche che li controllano. Un salvataggio incoerente (un'etichetta sbagliata, un enumerato sconosciuto, un parametro mancante, una voce senza azioni,
 il file troncato) è rifiutato con una `IOException`. Il test di andata e ritorno scrive una tattica con almeno un esemplare di ogni forma di filtro, predicato e azione e controlla che torni uguale (le classi hanno `equals`) e che riscrivere dia lo stesso testo; un
-altro salva e ricarica una partita vera e controlla che il personaggio rilegga la tattica e agisca come impostato. I salvataggi precedenti non si leggono più, come per ogni cambio di formato.
+altro salva e ricarica una partita vera e controlla che il personaggio rilegga la tattica e agisca come impostato.
 
-### 11.13 Le tattiche base dei mostri: la replica di oggi
+### 11.13 La replica del vecchio comportamento dei mostri
 
-**Fatto** (`RegistroTattiche`, `RegistroTatticheTest`, `CombattimentoConTatticheTest`). Ogni mostro senza una tattica sua agisce con quella della sua classe (`RegistroTattiche.perClasse`, `LocazioneBase.tatticaDi`): oggi è per tutti `tatticaDiOggi()`, la **trasposizione voce per voce** di come i
-mostri sceglievano prima (il vecchio `PersonaggioBase.attacca(Gruppo)`, ora rimosso), con venti voci generate dal codice. Il registro non copia la tattica nei personaggi (non si salva con ogni mostro): la cerca quando serve, e un'istanza ne può avere una sua.
+`RegistroTattiche.tatticaDiOggi()` (`RegistroTatticheTest`, `CombattimentoConTatticheTest`) è la **trasposizione voce per voce** di come i mostri sceglievano prima delle tattiche (il vecchio `PersonaggioBase.attacca(Gruppo)`), con venti voci generate dal codice. Oggi serve da ripiego per le classi di mostri
+senza una tattica base in `TatticheBase` (`RegistroTattiche.perClasse`: quella registrata con `registra`, altrimenti `TatticheBase.deiMostri`, altrimenti questa) e da tattica di riferimento per i test; le simulazioni di §9 la usavano. Il registro non copia la tattica nei personaggi (non si salva con ogni mostro): la cerca quando serve (`LocazioneBase.tatticaDi`), e un'istanza ne può avere una sua.
 
 - **Chi colpire**, cinque selettori: il Mago o la Maga di livello più alto (`CLASSE MAGO` con `LIVELLO_PIU_ALTO`, a parità il primo), altrimenti il Sacerdote, l'Elfo, il Bardo (ognuno nel ruolo, con la variante di genere), altrimenti uno a caso fra i miei personaggi vivi e gli ospiti vulnerabili (`AVVERSARI_E_OSPITI`, `A_CASO`).
 - **Se e quale incantesimo**, quattro voci per ogni bersaglio, nell'ordine: (1) poco intelligente (`INTELLIGENZA` sotto 5): `INCANTESIMO_DEL_REPERTORIO` a caso; (2) da 5 a 6: il più potente (`PIU_POTENTE`, il danno base più alto); (3) da 7: il più potente solo se rende più dell'attacco con le armi
   (`soloSePiuForteDellAttacco`, con i danni attesi); (4) l'attacco con le armi. Le prime tre hanno le condizioni `QUANTI SE_STESSO [MAGICO] MAGGIORE 0` (non lancia se non è magico, è silenziato o ha 0 `MAGIA`: e non tira nemmeno il dado) e `PROBABILITA 67` (una volta su tre rinuncia), e
   l'attacco con le armi come ripiego nella loro sequenza di azioni.
-- **Per fare questo sono state aggiunte**: l'azione `INCANTESIMO_DEL_REPERTORIO` (un incantesimo malefico qualsiasi del repertorio **compresi la Morte e il Silenzio**, come oggi; l'`INCANTESIMO_DI_DANNO` del giocatore resta sugli elementali) e il predicato `INTELLIGENZA` (l'intelligenza attuale: le soglie di oggi, 5 e 7, sono sua e
-  non dell'astuzia).
-- **Un mostro colpisce solo il bersaglio scelto**, anche con un incantesimo a più bersagli, come prima (`SceltaIncantesimo.bersagli`).
-- **Le differenze dalla logica di prima**: un mostro non lancia un incantesimo a cui il bersaglio è immune per la sua classe né il Silenzio su chi è già silenziato (prima sprecava il turno); il confronto fra incantesimo e armi usa i danni attesi e non i tiri dei dadi; il dado della rinuncia si tira una volta per voce che ha un bersaglio, non una sola per decisione (la
-  probabilità di lanciare resta due su tre). Le simulazioni di partita (30 per classe) danno risultati simili a prima.
+- **Un mostro colpisce solo il bersaglio scelto**, anche con un incantesimo a più bersagli (`SceltaIncantesimo.bersagli`).
+- **Rispetto al codice di prima**, un mostro non lancia un incantesimo a cui il bersaglio è immune per la sua classe né il Silenzio su chi è già silenziato (prima sprecava il turno); il confronto fra incantesimo e armi usa i danni attesi e non i tiri dei dadi; il dado della rinuncia si tira una volta per voce che ha un bersaglio, non una sola per decisione (la
+  probabilità di lanciare resta due su tre).
 
 ### 11.14 L'esecutore condiviso
 
-**Fatto** (`motore/EsecutoreTattiche`, `EsecutoreTatticheTest`). Il valutatore sceglie, l'esecutore fa: un attacco con le armi sul bersaglio scelto, un incantesimo (con il `GruppoDiBersagli` per i `MULTIPLO`, la pergamena consumata, l'esito registrato), il dardo arcano, i benefici, i canti, le pozioni, il
+(`motore/EsecutoreTattiche`, `EsecutoreTatticheTest`). Il valutatore sceglie, l'esecutore fa: un attacco con le armi sul bersaglio scelto, un incantesimo (con il `GruppoDiBersagli` per i `MULTIPLO`, la pergamena consumata, l'esito registrato), il dardo arcano, i benefici, i canti, le pozioni, il
 cambio d'arma. `agisci(attore, tattica)` decide, pubblica l'`InternoDecisioneTattica`, esegue e ricorda l'uso della voce, e restituisce la decisione (null se non c'era niente da fare). Non gestisce il round né la fine dello scontro: chi lo chiama guarda se gli avversari sono finiti o se è
 caduto il capo. Gli avversari messi fuori combattimento dai miei li comunica a un `RegistroUccisioni` (nel gioco danno esperienza e punti, `LocazioneBase.registraUccisione`; nelle simulazioni niente).
 
 Lo usano `LocazioneBase` (che gli passa i suoi gruppi e lo stato e tiene per sé il round, le opzioni di corruzione e amicizia, e le azioni manuali del giocatore, che per l'attacco e il dardo passano dalle sue stesse primitive) e `RoundASimulato`, quindi `TestScontriDiGruppo` e `TestLogoramentoInizioPartita`: **i mostri
 delle simulazioni agiscono con le stesse tattiche del gioco**, non più con una copia della logica di scelta. `ContestoTattico.per(attore, giocatore, mostri)` lo costruisce da gruppi qualunque.
 
+**Come lo usa `LocazioneBase`**: a ogni scatto del TIMER il personaggio di turno agisce con la sua tattica (`Personaggio.getTattica`, salvata con il personaggio, §11.12; `LocazioneBase.tatticaDi` sceglie quella da usare: la sua, la predefinita del ruolo per i miei che non ne hanno o hanno una disabilitata, quella della classe per i mostri). Le azioni manuali del giocatore (barra dei comandi) passano dalle primitive di `LocazioneBase`. Lo coprono `CombattimentoConTatticheTest` e `EsecutoreTatticheTest`.
+
 ### 11.15 La schermata del giocatore
 
-**Fatto** (`ui/DisplayableCanvasTattiche`, `BozzaTattica`, `CasellaADiscesa`, `TestoTattica`; `DisplayableCanvasTatticheTest`, `BozzaTatticaTest`, `ScenarioSchermataTatticheTest`). Si apre dall'inventario con l'icona `MOSTRA_TATTICHE` (stato `Stato.TATTICHE`, come la pagina dei trofei) e si lascia con `ANNULLA`. I comandi della barra sono i personaggi permanenti del gruppo, anche i caduti
+(`ui/DisplayableCanvasTattiche`, `BozzaTattica`, `CasellaADiscesa`, `TestoTattica`; `DisplayableCanvasTatticheTest`, `BozzaTatticaTest`, `ScenarioSchermataTatticheTest`). Si apre dall'inventario con l'icona `MOSTRA_TATTICHE` (stato `Stato.TATTICHE`, come la pagina dei trofei) e si lascia con `ANNULLA`. I comandi della barra sono i personaggi permanenti del gruppo, anche i caduti
 (non gli ospiti e chi è a tempo); il capo ha lo sfondo rosso. Due colonne con la cornice dell'inventario e il personaggio al centro:
 
 - **A sinistra la tattica**, un `ComponenteScorrevole` ricostruito a ogni disegno. Ogni voce ha una riga di intestazione (numero, **nome**; a destra su, giù, togli) e sotto il corpo: la riga della rosa e dell'ordinamento, i suoi **filtri** (`con`), le **condizioni** (`se`, con i filtri di `QUANTI` più indentati) e le **azioni** (`fai`); in coda a ogni gruppo una riga "(aggiungi...)" con un
@@ -1134,15 +970,14 @@ delle simulazioni agiscono con le stesse tattiche del gioco**, non più con una 
 - **Chi mi ha attaccato per ultimo e l'ultimo scelto sono ordinamenti**, non filtri, e solo fra gli avversari (`ULTIMO_ATTACCANTE`, `ULTIMO_SCELTO`): si scelgono accanto a "il primo", "con meno salute"... Scelgono **solo** quel personaggio: se non è fra i candidati (non c'è, o è caduto) la voce non si esegue e si passa alla successiva. I filtri con lo stesso nome (e "il capo", "me stesso") esistono ancora nei dati ma non si propongono: contando o scegliendo fra gli alleati non hanno senso.
 - **Cosa si può scegliere dipende dalla rosa**: su "Se stesso" non compaiono il menu dell'ordinamento né i filtri per classe, categoria, livello rispetto al mio, il capo, me stesso, scelto l'ultima volta, mi ha attaccato per ultimo, debole all'azione (`BozzaTattica.filtriAmmessi`): il candidato è uno solo e già deciso.
 - **Il menu a discesa** (`CasellaADiscesa`) è un popup nel font Doomdark con un `ComponenteScorrevole` (rotella e frecce se è lungo), che si apre sotto o sopra la riga e cattura i click finché è aperto.
-- **Al centro** il personaggio, le frecce che lo spostano nel gruppo (`ComandoSpostaPersonaggio`, subito, anche il capo: il gruppo ricorda chi è il capo e il suo posto si salva, `GruppoMD.indiceCapo`), **Sì** e **No** (solo se la bozza è diversa dalla tattica del motore; Sì solo se non ci sono problemi) e **Predefinita**, che rimette la tattica vuota
-  nella bozza (da confermare).
+- **Al centro** il personaggio, le frecce che lo spostano nel gruppo (`ComandoSpostaPersonaggio`, subito, anche il capo: il gruppo ricorda chi è il capo e il suo posto si salva, `GruppoMD.indiceCapo`), **Sì** e **No** (solo se la bozza è diversa dalla tattica del motore; Sì solo se non ci sono problemi) e **Predefinita**, che rimette nella bozza la tattica predefinita del ruolo (`RegistroTattiche.predefinitaDelGiocabile`, §11.16; da confermare).
 - **A destra la spiegazione**. Prima dell'elemento sotto il mouse: la rosa, il filtro, la condizione, l'azione, l'ordinamento, il confronto (`TestoTattica.spiega`), e con un menu aperto quella della scelta su cui si passa, o del pezzo che lo ha aperto; poi come si legge la voce a cui appartiene (`TestoTattica.spiegazione`) e, in rosso, i problemi che impediscono di confermare (`BozzaTattica.problemi`). Il filtro che si chiamava "Magico" ora è "Magie abilitate".
 
 La bozza (`BozzaTattica`) tiene le voci in liste modificabili, perché i dati `*MD` sono immutabili: solo con Sì si costruisce la `TatticaMD` e la si manda con `ComandoImpostaTattica(uuid, tattica)`; il motore la accetta solo con la schermata aperta, quindi **mai in combattimento**, e per un personaggio permanente del gruppo. Cambiando personaggio le modifiche non confermate si perdono. Aprendo una tattica, i confronti rovesciati sui numeri ("almeno 50") diventano quelli equivalenti senza rovescio ("maggiore di 49"): `BozzaTattica.normalizza`.
 
 ### 11.16 Le tattiche base dei mostri e le predefinite dei giocabili
 
-**Fatto** (`tattiche/TatticheBase`, `RegistroTattiche.perClasse` e `predefinitaDelGiocabile`, `TatticheBaseTest`). Sono scritte con le voci che il giocatore scrive nella schermata (§11.15) e salvano e rileggono come ogni tattica. Le fonti: il codice del gioco (che cosa sa fare ogni classe: repertorio, categoria, intelligenza, debolezze) e i
+(`tattiche/TatticheBase`, `RegistroTattiche.perClasse` e `predefinitaDelGiocabile`, `TatticheBaseTest`). Sono scritte con le voci che il giocatore scrive nella schermata (§11.15) e salvano e rileggono come ogni tattica. Ogni voce ha un nome (`voce(nome, ...)` in `TatticheBase`): quelle dei mostri portano la fascia davanti ("Astuto: finisce i feriti"), quelle dei giocabili dicono che cosa fanno ("Alba sacra", "Pozione di salute grande"). Le fonti: il codice del gioco (che cosa sa fare ogni classe: repertorio, categoria, intelligenza, debolezze) e i
 manuali di tattica per il gioco di ruolo, che legano il comportamento dei mostri alla loro intelligenza (sotto una certa soglia agiscono d'istinto, contro il più vicino o chi li ha colpiti; più su scelgono i bersagli deboli, poi gli incantatori, infine coordinano le mosse), per esempio *The Monsters Know What They're Doing* di Keith Ammann.
 
 **Mostri: una lista per classe, a fasce di astuzia** (le soglie di §4: 12, 20, 31), dalla più alta alla più bassa; ogni fascia comincia con `NON ASTUZIA MINORE soglia`, e un mostro ha solo le fasce che la sua astuzia massima raggiunge. La prima voce eseguibile vince, quindi se una voce della fascia alta non si può eseguire
@@ -1155,10 +990,10 @@ manuali di tattica per il gioco di ruolo, che legano il comportamento dei mostri
 | **Esperto** (da 20) | Sui feriti (sotto il 35%) l'incantesimo più economico che basta a ucciderli; il Silenzio sull'incantatore con più magia dove lo ha; poi l'incantesimo più adatto al bersaglio. I giganti vanno sul più forte. |
 | **Stratega** (da 31) | La Morte sul quasi caduto (sotto il 25%, dove uccide: altrimenti si ritorcerebbe contro chi la lancia, `Morte.colpisci`); il Silenzio sull'incantatore con più magia; il colpo finale; gli incantesimi più adatti conoscendo l'equipaggiamento (`PIU_ADATTO_ESPERTO`). |
 
-Che cosa fa cosa dipende da tre elenchi in `TatticheBase`, da tenere allineati con il codice (`PersonaggioBase.getRepertorioIncantesimi` e le classi): chi è magico, chi ha il Silenzio, chi ha la Morte (i boss). **Da fare** (c'è un `TODO` in `TatticheBase`): derivarli dal codice, o almeno un test che li confronti con le classi vere. Come i mostri salgono di fascia col livello del mondo lo dice la rampa dell'astuzia (§4): il Drago è stratega fin dal primo livello, la Strega e il Lich dal terzo, l'Ombra Nera
+Che cosa fa cosa dipende da tre elenchi in `TatticheBase`, da tenere allineati con il codice (`PersonaggioBase.getRepertorioIncantesimi` e le classi): chi è magico, chi ha il Silenzio, chi ha la Morte (i boss). Derivarli dal codice è in §8. Come i mostri salgono di fascia col livello del mondo lo dice la rampa dell'astuzia (§4): il Drago è stratega fin dal primo livello, la Strega e il Lich dal terzo, l'Ombra Nera
 dal nono; le bestie e i bruti restano bruti.
 
-**Personaggi giocabili: una tattica predefinita per ruolo** (uguale per i due generi), che la schermata propone col pulsante "Predefinita". Un personaggio **senza tattica propria agisce con la predefinita del suo ruolo** (`LocazioneBase.tatticaDi`, e la schermata mostra quella); una tattica vuota esplicita (`TatticaMD.VUOTA`) vuol dire invece "solo l'attacco di riserva".
+**Personaggi giocabili: una tattica predefinita per ruolo** (uguale per i due generi), che la schermata propone col pulsante "Predefinita". Un personaggio **senza tattica propria agisce con la predefinita del suo ruolo** (`LocazioneBase.tatticaDi`, e la schermata mostra quella); una tattica vuota esplicita (`TatticaMD.VUOTA`) vuol dire invece "solo l'attacco di riserva". `RegistroTattiche.predefinitaDelGiocabile` la dà (la vuota per le classi che non ne hanno una).
 
 | Ruolo | Tattica |
 | :--- | :--- |
@@ -1174,35 +1009,3 @@ dal nono; le bestie e i bruti restano bruti.
 Le azioni a costo (pergamene, MAGIA, pozioni) le verificano i requisiti (§11.7): una voce che non si può eseguire cede alla successiva, quindi le predefinite funzionano anche con le scorte vuote. Le predefinite non conoscono ancora il livello del personaggio né la scorta rimasta (per esempio "risparmia le pergamene").
 
 **Verifica**: una simulazione manuale (`TestScontriDiGruppo`) con le nuove tattiche dei mostri dà gruppi completi che vincono quasi sempre e il Drago che mette in difficoltà i gruppi di tre; i numeri non si confrontano con quelli delle versioni precedenti.
-
-### 11.10 Il criterio di scelta dell'incantesimo di danno
-
-Vale per `INCANTESIMO_DI_DANNO` (§11.9), la sola azione che sceglie *quale* incantesimo lanciare. Nasce da `PersonaggioBase.scegliIncantesimoContro` (rimosso), che sceglieva così: se non è magico, è `SILENZIATO`, ha 0 `MAGIA` o non può pagare
-nessun incantesimo del repertorio, non lancia; una volta su tre rinuncia; poi, con `INTELLIGENZA` sotto 5 sceglie a caso, da 5 a 6 il più potente (il `getDanni()` più alto, senza guardare il bersaglio), da 7 il più potente solo se probabilità di
-colpire per danno batte quella dell'arma (con `calcolaDannoRisultante`, che tira i dadi). Nelle tattiche:
-
-- **Quelli che può lanciare adesso**: per un mostro il suo repertorio di incantesimi elementali che può pagare con la `MAGIA`; per un mio personaggio le pergamene della scorta del gruppo (`getIncantesimi(classe) > 0`) che sa
-  formulare (`puoFormulare`) e può pagare. Non `SILENZIATO`. Si scartano gli incantesimi a cui il bersaglio è immune per una conoscenza **nota** (§11.7) e quelli con troppi tentativi falliti. Se non ne resta nessuno l'azione non è applicabile.
-- **"Una volta su tre non lancia"** è la condizione `PROBABILITA 67` della voce.
-- **Le soglie di `INTELLIGENZA`** (5 e 7) non si riproducono: le tattiche base dei mostri usano le fasce di astuzia (§4, 0-11, 12-19, 20-30, da 31) e si **ritoccano le fasce**, accettando che qualche decisione cambi rispetto a oggi.
-
-Il **criterio** (`CriterioIncantesimo`) è un parametro dell'azione:
-
-| Valore | Sigla | Che cosa sceglie |
-| :--- | :--- | :--- |
-| `A_CASO` | S1 | uno a caso fra quelli lanciabili |
-| `PIU_POTENTE` | S2 | quello con più danno base (`getDanni()`, come oggi), senza resistenze né debolezze; con più bersagli conta il danno a uno solo |
-| `PIU_ADATTO` | S3 | quello con il **danno atteso** più alto su *quel* bersaglio: probabilità di colpire × `dannoAttesoDellArma` × `moltiplicatoreAtteso` (debolezze e resistenze di classe e stati, §6.3); con più bersagli il danno totale |
-| `PIU_ADATTO_ESPERTO` | S4 | come S3, moltiplicato per il fattore dell'equipaggiamento **osservato** (`getFattoreEquipaggiamentoNoto`, §3.3); con più bersagli conta anche chi verrebbe portato vicino alla fine (la quota di salute tolta a ogni bersaglio, al massimo 1, sommata) |
-| `PIU_ECONOMICO_CHE_BASTA` | — | per chi ha poche pergamene: fra quelli il cui danno atteso (come S4) basta a **uccidere** il bersaglio, il meno caro (il prezzo della pergamena per i miei, il costo di lancio in `MAGIA` per i mostri); se nessuno basta, il `PIU_ADATTO_ESPERTO` |
-
-**Il confronto con l'attacco fisico** è un secondo parametro, `soloSePiuForteDellAttacco`: se vero, l'incantesimo scelto è applicabile solo se il suo danno atteso (probabilità di colpire × danno × `moltiplicatoreAtteso`) è maggiore di quello delle fasi di
-attacco con le armi sullo stesso bersaglio; altrimenti non lo è, e la sequenza passa all'azione successiva (di solito `ATTACCO_FISICO`). Il danno atteso dell'arma si calcola senza dadi come quello dell'incantesimo (oggi il confronto tira i dadi).
-
-**Come ripartire le fasce di astuzia nella tattica base di un mostro magico** (da tarare con le simulazioni): la prima fascia (0-11) `PROBABILITA 67 → INCANTESIMO_DI_DANNO A_CASO`, la seconda (12-19) `PIU_POTENTE`, la terza (20-30) `PIU_ADATTO` con
-`soloSePiuForteDellAttacco`, la quarta (da 31) `PIU_ADATTO_ESPERTO` con `soloSePiuForteDellAttacco`; sempre seguite da `ATTACCO_FISICO`.
-
-**Fatto** (§11.9bis): `CalcolatoreCombattimento.dannoAtteso`, l'elenco dei lanciabili e i criteri (`SceltaIncantesimo`). Il registro delle decisioni (§7.7) deve riportare i danni attesi confrontati ("Gelo 14, Fulmine 31: Fulmine"): oggi la spiegazione dice solo
-quale incantesimo sceglie.
-
-**Da decidere:** il parametro di `PIU_ECONOMICO_CHE_BASTA` (basta se il danno atteso è almeno la salute attuale del bersaglio? o un margine?) e l'esatta ripartizione delle fasce, entrambi da tarare con le simulazioni.
