@@ -186,7 +186,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	public Set<ClasseIncantesimo> getRepertorioIncantesimi() {
 		Set<ClasseIncantesimo> repertorio = EnumSet.noneOf(ClasseIncantesimo.class);
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-			if (classeIncantesimo.getTipo() == TipoIncantesimo.MALEFICO
+			// La Luce Divina è dei sacerdoti del giocatore e di chi la compra: i mostri non la lanciano
+			if (classeIncantesimo.getTipo() == TipoIncantesimo.MALEFICO && classeIncantesimo != ClasseIncantesimo.LUCE_DIVINA
 					&& (classeIncantesimo != ClasseIncantesimo.MORTE || isParteConValoriMassimi())) {
 				repertorio.add(classeIncantesimo);
 			}
@@ -256,6 +257,10 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public boolean isPNG() {
 		return md.isPng();
+	}
+
+	public boolean isCurabile() {
+		return !isNonMorto() || !GruppoGiocatore.getIstanza().contiene(this);
 	}
 
 	public boolean isImmortale() {
@@ -1043,7 +1048,8 @@ public abstract class PersonaggioBase implements Personaggio {
 			if (!isImmortale()) {
 				md.setVivo(false);
 				StringBuilder sb;
-				if (notificaMorte == Personaggio.NotificaMorte.SI) {
+				// Chi lascia il gruppo appena muore (lo Scheletro della Mietitura) non ha ferite da raccontare: se ne occupa il gruppo
+				if (notificaMorte == Personaggio.NotificaMorte.SI && !getMotivoNelGruppo().isLasciaSeMuore()) {
 					sb = new StringBuilder();
 					if (md.getNome() == null) {
 						boolean isGruppoAvversario;

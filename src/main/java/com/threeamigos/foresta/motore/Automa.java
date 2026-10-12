@@ -8,6 +8,7 @@ import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
+import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.incantesimi.CantoDelBardo;
 import com.threeamigos.foresta.incantesimi.TipoCanto;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
@@ -718,12 +719,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// Il round torna a 1 e la memoria del combattimento si azzera (vedi StatoDelCombattimento)
 		StatoDelCombattimento.getIstanza().reimposta();
 		gruppo.svuotaPanchina();
-		// Chi è nel gruppo per un motivo che finisce con la sua morte (lo Scheletro della Mietitura) se ne va
-		for (Personaggio personaggioCorrente : new ArrayList<>(gruppo.getPersonaggi())) {
-			if (!personaggioCorrente.isVivo() && personaggioCorrente.getMotivoNelGruppo().isLasciaSeMuore()) {
-				gruppo.rimuoviPersonaggio(personaggioCorrente);
-			}
-		}
+		// Chi è nel gruppo per un motivo che finisce con la sua morte (lo Scheletro della Mietitura) se ne va: di norma l'ha già fatto, subito dopo l'azione in cui è caduto
+		gruppo.congedaChiNonRisorge();
 		gruppo.getPersonaggiVivi().forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
 		locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
 		gruppo.setLocazioneCorrente(locazioneCorrente);
@@ -1007,12 +1004,18 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (albaSacraInnata) {
 			comandiPossibili.add(Comando.ALBA_SACRA);
 		}
+		// Sacerdote e Sacerdotessa hanno anche la luce divina, che non consuma pergamene
+		boolean luceDivinaInnata = LuceDivina.puoLanciarlaInnata(formulante);
+		if (luceDivinaInnata) {
+			comandiPossibili.add(Comando.LUCE_DIVINA);
+		}
 		// Bardo e Cantastorie hanno i canti, che non consumano pergamene e si cantano solo contro avversari vivi
 		for (TipoCanto canto : CantoDelBardo.cantiUtili(formulante, gruppo, gruppoAvversario)) {
 			comandiPossibili.add(canto.getComando());
 		}
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-			if (albaSacraInnata && classeIncantesimo == ClasseIncantesimo.ALBA_SACRA) {
+			if ((albaSacraInnata && classeIncantesimo == ClasseIncantesimo.ALBA_SACRA)
+					|| (luceDivinaInnata && classeIncantesimo == ClasseIncantesimo.LUCE_DIVINA)) {
 				// Già fra i comandi, anche se il gruppo ha delle pergamene
 				continue;
 			}
@@ -1920,7 +1923,17 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 	}
 
+	/**
+	 * Se si sta scegliendo chi curare: la pozione di salute fuori dalle locazioni o, in una locazione, quella di
+	 * LocazioneBase (pozione di salute, Resurrezione). Chi le cure non guariscono (Personaggio.isCurabile) non si propone.
+	 */
+	private boolean isSceltaDiUnaCura() {
+		return statoPrecedente == Stato.ATTESA_POZIONE_SALUTE || statoPrecedente == Stato.ATTESA_POZIONE_SALUTE_GRANDE
+				|| (locazioneCorrente != null && locazioneCorrente.isSceltaDiUnaCura());
+	}
+
 	private Comando scegliPersonaggio(boolean ancheSeMorto) {
+		boolean cura = isSceltaDiUnaCura();
 		if (gruppo.getNumeroPersonaggiVivi() == 1 && !ancheSeMorto) {
 			// L'unico in campo: non per forza il primo del gruppo, se gli altri sono morti o in panchina
 			Comando unico = Comando.ofPersonaggio(gruppo.getPersonaggi().indexOf(gruppo.getPersonaggiVivi().get(0)));
@@ -1930,10 +1943,17 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			List<Comando> comandiPossibili = new ArrayList<>();
 			int i = 0;
 			for (Personaggio personaggioCorrente : gruppo.getPersonaggi()) {
-				if (ancheSeMorto || !personaggioCorrente.isFuoriCombattimento()) {
+				if ((ancheSeMorto || !personaggioCorrente.isFuoriCombattimento()) && !(cura && !personaggioCorrente.isCurabile())) {
 					comandiPossibili.add(Comando.ofPersonaggio(i));
 				}
 				i++;
+			}
+			if (cura && comandiPossibili.size() == 1) {
+				// Dei candidati ne resta uno solo, perché gli altri non si possono curare: non c'è nulla da scegliere. Non vuol dire
+				// che gli altri siano morti, e quindi che il gioco sia perso: di solito è il capo, con accanto uno Scheletro della
+				// Mietitura vivo ma non curabile. Si sceglie lui senza chiedere, come quando c'è un solo personaggio in campo
+				BusEventi.pubblica(new InternoMessaggio("Automa::scegliPersonaggio(cura): automaticamente " + comandiPossibili.get(0)));
+				return comandiPossibili.get(0);
 			}
 			comandiPossibili.add(Comando.ANNULLA);
 			BusEventi.pubblica(new InternoMessaggio("Automa::scegliPersonaggio(ancheMorto=" + ancheSeMorto + "): imposto le azioni"));
@@ -1950,7 +1970,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		List<Integer> indiciMorti = new ArrayList<>();
 		int i = 0;
 		for (Personaggio personaggioCorrente : gruppo.getPersonaggi()) {
-			if (!personaggioCorrente.isVivo()) {
+			if (!personaggioCorrente.isVivo() && personaggioCorrente.isCurabile()) {
 				indiciMorti.add(i);
 			}
 			i++;
@@ -1976,7 +1996,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (gruppo.getIncantesimi(ClasseIncantesimo.RESURREZIONE) <= 0) {
 			return false;
 		}
-		boolean qualcunoMorto = gruppo.getPersonaggi().stream().anyMatch(p -> !p.isVivo());
+		boolean qualcunoMorto = gruppo.getPersonaggi().stream().anyMatch(p -> !p.isVivo() && p.isCurabile());
 		return qualcunoMorto && !trovaFormulantiResurrezione().isEmpty();
 	}
 

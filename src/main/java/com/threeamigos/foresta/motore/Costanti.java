@@ -198,6 +198,10 @@ public class Costanti {
     public static final int INCANTESIMO_FUOCO_COSTO_LANCIO = 3;
     public static final int INCANTESIMO_FUOCO_DANNI = 50;
 
+    public static final int INCANTESIMO_LUCE_DIVINA_COSTO_ACQUISTO = 15;
+    public static final int INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO = 10;
+    public static final int INCANTESIMO_LUCE_DIVINA_DANNI = 100;
+
     public static final int INCANTESIMO_MORTE_COSTO_ACQUISTO = 5;
     public static final int INCANTESIMO_MORTE_COSTO_LANCIO = 5;
     public static final int INCANTESIMO_MORTE_DANNI = 0;

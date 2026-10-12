@@ -50,7 +50,11 @@ public enum ClasseIncantesimo {
 	SILENZIO(TipoIncantesimo.MALEFICO, PortataIncantesimo.GRUPPO, TipoDanno.ARCANO,
 			"Silenzio", "incantesimo del Silenzio", "incantesimi del Silenzio",
 			Comando.SILENZIO,
-			"Sigilla la voce di un avversario, che non può più lanciare incantesimi finché dura il silenzio.");
+			"Sigilla la voce di un avversario, che non può più lanciare incantesimi finché dura il silenzio."),
+	LUCE_DIVINA(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.SACRO,
+			"Luce Divina", "incantesimo della Luce Divina", "incantesimi della Luce Divina",
+			Comando.LUCE_DIVINA,
+			"Invoca una luce sacra che brucia i non morti, e che non fa distinzioni: investe anche lo Scheletro che combatte al fianco di chi la invoca.");
 
 	private final TipoIncantesimo tipo;
 	private final PortataIncantesimo portata;

@@ -250,7 +250,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	public final void aggiungiPersonaggio(Personaggio personaggio) {
 		super.aggiungiPersonaggio(personaggio);
 		String nome = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		BusEventi.pubblica(new NotificaTestoFrase(nome + " è felice di poter far parte del gruppo."));
+		boolean volentieri = personaggio.getMotivoNelGruppo().isEntraVolentieri();
+		BusEventi.pubblica(new NotificaTestoFrase(nome + (volentieri ? " è felice di poter far parte del gruppo."
+				: " entra a far parte del gruppo.")));
 		md.addPersonaggioMD(personaggio.getModelloDati());
 		allineaIndiceCapo();
 	}
@@ -284,6 +286,20 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		md.setIndiceCapo(Math.max(0, personaggi.indexOf(capo)));
 	}
 
+	/**
+	 * Congeda chi è morto e non può essere risuscitato (vedi TipoMotivoNelGruppo.isLasciaSeMuore): lo Scheletro della
+	 * Mietitura che cade torna polvere, e nessun incantesimo di Resurrezione lo riporta indietro. Non lo si toglie
+	 * nell'istante in cui muore perché la morte può arrivare nel mezzo di un ciclo sui personaggi del gruppo (un
+	 * incantesimo di gruppo, per esempio): va chiamato fra un'azione e l'altra.
+	 */
+	public final void congedaChiNonRisorge() {
+		for (Personaggio p : new ArrayList<>(personaggi)) {
+			if (!p.isVivo() && p.getMotivoNelGruppo().isLasciaSeMuore()) {
+				rimuoviPersonaggio(p);
+			}
+		}
+	}
+
 	@Override
 	public final void rimuoviPersonaggio(Personaggio p) {
 		super.rimuoviPersonaggio(p);
@@ -292,8 +308,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		allineaIndiceCapo();
 		String nome = p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		if (p.getMotivoNelGruppo() == TipoMotivoNelGruppo.MIETITURA) {
-			// Non se ne va: è finito l'effetto della Mietitura che lo teneva in piedi
-			BusEventi.pubblica(new NotificaTestoFrase(nome + " torna alla polvere: l'effetto della Mietitura è finito."));
+			// Non se ne va: o è caduto, e non c'è un'altra morte da raccontare, o è finito l'effetto della Mietitura che lo teneva in piedi
+			BusEventi.pubblica(new NotificaTestoFrase(p.isVivo()
+					? nome + " torna alla polvere: l'effetto della Mietitura è finito."
+					: nome + " torna ad essere polvere."));
 		} else {
 			BusEventi.pubblica(new NotificaTestoFrase(nome + " lascia il gruppo."));
 		}

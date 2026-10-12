@@ -121,6 +121,13 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
     boolean isImmortale();
 	/**
+	 * Se il personaggio si può curare: false per un non morto entrato nel gruppo del giocatore (lo Scheletro della
+	 * Mietitura), che le cure non guariscono. Non deve mai essere un bersaglio possibile di pozioni di salute,
+	 * canto curativo e Resurrezione: né per le tattiche né per chi sceglie a mano. Un non morto avversario resta
+	 * un bersaglio come gli altri (un gruppo di soli non morti ha comunque un "più ferito").
+	 */
+    boolean isCurabile();
+	/**
 	 * Indica se il personaggio sia vivo
 	 */
     boolean isVivo();

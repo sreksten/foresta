@@ -41,12 +41,16 @@ public class CantoCurativo implements Canto {
 	}
 
 	/**
-	 * Il personaggio vivo con la quota di salute più bassa, se qualcuno è ferito (a parità, il primo del gruppo)
+	 * Il personaggio vivo con la quota di salute più bassa, se qualcuno è ferito (a parità, il primo del gruppo). Chi non
+	 * si può curare (un non morto nel gruppo) non conta
 	 */
 	public static Optional<Personaggio> piuFerito(Gruppo gruppo) {
 		Personaggio piuFerito = null;
 		double quotaMinima = 1.0d;
 		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
+			if (!personaggio.isCurabile()) {
+				continue;
+			}
 			double quota = (double) personaggio.getSalute() / personaggio.getSaluteMassima();
 			if (quota < quotaMinima) {
 				quotaMinima = quota;
@@ -67,7 +71,7 @@ public class CantoCurativo implements Canto {
 	@Override
 	public boolean cantaSu(Personaggio cantore, Personaggio scelto, Gruppo gruppo, Gruppo gruppoAvversario) {
 		Optional<Personaggio> ferito = Optional.ofNullable(scelto)
-				.filter(p -> p.isVivo() && p.getSalute() < p.getSaluteMassima());
+				.filter(p -> p.isVivo() && p.isCurabile() && p.getSalute() < p.getSaluteMassima());
 		String nomeCantore = cantore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		if (!ferito.isPresent()) {

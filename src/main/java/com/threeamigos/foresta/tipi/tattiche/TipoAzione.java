@@ -24,6 +24,7 @@ public enum TipoAzione {
 	VELENO("Veleno", PortataAzione.AVVERSARIO, ClasseIncantesimo.VELENO),
 	MORTE("Morte", PortataAzione.AVVERSARIO, ClasseIncantesimo.MORTE),
 	SILENZIO("Silenzio", PortataAzione.AVVERSARIO, ClasseIncantesimo.SILENZIO),
+	LUCE_DIVINA("Luce Divina", PortataAzione.AVVERSARIO, ClasseIncantesimo.LUCE_DIVINA),
 	/** Uno dei sette incantesimi elementali, scelto con un criterio (non la Morte, non il Silenzio) */
 	INCANTESIMO_DI_DANNO("Incantesimo di danno", PortataAzione.AVVERSARIO, null),
 	/**

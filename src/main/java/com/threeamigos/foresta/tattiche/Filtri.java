@@ -2,6 +2,7 @@ package com.threeamigos.foresta.tattiche;
 
 import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
+import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.incantesimi.CantoDelBardo;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.interfacce.Arma;
@@ -94,7 +95,7 @@ public final class Filtri {
 		}
 		TipoPersonaggio classe = candidato.getClasse();
 		if (DardoArcano.conosciutoDa(classe) || AlbaSacra.conosciutaDa(classe) || CantoDelBardo.conosciutoDa(classe)) {
-			return DardoArcano.puoLanciarlo(candidato) || AlbaSacra.puoLanciarlaInnata(candidato)
+			return DardoArcano.puoLanciarlo(candidato) || AlbaSacra.puoLanciarlaInnata(candidato) || LuceDivina.puoLanciarlaInnata(candidato)
 					|| !CantoDelBardo.cantiPossibili(candidato).isEmpty();
 		}
 		if (contesto.isMostro(candidato)) {

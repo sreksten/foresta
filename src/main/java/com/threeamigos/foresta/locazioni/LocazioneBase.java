@@ -165,6 +165,14 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	@Override
+	public boolean isSceltaDiUnaCura() {
+		return statoLocazione == StatoLocazione.CHI_BEVE_POZIONE_SALUTE
+				|| statoLocazione == StatoLocazione.CHI_BEVE_POZIONE_SALUTE_GRANDE
+				|| (statoLocazione == StatoLocazione.SU_CHI_FORMULA && incantesimo != null
+				&& incantesimo.getClasse() == ClasseIncantesimo.RESURREZIONE);
+	}
+
+	@Override
 	public LocazioneMD getModelloDati() {
 		return md;
 	}
@@ -574,7 +582,7 @@ public abstract class LocazioneBase implements Locazione {
 						for (int i = 0; i < l; i++) {
 							personaggio = gruppo.getPersonaggio(i);
 							Logger.log("tipo == Incantesimo.SINGOLO_QUALSIASI || p.isVivo() ? " + ((tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo())));
-							if (tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo()) {
+							if ((tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo()) && personaggio.isCurabile()) {
 								comandiPossibiliBersaglio.add(Comando.ofPersonaggio(i));
 							}
 						}
@@ -633,7 +641,10 @@ public abstract class LocazioneBase implements Locazione {
 						return Stato.GIOCO_PERSO;
 					}
 
-					gruppo.subIncantesimi(incantesimo.getClasse(), 1);
+					// Chi la conosce per natura (Sacerdote, Sacerdotessa) non consuma pergamene
+					if (!(incantesimo.getClasse() == ClasseIncantesimo.LUCE_DIVINA && LuceDivina.conosciutaDa(formulante.getClasse()))) {
+						gruppo.subIncantesimi(incantesimo.getClasse(), 1);
+					}
 
 					if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
 						setCompleta(true);
@@ -957,7 +968,7 @@ public abstract class LocazioneBase implements Locazione {
 		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo,
 		// oppure se un Mago o un Elfo vivo ha la MAGIA per il dardo arcano, o un Sacerdote per l'alba sacra
 		boolean incantesimoPossibile = gruppo.getPersonaggiVivi().stream()
-				.anyMatch(p -> DardoArcano.puoLanciarlo(p) || AlbaSacra.puoLanciarlaInnata(p)
+				.anyMatch(p -> DardoArcano.puoLanciarlo(p) || AlbaSacra.puoLanciarlaInnata(p) || LuceDivina.puoLanciarlaInnata(p)
 						|| !CantoDelBardo.cantiUtili(p, gruppo, gruppoAvversario).isEmpty());
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 			if (gruppo.getIncantesimi(classeIncantesimo) > 0 &&
@@ -1108,6 +1119,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * @return lo stato in cui passare se la partita o lo scontro sono finiti, altrimenti null
 	 */
 	private Stato dopoAzioneDelGiocatore(Personaggio chi) {
+		gruppo.congedaChiNonRisorge();
 		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {
 			return null;
 		}
@@ -1120,6 +1132,7 @@ public abstract class LocazioneBase implements Locazione {
 				continue;
 			}
 			agisceUnAvversario(avversario);
+			gruppo.congedaChiNonRisorge();
 			if (!gruppo.getCapo().isVivo()) {
 				return Stato.GIOCO_PERSO;
 			}
@@ -1348,6 +1361,7 @@ public abstract class LocazioneBase implements Locazione {
 			personaggio.riduciEffettiDiStato();
 			personaggio.riduciModificatori(UnitaDurataModificatore.TURNI);
 		}
+		gruppo.congedaChiNonRisorge();
 		if (!gruppo.getCapo().isVivo()) {
 			return Stato.GIOCO_PERSO;
 		}

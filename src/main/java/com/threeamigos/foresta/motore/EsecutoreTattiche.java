@@ -6,6 +6,7 @@ import com.threeamigos.foresta.eventi.interni.InternoDecisioneTattica;
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaAperturaFinestraCombattimento;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
+import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaCanti;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
@@ -221,7 +222,10 @@ public final class EsecutoreTattiche {
 		for (Personaggio colpito : colpiti) {
 			uccisioni.registra(attore, colpito);
 		}
-		consumaLaPergamena(gruppoDellAttore, classe);
+		// Chi la conosce per natura (Sacerdote, Sacerdotessa) non consuma pergamene
+		if (!(classe == ClasseIncantesimo.LUCE_DIVINA && LuceDivina.conosciutaDa(attore.getClasse()))) {
+			consumaLaPergamena(gruppoDellAttore, classe);
+		}
 	}
 
 	private static void consumaLaPergamena(Gruppo gruppoDellAttore, ClasseIncantesimo classe) {

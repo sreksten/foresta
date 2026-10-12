@@ -21,7 +21,7 @@ final class RosaAlleatiCaduti implements Rosa {
 	public List<Personaggio> candidati(ContestoTattico contesto) {
 		List<Personaggio> caduti = new ArrayList<>();
 		for (Personaggio alleato : contesto.getAlleati()) {
-			if (!alleato.isVivo() && !alleato.isInPanchina()) {
+			if (!alleato.isVivo() && !alleato.isInPanchina() && alleato.isCurabile()) {
 				caduti.add(alleato);
 			}
 		}

@@ -18,6 +18,14 @@ public interface Locazione {
 	TipoLocazione getTipoLocazione();
 
 	/**
+	 * Se il giocatore sta scegliendo chi curare (chi beve una pozione di salute, su chi formulare la Resurrezione): fra
+	 * i candidati non ci sono i personaggi che le cure non guariscono (vedi Personaggio.isCurabile).
+	 */
+	default boolean isSceltaDiUnaCura() {
+		return false;
+	}
+
+	/**
 	 * Il modello dati della casella su cui si trova questa locazione: vi vive
 	 * lo stato durevole, che sopravvive alla visita e al salvataggio.
 	 */

@@ -329,6 +329,7 @@ final class TestoTattica {
 			case FULMINE:
 			case GELO:
 			case VELENO:
+			case LUCE_DIVINA:
 				return "Lancia l'incantesimo se la pergamena è disponibile e ha la Magia sufficiente per formularlo. Non viene lanciato se il bersaglio è immune.";
 			case MORTE:
 				return "Il colpo di grazia: se va a segno su chi ha meno di un quarto della salute lo uccide, altrimenti si ritorce contro chi lo lancia. "

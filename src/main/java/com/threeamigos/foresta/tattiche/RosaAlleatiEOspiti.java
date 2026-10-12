@@ -22,6 +22,8 @@ final class RosaAlleatiEOspiti implements Rosa {
 		verificaLato(contesto);
 		List<Personaggio> candidati = new ArrayList<>(Rosa.inCampo(contesto.getAlleati()));
 		candidati.addAll(Rosa.inCampo(contesto.getOspitiVulnerabili()));
+		// Le cure non guariscono un non morto del gruppo: non è un candidato
+		candidati.removeIf(p -> !p.isCurabile());
 		return Collections.unmodifiableList(candidati);
 	}
 }

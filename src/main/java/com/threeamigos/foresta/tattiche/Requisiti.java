@@ -2,6 +2,7 @@ package com.threeamigos.foresta.tattiche;
 
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
+import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.incantesimi.CantoDelBardo;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.TipoCanto;
@@ -28,6 +29,11 @@ public final class Requisiti {
 	private Requisiti() {
 	}
 
+	private static boolean isUnaCura(TipoAzione tipo) {
+		return tipo == TipoAzione.CANTO_CURATIVO || tipo == TipoAzione.POZIONE_SALUTE
+				|| tipo == TipoAzione.POZIONE_SALUTE_GRANDE || tipo == TipoAzione.RESURREZIONE;
+	}
+
 	/**
 	 * @param bersaglio il bersaglio scelto; null per le azioni su un gruppo intero (si guarda il gruppo) e per il cambio d'arma
 	 * @return null se l'azione si può fare, altrimenti il motivo
@@ -45,6 +51,10 @@ public final class Requisiti {
 					&& stato.getTentativiFalliti(attore, bersaglio, tipo) >= Costanti.MAX_TENTATIVI_FALLITI_PER_AZIONE) {
 				return tipo + " è già fallita " + Costanti.MAX_TENTATIVI_FALLITI_PER_AZIONE + " volte contro " + bersaglio.getNome();
 			}
+		}
+		// Chi le cure non guariscono (un non morto nel gruppo del giocatore) non è un bersaglio possibile, mai
+		if (bersaglio != null && !bersaglio.isCurabile() && isUnaCura(tipo)) {
+			return nome(bersaglio) + " è un non morto: non si può curare";
 		}
 		switch (tipo) {
 			case ATTACCO_FISICO:
@@ -115,7 +125,7 @@ public final class Requisiti {
 	}
 
 	/**
-	 * Gli incantesimi di una classe precisa: ARIA, ACQUA, TERRA, FUOCO, FULMINE, GELO, VELENO, MORTE, SILENZIO
+	 * Gli incantesimi di una classe precisa: ARIA, ACQUA, TERRA, FUOCO, FULMINE, GELO, VELENO, MORTE, SILENZIO, LUCE_DIVINA
 	 */
 	private static String incantesimoSingolo(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
 		ClasseIncantesimo classe = azione.getTipo().getClasseIncantesimo();
@@ -176,6 +186,9 @@ public final class Requisiti {
 			return false;
 		}
 		if (contesto.getPergamene(classe) > 0) {
+			return true;
+		}
+		if (classe == ClasseIncantesimo.LUCE_DIVINA && LuceDivina.puoLanciarlaInnata(attore)) {
 			return true;
 		}
 		return contesto.isMostro(attore) && attore.isMagico() && attore.getRepertorioIncantesimi().contains(classe);

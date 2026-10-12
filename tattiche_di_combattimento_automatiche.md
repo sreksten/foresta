@@ -709,7 +709,7 @@ Lo coprono `RosaTest` e `ContestoTatticoTest`; `TipoRosa.valePer(attoreDelGiocat
 | `ALLEATI_CADUTI` | i compagni caduti (non in panchina) | solo le azioni che lo dichiarano (`RESURREZIONE`) |
 | `AVVERSARI` | i vivi e in campo dell'altro gruppo | tutti |
 | `OSPITI` | gli **ospiti vulnerabili** vivi del gruppo del giocatore (`getOspitiBersaglio`) | tutti: per i miei sono da proteggere, per i mostri bersagli |
-| `ALLEATI_E_OSPITI` | alleati poi ospiti | **solo i miei personaggi** |
+| `ALLEATI_E_OSPITI` | alleati poi ospiti (senza chi non si può curare: `Personaggio.isCurabile`, vedi sotto) | **solo i miei personaggi** |
 | `AVVERSARI_E_OSPITI` | avversari poi ospiti | **solo i mostri**: riproduce la scelta a caso di prima |
 
 Regole:
@@ -717,6 +717,8 @@ Regole:
 - Una rosa restituisce **solo chi è in grado di essere scelto** (vivo e in campo, il filtro F1 del §7.5 è qui dentro), tranne `ALLEATI_CADUTI`. Nell'ordine del gruppo, così "il primo" e le parità sono ripetibili; nelle
   unioni prima i personaggi, poi gli ospiti.
 - **Gli ospiti** non agiscono e non hanno una tattica: sono solo candidati. Solo quelli **vulnerabili** vivi entrano nelle rose; i filtri su classe e magia non li comprendono mai (§7.5, F1), quelli su salute e stati sì.
+- Il sacerdote ha una voce per la **Luce Divina** (`TipoAzione.LUCE_DIVINA`, innata, danno SACRO su più avversari) sui non morti avversari: `su AVVERSARI [CATEGORIA NON_MORTO] ordine MENO_SALUTE → LUCE_DIVINA`. `INCANTESIMO_DI_DANNO` non la sceglie (il sacro non è fra i sette elementali); gli altri la lanciano solo con una pergamena, con l'azione `LUCE_DIVINA`.
+- Un **non morto entrato nel gruppo del giocatore** (lo Scheletro della Mietitura) non si può curare (`Personaggio.isCurabile`): `ALLEATI_E_OSPITI` e `ALLEATI_CADUTI` non lo propongono e `Requisiti` rifiuta su di lui `CANTO_CURATIVO`, `POZIONE_SALUTE`, `POZIONE_SALUTE_GRANDE` e `RESURREZIONE` ("è un non morto: non si può curare"). Un non morto avversario resta un bersaglio come gli altri: un gruppo di soli non morti ha sempre un "più ferito".
 - Ogni azione dichiara **quali rose accetta** (un attacco: `AVVERSARI` o `AVVERSARI_E_OSPITI` per i mostri, `OSPITI`; una cura: `SE_STESSO`, `ALLEATI`, `OSPITI`, `ALLEATI_E_OSPITI`); un uso che non torna
   (un mio personaggio che attacca gli ospiti, un mostro con `ALLEATI_E_OSPITI`) si rifiuta alla lettura.
 - Ogni voce ha **una sola rosa**; l'unione di più insiemi è una rosa a sé.

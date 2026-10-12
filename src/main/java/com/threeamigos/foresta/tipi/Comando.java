@@ -52,6 +52,7 @@ public enum Comando {
 	RESURREZIONE("Lancia un incantesimo di Resurrezione"),
 	ALBA_SACRA("Lancia un incantesimo di Alba Sacra"),
 	SILENZIO("Lancia un incantesimo del Silenzio"),
+	LUCE_DIVINA("Lancia un incantesimo della Luce Divina"),
 	// L'incantesimo innato di Mago ed Elfo, che non consuma pergamene
 	DARDO_ARCANO("Lancia un Dardo Arcano"),
 	// I canti innati del Bardo e della Cantastorie, che non consumano pergamene

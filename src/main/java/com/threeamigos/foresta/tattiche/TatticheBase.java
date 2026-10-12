@@ -416,7 +416,7 @@ public final class TatticheBase {
 	}
 
 	/**
-	 * Il sostegno del gruppo: cura chi sta male (anche gli ospiti), risuscita i caduti, toglie gli stati con l'Alba sacra, e quando può colpisce il più ferito.
+	 * Il sostegno del gruppo: cura chi sta male (anche gli ospiti), risuscita i caduti, toglie gli stati con l'Alba sacra, brucia i non morti con la Luce divina, e quando può colpisce il più ferito.
 	 */
 	private static TatticaMD sacerdote() {
 		return tattica(
@@ -424,6 +424,8 @@ public final class TatticheBase {
 				voce("Resurrezione dei caduti", su(TipoRosa.ALLEATI_CADUTI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.RESURREZIONE)),
 				voce("Alba sacra", su(TipoRosa.ALLEATI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.ALBA_SACRA)),
 				pozioniDiMagia(20),
+				voce("Luce divina sui non morti", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE,
+						FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.NON_MORTO)), condizioni(null), AzioneMD.di(TipoAzione.LUCE_DIVINA)),
 				voce("Colpisce il più ferito", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), danno(CriterioIncantesimo.PIU_ADATTO, true), attacco()));
 	}
 

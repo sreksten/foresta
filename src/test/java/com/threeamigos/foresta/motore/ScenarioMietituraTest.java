@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -15,6 +16,8 @@ import com.threeamigos.foresta.tipi.TipoTrofeo;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -52,6 +55,57 @@ class ScenarioMietituraTest {
             assertEquals(TipoPersonaggio.SCHELETRO, scheletro.getClasse());
             assertEquals(TipoMotivoNelGruppo.MIETITURA, scheletro.getMotivoNelGruppo());
             assertTrue(scheletro.isATempo());
+        }
+    }
+
+    @Test
+    void loScheletroRisvegliatoEntraNelGruppoSenzaEssereFelice() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(257)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
+            partita.eventi().ascolta(NotificaTestoFrase.class);
+            Personaggio goblin = minionQuasiMorto(partita);
+            goblin.applicaRisultatoCombattimento(mietitura(partita.gruppo().getCapo(), goblin));
+
+            List<String> frasi = partita.eventi().tutti(NotificaTestoFrase.class).stream()
+                    .map(NotificaTestoFrase::getMessaggio).collect(Collectors.toList());
+            assertTrue(frasi.contains("Lo Scheletro entra a far parte del gruppo."), frasi.toString());
+            assertTrue(frasi.stream().noneMatch(f -> f.contains("felice")), frasi.toString());
+        }
+    }
+
+    @Test
+    void ilCompagnoChePermaneNelGruppoESempreFelice() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(258)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
+            partita.eventi().ascolta(NotificaTestoFrase.class);
+            partita.gruppo().aggiungiPersonaggio(new Guerriero("Reginald", 1));
+
+            assertTrue(partita.eventi().tutti(NotificaTestoFrase.class).stream()
+                    .anyMatch(e -> e.getMessaggio().equals("Reginald è felice di poter far parte del gruppo.")));
+        }
+    }
+
+    @Test
+    void loScheletroCheCadeTornaPolvereELasciaIlGruppo() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(259)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
+            Personaggio goblin = minionQuasiMorto(partita);
+            goblin.applicaRisultatoCombattimento(mietitura(partita.gruppo().getCapo(), goblin));
+            Personaggio scheletro = partita.gruppo().getPersonaggio(1);
+            partita.eventi().ascolta(NotificaTestoFrase.class);
+
+            scheletro.subSalute(scheletro.getSalute() + 100, goblin, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+            assertFalse(scheletro.isVivo());
+            // Non lo si toglie nell'istante in cui cade: lo si congeda fra un'azione e l'altra
+            assertEquals(2, partita.gruppo().getNumeroPersonaggi());
+            partita.gruppo().congedaChiNonRisorge();
+
+            assertEquals(1, partita.gruppo().getNumeroPersonaggi());
+            assertFalse(partita.gruppo().contiene(scheletro));
+            List<String> frasi = partita.eventi().tutti(NotificaTestoFrase.class).stream()
+                    .map(NotificaTestoFrase::getMessaggio).collect(Collectors.toList());
+            assertTrue(frasi.contains("Lo Scheletro torna ad essere polvere."), frasi.toString());
+            assertTrue(frasi.stream().noneMatch(f -> f.contains("ferite riportate")), frasi.toString());
         }
     }
 

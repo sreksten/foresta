@@ -88,6 +88,7 @@ public enum ClasseIcona {
 	MORTE(Comando.MORTE, "icone/Morte.gif", Sfondo.VERDE),
 	RESURREZIONE(Comando.RESURREZIONE, "icone/Resurrezione.gif", Sfondo.VERDE),
 	ALBA_SACRA(Comando.ALBA_SACRA, "icone/AlbaSacra.gif", Sfondo.VERDE),
+	LUCE_DIVINA(Comando.LUCE_DIVINA, "icone/LuceDivina.gif", Sfondo.VERDE),
 	SILENZIO(Comando.SILENZIO, "icone/Silenzio.gif", Sfondo.VERDE),
 
 	/* Direzione verso la quale muoversi a fine locazione */
