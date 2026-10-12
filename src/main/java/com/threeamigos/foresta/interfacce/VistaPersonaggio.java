@@ -81,6 +81,11 @@ public interface VistaPersonaggio {
 	 */
 	int getEsperienzaPerProssimoLivello();
 
+	/**
+	 * Se il personaggio è al livello massimo: oltre non c'è un livello successivo da raggiungere
+	 */
+	boolean isAlLivelloMassimo();
+
 	int getPuntiEsperienza();
 
 	int getPuntiAbilitaDisponibili();

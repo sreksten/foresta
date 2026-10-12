@@ -6,7 +6,6 @@ import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
 import com.threeamigos.foresta.interfacce.*;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
-import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 
@@ -127,7 +126,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         int esperienza = personaggio.getEsperienza();
         disegnaTestoEValore(TipoAttributo.PUNTI_ESPERIENZA.getNome(), String.valueOf(esperienza), graphics, y, coloreTestata);
         y += fontHeight + SPACING;
-        if (personaggio.getLivello() < Costanti.MASSIMO_LIVELLO) {
+        if (!personaggio.isAlLivelloMassimo()) {
             int perProssimoLivello = personaggio.getEsperienzaPerProssimoLivello();
             disegnaTestoEValore("Su", String.valueOf(perProssimoLivello), graphics, y, coloreTestata);
         } else {

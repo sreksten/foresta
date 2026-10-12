@@ -83,18 +83,16 @@ public class RegistroPersonaggi {
 
 	/**
 	 * Il compagno che entra nel gruppo. Quelli del registro nascono al livello 1 insieme al mondo: chi entra arriva
-	 * al livello del mondo meno un numero a caso fra 0 e 2 (mai sotto 1), con caratteristiche tirate come per
-	 * chiunque nasca a quel livello e il suo nome, e con l'equipaggiamento di base della sua classe.
+	 * al livello del mondo meno un numero a caso fra 0 e 2 (mai sotto 1), con l'esperienza di quel livello e i punti
+	 * abilità da spendere (vedi Personaggio.impostaLivelloDopoReclutamento), e con l'equipaggiamento di base della sua
+	 * classe. È lo stesso personaggio del registro, non uno nuovo: resta il suo modello dati, e con lui il nome e il
+	 * fatto di essere un personaggio giocante che accumula esperienza.
 	 */
 	public static Personaggio preparaCompagno(Personaggio compagno) {
-		int livello = EquipaggiamentoIniziale.livelloCasualeDalMondo();
-		Personaggio pronto = compagno;
-		if (livello > compagno.getLivello()) {
-			pronto = FabbricaPersonaggi.crea(compagno.getClasse(), livello);
-			pronto.getModelloDati().setNome(compagno.getNomeProprio().orElse(null));
-		}
-		EquipaggiamentoIniziale.equipaggia(pronto);
-		return pronto;
+		// Prima il livello, poi la dotazione: i pezzi non possono superare il livello di chi li porta
+		compagno.impostaLivelloDopoReclutamento(EquipaggiamentoIniziale.livelloCasualeDalMondo());
+		EquipaggiamentoIniziale.equipaggia(compagno);
+		return compagno;
 	}
 
 	public static void addPersonaggioInLocazione(Personaggio personaggio, CoordinateMD coordinate) {

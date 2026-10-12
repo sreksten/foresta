@@ -850,6 +850,11 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public boolean isAlLivelloMassimo() {
+		return md.getLivello() >= Costanti.MASSIMO_LIVELLO;
+	}
+
+	@Override
 	public int getEsperienzaPerProssimoLivello() {
 		return GestoreProgressione.getXpPerProssimoLivello(md.getLivello());
 	}
@@ -882,6 +887,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		// 1. Ricalcola il nuovo budget di punti primari (con la tolleranza del 5%)
 		// 2. Aggiorna le statistiche nel modello md.setForza(...), ecc.
 		// 3. Ricalcola i valori derivati come Carico, Critico, Velocità.
+	}
+
+	@Override
+	public void impostaLivelloDopoReclutamento(int livello) {
+		int livelloAttuale = md.getLivello();
+		int nuovoLivello = Math.min(livello, Costanti.MASSIMO_LIVELLO);
+		if (nuovoLivello <= livelloAttuale) {
+			return;
+		}
+		md.setLivello(nuovoLivello);
+		md.setEsperienza(Math.max(md.getEsperienza(), GestoreProgressione.getXpNecessariPerLivello(nuovoLivello)));
+		md.setPuntiAbilitaDisponibili(md.getPuntiAbilitaDisponibili() + nuovoLivello - livelloAttuale);
 	}
 
 	@Override

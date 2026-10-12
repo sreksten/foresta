@@ -361,6 +361,24 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	void addPuntiEsperienza(int puntiEsperienza);
 
 	/**
+	 * Porta al livello dato un personaggio che entra nel gruppo, di norma un compagno reclutato (vedi
+	 * RegistroPersonaggi.preparaCompagno): imposta il livello, l'esperienza minima di quel livello e aggiunge ai punti
+	 * abilità da spendere uno per ogni livello guadagnato, come se li avesse conquistati sul campo.
+	 * <p>
+	 * Esiste perché addPuntiEsperienza non è adatta: a ogni salita di livello pubblica NotificaAumentoLivelloPersonaggio,
+	 * da cui la UI ricava il "LEVEL UP!" a tutto schermo, il messaggio nel notiziario e lo sprite nel riquadro del
+	 * gruppo. Un compagno che arriva già al livello 4 non ha appena fatto un'impresa, e quegli annunci al momento
+	 * del reclutamento sarebbero fuori luogo. Questo metodo quindi non pubblica nessuna notifica di livello: chi
+	 * lo chiama lo fa prima di aggiungere il personaggio al gruppo.
+	 * <p>
+	 * Non abbassa mai il livello: se il personaggio è già a quel livello o oltre, non fa nulla. L'esperienza
+	 * non scende sotto quella già accumulata.
+	 *
+	 * @param livello il livello da raggiungere
+	 */
+	void impostaLivelloDopoReclutamento(int livello);
+
+	/**
 	 * Restituisce il numero di punti abilità attribuibili
 	 */
 	int getPuntiAbilitaDisponibili();
