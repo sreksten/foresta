@@ -849,6 +849,11 @@ public abstract class PersonaggioBase implements Personaggio {
 		return md.getEsperienza();
 	}
 
+	@Override
+	public int getEsperienzaPerProssimoLivello() {
+		return GestoreProgressione.getXpPerProssimoLivello(md.getLivello());
+	}
+
 	public void addPuntiEsperienza(int esperienza) {
 		if (isPNG()) {
 			return;

@@ -46,9 +46,8 @@ public class GestoreProgressione {
         // Invertiamo la formula quadratica usando la radice quadrata
         int livelloCalcolato = (int) Math.floor(Math.sqrt((double) xpTotali / COSTANTE_XP)) + 1;
 
-        // Mettiamo un tetto massimo (CAP) per evitare che i livelli scalino all'infinito
-        int capMassimoLivello = 50;
-        return Math.min(livelloCalcolato, capMassimoLivello);
+        // Mettiamo un tetto massimo per evitare che i livelli scalino all'infinito
+        return Math.min(livelloCalcolato, Costanti.MASSIMO_LIVELLO);
     }
 
     /**

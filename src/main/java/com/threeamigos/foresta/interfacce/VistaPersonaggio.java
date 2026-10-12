@@ -71,6 +71,16 @@ public interface VistaPersonaggio {
 	 */
 	int getOrdinale();
 
+	/**
+	 * I punti esperienza che il personaggio ha accumulato (non quelli che darebbe se fosse sconfitto: {@link #getPuntiEsperienza()})
+	 */
+	int getEsperienza();
+
+	/**
+	 * I punti esperienza totali con cui il personaggio arriva al livello successivo
+	 */
+	int getEsperienzaPerProssimoLivello();
+
 	int getPuntiEsperienza();
 
 	int getPuntiAbilitaDisponibili();

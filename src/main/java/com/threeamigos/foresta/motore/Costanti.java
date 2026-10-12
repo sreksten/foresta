@@ -235,6 +235,11 @@ public class Costanti {
      */
     public static final double ASTUZIA_PER_LIVELLO = 0.075d;
 
+    /**
+     * Il livello massimo di un personaggio e del mondo: oltre, i punti esperienza non fanno più salire di livello (vedi GestoreProgressione)
+     */
+    public static final int MASSIMO_LIVELLO = 50;
+
     public static final int POZIONI_SALUTE_INIZIALI = 2;
     // Con cosa comincia una partita: le monete bastano a un'arma nuova per tutti dopo i primi pasti (vedi economia.md)
     public static final int MONETE_INIZIALI = 150;

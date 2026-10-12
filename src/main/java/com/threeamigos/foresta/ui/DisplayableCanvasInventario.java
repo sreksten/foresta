@@ -4,12 +4,9 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpesaPuntoAbilita;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
-import com.threeamigos.foresta.interfacce.ModificatoreAttivo;
-import com.threeamigos.foresta.interfacce.VistaArtefatto;
-import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.interfacce.VistaScambio;
+import com.threeamigos.foresta.interfacce.*;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 
@@ -126,16 +123,25 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         // Livello, XP, punti disponibili
         disegnaAttributoEValore(TipoAttributo.LIVELLO, personaggio.getLivello(), graphics, y, coloreTestata);
         y += fontHeight + SPACING;
-        disegnaAttributoEValore(TipoAttributo.PUNTI_ESPERIENZA, personaggio.getPuntiEsperienza(), graphics, y, coloreTestata);
+        // L'esperienza accumulata sul totale che serve per il livello dopo, e quanto ne manca
+        int esperienza = personaggio.getEsperienza();
+        disegnaTestoEValore(TipoAttributo.PUNTI_ESPERIENZA.getNome(), String.valueOf(esperienza), graphics, y, coloreTestata);
+        y += fontHeight + SPACING;
+        if (personaggio.getLivello() < Costanti.MASSIMO_LIVELLO) {
+            int perProssimoLivello = personaggio.getEsperienzaPerProssimoLivello();
+            disegnaTestoEValore("Su", String.valueOf(perProssimoLivello), graphics, y, coloreTestata);
+        } else {
+            disegnaTestoEValore("Livello massimo", "", graphics, y, coloreTestata);
+        }
         y += fontHeight + SPACING;
         // In verde se ci sono punti da spendere, perché si notino
         disegnaAttributoEValore(TipoAttributo.PUNTI_ABILITA, personaggio.getPuntiAbilitaDisponibili(), graphics, y,
                 personaggio.getPuntiAbilitaDisponibili() > 0 ? DoomdarkColorModel.Color.GREEN : coloreTestata);
-        y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+        y += fontHeight;
 
         BufferedImage separatore = ImageCache.separatore;
         graphics.drawImage(separatore, (width - separatore.getWidth()) / 2, y, null);
-        y += separatore.getHeight() + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+        y += separatore.getHeight();
 
         // Attributi personaggio
         yAttributi = y;
@@ -270,6 +276,13 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         }
         int yInterno = y - yAttributi + offsetYZonaCentrale;
         return costruisciComponenteScorrevoleAttributi(p, null).riferimentoTitoloAllaQuota(yInterno);
+    }
+
+    private void disegnaTestoEValore(String etichetta, String valore, Graphics2D graphics, int y, DoomdarkColorModel.Color colore) {
+        Image i = ImageCache.get(etichetta, colore);
+        graphics.drawImage(i, xMinimaZonaCentrale, y, null);
+        i = ImageCache.get(valore, colore);
+        graphics.drawImage(i, xMassimaZonaCentrale - i.getWidth(null), y, null);
     }
 
     private void disegnaAttributoEValore(TipoAttributo attributo, int valore, Graphics2D graphics, int y, DoomdarkColorModel.Color colore) {
