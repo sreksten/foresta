@@ -304,7 +304,7 @@ class DisplayableCanvasBarraIcone implements Finestra {
 		for (int i = 0; i < iconeVisibili.size(); i++) {
 			Rectangle r = rettangoloDisegnato(i);
 			if (r.contains(mouseX, mouseY)) {
-				String descrizione = iconeVisibili.get(i).comando.getDescrizione();
+				String descrizione = descrizioneAiuto(iconeVisibili.get(i).comando);
 				if (descrizione != null) {
 					Image testo = Cartiglio.testo(descrizione);
 					Point posizione = posizioneCartiglio(orientamento, new Rectangle(offsetX + r.x, offsetY + r.y, r.width, r.height),
@@ -314,6 +314,19 @@ class DisplayableCanvasBarraIcone implements Finestra {
 				return;
 			}
 		}
+	}
+
+	/**
+	 * Il testo del cartiglio: la descrizione del comando, tranne per l'icona di un personaggio, che porta il suo nome
+	 */
+	private String descrizioneAiuto(Comando comando) {
+		if (comando.isPersonaggio()) {
+			VistaPersonaggio personaggio = vistaPartita.getGruppoGiocatore().getPersonaggio(comando.ordinal() - Comando.PERSONAGGIO_1.ordinal());
+			if (personaggio != null && personaggio.getNomeProprio().isPresent()) {
+				return personaggio.getNomeProprio().get();
+			}
+		}
+		return comando.getDescrizione();
 	}
 
 	/**
