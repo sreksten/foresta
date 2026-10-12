@@ -48,6 +48,10 @@ final class BozzaTattica {
 		final List<PredicatoMD> condizioni = new ArrayList<>();
 		final List<AzioneMD> azioni = new ArrayList<>();
 		boolean attiva = true;
+		/** Il nome dato dal giocatore, o null: la schermata mostra allora "Tattica" e il numero della voce */
+		String nome;
+		/** La voce è ripiegata nella schermata (solo la riga del nome): non si salva */
+		boolean chiusa;
 
 		Voce(TipoRosa rosa, OrdinamentoMD ordinamento) {
 			this.rosa = rosa;
@@ -82,6 +86,8 @@ final class BozzaTattica {
 			}
 			voce.azioni.addAll(voceMD.getAzioni());
 			voce.attiva = voceMD.isAttiva();
+			// Una voce senza nome (una tattica scritta dal codice, o di prima) riceve subito quello predefinito: da qui il nome è suo e si salva
+			voce.nome = voceMD.getNome() != null ? voceMD.getNome() : nomePredefinito(bozza.voci.size());
 			bozza.voci.add(voce);
 		}
 		return bozza;
@@ -142,7 +148,7 @@ final class BozzaTattica {
 		for (Voce voce : voci) {
 			if (!voce.azioni.isEmpty()) {
 				SelettoreMD selettore = new SelettoreMD(voce.rosa, voce.filtri, voce.ordinamento);
-				costruite.add(new VoceMD(selettore, voce.condizioni, voce.azioni, voce.attiva));
+				costruite.add(new VoceMD(selettore, voce.condizioni, voce.azioni, voce.attiva, voce.nome));
 			}
 		}
 		return new TatticaMD(costruite);
@@ -152,7 +158,7 @@ final class BozzaTattica {
 	 * La voce come dato (deve avere almeno un'azione), per spiegarla
 	 */
 	VoceMD toVoceMD(Voce voce) {
-		return new VoceMD(new SelettoreMD(voce.rosa, voce.filtri, voce.ordinamento), voce.condizioni, voce.azioni, voce.attiva);
+		return new VoceMD(new SelettoreMD(voce.rosa, voce.filtri, voce.ordinamento), voce.condizioni, voce.azioni, voce.attiva, voce.nome);
 	}
 
 	/**
@@ -179,11 +185,19 @@ final class BozzaTattica {
 	// ------------------------------------------------------------------ le voci
 
 	/**
+	 * Il nome di una voce che non ne ha uno suo: "Tattica" e il suo numero (da 1)
+	 */
+	static String nomePredefinito(int indice) {
+		return "Tattica " + (indice + 1);
+	}
+
+	/**
 	 * Una voce nuova in fondo (prima dell'attacco di riserva), completamente vuota: né rosa né azioni; la rosa e l'ordinamento si scelgono, o arrivano da
 	 * soli con la prima azione. Finché non ha un'azione la bozza non si può confermare.
 	 */
 	Voce aggiungiVoce() {
 		Voce voce = new Voce(null, null);
+		voce.nome = nomePredefinito(voci.size());
 		voci.add(voce);
 		return voce;
 	}

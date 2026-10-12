@@ -830,6 +830,13 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	/**
+	 * Chi sa chiedere un testo al giocatore per conto della UI (il Prompt), per la schermata delle tattiche che rinomina le voci
+	 */
+	public void setRichiestaTesto(java.util.function.BiConsumer<String, java.util.function.Consumer<String>> richiestaTesto) {
+		tattiche.setRichiestaTesto(richiestaTesto);
+	}
+
+	/**
 	 * La schermata delle tattiche, aperta dall'inventario; arriva di nuovo quando cambia il personaggio scelto o l'ordine del gruppo.
 	 */
 	public void tattiche(VistaPersonaggio personaggio, TatticaMD tattica, TatticaMD tatticaPredefinita,

@@ -130,6 +130,69 @@ class DisplayableCanvasTatticheTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
+    void ilNomeRipiegaLaVoceEIlDoppioClickLaRinomina() throws Exception {
+        DisplayableCanvasTattiche schermata = schermata(personaggio("uno", "Arsenio", TipoPersonaggio.GUERRIERO), TatticaMD.VUOTA);
+        String[] richiesto = new String[1];
+        java.util.function.Consumer<String>[] conferma = new java.util.function.Consumer[1];
+        schermata.setRichiestaTesto((predefinito, alla) -> {
+            richiesto[0] = predefinito;
+            conferma[0] = alla;
+        });
+        disegna(schermata);
+        schermata.attivaPezzo("Nuova voce");
+        // Il nome predefinito è "Tattica" e il numero
+        assertTrue(schermata.attivaPezzo("Tattica 1"));
+        assertTrue(schermata.getBozza().getVoci().get(0).chiusa);
+        assertNull(richiesto[0]);
+        // Il secondo click ravvicinato annulla il primo e chiede il nome, già compilato
+        assertTrue(schermata.attivaPezzo("Tattica 1"));
+        assertFalse(schermata.getBozza().getVoci().get(0).chiusa);
+        assertEquals("Tattica 1", richiesto[0]);
+        conferma[0].accept("Cura i feriti");
+        assertEquals("Cura i feriti", schermata.getBozza().getVoci().get(0).nome);
+        // Un nome vuoto torna a quello predefinito
+        conferma[0].accept("   ");
+        assertEquals("Tattica 1", schermata.getBozza().getVoci().get(0).nome);
+    }
+
+    @Test
+    void ilNomeNonSiSovrapponeAlleIconeDellaVoce() throws Exception {
+        String[] nomi = {null, "Corto", "Un nome lungo lungo lungo lungo lungo lungo lungo lungo lungo lungo lungo lungo",
+                "Parolaunicamoltomoltomoltomoltomoltomoltomoltomoltomoltolunga", "Una Parolaunicamoltomoltomoltomoltomoltomoltomoltomoltolunga"};
+        for (String nome : nomi) {
+            DisplayableCanvasTattiche schermata = schermata(personaggio("uno", "Arsenio", TipoPersonaggio.GUERRIERO), TatticaMD.VUOTA);
+            disegna(schermata);
+            schermata.attivaPezzo("Nuova voce");
+            schermata.attivaPezzo("Nuova voce");
+            schermata.getBozza().getVoci().get(1).nome = nome;
+            java.lang.reflect.Method costruisci = DisplayableCanvasTattiche.class.getDeclaredMethod("costruisciRighe");
+            costruisci.setAccessible(true);
+            for (Object riga : (java.util.List<?>) costruisci.invoke(schermata)) {
+                java.lang.reflect.Field fPezzi = riga.getClass().getDeclaredField("pezzi");
+                fPezzi.setAccessible(true);
+                java.util.List<?> pezzi = (java.util.List<?>) fPezzi.get(riga);
+                for (Object a : pezzi) {
+                    for (Object b : pezzi) {
+                        if (a == b || campo(a, "linea") != campo(b, "linea")) {
+                            continue;
+                        }
+                        int xa = campo(a, "x"), xb = campo(b, "x");
+                        assertTrue(xa + campo(a, "larghezza") <= xb || xb + campo(b, "larghezza") <= xa,
+                                "pezzi sovrapposti per il nome " + nome + ": " + xa + "+" + campo(a, "larghezza") + " e " + xb + "+" + campo(b, "larghezza"));
+                    }
+                }
+            }
+        }
+    }
+
+    private static int campo(Object token, String nome) throws Exception {
+        java.lang.reflect.Field f = token.getClass().getDeclaredField(nome);
+        f.setAccessible(true);
+        return f.getInt(token);
+    }
+
+    @Test
     void siModificaLaBozzaEIlMenuSiApre() throws Exception {
         DisplayableCanvasTattiche schermata = schermata(personaggio("uno", "Arsenio", TipoPersonaggio.GUERRIERO), TatticaMD.VUOTA);
         disegna(schermata);

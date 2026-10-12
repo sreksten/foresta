@@ -13,6 +13,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.function.Consumer;
 
 public class Prompt extends JPanel implements ActionListener {
 
@@ -29,13 +30,16 @@ public class Prompt extends JPanel implements ActionListener {
 	// finestra già aperta (a fine logo, vedi ForestaUI), comparirebbe anche con il Prompt nascosto e senza cornice
 	private final JTextField tf;
 
+	// Chi ha chiesto il testo per sé (la UI, senza passare dal motore): se c'è, l'invio lo riceve lui invece del bus
+	private Consumer<String> alInvio;
+
 	public String getText() {
 		return Serializzabile.senzaPipe(tf.getText());
 	}
 
 	public Prompt() {
 		super();
-		BufferedImage cornice = ImageCache.cornicePiccola;
+		BufferedImage cornice = ImageCache.corniceCombattimento;
 		setSize(new Dimension(cornice.getWidth(), cornice.getHeight()));
 		setLayout(null);
 		tf = new JTextField();
@@ -46,6 +50,14 @@ public class Prompt extends JPanel implements ActionListener {
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyChar() == '|') {
 					e.consume();
+				}
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// Esc rinuncia, ma solo per un testo chiesto dalla UI: gli altri il motore li aspetta
+				if (e.getKeyCode() == KeyEvent.VK_ESCAPE && alInvio != null) {
+					setVisible(false);
 				}
 			}
 		});
@@ -61,6 +73,7 @@ public class Prompt extends JPanel implements ActionListener {
 
 	@Override
 	public void setVisible(boolean visible) {
+		alInvio = null;
 		if (visible) {
 			tf.setText("");
 		}
@@ -81,10 +94,23 @@ public class Prompt extends JPanel implements ActionListener {
 	}
 
 	/**
+	 * Come {@link #mostra(String)}, ma l'invio non va al motore: il testo lo riceve <code>alInvio</code> (con Esc non lo riceve nessuno).
+	 */
+	public void mostra(String testoPredefinito, Consumer<String> alInvio) {
+		mostra(testoPredefinito);
+		this.alInvio = alInvio;
+	}
+
+	/**
 	 * ActionListener interface
 	 */
 	public void actionPerformed(ActionEvent e) {
+		Consumer<String> richiedente = alInvio;
 		setVisible(false);
+		if (richiedente != null) {
+			richiedente.accept(getText());
+			return;
+		}
 		// Il testo incollato può ancora contenere un "|"
 		BusEventi.pubblica(new ComandoInvioTesto(getText()));
 	}
@@ -92,6 +118,6 @@ public class Prompt extends JPanel implements ActionListener {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(ImageCache.cornicePiccola, 0, 0, null);
+		g.drawImage(ImageCache.corniceCombattimento, 0, 0, null);
 	}
 }

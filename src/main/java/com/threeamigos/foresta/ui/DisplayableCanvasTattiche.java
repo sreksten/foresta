@@ -156,9 +156,45 @@ class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	private boolean puoSpostareASinistra;
 	private boolean puoSpostareADestra;
 
+	// Per rinominare una voce: chi chiede un testo al giocatore (testo predefinito, e chi riceve quello confermato)
+	private java.util.function.BiConsumer<String, Consumer<String>> richiestaTesto;
+	// Il nome di una voce si clicca per ripiegarla; due click ravvicinati sullo stesso nome la rinominano
+	private static final long INTERVALLO_DOPPIO_CLICK_MS = 400;
+	private BozzaTattica.Voce ultimaVoceCliccata;
+	private long ultimoClickSulNome;
+
 	DisplayableCanvasTattiche(int width, int height, VistaPartita vistaPartita) {
 		super(width, height, vistaPartita);
 		altezzaRiga = Math.max(fontRiga.getHeight(), 12) + 2 * MARGINE_RIGA;
+	}
+
+	void setRichiestaTesto(java.util.function.BiConsumer<String, Consumer<String>> richiestaTesto) {
+		this.richiestaTesto = richiestaTesto;
+	}
+
+	private static String nomeDellaVoce(BozzaTattica.Voce voce, int indice) {
+		return voce.nome != null ? voce.nome : BozzaTattica.nomePredefinito(indice);
+	}
+
+	/**
+	 * Un click sul nome ripiega o riapre la voce; il secondo click ravvicinato annulla il primo e chiede il nuovo nome.
+	 */
+	private void clickSulNome(BozzaTattica.Voce voce, int indice) {
+		long ora = System.currentTimeMillis();
+		boolean doppio = voce == ultimaVoceCliccata && ora - ultimoClickSulNome <= INTERVALLO_DOPPIO_CLICK_MS;
+		voce.chiusa = !voce.chiusa;
+		if (!doppio) {
+			ultimaVoceCliccata = voce;
+			ultimoClickSulNome = ora;
+			return;
+		}
+		ultimaVoceCliccata = null;
+		if (richiestaTesto != null) {
+			richiestaTesto.accept(nomeDellaVoce(voce, indice), testo -> {
+				String nuovo = testo.trim();
+				voce.nome = nuovo.isEmpty() ? BozzaTattica.nomePredefinito(indice) : nuovo;
+			});
+		}
 	}
 
 	/**
@@ -669,6 +705,19 @@ class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		riga.pezzi.add(new Token((i + 1) + ".", null, coloreVoce, a -> voce.attiva = !voce.attiva,
 				voce.attiva ? "Click: disattiva la voce (viene saltata)" : "Click: riattiva la voce", false, true)
 				.spiega("Voce " + (i + 1), "Le voci si valutano dall'alto in basso: la prima che si può eseguire vince. Il numero è verde se la voce è attiva, rosso se è disattivata e viene saltata: click per cambiare."));
+		riga.pezzi.add(new Token(nomeDellaVoce(voce, i), null, DoomdarkColorModel.Color.WHITE, a -> clickSulNome(voce, i),
+				voce.chiusa ? "Click: apre la tattica. Doppio click: la rinomina" : "Click: ripiega la tattica. Doppio click: la rinomina", false, true)
+				.spiega("Nome della tattica", "Click sul nome per ripiegare la tattica e risparmiare posto, o aprirla di nuovo. Doppio click per cambiarne il nome."));
+		riga.pezzi.add(icona(ICONA_ELIMINA, () -> bozza.rimuoviVoce(i), "Toglie la voce", true));
+		riga.pezzi.add(icona(ICONA_GIU, () -> bozza.spostaVoce(i, 1), "Sposta la voce in basso", i < voci.size() - 1));
+		riga.pezzi.add(icona(ICONA_SU, () -> bozza.spostaVoce(i, -1), "Sposta la voce in alto", i > 0));
+		righe.add(riga);
+		if (voce.chiusa) {
+			return;
+		}
+
+		// Il corpo, sotto il nome: su chi agisce la voce e come sceglie
+		riga = new Riga(1, i);
 		riga.pezzi.add(testo("su").spiega("Su chi", "La rosa dei candidati e come se ne sceglie uno: prima la rosa, poi i filtri la restringono, infine l'ordinamento ne sceglie uno."));
 		List<TipoRosa> rose = BozzaTattica.roseAmmesse(voce);
 		if (voce.rosa == null || rose.size() != 1) {
@@ -696,9 +745,6 @@ class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 						"Il tipo di danno"));
 			}
 		}
-		riga.pezzi.add(icona(ICONA_ELIMINA, () -> bozza.rimuoviVoce(i), "Toglie la voce", true));
-		riga.pezzi.add(icona(ICONA_GIU, () -> bozza.spostaVoce(i, 1), "Sposta la voce in basso", i < voci.size() - 1));
-		riga.pezzi.add(icona(ICONA_SU, () -> bozza.spostaVoce(i, -1), "Sposta la voce in alto", i > 0));
 		righe.add(riga);
 
 		// I filtri del selettore

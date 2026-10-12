@@ -11,7 +11,7 @@ import java.io.IOException;
  * restano vuoti; gli elementi che ne contengono altri dicono quanti sono, e questi seguono nelle righe successive.
  * <pre>
  * TATTICA|numero di voci|disabilitata (0 o 1)
- * VOCE|attiva|ha un selettore|numero di condizioni|numero di azioni
+ * VOCE|attiva|ha un selettore|numero di condizioni|numero di azioni|nome dato dal giocatore
  * SELETTORE|rosa|ordinamento|tipo di danno dell'ordinamento|numero di filtri       (seguono i filtri)
  * FILTRO|tipo|negato|confronto|numero|stato|classe|categoria|tipo di danno
  * PREDICATO|tipo|negato|confronto|numero|rosa|numero di filtri                     (seguono i filtri)

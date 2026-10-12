@@ -65,6 +65,22 @@ class BozzaTatticaTest {
     }
 
     @Test
+    void ilNomeSegueLaVoceQuandoSiSposta() {
+        TatticaMD tattica = TatticaMD.di(VoceMD.su(null, AzioneMD.di(TipoAzione.ATTACCO_FISICO)),
+                new VoceMD(null, Collections.emptyList(), Collections.singletonList(AzioneMD.di(TipoAzione.FULMINE)), true, "Mia"));
+        BozzaTattica bozza = BozzaTattica.da(tattica);
+        assertTrue(bozza.spostaVoce(0, 1));
+        // La voce che non aveva un nome ha ricevuto "Tattica 1" e se lo porta dietro
+        assertEquals("Mia", bozza.getVoci().get(0).nome);
+        assertEquals("Tattica 1", bozza.getVoci().get(1).nome);
+        assertFalse(bozza.descrive(tattica));
+        // Rimessa al suo posto, la tattica torna uguale
+        assertTrue(bozza.spostaVoce(1, -1));
+        assertTrue(bozza.descrive(tattica));
+        assertEquals("Tattica 1", bozza.toTattica().getVoci().get(0).getNome());
+    }
+
+    @Test
     void unaVoceSenzaAzioniNonSiPuoConfermare() {
         BozzaTattica bozza = BozzaTattica.da(TatticaMD.VUOTA);
         bozza.aggiungiVoce();

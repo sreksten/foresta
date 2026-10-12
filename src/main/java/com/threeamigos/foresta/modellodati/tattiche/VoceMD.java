@@ -24,13 +24,15 @@ public final class VoceMD {
 	private final List<PredicatoMD> condizioni;
 	private final List<AzioneMD> azioni;
 	private final boolean attiva;
+	private final String nome;
 
 	/**
 	 * @param selettore  chi, o null per quello di base (vedi {@link #selettoreEffettivo()})
 	 * @param condizioni quando (in AND); vuota vale sempre
 	 * @param azioni     almeno una; la prima applicabile vince
+	 * @param nome       il nome dato dal giocatore, o null se non ne ha (la schermata mostra allora "Tattica" e il numero della voce)
 	 */
-	public VoceMD(SelettoreMD selettore, List<PredicatoMD> condizioni, List<AzioneMD> azioni, boolean attiva) {
+	public VoceMD(SelettoreMD selettore, List<PredicatoMD> condizioni, List<AzioneMD> azioni, boolean attiva, String nome) {
 		if (azioni.isEmpty()) {
 			throw new IllegalArgumentException("Una voce ha almeno un'azione");
 		}
@@ -38,6 +40,11 @@ public final class VoceMD {
 		this.condizioni = Collections.unmodifiableList(new ArrayList<>(condizioni));
 		this.azioni = Collections.unmodifiableList(new ArrayList<>(azioni));
 		this.attiva = attiva;
+		this.nome = nome == null || nome.trim().isEmpty() ? null : Serializzabile.senzaPipe(nome.trim());
+	}
+
+	public VoceMD(SelettoreMD selettore, List<PredicatoMD> condizioni, List<AzioneMD> azioni, boolean attiva) {
+		this(selettore, condizioni, azioni, attiva, null);
 	}
 
 	public VoceMD(SelettoreMD selettore, List<PredicatoMD> condizioni, List<AzioneMD> azioni) {
@@ -52,7 +59,7 @@ public final class VoceMD {
 	}
 
 	public VoceMD disattivata() {
-		return new VoceMD(selettore, condizioni, azioni, false);
+		return new VoceMD(selettore, condizioni, azioni, false, nome);
 	}
 
 	/**
@@ -108,6 +115,13 @@ public final class VoceMD {
 	}
 
 	/**
+	 * Il nome dato dalla voce dal giocatore, o null se non ne ha
+	 */
+	public String getNome() {
+		return nome;
+	}
+
+	/**
 	 * Gli errori della voce per quel lato (un mio personaggio o un mostro): azioni di portate diverse, una rosa che nessuna azione accetta
 	 * o che non vale per il lato. Vuota se la voce è a posto. La rilettura non rifiuta una tattica con problemi: la disabilita (TatticaMD.problemiPerQualsiasiLato).
 	 */
@@ -134,7 +148,7 @@ public final class VoceMD {
 	@Override
 	public String toString() {
 		return (selettore == null ? "" : selettore + " ") + (condizioni.isEmpty() ? "" : "SE " + condizioni + " ") + "→ " + azioni
-				+ (attiva ? "" : " (disattivata)");
+				+ (attiva ? "" : " (disattivata)") + (nome == null ? "" : " \"" + nome + "\"");
 	}
 
 	/**
@@ -142,7 +156,7 @@ public final class VoceMD {
 	 */
 	public void salva(PrintWriter stream) {
 		stream.println(String.join(Serializzabile.PIPE, "VOCE", String.valueOf(attiva), String.valueOf(selettore != null),
-				String.valueOf(condizioni.size()), String.valueOf(azioni.size())));
+				String.valueOf(condizioni.size()), String.valueOf(azioni.size()), Serializzabile.facoltativo(nome)));
 		if (selettore != null) {
 			selettore.salva(stream);
 		}
@@ -160,6 +174,7 @@ public final class VoceMD {
 		boolean haSelettore = campi.booleano();
 		int numeroCondizioni = campi.intero();
 		int numeroAzioni = campi.intero();
+		String nome = campi.testoFacoltativo();
 		SelettoreMD selettore = haSelettore ? SelettoreMD.leggi(stream) : null;
 		List<PredicatoMD> condizioni = new ArrayList<>();
 		for (int i = 0; i < numeroCondizioni; i++) {
@@ -172,7 +187,7 @@ public final class VoceMD {
 		if (azioni.isEmpty()) {
 			throw new IOException("Una voce senza azioni nel salvataggio");
 		}
-		return new VoceMD(selettore, condizioni, azioni, attiva);
+		return new VoceMD(selettore, condizioni, azioni, attiva, nome);
 	}
 
 	@Override
@@ -181,11 +196,12 @@ public final class VoceMD {
 			return false;
 		}
 		VoceMD v = (VoceMD) altro;
-		return attiva == v.attiva && Objects.equals(selettore, v.selettore) && condizioni.equals(v.condizioni) && azioni.equals(v.azioni);
+		return attiva == v.attiva && Objects.equals(selettore, v.selettore) && condizioni.equals(v.condizioni) && azioni.equals(v.azioni)
+				&& Objects.equals(nome, v.nome);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(selettore, condizioni, azioni, attiva);
+		return Objects.hash(selettore, condizioni, azioni, attiva, nome);
 	}
 }
