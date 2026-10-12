@@ -2229,6 +2229,12 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public void rimuoviGliEffettiDiStatoNegativi() {
+		getEffettiDiStato().stream().map(EffettoDiStatoMD::getTipoEffettoDiStato).filter(t -> !t.isBenefico()).distinct()
+				.collect(Collectors.toList()).forEach(this::rimuoviEffettoDiStato);
+	}
+
+	@Override
 	public void rimuoviEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
 		List<EffettoDiStatoMD> effettiDiStatoDaRimuovere = getEffettiDiStato()
 				.stream()

@@ -133,4 +133,12 @@ public enum TipoEffettoDiStato {
     public String getDescrizione() {
         return descrizione;
     }
+
+    /**
+     * Se l'effetto è un vantaggio per chi lo ha: l'ispirazione del Bardo e il berserk del Guerriero. Gli altri sono
+     * un male da togliere (per esempio con l'Alba sacra).
+     */
+    public boolean isBenefico() {
+        return this == ISPIRATO || this == BERSERK;
+    }
 }

@@ -612,6 +612,11 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 * Rimuove tutti gli effetti di stato da un personaggio
 	 */
 	void rimuoviTuttiGliEffettiDiStato();
+	/**
+	 * Toglie gli effetti di stato che sono un male e lascia quelli benefici (vedi TipoEffettoDiStato.isBenefico):
+	 * l'ispirazione del Bardo e il berserk del Guerriero. È quello che fa l'Alba sacra.
+	 */
+	void rimuoviGliEffettiDiStatoNegativi();
 
 	/**
 	 * Rimuove un effetto di stato dal personaggio

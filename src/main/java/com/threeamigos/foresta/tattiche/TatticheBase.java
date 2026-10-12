@@ -135,6 +135,16 @@ public final class TatticheBase {
 		return PredicatoMD.probabilita(percentuale);
 	}
 
+	/** Ci sono almeno tanti alleati con un effetto di stato da togliere */
+	private static PredicatoMD alleatiConUnStatoNegativo(int almeno) {
+		return PredicatoMD.quanti(TipoRosa.ALLEATI, Collections.singletonList(FiltroMD.senzaParametro(TipoFiltro.STATO_NEGATIVO)), Confronto.MAGGIORE, almeno - 1);
+	}
+
+	/** Sono passati almeno tanti round dall'ultimo uso della voce (se non l'ha mai usata, è passato abbastanza) */
+	private static PredicatoMD dopoRound(int round) {
+		return PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND_DALL_ULTIMO_USO, Confronto.MINORE, round).negato();
+	}
+
 	/** La fascia di astuzia: l'astuzia non è sotto la soglia */
 	private static PredicatoMD daAstuzia(int soglia) {
 		return PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, Confronto.MINORE, soglia).negato();
@@ -422,7 +432,7 @@ public final class TatticheBase {
 		return tattica(
 				pozioniDiSalute(40, true),
 				voce("Resurrezione dei caduti", su(TipoRosa.ALLEATI_CADUTI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.RESURREZIONE)),
-				voce("Alba sacra", su(TipoRosa.ALLEATI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.ALBA_SACRA)),
+				voce("Alba sacra", su(TipoRosa.ALLEATI, TipoOrdinamento.PRIMO), condizioni(alleatiConUnStatoNegativo(2), dopoRound(3)), AzioneMD.di(TipoAzione.ALBA_SACRA)),
 				pozioniDiMagia(20),
 				voce("Luce divina sui non morti", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE,
 						FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.NON_MORTO)), condizioni(null), AzioneMD.di(TipoAzione.LUCE_DIVINA)),

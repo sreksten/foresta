@@ -46,7 +46,7 @@ public enum ClasseIncantesimo {
 	ALBA_SACRA(TipoIncantesimo.BENEFICO, PortataIncantesimo.GRUPPO, null,
 			"Alba Sacra", "incantesimo dell'Alba Sacra", "incantesimi dell'Alba Sacra",
 			Comando.ALBA_SACRA,
-			"Rimuove tutti gli effetti di stato e i modificatori temporanei al gruppo."),
+			"Rimuove gli effetti di stato negativi e i modificatori temporanei al gruppo, lasciando l'ispirazione e il berserk."),
 	SILENZIO(TipoIncantesimo.MALEFICO, PortataIncantesimo.GRUPPO, TipoDanno.ARCANO,
 			"Silenzio", "incantesimo del Silenzio", "incantesimi del Silenzio",
 			Comando.SILENZIO,

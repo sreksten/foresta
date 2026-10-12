@@ -39,6 +39,7 @@ public final class Filtri {
 		VERIFICHE.put(TipoFiltro.CLASSE, (f, c, ctx) -> !ctx.isOspite(c) && c.getClasse().stessoRuoloDi(f.getClasse()));
 		VERIFICHE.put(TipoFiltro.CATEGORIA, (f, c, ctx) -> !ctx.isOspite(c) && c.getClasse().isDellaCategoria(f.getCategoria()));
 		VERIFICHE.put(TipoFiltro.STATO, (f, c, ctx) -> c.hasEffettoDiStato(f.getStato()));
+		VERIFICHE.put(TipoFiltro.STATO_NEGATIVO, (f, c, ctx) -> haUnoStatoNegativo(c));
 		VERIFICHE.put(TipoFiltro.MAGICO, (f, c, ctx) -> !ctx.isOspite(c) && isMagico(c, ctx));
 		VERIFICHE.put(TipoFiltro.DEBOLE_A, (f, c, ctx) -> isDebole(c, f.getTipoDanno()));
 		VERIFICHE.put(TipoFiltro.DEBOLE_ALL_AZIONE, (f, c, ctx) -> {
@@ -56,6 +57,13 @@ public final class Filtri {
 	}
 
 	private Filtri() {
+	}
+
+	/**
+	 * Se ha almeno un effetto di stato che è un male da togliere: qualunque tranne quelli benefici (ISPIRATO, BERSERK)
+	 */
+	static boolean haUnoStatoNegativo(Personaggio personaggio) {
+		return personaggio.getEffettiDiStato().stream().anyMatch(e -> !e.getTipoEffettoDiStato().isBenefico());
 	}
 
 	/**

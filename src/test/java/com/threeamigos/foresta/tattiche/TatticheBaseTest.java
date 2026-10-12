@@ -11,6 +11,7 @@ import com.threeamigos.foresta.motore.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import org.junit.jupiter.api.AfterEach;
@@ -173,7 +174,7 @@ class TatticheBaseTest {
         feriscici(ferito, 0.2);
         Decisione decisione = Valutatore.decidi(TatticheBase.deiMostri(TipoPersonaggio.TITANO), perIMostri(hobgoblin, sano, ferito));
         assertEquals(TipoAzione.ATTACCO_FISICO, decisione.getTipoEseguito());
-        assertSame(ferito, decisione.getBersaglio(), "astuzia " + Astuzia.di(hobgoblin) + " " + decisione.getSpiegazione());
+        assertSame(ferito, decisione.getBersaglio(), "astuzia " + Astuzia.di(hobgoblin) + " " + decisione.getSpiegazione().toString());
     }
 
     // ---- i personaggi giocabili ----
@@ -253,6 +254,41 @@ class TatticheBaseTest {
                 perIMiei(sacerdote, Arrays.asList(sacerdote, guerriero), goblin));
         assertEquals(TipoAzione.RESURREZIONE, decisione.getTipoEseguito());
         assertSame(guerriero, decisione.getBersaglio());
+    }
+
+    @Test
+    void ilSacerdoteUsaLAlbaSacraSoloSeAlmenoDueAlleatiHannoUnoStatoNegativo() {
+        Personaggio sacerdote = crea(TipoPersonaggio.SACERDOTE, 1);
+        Personaggio guerriero = crea(TipoPersonaggio.GUERRIERO, 1);
+        Personaggio goblin = crea(TipoPersonaggio.GOBLIN, 1);
+        guerriero.addEffettoDiStato(TipoEffettoDiStato.SANGUINAMENTO, 3, 0);
+        List<Personaggio> alleati = Arrays.asList(sacerdote, guerriero);
+        TatticaMD tattica = TatticheBase.deiGiocabili(TipoPersonaggio.SACERDOTE);
+
+        assertNotEquals(TipoAzione.ALBA_SACRA, Valutatore.decidi(tattica, perIMiei(sacerdote, alleati, goblin)).getTipoEseguito(),
+                "uno solo con uno stato negativo non basta");
+
+        sacerdote.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO, 3, 0);
+        Decisione decisione = Valutatore.decidi(tattica, perIMiei(sacerdote, alleati, goblin));
+        assertEquals(TipoAzione.ALBA_SACRA, decisione.getTipoEseguito(), decisione.getSpiegazione().toString());
+
+        StatoDelCombattimento.getIstanza().registraUsoVoce(sacerdote, decisione.getIdentificativoVoce());
+        assertNotEquals(TipoAzione.ALBA_SACRA, Valutatore.decidi(tattica, perIMiei(sacerdote, alleati, goblin)).getTipoEseguito(),
+                "appena lanciata, per qualche round non la ripete");
+    }
+
+    @Test
+    void ilBerserkELIspirazioneNonSonoStatiDaTogliere() {
+        Personaggio sacerdote = crea(TipoPersonaggio.SACERDOTE, 1);
+        Personaggio guerriero = crea(TipoPersonaggio.GUERRIERO, 1);
+        Personaggio goblin = crea(TipoPersonaggio.GOBLIN, 1);
+        sacerdote.addEffettoDiStato(TipoEffettoDiStato.ISPIRATO, 3, 0);
+        guerriero.addEffettoDiStato(TipoEffettoDiStato.BERSERK, 3, 0);
+        Decisione decisione = Valutatore.decidi(TatticheBase.deiGiocabili(TipoPersonaggio.SACERDOTE),
+                perIMiei(sacerdote, Arrays.asList(sacerdote, guerriero), goblin));
+        assertNotEquals(TipoAzione.ALBA_SACRA, decisione.getTipoEseguito(), decisione.getSpiegazione().toString());
+        assertTrue(TipoEffettoDiStato.BERSERK.isBenefico() && TipoEffettoDiStato.ISPIRATO.isBenefico());
+        assertFalse(TipoEffettoDiStato.SILENZIATO.isBenefico());
     }
 
     @Test

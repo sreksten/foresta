@@ -22,6 +22,8 @@ public enum TipoFiltro {
 	CATEGORIA("Categoria", TipoParametro.CATEGORIA),
 	/** Ha quell'effetto di stato */
 	STATO("Stato", TipoParametro.STATO),
+	/** Ha almeno un effetto di stato che è un male da togliere (non l'ispirazione, non il berserk) */
+	STATO_NEGATIVO("Stato negativo", TipoParametro.NESSUNO),
 	/** Sa fare magie in questo momento (vedi tattiche.Filtri) */
 	MAGICO("Magie abilitate", TipoParametro.NESSUNO),
 	/** È debole a quel tipo di danno: il moltiplicatore di classe e di stati è maggiore di 1 */

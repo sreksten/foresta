@@ -757,6 +757,7 @@ Un filtro è una domanda a cui un candidato risponde sì o no: `ammette(candidat
 | `CLASSE` | classe (il ruolo) | `getClasse()`, entrambe le varianti |
 | `CATEGORIA` | categoria | `isDellaCategoria` (basta una) |
 | `STATO` | stato | `hasEffettoDiStato` |
+| `STATO_NEGATIVO` | nessuno | almeno un effetto che è un male da togliere, cioè non benefico (`TipoEffettoDiStato.isBenefico`: ISPIRATO e BERSERK) |
 | `MAGICO` | nessuno | F3 (§7.5): abilità innate, mostri magici, chi ha già lanciato |
 | `DEBOLE_A` | tipo di danno | `moltiplicatoreAtteso` maggiore di 1 ("debole" è solo questo, §6.3) |
 | `DEBOLE_ALL_AZIONE` | nessuno | come `DEBOLE_A` per il tipo di danno dell'azione della voce che si sta valutando (il contesto la espone con `conAzione`); l'attacco fisico non ne ha uno fisso, quindi non passa. Gli stati che l'azione stessa può causare (`moltiplicatoreAttesoDopo`) non contano per il suo stesso colpo: servono a chi sceglie l'azione *seguente* |
@@ -1003,7 +1004,7 @@ dal nono; le bestie e i bruti restano bruti.
 | **Ladro** | Si cura da solo sotto il 30%; i feriti, poi chi ha meno salute. |
 | **Mago** | Pozioni della Salute (25%) e della Magia (sotto 20 di MAGIA); Silenzio sui maghi nemici (60%); sui feriti (sotto il 40%) l'incantesimo più economico che basta, il dardo arcano, l'attacco; poi contro il più forte l'incantesimo più adatto (se rende più dell'attacco), il dardo. |
 | **Elfo** | Come il guerriero per le cure; dardo arcano e incantesimo solo dove rendono più dell'attacco; i maghi nemici per primi. |
-| **Sacerdote** | Cura gli altri (anche gli ospiti) sotto il 40%; risuscita i caduti; Alba sacra se qualcuno ha uno stato da togliere; pozione della Magia; poi colpisce il più ferito. |
+| **Sacerdote** | Cura gli altri (anche gli ospiti) sotto il 40%; risuscita i caduti; Alba sacra se almeno due alleati hanno uno stato da togliere (`STATO_NEGATIVO`, non contano ISPIRATO e BERSERK) e sono passati almeno tre round dall'ultima volta (`ROUND_DALL_ULTIMO_USO`); pozione della Magia; poi colpisce il più ferito. |
 | **Bardo** | Pozione (25%); canto curativo sotto il 60%; canto di valore a chi non è ispirato; Urlo della Banshee o canto ipnotico contro più di un avversario; poi colpisce il più ferito. |
 
 **Le pozioni** sono quattro azioni (Salute e Magia, normale e grande, ognuna beve solo la sua): le predefinite hanno due voci per tipo, la prima con la grande quando manca molto (sotto la metà della soglia), la seconda con la normale e, se non ce n'è, la grande.

@@ -203,11 +203,10 @@ public final class Requisiti {
 	}
 
 	/**
-	 * Uno stato che l'Alba sacra toglie con vantaggio: qualunque tranne l'ISPIRATO (il solo benefico)
+	 * Uno stato che l'Alba sacra toglie con vantaggio: qualunque tranne quelli benefici (ISPIRATO, BERSERK)
 	 */
 	private static boolean haUnoStatoNegativo(Personaggio personaggio) {
-		return !personaggio.isFuoriCombattimento() && personaggio.getEffettiDiStato().stream()
-				.anyMatch(e -> e.getTipoEffettoDiStato() != TipoEffettoDiStato.ISPIRATO);
+		return !personaggio.isFuoriCombattimento() && Filtri.haUnoStatoNegativo(personaggio);
 	}
 
 	private static boolean esiste(java.util.List<Personaggio> personaggi, java.util.function.Predicate<Personaggio> condizione) {

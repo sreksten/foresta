@@ -216,6 +216,8 @@ final class TestoTattica {
 				return "La categoria di creatura: umanoide, bestia, non morto, volante, draconico, gigantesco, ibrido, costrutto (ne basta una).";
 			case STATO:
 				return "Ha un certo effetto di stato attivo (silenziato, bagnato, avvelenato...).";
+			case STATO_NEGATIVO:
+				return "Ha almeno un effetto di stato che è un male da togliere (avvelenato, stordito, silenziato...): non conta l'ispirazione del Bardo né il berserk del Guerriero.";
 			case MAGICO:
 				return "Può lanciare magie: non è silenziato e ha abbastanza magia per formularle (abilità innate o "
 						+ "un incantesimo a disposizione). Chi non ha poteri innati conta solo dopo aver lanciato il suo primo incantesimo nello scontro.";
