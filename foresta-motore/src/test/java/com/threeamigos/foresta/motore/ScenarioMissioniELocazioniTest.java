@@ -10,6 +10,7 @@ import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
@@ -28,9 +29,12 @@ class ScenarioMissioniELocazioniTest {
 
 	@Test
 	void laMissioneCheFallisceFinisceTraLeFalliteAncheDopoUnSalvataggio() {
+		FabbricaMissioni.registra(ClasseMissione.MISSIONE_CHE_FALLISCE, MissioneCheFallisce::new);
 		try (PartitaDiTest partita = PartitaDiTest.nuova(21)) {
-			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> {
+				partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA);
+				RegistroMissioni.aggiungiMissioneSecondaria(new MissioneCheFallisce());
+			});
 			assertTrue(RegistroMissioni.getMissioniAttive().stream().anyMatch(m -> m instanceof MissioneCheFallisce),
 					"al primo turno la missione e' attiva");
 

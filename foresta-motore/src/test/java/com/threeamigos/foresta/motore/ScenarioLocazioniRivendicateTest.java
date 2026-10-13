@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
+import com.threeamigos.foresta.missioni.FabbricaMissioni;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
@@ -167,6 +168,7 @@ class ScenarioLocazioniRivendicateTest {
 
     @Test
     void dopoUnCaricamentoIClaimSiRicostruisconoEVinceLUltimo() {
+        FabbricaMissioni.registra(ClasseMissione.MISSIONE_DI_PROVA, MissioneDelTempio::new);
         try (PartitaDiTest partita = nuovaPartita(34)) {
             MissioneDelTempio prima = aggiungi(new MissioneDelTempio());
             MissioneDelTempio seconda = aggiungi(new MissioneDelTempio());

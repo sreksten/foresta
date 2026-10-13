@@ -158,7 +158,7 @@ Le ricompense in monete di questo catalogo sono le paghe del primo livello del m
 
 ### Missioni scritte a mano
 
-`CronacheDiUnFegatoEroico` (un boccale in ogni locanda cittadina, una tappa `VisitaLocanda` per città), `NessunBoccaleLasciatoIndietro` (dieci locande nel mezzo della Foresta: tornare dallo stesso oste non conta, la bevuta è annotata sulla casella), `DisturbatoreDellaQuietePubblica` (dieci eremiti disturbati, contati all'incontro) e le missioni di prova (`MissioneDIProva`, `MissioneCheFallisce`, `MissioneDiProvaSecondariaUno/Due`, `MissioneDiProvaTerziariaUno`), oltre alle classi generiche `Combatti`, `MuoviALocazione`, `VisitaLocanda`, `MissioneSecondaria`.
+`CronacheDiUnFegatoEroico` (un boccale in ogni locanda cittadina, una tappa `VisitaLocanda` per città), `NessunBoccaleLasciatoIndietro` (dieci locande nel mezzo della Foresta: tornare dallo stesso oste non conta, la bevuta è annotata sulla casella), `DisturbatoreDellaQuietePubblica` (dieci eremiti disturbati, contati all'incontro) oltre alle classi generiche `Combatti`, `MuoviALocazione`, `VisitaLocanda`, `MissioneSecondaria`.
 
 ## 5. Le grammatiche delle missioni
 

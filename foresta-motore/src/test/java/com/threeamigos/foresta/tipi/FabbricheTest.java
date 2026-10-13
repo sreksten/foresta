@@ -44,6 +44,10 @@ class FabbricheTest {
     @Test
     void ogniClasseMissioneSiCostruisce() {
         for (ClasseMissione classe : ClasseMissione.values()) {
+            // Le missioni di prova sono dei test, che le registrano da sé: nel gioco non esistono
+            if (classe == ClasseMissione.MISSIONE_DI_PROVA || classe == ClasseMissione.MISSIONE_CHE_FALLISCE) {
+                continue;
+            }
             assertNotNull(FabbricaMissioni.crea(classe), classe.name());
         }
     }

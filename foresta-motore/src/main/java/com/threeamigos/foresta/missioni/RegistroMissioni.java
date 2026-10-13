@@ -14,7 +14,6 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.motore.ModalitaDiProva;
 
 import java.util.*;
 import com.threeamigos.foresta.motore.Dado;
@@ -35,10 +34,6 @@ public class RegistroMissioni {
 
 	public enum TipoMissionePredefinita {
 		SCONFIGGI_IL_DRAGO(ClasseMissione.SCONFIGGI_IL_DRAGO),
-		// Solo in modalità di prova (vedi ModalitaDiProva)
-		MISSIONE_DI_PROVA(ClasseMissione.MISSIONE_DI_PROVA, true),
-		// Solo in modalità di prova: serve a vedere una missione fallita nella finestra delle missioni
-		MISSIONE_CHE_FALLISCE(ClasseMissione.MISSIONE_CHE_FALLISCE, true),
 		RECUPERA_IL_MEDAGLIONE(ClasseMissione.RECUPERA_IL_MEDAGLIONE),
 		RECUPERA_LE_DERRATE_ALIMENTARI(ClasseMissione.RECUPERA_LE_DERRATE_ALIMENTARI),
 		LA_LEGGENDA_DELL_ARMAIOLO(ClasseMissione.LA_LEGGENDA_DELL_ARMAIOLO),
@@ -73,16 +68,10 @@ public class RegistroMissioni {
 		IL_TORNEO(ClasseMissione.IL_TORNEO);
 
 		TipoMissionePredefinita(ClasseMissione classeMissione) {
-			this(classeMissione, false);
-		}
-
-		TipoMissionePredefinita(ClasseMissione classeMissione, boolean diProva) {
 			this.classeMissione = classeMissione;
-			this.diProva = diProva;
 		}
 
 		private final ClasseMissione classeMissione;
-		private final boolean diProva;
 
 		public Missione getIstanza() {
 			return FabbricaMissioni.crea(classeMissione);
@@ -197,9 +186,6 @@ public class RegistroMissioni {
 		pulisciElenchi();
 
 		for (TipoMissionePredefinita tipoMissionePredefinita : TipoMissionePredefinita.values()) {
-			if (tipoMissionePredefinita.diProva && !ModalitaDiProva.isAttiva()) {
-				continue;
-			}
 			Missione missione = tipoMissionePredefinita.getIstanza();
 			missione.getModelloDati().setId(tipoMissionePredefinita.name());
 			elencoMissioniPredefinite.put(tipoMissionePredefinita, missione);

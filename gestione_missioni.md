@@ -29,14 +29,14 @@ Ogni missione può avere **figlie** (`aggiungiMissione`, `getMissioniSecondarie`
 `tipi.ClasseMissione` elenca **ogni classe concreta** di missione, e `missioni.FabbricaMissioni` ne tiene il costruttore: è ciò che permette di ricostruire un albero dopo un caricamento, perché ogni nodo salvato dichiara la propria classe. Ne consegue una regola: **ogni missione che il gioco può creare, anche solo come figlia affidata a metà partita, deve stare in `ClasseMissione` e in `FabbricaMissioni`** (`FabbricheTest` controlla che ogni `ClasseMissione` si costruisca). Quelle che nascono con la partita stanno anche in `RegistroMissioni.TipoMissionePredefinita` (§2), che elenca solo le radici.
 
 Le missioni si dividono per come sono scritte:
-- **a mano**, direttamente su `MissioneBase`: le principali (`SconfiggiIlDrago` e le quattro `Sconfiggi*` figlie), le missioni di prova, e alcune secondarie semplici (`Combatti` e le sue derivate, `VisitaLocanda`, `MuoviALocazione`, `CronacheDiUnFegatoEroico`, `NessunBoccaleLasciatoIndietro`, `DisturbatoreDellaQuietePubblica`, `MissioneSecondaria`);
+- **a mano**, direttamente su `MissioneBase`: le principali (`SconfiggiIlDrago` e le quattro `Sconfiggi*` figlie) e alcune secondarie semplici (`Combatti` e le sue derivate, `VisitaLocanda`, `MuoviALocazione`, `CronacheDiUnFegatoEroico`, `NessunBoccaleLasciatoIndietro`, `DisturbatoreDellaQuietePubblica`, `MissioneSecondaria`);
 - **a passi**, su `MissioneAPassi` (§4): tutto il resto, cioè le due missioni di recupero, gli incarichi in città, le leggende, i rituali e le altre. È il modo in cui si scrivono le missioni nuove.
 
 ## 2. Il registro (`RegistroMissioni`)
 
 `RegistroMissioni` è la facciata statica sul modello dati (`RegistroMissioniMD`: due mappe, attive e completate) e tiene in memoria gli elenchi di primo livello:
 
-- le **predefinite** (`TipoMissionePredefinita`: la missione principale, le due di recupero, le leggende, gli incarichi e le altre che esistono dall'inizio) in tre elenchi: in corso, completate, fallite. All'inizio della partita (`reimposta`) se ne crea una per ogni valore (le due missioni di prova solo in modalità di prova); nessuna è attiva finché non si attiva da sola (§3). L'identificatore di una predefinita è il nome del suo valore;
+- le **predefinite** (`TipoMissionePredefinita`: la missione principale, le due di recupero, le leggende, gli incarichi e le altre che esistono dall'inizio) in tre elenchi: in corso, completate, fallite. All'inizio della partita (`reimposta`) se ne crea una per ogni valore; nessuna è attiva finché non si attiva da sola (§3). L'identificatore di una predefinita è il nome del suo valore;
 - le **secondarie di primo livello** (`aggiungiMissioneSecondaria`): missioni nate durante la partita fuori dall'albero della principale, per esempio l'incarico in città che ne ripete uno finito. Anche queste in corso, completate, fallite.
 
 Le figlie non stanno in nessun elenco: una figlia completata o fallita resta dentro la sua madre con il proprio flag. Le interrogazioni principali:
@@ -195,7 +195,7 @@ Due famiglie:
 
 ## 12. Osservazioni
 
-- **Due stili di missione.** Le principali, le missioni di prova e le più vecchie secondarie sono scritte direttamente su `MissioneBase` con flag e controlli a mano; tutto il resto è a passi. Non c'è un'unica via, e le prime non hanno gli intermezzi per passo, le domande, i contatori, i ripieghi.
+- **Due stili di missione.** Le principali e le più vecchie secondarie sono scritte direttamente su `MissioneBase` con flag e controlli a mano; tutto il resto è a passi. Non c'è un'unica via, e le prime non hanno gli intermezzi per passo, le domande, i contatori, i ripieghi.
 - **Predefinite e `ClasseMissione` da tenere allineate a mano.** Una missione dimenticata in `ClasseMissione` non dà errori in partita: fallisce solo alla rilettura di un salvataggio.
 - **Un solo claim per missione.** `occupaLocazione` sovrascrive la coordinata precedente di quella missione (`LOCAZIONE_OCCUPATA` ha un solo valore): una missione che dovesse tenere insieme più luoghi non può.
 - **Condizioni con effetti.** `haUnIntermezzoInArrivo` valuta la condizione del passo corrente solo se ha un intermezzo, e dice nel Javadoc che quelle condizioni non devono avere effetti: è una convenzione non controllata.

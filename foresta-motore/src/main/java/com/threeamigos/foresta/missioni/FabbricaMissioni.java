@@ -20,8 +20,6 @@ public final class FabbricaMissioni {
 		COSTRUTTORI.put(ClasseMissione.SCONFIGGI_L_IDRA, SconfiggiLIdra::new);
 		COSTRUTTORI.put(ClasseMissione.SCONFIGGI_IL_LICH, SconfiggiIlLich::new);
 		COSTRUTTORI.put(ClasseMissione.SCONFIGGI_LA_STREGA, SconfiggiLaStrega::new);
-		COSTRUTTORI.put(ClasseMissione.MISSIONE_DI_PROVA, MissioneDIProva::new);
-		COSTRUTTORI.put(ClasseMissione.MISSIONE_CHE_FALLISCE, MissioneCheFallisce::new);
 		COSTRUTTORI.put(ClasseMissione.RECUPERA_IL_MEDAGLIONE, RecuperaIlMedaglione::new);
 		COSTRUTTORI.put(ClasseMissione.RECUPERA_LE_DERRATE_ALIMENTARI, RecuperaLeDerrateAlimentari::new);
 		COSTRUTTORI.put(ClasseMissione.LA_LEGGENDA_DELL_ARMAIOLO, LaLeggendaDellArmaiolo::new);
@@ -57,15 +55,20 @@ public final class FabbricaMissioni {
 		COSTRUTTORI.put(ClasseMissione.IL_RITUALE, IlRituale::new);
 		COSTRUTTORI.put(ClasseMissione.LA_SFIDA_DEI_CAMPIONI, LaSfidaDeiCampioni::new);
 		COSTRUTTORI.put(ClasseMissione.IL_CAMPIONE, IlCampione::new);
-		COSTRUTTORI.put(ClasseMissione.MISSIONE_DI_PROVA_SECONDARIA_UNO, MissioneDiProvaSecondariaUno::new);
-		COSTRUTTORI.put(ClasseMissione.MISSIONE_DI_PROVA_SECONDARIA_DUE, MissioneDiProvaSecondariaDue::new);
-		COSTRUTTORI.put(ClasseMissione.MISSIONE_DI_PROVA_TERZIARIA_UNO, MissioneDiProvaTerziariaUno::new);
 		COSTRUTTORI.put(ClasseMissione.VISITA_LOCANDA, VisitaLocanda::new);
 		COSTRUTTORI.put(ClasseMissione.MUOVI_A_LOCAZIONE, MuoviALocazione::new);
 		COSTRUTTORI.put(ClasseMissione.MISSIONE_SECONDARIA, MissioneSecondaria::new);
 	}
 
 	private FabbricaMissioni() {
+	}
+
+	/**
+	 * Fa conoscere alla fabbrica una missione che non sta nel gioco, come quelle che i test inventano, così si può ricostruire
+	 * dopo un caricamento.
+	 */
+	public static void registra(ClasseMissione classe, Supplier<Missione> costruttore) {
+		COSTRUTTORI.put(classe, costruttore);
 	}
 
 	/**
