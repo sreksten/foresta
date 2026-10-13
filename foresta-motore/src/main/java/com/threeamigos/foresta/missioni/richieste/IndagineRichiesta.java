@@ -163,6 +163,11 @@ public final class IndagineRichiesta {
 		return ondate;
 	}
 
+	/**
+	 * Legge la riga della grammatica che descrive l'indagine.
+	 *
+	 * @throws IllegalArgumentException se la riga è sbagliata o manca un campo obbligatorio
+	 */
 	public static IndagineRichiesta da(String riga) {
 		return new IndagineRichiesta(riga);
 	}

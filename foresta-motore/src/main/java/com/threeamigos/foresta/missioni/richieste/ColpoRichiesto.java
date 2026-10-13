@@ -62,6 +62,11 @@ public final class ColpoRichiesto {
 		ricordo = campi.obbligatorio("RICORDO");
 	}
 
+	/**
+	 * Legge la riga della grammatica che descrive il colpo.
+	 *
+	 * @throws IllegalArgumentException se la riga è sbagliata o manca un campo obbligatorio
+	 */
 	public static ColpoRichiesto da(String riga) {
 		return new ColpoRichiesto(riga);
 	}

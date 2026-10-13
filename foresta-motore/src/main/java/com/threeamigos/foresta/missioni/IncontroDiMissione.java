@@ -59,6 +59,9 @@ public final class IncontroDiMissione {
 		this.numero = numero;
 	}
 
+	/**
+	 * Un incontro con quel numero di avversari di quella classe.
+	 */
 	public static IncontroDiMissione di(TipoPersonaggio classe, int numero) {
 		return new IncontroDiMissione(classe, numero);
 	}

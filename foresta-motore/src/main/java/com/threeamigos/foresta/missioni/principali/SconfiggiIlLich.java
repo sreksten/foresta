@@ -10,6 +10,7 @@ import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
+ * Sconfiggere il Lich, alleato del Drago, che infesta il Castello dell'Ombra e risveglia i morti. È una figlia di {@link SconfiggiIlDrago}.
  *
  * @author Stefano Reksten
  */

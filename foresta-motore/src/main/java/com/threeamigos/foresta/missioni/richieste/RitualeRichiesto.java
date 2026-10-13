@@ -123,6 +123,11 @@ public final class RitualeRichiesto {
 		ricordo = campi.obbligatorio("RICORDO");
 	}
 
+	/**
+	 * Legge la riga della grammatica che descrive il rito.
+	 *
+	 * @throws IllegalArgumentException se la riga è sbagliata o manca un campo obbligatorio
+	 */
 	public static RitualeRichiesto da(String riga) {
 		return new RitualeRichiesto(riga);
 	}

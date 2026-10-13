@@ -46,6 +46,11 @@ public final class BenedizioneRichiesta {
 		benedetto = campi.obbligatorio("BENEDETTO");
 	}
 
+	/**
+	 * Legge la riga della grammatica che descrive la benedizione.
+	 *
+	 * @throws IllegalArgumentException se la riga è sbagliata o manca un campo obbligatorio
+	 */
 	public static BenedizioneRichiesta da(String riga) {
 		return new BenedizioneRichiesta(riga);
 	}

@@ -92,6 +92,9 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 		return getNarratore();
 	}
 
+	/**
+	 * Il racconto della leggenda, a cui chi la racconta aggiunge le sue battute.
+	 */
 	protected abstract Racconto nuovoRacconto();
 
 	@Override

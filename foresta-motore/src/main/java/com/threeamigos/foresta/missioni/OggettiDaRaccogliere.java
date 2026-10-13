@@ -61,10 +61,16 @@ public final class OggettiDaRaccogliere {
 		this.quantita = quantita;
 	}
 
+	/**
+	 * Gli oggetti da raccogliere: la chiave con cui la missione li conta, il nome e la quantità.
+	 */
 	public static OggettiDaRaccogliere di(String chiave, NomeOggetto nome, int quantita) {
 		return new OggettiDaRaccogliere(chiave, nome, quantita);
 	}
 
+	/**
+	 * Le locazioni in cui possono comparire.
+	 */
 	public OggettiDaRaccogliere in(TipoLocazione prima, TipoLocazione... altre) {
 		locazioni = EnumSet.of(prima, altre);
 		return this;
@@ -115,6 +121,11 @@ public final class OggettiDaRaccogliere {
 		return this;
 	}
 
+	/**
+	 * Quanti ne possono comparire al massimo in una stessa locazione.
+	 *
+	 * @throws IllegalArgumentException se è meno di uno
+	 */
 	public OggettiDaRaccogliere alPiuPerLocazione(int massimo) {
 		if (massimo < 1) {
 			throw new IllegalArgumentException("Almeno uno per locazione: " + massimo);

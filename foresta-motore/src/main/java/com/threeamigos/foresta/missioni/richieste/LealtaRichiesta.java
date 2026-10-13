@@ -40,6 +40,11 @@ public final class LealtaRichiesta {
 		leale = campi.obbligatorio("LEALE");
 	}
 
+	/**
+	 * Legge la riga della grammatica che descrive il problema di lealtà.
+	 *
+	 * @throws IllegalArgumentException se la riga è sbagliata o manca un campo obbligatorio
+	 */
 	public static LealtaRichiesta da(String riga) {
 		return new LealtaRichiesta(riga);
 	}

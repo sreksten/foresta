@@ -88,6 +88,11 @@ public final class SorveglianzaRichiesta {
 		return ondate;
 	}
 
+	/**
+	 * Legge la riga della grammatica che descrive la sorveglianza.
+	 *
+	 * @throws IllegalArgumentException se la riga è sbagliata o manca un campo obbligatorio
+	 */
 	public static SorveglianzaRichiesta da(String riga) {
 		return new SorveglianzaRichiesta(riga);
 	}

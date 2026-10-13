@@ -50,6 +50,11 @@ public final class DocumentazioneRichiesta {
 		ringraziamento = campi.obbligatorio("RINGRAZIAMENTO");
 	}
 
+	/**
+	 * Legge la riga della grammatica che descrive la documentazione.
+	 *
+	 * @throws IllegalArgumentException se la riga è sbagliata o manca un campo obbligatorio
+	 */
 	public static DocumentazioneRichiesta da(String riga) {
 		return new DocumentazioneRichiesta(riga);
 	}

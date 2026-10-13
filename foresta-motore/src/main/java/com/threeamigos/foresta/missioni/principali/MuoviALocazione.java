@@ -10,6 +10,9 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 
+/**
+ * Una missione che chiede di raggiungere una locazione unica: finché non ci si è arrivati la locazione lampeggia sulla mappa, e arrivandoci la missione si completa.
+ */
 public class MuoviALocazione extends MissioneBase {
 
 	public MuoviALocazione() {

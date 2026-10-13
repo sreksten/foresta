@@ -30,6 +30,11 @@ public final class ModificatoreDelTesto {
 	private ModificatoreDelTesto() {
 	}
 
+	/**
+	 * Legge il modificatore scritto in una riga di testo (MOD= di leggendari.txt).
+	 *
+	 * @throws IllegalArgumentException se il testo non ha la forma attesa
+	 */
 	public static ModificatoreAttributoMD da(String testo) {
 		String descrizione = testo.trim();
 		String[] parti = descrizione.split("\\s+", 3);

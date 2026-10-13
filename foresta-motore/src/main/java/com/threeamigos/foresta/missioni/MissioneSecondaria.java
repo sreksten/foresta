@@ -3,6 +3,7 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 
 /**
+ * Una missione secondaria generica, senza comportamento: serve da contenitore per le missioni figlie di un'altra (la fabbrica la ricostruisce dopo un caricamento).
  *
  * @author Stefano Reksten
  */

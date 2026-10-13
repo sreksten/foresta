@@ -21,6 +21,9 @@ public final class Costruzione {
 	private Costruzione() {
 	}
 
+	/**
+	 * Una costruzione che non richiede materiali.
+	 */
 	public static Costruzione senzaMateriali() {
 		return new Costruzione();
 	}
@@ -36,6 +39,11 @@ public final class Costruzione {
 		return costruzione;
 	}
 
+	/**
+	 * Le monete che costa la costruzione.
+	 *
+	 * @throws IllegalArgumentException se sono negative
+	 */
 	public Costruzione conMonete(int monete) {
 		if (monete < 0) {
 			throw new IllegalArgumentException("Monete negative: " + monete);
@@ -44,6 +52,11 @@ public final class Costruzione {
 		return this;
 	}
 
+	/**
+	 * Le ore di gioco che richiede la costruzione.
+	 *
+	 * @throws IllegalArgumentException se sono negative
+	 */
 	public Costruzione inOre(int ore) {
 		if (ore < 0) {
 			throw new IllegalArgumentException("Ore negative: " + ore);

@@ -36,18 +36,30 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 		this.mandante = mandante;
 	}
 
+	/**
+	 * La richiesta dell'alchimista.
+	 */
 	public static RichiestaDiMateriali dellAlchimista() {
 		return new RichiestaDiMateriali(ClasseMissione.RICHIESTA_ALCHIMISTA, Mandante.ALCHIMISTA);
 	}
 
+	/**
+	 * La richiesta dell'armaiolo.
+	 */
 	public static RichiestaDiMateriali dellArmaiolo() {
 		return new RichiestaDiMateriali(ClasseMissione.RICHIESTA_ARMAIOLO, Mandante.ARMAIOLO);
 	}
 
+	/**
+	 * La richiesta del capitano delle guardie.
+	 */
 	public static RichiestaDiMateriali delCapitano() {
 		return new RichiestaDiMateriali(ClasseMissione.RICHIESTA_CAPITANO, Mandante.CAPITANO);
 	}
 
+	/**
+	 * La richiesta del locandiere.
+	 */
 	public static RichiestaDiMateriali delLocandiere() {
 		return new RichiestaDiMateriali(ClasseMissione.RICHIESTA_LOCANDIERE, Mandante.LOCANDIERE);
 	}

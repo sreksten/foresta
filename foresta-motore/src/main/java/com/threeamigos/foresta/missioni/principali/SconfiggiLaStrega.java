@@ -10,6 +10,7 @@ import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
+ * Sconfiggere la Strega, alleata del Drago, nel Maniero del Malefizio. È una figlia di {@link SconfiggiIlDrago}.
  *
  * @author Stefano Reksten
  */

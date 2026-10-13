@@ -301,6 +301,9 @@ public final class Passo {
 		return prossimoPasso.get();
 	}
 
+	/**
+	 * Dice se il passo ha un intermezzo da mostrare.
+	 */
 	public boolean haIntermezzo() {
 		return momentoIntermezzo != null;
 	}

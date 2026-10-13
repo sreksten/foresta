@@ -10,6 +10,7 @@ import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
+ * Sconfiggere il Minotauro Gigante, alleato del Drago, nella Torre della Paura. È una figlia di {@link SconfiggiIlDrago}.
  *
  * @author Stefano Reksten
  */

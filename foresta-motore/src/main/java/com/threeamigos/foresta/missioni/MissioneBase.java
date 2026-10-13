@@ -10,6 +10,12 @@ import com.threeamigos.foresta.tipi.ClasseMissione;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * La base delle missioni scritte a mano: tiene i dati nel {@code MissioneMD} (nome, descrizione, proprietà, missioni figlie) e implementa lo stato di una missione
+ * (attiva, completa, fallita) e l'albero delle missioni secondarie. Una missione concreta dice cosa succede prima, durante e dopo una locazione
+ * ({@code controllaPreLocazione}, {@code controllaInLocazione}, {@code controllaPostLocazione}). Le missioni fatte di passi estendono invece
+ * {@link MissioneAPassi}.
+ */
 public abstract class MissioneBase implements Missione {
 
 	protected static final String NOME = "NOME";

@@ -66,6 +66,11 @@ public final class SoccorsoRichiesto {
 		ricordo = campi.obbligatorio("RICORDO");
 	}
 
+	/**
+	 * Legge la riga della grammatica che descrive il soccorso.
+	 *
+	 * @throws IllegalArgumentException se la riga è sbagliata o manca un campo obbligatorio
+	 */
 	public static SoccorsoRichiesto da(String riga) {
 		return new SoccorsoRichiesto(riga);
 	}

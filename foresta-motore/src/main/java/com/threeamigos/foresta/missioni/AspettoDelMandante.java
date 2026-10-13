@@ -37,6 +37,9 @@ public enum AspettoDelMandante {
 		this.scena = scena;
 	}
 
+	/**
+	 * Una scena nuova con chi ha questo aspetto, per l'intermezzo dell'incarico.
+	 */
 	public ScenaInCitta nuovaScena() {
 		return scena.get();
 	}

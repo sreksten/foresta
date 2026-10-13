@@ -80,6 +80,9 @@ public abstract class LaLiberazione extends IncaricoInCitta {
 	 */
 	protected abstract String testoPortaChiusa();
 
+	/**
+	 * La scena in cui si scopre che la persona da liberare non c'è più, se la città del mandante viene distrutta o la liberazione fallisce.
+	 */
 	protected abstract ScenaInCitta scenaDelLutto();
 
 	/**

@@ -12,6 +12,10 @@ import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 
+/**
+ * La missione principale: sconfiggere il Drago. Il suo castello è nascosto da un incantesimo finché non sono stati sconfitti tutti i suoi alleati: le missioni
+ * figlie ({@link SconfiggiLaStrega}, {@link SconfiggiIlLich}, {@link SconfiggiIlMinotauroGigante}, {@link SconfiggiLIdra}) vanno sconfitte prima.
+ */
 public class SconfiggiIlDrago extends MissioneBase implements Missione {
 
 	public SconfiggiIlDrago() {

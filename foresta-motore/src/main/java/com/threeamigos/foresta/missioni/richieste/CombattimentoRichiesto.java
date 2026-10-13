@@ -98,6 +98,11 @@ public final class CombattimentoRichiesto {
 		return ondate;
 	}
 
+	/**
+	 * Legge la riga della grammatica che descrive l'incarico di combattimento.
+	 *
+	 * @throws IllegalArgumentException se la riga è sbagliata o manca un campo obbligatorio
+	 */
 	public static CombattimentoRichiesto da(String riga) {
 		return new CombattimentoRichiesto(riga);
 	}

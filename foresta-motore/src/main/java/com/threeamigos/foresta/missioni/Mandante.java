@@ -52,6 +52,9 @@ public enum Mandante {
 		return nome;
 	}
 
+	/**
+	 * Una scena nuova con questo mandante, per l'intermezzo dell'incarico.
+	 */
 	public ScenaInCitta nuovaScena() {
 		return scena.get();
 	}

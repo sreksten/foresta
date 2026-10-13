@@ -6,6 +6,11 @@ package com.threeamigos.foresta.missioni;
  */
 // Ogni tipo coperto da almeno una missione vera ha sopra un commento "Coperto da:" con le classi che lo coprono
 // (vedi passi_missioni.md, "Regole per chi aggiunge missioni"); i tipi impossibili nella Foresta sono commentati.
+/**
+ * Il catalogo dei tipi di missione che il gioco può proporre, raggruppati per {@link SupertipoMissione}: ciascuno con un esempio. Non sono le classi concrete (quelle
+ * sono le {@code ClasseMissione}), ma i generi di incarico. Sopra ogni tipo un commento "Coperto da:" dice quali missioni lo realizzano (vedi passi_missioni.md,
+ * "Regole per chi aggiunge missioni"); quelli impossibili nella Foresta sono commentati.
+ */
 public enum TipoMissione {
 
     // Coperto da: RichiestaDiMateriali (alchimista: le erbe)

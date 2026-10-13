@@ -10,6 +10,7 @@ import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
+ * Sconfiggere l'Idra, alleata del Drago, nella Rocca del Sangue. È una figlia di {@link SconfiggiIlDrago}.
  *
  * @author Stefano Reksten
  */

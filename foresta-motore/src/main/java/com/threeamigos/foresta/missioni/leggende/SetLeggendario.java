@@ -56,6 +56,9 @@ public final class SetLeggendario {
 		return valore;
 	}
 
+	/**
+	 * Legge la riga di leggendari.txt che descrive il set.
+	 */
 	public static SetLeggendario da(String riga) {
 		return new SetLeggendario(riga);
 	}

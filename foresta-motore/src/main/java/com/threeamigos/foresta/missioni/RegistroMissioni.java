@@ -24,6 +24,12 @@ import com.threeamigos.foresta.motore.Quadrante;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.missioni.principali.SconfiggiIlDrago;
 
+/**
+ * Le missioni della partita: quelle predefinite ({@link TipoMissionePredefinita}), in tre elenchi (in corso, completate, fallite), e le secondarie nate durante il gioco, anch'esse
+ * in tre elenchi. Le controlla a ogni locazione (prima, durante, dopo), consegna loro gli eventi di gioco (avversari sconfitti, oggetti raccolti, combattimenti) e tiene i
+ * conti delle locazioni che le missioni rivendicano, segnano sulla mappa o svuotano, e delle ricerche di una casella adatta (vedi gestione_missioni.md, §6-7). I dati stanno nel
+ * {@code RegistroMissioniMD} e si salvano con la partita.
+ */
 public class RegistroMissioni {
 
 	private static RegistroMissioniMD getRegistroMissioni() {
@@ -33,6 +39,9 @@ public class RegistroMissioni {
 	private RegistroMissioni() {
 	}
 
+	/**
+	 * Le missioni che esistono dall'inizio della partita, ciascuna con la sua classe: il suo nome è l'identificativo con cui la missione si salva.
+	 */
 	public enum TipoMissionePredefinita {
 		SCONFIGGI_IL_DRAGO(ClasseMissione.SCONFIGGI_IL_DRAGO),
 		RECUPERA_IL_MEDAGLIONE(ClasseMissione.RECUPERA_IL_MEDAGLIONE),
@@ -78,6 +87,9 @@ public class RegistroMissioni {
 			return FabbricaMissioni.crea(classeMissione);
 		}
 
+		/**
+		 * Dice se quell'identificativo è quello di una missione predefinita.
+		 */
 		public static boolean contieneMissione(String id) {
 			return Arrays.stream(TipoMissionePredefinita.values()).anyMatch(m -> m.name().equals(id));
 		}
@@ -181,6 +193,9 @@ public class RegistroMissioni {
 		}
 	}
 
+	/**
+	 * Ricomincia da capo: dimentica le missioni e crea una missione per ogni predefinita.
+	 */
 	public static void reimposta() {
 		RegistroMissioniMD md = getRegistroMissioni();
 		md.reimposta();
@@ -194,6 +209,9 @@ public class RegistroMissioni {
 		}
 	}
 	
+	/**
+	 * Dopo aver caricato un salvataggio ricostruisce le missioni dai dati letti e rimette ogni locazione rivendicata o segnalata.
+	 */
 	public static void aggiornaDopoRilettura() {
 		RegistroMissioniMD md = getRegistroMissioni();
 		pulisciElenchi();

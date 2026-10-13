@@ -316,6 +316,9 @@ public abstract class MissioneAPassi extends MissioneBase {
 		return Passo.quando(momento, () -> getContatore(contatore) >= obiettivo);
 	}
 
+	/**
+	 * Aggiunge quella quantità a un contatore della missione (che si salva con le proprietà); la quantità può essere negativa.
+	 */
 	protected final void incrementaContatore(String contatore, int quanto) {
 		aggiungiProprieta(CONTATORE + validaId(contatore), String.valueOf(getContatore(contatore) + quanto));
 	}
@@ -544,6 +547,9 @@ public abstract class MissioneAPassi extends MissioneBase {
 				.falliscoSe(this::haCombattutoNelPassoCorrente, testoSeScoperti);
 	}
 
+	/**
+	 * Dice se, da quando il passo corrente è cominciato, il gruppo ha combattuto.
+	 */
 	public final boolean haCombattutoNelPassoCorrente() {
 		return getConteggioNelPassoCorrente(EVENTO_COMBATTIMENTO) > 0;
 	}
@@ -935,6 +941,9 @@ public abstract class MissioneAPassi extends MissioneBase {
 
 	// --- Eventi di gioco contati per il passo corrente (vedi RegistroMissioni.registrati)
 
+	/**
+	 * Il nome dell'evento "è stato sconfitto un avversario di quella classe", da registrare con {@link #registraEvento}.
+	 */
 	public static String eventoSconfitto(TipoPersonaggio classe) {
 		return "SCONFITTO_" + classe.name();
 	}
@@ -960,6 +969,9 @@ public abstract class MissioneAPassi extends MissioneBase {
 		return "INOSSERVATO_IN_" + coordinate.getX() + "_" + coordinate.getY();
 	}
 
+	/**
+	 * Il nome dell'evento "è stato raccolto un oggetto di quel tipo", da registrare con {@link #registraEvento}.
+	 */
 	public static String eventoRaccolto(TipoOggetto tipo) {
 		return "RACCOLTO_" + tipo.name();
 	}
@@ -999,6 +1011,9 @@ public abstract class MissioneAPassi extends MissioneBase {
 		return Long.parseLong(valore);
 	}
 
+	/**
+	 * Le ore di gioco trascorse dall'inizio, contando i giorni interi.
+	 */
 	protected static long oreDiGioco() {
 		return LineaTemporale.getGiorno() * 24L + LineaTemporale.getOra();
 	}
@@ -1088,6 +1103,9 @@ public abstract class MissioneAPassi extends MissioneBase {
 		aggiungiProprieta(SEQUENZA_PASSI, String.join(SEPARATORE, idPassi));
 	}
 
+	/**
+	 * La sequenza di passi fissata con {@link #impostaSequenzaPassi}.
+	 */
 	protected final List<String> leggiSequenzaPassi() {
 		return leggiLista(SEQUENZA_PASSI);
 	}
@@ -1180,6 +1198,9 @@ public abstract class MissioneAPassi extends MissioneBase {
 		return ottieniProprieta(INTERMEZZO_MOSTRATO + idPasso) != null;
 	}
 
+	/**
+	 * Segna che l'intermezzo di quel passo è stato mostrato e lo toglie da quelli in attesa.
+	 */
 	public final void segnaIntermezzoPassoMostrato(String idPasso) {
 		aggiungiProprieta(INTERMEZZO_MOSTRATO + validaId(idPasso), AFFERMATIVO);
 		List<String> inAttesa = leggiLista(INTERMEZZI_IN_ATTESA);

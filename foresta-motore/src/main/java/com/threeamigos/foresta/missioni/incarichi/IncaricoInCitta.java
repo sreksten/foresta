@@ -62,14 +62,29 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 		super(classe);
 	}
 
+	/**
+	 * La scena in cui il mandante chiede l'incarico.
+	 */
 	protected abstract ScenaInCitta scenaIncarico();
 
+	/**
+	 * La scena in cui il mandante ringrazia, quando il gruppo torna a riscuotere.
+	 */
 	protected abstract ScenaInCitta scenaRingraziamento();
 
+	/**
+	 * Il testo che si legge quando il gruppo accetta l'incarico.
+	 */
 	protected abstract String testoAccettazione();
 
+	/**
+	 * Il testo che si legge quando il gruppo riceve la ricompensa.
+	 */
 	protected abstract String testoRicompensa();
 
+	/**
+	 * La paga base, per il primo livello del mondo; la paga vera la moltiplica per il livello (vedi {@link #getRicompensa()}).
+	 */
 	protected abstract int getRicompensaBase();
 
 	/**
@@ -83,8 +98,14 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 		return getRicompensaBase() * (livello != null ? Integer.parseInt(livello) : Statistiche.getLivello());
 	}
 
+	/**
+	 * L'identificativo del primo passo del compito, quello che viene dopo l'accettazione.
+	 */
 	protected abstract String primoPassoDelCompito();
 
+	/**
+	 * Costruisce uno dei passi del compito: l'ultimo deve proseguire con il ritorno nella città.
+	 */
 	protected abstract Passo costruisciPassoDelCompito(String id);
 
 	/**
@@ -94,6 +115,9 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 		return null;
 	}
 
+	/**
+	 * Il testo che si legge quando il gruppo consegna gli oggetti richiesti; vuoto se non ce ne sono.
+	 */
 	protected String testoConsegna() {
 		return "";
 	}
@@ -136,6 +160,9 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	protected void allIncarico() {
 	}
 
+	/**
+	 * Il testo che si legge se la città in cui si riscuote viene distrutta, e l'incarico fallisce.
+	 */
 	protected String testoCittaDistrutta() {
 		return nomeDellaCitta(getCittaDelRitorno()) + " è stata distrutta: nessuno potrà più pagare per l'incarico.";
 	}
@@ -343,6 +370,9 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 				&& !LineaTemporale.isCittaDistrutta(tipo);
 	}
 
+	/**
+	 * Dice se il gruppo è nella città in cui l'incarico si offre.
+	 */
 	protected final boolean nellaCitta() {
 		return inCitta(getCitta());
 	}

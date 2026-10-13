@@ -29,7 +29,7 @@ Ogni missione può avere **figlie** (`aggiungiMissione`, `getMissioniSecondarie`
 `tipi.ClasseMissione` elenca **ogni classe concreta** di missione, e `missioni.FabbricaMissioni` ne tiene il costruttore: è ciò che permette di ricostruire un albero dopo un caricamento, perché ogni nodo salvato dichiara la propria classe. Ne consegue una regola: **ogni missione che il gioco può creare, anche solo come figlia affidata a metà partita, deve stare in `ClasseMissione` e in `FabbricaMissioni`** (`FabbricheTest` controlla che ogni `ClasseMissione` si costruisca). Quelle che nascono con la partita stanno anche in `RegistroMissioni.TipoMissionePredefinita` (§2), che elenca solo le radici.
 
 Le missioni si dividono per come sono scritte:
-- **a mano**, direttamente su `MissioneBase`: le principali (`SconfiggiIlDrago` e le quattro `Sconfiggi*` figlie) e alcune secondarie semplici (`Combatti` e le sue derivate, `VisitaLocanda`, `MuoviALocazione`, `CronacheDiUnFegatoEroico`, `NessunBoccaleLasciatoIndietro`, `DisturbatoreDellaQuietePubblica`, `MissioneSecondaria`);
+- **a mano**, direttamente su `MissioneBase`: le principali (`SconfiggiIlDrago` e le quattro `Sconfiggi*` figlie) e alcune secondarie semplici (`VisitaLocanda`, `MuoviALocazione`, `CronacheDiUnFegatoEroico`, `NessunBoccaleLasciatoIndietro`, `DisturbatoreDellaQuietePubblica`, `MissioneSecondaria`);
 - **a passi**, su `MissioneAPassi` (§4): tutto il resto, cioè le due missioni di recupero, gli incarichi in città, le leggende, i rituali e le altre. È il modo in cui si scrivono le missioni nuove.
 
 ## 2. Il registro (`RegistroMissioni`)

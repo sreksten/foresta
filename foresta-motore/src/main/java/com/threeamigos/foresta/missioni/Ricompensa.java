@@ -22,29 +22,47 @@ public final class Ricompensa {
 	private Ricompensa() {
 	}
 
+	/**
+	 * Una ricompensa vuota, su cui costruire con i metodi {@code con…}.
+	 */
 	public static Ricompensa nulla() {
 		return new Ricompensa();
 	}
 
+	/**
+	 * Una ricompensa di sole monete.
+	 */
 	public static Ricompensa inMonete(int monete) {
 		return nulla().conMonete(monete);
 	}
 
+	/**
+	 * Aggiunge monete alla ricompensa.
+	 */
 	public Ricompensa conMonete(int monete) {
 		this.monete = nonNegativo(monete);
 		return this;
 	}
 
+	/**
+	 * Aggiunge pietre preziose alla ricompensa.
+	 */
 	public Ricompensa conPreziosi(int preziosi) {
 		this.preziosi = nonNegativo(preziosi);
 		return this;
 	}
 
+	/**
+	 * Aggiunge punti esperienza alla ricompensa.
+	 */
 	public Ricompensa conEsperienza(int esperienza) {
 		this.esperienza = nonNegativo(esperienza);
 		return this;
 	}
 
+	/**
+	 * Aggiunge un artefatto, che si crea solo al momento di consegnarlo.
+	 */
 	public Ricompensa conArtefatto(Supplier<Artefatto> artefatto) {
 		this.artefatto = artefatto;
 		return this;

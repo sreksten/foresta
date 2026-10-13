@@ -78,6 +78,11 @@ public final class TorneoRichiesto {
 		ricordo = campi.obbligatorio("RICORDO");
 	}
 
+	/**
+	 * Legge la riga della grammatica che descrive il torneo.
+	 *
+	 * @throws IllegalArgumentException se la riga è sbagliata o manca un campo obbligatorio
+	 */
 	public static TorneoRichiesto da(String riga) {
 		return new TorneoRichiesto(riga);
 	}
