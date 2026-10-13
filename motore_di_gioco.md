@@ -66,7 +66,7 @@ Restano fuori dalla regola i due punti in cui il motore usa Swing per il thread 
 1. **Comandi del giocatore**: la UI pubblica `ComandoDiGioco` e l'automa lo riceve in `processaComando`. Il testo libero (nome del personaggio, nome per la classifica, nome di un artefatto) arriva con un altro evento, `ComandoInvioTesto`, e segue lo stesso ciclo.
 2. **Impulsi di un timer**: `Temporizzatore.inizia(ms)` fa scattare il primo impulso subito, `iniziaDopo(ms)` dopo un periodo intero, `termina()` ferma. Ogni impulso arriva all'automa come `Comando.TIMER`. Il combattimento usa `inizia(1000)` (un round al secondo, primo subito); gli intermezzi, l'intro e le sequenze di sconfitta e vittoria usano `iniziaDopo`, perché la prima schermata non sparisca all'istante.
 
-`TemporizzatoreJ2SE` pianifica gli impulsi su un thread daemon, ma ognuno viene eseguito sull'Event Dispatch Thread, e ricorda la pianificazione da cui viene: se nel frattempo è cambiata (un `inizia`, `iniziaDopo` o `termina`), l'impulso già accodato non fa nulla. Così nessun `TIMER` raggiunge l'automa dopo un cambio di stato. **Tutta la logica di gioco gira sull'EDT**; solo il timing è schedulato fuori.
+`TemporizzatoreJ2SE` pianifica gli impulsi su un thread daemon, ma ognuno viene eseguito sull'Event Dispatch Thread, e ricorda la pianificazione da cui viene: se nel frattempo è cambiata (un `inizia`, `iniziaDopo` o `termina`), l'impulso già accodato non fa nulla. Così nessun `TIMER` raggiunge l'automa dopo un cambio di stato. **Tutta la logica di gioco gira sul thread principale** (per Swing l'EDT); solo il timing è schedulato fuori. Motore e bus non conoscono Swing: passano da `strumenti/ThreadPrincipale` (`esegui`, `accoda`), e `Main` vi installa `ui/EsecutoreSwing`. Senza un esecutore installato le operazioni girano subito sul thread chiamante.
 
 ### Il ciclo di avanzamento
 
@@ -123,7 +123,7 @@ INIZIO_LOCAZIONE ─ controllo missioni PRE_LOCAZIONE ─ evento della linea tem
 
 `BusEventi` è un publish/subscribe **sincrono per classe esatta** (`evento.getClass()`: iscriversi a una superclasse non intercetta le sottoclassi), con `iscriviti`, `cancellati`, `pubblica`.
 
-- **Consegna sull'EDT.** `pubblica` consegna subito se già sull'EDT, altrimenti accoda con `invokeLater`. La consegna è sostituibile con `impostaConsegna` (i test usano `Runnable::run` per riceverla subito sul loro thread) e `azzera()` toglie tutti gli iscritti.
+- **Consegna sul thread principale.** `pubblica` consegna subito se già sul thread principale (`ThreadPrincipale`), altrimenti accoda. La consegna è sostituibile con `impostaConsegna` (i test usano `Runnable::run` per riceverla subito sul loro thread) e `azzera()` toglie tutti gli iscritti.
 - **Isolamento degli errori.** Ogni iscritto è chiamato in un `try`: se uno solleva un'eccezione gli altri ricevono comunque l'evento, l'errore va nel `Logger` e sul bus come `InternoException`, a meno che a fallire sia proprio chi ascolta quelle. Chi ha pubblicato non si trova l'eccezione a metà di una transizione.
 - Sottoscrittori in `CopyOnWriteArrayList`; nessuna garanzia di ordine fra iscritti allo stesso evento.
 

@@ -3,7 +3,6 @@ package com.threeamigos.foresta.strumenti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 
-import javax.swing.SwingUtilities;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -20,7 +19,7 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 
 	private ScheduledFuture<?> timerTask;
 	// Cambia a ogni inizia/iniziaDopo/termina. cancel() ferma i prossimi impulsi ma non quelli gia' accodati
-	// sull'EDT con invokeLater: ognuno ricorda la pianificazione da cui viene e, se non e' piu' quella corrente,
+	// sul thread principale con accoda: ognuno ricorda la pianificazione da cui viene e, se non e' piu' quella corrente,
 	// non fa nulla. Cosi' nessun TIMER arriva all'automa dopo un cambio di stato.
 	private final AtomicInteger pianificazione = new AtomicInteger();
 	private Temporizzabile temporizzabile;
@@ -43,11 +42,11 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 		}
 		int questaPianificazione = pianificazione.incrementAndGet();
 		timerTask = executor.scheduleWithFixedDelay(
-			// Il tick va eseguito sull'EDT: processaComando() pubblica eventi via BusEventi, che
-			// se chiamato da un thread diverso dall'EDT li accoda con invokeLater. Questo apre una
+			// Il tick va eseguito sul thread principale: processaComando() pubblica eventi via BusEventi, che
+			// se chiamato da un thread diverso li accoda. Questo apre una
 			// finestra in cui lo stato di gioco è già cambiato (es. un personaggio è morto) ma la
 			// UI non l'ha ancora saputo, causando artefatti visivi (es. flicker alla morte di un mostro).
-			() -> SwingUtilities.invokeLater(() -> {
+			() -> ThreadPrincipale.accoda(() -> {
 				if (pianificazione.get() != questaPianificazione) {
 					return;
 				}

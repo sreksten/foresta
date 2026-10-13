@@ -37,7 +37,7 @@ class DisplayableCanvasAnnuncioGlobaleTest {
 	@AfterEach
 	void ripristinaBus() {
 		BusEventi.azzera();
-		BusEventi.impostaConsegna(BusEventi.CONSEGNA_SU_EDT);
+		BusEventi.impostaConsegna(BusEventi.CONSEGNA_SU_THREAD_PRINCIPALE);
 	}
 
 	@Test

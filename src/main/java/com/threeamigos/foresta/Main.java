@@ -13,6 +13,7 @@ import com.threeamigos.foresta.motore.RegistroTrofei;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.strumenti.*;
+import com.threeamigos.foresta.ui.EsecutoreSwing;
 import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Orientamento;
@@ -49,6 +50,9 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 
+		// Tutta la logica di gioco gira sull'Event Dispatch Thread di Swing
+		ThreadPrincipale.imposta(new EsecutoreSwing());
+
 		// Si registra per ascoltare qualsiasi evento venga generato
 		new SnifferBusEventi();
 		// Si registra per ricordare gli ultimi messaggi e le ultime notizie
@@ -67,7 +71,7 @@ public class Main {
 		Temporizzatore temporizzatoreAutoma = new TemporizzatoreJ2SE();
 		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatoreAutoma, new GestoreSalvataggiSuFile(), gestorePunteggi);
 
-		// Ci si iscrive prima di creare la UI: ForestaUI pubblica InternoInterfacciaUtentePronta sull'EDT,
+		// Ci si iscrive prima di creare la UI: ForestaUI pubblica InternoInterfacciaUtentePronta sul thread principale,
 		// e un evento senza iscritti andrebbe perso lasciando il gioco sulla finestra nera
 		BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, e -> controlloreDiGioco.inizia());
 

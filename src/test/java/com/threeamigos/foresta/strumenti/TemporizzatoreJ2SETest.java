@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.strumenti;
 
+import com.threeamigos.foresta.ui.EsecutoreSwing;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.SwingUtilities;
@@ -10,6 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TemporizzatoreJ2SETest {
 
+    @BeforeAll
+    static void usaIlThreadDiSwing() {
+        ThreadPrincipale.imposta(new EsecutoreSwing());
+    }
+
+    @AfterAll
+    static void tornaAllEsecuzioneImmediata() {
+        ThreadPrincipale.imposta(null);
+    }
+
     @Test
     void gliImpulsiGiaAccodatiNonArrivanoDopoTermina() throws Exception {
         TemporizzatoreJ2SE temporizzatore = new TemporizzatoreJ2SE();
@@ -17,7 +30,7 @@ class TemporizzatoreJ2SETest {
         temporizzatore.setTemporizzabile(impulsi::incrementAndGet);
         SwingUtilities.invokeAndWait(() -> {
             temporizzatore.inizia(2);
-            // L'EDT e' occupato: intanto gli impulsi si accodano con invokeLater
+            // Il thread principale e' occupato: intanto gli impulsi si accodano
             try {
                 Thread.sleep(60);
             } catch (InterruptedException e) {

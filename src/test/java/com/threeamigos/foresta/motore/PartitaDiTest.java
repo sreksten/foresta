@@ -400,7 +400,7 @@ final class PartitaDiTest implements AutoCloseable {
 		Dado.ripristina();
 		Dado.impostaSeme(System.nanoTime());
 		BusEventi.azzera();
-		BusEventi.impostaConsegna(BusEventi.CONSEGNA_SU_EDT);
+		BusEventi.impostaConsegna(BusEventi.CONSEGNA_SU_THREAD_PRINCIPALE);
 		if (modalitaDiProvaPrecedente) {
 			ModalitaDiProva.setAttiva(false);
 		}

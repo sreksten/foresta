@@ -21,7 +21,7 @@ class BusEventiTest {
     @AfterEach
     void ripristina() {
         BusEventi.azzera();
-        BusEventi.impostaConsegna(BusEventi.CONSEGNA_SU_EDT);
+        BusEventi.impostaConsegna(BusEventi.CONSEGNA_SU_THREAD_PRINCIPALE);
     }
 
     @Test

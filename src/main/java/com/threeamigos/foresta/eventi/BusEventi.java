@@ -2,8 +2,8 @@ package com.threeamigos.foresta.eventi;
 
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.ThreadPrincipale;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,7 +13,8 @@ import java.util.function.Consumer;
 /**
  * Un Bus Eventi sincrono
  * Chi deve pubblicare chiama pubblica(evento); chi si vuole iscrivere chiama iscriviti(Type.class, gestore).
- * La consegna avviene sull'Event Dispatch Thread: subito se si pubblica già da lì, altrimenti accodata.
+ * La consegna avviene sul thread principale (vedi {@link ThreadPrincipale}): subito se si pubblica già da lì,
+ * altrimenti accodata.
  * I test possono sostituire la consegna (vedi {@link #impostaConsegna}) per riceverla subito sul proprio thread.
  *
  * @author Stefano Reksten
@@ -23,17 +24,11 @@ public class BusEventi {
     private static final Map<Class<?>, List<Consumer<Object>>> sottoscrittori = new ConcurrentHashMap<>();
 
     /**
-     * La consegna del gioco: sull'Event Dispatch Thread, subito se si è già lì.
+     * La consegna del gioco: sul thread principale, subito se si è già lì.
      */
-    public static final Consumer<Runnable> CONSEGNA_SU_EDT = consegna -> {
-        if (SwingUtilities.isEventDispatchThread()) {
-            consegna.run();
-        } else {
-            SwingUtilities.invokeLater(consegna);
-        }
-    };
+    public static final Consumer<Runnable> CONSEGNA_SU_THREAD_PRINCIPALE = ThreadPrincipale::esegui;
 
-    private static volatile Consumer<Runnable> consegna = CONSEGNA_SU_EDT;
+    private static volatile Consumer<Runnable> consegna = CONSEGNA_SU_THREAD_PRINCIPALE;
 
     private BusEventi() {
     }
@@ -78,10 +73,10 @@ public class BusEventi {
 
     /**
      * Sostituisce il modo in cui gli eventi arrivano agli iscritti. Nei test {@code Runnable::run} li consegna
-     * subito sul thread che pubblica, come succede nel gioco, dove tutto gira sull'Event Dispatch Thread.
+     * subito sul thread che pubblica, come succede nel gioco, dove tutto gira sul thread principale.
      */
     public static void impostaConsegna(Consumer<Runnable> nuovaConsegna) {
-        consegna = nuovaConsegna == null ? CONSEGNA_SU_EDT : nuovaConsegna;
+        consegna = nuovaConsegna == null ? CONSEGNA_SU_THREAD_PRINCIPALE : nuovaConsegna;
     }
 
     /**

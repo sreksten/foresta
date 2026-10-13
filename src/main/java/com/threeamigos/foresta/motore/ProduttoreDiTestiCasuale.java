@@ -9,8 +9,8 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.strumenti.ThreadPrincipale;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -71,10 +71,10 @@ public class ProduttoreDiTestiCasuale {
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/sfide.txt"), null);
 		} catch (InvalidGrammarException | IOException e) {
 			// Senza grammatiche il gioco non puo' andare avanti: si segnala l'errore e si esce. L'uscita va in coda
-			// sull'EDT dopo la notifica, cosi' chi ascolta le InternoException la riceve prima.
+			// sul thread principale dopo la notifica, cosi' chi ascolta le InternoException la riceve prima.
 			Logger.log(e);
 			BusEventi.pubblica(new InternoException("Grammatiche dei testi non valide o mancanti", e));
-			SwingUtilities.invokeLater(() -> System.exit(1));
+			ThreadPrincipale.accoda(() -> System.exit(1));
 		}
 	}
 
