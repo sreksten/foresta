@@ -36,8 +36,14 @@ public interface Serializzabile {
 		return valore instanceof Enum ? ((Enum<?>) valore).name() : valore.toString();
 	}
 
+	/**
+	 * Scrive l'oggetto sul flusso, in un formato di testo a righe che {@link #leggi(BufferedReader)} sa rileggere.
+	 */
 	void salva(PrintWriter stream) throws IOException;
 	
+	/**
+	 * Rilegge l'oggetto da ciò che ha scritto {@link #salva(PrintWriter)}, sostituendo il suo contenuto attuale.
+	 */
 	void leggi(BufferedReader stream) throws IOException;
 	
 }

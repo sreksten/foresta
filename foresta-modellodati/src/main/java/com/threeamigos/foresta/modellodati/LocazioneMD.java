@@ -57,6 +57,9 @@ public class LocazioneMD implements Serializzabile {
 		this.tipo = tipo;
 	}
 
+	/**
+	 * L'identificativo unico di questa casella, assegnato alla creazione e conservato nei salvataggi.
+	 */
 	public String getUuid() {
 		return uuid;
 	}
@@ -69,22 +72,38 @@ public class LocazioneMD implements Serializzabile {
 		this.tipo = tipo;
 	}
 
+	/**
+	 * Imposta una proprietà (o ne sostituisce il valore). Il carattere "|" si toglie dal valore, perché separa i campi
+	 * nel salvataggio. Per le proprietà che valgono per la sola presenza si usa {@link #AFFERMATIVO}.
+	 */
 	public void aggiungiProprieta(String nome, String valore) {
 		proprieta.put(nome, Serializzabile.senzaPipe(valore));
 	}
 
+	/**
+	 * @return il valore della proprietà, o null se la casella non ce l'ha
+	 */
 	public String ottieniProprieta(String nome) {
 		return proprieta.get(nome);
 	}
 
+	/**
+	 * Toglie la proprietà, se c'è.
+	 */
 	public void rimuoviProprieta(String nome) {
 		proprieta.remove(nome);
 	}
 
+	/**
+	 * Il nome proprio della casella, o null se non ne ha.
+	 */
 	public String getNome() {
 		return proprieta.get(NOME);
 	}
 
+	/**
+	 * Imposta il nome proprio della casella; con null lo toglie. Il carattere "|" si toglie dal nome.
+	 */
 	public void setNome(String nome) {
 		if (nome == null) {
 			proprieta.remove(NOME);
@@ -93,6 +112,10 @@ public class LocazioneMD implements Serializzabile {
 		}
 	}
 
+	/**
+	 * Scrive una riga: uuid, tipo e, se ce ne sono, le proprietà (vedi {@link MappaProprieta}), tutto separato
+	 * da {@link #PIPE}.
+	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.print(uuid);
@@ -105,6 +128,9 @@ public class LocazioneMD implements Serializzabile {
 		stream.println();
 	}
 
+	/**
+	 * Rilegge la riga scritta da {@link #salva(PrintWriter)}, sostituendo tutte le proprietà.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();

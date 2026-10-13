@@ -7,11 +7,22 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Le missioni della partita, ciascuna con il proprio identificativo: quelle attive e quelle completate.
+ * <p>
+ * Sono dati puri: le regole che le fanno avanzare e che le spostano da un elenco all'altro stanno nel motore
+ * (vedi gestione_missioni.md).
+ *
+ * @author Stefano Reksten
+ */
 public class RegistroMissioniMD implements Serializzabile {
 
 	private final Map<String, MissioneMD> missioniAttive = new HashMap<>();
 	private final Map<String, MissioneMD> missioniCompletate = new HashMap<>();
 
+	/**
+	 * Dimentica tutte le missioni, attive e completate.
+	 */
 	public void reimposta() {
 		missioniAttive.clear();
 		missioniCompletate.clear();
@@ -24,18 +35,30 @@ public class RegistroMissioniMD implements Serializzabile {
 		missioniAttive.put(id, missione);
 	}
 
+	/**
+	 * @return la missione attiva con quell'identificativo, o null se non c'è
+	 */
 	public MissioneMD getMissioneAttiva(String id) {
 		return missioniAttive.get(id);
 	}
 
+	/**
+	 * Le missioni attive.
+	 */
 	public Collection<MissioneMD> getMissioniAttive() {
 		return missioniAttive.values();
 	}
 
+	/**
+	 * Le missioni completate.
+	 */
 	public Collection<MissioneMD> getMissioniCompletate() {
 		return missioniCompletate.values();
 	}
 
+	/**
+	 * Scrive le missioni attive e poi le completate, ciascun elenco preceduto dal numero di missioni.
+	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		salvaImpl(stream, missioniAttive);
@@ -49,6 +72,9 @@ public class RegistroMissioniMD implements Serializzabile {
 		}
 	}
 
+	/**
+	 * Rilegge ciò che scrive {@link #salva(PrintWriter)}, sostituendo le missioni ricordate finora.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		leggiImpl(stream, missioniAttive);

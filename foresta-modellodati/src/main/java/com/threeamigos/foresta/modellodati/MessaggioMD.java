@@ -34,6 +34,9 @@ public class MessaggioMD implements Serializzabile {
 		this.paragrafo = paragrafo;
 	}
 
+	/**
+	 * L'identificativo unico del messaggio.
+	 */
 	public String getUuid() {
 		return uuid;
 	}
@@ -63,6 +66,9 @@ public class MessaggioMD implements Serializzabile {
 		stream.println(testo);
 	}
 
+	/**
+	 * Rilegge la riga scritta da {@link #salva(PrintWriter)}; un flusso finito troppo presto lancia un'{@link IOException}.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();

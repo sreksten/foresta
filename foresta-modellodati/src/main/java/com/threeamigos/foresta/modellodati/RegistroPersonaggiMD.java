@@ -5,6 +5,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
+/**
+ * I personaggi del mondo che non stanno nel gruppo del giocatore: quelli ancora da distribuire, quelli che si trovano
+ * nelle locazioni (uno per casella, riconosciuti dalle coordinate) e i residenti, che hanno un nome nel mondo senza
+ * stare in una locazione (vedi {@link ResidenteMD} e nomi.md).
+ * <p>
+ * L'elenco dei personaggi da distribuire non si salva: serve solo quando si costruisce la foresta.
+ *
+ * @author Stefano Reksten
+ */
 public class RegistroPersonaggiMD implements Serializzabile {
 
 	private final List<PersonaggioMD> elencoIniziale = new ArrayList<>();
@@ -14,24 +23,39 @@ public class RegistroPersonaggiMD implements Serializzabile {
 	// Chi ha un nome nel mondo senza stare in una locazione (vedi tipi.PersonaggioNoto), per chiave
 	private final Map<String, ResidenteMD> residenti = new LinkedHashMap<>();
 
+	/**
+	 * Dimentica tutti i personaggi e i residenti.
+	 */
 	public void reimposta() {
 		elencoIniziale.clear();
 		personaggiInLocazione.clear();
 		residenti.clear();
 	}
 
+	/**
+	 * @return il residente con quella chiave, o null se non c'è
+	 */
 	public final ResidenteMD getResidente(String chiave) {
 		return residenti.get(chiave);
 	}
 
+	/**
+	 * Aggiunge un residente con la sua chiave (vedi tipi.PersonaggioNoto); un residente con la stessa chiave viene sostituito.
+	 */
 	public final void aggiungiResidente(String chiave, ResidenteMD residente) {
 		residenti.put(chiave, residente);
 	}
 
+	/**
+	 * I residenti per chiave, nell'ordine in cui sono stati aggiunti; la mappa non si può modificare.
+	 */
 	public final Map<String, ResidenteMD> getResidenti() {
 		return Collections.unmodifiableMap(residenti);
 	}
 
+	/**
+	 * Aggiunge un personaggio all'elenco di quelli ancora da distribuire.
+	 */
 	public void aggiungiPersonaggio(PersonaggioMD personaggioMD) {
 		elencoIniziale.add(personaggioMD);
 	}
@@ -43,26 +67,45 @@ public class RegistroPersonaggiMD implements Serializzabile {
 		return elencoIniziale.remove(indice);
 	}
 
+	/**
+	 * Quanti personaggi restano da distribuire.
+	 */
 	public final int getNumeroDisponibili() {
 		return elencoIniziale.size();
 	}
 
+	/**
+	 * Le coordinate delle caselle in cui si trova un personaggio; l'insieme non si può modificare.
+	 */
 	public final Set<CoordinateMD> getUbicazioniPersonaggi() {
 		return Collections.unmodifiableSet(personaggiInLocazione.keySet());
 	}
 
+	/**
+	 * Mette il personaggio nella casella indicata, al posto di quello che c'era.
+	 */
 	public final void addPersonaggioInLocazione(PersonaggioMD personaggio, CoordinateMD coordinate) {
 		personaggiInLocazione.put(coordinate, personaggio);
 	}
 
+	/**
+	 * @return il personaggio nella casella, o null se non ce n'è
+	 */
 	public final PersonaggioMD getPersonaggioInLocazione(CoordinateMD coordinate) {
 		return personaggiInLocazione.get(coordinate);
 	}
 
+	/**
+	 * Toglie il personaggio dalla casella, se c'è.
+	 */
 	public final void rimuoviPersonaggioInLocazione(CoordinateMD coordinate) {
 		personaggiInLocazione.remove(coordinate);
 	}
 
+	/**
+	 * Scrive i personaggi nelle locazioni (le coordinate su una riga e poi il personaggio) e i residenti (una riga ciascuno),
+	 * ogni gruppo preceduto dal numero di elementi.
+	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.println(personaggiInLocazione.size());
@@ -78,6 +121,9 @@ public class RegistroPersonaggiMD implements Serializzabile {
 		}
 	}
 
+	/**
+	 * Rilegge ciò che scrive {@link #salva(PrintWriter)}, sostituendo i residenti ricordati finora.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();

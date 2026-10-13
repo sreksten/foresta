@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Modello dati di sola memoria: gli ultimi messaggi mostrati al giocatore nel
- * pannello di testo (per poterlo ripopolare dopo un ricaricamento) e le ultime
- * notizie destinate alla schermata della mappa. La logica di aggiunta (testa
- * della lista, scarto delle più vecchie oltre il limite) vive in {@link
- * com.threeamigos.foresta.motore.Notizie}, non qui: questa classe tiene solo i dati.
+ * Gli ultimi messaggi mostrati al giocatore nel pannello di testo (per poterlo ripopolare dopo un ricaricamento) e le
+ * ultime notizie destinate alla schermata della mappa, salvati con la partita.
+ * <p>
+ * La logica di aggiunta (testa della lista, scarto delle più vecchie oltre il limite) vive in
+ * {@code motore.Notizie}, non qui: questa classe tiene solo i dati.
  *
  * @author Stefano Reksten
  */
@@ -32,19 +32,31 @@ public class NotizieMD implements Serializzabile {
 	private final List<MessaggioMD> ultimiMessaggi = new ArrayList<>();
 	private final List<NotiziaMD> ultimeNotizie = new ArrayList<>();
 
+	/**
+	 * I messaggi ricordati, dal più recente al più vecchio, in numero non superiore a {@value #MASSIMO_MESSAGGI_RICORDATI}.
+	 */
 	public List<MessaggioMD> getUltimiMessaggi() {
 		return ultimiMessaggi;
 	}
 
+	/**
+	 * Le notizie ricordate, dalla più recente alla più vecchia, in numero non superiore a {@value #MASSIMO_NOTIZIE_RICORDATE}.
+	 */
 	public List<NotiziaMD> getUltimeNotizie() {
 		return ultimeNotizie;
 	}
 
+	/**
+	 * Dimentica messaggi e notizie.
+	 */
 	public void reimposta() {
 		ultimiMessaggi.clear();
 		ultimeNotizie.clear();
 	}
 
+	/**
+	 * Scrive il numero dei messaggi e i messaggi, poi il numero delle notizie e le notizie.
+	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.println(ultimiMessaggi.size());
@@ -57,6 +69,9 @@ public class NotizieMD implements Serializzabile {
 		}
 	}
 
+	/**
+	 * Rilegge ciò che scrive {@link #salva(PrintWriter)}, sostituendo messaggi e notizie ricordati finora.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		ultimiMessaggi.clear();

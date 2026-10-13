@@ -21,18 +21,30 @@ public class TrofeiMD implements Serializzabile {
 	private final Set<TipoTrofeo> vinti = EnumSet.noneOf(TipoTrofeo.class);
 	private final Map<TipoTrofeo, Integer> progressi = new EnumMap<>(TipoTrofeo.class);
 
+	/**
+	 * Dice se il trofeo è già stato vinto.
+	 */
 	public boolean isVinto(TipoTrofeo trofeo) {
 		return vinti.contains(trofeo);
 	}
 
+	/**
+	 * Segna il trofeo come vinto.
+	 */
 	public void aggiungiVinto(TipoTrofeo trofeo) {
 		vinti.add(trofeo);
 	}
 
+	/**
+	 * Il progresso accumulato verso il trofeo; zero se non ce n'è.
+	 */
 	public int getProgresso(TipoTrofeo trofeo) {
 		return progressi.getOrDefault(trofeo, 0);
 	}
 
+	/**
+	 * Aggiunge la quantità indicata al progresso verso il trofeo.
+	 */
 	public void incrementaProgresso(TipoTrofeo trofeo, int quantita) {
 		progressi.merge(trofeo, quantita, Integer::sum);
 	}

@@ -24,6 +24,12 @@ public class ModificatoreAttributoMD {
     private final int durata;
     private final BersaglioModificatore bersaglio;
 
+    /**
+     * @param note una nota libera, spesso vuota; il carattere "|" si toglie
+     * @param durata 0 per un modificatore permanente, almeno 1 per uno a tempo (nell'unità indicata)
+     * @throws IllegalArgumentException se la durata non è coerente con l'unità: un permanente deve avere durata 0 e uno a
+     * tempo almeno 1
+     */
     public ModificatoreAttributoMD(TipoAttributo tipoAttributo, TipoModificatore tipoModificatore,
                                  double quantita, String note, UnitaDurataModificatore unitaDurata, int durata,
                                  BersaglioModificatore bersaglio) {
@@ -40,25 +46,40 @@ public class ModificatoreAttributoMD {
         this.bersaglio = bersaglio;
     }
 
+    /**
+     * Un modificatore permanente, con una nota, che agisce su chi porta l'artefatto.
+     */
     public ModificatoreAttributoMD(TipoAttributo tipoAttributo, TipoModificatore tipoModificatore,
                                  double quantita, String note) {
         this(tipoAttributo, tipoModificatore, quantita, note, UnitaDurataModificatore.PERMANENTE, 0,
                 BersaglioModificatore.PORTATORE);
     }
 
+    /**
+     * Un modificatore permanente, senza note, che agisce su chi porta l'artefatto.
+     */
     public ModificatoreAttributoMD(TipoAttributo tipoAttributo, TipoModificatore tipoModificatore,
                                  double quantita) {
         this(tipoAttributo, tipoModificatore, quantita, "");
     }
 
+    /**
+     * L'attributo del personaggio che il modificatore cambia.
+     */
     public TipoAttributo getTipoAttributo() {
         return tipoAttributo;
     }
 
+    /**
+     * Come si applica la quantità: per esempio come variazione fissa, in percentuale o come valore a cui portare l'attributo.
+     */
     public TipoModificatore getTipoModificatoreAttributo() {
         return tipoModificatore;
     }
 
+    /**
+     * La quantità del modificatore (vedi {@link #getTipoModificatoreAttributo()}).
+     */
     public double getQuantita() {
         return quantita;
     }
@@ -67,6 +88,9 @@ public class ModificatoreAttributoMD {
         return note;
     }
 
+    /**
+     * L'unità in cui si misura la durata, o permanente.
+     */
     public UnitaDurataModificatore getUnitaDurata() {
         return unitaDurata;
     }
@@ -78,10 +102,16 @@ public class ModificatoreAttributoMD {
         return durata;
     }
 
+    /**
+     * Chi subisce il modificatore: chi porta l'artefatto o, per un'arma, il bersaglio che colpisce.
+     */
     public BersaglioModificatore getBersaglio() {
         return bersaglio;
     }
 
+    /**
+     * Dice se il modificatore ha una scadenza.
+     */
     public boolean isTemporaneo() {
         return unitaDurata != UnitaDurataModificatore.PERMANENTE;
     }
@@ -182,6 +212,9 @@ public class ModificatoreAttributoMD {
         return sb.toString();
     }
 
+    /**
+     * Due modificatori sono uguali se hanno tutti gli stessi dati, durata compresa.
+     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof ModificatoreAttributoMD)) {
@@ -191,6 +224,9 @@ public class ModificatoreAttributoMD {
         return stessoEffetto(other) && durata == other.durata;
     }
 
+    /**
+     * Coerente con {@link #equals(Object)}.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(tipoAttributo, tipoModificatore, quantita, note, unitaDurata, durata, bersaglio);

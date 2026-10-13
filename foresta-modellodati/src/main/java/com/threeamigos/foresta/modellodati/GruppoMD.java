@@ -10,6 +10,14 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * I dati di un gruppo di personaggi: chi ne fa parte, chi è il capo e le scorte comuni (le pergamene degli incantesimi
+ * e le quattro pozioni). Il gruppo del giocatore ne è una specializzazione ({@link GruppoGiocatoreMD}).
+ * <p>
+ * Il capo non è un personaggio a parte: è il personaggio nella posizione {@link #getIndiceCapo()} dell'elenco.
+ *
+ * @author Stefano Reksten
+ */
 public class GruppoMD implements Serializzabile {
 
 	protected List<PersonaggioMD> personaggiMD = new ArrayList<>();
@@ -30,10 +38,16 @@ public class GruppoMD implements Serializzabile {
 		this.indiceCapo = indiceCapo;
 	}
 
+	/**
+	 * Imposta quante pergamene di quell'incantesimo ha il gruppo.
+	 */
 	public void setIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
 		incantesimi.put(classeIncantesimo, quantita);
 	}
 
+	/**
+	 * Quante pergamene di quell'incantesimo ha il gruppo; zero se non ne ha.
+	 */
 	public int getIncantesimi(ClasseIncantesimo classeIncantesimo) {
 		return incantesimi.getOrDefault(classeIncantesimo, 0);
 	}
@@ -70,14 +84,23 @@ public class GruppoMD implements Serializzabile {
 		this.pozioniMagiaGrande = pozioniMagiaGrande;
 	}
 
+	/**
+	 * Aggiunge un personaggio in fondo all'elenco.
+	 */
 	public void addPersonaggioMD(PersonaggioMD personaggioMD) {
 		personaggiMD.add(personaggioMD);
 	}
 
+	/**
+	 * L'elenco dei personaggi, modificabile: la posizione di un personaggio è quella in cui il gruppo lo mostra.
+	 */
 	public List<PersonaggioMD> getPersonaggiMD() {
 		return personaggiMD;
 	}
 
+	/**
+	 * Svuota il gruppo: nessun personaggio, capo in prima posizione, nessuna pergamena e nessuna pozione.
+	 */
 	public void reimposta() {
 		personaggiMD.clear();
 		indiceCapo = 0;
@@ -88,6 +111,10 @@ public class GruppoMD implements Serializzabile {
 		pozioniMagiaGrande = 0;
 	}
 
+	/**
+	 * Scrive una riga con il numero dei personaggi e la posizione del capo, poi i personaggi uno dopo l'altro. Le scorte
+	 * non sono qui: le scrive {@link GruppoGiocatoreMD}.
+	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.println(personaggiMD.size() + PIPE + indiceCapo);
@@ -96,6 +123,9 @@ public class GruppoMD implements Serializzabile {
 		}
 	}
 
+	/**
+	 * Rilegge i personaggi scritti da {@link #salva(PrintWriter)} e li aggiunge a quelli già presenti.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		LettoreCampi campi = new LettoreCampi(stream.readLine());

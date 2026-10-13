@@ -9,6 +9,13 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Le statistiche della partita: livello del gioco, punti esperienza, punteggio, turni giocati, mostri uccisi per
+ * classe e l'identificativo della partita (che resta lo stesso attraverso salvataggi e caricamenti, così la classifica
+ * non registra due volte la stessa partita).
+ *
+ * @author Stefano Reksten
+ */
 public class StatisticheMD implements Serializzabile {
 
 	private int livello = 1;
@@ -52,12 +59,18 @@ public class StatisticheMD implements Serializzabile {
 		this.turniGiocati = turniGiocati;
 	}
 
+	/**
+	 * L'identificativo unico della partita, che non cambia fra un salvataggio e il successivo.
+	 */
 	public String getIdPartita() {
 		return idPartita;
 	}
 
 	////////////////////
 
+	/**
+	 * Azzera tutto per una partita nuova, compreso un identificativo di partita nuovo.
+	 */
 	public final void reimposta() {
 		mostriUccisi.clear();
 		livello = 1;
@@ -79,10 +92,16 @@ public class StatisticheMD implements Serializzabile {
 		this.puntiEsperienza = puntiEsperienza;
 	}
 
+	/**
+	 * Conta un mostro ucciso in più per quella classe.
+	 */
 	public final void addMostroUcciso(TipoPersonaggio classe) {
         mostriUccisi.merge(classe, 1, Integer::sum);
 	}
 
+	/**
+	 * Quanti mostri di quella classe sono stati uccisi; zero se nessuno.
+	 */
 	public final int getMostriUccisi(TipoPersonaggio classe) {
 		Integer uccisi = mostriUccisi.get(classe);
 		if (uccisi == null) {
@@ -91,6 +110,10 @@ public class StatisticheMD implements Serializzabile {
 		return uccisi;
 	}
 
+	/**
+	 * Scrive una riga con livello, punti esperienza, punteggio, turni e identificativo della partita, poi una riga
+	 * con i mostri uccisi di ogni classe, nella forma classe e numero.
+	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.print(livello);
@@ -111,6 +134,9 @@ public class StatisticheMD implements Serializzabile {
 		stream.println("");
 	}
 
+	/**
+	 * Rilegge le due righe scritte da {@link #salva(PrintWriter)}.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();

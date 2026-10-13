@@ -46,6 +46,9 @@ public final class TatticaMD {
 		return disabilitata;
 	}
 
+	/**
+	 * Una tattica con quelle voci, nell'ordine dato.
+	 */
 	public static TatticaMD di(VoceMD... voci) {
 		return new TatticaMD(java.util.Arrays.asList(voci));
 	}
@@ -76,6 +79,9 @@ public final class TatticaMD {
 		return perIMiei.isEmpty() || problemi(false).isEmpty() ? Collections.emptyList() : perIMiei;
 	}
 
+	/**
+	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 */
 	@Override
 	public String toString() {
 		return (disabilitata ? "(disabilitata) " : "") + voci.toString();
@@ -119,11 +125,17 @@ public final class TatticaMD {
 		}
 	}
 
+	/**
+	 * Due tattiche sono uguali se hanno gli stessi dati.
+	 */
 	@Override
 	public boolean equals(Object altro) {
 		return altro instanceof TatticaMD && voci.equals(((TatticaMD) altro).voci) && disabilitata == ((TatticaMD) altro).disabilitata;
 	}
 
+	/**
+	 * Coerente con {@link #equals(Object)}.
+	 */
 	@Override
 	public int hashCode() {
 		return voci.hashCode() * 2 + (disabilitata ? 1 : 0);

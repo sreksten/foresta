@@ -25,6 +25,9 @@ public final class LettoreCampi {
 		this.campi = riga.isEmpty() ? new String[0] : SEPARATORE.split(riga, -1);
 	}
 
+	/**
+	 * Dice se ci sono ancora campi da leggere.
+	 */
 	public boolean haAltriCampi() {
 		return indice < campi.length;
 	}
@@ -47,18 +50,30 @@ public final class LettoreCampi {
 		return testo.isEmpty() ? null : testo;
 	}
 
+	/**
+	 * Il prossimo campo come numero intero.
+	 */
 	public int intero() throws IOException {
 		return Integer.parseInt(testo());
 	}
 
+	/**
+	 * Il prossimo campo come numero decimale.
+	 */
 	public double decimale() throws IOException {
 		return Double.parseDouble(testo());
 	}
 
+	/**
+	 * Il prossimo campo come valore vero o falso.
+	 */
 	public boolean booleano() throws IOException {
 		return Boolean.parseBoolean(testo());
 	}
 
+	/**
+	 * Il prossimo campo come valore dell'enum, in base al suo nome; un campo vuoto non è valido (per quelli che possono mancare vedi {@link #enumeratoFacoltativo}).
+	 */
 	public <E extends Enum<E>> E enumerato(Class<E> classe) throws IOException {
 		return Enum.valueOf(classe, testo());
 	}

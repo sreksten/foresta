@@ -8,6 +8,15 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.function.Predicate;
 
+/**
+ * Gli artefatti del mondo che non sono nell'inventario del gruppo: quelli ancora da distribuire, quelli smarriti nelle
+ * locazioni (uno per casella, riconosciuti dalle coordinate), i magazzini dei negozi (per tipo di negozio e per città) e
+ * le caselle in cui il gruppo sa che c'è un artefatto smarrito.
+ * <p>
+ * L'elenco di quelli da distribuire non si salva: serve solo quando si costruisce la foresta.
+ *
+ * @author Stefano Reksten
+ */
 public class RegistroArtefattiMD implements Serializzabile {
 
 	private final List<ArtefattoMD> elencoIniziale = new ArrayList<>();
@@ -20,6 +29,9 @@ public class RegistroArtefattiMD implements Serializzabile {
 	// l'artefatto non viene recuperato.
 	private final Set<CoordinateMD> localizzazioniConosciute = new HashSet<>();
 
+	/**
+	 * Dimentica tutti gli artefatti, i magazzini e le localizzazioni conosciute.
+	 */
 	public void reimposta() {
 		elencoIniziale.clear();
 		artefattiSmarriti.clear();
@@ -27,6 +39,9 @@ public class RegistroArtefattiMD implements Serializzabile {
 		localizzazioniConosciute.clear();
 	}
 
+	/**
+	 * Aggiunge un artefatto all'elenco di quelli ancora da distribuire.
+	 */
 	public void aggiungiArtefatto(ArtefattoMD artefattoMD) {
 		elencoIniziale.add(artefattoMD);
 	}
@@ -46,6 +61,9 @@ public class RegistroArtefattiMD implements Serializzabile {
 		return Collections.unmodifiableSet(artefattiSmarriti.keySet());
 	}
 
+	/**
+	 * Mette l'artefatto smarrito nella casella indicata, al posto di quello che c'era.
+	 */
 	public final void addArtefattoInLocazione(ArtefattoMD artefatto, CoordinateMD coordinate) {
 		artefattiSmarriti.put(coordinate, artefatto);
 	}
@@ -54,11 +72,17 @@ public class RegistroArtefattiMD implements Serializzabile {
 		return artefattiSmarriti.get(coordinate);
 	}
 
+	/**
+	 * Toglie l'artefatto smarrito dalla casella, e con lui il fatto che il gruppo ne conoscesse la posizione.
+	 */
 	public final void rimuoviArtefattoInLocazione(CoordinateMD coordinate) {
 		artefattiSmarriti.remove(coordinate);
 		localizzazioniConosciute.remove(coordinate);
 	}
 
+	/**
+	 * Ricorda che il gruppo sa che nella casella c'è un artefatto smarrito, così la mappa la segnala.
+	 */
 	public final void segnaLocalizzazioneConosciuta(CoordinateMD coordinate) {
 		localizzazioniConosciute.add(coordinate);
 	}
@@ -71,6 +95,10 @@ public class RegistroArtefattiMD implements Serializzabile {
 		return Collections.unmodifiableSet(localizzazioniConosciute);
 	}
 
+	/**
+	 * Scrive gli artefatti smarriti (le coordinate e poi l'artefatto), i magazzini dei negozi e le localizzazioni conosciute,
+	 * ogni gruppo preceduto dal numero di elementi.
+	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.println(artefattiSmarriti.size());
@@ -104,6 +132,9 @@ public class RegistroArtefattiMD implements Serializzabile {
 		}
 	}
 
+	/**
+	 * Rilegge ciò che scrive {@link #salva(PrintWriter)}, aggiungendolo a quello che c'è già.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();

@@ -12,6 +12,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map;
 
+/**
+ * Il gruppo del giocatore. Oltre a quanto tiene {@link GruppoMD} (personaggi, capo, pergamene e pozioni) porta con sé
+ * le monete, le pietre preziose, la posizione sulla mappa, gli artefatti dell'inventario generale (quelli che nessun
+ * personaggio sta usando), gli ospiti e il conto delle sfide a carta, forbici e sasso vinte.
+ * <p>
+ * Gli <b>ospiti</b> viaggiano con il gruppo senza farne parte; fra loro, solo quelli registrati come vulnerabili
+ * possono essere attaccati dagli avversari.
+ * <p>
+ * È anche la parte del salvataggio che basta a mostrare la situazione di un salvataggio nell'elenco degli slot,
+ * quindi si può rileggere da sola ({@link #leggi(BufferedReader)}).
+ *
+ * @author Stefano Reksten
+ */
 public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
 	private int monete;
@@ -27,6 +40,9 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	// Le sfide a carta, forbici e sasso vinte in tutta la partita (vedi carta_forbici_sasso.md)
 	private int sfideVinte;
 
+	/**
+	 * Le sfide a carta, forbici e sasso vinte in tutta la partita.
+	 */
 	public int getSfideVinte() {
 		return sfideVinte;
 	}
@@ -35,10 +51,16 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		this.sfideVinte = sfideVinte;
 	}
 
+	/**
+	 * Gli ospiti del gruppo: chi viaggia con i personaggi senza farne parte.
+	 */
 	public List<PersonaggioMD> getOspitiMD() {
 		return ospiti;
 	}
 
+	/**
+	 * Gli identificativi (uuid) degli ospiti che gli avversari possono attaccare.
+	 */
 	public Set<String> getOspitiVulnerabili() {
 		return ospitiVulnerabili;
 	}
@@ -59,6 +81,9 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		this.preziosi = preziosi;
 	}
 
+	/**
+	 * La posizione del gruppo sulla mappa della Foresta.
+	 */
 	public CoordinateMD getCoordinate() {
 		return coordinate;
 	}
@@ -67,12 +92,19 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		this.coordinate = coordinate;
 	}
 
+	/**
+	 * Gli artefatti del gruppo che nessun personaggio sta usando (l'inventario generale).
+	 */
 	public Collection<ArtefattoMD> getArtefatti() {
 		return artefatti;
 	}
 
 	////////////////////////////////
 
+	/**
+	 * Azzera il gruppo per una partita nuova: oltre a quanto azzera {@link GruppoMD#reimposta()}, monete, pietre preziose,
+	 * artefatti, ospiti e ospiti vulnerabili, e il conto delle sfide vinte.
+	 */
 	public void reimposta() {
 		super.reimposta();
 		monete = 0;
@@ -80,8 +112,14 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		artefatti.clear();
 		ospiti.clear();
 		ospitiVulnerabili.clear();
+		sfideVinte = 0;
 	}
 
+	/**
+	 * Scrive il gruppo (vedi {@link GruppoMD#salva(PrintWriter)}), poi una riga con monete, preziosi, pergamene, pozioni,
+	 * posizione e sfide vinte, e infine gli artefatti, gli ospiti e gli identificativi degli ospiti vulnerabili, ciascun
+	 * elenco preceduto dal suo numero di elementi.
+	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		super.salva(stream);
@@ -126,6 +164,9 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		}
 	}
 
+	/**
+	 * Rilegge ciò che scrive {@link #salva(PrintWriter)}, sostituendo il contenuto attuale del gruppo.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		super.leggi(stream);

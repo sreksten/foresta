@@ -58,6 +58,9 @@ public final class VoceMD {
 		return new VoceMD(selettore, Collections.emptyList(), java.util.Arrays.asList(azioni));
 	}
 
+	/**
+	 * La stessa voce, ma disattivata: si conserva ma non si usa.
+	 */
 	public VoceMD disattivata() {
 		return new VoceMD(selettore, condizioni, azioni, false, nome);
 	}
@@ -98,6 +101,9 @@ public final class VoceMD {
 		return selettore;
 	}
 
+	/**
+	 * Il selettore che la voce usa davvero: il suo, oppure quello di base della portata delle sue azioni se non ne ha uno.
+	 */
 	public SelettoreMD selettoreEffettivo() {
 		return selettore != null ? selettore : selettoreDiBase(getPortata());
 	}
@@ -145,6 +151,9 @@ public final class VoceMD {
 		return problemi;
 	}
 
+	/**
+	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 */
 	@Override
 	public String toString() {
 		return (selettore == null ? "" : selettore + " ") + (condizioni.isEmpty() ? "" : "SE " + condizioni + " ") + "→ " + azioni
@@ -168,6 +177,9 @@ public final class VoceMD {
 		}
 	}
 
+	/**
+	 * Rilegge una voce scritta da {@link #salva(PrintWriter)}; una voce senza azioni è un errore.
+	 */
 	public static VoceMD leggi(BufferedReader stream) throws IOException {
 		LettoreCampi campi = FormatoTattiche.riga(stream, "VOCE");
 		boolean attiva = campi.booleano();
@@ -190,6 +202,9 @@ public final class VoceMD {
 		return new VoceMD(selettore, condizioni, azioni, attiva, nome);
 	}
 
+	/**
+	 * Due voci sono uguali se hanno gli stessi dati.
+	 */
 	@Override
 	public boolean equals(Object altro) {
 		if (!(altro instanceof VoceMD)) {
@@ -200,6 +215,9 @@ public final class VoceMD {
 				&& Objects.equals(nome, v.nome);
 	}
 
+	/**
+	 * Coerente con {@link #equals(Object)}.
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(selettore, condizioni, azioni, attiva, nome);

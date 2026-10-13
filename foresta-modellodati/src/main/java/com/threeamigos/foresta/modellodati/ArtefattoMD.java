@@ -10,6 +10,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
+/**
+ * I dati di un artefatto: un oggetto del gioco con un tipo (un'arma, un'armatura, una pergamena, un ingrediente...), una
+ * rarità, un nome con l'articolo (la spada di fuoco) ed eventualmente un nome proprio (Diavolina) e una descrizione,
+ * il livello, i danni base, il costo, il peso e lo slot che occupa mentre un personaggio lo porta.
+ * <p>
+ * Può portare dei {@link ModificatoreAttributoMD modificatori di attributo} e degli {@link IncantamentoMD incantamenti}.
+ * Ogni artefatto ha un identificativo unico che il salvataggio conserva. Gli artefatti leggendari sono pezzi di un
+ * set, riconosciuto da due chiavi (vedi {@link #setPezzoDiSetLeggendario}).
+ * <p>
+ * Contiene solo dati, con le poche regole di coerenza che servono a non scrivere un salvataggio rotto (per esempio
+ * il carattere "|" si toglie dai nomi). Le regole del gioco stanno nel motore (vedi artefatti_e_incantamenti.md).
+ *
+ * @author Stefano Reksten
+ */
 public class ArtefattoMD implements Serializzabile {
 
 	/**
@@ -44,6 +58,9 @@ public class ArtefattoMD implements Serializzabile {
 	private final Collection<ModificatoreAttributoMD> modificatori = new ArrayList<>();
 	private final Collection<IncantamentoMD> incantamenti = new ArrayList<>();
 
+	/**
+	 * L'identificativo unico dell'artefatto.
+	 */
 	public String getUuid() {
 		return uuid;
 	}
@@ -210,6 +227,13 @@ public class ArtefattoMD implements Serializzabile {
 		return modificatori;
 	}
 
+	/**
+	 * Aggiunge un modificatore.
+	 *
+	 * @throws IllegalArgumentException se il modificatore agisce sul bersaglio ma l'artefatto non è né un'arma né un
+	 * ingrediente: solo un'arma può mettere un modificatore sul bersaglio che colpisce, e un ingrediente (la pergamena) lo
+	 * porta per passarlo a un'arma
+	 */
 	public void addModificatore(ModificatoreAttributoMD modificatore) {
 		// Lo mette sul bersaglio un'arma che colpisce; un ingrediente (la pergamena) lo porta per passarlo a un'arma
 		if (modificatore.getBersaglio() == BersaglioModificatore.BERSAGLIO && tipo.getSupertipo() != SupertipoArtefatto.ARMA
@@ -219,6 +243,9 @@ public class ArtefattoMD implements Serializzabile {
 		modificatori.add(modificatore);
 	}
 
+	/**
+	 * Aggiunge un modificatore permanente, che agisce su chi porta l'artefatto.
+	 */
 	public void addModificatore(TipoAttributo tipoAttributo, TipoModificatore tipoModificatore,
 								double quantita, String nota) {
 		modificatori.add(new ModificatoreAttributoMD(tipoAttributo, tipoModificatore, quantita, nota));
@@ -228,14 +255,23 @@ public class ArtefattoMD implements Serializzabile {
 		return incantamenti;
 	}
 
+	/**
+	 * Aggiunge un incantamento.
+	 */
 	public void addIncantamento(IncantamentoMD incantamento) {
 		incantamenti.add(incantamento);
 	}
 
+	/**
+	 * Aggiunge un incantamento, creandolo dai suoi dati.
+	 */
 	public void addIncantamento(String nomeIncantamento, TipoDanno tipoDanno, int dannoBonusFisso, double coefficienteScala) {
 		incantamenti.add(new IncantamentoMD(nomeIncantamento, tipoDanno, dannoBonusFisso, coefficienteScala));
 	}
 
+	/**
+	 * Se l'elenco dei modificatori e degli incantamenti è aperto nell'inventario; è solo uno stato della schermata.
+	 */
 	public boolean isFigliVisibili() {
 		return figliVisibili;
 	}
@@ -244,6 +280,10 @@ public class ArtefattoMD implements Serializzabile {
 		this.figliVisibili = figliVisibili;
 	}
 
+	/**
+	 * Scrive una riga con i dati dell'artefatto e il numero dei modificatori e degli incantamenti, poi una riga per
+	 * ogni modificatore e una per ogni incantamento.
+	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.print(uuid);
@@ -305,6 +345,9 @@ public class ArtefattoMD implements Serializzabile {
 		}
 	}
 
+	/**
+	 * Rilegge ciò che scrive {@link #salva(PrintWriter)}, sostituendo i dati, i modificatori e gli incantamenti attuali.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		LettoreCampi campi = new LettoreCampi(stream.readLine());

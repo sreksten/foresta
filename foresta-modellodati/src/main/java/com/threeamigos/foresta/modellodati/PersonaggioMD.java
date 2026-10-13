@@ -10,7 +10,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Il modello dati per un personaggio.
+ * I dati di un personaggio: la classe (mago, arpia...), il nome proprio facoltativo, se è vivo (o la causa della morte),
+ * livello, esperienza e punti abilità non ancora assegnati, se è un PNG e perché sta nel gruppo, gli artefatti che
+ * porta, i modificatori e gli effetti di stato in corso e la sua tattica di combattimento.
+ * <p>
+ * Gli <b>attributi</b> (salute, forza, destrezza...) stanno in una mappa indicizzata da {@link TipoAttributo}, con un
+ * valore minimo e uno massimo facoltativi per ciascuno: {@link #set(TipoAttributo, double)} li rispetta, quindi un
+ * valore fuori dai limiti viene portato al limite. I metodi con il nome dell'attributo ({@code getForza},
+ * {@code setSaluteMassima}...) sono scorciatoie su {@link #get}, {@link #set}, {@link #getMassimo} e
+ * {@link #setMassimo}, e i loro valori letti sono troncati a numeri interi.
+ * <p>
+ * Le regole del gioco (come cambiano gli attributi, come si combatte) stanno nel motore; qui ci sono solo i dati.
  */
 public class PersonaggioMD implements Serializzabile {
 
@@ -37,7 +47,7 @@ public class PersonaggioMD implements Serializzabile {
 
 	// Impostati da PersonaggioBase uguali per tutti i personaggi
 	/**
-	 * Se il personaggio sia sempre vivo
+	 * Se il personaggio è vivo
 	 */
 	private boolean vivo;
 	/**
@@ -70,7 +80,7 @@ public class PersonaggioMD implements Serializzabile {
 	 */
 	private final Map<TipoAttributo, Double> valoriMinimi = new HashMap<>();
 	/**
-	 * Valori minimi per un dato attributo - solitamente non presenti
+	 * Valori massimi per un dato attributo - solitamente non presenti
 	 */
 	private final Map<TipoAttributo, Double> valoriMassimi = new HashMap<>();
 	/**
@@ -91,6 +101,9 @@ public class PersonaggioMD implements Serializzabile {
 	 */
 	private Collection<ArtefattoMD> artefatti = new ArrayList<>();
 
+	/**
+	 * L'identificativo unico del personaggio, che il salvataggio conserva.
+	 */
 	public String getUuid() {
 		return uuid;
 	}
@@ -103,6 +116,9 @@ public class PersonaggioMD implements Serializzabile {
 		this.classe = classe;
 	}
 
+	/**
+	 * Il nome proprio del personaggio, o null se non ne ha: allora si chiama con la sua classe.
+	 */
 	public String getNome() {
 		return nome;
 	}
@@ -163,6 +179,9 @@ public class PersonaggioMD implements Serializzabile {
 		this.puntiAbilitaDisponibili = puntiAbilitaDisponibili;
 	}
 
+	/**
+	 * Imposta il valore minimo di un attributo; con null lo toglie.
+	 */
 	public void setMinimo(TipoAttributo tipo, Double valore) {
 		if (valore == null) {
 			valoriMinimi.remove(tipo);
@@ -171,6 +190,9 @@ public class PersonaggioMD implements Serializzabile {
 		}
 	}
 
+	/**
+	 * Il valore minimo dell'attributo, se ne ha uno.
+	 */
 	public Optional<Double> getMinimo(TipoAttributo tipo) {
 		if (!valoriMinimi.containsKey(tipo)) {
 			return Optional.empty();
@@ -178,6 +200,9 @@ public class PersonaggioMD implements Serializzabile {
 		return Optional.of(valoriMinimi.get(tipo));
 	}
 
+	/**
+	 * Imposta il valore massimo di un attributo; con null lo toglie.
+	 */
 	public void setMassimo(TipoAttributo tipo, Double valore) {
 		if (valore == null) {
 			valoriMassimi.remove(tipo);
@@ -186,6 +211,9 @@ public class PersonaggioMD implements Serializzabile {
 		}
 	}
 
+	/**
+	 * Il valore massimo dell'attributo, se ne ha uno.
+	 */
 	public Optional<Double> getMassimo(TipoAttributo tipo) {
 		if (!valoriMassimi.containsKey(tipo)) {
 			return Optional.empty();
@@ -215,6 +243,11 @@ public class PersonaggioMD implements Serializzabile {
 		valoriAttributi.put(tipo, valore);
 	}
 
+	/**
+	 * Il valore di un attributo.
+	 *
+	 * @throws IllegalStateException se il personaggio non ha quell'attributo
+	 */
 	public double get(TipoAttributo tipo) {
 		if (!valoriAttributi.containsKey(tipo)) {
 			throw new IllegalStateException("TipoAttributo " + tipo + " non presente");
@@ -223,10 +256,16 @@ public class PersonaggioMD implements Serializzabile {
 	}
 
 	// Piccola eccezione, TEMPO non è detto che ci sia.
+	/**
+	 * Come {@link #get(TipoAttributo)}, ma vuoto invece di lanciare un'eccezione: serve per l'attributo del tempo, che non tutti hanno.
+	 */
 	public Optional<Double> getOptional(TipoAttributo tipo) {
 		return Optional.ofNullable(valoriAttributi.get(tipo));
 	}
 
+	/**
+	 * Il carico massimo che il personaggio può portare, 0 se non è limitato da un massimo.
+	 */
 	public int getCaricoMassimo() {
 		return getMassimo(TipoAttributo.CARICO_MASSIMO).orElse(0.0d).intValue();
 	}
@@ -256,7 +295,7 @@ public class PersonaggioMD implements Serializzabile {
 	}
 
 	public void setForzaMassima(double forzaMassima) {
-		valoriMassimi.put(TipoAttributo.FORZA, forzaMassima);
+		setMassimo(TipoAttributo.FORZA, forzaMassima);
 	}
 
 	public Optional<Double> getForzaMassima() {
@@ -642,6 +681,11 @@ public class PersonaggioMD implements Serializzabile {
 		this.modificatori = modificatori;
 	}
 
+	/**
+	 * Scrive una riga con i dati del personaggio (compreso il numero di artefatti), poi cinque righe con i valori minimi,
+	 * i valori massimi, gli attributi, i modificatori e gli effetti di stato, poi la tattica (una riga vuota se non ne ha)
+	 * e infine gli artefatti.
+	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.print(uuid);
@@ -683,6 +727,9 @@ public class PersonaggioMD implements Serializzabile {
 		}
 	}
 
+	/**
+	 * Rilegge ciò che scrive {@link #salva(PrintWriter)}, sostituendo i dati attuali del personaggio.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException{
 		LettoreCampi campi = new LettoreCampi(stream.readLine());

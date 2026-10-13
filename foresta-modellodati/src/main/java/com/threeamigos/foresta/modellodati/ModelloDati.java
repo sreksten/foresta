@@ -50,10 +50,16 @@ public class ModelloDati implements Serializzabile {
 		intermezziMD = new IntermezziMD();
 	}
 
+	/**
+	 * L'istanza del modello dati su cui si basa la partita in corso.
+	 */
 	public static ModelloDati getIstanza() {
 		return istanza;
 	}
 
+	/**
+	 * Sostituisce l'istanza del modello dati: succede quando si carica un salvataggio.
+	 */
 	public static void setIstanza(ModelloDati modelloDati) {
 		istanza = modelloDati;
 	}
@@ -104,6 +110,9 @@ public class ModelloDati implements Serializzabile {
 
 	///////////////////////////////////
 
+	/**
+	 * Azzera tutte le parti per una partita nuova, con una mappa della Foresta delle dimensioni indicate.
+	 */
 	public void reimposta(int dimensioneX, int dimensioneY) {
 		gruppoGiocatoreMD.reimposta();
 		statisticheMD.reimposta();
@@ -117,6 +126,10 @@ public class ModelloDati implements Serializzabile {
 		aiutoAbilitato = true;
 	}
 
+	/**
+	 * Scrive tutte le parti del modello dati, una dopo l'altra e nell'ordine in cui le ha {@link #leggi(BufferedReader)},
+	 * e infine se l'aiuto della barra delle icone è acceso.
+	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		gruppoGiocatoreMD.salva(stream);
@@ -131,6 +144,9 @@ public class ModelloDati implements Serializzabile {
 		stream.println(aiutoAbilitato);
 	}
 
+	/**
+	 * Azzera le parti e le rilegge da ciò che scrive {@link #salva(PrintWriter)}.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		gruppoGiocatoreMD.reimposta();

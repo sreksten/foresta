@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * Gli identificativi degli intermezzi già mostrati nella partita corrente: un intermezzo
  * non ha progressi, quindi basta ricordare che è scattato. La logica vive in
- * {@link com.threeamigos.foresta.motore.RegistroIntermezzi}.
+ * {@code motore.RegistroIntermezzi}.
  *
  * @author Stefano Reksten
  */
@@ -22,27 +22,45 @@ public class IntermezziMD implements Serializzabile {
 	// stesso ciclo), fino a un massimo di occorrenze.
 	private int numeroAccampamenti;
 
+	/**
+	 * Dice se quell'intermezzo è già stato mostrato in questa partita.
+	 */
 	public boolean isScattato(String id) {
 		return intermezziScattati.contains(id);
 	}
 
+	/**
+	 * Ricorda che quell'intermezzo è stato mostrato.
+	 */
 	public void aggiungiScattato(String id) {
 		intermezziScattati.add(id);
 	}
 
+	/**
+	 * Quante volte il gruppo si è accampato nella partita corrente.
+	 */
 	public int getNumeroAccampamenti() {
 		return numeroAccampamenti;
 	}
 
+	/**
+	 * Conta un accampamento in più.
+	 */
 	public void incrementaNumeroAccampamenti() {
 		numeroAccampamenti++;
 	}
 
+	/**
+	 * Dimentica gli intermezzi scattati e gli accampamenti: si ricomincia da una partita nuova.
+	 */
 	public void reimposta() {
 		intermezziScattati.clear();
 		numeroAccampamenti = 0;
 	}
 
+	/**
+	 * Scrive il numero degli intermezzi scattati, un identificativo per riga, e poi il numero degli accampamenti.
+	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.println(intermezziScattati.size());
@@ -52,6 +70,9 @@ public class IntermezziMD implements Serializzabile {
 		stream.println(numeroAccampamenti);
 	}
 
+	/**
+	 * Rilegge ciò che scrive {@link #salva(PrintWriter)}, sostituendo gli intermezzi scattati ricordati finora.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		intermezziScattati.clear();

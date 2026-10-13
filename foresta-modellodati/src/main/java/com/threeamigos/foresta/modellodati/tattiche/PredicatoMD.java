@@ -98,6 +98,9 @@ public final class PredicatoMD {
 		return filtri;
 	}
 
+	/**
+	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -129,6 +132,9 @@ public final class PredicatoMD {
 		}
 	}
 
+	/**
+	 * Rilegge un predicato scritto da {@link #salva(PrintWriter)}, passando dalle fabbriche che controllano i parametri.
+	 */
 	public static PredicatoMD leggi(BufferedReader stream) throws IOException {
 		LettoreCampi campi = FormatoTattiche.riga(stream, "PREDICATO");
 		TipoPredicato tipo = campi.enumerato(TipoPredicato.class);
@@ -162,6 +168,9 @@ public final class PredicatoMD {
 		return negato ? predicato.negato() : predicato;
 	}
 
+	/**
+	 * Due predicati sono uguali se hanno gli stessi dati.
+	 */
 	@Override
 	public boolean equals(Object altro) {
 		if (!(altro instanceof PredicatoMD)) {
@@ -171,6 +180,9 @@ public final class PredicatoMD {
 		return tipo == p.tipo && negato == p.negato && confronto == p.confronto && numero == p.numero && rosa == p.rosa && filtri.equals(p.filtri);
 	}
 
+	/**
+	 * Coerente con {@link #equals(Object)}.
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(tipo, negato, confronto, numero, rosa, filtri);

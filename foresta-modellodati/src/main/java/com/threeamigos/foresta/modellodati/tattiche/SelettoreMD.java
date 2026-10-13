@@ -43,6 +43,9 @@ public final class SelettoreMD {
 		return ordinamento;
 	}
 
+	/**
+	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 */
 	@Override
 	public String toString() {
 		return "SU " + rosa + (filtri.isEmpty() ? "" : " " + filtri) + " ordine " + ordinamento;
@@ -59,6 +62,9 @@ public final class SelettoreMD {
 		}
 	}
 
+	/**
+	 * Rilegge un selettore scritto da {@link #salva(PrintWriter)}.
+	 */
 	public static SelettoreMD leggi(BufferedReader stream) throws IOException {
 		LettoreCampi campi = FormatoTattiche.riga(stream, "SELETTORE");
 		TipoRosa rosa = campi.enumerato(TipoRosa.class);
@@ -76,6 +82,9 @@ public final class SelettoreMD {
 		}
 	}
 
+	/**
+	 * Due selettori sono uguali se hanno gli stessi dati.
+	 */
 	@Override
 	public boolean equals(Object altro) {
 		if (!(altro instanceof SelettoreMD)) {
@@ -85,6 +94,9 @@ public final class SelettoreMD {
 		return rosa == s.rosa && filtri.equals(s.filtri) && ordinamento.equals(s.ordinamento);
 	}
 
+	/**
+	 * Coerente con {@link #equals(Object)}.
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(rosa, filtri, ordinamento);

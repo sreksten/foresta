@@ -54,6 +54,9 @@ public final class AzioneMD {
 		return new AzioneMD(TipoAzione.INCANTESIMO_DEL_REPERTORIO, Objects.requireNonNull(criterio), soloSePiuForteDellAttacco, null);
 	}
 
+	/**
+	 * Un'azione che fa impugnare l'arma di quel tipo di danno; il tipo di danno è obbligatorio.
+	 */
 	public static AzioneMD cambiaArma(TipoDanno armaDi) {
 		return new AzioneMD(TipoAzione.CAMBIA_ARMA, null, false, Objects.requireNonNull(armaDi));
 	}
@@ -97,6 +100,9 @@ public final class AzioneMD {
 		return armaDi;
 	}
 
+	/**
+	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(tipo.name());
@@ -112,11 +118,17 @@ public final class AzioneMD {
 		return sb.toString();
 	}
 
+	/**
+	 * Scrive l'azione su una riga (vedi FormatoTattiche).
+	 */
 	public void salva(PrintWriter stream) {
 		stream.println(String.join(Serializzabile.PIPE, "AZIONE", tipo.name(), Serializzabile.facoltativo(criterio), String.valueOf(soloSePiuForteDellAttacco),
 				Serializzabile.facoltativo(armaDi)));
 	}
 
+	/**
+	 * Rilegge un'azione scritta da {@link #salva(PrintWriter)}, passando dalle fabbriche che controllano i parametri.
+	 */
 	public static AzioneMD leggi(BufferedReader stream) throws IOException {
 		LettoreCampi campi = FormatoTattiche.riga(stream, "AZIONE");
 		TipoAzione tipo = campi.enumerato(TipoAzione.class);
@@ -140,6 +152,9 @@ public final class AzioneMD {
 		}
 	}
 
+	/**
+	 * Due azioni sono uguali se hanno gli stessi dati.
+	 */
 	@Override
 	public boolean equals(Object altro) {
 		if (!(altro instanceof AzioneMD)) {
@@ -149,6 +164,9 @@ public final class AzioneMD {
 		return tipo == a.tipo && criterio == a.criterio && soloSePiuForteDellAttacco == a.soloSePiuForteDellAttacco && armaDi == a.armaDi;
 	}
 
+	/**
+	 * Coerente con {@link #equals(Object)}.
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(tipo, criterio, soloSePiuForteDellAttacco, armaDi);

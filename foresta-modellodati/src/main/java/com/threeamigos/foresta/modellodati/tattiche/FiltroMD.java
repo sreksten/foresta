@@ -50,30 +50,65 @@ public final class FiltroMD {
 		return new FiltroMD(tipo, false, confronto, numero, stato, classe, categoria, tipoDanno);
 	}
 
+	/**
+	 * Un filtro che non vuole parametri.
+	 *
+	 * @throws IllegalArgumentException se il tipo di filtro ne vuole uno
+	 */
 	public static FiltroMD senzaParametro(TipoFiltro tipo) {
 		return crea(tipo, TipoParametro.NESSUNO, null, 0, null, null, null, null);
 	}
 
+	/**
+	 * Un filtro il cui parametro è un confronto con un numero.
+	 *
+	 * @throws IllegalArgumentException se il tipo di filtro vuole un altro parametro
+	 */
 	public static FiltroMD conConfrontoENumero(TipoFiltro tipo, Confronto confronto, int numero) {
 		return crea(tipo, TipoParametro.CONFRONTO_E_NUMERO, Objects.requireNonNull(confronto), numero, null, null, null, null);
 	}
 
+	/**
+	 * Un filtro il cui parametro è un confronto, senza numero.
+	 *
+	 * @throws IllegalArgumentException se il tipo di filtro vuole un altro parametro
+	 */
 	public static FiltroMD conConfronto(TipoFiltro tipo, Confronto confronto) {
 		return crea(tipo, TipoParametro.CONFRONTO, Objects.requireNonNull(confronto), 0, null, null, null, null);
 	}
 
+	/**
+	 * Un filtro il cui parametro è uno stato alterato.
+	 *
+	 * @throws IllegalArgumentException se il tipo di filtro vuole un altro parametro
+	 */
 	public static FiltroMD conStato(TipoFiltro tipo, TipoEffettoDiStato stato) {
 		return crea(tipo, TipoParametro.STATO, null, 0, Objects.requireNonNull(stato), null, null, null);
 	}
 
+	/**
+	 * Un filtro il cui parametro è una classe di personaggio.
+	 *
+	 * @throws IllegalArgumentException se il tipo di filtro vuole un altro parametro
+	 */
 	public static FiltroMD conClasse(TipoFiltro tipo, TipoPersonaggio classe) {
 		return crea(tipo, TipoParametro.CLASSE, null, 0, null, Objects.requireNonNull(classe), null, null);
 	}
 
+	/**
+	 * Un filtro il cui parametro è una categoria di personaggi.
+	 *
+	 * @throws IllegalArgumentException se il tipo di filtro vuole un altro parametro
+	 */
 	public static FiltroMD conCategoria(TipoFiltro tipo, CategoriaPersonaggio categoria) {
 		return crea(tipo, TipoParametro.CATEGORIA, null, 0, null, null, Objects.requireNonNull(categoria), null);
 	}
 
+	/**
+	 * Un filtro il cui parametro è un tipo di danno.
+	 *
+	 * @throws IllegalArgumentException se il tipo di filtro vuole un altro parametro
+	 */
 	public static FiltroMD conTipoDanno(TipoFiltro tipo, TipoDanno tipoDanno) {
 		return crea(tipo, TipoParametro.TIPO_DANNO, null, 0, null, null, null, Objects.requireNonNull(tipoDanno));
 	}
@@ -117,6 +152,9 @@ public final class FiltroMD {
 		return tipoDanno;
 	}
 
+	/**
+	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -192,6 +230,9 @@ public final class FiltroMD {
 		return negato ? filtro.negato() : filtro;
 	}
 
+	/**
+	 * Due filtri sono uguali se hanno gli stessi dati.
+	 */
 	@Override
 	public boolean equals(Object altro) {
 		if (this == altro) {
@@ -205,6 +246,9 @@ public final class FiltroMD {
 				&& categoria == f.categoria && tipoDanno == f.tipoDanno;
 	}
 
+	/**
+	 * Coerente con {@link #equals(Object)}.
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(tipo, negato, confronto, numero, stato, classe, categoria, tipoDanno);

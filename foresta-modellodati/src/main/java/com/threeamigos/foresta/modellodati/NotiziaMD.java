@@ -40,6 +40,9 @@ public class NotiziaMD implements Serializzabile {
 		this.corpo = Serializzabile.senzaPipe(corpo);
 	}
 
+	/**
+	 * Scrive una riga con l'identificativo e il corpo, separati da {@link #PIPE}.
+	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.print(id);
@@ -47,6 +50,9 @@ public class NotiziaMD implements Serializzabile {
 		stream.println(corpo);
 	}
 
+	/**
+	 * Rilegge la riga scritta da {@link #salva(PrintWriter)}.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();

@@ -9,6 +9,20 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * I dati della mappa della Foresta: una casella per ogni posizione, ciascuna con il suo {@link LocazioneMD}.
+ * <p>
+ * Oltre alle caselle tiene a portata di mano tre informazioni derivate, così da non doverle ricavare ogni volta
+ * con un ciclo su tutta la mappa: dove stanno le locazioni uniche (quelle che nella foresta esistono una volta
+ * sola), quali sono i limiti dell'area conosciuta dal giocatore (serve alla mappa a tutto schermo) e un numero di
+ * versione che cambia a ogni modifica visibile della mappa (serve a chi la disegna per sapere se la sua copia
+ * in memoria è da rifare).
+ * <p>
+ * Le caselle "visitata" e "conosciuta" sono proprietà del modello dati della casella, non campi di questa classe.
+ * Il salvataggio scrive le dimensioni e poi una riga per casella (vedi {@link #salva(PrintWriter)}).
+ *
+ * @author Stefano Reksten
+ */
 public class ForestaMD implements Serializzabile {
 
 	private int dimensioneX;
@@ -95,32 +109,61 @@ public class ForestaMD implements Serializzabile {
 		}
 	}
 
+	/**
+	 * Le coordinate della locazione unica di quel tipo.
+	 *
+	 * @return le coordinate, o null se nella foresta non c'è (ancora) una locazione di quel tipo
+	 */
 	public final CoordinateMD ottieniCoordinateLocazioneUnica(TipoLocazione tipoLocazione) {
 		return locazioniUniche.get(tipoLocazione);
 	}
 
+	/**
+	 * Ricorda dove sta la locazione unica di quel tipo.
+	 */
 	public final void aggiungiLocazioneUnica(TipoLocazione tipoLocazione, CoordinateMD coordinate) {
 		locazioniUniche.put(tipoLocazione, coordinate);
 	}
 	
+	/**
+	 * Dimentica la locazione unica di quel tipo, per esempio perché è stata distrutta.
+	 */
 	public final void rimuoviLocazioneUnica(TipoLocazione tipoLocazione) {
 		locazioniUniche.remove(tipoLocazione);
 	}
 
+	/**
+	 * Il modello dati della casella in quella posizione.
+	 *
+	 * @return il modello dati, o null se la casella non è ancora stata assegnata (succede solo mentre la foresta si costruisce)
+	 */
 	public LocazioneMD ottieniLocazioneMD(CoordinateMD coordinate) {
 		return arrayLocazioni[offset(coordinate.getX(), coordinate.getY())];
 	}
 
+	/**
+	 * Il tipo di locazione della casella, o null se non è ancora stata assegnata.
+	 */
 	public TipoLocazione ottieniTipoLocazione(CoordinateMD coordinate) {
 		return ottieniTipoLocazione(coordinate.getX(), coordinate.getY());
 	}
 
+	/**
+	 * Come {@link #ottieniTipoLocazione(CoordinateMD)}, con colonna e riga separate.
+	 */
 	public TipoLocazione ottieniTipoLocazione(int x, int y) {
 		LocazioneMD locazioneMD = arrayLocazioni[offset(x, y)];
 		// Durante la costruzione della Foresta le caselle non ancora assegnate sono vuote
 		return locazioneMD == null ? null : locazioneMD.getTipo();
 	}
 
+	/**
+	 * Prepara una mappa vuota di quella misura: nessuna casella assegnata, nessuna locazione unica, nessuna casella
+	 * conosciuta. Anche la versione della mappa cambia, perché chi la disegna deve ricostruirla.
+	 *
+	 * @param dimensioneX il numero di colonne
+	 * @param dimensioneY il numero di righe
+	 */
 	public void reimposta(int dimensioneX, int dimensioneY) {
 		this.dimensioneX = dimensioneX;
 		this.dimensioneY = dimensioneY;
@@ -133,10 +176,16 @@ public class ForestaMD implements Serializzabile {
 		versioneMappa = ULTIMA_VERSIONE_MAPPA.incrementAndGet();
 	}
 
+	/**
+	 * Segna la casella come visitata dal gruppo.
+	 */
 	public final void impostaLocazioneVisitata(CoordinateMD coordinate) {
 		impostaLocazioneVisitata(coordinate, true);
 	}
 
+	/**
+	 * Segna la casella come visitata o, con <code>false</code>, toglie il segno. Cambia la versione della mappa.
+	 */
 	public final void impostaLocazioneVisitata(CoordinateMD coordinate, boolean visitata) {
 		LocazioneMD locazioneMD = ottieniLocazioneMD(coordinate);
 		if (visitata) {
@@ -151,6 +200,10 @@ public class ForestaMD implements Serializzabile {
 		return ottieniLocazioneMD(coordinate).ottieniProprieta(LocazioneMD.VISITATA) != null;
 	}
 
+	/**
+	 * Segna la casella come conosciuta: il giocatore sa che esiste e la mappa la mostra. Aggiorna anche i limiti
+	 * dell'area conosciuta e la versione della mappa.
+	 */
 	public final void impostaLocazioneConosciuta(CoordinateMD coordinate) {
 		impostaLocazioneConosciuta(coordinate.getX(), coordinate.getY());
 	}
@@ -159,6 +212,9 @@ public class ForestaMD implements Serializzabile {
 		return ottieniLocazioneMD(coordinate).ottieniProprieta(LocazioneMD.CONOSCIUTA) != null;
 	}
 
+	/**
+	 * Rende conosciute tutte le caselle: il gruppo ha ottenuto la mappa completa della Foresta.
+	 */
 	public final void ottieniMappa() {
 		for (int y = 0; y < dimensioneY; y++) {
 			for (int x = 0; x < dimensioneX; x++) {
@@ -196,6 +252,10 @@ public class ForestaMD implements Serializzabile {
 
 	// Routine per il salvataggio
 
+	/**
+	 * Scrive su una riga le dimensioni della mappa e poi una riga per ogni casella, in ordine per riga. Le dimensioni
+	 * fanno da conteggio, quindi non serve altro.
+	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.print(dimensioneX);
@@ -208,6 +268,10 @@ public class ForestaMD implements Serializzabile {
 		}
 	}
 
+	/**
+	 * Rilegge la mappa scritta da {@link #salva(PrintWriter)}. Mentre legge ricostruisce anche le informazioni derivate:
+	 * dove stanno le locazioni uniche e i limiti dell'area conosciuta.
+	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();
