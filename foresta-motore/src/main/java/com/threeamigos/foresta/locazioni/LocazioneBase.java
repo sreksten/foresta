@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -22,7 +24,6 @@ import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
@@ -769,7 +770,7 @@ public abstract class LocazioneBase implements Locazione {
 							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " riesce a stringere amicizia."));
 
 					// Finché la missione La sfida dei campioni non è partita, a volte l'avversario sfida invece di offrire
-					if (!LaSfidaDeiCampioni.isPartita() && MossaCartaForbiciSasso.puoGiocare(gruppoAvversario.getCapo().getClasse())
+					if (!RegistroMissioni.isPartita(ClasseMissione.LA_SFIDA_DEI_CAMPIONI) && MossaCartaForbiciSasso.puoGiocare(gruppoAvversario.getCapo().getClasse())
 							&& Dado.tira(100) <= Costanti.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO) {
 						return iniziaLaSfida();
 					}
@@ -1806,9 +1807,9 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		if (vinta) {
 			gruppo.addSfidaVinta();
-			if (gruppo.getSfideVinte() >= Costanti.SFIDE_VINTE_PER_IL_TORNEO && !LaSfidaDeiCampioni.isPartita()) {
+			if (gruppo.getSfideVinte() >= Costanti.SFIDE_VINTE_PER_IL_TORNEO && !RegistroMissioni.isPartita(ClasseMissione.LA_SFIDA_DEI_CAMPIONI)) {
 				BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \"" + ProduttoreDiTestiCasuale.fraseDelTorneo() + "\""));
-				LaSfidaDeiCampioni.avvia();
+				RegistroMissioni.avvia(ClasseMissione.LA_SFIDA_DEI_CAMPIONI);
 			}
 		}
 		setCompleta(true);

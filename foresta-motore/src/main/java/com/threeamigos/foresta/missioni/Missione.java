@@ -107,6 +107,13 @@ public interface Missione extends VistaMissione {
 		return Optional.empty();
 	}
 
+	/**
+	 * Le missioni che partono da sole, senza un mandante che le affidi (oggi La sfida dei campioni), preparano qui il loro
+	 * stato iniziale e si attivano. Le chiama RegistroMissioni.avvia; le altre non fanno niente.
+	 */
+	default void avviaDaSola() {
+	}
+
 	MissioneMD getModelloDati();
 	
 	void setModelloDati(MissioneMD modelloDati);

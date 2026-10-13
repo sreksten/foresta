@@ -10,7 +10,7 @@ forbici e sasso. Si gioca **a tre mani vinte** (`Costanti.VITTORIE_PER_VINCERE_L
 `FORBICE` e `SASSO`; un pareggio non conta e si rigioca. Ogni sfida vinta dal giocatore si conta per tutta la partita
 (`GruppoGiocatoreMD.sfideVinte`, salvato): alla **terza** (`Costanti.SFIDE_VINTE_PER_IL_TORNEO`) l'avversario lo manda
 al torneo e parte la missione `LaSfidaDeiCampioni`. **Da quel momento nessuno sfida più**: la sfida per amicizia serve
-solo da innesco, e `LaSfidaDeiCampioni.isPartita()` (la missione è una sola per partita, in corso, finita o fallita)
+solo da innesco, e `RegistroMissioni.isPartita(ClasseMissione.LA_SFIDA_DEI_CAMPIONI)` (la missione è una sola per partita, in corso, finita o fallita)
 la spegne, senza nemmeno tirare il dado.
 
 | Cosa | Dove |
@@ -30,7 +30,7 @@ locazione, come `CHI_DUELLA`. Sfondo e avversari sono quelli della locazione; l'
 `NotificaTestoFrase` ("L'Idra dice: \"…\"").
 
 - **Innesco.** Nel ramo di successo di `CHI_FA_AMICIZIA`, dopo `InternoAmiciziaStretta` e prima di `getOfferta`: se
-  `LaSfidaDeiCampioni.isPartita()` è falso, `Dado.tira(100) <= 33` → `iniziaLaSfida()`. Il conto di `AMICO_DI_TUTTI` quindi
+  la missione non è ancora partita (`RegistroMissioni.isPartita`), `Dado.tira(100) <= 33` → `iniziaLaSfida()`. Il conto di `AMICO_DI_TUTTI` quindi
   avanza lo stesso.
 - **Chi non gioca.** L'ombrafiamma è un personaggio segreto, per ora escluso (`MossaCartaForbiciSasso.puoGiocare`): non sfida mai e non è mai un campione.
 - **I comandi.** In `SFIDA_CARTA_FORBICI_SASSO` `impostaComandiPossibili` offre solo `CARTA`, `FORBICE`, `SASSO`: non c'è
@@ -40,7 +40,7 @@ locazione, come `CHI_DUELLA`. Sfondo e avversari sono quelli della locazione; l'
 - **La fine** (`concludiLaSfida`): l'avversario commenta ("Poffarre! Non avevo mai incontrato un giocatore forte come te!" se
   vince il giocatore, "Heh! Sono sempre il più forte a questo gioco." se perde) e la locazione **finisce**, vinta o persa,
   come dopo un'offerta accettata: `setCompleta(true)`, `haStrettoAmicizia` vero, l'oggetto non si prende. L'oggetto non preso sparisce **subito**, appena l'amicizia riesce (`setOggetto(null)` in `CHI_FA_AMICIZIA`, come già per la corruzione), quindi non resta disegnato in una locazione che si svuota; vale per ogni amicizia, non solo per la sfida. Se è la terza
-  vittoria, l'avversario aggiunge la frase del torneo e `LaSfidaDeiCampioni.avvia()` fa partire la missione.
+  vittoria, l'avversario aggiunge la frase del torneo e `RegistroMissioni.avvia(LA_SFIDA_DEI_CAMPIONI)` fa partire la missione (la prepara `LaSfidaDeiCampioni.avviaDaSola()`).
 - **Il salvataggio.** Lo stato della sfida non si salva: si gioca fino a tre mani vinte e solo dopo si può salvare (durante
   la sfida non ci sono i comandi per farlo). Si salva solo il conto delle sfide vinte.
 
@@ -71,7 +71,7 @@ contenuto (`fattoreDiScala`, mai un ingrandimento). Si disegna dopo tutte le alt
 ## 3. La missione La sfida dei campioni
 
 `LaSfidaDeiCampioni` (`ClasseMissione.LA_SFIDA_DEI_CAMPIONI`) è una missione secondaria senza mandante in città: la
-fa partire la terza sfida vinta (`LaSfidaDeiCampioni.avvia()`), che fissa il livello del mondo di quel momento e il
+fa partire la terza sfida vinta (`RegistroMissioni.avvia`), che fissa il livello del mondo di quel momento e il
 leggendario in palio, pubblica la notifica "NUOVA MISSIONE" e **subito**, senza aspettare il prossimo controllo, affida
 quattro missioni `IlCampione` (`affida` di `MissioneAPassi`) e fa trovare a ognuna il suo posto: i quattro segnalini
 sono già sulla mappa quando la sfida finisce. Poi ne aspetta la fine:

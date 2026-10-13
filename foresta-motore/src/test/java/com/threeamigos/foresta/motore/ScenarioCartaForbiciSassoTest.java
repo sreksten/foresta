@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.eventi.interni.InternoAmiciziaStretta;
 import com.threeamigos.foresta.eventi.interni.InternoSfidaCartaForbiciSasso;
@@ -81,7 +83,7 @@ class ScenarioCartaForbiciSassoTest {
             // Una delle frasi di GIOCATORE_VINCE (vedi sfide.txt), scelta a caso
             assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("L'Idra dice: \"Poffarre") || t.startsWith("L'Idra dice: \"Incredibile")),
                     String.valueOf(partita.testi()));
-            assertFalse(LaSfidaDeiCampioni.isPartita(), "una sfida sola non basta");
+            assertFalse(RegistroMissioni.isPartita(ClasseMissione.LA_SFIDA_DEI_CAMPIONI), "una sfida sola non basta");
         }
     }
 
@@ -142,7 +144,7 @@ class ScenarioCartaForbiciSassoTest {
         try (PartitaDiTest partita = sfidataDaLIdra(25)) {
             partita.gruppo().addSfidaVinta();
             partita.gruppo().addSfidaVinta();
-            assertFalse(LaSfidaDeiCampioni.isPartita());
+            assertFalse(RegistroMissioni.isPartita(ClasseMissione.LA_SFIDA_DEI_CAMPIONI));
             Dado.trucca(1, 1);
             partita.comando(Comando.AMICIZIA);
             Dado.trucca(3, 3, 3);
@@ -151,7 +153,7 @@ class ScenarioCartaForbiciSassoTest {
             partita.comando(Comando.CARTA);
 
             assertEquals(3, partita.gruppo().getSfideVinte());
-            assertTrue(LaSfidaDeiCampioni.isPartita());
+            assertTrue(RegistroMissioni.isPartita(ClasseMissione.LA_SFIDA_DEI_CAMPIONI));
             assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("L'Idra dice: \"") && t.contains("torneo")),
                     String.valueOf(partita.testi()));
         }
@@ -160,7 +162,7 @@ class ScenarioCartaForbiciSassoTest {
     @Test
     void conLaMissioneGiaPartitaChiStringeAmiciziaNonVieneSfidatoPiu() {
         try (PartitaDiTest partita = sfidataDaLIdra(25)) {
-            LaSfidaDeiCampioni.avvia();
+            RegistroMissioni.avvia(ClasseMissione.LA_SFIDA_DEI_CAMPIONI);
             // Il dado delle sfide non viene nemmeno tirato: l'amicizia va per l'offerta di sempre
             Dado.trucca(1);
             partita.comando(Comando.AMICIZIA);

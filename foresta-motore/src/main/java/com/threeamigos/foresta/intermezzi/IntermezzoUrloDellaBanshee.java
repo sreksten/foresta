@@ -1,9 +1,11 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.missioni.storie.IlViaggioDellaMoglie;
+import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.missioni.ProprietaDiMissione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Il bardo della locanda ringrazia il gruppo per aver accompagnato sua moglie (vedi IlViaggioDellaMoglie) e gli insegna
+ * Il bardo della locanda ringrazia il gruppo per aver accompagnato sua moglie (la missione IlViaggioDellaMoglie) e gli insegna
  * l'Urlo della Banshee. Scatta una volta sola, la prima volta che il gruppo entra in una locanda nel bosco dopo aver
  * <b>completato con successo</b> il viaggio della moglie; non è un intermezzo di ripiego. Da quel momento il Bardo e la
  * Cantastorie del gruppo conoscono il canto (vedi CantoDelBardo.isUrloDellaBansheeAppreso: lo dice l'essere scattato di
@@ -37,17 +39,17 @@ public class IntermezzoUrloDellaBanshee implements Intermezzo {
 	/**
 	 * Il viaggio della moglie, se il gruppo l'ha concluso con successo.
 	 */
-	private static Optional<IlViaggioDellaMoglie> getViaggioCompletato() {
+	private static Optional<Missione> getViaggioCompletato() {
 		return RegistroMissioni.getMissioniCompletate().stream()
-				.filter(IlViaggioDellaMoglie.class::isInstance)
-				.map(IlViaggioDellaMoglie.class::cast)
+				.filter(missione -> missione.getClasse() == ClasseMissione.IL_VIAGGIO_DELLA_MOGLIE)
 				.findFirst();
 	}
 
 	@Override
 	public List<PaginaIntermezzo> getPagine() {
 		String moglie = RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome();
-		TipoLocazione arrivo = getViaggioCompletato().map(IlViaggioDellaMoglie::getCittaDiArrivo).orElse(null);
+		TipoLocazione arrivo = getViaggioCompletato()
+				.map(viaggio -> viaggio.ottieniProprieta(ProprietaDiMissione.CITTA_DI_ARRIVO)).map(TipoLocazione::valueOf).orElse(null);
 		String dove = arrivo == null ? "dall'altra parte della foresta" : Misc.conPreposizione("a", arrivo.getNomeProprio());
 		return ScenaInLocanda.conBardo()
 				.parlaIlBardo("Siete tornati! Mia moglie " + moglie + " mi ha scritto: è arrivata sana e salva " + dove + ", grazie a voi.")

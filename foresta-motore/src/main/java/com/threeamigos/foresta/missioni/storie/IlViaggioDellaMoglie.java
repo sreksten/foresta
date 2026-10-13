@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.missioni.ProprietaDiMissione;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -44,7 +45,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 public class IlViaggioDellaMoglie extends MissioneAPassi {
 
 	private static final String CITTA_DI_PARTENZA = "CITTA_DI_PARTENZA";
-	private static final String CITTA_DI_ARRIVO = "CITTA_DI_ARRIVO";
+	private static final String CITTA_DI_ARRIVO = ProprietaDiMissione.CITTA_DI_ARRIVO;
 	private static final String LOCANDA = "LOCANDA";
 	private static final String LIVELLO_DELL_INCARICO = "LIVELLO_DELL_INCARICO";
 	// La paga base, per il primo livello del mondo: si moltiplica per il livello di quando si accetta il viaggio

@@ -639,6 +639,22 @@ public class RegistroMissioni {
 	}
 
 	/**
+	 * Se una missione di quella classe è già partita in questa partita, in corso, finita o fallita.
+	 */
+	public static boolean isPartita(ClasseMissione classe) {
+		return getTutteLeMissioni().stream().anyMatch(missione -> missione.getClasse() == classe);
+	}
+
+	/**
+	 * Fa partire una missione che parte da sola (vedi Missione.avviaDaSola) e la restituisce.
+	 */
+	public static Missione avvia(ClasseMissione classe) {
+		Missione missione = FabbricaMissioni.crea(classe);
+		missione.avviaDaSola();
+		return missione;
+	}
+
+	/**
 	 * Ogni missione dell'albero, una volta sola e in qualunque stato (da attivare, attiva, completata, fallita),
 	 * sotto-missioni comprese: per chi cerca qualcosa che una missione ha lasciato in sospeso anche dopo essersi
 	 * conclusa, come l'intermezzo del suo ultimo passo (vedi RegistroIntermezzi).

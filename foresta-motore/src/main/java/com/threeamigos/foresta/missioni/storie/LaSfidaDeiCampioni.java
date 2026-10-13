@@ -65,29 +65,21 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 	}
 
 	/**
-	 * Se la missione è già partita in questa partita, in corso, finita o fallita: ce n'è una sola.
+	 * Fissa il livello del mondo di adesso e il leggendario in palio, la attiva (con la notifica di nuova missione) e
+	 * affida subito i quattro campioni, ognuno già con il suo posto segnato sulla mappa.
 	 */
-	public static boolean isPartita() {
-		return RegistroMissioni.getTutteLeMissioni().stream().anyMatch(missione -> missione instanceof LaSfidaDeiCampioni);
-	}
-
-	/**
-	 * Fa partire la missione: fissa il livello del mondo di adesso e il leggendario in palio, la attiva (con la notifica di
-	 * nuova missione) e affida subito i quattro campioni, ognuno già con il suo posto segnato sulla mappa.
-	 */
-	public static LaSfidaDeiCampioni avvia() {
-		LaSfidaDeiCampioni missione = new LaSfidaDeiCampioni();
-		missione.aggiungiProprieta(LIVELLO_DEL_MONDO, String.valueOf(Statistiche.getLivello()));
-		missione.aggiungiProprieta(LEGGENDARIO, missione.scegliIlLeggendario().getRiga());
-		RegistroMissioni.aggiungiMissioneSecondaria(missione);
-		missione.attivaMissione();
-		BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(missione, "NUOVA MISSIONE", missione.getNome()));
+	@Override
+	public void avviaDaSola() {
+		aggiungiProprieta(LIVELLO_DEL_MONDO, String.valueOf(Statistiche.getLivello()));
+		aggiungiProprieta(LEGGENDARIO, scegliIlLeggendario().getRiga());
+		RegistroMissioni.aggiungiMissioneSecondaria(this);
+		attivaMissione();
+		BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "NUOVA MISSIONE", getNome()));
 		// Non si aspetta il prossimo controllo: i campioni si affidano subito e ognuno trova e segna subito il suo posto,
 		// così la notifica c'è e i quattro segnalini sono già sulla mappa
-		missione.controllaPostLocazione();
-		missione.getCampioni().forEach(Missione::controllaInLocazione);
+		controllaPostLocazione();
+		getCampioni().forEach(Missione::controllaInLocazione);
 		BusEventi.pubblica(new InternoRichiestaRefreshUI());
-		return missione;
 	}
 
 	private OggettoLeggendario scegliIlLeggendario() {

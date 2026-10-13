@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
@@ -30,10 +31,14 @@ class ScenarioSfidaDeiCampioniTest {
 
     private static final Set<Comando> LE_TRE_MOSSE = new HashSet<>(Arrays.asList(Comando.CARTA, Comando.FORBICE, Comando.SASSO));
 
+    private static LaSfidaDeiCampioni avviaLaSfida() {
+        return (LaSfidaDeiCampioni) RegistroMissioni.avvia(ClasseMissione.LA_SFIDA_DEI_CAMPIONI);
+    }
+
     private static LaSfidaDeiCampioni avviaLaMissione(PartitaDiTest partita) {
         partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         partita.assertStato(Stato.IN_LOCAZIONE);
-        LaSfidaDeiCampioni missione = LaSfidaDeiCampioni.avvia();
+        LaSfidaDeiCampioni missione = avviaLaSfida();
         assertTrue(missione.isAttiva());
         // I quattro campioni si affidano a fine locazione, e ognuno trova il suo posto al controllo in locazione
         missione.controllaPostLocazione();
@@ -48,8 +53,8 @@ class ScenarioSfidaDeiCampioniTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             partita.eventi().ascolta(NotificaAggiornamentoStatoMissione.class);
 
-            // Senza altri controlli di missione: tutto succede in avvia()
-            LaSfidaDeiCampioni missione = LaSfidaDeiCampioni.avvia();
+            // Senza altri controlli di missione: tutto succede in avviaDaSola()
+            LaSfidaDeiCampioni missione = avviaLaSfida();
 
             assertTrue(partita.eventi().tutti(NotificaAggiornamentoStatoMissione.class).stream()
                     .anyMatch(n -> "NUOVA MISSIONE".equals(n.getEtichetta())), "la notifica di nuova missione");
@@ -193,7 +198,7 @@ class ScenarioSfidaDeiCampioniTest {
             assertTrue(partita.leggi(Comando.NUMERO_2));
 
             assertEquals(3, partita.gruppo().getSfideVinte());
-            assertTrue(LaSfidaDeiCampioni.isPartita());
+            assertTrue(RegistroMissioni.isPartita(ClasseMissione.LA_SFIDA_DEI_CAMPIONI));
             LaSfidaDeiCampioni riletta = RegistroMissioni.getTutteLeMissioni().stream()
                     .filter(LaSfidaDeiCampioni.class::isInstance).map(LaSfidaDeiCampioni.class::cast).findFirst()
                     .orElseThrow(AssertionError::new);
