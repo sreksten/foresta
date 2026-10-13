@@ -2,7 +2,7 @@
 
 Il vocabolario dei passi con cui si scrivono le missioni a passi, le missioni concrete che li usano e la mappatura dei tipi di missione (`TipoMissione`) sulle missioni che li coprono. L'infrastruttura (`Passo`, `MissioneAPassi`, registro, claim, intermezzi) è in [`gestione_missioni.md`](gestione_missioni.md); qui si descrive **che cosa c'è**, non come funziona il motore.
 
-Il codice è in `missioni/`; le grammatiche in `src/main/resources/com/threeamigos/foresta/motore/missioni.txt` e `leggendari.txt`.
+Il codice è in `missioni/`; le grammatiche in `foresta-motore/src/main/resources/com/threeamigos/foresta/motore/missioni.txt` e `leggendari.txt`.
 
 ## 1. Regole per chi aggiunge missioni
 

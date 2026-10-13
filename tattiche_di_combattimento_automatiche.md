@@ -899,10 +899,10 @@ Il registro delle decisioni (§7.7) riporta i danni attesi confrontati ("PIU_ADA
 
 Le classi che descrivono una tattica sono **dati puri**: immutabili, fatti solo di enumerati (`tipi/tattiche`), numeri e liste. Stanno in **`…/modellodati/tattiche`**, con il suffisso `MD` come il resto del modello dati
 (`TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`). Il motivo è che la stessa classe serve a tre cose: la **UI** le legge e le modifica (può importare `modellodati` e `tipi`, non il motore né il dominio), il **salvataggio**
-le scrive con il personaggio (`PersonaggioMD`, §11.12) e il **motore** le valuta. Un test (`DipendenzeTatticheTest`) controlla che dipendano solo da `tipi` e fra loro.
+le scrive con il personaggio (`PersonaggioMD`, §11.12) e il **motore** le valuta. Il modulo `foresta-modellodati` non vede il motore, e quindi nemmeno `tattiche`: dipendono solo da `tipi` e fra loro.
 
 La **logica** sta in `…/tattiche`: le rose (`Rosa`, `Rose`), `Filtri`, `Ordinamenti`, `Predicati`, `Selettori` (applica un `SelettoreMD`), `Requisiti`, `SceltaIncantesimo`, `Astuzia`, `Valutatore`, il `ContestoTattico` e i risultati (`RisultatoSelezione`, `Decisione`). Non la
-può importare la UI (`DipendenzeUITest`, che ora riconosce anche i sottopacchetti).
+può importare la UI: sta in `foresta-motore`, che non vede `foresta-swing`.
 
 Il valutatore e il contesto: `Valutatore.decidi` (la prima voce eseguibile; ripiego sull'attacco fisico al primo avversario) restituisce una `Decisione` (azione, bersaglio, perché). Il `Selettore` accetta un'`Ammissione`: restano nella rosa solo i candidati su cui un'azione della voce si può fare, e i filtri che dipendono dall'azione la valutano per quella che si farebbe su ciascuno.
 `Requisiti` dice quando si può fare ciascuna azione, con il motivo del no; `Astuzia` calcola l'astuzia (§4); `SceltaIncantesimo` e `CriterioIncantesimo` scelgono l'incantesimo (§11.10), con `CalcolatoreCombattimento.dannoAtteso` e `dannoAttesoDellaMischia` (senza dadi).

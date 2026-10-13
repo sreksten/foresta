@@ -155,7 +155,7 @@ Un'immagine si indica con `ImmagineIntermezzo`:
 | :--- | :--- | :--- |
 | Personaggio | `ImmagineIntermezzo.personaggio(TipoPersonaggio.X)` oppure la scorciatoia `ElementoIntermezzo.personaggio(id, classe, x, y)` | Le stesse immagini delle locazioni |
 | Illustrazione di una locazione | `ImmagineIntermezzo.locazione(TipoLocazione.X)` | Adatta come sfondo |
-| Risorsa qualsiasi | `ImmagineIntermezzo.risorsa("intermezzi/Tramonto.png")` | Percorso relativo a `src/main/resources/com/threeamigos/foresta/img/` |
+| Risorsa qualsiasi | `ImmagineIntermezzo.risorsa("intermezzi/Tramonto.png")` | Percorso relativo a `foresta-swing/src/main/resources/com/threeamigos/foresta/img/` |
 | Sprite sheet | `ImmagineIntermezzo.spriteSheet("intermezzi/Pipistrello.png", colonne, righe, fotogrammiAlSecondo)` | Vedi sotto |
 | Animazione via codice | `ImmagineIntermezzo.animazione(Animazione.X)` | Vedi §8 |
 

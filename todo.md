@@ -17,12 +17,9 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 
 ## Architettura
 
-- **Dividere il progetto in moduli Maven**, così che la separazione fra motore e UI (vedi [`motore_di_gioco.md`](motore_di_gioco.md) §1) la garantisca il compilatore e non solo i test. L'idea: una **base** (`tipi`, `modellodati`, `interfacce`, `eventi` con `BusEventi`, gli strumenti neutri e i dati degli intermezzi), il **motore** (tutto il dominio, che resta un blocco: i suoi pacchetti si richiamano a vicenda), la **UI** e l'**applicazione** (`Main`, che li assembla); le risorse si dividono fra i moduli (immagini nella UI, grammatiche nel motore). Prima vanno tolti gli ultimi legami, che si possono controllare con test di dipendenza come quelli che già ci sono:
-  - `interfacce` importa `missioni.Missione` (`FornitoreMissione`: farle usare `VistaMissione`, o spostare l'interfaccia in `missioni`) e `strumenti.Punteggio` e `strumenti.TestataSalvataggio` (`GestorePunteggi`, `GestoreSalvataggi`: spostare i due tipi nella base);
-  - `strumenti` mescola le utilità neutre (`Logger`, `Misc`, `ModalitaDiProva`, i temporizzatori, i gestori su file di classifica e trofei, `Punteggio`, `TestataSalvataggio`) e quel che dipende dal dominio (`CostruttoreArtefatto` e la sua implementazione, che usano `Artefatto`; `GestoreSalvataggiSuFile`, che usa `GruppoGiocatore` e `LineaTemporale`): le seconde vanno nel motore;
-  - `intermezzi` mescola i dati che disegna la UI (`PaginaIntermezzo`, `BattutaIntermezzo`, `ImmagineIntermezzo`, `ElementoIntermezzo`, `Animazione`, `StatoElemento`, `TipoStiramento`, `BattutaProgrammata`, che dipendono solo da `tipi`) e la logica degli intermezzi (che dipende da motore, missioni e locazioni): i dati vanno nella base;
-  - gli undici `Interno*` che importano il dominio (le parti di uno scambio, il banco di lavoro, i personaggi) vanno nel motore: sono le eccezioni di `eventi/DipendenzeEventiTest`, e `BusEventi` non deve dipendere da loro (`SnifferBusEventi` sta nel pacchetto radice con `Main`, nell'applicazione, perché ascolta anche gli eventi della UI);
-  - i sei eventi `InternoCreazioneSprite*` e `InternoNotificaViaFumettoATempo` portano tipi della UI (sono le eccezioni di `ui/DipendenzeVersoLaUITest`): li crea e li consuma solo la UI, e vanno nel suo modulo, che userà `BusEventi` della base.
+- **Rivedere i javadoc di classi e metodi** (in italiano), partendo da `modellodati` e dagli altri moduli bassi; il progetto serve anche per la didattica.
+- **Salvataggi fuori dal modello dati.** Le classi `…MD` portano ancora `salva` e `leggi` (formato di file). Per toglierli servono getter e setter in quasi tutti i MD (`leggi` scrive direttamente nei campi privati) e un serializzatore per classe, in un solo commit perché `ModelloDati` richiama tutto a catena (circa 870 righe in 24 file); non è necessario per il porting (usano solo `java.io`).
+- **Spezzare il motore.** I suoi pacchetti si richiamano a vicenda (`motore`, `personaggi`, `oggetti`, `locazioni`, `missioni`, `incantesimi`...) e per ora restano un modulo solo.
 
 ## Gioco e contenuti
 
@@ -84,4 +81,4 @@ I nomi di questi personaggi sono fatti (liste, registro, testi delle missioni, s
 Gli altri `TODO`/`FIXME` restano nel codice, accanto al punto a cui si riferiscono (venti, sparsi fra `PersonaggioBase`, `LocazioneBase`, `DisplayableCanvas`, `GruppoGiocatore`, `TatticheBase` e altri; in `TatticheBase` gli elenchi delle classi magiche, con Silenzio e con Morte da tenere allineati con le classi, e le abilità proprie dei mostri: rigenerazione del Troll, teste dell'Idra, canto dell'Arpia). Per ritrovarli:
 
 - in IntelliJ, la finestra **TODO** (View → Tool Windows → TODO, oppure ⌘6) li elenca tutti con file e riga sempre aggiornati, e un click porta al punto esatto;
-- da terminale: `grep -rn "TODO\|FIXME" src/main/java`.
+- da terminale: `grep -rn "TODO\|FIXME" --include=*.java .`.

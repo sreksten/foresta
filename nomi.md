@@ -6,7 +6,7 @@ tengono in un registro, che si salva con la partita.
 
 ## 1. Le liste: `nomi.txt`
 
-Risorsa `src/main/resources/com/threeamigos/foresta/motore/nomi.txt`. `locande.txt` e `missioni.txt` la includono con
+Risorsa `foresta-motore/src/main/resources/com/threeamigos/foresta/motore/nomi.txt`. `locande.txt` e `missioni.txt` la includono con
 `#include_static` (una sezione condivisa: un nome uscito in una grammatica non esce più in nessun'altra), `fiabe.txt` con
 `#include` normale (le fiabe si azzerano a ogni racconto: hanno una copia tutta loro). Vedi [`GrammarBean.md`](GrammarBean.md)
 §4.7 (one-shot), §4.11 e §4.12.

@@ -455,7 +455,7 @@ La grammatica sceglie **che cosa** ha un artefatto (nome, soprannome, descrizion
 
 ### File e classi
 
-- `src/main/resources/.../motore/artefatti2.txt`: la grammatica, con il formato spiegato in testa al file.
+- `foresta-motore/src/main/resources/.../motore/artefatti2.txt`: la grammatica, con il formato spiegato in testa al file.
 - `artefatti2_pp.txt`: post-produzione, solo per gli articoli (sotto).
 - `ingredienti.txt`: la grammatica degli ingredienti magici, con le radici `PERGAMENA_1` … `SIGILLO_3`; gli effetti di un ingrediente sono tutti diversi perché `EFFETTO_<TIPO>$` è one-shot. Usa la stessa post-produzione. `GrammaticaArtefatti.caricaIngredientiOppureNull` la carica; se non si carica, gli ingredienti vengono dalle tabelle con il solo nome comune.
 - `oggetti/GrammaticaArtefatti`: carica la grammatica, sceglie la radice, toglie i marcatori e restituisce un `Risultato`. Se il file non si carica lo scrive nel log e il gioco resta alle tabelle.

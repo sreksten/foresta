@@ -37,15 +37,12 @@ Il motore parla alla UI solo tramite il bus eventi (§4), e la UI non vede il do
 
 ### La separazione fra motore, modello dati e UI
 
-Tre regole, controllate da test che leggono i sorgenti e falliscono se ne compare un'infrazione (e anche se una eccezione elencata non serve più):
+La separazione è nella struttura dei moduli Maven (elenco in `CLAUDE.md`): ogni modulo conosce solo quelli sotto la sua riga, e il compilatore rifiuta un import che la viola.
 
-| Regola | Test |
-| :--- | :--- |
-| Fuori da `ui` (salvo `Main`) nessuno importa classi di `ui`. Per portare in primo piano un riquadro il motore pubblica `InternoMostraFinestraStato`, `InternoMostraFinestraStatistiche` o `InternoMostraFinestraIncantesimiEPozioni`. Restano in `eventi` solo sei eventi che portano tipi della UI (gli sprite e i fumetti, che crea la UI stessa) | `ui/DipendenzeVersoLaUITest` |
-| La UI importa solo `ui`, `tipi`, `interfacce`, `eventi`, `modellodati` e, dai pacchetti di servizio, le classi che non dipendono né dal motore né dal dominio (`strumenti`, i dati degli intermezzi). Oggi senza eccezioni | `ui/DipendenzeUITest` |
-| Gli eventi non importano il dominio, e i comandi della UI non portano viste. Fanno eccezione gli undici `Interno*` che il motore manda a sé stesso (con le parti di uno scambio, il banco di lavoro, i personaggi) e lo sniffer | `eventi/DipendenzeEventiTest` |
-
-Restano fuori dalla regola i due punti in cui il motore usa Swing per il thread (`BusEventi` e `TemporizzatoreJ2SE`, §2 e §4).
+- Il motore (`foresta-motore`) non importa mai la UI (`foresta-swing`). Per portare in primo piano un riquadro pubblica `InternoMostraFinestraStato`, `InternoMostraFinestraStatistiche` o `InternoMostraFinestraIncantesimiEPozioni`. I sei eventi che portano sprite e fumetti (`InternoCreazioneSprite*`, `InternoNotificaViaFumettoATempo`) li crea e li riceve solo la UI e stanno nel suo modulo.
+- La UI importa solo `foresta-contratti` e quel che sta sotto (`tipi`, `modellodati`, `interfacce`, `eventi`, le utilità di `strumenti` e i dati degli intermezzi), mai il motore né il dominio. Legge lo stato da `VistaPartita` e comanda il motore con eventi.
+- Gli eventi che la UI riceve (`notifiche`, `richieste`, `comandigiocatore`) non portano classi del dominio, perché `foresta-contratti` non le vede. Gli undici `Interno*` che portano il dominio (le parti di uno scambio, il banco di lavoro, i personaggi) stanno nel motore.
+- Fuori da `foresta-swing` nessuno usa `java.awt`, `javax.swing`, `javax.imageio` o `javax.sound`: lo controlla un test (`DipendenzeDalToolkitGraficoTest`), perché sono parte del JDK. Per eseguire qualcosa sul thread principale del toolkit il motore e il bus passano da `strumenti/ThreadPrincipale`, e `Main` vi installa `ui/EsecutoreSwing` (§2 e §4).
 
 **Identificativi e fabbriche.** Gli enum di `tipi` che nominano le cose del gioco (`TipoPersonaggio`, `TipoLocazione`, `ClasseMissione`, `ClasseIncantesimo`, `TipoOggetto`, `TipoIntermezzo`, `TipoOfferta`) sono identificativi puri e non costruiscono niente: la costruzione sta nelle fabbriche del pacchetto di dominio (`FabbricaPersonaggi`, `FabbricaLocazioni`, `FabbricaMissioni`, `FabbricaIncantesimi`, `FabbricaOggetti`, `FabbricaIntermezzi`, `FabbricaOfferte`), che il modello dati non vede. Così `modellodati`, che salva identificativi e dati e basta (le scelte a caso dei registri stanno in `RegistroArtefatti` e `RegistroPersonaggi`, `EffettoDiStatoMD` e `IncantamentoMD` sono nel modello), dipende solo da `tipi`.
 

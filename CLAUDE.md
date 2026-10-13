@@ -1,8 +1,20 @@
 # Foresta
 
 Gioco di ruolo a turni in Java 8 + Swing, interamente in italiano (codice, commenti, documentazione).
-Sorgenti in `src/main/java/com/threeamigos/foresta` (abbreviato `…/` sotto), risorse in
-`src/main/resources/com/threeamigos/foresta`. Tutti i file sono UTF-8.
+
+Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo conosce solo quelli sopra di lui, quindi è il compilatore a garantire la separazione:
+
+| Modulo | Contiene | Dipende da |
+| :--- | :--- | :--- |
+| `foresta-tipi` | `tipi`: enum e costanti di base | nessuno |
+| `foresta-modellodati` | `modellodati`: le classi `…MD`, solo dati (con la lettura e la scrittura dei salvataggi) | tipi |
+| `foresta-contratti` | `interfacce`, `eventi` (bus e classi degli eventi), le utilità di `strumenti` e i dati di `intermezzi` che servono alla UI | modellodati |
+| `foresta-motore` | il resto: `motore`, `personaggi`, `oggetti`, `locazioni`, `missioni`, `incantesimi`, `offerte`, `tattiche`, `trofei`, la logica degli intermezzi, gli eventi interni che portano il dominio, le grammatiche `.txt` | contratti |
+| `foresta-swing` | `ui` (e gli eventi con sprite), le immagini | contratti |
+| `foresta-app` | `Main`, `SnifferBusEventi` e i test che usano motore e UI insieme | motore, swing |
+
+Un pacchetto può stare in più moduli (`strumenti`, `intermezzi`, `eventi.interni`): quel che conta è il modulo, non il pacchetto.
+Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbreviato `…/` sotto), `src/main/resources/com/threeamigos/foresta` e `src/test/java`. Tutti i file sono UTF-8.
 
 ## Dove trovare le cose
 
@@ -56,8 +68,8 @@ Panoramica in `motore_grafico.md`.
 
 ## Build e test
 
-`mvn test` esegue tutti i test (JUnit 5, in `src/test/java`); al 2026-10-11 sono 1192, tutti verdi (16 saltati).
-`ui/DipendenzeUITest` controlla che la UI non importi motore e dominio, `eventi/DipendenzeEventiTest` che gli eventi non portino classi del dominio, `ui/DipendenzeVersoLaUITest` che nessuno fuori da `ui` la importi: le dipendenze che restano da togliere sono nelle loro `ECCEZIONI` (per la UI oggi nessuna).
-`ui/DipendenzeDalToolkitGraficoTest` vieta `java.awt`, `javax.swing`, `javax.imageio` e `javax.sound` fuori da `ui`: il thread principale si raggiunge da `strumenti/ThreadPrincipale` (Swing lo installa con `ui/EsecutoreSwing` in `Main`).
-`DipendenzeTraModuliTest` (radice dei test) fissa i tre moduli futuri: modello (`tipi`, `modellodati`, `interfacce`, `eventi` e poche classi di `strumenti`/`intermezzi`), motore (il resto) swing (`ui`, gli eventi con sprite) e applicazione (`Main`, `SnifferBusEventi`, che stanno nel pacchetto radice); ogni modulo può conoscere solo il modello, l'applicazione tutti. Le liste delle classi che escono dal loro pacchetto sono nel test.
+`mvn test` dalla radice esegue i test di tutti i moduli (JUnit 5, in `src/test/java` di ciascuno); al 2026-10-13 sono 1226, tutti verdi (16 saltati).
+I test stanno nel modulo più basso che vede tutto quello che usano; i test di motore e UI insieme sono in `foresta-app`, che usa gli helper dei test del motore (`PartitaDiTest` e simili) tramite il suo `test-jar`.
+Le dipendenze fra moduli le controlla il compilatore. Il compilatore non vede invece che nessuno fuori da `foresta-swing` usi `java.awt`, `javax.swing`, `javax.imageio` o `javax.sound` (fanno parte del JDK): lo controlla `ui/DipendenzeDalToolkitGraficoTest` in `foresta-app`, che legge i sorgenti (con `SorgentiDelProgetto`). Il thread principale si raggiunge da `strumenti/ThreadPrincipale` (Swing lo installa con `ui/EsecutoreSwing` in `Main`).
+`mvn package` scrive nella radice il jar eseguibile con le dipendenze, `foresta-0.0.1-SNAPSHOT-jar-with-dependencies.jar`.
 Le cose da fare generali sono in `todo.md`; i `TODO`/`FIXME` puntuali restano nel codice.
