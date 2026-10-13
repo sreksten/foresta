@@ -8,6 +8,9 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
+/**
+ * L'offerta gratuita di un pasto caldo: di solito squisito, e allora rende un po' di salute a tutti i personaggi vivi; a volte non incontra i gusti del gruppo.
+ */
 public class Pasto implements Offerta {
 
 	private final int gustoso = Dado.tira(4);

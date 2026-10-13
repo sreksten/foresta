@@ -4,6 +4,9 @@ import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 
+/**
+ * L'incantesimo di Aria: un incantesimo malefico di danno di Aria (vedi {@link IncantesimoMaleficoImpl}). Costo e danni stanno nelle costanti {@code INCANTESIMO_ARIA_*}.
+ */
 public class Aria extends IncantesimoMaleficoImpl implements Incantesimo {
 
 	public Aria(int livello) {

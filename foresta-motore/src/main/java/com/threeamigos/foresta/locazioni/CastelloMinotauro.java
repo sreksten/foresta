@@ -8,6 +8,9 @@ import com.threeamigos.foresta.personaggi.MinotauroGigante;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
+/**
+ * La Torre della Paura, dove abita il Minotauro Gigante, con dei cofani: se il gruppo lo vince il castello diventa rovine. Non ci si può riposare.
+ */
 public class CastelloMinotauro extends LocazioneUnica {
 
 	@Override

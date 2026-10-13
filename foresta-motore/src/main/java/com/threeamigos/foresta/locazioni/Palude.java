@@ -7,6 +7,10 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
+/**
+ * Una palude malsana: da sola è vuota, e avversari o oggetti ce li mette solo una missione. Altrimenti il gruppo, sette volte su dieci, decide di non fermarsi;
+ * le altre approfitta della quiete per riposare un poco, all'aperto e senza fuoco.
+ */
 public class Palude extends LocazioneBase {
 
 	@Override

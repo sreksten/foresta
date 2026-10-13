@@ -8,6 +8,9 @@ import com.threeamigos.foresta.personaggi.Lich;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
+/**
+ * Il Castello dell'Ombra, dove abita il Lich, con dei cofani: se il gruppo lo vince il castello diventa rovine. Non ci si può riposare.
+ */
 public class CastelloLich extends LocazioneUnica {
 
 	@Override

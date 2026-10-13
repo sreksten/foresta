@@ -263,6 +263,10 @@ public abstract class LocazioneBase implements Locazione {
 		return Math.max(1, personaggiDelGruppo) + inPiu;
 	}
 
+	/**
+	 * Crea gli avversari della locazione scegliendo a caso fra gli incontri possibili adatti al livello del capo. Non sempre si trova qualcuno, ma al
+	 * primo turno sì, perché la Foresta non sembri vuota.
+	 */
 	public void crea(GruppoGiocatore g, GruppoAvversario avversario) {
 		TipoPersonaggio[] m = incontriPossibili(getPossibiliIncontri(), g.getCapo().getLivello());
 		if (m.length > 0) {
@@ -1245,6 +1249,10 @@ public abstract class LocazioneBase implements Locazione {
 		return oggettoCorrente;
 	}
 
+	/**
+	 * Toglie l'oggetto della locazione, dopo che il gruppo l'ha raccolto. Se è un artefatto lo toglie anche dal registro, altrimenti a ogni visita se ne
+	 * avrebbe una copia in più.
+	 */
 	public void rimuoviOggetto() {
 		if (oggettoCorrente instanceof Artefatto) {
 			// L'unico artefatto che una locazione può offrire è quello del registro (vedi crea):

@@ -4,6 +4,9 @@ import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 
+/**
+ * L'incantesimo di Fulmine: un incantesimo malefico di danno di Fulmine (vedi {@link IncantesimoMaleficoImpl}). Costo e danni stanno nelle costanti {@code INCANTESIMO_FULMINE_*}.
+ */
 public class Fulmine extends IncantesimoMaleficoImpl implements Incantesimo {
 
 	public Fulmine(int livello) {

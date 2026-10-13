@@ -8,6 +8,9 @@ import com.threeamigos.foresta.personaggi.Strega;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
+/**
+ * Il Maniero del Malefizio, dove abita la Strega, con dei cofani: se il gruppo lo vince il castello diventa rovine. Non ci si può riposare.
+ */
 public class CastelloStrega extends LocazioneUnica {
 
 	@Override

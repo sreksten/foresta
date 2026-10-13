@@ -8,6 +8,9 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Logger;
 
+/**
+ * L'offerta gratuita della mappa della zona intorno al gruppo, un quadrato di 15 caselle per lato (meno vicino ai bordi della Foresta).
+ */
 public class MappaZona implements Offerta {
 
 	@Override

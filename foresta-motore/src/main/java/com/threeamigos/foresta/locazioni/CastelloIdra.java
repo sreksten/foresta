@@ -8,6 +8,9 @@ import com.threeamigos.foresta.personaggi.Idra;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
+/**
+ * La Rocca del Sangue, dove abita l'Idra, con dei cofani: se il gruppo la vince il castello diventa rovine. Non ci si può riposare.
+ */
 public class CastelloIdra extends LocazioneUnica {
 
 	@Override

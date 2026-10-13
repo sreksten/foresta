@@ -10,6 +10,9 @@ public final class FabbricaCanti {
 	private FabbricaCanti() {
 	}
 
+	/**
+	 * Il canto di quel tipo, per il personaggio che lo canta.
+	 */
 	public static Canto crea(TipoCanto tipo, Personaggio cantore) {
 		switch (tipo) {
 			case CURATIVO:

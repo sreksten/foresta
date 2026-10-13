@@ -11,6 +11,9 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.List;
 
+/**
+ * L'offerta di un avversario che si unisce al gruppo per un periodo limitato, in cambio di monete. Non si può se il gruppo è al completo o non ha le monete.
+ */
 public class AiutoMercenario implements Offerta {
 
 	private Personaggio personaggio;

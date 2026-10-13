@@ -11,6 +11,9 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.List;
 
+/**
+ * L'offerta di un avversario che si unisce al gruppo per un periodo limitato, senza chiedere niente. Non si può se il gruppo è già al completo.
+ */
 public class AiutoGratuito implements Offerta {
 
 	private Personaggio personaggio;

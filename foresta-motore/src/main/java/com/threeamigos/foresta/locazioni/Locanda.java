@@ -21,6 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
+/**
+ * La locanda, nel bosco o in città: il gruppo vi entra se ha le monete per pagare, e può mangiare, pernottare, ascoltare le notizie e le voci
+ * del posto e incontrare un personaggio che chiede di unirsi al gruppo. Nome, locandiere, recensione e dialogo di ogni locanda vengono dalla
+ * grammatica ({@code locande.txt}) e si scrivono nel modello dati della casella.
+ */
 public class Locanda extends LocazioneBase {
 
 	private enum StatoInLocanda {
@@ -49,7 +54,7 @@ public class Locanda extends LocazioneBase {
 	 * ProduttoreDiTestiCasuale.DatiLocanda quando la locanda (o la città che la ospita)
 	 * viene costruita. L'identificativo è quello assegnato nella grammatica (es.
 	 * CINGHIALE_VEGANO) e resta lo stesso indipendentemente dal nome pubblicato: serve
-	 * a collegare questa istanza di locanda alle sue notizie proprie (NOTIZIE_<IDENTIFICATIVO>
+	 * a collegare questa istanza di locanda alle sue notizie proprie ({@code NOTIZIE_<IDENTIFICATIVO>}
 	 * in locande.txt), non a essere mostrato al giocatore.
 	 * <p>
 	 * Il nome di una locanda nel bosco è il nome della casella (LocazioneMD.NOME), come per le altre locazioni con
@@ -116,6 +121,9 @@ public class Locanda extends LocazioneBase {
 		setCompleta(true);
 	}
 
+	/**
+	 * Scrive nel modello dati della casella i dati della locanda (nome, identificativo, locandiere, recensione e dialogo); in una locanda in città il nome sta a parte, perché quello della casella è della città.
+	 */
 	public static void impostaDatiLocanda(LocazioneMD modelloDati, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
 		if (modelloDati.getTipo() == TipoLocazione.LOCANDA) {
 			modelloDati.setNome(datiLocanda.getNome());
@@ -316,6 +324,10 @@ public class Locanda extends LocazioneBase {
 		return false;
 	}
 
+	/**
+	 * Il gruppo accetta o rifiuta la proposta del personaggio disponibile: se accetta il personaggio entra nel gruppo, e il gruppo riceve a caso monete,
+	 * incantesimi e pietre preziose; se rifiuta, quello se ne va.
+	 */
 	public void accetta(GruppoGiocatore g, boolean accetta) {
 		if (accetta) {
 			RegistroPersonaggi.rimuoviPersonaggioInLocazione(g.getCoordinate());

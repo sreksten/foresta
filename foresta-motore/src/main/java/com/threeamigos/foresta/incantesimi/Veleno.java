@@ -5,6 +5,7 @@ import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 
 /**
+ * L'incantesimo di Veleno: un incantesimo malefico di danno di Veleno (vedi {@link IncantesimoMaleficoImpl}). Costo e danni stanno nelle costanti {@code INCANTESIMO_VELENO_*}.
  *
  * @author Stefano Reksten
  */

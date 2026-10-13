@@ -9,6 +9,9 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 
 import static com.threeamigos.foresta.motore.Costanti.COSTO_MAPPA_DELLA_FORESTA;
 
+/**
+ * L'offerta della mappa completa della Foresta, a pagamento.
+ */
 public class MappaForesta implements Offerta {
 
 	@Override

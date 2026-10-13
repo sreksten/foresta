@@ -10,6 +10,9 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.strumenti.Misc;
 
+/**
+ * L'offerta di alcune pergamene di un incantesimo scelto a caso, a metà del prezzo abituale per ciascuna. Occorrono le monete per pagarle.
+ */
 public class Incantesimi implements Offerta {
 
 	private final ClasseIncantesimo classeIncantesimo;

@@ -4,9 +4,9 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 
 /**
- * Facendo amicizia un gruppo puo' ricevere un'offerta.
+ * Un'offerta che il gruppo può ricevere facendo amicizia, corrompendo o in una locanda: un aiuto, delle pergamene, delle informazioni, una
+ * mappa, un pasto. Alcune sono gratuite e si accettano subito, altre costano monete e hanno dei prerequisiti.
  */
-
 public interface Offerta {
 
 	/**

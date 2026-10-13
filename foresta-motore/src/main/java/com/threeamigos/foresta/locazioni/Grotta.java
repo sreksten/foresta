@@ -12,6 +12,9 @@ import com.threeamigos.foresta.personaggi.Viverna;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
+/**
+ * Una grotta: una volta su due vi abita una viverna o un eremita, e la prima volta che la si visita vi si trova un cofano.
+ */
 public class Grotta extends LocazioneBase {
 
 	@Override

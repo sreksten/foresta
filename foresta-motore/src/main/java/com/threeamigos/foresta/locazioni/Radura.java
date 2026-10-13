@@ -9,6 +9,9 @@ import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
+/**
+ * Una radura: vi si incontrano gli stessi mostri del bosco, ma non vi si trova niente. Si può riposare all'aperto con il fuoco.
+ */
 public class Radura extends LocazioneBase {
 
 	@Override

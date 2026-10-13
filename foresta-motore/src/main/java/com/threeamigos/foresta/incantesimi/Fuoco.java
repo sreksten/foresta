@@ -4,6 +4,9 @@ import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 
+/**
+ * L'incantesimo del Fuoco: un incantesimo malefico di danno di Fuoco (vedi {@link IncantesimoMaleficoImpl}). Costo e danni stanno nelle costanti {@code INCANTESIMO_FUOCO_*}.
+ */
 public class Fuoco extends IncantesimoMaleficoImpl implements Incantesimo {
 
 	public Fuoco(int livello) {

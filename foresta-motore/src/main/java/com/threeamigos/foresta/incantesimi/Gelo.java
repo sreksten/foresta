@@ -5,6 +5,7 @@ import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 
 /**
+ * L'incantesimo di Gelo: un incantesimo malefico di danno di Gelo (vedi {@link IncantesimoMaleficoImpl}). Costo e danni stanno nelle costanti {@code INCANTESIMO_GELO_*}.
  *
  * @author Stefano Reksten
  */

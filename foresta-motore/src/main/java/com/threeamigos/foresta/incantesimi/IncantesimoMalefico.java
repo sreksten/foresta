@@ -7,6 +7,9 @@ import com.threeamigos.foresta.tipi.TipoDanno;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * Un incantesimo che fa del male al bersaglio: ha un tipo di danno e dei danni base, e si comporta come un'arma ({@link Arma}) senza incantamenti.
+ */
 public interface IncantesimoMalefico extends Incantesimo, Arma {
 
 	/**

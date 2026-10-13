@@ -26,6 +26,11 @@ import java.util.Optional;
 import com.threeamigos.foresta.motore.OfferteAlchimista;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
+/**
+ * Una città: il gruppo vi arriva, vende le pietre preziose e può andare in piazza, alla locanda, dall'alchimista, dall'armaiolo, dal venditore
+ * di pergamene o dall'incantatore. Non si combatte, e non si può riposare all'aperto. Le quattro città sono uniche e il drago le distrugge una dopo l'altra.
+ * Le sottoclassi si distinguono solo per il tipo.
+ */
 public abstract class Citta extends LocazioneUnica {
 
 	private enum StatoInCitta {

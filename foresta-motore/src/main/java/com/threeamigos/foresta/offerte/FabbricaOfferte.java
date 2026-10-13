@@ -26,6 +26,9 @@ public final class FabbricaOfferte {
 	private FabbricaOfferte() {
 	}
 
+	/**
+	 * Una nuova offerta di quel tipo.
+	 */
 	public static Offerta crea(TipoOfferta tipo) {
 		return COSTRUTTORI.get(tipo).get();
 	}

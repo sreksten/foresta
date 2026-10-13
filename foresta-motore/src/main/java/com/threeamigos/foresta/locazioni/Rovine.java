@@ -13,6 +13,10 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.strumenti.Misc;
 
+/**
+ * Le rovine, con il loro nome (le Vestigia dell'Antico Impero, le Rovine di un castello distrutto): vi si incontrano chimere, non morti, gargoyle e
+ * goblin, e vi si trova un cofano. Le rovine di un castello o di una città nascono quando il drago o la vittoria su un boss li distruggono.
+ */
 public class Rovine extends LocazioneBase {
 
 	@Override

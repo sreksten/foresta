@@ -16,7 +16,7 @@ import java.util.Collections;
  * consuma pergamene, così chi vive di magia ha sempre un modo di combattere. Al Mago rende di più e costa meno
  * che all'Elfo (Costanti.DARDO_ARCANO_*); il resto lo fanno l'INTELLIGENZA e il moltiplicatore magico di chi lo lancia.
  * <p>
- * Non è fra le {@link ClasseIncantesimo}, perché non è una pergamena: non si compra, non si trova e non si conta
+ * Non è fra le {@link com.threeamigos.foresta.tipi.ClasseIncantesimo}, perché non è una pergamena: non si compra, non si trova e non si conta
  * nell'inventario del gruppo.
  */
 public class DardoArcano implements Arma {

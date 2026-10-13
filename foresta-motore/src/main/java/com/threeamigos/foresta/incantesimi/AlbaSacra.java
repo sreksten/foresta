@@ -11,6 +11,8 @@ import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
+ * L'alba sacra: un incantesimo benefico che toglie al gruppo gli stati alterati negativi e i modificatori temporanei (lasciando l'ispirazione e il
+ * berserk). Sacerdote e Sacerdotessa lo sanno lanciare senza pergamene, se hanno la magia necessaria.
  *
  * @author Stefano Reksten
  */
@@ -51,6 +53,9 @@ public class AlbaSacra  implements Incantesimo {
         return Costanti.INCANTESIMO_ALBA_SACRA_COSTO_LANCIO;
     }
 
+    /**
+     * Toglie a tutto il gruppo bersaglio gli stati alterati negativi e i modificatori temporanei, e fa pagare il lancio a chi lo formula.
+     */
     public void formula(Personaggio formulante, Personaggio personaggioBersaglio, Gruppo gruppoBersaglio) {
 
         BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,

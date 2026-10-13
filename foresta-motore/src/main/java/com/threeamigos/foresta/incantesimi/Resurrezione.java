@@ -8,6 +8,10 @@ import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 
+/**
+ * La resurrezione: un incantesimo benefico su un solo personaggio del gruppo. Se è caduto, risorge; se è ancora vivo, la sua salute torna al massimo e
+ * la stanchezza scompare.
+ */
 public class Resurrezione implements Incantesimo {
 
 	private final int livello;
@@ -28,6 +32,9 @@ public class Resurrezione implements Incantesimo {
 		return Costanti.INCANTESIMO_RESURREZIONE_COSTO_LANCIO;
 	}
 
+	/**
+	 * Resuscita il bersaglio, o ne reintegra la salute se è vivo, e fa pagare il lancio a chi lo formula.
+	 */
 	public void formula(Personaggio formulante, Personaggio personaggioBersaglio, Gruppo gruppoBersaglio) {
 		String nome = personaggioBersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);

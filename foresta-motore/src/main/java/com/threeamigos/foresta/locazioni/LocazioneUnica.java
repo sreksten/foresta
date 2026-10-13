@@ -1,12 +1,9 @@
 package com.threeamigos.foresta.locazioni;
 
+/**
+ * Le locazioni uniche: le città e i castelli. Esistono una volta sola nella Foresta, hanno una loro ubicazione e a volte, chiacchierando, il gruppo
+ * viene a sapere in che direzione si trovano rispetto a lui. Il nome sta in {@code TipoLocazione.getNomeProprio} e, costruita la locazione,
+ * nel nome della casella.
+ */
 public abstract class LocazioneUnica extends LocazioneBase {
-
-	/*
-	 * Le locazioni uniche sono le città e i castelli. Essendo uniche hanno
-	 * una loro ubicazione all'interno della foresta e a volte chiacchierando
-	 * un gruppo viene a sapere la direzione della locazione rispetto alla loro.
-	 * Il nome sta in TipoLocazione.getNomeProprio e, costruita la locazione, nel nome della casella.
-	 */
-
 }

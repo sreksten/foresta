@@ -7,6 +7,10 @@ import com.threeamigos.foresta.personaggi.Drago;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
+/**
+ * Il Castello della Morte Alata, dove abita il Drago, per lo scontro finale: se il gruppo lo vince, il drago è sconfitto e il castello
+ * diventa rovine. Non ci si può riposare.
+ */
 public class CastelloDrago extends LocazioneUnica {
 
 	@Override

@@ -19,6 +19,10 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.strumenti.Misc;
 
+/**
+ * Un tempio, con il suo nome (il Santuario della Luna): lo custodiscono delle viverne, e custodiscono un cofano oppure, se il registro ne ha uno da
+ * dare, un artefatto.
+ */
 public class Tempio extends LocazioneBase {
 
 	@Override

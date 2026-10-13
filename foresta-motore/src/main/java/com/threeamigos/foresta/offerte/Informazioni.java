@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Ubicazione artefatto/citta'/castello
+/**
+ * L'offerta di qualche notizia gratuita: dove si trova un artefatto smarrito, una città o un castello.
+ */
 public class Informazioni implements Offerta {
 
 	@Override

@@ -11,6 +11,10 @@ import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
+/**
+ * Il bosco: la locazione più comune della Foresta. Vi si incontrano molte specie di mostri e vi si trovano anelli, cofani, monete, pietre preziose e
+ * pezzi di equipaggiamento. Sulla mappa ha una fra più immagini alternative, scelta una volta per tutte quando la casella nasce.
+ */
 public class Bosco extends LocazioneBase {
 
 	/**
@@ -32,6 +36,9 @@ public class Bosco extends LocazioneBase {
 		return TipoLocazione.BOSCO;
 	}
 
+	/**
+	 * Sceglie a caso quale delle immagini alternative rappresenta questo bosco sulla mappa e lo scrive nel modello dati della casella.
+	 */
 	public static void impostaVarianteMappaACaso(LocazioneMD modelloDati) {
 		modelloDati.aggiungiProprieta(VARIANTE_MAPPA, String.valueOf(Dado.tira(NUMERO_VARIANTI_MAPPA)));
 	}

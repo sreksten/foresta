@@ -84,6 +84,10 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 				nomeBersaglio + "."));
 	}
 
+	/**
+	 * Lancia l'incantesimo su un bersaglio: se è immune non succede niente, altrimenti si tira per colpire come per le armi e, se va a segno, il
+	 * danno risultante si applica al bersaglio. L'esito viene registrato nello stato del combattimento.
+	 */
 	protected void colpisci(Personaggio formulante, Personaggio personaggioBersaglio) {
 		TipoAzione azione = TipoAzione.di(getClasse());
 		StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
