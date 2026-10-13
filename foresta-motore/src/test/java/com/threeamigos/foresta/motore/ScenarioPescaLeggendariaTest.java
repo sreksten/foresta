@@ -2,9 +2,9 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.missioni.leggende.LaLeggenda;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
-import com.threeamigos.foresta.missioni.leggende.OggettoLeggendario;
+import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.leggende.PescaLeggendaria;
-import com.threeamigos.foresta.missioni.leggende.SetLeggendario;
+import com.threeamigos.foresta.oggetti.leggendari.SetLeggendario;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.oggetti.CatalogoLeggendari;
+import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 
 /**
  * La pesca delle leggende favorisce i set cominciati: con un set cominciato, una leggenda su due ne racconta un pezzo

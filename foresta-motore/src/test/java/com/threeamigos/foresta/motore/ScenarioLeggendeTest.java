@@ -8,7 +8,7 @@ import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.missioni.leggende.LaLeggenda;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelLocandiere;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
-import com.threeamigos.foresta.missioni.leggende.OggettoLeggendario;
+import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.oggetti.CatalogoLeggendari;
+import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
@@ -118,7 +118,7 @@ class ScenarioLeggendeTest {
             assertTrue(leggenda.getDescrizione().startsWith("Secondo la leggenda raccontata dall'armaiolo, "), leggenda.getDescrizione());
 
             // Nel tempio ci sono i guardiani della leggenda: quelli della riga, o quelli del livello del gruppo
-            TipoPersonaggio guardiano = leggendario.getGuardiani().map(IncontroDiMissione::getClasse).orElse(TipoPersonaggio.HOBGOBLIN);
+            TipoPersonaggio guardiano = leggendario.getClasseGuardiani().orElse(TipoPersonaggio.HOBGOBLIN);
             List<Personaggio> guardiani = leggenda.getIncontroInLocazione(tempio).orElseThrow(AssertionError::new);
             assertEquals(leggenda.getGuardiani().getNumero(), guardiani.size());
             assertTrue(guardiani.stream().allMatch(p -> p.getClasse() == guardiano));

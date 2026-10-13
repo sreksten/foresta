@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.missioni.leggende.OggettoLeggendario;
-import com.threeamigos.foresta.missioni.leggende.SetLeggendario;
+import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.oggetti.leggendari.SetLeggendario;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -33,8 +33,8 @@ import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.oggetti.CatalogoLeggendari;
-import com.threeamigos.foresta.oggetti.RegoleSetLeggendari;
+import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
 /**

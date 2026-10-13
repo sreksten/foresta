@@ -26,6 +26,7 @@ import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 
 /**
  * Qualcuno (l'armaiolo in città, il locandiere in una locanda: vedi le sottoclassi) racconta la leggenda di un
@@ -128,7 +129,10 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 	public final IncontroDiMissione getGuardiani() {
 		String guardiani = ottieniProprieta(GUARDIANI);
 		if (guardiani == null) {
-			return getLeggendario().getGuardiani().orElseGet(() -> guardianiPerLivello(Statistiche.getLivello()));
+			OggettoLeggendario leggendario = getLeggendario();
+			return leggendario.getClasseGuardiani()
+					.map(classe -> IncontroDiMissione.di(classe, leggendario.getNumeroGuardiani()))
+					.orElseGet(() -> guardianiPerLivello(Statistiche.getLivello()));
 		}
 		String[] parti = guardiani.split(SEPARATORE);
 		return IncontroDiMissione.di(TipoPersonaggio.valueOf(parti[0]), Integer.parseInt(parti[1]));

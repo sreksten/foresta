@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
 
 /**
  * Un artefatto: un pezzo di equipaggiamento vero (arma, scudo, elmo, armatura, anello, ingrediente magico...), con un nome, un

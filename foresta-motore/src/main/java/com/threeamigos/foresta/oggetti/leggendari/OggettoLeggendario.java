@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.missioni.leggende;
+package com.threeamigos.foresta.oggetti.leggendari;
 
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
@@ -15,8 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import com.threeamigos.foresta.missioni.IncontroDiMissione;
-import com.threeamigos.foresta.missioni.richieste.ModificatoreDelTesto;
+import com.threeamigos.foresta.oggetti.ModificatoreDelTesto;
 
 /**
  * Un oggetto leggendario già pronto, con le sue proprietà e la sua leggenda, letto da una riga di leggendari.txt (che
@@ -47,7 +46,8 @@ public final class OggettoLeggendario {
 	private final List<String> modificatori;
 	private final List<String> incantamenti;
 	private final List<String> leggenda;
-	private final String guardiani;
+	private final TipoPersonaggio classeGuardiani;
+	private final int numeroGuardiani;
 	private final String set;
 
 	private OggettoLeggendario(String riga) {
@@ -108,11 +108,21 @@ public final class OggettoLeggendario {
 		if (leggenda.size() < LEGGENDE_MINIME) {
 			throw new IllegalArgumentException("La leggenda ha almeno " + LEGGENDE_MINIME + " battute: " + riga);
 		}
-		guardiani = campi.get("GUARDIANI");
+		String guardiani = campi.get("GUARDIANI");
+		if (guardiani == null) {
+			classeGuardiani = null;
+			numeroGuardiani = 0;
+		} else {
+			String[] parti = guardiani.split("\\s+");
+			if (parti.length != 2) {
+				throw new IllegalArgumentException("I guardiani sono classe e numero, \"VIVERNA 5\": " + guardiani);
+			}
+			classeGuardiani = TipoPersonaggio.valueOf(parti[0]);
+			numeroGuardiani = Integer.parseInt(parti[1]);
+		}
 		set = campi.get("SET");
 		// Si costruisce una volta qui, così un modificatore, un incantamento o i guardiani sbagliati si scoprono subito
 		costruisci();
-		getGuardiani();
 	}
 
 	private static String obbligatorio(Map<String, String> campi, String chiave) {
@@ -186,17 +196,17 @@ public final class OggettoLeggendario {
 	}
 
 	/**
-	 * Chi lo custodisce, se la riga lo dice; altrimenti lo decide la missione.
+	 * La classe di chi lo custodisce, se la riga lo dice; altrimenti lo decide la missione.
 	 */
-	public Optional<IncontroDiMissione> getGuardiani() {
-		if (guardiani == null) {
-			return Optional.empty();
-		}
-		String[] parti = guardiani.split("\\s+");
-		if (parti.length != 2) {
-			throw new IllegalArgumentException("I guardiani sono classe e numero, \"VIVERNA 5\": " + guardiani);
-		}
-		return Optional.of(IncontroDiMissione.di(TipoPersonaggio.valueOf(parti[0]), Integer.parseInt(parti[1])));
+	public Optional<TipoPersonaggio> getClasseGuardiani() {
+		return Optional.ofNullable(classeGuardiani);
+	}
+
+	/**
+	 * Quanti sono i custodi che la riga indica, o 0 se non lo dice.
+	 */
+	public int getNumeroGuardiani() {
+		return numeroGuardiani;
 	}
 
 	/**

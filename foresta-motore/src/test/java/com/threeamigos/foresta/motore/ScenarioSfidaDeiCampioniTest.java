@@ -5,7 +5,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissio
 import com.threeamigos.foresta.missioni.storie.IlCampione;
 import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
 import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.missioni.leggende.OggettoLeggendario;
+import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;

@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.missioni.leggende.OggettoLeggendario;
+import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.oggetti.CatalogoLeggendari;
+import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

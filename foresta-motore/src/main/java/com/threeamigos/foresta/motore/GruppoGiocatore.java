@@ -21,7 +21,7 @@ import com.threeamigos.foresta.modellodati.GruppoGiocatoreMD;
 import com.threeamigos.foresta.modellodati.GruppoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.missioni.richieste.ModificatoreDelTesto;
+import com.threeamigos.foresta.oggetti.ModificatoreDelTesto;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
@@ -50,8 +50,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import com.threeamigos.foresta.oggetti.CatalogoLeggendari;
-import com.threeamigos.foresta.oggetti.RegoleSetLeggendari;
+import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 /**

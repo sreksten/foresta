@@ -28,7 +28,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import com.threeamigos.foresta.oggetti.ArmaNaturale;
-import com.threeamigos.foresta.oggetti.RegoleSetLeggendari;
+import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.combattimento.FaseDiAttacco;

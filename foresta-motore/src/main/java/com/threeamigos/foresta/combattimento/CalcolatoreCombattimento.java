@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import com.threeamigos.foresta.oggetti.ArmaNaturale;
-import com.threeamigos.foresta.oggetti.RegoleSetLeggendari;
+import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.ModalitaDiProva;

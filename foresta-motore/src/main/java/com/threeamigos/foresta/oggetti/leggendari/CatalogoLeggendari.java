@@ -1,7 +1,5 @@
-package com.threeamigos.foresta.oggetti;
+package com.threeamigos.foresta.oggetti.leggendari;
 
-import com.threeamigos.foresta.missioni.leggende.OggettoLeggendario;
-import com.threeamigos.foresta.missioni.leggende.SetLeggendario;
 import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 
 import java.util.Collections;

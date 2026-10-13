@@ -26,11 +26,11 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | Mappa, tempo, locazioni | `…/motore/Foresta`, `LineaTemporale`, `…/locazioni` | `motore_di_gioco.md` §6 |
 | Combattimento | `…/combattimento/CalcolatoreCombattimento`, `Ondata`, `StatoDelCombattimento`, `…/modellodati/EffettoDiStatoMD` | `motore_di_gioco.md` §7, `interazioni_effetti_di_stato.md` |
 | Debolezze, resistenze e immunità di classe ai tipi di danno | `…/tipi/CategoriaPersonaggio`, `TipoPersonaggio` (tabelle), `…/personaggi/PersonaggioBase` (`getMoltiplicatoreDannoSubito`), `…/combattimento/CalcolatoreCombattimento`, `…/ui/TestoReazioneDiClasse` | `debolezze_e_resistenze.md` |
-| Modificatori di attributo a tempo, armi che li mettono sul bersaglio | `…/modellodati/ModificatoreAttributoMD`, `…/missioni/richieste/ModificatoreDelTesto`, `PersonaggioBase`, `CalcolatoreCombattimento` | `modificatori_temporanei.md` |
+| Modificatori di attributo a tempo, armi che li mettono sul bersaglio | `…/modellodati/ModificatoreAttributoMD`, `…/oggetti/ModificatoreDelTesto`, `PersonaggioBase`, `CalcolatoreCombattimento` | `modificatori_temporanei.md` |
 | Canti del Bardo (curativo, ipnotico, di valore), effetto di stato `ISPIRATO` | `…/canti/Canto*`, `TipoCanto`, `FabbricaCanti`, `…/locazioni/LocazioneBase` (`cantaUnCanto`), `…/motore/Automa` | `bardo.md` |
 | Tattiche di combattimento (rose di candidati, contesto, valutatore, tattiche base dei mostri `TatticheBase`) | `…/tattiche` (logica; sottopacchetti `rose` e `valutazione`), `…/modellodati/tattiche` (dati, suffisso `MD`), `…/tipi/tattiche` | `tattiche_di_combattimento_automatiche.md` §11 |
 | Personaggi e gruppi | `…/personaggi`, `…/motore/Gruppo*`, `GestoreProgressione` | `motore_di_gioco.md` §8 |
-| Oggetti, artefatti, incantatore | `…/oggetti` (anche `CatalogoLeggendari`, `RegoleSetLeggendari`), `…/motore/Automa{Inventario,AcquistiArtefatti,Incantatore,ScambiatoreArtefatti}`, `Regole*` | `artefatti_e_incantamenti.md` |
+| Oggetti, artefatti, incantatore | `…/oggetti` (i leggendari e i loro set in `…/oggetti/leggendari`: `OggettoLeggendario`, `SetLeggendario`, `CatalogoLeggendari`, `RegoleSetLeggendari`), `…/motore/Automa{Inventario,AcquistiArtefatti,Incantatore,ScambiatoreArtefatti}`, `Regole*` | `artefatti_e_incantamenti.md` |
 | Negozi ed economia | `…/offerte`, `…/motore/RegoleContrattazione`, `OfferteAlchimista` | `economia.md` |
 | Missioni (infrastruttura) | `…/missioni/MissioneAPassi`, `Passo`, `RegistroMissioni` | `gestione_missioni.md` |
 | Missioni (catalogo) | `…/missioni/{principali,incarichi,richieste,leggende,storie}` | `passi_missioni.md` |

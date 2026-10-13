@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.missioni.leggende;
+package com.threeamigos.foresta.oggetti.leggendari;
 
 import java.util.HashMap;
 import java.util.Map;

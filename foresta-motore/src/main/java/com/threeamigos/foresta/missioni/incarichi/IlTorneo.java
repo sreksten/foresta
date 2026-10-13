@@ -21,7 +21,7 @@ import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
 import com.threeamigos.foresta.missioni.leggende.ConLeggendario;
-import com.threeamigos.foresta.missioni.leggende.OggettoLeggendario;
+import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.leggende.PescaLeggendaria;
 import com.threeamigos.foresta.missioni.richieste.TorneoRichiesto;
 

@@ -1,13 +1,13 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.missioni.leggende.OggettoLeggendario;
+import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.oggetti.CatalogoLeggendari;
+import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**

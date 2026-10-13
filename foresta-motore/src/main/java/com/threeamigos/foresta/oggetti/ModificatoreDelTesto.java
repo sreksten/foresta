@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.missioni.richieste;
+package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.BersaglioModificatore;
