@@ -34,14 +34,15 @@ Il codice si divide in due parti, che si parlano attraverso un bus eventi publis
 
 ```
         UI (ui)                                              Motore (Automa e il resto)
-  ┌────────────────────────┐   Comando*  ──────────────▶  ┌─────────────────────────────┐
+  ┌────────────────────────┐   Comando*  ──────────────▶  ┌──────────────────────────────┐
   │ ForestaUI              │                              │ Automa: macchina a stati     │
   │ DisplayableCanvas      │   ◀──────  Notifica*,        │ reattiva, senza game loop    │
   │ thread di ridisegno    │            Richiesta*,       │                              │
   │ a 60 FPS (solo repaint)│            Interno*          │ TemporizzatoreJ2SE: impulsi  │
   └───────────┬────────────┘                              │ TIMER pianificati fuori, ma  │
-              │  legge lo stato in sola lettura            │ eseguiti sull'EDT            │
-              └──────────▶ VistaPartita, VistaScambio ─────┘ (implementate dal motore)
+              │                                           │ eseguiti sull'EDT            │
+              │  legge lo stato in sola lettura           └──────────────────────────────┘
+              └──────────▶ VistaPartita, VistaScambio (implementate dal motore)
 
                  Tutta la logica di gioco e tutto il disegno girano sull'EDT di Swing.
 ```
