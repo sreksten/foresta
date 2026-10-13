@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;

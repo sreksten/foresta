@@ -2,7 +2,7 @@ package com.threeamigos.foresta.tattiche.valutazione;
 
 import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.List;

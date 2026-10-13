@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.incarichi.RecuperaIlMedaglione;
 import com.threeamigos.foresta.modellodati.ModelloDati;

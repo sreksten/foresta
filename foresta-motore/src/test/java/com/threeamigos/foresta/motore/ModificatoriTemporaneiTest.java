@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.ModificatoreAttivo;

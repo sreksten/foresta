@@ -2,8 +2,8 @@ package com.threeamigos.foresta.offerte;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
-import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;

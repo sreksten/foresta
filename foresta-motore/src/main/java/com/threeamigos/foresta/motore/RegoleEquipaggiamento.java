@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;

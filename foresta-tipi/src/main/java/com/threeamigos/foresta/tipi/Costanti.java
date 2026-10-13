@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.tipi;
 
 /**
  * Le costanti di bilanciamento del gioco, raccolte in un posto solo: cambiandole si cambia la difficoltà senza toccare le regole.

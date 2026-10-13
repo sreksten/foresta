@@ -5,7 +5,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroArtefatti;

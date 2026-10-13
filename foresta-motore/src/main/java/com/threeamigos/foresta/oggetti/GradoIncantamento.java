@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.tipi.Costanti;
 
 /**
  * I gradini degli effetti di un ingrediente magico e degli incantamenti degli artefatti (vedi

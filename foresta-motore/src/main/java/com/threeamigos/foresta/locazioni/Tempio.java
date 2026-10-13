@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
-import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;

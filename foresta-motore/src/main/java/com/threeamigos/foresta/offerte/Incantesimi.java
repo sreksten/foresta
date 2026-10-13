@@ -3,7 +3,7 @@ package com.threeamigos.foresta.offerte;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraIncantesimiEPozioni;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
-import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;

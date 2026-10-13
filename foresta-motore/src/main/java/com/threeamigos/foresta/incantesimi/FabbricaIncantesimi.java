@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
-import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 
 import java.util.EnumMap;

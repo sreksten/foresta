@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.motore.*;

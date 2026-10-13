@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Logger;

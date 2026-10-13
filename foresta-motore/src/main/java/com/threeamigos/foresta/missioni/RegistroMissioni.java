@@ -16,7 +16,7 @@ import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.*;
-import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.combattimento.Ondata;

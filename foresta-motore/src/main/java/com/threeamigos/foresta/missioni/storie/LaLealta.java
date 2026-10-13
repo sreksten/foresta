@@ -6,7 +6,7 @@ import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaFraCompagni;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.personaggi.Personaggio;

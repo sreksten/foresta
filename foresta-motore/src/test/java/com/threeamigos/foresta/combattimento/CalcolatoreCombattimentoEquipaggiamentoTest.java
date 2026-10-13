@@ -23,7 +23,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.tipi.Costanti;
 
 /**
  * Le regole di combattimento legate all'equipaggiamento (vedi artefatti_e_incantamenti.md, §2 "Combattimento"):

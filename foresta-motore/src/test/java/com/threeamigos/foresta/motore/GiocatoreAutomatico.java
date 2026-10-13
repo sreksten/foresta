@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;

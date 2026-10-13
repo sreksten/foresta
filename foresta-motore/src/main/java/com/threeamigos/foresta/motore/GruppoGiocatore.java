@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.interni.InternoAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoPrelievoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoStoccaggioArtefatto;

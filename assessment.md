@@ -15,7 +15,7 @@ Valutazione dello stato del progetto al **2026-10-05**, scritta dopo la revision
 | Meccanica | Stato | Note |
 | :--- | :--- | :--- |
 | Creazione del capo (nome, sesso, classe) | Fatta | Dieci classi giocabili, cinque per sesso (`motore/Automa.java:474-478`) |
-| Gruppo, reclutamento, personaggi temporanei | Fatta | 5 permanenti + 3 temporanei (`motore/Costanti.java:177`); i compagni da reclutare sono in città e locande (`RegistroPersonaggi`) |
+| Gruppo, reclutamento, personaggi temporanei | Fatta | 5 permanenti + 3 temporanei (`tipi/Costanti.java:177`); i compagni da reclutare sono in città e locande (`RegistroPersonaggi`) |
 | Mappa generata, caselle conosciute | Fatta | Dimensione in taratura: oggi 20×20 (`motore/Foresta.java:34-35`) |
 | Tempo, distruzione delle città, fine per tempo | Fatta | Giorni 20/25/30/35 e 40 (`motore_di_gioco.md` §6) |
 | Combattimento, effetti di stato, duelli, ondate | Fatta | **Da bilanciare** contro i boss (FIXME in [`todo.md`](todo.md)) |

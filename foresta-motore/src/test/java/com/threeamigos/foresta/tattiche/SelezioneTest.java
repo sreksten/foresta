@@ -6,7 +6,7 @@ import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
-import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;

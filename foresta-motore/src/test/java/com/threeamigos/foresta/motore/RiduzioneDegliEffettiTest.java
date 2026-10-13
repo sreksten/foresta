@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;

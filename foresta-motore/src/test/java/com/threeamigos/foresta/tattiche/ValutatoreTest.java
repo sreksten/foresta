@@ -11,7 +11,7 @@ import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;

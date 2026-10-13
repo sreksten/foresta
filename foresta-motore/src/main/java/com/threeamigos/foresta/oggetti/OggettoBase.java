@@ -3,7 +3,7 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStatistiche;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
-import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.tipi.Comando;

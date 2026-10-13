@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaIncantatore;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioFornitore;

@@ -30,7 +30,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.Gruppo;
 
 /**

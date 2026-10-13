@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.locazioni.Bosco;
 import com.threeamigos.foresta.locazioni.FabbricaLocazioni;
 import com.threeamigos.foresta.locazioni.Locanda;

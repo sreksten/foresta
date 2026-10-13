@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.tipi.Costanti;
 
 import java.util.List;
 

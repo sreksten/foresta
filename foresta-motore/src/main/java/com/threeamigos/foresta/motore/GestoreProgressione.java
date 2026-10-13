@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.Costanti;
+
 /**
  * La curva dell'esperienza: quanti punti servono per raggiungere un livello. Cresce con il quadrato del livello meno uno, per una
  * costante di bilanciamento: toccandola si rallenta o si velocizza il gioco.

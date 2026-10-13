@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.Costanti;
+
 /**
  * I prezzi nelle botteghe secondo la CONTRATTAZIONE di chi tratta. Lo sconto sugli acquisti (artefatti,
  * consumabili, fusioni) e la quota del costo che si ricava vendendo crescono con

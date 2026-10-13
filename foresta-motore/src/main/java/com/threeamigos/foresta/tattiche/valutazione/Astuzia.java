@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.tattiche.valutazione;
 
-import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 

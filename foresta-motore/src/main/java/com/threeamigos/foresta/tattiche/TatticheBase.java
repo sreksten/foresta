@@ -7,7 +7,7 @@ import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
 import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
-import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.tattiche.Confronto;

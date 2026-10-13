@@ -1,9 +1,8 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.strumenti;
 
 import java.util.Deque;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import com.threeamigos.foresta.strumenti.Logger;
 
 /**
  * Simula un lancio di dado. Tutto il caso delle decisioni di gioco passa da qui, così nei test si può:

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaAperturaFinestraCombattimento;
 import com.threeamigos.foresta.missioni.richieste.ColpoRichiesto;
 import com.threeamigos.foresta.missioni.incarichi.IlColpo;

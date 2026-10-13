@@ -5,7 +5,7 @@ import com.threeamigos.foresta.eventi.interni.InternoRichiestaRefreshUI;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.motore.Statistiche;

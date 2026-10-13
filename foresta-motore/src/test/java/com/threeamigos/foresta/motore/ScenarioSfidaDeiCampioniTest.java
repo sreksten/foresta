@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
 import com.threeamigos.foresta.missioni.storie.IlCampione;

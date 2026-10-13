@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.missioni.incarichi.IlPellegrino;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;

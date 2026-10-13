@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.modellodati.CoordinateMD;

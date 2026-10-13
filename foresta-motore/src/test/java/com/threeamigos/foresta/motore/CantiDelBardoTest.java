@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.canti.Canto;
 import com.threeamigos.foresta.canti.CantoCurativo;
 import com.threeamigos.foresta.canti.CantoDelBardo;

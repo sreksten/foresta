@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 
 /**

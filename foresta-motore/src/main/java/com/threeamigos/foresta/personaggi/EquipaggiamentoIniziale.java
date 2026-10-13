@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;

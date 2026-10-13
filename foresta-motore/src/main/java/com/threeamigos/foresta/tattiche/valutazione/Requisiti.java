@@ -6,7 +6,7 @@ import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.canti.TipoCanto;
-import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.Personaggio;

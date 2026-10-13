@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.interni.InternoAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;

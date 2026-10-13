@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.interni.InternoPersonaggioArreso;
 import com.threeamigos.foresta.missioni.richieste.CombattimentoRichiesto;
