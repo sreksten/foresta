@@ -1,8 +1,5 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.intermezzi.Intermezzo;
-import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.missioni.IntermezzoDiPasso;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
@@ -20,6 +17,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.intermezzi.Intermezzo;
+import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
+import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
+import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 
 class RegistroIntermezziPassiTest {
 

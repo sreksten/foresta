@@ -20,6 +20,8 @@ import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.oggetti.CatalogoLeggendari;
 
 /**
  * La pesca delle leggende favorisce i set cominciati: con un set cominciato, una leggenda su due ne racconta un pezzo

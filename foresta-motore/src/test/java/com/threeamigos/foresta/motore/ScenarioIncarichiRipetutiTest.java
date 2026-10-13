@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Gli incarichi in città ripetibili, finiti, ne lasciano uno nuovo uguale, che si prende dopo una pausa; le storie

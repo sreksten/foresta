@@ -2,6 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.missioni.Mandante;
 import com.threeamigos.foresta.missioni.RichiestaDiMateriali;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Per i test delle richieste di materiali: l'alchimista della partita, e la mandragola, quattro radici, invece di un

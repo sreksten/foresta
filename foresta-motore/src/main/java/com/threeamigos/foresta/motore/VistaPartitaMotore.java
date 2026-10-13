@@ -16,6 +16,8 @@ import com.threeamigos.foresta.tipi.TipoTrofeo;
 import com.threeamigos.foresta.trofei.ClasseTrofeo;
 
 import java.util.List;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 /**
  * La vista in sola lettura della partita che il motore dà alla UI (vedi VistaPartita). Non tiene stato: a ogni

@@ -50,6 +50,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
+import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 
 public class Automa implements ControlloreDiGioco, Temporizzabile {
 

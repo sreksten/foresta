@@ -6,7 +6,7 @@ import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.strumenti.CostruttoreArtefatto;
+import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 
 import java.util.ArrayList;
 import java.util.Collections;

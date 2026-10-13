@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 /**
  * I trofei: quanto si guadagna in una locazione conta solo se il gruppo ne esce vivo, il

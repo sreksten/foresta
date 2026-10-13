@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import com.threeamigos.foresta.motore.OfferteAlchimista;
 
 public abstract class Citta extends LocazioneUnica {
 

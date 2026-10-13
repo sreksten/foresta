@@ -10,6 +10,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Le città e i castelli degli alleati del Drago non sono sparsi a caso: uno per quadrante. E le radure sono poche.

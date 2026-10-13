@@ -14,6 +14,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * I passi pronti di MissioneAPassi su una partita vera (passi_missioni.md, §2): gli eventi di gioco arrivano dal

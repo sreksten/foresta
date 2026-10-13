@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Le due missioni di recupero sui passi (gestione_missioni.md, §5): l'intermezzo del mandante in città, la

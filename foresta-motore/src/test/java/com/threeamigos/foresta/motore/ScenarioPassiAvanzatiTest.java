@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Gli ultimi passi del catalogo (passi_missioni.md, §2): GENERA_PARAMETRI, SORVEGLIA, EVITA_COMBATTIMENTO,

@@ -13,6 +13,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 
 /**
  * Verifica il checkpoint {@link MomentoIntermezzo#LOCAZIONE_COMPLETATA} (gestione_missioni.md, punto 1):

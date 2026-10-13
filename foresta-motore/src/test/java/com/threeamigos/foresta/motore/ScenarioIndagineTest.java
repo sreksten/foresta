@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * L'indagine: gli indizi in posti segnati sulla mappa uno alla volta, poi la scelta del colpevole; se è quello giusto

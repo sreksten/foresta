@@ -24,7 +24,7 @@ import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.missioni.ModificatoreDelTesto;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.strumenti.CostruttoreArtefatto;
+import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
@@ -42,7 +42,6 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.strumenti.Misc;
-import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,6 +50,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.oggetti.CatalogoLeggendari;
+import com.threeamigos.foresta.oggetti.RegoleSetLeggendari;
 
 /**
  * Un insieme di personaggi guidati da un giocatore

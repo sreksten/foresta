@@ -8,6 +8,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Le monete seguono il livello del mondo (vedi economia.md): si comincia con più monete, un prezioso vale quanto il

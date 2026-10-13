@@ -12,7 +12,6 @@ import com.threeamigos.foresta.oggetti.GradoIncantamento;
 import com.threeamigos.foresta.personaggi.OmbraFiamma;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Logger;
-import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;
@@ -21,6 +20,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import com.threeamigos.foresta.oggetti.ArmaNaturale;
+import com.threeamigos.foresta.oggetti.RegoleSetLeggendari;
 
 /**
  *

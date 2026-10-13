@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * La benedizione: in una locanda un sacerdote chiede un favore, che è una missione secondaria; fatto il favore, in un

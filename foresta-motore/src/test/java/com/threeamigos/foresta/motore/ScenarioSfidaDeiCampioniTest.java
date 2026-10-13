@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 /**
  * La missione La sfida dei campioni (vedi carta_forbici_sasso.md): quattro campioni, ognuno con il suo posto segnato sulla
@@ -132,7 +134,7 @@ class ScenarioSfidaDeiCampioniTest {
             partita.assertStato(Stato.SCELTA_DIREZIONE);
             assertFalse(campione.isCompleta());
             assertFalse(campione.isFallita());
-            assertEquals(campione.getPosto(), com.threeamigos.foresta.motore.RegistroMissioni.getLocazioneOccupata(campione));
+            assertEquals(campione.getPosto(), com.threeamigos.foresta.missioni.RegistroMissioni.getLocazioneOccupata(campione));
             assertTrue(Foresta.getCoordinateDaSegnalare().contains(campione.getPosto()), "il posto resta segnato: si può riprovare");
             assertFalse(Foresta.isLocazioneVisitata(campione.getPosto()), "la locazione resta non visitata");
         }

@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Una missione a passi pone una domanda al giocatore nel mezzo di una partita vera (gestione_missioni.md, §4).

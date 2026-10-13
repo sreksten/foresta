@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.oggetti.CatalogoLeggendari;
 
 /**
  * La prima battuta della leggenda dice di quale oggetto si parla, a meno che la prima battuta dell'oggetto non lo

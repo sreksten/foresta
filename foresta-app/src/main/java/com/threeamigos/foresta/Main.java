@@ -7,8 +7,8 @@ import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.motore.Automa;
 import com.threeamigos.foresta.motore.Notizie;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
-import com.threeamigos.foresta.motore.RegistroMissioni;
-import com.threeamigos.foresta.motore.RegistroTrofei;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.trofei.RegistroTrofei;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.strumenti.*;
@@ -16,6 +16,10 @@ import com.threeamigos.foresta.ui.EsecutoreSwing;
 import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Orientamento;
+import com.threeamigos.foresta.motore.ModalitaDiProva;
+import com.threeamigos.foresta.salvataggi.GestorePunteggiSuFile;
+import com.threeamigos.foresta.salvataggi.GestoreSalvataggiSuFile;
+import com.threeamigos.foresta.salvataggi.GestoreTrofeiSuFile;
 
 public class Main {
 

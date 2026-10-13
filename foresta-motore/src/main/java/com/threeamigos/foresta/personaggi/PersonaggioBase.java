@@ -27,6 +27,8 @@ import com.threeamigos.foresta.tipi.*;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.oggetti.ArmaNaturale;
+import com.threeamigos.foresta.oggetti.RegoleSetLeggendari;
 
 /*
  * I personaggi originali della Foresta su ZX Spectrum:

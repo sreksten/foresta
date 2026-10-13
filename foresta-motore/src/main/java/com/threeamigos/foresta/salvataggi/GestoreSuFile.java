@@ -1,6 +1,7 @@
-package com.threeamigos.foresta.strumenti;
+package com.threeamigos.foresta.salvataggi;
 
 import java.io.File;
+import com.threeamigos.foresta.strumenti.Logger;
 
 public abstract class GestoreSuFile {
 

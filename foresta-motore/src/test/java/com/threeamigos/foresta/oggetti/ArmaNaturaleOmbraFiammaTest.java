@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.ChimeraDrago;
@@ -12,6 +12,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
+import com.threeamigos.foresta.motore.FaseDiAttacco;
 
 /**
  * L'attacco naturale dell'Ombrafiamma è il fuoco, ma contro chi è immune al fuoco (i draghi) ripiega sugli artigli:

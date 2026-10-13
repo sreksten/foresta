@@ -13,6 +13,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Non sparate sul pianista: alla terza visita a una locanda il locandiere affida al gruppo un bardo ubriaco,

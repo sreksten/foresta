@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * I nomi dei personaggi non combattenti del mondo (vedi nomi.md): il bardo e sua moglie, le persone di ogni città e i

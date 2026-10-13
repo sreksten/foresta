@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Il soccorso: qualcuno è rimasto nella foresta in mezzo a dei nemici; sconfitti i nemici, viaggia con il gruppo come

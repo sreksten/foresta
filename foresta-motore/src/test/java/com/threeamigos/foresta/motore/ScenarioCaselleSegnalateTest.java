@@ -11,6 +11,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Sulla mappa lampeggiano le caselle delle missioni a passi in corso che il gruppo conosce: il covo dei ladri, il

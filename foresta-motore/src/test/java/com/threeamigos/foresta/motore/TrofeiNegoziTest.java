@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 /**
  * I trofei dei negozi di città, dell'incantatore e degli artefatti tolti agli avversari.

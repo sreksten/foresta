@@ -6,6 +6,7 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Riproduzione mirata del bug in todo.md: la conoscenza della mappa non dovrebbe

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Le locazioni rivendicate dalle missioni (gestione_missioni.md, §6-7): i castelli che le missioni si procurano a

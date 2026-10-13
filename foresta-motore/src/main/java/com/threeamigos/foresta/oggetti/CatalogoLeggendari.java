@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.missioni.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.SetLeggendario;
@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 
 /**
  * Tutti i leggendari e i set leggendari di leggendari.txt, per chiave. I pezzi di un set sono i leggendari che lo

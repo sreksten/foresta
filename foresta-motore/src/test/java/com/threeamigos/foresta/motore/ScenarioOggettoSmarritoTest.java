@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * L'oggetto smarrito: si cerca a non più di due passi da un posto segnato sulla mappa, e si riporta a chi l'ha perso.

@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.tipi.*;
 
 import java.io.BufferedReader;

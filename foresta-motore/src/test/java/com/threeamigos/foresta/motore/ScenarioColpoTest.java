@@ -13,6 +13,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Il colpo: nel posto segnato sulla mappa ci sono le guardie, e il colpo riesce passando inosservati; se il gruppo

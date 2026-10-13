@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.trofei;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
@@ -7,8 +7,6 @@ import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
 import com.threeamigos.foresta.interfacce.GestoreTrofei;
 import com.threeamigos.foresta.modellodati.TrofeiMD;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
-import com.threeamigos.foresta.trofei.ClasseTrofeo;
-import com.threeamigos.foresta.trofei.Trofeo;
 
 import java.util.EnumMap;
 import java.util.Map;

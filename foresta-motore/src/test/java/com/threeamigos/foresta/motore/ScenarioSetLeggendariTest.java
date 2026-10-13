@@ -33,6 +33,8 @@ import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.oggetti.CatalogoLeggendari;
+import com.threeamigos.foresta.oggetti.RegoleSetLeggendari;
 
 /**
  * I set leggendari: i pezzi di un set sono le righe di leggendari.txt che lo nominano, e chi li indossa tutti ha i

@@ -18,6 +18,8 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Il viaggio della moglie: dopo aver riportato a casa il bardo (vedi NonSparateSulPianista), rientrando in una locanda

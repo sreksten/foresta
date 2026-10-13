@@ -14,6 +14,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 
 /**
  * La scenetta di chi entra a ore impossibili: "Ma voi ... non chiudete mai?". Scatta una volta per

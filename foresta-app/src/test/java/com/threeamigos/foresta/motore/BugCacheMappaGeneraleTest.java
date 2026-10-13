@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.awt.image.BufferedImage;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Riproduzione del bug in todo.md passando per la cache statica di DisegnatoreMappa

@@ -23,12 +23,13 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 /**
  * Una partita guidata da un test al posto del giocatore e della UI: manda comandi e testi all'Automa come farebbe

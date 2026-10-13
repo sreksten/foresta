@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 
 /**
  * Gli intermezzi dell'accampamento: ognuno dei tre accampamenti in cui scattano ha la sua scena, poi non scattano più.

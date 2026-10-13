@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 
 /**
  * I canti innati del Bardo e della Cantastorie (vedi bardo.md, fase 2): chi può cantare, il costo, la cura al più

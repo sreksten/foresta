@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Gli incarichi di combattimento: in città qualcuno vuole sconfitto qualcosa che sta in un posto segnato sulla mappa;

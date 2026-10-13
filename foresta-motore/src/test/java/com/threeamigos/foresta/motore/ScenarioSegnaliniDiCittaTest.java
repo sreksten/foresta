@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Dove una missione manda il gruppo (la città in cui riportare qualcuno o tornare a riscuotere) la casella lampeggia

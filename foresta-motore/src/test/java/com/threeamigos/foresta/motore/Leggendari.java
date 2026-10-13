@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.missioni.OggettoLeggendario;
+import com.threeamigos.foresta.oggetti.CatalogoLeggendari;
 
 /**
  * Gli oggetti leggendari di leggendari.txt, per i test: si cercano per chiave, che non cambia, così i nomi e le

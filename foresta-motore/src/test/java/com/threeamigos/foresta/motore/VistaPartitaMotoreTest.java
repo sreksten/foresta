@@ -9,6 +9,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * La vista che la UI riceve al posto delle classi del motore: segue la partita corrente, anche quando il gruppo

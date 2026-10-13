@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Un ospite vulnerabile (un ostaggio, un ferito da soccorrere) non combatte ma gli avversari lo possono attaccare,

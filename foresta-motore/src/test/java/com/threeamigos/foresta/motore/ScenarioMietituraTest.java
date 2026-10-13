@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 /**
  * La Mietitura: il minion quasi morto muore e al suo posto entra uno Scheletro a tempo, se nel gruppo c'è posto;

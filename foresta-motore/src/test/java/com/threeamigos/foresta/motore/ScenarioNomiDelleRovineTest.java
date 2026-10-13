@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Le rovine hanno un nome: dalla grammatica rovine.txt quelle che ci sono dall'inizio, da quello che c'era prima

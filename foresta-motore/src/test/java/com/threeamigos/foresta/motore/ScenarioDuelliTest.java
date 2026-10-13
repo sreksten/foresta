@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * I combattimenti fino alla resa: lo sfidante sconfitto si arrende e resta vivo, ma conta come sconfitto; se si

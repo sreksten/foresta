@@ -3,7 +3,7 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
-import com.threeamigos.foresta.motore.ArmaNaturale;
+import com.threeamigos.foresta.oggetti.ArmaNaturale;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
 import com.threeamigos.foresta.oggetti.Artefatto;

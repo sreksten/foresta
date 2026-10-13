@@ -17,6 +17,8 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Il bardo della locanda insegna al gruppo l'Urlo della Banshee, la prima volta che entra in una locanda nel bosco dopo

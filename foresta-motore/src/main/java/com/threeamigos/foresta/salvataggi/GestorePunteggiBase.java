@@ -1,7 +1,8 @@
-package com.threeamigos.foresta.strumenti;
+package com.threeamigos.foresta.salvataggi;
 
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.modellodati.Serializzabile;
+import com.threeamigos.foresta.strumenti.Punteggio;
 
 abstract class GestorePunteggiBase extends GestoreSuFile implements GestorePunteggi {
 

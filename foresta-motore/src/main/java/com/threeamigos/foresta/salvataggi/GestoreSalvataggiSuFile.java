@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.strumenti;
+package com.threeamigos.foresta.salvataggi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 
 public class GestoreSalvataggiSuFile extends GestoreSuFile implements GestoreSalvataggi {
 

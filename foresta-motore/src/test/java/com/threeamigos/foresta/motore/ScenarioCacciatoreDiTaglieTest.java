@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Il cacciatore di taglie: la banda di goblin si nasconde fra rovine non segnate sulla mappa, basta abbattere il capo,

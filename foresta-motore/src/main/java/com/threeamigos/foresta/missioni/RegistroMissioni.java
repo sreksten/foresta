@@ -1,14 +1,10 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.interni.InternoPassaggioInosservato;
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaAperturaFinestraCombattimento;
-import com.threeamigos.foresta.missioni.FabbricaMissioni;
-import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.SconfiggiIlDrago;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.MissioneMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
@@ -18,9 +14,15 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.strumenti.ModalitaDiProva;
+import com.threeamigos.foresta.motore.ModalitaDiProva;
 
 import java.util.*;
+import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.Ondata;
+import com.threeamigos.foresta.motore.Quadrante;
+import com.threeamigos.foresta.motore.RegistroArtefatti;
 
 public class RegistroMissioni {
 
@@ -579,7 +581,7 @@ public class RegistroMissioni {
 	 * Le celle a distanza esattamente {@code raggio} (di Chebyshev) dal centro, dal lato nord in senso orario; il
 	 * centro stesso per raggio 0. Possono uscire dalla mappa: le scarta chi le usa.
 	 */
-	static List<CoordinateMD> bordo(int x0, int y0, int raggio) {
+	public static List<CoordinateMD> bordo(int x0, int y0, int raggio) {
 		List<CoordinateMD> celle = new ArrayList<>();
 		if (raggio == 0) {
 			celle.add(new CoordinateMD(x0, y0));

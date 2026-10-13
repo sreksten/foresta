@@ -25,6 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Contiene la mappa di una istanza della Foresta,

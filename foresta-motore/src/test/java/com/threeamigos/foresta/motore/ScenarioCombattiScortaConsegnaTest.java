@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * I passi COMBATTI, SCORTA (con lo scortato come ospite del gruppo) e CONSEGNA (passi_missioni.md, §2) sugli incarichi in città che li usano: la taglia su

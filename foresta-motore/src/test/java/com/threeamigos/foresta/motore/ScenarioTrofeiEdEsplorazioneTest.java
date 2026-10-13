@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * I trofei che si prendono ai mostri (OggettiDaRaccogliere.daiNemici, con il ripiego) e l'esplorazione di caselle nuove
