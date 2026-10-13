@@ -270,7 +270,6 @@ I riquadri e le schermate **non sono componenti Swing**: sono disegnatori a cui 
 ## Osservazioni
 
 - Questa guida descrive lo stato al 2026-10-13: sei moduli Maven, 1226 test, tutti verdi (16 saltati).
-- Alcuni punti di [`foresta.md`](foresta.md) sono rimasti indietro rispetto al codice: lo schema dice ancora che la UI «legge direttamente lo stato di dominio» (oggi lo legge da `VistaPartita`) e riporta il conteggio dei test al 2026-10-05. Conviene ritoccarlo.
 - Il motore è ancora un modulo unico, con pacchetti che si richiamano a vicenda; il possibile taglio del modulo delle missioni è descritto in `todo.md`.
 
 ## Da fare / idee aperte

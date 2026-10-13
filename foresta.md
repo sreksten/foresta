@@ -29,8 +29,8 @@ Il codice si divide in due parti, che si parlano attraverso un bus eventi publis
 
 | Parte | Pacchetti | Documento |
 | :--- | :--- | :--- |
-| **Motore di gioco** | `motore`, `modellodati`, `tipi`, `eventi`, `personaggi`, `locazioni`, `missioni`, `intermezzi`, `oggetti`, `offerte`, `incantesimi`, `trofei`, `interfacce`, `strumenti` | [`motore_di_gioco.md`](motore_di_gioco.md) |
-| **Motore grafico** | `ui`, `ui.sfx` | [`motore_grafico.md`](motore_grafico.md) |
+| **Motore di gioco** | `motore`, `combattimento`, `tattiche`, `modellodati`, `tipi`, `eventi`, `personaggi`, `locazioni`, `missioni`, `intermezzi`, `oggetti` (con `leggendari`), `offerte`, `incantesimi`, `canti`, `trofei`, `testi`, `salvataggi`, `interfacce`, `strumenti` | [`motore_di_gioco.md`](motore_di_gioco.md) |
+| **Motore grafico** | `ui` e i suoi sottopacchetti (`schermate`, `riquadri`, `barra`, `sprite`, `testo`, `immagini`, `tattiche`, `componenti`, `sfx`) | [`motore_grafico.md`](motore_grafico.md) |
 
 ```
         UI (ui)                                              Motore (Automa e il resto)
@@ -40,8 +40,8 @@ Il codice si divide in due parti, che si parlano attraverso un bus eventi publis
   │ thread di ridisegno    │            Richiesta*,       │                              │
   │ a 60 FPS (solo repaint)│            Interno*          │ TemporizzatoreJ2SE: impulsi  │
   └───────────┬────────────┘                              │ TIMER pianificati fuori, ma  │
-              │  legge direttamente lo stato di dominio    │ eseguiti sull'EDT            │
-              └──────────▶ GruppoGiocatore, Foresta, ...   └─────────────────────────────┘
+              │  legge lo stato in sola lettura            │ eseguiti sull'EDT            │
+              └──────────▶ VistaPartita, VistaScambio ─────┘ (implementate dal motore)
 
                  Tutta la logica di gioco e tutto il disegno girano sull'EDT di Swing.
 ```
@@ -80,9 +80,9 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 
 - **Java 8** (`maven.compiler.source/target = 1.8`), build **Maven**, sorgenti in UTF-8.
 - **Swing/AWT/Java2D** per tutta la grafica, nessuna libreria esterna. Nessuna dipendenza di runtime.
-- **JUnit 5** per i test e **JaCoCo** per la copertura. `mvn test` esegue la suite: al 2026-10-05 sono 681 test, tutti verdi (8 saltati). I test di scenario guidano partite intere senza UI (`PartitaDiTest`).
+- **JUnit 5** per i test e **JaCoCo** per la copertura. `mvn test` esegue la suite: al 2026-10-13 sono 1226 test, tutti verdi (16 saltati), distribuiti sui moduli. I test di scenario guidano partite intere senza UI (`PartitaDiTest`).
 - I salvataggi usano un formato testo proprietario a campi separati da `|` (`Serializzabile`), senza versione: la compatibilità con i salvataggi vecchi non è un obiettivo.
-- Circa 520 file e 75.000 righe di codice, più circa 20.000 righe di test.
+- Circa 680 file e 95.000 righe di codice, più circa 220 file e 33.000 righe di test.
 
 ## Mappa dei documenti
 
