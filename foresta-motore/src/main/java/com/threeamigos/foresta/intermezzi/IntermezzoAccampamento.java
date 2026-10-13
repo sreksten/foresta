@@ -18,7 +18,7 @@ import java.util.List;
  * {@link com.threeamigos.foresta.motore.Automa}), fino a un massimo di
  * {@value #MASSIMO_OCCORRENZE} volte nella partita: {@link #getId()} include quindi la sua
  * occorrenza (vedi {@link #prossimaOccorrenza()}), cosa possibile perché
- * {@link TipoIntermezzo#getIstanza()} crea una nuova istanza a ogni controllo e
+ * {@link FabbricaIntermezzi#crea} crea una nuova istanza a ogni controllo e
  * {@link IntermezziMD} è un semplice insieme di stringhe senza vincoli di formato.
  * <p>
  * Ogni occorrenza ha la sua scena, con la sua luna e le sue battute: la storia di quello trasformato in scarafaggio

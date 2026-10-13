@@ -45,6 +45,9 @@ public final class GestoreTrofeiSuFile extends GestoreSuFile implements GestoreT
 		return true;
 	}
 
+	/**
+	 * Scrive i trofei nel file; dice se ci è riuscito.
+	 */
 	public boolean salva(TrofeiMD trofeiMD) {
 		try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(Files.newOutputStream(Paths.get(nomeFile())), StandardCharsets.UTF_8))) {
 			trofeiMD.salva(writer);

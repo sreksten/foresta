@@ -104,11 +104,17 @@ public final class ScenaInCitta {
 		return con(TipoPersonaggio.MOGLIE_DEL_BARDO);
 	}
 
+	/**
+	 * Una battuta del mandante.
+	 */
 	public ScenaInCitta parlaIlMandante(String testo) {
 		scena().parlaIlNegoziante(testo);
 		return this;
 	}
 
+	/**
+	 * Una battuta del capo del gruppo.
+	 */
 	public ScenaInCitta parlaIlCapo(String testo) {
 		scena().parlaIlCapo(testo);
 		return this;

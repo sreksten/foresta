@@ -79,11 +79,17 @@ public final class ScenaFraCompagni {
 		return this;
 	}
 
+	/**
+	 * Una battuta del primo personaggio.
+	 */
 	public ScenaFraCompagni parlaIlPrimo(String battuta) {
 		battute.add(BattutaIntermezzo.di(PRIMO, battuta));
 		return this;
 	}
 
+	/**
+	 * Una battuta del secondo personaggio.
+	 */
 	public ScenaFraCompagni parlaIlSecondo(String battuta) {
 		battute.add(BattutaIntermezzo.di(SECONDO, battuta));
 		return this;

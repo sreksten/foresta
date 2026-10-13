@@ -35,6 +35,9 @@ public final class FabbricaIntermezzi {
 	private FabbricaIntermezzi() {
 	}
 
+	/**
+	 * L'intermezzo di quel tipo.
+	 */
 	public static Intermezzo crea(TipoIntermezzo tipo) {
 		return COSTRUTTORI.get(tipo).apply(tipo);
 	}

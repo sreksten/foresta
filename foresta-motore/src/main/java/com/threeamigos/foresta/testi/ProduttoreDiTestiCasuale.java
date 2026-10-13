@@ -20,6 +20,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 
+/**
+ * Il punto da cui il gioco ottiene i suoi testi a caso: ogni metodo produce un testo da una delle grammatiche ({@code fiabe.txt}, {@code locande.txt},
+ * {@code missioni.txt}, {@code leggendari.txt}, {@code sfide.txt} e le altre) tramite {@link GrammarBean}. Le grammatiche si leggono una volta sola, la
+ * prima volta che si usa la classe (o prima, con {@link #precarica()}); i nomi dei luoghi e dei personaggi che devono restare diversi fra loro
+ * si pescano da liste che si esauriscono, e si azzerano con {@link #resetProduzioni()}. Vedi GrammarBean.md e nomi.md.
+ */
 public class ProduttoreDiTestiCasuale {
 
 	private static final int MASSIMO_TENTATIVI_NOTIZIA_LOCANDA = 20;
@@ -79,12 +85,18 @@ public class ProduttoreDiTestiCasuale {
 		}
 	}
 
+	/**
+	 * Una fiaba a caso, a paragrafi.
+	 */
 	public static List<String> fiaba() {
 		List<String> fiaba = fiabe.produce();
 		fiabe.reset();
 		return fiaba;
 	}
 
+	/**
+	 * Una reazione a caso del locandiere, per esempio quando il gruppo gli dice cosa vuole.
+	 */
 	public static String reazioneLocandiere() {
 		List<String> reazioneLocandiere = locande.produce("REAZIONE_LOCANDIERE");
 		locande.reset();
@@ -267,6 +279,9 @@ public class ProduttoreDiTestiCasuale {
 		return missioni.produce("NOME_CAPOBANDA").get(0).trim();
 	}
 
+	/**
+	 * Un oroscopo a caso, a righe.
+	 */
 	public static List<String> oroscopo() {
 		List<String> oroscopo = oroscopi.produce();
 		oroscopi.reset();
@@ -402,6 +417,9 @@ public class ProduttoreDiTestiCasuale {
 		return opt.orElseThrow(() -> new IllegalStateException("Non è stato trovato nessun " + classe + " o " + classeDiRipiego + " tra i personaggi vivi"));
 	}
 
+	/**
+	 * Azzera le liste esauribili delle grammatiche (i nomi già estratti), così si può ripartire per una partita nuova.
+	 */
 	public static void resetProduzioni() {
 		fiabe.reset();
 		oroscopi.reset();

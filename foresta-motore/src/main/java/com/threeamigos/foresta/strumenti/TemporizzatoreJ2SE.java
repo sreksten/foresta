@@ -9,6 +9,11 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Il temporizzatore basato sull'esecutore pianificato di Java: gli impulsi si pianificano su un thread a parte, ma ognuno viene eseguito sul thread principale
+ * (vedi {@link ThreadPrincipale}). Ogni impulso ricorda la pianificazione da cui viene: se nel frattempo è cambiata, l'impulso già accodato non fa niente, così
+ * nessun impulso arriva dopo un cambio di stato.
+ */
 public class TemporizzatoreJ2SE implements Temporizzatore {
 
 	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1, r -> {
@@ -28,10 +33,16 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 		this.temporizzabile = temporizzabile;
 	}
 
+	/**
+	 * Avvia gli impulsi: il primo subito, poi uno ogni quei millisecondi.
+	 */
 	public void inizia(int millisecondi) {
 		pianifica(0, millisecondi);
 	}
 
+	/**
+	 * Avvia gli impulsi: il primo dopo quei millisecondi, poi uno ogni quei millisecondi.
+	 */
 	public void iniziaDopo(int millisecondi) {
 		pianifica(millisecondi, millisecondi);
 	}
@@ -62,6 +73,9 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 		);
 	}
 
+	/**
+	 * Ferma gli impulsi, anche quelli già accodati.
+	 */
 	public void termina() {
 		pianificazione.incrementAndGet();
 		if (timerTask != null) {

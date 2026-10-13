@@ -28,6 +28,9 @@ public final class ScenaInLocanda {
 				Y_PERSONAGGI, X_ARRIVO_CAPO, RITARDO_FRA_PARTENZE);
 	}
 
+	/**
+	 * Una scena con il locandiere dietro il bancone.
+	 */
 	public static ScenaInLocanda conLocandiere() {
 		return new ScenaInLocanda(ElementoIntermezzo.personaggio(ID_LOCANDIERE, TipoPersonaggio.LOCANDIERE, X_LOCANDIERE, Y_PERSONAGGI));
 	}
@@ -55,6 +58,9 @@ public final class ScenaInLocanda {
 				.guarda(Verso.SINISTRA));
 	}
 
+	/**
+	 * Una battuta del locandiere.
+	 */
 	public ScenaInLocanda parlaIlLocandiere(String testo) {
 		scena.parlaIlNegoziante(testo);
 		return this;
@@ -67,6 +73,9 @@ public final class ScenaInLocanda {
 		return parlaIlLocandiere(testo);
 	}
 
+	/**
+	 * Una battuta del capo del gruppo.
+	 */
 	public ScenaInLocanda parlaIlCapo(String testo) {
 		scena.parlaIlCapo(testo);
 		return this;

@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.testi;
 
 /**
- * Controls how {@link GrammarBean} picks an alternative among a production's children.
+ * Come {@link GrammarBean} sceglie un'alternativa fra i figli di una produzione.
+ *
  * @author Stefano Reksten
  */
 public enum TipoModalitaProduzioneTesti {

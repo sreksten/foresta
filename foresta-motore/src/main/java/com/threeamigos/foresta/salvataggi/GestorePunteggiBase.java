@@ -4,6 +4,10 @@ import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.modellodati.Serializzabile;
 import com.threeamigos.foresta.strumenti.Punteggio;
 
+/**
+ * La classifica dei migliori dieci punteggi, indipendente da dove si conserva: tiene i nomi, i punteggi e la partita di ciascuno, e sa dove inserire un nuovo
+ * punteggio. Chi la estende dice come si legge e si scrive ({@code carica} e {@code salva}).
+ */
 abstract class GestorePunteggiBase extends GestoreSuFile implements GestorePunteggi {
 
 	private static final int NUMERO_MASSIMO = 10;
@@ -60,6 +64,10 @@ abstract class GestorePunteggiBase extends GestoreSuFile implements GestorePunte
 		return punteggio > punteggi[NUMERO_MASSIMO - 1];
 	}
 
+	/**
+	 * Inserisce il punteggio al suo posto in classifica, se ce n'è uno: un punteggio nuovo della stessa partita prende il posto di quello vecchio, gli altri scorrono
+	 * e il più basso esce. Poi salva la classifica.
+	 */
 	public void addPunteggio(String nome, int punteggio, String idPartita) {
 		if (!isPunteggioInClassifica(punteggio, idPartita)) {
 			return;

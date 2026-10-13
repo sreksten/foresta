@@ -15,6 +15,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import com.threeamigos.foresta.strumenti.Punteggio;
 
+/**
+ * La classifica nel file {@code forestaHS} della cartella {@code .foresta}.
+ */
 public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 
 	private String nomeFile;
@@ -29,6 +32,9 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 		return nomeFile;
 	}
 
+	/**
+	 * Legge la classifica dal file, una riga per punteggio; dice se ci è riuscito.
+	 */
 	public boolean carica() {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(nomeFile())), StandardCharsets.UTF_8))) {
 			for (int posizione = 0; posizione < getConteggio(); posizione++) {
@@ -45,6 +51,9 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 		return true;
 	}
 
+	/**
+	 * Scrive la classifica nel file, una riga per punteggio; dice se ci è riuscito.
+	 */
 	public boolean salva() {
 		try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(Files.newOutputStream(Paths.get(nomeFile())), StandardCharsets.UTF_8))) {
 			for (int posizione = 0; posizione < getConteggio(); posizione++) {

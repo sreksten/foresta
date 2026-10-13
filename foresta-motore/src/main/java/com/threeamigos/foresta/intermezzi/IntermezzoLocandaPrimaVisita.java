@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * A differenza degli altri {@link Intermezzo}, che scattano una volta sola per l'intera
  * partita, questo deve scattare una volta per ogni locanda: {@link #getId()} include
  * quindi l'identificativo della locanda corrente, cosa possibile perché
- * {@link TipoIntermezzo#getIstanza()} crea una nuova istanza a ogni controllo e
+ * {@link FabbricaIntermezzi#crea} crea una nuova istanza a ogni controllo e
  * {@link com.threeamigos.foresta.modellodati.IntermezziMD} è un semplice insieme
  * di stringhe senza vincoli di formato.
  */

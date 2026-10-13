@@ -23,6 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 
+/**
+ * I salvataggi su file: cinque slot, un file di testo ciascuno nella cartella {@code .foresta}, sempre in UTF-8. La prima riga è l'intestazione (slot, capo
+ * e momento della partita), il resto è il {@code ModelloDati}. Si scrive prima su un file temporaneo, che sostituisce il salvataggio solo se è stato scritto per intero.
+ */
 public class GestoreSalvataggiSuFile extends GestoreSuFile implements GestoreSalvataggi {
 
 	private static final String POSTFISSO_FILE = ".TXT";
