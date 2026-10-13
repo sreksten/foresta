@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.incarichi.RecuperaIlMedaglione;
 import com.threeamigos.foresta.missioni.principali.CronacheDiUnFegatoEroico;
-import com.threeamigos.foresta.missioni.principali.SconfiggiIlDrago;
 import com.threeamigos.foresta.missioni.principali.SconfiggiIlMinotauroGigante;
 
 /**
@@ -74,7 +73,7 @@ class ScenarioMissioniELocazioniTest {
 			assertEquals(1, RegistroMissioni.getMissioniCompletate().stream()
 					.filter(m -> m instanceof SconfiggiIlMinotauroGigante).count(), "anche dopo un caricamento");
 
-			SconfiggiIlDrago drago = RegistroMissioni.getMissionePrincipale();
+			Missione drago = RegistroMissioni.getMissionePrincipale();
 			drago.completaMissione();
 
 			assertTrue(RegistroMissioni.getMissioniCompletate().contains(drago));

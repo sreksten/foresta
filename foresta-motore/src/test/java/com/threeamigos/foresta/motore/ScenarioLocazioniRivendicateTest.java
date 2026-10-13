@@ -6,7 +6,6 @@ import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.principali.SconfiggiIlDrago;
 import com.threeamigos.foresta.missioni.principali.SconfiggiIlLich;
 import com.threeamigos.foresta.missioni.principali.SconfiggiIlMinotauroGigante;
 import com.threeamigos.foresta.missioni.principali.SconfiggiLIdra;
@@ -240,7 +239,7 @@ class ScenarioLocazioniRivendicateTest {
             }
 
             // Sconfitti gli alleati, compare il castello del Drago, che a sua volta diventa rovine
-            SconfiggiIlDrago drago = RegistroMissioni.getMissionePrincipale();
+            Missione drago = RegistroMissioni.getMissionePrincipale();
             drago.controllaPostLocazione();
             CoordinateMD castelloDrago = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CASTELLO_DRAGO);
             assertNotNull(castelloDrago);

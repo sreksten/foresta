@@ -10,8 +10,8 @@ import com.threeamigos.foresta.eventi.interni.InternoScheletroRisvegliato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
-import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -29,9 +29,9 @@ public enum ClasseTrofeo {
 	// Per ora contano tutte le missioni completate, anche le secondarie
 	CACCIATORE_DI_TAGLIE(() -> new TrofeoAContatore<>(TipoTrofeo.CACCIATORE_DI_TAGLIE,
 			InternoMissioneCompletata.class, evento -> 1, 50)),
-	// La missione La sfida dei campioni, una sola per partita (vedi LaSfidaDeiCampioni)
+	// La missione La sfida dei campioni, una sola per partita (vedi LaSfidaDeiCampioni nel catalogo delle missioni)
 	RE_DI_CARTA_FORBICI_E_SASSO(() -> new TrofeoAContatore<>(TipoTrofeo.RE_DI_CARTA_FORBICI_E_SASSO,
-			InternoMissioneCompletata.class, evento -> evento.getMissione() instanceof LaSfidaDeiCampioni ? 1 : 0, 1)),
+			InternoMissioneCompletata.class, evento -> evento.getMissione().getClasse() == ClasseMissione.LA_SFIDA_DEI_CAMPIONI ? 1 : 0, 1)),
 	// Chi viene respinto dall'oste per mancanza di monete non mangia, e non conta
 	SBEVAZZONE(() -> new TrofeoAContatore<>(TipoTrofeo.SBEVAZZONE,
 			InternoPastoConsumatoInLocanda.class, evento -> 1, 100)),

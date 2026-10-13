@@ -884,7 +884,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 		boolean eraInCorso = !isCompleta() && !isFallita();
 		congedaScortato();
 		super.fallisciMissione();
-		if (eraInCorso && !RegistroMissioni.TipoMissionePredefinita.contieneMissione(getId())) {
+		if (eraInCorso && !ClasseMissione.isIdDiMissionePredefinita(getId())) {
 			// Per le missioni predefinite l'avviso lo dà già MissioneBase
 			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "MISSIONE FALLITA", getNome()));
 		}

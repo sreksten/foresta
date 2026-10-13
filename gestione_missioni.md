@@ -22,7 +22,7 @@ Tutto il codice è in `missioni/` (modello e missioni concrete), in `missioni/Re
 
 ### Le missioni formano un albero
 
-Ogni missione può avere **figlie** (`aggiungiMissione`, `getMissioniSecondarie`). L'albero è quello del modello dati: `MissioneMD` tiene l'identificatore (un UUID, o il nome del `TipoMissionePredefinita` per le radici predefinite), la `ClasseMissione`, nome, descrizione, flag di visibilità, la mappa delle proprietà e la lista delle figlie. Una missione non può essere figlia di sé stessa (un ciclo renderebbe infinite le ricorsioni di salvataggio e di ricostruzione). Un esempio è `SconfiggiIlDrago`, che nel costruttore ha come figlie le quattro missioni degli alleati.
+Ogni missione può avere **figlie** (`aggiungiMissione`, `getMissioniSecondarie`). L'albero è quello del modello dati: `MissioneMD` tiene l'identificatore (un UUID, o il nome della `ClasseMissione` predefinita per le radici predefinite), la `ClasseMissione`, nome, descrizione, flag di visibilità, la mappa delle proprietà e la lista delle figlie. Una missione non può essere figlia di sé stessa (un ciclo renderebbe infinite le ricorsioni di salvataggio e di ricostruzione). Un esempio è `SconfiggiIlDrago`, che nel costruttore ha come figlie le quattro missioni degli alleati.
 
 ### Classi di missione
 
@@ -36,7 +36,7 @@ Le missioni si dividono per come sono scritte:
 
 `RegistroMissioni` è la facciata statica sul modello dati (`RegistroMissioniMD`: due mappe, attive e completate) e tiene in memoria gli elenchi di primo livello:
 
-- le **predefinite** (`TipoMissionePredefinita`: la missione principale, le due di recupero, le leggende, gli incarichi e le altre che esistono dall'inizio) in tre elenchi: in corso, completate, fallite. All'inizio della partita (`reimposta`) se ne crea una per ogni valore; nessuna è attiva finché non si attiva da sola (§3). L'identificatore di una predefinita è il nome del suo valore;
+- le **predefinite** (le `ClasseMissione` con `isPredefinita()`: la missione principale, le due di recupero, le leggende, gli incarichi e le altre che esistono dall'inizio) in tre elenchi: in corso, completate, fallite. All'inizio della partita (`reimposta`) se ne crea una per ogni valore; nessuna è attiva finché non si attiva da sola (§3). L'identificatore di una predefinita è il nome del suo valore;
 - le **secondarie di primo livello** (`aggiungiMissioneSecondaria`): missioni nate durante la partita fuori dall'albero della principale, per esempio l'incarico in città che ne ripete uno finito. Anche queste in corso, completate, fallite.
 
 Le figlie non stanno in nessun elenco: una figlia completata o fallita resta dentro la sua madre con il proprio flag. Le interrogazioni principali:
@@ -49,7 +49,7 @@ Le figlie non stanno in nessun elenco: una figlia completata o fallita resta den
 | `getMissioniFallite()` | le radici fallite |
 | `getTutteLeMissioni()` | ogni missione dell'albero, una volta sola e in qualunque stato (serve a chi cerca ciò che una missione ha lasciato in sospeso anche dopo la fine: l'intermezzo dell'ultimo passo, i claim) |
 | `getMissione(id)` | la missione con quell'identificatore |
-| `getMissionePrincipale()` | `SconfiggiIlDrago`, in corso o completata |
+| `getMissionePrincipale()` | la missione principale (`SconfiggiIlDrago`, ma il tipo restituito è `Missione`), in corso o completata |
 
 **Eventi di gioco.** `registrati()` (chiamato da `Main`) iscrive il registro al bus per contare ciò che le missioni a passi vogliono sapere: l'apertura di un combattimento, gli avversari sconfitti (con la casella), gli oggetti raccolti, i passaggi inosservati. Ognuno è girato a tutte le missioni a passi non finite (`registraEvento`).
 
@@ -177,7 +177,7 @@ Due famiglie:
 ## 9. Come si scrive una missione nuova
 
 1. Estendere `MissioneAPassi` (o `IncaricoInCitta` per un incarico) e implementare `passoIniziale()` e `costruisciPasso(id)`, componendo i passi già pronti di [`passi_missioni.md`](passi_missioni.md) e collegandoli con `poi`.
-2. Aggiungerla a `ClasseMissione` e a `FabbricaMissioni` (**obbligatorio**, altrimenti non si ricostruisce dopo un caricamento) e, se deve esistere dall'inizio, a `RegistroMissioni.TipoMissionePredefinita`.
+2. Aggiungerla a `ClasseMissione` e a `FabbricaMissioni` (**obbligatorio**, altrimenti non si ricostruisce dopo un caricamento) e, se deve esistere dall'inizio, dichiararla predefinita in `ClasseMissione` (`(true)`, nell'ordine in cui va creata).
 3. Salvare in proprietà (`aggiungiProprieta` o `parametro`) tutto ciò che deve sopravvivere: i passi non si salvano e i campi Java si perdono.
 4. Se la condizione di un passo ha effetti (pesca un nome, cambia lo stato), spostarli nell'azione: la condizione può essere valutata più volte e per i passi con intermezzo anche in anticipo (`haUnIntermezzoInArrivo`).
 5. Se la missione vuole un luogo, rivendicarlo con `cercaLocazione` (o `RegistroMissioni.cerca`/`cercaOCostruisci`) e dare un `getRicordoDellaLocazione()`.

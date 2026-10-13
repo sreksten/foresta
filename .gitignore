@@ -37,3 +37,4 @@ build/
 ### Vim ###
 *.swp
 *.swo
+.mcp.json

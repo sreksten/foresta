@@ -22,10 +22,9 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.combattimento.Ondata;
 import com.threeamigos.foresta.motore.Quadrante;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
-import com.threeamigos.foresta.missioni.principali.SconfiggiIlDrago;
 
 /**
- * Le missioni della partita: quelle predefinite ({@link TipoMissionePredefinita}), in tre elenchi (in corso, completate, fallite), e le secondarie nate durante il gioco, anch'esse
+ * Le missioni della partita: quelle predefinite ({@link ClasseMissione#isPredefinita}), in tre elenchi (in corso, completate, fallite), e le secondarie nate durante il gioco, anch'esse
  * in tre elenchi. Le controlla a ogni locazione (prima, durante, dopo), consegna loro gli eventi di gioco (avversari sconfitti, oggetti raccolti, combattimenti) e tiene i
  * conti delle locazioni che le missioni rivendicano, segnano sulla mappa o svuotano, e delle ricerche di una casella adatta (vedi gestione_missioni.md, §6-7). I dati stanno nel
  * {@code RegistroMissioniMD} e si salvano con la partita.
@@ -39,68 +38,12 @@ public class RegistroMissioni {
 	private RegistroMissioni() {
 	}
 
-	/**
-	 * Le missioni che esistono dall'inizio della partita, ciascuna con la sua classe: il suo nome è l'identificativo con cui la missione si salva.
-	 */
-	public enum TipoMissionePredefinita {
-		SCONFIGGI_IL_DRAGO(ClasseMissione.SCONFIGGI_IL_DRAGO),
-		RECUPERA_IL_MEDAGLIONE(ClasseMissione.RECUPERA_IL_MEDAGLIONE),
-		RECUPERA_LE_DERRATE_ALIMENTARI(ClasseMissione.RECUPERA_LE_DERRATE_ALIMENTARI),
-		LA_LEGGENDA_DELL_ARMAIOLO(ClasseMissione.LA_LEGGENDA_DELL_ARMAIOLO),
-		LA_LEGGENDA_DEL_LOCANDIERE(ClasseMissione.LA_LEGGENDA_DEL_LOCANDIERE),
-		CRONACHE_DI_UN_FEGATO_EROICO(ClasseMissione.CRONACHE_DI_UN_FEGATO_EROICO),
-		NESSUN_BOCCALE_LASCIATO_INDIETRO(ClasseMissione.NESSUN_BOCCALE_LASCIATO_INDIETRO),
-		DISTURBATORE_DELLA_QUIETE_PUBBLICA(ClasseMissione.DISTURBATORE_DELLA_QUIETE_PUBBLICA),
-		CACCIA_AI_GOBLIN(ClasseMissione.CACCIA_AI_GOBLIN),
-		RICHIESTA_ALCHIMISTA(ClasseMissione.RICHIESTA_ALCHIMISTA),
-		RICHIESTA_ARMAIOLO(ClasseMissione.RICHIESTA_ARMAIOLO),
-		RICHIESTA_CAPITANO(ClasseMissione.RICHIESTA_CAPITANO),
-		RICHIESTA_LOCANDIERE(ClasseMissione.RICHIESTA_LOCANDIERE),
-		LA_TAGLIA_SULLA_BANDA(ClasseMissione.LA_TAGLIA_SULLA_BANDA),
-		IL_PELLEGRINO(ClasseMissione.IL_PELLEGRINO),
-		IL_RAPIMENTO(ClasseMissione.IL_RAPIMENTO),
-		NON_SPARATE_SUL_PIANISTA(ClasseMissione.NON_SPARATE_SUL_PIANISTA),
-		IL_VIAGGIO_DELLA_MOGLIE(ClasseMissione.IL_VIAGGIO_DELLA_MOGLIE),
-		CACCIATORE_DI_TAGLIE(ClasseMissione.CACCIATORE_DI_TAGLIE),
-		IL_CARTOGRAFO(ClasseMissione.IL_CARTOGRAFO),
-		IL_CORRIERE(ClasseMissione.IL_CORRIERE),
-		L_OGGETTO_SMARRITO(ClasseMissione.L_OGGETTO_SMARRITO),
-		INCARICO_DI_COMBATTIMENTO(ClasseMissione.INCARICO_DI_COMBATTIMENTO),
-		LA_SORVEGLIANZA(ClasseMissione.LA_SORVEGLIANZA),
-		IL_CONTRABBANDIERE(ClasseMissione.IL_CONTRABBANDIERE),
-		IL_SOCCORSO(ClasseMissione.IL_SOCCORSO),
-		L_INDAGINE(ClasseMissione.L_INDAGINE),
-		IL_RITUALE(ClasseMissione.IL_RITUALE),
-		LA_BENEDIZIONE(ClasseMissione.LA_BENEDIZIONE),
-		LA_DOCUMENTAZIONE(ClasseMissione.LA_DOCUMENTAZIONE),
-		IL_COLPO(ClasseMissione.IL_COLPO),
-		LA_LEALTA(ClasseMissione.LA_LEALTA),
-		IL_TORNEO(ClasseMissione.IL_TORNEO);
-
-		TipoMissionePredefinita(ClasseMissione classeMissione) {
-			this.classeMissione = classeMissione;
-		}
-
-		private final ClasseMissione classeMissione;
-
-		public Missione getIstanza() {
-			return FabbricaMissioni.crea(classeMissione);
-		}
-
-		/**
-		 * Dice se quell'identificativo è quello di una missione predefinita.
-		 */
-		public static boolean contieneMissione(String id) {
-			return Arrays.stream(TipoMissionePredefinita.values()).anyMatch(m -> m.name().equals(id));
-		}
-	}
-
-	private static final Map<TipoMissionePredefinita, Missione> elencoMissioniPredefinite = new EnumMap<>(TipoMissionePredefinita.class);
-	private static final Map<TipoMissionePredefinita, Missione> elencoMissioniPredefiniteCompletate = new EnumMap<>(TipoMissionePredefinita.class);
+	private static final Map<ClasseMissione, Missione> elencoMissioniPredefinite = new EnumMap<>(ClasseMissione.class);
+	private static final Map<ClasseMissione, Missione> elencoMissioniPredefiniteCompletate = new EnumMap<>(ClasseMissione.class);
 	private static final List<Missione> elencoMissioniSecondarie = new ArrayList<>();
 	private static final List<Missione> elencoMissioniSecondarieCompletate = new ArrayList<>();
 	// Le missioni concluse senza successo (vedi Missione.fallisciMissione)
-	private static final Map<TipoMissionePredefinita, Missione> elencoMissioniPredefiniteFallite = new EnumMap<>(TipoMissionePredefinita.class);
+	private static final Map<ClasseMissione, Missione> elencoMissioniPredefiniteFallite = new EnumMap<>(ClasseMissione.class);
 	private static final List<Missione> elencoMissioniSecondarieFallite = new ArrayList<>();
 
 	/**
@@ -201,11 +144,14 @@ public class RegistroMissioni {
 		md.reimposta();
 		pulisciElenchi();
 
-		for (TipoMissionePredefinita tipoMissionePredefinita : TipoMissionePredefinita.values()) {
-			Missione missione = tipoMissionePredefinita.getIstanza();
-			missione.getModelloDati().setId(tipoMissionePredefinita.name());
-			elencoMissioniPredefinite.put(tipoMissionePredefinita, missione);
-			md.aggiungiMissione(tipoMissionePredefinita.name(), missione.getModelloDati());
+		for (ClasseMissione classe : ClasseMissione.values()) {
+			if (!classe.isPredefinita()) {
+				continue;
+			}
+			Missione missione = FabbricaMissioni.crea(classe);
+			missione.getModelloDati().setId(classe.name());
+			elencoMissioniPredefinite.put(classe, missione);
+			md.aggiungiMissione(classe.name(), missione.getModelloDati());
 		}
 	}
 	
@@ -641,9 +587,9 @@ public class RegistroMissioni {
 
 	private static void aggiornaDopoRiletturaImpl(Collection<MissioneMD> missioni) {
 		for (MissioneMD missioneMD : missioni) {
-			if (TipoMissionePredefinita.contieneMissione(missioneMD.getId())) {
-				TipoMissionePredefinita tipoMissionePredefinita = TipoMissionePredefinita.valueOf(missioneMD.getId());
-				Missione missione = ricostruisci(tipoMissionePredefinita.getIstanza(), missioneMD);
+			ClasseMissione tipoMissionePredefinita = ClasseMissione.predefinitaConId(missioneMD.getId());
+			if (tipoMissionePredefinita != null) {
+				Missione missione = ricostruisci(FabbricaMissioni.crea(tipoMissionePredefinita), missioneMD);
 				if (missione.isFallita()) {
 					elencoMissioniPredefiniteFallite.put(tipoMissionePredefinita, missione);
 				} else if (missione.isCompleta()) {
@@ -730,14 +676,6 @@ public class RegistroMissioni {
 	}
 
 	/**
-	 * La missione predefinita indicata è attualmente attiva (accettata e non ancora completata
-	 * né fallita)?
-	 */
-	public static boolean isMissioneAttiva(TipoMissionePredefinita tipoMissionePredefinita) {
-		return elencoMissioniPredefinite.containsKey(tipoMissionePredefinita);
-	}
-
-	/**
 	 * Le missioni di primo livello completate, seguite dalle sotto-missioni completate di quelle ancora in corso.
 	 * Quando si completa anche la missione che le contiene, le sotto-missioni non compaiono più qui da sole ma
 	 * sotto di lei, perché la missione passa tra le completate con tutto il suo albero.
@@ -776,8 +714,8 @@ public class RegistroMissioni {
 	 */
 	public static void fallisciMissione(Missione missione) {
 		togliSegnalino(missione);
-		if (TipoMissionePredefinita.contieneMissione(missione.getId())) {
-			TipoMissionePredefinita tipoMissione = TipoMissionePredefinita.valueOf(missione.getId());
+		ClasseMissione tipoMissione = ClasseMissione.predefinitaConId(missione.getId());
+		if (tipoMissione != null) {
 			elencoMissioniPredefinite.remove(tipoMissione);
 			elencoMissioniPredefiniteFallite.put(tipoMissione, missione);
 		} else if (elencoMissioniSecondarie.removeIf(missione::equals)) {
@@ -789,12 +727,12 @@ public class RegistroMissioni {
 	 * La missione principale, attiva o gia' completata: completandola (drago sconfitto) passa tra le completate,
 	 * ma e' proprio allora che l'Automa chiede se lo sia per decidere tra vittoria e sconfitta.
 	 */
-	public static SconfiggiIlDrago getMissionePrincipale() {
-		Missione missione = elencoMissioniPredefinite.get(TipoMissionePredefinita.SCONFIGGI_IL_DRAGO);
+	public static Missione getMissionePrincipale() {
+		Missione missione = elencoMissioniPredefinite.get(ClasseMissione.SCONFIGGI_IL_DRAGO);
 		if (missione == null) {
-			missione = elencoMissioniPredefiniteCompletate.get(TipoMissionePredefinita.SCONFIGGI_IL_DRAGO);
+			missione = elencoMissioniPredefiniteCompletate.get(ClasseMissione.SCONFIGGI_IL_DRAGO);
 		}
-		return (SconfiggiIlDrago) missione;
+		return missione;
 	}
 
 	/**
@@ -803,8 +741,8 @@ public class RegistroMissioni {
 	 */
 	public static void completaMissione(Missione missione) {
 		togliSegnalino(missione);
-		if (TipoMissionePredefinita.contieneMissione(missione.getId())) {
-			TipoMissionePredefinita tipoMissione = TipoMissionePredefinita.valueOf(missione.getId());
+		ClasseMissione tipoMissione = ClasseMissione.predefinitaConId(missione.getId());
+		if (tipoMissione != null) {
 			elencoMissioniPredefinite.remove(tipoMissione);
 			elencoMissioniPredefiniteCompletate.put(tipoMissione, missione);
 		} else if (elencoMissioniSecondarie.removeIf(missione::equals)) {
