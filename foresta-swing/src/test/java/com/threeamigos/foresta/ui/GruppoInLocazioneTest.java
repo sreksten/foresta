@@ -10,6 +10,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.immagini.VersiDeiPersonaggi;
+import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroLocazione;
 
 /**
  * Il gruppo del giocatore nel riquadro della locazione: a destra, il capo più in basso e vicino al bordo, gli altri

@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import com.threeamigos.foresta.ui.schermate.DisegnatoreMappa;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasMappaATuttoSchermo;
 
 /**
  * Sulla mappa a tutto schermo, passando col mouse sopra una casella conosciuta con un nome se ne legge il nome.

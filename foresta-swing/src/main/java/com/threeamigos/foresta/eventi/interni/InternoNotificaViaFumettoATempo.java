@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.ui.CoordinateFumetto;
+import com.threeamigos.foresta.ui.sprite.CoordinateFumetto;
 
 /**
  * Evento interno del motore UI che mostra un certo messaggio sotto forma di fumetto.

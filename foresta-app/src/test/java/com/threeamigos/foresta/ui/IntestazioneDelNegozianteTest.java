@@ -18,6 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasCommerciante;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIncantatore;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatore;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatoreConsumabili;
+import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
+import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+import com.threeamigos.foresta.ui.testo.DoomdarkFontSmall;
+import com.threeamigos.foresta.ui.testo.FontTool;
 
 /**
  * Nelle schermate dell'armaiolo, dell'alchimista, del venditore di pergamene e dell'incantatore il nome del negoziante

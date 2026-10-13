@@ -27,7 +27,7 @@ import java.util.List;
  *    -----------------------------------------------------------------------
  *    Non decidiamo staticamente "alpha basso = sfondo": deleghiamo la
  *    decisione a un {@link PredicatoSfondo}, una semplice funzione
- *    (x, y, colore-ARGB) -> booleano. Questo permette di riusare lo stesso
+ *    (x, y, colore-ARGB) &rarr; booleano. Questo permette di riusare lo stesso
  *    algoritmo sia su PNG con canale alpha (predicato basato sulla
  *    trasparenza, vedi {@link PredicatoSfondo#perAlpha}) sia su immagini
  *    opache con uno sfondo a tinta unita (scontorno per colore, vedi
@@ -148,13 +148,13 @@ import java.util.List;
  *    si somma naturalmente alla regola del punto 6: il gruppo non è
  *    "completato" finché anche l'ultimo corridore ritardato non ha concluso
  *    il proprio percorso. Il ritardo residuo viene ripristinato al valore
- *    iniziale ad ogni nuovo ciclo (fase PAUSA -> TRACCIAMENTO), così la partenza
+ *    iniziale ad ogni nuovo ciclo (fase PAUSA &rarr; TRACCIAMENTO), così la partenza
  *    sfalsata si ripete identica ad ogni giro.
  *
  * 7) RESA GRAFICA: TORCIA + DISSOLVENZA FINALE
  *    -----------------------------------------------------------------------
  *    L'intera animazione e' una piccola macchina a stati ({@link Fase}):
- *      TRACCIAMENTO    -> il logo è nascosto; ogni corridore porta con se una
+ *      TRACCIAMENTO    &rarr; il logo è nascosto; ogni corridore porta con se una
  *                    "torcia" (un cerchio con gradiente radiale morbido)
  *                    che rivela il logo SOLO nel proprio raggio d'azione,
  *                    ricreata da zero ad ogni fotogramma (non si accumula:
@@ -165,13 +165,13 @@ import java.util.List;
  *                    l'alpha del logo per l'alpha della maschera pixel per
  *                    pixel. La scia bianca e il punto luminoso restano
  *                    sempre disegnati sopra, indipendentemente dal logo.
- *      DISSOLVENZA  -> una volta che TUTTI i corridori hanno completato (vedi
+ *      DISSOLVENZA  &rarr; una volta che TUTTI i corridori hanno completato (vedi
  *                    punto 6), il logo intero viene dissolto in trasparenza
  *                    da invisibile a completamente visibile in
  *                    {@code fotogrammiDissolvenza} fotogrammi (un semplice
  *                    AlphaComposite globale, non più localizzato).
- *      PAUSA        -> il logo resta visibile a piena opacità per una pausa.
- *      SCOMPARSA    -> solo se richiesta ({@link Costruttore#fotogrammiScomparsa}): il logo
+ *      PAUSA        &rarr; il logo resta visibile a piena opacità per una pausa.
+ *      SCOMPARSA    &rarr; solo se richiesta ({@link Costruttore#fotogrammiScomparsa}): il logo
  *                    svanisce in trasparenza, all'inverso della dissolvenza.
  *    Con {@link Costruttore#sfumaScie} le scie svaniscono durante la dissolvenza, mentre
  *    il logo compare, e le teste luminose non si disegnano piu' dalla fine del

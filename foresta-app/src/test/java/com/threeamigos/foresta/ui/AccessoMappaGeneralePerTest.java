@@ -3,6 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 
 import java.awt.image.BufferedImage;
+import com.threeamigos.foresta.ui.schermate.DisegnatoreMappa;
 
 /**
  * Ponte verso i membri protected di DisegnatoreMappa, per un test di riproduzione

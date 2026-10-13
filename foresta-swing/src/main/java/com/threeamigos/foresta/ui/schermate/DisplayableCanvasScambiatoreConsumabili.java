@@ -1,0 +1,442 @@
+package com.threeamigos.foresta.ui.schermate;
+
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
+import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
+import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoConsumabile;
+import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaOffertaConsumabile;
+import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.TipoConsumabile;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.*;
+import java.util.List;
+import com.threeamigos.foresta.ui.barra.Cartiglio;
+import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
+import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
+import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.sprite.SpriteATempo;
+import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+
+/**
+ *
+ * @author Stefano Reksten
+ */
+public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasScambiatore {
+
+    // Il listino che il motore ha mandato con l'apertura della bottega: nomi, descrizioni e costi sono suoi
+    private List<? extends VistaOffertaConsumabile> offerte = Collections.emptyList();
+
+    public DisplayableCanvasScambiatoreConsumabili(int width, int height, VistaPartita vistaPartita) {
+        super(width, height, vistaPartita);
+        BusEventi.iscriviti(NotificaApprovazioneAcquistoConsumabile.class, this::gestisciEventoApprovazioneAcquistoConsumabile);
+        BusEventi.iscriviti(NotificaRifiutoAcquistoConsumabile.class, this::gestisciEventoRifiutoAcquistoConsumabile);
+    }
+
+    public void impostaOfferte(List<? extends VistaOffertaConsumabile> offerte) {
+        this.offerte = offerte;
+    }
+
+    private void gestisciEventoApprovazioneAcquistoConsumabile(NotificaApprovazioneAcquistoConsumabile notificaApprovazioneAcquistoConsumabile) {
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie per l'acquisto!", getCoordinateFumetto()));
+
+        ComandoAcquistoConsumabile comando = notificaApprovazioneAcquistoConsumabile.getEventoRichiestaAcquistoConsumabile();
+
+        aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, -notificaApprovazioneAcquistoConsumabile.getPrezzoPagato(), font,
+                xMassimaZonaCentrale, yRigaMonete(), "Monete spese"));
+
+        if (comando.getTipoConsumabile() == TipoConsumabile.INCANTESIMO) {
+            ClasseIncantesimo classe = comando.getClasseIncantesimo();
+            String descrizione = "Incantesimo acquistato: " + classe.getNomeSingolare();
+            Point posizione = posizioneIncantesimoNellElencoSinistro(classe);
+            if (posizione != null) {
+                aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteIncantesimi[classe.ordinal()], 1, font,
+                        posizione.x, posizione.y, true, descrizione));
+            } else {
+                aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteIncantesimi[classe.ordinal()], 1, font,
+                        xMinimaZonaCentrale, yRigaMonete(), true, descrizione));
+            }
+        }
+    }
+
+    /**
+     * Cerca la posizione a schermo, nell'elenco di sinistra (inventario del gruppo), dell'icona
+     * relativa all'incantesimo indicato, se attualmente visibile nella porzione scrollata a video.
+     */
+    private Point posizioneIncantesimoNellElencoSinistro(ClasseIncantesimo classeIncantesimo) {
+        List<Consumabile> consumabili = getElencoGruppo();
+        ComponenteScorrevole<Consumabile> componenteScorrevole = costruisciComponenteScorrevoleConsumabili(consumabili, null, false);
+        Point posizione = componenteScorrevole.posizioneTitolo(c -> c.classeIncantesimo == classeIncantesimo);
+        if (posizione == null) {
+            return null;
+        }
+        int relativo = posizione.y - offsetYZonaSinistra;
+        if (relativo < 0 || relativo >= ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO) {
+            return null;
+        }
+        return new Point(xMinimaZonaSinistra + SPACING + posizione.x, DIMENSIONE_BORDO_INTERNO + 2 * SPACING + relativo);
+    }
+
+    private void gestisciEventoRifiutoAcquistoConsumabile(NotificaRifiutoAcquistoConsumabile notificaRifiutoAcquistoConsumabile) {
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Non hai abbastanza monete per comprare questo oggetto.", getCoordinateFumetto()));
+    }
+
+    @Override
+    public void disegnaIntestazioniInventario(Graphics2D graphics) {
+        disegnaIntestazioniInventarioImpl(graphics, "Inventario gruppo", "Inventario alchimista");
+    }
+
+    @Override
+    public TipoPersonaggio getMestiereAlCentro() {
+        return TipoPersonaggio.ALCHIMISTA;
+    }
+
+    @Override
+    public String getEtichettaMestiere() {
+        return "Alchimista";
+    }
+
+    public void disegnaColonnaPersonaggio(Graphics2D graphics) {
+
+        int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+        DoomdarkColorModel.Color coloreTestata = DoomdarkColorModel.Color.LIGHT_GRAY;
+
+        // Nome dell'alchimista (e sotto il mestiere)
+        y = disegnaIntestazioneCentrale(graphics, y, coloreTestata) + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+
+        // Immagine personaggio
+        BufferedImage immaginePersonaggio = ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.ALCHIMISTA);
+
+        // Per tenere i personaggi sullo stesso livello (se si passa da un personaggio all'altro)
+        // ed evitare sfarfallamenti, scegliamo il ladro come personaggio "base" per calcolare l'altezza a cui disegnare.
+        y += ALTEZZA_LADRO;
+        graphics.drawImage(immaginePersonaggio, (width - immaginePersonaggio.getWidth()) / 2, y - immaginePersonaggio.getHeight(), null);
+        y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+
+        Image i = ImageCache.get("Monete", coloreTestata);
+        graphics.drawImage(i, xMinimaZonaCentrale, y, null);
+        i = ImageCache.get(vistaPartita.getGruppoGiocatore().getMonete(), font, coloreTestata);
+        graphics.drawImage(i, xMassimaZonaCentrale - i.getWidth(null), y, null);
+
+        y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+
+        BufferedImage separatore = ImageCache.separatore;
+        graphics.drawImage(separatore, (width - separatore.getWidth()) / 2, y, null);
+    }
+
+    public void disegnaInventario(Graphics2D graphics) {
+
+        super.disegnaInventario(graphics);
+
+        disegnaColonnaPersonaggio(graphics);
+
+        // Inventario personaggio
+        offsetYZonaSinistra = disegnaElencoSinistro(graphics, xMinimaZonaSinistra, offsetYZonaSinistra);
+        // Inventario gruppo
+        offsetYZonaDestra = disegnaElencoDestro(graphics, xMinimaZonaDestra, offsetYZonaDestra);
+
+        disegnaIntestazioniInventario(graphics);
+
+        disegnaSpriteLocali(graphics);
+
+        disegnaAiuto(graphics, righeAiuto());
+    }
+
+    /**
+     * L'aiuto per l'elenco sotto il mouse: su un consumabile il click apre e chiude la sua descrizione, e quelli
+     * dell'alchimista, a destra, si comprano con il doppio click (i consumabili del gruppo non si vendono); ovunque
+     * nell'elenco, se si scorre, la rotella
+     */
+    private List<String> righeAiuto() {
+        List<String> righe = new ArrayList<>();
+        if (dentroElenco(xMinimaZonaSinistra, mouseX, mouseY)) {
+            List<Consumabile> gruppo = getElencoGruppo();
+            Consumabile consumabile = trovaConsumabile(gruppo, xMinimaZonaSinistra, offsetYZonaSinistra, mouseX, mouseY, false);
+            if (consumabile != null) {
+                righe.add(Cartiglio.aiutoClick(statoDi(consumabile).isFigliVisibili(), "descrizione"));
+            }
+            aggiungiAiutoRotella(righe, gruppo, false);
+        } else if (dentroElenco(xMinimaZonaDestra, mouseX, mouseY)) {
+            List<Consumabile> venditore = getElencoVenditore();
+            Consumabile consumabile = trovaConsumabile(venditore, xMinimaZonaDestra, offsetYZonaDestra, mouseX, mouseY, true);
+            if (consumabile != null) {
+                righe.add(Cartiglio.aiutoClick(statoDi(consumabile).isFigliVisibili(), "descrizione"));
+                righe.add("Doppio click: acquista");
+            }
+            aggiungiAiutoRotella(righe, venditore, true);
+        }
+        return righe;
+    }
+
+    private void aggiungiAiutoRotella(List<String> righe, List<Consumabile> elenco, boolean mostraCosto) {
+        if (costruisciComponenteScorrevoleConsumabili(elenco, null, mostraCosto).isScorrevole(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO)) {
+            righe.add(Cartiglio.AIUTO_ROTELLA);
+        }
+    }
+
+    private int disegnaElencoSinistro(Graphics2D graphics, int x, int offset) {
+
+        List<Consumabile> consumabili = getElencoGruppo();
+        Consumabile evidenziato = trovaConsumabile(consumabili, x, offset, mouseX, mouseY, false);
+        ComponenteScorrevole<Consumabile> componenteScorrevole = costruisciComponenteScorrevoleConsumabili(consumabili, evidenziato, false);
+
+        int nuovoOffset = componenteScorrevole.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offset);
+        Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, nuovoOffset);
+        graphics.drawImage(image, x + SPACING, DIMENSIONE_BORDO_INTERNO + 2 * SPACING, null);
+
+        return nuovoOffset;
+    }
+
+    private int disegnaElencoDestro(Graphics2D graphics, int x, int offset) {
+
+        List<Consumabile> consumabili = getElencoVenditore();
+        Consumabile evidenziato = trovaConsumabile(consumabili, x, offset, mouseX, mouseY, true);
+        ComponenteScorrevole<Consumabile> componenteScorrevole = costruisciComponenteScorrevoleConsumabili(consumabili, evidenziato, true);
+
+        int nuovoOffset = componenteScorrevole.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offset);
+        Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, nuovoOffset);
+        graphics.drawImage(image, x + SPACING, DIMENSIONE_BORDO_INTERNO + 2 * SPACING, null);
+
+        return nuovoOffset;
+    }
+
+    /**
+     * Riporta il consumabile disegnato alla posizione (x, y) espressa in coordinate della
+     * finestra, oppure null se il punto non cade sull'elenco o non corrisponde al titolo
+     * di un consumabile.
+     */
+    private Consumabile trovaConsumabile(Collection<Consumabile> consumabili, int boxX, int offset, int x, int y, boolean mostraCosto) {
+        int xInterno = x - (boxX + SPACING);
+        int yInterno = y - (DIMENSIONE_BORDO_INTERNO + 2 * SPACING);
+        if (xInterno < 0 || xInterno >= LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO
+                || yInterno < 0 || yInterno >= ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO) {
+            return null;
+        }
+        return costruisciComponenteScorrevoleConsumabili(consumabili, null, mostraCosto).riferimentoTitoloAllaQuota(yInterno + offset);
+    }
+
+    /**
+     * L'albero viene ricostruito a ogni disegno e a ogni click. L'artefatto passato in
+     * evidenziato (se non null) viene disegnato in bianco invece che in grigio chiaro.
+     */
+    private ComponenteScorrevole<Consumabile> costruisciComponenteScorrevoleConsumabili(Collection<Consumabile> consumabili,
+                                                                                    Consumabile evidenziato, boolean mostraCosto) {
+
+        ComponenteScorrevole<Consumabile> componenteScorrevole = new ComponenteScorrevole<>(
+                LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 10, 2);
+
+        TipoConsumabile tipoPrecedente = null;
+
+        for (Consumabile consumabile : consumabili) {
+
+            if (tipoPrecedente != consumabile.tipo) {
+                tipoPrecedente = consumabile.tipo;
+                Image separatore = getSeparatoreConsumabile(tipoPrecedente);
+                if (separatore != null) {
+                    componenteScorrevole.creaNodo(
+                            null, null, null,
+                            null, null, null,
+                            null, null, null,
+                            getSeparatoreConsumabile(tipoPrecedente), null);
+                }
+            }
+
+            DoomdarkColorModel.Color colore = consumabile == evidenziato
+                    ? DoomdarkColorModel.Color.WHITE
+                    : DoomdarkColorModel.Color.LIGHT_GRAY;
+
+            String nome = consumabile.nome;
+            ComponenteScorrevole<Consumabile>.Nodo nodo = componenteScorrevole.creaNodo(
+                    nome, font, colore,
+                    String.valueOf(mostraCosto ? vistaPartita.getGruppoGiocatore().prezzoAcquisto(consumabile.costo) : consumabile.quantita), fontSmall,
+                    mostraCosto ? DoomdarkColorModel.Color.YELLOW : DoomdarkColorModel.Color.LIGHT_GRAY,
+                    consumabile.descrizione, fontSmall, colore,
+                    consumabile.icona, consumabile);
+            nodo.setFigliVisibili(statoDi(consumabile).isFigliVisibili());
+        }
+
+        return componenteScorrevole;
+    }
+
+    @Override
+    public void processaClick(int x, int y, Tasto tasto) {
+        if (tasto != Tasto.SINISTRO) {
+            return;
+        }
+        Consumabile consumabile = trovaConsumabile(getElencoGruppo(), xMinimaZonaSinistra, offsetYZonaSinistra, x, y, false);
+        if (consumabile == null) {
+            consumabile = trovaConsumabile(getElencoVenditore(), xMinimaZonaDestra, offsetYZonaDestra, x, y, true);
+        }
+        if (consumabile == null) {
+            return;
+        }
+        StatoAttributo statoAttributo = statoDi(consumabile);
+        if (statoAttributo.isFigliVisibili()) {
+            statoAttributo.nascondiFigli();
+        } else {
+            statoAttributo.mostraFigli();
+        }
+    }
+
+    @Override
+    public void processaDoppioClick(int x, int y, Tasto tasto) {
+        Collection<Consumabile> disponibili = getElencoVenditore();
+        Consumabile consumabile = trovaConsumabile(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y, true);
+        if (consumabile != null) {
+            BusEventi.pubblica(new ComandoAcquistoConsumabile(consumabile.tipo, consumabile.classeIncantesimo,
+                    consumabile.personaggio == null ? null : consumabile.personaggio.getUuid()));
+        }
+    }
+
+    private List<Consumabile> getElencoGruppo() {
+        List<Consumabile> elencoGruppo = new ArrayList<>();
+        VistaGruppoGiocatore gruppoGiocatore = vistaPartita.getGruppoGiocatore();
+        for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
+            aggiungiSePosseduto(elencoGruppo, TipoConsumabile.INCANTESIMO, classeIncantesimo,
+                    gruppoGiocatore.getIncantesimi(classeIncantesimo));
+        }
+        aggiungiSePosseduto(elencoGruppo, TipoConsumabile.POZIONE_SALUTE, null, gruppoGiocatore.getPozioniSalute());
+        aggiungiSePosseduto(elencoGruppo, TipoConsumabile.POZIONE_SALUTE_GRANDE, null, gruppoGiocatore.getPozioniSaluteGrande());
+        aggiungiSePosseduto(elencoGruppo, TipoConsumabile.POZIONE_MAGIA, null, gruppoGiocatore.getPozioniMagia());
+        aggiungiSePosseduto(elencoGruppo, TipoConsumabile.POZIONE_MAGIA_GRANDE, null, gruppoGiocatore.getPozioniMagiaGrande());
+        return elencoGruppo;
+    }
+
+    /**
+     * Ciò che il gruppo ha si descrive come la voce del listino che lo vende (stesso nome, stessa descrizione)
+     */
+    private void aggiungiSePosseduto(List<Consumabile> elenco, TipoConsumabile tipo, ClasseIncantesimo classeIncantesimo,
+                                     int quantita) {
+        if (quantita <= 0) {
+            return;
+        }
+        for (VistaOffertaConsumabile offerta : offerte) {
+            if (offerta.getTipo() == tipo && offerta.getClasseIncantesimo() == classeIncantesimo) {
+                elenco.add(daOfferta(offerta, quantita));
+                return;
+            }
+        }
+    }
+
+    private List<Consumabile> getElencoVenditore() {
+        List<Consumabile> elencoVenditore = new ArrayList<>();
+        for (VistaOffertaConsumabile offerta : offerte) {
+            elencoVenditore.add(daOfferta(offerta, 1));
+        }
+        return elencoVenditore;
+    }
+
+    private Consumabile daOfferta(VistaOffertaConsumabile offerta, int quantita) {
+        return new Consumabile(offerta.getTipo(), offerta.getNome(), offerta.getDescrizione(), quantita,
+                offerta.getClasseIncantesimo(), offerta.getPersonaggio(), offerta.getCosto(), iconaDi(offerta));
+    }
+
+    private static Image iconaDi(VistaOffertaConsumabile offerta) {
+        switch (offerta.getTipo()) {
+            case INCANTESIMO:
+                return ImageCache.spriteIncantesimi[offerta.getClasseIncantesimo().ordinal()];
+            case POZIONE_SALUTE:
+                return ImageCache.spritePozioneSalute;
+            case POZIONE_SALUTE_GRANDE:
+                return ImageCache.spritePozioneSaluteGrande;
+            case POZIONE_MAGIA:
+                return ImageCache.spritePozioneMagia;
+            case POZIONE_MAGIA_GRANDE:
+                return ImageCache.spritePozioneMagiaGrande;
+            case AUMENTO_MAGIA_SINGOLO:
+                return ClassePersonaggioImmagine.getIcona(offerta.getPersonaggio().getClasse());
+            case AUMENTO_MAGIA_GRUPPO:
+                return ImageCache.spriteGruppo;
+            default:
+                return ImageCache.spriteMappa;
+        }
+    }
+
+    private static class Consumabile {
+
+        private final TipoConsumabile tipo;
+        private final String nome;
+        private final String descrizione;
+        private final int quantita;
+        private final ClasseIncantesimo classeIncantesimo;
+        private final VistaPersonaggio personaggio;
+        private final int costo;
+        private final Image icona;
+
+        public Consumabile(TipoConsumabile tipo, String nome, String descrizione, int quantita,
+                           ClasseIncantesimo classeIncantesimo, VistaPersonaggio personaggio,
+                           int costo, Image icona) {
+            this.tipo = tipo;
+            this.nome = nome;
+            this.descrizione = descrizione;
+            this.quantita = quantita;
+            this.classeIncantesimo = classeIncantesimo;
+            this.personaggio = personaggio;
+            this.costo = costo;
+            this.icona = icona;
+        }
+    }
+
+    private Image getSeparatoreConsumabile(TipoConsumabile tipoConsumabile) {
+        switch (tipoConsumabile) {
+            case INCANTESIMO:
+                return ImageCache.separatoreIncantesimi;
+            case POZIONE_SALUTE:
+                return ImageCache.separatorePozioni;
+            default:
+                return null;
+        }
+    }
+    // --- CLASSE DI APPOGGIO per ricordare se gli attributi vanno tenuti aperti o chiusi
+    /**
+     * Le caratteristiche di un Consumabile, a differenza degli artefatti, non hanno un
+     * modello dati proprio: questa classe di appoggio associa a ogni voce la
+     * visibilità della sua descrizione, replicando l'API isFigliVisibili/mostraFigli/
+     * nascondiFigli già usata da Artefatto.
+     */
+    private static final class StatoAttributo {
+
+        private boolean figliVisibili = true;
+
+        private boolean isFigliVisibili() {
+            return figliVisibili;
+        }
+
+        private void mostraFigli() {
+            figliVisibili = true;
+        }
+
+        private void nascondiFigli() {
+            figliVisibili = false;
+        }
+    }
+
+    private final Map<Object, StatoAttributo> statiAttributi = new HashMap<>();
+
+    /**
+     * TipoConsumabile da solo non basta come chiave: INCANTESIMO è lo stesso valore per
+     * tutte le ClasseIncantesimo, e AUMENTO_MAGIA_SINGOLO è lo stesso per ogni personaggio.
+     * Usiamo quindi, quando presente, il tratto che distingue le singole voci dello stesso tipo.
+     */
+    private Object chiaveVisibilita(Consumabile consumabile) {
+        if (consumabile.classeIncantesimo != null) {
+            return consumabile.classeIncantesimo;
+        }
+        if (consumabile.personaggio != null) {
+            return consumabile.personaggio;
+        }
+        return consumabile.tipo;
+    }
+
+    private StatoAttributo statoDi(Consumabile consumabile) {
+        return statiAttributi.computeIfAbsent(chiaveVisibilita(consumabile), k -> new StatoAttributo());
+    }
+    // --- FINE classe di appoggio
+
+}

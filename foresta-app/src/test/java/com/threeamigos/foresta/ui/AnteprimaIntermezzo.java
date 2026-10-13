@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIntermezzo;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIntroOutro;
 
 /**
  * Strumento di sviluppo: mostra un intermezzo senza dover giocare fino al punto in cui

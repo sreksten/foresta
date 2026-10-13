@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.ui.SpriteATempo;
+import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 
 /**
  * Evento interno alla UI che decide di rappresentare eventi di gioco come sprite a tempo

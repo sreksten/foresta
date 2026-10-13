@@ -17,6 +17,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.threeamigos.foresta.ui.barra.ComandiPossibili;
+import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIcone;
 
 /**
  * L'interruttore dell'aiuto in fondo alla barra delle icone, e il cartiglio dell'aiuto che resta dentro lo schermo.

@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.ui.barra.ClasseIcona;
 
 /**
  * Ogni canto del Bardo ha il suo comando e la sua icona (vedi bardo.md, fase 3).

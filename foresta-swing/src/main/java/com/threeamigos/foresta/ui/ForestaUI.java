@@ -26,6 +26,14 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import com.threeamigos.foresta.ui.barra.ClasseIcona;
+import com.threeamigos.foresta.ui.barra.ComandiPossibili;
+import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
+import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroCombattimento;
+import com.threeamigos.foresta.ui.sfx.PannelloLogoIniziale;
+import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.TestoReazioneDiClasse;
 
 public class ForestaUI implements Temporizzabile {
 

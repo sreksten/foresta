@@ -14,6 +14,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.function.Consumer;
+import com.threeamigos.foresta.ui.immagini.ImageCache;
 
 public class Prompt extends JPanel implements ActionListener {
 

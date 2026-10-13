@@ -40,7 +40,9 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | Trofei | `…/trofei` (anche `RegistroTrofei`) | `motore_di_gioco.md` §10 |
 | Nomi dei personaggi, residenti del mondo (bardo, città, campioni) | risorsa `motore/nomi.txt`, `…/tipi/PersonaggioNoto`, `…/modellodati/ResidenteMD`, `…/motore/RegistroPersonaggi`, `ProduttoreDiTestiCasuale` | `nomi.md` |
 
-## Schermate (tutte in `…/ui`)
+## Schermate (tutte in `…/ui`, divise in sottopacchetti)
+
+Sottopacchetti di `ui`: `schermate` (le schermate a tutto schermo e i loro aiuti), `riquadri` (i riquadri della schermata di gioco), `barra` (la barra icone), `sprite`, `testo` (font bitmap Doomdark), `immagini` (`ImageCache` e le immagini), `tattiche` (la schermata delle tattiche), `componenti` (componenti riusabili), `sfx` (logo e nuvole); in `ui` restano `ForestaUI`, `DisplayableCanvas` e poco altro.
 
 Il canvas principale è `DisplayableCanvas` (enum interno `StatoDisplayableCanvas` per le schermate a tutto schermo).
 Lo stato della partita la UI lo legge da `…/interfacce/VistaPartita` (sola lettura, implementata da `…/motore/VistaPartitaMotore`), mai dai singleton del motore; verso il motore manda solo eventi.

@@ -1,12 +1,14 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.ui.immagini.ImageCache;
+
 /**
  * Una finestra è una parte di DisplayableCanvas.
  * DisplayableCanvas disegna i vari componenti nell'ordine in cui appaiono nello stack.
  * Usando lo stack e usando le coordinate di ogni componente grafico, siamo in grado di adattare
  * le coordinate del mouse alla finestra sottostante.
  */
-interface Finestra {
+public interface Finestra {
 
     int SPACING = ImageCache.SPACING;
 

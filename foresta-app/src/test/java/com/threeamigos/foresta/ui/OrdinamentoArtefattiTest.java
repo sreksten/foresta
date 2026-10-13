@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatoreArtefatti;
 
 class OrdinamentoArtefattiTest {
 

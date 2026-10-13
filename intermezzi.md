@@ -207,7 +207,7 @@ ElementoIntermezzo.personaggio("goblin", TipoPersonaggio.GOBLIN, -0.1, 0.7)
 
 **Verso dell'immagine**, cioè da che parte guarda:
 
-- `guarda(Verso.X)`: parte guardando da quella parte. La scena dice solo il verso voluto: se l'immagine di un personaggio è disegnata dall'altra parte la UI la specchia da sé (da che parte guarda ogni classe lo sa `ui/VersiDeiPersonaggi`). Le immagini che non sono personaggi non si specchiano.
+- `guarda(Verso.X)`: parte guardando da quella parte. La scena dice solo il verso voluto: se l'immagine di un personaggio è disegnata dall'altra parte la UI la specchia da sé (da che parte guarda ogni classe lo sa `ui/immagini/VersiDeiPersonaggi`). Le immagini che non sono personaggi non si specchiano.
 - `Tappa.guarda(Verso.X)`: cambia verso per quella tappa. Vale per tutta la tappa, non si interpola.
 - `orientaNelVersoDelMoto()`: guarda sempre dove va. Funziona anche nella fase di ritorno di `AVANTI_E_INDIETRO`. Quando l'elemento non si muove in orizzontale vale il verso delle tappe.
 
@@ -276,7 +276,7 @@ Per un'animazione che non è una sequenza di fotogrammi già pronti (un fuoco, u
    }
    ```
 
-3. Una riga in `ui/AnimazioniIntermezzo.java`: `case PIOGGIA: return new AnimazionePioggia();`.
+3. Una riga in `ui/schermate/AnimazioniIntermezzo.java`: `case PIOGGIA: return new AnimazionePioggia();`.
 
 Poi la usi con `ImmagineIntermezzo.animazione(Animazione.PIOGGIA)`.
 
@@ -286,7 +286,7 @@ Qualche regola:
 - **`stato`** contiene posizione, scala, opacità e verso correnti dell'elemento (è null se l'animazione fa da sfondo). Serve, per esempio, a mostrare la camminata solo mentre l'elemento si sposta.
 - **La dimensione** dell'immagine restituita è quella di disegno a scala 1. La scala dell'elemento si applica sopra.
 
-`ui/AnimazioneFuocoDaCampo.java` è un esempio completo, senza nessuna risorsa grafica.
+`ui/sprite/AnimazioneFuocoDaCampo.java` è un esempio completo, senza nessuna risorsa grafica.
 
 ---
 

@@ -1,0 +1,201 @@
+package com.threeamigos.foresta.ui.schermate;
+
+import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.modellodati.NotiziaMD;
+import com.threeamigos.foresta.strumenti.Logger;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
+import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+
+/**
+ * Ticker delle notizie in fondo alla mappa a tutto schermo: mostra le
+ * {@link VistaPartita#getUltimeNotizie()} come un'unica striscia composita
+ * (titolo in giallo + corpo in bianco con {@link DoomdarkFontMedium},
+ * separate da un "-" con margini di {@value #LARGHEZZA_MARGINE_SEPARATORE_NOTIZIE}px,
+ * incluso dopo l'ultima per un loop continuo), disegnata più volte affiancata (tiling) così che una
+ * notizia comincia a comparire da destra mentre la precedente sta ancora
+ * uscendo da sinistra, senza mai fermarsi. Lo scroll avanza in base al tempo
+ * reale trascorso tra una chiamata di {@link #disegna} e la successiva (non
+ * a un passo fisso per chiamata): {@link #disegna} può essere invocato anche
+ * da un repaint() estraneo all'animatore (es. per l'hover del mouse), quindi
+ * non a un ritmo garantito di una volta per fotogramma.
+ */
+class Notiziario {
+
+	private static final int VELOCITA_SCROLL_PX_PER_SECONDO = 90;
+	private static final int LARGHEZZA_ZONA_FADE = 60;
+	private static final int LARGHEZZA_MARGINE_SEPARATORE_NOTIZIE = 16;
+	private static final Color COLORE_SFONDO = new Color(20, 40, 120);
+	private static final DoomdarkFont FONT = DoomdarkFontMedium.getInstance();
+	private static final String SEPARATORE_TITOLO = " - ";
+
+	private final int larghezza;
+	private final int altezza;
+	private final VistaPartita vistaPartita;
+
+	private List<NotiziaMD> notizieCostruite = new ArrayList<>();
+	private BufferedImage immagineCorrente;
+	private float x;
+	// -1 = nessuna chiamata precedente (o il notiziario era vuoto): il prossimo
+	// disegna() non fa avanzare lo scroll, si limita a registrare il timestamp.
+	private long ultimoAggiornamentoNanos = -1;
+
+	Notiziario(int larghezza, int altezza, VistaPartita vistaPartita) {
+		this.larghezza = larghezza;
+		this.altezza = altezza;
+		this.vistaPartita = vistaPartita;
+	}
+
+	public void disegna(Graphics2D g, int xBanda, int yBanda) {
+		List<NotiziaMD> notizieAttuali = vistaPartita.getUltimeNotizie();
+		if (notizieAttuali.isEmpty()) {
+			ultimoAggiornamentoNanos = -1;
+			return;
+		}
+
+		g.setColor(COLORE_SFONDO);
+		g.fillRect(xBanda, yBanda, larghezza, altezza);
+
+		if (immagineCorrente == null || !notizieAttuali.equals(notizieCostruite)) {
+			costruisciImmagineComplessiva(notizieAttuali);
+		}
+
+		if (immagineCorrente != null) {
+			Shape clipOriginale = g.getClip();
+			g.clipRect(xBanda, yBanda, larghezza, altezza);
+			int yTesto = yBanda + (altezza - immagineCorrente.getHeight()) / 2;
+			int larghezzaTotale = immagineCorrente.getWidth();
+			// Tiling: la stessa immagine (titolo+corpo+separatore di ogni notizia,
+			// concatenati) viene disegnata più volte affiancata, così la striscia
+			// riprende subito da dove finisce l'ultima copia visibile, senza mai
+			// attendere che una notizia sia uscita del tutto dallo schermo.
+			int drawX = Math.round(x);
+			while (drawX < larghezza) {
+				g.drawImage(immagineCorrente, xBanda + drawX, yTesto, null);
+				drawX += larghezzaTotale;
+			}
+			g.setClip(clipOriginale);
+
+			long ora = System.nanoTime();
+			if (ultimoAggiornamentoNanos >= 0) {
+				float secondiTrascorsi = (ora - ultimoAggiornamentoNanos) / 1_000_000_000f;
+				x -= VELOCITA_SCROLL_PX_PER_SECONDO * secondiTrascorsi;
+			}
+			ultimoAggiornamentoNanos = ora;
+			while (x <= -larghezzaTotale) {
+				x += larghezzaTotale;
+			}
+		}
+
+		disegnaZonaFade(g, xBanda, yBanda);
+	}
+
+	private void disegnaZonaFade(Graphics2D g, int xBanda, int yBanda) {
+		int xInizioFade = xBanda + larghezza - LARGHEZZA_ZONA_FADE;
+		Paint gradienteOriginale = g.getPaint();
+		GradientPaint gradiente = new GradientPaint(
+				xInizioFade, yBanda,
+				new Color(COLORE_SFONDO.getRed(), COLORE_SFONDO.getGreen(), COLORE_SFONDO.getBlue(), 0),
+				xBanda + larghezza, yBanda, COLORE_SFONDO);
+		g.setPaint(gradiente);
+		g.fillRect(xInizioFade, yBanda, LARGHEZZA_ZONA_FADE, altezza);
+		g.setPaint(gradienteOriginale);
+	}
+
+	private void costruisciImmagineComplessiva(List<NotiziaMD> notizieAttuali) {
+		List<BufferedImage> segmenti = new ArrayList<>();
+		int larghezzaTotale = 0;
+		// Il "-" con i suoi margini è disegnato come immagine dedicata invece che
+		// come testo " - ": gli spazi del font Doomdark sono larghi solo pochi
+		// pixel, troppo poco per separare visibilmente due notizie concatenate.
+		BufferedImage separatore = costruisciSeparatore();
+		for (NotiziaMD notizia : notizieAttuali) {
+			try {
+				BufferedImage segmento = costruisciImmagine(notizia);
+				segmenti.add(segmento);
+				larghezzaTotale += segmento.getWidth();
+				segmenti.add(separatore);
+				larghezzaTotale += separatore.getWidth();
+			} catch (DoomdarkFont.UnsupportedCharacterException e) {
+				Logger.log(e);
+			}
+		}
+
+		// Snapshot per valore: VistaPartita.getUltimeNotizie() restituisce la lista viva,
+		// quindi va copiata per poterla confrontare più avanti con il suo stato futuro.
+		notizieCostruite = new ArrayList<>(notizieAttuali);
+
+		if (segmenti.isEmpty()) {
+			immagineCorrente = null;
+			return;
+		}
+
+		GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment()
+				.getDefaultScreenDevice().getDefaultConfiguration();
+		BufferedImage immagine = gc.createCompatibleImage(larghezzaTotale, FONT.getHeight(), Transparency.TRANSLUCENT);
+		Graphics2D g2d = immagine.createGraphics();
+		int xSegmento = 0;
+		for (BufferedImage segmento : segmenti) {
+			g2d.drawImage(segmento, xSegmento, 0, null);
+			xSegmento += segmento.getWidth();
+		}
+		g2d.dispose();
+		immagineCorrente = immagine;
+
+		// La notizia più recente è sempre il primo segmento della striscia (vedi
+		// Notizie.aggiungiNotizia, che inserisce in testa): facendo ripartire lo
+		// scroll da destra ad ogni ricostruzione, si vede subito, senza aspettare
+		// che il giro precedente finisca.
+		x = larghezza;
+	}
+
+	private BufferedImage costruisciSeparatore() {
+		Image imgTrattino = ImageCache.get("-", FONT, DoomdarkColorModel.Color.WHITE);
+		int larghezzaTrattino = imgTrattino.getWidth(null);
+		int larghezzaTotale = LARGHEZZA_MARGINE_SEPARATORE_NOTIZIE * 2 + larghezzaTrattino;
+
+		GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment()
+				.getDefaultScreenDevice().getDefaultConfiguration();
+		BufferedImage immagine = gc.createCompatibleImage(larghezzaTotale, FONT.getHeight(), Transparency.TRANSLUCENT);
+		Graphics2D g2d = immagine.createGraphics();
+		g2d.drawImage(imgTrattino, LARGHEZZA_MARGINE_SEPARATORE_NOTIZIE, 0, null);
+		g2d.dispose();
+		return immagine;
+	}
+
+	private BufferedImage costruisciImmagine(NotiziaMD notizia) {
+		String corpo = notizia.getCorpo();
+		int posizioneSeparatore = corpo.indexOf(SEPARATORE_TITOLO);
+
+		Image imgTitolo = null;
+		String resto;
+		if (posizioneSeparatore > 0) {
+			String titolo = corpo.substring(0, posizioneSeparatore);
+			resto = corpo.substring(posizioneSeparatore);
+			imgTitolo = ImageCache.get(titolo, FONT, DoomdarkColorModel.Color.YELLOW);
+		} else {
+			resto = corpo;
+		}
+		Image imgResto = ImageCache.get(resto, FONT, DoomdarkColorModel.Color.WHITE);
+
+		int larghezzaTitolo = imgTitolo == null ? 0 : imgTitolo.getWidth(null);
+		int larghezzaTotale = larghezzaTitolo + imgResto.getWidth(null);
+
+		GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment()
+				.getDefaultScreenDevice().getDefaultConfiguration();
+		BufferedImage immagine = gc.createCompatibleImage(larghezzaTotale, FONT.getHeight(), Transparency.TRANSLUCENT);
+		Graphics2D g2d = immagine.createGraphics();
+		if (imgTitolo != null) {
+			g2d.drawImage(imgTitolo, 0, 0, null);
+		}
+		g2d.drawImage(imgResto, larghezzaTitolo, 0, null);
+		g2d.dispose();
+		return immagine;
+	}
+}

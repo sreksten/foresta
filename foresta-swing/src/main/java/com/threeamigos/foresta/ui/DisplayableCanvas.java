@@ -27,6 +27,35 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIcone;
+import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIconeDock;
+import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroCombattimento;
+import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroGruppo;
+import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroIncantesimiEPozioni;
+import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroLocazione;
+import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroMappa;
+import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroMissioni;
+import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroSfida;
+import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroStatistiche;
+import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroTesto;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasCommerciante;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIncantatore;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIntermezzo;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIntroOutro;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasInventario;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasMappaATuttoSchermo;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatoreConsumabili;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasTrofei;
+import com.threeamigos.foresta.ui.sprite.CoordinateFumetto;
+import com.threeamigos.foresta.ui.sprite.SpriteAnnuncioGlobale;
+import com.threeamigos.foresta.ui.sprite.SpriteFumetto;
+import com.threeamigos.foresta.ui.sprite.SpriteInDissolvenza;
+import com.threeamigos.foresta.ui.sprite.SpriteInterface;
+import com.threeamigos.foresta.ui.sprite.SpriteRivelazioneArtefatto;
+import com.threeamigos.foresta.ui.tattiche.DisplayableCanvasTattiche;
+import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 
 /**
  * Classe che rappresenta il canvas grafico del gioco.
