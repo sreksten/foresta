@@ -10,7 +10,7 @@ import java.util.function.Supplier;
  * (campo ASPETTO): un personaggio, se il mandante ne ha uno, altrimenti QUALUNQUE (un Uomo, con l'aspetto del
  * locandiere) o DONNA (una Donna, con quello della moglie del bardo).
  */
-enum AspettoDelMandante {
+public enum AspettoDelMandante {
 
 	QUALUNQUE(ScenaInCitta::conMandante),
 	DONNA(ScenaInCitta::conMandantessa),
@@ -37,7 +37,7 @@ enum AspettoDelMandante {
 		this.scena = scena;
 	}
 
-	ScenaInCitta nuovaScena() {
+	public ScenaInCitta nuovaScena() {
 		return scena.get();
 	}
 }

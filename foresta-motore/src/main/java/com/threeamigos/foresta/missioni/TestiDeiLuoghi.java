@@ -10,7 +10,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 /**
  * Come le missioni nominano i luoghi nei loro testi.
  */
-final class TestiDeiLuoghi {
+public final class TestiDeiLuoghi {
 
 	private TestiDeiLuoghi() {
 	}
@@ -18,7 +18,7 @@ final class TestiDeiLuoghi {
 	/**
 	 * Un luogo di quella classe, con l'articolo indeterminativo: "una grotta", "delle rovine".
 	 */
-	static String indefinito(TipoLocazione tipo) {
+	public static String indefinito(TipoLocazione tipo) {
 		switch (tipo) {
 			case GROTTA:
 				return "una grotta";
@@ -42,7 +42,7 @@ final class TestiDeiLuoghi {
 	/**
 	 * Dentro un luogo di quella classe: "in una grotta", "fra delle rovine".
 	 */
-	static String dentro(TipoLocazione tipo) {
+	public static String dentro(TipoLocazione tipo) {
 		return (tipo == TipoLocazione.ROVINE ? "fra " : "in ") + indefinito(tipo);
 	}
 
@@ -50,7 +50,7 @@ final class TestiDeiLuoghi {
 	 * Il nome del posto in quelle coordinate, con l'articolo: "il Tempio del Sole", "le Rovine di Malgaard", "la
 	 * grotta"; "il posto" se non c'è.
 	 */
-	static String nome(CoordinateMD posto) {
+	public static String nome(CoordinateMD posto) {
 		if (posto == null) {
 			return "il posto";
 		}

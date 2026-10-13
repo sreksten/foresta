@@ -21,7 +21,7 @@ import com.threeamigos.foresta.modellodati.GruppoGiocatoreMD;
 import com.threeamigos.foresta.modellodati.GruppoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.missioni.ModificatoreDelTesto;
+import com.threeamigos.foresta.missioni.richieste.ModificatoreDelTesto;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;

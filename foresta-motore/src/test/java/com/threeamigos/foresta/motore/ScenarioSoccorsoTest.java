@@ -2,8 +2,8 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.missioni.IlSoccorso;
-import com.threeamigos.foresta.missioni.SoccorsoRichiesto;
+import com.threeamigos.foresta.missioni.incarichi.IlSoccorso;
+import com.threeamigos.foresta.missioni.richieste.SoccorsoRichiesto;
 import com.threeamigos.foresta.missioni.TipoMissione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;

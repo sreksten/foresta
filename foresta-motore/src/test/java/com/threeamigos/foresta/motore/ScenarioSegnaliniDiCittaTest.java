@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.locazioni.Locanda;
-import com.threeamigos.foresta.missioni.CacciaAiGoblin;
+import com.threeamigos.foresta.missioni.incarichi.CacciaAiGoblin;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.NonSparateSulPianista;
-import com.threeamigos.foresta.missioni.RecuperaIlMedaglione;
+import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
+import com.threeamigos.foresta.missioni.incarichi.RecuperaIlMedaglione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;

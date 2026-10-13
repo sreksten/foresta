@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.missioni.IlContrabbandiere;
-import com.threeamigos.foresta.missioni.IlCorriere;
+import com.threeamigos.foresta.missioni.incarichi.IlContrabbandiere;
+import com.threeamigos.foresta.missioni.incarichi.IlCorriere;
 import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.Spedizione;
+import com.threeamigos.foresta.missioni.richieste.Spedizione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;

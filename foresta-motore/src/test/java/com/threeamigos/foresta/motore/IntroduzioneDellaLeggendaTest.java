@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.missioni.OggettoLeggendario;
+import com.threeamigos.foresta.missioni.leggende.OggettoLeggendario;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;

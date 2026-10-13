@@ -2,7 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.missioni.IlRapimento;
+import com.threeamigos.foresta.missioni.incarichi.IlRapimento;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;

@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.missioni.IndagineRichiesta;
-import com.threeamigos.foresta.missioni.LIndagine;
+import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta;
+import com.threeamigos.foresta.missioni.incarichi.LIndagine;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;

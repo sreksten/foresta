@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.missioni.OggettoLeggendario;
-import com.threeamigos.foresta.missioni.SetLeggendario;
+import com.threeamigos.foresta.missioni.leggende.OggettoLeggendario;
+import com.threeamigos.foresta.missioni.leggende.SetLeggendario;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;

@@ -21,6 +21,10 @@ import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.incarichi.RecuperaIlMedaglione;
+import com.threeamigos.foresta.missioni.principali.CronacheDiUnFegatoEroico;
+import com.threeamigos.foresta.missioni.principali.SconfiggiIlDrago;
+import com.threeamigos.foresta.missioni.principali.SconfiggiIlMinotauroGigante;
 
 /**
  * Missioni fallite, citta' distrutte, locazioni delle missioni, annullamenti che non fanno passare il turno.

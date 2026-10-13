@@ -22,6 +22,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.combattimento.Ondata;
 import com.threeamigos.foresta.motore.Quadrante;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
+import com.threeamigos.foresta.missioni.principali.SconfiggiIlDrago;
 
 public class RegistroMissioni {
 

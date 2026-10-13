@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.missioni.CacciaAiGoblin;
-import com.threeamigos.foresta.missioni.IncaricoInCitta;
-import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
+import com.threeamigos.foresta.missioni.incarichi.CacciaAiGoblin;
+import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
+import com.threeamigos.foresta.missioni.incarichi.LaTagliaSullaBanda;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.RecuperaIlMedaglione;
+import com.threeamigos.foresta.missioni.incarichi.RecuperaIlMedaglione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;

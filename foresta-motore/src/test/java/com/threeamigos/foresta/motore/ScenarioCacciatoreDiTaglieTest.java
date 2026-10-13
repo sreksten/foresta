@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.missioni.CacciatoreDiTaglie;
-import com.threeamigos.foresta.missioni.IlRapimento;
-import com.threeamigos.foresta.missioni.IncaricoInCitta;
+import com.threeamigos.foresta.missioni.incarichi.CacciatoreDiTaglie;
+import com.threeamigos.foresta.missioni.incarichi.IlRapimento;
+import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;

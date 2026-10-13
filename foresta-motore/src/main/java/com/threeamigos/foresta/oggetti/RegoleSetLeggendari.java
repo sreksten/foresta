@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.interfacce.VistaPezzoDelSet;
-import com.threeamigos.foresta.missioni.OggettoLeggendario;
-import com.threeamigos.foresta.missioni.SetLeggendario;
+import com.threeamigos.foresta.missioni.leggende.OggettoLeggendario;
+import com.threeamigos.foresta.missioni.leggende.SetLeggendario;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.StatoPezzoDelSet;

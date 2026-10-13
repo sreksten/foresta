@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.missioni.Mandante;
-import com.threeamigos.foresta.missioni.RichiestaDiMateriali;
+import com.threeamigos.foresta.missioni.incarichi.RichiestaDiMateriali;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**

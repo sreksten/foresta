@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
+import com.threeamigos.foresta.missioni.incarichi.LaTagliaSullaBanda;
 import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.missioni.RecuperaIlMedaglione;
+import com.threeamigos.foresta.missioni.incarichi.RecuperaIlMedaglione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;

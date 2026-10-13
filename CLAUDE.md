@@ -26,15 +26,15 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | Mappa, tempo, locazioni | `…/motore/Foresta`, `LineaTemporale`, `…/locazioni` | `motore_di_gioco.md` §6 |
 | Combattimento | `…/combattimento/CalcolatoreCombattimento`, `Ondata`, `StatoDelCombattimento`, `…/modellodati/EffettoDiStatoMD` | `motore_di_gioco.md` §7, `interazioni_effetti_di_stato.md` |
 | Debolezze, resistenze e immunità di classe ai tipi di danno | `…/tipi/CategoriaPersonaggio`, `TipoPersonaggio` (tabelle), `…/personaggi/PersonaggioBase` (`getMoltiplicatoreDannoSubito`), `…/combattimento/CalcolatoreCombattimento`, `…/ui/TestoReazioneDiClasse` | `debolezze_e_resistenze.md` |
-| Modificatori di attributo a tempo, armi che li mettono sul bersaglio | `…/modellodati/ModificatoreAttributoMD`, `…/missioni/ModificatoreDelTesto`, `PersonaggioBase`, `CalcolatoreCombattimento` | `modificatori_temporanei.md` |
+| Modificatori di attributo a tempo, armi che li mettono sul bersaglio | `…/modellodati/ModificatoreAttributoMD`, `…/missioni/richieste/ModificatoreDelTesto`, `PersonaggioBase`, `CalcolatoreCombattimento` | `modificatori_temporanei.md` |
 | Canti del Bardo (curativo, ipnotico, di valore), effetto di stato `ISPIRATO` | `…/canti/Canto*`, `TipoCanto`, `FabbricaCanti`, `…/locazioni/LocazioneBase` (`cantaUnCanto`), `…/motore/Automa` | `bardo.md` |
 | Tattiche di combattimento (rose di candidati, contesto, valutatore, tattiche base dei mostri `TatticheBase`) | `…/tattiche` (logica), `…/modellodati/tattiche` (dati, suffisso `MD`), `…/tipi/tattiche` | `tattiche_di_combattimento_automatiche.md` §11 |
 | Personaggi e gruppi | `…/personaggi`, `…/motore/Gruppo*`, `GestoreProgressione` | `motore_di_gioco.md` §8 |
 | Oggetti, artefatti, incantatore | `…/oggetti` (anche `CatalogoLeggendari`, `RegoleSetLeggendari`), `…/motore/Automa{Inventario,AcquistiArtefatti,Incantatore,ScambiatoreArtefatti}`, `Regole*` | `artefatti_e_incantamenti.md` |
 | Negozi ed economia | `…/offerte`, `…/motore/RegoleContrattazione`, `OfferteAlchimista` | `economia.md` |
 | Missioni (infrastruttura) | `…/missioni/MissioneAPassi`, `Passo`, `RegistroMissioni` | `gestione_missioni.md` |
-| Missioni (catalogo) | `…/missioni/*` | `passi_missioni.md` |
-| Carta, forbici e sasso (sfida, missione dei campioni) | `…/motore/PartitaCartaForbiciSasso`, `…/locazioni/LocazioneBase`, `…/missioni/LaSfidaDeiCampioni`, `IlCampione`, `…/ui/DisplayableCanvasRiquadroSfida` | `carta_forbici_sasso.md` |
+| Missioni (catalogo) | `…/missioni/{principali,incarichi,richieste,leggende,storie}` | `passi_missioni.md` |
+| Carta, forbici e sasso (sfida, missione dei campioni) | `…/motore/PartitaCartaForbiciSasso`, `…/locazioni/LocazioneBase`, `…/missioni/storie/LaSfidaDeiCampioni`, `IlCampione`, `…/ui/DisplayableCanvasRiquadroSfida` | `carta_forbici_sasso.md` |
 | Intermezzi | `…/intermezzi` (anche `RegistroIntermezzi`) | `intermezzi.md` |
 | Testi generati, grammatiche | `…/testi/GrammarBean`, `ProduttoreDiTestiCasuale`, risorse `motore/*.txt` | `GrammarBean.md` |
 | Trofei | `…/trofei` (anche `RegistroTrofei`) | `motore_di_gioco.md` §10 |

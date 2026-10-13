@@ -3,7 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.missioni.NonSparateSulPianista;
+import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.RegistroPersonaggiMD;
 import com.threeamigos.foresta.modellodati.ResidenteMD;

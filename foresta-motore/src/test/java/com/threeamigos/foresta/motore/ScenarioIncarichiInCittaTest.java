@@ -18,6 +18,11 @@ import org.junit.jupiter.api.Test;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.incarichi.CacciaAiGoblin;
+import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
+import com.threeamigos.foresta.missioni.incarichi.RecuperaIlMedaglione;
+import com.threeamigos.foresta.missioni.incarichi.RichiestaDiMateriali;
+import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
 
 /**
  * Gli incarichi presi in città (IncaricoInCitta): la caccia ai goblin e le radici di mandragola dell'alchimista,

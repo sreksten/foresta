@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.missioni.LOggettoSmarrito;
-import com.threeamigos.foresta.missioni.OggettoSmarrito;
+import com.threeamigos.foresta.missioni.incarichi.LOggettoSmarrito;
+import com.threeamigos.foresta.missioni.richieste.OggettoSmarrito;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;

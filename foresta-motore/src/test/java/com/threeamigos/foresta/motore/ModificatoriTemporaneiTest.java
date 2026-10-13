@@ -3,7 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.ModificatoreAttivo;
-import com.threeamigos.foresta.missioni.ModificatoreDelTesto;
+import com.threeamigos.foresta.missioni.richieste.ModificatoreDelTesto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;

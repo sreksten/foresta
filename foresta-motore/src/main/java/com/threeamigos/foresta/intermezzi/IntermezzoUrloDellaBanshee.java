@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.missioni.IlViaggioDellaMoglie;
+import com.threeamigos.foresta.missioni.storie.IlViaggioDellaMoglie;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.strumenti.Misc;

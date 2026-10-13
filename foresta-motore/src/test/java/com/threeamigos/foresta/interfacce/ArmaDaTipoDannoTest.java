@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.missioni.OggettoLeggendario;
+import com.threeamigos.foresta.missioni.leggende.OggettoLeggendario;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.CatalogoLeggendari;

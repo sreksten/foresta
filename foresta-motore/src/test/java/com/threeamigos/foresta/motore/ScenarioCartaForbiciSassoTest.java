@@ -2,7 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAmiciziaStretta;
 import com.threeamigos.foresta.eventi.interni.InternoSfidaCartaForbiciSasso;
-import com.threeamigos.foresta.missioni.LaSfidaDeiCampioni;
+import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
 import com.threeamigos.foresta.oggetti.FabbricaOggetti;

@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.missioni.IlPellegrino;
-import com.threeamigos.foresta.missioni.IncaricoInCitta;
-import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
-import com.threeamigos.foresta.missioni.RichiestaDiMateriali;
+import com.threeamigos.foresta.missioni.incarichi.IlPellegrino;
+import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
+import com.threeamigos.foresta.missioni.incarichi.LaTagliaSullaBanda;
+import com.threeamigos.foresta.missioni.incarichi.RichiestaDiMateriali;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.Personaggio;

@@ -3,7 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.interni.InternoFumettoSuccessivo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
-import com.threeamigos.foresta.missioni.LealtaRichiesta;
+import com.threeamigos.foresta.missioni.richieste.LealtaRichiesta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.Guerriero;

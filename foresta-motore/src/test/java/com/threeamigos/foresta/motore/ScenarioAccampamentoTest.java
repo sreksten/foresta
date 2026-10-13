@@ -3,7 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
 import com.threeamigos.foresta.intermezzi.IntermezzoAccampamento;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.missioni.LealtaRichiesta;
+import com.threeamigos.foresta.missioni.richieste.LealtaRichiesta;
 import com.threeamigos.foresta.modellodati.IntermezziMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;

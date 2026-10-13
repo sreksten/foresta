@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.missioni.LaSorveglianza;
-import com.threeamigos.foresta.missioni.SorveglianzaRichiesta;
+import com.threeamigos.foresta.missioni.incarichi.LaSorveglianza;
+import com.threeamigos.foresta.missioni.richieste.SorveglianzaRichiesta;
 import com.threeamigos.foresta.missioni.TipoMissione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;

@@ -2,8 +2,8 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.interni.InternoPersonaggioArreso;
-import com.threeamigos.foresta.missioni.CombattimentoRichiesto;
-import com.threeamigos.foresta.missioni.IncaricoDiCombattimento;
+import com.threeamigos.foresta.missioni.richieste.CombattimentoRichiesto;
+import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Guerriero;

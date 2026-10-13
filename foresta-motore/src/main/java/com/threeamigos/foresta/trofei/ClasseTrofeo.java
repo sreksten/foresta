@@ -10,7 +10,7 @@ import com.threeamigos.foresta.eventi.interni.InternoScheletroRisvegliato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
-import com.threeamigos.foresta.missioni.LaSfidaDeiCampioni;
+import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
 import com.threeamigos.foresta.tipi.TipoOggetto;
