@@ -16,7 +16,6 @@ import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
-import com.threeamigos.foresta.strumenti.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -200,29 +199,12 @@ public class Locanda extends LocazioneBase {
 				BusEventi.pubblica(new NotificaTestoFrase("L'oste però non è disposto a fare credito..."));
 				return Stato.FINE_LOCAZIONE;
 			}
-			BusEventi.pubblica(new NotificaTestoParagrafo("Un cantastorie sta raccontando una vecchia storia locale."));
-			try {
-				List<String> fiaba = ProduttoreDiTestiCasuale.fiaba();
-				int numeroLinea = 0;
-				for (String linea : fiaba) {
-					if (numeroLinea == 0) {
-						BusEventi.pubblica(new NotificaTestoFrase('“' + linea));
-					} else if (numeroLinea == fiaba.size() - 1) {
-						BusEventi.pubblica(new NotificaTestoFrase(linea + '"'));
-					} else {
-						BusEventi.pubblica(new NotificaTestoFrase(linea));
-					}
-					numeroLinea++;
-				}
-			} catch (Exception e) {
-				Logger.log(e);
-			}
-			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 			stato = StatoInLocanda.ENTRATO;
 			getModelloDati().aggiungiProprieta(LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
 			String visite = getModelloDati().ottieniProprieta(LOCANDA_VISITE);
 			getModelloDati().aggiungiProprieta(LOCANDA_VISITE, String.valueOf(visite == null ? 1 : Integer.parseInt(visite) + 1));
-			return Stato.IN_LOCAZIONE;
+			// Niente più fiaba da leggere, e quindi niente comando per andare avanti: si passa subito al pasto
+			return impostaAzioni(gruppo, gng, azione);
 
 		case ENTRATO:
 			if (gruppo.getMonete() < Costanti.COSTO_PASTO * gruppo.getNumeroPersonaggiVivi()) {

@@ -446,10 +446,6 @@ final class GiocatoreAutomatico {
 			negozioAperto = null;
 			return Comando.ANNULLA;
 		}
-		if (comandi.contains(Comando.PERGAMENA) && comandi.size() == 1) {
-			// La fiaba del cantastorie in locanda
-			return Comando.PERGAMENA;
-		}
 		if (comandi.contains(Comando.SI) && comandi.contains(Comando.NO)) {
 			return rispostaSiNo(gruppo);
 		}
