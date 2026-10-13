@@ -13,6 +13,9 @@ import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
  */
 public class NotificaVariazioneModificatorePersonaggio extends EventoSuPersonaggio {
 
+    /**
+     * Che cosa è successo al modificatore.
+     */
     public enum TipoVariazione {
         AGGIUNTA,
         MODIFICA,

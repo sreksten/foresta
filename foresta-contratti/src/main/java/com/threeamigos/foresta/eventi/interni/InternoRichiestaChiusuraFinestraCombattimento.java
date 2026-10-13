@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
 
 /**
+ * La richiesta di chiudere la finestra del combattimento.
  *
  * @author Stefano Reksten
  */

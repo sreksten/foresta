@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
 
 /**
+ * Il caricamento di un salvataggio è fallito: porta l'eccezione, perché la UI possa avvisare il giocatore.
  *
  * @author Stefano Reksten
  */

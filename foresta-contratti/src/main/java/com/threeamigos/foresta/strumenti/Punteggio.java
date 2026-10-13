@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.strumenti;
 
 /**
+ * Un punteggio della classifica: chi l'ha fatto e quanto.
  *
  * @author Stefano Reksten
  */

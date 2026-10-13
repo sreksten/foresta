@@ -33,6 +33,9 @@ public class BusEventi {
     private BusEventi() {
     }
 
+    /**
+     * Registra un gestore per gli eventi di quel tipo: ne bastano quelli della classe indicata, non le sue sottoclassi.
+     */
     @SuppressWarnings("unchecked")
     public static <T> void iscriviti(Class<T> eventType, Consumer<T> listener) {
         sottoscrittori
@@ -40,6 +43,9 @@ public class BusEventi {
                 .add((Consumer<Object>) listener);
     }
 
+    /**
+     * Toglie un gestore registrato con {@link #iscriviti}.
+     */
     public static <T> void cancellati(Class<T> eventType, Consumer<T> listener) {
         List<Consumer<Object>> list = sottoscrittori.get(eventType);
         if (list != null) {
@@ -47,6 +53,10 @@ public class BusEventi {
         }
     }
 
+    /**
+     * Consegna l'evento a tutti gli iscritti al suo tipo, sul thread principale: subito se si è già lì, altrimenti in coda.
+     * Senza iscritti non succede niente.
+     */
     public static void pubblica(Object evento) {
         List<Consumer<Object>> list = sottoscrittori.get(evento.getClass());
         if (list == null || list.isEmpty()) {

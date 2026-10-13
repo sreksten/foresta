@@ -8,12 +8,21 @@ package com.threeamigos.foresta.tipi;
  */
 public enum TipoMotivoRifiutoEquipaggiamento {
 
-	TROPPO_CARICO("è già al massimo ddel carico che può portare", "Sono già al massimo del carico che posso portare"),
+	/**
+	 * Il carico del personaggio è già al massimo
+	 */
+	TROPPO_CARICO("è già al massimo del carico che può portare", "Sono già al massimo del carico che posso portare"),
+	/**
+	 * Lo slot dell'artefatto è già occupato da un altro
+	 */
 	SLOT_OCCUPATO("non ha uno slot libero per usare %s", "Sto già usando %s"),
 	/**
 	 * Le pergamene (slot NUCLEO) restano sempre nell'inventario del gruppo
 	 */
 	PERGAMENA("le pergamene rimangono nell'inventario del gruppo", "Le pergamene rimangono nell'inventario del gruppo"),
+	/**
+	 * Il livello dell'artefatto supera quello del personaggio
+	 */
 	LIVELLO_TROPPO_ALTO("non ha ancora il Livello per usare %s", "Non ho ancora il Livello per usare %s"),
 	/**
 	 * Ogni classe usa solo certe armi, lo scudo e il libro (es. niente spadone per il mago)
@@ -70,10 +79,16 @@ public enum TipoMotivoRifiutoEquipaggiamento {
 		return nomePersonaggio + ' ' + String.format(spiegazione, nomeArtefatto) + '.';
 	}
 
+	/**
+	 * La frase che il personaggio dice nel fumetto, per i motivi che non nominano l'artefatto.
+	 */
 	public String formattaFumetto() {
 		return fumetto + '.';
 	}
 
+	/**
+	 * La frase che il personaggio dice nel fumetto, con il nome dell'artefatto al posto del %s.
+	 */
 	public String formattaFumetto(String nomeArtefatto) {
 		return String.format(fumetto, nomeArtefatto) + '.';
 	}

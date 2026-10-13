@@ -499,7 +499,7 @@ public class SnifferBusEventi {
 
     public void onEventoVariazioneMappa(NotificaVariazioneConoscenzaMappa evento) {
         Logger.log(headerEvento(evento) + String.format("Variazione: (%d, %d) -> (%d, %d)",
-                evento.getDaX(), evento.getDaY(), evento.getaX(), evento.getaY()));
+                evento.getDaX(), evento.getDaY(), evento.getAX(), evento.getAY()));
     }
 
     public void onEventoVariazioneMonete(NotificaVariazioneDisponibilitaMonete evento) {

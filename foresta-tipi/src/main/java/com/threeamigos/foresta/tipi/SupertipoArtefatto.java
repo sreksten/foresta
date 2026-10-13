@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.tipi;
 
 /**
+ * La famiglia generale di un artefatto: serve a raggruppare i tipi che seguono le stesse regole (le armi colpiscono, le
+ * armature proteggono, gli ingredienti magici si fondono).
  *
  * @author Stefano Reksten
  */
@@ -39,6 +41,9 @@ public enum SupertipoArtefatto {
      */
     INCANTAMENTO,
 
+    /**
+     * Gli accessori senza regole particolari (anello, talismano, ninnolo)
+     */
     ALTRO
 
 }

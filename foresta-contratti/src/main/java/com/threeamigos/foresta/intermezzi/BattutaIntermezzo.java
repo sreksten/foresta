@@ -63,6 +63,9 @@ public final class BattutaIntermezzo {
 		return this;
 	}
 
+	/**
+	 * Per quanti secondi il fumetto resta visibile.
+	 */
 	public BattutaIntermezzo perSecondi(double secondi) {
 		perSecondi = secondi;
 		return this;
@@ -113,6 +116,9 @@ public final class BattutaIntermezzo {
 		return testo;
 	}
 
+	/**
+	 * Dice se la posizione del fumetto è fissata ({@link #nuvolaA}) invece di essere automatica.
+	 */
 	public boolean hasPosizioneNuvola() {
 		return !Double.isNaN(nuvolaX);
 	}
@@ -125,6 +131,9 @@ public final class BattutaIntermezzo {
 		return nuvolaY;
 	}
 
+	/**
+	 * Dice se la larghezza del fumetto è stata fissata.
+	 */
 	public boolean hasLarghezza() {
 		return !Double.isNaN(larghezza);
 	}

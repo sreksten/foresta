@@ -1,5 +1,12 @@
 package com.threeamigos.foresta.tipi;
 
+/**
+ * Tutto ciò che il giocatore può comandare (le scelte nel menu, i personaggi da selezionare, le direzioni, le mosse di
+ * carta, forbici e sasso) più alcuni comandi generati dal sistema, come {@link #TIMER}. La UI li manda al motore come
+ * eventi (vedi comandigiocatore). Molti hanno una {@link #getDescrizione() descrizione} da mostrare.
+ *
+ * @author Stefano Reksten
+ */
 public enum Comando {
 
 	// All'inizio del gioco, per scegliere il sesso del proprio personaggio
@@ -136,6 +143,11 @@ public enum Comando {
 
 	public static final int MAX_MOVIMENTO = 5;
 
+	/**
+	 * Il comando che ha quella posizione nell'elenco.
+	 *
+	 * @throws IllegalArgumentException se la posizione non esiste
+	 */
 	public static final Comando of(int ordinal) {
 		for (Comando azioneCorrente : Comando.values()) {
 			if (azioneCorrente.ordinal() == ordinal) {
@@ -166,6 +178,11 @@ public enum Comando {
 		return ordinal() >= PERSONAGGIO_1.ordinal() && ordinal() <= PERSONAGGIO_8.ordinal();
 	}
 
+	/**
+	 * Il comando che sceglie il personaggio in quella posizione del gruppo, contando da 0.
+	 *
+	 * @throws IllegalArgumentException se la posizione non è fra 0 e 7
+	 */
 	public static Comando ofPersonaggio(int personaggio) {
 		if (personaggio == 0) {
 			return PERSONAGGIO_1;

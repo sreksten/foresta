@@ -7,6 +7,7 @@ import com.threeamigos.foresta.tipi.Comando;
 import java.util.Collection;
 
 /**
+ * Chiede al giocatore quale incantesimo lanciare, fra quelli possibili.
  *
  * @author Stefano Reksten
  */

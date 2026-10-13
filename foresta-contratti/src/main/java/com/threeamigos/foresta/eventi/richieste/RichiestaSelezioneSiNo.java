@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
+ * Chiede al giocatore una risposta sì o no. Le richieste che hanno bisogno di una conferma ne estendono il comportamento.
  *
  * @author Stefano Reksten
  */

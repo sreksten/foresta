@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.tipi;
 
+/**
+ * Su chi agisce un incantesimo: su tutta la locazione, su un gruppo, su più bersagli o su uno solo.
+ */
 public enum PortataIncantesimo {
 	
 

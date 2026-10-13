@@ -10,6 +10,9 @@ import com.threeamigos.foresta.eventi.TipoEvento;
  */
 public class ComandoScambioArtefatto extends EventoBase {
 
+    /**
+     * Da quale lato dello scambio viene l'artefatto: da chi lo cede o dall'altra parte.
+     */
     public enum Destinazione {
         PARTE_ATTIVA,
         PARTE_REMOTA

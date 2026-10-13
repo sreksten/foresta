@@ -207,7 +207,7 @@ public enum TipoAttributo {
     /**
      * Abilità nel mercanteggiare: parlantina, faccia tosta e il fiuto per l'affare giusto al momento giusto.
      * <p><b>Nelle botteghe:</b> Riduce il prezzo degli acquisti (artefatti, consumabili, fusioni dall'incantatore)
-     * e alza il ricavo delle vendite, entro i limiti di {@link com.threeamigos.foresta.motore.RegoleContrattazione}.
+     * e alza il ricavo delle vendite, entro i limiti di {@code motore.RegoleContrattazione}.
      * Il gruppo tratta con la Contrattazione più alta tra i suoi personaggi vivi.</p>
      */
     CONTRATTAZIONE(SupertipoAttributo.SECONDARIO, "Contrattazione", "Abilità nello strappare prezzi migliori ai mercanti"),

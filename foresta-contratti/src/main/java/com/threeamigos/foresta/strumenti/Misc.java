@@ -9,7 +9,6 @@ import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
  * funzione che indica la direzione e la distanza tra due punti all'interno
  * della foresta.
  */
-
 public class Misc {
 	
 	private Misc() {}

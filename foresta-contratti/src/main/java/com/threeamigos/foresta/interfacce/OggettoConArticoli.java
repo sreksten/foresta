@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.interfacce;
 
 /**
+ * Un oggetto di cui si possono scrivere i nomi con l'articolo giusto (il, un, alcuni...), per costruire le frasi dei testi.
  *
  * @author Stefano Reksten
  */

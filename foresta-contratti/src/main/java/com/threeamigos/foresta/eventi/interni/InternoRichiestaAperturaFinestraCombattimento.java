@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 
 /**
+ * La richiesta di aprire la finestra del combattimento fra un combattente e il suo avversario.
  *
  * @author Stefano Reksten
  */

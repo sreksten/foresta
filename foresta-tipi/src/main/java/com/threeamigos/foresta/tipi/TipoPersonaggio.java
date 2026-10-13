@@ -184,6 +184,9 @@ public enum TipoPersonaggio {
 		}
 	}
 
+	/**
+	 * Dice se le due classi hanno lo stesso ruolo (vedi {@link #getRuolo()}): per esempio il Mago e la Maga.
+	 */
 	public boolean stessoRuoloDi(TipoPersonaggio altra) {
 		return getRuolo() == altra.getRuolo();
 	}

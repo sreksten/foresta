@@ -78,6 +78,11 @@ public class PaginaIntermezzo {
 		return ritaglioSuSfondo;
 	}
 
+	/**
+	 * Aggiunge un elemento alla pagina.
+	 *
+	 * @throws IllegalArgumentException se c'è già un elemento con lo stesso identificativo
+	 */
 	public PaginaIntermezzo conElemento(ElementoIntermezzo elemento) {
 		if (elementi.containsKey(elemento.getId())) {
 			throw new IllegalArgumentException("Elemento già presente nella pagina: " + elemento.getId());
@@ -127,6 +132,9 @@ public class PaginaIntermezzo {
 		return elementi.get(id);
 	}
 
+	/**
+	 * Dice se la durata della pagina è stata fissata con {@link #perSecondi(double)}.
+	 */
 	public boolean hasDurata() {
 		return !Double.isNaN(durata);
 	}
@@ -141,7 +149,7 @@ public class PaginaIntermezzo {
 	 * almeno il suo tempo per pagina e comunque non prima che dialoghi e animazioni
 	 * siano finiti.
 	 *
-	 * @param secondiPerPagina come da {@link Intermezzo#getSecondiPerPagina()}
+	 * @param secondiPerPagina come da {@code Intermezzo.getSecondiPerPagina()}
 	 */
 	public double getSecondiPrimaDiAvanzare(int secondiPerPagina) {
 		if (hasDurata()) {

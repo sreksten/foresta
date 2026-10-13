@@ -27,6 +27,11 @@ public final class Tappa {
 		this.secondi = secondi;
 	}
 
+	/**
+	 * Una tappa che dura quei secondi.
+	 *
+	 * @throws IllegalArgumentException se la durata non è positiva
+	 */
 	public static Tappa inSecondi(double secondi) {
 		return new Tappa(secondi);
 	}
@@ -38,11 +43,17 @@ public final class Tappa {
 		return this;
 	}
 
+	/**
+	 * La scala dell'immagine alla fine della tappa (1 è la dimensione normale).
+	 */
 	public Tappa conScala(double scala) {
 		this.scala = scala;
 		return this;
 	}
 
+	/**
+	 * L'opacità dell'immagine alla fine della tappa, da 0 (invisibile) a 1.
+	 */
 	public Tappa conOpacita(double opacita) {
 		this.opacita = opacita;
 		return this;

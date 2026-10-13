@@ -63,12 +63,18 @@ public final class ElementoIntermezzo {
 		return new ElementoIntermezzo(id, ImmagineIntermezzo.personaggio(classePersonaggio), x, y);
 	}
 
+	/**
+	 * La scala con cui l'elemento parte (1 è la dimensione normale).
+	 */
 	public ElementoIntermezzo conScala(double scala) {
 		statoIniziale = new StatoElemento(statoIniziale.getX(), statoIniziale.getY(), scala, statoIniziale.getOpacita(),
 				statoIniziale.getVerso());
 		return this;
 	}
 
+	/**
+	 * L'opacità con cui l'elemento parte, da 0 (invisibile) a 1.
+	 */
 	public ElementoIntermezzo conOpacita(double opacita) {
 		statoIniziale = new StatoElemento(statoIniziale.getX(), statoIniziale.getY(), statoIniziale.getScala(), opacita,
 				statoIniziale.getVerso());
@@ -102,6 +108,9 @@ public final class ElementoIntermezzo {
 		return this;
 	}
 
+	/**
+	 * Aggiunge una tappa: dove l'elemento va dopo quelle già aggiunte.
+	 */
 	public ElementoIntermezzo poi(Tappa tappa) {
 		tappe.add(tappa);
 		return this;
@@ -112,6 +121,9 @@ public final class ElementoIntermezzo {
 		return poi(Tappa.inSecondi(secondi));
 	}
 
+	/**
+	 * Come l'elemento ripete le sue tappe una volta finite.
+	 */
 	public ElementoIntermezzo ripeti(Ripetizione ripetizione) {
 		this.ripetizione = ripetizione;
 		return this;

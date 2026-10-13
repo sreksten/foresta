@@ -9,6 +9,10 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Il registro di log del gioco: scrive sulla console e, se si indica una cartella con
+ * {@code -D}{@value #PROPRIETA_CARTELLA_DI_LOG}{@code =cartella}, anche su un file per ogni sessione.
+ */
 public class Logger {
 
 	/**
@@ -49,6 +53,9 @@ public class Logger {
 		}
 	}
 
+	/**
+	 * Scrive un messaggio, su console e sul file di log se c'è.
+	 */
 	public static void log(String messaggio) {
 		System.out.println(messaggio);
 		if (fileWriter != null) {
@@ -56,6 +63,9 @@ public class Logger {
 		}
 	}
 
+	/**
+	 * Scrive un'eccezione con la sua traccia, su console e sul file di log se c'è.
+	 */
 	public static void log(Exception e) {
 		e.printStackTrace(System.err);
 		if (fileWriter != null) {

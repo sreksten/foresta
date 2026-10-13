@@ -27,6 +27,9 @@ public enum PersonaggioNoto {
 
 	CAMPIONE(null, Ambito.PER_SFIDA, null, false);
 
+	/**
+	 * Quanti ce ne sono nel mondo e da dove prende il nome un personaggio noto.
+	 */
 	public enum Ambito {
 		/** Uno solo in tutto il mondo (il bardo e sua moglie). */
 		GLOBALE,

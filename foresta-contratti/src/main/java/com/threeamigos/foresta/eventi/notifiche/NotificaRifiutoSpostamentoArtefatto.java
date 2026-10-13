@@ -6,7 +6,7 @@ import com.threeamigos.foresta.interfacce.VistaScambio;
 
 /**
  * Classe base per i rifiuti delle richieste di spostamento di un artefatto.
- * (Personaggio <-> GruppoGiocatore, GruppoGiocatore <-> commerciante)
+ * (Personaggio &lt;-&gt; GruppoGiocatore, GruppoGiocatore &lt;-&gt; commerciante)
  *
  * @author Stefano Reksten
  */

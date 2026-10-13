@@ -7,6 +7,7 @@ import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import java.util.Collection;
 
 /**
+ * Chiede al giocatore in quale slot salvare la partita; porta le testate di quelli disponibili.
  *
  * @author Stefano Reksten
  */

@@ -12,6 +12,9 @@ import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
  */
 public class NotificaVariazioneEffettoDiStatoPersonaggio extends EventoSuPersonaggio {
 
+    /**
+     * Che cosa è successo allo stato alterato: è comparso, si è rinforzato, sta decadendo o è finito.
+     */
     public enum TipoVariazione {
         AGGIUNTA,
         RINFORZO,

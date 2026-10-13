@@ -7,6 +7,7 @@ import com.threeamigos.foresta.tipi.Comando;
 import java.util.Collection;
 
 /**
+ * Chiede al giocatore in quale direzione muoversi, fra quelle possibili.
  *
  * @author Stefano Reksten
  */

@@ -3,6 +3,7 @@ package com.threeamigos.foresta.eventi.richieste;
 import com.threeamigos.foresta.eventi.TipoEvento;
 
 /**
+ * Chiede al giocatore se vuole davvero uscire dal gioco.
  *
  * @author Stefano Reksten
  */

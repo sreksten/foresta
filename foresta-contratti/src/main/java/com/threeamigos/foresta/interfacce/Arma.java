@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
+ * Un'arma, vista da chi non ne conosce la classe concreta: i danni base, il livello, il tipo di danno e gli eventuali incantamenti.
  *
  * @author Stefano Reksten
  */

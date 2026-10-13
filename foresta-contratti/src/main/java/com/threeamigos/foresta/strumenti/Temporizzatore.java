@@ -4,7 +4,6 @@ package com.threeamigos.foresta.strumenti;
  * Il temporizzatore serve per far ricevere ad un oggetto un impulso
  * ogni tot tempo, per i combattimenti, la intro, la fine, le animazioni, eccetera.
  */
-
 public interface Temporizzatore {
 
 	// Le animazioni avanzano in base al tempo reale, non per fotogramma: alzarlo le rende

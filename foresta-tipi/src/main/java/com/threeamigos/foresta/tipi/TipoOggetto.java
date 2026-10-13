@@ -19,9 +19,9 @@ public enum TipoOggetto {
 	MASCHERA(1, 100),
 	ARMATURA(1, 100),
 	SCHINIERI(1, 100),
-	// Gli artefatti non vanno mai restituiti tra gli oggetti che una locazione può nascondere!
+	/** Gli artefatti non vanno mai restituiti tra gli oggetti che una locazione può nascondere! */
 	ARTEFATTO(1, 100, false),
-	// Neanche gli oggetti delle missioni: li mettono nelle locazioni le missioni (vedi OggettoMissione)
+	/** Neanche gli oggetti delle missioni: li mettono nelle locazioni le missioni (vedi OggettoMissione) */
 	OGGETTO_MISSIONE(1, 50, false);
 
 	private final int quantitaMassima;

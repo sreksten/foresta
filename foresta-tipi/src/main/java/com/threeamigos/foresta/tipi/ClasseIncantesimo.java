@@ -131,6 +131,11 @@ public enum ClasseIncantesimo {
 		return comandoDiAttivazione;
 	}
 
+	/**
+	 * L'incantesimo che il comando attiva.
+	 *
+	 * @throws IllegalArgumentException se il comando non attiva nessun incantesimo
+	 */
 	public static ClasseIncantesimo ofComando(Comando comando) {
 		for (ClasseIncantesimo corrente : values()) {
 			if (comando == corrente.comandoDiAttivazione) {

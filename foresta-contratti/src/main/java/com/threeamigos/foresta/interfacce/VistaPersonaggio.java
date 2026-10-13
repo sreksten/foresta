@@ -14,6 +14,9 @@ import java.util.Optional;
  */
 public interface VistaPersonaggio {
 
+	/**
+	 * Come si scrive il nome di un personaggio: con quale articolo o preposizione e con quale maiuscola.
+	 */
 	enum OpzioniGetNome {
 		/**
 		 * Es. il, la

@@ -4,7 +4,8 @@ import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
 
 /**
- * Notifica un cambiamento nella conoscenza della mappa della Foresta.
+ * Notifica un cambiamento nella conoscenza della mappa della Foresta: il gruppo ora conosce l'area rettangolare che va
+ * dalla casella (daX, daY) alla casella (aX, aY), per esempio perché ha comprato o ricevuto una mappa.
  *
  * @author Stefano Reksten
  */
@@ -31,11 +32,11 @@ public class NotificaVariazioneConoscenzaMappa extends EventoBase {
         return daY;
     }
 
-    public int getaX() {
+    public int getAX() {
         return aX;
     }
 
-    public int getaY() {
+    public int getAY() {
         return aY;
     }
 }

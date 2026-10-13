@@ -1,6 +1,12 @@
 package com.threeamigos.foresta.tipi;
 
 /**
+ * I tipi di artefatto, dalla spada alla pergamena. Ogni tipo dichiara il suo {@link SupertipoArtefatto supertipo}, la
+ * {@link TipoCardinalitaArtefatto cardinalità} (singolo o a paio), lo {@link TipoSlotArtefatto slot} che occupa, per le
+ * armi il {@link TipoDanno tipo di danno}, il nome generico e il verbo con cui un personaggio lo usa (impugna, indossa...).
+ * <p>
+ * Gli <b>ingredienti magici</b> (pergamena, gemma, monile, gingillo, sigillo) non si indossano: si fondono sugli
+ * artefatti dall'incantatore.
  *
  * @author Stefano Reksten
  */
@@ -9,7 +15,7 @@ public enum TipoArtefatto {
     SPADA(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.TAGLIENTE,"Spada", "impugna"),
     MAZZA(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.CONTUNDENTE, "Mazza", "brandisce"),
     ASCIA(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.TAGLIENTE, "Ascia", "impugna"),
-    // Arma a due mani.
+    /** Arma a due mani. */
     SPADONE(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ENTRAMBE_LE_MANI, TipoDanno.TAGLIENTE, "Spadone", "impugna"),
     LANCIA(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.PERFORANTE, "Lancia", "impugna"),
 

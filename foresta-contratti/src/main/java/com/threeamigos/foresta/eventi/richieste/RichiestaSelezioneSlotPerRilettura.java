@@ -7,6 +7,7 @@ import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import java.util.Collection;
 
 /**
+ * Chiede al giocatore da quale salvataggio ricaricare la partita; porta le testate di quelli disponibili.
  *
  * @author Stefano Reksten
  */

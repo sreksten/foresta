@@ -21,6 +21,9 @@ import java.util.Objects;
  */
 public final class ImmagineIntermezzo {
 
+	/**
+	 * Da dove viene l'immagine: la classe di un personaggio, una locazione, una risorsa, un foglio di sprite o un'animazione.
+	 */
 	public enum Tipo {
 		PERSONAGGIO,
 		LOCAZIONE,
@@ -44,12 +47,18 @@ public final class ImmagineIntermezzo {
 		this.tipo = tipo;
 	}
 
+	/**
+	 * L'immagine di una classe di personaggio.
+	 */
 	public static ImmagineIntermezzo personaggio(TipoPersonaggio classePersonaggio) {
 		ImmagineIntermezzo immagine = new ImmagineIntermezzo(Tipo.PERSONAGGIO);
 		immagine.classePersonaggio = Objects.requireNonNull(classePersonaggio);
 		return immagine;
 	}
 
+	/**
+	 * L'immagine di un tipo di locazione.
+	 */
 	public static ImmagineIntermezzo locazione(TipoLocazione tipoLocazione) {
 		ImmagineIntermezzo immagine = new ImmagineIntermezzo(Tipo.LOCAZIONE);
 		immagine.tipoLocazione = Objects.requireNonNull(tipoLocazione);
@@ -94,6 +103,9 @@ public final class ImmagineIntermezzo {
 		return immagine;
 	}
 
+	/**
+	 * L'immagine di un'animazione (vedi {@link Animazione}).
+	 */
 	public static ImmagineIntermezzo animazione(Animazione animazione) {
 		ImmagineIntermezzo immagine = new ImmagineIntermezzo(Tipo.ANIMAZIONE);
 		immagine.animazione = Objects.requireNonNull(animazione);

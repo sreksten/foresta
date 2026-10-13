@@ -14,6 +14,7 @@ import java.util.Set;
  */
 public enum TipoAzione {
 
+	/** L'attacco con l'arma impugnata */
 	ATTACCO_FISICO("Attacco fisico", PortataAzione.AVVERSARIO, null),
 	ARIA("Aria", PortataAzione.AVVERSARIO, ClasseIncantesimo.ARIA),
 	ACQUA("Acqua", PortataAzione.AVVERSARIO, ClasseIncantesimo.ACQUA),
@@ -32,17 +33,27 @@ public enum TipoAzione {
 	 * scelgono i mostri oggi (RegistroTattiche); un giocatore usa piuttosto le azioni dei singoli incantesimi o INCANTESIMO_DI_DANNO
 	 */
 	INCANTESIMO_DEL_REPERTORIO("Incantesimo del repertorio", PortataAzione.AVVERSARIO, null),
+	/** L'attacco magico di base, con danno arcano */
 	DARDO_ARCANO("Dardo Arcano", PortataAzione.AVVERSARIO, null),
 	RESURREZIONE("Resurrezione", PortataAzione.ALLEATO_CADUTO, ClasseIncantesimo.RESURREZIONE),
 	ALBA_SACRA("Alba Sacra", PortataAzione.GRUPPO_ALLEATI, ClasseIncantesimo.ALBA_SACRA),
+	/** Il canto del Bardo che cura un alleato (vedi bardo.md) */
 	CANTO_CURATIVO("Canto Curativo", PortataAzione.ALLEATO, null),
+	/** Il canto del Bardo che ipnotizza il gruppo avversario (vedi bardo.md) */
 	CANTO_IPNOTICO("Canto Ipnotico", PortataAzione.GRUPPO_AVVERSARI, null),
+	/** L'urlo della Banshee, che colpisce il gruppo avversario: il gruppo lo impara dal bardo della locanda */
 	URLO_DELLA_BANSHEE("Urlo della Banshee", PortataAzione.GRUPPO_AVVERSARI, null),
+	/** Il canto del Bardo che ispira il gruppo alleato (stato ISPIRATO, vedi bardo.md) */
 	CANTO_DI_VALORE("Canto di Valore", PortataAzione.GRUPPO_ALLEATI, null),
+	/** Dà a un alleato una pozione della salute */
 	POZIONE_SALUTE("Pozione della Salute", PortataAzione.ALLEATO, null),
+	/** Dà a un alleato una pozione della magia */
 	POZIONE_MAGIA("Pozione della Magia", PortataAzione.ALLEATO, null),
+	/** Dà a un alleato una pozione della salute grande */
 	POZIONE_SALUTE_GRANDE("Pozione della Salute grande", PortataAzione.ALLEATO, null),
+	/** Dà a un alleato una pozione della magia grande */
 	POZIONE_MAGIA_GRANDE("Pozione della Magia grande", PortataAzione.ALLEATO, null),
+	/** Cambia l'arma impugnata con quella del tipo di danno indicato dall'azione */
 	CAMBIA_ARMA("Cambia Arma", PortataAzione.ARMA, null);
 
 	private final String descrizione;
