@@ -103,6 +103,12 @@ public final class RegoleEquipaggiamento {
 	private RegoleEquipaggiamento() {
 	}
 
+	/**
+	 * Valuta se il personaggio può usare l'artefatto: la classe sa usare quel genere di oggetti, il livello è sufficiente, la forza basta per un'armatura, lo slot è libero
+	 * (con le regole di mani e seconda arma) e il peso è sostenibile.
+	 *
+	 * @return l'esito del controllo, con il motivo del rifiuto se non può
+	 */
 	public static EsitoControlloRichiestaEquipaggiamento valuta(Personaggio personaggio, ArtefattoMD artefatto) {
 		TipoPersonaggio classe = personaggio.getClasse();
 		int livelloPersonaggio = personaggio.getLivello();

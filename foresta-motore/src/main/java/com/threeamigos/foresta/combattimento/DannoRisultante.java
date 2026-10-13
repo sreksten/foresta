@@ -15,6 +15,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * Il risultato di un colpo, prima che il difensore lo subisca: il danno e il suo tipo, le interazioni fra tipo di danno e stati scattate, le
+ * debolezze e resistenze di classe che hanno contato, gli stati alterati e i modificatori da aggiungere o togliere, l'effetto dell'equipaggiamento
+ * difensivo e gli effetti speciali (colpo di grazia, cura ad area, sifone vitale, mietitura...).
+ * <p>
+ * Lo costruisce {@link CalcolatoreCombattimento} e lo applica il difensore con {@code applicaRisultatoCombattimento}.
  *
  * @author Stefano Reksten
  */
@@ -68,6 +73,9 @@ public class DannoRisultante {
         return danno;
     }
 
+    /**
+     * Registra un'interazione fra tipo di danno e stato del difensore che è scattata con questo colpo.
+     */
     public void addInterazione(TipoInterazioneConEffettiDiStato tipoInterazione) {
         interazioni.add(tipoInterazione);
     }
@@ -90,6 +98,9 @@ public class DannoRisultante {
         return interazioni;
     }
 
+    /**
+     * Aggiunge uno stato alterato da applicare al difensore.
+     */
     public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo) {
         effettiDiStatoDaAggiungere.add(new EffettoDiStatoMD(tipoEffettoDiStato, durata, danniNelTempo));
     }
@@ -109,6 +120,9 @@ public class DannoRisultante {
         return modificatoriDaAggiungere;
     }
 
+    /**
+     * Segna uno stato alterato da togliere al difensore.
+     */
     public void rimuoviEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
         effettiDiStatoDaRimuovere.add(tipoEffettoDiStato);
     }

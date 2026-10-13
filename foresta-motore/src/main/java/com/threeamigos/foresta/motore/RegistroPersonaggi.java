@@ -17,6 +17,11 @@ import java.util.List;
 import java.util.Map;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
+/**
+ * I personaggi del mondo che non stanno nel gruppo del giocatore: quelli da distribuire nelle locazioni, quelli già posati nelle caselle e i residenti,
+ * cioè i personaggi con un nome proprio nel mondo (il bardo, gli artigiani delle città, i campioni delle sfide: vedi nomi.md). I dati stanno nel
+ * {@code RegistroPersonaggiMD}.
+ */
 public class RegistroPersonaggi {
 
 	private RegistroPersonaggi() {
@@ -96,6 +101,9 @@ public class RegistroPersonaggi {
 		return compagno;
 	}
 
+	/**
+	 * Mette il personaggio nella casella indicata.
+	 */
 	public static void addPersonaggioInLocazione(Personaggio personaggio, CoordinateMD coordinate) {
 		getRegistroMD().addPersonaggioInLocazione(personaggio.getModelloDati(), coordinate);
 	}
@@ -104,6 +112,9 @@ public class RegistroPersonaggi {
 		return costruisciPersonaggio(getRegistroMD().getPersonaggioInLocazione(coordinate));
 	}
 
+	/**
+	 * Toglie il personaggio dalla casella.
+	 */
 	public static void rimuoviPersonaggioInLocazione(CoordinateMD coordinate) {
 		getRegistroMD().rimuoviPersonaggioInLocazione(coordinate);
 	}
@@ -221,6 +232,9 @@ public class RegistroPersonaggi {
 		getRegistroMD().aggiungiResidente(PersonaggioNoto.CAMPIONE.chiave(nome), new ResidenteMD(nome, null, classe));
 	}
 
+	/**
+	 * Segna come sconfitto il campione di quel nome.
+	 */
 	public static void segnaCampioneSconfitto(String nome) {
 		ResidenteMD campione = getRegistroMD().getResidente(PersonaggioNoto.CAMPIONE.chiave(nome));
 		if (campione != null) {

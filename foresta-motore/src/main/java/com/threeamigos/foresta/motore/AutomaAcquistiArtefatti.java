@@ -6,6 +6,7 @@ import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
 /**
+ * Lo scambio di artefatti fra il gruppo e un commerciante: ogni spostamento è un acquisto o una vendita, e i costi si mostrano.
  *
  * @author Stefano Reksten
  */

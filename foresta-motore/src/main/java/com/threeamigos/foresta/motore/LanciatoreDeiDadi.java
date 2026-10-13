@@ -4,6 +4,8 @@ import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
+ * Distribuisce a un personaggio i punti degli attributi di base alla creazione: un budget di punti, che cresce con il livello, ripartito in
+ * percentuali diverse per ogni classe (il guerriero punta su forza e costituzione, il mago su intelligenza e saggezza...).
  *
  * @author Stefano Reksten
  */
@@ -176,6 +178,9 @@ public class LanciatoreDeiDadi {
         }
     }
 
+    /**
+     * Distribuisce i punti da assegnare a un personaggio di quella classe e di quel livello, scrivendo gli attributi di base nel suo modello dati.
+     */
     public static void tiraDadiPer(TipoPersonaggio classePersonaggio, int livello, PersonaggioMD md) {
         int puntiDaDistribuire = getPuntiDaDistribuire(classePersonaggio, livello);
         int[] percentuali = getPercentualiPer(classePersonaggio);

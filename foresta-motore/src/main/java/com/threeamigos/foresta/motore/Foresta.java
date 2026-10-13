@@ -29,9 +29,9 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
- * Contiene la mappa di una istanza della Foresta,
- * l'elenco dei Cacciatori di Draghi tuttora disponibili,
- * varie ed eventuali
+ * La mappa della Foresta di questa partita: una griglia di 20 per 20 caselle, ciascuna con la sua locazione. I dati stanno nel
+ * {@code ForestaMD}; qui ci sono le operazioni del gioco: costruire le locazioni (anche le città e i castelli, che sono uniche), trasformarle
+ * (il drago distrugge una città e al suo posto restano delle rovine), cercare una casella libera e farne l'istanza per la visita.
  */
 
 public class Foresta {
@@ -54,6 +54,9 @@ public class Foresta {
 		return getForestaMD().getDimensioneY();
 	}
 	
+	/**
+	 * Fa della casella in cui si trova il gruppo una locazione di quel tipo.
+	 */
 	public static void impostaLocazioneCorrente(TipoLocazione tipoLocazione) {
 		getForestaMD().impostaLocazione(GruppoGiocatore.getIstanza().getCoordinate(), tipoLocazione);
 	}
@@ -65,6 +68,10 @@ public class Foresta {
 		return getForestaMD().ottieniCoordinateLocazioneUnica(tipoLocazione);
 	}
 	
+	/**
+	 * Trasforma la locazione unica in un'altra (di solito delle rovine, che prendono il nome da quel che c'era) e non la considera più unica.
+	 * Non fa niente se quella locazione non è stata costruita.
+	 */
 	public static void distruggiLocazioneUnica(TipoLocazione tipoLocazione, TipoLocazione nuovoTipoLocazione) {
 		CoordinateMD coordinate = getCoordinateLocazioneUnica(tipoLocazione);
 		if (coordinate != null) {
@@ -102,6 +109,12 @@ public class Foresta {
 		return locazione;
 	}
 	
+	/**
+	 * Costruisce la locazione unica in una casella libera a caso.
+	 *
+	 * @param conosciutaSuMappa se la casella è già conosciuta dal giocatore
+	 * @return le coordinate della casella scelta
+	 */
 	public static CoordinateMD costruisciLocazioneUnica(TipoLocazione tipoLocazioneUnica, boolean conosciutaSuMappa) {
 		return costruisciLocazioneUnica(tipoLocazioneUnica, getCoordinateLibere(), conosciutaSuMappa);
 	}

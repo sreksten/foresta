@@ -15,15 +15,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Un insieme di personaggi
+ * Un insieme di personaggi, con il suo capo e le sue scorte di pergamene e pozioni. Le due specializzazioni sono {@link GruppoGiocatore} e
+ * {@link GruppoAvversario}. Le scorte stanno nel modello dati del gruppo: le variazioni di quelle del giocatore si annunciano alla UI con le
+ * notifiche, quelle degli avversari no (sono scorte che i mostri hanno con sé e che a scontro finito possono diventare bottino).
  */
-
 public abstract class Gruppo implements VistaGruppo {
 	
 	// Caratteristiche del gruppo
 	protected List<Personaggio> personaggi = new ArrayList<>();
 	protected Personaggio capo;
 
+	/**
+	 * Svuota il gruppo: nessun personaggio e nessun capo.
+	 */
 	protected void reimposta() {
 		personaggi.clear();
 		capo = null;
@@ -48,6 +52,9 @@ public abstract class Gruppo implements VistaGruppo {
 		return getGruppoMD().getIncantesimi(classeIncantesimo);
 	}
 
+	/**
+	 * Aggiunge pergamene di quell'incantesimo alle scorte; il gruppo del giocatore lo annuncia alla UI.
+	 */
 	public final void addIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
 		int valorePrecedente = getGruppoMD().getIncantesimi(classeIncantesimo);
 		int valoreAttuale = valorePrecedente + quantita;
@@ -57,6 +64,9 @@ public abstract class Gruppo implements VistaGruppo {
 		}
 	}
 
+	/**
+	 * Toglie pergamene di quell'incantesimo dalle scorte.
+	 */
 	public final void subIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
 		addIncantesimi(classeIncantesimo, -quantita);
 	}
@@ -65,6 +75,9 @@ public abstract class Gruppo implements VistaGruppo {
 		return getGruppoMD().getPozioniSalute();
 	}
 
+	/**
+	 * Aggiunge pozioni della salute alle scorte; il gruppo del giocatore lo annuncia alla UI.
+	 */
 	public final void addPozioniSalute(int quantita) {
 		int valorePrecedente = getGruppoMD().getPozioniSalute();
 		int valoreAttuale = valorePrecedente + quantita;
@@ -74,14 +87,23 @@ public abstract class Gruppo implements VistaGruppo {
 		}
 	}
 
+	/**
+	 * Toglie pozioni della salute dalle scorte.
+	 */
 	public final void subPozioniSalute(int quantita) {
 		addPozioniSalute(-quantita);
 	}
 
+	/**
+	 * Fa bere a un personaggio, scelto con il comando, una pozione della salute.
+	 */
 	public final void consumaPozioneSalute(Comando azione) {
 		consumaPozioneSalute(getPersonaggio(azione));
 	}
 
+	/**
+	 * Fa bere a quel personaggio una pozione della salute: ne toglie una dalle scorte e gli restituisce un po' di salute.
+	 */
 	public final void consumaPozioneSalute(Personaggio personaggio) {
 		subPozioniSalute(1);
 		personaggio.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE);
@@ -95,6 +117,9 @@ public abstract class Gruppo implements VistaGruppo {
 		return getGruppoMD().getPozioniSaluteGrande();
 	}
 	
+	/**
+	 * Aggiunge pozioni della salute grandi alle scorte; il gruppo del giocatore lo annuncia alla UI.
+	 */
 	public final void addPozioniSaluteGrande(int quantita) {
 		int valorePrecedente = getGruppoMD().getPozioniSaluteGrande();
 		int valoreAttuale = valorePrecedente + quantita;
@@ -104,14 +129,23 @@ public abstract class Gruppo implements VistaGruppo {
 		}
 	}
 
+	/**
+	 * Toglie pozioni della salute grandi dalle scorte.
+	 */
 	public final void subPozioniSaluteGrande(int quantita) {
 		addPozioniSaluteGrande(-quantita);
 	}
 
+	/**
+	 * Fa bere a un personaggio, scelto con il comando, una pozione della salute grande.
+	 */
 	public final void consumaPozioneSaluteGrande(Comando azione) {
 		consumaPozioneSaluteGrande(getPersonaggio(azione));
 	}
 
+	/**
+	 * Fa bere a quel personaggio una pozione della salute grande: ne toglie una dalle scorte, gli alza la salute massima e lo cura.
+	 */
 	public final void consumaPozioneSaluteGrande(Personaggio personaggio) {
 		subPozioniSaluteGrande(1);
 		personaggio.addSaluteMassima(Costanti.AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE, "POZIONE_SALUTE_GRANDE");
@@ -126,6 +160,9 @@ public abstract class Gruppo implements VistaGruppo {
 		return getGruppoMD().getPozioniMagia();
 	}
 
+	/**
+	 * Aggiunge pozioni della magia alle scorte; il gruppo del giocatore lo annuncia alla UI.
+	 */
 	public final void addPozioniMagia(int quantita) {
 		int valorePrecedente = getGruppoMD().getPozioniMagia();
 		int valoreAttuale = valorePrecedente + quantita;
@@ -135,14 +172,23 @@ public abstract class Gruppo implements VistaGruppo {
 		}
 	}
 
+	/**
+	 * Toglie pozioni della magia dalle scorte.
+	 */
 	public final void subPozioniMagia(int quantita) {
 		addPozioniMagia(-quantita);
 	}
 
+	/**
+	 * Fa bere a un personaggio, scelto con il comando, una pozione della magia.
+	 */
 	public final void consumaPozioneMagia(Comando azione) {
 		consumaPozioneMagia(getPersonaggio(azione));
 	}
 
+	/**
+	 * Fa bere a quel personaggio una pozione della magia: ne toglie una dalle scorte e gli restituisce un po' di magia.
+	 */
 	public final void consumaPozioneMagia(Personaggio personaggio) {
 		subPozioniMagia(1);
 		personaggio.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA);
@@ -156,6 +202,9 @@ public abstract class Gruppo implements VistaGruppo {
 		return getGruppoMD().getPozioniMagiaGrande();
 	}
 
+	/**
+	 * Aggiunge pozioni della magia grandi alle scorte; il gruppo del giocatore lo annuncia alla UI.
+	 */
 	public final void addPozioniMagiaGrande(int quantita) {
 		int valorePrecedente = getGruppoMD().getPozioniMagiaGrande();
 		int valoreAttuale = valorePrecedente + quantita;
@@ -165,14 +214,23 @@ public abstract class Gruppo implements VistaGruppo {
 		}
 	}
 
+	/**
+	 * Toglie pozioni della magia grandi dalle scorte.
+	 */
 	public final void subPozioniMagiaGrande(int quantita) {
 		addPozioniMagiaGrande(-quantita);
 	}
 
+	/**
+	 * Fa bere a un personaggio, scelto con il comando, una pozione della magia grande.
+	 */
 	public final void consumaPozioneMagiaGrande(Comando azione) {
 		consumaPozioneMagiaGrande(getPersonaggio(azione));
 	}
 
+	/**
+	 * Fa bere a quel personaggio una pozione della magia grande: ne toglie una dalle scorte, gli alza la magia massima e gli restituisce magia.
+	 */
 	public final void consumaPozioneMagiaGrande(Personaggio personaggio) {
 		subPozioniMagiaGrande(1);
 		personaggio.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "POZIONE_MAGIA_GRANDE");
@@ -255,6 +313,9 @@ public abstract class Gruppo implements VistaGruppo {
 		return personaggi.stream().anyMatch(Personaggio::isFinoAllaResa);
 	}
 
+	/**
+	 * Aggiunge un personaggio al gruppo; il primo che entra ne è il capo.
+	 */
 	public void aggiungiPersonaggio(Personaggio p) {
 		if (capo == null) {
 			capo = p;
@@ -306,11 +367,17 @@ public abstract class Gruppo implements VistaGruppo {
 		return true;
 	}
 
+	/**
+	 * Toglie tutti i personaggi e il capo.
+	 */
 	public void rimuoviPersonaggi() {
 		personaggi.clear();
 		capo = null;
 	}
 
+	/**
+	 * Toglie il personaggio dal gruppo; il capo diventa il primo dei personaggi rimasti.
+	 */
 	public void rimuoviPersonaggio(Personaggio p) {
 		if (p.equals(capo)) {
 			capo = null;
@@ -321,10 +388,16 @@ public abstract class Gruppo implements VistaGruppo {
 		}
 	}
 
+	/**
+	 * Chi parla, per le frasi dei testi: "il gruppo" se sono più di uno, altrimenti il capo con l'articolo.
+	 */
 	public String chi() {
 		return personaggi.size() > 1 ? "il gruppo" : capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 	}
 
+	/**
+	 * Come {@link #chi()}, con l'iniziale maiuscola.
+	 */
 	public String chiMaiuscolo() {
 		return personaggi.size() > 1 ? "Il gruppo" : capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 	}

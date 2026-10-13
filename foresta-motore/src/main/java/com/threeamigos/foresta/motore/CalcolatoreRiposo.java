@@ -4,6 +4,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 /**
+ * Calcola quanto recupera un personaggio riposando: salute, magia e stanchezza, in base alle ore e al tipo di riposo.
  *
  * @author Stefano Reksten
  */
@@ -17,6 +18,11 @@ public class CalcolatoreRiposo {
 
     private static final double BASE_RIDUZIONE_STANCHEZZA = 2.0;
 
+    /**
+     * Il recupero di un personaggio che riposa quelle ore in quel modo. Il tempo conta con la radice delle ore (quattro ore valgono il doppio
+     * di una), moltiplicata per il fattore del luogo; salute e magia dipendono dai massimi del personaggio e dai moltiplicatori della sua classe,
+     * e chi non recupera salute o non si stanca (i non morti) salta quella parte.
+     */
     public static RisultatoRiposo calcolaRiposo(Personaggio personaggio, int ore, TipoRiposo tipoRiposo) {
 
         // 1. Calcolo del coefficiente non lineare del tempo (es. 1 ora = 1.0, 4 ore = 2.0)

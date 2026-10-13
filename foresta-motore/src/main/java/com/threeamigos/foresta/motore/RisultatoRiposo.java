@@ -3,6 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 /**
+ * Quanto ha recuperato un personaggio che ha riposato: salute e magia ripristinate e stanchezza tolta, con la durata e il tipo di riposo.
  *
  * @author Stefano Reksten
  */

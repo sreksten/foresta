@@ -8,6 +8,12 @@ import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.strumenti.Misc;
 
+/**
+ * Il tempo della partita: giorno e ora, le città distrutte e l'ultimo evento da mostrare. I dati stanno nel {@code LineaTemporaleMD}.
+ * <p>
+ * Il tempo ha una scadenza: dal ventesimo giorno il drago distrugge una città ogni cinque giorni, e al quarantunesimo non resta più
+ * nulla da difendere e il gioco è perduto.
+ */
 public class LineaTemporale {
 	
 	private LineaTemporale() {
@@ -25,6 +31,9 @@ public class LineaTemporale {
 		return getLineaTemporaleMD().getGiorno();
 	}
 
+	/**
+	 * Riporta il tempo all'inizio della partita.
+	 */
 	public static void reimposta() {
 		getLineaTemporaleMD().reimposta();
 	}
@@ -68,6 +77,9 @@ public class LineaTemporale {
 		return sb.toString();
 	}
 
+	/**
+	 * Quante ore mancano alle otto del mattino, che sono quelle del mattino seguente se è già passata quell'ora oggi.
+	 */
 	public static int oreFinoAlMattino() {
 		int ora = getOra();
 		if (ora >= 8) {
@@ -77,6 +89,9 @@ public class LineaTemporale {
 		}
 	}
 
+	/**
+	 * Porta l'orologio alle otto del mattino: dello stesso giorno se è notte fonda, del giorno dopo altrimenti.
+	 */
 	public static void mattinoSeguente() {
 		LineaTemporaleMD md = getLineaTemporaleMD();
 		if (getOra() >= LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO) {
@@ -87,6 +102,9 @@ public class LineaTemporale {
 		}
 	}
 
+	/**
+	 * Fa passare quelle ore, anche più di un giorno in una volta sola.
+	 */
 	public static void aggiungiOre(int quantita) {
 		LineaTemporaleMD md = getLineaTemporaleMD();
 		int ora = getOra() + quantita;
@@ -98,6 +116,10 @@ public class LineaTemporale {
 	private static final String COLONNA = " vede levarsi una colonna di fumo ";
 
 	//TODO le città potrebbero essere distrutte a caso
+	/**
+	 * Gli eventi che dipendono dal giorno: dal giorno 20 il drago distrugge una città ogni cinque giorni (Ruuna, Nyena, Fleena, Malgaard) e
+	 * dopo il giorno 40 il gioco è perduto. La distruzione di una città viene annunciata con una colonna di fumo nella sua direzione.
+	 */
 	public static void eventi(GruppoGiocatore gruppo) {
 		int giorno = getGiorno();
 		String nome = gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);

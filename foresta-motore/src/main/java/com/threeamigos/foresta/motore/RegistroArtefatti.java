@@ -25,6 +25,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Gli artefatti del mondo che non sono nell'inventario del gruppo: quelli da distribuire, quelli smarriti nelle locazioni, i magazzini dei negozi e
+ * le caselle in cui il gruppo sa che c'è un artefatto smarrito. I dati stanno nel {@code RegistroArtefattiMD}; qui li si trasforma in
+ * {@link com.threeamigos.foresta.oggetti.Artefatto} e li si distribuisce a caso.
+ */
 public class RegistroArtefatti {
 
 	private static RegistroArtefattiMD getRegistroArtefatti() {
@@ -260,6 +265,9 @@ public class RegistroArtefatti {
 		return new RegistroArtefattiMD.ArtefattoESuaUbicazione(getRegistroArtefatti().getArtefattoInLocazione(coordinate), coordinate);
 	}
 
+	/**
+	 * Mette l'artefatto smarrito nella casella indicata.
+	 */
 	public static void addArtefattoInLocazione(Artefatto artefatto, CoordinateMD coordinate) {
 		getRegistroArtefatti().addArtefattoInLocazione(artefatto.getModelloDati(), coordinate);
 	}
@@ -268,10 +276,16 @@ public class RegistroArtefatti {
 		return costruisciArtefatto(getRegistroArtefatti().getArtefattoInLocazione(coordinate));
 	}
 
+	/**
+	 * Toglie l'artefatto smarrito dalla casella, perché il gruppo l'ha preso.
+	 */
 	public static void rimuoviArtefattoInLocazione(CoordinateMD coordinate) {
 		getRegistroArtefatti().rimuoviArtefattoInLocazione(coordinate);
 	}
 
+	/**
+	 * Ricorda che il gruppo sa che nella casella c'è un artefatto smarrito, così la mappa la segnala.
+	 */
 	public static void segnaLocalizzazioneConosciuta(CoordinateMD coordinate) {
 		getRegistroArtefatti().segnaLocalizzazioneConosciuta(coordinate);
 	}

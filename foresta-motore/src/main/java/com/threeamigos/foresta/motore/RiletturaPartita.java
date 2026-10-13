@@ -17,6 +17,9 @@ public final class RiletturaPartita {
 	private RiletturaPartita() {
 	}
 
+	/**
+	 * Dopo aver caricato un salvataggio ricostruisce ciò che non si salva: gli attributi secondari dei personaggi e i dati del gruppo del giocatore e degli avversari.
+	 */
 	public static void ricostruisci() {
 		for (PersonaggioMD personaggioMD : ModelloDati.getIstanza().getGruppoGiocatoreMD().getPersonaggiMD()) {
 			PersonaggioBase.ricalcolaAttributiSecondari(personaggioMD, FabbricaPersonaggi.modello(personaggioMD.getClasse()));

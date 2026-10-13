@@ -56,6 +56,15 @@ import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
+/**
+ * Il motore di gioco: una macchina a stati finiti reattiva, senza ciclo di gioco. Avanza solo in risposta a due stimoli: i comandi del
+ * giocatore ({@link #processaComando}) e gli impulsi di un {@link Temporizzatore} ({@link #tick}, che arriva come {@code Comando.TIMER}).
+ * <p>
+ * Ogni stato ({@link Stato}) ha un gestore di ingresso, per quando ci si arriva senza un comando, e uno di comando, per quando il
+ * giocatore sceglie qualcosa. I gestori impostano il nuovo stato, pubblicano sul bus le conseguenze per la UI e dicono se fermarsi in attesa
+ * di un comando o proseguire da soli con una transizione automatica. Non esiste una funzione di transizione centralizzata: le regole su "da
+ * quale stato a quale" stanno nei singoli gestori. Vedi motore_di_gioco.md §2.
+ */
 public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	/**
@@ -292,6 +301,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.PUNTEGGI, comando -> entraOGestisciStatoPunteggi());
 	}
 
+	/**
+	 * Un impulso del temporizzatore: arriva allo stato corrente come un comando {@code TIMER}.
+	 */
 	public void tick() {
 		processaComando(Comando.TIMER);
 	}

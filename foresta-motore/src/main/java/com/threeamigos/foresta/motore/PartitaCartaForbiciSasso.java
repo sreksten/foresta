@@ -33,6 +33,9 @@ public class PartitaCartaForbiciSasso {
 			return giocatore == avversario;
 		}
 
+		/**
+		 * Dice se ha vinto il giocatore: la sua mossa batte quella dell'avversario.
+		 */
 		public boolean haVintoIlGiocatore() {
 			return giocatore.batte(avversario);
 		}
@@ -71,6 +74,9 @@ public class PartitaCartaForbiciSasso {
 				|| vittorieDellAvversario >= Costanti.VITTORIE_PER_VINCERE_LA_SFIDA;
 	}
 
+	/**
+	 * Dice se la sfida è stata vinta dal giocatore: ha vinto le mani necessarie.
+	 */
 	public boolean haVintoIlGiocatore() {
 		return vittorieDelGiocatore >= Costanti.VITTORIE_PER_VINCERE_LA_SFIDA;
 	}

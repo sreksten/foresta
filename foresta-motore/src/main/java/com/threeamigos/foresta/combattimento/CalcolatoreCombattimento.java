@@ -27,12 +27,26 @@ import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.ModalitaDiProva;
 
 /**
+ * Le regole del combattimento: se un colpo va a segno, quanto danno fa e quali stati alterati provoca, e le stime che le tattiche usano per
+ * scegliere cosa fare.
+ * <p>
+ * La probabilità di colpire confronta un attacco e una difesa. Per i danni fisici contano la coordinazione di chi attacca (precisione e destrezza)
+ * contro la schivata di chi si difende (velocità, destrezza e parata); per quelli magici l'intelligenza e la precisione contro la resistenza
+ * magica e la saggezza. Stanchezza e stati alterati (confuso, accecato, rallentato, spaventato) cambiano i due lati, e il risultato ha dei limiti
+ * minimo e massimo. Il danno tiene conto dell'arma e degli incantamenti, del livello, dei critici, di debolezze e resistenze della classe, delle
+ * interazioni fra tipo di danno e stati (vedi interazioni_effetti_di_stato.md) e dell'equipaggiamento difensivo del bersaglio.
+ * <p>
+ * Il risultato è un {@link DannoRisultante}, che il personaggio colpito applica a sé con {@code applicaRisultatoCombattimento}.
  *
  * @author Stefano Reksten
  */
 public class CalcolatoreCombattimento {
 
 
+    /**
+     * La probabilità, in percentuale, che l'attaccante colpisca il difensore con quel genere di danno (fisico o magico). Alcuni stati decidono da soli
+     * l'esito; altrimenti si confronta l'attacco con la difesa, e il risultato resta fra un minimo e un massimo.
+     */
     public static int calcolaProbabilitaDiColpire(Personaggio attaccante, Personaggio difensore, SupertipoDanno tipoDanno) {
 
         // DEBUG: in modalità di prova l'OmbraFiamma va sempre a segno, per poter testare
@@ -146,6 +160,9 @@ public class CalcolatoreCombattimento {
         return probabilitaFinale;
     }
 
+    /**
+     * Tira il dado e dice se il colpo va a segno, in base alla {@link #calcolaProbabilitaDiColpire probabilità di colpire}.
+     */
     public static boolean colpisce(Personaggio attaccante, Personaggio difensore, SupertipoDanno tipoDanno) {
 
         int probabilitaFinale = calcolaProbabilitaDiColpire(attaccante, difensore, tipoDanno);
@@ -157,6 +174,9 @@ public class CalcolatoreCombattimento {
         return tiroDado <= probabilitaFinale;
     }
 
+    /**
+     * Il risultato di un colpo pieno con quell'arma: il danno, gli stati alterati e le reazioni che ne seguono.
+     */
     public static DannoRisultante calcolaDannoRisultante(Personaggio attaccante, Personaggio difensore, Arma arma) {
         return calcolaDannoRisultante(attaccante, difensore, arma, 1.0d);
     }
@@ -1029,6 +1049,10 @@ public class CalcolatoreCombattimento {
                 (int) Math.round(grado.getBonusFisso() * maggiorazione), grado.getCoefficiente() * maggiorazione);
     }
 
+    /**
+     * La durata in turni di uno stato alterato appena causato al difensore: dipende dal tipo di stato e da quanto il difensore lo contrasta con i suoi
+     * attributi. Atterrato dura un turno, e il berserk (che finisce da solo lasciando la locazione) vale uno.
+     */
     public static int calcolaDurataStato(Personaggio difensore, TipoEffettoDiStato stato) {
         // Gestione immediata dell'unico stato a 1 turno fisso (Azione per rialzarsi)
         if (stato == TipoEffettoDiStato.ATTERRATO) {

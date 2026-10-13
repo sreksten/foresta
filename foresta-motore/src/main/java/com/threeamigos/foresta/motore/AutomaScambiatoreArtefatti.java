@@ -126,15 +126,27 @@ public abstract class AutomaScambiatoreArtefatti implements VistaScambio {
 	@Override
 	public abstract boolean mostraCostoSuParteRemota();
 
+	/**
+	 * Chiede al motore, con un evento, di spostare l'artefatto sulla parte attiva; il motore verifica e risponde con un'approvazione o un rifiuto.
+	 */
 	public abstract void richiediSpostamentoSuParteAttiva(Artefatto artefatto);
 
+	/**
+	 * Sposta davvero l'artefatto dalla parte remota a quella attiva, a richiesta già approvata.
+	 */
 	public void spostaSuParteAttiva(Artefatto artefatto) {
 		parteRemota.removeArtefatto(artefatto);
 		parteAttiva.addArtefatto(artefatto);
 	}
 
+	/**
+	 * Chiede al motore, con un evento, di spostare l'artefatto sulla parte remota; il motore verifica e risponde con un'approvazione o un rifiuto.
+	 */
 	public abstract void richiediSpostamentoSuParteRemota(Artefatto artefatto);
 
+	/**
+	 * Sposta davvero l'artefatto dalla parte attiva a quella remota, a richiesta già approvata.
+	 */
 	public void spostaSuParteRemota(Artefatto artefatto) {
 		parteAttiva.removeArtefatto(artefatto);
 		parteRemota.addArtefatto(artefatto);

@@ -1,6 +1,11 @@
 package com.threeamigos.foresta.motore;
 
 /**
+ * Le costanti di bilanciamento del gioco, raccolte in un posto solo: cambiandole si cambia la difficoltà senza toccare le regole.
+ * <p>
+ * Sono divise in sezioni, ciascuna aperta da un commento: amicizia e corruzione, carta forbici e sasso, artefatti, combattimento, e poi, per
+ * ogni classe di personaggio, i valori di partenza ({@code GOBLIN_MAX_FORZA}, {@code GOBLIN_SALUTE_BASE}...) e i moltiplicatori con le loro note
+ * ({@code GOBLIN_MOLTIPLICATORE_CRITICO} e {@code GOBLIN_MOLTIPLICATORE_CRITICO_NOTA}).
  *
  * @author Stefano Reksten
  */

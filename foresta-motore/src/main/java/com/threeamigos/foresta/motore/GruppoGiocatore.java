@@ -63,6 +63,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	// Il leggendario che la modalità di prova mette nell'inventario del gruppo (vedi leggendari.txt)
 	private static final String CHIAVE_FALCE_DI_PROVA = "FALCE_DEL_TRISTO_MIETITORE";
 
+	/**
+	 * Il gruppo del giocatore ricostruito da un modello dati, per esempio dopo aver caricato un salvataggio.
+	 */
 	public static GruppoGiocatore of(GruppoGiocatoreMD gruppoGiocatoreMD) {
 		return new GruppoGiocatore(gruppoGiocatoreMD);
 	}
@@ -135,10 +138,16 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return Collections.unmodifiableList(ospiti);
 	}
 
+	/**
+	 * Aggiunge un ospite non vulnerabile: viaggia con il gruppo senza farne parte.
+	 */
 	public final void aggiungiOspite(Personaggio ospite) {
 		aggiungiOspite(ospite, false);
 	}
 
+	/**
+	 * Aggiunge un ospite: viaggia con il gruppo senza farne parte. Se è vulnerabile gli avversari possono attaccarlo.
+	 */
 	public final void aggiungiOspite(Personaggio ospite, boolean vulnerabile) {
 		ospiti.add(ospite);
 		md.getOspitiMD().add(ospite.getModelloDati());
@@ -172,6 +181,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return getOspitiVulnerabiliVivi();
 	}
 
+	/**
+	 * Toglie un ospite dal gruppo.
+	 */
 	public final void rimuoviOspite(Personaggio ospite) {
 		ospiti.remove(ospite);
 		md.getOspitiMD().remove(ospite.getModelloDati());
@@ -259,6 +271,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		allineaIndiceCapo();
 	}
 
+	/**
+	 * Aggiunge un personaggio al gruppo senza pubblicare le notifiche: serve quando si ricostruisce il gruppo.
+	 */
 	public final void aggiungiPersonaggioSenzaNotificare(Personaggio personaggio) {
 		super.aggiungiPersonaggio(personaggio);
 		md.addPersonaggioMD(personaggio.getModelloDati());
@@ -326,6 +341,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return md.getSfideVinte();
 	}
 
+	/**
+	 * Conta una sfida a carta, forbici e sasso vinta in più.
+	 */
 	public final void addSfidaVinta() {
 		md.setSfideVinte(md.getSfideVinte() + 1);
 	}
@@ -334,6 +352,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return md.getMonete();
 	}
 
+	/**
+	 * Aggiunge monete al gruppo e lo annuncia alla UI.
+	 */
 	public final void addMonete(int quantita) {
 		int valorePrecedente = md.getMonete();
 		int valoreAttuale = valorePrecedente + quantita;
@@ -341,6 +362,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		BusEventi.pubblica(new NotificaVariazioneDisponibilitaMonete(valorePrecedente, valoreAttuale));
 	}
 
+	/**
+	 * Toglie monete al gruppo.
+	 */
 	public final void subMonete(int quantita) {
 		addMonete(-quantita);
 	}
@@ -377,6 +401,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return md.getPreziosi();
 	}
 
+	/**
+	 * Aggiunge pietre preziose al gruppo e lo annuncia alla UI.
+	 */
 	public final void addPreziosi(int quantita) {
 		int valorePrecedente = md.getPreziosi();
 		int valoreAttuale = valorePrecedente + quantita;
@@ -384,6 +411,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		BusEventi.pubblica(new NotificaVariazioneDisponibilitaPreziosi(valorePrecedente, valoreAttuale));
 	}
 
+	/**
+	 * Toglie pietre preziose al gruppo.
+	 */
 	public final void subPreziosi(int quantita) {
 		addPreziosi(-quantita);
 	}
@@ -460,6 +490,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return Comando.MAX_MOVIMENTO;
 	}
 
+	/**
+	 * Sposta il gruppo verso nord di quei passi, fermandosi al bordo della mappa.
+	 */
 	public final void muoveNord(int passi) {
 		int maxPassiNord = getMaxPassiNord();
 		if (passi > maxPassiNord) {
@@ -484,6 +517,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return Comando.MAX_MOVIMENTO;
 	}
 
+	/**
+	 * Sposta il gruppo verso est di quei passi, fermandosi al bordo della mappa.
+	 */
 	public final void muoveEst(int passi) {
 		int maxPassiEst = getMaxPassiEst();
 		if (passi > maxPassiEst) {
@@ -509,6 +545,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return Comando.MAX_MOVIMENTO;
 	}
 
+	/**
+	 * Sposta il gruppo verso sud di quei passi, fermandosi al bordo della mappa.
+	 */
 	public final void muoveSud(int passi) {
 		int maxPassiSud = getMaxPassiSud();
 		if (passi > maxPassiSud) {
@@ -534,6 +573,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return Comando.MAX_MOVIMENTO;
 	}
 
+	/**
+	 * Sposta il gruppo verso ovest di quei passi, fermandosi al bordo della mappa.
+	 */
 	public final void muoveOvest(int passi) {
 		int maxPassiOvest = getMaxPassiOvest();
 		if (passi > maxPassiOvest) {
@@ -542,6 +584,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		setCoordinate(new CoordinateMD(getX() - passi, getY()));
 	}
 
+	/**
+	 * Fa riposare un'ora tutti i personaggi vivi e gli ospiti che si possono ferire.
+	 */
 	public final void riposa(TipoRiposo tipoRiposo) {
 		getPersonaggiVivi().forEach(p -> p.riposa(1, tipoRiposo));
 		// Anche gli ospiti che si possono ferire recuperano
@@ -549,6 +594,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		BusEventi.pubblica(new InternoMostraFinestraStato());
 	}
 
+	/**
+	 * Fa passare la notte al gruppo, fino al mattino, con il tipo di riposo indicato.
+	 */
 	public final void pernotta(TipoRiposo tipoRiposo) {
 		Logger.log("Inizio pernottamento");
 		TipoLocazione tipoLocazione = getTipoLocazioneCorrente();
@@ -618,6 +666,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	// TODO riguardare la fuga, oggi troppo penalizzante: oltre a perdere fino a metà di
 	// monete, preziosi, incantesimi e pozioni, ogni personaggio vivo subisce da 50 a 100
 	// danni (PersonaggioBase.fugge), e se muore il capo la partita è persa.
+	/**
+	 * Il gruppo fugge: subisce gravi ferite e perde molte delle cose che ha con sé.
+	 */
 	public final void fugge() {
 		BusEventi.pubblica(new NotificaTestoFrase(chiMaiuscolo() + ", in preda al panico, cerca la salvezza nella fuga!" +
 				" Sfortunatamente riceve gravi ferite e perde molte delle cose in suo possesso!"));
@@ -643,6 +694,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return getTipoLocazioneCorrente() == tipoLocazioneUnica;
 	}
 
+	/**
+	 * Dà quei punti esperienza a tutti i personaggi vivi e alle statistiche del gioco.
+	 */
 	public void addPuntiEsperienza(int puntiEsperienza) {
 		Statistiche.addPuntiEsperienza(puntiEsperienza);
 		for (Personaggio personaggio : getPersonaggiVivi()) {
@@ -667,12 +721,18 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return md.getArtefatti().stream().map(Artefatto::di).collect(Collectors.toList());
 	}
 
+	/**
+	 * Mette l'artefatto nell'inventario del gruppo, dove nessun artefatto è equipaggiato.
+	 */
 	public void addArtefatto(Artefatto artefatto) {
 		// Nell'inventario del gruppo nessun artefatto è equipaggiato
 		artefatto.getModelloDati().setSlotEquipaggiamento(null);
 		md.getArtefatti().add(artefatto.getModelloDati());
 	}
 
+	/**
+	 * Toglie l'artefatto dall'inventario del gruppo.
+	 */
 	public void removeArtefatto(Artefatto artefatto) {
 		md.getArtefatti().remove(artefatto.getModelloDati());
 	}

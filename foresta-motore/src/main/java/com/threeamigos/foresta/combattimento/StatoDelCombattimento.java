@@ -119,6 +119,9 @@ public class StatoDelCombattimento {
 		return round;
 	}
 
+	/**
+	 * Dice se il personaggio ha già agito in questo round.
+	 */
 	public boolean haAgitoNelRound(Personaggio personaggio) {
 		return hannoAgitoNelRound.contains(personaggio);
 	}
@@ -351,6 +354,9 @@ public class StatoDelCombattimento {
 		scheda(personaggio).haLanciato = true;
 	}
 
+	/**
+	 * Dice se il personaggio ha già lanciato un incantesimo in questo combattimento.
+	 */
 	public boolean haLanciatoUnIncantesimo(Personaggio personaggio) {
 		Scheda scheda = schede.get(personaggio);
 		return scheda != null && scheda.haLanciato;
@@ -382,6 +388,9 @@ public class StatoDelCombattimento {
 		return usi == null ? 0 : usi;
 	}
 
+	/**
+	 * Dice se il personaggio ha già usato quella voce della sua tattica.
+	 */
 	public boolean haUsatoLaVoce(Personaggio personaggio, String voce) {
 		return getRoundUltimoUsoVoce(personaggio, voce) > 0;
 	}

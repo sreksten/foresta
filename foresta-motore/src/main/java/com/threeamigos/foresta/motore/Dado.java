@@ -93,12 +93,12 @@ public class Dado {
 
 
     /**
-     * Simula un lancio di dado a N facce con N >= 1.
+     * Simula un lancio di dado a N facce con N &gt;= 1.
      * <p> Questa funzione è utile quando occorre passare la dimensione di un array o di una lista per recuperare
      * un elemento casuale.
      * Normalmente un dado non ha una faccia sola, ma in caso non si sappia di preciso quale sarà il numero di facce
      * perché per esempio si sta filtrando su una lista, si può usare questo metodo.
-     * L'unico controllo da fare è che la lista non sia vuota (basta che N sia > 0)
+     * L'unico controllo da fare è che la lista non sia vuota (basta che N sia &gt; 0)
      * @param N il numero di facce del dado
      * @return il risultato del lancio, da 1 a N inclusi
      */
@@ -114,8 +114,8 @@ public class Dado {
     }
 
     /**
-     * Simula un lancio di dado a (max - min + 1) facce con numero minimo >= 1.
-     * <p>L'unico controllo è che min sia <= max
+     * Simula un lancio di dado a (max - min + 1) facce con numero minimo &gt;= 1.
+     * <p>L'unico controllo è che min sia &lt;= max
      * @param min il valore minimo
      * @param max il valore massimo
      * @return il risultato del lancio, da 1 a N inclusi

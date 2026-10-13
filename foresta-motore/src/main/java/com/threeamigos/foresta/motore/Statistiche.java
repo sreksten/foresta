@@ -9,6 +9,10 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.StatisticheMD;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
+/**
+ * Le statistiche della partita: punti, esperienza, livello del gioco e turni giocati. I dati stanno nello {@code StatisticheMD}; qui si aggiornano,
+ * e le variazioni si annunciano alla UI con le notifiche.
+ */
 public class Statistiche {
 
 	private static StatisticheMD getStatisticheMD() {
@@ -25,6 +29,9 @@ public class Statistiche {
 		BusEventi.iscriviti(InternoAvversarioSconfitto.class, evento -> addMostroUcciso(evento.getClasse()));
 	}
 
+	/**
+	 * Aggiunge punti al punteggio e lo annuncia alla UI.
+	 */
 	public static void addPunti(int quantita) {
 		StatisticheMD md = getStatisticheMD();
 		int valorePrecedente = md.getPunti();
@@ -34,6 +41,9 @@ public class Statistiche {
 	}
 
 	// Chiamato ogni volta che il personaggio completa una missione o uccide un mostro
+	/**
+	 * Aggiunge punti esperienza e lo annuncia alla UI.
+	 */
 	public static void addPuntiEsperienza(int quantita) {
 		StatisticheMD md = getStatisticheMD();
 		int valorePrecedente = md.getPuntiEsperienza();
@@ -75,6 +85,9 @@ public class Statistiche {
 		return getStatisticheMD().getMostriUccisi(classe);
 	}
 
+	/**
+	 * Conta un turno giocato in più.
+	 */
 	public static void incrementaTurniGiocati() {
 		StatisticheMD md = getStatisticheMD();
 		md.setTurniGiocati(md.getTurniGiocati() + 1);
@@ -91,6 +104,9 @@ public class Statistiche {
 		return getStatisticheMD().getIdPartita();
 	}
 
+	/**
+	 * Azzera le statistiche per una partita nuova.
+	 */
 	public static void reimposta() {
 		getStatisticheMD().reimposta();
 	}

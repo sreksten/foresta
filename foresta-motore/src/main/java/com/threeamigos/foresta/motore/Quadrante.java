@@ -47,6 +47,9 @@ public enum Quadrante {
 		return sud ? Foresta.getDimensioneY() : Foresta.getDimensioneY() / 2;
 	}
 
+	/**
+	 * Dice se la casella sta in questo quadrante.
+	 */
 	public boolean contiene(CoordinateMD coordinate) {
 		return coordinate.getX() >= getMinX() && coordinate.getX() < getMaxX()
 				&& coordinate.getY() >= getMinY() && coordinate.getY() < getMaxY();
@@ -60,6 +63,11 @@ public enum Quadrante {
 				getMinY() + Dado.tiraAncheAUnaFaccia(getMaxY() - getMinY()) - 1);
 	}
 
+	/**
+	 * Il quadrante in cui sta la casella.
+	 *
+	 * @throws IllegalArgumentException se la casella è fuori dalla Foresta
+	 */
 	public static Quadrante di(CoordinateMD coordinate) {
 		for (Quadrante quadrante : values()) {
 			if (quadrante.contiene(coordinate)) {

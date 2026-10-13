@@ -6,6 +6,8 @@ import com.threeamigos.foresta.eventi.interni.InternoStoccaggioArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
 /**
+ * Lo scambio di artefatti fra il gruppo e un suo personaggio, nell'inventario: non ci sono costi, e spostare vuol dire prelevare dal
+ * gruppo o stoccare nel gruppo.
  *
  * @author Stefano Reksten
  */

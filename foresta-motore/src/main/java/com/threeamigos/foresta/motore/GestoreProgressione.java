@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.motore;
 
 /**
+ * La curva dell'esperienza: quanti punti servono per raggiungere un livello. Cresce con il quadrato del livello meno uno, per una
+ * costante di bilanciamento: toccandola si rallenta o si velocizza il gioco.
  *
  * @author Stefano Reksten
  */
@@ -29,8 +31,7 @@ public class GestoreProgressione {
     }
 
     /**
-     * Calcola gli XP richiesti SPECIFICATAMENTE per superare il livello attuale
-     * e passare a quello successivo (la classica "barra degli XP" che si riempie).
+     * Gli XP totali cumulativi con cui si raggiunge il livello successivo a quello attuale.
      */
     public static int getXpPerProssimoLivello(int livelloAttuale) {
         return getXpNecessariPerLivello(livelloAttuale + 1);

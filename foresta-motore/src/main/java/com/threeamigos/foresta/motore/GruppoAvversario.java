@@ -7,6 +7,10 @@ import java.util.Deque;
 import java.util.List;
 import com.threeamigos.foresta.combattimento.Ondata;
 
+/**
+ * Il gruppo dei mostri che il gruppo del giocatore affronta in una locazione. Esiste una sola istanza, che si svuota a ogni locazione; tiene anche
+ * le ondate di rinforzi che arrivano, una dopo l'altra, quando gli avversari in campo sono stati sconfitti tutti (vedi {@link Ondata}).
+ */
 public class GruppoAvversario extends Gruppo {
 
 	// Le ondate che arrivano, una dopo l'altra, quando gli avversari in campo sono sconfitti tutti (vedi Ondata). Non
