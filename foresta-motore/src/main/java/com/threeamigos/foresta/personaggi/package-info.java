@@ -10,7 +10,8 @@
  * <ul>
  * <li>i <b>personaggi giocanti</b> (Guerriero e Guerriera, Ladro e Ladra, Mago e Maga, Elfo e Elfa, Bardo e Cantastorie, Sacerdote e
  * Sacerdotessa), uno al maschile e uno al femminile con lo stesso ruolo;</li>
- * <li>i <b>mostri</b>, dal goblin al drago, alcuni dei quali sono i boss dei castelli;</li>
+ * <li>i <b>mostri</b>, dal goblin al drago, alcuni dei quali sono i boss dei castelli (i non morti volanti incorporei condividono
+ * la base {@link com.threeamigos.foresta.personaggi.NonMortoVolante});</li>
  * <li>i <b>non combattenti</b> ({@link com.threeamigos.foresta.personaggi.PersonaggioNonCombattente}): il locandiere, l'armaiolo,
  * l'alchimista e gli altri abitanti che compaiono nelle scene.</li>
  * </ul>

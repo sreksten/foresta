@@ -1,21 +1,16 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
 
-import java.util.EnumSet;
-import java.util.Set;
 import java.util.function.Function;
 
 /**
- * Il fantasma: non morto e volante. Nel suo repertorio c'è il Gelo; oltre a ciò che vale per tutti i non morti, è immune
- * all'Aria, alla Terra e allo stato atterrato.
+ * Il fantasma: non morto volante, con le capacità comuni descritte in {@link NonMortoVolante}.
  */
-public class Fantasma extends PersonaggioBase implements Personaggio {
+public class Fantasma extends NonMortoVolante {
 
 	public String getAIS() { return Misc.UN; }
 	public String getADS() { return Misc.IL; }
@@ -65,11 +60,6 @@ public class Fantasma extends PersonaggioBase implements Personaggio {
 	@Override
 	public double getLivellamentoMagia() {
 		return Costanti.FANTASMA_LIVELLAMENTO_MAGIA;
-	}
-
-	@Override
-	public Set<ClasseIncantesimo> getRepertorioIncantesimi() {
-		return EnumSet.of(ClasseIncantesimo.GELO);
 	}
 
 	@Override
@@ -274,16 +264,4 @@ public class Fantasma extends PersonaggioBase implements Personaggio {
 		}
 	}
 
-	@Override
-	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
-		return super.isImmuneAIncantesimo(classeIncantesimo) ||
-				classeIncantesimo == ClasseIncantesimo.ARIA ||
-				classeIncantesimo == ClasseIncantesimo.TERRA;
-	}
-
-	@Override
-	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
-		return super.isImmuneAEffetto(effettoStato) ||
-				effettoStato == TipoEffettoDiStato.ATTERRATO;
-	}
 }

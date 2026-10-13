@@ -1,21 +1,16 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
 
-import java.util.EnumSet;
-import java.util.Set;
 import java.util.function.Function;
 
 /**
- * Lo spirito: non morto e volante, ma amichevole. Nel suo repertorio c'è il Gelo; oltre a ciò che vale per tutti i non morti, è
- * immune all'Aria, alla Terra e allo stato atterrato.
+ * Lo spirito: non morto volante, ma amichevole, con le capacità comuni descritte in {@link NonMortoVolante}.
  */
-public class Spirito extends PersonaggioBase implements Personaggio {
+public class Spirito extends NonMortoVolante {
 
 	public String getAIS() { return Misc.UNO; }
 	public String getADS() { return Misc.LO; }
@@ -67,11 +62,6 @@ public class Spirito extends PersonaggioBase implements Personaggio {
 	@Override
 	public double getLivellamentoMagia() {
 		return Costanti.SPIRITO_LIVELLAMENTO_MAGIA;
-	}
-
-	@Override
-	public Set<ClasseIncantesimo> getRepertorioIncantesimi() {
-		return EnumSet.of(ClasseIncantesimo.GELO);
 	}
 
 	@Override
@@ -276,16 +266,4 @@ public class Spirito extends PersonaggioBase implements Personaggio {
 		}
 	}
 
-	@Override
-	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
-		return super.isImmuneAIncantesimo(classeIncantesimo) ||
-				classeIncantesimo == ClasseIncantesimo.ARIA ||
-				classeIncantesimo == ClasseIncantesimo.TERRA;
-	}
-
-	@Override
-	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
-		return super.isImmuneAEffetto(effettoStato) ||
-				effettoStato == TipoEffettoDiStato.ATTERRATO;
-	}
 }
