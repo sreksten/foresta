@@ -3,18 +3,19 @@ package com.threeamigos.foresta.tattiche;
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.incantesimi.LuceDivina;
-import com.threeamigos.foresta.incantesimi.CantoDelBardo;
+import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
-import com.threeamigos.foresta.incantesimi.TipoCanto;
+import com.threeamigos.foresta.canti.TipoCanto;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.StatoDelCombattimento;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.tattiche.PortataAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
 /**
  * Quando un'azione si può fare (tattiche_di_combattimento_automatiche.md §11.9): i requisiti che l'azione porta, e che il giocatore non scrive. Per
@@ -174,7 +175,7 @@ public final class Requisiti {
 
 	private static boolean piuForteDellAttacco(Personaggio attore, Personaggio bersaglio, ClasseIncantesimo classe) {
 		return SceltaIncantesimo.dannoAttesoSuUno(attore, bersaglio, classe)
-				> com.threeamigos.foresta.motore.CalcolatoreCombattimento.dannoAttesoDellaMischia(attore, bersaglio);
+				> com.threeamigos.foresta.combattimento.CalcolatoreCombattimento.dannoAttesoDellaMischia(attore, bersaglio);
 	}
 
 	/**

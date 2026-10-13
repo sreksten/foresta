@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * Contiene la mappa di una istanza della Foresta,

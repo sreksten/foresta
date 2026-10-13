@@ -18,6 +18,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * Il corriere: una cosa da portare da una città all'altra, che il destinatario paga alla consegna; le spedizioni

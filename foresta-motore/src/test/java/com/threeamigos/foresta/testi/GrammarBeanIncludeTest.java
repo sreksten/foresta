@@ -1,6 +1,6 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.testi;
 
-import com.threeamigos.foresta.motore.GrammarBean.InvalidGrammarException;
+import com.threeamigos.foresta.testi.GrammarBean.InvalidGrammarException;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;

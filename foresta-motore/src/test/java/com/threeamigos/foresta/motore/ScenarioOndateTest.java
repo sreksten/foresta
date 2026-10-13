@@ -18,6 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.combattimento.Ondata;
 
 /**
  * Le ondate: sconfitti tutti gli avversari in campo, la locazione si riempie di nuovo, fino a tre ondate in tutto. Con

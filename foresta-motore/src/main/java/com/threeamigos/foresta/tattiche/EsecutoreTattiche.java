@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.tattiche;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
@@ -8,19 +8,15 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
-import com.threeamigos.foresta.incantesimi.FabbricaCanti;
+import com.threeamigos.foresta.canti.FabbricaCanti;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
-import com.threeamigos.foresta.incantesimi.TipoCanto;
+import com.threeamigos.foresta.canti.TipoCanto;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Logger;
-import com.threeamigos.foresta.tattiche.ContestoTattico;
-import com.threeamigos.foresta.tattiche.Decisione;
-import com.threeamigos.foresta.tattiche.SceltaIncantesimo;
-import com.threeamigos.foresta.tattiche.Valutatore;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
@@ -28,6 +24,13 @@ import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.DannoRisultante;
+import com.threeamigos.foresta.combattimento.FaseDiAttacco;
+import com.threeamigos.foresta.combattimento.GruppoDiBersagli;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
+import com.threeamigos.foresta.motore.Gruppo;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 
 /**
  * Esegue le decisioni delle tattiche (tattiche_di_combattimento_automatiche.md §11): il valutatore sceglie (<code>Valutatore.decidi</code>), qui si fa quello che ha

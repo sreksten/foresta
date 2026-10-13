@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 public class TestNomiLocanda extends TestGrammatiche {
 

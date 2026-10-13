@@ -1,14 +1,14 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.incantesimi.Canto;
-import com.threeamigos.foresta.incantesimi.CantoCurativo;
-import com.threeamigos.foresta.incantesimi.CantoDelBardo;
-import com.threeamigos.foresta.incantesimi.CantoDiValore;
-import com.threeamigos.foresta.incantesimi.CantoIpnotico;
-import com.threeamigos.foresta.incantesimi.FabbricaCanti;
-import com.threeamigos.foresta.incantesimi.UrloDellaBanshee;
+import com.threeamigos.foresta.canti.Canto;
+import com.threeamigos.foresta.canti.CantoCurativo;
+import com.threeamigos.foresta.canti.CantoDelBardo;
+import com.threeamigos.foresta.canti.CantoDiValore;
+import com.threeamigos.foresta.canti.CantoIpnotico;
+import com.threeamigos.foresta.canti.FabbricaCanti;
+import com.threeamigos.foresta.canti.UrloDellaBanshee;
 import com.threeamigos.foresta.intermezzi.IntermezzoUrloDellaBanshee;
-import com.threeamigos.foresta.incantesimi.TipoCanto;
+import com.threeamigos.foresta.canti.TipoCanto;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.*;

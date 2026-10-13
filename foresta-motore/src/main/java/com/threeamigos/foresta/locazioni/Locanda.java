@@ -19,6 +19,7 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 public class Locanda extends LocazioneBase {
 

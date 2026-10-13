@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
 /**
  * Quanto sono difficili Lich e Strega, che compaiono al livello del gioco: per ogni livello e classe giocante (con

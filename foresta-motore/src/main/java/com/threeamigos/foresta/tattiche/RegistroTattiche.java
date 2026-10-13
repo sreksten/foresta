@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import com.threeamigos.foresta.canti.CantoDelBardo;
 
 /**
  * Le tattiche base dei mostri (tattiche_di_combattimento_automatiche.md §4): quella di una classe è la sua, se qualcuno gliene ha registrata una, altrimenti
@@ -94,7 +95,7 @@ public final class RegistroTattiche {
 	public static java.util.Set<TipoAzione> azioniPossibili(TipoPersonaggio classe) {
 		java.util.Set<TipoAzione> possibili = java.util.EnumSet.allOf(TipoAzione.class);
 		possibili.remove(TipoAzione.INCANTESIMO_DEL_REPERTORIO);
-		if (!com.threeamigos.foresta.incantesimi.CantoDelBardo.conosciutoDa(classe)) {
+		if (!com.threeamigos.foresta.canti.CantoDelBardo.conosciutoDa(classe)) {
 			possibili.removeAll(java.util.EnumSet.of(TipoAzione.CANTO_CURATIVO, TipoAzione.CANTO_IPNOTICO, TipoAzione.CANTO_DI_VALORE,
 					TipoAzione.URLO_DELLA_BANSHEE));
 		}

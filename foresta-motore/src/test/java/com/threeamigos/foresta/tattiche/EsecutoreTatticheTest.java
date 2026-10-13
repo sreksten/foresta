@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.tattiche;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoDecisioneTattica;
@@ -11,7 +11,6 @@ import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tattiche.Decisione;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -30,6 +29,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
+import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.motore.Gruppo;
 
 /**
  * L'esecutore delle decisioni delle tattiche, da solo (senza una locazione): i gruppi sono fatti sul momento, come nelle simulazioni.
@@ -37,15 +39,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class EsecutoreTatticheTest {
 
     private static Gruppo gruppo(boolean delGiocatore, Personaggio... membri) {
-        Gruppo gruppo = new Gruppo() {
+        return new Gruppo() {
+            {
+                personaggi.addAll(Arrays.asList(membri));
+                capo = membri[0];
+            }
+
             @Override
             public boolean isGruppoGiocatore() {
                 return delGiocatore;
             }
         };
-        gruppo.personaggi.addAll(Arrays.asList(membri));
-        gruppo.capo = membri[0];
-        return gruppo;
     }
 
     private Personaggio mago;

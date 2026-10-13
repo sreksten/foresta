@@ -19,6 +19,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * Il torneo: in città qualcuno lo bandisce, con in palio un leggendario; nella lizza segnata sulla mappa si combattono

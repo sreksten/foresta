@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.incantesimi;
+package com.threeamigos.foresta.canti;
 
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;

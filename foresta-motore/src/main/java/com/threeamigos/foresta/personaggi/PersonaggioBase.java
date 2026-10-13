@@ -29,6 +29,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import com.threeamigos.foresta.oggetti.ArmaNaturale;
 import com.threeamigos.foresta.oggetti.RegoleSetLeggendari;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.DannoRisultante;
+import com.threeamigos.foresta.combattimento.FaseDiAttacco;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 /*
  * I personaggi originali della Foresta su ZX Spectrum:

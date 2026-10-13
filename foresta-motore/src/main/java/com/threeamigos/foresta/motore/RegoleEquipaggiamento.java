@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.EnumSet;
 import java.util.Optional;
 import java.util.Set;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
 /**
  * Regole a slot per l'equipaggiamento di un personaggio (vedi artefatti_e_incantamenti.md, §2 "Equipaggiamento"):

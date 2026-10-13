@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
 /**
  * Esempio di dado truccato: il tiro per colpire (d100 contro una probabilità limitata tra 5 e 95) deciso dal test.

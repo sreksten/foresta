@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 /**
  * La tattica del personaggio comanda il combattimento automatico (tattiche_di_combattimento_automatiche.md §11): a ogni scatto del TIMER il personaggio

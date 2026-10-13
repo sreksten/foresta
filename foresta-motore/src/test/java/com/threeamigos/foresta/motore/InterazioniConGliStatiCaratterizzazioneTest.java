@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.DannoRisultante;
 
 /**
  * Caratterizzazione di CalcolatoreCombattimento.calcolaDannoRisultante per le interazioni fra tipi di danno e stati del

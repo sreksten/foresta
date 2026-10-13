@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.testi;
 
 /**
  * Controls how {@link GrammarBean} picks an alternative among a production's children.

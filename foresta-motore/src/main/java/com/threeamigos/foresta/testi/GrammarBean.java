@@ -1,10 +1,11 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.testi;
 
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.motore.Dado;
 
 /**
  * Reads a text-based grammar file and uses it to randomly generate ("produce") text

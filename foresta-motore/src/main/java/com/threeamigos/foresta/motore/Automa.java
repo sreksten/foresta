@@ -9,8 +9,8 @@ import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.incantesimi.LuceDivina;
-import com.threeamigos.foresta.incantesimi.CantoDelBardo;
-import com.threeamigos.foresta.incantesimi.TipoCanto;
+import com.threeamigos.foresta.canti.CantoDelBardo;
+import com.threeamigos.foresta.canti.TipoCanto;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
@@ -53,6 +53,8 @@ import java.util.function.Supplier;
 import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 public class Automa implements ControlloreDiGioco, Temporizzabile {
 

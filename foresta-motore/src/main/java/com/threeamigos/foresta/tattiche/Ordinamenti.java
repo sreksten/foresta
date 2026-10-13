@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.tattiche;
 
 import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
-import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.personaggi.Personaggio;
 

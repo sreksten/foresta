@@ -12,6 +12,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * La documentazione: i posti da documentare si segnano sulla mappa uno alla volta; in ognuno si annota che cosa si è

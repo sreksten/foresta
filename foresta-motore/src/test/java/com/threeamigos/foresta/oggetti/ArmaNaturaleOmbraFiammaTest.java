@@ -12,8 +12,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
-import com.threeamigos.foresta.motore.FaseDiAttacco;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.FaseDiAttacco;
 
 /**
  * L'attacco naturale dell'Ombrafiamma è il fuoco, ma contro chi è immune al fuoco (i draghi) ripiega sugli artigli:

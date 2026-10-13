@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * I templi hanno un nome preso da templi.txt, diverso per ognuno, che si salva con la casella.

@@ -5,7 +5,7 @@ import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
-import com.threeamigos.foresta.motore.StatoDelCombattimento;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;

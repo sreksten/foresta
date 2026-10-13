@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.testi.GrammarBean;
+
 public class TestFiabe extends TestGrammatiche {
 
 	public static void main(String[] args) throws Exception {

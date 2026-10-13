@@ -19,6 +19,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * Il rito: si raccolgono gli ingredienti, poi nel posto segnato sulla mappa si decide se cominciarlo, o come; a volte

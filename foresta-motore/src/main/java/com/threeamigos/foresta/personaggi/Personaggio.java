@@ -15,6 +15,7 @@ import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 
 import java.util.Collection;
 import java.util.Optional;
+import com.threeamigos.foresta.combattimento.DannoRisultante;
 
 /**
  * Un personaggio: le letture stanno in VistaPersonaggio, che è quel che ne vede la UI.

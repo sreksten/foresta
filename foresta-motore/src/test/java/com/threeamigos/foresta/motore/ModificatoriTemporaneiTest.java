@@ -24,6 +24,8 @@ import java.util.Collection;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.DannoRisultante;
 
 /**
  * I modificatori di attributo a tempo (vedi modificatori_temporanei.md): durata in turni o in locazioni, bersaglio,

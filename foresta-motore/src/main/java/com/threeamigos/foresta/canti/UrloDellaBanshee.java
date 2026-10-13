@@ -1,8 +1,8 @@
-package com.threeamigos.foresta.incantesimi;
+package com.threeamigos.foresta.canti;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.Gruppo;

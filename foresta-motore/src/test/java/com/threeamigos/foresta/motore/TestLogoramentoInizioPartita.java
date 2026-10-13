@@ -26,6 +26,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.FaseDiAttacco;
 
 /**
  * Il logoramento a inizio partita: un protagonista di livello 1 con la dotazione di base (EquipaggiamentoIniziale),

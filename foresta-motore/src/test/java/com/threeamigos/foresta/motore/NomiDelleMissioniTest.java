@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * La grammatica missioni.txt dà i nomi di ostaggi e capibanda.

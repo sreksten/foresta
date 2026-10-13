@@ -18,6 +18,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * Le richieste di materiali dell'alchimista, dell'armaiolo, del capitano delle guardie e del locandiere: ogni riga di missioni.txt si

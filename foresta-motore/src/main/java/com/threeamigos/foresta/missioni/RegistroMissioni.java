@@ -20,7 +20,7 @@ import java.util.*;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Ondata;
+import com.threeamigos.foresta.combattimento.Ondata;
 import com.threeamigos.foresta.motore.Quadrante;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 

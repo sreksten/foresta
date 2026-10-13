@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * Gli identificativi degli intermezzi già mostrati nella partita corrente: un intermezzo
  * non ha progressi, quindi basta ricordare che è scattato. La logica vive in
- * {@code motore.RegistroIntermezzi}.
+ * {@code intermezzi.RegistroIntermezzi}.
  *
  * @author Stefano Reksten
  */

@@ -2,7 +2,7 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.oggetti.CatalogoLeggendari;
 import com.threeamigos.foresta.motore.Dado;
-import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.ArrayList;

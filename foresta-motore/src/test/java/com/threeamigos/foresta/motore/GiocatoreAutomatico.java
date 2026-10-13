@@ -26,6 +26,9 @@ import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.FaseDiAttacco;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 /**
  * Il giocatore automatico di {@link SimulazionePartiteTest}: gioca una partita vera (senza la modalità di prova)

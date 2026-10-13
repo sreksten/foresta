@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 /**
  * Il combattimento a round (vedi tattiche_di_combattimento_automatiche.md §3): a ogni scatto del TIMER agisce una sola volta il prossimo

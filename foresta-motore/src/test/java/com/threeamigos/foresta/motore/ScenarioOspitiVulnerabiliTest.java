@@ -18,6 +18,8 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
+import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
 
 /**
  * Un ospite vulnerabile (un ostaggio, un ferito da soccorrere) non combatte ma gli avversari lo possono attaccare,

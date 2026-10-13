@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import com.threeamigos.foresta.motore.OfferteAlchimista;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 public abstract class Citta extends LocazioneUnica {
 

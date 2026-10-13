@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.testi.GrammarBean;
+
 /**
  *
  * @author Stefano Reksten

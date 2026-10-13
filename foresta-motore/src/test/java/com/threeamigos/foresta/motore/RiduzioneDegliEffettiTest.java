@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.DannoRisultante;
 
 /**
  * Chi resiste a un tipo di danno (moltiplicatore fra 0 e 1) ne subisce meno anche gli effetti: gli stati nativi del tipo di danno

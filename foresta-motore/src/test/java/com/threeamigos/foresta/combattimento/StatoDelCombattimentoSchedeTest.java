@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.combattimento;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.modellodati.ModelloDati;

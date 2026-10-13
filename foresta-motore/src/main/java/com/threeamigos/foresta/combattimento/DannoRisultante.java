@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.combattimento;
 
 import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;

@@ -3,7 +3,7 @@ package com.threeamigos.foresta.tattiche;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.StatoDelCombattimento;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 /**
  * Il cambio d'arma come azione sola: controllo preventivo, esecuzione, massimo di cambi e filtro per tipo di danno.

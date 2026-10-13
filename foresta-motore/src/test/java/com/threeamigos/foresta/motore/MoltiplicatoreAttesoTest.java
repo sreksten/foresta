@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
 /**
  * Il fattore del danno atteso contro un difensore (CalcolatoreCombattimento.moltiplicatoreAtteso): la debolezza della

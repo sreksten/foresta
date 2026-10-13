@@ -7,6 +7,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * Il repertorio delle notizie di una locanda è di cinque: tornandoci spesso si esaurisce (tutte fra le ultime pubblicate) e

@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.testi;
 
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.motore.Dado;
 
 class GrammarBeanTest {
 

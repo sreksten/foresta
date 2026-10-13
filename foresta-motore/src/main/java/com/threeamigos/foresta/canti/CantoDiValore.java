@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.incantesimi;
+package com.threeamigos.foresta.canti;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;

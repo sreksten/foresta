@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 /**
  * Regressioni dei bug corretti dopo l'indagine sul codice.

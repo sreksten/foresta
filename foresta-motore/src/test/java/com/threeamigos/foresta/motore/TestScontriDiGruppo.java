@@ -21,6 +21,9 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.DannoRisultante;
+import com.threeamigos.foresta.combattimento.FaseDiAttacco;
 
 /**
  * Scontri di un gruppo di personaggi giocanti (ognuno con la sua prima dotazione tipica, del suo livello) contro boss

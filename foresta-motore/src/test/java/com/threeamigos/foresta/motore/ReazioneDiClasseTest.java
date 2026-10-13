@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
 /**
  * Quando un personaggio, per la sua classe, è debole, resiste o è immune al tipo di danno che subisce, il danno si moltiplica e

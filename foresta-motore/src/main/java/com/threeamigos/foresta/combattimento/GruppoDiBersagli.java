@@ -1,8 +1,9 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.combattimento;
 
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.List;
+import com.threeamigos.foresta.motore.Gruppo;
 
 /**
  * Un gruppo fatto sul momento con i bersagli scelti di un incantesimo a più bersagli (la tattica sceglie il principale e i successivi): l'incantesimo

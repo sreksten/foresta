@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.combattimento;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoInizioRound;
@@ -18,6 +18,9 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import com.threeamigos.foresta.motore.Gruppo;
+import com.threeamigos.foresta.motore.GruppoAvversario;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 
 /**
  * La memoria di un combattimento, che le tattiche leggono (vedi tattiche_di_combattimento_automatiche.md §3.3): non fa
@@ -56,7 +59,7 @@ public class StatoDelCombattimento {
 	/**
 	 * Dimentica lo stato corrente. Serve ai test (vedi GruppoGiocatore.azzeraIstanza).
 	 */
-	static void azzeraIstanza() {
+	public static void azzeraIstanza() {
 		istanza = null;
 	}
 

@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.combattimento;
 
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.threeamigos.foresta.motore.Costanti;
 
 /**
  * I moltiplicatori di danno delle classi (Costanti.*_MOLTIPLICATORE_DANNI_FISICI e _MAGICI): a parità di statistiche

@@ -5,6 +5,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import com.threeamigos.foresta.combattimento.Ondata;
 
 public class GruppoAvversario extends Gruppo {
 
@@ -28,7 +29,7 @@ public class GruppoAvversario extends Gruppo {
 	/**
 	 * Dimentica il gruppo avversario corrente. Serve ai test (vedi GruppoGiocatore.azzeraIstanza).
 	 */
-	static void azzeraIstanza() {
+	public static void azzeraIstanza() {
 		gruppoAvversario = null;
 	}
 

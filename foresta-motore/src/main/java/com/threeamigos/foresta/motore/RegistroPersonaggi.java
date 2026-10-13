@@ -15,6 +15,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 public class RegistroPersonaggi {
 

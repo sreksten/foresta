@@ -949,7 +949,7 @@ senza una tattica base in `TatticheBase` (`RegistroTattiche.perClasse`: quella r
 
 ### 11.14 L'esecutore condiviso
 
-(`motore/EsecutoreTattiche`, `EsecutoreTatticheTest`). Il valutatore sceglie, l'esecutore fa: un attacco con le armi sul bersaglio scelto, un incantesimo (con il `GruppoDiBersagli` per i `MULTIPLO`, la pergamena consumata, l'esito registrato), il dardo arcano, i benefici, i canti, le pozioni, il
+(`tattiche/EsecutoreTattiche`, `EsecutoreTatticheTest`). Il valutatore sceglie, l'esecutore fa: un attacco con le armi sul bersaglio scelto, un incantesimo (con il `GruppoDiBersagli` per i `MULTIPLO`, la pergamena consumata, l'esito registrato), il dardo arcano, i benefici, i canti, le pozioni, il
 cambio d'arma. `agisci(attore, tattica)` decide, pubblica l'`InternoDecisioneTattica`, esegue e ricorda l'uso della voce, e restituisce la decisione (null se non c'era niente da fare). Non gestisce il round né la fine dello scontro: chi lo chiama guarda se gli avversari sono finiti o se è
 caduto il capo. Gli avversari messi fuori combattimento dai miei li comunica a un `RegistroUccisioni` (nel gioco danno esperienza e punti, `LocazioneBase.registraUccisione`; nelle simulazioni niente).
 

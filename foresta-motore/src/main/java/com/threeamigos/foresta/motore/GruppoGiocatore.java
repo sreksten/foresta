@@ -52,6 +52,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import com.threeamigos.foresta.oggetti.CatalogoLeggendari;
 import com.threeamigos.foresta.oggetti.RegoleSetLeggendari;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 /**
  * Un insieme di personaggi guidati da un giocatore
@@ -79,7 +80,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	 * Dimentica il gruppo corrente: il prossimo getIstanza() ne crea uno nuovo sul ModelloDati installato.
 	 * Serve ai test, che ricostruiscono una partita da zero a ogni prova.
 	 */
-	static void azzeraIstanza() {
+	public static void azzeraIstanza() {
 		istanza = null;
 	}
 

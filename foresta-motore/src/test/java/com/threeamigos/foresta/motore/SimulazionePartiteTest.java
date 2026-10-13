@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.function.ToDoubleFunction;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 /**
  * Partite vere (senza la modalità di prova) giocate da un giocatore automatico, per avere dei numeri sul

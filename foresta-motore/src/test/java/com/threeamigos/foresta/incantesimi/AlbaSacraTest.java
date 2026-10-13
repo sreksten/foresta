@@ -2,7 +2,7 @@ package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.Gruppo;
-import com.threeamigos.foresta.motore.StatoDelCombattimento;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;

@@ -1,10 +1,10 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.testi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.NotiziaMD;
-import com.threeamigos.foresta.motore.GrammarBean.InvalidGrammarException;
+import com.threeamigos.foresta.testi.GrammarBean.InvalidGrammarException;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Logger;
@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 
 public class ProduttoreDiTestiCasuale {
 
@@ -41,7 +42,7 @@ public class ProduttoreDiTestiCasuale {
 	 * Non fa nulla: chiamarlo basta a caricare subito le grammatiche, che il blocco statico legge al primo uso della
 	 * classe (vedi Automa, stato LOGO_INIZIALE).
 	 */
-	static void precarica() {
+	public static void precarica() {
 		// il lavoro lo fa il blocco statico
 	}
 
@@ -374,7 +375,7 @@ public class ProduttoreDiTestiCasuale {
 			contenuto = sostituisci(contenuto, TipoPersonaggio.ELFA, TipoPersonaggio.ELFO);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.ELFO, TipoPersonaggio.ELFA);
 		}
-		Personaggio eroe = GruppoGiocatore.getIstanza().capo;
+		Personaggio eroe = GruppoGiocatore.getIstanza().getCapo();
 		contenuto = contenuto.replace("EROE", eroe.getNomeProprio().orElseThrow(() -> new IllegalStateException("Personaggio senza nome proprio")));
 		contenuto = contenuto.replace("LETTERA_FINALE", eroe.getLetteraFinaleAttributo());
 		return contenuto;

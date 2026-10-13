@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
 /**
  * Il dardo arcano, l'incantesimo innato di Mago ed Elfo. Il critico è neutralizzato, così i danni sono deterministici.

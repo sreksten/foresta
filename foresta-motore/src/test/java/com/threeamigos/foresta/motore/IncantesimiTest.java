@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
 /**
  * Il POTERE_MAGICO (bastoni, libri) aumenta i danni degli incantesimi, la riserva di MAGIA no; Morte uccide solo

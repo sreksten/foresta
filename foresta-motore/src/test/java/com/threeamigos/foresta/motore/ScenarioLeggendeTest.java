@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.oggetti.CatalogoLeggendari;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * Le leggende: l'armaiolo in città o il locandiere in una locanda raccontano la leggenda di un oggetto leggendario di

@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.combattimento;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
@@ -22,6 +22,9 @@ import java.util.Optional;
 import java.util.Set;
 import com.threeamigos.foresta.oggetti.ArmaNaturale;
 import com.threeamigos.foresta.oggetti.RegoleSetLeggendari;
+import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.motore.ModalitaDiProva;
 
 /**
  *
@@ -767,7 +770,7 @@ public class CalcolatoreCombattimento {
      * resiste, altrimenti 1. Chi è debole subisce più danno ma non più effetti. Per chi è immune (0) non scatta niente, ma
      * l'immunità l'ha già esclusa il calcolo del danno.
      */
-    static double fattoreEffetti(Personaggio difensore, TipoDanno tipoDanno) {
+    public static double fattoreEffetti(Personaggio difensore, TipoDanno tipoDanno) {
         return Math.min(1.0d, difensore.getMoltiplicatoreDannoSubito(tipoDanno));
     }
 

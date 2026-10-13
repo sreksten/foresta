@@ -41,6 +41,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
+import com.threeamigos.foresta.canti.CantoDelBardo;
+import com.threeamigos.foresta.canti.FabbricaCanti;
+import com.threeamigos.foresta.canti.TipoCanto;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.DannoRisultante;
+import com.threeamigos.foresta.combattimento.FaseDiAttacco;
+import com.threeamigos.foresta.combattimento.Ondata;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
+import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * La locazione è un automa a stati finiti. Un gruppo mentre si sposta per

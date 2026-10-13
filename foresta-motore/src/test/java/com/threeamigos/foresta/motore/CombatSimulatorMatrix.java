@@ -13,6 +13,9 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.DannoRisultante;
+import com.threeamigos.foresta.combattimento.FaseDiAttacco;
 
 /**
  * Simulatore di combattimento isolato (Monte Carlo Matrix Test), non collegato allo stato

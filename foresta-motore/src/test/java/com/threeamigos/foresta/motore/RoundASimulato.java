@@ -7,6 +7,8 @@ import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
+import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
 
 /**
  * Il round a coppie del gioco (vedi tattiche_di_combattimento_automatiche.md §3 e {@link StatoDelCombattimento}) per le simulazioni che
