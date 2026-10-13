@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tattiche;
+package com.threeamigos.foresta.tattiche.valutazione;
 
 import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
 import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
@@ -23,6 +23,8 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 
 /**
  * Le condizioni di una voce che non sono un controllo su un personaggio (tattiche_di_combattimento_automatiche.md §11.8).

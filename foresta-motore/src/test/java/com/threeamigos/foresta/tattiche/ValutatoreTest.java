@@ -39,6 +39,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.tattiche.valutazione.SceltaIncantesimo;
 
 /**
  * Il valutatore: scorre la tattica di un personaggio e decide che cosa fa (tattiche_di_combattimento_automatiche.md §11).

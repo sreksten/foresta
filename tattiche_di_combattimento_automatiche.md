@@ -689,7 +689,7 @@ Il **selettore** può mancare (`null`): vale allora quello di base della portata
 ### 11.3 La rosa dei candidati
 
 La rosa è l'insieme da cui il selettore pesca, prima dei filtri. Il suo nome è un enumerato (`tipi/tattiche/TipoRosa`, che serve anche alla UI), e chi calcola i candidati è la classe
-corrispondente (`tattiche/Rosa`, una per valore: `RosaAlleati`, `RosaOspiti`..., si trovano con `Rose.di(tipo)`); il metodo restituisce una **`List<Personaggio>`** (non uno `Stream`: il registro delle decisioni, §7.7, deve
+corrispondente (`tattiche/rose/Rosa`, una per valore: `RosaAlleati`, `RosaOspiti`..., si trovano con `Rose.di(tipo)`); il metodo restituisce una **`List<Personaggio>`** (non uno `Stream`: il registro delle decisioni, §7.7, deve
 poter dire quanti candidati c'erano e quanti ne sono rimasti dopo ogni filtro; le liste sono piccole).
 
 ```java

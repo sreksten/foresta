@@ -12,6 +12,11 @@ import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.threeamigos.foresta.tattiche.rose.Rose;
+import com.threeamigos.foresta.tattiche.valutazione.Predicati;
+import com.threeamigos.foresta.tattiche.valutazione.Requisiti;
+import com.threeamigos.foresta.tattiche.valutazione.SceltaIncantesimo;
+import com.threeamigos.foresta.tattiche.valutazione.Selettori;
 
 /**
  * Scorre la tattica di un personaggio e decide che cosa fa (tattiche_di_combattimento_automatiche.md §1, §11): la prima voce eseguibile vince. Una voce è

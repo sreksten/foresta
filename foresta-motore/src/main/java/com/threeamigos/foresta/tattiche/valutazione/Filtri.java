@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tattiche;
+package com.threeamigos.foresta.tattiche.valutazione;
 
 import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
@@ -15,6 +15,7 @@ import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
 
 import java.util.EnumMap;
 import java.util.Map;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
 
 /**
  * La risposta di ogni {@link TipoFiltro} per un candidato (tattiche_di_combattimento_automatiche.md §11.5). Senza stato: quello che serve
@@ -76,7 +77,7 @@ public final class Filtri {
 	/**
 	 * Se per ogni tipo di filtro c'è la sua risposta (lo controlla un test)
 	 */
-	static boolean haLaSuaRisposta(TipoFiltro tipo) {
+	public static boolean haLaSuaRisposta(TipoFiltro tipo) {
 		return VERIFICHE.containsKey(tipo);
 	}
 

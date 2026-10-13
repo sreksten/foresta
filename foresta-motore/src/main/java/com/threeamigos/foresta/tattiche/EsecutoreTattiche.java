@@ -31,6 +31,7 @@ import com.threeamigos.foresta.combattimento.GruppoDiBersagli;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.tattiche.valutazione.SceltaIncantesimo;
 
 /**
  * Esegue le decisioni delle tattiche (tattiche_di_combattimento_automatiche.md §11): il valutatore sceglie (<code>Valutatore.decidi</code>), qui si fa quello che ha

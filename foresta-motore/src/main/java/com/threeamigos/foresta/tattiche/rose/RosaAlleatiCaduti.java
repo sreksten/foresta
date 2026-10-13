@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tattiche;
+package com.threeamigos.foresta.tattiche.rose;
 
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
@@ -6,6 +6,7 @@ import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
 
 /**
  * I compagni caduti, per la Resurrezione. Chi è in panchina non è caduto: è vivo, solo fuori dallo scontro.

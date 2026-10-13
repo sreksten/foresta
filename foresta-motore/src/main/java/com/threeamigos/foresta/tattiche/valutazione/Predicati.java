@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tattiche;
+package com.threeamigos.foresta.tattiche.valutazione;
 
 import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
 import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
@@ -11,6 +11,8 @@ import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
 
 import java.util.EnumMap;
 import java.util.Map;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
+import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
 
 /**
  * La risposta di ogni {@link TipoPredicato} (tattiche_di_combattimento_automatiche.md §11.8). I predicati sulla voce (VOCE_USATA,

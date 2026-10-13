@@ -30,6 +30,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.tattiche.valutazione.Filtri;
+import com.threeamigos.foresta.tattiche.valutazione.Ordinamenti;
+import com.threeamigos.foresta.tattiche.valutazione.Selettori;
 
 /**
  * Il "SU" di una voce di tattica: i filtri, gli ordinamenti e il selettore che li mette insieme (tattiche_di_combattimento_automatiche.md §11.5, §11.6).

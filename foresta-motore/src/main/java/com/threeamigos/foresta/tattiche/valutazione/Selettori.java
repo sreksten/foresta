@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tattiche;
+package com.threeamigos.foresta.tattiche.valutazione;
 
 import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
 import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
+import com.threeamigos.foresta.tattiche.RisultatoSelezione;
+import com.threeamigos.foresta.tattiche.rose.Rose;
 
 /**
  * Applica un {@link SelettoreMD} (tattiche_di_combattimento_automatiche.md §11.2): la rosa, i filtri in AND e l'ordinamento che sceglie uno fra i

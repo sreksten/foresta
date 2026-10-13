@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tattiche;
+package com.threeamigos.foresta.tattiche.rose;
 
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 
@@ -29,6 +29,9 @@ public final class Rose {
 		ROSE.put(rosa.getTipo(), rosa);
 	}
 
+	/**
+	 * La rosa che corrisponde a quel tipo.
+	 */
 	public static Rosa di(TipoRosa tipo) {
 		return ROSE.get(tipo);
 	}

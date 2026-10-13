@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.tattiche.valutazione.Astuzia;
 
 /**
  * Le tattiche base (TatticheBase): quelle dei mostri e quelle predefinite dei personaggi giocabili sono valide, si salvano e si rileggono, e

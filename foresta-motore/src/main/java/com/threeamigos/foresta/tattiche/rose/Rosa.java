@@ -1,9 +1,10 @@
-package com.threeamigos.foresta.tattiche;
+package com.threeamigos.foresta.tattiche.rose;
 
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 
 import java.util.List;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
 
 /**
  * L'insieme da cui il selettore di una voce pesca i candidati, prima dei filtri (vedi tattiche_di_combattimento_automatiche.md §11.3).

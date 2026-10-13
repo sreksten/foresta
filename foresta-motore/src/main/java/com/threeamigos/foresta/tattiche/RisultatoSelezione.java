@@ -15,7 +15,7 @@ public final class RisultatoSelezione {
 	private final List<Personaggio> rimasti;
 	private final List<String> passi;
 
-	RisultatoSelezione(Personaggio scelto, List<Personaggio> rimasti, List<String> passi) {
+	public RisultatoSelezione(Personaggio scelto, List<Personaggio> rimasti, List<String> passi) {
 		this.scelto = scelto;
 		this.rimasti = Collections.unmodifiableList(rimasti);
 		this.passi = Collections.unmodifiableList(passi);

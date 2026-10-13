@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tattiche;
+package com.threeamigos.foresta.tattiche.valutazione;
 
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
@@ -17,6 +17,9 @@ import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * Quale dei sette incantesimi elementali lancia <code>INCANTESIMO_DI_DANNO</code> contro un bersaglio, secondo il suo criterio
@@ -27,7 +30,7 @@ public final class SceltaIncantesimo {
 	/**
 	 * Gli incantesimi che "del repertorio" comprende: non la Morte (può ritorcersi contro chi la lancia), non il Silenzio, non i benefici
 	 */
-	static final List<ClasseIncantesimo> ELEMENTALI = Arrays.asList(ClasseIncantesimo.ARIA, ClasseIncantesimo.ACQUA, ClasseIncantesimo.TERRA,
+	public static final List<ClasseIncantesimo> ELEMENTALI = Arrays.asList(ClasseIncantesimo.ARIA, ClasseIncantesimo.ACQUA, ClasseIncantesimo.TERRA,
 			ClasseIncantesimo.FUOCO, ClasseIncantesimo.FULMINE, ClasseIncantesimo.GELO, ClasseIncantesimo.VELENO);
 
 	/**

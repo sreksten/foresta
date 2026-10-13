@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tattiche;
+package com.threeamigos.foresta.tattiche.valutazione;
 
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
@@ -16,6 +16,7 @@ import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.tattiche.PortataAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
 
 /**
  * Quando un'azione si può fare (tattiche_di_combattimento_automatiche.md §11.9): i requisiti che l'azione porta, e che il giocatore non scrive. Per

@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tattiche;
+package com.threeamigos.foresta.tattiche.valutazione;
 
 import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
@@ -6,6 +6,8 @@ import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.List;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
+import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
 
 /**
  * Sceglie uno fra i candidati con un {@link OrdinamentoMD} (tattiche_di_combattimento_automatiche.md §11.6). A parità di misura vince il primo
