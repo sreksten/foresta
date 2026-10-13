@@ -17,6 +17,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
 import com.threeamigos.foresta.missioni.richieste.OndateDellaRiga;
 import com.threeamigos.foresta.missioni.richieste.SorveglianzaRichiesta;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
 
 /**
  * In città qualcuno vuole che si tenga d'occhio un posto nella foresta: vegliare una tomba, scoprire chi passa da un

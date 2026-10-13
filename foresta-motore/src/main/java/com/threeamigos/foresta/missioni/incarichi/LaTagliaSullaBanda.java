@@ -13,6 +13,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
 
 /**
  * In città c'è una taglia sul capo di una banda di hobgoblin che si nasconde in un bosco: la missione rivendica il

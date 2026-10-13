@@ -14,6 +14,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
 
 /**
  * In città una donna chiede di accompagnare suo fratello, un pellegrino, fino a un tempio nella foresta: la

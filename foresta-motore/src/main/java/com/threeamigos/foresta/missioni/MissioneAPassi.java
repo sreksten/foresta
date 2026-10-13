@@ -623,7 +623,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * {@link #getRisposta}). Diventano figlie di questa missione, attive, si controllano e si salvano con lei; la
 	 * chiave serve a ritrovarle (vedi {@link #getMissioniAffidate}) e ad affidarle una volta sola. Le missioni
 	 * affidate non devono essere ripetibili. Per aspettare che finiscano c'è {@link #attendiLeAffidate}.
-	 * <pre>
+	 * <pre>{@code
 	 * case FAVORE:
 	 *     return affida(FAVORE, MomentoControllo.IN_LOCAZIONE, () -> true,
 	 *             () -> "1".equals(getRisposta(SCELTA)) ? Arrays.asList(new IlFavore()) : Arrays.asList(new AltroFavore()))
@@ -631,7 +631,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * case ATTESA:
 	 *     return attendiLeAffidate(FAVORE, MomentoControllo.POST_LOCAZIONE)
 	 *         .poi(() -> sonoRiusciteLeAffidate(FAVORE) ? RICOMPENSA : FALLIMENTO);
-	 * </pre>
+	 * }</pre>
 	 */
 	protected final Passo affida(String chiave, MomentoControllo momento, BooleanSupplier quando, Supplier<List<Missione>> missioni) {
 		String proprieta = AFFIDATE + validaId(chiave);

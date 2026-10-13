@@ -17,6 +17,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
 import com.threeamigos.foresta.missioni.richieste.CombattimentoRichiesto;
 import com.threeamigos.foresta.missioni.richieste.OndateDellaRiga;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
 
 /**
  * In città qualcuno vuole sconfitto qualcosa che si nasconde nella foresta: una bestia rara, una banda in un covo, una

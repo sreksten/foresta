@@ -7,6 +7,7 @@ import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
 
 /**
  * Il cartografo: in città un cartografo vuole sapere che cosa c'è nella foresta, e paga il gruppo perché esplori un

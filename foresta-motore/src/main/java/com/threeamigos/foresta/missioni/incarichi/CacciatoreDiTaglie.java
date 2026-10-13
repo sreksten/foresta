@@ -14,6 +14,7 @@ import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
 
 /**
  * Il cacciatore di taglie: in città c'è un manifesto con una taglia sul capo di una banda di goblin, un hobgoblin. La
