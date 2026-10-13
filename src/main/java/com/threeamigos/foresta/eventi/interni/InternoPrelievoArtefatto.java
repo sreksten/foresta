@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazionePrelievoArtefatto;
+import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
@@ -22,5 +24,19 @@ public class InternoPrelievoArtefatto extends InternoSpostamentoArtefatto<Oggett
     public InternoPrelievoArtefatto(ScambiatoreArtefatti parteAttiva, ScambiatoreArtefatti parteRemota,
                                     OggettoConPeso oggettoDaPrelevare, VistaScambio scambio) {
         super(TipoEvento.INTERNO_PRELIEVO_ARTEFATTO, parteAttiva, parteRemota, oggettoDaPrelevare, scambio);
+    }
+
+    /**
+     * La notifica con cui si approva la richiesta.
+     */
+    public NotificaApprovazionePrelievoArtefatto approvazione() {
+        return new NotificaApprovazionePrelievoArtefatto(getScambio(), getOggettoDaSpostare(), getUuid());
+    }
+
+    /**
+     * La notifica con cui si rifiuta la richiesta.
+     */
+    public NotificaRifiutoPrelievoArtefatto rifiuto(String motivo) {
+        return new NotificaRifiutoPrelievoArtefatto(getScambio(), getOggettoDaSpostare(), getUuid(), motivo);
     }
 }

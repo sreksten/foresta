@@ -365,7 +365,7 @@ class CombattimentoConTatticheTest {
         java.io.PrintStream originale = System.out;
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(609)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
-            new com.threeamigos.foresta.eventi.SnifferBusEventi();
+            new com.threeamigos.foresta.SnifferBusEventi();
             System.setOut(new java.io.PrintStream(catturato, true));
             Personaggio capo = partita.gruppo().getCapo();
             com.threeamigos.foresta.eventi.BusEventi.pubblica(new InternoDecisioneTattica(capo, null, TipoAzione.CANTO_DI_VALORE, 2,

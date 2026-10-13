@@ -33,11 +33,10 @@ class DipendenzeEventiTest {
 
 	/**
 	 * Gli eventi interni al motore, che la UI non riceve (chi li crea e chi li consuma sta nel motore e nel dominio),
-	 * più lo sniffer, che li scrive nel log. Quando uno smette di importare il dominio, va tolto da qui (il test lo
+	 * Quando uno smette di importare il dominio, va tolto da qui (il test lo
 	 * pretende).
 	 */
 	private static final Set<String> ECCEZIONI = new TreeSet<>(Arrays.asList(
-			"SnifferBusEventi.java",
 			"interni/InternoAcquistoArtefatto.java",
 			"interni/InternoCreazionePersonaggio.java",
 			"interni/InternoIncantatura.java",
@@ -74,7 +73,7 @@ class DipendenzeEventiTest {
 	@Test
 	void leEccezioniSonoTutteInterne() {
 		for (String nome : ECCEZIONI) {
-			assertTrue(nome.startsWith("interni/") || nome.equals("SnifferBusEventi.java"), nome);
+			assertTrue(nome.startsWith("interni/"), nome);
 		}
 	}
 

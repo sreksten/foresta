@@ -1,7 +1,6 @@
 package com.threeamigos.foresta;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.SnifferBusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoInterfacciaUtentePronta;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;

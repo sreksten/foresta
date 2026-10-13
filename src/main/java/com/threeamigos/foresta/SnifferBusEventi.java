@@ -1,7 +1,8 @@
-package com.threeamigos.foresta.eventi;
+package com.threeamigos.foresta;
 
 import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 
+import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;

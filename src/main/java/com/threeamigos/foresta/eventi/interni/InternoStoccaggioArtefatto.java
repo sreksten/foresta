@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneStoccaggioArtefatto;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
@@ -24,5 +25,12 @@ public class InternoStoccaggioArtefatto extends InternoSpostamentoArtefatto<Ogge
     public InternoStoccaggioArtefatto(ScambiatoreArtefatti parteAttiva, ScambiatoreArtefatti parteRemota,
                                       OggettoConPeso oggettoDaStoccare, VistaScambio scambio) {
         super(TipoEvento.INTERNO_STOCCAGGIO_ARTEFATTO, parteAttiva, parteRemota, oggettoDaStoccare, scambio);
+    }
+
+    /**
+     * La notifica con cui si approva la richiesta.
+     */
+    public NotificaApprovazioneStoccaggioArtefatto approvazione() {
+        return new NotificaApprovazioneStoccaggioArtefatto(getScambio(), getOggettoDaSpostare(), getUuid());
     }
 }

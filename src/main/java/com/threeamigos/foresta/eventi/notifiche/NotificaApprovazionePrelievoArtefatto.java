@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.eventi.interni.InternoPrelievoArtefatto;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
+import com.threeamigos.foresta.interfacce.VistaScambio;
 
 /**
  * Il GruppoGiocatore (che controlla il peso dell'Artefatto e la disponibilità di carico di un Personaggio)
@@ -14,9 +14,11 @@ import com.threeamigos.foresta.interfacce.OggettoConPeso;
 public class NotificaApprovazionePrelievoArtefatto extends NotificaApprovazioneSpostamentoArtefatto<OggettoConPeso> {
 
     /**
-     * @param eventoRichiestaPrelievoArtefatto la richiesta di prelievo di un Artefatto che si approva
+     * @param scambio lo scambio aperto da cui veniva la richiesta, o null
+     * @param oggetto l'oggetto di cui si chiedeva lo spostamento
+     * @param uuidRichiesta l'identificativo della richiesta
      */
-    public NotificaApprovazionePrelievoArtefatto(InternoPrelievoArtefatto eventoRichiestaPrelievoArtefatto) {
-        super(TipoEvento.NOTIFICA_APPROVAZIONE_PRELIEVO_ARTEFATTO, eventoRichiestaPrelievoArtefatto);
+    public NotificaApprovazionePrelievoArtefatto(VistaScambio scambio, OggettoConPeso oggetto, String uuidRichiesta) {
+        super(TipoEvento.NOTIFICA_APPROVAZIONE_PRELIEVO_ARTEFATTO, scambio, oggetto, uuidRichiesta);
     }
 }

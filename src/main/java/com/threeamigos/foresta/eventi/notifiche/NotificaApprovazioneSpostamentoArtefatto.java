@@ -2,7 +2,6 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.eventi.interni.InternoSpostamentoArtefatto;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 
 /**
@@ -13,14 +12,20 @@ import com.threeamigos.foresta.interfacce.VistaScambio;
  */
 public abstract class NotificaApprovazioneSpostamentoArtefatto<T> extends EventoBase {
 
-    private final InternoSpostamentoArtefatto<T> comandoSpostamentoArtefatto;
+    private final VistaScambio scambio;
+    private final T oggettoSpostato;
+    private final String uuidRichiesta;
 
     /**
-     * @param comandoSpostamentoArtefatto la richiesta di spostamento di un Artefatto che si approva
+     * @param scambio lo scambio aperto da cui veniva la richiesta, o null
+     * @param oggettoSpostato l'oggetto di cui si chiedeva lo spostamento
+     * @param uuidRichiesta l'identificativo della richiesta che si approva
      */
-    public NotificaApprovazioneSpostamentoArtefatto(TipoEvento tipoEvento, InternoSpostamentoArtefatto<T> comandoSpostamentoArtefatto) {
+    public NotificaApprovazioneSpostamentoArtefatto(TipoEvento tipoEvento, VistaScambio scambio, T oggettoSpostato, String uuidRichiesta) {
         super(tipoEvento);
-        this.comandoSpostamentoArtefatto = comandoSpostamentoArtefatto;
+        this.scambio = scambio;
+        this.oggettoSpostato = oggettoSpostato;
+        this.uuidRichiesta = uuidRichiesta;
     }
 
     /**
@@ -28,20 +33,20 @@ public abstract class NotificaApprovazioneSpostamentoArtefatto<T> extends Evento
      * proprio (la richiesta stessa è interna al motore)
      */
     public VistaScambio getScambio() {
-        return comandoSpostamentoArtefatto.getScambio();
+        return scambio;
     }
 
     /**
      * @return l'oggetto di cui si chiedeva lo spostamento
      */
     public T getOggettoSpostato() {
-        return comandoSpostamentoArtefatto.getOggettoDaSpostare();
+        return oggettoSpostato;
     }
 
     /**
      * @return l'identificativo della richiesta che si approva
      */
     public String getUuidRichiesta() {
-        return comandoSpostamentoArtefatto.getUuid();
+        return uuidRichiesta;
     }
 }

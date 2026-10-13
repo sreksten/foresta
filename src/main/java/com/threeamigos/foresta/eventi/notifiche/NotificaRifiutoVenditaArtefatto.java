@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
 import com.threeamigos.foresta.interfacce.OggettoConCosto;
+import com.threeamigos.foresta.interfacce.VistaScambio;
 
 /**
  * Il GruppoGiocatore rifiuta la vendita di un Artefatto a un commerciante che non tratta quel genere di
@@ -15,9 +15,11 @@ import com.threeamigos.foresta.interfacce.OggettoConCosto;
 public class NotificaRifiutoVenditaArtefatto extends NotificaRifiutoSpostamentoArtefatto<OggettoConCosto> {
 
     /**
-     * @param eventoRichiestaVenditaArtefatto la richiesta di vendita di un Artefatto che si rifiuta
+     * @param scambio lo scambio aperto da cui veniva la richiesta, o null
+     * @param oggetto l'oggetto di cui si chiedeva lo spostamento
+     * @param uuidRichiesta l'identificativo della richiesta
      */
-    public NotificaRifiutoVenditaArtefatto(InternoVenditaArtefatto eventoRichiestaVenditaArtefatto) {
-        super(TipoEvento.NOTIFICA_RIFIUTO_VENDITA_ARTEFATTO, eventoRichiestaVenditaArtefatto);
+    public NotificaRifiutoVenditaArtefatto(VistaScambio scambio, OggettoConCosto oggetto, String uuidRichiesta) {
+        super(TipoEvento.NOTIFICA_RIFIUTO_VENDITA_ARTEFATTO, scambio, oggetto, uuidRichiesta);
     }
 }

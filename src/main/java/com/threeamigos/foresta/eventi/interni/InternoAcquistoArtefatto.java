@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
+import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
 import com.threeamigos.foresta.interfacce.OggettoConCosto;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
@@ -22,5 +24,19 @@ public class InternoAcquistoArtefatto extends InternoSpostamentoArtefatto<Oggett
     public InternoAcquistoArtefatto(ScambiatoreArtefatti parteAttiva, ScambiatoreArtefatti parteRemota,
                                     OggettoConCosto oggettoDaAcquistare, VistaScambio scambio) {
         super(TipoEvento.INTERNO_ACQUISTO_ARTEFATTO, parteAttiva, parteRemota, oggettoDaAcquistare, scambio);
+    }
+
+    /**
+     * La notifica con cui si approva la richiesta.
+     */
+    public NotificaApprovazioneAcquistoArtefatto approvazione() {
+        return new NotificaApprovazioneAcquistoArtefatto(getScambio(), getOggettoDaSpostare(), getUuid());
+    }
+
+    /**
+     * La notifica con cui si rifiuta la richiesta.
+     */
+    public NotificaRifiutoAcquistoArtefatto rifiuto() {
+        return new NotificaRifiutoAcquistoArtefatto(getScambio(), getOggettoDaSpostare(), getUuid());
     }
 }

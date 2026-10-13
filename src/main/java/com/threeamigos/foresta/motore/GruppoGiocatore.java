@@ -773,7 +773,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	private void suEventoRichiestaStoccaggioArtefatto(InternoStoccaggioArtefatto eventoRichiestaStoccaggio) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaStoccaggio.getOggettoDaSpostare();
 		stocca(eventoRichiestaStoccaggio.getParteAttiva(), artefatto);
-		BusEventi.pubblica(new NotificaApprovazioneStoccaggioArtefatto(eventoRichiestaStoccaggio));
+		BusEventi.pubblica(eventoRichiestaStoccaggio.approvazione());
 	}
 
 	private void suEventoRichiestaPrelievoArtefatto(InternoPrelievoArtefatto eventoRichiestaPrelievoArtefatto) {
@@ -782,10 +782,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> motivoRifiuto = controllaPrelievo(personaggio, artefatto);
 		if (motivoRifiuto.isPresent()) {
 			RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento esito = motivoRifiuto.get();
-			BusEventi.pubblica(new NotificaRifiutoPrelievoArtefatto(eventoRichiestaPrelievoArtefatto, esito.getFumetto()));
+			BusEventi.pubblica(eventoRichiestaPrelievoArtefatto.rifiuto(esito.getFumetto()));
 		} else {
 			equipaggia(personaggio, artefatto);
-			BusEventi.pubblica(new NotificaApprovazionePrelievoArtefatto(eventoRichiestaPrelievoArtefatto));
+			BusEventi.pubblica(eventoRichiestaPrelievoArtefatto.approvazione());
 		}
 	}
 
@@ -796,9 +796,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			addArtefatto(artefatto);
 			subMonete(costoOggetto);
 			comandoAcquistoArtefatto.getParteRemota().removeArtefatto(artefatto);
-			BusEventi.pubblica(new NotificaApprovazioneAcquistoArtefatto(comandoAcquistoArtefatto));
+			BusEventi.pubblica(comandoAcquistoArtefatto.approvazione());
 		} else {
-			BusEventi.pubblica(new NotificaRifiutoAcquistoArtefatto(comandoAcquistoArtefatto));
+			BusEventi.pubblica(comandoAcquistoArtefatto.rifiuto());
 		}
 	}
 
@@ -816,14 +816,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	boolean vende(InternoVenditaArtefatto eventoRichiestaVendita) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaVendita.getOggettoDaSpostare();
 		if (!eventoRichiestaVendita.getParteRemota().tratta(artefatto)) {
-			BusEventi.pubblica(new NotificaRifiutoVenditaArtefatto(eventoRichiestaVendita));
+			BusEventi.pubblica(eventoRichiestaVendita.rifiuto());
 			return false;
 		}
 		int ricavo = prezzoVendita(artefatto.getCostoAcquisto());
 		removeArtefatto(artefatto);
 		addMonete(ricavo);
 		eventoRichiestaVendita.getParteRemota().addArtefatto(artefatto);
-		BusEventi.pubblica(new NotificaApprovazioneVenditaArtefatto(eventoRichiestaVendita));
+		BusEventi.pubblica(eventoRichiestaVendita.approvazione());
 		return true;
 	}
 

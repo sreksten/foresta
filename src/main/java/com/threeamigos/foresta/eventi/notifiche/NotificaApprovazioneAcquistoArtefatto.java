@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.eventi.interni.InternoAcquistoArtefatto;
 import com.threeamigos.foresta.interfacce.OggettoConCosto;
+import com.threeamigos.foresta.interfacce.VistaScambio;
 
 /**
  * Il GruppoGiocatore (che "fa da banchiere" controllando le disponibilità economiche del GruppoGiocatore e il costo
@@ -13,9 +13,11 @@ import com.threeamigos.foresta.interfacce.OggettoConCosto;
 public class NotificaApprovazioneAcquistoArtefatto extends NotificaApprovazioneSpostamentoArtefatto<OggettoConCosto> {
 
     /**
-     * @param comandoAcquistoArtefatto la richiesta di acquisto di un Artefatto che si approva
+     * @param scambio lo scambio aperto da cui veniva la richiesta, o null
+     * @param oggetto l'oggetto di cui si chiedeva lo spostamento
+     * @param uuidRichiesta l'identificativo della richiesta
      */
-    public NotificaApprovazioneAcquistoArtefatto(InternoAcquistoArtefatto comandoAcquistoArtefatto) {
-        super(TipoEvento.NOTIFICA_APPROVAZIONE_ACQUISTO_ARTEFATTO, comandoAcquistoArtefatto);
+    public NotificaApprovazioneAcquistoArtefatto(VistaScambio scambio, OggettoConCosto oggetto, String uuidRichiesta) {
+        super(TipoEvento.NOTIFICA_APPROVAZIONE_ACQUISTO_ARTEFATTO, scambio, oggetto, uuidRichiesta);
     }
 }
