@@ -8,210 +8,215 @@ import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.motore.Dado;
 
 /**
- * Reads a text-based grammar file and uses it to randomly generate ("produce") text
- * by recursively expanding production references.
+ * Legge un file di grammatica in formato testuale e lo usa per generare ("produrre") testo
+ * in modo casuale, espandendo ricorsivamente i riferimenti alle produzioni.
  * <p>
- * Grammar file syntax:
+ * Sintassi del file di grammatica:
  * <ul>
- *     <li>A line starting at column 0 declares a <b>production</b>: its name.</li>
- *     <li>Lines indented with a TAB or a space are the production's <b>children</b>
- *     (alternatives): the text that can be randomly chosen when the production is
- *     expanded. Multiple alternatives can be listed on the same line, separated by
+ *     <li>Una riga che inizia alla colonna 0 dichiara una <b>produzione</b>: il suo nome.</li>
+ *     <li>Le righe rientrate con un TAB o con uno spazio sono i <b>figli</b> della produzione
+ *     (le alternative): il testo che può essere scelto a caso quando la produzione viene
+ *     espansa. Più alternative possono stare sulla stessa riga, separate da
  *     {@code |}.</li>
- *     <li>A child can reference another production by wrapping its name in square
- *     brackets, e.g. {@code [OtherProduction]}; when expanded, the reference is
- *     replaced by one randomly chosen (and in turn recursively expanded) alternative
- *     of {@code OtherProduction}.</li>
- *     <li>A child can contain an <b>inline alternation group</b>,
- *     {@code {opt1|opt2|...}}: at load time this is transformed into a brand new,
- *     auto-named production (see {@link #expandInlineAlternations}) and the group is
- *     replaced with a reference to it, so from then on it behaves exactly like a
- *     regular {@code [Name]} reference. Example:
+ *     <li>Un figlio può riferirsi a un'altra produzione racchiudendone il nome fra parentesi
+ *     quadre, ad esempio {@code [AltraProduzione]}; all'espansione il riferimento viene
+ *     sostituito da un'alternativa di {@code AltraProduzione} scelta a caso (e a sua volta
+ *     espansa ricorsivamente).</li>
+ *     <li>Un figlio può contenere un <b>gruppo di alternative in linea</b>,
+ *     {@code {opz1|opz2|...}}: al caricamento viene trasformato in una produzione nuova, con un
+ *     nome generato automaticamente (vedi {@link #expandInlineAlternations}), e il gruppo è
+ *     sostituito da un riferimento a essa, così da quel momento si comporta esattamente come
+ *     un normale riferimento {@code [Nome]}. Esempio:
  *     <pre>{@code
  *     FATTO_PROEMIO
  *         Il {vecchio|giovane|misterioso} viandante bussò alla porta
  *     }</pre></li>
- *     <li>A span delimited by double quotes ({@code "..."}) is a <b>raw literal
- *     span</b>: {@code {}}, {@code }}} and {@code |} inside it are treated as plain
- *     text instead of inline-alternation-group syntax, and {@code \"} inside it is an
- *     escaped literal quote that does not close the span. A span left open at the end
- *     of the line (or of an inline alternation group's content) is an error. Note
- *     that this only protects {@code {}}, {@code }}} and {@code |}: literal
- *     {@code [Name]}-looking text inside a span would still be parsed as a
- *     production reference.</li>
- *     <li>A production name ending with {@code $} is <b>one-shot</b>: once one of
- *     its alternatives is chosen during a production cycle, that alternative (and,
- *     if it was the last one left, the whole production and every reference to it)
- *     is removed for the rest of the cycle.</li>
- *     <li>A reference prefixed with {@code *} (e.g. {@code [*Name]}) is a
- *     <b>globally fixed production</b>: the first time it is expanded within a call
- *     to {@link #produce()}, the result is cached and reused for every subsequent
- *     occurrence, anywhere in the produced text.</li>
- *     <li>A reference prefixed with {@code !} (e.g. {@code [!Name]}) is a
- *     <b>locally fixed production</b>: like the global one, but the cached value is
- *     only reused within the same production subtree (i.e., it does not leak into
- *     sibling branches produced independently). It is visible to everything nested
- *     below the point that fixed it, at any depth, so a {@code [#Name]} inside a
- *     referenced production still finds the value its caller fixed.</li>
- *     <li>A reference of the form {@code [key=value]} <b>assigns</b> a value
- *     to {@code key} in the same global cache used by {@code *} references, to be
- *     later retrieved with a {@code #} reference anywhere in the produced text.
- *     {@code value} may itself contain {@code [...]} tokens (e.g.
- *     {@code [key=[OtherProduction]]}), which are fully resolved before the result
- *     is stored.</li>
- *     <li>A reference prefixed with {@code #} (e.g. {@code [#key]}) retrieves the
- *     value previously assigned to {@code key} via a {@code key=value} token.</li>
- *     <li>A reference of any kind may carry a <b>default value</b>, written after the
- *     referenced name as {@code ?} followed by {@code |} and the text to fall back on:
- *     {@code [*EQUIPAGGIAMENTO? | fagotto]}. Whitespace around the {@code ?} and the
- *     {@code |} is ignored, and {@code [Name?]} on its own is the short form for an empty
- *     default. The fallback is ordinary grammar text: a literal, a {@code [Reference]}, an
- *     inline group, or a mix. It is used whenever no value is available at that point —
- *     because the name was never declared, because the {@code [key=value]} that would have
- *     filled it has not run yet, or because a one-shot production has been exhausted — which
- *     is what makes a grammar safe to write without declaring a placeholder production just
- *     to satisfy validation. The {@code ?} buys tolerance about <i>when</i> a value appears,
- *     not about whether the name means anything: the name must still be a declared production
- *     or a key assigned somewhere in the grammar, so a typo is still refused at load time
- *     (see {@link #checkTokenValidity}). A production name may therefore not end with
- *     {@code ?}. An assignment's value is free text, so {@code ?} and {@code |} inside
- *     {@code [key=value]} stay plain text.</li>
- *     <li>A line starting with {@code //} is a full-line comment and is ignored, as
- *     are empty lines.</li>
- *     <li>An alternative may start with a {@code [^N]} token ({@code N} a positive
- *     number, e.g. {@code 10} or {@code 2.5}) to give it a selection <b>weight</b>: under
- *     {@link TipoModalitaProduzioneTesti#CASUALE} it is picked {@code N} times as often as an
- *     alternative with the default weight of 1.
- *     The token is resolved and stripped when the grammar is loaded (unlike
- *     {@code [key=value]}, which is resolved lazily during production), so it never appears
- *     in produced text. An alternative with no {@code [^N]} token defaults to weight 1,
- *     exactly matching the uniform selection every alternative had before this feature
- *     existed — including the auto-named productions created from inline alternation
- *     groups, whose options may optionally carry a {@code [^N]} token of their own but need
- *     no special handling to stay uniformly random.</li>
- *     <li>Once the whole grammar has been parsed and validated, every alternative's
- *     weight is automatically boosted by {@link #SCALE_FACTOR} times the aggregate
- *     weight of every production it references (recursively, since a referenced
- *     production's own weight has by then already been boosted by whatever it in turn
- *     references), so alternatives that expand into structurally richer subtrees get
- *     picked proportionally more often under {@link TipoModalitaProduzioneTesti#CASUALE} without
- *     requiring a hand-written {@code [^N]} token. A production referenced more than
- *     once in the same alternative contributes to the boost once per occurrence. A
- *     reference carrying a default counts either the referenced production or whatever its
- *     fallback references, never both, since only one of the two is taken at production time.
- *     This adjustment is computed once, at grammar-load time, and baked into the weights
- *     used for the rest of the {@code GrammarBean}'s lifetime. Reference cycles
- *     (self- or mutually-recursive productions) are handled by using a production's
- *     original, not-yet-boosted weight wherever it is re-encountered while its own
- *     boost is still being computed. Two structurally identical members of a cycle
- *     therefore do not end up with the same weight: the one <b>declared first in the
- *     file</b> is boosted first, and so ends up the heavier of the two (see
+ *     <li>Un tratto delimitato da virgolette doppie ({@code "..."}) è un <b>tratto letterale
+ *     grezzo</b>: {@code {}}, {@code }}} e {@code |} al suo interno sono trattati come testo
+ *     semplice invece che come sintassi dei gruppi di alternative in linea, e {@code \"} al
+ *     suo interno è una virgoletta letterale con l'escape, che non chiude il tratto. Un
+ *     tratto lasciato aperto a fine riga (o a fine contenuto di un gruppo di alternative in
+ *     linea) è un errore. Si noti che questo protegge solo {@code {}}, {@code }}} e
+ *     {@code |}: un testo letterale che somigli a {@code [Nome]} dentro un tratto verrebbe
+ *     comunque interpretato come riferimento a una produzione.</li>
+ *     <li>Un nome di produzione che termina con {@code $} è <b>monouso</b>: una volta scelta una
+ *     delle sue alternative durante un ciclo di produzione, quell'alternativa (e, se era
+ *     l'ultima rimasta, l'intera produzione e ogni riferimento a essa) viene rimossa per il
+ *     resto del ciclo.</li>
+ *     <li>Un riferimento preceduto da {@code *} (ad esempio {@code [*Nome]}) è una
+ *     <b>produzione fissata globalmente</b>: la prima volta che viene espansa nel corso di una
+ *     chiamata a {@link #produce()}, il risultato viene messo in cache e riusato per ogni
+ *     occorrenza successiva, in qualsiasi punto del testo prodotto.</li>
+ *     <li>Un riferimento preceduto da {@code !} (ad esempio {@code [!Nome]}) è una
+ *     <b>produzione fissata localmente</b>: come quella globale, ma il valore in cache viene
+ *     riusato solo all'interno dello stesso sottoalbero di produzione (cioè non trapela nei
+ *     rami fratelli prodotti in modo indipendente). È visibile a tutto ciò che sta annidato
+ *     sotto il punto che l'ha fissato, a qualsiasi profondità, così un {@code [#Nome]} dentro
+ *     una produzione referenziata trova comunque il valore fissato da chi l'ha chiamata.</li>
+ *     <li>Un riferimento della forma {@code [chiave=valore]} <b>assegna</b> un valore
+ *     a {@code chiave} nella stessa cache globale usata dai riferimenti {@code *}, per
+ *     recuperarlo poi con un riferimento {@code #} in qualsiasi punto del testo prodotto.
+ *     {@code valore} può a sua volta contenere elementi {@code [...]} (ad esempio
+ *     {@code [chiave=[AltraProduzione]]}), che vengono risolti completamente prima che il
+ *     risultato sia memorizzato.</li>
+ *     <li>Un riferimento preceduto da {@code #} (ad esempio {@code [#chiave]}) recupera il
+ *     valore assegnato in precedenza a {@code chiave} con un elemento {@code chiave=valore}.</li>
+ *     <li>Un riferimento di qualsiasi tipo può avere un <b>valore predefinito</b>, scritto dopo il
+ *     nome referenziato come {@code ?} seguito da {@code |} e dal testo di ripiego:
+ *     {@code [*EQUIPAGGIAMENTO? | fagotto]}. Gli spazi attorno a {@code ?} e a {@code |} sono
+ *     ignorati, e {@code [Nome?]} da solo è la forma abbreviata per un predefinito vuoto. Il
+ *     ripiego è normale testo di grammatica: un letterale, un {@code [Riferimento]}, un gruppo
+ *     in linea, o un misto. Si usa ogni volta che in quel punto non c'è alcun valore
+ *     disponibile, perché il nome non è mai stato dichiarato, perché il {@code [chiave=valore]}
+ *     che lo avrebbe riempito non è ancora stato eseguito, o perché una produzione monouso è
+ *     esaurita: è ciò che permette di scrivere una grammatica senza dichiarare una produzione
+ *     segnaposto solo per superare la validazione. Il {@code ?} dà tolleranza su <i>quando</i>
+ *     compare un valore, non sul fatto che il nome abbia un significato: il nome deve comunque
+ *     essere una produzione dichiarata o una chiave assegnata da qualche parte nella
+ *     grammatica, così un errore di battitura viene rifiutato comunque al caricamento (vedi
+ *     {@link #checkTokenValidity}). Un nome di produzione quindi non può terminare con
+ *     {@code ?}. Il valore di un'assegnazione è testo libero, perciò {@code ?} e {@code |}
+ *     dentro {@code [chiave=valore]} restano testo semplice.</li>
+ *     <li>Una riga che inizia con {@code //} è un commento a riga intera e viene ignorata, così
+ *     come le righe vuote.</li>
+ *     <li>Un'alternativa può iniziare con un elemento {@code [^N]} ({@code N} un numero
+ *     positivo, ad esempio {@code 10} o {@code 2.5}) per darle un <b>peso</b> di selezione: con
+ *     {@link TipoModalitaProduzioneTesti#CASUALE} viene scelta {@code N} volte più spesso di
+ *     un'alternativa col peso predefinito di 1.
+ *     L'elemento è risolto e tolto al caricamento della grammatica (a differenza di
+ *     {@code [chiave=valore]}, che è risolto in modo pigro durante la produzione), perciò non
+ *     compare mai nel testo prodotto. Un'alternativa senza {@code [^N]} ha peso 1,
+ *     esattamente come la selezione uniforme che ogni alternativa aveva prima che questa
+ *     funzione esistesse, comprese le produzioni con nome automatico create dai gruppi di
+ *     alternative in linea, le cui opzioni possono avere a loro volta un elemento {@code [^N]}
+ *     ma non richiedono alcun trattamento speciale per restare uniformemente casuali.</li>
+ *     <li>Una volta che l'intera grammatica è stata analizzata e validata, il peso di ogni
+ *     alternativa viene aumentato automaticamente di {@link #SCALE_FACTOR} volte il peso
+ *     aggregato di ogni produzione che essa referenzia (ricorsivamente, dato che il peso di
+ *     una produzione referenziata è a quel punto già stato aumentato da ciò che a sua volta
+ *     referenzia), così le alternative che si espandono in sottoalberi strutturalmente più
+ *     ricchi vengono scelte proporzionalmente più spesso con
+ *     {@link TipoModalitaProduzioneTesti#CASUALE}, senza bisogno di scrivere a mano un
+ *     elemento {@code [^N]}. Una produzione referenziata più di una volta nella stessa
+ *     alternativa contribuisce all'aumento una volta per ogni occorrenza. Un riferimento con
+ *     un predefinito conta o la produzione referenziata o ciò che il suo ripiego referenzia,
+ *     mai entrambi, perché al momento della produzione se ne prende solo uno.
+ *     Questo aggiustamento è calcolato una sola volta, al caricamento della grammatica, e
+ *     incorporato nei pesi usati per tutta la vita del {@code GrammarBean}. I cicli di
+ *     riferimenti (produzioni ricorsive su se stesse o a vicenda) sono gestiti usando il peso
+ *     originale, non ancora aumentato, di una produzione ogni volta che la si reincontra
+ *     mentre il suo stesso aumento è ancora in calcolo. Due membri strutturalmente identici
+ *     di un ciclo quindi non finiscono con lo stesso peso: quello <b>dichiarato per primo nel
+ *     file</b> viene aumentato per primo, e finisce per essere il più pesante dei due (vedi
  *     {@link #adjustWeightsForDescendants}).</li>
- *     <li>A reference of any kind ({@code [Name]}, {@code [*Name]}, {@code [!Name]} or
- *     {@code [#key]}) prefixed with {@code ^} immediately to its left, <b>outside</b>
- *     the square brackets (e.g. {@code ^[Name]}), has its resolved value's first letter
- *     capitalized. Unlike the {@code [^N]} weight token — which lives just inside the
- *     brackets, at the very start of an alternative's own text, and is resolved at
- *     grammar-load time — this marker is resolved at production time, as each reference
- *     is expanded, so it works uniformly on whatever that specific reference produces.
- *     There is no escape sequence for a literal {@code ^} immediately before a
- *     reference, same as the file's other markers.</li>
+ *     <li>Un riferimento di qualsiasi tipo ({@code [Nome]}, {@code [*Nome]}, {@code [!Nome]} o
+ *     {@code [#chiave]}) preceduto da {@code ^} immediatamente alla sua sinistra, <b>fuori</b>
+ *     dalle parentesi quadre (ad esempio {@code ^[Nome]}), ha la prima lettera del valore
+ *     risolto in maiuscolo. A differenza dell'elemento di peso {@code [^N]}, che sta subito
+ *     dentro le parentesi, all'inizio del testo di un'alternativa, ed è risolto al caricamento
+ *     della grammatica, questo marcatore è risolto al momento della produzione, via via che
+ *     ogni riferimento viene espanso, perciò funziona in modo uniforme su qualunque cosa
+ *     produca quello specifico riferimento. Non esiste una sequenza di escape per un
+ *     {@code ^} letterale immediatamente prima di un riferimento, come per gli altri
+ *     marcatori del file.</li>
  * </ul>
- * Both source files are decoded as <b>UTF-8</b>, explicitly rather than through the JVM's
- * default charset, so that a grammar's accented letters survive regardless of the platform
- * the game runs on. A {@code String} handed to the text-based constructors is likewise
- * encoded as UTF-8 before being re-read.
+ * Entrambi i file sorgente sono decodificati come <b>UTF-8</b>, in modo esplicito e non
+ * tramite il charset predefinito della JVM, così le lettere accentate di una grammatica
+ * sopravvivono qualunque sia la piattaforma su cui gira il gioco. Anche una {@code String}
+ * passata ai costruttori testuali è codificata in UTF-8 prima di essere riletta.
  * <p>
- * A second, optional post-production file lists literal text substitutions
- * ({@code pre:post}) applied to the final produced text, to fix natural-language
- * issues arising from the mechanical concatenation (e.g., in Italian, {@code "a il"}
- * becoming {@code "al"}). A rule's {@code post} may not contain its own {@code pre}
- * verbatim, since each rule is applied until its {@code pre} no longer occurs (see
- * {@link #setPostProductionFile} and {@link #postProduce}).
+ * Un secondo file facoltativo, di post-produzione, elenca sostituzioni letterali di testo
+ * ({@code pre:post}) applicate al testo finale prodotto, per correggere i problemi di lingua
+ * naturale che nascono dalla concatenazione meccanica (ad esempio, in italiano, {@code "a il"}
+ * che diventa {@code "al"}). Il {@code post} di una regola non può contenere il proprio
+ * {@code pre} alla lettera, dato che ogni regola viene applicata finché il suo {@code pre}
+ * non compare più (vedi {@link #setPostProductionFile} e {@link #postProduce}).
  * <p>
- * Every production is expected to produce a trimmed string (see
- * {@link #resolvePlainProduction} and {@link #resolveFixedProduction}): any leading or
- * trailing whitespace left over once a production's chosen alternative has been fully
- * expanded is stripped before it is spliced into whatever referenced it. This matters in
- * particular for inline alternation groups, where a nested group's empty leaf, chosen next
- * to literal text, would otherwise leave a stray space behind.
+ * Ci si aspetta che ogni produzione produca una stringa senza spazi ai bordi (vedi
+ * {@link #resolvePlainProduction} e {@link #resolveFixedProduction}): gli spazi iniziali o
+ * finali rimasti dopo che l'alternativa scelta di una produzione è stata espansa del tutto
+ * vengono tolti prima che il risultato sia inserito in ciò che l'ha referenziata. Conta in
+ * particolare per i gruppi di alternative in linea, dove la foglia vuota di un gruppo
+ * annidato, scelta accanto a testo letterale, lascerebbe altrimenti uno spazio spurio.
  * <p>
- * That trimming only ever protects the edges of a single reference's own expansion: a
- * production reference that intentionally resolves to an empty string (e.g. an
- * alternative meant to represent "no extra text here") still leaves behind the literal
- * spaces or tabs the surrounding template text put on either side of the reference,
- * producing a run of two or more whitespace characters, or, if the reference sits right
- * before a punctuation mark at the end of a sentence, a single stray space or tab before
- * that punctuation. To keep such deliberately-empty alternatives usable without requiring
- * every template to special-case them, any run of two or more spaces and/or tabs left in
- * the final produced text is automatically collapsed into a single space, and any space
- * or tab left immediately before a punctuation mark is removed, once, after every
- * post-production substitution has been applied (see {@link #postProduce}).
+ * Questa rimozione protegge solo i bordi dell'espansione di un singolo riferimento: un
+ * riferimento a una produzione che risolve intenzionalmente in una stringa vuota (ad esempio
+ * un'alternativa pensata per rappresentare "nessun testo in più qui") lascia comunque gli
+ * spazi o i tab letterali che il testo del modello metteva ai due lati del riferimento,
+ * producendo una sequenza di due o più caratteri di spaziatura o, se il riferimento sta
+ * subito prima di un segno di punteggiatura a fine frase, un singolo spazio o tab spurio prima
+ * di quella punteggiatura. Per rendere utilizzabili queste alternative volutamente vuote
+ * senza obbligare ogni modello a trattarle come caso speciale, ogni sequenza di due o più
+ * spazi e/o tab rimasta nel testo prodotto finale viene ridotta automaticamente a un solo
+ * spazio, e ogni spazio o tab rimasto subito prima di un segno di punteggiatura viene tolto,
+ * una volta sola, dopo che tutte le sostituzioni di post-produzione sono state applicate (vedi
+ * {@link #postProduce}).
  * <p>
- * <b>One-shot productions make a sequence of {@code produce()} calls stateful, and the
- * caller decides where one sequence ends and the next begins by calling
- * {@link #reset()}.</b> There is no single right policy, because the two things a grammar
- * may want are opposites:
+ * <b>Le produzioni monouso rendono con stato una sequenza di chiamate a {@code produce()},
+ * e il chiamante decide dove finisce una sequenza e dove comincia la successiva chiamando
+ * {@link #reset()}.</b> Non esiste un'unica politica giusta, perché le due cose che una
+ * grammatica può volere sono opposte:
  * <ul>
- *     <li><b>Independent results.</b> Each call should stand on its own and draw from the
- *     full set of alternatives — one fairy tale per visit to the inn, say. Call
- *     {@link #reset()} after every {@code produce()}. Without it the one-shot pools keep
- *     draining across calls, and results get progressively poorer until they fail
- *     outright.</li>
- *     <li><b>A run of deliberately distinct results.</b> Generating, say, five different
- *     characters that must not repeat one another is exactly what a one-shot production is
- *     for: <b>do not</b> reset between them, or they will be free to repeat. Reset only when
- *     starting a new run.</li>
+ *     <li><b>Risultati indipendenti.</b> Ogni chiamata deve reggersi da sola e attingere
+ *     all'insieme completo delle alternative: una fiaba per ogni visita alla locanda, per
+ *     dire. Si chiama {@link #reset()} dopo ogni {@code produce()}. Senza di esso i serbatoi
+ *     monouso continuano a svuotarsi di chiamata in chiamata, e i risultati diventano via via
+ *     più poveri fino a fallire del tutto.</li>
+ *     <li><b>Una serie di risultati volutamente distinti.</b> Generare, ad esempio, cinque
+ *     personaggi diversi che non devono ripetersi è esattamente lo scopo di una produzione
+ *     monouso: <b>non</b> si fa il reset fra l'uno e l'altro, o potrebbero ripetersi. Si fa il
+ *     reset solo quando si inizia una nuova serie.</li>
  * </ul>
- * The failure mode of the second case is worth knowing, because it arrives late and its
- * message names an innocent production: once a one-shot production's last alternative has
- * been consumed, the production is removed and the cascade in {@link #removeProduction}
- * strips every alternative referencing it, recursively removing whatever is left empty. A
- * later call then dies with {@code IllegalArgumentException: Production X is empty!}, where
- * {@code X} may be several levels above the pool that actually ran dry. The length of a run
- * is therefore bounded by the smallest one-shot pool it draws from — see
- * {@link #ONE_SHOT_MARKER} and {@link #getProduction}.
+ * Il modo in cui il secondo caso fallisce merita di essere conosciuto, perché arriva tardi e
+ * il suo messaggio nomina una produzione innocente: una volta consumata l'ultima alternativa
+ * di una produzione monouso, la produzione viene rimossa e la cascata in
+ * {@link #removeProduction} elimina ogni alternativa che la referenzia, rimuovendo
+ * ricorsivamente tutto ciò che resta vuoto. Una chiamata successiva muore allora con
+ * {@code IllegalArgumentException: Production X is empty!}, dove {@code X} può trovarsi
+ * parecchi livelli sopra il serbatoio che si è davvero esaurito. La lunghezza di una serie è
+ * quindi limitata dal più piccolo serbatoio monouso da cui attinge: vedi
+ * {@link #ONE_SHOT_MARKER} e {@link #getProduction}.
  * <p>
- * <b>This class is not thread-safe.</b> An instance must be confined to a single thread.
- * The catch is that {@link #produce()} looks like a read but is not: it consumes one-shot
- * alternatives out of {@link #currentProductionsMap} (cascading through
- * {@link #removeProduction}), fills and then clears {@link #globalFixedProductions}, and
- * draws from the shared {@link Dado#sorgente()}. Two threads calling {@code produce()} on the same
- * instance can therefore lose one another's fixed values, consume the same one-shot
- * alternative twice, or leave the productions map half-pruned. {@link #reset()},
- * {@link #addFixedProduction}, {@link #setRootNode} and {@link #setProductionMode} mutate
- * the same state and are equally unguarded.
+ * <b>Questa classe non è thread-safe.</b> Un'istanza deve restare confinata a un singolo
+ * thread. Il punto delicato è che {@link #produce()} sembra una lettura ma non lo è: consuma
+ * le alternative monouso da {@link #currentProductionsMap} (a cascata attraverso
+ * {@link #removeProduction}), riempie e poi svuota {@link #globalFixedProductions}, e
+ * attinge dalla sorgente condivisa {@link Dado#sorgente()}. Due thread che chiamano
+ * {@code produce()} sulla stessa istanza possono quindi perdersi a vicenda i valori fissati,
+ * consumare due volte la stessa alternativa monouso, o lasciare la mappa delle produzioni
+ * potata a metà. {@link #reset()}, {@link #addFixedProduction}, {@link #setRootNode} e
+ * {@link #setProductionMode} modificano lo stesso stato e sono ugualmente non protetti.
  * <p>
- * What <i>is</i> safe is sharing the grammar <i>source</i>: everything parsed at load time
- * ({@link #productionsMap}, including the weights baked in by
- * {@link #adjustWeightsForDescendants}, and {@link #postProductions}) is never written
- * again once the constructor returns. So the way to produce text from more than one thread
- * is to give each thread its own {@code GrammarBean} built from the same file, not to
- * synchronize access to one shared instance.
+ * Ciò che <i>è</i> sicuro è condividere il <i>sorgente</i> della grammatica: tutto ciò che
+ * viene analizzato al caricamento ({@link #productionsMap}, compresi i pesi incorporati da
+ * {@link #adjustWeightsForDescendants}, e {@link #postProductions}) non viene più scritto
+ * dopo che il costruttore è ritornato. Quindi il modo di produrre testo da più di un thread
+ * è dare a ciascun thread il proprio {@code GrammarBean} costruito dallo stesso file, non
+ * sincronizzare l'accesso a una sola istanza condivisa.
  */
 public class GrammarBean {
 
 	/**
-	 * Opens the text of a file included with {@code #include <file>}. The grammar knows only the name written in the
-	 * directive, relative to the folder of the file that includes it; where that folder is, and how a file is read, is up
-	 * to the resolver (see {@link #fromResource}).
+	 * Apre il testo di un file incluso con {@code #include <file>}. La grammatica conosce solo il nome scritto nella
+	 * direttiva, relativo alla cartella del file che lo include; dove sia quella cartella, e come si legga un file, lo
+	 * decide il risolutore (vedi {@link #fromResource}).
 	 */
 	@FunctionalInterface
 	public interface IncludeResolver {
 		/**
-		 * @param path the path of the file, relative to the folder of the main grammar: it uses {@code /} as separator
-		 *             and never starts with it, nor contains {@code .}, {@code ..} or empty segments
-		 * @return the text of the file, or {@code null} if it does not exist
-		 * @throws IOException if the file exists but cannot be opened
+		 * @param path il percorso del file, relativo alla cartella della grammatica principale: usa {@code /} come separatore
+		 *             e non inizia mai con esso, né contiene segmenti {@code .}, {@code ..} o vuoti
+		 * @return il testo del file, o {@code null} se non esiste
+		 * @throws IOException se il file esiste ma non si può aprire
 		 */
 		InputStream open(String path) throws IOException;
 
 		/**
-		 * A name that tells apart this file from every other in the whole program, so that {@code #include_static} can
-		 * share its productions among the grammars that include it. The default is null: the resolver does not support
-		 * static sections. {@link #fromResource} gives the URL of the resource.
-		 * @param path the same path as {@link #open}
-		 * @return the identity of the file, or null if the resolver cannot give one
+		 * Un nome che distingue questo file da ogni altro in tutto il programma, così che {@code #include_static} possa
+		 * condividerne le produzioni fra le grammatiche che lo includono. Il valore predefinito è null: il risolutore non
+		 * supporta le sezioni statiche. {@link #fromResource} dà l'URL della risorsa.
+		 * @param path lo stesso percorso di {@link #open}
+		 * @return l'identità del file, o null se il risolutore non ne può dare una
 		 */
 		default String identity(String path) {
 			return null;
@@ -221,248 +226,248 @@ public class GrammarBean {
 	private static final String PRODUCTION = "Production ";
 	private static final String LINE = "Line ";
 	/**
-	 * Prefix marking a full-line comment in the grammar/post-production source files.
+	 * Prefisso che segna un commento a riga intera nei file sorgente di grammatica e di post-produzione.
 	 */
 	private static final String COMMENT_PREFIX = "//";
 	/**
-	 * What a directive line starts with, in the first column. A line that starts with it and is not a known directive
-	 * is an error: a comment starts with {@link #COMMENT_PREFIX}.
+	 * Con cosa inizia una riga di direttiva, nella prima colonna. Una riga che inizia così e non è una direttiva nota
+	 * è un errore: un commento inizia con {@link #COMMENT_PREFIX}.
 	 */
 	private static final String DIRECTIVE_PREFIX = "#";
 	/**
-	 * Directive that includes another file, C style: {@code #include <file>} on a line of its own, starting in the
-	 * first column. See {@link IncludeResolver}.
+	 * Direttiva che include un altro file, in stile C: {@code #include <file>} su una riga a sé, a partire dalla
+	 * prima colonna. Vedi {@link IncludeResolver}.
 	 */
 	private static final String INCLUDE_DIRECTIVE = "#include";
 	/**
-	 * Directive that includes a file as a <i>static section</i>: {@code #include_static <file>}. Its productions are
-	 * shared by every grammar that includes it (see {@link #resetStaticProductions()}).
+	 * Direttiva che include un file come <i>sezione statica</i>: {@code #include_static <file>}. Le sue produzioni sono
+	 * condivise da ogni grammatica che la include (vedi {@link #resetStaticProductions()}).
 	 */
 	private static final String INCLUDE_STATIC_DIRECTIVE = "#include_static";
 	/**
-	 * How many files can include one another, one inside the other: stops runaway inclusions.
+	 * Quanti file possono includersi a vicenda, uno dentro l'altro: ferma le inclusioni senza fine.
 	 */
 	private static final int MAX_INCLUDE_DEPTH = 10;
 	/**
-	 * Suffix marking a production as one-shot (removed once used within a cycle). A single
-	 * character rather than {@code {1}} to avoid visual confusion with inline alternation
-	 * groups ({@link #OPENING_BRACE}/{@link #CLOSING_BRACE}), which use the same braces.
+	 * Suffisso che segna una produzione come monouso (rimossa una volta usata nel corso di un ciclo). Un solo
+	 * carattere anziché {@code {1}}, per evitare confusione visiva con i gruppi di alternative in linea
+	 * ({@link #OPENING_BRACE}/{@link #CLOSING_BRACE}), che usano le stesse parentesi graffe.
 	 */
 	private static final String ONE_SHOT_MARKER = "$";
 	/**
-	 * Marker for productions that derive their possible values also from other productions.
+	 * Marcatore per le produzioni che derivano i loro valori possibili anche da altre produzioni.
 	 */
 	private static final String DERIVED_MARKER = "=";
 
 	private static final String OPENING_BRACKET = "[";
 	private static final String CLOSING_BRACKET = "]";
 	/**
-	 * Characters delimiting an inline alternation group in a leaf ({@code {opt1|opt2|...}}).
+	 * Caratteri che delimitano un gruppo di alternative in linea in una foglia ({@code {opz1|opz2|...}}).
 	 */
 	private static final char OPENING_BRACE = '{';
 	private static final char CLOSING_BRACE = '}';
 	/**
-	 * Character delimiting a raw literal span in a leaf ({@code "..."}), inside which
-	 * {@link #OPENING_BRACE}, {@link #CLOSING_BRACE} and {@code |} are treated as plain text.
+	 * Carattere che delimita un tratto letterale grezzo in una foglia ({@code "..."}), dentro il quale
+	 * {@link #OPENING_BRACE}, {@link #CLOSING_BRACE} e {@code |} sono trattati come testo semplice.
 	 */
 	private static final char QUOTE_CHAR = '"';
 	/**
-	 * Character escaping a {@link #QUOTE_CHAR}, an {@link #OPENING_BRACKET} or a
-	 * {@link #CLOSING_BRACKET} inside a raw literal span so it is treated as plain text.
+	 * Carattere che mette in escape un {@link #QUOTE_CHAR}, un {@link #OPENING_BRACKET} o un
+	 * {@link #CLOSING_BRACKET} dentro un tratto letterale grezzo, così che sia trattato come testo semplice.
 	 */
 	private static final char ESCAPE_CHAR = '\\';
 	/**
-	 * Characters standing in for a literal {@code [} and {@code ]} written as {@code \[} and
-	 * {@code \]} inside a raw literal span. Substituted in by {@link #unescapeQuotes} at
-	 * grammar-load time and turned back into real brackets by {@link #postProduce}, once every
-	 * token has been expanded: this is what keeps an escaped bracket invisible to the
-	 * token scanners ({@link #checkTokensValidity}, {@link #collectReferencedProductions},
-	 * {@link #produceImpl(String, Map, Map, String)}), which all look for a bare {@code [}. Control
-	 * Private-use-area characters are used so that no plausible grammar text can collide with
-	 * them; a source file containing one is rejected outright (see
-	 * {@link #readSourceFileAndCreateProductionsMap}). They must stay above {@code U+0020},
-	 * because every production's expansion is passed through {@link String#trim()}, which would
-	 * otherwise strip a placeholder sitting at either edge of it.
+	 * Caratteri che fanno le veci di un {@code [} e un {@code ]} letterali, scritti {@code \[} e
+	 * {@code \]} dentro un tratto letterale grezzo. Sono messi al loro posto da {@link #unescapeQuotes} al
+	 * caricamento della grammatica e riconvertiti in vere parentesi da {@link #postProduce}, una volta che ogni
+	 * elemento è stato espanso: è ciò che rende una parentesi in escape invisibile agli scanner degli elementi
+	 * ({@link #checkTokensValidity}, {@link #collectReferencedProductions},
+	 * {@link #produceImpl(String, Map, Map, String)}), che cercano tutti una {@code [} nuda.
+	 * Si usano caratteri dell'area a uso privato, così che nessun testo plausibile di grammatica possa
+	 * scontrarsi con essi; un file sorgente che ne contenga uno viene rifiutato senza appello (vedi
+	 * {@link #readSourceFileAndCreateProductionsMap}). Devono restare sopra {@code U+0020},
+	 * perché l'espansione di ogni produzione passa per {@link String#trim()}, che altrimenti
+	 * toglierebbe un segnaposto posto a uno dei suoi bordi.
 	 */
 	private static final char LITERAL_OPENING_BRACKET_PLACEHOLDER = '\uE000';
 	private static final char LITERAL_CLOSING_BRACKET_PLACEHOLDER = '\uE001';
 	/**
-	 * Marker that, found as the very last character of a line, means the line is not
-	 * finished yet: it is stripped and the next line is appended in its place.
+	 * Marcatore che, trovato come ultimo carattere di una riga, significa che la riga non è
+	 * ancora finita: viene tolto e al suo posto si accoda la riga successiva.
 	 */
 	private static final String LINE_CONTINUATION_MARKER = "\\";
 	/**
-	 * Prefix used to name productions auto-generated from inline alternation groups.
+	 * Prefisso usato per dare il nome alle produzioni generate automaticamente dai gruppi di alternative in linea.
 	 */
 	private static final String INLINE_PRODUCTION_PREFIX = "PROD_";
 	/**
-	 * Marker for a production whose result is fixed globally, for the whole call to produce().
+	 * Marcatore di una produzione il cui risultato è fissato globalmente, per l'intera chiamata a produce().
 	 */
 	private static final String GLOBAL_FIXED_PRODUCTION_MARKER = "*";
 	/**
-	 * Marker for a production whose result is fixed locally, within the current production tree.
+	 * Marcatore di una produzione il cui risultato è fissato localmente, all'interno dell'albero di produzione corrente.
 	 */
 	private static final String LOCAL_FIXED_PRODUCTION_MARKER = "!";
 	/**
-	 * Marker assigning a literal value to a key in the global fixed-productions cache
-	 * (key=value).
+	 * Marcatore che assegna un valore letterale a una chiave nella cache globale delle produzioni
+	 * fissate (chiave=valore).
 	 */
 	private static final String ASSIGNMENT_MARKER = "=";
 	/**
-	 * Marker referencing a previously assigned key's value in the global fixed-productions
-	 * cache.
+	 * Marcatore che referenzia il valore di una chiave assegnata in precedenza nella cache globale
+	 * delle produzioni fissate.
 	 */
 	private static final String REFERENCE_MARKER = "#";
 	/**
-	 * Marker prefixing an alternative's leading {@code [^N]} weight token (e.g.
-	 * {@code [^10] some text} or {@code [^2.5] some text}), used to bias random selection
-	 * towards it; see {@link #parseWeight}. Resolved and stripped at grammar-load time,
-	 * unlike {@link #ASSIGNMENT_MARKER}/{@link #REFERENCE_MARKER} which are resolved
-	 * lazily at production time.
+	 * Marcatore che precede l'elemento di peso {@code [^N]} iniziale di un'alternativa (ad esempio
+	 * {@code [^10] del testo} o {@code [^2.5] del testo}), usato per orientare la scelta casuale
+	 * verso di essa; vedi {@link #parseWeight}. Risolto e tolto al caricamento della grammatica,
+	 * a differenza di {@link #ASSIGNMENT_MARKER}/{@link #REFERENCE_MARKER}, che sono risolti
+	 * in modo pigro al momento della produzione.
 	 */
 	private static final String WEIGHT_MARKER = "^";
 	/**
-	 * Marker capitalizing the first letter of a reference's resolved value when found
-	 * immediately before its opening bracket, outside it (e.g. {@code ^[Name]}). Same
-	 * character as {@link #WEIGHT_MARKER} but in the mirror position (before the bracket
-	 * rather than just inside it), so the two never occur at the same character position
-	 * and cannot be confused with one another. Resolved at production time, in
+	 * Marcatore che mette in maiuscolo la prima lettera del valore risolto di un riferimento quando si trova
+	 * immediatamente prima della sua parentesi di apertura, fuori da essa (ad esempio {@code ^[Nome]}). Stesso
+	 * carattere di {@link #WEIGHT_MARKER} ma in posizione speculare (prima della parentesi
+	 * anziché subito dentro), così i due non occorrono mai nella stessa posizione di carattere
+	 * e non si possono confondere. Risolto al momento della produzione, in
 	 * {@link #produceImpl(String, Map, Map, String)}.
 	 */
 	private static final String CAPITALIZE_MARKER = "^";
 	/**
-	 * Marker making a reference tolerant of a missing value: written just after the referenced
-	 * name and followed by {@code |} and the value to fall back on
-	 * ({@code [Name? | fallback]}), or alone for an empty fallback ({@code [Name?]}). Resolved
-	 * at production time, in {@link #resolveToken}. Distinct in position from both
-	 * {@link #WEIGHT_MARKER} (which follows the opening bracket, at the very start of an
-	 * alternative) and {@link #CAPITALIZE_MARKER} (which precedes the opening bracket), so the
-	 * three never occupy the same character position. A production name may therefore not end
-	 * with this character (see {@link #handleProduction}).
+	 * Marcatore che rende un riferimento tollerante a un valore mancante: scritto subito dopo il nome
+	 * referenziato e seguito da {@code |} e dal valore di ripiego
+	 * ({@code [Nome? | ripiego]}), oppure da solo per un ripiego vuoto ({@code [Nome?]}). Risolto
+	 * al momento della produzione, in {@link #resolveToken}. Diverso per posizione sia da
+	 * {@link #WEIGHT_MARKER} (che segue la parentesi di apertura, all'inizio di
+	 * un'alternativa) sia da {@link #CAPITALIZE_MARKER} (che precede la parentesi di apertura), così i
+	 * tre non occupano mai la stessa posizione di carattere. Un nome di produzione quindi non può
+	 * terminare con questo carattere (vedi {@link #handleProduction}).
 	 */
 	private static final String DEFAULT_MARKER = "?";
 	/**
-	 * Scale factor applied to a referenced production's aggregate weight when boosting the
-	 * weight of an alternative that references it; see {@link #adjustWeightsForDescendants}.
+	 * Fattore di scala applicato al peso aggregato di una produzione referenziata quando si aumenta il
+	 * peso di un'alternativa che la referenzia; vedi {@link #adjustWeightsForDescendants}.
 	 */
 	private static final double SCALE_FACTOR = 0.33;
 	/**
-	 * Separator between the pre- and post-production text in the post-production file.
+	 * Separatore fra il testo di pre-produzione e quello di post-produzione nel file di post-produzione.
 	 */
 	private static final String POST_PRODUCTION_SEPARATOR = ":";
 	/**
-	 * Regex splitting the produced text into individual lines.
+	 * Espressione regolare che divide il testo prodotto in singole righe.
 	 */
 	private static final String LINE_BREAK_REGEX = "\\n";
 	/**
-	 * Regex matching a run of two or more spaces and/or tabs, collapsed to one space by
+	 * Espressione regolare che trova una sequenza di due o più spazi e/o tab, ridotta a un solo spazio da
 	 * {@link #postProduce}.
 	 */
 	private static final String MULTIPLE_SPACES_REGEX = "[ \t]{2,}";
 	/**
-	 * Regex matching one or more spaces and/or tabs immediately before a sentence/clause
-	 * punctuation mark, removed by {@link #postProduce}.
+	 * Espressione regolare che trova uno o più spazi e/o tab immediatamente prima di un segno di punteggiatura
+	 * di frase/proposizione, tolti da {@link #postProduce}.
 	 */
 	private static final String SPACE_BEFORE_PUNCTUATION_REGEX = "[ \t]+(?=[.,;:!?])";
 	/**
-	 * Root production from which the generation process starts.
+	 * Produzione radice da cui parte il processo di generazione.
 	 */
 	private String rootNode = null;
 	/**
-	 * Map of all available productions. Insertion-ordered, so that iterating it follows the
-	 * order in which the productions were declared in the grammar file (with any production
-	 * auto-generated from an inline alternation group sitting where it was created). Three
-	 * things depend on that: which member of a reference cycle gets its descendant weight
-	 * boosted first (see {@link #adjustWeightsForDescendants}), which broken reference is
-	 * reported first when a grammar has several (see {@link #checkProductionsValidity}), and
-	 * the order in which an exhausted one-shot production's cascade strips other productions
-	 * (see {@link #removeProduction}). A plain {@link HashMap} left all three up to hash
-	 * order: reproducible for a given grammar and JVM, but impossible to predict by reading
-	 * the file.
+	 * Mappa di tutte le produzioni disponibili. Mantiene l'ordine di inserimento, così che iterarla segua
+	 * l'ordine in cui le produzioni sono state dichiarate nel file di grammatica (con ogni produzione
+	 * generata automaticamente da un gruppo di alternative in linea collocata dove è stata creata). Tre
+	 * cose dipendono da questo: quale membro di un ciclo di riferimenti ottiene per primo l'aumento del peso dei
+	 * discendenti (vedi {@link #adjustWeightsForDescendants}), quale riferimento errato viene segnalato per primo
+	 * quando una grammatica ne ha diversi (vedi {@link #checkProductionsValidity}), e
+	 * l'ordine in cui la cascata di una produzione monouso esaurita elimina le altre produzioni
+	 * (vedi {@link #removeProduction}). Una semplice {@link HashMap} lasciava tutte e tre all'ordine
+	 * dell'hash: riproducibile per una data grammatica e JVM, ma impossibile da prevedere leggendo
+	 * il file.
 	 */
 	private final Map<String, List<WeightedAlternative>> productionsMap = new LinkedHashMap<>();
 	/**
-	 * Map of all available productions to be reused in a cycle of productions. Insertion-ordered
-	 * like {@link #productionsMap}, which {@link #reset()} copies it from, so the one-shot
-	 * removal cascade walks the productions in declaration order.
+	 * Mappa di tutte le produzioni disponibili da riusare in un ciclo di produzioni. Mantiene l'ordine di inserimento
+	 * come {@link #productionsMap}, da cui {@link #reset()} la copia, così la cascata di rimozione monouso
+	 * percorre le produzioni nell'ordine di dichiarazione.
 	 */
 	private final Map<String, List<WeightedAlternative>> currentProductionsMap = new CurrentProductions();
 	/**
-	 * The static sections this grammar includes with {@code #include_static}, in the order of the directives.
+	 * Le sezioni statiche che questa grammatica include con {@code #include_static}, nell'ordine delle direttive.
 	 */
 	private final List<StaticSection> staticSections = new ArrayList<>();
 	/**
-	 * True when this instance is the one that loads a static section: such a source cannot include other static
-	 * sections.
+	 * Vero quando questa istanza è quella che carica una sezione statica: un sorgente simile non può includere altre
+	 * sezioni statiche.
 	 */
 	private boolean staticSource;
 	/**
-	 * Prefix of the names given to the inline-alternation productions: a static section has its own, so that its
-	 * names never meet those of the grammar that includes it.
+	 * Prefisso dei nomi dati alle produzioni delle alternative in linea: una sezione statica ha il proprio, così che
+	 * i suoi nomi non incontrino mai quelli della grammatica che la include.
 	 */
 	private String inlinePrefix = INLINE_PRODUCTION_PREFIX;
 	/**
-	 * The names of static productions already exhausted, whose alternatives have been pruned from
+	 * I nomi delle produzioni statiche già esaurite, le cui alternative sono state potate da
 	 * {@link #currentProductionsMap}.
 	 */
 	private final Set<String> prunedStaticNames = new HashSet<>();
 	/**
-	 * What {@link #staticEpoch} and {@link #staticVersion} were when this grammar last looked at the static sections.
+	 * Quanto valevano {@link #staticEpoch} e {@link #staticVersion} l'ultima volta che questa grammatica ha guardato le sezioni statiche.
 	 */
 	private long seenStaticEpoch;
 	private long seenStaticVersion;
 	/**
-	 * Fixed productions map
+	 * Mappa delle produzioni fissate
 	 */
 	private final Map<String, String> globalFixedProductions = new HashMap<>();
 	/**
-	 * Map of all productions that happen after the main production has finished, to adjust the result fixing natural language grammar issues
-	 * (e.g., in the Italian language, 'a il' is transformed to 'al').
+	 * Mappa di tutte le produzioni che avvengono dopo che la produzione principale è terminata, per aggiustare il risultato correggendo i problemi di grammatica della lingua naturale
+	 * (ad esempio, in italiano, 'a il' viene trasformato in 'al').
 	 * <p>
-	 * Insertion-ordered, so {@link #postProduce} applies the rules in the order they are
-	 * written in the post-production file. This matters whenever two rules can match the same
-	 * span of text — a shorter {@code pre} that is a prefix of a longer one, say — because
-	 * whichever runs first consumes it. With a plain {@link HashMap} that outcome was decided
-	 * by hash order, so a file could not express its own precedence.
+	 * Mantiene l'ordine di inserimento, così {@link #postProduce} applica le regole nell'ordine in cui
+	 * sono scritte nel file di post-produzione. Conta ogni volta che due regole possono corrispondere allo stesso
+	 * tratto di testo (un {@code pre} più corto che è prefisso di uno più lungo, per dire), perché
+	 * quella eseguita per prima lo consuma. Con una semplice {@link HashMap} quell'esito era deciso
+	 * dall'ordine dell'hash, così un file non poteva esprimere una propria precedenza.
 	 */
 	private final Map<String, String> postProductions = new LinkedHashMap<>();
 	/**
-	 * To randomly choose a production: the game's single random source, {@link Dado#sorgente()},
-	 * so that a seed set with {@link Dado#impostaSeme} makes the produced texts — and the
-	 * artifacts generated from a grammar — repeatable too. Drawing from it directly does not
-	 * consume the rolls rigged with {@link Dado#trucca}, which are left to game decisions.
-	 * (It used to be a private {@link Random}; one seeded from {@link System#currentTimeMillis()}
-	 * would make two beans built within the same millisecond draw the same sequence, which a
-	 * shared source cannot do.)
+	 * Per scegliere a caso una produzione: l'unica sorgente casuale del gioco, {@link Dado#sorgente()},
+	 * così che un seme impostato con {@link Dado#impostaSeme} renda ripetibili anche i testi prodotti, e
+	 * gli artefatti generati da una grammatica. Attingere direttamente da essa non consuma i
+	 * tiri truccati con {@link Dado#trucca}, che restano riservati alle decisioni di gioco.
+	 * (Una volta era un {@link Random} privato; uno inizializzato con {@link System#currentTimeMillis()}
+	 * farebbe attingere la stessa sequenza a due bean costruiti nello stesso millisecondo, cosa che una
+	 * sorgente condivisa non può fare.)
 	 */
 	private final Random rnd = Dado.sorgente();
 	/**
-	 * Controls how a production's alternative is picked; see {@link TipoModalitaProduzioneTesti}.
-	 * Defaults to {@link TipoModalitaProduzioneTesti#CASUALE}. Setting it to {@link TipoModalitaProduzioneTesti#PRIMO}
-	 * or {@link TipoModalitaProduzioneTesti#ULTIMO} makes {@link #produce()}/{@link #produce(String)} fully
-	 * deterministic, which is mostly useful for testing.
+	 * Controlla come viene scelta l'alternativa di una produzione; vedi {@link TipoModalitaProduzioneTesti}.
+	 * Il valore predefinito è {@link TipoModalitaProduzioneTesti#CASUALE}. Impostarlo a {@link TipoModalitaProduzioneTesti#PRIMO}
+	 * o {@link TipoModalitaProduzioneTesti#ULTIMO} rende {@link #produce()}/{@link #produce(String)} del tutto
+	 * deterministici, il che serve soprattutto nei test.
 	 */
 	private TipoModalitaProduzioneTesti productionMode = TipoModalitaProduzioneTesti.CASUALE;
 	/**
-	 * Productions that must be removed once used within a cycle
+	 * Produzioni che devono essere rimosse una volta usate nel corso di un ciclo
 	 */
 	private final Set<String> oneShotProductions = new HashSet<>();
 	/**
-	 * Progressive counter used to name productions auto-generated from inline
-	 * alternation groups ({@link #INLINE_PRODUCTION_PREFIX} + this counter).
+	 * Contatore progressivo usato per dare il nome alle produzioni generate automaticamente dai gruppi di
+	 * alternative in linea ({@link #INLINE_PRODUCTION_PREFIX} + questo contatore).
 	 */
 	private int inlineProductionCounter = 0;
 
 	private final Map<String, Collection<String>> derivedProductions = new HashMap<>();
 
 	/**
-	 * One frame per active (not yet returned) recursive call to
-	 * {@link #produceImpl(String, Map, Map, String)}: {@code label} names what is being
-	 * expanded (a production name, or the initial {@code [rootNode]} token) and
-	 * {@code steps} holds the successive values of that call's own {@code production}
-	 * variable, one per bracket resolved. Used by {@link #describeProductionTrace()} to
-	 * reconstruct the path the grammar engine followed, in case an exception is thrown
-	 * mid-production; see {@link #produce()}.
+	 * Un frame per ogni chiamata ricorsiva attiva (non ancora ritornata) a
+	 * {@link #produceImpl(String, Map, Map, String)}: {@code label} nomina ciò che viene
+	 * espanso (il nome di una produzione, o l'elemento iniziale {@code [rootNode]}) e
+	 * {@code steps} contiene i valori successivi della variabile {@code production} propria
+	 * di quella chiamata, uno per ogni parentesi risolta. Usato da {@link #describeProductionTrace()} per
+	 * ricostruire il percorso seguito dal motore della grammatica, nel caso venga lanciata un'eccezione
+	 * durante la produzione; vedi {@link #produce()}.
 	 */
 	private static final class TraceFrame {
 		private final String label;
@@ -475,17 +480,17 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Innermost frame last, so that iterating it in insertion order (outermost first)
-	 * gives the path from the root of the expansion down to the point where it currently
-	 * is (or was, when an exception interrupted it). Not thread-safe, like the rest of
-	 * this class.
+	 * Il frame più interno per ultimo, così che iterare in ordine di inserimento (prima l'esterno)
+	 * dia il percorso dalla radice dell'espansione fino al punto in cui si trova ora
+	 * (o si trovava, quando un'eccezione l'ha interrotta). Non thread-safe, come il resto di
+	 * questa classe.
 	 */
 	private final Deque<TraceFrame> productionTrace = new ArrayDeque<>();
 
 	/**
-	 * An alternative's text together with its selection weight (see {@link #WEIGHT_MARKER},
-	 * {@link #parseWeight}). Immutable; instances are shared between {@link #productionsMap}
-	 * and {@link #currentProductionsMap} copies made by {@link #reset()}.
+	 * Il testo di un'alternativa insieme al suo peso di selezione (vedi {@link #WEIGHT_MARKER},
+	 * {@link #parseWeight}). Immutabile; le istanze sono condivise fra {@link #productionsMap}
+	 * e le copie di {@link #currentProductionsMap} fatte da {@link #reset()}.
 	 */
 	static final class WeightedAlternative {
 		private final String text;
@@ -502,23 +507,23 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Where the files of the {@code #include} directives are read from; null if the grammar was built without one.
+	 * Da dove si leggono i file delle direttive {@code #include}; null se la grammatica è stata costruita senza.
 	 */
 	private IncludeResolver includeResolver;
 	/**
-	 * For each line of the source after the inclusions, the file and the line it comes from ("nomi.txt:12"); null if
-	 * the source has no {@code #include}, so that the messages keep saying only "Line N".
+	 * Per ogni riga del sorgente dopo le inclusioni, il file e la riga da cui proviene ("nomi.txt:12"); null se
+	 * il sorgente non ha {@code #include}, così che i messaggi continuino a dire solo "Line N".
 	 */
 	private List<String> sourceOrigins;
 
 	/**
-	 * Builds a grammar from a resource, resolving its {@code #include} directives in the same way: a name written in a
-	 * directive is a file in the folder of the resource that contains it, or in a subfolder of it.
-	 * @param anchor class used to find the resources, as for {@link Class#getResourceAsStream}
-	 * @param grammarResource the resource with the grammar, for example {@code "/com/mio/pacchetto/locande.txt"}
-	 * @param postProductionResource the resource with the post-production substitutions, or null
-	 * @throws InvalidGrammarException if a resource is missing or the grammar is not valid
-	 * @throws IOException if a resource cannot be read
+	 * Costruisce una grammatica da una risorsa, risolvendo allo stesso modo le sue direttive {@code #include}: un nome scritto in una
+	 * direttiva è un file nella cartella della risorsa che lo contiene, o in una sua sottocartella.
+	 * @param anchor classe usata per trovare le risorse, come per {@link Class#getResourceAsStream}
+	 * @param grammarResource la risorsa con la grammatica, ad esempio {@code "/com/mio/pacchetto/locande.txt"}
+	 * @param postProductionResource la risorsa con le sostituzioni di post-produzione, o null
+	 * @throws InvalidGrammarException se una risorsa manca o la grammatica non è valida
+	 * @throws IOException se una risorsa non si può leggere
 	 */
 	public static GrammarBean fromResource(Class<?> anchor, String grammarResource, String postProductionResource)
 			throws InvalidGrammarException, IOException {
@@ -536,7 +541,7 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Reads the included files from the class path, in the folder of the main grammar resource.
+	 * Legge i file inclusi dal class path, nella cartella della risorsa della grammatica principale.
 	 */
 	private static final class ResourceIncludeResolver implements IncludeResolver {
 		private final Class<?> anchor;
@@ -560,10 +565,10 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Builds a grammar from a source string, with no post-production substitutions.
-	 * @param grammar grammar source text, see the class documentation for its syntax
-	 * @throws InvalidGrammarException if the text does not describe a valid grammar
-	 * @throws IOException if the text cannot be read
+	 * Costruisce una grammatica da una stringa sorgente, senza sostituzioni di post-produzione.
+	 * @param grammar testo sorgente della grammatica, per la sintassi vedi la documentazione della classe
+	 * @throws InvalidGrammarException se il testo non descrive una grammatica valida
+	 * @throws IOException se il testo non si può leggere
 	 */
 	public GrammarBean(String grammar) throws InvalidGrammarException, IOException {
 		if (grammar == null) {
@@ -573,12 +578,12 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Builds a grammar from a source string and an optional post-production string.
-	 * @param grammar grammar source text, see the class documentation for its syntax
-	 * @param postProduction the optional (can be {@code null}) post-production text, listing
-	 *                       {@code pre:post} literal text substitutions applied to produced text
-	 * @throws InvalidGrammarException if either text does not describe a valid grammar
-	 * @throws IOException if either text cannot be read
+	 * Costruisce una grammatica da una stringa sorgente e da una stringa facoltativa di post-produzione.
+	 * @param grammar testo sorgente della grammatica, per la sintassi vedi la documentazione della classe
+	 * @param postProduction il testo facoltativo (può essere {@code null}) di post-produzione, che elenca
+	 *                       sostituzioni letterali {@code pre:post} applicate al testo prodotto
+	 * @throws InvalidGrammarException se uno dei due testi non descrive una grammatica valida
+	 * @throws IOException se uno dei due testi non si può leggere
 	 */
 	public GrammarBean(String grammar, String postProduction) throws InvalidGrammarException, IOException {
 		if (grammar == null) {
@@ -589,12 +594,12 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Builds a grammar from a source file and an optional post-production file.
-	 * @param grammar grammar source file, see the class documentation for its syntax
-	 * @param postProduction the optional (can be {@code null}) post-production file, listing
-	 *                        {@code pre:post} literal text substitutions applied to produced text
-	 * @throws InvalidGrammarException if either file does not describe a valid grammar
-	 * @throws IOException if either file cannot be read
+	 * Costruisce una grammatica da un file sorgente e da un file facoltativo di post-produzione.
+	 * @param grammar file sorgente della grammatica, per la sintassi vedi la documentazione della classe
+	 * @param postProduction il file facoltativo (può essere {@code null}) di post-produzione, che elenca
+	 *                        sostituzioni letterali {@code pre:post} applicate al testo prodotto
+	 * @throws InvalidGrammarException se uno dei due file non descrive una grammatica valida
+	 * @throws IOException se uno dei due file non si può leggere
 	 */
 	public GrammarBean(InputStream grammar, InputStream postProduction) throws InvalidGrammarException, IOException {
 		if (grammar == null) {
@@ -608,9 +613,9 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Like {@link #GrammarBean(InputStream, InputStream)}, but the grammar can include other files with
-	 * {@code #include <file>}: the resolver opens them (see {@link IncludeResolver}).
-	 * @param includeResolver where the included files are read from; null if the grammar has no {@code #include}
+	 * Come {@link #GrammarBean(InputStream, InputStream)}, ma la grammatica può includere altri file con
+	 * {@code #include <file>}: li apre il risolutore (vedi {@link IncludeResolver}).
+	 * @param includeResolver da dove si leggono i file inclusi; null se la grammatica non ha {@code #include}
 	 */
 	public GrammarBean(InputStream grammar, InputStream postProduction, IncludeResolver includeResolver)
 			throws InvalidGrammarException, IOException {
@@ -622,7 +627,7 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Builds the grammar of a static section (see {@link StaticSection}).
+	 * Costruisce la grammatica di una sezione statica (vedi {@link StaticSection}).
 	 */
 	private GrammarBean(InputStream grammar, IncludeResolver includeResolver, String inlinePrefix)
 			throws InvalidGrammarException, IOException {
@@ -639,7 +644,7 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Reads and parses the grammar file.
+	 * Legge e analizza il file di grammatica.
 	 */
 	private void setSourceFile(InputStream inputStream) throws InvalidGrammarException, IOException {
 		readSourceFileAndCreateProductionsMap(inputStream);
@@ -649,11 +654,11 @@ public class GrammarBean {
 	}
 
 	/**
-	 * The source of the grammar with every {@code #include <file>} replaced, on its own line, by the lines of that
-	 * file (which can include others, up to {@link #MAX_INCLUDE_DEPTH} deep), and every {@code #include_static <file>}
-	 * removed after registering its static section (see {@link StaticSection}). A file is included only once, wherever
-	 * it is asked for again, so two files can include the same third one and a file cannot include itself. A source
-	 * with no directive is returned as it is, and {@link #sourceOrigins} stays null.
+	 * Il sorgente della grammatica con ogni {@code #include <file>} sostituito, su una riga a sé, dalle righe di quel
+	 * file (che può includerne altri, fino a {@link #MAX_INCLUDE_DEPTH} livelli), e ogni {@code #include_static <file>}
+	 * rimosso dopo aver registrato la sua sezione statica (vedi {@link StaticSection}). Un file viene incluso una sola volta, ovunque
+	 * lo si richieda di nuovo, così due file possono includere lo stesso terzo file e un file non può includere se stesso. Un sorgente
+	 * senza direttive viene restituito com'è, e {@link #sourceOrigins} resta null.
 	 */
 	private InputStream withIncludes(InputStream inputStream) throws IOException, InvalidGrammarException {
 		List<String> lines = readLines(inputStream);
@@ -690,15 +695,15 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Whether the line is a full-line comment: it starts with {@link #COMMENT_PREFIX}.
+	 * Dice se la riga è un commento a riga intera: inizia con {@link #COMMENT_PREFIX}.
 	 */
 	private static boolean isComment(String line) {
 		return line.startsWith(COMMENT_PREFIX);
 	}
 
 	/**
-	 * The directive a line is, {@code "include"} or {@code "include_static"}, or null. The name must be the whole word
-	 * after the {@code #}: {@code #includes} or {@code # include} are not directives.
+	 * La direttiva che una riga rappresenta, {@code "include"} o {@code "include_static"}, o null. Il nome deve essere l'intera parola
+	 * dopo il {@code #}: {@code #includes} o {@code # include} non sono direttive.
 	 */
 	private static String directive(String line) {
 		if (!line.startsWith(DIRECTIVE_PREFIX)) {
@@ -713,9 +718,9 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Copies the lines to {@code output}, replacing the include directives with the lines of the files they name.
-	 * @param folder the folder of this file, relative to the main grammar ("" or ending with "/")
-	 * @param name how this file is called in the messages
+	 * Copia le righe in {@code output}, sostituendo le direttive di inclusione con le righe dei file che nominano.
+	 * @param folder la cartella di questo file, relativa alla grammatica principale ("" o che termina con "/")
+	 * @param name come si chiama questo file nei messaggi
 	 */
 	private void expandIncludes(List<String> lines, String folder, String name, int depth, Set<String> alreadyIncluded,
 								List<String> output, List<String> origins) throws IOException, InvalidGrammarException {
@@ -723,7 +728,7 @@ public class GrammarBean {
 		for (int i = 0; i < lines.size(); i++) {
 			String line = lines.get(i);
 			String where = name + ":" + (i + 1);
-			// A line that continues the previous one (see LINE_CONTINUATION_MARKER) is never a directive
+			// Una riga che continua la precedente (vedi LINE_CONTINUATION_MARKER) non è mai una direttiva
 			String directive = continued ? null : directive(line);
 			if (directive != null) {
 				String path = includePath(line, directive, where);
@@ -754,7 +759,7 @@ public class GrammarBean {
 	}
 
 	/**
-	 * The name between {@code <} and {@code >} in an include directive.
+	 * Il nome fra {@code <} e {@code >} in una direttiva di inclusione.
 	 */
 	private static String includePath(String line, String directive, String where) throws InvalidGrammarException {
 		String shown = DIRECTIVE_PREFIX + directive;
@@ -805,8 +810,8 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Registers the static section of {@code #include_static <path>}, loading it the first time anyone asks for it.
-	 * It adds nothing to the text of this grammar: its productions are looked up in the shared section.
+	 * Registra la sezione statica di {@code #include_static <path>}, caricandola la prima volta che qualcuno la chiede.
+	 * Non aggiunge nulla al testo di questa grammatica: le sue produzioni vengono cercate nella sezione condivisa.
 	 */
 	private void includeStatic(String path, String folder, String where) throws IOException, InvalidGrammarException {
 		if (staticSource) {
@@ -844,51 +849,51 @@ public class GrammarBean {
 	}
 
 	// ---------------------------------------------------------------------------------------------------------
-	// Static sections: #include_static <file>
+	// Sezioni statiche: #include_static <file>
 	// ---------------------------------------------------------------------------------------------------------
 
 	/**
-	 * Guards everything shared among the grammars: {@link #STATIC_SECTIONS}, the consumable productions of every
-	 * {@link StaticSection}, {@link #staticEpoch} and {@link #staticVersion}. A single lock, so that two threads
-	 * producing from two different grammars never take two locks in different orders.
+	 * Protegge tutto ciò che è condiviso fra le grammatiche: {@link #STATIC_SECTIONS}, le produzioni consumabili di ogni
+	 * {@link StaticSection}, {@link #staticEpoch} e {@link #staticVersion}. Un unico lock, così che due thread che
+	 * producono da due grammatiche diverse non prendano mai due lock in ordine diverso.
 	 */
 	private static final Object STATIC_LOCK = new Object();
 	/**
-	 * Prefix of the inline-production names of a static section, followed by its number: {@code PROD_S1_0}.
+	 * Prefisso dei nomi delle produzioni in linea di una sezione statica, seguito dal suo numero: {@code PROD_S1_0}.
 	 */
 	private static final String STATIC_INLINE_PREFIX = "PROD_S";
 	/**
-	 * The loaded static sections, by identity of the file (see {@link IncludeResolver#identity}).
+	 * Le sezioni statiche caricate, per identità del file (vedi {@link IncludeResolver#identity}).
 	 */
 	private static final Map<String, StaticSection> STATIC_SECTIONS = new HashMap<>();
 	/**
-	 * Changes with {@link #resetStaticProductions()}: a grammar that sees a new one rebuilds its own productions.
+	 * Cambia con {@link #resetStaticProductions()}: una grammatica che ne vede uno nuovo ricostruisce le proprie produzioni.
 	 */
 	private static long staticEpoch = 0;
 	/**
-	 * Changes whenever a static production is exhausted (or on a reset): a grammar that sees a new one prunes what
-	 * depended on it.
+	 * Cambia ogni volta che una produzione statica si esaurisce (o a un reset): una grammatica che ne vede uno nuovo pota ciò che
+	 * dipendeva da essa.
 	 */
 	private static long staticVersion = 0;
 
 	/**
-	 * A file included with {@code #include_static}: parsed once, for the whole program, as a grammar of its own (so it
-	 * cannot refer to productions of the grammar that includes it, which instead can refer to its productions). Its
-	 * productions are <b>shared</b>: a one-shot production consumed through one grammar is consumed for every other
-	 * grammar that includes the same file, until {@link GrammarBean#resetStaticProductions()}.
+	 * Un file incluso con {@code #include_static}: analizzato una sola volta, per tutto il programma, come grammatica a sé (così non
+	 * può riferirsi alle produzioni della grammatica che lo include, che invece può riferirsi alle sue). Le sue
+	 * produzioni sono <b>condivise</b>: una produzione monouso consumata tramite una grammatica è consumata per ogni altra
+	 * grammatica che include lo stesso file, finché non si chiama {@link GrammarBean#resetStaticProductions()}.
 	 * <p>
-	 * There is no automatic refill: an exhausted production stays exhausted, and the alternatives that depended on it
-	 * are removed, exactly as for an ordinary one-shot production (see {@link #removeProduction}).
+	 * Non c'è alcun rifornimento automatico: una produzione esaurita resta esaurita, e le alternative che dipendevano da essa
+	 * sono rimosse, esattamente come per una normale produzione monouso (vedi {@link #removeProduction}).
 	 */
 	private static final class StaticSection {
 		final String key;
 		/**
-		 * The productions as loaded, weights included: never modified afterwards.
+		 * Le produzioni come caricate, pesi compresi: mai modificate dopo.
 		 */
 		final Map<String, List<WeightedAlternative>> productions;
 		final Set<String> oneShot;
 		/**
-		 * What can still be produced: the shared, consumable copy of {@link #productions}.
+		 * Ciò che si può ancora produrre: la copia condivisa e consumabile di {@link #productions}.
 		 */
 		final Map<String, List<WeightedAlternative>> current = new LinkedHashMap<>();
 
@@ -908,8 +913,8 @@ public class GrammarBean {
 	}
 
 	/**
-	 * The productions a grammar can produce now: its own, consumed as the grammar produces, and, for a name that is not
-	 * its own, the shared productions of its static sections.
+	 * Le produzioni che una grammatica può produrre ora: le proprie, consumate man mano che la grammatica produce, e, per un nome che non è
+	 * suo, le produzioni condivise delle sue sezioni statiche.
 	 */
 	private final class CurrentProductions extends LinkedHashMap<String, List<WeightedAlternative>> {
 		private static final long serialVersionUID = 1L;
@@ -938,10 +943,10 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Restores the shared productions of every static section loaded so far: what was consumed through any grammar
-	 * becomes available again. Every grammar that includes a static section also rebuilds its own productions the next
-	 * time it is used (including its own one-shot ones), so that nothing stays pruned for a name that is back. Call it
-	 * at the start of a game (see {@code ProduttoreDiTestiCasuale.resetProduzioni}).
+	 * Ripristina le produzioni condivise di ogni sezione statica caricata finora: ciò che era stato consumato tramite una qualsiasi grammatica
+	 * torna disponibile. Ogni grammatica che include una sezione statica ricostruisce inoltre le proprie produzioni la volta
+	 * successiva che viene usata (comprese quelle monouso proprie), così che nulla resti potato per un nome che è tornato. Si chiama
+	 * all'inizio di una partita (vedi {@code ProduttoreDiTestiCasuale.resetProduzioni}).
 	 */
 	public static void resetStaticProductions() {
 		synchronized (STATIC_LOCK) {
@@ -954,7 +959,7 @@ public class GrammarBean {
 	}
 
 	/**
-	 * The static section of that file, parsed the first time and shared afterwards.
+	 * La sezione statica di quel file, analizzata la prima volta e condivisa poi.
 	 */
 	private StaticSection loadStaticSection(String key, String fullPath, String where) throws IOException, InvalidGrammarException {
 		synchronized (STATIC_LOCK) {
@@ -984,7 +989,7 @@ public class GrammarBean {
 	}
 
 	/**
-	 * A grammar cannot define a production that one of its static sections already defines.
+	 * Una grammatica non può definire una produzione che una delle sue sezioni statiche definisce già.
 	 */
 	private void checkStaticNameCollisions() throws InvalidGrammarException {
 		if (staticSections.isEmpty()) {
@@ -1014,16 +1019,16 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Whether a production of that name exists, in this grammar or in one of its static sections.
+	 * Dice se esiste una produzione con quel nome, in questa grammatica o in una delle sue sezioni statiche.
 	 */
 	private boolean isDefined(String name) {
 		return productionsMap.containsKey(name) || isStaticName(name);
 	}
 
 	/**
-	 * Picks an alternative of a static production, consuming it if the production is one-shot. When the production is
-	 * exhausted it is removed from the shared productions with its dependents, and this grammar prunes its own
-	 * alternatives that used it. Must be called holding {@link #STATIC_LOCK}.
+	 * Sceglie un'alternativa di una produzione statica, consumandola se la produzione è monouso. Quando la produzione è
+	 * esaurita viene rimossa dalle produzioni condivise insieme ai suoi dipendenti, e questa grammatica pota le proprie
+	 * alternative che la usavano. Va chiamato tenendo {@link #STATIC_LOCK}.
 	 */
 	private String getStaticProduction(String production) {
 		StaticSection section = staticSectionOf(production);
@@ -1045,8 +1050,8 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Removes from this grammar's own productions the alternatives that need a static production that is no longer
-	 * available, with what depended on them (see {@link #removeProduction}). Must be called holding
+	 * Toglie dalle produzioni proprie di questa grammatica le alternative che richiedono una produzione statica non più
+	 * disponibile, insieme a ciò che dipendeva da esse (vedi {@link #removeProduction}). Va chiamato tenendo
 	 * {@link #STATIC_LOCK}.
 	 */
 	private void syncStatic() {
@@ -1060,8 +1065,8 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Brings this grammar up to date with the static sections, before producing: if they were reset it rebuilds its own
-	 * productions, and if something was exhausted by another grammar it prunes what depended on it.
+	 * Aggiorna questa grammatica rispetto alle sezioni statiche, prima di produrre: se sono state resettate ricostruisce le proprie
+	 * produzioni, e se qualcosa è stato esaurito da un'altra grammatica pota ciò che ne dipendeva.
 	 */
 	private void refreshStatic() {
 		if (staticSections.isEmpty()) {
@@ -1078,8 +1083,8 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Where a line of the source is, for the error messages: "Line N", plus the file and line it comes from when the
-	 * source includes other files ("Line 120 (nomi.txt:12)").
+	 * Dove si trova una riga del sorgente, per i messaggi di errore: "Line N", più il file e la riga da cui proviene quando il
+	 * sorgente include altri file ("Line 120 (nomi.txt:12)").
 	 */
 	private String position(int lineNumber) {
 		if (sourceOrigins == null || lineNumber < 1 || lineNumber > sourceOrigins.size()) {
@@ -1089,15 +1094,15 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Reads the grammar file line by line, populating {@link #productionsMap}: each
-	 * unindented line starts a new production (see {@link #handleProduction}), each
-	 * TAB/space-indented line adds children to the current production (see
-	 * {@link #handleChildren}). Comments and empty lines are skipped. A line ending with
-	 * {@link #LINE_CONTINUATION_MARKER} is not yet finished: the marker is stripped, and
-	 * the following line is appended in its place, repeating as needed until a line not
-	 * ending with the marker is found; reaching the end of the file while still expecting
-	 * a continuation is an error.
-	 * @throws InvalidGrammarException if the file ends with a dangling line continuation marker
+	 * Legge il file di grammatica riga per riga, popolando {@link #productionsMap}: ogni riga
+	 * non rientrata inizia una nuova produzione (vedi {@link #handleProduction}), ogni riga
+	 * rientrata con TAB/spazio aggiunge figli alla produzione corrente (vedi
+	 * {@link #handleChildren}). I commenti e le righe vuote vengono saltati. Una riga che termina con
+	 * {@link #LINE_CONTINUATION_MARKER} non è ancora finita: il marcatore viene tolto e
+	 * la riga seguente viene accodata al suo posto, ripetendo finché non si trova una riga che non
+	 * termina con il marcatore; raggiungere la fine del file mentre si attende ancora
+	 * una continuazione è un errore.
+	 * @throws InvalidGrammarException se il file termina con un marcatore di continuazione di riga pendente
 	 */
 	private void readSourceFileAndCreateProductionsMap(InputStream inputStream) throws IOException, InvalidGrammarException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(withIncludes(inputStream), StandardCharsets.UTF_8))) {
@@ -1156,13 +1161,13 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Checks that the production just closed off by reaching a new production header
-	 * (or the end of file) has at least one child, since a production that produces
-	 * nothing would break generation later on. Called with the production that was
-	 * still being filled in, so that every production in the file is checked exactly
-	 * once: when the header that closes it is read, or, for the last one, when the end
-	 * of file is reached.
-	 * @throws InvalidGrammarException if {@code previousProduction} has no children at all
+	 * Verifica che la produzione appena chiusa dall'arrivo di una nuova intestazione di produzione
+	 * (o dalla fine del file) abbia almeno un figlio, dato che una produzione che non produce
+	 * nulla farebbe fallire la generazione più avanti. Viene chiamato con la produzione che era
+	 * ancora in corso di riempimento, così che ogni produzione del file sia controllata esattamente
+	 * una volta: quando si legge l'intestazione che la chiude oppure, per l'ultima, quando si
+	 * raggiunge la fine del file.
+	 * @throws InvalidGrammarException se {@code previousProduction} non ha alcun figlio
 	 */
 	private void validatePreviousProduction(int currentLineNumber, String previousProduction) throws InvalidGrammarException {
 		if (previousProduction != null) {
@@ -1174,20 +1179,20 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Registers a new production header line: strips the {@link #ONE_SHOT_MARKER}
-	 * suffix if present (marking the production as one-shot), sets it as the
-	 * {@link #rootNode} if it is the first production found, and adds it (initially
-	 * childless) to {@link #productionsMap}. If the production is derived from others,
-	 * it checks for self, mutual, and repeated derivations.
+	 * Registra una nuova riga di intestazione di produzione: toglie il suffisso {@link #ONE_SHOT_MARKER}
+	 * se presente (segnando la produzione come monouso), la imposta come
+	 * {@link #rootNode} se è la prima produzione trovata, e la aggiunge (inizialmente
+	 * senza figli) a {@link #productionsMap}. Se la produzione deriva da altre,
+	 * controlla che non ci siano derivazioni da sé, reciproche o ripetute.
 	 *
-	 * @return the plain production name (without the one-shot marker)
-	 * @throws InvalidGrammarException if a production with the same name was already declared
+	 * @return il nome semplice della produzione (senza il marcatore monouso)
+	 * @throws InvalidGrammarException se una produzione con lo stesso nome è già stata dichiarata
 	 */
 	private String handleProduction(int currentLineNumber, String line) throws InvalidGrammarException {
 		String currentProduction = line.trim();
 		if (currentProduction.contains(DERIVED_MARKER)) {
 			String derivingProductions = currentProduction.substring(currentProduction.indexOf(DERIVED_MARKER) + DERIVED_MARKER.length());
-			// Clean up deriving productions
+			// Ripulisce le produzioni da cui si deriva
 			derivingProductions = derivingProductions.replaceAll("\\s+", " ").trim();
 
 			currentProduction = currentProduction.substring(0, currentProduction.indexOf(DERIVED_MARKER)).trim();
@@ -1229,15 +1234,15 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Adds the alternatives found on an indented line as children of {@code currentProduction}.
-	 * The line is first split into top-level alternatives on {@code |}
-	 * (ignoring any {@code |} found inside a {@code {...}} inline alternation group, see
-	 * {@link #splitTopLevelAlternatives}); each alternative then has its leading {@code [^N]}
-	 * weight token, if any, parsed off (see {@link #parseWeight}) before its inline alternation
-	 * groups are expanded into auto-generated productions (see {@link #expandInlineAlternations}).
-	 * @throws InvalidGrammarException if the line is not preceded by a production header,
-	 *                                  it contains a malformed inline alternation group or a
-	 *                                  malformed weight token
+	 * Aggiunge le alternative trovate su una riga rientrata come figli di {@code currentProduction}.
+	 * La riga viene prima divisa in alternative di primo livello su {@code |}
+	 * (ignorando ogni {@code |} che si trovi dentro un gruppo di alternative in linea {@code {...}}, vedi
+	 * {@link #splitTopLevelAlternatives}); poi, per ogni alternativa, si analizza e si toglie l'eventuale
+	 * elemento di peso {@code [^N]} iniziale (vedi {@link #parseWeight}) prima che i suoi gruppi di
+	 * alternative in linea siano espansi in produzioni generate automaticamente (vedi {@link #expandInlineAlternations}).
+	 * @throws InvalidGrammarException se la riga non è preceduta da un'intestazione di produzione,
+	 *                                  contiene un gruppo di alternative in linea malformato o un
+	 *                                  elemento di peso malformato
 	 */
 	private void handleChildren(String line, int currentLine, String currentProduction) throws InvalidGrammarException {
 		List<WeightedAlternative> currentProductionChildren = productionsMap.get(currentProduction);
@@ -1248,15 +1253,15 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Parses and strips a leading {@code [^N]} weight token from {@code trimmedChild}, if
-	 * present, so that this alternative is picked {@code N} times as often as one with the
-	 * default weight of 1 (see {@link #getProduction}). {@code N} may be fractional (e.g.
-	 * {@code [^2.5]}). An alternative with no such token gets weight 1, exactly matching the
-	 * uniform selection behavior of every alternative before this feature existed.
-	 * @return a {@link WeightedAlternative} holding the remaining text and the parsed weight
-	 *         (or weight 1 and the untouched text, if no weight token is present)
-	 * @throws InvalidGrammarException if a weight token is opened but not closed, or its
-	 *                                  value is not a positive number
+	 * Analizza e toglie da {@code trimmedChild} un eventuale elemento di peso {@code [^N]} iniziale,
+	 * in modo che questa alternativa sia scelta {@code N} volte più spesso di una con il
+	 * peso predefinito di 1 (vedi {@link #getProduction}). {@code N} può essere frazionario (ad esempio
+	 * {@code [^2.5]}). Un'alternativa senza tale elemento ha peso 1, esattamente come
+	 * la selezione uniforme che ogni alternativa aveva prima che questa funzione esistesse.
+	 * @return una {@link WeightedAlternative} con il testo rimanente e il peso analizzato
+	 *         (oppure peso 1 e il testo intatto, se non c'è alcun elemento di peso)
+	 * @throws InvalidGrammarException se un elemento di peso è aperto ma non chiuso, o il suo
+	 *                                  valore non è un numero positivo
 	 */
 	private WeightedAlternative parseWeight(String trimmedChild, int currentLineNumber) throws InvalidGrammarException {
 		String weightTokenStart = OPENING_BRACKET + WEIGHT_MARKER;
@@ -1281,18 +1286,18 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Splits an indented line into its top-level alternatives on {@code |},
-	 * treating any {@code |} found between an opening and matching closing curly brace as part of
-	 * an inline alternation group rather than an alternative separator, so that a line like
-	 * <code>A {a|b} | C</code> is split into two pieces (<code>A {a|b} </code> and <code> C</code>),
-	 * not four. A {@code |} found between an opening and matching closing square bracket is
-	 * likewise part of a token rather than a separator, which is what lets a token carry a
-	 * default value (<code>[Name? | fallback]</code>, see {@link #splitDefault}) or an
-	 * assignment whose value contains a literal {@code |}. A {@code |} (or {@code {}}/{@code }}})
-	 * found inside a raw literal span ({@code "..."}) is never treated as a separator either;
-	 * quotes and escapes are left untouched here (they are resolved later, in
+	 * Divide una riga rientrata nelle sue alternative di primo livello su {@code |},
+	 * trattando ogni {@code |} che si trovi fra una graffa di apertura e la corrispondente graffa di chiusura come parte di
+	 * un gruppo di alternative in linea e non come separatore di alternative, così che una riga come
+	 * <code>A {a|b} | C</code> sia divisa in due pezzi (<code>A {a|b} </code> e <code> C</code>),
+	 * non in quattro. Allo stesso modo un {@code |} fra una parentesi quadra di apertura e la corrispondente
+	 * parentesi di chiusura fa parte di un elemento e non è un separatore, ed è ciò che permette a un elemento di portare un
+	 * valore predefinito (<code>[Nome? | ripiego]</code>, vedi {@link #splitDefault}) o
+	 * un'assegnazione il cui valore contiene un {@code |} letterale. Un {@code |} (o {@code {}}/{@code }}})
+	 * dentro un tratto letterale grezzo ({@code "..."}) non è mai trattato nemmeno come separatore;
+	 * virgolette ed escape qui sono lasciate intatte (vengono risolte più tardi, in
 	 * {@link #expandInlineAlternations}).
-	 * @throws InvalidGrammarException if a raw literal span is opened but never closed
+	 * @throws InvalidGrammarException se un tratto letterale grezzo è aperto ma mai chiuso
 	 */
 	private List<String> splitTopLevelAlternatives(String line, int currentLineNumber) throws InvalidGrammarException {
 		List<String> alternatives = new ArrayList<>();
@@ -1342,15 +1347,15 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Expands every top-level inline alternation group (<code>{opt1|opt2|...}</code>) found in
-	 * {@code child} into a reference to a brand new, auto-named production (see
-	 * {@link #createInlineProduction}), so that the returned text can be treated exactly like any
-	 * other leaf from then on. A group's own content may contain further nested groups (e.g.
-	 * <code>{a|{b|c}}</code>); those are expanded recursively by {@link #createInlineProduction} into
-	 * their own on-the-fly productions before the outer group is registered.
-	 * @throws InvalidGrammarException if an opening curly brace is not matched by a closing one,
-	 *                                  if a raw literal span is opened but never closed, or if the
-	 *                                  resulting inline production would be empty
+	 * Espande ogni gruppo di alternative in linea di primo livello (<code>{opz1|opz2|...}</code>) trovato in
+	 * {@code child} in un riferimento a una produzione nuova con nome generato automaticamente (vedi
+	 * {@link #createInlineProduction}), così che il testo restituito possa da lì in poi essere trattato esattamente come
+	 * ogni altra foglia. Il contenuto di un gruppo può a sua volta contenere altri gruppi annidati (ad esempio
+	 * <code>{a|{b|c}}</code>); questi sono espansi ricorsivamente da {@link #createInlineProduction} nelle
+	 * loro produzioni al volo prima che il gruppo esterno sia registrato.
+	 * @throws InvalidGrammarException se una graffa di apertura non ha la corrispondente di chiusura,
+	 *                                  se un tratto letterale grezzo è aperto ma mai chiuso, o se la
+	 *                                  produzione in linea risultante sarebbe vuota
 	 */
 	private String expandInlineAlternations(String child, int currentLineNumber) throws InvalidGrammarException {
 		StringBuilder result = new StringBuilder();
@@ -1369,10 +1374,10 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Finds the index of the next {@link #OPENING_BRACE} at or after {@code fromIndex} that is not
-	 * inside a raw literal span ({@code "..."}), so that e.g., in <code>"a {b} c"</code> the whole
-	 * text (including the brace) is treated as literal, not as an inline alternation group.
-	 * @return the index of the next unquoted opening brace, or {@code -1} if there is none
+	 * Trova l'indice della prossima {@link #OPENING_BRACE} a partire da {@code fromIndex} (compreso) che non si trovi
+	 * dentro un tratto letterale grezzo ({@code "..."}), così che ad esempio in <code>"a {b} c"</code> l'intero
+	 * testo (graffa compresa) sia trattato come letterale, non come gruppo di alternative in linea.
+	 * @return l'indice della prossima graffa di apertura non fra virgolette, o {@code -1} se non ce n'è
 	 */
 	private int findNextUnquotedOpeningBrace(String child, int fromIndex) {
 		boolean inQuotes = false;
@@ -1394,14 +1399,13 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Strips the {@link #QUOTE_CHAR} delimiters of every raw literal span found in {@code text},
-	 * turning a {@code \"} escape into a literal {@code "} and a {@code \[}/{@code \]} escape into
-	 * the placeholder that {@link #postProduce} will turn back into a literal bracket. This is the
-	 * single point where a raw
-	 * literal span's markers are actually resolved: earlier scans ({@link #splitTopLevelAlternatives},
-	 * {@link #findMatchingClosingBrace}, {@link #findNextUnquotedOpeningBrace}) only need to know
-	 * where a span is, not strip it, since doing so before group detection is finished would make a
-	 * quote-protected {@link #OPENING_BRACE}/{@link #CLOSING_BRACE} indistinguishable from real syntax.
+	 * Toglie i delimitatori {@link #QUOTE_CHAR} di ogni tratto letterale grezzo trovato in {@code text},
+	 * trasformando un escape {@code \"} in una {@code "} letterale e un escape {@code \[}/{@code \]} nel
+	 * segnaposto che {@link #postProduce} riconvertirà in una parentesi letterale. È l'unico punto in cui i marcatori
+	 * di un tratto letterale grezzo sono effettivamente risolti: le scansioni precedenti ({@link #splitTopLevelAlternatives},
+	 * {@link #findMatchingClosingBrace}, {@link #findNextUnquotedOpeningBrace}) devono solo sapere
+	 * dove si trova un tratto, non toglierlo, dato che farlo prima che il riconoscimento dei gruppi sia finito renderebbe una
+	 * {@link #OPENING_BRACE}/{@link #CLOSING_BRACE} protetta dalle virgolette indistinguibile dalla sintassi vera.
 	 */
 	private String unescapeQuotes(String text) {
 		StringBuilder result = new StringBuilder();
@@ -1433,13 +1437,13 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Finds the closing curly brace matching the opening one at {@code openingBraceIndex}, honoring
-	 * nesting depth so that e.g., in <code>{a|{b|c}}</code> the outer group's match is the very last
-	 * <code>}</code>, not the first one encountered.
-	 * A {@link #OPENING_BRACE}/{@link #CLOSING_BRACE} found inside a raw literal span
-	 * ({@code "..."}) does not affect the depth count, so a group's own text may contain
-	 * literal braces without breaking its matching.
-	 * @throws InvalidGrammarException if no matching closing brace exists
+	 * Trova la graffa di chiusura corrispondente a quella di apertura in {@code openingBraceIndex}, rispettando
+	 * il livello di annidamento, così che ad esempio in <code>{a|{b|c}}</code> la corrispondente del gruppo esterno sia proprio l'ultima
+	 * <code>}</code>, non la prima incontrata.
+	 * Una {@link #OPENING_BRACE}/{@link #CLOSING_BRACE} dentro un tratto letterale grezzo
+	 * ({@code "..."}) non influisce sul conteggio della profondità, così il testo di un gruppo può contenere
+	 * graffe letterali senza compromettere l'appaiamento.
+	 * @throws InvalidGrammarException se non esiste una graffa di chiusura corrispondente
 	 */
 	private int findMatchingClosingBrace(String child, int openingBraceIndex, int currentLineNumber) throws InvalidGrammarException {
 		int depth = 0;
@@ -1468,24 +1472,24 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Creates a new production out of an inline alternation group's content, named
-	 * {@link #INLINE_PRODUCTION_PREFIX} followed by a unique progressive number, and
-	 * registers it in {@link #productionsMap}. Alternatives are split with
-	 * {@link #splitTopLevelAlternatives} (not a naive regex split) so that a nested group's own
-	 * <code>|</code> separators aren't mistaken for top-level ones, and each alternative is passed
-	 * back through {@link #expandInlineAlternations} so any nested group it contains becomes its
-	 * own on-the-fly production before this one is registered. A blank alternative (e.g. the
-	 * trailing empty option in {@code {big|fierce|}}) is kept as an empty-string leaf, exactly like
-	 * a trailing {@code |} on a regular production's children line — this is what lets an inline
-	 * group express an optional element (e.g. an optional adjective). Each option may also start
-	 * with a (possibly fractional) {@code [^N]} weight token (see {@link #parseWeight}), letting
-	 * an on-the-fly production be weighted, though this is entirely opt-in: an option with no such
-	 * token gets the default weight of 1, so inline groups need no special handling to stay
-	 * uniformly random.
-	 * @param inlineOptionsText the raw text between the opening and closing curly braces
-	 * @return the name of the newly created production
-	 * @throws InvalidGrammarException if a nested inline alternation group is malformed, or an
-	 *                                  option's weight token is malformed
+	 * Crea una nuova produzione dal contenuto di un gruppo di alternative in linea, con nome
+	 * {@link #INLINE_PRODUCTION_PREFIX} seguito da un numero progressivo univoco, e
+	 * la registra in {@link #productionsMap}. Le alternative sono divise con
+	 * {@link #splitTopLevelAlternatives} (non con una divisione ingenua per espressione regolare), così che i separatori
+	 * <code>|</code> di un gruppo annidato non siano scambiati per quelli di primo livello, e ogni alternativa viene passata
+	 * di nuovo a {@link #expandInlineAlternations}, così che ogni gruppo annidato che contiene diventi la
+	 * propria produzione al volo prima che questa sia registrata. Un'alternativa vuota (ad esempio
+	 * l'ultima opzione vuota in {@code {grande|feroce|}}) è conservata come foglia a stringa vuota, esattamente come
+	 * un {@code |} finale sulla riga dei figli di una produzione normale: è ciò che permette a un gruppo in linea
+	 * di esprimere un elemento facoltativo (ad esempio un aggettivo facoltativo). Ogni opzione può anche iniziare
+	 * con un elemento di peso {@code [^N]} (eventualmente frazionario; vedi {@link #parseWeight}), che permette
+	 * di pesare una produzione al volo, benché sia del tutto facoltativo: un'opzione senza tale
+	 * elemento ha il peso predefinito di 1, perciò i gruppi in linea non richiedono alcun trattamento speciale per restare
+	 * uniformemente casuali.
+	 * @param inlineOptionsText il testo grezzo fra la graffa di apertura e quella di chiusura
+	 * @return il nome della produzione appena creata
+	 * @throws InvalidGrammarException se un gruppo di alternative in linea annidato è malformato, o
+	 *                                  l'elemento di peso di un'opzione è malformato
 	 */
 	private String createInlineProduction(String inlineOptionsText, int currentLineNumber) throws InvalidGrammarException {
 		List<String> rawOptions = splitTopLevelAlternatives(inlineOptionsText, currentLineNumber);
@@ -1509,18 +1513,18 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Walks every child of every production looking for {@code [Name]} references and
-	 * validates each of them via {@link #checkTokenValidity}. Called once, right after
-	 * the whole grammar file (including any inline-alternation-generated productions)
-	 * has been parsed.
-	 * <p>A key assigned anywhere via {@code [key=value]} is a valid target for a
-	 * {@code *}/{@code !}/plain reference elsewhere, even if no production named
-	 * {@code key} exists, since at runtime such a reference is satisfied from the
-	 * fixed-productions cache rather than from the productions map. This requires a
-	 * first pass ({@link #collectAssignedKeys()}) over the whole grammar before the
-	 * actual validation pass, since an assignment can textually appear after the
-	 * reference that depends on it.
-	 * @throws InvalidGrammarException if a reference is malformed or points to an undefined production
+	 * Scorre ogni figlio di ogni produzione cercando i riferimenti {@code [Nome]} e
+	 * convalida ciascuno con {@link #checkTokenValidity}. Viene chiamato una volta, subito dopo che
+	 * l'intero file di grammatica (comprese le produzioni generate dai gruppi di alternative in linea)
+	 * è stato analizzato.
+	 * <p>Una chiave assegnata in un punto qualsiasi con {@code [chiave=valore]} è un bersaglio valido per un
+	 * riferimento {@code *}/{@code !}/semplice altrove, anche se non esiste alcuna produzione di nome
+	 * {@code chiave}, dato che a runtime un riferimento simile è soddisfatto dalla cache delle
+	 * produzioni fissate e non dalla mappa delle produzioni. Serve quindi un
+	 * primo passaggio ({@link #collectAssignedKeys()}) su tutta la grammatica prima del
+	 * passaggio di convalida vero e proprio, dato che un'assegnazione può comparire nel testo dopo il
+	 * riferimento che ne dipende.
+	 * @throws InvalidGrammarException se un riferimento è malformato o punta a una produzione non definita
 	 */
 	private void checkProductionsValidity() throws InvalidGrammarException {
 		Set<String> assignedKeys = collectAssignedKeys();
@@ -1532,9 +1536,9 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Walks every child of every production collecting the keys assigned via
-	 * {@code [key=value]}, including assignments nested inside another assignment's
-	 * value (e.g. {@code [key=[OtherProduction]]}).
+	 * Scorre ogni figlio di ogni produzione raccogliendo le chiavi assegnate con
+	 * {@code [chiave=valore]}, comprese le assegnazioni annidate nel valore di un'altra
+	 * assegnazione (ad esempio {@code [chiave=[AltraProduzione]]}).
 	 */
 	private Set<String> collectAssignedKeys() throws InvalidGrammarException {
 		Set<String> assignedKeys = new HashSet<>();
@@ -1553,7 +1557,7 @@ public class GrammarBean {
 			String tokenBody = text.substring(openingBracketIndex + 1, closingBracketIndex);
 			TokenWithDefault withDefault = splitDefault(tokenBody);
 			if (withDefault.fallback != null) {
-				// a defaulted token only ever reads; its fallback, though, may well assign
+				// un elemento con predefinito legge soltanto; il suo ripiego, però, può benissimo assegnare
 				collectAssignedKeys(withDefault.fallback, assignedKeys);
 			} else {
 				int equalsPosition = tokenBody.indexOf(ASSIGNMENT_MARKER);
@@ -1567,9 +1571,9 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Walks every {@code [...]} token in {@code text} (nesting-aware, so a token like
-	 * {@code [key=[OtherProduction]]} is treated as a single outer token whose value is
-	 * itself validated recursively) and validates each via {@link #checkTokenValidity}.
+	 * Scorre ogni elemento {@code [...]} in {@code text} (tenendo conto dell'annidamento, così un elemento come
+	 * {@code [chiave=[AltraProduzione]]} è trattato come un unico elemento esterno il cui valore è
+	 * a sua volta convalidato ricorsivamente) e convalida ciascuno con {@link #checkTokenValidity}.
 	 */
 	private void checkTokensValidity(String text, Set<String> assignedKeys) throws InvalidGrammarException {
 		int openingBracketIndex;
@@ -1581,12 +1585,12 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Validates the body of a single {@code [...]} reference (a fixed-production marker,
-	 * an assignment, a value reference, or a plain production name).
-	 * @throws InvalidGrammarException if a fixed-production marker has no name after it,
-	 *                                  an assignment marker has no key before it, or the
-	 *                                  token is a plain name that is not a defined production
-	 *                                  and was not assigned anywhere in the grammar
+	 * Convalida il corpo di un singolo riferimento {@code [...]} (un marcatore di produzione fissata,
+	 * un'assegnazione, un riferimento a valore, o un semplice nome di produzione).
+	 * @throws InvalidGrammarException se un marcatore di produzione fissata non ha un nome dopo di sé,
+	 *                                  un marcatore di assegnazione non ha una chiave prima di sé, o
+	 *                                  l'elemento è un semplice nome che non è una produzione definita
+	 *                                  e non è stato assegnato in nessun punto della grammatica
 	 */
 	private void checkTokenValidity(String thisProduction, Set<String> assignedKeys) throws InvalidGrammarException {
 		TokenWithDefault withDefault = splitDefault(thisProduction);
@@ -1628,9 +1632,9 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Like {@link #findClosingBracket}, but reports a mismatched bracket as an
-	 * {@link InvalidGrammarException} instead of an {@link IllegalArgumentException},
-	 * for use during grammar-load-time validation.
+	 * Come {@link #findClosingBracket}, ma segnala una parentesi non appaiata come
+	 * {@link InvalidGrammarException} invece che come {@link IllegalArgumentException},
+	 * per l'uso durante la convalida al caricamento della grammatica.
 	 */
 	private int findClosingBracketOrThrow(String text, int openingBracketIndex) throws InvalidGrammarException {
 		try {
@@ -1641,18 +1645,18 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Boosts every alternative's weight by {@link #SCALE_FACTOR} times the (recursively
-	 * adjusted) aggregate weight of every production it references (see
-	 * {@link #findReferencedProductions}), so alternatives that expand into structurally
-	 * richer subtrees are picked proportionally more often under
-	 * {@link TipoModalitaProduzioneTesti#CASUALE}, without needing a hand-written {@code [^N]}
-	 * token on every alternative. Called once, right after the whole grammar (including
-	 * inline-alternation-group productions) has been parsed and validated, and before
-	 * {@link #reset()} ever copies {@link #productionsMap} into
+	 * Aumenta il peso di ogni alternativa di {@link #SCALE_FACTOR} volte il peso aggregato (aggiustato
+	 * ricorsivamente) di ogni produzione che referenzia (vedi
+	 * {@link #findReferencedProductions}), così che le alternative che si espandono in sottoalberi
+	 * strutturalmente più ricchi siano scelte proporzionalmente più spesso con
+	 * {@link TipoModalitaProduzioneTesti#CASUALE}, senza bisogno di un elemento {@code [^N]}
+	 * scritto a mano su ogni alternativa. Viene chiamato una volta, subito dopo che l'intera grammatica (comprese
+	 * le produzioni dei gruppi di alternative in linea) è stata analizzata e convalidata, e prima che
+	 * {@link #reset()} copi mai {@link #productionsMap} in
 	 * {@link #currentProductionsMap}.
 	 * <p>
-	 * Productions are visited in declaration order, which is what makes the outcome for
-	 * reference cycles predictable from the grammar file; see
+	 * Le produzioni sono visitate nell'ordine di dichiarazione, ed è ciò che rende l'esito per
+	 * i cicli di riferimenti prevedibile dal file di grammatica; vedi
 	 * {@link #computeAdjustedAggregateWeight}.
 	 */
 	private void adjustWeightsForDescendants() {
@@ -1664,20 +1668,19 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Returns the aggregate (sum of all alternatives') weight of the production {@code name}
-	 * after recursively boosting each of its alternatives via
-	 * {@link #adjustWeightsForDescendants}, replacing its entry in {@link #productionsMap}
-	 * with the boosted alternatives as a side effect. Results are memoized in
+	 * Restituisce il peso aggregato (somma di quelli di tutte le alternative) della produzione {@code name}
+	 * dopo aver aumentato ricorsivamente ciascuna delle sue alternative tramite
+	 * {@link #adjustWeightsForDescendants}, sostituendo come effetto collaterale la sua voce in {@link #productionsMap}
+	 * con le alternative aumentate. I risultati sono memorizzati in
 	 * {@code aggregateWeightCache}.
 	 * <p>
-	 * Cycle-safe: production references may form cycles (self- or mutually-recursive
-	 * productions). A production still being computed higher up the call stack (tracked in
-	 * {@code inProgressProductions}) is not re-entered; its current, not-yet-boosted
-	 * alternatives are summed directly instead, breaking the cycle with that production's
-	 * original base weight. For a cycle spanning more than one production, the member reached
-	 * first ends up with a bigger boost than the other(s); since {@link #productionsMap} is
-	 * insertion-ordered, that is the member declared first in the grammar file, so the
-	 * asymmetry can be predicted (and reordered) by reading the file.
+	 * Sicuro rispetto ai cicli: i riferimenti fra produzioni possono formare cicli (produzioni ricorsive su se stesse
+	 * o a vicenda). Una produzione ancora in calcolo più in alto nello stack delle chiamate (tracciata in
+	 * {@code inProgressProductions}) non viene rientrata; si sommano invece direttamente le sue alternative
+	 * attuali, non ancora aumentate, rompendo il ciclo con il peso base originale di quella produzione. Per un ciclo che attraversa più di una produzione,
+	 * il membro raggiunto per primo finisce con un aumento maggiore degli altri; dato che {@link #productionsMap} mantiene
+	 * l'ordine di inserimento, è il membro dichiarato per primo nel file di grammatica, perciò
+	 * l'asimmetria si può prevedere (e riordinare) leggendo il file.
 	 */
 	private double computeAdjustedAggregateWeight(String name, Map<String, Double> aggregateWeightCache, Set<String> inProgressProductions) {
 		Double cached = aggregateWeightCache.get(name);
@@ -1685,7 +1688,7 @@ public class GrammarBean {
 			return cached;
 		}
 		if (!productionsMap.containsKey(name)) {
-			// A production of a static section: its weights were adjusted when the section was loaded
+			// Una produzione di una sezione statica: i suoi pesi sono stati aggiustati quando la sezione è stata caricata
 			double sectionTotal = 0;
 			for (WeightedAlternative alternative : staticSectionOf(name).productions.get(name)) {
 				sectionTotal += alternative.weight;
@@ -1718,19 +1721,19 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Returns every production name referenced (as {@code [Name]}, {@code [*Name]} or
-	 * {@code [!Name]}) directly in {@code text}, in order of occurrence, with duplicates
-	 * kept: a production referenced twice in the same alternative contributes its
-	 * aggregate weight twice to that alternative's descendant-weight boost (see
-	 * {@link #adjustWeightsForDescendants}). Mirrors {@link #checkTokenValidity}'s
-	 * marker-stripping so {@code [key=value]}/{@code [#key]} tokens, which don't
-	 * reference a production, are skipped, except that an assignment's value is itself
-	 * searched recursively (so {@code [key=[OtherProduction]]} still counts
-	 * {@code OtherProduction} as referenced). A {@code *}/{@code !}/plain name that is not
-	 * an actual production (i.e. only ever populated via {@code =} elsewhere) is skipped
-	 * too, since it has no aggregate weight of its own. Assumes {@code text} is already
-	 * known to be well-formed (called only after {@link #checkProductionsValidity} has
-	 * succeeded).
+	 * Restituisce ogni nome di produzione referenziato (come {@code [Nome]}, {@code [*Nome]} o
+	 * {@code [!Nome]}) direttamente in {@code text}, in ordine di occorrenza, mantenendo i
+	 * duplicati: una produzione referenziata due volte nella stessa alternativa contribuisce
+	 * due volte con il proprio peso aggregato all'aumento del peso dei discendenti di quell'alternativa (vedi
+	 * {@link #adjustWeightsForDescendants}). Rispecchia il modo in cui {@link #checkTokenValidity}
+	 * toglie i marcatori, così gli elementi {@code [chiave=valore]}/{@code [#chiave]}, che non
+	 * referenziano una produzione, sono saltati, salvo che il valore di un'assegnazione viene a sua volta
+	 * cercato ricorsivamente (così {@code [chiave=[AltraProduzione]]} conta comunque
+	 * {@code AltraProduzione} come referenziata). Anche un nome {@code *}/{@code !}/semplice che non sia
+	 * una vera produzione (cioè che viene popolato solo tramite {@code =} altrove) è saltato,
+	 * dato che non ha un proprio peso aggregato. Presuppone che {@code text} sia già
+	 * noto come ben formato (viene chiamato solo dopo che {@link #checkProductionsValidity} è
+	 * riuscito).
 	 */
 	private List<String> findReferencedProductions(String text) {
 		List<String> referenced = new ArrayList<>();
@@ -1746,9 +1749,9 @@ public class GrammarBean {
 			String tokenBody = remaining.substring(openingBracketIndex + 1, closingBracketIndex);
 			TokenWithDefault withDefault = splitDefault(tokenBody);
 			if (withDefault.fallback != null) {
-				// exactly one of the two branches is taken at production time, so counting both
-				// would inflate the alternative's weight: prefer the name when it is a real
-				// production, and fall back on what the default itself references
+				// dei due rami se ne prende esattamente uno al momento della produzione, quindi contarli
+				// entrambi gonfierebbe il peso dell'alternativa: si preferisce il nome quando è una vera
+				// produzione, e ci si ripiega su ciò che il predefinito stesso referenzia
 				String name = withDefault.name;
 				if (name.startsWith(GLOBAL_FIXED_PRODUCTION_MARKER) || name.startsWith(LOCAL_FIXED_PRODUCTION_MARKER)) {
 					name = name.substring(1);
@@ -1775,30 +1778,30 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Reads the optional post-production file into {@link #postProductions}. Each line
-	 * must be of the form {@code pre:post}; a missing file (a {@code null} stream) simply
-	 * results in no post-production substitutions.
+	 * Legge il file facoltativo di post-produzione in {@link #postProductions}. Ogni riga
+	 * deve avere la forma {@code pre:post}; un file mancante (uno stream {@code null}) comporta semplicemente
+	 * nessuna sostituzione di post-produzione.
 	 * <p>
-	 * A line starting with {@link #COMMENT_PREFIX} is a full-line comment and a blank line is
-	 * ignored, exactly as in the grammar file — a substitution rule like {@code [,:[} needs a
-	 * word of explanation next to it far more than a grammar line does. Comments and blank
-	 * lines still count towards the line number reported in an error message, so it points at
-	 * the real line of the file. Note that a line is treated as blank when it is
-	 * <i>whitespace-only</i>, not merely empty: unlike a grammar file, where an indented blank
-	 * line is a meaningful empty alternative, here it could never express a rule. A rule whose
-	 * {@code pre} starts with {@code #} is consequently not expressible, the same trade-off the
-	 * grammar file makes.
+	 * Una riga che inizia con {@link #COMMENT_PREFIX} è un commento a riga intera e una riga vuota è
+	 * ignorata, esattamente come nel file di grammatica: una regola di sostituzione come {@code [,:[} ha bisogno
+	 * di una parola di spiegazione accanto molto più di una riga di grammatica. Commenti e righe vuote
+	 * contano comunque per il numero di riga riportato in un messaggio di errore, così che indichi
+	 * la riga reale del file. Si noti che una riga è considerata vuota quando è
+	 * <i>fatta di soli spazi</i>, non solo quando è vuota: a differenza di un file di grammatica, dove una riga
+	 * rientrata e vuota è un'alternativa vuota significativa, qui non potrebbe mai esprimere una regola. Una regola il cui
+	 * {@code pre} inizia con {@code #} non è di conseguenza esprimibile, lo stesso compromesso che fa il
+	 * file di grammatica.
 	 * <p>
-	 * A rule whose {@code post} contains its own {@code pre} verbatim is rejected here,
-	 * because {@link #postProduce} re-scans the text it has just rewritten and would
-	 * therefore keep finding that same {@code pre} inside the {@code post} it just wrote,
-	 * looping forever. Rejecting it at load time keeps the substitution loop in
-	 * {@link #postProduce} exactly as it is — repeated application per rule, so that
-	 * overlapping occurrences are all rewritten — instead of trading that behaviour away
-	 * for a single-pass replacement.
-	 * @throws InvalidGrammarException if a line is missing its pre- or post-production
-	 *                                  text, or its post-production contains its own
-	 *                                  pre-production
+	 * Una regola il cui {@code post} contiene alla lettera il proprio {@code pre} viene rifiutata qui,
+	 * perché {@link #postProduce} riesamina il testo che ha appena riscritto e
+	 * continuerebbe quindi a ritrovare lo stesso {@code pre} dentro il {@code post} appena scritto,
+	 * ciclando all'infinito. Rifiutarla al caricamento lascia il ciclo di sostituzione in
+	 * {@link #postProduce} esattamente com'è (applicazione ripetuta per regola, così che
+	 * le occorrenze sovrapposte siano tutte riscritte) invece di rinunciare a quel comportamento
+	 * a favore di una sostituzione in un solo passaggio.
+	 * @throws InvalidGrammarException se in una riga manca il testo di pre- o post-produzione,
+	 *                                  o il suo testo di post-produzione contiene il proprio
+	 *                                  testo di pre-produzione
 	 */
 	private void setPostProductionFile(InputStream inputStream) throws InvalidGrammarException, IOException {
 		if (inputStream == null) {
@@ -1837,9 +1840,9 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Changes the production {@link #produce()} starts from.
-	 * @param rootNode the plain name (no brackets) of an existing production
-	 * @throws IllegalArgumentException if {@code rootNode} is not a defined production
+	 * Cambia la produzione da cui parte {@link #produce()}.
+	 * @param rootNode il nome semplice (senza parentesi) di una produzione esistente
+	 * @throws IllegalArgumentException se {@code rootNode} non è una produzione definita
 	 */
 	public void setRootNode(String rootNode) {
 		if (productionsMap.get(rootNode) == null && !isStaticName(rootNode)) {
@@ -1849,24 +1852,24 @@ public class GrammarBean {
 	}
 
 	/**
-	 * @return the plain name (no brackets) of the production {@link #produce()} currently starts from
+	 * @return il nome semplice (senza parentesi) della produzione da cui {@link #produce()} parte attualmente
 	 */
 	public String getRootNode() {
 		return rootNode;
 	}
 
 	/**
-	 * Whether the production can still produce something in the current cycle: it exists and has
-	 * alternatives left. A one-shot production ({@code NAME$}) stops being able to once its last
-	 * alternative is consumed, and so does every production that only referenced it (the removal
-	 * cascade, see {@link #removeProduction}), until the next {@link #reset()}. It is how a caller
-	 * that draws a run of unique results finds out the run is over, instead of waiting for
-	 * {@link #produce(String)} to throw.
+	 * Dice se la produzione può ancora produrre qualcosa nel ciclo corrente: esiste e ha
+	 * ancora alternative. Una produzione monouso ({@code NOME$}) smette di poterlo fare quando la sua ultima
+	 * alternativa è consumata, e così ogni produzione che referenziava solo lei (la cascata di
+	 * rimozione, vedi {@link #removeProduction}), fino al prossimo {@link #reset()}. È il modo in cui un chiamante
+	 * che estrae una serie di risultati unici scopre che la serie è finita, invece di aspettare che
+	 * {@link #produce(String)} lanci un'eccezione.
 	 * <p>
-	 * It does not look inside the alternatives: one that references the same exhausted one-shot
-	 * production twice ({@code [X] [X]}) still counts, and fails only when produced.
-	 * @param production the plain name (no brackets) of a production
-	 * @return false for a production that was never defined, too
+	 * Non guarda dentro le alternative: una che referenzia due volte la stessa produzione monouso esaurita
+	 * ({@code [X] [X]}) conta comunque, e fallisce solo quando viene prodotta.
+	 * @param production il nome semplice (senza parentesi) di una produzione
+	 * @return false anche per una produzione mai definita
 	 */
 	public boolean canProduce(String production) {
 		refreshStatic();
@@ -1879,38 +1882,38 @@ public class GrammarBean {
 	}
 
 	/**
-	 * @return the current alternative-picking mode (see {@link TipoModalitaProduzioneTesti})
+	 * @return la modalità corrente di scelta dell'alternativa (vedi {@link TipoModalitaProduzioneTesti})
 	 */
 	public TipoModalitaProduzioneTesti getProductionMode() {
 		return productionMode;
 	}
 
 	/**
-	 * Sets how a production's alternative is picked.
-	 * @param productionMode the new mode; see {@link TipoModalitaProduzioneTesti}
+	 * Imposta come viene scelta l'alternativa di una produzione.
+	 * @param productionMode la nuova modalità; vedi {@link TipoModalitaProduzioneTesti}
 	 */
 	public void setProductionMode(TipoModalitaProduzioneTesti productionMode) {
 		this.productionMode = productionMode;
 	}
 
 	/**
-	 * Restores {@link #currentProductionsMap} to a fresh copy of {@link #productionsMap} and
-	 * clears {@link #globalFixedProductions}, so that any one-shot alternative consumed by a
-	 * previous production cycle is available again and no stale fixed value leaks into the next
-	 * cycle.
+	 * Ripristina {@link #currentProductionsMap} a una copia fresca di {@link #productionsMap} e
+	 * svuota {@link #globalFixedProductions}, così che ogni alternativa monouso consumata da un
+	 * ciclo di produzione precedente torni disponibile e nessun valore fissato vecchio trapeli nel ciclo
+	 * successivo.
 	 * <p>
-	 * This is the call that draws the boundary between one production run and the next, so
-	 * <b>when</b> to make it is a choice, not a formality:
+	 * È la chiamata che traccia il confine fra una serie di produzioni e la successiva, quindi
+	 * <b>quando</b> farla è una scelta, non una formalità:
 	 * <ul>
-	 *     <li>after every {@link #produce()}, when each result must be independent of the
-	 *     others and may reuse the same alternatives;</li>
-	 *     <li>only at the start of a run, when the point of the run is that its results do
-	 *     <b>not</b> repeat one another — resetting in between would defeat the one-shot
-	 *     productions the grammar relies on for that.</li>
+	 *     <li>dopo ogni {@link #produce()}, quando ogni risultato deve essere indipendente dagli
+	 *     altri e può riusare le stesse alternative;</li>
+	 *     <li>solo all'inizio di una serie, quando lo scopo della serie è che i suoi risultati
+	 *     <b>non</b> si ripetano a vicenda: fare il reset nel mezzo vanificherebbe le produzioni
+	 *     monouso su cui la grammatica conta a tal fine.</li>
 	 * </ul>
-	 * A grammar with no one-shot production and no {@code [*Name]} reference has nothing to
-	 * restore, so calling this is harmless but pointless. See the class documentation for what
-	 * happens to a run that outlives its smallest one-shot pool.
+	 * Una grammatica senza produzioni monouso e senza riferimenti {@code [*Nome]} non ha nulla da
+	 * ripristinare, quindi chiamarlo è innocuo ma inutile. Vedi la documentazione della classe per cosa
+	 * succede a una serie che sopravvive al suo più piccolo serbatoio monouso.
 	 */
 	public void reset() {
 		rebuildCurrentProductions();
@@ -1918,8 +1921,8 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Copies {@link #productionsMap} into {@link #currentProductionsMap} and prunes what the static sections have
-	 * already exhausted. It does not touch the static sections: only {@link #resetStaticProductions()} does.
+	 * Copia {@link #productionsMap} in {@link #currentProductionsMap} e pota ciò che le sezioni statiche hanno
+	 * già esaurito. Non tocca le sezioni statiche: lo fa solo {@link #resetStaticProductions()}.
 	 */
 	private void rebuildCurrentProductions() {
 		synchronized (STATIC_LOCK) {
@@ -1935,21 +1938,21 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Pre-sets the value that will be returned for a globally fixed production
-	 * ({@code [*name]}) reference, before calling {@link #produce()}.
+	 * Preimposta il valore che sarà restituito per un riferimento a produzione fissata globalmente
+	 * ({@code [*nome]}), prima di chiamare {@link #produce()}.
 	 */
 	public void addFixedProduction(String name, String value) {
 		globalFixedProductions.put(name, value);
 	}
 
 	/**
-	 * Produces a random text starting from {@link #rootNode}.
+	 * Produce un testo casuale a partire da {@link #rootNode}.
 	 * <p>
-	 * If the grammar has one-shot productions, whether this call should be followed by
-	 * {@link #reset()} depends on what the caller is after: reset to make every call
-	 * independent, do not reset to build a run of results that must not repeat one another.
-	 * See the class documentation.
-	 * @return the produced text, split into one entry per line
+	 * Se la grammatica ha produzioni monouso, se questa chiamata debba essere seguita da
+	 * {@link #reset()} dipende da cosa vuole il chiamante: reset per rendere ogni chiamata
+	 * indipendente, niente reset per costruire una serie di risultati che non devono ripetersi a vicenda.
+	 * Vedi la documentazione della classe.
+	 * @return il testo prodotto, diviso in una voce per riga
 	 */
 	public List<String> produce() {
 		productionTrace.clear();
@@ -1964,14 +1967,14 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Produces a random text starting from an explicitly given production, without
-	 * changing {@link #rootNode}. Like {@link #produce()}, the global fixed-production
-	 * cache is cleared once the text has been produced, so that a {@code [*Name]}
-	 * reference stays fixed within a single call instead of being frozen across every
-	 * subsequent one. One-shot productions, on the other hand, stay consumed until
-	 * {@link #reset()} is called; see the class documentation for when that is what you want.
-	 * @param rootNode the plain name (no brackets) of an existing production
-	 * @return the produced text, split into one entry per line
+	 * Produce un testo casuale a partire da una produzione data esplicitamente, senza
+	 * cambiare {@link #rootNode}. Come {@link #produce()}, la cache globale delle produzioni fissate
+	 * viene svuotata una volta prodotto il testo, così che un riferimento {@code [*Nome]}
+	 * resti fissato all'interno di una singola chiamata invece di restare congelato per tutte
+	 * le successive. Le produzioni monouso, invece, restano consumate finché non si chiama
+	 * {@link #reset()}; vedi la documentazione della classe per quando è ciò che si vuole.
+	 * @param rootNode il nome semplice (senza parentesi) di una produzione esistente
+	 * @return il testo prodotto, diviso in una voce per riga
 	 */
 	public List<String> produce(String rootNode) {
 		productionTrace.clear();
@@ -1986,17 +1989,17 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Expands {@code startNode} (already wrapped in brackets by {@link #produce()} or
-	 * {@link #produce(String)}) into its final text, then applies post-production
-	 * substitutions and splits the result into lines.
+	 * Espande {@code startNode} (già racchiuso fra parentesi da {@link #produce()} o
+	 * {@link #produce(String)}) nel suo testo finale, poi applica le sostituzioni
+	 * di post-produzione e divide il risultato in righe.
 	 * <p>
-	 * Package-private on purpose: it takes an already-bracketed token and exposes the
-	 * internal ordering of the production phases, so it is not part of the class's public
-	 * surface. It is visible only so that tests in this package can drive the final
-	 * line-splitting step directly, which no grammar file can reach (neither source file
-	 * can embed a literal newline inside a single entry).
-	 * @param startNode a single {@code [Name]} token to expand
-	 * @return the produced text, split into one entry per line
+	 * Visibile solo nel package di proposito: prende un elemento già fra parentesi ed espone l'ordine
+	 * interno delle fasi di produzione, quindi non fa parte della superficie pubblica della classe.
+	 * È visibile solo perché i test di questo package possano pilotare direttamente il passaggio finale
+	 * di divisione in righe, che nessun file di grammatica può raggiungere (nessuno dei due file
+	 * sorgente può incorporare un a capo letterale dentro una singola voce).
+	 * @param startNode un singolo elemento {@code [Nome]} da espandere
+	 * @return il testo prodotto, diviso in una voce per riga
 	 */
 	List<String> produceImpl(String startNode) {
 		refreshStatic();
@@ -2006,14 +2009,14 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Describes {@link #productionTrace} as it currently stands, one line per active frame
-	 * (outermost first), each showing the successive values its own expansion went through.
-	 * Meant to be called right after an exception interrupts {@link #produce()}/
-	 * {@link #produce(String)}, when the frames left in {@link #productionTrace} are exactly
-	 * the path the grammar engine followed before failing; calling it at any other time (e.g.
-	 * after a successful production) returns an empty string, since every frame is popped on
-	 * normal return.
-	 * @return the trace, or an empty string if none is active
+	 * Descrive {@link #productionTrace} così com'è al momento, una riga per frame attivo
+	 * (prima il più esterno), ciascuna con i valori successivi attraversati dalla propria espansione.
+	 * Pensato per essere chiamato subito dopo che un'eccezione interrompe {@link #produce()}/
+	 * {@link #produce(String)}, quando i frame rimasti in {@link #productionTrace} sono esattamente
+	 * il percorso seguito dal motore della grammatica prima di fallire; chiamarlo in qualsiasi altro momento (ad esempio
+	 * dopo una produzione riuscita) restituisce una stringa vuota, dato che ogni frame viene tolto
+	 * al ritorno normale.
+	 * @return la traccia, o una stringa vuota se non ce n'è di attiva
 	 */
 	String describeProductionTrace() {
 		StringBuilder sb = new StringBuilder();
@@ -2024,23 +2027,23 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Repeatedly finds the leftmost {@code [...]} token in {@code production} and replaces
-	 * it with its resolved value (see {@link #resolveToken}) until none are left.
-	 * @param production the text to expand, generally starting as a single {@code [Name]} token
-	 * @param superProductionsMap the productions map to resolve plain/fixed references against
-	 *                            (the whole grammar's, or a one-shot-pruned copy of it)
-	 * @param superFixedProductions the fixed-production cache inherited from the caller
-	 *                              (global cache for a top-level call, or a subtree's local cache)
-	 * @param label names what is being expanded, for {@link #productionTrace}: a production
-	 *              name, or the initial {@code [rootNode]} token for the outermost call
-	 * @return the fully expanded text, with no {@code [...]} tokens left
+	 * Trova ripetutamente l'elemento {@code [...]} più a sinistra in {@code production} e lo sostituisce
+	 * con il suo valore risolto (vedi {@link #resolveToken}) finché non ne restano.
+	 * @param production il testo da espandere, in genere all'inizio un unico elemento {@code [Nome]}
+	 * @param superProductionsMap la mappa delle produzioni rispetto a cui risolvere i riferimenti semplici/fissati
+	 *                            (quella dell'intera grammatica, o una sua copia potata dei monouso)
+	 * @param superFixedProductions la cache delle produzioni fissate ereditata dal chiamante
+	 *                              (la cache globale per una chiamata di primo livello, o la cache locale di un sottoalbero)
+	 * @param label nomina ciò che viene espanso, per {@link #productionTrace}: un nome di produzione,
+	 *              o l'elemento iniziale {@code [rootNode]} per la chiamata più esterna
+	 * @return il testo completamente espanso, senza più elementi {@code [...]}
 	 */
 	private String produceImpl(String production, Map<String, List<WeightedAlternative>> superProductionsMap, Map<String, String> superFixedProductions, String label) {
-		// Seeded from the caller's cache rather than empty, so that a value fixed by a
-		// [!Name] higher up is visible to a [#Name] (or a further [!Name]) anywhere below
-		// it in the same subtree, at any depth. The copy is what keeps sibling branches
-		// independent: each inherits the same starting point but writes only into its own
-		// map, so nothing a branch fixes leaks back up or sideways.
+		// Inizializzata con la cache del chiamante e non vuota, così che un valore fissato da un
+		// [!Nome] più in alto sia visibile a un [#Nome] (o a un altro [!Nome]) in qualsiasi punto sotto
+		// di esso nello stesso sottoalbero, a qualsiasi profondità. La copia è ciò che mantiene
+		// indipendenti i rami fratelli: ognuno eredita lo stesso punto di partenza ma scrive solo nella
+		// propria mappa, così nulla di ciò che un ramo fissa trapela verso l'alto o di lato.
 		Map<String, String> localFixedProductions = new HashMap<>(superFixedProductions);
 		TraceFrame frame = new TraceFrame(label, production);
 		productionTrace.addLast(frame);
@@ -2060,15 +2063,15 @@ public class GrammarBean {
 			production = prefix + resolved + postfix;
 			frame.steps.add(production);
 		}
-		// Only on the normal-return path: if an exception propagates out of this call
-		// (or one nested inside it), this frame is deliberately left in productionTrace,
-		// so that describeProductionTrace() can still report it.
+		// Solo sul percorso di ritorno normale: se un'eccezione si propaga fuori da questa chiamata
+		// (o da una annidata in essa), questo frame viene lasciato di proposito in productionTrace,
+		// così che describeProductionTrace() possa ancora riportarlo.
 		productionTrace.removeLast();
 		return production;
 	}
 
 	/**
-	 * Capitalizes the first character of {@code text}, if any; used to implement
+	 * Mette in maiuscolo il primo carattere di {@code text}, se c'è; serve a realizzare
 	 * {@link #CAPITALIZE_MARKER}.
 	 */
 	private static String capitalizeFirstLetter(String text) {
@@ -2079,9 +2082,9 @@ public class GrammarBean {
 	}
 
 	/**
-	 * A token body split into the name it references and the value to fall back on when that
-	 * name has no value available. {@link #fallback} is {@code null} for a token without a
-	 * {@link #DEFAULT_MARKER}, which is what tells every caller to take the ordinary path.
+	 * Il corpo di un elemento diviso nel nome che referenzia e nel valore di ripiego da usare quando quel
+	 * nome non ha alcun valore disponibile. {@link #fallback} è {@code null} per un elemento senza
+	 * {@link #DEFAULT_MARKER}, ed è ciò che dice a ogni chiamante di seguire il percorso ordinario.
 	 */
 	private static final class TokenWithDefault {
 		private final String name;
@@ -2094,15 +2097,15 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Finds the {@code |} separating a token's referenced name from its default value: the
-	 * first one at nesting depth zero (square brackets, curly braces and raw literal spans all
-	 * count) whose closest preceding non-whitespace character is a {@link #DEFAULT_MARKER}.
+	 * Trova il {@code |} che separa il nome referenziato da un elemento dal suo valore predefinito: il
+	 * primo a profondità di annidamento zero (contano parentesi quadre, graffe e tratti letterali grezzi)
+	 * il cui carattere non bianco immediatamente precedente è un {@link #DEFAULT_MARKER}.
 	 * <p>
-	 * Returns {@code -1} when there is none, and also when a {@code =} is found at depth zero
-	 * first: that makes the token an assignment ({@code [key=value]}), whose value is free to
-	 * contain {@code ?} and {@code |} as plain text. The very first depth-zero {@code |}
-	 * decides — if it is not preceded by a {@link #DEFAULT_MARKER} the token simply has no
-	 * default, rather than the scan hunting for a later candidate.
+	 * Restituisce {@code -1} quando non ce n'è nessuno, e anche quando si trova prima un {@code =} a profondità zero:
+	 * ciò rende l'elemento un'assegnazione ({@code [chiave=valore]}), il cui valore può liberamente
+	 * contenere {@code ?} e {@code |} come testo semplice. Decide il primissimo {@code |} a profondità zero:
+	 * se non è preceduto da un {@link #DEFAULT_MARKER} l'elemento semplicemente non ha
+	 * predefinito, invece di proseguire la scansione a caccia di un candidato successivo.
 	 */
 	private int findDefaultSeparator(String tokenBody) {
 		int braceDepth = 0;
@@ -2139,7 +2142,7 @@ public class GrammarBean {
 	}
 
 	/**
-	 * @return whether {@code text}, ignoring trailing whitespace, ends with the
+	 * @return se {@code text}, ignorando gli spazi finali, termina con il
 	 *         {@link #DEFAULT_MARKER}
 	 */
 	private static boolean endsWithDefaultMarker(String text) {
@@ -2156,13 +2159,13 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Splits a token body into the name it references and its default value, recognizing both
-	 * {@code Name? | fallback} and the short form {@code Name?} (an empty fallback). Whitespace
-	 * around the {@link #DEFAULT_MARKER} and the {@code |} is ignored; the fallback itself is
-	 * returned verbatim, to be expanded and trimmed by whoever needs its value.
-	 * @return a {@link TokenWithDefault} whose {@code fallback} is {@code null} when the token
-	 *         carries no default at all, in which case its {@code name} is {@code tokenBody}
-	 *         untouched
+	 * Divide il corpo di un elemento nel nome che referenzia e nel suo valore predefinito, riconoscendo sia
+	 * {@code Nome? | ripiego} sia la forma abbreviata {@code Nome?} (un ripiego vuoto). Gli spazi
+	 * attorno al {@link #DEFAULT_MARKER} e al {@code |} sono ignorati; il ripiego stesso viene
+	 * restituito alla lettera, per essere espanso e ripulito da chi ne ha bisogno.
+	 * @return un {@link TokenWithDefault} il cui {@code fallback} è {@code null} quando l'elemento
+	 *         non porta alcun predefinito, nel qual caso il suo {@code name} è {@code tokenBody}
+	 *         intatto
 	 */
 	private TokenWithDefault splitDefault(String tokenBody) {
 		int separatorIndex = findDefaultSeparator(tokenBody);
@@ -2179,8 +2182,8 @@ public class GrammarBean {
 	}
 
 	/**
-	 * @return whether {@code tokenBody} carries an {@link #ASSIGNMENT_MARKER} at nesting depth
-	 *         zero, i.e. whether it is an assignment rather than a reference
+	 * @return se {@code tokenBody} contiene un {@link #ASSIGNMENT_MARKER} a profondità di annidamento
+	 *         zero, cioè se è un'assegnazione e non un riferimento
 	 */
 	private boolean hasTopLevelAssignment(String tokenBody) {
 		int braceDepth = 0;
@@ -2212,10 +2215,10 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Finds the {@code ]} matching the {@code [} at {@code openingBracketIndex}, honoring
-	 * nesting so that e.g. in {@code [key=[OtherProduction]]} the outer token is matched
-	 * to the outer, final {@code ]} rather than the first one encountered.
-	 * @throws IllegalArgumentException if {@code production} has no matching {@code ]} after {@code openingBracketIndex}
+	 * Trova la {@code ]} corrispondente alla {@code [} in {@code openingBracketIndex}, rispettando
+	 * l'annidamento, così che ad esempio in {@code [chiave=[AltraProduzione]]} l'elemento esterno sia appaiato
+	 * con l'ultima {@code ]} esterna e non con la prima incontrata.
+	 * @throws IllegalArgumentException se {@code production} non ha alcuna {@code ]} corrispondente dopo {@code openingBracketIndex}
 	 */
 	private int findClosingBracket(String production, int openingBracketIndex) {
 		int depth = 1;
@@ -2234,8 +2237,8 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Resolves the content of a single [token], dispatching to the appropriate handler
-	 * depending on its marker ({@code *}, {@code !}, {@code =} or {@code #}).
+	 * Risolve il contenuto di un singolo [elemento], passando al gestore appropriato
+	 * in base al suo marcatore ({@code *}, {@code !}, {@code =} o {@code #}).
 	 */
 	private String resolveToken(String tokenBody, Map<String, List<WeightedAlternative>> productionsMap, Map<String, String> superFixedProductions, Map<String, String> localFixedProductions) {
 		TokenWithDefault withDefault = splitDefault(tokenBody);
@@ -2265,19 +2268,19 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Resolves a reference the same way {@link #resolveToken} does, but answers {@code null}
-	 * instead of throwing when no value is available, so that the caller can fall back on the
-	 * token's default. "No value available" deliberately covers every reason at once:
+	 * Risolve un riferimento come fa {@link #resolveToken}, ma risponde {@code null}
+	 * invece di lanciare un'eccezione quando non c'è alcun valore disponibile, così che il chiamante possa ripiegare sul
+	 * predefinito dell'elemento. "Nessun valore disponibile" copre volutamente tutti i motivi insieme:
 	 * <ul>
-	 *     <li>the name was never declared as a production and never assigned;</li>
-	 *     <li>it is a key that some {@code [key=value]} assigns, but that assignment has not run
-	 *     yet at this point of the expansion;</li>
-	 *     <li>it names a one-shot production whose alternatives have all been consumed, since
-	 *     {@code productionsMap} here is the pruned {@link #currentProductionsMap} and an
-	 *     exhausted production has been removed from it.</li>
+	 *     <li>il nome non è mai stato dichiarato come produzione e non è mai stato assegnato;</li>
+	 *     <li>è una chiave che qualche {@code [chiave=valore]} assegna, ma quell'assegnazione non è ancora
+	 *     stata eseguita a questo punto dell'espansione;</li>
+	 *     <li>nomina una produzione monouso le cui alternative sono state tutte consumate, dato che
+	 *     {@code productionsMap} qui è la {@link #currentProductionsMap} potata e una produzione
+	 *     esaurita ne è stata rimossa.</li>
 	 * </ul>
-	 * An assignment token never reaches this method: {@link #findDefaultSeparator} refuses to
-	 * see a default in a token that assigns.
+	 * Un elemento di assegnazione non arriva mai a questo metodo: {@link #findDefaultSeparator} si rifiuta di
+	 * vedere un predefinito in un elemento che assegna.
 	 */
 	private String resolveTokenOrNull(String tokenBody, Map<String, List<WeightedAlternative>> productionsMap, Map<String, String> superFixedProductions, Map<String, String> localFixedProductions) {
 		if (tokenBody.startsWith(GLOBAL_FIXED_PRODUCTION_MARKER)) {
@@ -2300,8 +2303,8 @@ public class GrammarBean {
 	}
 
 	/**
-	 * The nullable counterpart of {@link #resolveFixedProduction}: the cache first, then the
-	 * productions map, then {@code null}.
+	 * La controparte nullable di {@link #resolveFixedProduction}: prima la cache, poi la
+	 * mappa delle produzioni, poi {@code null}.
 	 */
 	private String resolveFixedProductionOrNull(String name, Map<String, String> fixedProductionsCache, Map<String, List<WeightedAlternative>> productionsMap, Map<String, String> superFixedProductions) {
 		String cached = fixedProductionsCache.get(name);
@@ -2315,10 +2318,10 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Resolves a production whose result is cached (globally or locally, depending on
-	 * {@code fixedProductionsCache}) so that further references to the same name reuse
-	 * the value generated the first time. Like {@link #resolvePlainProduction}, the result is
-	 * trimmed: every production is expected to produce a trimmed string.
+	 * Risolve una produzione il cui risultato è messo in cache (globalmente o localmente, a seconda di
+	 * {@code fixedProductionsCache}) così che i riferimenti successivi allo stesso nome riusino
+	 * il valore generato la prima volta. Come {@link #resolvePlainProduction}, il risultato viene
+	 * ripulito dagli spazi ai bordi: ci si aspetta che ogni produzione produca una stringa senza spazi ai bordi.
 	 */
 	private String resolveFixedProduction(String name, Map<String, String> fixedProductionsCache, Map<String, List<WeightedAlternative>> productionsMap, Map<String, String> superFixedProductions) {
 		String cached = fixedProductionsCache.get(name);
@@ -2335,12 +2338,12 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Handles a {@code [key=value]} token by storing {@code value} under {@code key} in
-	 * {@link #globalFixedProductions}, to be retrieved later by a {@code [#key]} reference
-	 * anywhere in the produced text (not just within the current production subtree).
-	 * If {@code value} itself contains {@code [...]} tokens (e.g. {@code [key=[OtherProduction]]}),
-	 * they are fully resolved before the result is stored, so the cached value is always
-	 * plain text.
+	 * Gestisce un elemento {@code [chiave=valore]} memorizzando {@code valore} sotto {@code chiave} in
+	 * {@link #globalFixedProductions}, per recuperarlo poi con un riferimento {@code [#chiave]}
+	 * in qualsiasi punto del testo prodotto (non solo all'interno del sottoalbero di produzione corrente).
+	 * Se {@code valore} contiene a sua volta elementi {@code [...]} (ad esempio {@code [chiave=[AltraProduzione]]}),
+	 * questi sono risolti completamente prima che il risultato sia memorizzato, così che il valore in cache sia sempre
+	 * testo semplice.
 	 */
 	private void assignFixedProduction(String tokenBody, Map<String, List<WeightedAlternative>> productionsMap, Map<String, String> superFixedProductions) {
 		int equalsPosition = tokenBody.indexOf(ASSIGNMENT_MARKER);
@@ -2351,12 +2354,12 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Handles a {@code [#key]} token by looking up the value previously assigned to
-	 * {@code key}: first in {@code localFixedProductions} (which a {@code [!key]} in the
-	 * same call frame, or in any enclosing one within the same subtree, may have
-	 * populated), then in {@link #globalFixedProductions} (which
-	 * {@link #assignFixedProduction} populates).
-	 * @throws IllegalArgumentException if {@code key} was never assigned
+	 * Gestisce un elemento {@code [#chiave]} cercando il valore assegnato in precedenza a
+	 * {@code chiave}: prima in {@code localFixedProductions} (che un {@code [!chiave]} nello
+	 * stesso frame di chiamata, o in uno qualsiasi che lo racchiuda nello stesso sottoalbero, può aver
+	 * popolato), poi in {@link #globalFixedProductions} (che
+	 * {@link #assignFixedProduction} popola).
+	 * @throws IllegalArgumentException se {@code key} non è mai stata assegnata
 	 */
 	private String resolveReference(String tokenBody, Map<String, String> localFixedProductions) {
 		String key = tokenBody.substring(REFERENCE_MARKER.length());
@@ -2371,12 +2374,12 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Resolves a plain {@code [Name]} reference: picks one alternative of {@code name}
-	 * (see {@link #getProduction}) and recursively expands it. The result is trimmed: every
-	 * production is expected to produce a trimmed string, so that e.g. an inline alternation
-	 * group's chosen leaf being empty doesn't leave a stray space behind from the literal text
-	 * surrounding the reference to it.
-	 * @throws IllegalArgumentException if {@code name} is not a (currently available) production
+	 * Risolve un semplice riferimento {@code [Nome]}: sceglie un'alternativa di {@code name}
+	 * (vedi {@link #getProduction}) e la espande ricorsivamente. Il risultato viene ripulito dagli spazi ai bordi: ci si aspetta che ogni
+	 * produzione produca una stringa senza spazi ai bordi, così che ad esempio la foglia scelta da un gruppo di alternative in linea,
+	 * se vuota, non lasci uno spazio spurio dovuto al testo letterale
+	 * che circonda il riferimento a essa.
+	 * @throws IllegalArgumentException se {@code name} non è una produzione (attualmente disponibile)
 	 */
 	private String resolvePlainProduction(String name, Map<String, List<WeightedAlternative>> productionsMap, Map<String, String> localFixedProductions) {
 		List<WeightedAlternative> productions = productionsMap.get(name);
@@ -2387,13 +2390,13 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Picks an alternative of {@code production} from {@code localProductionsMap}, according to
-	 * {@link #productionMode}: always the first one, always the last one, or a weighted-random one
-	 * (see {@link #pickWeighted}, weighing each alternative by its {@link WeightedAlternative#weight}
-	 * so that e.g., an alternative with weight 10 is picked ten times as often as one with the default
-	 * weight of 1). If {@code production} is one-shot, the chosen alternative (and, if it was the
-	 * last one, the whole production, cascading via {@link #removeProduction}) is removed so it
-	 * cannot be picked again within the same production cycle.
+	 * Sceglie un'alternativa di {@code production} da {@code localProductionsMap}, secondo
+	 * {@link #productionMode}: sempre la prima, sempre l'ultima, o una scelta a caso pesata
+	 * (vedi {@link #pickWeighted}, che pesa ogni alternativa col suo {@link WeightedAlternative#weight}
+	 * così che ad esempio un'alternativa di peso 10 sia scelta dieci volte più spesso di una col peso predefinito
+	 * di 1). Se {@code production} è monouso, l'alternativa scelta (e, se era
+	 * l'ultima, l'intera produzione, a cascata tramite {@link #removeProduction}) viene rimossa, così che non
+	 * possa essere scelta di nuovo nello stesso ciclo di produzione.
 	 */
 	private String getProduction(Map<String, List<WeightedAlternative>> localProductionsMap, String production) {
 		if (isStaticName(production)) {
@@ -2413,7 +2416,7 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Picks an alternative according to {@link #productionMode}: the first, the last, or a weighted-random one.
+	 * Sceglie un'alternativa secondo {@link #productionMode}: la prima, l'ultima, o una scelta a caso pesata.
 	 */
 	private WeightedAlternative pick(List<WeightedAlternative> productions) {
 		switch (productionMode) {
@@ -2427,12 +2430,12 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Picks one alternative from {@code productions} at random, weighing each one by its
-	 * (possibly fractional) {@link WeightedAlternative#weight}: the total weight is summed, a
-	 * random value is drawn in {@code [0, totalWeight)}, and the alternative whose cumulative
-	 * weight range contains it is returned. An alternative with the default weight of 1 is picked
-	 * exactly as often as it would be under plain uniform selection, so a grammar with no
-	 * {@code [^N]} tokens at all behaves identically to before this method existed.
+	 * Sceglie a caso un'alternativa fra {@code productions}, pesando ciascuna col suo
+	 * peso (eventualmente frazionario) {@link WeightedAlternative#weight}: si somma il peso totale, si estrae un
+	 * valore casuale in {@code [0, totalWeight)}, e si restituisce l'alternativa il cui intervallo di
+	 * peso cumulato lo contiene. Un'alternativa col peso predefinito di 1 è scelta
+	 * esattamente tanto spesso quanto lo sarebbe con una semplice selezione uniforme, quindi una grammatica senza
+	 * alcun elemento {@code [^N]} si comporta in modo identico a prima che questo metodo esistesse.
 	 */
 	private WeightedAlternative pickWeighted(List<WeightedAlternative> productions) {
 		double totalWeight = 0;
@@ -2451,10 +2454,10 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Removes an exhausted one-shot production from {@code localProductionsMap}, and cascades:
-	 * strips any {@code [production]}/{@code [*production]}/{@code [!production]} reference to it
-	 * from every other production's alternatives, recursively removing any production that is
-	 * thereby left with no alternatives of its own.
+	 * Rimuove da {@code localProductionsMap} una produzione monouso esaurita, e procede a cascata:
+	 * toglie ogni riferimento {@code [production]}/{@code [*production]}/{@code [!production]} a essa
+	 * dalle alternative di ogni altra produzione, rimuovendo ricorsivamente ogni produzione che
+	 * resti così senza alternative proprie.
 	 */
 	private void removeProduction(Map<String, List<WeightedAlternative>> localProductionsMap, String production) {
 		localProductionsMap.remove(production);
@@ -2475,27 +2478,27 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Applies every {@code pre:post} substitution from {@link #postProductions} to the
-	 * fully expanded text, fixing natural-language issues arising from the mechanical
-	 * concatenation of production alternatives, then collapses any run of two or more
-	 * spaces and/or tabs left behind (typically by a deliberately empty alternative) into
-	 * one space, and finally strips any space or tab left immediately before a punctuation
-	 * mark (typically left behind when a reference at the very end of a sentence expands
-	 * to an empty string).
+	 * Applica ogni sostituzione {@code pre:post} di {@link #postProductions} al testo
+	 * completamente espanso, correggendo i problemi di lingua naturale nati dalla concatenazione
+	 * meccanica delle alternative di produzione, poi riduce a un solo spazio ogni sequenza di due o più
+	 * spazi e/o tab rimasta (tipicamente per un'alternativa volutamente vuota), e infine toglie
+	 * ogni spazio o tab rimasto subito prima di un segno di punteggiatura
+	 * (tipicamente lasciato quando un riferimento proprio a fine frase si espande
+	 * in una stringa vuota).
 	 * <p>
-	 * Any {@code \[}/{@code \]} escape written inside a raw literal span is turned back into a
-	 * real bracket first, before the substitutions run: every token has already been expanded by
-	 * now, so a bracket restored here can no longer be mistaken for a reference, and the
-	 * post-production rules and the whitespace cleanup both get to see the final text.
+	 * Ogni escape {@code \[}/{@code \]} scritto dentro un tratto letterale grezzo viene prima riconvertito in una
+	 * vera parentesi, prima che le sostituzioni siano eseguite: ogni elemento è già stato espanso
+	 * a quel punto, quindi una parentesi ripristinata qui non può più essere scambiata per un riferimento, e le
+	 * regole di post-produzione e la ripulitura degli spazi vedono entrambe il testo finale.
 	 * <p>
-	 * Rules are applied in the order they appear in the post-production file, so a file listing
-	 * a longer {@code pre} before a shorter one that is its prefix gets the longer match first.
+	 * Le regole sono applicate nell'ordine in cui compaiono nel file di post-produzione, così che un file che elenchi
+	 * un {@code pre} più lungo prima di uno più corto che ne è il prefisso ottenga prima la corrispondenza più lunga.
 	 * <p>
-	 * Each rule is applied repeatedly until its {@code pre} no longer occurs, re-scanning
-	 * from the start of the text every time, so that occurrences overlapping one another
-	 * are all rewritten. This terminates because {@link #setPostProductionFile} refuses
-	 * any rule whose {@code post} contains its own {@code pre}: without that guarantee a
-	 * rule would keep matching the text it had just written.
+	 * Ogni regola è applicata ripetutamente finché il suo {@code pre} non compare più, riesaminando
+	 * il testo dall'inizio ogni volta, così che le occorrenze sovrapposte
+	 * siano tutte riscritte. Termina perché {@link #setPostProductionFile} rifiuta
+	 * ogni regola il cui {@code post} contenga il proprio {@code pre}: senza questa garanzia una
+	 * regola continuerebbe a trovare il testo che aveva appena scritto.
 	 */
 	private String postProduce(String intermediateProduction) {
 		intermediateProduction = intermediateProduction
