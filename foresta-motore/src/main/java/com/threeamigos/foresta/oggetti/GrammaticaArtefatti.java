@@ -29,7 +29,7 @@ final class GrammaticaArtefatti {
 	private static final String POST_PRODUZIONE = "/com/threeamigos/foresta/motore/artefatti2_pp.txt";
 
 	/**
-	 * Fin dove si cercano le radici <TIPO>_<n>
+	 * Fin dove si cercano le radici {@code <TIPO>_<n>}
 	 */
 	private static final int EFFETTI_CERCATI = 10;
 
@@ -38,7 +38,7 @@ final class GrammaticaArtefatti {
 
 	private final GrammarBean grammatica;
 	/**
-	 * Per ogni tipo presente nella grammatica il numero minimo e massimo di effetti, cioè la radice <TIPO>_<n> più
+	 * Per ogni tipo presente nella grammatica il numero minimo e massimo di effetti, cioè la radice {@code <TIPO>_<n>} più
 	 * piccola e più grande (le radici vanno dalla prima all'ultima senza buchi)
 	 */
 	private final Map<TipoArtefatto, Integer> effettiMinimi = new EnumMap<>(TipoArtefatto.class);

@@ -8,6 +8,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * Il gigante: creatura umanoide e gigantesca, corrompibile e amichevole. Con l'amicizia offre aiuto, incantesimi,
+ * informazioni, mappe e un pasto.
+ */
 public class Gigante extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

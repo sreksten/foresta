@@ -8,6 +8,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * Il centauro: creatura umanoide e ibrida, corrompibile e amichevole. Con l'amicizia o con la corruzione può fare qualsiasi
+ * genere di offerta.
+ */
 public class Centauro extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

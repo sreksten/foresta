@@ -7,6 +7,9 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * La ladra: il Ladro al femminile, con lo stesso ruolo e le stesse capacità (vedi {@link Ladro}).
+ */
 public class Ladra extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UNA; }

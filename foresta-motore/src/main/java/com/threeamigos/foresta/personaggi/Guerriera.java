@@ -8,6 +8,9 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * La guerriera: il Guerriero al femminile, con lo stesso ruolo e le stesse capacità (vedi {@link Guerriero}).
+ */
 public class Guerriera extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UNA; }

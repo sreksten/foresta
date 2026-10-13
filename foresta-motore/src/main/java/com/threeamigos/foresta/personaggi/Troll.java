@@ -8,6 +8,9 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * Il troll: creatura umanoide e gigantesca, corrompibile ma non amichevole. È immune agli incantesimi di Terra.
+ */
 public class Troll extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

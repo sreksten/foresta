@@ -5,6 +5,7 @@ import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.strumenti.Misc;
 
 /**
+ * Uno spadone del bottino: un oggetto che diventa un artefatto di tipo spadone, un'arma a due mani (vedi {@link OggettoArtefatto}).
  *
  * @author Stefano Reksten
  */

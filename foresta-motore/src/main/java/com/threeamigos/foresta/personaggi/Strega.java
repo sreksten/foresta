@@ -8,6 +8,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * La strega: creatura umanoide, boss del suo castello. Parte con salute e magia piene ed è immune agli incantesimi di Acqua,
+ * Aria, Fuoco e Terra.
+ */
 public class Strega extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UNA; }

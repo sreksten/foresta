@@ -7,6 +7,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * L'elfo giocante, al maschile: umanoide, corrompibile e amichevole. Come il Mago ha il dardo arcano come incantesimo
+ * innato e, come il Ladro, può impugnare una seconda arma. Il femminile è l'{@link Elfa}.
+ */
 public class Elfo extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

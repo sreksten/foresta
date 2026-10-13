@@ -7,6 +7,9 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * La Cantastorie: il Bardo al femminile, con lo stesso ruolo e le stesse capacità (vedi {@link Bardo}).
+ */
 public class Cantastorie extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UNA; }

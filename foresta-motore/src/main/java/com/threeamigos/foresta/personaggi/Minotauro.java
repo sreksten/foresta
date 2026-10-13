@@ -8,6 +8,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * Il minotauro: creatura umanoide e ibrida, corrompibile ma non amichevole. Con la corruzione offre un aiuto a pagamento o la
+ * mappa della Foresta. Per la sua versione gigante vedi {@link MinotauroGigante}.
+ */
 public class Minotauro extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

@@ -4,6 +4,9 @@ import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.strumenti.Misc;
 
+/**
+ * Uno scudo del bottino: un oggetto che diventa un artefatto di tipo scudo (vedi {@link OggettoArtefatto}).
+ */
 public class Scudo extends OggettoArtefatto {
 
 	public Scudo() {

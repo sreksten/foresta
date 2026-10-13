@@ -18,14 +18,24 @@ public class ArmaNaturale implements Arma {
     private final Personaggio proprietario;
     private final TipoAttaccoNaturale tipoAttacco;
 
-    // Enum interno per mappare la potenza biologica base di ogni creatura
+    /**
+     * La potenza base dell'attacco innato di ogni creatura: i danni iniziali, il tipo di danno e l'attributo su cui scala (la Forza per
+     * gli attacchi fisici, l'Intelligenza per quelli magici).
+     */
     public enum TipoAttaccoNaturale {
+        /** Gli artigli di Arpia, Folletto e Goblin */
         ARTIGLI_LEGGERI(4, true, TipoDanno.TAGLIENTE),   // Arpia, Folletto, Goblin
+        /** Il morso di Minotauro, Troll e Chimera */
         MORSO_BRUTO(8, true, TipoDanno.PERFORANTE),       // Minotauro, Troll, Chimera
+        /** La zampata di Gigante e Minotauro Gigante */
         ZAMPATA_COLOSSALE(12, true, TipoDanno.CONTUNDENTE),// Gigante, Minotauro Gigante
+        /** Le zanne di Drago, Viverna e Chimera Drago */
         ZANNE_DRACONICHE(16, true, TipoDanno.VELENO), // Drago, Viverna, Chimera Drago
+        /** Il tocco di Spettro e Fantasma */
         TOCCO_GELIDO(5, false, TipoDanno.GELO),     // Spettro, Fantasma
+        /** La dissipazione dell'anima di Ombra Nera e Spirito */
         DISSIPAZIONE_ANIMA(10, false, TipoDanno.NECROTICO),// Ombra Nera, Spirito
+        /** La fiamma viva dell'Ombrafiamma */
         FIAMMA_VIVA(14, false, TipoDanno.FUOCO);     // Ombrafiamma
 
         private final int dannoInizialeFisso;

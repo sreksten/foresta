@@ -5,6 +5,9 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.strumenti.Misc;
 
+/**
+ * Alcune pietre preziose: prese, si aggiungono ai preziosi del gruppo.
+ */
 public class PietraPreziosa extends OggettoBase implements Oggetto {
 
 	public PietraPreziosa() {

@@ -25,16 +25,25 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	@Override
 	Collection<Artefatto> getInventario();
 
+	/**
+	 * Se, subendo un danno, il personaggio deve notificare le ferite.
+	 */
 	enum NotificaFerite {
 		SI,
 		NO
     }
 
+	/**
+	 * Se, morendo, il personaggio deve notificare la morte.
+	 */
 	enum NotificaMorte {
 		SI,
 		NO
     }
 
+	/**
+	 * Il sesso del personaggio, da cui dipendono gli articoli e i pronomi dei testi.
+	 */
 	enum Sesso {
 		MASCHIO,
 		FEMMINA
@@ -571,6 +580,11 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 
 	// Modificatori di stato
 
+	/**
+	 * Applica al personaggio il risultato di un colpo: gli toglie la salute, gli aggiunge gli stati alterati (per lo stesso stato tiene
+	 * quello che dura di più) e i modificatori, gli toglie gli stati da rimuovere e pubblica le notifiche delle interazioni e delle
+	 * reazioni di classe. L'eventuale cura ad area va agli alleati.
+	 */
 	void applicaRisultatoCombattimento(DannoRisultante risultato);
 
 	/**

@@ -10,6 +10,9 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * L'arpia: creatura umanoide, ibrida e volante. Nel suo repertorio c'è l'incantesimo dell'Aria, a cui è immune.
+ */
 public class Arpia extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN_APOSTROFO; }

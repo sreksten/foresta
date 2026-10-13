@@ -10,6 +10,9 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * La viverna: bestia draconica e volante. Nel suo repertorio c'è il Veleno; è immune agli incantesimi di Fuoco.
+ */
 public class Viverna extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UNA; }

@@ -7,6 +7,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * Il ladro giocante, al maschile: umanoide, corrompibile e amichevole. Può impugnare una seconda arma. Il femminile è la
+ * {@link Ladra}.
+ */
 public class Ladro extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

@@ -9,6 +9,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * Il gargoyle: costrutto volante. È immune a tutti gli incantesimi e agli stati sanguinamento, infezione, avvelenamento e
+ * immobilizzazione.
+ */
 public class Gargoyle extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

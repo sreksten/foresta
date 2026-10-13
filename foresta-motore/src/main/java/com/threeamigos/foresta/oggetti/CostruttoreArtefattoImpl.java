@@ -9,6 +9,7 @@ import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 
 /**
+ * L'implementazione del costruttore a passi di {@link CostruttoreArtefatto}: raccoglie i dati in un {@code ArtefattoMD} e alla fine ne fa un {@link Artefatto}.
  *
  * @author Stefano Reksten
  */

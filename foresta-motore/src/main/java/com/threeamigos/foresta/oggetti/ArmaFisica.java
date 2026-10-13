@@ -12,6 +12,8 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
+ * Un artefatto che è un'arma: i danni, il tipo di danno, gli incantamenti e i modificatori che mette sul bersaglio vengono dal suo
+ * {@code ArtefattoMD}.
  *
  * @author Stefano Reksten
  */

@@ -31,6 +31,11 @@ public final class FabbricaOggetti {
 	private FabbricaOggetti() {
 	}
 
+	/**
+	 * Un oggetto nuovo di quel tipo.
+	 *
+	 * @throws IllegalArgumentException se il tipo non si genera così (per esempio gli oggetti delle missioni)
+	 */
 	public static Oggetto crea(TipoOggetto tipo) {
 		Supplier<Oggetto> costruttore = COSTRUTTORI.get(tipo);
 		if (costruttore == null) {

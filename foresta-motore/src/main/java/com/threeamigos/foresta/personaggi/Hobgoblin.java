@@ -8,6 +8,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * L'hobgoblin: creatura umanoide e corrompibile, ma non amichevole. Con la corruzione offre un aiuto a pagamento, incantesimi
+ * o la mappa della Foresta.
+ */
 public class Hobgoblin extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

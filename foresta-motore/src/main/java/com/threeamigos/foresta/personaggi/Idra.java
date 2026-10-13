@@ -9,6 +9,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * L'idra: bestia gigantesca, boss del suo castello. Parte con salute e magia piene; è immune agli incantesimi di Terra, Acqua e
+ * Aria e agli stati confuso e stordito.
+ */
 public class Idra extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN_APOSTROFO; }

@@ -41,6 +41,15 @@ import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
  * Ankus il gigante
  */
 
+/**
+ * La base di tutti i personaggi: i giocanti, i mostri e le comparse. Tiene i dati in un {@link PersonaggioMD} e implementa le
+ * regole comuni: salute e magia (con i loro massimi, che crescono con il livello), stanchezza, esperienza e livelli, punti
+ * abilità, modificatori e stati alterati, inventario ed equipaggiamento, danni e morte.
+ * <p>
+ * Una classe concreta aggiunge solo ciò che la distingue: i valori di partenza dei suoi attributi, che prende dalle costanti
+ * della classe ({@code Costanti.GOBLIN_*} e simili), i nomi e gli articoli, il repertorio di incantesimi, le immunità e le
+ * offerte che può fare.
+ */
 public abstract class PersonaggioBase implements Personaggio {
 
 	protected PersonaggioMD md = new PersonaggioMD();
@@ -85,6 +94,10 @@ public abstract class PersonaggioBase implements Personaggio {
 	 */
 	private boolean daAffrontare;
 
+	/**
+	 * Crea un personaggio non giocante di quella classe e di quel livello, con i valori di partenza: i boss con salute e magia piene,
+	 * gli altri con un valore fra il 75% e il 100% dei massimi.
+	 */
 	public PersonaggioBase(TipoPersonaggio classe, int livello) {
 		md.setClasse(classe);
 		md.setPng(true);
@@ -145,6 +158,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		return md.getUuid().equals(((Personaggio) obj).getModelloDati().getUuid());
 	}
 
+	/**
+	 * Coerente con {@link #equals(Object)}: dipende solo dall'identificativo del modello dati.
+	 */
 	@Override
 	public int hashCode() {
 		return md.getUuid().hashCode();
@@ -825,8 +841,19 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.set(TipoAttributo.STANCHEZZA,Costanti.MAX_STANCHEZZA - funzione.apply(Costanti.MAX_STANCHEZZA));
 	}
 
+	/**
+	 * Chiamato alla creazione: la classe concreta imposta i suoi attributi primari, la quantità massima per locazione e i suoi
+	 * indicatori (corrompibile, amichevole).
+	 *
+	 * @param funzione dato il valore massimo di un attributo, dà quello di partenza: lo stesso valore per i boss, uno scelto a
+	 * caso fra il 75% e il 100% per gli altri
+	 */
 	protected abstract void impostaValoriDiPartenza(Function<Integer, Integer> funzione);
 
+	/**
+	 * Il valore di un attributo di base per il livello del personaggio: cresce con la radice del livello, secondo la formula
+	 * {@code base + base/2 · (√(livello + 3) − 2)}.
+	 */
 	protected int getAttributoAdeguatoALivello(double valoreBase) {
 		/*
 		 * Applichiamo il metodo Curva con radice e spostamento.
@@ -1128,6 +1155,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)calcolaSaluteMassima();
 	}
 
+	/**
+	 * La salute massima: quella di base della classe per la radice quadrata del livello, più i modificatori.
+	 */
 	protected double calcolaSaluteMassima() {
 		// Cresce con la radice quadrata del livello (100, 141, 173, 200...), per tutti: come il danno
 		// (vedi CalcolatoreCombattimento.livelloDiCombattimento), così uno scontro alla pari dura uguale a ogni livello
@@ -1180,6 +1210,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		addModificatore(modificatore);
 	}
 
+	/**
+	 * La magia massima: quella di base più il livellamento per la radice del livello meno uno, più i modificatori; zero per chi non ha magia.
+	 */
 	protected double calcolaMagiaMassima() {
 		if (getLivellamentoMagia() == 0.0d) {
 			return 0.0d;

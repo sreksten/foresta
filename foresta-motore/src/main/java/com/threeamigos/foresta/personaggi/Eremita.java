@@ -8,6 +8,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * L'eremita: umanoide, corrompibile e amichevole. Con l'amicizia offre aiuto, incantesimi, informazioni, mappe e un pasto;
+ * con la corruzione, soltanto informazioni.
+ */
 public class Eremita extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

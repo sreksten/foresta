@@ -7,6 +7,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * Il Bardo giocante, al maschile: umanoide, corrompibile e disposto all'amicizia. Conosce i canti (vedi il pacchetto
+ * {@code canti}). Il femminile è la {@link Cantastorie}, che ha lo stesso ruolo.
+ */
 public class Bardo extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

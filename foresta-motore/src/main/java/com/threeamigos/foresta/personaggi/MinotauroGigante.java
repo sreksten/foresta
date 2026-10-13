@@ -7,6 +7,9 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * Il minotauro gigante: creatura umanoide, ibrida e gigantesca, boss del suo castello. Parte con salute e magia piene.
+ */
 public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

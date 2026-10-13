@@ -7,6 +7,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * Il mago giocante, al maschile: umanoide, corrompibile e amichevole. Vive di magia: ha il dardo arcano come incantesimo
+ * innato, che non consuma pergamene. Il femminile è la {@link Maga}.
+ */
 public class Mago extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

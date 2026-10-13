@@ -15,6 +15,10 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.strumenti.Misc;
 
+/**
+ * Un cofano: il gruppo che lo apre trova qualcosa a caso fra una pergamena, tre pergamene, una pozione (della salute, della salute
+ * grande o della magia), monete o pietre preziose. Con una piccola probabilità c'è anche un ingrediente magico o un artefatto.
+ */
 public class Cofano extends OggettoBase implements Oggetto {
 
 	public Cofano() {

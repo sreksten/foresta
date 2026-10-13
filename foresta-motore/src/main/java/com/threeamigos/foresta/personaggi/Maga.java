@@ -7,6 +7,9 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * La maga: il Mago al femminile, con lo stesso ruolo e le stesse capacità (vedi {@link Mago}).
+ */
 public class Maga extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UNA; }

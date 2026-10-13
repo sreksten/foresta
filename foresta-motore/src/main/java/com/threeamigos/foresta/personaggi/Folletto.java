@@ -11,6 +11,10 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * Il folletto: creatura umanoide e volante, corrompibile e amichevole. Nel suo repertorio ci sono Acqua, Gelo e Aria; con
+ * l'amicizia offre incantesimi, informazioni e un pasto.
+ */
 public class Folletto extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

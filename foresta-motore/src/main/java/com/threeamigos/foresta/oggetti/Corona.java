@@ -5,6 +5,9 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.strumenti.Misc;
 
+/**
+ * Alcune corone: per il gruppo valgono come le pietre preziose e si sommano ai preziosi.
+ */
 public class Corona extends OggettoBase implements Oggetto {
 
 	public Corona() {

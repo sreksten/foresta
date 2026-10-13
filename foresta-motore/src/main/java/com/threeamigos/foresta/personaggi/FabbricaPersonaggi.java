@@ -87,10 +87,16 @@ public final class FabbricaPersonaggi {
 		return MODELLI.computeIfAbsent(tipo, t -> crea(t, 1));
 	}
 
+	/**
+	 * Il nome al singolare della classe, per esempio "Goblin".
+	 */
 	public static String nomeSingolare(TipoPersonaggio tipo) {
 		return modello(tipo).getNomeSingolare();
 	}
 
+	/**
+	 * Il nome al plurale della classe, per esempio "Idre".
+	 */
 	public static String nomePlurale(TipoPersonaggio tipo) {
 		return modello(tipo).getNomePlurale();
 	}

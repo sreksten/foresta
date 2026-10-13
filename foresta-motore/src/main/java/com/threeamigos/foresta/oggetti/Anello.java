@@ -14,6 +14,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.Optional;
 
+/**
+ * Un anello: una volta su sei è magico, di uno di tre tipi, e allora porta con sé un artefatto con i suoi effetti; altrimenti non ha
+ * effetto.
+ */
 public class Anello extends OggettoBase implements Oggetto {
 
 	private final boolean anelloMagico;

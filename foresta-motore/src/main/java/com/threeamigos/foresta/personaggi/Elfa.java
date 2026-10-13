@@ -7,6 +7,9 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * L'elfa: l'Elfo al femminile, con lo stesso ruolo e le stesse capacità (vedi {@link Elfo}).
+ */
 public class Elfa extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN_APOSTROFO; }

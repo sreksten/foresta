@@ -88,6 +88,9 @@ public final class ListinoPergamene {
 		return prezzo;
 	}
 
+	/**
+	 * Il prezzo di un modificatore: quello del permanente moltiplicato per un fattore che dipende dalla durata.
+	 */
 	public static double prezzo(ModificatoreAttributoMD modificatore) {
 		return prezzoPermanente(modificatore) * moltiplicatoreTempo(modificatore);
 	}

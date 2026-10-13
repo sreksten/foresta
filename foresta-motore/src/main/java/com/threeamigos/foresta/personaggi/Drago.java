@@ -9,6 +9,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * Il drago: bestia draconica, volante e gigantesca, il boss del suo castello. Parte con salute e magia piene ed è immune
+ * al Fuoco e allo stato bruciato.
+ */
 public class Drago extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

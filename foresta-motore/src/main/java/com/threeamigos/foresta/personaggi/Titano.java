@@ -8,6 +8,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * Il titano: creatura umanoide e gigantesca, corrompibile e amichevole. Con l'amicizia offre aiuto, incantesimi, informazioni,
+ * mappe e un pasto; con la corruzione può fare qualsiasi offerta.
+ */
 public class Titano extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

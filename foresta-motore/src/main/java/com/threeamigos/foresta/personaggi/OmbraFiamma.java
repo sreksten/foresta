@@ -7,6 +7,10 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.function.Function;
 
+/**
+ * L'ombrafiamma: un personaggio segreto, immortale, che parte con salute e magia piene. Ha un carisma che fa riuscire sempre
+ * l'amicizia (una faccia in più del dado dell'amicizia), e non partecipa alle sfide a carta, forbici e sasso.
+ */
 public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN_APOSTROFO; }

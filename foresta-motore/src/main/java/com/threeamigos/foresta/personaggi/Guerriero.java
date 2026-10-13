@@ -8,6 +8,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * Il guerriero giocante, al maschile: umanoide, corrompibile e amichevole. Quando è in berserk è immune a confusione e
+ * spavento. Il femminile è la {@link Guerriera}.
+ */
 public class Guerriero extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

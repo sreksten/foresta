@@ -11,6 +11,10 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * Il fantasma: non morto e volante. Nel suo repertorio c'è il Gelo; oltre a ciò che vale per tutti i non morti, è immune
+ * all'Aria, alla Terra e allo stato atterrato.
+ */
 public class Fantasma extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

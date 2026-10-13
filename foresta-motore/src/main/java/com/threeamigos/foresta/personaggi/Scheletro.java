@@ -8,6 +8,9 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * Lo scheletro: non morto. Oltre a ciò che vale per tutti i non morti è immune ad avvelenamento e spavento.
+ */
 public class Scheletro extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UNO; }

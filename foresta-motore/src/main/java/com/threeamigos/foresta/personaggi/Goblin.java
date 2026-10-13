@@ -8,6 +8,10 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.function.Function;
 
+/**
+ * Il goblin: creatura umanoide e corrompibile, ma non amichevole. Con la corruzione offre un aiuto a pagamento o la mappa
+ * della Foresta.
+ */
 public class Goblin extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UN; }

@@ -26,6 +26,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Un artefatto: un pezzo di equipaggiamento vero (arma, scudo, elmo, armatura, anello, ingrediente magico...), con un nome, un
+ * livello, un costo, un peso e, se ce ne sono, modificatori di attributo e incantamenti.
+ * <p>
+ * È un involucro sul suo {@link ArtefattoMD}, che ne tiene i dati e si salva; qui stanno le regole: cosa succede quando lo si
+ * raccoglie ({@link #raccogli}), a chi può andare ({@link #candidati}) e come lo si dà a un personaggio ({@link #consegna}).
+ * Lo si ricrea dal modello dati con {@link #di(ArtefattoMD)}, che sceglie la sottoclasse giusta.
+ * <p>
+ * Un artefatto è anche un {@link Oggetto}, perché il gruppo lo trova nelle locazioni come ogni altro bottino.
+ */
 public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, VistaArtefatto {
 
 	protected final ArtefattoMD md;
@@ -176,10 +186,16 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, Vist
 		return md.isFigliVisibili();
 	}
 
+	/**
+	 * Apre l'elenco dei modificatori e degli incantamenti nell'inventario.
+	 */
 	public void mostraFigli() {
 		md.setFigliVisibili(true);
 	}
 
+	/**
+	 * Chiude l'elenco dei modificatori e degli incantamenti nell'inventario.
+	 */
 	public void nascondiFigli() {
 		md.setFigliVisibili(false);
 	}

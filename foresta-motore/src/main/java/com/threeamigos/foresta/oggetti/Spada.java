@@ -4,6 +4,9 @@ import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.strumenti.Misc;
 
+/**
+ * Una spada del bottino: un oggetto che diventa un artefatto di tipo spada (vedi {@link OggettoArtefatto}).
+ */
 public class Spada extends OggettoArtefatto {
 
 	public Spada() {

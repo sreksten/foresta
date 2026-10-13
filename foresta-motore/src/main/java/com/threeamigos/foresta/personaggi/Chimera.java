@@ -10,6 +10,9 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * La chimera: bestia ibrida. Nel suo repertorio ci sono il Fuoco e il Veleno.
+ */
 public class Chimera extends PersonaggioBase implements Personaggio {
 
 	public String getAIS() { return Misc.UNA; }
