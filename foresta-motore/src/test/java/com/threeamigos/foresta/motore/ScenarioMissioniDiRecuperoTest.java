@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
@@ -62,6 +63,41 @@ class ScenarioMissioniDiRecuperoTest {
             medaglione.controllaInLocazione();
             assertEquals(monete + 20, partita.gruppo().getMonete());
             assertTrue(medaglione.isCompleta());
+        }
+    }
+
+    @Test
+    void sconfittiILadriIlSegnalinoPassaDalCovoAllaCitta() {
+        verificaIlSegnalinoDopoLaCaccia(TipoLocazione.CITTA_FLEENA, RecuperaIlMedaglione.class);
+    }
+
+    @Test
+    void sconfittiITrollIlSegnalinoPassaDalleRovineAllaCitta() {
+        verificaIlSegnalinoDopoLaCaccia(TipoLocazione.CITTA_RUUNA, RecuperaLeDerrateAlimentari.class);
+    }
+
+    private static void verificaIlSegnalinoDopoLaCaccia(TipoLocazione citta, Class<? extends Missione> tipo) {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(22)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(citta));
+            IncaricoDiCombattimentoBase missione = (IncaricoDiCombattimentoBase) trova(tipo);
+            CoordinateMD covo = RegistroMissioni.getLocazioneOccupata(missione);
+            CoordinateMD cittaDelMandante = Foresta.getCoordinateLocazioneUnica(citta);
+            assertEquals("CACCIA", missione.getPassoCorrente());
+            assertTrue(Foresta.getCoordinateDaSegnalare().contains(covo), "a caccia lampeggia il covo");
+            assertFalse(Foresta.getCoordinateDaSegnalare().contains(cittaDelMandante));
+
+            partita.gruppo().setCoordinate(covo);
+            for (Personaggio nemico : missione.getNemici().crea()) {
+                partita.pubblica(new InternoAvversarioSconfitto(nemico.getClasse()));
+            }
+            missione.controllaPostLocazione();
+
+            assertEquals("RITORNO", missione.getPassoCorrente());
+            assertTrue(Foresta.getCoordinateDaSegnalare().contains(cittaDelMandante), "al ritorno lampeggia la città");
+            assertFalse(Foresta.getCoordinateDaSegnalare().contains(covo), "e il covo non più");
+            assertEquals(java.util.Collections.emptyList(), RegistroMissioni.getNomiMissioniDaSegnalare(covo));
+            assertEquals(java.util.Collections.singletonList(missione.getNome()),
+                    RegistroMissioni.getNomiMissioniDaSegnalare(cittaDelMandante));
         }
     }
 

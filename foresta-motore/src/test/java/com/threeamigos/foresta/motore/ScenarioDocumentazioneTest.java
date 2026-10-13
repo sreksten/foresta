@@ -7,6 +7,7 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -74,6 +75,62 @@ class ScenarioDocumentazioneTest {
             documentazione.controllaInLocazione();
             assertEquals(monete + 35, partita.gruppo().getMonete());
             assertTrue(documentazione.isCompleta());
+        }
+    }
+
+    @Test
+    void ilPostoGiaDocumentatoNonLampeggiaPiuNeDaNome() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(251)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            LaDocumentazione documentazione = RegistroMissioni.getTutteLeMissioni().stream().filter(LaDocumentazione.class::isInstance)
+                    .map(LaDocumentazione.class::cast).findFirst().orElseThrow(AssertionError::new);
+            documentazione.aggiungiProprieta("PARAMETRO_" + LaDocumentazione.DOCUMENTAZIONE, ISCRIZIONI);
+            documentazione.controllaPreLocazione();
+            documentazione.segnaIntermezzoPassoMostrato("INCARICO");
+            documentazione.controllaInLocazione();
+
+            CoordinateMD rovine = documentazione.getPosto();
+            assertTrue(Foresta.getCoordinateDaSegnalare().contains(rovine));
+            assertEquals(Collections.singletonList(documentazione.getNome()), RegistroMissioni.getNomiMissioniDaSegnalare(rovine));
+
+            partita.gruppo().setCoordinate(rovine);
+            documentazione.controllaInLocazione();
+            CoordinateMD tempio = documentazione.getPosto();
+            assertNotEquals(rovine, tempio);
+
+            assertTrue(Foresta.getCoordinateDaSegnalare().contains(tempio), "ora lampeggia il tempio");
+            assertFalse(Foresta.getCoordinateDaSegnalare().contains(rovine), "le rovine, già documentate, non più");
+            assertEquals(Collections.emptyList(), RegistroMissioni.getNomiMissioniDaSegnalare(rovine),
+                    "e nessuna missione le elenca più sul cartiglio");
+            assertEquals(Collections.singletonList(documentazione.getNome()), RegistroMissioni.getNomiMissioniDaSegnalare(tempio));
+        }
+    }
+
+    @Test
+    void iPostiGiaOccupatiDallaMissioneSiRicordanoAncheDopoUnCaricamento() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(251)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            LaDocumentazione documentazione = RegistroMissioni.getTutteLeMissioni().stream().filter(LaDocumentazione.class::isInstance)
+                    .map(LaDocumentazione.class::cast).findFirst().orElseThrow(AssertionError::new);
+            documentazione.aggiungiProprieta("PARAMETRO_" + LaDocumentazione.DOCUMENTAZIONE, ISCRIZIONI);
+            documentazione.controllaPreLocazione();
+            documentazione.segnaIntermezzoPassoMostrato("INCARICO");
+            documentazione.controllaInLocazione();
+
+            CoordinateMD rovine = documentazione.getPosto();
+            partita.gruppo().setCoordinate(rovine);
+            documentazione.controllaInLocazione();
+            CoordinateMD tempio = documentazione.getPosto();
+            assertNotEquals(rovine, tempio);
+            assertEquals(documentazione.getId(), RegistroMissioni.getMissioneCheHaOccupato(rovine).map(m -> m.getId()).orElse(null),
+                    "le rovine ricordano la missione che le ha avute");
+
+            partita.salva(Comando.NUMERO_3);
+            assertTrue(partita.leggi(Comando.NUMERO_3));
+
+            assertEquals(documentazione.getId(), RegistroMissioni.getMissioneCheHaOccupato(rovine).map(m -> m.getId()).orElse(null),
+                    "anche dopo un caricamento");
+            assertEquals(documentazione.getId(), RegistroMissioni.getMissioneCheHaOccupato(tempio).map(m -> m.getId()).orElse(null));
         }
     }
 }

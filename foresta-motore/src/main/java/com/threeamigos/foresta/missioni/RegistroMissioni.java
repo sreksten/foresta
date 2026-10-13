@@ -50,13 +50,16 @@ public class RegistroMissioni {
 	 * Le locazioni rivendicate dalle missioni (vedi {@link #cerca}): per ogni coordinata l'id della missione che
 	 * l'ha rivendicata per ultima. Un claim non si cancella mai, si sovrascrive: così la coordinata ricorda chi
 	 * l'ha avuta anche dopo che la missione è finita. Non si salva a parte: si ricostruisce dalle proprietà delle
-	 * missioni ({@code LOCAZIONE_OCCUPATA}).
+	 * missioni ({@code LOCAZIONE_OCCUPATA} e {@code LOCAZIONI_GIA_OCCUPATE}).
 	 */
 	private static final Map<CoordinateMD, String> locazioniOccupate = new HashMap<>();
 	// Il numero d'ordine del prossimo claim: dopo un caricamento, fra due missioni che hanno rivendicato la stessa
 	// coordinata vince quella che l'ha fatto per ultima
 	private static int prossimoClaim;
 	private static final String LOCAZIONE_OCCUPATA = "LOCAZIONE_OCCUPATA";
+	// I claim che la missione ha lasciato per rivendicare un altro posto, "x,y,numero" separati da ';': servono per
+	// ricostruire dopo un caricamento anche i posti che la missione ha avuto prima di quello di adesso
+	private static final String LOCAZIONI_GIA_OCCUPATE = "LOCAZIONI_GIA_OCCUPATE";
 
 	/**
 	 * Le caselle che le missioni in corso fanno lampeggiare sulla mappa perché ci si deve andare (vedi
@@ -171,9 +174,15 @@ public class RegistroMissioni {
 
 	/**
 	 * La missione rivendica la locazione in quelle coordinate, al posto di chiunque l'avesse prima. La missione
-	 * ricorda la sua coordinata nella proprietà {@code LOCAZIONE_OCCUPATA}; ne rivendica una sola alla volta.
+	 * ricorda la sua coordinata nella proprietà {@code LOCAZIONE_OCCUPATA}; ne rivendica una sola alla volta, e quella che
+	 * lascia passa in {@code LOCAZIONI_GIA_OCCUPATE}, così dopo un caricamento il posto ricorda ancora la missione.
 	 */
 	public static void occupaLocazione(CoordinateMD coordinate, Missione missione) {
+		String precedente = missione.ottieniProprieta(LOCAZIONE_OCCUPATA);
+		if (precedente != null) {
+			String giaOccupate = missione.ottieniProprieta(LOCAZIONI_GIA_OCCUPATE);
+			missione.aggiungiProprieta(LOCAZIONI_GIA_OCCUPATE, giaOccupate == null ? precedente : giaOccupate + ";" + precedente);
+		}
 		missione.aggiungiProprieta(LOCAZIONE_OCCUPATA, coordinate.getX() + "," + coordinate.getY() + "," + prossimoClaim++);
 		locazioniOccupate.put(coordinate, missione.getId());
 	}
@@ -264,7 +273,7 @@ public class RegistroMissioni {
 	public static List<CoordinateMD> getLocazioniDaSegnalare() {
 		List<CoordinateMD> caselle = new ArrayList<>();
 		for (Missione missione : getTutteLeMissioni()) {
-			if (missione instanceof MissioneAPassi && missione.isAttiva() && !missione.isCompleta() && !missione.isFallita()) {
+			if (missione instanceof MissioneAPassi && isInCorso(missione) && !haUnAltroSegnalino(missione, getLocazioneOccupata(missione))) {
 				CoordinateMD coordinate = getLocazioneOccupata(missione);
 				if (coordinate != null && Foresta.isLocazioneConosciuta(coordinate)) {
 					caselle.add(coordinate);
@@ -279,6 +288,15 @@ public class RegistroMissioni {
 		return caselle;
 	}
 
+	/**
+	 * Se il passo corrente della missione segna una casella diversa da quella rivendicata (la città in cui tornare, dopo
+	 * aver sconfitto i nemici nel covo): allora il posto rivendicato ha fatto il suo e non lampeggia più.
+	 */
+	private static boolean haUnAltroSegnalino(Missione missione, CoordinateMD rivendicata) {
+		CoordinateMD segnalata = locazioniSegnalate.get(missione.getId());
+		return segnalata != null && !segnalata.equals(rivendicata);
+	}
+
 	private static boolean isInCorso(Missione missione) {
 		return missione.isAttiva() && !missione.isCompleta() && !missione.isFallita();
 	}
@@ -291,7 +309,8 @@ public class RegistroMissioni {
 	public static List<String> getNomiMissioniDaSegnalare(CoordinateMD coordinate) {
 		List<String> nomi = new ArrayList<>();
 		getMissioneCheHaOccupato(coordinate)
-				.filter(missione -> missione instanceof MissioneAPassi && isInCorso(missione))
+				.filter(missione -> missione instanceof MissioneAPassi && isInCorso(missione)
+						&& coordinate.equals(getLocazioneOccupata(missione)) && !haUnAltroSegnalino(missione, coordinate))
 				.ifPresent(missione -> nomi.add(missione.getNome()));
 		for (Missione missione : getTutteLeMissioni()) {
 			if (coordinate.equals(locazioniSegnalate.get(missione.getId())) && isInCorso(missione)
@@ -567,21 +586,32 @@ public class RegistroMissioni {
 	}
 
 	/**
-	 * Dopo un caricamento: i claim si rileggono dalle proprietà delle missioni, nell'ordine in cui sono stati fatti.
+	 * Dopo un caricamento: i claim si rileggono dalle proprietà delle missioni (quello di adesso e quelli lasciati
+	 * prima), nell'ordine in cui sono stati fatti.
 	 */
 	private static void ricostruisciLocazioniOccupate() {
 		List<String[]> claim = new ArrayList<>();
 		for (Missione missione : getTutteLeMissioni()) {
-			String valore = missione.ottieniProprieta(LOCAZIONE_OCCUPATA);
-			if (valore != null) {
-				String[] parti = valore.split(",");
-				claim.add(new String[] {parti[0], parti[1], parti[2], missione.getId()});
-			}
+			aggiungiIClaim(claim, missione.ottieniProprieta(LOCAZIONI_GIA_OCCUPATE), missione.getId());
+			aggiungiIClaim(claim, missione.ottieniProprieta(LOCAZIONE_OCCUPATA), missione.getId());
 		}
 		claim.sort(Comparator.comparingInt(c -> Integer.parseInt(c[2])));
 		for (String[] c : claim) {
 			locazioniOccupate.put(new CoordinateMD(Integer.parseInt(c[0]), Integer.parseInt(c[1])), c[3]);
 			prossimoClaim = Integer.parseInt(c[2]) + 1;
+		}
+	}
+
+	/**
+	 * Aggiunge all'elenco i claim scritti nel valore di una proprietà: "x,y,numero", più d'uno se separati da ';'.
+	 */
+	private static void aggiungiIClaim(List<String[]> claim, String valore, String idMissione) {
+		if (valore == null) {
+			return;
+		}
+		for (String uno : valore.split(";")) {
+			String[] parti = uno.split(",");
+			claim.add(new String[] {parti[0], parti[1], parti[2], idMissione});
 		}
 	}
 
