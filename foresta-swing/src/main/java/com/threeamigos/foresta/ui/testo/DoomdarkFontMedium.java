@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.ui.testo;
 
+/**
+ * Il font bitmap medio, alto 16 punti: maiuscole, minuscole, cifre, punteggiatura e le accentate che servono ai testi del gioco.
+ */
 public class DoomdarkFontMedium implements DoomdarkFont {
 
 	private DoomdarkFontMedium() {

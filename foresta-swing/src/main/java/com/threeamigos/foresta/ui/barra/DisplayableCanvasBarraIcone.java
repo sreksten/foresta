@@ -117,6 +117,9 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 		}
 	}
 
+	/**
+	 * Dispone le icone dei comandi possibili e, in ogni schermata che ha dei comandi, aggiunge l'interruttore dell'aiuto.
+	 */
 	public void impostaAzioni() {
 		List<Comando> possibiliAzioni = new ArrayList<>(ComandiPossibili.getComandi());
 		// L'interruttore dell'aiuto, in ogni schermata che ha dei comandi
@@ -266,6 +269,9 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 		}
 	}
 
+	/**
+	 * Disegna la barra: lo sfondo e le icone visibili, con l'aiuto del comando sotto il cursore.
+	 */
 	public void disegna(Graphics2D graphics) {
 		graphics.setColor(Color.black);
 		graphics.fillRect(offsetX, offsetY, larghezza, altezza);

@@ -244,6 +244,9 @@ public final class TracciatoreLogo {
         }
     }
 
+    /**
+     * Il verso in cui un punto luminoso percorre il contorno del logo.
+     */
     public enum Verso { ORARIO, ANTIORARIO }
 
     /** Descrive un singolo punto luminoso indipendente: partenza, arrivo (opzionale), verso e ritardo. */
@@ -950,8 +953,8 @@ public final class TracciatoreLogo {
 
     /**
      * Area con segno del poligono (formula dell'area di Gauss, "shoelace"), calcolata in
-     * coordinate immagine (Y verso il basso): positiva => percorso orario
-     * sullo schermo, negativa => antiorario.
+     * coordinate immagine (Y verso il basso): positiva &rArr; percorso orario
+     * sullo schermo, negativa &rArr; antiorario.
      */
     private static double areaConSegno(List<Point2D.Double> percorso) {
         // formula dell'area di Gauss, "shoelace": somma di (x_i * y_(i+1) - x_(i+1) * y_i) su tutti

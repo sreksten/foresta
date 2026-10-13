@@ -12,11 +12,17 @@ public interface Finestra {
 
     int SPACING = ImageCache.SPACING;
 
+    /**
+     * Il verso in cui gira la rotella del mouse.
+     */
     enum MovimentoRotella {
         SU,
         GIU
     }
 
+    /**
+     * Il tasto del mouse.
+     */
     enum Tasto {
         SINISTRO,
         CENTRALE,

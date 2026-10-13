@@ -21,6 +21,8 @@ import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 
 /**
+ * La schermata dell'inventario: a sinistra gli artefatti del personaggio scelto, a destra quelli del gruppo, in mezzo la colonna del personaggio con
+ * equipaggiamento e caratteristiche.
  *
  * @author Stefano Reksten
  */
@@ -96,6 +98,9 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         disegnaIntestazioniInventarioImpl(graphics, "Inventario personaggio", "Inventario gruppo");
     }
 
+    /**
+     * Disegna la colonna centrale con il personaggio, il suo equipaggiamento e le sue caratteristiche.
+     */
     public void disegnaColonnaPersonaggio(Graphics2D graphics) {
 
         Image doomdark;
@@ -295,6 +300,9 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         graphics.drawImage(i, xMassimaZonaCentrale - i.getWidth(null), y, null);
     }
 
+    /**
+     * Gestisce un click nella colonna del personaggio; dice se l'ha consumato.
+     */
     protected boolean processaClickPersonaggio(int x, int y, Tasto tasto) {
         Object riferimento = trovaRiferimento(personaggio, x, y);
         if (riferimento == MODIFICATORI_TEMPORANEI) {
@@ -326,6 +334,9 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
                 return personaggio.isEquipaggiabile(artefatto) ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
     }
 
+    /**
+     * Gestisce un doppio click nella colonna del personaggio; dice se l'ha consumato.
+     */
     protected boolean processaDoppioClickPersonaggio(int x, int y, Tasto tasto) {
         Object riferimento = trovaRiferimento(personaggio, x, y);
         TipoAttributo attributo = riferimento instanceof TipoAttributo ? (TipoAttributo) riferimento : null;

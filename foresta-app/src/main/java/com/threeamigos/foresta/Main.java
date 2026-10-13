@@ -21,6 +21,14 @@ import com.threeamigos.foresta.salvataggi.GestorePunteggiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreSalvataggiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreTrofeiSuFile;
 
+/**
+ * Il punto d'ingresso del gioco: l'unico posto che conosce insieme motore e interfaccia grafica e li collega.
+ * Sceglie dove gira la logica (il thread di Swing), registra gli ascoltatori del bus eventi, crea l'automa e
+ * la finestra e li lascia dialogare solo tramite eventi.
+ * <p>
+ * Argomenti riconosciuti (senza distinzione fra maiuscole e minuscole): {@code ORIZZONTALE}, {@code VERTICALE},
+ * {@code TUTTOSCHERMO}, {@code SALTALOGO}, {@code BARRACLASSICA}, {@code ZOOM=<numero>}, {@code MODALITA_DI_PROVA}.
+ */
 public class Main {
 
 	private static Orientamento orientamento = Orientamento.ORIZZONTALE;
@@ -31,6 +39,11 @@ public class Main {
 	// con l'argomento BARRACLASSICA si torna alla barra fissa
 	private static boolean barraDock = true;
 
+	/**
+	 * Imposta le opzioni di avvio dagli argomenti; quelli sconosciuti sono ignorati.
+	 *
+	 * @throws NumberFormatException se il valore di {@code ZOOM=} non è un numero
+	 */
 	private static void leggiArgomenti(String[] args) {
         for (String arg : args) {
             if (arg.equalsIgnoreCase("ORIZZONTALE")) {
@@ -51,6 +64,9 @@ public class Main {
         }
 	}
 
+	/**
+	 * Avvia il gioco: il resto del lavoro lo fanno gli eventi, perché la finestra, quando è pronta, avvisa l'automa che può cominciare.
+	 */
 	public static void main(String[] args) throws Exception {
 
 		// Tutta la logica di gioco gira sull'Event Dispatch Thread di Swing

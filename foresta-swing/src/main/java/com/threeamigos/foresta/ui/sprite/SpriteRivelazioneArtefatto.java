@@ -172,6 +172,9 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 		}
 	}
 
+	/**
+	 * Disegna la rivelazione all'istante {@code t} dall'inizio: il cerchio, i raggi, le scintille e il pannello.
+	 */
 	public void disegna(Graphics2D g, float t) {
 		float inizioUscita = durata - USCITA;
 		float uscita = t > inizioUscita ? Math.min(1f, (t - inizioUscita) / USCITA) : 0f;

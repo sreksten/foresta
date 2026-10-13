@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.image.MemoryImageSource;
 import java.util.List;
 
+/**
+ * Trasforma una stringa in un'immagine scritta con un font bitmap e un colore, anche su più righe entro una larghezza massima.
+ */
 public class DoomdarkTextProducer {
 	
 	private DoomdarkTextProducer() {

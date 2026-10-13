@@ -141,10 +141,16 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
      */
     private final List<SpriteInterface> spriteLocali = new ArrayList<>();
 
+    /**
+     * Aggiunge uno sprite che resta confinato in questa schermata.
+     */
     protected void aggiungiSpriteLocale(SpriteInterface sprite) {
         spriteLocali.add(sprite);
     }
 
+    /**
+     * Anima gli sprite locali e toglie quelli esauriti.
+     */
     protected void disegnaSpriteLocali(Graphics2D graphics) {
         List<SpriteInterface> copia = new ArrayList<>(spriteLocali);
         for (SpriteInterface sprite : copia) {

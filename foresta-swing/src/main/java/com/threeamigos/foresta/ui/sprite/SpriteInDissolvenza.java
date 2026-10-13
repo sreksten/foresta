@@ -6,6 +6,9 @@ import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.util.Arrays;
 
+/**
+ * Un'immagine ferma che sfuma sul posto, subito o dopo un'attesa durante la quale resta intera.
+ */
 public class SpriteInDissolvenza extends SpriteBase {
 
 	private static final float DURATA_IN_SECONDI = 1.2f;

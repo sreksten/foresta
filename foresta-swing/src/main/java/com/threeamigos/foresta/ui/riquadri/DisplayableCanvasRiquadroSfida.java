@@ -165,6 +165,9 @@ public class DisplayableCanvasRiquadroSfida implements Finestra {
 		this.visibile = true;
 	}
 
+	/**
+	 * Disegna il riquadro della sfida a carta, forbici e sasso.
+	 */
 	public void disegna(Graphics2D graphics) {
 		if (!visibile) {
 			return;

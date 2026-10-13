@@ -26,6 +26,11 @@ public final class DimensioniRisorsa {
 		return new Dimension((int) Math.round(d.width * zoom), (int) Math.round(d.height * zoom));
 	}
 
+	/**
+	 * Le dimensioni della risorsa, lette dall'intestazione del file.
+	 *
+	 * @throws IllegalArgumentException se la risorsa non c'è o il suo formato non è riconosciuto
+	 */
 	public static Dimension di(String risorsa) {
 		String percorso = "/com/threeamigos/foresta/img/" + risorsa;
 		try (InputStream in = DimensioniRisorsa.class.getResourceAsStream(percorso)) {

@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/**
+ * Funzioni per misurare e spezzare il testo scritto con un font bitmap.
+ */
 public class FontTool {
 	
 	private FontTool() {
@@ -27,6 +30,9 @@ public class FontTool {
 	}
 
 	// Spezza la frase in più stringhe per farla rientrare in una larghezza massima
+	/**
+	 * Spezza il testo in più righe, andando a capo fra le parole, in modo che ciascuna stia nella larghezza data.
+	 */
 	public static List<String> split(DoomdarkFont font, String s, int width) {
 		List<String> list = new ArrayList<>();
 		StringTokenizer st = new StringTokenizer(s == null ? "" : s, " ");

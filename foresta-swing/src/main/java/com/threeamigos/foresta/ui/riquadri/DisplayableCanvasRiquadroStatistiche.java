@@ -16,6 +16,9 @@ import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 
+/**
+ * Il riquadro con le statistiche del gruppo: monete, preziosi e punti esperienza.
+ */
 public class DisplayableCanvasRiquadroStatistiche implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE = 6;
@@ -52,6 +55,9 @@ public class DisplayableCanvasRiquadroStatistiche implements Finestra {
 		BusEventi.iscriviti(NotificaVariazionePuntiEsperienzaPersonaggio.class, this::gestisciEventoVariazionePuntiEsperienza);
 	}
 
+	/**
+	 * Disegna le statistiche del gruppo.
+	 */
 	public void disegnaStatistiche(Graphics2D graphics) {
 		VistaGruppoGiocatore gruppoGiocatore = vistaPartita.getGruppoGiocatore();
 		graphics.drawImage(ImageCache.cornicePiccola, topLeftX, topLeftY, null);

@@ -156,6 +156,9 @@ final class CasellaADiscesa<T> {
 		return px >= x && px < x + larghezza && py >= y && py < y + altezza;
 	}
 
+	/**
+	 * Disegna il menu aperto, con la scelta sotto il mouse evidenziata.
+	 */
 	public void disegna(Graphics2D graphics, int mouseX, int mouseY) {
 		graphics.setColor(SFONDO);
 		graphics.fillRect(x, y, larghezza, altezza);

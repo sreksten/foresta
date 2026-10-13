@@ -3,6 +3,11 @@ package com.threeamigos.foresta.ui.sprite;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * La base degli sprite con un'immagine che si muove da un punto a un altro, cambia scala e sfuma. La sottoclasse costruisce l'immagine ({@link #buildImage()}), dice come disegnarla e come
+ * cresce la trasparenza e la richiama {@link #inizializza}; la base misura il tempo reale che passa fra una chiamata e l'altra di {@link #anima(Graphics2D)}, calcola posizione e scala per interpolazione
+ * e disattiva lo sprite alla fine. Se si indica un ritaglio, lo sprite si vede solo dentro quell'area.
+ */
 public abstract class SpriteBase implements SpriteInterface {
 
 	protected BufferedImage immagine;
@@ -136,8 +141,14 @@ public abstract class SpriteBase implements SpriteInterface {
 		ultimoAggiornamentoNanos = -1;
 	}
 
+	/**
+	 * L'opacità dello sprite, da 0 (invisibile) a 1, dopo quel tempo dall'inizio.
+	 */
 	protected abstract float calcolaAlpha(float secondiTrascorsi);
 
+	/**
+	 * Disegna lo sprite in quella posizione e a quella scala.
+	 */
 	public abstract void disegna(Graphics2D g, float x, float y, float scala);
 
 	@Override
@@ -145,10 +156,16 @@ public abstract class SpriteBase implements SpriteInterface {
 		return attivo;
 	}
 
+	/**
+	 * Il valore che sta a quel progresso (da 0 a 1) fra l'iniziale e il finale.
+	 */
 	protected static float interpola(float iniziale, float finale, float progresso) {
 		return iniziale + (finale - iniziale) * progresso;
 	}
 
+	/**
+	 * Una dissolvenza che non comincia finché non passa la soglia e poi sfuma con una curva iperbolica, rapida all'inizio e lenta in coda.
+	 */
 	protected static float dissolvenzaIperbolicaConSoglia(float secondiTrascorsi, float sogliaInSecondi) {
 		if (secondiTrascorsi <= sogliaInSecondi) {
 			return 1.0f;
@@ -158,6 +175,9 @@ public abstract class SpriteBase implements SpriteInterface {
 		return Math.min(1.0f, 1.0f / ((secondiTrascorsi - sogliaInSecondi) * 10));
 	}
 
+	/**
+	 * Una dissolvenza che non comincia finché non passa la soglia e poi sfuma in linea retta fino alla fine della durata.
+	 */
 	protected static float dissolvenzaLineareConSoglia(float secondiTrascorsi, float sogliaInSecondi, float durataInSecondi) {
 		if (secondiTrascorsi <= sogliaInSecondi) {
 			return 1.0f;

@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 
 /**
+ * Disegna la mappa della foresta con le caselle che il gruppo conosce: base comune della minimappa e della mappa a tutto schermo.
  *
  * @author Stefano Reksten
  */
@@ -30,6 +31,9 @@ public class DisegnatoreMappa {
         this.vistaPartita = vistaPartita;
     }
 
+    /**
+     * L'immagine di tutte le caselle conosciute; si ricostruisce solo quando la mappa è cambiata dall'ultima volta.
+     */
     public BufferedImage ottieniMappaGenerale() {
         int versioneCorrente = vistaPartita.getMappa().getVersioneMappa();
         if (mappaGenerale == null || versioneCorrente != versioneMappaGenerata) {

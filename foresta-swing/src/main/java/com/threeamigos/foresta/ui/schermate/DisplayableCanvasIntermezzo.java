@@ -76,6 +76,9 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 		this.testo = testo;
 	}
 
+	/**
+	 * Mostra la pagina, facendo ripartire da zero il suo tempo.
+	 */
 	public void mostra(PaginaIntermezzo pagina) {
 		this.pagina = pagina;
 		inizioPaginaNanosecondi = System.nanoTime();
@@ -102,6 +105,9 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 		versi.clear();
 	}
 
+	/**
+	 * Disegna la pagina com'è al tempo trascorso dalla sua comparsa.
+	 */
 	public void disegna(Graphics2D graphics) {
 		disegnaAl(graphics, (System.nanoTime() - inizioPaginaNanosecondi) / 1_000_000_000.0);
 	}

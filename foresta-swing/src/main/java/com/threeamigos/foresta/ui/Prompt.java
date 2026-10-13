@@ -16,6 +16,9 @@ import java.awt.image.BufferedImage;
 import java.util.function.Consumer;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 
+/**
+ * Il campo in cui il giocatore scrive un testo (il nome di un personaggio, il suo nome in classifica...): l'invio lo manda al motore come comando, o a chi lo ha chiesto per sé.
+ */
 public class Prompt extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;

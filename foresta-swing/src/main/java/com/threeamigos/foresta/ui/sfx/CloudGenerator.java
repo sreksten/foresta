@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+/**
+ * Genera una nuvola procedurale: una manciata di cerchi sfumati sovrapposti, su uno sfondo trasparente.
+ */
 public class CloudGenerator {
 
     /**

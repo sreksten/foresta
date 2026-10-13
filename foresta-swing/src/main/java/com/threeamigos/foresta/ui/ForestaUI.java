@@ -35,6 +35,10 @@ import com.threeamigos.foresta.ui.sfx.PannelloLogoIniziale;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.TestoReazioneDiClasse;
 
+/**
+ * La classe radice dell'interfaccia: crea la finestra (sul thread di Swing), il canvas e il prompt, mostra il logo iniziale mentre carica le risorse e poi lascia il posto alla schermata di gioco. Si iscrive,
+ * subito, a una quarantina di tipi di evento del bus e traduce ciascuno in una chiamata sul canvas. Quando ha finito pubblica {@code InternoInterfacciaUtentePronta}, e da lì l'automa parte. Vedi motore_grafico.md.
+ */
 public class ForestaUI implements Temporizzabile {
 
 	private final Orientamento orientamento;
@@ -261,6 +265,9 @@ public class ForestaUI implements Temporizzabile {
 		}
 	}
 
+	/**
+	 * Un impulso del temporizzatore: durante il logo iniziale fa avanzare il logo, durante l'intro le sue schermate.
+	 */
 	public void tick() {
 		if (faseDiGioco == FaseDiGioco.LOGO_INIZIALE) {
 			avanzaLogoIniziale();
@@ -274,6 +281,9 @@ public class ForestaUI implements Temporizzabile {
 		prompt.mostra(evento.getTestoPredefinito());
 	}
 
+	/**
+	 * Mostra nella barra delle icone i comandi che il giocatore può dare.
+	 */
 	public void impostaAzioni(Collection<Comando> possibilita) {
 		ComandiPossibili.set(possibilita);
 		displayableCanvas.impostaAzioniIcone();

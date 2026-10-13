@@ -12,6 +12,9 @@ import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 import com.threeamigos.foresta.ui.testo.FontTool;
 
+/**
+ * Il riquadro che mostra gli avversari della locazione e le informazioni sul combattimento in corso.
+ */
 public class DisplayableCanvasRiquadroCombattimento implements Finestra {
 
 	private boolean visible;
@@ -93,6 +96,9 @@ public class DisplayableCanvasRiquadroCombattimento implements Finestra {
 		}
 	}
 
+	/**
+	 * Disegna le informazioni sul combattimento: chi si affronta e come va.
+	 */
 	public void disegnaInfoCombattimento(Graphics2D graphics) {
 		if (!visible) {
 			return;

@@ -25,6 +25,7 @@ import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 
 /**
+ * La schermata dell'alchimista: elenca le offerte di pozioni e altri consumabili e permette di comprarle per il personaggio scelto.
  *
  * @author Stefano Reksten
  */
@@ -39,6 +40,9 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         BusEventi.iscriviti(NotificaRifiutoAcquistoConsumabile.class, this::gestisciEventoRifiutoAcquistoConsumabile);
     }
 
+    /**
+     * Imposta le offerte da mostrare.
+     */
     public void impostaOfferte(List<? extends VistaOffertaConsumabile> offerte) {
         this.offerte = offerte;
     }
@@ -102,6 +106,9 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         return "Alchimista";
     }
 
+    /**
+     * Disegna la colonna centrale con il personaggio scelto.
+     */
     public void disegnaColonnaPersonaggio(Graphics2D graphics) {
 
         int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
@@ -130,6 +137,9 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         graphics.drawImage(separatore, (width - separatore.getWidth()) / 2, y, null);
     }
 
+    /**
+     * Disegna l'elenco delle offerte.
+     */
     public void disegnaInventario(Graphics2D graphics) {
 
         super.disegnaInventario(graphics);

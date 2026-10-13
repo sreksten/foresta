@@ -25,6 +25,10 @@ import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 import com.threeamigos.foresta.ui.testo.TestoGrande;
 
+/**
+ * La finestra delle schermate senza partita in corso: l'introduzione (storia che scorre, loghi, classifica, trofei), i messaggi su sfondo con l'ombra del drago,
+ * le statistiche di fine partita e la scelta dello slot di salvataggio da caricare.
+ */
 public class DisplayableCanvasIntroOutro implements Finestra {
 
 	// Lo scorrimento dell'intro (vedi ScorrimentoVerticale): pixel al secondo, e quanto è alta la fascia di
@@ -125,6 +129,9 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		ultimoFotogramma = 0;
 	}
 
+	/**
+	 * Passa al passo successivo della sequenza, ripartendo da zero oltre la lunghezza massima.
+	 */
 	public void incrementaSequenza(int lunghezzaMassima) {
 		sequenza++;
 		if (sequenza >= lunghezzaMassima) {
@@ -132,10 +139,16 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		}
 	}
 	
+	/**
+	 * Imposta il messaggio che {@link #scrivi} mostra.
+	 */
 	public void impostaMessaggio(String messaggio) {
 		this.messaggio = messaggio;
 	}
 
+	/**
+	 * Disegna il messaggio corrente, centrato e con a capo automatico, sopra l'ombra del drago se richiesta.
+	 */
 	public void scrivi(Graphics2D graphics, boolean disegnaOmbraDelDrago) {
 		if (disegnaOmbraDelDrago) {
 			disegnaOmbraDelDrago(graphics);
@@ -155,6 +168,9 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		}
 	}
 
+	/**
+	 * Disegna i mostri uccisi per classe, uno per riga.
+	 */
 	public void statistiche(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
 		int locXOffset = xOffset;
@@ -181,6 +197,9 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		this.salvataggiDisponibili = salvataggiDisponibili;
 	}
 
+	/**
+	 * Disegna l'elenco dei salvataggi disponibili, con il gruppo di ciascuno.
+	 */
 	public void selezioneSlotDaCaricare(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
 		graphics.drawImage(immagineSelezionaSlotDaCaricare(), 0, 50 - RAGGIO_ALONE, null);
@@ -221,6 +240,9 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		graphics.drawImage(immagineConAlone, 0, coordinataY - RAGGIO_ALONE, null);
 	}
 
+	/**
+	 * Disegna gli slot di salvataggio fra cui scegliere dove salvare, con il gruppo di quelli occupati.
+	 */
 	public void selezioneSlotDaSalvare(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
 		disegnaStringaCentrataConACapoAutomatico(graphics, "seleziona lo slot per il salvataggio", 50);
@@ -236,17 +258,26 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		}
 	}
 
+	/**
+	 * Disegna la richiesta di conferma per uscire dal gioco.
+	 */
 	public void confermaUscita(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
 		disegnaStringaCentrataConACapoAutomatico(graphics, "uscire dal gioco?", 100);
 	}
 
+	/**
+	 * Disegna la schermata della sconfitta.
+	 */
 	public void perso(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
 		messaggio = Misc.PERSO[sequenza];
 		scrivi(graphics, true);
 	}
 
+	/**
+	 * Disegna la schermata della vittoria.
+	 */
 	public void vinto(Graphics2D graphics) {
 		Image d = ImageCache.trionfo;
 		graphics.drawImage(d, (width - d.getWidth(null)) / 2, (height - d.getHeight(null)) / 2, null);

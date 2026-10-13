@@ -6,6 +6,9 @@ import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkTextRectangle2x;
 
+/**
+ * Il riquadro di testo in cui scorrono le frasi che raccontano la partita.
+ */
 public class DisplayableCanvasRiquadroTesto implements Finestra {
 
 	// Righe di testo per ogni scatto della rotella
@@ -29,10 +32,16 @@ public class DisplayableCanvasRiquadroTesto implements Finestra {
 		doomdarkTextRectangle = new DoomdarkTextRectangle2x(width, height);
 	}
 
+	/**
+	 * Cancella tutto il testo.
+	 */
 	public void clear() {
 		doomdarkTextRectangle.clear();
 	}
 	
+	/**
+	 * Aggiunge una frase in fondo.
+	 */
 	public void addString(String messaggio) {
 		doomdarkTextRectangle.addString(messaggio);
 	}
@@ -47,6 +56,9 @@ public class DisplayableCanvasRiquadroTesto implements Finestra {
 		}
 	}
 
+	/**
+	 * Disegna le ultime frasi che entrano nel riquadro.
+	 */
 	public void disegnaTesto(Graphics2D graphics) {
 		int versione = doomdarkTextRectangle.getVersione();
 		if (immagineTesto == null || versione != versioneDisegnata) {

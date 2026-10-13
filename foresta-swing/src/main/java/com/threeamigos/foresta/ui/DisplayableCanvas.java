@@ -58,9 +58,12 @@ import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 
 /**
- * Classe che rappresenta il canvas grafico del gioco.
- * Le animazioni sono gestite dal metodo run() che gira a Temporizzatore.FRAME_PER_SECONDO
- * fotogrammi al secondo.
+ * Il canvas grafico del gioco: sa quale schermata è quella corrente (in gioco, mappa, inventario, negozi, intermezzo, intro e fine partita...) e la disegna, e fa da
+ * facciata per tutto ciò che la UI deve mostrare. {@link ForestaUI} traduce gli eventi del bus in chiamate sui suoi metodi.
+ * <p>
+ * Nella schermata di gioco disegna i riquadri (locazione, gruppo, combattimento, mappa, missioni, testo, statistiche, incantesimi e pozioni) e la barra delle icone, in
+ * una pila di finestre che si possono portare in primo piano, e sopra a tutto gli sprite (numeri che salgono, fumetti, annunci). Le animazioni girano nel metodo
+ * {@link #run()}, a {@code Temporizzatore.FRAME_PER_SECONDO} fotogrammi al secondo; il disegno vero avviene sul thread di Swing.
  */
 public class DisplayableCanvas extends JPanel implements Runnable {
 
@@ -449,6 +452,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		notificaAnnuncioGlobale(evento.getEtichetta(), evento.getDescrizione());
 	}
 
+	/**
+	 * Mostra la schermata per scegliere lo slot da cui caricare una partita, con le testate di quelli disponibili.
+	 */
 	public void selezioneSlotSalvataggioDaCaricare(Collection<TestataSalvataggio> salvataggiDisponibili) {
 		riquadroIntroOutro.setSalvataggiDisponibili(salvataggiDisponibili);
 		stato = StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_CARICARE;
@@ -469,10 +475,16 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 	}
 
+	/**
+	 * Ferma il thread che ridisegna a ogni fotogramma.
+	 */
 	public void fermaThreadAnimazione() {
 		animatoreInAzione = false;
 	}
 
+	/**
+	 * Il ciclo di animazione: a cadenza fissa fa avanzare gli sprite e chiede il ridisegno, senza contenere logica di gioco.
+	 */
 	public void run() {
 		animatoreInAzione = true;
 		// Cadenza fissa: la scadenza del fotogramma successivo si calcola dalla precedente,
@@ -525,10 +537,18 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		return riquadroCombattimento;
 	}
 
+	/**
+	 * Svuota il riquadro di testo, per una partita nuova.
+	 */
 	public void reinizializza() {
 		riquadroTesto.clear();
 	}
 
+	/**
+	 * Porta la finestra in cima alla pila: è quella che si disegna sopra le altre e che riceve per prima il mouse.
+	 *
+	 * @throws IllegalArgumentException se non è una finestra della pila
+	 */
 	public void primoPiano(TipoFinestra finestra) {
 		if (!stackElementiGrafici.remove(finestra)) {
 			throw new IllegalArgumentException("Elemento grafico non valido: " + finestra);
@@ -825,6 +845,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 	}
 
+	/**
+	 * Passa alla schermata di gioco; se si torna da un intermezzo ne libera le immagini e fa partire gli annunci che erano stati rimandati.
+	 */
 	public void iniziaGioco() {
 		// Se si torna al gioco da un intermezzo, le sue immagini non servono più
 		intermezzo.svuota();
@@ -838,12 +861,18 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
+	/**
+	 * Passa alla mappa a tutto schermo, centrata sul gruppo.
+	 */
 	public void mappa() {
 		stato = StatoDisplayableCanvas.STATO_MAPPA;
 		mappaATuttoSchermo.centraSuGiocatore();
 		repaint();
 	}
 
+	/**
+	 * Passa all'inventario.
+	 */
 	public void inventario() {
 		stato = StatoDisplayableCanvas.STATO_INVENTARIO;
 		repaint();
@@ -875,17 +904,26 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
+	/**
+	 * Imposta lo scambio e il personaggio che l'inventario mostra.
+	 */
 	public void impostaScambioInventario(VistaScambio scambio, VistaPersonaggio personaggio) {
 		inventario.impostaScambio(scambio, personaggio);
 		repaint();
 	}
 
+	/**
+	 * Passa alla schermata del commerciante, che accoglie il gruppo con un fumetto.
+	 */
 	public void commerciante() {
 		stato = StatoDisplayableCanvas.STATO_COMMERCIANTE;
 		notificaFumetto("Come posso aiutarvi?", commerciante.getCoordinateFumetto());
 		repaint();
 	}
 
+	/**
+	 * Imposta il negozio e lo scambio che la schermata del commerciante mostra.
+	 */
 	public void impostaScambioCommerciante(TipoNegozio negozio, VistaScambio scambio) {
 		commerciante.impostaNegozio(negozio);
 		commerciante.impostaScambio(scambio);
@@ -903,11 +941,17 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
+	/**
+	 * Imposta il banco di lavoro che la schermata dell'incantatore mostra.
+	 */
 	public void impostaBancoIncantatore(VistaBancoDiLavoro banco) {
 		incantatore.impostaBanco(banco);
 		repaint();
 	}
 
+	/**
+	 * Imposta le offerte che la schermata dell'alchimista mostra.
+	 */
 	public void impostaOfferteAlchimista(List<? extends VistaOffertaConsumabile> offerte) {
 		alchimista.impostaOfferte(offerte);
 		repaint();
@@ -925,6 +969,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
+	/**
+	 * Aggiorna la barra delle icone con i comandi possibili.
+	 */
 	public void impostaAzioniIcone() {
 		barraIcone.impostaAzioni();
 		repaint();
@@ -941,11 +988,17 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 	
+	/**
+	 * Passa alla schermata che chiede conferma per uscire dal gioco.
+	 */
 	public void confermaUscita() {
 		stato = StatoDisplayableCanvas.STATO_CONFERMA_USCITA;
 		repaint();
 	}
 	
+	/**
+	 * Passa alla schermata della sconfitta; se c'è già, fa avanzare il suo testo.
+	 */
 	public void perso() {
 		if (stato != StatoDisplayableCanvas.STATO_PERSO) {
 			stato = StatoDisplayableCanvas.STATO_PERSO;
@@ -956,6 +1009,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
+	/**
+	 * Passa alla schermata della vittoria; se c'è già, fa avanzare il suo testo.
+	 */
 	public void vinto() {
 		if (stato != StatoDisplayableCanvas.STATO_VINTO) {
 			stato = StatoDisplayableCanvas.STATO_VINTO;
@@ -966,11 +1022,17 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
+	/**
+	 * Passa alla schermata delle statistiche di fine partita.
+	 */
 	public void mostraStatistiche() {
 		stato = StatoDisplayableCanvas.STATO_STATISTICHE;
 		repaint();
 	}
 
+	/**
+	 * Passa alla schermata dei punteggi migliori; l'introduzione che segue parte da quella classifica.
+	 */
 	public void mostraPunteggi() {
 		stato = StatoDisplayableCanvas.STATO_PUNTEGGI;
 		// Il motore torna subito all'intro: che parta dalla classifica appena aggiornata
@@ -978,6 +1040,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
+	/**
+	 * Passa all'intermezzo e ne mostra la pagina.
+	 */
 	public void mostraPaginaIntermezzo(PaginaIntermezzo pagina) {
 		stato = StatoDisplayableCanvas.STATO_INTERMEZZO;
 		intermezzo.mostra(pagina);
@@ -992,12 +1057,18 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
+	/**
+	 * Mostra un messaggio a tutto schermo, in caratteri grandi.
+	 */
 	public void scriviGrande(String messaggio) {
 		stato = StatoDisplayableCanvas.STATO_MESSAGGIO;
 		riquadroIntroOutro.impostaMessaggio(messaggio);
 		repaint();
 	}
 
+	/**
+	 * Aggiunge una frase al riquadro di testo.
+	 */
 	public void notifica(String messaggio) {
 		riquadroTesto.addString(messaggio);
 		repaint();
@@ -1036,6 +1107,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
+	/**
+	 * Segnala con uno sprite che un personaggio è morto o è tornato in vita.
+	 */
 	public void notificaVariazioneStatoVitale(VistaPersonaggio personaggio) {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.notificaMorte(personaggio));
@@ -1047,6 +1121,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 	}
 
+	/**
+	 * Mostra con uno sprite la variazione di salute di un personaggio, e porta in primo piano la finestra dello stato se è del gruppo.
+	 */
 	public void variaSalute(VistaPersonaggio personaggio, int variazione) {
 		if (!personaggio.isPNG()) {
 			primoPiano(TipoFinestra.STATO);
@@ -1055,6 +1132,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		aggiungiSprite(riquadroLocazione.variaSalute(personaggio, variazione));
 	}
 
+	/**
+	 * Mostra con uno sprite la variazione di magia di un personaggio, e porta in primo piano la finestra dello stato se è del gruppo.
+	 */
 	public void variaMagia(VistaPersonaggio personaggio, int variazione) {
 		if (!personaggio.isPNG()) {
 			primoPiano(TipoFinestra.STATO);
@@ -1062,6 +1142,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		aggiungiSprite(riquadroLocazione.variaMagia(personaggio, variazione));
 	}
 
+	/**
+	 * Mostra con uno sprite che il gruppo ha raccolto un oggetto.
+	 */
 	public void raccogliOggetto() {
 		aggiungiSprite(riquadroLocazione.raccogliOggetto());
 	}
@@ -1070,6 +1153,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		notificaFumetto(testo, coordinateFumetto.getX(), coordinateFumetto.getY(), coordinateFumetto.getPointToX(), coordinateFumetto.getPointToY());
 	}
 
+	/**
+	 * Mostra un fumetto con quel testo in quel punto, con la punta verso quell'altro; se c'è già quello stesso fumetto lo fa ripartire, uno diverso lo interrompe.
+	 */
 	public void notificaFumetto(String testo, int x, int y, int pointToX, int pointToY) {
 		if (fumettoAttivo != null) {
 			if (testo.equals(fumettoAttivo.getTesto())) {
@@ -1089,6 +1175,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		codaFumetti.clear();
 	}
 
+	/**
+	 * Mostra un annuncio al centro dello schermo (per esempio una missione disponibile o completata); in un intermezzo lo rimanda a dopo.
+	 */
 	public void notificaAnnuncioGlobale(String etichetta, String messaggio) {
 		SpriteAnnuncioGlobale annuncio = new SpriteAnnuncioGlobale(etichetta, messaggio, larghezzaSchermo, altezzaSchermo);
 		if (stato == StatoDisplayableCanvas.STATO_INTERMEZZO) {
@@ -1101,14 +1190,23 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		BusEventi.pubblica(new InternoUiOccupata());
 	}
 
+	/**
+	 * Mostra con uno sprite l'effetto di stato appena subito da un personaggio.
+	 */
 	public void aggiungiEffettoDiStato(VistaPersonaggio personaggio, TipoEffettoDiStato effettoDiStato, DoomdarkColorModel.Color colore) {
 		aggiungiSprite(riquadroLocazione.aggiungiEffettoDiStato(personaggio, effettoDiStato, colore));
 	}
 
+	/**
+	 * Mostra con uno sprite il modificatore appena applicato a un personaggio.
+	 */
 	public void aggiungiModificatore(VistaPersonaggio personaggio, String descrizione, DoomdarkColorModel.Color colore) {
 		aggiungiSprite(riquadroLocazione.aggiungiModificatore(personaggio, descrizione, colore));
 	}
 
+	/**
+	 * Mostra con uno sprite l'interazione fra tipo di danno e stato appena scattata su un personaggio.
+	 */
 	public void aggiungiInterazione(VistaPersonaggio personaggio, TipoInterazioneConEffettiDiStato interazione) {
 		aggiungiSprite(riquadroLocazione.aggiungiInterazione(personaggio, interazione));
 	}

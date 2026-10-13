@@ -32,12 +32,18 @@ public class CloudManager {
 	private CloudManager() {
 	}
 
+	/**
+	 * Genera le nuvole se ancora non ci sono: l'insieme è uno solo e lo condividono il riquadro della mappa e la mappa a tutto schermo.
+	 */
 	public static void assicuraGenerate(VistaMappa mappa, int width, int height, int larghezzaIcona, int altezzaIcona) {
 		if (clouds == null) {
 			genera(mappa, width, height, larghezzaIcona, altezzaIcona);
 		}
 	}
 
+	/**
+	 * Fa avanzare tutte le nuvole del tempo reale trascorso dall'ultima chiamata.
+	 */
 	public static void aggiorna() {
 		if (clouds == null) {
 			return;

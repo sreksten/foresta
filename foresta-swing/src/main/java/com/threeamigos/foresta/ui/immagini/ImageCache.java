@@ -27,6 +27,10 @@ import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 import com.threeamigos.foresta.ui.testo.DoomdarkTextProducer;
 
+/**
+ * La raccolta delle immagini del gioco: le cornici, i fondali, le icone, le immagini delle locazioni, dei personaggi e degli oggetti, caricate una volta sola all'avvio con
+ * {@link #init()}. Tiene anche una cache dinamica di immagini di testo ({@code get(testo, font, colore)}), costruite alla prima richiesta e rilasciate quando nessuno le usa più.
+ */
 public class ImageCache {
 
 	public static final int SPACING = 4;
@@ -313,6 +317,9 @@ public class ImageCache {
 		reaperExecutor.shutdown();
 	}
 
+	/**
+	 * Carica tutte le immagini, la prima volta; le volte successive non fa niente.
+	 */
 	public static void init() {
 		if (!inited) {
 			// Forzo il caricamento delle immagini dei personaggi, che stanno in ClassePersonaggioImmagine
@@ -359,10 +366,16 @@ public class ImageCache {
 		}, periodo, periodo, unitaTempo);
 	}
 
+	/**
+	 * Memorizza un'immagine con quel nome.
+	 */
 	public static void set(String nomeImmagine, BufferedImage displayable) {
 		imageMap.put(nomeImmagine, displayable);
 	}
 	
+	/**
+	 * L'immagine con quel nome, o null se non c'è.
+	 */
 	public static BufferedImage get(String nomeImmagine) {
 		return imageMap.get(nomeImmagine);
 	}

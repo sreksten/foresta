@@ -52,6 +52,9 @@ class Notiziario {
 		this.vistaPartita = vistaPartita;
 	}
 
+	/**
+	 * Disegna le notizie in una banda con l'angolo in quel punto; senza notizie non disegna niente.
+	 */
 	public void disegna(Graphics2D g, int xBanda, int yBanda) {
 		List<NotiziaMD> notizieAttuali = vistaPartita.getUltimeNotizie();
 		if (notizieAttuali.isEmpty()) {

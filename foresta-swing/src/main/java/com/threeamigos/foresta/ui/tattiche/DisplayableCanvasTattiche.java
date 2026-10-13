@@ -229,6 +229,9 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 
 	// ============================================================== il disegno
 
+	/**
+	 * Disegna la schermata: la colonna del personaggio e l'elenco delle voci della sua tattica, con le caselle a discesa aperte per ultime.
+	 */
 	public void disegna(Graphics2D graphics) {
 		super.disegnaInventario(graphics);
 		if (personaggio == null) {

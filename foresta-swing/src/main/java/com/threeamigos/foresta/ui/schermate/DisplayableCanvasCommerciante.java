@@ -47,6 +47,9 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
                 : "Con il materiale che mi hai fornito, farò altre meravigliose creazioni!";
     }
 
+    /**
+     * Imposta il tipo di negozio, che decide il negoziante mostrato.
+     */
     public void impostaNegozio(TipoNegozio negozio) {
         this.negozio = negozio;
     }
@@ -77,6 +80,9 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
                 negozio == TipoNegozio.VENDITORE_DI_PERGAMENE ? "Inventario venditore" : "Inventario armaiolo");
     }
 
+    /**
+     * Disegna la colonna centrale con il personaggio scelto.
+     */
     public void disegnaColonnaPersonaggio(Graphics2D graphics) {
 
         int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;

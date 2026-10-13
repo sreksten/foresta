@@ -16,6 +16,9 @@ import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.schermate.DisegnatoreMappa;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 
+/**
+ * La minimappa della schermata di gioco: le caselle conosciute attorno al gruppo.
+ */
 public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA = 12;
@@ -47,6 +50,9 @@ public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements 
 		BusEventi.iscriviti(NotificaVariazioneConoscenzaMappa.class, this::gestisciEventoVariazioneMappa);
 	}
 
+	/**
+	 * Disegna la porzione di mappa attorno al gruppo.
+	 */
 	public void disegnaMappa(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceMappa, topLeftX, topLeftY, null);
 		VistaMappa mappa = vistaPartita.getMappa();

@@ -100,6 +100,9 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		offsetY = Math.max(0, Math.min(offsetMassimo(), offsetY));
 	}
 
+	/**
+	 * Disegna gli incantesimi disponibili e le pozioni.
+	 */
 	public void disegnaIncantesimi(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceIncantesimi, topLeftX, topLeftY, null);
 
@@ -151,6 +154,9 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		}
 	}
 
+	/**
+	 * Aggiorna gli incantesimi disponibili.
+	 */
 	public void gestisciEventoVariazioneIncantesimi(NotificaVariazioneDisponibilitaIncantesimi evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneIncantesimi(evento.getClasseIncantesimo(),
 				evento.getNuovoValore() - evento.getValorePrecedente());
@@ -181,6 +187,9 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		return ClasseIncantesimo.values().length + numeroPozione;
 	}
 
+	/**
+	 * Aggiorna il numero di pozioni di salute.
+	 */
 	public void gestisciEventoVariazionePozioniSalute(NotificaVariazioneDisponibilitaPozioniSalute evento) {
 		SpriteATempo sprite = costruisciSprite(indicePozione(0), evento.getNuovoValore() - evento.getValorePrecedente(),
 				"Pozioni salute variate");
@@ -189,6 +198,9 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		}
 	}
 
+	/**
+	 * Aggiorna il numero di pozioni di salute grandi.
+	 */
 	public void gestisciEventoVariazionePozioniSaluteGrandi(NotificaVariazioneDisponibilitaPozioniSaluteGrandi evento) {
 		SpriteATempo sprite = costruisciSprite(indicePozione(1), evento.getNuovoValore() - evento.getValorePrecedente(),
 				"Pozioni salute grande variate");
@@ -197,6 +209,9 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		}
 	}
 
+	/**
+	 * Aggiorna il numero di pozioni di magia.
+	 */
 	public void gestisciEventoVariazionePozioniMagia(NotificaVariazioneDisponibilitaPozioniMagia evento) {
 		SpriteATempo sprite = costruisciSprite(indicePozione(2), evento.getNuovoValore() - evento.getValorePrecedente(),
 				"Pozioni magia variate");
@@ -205,6 +220,9 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		}
 	}
 
+	/**
+	 * Aggiorna il numero di pozioni di magia grandi.
+	 */
 	public void gestisciEventoVariazionePozioniMagiaGrandi(NotificaVariazioneDisponibilitaPozioniMagiaGrandi evento) {
 		SpriteATempo sprite = costruisciSprite(indicePozione(3), evento.getNuovoValore() - evento.getValorePrecedente(),
 				"Pozioni magia grande variate");

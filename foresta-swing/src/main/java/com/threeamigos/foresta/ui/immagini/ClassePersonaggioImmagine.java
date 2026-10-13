@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 
 /**
+ * Le immagini di ogni classe di personaggio: il personaggio per la schermata di gioco e, per chi si può reclutare, l'icona per il riquadro del gruppo. Si caricano alla prima volta che si usa l'enum.
  *
  * @author Stefano Reksten
  */

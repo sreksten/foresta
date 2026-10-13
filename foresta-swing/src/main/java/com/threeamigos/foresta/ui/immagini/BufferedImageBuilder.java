@@ -7,6 +7,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 
+/**
+ * Carica le immagini dalle risorse e le prepara per lo schermo, con un eventuale ingrandimento.
+ */
 public class BufferedImageBuilder {
 	
 	private BufferedImageBuilder() {

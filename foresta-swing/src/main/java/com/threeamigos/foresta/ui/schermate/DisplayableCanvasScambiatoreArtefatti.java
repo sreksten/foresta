@@ -33,6 +33,8 @@ import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 
 /**
+ * Base delle schermate che scambiano artefatti fra due liste affiancate (inventario, commercianti, incantatore): disegna le due liste e traduce click e
+ * doppi click in comandi di scambio.
  *
  * @author Stefano Reksten
  */
@@ -100,10 +102,16 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
         return "Grazie di aver fatto affari con noi!";
     }
 
+    /**
+     * Imposta lo scambio fra le due liste di artefatti.
+     */
     public void impostaScambio(VistaScambio scambio) {
         this.scambio = scambio;
     }
 
+    /**
+     * Disegna le due liste affiancate.
+     */
     public void disegnaInventario(Graphics2D graphics) {
 
         super.disegnaInventario(graphics);
@@ -132,6 +140,9 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
      */
     protected abstract String aiutoDoppioClickSinistra();
 
+    /**
+     * Il testo di aiuto che dice cosa fa il doppio click destro in questa schermata.
+     */
     protected abstract String aiutoDoppioClickDestra();
 
     /**
@@ -401,6 +412,9 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
         return costruisciComponenteScorrevoleArtefatti(artefatti, null, parteAttiva).riferimentoTitoloAllaQuota(yInterno + offset);
     }
 
+    /**
+     * Gestisce un click nella colonna centrale; dice se l'ha consumato.
+     */
     protected abstract boolean processaClickPersonaggio(int x, int y, Tasto tasto);
 
     @Override
@@ -422,6 +436,9 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
         BusEventi.pubblica(ComandoCommutazioneElenco.artefatto(scambio.getId(), artefatto.getUuid()));
     }
 
+    /**
+     * Gestisce un doppio click nella colonna centrale; dice se l'ha consumato.
+     */
     protected abstract boolean processaDoppioClickPersonaggio(int x, int y, Tasto tasto);
 
     @Override

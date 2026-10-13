@@ -34,6 +34,9 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         BusEventi.iscriviti(NotificaApprovazioneIncantatura.class, this::onEventoApprovazioneIncantatura);
     }
 
+    /**
+     * Imposta il banco di lavoro (e lo scambio) che la schermata mostra.
+     */
     public void impostaBanco(VistaBancoDiLavoro banco) {
         impostaScambio(banco);
         this.banco = banco;
@@ -74,6 +77,9 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         return "Incantatore";
     }
 
+    /**
+     * Disegna la colonna centrale con il personaggio scelto.
+     */
     public void disegnaColonnaPersonaggio(Graphics2D graphics) {
 
         int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;

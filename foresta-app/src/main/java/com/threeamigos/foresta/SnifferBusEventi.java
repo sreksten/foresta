@@ -24,11 +24,16 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 /**
+ * Ascolta tutti i tipi di evento del bus e ne scrive una riga nel log, con il tipo in testa per poterle cercare con grep:
+ * serve a seguire dall'esterno cosa accade in una partita, senza influire sul gioco.
  *
  * @author Stefano Reksten
  */
 public class SnifferBusEventi {
 
+    /**
+     * Si iscrive a tutte le notifiche e richieste; da creare una volta sola, all'avvio.
+     */
     public SnifferBusEventi() {
         BusEventi.iscriviti(NotificaAggiornamentoStatoMissione.class, this::onEventoAggiornamentoStatoMissione);
         BusEventi.iscriviti(NotificaVariazioneModificatorePersonaggio.class, this::onEventoVariazioneModificatore);

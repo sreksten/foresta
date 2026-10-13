@@ -6,6 +6,10 @@ import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 
+/**
+ * Un'icona, con eventualmente una variazione scritta a fianco (per esempio "+5" in verde o "-3" in rosso), che sale e sfuma in poco più di un secondo: per segnalare un cambiamento di
+ * salute, magia, monete e simili sopra l'elemento che lo riguarda.
+ */
 public class SpriteATempo extends SpriteBase {
 
 	private static final float DURATA_IN_SECONDI = 1.6f;

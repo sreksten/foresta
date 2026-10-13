@@ -2,8 +2,14 @@ package com.threeamigos.foresta.ui.testo;
 
 import java.awt.image.IndexColorModel;
 
+/**
+ * I colori con cui si scrive il testo bitmap: ogni colore è un modello a due indici (sfondo trasparente e primo piano), con cui si trasforma il disegno in bit di un carattere in un'immagine.
+ */
 public class DoomdarkColorModel {
 
+	/**
+	 * I colori del testo, dal bianco al nero passando per i grigi, più rosso, giallo, verde e il marrone del bordo dei cartigli.
+	 */
 	public enum Color {
 		WHITE,
 		LIGHT_GRAY,

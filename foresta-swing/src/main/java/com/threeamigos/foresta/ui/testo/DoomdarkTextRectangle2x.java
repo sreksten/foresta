@@ -14,7 +14,7 @@ import java.util.List;
  * vengono conservate in uno storico, e il raster viene ridisegnato a partire da quello:
  * è ciò che permette di tornare indietro con la rotella invece di limitarsi a far
  * scorrere via il testo vecchio. Lo storico condivide il limite con quanto ricordato
- * da {@link com.threeamigos.foresta.motore.Notizie} (vedi {@link NotizieMD#MASSIMO_MESSAGGI_RICORDATI}),
+ * da {@code motore.Notizie} (vedi {@link NotizieMD#MASSIMO_MESSAGGI_RICORDATI}),
  * così che dopo un ricaricamento il pannello possa essere ripopolato per intero.
  */
 public class DoomdarkTextRectangle2x {
@@ -116,6 +116,9 @@ public class DoomdarkTextRectangle2x {
 		daRidisegnare = false;
 	}
 
+	/**
+	 * Aggiunge una riga in fondo, spezzandola se è più larga del rettangolo, e la ricorda nello storico.
+	 */
 	public final synchronized void addString(String s) {
 		// Gestisce i \n letterali come vere newline
 		String[] lines = s.split("\\\\n");
@@ -131,6 +134,9 @@ public class DoomdarkTextRectangle2x {
 		segnaCambiato();
 	}
 
+	/**
+	 * Svuota il rettangolo e lo storico.
+	 */
 	public final synchronized void clear() {
 		righe.clear();
 		imbottisci();

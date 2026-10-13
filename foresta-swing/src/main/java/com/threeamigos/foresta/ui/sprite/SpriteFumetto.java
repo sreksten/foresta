@@ -11,6 +11,7 @@ import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.FontTool;
 
 /**
+ * Il fumetto di un personaggio: un riquadro con il testo e una punta che indica chi parla, che cresce verso l'alto da un punto e svanisce dopo qualche secondo.
  *
  * @author Stefano Reksten
  */
@@ -34,14 +35,15 @@ public class SpriteFumetto extends SpriteBase {
     private final DoomdarkColorModel.Color colore;
 
     /**
+     * Un fumetto con quel testo, che arriva a quella posizione.
      *
-     * @param testo
-     * @param maxLarghezza
-     * @param xIniziale
-     * @param yIniziale - può essere riaggiustata se l'altezza del fumetto risulterebbe troppo alta
+     * @param testo il testo del fumetto
+     * @param maxLarghezza la larghezza massima oltre la quale il testo va a capo
+     * @param xIniziale la coordinata X del fumetto
+     * @param yIniziale la coordinata Y del fumetto; può essere riaggiustata se l'altezza del fumetto risulterebbe troppo alta
      *                  rispetto al margine superiore dello schermo + altezza del fumetto
-     * @param font
-     * @param colore
+     * @param font il carattere del testo
+     * @param colore il colore del testo
      * @param puntaVersoX coordinata X verso cui la punta del fumetto deve andare
      * @param puntaVersoY coordinata Y verso cui la punta del fumetto deve andare
      */
@@ -217,6 +219,9 @@ public class SpriteFumetto extends SpriteBase {
         return testo;
     }
 
+    /**
+     * Fa ripartire da zero il tempo trascorso, per esempio quando un fumetto resta in vita perché ne arriva uno uguale.
+     */
     public void resettaImpulsi() {
         resettaTempoTrascorso();
     }

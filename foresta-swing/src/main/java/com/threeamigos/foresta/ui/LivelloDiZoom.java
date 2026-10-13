@@ -14,6 +14,11 @@ public final class LivelloDiZoom {
 	private LivelloDiZoom() {
 	}
 
+	/**
+	 * Imposta il livello di zoom.
+	 *
+	 * @throws IllegalArgumentException se non è positivo
+	 */
 	public static void imposta(double nuovoValore) {
 		if (!(nuovoValore > 0)) {
 			throw new IllegalArgumentException("Livello di zoom non valido: " + nuovoValore);
@@ -21,6 +26,9 @@ public final class LivelloDiZoom {
 		valore = nuovoValore;
 	}
 
+	/**
+	 * Il livello di zoom corrente.
+	 */
 	public static double valore() {
 		return valore;
 	}

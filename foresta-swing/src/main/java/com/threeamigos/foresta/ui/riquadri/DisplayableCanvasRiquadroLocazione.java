@@ -30,6 +30,9 @@ import com.threeamigos.foresta.ui.sprite.SpriteInterface;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 
+/**
+ * Il riquadro con la locazione corrente: sfondo, avversari e personaggi che incontrano il gruppo; ospita gli sprite che mostrano cosa accade (danni, effetti, oggetti raccolti).
+ */
 public class DisplayableCanvasRiquadroLocazione implements Finestra {
 
 	// Per sparpagliare un po' gli avversari: non Dado, che segue il seme della partita e non va consumato dalla UI
@@ -95,6 +98,9 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		this.topLeftY = topLeftY;
 	}
 
+	/**
+	 * Dispone gli avversari nel riquadro.
+	 */
 	public void assegnaCoordinateAgliAvversari() {
 		mappaCoordinate.clear();
 		mappaImmagini.clear();
@@ -224,6 +230,9 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		}
 	}
 
+	/**
+	 * Crea lo sprite che segnala la morte del personaggio.
+	 */
 	public SpriteInterface notificaMorte(VistaPersonaggio personaggio) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
 		if (coordinate == null) {
@@ -237,10 +246,16 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		return spriteATempo(personaggio, ImageCache.spriteAumentoLivello, variazione, "Livello aumentato");
 	}
 
+	/**
+	 * Crea lo sprite che mostra la variazione di salute del personaggio.
+	 */
 	public SpriteInterface variaSalute(VistaPersonaggio personaggio, int variazione) {
 		return spriteATempo(personaggio, ImageCache.spriteCombattimento, variazione, "Salute modificata");
 	}
 
+	/**
+	 * Crea lo sprite che mostra la variazione di magia del personaggio.
+	 */
 	public SpriteInterface variaMagia(VistaPersonaggio personaggio, int variazione) {
 		return spriteATempo(personaggio, ImageCache.spriteMagia, variazione, "Magia modificata");
 	}
@@ -290,6 +305,9 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		return candidato;
 	}
 
+	/**
+	 * Crea lo sprite che mostra il gruppo che raccoglie un oggetto.
+	 */
 	public SpriteInterface raccogliOggetto() {
 		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
 		BufferedImage locazione = ImageCache.locazioni.get(g.getTipoLocazioneCorrente());
@@ -321,6 +339,9 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		return personaggio.isPNG() ? coordinate.getX() + immagine.getWidth() : coordinate.getX();
 	}
 
+	/**
+	 * Crea lo sprite con il nome dell'effetto di stato subito dal personaggio.
+	 */
 	public SpriteInterface aggiungiEffettoDiStato(VistaPersonaggio personaggio, TipoEffettoDiStato effettoDiStato, DoomdarkColorModel.Color colore) {
 		return aggiungiScrittaSulPersonaggio(personaggio, effettoDiStato.getDescrizione(), colore);
 	}
@@ -347,10 +368,16 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		return sprite;
 	}
 
+	/**
+	 * Crea lo sprite con la descrizione dell'interazione scattata sul personaggio.
+	 */
 	public SpriteInterface aggiungiInterazione(VistaPersonaggio personaggio, TipoInterazioneConEffettiDiStato interazione) {
 		return aggiungiTestoSulPersonaggio(personaggio, interazione.getDescrizione(), DoomdarkColorModel.Color.GREEN);
 	}
 
+	/**
+	 * Crea lo sprite con quel testo, di quel colore, sul personaggio.
+	 */
 	public SpriteInterface aggiungiTestoSulPersonaggio(VistaPersonaggio personaggio, String testo, DoomdarkColorModel.Color colore) {
 		return aggiungiTestoSulPersonaggio(personaggio, testo, (x, y) ->
 				new SpriteEffetto(testo, DoomdarkFontMedium.getInstance(), colore, x, y));

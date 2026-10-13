@@ -33,6 +33,9 @@ public class ComponenteScorrevole<T> {
         this.interlinea = interlinea;
     }
 
+    /**
+     * Aggiunge un nodo con una chiave e una descrizione.
+     */
     public Nodo creaNodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
                          String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
                          T riferimento) {
@@ -42,6 +45,9 @@ public class ComponenteScorrevole<T> {
                 null, riferimento);
     }
 
+    /**
+     * Aggiunge un nodo con una chiave, una descrizione e un'icona a sinistra.
+     */
     public Nodo creaNodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
                          String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
                          Image icona, T riferimento) {
@@ -51,6 +57,9 @@ public class ComponenteScorrevole<T> {
                 icona, riferimento);
     }
 
+    /**
+     * Aggiunge un nodo con una chiave, un valore scritto, una descrizione e un'icona a sinistra.
+     */
     public Nodo creaNodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
                          String valore, DoomdarkFont fontValore, DoomdarkColorModel.Color coloreValore,
                          String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
@@ -76,6 +85,9 @@ public class ComponenteScorrevole<T> {
         return nodo;
     }
 
+    /**
+     * Aggiunge un separatore orizzontale.
+     */
     public void creaSeparatore() {
         creaNodo(null, null, null,
                 null, null, null,
@@ -107,6 +119,9 @@ public class ComponenteScorrevole<T> {
         return Math.max(0, Math.min(offset, altezzaImmagine - altezzaMassima));
     }
 
+    /**
+     * Disegna una porzione dell'elenco, alta al più quell'altezza e a partire da quella posizione di scorrimento.
+     */
     public Image produci(int altezzaMassima, int offset) {
 
         List<Nodo> contenuto = espandiNodi();
@@ -220,6 +235,9 @@ public class ComponenteScorrevole<T> {
         return null;
     }
 
+    /**
+     * Un nodo dell'elenco: le immagini di chiave, valore e descrizione già composte, l'icona e i dati originali, più i nodi figli che si possono aprire e chiudere.
+     */
     public class Nodo {
         private final Image icona;
         private final Image chiave;
@@ -288,6 +306,9 @@ public class ComponenteScorrevole<T> {
             return canvas;
         }
 
+        /**
+         * Aggiunge a questo nodo un figlio con una chiave, una descrizione e un'icona.
+         */
         public Nodo creaNodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
                              String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
                              Image icona, T riferimento) {
@@ -297,6 +318,9 @@ public class ComponenteScorrevole<T> {
                     icona, riferimento);
         }
 
+        /**
+         * Aggiunge a questo nodo un figlio con una chiave, un valore scritto, una descrizione e un'icona.
+         */
         public Nodo creaNodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
                              String valore, DoomdarkFont fontValore, DoomdarkColorModel.Color coloreValore,
                              String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,

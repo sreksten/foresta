@@ -7,6 +7,9 @@ import java.awt.image.MemoryImageSource;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Un rettangolo di testo che scorre verso l'alto man mano che si aggiungono righe, nel font piccolo: il testo vecchio esce in alto e quello nuovo entra in basso.
+ */
 public class DoomdarkTextRectangle {
 
 	// I testi contenuti
@@ -74,6 +77,9 @@ public class DoomdarkTextRectangle {
 		render(s);
 	}
 
+	/**
+	 * Aggiunge una riga in fondo e fa scorrere il resto verso l'alto.
+	 */
 	public final void addString(String s) {
 		// Gestisce i \n letterali come vere newline
 		String[] lines = s.split("\\\\n");
@@ -85,6 +91,9 @@ public class DoomdarkTextRectangle {
 		}
 	}
 
+	/**
+	 * Svuota il rettangolo.
+	 */
 	public final void clear() {
         Arrays.fill(strings, "");
 		int l = textData.length;

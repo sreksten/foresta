@@ -13,6 +13,9 @@ import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 
+/**
+ * La mappa della foresta a tutto schermo: si trascina con il mouse, mostra il nome della casella sotto il cursore e, in alto, il notiziario.
+ */
 public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Finestra {
 
 	// Il notiziario si ferma a metà della larghezza della sfera magica: l'altra
@@ -50,6 +53,9 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 		return vistaPartita.getUltimeNotizie().isEmpty() ? height : height - ALTEZZA_ICONA;
 	}
 
+	/**
+	 * Sposta la mappa in modo che il gruppo sia al centro dello schermo (o, se la mappa è più piccola dello schermo, la centra).
+	 */
 	public void centraSuGiocatore() {
 		// Ho una mappa che può essere più o meno grande rispetto a uno schermo.
 		// Le dimensioni dello schermo sono width e height.
@@ -116,6 +122,9 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 		}
 	}
 
+	/**
+	 * Disegna la mappa con le caselle conosciute e il gruppo, e il notiziario.
+	 */
 	public void disegnaMappaATuttoSchermo(Graphics2D graphics) {
 
 		int altezzaMappa = altezzaMappa();

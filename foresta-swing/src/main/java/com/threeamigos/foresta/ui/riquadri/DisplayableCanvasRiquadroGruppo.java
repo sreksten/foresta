@@ -22,6 +22,9 @@ import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 
+/**
+ * Il riquadro con lo stato dei personaggi del gruppo: nome, salute, magia e le altre statistiche. Si aggiorna ascoltando gli eventi di variazione.
+ */
 public class DisplayableCanvasRiquadroGruppo implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE = 16;
@@ -99,6 +102,9 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 				innerWidth, ImageCache.corniceGrande.getHeight() - (DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE << 1));
 	}
 
+	/**
+	 * Disegna lo stato dei personaggi del gruppo.
+	 */
 	public void disegnaStatus(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
 		
@@ -306,6 +312,9 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 		offsetY = Math.max(0, Math.min(offsetMassimo(), offsetY));
 	}
 
+	/**
+	 * Segnala sul riquadro che un personaggio è salito di livello.
+	 */
 	public void gestisciEventoAumentoLivelloPersonaggio(NotificaAumentoLivelloPersonaggio evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneLivello(evento.getPersonaggio(),
 				evento.getLivelloAttuale() - evento.getLivelloPrecedente());
@@ -327,6 +336,9 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetLivello, y, "Livello variato"));
 	}
 
+	/**
+	 * Aggiorna i valori mostrati di un personaggio e segnala le variazioni.
+	 */
 	public void gestisciEventoVariazioneStatistichePersonaggio(NotificaVariazioneStatistichePersonaggio evento) {
 		if (!vistaPartita.getGruppoGiocatore().contiene(evento.getPersonaggio())) {
 			return;

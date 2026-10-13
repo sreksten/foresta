@@ -10,6 +10,10 @@ import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
 
+/**
+ * Le icone della barra dei comandi: ognuna lega un comando (e, per i personaggi, una classe) a un'immagine e a uno sfondo, nell'ordine in cui compaiono nelle varie fasi di gioco: caricare una partita, scegliere
+ * il sesso e la classe, i comandi in locazione, in combattimento, in città e così via.
+ */
 public enum ClasseIcona {
 
 	/* Inizio gioco */
@@ -261,6 +265,11 @@ public enum ClasseIcona {
 		return altezzaMassima;
 	}
 
+	/**
+	 * L'icona della classe di personaggio.
+	 *
+	 * @throws IllegalArgumentException se quella classe non ha un'icona
+	 */
 	public static ClasseIcona ofClasse(TipoPersonaggio classePersonaggio) {
 		for (ClasseIcona corrente : values()) {
 			if (corrente.classePersonaggio == classePersonaggio) {
@@ -270,6 +279,11 @@ public enum ClasseIcona {
 		throw new IllegalArgumentException("ClasseIcona non trovata via classe personaggio: " + classePersonaggio);
 	}
 
+	/**
+	 * L'icona del comando.
+	 *
+	 * @throws IllegalArgumentException se quel comando non ha un'icona
+	 */
 	public static ClasseIcona ofComando(Comando comando) {
 		for (ClasseIcona corrente : values()) {
 			if (corrente.comando == comando) {

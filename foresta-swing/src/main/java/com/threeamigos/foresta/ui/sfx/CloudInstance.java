@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+/**
+ * Una nuvola sulla mappa: la sua immagine, la posizione e la velocità; si muove verso destra e quando esce dal riquadro rientra da sinistra a un'altezza diversa.
+ */
 public class CloudInstance {
     private final BufferedImage image;
     private float x;
@@ -23,6 +26,9 @@ public class CloudInstance {
     // Aggiorna la posizione muovendosi solo nello spazio consentito. secondiTrascorsi è il
     // tempo reale trascorso dall'ultimo update(), non un passo fisso per chiamata: update()
     // può essere invocato anche da un repaint() estraneo all'animatore (es. hover del mouse).
+    /**
+     * Fa avanzare la nuvola del tempo reale trascorso dall'ultima volta.
+     */
     public void update(float secondiTrascorsi) {
         x += speed * secondiTrascorsi;
 

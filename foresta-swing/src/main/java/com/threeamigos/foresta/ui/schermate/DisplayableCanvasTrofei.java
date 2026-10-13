@@ -49,6 +49,9 @@ public class DisplayableCanvasTrofei implements Finestra {
 				new Rectangle(0, cimaElenco, width, height - cimaElenco));
 	}
 
+	/**
+	 * Disegna il titolo e i trofei che scorrono.
+	 */
 	public void disegna(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.ombraDelDrago, (width - ImageCache.ombraDelDrago.getWidth()) >> 1,
 				(height - ImageCache.ombraDelDrago.getHeight()) >> 1, null);

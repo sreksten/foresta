@@ -18,6 +18,9 @@ import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontSmall;
 
+/**
+ * Il riquadro con le missioni attive.
+ */
 public class DisplayableCanvasRiquadroMissioni implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE = 16;
@@ -49,6 +52,9 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 		innerHeight = ImageCache.corniceGrande.getHeight() - ((DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING) << 1);
 	}
 
+	/**
+	 * Disegna le missioni attive.
+	 */
 	public void disegnaMissioni(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
 

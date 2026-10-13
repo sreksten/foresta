@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.ui.testo;
 
+/**
+ * Il font bitmap piccolo, quello dei riquadri di testo e delle schermate fitte: maiuscole, minuscole, cifre, punteggiatura e le accentate che servono ai testi del gioco.
+ */
 public class DoomdarkFontSmall implements DoomdarkFont {
 
 	private DoomdarkFontSmall() {
