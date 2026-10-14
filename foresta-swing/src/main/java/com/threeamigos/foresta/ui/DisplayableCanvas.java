@@ -97,6 +97,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final ArrayList<TipoFinestra> stackElementiGrafici;
 
 	private final Map<Finestra, Rectangle> mappaCoordinateElementiGrafici = new HashMap<>();
+
+	// Gruppo, incantesimi e missioni sono impilati nella colonna a destra, sotto mappa e statistiche, ognuno
+	// più in basso del precedente di passoPila: l'ultimo dello stack è il più in basso e sta sopra gli altri
+	private static final int RIQUADRI_IMPILATI = 3;
+	private final int quotaPila;
+	private final int passoPila;
+	// Quanto sfuma in basso un riquadro prima che cominci il successivo
+	private final int altezzaDissolvenzaPila = DoomdarkFontMedium.getInstance().getHeight();
 	
 	private final transient DisplayableCanvasIntroOutro riquadroIntroOutro;
 	private final transient DisplayableCanvasRiquadroMappa riquadroMappa;
@@ -174,8 +182,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		larghezzaSchermo = larghezzaContenuto;
 		altezzaSchermo = altezzaContenuto;
 		stackElementiGrafici = new ArrayList<>();
-		stackElementiGrafici.add(TipoFinestra.INCANTESIMI_E_POZIONI);
+		// Gruppo, incantesimi e missioni sono impilati nell'ordine in cui compaiono qui
 		stackElementiGrafici.add(TipoFinestra.STATO);
+		stackElementiGrafici.add(TipoFinestra.INCANTESIMI_E_POZIONI);
 		stackElementiGrafici.add(TipoFinestra.MAPPA);
 		stackElementiGrafici.add(TipoFinestra.STATISTICHE);
 		stackElementiGrafici.add(TipoFinestra.GRAFICA);
@@ -198,13 +207,23 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		intermezzo = new DisplayableCanvasIntermezzo(larghezzaContenuto, altezzaContenuto, riquadroIntroOutro);
 		mappaCoordinateElementiGrafici.put(intermezzo, new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto));
 
-		int elementoX = ImageCache.SPACING;
+		// A destra la colonna con mappa, statistiche e i riquadri impilati; a sinistra la locazione con il testo sotto.
+		// Fino all'altezza della locazione la colonna è larga quanto la mappa, quindi lo spazio per la locazione è la
+		// larghezza della finestra meno quella della mappa; il testo sotto, accanto ai riquadri impilati, è più stretto
+		int colonnaDestraX = larghezzaContenuto - ImageCache.SPACING - ImageCache.corniceGrande.getWidth();
+		int larghezzaLocazioneDisponibile = larghezzaContenuto - 3 * ImageCache.SPACING - ImageCache.corniceMappa.getWidth();
+		int larghezzaTesto = colonnaDestraX - 2 * ImageCache.SPACING;
+		// Mappa e statistiche, più strette dei riquadri impilati, sono allineate a destra
+		int mappaX = colonnaDestraX + ImageCache.corniceGrande.getWidth() - ImageCache.corniceMappa.getWidth();
+		int statisticheX = colonnaDestraX + ImageCache.corniceGrande.getWidth() - ImageCache.cornicePiccola.getWidth();
+
+		int elementoX = mappaX;
 		int elementoY = ImageCache.SPACING;
 		int larghezzaElemento = ImageCache.corniceMappa.getWidth();
 		int altezzaElemento = ImageCache.corniceMappa.getHeight();
 
 		riquadroMappa = new DisplayableCanvasRiquadroMappa(
-				ImageCache.SPACING,
+				mappaX,
 				ImageCache.SPACING,
 				larghezzaContenuto,
 				altezzaContenuto,
@@ -213,17 +232,17 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		Rectangle riquadroMappaRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
 		mappaCoordinateElementiGrafici.put(riquadroMappa, riquadroMappaRect);
 
-		elementoX = ImageCache.SPACING + ImageCache.corniceMappa.getWidth() + ImageCache.SPACING;
+		elementoX = ImageCache.SPACING;
 		elementoY = ImageCache.SPACING;
-		larghezzaElemento = immagineLocazione.getWidth();
+		larghezzaElemento = larghezzaLocazioneDisponibile;
 		altezzaElemento = immagineLocazione.getHeight();
 
-		riquadroLocazione = new DisplayableCanvasRiquadroLocazione(elementoX, elementoY, vistaPartita);
+		riquadroLocazione = new DisplayableCanvasRiquadroLocazione(elementoX, elementoY, larghezzaElemento, vistaPartita);
 
 		Rectangle riquadroLocazioneRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
 		mappaCoordinateElementiGrafici.put(riquadroLocazione, riquadroLocazioneRect);
 
-		elementoX = ImageCache.SPACING;
+		elementoX = statisticheX;
 		elementoY = ImageCache.SPACING + ImageCache.corniceMappa.getHeight() + ImageCache.SPACING;
 		larghezzaElemento = ImageCache.cornicePiccola.getWidth();
 		altezzaElemento = ImageCache.cornicePiccola.getHeight();
@@ -234,7 +253,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		mappaCoordinateElementiGrafici.put(riquadroStatistiche, riquadroStatisticheRect);
 
 		// Di norma sotto l'immagine della locazione, dove ci sono i personaggi
-		riquadroCombattimento = new DisplayableCanvasRiquadroCombattimento(larghezzaContenuto, altezzaContenuto,
+		// Centrato sul testo sotto la locazione, non sull'intero schermo
+		riquadroCombattimento = new DisplayableCanvasRiquadroCombattimento(colonnaDestraX, altezzaContenuto,
 				ImageCache.SPACING + immagineLocazione.getHeight() + ImageCache.SPACING, vistaPartita);
 
 		// Lo calcola da solo perché è un elemento flottante a differenza degli altri che sono fissi
@@ -245,7 +265,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		elementoX = ImageCache.SPACING;
 		elementoY = ImageCache.SPACING + immagineLocazione.getHeight() + ImageCache.SPACING;
-		larghezzaElemento = ImageCache.corniceMappa.getWidth() + ImageCache.SPACING + immagineLocazione.getWidth();
+		larghezzaElemento = larghezzaTesto;
 		altezzaElemento = altezzaContenuto - ImageCache.SPACING - immagineLocazione.getHeight() - ImageCache.SPACING;
 
 		riquadroTesto = new DisplayableCanvasRiquadroTesto(elementoX, elementoY, larghezzaElemento, altezzaElemento);
@@ -253,8 +273,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		Rectangle riquadroTestoRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
 		mappaCoordinateElementiGrafici.put(riquadroTesto, riquadroTestoRect);
 
-		elementoX = ImageCache.SPACING + ImageCache.corniceMappa.getWidth() +
-				ImageCache.SPACING + immagineLocazione.getWidth() + ImageCache.SPACING;
+		elementoX = colonnaDestraX;
 		elementoY = ImageCache.SPACING;
 		larghezzaElemento = ImageCache.corniceGrande.getWidth();
 		altezzaElemento = ImageCache.corniceGrande.getHeight();
@@ -264,21 +283,19 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		Rectangle riquadroGruppoRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
 		mappaCoordinateElementiGrafici.put(riquadroGruppo, riquadroGruppoRect);
 
-		elementoX = ImageCache.SPACING + ImageCache.corniceMappa.getWidth() +
-				ImageCache.SPACING + immagineLocazione.getWidth() + ImageCache.SPACING;
+		elementoX = colonnaDestraX;
 		elementoY = ImageCache.SPACING + ImageCache.corniceGrande.getHeight() +	ImageCache.SPACING;
-		larghezzaElemento = ImageCache.corniceIncantesimi.getWidth();
-		altezzaElemento = ImageCache.corniceIncantesimi.getHeight();
+		larghezzaElemento = ImageCache.corniceGrande.getWidth();
+		altezzaElemento = ImageCache.corniceGrande.getHeight();
 
 		riquadroIncantesimiEPozioni = new DisplayableCanvasRiquadroIncantesimiEPozioni(elementoX, elementoY, vistaPartita);
 
 		Rectangle riquadroIncantesimiRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
 		mappaCoordinateElementiGrafici.put(riquadroIncantesimiEPozioni, riquadroIncantesimiRect);
 
-		elementoX = ImageCache.SPACING + ImageCache.corniceMappa.getWidth() +
-				ImageCache.SPACING + immagineLocazione.getWidth() + ImageCache.SPACING;
+		elementoX = colonnaDestraX;
 		elementoY = ImageCache.SPACING + ImageCache.corniceGrande.getHeight() +
-				ImageCache.SPACING + ImageCache.corniceIncantesimi.getHeight() + ImageCache.SPACING;
+				ImageCache.SPACING + ImageCache.corniceGrande.getHeight() + ImageCache.SPACING;
 		larghezzaElemento = ImageCache.corniceGrande.getWidth();
 		altezzaElemento = ImageCache.corniceGrande.getHeight();
 
@@ -286,6 +303,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		Rectangle riquadroMissioniRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
 		mappaCoordinateElementiGrafici.put(riquadroMissioni, riquadroMissioniRect);
+
+		quotaPila = ImageCache.SPACING + ImageCache.corniceMappa.getHeight() + ImageCache.SPACING
+				+ ImageCache.cornicePiccola.getHeight() + ImageCache.SPACING;
+		passoPila = Math.max(0, (altezzaContenuto - quotaPila - ImageCache.corniceGrande.getHeight()) / RIQUADRI_IMPILATI);
+		posizionaRiquadriImpilati();
 
 		mappaATuttoSchermo = new DisplayableCanvasMappaATuttoSchermo(larghezzaContenuto, altezzaContenuto, vistaPartita);
 
@@ -562,6 +584,67 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			throw new IllegalArgumentException("Elemento grafico non valido: " + finestra);
 		}
 		stackElementiGrafici.add(finestra);
+		posizionaRiquadriImpilati();
+	}
+
+	private static boolean isRiquadroImpilato(TipoFinestra finestra) {
+		return finestra == TipoFinestra.STATO || finestra == TipoFinestra.INCANTESIMI_E_POZIONI
+				|| finestra == TipoFinestra.MISSIONI;
+	}
+
+	/**
+	 * I riquadri impilati nell'ordine dello stack: il primo è il più in alto, l'ultimo il più in basso e davanti agli altri
+	 */
+	private List<TipoFinestra> riquadriImpilati() {
+		List<TipoFinestra> impilati = new ArrayList<>(RIQUADRI_IMPILATI);
+		for (TipoFinestra finestra : new ArrayList<>(stackElementiGrafici)) {
+			if (isRiquadroImpilato(finestra)) {
+				impilati.add(finestra);
+			}
+		}
+		return impilati;
+	}
+
+	/**
+	 * Dà a ogni riquadro impilato la quota secondo la sua posizione nello stack, sia per disegnarlo sia per il mouse
+	 */
+	private void posizionaRiquadriImpilati() {
+		List<TipoFinestra> impilati = riquadriImpilati();
+		for (int posizione = 0; posizione < impilati.size(); posizione++) {
+			TipoFinestra tipo = impilati.get(posizione);
+			int y = quotaPila + posizione * passoPila;
+			switch (tipo) {
+				case STATO:
+					riquadroGruppo.spostaInVerticale(y);
+					break;
+				case INCANTESIMI_E_POZIONI:
+					riquadroIncantesimiEPozioni.spostaInVerticale(y);
+					break;
+				default:
+					riquadroMissioni.spostaInVerticale(y);
+					break;
+			}
+			mappaCoordinateElementiGrafici.get(recuperaFinestra(tipo)).y = y;
+		}
+	}
+
+	/**
+	 * Dopo un riquadro impilato che non è l'ultimo, lo fa sfumare nel nero nelle ultime righe prima del riquadro
+	 * successivo, che comincia subito dopo
+	 */
+	private void dissolviSeCoperto(Graphics2D graphics, TipoFinestra finestra) {
+		List<TipoFinestra> impilati = riquadriImpilati();
+		int posizione = impilati.indexOf(finestra);
+		if (posizione < 0 || posizione == impilati.size() - 1) {
+			return;
+		}
+		Rectangle rettangolo = mappaCoordinateElementiGrafici.get(recuperaFinestra(finestra));
+		int quotaSuccessivo = quotaPila + (posizione + 1) * passoPila;
+		for (int riga = 0; riga < altezzaDissolvenzaPila; riga++) {
+			int alfa = (riga + 1) * 255 / altezzaDissolvenzaPila;
+			graphics.setColor(new Color(0, 0, 0, alfa));
+			graphics.fillRect(rettangolo.x, quotaSuccessivo - altezzaDissolvenzaPila + riga, rettangolo.width, 1);
+		}
 	}
 
 	private void inGioco(Graphics gfx) {
@@ -586,15 +669,18 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				break;
 			case STATO:
 				riquadroGruppo.disegnaStatus(graphics);
+				dissolviSeCoperto(graphics, finestra);
 				break;
 			case INCANTESIMI_E_POZIONI:
 				riquadroIncantesimiEPozioni.disegnaIncantesimi(graphics);
+				dissolviSeCoperto(graphics, finestra);
 				break;
 			case TESTO:
 				riquadroTesto.disegnaTesto(graphics);
 				break;
 			case MISSIONI:
 				riquadroMissioni.disegnaMissioni(graphics);
+				dissolviSeCoperto(graphics, finestra);
 				break;
 			case INFO_COMBATTIMENTO:
 			case SFIDA:
@@ -1332,6 +1418,23 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			return null;
 		}
 
+		/**
+		 * @return true se la finestra è un riquadro impilato che non era l'ultimo, ed è stato portato davanti
+		 */
+		private boolean portaInPrimoPianoSeImpilato(Finestra finestra) {
+			List<TipoFinestra> impilati = riquadriImpilati();
+			for (TipoFinestra tipo : impilati) {
+				if (recuperaFinestra(tipo) == finestra) {
+					if (tipo == impilati.get(impilati.size() - 1)) {
+						return false;
+					}
+					primoPiano(tipo);
+					return true;
+				}
+			}
+			return false;
+		}
+
 		private RisultatoRicerca creaRisultato(Finestra finestra, int x, int y) {
 			if (!finestra.isVisibile()) {
 				return null;
@@ -1376,6 +1479,12 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			Finestra finestra = risultatoRicerca.finestra;
 			int x = risultatoRicerca.xRelativoAFinestra;
 			int y = risultatoRicerca.yRelativoAFinestra;
+
+			// Il click su un riquadro impilato che non è l'ultimo lo porta davanti e basta
+			if (portaInPrimoPianoSeImpilato(finestra)) {
+				repaint();
+				return;
+			}
 
 			Finestra.Tasto tasto;
 			if (SwingUtilities.isLeftMouseButton(e)) {

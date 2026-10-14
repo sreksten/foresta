@@ -39,14 +39,14 @@ public class ImageCache {
 	// sono costanti, quindi usarle non inizializza ImageCache
 	public static final String RISORSA_LOGO_3AM = "Logo3AM.png";
 	public static final String RISORSA_CORNICE_GRANDE = "fondi/CorniceGrande.gif";
-	public static final String RISORSA_CORNICE_INCANTESIMI = "fondi/CorniceIncantesimi.gif";
 	public static final String RISORSA_CORNICE_MAPPA = "fondi/CorniceMappa.gif";
+	// Non si disegna più: serve solo a ForestaUI per le dimensioni della finestra
+	public static final String RISORSA_CORNICE_INCANTESIMI = "fondi/CorniceIncantesimi.gif";
 	public static final String RISORSA_BOSCO = "locazioni/Foresta.gif";
 
 	public static BufferedImage logo3AM;
 	public static BufferedImage logoForesta;
 	public static BufferedImage corniceGrande;
-	public static BufferedImage corniceIncantesimi;
 	public static BufferedImage corniceMappa;
 	public static BufferedImage cornicePiccola;
 	public static BufferedImage corniceCombattimento;
@@ -143,7 +143,6 @@ public class ImageCache {
 		logoForesta = BufferedImageBuilder.buildBufferedImage("LogoForesta.png", zoom);
 
 		corniceGrande = BufferedImageBuilder.buildBufferedImage(RISORSA_CORNICE_GRANDE, zoom);
-		corniceIncantesimi = BufferedImageBuilder.buildBufferedImage(RISORSA_CORNICE_INCANTESIMI, zoom);
 		corniceMappa = BufferedImageBuilder.buildBufferedImage(RISORSA_CORNICE_MAPPA, zoom);
 		cornicePiccola = BufferedImageBuilder.buildBufferedImage("fondi/CornicePiccola.gif", zoom);
 		corniceCombattimento = BufferedImageBuilder.buildBufferedImage("fondi/CorniceCombattimento.gif", zoom);

@@ -41,13 +41,16 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	private static final int SOLLEVAMENTO_ANCORA = 8;
 	private static final int SCOSTAMENTO_SOVRAPPOSIZIONE = 20;
 	/**
-	 * Di quanto si sposta di lato e sale ogni personaggio rispetto al precedente nel suo gruppo
+	 * Lo spazio fra un personaggio e il successivo nel suo gruppo, perché non si sovrappongano
 	 */
-	private static final int PASSO_ORIZZONTALE = 40;
+	public static final int DISTANZA_FRA_PERSONAGGI = 10;
 	/**
-	 * Il gruppo del giocatore sta più largo degli avversari: ogni personaggio è più distante dal precedente
+	 * Lo stacco fra lo spazio dell'oggetto al centro e il primo personaggio di ognuno dei due gruppi
 	 */
-	private static final int PASSO_ORIZZONTALE_GRUPPO = 50;
+	public static final int STACCO_DALL_OGGETTO = 10;
+	/**
+	 * Di quanto ogni personaggio è più in alto del successivo nel suo gruppo: più si va verso il bordo, più si scende
+	 */
 	private static final int PASSO_VERTICALE = 6;
 	/**
 	 * Due sprite a tempo (salute, magia, livello) più vicini di così in orizzontale si sovrappongono, e se lo sono
@@ -63,6 +66,12 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 
 	private final int topLeftX;
 	private final int topLeftY;
+	// La larghezza dello spazio a disposizione: lo sfondo e l'oggetto stanno al centro, gli avversari a sinistra
+	// dell'oggetto e il gruppo a destra, via via verso i bordi
+	private final int larghezzaDisponibile;
+	// La larghezza dell'oggetto che c'era in locazione all'ultima disposizione dei personaggi (0 se non ce n'era):
+	// i personaggi non si spostano se l'oggetto viene raccolto
+	private int larghezzaOggetto;
 
 	// Avversari e gruppo del giocatore: lette dall'EDT che disegna e dal thread che notifica gli eventi
 	private final Map<VistaPersonaggio, CoordinateMD> mappaCoordinate = new ConcurrentHashMap<>();
@@ -92,10 +101,11 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 
 	private final VistaPartita vistaPartita;
 
-	public DisplayableCanvasRiquadroLocazione(int topLeftX, int topLeftY, VistaPartita vistaPartita) {
+	public DisplayableCanvasRiquadroLocazione(int topLeftX, int topLeftY, int larghezzaDisponibile, VistaPartita vistaPartita) {
 		this.vistaPartita = vistaPartita;
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
+		this.larghezzaDisponibile = larghezzaDisponibile;
 	}
 
 	/**
@@ -105,19 +115,36 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		mappaCoordinate.clear();
 		mappaImmagini.clear();
 		effettiAttivi.clear();
+		larghezzaOggetto = larghezzaOggettoInLocazione();
 		VistaGruppo gruppoAvversario = vistaPartita.getGruppoAvversario();
-		int i = 0;
-		for (VistaPersonaggio personaggioCorrente : gruppoAvversario.getPersonaggi()) {
+		List<VistaPersonaggio> avversari = new ArrayList<>(gruppoAvversario.getPersonaggi());
+		List<BufferedImage> immagini = new ArrayList<>();
+		for (VistaPersonaggio avversario : avversari) {
 			// Gli avversari stanno a sinistra e guardano a destra, verso il gruppo
-			BufferedImage d = ClassePersonaggioImmagine.getImmagine(personaggioCorrente.getClasse(), Verso.DESTRA);
-			mappaImmagini.put(personaggioCorrente, d);
-			CoordinateMD coordinate = new CoordinateMD(topLeftX + i++ * PASSO_ORIZZONTALE + 1 + caso.nextInt(10),
-					ImageCache.SPACING + ImageCache.locazioni.get(TipoLocazione.BOSCO).getHeight() - i * PASSO_VERTICALE - d.getHeight());
-			mappaCoordinate.put(personaggioCorrente, coordinate);
+			immagini.add(ClassePersonaggioImmagine.getImmagine(avversario.getClasse(), Verso.DESTRA));
+		}
+		List<Point> posizioni = disponiAvversari(topLeftX, larghezzaDisponibile, larghezzaOggetto,
+				ImageCache.locazioni.get(TipoLocazione.BOSCO).getHeight(), immagini);
+		for (int i = 0; i < avversari.size(); i++) {
+			mappaImmagini.put(avversari.get(i), immagini.get(i));
+			// Sparpagliati un poco verso il bordo, meno della distanza fra due personaggi: non si toccano
+			mappaCoordinate.put(avversari.get(i),
+					new CoordinateMD(posizioni.get(i).x - caso.nextInt(DISTANZA_FRA_PERSONAGGI), posizioni.get(i).y));
 		}
 		// Le mappe sono state svuotate: anche il gruppo si dispone da capo
 		gruppoDisegnato = new ArrayList<>();
 		aggiornaGruppo();
+	}
+
+	/**
+	 * La larghezza dell'immagine dell'oggetto che c'è adesso in locazione, 0 se non c'è (o è un artefatto, che non si mostra)
+	 */
+	private int larghezzaOggettoInLocazione() {
+		TipoOggetto tipoOggetto = vistaPartita.getGruppoGiocatore().getTipoOggettoInLocazione();
+		if (tipoOggetto == null || tipoOggetto == TipoOggetto.ARTEFATTO) {
+			return 0;
+		}
+		return ClassiOggettoImmagine.getImmagine(tipoOggetto).getWidth();
 	}
 
 	/**
@@ -155,7 +182,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 			immagini.add(ClassePersonaggioImmagine.getImmagine(personaggio.getClasse(), Verso.SINISTRA));
 		}
 		BufferedImage locazione = ImageCache.locazioni.get(TipoLocazione.BOSCO);
-		List<Point> posizioni = disponiGruppo(topLeftX, locazione.getWidth(), locazione.getHeight(), immagini);
+		List<Point> posizioni = disponiGruppo(topLeftX, larghezzaDisponibile, larghezzaOggetto, locazione.getHeight(), immagini);
 		for (int i = 0; i < personaggi.size(); i++) {
 			mappaImmagini.put(personaggi.get(i), immagini.get(i));
 			mappaCoordinate.put(personaggi.get(i), new CoordinateMD(posizioni.get(i).x, posizioni.get(i).y));
@@ -164,18 +191,72 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	}
 
 	/**
-	 * Dove disegnare il gruppo, a destra della locazione e come gli avversari a sinistra: il primo, il capo, sta più
-	 * in basso e vicino al bordo, e ogni altro si sposta verso il centro e sale un poco, così il precedente lo copre.
+	 * Di quanto è distante dal punto di partenza ogni personaggio di un gruppo, nell'ordine: il primo sta sul punto di
+	 * partenza, ogni altro subito dopo il precedente, a una certa distanza. Se l'ultimo uscirebbe dallo spazio
+	 * disponibile le distanze si accorciano e i personaggi si sovrappongono un poco.
 	 *
+	 * @param spazio quanto si può andare lontano dal punto di partenza, fino al bordo dello spazio a disposizione
+	 */
+	static int[] distanzeDalPuntoDiPartenza(List<BufferedImage> immagini, int spazio) {
+		int[] distanze = new int[immagini.size()];
+		for (int i = 1; i < distanze.length; i++) {
+			distanze[i] = distanze[i - 1] + immagini.get(i - 1).getWidth() + DISTANZA_FRA_PERSONAGGI;
+		}
+		if (distanze.length > 1) {
+			int ultimo = distanze.length - 1;
+			int massimo = spazio - immagini.get(ultimo).getWidth();
+			if (distanze[ultimo] > massimo) {
+				double fattore = Math.max(0, massimo) / (double) distanze[ultimo];
+				for (int i = 1; i < distanze.length; i++) {
+					distanze[i] = (int) (distanze[i] * fattore);
+				}
+			}
+		}
+		return distanze;
+	}
+
+	/**
+	 * Il fondo di un personaggio di un gruppo di quel numero: il primo, accanto all'oggetto, sta più in alto, ogni altro
+	 * scende di un passo, l'ultimo di un solo passo dal fondo della locazione.
+	 */
+	private static int yDelPersonaggio(int altezzaLocazione, int numeroPersonaggi, int indice, BufferedImage immagine) {
+		return ImageCache.SPACING + altezzaLocazione - (numeroPersonaggi - indice) * PASSO_VERTICALE - immagine.getHeight();
+	}
+
+	/**
+	 * Dove disegnare il gruppo, a destra dell'oggetto al centro dello spazio a disposizione: il primo, il capo, a poca
+	 * distanza dall'oggetto e più in alto, ogni altro più a destra e un po' più in basso.
+	 *
+	 * @param larghezzaDisponibile la larghezza dello spazio, che comincia in topLeftX
+	 * @param larghezzaOggetto lo spazio che l'oggetto occupa al centro
 	 * @param immagini le immagini dei personaggi, nell'ordine del gruppo
 	 * @return la posizione dell'angolo in alto a sinistra di ognuna, nello stesso ordine
 	 */
-	public static List<Point> disponiGruppo(int topLeftX, int larghezzaLocazione, int altezzaLocazione, List<BufferedImage> immagini) {
+	public static List<Point> disponiGruppo(int topLeftX, int larghezzaDisponibile, int larghezzaOggetto, int altezzaLocazione,
+			List<BufferedImage> immagini) {
+		int partenza = topLeftX + (larghezzaDisponibile + larghezzaOggetto) / 2 + STACCO_DALL_OGGETTO;
+		int[] distanze = distanzeDalPuntoDiPartenza(immagini, topLeftX + larghezzaDisponibile - 1 - partenza);
+		List<Point> posizioni = new ArrayList<>();
+		for (int i = 0; i < immagini.size(); i++) {
+			posizioni.add(new Point(partenza + distanze[i],
+					yDelPersonaggio(altezzaLocazione, immagini.size(), i, immagini.get(i))));
+		}
+		return posizioni;
+	}
+
+	/**
+	 * Come {@link #disponiGruppo}, a sinistra dell'oggetto: il primo accanto all'oggetto, ogni altro più a sinistra.
+	 */
+	public static List<Point> disponiAvversari(int topLeftX, int larghezzaDisponibile, int larghezzaOggetto, int altezzaLocazione,
+			List<BufferedImage> immagini) {
+		// Il bordo destro del primo: ogni altro arretra verso sinistra
+		int partenza = topLeftX + (larghezzaDisponibile - larghezzaOggetto) / 2 - STACCO_DALL_OGGETTO;
+		int[] distanze = distanzeDalPuntoDiPartenza(immagini, partenza - topLeftX - 1);
 		List<Point> posizioni = new ArrayList<>();
 		for (int i = 0; i < immagini.size(); i++) {
 			BufferedImage immagine = immagini.get(i);
-			posizioni.add(new Point(topLeftX + larghezzaLocazione - immagine.getWidth() - (i * PASSO_ORIZZONTALE_GRUPPO + 1),
-					ImageCache.SPACING + altezzaLocazione - (i + 1) * PASSO_VERTICALE - immagine.getHeight()));
+			posizioni.add(new Point(partenza - immagine.getWidth() - distanze[i],
+					yDelPersonaggio(altezzaLocazione, immagini.size(), i, immagine)));
 		}
 		return posizioni;
 	}
@@ -189,8 +270,8 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		VistaGruppo gng = vistaPartita.getGruppoAvversario();
 		TipoLocazione tipoLocazione = g.getTipoLocazioneCorrente();
 		BufferedImage locazione = ImageCache.locazioni.get(tipoLocazione);
-		int locXOffset = topLeftX;
-		graphics.drawImage(locazione, locXOffset, topLeftY, null);
+		// Lo sfondo sta al centro dello spazio a disposizione
+		graphics.drawImage(locazione, topLeftX + ((larghezzaDisponibile - locazione.getWidth()) >> 1), topLeftY, null);
 
 		// L'oggetto si disegna per primo: i personaggi lo coprono
 		TipoOggetto tipoOggetto = g.getTipoOggettoInLocazione();
@@ -199,20 +280,17 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 			graphics.drawImage(d, xOggetto(locazione, d), yOggetto(locazione, d), null);
 		}
 
-		// Lista invertita
-		List<VistaPersonaggio> avversariDaDisegnare = new ArrayList<>();
-		gng.getPersonaggiVivi().forEach(p -> avversariDaDisegnare.add(0, p));
-
-		for (VistaPersonaggio personaggioCorrente : avversariDaDisegnare) {
+		// Dal primo all'ultimo: chi sta più in basso copre chi sta più in alto
+		for (VistaPersonaggio personaggioCorrente : gng.getPersonaggiVivi()) {
 			BufferedImage d = mappaImmagini.get(personaggioCorrente);
 			CoordinateMD coordinate = mappaCoordinate.get(personaggioCorrente);
 			disegnaPersonaggio(graphics, personaggioCorrente, d, coordinate.getX(), coordinate.getY(), agente, bersaglio);
 		}
 
-		// Il gruppo, dall'ultimo al primo: il capo sta più in basso e copre gli altri
+		// Il gruppo, dal primo all'ultimo, come gli avversari
 		aggiornaGruppo();
 		List<VistaPersonaggio> gruppoDaDisegnare = new ArrayList<>(gruppoDisegnato);
-		for (int i = gruppoDaDisegnare.size() - 1; i >= 0; i--) {
+		for (int i = 0; i < gruppoDaDisegnare.size(); i++) {
 			CoordinateMD coordinate = mappaCoordinate.get(gruppoDaDisegnare.get(i));
 			BufferedImage d = mappaImmagini.get(gruppoDaDisegnare.get(i));
 			if (coordinate != null && d != null) {
@@ -321,10 +399,10 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	}
 
 	/**
-	 * L'oggetto che si trova in locazione sta al centro, in basso: i lati sono dei due gruppi
+	 * L'oggetto che si trova in locazione sta al centro dello spazio a disposizione, in basso: i lati sono dei due gruppi
 	 */
 	private int xOggetto(BufferedImage locazione, BufferedImage oggetto) {
-		return topLeftX + (locazione.getWidth() - oggetto.getWidth()) / 2;
+		return topLeftX + (larghezzaDisponibile - oggetto.getWidth()) / 2;
 	}
 
 	private int yOggetto(BufferedImage locazione, BufferedImage oggetto) {

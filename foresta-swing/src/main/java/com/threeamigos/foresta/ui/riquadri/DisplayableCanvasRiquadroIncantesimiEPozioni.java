@@ -26,7 +26,7 @@ import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
  */
 public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 
-	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI = 16;
+	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE = 16;
 	// Pixel di scorrimento per ogni scatto della rotella, come per le missioni
 	private static final int PASSO_SCORRIMENTO = 2;
 
@@ -49,7 +49,7 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	private final int altezzaVisibile;
 	private final int altezzaRiga = DoomdarkFontMedium.getInstance().getHeight();
 	private final int topLeftX;
-	private final int topLeftY;
+	private int topLeftY;
 	private final int iconaX;
 	private final int nomeX;
 	private final int totaleX;
@@ -80,14 +80,22 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 			maxIconWidth = Math.max(maxIconWidth, righe.get(i).icona.getWidth());
 		}
 
-		altezzaVisibile = ImageCache.corniceIncantesimi.getHeight() - 2 * DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
-		areaLista = new Rectangle(topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI,
-				topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI,
-				ImageCache.corniceIncantesimi.getWidth() - 2 * DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI, altezzaVisibile);
+		altezzaVisibile = ImageCache.corniceGrande.getHeight() - 2 * DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE;
+		areaLista = new Rectangle(topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE,
+				topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE,
+				ImageCache.corniceGrande.getWidth() - 2 * DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE, altezzaVisibile);
 		iconaX = areaLista.x;
 		nomeX = iconaX + maxIconWidth + 2;
 		// Le quantità stanno a sinistra delle frecce, che si disegnano sopra la lista
 		totaleX = areaLista.x + areaLista.width - ImageCache.componenteScorrevoleFrecciaSu.getWidth(null) - 2 * ImageCache.SPACING;
+	}
+
+	/**
+	 * Sposta il riquadro in verticale: topLeftY è la nuova quota del bordo superiore della cornice
+	 */
+	public void spostaInVerticale(int topLeftY) {
+		this.topLeftY = topLeftY;
+		areaLista.y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE;
 	}
 
 	private int offsetMassimo() {
@@ -105,8 +113,8 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	 * Disegna gli incantesimi disponibili e le pozioni.
 	 */
 	public void disegnaIncantesimi(Graphics2D graphics) {
-		graphics.drawImage(ImageCache.corniceIncantesimi, topLeftX, topLeftY, null);
-		IntestazioneRiquadro.disegna(graphics, "Incantesimi e pozioni", topLeftX, topLeftY, ImageCache.corniceIncantesimi.getWidth());
+		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
+		IntestazioneRiquadro.disegna(graphics, "Incantesimi e pozioni", topLeftX, topLeftY, ImageCache.corniceGrande.getWidth());
 
 		graphics.setClip(areaLista);
 

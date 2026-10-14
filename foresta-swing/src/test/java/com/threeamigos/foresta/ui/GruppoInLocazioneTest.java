@@ -16,7 +16,7 @@ import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroLocazione;
 
 /**
  * Il gruppo del giocatore nel riquadro della locazione: a destra, il capo più in basso e vicino al bordo, gli altri
- * verso il centro e un poco più in alto.
+ * verso il centro, senza sovrapporsi, e un poco più in alto.
  */
 class GruppoInLocazioneTest {
 
@@ -24,37 +24,58 @@ class GruppoInLocazioneTest {
 		return new BufferedImage(larghezza, altezza, BufferedImage.TYPE_INT_ARGB);
 	}
 
+	private static final int LARGHEZZA = 600;
+	private static final int OGGETTO = 40;
+
 	@Test
-	void ilCapoStaInBassoAdestraEGliAltriSalgonoVersoIlCentro() {
+	void ilCapoStaAccantoAllOggettoEGliAltriVannoVersoDestraEInBasso() {
 		List<BufferedImage> immagini = Arrays.asList(immagine(60, 140), immagine(60, 140), immagine(60, 140));
-		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiGruppo(100, 390, 320, immagini);
+		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiGruppo(100, LARGHEZZA, OGGETTO, 320, immagini);
 		assertEquals(3, posizioni.size());
+		// Il capo parte a destra dell'oggetto, che sta al centro dello spazio, a poca distanza
+		assertEquals(100 + (LARGHEZZA + OGGETTO) / 2 + DisplayableCanvasRiquadroLocazione.STACCO_DALL_OGGETTO, posizioni.get(0).x);
 		for (int i = 1; i < posizioni.size(); i++) {
-			assertTrue(posizioni.get(i).x < posizioni.get(i - 1).x, "ogni personaggio è più verso il centro del precedente");
-			assertTrue(posizioni.get(i).y < posizioni.get(i - 1).y, "ogni personaggio è più in alto del precedente");
+			assertTrue(posizioni.get(i).x > posizioni.get(i - 1).x, "ogni personaggio è più verso il bordo del precedente");
+			assertTrue(posizioni.get(i).y > posizioni.get(i - 1).y, "ogni personaggio è più in basso del precedente");
 		}
-		// Il capo non esce dalla locazione a destra e poggia in basso
-		Point capo = posizioni.get(0);
-		assertTrue(capo.x + 60 <= 100 + 390);
-		assertTrue(capo.y + 140 <= ImageCache.SPACING + 320);
+		// L'ultimo non esce dallo spazio e poggia un passo sopra il fondo
+		Point ultimo = posizioni.get(2);
+		assertTrue(ultimo.x + 60 <= 100 + LARGHEZZA);
+		assertEquals(ImageCache.SPACING + 320 - 6, ultimo.y + 140);
+		// Il primo parte da tanti passi dal fondo quanti sono i personaggi
+		assertEquals(ImageCache.SPACING + 320 - 3 * 6, posizioni.get(0).y + 140);
 	}
 
 	@Test
-	void ilPassoELoStessoPerImmaginiDiMisureDiverse() {
-		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiGruppo(0, 390, 320,
+	void gliAvversariSpecchianoIlGruppoASinistraDellOggetto() {
+		List<BufferedImage> immagini = Arrays.asList(immagine(60, 140), immagine(60, 140));
+		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiAvversari(100, LARGHEZZA, OGGETTO, 320, immagini);
+		assertEquals(100 + (LARGHEZZA - OGGETTO) / 2 - DisplayableCanvasRiquadroLocazione.STACCO_DALL_OGGETTO,
+				posizioni.get(0).x + 60);
+		assertTrue(posizioni.get(1).x < posizioni.get(0).x);
+		assertTrue(posizioni.get(1).y > posizioni.get(0).y);
+	}
+
+	@Test
+	void ognunoStaSubitoDopoIlPrecedenteSenzaSovrapporsi() {
+		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiGruppo(0, LARGHEZZA, OGGETTO, 320,
 				Arrays.asList(immagine(112, 142), immagine(56, 138)));
-		// Il bordo destro di ognuno arretra sempre dello stesso passo; il fondo sale sempre dello stesso passo
-		int bordoDestroCapo = posizioni.get(0).x + 112;
-		int bordoDestroSecondo = posizioni.get(1).x + 56;
-		assertEquals(50, bordoDestroCapo - bordoDestroSecondo);
-		int fondoCapo = posizioni.get(0).y + 142;
-		int fondoSecondo = posizioni.get(1).y + 138;
-		assertEquals(6, fondoCapo - fondoSecondo);
+		assertEquals(DisplayableCanvasRiquadroLocazione.DISTANZA_FRA_PERSONAGGI, posizioni.get(1).x - (posizioni.get(0).x + 112));
+	}
+
+	@Test
+	void ilGruppoNonEsceDalloSpazioEAccorciaLeDistanze() {
+		List<BufferedImage> immagini = Arrays.asList(immagine(60, 140), immagine(60, 140), immagine(60, 140), immagine(60, 140),
+				immagine(60, 140), immagine(60, 140), immagine(60, 140), immagine(60, 140));
+		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiGruppo(100, LARGHEZZA, OGGETTO, 320, immagini);
+		for (Point posizione : posizioni) {
+			assertTrue(posizione.x + 60 <= 100 + LARGHEZZA, "nessuno esce a destra");
+		}
 	}
 
 	@Test
 	void unGruppoVuotoNonHaPosizioni() {
-		assertTrue(DisplayableCanvasRiquadroLocazione.disponiGruppo(0, 390, 320, Collections.emptyList()).isEmpty());
+		assertTrue(DisplayableCanvasRiquadroLocazione.disponiGruppo(0, LARGHEZZA, OGGETTO, 320, Collections.emptyList()).isEmpty());
 	}
 
 	@Test

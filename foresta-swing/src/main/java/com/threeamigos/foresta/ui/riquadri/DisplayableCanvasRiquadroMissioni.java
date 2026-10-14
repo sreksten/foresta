@@ -32,7 +32,7 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 	private static final DoomdarkFont fontDescrizione = DoomdarkFontSmall.getInstance();
 
 	private final int topLeftX;
-	private final int topLeftY;
+	private int topLeftY;
 	private final int innerWidth;
 	private final int innerHeight;
 
@@ -50,6 +50,13 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 		this.topLeftY = topLeftY;
 		innerWidth = ImageCache.corniceGrande.getWidth() - ((DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE  + SPACING) << 1);
 		innerHeight = ImageCache.corniceGrande.getHeight() - ((DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING) << 1);
+	}
+
+	/**
+	 * Sposta il riquadro in verticale: topLeftY è la nuova quota del bordo superiore della cornice
+	 */
+	public void spostaInVerticale(int topLeftY) {
+		this.topLeftY = topLeftY;
 	}
 
 	/**

@@ -30,7 +30,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE = 16;
 
 	private final int topLeftX;
-	private final int topLeftY;
+	private int topLeftY;
 	private final int innerWidth;
 	private final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 	private final int leftXOffsetLabelSalute;
@@ -100,6 +100,14 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 		altezzaBlocco = fontMedium.getHeight() * 3;
 		areaLista = new Rectangle(topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE, topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE,
 				innerWidth, ImageCache.corniceGrande.getHeight() - (DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE << 1));
+	}
+
+	/**
+	 * Sposta il riquadro in verticale: topLeftY è la nuova quota del bordo superiore della cornice
+	 */
+	public void spostaInVerticale(int topLeftY) {
+		this.topLeftY = topLeftY;
+		areaLista.y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE;
 	}
 
 	/**
