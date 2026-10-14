@@ -260,14 +260,15 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, Vist
 
 	/**
 	 * I comandi dei personaggi vivi che possono equipaggiare l'artefatto: slot libero, livello
-	 * sufficiente, mani libere, carico. Le pergamene non hanno mai candidati.
+	 * sufficiente, mani libere, carico. Le pergamene non hanno mai candidati. Chi è a tempo non è
+	 * un candidato: se ne andrebbe subito portandosi via l'artefatto.
 	 */
 	public static List<Comando> candidati(GruppoGiocatore gruppo, Artefatto artefatto) {
 		List<Comando> candidati = new ArrayList<>();
 		List<Personaggio> personaggi = gruppo.getPersonaggi();
 		for (int i = 0; i < personaggi.size(); i++) {
 			Personaggio personaggio = personaggi.get(i);
-			if (personaggio.isVivo() && !personaggio.puoEquipaggiare(artefatto).isPresent()) {
+			if (personaggio.isVivo() && !personaggio.isATempo() && !personaggio.puoEquipaggiare(artefatto).isPresent()) {
 				candidati.add(Comando.ofPersonaggio(i));
 			}
 		}
@@ -280,7 +281,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, Vist
 	 */
 	private static boolean troppoPesante(GruppoGiocatore gruppo, Artefatto artefatto) {
 		for (Personaggio personaggio : gruppo.getPersonaggi()) {
-			if (personaggio.isVivo() && personaggio.puoEquipaggiare(artefatto)
+			if (personaggio.isVivo() && !personaggio.isATempo() && personaggio.puoEquipaggiare(artefatto)
 					.filter(motivo -> motivo.equals(TipoMotivoRifiutoEquipaggiamento.TROPPO_CARICO.getFumetto())).isPresent()) {
 				return true;
 			}

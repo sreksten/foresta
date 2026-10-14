@@ -983,6 +983,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	/**
 	 * I personaggi a cui si può dare l'oggetto della locazione: se porta un artefatto, quelli che
 	 * possono equipaggiarlo (Artefatto.candidati), altrimenti tutti i vivi.
+	 * Chi è a tempo non è mai un candidato: se ne andrebbe subito portandosi via l'oggetto.
 	 */
 	private List<Comando> comandiDestinatarioOggetto() {
 		Oggetto oggetto = locazioneCorrente.getOggetto();
@@ -993,7 +994,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		List<Comando> vivi = new ArrayList<>();
 		int i = 0;
 		for (Personaggio personaggioCorrente : gruppo.getPersonaggi()) {
-			if (personaggioCorrente.isVivo()) {
+			if (personaggioCorrente.isVivo() && !personaggioCorrente.isATempo()) {
 				vivi.add(Comando.ofPersonaggio(i));
 			}
 			i++;
