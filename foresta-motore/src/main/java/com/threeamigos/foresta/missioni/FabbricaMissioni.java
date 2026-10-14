@@ -22,8 +22,6 @@ import com.threeamigos.foresta.missioni.incarichi.LOggettoSmarrito;
 import com.threeamigos.foresta.missioni.incarichi.LaDocumentazione;
 import com.threeamigos.foresta.missioni.incarichi.LaSorveglianza;
 import com.threeamigos.foresta.missioni.incarichi.LaTagliaSullaBanda;
-import com.threeamigos.foresta.missioni.incarichi.RecuperaIlMedaglione;
-import com.threeamigos.foresta.missioni.incarichi.RecuperaLeDerrateAlimentari;
 import com.threeamigos.foresta.missioni.incarichi.RichiestaDiMateriali;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelLocandiere;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
@@ -59,8 +57,6 @@ public final class FabbricaMissioni {
 		COSTRUTTORI.put(ClasseMissione.SCONFIGGI_L_IDRA, SconfiggiLIdra::new);
 		COSTRUTTORI.put(ClasseMissione.SCONFIGGI_IL_LICH, SconfiggiIlLich::new);
 		COSTRUTTORI.put(ClasseMissione.SCONFIGGI_LA_STREGA, SconfiggiLaStrega::new);
-		COSTRUTTORI.put(ClasseMissione.RECUPERA_IL_MEDAGLIONE, RecuperaIlMedaglione::new);
-		COSTRUTTORI.put(ClasseMissione.RECUPERA_LE_DERRATE_ALIMENTARI, RecuperaLeDerrateAlimentari::new);
 		COSTRUTTORI.put(ClasseMissione.LA_LEGGENDA_DELL_ARMAIOLO, LaLeggendaDellArmaiolo::new);
 		COSTRUTTORI.put(ClasseMissione.LA_LEGGENDA_DEL_LOCANDIERE, LaLeggendaDelLocandiere::new);
 		COSTRUTTORI.put(ClasseMissione.CRONACHE_DI_UN_FEGATO_EROICO, CronacheDiUnFegatoEroico::new);

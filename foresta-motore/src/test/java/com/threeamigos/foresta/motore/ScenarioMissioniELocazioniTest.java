@@ -21,7 +21,7 @@ import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.incarichi.RecuperaIlMedaglione;
+import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.principali.CronacheDiUnFegatoEroico;
 import com.threeamigos.foresta.missioni.principali.SconfiggiIlMinotauroGigante;
 
@@ -94,8 +94,11 @@ class ScenarioMissioniELocazioniTest {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(22)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
 					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
-			Missione medaglione = trova(RecuperaIlMedaglione.class);
-			assertTrue(medaglione.isAttiva(), "a Fleena la missione del medaglione si attiva");
+			IncaricoDiCombattimento medaglione = (IncaricoDiCombattimento) trova(IncaricoDiCombattimento.class);
+			medaglione.controllaPreLocazione();
+			medaglione.segnaIntermezzoPassoMostrato("INCARICO");
+			medaglione.controllaInLocazione();
+			assertTrue(medaglione.isAttiva(), "a Fleena si prende un incarico da riscuotere là");
 			Missione cronache = trova(CronacheDiUnFegatoEroico.class);
 			CoordinateMD fleena = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_FLEENA);
 
@@ -111,7 +114,7 @@ class ScenarioMissioniELocazioniTest {
 			partita.comando(Comando.ESCI_DA_CITTA);
 			muoviDiUnPasso(partita);
 
-			assertTrue(medaglione.isFallita(), "il medaglione non si puo' piu' consegnare");
+			assertTrue(medaglione.isFallita(), "l'incarico non si puo' piu' riscuotere");
 			assertTrue(RegistroMissioni.getMissioniFallite().contains(medaglione));
 			assertTrue(cronache.isFallita(), "una tappa delle cronache e' andata persa");
 			// Le descrizioni delle tappe non cercano piu' la locanda sulla mappa

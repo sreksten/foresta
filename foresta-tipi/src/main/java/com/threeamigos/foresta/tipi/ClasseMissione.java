@@ -11,8 +11,6 @@ package com.threeamigos.foresta.tipi;
 public enum ClasseMissione {
 
 	SCONFIGGI_IL_DRAGO(true),
-	RECUPERA_IL_MEDAGLIONE(true),
-	RECUPERA_LE_DERRATE_ALIMENTARI(true),
 	LA_LEGGENDA_DELL_ARMAIOLO(true),
 	LA_LEGGENDA_DEL_LOCANDIERE(true),
 	CRONACHE_DI_UN_FEGATO_EROICO(true),

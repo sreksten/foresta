@@ -5,7 +5,7 @@ import com.threeamigos.foresta.missioni.incarichi.CacciaAiGoblin;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
-import com.threeamigos.foresta.missioni.incarichi.RecuperaIlMedaglione;
+import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -22,6 +22,11 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
  * mandano nella stessa città, e anche dopo un salvataggio.
  */
 class ScenarioSegnaliniDiCittaTest {
+
+    private static final String LADRI = "CHIAVE=LADRI_DI_PROVA;TIPO=RECUPERO;ASPETTO=QUALUNQUE;MANDANTE=il derubato;NEMICO=LADRO;"
+            + "NUMERO=4;LUOGO=GROTTA;MONETE=20;TITOLO=Recupera il medaglione;RICHIESTA=Mi hanno rubato il medaglione.;"
+            + "BATTUTA=Lo riavrai.;RISPOSTA=Grazie.;VITTORIA=I ladri sono a terra.;RINGRAZIAMENTO=Il mio medaglione!;"
+            + "RICORDO=In questa grotta i ladri nascondevano il medaglione.";
 
     private static <T extends Missione> T trova(Class<T> tipo) {
         return RegistroMissioni.getTutteLeMissioni().stream().filter(tipo::isInstance).map(tipo::cast).findFirst()
@@ -117,7 +122,11 @@ class ScenarioSegnaliniDiCittaTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(22)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
-            MissioneAPassi medaglione = trova(RecuperaIlMedaglione.class);
+            MissioneAPassi medaglione = trova(IncaricoDiCombattimento.class);
+            medaglione.aggiungiProprieta("PARAMETRO_" + IncaricoDiCombattimento.INCARICO, LADRI);
+            medaglione.controllaPreLocazione();
+            medaglione.segnaIntermezzoPassoMostrato("INCARICO");
+            medaglione.controllaInLocazione();
             CoordinateMD fleena = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_FLEENA);
 
             // Sconfitti i ladri si torna in città, ma il gruppo è altrove: Fleena lampeggia

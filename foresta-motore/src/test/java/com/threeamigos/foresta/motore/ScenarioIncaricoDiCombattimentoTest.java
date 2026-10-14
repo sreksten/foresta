@@ -11,6 +11,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
@@ -37,7 +38,7 @@ class ScenarioIncaricoDiCombattimentoTest {
         Set<TipoMissione> tipi = EnumSet.noneOf(TipoMissione.class);
         for (int i = 0; i < 1000; i++) {
             CombattimentoRichiesto incarico = CombattimentoRichiesto.da(ProduttoreDiTestiCasuale.rigaDiMissioni("INCARICO_DI_COMBATTIMENTO"));
-            assertTrue(incarico.getNumero() > 0 && incarico.getMonete() > 0, incarico.getRiga());
+            assertTrue(incarico.getNumero(1) > 0 && incarico.getMonete() > 0, incarico.getRiga());
             assertFalse(incarico.getVittoria().isEmpty() || incarico.getRingraziamento().isEmpty(), incarico.getRiga());
             if (!incarico.isConCapo()) {
                 assertFalse(incarico.getRiga().contains("%CAPO%"), incarico.getRiga());
@@ -45,13 +46,14 @@ class ScenarioIncaricoDiCombattimentoTest {
             chiavi.add(incarico.getChiave());
             tipi.add(incarico.getTipo());
         }
-        assertTrue(chiavi.size() >= 29, String.valueOf(chiavi));
+        assertTrue(chiavi.size() >= 31, String.valueOf(chiavi));
+        assertTrue(chiavi.containsAll(Arrays.asList("MEDAGLIONE_RUBATO", "DERRATE_SPARITE")), "due incarichi di recupero: " + chiavi);
         assertEquals(EnumSet.of(TipoMissione.VENDETTA, TipoMissione.COMBATTIMENTO_BESTIA, TipoMissione.PULIZIA_DEI_DUNGEON,
                 TipoMissione.SCHERMAGLIA, TipoMissione.IMBOSCATA, TipoMissione.PROTEZIONE_TEMPORALE, TipoMissione.DUELLO,
                 TipoMissione.DUELLO_ANTICO, TipoMissione.DUELLO_MAGICO, TipoMissione.COMBATTIMENTO_RITUALE, TipoMissione.BLOCCO,
                 TipoMissione.PONTE_TATTICO, TipoMissione.SORTITA, TipoMissione.CARICA, TipoMissione.COMPETIZIONE,
                 TipoMissione.CONFINAMENTO, TipoMissione.BRIGANTAGGIO, TipoMissione.ASSEDIO_OFFENSIVO, TipoMissione.CIRCONDAMENTO,
-                TipoMissione.SICARIO, TipoMissione.TITOLO_NOBILIARE, TipoMissione.BATTAGLIA), tipi);
+                TipoMissione.SICARIO, TipoMissione.TITOLO_NOBILIARE, TipoMissione.BATTAGLIA, TipoMissione.RECUPERO), tipi);
 
         assertThrows(IllegalArgumentException.class, () -> CombattimentoRichiesto.da(TROLL + ";COLORE=VERDE"));
         assertEquals("Teodolinda", CombattimentoRichiesto.da(TROLL.replace("CAPO=SI", "CAPO=Teodolinda")).pescaNomeDelCapo());
@@ -59,6 +61,17 @@ class ScenarioIncaricoDiCombattimentoTest {
                 .matches("(Bradamante|Marfisa|Ermengarda|Matilde|Clorinda|Gualdrada|Isotta|Brunilde) .+"));
         assertThrows(IllegalArgumentException.class, () -> CombattimentoRichiesto.da(TROLL.replace("LUOGO=GROTTA", "LUOGO=CITTA_NYENA")));
         assertThrows(IllegalArgumentException.class, () -> CombattimentoRichiesto.da(TROLL.replace("MONETE=35;", "")));
+
+        // NUMERO=LIVELLO:4: tanti quanto il livello del mondo, da uno a quattro
+        CombattimentoRichiesto perLivello = CombattimentoRichiesto.da(TROLL.replace("NUMERO=2", "NUMERO=LIVELLO:4"));
+        assertEquals(2, CombattimentoRichiesto.da(TROLL).getNumero(9));
+        assertEquals(1, perLivello.getNumero(1));
+        assertEquals(3, perLivello.getNumero(3));
+        assertEquals(4, perLivello.getNumero(4));
+        assertEquals(4, perLivello.getNumero(10));
+        assertThrows(IllegalArgumentException.class, () -> CombattimentoRichiesto.da(TROLL.replace("NUMERO=2", "NUMERO=LIVELLO:x")));
+        assertThrows(IllegalArgumentException.class, () -> CombattimentoRichiesto.da(TROLL.replace("NUMERO=2", "NUMERO=LIVELLO:1").replace("TIPO=VENDETTA", "TIPO=DUELLO").replace("NEMICO=TROLL", "NEMICO=GUERRIERO")
+                .replace(";CAPO=SI", ";DUELLO=SI")));
     }
 
     @Test

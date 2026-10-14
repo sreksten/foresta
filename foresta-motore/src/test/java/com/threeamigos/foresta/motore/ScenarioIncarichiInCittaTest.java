@@ -15,12 +15,14 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.incarichi.CacciaAiGoblin;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
-import com.threeamigos.foresta.missioni.incarichi.RecuperaIlMedaglione;
+import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.incarichi.RichiestaDiMateriali;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
 
@@ -31,35 +33,28 @@ import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
 class ScenarioIncarichiInCittaTest {
 
     @Test
-    void gliIncarichiNonSiSovrappongonoAlleAltreMissioniDellaCitta() {
+    void inUnaVisitaParteUnSoloIncaricoEGliAltriAspettano() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(64)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
-            CacciaAiGoblin caccia = trova(CacciaAiGoblin.class);
-            RichiestaDiMateriali mandragola = Alchimie.alchimista();
-            MissioneAPassi medaglione = trova(RecuperaIlMedaglione.class);
+            // L'armaiolo racconterebbe la sua leggenda prima di ogni incarico: qui non è ancora il momento
+            trova(LaLeggendaDellArmaiolo.class).aggiungiProprieta("DISPONIBILE_DALLE", String.valueOf(Long.MAX_VALUE));
+            List<IncaricoInCitta> incarichi = Arrays.asList(trova(CacciaAiGoblin.class), Alchimie.alchimista(),
+                    trova(IncaricoDiCombattimento.class));
 
-            // Alla prima visita parte il medaglione, e gli incarichi aspettano
-            assertTrue(medaglione.isAttiva());
-            assertEquals("INCARICO", caccia.getPassoCorrente());
-            assertEquals("INCARICO", mandragola.getPassoCorrente());
+            // Fra più incarichi pronti nella stessa visita parte il primo controllato, gli altri aspettano
+            incarichi.forEach(IncaricoInCitta::controllaPreLocazione);
+            long inAttesaDelMandante = incarichi.stream().filter(i -> "ACCETTAZIONE".equals(i.getPassoCorrente())).count();
+            long fermi = incarichi.stream().filter(i -> "INCARICO".equals(i.getPassoCorrente())).count();
+            assertEquals(1, inAttesaDelMandante, incarichi.toString());
+            assertEquals(incarichi.size() - 1, fermi);
 
-            // Tornati col medaglione: c'è il ringraziamento, e gli incarichi aspettano ancora
-            medaglione.aggiungiProprieta("PASSO_CORRENTE", "RITORNO");
-            caccia.controllaPreLocazione();
-            mandragola.controllaPreLocazione();
-            assertEquals("INCARICO", caccia.getPassoCorrente());
-            assertEquals("INCARICO", mandragola.getPassoCorrente());
-
-            // A medaglione ancora da trovare la visita è tranquilla: parte il primo incarico controllato, l'altro aspetta
-            medaglione.aggiungiProprieta("PASSO_CORRENTE", "CACCIA");
-            caccia.controllaPreLocazione();
-            mandragola.controllaPreLocazione();
-            assertEquals("ACCETTAZIONE", caccia.getPassoCorrente());
-            assertEquals("INCARICO", mandragola.getPassoCorrente());
-            caccia.controllaInLocazione();
-            assertTrue(caccia.isAttiva());
-            assertFalse(mandragola.isAttiva());
+            // Detto dal mandante, l'incarico parte e gli altri non sono partiti
+            IncaricoInCitta partito = incarichi.stream().filter(i -> "ACCETTAZIONE".equals(i.getPassoCorrente())).findFirst().get();
+            partito.segnaIntermezzoPassoMostrato("INCARICO");
+            partito.controllaInLocazione();
+            assertTrue(partito.isAttiva());
+            incarichi.stream().filter(i -> i != partito).forEach(i -> assertFalse(i.isAttiva()));
         }
     }
 
@@ -69,7 +64,7 @@ class ScenarioIncarichiInCittaTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
             CacciaAiGoblin caccia = trova(CacciaAiGoblin.class);
-            assertFalse(caccia.isAttiva(), "alla prima visita parte il medaglione");
+            assertFalse(caccia.isAttiva(), "alla prima visita non è ancora partito");
             CoordinateMD fleena = partita.gruppo().getCoordinate();
             // L'armaiolo racconterebbe la sua leggenda prima di ogni incarico: qui non è ancora il momento
             trova(LaLeggendaDellArmaiolo.class).aggiungiProprieta("DISPONIBILE_DALLE", String.valueOf(Long.MAX_VALUE));

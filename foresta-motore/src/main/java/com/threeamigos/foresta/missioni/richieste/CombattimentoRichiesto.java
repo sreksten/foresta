@@ -12,9 +12,6 @@ import com.threeamigos.foresta.missioni.TipoMissione;
  * Un incarico di combattimento (vedi IncaricoDiCombattimento), letto da una riga di INCARICO_DI_COMBATTIMENTO in
  * missioni.txt, che ne descrive i campi: chi lo chiede, chi va sconfitto, dove, quanto si paga e i testi.
  * Nei testi %CAPO% è il nome del capo, se c'è (vedi CapoDellaRiga).
- * Una riga può anche essere la storia di una città (vedi IncaricoDiCombattimentoBase.getCittaFissa), come il medaglione
- * di Fleena: allora sta in una produzione sua e scrive la descrizione della missione (DESCRIZIONE=,
- * DESCRIZIONE_RITORNO=).
  */
 public final class CombattimentoRichiesto {
 
@@ -24,6 +21,7 @@ public final class CombattimentoRichiesto {
 	public static final Set<TipoLocazione> LUOGHI = EnumSet.of(TipoLocazione.GROTTA, TipoLocazione.ROVINE, TipoLocazione.BOSCO,
 			TipoLocazione.PALUDE, TipoLocazione.RADURA);
 	public static final String CAPO = "%CAPO%";
+	private static final String PER_LIVELLO = "LIVELLO:";
 
 	private final String riga;
 	private final String chiave;
@@ -31,7 +29,9 @@ public final class CombattimentoRichiesto {
 	private final AspettoDelMandante aspetto;
 	private final String mandante;
 	private final TipoPersonaggio nemico;
+	// Quanti sono; se numeroPerLivello, il massimo (vedi getNumero)
 	private final int numero;
+	private final boolean numeroPerLivello;
 	private final CapoDellaRiga capo;
 	private final boolean finoAllaResa;
 	private final boolean aDuello;
@@ -45,20 +45,24 @@ public final class CombattimentoRichiesto {
 	private final String vittoria;
 	private final String ringraziamento;
 	private final String ricordo;
-	private final String descrizione;
-	private final String descrizioneAlRitorno;
 
 	private CombattimentoRichiesto(String riga) {
 		this.riga = riga;
 		CampiDiGrammatica campi = CampiDiGrammatica.da(riga, OndateDellaRiga.conICampiDelleOndate("CHIAVE", "TIPO", "ASPETTO",
 				"MANDANTE", "NEMICO", "NUMERO", "CAPO", "RESA", "DUELLO", "LUOGO", "MONETE", "TITOLO", "RICHIESTA", "BATTUTA",
-				"RISPOSTA", "VITTORIA", "RINGRAZIAMENTO", "RICORDO", "DESCRIZIONE", "DESCRIZIONE_RITORNO"));
+				"RISPOSTA", "VITTORIA", "RINGRAZIAMENTO", "RICORDO"));
 		chiave = campi.obbligatorio("CHIAVE");
 		tipo = campi.enumerato("TIPO", TipoMissione.class);
 		aspetto = campi.enumerato("ASPETTO", AspettoDelMandante.class);
 		mandante = campi.obbligatorio("MANDANTE");
 		nemico = campi.enumerato("NEMICO", TipoPersonaggio.class);
-		numero = campi.intero("NUMERO");
+		String quanti = campi.obbligatorio("NUMERO");
+		numeroPerLivello = quanti.startsWith(PER_LIVELLO);
+		try {
+			numero = Integer.parseInt(numeroPerLivello ? quanti.substring(PER_LIVELLO.length()) : quanti);
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException("NUMERO è un numero, o " + PER_LIVELLO + " e il massimo: " + riga, e);
+		}
 		capo = CapoDellaRiga.da(campi.facoltativo("CAPO"));
 		finoAllaResa = campi.facoltativo("RESA").map("SI"::equals).orElse(false);
 		aDuello = campi.facoltativo("DUELLO").map("SI"::equals).orElse(false);
@@ -70,7 +74,7 @@ public final class CombattimentoRichiesto {
 		if (numero < 1 || monete < 1) {
 			throw new IllegalArgumentException("Numero e monete sono almeno 1: " + riga);
 		}
-		if (aDuello && numero != 1) {
+		if (aDuello && (numero != 1 || numeroPerLivello)) {
 			throw new IllegalArgumentException("A duello si sfida da soli: NUMERO=1 con DUELLO=SI: " + riga);
 		}
 		ondate = OndateDellaRiga.da(campi, riga);
@@ -84,11 +88,6 @@ public final class CombattimentoRichiesto {
 		vittoria = campi.obbligatorio("VITTORIA");
 		ringraziamento = campi.obbligatorio("RINGRAZIAMENTO");
 		ricordo = campi.obbligatorio("RICORDO");
-		descrizione = campi.facoltativo("DESCRIZIONE").orElse(null);
-		descrizioneAlRitorno = campi.facoltativo("DESCRIZIONE_RITORNO").orElse(null);
-		if ((descrizione == null) != (descrizioneAlRitorno == null)) {
-			throw new IllegalArgumentException("DESCRIZIONE e DESCRIZIONE_RITORNO vanno insieme: " + riga);
-		}
 	}
 
 	/**
@@ -137,8 +136,12 @@ public final class CombattimentoRichiesto {
 		return nemico;
 	}
 
-	public int getNumero() {
-		return numero;
+	/**
+	 * Quanti sono i nemici. Di solito il numero scritto nella riga; con NUMERO=LIVELLO:4 tanti quanto il livello del mondo
+	 * di quando l'incarico si è offerto (almeno uno), fino al massimo scritto dopo i due punti.
+	 */
+	public int getNumero(int livelloDelMondo) {
+		return numeroPerLivello ? Math.max(1, Math.min(livelloDelMondo, numero)) : numero;
 	}
 
 	/**
@@ -195,23 +198,6 @@ public final class CombattimentoRichiesto {
 	 */
 	public String getRicordo() {
 		return ricordo;
-	}
-
-	/**
-	 * Che cosa dice la descrizione della missione finché i nemici non sono sconfitti, se la riga la scrive (DESCRIZIONE=,
-	 * per gli incarichi che sono una storia: un medaglione da recuperare), altrimenti null e la descrizione la compone la
-	 * missione dal mandante e dai nemici.
-	 */
-	public String getDescrizione() {
-		return descrizione;
-	}
-
-	/**
-	 * Che cosa dice la descrizione una volta sconfitti, da riscuotere in città (DESCRIZIONE_RITORNO=): null se la
-	 * riga non scrive la descrizione.
-	 */
-	public String getDescrizioneAlRitorno() {
-		return descrizioneAlRitorno;
 	}
 
 	/**

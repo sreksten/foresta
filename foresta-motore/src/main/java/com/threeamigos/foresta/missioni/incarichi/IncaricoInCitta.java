@@ -38,14 +38,12 @@ import com.threeamigos.foresta.missioni.Passo;
  * RITORNO, CONSEGNA e RICOMPENSA sono là.
  * Se la città in cui si riscuote viene distrutta dopo l'accettazione, la missione fallisce.
  * <p>
- * Un incarico può avere una città fissa ({@link #getCittaFissa()}): è la storia di quella città (il medaglione di
- * Fleena, le derrate di Ruuna, vedi IncaricoDiCombattimentoBase), e parte alla prima visita. Gli altri si prendono in
- * una città qualsiasi, ma solo a una visita tranquilla, in cui nessun'altra missione mostra un intermezzo entrando in
- * città: non alla prima visita, quando parte la missione della città, né quando si torna a concluderne una; fra due
- * incarichi pronti nella stessa visita parte il primo controllato, l'altro aspetta.
+ * Un incarico si prende in una città qualsiasi, ma solo a una visita tranquilla, in cui nessun'altra missione mostra un
+ * intermezzo entrando in città: non alla prima visita, quando parte la missione della città, né quando si torna a
+ * concluderne una; fra due incarichi pronti nella stessa visita parte il primo controllato, l'altro aspetta.
  * <p>
- * Gli incarichi senza città fissa sono ripetibili (vedi MissioneAPassi.isRipetibile): finiti, bene o male, ne
- * lasciano uno nuovo uguale, che si può prendere dopo una pausa.
+ * Gli incarichi sono ripetibili (vedi MissioneAPassi.isRipetibile): finiti, bene o male, ne lasciano uno nuovo uguale,
+ * che si può prendere dopo una pausa.
  */
 public abstract class IncaricoInCitta extends MissioneAPassi {
 
@@ -94,8 +92,15 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 * vale quello di adesso.
 	 */
 	protected final int getRicompensa() {
+		return getRicompensaBase() * getLivelloDellIncarico();
+	}
+
+	/**
+	 * Il livello del mondo di quando l'incarico si è offerto; finché non si è offerto, quello di adesso.
+	 */
+	protected final int getLivelloDellIncarico() {
 		String livello = ottieniProprieta(LIVELLO_DELL_INCARICO);
-		return getRicompensaBase() * (livello != null ? Integer.parseInt(livello) : Statistiche.getLivello());
+		return livello != null ? Integer.parseInt(livello) : Statistiche.getLivello();
 	}
 
 	/**
@@ -123,14 +128,6 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	}
 
 	/**
-	 * La città dell'incarico, se è sempre quella (la storia di una città): allora l'incarico parte alla prima visita,
-	 * senza aspettare una visita tranquilla. Null per un incarico che si prende in una città qualsiasi.
-	 */
-	protected TipoLocazione getCittaFissa() {
-		return null;
-	}
-
-	/**
 	 * La città in cui si torna a riscuotere: quella dell'incarico, se non è un'altra (vedi IlCorriere).
 	 */
 	protected TipoLocazione getCittaDelRitorno() {
@@ -139,18 +136,15 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 
 	/**
 	 * Se l'incarico si può offrire nella città in cui è il gruppo (per esempio se c'è un'altra città a cui portare
-	 * qualcosa). Vale solo per gli incarichi senza città fissa.
+	 * qualcosa). 
 	 */
 	protected boolean isPossibileQui() {
 		return true;
 	}
 
-	/**
-	 * Gli incarichi che si prendono in una città qualsiasi si ripetono; le storie delle città no.
-	 */
 	@Override
 	protected boolean isRipetibile() {
-		return getCittaFissa() == null;
+		return true;
 	}
 
 	/**
@@ -172,10 +166,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 */
 	public final TipoLocazione getCitta() {
 		String citta = ottieniProprieta(CITTA);
-		if (citta != null) {
-			return TipoLocazione.valueOf(citta);
-		}
-		return getCittaFissa();
+		return citta == null ? null : TipoLocazione.valueOf(citta);
 	}
 
 	/**
@@ -198,7 +189,6 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 		MANDANTI_CON_NOME.put("il venditore di pergamene", PersonaggioNoto.VENDITORE_DI_PERGAMENE);
 		MANDANTI_CON_NOME.put("l'incantatore", PersonaggioNoto.INCANTATORE);
 		MANDANTI_CON_NOME.put("il borgomastro", PersonaggioNoto.BORGOMASTRO);
-		MANDANTI_CON_NOME.put("il Borgomastro", PersonaggioNoto.BORGOMASTRO);
 		MANDANTI_CON_NOME.put("la levatrice", PersonaggioNoto.LEVATRICE);
 	}
 
@@ -349,19 +339,16 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	}
 
 	/**
-	 * Se il gruppo è dove l'incarico si offre: nella sua città fissa, oppure in una città qualsiasi a una visita
-	 * tranquilla, e passata la pausa dopo l'incarico precedente.
+	 * Se il gruppo è dove l'incarico si offre: in una città qualsiasi a una visita tranquilla, e passata la pausa dopo
+	 * l'incarico precedente.
 	 */
 	private boolean isIncaricoDaOffrire() {
-		if (getCittaFissa() != null) {
-			return nellaCitta();
-		}
 		return isDisponibile() && inUnaCitta() && isPossibileQui() && isVisitaTranquilla();
 	}
 
 	@Override
 	protected boolean aspettaUnaVisitaTranquilla() {
-		return getCittaFissa() == null;
+		return true;
 	}
 
 	private boolean inUnaCitta() {

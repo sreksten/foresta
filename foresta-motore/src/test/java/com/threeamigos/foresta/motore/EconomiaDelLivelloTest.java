@@ -2,7 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.incarichi.RecuperaIlMedaglione;
+import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -16,6 +16,11 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
  * livello, e un incarico paga la sua paga base per il livello di quando si è offerto.
  */
 class EconomiaDelLivelloTest {
+
+    private static final String LADRI = "CHIAVE=LADRI_DI_PROVA;TIPO=RECUPERO;ASPETTO=QUALUNQUE;MANDANTE=il derubato;NEMICO=LADRO;"
+            + "NUMERO=4;LUOGO=GROTTA;MONETE=20;TITOLO=Recupera il medaglione;RICHIESTA=Mi hanno rubato il medaglione.;"
+            + "BATTUTA=Lo riavrai.;RISPOSTA=Grazie.;VITTORIA=I ladri sono a terra.;RINGRAZIAMENTO=Il mio medaglione!;"
+            + "RICORDO=In questa grotta i ladri nascondevano il medaglione.";
 
     private static void impostaLivello(int livello) {
         ModelloDati.getIstanza().getStatisticheMD().setLivello(livello);
@@ -62,8 +67,12 @@ class EconomiaDelLivelloTest {
                 partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA);
             });
             MissioneAPassi medaglione = RegistroMissioni.getTutteLeMissioni().stream()
-                    .filter(RecuperaIlMedaglione.class::isInstance).map(MissioneAPassi.class::cast).findFirst()
+                    .filter(IncaricoDiCombattimento.class::isInstance).map(MissioneAPassi.class::cast).findFirst()
                     .orElseThrow(AssertionError::new);
+            medaglione.aggiungiProprieta("PARAMETRO_" + IncaricoDiCombattimento.INCARICO, LADRI);
+            medaglione.controllaPreLocazione();
+            medaglione.segnaIntermezzoPassoMostrato("INCARICO");
+            medaglione.controllaInLocazione();
             assertTrue(medaglione.isAttiva());
 
             // Nel frattempo il livello sale, ma la cifra promessa è quella di quando l'incarico si è offerto

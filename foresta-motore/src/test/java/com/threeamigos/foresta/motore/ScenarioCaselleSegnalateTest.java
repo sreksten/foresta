@@ -3,7 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.missioni.incarichi.LaTagliaSullaBanda;
 import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.missioni.incarichi.RecuperaIlMedaglione;
+import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -19,13 +19,23 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
  */
 class ScenarioCaselleSegnalateTest {
 
+    private static final String LADRI = "CHIAVE=LADRI_DI_PROVA;TIPO=RECUPERO;ASPETTO=QUALUNQUE;MANDANTE=il derubato;NEMICO=LADRO;"
+            + "NUMERO=4;LUOGO=GROTTA;MONETE=20;TITOLO=Recupera il medaglione;RICHIESTA=Mi hanno rubato il medaglione.;"
+            + "BATTUTA=Lo riavrai.;RISPOSTA=Grazie.;VITTORIA=I ladri sono a terra.;RINGRAZIAMENTO=Il mio medaglione!;"
+            + "RICORDO=In questa grotta i ladri nascondevano il medaglione.";
+
     @Test
-    void ilCovoDelMedaglioneLampeggiaFinchéLaMissioneÈInCorso() {
+    void ilCovoDeiLadriLampeggiaFinchéLaMissioneÈInCorso() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(22)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
-            Missione medaglione = RegistroMissioni.getTutteLeMissioni().stream().filter(RecuperaIlMedaglione.class::isInstance)
+            IncaricoDiCombattimento medaglione = RegistroMissioni.getTutteLeMissioni().stream()
+                    .filter(IncaricoDiCombattimento.class::isInstance).map(IncaricoDiCombattimento.class::cast)
                     .findFirst().orElseThrow(AssertionError::new);
+            medaglione.aggiungiProprieta("PARAMETRO_" + IncaricoDiCombattimento.INCARICO, LADRI);
+            medaglione.controllaPreLocazione();
+            medaglione.segnaIntermezzoPassoMostrato("INCARICO");
+            medaglione.controllaInLocazione();
             CoordinateMD covo = RegistroMissioni.getLocazioneOccupata(medaglione);
             assertNotNull(covo);
             assertEquals(TipoLocazione.GROTTA, Foresta.getLocazione(covo), "una grotta come le altre");

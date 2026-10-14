@@ -5,7 +5,6 @@ import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
 import com.threeamigos.foresta.missioni.incarichi.LaTagliaSullaBanda;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.incarichi.RecuperaIlMedaglione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
@@ -82,14 +81,9 @@ class ScenarioIncarichiRipetutiTest {
     }
 
     @Test
-    void leStorieDelleCittaNonSiRipetonoGliIncarichiConINomiDallaGrammaticaSi() {
+    void gliIncarichiConINomiDallaGrammaticaSiRipetonoConAltriNomi() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(143)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
-            RecuperaIlMedaglione medaglione = tutte(RecuperaIlMedaglione.class).get(0);
-            assertTrue(medaglione.isAttiva(), "la storia di Fleena parte alla prima visita");
-            medaglione.completaMissione();
-            assertEquals(1, tutte(RecuperaIlMedaglione.class).size());
-
             LaTagliaSullaBanda taglia = tutte(LaTagliaSullaBanda.class).get(0);
             taglia.completaMissione();
             assertEquals(2, tutte(LaTagliaSullaBanda.class).size(), "con un altro capobanda, pescato quando si offre");
