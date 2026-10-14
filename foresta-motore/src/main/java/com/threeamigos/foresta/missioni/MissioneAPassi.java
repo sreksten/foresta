@@ -926,6 +926,13 @@ public abstract class MissioneAPassi extends MissioneBase {
 	}
 
 	/**
+	 * Per le missioni ripetibili che vogliono tramandare qualcosa alla nuova che lasciano (che cosa è già successo nella
+	 * serie): di norma niente.
+	 */
+	protected void passaAllaNuova(Missione nuova) {
+	}
+
+	/**
 	 * Una missione ripetibile, finita, ne lascia una nuova della stessa classe, con i suoi nomi e i suoi luoghi.
 	 * Una volta sola, anche se la fine si controllasse due volte.
 	 */
@@ -936,6 +943,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 		aggiungiProprieta(GIA_RIPETUTA, AFFERMATIVO);
 		Missione nuova = FabbricaMissioni.crea(getModelloDati().getClasse());
 		nuova.aggiungiProprieta(DISPONIBILE_DALLE, String.valueOf(oreDiGioco() + getOreFraUnaMissioneELAltra()));
+		passaAllaNuova(nuova);
 		RegistroMissioni.aggiungiMissioneSecondaria(nuova);
 	}
 

@@ -10,6 +10,11 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.RegistroPersonaggi;
+import com.threeamigos.foresta.personaggi.Sacerdote;
+import com.threeamigos.foresta.personaggi.Sacerdotessa;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseMissione;
@@ -31,7 +36,8 @@ import com.threeamigos.foresta.missioni.richieste.BenedizioneRichiesta;
  * di un favore (vedi {@link BenedizioneRichiesta}, da missioni.txt): il favore è una missione secondaria che la
  * benedizione affida (vedi {@link IlFavore} e {@link MissioneAPassi#affida}). Fatto il favore, un tempio compare
  * sulla mappa: lì il giocatore sceglie chi del gruppo riceve la benedizione, un modificatore permanente di un
- * attributo. La benedizione si ripete, anche per lo stesso personaggio.
+ * attributo. La benedizione si ripete, anche per lo stesso personaggio; la prima volta che riesce, però, il sacerdote
+ * aggiunge un premio: una pozione dell'aumento di livello, e la proposta di unirsi al gruppo in pianta stabile.
  * <ol>
  * <li>INCONTRO, a inizio locazione, in una locanda già visitata due volte, a una visita tranquilla: l'intermezzo;</li>
  * <li>FAVORE, in locanda: la missione si attiva e affida il favore;</li>
@@ -39,7 +45,8 @@ import com.threeamigos.foresta.missioni.richieste.BenedizioneRichiesta;
  * <li>TEMPIO, a fine locazione: se il favore è riuscito, il tempio compare sulla mappa (altrimenti FALLIMENTO);</li>
  * <li>ARRIVO, a inizio locazione, nel tempio: il tempio è sicuro, niente avversari né oggetti a caso (vedi
  * RegistroMissioni.sopprimiContenutoLocazione);</li>
- * <li>SCELTA, se nel gruppo c'è più di un personaggio in campo, o DIRETTA: la benedizione.</li>
+ * <li>SCELTA, se nel gruppo c'è più di un personaggio in campo, o DIRETTA: la benedizione;</li>
+ * <li>solo la prima volta, PREMIO (la pozione) e COMPAGNO (se il gruppo vuole un sacerdote o una sacerdotessa fra i suoi).</li>
  * </ol>
  */
 public class LaBenedizione extends MissioneAPassi {
@@ -56,6 +63,10 @@ public class LaBenedizione extends MissioneAPassi {
 	private static final String FALLIMENTO = "FALLIMENTO";
 	private static final String LOCANDA = "LOCANDA";
 	private static final String RICEVUTA_DA = "RICEVUTA_DA";
+	private static final String PREMIO = "PREMIO";
+	private static final String COMPAGNO = "COMPAGNO";
+	// Il premio della prima benedizione è già stato dato: lo si tramanda alle benedizioni che seguono (vedi passaAllaNuova)
+	private static final String PREMIO_DATO = "PREMIO_DATO";
 	// Le visite precedenti alla locanda sono già contate quando si entra: alle prime due c'è l'intermezzo della locanda
 	private static final int VISITE_PRECEDENTI = 2;
 	private static final int OPZIONI_MASSIME = 5;
@@ -86,6 +97,13 @@ public class LaBenedizione extends MissioneAPassi {
 	@Override
 	protected boolean isRipetibile() {
 		return true;
+	}
+
+	@Override
+	protected void passaAllaNuova(Missione nuova) {
+		if (ottieniProprieta(PREMIO_DATO) != null) {
+			nuova.aggiungiProprieta(PREMIO_DATO, AFFERMATIVO);
+		}
 	}
 
 	@Override
@@ -133,6 +151,34 @@ public class LaBenedizione extends MissioneAPassi {
 		aggiungiProprieta(RICEVUTA_DA, personaggio.getNome());
 		BusEventi.pubblica(new NotificaTestoParagrafo(benedizione.getBenedetto().replace(BenedizioneRichiesta.PERSONAGGIO, personaggio.getNome())
 				+ " " + Misc.inizialeMaiuscola(benedizione.getNomeDellaBenedizione()) + " resterà con " + personaggio.getNome() + " per sempre."));
+	}
+
+	/**
+	 * Dopo la benedizione: la prima volta che una benedizione riesce, il premio; le altre volte la fine.
+	 */
+	private String dopoLaBenedizione() {
+		return ottieniProprieta(PREMIO_DATO) == null ? PREMIO : Passo.FINE;
+	}
+
+	/**
+	 * Il premio della prima benedizione: una pozione dell'aumento di livello per il gruppo.
+	 */
+	private void premia() {
+		aggiungiProprieta(PREMIO_DATO, AFFERMATIVO);
+		GruppoGiocatore.getIstanza().addPozioniAumentoLivello(1);
+		BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(getBenedizione().getMandante())
+				+ " vi consegna anche una piccola ampolla luminosa: una Pozione dell'Aumento di Livello."));
+	}
+
+	/**
+	 * Un sacerdote o una sacerdotessa, a caso, entra nel gruppo anche se questo ha già il numero massimo di personaggi.
+	 */
+	private void accogliUnSacerdote() {
+		Personaggio sacerdote = Dado.tiraAncheAUnaFaccia(2) == 1
+				? new Sacerdote(ProduttoreDiTestiCasuale.nomeSacerdote(), 1)
+				: new Sacerdotessa(ProduttoreDiTestiCasuale.nomeSacerdotessa(), 1);
+		GruppoGiocatore.getIstanza().aggiungiPersonaggio(RegistroPersonaggi.preparaCompagno(sacerdote));
+		BusEventi.pubblica(new InternoMostraFinestraStato());
 	}
 
 	private List<PaginaIntermezzo> getPagineDellIncontro() {
@@ -210,10 +256,23 @@ public class LaBenedizione extends MissioneAPassi {
 						.chiediScelta("Chi riceve " + benedizione.getNomeDellaBenedizione() + "?",
 								candidati().stream().map(Personaggio::getNome).collect(Collectors.toList()))
 						.esegui(() -> benedici(candidati().get(Integer.parseInt(getRisposta(SCELTA)) - 1)))
-						.poi(Passo.FINE);
+						.poi(this::dopoLaBenedizione);
 			case DIRETTA:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> true)
 						.esegui(() -> benedici(candidati().get(0)))
+						.poi(this::dopoLaBenedizione);
+			case PREMIO:
+				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> true)
+						.esegui(this::premia)
+						.poi(COMPAGNO);
+			case COMPAGNO:
+				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> true)
+						.chiediConferma(Misc.inizialeMaiuscola(benedizione.getMandante()) + " chiede se desiderate che un sacerdote o una sacerdotessa vi accompagni in pianta stabile. Accettate?")
+						.esegui(() -> {
+							if (Passo.SI.equals(getRisposta(COMPAGNO))) {
+								accogliUnSacerdote();
+							}
+						})
 						.poi(Passo.FINE);
 			case FALLIMENTO:
 				return Passo.quando(MomentoControllo.POST_LOCAZIONE, () -> true)

@@ -362,7 +362,7 @@ class CombattimentoConTatticheTest {
 
     @Test
     void iMostriSenzaTatticaAgisconoConQuellaBaseDellaLoroClasse() {
-        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(610)) {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(611)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             Locazione locazione = preparaLo(partita, 2);
             Personaggio capo = partita.gruppo().getCapo();

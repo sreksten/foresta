@@ -9,6 +9,7 @@ import com.threeamigos.foresta.missioni.storie.IlFavore;
 import com.threeamigos.foresta.missioni.storie.LaBenedizione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.Comando;
@@ -101,6 +102,7 @@ class ScenarioBenedizioneTest {
             Guerriero compagno = new Guerriero("Compagno", 1);
             partita.gruppo().aggiungiPersonaggio(compagno);
             int saluteMassima = compagno.getSaluteMassima();
+            int pozioni = partita.gruppo().getPozioniAumentoLivello();
             partita.gruppo().setCoordinate(tempio);
             benedizione.controllaPreLocazione();
             Passo scelta = benedizione.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE);
@@ -109,6 +111,20 @@ class ScenarioBenedizioneTest {
             assertEquals(java.util.Arrays.asList("Arsenio", "Compagno"), scelta.getOpzioni());
             benedizione.rispondi("2");
             benedizione.controllaPreLocazione();
+
+            // La prima benedizione porta anche il premio: la pozione, e la proposta di un sacerdote nel gruppo
+            assertEquals(pozioni + 1, partita.gruppo().getPozioniAumentoLivello());
+            assertFalse(benedizione.isCompleta());
+            Passo proposta = benedizione.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE);
+            assertNotNull(proposta);
+            assertTrue(proposta.isConferma());
+            int personaggi = partita.gruppo().getNumeroPersonaggi();
+            benedizione.rispondi(Passo.SI);
+            benedizione.controllaPreLocazione();
+            assertEquals(personaggi + 1, partita.gruppo().getNumeroPersonaggi());
+            Personaggio nuovo = partita.gruppo().getPersonaggi().get(personaggi);
+            assertTrue(nuovo.getClasse() == TipoPersonaggio.SACERDOTE || nuovo.getClasse() == TipoPersonaggio.SACERDOTESSA);
+            assertFalse(nuovo.isATempo());
 
             assertTrue(benedizione.isCompleta());
             assertEquals("Compagno", benedizione.getBenedetto());
@@ -119,6 +135,9 @@ class ScenarioBenedizioneTest {
                     String.valueOf(partita.testi()));
             assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof LaBenedizione && m != benedizione),
                     "si potrà ricevere un'altra benedizione");
+            assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof LaBenedizione && m != benedizione
+                            && m.ottieniProprieta("PREMIO_DATO") != null),
+                    "e non porterà un altro premio");
         }
     }
 

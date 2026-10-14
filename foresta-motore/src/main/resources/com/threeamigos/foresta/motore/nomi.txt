@@ -123,10 +123,10 @@ NOME_FEMMINILE$
     Sgrattina | Sgusciola | Sigfrida | Stuccata | Sventola | Teodolinda | Tullia | Vincenza | Zampata
     Zavorra | Zelinda | Zita
 
-NOME_SACERDOTE
+NOME_SACERDOTE$
     Fra' Stornato | Fra' Dicio | Fra' Cassone | Fra' Stagliato | Fra' Goroso
 
-NOME_SACERDOTESSA
+NOME_SACERDOTESSA$
     Suor Daliso | Suor Chidea | Suor Presa | Suor Ridente | Suor Reale | Suor Tita | Sorella Intronata
 
 // ---------------------------------------------------------------------------------------------

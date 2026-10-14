@@ -130,8 +130,9 @@ class SacerdoteTest {
                     .getRegistroPersonaggiMD().getUbicazioniPersonaggi()) {
                 nomi.add(RegistroPersonaggi.getPersonaggioInLocazione(coordinate).getNomeProprio().orElse("?"));
             }
-            assertTrue(nomi.contains("Fra' Stornato"), nomi.toString());
-            assertTrue(nomi.contains("Sorella Intronata"), nomi.toString());
+            // I loro nomi vengono da nomi.txt (NOME_SACERDOTE e NOME_SACERDOTESSA)
+            assertTrue(nomi.stream().anyMatch(n -> n.startsWith("Fra' ")), nomi.toString());
+            assertTrue(nomi.stream().anyMatch(n -> n.startsWith("Suor ") || n.startsWith("Sorella ")), nomi.toString());
         }
     }
 

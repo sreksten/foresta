@@ -170,6 +170,21 @@ public class ProduttoreDiTestiCasuale {
 	}
 
 	/**
+	 * Il nome di un sacerdote (vedi NOME_SACERDOTE in nomi.txt): one-shot, non si ripete finché non si azzerano le sezioni
+	 * statiche.
+	 */
+	public static String nomeSacerdote() {
+		return produciDaMissioni("NOME_SACERDOTE");
+	}
+
+	/**
+	 * Il nome di una sacerdotessa (vedi NOME_SACERDOTESSA in nomi.txt): one-shot, come quello del sacerdote.
+	 */
+	public static String nomeSacerdotessa() {
+		return produciDaMissioni("NOME_SACERDOTESSA");
+	}
+
+	/**
 	 * Il nome di un pellegrino (vedi missioni.txt).
 	 */
 	public static String nomePellegrino() {

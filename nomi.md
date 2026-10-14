@@ -20,6 +20,7 @@ Risorsa `foresta-motore/src/main/resources/com/threeamigos/foresta/motore/nomi.t
 | `TITOLO$` | 35 | "il Barone"… |
 | `DEGLI_LOCANDE$` | 35 | con le note tra parentesi che descrivono il locandiere: restano così |
 | `DEGLI_ALTISONANTE$` | 35 | senza note: "dei Signori della Luna", "di Altomonte" |
+| `NOME_SACERDOTE$`, `NOME_SACERDOTESSA$` | 5 + 7 | "Fra' …", "Suor …": i due sacerdoti da reclutare e quelli che la benedizione manda nel gruppo (`ProduttoreDiTestiCasuale.nomeSacerdote`, `nomeSacerdotessa`) |
 | `NOME_COMPARSA` | 20 | non one-shot: si ripete |
 
 Le radici per i personaggi del mondo: `NOME_MASTRO` ("Mastro [NOME_MASCHILE]"), `NOME_CAPITANO` (`[NOME_MASCHILE]`),
@@ -47,7 +48,8 @@ usano, e `produce()` finisce per lanciare `IllegalArgumentException`.
 | Campioni delle sfide | quattro | nome ed epiteto scelti dalla missione | no |
 
 La **provenienza** fa parte del nome completo: "Mastro Ferruccio da Ruuna", per distinguere per esempio due armaioli. I nomi
-fissi dei 18 compagni da reclutare (`RegistroPersonaggi.reimposta()`) restano scritti nel codice.
+fissi dei compagni da reclutare (`RegistroPersonaggi.reimposta()`) restano scritti nel codice, tranne quelli del sacerdote e della
+sacerdotessa, che vengono da `NOME_SACERDOTE` e `NOME_SACERDOTESSA`.
 
 ## 3. Generazione
 
