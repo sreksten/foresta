@@ -107,7 +107,8 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 	 */
 	public void disegnaStatus(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
-		
+		IntestazioneRiquadro.disegna(graphics, "Gruppo", topLeftX, topLeftY, ImageCache.corniceGrande.getWidth());
+
 		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
 		int locXOffset = areaLista.x;
 

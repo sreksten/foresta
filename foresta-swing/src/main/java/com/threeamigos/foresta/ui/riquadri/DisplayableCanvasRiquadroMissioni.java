@@ -57,6 +57,7 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 	 */
 	public void disegnaMissioni(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
+		IntestazioneRiquadro.disegna(graphics, "Missioni", topLeftX, topLeftY, ImageCache.corniceGrande.getWidth());
 
 		ComponenteScorrevole<VistaMissione> componenteScorrevole = costruisciComponenteScorrevole();
 		// L'elenco può essere cambiato dall'ultimo scorrimento: l'offset va rimesso nei limiti

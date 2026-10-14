@@ -106,6 +106,7 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	 */
 	public void disegnaIncantesimi(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceIncantesimi, topLeftX, topLeftY, null);
+		IntestazioneRiquadro.disegna(graphics, "Incantesimi e pozioni", topLeftX, topLeftY, ImageCache.corniceIncantesimi.getWidth());
 
 		graphics.setClip(areaLista);
 
