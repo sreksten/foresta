@@ -242,6 +242,62 @@ public abstract class Gruppo implements VistaGruppo {
 				" ha bevuto una pozione che recupera e fa aumentare la magia massima!"));
 	}
 
+	public final int getPozioniAumentoLivello() {
+		return getGruppoMD().getPozioniAumentoLivello();
+	}
+
+	/**
+	 * Aggiunge pozioni dell'aumento di livello alle scorte; il gruppo del giocatore lo annuncia alla UI.
+	 */
+	public final void addPozioniAumentoLivello(int quantita) {
+		int valorePrecedente = getGruppoMD().getPozioniAumentoLivello();
+		int valoreAttuale = valorePrecedente + quantita;
+		getGruppoMD().setPozioniAumentoLivello(valoreAttuale);
+		if (isGruppoGiocatore()) {
+			BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniAumentoLivello(valorePrecedente, valoreAttuale));
+		}
+	}
+
+	/**
+	 * Toglie pozioni dell'aumento di livello dalle scorte.
+	 */
+	public final void subPozioniAumentoLivello(int quantita) {
+		addPozioniAumentoLivello(-quantita);
+	}
+
+	/**
+	 * Se c'è una pozione dell'aumento di livello da bere e almeno un personaggio vivo che non sia già al livello massimo.
+	 */
+	public final boolean isPozioneAumentoLivelloUtilizzabile() {
+		return getPozioniAumentoLivello() > 0
+				&& getPersonaggiVivi().stream().anyMatch(p -> !p.isAlLivelloMassimo());
+	}
+
+	/**
+	 * Fa bere a un personaggio, scelto con il comando, una pozione dell'aumento di livello.
+	 */
+	public final void consumaPozioneAumentoLivello(Comando azione) {
+		consumaPozioneAumentoLivello(getPersonaggio(azione));
+	}
+
+	/**
+	 * Fa bere a quel personaggio una pozione dell'aumento di livello: ne toglie una dalle scorte e gli dà l'esperienza che
+	 * serve per salire di un livello, tenendo la stessa percentuale che gli mancava per quello dopo (vedi
+	 * {@link GestoreProgressione#getXpPerAumentoDiLivello}). Se è già al livello massimo non fa nulla e la pozione resta.
+	 */
+	public final void consumaPozioneAumentoLivello(Personaggio personaggio) {
+		String chi = personaggio.getNome(
+				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+		if (personaggio.isAlLivelloMassimo()) {
+			BusEventi.pubblica(new NotificaTestoFrase(chi + " è già al livello massimo: la pozione non avrebbe effetto."));
+			return;
+		}
+		subPozioniAumentoLivello(1);
+		personaggio.addPuntiEsperienza(GestoreProgressione.getXpPerAumentoDiLivello(personaggio.getLivello(), personaggio.getEsperienza()));
+		BusEventi.pubblica(new NotificaTestoFrase(chi + " ha bevuto una pozione che fa salire di livello!"));
+	}
+
 	/**
 	 * Riporta se il gruppo sia quello del giocatore o il gruppo avversario
 	 */

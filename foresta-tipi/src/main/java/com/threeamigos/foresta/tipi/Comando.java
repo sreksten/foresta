@@ -81,6 +81,7 @@ public enum Comando {
 	POZIONE_SALUTE_GRANDE("Consuma una pozione della Salute, grande"),
 	POZIONE_MAGIA("Consuma una pozione della Magia"),
 	POZIONE_MAGIA_GRANDE("Consuma una pozione della Magia, grande"),
+	POZIONE_AUMENTO_LIVELLO("Consuma una pozione dell'Aumento di Livello"),
 	MAPPA("Consulta la mappa della Foresta"),
 	INVENTARIO("Consulta l'inventario del gruppo"),
 	// Nell'intro, per riprendere una partita salvata; in gioco, per salvare

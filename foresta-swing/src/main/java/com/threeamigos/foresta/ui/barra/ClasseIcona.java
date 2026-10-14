@@ -72,6 +72,7 @@ public enum ClasseIcona {
 	POZIONE_SALUTE_GRANDE(Comando.POZIONE_SALUTE_GRANDE, "icone/PozioneSaluteGrande.gif", Sfondo.VERDE),
 	POZIONE_MAGIA(Comando.POZIONE_MAGIA, "icone/PozioneMagia.gif", Sfondo.VERDE),
 	POZIONE_MAGIA_GRANDE(Comando.POZIONE_MAGIA_GRANDE, "icone/PozioneMagiaGrande.gif", Sfondo.VERDE),
+	POZIONE_AUMENTO_LIVELLO(Comando.POZIONE_AUMENTO_LIVELLO, "icone/AumentoLivello.gif", Sfondo.VERDE),
 	INVENTARIO(Comando.INVENTARIO, "icone/Inventario.gif", Sfondo.VERDE),
 	FUGA(Comando.FUGA, "icone/Fuga.gif", Sfondo.ROSSO),
 	PASSA_INOSSERVATO(Comando.PASSA_INOSSERVATO, "icone/PassaInosservato.gif", Sfondo.VERDE),

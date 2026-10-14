@@ -55,6 +55,8 @@ public interface VistaGruppoGiocatore extends VistaGruppo {
 
 	int getPozioniMagiaGrande();
 
+	int getPozioniAumentoLivello();
+
 	CoordinateMD getCoordinate();
 
 	TipoLocazione getTipoLocazioneCorrente();

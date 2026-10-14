@@ -26,6 +26,14 @@ public interface Locazione {
 	}
 
 	/**
+	 * Se il giocatore sta scegliendo chi beve una pozione dell'aumento di livello: fra i candidati non ci sono i personaggi
+	 * già al livello massimo.
+	 */
+	default boolean isSceltaDiUnAumentoDiLivello() {
+		return false;
+	}
+
+	/**
 	 * Il modello dati della casella su cui si trova questa locazione: vi vive
 	 * lo stato durevole, che sopravvive alla visita e al salvataggio.
 	 */

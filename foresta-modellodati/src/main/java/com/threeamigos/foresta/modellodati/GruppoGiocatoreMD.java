@@ -143,6 +143,8 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(pozioniMagiaGrande);
 		stream.print(PIPE);
+		stream.print(pozioniAumentoLivello);
+		stream.print(PIPE);
 		stream.print(coordinate.getX());
 		stream.print(PIPE);
 		stream.print(coordinate.getY());
@@ -183,6 +185,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		pozioniSaluteGrande = Integer.parseInt(st.testo());
 		pozioniMagia = Integer.parseInt(st.testo());
 		pozioniMagiaGrande = Integer.parseInt(st.testo());
+		pozioniAumentoLivello = Integer.parseInt(st.testo());
 		coordinate = new CoordinateMD(Integer.parseInt(st.testo()), Integer.parseInt(st.testo()));
 		sfideVinte = Integer.parseInt(st.testo());
 		int numeroArtefatti = Integer.parseInt(st.testo());

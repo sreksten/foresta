@@ -284,6 +284,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.ATTESA_POZIONE_SALUTE_GRANDE, this::gestisciComandoInStatoAttesaPozioneSaluteGrande);
 		gestoriComando.put(Stato.ATTESA_POZIONE_MAGIA, this::gestisciComandoInStatoAttesaPozioneMagia);
 		gestoriComando.put(Stato.ATTESA_POZIONE_MAGIA_GRANDE, this::gestisciComandoInStatoAttesaPozioneMagiaGrande);
+		gestoriComando.put(Stato.ATTESA_POZIONE_AUMENTO_LIVELLO, this::gestisciComandoInStatoAttesaPozioneAumentoLivello);
 		gestoriComando.put(Stato.SCELTA_FORMULANTE_RESURREZIONE, this::gestisciComandoInStatoSceltaFormulanteResurrezione);
 		gestoriComando.put(Stato.SCELTA_BERSAGLIO_RESURREZIONE, this::gestisciComandoInStatoSceltaBersaglioResurrezione);
 		gestoriComando.put(Stato.ESECUZIONE_RESURREZIONE, this::gestisciComandoInStatoEsecuzioneResurrezione);
@@ -1223,6 +1224,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				statoPrecedente = Stato.ATTESA_POZIONE_MAGIA_GRANDE;
 				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 				return Esito.CONTINUA_CON_INGRESSO;
+			case POZIONE_AUMENTO_LIVELLO:
+				statoPrecedente = Stato.ATTESA_POZIONE_AUMENTO_LIVELLO;
+				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+				return Esito.CONTINUA_CON_INGRESSO;
 			case RESURREZIONE:
 				stato = Stato.SCELTA_FORMULANTE_RESURREZIONE;
 				return Esito.CONTINUA_CON_INGRESSO;
@@ -1322,6 +1327,14 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito gestisciComandoInStatoAttesaPozioneMagiaGrande(Comando comando) {
 		if (comando != null && comando != Comando.ANNULLA) {
 			gruppo.consumaPozioneMagiaGrande(comando);
+		}
+		stato = Stato.ATTESA_DIREZIONE;
+		return Esito.CONTINUA_CON_INGRESSO;
+	}
+
+	private Esito gestisciComandoInStatoAttesaPozioneAumentoLivello(Comando comando) {
+		if (comando != null && comando != Comando.ANNULLA) {
+			gruppo.consumaPozioneAumentoLivello(comando);
 		}
 		stato = Stato.ATTESA_DIREZIONE;
 		return Esito.CONTINUA_CON_INGRESSO;
@@ -1953,9 +1966,19 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				|| (locazioneCorrente != null && locazioneCorrente.isSceltaDiUnaCura());
 	}
 
+	/**
+	 * Se si sta scegliendo chi beve la pozione dell'aumento di livello (fuori o dentro una locazione): chi è già al livello
+	 * massimo non si propone.
+	 */
+	private boolean isSceltaDiUnAumentoDiLivello() {
+		return statoPrecedente == Stato.ATTESA_POZIONE_AUMENTO_LIVELLO
+				|| (locazioneCorrente != null && locazioneCorrente.isSceltaDiUnAumentoDiLivello());
+	}
+
 	private Comando scegliPersonaggio(boolean ancheSeMorto) {
 		boolean cura = isSceltaDiUnaCura();
-		if (gruppo.getNumeroPersonaggiVivi() == 1 && !ancheSeMorto) {
+		boolean aumentoDiLivello = isSceltaDiUnAumentoDiLivello();
+		if (gruppo.getNumeroPersonaggiVivi() == 1 && !ancheSeMorto && !aumentoDiLivello) {
 			// L'unico in campo: non per forza il primo del gruppo, se gli altri sono morti o in panchina
 			Comando unico = Comando.ofPersonaggio(gruppo.getPersonaggi().indexOf(gruppo.getPersonaggiVivi().get(0)));
 			BusEventi.pubblica(new InternoMessaggio("Automa::scegliPersonaggio(ancheMorto=false): automaticamente " + unico));
@@ -1964,7 +1987,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			List<Comando> comandiPossibili = new ArrayList<>();
 			int i = 0;
 			for (Personaggio personaggioCorrente : gruppo.getPersonaggi()) {
-				if ((ancheSeMorto || !personaggioCorrente.isFuoriCombattimento()) && !(cura && !personaggioCorrente.isCurabile())) {
+				if ((ancheSeMorto || !personaggioCorrente.isFuoriCombattimento()) && !(cura && !personaggioCorrente.isCurabile())
+						&& !(aumentoDiLivello && personaggioCorrente.isAlLivelloMassimo())) {
 					comandiPossibili.add(Comando.ofPersonaggio(i));
 				}
 				i++;
@@ -1974,6 +1998,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				// che gli altri siano morti, e quindi che il gioco sia perso: di solito è il capo, con accanto uno Scheletro della
 				// Mietitura vivo ma non curabile. Si sceglie lui senza chiedere, come quando c'è un solo personaggio in campo
 				BusEventi.pubblica(new InternoMessaggio("Automa::scegliPersonaggio(cura): automaticamente " + comandiPossibili.get(0)));
+				return comandiPossibili.get(0);
+			}
+			if (aumentoDiLivello && comandiPossibili.size() == 1) {
+				// Un solo candidato: non c'è nulla da scegliere
+				BusEventi.pubblica(new InternoMessaggio("Automa::scegliPersonaggio(aumento di livello): automaticamente " + comandiPossibili.get(0)));
 				return comandiPossibili.get(0);
 			}
 			comandiPossibili.add(Comando.ANNULLA);
@@ -2112,6 +2141,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 		if (gruppo.getPozioniMagiaGrande() > 0) {
 			comandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
+		}
+		if (gruppo.isPozioneAumentoLivelloUtilizzabile()) {
+			comandiPossibili.add(Comando.POZIONE_AUMENTO_LIVELLO);
 		}
 		if (isResurrezioneDisponibile()) {
 			comandiPossibili.add(Comando.RESURREZIONE);

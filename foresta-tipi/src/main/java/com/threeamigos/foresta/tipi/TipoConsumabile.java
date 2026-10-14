@@ -9,6 +9,8 @@ public enum TipoConsumabile {
 
     MONETE,
     PUNTI_ESPERIENZA, // In realtà questi non vengono mai "consumati"
+    // Ultra rara: l'alchimista non la vende, la si ottiene solo come ricompensa
+    POZIONE_AUMENTO_LIVELLO,
 
     // Tipi acquistabili da un alchimista
     INCANTESIMO,

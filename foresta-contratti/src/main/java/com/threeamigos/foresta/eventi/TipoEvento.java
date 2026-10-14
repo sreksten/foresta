@@ -265,6 +265,10 @@ public enum TipoEvento {
      */
     NOTIFICA_VARIAZIONE_DISPONIBILITA_POZIONI_MAGIA_GRANDI,
     /**
+     * Variazione della quantità di pozioni dell'aumento di livello disponibili
+     */
+    NOTIFICA_VARIAZIONE_DISPONIBILITA_POZIONI_AUMENTO_LIVELLO,
+    /**
      * Un Personaggio subisce una variazione di un effetto di stato come effetto collaterale di un combattimento
      */
     NOTIFICA_VARIAZIONE_EFFETTO_DI_STATO_PERSONAGGIO,

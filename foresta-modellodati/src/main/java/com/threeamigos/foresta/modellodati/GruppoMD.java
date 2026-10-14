@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * I dati di un gruppo di personaggi: chi ne fa parte, chi è il capo e le scorte comuni (le pergamene degli incantesimi
- * e le quattro pozioni). Il gruppo del giocatore ne è una specializzazione ({@link GruppoGiocatoreMD}).
+ * e le cinque pozioni). Il gruppo del giocatore ne è una specializzazione ({@link GruppoGiocatoreMD}).
  * <p>
  * Il capo non è un personaggio a parte: è il personaggio nella posizione {@link #getIndiceCapo()} dell'elenco.
  *
@@ -27,6 +27,7 @@ public class GruppoMD implements Serializzabile {
 	protected int pozioniSaluteGrande;
 	protected int pozioniMagia;
 	protected int pozioniMagiaGrande;
+	protected int pozioniAumentoLivello;
 	// La posizione del capo fra i personaggi: il capo è il primo che è entrato nel gruppo, e non cambia se lo si sposta
 	protected int indiceCapo;
 
@@ -84,6 +85,14 @@ public class GruppoMD implements Serializzabile {
 		this.pozioniMagiaGrande = pozioniMagiaGrande;
 	}
 
+	public int getPozioniAumentoLivello() {
+		return pozioniAumentoLivello;
+	}
+
+	public void setPozioniAumentoLivello(int pozioniAumentoLivello) {
+		this.pozioniAumentoLivello = pozioniAumentoLivello;
+	}
+
 	/**
 	 * Aggiunge un personaggio in fondo all'elenco.
 	 */
@@ -109,6 +118,7 @@ public class GruppoMD implements Serializzabile {
 		pozioniSaluteGrande = 0;
 		pozioniMagia = 0;
 		pozioniMagiaGrande = 0;
+		pozioniAumentoLivello = 0;
 	}
 
 	/**

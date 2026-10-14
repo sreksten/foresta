@@ -75,6 +75,7 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		righe.add(new Riga(ImageCache.spritePozioneSaluteGrande, "Salute grande", VistaGruppoGiocatore::getPozioniSaluteGrande));
 		righe.add(new Riga(ImageCache.spritePozioneMagia, "Magia", VistaGruppoGiocatore::getPozioniMagia));
 		righe.add(new Riga(ImageCache.spritePozioneMagiaGrande, "Magia grande", VistaGruppoGiocatore::getPozioniMagiaGrande));
+		righe.add(new Riga(ImageCache.spritePozioneAumentoLivello, "Aumento livello", VistaGruppoGiocatore::getPozioniAumentoLivello));
 		for (int i = ClasseIncantesimo.values().length; i < righe.size(); i++) {
 			maxIconWidth = Math.max(maxIconWidth, righe.get(i).icona.getWidth());
 		}
@@ -226,6 +227,17 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	public void gestisciEventoVariazionePozioniMagiaGrandi(NotificaVariazioneDisponibilitaPozioniMagiaGrandi evento) {
 		SpriteATempo sprite = costruisciSprite(indicePozione(3), evento.getNuovoValore() - evento.getValorePrecedente(),
 				"Pozioni magia grande variate");
+		if (sprite != null) {
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	/**
+	 * Aggiorna il numero di pozioni dell'aumento di livello.
+	 */
+	public void gestisciEventoVariazionePozioniAumentoLivello(NotificaVariazioneDisponibilitaPozioniAumentoLivello evento) {
+		SpriteATempo sprite = costruisciSprite(indicePozione(4), evento.getNuovoValore() - evento.getValorePrecedente(),
+				"Pozioni aumento livello variate");
 		if (sprite != null) {
 			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}

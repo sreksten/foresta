@@ -40,6 +40,22 @@ public class GestoreProgressione {
     }
 
     /**
+     * Gli XP da aggiungere per far salire di un livello chi ha quell'esperienza: quelli che mancano al livello successivo, più
+     * quelli che servono perché per il livello dopo ancora gli manchi la stessa percentuale (arrotondata per eccesso, così il
+     * salto è sempre di un solo livello). Se il livello successivo è già il massimo, bastano quelli che mancano a raggiungerlo.
+     * Zero se è già al livello massimo.
+     */
+    public static int getXpPerAumentoDiLivello(int livello, int xpAttuali) {
+        if (livello >= Costanti.MASSIMO_LIVELLO) return 0;
+        long mancanti = Math.max(0, getXpPerProssimoLivello(livello) - xpAttuali);
+        if (livello + 1 >= Costanti.MASSIMO_LIVELLO) return (int) mancanti;
+        long ampiezzaLivello = getXpRichiestiPerProssimoLivello(livello);
+        long ampiezzaProssimo = getXpRichiestiPerProssimoLivello(livello + 1);
+        long mancantiDopo = (mancanti * ampiezzaProssimo + ampiezzaLivello - 1) / ampiezzaLivello;
+        return (int) (mancanti + ampiezzaProssimo - mancantiDopo);
+    }
+
+    /**
      * Calcola matematicamente il livello attuale del personaggio basandosi
      * unicamente sugli XP totali accumulati nella sua carriera.
      */

@@ -221,6 +221,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		md.setPozioniSaluteGrande(0);
 		md.setPozioniMagia(0);
 		md.setPozioniMagiaGrande(0);
+		md.setPozioniAumentoLivello(0);
 		md.setCoordinate(Foresta.getCoordinateLibere());
 		Foresta.aggiornaMappaCircostante(this);
 
@@ -233,6 +234,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			md.setPozioniSaluteGrande(99);
 			md.setPozioniMagia(99);
 			md.setPozioniMagiaGrande(99);
+			md.setPozioniAumentoLivello(99);
 			// La Falce del Tristo Mietitore, per provare la Mietitura
 			CatalogoLeggendari.getLeggendario(CHIAVE_FALCE_DI_PROVA).ifPresent(falce -> addArtefatto(falce.costruisci()));
 			// Due spade di livello 1 per provare i modificatori temporanei sul bersaglio (vedi modificatori_temporanei.md)
@@ -686,6 +688,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		subPozioniSaluteGrande(calcolaPerdita.apply(md.getPozioniSaluteGrande()));
 		subPozioniMagia(calcolaPerdita.apply(md.getPozioniMagia()));
 		subPozioniMagiaGrande(calcolaPerdita.apply(md.getPozioniMagiaGrande()));
+		subPozioniAumentoLivello(calcolaPerdita.apply(md.getPozioniAumentoLivello()));
 
 		getPersonaggiVivi().forEach(Personaggio::fugge);
 

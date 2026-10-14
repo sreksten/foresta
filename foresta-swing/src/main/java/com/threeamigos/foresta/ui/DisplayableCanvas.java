@@ -367,6 +367,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniSaluteGrandi.class, this::gestisciEventoVariazionePozioniSaluteGrandi);
 		BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniMagia.class, this::gestisciEventoVariazionePozioniMagia);
 		BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniMagiaGrandi.class, this::gestisciEventoVariazionePozioniMagiaGrandi);
+		BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniAumentoLivello.class, this::gestisciEventoVariazionePozioniAumentoLivello);
 		// Eventi del riquadro missioni
 		BusEventi.iscriviti(NotificaAggiornamentoStatoMissione.class, this::gestisciEventoAggiornamentoStatoMissione);
 
@@ -445,6 +446,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private void gestisciEventoVariazionePozioniMagiaGrandi(NotificaVariazioneDisponibilitaPozioniMagiaGrandi evento) {
 		primoPiano(TipoFinestra.INCANTESIMI_E_POZIONI);
 		riquadroIncantesimiEPozioni.gestisciEventoVariazionePozioniMagiaGrandi(evento);
+	}
+
+	private void gestisciEventoVariazionePozioniAumentoLivello(NotificaVariazioneDisponibilitaPozioniAumentoLivello evento) {
+		primoPiano(TipoFinestra.INCANTESIMI_E_POZIONI);
+		riquadroIncantesimiEPozioni.gestisciEventoVariazionePozioniAumentoLivello(evento);
 	}
 
 	private void gestisciEventoAggiornamentoStatoMissione(NotificaAggiornamentoStatoMissione evento) {
