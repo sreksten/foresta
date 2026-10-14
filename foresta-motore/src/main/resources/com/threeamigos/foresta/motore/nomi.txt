@@ -123,6 +123,12 @@ NOME_FEMMINILE$
     Sgrattina | Sgusciola | Sigfrida | Stuccata | Sventola | Teodolinda | Tullia | Vincenza | Zampata
     Zavorra | Zelinda | Zita
 
+NOME_SACERDOTE
+    Fra' Stornato | Fra' Dicio | Fra' Cassone | Fra' Stagliato | Fra' Goroso
+
+NOME_SACERDOTESSA
+    Suor Daliso | Suor Chidea | Suor Presa | Suor Ridente | Suor Reale | Suor Tita | Sorella Intronata
+
 // ---------------------------------------------------------------------------------------------
 // Cognomi, uno per riga, in ordine alfabetico: la somma dei cognomi dei locandieri e dei protagonisti delle fiabe
 // ---------------------------------------------------------------------------------------------
