@@ -8,7 +8,7 @@ import java.awt.image.IndexColorModel;
 public class DoomdarkColorModel {
 
 	/**
-	 * I colori del testo, dal bianco al nero passando per i grigi, più rosso, giallo, verde e il marrone del bordo dei cartigli.
+	 * I colori del testo, dal bianco al nero passando per i grigi, più rosso, giallo, verde, arancione e il marrone del bordo dei cartigli.
 	 */
 	public enum Color {
 		WHITE,
@@ -20,6 +20,8 @@ public class DoomdarkColorModel {
 		RED,
 		YELLOW,
 		GREEN,
+		// L'arancione dei punti abilità da spendere (#ff8c00)
+		ORANGE,
 		// Il marrone del bordo dei cartigli (#8c4210)
 		BROWN,
 	}
@@ -43,6 +45,9 @@ public class DoomdarkColorModel {
 	private static final IndexColorModel brownIndexColorModel = new IndexColorModel(8, 2,
 			new byte[] { 0, (byte)0x8C }, new byte[] { 0, (byte)0x42 }, new byte[] { 0, (byte)0x10 }, 0);
 
+	private static final IndexColorModel orangeIndexColorModel = new IndexColorModel(8, 2,
+			new byte[] { 0, (byte)0xFF }, new byte[] { 0, (byte)0x8C }, new byte[] { 0, 0 }, 0);
+
 	static final IndexColorModel getColorModel(Color color) {
 		switch (color) {
 		case WHITE:
@@ -63,6 +68,8 @@ public class DoomdarkColorModel {
 			return yellowIndexColorModel;
 		case GREEN:
 			return greenIndexColorModel;
+		case ORANGE:
+			return orangeIndexColorModel;
 		case BROWN:
 			return brownIndexColorModel;
 		}

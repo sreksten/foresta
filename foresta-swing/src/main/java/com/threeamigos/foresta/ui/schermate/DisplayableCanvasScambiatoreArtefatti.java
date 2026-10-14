@@ -146,6 +146,13 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
     protected abstract String aiutoDoppioClickDestra();
 
     /**
+     * L'aiuto per la colonna centrale, quando il mouse non è su un elenco di artefatti; di norma nessuno.
+     */
+    protected List<String> righeAiutoColonnaPersonaggio() {
+        return new ArrayList<>();
+    }
+
+    /**
      * L'aiuto per l'elenco sotto il mouse: sul nome di un artefatto cosa fa il click (aprire o chiudere l'elenco dei
      * modificatori) e cosa fa il doppio click da quella parte; ovunque nell'elenco, se si scorre, la rotella
      */
@@ -169,7 +176,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
             offset = offsetYZonaDestra;
             doppioClick = aiutoDoppioClickDestra();
         } else {
-            return righe;
+            return righeAiutoColonnaPersonaggio();
         }
         VistaArtefatto artefatto = trovaArtefatto(elenco, boxX, offset, mouseX, mouseY, parteAttiva);
         if (artefatto != null) {

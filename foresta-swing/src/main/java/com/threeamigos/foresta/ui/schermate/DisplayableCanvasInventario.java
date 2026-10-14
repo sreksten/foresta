@@ -11,8 +11,10 @@ import com.threeamigos.foresta.tipi.TipoModificatore;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
@@ -142,9 +144,9 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
             disegnaTestoEValore("Livello massimo", "", graphics, y, coloreTestata);
         }
         y += fontHeight + SPACING;
-        // In verde se ci sono punti da spendere, perché si notino
+        // In arancione se ci sono punti da spendere, perché si notino
         disegnaAttributoEValore(TipoAttributo.PUNTI_ABILITA, personaggio.getPuntiAbilitaDisponibili(), graphics, y,
-                personaggio.getPuntiAbilitaDisponibili() > 0 ? DoomdarkColorModel.Color.GREEN : coloreTestata);
+                personaggio.getPuntiAbilitaDisponibili() > 0 ? DoomdarkColorModel.Color.ORANGE : coloreTestata);
         y += fontHeight;
 
         BufferedImage separatore = ImageCache.separatore;
@@ -238,7 +240,8 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
 
     /**
      * Giallo se un modificatore porta l'attributo a un valore fisso (da qualunque fonte); altrimenti verde o rosso
-     * se i modificatori temporanei lo alzano o lo abbassano. Sotto il mouse un attributo primario è bianco.
+     * se i modificatori temporanei lo alzano o lo abbassano. Un attributo primario è arancione se ci sono punti abilità
+     * da spendere (e nessun modificatore lo colora già). Sotto il mouse un attributo primario è bianco.
      */
     private void creaNodo(ComponenteScorrevole<Object> componenteScorrevole, VistaPersonaggio p, DoomdarkColorModel.Color colore,
                           TipoAttributo tipoAttributo, double valoreAttributo, TipoAttributo evidenziato) {
@@ -247,6 +250,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         DoomdarkColorModel.Color coloreBase = fissaggio.isPresent() ? DoomdarkColorModel.Color.YELLOW
                 : variazione > 0 ? DoomdarkColorModel.Color.GREEN
                 : variazione < 0 ? DoomdarkColorModel.Color.RED
+                : tipoAttributo.isPrimario() && p.getPuntiAbilitaDisponibili() > 0 ? DoomdarkColorModel.Color.ORANGE
                 : colore;
         DoomdarkColorModel.Color coloreEffettivo = tipoAttributo.isPrimario() && tipoAttributo == evidenziato
                 ? DoomdarkColorModel.Color.WHITE
@@ -332,6 +336,28 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
             return super.coloreLivello(artefatto, true);
         }
                 return personaggio.isEquipaggiabile(artefatto) ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
+    }
+
+    /**
+     * Sopra un attributo, i cartigli che spiegano il colore: di quanto lo cambiano i modificatori temporanei (se ce ne
+     * sono) e, se è primario e ci sono punti abilità da spendere, il doppio click che lo aumenta.
+     */
+    @Override
+    protected List<String> righeAiutoColonnaPersonaggio() {
+        List<String> righe = new ArrayList<>();
+        Object riferimento = trovaRiferimento(personaggio, mouseX, mouseY);
+        if (!(riferimento instanceof TipoAttributo)) {
+            return righe;
+        }
+        TipoAttributo attributo = (TipoAttributo) riferimento;
+        long variazione = Math.round(personaggio.getVariazioneDaTemporanei(attributo));
+        if (variazione != 0) {
+            righe.add("Temporaneamente " + (variazione > 0 ? "+" : "") + variazione);
+        }
+        if (attributo.isPrimario() && personaggio.getPuntiAbilitaDisponibili() > 0) {
+            righe.add("Doppio click: aumenta questa abilità");
+        }
+        return righe;
     }
 
     /**
