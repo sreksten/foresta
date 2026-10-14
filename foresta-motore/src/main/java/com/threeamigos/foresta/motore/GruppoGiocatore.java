@@ -401,6 +401,13 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return RegoleIncantatura.costo(banco, getContrattazione());
 	}
 
+	/**
+	 * Il costo di una fusione che trasferisce quel numero di effetti, scontato secondo la contrattazione del gruppo.
+	 */
+	public final int costoFusione(int effettiDaTrasferire) {
+		return RegoleIncantatura.costo(effettiDaTrasferire, getContrattazione());
+	}
+
 	public final int getPreziosi() {
 		return md.getPreziosi();
 	}

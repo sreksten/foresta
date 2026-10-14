@@ -14,17 +14,21 @@ import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.IdentityHashMap;
+import java.util.Set;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * Le regole della fusione (vedi artefatti_e_incantamenti.md, §2 "Fusione"): sul banco un solo artefatto
- * incantabile e almeno un ingrediente magico (pergamena, gemma, monile, gingillo, sigillo). Degli effetti
- * degli ingredienti (incantamenti e modificatori) passano sull'artefatto quelli che vi hanno senso, i più
- * preziosi per primi (secondo {@link ListinoPergamene}), finché l'artefatto ha posti liberi; gli altri vanno
- * persi, e l'incantatore lo dice prima. Su un libro magico non passano gli incantamenti elementali, che
+ * incantabile e almeno un ingrediente magico (pergamena, gemma, monile, gingillo, sigillo). Tra gli effetti
+ * che l'artefatto ha già e quelli degli ingredienti che vi hanno senso (incantamenti e modificatori) restano
+ * sull'artefatto i più preziosi (secondo {@link ListinoPergamene}), senza superare il numero massimo di effetti
+ * dell'artefatto: un effetto nuovo migliore ne scalza uno vecchio (uno solo, anche se ce ne sono di uguali),
+ * e gli effetti che non entrano vanno persi. L'incantatore lo dice prima. Su un libro magico non passano gli incantamenti elementali, che
  * agiscono solo sulle armi; il POTERE_MAGICO passa solo su bastoni e libri magici. Costo 10 monete più 5 per
  * effetto trasferito. Gli ingredienti usati vengono distrutti.
  */
@@ -45,26 +49,50 @@ public final class RegoleIncantatura {
 	}
 
 	/**
-	 * I posti che restano all'artefatto per gli effetti nuovi.
-	 */
-	public static int postiLiberi(Artefatto artefatto) {
-		return Math.max(0, artefatto.getEffettiMassimi() - effetti(artefatto));
-	}
-
-	/**
-	 * Gli effetti degli ingredienti sul banco che passeranno sull'artefatto (tutti, finché l'artefatto manca).
+	 * Gli effetti degli ingredienti sul banco che entreranno sull'artefatto (tutti, finché l'artefatto manca).
 	 */
 	public static int effettiDaTrasferire(Collection<Artefatto> banco) {
 		Optional<Artefatto> artefatto = artefattoSulBanco(banco);
 		if (!artefatto.isPresent()) {
 			return ingredienti(banco).stream().mapToInt(RegoleIncantatura::effetti).sum();
 		}
-		return effettiChePassano(artefatto.get(), ingredienti(banco)).size();
+		return piano(artefatto.get(), ingredienti(banco)).daAggiungere.size();
 	}
 
 	/**
-	 * Se la fusione farà perdere qualche effetto degli ingredienti sul banco, e perché: l'incantatore lo dice,
-	 * ma la fusione si può fare. Vuoto se passa tutto (o se manca l'artefatto).
+	 * Che cosa farebbe la fusione di quel che c'è sul banco: quali effetti entrano e quali escono. Vuoto se manca
+	 * l'artefatto. Il calcolo non è gratis: chi lo chiede spesso (la UI) lo tiene da parte.
+	 */
+	public static Piano pianoDellaFusione(Collection<Artefatto> banco) {
+		Optional<Artefatto> artefatto = artefattoSulBanco(banco);
+		return artefatto.isPresent() ? piano(artefatto.get(), ingredienti(banco)) : Piano.VUOTO;
+	}
+
+	/**
+	 * Costo della fusione di quel numero di effetti, scontato secondo la CONTRATTAZIONE di chi tratta.
+	 */
+	public static int costo(int effettiDaTrasferire, int contrattazione) {
+		return RegoleContrattazione.prezzoAcquisto(
+				Costanti.FUSIONE_COSTO_BASE + Costanti.FUSIONE_COSTO_PER_EFFETTO * effettiDaTrasferire, contrattazione);
+	}
+
+	/**
+	 * Quanti effetti avrà l'artefatto dopo la fusione: i suoi, meno quelli scalzati, più quelli nuovi. Zero se
+	 * sul banco manca l'artefatto.
+	 */
+	public static int effettiDopoLaFusione(Collection<Artefatto> banco) {
+		Optional<Artefatto> artefatto = artefattoSulBanco(banco);
+		if (!artefatto.isPresent()) {
+			return 0;
+		}
+		Piano piano = piano(artefatto.get(), ingredienti(banco));
+		return effetti(artefatto.get()) - piano.daTogliere.size() + piano.daAggiungere.size();
+	}
+
+	/**
+	 * Se la fusione farà perdere qualche effetto degli ingredienti sul banco o scalzarne qualcuno dell'artefatto, e
+	 * perché: l'incantatore lo dice, ma la fusione si può fare. Vuoto se passa tutto senza scalzare niente (o se
+	 * manca l'artefatto).
 	 */
 	public static Optional<String> avvisoEffettiPersi(Collection<Artefatto> banco) {
 		Optional<Artefatto> artefatto = artefattoSulBanco(banco);
@@ -74,21 +102,35 @@ public final class RegoleIncantatura {
 		List<Artefatto> ingredienti = ingredienti(banco);
 		int totale = ingredienti.stream().mapToInt(RegoleIncantatura::effetti).sum();
 		int sensati = ingredienti.stream().mapToInt(i -> trasferibili(artefatto.get(), i).size()).sum();
-		int passano = effettiChePassano(artefatto.get(), ingredienti).size();
-		if (passano == totale) {
+		Piano piano = piano(artefatto.get(), ingredienti);
+		int passano = piano.daAggiungere.size();
+		int scalzati = piano.daTogliere.size();
+		if (passano == 0 && sensati > 0) {
+			return Optional.of("Nessun effetto è migliore di quelli dell'artefatto: la fusione non cambierebbe niente.");
+		}
+		if (passano == totale && scalzati == 0) {
 			return Optional.empty();
 		}
+		List<String> frasi = new ArrayList<>();
 		if (sensati > passano) {
-			return Optional.of(passano == 1
-					? "L'artefatto ha posto per un solo effetto: passerà il migliore, gli altri andranno persi."
-					: "L'artefatto ha posto per " + passano + " effetti: passeranno i migliori, gli altri andranno persi.");
+			frasi.add(passano == 1
+					? "L'artefatto tiene i migliori effetti: passerà un solo effetto, gli altri andranno persi."
+					: "L'artefatto tiene i migliori effetti: passeranno " + passano + " effetti, gli altri andranno persi.");
+		} else if (totale > passano) {
+			if (!isArma(artefatto.get()) && haModificatoriSulBersaglio(ingredienti)) {
+				frasi.add("I modificatori sul bersaglio si fondono solo sulle armi: passeranno solo gli altri effetti.");
+			} else {
+				frasi.add(isLibro(artefatto.get())
+						? "Sul libro gli incantamenti elementali non hanno effetto: passeranno solo gli altri effetti."
+						: "Il potere magico si fonde solo su bastoni e libri magici: passeranno solo gli altri effetti.");
+			}
 		}
-		if (!isArma(artefatto.get()) && haModificatoriSulBersaglio(ingredienti)) {
-			return Optional.of("I modificatori sul bersaglio si fondono solo sulle armi: passeranno solo gli altri effetti.");
+		if (scalzati > 0) {
+			frasi.add(scalzati == 1
+					? "Un effetto dell'artefatto sarà scalzato da uno migliore."
+					: scalzati + " effetti dell'artefatto saranno scalzati da altri migliori.");
 		}
-		return Optional.of(isLibro(artefatto.get())
-				? "Sul libro gli incantamenti elementali non hanno effetto: passeranno solo gli altri effetti."
-				: "Il potere magico si fonde solo su bastoni e libri magici: passeranno solo gli altri effetti.");
+		return Optional.of(String.join(" ", frasi));
 	}
 
 	/**
@@ -146,6 +188,9 @@ public final class RegoleIncantatura {
 		if (problema.isPresent()) {
 			return problema;
 		}
+		if (piano(artefatto, ingredienti).daAggiungere.isEmpty()) {
+			return Optional.of(TipoMotivoRifiutoIncantatura.NESSUN_MIGLIORAMENTO);
+		}
 		if (monete < costo(banco, contrattazione)) {
 			return Optional.of(TipoMotivoRifiutoIncantatura.MONETE_INSUFFICIENTI);
 		}
@@ -175,14 +220,22 @@ public final class RegoleIncantatura {
 
 	/**
 	 * Fa la fusione, che va prima verificata ({@link #verifica}): copia sull'artefatto gli effetti degli
-	 * ingredienti che passano, gli dà il nome proprio (normalizzato; vuoto vuol dire nessun nome) e svuota il
+	 * ingredienti che entrano (togliendo quelli che scalzano), gli dà il nome proprio (normalizzato; vuoto vuol dire nessun nome) e svuota il
 	 * banco. Gli ingredienti spariscono. Restituisce l'artefatto incantato; le monete le toglie chi chiama.
 	 */
 	static Artefatto fondi(BancoDiLavoro banco, String nomeProprio) {
 		Collection<Artefatto> sulBanco = banco.getInventario();
 		Artefatto artefatto = artefattoSulBanco(sulBanco).orElseThrow(IllegalStateException::new);
 		ArtefattoMD md = artefatto.getModelloDati();
-		for (Effetto effetto : effettiChePassano(artefatto, ingredienti(sulBanco))) {
+		Piano piano = piano(artefatto, ingredienti(sulBanco));
+		for (Effetto effetto : piano.daTogliere) {
+			if (effetto.incantamento != null) {
+				md.removeIncantamento(effetto.incantamento);
+			} else {
+				md.removeModificatore(effetto.modificatore);
+			}
+		}
+		for (Effetto effetto : piano.daAggiungere) {
 			if (effetto.incantamento != null) {
 				md.addIncantamento(effetto.incantamento);
 			} else {
@@ -202,13 +255,10 @@ public final class RegoleIncantatura {
 	}
 
 	/**
-	 * Perché l'artefatto non può ricevere niente da quegli ingredienti, se è così: non ha posti, oppure un
-	 * ingrediente non vi avrebbe nessun effetto.
+	 * Perché l'artefatto non può ricevere niente da quegli ingredienti, se è così: un ingrediente non vi avrebbe
+	 * nessun effetto. Se gli effetti nuovi siano migliori di quelli presenti lo dice {@link #verifica}.
 	 */
 	private static Optional<TipoMotivoRifiutoIncantatura> problemi(Artefatto artefatto, Collection<Artefatto> ingredienti) {
-		if (postiLiberi(artefatto) == 0) {
-			return Optional.of(TipoMotivoRifiutoIncantatura.LIMITE_SUPERATO);
-		}
 		if (ingredienti.stream().anyMatch(i -> trasferibili(artefatto, i).isEmpty())) {
 			return Optional.of(isLibro(artefatto)
 					? TipoMotivoRifiutoIncantatura.INCANTAMENTO_SU_LIBRO
@@ -218,15 +268,39 @@ public final class RegoleIncantatura {
 	}
 
 	/**
-	 * Gli effetti degli ingredienti che passano: quelli che sull'artefatto hanno senso, dal più prezioso, fino ai
-	 * posti liberi. A parità di prezzo vale l'ordine sul banco.
+	 * Quali effetti restano sull'artefatto dopo la fusione: fra i suoi e quelli degli ingredienti che hanno senso,
+	 * i più preziosi, fino al numero massimo di effetti (o a quanti ne ha già, se ne ha di più, come certi
+	 * leggendari: non ne guadagna e non ne perde per questo). A parità di prezzo vince l'effetto già presente, poi
+	 * l'ordine sul banco: così non si scalza niente per niente.
 	 */
-	private static List<Effetto> effettiChePassano(Artefatto artefatto, Collection<Artefatto> ingredienti) {
-		return ingredienti.stream()
-				.flatMap(i -> trasferibili(artefatto, i).stream())
+	private static Piano piano(Artefatto artefatto, Collection<Artefatto> ingredienti) {
+		List<Effetto> candidati = new ArrayList<>();
+		for (IncantamentoMD incantamento : artefatto.getIncantamenti()) {
+			candidati.add(new Effetto(incantamento, null, ListinoPergamene.prezzo(incantamento, artefatto.getLivello())));
+		}
+		for (ModificatoreAttributoMD modificatore : artefatto.getModificatori()) {
+			candidati.add(new Effetto(null, modificatore, ListinoPergamene.prezzo(modificatore)));
+		}
+		int presenti = candidati.size();
+		ingredienti.forEach(i -> candidati.addAll(trasferibili(artefatto, i)));
+		int posti = Math.max(artefatto.getEffettiMassimi(), presenti);
+		// Il sorted è stabile: a parità di prezzo restano nell'ordine in cui sono (prima i presenti)
+		List<Effetto> ordinati = candidati.stream()
 				.sorted(Comparator.comparingDouble((Effetto e) -> e.prezzo).reversed())
-				.limit(postiLiberi(artefatto))
 				.collect(Collectors.toList());
+		Piano piano = new Piano();
+		for (int i = 0; i < ordinati.size(); i++) {
+			Effetto effetto = ordinati.get(i);
+			boolean presente = candidati.indexOf(effetto) < presenti;
+			if (i < posti) {
+				if (!presente) {
+					piano.aggiungi(effetto);
+				}
+			} else if (presente) {
+				piano.togli(effetto);
+			}
+		}
+		return piano;
 	}
 
 	/**
@@ -288,6 +362,52 @@ public final class RegoleIncantatura {
 			this.incantamento = incantamento;
 			this.modificatore = modificatore;
 			this.prezzo = prezzo;
+		}
+	}
+
+	/**
+	 * Gli effetti nuovi che entrano sull'artefatto e quelli suoi che vengono scalzati
+	 */
+	public static final class Piano {
+
+		private static final Piano VUOTO = new Piano();
+
+		private final List<Effetto> daAggiungere = new ArrayList<>();
+		private final List<Effetto> daTogliere = new ArrayList<>();
+		// Gli effetti stessi (gli oggetti dei modelli dati, per identità: due +5 Forza uguali sono due effetti)
+		private final Set<Object> inEntrata = Collections.newSetFromMap(new IdentityHashMap<>());
+		private final Set<Object> inUscita = Collections.newSetFromMap(new IdentityHashMap<>());
+
+		private void aggiungi(Effetto effetto) {
+			daAggiungere.add(effetto);
+			inEntrata.add(effetto.incantamento != null ? effetto.incantamento : effetto.modificatore);
+		}
+
+		private void togli(Effetto effetto) {
+			daTogliere.add(effetto);
+			inUscita.add(effetto.incantamento != null ? effetto.incantamento : effetto.modificatore);
+		}
+
+		/**
+		 * Se l'effetto (un IncantamentoMD o un ModificatoreAttributoMD di un ingrediente) passerà sull'artefatto
+		 */
+		public boolean entra(Object effetto) {
+			return inEntrata.contains(effetto);
+		}
+
+		/**
+		 * Se l'effetto (un IncantamentoMD o un ModificatoreAttributoMD dell'artefatto) verrà scalzato
+		 */
+		public boolean esce(Object effetto) {
+			return inUscita.contains(effetto);
+		}
+
+		public int numeroDaAggiungere() {
+			return daAggiungere.size();
+		}
+
+		public int numeroDaTogliere() {
+			return daTogliere.size();
 		}
 	}
 }

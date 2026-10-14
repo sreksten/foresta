@@ -41,15 +41,65 @@ class IncantatoreTest {
     }
 
     @Test
-    void unArtefattoSenzaPostiLiberiNonRiceveNiente() {
+    void unArtefattoPienoSiIncantaSoloSeGliEffettiNuoviSonoMigliori() {
         // Una spada comune di livello 3 ha 2 posti, tutti e due presi
         Artefatto spada = artefatto(TipoArtefatto.SPADA, 3);
         spada.getModelloDati().addIncantamento("Fuoco minore", TipoDanno.FUOCO, 5, 0.05);
         spada.getModelloDati().addIncantamento("Gelo minore", TipoDanno.GELO, 5, 0.05);
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.LIMITE_SUPERATO),
-                RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(spada), pergamena(1)));
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.LIMITE_SUPERATO),
-                RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(pergamena(1)), spada));
+        // Si può mettere sul banco, ma un effetto uguale a quelli che ha non lo migliora
+        Artefatto pari = artefatto(TipoArtefatto.GEMMA, 1);
+        pari.getModelloDati().addIncantamento("Acido minore", TipoDanno.ACIDO, 5, 0.05);
+        List<Artefatto> banco = Arrays.asList(spada, pari);
+        assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(pari), spada));
+        assertEquals(0, RegoleIncantatura.effettiDaTrasferire(banco));
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NESSUN_MIGLIORAMENTO), RegoleIncantatura.verifica(banco, 100));
+    }
+
+    @Test
+    void unEffettoMiglioreScalzaSoloUnoDeiPiuDebboli() {
+        // Given: una spada con due +5 Forza uguali e una pergamena con un +10 Forza
+        Artefatto spada = artefatto(TipoArtefatto.SPADA, 3);
+        spada.getModelloDati().addModificatore(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 5, "");
+        spada.getModelloDati().addModificatore(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 5, "");
+        Artefatto pergamena = artefatto(TipoArtefatto.PERGAMENA, 1);
+        pergamena.getModelloDati().addModificatore(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 10, "");
+        BancoDiLavoro banco = new BancoDiLavoro();
+        banco.addArtefatto(spada);
+        banco.addArtefatto(pergamena);
+        assertTrue(RegoleIncantatura.avvisoEffettiPersi(banco.getInventario()).isPresent());
+        assertEquals(1, RegoleIncantatura.effettiDaTrasferire(banco.getInventario()));
+        assertEquals(2, RegoleIncantatura.effettiDopoLaFusione(banco.getInventario()));
+        // When
+        assertEquals(Optional.empty(), gruppo.incanta(banco, ""));
+        // Then: il tetto resta 2, e un solo +5 è stato sostituito
+        assertEquals(2, spada.getModificatori().size());
+        assertEquals(1, spada.getModificatori().stream().filter(m -> m.getQuantita() == 10).count());
+        assertEquals(1, spada.getModificatori().stream().filter(m -> m.getQuantita() == 5).count());
+    }
+
+    @Test
+    void ilBancoDiceQualiEffettiEntranoEQualiEscono() {
+        // Given: una spada con due +5 Forza e una pergamena con un +10 Forza
+        Artefatto spada = artefatto(TipoArtefatto.SPADA, 3);
+        spada.getModelloDati().addModificatore(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 5, "");
+        spada.getModelloDati().addModificatore(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 5, "");
+        Artefatto pergamena = artefatto(TipoArtefatto.PERGAMENA, 1);
+        pergamena.getModelloDati().addModificatore(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 10, "");
+        AutomaIncantatore incantatore = new AutomaIncantatore(gruppo, new BancoDiLavoro());
+        gruppo.addArtefatto(spada);
+        gruppo.addArtefatto(pergamena);
+        assertFalse(incantatore.isEffettoInUscita(spada.getModificatori().iterator().next()));
+        incantatore.richiediSpostamentoSuParteRemota(spada);
+        incantatore.richiediSpostamentoSuParteRemota(pergamena);
+        // Then: esce uno solo dei due +5 (per identità), entra il +10
+        long inUscita = spada.getModificatori().stream().filter(incantatore::isEffettoInUscita).count();
+        assertEquals(1, inUscita);
+        assertTrue(incantatore.isEffettoInEntrata(pergamena.getModificatori().iterator().next()));
+        assertEquals(2, incantatore.getEffettiDopoLaFusione());
+        assertEquals(1, incantatore.getEffettiDaTrasferire());
+        // Tolta la pergamena dal banco il piano si ricalcola
+        incantatore.richiediSpostamentoSuParteAttiva(pergamena);
+        assertEquals(0, spada.getModificatori().stream().filter(incantatore::isEffettoInUscita).count());
     }
 
     @Test

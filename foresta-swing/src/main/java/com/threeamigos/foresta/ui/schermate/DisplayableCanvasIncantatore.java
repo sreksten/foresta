@@ -103,9 +103,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         }
         Optional<? extends VistaArtefatto> artefatto = banco.getArtefattoSulBanco();
         if (artefatto.isPresent()) {
-            int effetti = artefatto.get().getNumeroEffetti();
-            int daAggiungere = banco.getEffettiDaTrasferire();
-            y = disegnaValore(graphics, "Effetti", (effetti + daAggiungere) + "/" + artefatto.get().getEffettiMassimi(), y, coloreTestata);
+            y = disegnaValore(graphics, "Effetti", banco.getEffettiDopoLaFusione() + "/" + artefatto.get().getEffettiMassimi(), y, coloreTestata);
         }
 
         BufferedImage separatore = ImageCache.separatore;
@@ -121,8 +119,24 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
     }
 
     /**
-     * Negli artefatti incantabili il livello dice se hanno ancora posti per gli effetti degli ingredienti (verde)
-     * o no (rosso); gli altri (accessori, ingredienti) restano grigi.
+     * Nel banco di lavoro gli effetti dell'artefatto che la fusione scalzerebbe sono rossi, quelli degli ingredienti
+     * che entrerebbero verdi.
+     */
+    @Override
+    protected DoomdarkColorModel.Color coloreEffetto(VistaArtefatto artefatto, Object effetto, boolean parteAttiva,
+                                                     DoomdarkColorModel.Color predefinito) {
+        if (parteAttiva || banco == null) {
+            return predefinito;
+        }
+        if (banco.isEffettoInUscita(effetto)) {
+            return DoomdarkColorModel.Color.RED;
+        }
+        return banco.isEffettoInEntrata(effetto) ? DoomdarkColorModel.Color.GREEN : predefinito;
+    }
+
+    /**
+     * Negli artefatti incantabili il livello dice se hanno tutti i posti presi (verde) o se ne hanno ancora di
+     * liberi (arancione: non sono sfruttati appieno); gli altri (accessori, ingredienti) restano grigi.
      */
     @Override
     protected DoomdarkColorModel.Color coloreLivello(VistaArtefatto artefatto, boolean parteAttiva) {
@@ -130,7 +144,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
             return super.coloreLivello(artefatto, parteAttiva);
         }
         return artefatto.getNumeroEffetti() < artefatto.getEffettiMassimi()
-                ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
+                ? DoomdarkColorModel.Color.ORANGE : DoomdarkColorModel.Color.GREEN;
     }
 
     @Override

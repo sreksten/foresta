@@ -14,9 +14,26 @@ public interface VistaBancoDiLavoro extends VistaScambio {
 	Optional<? extends VistaArtefatto> getArtefattoSulBanco();
 
 	/**
-	 * Gli effetti degli ingredienti sul banco che passeranno sull'artefatto
+	 * Gli effetti degli ingredienti sul banco che entreranno sull'artefatto
 	 */
 	int getEffettiDaTrasferire();
+
+	/**
+	 * Quanti effetti avrà l'artefatto sul banco dopo la fusione (quelli nuovi possono scalzarne di vecchi)
+	 */
+	int getEffettiDopoLaFusione();
+
+	/**
+	 * Se l'effetto (un IncantamentoMD o un ModificatoreAttributoMD di un ingrediente sul banco) passerebbe
+	 * sull'artefatto con la fusione
+	 */
+	boolean isEffettoInEntrata(Object effetto);
+
+	/**
+	 * Se l'effetto (un IncantamentoMD o un ModificatoreAttributoMD dell'artefatto sul banco) verrebbe scalzato
+	 * dalla fusione
+	 */
+	boolean isEffettoInUscita(Object effetto);
 
 	/**
 	 * Quanto costa al gruppo la fusione di quel che sta sul banco

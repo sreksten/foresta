@@ -250,8 +250,27 @@ public class ArtefattoMD implements Serializzabile {
 		modificatori.add(new ModificatoreAttributoMD(tipoAttributo, tipoModificatore, quantita, nota));
 	}
 
+	/**
+	 * Toglie un modificatore (uno solo, se ce ne sono di uguali): serve alla fusione, quando un effetto migliore ne
+	 * prende il posto.
+	 *
+	 * @return se c'era
+	 */
+	public boolean removeModificatore(ModificatoreAttributoMD modificatore) {
+		return modificatori.remove(modificatore);
+	}
+
 	public Collection<IncantamentoMD> getIncantamenti() {
 		return incantamenti;
+	}
+
+	/**
+	 * Toglie un incantamento: serve alla fusione, quando un effetto migliore ne prende il posto.
+	 *
+	 * @return se c'era
+	 */
+	public boolean removeIncantamento(IncantamentoMD incantamento) {
+		return incantamenti.remove(incantamento);
 	}
 
 	/**

@@ -7,6 +7,10 @@ import com.threeamigos.foresta.interfacce.VistaBancoDiLavoro;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,6 +22,8 @@ public class AutomaIncantatore extends AutomaScambiatoreArtefatti implements Vis
 
 	private final GruppoGiocatore gruppo;
 	private final BancoDiLavoro banco;
+	private RegoleIncantatura.Piano pianoCache;
+	private List<Object> chiaveCache = Collections.emptyList();
 
 	public AutomaIncantatore(GruppoGiocatore gruppo, BancoDiLavoro banco) {
 		super(gruppo, banco);
@@ -32,12 +38,68 @@ public class AutomaIncantatore extends AutomaScambiatoreArtefatti implements Vis
 
 	@Override
 	public int getEffettiDaTrasferire() {
-		return RegoleIncantatura.effettiDaTrasferire(banco.getInventario());
+		if (!getArtefattoSulBanco().isPresent()) {
+			return RegoleIncantatura.effettiDaTrasferire(banco.getInventario());
+		}
+		return piano().numeroDaAggiungere();
+	}
+
+	@Override
+	public int getEffettiDopoLaFusione() {
+		return getArtefattoSulBanco()
+				.map(a -> a.getNumeroEffetti() - piano().numeroDaTogliere() + piano().numeroDaAggiungere())
+				.orElse(0);
 	}
 
 	@Override
 	public int getCostoFusione() {
-		return gruppo.costoFusione(banco.getInventario());
+		if (!getArtefattoSulBanco().isPresent()) {
+			return gruppo.costoFusione(banco.getInventario());
+		}
+		return gruppo.costoFusione(piano().numeroDaAggiungere());
+	}
+
+	@Override
+	public boolean isEffettoInEntrata(Object effetto) {
+		return piano().entra(effetto);
+	}
+
+	@Override
+	public boolean isEffettoInUscita(Object effetto) {
+		return piano().esce(effetto);
+	}
+
+	/**
+	 * Il piano della fusione di quel che sta sul banco. La UI lo chiede a ogni disegno (e per ogni riga di effetto),
+	 * ma cambia solo quando cambia il banco: si ricalcola allora.
+	 */
+	private RegoleIncantatura.Piano piano() {
+		Collection<Artefatto> sulBanco = banco.getInventario();
+		List<Object> chiave = new ArrayList<>();
+		for (Artefatto artefatto : sulBanco) {
+			chiave.add(artefatto);
+			chiave.add(artefatto.getNumeroEffetti());
+		}
+		if (pianoCache == null || !stessaChiave(chiave, chiaveCache)) {
+			pianoCache = RegoleIncantatura.pianoDellaFusione(sulBanco);
+			chiaveCache = chiave;
+		}
+		return pianoCache;
+	}
+
+	// Gli artefatti si confrontano per identità, i numeri di effetti per valore
+	private static boolean stessaChiave(List<Object> a, List<Object> b) {
+		if (a.size() != b.size()) {
+			return false;
+		}
+		for (int i = 0; i < a.size(); i++) {
+			Object x = a.get(i);
+			Object y = b.get(i);
+			if (x != y && !(x instanceof Integer && x.equals(y))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public BancoDiLavoro getBanco() {

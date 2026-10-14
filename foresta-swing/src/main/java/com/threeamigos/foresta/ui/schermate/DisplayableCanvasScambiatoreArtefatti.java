@@ -210,6 +210,16 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
     }
 
     /**
+     * Il colore di una riga di effetto (un ModificatoreAttributoMD o un IncantamentoMD) di un artefatto: di suo
+     * quello predefinito, le schermate lo ridefiniscono per evidenziare certi effetti (l'incantatore, quelli che
+     * entrano ed escono con la fusione).
+     */
+    protected DoomdarkColorModel.Color coloreEffetto(VistaArtefatto artefatto, Object effetto, boolean parteAttiva,
+                                                     DoomdarkColorModel.Color predefinito) {
+        return predefinito;
+    }
+
+    /**
      * Accanto al nome: il livello, nel suo colore, e il prezzo in giallo se la parte lo mostra.
      */
     private Image valore(VistaArtefatto artefatto, boolean parteAttiva) {
@@ -275,7 +285,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
             DoomdarkColorModel.Color colore = artefatto == evidenziato
                     ? DoomdarkColorModel.Color.WHITE
                     : DoomdarkColorModel.Color.LIGHT_GRAY;
-            DoomdarkColorModel.Color coloreAttributi = artefatto == evidenziato
+            DoomdarkColorModel.Color coloreBase = artefatto == evidenziato
                     ? DoomdarkColorModel.Color.LIGHT_GRAY
                     : DoomdarkColorModel.Color.MEDIUM_GRAY;
             DoomdarkColorModel.Color coloreSeparatori = artefatto == evidenziato
@@ -319,6 +329,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
                         null, null, null,
                         null, artefatto);
                 for (ModificatoreAttributoMD modificatore : artefatto.getModificatori()) {
+                    DoomdarkColorModel.Color coloreAttributi = coloreEffetto(artefatto, modificatore, parteAttiva, coloreBase);
                     String valore;
                     int valoreIntero = (int) modificatore.getQuantita();
                     switch (modificatore.getTipoModificatoreAttributo()) {
@@ -358,6 +369,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
                         null, null, null,
                         null, artefatto);
                 for (IncantamentoMD incantamento : artefatto.getIncantamenti()) {
+                    DoomdarkColorModel.Color coloreAttributi = coloreEffetto(artefatto, incantamento, parteAttiva, coloreBase);
                     nodo.creaNodo(
                             incantamento.getNomeIncantamento(), font, coloreAttributi,
                             null, null, null,
