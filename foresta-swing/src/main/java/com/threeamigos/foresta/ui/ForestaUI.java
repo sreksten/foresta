@@ -108,6 +108,7 @@ public class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(InternoAssegnaCoordinateAPersonaggi.class, evento -> displayableCanvas.assegnaCoordinateAPersonaggi());
 		BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, this::gestisciEventoRichiestaAperturaFinestraCombattimento);
 		BusEventi.iscriviti(InternoAzioneInCombattimento.class, this::gestisciEventoAzioneInCombattimento);
+		BusEventi.iscriviti(InternoDecisioneTattica.class, this::gestisciEventoDecisioneTattica);
 		BusEventi.iscriviti(RichiestaAperturaInventarioCommerciante.class, this::gestisciEventoRichiestaAperturaInventarioCommerciante);
 		BusEventi.iscriviti(RichiestaAperturaIncantatore.class, this::gestisciEventoRichiestaAperturaIncantatore);
 		BusEventi.iscriviti(RichiestaAperturaInventarioFornitore.class, this::gestisciEventoRichiestaAperturaInventarioFornitore);
@@ -440,8 +441,22 @@ public class ForestaUI implements Temporizzabile {
 		DisplayableCanvasRiquadroCombattimento infoCombattimento = displayableCanvas.getRiquadroCombattimento();
 		infoCombattimento.setCombattente(evento.getPersonaggio());
 		infoCombattimento.setAvversario(evento.getBersaglio());
+		if (!infoCombattimento.haAzionePer(evento.getPersonaggio())) {
+			// Fuori dalla tattica: l'azione non ha una decisione, si scrive che attacca il bersaglio (se c'è)
+			infoCombattimento.setAzione(evento.getPersonaggio(),
+					DisplayableCanvasRiquadroCombattimento.azionePredefinita(evento.getBersaglio()));
+		}
 		infoCombattimento.setVisible(true);
 		rinfresca();
+	}
+
+	/**
+	 * La tattica ha scelto l'azione (viene prima che si esegua): il riquadro la scrive sotto il personaggio.
+	 */
+	private void gestisciEventoDecisioneTattica(InternoDecisioneTattica evento) {
+		DisplayableCanvasRiquadroCombattimento infoCombattimento = displayableCanvas.getRiquadroCombattimento();
+		infoCombattimento.setAzione(evento.getPersonaggio(), DisplayableCanvasRiquadroCombattimento.testoDellAzione(
+				evento.getAzione(), evento.getPersonaggio(), evento.getBersaglio()));
 	}
 
 	private void gestisciEventoRichiestaVisualizzazioneMappa(RichiestaVisualizzazioneMappa evento) {

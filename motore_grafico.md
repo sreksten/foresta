@@ -120,7 +120,7 @@ Un sistema di rendering del testo **proprietario**, in stile retro (il nome è u
 | `DisplayableCanvasRiquadroIncantesimiEPozioni` | Gli incantesimi e le pozioni disponibili: una lista a una colonna con i nomi per intero, che scorre a pixel con la rotella del mouse, come le missioni (stesse frecce); le notifiche di variazione partono dalla riga giusta anche se fuori vista, ritagliate sull’area della lista (`SpriteBase.setRitaglio`) |
 | `DisplayableCanvasRiquadroMissioni` | Le missioni attive come albero scorrevole (§10), con lo stato di apertura dei nodi tenuto nel modello dati |
 | `DisplayableCanvasRiquadroTesto` | Il pannello dei messaggi (§7) |
-| `DisplayableCanvasRiquadroCombattimento` | Nomi e barre di salute di combattente e avversario durante un round |
+| `DisplayableCanvasRiquadroCombattimento` | Tutti i personaggi del combattimento, dei due gruppi, nell'ordine del round (`VistaPartita.getOrdineDiCombattimento`, da `StatoDelCombattimento.getOrdineDelRound`): nome e barra della salute per i vivi (nome grigio chi è in panchina), solo il nome in grigio scuro per i morti, e sotto chi agisce l'azione scelta (`InternoDecisioneTattica`, testi in `TestoAzioneInCombattimento`). La cornice è tagliata a metà (alta in cima, bassa in fondo) su uno sfondo nero con i bordi laterali; il riquadro cresce con i personaggi, sta centrato e di norma sotto l'immagine della locazione, salendo se non ci sta |
 
 Ogni variazione che arriva dal motore genera qui uno sprite a tempo, vicino al valore che è cambiato.
 

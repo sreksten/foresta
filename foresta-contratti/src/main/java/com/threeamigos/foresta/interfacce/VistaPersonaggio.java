@@ -58,6 +58,11 @@ public interface VistaPersonaggio {
 	boolean isVivo();
 
 	/**
+	 * Se il personaggio, vivo, non combatte (è in panchina o si è arreso).
+	 */
+	boolean isInPanchina();
+
+	/**
 	 * Come è morto, per i testi; null se è vivo
 	 */
 	String getCausaTrapasso();

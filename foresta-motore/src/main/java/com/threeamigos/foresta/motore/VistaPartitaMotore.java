@@ -3,7 +3,9 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.interfacce.VistaGruppo;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaMappa;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.locazioni.Bosco;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
@@ -36,6 +38,11 @@ public class VistaPartitaMotore implements VistaPartita {
 	@Override
 	public VistaGruppo getGruppoAvversario() {
 		return GruppoAvversario.getIstanza();
+	}
+
+	@Override
+	public List<? extends VistaPersonaggio> getOrdineDiCombattimento() {
+		return StatoDelCombattimento.getIstanza().getOrdineDelRound();
 	}
 
 	@Override

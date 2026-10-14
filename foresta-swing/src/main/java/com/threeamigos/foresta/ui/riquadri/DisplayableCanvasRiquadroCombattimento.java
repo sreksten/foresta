@@ -5,7 +5,10 @@ import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.List;
+import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import com.threeamigos.foresta.ui.Finestra;
+import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
@@ -13,33 +16,60 @@ import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 import com.threeamigos.foresta.ui.testo.FontTool;
 
 /**
- * Il riquadro che mostra gli avversari della locazione e le informazioni sul combattimento in corso.
+ * Il riquadro del combattimento: tutti i personaggi della locazione, dei due gruppi, nell'ordine in cui agiscono nel round (vedi
+ * VistaPartita.getOrdineDiCombattimento). Chi è vivo ha il nome e la barra della salute; chi è vivo ma non combatte (in panchina)
+ * ha la barra ma il nome grigio; chi è morto ha solo il nome, in grigio scuro. Sotto il personaggio che agisce c'è l'azione che compie.
+ * <p>
+ * La cornice è quella di sempre, tagliata a metà: la metà alta sta in cima e la metà bassa in fondo, e in mezzo c'è lo sfondo nero con i due
+ * bordi laterali. Così il riquadro cresce quanto serve. Sta centrato in orizzontale, sotto l'immagine della locazione; se non ci sta sale
+ * quanto basta per non coprire la barra delle icone.
  */
 public class DisplayableCanvasRiquadroCombattimento implements Finestra {
 
+	private static final Color COLORE_BORDO = new Color(0x8c, 0x42, 0x10);
+	private static final Color COLORE_SFONDO = Color.BLACK;
+	private static final Color COLORE_GRUPPO = new Color(70, 130, 230);
+	private static final Color COLORE_AVVERSARI = new Color(170, 50, 50);
+	// Larghezza del bordo laterale nell'immagine originale (poi si applica lo zoom)
+	private static final int BORDO_LATERALE = 3;
+	private static final int OFFSET_DA_CORNICE = 8;
+	private static final int ALTEZZA_BARRA = 26;
+	private static final int SPAZIATURA = 2;
+	private static final int LARGHEZZA_SEGNALE = 4;
+
 	private boolean visible;
-	private final int xOffset;
-	private final int yOffset;
+	private int xOffset;
+	private int yOffset;
+	private final int parentWidth;
+	private final int parentHeight;
+	private final int yPreferita;
 	private final BufferedImage cornice;
 	private final Rectangle rettangolo;
 	private VistaPersonaggio combattente;
 	private VistaPersonaggio avversario;
-	private String nomeCombattente;
-	private String nomeAvversario;
+	private VistaPersonaggio chiHaDecisoLAzione;
+	private String testoAzione;
 	private final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 
 	private final VistaPartita vistaPartita;
 
-	public DisplayableCanvasRiquadroCombattimento(int parentWidth, int parentHeight, VistaPartita vistaPartita) {
+	/**
+	 * @param yPreferita dove il riquadro comincia di norma: subito sotto l'immagine della locazione
+	 */
+	public DisplayableCanvasRiquadroCombattimento(int parentWidth, int parentHeight, int yPreferita, VistaPartita vistaPartita) {
 		this.vistaPartita = vistaPartita;
+		this.parentWidth = parentWidth;
+		this.parentHeight = parentHeight;
+		this.yPreferita = yPreferita;
 		cornice = ImageCache.corniceCombattimento;
 		visible = false;
 		xOffset = (parentWidth - cornice.getWidth()) >> 1;
-		yOffset = (parentHeight - cornice.getHeight()) >> 1;
+		yOffset = Math.min(yPreferita, Math.max(0, parentHeight - cornice.getHeight()));
 
 		rettangolo = new Rectangle(xOffset, yOffset, cornice.getWidth(), cornice.getHeight());
 	}
 
+	/** Il riquadro com'è stato disegnato l'ultima volta (cresce con i personaggi). */
 	public Rectangle getRettangolo() {
 		return rettangolo;
 	}
@@ -57,10 +87,12 @@ public class DisplayableCanvasRiquadroCombattimento implements Finestra {
 		return yOffset;
 	}
 
-	public
-
-	void setVisible(boolean visible) {
+	public void setVisible(boolean visible) {
 		this.visible = visible;
+		if (!visible) {
+			chiHaDecisoLAzione = null;
+			testoAzione = null;
+		}
 	}
 
 	public VistaPersonaggio getCombattente() {
@@ -71,67 +103,136 @@ public class DisplayableCanvasRiquadroCombattimento implements Finestra {
 		return avversario;
 	}
 
-	/** Larghezza a disposizione del nome: la cornice meno lo spazio per "salute/massima". */
-	private int larghezzaMassimaNome() {
-		return cornice.getWidth() - 30 - FontTool.getWidth(fontMedium, "000/000");
-	}
-
 	public void setCombattente(VistaPersonaggio combattente) {
 		this.combattente = combattente;
-		nomeCombattente = combattente.getNome(VistaPersonaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		int l = larghezzaMassimaNome();
-		while (FontTool.getWidth(fontMedium, nomeCombattente) > l)
-			nomeCombattente = nomeCombattente.substring(0, nomeCombattente.length() - 2);
 	}
 
 	public void setAvversario(VistaPersonaggio avversario) {
 		this.avversario = avversario;
-		if (avversario != null) {
-			// Il nome porta già il numero ("Viverna 2") quando ce n'è più d'uno della stessa specie
-			nomeAvversario = avversario.getNome(VistaPersonaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-			int l = larghezzaMassimaNome();
-			while (FontTool.getWidth(fontMedium, nomeAvversario) > l) {
-				nomeAvversario = nomeAvversario.substring(0, nomeAvversario.length() - 2);
-			}
-		}
 	}
 
 	/**
-	 * Disegna le informazioni sul combattimento: chi si affronta e come va.
+	 * Che cosa fa il personaggio che agisce, da scrivere sotto di lui.
+	 */
+	public void setAzione(VistaPersonaggio personaggio, String testo) {
+		chiHaDecisoLAzione = personaggio;
+		testoAzione = testo;
+	}
+
+	/**
+	 * Se c'è già un testo per l'azione di quel personaggio.
+	 */
+	public boolean haAzionePer(VistaPersonaggio personaggio) {
+		return testoAzione != null && chiHaDecisoLAzione == personaggio;
+	}
+
+	/**
+	 * Il testo da scrivere se la tattica non ha detto che cosa fa chi agisce: attacca il bersaglio, se c'è.
+	 */
+	public static String azionePredefinita(VistaPersonaggio bersaglio) {
+		return TestoAzioneInCombattimento.predefinito(bersaglio);
+	}
+
+	/**
+	 * Il testo dell'azione scelta con la tattica.
+	 */
+	public static String testoDellAzione(TipoAzione azione, VistaPersonaggio attore, VistaPersonaggio bersaglio) {
+		return TestoAzioneInCombattimento.di(azione, attore, bersaglio);
+	}
+
+	/**
+	 * Disegna il riquadro con tutti i personaggi del combattimento.
 	 */
 	public void disegnaInfoCombattimento(Graphics2D graphics) {
 		if (!visible) {
 			return;
 		}
+		List<? extends VistaPersonaggio> personaggi = vistaPartita.getOrdineDiCombattimento();
+		if (personaggi.isEmpty()) {
+			return;
+		}
 
-		graphics.drawImage(cornice, xOffset, yOffset, null);
+		final int altezzaAzione = fontMedium.getHeight() + SPAZIATURA;
+		final int altezzaRiga = ALTEZZA_BARRA + SPAZIATURA;
+		final int altezzaAreaDisponibile = parentHeight - 2 * OFFSET_DA_CORNICE;
+		// Se tutte le righe riservano il posto per l'azione ma non ci stanno, quel posto lo ha solo chi agisce
+		final boolean azioneSuOgniRiga = personaggi.size() * (altezzaRiga + altezzaAzione) <= altezzaAreaDisponibile;
+		final int altezzaContenuto = personaggi.size() * altezzaRiga
+				+ (azioneSuOgniRiga ? personaggi.size() : 1) * altezzaAzione;
 
-		final int larghezzaMassimaBarra = cornice.getWidth() - 16;
-		final int altezzaBarra = 26;
-		final int offsetDaBarra = (altezzaBarra - fontMedium.getHeight()) / 2;
+		final int metaAlta = cornice.getHeight() / 2;
+		final int metaBassa = cornice.getHeight() - metaAlta;
+		final int altezza = Math.max(cornice.getHeight(), altezzaContenuto + 2 * OFFSET_DA_CORNICE);
+		final int larghezza = cornice.getWidth();
 
-		final int OFFSET_DA_CORNICE = 8;
-		final int SPAZIATURA = 2;
+		xOffset = (parentWidth - larghezza) >> 1;
+		yOffset = Math.max(0, Math.min(yPreferita, parentHeight - altezza));
+		rettangolo.setBounds(xOffset, yOffset, larghezza, altezza);
 
-		int x = xOffset + OFFSET_DA_CORNICE;
+		// Lo sfondo nero e i bordi laterali per primi, poi la cornice: la metà alta sopra e quella bassa sotto
+		final int bordo = Math.max(1, (int) Math.round(BORDO_LATERALE * LivelloDiZoom.valore()));
+		graphics.setColor(COLORE_SFONDO);
+		graphics.fillRect(xOffset, yOffset, larghezza, altezza);
+		graphics.setColor(COLORE_BORDO);
+		graphics.fillRect(xOffset, yOffset, bordo, altezza);
+		graphics.fillRect(xOffset + larghezza - bordo, yOffset, bordo, altezza);
+		graphics.drawImage(cornice.getSubimage(0, 0, larghezza, metaAlta), xOffset, yOffset, null);
+		graphics.drawImage(cornice.getSubimage(0, metaAlta, larghezza, metaBassa), xOffset, yOffset + altezza - metaBassa, null);
+
+		final int larghezzaMassimaBarra = larghezza - 2 * OFFSET_DA_CORNICE - LARGHEZZA_SEGNALE - SPAZIATURA;
+		final int offsetDaBarra = (ALTEZZA_BARRA - fontMedium.getHeight()) / 2;
+		final int xSegnale = xOffset + OFFSET_DA_CORNICE;
+		final int xBarra = xSegnale + LARGHEZZA_SEGNALE + SPAZIATURA;
 		int y = yOffset + OFFSET_DA_CORNICE;
 
-		double percentualeSalute = (double)combattente.getSalute() / combattente.getSaluteMassima();
-		disegnaBarraSalute(graphics, x, y, percentualeSalute, larghezzaMassimaBarra, altezzaBarra);
-		disegnaNomeConOmbra(graphics, nomeCombattente, x + SPAZIATURA, y + offsetDaBarra);
-		x = xOffset + cornice.getWidth() - OFFSET_DA_CORNICE - SPAZIATURA;
-		disegnaSaluteConOmbra(graphics, combattente.getSalute(), combattente.getSaluteMassima(), x, y + offsetDaBarra);
-
-		if (avversario != null) {
-			x = xOffset + OFFSET_DA_CORNICE;
-			y = yOffset + OFFSET_DA_CORNICE + altezzaBarra + SPAZIATURA;
-
-			percentualeSalute = (double)avversario.getSalute() / avversario.getSaluteMassima();
-			disegnaBarraSalute(graphics, x, y, percentualeSalute, larghezzaMassimaBarra, altezzaBarra);
-			disegnaNomeConOmbra(graphics, nomeAvversario, x + SPAZIATURA, y + offsetDaBarra);
-			x = xOffset + cornice.getWidth() - OFFSET_DA_CORNICE;
-			disegnaSaluteConOmbra(graphics, avversario.getSalute(), avversario.getSaluteMassima(), x, y + offsetDaBarra);
+		for (VistaPersonaggio personaggio : personaggi) {
+			boolean agisce = personaggio == combattente;
+			disegnaSegnaleDelGruppo(graphics, personaggio, xSegnale, y);
+			if (personaggio.isVivo()) {
+				double percentualeSalute = (double) personaggio.getSalute() / personaggio.getSaluteMassima();
+				disegnaBarraSalute(graphics, xBarra, y, percentualeSalute, larghezzaMassimaBarra, ALTEZZA_BARRA);
+				String salute = personaggio.getSalute() + "/" + personaggio.getSaluteMassima();
+				int xSalute = xBarra + larghezzaMassimaBarra - SPAZIATURA;
+				disegnaTestoConOmbra(graphics, salute, xSalute - FontTool.getWidth(fontMedium, salute), y + offsetDaBarra, DoomdarkColorModel.Color.WHITE, true);
+				String nome = nomeEntro(personaggio, larghezzaMassimaBarra - 3 * SPAZIATURA - FontTool.getWidth(fontMedium, "000/000"));
+				disegnaTestoConOmbra(graphics, nome, xBarra + SPAZIATURA, y + offsetDaBarra,
+						personaggio.isInPanchina() ? DoomdarkColorModel.Color.MEDIUM_GRAY : DoomdarkColorModel.Color.WHITE, true);
+			} else {
+				String nome = nomeEntro(personaggio, larghezzaMassimaBarra - 2 * SPAZIATURA);
+				disegnaTestoConOmbra(graphics, nome, xBarra + SPAZIATURA, y + offsetDaBarra, DoomdarkColorModel.Color.DARK_GRAY, false);
+			}
+			y += altezzaRiga;
+			if (azioneSuOgniRiga || agisce) {
+				if (agisce && testoAzione != null) {
+					String azione = testoAzione;
+					int l = larghezzaMassimaBarra - 2 * SPAZIATURA;
+					while (azione.length() > 1 && FontTool.getWidth(fontMedium, azione) > l) {
+						azione = azione.substring(0, azione.length() - 2);
+					}
+					disegnaTestoConOmbra(graphics, azione, xBarra + SPAZIATURA, y, DoomdarkColorModel.Color.YELLOW, true);
+				}
+				y += altezzaAzione;
+			}
 		}
+	}
+
+	/**
+	 * Una piccola striscia a sinistra della riga, per distinguere il gruppo dagli avversari.
+	 */
+	private void disegnaSegnaleDelGruppo(Graphics2D graphics, VistaPersonaggio personaggio, int x, int y) {
+		graphics.setColor(vistaPartita.getGruppoAvversario().contiene(personaggio) ? COLORE_AVVERSARI : COLORE_GRUPPO);
+		graphics.fillRect(x, y, LARGHEZZA_SEGNALE, ALTEZZA_BARRA);
+	}
+
+	/**
+	 * Il nome (con il numero, se ce n'è più d'uno della stessa specie), accorciato finché ci sta.
+	 */
+	private String nomeEntro(VistaPersonaggio personaggio, int larghezzaMassima) {
+		String nome = personaggio.getNome(VistaPersonaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+		while (nome.length() > 1 && FontTool.getWidth(fontMedium, nome) > larghezzaMassima) {
+			nome = nome.substring(0, nome.length() - 2);
+		}
+		return nome;
 	}
 
 	private void disegnaBarraSalute(Graphics2D graphics, int x, int y, double percentualeSalute, int larghezzaMassimaBarra, int altezzaBarra) {
@@ -143,22 +244,12 @@ public class DisplayableCanvasRiquadroCombattimento implements Finestra {
 		graphics.fillRect(x, y, larghezzaCorrenteBarra, altezzaBarra);
 	}
 
-	private void disegnaNomeConOmbra(Graphics2D graphics, String testo, int x, int y) {
+	private void disegnaTestoConOmbra(Graphics2D graphics, String testo, int x, int y, DoomdarkColorModel.Color colore, boolean conOmbra) {
 		final int OFFSET_OMBRA = 2;
-		Image testoTrasformatoNero = ImageCache.get(testo, fontMedium, DoomdarkColorModel.Color.BLACK);
-		graphics.drawImage(testoTrasformatoNero, x + OFFSET_OMBRA, y + OFFSET_OMBRA, null);
-		Image testoTrasformatoBianco = ImageCache.get(testo, fontMedium, DoomdarkColorModel.Color.WHITE);
-		graphics.drawImage(testoTrasformatoBianco, x, y, null);
-	}
-
-	private void disegnaSaluteConOmbra(Graphics2D graphics, int salute, int saluteMassima, int xIniziale, int y) {
-		final int OFFSET_OMBRA = 2;
-		String testo = salute + "/" + saluteMassima;
-		Image testoTrasformatoNero = ImageCache.get(testo, fontMedium, DoomdarkColorModel.Color.BLACK);
-		int x = xIniziale - testoTrasformatoNero.getWidth(null);
-		graphics.drawImage(testoTrasformatoNero, x + OFFSET_OMBRA, y + OFFSET_OMBRA, null);
-		Image testoTrasformatoBianco = ImageCache.get(testo, fontMedium, DoomdarkColorModel.Color.WHITE);
-		graphics.drawImage(testoTrasformatoBianco, x, y, null);
+		if (conOmbra) {
+			graphics.drawImage(ImageCache.get(testo, fontMedium, DoomdarkColorModel.Color.BLACK), x + OFFSET_OMBRA, y + OFFSET_OMBRA, null);
+		}
+		graphics.drawImage(ImageCache.get(testo, fontMedium, colore), x, y, null);
 	}
 
 	/**

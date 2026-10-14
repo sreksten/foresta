@@ -233,7 +233,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		Rectangle riquadroStatisticheRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
 		mappaCoordinateElementiGrafici.put(riquadroStatistiche, riquadroStatisticheRect);
 
-		riquadroCombattimento = new DisplayableCanvasRiquadroCombattimento(larghezzaContenuto, altezzaContenuto, vistaPartita);
+		// Di norma sotto l'immagine della locazione, dove ci sono i personaggi
+		riquadroCombattimento = new DisplayableCanvasRiquadroCombattimento(larghezzaContenuto, altezzaContenuto,
+				ImageCache.SPACING + immagineLocazione.getHeight() + ImageCache.SPACING, vistaPartita);
 
 		// Lo calcola da solo perché è un elemento flottante a differenza degli altri che sono fissi
 		mappaCoordinateElementiGrafici.put(riquadroCombattimento, riquadroCombattimento.getRettangolo());

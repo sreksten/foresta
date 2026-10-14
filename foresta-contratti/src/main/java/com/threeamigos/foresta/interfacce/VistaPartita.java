@@ -19,6 +19,12 @@ public interface VistaPartita {
 
 	VistaGruppo getGruppoAvversario();
 
+	/**
+	 * Tutti i personaggi del combattimento, dei due gruppi, nell'ordine in cui agiscono nel round (vedi
+	 * StatoDelCombattimento.getOrdineDelRound): prima chi può agire, poi i caduti e chi è in panchina.
+	 */
+	List<? extends VistaPersonaggio> getOrdineDiCombattimento();
+
 	VistaMappa getMappa();
 
 	List<? extends VistaMissione> getMissioniAttive();

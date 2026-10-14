@@ -77,6 +77,8 @@ public class StatoDelCombattimento {
 	private int round = 1;
 	// Il piano del round, che si costruisce quando serve (null: da costruire) e quanti posti ne sono già stati usati
 	private List<Lato> piano;
+	// Chi agirà nel round, nell'ordine del piano: si costruisce insieme al piano e, come lui, non cambia finché il round non finisce
+	private List<Personaggio> ordine;
 	private int postiUsati;
 	private final Set<Personaggio> hannoAgitoNelRound = Collections.newSetFromMap(new IdentityHashMap<>());
 	private final Map<Gruppo, Puntatore> puntatori = new IdentityHashMap<>();
@@ -106,6 +108,7 @@ public class StatoDelCombattimento {
 	public void reimposta() {
 		round = 1;
 		piano = null;
+		ordine = null;
 		postiUsati = 0;
 		hannoAgitoNelRound.clear();
 		puntatori.clear();
@@ -199,6 +202,62 @@ public class StatoDelCombattimento {
 				piano.add(Lato.AVVERSARI);
 			}
 		}
+		ordine = costruisciOrdine();
+	}
+
+	/**
+	 * Chi agirà nel round, nell'ordine del piano: per ogni posto del piano, il prossimo del suo gruppo in round-robin (dopo
+	 * l'ultimo che ha agito). Non sposta i puntatori. Serve alla UI, che mostra i personaggi nell'ordine in cui agiscono.
+	 */
+	private List<Personaggio> costruisciOrdine() {
+		Map<Lato, List<Personaggio>> perLato = new EnumMap<>(Lato.class);
+		perLato.put(Lato.GIOCATORE, inOrdineDiGiro(GruppoGiocatore.getIstanza()));
+		perLato.put(Lato.AVVERSARI, inOrdineDiGiro(GruppoAvversario.getIstanza()));
+		Map<Lato, Integer> usati = new EnumMap<>(Lato.class);
+		List<Personaggio> risultato = new ArrayList<>();
+		for (Lato lato : piano) {
+			int indice = usati.merge(lato, 1, Integer::sum) - 1;
+			List<Personaggio> candidati = perLato.get(lato);
+			if (indice < candidati.size()) {
+				risultato.add(candidati.get(indice));
+			}
+		}
+		return risultato;
+	}
+
+	/**
+	 * I personaggi del gruppo in grado di agire, nell'ordine in cui il round-robin li farebbe agire da ora (senza avanzare il puntatore).
+	 */
+	private List<Personaggio> inOrdineDiGiro(Gruppo gruppo) {
+		List<Personaggio> personaggi = gruppo.getPersonaggi();
+		List<Personaggio> inGiro = new ArrayList<>();
+		Puntatore puntatore = puntatori.get(gruppo);
+		int partenza = puntatore == null ? -1 : posizioneDiPartenza(puntatore, personaggi);
+		for (int i = 1; i <= personaggi.size(); i++) {
+			Personaggio candidato = personaggi.get(Math.floorMod(partenza + i, personaggi.size()));
+			if (!candidato.isFuoriCombattimento()) {
+				inGiro.add(candidato);
+			}
+		}
+		return inGiro;
+	}
+
+	/**
+	 * Tutti i personaggi dei due gruppi nell'ordine in cui agiscono nel round: prima quelli in grado di farlo, nell'ordine del piano
+	 * (un mio, un avversario, un mio...), poi gli altri (caduti o in panchina), prima i miei e poi gli avversari. Si tiene fermo per
+	 * tutto il round, così la UI non rimescola le righe a ogni azione.
+	 */
+	public List<Personaggio> getOrdineDelRound() {
+		assicuraIlPiano();
+		List<Personaggio> tutti = new ArrayList<>(ordine);
+		for (Gruppo gruppo : new Gruppo[] {GruppoGiocatore.getIstanza(), GruppoAvversario.getIstanza()}) {
+			for (Personaggio personaggio : gruppo.getPersonaggi()) {
+				if (!tutti.contains(personaggio)) {
+					tutti.add(personaggio);
+				}
+			}
+		}
+		return tutti;
 	}
 
 	/**
@@ -206,6 +265,7 @@ public class StatoDelCombattimento {
 	 */
 	public void nuovaOndata() {
 		piano = null;
+		ordine = null;
 	}
 
 	/**
@@ -300,6 +360,7 @@ public class StatoDelCombattimento {
 		round++;
 		hannoAgitoNelRound.clear();
 		piano = null;
+		ordine = null;
 		BusEventi.pubblica(new InternoInizioRound(round));
 		return true;
 	}
