@@ -18,7 +18,8 @@ import com.threeamigos.foresta.ui.testo.FontTool;
 /**
  * Il riquadro del combattimento: tutti i personaggi della locazione, dei due gruppi, nell'ordine in cui agiscono nel round (vedi
  * VistaPartita.getOrdineDiCombattimento). Chi è vivo ha il nome e la barra della salute; chi è vivo ma non combatte (in panchina)
- * ha la barra ma il nome grigio; chi è morto ha solo il nome, in grigio scuro. Sotto il personaggio che agisce c'è l'azione che compie.
+ * ha la barra ma il nome grigio; chi è morto ha solo il nome, in grigio scuro. Sotto il personaggio che agisce c'è l'azione che compie (un
+ * solo posto, che scorre con lui).
  * <p>
  * La cornice è quella di sempre, tagliata a metà: la metà alta sta in cima e la metà bassa in fondo, e in mezzo c'è lo sfondo nero con i due
  * bordi laterali. Così il riquadro cresce quanto serve. Sta centrato in orizzontale, sotto l'immagine della locazione; se non ci sta sale
@@ -30,6 +31,7 @@ public class DisplayableCanvasRiquadroCombattimento implements Finestra {
 	private static final Color COLORE_SFONDO = Color.BLACK;
 	private static final Color COLORE_GRUPPO = new Color(70, 130, 230);
 	private static final Color COLORE_AVVERSARI = new Color(170, 50, 50);
+	private static final Color COLORE_PANCHINA = new Color(230, 200, 40);
 	// Larghezza del bordo laterale nell'immagine originale (poi si applica lo zoom)
 	private static final int BORDO_LATERALE = 3;
 	private static final int OFFSET_DA_CORNICE = 8;
@@ -154,11 +156,8 @@ public class DisplayableCanvasRiquadroCombattimento implements Finestra {
 
 		final int altezzaAzione = fontMedium.getHeight() + SPAZIATURA;
 		final int altezzaRiga = ALTEZZA_BARRA + SPAZIATURA;
-		final int altezzaAreaDisponibile = parentHeight - 2 * OFFSET_DA_CORNICE;
-		// Se tutte le righe riservano il posto per l'azione ma non ci stanno, quel posto lo ha solo chi agisce
-		final boolean azioneSuOgniRiga = personaggi.size() * (altezzaRiga + altezzaAzione) <= altezzaAreaDisponibile;
-		final int altezzaContenuto = personaggi.size() * altezzaRiga
-				+ (azioneSuOgniRiga ? personaggi.size() : 1) * altezzaAzione;
+		// Un solo posto per l'azione, sotto chi agisce: le righe sotto di lui scorrono in giù
+		final int altezzaContenuto = personaggi.size() * altezzaRiga + altezzaAzione;
 
 		final int metaAlta = cornice.getHeight() / 2;
 		final int metaBassa = cornice.getHeight() - metaAlta;
@@ -202,8 +201,8 @@ public class DisplayableCanvasRiquadroCombattimento implements Finestra {
 				disegnaTestoConOmbra(graphics, nome, xBarra + SPAZIATURA, y + offsetDaBarra, DoomdarkColorModel.Color.DARK_GRAY, false);
 			}
 			y += altezzaRiga;
-			if (azioneSuOgniRiga || agisce) {
-				if (agisce && testoAzione != null) {
+			if (agisce) {
+				if (testoAzione != null) {
 					String azione = testoAzione;
 					int l = larghezzaMassimaBarra - 2 * SPAZIATURA;
 					while (azione.length() > 1 && FontTool.getWidth(fontMedium, azione) > l) {
@@ -217,10 +216,14 @@ public class DisplayableCanvasRiquadroCombattimento implements Finestra {
 	}
 
 	/**
-	 * Una piccola striscia a sinistra della riga, per distinguere il gruppo dagli avversari.
+	 * Una piccola striscia a sinistra della riga, per distinguere il gruppo dagli avversari; gialla per chi è in panchina.
 	 */
 	private void disegnaSegnaleDelGruppo(Graphics2D graphics, VistaPersonaggio personaggio, int x, int y) {
-		graphics.setColor(vistaPartita.getGruppoAvversario().contiene(personaggio) ? COLORE_AVVERSARI : COLORE_GRUPPO);
+		if (personaggio.isVivo() && personaggio.isInPanchina()) {
+			graphics.setColor(COLORE_PANCHINA);
+		} else {
+			graphics.setColor(vistaPartita.getGruppoAvversario().contiene(personaggio) ? COLORE_AVVERSARI : COLORE_GRUPPO);
+		}
 		graphics.fillRect(x, y, LARGHEZZA_SEGNALE, ALTEZZA_BARRA);
 	}
 

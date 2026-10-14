@@ -113,8 +113,8 @@ class CombattimentoARoundTest {
             for (int i = 0; i < 4; i++) {
                 locazione.impostaAzioni(partita.gruppo(), GruppoAvversario.getIstanza(), Comando.TIMER);
             }
-            // G A G G: dopo la coppia i due compagni in più agiscono da soli
-            assertEquals(java.util.Arrays.asList(G, A, G, G), lati(partita).subList(annunci, annunci + 4));
+            // G G A G: l'avversario unico sta in mezzo ai miei tre compagni, che agiscono senza di lui
+            assertEquals(java.util.Arrays.asList(G, G, A, G), lati(partita).subList(annunci, annunci + 4));
             assertEquals(2, StatoDelCombattimento.getIstanza().getRound());
         }
     }
@@ -146,8 +146,8 @@ class CombattimentoARoundTest {
                 locazione.impostaAzioni(partita.gruppo(), GruppoAvversario.getIstanza(), Comando.SINGOLO_ATTACCO);
                 locazione.impostaAzioni(partita.gruppo(), GruppoAvversario.getIstanza(), Comando.ofPersonaggio(i));
             }
-            // Piano G A G G: la mia prima azione ha la risposta, la seconda no
-            assertEquals(java.util.Arrays.asList(G, A, G), lati(partita));
+            // Lista G G A G: la mia prima azione non ha risposta (tocca ancora a un mio compagno), la seconda sì
+            assertEquals(java.util.Arrays.asList(G, G, A), lati(partita));
         }
     }
 

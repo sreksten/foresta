@@ -1238,7 +1238,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * del round.
 	 */
 	private void gliAvversariAttaccanoPerPrimi() {
-		Personaggio avversario = statoDelCombattimento.getProssimoAttaccante(gruppoAvversario);
+		Personaggio avversario = statoDelCombattimento.getAvversarioCheAttaccaPerPrimo();
 		if (avversario != null) {
 			agisceUnAvversario(avversario);
 		}

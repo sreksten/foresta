@@ -11,7 +11,7 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 ## Bug noti
 
 - **Combattimento.** Personaggi di livello 5 pesantemente armati non riescono nemmeno a scalfire un boss come la Strega o il Lich.
-- **Bilanciamento col round a coppie.** Le simulazioni (`SimulazionePartiteTest`, `TestScontriDiGruppo`, `TestLogoramentoInizioPartita`) sono portate al piano del round e i numeri sono in [`tattiche_di_combattimento_automatiche.md`](tattiche_di_combattimento_automatiche.md) §9: la stima del giocatore automatico è tarata; restano l'Eremita a livello 1-3 e il bersaglio preferito che uccide presto maghi e sacerdoti.
+- **Bilanciamento col round a coppie.** Le simulazioni (`SimulazionePartiteTest`, `TestScontriDiGruppo`, `TestLogoramentoInizioPartita`) sono portate al round a coppie (oggi lista dei turni con distribuzione in proporzione: `RoundASimulato` replica ancora il vecchio piano, da allineare) e i numeri sono in [`tattiche_di_combattimento_automatiche.md`](tattiche_di_combattimento_automatiche.md) §9: la stima del giocatore automatico è tarata; restano l'Eremita a livello 1-3 e il bersaglio preferito che uccide presto maghi e sacerdoti.
 - **Modalità VERTICALE.** `DisplayableCanvasBarraIcone` avanza di 32 px con icone alte 64, e la finestra è larga al massimo 400 px (vedi [`motore_grafico.md`](motore_grafico.md) §12).
 - **Schermi alti meno di 804 px.** La barra delle icone copre il fondo del riquadro delle missioni.
 
@@ -61,6 +61,7 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 - Come ci sono locande sparse per la foresta, anche qualche negozio (armaiolo, alchimista, venditore di pergamene, incantatore).
 - Economia: le entrate sono misurate solo fino al livello 5, perché il giocatore automatico di `SimulazionePartiteTest` muore a livello 2-4 e non fa le missioni; farlo vivere più a lungo e fare le missioni, poi eventualmente ritarare i prezzi degli ingredienti: vedi [`economia.md`](economia.md).
 - Dimensione ottimale della mappa: `Foresta.DIMENSIONE_X`/`DIMENSIONE_Y`, da tarare con le prove.
+- **Iniziativa in combattimento.** Non c'è un "tiro di iniziativa": il gruppo del giocatore comincia sempre per primo (di norma, con `COMBATTIMENTO`, il giocatore sceglie chi), e l'ordine dei turni è quello della lista fissata a inizio combattimento (vedi `tattiche_di_combattimento_automatiche.md` §3). Da valutare un'iniziativa vera, magari legata alla `VELOCITA` dei personaggi, e chi attacca per primo se gli avversari si accorgono del gruppo (oggi `gliAvversariAttaccanoPerPrimi`, un solo attacco fuori dal piano).
 
 ## Personaggi non combattenti
 

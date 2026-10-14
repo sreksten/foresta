@@ -27,14 +27,15 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
  * parte del modello dati, non si salva (un combattimento non si interrompe mai per salvare) e si azzera a ogni inizio
  * locazione. Tiene:
  * <ul>
- * <li>il <b>piano del round</b>: a inizio round si contano i personaggi in grado di agire dei due gruppi (<i>n</i> i miei, <i>m</i> gli
- * avversari) e si fanno max(<i>n</i>, <i>m</i>) coppie, alla coppia <i>k</i> agisce il mio <i>k</i>-esimo e poi l'avversario <i>k</i>-esimo;
- * chi non ha un compagno nell'altro gruppo agisce da solo, di seguito. Il piano è la sequenza dei lati ({@link Lato}), non dei
- * personaggi: chi agisce davvero lo decide il round-robin di ogni gruppo al momento. Il round finisce quando il piano è finito
- * (e ne comincia un altro, con un {@link InternoInizioRound}); il suo numero riparte da 1 a ogni inizio locazione e continua con le ondate;</li>
+ * <li>la <b>lista dei turni</b>: a inizio combattimento (e a ogni ondata) si fissa la lista di tutti i personaggi dei due gruppi, anche gli
+ * ospiti vulnerabili, i caduti e chi è in panchina. I miei e gli avversari si alternano distribuendo i posti in proporzione: il
+ * personaggio <i>i</i> di un gruppo di <i>n</i> sta alla posizione <i>(i + 1/2)/n</i>, e a parità di posizione viene prima il mio gruppo; la
+ * lista, circolare, parte dal mio primo personaggio. Con gruppi pari sono le coppie (un mio, un avversario...); con 4 contro 1 esce
+ * M M T M M, con 2 contro 5 M T T T M T T, così gli ultimi non sono tutti dello stesso gruppo. Un <b>cursore</b> dice a chi tocca: chi non può agire (morto, in panchina, un ospite che non combatte, chi ha già agito fuori
+ * turno) è saltato, e questo vale anche se cade durante il giro. Il giro completo della lista è un round: finito, ne comincia un altro (con
+ * un {@link InternoInizioRound}); il suo numero riparte da 1 a ogni inizio locazione e continua con le ondate. Chi arriva a
+ * combattimento in corso (lo Scheletro della Mietitura) va in fondo alla lista;</li>
  * <li>chi ha già agito nel round (di entrambi i gruppi);</li>
- * <li>per ogni gruppo, il <b>puntatore</b> al personaggio che ha agito per ultimo, per il round-robin. Si ricorda il
- * personaggio e non solo la sua posizione, perché la lista di un gruppo cambia durante lo scontro;</li>
  * <li>per ogni personaggio una <b>scheda</b> (indicizzata per identità, e non dimenticata quando cade: un compagno potrebbe
  * farlo risorgere): l'ultimo avversario e l'ultimo alleato scelti, chi lo ha attaccato per ultimo, se ha già lanciato un
  * incantesimo, i cambi d'arma, le voci della tattica già usate (e in quale round) e le armi già valutate;</li>
@@ -63,25 +64,16 @@ public class StatoDelCombattimento {
 		istanza = null;
 	}
 
-	/** L'ultimo personaggio che ha agito in ogni gruppo, e dov'era nella lista */
-	private static final class Puntatore {
-		private Personaggio personaggio;
-		private int posizione = -1;
-	}
-
 	/** I due lati del combattimento: il gruppo del giocatore e quello degli avversari */
 	public enum Lato {
 		GIOCATORE, AVVERSARI
 	}
 
 	private int round = 1;
-	// Il piano del round, che si costruisce quando serve (null: da costruire) e quanti posti ne sono già stati usati
-	private List<Lato> piano;
-	// Chi agirà nel round, nell'ordine del piano: si costruisce insieme al piano e, come lui, non cambia finché il round non finisce
-	private List<Personaggio> ordine;
-	private int postiUsati;
+	// La lista dei turni, che si costruisce quando serve (null: da costruire), e il posto a cui tocca (vedi getOrdineDelRound)
+	private List<Personaggio> lista;
+	private int cursore;
 	private final Set<Personaggio> hannoAgitoNelRound = Collections.newSetFromMap(new IdentityHashMap<>());
-	private final Map<Gruppo, Puntatore> puntatori = new IdentityHashMap<>();
 	private final Map<Personaggio, Scheda> schede = new IdentityHashMap<>();
 	private final Map<Personaggio, Map<TipoDanno, Double>> reazioniNote = new IdentityHashMap<>();
 	private final Map<Personaggio, Set<TipoAzione>> immunitaScoperte = new IdentityHashMap<>();
@@ -107,11 +99,9 @@ public class StatoDelCombattimento {
 	 */
 	public void reimposta() {
 		round = 1;
-		piano = null;
-		ordine = null;
-		postiUsati = 0;
+		lista = null;
+		cursore = 0;
 		hannoAgitoNelRound.clear();
-		puntatori.clear();
 		schede.clear();
 		reazioniNote.clear();
 		immunitaScoperte.clear();
@@ -129,52 +119,135 @@ public class StatoDelCombattimento {
 		return hannoAgitoNelRound.contains(personaggio);
 	}
 
+	/** Un posto della lista mentre la si distribuisce: il personaggio e la sua posizione, come frazione (indice + 1/2)/dimensione del suo gruppo */
+	private static final class Posto {
+		private final Personaggio personaggio;
+		private final int indice;
+		private final int dimensione;
+		private final int lato;
+
+		private Posto(Personaggio personaggio, int indice, int dimensione, int lato) {
+			this.personaggio = personaggio;
+			this.indice = indice;
+			this.dimensione = dimensione;
+			this.lato = lato;
+		}
+	}
+
 	/**
-	 * Il prossimo personaggio del gruppo che deve agire, in round-robin: dopo l'ultimo che ha agito (la prima volta, il
-	 * primo), saltando chi è caduto o in panchina. Il puntatore del gruppo avanza a ogni chiamata.
+	 * I personaggi del gruppo che vanno in lista: quelli del gruppo e gli ospiti vulnerabili vivi (gli ospiti che non si possono colpire
+	 * non compaiono).
+	 */
+	private static List<Personaggio> daMettereInLista(Gruppo gruppo) {
+		List<Personaggio> elenco = new ArrayList<>(gruppo.getPersonaggi());
+		for (Personaggio ospite : gruppo.getOspitiBersaglio()) {
+			if (!elenco.contains(ospite)) {
+				elenco.add(ospite);
+			}
+		}
+		return elenco;
+	}
+
+	/**
+	 * Quelli che fanno ancora parte di un gruppo: anche gli ospiti caduti, che restano in lista (grigi) finché il combattimento dura.
+	 */
+	private static List<Personaggio> chiFaParte(Gruppo gruppo) {
+		List<Personaggio> elenco = new ArrayList<>(gruppo.getPersonaggi());
+		elenco.addAll(gruppo instanceof GruppoGiocatore ? ((GruppoGiocatore) gruppo).getOspiti() : gruppo.getOspitiBersaglio());
+		return elenco;
+	}
+
+	/**
+	 * La lista dei turni: i miei e gli avversari distribuiti in proporzione (vedi la descrizione della classe). A parità di posizione
+	 * viene prima il mio gruppo, e chi è in un gruppo conserva l'ordine che ha lì. La lista è circolare e parte dal mio primo personaggio.
+	 */
+	private static List<Personaggio> distribuisci(List<Personaggio> miei, List<Personaggio> loro) {
+		List<Posto> posti = new ArrayList<>();
+		for (int i = 0; i < miei.size(); i++) {
+			posti.add(new Posto(miei.get(i), i, miei.size(), 0));
+		}
+		for (int i = 0; i < loro.size(); i++) {
+			posti.add(new Posto(loro.get(i), i, loro.size(), 1));
+		}
+		// (indice + 1/2)/dimensione, cioè (2 * indice + 1)/(2 * dimensione), si confronta con il prodotto in croce, senza arrotondamenti
+		posti.sort((a, b) -> {
+			int confronto = Long.compare((2L * a.indice + 1) * b.dimensione, (2L * b.indice + 1) * a.dimensione);
+			return confronto != 0 ? confronto : Integer.compare(a.lato, b.lato);
+		});
+		List<Personaggio> risultato = new ArrayList<>();
+		for (Posto posto : posti) {
+			risultato.add(posto.personaggio);
+		}
+		// Si parte dal mio primo personaggio (con le posizioni centrate qualche avversario può stare prima di lui)
+		if (!miei.isEmpty()) {
+			Collections.rotate(risultato, -risultato.indexOf(miei.get(0)));
+		}
+		return risultato;
+	}
+
+	/**
+	 * Costruisce la lista se manca; se c'è, toglie chi ha lasciato i gruppi e mette in fondo chi è arrivato.
+	 */
+	private void assicuraLaLista() {
+		Gruppo miei = GruppoGiocatore.getIstanza();
+		Gruppo loro = GruppoAvversario.getIstanza();
+		if (lista == null) {
+			lista = distribuisci(daMettereInLista(miei), daMettereInLista(loro));
+			cursore = 0;
+			return;
+		}
+		List<Personaggio> presenti = chiFaParte(miei);
+		presenti.addAll(chiFaParte(loro));
+		for (int i = lista.size() - 1; i >= 0; i--) {
+			if (!presenti.contains(lista.get(i))) {
+				lista.remove(i);
+				if (i < cursore) {
+					cursore--;
+				}
+			}
+		}
+		for (Personaggio personaggio : daMettereInLista(miei)) {
+			if (!lista.contains(personaggio)) {
+				lista.add(personaggio);
+			}
+		}
+		for (Personaggio personaggio : daMettereInLista(loro)) {
+			if (!lista.contains(personaggio)) {
+				lista.add(personaggio);
+			}
+		}
+	}
+
+	/**
+	 * Se il personaggio, adesso, può agire: combatte (è del gruppo, non un ospite), è vivo e non in panchina, e nel giro non ha già agito.
+	 */
+	private boolean puoAgire(Personaggio personaggio) {
+		return !personaggio.isFuoriCombattimento() && !hannoAgitoNelRound.contains(personaggio) && combatte(personaggio);
+	}
+
+	private static boolean combatte(Personaggio personaggio) {
+		return GruppoAvversario.getIstanza().getPersonaggi().contains(personaggio)
+				|| GruppoGiocatore.getIstanza().getPersonaggi().contains(personaggio);
+	}
+
+	private static Lato latoDi(Personaggio personaggio) {
+		return GruppoAvversario.getIstanza().getPersonaggi().contains(personaggio) ? Lato.AVVERSARI : Lato.GIOCATORE;
+	}
+
+	/**
+	 * Porta il cursore sul primo posto di chi può agire: i posti degli altri sono consumati senza che succeda niente.
 	 *
-	 * @return il personaggio, oppure null se nel gruppo non ce n'è nessuno in grado di agire
+	 * @return false se nel giro non resta nessuno che possa agire
 	 */
-	public Personaggio getProssimoAttaccante(Gruppo gruppo) {
-		List<Personaggio> personaggi = gruppo.getPersonaggi();
-		int dimensione = personaggi.size();
-		if (gruppo.getPersonaggiVivi().isEmpty()) {
-			Logger.log("[ROUND-ROBIN] Tutti i personaggi del gruppo sono stati sconfitti.");
-			return null;
+	private boolean saltaChiNonPuoAgire() {
+		while (cursore < lista.size() && !puoAgire(lista.get(cursore))) {
+			cursore++;
 		}
-		Puntatore puntatore = puntatori.computeIfAbsent(gruppo, g -> new Puntatore());
-		int partenza = posizioneDiPartenza(puntatore, personaggi);
-		for (int i = 1; i <= dimensione; i++) {
-			int posizione = (partenza + i) % dimensione;
-			Personaggio candidato = personaggi.get(posizione);
-			if (candidato.isFuoriCombattimento()) {
-				continue;
-			}
-			puntatore.personaggio = candidato;
-			puntatore.posizione = posizione;
-			return candidato;
-		}
-		return null;
+		return cursore < lista.size();
 	}
 
 	/**
-	 * Da dove riparte il giro: dal personaggio che ha agito per ultimo; se non è più nella lista (è uscito dal gruppo) dalla
-	 * posizione in cui era, che ora è occupata dal suo successore.
-	 */
-	private static int posizioneDiPartenza(Puntatore puntatore, List<Personaggio> personaggi) {
-		if (puntatore.personaggio == null) {
-			return -1;
-		}
-		for (int i = 0; i < personaggi.size(); i++) {
-			if (personaggi.get(i) == puntatore.personaggio) {
-				return i;
-			}
-		}
-		return Math.min(puntatore.posizione, personaggi.size()) - 1;
-	}
-
-	/**
-	 * Quanti personaggi di un gruppo sono in grado di agire in un round (vivi e non in panchina)
+	 * Quanti personaggi di un gruppo sono in grado di agire (vivi e non in panchina)
 	 */
 	private static int quantiAgiscono(Gruppo gruppo) {
 		int quanti = 0;
@@ -186,110 +259,81 @@ public class StatoDelCombattimento {
 		return quanti;
 	}
 
-	private void assicuraIlPiano() {
-		if (piano != null) {
-			return;
-		}
-		int mieiPersonaggi = quantiAgiscono(GruppoGiocatore.getIstanza());
-		int avversariPersonaggi = quantiAgiscono(GruppoAvversario.getIstanza());
-		piano = new ArrayList<>();
-		postiUsati = 0;
-		for (int k = 0; k < Math.max(mieiPersonaggi, avversariPersonaggi); k++) {
-			if (k < mieiPersonaggi) {
-				piano.add(Lato.GIOCATORE);
-			}
-			if (k < avversariPersonaggi) {
-				piano.add(Lato.AVVERSARI);
-			}
-		}
-		ordine = costruisciOrdine();
-	}
-
 	/**
-	 * Chi agirà nel round, nell'ordine del piano: per ogni posto del piano, il prossimo del suo gruppo in round-robin (dopo
-	 * l'ultimo che ha agito). Non sposta i puntatori. Serve alla UI, che mostra i personaggi nell'ordine in cui agiscono.
-	 */
-	private List<Personaggio> costruisciOrdine() {
-		Map<Lato, List<Personaggio>> perLato = new EnumMap<>(Lato.class);
-		perLato.put(Lato.GIOCATORE, inOrdineDiGiro(GruppoGiocatore.getIstanza()));
-		perLato.put(Lato.AVVERSARI, inOrdineDiGiro(GruppoAvversario.getIstanza()));
-		Map<Lato, Integer> usati = new EnumMap<>(Lato.class);
-		List<Personaggio> risultato = new ArrayList<>();
-		for (Lato lato : piano) {
-			int indice = usati.merge(lato, 1, Integer::sum) - 1;
-			List<Personaggio> candidati = perLato.get(lato);
-			if (indice < candidati.size()) {
-				risultato.add(candidati.get(indice));
-			}
-		}
-		return risultato;
-	}
-
-	/**
-	 * I personaggi del gruppo in grado di agire, nell'ordine in cui il round-robin li farebbe agire da ora (senza avanzare il puntatore).
-	 */
-	private List<Personaggio> inOrdineDiGiro(Gruppo gruppo) {
-		List<Personaggio> personaggi = gruppo.getPersonaggi();
-		List<Personaggio> inGiro = new ArrayList<>();
-		Puntatore puntatore = puntatori.get(gruppo);
-		int partenza = puntatore == null ? -1 : posizioneDiPartenza(puntatore, personaggi);
-		for (int i = 1; i <= personaggi.size(); i++) {
-			Personaggio candidato = personaggi.get(Math.floorMod(partenza + i, personaggi.size()));
-			if (!candidato.isFuoriCombattimento()) {
-				inGiro.add(candidato);
-			}
-		}
-		return inGiro;
-	}
-
-	/**
-	 * Tutti i personaggi dei due gruppi nell'ordine in cui agiscono nel round: prima quelli in grado di farlo, nell'ordine del piano
-	 * (un mio, un avversario, un mio...), poi gli altri (caduti o in panchina), prima i miei e poi gli avversari. Si tiene fermo per
-	 * tutto il round, così la UI non rimescola le righe a ogni azione.
+	 * Tutti i personaggi dei due gruppi nell'ordine dei turni (vedi la descrizione della classe), che vale per tutto il combattimento o
+	 * fino alla prossima ondata: chi cade o va in panchina resta al suo posto, e semplicemente non agisce. È l'ordine che mostra anche
+	 * il riquadro del combattimento.
 	 */
 	public List<Personaggio> getOrdineDelRound() {
-		assicuraIlPiano();
-		List<Personaggio> tutti = new ArrayList<>(ordine);
-		for (Gruppo gruppo : new Gruppo[] {GruppoGiocatore.getIstanza(), GruppoAvversario.getIstanza()}) {
-			for (Personaggio personaggio : gruppo.getPersonaggi()) {
-				if (!tutti.contains(personaggio)) {
-					tutti.add(personaggio);
-				}
-			}
-		}
-		return tutti;
+		assicuraLaLista();
+		return Collections.unmodifiableList(new ArrayList<>(lista));
 	}
 
 	/**
-	 * Un'altra ondata di avversari: il piano del round in corso si rifà con i nuovi arrivati. Il numero del round non cambia.
+	 * Un'altra ondata di avversari: la lista dei turni si rifà con i nuovi arrivati e un nuovo giro comincia dal primo. Il numero del round
+	 * non cambia.
 	 */
 	public void nuovaOndata() {
-		piano = null;
-		ordine = null;
+		lista = null;
+		cursore = 0;
+		hannoAgitoNelRound.clear();
 	}
 
 	/**
-	 * A chi tocca adesso nel piano del round.
+	 * A chi tocca adesso: il lato del prossimo personaggio che può agire (i posti di chi non può sono consumati).
 	 *
-	 * @return il lato che deve agire, oppure null se nessuno può farlo (un gruppo senza nessuno e l'altro nemmeno)
+	 * @return il lato che deve agire, oppure null se nel giro non resta nessuno in grado di farlo
 	 */
 	public Lato getProssimoLato() {
-		assicuraIlPiano();
-		return postiUsati < piano.size() ? piano.get(postiUsati) : null;
+		assicuraLaLista();
+		return saltaChiNonPuoAgire() ? latoDi(lista.get(cursore)) : null;
 	}
 
 	/**
-	 * Il piano del round, per i test e il log: i lati nell'ordine in cui agiscono (anche quelli già passati)
+	 * Il personaggio a cui tocca, se è di quel gruppo; altrimenti null (anche se nel giro non resta nessuno in grado di agire). Non
+	 * consuma il posto: lo fa {@link #registraAzione}.
+	 */
+	public Personaggio getProssimoAttaccante(Gruppo gruppo) {
+		assicuraLaLista();
+		if (!saltaChiNonPuoAgire()) {
+			return null;
+		}
+		Personaggio personaggio = lista.get(cursore);
+		return gruppo.getPersonaggi().contains(personaggio) ? personaggio : null;
+	}
+
+	/**
+	 * Il primo avversario in grado di agire a partire dal cursore, senza consumare niente: serve a chi attacca per primo fuori dal giro
+	 * (un passaggio inosservato fallito).
+	 */
+	public Personaggio getAvversarioCheAttaccaPerPrimo() {
+		assicuraLaLista();
+		for (int k = 0; k < lista.size(); k++) {
+			Personaggio candidato = lista.get((cursore + k) % lista.size());
+			if (latoDi(candidato) == Lato.AVVERSARI && !candidato.isFuoriCombattimento() && combatte(candidato)) {
+				return candidato;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * La lista dei lati, un posto per personaggio, per i test e il log.
 	 */
 	public List<Lato> getPiano() {
-		assicuraIlPiano();
-		return Collections.unmodifiableList(piano);
+		assicuraLaLista();
+		List<Lato> lati = new ArrayList<>();
+		for (Personaggio personaggio : lista) {
+			lati.add(latoDi(personaggio));
+		}
+		return Collections.unmodifiableList(lati);
 	}
 
 	/**
-	 * Registra che il personaggio ha agito, nel gruppo in cui sta. Se è del giocatore il suo gruppo riparte dal successivo
-	 * (le azioni manuali scelgono chi agisce). Consuma il prossimo posto del suo lato nel piano; se il piano è finito il round è
-	 * finito e ne comincia un altro.
+	 * Registra che il personaggio ha agito. Se toccava a lui il cursore avanza. Se agisce fuori turno (un'azione scelta dal giocatore) per
+	 * la prima volta nel giro, il cursore resta dov'è e il suo posto, quando arriverà, sarà saltato: nessuno perde il turno. Se agisce
+	 * fuori turno una seconda volta nel giro, l'azione costa il posto a cui tocca, che passa. Se con questa azione il giro è finito, ne
+	 * comincia un altro.
 	 *
 	 * @return true se con questa azione il round è finito
 	 */
@@ -297,72 +341,74 @@ public class StatoDelCombattimento {
 		if (personaggio == null) {
 			return false;
 		}
-		hannoAgitoNelRound.add(personaggio);
-		Lato lato = GruppoAvversario.getIstanza().contiene(personaggio) ? Lato.AVVERSARI : Lato.GIOCATORE;
-		if (lato == Lato.GIOCATORE) {
-			ricordaChiHaAgito(GruppoGiocatore.getIstanza(), personaggio);
-		}
-		return consuma(lato);
-	}
-
-	/**
-	 * Registra che il lato doveva agire ma nessuno ne era in grado: il posto nel piano è usato lo stesso
-	 *
-	 * @return true se con questo il round è finito
-	 */
-	public boolean registraAzioneSaltata(Lato lato) {
-		return consuma(lato);
-	}
-
-	/**
-	 * Fa in modo che il prossimo a agire in quel gruppo, nel suo round-robin, sia questo personaggio (il giocatore ha scelto chi comincia).
-	 */
-	public void faAgirePerPrimo(Gruppo gruppo, Personaggio personaggio) {
-		List<Personaggio> personaggi = gruppo.getPersonaggi();
-		int posizione = personaggi.indexOf(personaggio);
-		if (posizione < 0) {
-			return;
-		}
-		int precedente = (posizione - 1 + personaggi.size()) % personaggi.size();
-		Puntatore puntatore = puntatori.computeIfAbsent(gruppo, g -> new Puntatore());
-		puntatore.personaggio = personaggi.get(precedente);
-		puntatore.posizione = precedente;
-	}
-
-	private void ricordaChiHaAgito(Gruppo gruppo, Personaggio personaggio) {
-		int posizione = gruppo.getPersonaggi().indexOf(personaggio);
-		if (posizione < 0) {
-			return;
-		}
-		Puntatore puntatore = puntatori.computeIfAbsent(gruppo, g -> new Puntatore());
-		puntatore.personaggio = personaggio;
-		puntatore.posizione = posizione;
-	}
-
-	private boolean consuma(Lato lato) {
+		boolean giaAgito = !hannoAgitoNelRound.add(personaggio);
 		if (quantiAgiscono(GruppoAvversario.getIstanza()) == 0) {
 			// Senza avversari il combattimento è finito: il round non avanza
 			return false;
 		}
-		assicuraIlPiano();
-		int posto = postiUsati;
-		while (posto < piano.size() && piano.get(posto) != lato) {
-			posto++;
+		assicuraLaLista();
+		if (cursore < lista.size() && (lista.get(cursore).equals(personaggio) || giaAgito)) {
+			// Toccava a lui; oppure agisce di nuovo nello stesso giro (un'azione del giocatore): costa il posto a cui tocca, altrimenti
+			// il giocatore potrebbe agire all'infinito senza che gli avversari rispondano
+			cursore++;
 		}
-		if (posto >= piano.size()) {
-			// Un'azione fuori dal piano (per esempio il lato non ha più posti): non consuma niente
+		return chiudeIlGiroSeFinito();
+	}
+
+	/**
+	 * Registra che a quel lato toccava ma nessuno era in grado di agire: il posto è consumato lo stesso.
+	 *
+	 * @return true se con questo il round è finito
+	 */
+	public boolean registraAzioneSaltata(Lato lato) {
+		if (quantiAgiscono(GruppoAvversario.getIstanza()) == 0) {
 			return false;
 		}
-		postiUsati = posto + 1;
-		if (postiUsati < piano.size()) {
+		assicuraLaLista();
+		if (cursore < lista.size()) {
+			cursore++;
+		}
+		return chiudeIlGiroSeFinito();
+	}
+
+	/**
+	 * Consuma i posti di chi non può agire che seguono il cursore, e se la lista è finita comincia un altro round.
+	 */
+	private boolean chiudeIlGiroSeFinito() {
+		if (saltaChiNonPuoAgire()) {
 			return false;
 		}
 		round++;
 		hannoAgitoNelRound.clear();
-		piano = null;
-		ordine = null;
+		cursore = 0;
 		BusEventi.pubblica(new InternoInizioRound(round));
 		return true;
+	}
+
+	/**
+	 * Il giocatore sceglie chi dei suoi agisce per primo. A giro non cominciato la lista riparte da lui (e il primo avversario che segue
+	 * è quello che viene dopo di lui nella lista); a giro avviato scambia il suo posto con quello del prossimo dei miei che deve agire.
+	 */
+	public void faAgirePerPrimo(Gruppo gruppo, Personaggio personaggio) {
+		assicuraLaLista();
+		int posizione = lista.indexOf(personaggio);
+		if (posizione < 0) {
+			return;
+		}
+		if (cursore == 0 && hannoAgitoNelRound.isEmpty()) {
+			Collections.rotate(lista, -posizione);
+			return;
+		}
+		if (!puoAgire(personaggio)) {
+			return;
+		}
+		for (int i = cursore; i < lista.size(); i++) {
+			Personaggio candidato = lista.get(i);
+			if (puoAgire(candidato) && latoDi(candidato) == Lato.GIOCATORE) {
+				Collections.swap(lista, i, posizione);
+				return;
+			}
+		}
 	}
 
 	private Scheda scheda(Personaggio personaggio) {
