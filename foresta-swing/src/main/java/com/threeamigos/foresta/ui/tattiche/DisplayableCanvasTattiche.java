@@ -223,6 +223,9 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		menu = null;
 	}
 
+	/**
+	 * Se la bozza è diversa dalla tattica applicata nel motore (a parte l'attacco di riserva): i pulsanti Sì e No hanno senso solo allora
+	 */
 	private boolean isModificata() {
 		return !bozza.descrive(applicata);
 	}
@@ -1092,6 +1095,14 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		return bozza;
 	}
 
+	/**
+	 * I click sulle aree della colonna centrale: le frecce spostano il personaggio nel gruppo, Sì manda la tattica al motore (solo se la bozza non ha
+	 * problemi: la conferma è ignorata altrimenti), No butta la bozza e torna alla tattica applicata, "predefinita" riparte da quella della classe.
+	 * Né No né "predefinita" toccano il motore: solo Sì cambia la tattica del personaggio, e il motore la ripubblica (RichiestaAperturaTattiche) per
+	 * far aggiornare la schermata.
+	 *
+	 * @return true se il click era su una di queste aree
+	 */
 	private boolean processaClickColonnaCentrale(int x, int y) {
 		if (areaSposta[0] != null && areaSposta[0].contains(x, y)) {
 			if (puoSpostareASinistra) {

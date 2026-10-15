@@ -45,8 +45,11 @@ import com.threeamigos.foresta.canti.CantoDelBardo;
  */
 public final class RegistroTattiche {
 
+	// La replica del vecchio comportamento, costruita una volta sola
 	private static final TatticaMD DI_OGGI = costruisciLaTatticaDiOggi();
+	// Le tattiche registrate a mano (dai test e dalle simulazioni): hanno la precedenza su tutto il resto
 	private static final Map<TipoPersonaggio, TatticaMD> PER_CLASSE = new EnumMap<>(TipoPersonaggio.class);
+	// Le tattiche base di TatticheBase, costruite alla prima richiesta di una classe e poi ricordate (computeIfAbsent)
 	private static final Map<TipoPersonaggio, TatticaMD> BASE_DEI_MOSTRI = new java.util.concurrent.ConcurrentHashMap<>();
 
 	private RegistroTattiche() {
@@ -116,6 +119,7 @@ public final class RegistroTattiche {
 	}
 
 	private static TatticaMD costruisciLaTatticaDiOggi() {
+		// Un selettore per ogni preferenza di bersaglio, nell'ordine in cui i mostri le seguivano: maghi, sacerdoti, elfi, bardi, e infine tutti
 		List<SelettoreMD> bersagli = new ArrayList<>();
 		for (TipoPersonaggio ruolo : Arrays.asList(TipoPersonaggio.MAGO, TipoPersonaggio.SACERDOTE, TipoPersonaggio.ELFO, TipoPersonaggio.BARDO)) {
 			bersagli.add(new SelettoreMD(TipoRosa.AVVERSARI, Collections.singletonList(FiltroMD.conClasse(TipoFiltro.CLASSE, ruolo)),
@@ -130,6 +134,8 @@ public final class RegistroTattiche {
 		PredicatoMD unaVoltaSuTreRinuncia = PredicatoMD.probabilita(67);
 		AzioneMD attacco = AzioneMD.di(TipoAzione.ATTACCO_FISICO);
 
+		// Per ogni bersaglio le stesse quattro voci. L'ordine conta: se il bersaglio preferito esiste, le sue quattro voci vengono prima di quelle del
+		// bersaglio successivo, e solo una di esse (la prima eseguibile) si esegue
 		List<VoceMD> voci = new ArrayList<>();
 		for (SelettoreMD bersaglio : bersagli) {
 			// Poco intelligente: un incantesimo a caso

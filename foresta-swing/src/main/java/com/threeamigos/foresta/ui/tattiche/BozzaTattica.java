@@ -59,8 +59,10 @@ final class BozzaTattica {
 		}
 	}
 
+	/** Il numero più alto che il giocatore può scrivere in un filtro o in una condizione (le percentuali si fermano a 100, vedi massimo) */
 	private static final int MASSIMO_NUMERO = 999;
 
+	// Le voci in lavorazione, nell'ordine in cui si valutano; non comprendono l'attacco di riserva, che la schermata disegna a parte
 	private final List<Voce> voci = new ArrayList<>();
 
 	private BozzaTattica() {
@@ -70,6 +72,8 @@ final class BozzaTattica {
 	 * La bozza di una tattica, per un personaggio del giocatore
 	 */
 	static BozzaTattica da(TatticaMD tattica) {
+		// Si copia ogni voce nei suoi pezzi modificabili. La voce senza selettore diventa quella con il selettore di base (selettoreEffettivo), così
+		// la schermata mostra sempre la rosa e l'ordinamento che il motore userebbe davvero
 		BozzaTattica bozza = new BozzaTattica();
 		List<VoceMD> daLeggere = new ArrayList<>(tattica.getVoci());
 		if (!daLeggere.isEmpty() && isAttaccoDiRiserva(daLeggere.get(daLeggere.size() - 1))) {
@@ -110,6 +114,9 @@ final class BozzaTattica {
 		return filtro;
 	}
 
+	/**
+	 * Lo stesso per una condizione: oltre al rovescio dei suoi confronti, normalizza anche i filtri che contiene (QUANTI)
+	 */
 	static PredicatoMD normalizza(PredicatoMD predicato) {
 		List<FiltroMD> filtri = new ArrayList<>();
 		for (FiltroMD filtro : predicato.getFiltri()) {
@@ -128,6 +135,10 @@ final class BozzaTattica {
 		return con;
 	}
 
+	/**
+	 * Se la voce è l'attacco fisico sul primo avversario senza filtri né condizioni: la stessa cosa che il Valutatore fa da solo quando nessuna voce è
+	 * eseguibile. Scritta in coda a una tattica (le predefinite lo fanno) non entra nella bozza, per non mostrarla due volte.
+	 */
 	private static boolean isAttaccoDiRiserva(VoceMD voce) {
 		SelettoreMD selettore = voce.selettoreEffettivo();
 		return voce.isAttiva() && voce.getCondizioni().isEmpty() && voce.getAzioni().size() == 1
@@ -136,6 +147,9 @@ final class BozzaTattica {
 				&& selettore.getOrdinamento() != null && selettore.getOrdinamento().getTipo() == TipoOrdinamento.PRIMO;
 	}
 
+	/**
+	 * Le voci della bozza, in sola lettura come lista (le singole voci si modificano)
+	 */
 	List<Voce> getVoci() {
 		return Collections.unmodifiableList(voci);
 	}
@@ -202,6 +216,9 @@ final class BozzaTattica {
 		return voce;
 	}
 
+	/**
+	 * Toglie la voce in quella posizione
+	 */
 	void rimuoviVoce(int indice) {
 		voci.remove(indice);
 	}
@@ -273,11 +290,18 @@ final class BozzaTattica {
 		correggiLaRosa(voce);
 	}
 
+	/**
+	 * Cambia il tipo di un'azione della voce, con i parametri predefiniti del nuovo tipo; anche qui la rosa si corregge se non va più bene
+	 */
 	void sostituisciAzione(Voce voce, int indice, TipoAzione tipo) {
 		voce.azioni.set(indice, azionePredefinita(tipo));
 		correggiLaRosa(voce);
 	}
 
+	/**
+	 * Se la rosa della voce non è più ammessa dalle sue azioni (o non è ancora stata scelta) passa alla prima che va bene, e filtri e ordinamento
+	 * ripartono da zero: quelli della rosa di prima possono non avere senso sulla nuova
+	 */
 	private static void correggiLaRosa(Voce voce) {
 		List<TipoRosa> ammesse = roseAmmesse(voce);
 		if (!ammesse.isEmpty() && (voce.rosa == null || !ammesse.contains(voce.rosa))) {
@@ -289,6 +313,10 @@ final class BozzaTattica {
 
 	// ------------------------------------------------------------------ i valori predefiniti
 
+	/**
+	 * L'azione di quel tipo con i parametri iniziali: il criterio più adatto per gli incantesimi, il primo tipo di danno per il cambio d'arma (il
+	 * giocatore poi lo cambia)
+	 */
 	static AzioneMD azionePredefinita(TipoAzione tipo) {
 		switch (tipo) {
 			case INCANTESIMO_DI_DANNO:
@@ -302,15 +330,25 @@ final class BozzaTattica {
 		}
 	}
 
+	/**
+	 * L'ordinamento di quel tipo, con il primo tipo di danno se ne vuole uno
+	 */
 	static OrdinamentoMD ordinamentoPredefinito(TipoOrdinamento tipo) {
 		return tipo.getParametro() == TipoParametro.TIPO_DANNO ? OrdinamentoMD.di(tipo, TipoDanno.values()[0]) : OrdinamentoMD.di(tipo);
 	}
 
+	/**
+	 * Un filtro nuovo di quel tipo, con un parametro qualsiasi ma valido (il confronto "minore di", tranne dove c'è solo il confronto): la bozza non
+	 * può avere pezzi a metà, perché i dati sono immutabili e verificano i parametri alla costruzione
+	 */
 	static FiltroMD filtroPredefinito(TipoFiltro tipo) {
 		return filtro(tipo, false, tipo.getParametro() == TipoParametro.CONFRONTO ? Confronto.MAGGIORE : Confronto.MINORE,
 				numeroPredefinito(tipo), parametroPredefinito(tipo.getParametro()));
 	}
 
+	/**
+	 * Una condizione nuova di quel tipo con valori di partenza ragionevoli (50% di probabilità, "almeno un avversario" per QUANTI...)
+	 */
 	static PredicatoMD predicatoPredefinito(TipoPredicato tipo) {
 		switch (tipo) {
 			case QUANTI:
@@ -323,6 +361,9 @@ final class BozzaTattica {
 		}
 	}
 
+	/**
+	 * Il numero di partenza di un filtro numerico, nell'ordine di grandezza della sua misura (50 punti o percento di salute, 10 di MAGIA, livello 5)
+	 */
 	private static int numeroPredefinito(TipoFiltro tipo) {
 		switch (tipo) {
 			case SALUTE:
@@ -338,6 +379,9 @@ final class BozzaTattica {
 		}
 	}
 
+	/**
+	 * Il primo valore dell'enumerato che il parametro richiede, o null se non ne vuole uno
+	 */
 	private static Object parametroPredefinito(TipoParametro parametro) {
 		switch (parametro) {
 			case STATO:
@@ -407,9 +451,11 @@ final class BozzaTattica {
 		return ammessi;
 	}
 
+	// I filtri che confrontano il candidato con chi decide o con la sua storia: non si offrono mai nei filtri di un selettore o di un QUANTI
 	private static final Set<TipoFiltro> SOLO_PER_SCEGLIERE = EnumSet.of(TipoFiltro.IL_CAPO, TipoFiltro.ME_STESSO, TipoFiltro.SCELTO_L_ULTIMA_VOLTA,
 			TipoFiltro.MI_HA_ATTACCATO_PER_ULTIMO);
 
+	// I filtri che non hanno senso quando la rosa è il solo attore (SE_STESSO)
 	private static final Set<TipoFiltro> SOLO_SU_ALTRI = EnumSet.of(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, TipoFiltro.CLASSE, TipoFiltro.CATEGORIA,
 			TipoFiltro.IL_CAPO, TipoFiltro.ME_STESSO, TipoFiltro.SCELTO_L_ULTIMA_VOLTA, TipoFiltro.MI_HA_ATTACCATO_PER_ULTIMO,
 			TipoFiltro.DEBOLE_ALL_AZIONE);
@@ -421,6 +467,9 @@ final class BozzaTattica {
 		return tipo == TipoFiltro.SALUTE || tipo == TipoFiltro.SALUTE_PERCENTUALE || tipo == TipoFiltro.MAGIA ? 5 : 1;
 	}
 
+	/**
+	 * Come passo(TipoFiltro), per una condizione: la probabilità va di 5 in 5
+	 */
 	static int passo(TipoPredicato tipo) {
 		return tipo == TipoPredicato.PROBABILITA ? 5 : 1;
 	}
@@ -429,6 +478,9 @@ final class BozzaTattica {
 		return tipo == TipoFiltro.SALUTE_PERCENTUALE ? 100 : MASSIMO_NUMERO;
 	}
 
+	/**
+	 * Come massimo(TipoFiltro), per una condizione: la probabilità arriva a 100
+	 */
 	static int massimo(TipoPredicato tipo) {
 		return tipo == TipoPredicato.PROBABILITA ? 100 : MASSIMO_NUMERO;
 	}
@@ -463,6 +515,10 @@ final class BozzaTattica {
 		return negato ? filtro.negato() : filtro;
 	}
 
+	/**
+	 * Il parametro enumerato del filtro (stato, classe, categoria o tipo di danno), o null se non ne ha: quello che serve per ricostruirlo con
+	 * {@link #filtro}
+	 */
 	static Object parametroDi(FiltroMD filtro) {
 		if (filtro.getStato() != null) {
 			return filtro.getStato();
@@ -476,6 +532,9 @@ final class BozzaTattica {
 		return filtro.getTipoDanno();
 	}
 
+	/**
+	 * Lo stesso filtro con un altro numero, tenuto fra 0 e il massimo del suo tipo
+	 */
 	static FiltroMD conNumero(FiltroMD f, int numero) {
 		int limitato = Math.max(0, Math.min(massimo(f.getTipo()), numero));
 		return filtro(f.getTipo(), f.isNegato(), f.getConfronto(), limitato, parametroDi(f));
@@ -499,23 +558,38 @@ final class BozzaTattica {
 		return predicato(p.getTipo(), negato, confronto, p.getNumero(), p.getRosa(), p.getFiltri());
 	}
 
+	/**
+	 * Lo stesso filtro con un altro confronto (i dati sono immutabili: si ricostruisce)
+	 */
 	static FiltroMD conConfronto(FiltroMD f, Confronto confronto) {
 		return filtro(f.getTipo(), f.isNegato(), confronto, f.getNumero(), parametroDi(f));
 	}
 
+	/**
+	 * Lo stesso filtro con un altro parametro enumerato
+	 */
 	static FiltroMD conParametro(FiltroMD f, Object parametro) {
 		return filtro(f.getTipo(), f.isNegato(), f.getConfronto(), f.getNumero(), parametro);
 	}
 
+	/**
+	 * La stessa condizione con un altro numero, tenuto fra 0 e il massimo del suo tipo
+	 */
 	static PredicatoMD conNumero(PredicatoMD p, int numero) {
 		int limitato = Math.max(0, Math.min(massimo(p.getTipo()), numero));
 		return predicato(p.getTipo(), p.isNegato(), p.getConfronto(), limitato, p.getRosa(), p.getFiltri());
 	}
 
+	/**
+	 * La stessa condizione con un altro confronto
+	 */
 	static PredicatoMD conConfronto(PredicatoMD p, Confronto confronto) {
 		return predicato(p.getTipo(), p.isNegato(), confronto, p.getNumero(), p.getRosa(), p.getFiltri());
 	}
 
+	/**
+	 * La stessa condizione QUANTI su un'altra rosa
+	 */
 	static PredicatoMD conRosa(PredicatoMD p, TipoRosa rosa) {
 		// I filtri che non hanno senso sulla nuova rosa cadono
 		List<FiltroMD> filtri = new ArrayList<>();
@@ -527,10 +601,16 @@ final class BozzaTattica {
 		return predicato(p.getTipo(), p.isNegato(), p.getConfronto(), p.getNumero(), rosa, filtri);
 	}
 
+	/**
+	 * La stessa condizione QUANTI con altri filtri
+	 */
 	static PredicatoMD conFiltri(PredicatoMD p, List<FiltroMD> filtri) {
 		return predicato(p.getTipo(), p.isNegato(), p.getConfronto(), p.getNumero(), p.getRosa(), filtri);
 	}
 
+	/**
+	 * Ricostruisce una condizione dai suoi pezzi (i dati sono immutabili): quelli che il tipo non usa si ignorano
+	 */
 	static PredicatoMD predicato(TipoPredicato tipo, boolean negato, Confronto confronto, int numero, TipoRosa rosa, List<FiltroMD> filtri) {
 		PredicatoMD predicato;
 		switch (tipo) {
@@ -546,6 +626,9 @@ final class BozzaTattica {
 		return negato ? predicato.negato() : predicato;
 	}
 
+	/**
+	 * La stessa azione (INCANTESIMO_DI_DANNO o del repertorio) con un altro criterio di scelta
+	 */
 	static AzioneMD conCriterio(AzioneMD a, CriterioIncantesimo criterio) {
 		return a.getTipo() == TipoAzione.INCANTESIMO_DI_DANNO
 				? AzioneMD.incantesimoDiDanno(criterio, a.isSoloSePiuForteDellAttacco())

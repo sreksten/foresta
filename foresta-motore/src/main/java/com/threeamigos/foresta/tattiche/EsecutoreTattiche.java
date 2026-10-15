@@ -73,13 +73,19 @@ public final class EsecutoreTattiche {
 	 * @return la decisione, o null se non c'era niente da fare (nessun bersaglio)
 	 */
 	public Decisione agisci(Personaggio attore, TatticaMD tattica) {
+		// Tre passi: decidere (il Valutatore non cambia niente), annunciare la decisione e poi eseguirla. Il contesto è nuovo a ogni azione e si butta
+		// dopo: è una fotografia dei gruppi di quel momento (chi è caduto, chi è silenziato...) e non va tenuto da un'azione all'altra
 		Decisione decisione = Valutatore.decidi(tattica, ContestoTattico.per(attore, miei, avversari));
 		if (decisione == null) {
 			return null;
 		}
+		// Pubblicato prima dell'esecuzione: nel log la spiegazione precede le righe dell'azione, e la UI scrive l'azione sotto il personaggio prima che
+		// questa accada (ForestaUI.gestisciEventoDecisioneTattica)
 		BusEventi.pubblica(new InternoDecisioneTattica(attore, decisione.getBersaglio(), decisione.getTipoEseguito(), decisione.getIndiceVoce(),
 				decisione.getSpiegazione()));
 		esegui(attore, decisione);
+		// Il ripiego non è una voce della tattica: non ha un identificativo e non conta per VOCE_USATA e ROUND_DALL_ULTIMO_USO. L'uso si registra dopo
+		// l'esecuzione, così durante l'azione la voce risulta ancora non usata in questo round
 		if (!decisione.isRipiego()) {
 			stato.registraUsoVoce(attore, decisione.getIdentificativoVoce());
 		}
@@ -90,12 +96,15 @@ public final class EsecutoreTattiche {
 	 * Fa quello che la decisione dice
 	 */
 	public void esegui(Personaggio attore, Decisione decisione) {
+		// Lo stesso esecutore serve i due lati: "miei" è sempre il gruppo del giocatore, e da lì si ricava di chi è l'attore e chi è il suo nemico
 		boolean deiMiei = miei.contiene(attore);
 		Gruppo gruppoDellAttore = deiMiei ? miei : avversari;
 		Gruppo gruppoNemico = deiMiei ? avversari : miei;
 		Personaggio bersaglio = decisione.getBersaglio();
 		switch (decisione.getTipoEseguito()) {
 			case ATTACCO_FISICO:
+				// I miei passano dal metodo di questa classe, che registra gli uccisi (esperienza e punti); i mostri attaccano con il proprio metodo, in
+				// PersonaggioBase, che ferma il colpo successivo se il bersaglio è già fuori combattimento ma non registra nessuno
 				if (deiMiei) {
 					attaccaConLeArmi(attore, bersaglio);
 				} else {
@@ -105,6 +114,7 @@ public final class EsecutoreTattiche {
 			case DARDO_ARCANO:
 				scagliaIlDardo(attore, bersaglio);
 				break;
+			// La Resurrezione consuma una pergamena se il gruppo ne ha una (consumaLaPergamena non fa niente se non ce ne sono)
 			case RESURREZIONE:
 				annuncia(attore, bersaglio);
 				FabbricaIncantesimi.crea(ClasseIncantesimo.RESURREZIONE, attore.getLivello()).formula(attore, bersaglio, null);
@@ -118,6 +128,7 @@ public final class EsecutoreTattiche {
 					consumaLaPergamena(gruppoDellAttore, ClasseIncantesimo.ALBA_SACRA);
 				}
 				break;
+			// I canti sono tutti la stessa azione con un tipo diverso: il canto curativo ha un bersaglio, gli altri agiscono sul gruppo
 			case CANTO_CURATIVO:
 				canta(attore, TipoCanto.CURATIVO, bersaglio, gruppoDellAttore, gruppoNemico);
 				break;
@@ -130,6 +141,8 @@ public final class EsecutoreTattiche {
 			case CANTO_DI_VALORE:
 				canta(attore, TipoCanto.DI_VALORE, null, gruppoDellAttore, gruppoNemico);
 				break;
+			// Le pozioni si prendono dalle scorte del gruppo dell'attore e si ricorda l'alleato scelto, per ULTIMO_SCELTO e SCELTO_L_ULTIMA_VOLTA. Il
+			// bersaglio è annunciato come null: l'attore beve o dà da bere, non attacca nessuno
 			case POZIONE_SALUTE:
 				annuncia(attore, null);
 				gruppoDellAttore.consumaPozioneSalute(bersaglio);
@@ -153,6 +166,8 @@ public final class EsecutoreTattiche {
 			case CAMBIA_ARMA:
 				cambiaArma(attore, decisione);
 				break;
+			// Tutto il resto sono incantesimi di una classe precisa: ARIA, ACQUA, ..., MORTE, SILENZIO, LUCE_DIVINA. INCANTESIMO_DI_DANNO e
+			// INCANTESIMO_DEL_REPERTORIO non arrivano qui: il Valutatore li ha già trasformati in quello scelto (Decisione.getTipoEseguito)
 			default:
 				lanciaUnIncantesimoDiDanno(attore, decisione, gruppoDellAttore);
 				break;
@@ -164,11 +179,13 @@ public final class EsecutoreTattiche {
 	 * prima l'ha ucciso); chi ucciderebbe l'ultimo avversario non ha altri colpi.
 	 */
 	public void attaccaConLeArmi(Personaggio attore, Personaggio bersaglio) {
+		// Prima si apre il riquadro del combattimento sul bersaglio (ForestaUI), poi si annuncia chi agisce e si scrive la riga di testo dell'attacco
 		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(attore, bersaglio));
 		annuncia(attore, bersaglio);
 
 		Logger.log(attore.getNome() + " attacca " + bersaglio.getNome());
 
+		// Una fase per ogni arma impugnata (principale e secondaria); il fattore ne riduce il danno. Il tiro per colpire si fa fase per fase
 		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(attore, bersaglio)) {
 			Arma arma = fase.getArma();
 			boolean colpisce = CalcolatoreCombattimento.colpisce(attore, bersaglio, arma.getTipoDanno().getSuperTipo());
@@ -177,6 +194,7 @@ public final class EsecutoreTattiche {
 				bersaglio.applicaRisultatoCombattimento(risultato);
 				if (bersaglio.isFuoriCombattimento()) {
 					uccisioni.registra(attore, bersaglio);
+					// Il colpo successivo passa al primo avversario ancora in piedi (non al "prossimo" della rosa): coerente con il ripiego del Valutatore
 					List<Personaggio> vivi = avversari.getPersonaggiVivi();
 					if (vivi.isEmpty()) {
 						return;
@@ -191,6 +209,8 @@ public final class EsecutoreTattiche {
 	 * Il dardo arcano contro un bersaglio (costa MAGIA, non consuma pergamene): l'esito si ricorda per le tattiche
 	 */
 	public void scagliaIlDardo(Personaggio formulante, Personaggio bersaglio) {
+		// Un incantesimo "fatto in casa": non passa dalla fabbrica degli incantesimi, quindi l'esito (colpito, mancato) lo registra qui e non in
+		// IncantesimoMaleficoImpl come per gli altri. Il costo in MAGIA si paga comunque, anche se il dardo manca
 		DardoArcano dardo = new DardoArcano(formulante);
 		annuncia(formulante, bersaglio);
 		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
@@ -232,12 +252,20 @@ public final class EsecutoreTattiche {
 		}
 	}
 
+	/**
+	 * Toglie una pergamena di quella classe dalle scorte del gruppo, se ce n'è; senza, niente (un mostro non ne ha, un personaggio con il potere innato
+	 * non ne usa: chi chiama decide se chiamarlo)
+	 */
 	private static void consumaLaPergamena(Gruppo gruppoDellAttore, ClasseIncantesimo classe) {
 		if (gruppoDellAttore.getIncantesimi(classe) > 0) {
 			gruppoDellAttore.subIncantesimi(classe, 1);
 		}
 	}
 
+	/**
+	 * <code>cantaSu</code> dice se il canto ha avuto luogo (e ha consumato MAGIA) o se non c'era nessuno su cui farlo: solo nel primo caso conta come
+	 * incantesimo lanciato (per il filtro MAGICO) e si annuncia. Nel secondo non si annuncia niente e per la tattica il turno è comunque speso.
+	 */
 	private void canta(Personaggio cantore, TipoCanto tipo, Personaggio bersaglio, Gruppo gruppoDelCantore, Gruppo gruppoNemico) {
 		if (FabbricaCanti.crea(tipo, cantore).cantaSu(cantore, bersaglio, gruppoDelCantore, gruppoNemico)) {
 			stato.registraIncantesimoLanciato(cantore);
@@ -261,6 +289,9 @@ public final class EsecutoreTattiche {
 		}
 	}
 
+	/**
+	 * Dice alla UI che l'attore sta agendo (bersaglio null se non ne ha uno): il riquadro del combattimento mostra l'uno e l'altro
+	 */
 	private static void annuncia(Personaggio attore, Personaggio bersaglio) {
 		BusEventi.pubblica(new InternoAzioneInCombattimento(attore, bersaglio));
 	}

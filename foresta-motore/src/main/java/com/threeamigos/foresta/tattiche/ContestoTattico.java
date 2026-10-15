@@ -21,6 +21,8 @@ import java.util.List;
  */
 public final class ContestoTattico {
 
+	// Il contesto è immutabile: le liste sono copie non modificabili e conAzione, conVoce, conStato e conGruppoDegliAlleati restituiscono un contesto
+	// nuovo con quel solo campo cambiato. I campi azioneInValutazione e identificativoVoce valgono null finché non si valuta una voce.
 	private final Personaggio attore;
 	private final boolean attoreDelGiocatore;
 	private final List<Personaggio> alleati;
@@ -28,6 +30,7 @@ public final class ContestoTattico {
 	private final List<Personaggio> ospitiVulnerabili;
 	private final Personaggio capoDegliAlleati;
 	private final Personaggio capoDegliAvversari;
+	// La memoria dello scontro è un singleton (StatoDelCombattimento.getIstanza): il contesto la porta con sé per poterla sostituire nei test (conStato)
 	private final StatoDelCombattimento stato;
 	private final TipoAzione azioneInValutazione;
 	private final String identificativoVoce;
@@ -44,6 +47,9 @@ public final class ContestoTattico {
 				StatoDelCombattimento.getIstanza(), null, null, null);
 	}
 
+	/**
+	 * Il costruttore completo, usato da tutti i "con...": ricopia le liste, quindi un contesto non vede cambiare i gruppi dopo la sua creazione
+	 */
 	private ContestoTattico(Personaggio attore, boolean attoreDelGiocatore, List<Personaggio> alleati, List<Personaggio> avversari,
 							List<Personaggio> ospitiVulnerabili, Personaggio capoDegliAlleati, Personaggio capoDegliAvversari,
 							StatoDelCombattimento stato, TipoAzione azioneInValutazione, String identificativoVoce, Gruppo gruppoDegliAlleati) {
@@ -60,6 +66,9 @@ public final class ContestoTattico {
 		this.gruppoDegliAlleati = gruppoDegliAlleati;
 	}
 
+	/**
+	 * Il primo del gruppo è il suo capo (il gruppo tiene il capo in testa); null per un gruppo vuoto
+	 */
 	private static Personaggio primo(List<Personaggio> personaggi) {
 		return personaggi.isEmpty() ? null : personaggi.get(0);
 	}
@@ -76,10 +85,13 @@ public final class ContestoTattico {
 	 * Come {@link #per(Personaggio)}, ma con i gruppi dati (le simulazioni non usano quelli della partita)
 	 */
 	public static ContestoTattico per(Personaggio attore, Gruppo giocatore, Gruppo mostri) {
+		// Il lato dell'attore si decide cercandolo nel gruppo del giocatore: chi non c'è è un mostro. Da qui in poi "alleati" e "avversari" sono relativi
+		// all'attore, e le rose e i filtri non devono più chiedersi di che lato sia
 		boolean delGiocatore = giocatore.contiene(attore);
 		return new ContestoTattico(attore, delGiocatore,
 				(delGiocatore ? giocatore : mostri).getPersonaggi(),
 				(delGiocatore ? mostri : giocatore).getPersonaggi(),
+				// Gli ospiti vulnerabili stanno sempre nel gruppo del giocatore, anche per un mostro che li può scegliere come bersagli
 				giocatore.getOspitiBersaglio(),
 				(delGiocatore ? giocatore : mostri).getCapo(),
 				(delGiocatore ? mostri : giocatore).getCapo(),

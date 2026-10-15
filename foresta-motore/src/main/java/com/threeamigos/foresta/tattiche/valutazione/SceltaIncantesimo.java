@@ -11,7 +11,6 @@ import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
-import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
 import java.util.ArrayList;
@@ -66,6 +65,10 @@ public final class SceltaIncantesimo {
 		return lanciabiliContro(attore, bersaglio, contesto, ELEMENTALI);
 	}
 
+	/**
+	 * I lanciabili fra quelli dell'elenco, nell'ordine dell'elenco (da cui "a parità vince il primo" negli altri criteri). Tutti i controlli, tranne la
+	 * pergamena, sono sul bersaglio: dipendono quindi da chi è colpito, non solo da chi lancia.
+	 */
 	private static List<ClasseIncantesimo> lanciabiliContro(Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
 															List<ClasseIncantesimo> elenco) {
 		List<ClasseIncantesimo> lanciabili = new ArrayList<>();
@@ -99,6 +102,8 @@ public final class SceltaIncantesimo {
 			return null;
 		}
 		ClasseIncantesimo scelto = secondoIlCriterio(azione, attore, bersaglio, contesto, lanciabili);
+		// Il confronto con l'attacco si fa solo sull'incantesimo già scelto: se il migliore secondo il criterio non batte le armi, non si prova con gli
+		// altri e l'azione non è applicabile (la voce passa alla sua azione successiva, di solito l'attacco fisico)
 		if (azione.isSoloSePiuForteDellAttacco()
 				&& dannoAttesoSuUno(attore, bersaglio, scelto) <= CalcolatoreCombattimento.dannoAttesoDellaMischia(attore, bersaglio)) {
 			return null;
@@ -106,6 +111,9 @@ public final class SceltaIncantesimo {
 		return scelto;
 	}
 
+	/**
+	 * Applica il criterio dell'azione a una lista non vuota di lanciabili; a parità di misura vince il primo dell'elenco
+	 */
 	private static ClasseIncantesimo secondoIlCriterio(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
 													   List<ClasseIncantesimo> lanciabili) {
 		switch (azione.getCriterio()) {
@@ -159,6 +167,9 @@ public final class SceltaIncantesimo {
 		return sb.toString();
 	}
 
+	/**
+	 * Il valore che un criterio massimizza per un incantesimo
+	 */
 	private interface Misura {
 		double di(ClasseIncantesimo classe);
 	}
@@ -179,6 +190,9 @@ public final class SceltaIncantesimo {
 		return migliore;
 	}
 
+	/**
+	 * L'incantesimo di quella classe come arma, al livello dell'attore (per chiedere al calcolatore il danno atteso senza lanciarlo)
+	 */
 	private static Arma incantesimo(Personaggio attore, ClasseIncantesimo classe) {
 		return (Arma) FabbricaIncantesimi.crea(classe, attore.getLivello());
 	}
@@ -190,6 +204,9 @@ public final class SceltaIncantesimo {
 		return CalcolatoreCombattimento.dannoAtteso(attore, bersaglio, incantesimo(attore, classe));
 	}
 
+	/**
+	 * Se il dardo arcano rende più dell'attacco con le armi sul bersaglio, in danni attesi (per DARDO_ARCANO con soloSePiuForteDellAttacco)
+	 */
 	static boolean piuForteDellAttaccoConIlDardo(Personaggio attore, Personaggio bersaglio) {
 		return CalcolatoreCombattimento.dannoAtteso(attore, bersaglio, new DardoArcano(attore))
 				> CalcolatoreCombattimento.dannoAttesoDellaMischia(attore, bersaglio);
@@ -274,9 +291,5 @@ public final class SceltaIncantesimo {
 			}
 		}
 		return economico != null ? economico : piuAdattoEsperto(attore, bersaglio, contesto, lanciabili);
-	}
-
-	static TipoDanno tipoDanno(ClasseIncantesimo classe) {
-		return classe.getTipoDanno();
 	}
 }

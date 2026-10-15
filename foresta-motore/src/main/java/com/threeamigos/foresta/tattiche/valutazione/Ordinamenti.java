@@ -42,16 +42,25 @@ public final class Ordinamenti {
 			case PRIMO:
 				return candidati.get(0);
 			case A_CASO:
+				// L'unica fonte di caso: Dado, così le prove possono truccare il tiro. tiraAncheAUnaFaccia accetta anche un solo candidato (1 faccia)
 				return candidati.get(Dado.tiraAncheAUnaFaccia(candidati.size()) - 1);
 			default:
 				return conLaMisuraMigliore(candidati, ordinamento);
 		}
 	}
 
+	/**
+	 * Il personaggio cercato se è fra i candidati, altrimenti null. La memoria di chi decide (l'ultimo attaccante, l'ultimo scelto) può riferirsi a
+	 * qualcuno che nel frattempo è caduto o non è più in rosa: lo si scopre qui, non quando lo si ricorda.
+	 */
 	private static Personaggio fra(List<Personaggio> candidati, Personaggio cercato) {
 		return cercato != null && candidati.contains(cercato) ? cercato : null;
 	}
 
+	/**
+	 * Il candidato con la misura più alta; a parità il primo, perché il confronto è "maggiore" e non "maggiore o uguale". Tutti gli ordinamenti
+	 * "meno" sono resi "più" cambiando il segno della misura (vedi {@link #misura}).
+	 */
 	private static Personaggio conLaMisuraMigliore(List<Personaggio> candidati, OrdinamentoMD ordinamento) {
 		Personaggio migliore = candidati.get(0);
 		double misuraMigliore = misura(migliore, ordinamento);
@@ -100,6 +109,8 @@ public final class Ordinamenti {
 				return -candidato.getLivello();
 			case LIVELLO_PIU_ALTO:
 				return candidato.getLivello();
+			// Il moltiplicatore atteso comprende la difesa dell'equipaggiamento oltre a debolezze e resistenze di classe e di stati; un immune vale 0, quindi è
+			// il "più resistente". Il filtro DEBOLE_A, invece, guarda solo classe e stati (vedi Filtri.isDebole)
 			case PIU_DEBOLE_A:
 				return CalcolatoreCombattimento.moltiplicatoreAtteso(candidato, ordinamento.getTipoDanno());
 			case PIU_RESISTENTE_A:

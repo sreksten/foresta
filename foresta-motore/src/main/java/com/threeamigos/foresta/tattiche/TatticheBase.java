@@ -119,18 +119,30 @@ public final class TatticheBase {
 
 	// ======================================================================= i pezzi
 
+	/**
+	 * Un selettore: la rosa, l'ordinamento (senza parametri) e i filtri
+	 */
 	private static SelettoreMD su(TipoRosa rosa, TipoOrdinamento ordinamento, FiltroMD... filtri) {
 		return new SelettoreMD(rosa, Arrays.asList(filtri), OrdinamentoMD.di(ordinamento));
 	}
 
+	/**
+	 * Filtro: salute sotto quella percentuale della massima
+	 */
 	private static FiltroMD sotto(int percentuale) {
 		return FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, Confronto.MINORE, percentuale);
 	}
 
+	/**
+	 * Filtro: sa fare magie in questo momento (vedi Filtri.isMagico)
+	 */
 	private static FiltroMD magico() {
 		return FiltroMD.senzaParametro(TipoFiltro.MAGICO);
 	}
 
+	/**
+	 * Condizione vera nella percentuale indicata dei casi (tira il dado a ogni valutazione)
+	 */
 	private static PredicatoMD probabilita(int percentuale) {
 		return PredicatoMD.probabilita(percentuale);
 	}
@@ -150,22 +162,37 @@ public final class TatticheBase {
 		return PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, Confronto.MINORE, soglia).negato();
 	}
 
+	/**
+	 * L'attacco con le armi: l'ultima azione di quasi tutte le voci, perché non fallisce mai (vedi Requisiti)
+	 */
 	private static AzioneMD attacco() {
 		return AzioneMD.di(TipoAzione.ATTACCO_FISICO);
 	}
 
+	/**
+	 * L'incantesimo di danno (uno dei sette elementali) con il criterio di scelta dato
+	 */
 	private static AzioneMD danno(CriterioIncantesimo criterio, boolean soloSePiuForte) {
 		return AzioneMD.incantesimoDiDanno(criterio, soloSePiuForte);
 	}
 
+	/**
+	 * L'incantesimo del repertorio del mostro (anche la Morte e il Silenzio) con il criterio di scelta dato
+	 */
 	private static AzioneMD repertorio(CriterioIncantesimo criterio, boolean soloSePiuForte) {
 		return AzioneMD.incantesimoDelRepertorio(criterio, soloSePiuForte);
 	}
 
+	/**
+	 * Una voce attiva con un nome (la schermata delle tattiche e il log lo mostrano al posto di "Tattica" e il numero)
+	 */
 	private static VoceMD voce(String nome, SelettoreMD selettore, List<PredicatoMD> condizioni, AzioneMD... azioni) {
 		return new VoceMD(selettore, condizioni, Arrays.asList(azioni), true, nome);
 	}
 
+	/**
+	 * Le condizioni di una voce; il primo può essere null per dire "nessuna condizione" e allora viene saltato
+	 */
 	private static List<PredicatoMD> condizioni(PredicatoMD primo, PredicatoMD... altre) {
 		List<PredicatoMD> lista = new ArrayList<>();
 		if (primo != null) {
@@ -191,6 +218,9 @@ public final class TatticheBase {
 		// Quanto spesso lancia una magia invece di colpire, per fascia; i folletti ne fanno un uso sfrenato
 		int[] incantesimo = classe == TipoPersonaggio.FOLLETTO ? new int[]{80, 80, 80, 90} : new int[]{50, 60, 75, 90};
 
+		// Le fasce si aggiungono dalla più alta alla più bassa. Ogni fascia, tranne la bruta, comincia con una condizione sull'astuzia: la rampa del livello
+		// (Astuzia.di) porta il mostro in una fascia più alta col salire del mondo, e se nessuna voce di quella si può eseguire il mostro scende a quella sotto.
+		// Un mostro la cui astuzia massima non raggiunge la soglia non ha proprio quelle voci
 		List<VoceMD> voci = new ArrayList<>();
 		if (massima >= SOGLIA_STRATEGA) {
 			voci.addAll(fasciaStratega(classe, magico, incantesimo[3]));
@@ -313,6 +343,7 @@ public final class TatticheBase {
 	 * di genere (Guerriero e Guerriera...) hanno la stessa.
 	 */
 	public static TatticaMD deiGiocabili(TipoPersonaggio classe) {
+		// Il ruolo, non la classe: Mago e Maga hanno la stessa tattica
 		switch (classe.getRuolo()) {
 			case GUERRIERO:
 				return guerriero();

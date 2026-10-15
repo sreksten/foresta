@@ -38,6 +38,9 @@ final class TestoTattica {
 		return negato ? "non " + confronto(confronto) : confronto(confronto);
 	}
 
+	/**
+	 * Il criterio di scelta dell'incantesimo, a parole
+	 */
 	static String criterio(CriterioIncantesimo criterio) {
 		switch (criterio) {
 			case A_CASO:
@@ -58,6 +61,9 @@ final class TestoTattica {
 		return valore.name().toLowerCase(Locale.ITALIAN).replace('_', ' ');
 	}
 
+	/**
+	 * Un filtro a parole. I filtri con un confronto portano il rovescio dentro il confronto ("non minore di"), gli altri davanti ("senza")
+	 */
 	static String filtro(FiltroMD filtro) {
 		StringBuilder sb = new StringBuilder();
 		boolean conConfronto = filtro.getTipo().getParametro() == TipoParametro.CONFRONTO_E_NUMERO
@@ -84,6 +90,9 @@ final class TestoTattica {
 		return sb.toString();
 	}
 
+	/**
+	 * I filtri separati da virgole
+	 */
 	static String filtri(List<FiltroMD> filtri) {
 		List<String> testi = new ArrayList<>();
 		for (FiltroMD filtro : filtri) {
@@ -92,11 +101,17 @@ final class TestoTattica {
 		return String.join(", ", testi);
 	}
 
+	/**
+	 * L'ordinamento a parole, con il tipo di danno se ne ha uno
+	 */
 	static String ordinamento(OrdinamentoMD ordinamento) {
 		String testo = ordinamento.getTipo().getDescrizione().toLowerCase(Locale.ITALIAN);
 		return ordinamento.getTipoDanno() == null ? testo : testo + " " + ordinamento.getTipoDanno().getNome().toLowerCase(Locale.ITALIAN);
 	}
 
+	/**
+	 * Il selettore a parole: la rosa, fra parentesi i filtri e dopo i due punti l'ordinamento
+	 */
 	static String selettore(SelettoreMD selettore) {
 		StringBuilder sb = new StringBuilder(selettore.getRosa().getDescrizione());
 		if (!selettore.getFiltri().isEmpty()) {
@@ -108,6 +123,9 @@ final class TestoTattica {
 		return sb.toString();
 	}
 
+	/**
+	 * Una condizione a parole; PROBABILITA e QUANTI hanno una forma loro
+	 */
 	static String predicato(PredicatoMD predicato) {
 		StringBuilder sb = new StringBuilder();
 		switch (predicato.getTipo()) {
@@ -126,6 +144,9 @@ final class TestoTattica {
 		return sb.toString();
 	}
 
+	/**
+	 * Un'azione a parole, con il criterio, il tipo di danno dell'arma e il "solo se più forte" se li ha
+	 */
 	static String azione(AzioneMD azione) {
 		StringBuilder sb = new StringBuilder(azione.getTipo().getDescrizione());
 		if (azione.getCriterio() != null) {
@@ -179,6 +200,10 @@ final class TestoTattica {
 
 	// ================================================================ le spiegazioni degli elementi (riquadro destro della schermata)
 
+	/**
+	 * Il testo del riquadro destro per un elemento: una spiegazione per ogni valore degli enumerati, nel rispetto di quello che fa il motore
+	 * (tattiche.Rose, Filtri, Predicati, Ordinamenti, Requisiti). Se cambia il comportamento di uno di questi va cambiato anche il testo.
+	 */
 	static String spiega(TipoRosa rosa) {
 		switch (rosa) {
 			case SE_STESSO:
@@ -358,9 +383,9 @@ final class TestoTattica {
 			case CANTO_DI_VALORE:
 				return "Il canto del bardo che rafforza coraggio e precisione di tutto il gruppo. Si canta solo se qualcuno non è già ispirato.";
 			case POZIONE_SALUTE:
-				return "Beve una pozione della Salute dalla scorta del gruppo. Funziona solo se la magia non è piena.";
+				return "Beve una pozione della Salute dalla scorta del gruppo. Funziona solo se il bersaglio è ferito.";
 			case POZIONE_SALUTE_GRANDE:
-				return "Beve una pozione della Salute grande, che ridà molta più salute e ne aumenta il livello massimo. Funziona solo se la magia non è piena.";
+				return "Beve una pozione della Salute grande, che ridà molta più salute e ne aumenta il livello massimo. Funziona solo se il bersaglio è ferito.";
 			case POZIONE_MAGIA:
 				return "Beve una pozione della Magia dalla scorta del gruppo. Funziona solo se la magia non è piena.";
 			case POZIONE_MAGIA_GRANDE:

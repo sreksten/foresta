@@ -42,9 +42,13 @@ public final class Selettori {
 	 * ({@link Ammissione}), e i filtri che dipendono dall'azione (DEBOLE_ALL_AZIONE) la valutano per quella che si farebbe su ciascuno
 	 */
 	public static RisultatoSelezione seleziona(SelettoreMD selettore, ContestoTattico contesto, Ammissione ammissione) {
+		// Le fasi, sempre in questo ordine: la rosa dà i candidati; l'ammissione (se c'è) tiene solo quelli su cui un'azione si può fare; i filtri li
+		// restringono uno dopo l'altro (AND); l'ordinamento ne sceglie uno. I passi ricordano quanti candidati restano a ogni fase, per la spiegazione della decisione
 		List<String> passi = new ArrayList<>();
 		List<Personaggio> candidati = Rose.di(selettore.getRosa()).candidati(contesto);
 		passi.add(selettore.getRosa() + ": " + candidati.size() + nomi(candidati));
+		// Per ogni candidato rimasto, l'azione che si farebbe su di lui: i filtri che dipendono dall'azione (DEBOLE_ALL_AZIONE) la leggono dal contesto.
+		// Mappa per identità: due personaggi uguali per equals (stesso nome e classe) restano candidati distinti
 		Map<Personaggio, TipoAzione> azioni = new IdentityHashMap<>();
 		if (ammissione != null) {
 			List<Personaggio> applicabili = new ArrayList<>();
@@ -58,6 +62,7 @@ public final class Selettori {
 			candidati = applicabili;
 			passi.add("azione applicabile: " + candidati.size() + nomi(candidati));
 		}
+		// Ogni filtro vede solo i sopravvissuti del precedente: l'ordine dei filtri non cambia il risultato, ma cambia quanti controlli si fanno
 		for (FiltroMD filtro : selettore.getFiltri()) {
 			List<Personaggio> rimasti = new ArrayList<>();
 			for (Personaggio candidato : candidati) {
@@ -69,6 +74,8 @@ public final class Selettori {
 			candidati = rimasti;
 			passi.add(filtro + ": " + candidati.size() + nomi(candidati));
 		}
+		// scelto è null se non resta nessuno, ma anche se l'ordinamento vuole un personaggio preciso (ULTIMO_ATTACCANTE, ULTIMO_SCELTO) che non c'è
+		// fra i rimasti: per questo "rimasti" e "scelto" vanno guardati separatamente (vedi Valutatore e il predicato QUANTI)
 		Personaggio scelto = Ordinamenti.scegli(candidati, selettore.getOrdinamento(), contesto);
 		String misure = Ordinamenti.descriviLeMisure(candidati, selettore.getOrdinamento());
 		passi.add(selettore.getOrdinamento() + (misure.isEmpty() ? "" : " (" + misure + ")") + ": " + (scelto == null ? "nessuno" : scelto.getNome()));

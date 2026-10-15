@@ -31,6 +31,9 @@ public final class Requisiti {
 	private Requisiti() {
 	}
 
+	/**
+	 * Le azioni che curano: quelle che non possono avere come bersaglio un non morto del gruppo del giocatore (la Resurrezione compresa)
+	 */
 	private static boolean isUnaCura(TipoAzione tipo) {
 		return tipo == TipoAzione.CANTO_CURATIVO || tipo == TipoAzione.POZIONE_SALUTE
 				|| tipo == TipoAzione.POZIONE_SALUTE_GRANDE || tipo == TipoAzione.RESURREZIONE;
@@ -44,11 +47,14 @@ public final class Requisiti {
 		TipoAzione tipo = azione.getTipo();
 		StatoDelCombattimento stato = contesto.getStato();
 		PortataAzione portata = tipo.getPortata();
+		// Prima i requisiti comuni a tutte le azioni su un singolo bersaglio, poi (nello switch) quelli propri di ciascuna azione. Il primo che
+		// fallisce dà il motivo: un'azione che può essere scartata per più ragioni mostra sempre la stessa, quella che si controlla per prima
 		if (bersaglio != null && (portata == PortataAzione.AVVERSARIO || portata == PortataAzione.ALLEATO)) {
 			if (stato.isImmunitaScoperta(bersaglio, tipo)) {
 				return "si è scoperto che " + bersaglio.getNome() + " è immune a " + tipo;
 			}
-			// L'attacco fisico non si abbandona mai: è il ripiego, e "non fallisce mai" (§5)
+			// La memoria dello scontro: un'immunità scoperta (da chiunque, è conoscenza pubblica) o troppi fallimenti per caso. L'attacco fisico non si
+			// abbandona mai: è il ripiego, e "non fallisce mai" (§5)
 			if (tipo != TipoAzione.ATTACCO_FISICO
 					&& stato.getTentativiFalliti(attore, bersaglio, tipo) >= Costanti.MAX_TENTATIVI_FALLITI_PER_AZIONE) {
 				return tipo + " è già fallita " + Costanti.MAX_TENTATIVI_FALLITI_PER_AZIONE + " volte contro " + bersaglio.getNome();
@@ -61,10 +67,13 @@ public final class Requisiti {
 		switch (tipo) {
 			case ATTACCO_FISICO:
 				return bersaglio == null || bersaglio.isFuoriCombattimento() ? "nessun bersaglio" : null;
+			// Gli incantesimi di danno e del repertorio non hanno una classe fissa: è SceltaIncantesimo a dire se c'è qualcosa da lanciare
+			// (null: nessun lanciabile, oppure le armi rendono di più)
 			case INCANTESIMO_DI_DANNO:
 			case INCANTESIMO_DEL_REPERTORIO:
 				return SceltaIncantesimo.scegli(azione, attore, bersaglio, contesto) == null
 						? "nessun incantesimo adatto da lanciare contro " + nome(bersaglio) : null;
+			// Il dardo arcano non consuma pergamene: costa solo MAGIA, e lo possono lanciare solo le classi che lo conoscono
 			case DARDO_ARCANO:
 				if (!DardoArcano.puoLanciarlo(attore)) {
 					return "il dardo arcano non si può lanciare (classe, MAGIA o silenzio)";
@@ -75,6 +84,7 @@ public final class Requisiti {
 					return "manca la pergamena o la MAGIA per la Resurrezione";
 				}
 				return bersaglio == null || bersaglio.isVivo() || bersaglio.isInPanchina() ? "nessun caduto da risuscitare" : null;
+			// Un'azione su tutto il gruppo non ha un bersaglio: i requisiti guardano che nel gruppo ci sia qualcuno su cui valga la pena usarla
 			case ALBA_SACRA:
 				if (!AlbaSacra.puoLanciarlaInnata(attore) && !puoLanciare(attore, ClasseIncantesimo.ALBA_SACRA, contesto)) {
 					return "manca l'Alba sacra innata o la pergamena con la MAGIA";
@@ -95,6 +105,8 @@ public final class Requisiti {
 				}
 				return esiste(contesto.getAlleati(), p -> !p.isFuoriCombattimento() && !p.hasEffettoDiStato(TipoEffettoDiStato.ISPIRATO))
 						? null : "tutti sono già ispirati";
+			// Le pozioni vengono dalle scorte del gruppo (ContestoTattico). Quelle normali e quelle grandi sono azioni distinte: una voce le elenca in
+			// sequenza per scegliere quale usare per prima (vedi TatticheBase.pozioniDiSalute)
 			case POZIONE_SALUTE:
 				if (contesto.getPozioniSalute() <= 0) {
 					return "il gruppo non ha pozioni della Salute";
@@ -115,6 +127,7 @@ public final class Requisiti {
 					return "il gruppo non ha pozioni della Magia grandi";
 				}
 				return bersaglio != null && bersaglio.isVivo() && bersaglio.getMagia() < bersaglio.getMagiaMassima() ? null : "il bersaglio ha la MAGIA piena";
+			// Il cambio d'arma ha bisogno dell'inventario, che hanno solo i personaggi del giocatore: per un mostro il requisito fallisce sempre
 			case CAMBIA_ARMA:
 				if (!(contesto.getGruppoDegliAlleati() instanceof GruppoGiocatore)) {
 					return "solo i personaggi del giocatore cambiano arma";
@@ -143,6 +156,7 @@ public final class Requisiti {
 		if (bersaglio.isImmuneAIncantesimo(classe)) {
 			return nome(bersaglio) + " è immune a " + classe;
 		}
+		// Il Silenzio su chi è già silenziato (o non può esserlo) non ha senso, e non c'è un tipo di danno da confrontare
 		if (azione.getTipo() == TipoAzione.SILENZIO
 				&& (bersaglio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO) || bersaglio.isImmuneAEffetto(TipoEffettoDiStato.SILENZIATO))) {
 			return nome(bersaglio) + " è già silenziato o è immune al silenzio";
@@ -174,6 +188,9 @@ public final class Requisiti {
 		return null;
 	}
 
+	/**
+	 * Se l'incantesimo rende più dell'attacco con le armi sul bersaglio, in danni attesi (senza dadi: sempre lo stesso risultato per la stessa situazione)
+	 */
 	private static boolean piuForteDellAttacco(Personaggio attore, Personaggio bersaglio, ClasseIncantesimo classe) {
 		return SceltaIncantesimo.dannoAttesoSuUno(attore, bersaglio, classe)
 				> com.threeamigos.foresta.combattimento.CalcolatoreCombattimento.dannoAttesoDellaMischia(attore, bersaglio);
@@ -196,6 +213,9 @@ public final class Requisiti {
 		return contesto.isMostro(attore) && attore.isMagico() && attore.getRepertorioIncantesimi().contains(classe);
 	}
 
+	/**
+	 * I canti che agiscono sul gruppo avversario (ipnotico, urlo della Banshee): servono se c'è almeno un avversario in campo non già spaventato o confuso
+	 */
 	private static String canto(Personaggio attore, TipoCanto canto, ContestoTattico contesto) {
 		if (!CantoDelBardo.puoCantare(attore, canto)) {
 			return "il canto non si può cantare";
@@ -211,6 +231,9 @@ public final class Requisiti {
 		return !personaggio.isFuoriCombattimento() && Filtri.haUnoStatoNegativo(personaggio);
 	}
 
+	/**
+	 * Se almeno uno dei personaggi soddisfa la condizione
+	 */
 	private static boolean esiste(java.util.List<Personaggio> personaggi, java.util.function.Predicate<Personaggio> condizione) {
 		for (Personaggio personaggio : personaggi) {
 			if (condizione.test(personaggio)) {
@@ -220,6 +243,9 @@ public final class Requisiti {
 		return false;
 	}
 
+	/**
+	 * Il nome per i motivi del no; "nessuno" se il bersaglio manca
+	 */
 	private static String nome(Personaggio personaggio) {
 		return personaggio == null ? "nessuno" : personaggio.getNome();
 	}

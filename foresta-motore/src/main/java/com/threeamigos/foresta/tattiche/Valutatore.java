@@ -35,8 +35,11 @@ public final class Valutatore {
 	 * @return la decisione, o null se non c'è nessun avversario in campo da attaccare e nessuna voce è eseguibile
 	 */
 	public static Decisione decidi(TatticaMD tattica, ContestoTattico contesto) {
+		// La spiegazione si riempie passo per passo e finisce nella Decisione (e di lì nel log e in InternoDecisioneTattica): ogni ramo che scarta
+		// una voce o un'azione ne lascia il motivo, così si può ricostruire perché un personaggio ha fatto proprio quella mossa
 		List<String> spiegazione = new ArrayList<>();
 		List<VoceMD> voci = tattica.getVoci();
+		// Le voci si provano nell'ordine in cui sono scritte: la prima che produce una decisione vince e le successive non si guardano nemmeno
 		for (int i = 0; i < voci.size(); i++) {
 			VoceMD voce = voci.get(i);
 			String numero = "voce " + (i + 1);
@@ -44,6 +47,8 @@ public final class Valutatore {
 				spiegazione.add(numero + ": disattivata");
 				continue;
 			}
+			// L'identificativo di una voce è la sua posizione: i predicati VOCE_USATA e ROUND_DALL_ULTIMO_USO lo usano per leggere la scheda dello stato
+			// del combattimento. Va scritto nel contesto prima delle condizioni, non solo prima dell'esecuzione
 			ContestoTattico perLaVoce = contesto.conVoce(String.valueOf(i));
 			if (!Predicati.valgonoTutti(voce.getCondizioni(), perLaVoce)) {
 				spiegazione.add(numero + ": le condizioni non sono tutte vere " + voce.getCondizioni());
@@ -54,22 +59,31 @@ public final class Valutatore {
 				return decisione;
 			}
 		}
+		// Nessuna voce ha prodotto una decisione (o la tattica è vuota)
 		return ripiego(contesto, spiegazione);
 	}
 
+	/**
+	 * Prova a ricavare una decisione da una voce le cui condizioni sono già vere: trova il bersaglio con il selettore e poi sceglie l'azione.
+	 * Per le voci su un gruppo intero (portata GRUPPO_ALLEATI o GRUPPO_AVVERSARI) il selettore dice solo se c'è qualcuno e il bersaglio resta null.
+	 *
+	 * @return la decisione, o null se la voce non è eseguibile (il motivo è già in <code>spiegazione</code>) e si deve passare alla successiva
+	 */
 	private static Decisione valutaLaVoce(VoceMD voce, int indice, ContestoTattico contesto, List<String> spiegazione) {
 		String numero = "voce " + (indice + 1);
 		Personaggio attore = contesto.getAttore();
 		SelettoreMD selettore = voce.selettoreEffettivo();
 		PortataAzione portata = voce.getPortata();
 		if (portata == PortataAzione.GRUPPO_ALLEATI || portata == PortataAzione.GRUPPO_AVVERSARI) {
-			// Il selettore è solo un test di esistenza; l'azione agisce su tutto il gruppo
+			// Il selettore è solo un test di esistenza; l'azione agisce su tutto il gruppo. Si passa l'azione al contesto (la prima: sono tutte della
+			// stessa portata) perché un filtro come DEBOLE_ALL_AZIONE, che ne dipende, abbia qualcosa da leggere
 			RisultatoSelezione esistenza = Selettori.seleziona(selettore, contesto.conAzione(voce.getAzioni().get(0).getTipo()));
-			// Per un'azione su un gruppo intero il selettore è solo un test di esistenza: conta che resti qualcuno, non chi sceglierebbe l'ordinamento
+			// Si guardano i rimasti e non lo scelto: l'ordinamento potrebbe non scegliere nessuno (ULTIMO_ATTACCANTE) pur restando dei candidati
 			if (esistenza.getRimasti().isEmpty()) {
 				spiegazione.add(numero + ": nessun candidato " + esistenza.getPassi());
 				return null;
 			}
+			// Le azioni si provano in ordine e vince la prima che i requisiti permettono; senza bersaglio, i requisiti guardano il gruppo
 			for (AzioneMD azione : voce.getAzioni()) {
 				String motivo = Requisiti.motivoDelNo(azione, attore, null, contesto);
 				if (motivo == null) {
@@ -80,6 +94,8 @@ public final class Valutatore {
 			}
 			return null;
 		}
+		// Il bersaglio si sceglie fra chi ammette davvero almeno un'azione della voce (Ammissione): altrimenti un ordinamento come MENO_SALUTE potrebbe
+		// cadere su un candidato su cui nessuna azione si può fare, e la voce verrebbe scartata anche se ce n'era un altro adatto
 		RisultatoSelezione risultato = Selettori.seleziona(selettore, contesto, candidato -> primaAzioneApplicabile(voce, attore, candidato, contesto));
 		if (risultato.isVuoto()) {
 			spiegazione.add(numero + ": nessun bersaglio " + risultato.getPassi());
@@ -87,31 +103,49 @@ public final class Valutatore {
 		}
 		Personaggio bersaglio = risultato.getScelto();
 		spiegazione.add(numero + ": bersaglio " + bersaglio.getNome() + " " + risultato.getPassi());
+		// Le azioni si riprovano sul bersaglio scelto, nello stesso ordine: la prima che passa i requisiti è quella che si esegue (con l'incantesimo
+		// di danno sceglierla significa anche scegliere quale incantesimo, vedi decisioneSu)
 		for (AzioneMD azione : voce.getAzioni()) {
 			String motivo = Requisiti.motivoDelNo(azione, attore, bersaglio, contesto);
 			if (motivo != null) {
 				spiegazione.add(numero + ": " + azione.getTipo() + " scartata: " + motivo);
 				continue;
 			}
-			return decisioneSu(indice, azione, attore, bersaglio, contesto, spiegazione);
+			Decisione decisione = decisioneSu(indice, azione, attore, bersaglio, contesto, spiegazione);
+			if (decisione != null) {
+				return decisione;
+			}
+			// Succede solo con un incantesimo a criterio A_CASO e soloSePiuForteDellAttacco: la scelta ritira il dado, e l'incantesimo che bastava nel
+			// controllo dei requisiti può non bastare nella scelta vera. L'azione non è applicabile e si passa alla successiva della voce
+			spiegazione.add(numero + ": " + azione.getTipo() + " scartata: nessun incantesimo adatto alla scelta");
 		}
+		// Dopo l'Ammissione di solito non si arriva qui: solo se tutte le azioni sono state scartate come sopra
 		return null;
 	}
 
 	/**
 	 * L'azione di tipo INCANTESIMO_DI_DANNO diventa l'incantesimo scelto; le altre restano come sono. Per il cambio d'arma non c'è un bersaglio.
+	 *
+	 * @return la decisione, o null se l'incantesimo a criterio non ne trova nessuno da lanciare (vedi il chiamante)
 	 */
 	private static Decisione decisioneSu(int indice, AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
 										 List<String> spiegazione) {
 		TipoAzione tipo = azione.getTipo();
 		ClasseIncantesimo classe = tipo.getClasseIncantesimo();
 		if (tipo == TipoAzione.INCANTESIMO_DI_DANNO || tipo == TipoAzione.INCANTESIMO_DEL_REPERTORIO) {
+			// Qui si sceglie davvero: i requisiti avevano chiamato la stessa scelta solo per sapere se c'era qualcosa da lanciare. Con il criterio A_CASO
+			// ogni chiamata ritira il dado, quindi l'incantesimo di allora e questo possono essere diversi (entrambi fra i lanciabili)
 			classe = SceltaIncantesimo.scegli(azione, attore, bersaglio, contesto);
+			if (classe == null) {
+				// TipoAzione.di(null) darebbe ATTACCO_FISICO, la prima azione senza classe: un attacco che la tattica non ha chiesto
+				return null;
+			}
 			tipo = TipoAzione.di(classe);
 			spiegazione.add("voce " + (indice + 1) + ": " + azione + " sceglie " + classe + " (" + SceltaIncantesimo.descrivi(azione, attore, bersaglio, contesto) + ")");
 		} else {
 			spiegazione.add("voce " + (indice + 1) + ": " + azione + " su " + (bersaglio == null ? "nessuno" : bersaglio.getNome()));
 		}
+		// Il cambio d'arma ha come "bersaglio" l'attore stesso (rosa SE_STESSO), ma la decisione non lo porta: non c'è nessuno da colpire
 		Personaggio colpito = tipo == TipoAzione.CAMBIA_ARMA ? null : bersaglio;
 		return new Decisione(indice, azione, tipo, classe, colpito, spiegazione);
 	}
