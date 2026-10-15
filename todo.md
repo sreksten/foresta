@@ -10,7 +10,6 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 
 ## Da fare per prime
 
-- **Rivedere i nomi degli aggiornamenti.** Ricontrollare e riaggiustare a mano la grammatica `foresta-motore/src/main/resources/com/threeamigos/foresta/motore/aggiornamenti.txt`, produzione `NOME_AGGIORNAMENTO` (18 nomi buffi per gli oggetti dei cofani che fanno salire di un livello un artefatto: vedi [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md)). Un nome per riga, con l'articolo davanti; niente `[ ] { } | "`. Tolta la voce quando i nomi sono a posto.
 - **Più incantesimi e un'economia da rivedere.** A metà partita il gruppo non ha più le monete per comprare incantesimi o artefatti: i soldi non bastano e le fonti sono poche. Servono un modo per recuperare più incantesimi e una revisione dell'economia del mondo (vedi [`economia.md`](economia.md), "Che cosa non torna"). Una delle poche strade praticabili, oltre alle missioni, è il bottino lasciato dai mostri sconfitti: aggiungervi anche le monete. Oggi non ci sono, e `economia.md` lo dichiara scelta voluta (scheletri e spettri non hanno niente da lasciare, un bottino solo per alcuni sarebbe incoerente): la decisione va rivista, per esempio dando le monete solo alle classi che portano una borsa (vedi `BottinoDegliAvversari` per le pergamene). Da stabilire quante, in funzione del livello del mondo e dell'avversario, senza far crollare i prezzi dei negozi.
 - **Viaggio rapido.** Un modo per tornare in una locazione già visitata senza rifare la strada (città, locande, templi...), probabilmente a pagamento o a costo di tempo (ore di gioco, con la notte e gli eventi della linea temporale). Da decidere da dove si parte (mappa a tutto schermo?), cosa succede strada facendo e se vale per ogni tipo di locazione.
 
@@ -41,10 +40,6 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 
 ## Gioco e contenuti
 
-- **Gruppo in locazione**: il gruppo del giocatore e gli ospiti vivi si disegnano a destra e i mostri a sinistra, ognuno specchiato verso l'altro (`ClassePersonaggioImmagine.getImmagine(tipo, verso)`, 
-  che usa i versi di `VersiDeiPersonaggi`), con gli sprite dei danni, degli effetti e della morte al posto giusto. Gli sprite a tempo di salute e magia (anche dei mostri) non si sovrappongono più: 
-  se ce n'è già uno vicino e attivo, il nuovo parte più in basso (`primoPostoLibero`), e le variazioni nulle non ne creano. 
-  Da guardare in partita: i mostri molto larghi (Drago, 454 px su 390) vengono coperti dal gruppo.
 - Fumetto che attende la chiusura.
 - **Tabella delle debolezze e resistenze (provvisoria).** Le voci per classe e categoria in `TipoPersonaggio` e `CategoriaPersonaggio` sono un primo giro dalla tradizione fantasy (vedi [`debolezze_e_resistenze.md`](debolezze_e_resistenze.md)): vanno provate in partita, ritoccate e completate per le classi che non hanno ancora voci (Arpia, Centauro, Minotauro, Gigante, Titano, Goblin, Hobgoblin).
 - **Incantesimi che mancano per i tipi di danno non fisici (da fare fra i primi).** Ogni `TipoDanno` non fisico dovrebbe avere almeno un incantesimo che lo infligge. Oggi (`ClasseIncantesimo`, più il Dardo arcano e i canti) la situazione è questa:

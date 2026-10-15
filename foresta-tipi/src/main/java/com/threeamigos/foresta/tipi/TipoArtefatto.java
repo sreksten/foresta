@@ -46,7 +46,7 @@ public enum TipoArtefatto {
     SIGILLO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Sigillo", "porta con se"),
 
     // Un oggetto che sul banco dell'incantatore fa salire di un livello un artefatto, invece di dargli degli effetti: si trova
-    // solo nei cofani, non si compra né si vende (vedi isAggiornamento, RegoleIncantatura e aggiornamenti.txt per i nomi).
+    // solo nei cofani, non si compra né si vende (vedi isAggiornamento, RegoleIncantatura e artefatti2.txt per i nomi).
     AGGIORNAMENTO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Aggiornamento", "porta con se");
 
     private final SupertipoArtefatto supertipo;

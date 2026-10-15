@@ -38,7 +38,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | Carta, forbici e sasso (sfida, missione dei campioni) | `…/motore/PartitaCartaForbiciSasso`, `…/locazioni/LocazioneBase`, `…/missioni/storie/LaSfidaDeiCampioni`, `IlCampione`, `…/ui/DisplayableCanvasRiquadroSfida` | `carta_forbici_sasso.md` |
 | Intermezzi | `…/intermezzi` (anche `RegistroIntermezzi`) | `intermezzi.md` |
 | Testi generati, grammatiche | `…/testi/GrammarBean`, `ProduttoreDiTestiCasuale`, risorse `motore/*.txt` | `GrammarBean.md` |
-| Oggetti che fanno salire di livello un artefatto (solo nei cofani, si usano con la fusione) | `…/tipi/TipoArtefatto` (`AGGIORNAMENTO`), `…/oggetti/GeneratoreArtefattiTabelle`, `Cofano`, `…/motore/RegoleIncantatura`; **i nomi sono nella grammatica `foresta-motore/src/main/resources/com/threeamigos/foresta/motore/aggiornamenti.txt`** (produzione `NOME_AGGIORNAMENTO`) | `artefatti_e_incantamenti.md` |
+| Oggetti che fanno salire di livello un artefatto (solo nei cofani, si usano con la fusione) | `…/tipi/TipoArtefatto` (`AGGIORNAMENTO`), `…/oggetti/GeneratoreArtefattiTabelle`, `Cofano`, `…/motore/RegoleIncantatura`; **i nomi sono nella grammatica `foresta-motore/src/main/resources/com/threeamigos/foresta/motore/artefatti2.txt`** (produzione `NOME_AGGIORNAMENTO`) | `artefatti_e_incantamenti.md` |
 | Trofei | `…/trofei` (anche `RegistroTrofei`) | `motore_di_gioco.md` §10 |
 | Nomi dei personaggi, residenti del mondo (bardo, città, campioni) | risorsa `motore/nomi.txt`, `…/tipi/PersonaggioNoto`, `…/modellodati/ResidenteMD`, `…/motore/RegistroPersonaggi`, `ProduttoreDiTestiCasuale` | `nomi.md` |
 

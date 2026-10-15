@@ -1700,3 +1700,24 @@ DESCRIZIONE_MALEDIZIONE_PROTEZIONE
 
 DESCRIZIONE_MALEDIZIONE_PROTEZIONE_PLURALE
     che allontanano il malocchio | che scongiurano le maledizioni | che fanno le corna alla sfortuna
+
+// NOME_AGGIORNAMENTO: i nomi degli oggetti che fanno salire di un livello un artefatto (vedi TipoArtefatto.AGGIORNAMENTO,
+// RegoleIncantatura e ProduttoreDiTestiCasuale.nomeAggiornamento): si trovano solo nei cofani e si fondono sull'artefatto
+// dall'incantatore. Un nome è l'oggetto (la pergamena, il ninnolo, il gingillo...) con il suo articolo e quello che promette,
+// in stile burocratico-informatico come lo Scudo Fiscale: aggiornamenti, patch, condoni e piani casa. Un nome per riga, con
+// l'articolo davanti.
+NOME_AGGIORNAMENTO
+    la Pergamena dell'Ultima Moda
+    il Ninnolo dell'Ultimo Aggiornamento
+    il Ninnolo dell'Ultima Versione
+    la Pergamena della Sopraelevazione Abusiva
+    il Ninnolo dell'Ampliamento in Deroga
+    il Gingillo della Patch Risolutiva
+    la Pergamena delle Note di Rilascio
+    il Ninnolo del Riavvio Necessario
+    il Gingillo dell'Aggiornamento Obbligatorio
+    la Pergamena dello Scatto di Anzianità
+    il Ninnolo del Salto di Categoria
+    la Pergamena della Garanzia Estesa
+    il Gingillo della Versione Definitiva Finale Davvero
+    il Ninnolo del Collaudo Superato

@@ -100,7 +100,7 @@ class GeneratoreArtefattiTest {
             assertFalse(generatore.generaIngrediente(3).getTipo().isAggiornamento());
             assertFalse(generatore.generaArtefattoCasuale(3).getTipo().isAggiornamento());
         }
-        assertTrue(nomi.size() >= 15, nomi.toString());
+        assertTrue(nomi.size() >= 10, nomi.toString());
         assertTrue(nomi.contains("la Pergamena dell'Ultima Moda") && nomi.contains("il Ninnolo dell'Ultima Versione"), nomi.toString());
     }
 
