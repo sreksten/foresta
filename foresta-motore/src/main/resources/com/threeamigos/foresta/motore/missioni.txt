@@ -2,7 +2,7 @@
 // riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
 // l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; le cose da portare da una città all'altra,
 // anche di contrabbando; gli oggetti smarriti nella foresta; gli incarichi di combattimento, le sorveglianze, i
-// soccorsi, le indagini, i riti, le benedizioni, le lealtà, i tornei, le documentazioni e i colpi.
+// soccorsi, le indagini, i riti, le benedizioni, le lealtà, i tornei, le documentazioni, i colpi e le botteghe nella Foresta.
 // I nomi sono tutti maschili, perché i testi delle missioni parlano di "suo marito" e "sua moglie".
 //
 // Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
@@ -1628,5 +1628,100 @@ COLPO
     SCOPERTI=I goblin di %CAPO% vi hanno sorpresi davanti all'idolo: adesso lo sorvegliano giorno e notte. Il colpo è fallito.;\
     RINGRAZIAMENTO=I goblin non escono più dalla grotta: credono che il loro dio sia offeso. Lo sarei anch'io, con quei baffi.;\
     RICORDO=In questa grotta c'era un idolo dei goblin, con i baffi e un secchio in testa.
+
+// ---------------------------------------------------------------------------------------------
+// Le botteghe nella Foresta (vedi IlNegozio e le sue quattro sottoclassi)
+// ---------------------------------------------------------------------------------------------
+//
+// Il negoziante di una città chiede di disinfestare delle rovine ereditate da un suo parente, che vuole aprire una bottega
+// del suo stesso mestiere nella Foresta. La richiesta si compone di NEGOZIO_CAUSA, NEGOZIO_EREDITA e NEGOZIO_APPELLO, tutte
+// con questi segnaposto:
+//   %PARENTE%  chi aprirà la bottega, con il suo nome ("mio fratello Mastro Ferruccio": da NEGOZIO_PARENTE);
+//   %NOME%     il suo nome ("Mastro Ferruccio");
+//   %ROVINA%   le rovine, con l'articolo ("le Vestigia dell'Antico Impero"): il genere cambia, nei testi niente aggettivi da accordare;
+//   %NEMICI%   chi le infesta ("quattro Scheletri": da NEGOZIO_NEMICI).
+// NEGOZIO_NEMICI ha una riga per infestazione: NEMICO= (un TipoPersonaggio) e NUMERO=. I nomi delle botteghe hanno il
+// segnaposto %NOME% e l'articolo davanti. Nei testi non si usa il ";".
+
+NEGOZIO_PARENTE
+    mio fratello
+    mio cugino
+    un mio amico
+    mio nipote
+    mio cognato
+
+NEGOZIO_CAUSA
+    %PARENTE% ha deciso di andare a vivere fuori città, e vuole aprire anche lui una sua attività.
+    %PARENTE% è stufo del chiasso della città e vuole mettersi in proprio, lontano dalla folla.
+    %PARENTE% ha litigato con tutti i vicini, e vuole una bottega dove nessuno possa lamentarsi.
+    %PARENTE% sogna da anni una bottega tutta sua in mezzo alla foresta, con il silenzio e l'aria buona.
+    %PARENTE% dice che in città gli affitti sono troppo alti, e che nella foresta almeno i fantasmi non chiedono la caparra.
+    %PARENTE% vuole lasciare la città e aprire anche lui un'attività, lontano dalle guardie e dalle tasse.
+
+NEGOZIO_EREDITA
+    Ha ereditato %ROVINA% da uno zio, ma il posto è infestato da %NEMICI%.
+    Gli hanno lasciato in eredità %ROVINA%, ma il posto è infestato da %NEMICI%.
+    Ha ereditato %ROVINA% da una prozia, e purtroppo il posto è infestato da %NEMICI%.
+    Ha comprato %ROVINA% a un prezzo stracciato. Ora si capisce perché: il posto è infestato da %NEMICI%.
+
+NEGOZIO_APPELLO
+    Potreste dargli una mano a disinfestarlo?
+    Potreste ripulirlo, prima che ci si trasferisca?
+    Pensate di poter sfrattare gli inquilini, per lui?
+
+NEGOZIO_BATTUTA
+    Sfrattare mostri è un lavoro come un altro. Pagato bene, spero.
+    Disinfestare? Di solito si fa con la polvere. Noi usiamo la spada.
+    Un affitto stracciato, e solo qualche inquilino molesto. Ci stiamo.
+
+NEGOZIO_RISPOSTA
+    Siete la mia salvezza. E quella del suo portafoglio.
+    Grazie, viandanti. Così potrà aprire in pace, almeno finché le tegole reggono.
+    Lo sapevo che di voi ci si poteva fidare. Il posto ve lo segno sulla mappa.
+
+NEGOZIO_VITTORIA
+    Fatto: %ROVINA% adesso ha un solo padrone, %NOME%, con posto per una bottega e per qualche spazzata di scopa.
+    Gli ultimi inquilini sono a terra: a %NOME% non resta che trovare il martello e aprire la bottega.
+    I mostri sono sconfitti, e a %NOME% resta solo da mettere l'insegna.
+
+NEGOZIO_RINGRAZIAMENTO
+    Ho già ricevuto un messaggio di %NOME%: dice che nella foresta non si è mai sentito così poco rumore.
+    Il posto è libero, e %NOME% sta già mettendo l'insegna. Grazie, viandanti.
+    %NOME% mi ha scritto: i mostri sono spariti, e il tetto è rimasto quasi tutto al suo posto. Grazie.
+
+NEGOZIO_APERTURA
+    %NOME% ha aperto %BOTTEGA%: la trovate sulla mappa, dove un tempo c'erano le rovine.
+    Dove c'erano le rovine ora c'è %BOTTEGA%, e %NOME% vi aspetta dietro il banco.
+    %BOTTEGA% è aperta: %NOME% ha messo l'insegna, e un campanello contro i mostri.
+
+NEGOZIO_NEMICI
+    NEMICO=SCHELETRO;NUMERO=4
+    NEMICO=GARGOYLE;NUMERO=2
+    NEMICO=SPETTRO;NUMERO=2
+    NEMICO=FANTASMA;NUMERO=3
+    NEMICO=GOBLIN;NUMERO=5
+    NEMICO=HOBGOBLIN;NUMERO=3
+    NEMICO=TROLL;NUMERO=2
+    NEMICO=SPIRITO;NUMERO=2
+
+NEGOZIO_NOME_ALCHIMISTA
+    la Spezieria di %NOME%
+    l'Emporio dei Rimedi di %NOME%
+    il Laboratorio di %NOME%
+
+NEGOZIO_NOME_ARMAIOLO
+    la Fucina di %NOME%
+    l'Armeria di %NOME%
+    la Forgia di %NOME%
+
+NEGOZIO_NOME_VENDITORE_DI_PERGAMENE
+    la Cartoleria Arcana di %NOME%
+    l'Archivio di %NOME%
+    il Ripostiglio delle Meraviglie di %NOME%
+
+NEGOZIO_NOME_INCANTATORE
+    il Laboratorio Incantato di %NOME%
+    la Bottega degli Incantesimi di %NOME%
+    l'Atelier Arcano di %NOME%
 
 #include_static <nomi.txt>

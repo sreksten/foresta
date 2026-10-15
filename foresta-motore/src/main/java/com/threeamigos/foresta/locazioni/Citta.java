@@ -1,30 +1,15 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaIncantatore;
-import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
-import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioFornitore;
-import com.threeamigos.foresta.eventi.interni.InternoIncantatura;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
-import com.threeamigos.foresta.eventi.interni.InternoMostraSchermataGioco;
-import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.eventi.richieste.RichiestaTesto;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
-import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.motore.GruppoAvversario;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.Stato;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
-import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.strumenti.Misc;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import com.threeamigos.foresta.motore.OfferteAlchimista;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * Una città: il gruppo vi arriva, vende le pietre preziose e può andare in piazza, alla locanda, dall'alchimista, dall'armaiolo, dal venditore
@@ -36,19 +21,14 @@ public abstract class Citta extends LocazioneUnica {
 	private enum StatoInCitta {
 		IN_PIAZZA,
 		IN_LOCANDA,
-		DA_ALCHIMISTA,
-		DA_ARMAIOLO,
-		DA_VENDITORE_DI_PERGAMENE,
-		DA_INCANTATORE,
-		// Dall'incantatore, in attesa del nome proprio dell'artefatto da fondere
-		NOME_ARTEFATTO_DA_FONDERE
+		IN_BOTTEGA
 	}
 
 	private StatoInCitta stato;
 	// La locanda sta sulla casella della città: ne condivide il modello dati, così quel che vi segna resta lì.
 	private Locanda locanda;
-	// La bottega dell'incantatore: il banco di lavoro vive solo finché si è dentro
-	private AutomaIncantatore incantatore;
+	// Le botteghe: l'alchimista, l'armaiolo, il venditore di pergamene e l'incantatore (vedi GestoreBotteghe)
+	private final GestoreBotteghe botteghe = new GestoreBotteghe();
 
 	protected Citta() {
 		stato = StatoInCitta.IN_PIAZZA;
@@ -107,25 +87,9 @@ public abstract class Citta extends LocazioneUnica {
 					impostaAzioniCitta();
 				}
 
-			} else if (azione == Comando.NEGOZIO_ALCHIMISTA) {
-				stato = StatoInCitta.DA_ALCHIMISTA;
-				List<Comando> comandiPossibili = new ArrayList<>();
-				comandiPossibili.add(Comando.ANNULLA);
-				BusEventi.pubblica(new RichiestaAperturaInventarioFornitore(comandiPossibili, OfferteAlchimista.elenco(g),
-						String.join(" ", ProduttoreDiTestiCasuale.oroscopo())));
-
-			} else if (azione == Comando.NEGOZIO_ARMAIOLO) {
-				stato = StatoInCitta.DA_ARMAIOLO;
-				apriNegozio(g, TipoNegozio.ARMAIOLO);
-
-			} else if (azione == Comando.NEGOZIO_VENDITORE_DI_PERGAMENE) {
-				stato = StatoInCitta.DA_VENDITORE_DI_PERGAMENE;
-				apriNegozio(g, TipoNegozio.VENDITORE_DI_PERGAMENE);
-
-			} else if (azione == Comando.NEGOZIO_INCANTATORE) {
-				stato = StatoInCitta.DA_INCANTATORE;
-				incantatore = new AutomaIncantatore(g, new BancoDiLavoro());
-				apriIncantatore("Mettete sul banco un artefatto e le pergamene da fondere.");
+			} else if (GestoreBotteghe.isComandoDiIngresso(azione)) {
+				stato = StatoInCitta.IN_BOTTEGA;
+				botteghe.apri(g, azione);
 
 			} else if (azione == Comando.ESCI_DA_CITTA) {
 				return Stato.FINE_LOCAZIONE;
@@ -138,22 +102,8 @@ public abstract class Citta extends LocazioneUnica {
 				stato = StatoInCitta.IN_PIAZZA;
 			}
 
-		} else if (stato == StatoInCitta.DA_ALCHIMISTA || stato == StatoInCitta.DA_ARMAIOLO
-				|| stato == StatoInCitta.DA_VENDITORE_DI_PERGAMENE) {
-			if (azione == Comando.ANNULLA) {
-				BusEventi.pubblica(new InternoMostraSchermataGioco());
-				impostaAzioniCitta();
-				stato = StatoInCitta.IN_PIAZZA;
-			}
-
-		} else if (stato == StatoInCitta.DA_INCANTATORE) {
-			if (azione == Comando.FUSIONE) {
-				chiediNomeArtefattoDaFondere(g);
-			} else if (azione == Comando.ANNULLA) {
-				// Quel che resta sul banco torna nel gruppo: il banco non si salva
-				incantatore.svuotaBanco();
-				incantatore = null;
-				BusEventi.pubblica(new InternoMostraSchermataGioco());
+		} else if (stato == StatoInCitta.IN_BOTTEGA) {
+			if (botteghe.gestisci(g, azione)) {
 				impostaAzioniCitta();
 				stato = StatoInCitta.IN_PIAZZA;
 			}
@@ -161,53 +111,12 @@ public abstract class Citta extends LocazioneUnica {
 		return Stato.IN_LOCAZIONE;
 	}
 
-	private void apriNegozio(GruppoGiocatore g, TipoNegozio negozio) {
-		List<Comando> comandiPossibili = new ArrayList<>();
-		comandiPossibili.add(Comando.ANNULLA);
-		ScambiatoreArtefatti magazzino = RegistroArtefatti.getScambiatorePerNegozio(g.getCoordinate(), negozio);
-		BusEventi.pubblica(new RichiestaAperturaInventarioCommerciante(comandiPossibili, negozio,
-				new AutomaAcquistiArtefatti(g, magazzino)));
-	}
-
-	private void apriIncantatore(String messaggio) {
-		List<Comando> comandiPossibili = new ArrayList<>();
-		comandiPossibili.add(Comando.FUSIONE);
-		comandiPossibili.add(Comando.ANNULLA);
-		BusEventi.pubblica(new RichiestaAperturaIncantatore(comandiPossibili, incantatore, messaggio));
-	}
-
 	/**
-	 * Se sul banco la fusione si può fare, chiede il nome proprio dell'artefatto, proponendo quello
-	 * che ha già; altrimenti l'incantatore dice perché no.
-	 */
-	private void chiediNomeArtefattoDaFondere(GruppoGiocatore g) {
-		Collection<Artefatto> banco = incantatore.getBanco().getInventario();
-		Optional<TipoMotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco, g.getMonete(), g.getContrattazione());
-		if (motivo.isPresent()) {
-			BusEventi.pubblica(new NotificaRifiutoIncantatura(motivo.get()));
-			return;
-		}
-		String nomeAttuale = RegoleIncantatura.artefattoSulBanco(banco)
-				.flatMap(Artefatto::getNomeProprio)
-				.orElse("");
-		stato = StatoInCitta.NOME_ARTEFATTO_DA_FONDERE;
-		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili());
-		// Il messaggio si scrive in grande: niente accenti né parentesi
-		BusEventi.pubblica(new RichiestaTesto("Come si chiamera' l'artefatto? La fusione costa "
-				+ g.costoFusione(banco) + " monete.", nomeAttuale));
-	}
-
-	/**
-	 * Il nome proprio dell'artefatto da fondere: si fa la fusione e si torna nella bottega.
+	 * Il nome proprio dell'artefatto da fondere, dall'incantatore.
 	 */
 	@Override
 	public Stato riceviTesto(GruppoGiocatore g, String testo) {
-		if (stato != StatoInCitta.NOME_ARTEFATTO_DA_FONDERE) {
-			return Stato.IN_LOCAZIONE;
-		}
-		stato = StatoInCitta.DA_INCANTATORE;
-		BusEventi.pubblica(new InternoIncantatura(incantatore.getBanco(), testo));
-		apriIncantatore(null);
+		botteghe.riceviTesto(testo);
 		return Stato.IN_LOCAZIONE;
 	}
 

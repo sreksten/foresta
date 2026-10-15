@@ -148,6 +148,7 @@ Le ricompense in monete di questo catalogo sono le paghe del primo livello del m
 | `ConLeggendario` (e `oggetti.leggendari.OggettoLeggendario`, `SetLeggendario`) | una missione che mette in palio un leggendario (riga di `leggendari.txt`: chiave stabile, proprietà, leggende; i set hanno un moltiplicatore dei bonus se indossati tutti: non dipendono dalle missioni, stanno in `oggetti.leggendari`); **ogni leggendario esce una volta sola per partita**, in una sola missione fra leggende e tornei |
 | `LaSfidaDeiCampioni`, `IlCampione` | la missione che parte alla terza sfida a carta, forbici e sasso vinta stringendo amicizia (vedi [`carta_forbici_sasso.md`](carta_forbici_sasso.md)): affida quattro **campioni**, avversari amichevoli a caso in quattro tipi di posto diversi, ciascuno con il suo posto segnato sulla mappa (`POSTO`, `SFIDA`, con `IncontroDiMissione.aCartaForbiciSasso`: all'arrivo si gioca subito, a tre mani vinte; persa, si riprova); battuto il quarto, sul posto, 100 × il livello del mondo e un leggendario (catalogo, altrimenti costruito al volo); una sola per partita; trofeo `RE_DI_CARTA_FORBICI_E_SASSO` |
 | `IlTorneo` | un torneo bandito in città, con un leggendario e una borsa in palio: nella lizza (segnata sulla mappa) due turni e la finale, uno per visita, uno contro uno e **fino alla resa** (`LIZZA`, `PRIMO_TURNO`, `SECONDO_TURNO`, `FINALE`); in finale il campione ha un nome e un livello in più; chi perde un turno può tornare per la rivincita; vinta la finale il leggendario va al gruppo e la borsa si riscuote in città; fra due tornei 72 ore; righe di `TORNEO` (`TorneoRichiesto`) |
+| `IlNegozio` (`IlNegozioDellArmaiolo`, `IlNegozioDellAlchimista`, `IlNegozioDelVenditoreDiPergamene`, `IlNegozioDellIncantatore`) | il negoziante di una città chiede di disinfestare delle rovine ereditate da un suo parente (fratello, cugino, amico...), che vuole aprirci una bottega del suo mestiere: **una missione per città, assegnata a caso a inizio partita** (`CITTA_ASSEGNATA`, `IlNegozio.assegnaLeCitta` da `RegistroMissioni.reimposta`), che si offre solo lì e fa parte del pool degli incarichi in città; non si ripete. All'offerta (`allIncarico`) pesca il negoziante (`PersonaggioNoto.*_DELLA_FORESTA`, `Ambito.PER_NEGOZIO`, nome da `NOME_MASTRO`, provenienza la città), i testi da `NEGOZIO_*` in `missioni.txt` (causa, eredità, appello, battute, ringraziamento, apertura, nome della bottega, `NEGOZIO_NEMICI`) e **rivendica le rovine** dello stesso quadrante della città (`RegistroMissioni.cerca`: se non ce n'è di libere, in un altro quadrante, e solo come ultima scelta se ne costruisce una al posto di un bosco); `COVO` (il posto sulla mappa), `DISINFESTAZIONE` (`combatti`), poi `RITORNO` e `RICOMPENSA` come ogni incarico (50 monete per livello del mondo). **Completata** (`completaMissione`, non prima) le rovine diventano la bottega (`Bottega`, vedi `motore_di_gioco.md` §6): nome proprio e negoziante nel modello dati della casella, magazzino generato da zero; se la città è distrutta la missione fallisce e le rovine restano rovine |
 
 ### Missioni scritte a mano
 
@@ -176,12 +177,13 @@ I contenuti variabili sono in `missioni.txt` (e `leggendari.txt`), caricate da `
 
 ### Acquisizione
 
+- `IlNegozio` (le quattro botteghe): `COSTRUZIONE`
 - `RichiestaDiMateriali`: `RACCOLTA_INGREDIENTI`, `RACCOLTA_TROFEI`, `RACCOLTA_CRISTALLI`, `RACCOLTA_ESSENZA`, `MINIERA`, `CACCIA_ANIMALI`, `PESCA`, `FORAGGIAMENTO`
 - `IncaricoDiCombattimento`: `RECUPERO` (con tanti altri, vedi sopra)
 - `IlCorriere`: `TRASPORTO`
 - `LaLeggendaDellArmaiolo`, `LaLeggendaDelLocandiere`: `CACCIA_AL_TESORO` (la leggenda è l'indizio, i guardiani del tempio, il leggendario il tesoro)
 - `LaSorveglianza`: `AGRICOLTURA` (le rape giganti), `ALLEVAMENTO` (le oche da guardia)
-- non fattibile: `BORSA`. Non coperti: `ARTIGIANATO`, `COSTRUZIONE` (il passo `COSTRUISCI` esiste ma nessuna missione lo usa)
+- non fattibile: `BORSA`. Non coperti: `ARTIGIANATO`
 
 ### Combattimento
 

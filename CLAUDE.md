@@ -70,7 +70,7 @@ Panoramica in `motore_grafico.md`.
 
 ## Build e test
 
-`mvn test` dalla radice esegue i test di tutti i moduli (JUnit 5, in `src/test/java` di ciascuno); al 2026-10-13 sono 1226, tutti verdi (16 saltati).
+`mvn test` dalla radice esegue i test di tutti i moduli (JUnit 5, in `src/test/java` di ciascuno); al 2026-10-15 sono 1245, tutti verdi (16 saltati).
 I test stanno nel modulo più basso che vede tutto quello che usano; i test di motore e UI insieme sono in `foresta-app`, che usa gli helper dei test del motore (`PartitaDiTest` e simili) tramite il suo `test-jar`.
 Le dipendenze fra moduli le controlla il compilatore. Il compilatore non vede invece che nessuno fuori da `foresta-swing` usi `java.awt`, `javax.swing`, `javax.imageio` o `javax.sound` (fanno parte del JDK): lo controlla `ui/DipendenzeDalToolkitGraficoTest` in `foresta-app`, che legge i sorgenti (con `SorgentiDelProgetto`). Il thread principale si raggiunge da `strumenti/ThreadPrincipale` (Swing lo installa con `ui/EsecutoreSwing` in `Main`).
 `mvn package` scrive nella radice il jar eseguibile con le dipendenze, `foresta-0.0.1-SNAPSHOT-jar-with-dependencies.jar`.

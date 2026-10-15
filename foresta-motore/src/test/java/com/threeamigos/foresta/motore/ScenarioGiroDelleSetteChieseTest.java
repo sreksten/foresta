@@ -136,7 +136,9 @@ class ScenarioGiroDelleSetteChieseTest {
     void ilTempioRipulitoNonHaMostriNeOggetti() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(302)) {
             avvia(partita);
-            CoordinateMD coordinate = templi().get(0);
+            // Un tempio senza artefatto: quello di un artefatto lo custodisce comunque (vedi più sotto)
+            CoordinateMD coordinate = templi().stream()
+                    .filter(tempio -> RegistroArtefatti.getArtefattoInLocazione(tempio) == null).findFirst().get();
             LocazioneMD modello = Foresta.getLocazioneMD(coordinate);
             partita.gruppo().setCoordinate(coordinate);
             Tempio.ripulisci(modello);

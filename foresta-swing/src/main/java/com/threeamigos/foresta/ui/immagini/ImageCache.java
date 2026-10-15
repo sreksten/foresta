@@ -191,6 +191,10 @@ public class ImageCache {
 		d = BufferedImageBuilder.buildBufferedImage("locazioni/Rovine.gif", zoom);
 		locazioni.put(TipoLocazione.ROVINE, d);
 		locazioni.put(TipoLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("locazioni/Tempio.gif", zoom));
+		locazioni.put(TipoLocazione.ALCHIMISTA, BufferedImageBuilder.buildBufferedImage("locazioni/Alchimista.gif", zoom));
+		locazioni.put(TipoLocazione.ARMAIOLO, BufferedImageBuilder.buildBufferedImage("locazioni/Armaiolo.gif", zoom));
+		locazioni.put(TipoLocazione.VENDITORE_DI_PERGAMENE, BufferedImageBuilder.buildBufferedImage("locazioni/VenditoreDiPergamene.gif", zoom));
+		locazioni.put(TipoLocazione.INCANTATORE, BufferedImageBuilder.buildBufferedImage("locazioni/Incantatore.gif", zoom));
 
 		mappa = new EnumMap<>(TipoLocazione.class);
 		mappaVariantiBosco = new BufferedImage[RISORSE_VARIANTI_BOSCO.length];
@@ -218,6 +222,10 @@ public class ImageCache {
 		d = BufferedImageBuilder.buildBufferedImage("mappa/Rovine.gif", zoom);
 		mappa.put(TipoLocazione.ROVINE, d);
 		mappa.put(TipoLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("mappa/Tempio.gif", zoom));
+		mappa.put(TipoLocazione.ALCHIMISTA, BufferedImageBuilder.buildBufferedImage("mappa/Alchimista.gif", zoom));
+		mappa.put(TipoLocazione.ARMAIOLO, BufferedImageBuilder.buildBufferedImage("mappa/Armaiolo.gif", zoom));
+		mappa.put(TipoLocazione.VENDITORE_DI_PERGAMENE, BufferedImageBuilder.buildBufferedImage("mappa/VenditoreDiPergamene.gif", zoom));
+		mappa.put(TipoLocazione.INCANTATORE, BufferedImageBuilder.buildBufferedImage("mappa/Incantatore.gif", zoom));
 		segnalino = BufferedImageBuilder.buildBufferedImage("mappa/Segnalino.gif", zoom);
 		indicatore = BufferedImageBuilder.buildBufferedImage("mappa/Indicatore.gif", zoom);
 

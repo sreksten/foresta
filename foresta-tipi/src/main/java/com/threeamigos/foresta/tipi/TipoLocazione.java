@@ -17,6 +17,13 @@ public enum TipoLocazione {
 	TEMPIO(CategoriaLocazione.STANDARD),
 	GROTTA(CategoriaLocazione.STANDARD),
 	/*
+	 * Le botteghe nella Foresta: nascono dalle rovine, alla fine di una missione (vedi missioni.incarichi.IlNegozio)
+	 */
+	ALCHIMISTA(CategoriaLocazione.STANDARD),
+	ARMAIOLO(CategoriaLocazione.STANDARD),
+	VENDITORE_DI_PERGAMENE(CategoriaLocazione.STANDARD),
+	INCANTATORE(CategoriaLocazione.STANDARD),
+	/*
 	 * Città
 	 */
 	CITTA_NYENA(CategoriaLocazione.CITTA, "la città di Nyena"),
@@ -63,6 +70,14 @@ public enum TipoLocazione {
 		}
 		String prefisso = "la città di ";
 		return nomeProprio.startsWith(prefisso) ? nomeProprio.substring(prefisso.length()) : nomeProprio;
+	}
+
+	/**
+	 * Se è la bottega di un alchimista, di un armaiolo, di un venditore di pergamene o di un incantatore, nella Foresta: vi si
+	 * entra come nel negozio di una città, e non vi si combatte.
+	 */
+	public boolean isBottega() {
+		return this == ALCHIMISTA || this == ARMAIOLO || this == VENDITORE_DI_PERGAMENE || this == INCANTATORE;
 	}
 
 	public CategoriaLocazione getCategoria() {

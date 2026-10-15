@@ -71,11 +71,11 @@ nome di un residente: è accettato.
 
 ## 4. Il registro dei residenti
 
-- `tipi.PersonaggioNoto`: l'enumerato dei personaggi del mondo, con classe, ambito (`GLOBALE`, `PER_CITTA`, `PER_LOCANDA`,
-  `COMPARSA`, `PER_SFIDA`), produzione di nomi e se porta la provenienza. Borgomastro e levatrice sono i tipi generici `UOMO`
+- `tipi.PersonaggioNoto`: l'enumerato dei personaggi del mondo, con classe, ambito (`GLOBALE`, `PER_CITTA`, `PER_NEGOZIO`,
+  `PER_LOCANDA`, `COMPARSA`, `PER_SFIDA`), produzione di nomi e se porta la provenienza. Borgomastro e levatrice sono i tipi generici `UOMO`
   e `DONNA` (classi `Uomo` e `Donna`, con l'immagine e il verso del locandiere e della moglie del bardo e gli attributi dei
   non giocanti). Il locandiere è nell'enumerato per completezza, ma il suo nome sta nella locanda
-  (`Locanda.LOCANDA_NOME_LOCANDIERE`), non nel registro.
+  (`Locanda.LOCANDA_NOME_LOCANDIERE`), non nel registro. Chi apre una bottega nella Foresta (`ALCHIMISTA_DELLA_FORESTA`, `ARMAIOLO_DELLA_FORESTA`, `VENDITORE_DI_PERGAMENE_DELLA_FORESTA`, `INCANTATORE_DELLA_FORESTA`, ambito `PER_NEGOZIO`, vedi `IlNegozio`) nasce alla prima richiesta, con la città da cui parte la missione per chiave e provenienza (`RegistroPersonaggi.getResidente(noto, citta)`); la sua classe dà l'immagine, come per gli artigiani delle città.
 - `modellodati.ResidenteMD` (nome, provenienza, classe, sconfitto), in una mappa `chiave → ResidenteMD` di
   `RegistroPersonaggiMD`, salvata subito dopo i personaggi in locazione.
 - `RegistroPersonaggi`: `getResidente(...)` (lo crea al volo se manca), `getNomeCompleto` ("Mastro Ferruccio da Ruuna"),

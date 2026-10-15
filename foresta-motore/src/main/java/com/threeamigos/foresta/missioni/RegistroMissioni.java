@@ -12,6 +12,7 @@ import com.threeamigos.foresta.modellodati.RegistroMissioniMD;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.missioni.incarichi.IlNegozio;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -156,6 +157,7 @@ public class RegistroMissioni {
 			elencoMissioniPredefinite.put(classe, missione);
 			md.aggiungiMissione(classe.name(), missione.getModelloDati());
 		}
+		IlNegozio.assegnaLeCitta(elencoMissioniPredefinite.values());
 	}
 	
 	/**

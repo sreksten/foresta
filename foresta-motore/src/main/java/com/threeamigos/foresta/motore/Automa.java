@@ -21,6 +21,7 @@ import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
+import com.threeamigos.foresta.locazioni.Bottega;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
@@ -810,6 +811,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		 * Altrimenti ogni locazione è in effetti un automa a stati finiti
 		 * che tiene traccia del suo stato.
 		 */
+		if (locazioneCorrente instanceof Bottega) {
+			// In una bottega si entra appena arrivati, come in una locanda: prima l'intermezzo d'ingresso, poi il negozio
+			comandoNegozioInAttesa = ((Bottega) locazioneCorrente).getComandoDiIngresso();
+			return avviaIntermezzi(momentoIngressoNegozio(comandoNegozioInAttesa), Stato.INGRESSO_NEGOZIO);
+		}
 		stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, null);
 		/*
 		 * Se si resta IN_LOCAZIONE il giocatore si trova davanti la scelta
@@ -2115,7 +2121,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	/**
 	 * Ci si accampa solo di notte, con almeno un altro personaggio vivo da mettere di
-	 * guardia, e non in città, castelli, locande o paludi.
+	 * guardia, e non in città, castelli, locande, botteghe o paludi.
 	 */
 	private boolean isAccampamentoPossibile() {
 		if (gruppo.getNumeroPersonaggiVivi() <= 1 || (LineaTemporale.getOra() <= 20 && LineaTemporale.getOra() >= 6)) {
@@ -2126,6 +2132,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		return tipoLocazione.getCategoria() != CategoriaLocazione.CITTA &&
 				tipoLocazione.getCategoria() != CategoriaLocazione.CASTELLO &&
 				tipoLocazione != TipoLocazione.LOCANDA &&
+				!tipoLocazione.isBottega() &&
 				tipoLocazione != TipoLocazione.PALUDE;
 	}
 

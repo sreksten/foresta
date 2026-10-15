@@ -57,6 +57,7 @@ public enum TipoMissione {
      * Esempio: forgiare un'arma leggendaria, creare una pozione rara, realizzare un artefatto magico
      */
     ARTIGIANATO(SupertipoMissione.ACQUISIZIONE),
+    // Coperto da: IlNegozioDellArmaiolo, IlNegozioDellAlchimista, IlNegozioDelVenditoreDiPergamene, IlNegozioDellIncantatore (disinfestate le rovine, diventano una bottega)
     /**
      * Esempio: costruire una torre, erigere una statua, realizzare un ponte
      */

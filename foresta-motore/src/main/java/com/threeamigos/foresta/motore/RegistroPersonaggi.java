@@ -6,6 +6,7 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.modellodati.RegistroPersonaggiMD;
 import com.threeamigos.foresta.modellodati.ResidenteMD;
+import com.threeamigos.foresta.locazioni.Bottega;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.strumenti.Misc;
@@ -154,10 +155,11 @@ public class RegistroPersonaggi {
 	}
 
 	/**
-	 * Chi è di una città (il borgomastro, il capitano, l'alchimista, l'armaiolo, il venditore di pergamene, l'incantatore).
+	 * Chi è di una città (il borgomastro, il capitano, l'alchimista, l'armaiolo, il venditore di pergamene, l'incantatore),
+	 * o chi apre una bottega nella Foresta con la missione di quella città: si crea alla prima richiesta.
 	 */
 	public static ResidenteMD getResidente(PersonaggioNoto noto, TipoLocazione citta) {
-		if (noto.getAmbito() != PersonaggioNoto.Ambito.PER_CITTA) {
+		if (noto.getAmbito() != PersonaggioNoto.Ambito.PER_CITTA && noto.getAmbito() != PersonaggioNoto.Ambito.PER_NEGOZIO) {
 			throw new IllegalArgumentException(noto + " non è di una città");
 		}
 		return residente(noto, citta.name(), citta.getNomeDellaCitta());
@@ -188,11 +190,16 @@ public class RegistroPersonaggi {
 	}
 
 	/**
-	 * Il nome completo del personaggio di quel mestiere (armaiolo, alchimista...) della città in cui è il gruppo; null se
-	 * il gruppo non è in una città o nessuna voce di PersonaggioNoto ha quel mestiere.
+	 * Il nome completo del personaggio di quel mestiere (armaiolo, alchimista...) della città in cui è il gruppo, o il
+	 * negoziante della bottega in cui è; null se il gruppo non è in una città né in una bottega o nessuna voce di
+	 * PersonaggioNoto ha quel mestiere.
 	 */
 	public static String getNomeDelPersonaggioDiCitta(TipoPersonaggio mestiere) {
-		TipoLocazione luogo = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
+		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+		TipoLocazione luogo = gruppo.getTipoLocazioneCorrente();
+		if (luogo != null && luogo.isBottega()) {
+			return Bottega.getNegoziante(Foresta.getLocazioneMD(gruppo.getCoordinate()));
+		}
 		if (luogo == null || luogo.getNomeDellaCitta() == null) {
 			return null;
 		}

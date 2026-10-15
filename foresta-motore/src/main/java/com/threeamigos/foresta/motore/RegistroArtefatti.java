@@ -358,33 +358,61 @@ public class RegistroArtefatti {
 	 * l'armaiolo, ingredienti magici per il venditore di pergamene, attorno al livello del mondo.
 	 */
 	static void riempiMagazzini(CoordinateMD coordinate, GeneratoreArtefatti generatore) {
-		rifornisci(coordinate, Statistiche.getLivello(), generatore);
+		riempiMagazzino(coordinate, TipoNegozio.ARMAIOLO, generatore);
+		riempiMagazzino(coordinate, TipoNegozio.VENDITORE_DI_PERGAMENE, generatore);
 	}
 
 	/**
-	 * Il livello del mondo è aumentato: in ogni città ancora in piedi l'armaiolo scarta gli artefatti
-	 * ormai troppo deboli, il venditore rinnova tutti i suoi ingredienti magici, e arriva merce nuova.
+	 * Riempie il magazzino di una bottega nata nella Foresta (vedi locazioni.Bottega), attorno al livello del mondo di adesso.
+	 */
+	public static void riempiMagazzino(CoordinateMD coordinate, TipoNegozio negozio) {
+		riempiMagazzino(coordinate, negozio, GeneratoreArtefatti.istanza());
+	}
+
+	private static void riempiMagazzino(CoordinateMD coordinate, TipoNegozio negozio, GeneratoreArtefatti generatore) {
+		rifornisci(coordinate, Statistiche.getLivello(), negozio, generatore);
+	}
+
+	/**
+	 * Il livello del mondo è aumentato: in ogni città ancora in piedi, e in ogni bottega della Foresta, l'armaiolo scarta gli
+	 * artefatti ormai troppo deboli, il venditore rinnova tutti i suoi ingredienti magici, e arriva merce nuova.
 	 */
 	static void aggiornaMagazzini(int livelloMondo, GeneratoreArtefatti generatore) {
 		int livelloMinimo = livelloMondo - Costanti.MAGAZZINO_SCARTO_SOTTO_LIVELLO;
 		RegistroArtefattiMD registro = getRegistroArtefatti();
 		for (CoordinateMD coordinate : registro.getCoordinateMagazzini(TipoNegozio.ARMAIOLO)) {
-			if (Foresta.getLocazione(coordinate).getCategoria() == CategoriaLocazione.CITTA) {
+			if (haUnNegozio(coordinate, TipoNegozio.ARMAIOLO)) {
 				registro.tieniInMagazzino(coordinate, TipoNegozio.ARMAIOLO, artefatto -> artefatto.getLivello() >= livelloMinimo);
+				rifornisci(coordinate, livelloMondo, TipoNegozio.ARMAIOLO, generatore);
+			}
+		}
+		for (CoordinateMD coordinate : registro.getCoordinateMagazzini(TipoNegozio.VENDITORE_DI_PERGAMENE)) {
+			if (haUnNegozio(coordinate, TipoNegozio.VENDITORE_DI_PERGAMENE)) {
 				registro.tieniInMagazzino(coordinate, TipoNegozio.VENDITORE_DI_PERGAMENE, artefatto -> false);
-				rifornisci(coordinate, livelloMondo, generatore);
+				rifornisci(coordinate, livelloMondo, TipoNegozio.VENDITORE_DI_PERGAMENE, generatore);
 			}
 		}
 	}
 
-	private static void rifornisci(CoordinateMD coordinate, int livelloMondo, GeneratoreArtefatti generatore) {
-		ScambiatoreArtefatti armaiolo = getScambiatorePerNegozio(coordinate, TipoNegozio.ARMAIOLO);
-		for (int i = 0; i < Costanti.MAGAZZINO_ARTEFATTI_ARMAIOLO; i++) {
-			armaiolo.addArtefatto(generatore.generaArtefattoCasuale(livelloInMagazzino(i, livelloMondo)));
-		}
-		ScambiatoreArtefatti venditoreDiPergamene = getScambiatorePerNegozio(coordinate, TipoNegozio.VENDITORE_DI_PERGAMENE);
-		for (int i = 0; i < Costanti.MAGAZZINO_PERGAMENE; i++) {
-			venditoreDiPergamene.addArtefatto(generatore.generaIngrediente(livelloInMagazzino(i, livelloMondo)));
+	/**
+	 * Se quella casella ha ancora quel negozio: una città in piedi, o la bottega di quel mestiere nella Foresta.
+	 */
+	private static boolean haUnNegozio(CoordinateMD coordinate, TipoNegozio negozio) {
+		TipoLocazione tipo = Foresta.getLocazione(coordinate);
+		return tipo.getCategoria() == CategoriaLocazione.CITTA
+				|| tipo == (negozio == TipoNegozio.ARMAIOLO ? TipoLocazione.ARMAIOLO : TipoLocazione.VENDITORE_DI_PERGAMENE);
+	}
+
+	private static void rifornisci(CoordinateMD coordinate, int livelloMondo, TipoNegozio negozio, GeneratoreArtefatti generatore) {
+		ScambiatoreArtefatti scambiatore = getScambiatorePerNegozio(coordinate, negozio);
+		if (negozio == TipoNegozio.ARMAIOLO) {
+			for (int i = 0; i < Costanti.MAGAZZINO_ARTEFATTI_ARMAIOLO; i++) {
+				scambiatore.addArtefatto(generatore.generaArtefattoCasuale(livelloInMagazzino(i, livelloMondo)));
+			}
+		} else {
+			for (int i = 0; i < Costanti.MAGAZZINO_PERGAMENE; i++) {
+				scambiatore.addArtefatto(generatore.generaIngrediente(livelloInMagazzino(i, livelloMondo)));
+			}
 		}
 	}
 

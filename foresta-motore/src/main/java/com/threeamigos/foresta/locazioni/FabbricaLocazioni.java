@@ -22,6 +22,10 @@ public final class FabbricaLocazioni {
 		COSTRUTTORI.put(TipoLocazione.ROVINE, Rovine::new);
 		COSTRUTTORI.put(TipoLocazione.TEMPIO, Tempio::new);
 		COSTRUTTORI.put(TipoLocazione.GROTTA, Grotta::new);
+		COSTRUTTORI.put(TipoLocazione.ALCHIMISTA, BottegaDellAlchimista::new);
+		COSTRUTTORI.put(TipoLocazione.ARMAIOLO, BottegaDellArmaiolo::new);
+		COSTRUTTORI.put(TipoLocazione.VENDITORE_DI_PERGAMENE, BottegaDelVenditoreDiPergamene::new);
+		COSTRUTTORI.put(TipoLocazione.INCANTATORE, BottegaDellIncantatore::new);
 		COSTRUTTORI.put(TipoLocazione.CITTA_NYENA, CittaNyena::new);
 		COSTRUTTORI.put(TipoLocazione.CITTA_MALGAARD, CittaMalgaard::new);
 		COSTRUTTORI.put(TipoLocazione.CITTA_RUUNA, CittaRuuna::new);

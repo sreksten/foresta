@@ -21,6 +21,12 @@ public enum PersonaggioNoto {
 	VENDITORE_DI_PERGAMENE(TipoPersonaggio.VENDITORE_DI_PERGAMENE, Ambito.PER_CITTA, "NOME_MASTRO", true),
 	INCANTATORE(TipoPersonaggio.INCANTATORE, Ambito.PER_CITTA, "NOME_MASTRO", true),
 
+	// Chi apre una bottega nella Foresta (vedi missioni.incarichi.IlNegozio): uno per mestiere, con la provenienza della città da cui parte la missione
+	ALCHIMISTA_DELLA_FORESTA(TipoPersonaggio.ALCHIMISTA, Ambito.PER_NEGOZIO, "NOME_MASTRO", true),
+	ARMAIOLO_DELLA_FORESTA(TipoPersonaggio.ARMAIOLO, Ambito.PER_NEGOZIO, "NOME_MASTRO", true),
+	VENDITORE_DI_PERGAMENE_DELLA_FORESTA(TipoPersonaggio.VENDITORE_DI_PERGAMENE, Ambito.PER_NEGOZIO, "NOME_MASTRO", true),
+	INCANTATORE_DELLA_FORESTA(TipoPersonaggio.INCANTATORE, Ambito.PER_NEGOZIO, "NOME_MASTRO", true),
+
 	LOCANDIERE(TipoPersonaggio.LOCANDIERE, Ambito.PER_LOCANDA, null, false),
 
 	LEVATRICE(TipoPersonaggio.DONNA, Ambito.COMPARSA, "NOME_COMPARSA", false),
@@ -35,6 +41,8 @@ public enum PersonaggioNoto {
 		GLOBALE,
 		/** Uno per città: la chiave è il personaggio più la città. */
 		PER_CITTA,
+		/** Uno per bottega della Foresta, quindi per missione: la chiave è la città da cui parte, e dà la provenienza. */
+		PER_NEGOZIO,
 		/** Uno per locanda: il nome sta nella locanda. */
 		PER_LOCANDA,
 		/** Compare al volo, alla prima richiesta, con un nome da un gruppo che si ripete. */
