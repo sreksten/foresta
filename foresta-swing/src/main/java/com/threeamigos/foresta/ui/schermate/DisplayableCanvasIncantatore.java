@@ -103,7 +103,10 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         }
         Optional<? extends VistaArtefatto> artefatto = banco.getArtefattoSulBanco();
         if (artefatto.isPresent()) {
-            y = disegnaValore(graphics, "Effetti", banco.getEffettiDopoLaFusione() + "/" + artefatto.get().getEffettiMassimi(), y, coloreTestata);
+            if (banco.getLivelloDopoLaFusione() != artefatto.get().getLivello()) {
+                y = disegnaValore(graphics, "Nuovo livello", String.valueOf(banco.getLivelloDopoLaFusione()), y, coloreTestata);
+            }
+            y = disegnaValore(graphics, "Effetti", banco.getEffettiDopoLaFusione() + "/" + banco.getEffettiMassimiDopoLaFusione(), y, coloreTestata);
         }
 
         BufferedImage separatore = ImageCache.separatore;

@@ -87,6 +87,24 @@ class GeneratoreArtefattiTest {
     }
 
     @Test
+    void gliAggiornamentiHannoUnNomeBuffoENonEsconoMaiComeIngredientiOArtefattiCasuali() {
+        GeneratoreArtefatti generatore = new GeneratoreArtefattiTabelle(new Random(6));
+        Set<String> nomi = new java.util.HashSet<>();
+        for (int i = 0; i < GIRI; i++) {
+            Artefatto aggiornamento = generatore.generaAggiornamento(3);
+            assertEquals(TipoArtefatto.AGGIORNAMENTO, aggiornamento.getTipo());
+            assertEquals("che fa aumentare di un livello un Artefatto", aggiornamento.getDescrizione());
+            assertFalse(aggiornamento.getNome().isEmpty());
+            assertEquals(0, aggiornamento.getNumeroEffetti());
+            nomi.add(aggiornamento.getNome());
+            assertFalse(generatore.generaIngrediente(3).getTipo().isAggiornamento());
+            assertFalse(generatore.generaArtefattoCasuale(3).getTipo().isAggiornamento());
+        }
+        assertTrue(nomi.size() >= 15, nomi.toString());
+        assertTrue(nomi.contains("la Pergamena dell'Ultima Moda") && nomi.contains("il Ninnolo dell'Ultima Versione"), nomi.toString());
+    }
+
+    @Test
     void ilNomeProprioCompareDiRado() {
         GeneratoreArtefatti generatore = new GeneratoreArtefattiTabelle(new Random(5));
         int conNomeProprio = 0;

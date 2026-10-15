@@ -299,6 +299,91 @@ class IncantatoreTest {
         assertTrue(libro.getModificatori().stream().anyMatch(m -> m.getTipoAttributo() == TipoAttributo.POTERE_MAGICO));
     }
 
+    // --- Gli aggiornamenti: fanno salire di un livello l'artefatto, fino al livello del mondo
+
+    private static void livelloDelMondo(int livello) {
+        ModelloDati.getIstanza().getStatisticheMD().setLivello(livello);
+    }
+
+    @Test
+    void unAggiornamentoDaSoloBastaAFarSalireDiLivelloLArtefatto() {
+        livelloDelMondo(6);
+        Artefatto spada = artefatto(TipoArtefatto.SPADA, 3);
+        Artefatto aggiornamento = artefatto(TipoArtefatto.AGGIORNAMENTO, 1);
+        gruppo.addArtefatto(spada);
+        gruppo.addArtefatto(aggiornamento);
+        AutomaIncantatore incantatore = new AutomaIncantatore(gruppo, new BancoDiLavoro());
+        incantatore.richiediSpostamentoSuParteRemota(spada);
+        incantatore.richiediSpostamentoSuParteRemota(aggiornamento);
+        assertEquals(2, incantatore.getBanco().getInventario().size());
+        assertEquals(4, incantatore.getLivelloDopoLaFusione());
+        // Una spada comune ha un posto in meno del livello: da 2 a 3
+        assertEquals(3, incantatore.getEffettiMassimiDopoLaFusione());
+        assertEquals(0, incantatore.getEffettiDaTrasferire());
+        assertEquals(Costanti.FUSIONE_COSTO_BASE, incantatore.getCostoFusione());
+
+        assertEquals(Optional.empty(), gruppo.incanta(incantatore.getBanco(), ""));
+        assertEquals(100 - Costanti.FUSIONE_COSTO_BASE, gruppo.getMonete());
+        assertEquals(1, gruppo.getInventario().size(), "l'aggiornamento si consuma");
+        assertEquals(4, gruppo.getInventario().iterator().next().getLivello());
+    }
+
+    @Test
+    void ilLivelloNuovoValeGiaPerGliEffettiDellaStessaFusione() {
+        livelloDelMondo(6);
+        // Una spada comune di livello 2 ha un solo posto, già preso: il livello 3 ne dà uno in più per la pergamena
+        Artefatto spada = artefatto(TipoArtefatto.SPADA, 2);
+        spada.getModelloDati().addModificatore(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 5, "");
+        Artefatto pergamena = artefatto(TipoArtefatto.PERGAMENA, 1);
+        pergamena.getModelloDati().addModificatore(TipoAttributo.DESTREZZA, TipoModificatore.VARIAZIONE_FISSA, 5, "");
+        Artefatto aggiornamento = artefatto(TipoArtefatto.AGGIORNAMENTO, 1);
+        BancoDiLavoro banco = new BancoDiLavoro();
+        banco.addArtefatto(spada);
+        banco.addArtefatto(pergamena);
+        assertEquals(1, RegoleIncantatura.effettiDopoLaFusione(banco.getInventario()), "senza l'aggiornamento non c'è posto");
+        banco.addArtefatto(aggiornamento);
+        assertEquals(2, RegoleIncantatura.effettiDopoLaFusione(banco.getInventario()));
+        assertEquals(Optional.empty(), gruppo.incanta(banco, ""));
+        assertEquals(3, spada.getLivello());
+        assertEquals(2, spada.getModificatori().size());
+    }
+
+    @Test
+    void siSaleAlMassimoFinoAlLivelloDelMondo() {
+        livelloDelMondo(4);
+        Artefatto spada = artefatto(TipoArtefatto.SPADA, 3);
+        // Due aggiornamenti porterebbero la spada a 5, oltre il mondo
+        List<Artefatto> banco = new ArrayList<>(Collections.singletonList(spada));
+        assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.AGGIORNAMENTO, 1)));
+        banco.add(artefatto(TipoArtefatto.AGGIORNAMENTO, 1));
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.LIVELLO_DEL_MONDO_RAGGIUNTO),
+                RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.AGGIORNAMENTO, 1)));
+        // Già al livello del mondo: neanche uno
+        Artefatto allaPari = artefatto(TipoArtefatto.ELMO, 4);
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.LIVELLO_DEL_MONDO_RAGGIUNTO),
+                RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(allaPari), artefatto(TipoArtefatto.AGGIORNAMENTO, 1)));
+        // L'aggiornamento già sul banco ferma anche l'artefatto che arriva dopo
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.LIVELLO_DEL_MONDO_RAGGIUNTO),
+                RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(artefatto(TipoArtefatto.AGGIORNAMENTO, 1)), allaPari));
+        // Un artefatto sopra il livello del mondo si incanta comunque con gli ingredienti di sempre
+        livelloDelMondo(1);
+        assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(pergamena(1)), artefatto(TipoArtefatto.SPADA, 5)));
+    }
+
+    @Test
+    void unAggiornamentoNonSiPuoMettereSuUnAccessorioNeSiCompraONonSiVende() {
+        livelloDelMondo(6);
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NON_INCANTABILE),
+                RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(artefatto(TipoArtefatto.AGGIORNAMENTO, 1)),
+                        artefatto(TipoArtefatto.ANELLO, 2)));
+        for (TipoNegozio negozio : TipoNegozio.values()) {
+            assertFalse(negozio.tratta(TipoArtefatto.AGGIORNAMENTO), negozio.name());
+        }
+        // Il venditore e l'armaiolo trattano ancora il resto
+        assertTrue(TipoNegozio.VENDITORE_DI_PERGAMENE.tratta(TipoArtefatto.GEMMA));
+        assertTrue(TipoNegozio.ARMAIOLO.tratta(TipoArtefatto.SPADA));
+    }
+
     private static Artefatto artefatto(TipoArtefatto tipo, int livello) {
         ArtefattoMD md = new ArtefattoMD();
         md.setTipo(tipo);

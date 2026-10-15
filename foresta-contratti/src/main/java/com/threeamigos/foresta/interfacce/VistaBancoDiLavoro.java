@@ -24,6 +24,17 @@ public interface VistaBancoDiLavoro extends VistaScambio {
 	int getEffettiDopoLaFusione();
 
 	/**
+	 * Il livello che avrà l'artefatto sul banco dopo la fusione: più alto del suo se sul banco ci sono degli aggiornamenti
+	 * (oggetti che fanno salire di livello un artefatto); 0 se manca l'artefatto
+	 */
+	int getLivelloDopoLaFusione();
+
+	/**
+	 * Quanti effetti al massimo avrà l'artefatto sul banco dopo la fusione, con il livello nuovo; 0 se manca l'artefatto
+	 */
+	int getEffettiMassimiDopoLaFusione();
+
+	/**
 	 * Se l'effetto (un IncantamentoMD o un ModificatoreAttributoMD di un ingrediente sul banco) passerebbe
 	 * sull'artefatto con la fusione
 	 */

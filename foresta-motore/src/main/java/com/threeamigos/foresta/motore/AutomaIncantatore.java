@@ -52,6 +52,16 @@ public class AutomaIncantatore extends AutomaScambiatoreArtefatti implements Vis
 	}
 
 	@Override
+	public int getLivelloDopoLaFusione() {
+		return RegoleIncantatura.livelloDopoLaFusione(banco.getInventario());
+	}
+
+	@Override
+	public int getEffettiMassimiDopoLaFusione() {
+		return RegoleIncantatura.effettiMassimiDopoLaFusione(banco.getInventario());
+	}
+
+	@Override
 	public int getCostoFusione() {
 		if (!getArtefattoSulBanco().isPresent()) {
 			return gruppo.costoFusione(banco.getInventario());
@@ -79,6 +89,7 @@ public class AutomaIncantatore extends AutomaScambiatoreArtefatti implements Vis
 		for (Artefatto artefatto : sulBanco) {
 			chiave.add(artefatto);
 			chiave.add(artefatto.getNumeroEffetti());
+			chiave.add(artefatto.getLivello());
 		}
 		if (pianoCache == null || !stessaChiave(chiave, chiaveCache)) {
 			pianoCache = RegoleIncantatura.pianoDellaFusione(sulBanco);

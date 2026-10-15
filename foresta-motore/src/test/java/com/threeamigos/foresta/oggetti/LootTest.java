@@ -134,7 +134,10 @@ class LootTest {
         assertTrue(Cofano.artefattoRaro(0.099, generatore, 3).getTipo().isIngrediente());
         assertFalse(Cofano.artefattoRaro(0.10, generatore, 3).getTipo().isIngrediente());
         assertFalse(Cofano.artefattoRaro(0.199, generatore, 3).getTipo().isIngrediente());
-        assertNull(Cofano.artefattoRaro(0.20, generatore, 3));
+        // Poi, di rado, un oggetto che fa salire di livello un artefatto: si trova solo nei cofani
+        assertTrue(Cofano.artefattoRaro(0.20, generatore, 3).getTipo().isAggiornamento());
+        assertTrue(Cofano.artefattoRaro(0.229, generatore, 3).getTipo().isAggiornamento());
+        assertNull(Cofano.artefattoRaro(0.23, generatore, 3));
         assertNull(Cofano.artefattoRaro(0.99, generatore, 3));
     }
 

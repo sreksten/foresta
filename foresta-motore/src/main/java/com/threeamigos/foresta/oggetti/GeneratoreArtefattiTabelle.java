@@ -4,6 +4,7 @@ import com.threeamigos.foresta.modellodati.IncantamentoMD;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.*;
@@ -48,6 +49,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		nomeEPeso(TipoArtefatto.MONILE, "il monile", 0.2);
 		nomeEPeso(TipoArtefatto.GINGILLO, "il gingillo", 0.2);
 		nomeEPeso(TipoArtefatto.SIGILLO, "il sigillo", 0.1);
+		nomeEPeso(TipoArtefatto.AGGIORNAMENTO, "l'aggiornamento", 0.1);
 	}
 
 	private static final String[] COMPLEMENTI = {
@@ -87,7 +89,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 			.collect(Collectors.toList());
 
 	private static final List<TipoArtefatto> INGREDIENTI = Arrays.stream(TipoArtefatto.values())
-			.filter(TipoArtefatto::isIngrediente)
+			.filter(t -> t.isIngrediente() && !t.isAggiornamento())
 			.collect(Collectors.toList());
 
 	/**
@@ -154,6 +156,9 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 
 	@Override
 	public Artefatto generaArtefatto(TipoArtefatto tipo, int livello) {
+		if (tipo.isAggiornamento()) {
+			return generaAggiornamento(livello);
+		}
 		if (tipo.isIngrediente()) {
 			return generaIngrediente(tipo, livello);
 		}
@@ -317,6 +322,20 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	@Override
 	public Artefatto generaArtefattoCasuale(int livello) {
 		return generaArtefatto(TIPI_CASUALI.get(random.nextInt(TIPI_CASUALI.size())), livello);
+	}
+
+	@Override
+	public Artefatto generaAggiornamento(int livello) {
+		int livelloEffettivo = Math.max(1, livello);
+		ArtefattoMD md = new ArtefattoMD();
+		md.setTipo(TipoArtefatto.AGGIORNAMENTO);
+		md.setNome(ProduttoreDiTestiCasuale.nomeAggiornamento());
+		md.setDescrizione("che fa aumentare di un livello un Artefatto");
+		md.setLivello(livelloEffettivo);
+		md.setPeso(PESI.get(TipoArtefatto.AGGIORNAMENTO));
+		// Non si compra né si vende: il costo dice solo quanto vale, per i punteggi e per l'inventario
+		md.setCostoAcquisto(Costanti.AGGIORNAMENTO_VALORE_PER_LIVELLO * livelloEffettivo);
+		return Artefatto.di(md);
 	}
 
 	@Override

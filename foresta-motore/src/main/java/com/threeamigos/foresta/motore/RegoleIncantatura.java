@@ -31,6 +31,10 @@ import java.util.stream.Collectors;
  * e gli effetti che non entrano vanno persi. L'incantatore lo dice prima. Su un libro magico non passano gli incantamenti elementali, che
  * agiscono solo sulle armi; il POTERE_MAGICO passa solo su bastoni e libri magici. Costo 10 monete più 5 per
  * effetto trasferito. Gli ingredienti usati vengono distrutti.
+ * <p>
+ * Un aggiornamento (vedi TipoArtefatto.AGGIORNAMENTO, che si trova solo nei cofani) non dà effetti: fa salire di un livello
+ * l'artefatto, ognuno di uno, fino al livello del mondo. Il livello nuovo vale già per la fusione stessa: più posti per gli
+ * effetti. Costa come ogni fusione, e da solo basta a farla.
  */
 public final class RegoleIncantatura {
 
@@ -56,7 +60,7 @@ public final class RegoleIncantatura {
 		if (!artefatto.isPresent()) {
 			return ingredienti(banco).stream().mapToInt(RegoleIncantatura::effetti).sum();
 		}
-		return piano(artefatto.get(), ingredienti(banco)).daAggiungere.size();
+		return piano(artefatto.get(), banco).daAggiungere.size();
 	}
 
 	/**
@@ -65,7 +69,7 @@ public final class RegoleIncantatura {
 	 */
 	public static Piano pianoDellaFusione(Collection<Artefatto> banco) {
 		Optional<Artefatto> artefatto = artefattoSulBanco(banco);
-		return artefatto.isPresent() ? piano(artefatto.get(), ingredienti(banco)) : Piano.VUOTO;
+		return artefatto.isPresent() ? piano(artefatto.get(), banco) : Piano.VUOTO;
 	}
 
 	/**
@@ -85,7 +89,7 @@ public final class RegoleIncantatura {
 		if (!artefatto.isPresent()) {
 			return 0;
 		}
-		Piano piano = piano(artefatto.get(), ingredienti(banco));
+		Piano piano = piano(artefatto.get(), banco);
 		return effetti(artefatto.get()) - piano.daTogliere.size() + piano.daAggiungere.size();
 	}
 
@@ -102,10 +106,10 @@ public final class RegoleIncantatura {
 		List<Artefatto> ingredienti = ingredienti(banco);
 		int totale = ingredienti.stream().mapToInt(RegoleIncantatura::effetti).sum();
 		int sensati = ingredienti.stream().mapToInt(i -> trasferibili(artefatto.get(), i).size()).sum();
-		Piano piano = piano(artefatto.get(), ingredienti);
+		Piano piano = piano(artefatto.get(), banco);
 		int passano = piano.daAggiungere.size();
 		int scalzati = piano.daTogliere.size();
-		if (passano == 0 && sensati > 0) {
+		if (passano == 0 && sensati > 0 && aggiornamenti(banco) == 0) {
 			return Optional.of("Nessun effetto è migliore di quelli dell'artefatto: la fusione non cambierebbe niente.");
 		}
 		if (passano == totale && scalzati == 0) {
@@ -135,12 +139,16 @@ public final class RegoleIncantatura {
 
 	/**
 	 * Se si può aggiungere l'oggetto al banco: un solo artefatto, incantabile, con almeno un posto libero, e
-	 * nessun ingrediente che sull'artefatto non avrebbe effetto. Vuoto se si può.
+	 * nessun ingrediente che sull'artefatto non avrebbe effetto, e senza far salire l'artefatto oltre il livello del mondo con gli
+	 * aggiornamenti. Vuoto se si può.
 	 */
 	public static Optional<TipoMotivoRifiutoIncantatura> puoMettereSulBanco(Collection<Artefatto> banco, Artefatto nuovo) {
 		Optional<Artefatto> artefatto = artefattoSulBanco(banco);
 		List<Artefatto> ingredienti = ingredienti(banco);
-		if (isIngrediente(nuovo)) {
+		int aggiornamenti = aggiornamenti(banco);
+		if (isAggiornamento(nuovo)) {
+			aggiornamenti++;
+		} else if (isIngrediente(nuovo)) {
 			ingredienti.add(nuovo);
 		} else {
 			if (artefatto.isPresent()) {
@@ -153,6 +161,9 @@ public final class RegoleIncantatura {
 		}
 		// Finché manca l'artefatto non si sa quanti posti ha né che cosa sia: si controlla quando arriva
 		if (artefatto.isPresent()) {
+			if (aggiornamenti > 0 && artefatto.get().getLivello() + aggiornamenti > livelloMassimoPerAggiornamenti()) {
+				return Optional.of(TipoMotivoRifiutoIncantatura.LIVELLO_DEL_MONDO_RAGGIUNTO);
+			}
 			return problemi(artefatto.get(), ingredienti);
 		}
 		return Optional.empty();
@@ -181,14 +192,17 @@ public final class RegoleIncantatura {
 		if (!artefatto.isIncantabile()) {
 			return Optional.of(TipoMotivoRifiutoIncantatura.NON_INCANTABILE);
 		}
-		if (ingredienti.isEmpty()) {
+		if (ingredienti.isEmpty() && aggiornamenti(banco) == 0) {
 			return Optional.of(TipoMotivoRifiutoIncantatura.NESSUNA_PERGAMENA);
+		}
+		if (aggiornamenti(banco) > 0 && artefatto.getLivello() + aggiornamenti(banco) > livelloMassimoPerAggiornamenti()) {
+			return Optional.of(TipoMotivoRifiutoIncantatura.LIVELLO_DEL_MONDO_RAGGIUNTO);
 		}
 		Optional<TipoMotivoRifiutoIncantatura> problema = problemi(artefatto, ingredienti);
 		if (problema.isPresent()) {
 			return problema;
 		}
-		if (piano(artefatto, ingredienti).daAggiungere.isEmpty()) {
+		if (piano(artefatto, banco).daAggiungere.isEmpty() && aggiornamenti(banco) == 0) {
 			return Optional.of(TipoMotivoRifiutoIncantatura.NESSUN_MIGLIORAMENTO);
 		}
 		if (monete < costo(banco, contrattazione)) {
@@ -227,7 +241,9 @@ public final class RegoleIncantatura {
 		Collection<Artefatto> sulBanco = banco.getInventario();
 		Artefatto artefatto = artefattoSulBanco(sulBanco).orElseThrow(IllegalStateException::new);
 		ArtefattoMD md = artefatto.getModelloDati();
-		Piano piano = piano(artefatto, ingredienti(sulBanco));
+		Piano piano = piano(artefatto, sulBanco);
+		// Il livello sale per primo: il piano ha già contato i posti del livello nuovo
+		md.setLivello(livelloDopoLaFusione(sulBanco));
 		for (Effetto effetto : piano.daTogliere) {
 			if (effetto.incantamento != null) {
 				md.removeIncantamento(effetto.incantamento);
@@ -250,8 +266,44 @@ public final class RegoleIncantatura {
 		return artefatto;
 	}
 
+	/**
+	 * Gli ingredienti sul banco che danno effetti: gli aggiornamenti no.
+	 */
 	private static List<Artefatto> ingredienti(Collection<Artefatto> banco) {
-		return banco.stream().filter(RegoleIncantatura::isIngrediente).collect(Collectors.toList());
+		return banco.stream().filter(a -> isIngrediente(a) && !isAggiornamento(a)).collect(Collectors.toList());
+	}
+
+	public static boolean isAggiornamento(Artefatto artefatto) {
+		return artefatto.getTipo().isAggiornamento();
+	}
+
+	/**
+	 * Quanti aggiornamenti ci sono sul banco: tanti livelli in più per l'artefatto.
+	 */
+	public static int aggiornamenti(Collection<Artefatto> banco) {
+		return (int) banco.stream().filter(RegoleIncantatura::isAggiornamento).count();
+	}
+
+	/**
+	 * Il livello dell'artefatto sul banco dopo la fusione, con gli aggiornamenti messi; zero se manca l'artefatto.
+	 */
+	public static int livelloDopoLaFusione(Collection<Artefatto> banco) {
+		return artefattoSulBanco(banco).map(a -> a.getLivello() + aggiornamenti(banco)).orElse(0);
+	}
+
+	/**
+	 * Quanti effetti al massimo avrà l'artefatto sul banco dopo la fusione, con il suo livello nuovo; zero se manca.
+	 */
+	public static int effettiMassimiDopoLaFusione(Collection<Artefatto> banco) {
+		return artefattoSulBanco(banco).filter(Artefatto::isIncantabile)
+				.map(a -> a.getRarita().getEffettiMassimi(livelloDopoLaFusione(banco))).orElse(0);
+	}
+
+	/**
+	 * Fin dove si può far salire un artefatto con gli aggiornamenti: il livello del mondo.
+	 */
+	private static int livelloMassimoPerAggiornamenti() {
+		return Statistiche.getLivello();
 	}
 
 	/**
@@ -273,17 +325,19 @@ public final class RegoleIncantatura {
 	 * leggendari: non ne guadagna e non ne perde per questo). A parità di prezzo vince l'effetto già presente, poi
 	 * l'ordine sul banco: così non si scalza niente per niente.
 	 */
-	private static Piano piano(Artefatto artefatto, Collection<Artefatto> ingredienti) {
+	private static Piano piano(Artefatto artefatto, Collection<Artefatto> banco) {
+		List<Artefatto> ingredienti = ingredienti(banco);
+		int livello = artefatto.getLivello() + aggiornamenti(banco);
 		List<Effetto> candidati = new ArrayList<>();
 		for (IncantamentoMD incantamento : artefatto.getIncantamenti()) {
-			candidati.add(new Effetto(incantamento, null, ListinoPergamene.prezzo(incantamento, artefatto.getLivello())));
+			candidati.add(new Effetto(incantamento, null, ListinoPergamene.prezzo(incantamento, livello)));
 		}
 		for (ModificatoreAttributoMD modificatore : artefatto.getModificatori()) {
 			candidati.add(new Effetto(null, modificatore, ListinoPergamene.prezzo(modificatore)));
 		}
 		int presenti = candidati.size();
-		ingredienti.forEach(i -> candidati.addAll(trasferibili(artefatto, i)));
-		int posti = Math.max(artefatto.getEffettiMassimi(), presenti);
+		ingredienti.forEach(i -> candidati.addAll(trasferibili(artefatto, i, livello)));
+		int posti = Math.max(artefatto.isIncantabile() ? artefatto.getRarita().getEffettiMassimi(livello) : 0, presenti);
 		// Il sorted è stabile: a parità di prezzo restano nell'ordine in cui sono (prima i presenti)
 		List<Effetto> ordinati = candidati.stream()
 				.sorted(Comparator.comparingDouble((Effetto e) -> e.prezzo).reversed())
@@ -307,10 +361,14 @@ public final class RegoleIncantatura {
 	 * Gli effetti di un ingrediente che sull'artefatto hanno senso.
 	 */
 	private static List<Effetto> trasferibili(Artefatto artefatto, Artefatto ingrediente) {
+		return trasferibili(artefatto, ingrediente, artefatto.getLivello());
+	}
+
+	private static List<Effetto> trasferibili(Artefatto artefatto, Artefatto ingrediente, int livello) {
 		List<Effetto> effetti = new ArrayList<>();
 		if (!isLibro(artefatto)) {
 			for (IncantamentoMD incantamento : ingrediente.getIncantamenti()) {
-				effetti.add(new Effetto(incantamento, null, ListinoPergamene.prezzo(incantamento, artefatto.getLivello())));
+				effetti.add(new Effetto(incantamento, null, ListinoPergamene.prezzo(incantamento, livello)));
 			}
 		}
 		for (ModificatoreAttributoMD modificatore : ingrediente.getModificatori()) {

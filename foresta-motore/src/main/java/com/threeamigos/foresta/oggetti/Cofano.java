@@ -128,7 +128,8 @@ public class Cofano extends OggettoBase implements Oggetto {
 	}
 
 	/**
-	 * Con probabilità 10% un ingrediente magico, con un altro 10% un artefatto casuale, altrimenti null (vedi Costanti).
+	 * Con probabilità 10% un ingrediente magico, con un altro 10% un artefatto casuale, con un altro 3% un oggetto che fa salire di
+	 * livello un artefatto (si trova solo qui), altrimenti null (vedi Costanti).
 	 */
 	static Artefatto artefattoRaro(double tiro, GeneratoreArtefatti generatore, int livello) {
 		if (tiro < Costanti.COFANO_PROBABILITA_PERGAMENA) {
@@ -136,6 +137,9 @@ public class Cofano extends OggettoBase implements Oggetto {
 		}
 		if (tiro < Costanti.COFANO_PROBABILITA_PERGAMENA + Costanti.COFANO_PROBABILITA_ARTEFATTO) {
 			return generatore.generaArtefattoCasuale(livello);
+		}
+		if (tiro < Costanti.COFANO_PROBABILITA_PERGAMENA + Costanti.COFANO_PROBABILITA_ARTEFATTO + Costanti.COFANO_PROBABILITA_AGGIORNAMENTO) {
+			return generatore.generaAggiornamento(livello);
 		}
 		return null;
 	}

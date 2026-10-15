@@ -43,7 +43,11 @@ public enum TipoArtefatto {
     GEMMA(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Gemma", "porta con se"),
     MONILE(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Monile", "porta con se"),
     GINGILLO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Gingillo", "porta con se"),
-    SIGILLO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Sigillo", "porta con se");
+    SIGILLO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Sigillo", "porta con se"),
+
+    // Un oggetto che sul banco dell'incantatore fa salire di un livello un artefatto, invece di dargli degli effetti: si trova
+    // solo nei cofani, non si compra né si vende (vedi isAggiornamento, RegoleIncantatura e aggiornamenti.txt per i nomi).
+    AGGIORNAMENTO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Aggiornamento", "porta con se");
 
     private final SupertipoArtefatto supertipo;
     private final TipoCardinalitaArtefatto cardinalita;
@@ -83,6 +87,14 @@ public enum TipoArtefatto {
      */
     public boolean isIngrediente() {
         return supertipo == SupertipoArtefatto.INCANTAMENTO;
+    }
+
+    /**
+     * Un oggetto che fa salire di un livello l'artefatto su cui lo si fonde, invece di dargli degli effetti. È anche un
+     * ingrediente (si mette sul banco dell'incantatore come gli altri), ma non lo si compra né lo si vende.
+     */
+    public boolean isAggiornamento() {
+        return this == AGGIORNAMENTO;
     }
 
     public SupertipoArtefatto getSupertipo() {

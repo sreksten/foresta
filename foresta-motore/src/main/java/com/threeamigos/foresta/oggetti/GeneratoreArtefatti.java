@@ -41,12 +41,18 @@ public interface GeneratoreArtefatti {
 	Artefatto generaArtefatto(TipoArtefatto tipo, int livello);
 
 	/**
+	 * Un oggetto che fa salire di un livello un artefatto (vedi TipoArtefatto.AGGIORNAMENTO), con un nome buffo a caso: si trova solo
+	 * nei cofani. Il livello è quello di riferimento, e non cambia che cosa fa.
+	 */
+	Artefatto generaAggiornamento(int livello);
+
+	/**
 	 * Un artefatto di tipo scelto a caso, ingredienti magici esclusi.
 	 */
 	Artefatto generaArtefattoCasuale(int livello);
 
 	/**
-	 * Un ingrediente magico di tipo scelto a caso (pergamena, gemma, monile, gingillo o sigillo), del livello di
+	 * Un ingrediente magico di tipo scelto a caso (pergamena, gemma, monile, gingillo o sigillo; mai un aggiornamento), del livello di
 	 * riferimento, con tanti effetti quanto il livello, fino a tre, tutti della specialità del tipo e del grado
 	 * adatto al livello: minore fino al 2, normale al 3, maggiore dal 4.
 	 */

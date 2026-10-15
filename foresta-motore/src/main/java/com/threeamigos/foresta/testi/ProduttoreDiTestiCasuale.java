@@ -35,6 +35,7 @@ public class ProduttoreDiTestiCasuale {
 	private static GrammarBean locande;
 	private static GrammarBean templi;
 	private static GrammarBean rovine;
+	private static GrammarBean aggiornamenti;
 	private static GrammarBean missioni;
 	private static GrammarBean leggendari;
 	private static GrammarBean sfide;
@@ -69,6 +70,8 @@ public class ProduttoreDiTestiCasuale {
 			rovine = new GrammarBean(
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/rovine.txt"),
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
+			aggiornamenti = new GrammarBean(
+					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/aggiornamenti.txt"), null);
 			missioni = GrammarBean.fromResource(ProduttoreDiTestiCasuale.class,
 					"/com/threeamigos/foresta/motore/missioni.txt",
 					"/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt");
@@ -116,6 +119,14 @@ public class ProduttoreDiTestiCasuale {
 	 */
 	public static String nomeRovine() {
 		return rovine.produce("NOME_ROVINE").get(0).trim();
+	}
+
+	/**
+	 * Il nome a caso, con l'articolo, di un oggetto che fa salire di un livello un artefatto: "la Pergamena dell'Ultima Moda" (vedi
+	 * aggiornamenti.txt e TipoArtefatto.AGGIORNAMENTO).
+	 */
+	public static String nomeAggiornamento() {
+		return aggiornamenti.produce("NOME_AGGIORNAMENTO").get(0).trim();
 	}
 
 	/**

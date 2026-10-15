@@ -12,6 +12,7 @@ public enum TipoMotivoRifiutoIncantatura {
 	NESSUN_MIGLIORAMENTO("Nessun effetto degli ingredienti è migliore di quelli dell'artefatto."),
 	POTERE_MAGICO_FUORI_POSTO("Il potere magico si fonde solo su bastoni e libri magici, e questo ingrediente non ha altro."),
 	INCANTAMENTO_SU_LIBRO("Su un libro magico gli incantamenti elementali non hanno effetto, e questo ingrediente non ha altro."),
+	LIVELLO_DEL_MONDO_RAGGIUNTO("Un artefatto non può salire oltre il livello del mondo."),
 	MONETE_INSUFFICIENTI("Non avete abbastanza monete per la fusione.");
 
 	private final String frase;
