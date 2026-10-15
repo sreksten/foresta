@@ -4,6 +4,9 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissio
 import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
 import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.locazioni.Tempio;
+import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.missioni.leggende.LaLeggenda;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelLocandiere;
@@ -67,6 +70,39 @@ class ScenarioLeggendeTest {
         assertThrows(IllegalArgumentException.class, () -> OggettoLeggendario.da(elmo + ";MOD=ALTEZZA +3"), "un attributo che non c'è");
         assertThrows(IllegalArgumentException.class, () -> OggettoLeggendario.da(elmo.replace(";LEGGENDA=b", "")),
                 "una leggenda di una battuta");
+    }
+
+    @Test
+    void unLeggendarioSiOttieneAlLivelloDelMondoSeEPiuAltoDiQuelloDelCatalogo() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(7)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            OggettoLeggendario leggendario = CatalogoLeggendari.getLeggendario(Leggendari.SPADA_DI_ROMY_JONA).get();
+            int livelloDelCatalogo = leggendario.costruisci().getLivello();
+
+            // Il mondo è ancora indietro: il leggendario non si indebolisce
+            ModelloDati.getIstanza().getStatisticheMD().setLivello(1);
+            assertEquals(livelloDelCatalogo, leggendario.costruisci().getLivello());
+
+            // Il mondo è più avanti: nasce al suo livello
+            int livelloDelMondo = livelloDelCatalogo + 4;
+            ModelloDati.getIstanza().getStatisticheMD().setLivello(livelloDelMondo);
+            assertEquals(livelloDelMondo, leggendario.costruisci().getLivello());
+
+            // Uno custodito in un tempio da prima lo si ottiene al livello di quando lo si prende
+            ModelloDati.getIstanza().getStatisticheMD().setLivello(livelloDelCatalogo);
+            Artefatto nelTempio = leggendario.costruisci();
+            assertEquals(livelloDelCatalogo, nelTempio.getLivello());
+            ModelloDati.getIstanza().getStatisticheMD().setLivello(livelloDelMondo);
+            Tempio tempio = new Tempio();
+            tempio.collocaOggettoMissione(nelTempio);
+            tempio.rimuoviOggetto();
+            assertEquals(livelloDelMondo, nelTempio.getLivello());
+
+            // Gli altri artefatti non si toccano
+            Artefatto comune = GeneratoreArtefatti.istanza().generaArtefatto(TipoArtefatto.ELMO, 1);
+            OggettoLeggendario.alLivelloDelMondo(comune);
+            assertEquals(1, comune.getLivello());
+        }
     }
 
     @Test

@@ -18,6 +18,7 @@ import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.FabbricaOggetti;
 import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
@@ -1283,6 +1284,8 @@ public abstract class LocazioneBase implements Locazione {
 			// ne ottengono infinite copie. Corruzione e fuga usano setOggetto(null), che invece
 			// lo lascia al suo posto.
 			RegistroArtefatti.rimuoviArtefattoInLocazione(gruppo.getCoordinate());
+			// Un leggendario custodito in un tempio è nato molto prima: lo si ottiene al livello del mondo di adesso
+			OggettoLeggendario.alLivelloDelMondo((Artefatto) oggettoCorrente);
 		}
 		oggettoCorrente = null;
 	}

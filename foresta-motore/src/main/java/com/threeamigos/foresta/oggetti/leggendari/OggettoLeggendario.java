@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.oggetti.leggendari;
 
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
@@ -210,14 +211,33 @@ public final class OggettoLeggendario {
 	}
 
 	/**
-	 * Un artefatto nuovo, leggendario, con tutte le proprietà della riga.
+	 * Il livello che un leggendario ha quando il gruppo lo ottiene: quello della riga, o il livello del mondo di adesso se è più
+	 * alto, così non resta sottodimensionato col procedere della partita (e non diventa più debole se lo si ottiene presto).
+	 */
+	private int livelloAlloraDelMondo() {
+		return Math.max(livello, Statistiche.getLivello());
+	}
+
+	/**
+	 * Porta un leggendario già costruito al livello del mondo di adesso, se questo è più alto del suo: per quelli che stanno in un
+	 * tempio, costruiti quando la leggenda è stata raccontata, e che il gruppo ottiene molto dopo. Gli altri artefatti non si toccano.
+	 */
+	public static void alLivelloDelMondo(Artefatto artefatto) {
+		if (artefatto.getRarita() == TipoRaritaArtefatto.LEGGENDARIO && artefatto.getLivello() < Statistiche.getLivello()) {
+			artefatto.getModelloDati().setLivello(Statistiche.getLivello());
+		}
+	}
+
+	/**
+	 * Un artefatto nuovo, leggendario, con tutte le proprietà della riga, al livello del mondo di adesso se più alto di quello della
+	 * riga (vedi {@link #livelloAlloraDelMondo}).
 	 */
 	public Artefatto costruisci() {
 		CostruttoreArtefatto.StepDanniBase passo = CostruttoreArtefatto.istanza()
 				.setTipo(tipo)
 				.setNome(nome)
 				.setDescrizione(descrizione)
-				.setLivello(livello);
+				.setLivello(livelloAlloraDelMondo());
 		CostruttoreArtefatto.StepModificatore costruttore = (danni != null ? passo.setDanniBase(danni).setCostoAcquisto(costo)
 				: passo.setCostoAcquisto(costo)).setPeso(peso);
 		for (String modificatore : modificatori) {
