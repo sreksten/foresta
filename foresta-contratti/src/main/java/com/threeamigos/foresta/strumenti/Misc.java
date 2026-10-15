@@ -88,15 +88,18 @@ public class Misc {
 		return testo.isEmpty() ? testo : Character.toUpperCase(testo.charAt(0)) + testo.substring(1);
 	}
 
+	/**
+	 * Il numero in lettere fino a dieci; oltre (o se negativo) resta in cifre: "15".
+	 */
 	public static String getCardinaleM(int numero) {
-		return cardinali[numero];
+		return numero >= 0 && numero < cardinali.length ? cardinali[numero] : String.valueOf(numero);
 	}
 
 	public static String getCardinaleF(int numero) {
 		if (numero == 1)
 			return "una";
 		else
-			return cardinali[numero];
+			return getCardinaleM(numero);
 	}
 
 	private static final String[] ordinali = {
