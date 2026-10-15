@@ -457,6 +457,14 @@ public enum TipoEvento {
      */
     INTERNO_PASTO_CONSUMATO_IN_LOCANDA,
     /**
+     * Il gruppo è arrivato per la prima volta in una casella
+     */
+    INTERNO_LOCAZIONE_VISITATA,
+    /**
+     * Il gruppo ha davanti degli eremiti
+     */
+    INTERNO_EREMITI_INCONTRATI,
+    /**
      * Il motore chiede alla UI di portare in primo piano il riquadro dello stato del gruppo
      */
     INTERNO_MOSTRA_FINESTRA_STATO,

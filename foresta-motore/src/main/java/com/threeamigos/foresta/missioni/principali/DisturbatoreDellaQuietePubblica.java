@@ -18,7 +18,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 
 	private static final int EREMITI_DA_INCONTRARE = 10;
 
-	private static final String DESCRIZIONE_BASE = "Angustia " + EREMITI_DA_INCONTRARE + " Eremiti";
+	private static final String DESCRIZIONE_BASE = "Angustia " + Misc.getCardinaleM(EREMITI_DA_INCONTRARE) + " Eremiti";
 	private static final String EREMITI_INCONTRATI = "EREMITI_INCONTRATI";
 
 	public DisturbatoreDellaQuietePubblica() {
@@ -42,7 +42,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 		if (mancanti == 10) {
 			return DESCRIZIONE_BASE + ".";
 		}
-		return DESCRIZIONE_BASE + ". Ne mancano " + mancanti + ".";
+		return DESCRIZIONE_BASE + ". Ne mancano " + Misc.getCardinaleM(mancanti) + ".";
 	}
 
 	@Override

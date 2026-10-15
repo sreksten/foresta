@@ -16,6 +16,8 @@ public enum TipoIntermezzo {
 	INTERMEZZO_VENDITORE_DI_PERGAMENE,
 	INTERMEZZO_INCANTATORE,
 	INTERMEZZO_ACCAMPAMENTO,
+	/** L'ultimo eremita disturbato dice al gruppo quello che pensa, a missione DisturbatoreDellaQuietePubblica completata */
+	INTERMEZZO_EREMITA_ROMPISCATOLE,
 	/** Di ripiego: la visita successiva alla locanda, che aspetta se all'ingresso scatta altro (per esempio l'incarico di una missione) */
 	INTERMEZZO_LOCANDA_VISITA_SUCCESSIVA,
 	/** Di ripiego: chi entra a ore impossibili, solo se all'ingresso non scatta nient'altro */

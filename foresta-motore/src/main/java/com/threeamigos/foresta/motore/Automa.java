@@ -26,6 +26,7 @@ import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
@@ -39,6 +40,7 @@ import com.threeamigos.foresta.tipi.FaseDiGioco;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoOggetto;
@@ -772,12 +774,29 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			BottinoDegliAvversari.fornisciLeScorte(gruppoAvversario, gruppoAvversario.getPersonaggi());
 		}
 		BusEventi.pubblica(new InternoPreparazioneLocazione());
+		pubblicaIncontri();
 		BusEventi.pubblica(new NotificaTestoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));
 		locazioneCorrente.descrivi(gruppo, gruppoAvversario);
 		// Dove una missione finita aveva la sua locazione, per esempio fra le rovine di un castello sconfitto
 		RegistroMissioni.getRicordo(gruppo.getCoordinate())
 				.ifPresent(ricordo -> BusEventi.pubblica(new NotificaTestoFrase(ricordo)));
 		return controllaMissioniEDomande(MomentoControllo.IN_LOCAZIONE, this::proseguiPreparazioneLocazione);
+	}
+
+	/**
+	 * Quello che i trofei contano all'arrivo, a locazione pronta: la prima visita alla casella e gli eremiti che il gruppo ha
+	 * davanti. Dopo InternoPreparazioneLocazione, che scarta il progresso in sospeso.
+	 */
+	private void pubblicaIncontri() {
+		LocazioneMD modelloDati = locazioneCorrente.getModelloDati();
+		if (modelloDati.ottieniProprieta(LocazioneMD.ARRIVATO) == null) {
+			modelloDati.aggiungiProprieta(LocazioneMD.ARRIVATO, LocazioneMD.AFFERMATIVO);
+			BusEventi.pubblica(new InternoLocazioneVisitata(locazioneCorrente.getTipoLocazione()));
+		}
+		int eremiti = (int) gruppoAvversario.getPersonaggi().stream().filter(p -> p.getClasse() == TipoPersonaggio.EREMITA).count();
+		if (eremiti > 0) {
+			BusEventi.pubblica(new InternoEremitiIncontrati(eremiti));
+		}
 	}
 
 	private Esito proseguiPreparazioneLocazione() {

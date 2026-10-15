@@ -29,6 +29,10 @@ public class LocazioneMD implements Serializzabile {
 	 */
 	public static final String VISITATA = "VISITATA";
 	/**
+	 * Il gruppo è arrivato in questa casella almeno una volta (anche se ne è fuggito): serve a pubblicare la prima visita
+	 */
+	public static final String ARRIVATO = "ARRIVATO";
+	/**
 	 * Il gruppo sa cosa c'è in questa casella e la vede sulla mappa
 	 */
 	public static final String CONOSCIUTA = "CONOSCIUTA";

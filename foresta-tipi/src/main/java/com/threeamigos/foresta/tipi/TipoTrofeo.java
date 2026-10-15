@@ -35,7 +35,10 @@ public enum TipoTrofeo {
 	AMICO_DI_TUTTI("Amico di tutti", "Fai amicizia 100 volte", SupertipoTrofeo.DIPLOMAZIA),
 	CORRUTTORE("Corruttore", "Porta a termine 100 tentativi di corruzione", SupertipoTrofeo.DIPLOMAZIA),
 	NECROMANTE("Necromante", "Recluta un aiuto dall'aldilà", SupertipoTrofeo.VARIE),
-	SBEVAZZONE("Sbevazzone", "Visita 100 locande nella foresta o in città", SupertipoTrofeo.VARIE);
+	SBEVAZZONE("Sbevazzone", "Visita 100 locande nella foresta o in città", SupertipoTrofeo.VARIE),
+	TUTTI_I_SANTI("Tutti i Santi (Ma Proprio Tutti)", "Visita 100 templi", SupertipoTrofeo.VARIE),
+	SPELEOLOGO("Speleologo", "Visita 100 grotte", SupertipoTrofeo.VARIE),
+	VERO_ROMPISCATOLE("Vero Rompiscatole", "Disturba la quiete di cento eremiti", SupertipoTrofeo.VARIE);
 
 	private final String nome;
 	private final String descrizione;

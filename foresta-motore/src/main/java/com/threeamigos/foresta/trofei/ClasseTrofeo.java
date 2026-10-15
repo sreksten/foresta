@@ -3,16 +3,19 @@ package com.threeamigos.foresta.trofei;
 import com.threeamigos.foresta.eventi.interni.InternoAmiciziaStretta;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.interni.InternoCorruzioneRiuscita;
+import com.threeamigos.foresta.eventi.interni.InternoEremitiIncontrati;
 import com.threeamigos.foresta.eventi.interni.InternoMissioneCompletata;
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.interni.InternoPastoConsumatoInLocanda;
 import com.threeamigos.foresta.eventi.interni.InternoScheletroRisvegliato;
+import com.threeamigos.foresta.eventi.interni.InternoLocazioneVisitata;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
@@ -35,6 +38,12 @@ public enum ClasseTrofeo {
 	// Chi viene respinto dall'oste per mancanza di monete non mangia, e non conta
 	SBEVAZZONE(() -> new TrofeoAContatore<>(TipoTrofeo.SBEVAZZONE,
 			InternoPastoConsumatoInLocanda.class, evento -> 1, 100)),
+	// Conta i templi e le grotte visitati per la prima volta in ogni partita, non i ritorni
+	TUTTI_I_SANTI(() -> visite(TipoTrofeo.TUTTI_I_SANTI, TipoLocazione.TEMPIO)),
+	SPELEOLOGO(() -> visite(TipoTrofeo.SPELEOLOGO, TipoLocazione.GROTTA)),
+	// Si conta l'incontro, non il suo esito, come per la missione Disturbatore della Quiete Pubblica
+	VERO_ROMPISCATOLE(() -> new TrofeoAContatore<>(TipoTrofeo.VERO_ROMPISCATOLE,
+			InternoEremitiIncontrati.class, InternoEremitiIncontrati::getQuantita, 100)),
 	// Lo scheletro che la mietitura porta dalla parte del gruppo: a gruppo pieno non c'è posto e non conta
 	NECROMANTE(() -> new TrofeoAContatore<>(TipoTrofeo.NECROMANTE,
 			InternoScheletroRisvegliato.class, evento -> 1, 1)),
@@ -88,6 +97,10 @@ public enum ClasseTrofeo {
 	 */
 	public static Trofeo di(TipoTrofeo tipo) {
 		return valueOf(tipo.name()).getIstanza();
+	}
+
+	private static Trofeo visite(TipoTrofeo tipo, TipoLocazione locazione) {
+		return new TrofeoAContatore<>(tipo, InternoLocazioneVisitata.class, evento -> evento.getTipo() == locazione ? 1 : 0, 100);
 	}
 
 	private static Trofeo refurtiva(TipoTrofeo tipo, TipoOggetto tipoOggetto) {

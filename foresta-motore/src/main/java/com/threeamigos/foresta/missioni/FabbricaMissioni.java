@@ -27,6 +27,7 @@ import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelLocandiere;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
 import com.threeamigos.foresta.missioni.principali.CronacheDiUnFegatoEroico;
 import com.threeamigos.foresta.missioni.principali.DisturbatoreDellaQuietePubblica;
+import com.threeamigos.foresta.missioni.principali.IlGiroDelleSetteChiese;
 import com.threeamigos.foresta.missioni.principali.MuoviALocazione;
 import com.threeamigos.foresta.missioni.principali.NessunBoccaleLasciatoIndietro;
 import com.threeamigos.foresta.missioni.principali.SconfiggiIlDrago;
@@ -62,6 +63,7 @@ public final class FabbricaMissioni {
 		COSTRUTTORI.put(ClasseMissione.CRONACHE_DI_UN_FEGATO_EROICO, CronacheDiUnFegatoEroico::new);
 		COSTRUTTORI.put(ClasseMissione.NESSUN_BOCCALE_LASCIATO_INDIETRO, NessunBoccaleLasciatoIndietro::new);
 		COSTRUTTORI.put(ClasseMissione.DISTURBATORE_DELLA_QUIETE_PUBBLICA, DisturbatoreDellaQuietePubblica::new);
+		COSTRUTTORI.put(ClasseMissione.IL_GIRO_DELLE_SETTE_CHIESE, IlGiroDelleSetteChiese::new);
 		COSTRUTTORI.put(ClasseMissione.CACCIA_AI_GOBLIN, CacciaAiGoblin::new);
 		COSTRUTTORI.put(ClasseMissione.RICHIESTA_ALCHIMISTA, RichiestaDiMateriali::dellAlchimista);
 		COSTRUTTORI.put(ClasseMissione.RICHIESTA_ARMAIOLO, RichiestaDiMateriali::dellArmaiolo);
