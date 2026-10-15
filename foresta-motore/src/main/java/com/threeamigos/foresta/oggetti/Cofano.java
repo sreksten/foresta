@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.strumenti.ContestoLancio;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
@@ -14,6 +15,12 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Un cofano: il gruppo che lo apre trova qualcosa a caso fra una pergamena, tre pergamene, una pozione (della salute, della salute
@@ -72,7 +79,7 @@ public class Cofano extends OggettoBase implements Oggetto {
 		}
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < quantita; i++) {
-			tipo = Dado.tira(min, max);
+			tipo = Dado.tira(ContestoLancio.COFANO_ESITO, min, max);
 			// Di rado, al posto dell'esito solito, una pergamena o un artefatto casuale, che vanno nel gruppo
 			Artefatto trovato = artefattoRaro();
 			sb.append("Aprendo il");
@@ -144,7 +151,55 @@ public class Cofano extends OggettoBase implements Oggetto {
 		return null;
 	}
 
+	/**
+	 * Chi non vuole un oggetto speciale preciso in un cofano (la scelta del contesto COFANO_OGGETTO): il cofano va come sempre.
+	 */
+	public static final String OGGETTO_SPECIALE_CASUALE = "CASUALE";
+	/** Nessun oggetto speciale: solo l'esito solito. */
+	public static final String OGGETTO_SPECIALE_NESSUNO = "NESSUNO";
+	public static final String OGGETTO_SPECIALE_INGREDIENTE = "INGREDIENTE";
+	public static final String OGGETTO_SPECIALE_ARTEFATTO = "ARTEFATTO";
+	public static final String OGGETTO_SPECIALE_AGGIORNAMENTO = "AGGIORNAMENTO";
+	/** Seguito dalla chiave del leggendario nel CatalogoLeggendari. */
+	public static final String PREFISSO_LEGGENDARIO = "LEGGENDARIO:";
+
+	/**
+	 * Gli oggetti speciali che un cofano può essere costretto a dare (vedi ContestoLancio.COFANO_OGGETTO): quelli generati
+	 * dal livello e ogni leggendario del catalogo.
+	 */
+	public static List<String> opzioniOggettoSpeciale() {
+		List<String> opzioni = new ArrayList<>(Arrays.asList(OGGETTO_SPECIALE_CASUALE, OGGETTO_SPECIALE_NESSUNO,
+				OGGETTO_SPECIALE_INGREDIENTE, OGGETTO_SPECIALE_ARTEFATTO, OGGETTO_SPECIALE_AGGIORNAMENTO));
+		for (String chiave : CatalogoLeggendari.getTuttiILeggendari().keySet()) {
+			opzioni.add(PREFISSO_LEGGENDARIO + chiave);
+		}
+		return opzioni;
+	}
+
+	/**
+	 * L'oggetto speciale del cofano: quello che chi sviluppa ha voluto (vedi {@link #opzioniOggettoSpeciale}), altrimenti
+	 * quello del tiro di probabilità.
+	 */
 	private static Artefatto artefattoRaro() {
-		return artefattoRaro(Dado.probabilita(), GeneratoreArtefatti.istanza(), Statistiche.getLivello());
+		String voluto = Dado.sceltaVoluta(ContestoLancio.COFANO_OGGETTO, opzioniOggettoSpeciale())
+				.orElse(OGGETTO_SPECIALE_CASUALE);
+		GeneratoreArtefatti generatore = GeneratoreArtefatti.istanza();
+		int livello = Statistiche.getLivello();
+		switch (voluto) {
+			case OGGETTO_SPECIALE_NESSUNO:
+				return null;
+			case OGGETTO_SPECIALE_INGREDIENTE:
+				return generatore.generaIngrediente(livello);
+			case OGGETTO_SPECIALE_ARTEFATTO:
+				return generatore.generaArtefattoCasuale(livello);
+			case OGGETTO_SPECIALE_AGGIORNAMENTO:
+				return generatore.generaAggiornamento(livello);
+			case OGGETTO_SPECIALE_CASUALE:
+				return artefattoRaro(Dado.probabilita(), generatore, livello);
+			default:
+				return CatalogoLeggendari.getLeggendario(voluto.substring(PREFISSO_LEGGENDARIO.length()))
+						.map(OggettoLeggendario::costruisci)
+						.orElseGet(() -> artefattoRaro(Dado.probabilita(), generatore, livello));
+		}
 	}
 }

@@ -1,6 +1,9 @@
 package com.threeamigos.foresta.strumenti;
 
 import java.util.Deque;
+import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -10,6 +13,9 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  *     <li>fissare il seme ({@link #impostaSeme}) per rendere ripetibile una partita intera;</li>
  *     <li>truccare i prossimi lanci ({@link #trucca}) per provare un caso preciso.</li>
  * </ul>
+ * I lanci importanti hanno anche un contesto ({@link ContestoLancio}): in modalità di prova un
+ * {@link TruccatoreDiDadi} può decidere il risultato di un contesto, finché non si spegne il trucco. La coda dei test
+ * ha la precedenza.
  * Il generatore di artefatti e le grammatiche (GrammarBean) usano direttamente {@link #sorgente()}: seguono il seme
  * ma non consumano i lanci truccati, che restano per le decisioni.
  *
@@ -21,6 +27,16 @@ public class Dado {
 
     // I prossimi risultati truccati, in ordine: Integer per i lanci, Double per le probabilità
     private static final Deque<Number> TRUCCHI = new ConcurrentLinkedDeque<>();
+
+    // Chi decide i lanci con contesto: solo in modalità di prova
+    private static volatile TruccatoreDiDadi truccatore;
+
+    /**
+     * Chi decide i lanci con contesto al posto del caso; null per toglierlo.
+     */
+    public static void impostaTruccatore(TruccatoreDiDadi truccatoreDiDadi) {
+        truccatore = truccatoreDiDadi;
+    }
 
     /**
      * Il generatore da cui viene tutto il caso: chi lo tiene segue anche un seme impostato dopo.
@@ -155,5 +171,79 @@ public class Dado {
             throw new IllegalArgumentException("Il valore minimo deve essere minore al valore massimo");
         }
         return intero(min, max);
+    }
+
+    /**
+     * Come {@link #tira(int, int)}, per un contesto che chi sviluppa può truccare. Se la coda dei trucchi dei test non è
+     * vuota vale quella; altrimenti, se il truccatore ha un risultato dentro l'intervallo, quello; altrimenti il caso.
+     */
+    public static int tira(ContestoLancio contesto, int min, int max) {
+        if (min >= max) {
+            Logger.log("**************************ERRORE FATALE! Dado tira(" + contesto + ", " + min + ", " + max + ")");
+            throw new IllegalArgumentException("Il valore minimo deve essere minore al valore massimo");
+        }
+        if (TRUCCHI.isEmpty()) {
+            TruccatoreDiDadi t = truccatore;
+            if (t != null) {
+                OptionalInt voluto = t.lancio(contesto, min, max);
+                if (voluto.isPresent() && voluto.getAsInt() >= min && voluto.getAsInt() <= max) {
+                    return voluto.getAsInt();
+                }
+            }
+        }
+        return intero(min, max);
+    }
+
+    /**
+     * Come {@link #tira(int)}, per un contesto: da 1 a N inclusi.
+     */
+    public static int tira(ContestoLancio contesto, int N) {
+        if (N <= 1) {
+            Logger.log("**************************ERRORE FATALE! Dado tira(" + contesto + ", " + N + ")");
+            throw new IllegalArgumentException("Il numero di facce deve essere maggiore di 1");
+        }
+        return tira(contesto, 1, N);
+    }
+
+    /**
+     * Come {@link #tiraAncheAUnaFaccia(int)}, per un contesto: con una faccia sola non si sceglie nulla e non si
+     * consulta il truccatore.
+     */
+    public static int tiraAncheAUnaFaccia(ContestoLancio contesto, int N) {
+        if (N < 1) {
+            Logger.log("**************************ERRORE FATALE! Dado tira(" + contesto + ", " + N + ")");
+            throw new IllegalArgumentException("Il numero di facce deve essere maggiore di zero");
+        }
+        if (N == 1) {
+            return 1;
+        }
+        return tira(contesto, 1, N);
+    }
+
+    /**
+     * Un elemento a caso fra quelli ammessi (che non possono essere vuoti), a meno che il truccatore ne voglia uno
+     * ammesso per quel contesto (la coda dei trucchi dei test ha la precedenza, come per i lanci).
+     */
+    public static <T> T scegli(ContestoLancio contesto, List<T> ammessi) {
+        if (ammessi.isEmpty()) {
+            throw new IllegalArgumentException("Non c'è niente da scegliere");
+        }
+        Optional<T> voluto = sceltaVoluta(contesto, ammessi);
+        if (voluto.isPresent()) {
+            return voluto.get();
+        }
+        return ammessi.get(tiraAncheAUnaFaccia(ammessi.size()) - 1);
+    }
+
+    /**
+     * L'elemento che il truccatore vuole per il contesto, se ne vuole uno fra gli ammessi; altrimenti niente, e chi
+     * chiama procede come sempre (senza tirare nulla). Con la coda dei trucchi dei test non vuota è sempre vuoto.
+     */
+    public static <T> Optional<T> sceltaVoluta(ContestoLancio contesto, List<T> ammessi) {
+        TruccatoreDiDadi t = truccatore;
+        if (t == null || !TRUCCHI.isEmpty()) {
+            return Optional.empty();
+        }
+        return t.scelta(contesto, ammessi).filter(ammessi::contains);
     }
 }

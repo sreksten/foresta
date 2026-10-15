@@ -95,6 +95,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | [`passi_missioni.md`](passi_missioni.md) | Catalogo dei passi e delle missioni concrete, mappatura dei tipi di missione |
 | [`intermezzi.md`](intermezzi.md) | Come scrivere, animare e provare un intermezzo |
 | [`carta_forbici_sasso.md`](carta_forbici_sasso.md) | La sfida a carta, forbici e sasso (chi stringe amicizia), la missione La sfida dei campioni e il suo trofeo |
+| [`strumenti_di_prova.md`](strumenti_di_prova.md) | La finestra di prova (personaggi, missioni da forzare) e i trucchi sui dadi per contesto, solo in modalità di prova |
 | [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md) | Artefatti, pergamene, incantatore, bilanciamento del combattimento (con il piano di lavoro) |
 | [`economia.md`](economia.md) | Bilancio dell'economia del gioco: entrate, uscite, prezzi per livello, cosa non torna e le decisioni prese, con le misure fatte col giocatore automatico fino al livello 5 |
 | [`interazioni_effetti_di_stato.md`](interazioni_effetti_di_stato.md) | Interazioni fra effetti di stato e tipi di danno |

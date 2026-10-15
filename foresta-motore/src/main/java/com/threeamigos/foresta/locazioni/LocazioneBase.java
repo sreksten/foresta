@@ -2,6 +2,7 @@ package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.strumenti.ContestoLancio;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -285,23 +286,19 @@ public abstract class LocazioneBase implements Locazione {
 			// scattare immediatamente le missioni secondarie che scattano a fine locazione.
 			boolean possibilitaIncontro = Statistiche.getTurniGiocati() == 0 || Dado.tira(100) <= 90;
 			if (possibilitaIncontro) {
-				TipoPersonaggio classePersonaggio = null;
-
-				int ordinale = Dado.tiraAncheAUnaFaccia(m.length) - 1;
-				classePersonaggio = m[ordinale];
-
 				// FIXME occorrerebbe gestire la cosa un po' più elegantemente...
 				// PEr non far apparire subito un Eremita che fa scattare la missione secondaria a inizio locazione
-				while (Statistiche.getTurniGiocati() == 0 && classePersonaggio == TipoPersonaggio.EREMITA) {
-					ordinale = Dado.tiraAncheAUnaFaccia(m.length) - 1;
-					classePersonaggio = m[ordinale];
+				List<TipoPersonaggio> ammessi = new ArrayList<>(Arrays.asList(m));
+				if (Statistiche.getTurniGiocati() == 0 && ammessi.size() > 1) {
+					ammessi.remove(TipoPersonaggio.EREMITA);
 				}
+				TipoPersonaggio classePersonaggio = Dado.scegli(ContestoLancio.TIPO_MOSTRO, ammessi);
 
 				int capLivello = numeroMassimoDiMostri(g.getCapo().getLivello(), g.getPersonaggiVivi().size());
 
 				int limiteMassimoIncontro = Math.min(capLivello, FabbricaPersonaggi.quantitaMassima(classePersonaggio));
 
-				int numero = Dado.tiraAncheAUnaFaccia(limiteMassimoIncontro);
+				int numero = Dado.tiraAncheAUnaFaccia(ContestoLancio.NUMERO_MOSTRI, limiteMassimoIncontro);
 				Logger.log("Scelta da " + m.length + " personaggi la classe " + classePersonaggio + ", numero " + numero + " con cap " + capLivello);
 				Personaggio p;
 				for (int i = 0; i < numero; i++) {

@@ -73,6 +73,24 @@ public class Statistiche {
 		return getStatisticheMD().getLivello();
 	}
 
+	/**
+	 * Per la modalità di prova: porta il livello del mondo a quello dato e i punti esperienza a quelli che servono per arrivarci
+	 * (altrimenti il livello tornerebbe a salire al primo punto guadagnato). Salendo lo annuncia come un aumento vero; scendendo no,
+	 * perché chi ascolta (gli artefatti, la UI) conosce solo gli aumenti.
+	 */
+	public static void impostaLivelloDelMondo(int livello) {
+		StatisticheMD md = getStatisticheMD();
+		int precedente = md.getLivello();
+		int esperienzaPrecedente = md.getPuntiEsperienza();
+		int nuovaEsperienza = GestoreProgressione.getXpNecessariPerLivello(livello);
+		md.setLivello(livello);
+		md.setPuntiEsperienza(nuovaEsperienza);
+		BusEventi.pubblica(new NotificaVariazionePuntiEsperienzaPersonaggio(esperienzaPrecedente, nuovaEsperienza));
+		if (livello > precedente) {
+			BusEventi.pubblica(new NotificaAumentoLivelloMondo(livello));
+		}
+	}
+
 	public static int getPuntiEsperienzaPerProssimoLivello() {
 		return GestoreProgressione.getXpPerProssimoLivello(getLivello());
 	}

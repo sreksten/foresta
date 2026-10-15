@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -101,8 +102,35 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 */
 	private static final int PASSI_DI_FILA_MASSIMI = 50;
 
+	// Per la modalità di prova (vedi forzaPartenza): non si salva, vale solo per questa esecuzione
+	private BooleanSupplier partenzaForzata;
+
 	protected MissioneAPassi(ClasseMissione classe) {
 		super(classe);
+	}
+
+	/**
+	 * Per la modalità di prova: finché la missione non è partita, il suo passo iniziale si considera concluso appena
+	 * {@code luogoGiusto} è vero (di solito: il gruppo è in una locanda o in una città), senza guardare le condizioni
+	 * che il passo si dà da sé (visita tranquilla, pausa, numero di visite). Le azioni del passo si eseguono come sempre.
+	 * Non si salva.
+	 */
+	public final void forzaPartenza(BooleanSupplier luogoGiusto) {
+		partenzaForzata = Objects.requireNonNull(luogoGiusto);
+	}
+
+	/**
+	 * Se la partenza è stata forzata (vedi {@link #forzaPartenza}) e la missione non è ancora partita.
+	 */
+	public final boolean isPartenzaForzata() {
+		return partenzaForzata != null && ottieniProprieta(PASSO_CORRENTE) == null;
+	}
+
+	/**
+	 * Se questo passo è quello iniziale di una missione la cui partenza è stata forzata, ed è il momento giusto.
+	 */
+	private boolean deveCominciareSubito(String id, Passo passo) {
+		return isPartenzaForzata() && id.equals(passoIniziale()) && !passo.isDomanda() && partenzaForzata.getAsBoolean();
 	}
 
 	/**
@@ -165,7 +193,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 			}
 			passo.eseguiAzioniAOgniControllo();
 			// Una domanda si conclude con la risposta, che può arrivare solo dall'automa (vedi getDomandaDaPorre)
-			if (passo.isDomanda() ? getRisposta(id) == null : !passo.isConcluso()) {
+			if (passo.isDomanda() ? getRisposta(id) == null : !deveCominciareSubito(id, passo) && !passo.isConcluso()) {
 				return;
 			}
 			if (passiDiFila >= PASSI_DI_FILA_MASSIMI) {

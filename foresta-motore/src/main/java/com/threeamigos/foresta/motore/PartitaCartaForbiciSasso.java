@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.strumenti.ContestoLancio;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
@@ -54,7 +55,7 @@ public class PartitaCartaForbiciSasso {
 			throw new IllegalStateException("La sfida è già finita");
 		}
 		MossaCartaForbiciSasso[] mosse = MossaCartaForbiciSasso.values();
-		Mano mano = new Mano(mossaDelGiocatore, mosse[Dado.tira(mosse.length) - 1]);
+		Mano mano = new Mano(mossaDelGiocatore, mosse[Dado.tira(ContestoLancio.CARTA_FORBICI_SASSO, mosse.length) - 1]);
 		if (mano.haVintoIlGiocatore()) {
 			vittorieDelGiocatore++;
 		} else if (!mano.isPareggio()) {

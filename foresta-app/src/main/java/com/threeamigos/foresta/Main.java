@@ -17,6 +17,8 @@ import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Orientamento;
 import com.threeamigos.foresta.motore.ModalitaDiProva;
+import com.threeamigos.foresta.motore.StrumentiDiSviluppoMotore;
+import com.threeamigos.foresta.ui.sviluppo.FinestraDiProva;
 import com.threeamigos.foresta.salvataggi.GestorePunteggiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreSalvataggiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreTrofeiSuFile;
@@ -94,9 +96,19 @@ public class Main {
 		// e un evento senza iscritti andrebbe perso lasciando il gioco sulla finestra nera
 		BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, e -> controlloreDiGioco.inizia());
 
+		// In modalità di prova i dadi si possono truccare dalla finestra di prova (vedi strumenti_di_prova.md)
+		if (ModalitaDiProva.isAttiva()) {
+			TrucchiDiSviluppo.istanza().installa();
+		}
+
+		VistaPartitaMotore vistaPartita = new VistaPartitaMotore();
 		Temporizzatore temporizzatoreUI = new TemporizzatoreJ2SE();
-		new ForestaUI(orientamento, tuttoSchermo, saltaLogo, barraDock, gestorePunteggi, new VistaPartitaMotore(),
+		new ForestaUI(orientamento, tuttoSchermo, saltaLogo, barraDock, gestorePunteggi, vistaPartita,
 				temporizzatoreUI);
+
+		if (ModalitaDiProva.isAttiva()) {
+			ThreadPrincipale.accoda(() -> new FinestraDiProva(vistaPartita, new StrumentiDiSviluppoMotore()).mostra());
+		}
 
 	}
 }
