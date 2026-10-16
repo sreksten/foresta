@@ -2,9 +2,9 @@ package com.threeamigos.foresta.ui.immagini;
 
 import com.threeamigos.foresta.intermezzi.Verso;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.ui.LivelloDiZoom;
 
 import java.awt.image.BufferedImage;
-import com.threeamigos.foresta.ui.LivelloDiZoom;
 
 /**
  * Le immagini di ogni classe di personaggio: il personaggio per la schermata di gioco e, per chi si può reclutare, l'icona per il riquadro del gruppo. Si caricano alla prima volta che si usa l'enum.
@@ -58,7 +58,7 @@ public enum ClassePersonaggioImmagine {
     INCANTATORE(TipoPersonaggio.INCANTATORE, "personaggi/Incantatore.gif", "icone/Incantatore.gif"),
     MOGLIE_DEL_BARDO(TipoPersonaggio.MOGLIE_DEL_BARDO, "personaggi/MoglieDelBardo.gif", "icone/MoglieDelBardo.gif"),
     VIANDANTE(TipoPersonaggio.VIANDANTE, "personaggi/Viandante.gif", "icone/Viandante.gif"),
-    BARDO_LOCANDA(TipoPersonaggio.BARDO_LOCANDA, "personaggi/BardoLocanda.gif", "icone/BardoLocanda.gif"),
+    BARDO_LOCANDA(TipoPersonaggio.BARDO_DELLE_LOCANDE, "personaggi/BardoLocanda.gif", "icone/BardoLocanda.gif"),
     CAPITANO_DELLE_GUARDIE(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, "personaggi/CapitanoDelleGuardie.gif", "icone/CapitanoDelleGuardie.gif"),
     UOMO(TipoPersonaggio.UOMO, "personaggi/Uomo.gif", "icone/Uomo.gif"),
     DONNA(TipoPersonaggio.DONNA, "personaggi/Donna.gif", "icone/Donna.gif");

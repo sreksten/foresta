@@ -11,7 +11,7 @@ package com.threeamigos.foresta.tipi;
  */
 public enum PersonaggioNoto {
 
-	BARDO_DELLE_LOCANDE(TipoPersonaggio.BARDO_LOCANDA, Ambito.GLOBALE, "NOME_MASCHILE", false),
+	BARDO_DELLE_LOCANDE(TipoPersonaggio.BARDO_DELLE_LOCANDE, Ambito.GLOBALE, "NOME_MASCHILE", false),
 	MOGLIE_DEL_BARDO(TipoPersonaggio.MOGLIE_DEL_BARDO, Ambito.GLOBALE, "NOME_MOGLIE", false),
 
 	BORGOMASTRO(TipoPersonaggio.UOMO, Ambito.PER_CITTA, "NOME_ALTISONANTE", true),

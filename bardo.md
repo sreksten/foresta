@@ -21,7 +21,7 @@ I tre **canti** innati del Bardo e della Cantastorie (e del bardo della locanda)
 
 | Tema | Decisione |
 | :--- | :--- |
-| Chi canta | Bardo, Cantastorie e bardo della locanda (`TipoPersonaggio.BARDO`, `CANTASTORIE`, `BARDO_LOCANDA`): il bardo della locanda è un bardo a tutti gli effetti. Nessun altro. |
+| Chi canta | Bardo, Cantastorie e bardo della locanda (`TipoPersonaggio.BARDO`, `CANTASTORIE`, `BARDO_DELLE_LOCANDE`): il bardo della locanda è un bardo a tutti gli effetti. Nessun altro. |
 | Costo | `MAGIA`, con costanti in `Costanti` da tarare: guarigione ~4, ipnotico ~3, valore ~5. |
 | Quando | Solo in combattimento, con almeno un avversario vivo. Fuori dagli scontri (mappa, accampamento) i canti non sono offerti. |
 | Turno | Ogni canto è l'azione del cantore nel round (`LocazioneBase.dopoAzioneDelGiocatore`: gli avversari del piano agiscono dopo di lui), come il dardo arcano. Vale anche per il canto di valore a inizio scontro. |

@@ -1,15 +1,15 @@
 package com.threeamigos.foresta.canti;
 
-import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
+import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.threeamigos.foresta.tipi.TipoCanto;
 
 /**
  * Chi sa cantare e quali canti può cantare adesso. Le capacità dipendono dal {@link TipoPersonaggio}, non dalla classe
@@ -25,7 +25,7 @@ public final class CantoDelBardo {
 	 */
 	public static boolean conosciutoDa(TipoPersonaggio classe) {
 		return classe == TipoPersonaggio.BARDO || classe == TipoPersonaggio.CANTASTORIE
-				|| classe == TipoPersonaggio.BARDO_LOCANDA;
+				|| classe == TipoPersonaggio.BARDO_DELLE_LOCANDE;
 	}
 
 	/**
@@ -44,7 +44,7 @@ public final class CantoDelBardo {
 		if (!conosciutoDa(classe)) {
 			return false;
 		}
-		return tipo != TipoCanto.URLO_DELLA_BANSHEE || classe == TipoPersonaggio.BARDO_LOCANDA || isUrloDellaBansheeAppreso();
+		return tipo != TipoCanto.URLO_DELLA_BANSHEE || classe == TipoPersonaggio.BARDO_DELLE_LOCANDE || isUrloDellaBansheeAppreso();
 	}
 
 	/**

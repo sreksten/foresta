@@ -40,7 +40,7 @@ public final class ScenaInLocanda {
 	 * gruppo.
 	 */
 	public static ScenaInLocanda conBardo() {
-		return new ScenaInLocanda(ElementoIntermezzo.personaggio(ID_LOCANDIERE, TipoPersonaggio.BARDO_LOCANDA, X_LOCANDIERE, Y_PERSONAGGI)
+		return new ScenaInLocanda(ElementoIntermezzo.personaggio(ID_LOCANDIERE, TipoPersonaggio.BARDO_DELLE_LOCANDE, X_LOCANDIERE, Y_PERSONAGGI)
 				.guarda(Verso.SINISTRA));
 	}
 

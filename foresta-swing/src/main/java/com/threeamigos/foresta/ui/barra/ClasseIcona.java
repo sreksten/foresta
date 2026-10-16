@@ -2,13 +2,13 @@ package com.threeamigos.foresta.ui.barra;
 
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.ui.LivelloDiZoom;
+import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
+import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Locale;
-import com.threeamigos.foresta.ui.LivelloDiZoom;
-import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
-import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
 
 /**
  * Le icone della barra dei comandi: ognuna lega un comando (e, per i personaggi, una classe) a un'immagine e a uno sfondo, nell'ordine in cui compaiono nelle varie fasi di gioco: caricare una partita, scegliere
@@ -54,7 +54,7 @@ public enum ClasseIcona {
 	INCANTATORE(TipoPersonaggio.INCANTATORE, "icone/Incantatore.gif", Sfondo.VERDE),
 	MOGLIE_DEL_BARDO(TipoPersonaggio.MOGLIE_DEL_BARDO, "icone/MoglieDelBardo.gif", Sfondo.VERDE),
 	VIANDANTE(TipoPersonaggio.VIANDANTE, "icone/Viandante.gif", Sfondo.VERDE),
-	BARDO_LOCANDA(TipoPersonaggio.BARDO_LOCANDA, "icone/BardoLocanda.gif", Sfondo.VERDE),
+	BARDO_LOCANDA(TipoPersonaggio.BARDO_DELLE_LOCANDE, "icone/BardoLocanda.gif", Sfondo.VERDE),
 	CAPITANO_DELLE_GUARDIE(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, "icone/CapitanoDelleGuardie.gif", Sfondo.VERDE),
 	UOMO(TipoPersonaggio.UOMO, "icone/Uomo.gif", Sfondo.VERDE),
 	DONNA(TipoPersonaggio.DONNA, "icone/Donna.gif", Sfondo.VERDE),

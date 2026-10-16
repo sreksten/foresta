@@ -1,14 +1,15 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.locazioni.Locanda;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.RegistroPersonaggiMD;
 import com.threeamigos.foresta.modellodati.ResidenteMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -16,18 +17,10 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * I nomi dei personaggi non combattenti del mondo (vedi nomi.md): il bardo e sua moglie, le persone di ogni città e i
@@ -89,7 +82,7 @@ class NomiDeiPersonaggiDelMondoTest {
 		ResidenteMD moglie = RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO);
 		assertNull(bardo.getProvenienza());
 		assertNull(moglie.getProvenienza());
-		assertEquals(TipoPersonaggio.BARDO_LOCANDA, bardo.getClasse());
+		assertEquals(TipoPersonaggio.BARDO_DELLE_LOCANDE, bardo.getClasse());
 		assertEquals(TipoPersonaggio.MOGLIE_DEL_BARDO, moglie.getClasse());
 		assertEquals(bardo.getNome(), RegistroPersonaggi.getNomeCompleto(bardo));
 	}
@@ -118,9 +111,7 @@ class NomiDeiPersonaggiDelMondoTest {
 			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
 				String locandiere = Foresta.getLocazioneMD(new CoordinateMD(x, y)).ottieniProprieta(Locanda.LOCANDA_NOME_LOCANDIERE);
 				if (locandiere != null) {
-					for (String parola : locandiere.split("[ ']")) {
-						paroleDeiLocandieri.add(parola);
-					}
+                    Collections.addAll(paroleDeiLocandieri, locandiere.split("[ ']"));
 				}
 			}
 		}
@@ -172,7 +163,7 @@ class NomiDeiPersonaggiDelMondoTest {
 	void ilPersonaggioCostruitoHaIlNomeDelResidente() {
 		ResidenteMD bardo = RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE);
 		Personaggio personaggio = RegistroPersonaggi.costruisciPersonaggio(bardo);
-		assertEquals(TipoPersonaggio.BARDO_LOCANDA, personaggio.getClasse());
+		assertEquals(TipoPersonaggio.BARDO_DELLE_LOCANDE, personaggio.getClasse());
 		assertEquals(bardo.getNome(), personaggio.getNomeProprio().orElse(null));
 	}
 

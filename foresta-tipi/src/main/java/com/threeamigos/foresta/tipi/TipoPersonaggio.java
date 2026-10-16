@@ -1,11 +1,6 @@
 package com.threeamigos.foresta.tipi;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Le classi dei personaggi, giocanti e mostri: l'identificativo che salva il modello dati (PersonaggioMD,
@@ -60,7 +55,7 @@ public enum TipoPersonaggio {
 	VENDITORE_DI_PERGAMENE(CategoriaPersonaggio.UMANOIDE),
 	INCANTATORE(CategoriaPersonaggio.UMANOIDE),
 	MOGLIE_DEL_BARDO(CategoriaPersonaggio.UMANOIDE),
-	BARDO_LOCANDA(CategoriaPersonaggio.UMANOIDE),
+	BARDO_DELLE_LOCANDE(CategoriaPersonaggio.UMANOIDE),
 	CAPITANO_DELLE_GUARDIE(CategoriaPersonaggio.UMANOIDE),
 	// Gli abitanti senza una classe propria (il borgomastro, la levatrice, i mandanti qualunque): hanno l'aspetto del locandiere e della moglie del bardo
 	UOMO(CategoriaPersonaggio.UMANOIDE),

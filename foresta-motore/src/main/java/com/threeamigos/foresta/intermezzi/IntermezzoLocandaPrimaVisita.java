@@ -3,8 +3,8 @@ package com.threeamigos.foresta.intermezzi;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -78,7 +78,7 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 				.conRitaglioSuSfondo()
 				.conElemento(ElementoIntermezzo.personaggio("locandiere", TipoPersonaggio.LOCANDIERE, X_LOCANDIERE, Y_LOCANDIERE)
 						.conBocca(0.5, -0.15))
-				.conElemento(ElementoIntermezzo.personaggio("bardo", TipoPersonaggio.BARDO_LOCANDA, X_BARDO, Y_BARDO)
+				.conElemento(ElementoIntermezzo.personaggio("bardo", TipoPersonaggio.BARDO_DELLE_LOCANDE, X_BARDO, Y_BARDO)
 						.conBocca(0.5, -0.15));
 
 		for (int i = 0; i < personaggiVivi.size(); i++) {

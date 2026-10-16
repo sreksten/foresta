@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
@@ -83,7 +83,7 @@ public class LanciatoreDeiDadi {
             case BARDO:
             case CANTASTORIE:
             case VIANDANTE:
-            case BARDO_LOCANDA:
+            case BARDO_DELLE_LOCANDE:
             case LOCANDIERE:
             case ARMAIOLO:
             case ALCHIMISTA:
@@ -151,7 +151,7 @@ public class LanciatoreDeiDadi {
             case BARDO:
             case CANTASTORIE:
             case VIANDANTE:
-            case BARDO_LOCANDA:
+            case BARDO_DELLE_LOCANDE:
             case LOCANDIERE:
             case ARMAIOLO:
             case ALCHIMISTA:

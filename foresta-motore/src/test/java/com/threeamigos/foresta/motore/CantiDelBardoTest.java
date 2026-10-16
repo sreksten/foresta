@@ -1,22 +1,12 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.canti.Canto;
-import com.threeamigos.foresta.canti.CantoCurativo;
-import com.threeamigos.foresta.canti.CantoDelBardo;
-import com.threeamigos.foresta.canti.CantoDiValore;
-import com.threeamigos.foresta.canti.CantoIpnotico;
-import com.threeamigos.foresta.canti.FabbricaCanti;
-import com.threeamigos.foresta.canti.UrloDellaBanshee;
+import com.threeamigos.foresta.canti.*;
 import com.threeamigos.foresta.intermezzi.IntermezzoUrloDellaBanshee;
-import com.threeamigos.foresta.tipi.TipoCanto;
+import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.*;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 
 /**
  * I canti innati del Bardo e della Cantastorie (vedi bardo.md, fase 2): chi può cantare, il costo, la cura al più
@@ -67,10 +56,10 @@ class CantiDelBardoTest {
     void cantanoSoloIlBardoELaCantastorie() {
         assertTrue(CantoDelBardo.conosciutoDa(TipoPersonaggio.BARDO));
         assertTrue(CantoDelBardo.conosciutoDa(TipoPersonaggio.CANTASTORIE));
-        assertTrue(CantoDelBardo.conosciutoDa(TipoPersonaggio.BARDO_LOCANDA));
+        assertTrue(CantoDelBardo.conosciutoDa(TipoPersonaggio.BARDO_DELLE_LOCANDE));
         for (TipoPersonaggio classe : TipoPersonaggio.values()) {
             if (classe != TipoPersonaggio.BARDO && classe != TipoPersonaggio.CANTASTORIE
-                    && classe != TipoPersonaggio.BARDO_LOCANDA) {
+                    && classe != TipoPersonaggio.BARDO_DELLE_LOCANDE) {
                 assertFalse(CantoDelBardo.conosciutoDa(classe), classe.name());
             }
         }
@@ -126,9 +115,9 @@ class CantiDelBardoTest {
         assertEquals(Costanti.CANTO_CURATIVO_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.CURATIVO, bardo).getCostoLancio());
         assertEquals(Costanti.CANTO_IPNOTICO_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.IPNOTICO, bardo).getCostoLancio());
         assertEquals(Costanti.CANTO_DI_VALORE_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.DI_VALORE, bardo).getCostoLancio());
-        assertTrue(FabbricaCanti.crea(TipoCanto.CURATIVO, bardo) instanceof CantoCurativo);
-        assertTrue(FabbricaCanti.crea(TipoCanto.IPNOTICO, bardo) instanceof CantoIpnotico);
-        assertTrue(FabbricaCanti.crea(TipoCanto.DI_VALORE, bardo) instanceof CantoDiValore);
+        assertInstanceOf(CantoCurativo.class, FabbricaCanti.crea(TipoCanto.CURATIVO, bardo));
+        assertInstanceOf(CantoIpnotico.class, FabbricaCanti.crea(TipoCanto.IPNOTICO, bardo));
+        assertInstanceOf(CantoDiValore.class, FabbricaCanti.crea(TipoCanto.DI_VALORE, bardo));
     }
 
     // --- Canto curativo
@@ -210,7 +199,7 @@ class CantiDelBardoTest {
         Bardo bardo = bardo();
         assertEquals(Costanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.URLO_DELLA_BANSHEE, bardo).getCostoLancio());
         assertTrue(Costanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO > Costanti.CANTO_IPNOTICO_COSTO_LANCIO);
-        assertTrue(FabbricaCanti.crea(TipoCanto.URLO_DELLA_BANSHEE, bardo) instanceof UrloDellaBanshee);
+        assertInstanceOf(UrloDellaBanshee.class, FabbricaCanti.crea(TipoCanto.URLO_DELLA_BANSHEE, bardo));
     }
 
     @Test

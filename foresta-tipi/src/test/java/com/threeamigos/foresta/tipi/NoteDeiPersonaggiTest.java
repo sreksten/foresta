@@ -6,15 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * La mappa (tipo di personaggio, attributo) → nota, letta da note_personaggi_it.properties.
@@ -48,7 +42,7 @@ class NoteDeiPersonaggiTest {
 	void unTipoPuoUsareLeNoteDiUnAltroOdiUnGruppo() {
 		for (String chiave : CHIAVI) {
 			assertEquals(NoteDeiPersonaggi.nota(TipoPersonaggio.GUERRIERO, chiave), NoteDeiPersonaggi.nota(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, chiave));
-			assertEquals(NoteDeiPersonaggi.nota(TipoPersonaggio.BARDO, chiave), NoteDeiPersonaggi.nota(TipoPersonaggio.BARDO_LOCANDA, chiave));
+			assertEquals(NoteDeiPersonaggi.nota(TipoPersonaggio.BARDO, chiave), NoteDeiPersonaggi.nota(TipoPersonaggio.BARDO_DELLE_LOCANDE, chiave));
 			assertEquals(NoteDeiPersonaggi.nota(TipoPersonaggio.ALCHIMISTA, chiave), NoteDeiPersonaggi.nota(TipoPersonaggio.LOCANDIERE, chiave));
 			assertEquals(NoteDeiPersonaggi.nota(TipoPersonaggio.ALCHIMISTA, chiave), NoteDeiPersonaggi.nota(TipoPersonaggio.DONNA, chiave));
 		}

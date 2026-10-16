@@ -2,18 +2,14 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.PersonaggioNoto;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Non sparate sul pianista: alla terza visita a una locanda il locandiere affida al gruppo un bardo ubriaco,
@@ -65,7 +61,7 @@ class ScenarioNonSparateSulPianistaTest {
             assertEquals("VIAGGIO", pianista.getPassoCorrente());
             Personaggio ugolino = pianista.getScortato().orElseThrow(AssertionError::new);
             assertEquals(pianista.getBardo(), ugolino.getNome());
-            assertEquals(TipoPersonaggio.BARDO_LOCANDA, ugolino.getClasse());
+            assertEquals(TipoPersonaggio.BARDO_DELLE_LOCANDE, ugolino.getClasse());
             assertEquals(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE).getNome(), ugolino.getNome(), "è il bardo della locanda, con il suo nome");
             assertFalse(partita.gruppo().isOspiteVulnerabile(ugolino), "è troppo ubriaco perché i mostri se ne curino");
 

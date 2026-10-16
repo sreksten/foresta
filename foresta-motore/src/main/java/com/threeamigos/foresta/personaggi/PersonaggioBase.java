@@ -1,17 +1,13 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.DannoRisultante;
+import com.threeamigos.foresta.combattimento.FaseDiAttacco;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
-import com.threeamigos.foresta.eventi.interni.InternoCreazionePersonaggio;
-import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
-import com.threeamigos.foresta.eventi.interni.InternoPersonaggioArreso;
-import com.threeamigos.foresta.eventi.interni.InternoScheletroRisvegliato;
+import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
-import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.ModificatoreAttivo;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
@@ -22,20 +18,18 @@ import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.FabbricaOfferte;
 import com.threeamigos.foresta.offerte.Offerta;
+import com.threeamigos.foresta.oggetti.ArmaNaturale;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import com.threeamigos.foresta.oggetti.ArmaNaturale;
-import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.combattimento.DannoRisultante;
-import com.threeamigos.foresta.combattimento.FaseDiAttacco;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 /*
  * I personaggi originali della Foresta su ZX Spectrum:
@@ -2013,7 +2007,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			case BARDO:
 			case CANTASTORIE:
 			case VIANDANTE:
-			case BARDO_LOCANDA:
+			case BARDO_DELLE_LOCANDE:
 			case LOCANDIERE:
 			case ALCHIMISTA:
 			case VENDITORE_DI_PERGAMENE:
