@@ -55,7 +55,7 @@ public class MessaggioMD implements Serializzabile {
 	/**
 	 * Una riga per messaggio: uuid, il tipo (P o F) e il testo, ciascuno separato da "|".
 	 * Il testo viene riletto per intero dopo il secondo separatore, quindi può contenere
-	 * anche "|".
+	 * anche "|"; gli a capo diventano spazi.
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
@@ -63,7 +63,7 @@ public class MessaggioMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(paragrafo ? PARAGRAFO : FRASE);
 		stream.print(PIPE);
-		stream.println(testo);
+		stream.println(Serializzabile.senzaACapo(testo));
 	}
 
 	/**
@@ -71,14 +71,14 @@ public class MessaggioMD implements Serializzabile {
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
-		String line = stream.readLine();
-		if (line == null) {
-			throw new IOException("Messaggio mancante");
+		LettoreCampi campi = new LettoreCampi(stream.readLine());
+		uuid = campi.testo();
+		String tipo = campi.testo();
+		if (tipo.length() != 1 || (tipo.charAt(0) != PARAGRAFO && tipo.charAt(0) != FRASE)) {
+			throw new IOException("Tipo di messaggio non valido: " + tipo);
 		}
-		int primoPipe = line.indexOf(PIPE);
-		int secondoPipe = line.indexOf(PIPE, primoPipe + 1);
-		uuid = line.substring(0, primoPipe);
-		paragrafo = line.charAt(primoPipe + 1) == PARAGRAFO;
-		testo = line.substring(secondoPipe + 1);
+		paragrafo = tipo.charAt(0) == PARAGRAFO;
+		// Il testo e' l'ultimo campo e puo' contenere il "|"
+		testo = campi.resto();
 	}
 }

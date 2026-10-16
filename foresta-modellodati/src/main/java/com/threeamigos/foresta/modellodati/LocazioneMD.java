@@ -81,7 +81,7 @@ public class LocazioneMD implements Serializzabile {
 	 * nel salvataggio. Per le proprietà che valgono per la sola presenza si usa {@link #AFFERMATIVO}.
 	 */
 	public void aggiungiProprieta(String nome, String valore) {
-		proprieta.put(nome, Serializzabile.senzaPipe(valore));
+		proprieta.put(nome, Serializzabile.pulisciCampo(valore));
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class LocazioneMD implements Serializzabile {
 		if (nome == null) {
 			proprieta.remove(NOME);
 		} else {
-			proprieta.put(NOME, Serializzabile.senzaPipe(nome));
+			proprieta.put(NOME, Serializzabile.pulisciCampo(nome));
 		}
 	}
 
@@ -137,11 +137,9 @@ public class LocazioneMD implements Serializzabile {
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
-		String line = stream.readLine();
-		// Il limite -1 conserva gli eventuali campi vuoti in coda
-		String[] tokens = line.split("\\|", -1);
-		uuid = tokens[0];
-		tipo = TipoLocazione.valueOf(tokens[1]);
-		MappaProprieta.leggi(tokens, 2, proprieta);
+		LettoreCampi campi = new LettoreCampi(stream.readLine());
+		uuid = campi.testo();
+		tipo = campi.enumerato(TipoLocazione.class);
+		MappaProprieta.leggi(campi, proprieta);
 	}
 }

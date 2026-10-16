@@ -3,7 +3,7 @@
  * <p>
  * Le classi hanno il suffisso <b>MD</b> (modello dati) e sono dati puri: campi, accessori e le poche regole di
  * coerenza che servono a non scrivere un salvataggio rotto (per esempio il carattere "|" si toglie dai testi, perché
- * separa i campi). Le regole del gioco stanno nel motore, che le usa: per ogni personaggio c'è un
+ * separa i campi, e gli a capo diventano spazi, perché il salvataggio è a righe). Le regole del gioco stanno nel motore, che le usa: per ogni personaggio c'è un
  * {@link com.threeamigos.foresta.modellodati.PersonaggioMD}, per ogni missione un
  * {@link com.threeamigos.foresta.modellodati.MissioneMD}, e così via.
  * <p>

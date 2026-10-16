@@ -433,10 +433,10 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 		StringBuilder sb = new StringBuilder(maiuscola(incantamento.getNomeIncantamento()));
 		List<String> parti = new ArrayList<>();
 		if (incantamento.getDannoBonusFisso() != 0) {
-			parti.add(String.format("%+d", incantamento.getDannoBonusFisso()));
+			parti.add(String.format(Locale.ROOT, "%+d", incantamento.getDannoBonusFisso()));
 		}
 		if (incantamento.getCoefficienteScala() != 0) {
-			parti.add(String.format("%+.0f%%", incantamento.getCoefficienteScala() * 100));
+			parti.add(String.format(Locale.ROOT, "%+.0f%%", incantamento.getCoefficienteScala() * 100));
 		}
 		if (!parti.isEmpty()) {
 			sb.append(' ').append(String.join(" e ", parti));

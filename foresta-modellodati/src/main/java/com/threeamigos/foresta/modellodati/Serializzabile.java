@@ -19,11 +19,19 @@ public interface Serializzabile {
 	String NESSUN_NOME = "nessun nome";
 
 	/**
-	 * Toglie in silenzio il separatore dei campi da un testo che finirà in un salvataggio:
-	 * un nome con dentro un "|" sposterebbe tutti i campi seguenti alla rilettura.
+	 * Pulisce in silenzio un testo che finirà in un campo di un salvataggio: toglie il separatore dei campi (un nome con
+	 * dentro un "|" sposterebbe tutti i campi seguenti alla rilettura) e trasforma gli a capo in uno spazio (il
+	 * salvataggio è a righe, un a capo spezzerebbe la riga).
 	 */
-	static String senzaPipe(String testo) {
-		return testo == null ? null : testo.replace(PIPE, "");
+	static String pulisciCampo(String testo) {
+		return testo == null ? null : senzaACapo(testo.replace(PIPE, ""));
+	}
+
+	/**
+	 * Trasforma gli a capo in uno spazio, e lascia il resto: per l'ultimo campo di una riga, che può contenere il "|".
+	 */
+	static String senzaACapo(String testo) {
+		return testo == null ? null : testo.replaceAll("\\r\\n|\\r|\\n", " ");
 	}
 
 	/**

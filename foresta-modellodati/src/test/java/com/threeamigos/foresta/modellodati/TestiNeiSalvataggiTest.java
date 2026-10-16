@@ -1,0 +1,137 @@
+package com.threeamigos.foresta.modellodati;
+
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import org.junit.jupiter.api.Test;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+/**
+ * Il salvataggio è a righe con i campi separati da "|": i testi liberi non devono poter spezzare la riga né spostare i
+ * campi, e a parità di dati il testo scritto è sempre lo stesso.
+ */
+class TestiNeiSalvataggiTest {
+
+	@Test
+	void pulisciCampoTogliePipeETrasformaGliACapoInSpazi() {
+		assertEquals("Pippo", Serializzabile.pulisciCampo("Pip|po"));
+		assertEquals("uno due", Serializzabile.pulisciCampo("uno\ndue"));
+		assertEquals("uno due", Serializzabile.pulisciCampo("uno\r\ndue"));
+		assertEquals("uno due tre", Serializzabile.pulisciCampo("uno\rdue\ntre"));
+		assertNull(Serializzabile.pulisciCampo(null));
+	}
+
+	@Test
+	void senzaACapoLasciaIlPipe() {
+		assertEquals("a|b c", Serializzabile.senzaACapo("a|b\nc"));
+	}
+
+	@Test
+	void unNomeConACapoPipeESeparatoreDiMappeSiRileggeSenzaSpostareICampi() throws IOException {
+		// Given
+		PersonaggioMD personaggio = new PersonaggioMD();
+		personaggio.setClasse(TipoPersonaggio.LADRO);
+		personaggio.setVivo(false);
+		personaggio.setNome("Ar\nse|nio");
+		personaggio.setCausaTrapasso("ucciso\r\nda un|goblin");
+		personaggio.set(TipoAttributo.FORZA, 12);
+		personaggio.setLivello(3);
+
+		// When
+		PersonaggioMD riletto = new PersonaggioMD();
+		riletto.leggi(lettore(scrivi(personaggio)));
+
+		// Then
+		assertEquals("Ar senio", riletto.getNome());
+		assertEquals("ucciso da ungoblin", riletto.getCausaTrapasso());
+		assertEquals(3, riletto.getLivello());
+		assertEquals(12, riletto.getForza());
+		assertEquals(TipoPersonaggio.LADRO, riletto.getClasse());
+	}
+
+	@Test
+	void gliAttributiSiScrivonoNellOrdineDellEnumQualunqueSiaQuelloDiInserimento() throws IOException {
+		// Given
+		TipoAttributo[] tutti = TipoAttributo.values();
+		List<TipoAttributo> alContrario = new ArrayList<>(Arrays.asList(tutti));
+		java.util.Collections.reverse(alContrario);
+		PersonaggioMD personaggio = new PersonaggioMD();
+		personaggio.setClasse(TipoPersonaggio.GUERRIERO);
+		personaggio.setVivo(true);
+		for (TipoAttributo tipo : alContrario) {
+			personaggio.set(tipo, 1);
+			personaggio.setMassimo(tipo, 5.0);
+		}
+
+		// When
+		String[] righe = scrivi(personaggio).split("\\R");
+
+		// Then: la riga 0 e' il personaggio, poi minimi, massimi e attributi
+		assertEquals(nomiInOrdine(tutti), nomiDellaRiga(righe[2]), "i massimi");
+		assertEquals(nomiInOrdine(tutti), nomiDellaRiga(righe[3]), "gli attributi");
+	}
+
+	@Test
+	void unMessaggioConACapoEPipeRestaSuUnaRigaSola() throws IOException {
+		// Given
+		MessaggioMD messaggio = new MessaggioMD("uno\ndue|tre\r\nquattro", true);
+		StringWriter scritto = new StringWriter();
+		PrintWriter stream = new PrintWriter(scritto);
+
+		// When
+		messaggio.salva(stream);
+		stream.flush();
+		MessaggioMD riletto = new MessaggioMD();
+		riletto.leggi(lettore(scritto.toString()));
+
+		// Then
+		assertEquals(1, scritto.toString().split("\\R").length, "una riga sola");
+		assertEquals("uno due|tre quattro", riletto.getTesto());
+		assertEquals(true, riletto.isParagrafo());
+	}
+
+	@Test
+	void unaChiaveDiProprietaConACapoNonSiSalva() {
+		assertThrows(IllegalStateException.class,
+				() -> MappaProprieta.salva(java.util.Collections.singletonMap("CHIAVE\nSTORTA", "valore")));
+	}
+
+	private static String scrivi(PersonaggioMD personaggio) throws IOException {
+		StringWriter scritto = new StringWriter();
+		PrintWriter stream = new PrintWriter(scritto);
+		personaggio.salva(stream);
+		stream.flush();
+		return scritto.toString();
+	}
+
+	private static BufferedReader lettore(String testo) {
+		return new BufferedReader(new StringReader(testo));
+	}
+
+	private static List<String> nomiInOrdine(TipoAttributo[] tipi) {
+		List<String> nomi = new ArrayList<>();
+		for (TipoAttributo tipo : tipi) {
+			nomi.add(tipo.name());
+		}
+		return nomi;
+	}
+
+	private static List<String> nomiDellaRiga(String riga) {
+		List<String> nomi = new ArrayList<>();
+		for (String campo : riga.split("\\|")) {
+			nomi.add(campo.substring(0, campo.indexOf(MappaProprieta.SEPARATORE)));
+		}
+		return nomi;
+	}
+}

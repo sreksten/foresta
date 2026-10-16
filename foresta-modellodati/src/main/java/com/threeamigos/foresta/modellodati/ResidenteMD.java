@@ -18,8 +18,8 @@ public class ResidenteMD {
 	private boolean sconfitto;
 
 	public ResidenteMD(String nome, String provenienza, TipoPersonaggio classe) {
-		this.nome = Serializzabile.senzaPipe(nome);
-		this.provenienza = Serializzabile.senzaPipe(provenienza);
+		this.nome = Serializzabile.pulisciCampo(nome);
+		this.provenienza = Serializzabile.pulisciCampo(provenienza);
 		this.classe = classe;
 	}
 

@@ -19,6 +19,7 @@ import java.util.List;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
+import java.util.Locale;
 
 /**
  * Quale dei sette incantesimi elementali lancia <code>INCANTESIMO_DI_DANNO</code> contro un bersaglio, secondo il suo criterio
@@ -150,19 +151,19 @@ public final class SceltaIncantesimo {
 					sb.append(' ').append(((IncantesimoMalefico) FabbricaIncantesimi.crea(classe, attore.getLivello())).getDanni());
 					break;
 				case PIU_ADATTO:
-					sb.append(String.format(" %.1f", danniTotali(attore, bersaglio, classe, contesto)));
+					sb.append(String.format(Locale.ROOT, " %.1f", danniTotali(attore, bersaglio, classe, contesto)));
 					break;
 				case PIU_ADATTO_ESPERTO:
-					sb.append(String.format(" %.2f", misuraEsperta(attore, bersaglio, classe, contesto)));
+					sb.append(String.format(Locale.ROOT, " %.2f", misuraEsperta(attore, bersaglio, classe, contesto)));
 					break;
 				default:
 					double danno = dannoConLaConoscenza(attore, bersaglio, classe, contesto);
-					sb.append(String.format(" %.1f (%s)", danno, danno >= bersaglio.getSalute() ? "basta" : "non basta"));
+					sb.append(String.format(Locale.ROOT, " %.1f (%s)", danno, danno >= bersaglio.getSalute() ? "basta" : "non basta"));
 					break;
 			}
 		}
 		if (azione.isSoloSePiuForteDellAttacco()) {
-			sb.append("; attacco con le armi ").append(String.format("%.1f", CalcolatoreCombattimento.dannoAttesoDellaMischia(attore, bersaglio)));
+			sb.append("; attacco con le armi ").append(String.format(Locale.ROOT, "%.1f", CalcolatoreCombattimento.dannoAttesoDellaMischia(attore, bersaglio)));
 		}
 		return sb.toString();
 	}

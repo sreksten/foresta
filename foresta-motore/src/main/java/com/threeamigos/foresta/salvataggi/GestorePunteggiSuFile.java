@@ -7,12 +7,12 @@ import com.threeamigos.foresta.modellodati.Serializzabile;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import com.threeamigos.foresta.strumenti.Punteggio;
 
 /**
@@ -22,8 +22,18 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 
 	private String nomeFile;
 
-	public GestorePunteggiSuFile() { 
+	/**
+	 * Scrive nella cartella {@code .foresta} della cartella dell'utente.
+	 */
+	public GestorePunteggiSuFile() {
 		super();
+	}
+
+	/**
+	 * Scrive nella cartella indicata (vedi {@link GestoreSuFile}).
+	 */
+	public GestorePunteggiSuFile(File directory) {
+		super(directory);
 	}
 
 	private String nomeFile() {
@@ -36,7 +46,7 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 	 * Legge la classifica dal file, una riga per punteggio; dice se ci è riuscito.
 	 */
 	public boolean carica() {
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(nomeFile())), StandardCharsets.UTF_8))) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(nomeFile()), StandardCharsets.UTF_8))) {
 			for (int posizione = 0; posizione < getConteggio(); posizione++) {
 				LettoreCampi campi = new LettoreCampi(reader.readLine());
 				String idPartita = campi.testoFacoltativo();
@@ -55,7 +65,7 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 	 * Scrive la classifica nel file, una riga per punteggio; dice se ci è riuscito.
 	 */
 	public boolean salva() {
-		try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(Files.newOutputStream(Paths.get(nomeFile())), StandardCharsets.UTF_8))) {
+		try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(nomeFile()), StandardCharsets.UTF_8))) {
 			for (int posizione = 0; posizione < getConteggio(); posizione++) {
 				Punteggio punteggio = getPunteggio(posizione);
 				writer.print(Serializzabile.facoltativo(punteggio.getIdPartita()));

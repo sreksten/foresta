@@ -8,6 +8,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import java.util.List;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
+import java.util.Locale;
 
 /**
  * Sceglie uno fra i candidati con un {@link OrdinamentoMD} (tattiche_di_combattimento_automatiche.md §11.6). A parità di misura vince il primo
@@ -91,7 +92,7 @@ public final class Ordinamenti {
 				sb.append(", ");
 			}
 			double valore = Math.abs(misura(candidato, ordinamento));
-			sb.append(candidato.getNome()).append(' ').append(valore == Math.rint(valore) ? String.valueOf((long) valore) : String.format("%.2f", valore));
+			sb.append(candidato.getNome()).append(' ').append(valore == Math.rint(valore) ? String.valueOf((long) valore) : String.format(Locale.ROOT, "%.2f", valore));
 		}
 		return sb.toString();
 	}

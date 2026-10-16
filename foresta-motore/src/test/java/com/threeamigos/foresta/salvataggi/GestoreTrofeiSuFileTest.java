@@ -61,4 +61,22 @@ class GestoreTrofeiSuFileTest {
 		assertTrue(new GestoreTrofeiSuFile().carica(riletti));
 		assertEquals(1, riletti.getProgresso(TipoTrofeo.SBEVAZZONE));
 	}
+
+	@Test
+	void conUnaCartellaIndicataScriveLiESenzaToccareLaHome() throws IOException {
+		// Given
+		Path cartella = home.resolve("spazio-privato-dell-app");
+		TrofeiMD trofei = new TrofeiMD();
+		trofei.incrementaProgresso(TipoTrofeo.SBEVAZZONE, 2);
+
+		// When
+		assertTrue(new GestoreTrofeiSuFile(cartella.toFile()).salva(trofei));
+
+		// Then
+		assertTrue(Files.isRegularFile(cartella.resolve("trofei")), "la cartella indicata viene creata e usata");
+		assertFalse(Files.exists(home.resolve(".foresta")), "la cartella dell'utente non c'entra");
+		TrofeiMD riletti = new TrofeiMD();
+		assertTrue(new GestoreTrofeiSuFile(cartella.toFile()).carica(riletti));
+		assertEquals(2, riletti.getProgresso(TipoTrofeo.SBEVAZZONE));
+	}
 }

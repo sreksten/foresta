@@ -50,7 +50,7 @@ public class MissioneMD implements Serializzabile {
 	}
 
 	public void setNome(String nome) {
-		this.nome = Serializzabile.senzaPipe(nome);
+		this.nome = Serializzabile.pulisciCampo(nome);
 	}
 
 	public String getDescrizione() {
@@ -58,7 +58,7 @@ public class MissioneMD implements Serializzabile {
 	}
 
 	public void setDescrizione(String descrizione) {
-		this.descrizione = Serializzabile.senzaPipe(descrizione);
+		this.descrizione = Serializzabile.pulisciCampo(descrizione);
 	}
 
 	public boolean isDescrizioneVisibile() {
@@ -81,7 +81,7 @@ public class MissioneMD implements Serializzabile {
 	 * Imposta una proprietà (o ne sostituisce il valore). Il carattere "|" si toglie dal valore.
 	 */
 	public void aggiungiProprieta(String nome, String valore) {
-		proprieta.put(nome, Serializzabile.senzaPipe(valore));
+		proprieta.put(nome, Serializzabile.pulisciCampo(valore));
 	}
 
 	/**
@@ -158,17 +158,14 @@ public class MissioneMD implements Serializzabile {
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
-		String line = stream.readLine();
-		String[] tokens = line.split("\\|", -1);
-		id = tokens[0];
-		classe = ClasseMissione.valueOf(tokens[1]);
-		nome = tokens[2];
-		descrizione = tokens[3];
-		descrizioneVisibile = Boolean.parseBoolean(tokens[4]);
-		int dimensioneElencoMissioniSecondarie = Integer.parseInt(tokens[5]);
-		line = stream.readLine();
-		tokens = line.split("\\|", -1);
-		MappaProprieta.leggi(tokens, 0, proprieta);
+		LettoreCampi campi = new LettoreCampi(stream.readLine());
+		id = campi.testo();
+		classe = campi.enumerato(ClasseMissione.class);
+		nome = campi.testo();
+		descrizione = campi.testo();
+		descrizioneVisibile = campi.booleano();
+		int dimensioneElencoMissioniSecondarie = campi.intero();
+		MappaProprieta.leggi(new LettoreCampi(stream.readLine()), proprieta);
 		missioniSecondarie.clear();
 		for (int i = 0; i < dimensioneElencoMissioniSecondarie; i++) {
 			MissioneMD missioneSecondaria = new MissioneMD();

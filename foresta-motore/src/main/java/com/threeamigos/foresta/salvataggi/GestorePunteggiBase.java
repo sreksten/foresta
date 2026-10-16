@@ -4,6 +4,8 @@ import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.modellodati.Serializzabile;
 import com.threeamigos.foresta.strumenti.Punteggio;
 
+import java.io.File;
+
 /**
  * La classifica dei migliori dieci punteggi, indipendente da dove si conserva: tiene i nomi, i punteggi e la partita di ciascuno, e sa dove inserire un nuovo
  * punteggio. Chi la estende dice come si legge e si scrive ({@code carica} e {@code salva}).
@@ -23,6 +25,14 @@ abstract class GestorePunteggiBase extends GestoreSuFile implements GestorePunte
 	 * file rovinato non c'è niente da recuperare e la classifica non è un dato prezioso come un salvataggio.
 	 */
 	public GestorePunteggiBase() {
+		this(null);
+	}
+
+	/**
+	 * Come {@link #GestorePunteggiBase()}, ma con la cartella indicata (vedi {@link GestoreSuFile}).
+	 */
+	public GestorePunteggiBase(File directory) {
+		super(directory);
 		if (!carica()) {
 			punteggi[0] = 10000;
 			nomi[0]     = "Stefano";
@@ -115,10 +125,10 @@ abstract class GestorePunteggiBase extends GestoreSuFile implements GestorePunte
 	}
 
 	/**
-	 * Toglie in silenzio il separatore "|", come per i salvataggi; un nome vuoto diventa "nessun nome".
+	 * Toglie in silenzio il separatore "|" e gli a capo, come per i salvataggi; un nome vuoto diventa "nessun nome".
 	 */
 	static String pulisciNome(String nome) {
-		String pulito = nome == null ? "" : Serializzabile.senzaPipe(nome);
+		String pulito = nome == null ? "" : Serializzabile.pulisciCampo(nome);
 		return pulito.trim().isEmpty() ? Serializzabile.NESSUN_NOME : pulito;
 	}
 	

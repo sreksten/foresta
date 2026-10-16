@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.modellodati;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -34,14 +35,13 @@ final class MappaProprieta {
 	}
 
 	/**
-	 * Ricostruisce la mappa a partire dai token della riga già separati sul PIPE, a partire
-	 * da {@code daIndice}. Sovrascrive il contenuto di {@code destinazione}, che viene svuotata
-	 * per prima.
+	 * Ricostruisce la mappa a partire dai campi che restano nella riga. Sovrascrive il contenuto di
+	 * {@code destinazione}, che viene svuotata per prima.
 	 */
-	static void leggi(String[] tokens, int daIndice, Map<String, String> destinazione) {
+	static void leggi(LettoreCampi campi, Map<String, String> destinazione) throws IOException {
 		destinazione.clear();
-		for (int i = daIndice; i < tokens.length; i++) {
-			String token = tokens[i];
+		while (campi.haAltriCampi()) {
+			String token = campi.testo();
 			if (token.isEmpty()) {
 				// La riga può essere del tutto vuota (nessuna proprietà): non è una proprietà con chiave vuota
 				continue;
@@ -53,7 +53,7 @@ final class MappaProprieta {
 	}
 
 	private static void validaChiave(String chiave) {
-		if (chiave.contains(SEPARATORE) || chiave.contains(Serializzabile.PIPE)) {
+		if (chiave.contains(SEPARATORE) || chiave.contains(Serializzabile.PIPE) || chiave.contains("\n") || chiave.contains("\r")) {
 			throw new IllegalStateException("Chiave di proprietà non valida, contiene un carattere riservato: " + chiave);
 		}
 	}

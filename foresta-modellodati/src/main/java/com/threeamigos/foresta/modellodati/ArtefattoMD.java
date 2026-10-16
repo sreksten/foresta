@@ -112,7 +112,7 @@ public class ArtefattoMD implements Serializzabile {
 	 * Un nome vuoto o di soli spazi vale come nessun nome; il carattere "|" si toglie.
 	 */
 	public void setNomeProprio(String nomeProprio) {
-		String pulito = Serializzabile.senzaPipe(nomeProprio);
+		String pulito = Serializzabile.pulisciCampo(nomeProprio);
 		this.nomeProprio = pulito == null || pulito.trim().isEmpty() ? null : pulito;
 	}
 
@@ -121,7 +121,7 @@ public class ArtefattoMD implements Serializzabile {
 	 * (es. "lama del drago" → "Lama Del Drago"). Restituisce null se il nome è vuoto.
 	 */
 	public static String normalizzaNomeProprio(String nomeProprio) {
-		String pulito = Serializzabile.senzaPipe(nomeProprio);
+		String pulito = Serializzabile.pulisciCampo(nomeProprio);
 		if (pulito == null || pulito.trim().isEmpty()) {
 			return null;
 		}
@@ -170,7 +170,7 @@ public class ArtefattoMD implements Serializzabile {
 	 * Il "|" si toglie; un nome vuoto diventa {@link #NESSUN_NOME}.
 	 */
 	public void setNome(String nome) {
-		String pulito = Serializzabile.senzaPipe(nome);
+		String pulito = Serializzabile.pulisciCampo(nome);
 		this.nome = pulito == null || pulito.trim().isEmpty() ? NESSUN_NOME : pulito;
 	}
 
@@ -179,7 +179,7 @@ public class ArtefattoMD implements Serializzabile {
 	}
 
 	public void setDescrizione(String descrizione) {
-		this.descrizione = Serializzabile.senzaPipe(descrizione);
+		this.descrizione = Serializzabile.pulisciCampo(descrizione);
 	}
 
 	public TipoSlotArtefatto getSlotEquipaggiamento() {

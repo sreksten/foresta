@@ -6,6 +6,7 @@ import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 
 import java.util.Objects;
+import java.util.Locale;
 
 /**
  * Modifica di un certo scostamento (positivo o negativo) il valore base di un attributo di un personaggio.
@@ -40,7 +41,7 @@ public class ModificatoreAttributoMD {
         this.tipoAttributo = tipoAttributo;
         this.tipoModificatore = tipoModificatore;
         this.quantita = quantita;
-        this.note = Serializzabile.senzaPipe(note);
+        this.note = Serializzabile.pulisciCampo(note);
         this.unitaDurata = unitaDurata;
         this.durata = durata;
         this.bersaglio = bersaglio;
@@ -157,10 +158,10 @@ public class ModificatoreAttributoMD {
         String testo;
         switch (tipoModificatore) {
             case VARIAZIONE_FISSA:
-                testo = String.format("%+d", valore);
+                testo = String.format(Locale.ROOT, "%+d", valore);
                 break;
             case VARIAZIONE_PERCENTUALE:
-                testo = String.format("%+d%%", valore);
+                testo = String.format(Locale.ROOT, "%+d%%", valore);
                 break;
             default:
                 testo = "porta a " + valore;
@@ -176,9 +177,9 @@ public class ModificatoreAttributoMD {
         int valore = (int) quantita;
         switch (tipoModificatore) {
             case VARIAZIONE_FISSA:
-                return String.format("%s %+d", tipoAttributo.getNome(), valore);
+                return String.format(Locale.ROOT, "%s %+d", tipoAttributo.getNome(), valore);
             case VARIAZIONE_PERCENTUALE:
-                return String.format("%s %+d%%", tipoAttributo.getNome(), valore);
+                return String.format(Locale.ROOT, "%s %+d%%", tipoAttributo.getNome(), valore);
             default:
                 return tipoAttributo.getNome() + " a " + valore;
         }

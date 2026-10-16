@@ -107,7 +107,7 @@ public class LineaTemporaleMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(giocoFinito);
 		stream.print(PIPE);
-		stream.print(Serializzabile.facoltativo(Serializzabile.senzaPipe(evento)));
+		stream.print(Serializzabile.facoltativo(Serializzabile.pulisciCampo(evento)));
 		for (TipoLocazione cittaDistrutta : cittaDistrutte) {
 			stream.print(PIPE);
 			stream.print(cittaDistrutta.name());

@@ -16,9 +16,6 @@ import com.threeamigos.foresta.tipi.Comando;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.AtomicMoveNotSupportedException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
@@ -30,6 +27,20 @@ import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 public class GestoreSalvataggiSuFile extends GestoreSuFile implements GestoreSalvataggi {
 
 	private static final String POSTFISSO_FILE = ".TXT";
+
+	/**
+	 * Scrive nella cartella {@code .foresta} della cartella dell'utente.
+	 */
+	public GestoreSalvataggiSuFile() {
+		super();
+	}
+
+	/**
+	 * Scrive nella cartella indicata (vedi {@link GestoreSuFile}).
+	 */
+	public GestoreSalvataggiSuFile(File directory) {
+		super(directory);
+	}
 
 	@Override
 	public List<TestataSalvataggio> getSalvataggiDisponibili() {
@@ -110,16 +121,29 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements GestoreSal
 			return false;
 		}
 		try {
-			try {
-				Files.move(fileTemporaneo.toPath(), fileSalvataggio.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-			} catch (AtomicMoveNotSupportedException e) {
-				Files.move(fileTemporaneo.toPath(), fileSalvataggio.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			}
+			sostituisci(fileTemporaneo, fileSalvataggio);
 			return true;
 		} catch (IOException e) {
 			BusEventi.pubblica(new InternoException(e));
 			fileTemporaneo.delete();
 			return false;
+		}
+	}
+
+	/**
+	 * Mette il file temporaneo al posto del salvataggio. Dove {@link File#renameTo(File)} sostituisce un file che c'è
+	 * già (macOS, Linux, Android, iOS) lo fa in un colpo solo; dove no (Windows) si toglie prima il vecchio file, e un
+	 * errore a metà lascia comunque il salvataggio nuovo nel file temporaneo.
+	 */
+	private static void sostituisci(File temporaneo, File destinazione) throws IOException {
+		if (temporaneo.renameTo(destinazione)) {
+			return;
+		}
+		if (destinazione.exists() && !destinazione.delete()) {
+			throw new IOException("Impossibile sostituire il salvataggio " + destinazione.getPath());
+		}
+		if (!temporaneo.renameTo(destinazione)) {
+			throw new IOException("Impossibile spostare " + temporaneo.getPath() + " in " + destinazione.getPath());
 		}
 	}
 

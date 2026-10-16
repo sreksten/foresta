@@ -403,8 +403,6 @@ final class PartitaDiTest implements AutoCloseable {
 		Dado.impostaSeme(System.nanoTime());
 		BusEventi.azzera();
 		BusEventi.impostaConsegna(BusEventi.CONSEGNA_SU_THREAD_PRINCIPALE);
-		if (modalitaDiProvaPrecedente) {
-			ModalitaDiProva.setAttiva(false);
-		}
+		ModalitaDiProva.setAttiva(modalitaDiProvaPrecedente);
 	}
 }

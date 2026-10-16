@@ -20,8 +20,8 @@ public class NotiziaMD implements Serializzabile {
 	}
 
 	public NotiziaMD(String id, String corpo) {
-		this.id = Serializzabile.senzaPipe(id);
-		this.corpo = Serializzabile.senzaPipe(corpo);
+		this.id = Serializzabile.pulisciCampo(id);
+		this.corpo = Serializzabile.pulisciCampo(corpo);
 	}
 
 	public String getId() {
@@ -29,7 +29,7 @@ public class NotiziaMD implements Serializzabile {
 	}
 
 	public void setId(String id) {
-		this.id = Serializzabile.senzaPipe(id);
+		this.id = Serializzabile.pulisciCampo(id);
 	}
 
 	public String getCorpo() {
@@ -37,7 +37,7 @@ public class NotiziaMD implements Serializzabile {
 	}
 
 	public void setCorpo(String corpo) {
-		this.corpo = Serializzabile.senzaPipe(corpo);
+		this.corpo = Serializzabile.pulisciCampo(corpo);
 	}
 
 	/**

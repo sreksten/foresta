@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.modellodati;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 /**
@@ -76,6 +77,32 @@ public final class LettoreCampi {
 	 */
 	public <E extends Enum<E>> E enumerato(Class<E> classe) throws IOException {
 		return Enum.valueOf(classe, testo());
+	}
+
+	/**
+	 * Il prossimo campo diviso nei suoi sottocampi, separati da {@value MappaProprieta#SEPARATORE} (per esempio
+	 * "FORZA§12" o i campi di un modificatore). Con {@code massimo} sottocampi l'ultimo tiene tutto il resto, anche
+	 * se contiene il separatore (è il caso di una nota). Meno di {@code minimo} sottocampi è un salvataggio rovinato.
+	 *
+	 * @throws IOException se il campo ha meno di {@code minimo} sottocampi
+	 */
+	public String[] sottocampi(int minimo, int massimo) throws IOException {
+		String campo = testo();
+		String[] sottocampi = campo.split(MappaProprieta.SEPARATORE, massimo);
+		if (sottocampi.length < minimo) {
+			throw new IOException("Mancano sottocampi nel campo \"" + campo + "\" della riga: " + riga);
+		}
+		return sottocampi;
+	}
+
+	/**
+	 * Tutto il resto della riga, anche con dentro il separatore dei campi: per l'ultimo campo di una riga che può
+	 * contenere il "|" (vedi {@link Serializzabile#senzaACapo(String)}). Vuoto se i campi sono finiti.
+	 */
+	public String resto() {
+		String resto = String.join(Serializzabile.PIPE, Arrays.asList(campi).subList(indice, campi.length));
+		indice = campi.length;
+		return resto;
 	}
 
 	/**

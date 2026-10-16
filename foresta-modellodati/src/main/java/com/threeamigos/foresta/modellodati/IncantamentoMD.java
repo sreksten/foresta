@@ -24,7 +24,7 @@ public class IncantamentoMD {
      * @param coefficienteScala la quota dell'attributo del portatore che si aggiunge ai danni (0,2 è il 20%)
      */
     public IncantamentoMD(String nomeIncantamento, TipoDanno tipoDannoElementale, int dannoBonusFisso, double coefficienteScala) {
-        String pulito = Serializzabile.senzaPipe(nomeIncantamento);
+        String pulito = Serializzabile.pulisciCampo(nomeIncantamento);
         this.nomeIncantamento = pulito == null || pulito.trim().isEmpty() ? ArtefattoMD.NESSUN_NOME : pulito;
         this.tipoDannoElementale = tipoDannoElementale;
         this.dannoBonusFisso = dannoBonusFisso;

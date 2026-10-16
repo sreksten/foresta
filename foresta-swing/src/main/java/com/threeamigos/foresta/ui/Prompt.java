@@ -38,7 +38,7 @@ public class Prompt extends JPanel implements ActionListener {
 	private Consumer<String> alInvio;
 
 	public String getText() {
-		return Serializzabile.senzaPipe(tf.getText());
+		return Serializzabile.pulisciCampo(tf.getText());
 	}
 
 	public Prompt() {

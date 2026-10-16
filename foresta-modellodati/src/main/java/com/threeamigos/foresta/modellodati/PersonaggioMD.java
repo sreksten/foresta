@@ -17,8 +17,10 @@ import java.util.stream.Collectors;
  * Gli <b>attributi</b> (salute, forza, destrezza...) stanno in una mappa indicizzata da {@link TipoAttributo}, con un
  * valore minimo e uno massimo facoltativi per ciascuno: {@link #set(TipoAttributo, double)} li rispetta, quindi un
  * valore fuori dai limiti viene portato al limite. I metodi con il nome dell'attributo ({@code getForza},
- * {@code setSaluteMassima}...) sono scorciatoie su {@link #get}, {@link #set}, {@link #getMassimo} e
- * {@link #setMassimo}, e i loro valori letti sono troncati a numeri interi.
+ * {@code setSalute}...) sono scorciatoie su {@link #get}, {@link #set}, {@link #getMassimo} e
+ * {@link #setMassimo}, e i loro valori letti sono troncati a numeri interi. Ne restano solo quelle che qualcuno usa
+ * (i sei attributi primari e la fortuna per crearli, gli altri per i metodi di lettura di {@code PersonaggioBase}): per
+ * il resto si passa da {@code get}/{@code set}/{@code getMassimo}/{@code setMassimo}, che prendono il {@link TipoAttributo}.
  * <p>
  * Le regole del gioco (come cambiano gli attributi, come si combatte) stanno nel motore; qui ci sono solo i dati.
  */
@@ -78,15 +80,15 @@ public class PersonaggioMD implements Serializzabile {
 	/**
 	 * Valori minimi per un dato attributo - solitamente non presenti
 	 */
-	private final Map<TipoAttributo, Double> valoriMinimi = new HashMap<>();
+	private final Map<TipoAttributo, Double> valoriMinimi = new EnumMap<>(TipoAttributo.class);
 	/**
 	 * Valori massimi per un dato attributo - solitamente non presenti
 	 */
-	private final Map<TipoAttributo, Double> valoriMassimi = new HashMap<>();
+	private final Map<TipoAttributo, Double> valoriMassimi = new EnumMap<>(TipoAttributo.class);
 	/**
 	 * Valori per i vari attributi dei personaggi
 	 */
-	private final Map<TipoAttributo, Double> valoriAttributi = new HashMap<>();
+	private final Map<TipoAttributo, Double> valoriAttributi = new EnumMap<>(TipoAttributo.class);
 	/**
 	 * Modificatori permanenti agli attributi dei personaggi
 	 */
@@ -127,7 +129,7 @@ public class PersonaggioMD implements Serializzabile {
 	 * Il "|" si toglie; un nome vuoto vale come nessun nome (null): il personaggio si chiama allora con la sua classe.
 	 */
 	public void setNome(String nome) {
-		String pulito = Serializzabile.senzaPipe(nome);
+		String pulito = Serializzabile.pulisciCampo(nome);
 		this.nome = pulito == null || pulito.trim().isEmpty() ? null : pulito;
 	}
 
@@ -278,13 +280,7 @@ public class PersonaggioMD implements Serializzabile {
 		return (int)get(TipoAttributo.SALUTE);
 	}
 
-	public void setSaluteMassima(double saluteMassima) {
-		setMassimo(TipoAttributo.SALUTE, saluteMassima);
-	}
 
-	public Optional<Double> getSaluteMassima() {
-		return getMassimo(TipoAttributo.SALUTE);
-	}
 
 	public void setForza(double forza) {
 		set(TipoAttributo.FORZA, forza);
@@ -294,15 +290,9 @@ public class PersonaggioMD implements Serializzabile {
 		return (int)get(TipoAttributo.FORZA);
 	}
 
-	public void setForzaMassima(double forzaMassima) {
-		setMassimo(TipoAttributo.FORZA, forzaMassima);
-	}
 
-	public Optional<Double> getForzaMassima() {
-		return getMassimo(TipoAttributo.FORZA);
-	}
 
-	public void setDestrezza(int destrezza) {
+	public void setDestrezza(double destrezza) {
 		set(TipoAttributo.DESTREZZA, destrezza);
 	}
 
@@ -310,15 +300,9 @@ public class PersonaggioMD implements Serializzabile {
 		return (int)get(TipoAttributo.DESTREZZA);
 	}
 
-	public void setDestrezzaMassima(double destrezzaMassima) {
-		setMassimo(TipoAttributo.DESTREZZA, destrezzaMassima);
-	}
 
-	public Optional<Double> getDestrezzaMassima() {
-		return getMassimo(TipoAttributo.DESTREZZA);
-	}
 
-	public void setCostituzione(int costituzione) {
+	public void setCostituzione(double costituzione) {
 		set(TipoAttributo.COSTITUZIONE, costituzione);
 	}
 
@@ -326,13 +310,7 @@ public class PersonaggioMD implements Serializzabile {
 		return (int)get(TipoAttributo.COSTITUZIONE);
 	}
 
-	public void setCostituzioneMassima(double costituzioneMassima) {
-		setMassimo(TipoAttributo.COSTITUZIONE, costituzioneMassima);
-	}
 
-	public Optional<Double> getCostituzioneMassima() {
-		return getMassimo(TipoAttributo.COSTITUZIONE);
-	}
 
 	public void setIntelligenza(double intelligenza) {
 		set(TipoAttributo.INTELLIGENZA, intelligenza);
@@ -342,13 +320,7 @@ public class PersonaggioMD implements Serializzabile {
 		return (int)get(TipoAttributo.INTELLIGENZA);
 	}
 
-	public void setIntelligenzaMassima(double intelligenzaMassima) {
-		setMassimo(TipoAttributo.INTELLIGENZA, intelligenzaMassima);
-	}
 
-	public Optional<Double> getIntelligenzaMassima() {
-		return getMassimo(TipoAttributo.INTELLIGENZA);
-	}
 
 	public void setSaggezza(double saggezza) {
 		set(TipoAttributo.SAGGEZZA, saggezza);
@@ -358,13 +330,7 @@ public class PersonaggioMD implements Serializzabile {
 		return (int)get(TipoAttributo.SAGGEZZA);
 	}
 
-	public void setSaggezzaMassima(double saggezzaMassima) {
-		setMassimo(TipoAttributo.SAGGEZZA, saggezzaMassima);
-	}
 
-	public Optional<Double> getSaggezzaMassima() {
-		return getMassimo(TipoAttributo.SAGGEZZA);
-	}
 
 	public void setCarisma(double carisma) {
 		set(TipoAttributo.CARISMA, carisma);
@@ -374,13 +340,7 @@ public class PersonaggioMD implements Serializzabile {
 		return (int)get(TipoAttributo.CARISMA);
 	}
 
-	public void setCarismaMassimo(double carismaMassimo) {
-		setMassimo(TipoAttributo.CARISMA, carismaMassimo);
-	}
 
-	public Optional<Double> getCarismaMassimo() {
-		return getMassimo(TipoAttributo.CARISMA);
-	}
 
 	public void setFortuna(double fortuna) {
 		set(TipoAttributo.FORTUNA, fortuna);
@@ -390,175 +350,79 @@ public class PersonaggioMD implements Serializzabile {
 		return (int)get(TipoAttributo.FORTUNA);
 	}
 
-	public void setFortunaMassima(double fortunaMassima) {
-		setMassimo(TipoAttributo.FORTUNA, fortunaMassima);
-	}
 
-	public Optional<Double> getFortunaMassima() {
-		return getMassimo(TipoAttributo.FORTUNA);
-	}
 
-	public void setCritico(double  critico) {
-		set(TipoAttributo.CRITICO, critico);
-	}
 
 	public int getCritico() {
 		return (int)get(TipoAttributo.CRITICO);
 	}
 
-	public void setCriticoMassimo(double criticoMassimo) {
-		setMassimo(TipoAttributo.CRITICO, criticoMassimo);
-	}
 
-	public Optional<Double> getCriticoMassimo() {
-		return getMassimo(TipoAttributo.CRITICO);
-	}
 
-	public void setPrecisione(double precisione) {
-		set(TipoAttributo.PRECISIONE, precisione);
-	}
 
 	public int getPrecisione() {
 		return (int)get(TipoAttributo.PRECISIONE);
 	}
 
-	public void setPrecisioneMassima(double precisioneMassima) {
-		setMassimo(TipoAttributo.PRECISIONE, precisioneMassima);
-	}
 
-	public Optional<Double> getPrecisioneMassima() {
-		return getMassimo(TipoAttributo.PRECISIONE);
-	}
 
-	public void setVelocita(double velocita) {
-		set(TipoAttributo.VELOCITA, velocita);
-	}
 
 	public int getVelocita() {
 		return (int)get(TipoAttributo.VELOCITA);
 	}
 
-	public void setVelocitaMassima(double velocitaMassima) {
-		setMassimo(TipoAttributo.VELOCITA, velocitaMassima);
-	}
 
-	public Optional<Double> getVelocitaMassima() {
-		return getMassimo(TipoAttributo.VELOCITA);
-	}
 
-	public void setFurtivita(double furtivita) {
-		set(TipoAttributo.FURTIVITA, furtivita);
-	}
 
 	public int getFurtivita() {
 		return (int)get(TipoAttributo.FURTIVITA);
 	}
 
-	public void setFurtivitaMassima(double furtivitaMassima) {
-		setMassimo(TipoAttributo.FURTIVITA, furtivitaMassima);
-	}
 
-	public Optional<Double> getFurtivitaMassima() {
-		return getMassimo(TipoAttributo.FURTIVITA);
-	}
 
-	public void setParata(double parata) {
-		set(TipoAttributo.PARATA, parata);
-	}
 
 	public int getParata() {
 		return (int)get(TipoAttributo.PARATA);
 	}
 
-	public void setParataMassima(double parataMassima) {
-		setMassimo(TipoAttributo.PARATA, parataMassima);
-	}
 
-	public Optional<Double> getParataMassima() {
-		return getMassimo(TipoAttributo.PARATA);
-	}
 
-	public void setResistenzaMagica(double resistenzaMagica) {
-		set(TipoAttributo.RESISTENZA_MAGICA, resistenzaMagica);
-	}
 
 	public int getResistenzaMagica() {
 		return (int)get(TipoAttributo.RESISTENZA_MAGICA);
 	}
 
-	public void setResistenzaMagicaMassima(double resistenzaMagicaMassima) {
-		setMassimo(TipoAttributo.RESISTENZA_MAGICA, resistenzaMagicaMassima);
-	}
 
-	public Optional<Double> getResistenzaMagicaMassima() {
-		return getMassimo(TipoAttributo.RESISTENZA_MAGICA);
-	}
 
-	public void setPercezione(double percezione) {
-		set(TipoAttributo.PERCEZIONE, percezione);
-	}
 
 	public int getPercezione() {
 		return (int)get(TipoAttributo.PERCEZIONE);
 	}
 
-	public void setPercezioneMassima(double percezioneMassima) {
-		setMassimo(TipoAttributo.PERCEZIONE, percezioneMassima);
-	}
 
-	public Optional<Double> getPercezioneMassima() {
-		return getMassimo(TipoAttributo.PERCEZIONE);
-	}
 
-	public void setSoggezione(double soggezione) {
-		set(TipoAttributo.SOGGEZIONE, soggezione);
-	}
 
 	public int getSoggezione() {
 		return (int)get(TipoAttributo.SOGGEZIONE);
 	}
 
-	public void setSoggezioneMassima(double soggezioneMassima) {
-		setMassimo(TipoAttributo.SOGGEZIONE, soggezioneMassima);
-	}
 
-	public Optional<Double> getSoggezioneMassima() {
-		return getMassimo(TipoAttributo.SOGGEZIONE);
-	}
 
-	public void setContrattazione(double contrattazione) {
-		set(TipoAttributo.CONTRATTAZIONE, contrattazione);
-	}
 
 	public int getContrattazione() {
 		return (int)get(TipoAttributo.CONTRATTAZIONE);
 	}
 
-	public void setContrattazioneMassima(double contrattazioneMassima) {
-		setMassimo(TipoAttributo.CONTRATTAZIONE, contrattazioneMassima);
-	}
 
-	public Optional<Double> getContrattazioneMassima() {
-		return getMassimo(TipoAttributo.CONTRATTAZIONE);
-	}
 
-	public void setFuria(double furia) {
-		set(TipoAttributo.FURIA, furia);
-	}
 
 	public int getFuria() {
 		return (int)get(TipoAttributo.FURIA);
 	}
 
-	public void setFuriaMassima(double furiaMassima) {
-		setMassimo(TipoAttributo.FURIA, furiaMassima);
-	}
 
-	public Optional<Double> getFuriaMassima() {
-		return getMassimo(TipoAttributo.FURIA);
-	}
 
-	public void setMagia(int magia) {
+	public void setMagia(double magia) {
 		set(TipoAttributo.MAGIA, magia);
 	}
 
@@ -566,45 +430,21 @@ public class PersonaggioMD implements Serializzabile {
 		return (int)get(TipoAttributo.MAGIA);
 	}
 
-	public void setMagiaMassima(double magiaMassima) {
-		setMassimo(TipoAttributo.MAGIA, magiaMassima);
-	}
 
-	public Optional<Double> getMagiaMassima() {
-		return getMassimo(TipoAttributo.MAGIA);
-	}
 
-	public void setCoraggio(double coraggio) {
-		set(TipoAttributo.CORAGGIO, coraggio);
-	}
 
 	public int getCoraggio() {
 		return (int)get(TipoAttributo.CORAGGIO);
 	}
 
-	public void setCoraggioMassimo(double coraggioMassimo) {
-		setMassimo(TipoAttributo.CORAGGIO, coraggioMassimo);
-	}
 
-	public Optional<Double> getCoraggioMassimo() {
-		return getMassimo(TipoAttributo.CORAGGIO);
-	}
 
-	public void setValore(double valore) {
-		set(TipoAttributo.VALORE, valore);
-	}
 
 	public int getValore() {
 		return (int)get(TipoAttributo.VALORE);
 	}
 
-	public void setValoreMassimo(double valoreMassimo) {
-		setMassimo(TipoAttributo.VALORE, valoreMassimo);
-	}
 
-	public Optional<Double> getValoreMassimo() {
-		return getMassimo(TipoAttributo.VALORE);
-	}
 
 	public void setStanchezza(double stanchezza) {
 		set(TipoAttributo.STANCHEZZA, stanchezza);
@@ -614,36 +454,18 @@ public class PersonaggioMD implements Serializzabile {
 		return (int)get(TipoAttributo.STANCHEZZA);
 	}
 
-	public void setStanchezzaMassima(double stanchezzaMassima) {
-		setMassimo(TipoAttributo.STANCHEZZA, stanchezzaMassima);
-	}
 
-	public Optional<Double> getStanchezzaMassima() {
-		return getMassimo(TipoAttributo.STANCHEZZA);
-	}
 
-	public void setNumeroBersagli(int numeroBersagli) {
-		set(TipoAttributo.NUMERO_BERSAGLI, numeroBersagli);
-	}
 
-	public int getNumeroBersagli() {
-		return (int)get(TipoAttributo.NUMERO_BERSAGLI);
-	}
 
-	public void setNumeroBersagliMassimo(double numeroBersagliMassimo) {
-		setMassimo(TipoAttributo.NUMERO_BERSAGLI, numeroBersagliMassimo);
-	}
 
-	public Optional<Double> getNumeroBersagliMassimo() {
-		return getMassimo(TipoAttributo.NUMERO_BERSAGLI);
-	}
 
 	public String getCausaTrapasso() {
 		return causaTrapasso;
 	}
 
 	public void setCausaTrapasso(String causaTrapasso) {
-		this.causaTrapasso = Serializzabile.senzaPipe(causaTrapasso);
+		this.causaTrapasso = Serializzabile.pulisciCampo(causaTrapasso);
 	}
 
 	public Collection<EffettoDiStatoMD> getEffettiDiStato() {
@@ -759,8 +581,8 @@ public class PersonaggioMD implements Serializzabile {
 		campi = new LettoreCampi(stream.readLine());
 		modificatori.clear();
 		while (campi.haAltriCampi()) {
-			// Limite 7: la nota, l'ultimo campo, può contenere il separatore
-			String[] attributoValore = campi.testo().split(MappaProprieta.SEPARATORE, 7);
+			// Fino a 7 sottocampi: la nota, l'ultimo, può contenere il separatore (e mancare)
+			String[] attributoValore = campi.sottocampi(6, 7);
 			ModificatoreAttributoMD modificatore = new ModificatoreAttributoMD(TipoAttributo.valueOf(attributoValore[0]),
 					TipoModificatore.valueOf(attributoValore[1]), Double.parseDouble(attributoValore[2]),
 					attributoValore.length > 6 ? attributoValore[6] : "",
@@ -771,7 +593,7 @@ public class PersonaggioMD implements Serializzabile {
 		campi = new LettoreCampi(stream.readLine());
 		effettiDiStato.clear();
 		while (campi.haAltriCampi()) {
-			String[] attributoValore = campi.testo().split(MappaProprieta.SEPARATORE);
+			String[] attributoValore = campi.sottocampi(4, 4);
 			EffettoDiStatoMD effettoDiStato = new EffettoDiStatoMD(TipoEffettoDiStato.valueOf(attributoValore[0]),
 					Integer.parseInt(attributoValore[1]), Integer.parseInt(attributoValore[2]),
 					Double.parseDouble(attributoValore[3]));
@@ -796,7 +618,7 @@ public class PersonaggioMD implements Serializzabile {
 		LettoreCampi campi = new LettoreCampi(linea);
 		mappa.clear();
 		while (campi.haAltriCampi()) {
-			String[] attributoValore = campi.testo().split(MappaProprieta.SEPARATORE);
+			String[] attributoValore = campi.sottocampi(2, 2);
 			mappa.put(TipoAttributo.valueOf(attributoValore[0]), Double.parseDouble(attributoValore[1]));
 		}
 	}

@@ -40,7 +40,7 @@ public final class VoceMD {
 		this.condizioni = Collections.unmodifiableList(new ArrayList<>(condizioni));
 		this.azioni = Collections.unmodifiableList(new ArrayList<>(azioni));
 		this.attiva = attiva;
-		this.nome = nome == null || nome.trim().isEmpty() ? null : Serializzabile.senzaPipe(nome.trim());
+		this.nome = nome == null || nome.trim().isEmpty() ? null : Serializzabile.pulisciCampo(nome.trim());
 	}
 
 	public VoceMD(SelettoreMD selettore, List<PredicatoMD> condizioni, List<AzioneMD> azioni, boolean attiva) {
