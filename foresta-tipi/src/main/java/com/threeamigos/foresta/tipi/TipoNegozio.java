@@ -3,26 +3,27 @@ package com.threeamigos.foresta.tipi;
 /**
  * I negozi che comprano e vendono artefatti. Più negozi della stessa città stanno sulla stessa casella:
  * il loro magazzino si riconosce da coordinate e tipo di negozio.
+ * <p>
+ * I testi di ogni costante (NOME) non stanno qui ma nel file {@code tipo_negozio_<lingua>.properties}, alla voce
+ * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
  */
 public enum TipoNegozio {
 
 	/**
 	 * Tratta tutti gli artefatti tranne le pergamene
 	 */
-	ARMAIOLO("Armaiolo"),
+	ARMAIOLO,
 	/**
 	 * Tratta solo le pergamene
 	 */
-	VENDITORE_DI_PERGAMENE("Venditore di pergamene");
+	VENDITORE_DI_PERGAMENE;
 
-	private final String nome;
 
-	TipoNegozio(String nome) {
-		this.nome = nome;
+	TipoNegozio() {
 	}
 
 	public String getNome() {
-		return nome;
+		return Testi.testoOCostante(this, "NOME");
 	}
 
 	/**

@@ -4,78 +4,35 @@ package com.threeamigos.foresta.tipi;
  * Gli incantesimi: l'identificativo che salva il modello dati (le pergamene del gruppo in GruppoGiocatoreMD) con i
  * dati che li descrivono. L'incantesimo vero, il suo costo e la scelta a caso li dà incantesimi.FabbricaIncantesimi.
  * (Da non confondere con TipoIncantesimo, benefico o malefico.)
+ * <p>
+ * I testi di ogni costante (NOME, NOME_SINGOLARE, NOME_PLURALE, EFFETTO) non stanno qui ma nel file {@code classe_incantesimo_<lingua>.properties}, alla voce
+ * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
  */
 public enum ClasseIncantesimo {
 
-	ARIA(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.ARIA,
-			"Aria", "incantesimo dell'Aria", "incantesimi dell'Aria",
-			Comando.ARIA,
-			"Scatena una folata sgangherata che destabilizza l'avversario e lo scaraventa a terra con un sonoro tonfo."),
-	ACQUA(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.ACQUA,
-			"Acqua", "incantesimo dell'Acqua", "incantesimi dell'Acqua",
-			Comando.ACQUA,
-			"Inonda il bersaglio con un getto corrosivo che spegne i suoi bollori e lo lascia inzuppato da capo a piedi."),
-	TERRA(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.TERRA,
-			"Terra", "incantesimo di Terra", "incantesimi di Terra",
-			Comando.TERRA,
-			"Scaglia una pioggia di fango e macigni ideale per bloccare le gambe del nemico e accecarlo di sabbia."),
-	FUOCO(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.FUOCO,
-			"Fuoco", "incantesimo del Fuoco", "incantesimi del Fuoco",
-			Comando.FUOCO,
-			"Avvolge l'avversario in un incendio molesto che brucia i suoi vestiti e infligge un fastidiosissimo danno nel tempo."),
-	FULMINE(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.FULMINE,
-			"Fulmine", "incantesimo del Fulmine", "incantesimi del Fulmine",
-			Comando.FULMINE,
-			"Saetta un arco energetico rapido che si propaga tra i nemici e li stordisce con una scossa ad alto voltaggio."),
-	GELO(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.GELO,
-			"Gelo", "incantesimo del Gelo", "incantesimi del Gelo",
-			Comando.GELO,
-			"Congela i fluidi corporei del bersaglio riducendone i riflessi o bloccandolo in un gelido cubetto ornamentale."),
-	VELENO(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.VELENO,
-			"Veleno", "incantesimo del Veleno", "incantesimi del Veleno",
-			Comando.VELENO,
-			"Inietta una tossina subdola che debilita le statistiche della vittima consumando la sua salute scatto dopo scatto."),
-	MORTE(TipoIncantesimo.MALEFICO, PortataIncantesimo.SINGOLO_SOLO_VIVI, TipoDanno.NECROTICO,
-			"Morte", "incantesimo di Morte", "incantesimi di Morte",
-			Comando.MORTE,
-			"Canalizza l'energia necrotica per prosciugare la forza vitale nemica, impedendo qualsiasi disperato tentativo di cura."),
-	RESURREZIONE(TipoIncantesimo.BENEFICO, PortataIncantesimo.SINGOLO_QUALSIASI, null,
-			"Resurrezione", "incantesimo della Resurrezione", "incantesimi della Resurrezione",
-			Comando.RESURREZIONE,
-			"Richiama un compagno caduto dal regno dei morti, restituendogli un decimo della sua salute; se è ancora vivo lo risana del tutto."),
-	ALBA_SACRA(TipoIncantesimo.BENEFICO, PortataIncantesimo.GRUPPO, null,
-			"Alba Sacra", "incantesimo dell'Alba Sacra", "incantesimi dell'Alba Sacra",
-			Comando.ALBA_SACRA,
-			"Rimuove gli effetti di stato negativi e i modificatori temporanei al gruppo, lasciando l'ispirazione e il berserk."),
-	SILENZIO(TipoIncantesimo.MALEFICO, PortataIncantesimo.GRUPPO, TipoDanno.ARCANO,
-			"Silenzio", "incantesimo del Silenzio", "incantesimi del Silenzio",
-			Comando.SILENZIO,
-			"Sigilla la voce di un avversario, che non può più lanciare incantesimi finché dura il silenzio."),
-	LUCE_DIVINA(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.SACRO,
-			"Luce Divina", "incantesimo della Luce Divina", "incantesimi della Luce Divina",
-			Comando.LUCE_DIVINA,
-			"Invoca una luce sacra che brucia i non morti, e che non fa distinzioni: investe anche lo Scheletro che combatte al fianco di chi la invoca.");
+	ARIA(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.ARIA, Comando.ARIA),
+	ACQUA(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.ACQUA, Comando.ACQUA),
+	TERRA(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.TERRA, Comando.TERRA),
+	FUOCO(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.FUOCO, Comando.FUOCO),
+	FULMINE(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.FULMINE, Comando.FULMINE),
+	GELO(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.GELO, Comando.GELO),
+	VELENO(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.VELENO, Comando.VELENO),
+	MORTE(TipoIncantesimo.MALEFICO, PortataIncantesimo.SINGOLO_SOLO_VIVI, TipoDanno.NECROTICO, Comando.MORTE),
+	RESURREZIONE(TipoIncantesimo.BENEFICO, PortataIncantesimo.SINGOLO_QUALSIASI, null, Comando.RESURREZIONE),
+	ALBA_SACRA(TipoIncantesimo.BENEFICO, PortataIncantesimo.GRUPPO, null, Comando.ALBA_SACRA),
+	SILENZIO(TipoIncantesimo.MALEFICO, PortataIncantesimo.GRUPPO, TipoDanno.ARCANO, Comando.SILENZIO),
+	LUCE_DIVINA(TipoIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.SACRO, Comando.LUCE_DIVINA);
 
 	private final TipoIncantesimo tipo;
 	private final PortataIncantesimo portata;
 	private final TipoDanno tipoDanno;
-	private final String nome;
-	private final String nomeSingolare;
-	private final String nomePlurale;
 	private final Comando comandoDiAttivazione;
-	private final String effetto;
 
-	ClasseIncantesimo(TipoIncantesimo tipo, PortataIncantesimo portata, TipoDanno tipoDanno,
-					  String nome, String nomeSingolare, String nomePlurale,
-					  Comando comando, String effetto) {
+	ClasseIncantesimo(TipoIncantesimo tipo, PortataIncantesimo portata, TipoDanno tipoDanno, Comando comando) {
 		this.tipo = tipo;
 		this.portata = portata;
 		this.tipoDanno = tipoDanno;
-		this.nome = nome;
-		this.nomeSingolare = nomeSingolare;
-		this.nomePlurale = nomePlurale;
 		this.comandoDiAttivazione = comando;
-		this.effetto = effetto;
 	}
 
 	/**
@@ -103,28 +60,28 @@ public enum ClasseIncantesimo {
 	 * Il nome breve di un incantesimo, senza "incantesimo di" (es. Aria, Alba Sacra)
 	 */
 	public String getNome() {
-		return nome;
+		return Testi.testoOCostante(this, "NOME");
 	}
 
 	/**
 	 * Il nome completo di un incantesimo al singolare (es. Incantesimo dell'Aria)
 	 */
 	public String getNomeSingolare() {
-		return nomeSingolare;
+		return Testi.testoOCostante(this, "NOME_SINGOLARE");
 	}
 
 	/**
 	 * Il nome completo di un incantesimo al plurale (es. Incantesimi dell'Aria)
 	 */
 	public String getNomePlurale() {
-		return nomePlurale;
+		return Testi.testoOCostante(this, "NOME_PLURALE");
 	}
 
 	/**
 	 * Quale effetto produce questo incantesimo
 	 */
 	public String getEffetto() {
-		return effetto;
+		return Testi.testoOCostante(this, "EFFETTO");
 	}
 
 	public Comando getComandoDiAttivazione() {

@@ -12,6 +12,7 @@ import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.tipi.TipoCanto;
 
 /**
  * Il canto che scuote il morale degli avversari: a caso {@code SPAVENTATO} o {@code CONFUSO} (lo stesso per tutti

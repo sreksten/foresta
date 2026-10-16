@@ -11,7 +11,7 @@ import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.canti.FabbricaCanti;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
-import com.threeamigos.foresta.canti.TipoCanto;
+import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.oggetti.Artefatto;

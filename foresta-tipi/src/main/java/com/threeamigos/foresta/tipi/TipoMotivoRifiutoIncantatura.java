@@ -2,26 +2,27 @@ package com.threeamigos.foresta.tipi;
 
 /**
  * Perché l'incantatore non accetta qualcosa sul banco o non fa la fusione (vedi RegoleIncantatura).
+ * <p>
+ * I testi di ogni costante (FRASE) non stanno qui ma nel file {@code tipo_motivo_rifiuto_incantatura_<lingua>.properties}, alla voce
+ * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
  */
 public enum TipoMotivoRifiutoIncantatura {
 
-	NESSUN_ARTEFATTO("Sul banco manca l'artefatto da incantare."),
-	PIU_ARTEFATTI("Sul banco ci va un artefatto alla volta."),
-	NESSUNA_PERGAMENA("Sul banco manca un ingrediente magico da fondere."),
-	NON_INCANTABILE("Questo non si può incantare: solo armi, scudi, elmi, maschere, armature, schinieri e libri magici."),
-	NESSUN_MIGLIORAMENTO("Nessun effetto degli ingredienti è migliore di quelli dell'artefatto."),
-	POTERE_MAGICO_FUORI_POSTO("Il potere magico si fonde solo su bastoni e libri magici, e questo ingrediente non ha altro."),
-	INCANTAMENTO_SU_LIBRO("Su un libro magico gli incantamenti elementali non hanno effetto, e questo ingrediente non ha altro."),
-	LIVELLO_DEL_MONDO_RAGGIUNTO("Un artefatto non può salire oltre il livello del mondo."),
-	MONETE_INSUFFICIENTI("Non avete abbastanza monete per la fusione.");
+	NESSUN_ARTEFATTO,
+	PIU_ARTEFATTI,
+	NESSUNA_PERGAMENA,
+	NON_INCANTABILE,
+	NESSUN_MIGLIORAMENTO,
+	POTERE_MAGICO_FUORI_POSTO,
+	INCANTAMENTO_SU_LIBRO,
+	LIVELLO_DEL_MONDO_RAGGIUNTO,
+	MONETE_INSUFFICIENTI;
 
-	private final String frase;
 
-	TipoMotivoRifiutoIncantatura(String frase) {
-		this.frase = frase;
+	TipoMotivoRifiutoIncantatura() {
 	}
 
 	public String getFrase() {
-		return frase;
+		return Testi.testoOCostante(this, "FRASE");
 	}
 }

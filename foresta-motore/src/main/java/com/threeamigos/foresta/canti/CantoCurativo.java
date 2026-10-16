@@ -7,6 +7,7 @@ import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.Optional;
+import com.threeamigos.foresta.tipi.TipoCanto;
 
 /**
  * Il canto che cura il personaggio più ferito del gruppo (la quota di salute più bassa, il cantore compreso): circa

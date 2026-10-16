@@ -6,62 +6,64 @@ import com.threeamigos.foresta.tipi.TipoDanno;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
+import com.threeamigos.foresta.tipi.Testi;
 
 /**
  * Le azioni che una voce di tattica può compiere (tattiche_di_combattimento_automatiche.md §11.9): le sole già disponibili nella barra dei
  * comandi in combattimento. Corruzione, amicizia, fuga e passare inosservati non ci sono. Ogni azione dichiara su che cosa agisce
  * ({@link PortataAzione}) e da quali rose può pescare il bersaglio; i suoi requisiti (la magia, la pergamena...) li verifica chi valuta la tattica.
+ * <p>
+ * I testi di ogni costante (DESCRIZIONE) non stanno qui ma nel file {@code tipo_azione_<lingua>.properties}, alla voce
+ * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link com.threeamigos.foresta.tipi.Testi}).
  */
 public enum TipoAzione {
 
 	/** L'attacco con l'arma impugnata */
-	ATTACCO_FISICO("Attacco fisico", PortataAzione.AVVERSARIO, null),
-	ARIA("Aria", PortataAzione.AVVERSARIO, ClasseIncantesimo.ARIA),
-	ACQUA("Acqua", PortataAzione.AVVERSARIO, ClasseIncantesimo.ACQUA),
-	TERRA("Terra", PortataAzione.AVVERSARIO, ClasseIncantesimo.TERRA),
-	FUOCO("Fuoco", PortataAzione.AVVERSARIO, ClasseIncantesimo.FUOCO),
-	FULMINE("Fulmine", PortataAzione.AVVERSARIO, ClasseIncantesimo.FULMINE),
-	GELO("Gelo", PortataAzione.AVVERSARIO, ClasseIncantesimo.GELO),
-	VELENO("Veleno", PortataAzione.AVVERSARIO, ClasseIncantesimo.VELENO),
-	MORTE("Morte", PortataAzione.AVVERSARIO, ClasseIncantesimo.MORTE),
-	SILENZIO("Silenzio", PortataAzione.AVVERSARIO, ClasseIncantesimo.SILENZIO),
-	LUCE_DIVINA("Luce Divina", PortataAzione.AVVERSARIO, ClasseIncantesimo.LUCE_DIVINA),
+	ATTACCO_FISICO(PortataAzione.AVVERSARIO, null),
+	ARIA(PortataAzione.AVVERSARIO, ClasseIncantesimo.ARIA),
+	ACQUA(PortataAzione.AVVERSARIO, ClasseIncantesimo.ACQUA),
+	TERRA(PortataAzione.AVVERSARIO, ClasseIncantesimo.TERRA),
+	FUOCO(PortataAzione.AVVERSARIO, ClasseIncantesimo.FUOCO),
+	FULMINE(PortataAzione.AVVERSARIO, ClasseIncantesimo.FULMINE),
+	GELO(PortataAzione.AVVERSARIO, ClasseIncantesimo.GELO),
+	VELENO(PortataAzione.AVVERSARIO, ClasseIncantesimo.VELENO),
+	MORTE(PortataAzione.AVVERSARIO, ClasseIncantesimo.MORTE),
+	SILENZIO(PortataAzione.AVVERSARIO, ClasseIncantesimo.SILENZIO),
+	LUCE_DIVINA(PortataAzione.AVVERSARIO, ClasseIncantesimo.LUCE_DIVINA),
 	/** Uno dei sette incantesimi elementali, scelto con un criterio (non la Morte, non il Silenzio) */
-	INCANTESIMO_DI_DANNO("Incantesimo di danno", PortataAzione.AVVERSARIO, null),
+	INCANTESIMO_DI_DANNO(PortataAzione.AVVERSARIO, null),
 	/**
 	 * Uno qualsiasi degli incantesimi malefici (anche la Morte e il Silenzio) che il personaggio può lanciare, scelto con un criterio: la replica di come
 	 * scelgono i mostri oggi (RegistroTattiche); un giocatore usa piuttosto le azioni dei singoli incantesimi o INCANTESIMO_DI_DANNO
 	 */
-	INCANTESIMO_DEL_REPERTORIO("Incantesimo del repertorio", PortataAzione.AVVERSARIO, null),
+	INCANTESIMO_DEL_REPERTORIO(PortataAzione.AVVERSARIO, null),
 	/** L'attacco magico di base, con danno arcano */
-	DARDO_ARCANO("Dardo Arcano", PortataAzione.AVVERSARIO, null),
-	RESURREZIONE("Resurrezione", PortataAzione.ALLEATO_CADUTO, ClasseIncantesimo.RESURREZIONE),
-	ALBA_SACRA("Alba Sacra", PortataAzione.GRUPPO_ALLEATI, ClasseIncantesimo.ALBA_SACRA),
+	DARDO_ARCANO(PortataAzione.AVVERSARIO, null),
+	RESURREZIONE(PortataAzione.ALLEATO_CADUTO, ClasseIncantesimo.RESURREZIONE),
+	ALBA_SACRA(PortataAzione.GRUPPO_ALLEATI, ClasseIncantesimo.ALBA_SACRA),
 	/** Il canto del Bardo che cura un alleato (vedi bardo.md) */
-	CANTO_CURATIVO("Canto Curativo", PortataAzione.ALLEATO, null),
+	CANTO_CURATIVO(PortataAzione.ALLEATO, null),
 	/** Il canto del Bardo che ipnotizza il gruppo avversario (vedi bardo.md) */
-	CANTO_IPNOTICO("Canto Ipnotico", PortataAzione.GRUPPO_AVVERSARI, null),
+	CANTO_IPNOTICO(PortataAzione.GRUPPO_AVVERSARI, null),
 	/** L'urlo della Banshee, che colpisce il gruppo avversario: il gruppo lo impara dal bardo della locanda */
-	URLO_DELLA_BANSHEE("Urlo della Banshee", PortataAzione.GRUPPO_AVVERSARI, null),
+	URLO_DELLA_BANSHEE(PortataAzione.GRUPPO_AVVERSARI, null),
 	/** Il canto del Bardo che ispira il gruppo alleato (stato ISPIRATO, vedi bardo.md) */
-	CANTO_DI_VALORE("Canto di Valore", PortataAzione.GRUPPO_ALLEATI, null),
+	CANTO_DI_VALORE(PortataAzione.GRUPPO_ALLEATI, null),
 	/** Dà a un alleato una pozione della salute */
-	POZIONE_SALUTE("Pozione della Salute", PortataAzione.ALLEATO, null),
+	POZIONE_SALUTE(PortataAzione.ALLEATO, null),
 	/** Dà a un alleato una pozione della magia */
-	POZIONE_MAGIA("Pozione della Magia", PortataAzione.ALLEATO, null),
+	POZIONE_MAGIA(PortataAzione.ALLEATO, null),
 	/** Dà a un alleato una pozione della salute grande */
-	POZIONE_SALUTE_GRANDE("Pozione della Salute grande", PortataAzione.ALLEATO, null),
+	POZIONE_SALUTE_GRANDE(PortataAzione.ALLEATO, null),
 	/** Dà a un alleato una pozione della magia grande */
-	POZIONE_MAGIA_GRANDE("Pozione della Magia grande", PortataAzione.ALLEATO, null),
+	POZIONE_MAGIA_GRANDE(PortataAzione.ALLEATO, null),
 	/** Cambia l'arma impugnata con quella del tipo di danno indicato dall'azione */
-	CAMBIA_ARMA("Cambia Arma", PortataAzione.ARMA, null);
+	CAMBIA_ARMA(PortataAzione.ARMA, null);
 
-	private final String descrizione;
 	private final PortataAzione portata;
 	private final ClasseIncantesimo classeIncantesimo;
 
-	TipoAzione(String descrizione, PortataAzione portata, ClasseIncantesimo classeIncantesimo) {
-		this.descrizione = descrizione;
+	TipoAzione(PortataAzione portata, ClasseIncantesimo classeIncantesimo) {
 		this.portata = portata;
 		this.classeIncantesimo = classeIncantesimo;
 	}
@@ -79,7 +81,7 @@ public enum TipoAzione {
 	}
 
 	public String getDescrizione() {
-		return descrizione;
+		return Testi.testoOCostante(this, "DESCRIZIONE");
 	}
 
 	public PortataAzione getPortata() {

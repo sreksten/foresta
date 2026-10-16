@@ -1,23 +1,23 @@
-package com.threeamigos.foresta.oggetti;
-
-import com.threeamigos.foresta.tipi.Costanti;
+package com.threeamigos.foresta.tipi;
 
 /**
  * I gradini degli effetti di un ingrediente magico e degli incantamenti degli artefatti (vedi
  * artefatti_e_incantamenti.md, §6). Il prezzo lo fa ListinoPergamene.
+ * <p>
+ * Il nome di ogni grado ("minore", "medio", "maggiore") non sta qui ma nel file
+ * {@code grado_incantamento_<lingua>.properties}, alla voce {@code COSTANTE.NOME}, in modo che il gioco si possa tradurre
+ * (vedi {@link Testi}).
  */
 public enum GradoIncantamento {
 
-	MINORE("minore", 5, 0.05),
-	MEDIO("medio", 10, 0.10),
-	MAGGIORE("maggiore", 15, 0.20);
+	MINORE(5, 0.05),
+	MEDIO(10, 0.10),
+	MAGGIORE(15, 0.20);
 
-	private final String nome;
 	private final int bonusFisso;
 	private final double coefficiente;
 
-	GradoIncantamento(String nome, int bonusFisso, double coefficiente) {
-		this.nome = nome;
+	GradoIncantamento(int bonusFisso, double coefficiente) {
 		this.bonusFisso = bonusFisso;
 		this.coefficiente = coefficiente;
 	}
@@ -50,7 +50,7 @@ public enum GradoIncantamento {
 	}
 
 	public String getNome() {
-		return nome;
+		return Testi.testoOCostante(this, "NOME");
 	}
 
 	public int getBonusFisso() {

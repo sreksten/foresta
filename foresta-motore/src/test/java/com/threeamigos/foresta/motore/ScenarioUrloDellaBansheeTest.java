@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.canti.CantoDelBardo;
-import com.threeamigos.foresta.canti.TipoCanto;
+import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.IntermezzoUrloDellaBanshee;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;

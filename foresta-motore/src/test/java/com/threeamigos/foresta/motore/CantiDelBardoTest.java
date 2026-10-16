@@ -9,7 +9,7 @@ import com.threeamigos.foresta.canti.CantoIpnotico;
 import com.threeamigos.foresta.canti.FabbricaCanti;
 import com.threeamigos.foresta.canti.UrloDellaBanshee;
 import com.threeamigos.foresta.intermezzi.IntermezzoUrloDellaBanshee;
-import com.threeamigos.foresta.canti.TipoCanto;
+import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.*;

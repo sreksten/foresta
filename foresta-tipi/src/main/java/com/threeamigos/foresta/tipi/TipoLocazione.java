@@ -2,7 +2,11 @@ package com.threeamigos.foresta.tipi;
 
 /**
  * Le locazioni della Foresta: l'identificativo che salva il modello dati (LocazioneMD, ForestaMD...) e che leggono
- * motore e UI. La locazione vera la costruisce locazioni.FabbricaLocazioni.
+ * motore e UI. La locazione vera la costruisce locazioni.FabbricaLocazioni. I nomi delle locazioni uniche non stanno
+ * qui ma nel file {@code tipo_locazione_<lingua>.properties}.
+ * <p>
+ * I testi di ogni costante (NOME_PROPRIO, NOME_DELLA_CITTA) non stanno qui ma nel file {@code tipo_locazione_<lingua>.properties}, alla voce
+ * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
  */
 public enum TipoLocazione {
 
@@ -26,38 +30,33 @@ public enum TipoLocazione {
 	/*
 	 * Città
 	 */
-	CITTA_NYENA(CategoriaLocazione.CITTA, "la città di Nyena"),
-	CITTA_MALGAARD(CategoriaLocazione.CITTA, "la città di Malgaard"),
-	CITTA_RUUNA(CategoriaLocazione.CITTA, "la città di Ruuna"),
-	CITTA_FLEENA(CategoriaLocazione.CITTA, "la città di Fleena"),
+	CITTA_NYENA(CategoriaLocazione.CITTA),
+	CITTA_MALGAARD(CategoriaLocazione.CITTA),
+	CITTA_RUUNA(CategoriaLocazione.CITTA),
+	CITTA_FLEENA(CategoriaLocazione.CITTA),
 	/*
 	 * Castelli
 	 */
-	CASTELLO_IDRA(CategoriaLocazione.CASTELLO, "la Rocca del Sangue"),
-	CASTELLO_MINOTAURO(CategoriaLocazione.CASTELLO, "la Torre della Paura"),
-	CASTELLO_LICH(CategoriaLocazione.CASTELLO, "il Castello dell'Ombra"),
-	CASTELLO_STREGA(CategoriaLocazione.CASTELLO, "il Maniero del Malefizio"),
-	CASTELLO_DRAGO(CategoriaLocazione.CASTELLO, "il Castello della Morte Alata");
+	CASTELLO_IDRA(CategoriaLocazione.CASTELLO),
+	CASTELLO_MINOTAURO(CategoriaLocazione.CASTELLO),
+	CASTELLO_LICH(CategoriaLocazione.CASTELLO),
+	CASTELLO_STREGA(CategoriaLocazione.CASTELLO),
+	CASTELLO_DRAGO(CategoriaLocazione.CASTELLO);
 
 	private final CategoriaLocazione categoria;
-	private final String nomeProprio;
 
 	TipoLocazione(CategoriaLocazione categoria) {
-		this(categoria, null);
-	}
-
-	TipoLocazione(CategoriaLocazione categoria, String nomeProprio) {
 		this.categoria = categoria;
-		this.nomeProprio = nomeProprio;
 	}
 
 	/**
 	 * Il nome, con l'articolo, di una locazione unica ("la città di Ruuna", "il Maniero del Malefizio"); null per le
 	 * altre. Quando la si costruisce finisce nel nome della casella (LocazioneMD.NOME), come quello delle locande e
-	 * dei templi.
+	 * dei templi. Sta nel file {@code tipo_locazione_<lingua>.properties}, alla voce {@code NOME_PROPRIO}, solo per le
+	 * locazioni uniche.
 	 */
 	public String getNomeProprio() {
-		return nomeProprio;
+		return Testi.testo(this, "NOME_PROPRIO").orElse(null);
 	}
 
 	/**
@@ -65,11 +64,12 @@ public enum TipoLocazione {
 	 * suoi abitanti ("Mastro Ferruccio da Ruuna").
 	 */
 	public String getNomeDellaCitta() {
-		if (categoria != CategoriaLocazione.CITTA || nomeProprio == null) {
+		if (categoria != CategoriaLocazione.CITTA) {
 			return null;
 		}
-		String prefisso = "la città di ";
-		return nomeProprio.startsWith(prefisso) ? nomeProprio.substring(prefisso.length()) : nomeProprio;
+		// Una voce a sé e non il nome proprio senza l'articolo ("la città di "): quel prefisso è italiano, e in un'altra
+		// lingua l'articolo e il "di" stanno altrove
+		return Testi.testo(this, "NOME_DELLA_CITTA").orElse(null);
 	}
 
 	/**

@@ -48,7 +48,7 @@ import java.util.OptionalInt;
 import java.util.Set;
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.canti.FabbricaCanti;
-import com.threeamigos.foresta.canti.TipoCanto;
+import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.combattimento.FaseDiAttacco;

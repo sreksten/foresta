@@ -9,6 +9,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.threeamigos.foresta.tipi.TipoCanto;
 
 /**
  * Chi sa cantare e quali canti può cantare adesso. Le capacità dipendono dal {@link TipoPersonaggio}, non dalla classe

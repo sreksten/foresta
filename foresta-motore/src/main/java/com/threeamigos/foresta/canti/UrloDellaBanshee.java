@@ -12,6 +12,7 @@ import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.tipi.TipoCanto;
 
 /**
  * Il canto ipnotico potenziato (vedi {@link CantoIpnotico}), che il bardo della locanda insegna al gruppo dopo il viaggio

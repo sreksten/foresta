@@ -6,27 +6,29 @@ import java.util.Map;
 /**
  * Il genere di creatura di un personaggio, per scegliere chi colpire o a chi rivolgere un'azione "per categoria" (un
  * non morto, un volante...). Una classe (TipoPersonaggio) ne ha una o più: lo Spirito è sia NON_MORTO sia VOLANTE.
+ * <p>
+ * I testi di ogni costante (NOME) non stanno qui ma nel file {@code categoria_personaggio_<lingua>.properties}, alla voce
+ * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
  */
 public enum CategoriaPersonaggio {
 
 	/** Ha forma umana: i giocanti, i goblin, la Strega... */
-	UMANOIDE("Umanoide"),
+	UMANOIDE,
 	/** Un animale o una bestia, senza un corpo da umanoide */
-	BESTIA("Bestia"),
+	BESTIA,
 	/** Un drago o un suo parente stretto: la Viverna, la Chimera Drago */
-	DRACONICO("Draconico"),
+	DRACONICO,
 	/** Morto che continua ad agire: scheletri, spettri, spiriti, lich */
-	NON_MORTO("Non morto"),
+	NON_MORTO,
 	/** Si muove in volo, fuori dalla portata di chi combatte a terra */
-	VOLANTE("Volante"),
+	VOLANTE,
 	/** Di taglia esagerata, che sovrasta chi le sta davanti: il Gigante, il Titano, il Troll, l'Idra, il Drago... Non è la razza dei giganti */
-	GIGANTESCO("Gigantesco"),
+	GIGANTESCO,
 	/** Un corpo fatto di più creature: arpie, centauri, minotauri, chimere */
-	IBRIDO("Ibrido"),
+	IBRIDO,
 	/** Una creatura fabbricata o animata, non nata: il gargoyle di pietra, un giorno i golem */
-	COSTRUTTO("Costrutto");
+	COSTRUTTO;
 
-	private final String nome;
 	// Quanto danno subisce, per tipo di danno, chi è di questa categoria: i tipi che mancano valgono 1
 	// Modificabile solo da qui (il blocco static, tramite un metodo privato): vedi la stessa nota in TipoPersonaggio
 	private final Map<TipoDanno, Double> dannoSubito = new EnumMap<>(TipoDanno.class);
@@ -46,8 +48,7 @@ public enum CategoriaPersonaggio {
 		COSTRUTTO.moltiplicaIlDannoSubito(TipoDanno.PSICHICO, 0.0d);
 	}
 
-	CategoriaPersonaggio(String nome) {
-		this.nome = nome;
+	CategoriaPersonaggio() {
 	}
 
 	private void moltiplicaIlDannoSubito(TipoDanno tipoDanno, double moltiplicatore) {
@@ -66,6 +67,6 @@ public enum CategoriaPersonaggio {
 	 * Il nome della categoria, per i testi
 	 */
 	public String getNome() {
-		return nome;
+		return Testi.testoOCostante(this, "NOME");
 	}
 }

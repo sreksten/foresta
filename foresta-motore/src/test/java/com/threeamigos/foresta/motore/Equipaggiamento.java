@@ -5,7 +5,7 @@ import com.threeamigos.foresta.modellodati.ArtefattoMD;
 
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
-import com.threeamigos.foresta.oggetti.GradoIncantamento;
+import com.threeamigos.foresta.tipi.GradoIncantamento;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;

@@ -4,6 +4,9 @@ package com.threeamigos.foresta.tipi;
  * Rappresenta le statistiche e le caratteristiche modificabili di personaggi ed equipaggiamento.
  * Definisce come ogni attributo influenza il comportamento, le azioni e le dinamiche
  * di combattimento sia in fase offensiva che difensiva.
+ * <p>
+ * I testi di ogni costante (NOME, DESCRIZIONE) non stanno qui ma nel file {@code tipo_attributo_<lingua>.properties}, alla voce
+ * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
  *
  * @author Stefano Reksten
  */
@@ -16,7 +19,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Permette di resistere agli effetti di spostamento fisico (es. respingimenti da Aria o Sonico)
      * riduce la fatica quando si bloccano attacchi pesanti.</p>
      */
-    FORZA(SupertipoAttributo.PRIMARIO, "Forza", "Forza fisica e potenza nei colpi"),
+    FORZA(SupertipoAttributo.PRIMARIO),
 
     /**
      * Agilità, coordinazione e riflessi.
@@ -25,7 +28,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Incrementa il valore di Schivata, permettendo di evitare completamente gli attacchi ad area
      * (es. Palle di fuoco) o i proiettili.</p>
      */
-    DESTREZZA(SupertipoAttributo.PRIMARIO, "Destrezza", "Agilità nei movimenti e coordinazione"),
+    DESTREZZA(SupertipoAttributo.PRIMARIO),
 
     /**
      * Resistenza fisica, tempra e salute complessiva.
@@ -34,7 +37,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Aumenta i Punti Vita (HP) massimi e mitiga i danni nel tempo fisici (es. riduce la durata
      * o il danno del Sanguinamento).</p>
      */
-    COSTITUZIONE(SupertipoAttributo.PRIMARIO, "Costituzione", "Tempra biologica e riserva di salute"),
+    COSTITUZIONE(SupertipoAttributo.PRIMARIO),
 
     /**
      * Potenza intellettuale, logica e controllo dei flussi magici grezzi.
@@ -43,7 +46,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Permette di identificare le illusioni nemiche e contrasta gli effetti di contro-incantesimo
      * o feedback arcano.</p>
      */
-    INTELLIGENZA(SupertipoAttributo.PRIMARIO, "Intelligenza", "Capacità logica e potenza magica elementale"),
+    INTELLIGENZA(SupertipoAttributo.PRIMARIO),
 
     /**
      * Consapevolezza spirituale, intuito e connessione con il divino.
@@ -52,7 +55,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Aumenta la resistenza mentale e riduce la durata delle Maledizioni e dei debuff spirituali
      * subiti, rendendo il personaggio più resistente agli effetti di controllo mentale (es. Confuso o Spaventato).</p>
      */
-    SAGGEZZA(SupertipoAttributo.PRIMARIO, "Saggezza", "Fede, intuito e resistenza spirituale"),
+    SAGGEZZA(SupertipoAttributo.PRIMARIO),
 
     /**
      * Forza della personalità, magnetismo e forza di volontà.
@@ -61,7 +64,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Rende più difficile per estranei o nemici manipolare, corrompere o intimidire socialmente
      * il personaggio, mantenendo la fedeltà al gruppo anche sotto pressione.</p>
      */
-    CARISMA(SupertipoAttributo.PRIMARIO, "Carisma", "Forza della personalità e presenza scenica"),
+    CARISMA(SupertipoAttributo.PRIMARIO),
 
     /**
      * Probabilità che gli eventi girino a favore del personaggio.
@@ -70,7 +73,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Permette di sopravvivere con 1 HP a colpi altrimenti letali, fa fallire le trappole
      * ambientali nemiche e riduce la probabilità di subire un Colpo Critico.</p>
      */
-    FORTUNA(SupertipoAttributo.PRIMARIO, "Fortuna", "Influenza del fato sulle probabilità di successo"),
+    FORTUNA(SupertipoAttributo.PRIMARIO),
 
     // Numero bersagli, rigenerazioni e potere magico si ricavano dalle caratteristiche e dall'equipaggiamento e
     // non hanno un valore proprio da alzare: sono SECONDARIO, così non si possono spendere punti abilità su di loro.
@@ -78,17 +81,17 @@ public enum TipoAttributo {
     /**
      * Il numero massimo di bersagli che un personaggio può colpire in un turno.
      */
-    NUMERO_BERSAGLI(SupertipoAttributo.SECONDARIO, "Numero bersagli", "Numero massimo di bersagli che può colpire in un turno"),
+    NUMERO_BERSAGLI(SupertipoAttributo.SECONDARIO),
 
     /**
      * Abilità di rigenerazione della salute fisica.
      */
-    RIGENERAZIONE_SALUTE(SupertipoAttributo.SECONDARIO, "Rigenerazione salute", "Abilità di rigenerazione della salute fisica"),
+    RIGENERAZIONE_SALUTE(SupertipoAttributo.SECONDARIO),
 
     /**
      * Abilità di rigenerazione della magia.
      */
-    RIGENERAZIONE_MAGIA(SupertipoAttributo.SECONDARIO, "Rigenerazione magia", "Abilità di rigenerazione della magia"),
+    RIGENERAZIONE_MAGIA(SupertipoAttributo.SECONDARIO),
 
     /**
      * La potenza degli incantesimi lanciati, data da bastoni e libri magici: una percentuale che parte da 100
@@ -96,7 +99,7 @@ public enum TipoAttributo {
      * che un'arma incantata applichi il suo effetto di stato (vedi CalcolatoreCombattimento). Non ha niente a
      * che vedere con la riserva di MAGIA.
      */
-    POTERE_MAGICO(SupertipoAttributo.SECONDARIO, "Potere magico", "Potenza degli incantesimi lanciati"),
+    POTERE_MAGICO(SupertipoAttributo.SECONDARIO),
 
     /**
      * Capacità di carico, peso massimo trasportabile e stazza dell'equipaggiamento.
@@ -105,7 +108,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Permette di indossare le armature più pesanti del gioco senza subire malus drastici alla
      * VELOCITA o alla schivata.</p>
      */
-    CARICO_MASSIMO(SupertipoAttributo.SECONDARIO, "Carico massimo", "Capacità di trasporto e tolleranza al peso dell'armatura"),
+    CARICO_MASSIMO(SupertipoAttributo.SECONDARIO),
 
     /**
      * Precisione millimetrica nel colpire i punti vitali scoperti.
@@ -114,7 +117,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Non ha alcun ruolo difensivo: contrastare i Colpi Critici subiti è compito della
      * FORTUNA.</p>
      */
-    CRITICO(SupertipoAttributo.SECONDARIO, "Critico", "Probabilità e moltiplicatore dei colpi devastanti"),
+    CRITICO(SupertipoAttributo.SECONDARIO),
 
     /**
      * Precisione oculare, stabilità della mano e coordinazione occhio-mano.
@@ -123,7 +126,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Aiuta a calcolare la traiettoria dei proiettili in arrivo per intercettarli prima
      * dell'impatto.</p>
      */
-    PRECISIONE(SupertipoAttributo.SECONDARIO, "Precisione", "Capacità di andare a segno senza mancare il bersaglio"),
+    PRECISIONE(SupertipoAttributo.SECONDARIO),
 
     /**
      * Velocità d'azione, rapidità di movimento e iniziativa nel turno.
@@ -132,7 +135,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Consente di fuggire rapidamente da una scontro svantaggioso o di riposizionarsi fuori dalle
      * zone di danno (AdE).</p>
      */
-    VELOCITA(SupertipoAttributo.SECONDARIO, "Velocità", "Iniziativa nei turni e rapidità di spostamento"),
+    VELOCITA(SupertipoAttributo.SECONDARIO),
 
     /**
      * Capacità di muoversi senza farsi notare e agire nell'ombra.
@@ -141,7 +144,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Impedisce ai nemici a distanza di agganciare il personaggio come bersaglio finché resta
      * nascosto.</p>
      */
-    FURTIVITA(SupertipoAttributo.SECONDARIO, "Furtività", "Capacità di occultamento e attacco a sorpresa"),
+    FURTIVITA(SupertipoAttributo.SECONDARIO),
 
     /**
      * Abilità nel frapporre l'arma o lo scudo tra sé e il colpo nemico.
@@ -150,7 +153,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Riduce o azzera il danno fisico in arrivo. È la statistica chiave per i personaggi Tank
      * dotati di scudo.</p>
      */
-    PARATA(SupertipoAttributo.SECONDARIO, "Parata", "Efficacia nel bloccare i colpi fisici diretti"),
+    PARATA(SupertipoAttributo.SECONDARIO),
 
     /**
      * Schermatura mistica contro le energie non terrene.
@@ -158,7 +161,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Riduce percentualmente i danni subiti da fonti magiche pure, come Arcano, Necrotico, Vuoto
      * e Maledizioni.</p>
      */
-    RESISTENZA_MAGICA(SupertipoAttributo.SECONDARIO, "Resistenza magica", "Filtro difensivo contro incantesimi e anatemi"),
+    RESISTENZA_MAGICA(SupertipoAttributo.SECONDARIO),
 
     /**
      * Sensi acuti, vista sviluppata e udito sopraffino.
@@ -166,7 +169,7 @@ public enum TipoAttributo {
      * invisibili o nascosti.</p>
      * <p><b>In difesa:</b> Evita di cadere nelle imboscate e riduce i malus dello stato ACCECATO o ASSORDATO.</p>
      */
-    PERCEZIONE(SupertipoAttributo.SECONDARIO, "Percezione", "Consapevolezza dell'ambiente e scoperta di segreti"),
+    PERCEZIONE(SupertipoAttributo.SECONDARIO),
 
     /**
      * Aura di terrore, maestosità o timore reverenziale emanata dall'arma o dal personaggio.
@@ -175,7 +178,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Esita i nemici ad attaccare direttamente il personaggio, spingendoli a scegliere bersagli
      * più facili.</p>
      */
-    SOGGEZIONE(SupertipoAttributo.SECONDARIO, "Soggezione", "Presenza terrificante che abbatte il morale nemico"),
+    SOGGEZIONE(SupertipoAttributo.SECONDARIO),
 
     /**
      * Uno stato di trance agonistica, rabbia incontrollata o adrenalina pura.
@@ -184,7 +187,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Rende il personaggio temporaneamente immune allo STORDITO o al RALLENTATO, sacrificando però
      * la capacità di parare.</p>
      */
-    FURIA(SupertipoAttributo.SECONDARIO, "Furia", "Rabbia da battaglia che scambia difesa per attacco bruto"),
+    FURIA(SupertipoAttributo.SECONDARIO),
 
     /**
      * Fermezza d'animo e determinazione di fronte al pericolo e all'ignoto.
@@ -193,7 +196,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Fornisce una resistenza nativa e drastica contro gli effetti psichici e mentali di tipo
      * SPAVENTATO, permettendo al personaggio di mantenere la posizione.</p>
      */
-    CORAGGIO(SupertipoAttributo.SECONDARIO, "Coraggio", "Fermezza mentale e resistenza alla paura"),
+    CORAGGIO(SupertipoAttributo.SECONDARIO),
 
     /**
      * Onore in battaglia, spirito di sacrificio ed eroismo cavalleresco.
@@ -202,7 +205,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Aumenta la resistenza generale ai danni (Mitigazione) e permette di attivare abilità di
      * "intercettazione" per subire un colpo al posto di un alleato indifeso.</p>
      */
-    VALORE(SupertipoAttributo.SECONDARIO, "Valore", "Spirito eroico e attitudini al sacrificio per il gruppo"),
+    VALORE(SupertipoAttributo.SECONDARIO),
 
     /**
      * Abilità nel mercanteggiare: parlantina, faccia tosta e il fiuto per l'affare giusto al momento giusto.
@@ -210,32 +213,32 @@ public enum TipoAttributo {
      * e alza il ricavo delle vendite, entro i limiti di {@code motore.RegoleContrattazione}.
      * Il gruppo tratta con la Contrattazione più alta tra i suoi personaggi vivi.</p>
      */
-    CONTRATTAZIONE(SupertipoAttributo.SECONDARIO, "Contrattazione", "Abilità nello strappare prezzi migliori ai mercanti"),
+    CONTRATTAZIONE(SupertipoAttributo.SECONDARIO),
 
     /**
      * Livello di esperienza raggiunto dal personaggio.
      */
-    LIVELLO(SupertipoAttributo.RISORSA_DINAMICA, "Livello", "Livello di esperienza raggiunto"),
+    LIVELLO(SupertipoAttributo.RISORSA_DINAMICA),
 
     /**
      * Punti abilità che il personaggio può usare per aumentare le sue statistiche.
      */
-    PUNTI_ABILITA(SupertipoAttributo.RISORSA_DINAMICA, "Punti abilità", "Punti abilità disponibili per aumentare le statistiche del personaggio"),
+    PUNTI_ABILITA(SupertipoAttributo.RISORSA_DINAMICA),
 
     /**
      * Esperienza totale accumulata dal personaggio
      */
-    PUNTI_ESPERIENZA(SupertipoAttributo.RISORSA_DINAMICA, "Esperienza", "Esperienza totale accumulata dal personaggio"),
+    PUNTI_ESPERIENZA(SupertipoAttributo.RISORSA_DINAMICA),
 
     /**
      * Salute fisica e resistenza complessiva. Quando la salute corrente scende a zero, il personaggio muore.
      */
-    SALUTE(SupertipoAttributo.RISORSA_DINAMICA, "Salute", "Salute fisica e resistenza complessiva"),
+    SALUTE(SupertipoAttributo.RISORSA_DINAMICA),
 
     /**
      * Salute fisica e resistenza complessiva (massimo livello). Quando la salute corrente scende a zero, il personaggio muore.
      */
-    SALUTE_MASSIMA(SupertipoAttributo.RISORSA_DINAMICA, "Salute massima", "Salute fisica e resistenza complessiva (massimo livello)"),
+    SALUTE_MASSIMA(SupertipoAttributo.RISORSA_DINAMICA),
 
     /**
      * Riserva di energia mistica e potenza magica accumulata.
@@ -244,12 +247,12 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Può essere usata come scudo energetico (meccanica *Mana Shield*) per assorbire i danni
      * subiti convertendoli in perdita di mana anziché di salute.</p>
      */
-    MAGIA(SupertipoAttributo.RISORSA_DINAMICA, "Magia", "Riserva di mana ed energia magica canalizzabile"),
+    MAGIA(SupertipoAttributo.RISORSA_DINAMICA),
 
     /**
      * Riserva di energia mistica e potenza magica accumulata (massimo livello).
      */
-    MAGIA_MASSIMA(SupertipoAttributo.RISORSA_DINAMICA, "Magia massima", "Riserva di mana ed energia magica canalizzabile (massimo livello)"),
+    MAGIA_MASSIMA(SupertipoAttributo.RISORSA_DINAMICA),
 
     /**
      * Livello di affaticamento fisico e mentale accumulato durante l'azione.
@@ -258,21 +261,17 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Penalizza pesantemente il valore di Schivata e aumenta il tempo di recupero dagli stati di
      * stordimento o atterramento (il personaggio si rialza più lentamente).</p>
      */
-    STANCHEZZA(SupertipoAttributo.RISORSA_DINAMICA, "Stanchezza", "Livello di affaticamento che penalizza le prestazioni fisiche"),
+    STANCHEZZA(SupertipoAttributo.RISORSA_DINAMICA),
 
     /**
      * Per i personaggi che rimangono nel gruppo un determinato periodo di tempo e poi lo lasciano.
      */
-    TEMPO(SupertipoAttributo.RISORSA_DINAMICA, "Tempo", "Tempo rimanente nel gruppo");
+    TEMPO(SupertipoAttributo.RISORSA_DINAMICA);
 
     private final SupertipoAttributo supertipo;
-    private final String nome;
-    private final String descrizione;
 
-    TipoAttributo(SupertipoAttributo supertipo, String nome, String descrizione) {
+    TipoAttributo(SupertipoAttributo supertipo) {
         this.supertipo = supertipo;
-        this.nome = nome;
-        this.descrizione = descrizione;
     }
 
     public SupertipoAttributo getSupertipo() {
@@ -280,11 +279,11 @@ public enum TipoAttributo {
     }
 
     public String getNome() {
-        return nome;
+        return Testi.testoOCostante(this, "NOME");
     }
 
     public String getDescrizione() {
-        return descrizione;
+        return Testi.testoOCostante(this, "DESCRIZIONE");
     }
 
     public boolean isPrimario() {

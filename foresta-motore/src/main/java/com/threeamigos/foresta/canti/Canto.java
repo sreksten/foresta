@@ -2,6 +2,7 @@ package com.threeamigos.foresta.canti;
 
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoCanto;
 
 /**
  * Una capacità innata del Bardo e della Cantastorie: costa MAGIA, non consuma pergamene. Non è fra le

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.canti;
 
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoCanto;
 
 /**
  * Costruisce il canto di quel tipo, per il personaggio che lo canta

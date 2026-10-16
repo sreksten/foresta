@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.canti.TipoCanto;
+import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.Comando;
 import org.junit.jupiter.api.Test;
 

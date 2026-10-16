@@ -6,6 +6,7 @@ import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoCanto;
 
 /**
  * Il canto che rafforza il gruppo: tutti i personaggi vivi del gruppo diventano ISPIRATI, con coraggio e precisione

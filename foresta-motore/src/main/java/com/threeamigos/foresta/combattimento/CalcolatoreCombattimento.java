@@ -8,7 +8,7 @@ import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.GradoIncantamento;
+import com.threeamigos.foresta.tipi.GradoIncantamento;
 import com.threeamigos.foresta.personaggi.OmbraFiamma;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Logger;

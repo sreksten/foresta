@@ -7,57 +7,57 @@ package com.threeamigos.foresta.tipi;
  * <p>
  * Gli <b>ingredienti magici</b> (pergamena, gemma, monile, gingillo, sigillo) non si indossano: si fondono sugli
  * artefatti dall'incantatore.
+ * <p>
+ * I testi di ogni costante (DESCRIZIONE, UTILIZZO) non stanno qui ma nel file {@code tipo_artefatto_<lingua>.properties}, alla voce
+ * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
  *
  * @author Stefano Reksten
  */
 public enum TipoArtefatto {
 
-    SPADA(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.TAGLIENTE,"Spada", "impugna"),
-    MAZZA(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.CONTUNDENTE, "Mazza", "brandisce"),
-    ASCIA(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.TAGLIENTE, "Ascia", "impugna"),
+    SPADA(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.TAGLIENTE),
+    MAZZA(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.CONTUNDENTE),
+    ASCIA(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.TAGLIENTE),
     /** Arma a due mani. */
-    SPADONE(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ENTRAMBE_LE_MANI, TipoDanno.TAGLIENTE, "Spadone", "impugna"),
-    LANCIA(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.PERFORANTE, "Lancia", "impugna"),
+    SPADONE(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ENTRAMBE_LE_MANI, TipoDanno.TAGLIENTE),
+    LANCIA(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.PERFORANTE),
 
-    BASTONE_MAGICO(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.CONTUNDENTE, "Bastone magico", "impugna"),
+    BASTONE_MAGICO(SupertipoArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.CONTUNDENTE),
 
-    LIBRO_MAGICO(SupertipoArtefatto.POTENZIAMENTO_POTERE_MAGICO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_SECONDARIA, "Libro magico", "porta"),
+    LIBRO_MAGICO(SupertipoArtefatto.POTENZIAMENTO_POTERE_MAGICO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_SECONDARIA),
 
-    SCUDO(SupertipoArtefatto.SCUDO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_SECONDARIA, "Scudo", "porta"),
+    SCUDO(SupertipoArtefatto.SCUDO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_SECONDARIA),
 
-    ELMO(SupertipoArtefatto.ELMO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.TESTA, "Elmo", "indossa"),
+    ELMO(SupertipoArtefatto.ELMO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.TESTA),
 
-    ARMATURA(SupertipoArtefatto.ARMATURA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.CORPO, "Armatura", "indossa"),
-    VESTE(SupertipoArtefatto.ARMATURA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.CORPO, "Veste", "indossa"),
-    MASCHERA(SupertipoArtefatto.ARMATURA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.VOLTO, "Maschera", "indossa"),
+    ARMATURA(SupertipoArtefatto.ARMATURA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.CORPO),
+    VESTE(SupertipoArtefatto.ARMATURA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.CORPO),
+    MASCHERA(SupertipoArtefatto.ARMATURA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.VOLTO),
 
-    SCHINIERI(SupertipoArtefatto.SCHINIERI, TipoCardinalitaArtefatto.PAIO, TipoSlotArtefatto.GAMBE, "Schinieri", "indossa"),
+    SCHINIERI(SupertipoArtefatto.SCHINIERI, TipoCardinalitaArtefatto.PAIO, TipoSlotArtefatto.GAMBE),
 
-    ANELLO(SupertipoArtefatto.ALTRO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ACCESSORIO, "Anello", "indossa"),
-    TALISMANO(SupertipoArtefatto.ALTRO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ACCESSORIO, "Talismano", "possiede"),
-    NINNOLO(SupertipoArtefatto.ALTRO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ACCESSORIO, "Ninnolo", "ha con se"),
+    ANELLO(SupertipoArtefatto.ALTRO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ACCESSORIO),
+    TALISMANO(SupertipoArtefatto.ALTRO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ACCESSORIO),
+    NINNOLO(SupertipoArtefatto.ALTRO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ACCESSORIO),
 
     // Ingredienti magici: si comprano dal venditore di pergamene e si fondono sugli artefatti dall'incantatore.
     // Ognuno ha la sua specialità (vedi GeneratoreArtefattiTabelle e ingredienti.txt).
-    PERGAMENA(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Pergamena", "porta con se"),
-    GEMMA(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Gemma", "porta con se"),
-    MONILE(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Monile", "porta con se"),
-    GINGILLO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Gingillo", "porta con se"),
-    SIGILLO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Sigillo", "porta con se"),
+    PERGAMENA(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO),
+    GEMMA(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO),
+    MONILE(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO),
+    GINGILLO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO),
+    SIGILLO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO),
 
     // Un oggetto che sul banco dell'incantatore fa salire di un livello un artefatto, invece di dargli degli effetti: si trova
     // solo nei cofani, non si compra né si vende (vedi isAggiornamento, RegoleIncantatura e artefatti2.txt per i nomi).
-    AGGIORNAMENTO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Aggiornamento", "porta con se");
+    AGGIORNAMENTO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO);
 
     private final SupertipoArtefatto supertipo;
     private final TipoCardinalitaArtefatto cardinalita;
     private final TipoSlotArtefatto tipoSlotArtefatto;
     private final TipoDanno tipoDanno;
-    private final String descrizione;
-    private final String utilizzo;
 
-    TipoArtefatto(SupertipoArtefatto supertipo, TipoCardinalitaArtefatto cardinalita, TipoSlotArtefatto tipoSlotArtefatto, TipoDanno tipoDanno,
-                  String descrizione, String utilizzo) {
+    TipoArtefatto(SupertipoArtefatto supertipo, TipoCardinalitaArtefatto cardinalita, TipoSlotArtefatto tipoSlotArtefatto, TipoDanno tipoDanno) {
         if (supertipo != SupertipoArtefatto.ARMA) {
             throw new IllegalArgumentException("Il Supertipo per l'artefatto deve essere ARMA");
         }
@@ -65,12 +65,9 @@ public enum TipoArtefatto {
         this.cardinalita = cardinalita;
         this.tipoSlotArtefatto = tipoSlotArtefatto;
         this.tipoDanno = tipoDanno;
-        this.descrizione = descrizione;
-        this.utilizzo = utilizzo;
     }
 
-    TipoArtefatto(SupertipoArtefatto supertipo, TipoCardinalitaArtefatto cardinalita, TipoSlotArtefatto tipoSlotArtefatto,
-                  String descrizione, String utilizzo) {
+    TipoArtefatto(SupertipoArtefatto supertipo, TipoCardinalitaArtefatto cardinalita, TipoSlotArtefatto tipoSlotArtefatto) {
         if (supertipo == SupertipoArtefatto.ARMA) {
             throw new IllegalArgumentException("Se il Supertipo per l'artefatto è ARMA occorre passare anche il TipoDanno");
         }
@@ -78,8 +75,6 @@ public enum TipoArtefatto {
         this.cardinalita = cardinalita;
         this.tipoSlotArtefatto = tipoSlotArtefatto;
         this.tipoDanno = null;
-        this.descrizione = descrizione;
-        this.utilizzo = utilizzo;
     }
 
     /**
@@ -114,11 +109,11 @@ public enum TipoArtefatto {
     }
 
     public String getDescrizione() {
-        return descrizione;
+        return Testi.testoOCostante(this, "DESCRIZIONE");
     }
 
     public String getUtilizzo() {
-        return utilizzo;
+        return Testi.testoOCostante(this, "UTILIZZO");
     }
 
 }

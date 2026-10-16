@@ -8,11 +8,11 @@ Qui c'è soltanto quello che resta da fare. Quello che è già stato sistemato n
 
 ### Testi italiani nel codice
 
-Il gioco è scritto in italiano. Tre gruppi di testi sono già in un file per lingua, letti da `Testi` (con ripiego sull'italiano): le note dei moltiplicatori di classe (`note_personaggi_it.properties`, via `NoteDeiPersonaggi`), le descrizioni dei comandi (`comandi_it.properties`) e i motivi di rifiuto dell'equipaggiamento (`rifiuti_equipaggiamento_it.properties`). Restano nel codice:
+Il gioco è scritto in italiano. Sono già in un file per lingua, letti da `Testi` (con ripiego sull'italiano): le note dei moltiplicatori di classe, le descrizioni dei comandi, i motivi di rifiuto dell'equipaggiamento e i nomi e le descrizioni di tutte le enum di `foresta-tipi`. Restano nel codice:
 
-- i nomi e le descrizioni di `TipoAttributo` e degli altri enum;
 - `FUGA_IGNOMINIA_NOTA` in `Costanti`: finisce nel salvataggio come nota di un modificatore, quindi spostarla vuol dire anche decidere come si confronta e come si salva;
-- il resto dei testi del motore e delle schermate.
+- le enum fuori da `foresta-tipi` con testi da mostrare: `NegozioInScena` (singolare e plurale), e le frasi di `Mandante` (mescolate a identificativi: vanno separate) e, nello strumento di sviluppo, `DovePartono` e `ContestoLancio`; `Testi.testo(costante, voce)` funziona per qualunque enum, con il file accanto all'enum nel suo modulo;
+- il resto dei testi del motore e delle schermate (messaggi, fumetti, intermezzi, grammatiche `.txt`).
 
 Prima di spostarli va deciso se il gioco avrà una versione inglese (per gli store). Se non l'avrà, i testi possono restare dove sono.
 
