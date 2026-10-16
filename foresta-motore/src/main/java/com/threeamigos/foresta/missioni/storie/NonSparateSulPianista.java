@@ -62,7 +62,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	 * Il nome del bardo: quello del bardo della locanda, che è lo stesso in tutto il mondo (vedi RegistroPersonaggi).
 	 */
 	public String getBardo() {
-		return parametro(BARDO, () -> RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome());
+		return parametro(BARDO, () -> RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE).getNome());
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 						.poi(ACCETTAZIONE);
 			case ACCETTAZIONE:
 				return prendiInScorta(MomentoControllo.IN_LOCAZIONE, this::nellaLocanda,
-								() -> RegistroPersonaggi.costruisciPersonaggio(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO),
+								() -> RegistroPersonaggi.costruisciPersonaggio(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE),
 										EquipaggiamentoIniziale.livelloCasualeDalMondo()), false)
 						.esegui(() -> {
 							aggiungiProprieta(CITTA, cittaPiuVicina().name());

@@ -72,7 +72,7 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 	}
 
 	private static String getBardo() {
-		return RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome();
+		return RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE).getNome();
 	}
 
 	@Override

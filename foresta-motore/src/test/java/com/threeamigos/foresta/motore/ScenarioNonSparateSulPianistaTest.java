@@ -66,7 +66,7 @@ class ScenarioNonSparateSulPianistaTest {
             Personaggio ugolino = pianista.getScortato().orElseThrow(AssertionError::new);
             assertEquals(pianista.getBardo(), ugolino.getNome());
             assertEquals(TipoPersonaggio.BARDO_LOCANDA, ugolino.getClasse());
-            assertEquals(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome(), ugolino.getNome(), "è il bardo della locanda, con il suo nome");
+            assertEquals(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE).getNome(), ugolino.getNome(), "è il bardo della locanda, con il suo nome");
             assertFalse(partita.gruppo().isOspiteVulnerabile(ugolino), "è troppo ubriaco perché i mostri se ne curino");
 
             // La città è la più vicina alla locanda

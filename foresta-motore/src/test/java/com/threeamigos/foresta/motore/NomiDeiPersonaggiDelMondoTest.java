@@ -85,7 +85,7 @@ class NomiDeiPersonaggiDelMondoTest {
 
 	@Test
 	void ilBardoELaMoglieNonHannoProvenienza() {
-		ResidenteMD bardo = RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO);
+		ResidenteMD bardo = RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE);
 		ResidenteMD moglie = RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO);
 		assertNull(bardo.getProvenienza());
 		assertNull(moglie.getProvenienza());
@@ -106,7 +106,7 @@ class NomiDeiPersonaggiDelMondoTest {
 				}
 			}
 		}
-		nomi.add(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome());
+		nomi.add(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE).getNome());
 		nomi.add(RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome());
 		assertEquals(quanti + 2, nomi.size(), "i nomi del mondo dovrebbero essere tutti diversi: " + nomi);
 	}
@@ -133,7 +133,7 @@ class NomiDeiPersonaggiDelMondoTest {
 				}
 			}
 		}
-		residenti.add(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO));
+		residenti.add(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE));
 		residenti.add(RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO));
 		for (ResidenteMD residente : residenti) {
 			String nomeDiBattesimo = residente.getNome().replaceFirst("^Mastro ", "").split(" ")[0];
@@ -156,7 +156,7 @@ class NomiDeiPersonaggiDelMondoTest {
 					}
 				}
 			}
-			nomi.add(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome());
+			nomi.add(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE).getNome());
 			nomi.add(RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome());
 			assertEquals(quanti + 2, nomi.size(), "seme " + seme + ": " + nomi);
 		}
@@ -164,13 +164,13 @@ class NomiDeiPersonaggiDelMondoTest {
 
 	@Test
 	void ilBardoDellaMissioneEQuelloDellaLocanda() {
-		String nome = RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome();
+		String nome = RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE).getNome();
 		assertEquals(nome, new NonSparateSulPianista().getBardo());
 	}
 
 	@Test
 	void ilPersonaggioCostruitoHaIlNomeDelResidente() {
-		ResidenteMD bardo = RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO);
+		ResidenteMD bardo = RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE);
 		Personaggio personaggio = RegistroPersonaggi.costruisciPersonaggio(bardo);
 		assertEquals(TipoPersonaggio.BARDO_LOCANDA, personaggio.getClasse());
 		assertEquals(bardo.getNome(), personaggio.getNomeProprio().orElse(null));
@@ -231,7 +231,7 @@ class NomiDeiPersonaggiDelMondoTest {
 	@Test
 	void iNomiSopravvivonoAlSalvataggioEAllaRilettura() throws IOException {
 		List<String> prima = nomiCompletiDeiResidenti();
-		String bardoPrima = RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome();
+		String bardoPrima = RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE).getNome();
 		int quanti = ModelloDati.getIstanza().getRegistroPersonaggiMD().getResidenti().size();
 
 		StringWriter scritto = new StringWriter();
@@ -248,7 +248,7 @@ class NomiDeiPersonaggiDelMondoTest {
 		assertEquals(quanti, riletto.getRegistroPersonaggiMD().getResidenti().size());
 		assertEquals(prima, nomiCompletiDeiResidenti());
 		assertEquals(quanti, riletto.getRegistroPersonaggiMD().getResidenti().size(), "nessun residente è stato ripescato");
-		assertEquals(bardoPrima, RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome());
+		assertEquals(bardoPrima, RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE).getNome());
 		assertEquals(bardoPrima, new NonSparateSulPianista().getBardo());
 	}
 
@@ -261,7 +261,7 @@ class NomiDeiPersonaggiDelMondoTest {
 				}
 			}
 		}
-		nomi.add(RegistroPersonaggi.getNomeCompleto(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO)));
+		nomi.add(RegistroPersonaggi.getNomeCompleto(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE)));
 		nomi.add(RegistroPersonaggi.getNomeCompleto(RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO)));
 		return nomi;
 	}

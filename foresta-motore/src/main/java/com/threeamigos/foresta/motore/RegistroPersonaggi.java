@@ -139,7 +139,7 @@ public class RegistroPersonaggi {
 	 * Alla creazione del mondo: il bardo della locanda, che viaggia di locanda in locanda ma è sempre lui, e sua moglie.
 	 */
 	static void creaIlBardoESuaMoglie() {
-		getResidente(PersonaggioNoto.BARDO);
+		getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE);
 		getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO);
 	}
 
