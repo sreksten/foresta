@@ -20,7 +20,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 
 | Argomento | Codice | Documento |
 | :--- | :--- | :--- |
-| Avvio, macchina a stati, ciclo di una locazione | `Main`, `…/motore/Automa` (implementa `…/interfacce/ControlloreDiGioco`), `…/motore/Stato` | `motore_di_gioco.md` §2–3 |
+| Avvio, macchina a stati, ciclo di una locazione, ciclo di vita dell'app (background, ripresa) | `Main`, `…/motore/Automa` (implementa `…/interfacce/ControlloreDiGioco`), `…/motore/Stato`, `…/motore/StatoDelMotore` | `motore_di_gioco.md` §2–3 |
 | Bus eventi | `…/eventi` (`notifiche`, `richieste`, `interni`, `comandigiocatore`) | `motore_di_gioco.md` §4 |
 | Salvataggi e modello dati | `…/modellodati`, `…/interfacce/GestoreSalvataggi`, `…/salvataggi/GestoreSalvataggiSuFile`, `…/motore/RiletturaPartita` | `motore_di_gioco.md` §5 |
 | Mappa, tempo, locazioni | `…/motore/Foresta`, `LineaTemporale`, `…/locazioni` | `motore_di_gioco.md` §6 |
@@ -29,6 +29,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | Modificatori di attributo a tempo, armi che li mettono sul bersaglio | `…/modellodati/ModificatoreAttributoMD`, `…/oggetti/ModificatoreDelTesto`, `PersonaggioBase`, `CalcolatoreCombattimento` | `modificatori_temporanei.md` |
 | Canti del Bardo (curativo, ipnotico, di valore), effetto di stato `ISPIRATO` | `…/canti/Canto*`, `TipoCanto`, `FabbricaCanti`, `…/locazioni/LocazioneBase` (`cantaUnCanto`), `…/motore/Automa` | `bardo.md` |
 | Tattiche di combattimento (rose di candidati, contesto, valutatore, tattiche base dei mostri `TatticheBase`) | `…/tattiche` (logica; sottopacchetti `rose` e `valutazione`), `…/modellodati/tattiche` (dati, suffisso `MD`), `…/tipi/tattiche` | `tattiche_di_combattimento_automatiche.md` §11, `tattiche_internals.md` (il codice) |
+| Testi che dipendono dalla lingua (in italiano in file `.properties`, uno per argomento; ogni altra lingua è un file accanto con `_<lingua>`): note dei moltiplicatori di classe (`note_personaggi_it`), descrizioni dei comandi (`comandi_it`), motivi di rifiuto dell'equipaggiamento (`rifiuti_equipaggiamento_it`) | `…/tipi/Testi` (caricatore per lingua), `…/tipi/NoteDeiPersonaggi` (mappa tipo di personaggio, attributo → nota), `Comando.getDescrizione`, `TipoMotivoRifiutoEquipaggiamento`; risorse in `foresta-tipi/src/main/resources/com/threeamigos/foresta/tipi/` | `assessment_portabilita.md` |
 | Personaggi e gruppi | `…/personaggi`, `…/motore/Gruppo*`, `GestoreProgressione` | `motore_di_gioco.md` §8 |
 | Oggetti, artefatti, incantatore | `…/oggetti` (i leggendari e i loro set in `…/oggetti/leggendari`: `OggettoLeggendario`, `SetLeggendario`, `CatalogoLeggendari`, `RegoleSetLeggendari`), `…/motore/Automa{Inventario,AcquistiArtefatti,Incantatore,ScambiatoreArtefatti}`, `Regole*` | `artefatti_e_incantamenti.md` |
 | Negozi ed economia | `…/offerte`, `…/motore/RegoleContrattazione`, `OfferteAlchimista` | `economia.md` |
@@ -68,12 +69,14 @@ Panoramica in `motore_grafico.md`.
 - I documenti finiscono con "Osservazioni" e, dove serve, "Da fare / idee aperte".
 - `risorse_e_documenti_vari/` è la cartella di scratch: file non usati dal gioco ed esperimenti.
 - I salvataggi non devono restare compatibili con le versioni precedenti.
+- Il motore e i moduli sotto di lui non chiudono mai il processo (`System.exit`): per uscire pubblicano `NotificaUscitaDalGioco`, e `Main` (o la piattaforma) decide come. Lo controlla `ConvenzioniDiPortabilitaTest`.
+- Un testo costruito per il log (concatenazione, `String.format`) si passa a `Logger.log` come fornitore, `Logger.log(() -> "Colpo a " + nome)`, così non si costruisce se il registro è spento; se una variabile cambia dopo la dichiarazione, si usa `if (Logger.isAttivo()) { ... }`. Lo controlla `ConvenzioniDiPortabilitaTest`.
 - `tipiDanno.md` e `tipiPersonaggio.md` sono appunti generici sul genere fantasy, non descrivono il codice.
 
 ## Build e test
 
-`mvn test` dalla radice esegue i test di tutti i moduli (JUnit 5, in `src/test/java` di ciascuno); al 2026-10-16 sono 1290, tutti verdi (16 saltati).
+`mvn test` dalla radice esegue i test di tutti i moduli (JUnit 5, in `src/test/java` di ciascuno); al 2026-10-16 sono 1342, tutti verdi (16 saltati).
 I test stanno nel modulo più basso che vede tutto quello che usano; i test di motore e UI insieme sono in `foresta-app`, che usa gli helper dei test del motore (`PartitaDiTest` e simili) tramite il suo `test-jar`.
-Le dipendenze fra moduli le controlla il compilatore. Il compilatore non vede invece che nessuno fuori da `foresta-swing` usi `java.awt`, `javax.swing`, `javax.imageio` o `javax.sound` (fanno parte del JDK): lo controlla `ui/DipendenzeDalToolkitGraficoTest` in `foresta-app`, che legge i sorgenti (con `SorgentiDelProgetto`). Il thread principale si raggiunge da `strumenti/ThreadPrincipale` (Swing lo installa con `ui/EsecutoreSwing` in `Main`).
+Le dipendenze fra moduli le controlla il compilatore. Il compilatore non vede invece che nessuno fuori da `foresta-swing` usi `java.awt`, `javax.swing`, `javax.imageio` o `javax.sound` (fanno parte del JDK): lo controlla `ui/DipendenzeDalToolkitGraficoTest` in `foresta-app`, che legge i sorgenti (con `SorgentiDelProgetto`). Allo stesso modo `ConvenzioniDiPortabilitaTest` vieta le chiamate che dipendono dalla lingua del dispositivo senza `Locale` (`String.format`, `toLowerCase()`, `toUpperCase()`, `SimpleDateFormat`): si passa sempre `Locale.ROOT`. Il thread principale si raggiunge da `strumenti/ThreadPrincipale` (Swing lo installa con `ui/EsecutoreSwing` in `Main`).
 `mvn package` scrive nella radice il jar eseguibile con le dipendenze, `foresta-0.0.1-SNAPSHOT-jar-with-dependencies.jar`.
 Le cose da fare generali sono in `todo.md`; i `TODO`/`FIXME` puntuali restano nel codice.

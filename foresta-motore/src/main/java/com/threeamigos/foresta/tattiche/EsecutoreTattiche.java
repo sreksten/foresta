@@ -183,7 +183,9 @@ public final class EsecutoreTattiche {
 		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(attore, bersaglio));
 		annuncia(attore, bersaglio);
 
-		Logger.log(attore.getNome() + " attacca " + bersaglio.getNome());
+		if (Logger.isAttivo()) {
+			Logger.log(attore.getNome() + " attacca " + bersaglio.getNome());
+		}
 
 		// Una fase per ogni arma impugnata (principale e secondaria); il fattore ne riduce il danno. Il tiro per colpire si fa fase per fase
 		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(attore, bersaglio)) {

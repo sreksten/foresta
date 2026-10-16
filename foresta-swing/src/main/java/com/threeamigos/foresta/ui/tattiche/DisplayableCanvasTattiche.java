@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
+import java.util.Locale;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
@@ -747,7 +748,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		} else {
 			// Una sola scelta possibile: non è un menu, ma dice perché
 			riga.pezzi.add(new Token(voce.rosa.getDescrizione(), null, DoomdarkColorModel.Color.LIGHT_GRAY, null,
-					"Le azioni della voce agiscono solo su: " + voce.rosa.getDescrizione().toLowerCase() + ". Per cambiare, cambia le azioni.", false, true));
+					"Le azioni della voce agiscono solo su: " + voce.rosa.getDescrizione().toLowerCase(Locale.ROOT) + ". Per cambiare, cambia le azioni.", false, true));
 		}
 		if (haOrdinamento(voce)) {
 			riga.pezzi.add(testo(":"));

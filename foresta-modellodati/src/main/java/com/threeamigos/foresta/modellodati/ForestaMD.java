@@ -52,6 +52,8 @@ public class ForestaMD implements Serializzabile {
 	// una partita nuova o caricata potrebbe avere la stessa versione di quella
 	// disegnata per ultima (morendo nella prima locazione, per esempio) e la mappa
 	// a video resterebbe quella vecchia.
+	// Non è un dato della partita (non si salva): sta qui, e non in chi disegna, perché solo questa classe sa quando la
+	// mappa cambia (lo incrementa nei suoi tre metodi che la modificano).
 	private static final AtomicInteger ULTIMA_VERSIONE_MAPPA = new AtomicInteger();
 	private int versioneMappa;
 

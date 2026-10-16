@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * La destinazione di log del desktop: scrive sulla console e, se si indica una cartella con
@@ -48,7 +49,8 @@ public final class DestinazioneConsoleEFile implements DestinazioneDiLog {
 		try {
 			File cartella = new File(cartellaDiLog);
 			cartella.mkdirs();
-			String nomeFile = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date()) + ".log";
+			// Locale.ROOT: il nome del file non deve cambiare con la lingua del telefono (calendario e cifre di un'altra lingua)
+			String nomeFile = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.ROOT).format(new Date()) + ".log";
 			return new PrintWriter(new OutputStreamWriter(
 					new FileOutputStream(new File(cartella, nomeFile), true), StandardCharsets.UTF_8), true);
 		} catch (IOException e) {

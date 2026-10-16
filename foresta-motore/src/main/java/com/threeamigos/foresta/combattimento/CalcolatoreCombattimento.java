@@ -20,6 +20,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Locale;
 import com.threeamigos.foresta.oggetti.ArmaNaturale;
 import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
 import com.threeamigos.foresta.tipi.Costanti;
@@ -76,31 +77,41 @@ public class CalcolatoreCombattimento {
             // --- CALCOLO ASSE FISICO ---
             // Attaccante usa la coordinazione occhio-mano (Precisione + Destrezza)
             attaccoTotale = attaccante.getPrecisione() + attaccante.getDestrezza();
-            Logger.log(String.format("[FISICO] Attacco totale (PRECISIONE %d + DESTREZZA %d): %f",
-                    attaccante.getPrecisione(), attaccante.getDestrezza(), attaccoTotale));
+            if (Logger.isAttivo()) {
+            	Logger.log(String.format(Locale.ROOT, "[FISICO] Attacco totale (PRECISIONE %d + DESTREZZA %d): %f",
+	                    attaccante.getPrecisione(), attaccante.getDestrezza(), attaccoTotale));
+            }
 
             // Il difensore contrasta fisicamente (Velocità + Destrezza) modificata dalla PARATA
             difesaTotale = difensore.getVelocita() + difensore.getDestrezza() + (difensore.getParata() * 0.5d);
-            Logger.log(String.format("[FISICO] Difesa totale (VELOCITA %d + DESTREZZA %d + 50%% PARATA %d): %f",
-                    difensore.getVelocita(), difensore.getDestrezza(), difensore.getParata(), difesaTotale));
+            if (Logger.isAttivo()) {
+            	Logger.log(String.format(Locale.ROOT, "[FISICO] Difesa totale (VELOCITA %d + DESTREZZA %d + 50%% PARATA %d): %f",
+	                    difensore.getVelocita(), difensore.getDestrezza(), difensore.getParata(), difesaTotale));
+            }
 
         } else {
             // --- CALCOLO ASSE MAGICO/ELEMENTALE ---
             // Chi lancia magie si affida al controllo mentale e alla potenza magica (Intelligenza + Precisione)
             attaccoTotale = attaccante.getPrecisione() + attaccante.getIntelligenza();
-            Logger.log(String.format("[MAGICO] Attacco totale (PRECISIONE %d + INTELLIGENZA %d): %f",
-                    attaccante.getPrecisione(), attaccante.getIntelligenza(), attaccoTotale));
+            if (Logger.isAttivo()) {
+            	Logger.log(String.format(Locale.ROOT, "[MAGICO] Attacco totale (PRECISIONE %d + INTELLIGENZA %d): %f",
+	                    attaccante.getPrecisione(), attaccante.getIntelligenza(), attaccoTotale));
+            }
 
             // Chi subisce magie si affida al filtro difensivo mistico e alla stabilità mentale (Resistenza Magica + Saggezza)
             difesaTotale = difensore.getResistenzaMagica() + difensore.getSaggezza();
-            Logger.log(String.format("[MAGICO] Difesa totale (RESISTENZA_MAGICA %d + SAGGEZZA %d): %f",
-                    difensore.getResistenzaMagica(), difensore.getSaggezza(), difesaTotale));
+            if (Logger.isAttivo()) {
+            	Logger.log(String.format(Locale.ROOT, "[MAGICO] Difesa totale (RESISTENZA_MAGICA %d + SAGGEZZA %d): %f",
+	                    difensore.getResistenzaMagica(), difensore.getSaggezza(), difesaTotale));
+            }
         }
 
         // 3. CONTROLLO EFFETTI DI STATO SULL'ATTACCANTE (CONFUSO / ACCECATO / STANCHEZZA)
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)) {
             attaccoTotale = attaccoTotale * (8.0d + Math.min(2, attaccante.getSaggezza() / 20.0d)) / 10.0d;
-            Logger.log(String.format("Attacco dopo effetto CONFUSO (mitigato da SAGGEZZA %d): %f", attaccante.getSaggezza(), attaccoTotale));
+            if (Logger.isAttivo()) {
+            	Logger.log(String.format(Locale.ROOT, "Attacco dopo effetto CONFUSO (mitigato da SAGGEZZA %d): %f", attaccante.getSaggezza(), attaccoTotale));
+            }
         }
 
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.ACCECATO)) {
@@ -113,12 +124,16 @@ public class CalcolatoreCombattimento {
                 double penalitaAccecatoMagico = (attaccoTotale / 4.0d) * (1.0d - Math.min(1.0d, attaccante.getPercezione() / 100.0d));
                 attaccoTotale -= penalitaAccecatoMagico;
             }
-            Logger.log(String.format("Attacco dopo effetto ACCECATO (mitigato da PERCEZIONE %d): %f", attaccante.getPercezione(), attaccoTotale));
+            if (Logger.isAttivo()) {
+            	Logger.log(String.format(Locale.ROOT, "Attacco dopo effetto ACCECATO (mitigato da PERCEZIONE %d): %f", attaccante.getPercezione(), attaccoTotale));
+            }
         }
 
         // Penalità di STANCHEZZA sull'attaccante
         attaccoTotale -= attaccante.getStanchezza() * 2.0d;
-        Logger.log(String.format("Attacco totale dopo stanchezza (STANCHEZZA %d): %f", attaccante.getStanchezza(), attaccoTotale));
+        if (Logger.isAttivo()) {
+        	Logger.log(String.format(Locale.ROOT, "Attacco totale dopo stanchezza (STANCHEZZA %d): %f", attaccante.getStanchezza(), attaccoTotale));
+        }
 
 
         // 4. APPLICAZIONE DEI MODIFICATORI DI STATO AL DIFENSORE
@@ -129,7 +144,9 @@ public class CalcolatoreCombattimento {
                 // Rallentato influisce pochissimo sulla barriera mistica passiva (Resistenza Magica)
                 difesaTotale = difesaTotale * 0.9d;
             }
-            Logger.log("Difesa totale dopo effetto RALLENTATO: " + difesaTotale);
+            if (Logger.isAttivo()) {
+            	Logger.log("Difesa totale dopo effetto RALLENTATO: " + difesaTotale);
+            }
         }
 
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO)) {
@@ -139,16 +156,22 @@ public class CalcolatoreCombattimento {
             double mitigazioneSpavento = (Math.min(1.0d, difensore.getSaggezza() / 40.0d)
                     + Math.min(1.0d, difensore.getCoraggio() * 10.0d / 40.0d)) / 2.0d;
             difesaTotale = difesaTotale * (0.8d + 0.1d * mitigazioneSpavento);
-            Logger.log(String.format("Difesa totale dopo effetto SPAVENTATO (mitigato da SAGGEZZA %d e CORAGGIO %d): %f", difensore.getSaggezza(), difensore.getCoraggio(), difesaTotale));
+            if (Logger.isAttivo()) {
+            	Logger.log(String.format(Locale.ROOT, "Difesa totale dopo effetto SPAVENTATO (mitigato da SAGGEZZA %d e CORAGGIO %d): %f", difensore.getSaggezza(), difensore.getCoraggio(), difesaTotale));
+            }
         }
 
         // Penalità di STANCHEZZA sul difensore (La fatica logora sia i riflessi fisici che la concentrazione magica)
         difesaTotale -= difensore.getStanchezza() * 2.0d;
-        Logger.log(String.format("Difesa totale dopo stanchezza (STANCHEZZA %d): %f", difensore.getStanchezza(), difesaTotale));
+        if (Logger.isAttivo()) {
+        	Logger.log(String.format(Locale.ROOT, "Difesa totale dopo stanchezza (STANCHEZZA %d): %f", difensore.getStanchezza(), difesaTotale));
+        }
 
         // 5. CALCOLO DELLA PROBABILITÀ FINALE DI COLPIRE
         int probabilitaFinale = 75 + (int) ((attaccoTotale - difesaTotale) * 2.0d);
-        Logger.log("Probabilità finale di colpire: " + probabilitaFinale);
+        if (Logger.isAttivo()) {
+        	Logger.log("Probabilità finale di colpire: " + probabilitaFinale);
+        }
 
         // Limiti minimi e massimi (Cap) per il bilanciamento
         if (probabilitaFinale < 5) {
@@ -156,7 +179,9 @@ public class CalcolatoreCombattimento {
         } else if (probabilitaFinale > 95) {
             probabilitaFinale = 95;
         }
-        Logger.log("Probabilità finale di colpire dopo applicazione dei limiti: " + probabilitaFinale);
+        if (Logger.isAttivo()) {
+        	Logger.log("Probabilità finale di colpire dopo applicazione dei limiti: " + probabilitaFinale);
+        }
         return probabilitaFinale;
     }
 
@@ -169,7 +194,7 @@ public class CalcolatoreCombattimento {
 
         // 6. TIRO DEL DADO (Generazione numero casuale da 1 a 100)
         int tiroDado = Dado.tira(100);
-        Logger.log("Risultato sul COLPIRE (tiro del dado = " + tiroDado + "): " + (tiroDado <= probabilitaFinale));
+        Logger.log(() -> "Risultato sul COLPIRE (tiro del dado = " + tiroDado + "): " + (tiroDado <= probabilitaFinale));
 
         return tiroDado <= probabilitaFinale;
     }
@@ -187,11 +212,11 @@ public class CalcolatoreCombattimento {
     private static TipoEffettoDiStato effettoDiStatoCasuale(TipoDanno tipoDanno) {
         TipoEffettoDiStato[] effetti = tipoDanno.getEffetti();
         if (effetti.length == 0) {
-            Logger.log("effettoDiStatoCasuale(" + tipoDanno + "): nessun effetto collaterale");
+            Logger.log(() -> "effettoDiStatoCasuale(" + tipoDanno + "): nessun effetto collaterale");
             return null;
         }
         TipoEffettoDiStato tipoEffetto = effetti[Dado.tiraAncheAUnaFaccia(effetti.length) - 1];
-        Logger.log("effettoDiStatoCasuale(" + tipoDanno + "): effetto casuale: " + tipoEffetto);
+        Logger.log(() -> "effettoDiStatoCasuale(" + tipoDanno + "): effetto casuale: " + tipoEffetto);
         return tipoEffetto;
     }
 
@@ -287,23 +312,31 @@ public class CalcolatoreCombattimento {
         // Determina se l'attacco scala su FORZA (Fisico) o INTELLIGENZA (Magico/Elementale)
         int statOffensiva;
         boolean dannoNonFisico = tipoDanno.getSuperTipo() == SupertipoDanno.ELEMENTALE || tipoDanno.getSuperTipo() == SupertipoDanno.MAGICO;
-        Logger.log("tipoDanno = " + tipoDanno + ", dannoNonFisico = " + dannoNonFisico);
+        Logger.log(() -> "tipoDanno = " + tipoDanno + ", dannoNonFisico = " + dannoNonFisico);
         if (dannoNonFisico) {
             statOffensiva = attaccante.getIntelligenza();
-            Logger.log("statOffensiva (INTELLIGENZA) = " + statOffensiva);
+            if (Logger.isAttivo()) {
+            	Logger.log("statOffensiva (INTELLIGENZA) = " + statOffensiva);
+            }
             // La SAGGEZZA potenzia i danni SACRO
             if (tipoDanno == TipoDanno.SACRO) {
                 statOffensiva += attaccante.getSaggezza() / 2;
-                Logger.log(String.format("statOffensiva modificata da SACRO (%d) = %d", attaccante.getSaggezza(), statOffensiva));
+                if (Logger.isAttivo()) {
+                	Logger.log(String.format(Locale.ROOT, "statOffensiva modificata da SACRO (%d) = %d", attaccante.getSaggezza(), statOffensiva));
+                }
             }
         } else {
             statOffensiva = attaccante.getForza();
-            Logger.log("statOffensiva (FORZA) = " + statOffensiva);
+            if (Logger.isAttivo()) {
+            	Logger.log("statOffensiva (FORZA) = " + statOffensiva);
+            }
         }
 
         if (dannoNonFisico && attaccante.hasEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA)) {
             statOffensiva = (int) Math.round(statOffensiva * 0.8d);
-            Logger.log("statOffensiva penalizzata dal 20% da MENTE_FRATTURATA = " + statOffensiva);
+            if (Logger.isAttivo()) {
+            	Logger.log("statOffensiva penalizzata dal 20% da MENTE_FRATTURATA = " + statOffensiva);
+            }
         }
 
         // Determina la difesa del bersaglio (COSTITUZIONE + PARATA per Fisico, RESISTENZA_MAGICA per Magico/Elementale),
@@ -314,7 +347,9 @@ public class CalcolatoreCombattimento {
 
         if (dannoNonFisico && difensore.hasEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA)) {
             statDifensiva = statDifensiva * 0.8d;
-            Logger.log("statDifensiva penalizzata dal 20% da MENTE_FRATTURATA = " + statDifensiva);
+            if (Logger.isAttivo()) {
+            	Logger.log("statDifensiva penalizzata dal 20% da MENTE_FRATTURATA = " + statDifensiva);
+            }
         }
 
         // 2. MATEMATICA DI BASE DEL DANNO (Con fattore di scala livello arma, che pesa con la sua radice quadrata)
@@ -324,7 +359,9 @@ public class CalcolatoreCombattimento {
             dannoBaseArma = (int) Math.round(dannoBaseArma * Costanti.INCANTESIMO_FATTORE_DANNI);
         }
 
-        Logger.log(String.format("dannoBaseArma = danniBase %d * livello arma %d = %d", arma.getDanni(), arma.getLivello(), dannoBaseArma));
+        if (Logger.isAttivo()) {
+        	Logger.log(String.format(Locale.ROOT, "dannoBaseArma = danniBase %d * livello arma %d = %d", arma.getDanni(), arma.getLivello(), dannoBaseArma));
+        }
 
         // Rapporto di Efficacia dell'Arma per evitare exploit di armi liv. 1 su campioni liv. 20: fino a
         // TOLLERANZA_LIVELLO_ARMA livelli sotto quello di chi la impugna l'arma rende ancora tutta la parte dell'eroe
@@ -332,19 +369,27 @@ public class CalcolatoreCombattimento {
         if (rapportoEfficacia > 1.0d) {
             rapportoEfficacia = 1.0d;
         }
-        Logger.log(String.format("rapportoEfficacia ((livello arma %d + %d) / livello attaccante %d) = %f", arma.getLivello(),
-                Costanti.TOLLERANZA_LIVELLO_ARMA, attaccante.getLivello(), rapportoEfficacia));
+        if (Logger.isAttivo()) {
+        	Logger.log(String.format(Locale.ROOT, "rapportoEfficacia ((livello arma %d + %d) / livello attaccante %d) = %f", arma.getLivello(),
+	                Costanti.TOLLERANZA_LIVELLO_ARMA, attaccante.getLivello(), rapportoEfficacia));
+        }
 
         double contributoEroe = statOffensiva * livelloDiCombattimento(attaccante.getLivello()) / 5.0d;
-        Logger.log(String.format("contributoEroe (statOffensiva %d * livello attaccante %d / 5 = %f", statOffensiva, attaccante.getLivello(), contributoEroe));
+        if (Logger.isAttivo()) {
+        	Logger.log(String.format(Locale.ROOT, "contributoEroe (statOffensiva %d * livello attaccante %d / 5 = %f", statOffensiva, attaccante.getLivello(), contributoEroe));
+        }
         // Il carattere della classe: il guerriero picchia, il mago incanta (Costanti.*_MOLTIPLICATORE_DANNI_*)
         double moltiplicatoreClasse = dannoNonFisico ? attaccante.getMoltiplicatoreDanniMagici() : attaccante.getMoltiplicatoreDanniFisici();
         double dannoOffensivoGrezzo = (dannoBaseArma + Math.floor(contributoEroe * rapportoEfficacia)) * fattore * moltiplicatoreClasse;
-        Logger.log("dannoOffensivoGrezzo = " + dannoOffensivoGrezzo + " (fattore " + fattore + ", moltiplicatore di classe " + moltiplicatoreClasse + ")");
+        if (Logger.isAttivo()) {
+        	Logger.log("dannoOffensivoGrezzo = " + dannoOffensivoGrezzo + " (fattore " + fattore + ", moltiplicatore di classe " + moltiplicatoreClasse + ")");
+        }
         if (isIncantesimo(arma)) {
             // Bastoni e libri magici aumentano la potenza degli incantesimi (POTERE_MAGICO)
             dannoOffensivoGrezzo = attaccante.getModificaDanniMagia(dannoOffensivoGrezzo);
-            Logger.log("dannoOffensivoGrezzo dopo POTERE_MAGICO = " + dannoOffensivoGrezzo);
+            if (Logger.isAttivo()) {
+            	Logger.log("dannoOffensivoGrezzo dopo POTERE_MAGICO = " + dannoOffensivoGrezzo);
+            }
         }
 
         // 2.5 APPLICAZIONE DEL BONUS BERSERK (Esclusivo ai Guerrieri con FURIA)
@@ -354,7 +399,9 @@ public class CalcolatoreCombattimento {
             // Il danno fisico scala con la salute persa: più è ferito, più forte colpisce
             double percentualeSalutePerduta = 1.0d - ((double) attaccante.getSalute() / (double) attaccante.getSaluteMassima());
             dannoOffensivoGrezzo = dannoOffensivoGrezzo * (1.0d + percentualeSalutePerduta * 0.5d);
-            Logger.log("dannoOffensivoGrezzo dopo BERSERK = " + dannoOffensivoGrezzo);
+            if (Logger.isAttivo()) {
+            	Logger.log("dannoOffensivoGrezzo dopo BERSERK = " + dannoOffensivoGrezzo);
+            }
         }
 
         // 3. APPLICAZIONE INTERAZIONI ELEMENTALI E STATI DEL DIFENSORE
@@ -591,10 +638,12 @@ public class CalcolatoreCombattimento {
 
         // 4. MITIGAZIONE DELLA DIFESA DEL DIFENSORE (Formula Diminishing Returns)
         double fattoreMitigazione = 100.0d / (100.0d + statDifensiva);
-        Logger.log("fattoreMitigazione: " + fattoreMitigazione + ", moltiplicatoreDannoStato = " + moltiplicatoreDannoStato);
+        if (Logger.isAttivo()) {
+        	Logger.log("fattoreMitigazione: " + fattoreMitigazione + ", moltiplicatoreDannoStato = " + moltiplicatoreDannoStato);
+        }
         double dannoMitigato = immuneATipoDannoBase ? 0.0d :
                 Math.floor(dannoOffensivoGrezzo * fattoreMitigazione * moltiplicatoreDannoStato);
-        Logger.log("dannoMitigato: " + dannoMitigato);
+        Logger.log(() -> "dannoMitigato: " + dannoMitigato);
 
         // 4.2 --- COMPONENTE ELEMENTALE INCANTATA CUMULATIVA ---
         double dannoElementaleFinale = 0.0d;
@@ -607,7 +656,7 @@ public class CalcolatoreCombattimento {
                 double moltiplicatoreDannoSubito = difensore.getMoltiplicatoreDannoSubito(elementoMagico);
                 dannoRisultante.addReazioneDiClasse(elementoMagico, moltiplicatoreDannoSubito);
                 if (difensore.isImmuneATipoDanno(elementoMagico)) {
-                    Logger.log(String.format("[INCANTAMENTO] %s è immune a %s: incantamento senza effetto",
+                    Logger.log(() -> String.format(Locale.ROOT, "[INCANTAMENTO] %s è immune a %s: incantamento senza effetto",
                             difensore.getNome(), elementoMagico));
                     continue;
                 }
@@ -634,7 +683,9 @@ public class CalcolatoreCombattimento {
 
                 // SOMMA i danni invece di sovrascriverli
                 dannoElementaleFinale += dannoQuestoIncantamento;
-                Logger.log(String.format("[INCANTAMENTO] Danno bonus accumulato da %s: %.2f", elementoMagico, dannoQuestoIncantamento));
+                if (Logger.isAttivo()) {
+                	Logger.log(String.format(Locale.ROOT, "[INCANTAMENTO] Danno bonus accumulato da %s: %.2f", elementoMagico, dannoQuestoIncantamento));
+                }
             }
         }
 
@@ -647,7 +698,7 @@ public class CalcolatoreCombattimento {
                 double dannoLibro = dannoIncantamento(attaccante, difensore, bonusLibroMagico(libro.get(), tipoDanno),
                         libro.get().getLivello(), fattoreLibroMagico(attaccante), attaccante.getMoltiplicatoreDanniMagici());
                 dannoElementaleFinale += dannoLibro;
-                Logger.log(String.format("[LIBRO MAGICO] Danno bonus: %.2f", dannoLibro));
+                Logger.log(() -> String.format(Locale.ROOT, "[LIBRO MAGICO] Danno bonus: %.2f", dannoLibro));
             }
         }
 
@@ -662,14 +713,16 @@ public class CalcolatoreCombattimento {
         int contromisuraCritico = difensore.getFortuna();
 
         double probabilitaCritico = Math.max(0.0d, 5.0d + intuitoCritico - contromisuraCritico);
-        Logger.log(String.format("probabilitaCritico: %f = MAX(0, 5 + CRITICO attaccante %d - FORTUNA difensore %d)", probabilitaCritico, intuitoCritico, contromisuraCritico));
+        Logger.log(() -> String.format(Locale.ROOT, "probabilitaCritico: %f = MAX(0, 5 + CRITICO attaccante %d - FORTUNA difensore %d)", probabilitaCritico, intuitoCritico, contromisuraCritico));
 
         double tiroDadoCritico = Dado.tira(100);
-        Logger.log("tiroDadoCritico: " + tiroDadoCritico);
+        Logger.log(() -> "tiroDadoCritico: " + tiroDadoCritico);
         if (tiroDadoCritico <= probabilitaCritico || criticoAutomatico) {
             // Il colpo critico raddoppia il danno finale calcolato
             dannoTotaleCombinato = dannoTotaleCombinato * 2.0d;
-            Logger.log("dannoTotaleCombinato raddoppiato per CRITICO: " + dannoTotaleCombinato);
+            if (Logger.isAttivo()) {
+            	Logger.log("dannoTotaleCombinato raddoppiato per CRITICO: " + dannoTotaleCombinato);
+            }
         }
 
         // 6. APPLICAZIONE DEI NUOVI STATI NATIVI (Proc Rate)
@@ -684,7 +737,7 @@ public class CalcolatoreCombattimento {
                     if (effettoFisico != null) {
                         dannoRisultante.addEffettoDiStato(effettoFisico, calcolaDurataStato(difensore, effettoFisico),
                                 calcolaDannoPeriodico(attaccante, difensore, effettoFisico));
-                        Logger.log("Arma applica stato fisico: " + effettoFisico);
+                        Logger.log(() -> "Arma applica stato fisico: " + effettoFisico);
                     }
                 }
             }
@@ -715,7 +768,7 @@ public class CalcolatoreCombattimento {
                             if (effettoMagico != null) {
                                 dannoRisultante.addEffettoDiStato(effettoMagico, calcolaDurataStato(difensore, effettoMagico),
                                         calcolaDannoPeriodico(attaccante, difensore, effettoMagico));
-                                Logger.log("L'incantamento applica stato magico: " + effettoMagico.name());
+                                Logger.log(() -> "L'incantamento applica stato magico: " + effettoMagico.name());
                             }
                         }
                     }
@@ -734,7 +787,7 @@ public class CalcolatoreCombattimento {
                             : 100.0d;
                     if (Dado.tira(100) <= probModificatore * fattoreEffetti(difensore, tipoDanno)) {
                         dannoRisultante.addModificatoreDaAggiungere(modificatore.suPortatore());
-                        Logger.log("L'arma applica il modificatore: " + modificatore.getTipoAttributo() + " " + modificatore.getQuantita());
+                        Logger.log(() -> "L'arma applica il modificatore: " + modificatore.getTipoAttributo() + " " + modificatore.getQuantita());
                     }
                 }
             }
@@ -986,8 +1039,10 @@ public class CalcolatoreCombattimento {
             }
         }
         double difesa = (difesaBase + fisso) * (1.0d + percentuale);
-        Logger.log(String.format("difesa contro %s = (base %.0f + fisso %.0f) x (1 + %.3f) = %.2f",
-                tipoDanno, difesaBase, fisso, percentuale, difesa));
+        if (Logger.isAttivo()) {
+        	Logger.log(String.format(Locale.ROOT, "difesa contro %s = (base %.0f + fisso %.0f) x (1 + %.3f) = %.2f",
+	                tipoDanno, difesaBase, fisso, percentuale, difesa));
+        }
         return difesa;
     }
 
@@ -1152,30 +1207,34 @@ public class CalcolatoreCombattimento {
                 // Danno fisico: scala su FORZA dell'attaccante e ignora metà COSTITUZIONE
                 dannoGrezzo = (attaccante.getForza() * livelloAttaccante) / 10.0d;
                 difesaFiltro = difensore.getCostituzione() / 4.0d;
-                Logger.log(String.format("[DoT] Elaborazione SANGUINAMENTO su %s. Attacco: %.2f, Difesa Filtro: %.2f",
-                        difensore.getNome(), dannoGrezzo, difesaFiltro));
+                if (Logger.isAttivo()) {
+                	Logger.log(String.format(Locale.ROOT, "[DoT] Elaborazione SANGUINAMENTO su %s. Attacco: %.2f, Difesa Filtro: %.2f",
+	                        difensore.getNome(), dannoGrezzo, difesaFiltro));
+                }
                 break;
 
             case BRUCIATO:
                 // Danno elementale: scala su INTELLIGENZA dell'attaccante, contrasta RESISTENZA MAGICA
                 dannoGrezzo = (attaccante.getIntelligenza() * livelloAttaccante) / 10.0d;
                 difesaFiltro = difensore.getResistenzaMagica() / 2.0d;
-                Logger.log(String.format("[DoT] Elaborazione BRUCIATO su %s. Attacco: %.2f, Difesa Filtro: %.2f",
-                        difensore.getNome(), dannoGrezzo, difesaFiltro));
+                if (Logger.isAttivo()) {
+                	Logger.log(String.format(Locale.ROOT, "[DoT] Elaborazione BRUCIATO su %s. Attacco: %.2f, Difesa Filtro: %.2f",
+	                        difensore.getNome(), dannoGrezzo, difesaFiltro));
+                }
                 break;
 
             case AVVELENATO:
                 // Danno elementale: scala su INTELLIGENZA dell'attaccante, contrasta COSTITUZIONE
                 dannoGrezzo = (attaccante.getIntelligenza() * livelloAttaccante) / 10.0d;
                 difesaFiltro = difensore.getCostituzione() / 2.0d;
-                Logger.log(String.format("[DoT] Elaborazione AVVELENATO su %s.", difensore.getNome()));
+                Logger.log(() -> String.format(Locale.ROOT, "[DoT] Elaborazione AVVELENATO su %s.", difensore.getNome()));
                 break;
 
             case INFETTATO:
                 // Danno necrotico: scala su INTELLIGENZA, contrasta RESISTENZA MAGICA
                 dannoGrezzo = (attaccante.getIntelligenza() * livelloAttaccante) / 12.0d; // Leggermente più lento ma blocca le cure
                 difesaFiltro = difensore.getResistenzaMagica() / 2.0d;
-                Logger.log(String.format("[DoT] Elaborazione INFETTATO su %s.", difensore.getNome()));
+                Logger.log(() -> String.format(Locale.ROOT, "[DoT] Elaborazione INFETTATO su %s.", difensore.getNome()));
                 break;
 
             default:

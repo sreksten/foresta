@@ -20,7 +20,7 @@ class RegistroArtefattiMDTest {
         ArtefattoMD dallArmaiolo = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SCUDO, "lo scudo fiscale", "che si fa fare sconti");
         dallArmaiolo.addModificatore(TipoAttributo.PARATA, TipoModificatore.VARIAZIONE_PERCENTUALE, 10, "Parata");
         dallArmaiolo.addIncantamento("La battuta del cavolo", TipoDanno.GELO, 10, 0.5);
-        registro.getMagazzino(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO).add(dallArmaiolo);
+        registro.aggiungiAMagazzino(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO, dallArmaiolo);
         // When
         RegistroArtefattiMD ricaricato = salvaERileggi(registro);
         // Then
@@ -40,13 +40,13 @@ class RegistroArtefattiMDTest {
         // Given
         RegistroArtefattiMD registro = new RegistroArtefattiMD();
         CoordinateMD citta = new CoordinateMD(7, 1);
-        registro.getMagazzino(citta, TipoNegozio.ARMAIOLO)
-                .add(ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada d'argento", "che luccica"));
+        registro.aggiungiAMagazzino(citta, TipoNegozio.ARMAIOLO,
+                ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada d'argento", "che luccica"));
         ArtefattoMD pergamena = ArtefattoMDTest.creaArtefatto(TipoArtefatto.PERGAMENA, "una pergamena del fuoco", "che scotta");
         pergamena.addIncantamento("Fuoco minore", TipoDanno.FUOCO, 5, 0.05);
-        Collection<ArtefattoMD> venditore = registro.getMagazzino(citta, TipoNegozio.VENDITORE_DI_PERGAMENE);
-        venditore.add(pergamena);
-        venditore.add(ArtefattoMDTest.creaArtefatto(TipoArtefatto.PERGAMENA, "una pergamena del gelo", "che gela"));
+        registro.aggiungiAMagazzino(citta, TipoNegozio.VENDITORE_DI_PERGAMENE, pergamena);
+        registro.aggiungiAMagazzino(citta, TipoNegozio.VENDITORE_DI_PERGAMENE,
+                ArtefattoMDTest.creaArtefatto(TipoArtefatto.PERGAMENA, "una pergamena del gelo", "che gela"));
         // When
         RegistroArtefattiMD ricaricato = salvaERileggi(registro);
         // Then

@@ -176,9 +176,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	/**
 	 * @param esecutorePrecaricamento dove eseguire, durante il logo iniziale, il caricamento delle risorse del motore:
-	 *                                nel gioco un thread a parte, nei test lo stesso thread ({@code Runnable::run})
+	 *                                sul desktop un thread a parte, nei test lo stesso thread ({@code Runnable::run}); una
+	 *                                piattaforma con i suoi esecutori (Android, iOS) passa il suo
 	 */
-	Automa(Temporizzatore temporizzatore, GestoreSalvataggi gestoreSalvataggi, GestorePunteggi gestorePunteggi,
+	public Automa(Temporizzatore temporizzatore, GestoreSalvataggi gestoreSalvataggi, GestorePunteggi gestorePunteggi,
 		   Executor esecutorePrecaricamento) {
 		this(temporizzatore, gestoreSalvataggi, gestorePunteggi, esecutorePrecaricamento, System::nanoTime);
 	}
@@ -334,6 +335,53 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			GeneratoreArtefatti.precarica();
 			BusEventi.pubblica(new InternoPrecaricamentoMotoreCompletato());
 		});
+	}
+
+	@Override
+	public void inBackground() {
+		temporizzatore.sospendi();
+		if (isInUnPuntoSicuro()) {
+			if (!gestoreSalvataggi.salva(Comando.SALVATAGGIO_AUTOMATICO)) {
+				BusEventi.pubblica(new InternoMessaggio("Salvataggio automatico non riuscito"));
+			}
+		}
+	}
+
+	@Override
+	public void inPrimoPiano() {
+		temporizzatore.riprendi();
+	}
+
+	@Override
+	public boolean riprendiPartitaInterrotta() {
+		if (stato != Stato.INTRO) {
+			return false;
+		}
+		stato = Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE;
+		prosegui(gestisciComandoInStatoPreGameSelezionaSalvataggioDaLeggere(Comando.SALVATAGGIO_AUTOMATICO));
+		// Se la lettura non e' riuscita si e' tornati all'INTRO
+		return stato != Stato.INTRO;
+	}
+
+	/**
+	 * Fra una locazione e l'altra, dove anche il giocatore può salvare: o in attesa della direzione (e della scelta dei
+	 * passi), o in una schermata aperta da lì (mappa, inventario, trofei, tattiche). Altrove il modello dati è a metà di
+	 * una locazione, e un salvataggio riletto la ricomincerebbe da capo, con gli avversari persi.
+	 */
+	private boolean isInUnPuntoSicuro() {
+		switch (stato) {
+			case ATTESA_DIREZIONE:
+			case SCELTA_DIREZIONE:
+			case SCELTA_PASSI:
+				return true;
+			case MAPPA:
+			case INVENTARIO:
+			case TROFEI:
+			case TATTICHE:
+				return statoPrecedente == Stato.ATTESA_DIREZIONE;
+			default:
+				return false;
+		}
 	}
 
 	private static void precaricaInBackground(Runnable precaricamento) {
@@ -955,7 +1003,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito entraInStatoSceltaAutomaticaPersonaggio() {
 		Comando comandoRisolto = scegliPersonaggio(false);
 		if (comandoRisolto != null) {
-			Logger.log(Stato.SCELTA_AUTOMATICA_PERSONAGGIO.name() + ": Torno allo stato " + statoPrecedente.name());
+			Logger.log(() -> Stato.SCELTA_AUTOMATICA_PERSONAGGIO.name() + ": Torno allo stato " + statoPrecedente.name());
 			stato = statoPrecedente;
 			return Esito.continuaCon(comandoRisolto);
 		} else {
@@ -967,7 +1015,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito entraInStatoSceltaPersonaggioQualsiasi() {
 		Comando comandoRisolto = scegliPersonaggio(true);
 		if (comandoRisolto != null) {
-			Logger.log(Stato.SCELTA_PERSONAGGIO_QUALSIASI.name() + ": Torno allo stato " + statoPrecedente.name());
+			Logger.log(() -> Stato.SCELTA_PERSONAGGIO_QUALSIASI.name() + ": Torno allo stato " + statoPrecedente.name());
 			stato = statoPrecedente;
 			return Esito.continuaCon(comandoRisolto);
 		} else {
@@ -981,7 +1029,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito gestisciComandoInStatoSceltaManualePersonaggio(Comando comando) {
-		Logger.log(Stato.SCELTA_MANUALE_PERSONAGGIO.name() + ": Torno allo stato " + statoPrecedente.name());
+		Logger.log(() -> Stato.SCELTA_MANUALE_PERSONAGGIO.name() + ": Torno allo stato " + statoPrecedente.name());
 		stato = statoPrecedente;
 		return Esito.continuaCon(comando);
 	}
@@ -1435,7 +1483,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito gestisciComandoInStatoMappa(Comando comando) {
-		Logger.log("Stato MAPPA, azione " + comando);
+		Logger.log(() -> "Stato MAPPA, azione " + comando);
 		if (comando == Comando.SI) {
 			stato = statoPrecedente;
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
@@ -1452,7 +1500,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito gestisciComandoInStatoInventario(Comando comando) {
-		Logger.log("Stato INVENTARIO, azione " + comando);
+		Logger.log(() -> "Stato INVENTARIO, azione " + comando);
 		switch (comando) {
 			case ANNULLA:
 				stato = statoPrecedente;
@@ -1508,7 +1556,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito gestisciComandoInStatoTattiche(Comando comando) {
-		Logger.log("Stato TATTICHE, azione " + comando);
+		Logger.log(() -> "Stato TATTICHE, azione " + comando);
 		switch (comando) {
 			case ANNULLA:
 				stato = Stato.INVENTARIO;
@@ -1569,7 +1617,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private void onComandoImpostaTattica(ComandoImpostaTattica comando) {
 		if (comando.getTattica() == null || !comando.getTattica().problemi(true).isEmpty()) {
-			Logger.log("Tattica rifiutata: " + (comando.getTattica() == null ? "nulla" : comando.getTattica().problemi(true)));
+			Logger.log(() -> "Tattica rifiutata: " + (comando.getTattica() == null ? "nulla" : comando.getTattica().problemi(true)));
 			return;
 		}
 		personaggioPerLeTattiche(comando.getUuidPersonaggio()).ifPresent(p -> {
@@ -1616,7 +1664,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciComandoInStatoConfermaUscita(Comando comando) {
 		if (comando == Comando.SI) {
-			System.exit(0);
+			// Come si termina lo decide la piattaforma (vedi NotificaUscitaDalGioco): qui si resta in attesa
+			BusEventi.pubblica(new NotificaUscitaDalGioco(0, null));
 		} else if (comando == Comando.NO) {
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
 			stato = Stato.ATTESA_DIREZIONE;
@@ -1626,6 +1675,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito entraInStatoGiocoPerso() {
+		gestoreSalvataggi.elimina(Comando.SALVATAGGIO_AUTOMATICO);
 		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 		return Esito.FERMATI;
@@ -1656,6 +1706,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito entraInStatoGiocoVinto() {
+		gestoreSalvataggi.elimina(Comando.SALVATAGGIO_AUTOMATICO);
 		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 		return Esito.FERMATI;

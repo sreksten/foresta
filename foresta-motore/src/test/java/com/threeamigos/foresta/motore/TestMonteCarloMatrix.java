@@ -125,7 +125,7 @@ public class TestMonteCarloMatrix {
 
     @Test
     void unaClasseCheNonPuoPortareLEquipaggiamentoVieneRifiutata() {
-        // Il Guerriero non sa combattere con due armi
+        // Il Guerriero non combatte con due armi
         assertTrue(Equipaggiamento.DUE_SPADE.motivoRifiuto(TipoPersonaggio.GUERRIERO, LIVELLO).isPresent());
         assertThrows(IllegalArgumentException.class, () -> simulaConLoggerMuto(TipoPersonaggio.GUERRIERO,
                 Equipaggiamento.DUE_SPADE, TipoPersonaggio.GOBLIN, 1, LIVELLO, 1));

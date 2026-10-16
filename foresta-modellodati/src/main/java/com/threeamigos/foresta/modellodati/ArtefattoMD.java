@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.Locale;
 
 /**
  * I dati di un artefatto: un oggetto del gioco con un tipo (un'arma, un'armatura, una pergamena, un ingrediente...), una
@@ -130,7 +131,7 @@ public class ArtefattoMD implements Serializzabile {
 			if (sb.length() > 0) {
 				sb.append(' ');
 			}
-			sb.append(parola.substring(0, 1).toUpperCase()).append(parola.substring(1));
+			sb.append(parola.substring(0, 1).toUpperCase(Locale.ROOT)).append(parola.substring(1));
 		}
 		return sb.toString();
 	}

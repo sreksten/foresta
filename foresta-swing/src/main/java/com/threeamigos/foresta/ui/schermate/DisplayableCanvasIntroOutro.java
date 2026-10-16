@@ -154,7 +154,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 			disegnaOmbraDelDrago(graphics);
 		}
 		if (messaggio != null && !messaggio.isEmpty())
-			disegnaStringaCentrataConACapoAutomatico(graphics, messaggio.toLowerCase(), 20);
+			disegnaStringaCentrataConACapoAutomatico(graphics, messaggio.toLowerCase(Locale.ROOT), 20);
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	 */
 	void scriviTestoCentrato(Graphics2D graphics, String testo) {
 		if (testo != null && !testo.isEmpty()) {
-			disegnaStringaCentrataConACapoAutomatico(graphics, testo.toLowerCase(), 20);
+			disegnaStringaCentrataConACapoAutomatico(graphics, testo.toLowerCase(Locale.ROOT), 20);
 		}
 	}
 
@@ -236,7 +236,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
         Collection<? extends VistaPersonaggio> personaggi = testata.getGruppoGiocatore().getPersonaggi();
 		disegnaPersonaggi(graphics, id, personaggi, coordinataY);
 		BufferedImage immagineConAlone = TestoGrande.conAlone(
-				TestoGrande.immagine(id + " - " + descrizione.toLowerCase(), width - 2 * RAGGIO_ALONE, true), RAGGIO_ALONE);
+				TestoGrande.immagine(id + " - " + descrizione.toLowerCase(Locale.ROOT), width - 2 * RAGGIO_ALONE, true), RAGGIO_ALONE);
 		graphics.drawImage(immagineConAlone, 0, coordinataY - RAGGIO_ALONE, null);
 	}
 

@@ -32,7 +32,7 @@ public class BufferedImageBuilder {
 			BufferedImage immagine = provaACaricare(resource, zoom);
 			if (immagine == null) {
 				// Codice d'uscita diverso da 0, perché chi lancia il gioco da uno script veda l'errore
-				Logger.log("Risorsa grafica di base mancante o illeggibile: " + resource);
+				Logger.log(() -> "Risorsa grafica di base mancante o illeggibile: " + resource);
 				System.exit(1);
 			}
 			return immagine;
@@ -68,7 +68,7 @@ public class BufferedImageBuilder {
 					throw new IllegalArgumentException("Formato non riconosciuto per il file " + resource);
 				}
 				BufferedImage copy = ingrandisci(img, zoom);
-				Logger.log("Image resource: " + resource + ", " + copy.getWidth() + "x" + copy.getHeight());
+				Logger.log(() -> "Image resource: " + resource + ", " + copy.getWidth() + "x" + copy.getHeight());
 				return copy;
 			} catch (Exception e) {
 				Logger.log(e);

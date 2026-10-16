@@ -26,4 +26,18 @@ public interface Temporizzatore {
 	void iniziaDopo(int millisecondi);
 
 	void termina();
+
+	/**
+	 * Ferma gli impulsi senza dimenticare il ritmo: serve quando l'app passa in background, dove un impulso non deve
+	 * arrivare (un combattimento non avanza, un'animazione non scorre). Gli impulsi già accodati non arrivano. Si
+	 * riprende con {@link #riprendi()}; un {@link #inizia(int)} o {@link #iniziaDopo(int)} chiamato intanto vale, ma
+	 * parte solo alla ripresa.
+	 */
+	void sospendi();
+
+	/**
+	 * Fa ripartire gli impulsi fermati da {@link #sospendi()}, con lo stesso ritmo: il primo dopo un periodo intero.
+	 * Non fa niente se non c'era nulla da riprendere.
+	 */
+	void riprendi();
 }

@@ -16,11 +16,10 @@ import java.util.stream.Collectors;
  * <p>
  * Gli <b>attributi</b> (salute, forza, destrezza...) stanno in una mappa indicizzata da {@link TipoAttributo}, con un
  * valore minimo e uno massimo facoltativi per ciascuno: {@link #set(TipoAttributo, double)} li rispetta, quindi un
- * valore fuori dai limiti viene portato al limite. I metodi con il nome dell'attributo ({@code getForza},
- * {@code setSalute}...) sono scorciatoie su {@link #get}, {@link #set}, {@link #getMassimo} e
- * {@link #setMassimo}, e i loro valori letti sono troncati a numeri interi. Ne restano solo quelle che qualcuno usa
- * (i sei attributi primari e la fortuna per crearli, gli altri per i metodi di lettura di {@code PersonaggioBase}): per
- * il resto si passa da {@code get}/{@code set}/{@code getMassimo}/{@code setMassimo}, che prendono il {@link TipoAttributo}.
+ * valore fuori dai limiti viene portato al limite. Si leggono con {@link #get}, {@link #getOptional} e {@link #getMassimo}
+ * (un valore intero, se serve, lo tronca chi lo legge); si scrivono con {@link #set} e {@link #setMassimo}. Restano
+ * soltanto alcune scorciatoie di scrittura, {@code setForza}, {@code setSalute}..., perché le classi dei personaggi le
+ * chiamano nel costruttore per darsi i valori di partenza, e lì si leggono meglio di un {@code set(TipoAttributo.FORZA, ...)}.
  * <p>
  * Le regole del gioco (come cambiano gli attributi, come si combatte) stanno nel motore; qui ci sono solo i dati.
  */
@@ -77,6 +76,9 @@ public class PersonaggioMD implements Serializzabile {
 	 */
 	private TipoMotivoNelGruppo motivoNelGruppo = TipoMotivoNelGruppo.PERMANENTE;
 
+	// Le tre mappe degli attributi sono EnumMap e non HashMap: l'hash di una costante di enum cambia a ogni esecuzione,
+	// e con una HashMap lo stesso personaggio si scriverebbe nel salvataggio con gli attributi in un ordine diverso ogni
+	// volta. Con una EnumMap l'ordine è sempre quello dell'enum.
 	/**
 	 * Valori minimi per un dato attributo - solitamente non presenti
 	 */
@@ -92,16 +94,16 @@ public class PersonaggioMD implements Serializzabile {
 	/**
 	 * Modificatori permanenti agli attributi dei personaggi
 	 */
-	private Collection<ModificatoreAttributoMD> modificatori = new ArrayList<>();
+	private final Collection<ModificatoreAttributoMD> modificatori = new ArrayList<>();
 	private TatticaMD tattica;
 	/**
 	 * Effetti di stato applicati al personaggio
 	 */
-	private Collection<EffettoDiStatoMD> effettiDiStato = new ArrayList<>();
+	private final Collection<EffettoDiStatoMD> effettiDiStato = new ArrayList<>();
 	/**
 	 * Artefatti posseduti dal personaggio
 	 */
-	private Collection<ArtefattoMD> artefatti = new ArrayList<>();
+	private final Collection<ArtefattoMD> artefatti = new ArrayList<>();
 
 	/**
 	 * L'identificativo unico del personaggio, che il salvataggio conserva.
@@ -276,9 +278,6 @@ public class PersonaggioMD implements Serializzabile {
 		set(TipoAttributo.SALUTE, salute);
 	}
 
-	public int getSalute() {
-		return (int)get(TipoAttributo.SALUTE);
-	}
 
 
 
@@ -286,9 +285,6 @@ public class PersonaggioMD implements Serializzabile {
 		set(TipoAttributo.FORZA, forza);
 	}
 
-	public int getForza() {
-		return (int)get(TipoAttributo.FORZA);
-	}
 
 
 
@@ -296,9 +292,6 @@ public class PersonaggioMD implements Serializzabile {
 		set(TipoAttributo.DESTREZZA, destrezza);
 	}
 
-	public int getDestrezza() {
-		return (int)get(TipoAttributo.DESTREZZA);
-	}
 
 
 
@@ -306,9 +299,6 @@ public class PersonaggioMD implements Serializzabile {
 		set(TipoAttributo.COSTITUZIONE, costituzione);
 	}
 
-	public int getCostituzione() {
-		return (int)get(TipoAttributo.COSTITUZIONE);
-	}
 
 
 
@@ -316,9 +306,6 @@ public class PersonaggioMD implements Serializzabile {
 		set(TipoAttributo.INTELLIGENZA, intelligenza);
 	}
 
-	public int getIntelligenza() {
-		return (int)get(TipoAttributo.INTELLIGENZA);
-	}
 
 
 
@@ -326,9 +313,6 @@ public class PersonaggioMD implements Serializzabile {
 		set(TipoAttributo.SAGGEZZA, saggezza);
 	}
 
-	public int getSaggezza() {
-		return (int)get(TipoAttributo.SAGGEZZA);
-	}
 
 
 
@@ -336,9 +320,6 @@ public class PersonaggioMD implements Serializzabile {
 		set(TipoAttributo.CARISMA, carisma);
 	}
 
-	public int getCarisma() {
-		return (int)get(TipoAttributo.CARISMA);
-	}
 
 
 
@@ -346,79 +327,46 @@ public class PersonaggioMD implements Serializzabile {
 		set(TipoAttributo.FORTUNA, fortuna);
 	}
 
-	public int getFortuna() {
-		return (int)get(TipoAttributo.FORTUNA);
-	}
 
 
 
 
-	public int getCritico() {
-		return (int)get(TipoAttributo.CRITICO);
-	}
 
 
 
 
-	public int getPrecisione() {
-		return (int)get(TipoAttributo.PRECISIONE);
-	}
 
 
 
 
-	public int getVelocita() {
-		return (int)get(TipoAttributo.VELOCITA);
-	}
 
 
 
 
-	public int getFurtivita() {
-		return (int)get(TipoAttributo.FURTIVITA);
-	}
 
 
 
 
-	public int getParata() {
-		return (int)get(TipoAttributo.PARATA);
-	}
 
 
 
 
-	public int getResistenzaMagica() {
-		return (int)get(TipoAttributo.RESISTENZA_MAGICA);
-	}
 
 
 
 
-	public int getPercezione() {
-		return (int)get(TipoAttributo.PERCEZIONE);
-	}
 
 
 
 
-	public int getSoggezione() {
-		return (int)get(TipoAttributo.SOGGEZIONE);
-	}
 
 
 
 
-	public int getContrattazione() {
-		return (int)get(TipoAttributo.CONTRATTAZIONE);
-	}
 
 
 
 
-	public int getFuria() {
-		return (int)get(TipoAttributo.FURIA);
-	}
 
 
 
@@ -426,23 +374,14 @@ public class PersonaggioMD implements Serializzabile {
 		set(TipoAttributo.MAGIA, magia);
 	}
 
-	public int getMagia() {
-		return (int)get(TipoAttributo.MAGIA);
-	}
 
 
 
 
-	public int getCoraggio() {
-		return (int)get(TipoAttributo.CORAGGIO);
-	}
 
 
 
 
-	public int getValore() {
-		return (int)get(TipoAttributo.VALORE);
-	}
 
 
 
@@ -450,9 +389,6 @@ public class PersonaggioMD implements Serializzabile {
 		set(TipoAttributo.STANCHEZZA, stanchezza);
 	}
 
-	public int getStanchezza() {
-		return (int)get(TipoAttributo.STANCHEZZA);
-	}
 
 
 
@@ -468,20 +404,42 @@ public class PersonaggioMD implements Serializzabile {
 		this.causaTrapasso = Serializzabile.pulisciCampo(causaTrapasso);
 	}
 
+	/**
+	 * Gli effetti di stato in corso, di sola lettura (ogni effetto, però, si può modificare); per aggiungerne o togliere
+	 * si usano {@link #aggiungiEffettoDiStato} e {@link #togliEffettoDiStato}.
+	 */
 	public Collection<EffettoDiStatoMD> getEffettiDiStato() {
-		return effettiDiStato;
+		return Collections.unmodifiableCollection(effettiDiStato);
 	}
 
-	public void setEffettiDiStato(Collection<EffettoDiStatoMD> effettiDiStato) {
-		this.effettiDiStato = effettiDiStato;
+	public void aggiungiEffettoDiStato(EffettoDiStatoMD effettoDiStato) {
+		effettiDiStato.add(effettoDiStato);
 	}
 
+	/**
+	 * @return true se l'effetto c'era
+	 */
+	public boolean togliEffettoDiStato(EffettoDiStatoMD effettoDiStato) {
+		return effettiDiStato.remove(effettoDiStato);
+	}
+
+	/**
+	 * Gli artefatti che porta, di sola lettura; per aggiungerne o togliere si usano {@link #aggiungiArtefatto} e
+	 * {@link #togliArtefatto}.
+	 */
 	public Collection<ArtefattoMD> getArtefatti() {
-		return artefatti;
+		return Collections.unmodifiableCollection(artefatti);
 	}
 
-	public void setArtefatti(Collection<ArtefattoMD> artefatti) {
-		this.artefatti = artefatti;
+	public void aggiungiArtefatto(ArtefattoMD artefatto) {
+		artefatti.add(artefatto);
+	}
+
+	/**
+	 * @return true se l'artefatto c'era
+	 */
+	public boolean togliArtefatto(ArtefattoMD artefatto) {
+		return artefatti.remove(artefatto);
 	}
 
 	/**
@@ -495,16 +453,38 @@ public class PersonaggioMD implements Serializzabile {
 		this.tattica = tattica;
 	}
 
-	public Collection<ModificatoreAttributoMD> getModificatori() {
-		return modificatori;
-	}
-
-	public void setModificatori(Collection<ModificatoreAttributoMD> modificatori) {
-		this.modificatori = modificatori;
+	/**
+	 * Rimette gli artefatti come erano: lo stesso contenuto e lo stesso ordine. Serve a chi ne ha tolti qualcuno per una
+	 * prova (vedi {@code RegoleEquipaggiamento.valutaCambioArma}) e deve lasciare tutto com'era, anche l'ordine in cui
+	 * l'inventario li mostra.
+	 */
+	public void ripristinaArtefatti(List<ArtefattoMD> prima) {
+		List<ArtefattoMD> copia = new ArrayList<>(prima);
+		artefatti.clear();
+		artefatti.addAll(copia);
 	}
 
 	/**
-	 * Scrive una riga con i dati del personaggio (compreso il numero di artefatti), poi cinque righe con i valori minimi,
+	 * I modificatori agli attributi, di sola lettura; per aggiungerne o togliere si usano {@link #aggiungiModificatore} e
+	 * {@link #togliModificatore}.
+	 */
+	public Collection<ModificatoreAttributoMD> getModificatori() {
+		return Collections.unmodifiableCollection(modificatori);
+	}
+
+	public void aggiungiModificatore(ModificatoreAttributoMD modificatore) {
+		modificatori.add(modificatore);
+	}
+
+	/**
+	 * @return true se il modificatore c'era
+	 */
+	public boolean togliModificatore(ModificatoreAttributoMD modificatore) {
+		return modificatori.remove(modificatore);
+	}
+
+	/**
+	 * Scrive una riga con i dati del personaggio (se è vivo e, se è morto, la causa; il numero di artefatti), poi cinque righe con i valori minimi,
 	 * i valori massimi, gli attributi, i modificatori e gli effetti di stato, poi la tattica (una riga vuota se non ne ha)
 	 * e infine gli artefatti.
 	 */
@@ -516,7 +496,10 @@ public class PersonaggioMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(Serializzabile.facoltativo(nome));
 		stream.print(PIPE);
-		stream.print(vivo ? "vivo" : Serializzabile.facoltativo(causaTrapasso));
+		stream.print(vivo);
+		stream.print(PIPE);
+		// La causa della morte c'e' solo per chi e' morto
+		stream.print(vivo ? "" : Serializzabile.facoltativo(causaTrapasso));
 		stream.print(PIPE);
 		stream.print(livello);
 		stream.print(PIPE);
@@ -559,14 +542,9 @@ public class PersonaggioMD implements Serializzabile {
 		uuid = campi.testo();
 		classe = campi.enumerato(TipoPersonaggio.class);
 		nome = campi.testoFacoltativo();
-		String vivoOMorto = campi.testo();
-		if ("vivo".equals(vivoOMorto)) {
-			vivo = true;
-			causaTrapasso = null;
-		} else {
-			vivo = false;
-			causaTrapasso = vivoOMorto.isEmpty() ? null : vivoOMorto;
-		}
+		vivo = campi.booleano();
+		String causa = campi.testoFacoltativo();
+		causaTrapasso = vivo ? null : causa;
 		livello = campi.intero();
 		esperienza = campi.intero();
 		puntiAbilitaDisponibili = campi.intero();

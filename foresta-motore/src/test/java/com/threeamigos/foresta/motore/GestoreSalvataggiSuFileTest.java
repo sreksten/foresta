@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -36,6 +37,22 @@ class GestoreSalvataggiSuFileTest {
 			assertEquals(Arrays.asList("NUMERO_3.TXT"), Arrays.asList(cartella.list()), "nessun file temporaneo rimasto");
 			List<TestataSalvataggio> salvataggi = gestore.getSalvataggiDisponibili();
 			assertEquals(1, salvataggi.size());
+		}
+	}
+
+	@Test
+	void ilSalvataggioAutomaticoNonCompareNellElencoESiPuoCancellare() {
+		try (PartitaDiTest partita = PartitaDiTest.nuova(132)) {
+			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+			GestoreSalvataggiSuFile gestore = new GestoreSalvataggiSuFile(cartella);
+
+			assertTrue(gestore.salva(Comando.SALVATAGGIO_AUTOMATICO));
+			assertTrue(new File(cartella, "SALVATAGGIO_AUTOMATICO.TXT").isFile());
+			assertTrue(gestore.getSalvataggiDisponibili().isEmpty(), "non e' uno degli slot del giocatore");
+
+			gestore.elimina(Comando.SALVATAGGIO_AUTOMATICO);
+			assertFalse(new File(cartella, "SALVATAGGIO_AUTOMATICO.TXT").exists());
+			gestore.elimina(Comando.SALVATAGGIO_AUTOMATICO);
 		}
 	}
 }

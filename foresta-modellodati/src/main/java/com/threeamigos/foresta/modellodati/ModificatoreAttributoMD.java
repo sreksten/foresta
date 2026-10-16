@@ -13,6 +13,9 @@ import java.util.Locale;
  * Può durare un certo tempo (in turni di combattimento o in locazioni) e, se scritto su un'arma, colpire il
  * bersaglio invece di chi la porta. È immutabile: chi lo fa scalare ne sostituisce la copia (vedi conDurata).
  * Su un artefatto la durata è quella con cui il modificatore sarà applicato; su un personaggio è il tempo che resta.
+ * <p>
+ * Qui ci sono solo i dati: i testi con cui lo si racconta al giocatore ("Coraggio -20% per 3 turni") li scrive
+ * {@code TestoDeiModificatori}, in foresta-contratti.
  * @author Stefano Reksten
  */
 public class ModificatoreAttributoMD {
@@ -148,69 +151,6 @@ public class ModificatoreAttributoMD {
         return tipoAttributo == altro.tipoAttributo && tipoModificatore == altro.tipoModificatore
                 && quantita == altro.quantita && Objects.equals(note, altro.note)
                 && unitaDurata == altro.unitaDurata && bersaglio == altro.bersaglio;
-    }
-
-    /**
-     * Per i testi, l'effetto: per esempio "Fortuna porta a 0" o "Coraggio -20%"
-     */
-    public String descrizioneEffetto() {
-        int valore = (int) quantita;
-        String testo;
-        switch (tipoModificatore) {
-            case VARIAZIONE_FISSA:
-                testo = String.format(Locale.ROOT, "%+d", valore);
-                break;
-            case VARIAZIONE_PERCENTUALE:
-                testo = String.format(Locale.ROOT, "%+d%%", valore);
-                break;
-            default:
-                testo = "porta a " + valore;
-                break;
-        }
-        return tipoAttributo.getNome() + " " + testo;
-    }
-
-    /**
-     * Per gli sprite, breve: "Furtività +5", "Coraggio -3", "Coraggio -20%", "Intelligenza a 0"
-     */
-    public String descrizioneBreve() {
-        int valore = (int) quantita;
-        switch (tipoModificatore) {
-            case VARIAZIONE_FISSA:
-                return String.format(Locale.ROOT, "%s %+d", tipoAttributo.getNome(), valore);
-            case VARIAZIONE_PERCENTUALE:
-                return String.format(Locale.ROOT, "%s %+d%%", tipoAttributo.getNome(), valore);
-            default:
-                return tipoAttributo.getNome() + " a " + valore;
-        }
-    }
-
-    /**
-     * Per i testi, la durata: per esempio "per 3 turni" o "per 1 locazione"; vuota se è permanente
-     */
-    public String descrizioneDurata() {
-        switch (unitaDurata) {
-            case TURNI:
-                return "per " + durata + (durata == 1 ? " turno" : " turni");
-            case LOCAZIONI:
-                return "per " + durata + (durata == 1 ? " locazione" : " locazioni");
-            default:
-                return "";
-        }
-    }
-
-    /**
-     * Per i testi, tutto: per esempio "Fortuna porta a 0 sul bersaglio per 5 turni"
-     */
-    public String descrizione() {
-        StringBuilder sb = new StringBuilder(descrizioneEffetto());
-        if (bersaglio == BersaglioModificatore.BERSAGLIO) {
-            sb.append(" sul bersaglio");
-        }
-        if (isTemporaneo()) {
-            sb.append(' ').append(descrizioneDurata());
-        }
-        return sb.toString();
     }
 
     /**

@@ -22,6 +22,7 @@ import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 
 import java.util.Date;
 import java.util.stream.Collectors;
+import java.util.Locale;
 
 /**
  * Ascolta tutti i tipi di evento del bus e ne scrive una riga nel log, con il tipo in testa per poterle cercare con grep:
@@ -119,6 +120,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(NotificaRifiutoStoccaggioArtefatto.class, this::onEventoRifiutoStoccaggioArtefatto);
         BusEventi.iscriviti(NotificaRifiutoVenditaArtefatto.class, this::onEventoRifiutoVenditaArtefatto);
         BusEventi.iscriviti(RichiestaUscitaDalGioco.class, this::onEventoSelezioneConfermaUscita);
+        BusEventi.iscriviti(NotificaUscitaDalGioco.class, this::onEventoUscitaDalGioco);
         BusEventi.iscriviti(RichiestaSelezioneDirezione.class, this::onEventoSelezioneDirezione);
         BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, this::onEventoSelezioneIncantesimoDaLanciare);
         BusEventi.iscriviti(RichiestaSelezioneSiNo.class, this::onEventoSelezioneSiNo);
@@ -140,453 +142,457 @@ public class SnifferBusEventi {
     }
 
     private void onEventoAggiornamentoStatoMissione(NotificaAggiornamentoStatoMissione evento) {
-        Logger.log(headerEvento(evento) + "Missione " + evento.getMissione().getNome() + " - " +
+        Logger.log(() -> headerEvento(evento) + "Missione " + evento.getMissione().getNome() + " - " +
                 evento.getEtichetta() + " - " + evento.getDescrizione());
     }
 
     private void onEventoVariazioneModificatore(NotificaVariazioneModificatorePersonaggio evento) {
         ModificatoreAttributoMD modificatore = evento.getModificatore();
-        Logger.log(headerEvento(evento) + String.format("Tipo: %s, Durata: %d -> %d, ", evento.getTipo(),
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Tipo: %s, Durata: %d -> %d, ", evento.getTipo(),
                 evento.getDurataPrecedente(), evento.getNuovaDurata()) + formattaModificatoreAttributo(modificatore) +
                 formattaStatistichePersonaggio(evento.getPersonaggio()));
     }
 
     private void onEventoApprovazioneAcquistoArtefatto(NotificaApprovazioneAcquistoArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
+        Logger.log(() -> headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoApprovazioneAcquistoConsumabile(NotificaApprovazioneAcquistoConsumabile evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaAcquistoConsumabile().getUuid()
+        Logger.log(() -> headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaAcquistoConsumabile().getUuid()
                 + ", Pagato: " + evento.getPrezzoPagato());
     }
 
     private void onEventoApprovazionePrelievoArtefatto(NotificaApprovazionePrelievoArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
+        Logger.log(() -> headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoApprovazioneStoccaggioArtefatto(NotificaApprovazioneStoccaggioArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
+        Logger.log(() -> headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoApprovazioneVenditaArtefatto(NotificaApprovazioneVenditaArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
+        Logger.log(() -> headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoArtefattoTrovato(NotificaArtefattoTrovato evento) {
-        Logger.log(headerEvento(evento) + "Trovato " + evento.getArtefatto().getNomeCompleto());
+        Logger.log(() -> headerEvento(evento) + "Trovato " + evento.getArtefatto().getNomeCompleto());
     }
 
     private void onEventoAumentoLivelloMondo(NotificaAumentoLivelloMondo evento) {
-        Logger.log(headerEvento(evento) + "Mondo aumenta di livello a " + evento.getLivello());
+        Logger.log(() -> headerEvento(evento) + "Mondo aumenta di livello a " + evento.getLivello());
     }
 
     private void onEventoAumentoLivelloPersonaggio(NotificaAumentoLivelloPersonaggio evento) {
-        Logger.log(headerEvento(evento) + "Aumento livello " + evento.getLivelloPrecedente() + " -> " +
+        Logger.log(() -> headerEvento(evento) + "Aumento livello " + evento.getLivelloPrecedente() + " -> " +
                 evento.getLivelloAttuale() + " - " + formattaStatistichePersonaggio(evento.getPersonaggio()));
     }
 
     private void onEventoComandiDisponibili(InternoAggiornamentoComandiDisponibili evento) {
-        Logger.log(headerEvento(evento) + "Comandi disponibili: " + evento.getPossibilita());
+        Logger.log(() -> headerEvento(evento) + "Comandi disponibili: " + evento.getPossibilita());
     }
 
     private void onEventoComandoDiGioco(ComandoDiGioco evento) {
         Comando comando = evento.getComando();
-        Logger.log(headerEvento(evento) + "Comando: " + comando);
+        Logger.log(() -> headerEvento(evento) + "Comando: " + comando);
     }
 
     private void onEventoConsumoPuntoAbilita(NotificaConsumoPuntoAbilitaPersonaggio evento) {
         VistaPersonaggio p = evento.getPersonaggio();
-        Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoAttributo());
+        Logger.log(() -> headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoAttributo());
     }
 
     private void onEventoCreazioneFumetto(InternoCreazioneFumetto evento) {
-        Logger.log(headerEvento(evento) + "Frase: " + evento.getFrase());
+        Logger.log(() -> headerEvento(evento) + "Frase: " + evento.getFrase());
     }
 
     private void onEventoCreazionePersonaggio(InternoCreazionePersonaggio evento) {
         VistaPersonaggio p  = evento.getPersonaggio();
-        Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p));
+        Logger.log(() -> headerEvento(evento) + formattaStatistichePersonaggio(p));
     }
 
     private void onEventoCreazioneSpriteAnnuncioGlobale(InternoCreazioneSpriteAnnuncioGlobale evento) {
-        Logger.log(headerEvento(evento) + "Titolo: " + evento.getSprite().getTitolo() +
+        Logger.log(() -> headerEvento(evento) + "Titolo: " + evento.getSprite().getTitolo() +
                 ", Descrizione: " + evento.getSprite().getDescrizione());
     }
 
     private void onEventoCreazioneSpriteATempo(InternoCreazioneSpriteATempo evento) {
-        Logger.log(headerEvento(evento) + "Descrizione: " + evento.getSprite().getDescrizione());
+        Logger.log(() -> headerEvento(evento) + "Descrizione: " + evento.getSprite().getDescrizione());
     }
 
     private void onEventoCreazioneSpriteEffetto(InternoCreazioneSpriteEffettoDiStato evento) {
-        Logger.log(headerEvento(evento) + "Descrizione: " + evento.getSprite().getTesto());
+        Logger.log(() -> headerEvento(evento) + "Descrizione: " + evento.getSprite().getTesto());
     }
 
     private void onEventoCreazioneSpriteFumetto(InternoCreazioneSpriteFumettoATempo evento) {
-        Logger.log(headerEvento(evento) + "Descrizione: " + evento.getSprite().getTesto());
+        Logger.log(() -> headerEvento(evento) + "Descrizione: " + evento.getSprite().getTesto());
     }
 
     private void onEventoCreazioneSpriteInDissolvenza(InternoCreazioneSpriteInDissolvenza evento) {
-        Logger.log(headerEvento(evento) + "Descrizione: " + evento.getSprite().getDescrizione());
+        Logger.log(() -> headerEvento(evento) + "Descrizione: " + evento.getSprite().getDescrizione());
     }
 
     private void onEventoErroreCaricamento(NotificaErroreCaricamento evento) {
-        Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getException().getMessage()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getException().getMessage()));
         Logger.log(evento.getException());
     }
 
     private void onEventoErroreInterno(InternoErrore evento) {
-        Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggio()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggio()));
     }
 
     private void onEventoException(InternoException evento) {
-        Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getException().getMessage()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getException().getMessage()));
         Logger.log(evento.getException());
     }
 
     private void onEventoFineGioco(NotificaFineGioco evento) {
-        Logger.log(String.format("%s - %s - Completato con successo: %s", new Date(), evento.getTipoEvento(), evento.isCompletatoConSuccesso()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s - Completato con successo: %s", new Date(), evento.getTipoEvento(), evento.isCompletatoConSuccesso()));
     }
 
     private void onEventoFumetto(InternoNotificaViaFumettoATempo evento) {
-        Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getTesto()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getTesto()));
     }
 
     private void onEventoAzioneInCombattimento(InternoAzioneInCombattimento evento) {
-        Logger.log(headerEvento(evento) + "Agisce " + formattaStatistichePersonaggio(evento.getPersonaggio()) +
+        Logger.log(() -> headerEvento(evento) + "Agisce " + formattaStatistichePersonaggio(evento.getPersonaggio()) +
                 (evento.getBersaglio() == null ? " (senza bersaglio)" : " contro " + formattaStatistichePersonaggio(evento.getBersaglio())));
     }
 
     private void onEventoDecisioneTattica(InternoDecisioneTattica evento) {
-        Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(evento.getPersonaggio()) + "decide " + evento.getAzione()
+        Logger.log(() -> headerEvento(evento) + formattaStatistichePersonaggio(evento.getPersonaggio()) + "decide " + evento.getAzione()
                 + (evento.getBersaglio() == null ? "" : " contro " + formattaStatistichePersonaggio(evento.getBersaglio()))
                 + (evento.isRipiego() ? " (ripiego)" : " (voce " + (evento.getIndiceVoce() + 1) + ")") + " - " + String.join(" | ", evento.getSpiegazione()));
     }
 
     private void onEventoInizioRound(InternoInizioRound evento) {
-        Logger.log(headerEvento(evento) + "Round " + evento.getNumeroRound());
+        Logger.log(() -> headerEvento(evento) + "Round " + evento.getNumeroRound());
     }
 
     private void onEventoReazioneDiClasse(NotificaReazioneDiClassePersonaggio evento) {
         VistaPersonaggio p = evento.getPersonaggio();
-        Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoDanno() + " x" + evento.getMoltiplicatore());
+        Logger.log(() -> headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoDanno() + " x" + evento.getMoltiplicatore());
     }
 
     private void onEventoInterazione(NotificaInterazionePersonaggio evento) {
         VistaPersonaggio p = evento.getPersonaggio();
-        Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoInterazione());
+        Logger.log(() -> headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoInterazione());
     }
 
     private void onEventoInterfacciaUtentePronta(InternoInterfacciaUtentePronta evento) {
-        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s", new Date(), evento.getTipoEvento()));
     }
 
     private void onEventoInvioTesto(ComandoInvioTesto evento) {
-        Logger.log(headerEvento(evento) + "Ricevuto testo: " + evento.getTesto());
+        Logger.log(() -> headerEvento(evento) + "Ricevuto testo: " + evento.getTesto());
     }
 
     private void onEventoMessaggio(NotificaTestoFrase evento) {
-        Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggio()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggio()));
     }
 
     private void onEventoMessaggioInterno(InternoMessaggio evento) {
-        Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggioInterno()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggioInterno()));
     }
 
     private void onEventoMostraFinestra(EventoBase evento) {
-        Logger.log(String.format("%s - %s ", new Date(), evento.getTipoEvento()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s ", new Date(), evento.getTipoEvento()));
     }
 
     private void onEventoMostraPunteggi(NotificaMostraPunteggiMigliori evento) {
-        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s", new Date(), evento.getTipoEvento()));
     }
 
     private void onEventoMostraSchermataGioco(InternoMostraSchermataGioco evento) {
-        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s", new Date(), evento.getTipoEvento()));
     }
 
     private void onEventoMostraStatistiche(NotificaMostraStatisticheFineGioco evento) {
-        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s", new Date(), evento.getTipoEvento()));
     }
 
     private void onEventoNotificaGlobale(NotificaGlobale evento) {
-        Logger.log(String.format("%s - %s - %s - %s - %s", new Date(), evento.getTipoEvento(), evento.getEtichetta(), evento.getEtichetta(), evento.getMessaggio()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s - %s - %s - %s", new Date(), evento.getTipoEvento(), evento.getEtichetta(), evento.getEtichetta(), evento.getMessaggio()));
     }
 
     private void onEventoParagrafo(NotificaTestoParagrafo evento) {
-        Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggio()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggio()));
     }
 
     private void onEventoPreparazioneLocazione(InternoPreparazioneLocazione evento) {
-        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s", new Date(), evento.getTipoEvento()));
     }
 
     private void onEventoPuliziaCacheDinamicaImmagini(InternoPuliziaCacheDinamicaImmagini evento) {
         int prima = evento.getElementiPrima();
         int dopo = evento.getElementiDopo();
-        Logger.log(headerEvento(evento) + "Eliminate " + (prima - dopo) + " immagini dalla cache. Rimanenti: " + dopo);
+        Logger.log(() -> headerEvento(evento) + "Eliminate " + (prima - dopo) + " immagini dalla cache. Rimanenti: " + dopo);
     }
 
     private void onEventoRaccoltaOggetti(NotificaRaccoltaOggetti evento) {
-        Logger.log(headerEvento(evento));
+        Logger.log(() -> headerEvento(evento));
     }
 
     private void onEventoTrofeoAcquisito(InternoTrofeoAcquisito evento) {
-        Logger.log(headerEvento(evento) + "Trofeo vinto: " + evento.getTrofeo().getNome());
+        Logger.log(() -> headerEvento(evento) + "Trofeo vinto: " + evento.getTrofeo().getNome());
     }
 
     private void onEventoAvversarioSconfitto(InternoAvversarioSconfitto evento) {
-        Logger.log(headerEvento(evento) + "Sconfitto: " + evento.getClasse());
+        Logger.log(() -> headerEvento(evento) + "Sconfitto: " + evento.getClasse());
     }
 
     private void onEventoFineLocazione(InternoFineLocazione evento) {
-        Logger.log(headerEvento(evento));
+        Logger.log(() -> headerEvento(evento));
     }
 
     private void onEventoPastoConsumatoInLocanda(InternoPastoConsumatoInLocanda evento) {
-        Logger.log(headerEvento(evento));
+        Logger.log(() -> headerEvento(evento));
     }
 
     private void onEventoLocazioneVisitata(InternoLocazioneVisitata evento) {
-        Logger.log(headerEvento(evento) + "Prima visita: " + evento.getTipo());
+        Logger.log(() -> headerEvento(evento) + "Prima visita: " + evento.getTipo());
     }
 
     private void onEventoEremitiIncontrati(InternoEremitiIncontrati evento) {
-        Logger.log(headerEvento(evento) + "Eremiti: " + evento.getQuantita());
+        Logger.log(() -> headerEvento(evento) + "Eremiti: " + evento.getQuantita());
     }
 
     private void onEventoAmiciziaStretta(InternoAmiciziaStretta evento) {
-        Logger.log(headerEvento(evento) + "Amicizia con: " + evento.getAvversari());
+        Logger.log(() -> headerEvento(evento) + "Amicizia con: " + evento.getAvversari());
     }
 
     private void onEventoCorruzioneRiuscita(InternoCorruzioneRiuscita evento) {
-        Logger.log(headerEvento(evento) + "Corrotti: " + evento.getAvversari());
+        Logger.log(() -> headerEvento(evento) + "Corrotti: " + evento.getAvversari());
     }
 
     private void onEventoScheletroRisvegliato(InternoScheletroRisvegliato evento) {
-        Logger.log(headerEvento(evento) + "Uno scheletro si è risvegliato dalla parte del gruppo");
+        Logger.log(() -> headerEvento(evento) + "Uno scheletro si è risvegliato dalla parte del gruppo");
     }
 
     private void onEventoMissioneCompletata(InternoMissioneCompletata evento) {
-        Logger.log(headerEvento(evento) + "Missione completata: " + evento.getMissione().getNome());
+        Logger.log(() -> headerEvento(evento) + "Missione completata: " + evento.getMissione().getNome());
     }
 
     private void onEventoOggettoRaccolto(InternoOggettoRaccolto evento) {
-        Logger.log(headerEvento(evento) + evento.getQuantita() + " " + evento.getClasse()
+        Logger.log(() -> headerEvento(evento) + evento.getQuantita() + " " + evento.getClasse()
                 + (evento.isCustodito() ? ", custodito" : ", incustodito"));
     }
 
     private void onEventoRichiestaAcquistoArtefatto(InternoAcquistoArtefatto evento) {
         OggettoConCosto oggetto = evento.getOggettoDaSpostare();
-        Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di acquistare "
+        Logger.log(() -> headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di acquistare "
                 + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") da "
                 + formattaParte(evento.getParteRemota()));
     }
 
     private void onEventoRichiestaAcquistoConsumabile(ComandoAcquistoConsumabile evento) {
         ClasseIncantesimo incantesimo = evento.getClasseIncantesimo();
-        Logger.log(headerEvento(evento) + "Gruppo richiede di acquistare " + evento.getTipoConsumabile() +
+        Logger.log(() -> headerEvento(evento) + "Gruppo richiede di acquistare " + evento.getTipoConsumabile() +
                 (incantesimo != null ? (" " + incantesimo) : ""));
     }
 
     private void onEventoRichiestaAperturaFinestraCombattimento(InternoRichiestaAperturaFinestraCombattimento evento) {
         String notifica = "Attiva - " + formattaStatistichePersonaggio(evento.getPersonaggio()) + " vs " +
                 formattaStatistichePersonaggio(evento.getAvversario());
-        Logger.log(headerEvento(evento) + notifica);
+        Logger.log(() -> headerEvento(evento) + notifica);
     }
 
     private void onEventoRichiestaAperturaInventarioCommerciante(RichiestaAperturaInventarioCommerciante evento) {
-        Logger.log(headerEvento(evento) + evento.getNegozio());
+        Logger.log(() -> headerEvento(evento) + evento.getNegozio());
     }
 
     private void onEventoRichiestaAperturaInventarioFornitore(RichiestaAperturaInventarioFornitore evento) {
-        Logger.log(headerEvento(evento));
+        Logger.log(() -> headerEvento(evento));
     }
 
     private void onEventoRichiestaAperturaInventarioGruppo(RichiestaAperturaInventarioGruppo evento) {
-        Logger.log(headerEvento(evento));
+        Logger.log(() -> headerEvento(evento));
     }
 
     private void onEventoRichiestaChiusuraFinestraCombattimento(InternoRichiestaChiusuraFinestraCombattimento evento) {
-        Logger.log(headerEvento(evento) + "Chiusa");
+        Logger.log(() -> headerEvento(evento) + "Chiusa");
     }
 
     private void onEventoRichiestaPrelievoArtefatto(InternoPrelievoArtefatto evento) {
         OggettoConPeso oggetto = evento.getOggettoDaSpostare();
-        Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di prelevare "
+        Logger.log(() -> headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di prelevare "
                 + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") da "
                 + formattaParte(evento.getParteRemota()));
     }
 
     private void onEventoRichiestaRefreshUI(InternoRichiestaRefreshUI evento) {
-        Logger.log(headerEvento(evento));
+        Logger.log(() -> headerEvento(evento));
     }
 
     private void onEventoRichiestaReinizializzazioneUI(InternoRichiestaReinizializzazioneUI evento) {
-        Logger.log(headerEvento(evento));
+        Logger.log(() -> headerEvento(evento));
     }
 
     private void onEventoRichiestaSelezioneSlotPerRilettura(RichiestaSelezioneSlotPerRilettura evento) {
-        Logger.log(headerEvento(evento) + "Salvataggi disponibili: " + evento.getSalvataggiDisponibili()
+        Logger.log(() -> headerEvento(evento) + "Salvataggi disponibili: " + evento.getSalvataggiDisponibili()
                 .stream().map(TestataSalvataggio::getId).map(Comando::name).collect(Collectors.joining(", ")));
     }
 
     private void onEventoRichiestaSelezioneSlotPerSalvataggio(RichiestaSelezioneSlotPerSalvataggio evento) {
-        Logger.log(headerEvento(evento) + "Salvataggi disponibili: " + evento.getSalvataggiDisponibili()
+        Logger.log(() -> headerEvento(evento) + "Salvataggi disponibili: " + evento.getSalvataggiDisponibili()
                 .stream().map(TestataSalvataggio::getId).map(Comando::name).collect(Collectors.joining(", ")));
     }
 
     private void onEventoRichiestaVisualizzazioneMappa(RichiestaVisualizzazioneMappa evento) {
-        Logger.log(headerEvento(evento));
+        Logger.log(() -> headerEvento(evento));
     }
 
     private void onEventoRichiestaStoccaggioArtefatto(InternoStoccaggioArtefatto evento) {
         OggettoConPeso oggetto = evento.getOggettoDaSpostare();
-        Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di stoccare "
+        Logger.log(() -> headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di stoccare "
                 + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") su "
                 + formattaParte(evento.getParteRemota()));
     }
 
     private void onEventoRichiestaTesto(RichiestaTesto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta: " + evento.getRichiesta());
+        Logger.log(() -> headerEvento(evento) + "Richiesta: " + evento.getRichiesta());
     }
 
     private void onEventoRichiestaVenditaArtefatto(InternoVenditaArtefatto evento) {
         OggettoConCosto oggetto = evento.getOggettoDaSpostare();
-        Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di vendere "
+        Logger.log(() -> headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di vendere "
                 + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") a "
                 + formattaParte(evento.getParteRemota()));
     }
 
     private void onEventoRifiutoAcquistoArtefatto(NotificaRifiutoAcquistoArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
+        Logger.log(() -> headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoRifiutoAcquistoConsumabile(NotificaRifiutoAcquistoConsumabile evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaAcquistoConsumabile().getUuid());
+        Logger.log(() -> headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaAcquistoConsumabile().getUuid());
     }
 
     private void onEventoRifiutoPrelievoArtefatto(NotificaRifiutoPrelievoArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
+        Logger.log(() -> headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoRifiutoStoccaggioArtefatto(NotificaRifiutoStoccaggioArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
+        Logger.log(() -> headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoRifiutoVenditaArtefatto(NotificaRifiutoVenditaArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
+        Logger.log(() -> headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
+    }
+
+    private void onEventoUscitaDalGioco(NotificaUscitaDalGioco evento) {
+        Logger.log(() -> headerEvento(evento) + "Codice " + evento.getCodice() + (evento.getMotivo() == null ? "" : ": " + evento.getMotivo()));
     }
 
     private void onEventoSelezioneConfermaUscita(RichiestaUscitaDalGioco evento) {
-        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s", new Date(), evento.getTipoEvento()));
     }
 
     private void onEventoSelezioneDirezione(RichiestaSelezioneDirezione evento) {
-        Logger.log(headerEvento(evento) + evento.getPossibilita());
+        Logger.log(() -> headerEvento(evento) + evento.getPossibilita());
     }
 
     private void onEventoSelezioneIncantesimoDaLanciare(RichiestaSelezioneIncantesimoDaLanciare evento) {
-        Logger.log(headerEvento(evento) + evento.getPossibilita());
+        Logger.log(() -> headerEvento(evento) + evento.getPossibilita());
     }
 
     private void onEventoSelezioneSiNo(RichiestaSelezioneSiNo evento) {
-        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s", new Date(), evento.getTipoEvento()));
     }
 
     private void onEventoFaseDiGioco(InternoFaseDiGioco evento) {
-        Logger.log(headerEvento(evento) + evento.getFase().toString());
+        Logger.log(() -> headerEvento(evento) + evento.getFase().toString());
     }
 
     private void onEventoVariazioneEffettoDiStato(NotificaVariazioneEffettoDiStatoPersonaggio evento) {
         VistaPersonaggio p = evento.getPersonaggio();
-        Logger.log(headerEvento(evento) + String.format("Tipo: %s, EffettoDiStatoMD: %s - ",
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Tipo: %s, EffettoDiStatoMD: %s - ",
                 evento.getTipo(), evento.getEffetto()) + formattaStatistichePersonaggio(p));
     }
 
     public void onEventoVariazionePreziosi(NotificaVariazioneDisponibilitaPreziosi evento) {
-        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
     public void onEventoVariazioneIncantesimi(NotificaVariazioneDisponibilitaIncantesimi evento) {
-        Logger.log(headerEvento(evento) + String.format("Tipo: %s, Variazione: %d -> %d",
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Tipo: %s, Variazione: %d -> %d",
                 evento.getClasseIncantesimo(), evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
     public void onEventoVariazioneMappa(NotificaVariazioneConoscenzaMappa evento) {
-        Logger.log(headerEvento(evento) + String.format("Variazione: (%d, %d) -> (%d, %d)",
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Variazione: (%d, %d) -> (%d, %d)",
                 evento.getDaX(), evento.getDaY(), evento.getAX(), evento.getAY()));
     }
 
     public void onEventoVariazioneMonete(NotificaVariazioneDisponibilitaMonete evento) {
-        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
     public void onEventoVariazionePozioniMagia(NotificaVariazioneDisponibilitaPozioniMagia evento) {
-        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
     public void onEventoVariazionePozioniMagiaGrandi(NotificaVariazioneDisponibilitaPozioniMagiaGrandi evento) {
-        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
     public void onEventoVariazionePozioniAumentoLivello(NotificaVariazioneDisponibilitaPozioniAumentoLivello evento) {
-        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
     public void onEventoVariazionePozioniSalute(NotificaVariazioneDisponibilitaPozioniSalute evento) {
-        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
     public void onEventoVariazionePozioniSaluteGrandi(NotificaVariazioneDisponibilitaPozioniSaluteGrandi evento) {
-        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
     public void onEventoVariazionePunti(NotificaVariazionePunteggio evento) {
-        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
     public void onEventoVariazionePuntiEsperienza(NotificaVariazionePuntiEsperienzaPersonaggio evento) {
-        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
     private void onEventoVariazioneStatistichePersonaggio(NotificaVariazioneStatistichePersonaggio evento) {
         VistaPersonaggio p = evento.getPersonaggio();
-        Logger.log(headerEvento(evento) + String.format("Attributo: %s, Variazione: %7.2f -> %7.2f - ",
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Attributo: %s, Variazione: %7.2f -> %7.2f - ",
                 evento.getTipoAttributo(), evento.getValorePrecedente(), evento.getNuovoValore()) +
                 formattaStatistichePersonaggio(p));
     }
 
     private void onEventoVariazioneStatoVitalePersonaggio(NotificaVariazioneStatoVitalePersonaggio evento) {
         VistaPersonaggio p = evento.getPersonaggio();
-        Logger.log(headerEvento(evento) + String.format("Stato: -> %s, Causa trapasso: -> %s - ",
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Stato: -> %s, Causa trapasso: -> %s - ",
                 p.isVivo() ? "Vivo" : "Morto", p.getCausaTrapasso()) + formattaStatistichePersonaggio(p));
     }
 
     //--- Metodi generali di utilità
 
     private String formattaStatistichePersonaggio(VistaPersonaggio p) {
-        return String.format("UUID: %s,Nome: %17s, Livello: %2d, Salute: %3d/%3d; Magia: %3d/%3d; Forza: %3d; Destrezza: %3d; Costituzione: %3d; Intelligenza: %3d; Saggezza: %3d; Carisma: %3d; Fortuna: %3d",
+        return String.format(Locale.ROOT, "UUID: %s,Nome: %17s, Livello: %2d, Salute: %3d/%3d; Magia: %3d/%3d; Forza: %3d; Destrezza: %3d; Costituzione: %3d; Intelligenza: %3d; Saggezza: %3d; Carisma: %3d; Fortuna: %3d",
                 p.getUuid(), p.getNomeSingolare(), p.getLivello(), p.getSalute(), p.getSaluteMassima(), p.getMagia(), p.getMagiaMassima(),
                 p.getForza(), p.getDestrezza(), p.getCostituzione(), p.getIntelligenza(), p.getSaggezza(), p.getCarisma(), p.getFortuna());
     }
 
     private String formattaModificatoreAttributo(ModificatoreAttributoMD modificatore) {
-        return String.format("TipoAttributo: %s, TipoModificatore: %s, Quantità: %5f, Durata: %s %d, Bersaglio: %s, Note: %s - ",
+        return String.format(Locale.ROOT, "TipoAttributo: %s, TipoModificatore: %s, Quantità: %5f, Durata: %s %d, Bersaglio: %s, Note: %s - ",
                 modificatore.getTipoAttributo(), modificatore.getTipoModificatoreAttributo(), modificatore.getQuantita(),
                 modificatore.getUnitaDurata(), modificatore.getDurata(), modificatore.getBersaglio(), modificatore.getNote());
     }
 
     private String headerEvento(EventoBase evento) {
-        return String.format("%s - %s - ", new Date(), evento.getTipoEvento());
+        return String.format(Locale.ROOT, "%s - %s - ", new Date(), evento.getTipoEvento());
     }
 
     private String formattaParte(ScambiatoreArtefatti parte) {

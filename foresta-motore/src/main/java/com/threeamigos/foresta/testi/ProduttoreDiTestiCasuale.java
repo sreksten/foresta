@@ -2,6 +2,7 @@ package com.threeamigos.foresta.testi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
+import com.threeamigos.foresta.eventi.notifiche.NotificaUscitaDalGioco;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.testi.GrammarBean.InvalidGrammarException;
@@ -9,7 +10,6 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.strumenti.Misc;
-import com.threeamigos.foresta.strumenti.ThreadPrincipale;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -80,11 +80,12 @@ public class ProduttoreDiTestiCasuale {
 			sfide = new GrammarBean(
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/sfide.txt"), null);
 		} catch (InvalidGrammarException | IOException e) {
-			// Senza grammatiche il gioco non puo' andare avanti: si segnala l'errore e si esce. L'uscita va in coda
-			// sul thread principale dopo la notifica, cosi' chi ascolta le InternoException la riceve prima.
+			// Senza grammatiche il gioco non puo' andare avanti: si segnala l'errore e si chiede alla piattaforma di
+			// terminare. Il bus consegna gli eventi nell'ordine in cui sono pubblicati, quindi chi ascolta le
+			// InternoException la riceve prima dell'uscita.
 			Logger.log(e);
 			BusEventi.pubblica(new InternoException("Grammatiche dei testi non valide o mancanti", e));
-			ThreadPrincipale.accoda(() -> System.exit(1));
+			BusEventi.pubblica(new NotificaUscitaDalGioco(1, "Grammatiche dei testi non valide o mancanti"));
 		}
 	}
 

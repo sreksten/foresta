@@ -47,10 +47,12 @@ public class MappaZona implements Offerta {
 		int x = gruppo.getX();
 		int y = gruppo.getY();
 		int dm1x = Foresta.getDimensioneX() - 1;
-		Logger.log("MappaZona::accetta(), x=" + x + ",y=" + y);
+		Logger.log(() -> "MappaZona::accetta(), x=" + x + ",y=" + y);
 		int fx = x - 7;
 		int tx = x + 7;
-		Logger.log("MappaZona::accetta(), fx=" + fx + ",tx=" + tx);
+		if (Logger.isAttivo()) {
+			Logger.log("MappaZona::accetta(), fx=" + fx + ",tx=" + tx);
+		}
 		if (fx < 0) {
 			fx = 0;
 			tx = Math.min(dm1x, 14);
@@ -61,7 +63,9 @@ public class MappaZona implements Offerta {
 		int dm1y = Foresta.getDimensioneY() - 1;
 		int fy = y - 7;
 		int ty = y + 7;
-		Logger.log("MappaZona::accetta(), fy=" + fy + ",ty=" + ty);
+		if (Logger.isAttivo()) {
+			Logger.log("MappaZona::accetta(), fy=" + fy + ",ty=" + ty);
+		}
 		if (fy < 0) {
 			fy = 0;
 			ty = Math.min(dm1y, 14);
@@ -69,7 +73,9 @@ public class MappaZona implements Offerta {
 			fy = Foresta.getDimensioneY() - (Math.min(Foresta.getDimensioneY(), 15));
 			ty = dm1y;
 		}
-		Logger.log("MappaZona::accetta(), fx=" + fx + ",fy=" + fy + ",tx=" + tx + ",ty=" + ty);
+		if (Logger.isAttivo()) {
+			Logger.log("MappaZona::accetta(), fx=" + fx + ",fy=" + fy + ",tx=" + tx + ",ty=" + ty);
+		}
 		Foresta.ottieniMappaZona(fx, fy, tx, ty);
 		BusEventi.pubblica(new NotificaVariazioneConoscenzaMappa(fx, fy, tx, ty));
 	}

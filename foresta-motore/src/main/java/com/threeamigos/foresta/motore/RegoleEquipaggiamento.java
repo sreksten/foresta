@@ -3,6 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
@@ -24,21 +25,24 @@ import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
  * Regole a slot per l'equipaggiamento di un personaggio (vedi artefatti_e_incantamenti.md, §2 "Equipaggiamento"):
  * al massimo un artefatto per testa, corpo e ciascuna mano, accessori senza limite, pergamene mai,
  * arma in mano secondaria solo per Ladro/Ladra ed Elfo/Elfa, armi a due mani solo con entrambe le mani libere.
- * Ogni classe giocabile usa solo le armi, lo scudo e il libro adatti a lei ({@link #puoUsare}).
+ * Ogni classe giocabile usa solo le armi, lo scudo, il libro e l'armatura adatti a lei ({@link #puoUsare}): il Ladro, il Mago e il Sacerdote, per esempio, non portano armature.
  * Peso e FORZA per l'armatura non sono controllati qui, ma in {@link PersonaggioBase#puoEquipaggiare}.
  */
 public final class RegoleEquipaggiamento {
 
-	// Armi, scudo e libro che ogni classe giocabile sa usare (vedi artefatti_e_incantamenti.md, §2,
-	// "Equipaggiamento secondo la classe"). Elmo, armature, vesti e accessori li portano tutti; l'armatura
-	// chiede una FORZA minima. Le classi che non sono qui (i mostri, l'Ombrafiamma) non hanno limiti.
+	// Armi, scudo, libro e armatura che ogni classe giocabile usa (vedi artefatti_e_incantamenti.md, §2,
+	// "Equipaggiamento secondo la classe"). Elmo, vesti e accessori li portano tutti. L'armatura la portano tutti
+	// tranne il Ladro, che non la usa mai (agisce con la destrezza), il Mago (la magia non si fa in armatura) e il
+	// Sacerdote (un chierico in armatura sarebbe un'altra classe, che non c'è); chi
+	// può portarla chiede una FORZA minima.
+	// Le classi che non sono qui (i mostri, l'Ombrafiamma) non hanno limiti.
 	private static final Set<TipoArtefatto> GUERRIERO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.SPADONE,
-			TipoArtefatto.MAZZA, TipoArtefatto.ASCIA, TipoArtefatto.LANCIA, TipoArtefatto.SCUDO);
+			TipoArtefatto.MAZZA, TipoArtefatto.ASCIA, TipoArtefatto.LANCIA, TipoArtefatto.SCUDO, TipoArtefatto.ARMATURA);
 	private static final Set<TipoArtefatto> LADRO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.MAZZA, TipoArtefatto.ASCIA);
 	// L'elfo sa usare anche il libro magico, ma ne ha metà del bonus (vedi Costanti.LIBRO_MAGICO_FATTORE_ELFO)
 	private static final Set<TipoArtefatto> ELFO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.MAZZA, TipoArtefatto.ASCIA,
-			TipoArtefatto.LANCIA, TipoArtefatto.LIBRO_MAGICO);
-	private static final Set<TipoArtefatto> BARDO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.SCUDO);
+			TipoArtefatto.LANCIA, TipoArtefatto.LIBRO_MAGICO, TipoArtefatto.ARMATURA);
+	private static final Set<TipoArtefatto> BARDO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.SCUDO, TipoArtefatto.ARMATURA);
 	private static final Set<TipoArtefatto> MAGO = EnumSet.of(TipoArtefatto.BASTONE_MAGICO, TipoArtefatto.LIBRO_MAGICO);
 	private static final Set<TipoArtefatto> SACERDOTE = EnumSet.of(TipoArtefatto.BASTONE_MAGICO, TipoArtefatto.MAZZA, TipoArtefatto.LIBRO_MAGICO);
 
@@ -105,7 +109,7 @@ public final class RegoleEquipaggiamento {
 	}
 
 	/**
-	 * Valuta se il personaggio può usare l'artefatto: la classe sa usare quel genere di oggetti, il livello è sufficiente, la forza basta per un'armatura, lo slot è libero
+	 * Valuta se il personaggio può usare l'artefatto, nell'ordine: la classe usa quel genere di oggetti, la forza basta per un'armatura, il peso è sostenibile, il livello è sufficiente, lo slot è libero
 	 * (con le regole di mani e seconda arma) e il peso è sostenibile.
 	 *
 	 * @return l'esito del controllo, con il motivo del rifiuto se non può
@@ -116,6 +120,12 @@ public final class RegoleEquipaggiamento {
 		Collection<ArtefattoMD> equipaggiati = personaggio.getModelloDati().getArtefatti();
 
 		TipoArtefatto tipo = artefatto.getTipo();
+
+		// La classe prima di tutto: chi non usa quel genere di oggetti non lo prende, e non importa quanto sia forte o
+		// quanto carico porti (diversamente il fumetto direbbe "non ho la forza" a un ladro che l'armatura non la usa mai)
+		if (!puoUsare(classe, tipo)) {
+			return EsitoControlloRichiestaEquipaggiamento.rifiuto(personaggio, TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE);
+		}
 
 		if (artefatto.getTipo() == TipoArtefatto.ARMATURA && personaggio.getForza() < Costanti.ARMATURA_FORZA_MINIMA) {
 			return EsitoControlloRichiestaEquipaggiamento.rifiuto(personaggio, TipoMotivoRifiutoEquipaggiamento.FORZA_INSUFFICIENTE, artefatto);
@@ -128,9 +138,6 @@ public final class RegoleEquipaggiamento {
 		TipoSlotArtefatto slotDelTipo = tipo.getSlotArtefatto();
 		if (slotDelTipo == TipoSlotArtefatto.NUCLEO) {
 			return EsitoControlloRichiestaEquipaggiamento.rifiuto(personaggio, TipoMotivoRifiutoEquipaggiamento.PERGAMENA);
-		}
-		if (!puoUsare(classe, tipo)) {
-			return EsitoControlloRichiestaEquipaggiamento.rifiuto(personaggio, TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE);
 		}
 		if (artefatto.getLivello() > livelloPersonaggio) {
 			return EsitoControlloRichiestaEquipaggiamento.rifiuto(personaggio, TipoMotivoRifiutoEquipaggiamento.LIVELLO_TROPPO_ALTO, artefatto);
@@ -255,18 +262,19 @@ public final class RegoleEquipaggiamento {
 		if (slotNuova != TipoSlotArtefatto.MANO_PRINCIPALE && slotNuova != TipoSlotArtefatto.ENTRAMBE_LE_MANI) {
 			throw new IllegalArgumentException("Non è un'arma da mano principale o a due mani: " + nuova.getTipo());
 		}
-		Collection<ArtefattoMD> equipaggiati = personaggio.getModelloDati().getArtefatti();
+		PersonaggioMD modello = personaggio.getModelloDati();
 		Optional<List<ArtefattoMD>> uscenti = chiEsce(personaggio, nuova);
 		if (!uscenti.isPresent()) {
 			return EsitoControlloRichiestaEquipaggiamento.rifiuto(personaggio, TipoMotivoRifiutoEquipaggiamento.MANI_OCCUPATE_PER_ARMA_A_DUE_MANI);
 		}
-		List<ArtefattoMD> prima = new ArrayList<>(equipaggiati);
+		List<ArtefattoMD> prima = new ArrayList<>(modello.getArtefatti());
 		try {
-			equipaggiati.removeAll(uscenti.get());
+			for (ArtefattoMD uscente : uscenti.get()) {
+				modello.togliArtefatto(uscente);
+			}
 			return valuta(personaggio, nuova);
 		} finally {
-			equipaggiati.clear();
-			equipaggiati.addAll(prima);
+			modello.ripristinaArtefatti(prima);
 		}
 	}
 
@@ -307,7 +315,7 @@ public final class RegoleEquipaggiamento {
 	 */
 	static boolean puoUsare(TipoPersonaggio classe, TipoArtefatto tipo) {
 		boolean daTabella = tipo.getSupertipo() == SupertipoArtefatto.ARMA || tipo == TipoArtefatto.SCUDO
-				|| tipo == TipoArtefatto.LIBRO_MAGICO;
+				|| tipo == TipoArtefatto.LIBRO_MAGICO || tipo == TipoArtefatto.ARMATURA;
 		if (!daTabella) {
 			return true;
 		}

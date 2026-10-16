@@ -13,6 +13,7 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Optional;
+import java.util.Locale;
 import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
@@ -48,7 +49,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
 
     private void onEventoApprovazioneIncantatura(NotificaApprovazioneIncantatura evento) {
         String nome = evento.getArtefatto().getNomeBreve();
-        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Ecco fatto! " + nome.substring(0, 1).toUpperCase()
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Ecco fatto! " + nome.substring(0, 1).toUpperCase(Locale.ROOT)
                 + nome.substring(1) + " è pronto.", getCoordinateFumetto()));
     }
 

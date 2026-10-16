@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.strumenti;
 
+import java.util.function.Supplier;
+
 /**
  * Il registro di log del gioco. Dove scrive lo decide la {@link DestinazioneDiLog}: se nessuno ne installa una, quella
  * del desktop ({@link DestinazioneConsoleEFile}: console e, con {@code -Dforesta.log=cartella}, un file per sessione),
@@ -42,10 +44,32 @@ public class Logger {
 	}
 
 	/**
-	 * Scrive un messaggio sulla destinazione di log.
+	 * Scrive un messaggio sulla destinazione di log. Per un testo che va costruito (una concatenazione, un
+	 * {@code String.format}) si usa {@link #log(Supplier)}: questo costruisce il testo anche quando nessuno lo scrive.
 	 */
 	public static void log(String messaggio) {
 		destinazione().scrivi(messaggio);
+	}
+
+	/**
+	 * Scrive il messaggio che il fornitore costruisce, ma solo se la destinazione scrive davvero: con
+	 * {@link DestinazioneDiLog#NESSUNA} il testo non viene nemmeno costruito, e il costo di una concatenazione o di un
+	 * {@code String.format} (che nei calcoli del combattimento si paga a ogni colpo) sparisce. È la forma da usare per ogni
+	 * testo costruito: {@code Logger.log(() -> "Colpo a " + nome)}. Le variabili usate nell'espressione devono essere
+	 * {@code final} o non cambiare più.
+	 */
+	public static void log(Supplier<String> messaggio) {
+		DestinazioneDiLog corrente = destinazione();
+		if (corrente.isAttiva()) {
+			corrente.scrivi(messaggio.get());
+		}
+	}
+
+	/**
+	 * Se il registro scrive davvero, per chi deve fare qualcosa di più di un testo per prepararlo.
+	 */
+	public static boolean isAttivo() {
+		return destinazione().isAttiva();
 	}
 
 	/**

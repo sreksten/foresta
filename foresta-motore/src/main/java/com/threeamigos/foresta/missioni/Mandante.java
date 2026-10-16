@@ -3,6 +3,7 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 
 import java.util.function.Supplier;
+import java.util.Locale;
 
 /**
  * Chi chiede dei materiali in città (vedi RichiestaDiMateriali): l'alchimista, l'armaiolo, il capitano delle guardie, il
@@ -64,13 +65,13 @@ public enum Mandante {
 	 * ("Sono il capitano delle guardie, Rodolfo, e ho bisogno di prove").
 	 */
 	public String getApertura(String nomeProprio) {
-		return String.format(apertura, nomeProprio == null ? "," : ", " + nomeProprio + ",");
+		return String.format(Locale.ROOT, apertura, nomeProprio == null ? "," : ", " + nomeProprio + ",");
 	}
 
 	/**
 	 * Che cosa fa dei materiali che riceve, con il pronome: "che le annusa soddisfatto".
 	 */
 	public String allaConsegna(String pronome) {
-		return String.format(allaConsegna, pronome);
+		return String.format(Locale.ROOT, allaConsegna, pronome);
 	}
 }

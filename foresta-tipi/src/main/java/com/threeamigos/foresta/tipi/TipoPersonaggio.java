@@ -69,7 +69,10 @@ public enum TipoPersonaggio {
 	VIANDANTE(CategoriaPersonaggio.UMANOIDE);
 
 	private final Set<CategoriaPersonaggio> categorie;
-	// Quanto danno subisce, per tipo di danno, questa classe in più di quanto dicono le sue categorie: i tipi che mancano valgono 1
+	// Quanto danno subisce, per tipo di danno, questa classe in più di quanto dicono le sue categorie: i tipi che mancano valgono 1.
+	// La mappa è modificabile ma solo da qui: la riempie il blocco static qui sotto, tramite un metodo privato, e da fuori
+	// nessuno può cambiarla; renderla immutabile vorrebbe dire costruirla altrove e passarla ai costruttori delle costanti,
+	// con più codice e nessun rischio in meno.
 	private final Map<TipoDanno, Double> dannoSubito = new EnumMap<>(TipoDanno.class);
 
 	// Le debolezze e le resistenze della classe (quelle comuni a una categoria stanno in CategoriaPersonaggio)

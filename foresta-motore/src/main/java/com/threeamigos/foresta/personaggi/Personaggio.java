@@ -651,79 +651,60 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 
 	double getMoltiplicatoreCarico();
 
-	String getNoteMoltiplicatoreCarico();
 
 	double getMoltiplicatoreCritico();
 
-	String getNoteMoltiplicatoreCritico();
 
 	double getMoltiplicatorePrecisione();
 
-	String getNoteMoltiplicatorePrecisione();
 
 	double getMoltiplicatoreVelocita();
 
-	String getNoteMoltiplicatoreVelocita();
 
 	double getMoltiplicatoreFurtivita();
 
-	String getNoteMoltiplicatoreFurtivita();
 
 	double getMoltiplicatoreParata();
 
-	String getNoteMoltiplicatoreParata();
 
 	double getMoltiplicatoreResistenzaMagica();
 
-	String getNoteMoltiplicatoreResistenzaMagica();
 
 	double getMoltiplicatorePercezione();
 
-	String getNoteMoltiplicatorePercezione();
 
 	double getMoltiplicatoreSoggezione();
 
-	String getNoteMoltiplicatoreSoggezione();
 
 	double getMoltiplicatoreFuria();
 
-	String getNoteMoltiplicatoreFuria();
 
 	double getMoltiplicatoreCoraggio();
 
-	String getNoteMoltiplicatoreCoraggio();
 
 	double getMoltiplicatoreValore();
 
-	String getNoteMoltiplicatoreValore();
 
 	double getMoltiplicatoreContrattazione();
 
-	String getNoteMoltiplicatoreContrattazione();
 
 	double getMoltiplicatoreNumeroBersagli();
 
-	String getNoteMoltiplicatoreNumeroBersagli();
 
 	double getMoltiplicatoreStanchezza();
 
-	String getNoteMoltiplicatoreStanchezza();
 
 	double getMoltiplicatoreDanniMagici();
 
-	String getNoteMoltiplicatoreDanniMagici();
 
 	double getMoltiplicatoreDanniFisici();
 
-	String getNoteMoltiplicatoreDanniFisici();
 
 	double getMoltiplicatoreRecuperoMagico();
 
-	String getNoteMoltiplicatoreRecuperoMagico();
 
 	double getMoltiplicatoreRecuperoFisico();
 
-	String getNoteMoltiplicatoreRecuperoFisico();
 
 	double getMaxStatistica(TipoAttributo tipoAttributo);
 

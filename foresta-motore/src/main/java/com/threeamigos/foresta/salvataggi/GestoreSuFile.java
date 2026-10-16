@@ -8,6 +8,9 @@ import com.threeamigos.foresta.strumenti.Logger;
  * <p>
  * Chi li crea può indicare la cartella (su Android e iOS sta in uno spazio privato dell'app, che solo la piattaforma
  * conosce); senza, è la cartella {@code .foresta} della cartella dell'utente, come sul desktop.
+ * <p>
+ * I gestori leggono e scrivono con {@code java.io.File} e non con {@code java.nio.file}, che su Android chiede almeno
+ * l'API 26: per sostituire un salvataggio con quello scritto in un file temporaneo vedi {@code GestoreSalvataggiSuFile}.
  */
 public abstract class GestoreSuFile {
 
@@ -38,7 +41,7 @@ public abstract class GestoreSuFile {
 	 */
 	protected File recuperaDirectory() {
 		File directory = directoryIndicata != null ? directoryIndicata : directoryNellaCartellaDellUtente();
-		Logger.log("Directory: " + directory.getPath());
+		Logger.log(() -> "Directory: " + directory.getPath());
 		if (!directory.exists()) {
 			directory.mkdirs();
 		}

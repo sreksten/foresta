@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Locale;
 import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
 
 /**
@@ -282,7 +283,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, Vist
 	private static boolean troppoPesante(GruppoGiocatore gruppo, Artefatto artefatto) {
 		for (Personaggio personaggio : gruppo.getPersonaggi()) {
 			if (personaggio.isVivo() && !personaggio.isATempo() && personaggio.puoEquipaggiare(artefatto)
-					.filter(motivo -> motivo.equals(TipoMotivoRifiutoEquipaggiamento.TROPPO_CARICO.getFumetto())).isPresent()) {
+					.filter(esito -> esito.getMotivo() == TipoMotivoRifiutoEquipaggiamento.TROPPO_CARICO).isPresent()) {
 				return true;
 			}
 		}
@@ -324,7 +325,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, Vist
 	 */
 	private static String comeSoggetto(Artefatto artefatto) {
 		String nome = artefatto.getNomeCompleto();
-		nome = nome.substring(0, 1).toUpperCase() + nome.substring(1);
+		nome = nome.substring(0, 1).toUpperCase(Locale.ROOT) + nome.substring(1);
 		return nome.contains(", ") ? nome + ',' : nome;
 	}
 

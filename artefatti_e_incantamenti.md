@@ -15,7 +15,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
   - **tutti lanciano incantesimi**, perché basta consumare la pergamena su cui sono scritti; ma il **Mago** deve fare con la magia danni di gran lunga superiori a quelli di chiunque altro;
   - l'**Elfo** combatte con più agilità del Mago ed è un po' meno bravo con la magia;
   - il **Guerriero** con gli incantesimi, salvo colpi di fortuna, fa poco, ma in mischia con spada e scudo o spadone è il più forte;
-  - il **Ladro** agisce con destrezza: doppia arma, niente armature pesanti;
+  - il **Ladro** agisce con destrezza: doppia arma, niente armature (non le usa proprio);
   - il **Bardo** fa da supporto al gruppo.
 
   Il gioco è fracassone: non deve essere frustrante, e i mostri stanno al livello del mondo, cioè del capo del gruppo.
@@ -100,7 +100,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
   - `ENTRAMBE_LE_MANI` (nuovo valore di `TipoSlotArtefatto`), per le **armi a due mani**: occupa sia la mano principale sia la secondaria.
     - Chi impugna un'arma a due mani non può equipaggiare scudo, libro magico o seconda arma finché non la ripone nell'inventario del gruppo. Viceversa, non può prendere un'arma a due mani se ha qualcosa in una delle due mani.
     - Il rifiuto si avverte con un fumetto.
-- **Equipaggiamento secondo la classe.** Armi, scudo e libro seguono una tabella per classe (`RegoleEquipaggiamento.puoUsare`); le versioni femminili seguono le maschili, le classi fuori tabella (i mostri, l'Ombrafiamma) non hanno limiti. Elmo, veste e accessori li portano tutti.
+- **Equipaggiamento secondo la classe.** Armi, scudo, libro e armatura seguono una tabella per classe (`RegoleEquipaggiamento.puoUsare`); le versioni femminili seguono le maschili, le classi fuori tabella (i mostri, l'Ombrafiamma) non hanno limiti. Elmo, veste e accessori li portano tutti. L'armatura la portano tutti tranne il Ladro/Ladra, il Mago/Maga e il Sacerdote/Sacerdotessa.
 
   | Classe | Armi, scudo e libro |
   | :--- | :--- |
@@ -110,8 +110,8 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
   | Bardo/Cantastorie | spada, scudo |
   | Mago/Maga | bastone magico, libro magico |
 
-  Il rifiuto è `MotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE` ("non sa usare questo genere di oggetti").
-- **Armatura e FORZA.** L'armatura chiede una `FORZA` di almeno 16 (`Costanti.ARMATURA_FORZA_MINIMA`), invece di un divieto per classe: il Guerriero ce l'ha sempre (17 a livello 1), Ladro, Elfo e Bardo solo se forzuti ai livelli alti (11-14 a livello 1, fino a 19 a livello 10), il Mago mai (5-11). Il rifiuto è `FORZA_INSUFFICIENTE`.
+  Il rifiuto è `MotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE` ("Non uso questo tipo di oggetti"): non è che la classe non sappia usarli, è che non li usa proprio. Il controllo della classe viene per primo (prima di forza, peso e livello), così il fumetto riporta il motivo che conta: a un ladro con un'armatura non si dice che gli manca la forza.
+- **Armatura e FORZA.** Chi può portare l'armatura (tutti tranne il Ladro/Ladra, il Mago/Maga e il Sacerdote/Sacerdotessa, che non la usano: `NON_ADATTO_ALLA_CLASSE`) deve avere una `FORZA` di almeno 16 (`Costanti.ARMATURA_FORZA_MINIMA`): il Guerriero ce l'ha sempre (17 a livello 1), Elfo e Bardo solo se forzuti ai livelli alti (11-14 a livello 1, fino a 19 a livello 10). Il rifiuto è `FORZA_INSUFFICIENTE`. In passato anche il Ladro poteva portarla, se abbastanza forte (e il Mago non ci arrivava mai per la forza): la destrezza del Ladro e la magia del Mago non vanno d'accordo con un'armatura, e il Sacerdote è un prete più che un chierico (un chierico in armatura è un'altra classe, che non c'è): è fuori dalle loro classi.
 - **Arma in `MANO_SECONDARIA`.** Oltre a scudo e libro, anche **spada, mazza o ascia**, ma solo per **Ladro/Ladra ed Elfo/Elfa**. Lancia e bastone magico restano solo nella mano principale.
 - **Armi a due mani.** Nuovo `TipoArtefatto.SPADONE` (supertipo `ARMA`, slot `ENTRAMBE_LE_MANI`, danno `TAGLIENTE`, "impugna"), che per ora riusa la grafica della spada.
   - **+50% di danno base** rispetto a un'arma a una mano dello stesso livello.
@@ -244,7 +244,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
   - `ArtefattoMD.slotEquipaggiamento` (null se non equipaggiato, oggi salvato come campo vuoto). Per ora nessuno lo imposta: è la fase 2.
   - Test: 10 nuovi in `ArtefattoMDTest` (salva/rileggi di nome proprio, slot, pergamene; forma completa; normalizzazione) e `ArtefattoIncantabileTest` (5). Tutta la suite è verde.
 - [x] **Fase 2 (equipaggiamento a slot e livello).**
-  - `Personaggio.puoEquipaggiare(Artefatto)` restituisce un `Optional<MotivoRifiutoEquipaggiamento>`: `TROPPO_CARICO`, `SLOT_OCCUPATO`, `PERGAMENA`, `LIVELLO_TROPPO_ALTO`, `SECONDA_ARMA_NON_CONSENTITA`, `MANI_OCCUPATE_PER_ARMA_A_DUE_MANI`, `ARMA_A_DUE_MANI_IMPUGNATA`. Ogni motivo ha la sua spiegazione ("Pippo non sa combattere con due armi.").
+  - `Personaggio.puoEquipaggiare(Artefatto)` restituisce un `Optional<MotivoRifiutoEquipaggiamento>`: `TROPPO_CARICO`, `SLOT_OCCUPATO`, `PERGAMENA`, `LIVELLO_TROPPO_ALTO`, `SECONDA_ARMA_NON_CONSENTITA`, `MANI_OCCUPATE_PER_ARMA_A_DUE_MANI`, `ARMA_A_DUE_MANI_IMPUGNATA`. Ogni motivo ha la sua spiegazione ("Pippo non combatte con due armi.").
   - Le regole a slot stanno in `RegoleEquipaggiamento` (package `personaggi`); il peso lo controlla `PersonaggioBase`.
   - Lo usano il prelievo (`GruppoGiocatore`: la `NotificaRifiutoPrelievoArtefatto` porta il motivo, e il fumetto dell'inventario lo mostra) e `Artefatto.consegna` (messaggioMD "… resta nell'inventario del gruppo: Pippo …").
   - `PersonaggioBase.addArtefatto` imposta `slotEquipaggiamento`; `removeArtefatto` e `GruppoGiocatore.addArtefatto` lo azzerano. Se si aggiunge un artefatto senza controlli (es. gli artefatti "PER TEST" dell'`Automa`), prende lo slot del suo tipo.

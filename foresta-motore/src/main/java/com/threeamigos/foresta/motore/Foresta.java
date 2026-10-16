@@ -128,7 +128,7 @@ public class Foresta {
 		if (tipoLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + tipoLocazione.name());
 		}
-		Logger.log("Costruzione di " + tipoLocazione + " in " + coordinate);
+		Logger.log(() -> "Costruzione di " + tipoLocazione + " in " + coordinate);
 		setLocazione(coordinate, tipoLocazione);
 		setLocazioneVisitata(coordinate, false);
 	}
@@ -141,7 +141,7 @@ public class Foresta {
 		if (!tipoLocazioneUnica.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazione per creare " + tipoLocazioneUnica.name());
 		}
-		Logger.log("Costruzione di " + tipoLocazioneUnica + " in " + coordinate);
+		Logger.log(() -> "Costruzione di " + tipoLocazioneUnica + " in " + coordinate);
 		setLocazione(coordinate, tipoLocazioneUnica);
 		getLocazioneMD(coordinate).setNome(tipoLocazioneUnica.getNomeProprio());
 		getForestaMD().aggiungiLocazioneUnica(tipoLocazioneUnica, coordinate);
@@ -349,7 +349,7 @@ public class Foresta {
 		if (tipoLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + tipoLocazione.name());
 		}
-		Logger.log("Costruzione di " + quantita + " classiLocazione " + tipoLocazione);
+		Logger.log(() -> "Costruzione di " + quantita + " classiLocazione " + tipoLocazione);
 		for (int i = 0; i < quantita; i++) {
 			setLocazione(getCoordinateLibere(), tipoLocazione);
 		}

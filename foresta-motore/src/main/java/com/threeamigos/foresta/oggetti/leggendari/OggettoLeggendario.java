@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Locale;
 import com.threeamigos.foresta.oggetti.ModificatoreDelTesto;
 
 /**
@@ -186,7 +187,7 @@ public final class OggettoLeggendario {
 	 */
 	public boolean laLeggendaNominaLOggetto() {
 		String nomeSenzaArticolo = nomeBreve.replaceFirst("^(il|lo|la|gli|le|i) |^l'", "");
-		return leggenda.get(0).toLowerCase().contains(nomeSenzaArticolo.toLowerCase());
+		return leggenda.get(0).toLowerCase(Locale.ROOT).contains(nomeSenzaArticolo.toLowerCase(Locale.ROOT));
 	}
 
 	/**

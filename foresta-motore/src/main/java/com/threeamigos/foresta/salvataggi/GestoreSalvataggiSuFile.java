@@ -147,6 +147,14 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements GestoreSal
 		}
 	}
 
+	@Override
+	public void elimina(Comando id) {
+		File fileSalvataggio = new File(recuperaDirectory().getPath() + File.separatorChar + id.name() + POSTFISSO_FILE);
+		if (fileSalvataggio.exists() && !fileSalvataggio.delete()) {
+			BusEventi.pubblica(new InternoMessaggio("Impossibile cancellare il salvataggio " + id));
+		}
+	}
+
 	/**
 	 * I salvataggi sono sempre in UTF-8, qualunque sia il charset predefinito del sistema.
 	 */

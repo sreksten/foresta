@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.Locale;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 
 /**
@@ -45,7 +46,7 @@ public final class TestoGrande {
 	 */
 	public static String normalizza(String testo) {
 		StringBuilder normalizzato = new StringBuilder();
-		for (char c : testo.toLowerCase().toCharArray()) {
+		for (char c : testo.toLowerCase(Locale.ROOT).toCharArray()) {
 			switch (c) {
 				case 'à':
 				case 'á':

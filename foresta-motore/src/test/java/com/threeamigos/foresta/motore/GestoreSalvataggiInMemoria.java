@@ -31,6 +31,9 @@ final class GestoreSalvataggiInMemoria implements GestoreSalvataggi {
 	public List<TestataSalvataggio> getSalvataggiDisponibili() {
 		List<TestataSalvataggio> testate = new ArrayList<>();
 		for (Map.Entry<Comando, String> salvataggio : salvataggi.entrySet()) {
+			if (salvataggio.getKey() == Comando.SALVATAGGIO_AUTOMATICO) {
+				continue;
+			}
 			try (BufferedReader reader = new BufferedReader(new StringReader(salvataggio.getValue()))) {
 				LettoreCampi intestazione = new LettoreCampi(reader.readLine());
 				intestazione.testo();
@@ -74,6 +77,11 @@ final class GestoreSalvataggiInMemoria implements GestoreSalvataggi {
 		}
 		salvataggi.put(id, testo.toString());
 		return true;
+	}
+
+	@Override
+	public void elimina(Comando id) {
+		salvataggi.remove(id);
 	}
 
 	boolean contiene(Comando id) {

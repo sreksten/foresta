@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Il temporizzatore basato sull'esecutore pianificato di Java: gli impulsi si pianificano su un thread a parte, ma ognuno viene eseguito sul thread principale
- * (vedi {@link ThreadPrincipale}). Ogni impulso ricorda la pianificazione da cui viene: se nel frattempo è cambiata, l'impulso già accodato non fa niente, così
+ * (vedi {@link ThreadPrincipale}). Si può sospendere e riprendere con il ciclo di vita dell'app ({@link #sospendi()}). Ogni impulso ricorda la pianificazione da cui viene: se nel frattempo è cambiata, l'impulso già accodato non fa niente, così
  * nessun impulso arriva dopo un cambio di stato.
  */
 public class TemporizzatoreJ2SE implements Temporizzatore {
@@ -29,29 +29,36 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 	private final AtomicInteger pianificazione = new AtomicInteger();
 	private Temporizzabile temporizzabile;
 
-	public void setTemporizzabile(Temporizzabile temporizzabile) {
+	// Il ritmo dell'ultimo inizia/iniziaDopo, per riprenderlo dopo una sospensione; 0 se non ci sono impulsi da fare
+	private int periodoAttivo;
+	private boolean sospeso;
+
+	public synchronized void setTemporizzabile(Temporizzabile temporizzabile) {
 		this.temporizzabile = temporizzabile;
 	}
 
 	/**
 	 * Avvia gli impulsi: il primo subito, poi uno ogni quei millisecondi.
 	 */
-	public void inizia(int millisecondi) {
+	public synchronized void inizia(int millisecondi) {
 		pianifica(0, millisecondi);
 	}
 
 	/**
 	 * Avvia gli impulsi: il primo dopo quei millisecondi, poi uno ogni quei millisecondi.
 	 */
-	public void iniziaDopo(int millisecondi) {
+	public synchronized void iniziaDopo(int millisecondi) {
 		pianifica(millisecondi, millisecondi);
 	}
 
 	private void pianifica(int ritardoIniziale, int millisecondi) {
-		if (timerTask != null) {
-			timerTask.cancel(false);
+		fermaLaPianificazioneInCorso();
+		periodoAttivo = millisecondi;
+		if (sospeso) {
+			// Il ritmo e' ricordato: gli impulsi partono alla ripresa
+			return;
 		}
-		int questaPianificazione = pianificazione.incrementAndGet();
+		int questaPianificazione = pianificazione.get();
 		timerTask = executor.scheduleWithFixedDelay(
 			// Il tick va eseguito sul thread principale: processaComando() pubblica eventi via BusEventi, che
 			// se chiamato da un thread diverso li accoda. Questo apre una
@@ -73,13 +80,41 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 		);
 	}
 
-	/**
-	 * Ferma gli impulsi, anche quelli già accodati.
-	 */
-	public void termina() {
+	// Cancella i prossimi impulsi e rende non piu' validi quelli gia' accodati
+	private void fermaLaPianificazioneInCorso() {
 		pianificazione.incrementAndGet();
 		if (timerTask != null) {
 			timerTask.cancel(false);
+			timerTask = null;
+		}
+	}
+
+	/**
+	 * Ferma gli impulsi, anche quelli già accodati.
+	 */
+	public synchronized void termina() {
+		fermaLaPianificazioneInCorso();
+		periodoAttivo = 0;
+	}
+
+	/**
+	 * Ferma gli impulsi, anche quelli già accodati, ricordando il ritmo per {@link #riprendi()}.
+	 */
+	public synchronized void sospendi() {
+		sospeso = true;
+		fermaLaPianificazioneInCorso();
+	}
+
+	/**
+	 * Rimette in marcia gli impulsi sospesi, con lo stesso ritmo e il primo dopo un periodo intero.
+	 */
+	public synchronized void riprendi() {
+		if (!sospeso) {
+			return;
+		}
+		sospeso = false;
+		if (periodoAttivo > 0) {
+			pianifica(periodoAttivo, periodoAttivo);
 		}
 	}
 }

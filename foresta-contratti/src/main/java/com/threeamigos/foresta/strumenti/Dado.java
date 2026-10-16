@@ -119,7 +119,7 @@ public class Dado {
      */
     public static int tiraAncheAUnaFaccia(int N) {
         if (N < 1) {
-            Logger.log("**************************ERRORE FATALE! Dado tira(" + N + ")");
+            Logger.log(() -> "**************************ERRORE FATALE! Dado tira(" + N + ")");
             throw new IllegalArgumentException("Il numero di facce deve essere maggiore di zero");
         }
         if (N == 1) {
@@ -137,7 +137,7 @@ public class Dado {
      */
     public static int tiraAncheSenzaRange(int min, int max) {
         if (min > max) {
-            Logger.log("**************************ERRORE FATALE! Dado tira(" + min + ", " + max + ")");
+            Logger.log(() -> "**************************ERRORE FATALE! Dado tira(" + min + ", " + max + ")");
             throw new IllegalArgumentException("Il valore minimo deve essere minore o uguale al valore massimo");
         }
         if (min == max) {
@@ -153,7 +153,7 @@ public class Dado {
      */
     public static int tira(int N) {
         if (N <= 1) {
-            Logger.log("**************************ERRORE FATALE! Dado tira(" + N + ")");
+            Logger.log(() -> "**************************ERRORE FATALE! Dado tira(" + N + ")");
             throw new IllegalArgumentException("Il numero di facce deve essere maggiore di 1");
         }
         return tira(1, N);
@@ -167,7 +167,7 @@ public class Dado {
      */
     public static int tira(int min, int max) {
         if (min >= max) {
-            Logger.log("**************************ERRORE FATALE! Dado tira(" + min + ", " + max + ")");
+            Logger.log(() -> "**************************ERRORE FATALE! Dado tira(" + min + ", " + max + ")");
             throw new IllegalArgumentException("Il valore minimo deve essere minore al valore massimo");
         }
         return intero(min, max);
@@ -179,7 +179,7 @@ public class Dado {
      */
     public static int tira(ContestoLancio contesto, int min, int max) {
         if (min >= max) {
-            Logger.log("**************************ERRORE FATALE! Dado tira(" + contesto + ", " + min + ", " + max + ")");
+            Logger.log(() -> "**************************ERRORE FATALE! Dado tira(" + contesto + ", " + min + ", " + max + ")");
             throw new IllegalArgumentException("Il valore minimo deve essere minore al valore massimo");
         }
         if (TRUCCHI.isEmpty()) {
@@ -199,7 +199,7 @@ public class Dado {
      */
     public static int tira(ContestoLancio contesto, int N) {
         if (N <= 1) {
-            Logger.log("**************************ERRORE FATALE! Dado tira(" + contesto + ", " + N + ")");
+            Logger.log(() -> "**************************ERRORE FATALE! Dado tira(" + contesto + ", " + N + ")");
             throw new IllegalArgumentException("Il numero di facce deve essere maggiore di 1");
         }
         return tira(contesto, 1, N);
@@ -211,7 +211,7 @@ public class Dado {
      */
     public static int tiraAncheAUnaFaccia(ContestoLancio contesto, int N) {
         if (N < 1) {
-            Logger.log("**************************ERRORE FATALE! Dado tira(" + contesto + ", " + N + ")");
+            Logger.log(() -> "**************************ERRORE FATALE! Dado tira(" + contesto + ", " + N + ")");
             throw new IllegalArgumentException("Il numero di facce deve essere maggiore di zero");
         }
         if (N == 1) {

@@ -56,8 +56,33 @@ class TestiNeiSalvataggiTest {
 		assertEquals("Ar senio", riletto.getNome());
 		assertEquals("ucciso da ungoblin", riletto.getCausaTrapasso());
 		assertEquals(3, riletto.getLivello());
-		assertEquals(12, riletto.getForza());
+		assertEquals(12.0, riletto.get(TipoAttributo.FORZA));
 		assertEquals(TipoPersonaggio.LADRO, riletto.getClasse());
+	}
+
+	@Test
+	void vivoEMortoSonoUnCampoASeEUnaCausaChiamataVivoNonCreaConfusione() throws IOException {
+		// Given
+		PersonaggioMD morto = new PersonaggioMD();
+		morto.setClasse(TipoPersonaggio.MAGO);
+		morto.setVivo(false);
+		morto.setCausaTrapasso("vivo");
+		PersonaggioMD vivoConUnaCausa = new PersonaggioMD();
+		vivoConUnaCausa.setClasse(TipoPersonaggio.MAGO);
+		vivoConUnaCausa.setVivo(true);
+		vivoConUnaCausa.setCausaTrapasso("avanzo di una morte precedente");
+
+		// When
+		PersonaggioMD mortoRiletto = new PersonaggioMD();
+		mortoRiletto.leggi(lettore(scrivi(morto)));
+		PersonaggioMD vivoRiletto = new PersonaggioMD();
+		vivoRiletto.leggi(lettore(scrivi(vivoConUnaCausa)));
+
+		// Then
+		assertEquals(false, mortoRiletto.isVivo());
+		assertEquals("vivo", mortoRiletto.getCausaTrapasso());
+		assertEquals(true, vivoRiletto.isVivo());
+		assertNull(vivoRiletto.getCausaTrapasso(), "chi e' vivo non ha una causa di morte");
 	}
 
 	@Test

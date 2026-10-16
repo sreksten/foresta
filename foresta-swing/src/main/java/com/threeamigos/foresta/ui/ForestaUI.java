@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
@@ -26,6 +27,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Locale;
 import com.threeamigos.foresta.ui.barra.ClasseIcona;
 import com.threeamigos.foresta.ui.barra.ComandiPossibili;
 import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
@@ -228,7 +230,7 @@ public class ForestaUI implements Temporizzabile {
 		prompt = new Prompt();
 		prompt.setLocation((larghezza - prompt.getSize().width) / 2, (altezza - prompt.getSize().height) / 2);
 
-		Logger.log("Orientamento: " + orientamento);
+		Logger.log(() -> "Orientamento: " + orientamento);
 		displayableCanvas = new DisplayableCanvas(larghezza, altezza, orientamentoCanvas(orientamento), SPESSORE_BARRA_ICONE, barraDock,
 				gestorePunteggi, vistaPartita);
 		displayableCanvas.setRichiestaTesto(prompt::mostra);
@@ -550,7 +552,7 @@ public class ForestaUI implements Temporizzabile {
 
 	private void gestisciEventoConsumoPuntoAbilita(NotificaConsumoPuntoAbilitaPersonaggio evento) {
 		TipoAttributo tipoAttributo = evento.getTipoAttributo();
-		displayableCanvas.notificaAnnuncioGlobale("AUMENTO", tipoAttributo.getNome().toUpperCase());
+		displayableCanvas.notificaAnnuncioGlobale("AUMENTO", tipoAttributo.getNome().toUpperCase(Locale.ROOT));
 	}
 
 	private void gestisciEventoFineGioco(NotificaFineGioco evento) {
@@ -661,7 +663,7 @@ public class ForestaUI implements Temporizzabile {
 			default:
 				throw new IllegalArgumentException("TipoVariazioneModificatore non gestito: " + evento.getTipo());
 		}
-		displayableCanvas.aggiungiModificatore(personaggio, modificatore.descrizioneBreve(), colore);
+		displayableCanvas.aggiungiModificatore(personaggio, TestoDeiModificatori.breve(modificatore), colore);
 	}
 
 	private static DoomdarkColorModel.Color coloreModificatore(ModificatoreAttributoMD modificatore) {

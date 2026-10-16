@@ -87,14 +87,74 @@ class PersonaggioEquipaggiamentoTest {
     }
 
     @Test
-    void lArmaturaChiedeForza() {
-        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.FORZA_INSUFFICIENTE, new Ladro("Pippo", 1), artefatto(TipoArtefatto.ARMATURA, 1));
-        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.FORZA_INSUFFICIENTE, new Mago("Merlino", 1), artefatto(TipoArtefatto.ARMATURA, 1));
-        assertEquals(Optional.empty(), new Guerriero("Pippo", 1).puoEquipaggiare(artefatto(TipoArtefatto.ARMATURA, 1)));
-        // Con un anello della forza anche il ladro la indossa
+    void ilMagoNonPortaMaiLArmatura() {
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Mago("Merlino", 1), artefatto(TipoArtefatto.ARMATURA, 1));
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Maga("Morgana", 1), artefatto(TipoArtefatto.ARMATURA, 1));
+        Mago forzuto = new Mago("Merlino", 1);
+        forzuto.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 20));
+        assertTrue(forzuto.getForza() >= Costanti.ARMATURA_FORZA_MINIMA, "la prova ha senso solo se la forza basterebbe");
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, forzuto, artefatto(TipoArtefatto.ARMATURA, 1));
+    }
+
+    @Test
+    void ilSacerdoteNonPortaMaiLArmatura() {
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Sacerdote("Pippo", 1), artefatto(TipoArtefatto.ARMATURA, 1));
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Sacerdotessa("Pippa", 1), artefatto(TipoArtefatto.ARMATURA, 1));
+        Sacerdote forzuto = new Sacerdote("Pippo", 1);
+        forzuto.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 20));
+        assertTrue(forzuto.getForza() >= Costanti.ARMATURA_FORZA_MINIMA, "la prova ha senso solo se la forza basterebbe");
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, forzuto, artefatto(TipoArtefatto.ARMATURA, 1));
+        // Il suo equipaggiamento di classe non cambia
+        assertEquals(Optional.empty(), new Sacerdote("Pippo", 1).puoEquipaggiare(artefatto(TipoArtefatto.MAZZA, 1)));
+        assertEquals(Optional.empty(), new Sacerdote("Pippo", 1).puoEquipaggiare(artefatto(TipoArtefatto.BASTONE_MAGICO, 1)));
+    }
+
+    @Test
+    void ilLadroNonPortaMaiLArmatura() {
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Ladro("Pippo", 1), artefatto(TipoArtefatto.ARMATURA, 1));
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Ladra("Pippa", 1), artefatto(TipoArtefatto.ARMATURA, 1));
+        // Nemmeno se fosse forte quanto basta: non e' questione di forza, la sua classe non la usa
         Ladro forzuto = new Ladro("Pippo", 1);
         forzuto.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 10));
+        assertTrue(forzuto.getForza() >= Costanti.ARMATURA_FORZA_MINIMA, "la prova ha senso solo se la forza basterebbe");
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, forzuto, artefatto(TipoArtefatto.ARMATURA, 1));
+        // L'elmo, la veste e gli accessori li porta, come tutti
+        assertEquals(Optional.empty(), new Ladro("Pippo", 1).puoEquipaggiare(artefatto(TipoArtefatto.ELMO, 1)));
+        assertEquals(Optional.empty(), new Ladro("Pippo", 1).puoEquipaggiare(artefatto(TipoArtefatto.VESTE, 1)));
+    }
+
+    @Test
+    void chiPuoPortareLArmaturaChiedeForza() {
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.FORZA_INSUFFICIENTE, new Bardo("Pippo", 1), artefatto(TipoArtefatto.ARMATURA, 1));
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.FORZA_INSUFFICIENTE, new Elfo("Pippo", 1), artefatto(TipoArtefatto.ARMATURA, 1));
+        assertEquals(Optional.empty(), new Guerriero("Pippo", 1).puoEquipaggiare(artefatto(TipoArtefatto.ARMATURA, 1)));
+        // Con un anello della forza anche il bardo la indossa
+        Bardo forzuto = new Bardo("Pippo", 1);
+        forzuto.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 10));
         assertEquals(Optional.empty(), forzuto.puoEquipaggiare(artefatto(TipoArtefatto.ARMATURA, 1)));
+    }
+
+    @Test
+    void laClasseVieneControllataPrimaDelPesoEDellaForza() {
+        // Il mago non usa la spada: il motivo e' questo, non che porta troppo carico
+        Artefatto spadaPesante = artefatto(TipoArtefatto.SPADA, 1);
+        spadaPesante.getModelloDati().setPeso(100_000);
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Mago("Merlino", 1), spadaPesante);
+        // E lo stesso per un'armatura, per un ladro che non regge nemmeno il peso
+        Artefatto armaturaPesante = artefatto(TipoArtefatto.ARMATURA, 1);
+        armaturaPesante.getModelloDati().setPeso(100_000);
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Ladro("Pippo", 1), armaturaPesante);
+        // Chi la classe la ammette riceve invece il motivo che gli compete
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.TROPPO_CARICO, new Guerriero("Pippo", 1), armaturaPesante);
+    }
+
+    @Test
+    void ilRifiutoDiClasseDiceCheNonUsaQuegliOggettiNonCheNonSaUsarli() {
+        Personaggio ladro = new Ladro("Pippo", 1);
+        RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento esito = ladro.puoEquipaggiare(artefatto(TipoArtefatto.ARMATURA, 1)).get();
+
+        assertEquals("Pippo non usa questo tipo di oggetti.", esito.getDescrizione());
+        assertEquals("Non uso questo tipo di oggetti.", esito.getFumetto());
     }
 
     @Test
@@ -234,7 +294,7 @@ class PersonaggioEquipaggiamentoTest {
     void ilMotivoSiLeggeComeFrase() {
         Personaggio guerriero = new Guerriero("Pippo", 1);
         Artefatto spadone = artefatto(TipoArtefatto.SPADONE, 1);
-        assertEquals("Pippo non sa combattere con due armi.",
+        assertEquals("Pippo non combatte con due armi.",
                 TipoMotivoRifiutoEquipaggiamento.SECONDA_ARMA_NON_CONSENTITA.formattaSpiegazione(
                         guerriero.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
                                 Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA), spadone.getNome()));

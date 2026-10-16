@@ -1216,7 +1216,9 @@ public class GrammarBean {
 
 		if (currentProduction.endsWith(ONE_SHOT_MARKER)) {
 			currentProduction = currentProduction.substring(0, currentProduction.length() - ONE_SHOT_MARKER.length());
-			Logger.log("One-shot production: " + currentProduction);
+			if (Logger.isAttivo()) {
+				Logger.log("One-shot production: " + currentProduction);
+			}
 			oneShotProductions.add(currentProduction);
 		}
 		if (currentProduction.endsWith(DEFAULT_MARKER)) {
@@ -1959,7 +1961,7 @@ public class GrammarBean {
 		try {
 			return produceImpl(OPENING_BRACKET + rootNode + CLOSING_BRACKET);
 		} catch (RuntimeException e) {
-			Logger.log("Grammar production failed. Trace:\n" + describeProductionTrace());
+			Logger.log(() -> "Grammar production failed. Trace:\n" + describeProductionTrace());
 			throw e;
 		} finally {
 			globalFixedProductions.clear();
@@ -1981,7 +1983,7 @@ public class GrammarBean {
 		try {
 			return produceImpl(OPENING_BRACKET + rootNode + CLOSING_BRACKET);
 		} catch (RuntimeException e) {
-			Logger.log("Grammar production failed. Trace:\n" + describeProductionTrace());
+			Logger.log(() -> "Grammar production failed. Trace:\n" + describeProductionTrace());
 			throw e;
 		} finally {
 			globalFixedProductions.clear();

@@ -28,6 +28,7 @@ public enum CategoriaPersonaggio {
 
 	private final String nome;
 	// Quanto danno subisce, per tipo di danno, chi è di questa categoria: i tipi che mancano valgono 1
+	// Modificabile solo da qui (il blocco static, tramite un metodo privato): vedi la stessa nota in TipoPersonaggio
 	private final Map<TipoDanno, Double> dannoSubito = new EnumMap<>(TipoDanno.class);
 
 	// Le debolezze e le resistenze comuni a una categoria (quelle di una sola classe stanno in TipoPersonaggio). Tabella

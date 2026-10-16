@@ -3,90 +3,91 @@ package com.threeamigos.foresta.tipi;
 /**
  * Tutto ciò che il giocatore può comandare (le scelte nel menu, i personaggi da selezionare, le direzioni, le mosse di
  * carta, forbici e sasso) più alcuni comandi generati dal sistema, come {@link #TIMER}. La UI li manda al motore come
- * eventi (vedi comandigiocatore). Molti hanno una {@link #getDescrizione() descrizione} da mostrare.
+ * eventi (vedi comandigiocatore). Molti hanno una {@link #getDescrizione() descrizione} da mostrare, scritta in un file
+ * di testi per lingua e non qui, in modo che il gioco si possa tradurre.
  *
  * @author Stefano Reksten
  */
 public enum Comando {
 
 	// All'inizio del gioco, per scegliere il sesso del proprio personaggio
-	MASCHIO("Crea un personaggio di sesso maschile"),
-	FEMMINA("Crea un personaggio di sesso femminile"),
+	MASCHIO,
+	FEMMINA,
 
 	// All'inizio del gioco, per scegliere la classe del proprio personaggio
-	GUERRIERA("Crea una Guerriera"),
-	GUERRIERO("Crea un Guerriero"),
-	LADRA("Crea una Ladra"),
-	LADRO("Crea un Ladro"),
-	BARDO("Crea un Bardo"),
-	CANTASTORIE("Crea una Cantastorie"),
-	ELFA("Crea un'Elfa"),
-	ELFO("Crea un Elfo"),
-	MAGA("Crea una Maga"),
-	MAGO("Crea un Mago"),
-	SACERDOTESSA("Crea una Sacerdotessa"),
-	SACERDOTE("Crea un Sacerdote"),
+	GUERRIERA,
+	GUERRIERO,
+	LADRA,
+	LADRO,
+	BARDO,
+	CANTASTORIE,
+	ELFA,
+	ELFO,
+	MAGA,
+	MAGO,
+	SACERDOTESSA,
+	SACERDOTE,
 
 	// Le scelte tipiche all'interno di una locazione standard
-	SINGOLO_ATTACCO("Esegue un singolo attacco"),
-	COMBATTIMENTO("Combatte fino alla fine di uno dei due contendenti"),
-	INTERRUZIONE_COMBATTIMENTO("Interrompe il combattimento in corso"),
-	INCANTESIMO("Formula un incantesimo"),
-	CORRUZIONE("Esegue un tentativo di corruzione"),
-	AMICIZIA("Prova a stringere amicizia"),
-	FUGA("Fugge a gambe levate"),
-	PASSA_INOSSERVATO("Cerca di passare inosservato"),
+	SINGOLO_ATTACCO,
+	COMBATTIMENTO,
+	INTERRUZIONE_COMBATTIMENTO,
+	INCANTESIMO,
+	CORRUZIONE,
+	AMICIZIA,
+	FUGA,
+	PASSA_INOSSERVATO,
 
 	// Quando occorre scegliere un particolare componente del gruppo
-	PERSONAGGIO_1("Il primo personaggio del gruppo"),
-	PERSONAGGIO_2("Il secondo personaggio del gruppo"),
-	PERSONAGGIO_3("Il terzo personaggio del gruppo"),
-	PERSONAGGIO_4("Il quarto personaggio del gruppo"),
-	PERSONAGGIO_5("Il quinto personaggio del gruppo"),
-	PERSONAGGIO_6("Il sesto personaggio del gruppo"),
-	PERSONAGGIO_7("Il settimo personaggio del gruppo"),
-	PERSONAGGIO_8("L'ottavo personaggio del gruppo"),
+	PERSONAGGIO_1,
+	PERSONAGGIO_2,
+	PERSONAGGIO_3,
+	PERSONAGGIO_4,
+	PERSONAGGIO_5,
+	PERSONAGGIO_6,
+	PERSONAGGIO_7,
+	PERSONAGGIO_8,
 
 	// Selezione di un tipo di incantesimo
-	ARIA("Lancia un incantesimo di Aria"),
-	ACQUA("Lancia un incantesimo di Acqua"),
-	TERRA("Lancia un incantesimo di Terra"),
-	FUOCO("Lancia un incantesimo del Fuoco"),
-	FULMINE("Lancia un incantesimo del Fulmine"),
-	GELO("Lancia un incantesimo del Gelo"),
-	VELENO("Lancia un incantesimo di Veleno"),
-	MORTE("Lancia un incantesimo di Morte"),
-	RESURREZIONE("Lancia un incantesimo di Resurrezione"),
-	ALBA_SACRA("Lancia un incantesimo di Alba Sacra"),
-	SILENZIO("Lancia un incantesimo del Silenzio"),
-	LUCE_DIVINA("Lancia un incantesimo della Luce Divina"),
+	ARIA,
+	ACQUA,
+	TERRA,
+	FUOCO,
+	FULMINE,
+	GELO,
+	VELENO,
+	MORTE,
+	RESURREZIONE,
+	ALBA_SACRA,
+	SILENZIO,
+	LUCE_DIVINA,
 	// L'incantesimo innato di Mago ed Elfo, che non consuma pergamene
-	DARDO_ARCANO("Lancia un Dardo Arcano"),
+	DARDO_ARCANO,
 	// I canti innati del Bardo e della Cantastorie, che non consumano pergamene
-	CANTO_CURATIVO("Canta il Canto Curativo"),
-	CANTO_IPNOTICO("Canta il Canto Ipnotico"),
-	CANTO_DI_VALORE("Canta il Canto di Valore"),
+	CANTO_CURATIVO,
+	CANTO_IPNOTICO,
+	CANTO_DI_VALORE,
 	// Il canto che il bardo della locanda insegna al gruppo (vedi IntermezzoUrloDellaBanshee)
-	URLO_DELLA_BANSHEE("Canta l'Urlo della Banshee"),
+	URLO_DELLA_BANSHEE,
 
 	// Direzione verso la quale muoversi
-	NORD("Muove verso Nord"),
-	EST("Muove verso Est"),
-	SUD("Muove verso Sud"),
-	OVEST("Muove verso Ovest"),
+	NORD,
+	EST,
+	SUD,
+	OVEST,
 
 	// Scelte possibili al completamento di una locazione
-	ACCAMPAMENTO("Il gruppo si accampa per la notte"),
-	POZIONE_SALUTE("Consuma una pozione della Salute"),
-	POZIONE_SALUTE_GRANDE("Consuma una pozione della Salute, grande"),
-	POZIONE_MAGIA("Consuma una pozione della Magia"),
-	POZIONE_MAGIA_GRANDE("Consuma una pozione della Magia, grande"),
-	POZIONE_AUMENTO_LIVELLO("Consuma una pozione dell'Aumento di Livello"),
-	MAPPA("Consulta la mappa della Foresta"),
-	INVENTARIO("Consulta l'inventario del gruppo"),
+	ACCAMPAMENTO,
+	POZIONE_SALUTE,
+	POZIONE_SALUTE_GRANDE,
+	POZIONE_MAGIA,
+	POZIONE_MAGIA_GRANDE,
+	POZIONE_AUMENTO_LIVELLO,
+	MAPPA,
+	INVENTARIO,
 	// Nell'intro, per riprendere una partita salvata; in gioco, per salvare
-	FLOPPY_CARICA("Continua una partita"),
-	FLOPPY_SALVA("Salva la partita"),
+	FLOPPY_CARICA,
+	FLOPPY_SALVA,
 
 	// Numero di passi di cui muoversi, o scelta di uno slot di salvataggio
 	NUMERO_1,
@@ -94,35 +95,37 @@ public enum Comando {
 	NUMERO_3,
 	NUMERO_4,
 	NUMERO_5,
+	// Lo slot del salvataggio automatico quando l'app passa in background: non si sceglie con le icone
+	SALVATAGGIO_AUTOMATICO,
 
 	// Scelte possibili all'interno di una città
-	LOCANDA("Visita la Locanda cittadina"),
-	NEGOZIO_ALCHIMISTA("Visita l'alchimista"),
-	NEGOZIO_ARMAIOLO("Visita l'armaiolo"),
-	NEGOZIO_VENDITORE_DI_PERGAMENE("Visita il venditore di pergamene"),
-	NEGOZIO_INCANTATORE("Visita l'incantatore"),
+	LOCANDA,
+	NEGOZIO_ALCHIMISTA,
+	NEGOZIO_ARMAIOLO,
+	NEGOZIO_VENDITORE_DI_PERGAMENE,
+	NEGOZIO_INCANTATORE,
 	// Nella bottega dell'incantatore, conferma la fusione
-	FUSIONE("Esegue la fusione"),
-	ESCI_DA_CITTA("Esce dalla città"),
+	FUSIONE,
+	ESCI_DA_CITTA,
 
 	// Dall'alchimista, sceglie se agire su un personaggio o su tutto il gruppo
-	GRUPPO("Tutto il gruppo"),
-	SINGOLO("Singolo personaggio"),
+	GRUPPO,
+	SINGOLO,
 
-	SI("Si"),
-	NO("No"),
-	ANNULLA("Annulla"),
+	SI,
+	NO,
+	ANNULLA,
 
-	AIUTO("Mostra l'aiuto"),
-	NO_AIUTO("Disabilita l'aiuto"),
+	AIUTO,
+	NO_AIUTO,
 
 	// Dall'inventario, la pagina dei trofei
-	MOSTRA_TROFEI("Mostra i trofei vinti"),
+	MOSTRA_TROFEI,
 	// Dall'inventario, la schermata delle tattiche di combattimento
-	MOSTRA_TATTICHE("Mostra le tattiche di combattimento"),
+	MOSTRA_TATTICHE,
 
 	// Usata per chiedere conferma all'utente prima di andare avanti
-	PERGAMENA("Avanti"),
+	PERGAMENA,
 
 	// In caso di mancanza di posto per l'elenco delle possibili azioni, appaiono due frecce
 	// agli estremi (a seconda del layout di visualizzazione)
@@ -131,9 +134,9 @@ public enum Comando {
 	DESTRA,
 	SINISTRA,
 
-	CARTA("Carta"),
-	FORBICE("Forbice"),
-	SASSO("Sasso"),
+	CARTA,
+	FORBICE,
+	SASSO,
 
 	// Azione automaticamente generata dal sistema quando si è in una locazione, per le animazioni
 	TIMER,
@@ -158,18 +161,15 @@ public enum Comando {
 		throw new IllegalArgumentException();
 	}
 
-	private final String descrizione;
+	private static final String FILE_DESCRIZIONI = "comandi";
 
-	Comando() {
-		this.descrizione = null;
-	}
-
-	Comando(String descrizione) {
-		this.descrizione = descrizione;
-	}
-	
+	/**
+	 * Quello che il comando fa, per il cartiglio della barra delle icone ("Salva la partita"), nella lingua dei testi
+	 * (vedi {@link Testi}); null per i comandi che non hanno una descrizione (gli slot numerici, le frecce di
+	 * scorrimento, il timer). Le descrizioni stanno nel file {@code comandi_<lingua>.properties}, non qui.
+	 */
 	public String getDescrizione() {
-		return descrizione;
+		return Testi.get(FILE_DESCRIZIONI, name()).orElse(null);
 	}
 
 	/**

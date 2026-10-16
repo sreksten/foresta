@@ -35,14 +35,14 @@ class ModelloDatiSalvataggioTest {
         ArtefattoMD spada = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada di fuoco", "");
         spada.setSlotEquipaggiamento(TipoSlotArtefatto.MANO_PRINCIPALE);
         spada.setNomeProprio("Diavolina");
-        senzaNome.getArtefatti().add(spada);
+        senzaNome.aggiungiArtefatto(spada);
         PersonaggioMD morto = new PersonaggioMD();
         morto.setClasse(TipoPersonaggio.MAGA);
         morto.setNome("Pippa");
         morto.setVivo(false);
         modello.getGruppoGiocatoreMD().addPersonaggioMD(senzaNome);
         modello.getGruppoGiocatoreMD().addPersonaggioMD(morto);
-        modello.getGruppoGiocatoreMD().getArtefatti().add(
+        modello.getGruppoGiocatoreMD().aggiungiArtefatto(
                 ArtefattoMDTest.creaArtefatto(TipoArtefatto.PERGAMENA, "la pergamena minore", "che trasmette un effetto"));
         modello.getGruppoGiocatoreMD().setIncantesimi(ClasseIncantesimo.FUOCO, 4);
         modello.getLineaTemporaleMD().setGiocoFinito(true);

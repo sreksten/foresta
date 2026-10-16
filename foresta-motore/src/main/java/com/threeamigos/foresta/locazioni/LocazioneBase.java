@@ -299,7 +299,7 @@ public abstract class LocazioneBase implements Locazione {
 				int limiteMassimoIncontro = Math.min(capLivello, FabbricaPersonaggi.quantitaMassima(classePersonaggio));
 
 				int numero = Dado.tiraAncheAUnaFaccia(ContestoLancio.NUMERO_MOSTRI, limiteMassimoIncontro);
-				Logger.log("Scelta da " + m.length + " personaggi la classe " + classePersonaggio + ", numero " + numero + " con cap " + capLivello);
+				Logger.log(() -> "Scelta da " + m.length + " personaggi la classe " + classePersonaggio + ", numero " + numero + " con cap " + capLivello);
 				Personaggio p;
 				for (int i = 0; i < numero; i++) {
 					p = FabbricaPersonaggi.crea(classePersonaggio, Statistiche.getLivello());
@@ -316,11 +316,11 @@ public abstract class LocazioneBase implements Locazione {
 		} else if (!isLocazioneVisitata()) {
 			// Non ci sono artefatti, creiamo un oggetto.
 			TipoOggetto[] o = getPossibiliOggetti();
-			Logger.log("Scelta da " + o.length + " oggetti");
+			Logger.log(() -> "Scelta da " + o.length + " oggetti");
 			if (o.length > 0) {
 				int indice = Dado.tiraAncheAUnaFaccia(o.length) - 1;
 				TipoOggetto tipoOggetto = o[indice];
-				Logger.log("Classe oggetto " + tipoOggetto);
+				Logger.log(() -> "Classe oggetto " + tipoOggetto);
 				Oggetto probabileOggetto = FabbricaOggetti.crea(tipoOggetto);
 				if (probabileOggetto.getQuantita() > 0) {
 					setOggetto(probabileOggetto);
@@ -555,7 +555,7 @@ public abstract class LocazioneBase implements Locazione {
 				return Stato.SCELTA_INCANTESIMO_DA_LANCIARE;
 
 			case QUALE_FORMULA:
-				Logger.log("LocazioneBase.QUALE_FORMULA: " + azione);
+				Logger.log(() -> "LocazioneBase.QUALE_FORMULA: " + azione);
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
 				} else if (TipoCanto.ofComando(azione) != null) {
@@ -607,13 +607,15 @@ public abstract class LocazioneBase implements Locazione {
 					// Un incantesimo benefico su un solo bersaglio (Resurrezione) si formula su un personaggio del gruppo,
 					// e occorre chiedere quale sia
 					if (suUnSoloBersaglio && classeIncantesimo.getTipo() == TipoIncantesimo.BENEFICO) {
-						Logger.log("Incantesimo di tipo " + (tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI ? "SINGOLO_SOLO_VIVI" : "SINGOLO_QUALSIASI"));
+						Logger.log(() -> "Incantesimo di tipo " + (tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI ? "SINGOLO_SOLO_VIVI" : "SINGOLO_QUALSIASI"));
 						int l = gruppo.getNumeroPersonaggi();
 						Personaggio personaggio;
 						List<Comando> comandiPossibiliBersaglio = new ArrayList<>();
 						for (int i = 0; i < l; i++) {
 							personaggio = gruppo.getPersonaggio(i);
-							Logger.log("tipo == Incantesimo.SINGOLO_QUALSIASI || p.isVivo() ? " + ((tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo())));
+							if (Logger.isAttivo()) {
+								Logger.log("tipo == Incantesimo.SINGOLO_QUALSIASI || p.isVivo() ? " + ((tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo())));
+							}
 							if ((tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo()) && personaggio.isCurabile()) {
 								comandiPossibiliBersaglio.add(Comando.ofPersonaggio(i));
 							}
@@ -767,14 +769,14 @@ public abstract class LocazioneBase implements Locazione {
 				}
 
 			case CHI_FA_AMICIZIA:
-				Logger.log("LocazioneBase.CHI_FA_AMICIZIA (azione " + azione + ")");
+				Logger.log(() -> "LocazioneBase.CHI_FA_AMICIZIA (azione " + azione + ")");
 				if (azione == Comando.ANNULLA) {
 					// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
 					return annullaScelta();
 				}
 				Personaggio personaggio = gruppo.getPersonaggio(azione);
 				int tiroDelDado = Dado.tira(Costanti.FACCE_DEL_DADO_DELL_AMICIZIA);
-				Logger.log("Carisma personaggio: " + personaggio.getCarisma() + "; tiro del dado: " + tiroDelDado);
+				Logger.log(() -> "Carisma personaggio: " + personaggio.getCarisma() + "; tiro del dado: " + tiroDelDado);
 				if (personaggio.getCarisma() > tiroDelDado) {
 					personaggio.addCarisma(1);
 					haStrettoAmicizia = true;

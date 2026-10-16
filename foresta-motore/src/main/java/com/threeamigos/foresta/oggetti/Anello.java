@@ -31,11 +31,11 @@ public class Anello extends OggettoBase implements Oggetto {
 	public Anello() {
 		super();
 		int tiroDado = Dado.tira(6);
-		Logger.log("Tiro del dado per anello magico: " + tiroDado);
+		Logger.log(() -> "Tiro del dado per anello magico: " + tiroDado);
 		if (tiroDado == 6) {
 			anelloMagico = true;
 			tipo = Dado.tira(3);
-			Logger.log("Anello magico di tipo " + tipo);
+			Logger.log(() -> "Anello magico di tipo " + tipo);
 			artefatto = creaAnelloMagico(tipo);
 		} else {
 			// Gli anelli non magici restano senza effetto. TODO più avanti si potranno vendere come gemme

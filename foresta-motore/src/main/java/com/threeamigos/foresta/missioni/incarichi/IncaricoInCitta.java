@@ -18,6 +18,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Locale;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
 import com.threeamigos.foresta.missioni.Passo;
@@ -272,7 +273,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 		if (citta == null) {
 			return "";
 		}
-		String nome = citta.name().substring(PREFISSO_CITTA.length()).toLowerCase();
+		String nome = citta.name().substring(PREFISSO_CITTA.length()).toLowerCase(Locale.ROOT);
 		return Character.toUpperCase(nome.charAt(0)) + nome.substring(1);
 	}
 

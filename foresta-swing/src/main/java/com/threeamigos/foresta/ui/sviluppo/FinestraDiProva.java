@@ -36,6 +36,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.Locale;
 
 /**
  * La finestra per chi sviluppa, che si apre solo in modalità di prova: una finestra a parte, con un tab per ogni
@@ -150,7 +151,7 @@ public class FinestraDiProva {
         tab.addTab("Gruppo", new JScrollPane(pannelloGruppo));
         tab.addTab("Statistiche", new JScrollPane(pannelloStatistiche));
         for (PannelloMissioni pannello : pannelliMissioni) {
-            tab.addTab("Missioni " + pannello.dove.getDescrizione().toLowerCase(), new JScrollPane(pannello));
+            tab.addTab("Missioni " + pannello.dove.getDescrizione().toLowerCase(Locale.ROOT), new JScrollPane(pannello));
         }
         tab.addTab("Dadi", new JScrollPane(new PannelloDadi()));
         tab.setSelectedIndex(Math.min(scelto, tab.getTabCount() - 1));

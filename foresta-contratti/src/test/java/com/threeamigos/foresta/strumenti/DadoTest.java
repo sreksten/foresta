@@ -1,6 +1,5 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.strumenti;
 
-import com.threeamigos.foresta.strumenti.Dado;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

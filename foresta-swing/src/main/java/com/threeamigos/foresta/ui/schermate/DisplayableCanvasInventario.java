@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpesaPuntoAbilita;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
@@ -231,8 +232,8 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
                     && modificatore.getTipoModificatoreAttributo() != TipoModificatore.QUANTITA_ASSOLUTA
                     ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
             nodo.creaNodo(
-                    modificatore.descrizioneEffetto(), font, coloreModificatore,
-                    modificatore.descrizioneDurata().replaceFirst("^per ", ""), font, coloreModificatore,
+                    TestoDeiModificatori.effetto(modificatore), font, coloreModificatore,
+                    TestoDeiModificatori.durata(modificatore).replaceFirst("^per ", ""), font, coloreModificatore,
                     modificatore.getNote().isEmpty() ? null : modificatore.getNote(), fontSmall, coloreModificatore,
                     null, MODIFICATORI_TEMPORANEI);
         }
@@ -266,7 +267,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         fissaggio.ifPresent(f -> {
             ModificatoreAttributoMD modificatore = f.getModificatore();
             String da = f.getFonte().isEmpty() ? "" : "da " + f.getFonte();
-            String durata = modificatore.isTemporaneo() ? " (" + modificatore.descrizioneDurata().replaceFirst("^per ", "ancora ") + ")" : "";
+            String durata = modificatore.isTemporaneo() ? " (" + TestoDeiModificatori.durata(modificatore).replaceFirst("^per ", "ancora ") + ")" : "";
             nodo.creaNodo(
                     "Fissato a " + (int) modificatore.getQuantita(), fontSmall, coloreCausa,
                     null, null, null,

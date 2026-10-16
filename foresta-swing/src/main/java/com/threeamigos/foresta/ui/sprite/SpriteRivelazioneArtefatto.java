@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.sprite;
 
+import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
@@ -426,7 +427,7 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 	}
 
 	private static String modificatore(ModificatoreAttributoMD modificatore) {
-		return modificatore.descrizione();
+		return TestoDeiModificatori.completo(modificatore);
 	}
 
 	private static String incantamento(IncantamentoMD incantamento) {

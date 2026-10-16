@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.interfacce.Arma;
@@ -426,10 +427,10 @@ class ModificatoriTemporaneiTest {
 
     @Test
     void laDescrizioneBrevePerGliSprite() {
-        assertEquals("Furtività +5", ModificatoreDelTesto.da("FURTIVITA +5").descrizioneBreve());
-        assertEquals("Coraggio -3", ModificatoreDelTesto.da("CORAGGIO -3").descrizioneBreve());
-        assertEquals("Coraggio -20%", ModificatoreDelTesto.da("CORAGGIO -20%").descrizioneBreve());
-        assertEquals("Intelligenza a 0", ModificatoreDelTesto.da("INTELLIGENZA =0").descrizioneBreve());
+        assertEquals("Furtività +5", TestoDeiModificatori.breve(ModificatoreDelTesto.da("FURTIVITA +5")));
+        assertEquals("Coraggio -3", TestoDeiModificatori.breve(ModificatoreDelTesto.da("CORAGGIO -3")));
+        assertEquals("Coraggio -20%", TestoDeiModificatori.breve(ModificatoreDelTesto.da("CORAGGIO -20%")));
+        assertEquals("Intelligenza a 0", TestoDeiModificatori.breve(ModificatoreDelTesto.da("INTELLIGENZA =0")));
     }
 
     // --- Leggendario di prova
@@ -448,9 +449,9 @@ class ModificatoriTemporaneiTest {
     @Test
     void laRivelazioneEIlTestoDicono() {
         ModificatoreAttributoMD modificatore = ModificatoreDelTesto.da("FORTUNA =0 @BERSAGLIO 5TURNI");
-        assertEquals("Fortuna porta a 0 sul bersaglio per 5 turni", modificatore.descrizione());
-        assertEquals("Coraggio -20% per 1 locazione", ModificatoreDelTesto.da("CORAGGIO -20% 1LOCAZIONE").descrizione());
-        assertEquals("Forza +3", ModificatoreDelTesto.da("FORZA +3").descrizione());
+        assertEquals("Fortuna porta a 0 sul bersaglio per 5 turni", TestoDeiModificatori.completo(modificatore));
+        assertEquals("Coraggio -20% per 1 locazione", TestoDeiModificatori.completo(ModificatoreDelTesto.da("CORAGGIO -20% 1LOCAZIONE")));
+        assertEquals("Forza +3", TestoDeiModificatori.completo(ModificatoreDelTesto.da("FORZA +3")));
     }
 
     // --- Alba Sacra sul gruppo
@@ -479,9 +480,9 @@ class ModificatoriTemporaneiTest {
                 }
             }
             ModificatoreAttributoMD inciampo = spade.get("la Spada dell'Inciampo");
-            assertEquals("Fortuna porta a 0 sul bersaglio per 2 turni", inciampo.descrizione());
+            assertEquals("Fortuna porta a 0 sul bersaglio per 2 turni", TestoDeiModificatori.completo(inciampo));
             ModificatoreAttributoMD debolezza = spade.get("la Spada della Debolezza");
-            assertEquals("Forza -2 sul bersaglio per 3 turni", debolezza.descrizione());
+            assertEquals("Forza -2 sul bersaglio per 3 turni", TestoDeiModificatori.completo(debolezza));
         }
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(259)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });

@@ -1,15 +1,14 @@
 package com.threeamigos.foresta;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.eventi.notifiche.NotificaUscitaDalGioco;
 import com.threeamigos.foresta.eventi.interni.InternoInterfacciaUtentePronta;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.motore.Automa;
-import com.threeamigos.foresta.motore.Notizie;
-import com.threeamigos.foresta.motore.RegistroArtefatti;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.motore.StatoDelMotore;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
-import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.strumenti.*;
 import com.threeamigos.foresta.ui.EsecutoreSwing;
@@ -22,6 +21,7 @@ import com.threeamigos.foresta.ui.sviluppo.FinestraDiProva;
 import com.threeamigos.foresta.salvataggi.GestorePunteggiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreSalvataggiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreTrofeiSuFile;
+import java.util.Locale;
 
 /**
  * Il punto d'ingresso del gioco: l'unico posto che conosce insieme motore e interfaccia grafica e li collega.
@@ -58,7 +58,7 @@ public class Main {
                 saltaLogo = true;
             } else if (arg.equalsIgnoreCase("BARRACLASSICA")) {
                 barraDock = false;
-            } else if (arg.toUpperCase().startsWith("ZOOM=")) {
+            } else if (arg.toUpperCase(Locale.ROOT).startsWith("ZOOM=")) {
                 LivelloDiZoom.imposta(Double.parseDouble(arg.substring("ZOOM=".length())));
             } else if (arg.equalsIgnoreCase("MODALITA_DI_PROVA")) {
                 ModalitaDiProva.setAttiva(true);
@@ -76,13 +76,15 @@ public class Main {
 
 		// Si registra per ascoltare qualsiasi evento venga generato
 		new SnifferBusEventi();
-		// Si registra per ricordare gli ultimi messaggi e le ultime notizie
-		Notizie.registrati();
-		// Si registrano per tenere il conto di quanto succede in gioco
-		Statistiche.registrati();
-		RegistroTrofei.registrati();
-		RegistroArtefatti.registrati();
-		RegistroMissioni.registrati();
+		// Sul desktop si esce chiudendo il processo: il motore lo chiede con questo evento, e non lo fa da solo
+		BusEventi.iscriviti(NotificaUscitaDalGioco.class, e -> {
+			if (e.isErrore()) {
+				Logger.log(() -> "Uscita per errore (" + e.getCodice() + "): " + e.getMotivo());
+			}
+			System.exit(e.getCodice());
+		});
+		// Si registrano per ricordare gli ultimi messaggi e le ultime notizie e per tenere il conto di quanto succede in gioco
+		StatoDelMotore.registraComponenti();
 
 		leggiArgomenti(args);
 		GestorePunteggi gestorePunteggi = new GestorePunteggiSuFile();

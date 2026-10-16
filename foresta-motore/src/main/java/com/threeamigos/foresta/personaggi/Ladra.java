@@ -74,190 +74,114 @@ public class Ladra extends PersonaggioBase implements Personaggio {
 		return Costanti.LADRA_MOLTIPLICATORE_CARICO;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreCarico() {
-		return Costanti.LADRA_MOLTIPLICATORE_CARICO_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreCritico() {
 		return Costanti.LADRA_MOLTIPLICATORE_CRITICO;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreCritico() {
-		return Costanti.LADRA_MOLTIPLICATORE_CRITICO_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatorePrecisione() {
 		return Costanti.LADRA_MOLTIPLICATORE_PRECISIONE;
 	}
 
-	@Override
-	public String getNoteMoltiplicatorePrecisione() {
-		return Costanti.LADRA_MOLTIPLICATORE_PRECISIONE_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreVelocita() {
 		return Costanti.LADRA_MOLTIPLICATORE_VELOCITA;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreVelocita() {
-		return Costanti.LADRA_MOLTIPLICATORE_VELOCITA_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreFurtivita() {
 		return Costanti.LADRA_MOLTIPLICATORE_FURTIVITA;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreFurtivita() {
-		return Costanti.LADRA_MOLTIPLICATORE_FURTIVITA_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreParata() {
 		return Costanti.LADRA_MOLTIPLICATORE_PARATA;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreParata() {
-		return Costanti.LADRA_MOLTIPLICATORE_PARATA_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreResistenzaMagica() {
 		return Costanti.LADRA_MOLTIPLICATORE_RESISTENZA_MAGICA;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreResistenzaMagica() {
-		return Costanti.LADRA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatorePercezione() {
 		return Costanti.LADRA_MOLTIPLICATORE_PERCEZIONE;
 	}
 
-	@Override
-	public String getNoteMoltiplicatorePercezione() {
-		return Costanti.LADRA_MOLTIPLICATORE_PERCEZIONE_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreSoggezione() {
 		return Costanti.LADRA_MOLTIPLICATORE_SOGGEZIONE;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreSoggezione() {
-		return Costanti.LADRA_MOLTIPLICATORE_SOGGEZIONE_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreFuria() {
 		return Costanti.LADRA_MOLTIPLICATORE_FURIA;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreFuria() {
-		return Costanti.LADRA_MOLTIPLICATORE_FURIA_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreCoraggio() {
 		return Costanti.LADRA_MOLTIPLICATORE_CORAGGIO;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreCoraggio() {
-		return Costanti.LADRA_MOLTIPLICATORE_CORAGGIO_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreValore() {
 		return Costanti.LADRA_MOLTIPLICATORE_VALORE;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreValore() {
-		return Costanti.LADRA_MOLTIPLICATORE_VALORE_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreContrattazione() {
 		return Costanti.LADRA_MOLTIPLICATORE_CONTRATTAZIONE;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreContrattazione() {
-		return Costanti.LADRA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.LADRA_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreNumeroBersagli() {
-		return Costanti.LADRA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreStanchezza() {
 		return Costanti.LADRA_MOLTIPLICATORE_STANCHEZZA;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreStanchezza() {
-		return Costanti.LADRA_MOLTIPLICATORE_STANCHEZZA_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreDanniMagici() {
 		return Costanti.LADRA_MOLTIPLICATORE_DANNI_MAGICI;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreDanniMagici() {
-		return Costanti.LADRA_MOLTIPLICATORE_DANNI_MAGICI_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreDanniFisici() {
 		return Costanti.LADRA_MOLTIPLICATORE_DANNI_FISICI;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreDanniFisici() {
-		return Costanti.LADRA_MOLTIPLICATORE_DANNI_FISICI_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreRecuperoMagico() {
 		return Costanti.LADRA_MOLTIPLICATORE_RECUPERO_MAGICO;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreRecuperoMagico() {
-		return Costanti.LADRA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA;
-	}
 
 	@Override
 	public double getMoltiplicatoreRecuperoFisico() {
 		return Costanti.LADRA_MOLTIPLICATORE_RECUPERO_FISICO;
 	}
 
-	@Override
-	public String getNoteMoltiplicatoreRecuperoFisico() {
-		return Costanti.LADRA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA;
-	}
 
 	@Override
 	public double getMaxStatistica(TipoAttributo tipoAttributo) {

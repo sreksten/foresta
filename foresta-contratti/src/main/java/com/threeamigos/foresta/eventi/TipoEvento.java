@@ -165,6 +165,10 @@ public enum TipoEvento {
      */
     NOTIFICA_FINE_GIOCO,
     /**
+     * Il gioco ha finito e chiede alla piattaforma di terminare (conferma di uscita del giocatore, o errore fatale)
+     */
+    NOTIFICA_USCITA_DAL_GIOCO,
+    /**
      * Mostra un annuncio in evidenza (ad esempio l'inizio di una missione)
      */
     NOTIFICA_GLOBALE,

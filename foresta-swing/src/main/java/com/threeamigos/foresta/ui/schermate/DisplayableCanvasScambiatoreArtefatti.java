@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoCommutazioneElenco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.IntUnaryOperator;
+import java.util.Locale;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
@@ -295,7 +297,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
             // In grande il nome proprio (o il nome), in piccolo la descrizione
             // TODO da riguardare con la resa grafica
             String nome = artefatto.getNomeBreve();
-            nome = nome.substring(0, 1).toUpperCase() + nome.substring(1);
+            nome = nome.substring(0, 1).toUpperCase(Locale.ROOT) + nome.substring(1);
             ComponenteScorrevole<VistaArtefatto>.Nodo nodo = componenteScorrevole.creaNodo(
                     nome, font, colore,
                     valore(artefatto, parteAttiva),
@@ -316,7 +318,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
                     DoomdarkColorModel.Color colorePezzo = colorePezzo(pezzo.getStato());
                     nodo.creaNodo(
                             pezzo.getTipo().getDescrizione(), font, colorePezzo,
-                            noto ? pezzo.getNome().substring(0, 1).toUpperCase() + pezzo.getNome().substring(1) : "???",
+                            noto ? pezzo.getNome().substring(0, 1).toUpperCase(Locale.ROOT) + pezzo.getNome().substring(1) : "???",
                             fontSmall, colorePezzo,
                             null, null, null,
                             null, artefatto);
@@ -352,7 +354,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
                         dettaglio.append("sul bersaglio");
                     }
                     if (modificatore.isTemporaneo()) {
-                        dettaglio.append(dettaglio.length() > 0 ? " " : "").append(modificatore.descrizioneDurata());
+                        dettaglio.append(dettaglio.length() > 0 ? " " : "").append(TestoDeiModificatori.durata(modificatore));
                     }
                     nodo.creaNodo(
                             modificatore.getTipoAttributo().getNome(), font, coloreAttributi,

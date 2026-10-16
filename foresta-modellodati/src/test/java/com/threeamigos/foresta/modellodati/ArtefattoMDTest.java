@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.tipi.*;
-import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
@@ -328,36 +327,6 @@ class ArtefattoMDTest {
         assertEquals(2, incantamenti.size());
         verificaIncantamento(incantamenti, "Fiamma", TipoDanno.FUOCO, 10, 0.1);
         verificaIncantamento(incantamenti, "Brina", TipoDanno.GELO, 0, 0.05);
-    }
-
-    @Test
-    void salvaERicaricaPergamenaConModificatoriEIncantamenti() throws IOException {
-        // Given: una pergamena è un artefatto, quindi porta sia modificatori sia incantamenti
-        ArtefattoMD pergamena = CostruttoreArtefatto.istanza()
-                .setTipo(TipoArtefatto.PERGAMENA)
-                .setNome("il Sigillo della Fiamma Eterna")
-                .setDescrizione("che arde di magia")
-                .setLivello(3)
-                .setCostoAcquisto(50)
-                .setPeso(0.1)
-                .setModificatore(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 2)
-                .setModificatore(TipoAttributo.CORAGGIO, TipoModificatore.VARIAZIONE_PERCENTUALE, 10)
-                .setIncantamento("Fiamma", TipoDanno.FUOCO, 15, 0.2)
-                .setIncantamento("Brina", TipoDanno.GELO, 5, 0.05)
-                .costruisci()
-                .getModelloDati();
-        // When
-        ArtefattoMD ricaricato = salvaERileggi(pergamena);
-        // Then
-        assertEquals(TipoArtefatto.PERGAMENA, ricaricato.getTipo());
-        Collection<ModificatoreAttributoMD> modificatori = ricaricato.getModificatori();
-        assertEquals(2, modificatori.size());
-        assertTrue(modificatori.contains(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 2)));
-        assertTrue(modificatori.contains(new ModificatoreAttributoMD(TipoAttributo.CORAGGIO, TipoModificatore.VARIAZIONE_PERCENTUALE, 10)));
-        List<IncantamentoMD> incantamenti = new ArrayList<>(ricaricato.getIncantamenti());
-        assertEquals(2, incantamenti.size());
-        verificaIncantamento(incantamenti, "Fiamma", TipoDanno.FUOCO, 15, 0.2);
-        verificaIncantamento(incantamenti, "Brina", TipoDanno.GELO, 5, 0.05);
     }
 
     @Test

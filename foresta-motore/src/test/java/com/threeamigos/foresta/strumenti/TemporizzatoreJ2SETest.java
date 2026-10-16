@@ -75,4 +75,70 @@ class TemporizzatoreJ2SETest {
         eseguiESpetta(temporizzatore::termina);
         assertTrue(impulsi.get() > 0);
     }
+
+    @Test
+    void dopoSospendiNonArrivanoImpulsiEConRiprendiRipartono() throws Exception {
+        TemporizzatoreJ2SE temporizzatore = new TemporizzatoreJ2SE();
+        AtomicInteger impulsi = new AtomicInteger();
+        temporizzatore.setTemporizzabile(impulsi::incrementAndGet);
+        eseguiESpetta(() -> temporizzatore.inizia(5));
+        attendi(() -> impulsi.get() >= 2);
+
+        eseguiESpetta(temporizzatore::sospendi);
+        // Lascia eseguire cio' che si era gia' accodato, che pero' non deve contare
+        eseguiESpetta(() -> { });
+        int allaSospensione = impulsi.get();
+        Thread.sleep(80);
+        assertEquals(allaSospensione, impulsi.get(), "sospeso: nessun impulso");
+
+        eseguiESpetta(temporizzatore::riprendi);
+        attendi(() -> impulsi.get() >= allaSospensione + 2);
+        eseguiESpetta(temporizzatore::termina);
+    }
+
+    @Test
+    void unInizioDuranteLaSospensioneParteSoloAllaRipresa() throws Exception {
+        TemporizzatoreJ2SE temporizzatore = new TemporizzatoreJ2SE();
+        AtomicInteger impulsi = new AtomicInteger();
+        temporizzatore.setTemporizzabile(impulsi::incrementAndGet);
+        eseguiESpetta(temporizzatore::sospendi);
+
+        eseguiESpetta(() -> temporizzatore.inizia(5));
+        Thread.sleep(60);
+        eseguiESpetta(() -> { });
+        assertEquals(0, impulsi.get(), "in background un impulso non parte");
+
+        eseguiESpetta(temporizzatore::riprendi);
+        attendi(() -> impulsi.get() >= 2);
+        eseguiESpetta(temporizzatore::termina);
+    }
+
+    @Test
+    void dopoTerminaRiprendiNonFaRipartireNiente() throws Exception {
+        TemporizzatoreJ2SE temporizzatore = new TemporizzatoreJ2SE();
+        AtomicInteger impulsi = new AtomicInteger();
+        temporizzatore.setTemporizzabile(impulsi::incrementAndGet);
+        eseguiESpetta(() -> temporizzatore.inizia(5));
+        attendi(() -> impulsi.get() >= 1);
+
+        eseguiESpetta(temporizzatore::sospendi);
+        eseguiESpetta(temporizzatore::termina);
+        eseguiESpetta(() -> { });
+        int allaFine = impulsi.get();
+        eseguiESpetta(temporizzatore::riprendi);
+        Thread.sleep(60);
+        eseguiESpetta(() -> { });
+        assertEquals(allaFine, impulsi.get(), "terminato: niente da riprendere");
+    }
+
+    // Aspetta che la condizione si avveri, fino a due secondi
+    private static void attendi(java.util.function.BooleanSupplier condizione) throws InterruptedException {
+        long limite = System.nanoTime() + 2_000_000_000L;
+        while (!condizione.getAsBoolean()) {
+            if (System.nanoTime() > limite) {
+                throw new AssertionError("la condizione non si e' avverata in due secondi");
+            }
+            Thread.sleep(5);
+        }
+    }
 }

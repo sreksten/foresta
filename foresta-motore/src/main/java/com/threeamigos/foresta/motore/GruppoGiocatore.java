@@ -152,9 +152,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	 */
 	public final void aggiungiOspite(Personaggio ospite, boolean vulnerabile) {
 		ospiti.add(ospite);
-		md.getOspitiMD().add(ospite.getModelloDati());
+		md.aggiungiOspite(ospite.getModelloDati());
 		if (vulnerabile) {
-			md.getOspitiVulnerabili().add(ospite.getModelloDati().getUuid());
+			md.aggiungiOspiteVulnerabile(ospite.getModelloDati().getUuid());
 		}
 		BusEventi.pubblica(new NotificaTestoFrase(ospite.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " viaggia con il gruppo."));
@@ -188,8 +188,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	 */
 	public final void rimuoviOspite(Personaggio ospite) {
 		ospiti.remove(ospite);
-		md.getOspitiMD().remove(ospite.getModelloDati());
-		md.getOspitiVulnerabili().remove(ospite.getModelloDati().getUuid());
+		md.togliOspite(ospite.getModelloDati());
+		md.togliOspiteVulnerabile(ospite.getModelloDati().getUuid());
 		BusEventi.pubblica(new NotificaTestoFrase(ospite.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " si separa dal gruppo."));
 	}
@@ -614,7 +614,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		int ore = LineaTemporale.oreFinoAlMattino();
 		boolean alCoperto = tipoLocazione == TipoLocazione.LOCANDA
 				|| tipoLocazione.getCategoria() == CategoriaLocazione.CITTA;
-		Logger.log("Pernottamento al coperto? " + alCoperto);
+		Logger.log(() -> "Pernottamento al coperto? " + alCoperto);
 		if (alCoperto) {
 			StringBuilder sb = new StringBuilder("La stanchezza accumulata ed il tepore delle coperte fanno addormentare subito ");
 			if (getNumeroPersonaggiVivi() > 1) {
@@ -739,14 +739,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	public void addArtefatto(Artefatto artefatto) {
 		// Nell'inventario del gruppo nessun artefatto è equipaggiato
 		artefatto.getModelloDati().setSlotEquipaggiamento(null);
-		md.getArtefatti().add(artefatto.getModelloDati());
+		md.aggiungiArtefatto(artefatto.getModelloDati());
 	}
 
 	/**
 	 * Toglie l'artefatto dall'inventario del gruppo.
 	 */
 	public void removeArtefatto(Artefatto artefatto) {
-		md.getArtefatti().remove(artefatto.getModelloDati());
+		md.togliArtefatto(artefatto.getModelloDati());
 	}
 
 	/**

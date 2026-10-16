@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.Locale;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.TestoGrande;
 
@@ -62,7 +63,7 @@ public class SpriteAnnuncioGlobale extends SpriteBase {
 		int larghezzaMassima = larghezzaSchermo / 2;
 		// Il font non supporta i caratteri minuscoli né le accentate: prima si normalizzano le accentate
 		// nella forma vocale+apostrofo (vedi TestoGrande.normalizza), poi si va in maiuscolo
-		return spezzaInRighe(TestoGrande.normalizza(testo).toUpperCase(), larghezzaMassima);
+		return spezzaInRighe(TestoGrande.normalizza(testo).toUpperCase(Locale.ROOT), larghezzaMassima);
 	}
 
 	private static List<String> spezzaInRighe(String testo, int larghezzaMassima) {

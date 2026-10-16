@@ -12,6 +12,7 @@ final class TemporizzatoreManuale implements Temporizzatore {
 	private Temporizzabile temporizzabile;
 	private boolean attivo;
 	private int periodo;
+	private boolean sospeso;
 
 	@Override
 	public void setTemporizzabile(Temporizzabile temporizzabile) {
@@ -34,6 +35,20 @@ final class TemporizzatoreManuale implements Temporizzatore {
 		attivo = false;
 	}
 
+	@Override
+	public void sospendi() {
+		sospeso = true;
+	}
+
+	@Override
+	public void riprendi() {
+		sospeso = false;
+	}
+
+	boolean isSospeso() {
+		return sospeso;
+	}
+
 	boolean isAttivo() {
 		return attivo;
 	}
@@ -48,6 +63,9 @@ final class TemporizzatoreManuale implements Temporizzatore {
 	void scatta() {
 		if (!attivo) {
 			throw new IllegalStateException("Il temporizzatore non è attivo: l'automa non aspetta impulsi");
+		}
+		if (sospeso) {
+			throw new IllegalStateException("Il temporizzatore è sospeso: l'app è in background e nessun impulso arriva");
 		}
 		temporizzabile.tick();
 	}

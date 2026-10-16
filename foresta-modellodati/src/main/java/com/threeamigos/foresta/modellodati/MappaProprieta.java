@@ -52,6 +52,8 @@ final class MappaProprieta {
 		}
 	}
 
+	// Una chiave non passa dalla pulizia dei testi (vedi Serializzabile.pulisciCampo), perché è scritta dal codice e non
+	// dal giocatore: se contiene un carattere che spezzerebbe la riga o i campi è un errore di programmazione, e si dice.
 	private static void validaChiave(String chiave) {
 		if (chiave.contains(SEPARATORE) || chiave.contains(Serializzabile.PIPE) || chiave.contains("\n") || chiave.contains("\r")) {
 			throw new IllegalStateException("Chiave di proprietà non valida, contiene un carattere riservato: " + chiave);

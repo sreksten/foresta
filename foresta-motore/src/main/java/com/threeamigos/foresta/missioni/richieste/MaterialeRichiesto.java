@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Locale;
 import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
 
 /**
@@ -246,7 +247,7 @@ public final class MaterialeRichiesto {
 					parti.add("nelle paludi");
 					break;
 				default:
-					parti.add(Misc.conPreposizione("in", luogo.name().toLowerCase()));
+					parti.add(Misc.conPreposizione("in", luogo.name().toLowerCase(Locale.ROOT)));
 					break;
 			}
 		}

@@ -107,6 +107,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | [`tattiche_di_combattimento_automatiche.md`](tattiche_di_combattimento_automatiche.md) | Il combattimento a round e le tattiche automatiche di personaggi e mostri: round a coppie, azioni, bersagli e condizioni (con i giochi di riferimento), modello dati, salvataggio, tattiche base e schermata del giocatore |
 | [`tattiche_internals.md`](tattiche_internals.md) | Come funzionano le tattiche a livello di codice: il flusso da `LocazioneBase` a `EsecutoreTattiche`, il valutatore, rose, filtri, ordinamenti, predicati e requisiti, la scelta dell'incantesimo, la memoria dello scontro, il salvataggio, la schermata del giocatore e le ricette per aggiungere un pezzo |
 | [`assessment.md`](assessment.md) | Valutazione dello stato del progetto e prossimi passi |
+| [`assessment_portabilita.md`](assessment_portabilita.md) | Cosa manca per portare il gioco su Android e iOS: testi, costanti, ciclo di vita dell'app, uscite dal processo, collezioni ancora vive |
 | [`todo.md`](todo.md) | Cose da fare generali e bug noti |
 | [`revisione_documentazione.md`](revisione_documentazione.md) | Piano e avanzamento della revisione della documentazione |
 | `tipiDanno.md`, `tipiPersonaggio.md` | Appunti generici sul genere fantasy (tipi di danno, ruoli dei personaggi), non descrivono il codice |

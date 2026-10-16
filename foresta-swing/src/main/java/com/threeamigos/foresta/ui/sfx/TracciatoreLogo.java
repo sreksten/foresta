@@ -651,7 +651,7 @@ public final class TracciatoreLogo {
                         + (specifica.arrivo != null ? ", arrivo agganciato a " + formattaPunto(percorso.get(percorso.size() - 1)) : ", giro completo")
                         + ", verso " + (specifica.verso == Verso.ORARIO ? "orario" : "antiorario")
                         + ", " + percorso.size() + " punti" + (velocitaAllineata ? " (velocita' sincronizzata)" : "")
-                        + (specifica.fotogrammiRitardo > 0 ? String.format(", ritardo %d fotogrammi (~%.2fs)",
+                        + (specifica.fotogrammiRitardo > 0 ? String.format(Locale.ROOT, ", ritardo %d fotogrammi (~%.2fs)",
                                 specifica.fotogrammiRitardo, specifica.fotogrammiRitardo * INTERVALLO_FOTOGRAMMA_MS / 1000.0) : "") + ".");
             }
 

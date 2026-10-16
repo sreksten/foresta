@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Locale;
 
 /**
  * Il listino dell'alchimista: nomi, descrizioni e costi di ciò che vende al gruppo. Lo costruisce il motore, che
@@ -56,7 +57,7 @@ public final class OfferteAlchimista {
 		for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
 			String nome = classe.getNomeSingolare();
 			offerte.add(new OffertaConsumabile(TipoConsumabile.INCANTESIMO, classe, null,
-					nome.substring(0, 1).toUpperCase() + nome.substring(1), classe.getEffetto(),
+					nome.substring(0, 1).toUpperCase(Locale.ROOT) + nome.substring(1), classe.getEffetto(),
 					FabbricaIncantesimi.costoAcquisto(classe)));
 		}
 		offerte.add(semplice(TipoConsumabile.POZIONE_SALUTE, "Pozione della Salute",

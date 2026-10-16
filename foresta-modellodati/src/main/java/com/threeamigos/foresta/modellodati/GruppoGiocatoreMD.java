@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,17 +53,35 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	}
 
 	/**
-	 * Gli ospiti del gruppo: chi viaggia con i personaggi senza farne parte.
+	 * Gli ospiti del gruppo: chi viaggia con i personaggi senza farne parte. Di sola lettura: si cambia con
+	 * {@link #aggiungiOspite} e {@link #togliOspite}.
 	 */
 	public List<PersonaggioMD> getOspitiMD() {
-		return ospiti;
+		return Collections.unmodifiableList(ospiti);
+	}
+
+	public void aggiungiOspite(PersonaggioMD ospite) {
+		ospiti.add(ospite);
+	}
+
+	public void togliOspite(PersonaggioMD ospite) {
+		ospiti.remove(ospite);
 	}
 
 	/**
-	 * Gli identificativi (uuid) degli ospiti che gli avversari possono attaccare.
+	 * Gli identificativi (uuid) degli ospiti che gli avversari possono attaccare. Di sola lettura: si cambia con
+	 * {@link #aggiungiOspiteVulnerabile} e {@link #togliOspiteVulnerabile}.
 	 */
 	public Set<String> getOspitiVulnerabili() {
-		return ospitiVulnerabili;
+		return Collections.unmodifiableSet(ospitiVulnerabili);
+	}
+
+	public void aggiungiOspiteVulnerabile(String uuid) {
+		ospitiVulnerabili.add(uuid);
+	}
+
+	public void togliOspiteVulnerabile(String uuid) {
+		ospitiVulnerabili.remove(uuid);
 	}
 
 	public int getMonete() {
@@ -93,10 +112,19 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	}
 
 	/**
-	 * Gli artefatti del gruppo che nessun personaggio sta usando (l'inventario generale).
+	 * Gli artefatti del gruppo che nessun personaggio sta usando (l'inventario generale). Di sola lettura: si cambia
+	 * con {@link #aggiungiArtefatto} e {@link #togliArtefatto}.
 	 */
 	public Collection<ArtefattoMD> getArtefatti() {
-		return artefatti;
+		return Collections.unmodifiableCollection(artefatti);
+	}
+
+	public void aggiungiArtefatto(ArtefattoMD artefatto) {
+		artefatti.add(artefatto);
+	}
+
+	public void togliArtefatto(ArtefattoMD artefatto) {
+		artefatti.remove(artefatto);
 	}
 
 	////////////////////////////////

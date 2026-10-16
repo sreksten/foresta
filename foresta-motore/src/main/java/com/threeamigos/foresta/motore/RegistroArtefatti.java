@@ -323,12 +323,12 @@ public class RegistroArtefatti {
 
 			@Override
 			public void addArtefatto(Artefatto artefatto) {
-				getMagazzino().add(artefatto.getModelloDati());
+				getRegistroArtefatti().aggiungiAMagazzino(coordinate, negozio, artefatto.getModelloDati());
 			}
 
 			@Override
 			public void removeArtefatto(Artefatto artefatto) {
-				getMagazzino().remove(artefatto.getModelloDati());
+				getRegistroArtefatti().rimuoviDaMagazzino(coordinate, negozio, artefatto.getModelloDati());
 			}
 
 			@Override

@@ -73,16 +73,10 @@ final class PartitaDiTest implements AutoCloseable {
 		BusEventi.impostaConsegna(Runnable::run);
 		Dado.ripristina();
 		Dado.impostaSeme(seme);
-		ModelloDati.setIstanza(new ModelloDati());
-		GruppoGiocatore.azzeraIstanza();
-		GruppoAvversario.azzeraIstanza();
+		StatoDelMotore.azzera();
 		// I trofei passano da una partita all'altra: ogni test riparte senza nessun trofeo vinto
 		RegistroTrofei.impostaGestoreTrofei(trofei);
-		Notizie.registrati();
-		Statistiche.registrati();
-		RegistroTrofei.registrati();
-		RegistroArtefatti.registrati();
-		RegistroMissioni.registrati();
+		StatoDelMotore.registraComponenti();
 
 		registratore.ascolta(InternoErrore.class, InternoException.class, InternoFaseDiGioco.class,
 				InternoAggiornamentoComandiDisponibili.class, RichiestaSelezioneDirezione.class,
@@ -342,6 +336,27 @@ final class PartitaDiTest implements AutoCloseable {
 	}
 
 	/**
+	 * L'app passa in background, come per Android {@code onPause}.
+	 */
+	void inBackground() {
+		automa.inBackground();
+	}
+
+	/**
+	 * L'app torna in primo piano.
+	 */
+	void inPrimoPiano() {
+		automa.inPrimoPiano();
+	}
+
+	/**
+	 * Dalla schermata iniziale, riprende la partita interrotta dal salvataggio automatico.
+	 */
+	boolean riprendiPartitaInterrotta() {
+		return automa.riprendiPartitaInterrotta();
+	}
+
+	/**
 	 * Tutto il testo mostrato al giocatore finora, frasi e paragrafi.
 	 */
 	List<String> testi() {
@@ -403,6 +418,9 @@ final class PartitaDiTest implements AutoCloseable {
 		Dado.impostaSeme(System.nanoTime());
 		BusEventi.azzera();
 		BusEventi.impostaConsegna(BusEventi.CONSEGNA_SU_THREAD_PRINCIPALE);
+		// Si rimette il valore che c'era, anche se era spento: se si spegnesse solo quando era acceso, la modalità di prova
+		// resterebbe accesa per tutti i test che seguono (la mappa tutta conosciuta, per esempio), e un test come
+		// BugMappaReimpostataTest passerebbe o fallirebbe a seconda dell'ordine in cui girano
 		ModalitaDiProva.setAttiva(modalitaDiProvaPrecedente);
 	}
 }
