@@ -12,9 +12,11 @@
  * missioni, le notizie e gli intermezzi mostrati. Una parte a sé è {@link com.threeamigos.foresta.modellodati.TrofeiMD},
  * che passa da una partita all'altra e si salva in un file separato.
  * <p>
- * <b>Collezioni.</b> Quelle che un personaggio, il gruppo del giocatore e i magazzini dei negozi mostrano sono di sola
- * lettura: chi vuole cambiarle passa dai metodi che lo dicono ({@code aggiungi…}, {@code togli…}), così nessuno
- * modifica per sbaglio un elenco che appartiene al modello.
+ * <b>Collezioni.</b> Quelle che le classi mostrano (gli artefatti e i modificatori di un personaggio, i personaggi di un
+ * gruppo, i magazzini dei negozi, le missioni, le notizie...) sono di sola lettura, anche se sono una vista dell'elenco
+ * vero e quindi seguono i suoi cambiamenti: chi vuole cambiarle passa dai metodi che lo dicono ({@code aggiungi…},
+ * {@code togli…}, {@code riordina…}), così nessuno modifica per sbaglio un elenco che appartiene al modello. Una vista
+ * di una lista si confronta con {@code equals} come la lista.
  * <p>
  * <b>Salvataggio.</b> Ogni classe che si salva implementa {@link com.threeamigos.foresta.modellodati.Serializzabile}:
  * scrive un testo a righe, con i campi separati da {@code |}, e lo rilegge con

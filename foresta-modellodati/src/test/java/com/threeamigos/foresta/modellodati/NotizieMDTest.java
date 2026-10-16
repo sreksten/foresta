@@ -17,9 +17,10 @@ class NotizieMDTest {
     void salvaERileggeIlTipoDeiMessaggi() throws IOException {
         // Given
         NotizieMD originale = new NotizieMD();
-        originale.getUltimiMessaggi().add(new MessaggioMD("Una frase | con un separatore", false));
-        originale.getUltimiMessaggi().add(new MessaggioMD("Un paragrafo", true));
-        originale.getUltimeNotizie().add(new NotiziaMD("CV1", "Titolo - Corpo"));
+        // Si aggiunge in testa: il più recente è il primo
+        originale.aggiungiMessaggio(new MessaggioMD("Un paragrafo", true));
+        originale.aggiungiMessaggio(new MessaggioMD("Una frase | con un separatore", false));
+        originale.aggiungiNotizia(new NotiziaMD("CV1", "Titolo - Corpo"));
         StringWriter scrittura = new StringWriter();
         try (PrintWriter writer = new PrintWriter(scrittura)) {
             originale.salva(writer);
@@ -64,5 +65,24 @@ class NotizieMDTest {
         // Il testo è tutto ciò che segue il secondo separatore, anche se somiglia a un tipo
         assertEquals("F|P", messaggi.get(1).getTesto());
         assertTrue(riletto.getUltimeNotizie().isEmpty());
+    }
+
+    @Test
+    void ilPiuRecenteEInTestaEOltreIlLimiteSiScartanoIPiuVecchi() {
+        NotizieMD notizie = new NotizieMD();
+
+        for (int i = 1; i <= NotizieMD.MASSIMO_MESSAGGI_RICORDATI + 5; i++) {
+            notizie.aggiungiMessaggio(new MessaggioMD("messaggio " + i, false));
+        }
+        for (int i = 1; i <= NotizieMD.MASSIMO_NOTIZIE_RICORDATE + 3; i++) {
+            notizie.aggiungiNotizia(new NotiziaMD("N" + i, "notizia " + i));
+        }
+
+        assertEquals(NotizieMD.MASSIMO_MESSAGGI_RICORDATI, notizie.getUltimiMessaggi().size());
+        assertEquals("messaggio " + (NotizieMD.MASSIMO_MESSAGGI_RICORDATI + 5), notizie.getUltimiMessaggi().get(0).getTesto());
+        assertEquals("messaggio 6", notizie.getUltimiMessaggi().get(NotizieMD.MASSIMO_MESSAGGI_RICORDATI - 1).getTesto());
+        assertEquals(NotizieMD.MASSIMO_NOTIZIE_RICORDATE, notizie.getUltimeNotizie().size());
+        assertEquals("N" + (NotizieMD.MASSIMO_NOTIZIE_RICORDATE + 3), notizie.getUltimeNotizie().get(0).getId());
+        assertEquals("N4", notizie.getUltimeNotizie().get(NotizieMD.MASSIMO_NOTIZIE_RICORDATE - 1).getId());
     }
 }

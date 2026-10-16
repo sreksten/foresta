@@ -112,7 +112,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		personaggi.clear();
 		List<PersonaggioMD> personaggiDaAggiungere = new ArrayList<>(gruppoGiocatoreMD.getPersonaggiMD());
 		int indiceCapo = gruppoGiocatoreMD.getIndiceCapo();
-		gruppoGiocatoreMD.getPersonaggiMD().clear();
+		gruppoGiocatoreMD.svuotaPersonaggiMD();
 		for (PersonaggioMD personaggioMD : personaggiDaAggiungere) {
 			Personaggio personaggio = FabbricaPersonaggi.crea(personaggioMD.getClasse(), 1);
 			personaggio.setModelloDati(personaggioMD);
@@ -292,10 +292,11 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		if (!super.spostaPersonaggio(p, direzione)) {
 			return false;
 		}
-		md.getPersonaggiMD().clear();
+		List<PersonaggioMD> inOrdine = new ArrayList<>();
 		for (Personaggio personaggio : personaggi) {
-			md.addPersonaggioMD(personaggio.getModelloDati());
+			inOrdine.add(personaggio.getModelloDati());
 		}
+		md.riordinaPersonaggiMD(inOrdine);
 		allineaIndiceCapo();
 		return true;
 	}
@@ -325,7 +326,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	public final void rimuoviPersonaggio(Personaggio p) {
 		super.rimuoviPersonaggio(p);
 		// Anche dal modello dati, altrimenti ricomparirebbe dopo un salvataggio
-		md.getPersonaggiMD().remove(p.getModelloDati());
+		md.rimuoviPersonaggioMD(p.getModelloDati());
 		allineaIndiceCapo();
 		String nome = p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		if (p.getMotivoNelGruppo() == TipoMotivoNelGruppo.MIETITURA) {

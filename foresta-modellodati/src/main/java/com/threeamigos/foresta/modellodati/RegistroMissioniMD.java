@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Collections;
 
 /**
  * Le missioni della partita, ciascuna con il proprio identificativo: quelle attive e quelle completate.
@@ -46,14 +47,14 @@ public class RegistroMissioniMD implements Serializzabile {
 	 * Le missioni attive.
 	 */
 	public Collection<MissioneMD> getMissioniAttive() {
-		return missioniAttive.values();
+		return Collections.unmodifiableCollection(missioniAttive.values());
 	}
 
 	/**
 	 * Le missioni completate.
 	 */
 	public Collection<MissioneMD> getMissioniCompletate() {
-		return missioniCompletate.values();
+		return Collections.unmodifiableCollection(missioniCompletate.values());
 	}
 
 	/**

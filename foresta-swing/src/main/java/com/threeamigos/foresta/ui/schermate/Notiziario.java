@@ -130,8 +130,8 @@ class Notiziario {
 			}
 		}
 
-		// Snapshot per valore: VistaPartita.getUltimeNotizie() restituisce la lista viva,
-		// quindi va copiata per poterla confrontare più avanti con il suo stato futuro.
+		// Snapshot per valore: VistaPartita.getUltimeNotizie() restituisce una vista di sola lettura della lista viva,
+		// che cambia quando arrivano notizie nuove: va copiata per poterla confrontare più avanti con il suo stato futuro.
 		notizieCostruite = new ArrayList<>(notizieAttuali);
 
 		if (segmenti.isEmpty()) {

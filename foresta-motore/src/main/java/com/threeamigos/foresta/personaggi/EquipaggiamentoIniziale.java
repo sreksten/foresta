@@ -68,7 +68,7 @@ public final class EquipaggiamentoIniziale {
 			// Di base: niente rarità, incantamenti o nome proprio che il generatore dà ogni tanto
 			ArtefattoMD md = artefatto.getModelloDati();
 			md.setRarita(TipoRaritaArtefatto.COMUNE);
-			md.getIncantamenti().clear();
+			md.rimuoviTuttiGliIncantamenti();
 			md.setNomeProprio(null);
 			if (!personaggio.puoEquipaggiare(artefatto).isPresent()) {
 				personaggio.addArtefatto(artefatto);

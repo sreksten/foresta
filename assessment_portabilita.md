@@ -36,19 +36,6 @@ Sono della UI Swing e si sostituiscono con lei:
 
 Una UI mobile userà `NotificaUscitaDalGioco` per l'errore fatale e il ciclo di vita dell'app al posto del gancio.
 
-## Qualità del codice
-
-### Collezioni ancora vive
-
-Restano con la collezione viva, da fare una per volta (come si è fatto per `PersonaggioMD`, `GruppoGiocatoreMD` e i magazzini dei negozi: vista di sola lettura più metodi `aggiungi…`/`togli…`):
-
-- `GruppoMD.getPersonaggiMD`: la lista si riordina da fuori, serve prima un metodo per spostare un personaggio;
-- `ArtefattoMD.getModificatori` e `getIncantamenti` (un solo punto di modifica: `EquipaggiamentoIniziale`);
-- `NotizieMD`: messaggi e notizie;
-- `LineaTemporaleMD.getCittaDistrutte`, che ha ancora il suo `setCittaDistrutte`;
-- `RegistroMissioniMD.getMissioniAttive` e `getMissioniCompletate` (viste sui valori della mappa);
-- `MissioneMD.getMissioniMD`.
-
 ## Osservazioni
 
 - Il grosso del porting resta la UI Swing, da riscrivere, e l'input. I `Comando` astratti aiutano, ma i cartigli al passaggio del mouse e le scorciatoie da tastiera vanno ripensati per il tocco.

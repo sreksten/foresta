@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 
 /**
  * I dati di un gruppo di personaggi: chi ne fa parte, chi è il capo e le scorte comuni (le pergamene degli incantesimi
@@ -20,7 +21,7 @@ import java.util.Map;
  */
 public class GruppoMD implements Serializzabile {
 
-	protected List<PersonaggioMD> personaggiMD = new ArrayList<>();
+	private final List<PersonaggioMD> personaggiMD = new ArrayList<>();
 	// Le scorte del gruppo: le pergamene degli incantesimi e le pozioni
 	protected final Map<ClasseIncantesimo, Integer> incantesimi = new EnumMap<>(ClasseIncantesimo.class);
 	protected int pozioniSalute;
@@ -101,10 +102,36 @@ public class GruppoMD implements Serializzabile {
 	}
 
 	/**
-	 * L'elenco dei personaggi, modificabile: la posizione di un personaggio è quella in cui il gruppo lo mostra.
+	 * L'elenco dei personaggi, di sola lettura: la posizione di un personaggio è quella in cui il gruppo lo mostra. Si
+	 * cambia con {@link #addPersonaggioMD}, {@link #rimuoviPersonaggioMD}, {@link #riordinaPersonaggiMD} e
+	 * {@link #svuotaPersonaggiMD}.
 	 */
 	public List<PersonaggioMD> getPersonaggiMD() {
-		return personaggiMD;
+		return Collections.unmodifiableList(personaggiMD);
+	}
+
+	/**
+	 * Toglie un personaggio dall'elenco.
+	 */
+	public void rimuoviPersonaggioMD(PersonaggioMD personaggioMD) {
+		personaggiMD.remove(personaggioMD);
+	}
+
+	/**
+	 * Mette i personaggi nell'ordine indicato, che è quello in cui il gruppo li mostra e in cui si salvano. Chi lo chiama
+	 * passa gli stessi personaggi che ci sono già, in un altro ordine.
+	 */
+	public void riordinaPersonaggiMD(List<PersonaggioMD> inOrdine) {
+		List<PersonaggioMD> copia = new ArrayList<>(inOrdine);
+		personaggiMD.clear();
+		personaggiMD.addAll(copia);
+	}
+
+	/**
+	 * Toglie tutti i personaggi dall'elenco, senza toccare capo, pergamene e pozioni (per quello c'è {@link #reimposta()}).
+	 */
+	public void svuotaPersonaggiMD() {
+		personaggiMD.clear();
 	}
 
 	/**

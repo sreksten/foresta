@@ -40,11 +40,7 @@ public class Notizie {
 	}
 
 	private static void aggiungiMessaggio(MessaggioMD messaggioMD) {
-		List<MessaggioMD> ultimiMessaggi = getNotizieMD().getUltimiMessaggi();
-		ultimiMessaggi.add(0, messaggioMD);
-		while (ultimiMessaggi.size() > NotizieMD.MASSIMO_MESSAGGI_RICORDATI) {
-			ultimiMessaggi.remove(ultimiMessaggi.size() - 1);
-		}
+		getNotizieMD().aggiungiMessaggio(messaggioMD);
 	}
 
 	/**
@@ -52,11 +48,7 @@ public class Notizie {
 	 * testa, e le più vecchie oltre il limite si scartano. La UI la legge da VistaPartita.getUltimeNotizie.
 	 */
 	public static void aggiungiNotizia(NotiziaMD notizia) {
-		List<NotiziaMD> ultimeNotizie = getNotizieMD().getUltimeNotizie();
-		ultimeNotizie.add(0, notizia);
-		while (ultimeNotizie.size() > NotizieMD.MASSIMO_NOTIZIE_RICORDATE) {
-			ultimeNotizie.remove(ultimeNotizie.size() - 1);
-		}
+		getNotizieMD().aggiungiNotizia(notizia);
 	}
 
 	/**

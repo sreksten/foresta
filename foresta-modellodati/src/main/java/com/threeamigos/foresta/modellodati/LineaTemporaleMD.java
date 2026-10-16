@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -23,7 +24,7 @@ public class LineaTemporaleMD implements Serializzabile {
 
 	private int ora;
 	private int giorno;
-	private List<TipoLocazione> cittaDistrutte = new ArrayList<>();
+	private final List<TipoLocazione> cittaDistrutte = new ArrayList<>();
 	private boolean giocoFinito;
 	// Il messaggio dell'ultimo evento (es. la colonna di fumo), non ancora mostrato al giocatore
 	private String evento;
@@ -44,12 +45,11 @@ public class LineaTemporaleMD implements Serializzabile {
 		this.giorno = giorno;
 	}
 
+	/**
+	 * Le città distrutte, nell'ordine in cui lo sono state. Di sola lettura: si aggiunge con {@link #addCittaDistrutta}.
+	 */
 	public List<TipoLocazione> getCittaDistrutte() {
-		return cittaDistrutte;
-	}
-
-	public void setCittaDistrutte(List<TipoLocazione> cittaDistrutte) {
-		this.cittaDistrutte = cittaDistrutte;
+		return Collections.unmodifiableList(cittaDistrutte);
 	}
 
 	public boolean isGiocoFinito() {

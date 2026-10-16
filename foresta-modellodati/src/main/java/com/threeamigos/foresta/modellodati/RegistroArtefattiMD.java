@@ -23,7 +23,7 @@ public class RegistroArtefattiMD implements Serializzabile {
 
 	private final Map<CoordinateMD, ArtefattoMD> artefattiSmarriti = new HashMap<>();
 	// I magazzini dei negozi: più negozi della stessa città hanno la stessa coordinata
-	private final Map<TipoNegozio, Map<CoordinateMD, Collection<ArtefattoMD>>> magazzini = new EnumMap<>(TipoNegozio.class);
+	private final Map<TipoNegozio, Map<CoordinateMD, List<ArtefattoMD>>> magazzini = new EnumMap<>(TipoNegozio.class);
 	// Locazioni di artefatti smarriti di cui il giocatore ha avuto notizia (Informazioni, in
 	// locanda o per amicizia): vanno segnalate sulla mappa con Indicatore.gif finché
 	// l'artefatto non viene recuperato.
@@ -109,8 +109,8 @@ public class RegistroArtefattiMD implements Serializzabile {
 			entry.getValue().salva(stream);
 		}
 		stream.println(magazzini.values().stream().mapToInt(Map::size).sum());
-		for (Map.Entry<TipoNegozio, Map<CoordinateMD, Collection<ArtefattoMD>>> negozio : magazzini.entrySet()) {
-			for (Map.Entry<CoordinateMD, Collection<ArtefattoMD>> entry : negozio.getValue().entrySet()) {
+		for (Map.Entry<TipoNegozio, Map<CoordinateMD, List<ArtefattoMD>>> negozio : magazzini.entrySet()) {
+			for (Map.Entry<CoordinateMD, List<ArtefattoMD>> entry : negozio.getValue().entrySet()) {
 				CoordinateMD coordinate = entry.getKey();
 				stream.print(coordinate.getX());
 				stream.print(PIPE);
@@ -156,7 +156,7 @@ public class RegistroArtefattiMD implements Serializzabile {
 			int y = Integer.parseInt(st.testo());
 			TipoNegozio negozio = TipoNegozio.valueOf(st.testo());
 			int totale = Integer.parseInt(st.testo());
-			Collection<ArtefattoMD> magazzino = magazzinoModificabile(new CoordinateMD(x, y), negozio);
+			List<ArtefattoMD> magazzino = magazzinoModificabile(new CoordinateMD(x, y), negozio);
 			for (int j = 0; j < totale; j++) {
 				ArtefattoMD artefatto = new ArtefattoMD();
 				artefatto.leggi(stream);
@@ -177,7 +177,7 @@ public class RegistroArtefattiMD implements Serializzabile {
 	 * Le città in cui un negozio ha un magazzino.
 	 */
 	public Set<CoordinateMD> getCoordinateMagazzini(TipoNegozio negozio) {
-		Map<CoordinateMD, Collection<ArtefattoMD>> delNegozio = magazzini.get(negozio);
+		Map<CoordinateMD, List<ArtefattoMD>> delNegozio = magazzini.get(negozio);
 		return delNegozio == null ? new HashSet<>() : new HashSet<>(delNegozio.keySet());
 	}
 
@@ -194,7 +194,7 @@ public class RegistroArtefattiMD implements Serializzabile {
 	 * @return true se c'era
 	 */
 	public boolean rimuoviDaMagazzino(CoordinateMD coordinate, TipoNegozio negozio, ArtefattoMD artefatto) {
-		Collection<ArtefattoMD> magazzino = magazzinoEsistente(coordinate, negozio);
+		List<ArtefattoMD> magazzino = magazzinoEsistente(coordinate, negozio);
 		return magazzino != null && magazzino.remove(artefatto);
 	}
 
@@ -202,7 +202,7 @@ public class RegistroArtefattiMD implements Serializzabile {
 	 * Toglie dal magazzino gli artefatti che non soddisfano la condizione.
 	 */
 	public void tieniInMagazzino(CoordinateMD coordinate, TipoNegozio negozio, Predicate<ArtefattoMD> daTenere) {
-		Collection<ArtefattoMD> magazzino = magazzinoEsistente(coordinate, negozio);
+		List<ArtefattoMD> magazzino = magazzinoEsistente(coordinate, negozio);
 		if (magazzino != null) {
 			magazzino.removeIf(daTenere.negate());
 		}
@@ -212,18 +212,18 @@ public class RegistroArtefattiMD implements Serializzabile {
 	 * Il magazzino del negozio in quella città, di sola lettura e vuoto se non ce n'è uno (leggerlo non lo crea). Per
 	 * cambiarlo si usano {@link #aggiungiAMagazzino}, {@link #rimuoviDaMagazzino} e {@link #tieniInMagazzino}.
 	 */
-	public Collection<ArtefattoMD> getMagazzino(CoordinateMD coordinate, TipoNegozio negozio) {
-		Collection<ArtefattoMD> magazzino = magazzinoEsistente(coordinate, negozio);
-		return magazzino == null ? Collections.<ArtefattoMD>emptyList() : Collections.unmodifiableCollection(magazzino);
+	public List<ArtefattoMD> getMagazzino(CoordinateMD coordinate, TipoNegozio negozio) {
+		List<ArtefattoMD> magazzino = magazzinoEsistente(coordinate, negozio);
+		return magazzino == null ? Collections.<ArtefattoMD>emptyList() : Collections.unmodifiableList(magazzino);
 	}
 
 	// Null se il negozio non ha un magazzino in quella città
-	private Collection<ArtefattoMD> magazzinoEsistente(CoordinateMD coordinate, TipoNegozio negozio) {
-		Map<CoordinateMD, Collection<ArtefattoMD>> delNegozio = magazzini.get(negozio);
+	private List<ArtefattoMD> magazzinoEsistente(CoordinateMD coordinate, TipoNegozio negozio) {
+		Map<CoordinateMD, List<ArtefattoMD>> delNegozio = magazzini.get(negozio);
 		return delNegozio == null ? null : delNegozio.get(coordinate);
 	}
 
-	private Collection<ArtefattoMD> magazzinoModificabile(CoordinateMD coordinate, TipoNegozio negozio) {
+	private List<ArtefattoMD> magazzinoModificabile(CoordinateMD coordinate, TipoNegozio negozio) {
 		return magazzini
 				.computeIfAbsent(negozio, k -> new HashMap<>())
 				.computeIfAbsent(coordinate, k -> new ArrayList<>());

@@ -33,7 +33,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	// Coordinate all'interno della Foresta
 	private CoordinateMD coordinate;
 	// Artefatti disponibili al gruppo ma non in uso da un personaggio specifico
-	private final Collection<ArtefattoMD> artefatti = new ArrayList<>();
+	private final List<ArtefattoMD> artefatti = new ArrayList<>();
 	// Chi viaggia con il gruppo senza farne parte (vedi GruppoGiocatore.aggiungiOspite)
 	private final List<PersonaggioMD> ospiti = new ArrayList<>();
 	// Gli ospiti che gli avversari possono attaccare, per uuid
@@ -116,7 +116,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	 * con {@link #aggiungiArtefatto} e {@link #togliArtefatto}.
 	 */
 	public Collection<ArtefattoMD> getArtefatti() {
-		return Collections.unmodifiableCollection(artefatti);
+		return Collections.unmodifiableList(artefatti);
 	}
 
 	public void aggiungiArtefatto(ArtefattoMD artefatto) {

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.Locale;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * I dati di un artefatto: un oggetto del gioco con un tipo (un'arma, un'armatura, una pergamena, un ingrediente...), una
@@ -55,8 +57,8 @@ public class ArtefattoMD implements Serializzabile {
 	private double peso;
 	// Stato per la UI: se false, l'elenco modificatori/incantamenti resta chiuso.
 	private boolean figliVisibili = true;
-	private final Collection<ModificatoreAttributoMD> modificatori = new ArrayList<>();
-	private final Collection<IncantamentoMD> incantamenti = new ArrayList<>();
+	private final List<ModificatoreAttributoMD> modificatori = new ArrayList<>();
+	private final List<IncantamentoMD> incantamenti = new ArrayList<>();
 
 	/**
 	 * L'identificativo unico dell'artefatto.
@@ -223,8 +225,11 @@ public class ArtefattoMD implements Serializzabile {
 		this.peso = peso;
 	}
 
+	/**
+	 * I modificatori, di sola lettura: si cambiano con {@link #addModificatore} e {@link #removeModificatore}.
+	 */
 	public Collection<ModificatoreAttributoMD> getModificatori() {
-		return modificatori;
+		return Collections.unmodifiableList(modificatori);
 	}
 
 	/**
@@ -261,8 +266,20 @@ public class ArtefattoMD implements Serializzabile {
 		return modificatori.remove(modificatore);
 	}
 
+	/**
+	 * Gli incantamenti, di sola lettura: si cambiano con {@link #addIncantamento}, {@link #removeIncantamento} e
+	 * {@link #rimuoviTuttiGliIncantamenti}.
+	 */
 	public Collection<IncantamentoMD> getIncantamenti() {
-		return incantamenti;
+		return Collections.unmodifiableList(incantamenti);
+	}
+
+	/**
+	 * Toglie tutti gli incantamenti: serve a chi vuole un artefatto "di base", senza gli incantamenti che il generatore dà ogni
+	 * tanto (la dotazione iniziale di un personaggio).
+	 */
+	public void rimuoviTuttiGliIncantamenti() {
+		incantamenti.clear();
 	}
 
 	/**

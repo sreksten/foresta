@@ -132,4 +132,96 @@ class CollezioniDiSolaLetturaTest {
 		registro.tieniInMagazzino(new CoordinateMD(0, 0), TipoNegozio.VENDITORE_DI_PERGAMENE, a -> true);
 		assertTrue(registro.getCoordinateMagazzini(TipoNegozio.VENDITORE_DI_PERGAMENE).isEmpty(), "non crea magazzini");
 	}
+
+	@Test
+	void ilGruppoCambiaIPersonaggiSoloConIMetodiEsplicitiEPuoRiordinarli() {
+		GruppoMD gruppo = new GruppoMD();
+		PersonaggioMD a = new PersonaggioMD();
+		PersonaggioMD b = new PersonaggioMD();
+		PersonaggioMD c = new PersonaggioMD();
+		gruppo.addPersonaggioMD(a);
+		gruppo.addPersonaggioMD(b);
+		gruppo.addPersonaggioMD(c);
+
+		assertThrows(UnsupportedOperationException.class, () -> gruppo.getPersonaggiMD().add(new PersonaggioMD()));
+		assertThrows(UnsupportedOperationException.class, () -> gruppo.getPersonaggiMD().clear());
+
+		gruppo.riordinaPersonaggiMD(Arrays.asList(c, a, b));
+		assertEquals(Arrays.asList(c, a, b), gruppo.getPersonaggiMD());
+		gruppo.rimuoviPersonaggioMD(a);
+		assertEquals(Arrays.asList(c, b), gruppo.getPersonaggiMD());
+		gruppo.setIndiceCapo(1);
+		gruppo.svuotaPersonaggiMD();
+		assertTrue(gruppo.getPersonaggiMD().isEmpty());
+		assertEquals(1, gruppo.getIndiceCapo(), "svuotare i personaggi non tocca il capo");
+	}
+
+	@Test
+	void riordinareConLaListaDelloStessoGruppoNonRompeNiente() {
+		GruppoMD gruppo = new GruppoMD();
+		PersonaggioMD a = new PersonaggioMD();
+		PersonaggioMD b = new PersonaggioMD();
+		gruppo.addPersonaggioMD(a);
+		gruppo.addPersonaggioMD(b);
+
+		// La vista del gruppo stesso come argomento: si copia prima di svuotare
+		gruppo.riordinaPersonaggiMD(gruppo.getPersonaggiMD());
+
+		assertEquals(Arrays.asList(a, b), gruppo.getPersonaggiMD());
+	}
+
+	@Test
+	void unArtefattoNonLasciaModificareModificatoriEIncantamenti() {
+		ArtefattoMD spada = artefatto("spada");
+		spada.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 1));
+		spada.addIncantamento("Fiamma", com.threeamigos.foresta.tipi.TipoDanno.FUOCO, 5, 0.1);
+
+		assertThrows(UnsupportedOperationException.class, () -> spada.getModificatori().clear());
+		assertThrows(UnsupportedOperationException.class, () -> spada.getIncantamenti().clear());
+		assertEquals(1, spada.getModificatori().size());
+		assertEquals(1, spada.getIncantamenti().size());
+
+		spada.rimuoviTuttiGliIncantamenti();
+		assertTrue(spada.getIncantamenti().isEmpty());
+		assertEquals(1, spada.getModificatori().size(), "i modificatori restano");
+	}
+
+	@Test
+	void ilRegistroDelleMissioniEUnaMissioneNonLasciannoModificareLeLoroListe() {
+		RegistroMissioniMD registro = new RegistroMissioniMD();
+		MissioneMD principale = new MissioneMD();
+		principale.setId("m1");
+		MissioneMD secondaria = new MissioneMD();
+		secondaria.setId("m2");
+		registro.aggiungiMissione("m1", principale);
+		principale.aggiungiMissioneMD(secondaria);
+
+		assertThrows(UnsupportedOperationException.class, () -> registro.getMissioniAttive().clear());
+		assertThrows(UnsupportedOperationException.class, () -> registro.getMissioniCompletate().add(new MissioneMD()));
+		assertThrows(UnsupportedOperationException.class, () -> principale.getMissioniMD().clear());
+		assertEquals(1, registro.getMissioniAttive().size());
+		assertEquals(1, principale.getMissioniMD().size());
+
+		principale.rimuoviMissioneMD(secondaria);
+		assertTrue(principale.getMissioniMD().isEmpty());
+	}
+
+	@Test
+	void laLineaTemporaleNonLasciaModificareLeCittaDistrutte() {
+		LineaTemporaleMD linea = new LineaTemporaleMD();
+
+		assertThrows(UnsupportedOperationException.class, () -> linea.getCittaDistrutte().add(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA));
+
+		linea.addCittaDistrutta(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA);
+		assertEquals(Arrays.asList(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA), linea.getCittaDistrutte());
+		assertTrue(linea.isCittaDistrutta(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA));
+	}
+
+	@Test
+	void leNotizieEIMessaggiNonSiModificanoDaFuori() {
+		NotizieMD notizie = new NotizieMD();
+
+		assertThrows(UnsupportedOperationException.class, () -> notizie.getUltimiMessaggi().add(new MessaggioMD("x", false)));
+		assertThrows(UnsupportedOperationException.class, () -> notizie.getUltimeNotizie().add(new NotiziaMD("N", "x")));
+	}
 }

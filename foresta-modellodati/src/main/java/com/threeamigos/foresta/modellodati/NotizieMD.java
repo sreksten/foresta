@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * Gli ultimi messaggi mostrati al giocatore nel pannello di testo (per poterlo ripopolare dopo un ricaricamento) e le
@@ -33,17 +34,41 @@ public class NotizieMD implements Serializzabile {
 	private final List<NotiziaMD> ultimeNotizie = new ArrayList<>();
 
 	/**
-	 * I messaggi ricordati, dal più recente al più vecchio, in numero non superiore a {@value #MASSIMO_MESSAGGI_RICORDATI}.
+	 * I messaggi ricordati, dal più recente al più vecchio, in numero non superiore a {@value #MASSIMO_MESSAGGI_RICORDATI}. Di sola
+	 * lettura: si aggiunge con {@link #aggiungiMessaggio}.
 	 */
 	public List<MessaggioMD> getUltimiMessaggi() {
-		return ultimiMessaggi;
+		return Collections.unmodifiableList(ultimiMessaggi);
 	}
 
 	/**
-	 * Le notizie ricordate, dalla più recente alla più vecchia, in numero non superiore a {@value #MASSIMO_NOTIZIE_RICORDATE}.
+	 * Mette il messaggio in testa, come il più recente; quelli oltre {@value #MASSIMO_MESSAGGI_RICORDATI} si scartano,
+	 * partendo dal più vecchio.
+	 */
+	public void aggiungiMessaggio(MessaggioMD messaggio) {
+		ultimiMessaggi.add(0, messaggio);
+		while (ultimiMessaggi.size() > MASSIMO_MESSAGGI_RICORDATI) {
+			ultimiMessaggi.remove(ultimiMessaggi.size() - 1);
+		}
+	}
+
+	/**
+	 * Le notizie ricordate, dalla più recente alla più vecchia, in numero non superiore a {@value #MASSIMO_NOTIZIE_RICORDATE}. Di sola
+	 * lettura: si aggiunge con {@link #aggiungiNotizia}.
 	 */
 	public List<NotiziaMD> getUltimeNotizie() {
-		return ultimeNotizie;
+		return Collections.unmodifiableList(ultimeNotizie);
+	}
+
+	/**
+	 * Mette la notizia in testa, come la più recente; quelle oltre {@value #MASSIMO_NOTIZIE_RICORDATE} si scartano,
+	 * partendo dalla più vecchia.
+	 */
+	public void aggiungiNotizia(NotiziaMD notizia) {
+		ultimeNotizie.add(0, notizia);
+		while (ultimeNotizie.size() > MASSIMO_NOTIZIE_RICORDATE) {
+			ultimeNotizie.remove(ultimeNotizie.size() - 1);
+		}
 	}
 
 	/**

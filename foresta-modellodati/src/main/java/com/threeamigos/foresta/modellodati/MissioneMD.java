@@ -127,7 +127,7 @@ public class MissioneMD implements Serializzabile {
 	 * Le missioni secondarie, nell'ordine in cui sono state aggiunte.
 	 */
 	public Collection<MissioneMD> getMissioniMD() {
-		return missioniSecondarie;
+		return Collections.unmodifiableList(missioniSecondarie);
 	}
 
 	/**

@@ -20,7 +20,7 @@ class NotiziaLocandaEsauritaTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(77)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             for (int i = 1; i <= 5; i++) {
-                ModelloDati.getIstanza().getNotizieMD().getUltimeNotizie().add(new NotiziaMD("BC" + i, "già detta " + i));
+                ModelloDati.getIstanza().getNotizieMD().aggiungiNotizia(new NotiziaMD("BC" + i, "già detta " + i));
             }
             for (int volta = 0; volta < 30; volta++) {
                 NotiziaMD notizia = assertDoesNotThrow(() ->

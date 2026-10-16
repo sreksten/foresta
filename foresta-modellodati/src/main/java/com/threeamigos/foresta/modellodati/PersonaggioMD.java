@@ -94,16 +94,16 @@ public class PersonaggioMD implements Serializzabile {
 	/**
 	 * Modificatori permanenti agli attributi dei personaggi
 	 */
-	private final Collection<ModificatoreAttributoMD> modificatori = new ArrayList<>();
+	private final List<ModificatoreAttributoMD> modificatori = new ArrayList<>();
 	private TatticaMD tattica;
 	/**
 	 * Effetti di stato applicati al personaggio
 	 */
-	private final Collection<EffettoDiStatoMD> effettiDiStato = new ArrayList<>();
+	private final List<EffettoDiStatoMD> effettiDiStato = new ArrayList<>();
 	/**
 	 * Artefatti posseduti dal personaggio
 	 */
-	private final Collection<ArtefattoMD> artefatti = new ArrayList<>();
+	private final List<ArtefattoMD> artefatti = new ArrayList<>();
 
 	/**
 	 * L'identificativo unico del personaggio, che il salvataggio conserva.
@@ -409,7 +409,7 @@ public class PersonaggioMD implements Serializzabile {
 	 * si usano {@link #aggiungiEffettoDiStato} e {@link #togliEffettoDiStato}.
 	 */
 	public Collection<EffettoDiStatoMD> getEffettiDiStato() {
-		return Collections.unmodifiableCollection(effettiDiStato);
+		return Collections.unmodifiableList(effettiDiStato);
 	}
 
 	public void aggiungiEffettoDiStato(EffettoDiStatoMD effettoDiStato) {
@@ -428,7 +428,7 @@ public class PersonaggioMD implements Serializzabile {
 	 * {@link #togliArtefatto}.
 	 */
 	public Collection<ArtefattoMD> getArtefatti() {
-		return Collections.unmodifiableCollection(artefatti);
+		return Collections.unmodifiableList(artefatti);
 	}
 
 	public void aggiungiArtefatto(ArtefattoMD artefatto) {
@@ -469,7 +469,7 @@ public class PersonaggioMD implements Serializzabile {
 	 * {@link #togliModificatore}.
 	 */
 	public Collection<ModificatoreAttributoMD> getModificatori() {
-		return Collections.unmodifiableCollection(modificatori);
+		return Collections.unmodifiableList(modificatori);
 	}
 
 	public void aggiungiModificatore(ModificatoreAttributoMD modificatore) {
