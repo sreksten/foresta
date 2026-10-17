@@ -31,6 +31,10 @@ public class RegistroArtefattiMD implements Serializzabile {
 	// l'artefatto non viene recuperato.
 	private final Set<CoordinateMD> localizzazioniConosciute = new HashSet<>();
 
+	public Set<CoordinateMD> getLocalizzazioniConosciute() {
+		return Collections.unmodifiableSet(localizzazioniConosciute);
+	}
+
 	/**
 	 * Dimentica tutti gli artefatti, i magazzini e le localizzazioni conosciute.
 	 */
@@ -93,8 +97,60 @@ public class RegistroArtefattiMD implements Serializzabile {
 		return localizzazioniConosciute.contains(coordinate);
 	}
 
-	public Set<CoordinateMD> getLocalizzazioniConosciute() {
-		return Collections.unmodifiableSet(localizzazioniConosciute);
+	/**
+	 * Le città in cui un negozio ha un magazzino.
+	 */
+	public Set<CoordinateMD> getCoordinateMagazzini(TipoNegozio negozio) {
+		Map<CoordinateMD, List<ArtefattoMD>> delNegozio = magazzini.get(negozio);
+		return delNegozio == null ? new HashSet<>() : new HashSet<>(delNegozio.keySet());
+	}
+
+	/**
+	 * Mette l'artefatto nel magazzino del negozio in quella città, che nasce vuoto se ancora non c'è.
+	 */
+	public void aggiungiAMagazzino(CoordinateMD coordinate, TipoNegozio negozio, ArtefattoMD artefatto) {
+		magazzinoModificabile(coordinate, negozio).add(artefatto);
+	}
+
+	/**
+	 * Toglie l'artefatto dal magazzino, se c'è ancora.
+	 *
+	 * @return true se c'era
+	 */
+	public boolean rimuoviDaMagazzino(CoordinateMD coordinate, TipoNegozio negozio, ArtefattoMD artefatto) {
+		List<ArtefattoMD> magazzino = magazzinoEsistente(coordinate, negozio);
+		return magazzino != null && magazzino.remove(artefatto);
+	}
+
+	/**
+	 * Toglie dal magazzino gli artefatti che non soddisfano la condizione.
+	 */
+	public void tieniInMagazzino(CoordinateMD coordinate, TipoNegozio negozio, Predicate<ArtefattoMD> daTenere) {
+		List<ArtefattoMD> magazzino = magazzinoEsistente(coordinate, negozio);
+		if (magazzino != null) {
+			magazzino.removeIf(daTenere.negate());
+		}
+	}
+
+	/**
+	 * Il magazzino del negozio in quella città, di sola lettura e vuoto se non ce n'è uno (leggerlo non lo crea). Per
+	 * cambiarlo si usano {@link #aggiungiAMagazzino}, {@link #rimuoviDaMagazzino} e {@link #tieniInMagazzino}.
+	 */
+	public List<ArtefattoMD> getMagazzino(CoordinateMD coordinate, TipoNegozio negozio) {
+		List<ArtefattoMD> magazzino = magazzinoEsistente(coordinate, negozio);
+		return magazzino == null ? Collections.emptyList() : Collections.unmodifiableList(magazzino);
+	}
+
+	// Null se il negozio non ha un magazzino in quella città
+	private List<ArtefattoMD> magazzinoEsistente(CoordinateMD coordinate, TipoNegozio negozio) {
+		Map<CoordinateMD, List<ArtefattoMD>> delNegozio = magazzini.get(negozio);
+		return delNegozio == null ? null : delNegozio.get(coordinate);
+	}
+
+	private List<ArtefattoMD> magazzinoModificabile(CoordinateMD coordinate, TipoNegozio negozio) {
+		return magazzini
+				.computeIfAbsent(negozio, k -> new HashMap<>())
+				.computeIfAbsent(coordinate, k -> new ArrayList<>());
 	}
 
 	/**
@@ -167,62 +223,6 @@ public class RegistroArtefattiMD implements Serializzabile {
 		}
 	}
 
-	/**
-	 * Le città in cui un negozio ha un magazzino.
-	 */
-	public Set<CoordinateMD> getCoordinateMagazzini(TipoNegozio negozio) {
-		Map<CoordinateMD, List<ArtefattoMD>> delNegozio = magazzini.get(negozio);
-		return delNegozio == null ? new HashSet<>() : new HashSet<>(delNegozio.keySet());
-	}
-
-	/**
-	 * Mette l'artefatto nel magazzino del negozio in quella città, che nasce vuoto se ancora non c'è.
-	 */
-	public void aggiungiAMagazzino(CoordinateMD coordinate, TipoNegozio negozio, ArtefattoMD artefatto) {
-		magazzinoModificabile(coordinate, negozio).add(artefatto);
-	}
-
-	/**
-	 * Toglie l'artefatto dal magazzino, se c'è ancora.
-	 *
-	 * @return true se c'era
-	 */
-	public boolean rimuoviDaMagazzino(CoordinateMD coordinate, TipoNegozio negozio, ArtefattoMD artefatto) {
-		List<ArtefattoMD> magazzino = magazzinoEsistente(coordinate, negozio);
-		return magazzino != null && magazzino.remove(artefatto);
-	}
-
-	/**
-	 * Toglie dal magazzino gli artefatti che non soddisfano la condizione.
-	 */
-	public void tieniInMagazzino(CoordinateMD coordinate, TipoNegozio negozio, Predicate<ArtefattoMD> daTenere) {
-		List<ArtefattoMD> magazzino = magazzinoEsistente(coordinate, negozio);
-		if (magazzino != null) {
-			magazzino.removeIf(daTenere.negate());
-		}
-	}
-
-	/**
-	 * Il magazzino del negozio in quella città, di sola lettura e vuoto se non ce n'è uno (leggerlo non lo crea). Per
-	 * cambiarlo si usano {@link #aggiungiAMagazzino}, {@link #rimuoviDaMagazzino} e {@link #tieniInMagazzino}.
-	 */
-	public List<ArtefattoMD> getMagazzino(CoordinateMD coordinate, TipoNegozio negozio) {
-		List<ArtefattoMD> magazzino = magazzinoEsistente(coordinate, negozio);
-		return magazzino == null ? Collections.emptyList() : Collections.unmodifiableList(magazzino);
-	}
-
-	// Null se il negozio non ha un magazzino in quella città
-	private List<ArtefattoMD> magazzinoEsistente(CoordinateMD coordinate, TipoNegozio negozio) {
-		Map<CoordinateMD, List<ArtefattoMD>> delNegozio = magazzini.get(negozio);
-		return delNegozio == null ? null : delNegozio.get(coordinate);
-	}
-
-	private List<ArtefattoMD> magazzinoModificabile(CoordinateMD coordinate, TipoNegozio negozio) {
-		return magazzini
-				.computeIfAbsent(negozio, k -> new HashMap<>())
-				.computeIfAbsent(coordinate, k -> new ArrayList<>());
-	}
-
 	public static class ArtefattoESuaUbicazione {
 
 		private final ArtefattoMD artefattoMD;
@@ -241,4 +241,5 @@ public class RegistroArtefattiMD implements Serializzabile {
 			return coordinate;
 		}
 	}
+
 }

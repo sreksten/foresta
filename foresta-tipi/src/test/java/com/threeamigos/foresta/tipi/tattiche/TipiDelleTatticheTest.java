@@ -80,12 +80,12 @@ class TipiDelleTatticheTest {
 
     @Test
     void unConfrontoDiceSeIlValoreStaSottoUgualeOSopra() {
-        assertTrue(Confronto.MINORE.vale(1, 2));
-        assertFalse(Confronto.MINORE.vale(2, 2));
-        assertTrue(Confronto.UGUALE.vale(2, 2));
-        assertFalse(Confronto.UGUALE.vale(3, 2));
-        assertTrue(Confronto.MAGGIORE.vale(3, 2));
-        assertFalse(Confronto.MAGGIORE.vale(2, 2));
+        assertTrue(TipoConfronto.MINORE.vale(1, 2));
+        assertFalse(TipoConfronto.MINORE.vale(2, 2));
+        assertTrue(TipoConfronto.UGUALE.vale(2, 2));
+        assertFalse(TipoConfronto.UGUALE.vale(3, 2));
+        assertTrue(TipoConfronto.MAGGIORE.vale(3, 2));
+        assertFalse(TipoConfronto.MAGGIORE.vale(2, 2));
     }
 
     @Test

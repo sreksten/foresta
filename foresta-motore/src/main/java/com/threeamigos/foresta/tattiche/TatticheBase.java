@@ -1,31 +1,12 @@
 package com.threeamigos.foresta.tattiche;
 
-import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
-import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
-import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
-import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
-import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.modellodati.tattiche.*;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
-import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
+import com.threeamigos.foresta.tipi.tattiche.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Le tattiche base: quelle dei mostri, una per classe, e quelle predefinite dei personaggi giocabili, da cui il giocatore può partire
@@ -130,7 +111,7 @@ public final class TatticheBase {
 	 * Filtro: salute sotto quella percentuale della massima
 	 */
 	private static FiltroMD sotto(int percentuale) {
-		return FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, Confronto.MINORE, percentuale);
+		return FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, TipoConfronto.MINORE, percentuale);
 	}
 
 	/**
@@ -149,17 +130,17 @@ public final class TatticheBase {
 
 	/** Ci sono almeno tanti alleati con un effetto di stato da togliere */
 	private static PredicatoMD alleatiConUnStatoNegativo(int almeno) {
-		return PredicatoMD.quanti(TipoRosa.ALLEATI, Collections.singletonList(FiltroMD.senzaParametro(TipoFiltro.STATO_NEGATIVO)), Confronto.MAGGIORE, almeno - 1);
+		return PredicatoMD.quanti(TipoRosa.ALLEATI, Collections.singletonList(FiltroMD.senzaParametro(TipoFiltro.STATO_NEGATIVO)), TipoConfronto.MAGGIORE, almeno - 1);
 	}
 
 	/** Sono passati almeno tanti round dall'ultimo uso della voce (se non l'ha mai usata, è passato abbastanza) */
 	private static PredicatoMD dopoRound(int round) {
-		return PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND_DALL_ULTIMO_USO, Confronto.MINORE, round).negato();
+		return PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND_DALL_ULTIMO_USO, TipoConfronto.MINORE, round).negato();
 	}
 
 	/** La fascia di astuzia: l'astuzia non è sotto la soglia */
 	private static PredicatoMD daAstuzia(int soglia) {
-		return PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, Confronto.MINORE, soglia).negato();
+		return PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, TipoConfronto.MINORE, soglia).negato();
 	}
 
 	/**
@@ -383,9 +364,9 @@ public final class TatticheBase {
 		AzioneMD normale = AzioneMD.di(TipoAzione.POZIONE_MAGIA);
 		AzioneMD grande = AzioneMD.di(TipoAzione.POZIONE_MAGIA_GRANDE);
 		return Arrays.asList(
-				voce("Pozione di magia grande", su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO, FiltroMD.conConfrontoENumero(TipoFiltro.MAGIA, Confronto.MINORE, sottoQuanto / 2)),
+				voce("Pozione di magia grande", su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO, FiltroMD.conConfrontoENumero(TipoFiltro.MAGIA, TipoConfronto.MINORE, sottoQuanto / 2)),
 						condizioni(null), grande, normale),
-				voce("Pozione di magia", su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO, FiltroMD.conConfrontoENumero(TipoFiltro.MAGIA, Confronto.MINORE, sottoQuanto)),
+				voce("Pozione di magia", su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO, FiltroMD.conConfrontoENumero(TipoFiltro.MAGIA, TipoConfronto.MINORE, sottoQuanto)),
 						condizioni(null), normale, grande));
 	}
 
@@ -475,7 +456,7 @@ public final class TatticheBase {
 	 * poi colpisce il più ferito.
 	 */
 	private static TatticaMD bardo() {
-		PredicatoMD piuDiUnAvversario = PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.emptyList(), Confronto.MAGGIORE, 1);
+		PredicatoMD piuDiUnAvversario = PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.emptyList(), TipoConfronto.MAGGIORE, 1);
 		return tattica(
 				pozioniDiSalute(25, false),
 				voce("Canto curativo", su(TipoRosa.ALLEATI_E_OSPITI, TipoOrdinamento.MENO_SALUTE, sotto(60)), condizioni(null), AzioneMD.di(TipoAzione.CANTO_CURATIVO)),

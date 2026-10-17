@@ -1,28 +1,10 @@
 package com.threeamigos.foresta.tattiche;
 
-import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
-import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
-import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
-import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
-import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
+import com.threeamigos.foresta.modellodati.tattiche.*;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
-import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
+import com.threeamigos.foresta.tipi.tattiche.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import com.threeamigos.foresta.canti.CantoDelBardo;
+import java.util.*;
 
 /**
  * Le tattiche base dei mostri (tattiche_di_combattimento_automatiche.md §4): quella di una classe è la sua, se qualcuno gliene ha registrata una, altrimenti
@@ -128,9 +110,9 @@ public final class RegistroTattiche {
 		bersagli.add(new SelettoreMD(TipoRosa.AVVERSARI_E_OSPITI, Collections.emptyList(), OrdinamentoMD.di(TipoOrdinamento.A_CASO)));
 
 		// Non lancia se non è magico (non lo è, è silenziato o ha 0 MAGIA), e una volta su tre rinuncia
-		PredicatoMD magico = PredicatoMD.quanti(TipoRosa.SE_STESSO, Collections.singletonList(FiltroMD.senzaParametro(TipoFiltro.MAGICO)), Confronto.MAGGIORE, 0);
-		PredicatoMD sotto5 = PredicatoMD.conConfrontoENumero(TipoPredicato.INTELLIGENZA, Confronto.MINORE, 5);
-		PredicatoMD sotto7 = PredicatoMD.conConfrontoENumero(TipoPredicato.INTELLIGENZA, Confronto.MINORE, 7);
+		PredicatoMD magico = PredicatoMD.quanti(TipoRosa.SE_STESSO, Collections.singletonList(FiltroMD.senzaParametro(TipoFiltro.MAGICO)), TipoConfronto.MAGGIORE, 0);
+		PredicatoMD sotto5 = PredicatoMD.conConfrontoENumero(TipoPredicato.INTELLIGENZA, TipoConfronto.MINORE, 5);
+		PredicatoMD sotto7 = PredicatoMD.conConfrontoENumero(TipoPredicato.INTELLIGENZA, TipoConfronto.MINORE, 7);
 		PredicatoMD unaVoltaSuTreRinuncia = PredicatoMD.probabilita(67);
 		AzioneMD attacco = AzioneMD.di(TipoAzione.ATTACCO_FISICO);
 

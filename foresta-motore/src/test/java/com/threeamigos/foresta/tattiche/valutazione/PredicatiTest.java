@@ -1,17 +1,18 @@
 package com.threeamigos.foresta.tattiche.valutazione;
 
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
 import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
-import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
+import com.threeamigos.foresta.tipi.tattiche.TipoConfronto;
 import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
 import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
@@ -23,8 +24,6 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.tattiche.ContestoTattico;
-import com.threeamigos.foresta.tipi.TipoAttributo;
 
 /**
  * Le condizioni di una voce che non sono un controllo su un personaggio (tattiche_di_combattimento_automatiche.md §11.8).
@@ -66,35 +65,35 @@ class PredicatiTest {
 
     @Test
     void ilParametroDeveEssereQuelloDelTipoDiPredicato() {
-        assertThrows(IllegalArgumentException.class, () -> PredicatoMD.conConfrontoENumero(TipoPredicato.PROBABILITA, Confronto.MINORE, 3));
-        assertThrows(IllegalArgumentException.class, () -> PredicatoMD.conConfrontoENumero(TipoPredicato.QUANTI, Confronto.MINORE, 3));
-        assertDoesNotThrow(() -> PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.UGUALE, 1));
+        assertThrows(IllegalArgumentException.class, () -> PredicatoMD.conConfrontoENumero(TipoPredicato.PROBABILITA, TipoConfronto.MINORE, 3));
+        assertThrows(IllegalArgumentException.class, () -> PredicatoMD.conConfrontoENumero(TipoPredicato.QUANTI, TipoConfronto.MINORE, 3));
+        assertDoesNotThrow(() -> PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.UGUALE, 1));
     }
 
     @Test
     void quantiContaICandidatiDopoIFiltri() {
         FiltroMD nonMorto = FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.NON_MORTO);
         // "C'è un non morto fra gli avversari"
-        PredicatoMD esisteNonMorto = PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.singletonList(nonMorto), Confronto.MAGGIORE, 0);
+        PredicatoMD esisteNonMorto = PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.singletonList(nonMorto), TipoConfronto.MAGGIORE, 0);
         assertTrue(vale(esisteNonMorto));
         assertFalse(vale(esisteNonMorto.negato()));
         // "Non ci sono non morti fra gli alleati"
-        assertTrue(vale(PredicatoMD.quanti(TipoRosa.ALLEATI, Collections.singletonList(nonMorto), Confronto.UGUALE, 0)));
+        assertTrue(vale(PredicatoMD.quanti(TipoRosa.ALLEATI, Collections.singletonList(nonMorto), TipoConfronto.UGUALE, 0)));
         // "Gli avversari sono almeno 2" è NON MINORE 2, "almeno 3" no
-        assertTrue(vale(PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.emptyList(), Confronto.MINORE, 2).negato()));
-        assertFalse(vale(PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.emptyList(), Confronto.MINORE, 3).negato()));
+        assertTrue(vale(PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.emptyList(), TipoConfronto.MINORE, 2).negato()));
+        assertFalse(vale(PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.emptyList(), TipoConfronto.MINORE, 3).negato()));
         // "Sono l'unico vivo"
-        assertFalse(vale(PredicatoMD.quanti(TipoRosa.ALLEATI, Collections.emptyList(), Confronto.UGUALE, 1)));
+        assertFalse(vale(PredicatoMD.quanti(TipoRosa.ALLEATI, Collections.emptyList(), TipoConfronto.UGUALE, 1)));
         guerriero.subSalute(1_000_000, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
         assertFalse(guerriero.isVivo());
         ContestoTattico delLadro = new ContestoTattico(ladro, true, Arrays.asList(guerriero, ladro), Arrays.asList(goblin, fantasma), Collections.emptyList());
-        assertTrue(Predicati.vale(PredicatoMD.quanti(TipoRosa.ALLEATI, Collections.emptyList(), Confronto.UGUALE, 1), delLadro));
+        assertTrue(Predicati.vale(PredicatoMD.quanti(TipoRosa.ALLEATI, Collections.emptyList(), TipoConfronto.UGUALE, 1), delLadro));
     }
 
     @Test
     void quantiConLaRosaSeStessoControllaIPropriStati() {
         PredicatoMD spaventato = PredicatoMD.quanti(TipoRosa.SE_STESSO,
-                Collections.singletonList(FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.SPAVENTATO)), Confronto.UGUALE, 1);
+                Collections.singletonList(FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.SPAVENTATO)), TipoConfronto.UGUALE, 1);
         assertFalse(vale(spaventato));
         guerriero.addEffettoDiStato(TipoEffettoDiStato.SPAVENTATO, 3, 0);
         assertTrue(vale(spaventato));
@@ -103,9 +102,9 @@ class PredicatiTest {
     @Test
     void ilRoundSiLeggeDalloStatoDelCombattimento() {
         assertEquals(1, StatoDelCombattimento.getIstanza().getRound());
-        assertTrue(vale(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.UGUALE, 1)));
-        assertFalse(vale(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.MAGGIORE, 1)));
-        assertTrue(vale(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.UGUALE, 1).negato().negato()));
+        assertTrue(vale(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.UGUALE, 1)));
+        assertFalse(vale(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.MAGGIORE, 1)));
+        assertTrue(vale(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.UGUALE, 1).negato().negato()));
     }
 
     @Test
@@ -117,9 +116,9 @@ class PredicatiTest {
         Personaggio stregaBassa = FabbricaPersonaggi.crea(TipoPersonaggio.STREGA, 1);
         ContestoTattico dellaStrega = new ContestoTattico(stregaBassa, false, Collections.singletonList(stregaBassa), Collections.singletonList(guerriero), Collections.emptyList());
         // La Strega ha 65 di massimo: 26 al livello 1, quindi è della terza fascia (20-30) e non della quarta
-        assertTrue(Predicati.vale(PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, Confronto.MINORE, 20).negato(), dellaStrega));
-        assertFalse(Predicati.vale(PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, Confronto.MINORE, 31).negato(), dellaStrega));
-        assertTrue(vale(PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, Confronto.MINORE, 12)), "il Guerriero è tonto al livello 1");
+        assertTrue(Predicati.vale(PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, TipoConfronto.MINORE, 20).negato(), dellaStrega));
+        assertFalse(Predicati.vale(PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, TipoConfronto.MINORE, 31).negato(), dellaStrega));
+        assertTrue(vale(PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, TipoConfronto.MINORE, 12)), "il Guerriero è tonto al livello 1");
     }
 
     @Test
@@ -137,13 +136,13 @@ class PredicatiTest {
     @Test
     void gliUsiDellaVoceSiContanoPerPersonaggioEPerVoce() {
         StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
-        PredicatoMD mai = PredicatoMD.conConfrontoENumero(TipoPredicato.VOCE_USATA, Confronto.UGUALE, 0);
+        PredicatoMD mai = PredicatoMD.conConfrontoENumero(TipoPredicato.VOCE_USATA, TipoConfronto.UGUALE, 0);
         ContestoTattico perLaVoce = contesto.conVoce("v1");
         assertTrue(Predicati.vale(mai, perLaVoce), "una volta per scontro: ancora mai usata");
         stato.registraUsoVoce(guerriero, "v1");
         stato.registraUsoVoce(guerriero, "v1");
         assertFalse(Predicati.vale(mai, perLaVoce));
-        assertTrue(Predicati.vale(PredicatoMD.conConfrontoENumero(TipoPredicato.VOCE_USATA, Confronto.UGUALE, 2), perLaVoce));
+        assertTrue(Predicati.vale(PredicatoMD.conConfrontoENumero(TipoPredicato.VOCE_USATA, TipoConfronto.UGUALE, 2), perLaVoce));
         assertTrue(Predicati.vale(mai, contesto.conVoce("v2")), "un'altra voce");
         assertEquals(0, stato.getUsiDellaVoce(ladro, "v1"), "un altro personaggio");
         assertThrows(IllegalStateException.class, () -> vale(mai), "senza dire quale voce");
@@ -152,17 +151,17 @@ class PredicatiTest {
     @Test
     void ilCooldownContaIRoundDallUltimoUso() {
         StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
-        PredicatoMD dopoDueRound = PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND_DALL_ULTIMO_USO, Confronto.MINORE, 2).negato();
+        PredicatoMD dopoDueRound = PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND_DALL_ULTIMO_USO, TipoConfronto.MINORE, 2).negato();
         ContestoTattico perLaVoce = contesto.conVoce("fiato");
         assertTrue(Predicati.vale(dopoDueRound, perLaVoce), "mai usata: il periodo di attesa è finito");
         stato.registraUsoVoce(guerriero, "fiato");
         assertFalse(Predicati.vale(dopoDueRound, perLaVoce), "appena usata");
-        assertTrue(Predicati.vale(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND_DALL_ULTIMO_USO, Confronto.UGUALE, 0), perLaVoce));
+        assertTrue(Predicati.vale(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND_DALL_ULTIMO_USO, TipoConfronto.UGUALE, 0), perLaVoce));
     }
 
     @Test
     void leCondizioniDiUnaVoceSonoInAnd() {
-        PredicatoMD vero = PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.UGUALE, 1);
+        PredicatoMD vero = PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.UGUALE, 1);
         PredicatoMD falso = vero.negato();
         assertTrue(Predicati.valgonoTutti(Collections.emptyList(), contesto), "nessuna condizione: sempre");
         assertTrue(Predicati.valgonoTutti(Arrays.asList(vero, vero), contesto));

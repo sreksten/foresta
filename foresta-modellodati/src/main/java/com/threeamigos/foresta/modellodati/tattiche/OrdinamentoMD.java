@@ -1,9 +1,5 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
-import com.threeamigos.foresta.modellodati.LettoreCampi;
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.BufferedReader;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
 import com.threeamigos.foresta.tipi.tattiche.TipoParametro;
@@ -17,14 +13,6 @@ import java.util.Objects;
  * @author Stefano Reksten
  */
 public final class OrdinamentoMD {
-
-	private final TipoOrdinamento tipo;
-	private final TipoDanno tipoDanno;
-
-	private OrdinamentoMD(TipoOrdinamento tipo, TipoDanno tipoDanno) {
-		this.tipo = tipo;
-		this.tipoDanno = tipoDanno;
-	}
 
 	/**
 	 * Un ordinamento che non vuole parametri.
@@ -50,8 +38,16 @@ public final class OrdinamentoMD {
 		return new OrdinamentoMD(tipo, Objects.requireNonNull(tipoDanno));
 	}
 
-	public TipoOrdinamento getTipo() {
-		return tipo;
+	private final TipoOrdinamento tipoOrdinamento;
+	private final TipoDanno tipoDanno;
+
+	private OrdinamentoMD(TipoOrdinamento tipoOrdinamento, TipoDanno tipoDanno) {
+		this.tipoOrdinamento = tipoOrdinamento;
+		this.tipoDanno = tipoDanno;
+	}
+
+	public TipoOrdinamento getTipoOrdinamento() {
+		return tipoOrdinamento;
 	}
 
 	public TipoDanno getTipoDanno() {
@@ -63,7 +59,7 @@ public final class OrdinamentoMD {
 	 */
 	@Override
 	public String toString() {
-		return tipoDanno == null ? tipo.name() : tipo + " " + tipoDanno;
+		return tipoDanno == null ? tipoOrdinamento.name() : tipoOrdinamento + " " + tipoDanno;
 	}
 
 	/**
@@ -71,7 +67,7 @@ public final class OrdinamentoMD {
 	 */
 	@Override
 	public boolean equals(Object altro) {
-		return altro instanceof OrdinamentoMD && tipo == ((OrdinamentoMD) altro).tipo && tipoDanno == ((OrdinamentoMD) altro).tipoDanno;
+		return altro instanceof OrdinamentoMD && tipoOrdinamento == ((OrdinamentoMD) altro).tipoOrdinamento && tipoDanno == ((OrdinamentoMD) altro).tipoDanno;
 	}
 
 	/**
@@ -79,6 +75,7 @@ public final class OrdinamentoMD {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(tipo, tipoDanno);
+		return Objects.hash(tipoOrdinamento, tipoDanno);
 	}
+
 }

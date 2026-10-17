@@ -2,34 +2,18 @@ package com.threeamigos.foresta.tattiche;
 
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
-import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
-import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
-import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
-import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
+import com.threeamigos.foresta.modellodati.tattiche.*;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
-import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
+import com.threeamigos.foresta.tipi.tattiche.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -49,9 +33,9 @@ class SalvataggioTatticheTest {
     /** Una tattica con almeno un esemplare di ogni forma di filtro, predicato e azione */
     private static TatticaMD complessa() {
         SelettoreMD tutto = new SelettoreMD(TipoRosa.AVVERSARI, Arrays.asList(
-                FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 50),
-                FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, Confronto.MAGGIORE, 30).negato(),
-                FiltroMD.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, Confronto.UGUALE),
+                FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 50),
+                FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, TipoConfronto.MAGGIORE, 30).negato(),
+                FiltroMD.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, TipoConfronto.UGUALE),
                 FiltroMD.conClasse(TipoFiltro.CLASSE, TipoPersonaggio.MAGO),
                 FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.NON_MORTO),
                 FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.SILENZIATO).negato(),
@@ -60,11 +44,11 @@ class SalvataggioTatticheTest {
                 FiltroMD.senzaParametro(TipoFiltro.DEBOLE_ALL_AZIONE)),
                 OrdinamentoMD.di(TipoOrdinamento.PIU_DEBOLE_A, TipoDanno.GELO));
         VoceMD silenzia = new VoceMD(tutto, Arrays.asList(
-                PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.UGUALE, 1),
-                PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, Confronto.MINORE, 20).negato(),
+                PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.UGUALE, 1),
+                PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, TipoConfronto.MINORE, 20).negato(),
                 PredicatoMD.probabilita(67),
-                PredicatoMD.quanti(TipoRosa.AVVERSARI, Arrays.asList(FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.VOLANTE)),
-                        Confronto.MAGGIORE, 0).negato()),
+                PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.singletonList(FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.VOLANTE)),
+                        TipoConfronto.MAGGIORE, 0).negato()),
                 Arrays.asList(AzioneMD.di(TipoAzione.SILENZIO), AzioneMD.di(TipoAzione.FULMINE).soloSePiuForteDellAttacco(),
                         AzioneMD.incantesimoDiDanno(CriterioIncantesimo.PIU_ECONOMICO_CHE_BASTA, true), AzioneMD.di(TipoAzione.ATTACCO_FISICO)));
         VoceMD cura = new VoceMD(new SelettoreMD(TipoRosa.ALLEATI_E_OSPITI, Collections.emptyList(), OrdinamentoMD.di(TipoOrdinamento.MENO_SALUTE)),

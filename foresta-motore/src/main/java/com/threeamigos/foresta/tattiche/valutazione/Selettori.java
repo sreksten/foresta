@@ -3,15 +3,15 @@ package com.threeamigos.foresta.tattiche.valutazione;
 import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
 import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
+import com.threeamigos.foresta.tattiche.RisultatoSelezione;
+import com.threeamigos.foresta.tattiche.rose.Rose;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import com.threeamigos.foresta.tattiche.ContestoTattico;
-import com.threeamigos.foresta.tattiche.RisultatoSelezione;
-import com.threeamigos.foresta.tattiche.rose.Rose;
 
 /**
  * Applica un {@link SelettoreMD} (tattiche_di_combattimento_automatiche.md §11.2): la rosa, i filtri in AND e l'ordinamento che sceglie uno fra i
@@ -45,8 +45,8 @@ public final class Selettori {
 		// Le fasi, sempre in questo ordine: la rosa dà i candidati; l'ammissione (se c'è) tiene solo quelli su cui un'azione si può fare; i filtri li
 		// restringono uno dopo l'altro (AND); l'ordinamento ne sceglie uno. I passi ricordano quanti candidati restano a ogni fase, per la spiegazione della decisione
 		List<String> passi = new ArrayList<>();
-		List<Personaggio> candidati = Rose.di(selettore.getRosa()).candidati(contesto);
-		passi.add(selettore.getRosa() + ": " + candidati.size() + nomi(candidati));
+		List<Personaggio> candidati = Rose.di(selettore.getTipoRosa()).candidati(contesto);
+		passi.add(selettore.getTipoRosa() + ": " + candidati.size() + nomi(candidati));
 		// Per ogni candidato rimasto, l'azione che si farebbe su di lui: i filtri che dipendono dall'azione (DEBOLE_ALL_AZIONE) la leggono dal contesto.
 		// Mappa per identità: due personaggi uguali per equals (stesso nome e classe) restano candidati distinti
 		Map<Personaggio, TipoAzione> azioni = new IdentityHashMap<>();

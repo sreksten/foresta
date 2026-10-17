@@ -11,16 +11,6 @@ import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.tattiche.*;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.IntConsumer;
-import java.util.Locale;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
@@ -30,6 +20,13 @@ import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 import com.threeamigos.foresta.ui.testo.FontTool;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.*;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 /**
  * La schermata delle tattiche di combattimento, che si apre dall'inventario (comando MOSTRA_TATTICHE): a sinistra la tattica del personaggio
@@ -741,7 +738,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 					rosa -> {
 						voce.rosa = rosa;
 						voce.filtri.clear();
-						if (voce.ordinamento == null || !BozzaTattica.ordinamentiAmmessi(rosa).contains(voce.ordinamento.getTipo())) {
+						if (voce.ordinamento == null || !BozzaTattica.ordinamentiAmmessi(rosa).contains(voce.ordinamento.getTipoOrdinamento())) {
 							voce.ordinamento = BozzaTattica.ordinamentoPredefinito(TipoOrdinamento.PRIMO);
 						}
 					}, "Su chi agisce la voce"));
@@ -753,11 +750,11 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		if (haOrdinamento(voce)) {
 			riga.pezzi.add(testo(":"));
 			riga.pezzi.add(menu(TestoTattica.ordinamento(voce.ordinamento), sceltePer(BozzaTattica.ordinamentiAmmessi(voce.rosa),
-					t -> t.getDescrizione()), voce.ordinamento.getTipo(),
+					t -> t.getDescrizione()), voce.ordinamento.getTipoOrdinamento(),
 					tipo -> voce.ordinamento = BozzaTattica.ordinamentoPredefinito(tipo), "Come sceglie fra i candidati"));
 			if (voce.ordinamento.getTipoDanno() != null) {
 				riga.pezzi.add(menu(voce.ordinamento.getTipoDanno().getNome(), sceltePerInOrdineAlfabetico(Arrays.asList(TipoDanno.values()), TipoDanno::getNome),
-						voce.ordinamento.getTipoDanno(), danno -> voce.ordinamento = OrdinamentoMD.di(voce.ordinamento.getTipo(), danno),
+						voce.ordinamento.getTipoDanno(), danno -> voce.ordinamento = OrdinamentoMD.di(voce.ordinamento.getTipoOrdinamento(), danno),
 						"Il tipo di danno"));
 			}
 		}
@@ -829,7 +826,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 			final int indice = f;
 			FiltroMD filtro = lista.get().get(f);
 			Riga riga = new Riga(profondita, indiceVoce);
-			if (BozzaTattica.isNegabile(filtro.getTipo())) {
+			if (BozzaTattica.isNegabile(filtro.getTipoFiltro())) {
 				// Un menu come gli altri: "con" tiene i candidati per cui il filtro è vero, "senza" quelli per cui è falso. Si riconosce dal colore dalle
 				// parole fisse: chiaro se si può scegliere, grigio scuro se no (i filtri numerici)
 				List<CasellaADiscesa.Scelta<Boolean>> modi = Arrays.asList(
@@ -841,8 +838,8 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 				riga.pezzi.add(testo(parola).spiega("Filtro", "I filtri restringono i candidati della rosa: restano solo quelli per cui sono tutti veri. "
 						+ "Passa il mouse su un filtro per capire che cosa controlla."));
 			}
-			riga.pezzi.add(menu(filtro.getTipo().getDescrizione(), sceltePer(BozzaTattica.filtriAmmessi(lista.rosa()), t -> t.getDescrizione()),
-					filtro.getTipo(), tipo -> {
+			riga.pezzi.add(menu(filtro.getTipoFiltro().getDescrizione(), sceltePer(BozzaTattica.filtriAmmessi(lista.rosa()), t -> t.getDescrizione()),
+					filtro.getTipoFiltro(), tipo -> {
 						FiltroMD nuovo = BozzaTattica.filtroPredefinito(tipo);
 						// Il "senza" resta solo dove ha senso (non nei filtri numerici)
 						sostituisci(lista, indice, filtro.isNegato() && BozzaTattica.isNegabile(tipo) ? nuovo.negato() : nuovo);
@@ -872,26 +869,26 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	}
 
 	private void aggiungiParametriFiltro(Riga riga, ListaFiltri lista, int indice, FiltroMD filtro) {
-		TipoParametro parametro = filtro.getTipo().getParametro();
+		TipoParametro parametro = filtro.getTipoFiltro().getParametro();
 		if (parametro == TipoParametro.CONFRONTO_E_NUMERO || parametro == TipoParametro.CONFRONTO) {
 			riga.pezzi.add(menu(TestoTattica.relazione(filtro.getConfronto(), filtro.isNegato()), relazioni(filtro.getConfronto(), filtro.isNegato()),
 					new Relazione(filtro.getConfronto(), filtro.isNegato()),
-					r -> sostituisci(lista, indice, BozzaTattica.conRelazione(filtro, r.confronto, r.negato)), "Il confronto"));
+					r -> sostituisci(lista, indice, BozzaTattica.conRelazione(filtro, r.tipoConfronto, r.negato)), "Il confronto"));
 			if (parametro == TipoParametro.CONFRONTO_E_NUMERO) {
-				aggiungiNumero(riga, filtro.getNumero(), BozzaTattica.passo(filtro.getTipo()), 0, BozzaTattica.massimo(filtro.getTipo()),
+				aggiungiNumero(riga, filtro.getNumero(), BozzaTattica.passo(filtro.getTipoFiltro()), 0, BozzaTattica.massimo(filtro.getTipoFiltro()),
 						n -> sostituisci(lista, indice, BozzaTattica.conNumero(filtro, n)));
 			}
 		} else if (parametro == TipoParametro.STATO) {
-			riga.pezzi.add(menu(filtro.getStato().getDescrizione(), sceltePerInOrdineAlfabetico(Arrays.asList(TipoEffettoDiStato.values()),
-					TipoEffettoDiStato::getDescrizione), filtro.getStato(),
+			riga.pezzi.add(menu(filtro.getTipoEffettoDiStato().getDescrizione(), sceltePerInOrdineAlfabetico(Arrays.asList(TipoEffettoDiStato.values()),
+					TipoEffettoDiStato::getDescrizione), filtro.getTipoEffettoDiStato(),
 					s -> sostituisci(lista, indice, BozzaTattica.conParametro(filtro, s)), "Lo stato"));
 		} else if (parametro == TipoParametro.CLASSE) {
-			riga.pezzi.add(menu(etichettaClasse(filtro.getClasse()), sceltePerInOrdineAlfabetico(Arrays.asList(TipoPersonaggio.values()),
-					DisplayableCanvasTattiche::etichettaClasse), filtro.getClasse(),
+			riga.pezzi.add(menu(etichettaClasse(filtro.getTipoPersonaggio()), sceltePerInOrdineAlfabetico(Arrays.asList(TipoPersonaggio.values()),
+					DisplayableCanvasTattiche::etichettaClasse), filtro.getTipoPersonaggio(),
 					c -> sostituisci(lista, indice, BozzaTattica.conParametro(filtro, c)), "La classe (il ruolo: Mago e Maga sono lo stesso)"));
 		} else if (parametro == TipoParametro.CATEGORIA) {
-			riga.pezzi.add(menu(filtro.getCategoria().getNome(), sceltePerInOrdineAlfabetico(Arrays.asList(CategoriaPersonaggio.values()),
-					CategoriaPersonaggio::getNome), filtro.getCategoria(),
+			riga.pezzi.add(menu(filtro.getCategoriaPersonaggio().getNome(), sceltePerInOrdineAlfabetico(Arrays.asList(CategoriaPersonaggio.values()),
+					CategoriaPersonaggio::getNome), filtro.getCategoriaPersonaggio(),
 					c -> sostituisci(lista, indice, BozzaTattica.conParametro(filtro, c)), "La categoria di creatura"));
 		} else if (parametro == TipoParametro.TIPO_DANNO) {
 			riga.pezzi.add(menu(filtro.getTipoDanno().getNome(), sceltePerInOrdineAlfabetico(Arrays.asList(TipoDanno.values()), TipoDanno::getNome),
@@ -903,22 +900,22 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	 * Un confronto con il suo eventuale rovescio ("non maggiore di" è "al massimo"), che la tattica può avere anche se il menu non lo propone
 	 */
 	private static final class Relazione {
-		final Confronto confronto;
+		final TipoConfronto tipoConfronto;
 		final boolean negato;
 
-		Relazione(Confronto confronto, boolean negato) {
-			this.confronto = confronto;
+		Relazione(TipoConfronto tipoConfronto, boolean negato) {
+			this.tipoConfronto = tipoConfronto;
 			this.negato = negato;
 		}
 
 		@Override
 		public boolean equals(Object altro) {
-			return altro instanceof Relazione && ((Relazione) altro).confronto == confronto && ((Relazione) altro).negato == negato;
+			return altro instanceof Relazione && ((Relazione) altro).tipoConfronto == tipoConfronto && ((Relazione) altro).negato == negato;
 		}
 
 		@Override
 		public int hashCode() {
-			return confronto.hashCode() * 2 + (negato ? 1 : 0);
+			return tipoConfronto.hashCode() * 2 + (negato ? 1 : 0);
 		}
 	}
 
@@ -926,11 +923,11 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	 * Le tre relazioni fra un valore e un numero: minore di, uguale a, maggiore di. Con numeri interi "al massimo 50" è "minore di 51": si va a grandi passi. Il
 	 * rovescio ("almeno", "al massimo", "diverso da") c'è solo se la tattica letta già lo contiene.
 	 */
-	private static List<CasellaADiscesa.Scelta<Relazione>> relazioni(Confronto attuale, boolean attualeNegato) {
+	private static List<CasellaADiscesa.Scelta<Relazione>> relazioni(TipoConfronto attuale, boolean attualeNegato) {
 		List<CasellaADiscesa.Scelta<Relazione>> scelte = new ArrayList<>();
-		for (Confronto confronto : new Confronto[]{Confronto.MINORE, Confronto.UGUALE, Confronto.MAGGIORE}) {
-			scelte.add(new CasellaADiscesa.Scelta<>(TestoTattica.confronto(confronto), new Relazione(confronto, false),
-					TestoTattica.spiega(confronto)));
+		for (TipoConfronto tipoConfronto : new TipoConfronto[]{TipoConfronto.MINORE, TipoConfronto.UGUALE, TipoConfronto.MAGGIORE}) {
+			scelte.add(new CasellaADiscesa.Scelta<>(TestoTattica.confronto(tipoConfronto), new Relazione(tipoConfronto, false),
+					TestoTattica.spiega(tipoConfronto)));
 		}
 		if (attualeNegato) {
 			scelte.add(new CasellaADiscesa.Scelta<>(TestoTattica.relazione(attuale, true), new Relazione(attuale, true), TestoTattica.spiega(attuale, true)));
@@ -942,31 +939,31 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		PredicatoMD predicato = voce.condizioni.get(c);
 		Riga riga = new Riga(1, indiceVoce);
 		riga.pezzi.add(testo("se").spiega("Condizione", "Le condizioni decidono se la voce vale in questo momento: devono essere tutte vere. Non riguardano un personaggio ma lo scontro (il round, le probabilità, quanti candidati ci sono)."));
-		riga.pezzi.add(menu(predicato.getTipo().getDescrizione(), sceltePer(BozzaTattica.predicatiAmmessi(), t -> t.getDescrizione()),
-				predicato.getTipo(), tipo -> {
+		riga.pezzi.add(menu(predicato.getTipoPredicato().getDescrizione(), sceltePer(BozzaTattica.predicatiAmmessi(), t -> t.getDescrizione()),
+				predicato.getTipoPredicato(), tipo -> {
 					voce.condizioni.set(c, BozzaTattica.predicatoPredefinito(tipo));
 				}, "Il tipo di condizione"));
-		if (predicato.getTipo() == TipoPredicato.QUANTI) {
-			riga.pezzi.add(menu(predicato.getRosa().getDescrizione(), sceltePer(rosePerQuanti(predicato.getRosa()), TipoRosa::getDescrizione), predicato.getRosa(),
+		if (predicato.getTipoPredicato() == TipoPredicato.QUANTI) {
+			riga.pezzi.add(menu(predicato.getTipoRosa().getDescrizione(), sceltePer(rosePerQuanti(predicato.getTipoRosa()), TipoRosa::getDescrizione), predicato.getTipoRosa(),
 					r -> voce.condizioni.set(c, BozzaTattica.conRosa(predicato, r)), "Da quali candidati si conta"));
 		}
-		if (predicato.getTipo() != TipoPredicato.PROBABILITA) {
-			riga.pezzi.add(menu(TestoTattica.relazione(predicato.getConfronto(), predicato.isNegato()),
-					relazioni(predicato.getConfronto(), predicato.isNegato()), new Relazione(predicato.getConfronto(), predicato.isNegato()),
-					r -> voce.condizioni.set(c, BozzaTattica.conRelazione(predicato, r.confronto, r.negato)), "Il confronto"));
+		if (predicato.getTipoPredicato() != TipoPredicato.PROBABILITA) {
+			riga.pezzi.add(menu(TestoTattica.relazione(predicato.getTipoConfronto(), predicato.isNegato()),
+					relazioni(predicato.getTipoConfronto(), predicato.isNegato()), new Relazione(predicato.getTipoConfronto(), predicato.isNegato()),
+					r -> voce.condizioni.set(c, BozzaTattica.conRelazione(predicato, r.tipoConfronto, r.negato)), "Il confronto"));
 		}
-		aggiungiNumero(riga, predicato.getNumero(), BozzaTattica.passo(predicato.getTipo()), 0, BozzaTattica.massimo(predicato.getTipo()),
+		aggiungiNumero(riga, predicato.getNumero(), BozzaTattica.passo(predicato.getTipoPredicato()), 0, BozzaTattica.massimo(predicato.getTipoPredicato()),
 				n -> voce.condizioni.set(c, BozzaTattica.conNumero(predicato, n)));
-		if (predicato.getTipo() == TipoPredicato.PROBABILITA) {
+		if (predicato.getTipoPredicato() == TipoPredicato.PROBABILITA) {
 			riga.pezzi.add(testo("%"));
 		}
 		riga.pezzi.add(icona(ICONA_ELIMINA, () -> voce.condizioni.remove(c), "Toglie la condizione", true));
 		righe.add(riga);
-		if (predicato.getTipo() == TipoPredicato.QUANTI) {
+		if (predicato.getTipoPredicato() == TipoPredicato.QUANTI) {
 			aggiungiFiltri(righe, new ListaFiltri() {
 				@Override
 				public TipoRosa rosa() {
-					return voce.condizioni.get(c).getRosa();
+					return voce.condizioni.get(c).getTipoRosa();
 				}
 
 				@Override

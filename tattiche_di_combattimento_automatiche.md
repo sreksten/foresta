@@ -274,7 +274,7 @@ ce n'è una che posso usare; azione: cambia arma, scegliendo una che dà SACRO".
   Con la **doppia arma** (Ladro, Elfo, due armi in mano, non uno scudo) si confrontano le due armi e **esce quella che infligge meno danno**, a parità la secondaria: il danno è `CalcolatoreCombattimento.dannoAttesoDellArma`
   (danni base per il livello di combattimento dell'arma, più per ogni incantamento il bonus fisso e la quota dell'INTELLIGENZA; senza dadi né critici, **contro un bersaglio neutro** e al pieno anche per la secondaria).
   La nuova arma prende lo slot di quella che esce, quindi deve poterci stare: una lancia (solo mano principale) fa uscire la principale anche se è la più forte. Se l'arma più debole è proprio quella che dà
-  il tipo di danno voluto, lo evita la condizione della voce ("non ho già un'arma che dà quel danno"), non il controllo. Il confronto si può affinare (§10).
+  il tipo di danno voluto, lo evita la condizione della voce ("non ho già un'arma che dà quel danno"), non il controllo. Il tipoConfronto si può affinare (§10).
 - **Ogni arma si valuta una volta sola.** Chi ha provato un'arma e ha visto che non può impugnarla se lo ricorda, per non rifare le
   prove a ogni turno e a ogni voce. La valutazione dipende da chi la fa (classe, livello, forza, carico) e da quello che ha in mano: se uno di questi cambia
   (un'arma nuova nell'inventario, un cambio d'arma, un livello, un effetto che cambia il carico) le valutazioni vanno rifatte o scartate. Il dato sta nello stato del combattimento (§3.3): `registraArmaValutata` / `getValutazioneArma`, usati da `GruppoGiocatore.puoCambiareArma`; un cambio d'arma del personaggio scarta le sue valutazioni, e si azzerano a ogni locazione.
@@ -355,7 +355,7 @@ bestia, ibrida e draconica. La Chimera Drago non è volante, il Gargoyle non è 
 | **più debole a** `<tipo di danno>` | il fattore di danno atteso contro di lui per quel tipo (`moltiplicatoreAtteso`) più **alto**: debolezza di classe, reazioni con i suoi stati e difesa | un immune ha 0 |
 | **più resistente a** `<tipo di danno>` | lo stesso fattore più **basso** | un immune è il più resistente; ha senso soprattutto per gli **alleati** ("chi regge meglio il fuoco del Drago"), e per scartare chi non vale la pena colpire con quel danno |
 
-I selettori che *filtrano* invece di ordinare sono altri: "di livello più alto **del mio**" (un confronto con chi sceglie), "salute
+I selettori che *filtrano* invece di ordinare sono altri: "di livello più alto **del mio**" (un tipoConfronto con chi sceglie), "salute
 sotto il n%" (una soglia), "**debole a** `<tipo>`" (moltiplicatore di classe e stati maggiore di 1, senza contare la difesa).
 
 **Regole comuni dei selettori** (decise)
@@ -524,7 +524,7 @@ soglie sono un parametro di ogni voce e non un livello globale. La formula dell'
 | F4 | **con / senza lo stato** `<X>` | `hasEffettoDiStato` |
 | F5 | **debole a** `<tipo di danno>` | moltiplicatore di classe e stati maggiore di 1 (senza la difesa); **non immune a** `<tipo>`: moltiplicatore maggiore di 0 |
 | F6 | **salute sotto / sopra il** `n%` | salute attuale su massima |
-| F7 | **di livello più alto / più basso del mio** | un confronto con chi sceglie |
+| F7 | **di livello più alto / più basso del mio** | un tipoConfronto con chi sceglie |
 | F8 | **lo stesso del turno precedente** | il bersaglio che questo personaggio ha scelto l'ultima volta (uno per avversari e uno per alleati), se è ancora valido (nella schermata è l'ordinamento `ULTIMO_SCELTO`, §11.15) |
 | F9 | **che mi ha attaccato per ultimo** | l'avversario che ha agito contro di me per ultimo (nella schermata è l'ordinamento `ULTIMO_ATTACCANTE`) |
 | F10 | **il capo** | `getCapo()` del gruppo avversario |
@@ -576,7 +576,7 @@ Per gli **alleati** (cure, resurrezioni, pozioni) valgono gli stessi, più: se s
 | S3 | **il più adatto** a quel bersaglio: danno atteso con `moltiplicatoreAtteso` | il danno totale |
 | S4 | come S3, ricordando i lanci fatti: se contro quel personaggio un incantesimo ha avuto un effetto diverso (oggetti che cambiano le resistenze), se ne tiene conto | anche chi verrebbe portato vicino alla fine o ucciso (somma della quota di salute tolta a ogni bersaglio, al massimo 1) |
 
-Il "più conveniente" di oggi (probabilità di colpire × danno atteso, contro l'attacco fisico) è S3 con in più il confronto con l'attacco (`soloSePiuForteDellAttacco`, §11.10). A questi si aggiunge `PIU_ECONOMICO_CHE_BASTA`, fuori dai quattro livelli.
+Il "più conveniente" di oggi (probabilità di colpire × danno atteso, contro l'attacco fisico) è S3 con in più il tipoConfronto con l'attacco (`soloSePiuForteDellAttacco`, §11.10). A questi si aggiunge `PIU_ECONOMICO_CHE_BASTA`, fuori dai quattro livelli.
 
 **Che cosa serve ricordare** durante lo scontro, oltre allo stato dei personaggi: il numero del turno; l'ultimo avversario e l'ultimo alleato scelti da ogni
 personaggio (F8); chi mi ha attaccato per ultimo (F9); chi ha già lanciato un incantesimo (F3); le voci già usate e i cambi d'arma (C6); per S4,
@@ -752,7 +752,7 @@ Un filtro è una domanda a cui un candidato risponde sì o no: `ammette(candidat
 - **Senza stato**: enumerati come le rose. Quello che serve ricordare (l'ultimo bersaglio, chi ha già lanciato) lo leggono dalle schede dello `StatoDelCombattimento` attraverso il contesto.
 - **Negazione**: ogni filtro ha un flag `negato` (nel file `NON`): "senza lo stato X" è `NON STATO X`, "non immune a Y" è `NON IMMUNE_A Y`. Niente coppie di enumerati.
 - **Parametri tipizzati**: ogni `TipoFiltro` dichiara il tipo del suo parametro (`TipoParametro`: `NESSUNO`, `CONFRONTO`, `CONFRONTO_E_NUMERO`, `STATO`, `CLASSE`, `CATEGORIA`, `TIPO_DANNO`; per le condizioni anche `NUMERO` e `SELEZIONE_CONFRONTO_E_NUMERO`); la lettura controlla che ci sia e sia giusto, e la scheda del giocatore mostra l'editor
-  adatto. I filtri numerici prendono un `Confronto` (`MINORE`, `UGUALE` o `MAGGIORE`: con `NON` si ottengono "almeno" e "al massimo") e un numero: `SALUTE MINORE 50`.
+  adatto. I filtri numerici prendono un `TipoConfronto` (`MINORE`, `UGUALE` o `MAGGIORE`: con `NON` si ottengono "almeno" e "al massimo") e un numero: `SALUTE MINORE 50`.
 - **La classe è il ruolo**: `MAGO` e `MAGA` sono due `TipoPersonaggio`, ma il filtro `CLASSE` ammette entrambe le varianti (Mago/Maga, Elfo/Elfa, Ladro/Ladra, Guerriero/Guerriera, Bardo/Cantastorie,
   Sacerdote/Sacerdotessa): la coppia la dà `TipoPersonaggio.getRuolo()`.
 - **Il giocatore sceglie i filtri tattici, l'azione porta i suoi requisiti** (§11.7): per scartare gli immuni o i già silenziati non serve scrivere un filtro.
@@ -813,7 +813,7 @@ Una voce ha una **lista di condizioni** (`Predicato`), tutte in **AND**; ognuna 
 Lista vuota = sempre. Le condizioni servono per ciò che **non è un controllo su un personaggio**: quelli sono filtri (§11.5) di un selettore (`SU SE_STESSO [SALUTE MINORE 50]`), e i requisiti dell'azione (la magia, la pozione, la
 pergamena, l'arma da prendere) li porta l'azione (§11.7), quindi non servono né `HO_POZIONE` né `PERGAMENE`. Come per i filtri, ogni `TipoPredicato` dichiara il tipo del parametro e la lettura lo controlla.
 
-`Confronto` ha tre valori, `MINORE`, `UGUALE`, `MAGGIORE`, ed è lo stesso dei filtri numerici: "almeno 3" è `NON MINORE 3`, "al massimo 3" è `NON MAGGIORE 3`.
+`TipoConfronto` ha tre valori, `MINORE`, `UGUALE`, `MAGGIORE`, ed è lo stesso dei filtri numerici: "almeno 3" è `NON MINORE 3`, "al massimo 3" è `NON MAGGIORE 3`.
 
 | Predicato | Parametro | Significato |
 | :--- | :--- | :--- |
@@ -830,7 +830,7 @@ pergamena, l'arma da prendere) li porta l'azione (§11.7), quindi non servono n�
 Gli esempi: la mossa d'apertura è `ROUND UGUALE 1`; "una volta per scontro" è `VOCE_USATA UGUALE 0`; "una volta su tre" è `PROBABILITA 33`; la voce di una fascia di astuzia è `NON ASTUZIA MINORE 20`;
 per tornare all'arma di prima, `QUANTI AVVERSARI [CATEGORIA NON_MORTO] UGUALE 0` e `SU SE_STESSO [ARMA_CHE_DA SACRO] → CAMBIA_ARMA`.
 
-**Non ci sono** (si aggiungono come valori in più dell'enumerato): la stanchezza, i modificatori temporanei attivi, il tipo di locazione e l'ora, il duello, l'ondata successiva, il confronto fra il numero
+**Non ci sono** (si aggiungono come valori in più dell'enumerato): la stanchezza, i modificatori temporanei attivi, il tipo di locazione e l'ora, il duello, l'ondata successiva, il tipoConfronto fra il numero
 degli avversari e dei miei compagni.
 
 ### 11.9 Le azioni: l'elenco
@@ -899,7 +899,7 @@ Il **criterio** (`CriterioIncantesimo`) è un parametro dell'azione:
 | `PIU_ADATTO_ESPERTO` | S4 | come S3, moltiplicato per il fattore dell'equipaggiamento **osservato** (`getFattoreEquipaggiamentoNoto`, §3.3); con più bersagli conta anche chi verrebbe portato vicino alla fine (la quota di salute tolta a ogni bersaglio, al massimo 1, sommata) |
 | `PIU_ECONOMICO_CHE_BASTA` | — | per chi ha poche pergamene: fra quelli il cui danno atteso (come S4) basta a **uccidere** il bersaglio, il meno caro (il prezzo della pergamena per i miei, il costo di lancio in `MAGIA` per i mostri); se nessuno basta, il `PIU_ADATTO_ESPERTO` |
 
-**Il confronto con l'attacco fisico** è un secondo parametro, `soloSePiuForteDellAttacco`: se vero, l'incantesimo scelto è applicabile solo se il suo danno atteso (probabilità di colpire × danno × `moltiplicatoreAtteso`) è maggiore di quello delle fasi di
+**Il tipoConfronto con l'attacco fisico** è un secondo parametro, `soloSePiuForteDellAttacco`: se vero, l'incantesimo scelto è applicabile solo se il suo danno atteso (probabilità di colpire × danno × `moltiplicatoreAtteso`) è maggiore di quello delle fasi di
 attacco con le armi sullo stesso bersaglio; altrimenti non lo è, e la sequenza passa all'azione successiva (di solito `ATTACCO_FISICO`). Il danno atteso dell'arma si calcola senza dadi come quello dell'incantesimo.
 
 **Le fasce di astuzia nella tattica base di un mostro magico** (§11.16): la prima fascia (0-11) lancia a caso (`A_CASO`, con una probabilità), la seconda (12-19) il `PIU_POTENTE` solo se rende più dell'attacco, la terza (20-30) il `PIU_ADATTO`, la quarta (da 31) il `PIU_ADATTO_ESPERTO`; sempre seguite da `ATTACCO_FISICO`. I valori sono da tarare con le simulazioni (§8).
@@ -936,8 +936,8 @@ Il formato, nello stile del resto del modello dati (una riga per elemento, campi
 TATTICA|numero di voci|disabilitata (0 o 1)
 VOCE|attiva|ha un selettore|numero di condizioni|numero di azioni|nome dato dal giocatore (vuoto se non ne ha)
 SELETTORE|rosa|ordinamento|tipo di danno dell'ordinamento|numero di filtri       (seguono i filtri)
-FILTRO|tipo|negato|confronto|numero|stato|classe|categoria|tipo di danno
-PREDICATO|tipo|negato|confronto|numero|rosa|numero di filtri                     (seguono i filtri)
+FILTRO|tipo|negato|tipoConfronto|numero|stato|classe|categoria|tipo di danno
+PREDICATO|tipo|negato|tipoConfronto|numero|rosa|numero di filtri                     (seguono i filtri)
 AZIONE|tipo|criterio|solo se più forte dell'attacco|tipo di danno dell'arma
 ```
 
@@ -955,7 +955,7 @@ senza una tattica base in `TatticheBase` (`RegistroTattiche.perClasse`: quella r
   (`soloSePiuForteDellAttacco`, con i danni attesi); (4) l'attacco con le armi. Le prime tre hanno le condizioni `QUANTI SE_STESSO [MAGICO] MAGGIORE 0` (non lancia se non è magico, è silenziato o ha 0 `MAGIA`: e non tira nemmeno il dado) e `PROBABILITA 67` (una volta su tre rinuncia), e
   l'attacco con le armi come ripiego nella loro sequenza di azioni.
 - **Un mostro colpisce solo il bersaglio scelto**, anche con un incantesimo a più bersagli (`SceltaIncantesimo.bersagli`).
-- **Rispetto al codice di prima**, un mostro non lancia un incantesimo a cui il bersaglio è immune per la sua classe né il Silenzio su chi è già silenziato (prima sprecava il turno); il confronto fra incantesimo e armi usa i danni attesi e non i tiri dei dadi; il dado della rinuncia si tira una volta per voce che ha un bersaglio, non una sola per decisione (la
+- **Rispetto al codice di prima**, un mostro non lancia un incantesimo a cui il bersaglio è immune per la sua classe né il Silenzio su chi è già silenziato (prima sprecava il turno); il tipoConfronto fra incantesimo e armi usa i danni attesi e non i tiri dei dadi; il dado della rinuncia si tira una volta per voce che ha un bersaglio, non una sola per decisione (la
   probabilità di lanciare resta due su tre).
 
 ### 11.14 L'esecutore condiviso
@@ -979,13 +979,13 @@ delle simulazioni agiscono con le stesse tattiche del gioco**, non più con una 
 - **Ogni riga è fatta di pezzi** (`Token`): testo fisso, testo che apre un menu a discesa, `-` e `+` per i numeri, icone. Le scelte valide dipendono dalla voce: le rose le accettano tutte le sue azioni (`BozzaTattica.roseAmmesse`), le azioni sono della stessa portata (`azioniAmmesse`); aggiungendo un'azione che non accetta la rosa la voce passa alla prima che va bene.
 - **Ognuno ha solo le azioni che sa fare** (`RegistroTattiche.azioniPossibili`, che il motore manda con la richiesta di apertura): i canti solo il bardo, il dardo arcano maghi ed elfi, l'Alba sacra i sacerdoti; le pergamene, le pozioni e l'attacco chiunque. Su che cosa agisce una voce dipende dalle sue azioni (un attacco solo sugli avversari): con una sola rosa possibile il nome non è un menu, e passandoci sopra il mouse dice perché.
 - **"Quanti" non conta su se stessi**: la rosa di una condizione `QUANTI` non propone "Se stesso" (un candidato solo); se una tattica letta l'ha già, resta e si vede.
-- **Niente "non" sui numeri**: i filtri numerici (salute, salute %, magia, livello, livello rispetto al mio) e le condizioni non hanno l'interruttore di negazione; il confronto offre tre relazioni (minore di, uguale a, maggiore di): con numeri interi "al massimo 50" è "minore di 51", e si va a grandi passi. Una tattica letta che ha un rovescio ("almeno", "al massimo") lo mostra comunque. Per gli altri filtri la parola "con" è l'interruttore: "con" o "senza".
+- **Niente "non" sui numeri**: i filtri numerici (salute, salute %, magia, livello, livello rispetto al mio) e le condizioni non hanno l'interruttore di negazione; il tipoConfronto offre tre relazioni (minore di, uguale a, maggiore di): con numeri interi "al massimo 50" è "minore di 51", e si va a grandi passi. Una tattica letta che ha un rovescio ("almeno", "al massimo") lo mostra comunque. Per gli altri filtri la parola "con" è l'interruttore: "con" o "senza".
 - **Le condizioni `ASTUZIA` e `INTELLIGENZA` non si propongono**: servono a dividere i mostri in fasce di furbizia (§4, §11.16), non hanno senso per i personaggi del gruppo (`BozzaTattica.predicatiAmmessi`).
 - **Chi mi ha attaccato per ultimo e l'ultimo scelto sono ordinamenti**, non filtri, e solo fra gli avversari (`ULTIMO_ATTACCANTE`, `ULTIMO_SCELTO`): si scelgono accanto a "il primo", "con meno salute"... Scelgono **solo** quel personaggio: se non è fra i candidati (non c'è, o è caduto) la voce non si esegue e si passa alla successiva. I filtri con lo stesso nome (e "il capo", "me stesso") esistono ancora nei dati ma non si propongono: contando o scegliendo fra gli alleati non hanno senso.
 - **Cosa si può scegliere dipende dalla rosa**: su "Se stesso" non compaiono il menu dell'ordinamento né i filtri per classe, categoria, livello rispetto al mio, il capo, me stesso, scelto l'ultima volta, mi ha attaccato per ultimo, debole all'azione (`BozzaTattica.filtriAmmessi`): il candidato è uno solo e già deciso.
 - **Il menu a discesa** (`CasellaADiscesa`) è un popup nel font Doomdark con un `ComponenteScorrevole` (rotella e frecce se è lungo), che si apre sotto o sopra la riga e cattura i click finché è aperto.
 - **Al centro** il personaggio, le frecce che lo spostano nel gruppo (`ComandoSpostaPersonaggio`, subito, anche il capo: il gruppo ricorda chi è il capo e il suo posto si salva, `GruppoMD.indiceCapo`), **Sì** e **No** (solo se la bozza è diversa dalla tattica del motore; Sì solo se non ci sono problemi) e **Predefinita**, che rimette nella bozza la tattica predefinita del ruolo (`RegistroTattiche.predefinitaDelGiocabile`, §11.16; da confermare).
-- **A destra la spiegazione**. Prima dell'elemento sotto il mouse: la rosa, il filtro, la condizione, l'azione, l'ordinamento, il confronto (`TestoTattica.spiega`), e con un menu aperto quella della scelta su cui si passa, o del pezzo che lo ha aperto; poi come si legge la voce a cui appartiene (`TestoTattica.spiegazione`) e, in rosso, i problemi che impediscono di confermare (`BozzaTattica.problemi`). Il filtro che si chiamava "Magico" ora è "Magie abilitate".
+- **A destra la spiegazione**. Prima dell'elemento sotto il mouse: la rosa, il filtro, la condizione, l'azione, l'ordinamento, il tipoConfronto (`TestoTattica.spiega`), e con un menu aperto quella della scelta su cui si passa, o del pezzo che lo ha aperto; poi come si legge la voce a cui appartiene (`TestoTattica.spiegazione`) e, in rosso, i problemi che impediscono di confermare (`BozzaTattica.problemi`). Il filtro che si chiamava "Magico" ora è "Magie abilitate".
 
 La bozza (`BozzaTattica`) tiene le voci in liste modificabili, perché i dati `*MD` sono immutabili: solo con Sì si costruisce la `TatticaMD` e la si manda con `ComandoImpostaTattica(uuid, tattica)`; il motore la accetta solo con la schermata aperta, quindi **mai in combattimento**, e per un personaggio permanente del gruppo. Cambiando personaggio le modifiche non confermate si perdono. Aprendo una tattica, i confronti rovesciati sui numeri ("almeno 50") diventano quelli equivalenti senza rovescio ("maggiore di 49"): `BozzaTattica.normalizza`.
 

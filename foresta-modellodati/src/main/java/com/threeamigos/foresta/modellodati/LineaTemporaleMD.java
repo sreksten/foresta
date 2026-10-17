@@ -35,7 +35,7 @@ public class LineaTemporaleMD implements Serializzabile {
 	private boolean giocoFinito;
 	// Il messaggio dell'ultimo evento (es. la colonna di fumo), non ancora mostrato al giocatore
 	private String evento;
-	
+
 	public int getOra() {
 		return ora;
 	}
@@ -131,4 +131,5 @@ public class LineaTemporaleMD implements Serializzabile {
 			cittaDistrutte.add(st.enumerato(TipoLocazione.class));
 		}
 	}
+
 }

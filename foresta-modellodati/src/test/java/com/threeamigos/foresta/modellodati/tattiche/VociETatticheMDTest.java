@@ -1,20 +1,10 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
 import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
-import com.threeamigos.foresta.tipi.tattiche.PortataAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
+import com.threeamigos.foresta.tipi.tattiche.*;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class VociETatticheMDTest {
 
     private static final SelettoreMD AVVERSARI_PIU_DEBOLI = new SelettoreMD(TipoRosa.AVVERSARI,
-            Collections.singletonList(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 10)),
+            Collections.singletonList(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 10)),
             OrdinamentoMD.di(TipoOrdinamento.MENO_SALUTE));
 
     private static BufferedReader lettore(String testo) {
@@ -45,7 +35,7 @@ class VociETatticheMDTest {
 
     private static VoceMD voceCompleta() {
         return new VoceMD(AVVERSARI_PIU_DEBOLI,
-                Collections.singletonList(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.MAGGIORE, 1)),
+                Collections.singletonList(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.MAGGIORE, 1)),
                 Collections.singletonList(AzioneMD.di(TipoAzione.ATTACCO_FISICO)), true, " Finisci i feriti ");
     }
 
@@ -76,12 +66,12 @@ class VociETatticheMDTest {
         assertSame(TipoRosa.ALLEATI_CADUTI, rosaDiBase(TipoAzione.RESURREZIONE));
         assertSame(TipoRosa.ALLEATI, rosaDiBase(TipoAzione.ALBA_SACRA));
         assertSame(TipoRosa.SE_STESSO, rosaDiBase(TipoAzione.POZIONE_SALUTE));
-        assertSame(TipoRosa.SE_STESSO, VoceMD.su(null, AzioneMD.cambiaArma(TipoDanno.CONTUNDENTE)).selettoreEffettivo().getRosa());
-        assertSame(TipoOrdinamento.PRIMO, VoceMD.su(null, AzioneMD.di(TipoAzione.ATTACCO_FISICO)).selettoreEffettivo().getOrdinamento().getTipo());
+        assertSame(TipoRosa.SE_STESSO, VoceMD.su(null, AzioneMD.cambiaArma(TipoDanno.CONTUNDENTE)).selettoreEffettivo().getTipoRosa());
+        assertSame(TipoOrdinamento.PRIMO, VoceMD.su(null, AzioneMD.di(TipoAzione.ATTACCO_FISICO)).selettoreEffettivo().getOrdinamento().getTipoOrdinamento());
     }
 
     private static TipoRosa rosaDiBase(TipoAzione tipo) {
-        return VoceMD.su(null, AzioneMD.di(tipo)).selettoreEffettivo().getRosa();
+        return VoceMD.su(null, AzioneMD.di(tipo)).selettoreEffettivo().getTipoRosa();
     }
 
     @Test
@@ -116,7 +106,7 @@ class VociETatticheMDTest {
         VoceMD voce = voceCompleta();
         assertEquals(voceCompleta(), voce);
         assertEquals(voceCompleta().hashCode(), voce.hashCode());
-        assertFalse(voce.equals("voce"));
+        assertNotEquals("voce", voce);
         List<AzioneMD> attacco = Collections.singletonList(AzioneMD.di(TipoAzione.ATTACCO_FISICO));
         List<PredicatoMD> condizioni = voce.getCondizioni();
         assertNotEquals(voce.disattivata(), voce);
@@ -173,7 +163,7 @@ class VociETatticheMDTest {
         assertNotEquals(tattica.disabilitata(), tattica);
         assertNotEquals(tattica.disabilitata().hashCode(), tattica.hashCode());
         assertNotEquals(TatticaMD.VUOTA, tattica);
-        assertFalse(tattica.equals("tattica"));
+        assertNotEquals("tattica", tattica);
     }
 
     @Test

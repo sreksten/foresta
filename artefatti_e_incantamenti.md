@@ -131,7 +131,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
   - i personaggi **vivi** che hanno ancora libero quello slot;
   - e che hanno un livello ≥ a quello dell'artefatto.
 
-  Chi ha già un oggetto in quello slot è escluso: il confronto lo fa il giocatore nell'inventario, così non si rischia di far indossare una ciofeca a chi ha già una megaspada fiammeggiante.
+  Chi ha già un oggetto in quello slot è escluso: il tipoConfronto lo fa il giocatore nell'inventario, così non si rischia di far indossare una ciofeca a chi ha già una megaspada fiammeggiante.
   - Per una spada, un Ladro o un Elfo con la mano principale occupata ma la secondaria libera **è** un candidato: la prende nella secondaria.
   - Chi impugna un'arma a due mani non è candidato per scudo, libro o seconda arma. Per prendere un'arma a due mani servono entrambe le mani libere.
 - **Anello e accessori.** Candidati: tutti i personaggi vivi (salvo il vincolo di livello).
@@ -433,7 +433,7 @@ I bonus vanno a gradini:
   - Il generatore sceglie il grado in base al livello di riferimento, per esempio solo minori ai primi livelli.
   - La grammatica lo usa anche per il **nome**: semplice per i gradi bassi ("una pergamena del fuoco"), altisonante per quelli alti ("il Sigillo della Fiamma Eterna").
 
-Prezzi medi misurati (2000 ingredienti per tipo e livello, generatore del gioco), con l'artefatto dell'armaiolo per confronto:
+Prezzi medi misurati (2000 ingredienti per tipo e livello, generatore del gioco), con l'artefatto dell'armaiolo per tipoConfronto:
 
 | Livello | Artefatto | Pergamena | Gingillo | Sigillo | Gemma | Monile |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |

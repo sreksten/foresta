@@ -1,17 +1,17 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
+import com.threeamigos.foresta.modellodati.LettoreCampi;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import java.util.Objects;
-import com.threeamigos.foresta.modellodati.LettoreCampi;
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.BufferedReader;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
 import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
@@ -27,18 +27,18 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
  */
 public final class SelettoreMD {
 
-	private final TipoRosa rosa;
+	private final TipoRosa tipoRosa;
 	private final List<FiltroMD> filtri;
 	private final OrdinamentoMD ordinamento;
 
-	public SelettoreMD(TipoRosa rosa, List<FiltroMD> filtri, OrdinamentoMD ordinamento) {
-		this.rosa = rosa;
+	public SelettoreMD(TipoRosa tipoRosa, List<FiltroMD> filtri, OrdinamentoMD ordinamento) {
+		this.tipoRosa = tipoRosa;
 		this.filtri = Collections.unmodifiableList(new ArrayList<>(filtri));
 		this.ordinamento = ordinamento;
 	}
 
-	public TipoRosa getRosa() {
-		return rosa;
+	public TipoRosa getTipoRosa() {
+		return tipoRosa;
 	}
 
 	public List<FiltroMD> getFiltri() {
@@ -50,21 +50,13 @@ public final class SelettoreMD {
 	}
 
 	/**
-	 * Una descrizione leggibile, per i messaggi di log e di prova.
-	 */
-	@Override
-	public String toString() {
-		return "SU " + rosa + (filtri.isEmpty() ? "" : " " + filtri) + " ordine " + ordinamento;
-	}
-
-	/**
 	 * Scrive il selettore e i suoi filtri (vedi FormatoTattiche)
 	 */
 	public void salva(PrintWriter stream) {
 		stampaRiga(stream,
 				"SELETTORE",
-				rosa,
-				ordinamento.getTipo(),
+				tipoRosa,
+				ordinamento.getTipoOrdinamento(),
 				facoltativo(ordinamento.getTipoDanno()),
 				filtri.size());
 		for (FiltroMD filtro : filtri) {
@@ -93,6 +85,14 @@ public final class SelettoreMD {
 	}
 
 	/**
+	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 */
+	@Override
+	public String toString() {
+		return "SU " + tipoRosa + (filtri.isEmpty() ? "" : " " + filtri) + " ordine " + ordinamento;
+	}
+
+	/**
 	 * Due selettori sono uguali se hanno gli stessi dati.
 	 */
 	@Override
@@ -101,7 +101,7 @@ public final class SelettoreMD {
 			return false;
 		}
 		SelettoreMD s = (SelettoreMD) altro;
-		return rosa == s.rosa && filtri.equals(s.filtri) && ordinamento.equals(s.ordinamento);
+		return tipoRosa == s.tipoRosa && filtri.equals(s.filtri) && ordinamento.equals(s.ordinamento);
 	}
 
 	/**
@@ -109,6 +109,7 @@ public final class SelettoreMD {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(rosa, filtri, ordinamento);
+		return Objects.hash(tipoRosa, filtri, ordinamento);
 	}
+
 }

@@ -1,30 +1,13 @@
 package com.threeamigos.foresta.ui.tattiche;
 
-import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
-import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
-import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
-import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
-import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
+import com.threeamigos.foresta.modellodati.tattiche.*;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
-import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoParametro;
-import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
+import com.threeamigos.foresta.tipi.tattiche.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * La tattica di un personaggio mentre il giocatore la modifica nella schermata delle tattiche (tattiche_di_combattimento_automatiche.md §11).
@@ -81,7 +64,7 @@ final class BozzaTattica {
 		}
 		for (VoceMD voceMD : daLeggere) {
 			SelettoreMD selettore = voceMD.selettoreEffettivo();
-			Voce voce = new Voce(selettore.getRosa(), selettore.getOrdinamento());
+			Voce voce = new Voce(selettore.getTipoRosa(), selettore.getOrdinamento());
 			for (FiltroMD filtro : selettore.getFiltri()) {
 				voce.filtri.add(normalizza(filtro));
 			}
@@ -102,14 +85,14 @@ final class BozzaTattica {
 	 * "minore di 51". Se il numero uscirebbe dai limiti, o per "diverso da", resta com'è.
 	 */
 	static FiltroMD normalizza(FiltroMD filtro) {
-		if (filtro.getTipo().getParametro() != TipoParametro.CONFRONTO_E_NUMERO || !filtro.isNegato()) {
+		if (filtro.getTipoFiltro().getParametro() != TipoParametro.CONFRONTO_E_NUMERO || !filtro.isNegato()) {
 			return filtro;
 		}
-		if (filtro.getConfronto() == Confronto.MINORE && filtro.getNumero() - 1 >= 0) {
-			return filtro(filtro.getTipo(), false, Confronto.MAGGIORE, filtro.getNumero() - 1, null);
+		if (filtro.getConfronto() == TipoConfronto.MINORE && filtro.getNumero() - 1 >= 0) {
+			return filtro(filtro.getTipoFiltro(), false, TipoConfronto.MAGGIORE, filtro.getNumero() - 1, null);
 		}
-		if (filtro.getConfronto() == Confronto.MAGGIORE && filtro.getNumero() + 1 <= massimo(filtro.getTipo())) {
-			return filtro(filtro.getTipo(), false, Confronto.MINORE, filtro.getNumero() + 1, null);
+		if (filtro.getConfronto() == TipoConfronto.MAGGIORE && filtro.getNumero() + 1 <= massimo(filtro.getTipoFiltro())) {
+			return filtro(filtro.getTipoFiltro(), false, TipoConfronto.MINORE, filtro.getNumero() + 1, null);
 		}
 		return filtro;
 	}
@@ -122,15 +105,15 @@ final class BozzaTattica {
 		for (FiltroMD filtro : predicato.getFiltri()) {
 			filtri.add(normalizza(filtro));
 		}
-		PredicatoMD con = predicato.getTipo() == TipoPredicato.QUANTI ? conFiltri(predicato, filtri) : predicato;
-		if (con.getConfronto() == null || !con.isNegato()) {
+		PredicatoMD con = predicato.getTipoPredicato() == TipoPredicato.QUANTI ? conFiltri(predicato, filtri) : predicato;
+		if (con.getTipoConfronto() == null || !con.isNegato()) {
 			return con;
 		}
-		if (con.getConfronto() == Confronto.MINORE && con.getNumero() - 1 >= 0) {
-			return predicato(con.getTipo(), false, Confronto.MAGGIORE, con.getNumero() - 1, con.getRosa(), con.getFiltri());
+		if (con.getTipoConfronto() == TipoConfronto.MINORE && con.getNumero() - 1 >= 0) {
+			return predicato(con.getTipoPredicato(), false, TipoConfronto.MAGGIORE, con.getNumero() - 1, con.getTipoRosa(), con.getFiltri());
 		}
-		if (con.getConfronto() == Confronto.MAGGIORE && con.getNumero() + 1 <= massimo(con.getTipo())) {
-			return predicato(con.getTipo(), false, Confronto.MINORE, con.getNumero() + 1, con.getRosa(), con.getFiltri());
+		if (con.getTipoConfronto() == TipoConfronto.MAGGIORE && con.getNumero() + 1 <= massimo(con.getTipoPredicato())) {
+			return predicato(con.getTipoPredicato(), false, TipoConfronto.MINORE, con.getNumero() + 1, con.getTipoRosa(), con.getFiltri());
 		}
 		return con;
 	}
@@ -143,8 +126,8 @@ final class BozzaTattica {
 		SelettoreMD selettore = voce.selettoreEffettivo();
 		return voce.isAttiva() && voce.getCondizioni().isEmpty() && voce.getAzioni().size() == 1
 				&& voce.getAzioni().get(0).equals(AzioneMD.di(TipoAzione.ATTACCO_FISICO))
-				&& selettore.getRosa() == TipoRosa.AVVERSARI && selettore.getFiltri().isEmpty()
-				&& selettore.getOrdinamento() != null && selettore.getOrdinamento().getTipo() == TipoOrdinamento.PRIMO;
+				&& selettore.getTipoRosa() == TipoRosa.AVVERSARI && selettore.getFiltri().isEmpty()
+				&& selettore.getOrdinamento() != null && selettore.getOrdinamento().getTipoOrdinamento() == TipoOrdinamento.PRIMO;
 	}
 
 	/**
@@ -342,7 +325,7 @@ final class BozzaTattica {
 	 * può avere pezzi a metà, perché i dati sono immutabili e verificano i parametri alla costruzione
 	 */
 	static FiltroMD filtroPredefinito(TipoFiltro tipo) {
-		return filtro(tipo, false, tipo.getParametro() == TipoParametro.CONFRONTO ? Confronto.MAGGIORE : Confronto.MINORE,
+		return filtro(tipo, false, tipo.getParametro() == TipoParametro.CONFRONTO ? TipoConfronto.MAGGIORE : TipoConfronto.MINORE,
 				numeroPredefinito(tipo), parametroPredefinito(tipo.getParametro()));
 	}
 
@@ -352,11 +335,11 @@ final class BozzaTattica {
 	static PredicatoMD predicatoPredefinito(TipoPredicato tipo) {
 		switch (tipo) {
 			case QUANTI:
-				return PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.emptyList(), Confronto.MAGGIORE, 0);
+				return PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.emptyList(), TipoConfronto.MAGGIORE, 0);
 			case PROBABILITA:
 				return PredicatoMD.probabilita(50);
 			default:
-				return PredicatoMD.conConfrontoENumero(tipo, tipo == TipoPredicato.VOCE_USATA ? Confronto.MINORE : Confronto.MAGGIORE,
+				return PredicatoMD.conConfrontoENumero(tipo, tipo == TipoPredicato.VOCE_USATA ? TipoConfronto.MINORE : TipoConfronto.MAGGIORE,
 						tipo == TipoPredicato.ASTUZIA || tipo == TipoPredicato.INTELLIGENZA ? 10 : 1);
 		}
 	}
@@ -488,14 +471,14 @@ final class BozzaTattica {
 	/**
 	 * Ricostruisce un filtro dai suoi pezzi (i dati sono immutabili): quelli che il tipo non usa si ignorano
 	 */
-	static FiltroMD filtro(TipoFiltro tipo, boolean negato, Confronto confronto, int numero, Object parametro) {
+	static FiltroMD filtro(TipoFiltro tipo, boolean negato, TipoConfronto tipoConfronto, int numero, Object parametro) {
 		FiltroMD filtro;
 		switch (tipo.getParametro()) {
 			case CONFRONTO_E_NUMERO:
-				filtro = FiltroMD.conConfrontoENumero(tipo, confronto, numero);
+				filtro = FiltroMD.conConfrontoENumero(tipo, tipoConfronto, numero);
 				break;
 			case CONFRONTO:
-				filtro = FiltroMD.conConfronto(tipo, confronto);
+				filtro = FiltroMD.conConfronto(tipo, tipoConfronto);
 				break;
 			case STATO:
 				filtro = FiltroMD.conStato(tipo, (TipoEffettoDiStato) parametro);
@@ -520,14 +503,14 @@ final class BozzaTattica {
 	 * {@link #filtro}
 	 */
 	static Object parametroDi(FiltroMD filtro) {
-		if (filtro.getStato() != null) {
-			return filtro.getStato();
+		if (filtro.getTipoEffettoDiStato() != null) {
+			return filtro.getTipoEffettoDiStato();
 		}
-		if (filtro.getClasse() != null) {
-			return filtro.getClasse();
+		if (filtro.getTipoPersonaggio() != null) {
+			return filtro.getTipoPersonaggio();
 		}
-		if (filtro.getCategoria() != null) {
-			return filtro.getCategoria();
+		if (filtro.getCategoriaPersonaggio() != null) {
+			return filtro.getCategoriaPersonaggio();
 		}
 		return filtro.getTipoDanno();
 	}
@@ -536,8 +519,8 @@ final class BozzaTattica {
 	 * Lo stesso filtro con un altro numero, tenuto fra 0 e il massimo del suo tipo
 	 */
 	static FiltroMD conNumero(FiltroMD f, int numero) {
-		int limitato = Math.max(0, Math.min(massimo(f.getTipo()), numero));
-		return filtro(f.getTipo(), f.isNegato(), f.getConfronto(), limitato, parametroDi(f));
+		int limitato = Math.max(0, Math.min(massimo(f.getTipoFiltro()), numero));
+		return filtro(f.getTipoFiltro(), f.isNegato(), f.getConfronto(), limitato, parametroDi(f));
 	}
 
 	/**
@@ -550,41 +533,41 @@ final class BozzaTattica {
 	/**
 	 * Un confronto con il suo rovescio: "al massimo" è "non maggiore", "almeno" è "non minore"
 	 */
-	static FiltroMD conRelazione(FiltroMD f, Confronto confronto, boolean negato) {
-		return filtro(f.getTipo(), negato, confronto, f.getNumero(), parametroDi(f));
+	static FiltroMD conRelazione(FiltroMD f, TipoConfronto tipoConfronto, boolean negato) {
+		return filtro(f.getTipoFiltro(), negato, tipoConfronto, f.getNumero(), parametroDi(f));
 	}
 
-	static PredicatoMD conRelazione(PredicatoMD p, Confronto confronto, boolean negato) {
-		return predicato(p.getTipo(), negato, confronto, p.getNumero(), p.getRosa(), p.getFiltri());
+	static PredicatoMD conRelazione(PredicatoMD p, TipoConfronto tipoConfronto, boolean negato) {
+		return predicato(p.getTipoPredicato(), negato, tipoConfronto, p.getNumero(), p.getTipoRosa(), p.getFiltri());
 	}
 
 	/**
 	 * Lo stesso filtro con un altro confronto (i dati sono immutabili: si ricostruisce)
 	 */
-	static FiltroMD conConfronto(FiltroMD f, Confronto confronto) {
-		return filtro(f.getTipo(), f.isNegato(), confronto, f.getNumero(), parametroDi(f));
+	static FiltroMD conConfronto(FiltroMD f, TipoConfronto tipoConfronto) {
+		return filtro(f.getTipoFiltro(), f.isNegato(), tipoConfronto, f.getNumero(), parametroDi(f));
 	}
 
 	/**
 	 * Lo stesso filtro con un altro parametro enumerato
 	 */
 	static FiltroMD conParametro(FiltroMD f, Object parametro) {
-		return filtro(f.getTipo(), f.isNegato(), f.getConfronto(), f.getNumero(), parametro);
+		return filtro(f.getTipoFiltro(), f.isNegato(), f.getConfronto(), f.getNumero(), parametro);
 	}
 
 	/**
 	 * La stessa condizione con un altro numero, tenuto fra 0 e il massimo del suo tipo
 	 */
 	static PredicatoMD conNumero(PredicatoMD p, int numero) {
-		int limitato = Math.max(0, Math.min(massimo(p.getTipo()), numero));
-		return predicato(p.getTipo(), p.isNegato(), p.getConfronto(), limitato, p.getRosa(), p.getFiltri());
+		int limitato = Math.max(0, Math.min(massimo(p.getTipoPredicato()), numero));
+		return predicato(p.getTipoPredicato(), p.isNegato(), p.getTipoConfronto(), limitato, p.getTipoRosa(), p.getFiltri());
 	}
 
 	/**
 	 * La stessa condizione con un altro confronto
 	 */
-	static PredicatoMD conConfronto(PredicatoMD p, Confronto confronto) {
-		return predicato(p.getTipo(), p.isNegato(), confronto, p.getNumero(), p.getRosa(), p.getFiltri());
+	static PredicatoMD conConfronto(PredicatoMD p, TipoConfronto tipoConfronto) {
+		return predicato(p.getTipoPredicato(), p.isNegato(), tipoConfronto, p.getNumero(), p.getTipoRosa(), p.getFiltri());
 	}
 
 	/**
@@ -594,34 +577,34 @@ final class BozzaTattica {
 		// I filtri che non hanno senso sulla nuova rosa cadono
 		List<FiltroMD> filtri = new ArrayList<>();
 		for (FiltroMD filtro : p.getFiltri()) {
-			if (filtriAmmessi(rosa).contains(filtro.getTipo())) {
+			if (filtriAmmessi(rosa).contains(filtro.getTipoFiltro())) {
 				filtri.add(filtro);
 			}
 		}
-		return predicato(p.getTipo(), p.isNegato(), p.getConfronto(), p.getNumero(), rosa, filtri);
+		return predicato(p.getTipoPredicato(), p.isNegato(), p.getTipoConfronto(), p.getNumero(), rosa, filtri);
 	}
 
 	/**
 	 * La stessa condizione QUANTI con altri filtri
 	 */
 	static PredicatoMD conFiltri(PredicatoMD p, List<FiltroMD> filtri) {
-		return predicato(p.getTipo(), p.isNegato(), p.getConfronto(), p.getNumero(), p.getRosa(), filtri);
+		return predicato(p.getTipoPredicato(), p.isNegato(), p.getTipoConfronto(), p.getNumero(), p.getTipoRosa(), filtri);
 	}
 
 	/**
 	 * Ricostruisce una condizione dai suoi pezzi (i dati sono immutabili): quelli che il tipo non usa si ignorano
 	 */
-	static PredicatoMD predicato(TipoPredicato tipo, boolean negato, Confronto confronto, int numero, TipoRosa rosa, List<FiltroMD> filtri) {
+	static PredicatoMD predicato(TipoPredicato tipo, boolean negato, TipoConfronto tipoConfronto, int numero, TipoRosa rosa, List<FiltroMD> filtri) {
 		PredicatoMD predicato;
 		switch (tipo) {
 			case QUANTI:
-				predicato = PredicatoMD.quanti(rosa, filtri, confronto, numero);
+				predicato = PredicatoMD.quanti(rosa, filtri, tipoConfronto, numero);
 				break;
 			case PROBABILITA:
 				predicato = PredicatoMD.probabilita(numero);
 				break;
 			default:
-				predicato = PredicatoMD.conConfrontoENumero(tipo, confronto, numero);
+				predicato = PredicatoMD.conConfrontoENumero(tipo, tipoConfronto, numero);
 		}
 		return negato ? predicato.negato() : predicato;
 	}

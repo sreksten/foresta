@@ -38,6 +38,10 @@ public class StatisticheMD implements Serializzabile {
 		return livello;
 	}
 
+	public final void setLivello(int livello) {
+		this.livello = livello;
+	}
+
 	/**
 	 * Restituisce i punti esperienza totali accumulati
 	 */
@@ -45,11 +49,19 @@ public class StatisticheMD implements Serializzabile {
 		return puntiEsperienza;
 	}
 
+	public final void setPuntiEsperienza(int puntiEsperienza) {
+		this.puntiEsperienza = puntiEsperienza;
+	}
+
 	/**
 	 * Restituisce il punteggio ottenuto
 	 */
 	public final int getPunti() {
 		return punti;
+	}
+
+	public final void setPunti(int punti) {
+		this.punti = punti;
 	}
 
 	/**
@@ -70,6 +82,17 @@ public class StatisticheMD implements Serializzabile {
 		return idPartita;
 	}
 
+	/**
+	 * Quanti mostri di quella classe sono stati uccisi; zero se nessuno.
+	 */
+	public final int getMostriUccisi(TipoPersonaggio classe) {
+		Integer uccisi = mostriUccisi.get(classe);
+		if (uccisi == null) {
+			return 0;
+		}
+		return uccisi;
+	}
+
 	////////////////////
 
 	/**
@@ -84,34 +107,11 @@ public class StatisticheMD implements Serializzabile {
 		idPartita = UUID.randomUUID().toString();
 	}
 
-	public final void setLivello(int livello) {
-		this.livello = livello;
-	}
-
-	public final void setPunti(int punti) {
-		this.punti = punti;
-	}
-
-	public final void setPuntiEsperienza(int puntiEsperienza) {
-		this.puntiEsperienza = puntiEsperienza;
-	}
-
 	/**
 	 * Conta un mostro ucciso in più per quella classe.
 	 */
 	public final void addMostroUcciso(TipoPersonaggio classe) {
         mostriUccisi.merge(classe, 1, Integer::sum);
-	}
-
-	/**
-	 * Quanti mostri di quella classe sono stati uccisi; zero se nessuno.
-	 */
-	public final int getMostriUccisi(TipoPersonaggio classe) {
-		Integer uccisi = mostriUccisi.get(classe);
-		if (uccisi == null) {
-			return 0;
-		}
-		return uccisi;
 	}
 
 	/**
@@ -152,4 +152,5 @@ public class StatisticheMD implements Serializzabile {
 			mostriUccisi.put(st.enumerato(TipoPersonaggio.class), st.intero());
 		}
 	}
+
 }

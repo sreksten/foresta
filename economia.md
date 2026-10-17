@@ -67,7 +67,7 @@ Prezzo medio di un ingrediente magico col listino nuovo, che si lascia com'è (m
 
 Il livello sale solo con l'esperienza: per passare dal livello L al L + 1 servono 100 × (2L − 1) punti. Con circa 45 punti a scontro servono 2 scontri per arrivare al livello 2, una ventina per il 4, circa 220 per il 10.
 
-La tabella mette a confronto le entrate di un gruppo di 4 che fa ogni scontro in una cella nuova (con i preziosi venduti al livello a cui si trovano) con tre spese tipiche:
+La tabella mette a tipoConfronto le entrate di un gruppo di 4 che fa ogni scontro in una cella nuova (con i preziosi venduti al livello a cui si trovano) con tre spese tipiche:
 - i pasti;
 - un pezzo d'equipaggiamento nuovo a testa;
 - un ingrediente medio con la sua fusione.

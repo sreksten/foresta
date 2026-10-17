@@ -1,14 +1,14 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
 import com.threeamigos.foresta.modellodati.LettoreCampi;
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.BufferedReader;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
+import com.threeamigos.foresta.tipi.tattiche.TipoConfronto;
 import com.threeamigos.foresta.tipi.tattiche.TipoParametro;
 import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,35 +26,19 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
  */
 public final class PredicatoMD {
 
-	private final TipoPredicato tipo;
-	private final boolean negato;
-	private final Confronto confronto;
-	private final int numero;
-	private final TipoRosa rosa;
-	private final List<FiltroMD> filtri;
-
-	private PredicatoMD(TipoPredicato tipo, boolean negato, Confronto confronto, int numero, TipoRosa rosa, List<FiltroMD> filtri) {
-		this.tipo = tipo;
-		this.negato = negato;
-		this.confronto = confronto;
-		this.numero = numero;
-		this.rosa = rosa;
-		this.filtri = Collections.unmodifiableList(new ArrayList<>(filtri));
-	}
-
 	/**
 	 * Quanti candidati restano nella rosa dopo i filtri, confrontati con il numero
 	 */
-	public static PredicatoMD quanti(TipoRosa rosa, List<FiltroMD> filtri, Confronto confronto, int numero) {
-		return new PredicatoMD(TipoPredicato.QUANTI, false, Objects.requireNonNull(confronto), numero, Objects.requireNonNull(rosa), filtri);
+	public static PredicatoMD quanti(TipoRosa rosa, List<FiltroMD> filtri, TipoConfronto tipoConfronto, int numero) {
+		return new PredicatoMD(TipoPredicato.QUANTI, false, Objects.requireNonNull(tipoConfronto), numero, Objects.requireNonNull(rosa), filtri);
 	}
 
 	/**
 	 * Un predicato con un confronto e un numero (ROUND, ASTUZIA, VOCE_USATA, ROUND_DALL_ULTIMO_USO)
 	 */
-	public static PredicatoMD conConfrontoENumero(TipoPredicato tipo, Confronto confronto, int numero) {
+	public static PredicatoMD conConfrontoENumero(TipoPredicato tipo, TipoConfronto tipoConfronto, int numero) {
 		verifica(tipo, TipoParametro.CONFRONTO_E_NUMERO);
-		return new PredicatoMD(tipo, false, Objects.requireNonNull(confronto), numero, null, Collections.emptyList());
+		return new PredicatoMD(tipo, false, Objects.requireNonNull(tipoConfronto), numero, null, Collections.emptyList());
 	}
 
 	/**
@@ -70,23 +54,32 @@ public final class PredicatoMD {
 		}
 	}
 
-	/**
-	 * Lo stesso predicato con il risultato rovesciato (<code>NON</code>)
-	 */
-	public PredicatoMD negato() {
-		return new PredicatoMD(tipo, !negato, confronto, numero, rosa, filtri);
+	private final TipoPredicato tipoPredicato;
+	private final boolean negato;
+	private final TipoConfronto tipoConfronto;
+	private final int numero;
+	private final TipoRosa tipoRosa;
+	private final List<FiltroMD> filtri;
+
+	private PredicatoMD(TipoPredicato tipoPredicato, boolean negato, TipoConfronto tipoConfronto, int numero, TipoRosa tipoRosa, List<FiltroMD> filtri) {
+		this.tipoPredicato = tipoPredicato;
+		this.negato = negato;
+		this.tipoConfronto = tipoConfronto;
+		this.numero = numero;
+		this.tipoRosa = tipoRosa;
+		this.filtri = Collections.unmodifiableList(new ArrayList<>(filtri));
 	}
 
-	public TipoPredicato getTipo() {
-		return tipo;
+	public TipoPredicato getTipoPredicato() {
+		return tipoPredicato;
 	}
 
 	public boolean isNegato() {
 		return negato;
 	}
 
-	public Confronto getConfronto() {
-		return confronto;
+	public TipoConfronto getTipoConfronto() {
+		return tipoConfronto;
 	}
 
 	public int getNumero() {
@@ -94,8 +87,8 @@ public final class PredicatoMD {
 	}
 
 	/** Solo per QUANTI */
-	public TipoRosa getRosa() {
-		return rosa;
+	public TipoRosa getTipoRosa() {
+		return tipoRosa;
 	}
 
 	/** Solo per QUANTI */
@@ -104,26 +97,10 @@ public final class PredicatoMD {
 	}
 
 	/**
-	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 * Lo stesso predicato con il risultato rovesciato (<code>NON</code>)
 	 */
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		if (negato) {
-			sb.append("NON ");
-		}
-		sb.append(tipo);
-		if (rosa != null) {
-			sb.append(' ').append(rosa);
-			if (!filtri.isEmpty()) {
-				sb.append(' ').append(filtri);
-			}
-		}
-		if (confronto != null) {
-			sb.append(' ').append(confronto);
-		}
-		sb.append(' ').append(numero);
-		return sb.toString();
+	public PredicatoMD negato() {
+		return new PredicatoMD(tipoPredicato, !negato, tipoConfronto, numero, tipoRosa, filtri);
 	}
 
 	/**
@@ -132,11 +109,11 @@ public final class PredicatoMD {
 	public void salva(PrintWriter stream) {
 		stampaRiga(stream,
 				"PREDICATO",
-				tipo,
+				tipoPredicato,
 				negato,
-				facoltativo(confronto),
+				facoltativo(tipoConfronto),
 				numero,
-				facoltativo(rosa),
+				facoltativo(tipoRosa),
 				filtri.size());
 		for (FiltroMD filtro : filtri) {
 			filtro.salva(stream);
@@ -150,7 +127,7 @@ public final class PredicatoMD {
 		LettoreCampi campi = FormatoTattiche.riga(stream, "PREDICATO");
 		TipoPredicato tipo = campi.enumerato(TipoPredicato.class);
 		boolean negato = campi.booleano();
-		Confronto confronto = campi.enumeratoFacoltativo(Confronto.class);
+		TipoConfronto tipoConfronto = campi.enumeratoFacoltativo(TipoConfronto.class);
 		int numero = campi.intero();
 		TipoRosa rosa = campi.enumeratoFacoltativo(TipoRosa.class);
 		int numeroFiltri = campi.intero();
@@ -163,9 +140,9 @@ public final class PredicatoMD {
 		try {
 			// L'ultimo caso è il numero (la probabilità): un parametro che i predicati non usano finisce lì, e verifica lo rifiuta
 			if (parametro == TipoParametro.SELEZIONE_CONFRONTO_E_NUMERO) {
-				predicato = quanti(rosa, filtri, confronto, numero);
+				predicato = quanti(rosa, filtri, tipoConfronto, numero);
 			} else if (parametro == TipoParametro.CONFRONTO_E_NUMERO) {
-				predicato = conConfrontoENumero(tipo, confronto, numero);
+				predicato = conConfrontoENumero(tipo, tipoConfronto, numero);
 			} else {
 				verifica(tipo, TipoParametro.NUMERO);
 				predicato = probabilita(numero);
@@ -177,6 +154,29 @@ public final class PredicatoMD {
 	}
 
 	/**
+	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		if (negato) {
+			sb.append("NON ");
+		}
+		sb.append(tipoPredicato);
+		if (tipoRosa != null) {
+			sb.append(' ').append(tipoRosa);
+			if (!filtri.isEmpty()) {
+				sb.append(' ').append(filtri);
+			}
+		}
+		if (tipoConfronto != null) {
+			sb.append(' ').append(tipoConfronto);
+		}
+		sb.append(' ').append(numero);
+		return sb.toString();
+	}
+
+	/**
 	 * Due predicati sono uguali se hanno gli stessi dati.
 	 */
 	@Override
@@ -185,7 +185,7 @@ public final class PredicatoMD {
 			return false;
 		}
 		PredicatoMD p = (PredicatoMD) altro;
-		return tipo == p.tipo && negato == p.negato && confronto == p.confronto && numero == p.numero && rosa == p.rosa && filtri.equals(p.filtri);
+		return tipoPredicato == p.tipoPredicato && negato == p.negato && tipoConfronto == p.tipoConfronto && numero == p.numero && tipoRosa == p.tipoRosa && filtri.equals(p.filtri);
 	}
 
 	/**
@@ -193,6 +193,7 @@ public final class PredicatoMD {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(tipo, negato, confronto, numero, rosa, filtri);
+		return Objects.hash(tipoPredicato, negato, tipoConfronto, numero, tipoRosa, filtri);
 	}
+
 }

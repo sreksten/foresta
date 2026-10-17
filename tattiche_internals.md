@@ -12,7 +12,7 @@ Le tattiche attraversano quattro moduli (la separazione la garantisce il compila
 
 | Modulo | Pacchetto | Che cosa contiene |
 | :--- | :--- | :--- |
-| `foresta-tipi` | `tipi.tattiche` | Gli **enumerati**: `TipoAzione`, `TipoRosa`, `TipoFiltro`, `TipoOrdinamento`, `TipoPredicato`, `Confronto`, `CriterioIncantesimo`, `PortataAzione`, `TipoParametro`, `EsitoAzione`. Solo nomi, descrizioni e regole di compatibilità; nessuna logica di gioco |
+| `foresta-tipi` | `tipi.tattiche` | Gli **enumerati**: `TipoAzione`, `TipoRosa`, `TipoFiltro`, `TipoOrdinamento`, `TipoPredicato`, `TipoConfronto`, `CriterioIncantesimo`, `PortataAzione`, `TipoParametro`, `EsitoAzione`. Solo nomi, descrizioni e regole di compatibilità; nessuna logica di gioco |
 | `foresta-modellodati` | `modellodati.tattiche` | I **dati** (suffisso `MD`): `TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`, e `FormatoTattiche` per il salvataggio. Immutabili, con la lettura e la scrittura |
 | `foresta-contratti` | `eventi.*` | `ComandoImpostaTattica` (UI → motore), `RichiestaAperturaTattiche` (motore → UI), `InternoDecisioneTattica` (la spiegazione di una decisione) |
 | `foresta-motore` | `tattiche` | La **logica**: `Valutatore`, `ContestoTattico`, `Decisione`, `RisultatoSelezione`, `EsecutoreTattiche`, `RegistroTattiche`, `TatticheBase` |
@@ -99,11 +99,11 @@ Sette rose, sempre **relative all'attore**: "alleati" e "avversari" sono i suoi,
 
 ### 3.3 Filtri, ordinamenti, predicati
 
-Ognuno dichiara il **tipo del suo parametro** (`TipoParametro`): nessuno, confronto, confronto e numero, stato, classe, categoria, tipo di danno, numero, oppure
-la forma composta di `QUANTI` (rosa, filtri, confronto e numero). Lo stesso `TipoParametro` serve a tre cose: le fabbriche dei dati controllano che il parametro
+Ognuno dichiara il **tipo del suo parametro** (`TipoParametro`): nessuno, tipoConfronto, tipoConfronto e numero, stato, classe, categoria, tipo di danno, numero, oppure
+la forma composta di `QUANTI` (rosa, filtri, tipoConfronto e numero). Lo stesso `TipoParametro` serve a tre cose: le fabbriche dei dati controllano che il parametro
 sia quello giusto, la lettura del salvataggio sa quale campo guardare, la UI sa quale editor mostrare.
 
-`Confronto` ha tre valori (`MINORE`, `UGUALE`, `MAGGIORE`); "almeno" e "al massimo" si ottengono con la **negazione** (`NON MINORE`, `NON MAGGIORE`).
+`TipoConfronto` ha tre valori (`MINORE`, `UGUALE`, `MAGGIORE`); "almeno" e "al massimo" si ottengono con la **negazione** (`NON MINORE`, `NON MAGGIORE`).
 
 ## 4. I dati (`foresta-modellodati`)
 
@@ -219,7 +219,7 @@ Quelli che meritano attenzione:
 | `PRIMO` | il primo della lista |
 | `A_CASO` | `Dado.tiraAncheAUnaFaccia(n)`: l'unico che tira il dado |
 | `ULTIMO_ATTACCANTE`, `ULTIMO_SCELTO` | solo quel personaggio, se è fra i candidati; altrimenti nessuno |
-| tutti gli altri | quello con la **misura più alta**; a parità il primo (il confronto è "maggiore" stretto) |
+| tutti gli altri | quello con la **misura più alta**; a parità il primo (il tipoConfronto è "maggiore" stretto) |
 
 Le misure (`Ordinamenti.misura`): i "meno" sono i "più" col segno cambiato (`MENO_SALUTE` = `-salute`, così si massimizza sempre). `PIU_DEBOLE_A` e `PIU_RESISTENTE_A` usano
 `CalcolatoreCombattimento.moltiplicatoreAtteso`, che — a differenza del filtro `DEBOLE_A` — comprende **anche la difesa dell'equipaggiamento**; un immune vale 0, quindi
@@ -278,7 +278,7 @@ Due blocchi, nell'ordine; il primo che fallisce dà il motivo.
 | `CAMBIA_ARMA` | il gruppo è un `GruppoGiocatore` e `armiPerCambio(attore, tipoDanno)` non è vuoto |
 | gli incantesimi di classe | `puoLanciare` (§7.3), bersaglio in campo, non immune all'incantesimo, `contro(...)`, e per il Silenzio non già silenziato né immune; con `soloSePiuForteDellAttacco`, rende più delle armi |
 
-`contro(...)` aggiunge due controlli: l'immunità di classe al *tipo di danno* e, per il solo dardo con `soloSePiuForteDellAttacco`, il confronto con le armi.
+`contro(...)` aggiunge due controlli: l'immunità di classe al *tipo di danno* e, per il solo dardo con `soloSePiuForteDellAttacco`, il tipoConfronto con le armi.
 
 ### 7.3 `puoLanciare`
 
@@ -310,7 +310,7 @@ Le azioni `INCANTESIMO_DI_DANNO` e `INCANTESIMO_DEL_REPERTORIO` non nominano un 
 | `PIU_ECONOMICO_CHE_BASTA` | fra quelli che bastano a uccidere il bersaglio, il meno caro (pergamena per i miei, costo di lancio in MAGIA per i mostri); se nessuno basta, `PIU_ADATTO_ESPERTO` |
 
 - **`soloSePiuForteDellAttacco`**: dopo la scelta, se il danno atteso dell'incantesimo scelto non supera `CalcolatoreCombattimento.dannoAttesoDellaMischia`, `scegli` restituisce
-  `null` e l'azione non è applicabile. Il confronto è fatto **solo sull'incantesimo scelto**: se il migliore secondo il criterio non batte le armi non si prova con gli altri.
+  `null` e l'azione non è applicabile. Il tipoConfronto è fatto **solo sull'incantesimo scelto**: se il migliore secondo il criterio non batte le armi non si prova con gli altri.
 - **`bersagli(...)`**: il bersaglio principale e, per un incantesimo `MULTIPLO` lanciato da un personaggio del giocatore, i successivi avversari vivi fino a `getBersagli()`.
   Un mostro colpisce sempre solo il bersaglio scelto, anche con un incantesimo a più bersagli.
 - **`descrivi(...)`** produce la riga di spiegazione ("PIU_ADATTO: FUOCO 4.2, FULMINE 9.8; attacco con le armi 6.0").
@@ -468,8 +468,8 @@ e questi seguono nelle righe successive.
 TATTICA|numero di voci|disabilitata (0 o 1)
 VOCE|attiva|ha un selettore|numero di condizioni|numero di azioni|nome
 SELETTORE|rosa|ordinamento|tipo di danno dell'ordinamento|numero di filtri      ← seguono i filtri
-FILTRO|tipo|negato|confronto|numero|stato|classe|categoria|tipo di danno
-PREDICATO|tipo|negato|confronto|numero|rosa|numero di filtri                    ← seguono i filtri
+FILTRO|tipo|negato|tipoConfronto|numero|stato|classe|categoria|tipo di danno
+PREDICATO|tipo|negato|tipoConfronto|numero|rosa|numero di filtri                    ← seguono i filtri
 AZIONE|tipo|criterio|solo se più forte dell'attacco|tipo di danno dell'arma
 ```
 
@@ -524,7 +524,7 @@ ricostruisce una `TatticaMD` da mandare al motore. Una voce della bozza può non
 
 - **`da(tattica)`**: scompone una tattica. Toglie l'**attacco di riserva** in coda (`isAttaccoDiRiserva`): la schermata lo disegna sempre come ultima riga, non si sposta e non si toglie,
   ed è il ripiego del valutatore. Assegna un nome predefinito ("Tattica N") alle voci che non ne hanno.
-- **`normalizza`**: un confronto negato su un numero diventa l'equivalente senza rovescio ("NON MINORE 50" → "MAGGIORE 49"), per mostrare "almeno"/"al massimo" in modo leggibile.
+- **`normalizza`**: un tipoConfronto negato su un numero diventa l'equivalente senza rovescio ("NON MINORE 50" → "MAGGIORE 49"), per mostrare "almeno"/"al massimo" in modo leggibile.
 - **Cosa è ammesso**: `roseAmmesse(voce)` (quelle valide per i miei **e** accettate da ogni azione della voce), `azioniAmmesse(voce, possibili)` (della stessa portata della prima azione,
   filtrate per la classe), `filtriAmmessi(rosa)` (senza quelli che confrontano con chi decide, e per `SE_STESSO` senza quelli che hanno senso solo su altri), `ordinamentiAmmessi(rosa)`
   (la storia di chi decide solo fra gli avversari), `predicatiAmmessi()` (senza `ASTUZIA` e `INTELLIGENZA`, che servono a dividere i mostri in fasce).

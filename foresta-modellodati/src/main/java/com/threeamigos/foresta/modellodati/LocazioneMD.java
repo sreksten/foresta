@@ -146,4 +146,5 @@ public class LocazioneMD implements Serializzabile {
 		tipo = campi.enumerato(TipoLocazione.class);
 		MappaProprieta.leggi(campi, proprieta);
 	}
+
 }

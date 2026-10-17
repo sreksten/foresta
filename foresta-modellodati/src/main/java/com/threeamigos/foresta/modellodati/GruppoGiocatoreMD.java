@@ -37,49 +37,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	// Le sfide a carta, forbici e sasso vinte in tutta la partita (vedi carta_forbici_sasso.md)
 	private int sfideVinte;
 
-	/**
-	 * Le sfide a carta, forbici e sasso vinte in tutta la partita.
-	 */
-	public int getSfideVinte() {
-		return sfideVinte;
-	}
-
-	public void setSfideVinte(int sfideVinte) {
-		this.sfideVinte = sfideVinte;
-	}
-
-	/**
-	 * Gli ospiti del gruppo: chi viaggia con i personaggi senza farne parte. Di sola lettura: si cambia con
-	 * {@link #aggiungiOspite} e {@link #togliOspite}.
-	 */
-	public List<PersonaggioMD> getOspitiMD() {
-		return Collections.unmodifiableList(ospiti);
-	}
-
-	public void aggiungiOspite(PersonaggioMD ospite) {
-		ospiti.add(ospite);
-	}
-
-	public void togliOspite(PersonaggioMD ospite) {
-		ospiti.remove(ospite);
-	}
-
-	/**
-	 * Gli identificativi (uuid) degli ospiti che gli avversari possono attaccare. Di sola lettura: si cambia con
-	 * {@link #aggiungiOspiteVulnerabile} e {@link #togliOspiteVulnerabile}.
-	 */
-	public Set<String> getOspitiVulnerabili() {
-		return Collections.unmodifiableSet(ospitiVulnerabili);
-	}
-
-	public void aggiungiOspiteVulnerabile(String uuid) {
-		ospitiVulnerabili.add(uuid);
-	}
-
-	public void togliOspiteVulnerabile(String uuid) {
-		ospitiVulnerabili.remove(uuid);
-	}
-
 	public int getMonete() {
 		return monete;
 	}
@@ -113,6 +70,49 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	 */
 	public Collection<ArtefattoMD> getArtefatti() {
 		return Collections.unmodifiableList(artefatti);
+	}
+
+	/**
+	 * Gli ospiti del gruppo: chi viaggia con i personaggi senza farne parte. Di sola lettura: si cambia con
+	 * {@link #aggiungiOspite} e {@link #togliOspite}.
+	 */
+	public List<PersonaggioMD> getOspitiMD() {
+		return Collections.unmodifiableList(ospiti);
+	}
+
+	/**
+	 * Gli identificativi (uuid) degli ospiti che gli avversari possono attaccare. Di sola lettura: si cambia con
+	 * {@link #aggiungiOspiteVulnerabile} e {@link #togliOspiteVulnerabile}.
+	 */
+	public Set<String> getOspitiVulnerabili() {
+		return Collections.unmodifiableSet(ospitiVulnerabili);
+	}
+
+	/**
+	 * Le sfide a carta, forbici e sasso vinte in tutta la partita.
+	 */
+	public int getSfideVinte() {
+		return sfideVinte;
+	}
+
+	public void setSfideVinte(int sfideVinte) {
+		this.sfideVinte = sfideVinte;
+	}
+
+	public void aggiungiOspite(PersonaggioMD ospite) {
+		ospiti.add(ospite);
+	}
+
+	public void togliOspite(PersonaggioMD ospite) {
+		ospiti.remove(ospite);
+	}
+
+	public void aggiungiOspiteVulnerabile(String uuid) {
+		ospitiVulnerabili.add(uuid);
+	}
+
+	public void togliOspiteVulnerabile(String uuid) {
+		ospitiVulnerabili.remove(uuid);
 	}
 
 	public void aggiungiArtefatto(ArtefattoMD artefatto) {
@@ -222,4 +222,5 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 			ospitiVulnerabili.add(stream.readLine());
 		}
 	}
+
 }

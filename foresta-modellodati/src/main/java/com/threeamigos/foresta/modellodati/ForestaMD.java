@@ -27,6 +27,16 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
  */
 public class ForestaMD implements Serializzabile {
 
+	// Cambia ogni volta che cambia visivamente la mappa (conosciuta/visitata),
+	// così chi disegna la mappa generale (la UI) sa quando la sua cache è da ricostruire.
+	// Il contatore è unico per tutta l'esecuzione: se ogni partita ripartisse da 0,
+	// una partita nuova o caricata potrebbe avere la stessa versione di quella
+	// disegnata per ultima (morendo nella prima locazione, per esempio) e la mappa
+	// a video resterebbe quella vecchia.
+	// Non è un dato della partita (non si salva): sta qui, e non in chi disegna, perché
+	// solo questa classe sa quando la mappa cambia (lo incrementa nei suoi tre metodi che la modificano).
+	private static final AtomicInteger ULTIMA_VERSIONE_MAPPA = new AtomicInteger();
+
 	private int dimensioneX;
 	private int dimensioneY;
 
@@ -48,20 +58,7 @@ public class ForestaMD implements Serializzabile {
 	// Si potrebbe fare anche un ciclo su tutta la foresta ma così si fa prima.
 	private Map<TipoLocazione, CoordinateMD> locazioniUniche;
 
-	// Cambia ogni volta che cambia visivamente la mappa (conosciuta/visitata),
-	// così chi disegna la mappa generale (la UI) sa quando la sua cache è da ricostruire.
-	// Il contatore è unico per tutta l'esecuzione: se ogni partita ripartisse da 0,
-	// una partita nuova o caricata potrebbe avere la stessa versione di quella
-	// disegnata per ultima (morendo nella prima locazione, per esempio) e la mappa
-	// a video resterebbe quella vecchia.
-	// Non è un dato della partita (non si salva): sta qui, e non in chi disegna, perché
-	// solo questa classe sa quando la mappa cambia (lo incrementa nei suoi tre metodi che la modificano).
-	private static final AtomicInteger ULTIMA_VERSIONE_MAPPA = new AtomicInteger();
 	private int versioneMappa;
-
-	public int getVersioneMappa() {
-		return versioneMappa;
-	}
 
 	public int getDimensioneX() {
 		return dimensioneX;
@@ -85,6 +82,10 @@ public class ForestaMD implements Serializzabile {
 
 	public int getMaxYConosciuta() {
 		return maxYConosciuta;
+	}
+
+	public int getVersioneMappa() {
+		return versioneMappa;
 	}
 
 	////////////
@@ -128,7 +129,7 @@ public class ForestaMD implements Serializzabile {
 	public final void aggiungiLocazioneUnica(TipoLocazione tipoLocazione, CoordinateMD coordinate) {
 		locazioniUniche.put(tipoLocazione, coordinate);
 	}
-	
+
 	/**
 	 * Dimentica la locazione unica di quel tipo, per esempio perché è stata distrutta.
 	 */
@@ -295,4 +296,5 @@ public class ForestaMD implements Serializzabile {
 			}
 		}
 	}
+
 }

@@ -1,13 +1,13 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
 import com.threeamigos.foresta.modellodati.LettoreCampi;
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.BufferedReader;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Objects;
 
 import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
@@ -21,18 +21,6 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
  * @author Stefano Reksten
  */
 public final class AzioneMD {
-
-	private final TipoAzione tipo;
-	private final CriterioIncantesimo criterio;
-	private final boolean soloSePiuForteDellAttacco;
-	private final TipoDanno armaDi;
-
-	private AzioneMD(TipoAzione tipo, CriterioIncantesimo criterio, boolean soloSePiuForteDellAttacco, TipoDanno armaDi) {
-		this.tipo = tipo;
-		this.criterio = criterio;
-		this.soloSePiuForteDellAttacco = soloSePiuForteDellAttacco;
-		this.armaDi = armaDi;
-	}
 
 	/**
 	 * Un'azione senza parametri (ogni tipo tranne INCANTESIMO_DI_DANNO e CAMBIA_ARMA)
@@ -65,25 +53,21 @@ public final class AzioneMD {
 		return new AzioneMD(TipoAzione.CAMBIA_ARMA, null, false, Objects.requireNonNull(armaDi));
 	}
 
-	/**
-	 * La stessa azione che si applica solo se rende più dell'attacco con le armi: per gli incantesimi e il dardo che fanno danno
-	 */
-	public AzioneMD soloSePiuForteDellAttacco() {
-		if (tipo == TipoAzione.INCANTESIMO_DI_DANNO) {
-			return incantesimoDiDanno(criterio, true);
-		}
-		if (tipo == TipoAzione.INCANTESIMO_DEL_REPERTORIO) {
-			return incantesimoDelRepertorio(criterio, true);
-		}
-		if (!faDanno(tipo)) {
-			throw new IllegalArgumentException(tipo + " non fa danno da confrontare con l'attacco");
-		}
-		return new AzioneMD(tipo, null, true, null);
-	}
-
 	private static boolean faDanno(TipoAzione tipo) {
 		return tipo == TipoAzione.DARDO_ARCANO
 				|| (tipo.getClasseIncantesimo() != null && tipo.getTipoDanno() != null && tipo != TipoAzione.SILENZIO && tipo != TipoAzione.MORTE);
+	}
+
+	private final TipoAzione tipo;
+	private final CriterioIncantesimo criterio;
+	private final boolean soloSePiuForteDellAttacco;
+	private final TipoDanno armaDi;
+
+	private AzioneMD(TipoAzione tipo, CriterioIncantesimo criterio, boolean soloSePiuForteDellAttacco, TipoDanno armaDi) {
+		this.tipo = tipo;
+		this.criterio = criterio;
+		this.soloSePiuForteDellAttacco = soloSePiuForteDellAttacco;
+		this.armaDi = armaDi;
 	}
 
 	public TipoAzione getTipo() {
@@ -105,21 +89,19 @@ public final class AzioneMD {
 	}
 
 	/**
-	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 * La stessa azione che si applica solo se rende più dell'attacco con le armi: per gli incantesimi e il dardo che fanno danno
 	 */
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder(tipo.name());
-		if (criterio != null) {
-			sb.append(' ').append(criterio);
+	public AzioneMD soloSePiuForteDellAttacco() {
+		if (tipo == TipoAzione.INCANTESIMO_DI_DANNO) {
+			return incantesimoDiDanno(criterio, true);
 		}
-		if (armaDi != null) {
-			sb.append(' ').append(armaDi);
+		if (tipo == TipoAzione.INCANTESIMO_DEL_REPERTORIO) {
+			return incantesimoDelRepertorio(criterio, true);
 		}
-		if (soloSePiuForteDellAttacco) {
-			sb.append(" SOLO_SE_PIU_FORTE_DELL_ATTACCO");
+		if (!faDanno(tipo)) {
+			throw new IllegalArgumentException(tipo + " non fa danno da confrontare con l'attacco");
 		}
-		return sb.toString();
+		return new AzioneMD(tipo, null, true, null);
 	}
 
 	/**
@@ -161,6 +143,24 @@ public final class AzioneMD {
 	}
 
 	/**
+	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(tipo.name());
+		if (criterio != null) {
+			sb.append(' ').append(criterio);
+		}
+		if (armaDi != null) {
+			sb.append(' ').append(armaDi);
+		}
+		if (soloSePiuForteDellAttacco) {
+			sb.append(" SOLO_SE_PIU_FORTE_DELL_ATTACCO");
+		}
+		return sb.toString();
+	}
+
+	/**
 	 * Due azioni sono uguali se hanno gli stessi dati.
 	 */
 	@Override
@@ -179,4 +179,5 @@ public final class AzioneMD {
 	public int hashCode() {
 		return Objects.hash(tipo, criterio, soloSePiuForteDellAttacco, armaDi);
 	}
+
 }

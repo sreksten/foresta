@@ -19,8 +19,8 @@ final class TestoTattica {
 	/**
 	 * Il confronto a parole: minore di, uguale a, maggiore di
 	 */
-	static String confronto(Confronto confronto) {
-		switch (confronto) {
+	static String confronto(TipoConfronto tipoConfronto) {
+		switch (tipoConfronto) {
 			case MINORE:
 				return "minore di";
 			case MAGGIORE:
@@ -34,8 +34,8 @@ final class TestoTattica {
 	 * Il confronto di un filtro o di una condizione, che nei dati può essere rovesciato ("NON MINORE"): la schermata non ne crea più, ma una tattica letta
 	 * o scritta nel codice (quelle dei mostri) ne ha, e si leggono con un "non" davanti.
 	 */
-	static String relazione(Confronto confronto, boolean negato) {
-		return negato ? "non " + confronto(confronto) : confronto(confronto);
+	static String relazione(TipoConfronto tipoConfronto, boolean negato) {
+		return negato ? "non " + confronto(tipoConfronto) : confronto(tipoConfronto);
 	}
 
 	/**
@@ -66,24 +66,24 @@ final class TestoTattica {
 	 */
 	static String filtro(FiltroMD filtro) {
 		StringBuilder sb = new StringBuilder();
-		boolean conConfronto = filtro.getTipo().getParametro() == TipoParametro.CONFRONTO_E_NUMERO
-				|| filtro.getTipo().getParametro() == TipoParametro.CONFRONTO;
+		boolean conConfronto = filtro.getTipoFiltro().getParametro() == TipoParametro.CONFRONTO_E_NUMERO
+				|| filtro.getTipoFiltro().getParametro() == TipoParametro.CONFRONTO;
 		if (filtro.isNegato() && !conConfronto) {
 			sb.append("senza ");
 		}
-		sb.append(filtro.getTipo().getDescrizione().toLowerCase(Locale.ITALIAN));
+		sb.append(filtro.getTipoFiltro().getDescrizione().toLowerCase(Locale.ITALIAN));
 		if (conConfronto) {
 			sb.append(' ').append(relazione(filtro.getConfronto(), filtro.isNegato()));
-			if (filtro.getTipo().getParametro() == TipoParametro.CONFRONTO_E_NUMERO) {
+			if (filtro.getTipoFiltro().getParametro() == TipoParametro.CONFRONTO_E_NUMERO) {
 				sb.append(' ').append(filtro.getNumero());
 			}
 		}
-		if (filtro.getStato() != null) {
-			sb.append(' ').append(filtro.getStato().getDescrizione().toLowerCase(Locale.ITALIAN));
-		} else if (filtro.getClasse() != null) {
-			sb.append(' ').append(nome(filtro.getClasse()));
-		} else if (filtro.getCategoria() != null) {
-			sb.append(' ').append(filtro.getCategoria().getNome().toLowerCase(Locale.ITALIAN));
+		if (filtro.getTipoEffettoDiStato() != null) {
+			sb.append(' ').append(filtro.getTipoEffettoDiStato().getDescrizione().toLowerCase(Locale.ITALIAN));
+		} else if (filtro.getTipoPersonaggio() != null) {
+			sb.append(' ').append(nome(filtro.getTipoPersonaggio()));
+		} else if (filtro.getCategoriaPersonaggio() != null) {
+			sb.append(' ').append(filtro.getCategoriaPersonaggio().getNome().toLowerCase(Locale.ITALIAN));
 		} else if (filtro.getTipoDanno() != null) {
 			sb.append(' ').append(filtro.getTipoDanno().getNome().toLowerCase(Locale.ITALIAN));
 		}
@@ -105,7 +105,7 @@ final class TestoTattica {
 	 * L'ordinamento a parole, con il tipo di danno se ne ha uno
 	 */
 	static String ordinamento(OrdinamentoMD ordinamento) {
-		String testo = ordinamento.getTipo().getDescrizione().toLowerCase(Locale.ITALIAN);
+		String testo = ordinamento.getTipoOrdinamento().getDescrizione().toLowerCase(Locale.ITALIAN);
 		return ordinamento.getTipoDanno() == null ? testo : testo + " " + ordinamento.getTipoDanno().getNome().toLowerCase(Locale.ITALIAN);
 	}
 
@@ -113,7 +113,7 @@ final class TestoTattica {
 	 * Il selettore a parole: la rosa, fra parentesi i filtri e dopo i due punti l'ordinamento
 	 */
 	static String selettore(SelettoreMD selettore) {
-		StringBuilder sb = new StringBuilder(selettore.getRosa().getDescrizione());
+		StringBuilder sb = new StringBuilder(selettore.getTipoRosa().getDescrizione());
 		if (!selettore.getFiltri().isEmpty()) {
 			sb.append(" (").append(filtri(selettore.getFiltri())).append(')');
 		}
@@ -128,19 +128,19 @@ final class TestoTattica {
 	 */
 	static String predicato(PredicatoMD predicato) {
 		StringBuilder sb = new StringBuilder();
-		switch (predicato.getTipo()) {
+		switch (predicato.getTipoPredicato()) {
 			case PROBABILITA:
 				return (predicato.isNegato() ? "non nel " : "nel ") + predicato.getNumero() + "% dei casi";
 			case QUANTI:
-				sb.append("quanti: ").append(predicato.getRosa().getDescrizione().toLowerCase(Locale.ITALIAN));
+				sb.append("quanti: ").append(predicato.getTipoRosa().getDescrizione().toLowerCase(Locale.ITALIAN));
 				if (!predicato.getFiltri().isEmpty()) {
 					sb.append(" (").append(filtri(predicato.getFiltri())).append(')');
 				}
 				break;
 			default:
-				sb.append(predicato.getTipo().getDescrizione().toLowerCase(Locale.ITALIAN));
+				sb.append(predicato.getTipoPredicato().getDescrizione().toLowerCase(Locale.ITALIAN));
 		}
-		sb.append(' ').append(relazione(predicato.getConfronto(), predicato.isNegato())).append(' ').append(predicato.getNumero());
+		sb.append(' ').append(relazione(predicato.getTipoConfronto(), predicato.isNegato())).append(' ').append(predicato.getNumero());
 		return sb.toString();
 	}
 
@@ -315,8 +315,8 @@ final class TestoTattica {
 		}
 	}
 
-	static String spiega(Confronto confronto) {
-		switch (confronto) {
+	static String spiega(TipoConfronto tipoConfronto) {
+		switch (tipoConfronto) {
 			case MINORE:
 				return "Il valore è minore del numero.";
 			case MAGGIORE:
@@ -326,8 +326,8 @@ final class TestoTattica {
 		}
 	}
 
-	static String spiega(Confronto confronto, boolean negato) {
-		return negato ? "Il contrario: vale quando il valore NON è " + confronto(confronto) + " il numero." : spiega(confronto);
+	static String spiega(TipoConfronto tipoConfronto, boolean negato) {
+		return negato ? "Il contrario: vale quando il valore NON è " + confronto(tipoConfronto) + " il numero." : spiega(tipoConfronto);
 	}
 
 	static String spiega(CriterioIncantesimo criterio) {

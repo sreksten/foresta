@@ -1,17 +1,17 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
 import com.threeamigos.foresta.modellodati.LettoreCampi;
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.BufferedReader;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
+import com.threeamigos.foresta.tipi.tattiche.TipoConfronto;
 import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
 import com.threeamigos.foresta.tipi.tattiche.TipoParametro;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Objects;
 
 import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
@@ -25,35 +25,6 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
  * @author Stefano Reksten
  */
 public final class FiltroMD {
-
-	private final TipoFiltro tipo;
-	private final boolean negato;
-	private final Confronto confronto;
-	private final int numero;
-	private final TipoEffettoDiStato stato;
-	private final TipoPersonaggio classe;
-	private final CategoriaPersonaggio categoria;
-	private final TipoDanno tipoDanno;
-
-	private FiltroMD(TipoFiltro tipo, boolean negato, Confronto confronto, int numero, TipoEffettoDiStato stato, TipoPersonaggio classe,
-				   CategoriaPersonaggio categoria, TipoDanno tipoDanno) {
-		this.tipo = tipo;
-		this.negato = negato;
-		this.confronto = confronto;
-		this.numero = numero;
-		this.stato = stato;
-		this.classe = classe;
-		this.categoria = categoria;
-		this.tipoDanno = tipoDanno;
-	}
-
-	private static FiltroMD crea(TipoFiltro tipo, TipoParametro atteso, Confronto confronto, int numero, TipoEffettoDiStato stato,
-							   TipoPersonaggio classe, CategoriaPersonaggio categoria, TipoDanno tipoDanno) {
-		if (tipo.getParametro() != atteso) {
-			throw new IllegalArgumentException("Il filtro " + tipo + " vuole un parametro " + tipo.getParametro() + ", non " + atteso);
-		}
-		return new FiltroMD(tipo, false, confronto, numero, stato, classe, categoria, tipoDanno);
-	}
 
 	/**
 	 * Un filtro che non vuole parametri.
@@ -69,8 +40,8 @@ public final class FiltroMD {
 	 *
 	 * @throws IllegalArgumentException se il tipo di filtro vuole un altro parametro
 	 */
-	public static FiltroMD conConfrontoENumero(TipoFiltro tipo, Confronto confronto, int numero) {
-		return crea(tipo, TipoParametro.CONFRONTO_E_NUMERO, Objects.requireNonNull(confronto), numero, null, null, null, null);
+	public static FiltroMD conConfrontoENumero(TipoFiltro tipo, TipoConfronto tipoConfronto, int numero) {
+		return crea(tipo, TipoParametro.CONFRONTO_E_NUMERO, Objects.requireNonNull(tipoConfronto), numero, null, null, null, null);
 	}
 
 	/**
@@ -78,8 +49,8 @@ public final class FiltroMD {
 	 *
 	 * @throws IllegalArgumentException se il tipo di filtro vuole un altro parametro
 	 */
-	public static FiltroMD conConfronto(TipoFiltro tipo, Confronto confronto) {
-		return crea(tipo, TipoParametro.CONFRONTO, Objects.requireNonNull(confronto), 0, null, null, null, null);
+	public static FiltroMD conConfronto(TipoFiltro tipo, TipoConfronto tipoConfronto) {
+		return crea(tipo, TipoParametro.CONFRONTO, Objects.requireNonNull(tipoConfronto), 0, null, null, null, null);
 	}
 
 	/**
@@ -118,39 +89,61 @@ public final class FiltroMD {
 		return crea(tipo, TipoParametro.TIPO_DANNO, null, 0, null, null, null, Objects.requireNonNull(tipoDanno));
 	}
 
-	/**
-	 * Lo stesso filtro con il risultato rovesciato (<code>NON</code>)
-	 */
-	public FiltroMD negato() {
-		return new FiltroMD(tipo, !negato, confronto, numero, stato, classe, categoria, tipoDanno);
+	private static FiltroMD crea(TipoFiltro tipo, TipoParametro atteso, TipoConfronto tipoConfronto, int numero, TipoEffettoDiStato stato,
+								 TipoPersonaggio classe, CategoriaPersonaggio categoria, TipoDanno tipoDanno) {
+		if (tipo.getParametro() != atteso) {
+			throw new IllegalArgumentException("Il filtro " + tipo + " vuole un parametro " + tipo.getParametro() + ", non " + atteso);
+		}
+		return new FiltroMD(tipo, false, tipoConfronto, numero, stato, classe, categoria, tipoDanno);
 	}
 
-	public TipoFiltro getTipo() {
-		return tipo;
+	private final TipoFiltro tipoFiltro;
+	private final boolean negato;
+	private final TipoConfronto tipoConfronto;
+	private final int numero;
+	private final TipoEffettoDiStato tipoEffettoDiStato;
+	private final TipoPersonaggio tipoPersonaggio;
+	private final CategoriaPersonaggio categoriaPersonaggio;
+	private final TipoDanno tipoDanno;
+
+	private FiltroMD(TipoFiltro tipoFiltro, boolean negato, TipoConfronto tipoConfronto, int numero, TipoEffettoDiStato tipoEffettoDiStato, TipoPersonaggio tipoPersonaggio,
+					 CategoriaPersonaggio categoriaPersonaggio, TipoDanno tipoDanno) {
+		this.tipoFiltro = tipoFiltro;
+		this.negato = negato;
+		this.tipoConfronto = tipoConfronto;
+		this.numero = numero;
+		this.tipoEffettoDiStato = tipoEffettoDiStato;
+		this.tipoPersonaggio = tipoPersonaggio;
+		this.categoriaPersonaggio = categoriaPersonaggio;
+		this.tipoDanno = tipoDanno;
+	}
+
+	public TipoFiltro getTipoFiltro() {
+		return tipoFiltro;
 	}
 
 	public boolean isNegato() {
 		return negato;
 	}
 
-	public Confronto getConfronto() {
-		return confronto;
+	public TipoConfronto getConfronto() {
+		return tipoConfronto;
 	}
 
 	public int getNumero() {
 		return numero;
 	}
 
-	public TipoEffettoDiStato getStato() {
-		return stato;
+	public TipoEffettoDiStato getTipoEffettoDiStato() {
+		return tipoEffettoDiStato;
 	}
 
-	public TipoPersonaggio getClasse() {
-		return classe;
+	public TipoPersonaggio getTipoPersonaggio() {
+		return tipoPersonaggio;
 	}
 
-	public CategoriaPersonaggio getCategoria() {
-		return categoria;
+	public CategoriaPersonaggio getCategoriaPersonaggio() {
+		return categoriaPersonaggio;
 	}
 
 	public TipoDanno getTipoDanno() {
@@ -158,26 +151,10 @@ public final class FiltroMD {
 	}
 
 	/**
-	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 * Lo stesso filtro con il risultato rovesciato (<code>NON</code>)
 	 */
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		if (negato) {
-			sb.append("NON ");
-		}
-		sb.append(tipo);
-		if (confronto != null) {
-			sb.append(' ').append(confronto);
-		}
-		if (tipo.getParametro() == TipoParametro.CONFRONTO_E_NUMERO) {
-			sb.append(' ').append(numero);
-		}
-		Object parametro = stato != null ? stato : classe != null ? classe : categoria != null ? categoria : tipoDanno;
-		if (parametro != null) {
-			sb.append(' ').append(parametro);
-		}
-		return sb.toString();
+	public FiltroMD negato() {
+		return new FiltroMD(tipoFiltro, !negato, tipoConfronto, numero, tipoEffettoDiStato, tipoPersonaggio, categoriaPersonaggio, tipoDanno);
 	}
 
 	/**
@@ -186,13 +163,13 @@ public final class FiltroMD {
 	public void salva(PrintWriter stream) {
 		stampaRiga(stream,
 				"FILTRO",
-				tipo,
+				tipoFiltro,
 				negato,
-				facoltativo(confronto),
+				facoltativo(tipoConfronto),
 				numero,
-				facoltativo(stato),
-				facoltativo(classe),
-				facoltativo(categoria),
+				facoltativo(tipoEffettoDiStato),
+				facoltativo(tipoPersonaggio),
+				facoltativo(categoriaPersonaggio),
 				facoltativo(tipoDanno));
 	}
 
@@ -203,7 +180,7 @@ public final class FiltroMD {
 		LettoreCampi campi = FormatoTattiche.riga(stream, "FILTRO");
 		TipoFiltro tipo = campi.enumerato(TipoFiltro.class);
 		boolean negato = campi.booleano();
-		Confronto confronto = campi.enumeratoFacoltativo(Confronto.class);
+		TipoConfronto tipoConfronto = campi.enumeratoFacoltativo(TipoConfronto.class);
 		int numero = campi.intero();
 		TipoEffettoDiStato stato = campi.enumeratoFacoltativo(TipoEffettoDiStato.class);
 		TipoPersonaggio classe = campi.enumeratoFacoltativo(TipoPersonaggio.class);
@@ -216,9 +193,9 @@ public final class FiltroMD {
 			if (parametro == TipoParametro.NESSUNO) {
 				filtro = senzaParametro(tipo);
 			} else if (parametro == TipoParametro.CONFRONTO_E_NUMERO) {
-				filtro = conConfrontoENumero(tipo, confronto, numero);
+				filtro = conConfrontoENumero(tipo, tipoConfronto, numero);
 			} else if (parametro == TipoParametro.CONFRONTO) {
-				filtro = conConfronto(tipo, confronto);
+				filtro = conConfronto(tipo, tipoConfronto);
 			} else if (parametro == TipoParametro.STATO) {
 				filtro = conStato(tipo, stato);
 			} else if (parametro == TipoParametro.CLASSE) {
@@ -235,6 +212,29 @@ public final class FiltroMD {
 	}
 
 	/**
+	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		if (negato) {
+			sb.append("NON ");
+		}
+		sb.append(tipoFiltro);
+		if (tipoConfronto != null) {
+			sb.append(' ').append(tipoConfronto);
+		}
+		if (tipoFiltro.getParametro() == TipoParametro.CONFRONTO_E_NUMERO) {
+			sb.append(' ').append(numero);
+		}
+		Object parametro = tipoEffettoDiStato != null ? tipoEffettoDiStato : tipoPersonaggio != null ? tipoPersonaggio : categoriaPersonaggio != null ? categoriaPersonaggio : tipoDanno;
+		if (parametro != null) {
+			sb.append(' ').append(parametro);
+		}
+		return sb.toString();
+	}
+
+	/**
 	 * Due filtri sono uguali se hanno gli stessi dati.
 	 */
 	@Override
@@ -246,8 +246,8 @@ public final class FiltroMD {
 			return false;
 		}
 		FiltroMD f = (FiltroMD) altro;
-		return tipo == f.tipo && negato == f.negato && confronto == f.confronto && numero == f.numero && stato == f.stato && classe == f.classe
-				&& categoria == f.categoria && tipoDanno == f.tipoDanno;
+		return tipoFiltro == f.tipoFiltro && negato == f.negato && tipoConfronto == f.tipoConfronto && numero == f.numero && tipoEffettoDiStato == f.tipoEffettoDiStato && tipoPersonaggio == f.tipoPersonaggio
+				&& categoriaPersonaggio == f.categoriaPersonaggio && tipoDanno == f.tipoDanno;
 	}
 
 	/**
@@ -255,6 +255,7 @@ public final class FiltroMD {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(tipo, negato, confronto, numero, stato, classe, categoria, tipoDanno);
+		return Objects.hash(tipoFiltro, negato, tipoConfronto, numero, tipoEffettoDiStato, tipoPersonaggio, categoriaPersonaggio, tipoDanno);
 	}
+
 }

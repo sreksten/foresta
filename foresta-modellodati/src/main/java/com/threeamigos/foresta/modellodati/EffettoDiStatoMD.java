@@ -105,4 +105,5 @@ public class EffettoDiStatoMD {
                 sottocampi.intero(),
                 sottocampi.decimale());
     }
+
 }

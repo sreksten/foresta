@@ -86,4 +86,5 @@ public class TrofeiMD implements Serializzabile {
 			progressi.put(trofeo, campi.intero());
 		}
 	}
+
 }

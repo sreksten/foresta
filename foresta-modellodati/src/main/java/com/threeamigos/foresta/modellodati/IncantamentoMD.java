@@ -17,9 +17,15 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.composto;
 public class IncantamentoMD {
 
     private final String nomeIncantamento;
-    private final TipoDanno tipoDannoElementale; // es. FUOCO
-    private final int dannoBonusFisso;           // es. 4 danni bonus
-    private final double coefficienteScala;       // es. 0.2 (scala su Intelligenza)
+    private final TipoDanno tipoDannoElementale;
+
+ // es. FUOCO
+    private final int dannoBonusFisso;
+
+           // es. 4 danni bonus
+    private final double coefficienteScala;
+
+       // es. 0.2 (scala su Intelligenza)
 
     /**
      * @param nomeIncantamento il nome dell'incantamento; il carattere "|" si toglie e un nome vuoto diventa {@link ArtefattoMD#NESSUN_NOME}
@@ -86,4 +92,5 @@ public class IncantamentoMD {
         double coefficienteScala = sottocampi.decimale();
         return new IncantamentoMD(sottocampi.testo(), tipoDanno, dannoBonusFisso, coefficienteScala);
     }
+
 }

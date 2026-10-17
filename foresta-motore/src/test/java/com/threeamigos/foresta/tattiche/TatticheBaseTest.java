@@ -161,10 +161,10 @@ class TatticheBaseTest {
     @Test
     void l_HobgoblinTieneIlFuocoSulloStessoBersaglio() {
         boolean tieneIlBersaglio = TatticheBase.deiMostri(TipoPersonaggio.HOBGOBLIN).getVoci().stream()
-                .anyMatch(v -> v.selettoreEffettivo().getOrdinamento().getTipo() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.ULTIMO_SCELTO);
+                .anyMatch(v -> v.selettoreEffettivo().getOrdinamento().getTipoOrdinamento() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.ULTIMO_SCELTO);
         assertTrue(tieneIlBersaglio);
         assertFalse(TatticheBase.deiMostri(TipoPersonaggio.GOBLIN).getVoci().stream()
-                .anyMatch(v -> v.selettoreEffettivo().getOrdinamento().getTipo() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.ULTIMO_SCELTO));
+                .anyMatch(v -> v.selettoreEffettivo().getOrdinamento().getTipoOrdinamento() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.ULTIMO_SCELTO));
     }
 
     @Test

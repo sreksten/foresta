@@ -29,6 +29,13 @@ public final class TatticaMD {
 	 */
 	public static final TatticaMD VUOTA = new TatticaMD(Collections.emptyList());
 
+	/**
+	 * Una tattica con quelle voci, nell'ordine dato.
+	 */
+	public static TatticaMD di(VoceMD... voci) {
+		return new TatticaMD(java.util.Arrays.asList(voci));
+	}
+
 	private final List<VoceMD> voci;
 	private final boolean disabilitata;
 
@@ -42,10 +49,10 @@ public final class TatticaMD {
 	}
 
 	/**
-	 * La stessa tattica, disabilitata: non si esegue finché non è corretta e confermata di nuovo
+	 * L'elenco delle voci che compongono la tattica
 	 */
-	public TatticaMD disabilitata() {
-		return disabilitata ? this : new TatticaMD(voci, true);
+	public List<VoceMD> getVoci() {
+		return voci;
 	}
 
 	public boolean isDisabilitata() {
@@ -53,14 +60,10 @@ public final class TatticaMD {
 	}
 
 	/**
-	 * Una tattica con quelle voci, nell'ordine dato.
+	 * La stessa tattica, disabilitata: non si esegue finché non è corretta e confermata di nuovo
 	 */
-	public static TatticaMD di(VoceMD... voci) {
-		return new TatticaMD(java.util.Arrays.asList(voci));
-	}
-
-	public List<VoceMD> getVoci() {
-		return voci;
+	public TatticaMD disabilitata() {
+		return disabilitata ? this : new TatticaMD(voci, true);
 	}
 
 	/**
@@ -83,14 +86,6 @@ public final class TatticaMD {
 	public List<String> problemiPerQualsiasiLato() {
 		List<String> perIMiei = problemi(true);
 		return perIMiei.isEmpty() || problemi(false).isEmpty() ? Collections.emptyList() : perIMiei;
-	}
-
-	/**
-	 * Una descrizione leggibile, per i messaggi di log e di prova.
-	 */
-	@Override
-	public String toString() {
-		return (disabilitata ? "(disabilitata) " : "") + voci.toString();
 	}
 
 	/**
@@ -135,6 +130,14 @@ public final class TatticaMD {
 	}
 
 	/**
+	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 */
+	@Override
+	public String toString() {
+		return (disabilitata ? "(disabilitata) " : "") + voci.toString();
+	}
+
+	/**
 	 * Due tattiche sono uguali se hanno gli stessi dati.
 	 */
 	@Override
@@ -149,4 +152,5 @@ public final class TatticaMD {
 	public int hashCode() {
 		return voci.hashCode() * 2 + (disabilitata ? 1 : 0);
 	}
+
 }

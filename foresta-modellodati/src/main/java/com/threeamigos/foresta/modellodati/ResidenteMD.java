@@ -71,4 +71,5 @@ public class ResidenteMD {
 		residente.sconfitto = campi.booleano();
 		return residente;
 	}
+
 }

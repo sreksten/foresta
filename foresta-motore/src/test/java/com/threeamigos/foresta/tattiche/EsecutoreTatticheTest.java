@@ -131,7 +131,7 @@ class EsecutoreTatticheTest {
         goblin.subSalute(goblin.getSalute() / 2, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
         int salute = goblin.getSalute();
         TatticaMD bevi = TatticaMD.di(VoceMD.su(su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO,
-                FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, Confronto.MINORE, 80)), AzioneMD.di(TipoAzione.POZIONE_SALUTE)));
+                FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, TipoConfronto.MINORE, 80)), AzioneMD.di(TipoAzione.POZIONE_SALUTE)));
         Decisione d = esecutore.agisci(goblin, bevi);
         assertEquals(TipoAzione.POZIONE_SALUTE, d.getTipoEseguito());
         assertEquals(0, mostri.getPozioniSalute());

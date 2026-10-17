@@ -1,19 +1,10 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
 import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
-import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
+import com.threeamigos.foresta.tipi.tattiche.*;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -97,7 +88,7 @@ class AzioniEOrdinamentiMDTest {
         assertEquals(incantesimo, incantesimo);
         assertEquals(AzioneMD.incantesimoDiDanno(CriterioIncantesimo.PIU_POTENTE, false), incantesimo);
         assertEquals(AzioneMD.incantesimoDiDanno(CriterioIncantesimo.PIU_POTENTE, false).hashCode(), incantesimo.hashCode());
-        assertFalse(incantesimo.equals("INCANTESIMO_DI_DANNO"));
+        assertNotEquals("INCANTESIMO_DI_DANNO", incantesimo);
         assertNotEquals(AzioneMD.incantesimoDelRepertorio(CriterioIncantesimo.PIU_POTENTE, false), incantesimo);
         assertNotEquals(AzioneMD.incantesimoDiDanno(CriterioIncantesimo.A_CASO, false), incantesimo);
         assertNotEquals(incantesimo.soloSePiuForteDellAttacco(), incantesimo);
@@ -115,7 +106,7 @@ class AzioniEOrdinamentiMDTest {
     @Test
     void unOrdinamentoVuoleIlTipoDiDannoSoloSeGliServe() {
         OrdinamentoMD primo = OrdinamentoMD.di(TipoOrdinamento.PRIMO);
-        assertSame(TipoOrdinamento.PRIMO, primo.getTipo());
+        assertSame(TipoOrdinamento.PRIMO, primo.getTipoOrdinamento());
         assertNull(primo.getTipoDanno());
         assertEquals("PRIMO", primo.toString());
         OrdinamentoMD debole = OrdinamentoMD.di(TipoOrdinamento.PIU_DEBOLE_A, TipoDanno.FUOCO);
@@ -131,7 +122,7 @@ class AzioniEOrdinamentiMDTest {
         OrdinamentoMD debole = OrdinamentoMD.di(TipoOrdinamento.PIU_DEBOLE_A, TipoDanno.FUOCO);
         assertEquals(OrdinamentoMD.di(TipoOrdinamento.PIU_DEBOLE_A, TipoDanno.FUOCO), debole);
         assertEquals(OrdinamentoMD.di(TipoOrdinamento.PIU_DEBOLE_A, TipoDanno.FUOCO).hashCode(), debole.hashCode());
-        assertFalse(debole.equals("PIU_DEBOLE_A"));
+        assertNotEquals("PIU_DEBOLE_A", debole);
         assertNotEquals(OrdinamentoMD.di(TipoOrdinamento.PIU_RESISTENTE_A, TipoDanno.FUOCO), debole);
         assertNotEquals(OrdinamentoMD.di(TipoOrdinamento.PIU_DEBOLE_A, TipoDanno.GELO), debole);
     }
@@ -139,14 +130,14 @@ class AzioniEOrdinamentiMDTest {
     @Test
     void unSelettoreSiSalvaESiRilegge() throws IOException {
         SelettoreMD conFiltri = new SelettoreMD(TipoRosa.AVVERSARI,
-                Collections.singletonList(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 10)),
+                Collections.singletonList(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 10)),
                 OrdinamentoMD.di(TipoOrdinamento.PIU_DEBOLE_A, TipoDanno.FUOCO));
         SelettoreMD semplice = new SelettoreMD(TipoRosa.SE_STESSO, Collections.emptyList(), OrdinamentoMD.di(TipoOrdinamento.PRIMO));
         for (SelettoreMD selettore : Arrays.asList(conFiltri, semplice)) {
             assertEquals(selettore, SelettoreMD.leggi(lettore(salva(selettore))), selettore.toString());
         }
         assertEquals(1, conFiltri.getFiltri().size());
-        assertSame(TipoOrdinamento.PIU_DEBOLE_A, conFiltri.getOrdinamento().getTipo());
+        assertSame(TipoOrdinamento.PIU_DEBOLE_A, conFiltri.getOrdinamento().getTipoOrdinamento());
         assertEquals("SU AVVERSARI [SALUTE MINORE 10] ordine PIU_DEBOLE_A FUOCO", conFiltri.toString());
         assertEquals("SU SE_STESSO ordine PRIMO", semplice.toString());
     }
@@ -156,7 +147,7 @@ class AzioniEOrdinamentiMDTest {
         SelettoreMD selettore = new SelettoreMD(TipoRosa.AVVERSARI, Collections.emptyList(), OrdinamentoMD.di(TipoOrdinamento.PRIMO));
         assertEquals(new SelettoreMD(TipoRosa.AVVERSARI, Collections.emptyList(), OrdinamentoMD.di(TipoOrdinamento.PRIMO)), selettore);
         assertEquals(new SelettoreMD(TipoRosa.AVVERSARI, Collections.emptyList(), OrdinamentoMD.di(TipoOrdinamento.PRIMO)).hashCode(), selettore.hashCode());
-        assertFalse(selettore.equals("AVVERSARI"));
+        assertNotEquals("AVVERSARI", selettore);
         assertNotEquals(new SelettoreMD(TipoRosa.ALLEATI, Collections.emptyList(), OrdinamentoMD.di(TipoOrdinamento.PRIMO)), selettore);
         assertNotEquals(new SelettoreMD(TipoRosa.AVVERSARI, Collections.singletonList(FiltroMD.senzaParametro(TipoFiltro.MAGICO)),
                 OrdinamentoMD.di(TipoOrdinamento.PRIMO)), selettore);

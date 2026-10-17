@@ -160,18 +160,6 @@ public class ModificatoreAttributoMD {
     }
 
     /**
-     * Due modificatori sono uguali se hanno tutti gli stessi dati, durata compresa.
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof ModificatoreAttributoMD)) {
-            return false;
-        }
-        ModificatoreAttributoMD other = (ModificatoreAttributoMD) obj;
-        return stessoEffetto(other) && durata == other.durata;
-    }
-
-    /**
      * Il modificatore come campo di un salvataggio: attributo, tipo, quantità, unità, durata, bersaglio e nota, separati da
      * {@value MappaProprieta#SEPARATORE}. La nota, testo libero, è l'ultima: se contiene il separatore non sposta gli altri.
      * Lo rilegge {@link #daCampo(LettoreCampi)}.
@@ -204,10 +192,23 @@ public class ModificatoreAttributoMD {
     }
 
     /**
+     * Due modificatori sono uguali se hanno tutti gli stessi dati, durata compresa.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ModificatoreAttributoMD)) {
+            return false;
+        }
+        ModificatoreAttributoMD other = (ModificatoreAttributoMD) obj;
+        return stessoEffetto(other) && durata == other.durata;
+    }
+
+    /**
      * Coerente con {@link #equals(Object)}.
      */
     @Override
     public int hashCode() {
         return Objects.hash(tipoAttributo, tipoModificatore, quantita, note, unitaDurata, durata, bersaglio);
     }
+
 }

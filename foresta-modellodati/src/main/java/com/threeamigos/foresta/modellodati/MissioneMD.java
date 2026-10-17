@@ -74,6 +74,13 @@ public class MissioneMD implements Serializzabile {
 	}
 
 	/**
+	 * Le missioni secondarie, nell'ordine in cui sono state aggiunte.
+	 */
+	public Collection<MissioneMD> getMissioniMD() {
+		return Collections.unmodifiableList(missioniSecondarie);
+	}
+
+	/**
 	 * Toglie le proprietà e le missioni secondarie. Identificativo, classe, nome e descrizione restano.
 	 */
 	public void reimposta() {
@@ -128,13 +135,6 @@ public class MissioneMD implements Serializzabile {
 	}
 
 	/**
-	 * Le missioni secondarie, nell'ordine in cui sono state aggiunte.
-	 */
-	public Collection<MissioneMD> getMissioniMD() {
-		return Collections.unmodifiableList(missioniSecondarie);
-	}
-
-	/**
 	 * Scrive una riga con identificativo, classe, nome, descrizione, visibilità e numero di missioni secondarie, poi una
 	 * riga con le proprietà e infine, una dopo l'altra, le missioni secondarie.
 	 */
@@ -173,4 +173,5 @@ public class MissioneMD implements Serializzabile {
 			missioniSecondarie.add(missioneSecondaria);
 		}
 	}
+
 }

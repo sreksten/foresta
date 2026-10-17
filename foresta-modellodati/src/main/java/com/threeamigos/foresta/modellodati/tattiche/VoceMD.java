@@ -1,17 +1,17 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
-import java.util.Objects;
-import com.threeamigos.foresta.modellodati.Serializzabile;
 import com.threeamigos.foresta.modellodati.LettoreCampi;
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.BufferedReader;
+import com.threeamigos.foresta.modellodati.Serializzabile;
 import com.threeamigos.foresta.tipi.tattiche.PortataAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
 import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
@@ -25,6 +25,38 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
  * @author Stefano Reksten
  */
 public final class VoceMD {
+
+	/**
+	 * Una voce attiva, senza condizioni, con le azioni indicate
+	 */
+	public static VoceMD su(SelettoreMD selettore, AzioneMD... azioni) {
+		return new VoceMD(selettore, Collections.emptyList(), java.util.Arrays.asList(azioni));
+	}
+
+	/**
+	 * Il selettore di base per la portata delle azioni: avversari (il primo) per un attacco, se stesso per una cura o una pozione, i caduti per la
+	 * Resurrezione, gli alleati o gli avversari tutti per un'azione di gruppo, se stesso per il cambio d'arma
+	 */
+	static SelettoreMD selettoreDiBase(PortataAzione portata) {
+		TipoRosa rosa;
+		switch (portata) {
+			case AVVERSARIO:
+			case GRUPPO_AVVERSARI:
+				rosa = TipoRosa.AVVERSARI;
+				break;
+			case ALLEATO_CADUTO:
+				rosa = TipoRosa.ALLEATI_CADUTI;
+				break;
+			case GRUPPO_ALLEATI:
+				rosa = TipoRosa.ALLEATI;
+				break;
+			default:
+				rosa = TipoRosa.SE_STESSO;
+				break;
+		}
+		return new SelettoreMD(rosa, Collections.emptyList(),
+				OrdinamentoMD.di(com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.PRIMO));
+	}
 
 	private final SelettoreMD selettore;
 	private final List<PredicatoMD> condizioni;
@@ -57,61 +89,8 @@ public final class VoceMD {
 		this(selettore, condizioni, azioni, true);
 	}
 
-	/**
-	 * Una voce attiva, senza condizioni, con le azioni indicate
-	 */
-	public static VoceMD su(SelettoreMD selettore, AzioneMD... azioni) {
-		return new VoceMD(selettore, Collections.emptyList(), java.util.Arrays.asList(azioni));
-	}
-
-	/**
-	 * La stessa voce, ma disattivata: si conserva ma non si usa.
-	 */
-	public VoceMD disattivata() {
-		return new VoceMD(selettore, condizioni, azioni, false, nome);
-	}
-
-	/**
-	 * Il selettore di base per la portata delle azioni: avversari (il primo) per un attacco, se stesso per una cura o una pozione, i caduti per la
-	 * Resurrezione, gli alleati o gli avversari tutti per un'azione di gruppo, se stesso per il cambio d'arma
-	 */
-	static SelettoreMD selettoreDiBase(PortataAzione portata) {
-		TipoRosa rosa;
-		switch (portata) {
-			case AVVERSARIO:
-			case GRUPPO_AVVERSARI:
-				rosa = TipoRosa.AVVERSARI;
-				break;
-			case ALLEATO_CADUTO:
-				rosa = TipoRosa.ALLEATI_CADUTI;
-				break;
-			case GRUPPO_ALLEATI:
-				rosa = TipoRosa.ALLEATI;
-				break;
-			default:
-				rosa = TipoRosa.SE_STESSO;
-				break;
-		}
-		return new SelettoreMD(rosa, Collections.emptyList(),
-				OrdinamentoMD.di(com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.PRIMO));
-	}
-
-	/**
-	 * Su che cosa agiscono le azioni (sono tutte della stessa portata)
-	 */
-	public PortataAzione getPortata() {
-		return azioni.get(0).getTipo().getPortata();
-	}
-
 	public SelettoreMD getSelettore() {
 		return selettore;
-	}
-
-	/**
-	 * Il selettore che la voce usa davvero: il suo, oppure quello di base della portata delle sue azioni se non ne ha uno.
-	 */
-	public SelettoreMD selettoreEffettivo() {
-		return selettore != null ? selettore : selettoreDiBase(getPortata());
 	}
 
 	public List<PredicatoMD> getCondizioni() {
@@ -134,6 +113,27 @@ public final class VoceMD {
 	}
 
 	/**
+	 * La stessa voce, ma disattivata: si conserva ma non si usa.
+	 */
+	public VoceMD disattivata() {
+		return new VoceMD(selettore, condizioni, azioni, false, nome);
+	}
+
+	/**
+	 * Su che cosa agiscono le azioni (sono tutte della stessa portata)
+	 */
+	public PortataAzione getPortata() {
+		return azioni.get(0).getTipo().getPortata();
+	}
+
+	/**
+	 * Il selettore che la voce usa davvero: il suo, oppure quello di base della portata delle sue azioni se non ne ha uno.
+	 */
+	public SelettoreMD selettoreEffettivo() {
+		return selettore != null ? selettore : selettoreDiBase(getPortata());
+	}
+
+	/**
 	 * Gli errori della voce per quel lato (un mio personaggio o un mostro): azioni di portate diverse, una rosa che nessuna azione accetta
 	 * o che non vale per il lato. Vuota se la voce è a posto. La rilettura non rifiuta una tattica con problemi: la disabilita (TatticaMD.problemiPerQualsiasiLato).
 	 */
@@ -146,24 +146,15 @@ public final class VoceMD {
 			}
 		}
 		SelettoreMD effettivo = selettoreEffettivo();
-		if (!effettivo.getRosa().valePer(attoreDelGiocatore)) {
-			problemi.add("la rosa " + effettivo.getRosa() + " non vale per " + (attoreDelGiocatore ? "i personaggi del giocatore" : "i mostri"));
+		if (!effettivo.getTipoRosa().valePer(attoreDelGiocatore)) {
+			problemi.add("la rosa " + effettivo.getTipoRosa() + " non vale per " + (attoreDelGiocatore ? "i personaggi del giocatore" : "i mostri"));
 		}
 		for (AzioneMD azione : azioni) {
-			if (!azione.getTipo().roseAmmesse(attoreDelGiocatore).contains(effettivo.getRosa())) {
-				problemi.add(azione.getTipo() + " non accetta la rosa " + effettivo.getRosa());
+			if (!azione.getTipo().roseAmmesse(attoreDelGiocatore).contains(effettivo.getTipoRosa())) {
+				problemi.add(azione.getTipo() + " non accetta la rosa " + effettivo.getTipoRosa());
 			}
 		}
 		return problemi;
-	}
-
-	/**
-	 * Una descrizione leggibile, per i messaggi di log e di prova.
-	 */
-	@Override
-	public String toString() {
-		return (selettore == null ? "" : selettore + " ") + (condizioni.isEmpty() ? "" : "SE " + condizioni + " ") + "→ " + azioni
-				+ (attiva ? "" : " (disattivata)") + (nome == null ? "" : " \"" + nome + "\"");
 	}
 
 	/**
@@ -214,6 +205,15 @@ public final class VoceMD {
 	}
 
 	/**
+	 * Una descrizione leggibile, per i messaggi di log e di prova.
+	 */
+	@Override
+	public String toString() {
+		return (selettore == null ? "" : selettore + " ") + (condizioni.isEmpty() ? "" : "SE " + condizioni + " ") + "→ " + azioni
+				+ (attiva ? "" : " (disattivata)") + (nome == null ? "" : " \"" + nome + "\"");
+	}
+
+	/**
 	 * Due voci sono uguali se hanno gli stessi dati.
 	 */
 	@Override
@@ -233,4 +233,5 @@ public final class VoceMD {
 	public int hashCode() {
 		return Objects.hash(selettore, condizioni, azioni, attiva, nome);
 	}
+
 }

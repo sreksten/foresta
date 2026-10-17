@@ -5,16 +5,12 @@ import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
 import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
+import com.threeamigos.foresta.tipi.tattiche.TipoConfronto;
 import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * I testi della schermata delle tattiche: ogni voce della tattica di oggi dei mostri ha una riga e una spiegazione leggibili.
@@ -53,7 +49,7 @@ class TestoTatticaTest {
         for (com.threeamigos.foresta.tipi.tattiche.TipoAzione t : com.threeamigos.foresta.tipi.tattiche.TipoAzione.values()) {
             assertFalse(TestoTattica.spiega(t).isEmpty(), t.name());
         }
-        for (Confronto c : Confronto.values()) {
+        for (TipoConfronto c : TipoConfronto.values()) {
             assertFalse(TestoTattica.spiega(c, false).isEmpty());
             assertFalse(TestoTattica.spiega(c, true).isEmpty());
         }
@@ -62,10 +58,10 @@ class TestoTatticaTest {
 
     @Test
     void ilConfrontoNegatoSiLeggeComeIlSuoContrario() {
-        assertEquals("minore di", TestoTattica.confronto(Confronto.MINORE));
-        assertEquals("non maggiore di", TestoTattica.relazione(Confronto.MAGGIORE, true));
-        assertEquals("salute minore di 50", TestoTattica.filtro(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 50)));
-        assertEquals("salute non minore di 50", TestoTattica.filtro(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 50).negato()));
+        assertEquals("minore di", TestoTattica.confronto(TipoConfronto.MINORE));
+        assertEquals("non maggiore di", TestoTattica.relazione(TipoConfronto.MAGGIORE, true));
+        assertEquals("salute minore di 50", TestoTattica.filtro(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 50)));
+        assertEquals("salute non minore di 50", TestoTattica.filtro(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 50).negato()));
         assertEquals("senza stato silenziato", TestoTattica.filtro(FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.SILENZIATO).negato()));
         assertEquals("nel 67% dei casi", TestoTattica.predicato(PredicatoMD.probabilita(67)));
     }

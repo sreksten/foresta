@@ -11,7 +11,7 @@ public class CoordinateMD {
 
 	private int x;
 	private int y;
-	
+
 	public CoordinateMD() {
 	}
 
@@ -20,22 +20,30 @@ public class CoordinateMD {
 		this.y = y;
 	}
 
-	public void setX(int x) {
-		this.x = x;
-	}
-	
 	public int getX() {
 		return x;
 	}
-	
-	public void setY(int y) {
-		this.y = y;
+
+	public void setX(int x) {
+		this.x = x;
 	}
 
 	public int getY() {
 		return y;
 	}
-	
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	/**
+	 * La forma "(x, y)", comoda nei messaggi di log.
+	 */
+	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ")";
+	}
+
 	/**
 	 * Due coordinate sono uguali se hanno la stessa colonna e la stessa riga.
 	 */
@@ -50,7 +58,7 @@ public class CoordinateMD {
 		CoordinateMD coordinate = (CoordinateMD)object;
 		return x == coordinate.x && y == coordinate.y;
 	}
-	
+
 	/**
 	 * Combina colonna e riga come Objects.hash, senza dipendere dalla misura della foresta: due coordinate uguali hanno
 	 * lo stesso valore, e due diverse lo condividono di rado (le mappe le distinguono comunque con equals).
@@ -60,11 +68,4 @@ public class CoordinateMD {
 		return 31 * x + y;
 	}
 
-	/**
-	 * La forma "(x, y)", comoda nei messaggi di log.
-	 */
-	@Override
-	public String toString() {
-		return "(" + x + ", " + y + ")";
-	}
 }

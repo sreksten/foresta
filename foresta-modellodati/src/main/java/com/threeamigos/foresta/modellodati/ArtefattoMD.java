@@ -33,6 +33,25 @@ public class ArtefattoMD implements Serializzabile {
 	public static final String NESSUN_NOME = Serializzabile.NESSUN_NOME;
 
 	/**
+	 * Mette le iniziali maiuscole a un nome proprio scelto dal giocatore
+	 * (es. "lama del drago" → "Lama Del Drago"). Restituisce null se il nome è vuoto.
+	 */
+	public static String normalizzaNomeProprio(String nomeProprio) {
+		String pulito = Serializzabile.pulisciCampo(nomeProprio);
+		if (pulito == null || pulito.trim().isEmpty()) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (String parola : pulito.trim().split("\\s+")) {
+			if (sb.length() > 0) {
+				sb.append(' ');
+			}
+			sb.append(parola.substring(0, 1).toUpperCase(Locale.ROOT)).append(parola.substring(1));
+		}
+		return sb.toString();
+	}
+
+	/**
 	 * Un identificativo unico per l'artefatto
 	 */
 	private String uuid = UUID.randomUUID().toString();
@@ -118,54 +137,8 @@ public class ArtefattoMD implements Serializzabile {
 		this.nomeProprio = pulito == null || pulito.trim().isEmpty() ? null : pulito;
 	}
 
-	/**
-	 * Mette le iniziali maiuscole a un nome proprio scelto dal giocatore
-	 * (es. "lama del drago" → "Lama Del Drago"). Restituisce null se il nome è vuoto.
-	 */
-	public static String normalizzaNomeProprio(String nomeProprio) {
-		String pulito = Serializzabile.pulisciCampo(nomeProprio);
-		if (pulito == null || pulito.trim().isEmpty()) {
-			return null;
-		}
-		StringBuilder sb = new StringBuilder();
-		for (String parola : pulito.trim().split("\\s+")) {
-			if (sb.length() > 0) {
-				sb.append(' ');
-			}
-			sb.append(parola.substring(0, 1).toUpperCase(Locale.ROOT)).append(parola.substring(1));
-		}
-		return sb.toString();
-	}
-
 	public String getNome() {
 		return nome;
-	}
-
-	/**
-	 * Forma completa da usare nei testi: "Diavolina, la spada di fuoco, che brucia i nemici",
-	 * oppure "la spada di fuoco, che brucia i nemici" se non c'è il nome proprio.
-	 */
-	public String getNomeCompleto() {
-		return nomeProprio == null ? getNomeEDescrizione() : nomeProprio + ", " + getNomeEDescrizione();
-	}
-
-	/**
-	 * Nome con cui l'artefatto compare in grande nell'inventario: il nome proprio, oppure il nome.
-	 */
-	public String getNomeBreve() {
-		return nomeProprio == null ? nome : nomeProprio;
-	}
-
-	/**
-	 * Testo del nodo secondario nell'inventario: con il nome proprio, "la spada di fuoco, che brucia i nemici",
-	 * così il nome generico non si perde; senza, la sola descrizione.
-	 */
-	public String getDescrizioneBreve() {
-		return nomeProprio == null ? descrizione : getNomeEDescrizione();
-	}
-
-	private String getNomeEDescrizione() {
-		return descrizione == null || descrizione.isEmpty() ? nome : nome + ", " + descrizione;
 	}
 
 	/**
@@ -225,10 +198,56 @@ public class ArtefattoMD implements Serializzabile {
 	}
 
 	/**
+	 * Se l'elenco dei modificatori e degli incantamenti è aperto nell'inventario; è solo uno stato della schermata.
+	 */
+	public boolean isFigliVisibili() {
+		return figliVisibili;
+	}
+
+	public void setFigliVisibili(boolean figliVisibili) {
+		this.figliVisibili = figliVisibili;
+	}
+
+	/**
 	 * I modificatori, di sola lettura: si cambiano con {@link #addModificatore} e {@link #removeModificatore}.
 	 */
 	public Collection<ModificatoreAttributoMD> getModificatori() {
 		return Collections.unmodifiableList(modificatori);
+	}
+
+	/**
+	 * Gli incantamenti, di sola lettura: si cambiano con {@link #addIncantamento}, {@link #removeIncantamento} e
+	 * {@link #rimuoviTuttiGliIncantamenti}.
+	 */
+	public Collection<IncantamentoMD> getIncantamenti() {
+		return Collections.unmodifiableList(incantamenti);
+	}
+
+	/**
+	 * Forma completa da usare nei testi: "Diavolina, la spada di fuoco, che brucia i nemici",
+	 * oppure "la spada di fuoco, che brucia i nemici" se non c'è il nome proprio.
+	 */
+	public String getNomeCompleto() {
+		return nomeProprio == null ? getNomeEDescrizione() : nomeProprio + ", " + getNomeEDescrizione();
+	}
+
+	/**
+	 * Nome con cui l'artefatto compare in grande nell'inventario: il nome proprio, oppure il nome.
+	 */
+	public String getNomeBreve() {
+		return nomeProprio == null ? nome : nomeProprio;
+	}
+
+	/**
+	 * Testo del nodo secondario nell'inventario: con il nome proprio, "la spada di fuoco, che brucia i nemici",
+	 * così il nome generico non si perde; senza, la sola descrizione.
+	 */
+	public String getDescrizioneBreve() {
+		return nomeProprio == null ? descrizione : getNomeEDescrizione();
+	}
+
+	private String getNomeEDescrizione() {
+		return descrizione == null || descrizione.isEmpty() ? nome : nome + ", " + descrizione;
 	}
 
 	/**
@@ -265,14 +284,6 @@ public class ArtefattoMD implements Serializzabile {
 	}
 
 	/**
-	 * Gli incantamenti, di sola lettura: si cambiano con {@link #addIncantamento}, {@link #removeIncantamento} e
-	 * {@link #rimuoviTuttiGliIncantamenti}.
-	 */
-	public Collection<IncantamentoMD> getIncantamenti() {
-		return Collections.unmodifiableList(incantamenti);
-	}
-
-	/**
 	 * Toglie tutti gli incantamenti: serve a chi vuole un artefatto "di base", senza gli incantamenti che il generatore
 	 * dà ogni tanto (la dotazione iniziale di un personaggio).
 	 */
@@ -301,17 +312,6 @@ public class ArtefattoMD implements Serializzabile {
 	 */
 	public void addIncantamento(String nomeIncantamento, TipoDanno tipoDanno, int dannoBonusFisso, double coefficienteScala) {
 		incantamenti.add(new IncantamentoMD(nomeIncantamento, tipoDanno, dannoBonusFisso, coefficienteScala));
-	}
-
-	/**
-	 * Se l'elenco dei modificatori e degli incantamenti è aperto nell'inventario; è solo uno stato della schermata.
-	 */
-	public boolean isFigliVisibili() {
-		return figliVisibili;
-	}
-
-	public void setFigliVisibili(boolean figliVisibili) {
-		this.figliVisibili = figliVisibili;
 	}
 
 	/**
@@ -371,4 +371,5 @@ public class ArtefattoMD implements Serializzabile {
 			incantamenti.add(IncantamentoMD.daCampo(campi));
 		}
 	}
+
 }

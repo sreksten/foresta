@@ -189,7 +189,7 @@ class ValutatoreTest {
     @Test
     void leVociDisattivateEQuelleConCondizioniFalseSiSaltano() {
         VoceMD secondoRound = new VoceMD(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO), Collections.singletonList(
-                PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.UGUALE, 2)), Collections.singletonList(AzioneMD.di(TipoAzione.ATTACCO_FISICO)));
+                PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.UGUALE, 2)), Collections.singletonList(AzioneMD.di(TipoAzione.ATTACCO_FISICO)));
         VoceMD disattivata = voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO), TipoAzione.ATTACCO_FISICO).disattivata();
         VoceMD buona = voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), TipoAzione.ATTACCO_FISICO);
         goblin2.subSalute(goblin2.getSalute() - Math.max(1, goblin1.getSalute() / 2), null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
@@ -207,7 +207,7 @@ class ValutatoreTest {
     void ilCantoDiValoreSiCantaFinoAChiNonELIspiratoESiSaltaQuandoTuttiLoSono() {
         TatticaMD tattica = TatticaMD.di(
                 new VoceMD(su(TipoRosa.ALLEATI, TipoOrdinamento.PRIMO, FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.ISPIRATO).negato()),
-                        Collections.singletonList(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.UGUALE, 1)),
+                        Collections.singletonList(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.UGUALE, 1)),
                         Collections.singletonList(AzioneMD.di(TipoAzione.CANTO_DI_VALORE))));
         ContestoTattico contesto = perIMiei(bardo, goblin1);
         Decisione canto = Valutatore.decidi(tattica, contesto);
@@ -222,7 +222,7 @@ class ValutatoreTest {
     @Test
     void laPozioneDiChiStaMale() {
         TatticaMD tattica = TatticaMD.di(voce(su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO,
-                FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, Confronto.MINORE, 50)), TipoAzione.POZIONE_SALUTE));
+                FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, TipoConfronto.MINORE, 50)), TipoAzione.POZIONE_SALUTE));
         ContestoTattico contesto = perIMiei(guerriero, goblin1);
         assertTrue(Valutatore.decidi(tattica, contesto).isRipiego(), "sta bene");
         guerriero.subSalute(guerriero.getSaluteMassima() * 6 / 10, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);

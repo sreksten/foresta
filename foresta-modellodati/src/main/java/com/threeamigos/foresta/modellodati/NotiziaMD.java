@@ -61,4 +61,5 @@ public class NotiziaMD implements Serializzabile {
 		id = st.testo();
 		corpo = st.testo();
 	}
+
 }

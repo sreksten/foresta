@@ -144,22 +144,6 @@ public class PersonaggioMD implements Serializzabile {
 		this.nome = pulito == null || pulito.trim().isEmpty() ? null : pulito;
 	}
 
-	public boolean isPng() {
-		return png;
-	}
-
-	public void setPng(boolean png) {
-		this.png = png;
-	}
-
-	public TipoMotivoNelGruppo getMotivoNelGruppo() {
-		return motivoNelGruppo;
-	}
-
-	public void setMotivoNelGruppo(TipoMotivoNelGruppo motivoNelGruppo) {
-		this.motivoNelGruppo = motivoNelGruppo;
-	}
-
 	public boolean isVivo() {
 		return vivo;
 	}
@@ -190,6 +174,65 @@ public class PersonaggioMD implements Serializzabile {
 
 	public void setPuntiAbilitaDisponibili(int puntiAbilitaDisponibili) {
 		this.puntiAbilitaDisponibili = puntiAbilitaDisponibili;
+	}
+
+	public String getCausaTrapasso() {
+		return causaTrapasso;
+	}
+
+	public void setCausaTrapasso(String causaTrapasso) {
+		this.causaTrapasso = Serializzabile.pulisciCampo(causaTrapasso);
+	}
+
+	public boolean isPng() {
+		return png;
+	}
+
+	public void setPng(boolean png) {
+		this.png = png;
+	}
+
+	public TipoMotivoNelGruppo getMotivoNelGruppo() {
+		return motivoNelGruppo;
+	}
+
+	public void setMotivoNelGruppo(TipoMotivoNelGruppo motivoNelGruppo) {
+		this.motivoNelGruppo = motivoNelGruppo;
+	}
+
+	/**
+	 * I modificatori agli attributi, di sola lettura; per aggiungerne o togliere si usano {@link #aggiungiModificatore} e
+	 * {@link #togliModificatore}.
+	 */
+	public Collection<ModificatoreAttributoMD> getModificatori() {
+		return Collections.unmodifiableList(modificatori);
+	}
+
+	/**
+	 * La tattica del personaggio (tattiche_di_combattimento_automatiche.md §11), o null se non ne ha una (oggi i mostri); si salva con lui
+	 */
+	public TatticaMD getTattica() {
+		return tattica;
+	}
+
+	public void setTattica(TatticaMD tattica) {
+		this.tattica = tattica;
+	}
+
+	/**
+	 * Gli effetti di stato in corso, di sola lettura (ogni effetto, però, si può modificare); per aggiungerne o togliere
+	 * si usano {@link #aggiungiEffettoDiStato} e {@link #togliEffettoDiStato}.
+	 */
+	public Collection<EffettoDiStatoMD> getEffettiDiStato() {
+		return Collections.unmodifiableList(effettiDiStato);
+	}
+
+	/**
+	 * Gli artefatti che porta, di sola lettura; per aggiungerne o togliere si usano {@link #aggiungiArtefatto} e
+	 * {@link #togliArtefatto}.
+	 */
+	public Collection<ArtefattoMD> getArtefatti() {
+		return Collections.unmodifiableList(artefatti);
 	}
 
 	/**
@@ -323,22 +366,6 @@ public class PersonaggioMD implements Serializzabile {
 		set(TipoAttributo.STANCHEZZA, stanchezza);
 	}
 
-	public String getCausaTrapasso() {
-		return causaTrapasso;
-	}
-
-	public void setCausaTrapasso(String causaTrapasso) {
-		this.causaTrapasso = Serializzabile.pulisciCampo(causaTrapasso);
-	}
-
-	/**
-	 * Gli effetti di stato in corso, di sola lettura (ogni effetto, però, si può modificare); per aggiungerne o togliere
-	 * si usano {@link #aggiungiEffettoDiStato} e {@link #togliEffettoDiStato}.
-	 */
-	public Collection<EffettoDiStatoMD> getEffettiDiStato() {
-		return Collections.unmodifiableList(effettiDiStato);
-	}
-
 	public void aggiungiEffettoDiStato(EffettoDiStatoMD effettoDiStato) {
 		effettiDiStato.add(effettoDiStato);
 	}
@@ -348,14 +375,6 @@ public class PersonaggioMD implements Serializzabile {
 	 */
 	public boolean togliEffettoDiStato(EffettoDiStatoMD effettoDiStato) {
 		return effettiDiStato.remove(effettoDiStato);
-	}
-
-	/**
-	 * Gli artefatti che porta, di sola lettura; per aggiungerne o togliere si usano {@link #aggiungiArtefatto} e
-	 * {@link #togliArtefatto}.
-	 */
-	public Collection<ArtefattoMD> getArtefatti() {
-		return Collections.unmodifiableList(artefatti);
 	}
 
 	public void aggiungiArtefatto(ArtefattoMD artefatto) {
@@ -370,17 +389,6 @@ public class PersonaggioMD implements Serializzabile {
 	}
 
 	/**
-	 * La tattica del personaggio (tattiche_di_combattimento_automatiche.md §11), o null se non ne ha una (oggi i mostri); si salva con lui
-	 */
-	public TatticaMD getTattica() {
-		return tattica;
-	}
-
-	public void setTattica(TatticaMD tattica) {
-		this.tattica = tattica;
-	}
-
-	/**
 	 * Rimette gli artefatti come erano: lo stesso contenuto e lo stesso ordine. Serve a chi ne ha tolti qualcuno per una
 	 * prova (vedi {@code RegoleEquipaggiamento.valutaCambioArma}) e deve lasciare tutto com'era, anche l'ordine in cui
 	 * l'inventario li mostra.
@@ -389,14 +397,6 @@ public class PersonaggioMD implements Serializzabile {
 		List<ArtefattoMD> copia = new ArrayList<>(prima);
 		artefatti.clear();
 		artefatti.addAll(copia);
-	}
-
-	/**
-	 * I modificatori agli attributi, di sola lettura; per aggiungerne o togliere si usano {@link #aggiungiModificatore} e
-	 * {@link #togliModificatore}.
-	 */
-	public Collection<ModificatoreAttributoMD> getModificatori() {
-		return Collections.unmodifiableList(modificatori);
 	}
 
 	public void aggiungiModificatore(ModificatoreAttributoMD modificatore) {
@@ -408,6 +408,15 @@ public class PersonaggioMD implements Serializzabile {
 	 */
 	public boolean togliModificatore(ModificatoreAttributoMD modificatore) {
 		return modificatori.remove(modificatore);
+	}
+
+	private void impostaValori(Map<TipoAttributo, Double> mappa, String linea) throws IOException {
+		LettoreCampi campi = new LettoreCampi(linea);
+		mappa.clear();
+		while (campi.haAltriCampi()) {
+			LettoreCampi sottocampi = campi.sottocampi(2, 2);
+			mappa.put(sottocampi.enumerato(TipoAttributo.class), sottocampi.decimale());
+		}
 	}
 
 	/**
@@ -500,12 +509,4 @@ public class PersonaggioMD implements Serializzabile {
 		}
 	}
 
-	private void impostaValori(Map<TipoAttributo, Double> mappa, String linea) throws IOException {
-		LettoreCampi campi = new LettoreCampi(linea);
-		mappa.clear();
-		while (campi.haAltriCampi()) {
-			LettoreCampi sottocampi = campi.sottocampi(2, 2);
-			mappa.put(sottocampi.enumerato(TipoAttributo.class), sottocampi.decimale());
-		}
-	}
 }

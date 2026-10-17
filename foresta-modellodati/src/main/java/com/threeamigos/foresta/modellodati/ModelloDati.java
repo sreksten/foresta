@@ -26,6 +26,20 @@ public class ModelloDati implements Serializzabile {
 	// L'istanza di modello dati su cui il gioco si basa
 	private static ModelloDati istanza = new ModelloDati();
 
+	/**
+	 * L'istanza del modello dati su cui si basa la partita in corso.
+	 */
+	public static ModelloDati getIstanza() {
+		return istanza;
+	}
+
+	/**
+	 * Sostituisce l'istanza del modello dati: succede quando si carica un salvataggio.
+	 */
+	public static void setIstanza(ModelloDati modelloDati) {
+		istanza = modelloDati;
+	}
+
 	// Dati sufficienti per mostrare una situazione di salvataggio
 	private final GruppoGiocatoreMD gruppoGiocatoreMD;
 	// Tutto il resto dei dati di gioco
@@ -50,20 +64,6 @@ public class ModelloDati implements Serializzabile {
 		registroMissioniMD = new RegistroMissioniMD();
 		notizieMD = new NotizieMD();
 		intermezziMD = new IntermezziMD();
-	}
-
-	/**
-	 * L'istanza del modello dati su cui si basa la partita in corso.
-	 */
-	public static ModelloDati getIstanza() {
-		return istanza;
-	}
-
-	/**
-	 * Sostituisce l'istanza del modello dati: succede quando si carica un salvataggio.
-	 */
-	public static void setIstanza(ModelloDati modelloDati) {
-		istanza = modelloDati;
 	}
 
 	public final GruppoGiocatoreMD getGruppoGiocatoreMD() {
@@ -98,16 +98,16 @@ public class ModelloDati implements Serializzabile {
 		return notizieMD;
 	}
 
+	public IntermezziMD getIntermezziMD() {
+		return intermezziMD;
+	}
+
 	public boolean isAiutoAbilitato() {
 		return aiutoAbilitato;
 	}
 
 	public void setAiutoAbilitato(boolean aiutoAbilitato) {
 		this.aiutoAbilitato = aiutoAbilitato;
-	}
-
-	public IntermezziMD getIntermezziMD() {
-		return intermezziMD;
 	}
 
 	///////////////////////////////////
@@ -171,4 +171,5 @@ public class ModelloDati implements Serializzabile {
 		intermezziMD.leggi(stream);
 		aiutoAbilitato = LettoreCampi.leggiBooleano(stream);
 	}
+
 }

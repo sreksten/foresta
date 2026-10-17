@@ -30,19 +30,13 @@ public class GruppoMD implements Serializzabile {
 	// La posizione del capo fra i personaggi: il capo è il primo che è entrato nel gruppo, e non cambia se lo si sposta
 	protected int indiceCapo;
 
-	public int getIndiceCapo() {
-		return indiceCapo;
-	}
-
-	public void setIndiceCapo(int indiceCapo) {
-		this.indiceCapo = indiceCapo;
-	}
-
 	/**
-	 * Imposta quante pergamene di quell'incantesimo ha il gruppo.
+	 * L'elenco dei personaggi, di sola lettura: la posizione di un personaggio è quella in cui il gruppo lo mostra. Si
+	 * cambia con {@link #addPersonaggioMD}, {@link #rimuoviPersonaggioMD}, {@link #riordinaPersonaggiMD} e
+	 * {@link #svuotaPersonaggiMD}.
 	 */
-	public void setIncantesimi(TipoIncantesimo tipoIncantesimo, int quantita) {
-		incantesimi.put(tipoIncantesimo, quantita);
+	public List<PersonaggioMD> getPersonaggiMD() {
+		return Collections.unmodifiableList(personaggiMD);
 	}
 
 	/**
@@ -50,6 +44,13 @@ public class GruppoMD implements Serializzabile {
 	 */
 	public int getIncantesimi(TipoIncantesimo tipoIncantesimo) {
 		return incantesimi.getOrDefault(tipoIncantesimo, 0);
+	}
+
+	/**
+	 * Imposta quante pergamene di quell'incantesimo ha il gruppo.
+	 */
+	public void setIncantesimi(TipoIncantesimo tipoIncantesimo, int quantita) {
+		incantesimi.put(tipoIncantesimo, quantita);
 	}
 
 	public int getPozioniSalute() {
@@ -92,20 +93,19 @@ public class GruppoMD implements Serializzabile {
 		this.pozioniAumentoLivello = pozioniAumentoLivello;
 	}
 
+	public int getIndiceCapo() {
+		return indiceCapo;
+	}
+
+	public void setIndiceCapo(int indiceCapo) {
+		this.indiceCapo = indiceCapo;
+	}
+
 	/**
 	 * Aggiunge un personaggio in fondo all'elenco.
 	 */
 	public void addPersonaggioMD(PersonaggioMD personaggioMD) {
 		personaggiMD.add(personaggioMD);
-	}
-
-	/**
-	 * L'elenco dei personaggi, di sola lettura: la posizione di un personaggio è quella in cui il gruppo lo mostra. Si
-	 * cambia con {@link #addPersonaggioMD}, {@link #rimuoviPersonaggioMD}, {@link #riordinaPersonaggiMD} e
-	 * {@link #svuotaPersonaggiMD}.
-	 */
-	public List<PersonaggioMD> getPersonaggiMD() {
-		return Collections.unmodifiableList(personaggiMD);
 	}
 
 	/**
@@ -174,4 +174,5 @@ public class GruppoMD implements Serializzabile {
 			personaggiMD.add(personaggioMD);
 		}
 	}
+
 }

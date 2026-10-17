@@ -22,6 +22,13 @@ public class RegistroMissioniMD implements Serializzabile {
 	private final Map<String, MissioneMD> missioni = new HashMap<>();
 
 	/**
+	 * Le missioni, di sola lettura.
+	 */
+	public Collection<MissioneMD> getMissioni() {
+		return Collections.unmodifiableCollection(missioni.values());
+	}
+
+	/**
 	 * Dimentica tutte le missioni.
 	 */
 	public void reimposta() {
@@ -40,13 +47,6 @@ public class RegistroMissioniMD implements Serializzabile {
 	 */
 	public MissioneMD getMissione(String id) {
 		return missioni.get(id);
-	}
-
-	/**
-	 * Le missioni, di sola lettura.
-	 */
-	public Collection<MissioneMD> getMissioni() {
-		return Collections.unmodifiableCollection(missioni.values());
 	}
 
 	/**
@@ -73,4 +73,5 @@ public class RegistroMissioniMD implements Serializzabile {
 			missioni.put(missione.getId(), missione);
 		}
 	}
+
 }

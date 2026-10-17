@@ -1,18 +1,7 @@
 package com.threeamigos.foresta.ui.tattiche;
 
-import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
-import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
-import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
-import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
-import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
+import com.threeamigos.foresta.modellodati.tattiche.*;
+import com.threeamigos.foresta.tipi.tattiche.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -110,17 +99,17 @@ class BozzaTatticaTest {
     void ogniTipoHaUnValorePredefinitoCheSiCostruisce() {
         for (TipoFiltro tipo : TipoFiltro.values()) {
             FiltroMD filtro = BozzaTattica.filtroPredefinito(tipo);
-            assertEquals(tipo, filtro.getTipo());
+            assertEquals(tipo, filtro.getTipoFiltro());
             assertFalse(TestoTattica.filtro(filtro).contains("null"));
         }
         for (TipoPredicato tipo : TipoPredicato.values()) {
-            assertEquals(tipo, BozzaTattica.predicatoPredefinito(tipo).getTipo());
+            assertEquals(tipo, BozzaTattica.predicatoPredefinito(tipo).getTipoPredicato());
         }
         for (TipoAzione tipo : TipoAzione.values()) {
             assertEquals(tipo, BozzaTattica.azionePredefinita(tipo).getTipo());
         }
         for (TipoOrdinamento tipo : TipoOrdinamento.values()) {
-            assertEquals(tipo, BozzaTattica.ordinamentoPredefinito(tipo).getTipo());
+            assertEquals(tipo, BozzaTattica.ordinamentoPredefinito(tipo).getTipoOrdinamento());
         }
     }
 
@@ -152,35 +141,35 @@ class BozzaTatticaTest {
         }
         // "Al massimo" e "almeno" sono i confronti rovesciati
         FiltroMD salute = BozzaTattica.filtroPredefinito(TipoFiltro.SALUTE);
-        FiltroMD alMassimo = BozzaTattica.conRelazione(salute, Confronto.MAGGIORE, true);
+        FiltroMD alMassimo = BozzaTattica.conRelazione(salute, TipoConfronto.MAGGIORE, true);
         assertTrue(alMassimo.isNegato());
         assertEquals("salute non maggiore di 50", TestoTattica.filtro(alMassimo));
-        assertEquals("salute non minore di 50", TestoTattica.filtro(BozzaTattica.conRelazione(salute, Confronto.MINORE, true)));
-        assertEquals("salute minore di 50", TestoTattica.filtro(BozzaTattica.conRelazione(alMassimo, Confronto.MINORE, false)));
+        assertEquals("salute non minore di 50", TestoTattica.filtro(BozzaTattica.conRelazione(salute, TipoConfronto.MINORE, true)));
+        assertEquals("salute minore di 50", TestoTattica.filtro(BozzaTattica.conRelazione(alMassimo, TipoConfronto.MINORE, false)));
         PredicatoMD round = BozzaTattica.predicatoPredefinito(TipoPredicato.ROUND);
-        assertTrue(BozzaTattica.conRelazione(round, Confronto.MINORE, true).isNegato());
+        assertTrue(BozzaTattica.conRelazione(round, TipoConfronto.MINORE, true).isNegato());
     }
 
     @Test
     void unConfrontoRovesciatoSuUnNumeroSiNormalizza() {
-        FiltroMD almeno = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 50).negato();
+        FiltroMD almeno = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 50).negato();
         FiltroMD normale = BozzaTattica.normalizza(almeno);
         assertFalse(normale.isNegato());
-        assertEquals(Confronto.MAGGIORE, normale.getConfronto());
+        assertEquals(TipoConfronto.MAGGIORE, normale.getConfronto());
         assertEquals(49, normale.getNumero());
-        FiltroMD alMassimo = BozzaTattica.normalizza(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MAGGIORE, 50).negato());
-        assertEquals(Confronto.MINORE, alMassimo.getConfronto());
+        FiltroMD alMassimo = BozzaTattica.normalizza(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MAGGIORE, 50).negato());
+        assertEquals(TipoConfronto.MINORE, alMassimo.getConfronto());
         assertEquals(51, alMassimo.getNumero());
         // Ai limiti, e per "diverso da", resta com'è
-        FiltroMD zero = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 0).negato();
+        FiltroMD zero = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 0).negato();
         assertEquals(zero, BozzaTattica.normalizza(zero));
-        FiltroMD diverso = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.UGUALE, 5).negato();
+        FiltroMD diverso = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.UGUALE, 5).negato();
         assertEquals(diverso, BozzaTattica.normalizza(diverso));
         // Anche nelle condizioni, e nei filtri di un Quanti
-        PredicatoMD round = BozzaTattica.normalizza(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.MINORE, 3).negato());
+        PredicatoMD round = BozzaTattica.normalizza(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.MINORE, 3).negato());
         assertFalse(round.isNegato());
         assertEquals(2, round.getNumero());
-        PredicatoMD quanti = BozzaTattica.normalizza(PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.singletonList(almeno), Confronto.MAGGIORE, 0));
+        PredicatoMD quanti = BozzaTattica.normalizza(PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.singletonList(almeno), TipoConfronto.MAGGIORE, 0));
         assertFalse(quanti.getFiltri().get(0).isNegato());
     }
 
@@ -213,17 +202,17 @@ class BozzaTatticaTest {
 
     @Test
     void leModificheRifannoIDatiImmutabili() {
-        FiltroMD salute = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 50);
+        FiltroMD salute = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 50);
         assertEquals(55, BozzaTattica.conNumero(salute, 55).getNumero());
         assertEquals(0, BozzaTattica.conNumero(salute, -5).getNumero());
         assertEquals(100, BozzaTattica.conNumero(BozzaTattica.filtroPredefinito(TipoFiltro.SALUTE_PERCENTUALE), 500).getNumero());
-        assertEquals(Confronto.MAGGIORE, BozzaTattica.conConfronto(salute, Confronto.MAGGIORE).getConfronto());
+        assertEquals(TipoConfronto.MAGGIORE, BozzaTattica.conConfronto(salute, TipoConfronto.MAGGIORE).getConfronto());
         assertTrue(salute.negato().isNegato());
         assertFalse(salute.negato().negato().isNegato());
         PredicatoMD quanti = BozzaTattica.predicatoPredefinito(TipoPredicato.QUANTI);
         PredicatoMD conFiltro = BozzaTattica.conFiltri(quanti, Collections.singletonList(salute));
         assertEquals(1, conFiltro.getFiltri().size());
-        assertEquals(TipoRosa.OSPITI, BozzaTattica.conRosa(conFiltro, TipoRosa.OSPITI).getRosa());
+        assertEquals(TipoRosa.OSPITI, BozzaTattica.conRosa(conFiltro, TipoRosa.OSPITI).getTipoRosa());
         assertEquals(30, BozzaTattica.conNumero(PredicatoMD.probabilita(50), 30).getNumero());
     }
 }

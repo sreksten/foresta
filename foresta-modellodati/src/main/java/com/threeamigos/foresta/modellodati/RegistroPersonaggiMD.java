@@ -26,6 +26,13 @@ public class RegistroPersonaggiMD implements Serializzabile {
 	private final Map<String, ResidenteMD> residenti = new LinkedHashMap<>();
 
 	/**
+	 * I residenti per chiave, nell'ordine in cui sono stati aggiunti; la mappa non si può modificare.
+	 */
+	public final Map<String, ResidenteMD> getResidenti() {
+		return Collections.unmodifiableMap(residenti);
+	}
+
+	/**
 	 * Dimentica tutti i personaggi e i residenti.
 	 */
 	public void reimposta() {
@@ -46,13 +53,6 @@ public class RegistroPersonaggiMD implements Serializzabile {
 	 */
 	public final void aggiungiResidente(String chiave, ResidenteMD residente) {
 		residenti.put(chiave, residente);
-	}
-
-	/**
-	 * I residenti per chiave, nell'ordine in cui sono stati aggiunti; la mappa non si può modificare.
-	 */
-	public final Map<String, ResidenteMD> getResidenti() {
-		return Collections.unmodifiableMap(residenti);
 	}
 
 	/**
@@ -144,4 +144,5 @@ public class RegistroPersonaggiMD implements Serializzabile {
 			residenti.put(chiave, ResidenteMD.leggi(campi));
 		}
 	}
+
 }

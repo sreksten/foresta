@@ -94,22 +94,22 @@ class SelezioneTest {
     void ilParametroDeveEssereQuelloDelTipoDiFiltro() {
         assertThrows(IllegalArgumentException.class, () -> FiltroMD.senzaParametro(TipoFiltro.SALUTE));
         assertThrows(IllegalArgumentException.class, () -> FiltroMD.conStato(TipoFiltro.CLASSE, TipoEffettoDiStato.BAGNATO));
-        assertThrows(IllegalArgumentException.class, () -> FiltroMD.conConfronto(TipoFiltro.MAGICO, Confronto.MINORE));
-        assertDoesNotThrow(() -> FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 50));
+        assertThrows(IllegalArgumentException.class, () -> FiltroMD.conConfronto(TipoFiltro.MAGICO, TipoConfronto.MINORE));
+        assertDoesNotThrow(() -> FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 50));
     }
 
     @Test
     void laSaluteInPuntiEInPercentuale() {
         ContestoTattico contesto = perIMiei(guerriero);
         int salute = goblin1.getSalute();
-        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.UGUALE, salute), goblin1, contesto));
-        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MAGGIORE, salute - 1), goblin1, contesto));
-        assertFalse(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, salute), goblin1, contesto));
+        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.UGUALE, salute), goblin1, contesto));
+        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MAGGIORE, salute - 1), goblin1, contesto));
+        assertFalse(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, salute), goblin1, contesto));
         // "Almeno" è NON MINORE
-        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, salute).negato(), goblin1, contesto));
+        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, salute).negato(), goblin1, contesto));
 
         ferisci(goblin2, goblin2.getSaluteMassima() / 2 + 1);
-        FiltroMD menoDellaMeta = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, Confronto.MINORE, 50);
+        FiltroMD menoDellaMeta = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, TipoConfronto.MINORE, 50);
         assertTrue(passa(menoDellaMeta, goblin2, contesto));
         assertFalse(passa(menoDellaMeta, goblin1, contesto));
     }
@@ -118,10 +118,10 @@ class SelezioneTest {
     void ilLivelloAssolutoERispettoAlMio() {
         Personaggio goblinForte = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 3);
         ContestoTattico contesto = perIMiei(guerriero);
-        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.LIVELLO, Confronto.UGUALE, 3), goblinForte, contesto));
-        assertTrue(passa(FiltroMD.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, Confronto.MAGGIORE), goblinForte, contesto));
-        assertFalse(passa(FiltroMD.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, Confronto.MAGGIORE), goblin1, contesto));
-        assertTrue(passa(FiltroMD.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, Confronto.UGUALE), goblin1, contesto));
+        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.LIVELLO, TipoConfronto.UGUALE, 3), goblinForte, contesto));
+        assertTrue(passa(FiltroMD.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, TipoConfronto.MAGGIORE), goblinForte, contesto));
+        assertFalse(passa(FiltroMD.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, TipoConfronto.MAGGIORE), goblin1, contesto));
+        assertTrue(passa(FiltroMD.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, TipoConfronto.UGUALE), goblin1, contesto));
     }
 
     @Test
@@ -264,7 +264,7 @@ class SelezioneTest {
         assertFalse(passa(FiltroMD.conClasse(TipoFiltro.CLASSE, TipoPersonaggio.VIANDANTE), ostaggio, contesto));
         assertFalse(passa(FiltroMD.senzaParametro(TipoFiltro.MAGICO), ostaggio, contesto));
         // I filtri su salute e stati li comprendono
-        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MAGGIORE, 0), ostaggio, contesto));
+        assertTrue(passa(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MAGGIORE, 0), ostaggio, contesto));
     }
 
     // ---- gli ordinamenti ----

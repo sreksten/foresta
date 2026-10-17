@@ -42,6 +42,14 @@ public class NotizieMD implements Serializzabile {
 	}
 
 	/**
+	 * Le notizie ricordate, dalla più recente alla più vecchia, in numero non superiore a {@value #MASSIMO_NOTIZIE_RICORDATE}. Di sola
+	 * lettura: si aggiunge con {@link #aggiungiNotizia}.
+	 */
+	public List<NotiziaMD> getUltimeNotizie() {
+		return Collections.unmodifiableList(ultimeNotizie);
+	}
+
+	/**
 	 * Mette il messaggio in testa, come il più recente; quelli oltre {@value #MASSIMO_MESSAGGI_RICORDATI} si scartano,
 	 * partendo dal più vecchio.
 	 */
@@ -50,14 +58,6 @@ public class NotizieMD implements Serializzabile {
 		while (ultimiMessaggi.size() > MASSIMO_MESSAGGI_RICORDATI) {
 			ultimiMessaggi.remove(ultimiMessaggi.size() - 1);
 		}
-	}
-
-	/**
-	 * Le notizie ricordate, dalla più recente alla più vecchia, in numero non superiore a {@value #MASSIMO_NOTIZIE_RICORDATE}. Di sola
-	 * lettura: si aggiunge con {@link #aggiungiNotizia}.
-	 */
-	public List<NotiziaMD> getUltimeNotizie() {
-		return Collections.unmodifiableList(ultimeNotizie);
 	}
 
 	/**
@@ -114,4 +114,5 @@ public class NotizieMD implements Serializzabile {
 			ultimeNotizie.add(notizia);
 		}
 	}
+
 }

@@ -1,13 +1,12 @@
 package com.threeamigos.foresta.tattiche.valutazione;
 
-import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
 
 import java.util.List;
-import com.threeamigos.foresta.tattiche.ContestoTattico;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
 import java.util.Locale;
 
 /**
@@ -34,7 +33,7 @@ public final class Ordinamenti {
 		if (candidati.isEmpty()) {
 			return null;
 		}
-		switch (ordinamento.getTipo()) {
+		switch (ordinamento.getTipoOrdinamento()) {
 			case ULTIMO_ATTACCANTE:
 				return fra(candidati, contesto.getStato().getUltimoAttaccante(contesto.getAttore()));
 			case ULTIMO_SCELTO:
@@ -80,10 +79,10 @@ public final class Ordinamenti {
 	 * Vuota per gli ordinamenti che non misurano (il primo, a caso).
 	 */
 	public static String descriviLeMisure(List<Personaggio> candidati, OrdinamentoMD ordinamento) {
-		if (ordinamento.getTipo() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.PRIMO
-				|| ordinamento.getTipo() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.A_CASO
-				|| ordinamento.getTipo() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.ULTIMO_ATTACCANTE
-				|| ordinamento.getTipo() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.ULTIMO_SCELTO) {
+		if (ordinamento.getTipoOrdinamento() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.PRIMO
+				|| ordinamento.getTipoOrdinamento() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.A_CASO
+				|| ordinamento.getTipoOrdinamento() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.ULTIMO_ATTACCANTE
+				|| ordinamento.getTipoOrdinamento() == com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.ULTIMO_SCELTO) {
 			return "";
 		}
 		StringBuilder sb = new StringBuilder();
@@ -101,7 +100,7 @@ public final class Ordinamenti {
 	 * Il valore che l'ordinamento massimizza (per i "meno", il suo opposto)
 	 */
 	private static double misura(Personaggio candidato, OrdinamentoMD ordinamento) {
-		switch (ordinamento.getTipo()) {
+		switch (ordinamento.getTipoOrdinamento()) {
 			case MENO_SALUTE:
 				return -candidato.getSalute();
 			case PIU_SALUTE:

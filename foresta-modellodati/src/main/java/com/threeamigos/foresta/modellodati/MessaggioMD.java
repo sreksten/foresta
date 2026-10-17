@@ -84,4 +84,5 @@ public class MessaggioMD implements Serializzabile {
 		// Il testo è l'ultimo campo e puo' contenere il "|"
 		testo = campi.resto();
 	}
+
 }

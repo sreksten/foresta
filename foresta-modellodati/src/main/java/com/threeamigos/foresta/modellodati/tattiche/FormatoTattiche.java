@@ -26,9 +26,6 @@ import java.io.IOException;
  */
 final class FormatoTattiche {
 
-	private FormatoTattiche() {
-	}
-
 	/**
 	 * Legge la riga successiva e controlla che sia del tipo atteso; restituisce i campi che seguono l'etichetta
 	 */
@@ -46,4 +43,8 @@ final class FormatoTattiche {
 		}
 		return campi;
 	}
+
+	private FormatoTattiche() {
+	}
+
 }

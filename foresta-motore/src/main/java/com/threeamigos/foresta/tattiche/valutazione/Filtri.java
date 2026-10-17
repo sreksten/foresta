@@ -1,13 +1,14 @@
 package com.threeamigos.foresta.tattiche.valutazione;
 
-import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
-import com.threeamigos.foresta.incantesimi.AlbaSacra;
-import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.canti.CantoDelBardo;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
-import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.incantesimi.AlbaSacra;
+import com.threeamigos.foresta.incantesimi.DardoArcano;
+import com.threeamigos.foresta.incantesimi.LuceDivina;
+import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -15,7 +16,6 @@ import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
 
 import java.util.EnumMap;
 import java.util.Map;
-import com.threeamigos.foresta.tattiche.ContestoTattico;
 
 /**
  * La risposta di ogni {@link TipoFiltro} per un candidato (tattiche_di_combattimento_automatiche.md §11.5). Senza stato: quello che serve
@@ -42,10 +42,10 @@ public final class Filtri {
 		VERIFICHE.put(TipoFiltro.LIVELLO, (f, c, ctx) -> f.getConfronto().vale(c.getLivello(), f.getNumero()));
 		VERIFICHE.put(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, (f, c, ctx) -> f.getConfronto().vale(c.getLivello(), ctx.getAttore().getLivello()));
 		// I filtri su classe, categoria e magia non comprendono mai gli ospiti (tattiche_di_combattimento_automatiche.md §7.5, F1)
-		VERIFICHE.put(TipoFiltro.CLASSE, (f, c, ctx) -> !ctx.isOspite(c) && c.getClasse().stessoRuoloDi(f.getClasse()));
-		VERIFICHE.put(TipoFiltro.CATEGORIA, (f, c, ctx) -> !ctx.isOspite(c) && c.getClasse().isDellaCategoria(f.getCategoria()));
+		VERIFICHE.put(TipoFiltro.CLASSE, (f, c, ctx) -> !ctx.isOspite(c) && c.getClasse().stessoRuoloDi(f.getTipoPersonaggio()));
+		VERIFICHE.put(TipoFiltro.CATEGORIA, (f, c, ctx) -> !ctx.isOspite(c) && c.getClasse().isDellaCategoria(f.getCategoriaPersonaggio()));
 		// stessoRuoloDi: il Mago e la Maga sono lo stesso ruolo, quindi un filtro CLASSE MAGO prende entrambi
-		VERIFICHE.put(TipoFiltro.STATO, (f, c, ctx) -> c.hasEffettoDiStato(f.getStato()));
+		VERIFICHE.put(TipoFiltro.STATO, (f, c, ctx) -> c.hasEffettoDiStato(f.getTipoEffettoDiStato()));
 		VERIFICHE.put(TipoFiltro.STATO_NEGATIVO, (f, c, ctx) -> haUnoStatoNegativo(c));
 		VERIFICHE.put(TipoFiltro.MAGICO, (f, c, ctx) -> !ctx.isOspite(c) && isMagico(c, ctx));
 		// DEBOLE_A ha il tipo di danno come parametro, DEBOLE_ALL_AZIONE lo ricava dall'azione che il contesto sta valutando (conAzione): fuori da una
@@ -81,7 +81,7 @@ public final class Filtri {
 	 * Se il candidato passa il filtro (tenendo conto della negazione)
 	 */
 	public static boolean ammette(FiltroMD filtro, Personaggio candidato, ContestoTattico contesto) {
-		return VERIFICHE.get(filtro.getTipo()).ammette(filtro, candidato, contesto) != filtro.isNegato();
+		return VERIFICHE.get(filtro.getTipoFiltro()).ammette(filtro, candidato, contesto) != filtro.isNegato();
 	}
 
 	/**

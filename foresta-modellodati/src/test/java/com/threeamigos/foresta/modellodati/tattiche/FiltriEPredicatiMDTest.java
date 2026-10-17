@@ -4,17 +4,13 @@ import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
+import com.threeamigos.foresta.tipi.tattiche.TipoConfronto;
 import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
 import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,8 +28,8 @@ class FiltriEPredicatiMDTest {
     private static List<FiltroMD> unFiltroPerOgniParametro() {
         return Arrays.asList(
                 FiltroMD.senzaParametro(TipoFiltro.MAGICO),
-                FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 10).negato(),
-                FiltroMD.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, Confronto.MAGGIORE),
+                FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 10).negato(),
+                FiltroMD.conConfronto(TipoFiltro.LIVELLO_RISPETTO_AL_MIO, TipoConfronto.MAGGIORE),
                 FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BRUCIATO),
                 FiltroMD.conClasse(TipoFiltro.CLASSE, TipoPersonaggio.GOBLIN),
                 FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CATEGORIA),
@@ -69,16 +65,16 @@ class FiltriEPredicatiMDTest {
 
     @Test
     void unFiltroTieneISuoiDati() {
-        FiltroMD salute = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 10);
-        assertSame(TipoFiltro.SALUTE, salute.getTipo());
+        FiltroMD salute = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 10);
+        assertSame(TipoFiltro.SALUTE, salute.getTipoFiltro());
         assertFalse(salute.isNegato());
         assertTrue(salute.negato().isNegato());
         assertFalse(salute.negato().negato().isNegato());
-        assertSame(Confronto.MINORE, salute.getConfronto());
+        assertSame(TipoConfronto.MINORE, salute.getConfronto());
         assertEquals(10, salute.getNumero());
-        assertSame(TipoEffettoDiStato.BRUCIATO, FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BRUCIATO).getStato());
-        assertSame(TipoPersonaggio.GOBLIN, FiltroMD.conClasse(TipoFiltro.CLASSE, TipoPersonaggio.GOBLIN).getClasse());
-        assertSame(CATEGORIA, FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CATEGORIA).getCategoria());
+        assertSame(TipoEffettoDiStato.BRUCIATO, FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BRUCIATO).getTipoEffettoDiStato());
+        assertSame(TipoPersonaggio.GOBLIN, FiltroMD.conClasse(TipoFiltro.CLASSE, TipoPersonaggio.GOBLIN).getTipoPersonaggio());
+        assertSame(CATEGORIA, FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CATEGORIA).getCategoriaPersonaggio());
         assertSame(TipoDanno.FUOCO, FiltroMD.conTipoDanno(TipoFiltro.DEBOLE_A, TipoDanno.FUOCO).getTipoDanno());
     }
 
@@ -104,15 +100,15 @@ class FiltriEPredicatiMDTest {
 
     @Test
     void dueFiltriSonoUgualiSoloConGliStessiDati() {
-        FiltroMD salute = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 10);
+        FiltroMD salute = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 10);
         assertEquals(salute, salute);
-        assertEquals(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 10), salute);
-        assertEquals(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 10).hashCode(), salute.hashCode());
-        assertFalse(salute.equals("SALUTE"));
-        assertNotEquals(FiltroMD.conConfrontoENumero(TipoFiltro.MAGIA, Confronto.MINORE, 10), salute);
+        assertEquals(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 10), salute);
+        assertEquals(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 10).hashCode(), salute.hashCode());
+        assertNotEquals("SALUTE", salute);
+        assertNotEquals(FiltroMD.conConfrontoENumero(TipoFiltro.MAGIA, TipoConfronto.MINORE, 10), salute);
         assertNotEquals(salute.negato(), salute);
-        assertNotEquals(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MAGGIORE, 10), salute);
-        assertNotEquals(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 20), salute);
+        assertNotEquals(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MAGGIORE, 10), salute);
+        assertNotEquals(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 20), salute);
         assertNotEquals(FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BAGNATO), FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BRUCIATO));
         assertNotEquals(FiltroMD.conClasse(TipoFiltro.CLASSE, TipoPersonaggio.TROLL), FiltroMD.conClasse(TipoFiltro.CLASSE, TipoPersonaggio.GOBLIN));
         assertNotEquals(FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.values()[1]), FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CATEGORIA));
@@ -129,8 +125,8 @@ class FiltriEPredicatiMDTest {
     @Test
     void ogniPredicatoSiSalvaESiRilegge() throws IOException {
         List<PredicatoMD> predicati = Arrays.asList(
-                PredicatoMD.quanti(TipoRosa.AVVERSARI, unFiltroPerOgniParametro(), Confronto.MAGGIORE, 2),
-                PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.UGUALE, 1).negato(),
+                PredicatoMD.quanti(TipoRosa.AVVERSARI, unFiltroPerOgniParametro(), TipoConfronto.MAGGIORE, 2),
+                PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.UGUALE, 1).negato(),
                 PredicatoMD.probabilita(30));
         for (PredicatoMD predicato : predicati) {
             assertEquals(predicato, PredicatoMD.leggi(lettore(salva(predicato))), predicato.toString());
@@ -139,16 +135,16 @@ class FiltriEPredicatiMDTest {
 
     @Test
     void unPredicatoTieneISuoiDatiESiDescrive() {
-        FiltroMD ferito = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 10);
-        PredicatoMD quanti = PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.singletonList(ferito), Confronto.MAGGIORE, 2);
-        assertSame(TipoPredicato.QUANTI, quanti.getTipo());
+        FiltroMD ferito = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 10);
+        PredicatoMD quanti = PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.singletonList(ferito), TipoConfronto.MAGGIORE, 2);
+        assertSame(TipoPredicato.QUANTI, quanti.getTipoPredicato());
         assertFalse(quanti.isNegato());
-        assertSame(Confronto.MAGGIORE, quanti.getConfronto());
+        assertSame(TipoConfronto.MAGGIORE, quanti.getTipoConfronto());
         assertEquals(2, quanti.getNumero());
-        assertSame(TipoRosa.AVVERSARI, quanti.getRosa());
+        assertSame(TipoRosa.AVVERSARI, quanti.getTipoRosa());
         assertEquals(Collections.singletonList(ferito), quanti.getFiltri());
         assertEquals("NON QUANTI AVVERSARI [SALUTE MINORE 10] MAGGIORE 2", quanti.negato().toString());
-        assertEquals("QUANTI AVVERSARI MAGGIORE 2", PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.emptyList(), Confronto.MAGGIORE, 2).toString());
+        assertEquals("QUANTI AVVERSARI MAGGIORE 2", PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.emptyList(), TipoConfronto.MAGGIORE, 2).toString());
         assertEquals("PROBABILITA 30", PredicatoMD.probabilita(30).toString());
         assertFalse(quanti.negato().negato().isNegato());
     }
@@ -156,24 +152,24 @@ class FiltriEPredicatiMDTest {
     @Test
     void unaFabbricaRifiutaUnPredicatoDallAltroParametro() {
         IllegalArgumentException errore = assertThrows(IllegalArgumentException.class,
-                () -> PredicatoMD.conConfrontoENumero(TipoPredicato.QUANTI, Confronto.MAGGIORE, 2));
+                () -> PredicatoMD.conConfrontoENumero(TipoPredicato.QUANTI, TipoConfronto.MAGGIORE, 2));
         assertTrue(errore.getMessage().contains("QUANTI"), errore.getMessage());
     }
 
     @Test
     void duePredicatiSonoUgualiSoloConGliStessiDati() {
-        PredicatoMD round = PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.UGUALE, 1);
+        PredicatoMD round = PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.UGUALE, 1);
         assertEquals(round, round);
-        assertEquals(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.UGUALE, 1), round);
-        assertEquals(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.UGUALE, 1).hashCode(), round.hashCode());
-        assertFalse(round.equals("ROUND"));
-        assertNotEquals(PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, Confronto.UGUALE, 1), round);
+        assertEquals(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.UGUALE, 1), round);
+        assertEquals(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.UGUALE, 1).hashCode(), round.hashCode());
+        assertNotEquals("ROUND", round);
+        assertNotEquals(PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, TipoConfronto.UGUALE, 1), round);
         assertNotEquals(round.negato(), round);
-        assertNotEquals(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.MINORE, 1), round);
-        assertNotEquals(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, Confronto.UGUALE, 2), round);
-        PredicatoMD quanti = PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.emptyList(), Confronto.MAGGIORE, 2);
-        assertNotEquals(PredicatoMD.quanti(TipoRosa.ALLEATI, Collections.emptyList(), Confronto.MAGGIORE, 2), quanti);
-        assertNotEquals(PredicatoMD.quanti(TipoRosa.AVVERSARI, unFiltroPerOgniParametro(), Confronto.MAGGIORE, 2), quanti);
+        assertNotEquals(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.MINORE, 1), round);
+        assertNotEquals(PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.UGUALE, 2), round);
+        PredicatoMD quanti = PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.emptyList(), TipoConfronto.MAGGIORE, 2);
+        assertNotEquals(PredicatoMD.quanti(TipoRosa.ALLEATI, Collections.emptyList(), TipoConfronto.MAGGIORE, 2), quanti);
+        assertNotEquals(PredicatoMD.quanti(TipoRosa.AVVERSARI, unFiltroPerOgniParametro(), TipoConfronto.MAGGIORE, 2), quanti);
     }
 
     @Test

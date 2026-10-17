@@ -3,32 +3,19 @@ package com.threeamigos.foresta.ui.tattiche;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
-import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
-import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
-import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
-import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
+import com.threeamigos.foresta.modellodati.tattiche.*;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
-import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
+import com.threeamigos.foresta.tipi.tattiche.*;
 import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -101,11 +88,11 @@ class DisplayableCanvasTatticheTest {
                         Collections.singletonList(FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.SILENZIATO).negato()),
                         OrdinamentoMD.di(TipoOrdinamento.MENO_SALUTE)),
                         Collections.singletonList(PredicatoMD.quanti(TipoRosa.AVVERSARI,
-                                Collections.singletonList(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, Confronto.MINORE, 30)),
-                                Confronto.MAGGIORE, 0)),
+                                Collections.singletonList(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE, TipoConfronto.MINORE, 30)),
+                                TipoConfronto.MAGGIORE, 0)),
                         Arrays.asList(AzioneMD.incantesimoDiDanno(CriterioIncantesimo.PIU_ADATTO, true), AzioneMD.di(TipoAzione.DARDO_ARCANO))),
                 new VoceMD(new SelettoreMD(TipoRosa.ALLEATI,
-                        Collections.singletonList(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, Confronto.MINORE, 50)),
+                        Collections.singletonList(FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, TipoConfronto.MINORE, 50)),
                         OrdinamentoMD.di(TipoOrdinamento.MENO_SALUTE)),
                         Collections.singletonList(PredicatoMD.probabilita(70)),
                         Arrays.asList(AzioneMD.di(TipoAzione.POZIONE_SALUTE_GRANDE), AzioneMD.di(TipoAzione.POZIONE_MAGIA_GRANDE))));

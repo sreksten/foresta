@@ -140,7 +140,7 @@ class CombattimentoConTatticheTest {
             svuotaLePergamene(partita.gruppo());
             partita.gruppo().addIncantesimi(TipoIncantesimo.FUOCO, 5);
             // "Una volta per scontro" un incantesimo, poi sempre l'attacco fisico (il ripiego)
-            VoceMD unaVolta = new VoceMD(null, Collections.singletonList(PredicatoMD.conConfrontoENumero(TipoPredicato.VOCE_USATA, Confronto.UGUALE, 0)),
+            VoceMD unaVolta = new VoceMD(null, Collections.singletonList(PredicatoMD.conConfrontoENumero(TipoPredicato.VOCE_USATA, TipoConfronto.UGUALE, 0)),
                     Collections.singletonList(AzioneMD.incantesimoDiDanno(CriterioIncantesimo.PIU_POTENTE, false)));
             mago.setTattica(TatticaMD.di(unaVolta));
             iniziaLaMischia(locazione, partita);
@@ -161,7 +161,7 @@ class CombattimentoConTatticheTest {
             svuotaLePergamene(partita.gruppo());
             partita.gruppo().addPozioniSalute(2);
             capo.setTattica(TatticaMD.di(VoceMD.su(su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO,
-                    FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, Confronto.MINORE, 50)), AzioneMD.di(TipoAzione.POZIONE_SALUTE))));
+                    FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, TipoConfronto.MINORE, 50)), AzioneMD.di(TipoAzione.POZIONE_SALUTE))));
             int pozioniPrima = partita.gruppo().getPozioniSalute();
             iniziaLaMischia(locazione, partita);
             scatta(locazione, partita, 1);

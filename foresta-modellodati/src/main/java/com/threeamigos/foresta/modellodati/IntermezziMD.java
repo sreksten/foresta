@@ -23,6 +23,13 @@ public class IntermezziMD implements Serializzabile {
 	private int numeroAccampamenti;
 
 	/**
+	 * Quante volte il gruppo si è accampato nella partita corrente.
+	 */
+	public int getNumeroAccampamenti() {
+		return numeroAccampamenti;
+	}
+
+	/**
 	 * Dice se quell'intermezzo è già stato mostrato in questa partita.
 	 */
 	public boolean isScattato(String id) {
@@ -34,13 +41,6 @@ public class IntermezziMD implements Serializzabile {
 	 */
 	public void aggiungiScattato(String id) {
 		intermezziScattati.add(id);
-	}
-
-	/**
-	 * Quante volte il gruppo si è accampato nella partita corrente.
-	 */
-	public int getNumeroAccampamenti() {
-		return numeroAccampamenti;
 	}
 
 	/**
@@ -83,4 +83,5 @@ public class IntermezziMD implements Serializzabile {
 		}
 		numeroAccampamenti = LettoreCampi.leggiIntero(stream);
 	}
+
 }
