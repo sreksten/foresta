@@ -166,22 +166,19 @@ public enum TipoPersonaggio {
 	 * Sacerdote e Sacerdotessa sono lo stesso ruolo (le tattiche non devono distinguerli); ogni altra classe ha il suo.
 	 */
 	public TipoPersonaggio getRuolo() {
-		switch (this) {
-			case MAGA:
-				return MAGO;
-			case ELFA:
-				return ELFO;
-			case LADRA:
-				return LADRO;
-			case GUERRIERA:
-				return GUERRIERO;
-			case CANTASTORIE:
-				return BARDO;
-			case SACERDOTESSA:
-				return SACERDOTE;
-			default:
-				return this;
-		}
+		return RUOLI.getOrDefault(this, this);
+	}
+
+	// Il ruolo di chi lo condivide con un'altra classe: quella al maschile. Chi non c'è è il ruolo di sé stesso
+	private static final Map<TipoPersonaggio, TipoPersonaggio> RUOLI = new EnumMap<>(TipoPersonaggio.class);
+
+	static {
+		RUOLI.put(MAGA, MAGO);
+		RUOLI.put(ELFA, ELFO);
+		RUOLI.put(LADRA, LADRO);
+		RUOLI.put(GUERRIERA, GUERRIERO);
+		RUOLI.put(CANTASTORIE, BARDO);
+		RUOLI.put(SACERDOTESSA, SACERDOTE);
 	}
 
 	/**
