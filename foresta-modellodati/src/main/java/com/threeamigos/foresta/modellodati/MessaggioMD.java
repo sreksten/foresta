@@ -80,7 +80,7 @@ public class MessaggioMD implements Serializzabile {
 			throw new IOException("Tipo di messaggio non valido: " + tipo);
 		}
 		paragrafo = tipo.charAt(0) == PARAGRAFO;
-		// Il testo e' l'ultimo campo e puo' contenere il "|"
+		// Il testo è l'ultimo campo e puo' contenere il "|"
 		testo = campi.resto();
 	}
 }

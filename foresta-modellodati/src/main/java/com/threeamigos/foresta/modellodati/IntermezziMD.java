@@ -77,10 +77,10 @@ public class IntermezziMD implements Serializzabile {
 	public void leggi(BufferedReader stream) throws IOException {
 		intermezziScattati.clear();
 		// LettoreCampi lancia IOException su un file troncato (readLine nullo)
-		int numero = new LettoreCampi(stream.readLine()).intero();
+		int numero = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numero; i++) {
 			intermezziScattati.add(new LettoreCampi(stream.readLine()).testo());
 		}
-		numeroAccampamenti = new LettoreCampi(stream.readLine()).intero();
+		numeroAccampamenti = LettoreCampi.leggiIntero(stream);
 	}
 }

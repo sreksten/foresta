@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
  * A differenza di StringTokenizer conserva i campi vuoti ("a||b" sono tre campi), così un testo
  * vuoto non sposta i campi che lo seguono. Una riga vuota non ha nessun campo: è il caso delle
  * liste vuote scritte su una sola riga.
+ *
+ * @author Stefano Reksten
  */
 public final class LettoreCampi {
 
