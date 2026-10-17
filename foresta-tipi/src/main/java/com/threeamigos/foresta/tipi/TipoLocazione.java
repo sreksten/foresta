@@ -1,12 +1,18 @@
 package com.threeamigos.foresta.tipi;
 
 /**
- * Le locazioni della Foresta: l'identificativo che salva il modello dati (LocazioneMD, ForestaMD...) e che leggono
- * motore e UI. La locazione vera la costruisce locazioni.FabbricaLocazioni. I nomi delle locazioni uniche non stanno
+ * Le locazioni della Foresta.
+ * <p>
+ * IL nome è anche l'identificativo che salva il modello dati (LocazioneMD, ForestaMD...) e che leggono
+ * motore e UI.
+ * <p>
+ * La locazione vera la costruisce locazioni.FabbricaLocazioni. I nomi delle locazioni uniche non stanno
  * qui ma nel file {@code tipo_locazione_<lingua>.properties}.
  * <p>
  * I testi di ogni costante (NOME_PROPRIO, NOME_DELLA_CITTA) non stanno qui ma nel file {@code tipo_locazione_<lingua>.properties}, alla voce
  * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
+ *
+ * @author Stefano Reksten
  */
 public enum TipoLocazione {
 

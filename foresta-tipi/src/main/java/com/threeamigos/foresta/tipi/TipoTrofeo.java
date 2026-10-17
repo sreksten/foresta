@@ -11,6 +11,8 @@ import java.util.List;
  * <p>
  * I testi di ogni costante (NOME, DESCRIZIONE) non stanno qui ma nel file {@code tipo_trofeo_<lingua>.properties}, alla voce
  * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
+ *
+ * @author Stefano Reksten
  */
 public enum TipoTrofeo {
 

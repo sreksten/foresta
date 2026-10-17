@@ -5,6 +5,8 @@ package com.threeamigos.foresta.tipi;
  * <p>
  * I testi di ogni costante (FRASE) non stanno qui ma nel file {@code tipo_motivo_rifiuto_incantatura_<lingua>.properties}, alla voce
  * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
+ *
+ * @author Stefano Reksten
  */
 public enum TipoMotivoRifiutoIncantatura {
 

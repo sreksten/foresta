@@ -1,20 +1,30 @@
 package com.threeamigos.foresta.tipi;
 
 /**
- * Gli intermezzi fissi del gioco (quelli dei passi delle missioni non hanno un tipo): l'identificativo con cui
- * IntermezziMD ricorda quelli già mostrati. L'intermezzo vero lo costruisce intermezzi.FabbricaIntermezzi.
+ * Gli intermezzi fissi del gioco (quelli dei passi delle missioni non hanno un tipo).
+ * <p>
+ * Il nome è anche l'identificativo con cui IntermezziMD ricorda quelli già mostrati.
+ * <p>
+ * L'intermezzo vero lo costruisce intermezzi.FabbricaIntermezzi.
+ *
+ * @author Stefano Reksten
  */
 public enum TipoIntermezzo {
 
+	/** L'Eremita che a inizio partita chiede chi stia procedendo */
 	INTERMEZZO_INTRODUTTIVO,
+	/** L'Eremita che dopo la prima locazione augura buona fortuna al giocatore. */
 	INTERMEZZO_FINE_PRIMA_LOCAZIONE,
+	/** Il Bardo che racconta una storia, e il locandiere che lo brontola */
 	INTERMEZZO_LOCANDA_PRIMA_VISITA,
 	/** Il bardo della locanda insegna al gruppo l'Urlo della Banshee, dopo il viaggio della moglie */
 	INTERMEZZO_URLO_DELLA_BANSHEE,
+	/** Gli intermezzi che si vedono alla prima visita nei negozi */
 	INTERMEZZO_ARMAIOLO,
 	INTERMEZZO_ALCHIMISTA,
 	INTERMEZZO_VENDITORE_DI_PERGAMENE,
 	INTERMEZZO_INCANTATORE,
+	/** Uno degli intermezzi dell'accampamento */
 	INTERMEZZO_ACCAMPAMENTO,
 	/** L'ultimo eremita disturbato dice al gruppo quello che pensa, a missione DisturbatoreDellaQuietePubblica completata */
 	INTERMEZZO_EREMITA_ROMPISCATOLE,

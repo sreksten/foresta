@@ -4,6 +4,8 @@ package com.threeamigos.foresta.tipi;
  * Gli oggetti che si trovano nelle locazioni, con quanti se ne trovano al massimo e il loro valore. L'oggetto vero lo
  * costruisce oggetti.FabbricaOggetti, ma solo per i tipi generabili: gli artefatti e gli oggetti delle missioni
  * nascono altrove.
+ *
+ * @author Stefano Reksten
  */
 public enum TipoOggetto {
 

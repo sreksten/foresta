@@ -6,6 +6,8 @@ import java.util.*;
  * Le classi dei personaggi, giocanti e mostri: l'identificativo che salva il modello dati (PersonaggioMD,
  * StatisticheMD...) e che leggono motore e UI. Il personaggio vero, i suoi nomi e quanti se ne incontrano al massimo
  * in una locazione li dà personaggi.FabbricaPersonaggi. Ogni classe ha le sue categorie di creatura (CategoriaPersonaggio).
+ *
+ * @author Stefano Reksten
  */
 public enum TipoPersonaggio {
 

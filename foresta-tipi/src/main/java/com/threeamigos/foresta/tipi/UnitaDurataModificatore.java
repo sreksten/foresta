@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.tipi;
 
 /**
- * In che cosa si misura il tempo che resta a un modificatore di attributo
+ * In che cosa si misura il tempo che resta a un modificatore di attributo.
+ *
  * @author Stefano Reksten
  */
 public enum UnitaDurataModificatore {

@@ -9,6 +9,8 @@ package com.threeamigos.foresta.tipi;
  * <p>
  * I testi di ogni costante (NOME) non stanno qui ma nel file {@code tipo_rarita_artefatto_<lingua>.properties}, alla voce
  * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
+ *
+ * @author Stefano Reksten
  */
 public enum TipoRaritaArtefatto {
 

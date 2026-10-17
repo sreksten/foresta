@@ -2,6 +2,8 @@ package com.threeamigos.foresta.tipi;
 
 /**
  * Perché un personaggio si trova nel gruppo del giocatore.
+ *
+ * @author Stefano Reksten
  */
 public enum TipoMotivoNelGruppo {
 
@@ -50,7 +52,7 @@ public enum TipoMotivoNelGruppo {
 	}
 
 	/**
-	 * Se il personaggio resta per un numero di turni (il suo TEMPO) e poi se ne va.
+	 * Se il personaggio resta per un numero di turni (il suo tempo) e poi se ne va.
 	 */
 	public boolean isATempo() {
 		return aTempo;
