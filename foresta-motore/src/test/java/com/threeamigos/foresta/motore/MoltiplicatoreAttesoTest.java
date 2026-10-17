@@ -164,6 +164,30 @@ class MoltiplicatoreAttesoTest {
     }
 
     @Test
+    void laTerraSuUnRallentatoLoAtterraPerLInciampo() {
+        Personaggio guerriero = difensore(TipoPersonaggio.GUERRIERO);
+        Arma terra = (Arma) FabbricaIncantesimi.crea(TipoIncantesimo.TERRA, 5);
+        assertFalse(CalcolatoreCombattimento.statiCausabili(guerriero, terra).contains(TipoEffettoDiStato.ATTERRATO),
+                "la terra da sola non atterra");
+        guerriero.addEffettoDiStato(TipoEffettoDiStato.RALLENTATO, 3, 0);
+        assertTrue(CalcolatoreCombattimento.statiCausabili(guerriero, terra).contains(TipoEffettoDiStato.ATTERRATO),
+                "su un RALLENTATO scatta l'INCIAMPO, che lo atterra");
+    }
+
+    @Test
+    void ilFuocoScioglieIlCongelatoEIlColpoDiLamaCheSegueNonTrovaPiuIlGuscio() {
+        Personaggio guerriero = difensore(TipoPersonaggio.GUERRIERO);
+        guerriero.addEffettoDiStato(TipoEffettoDiStato.CONGELATO, 3, 0);
+        Arma fuoco = (Arma) FabbricaIncantesimi.crea(TipoIncantesimo.FUOCO, 5);
+        assertTrue(CalcolatoreCombattimento.statiTolti(guerriero, fuoco).contains(TipoEffettoDiStato.CONGELATO), "DISGELO_VIOLENTO");
+        assertFalse(CalcolatoreCombattimento.statiCausabili(guerriero, fuoco).contains(TipoEffettoDiStato.CONGELATO));
+        double adesso = CalcolatoreCombattimento.moltiplicatoreAtteso(guerriero, TipoDanno.TAGLIENTE);
+        double dopo = CalcolatoreCombattimento.moltiplicatoreAttesoDopo(guerriero, TipoDanno.TAGLIENTE, fuoco);
+        assertTrue(dopo > adesso, "senza il guscio di ghiaccio la lama passa meglio: " + adesso + " -> " + dopo);
+        assertTrue(guerriero.hasEffettoDiStato(TipoEffettoDiStato.CONGELATO), "il difensore non è cambiato");
+    }
+
+    @Test
     void chiEImmuneAUnStatoOAUnTipoDiDannoNonLoRiceveDaiStatiCausabili() {
         Personaggio drago = difensore(TipoPersonaggio.DRAGO);
         Arma fuoco = (Arma) FabbricaIncantesimi.crea(TipoIncantesimo.FUOCO, 5);

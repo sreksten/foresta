@@ -50,9 +50,11 @@ class InterazioniConGliStatiCaratterizzazioneTest {
      * (e del danno vero, diventato la debolezza di classe) ci sono due differenze volute: un difensore insieme SPAVENTATO e
      * CONFUSO colpito da danno VUOTO subisce la Follia Cosmica (prima no, perché contava solo lo SPAVENTATO; 2 righe su 8316);
      * il danno vero dei non morti non è più fra le interazioni ma nel campo {@code classe} (SACRO=2.0), con lo stesso
-     * effetto sul danno.
+     * effetto sul danno. Da quando gli stati tolti e messi stanno nell'interazione (getStatiRimossi, getStatiApplicati),
+     * SHOCK_DI_REALTA e SOVRACCARICO_MENTALE tolgono tutti e due gli stati di paura, SPAVENTATO e CONFUSO, e non solo
+     * quello che contava prima (396 righe su 8316 cambiano solo nell'elenco dei tolti).
      */
-    private static final String IMPRONTA_ATTESA = "eb1a9b6ae6dfcfbaea53462ea77d503512aca5f90426526c39ee0d0b8281e1ea";
+    private static final String IMPRONTA_ATTESA = "1fd6bf8e6ac621c3534ebe15a7ee1c8ea41543a7edeb7c166919314c41f5746e";
 
     private static final TipoEffettoDiStato[] STATI = {
             TipoEffettoDiStato.BAGNATO, TipoEffettoDiStato.BRUCIATO, TipoEffettoDiStato.AVVELENATO, TipoEffettoDiStato.SANGUINAMENTO,

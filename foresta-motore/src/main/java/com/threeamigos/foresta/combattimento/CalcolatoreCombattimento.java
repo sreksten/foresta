@@ -414,108 +414,60 @@ public class CalcolatoreCombattimento {
             statDifensiva = statDifensiva * fattoreDifesaDaStati(difensore, tipoDanno, interazioni);
 
             for (TipoInterazioneConEffettiDiStato interazione : interazioni) {
+                // Gli stati che la reazione toglie e mette sono scritti nell'interazione (TipoInterazioneConEffettiDiStato):
+                // qui sotto restano solo gli effetti che non sono stati
+                applicaGliStatiDellInterazione(interazione, attaccante, difensore, dannoRisultante);
+                dannoRisultante.addInterazione(interazione);
                 switch (interazione) {
-                    // Cambiano solo il danno, e questo l'ha già fatto moltiplicatoreDelleInterazioni
+                    // Cambiano solo il danno (l'ha già fatto moltiplicatoreDelleInterazioni) o gli stati (qui sopra)
                     case ELETTROCUZIONE:
                     case ALIMENTAZIONE_FIAMMA:
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
                     case REAZIONE_TOSSICA:
-                        Logger.log("tipo danno ACIDO: Reazione Tossica, +15% danno");
-                        dannoRisultante.addInterazione(interazione);
+                    case CONGELAMENTO:
+                    case VAPORIZZAZIONE:
+                    case ESTINZIONE:
+                    case SCIOGLIMENTO_TERMICO:
+                    case ESPLOSIONE_DI_GAS:
+                    case VAMPATA_TOSSICA:
+                    case COAGULAZIONE_FORZATA:
+                    case FRANTUMAZIONE_DEL_GHIACCIO:
+                    case DISGELO_VIOLENTO:
+                    case SUPERCONDUZIONE:
+                    case RIGETTO:
+                    case TOSSICITA_SETTICA:
+                    case SCHIACCIAMENTO:
+                    case INCIAMPO:
+                    case INCENDIO_LIBERATORIO:
+                    case IMPATTO_RIGIDO:
+                    case SOVRACCARICO_MENTALE:
+                    case SHOCK_DI_REALTA:
+                    case FOLLIA_COSMICA:
+                    case DISPERSIONE:
+                    case FANGO:
+                    case DISORIENTAMENTO:
+                    case ISOLAMENTO_SENSORIALE:
+                        if (Logger.isAttivo()) {
+                            Logger.log("Interazione " + interazione + " con " + tipoDanno + " su " + difensore.getNome());
+                        }
                         break;
 
                     case DILUIZIONE_EMATICA:
                         Logger.log("tipo danno ACQUA: Diluizione Ematica, riduce il danno periodico da sanguinamento");
                         dannoRisultante.setDiluizioneEmaticaAttiva(true);
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case CONGELAMENTO:
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BAGNATO);
-                        dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.CONGELATO,
-                                calcolaDurataStato(difensore, TipoEffettoDiStato.CONGELATO),
-                                calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.CONGELATO));
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case VAPORIZZAZIONE:
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BAGNATO);
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case ESTINZIONE:
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case SCIOGLIMENTO_TERMICO:
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
-                        dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.BAGNATO,
-                                calcolaDurataStato(difensore, TipoEffettoDiStato.BAGNATO),
-                                calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.BAGNATO));
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case ESPLOSIONE_DI_GAS:
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
-                        dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO,
-                                calcolaDurataStato(difensore, TipoEffettoDiStato.AVVELENATO),
-                                calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.AVVELENATO));
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case VAMPATA_TOSSICA:
-                        Logger.log("tipo danno FUOCO: Vampata Tossica");
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.AVVELENATO);
-                        dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.BRUCIATO,
-                                calcolaDurataStato(difensore, TipoEffettoDiStato.BRUCIATO),
-                                calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.BRUCIATO));
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case COAGULAZIONE_FORZATA:
-                        Logger.log("tipo danno GELO: Coagulazione Forzata, rimuove SANGUINAMENTO e applica RALLENTATO");
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.SANGUINAMENTO);
-                        dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.RALLENTATO,
-                                calcolaDurataStato(difensore, TipoEffettoDiStato.RALLENTATO),
-                                calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.RALLENTATO));
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case FRANTUMAZIONE_DEL_GHIACCIO:
-                    case DISGELO_VIOLENTO:
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.CONGELATO);
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case SUPERCONDUZIONE:
-                        dannoRisultante.addInterazione(interazione);
                         break;
 
                     case MIETITURA:
                         // La SAGGEZZA del difensore riduce l'efficacia dei danni NECROTICO su un bersaglio MALEDETTO
                         // (il moltiplicatore sta in moltiplicatoreDelleInterazioni)
-                        dannoRisultante.addInterazione(interazione);
                         dannoRisultante.setMietituraAttiva(true);
                         break;
 
-                    case RIGETTO:
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.MALEDETTO);
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
                     case COLLASSO_ENTROPICO:
-                        Logger.log("tipo danno VUOTO: Collasso Entropico, rimuove MALEDETTO e brucia il 25% dei MP massimi come danno aggiuntivo");
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.MALEDETTO);
+                        Logger.log("tipo danno VUOTO: Collasso Entropico, brucia il 25% dei MP massimi come danno aggiuntivo");
                         dannoRisultante.setCollassoEntropicoAttivo(true);
-                        dannoRisultante.addInterazione(interazione);
                         break;
 
                     case PURIFICAZIONE:
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.INFETTATO);
-                        dannoRisultante.addInterazione(interazione);
                         // La cura ad area (50% del danno applicato) va calcolata più avanti, quando il danno finale è noto
                         purificazioneAttiva = true;
                         break;
@@ -524,102 +476,17 @@ public class CalcolatoreCombattimento {
                         // Sifone Vitale: il 30% del danno grezzo (pre-mitigazione) va all'attaccante come MP, l'eccedenza oltre
                         // il massimo di MP va in HP
                         dannoRisultante.setSifoneVitale((int) Math.round(dannoOffensivoGrezzo * 0.3d));
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case TOSSICITA_SETTICA:
-                        // Tossicità Settica: l'AVVELENATO applicato su un bersaglio già INFETTATO raddoppia i danni periodici
-                        dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO,
-                                calcolaDurataStato(difensore, TipoEffettoDiStato.AVVELENATO),
-                                calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.AVVELENATO) * 2);
-                        dannoRisultante.addInterazione(interazione);
                         break;
 
                     case COLPO_DI_GRAZIA:
                         Logger.log("tipo danno TAGLIENTE o PERFORANTE, critico automatico");
                         criticoAutomatico = true;
                         dannoRisultante.setColpoDiGrazia(true);
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case SCHIACCIAMENTO:
-                        Logger.log("Con difensore già ATTERRATO, tipo danno CONTUNDENTE: Schiacciamento");
-                        dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.ATTERRATO,
-                                calcolaDurataStato(difensore, TipoEffettoDiStato.ATTERRATO) + 1, 0);
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case INCIAMPO:
-                        Logger.log("Con difensore già RALLENTATO, tipo danno TERRA o CONTUNDENTE: Inciampo");
-                        dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.ATTERRATO,
-                                calcolaDurataStato(difensore, TipoEffettoDiStato.ATTERRATO), 0);
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case INCENDIO_LIBERATORIO:
-                        Logger.log("tipo danno FUOCO: Incendio Liberatorio, distrugge l'immobilizzazione all'istante");
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.IMMOBILIZZATO);
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case IMPATTO_RIGIDO:
-                        Logger.log("tipo danno CONTUNDENTE o TERRA: Impatto Rigido");
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case SOVRACCARICO_MENTALE:
-                        Logger.log("tipo danno ARCANO: Sovraccarico Mentale, trasforma lo stato in STORDITO pesante");
-                        dannoRisultante.rimuoviEffettoDiStato(statoDiPaura(difensore));
-                        dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.STORDITO, Dado.tira(2), 0);
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case SHOCK_DI_REALTA:
-                        Logger.log("danno FISICO: Shock di Realtà, interrompe subito lo stato");
-                        dannoRisultante.rimuoviEffettoDiStato(statoDiPaura(difensore));
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case FOLLIA_COSMICA:
-                        Logger.log("tipo danno VUOTO: Follia Cosmica, rimuove CONFUSO e applica MENTE_FRATTURATA");
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.CONFUSO);
-                        dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA,
-                                calcolaDurataStato(difensore, TipoEffettoDiStato.MENTE_FRATTURATA), 0);
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case DISPERSIONE:
-                        Logger.log("tipo danno ARIA: Dispersione, rimuove ACCECATO");
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.ACCECATO);
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case FANGO:
-                        Logger.log("tipo danno ACQUA: Fango, applica RALLENTATO severo");
-                        dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.RALLENTATO,
-                                calcolaDurataStato(difensore, TipoEffettoDiStato.RALLENTATO) + 2,
-                                calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.RALLENTATO));
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case DISORIENTAMENTO:
-                        Logger.log("Con difensore già ASSORDATO, tipo danno SONICO: Disorientamento, trasforma in STORDITO");
-                        dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.ASSORDATO);
-                        dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.STORDITO, 1, 0);
-                        dannoRisultante.addInterazione(interazione);
                         break;
 
                     case RISONANZA_SIGILLATA:
                         Logger.log("tipo danno ARCANO: Risonanza Sigillata, +30% danno Puro che ignora le difese");
                         dannoPuroBonus = dannoPuroBonus + dannoOffensivoGrezzo * 0.3d;
-                        dannoRisultante.addInterazione(interazione);
-                        break;
-
-                    case ISOLAMENTO_SENSORIALE:
-                        Logger.log("tipo danno PSICHICO: Isolamento Sensoriale, +50% danno ed estende anche ACCECATO");
-                        dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.ACCECATO,
-                                calcolaDurataStato(difensore, TipoEffettoDiStato.ACCECATO), 0);
-                        dannoRisultante.addInterazione(interazione);
                         break;
 
                     default:
@@ -868,64 +735,152 @@ public class CalcolatoreCombattimento {
      * avversario è debole a un elemento) usano questo.
      */
     public static List<TipoInterazioneConEffettiDiStato> interazioniAttive(Personaggio difensore, TipoDanno tipoDanno) {
-        return interazioniAttive(difensore, tipoDanno, Collections.emptySet());
+        return interazioniAttive(difensore, tipoDanno, StatiPrevisti.NESSUNO);
     }
 
     /**
-     * Come {@link #interazioniAttive(Personaggio, TipoDanno)}, ma il difensore ha anche gli stati indicati (quelli che un'azione
-     * precedente può avergli causato): per le tattiche, che guardano oltre l'azione di adesso.
+     * Come {@link #interazioniAttive(Personaggio, TipoDanno)}, ma con gli stati che un'azione precedente può avergli messo o tolto:
+     * per le tattiche, che guardano oltre l'azione di adesso.
      */
     static List<TipoInterazioneConEffettiDiStato> interazioniAttive(Personaggio difensore, TipoDanno tipoDanno,
-                                                                   Set<TipoEffettoDiStato> statiFuturi) {
+                                                                   StatiPrevisti previsti) {
         if (difensore.isImmuneATipoDanno(tipoDanno)) {
             return Collections.emptyList();
         }
         List<TipoInterazioneConEffettiDiStato> attive = new ArrayList<>();
         for (TipoInterazioneConEffettiDiStato interazione : TipoInterazioneConEffettiDiStato.values()) {
             if (interazione.getInnescanti().contains(tipoDanno)
-                    && interazione.getPrecondizioni().stream().anyMatch(stato -> haLoStato(difensore, statiFuturi, stato))) {
+                    && interazione.getPrecondizioni().stream().anyMatch(stato -> previsti.ha(difensore, stato))) {
                 attive.add(interazione);
             }
         }
         return attive;
     }
 
-    private static boolean haLoStato(Personaggio difensore, Set<TipoEffettoDiStato> statiFuturi, TipoEffettoDiStato stato) {
-        return difensore.hasEffettoDiStato(stato) || statiFuturi.contains(stato);
+    /**
+     * Gli stati che un'azione cambierà al difensore, per le stime: quelli che gli metterà e quelli che gli toglierà. Quelli
+     * tolti vincono, come nel calcolo vero, in cui chi subisce il colpo toglie gli stati dopo averli messi.
+     */
+    static final class StatiPrevisti {
+
+        static final StatiPrevisti NESSUNO = new StatiPrevisti(EnumSet.noneOf(TipoEffettoDiStato.class),
+                EnumSet.noneOf(TipoEffettoDiStato.class));
+
+        private final Set<TipoEffettoDiStato> messi;
+        private final Set<TipoEffettoDiStato> tolti;
+
+        StatiPrevisti(Set<TipoEffettoDiStato> messi, Set<TipoEffettoDiStato> tolti) {
+            this.messi = messi;
+            this.tolti = tolti;
+        }
+
+        /**
+         * Se il difensore, dopo l'azione, avrà quello stato.
+         */
+        boolean ha(Personaggio difensore, TipoEffettoDiStato stato) {
+            return !tolti.contains(stato) && (difensore.hasEffettoDiStato(stato) || messi.contains(stato));
+        }
+    }
+
+    /**
+     * Toglie e mette gli stati che la reazione dichiara (TipoInterazioneConEffettiDiStato.getStatiRimossi e getStatiApplicati),
+     * con la durata e il danno periodico normali, salvo le eccezioni di {@link #durataDelloStatoMesso} e
+     * {@link #dannoDelloStatoMesso}. Chi applica il danno toglie gli stati dopo averli messi (vedi PersonaggioBase).
+     */
+    private static void applicaGliStatiDellInterazione(TipoInterazioneConEffettiDiStato interazione, Personaggio attaccante,
+                                                       Personaggio difensore, DannoRisultante dannoRisultante) {
+        for (TipoEffettoDiStato stato : interazione.getStatiRimossi()) {
+            dannoRisultante.rimuoviEffettoDiStato(stato);
+        }
+        for (TipoEffettoDiStato stato : interazione.getStatiApplicati()) {
+            int durata = durataDelloStatoMesso(interazione, difensore, stato);
+            dannoRisultante.addEffettoDiStato(stato, durata, dannoDelloStatoMesso(interazione, attaccante, difensore, stato));
+        }
+    }
+
+    /**
+     * Quanto dura uno stato messo da una reazione: quanto dura di solito, salvo lo SCHIACCIAMENTO (un turno in più a terra),
+     * il FANGO (un RALLENTATO severo, due turni in più), il SOVRACCARICO_MENTALE (uno STORDITO pesante, 1-2 turni) e il
+     * DISORIENTAMENTO (uno STORDITO di un turno).
+     */
+    private static int durataDelloStatoMesso(TipoInterazioneConEffettiDiStato interazione, Personaggio difensore,
+                                             TipoEffettoDiStato stato) {
+        switch (interazione) {
+            case SCHIACCIAMENTO:
+                return calcolaDurataStato(difensore, stato) + 1;
+            case FANGO:
+                return calcolaDurataStato(difensore, stato) + 2;
+            case SOVRACCARICO_MENTALE:
+                return Dado.tira(2);
+            case DISORIENTAMENTO:
+                return 1;
+            default:
+                return calcolaDurataStato(difensore, stato);
+        }
+    }
+
+    /**
+     * Il danno periodico di uno stato messo da una reazione: quello di solito, doppio per la TOSSICITA_SETTICA (il veleno su
+     * un bersaglio già INFETTATO).
+     */
+    private static int dannoDelloStatoMesso(TipoInterazioneConEffettiDiStato interazione, Personaggio attaccante,
+                                            Personaggio difensore, TipoEffettoDiStato stato) {
+        int danno = calcolaDannoPeriodico(attaccante, difensore, stato);
+        return interazione == TipoInterazioneConEffettiDiStato.TOSSICITA_SETTICA ? danno * 2 : danno;
     }
 
     /**
      * Gli effetti di stato che un'arma (o un incantesimo) può causare a un difensore: quelli nativi del suo tipo di danno e
-     * quelli dei tipi elementali dei suoi incantamenti, escludendo i tipi di danno a cui il difensore è immune e gli stati a cui
-     * è immune. Non cambia niente e non tira i dadi; non dice con che probabilità scattano (vedi {@link #fattoreEffetti}).
+     * dei tipi elementali dei suoi incantamenti, e quelli che mettono le reazioni con gli stati che il difensore ha già
+     * (l'INCIAMPO atterra un RALLENTATO), escludendo i tipi di danno e gli stati a cui è immune e gli stati che le reazioni
+     * gli tolgono (vedi {@link #statiTolti}). Non cambia niente e non tira i dadi; conta le reazioni come se scattassero e
+     * non dice con che probabilità scattano gli stati (vedi {@link #fattoreEffetti}).
      */
     public static Set<TipoEffettoDiStato> statiCausabili(Personaggio difensore, Arma arma) {
-        Set<TipoEffettoDiStato> stati = EnumSet.noneOf(TipoEffettoDiStato.class);
-        aggiungiStatiCausabili(stati, difensore, arma.getTipoDanno());
-        if (arma.isIncantata()) {
-            for (IncantamentoMD incantamento : arma.getIncantamenti()) {
-                aggiungiStatiCausabili(stati, difensore, incantamento.getTipoDannoElementale());
-            }
-        }
-        return stati;
+        return Collections.unmodifiableSet(previsione(difensore, arma).messi);
     }
 
-    private static void aggiungiStatiCausabili(Set<TipoEffettoDiStato> stati, Personaggio difensore, TipoDanno tipoDanno) {
+    /**
+     * Gli effetti di stato che un'arma (o un incantesimo) toglie a un difensore con le reazioni che scatenano: il FUOCO
+     * scioglie un CONGELATO, l'ACQUA spegne un BRUCIATO. Come per {@link #statiCausabili}, le reazioni si contano come se
+     * scattassero.
+     */
+    public static Set<TipoEffettoDiStato> statiTolti(Personaggio difensore, Arma arma) {
+        return Collections.unmodifiableSet(previsione(difensore, arma).tolti);
+    }
+
+    private static StatiPrevisti previsione(Personaggio difensore, Arma arma) {
+        Set<TipoEffettoDiStato> messi = EnumSet.noneOf(TipoEffettoDiStato.class);
+        Set<TipoEffettoDiStato> tolti = EnumSet.noneOf(TipoEffettoDiStato.class);
+        aggiungiStatiCausabili(messi, tolti, difensore, arma.getTipoDanno());
+        if (arma.isIncantata()) {
+            for (IncantamentoMD incantamento : arma.getIncantamenti()) {
+                aggiungiStatiCausabili(messi, tolti, difensore, incantamento.getTipoDannoElementale());
+            }
+        }
+        // Chi subisce il colpo toglie gli stati dopo averli messi: uno stato messo e tolto non resta
+        messi.removeAll(tolti);
+        return new StatiPrevisti(messi, tolti);
+    }
+
+    private static void aggiungiStatiCausabili(Set<TipoEffettoDiStato> messi, Set<TipoEffettoDiStato> tolti, Personaggio difensore,
+                                               TipoDanno tipoDanno) {
         if (difensore.isImmuneATipoDanno(tipoDanno)) {
             return;
         }
         for (TipoEffettoDiStato stato : tipoDanno.getEffetti()) {
             if (!difensore.isImmuneAEffetto(stato)) {
-                stati.add(stato);
+                messi.add(stato);
             }
         }
-    }
-
-    /**
-     * Lo stato di SPAVENTATO o CONFUSO che conta per le interazioni: se li ha tutti e due, lo SPAVENTATO.
-     */
-    private static TipoEffettoDiStato statoDiPaura(Personaggio difensore) {
-        return difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO) ? TipoEffettoDiStato.SPAVENTATO : TipoEffettoDiStato.CONFUSO;
+        for (TipoInterazioneConEffettiDiStato interazione : interazioniAttive(difensore, tipoDanno)) {
+            for (TipoEffettoDiStato stato : interazione.getStatiApplicati()) {
+                if (!difensore.isImmuneAEffetto(stato)) {
+                    messi.add(stato);
+                }
+            }
+            tolti.addAll(interazione.getStatiRimossi());
+        }
     }
 
     /**
@@ -949,15 +904,15 @@ public class CalcolatoreCombattimento {
      * para i colpi di lama e di punta (×1,5), ma la SUPERCONDUZIONE la riduce (×0,7); 1 se non cambia.
      */
     static double fattoreDifesaDaStati(Personaggio difensore, TipoDanno tipoDanno, List<TipoInterazioneConEffettiDiStato> interazioni) {
-        return fattoreDifesaDaStati(difensore, tipoDanno, interazioni, Collections.emptySet());
+        return fattoreDifesaDaStati(difensore, tipoDanno, interazioni, StatiPrevisti.NESSUNO);
     }
 
     private static double fattoreDifesaDaStati(Personaggio difensore, TipoDanno tipoDanno, List<TipoInterazioneConEffettiDiStato> interazioni,
-                                               Set<TipoEffettoDiStato> statiFuturi) {
+                                               StatiPrevisti previsti) {
         if (interazioni.contains(TipoInterazioneConEffettiDiStato.SUPERCONDUZIONE)) {
             return 0.7d;
         }
-        if (haLoStato(difensore, statiFuturi, TipoEffettoDiStato.CONGELATO) && tipoDanno.getSuperTipo() == CategoriaDanno.FISICO
+        if (previsti.ha(difensore, TipoEffettoDiStato.CONGELATO) && tipoDanno.getSuperTipo() == CategoriaDanno.FISICO
                 && tipoDanno != TipoDanno.CONTUNDENTE) {
             return 1.5d;
         }
@@ -975,7 +930,7 @@ public class CalcolatoreCombattimento {
      * a quel tipo di danno (vedi {@link #fattoreEffetti}): conta le reazioni come se scattassero.
      */
     public static double moltiplicatoreAtteso(Personaggio difensore, TipoDanno tipoDanno) {
-        return moltiplicatoreAtteso(difensore, tipoDanno, Collections.emptySet());
+        return moltiplicatoreAtteso(difensore, tipoDanno, StatiPrevisti.NESSUNO);
     }
 
     /**
@@ -984,27 +939,28 @@ public class CalcolatoreCombattimento {
      * un BAGNATO. Gli stati si contano come se fossero scattati (come le reazioni, vedi sopra). Non cambia niente e non tira i dadi.
      */
     public static double moltiplicatoreAttesoDopo(Personaggio difensore, TipoDanno tipoDanno, Set<TipoEffettoDiStato> statiFuturi) {
-        return moltiplicatoreAtteso(difensore, tipoDanno, statiFuturi);
+        return moltiplicatoreAtteso(difensore, tipoDanno, new StatiPrevisti(statiFuturi, EnumSet.noneOf(TipoEffettoDiStato.class)));
     }
 
     /**
      * Il fattore del colpo di tipo <code>tipoDanno</code> che segue un'azione fatta con l'arma indicata, contando anche gli stati che
-     * l'arma può causare al difensore ({@link #statiCausabili}). Per scegliere il bersaglio o l'azione guardando oltre il colpo di adesso.
+     * l'arma può causare al difensore ({@link #statiCausabili}) e senza quelli che gli toglie ({@link #statiTolti}). Per scegliere il
+     * bersaglio o l'azione guardando oltre il colpo di adesso.
      */
     public static double moltiplicatoreAttesoDopo(Personaggio difensore, TipoDanno tipoDanno, Arma azione) {
-        return moltiplicatoreAtteso(difensore, tipoDanno, statiCausabili(difensore, azione));
+        return moltiplicatoreAtteso(difensore, tipoDanno, previsione(difensore, azione));
     }
 
-    private static double moltiplicatoreAtteso(Personaggio difensore, TipoDanno tipoDanno, Set<TipoEffettoDiStato> statiFuturi) {
+    private static double moltiplicatoreAtteso(Personaggio difensore, TipoDanno tipoDanno, StatiPrevisti previsti) {
         if (difensore.isImmuneATipoDanno(tipoDanno)) {
             return 0.0d;
         }
-        List<TipoInterazioneConEffettiDiStato> interazioni = interazioniAttive(difensore, tipoDanno, statiFuturi);
+        List<TipoInterazioneConEffettiDiStato> interazioni = interazioniAttive(difensore, tipoDanno, previsti);
         double difesa = difesaContro(difensore, tipoDanno);
-        if (tipoDanno.getSuperTipo() != CategoriaDanno.FISICO && haLoStato(difensore, statiFuturi, TipoEffettoDiStato.MENTE_FRATTURATA)) {
+        if (tipoDanno.getSuperTipo() != CategoriaDanno.FISICO && previsti.ha(difensore, TipoEffettoDiStato.MENTE_FRATTURATA)) {
             difesa = difesa * 0.8d;
         }
-        difesa = difesa * fattoreDifesaDaStati(difensore, tipoDanno, interazioni, statiFuturi);
+        difesa = difesa * fattoreDifesaDaStati(difensore, tipoDanno, interazioni, previsti);
         return 100.0d / (100.0d + difesa) * moltiplicatoreDelleInterazioni(difensore, tipoDanno, interazioni);
     }
 

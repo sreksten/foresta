@@ -437,8 +437,11 @@ non morti": la condizione del cambio d'arma, §5) e il momento del cambio.
 
 **Decisioni.** "Debole" vuol dire solo moltiplicatore > 1 (non "meno resistente degli altri elementi"). Il selettore e la scelta dell'azione guardano gli stati
 di adesso **e anche quelli che l'azione stessa può causare** (il Gelo che prima bagna e poi congela, quindi con i moltiplicatori della reazione che ne seguirebbe).
-`CalcolatoreCombattimento.statiCausabili(difensore, arma)` (stati nativi del tipo di danno e degli incantamenti, esclusi tipi di danno e stati a cui è immune) e
+`CalcolatoreCombattimento.statiCausabili(difensore, arma)` (stati nativi del tipo di danno e degli incantamenti, più quelli che mettono le reazioni con gli stati che il
+difensore ha già, come l'ATTERRATO dell'INCIAMPO; esclusi tipi di danno e stati a cui è immune), `statiTolti(difensore, arma)` (quelli che le reazioni gli tolgono) e
 `moltiplicatoreAttesoDopo(difensore, tipoDanno, arma | stati)`, il fattore del colpo che segue l'azione: gli stati si contano come se fossero scattati (come le reazioni).
+Le conseguenze delle reazioni sono dichiarate in `TipoInterazioneConEffettiDiStato` (vedi `interazioni_effetti_di_stato.md`). **Oggi il valutatore non chiama ancora
+queste stime**: guarda solo gli stati di adesso (`moltiplicatoreAtteso`).
 ## 7. Le condizioni
 
 Gli elenchi dei giochi sono quelli che ricordo, **indicativi**: i nomi esatti cambiano da gioco a gioco. La colonna a destra dice se

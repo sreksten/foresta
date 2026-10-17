@@ -1,19 +1,53 @@
 # Interazioni tra effetti di stato e tipi di danno: piano di lavoro
 
-> Stato: aggiornato al 2026-09-27. Passo 0 completo (compila senza errori, solo i 3 warning standard su Java 8).
-> `TipoInterazioneConEffettiDiStato` ora porta anche `precondizioni` (gli effetti di stato richiesti) e
-> `innescanti` (i `TipoDanno` che scatenano l'interazione) come metadati dichiarativi sull'enum stesso.
-> Per ora sono solo documentazione: `CalcolatoreCombattimento` continua a decidere quando scatenare
-> un'interazione con if espliciti (`hasEffettoDiStato(...)` + `tipoDanno == ...`), duplicando a mano la
-> stessa informazione. Le nuove interazioni (§2, §3) vanno aggiunte all'enum già con precondizioni/innescanti
-> corretti; whether centralizzare anche il *controllo* (leggendo `getPrecondizioni()`/`getInnescanti()` invece
-> di if sparsi) resta una possibile futura pulizia, non ancora approvata.
-> La logica delle interazioni vive tutta in `CalcolatoreCombattimento.calcolaDannoRisultante` (righe 226-348).
-> `PersonaggioBase.applicaRisultatoCombattimento` si limita a scorrere `DannoRisultante.getInterazioni()` e a
-> pubblicare `NotificaInterazionePersonaggio` per la UI, non decide nulla.
+> Stato: aggiornato al 2026-10-17. `TipoInterazioneConEffettiDiStato` dichiara tutto quello che un'interazione è:
+> `precondizioni` (gli stati del difensore), `innescanti` (i tipi di danno), il moltiplicatore del danno e le
+> **conseguenze sugli stati** (`getStatiRimossi`, `getStatiApplicati`, vedi la tabella qui sotto).
+> `CalcolatoreCombattimento.interazioniAttive` è l'unico punto che decide quando un'interazione scatta, e
+> `calcolaDannoRisultante` applica le conseguenze in modo generico (`applicaGliStatiDellInterazione`); nel suo `switch`
+> restano solo gli effetti che non sono stati (critico automatico, sifone, collasso entropico, cura della purificazione,
+> danno puro della risonanza, diluizione, mietitura) e le eccezioni a durata e danno periodico degli stati messi
+> (`durataDelloStatoMesso`, `dannoDelloStatoMesso`). `PersonaggioBase.applicaRisultatoCombattimento` mette gli stati, poi
+> li toglie (uno stato messo da una reazione e tolto da un'altra non resta) e pubblica `NotificaInterazionePersonaggio`.
 > I salvataggi **non** devono restare retrocompatibili: il formato si cambia liberamente.
 
 I modificatori di attributo a tempo (`modificatori_temporanei.md`) non sono effetti di stato: li toglie anche l'Alba Sacra, ma l'immunità a un effetto di stato non li ferma; li ferma l'immunità al tipo di danno dell'arma che li applica.
+
+## Conseguenze sugli stati
+
+Che cosa ogni interazione toglie e mette al difensore quando scatta (gli ultimi due argomenti del costruttore di ogni costante di `TipoInterazioneConEffettiDiStato`, dopo precondizioni, innescanti e moltiplicatore).
+Durata e danno periodico degli stati messi sono quelli normali (`calcolaDurataStato`, `calcolaDannoPeriodico`), salvo le eccezioni
+indicate. Le interazioni che non compaiono cambiano solo il danno o hanno effetti che non sono stati.
+
+| Interazione | Toglie | Mette |
+| :--- | :--- | :--- |
+| `CONGELAMENTO` | `BAGNATO` | `CONGELATO` |
+| `VAPORIZZAZIONE` | `BAGNATO` | — |
+| `ESTINZIONE` | `BRUCIATO` | — |
+| `SCIOGLIMENTO_TERMICO` | `BRUCIATO` | `BAGNATO` |
+| `ESPLOSIONE_DI_GAS` | `BRUCIATO` | `AVVELENATO` |
+| `VAMPATA_TOSSICA` | `AVVELENATO` | `BRUCIATO` |
+| `COAGULAZIONE_FORZATA` | `SANGUINAMENTO` | `RALLENTATO` |
+| `FRANTUMAZIONE_DEL_GHIACCIO`, `DISGELO_VIOLENTO` | `CONGELATO` | — |
+| `RIGETTO`, `COLLASSO_ENTROPICO` | `MALEDETTO` | — |
+| `PURIFICAZIONE` | `INFETTATO` | — |
+| `TOSSICITA_SETTICA` | — | `AVVELENATO` (danno periodico doppio) |
+| `SCHIACCIAMENTO` | — | `ATTERRATO` (un turno in più) |
+| `INCIAMPO` | — | `ATTERRATO` |
+| `INCENDIO_LIBERATORIO` | `IMMOBILIZZATO` | — |
+| `SOVRACCARICO_MENTALE` | `SPAVENTATO`, `CONFUSO` | `STORDITO` (1-2 turni) |
+| `SHOCK_DI_REALTA` | `SPAVENTATO`, `CONFUSO` | — |
+| `FOLLIA_COSMICA` | `CONFUSO` | `MENTE_FRATTURATA` |
+| `DISPERSIONE` | `ACCECATO` | — |
+| `FANGO` | — | `RALLENTATO` (due turni in più) |
+| `DISORIENTAMENTO` | `ASSORDATO` | `STORDITO` (un turno) |
+| `ISOLAMENTO_SENSORIALE` | — | `ACCECATO` |
+
+Le stesse conseguenze le usano le stime delle tattiche: `CalcolatoreCombattimento.statiCausabili(difensore, arma)` conta, oltre agli
+stati nativi del tipo di danno, quelli che mettono le reazioni con gli stati che il difensore ha già (la TERRA su un RALLENTATO lo
+atterra), `statiTolti` quelli che le reazioni gli tolgono (il FUOCO scioglie un CONGELATO), e `moltiplicatoreAttesoDopo(difensore,
+tipoDanno, arma)` stima il colpo che segue con gli uni e senza gli altri. `ConseguenzeDelleInterazioniTest` controlla che il calcolo
+vero tolga e metta quel che l'enum dichiara.
 
 ## 0. Prerequisito: da `TipoInterazioneElementale` a `TipoInterazioneConEffettiDiStato` — ✅ fatto
 
@@ -84,7 +118,7 @@ già porta con sé.
 - [x] Vampata Tossica (FUOCO): verso opposto di Esplosione di Gas — danno FUOCO su un bersaglio AVVELENATO (senza essere BRUCIATO) rimuove AVVELENATO, applica BRUCIATO e +30% danno (`moltiplicatoreDannoStato * 1.3`); nuovo valore separato `TipoInterazioneConEffettiDiStato.VAMPATA_TOSSICA` (non riusa `ESPLOSIONE_DI_GAS`, per non mischiarne precondizioni/innescanti in un'unica coppia BRUCIATO/AVVELENATO × VELENO/FUOCO che includerebbe anche le combinazioni senza senso BRUCIATO+FUOCO o AVVELENATO+VELENO), gestito anche in `ForestaUI`
 
 ### CONFUSO — ✅ chiuso
-- [x] Sovraccarico Mentale (ARCANO) e Shock di Realtà (danno FISICO): stessa interazione già usata per SPAVENTATO (§3, sopra) — dato che entrambi gli stati richiedono sempre lo stesso, unico tipo di danno scatenante rispettivamente (ARCANO / FISICO), non si ricade nel caso di cross-product invalido visto con BRUCIATO/AVVELENATO × VELENO/FUOCO: `precondizioni` di `SOVRACCARICO_MENTALE`/`SHOCK_DI_REALTA` estese a `[SPAVENTATO, CONFUSO]`, e nel `CalcolatoreCombattimento` un'unica condizione `hasEffettoDiStato(SPAVENTATO) || hasEffettoDiStato(CONFUSO)` individua lo stato attivo e lo rimuove (a parità, priorità a SPAVENTATO se entrambi presenti)
+- [x] Sovraccarico Mentale (ARCANO) e Shock di Realtà (danno FISICO): stessa interazione già usata per SPAVENTATO (§3, sopra) — dato che entrambi gli stati richiedono sempre lo stesso, unico tipo di danno scatenante rispettivamente (ARCANO / FISICO), non si ricade nel caso di cross-product invalido visto con BRUCIATO/AVVELENATO × VELENO/FUOCO: `precondizioni` di `SOVRACCARICO_MENTALE`/`SHOCK_DI_REALTA` estese a `[SPAVENTATO, CONFUSO]`, e la reazione toglie tutti e due gli stati di paura, SPAVENTATO e CONFUSO (prima toglieva solo quello attivo, con priorità a SPAVENTATO: con le conseguenze dichiarate nell'enum li toglie entrambi)
 - [x] Follia Cosmica (VUOTO): rimuove CONFUSO, +50% danno (`moltiplicatoreDannoStato * 1.5`) e applica un nuovo stato `MENTE_FRATTURATA` con durata a turni (rientra nella categoria di default di `calcolaDurataStato`, base 3 turni contrastati da SAGGEZZA). Scartato il "malus permanente" originale: dato che i personaggi giocatore subiscono le interazioni esattamente come i nemici (nessuna asimmetria nel `CalcolatoreCombattimento`), un malus vero e proprio via `ModificatoreAttributoMD` (che oggi non ha né durata né un metodo di rimozione) sarebbe rimasto per sempre anche su di loro. `MENTE_FRATTURATA` è invece un normale `TipoEffettoDiStato` a tempo: mentre è attivo, penalizza del 20% la `statOffensiva` di chi lo ha quando attacca con danno MAGICO/ELEMENTALE (non solo ARCANO/PSICHICO) e del 20% la `statDifensiva` di chi lo ha quando subisce danno MAGICO/ELEMENTALE — due controlli generici in testa a `calcolaDannoRisultante` (dove si calcolano `statOffensiva`/`statDifensiva`), non dentro il blocco delle interazioni, perché il malus deve valere in ogni combattimento successivo finché lo stato dura, non solo nel turno in cui scatta la reazione; nuovo valore `TipoInterazioneConEffettiDiStato.FOLLIA_COSMICA`, gestito anche in `ForestaUI`
 
 ### ACCECATO — ✅ chiuso
@@ -102,3 +136,12 @@ già porta con sé.
 
 ### ISPIRATO — ✅ chiuso (effetto positivo, non nasce da un danno)
 - [x] L'effetto del canto di valore del Bardo (vedi `bardo.md`): coraggio e precisione crescono della sua intensità (20% + 2,5% per livello del cantore, al più 50%) per 4 turni. Non ha interazioni con i tipi di danno e non fa danni nel tempo. Si applica in `PersonaggioBase.quantitaModificata`, sommando l'intensità alle percentuali; non agisce se un `QUANTITA_ASSOLUTA` fissa l'attributo. L'Alba Sacra lo toglie come ogni altro effetto di stato.
+
+## Osservazioni
+
+- Le conseguenze sugli stati sono dati dell'enum: una nuova interazione si dichiara con precondizioni, innescanti, moltiplicatore, stati tolti e stati aggiunti, uno per riga nel suo costruttore; il calcolo del danno e le stime delle tattiche le seguono senza codice nuovo, salvo eccezioni di durata o danno.
+- `InterazioniConGliStatiCaratterizzazioneTest` registra l'impronta di tutto ciò che il calcolo produce per ogni stato e tipo di danno: un cambiamento voluto la fa rigenerare, con una nota sul perché.
+
+## Da fare / idee aperte
+
+- Le tattiche non usano ancora le stime "dopo l'azione" (`moltiplicatoreAttesoDopo`, `statiCausabili`): oggi il valutatore guarda solo gli stati di adesso (`moltiplicatoreAtteso`, `DEBOLE_A`). Collegarle vorrebbe dire, per esempio, preferire un bersaglio già RALLENTATO per chi colpisce di TERRA prima di un compagno con la lama (l'INCIAMPO prepara il COLPO_DI_GRAZIA).
