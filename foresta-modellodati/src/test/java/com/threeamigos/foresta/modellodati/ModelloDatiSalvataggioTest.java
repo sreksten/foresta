@@ -39,7 +39,6 @@ class ModelloDatiSalvataggioTest {
         modello.getGruppoGiocatoreMD().aggiungiArtefatto(
                 ArtefattoMDTest.creaArtefatto(TipoArtefatto.PERGAMENA, "la pergamena minore", "che trasmette un effetto"));
         modello.getGruppoGiocatoreMD().setIncantesimi(TipoIncantesimo.FUOCO, 4);
-        modello.getLineaTemporaleMD().setGiocoFinito(true);
         modello.getLineaTemporaleMD().setEvento("Gwendolyn vede levarsi una colonna di fumo a nord");
         modello.getLineaTemporaleMD().addCittaDistrutta(TipoLocazione.CITTA_RUUNA);
         String primo = salva(modello);
@@ -52,7 +51,7 @@ class ModelloDatiSalvataggioTest {
         // Then
         assertEquals(primo, salva(riletto));
         assertEquals(4, riletto.getGruppoGiocatoreMD().getIncantesimi(TipoIncantesimo.FUOCO));
-        assertTrue(riletto.getLineaTemporaleMD().isGiocoFinito());
+        assertFalse(riletto.getLineaTemporaleMD().isGiocoFinito(), "una partita finita non si salva: alla rilettura non lo è");
         assertEquals("Gwendolyn vede levarsi una colonna di fumo a nord", riletto.getLineaTemporaleMD().getEvento());
         assertEquals(Collections.singletonList(TipoLocazione.CITTA_RUUNA), riletto.getLineaTemporaleMD().getCittaDistrutte());
     }

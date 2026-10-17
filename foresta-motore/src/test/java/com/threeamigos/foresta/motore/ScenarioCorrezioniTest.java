@@ -97,6 +97,26 @@ class ScenarioCorrezioniTest {
 	}
 
 	@Test
+	void superatoLUltimoGiornoAccampandosiLaPartitaEPersaSubito() {
+		try (PartitaDiTest partita = PartitaDiTest.nuova(7)) {
+			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO,
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+			partita.comando(Comando.ESCI_DA_CITTA);
+			partita.gruppo().setCoordinate(unaCasellaDiBosco());
+			partita.gruppo().aggiungiPersonaggio(new Guerriero("Sentinella", 1));
+			while (LineaTemporale.getOra() <= 20) {
+				LineaTemporale.aggiungiOre(1);
+			}
+			ModelloDati.getIstanza().getLineaTemporaleMD().setGiorno(40);
+
+			// Il mattino dopo è il giorno 41: non si torna a scegliere la direzione (e a poter salvare)
+			partita.comando(Comando.ACCAMPAMENTO);
+			partita.assertStato(Stato.GIOCO_PERSO);
+			assertTrue(partita.testi().stream().anyMatch(t -> t.contains("tutto e' perduto")), String.valueOf(partita.testi()));
+		}
+	}
+
+	@Test
 	void daSoliNonCiSiAccampa() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(7)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO,

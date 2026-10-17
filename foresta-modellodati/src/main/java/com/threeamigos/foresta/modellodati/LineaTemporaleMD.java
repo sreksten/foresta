@@ -30,6 +30,8 @@ public class LineaTemporaleMD implements Serializzabile {
 	private int ora;
 	private int giorno;
 	private final List<TipoLocazione> cittaDistrutte = new ArrayList<>();
+	// Vale solo durante la partita e non si salva: quando diventa vero la partita finisce subito (vinta o persa), senza un
+	// momento in cui la si possa salvare
 	private boolean giocoFinito;
 	// Il messaggio dell'ultimo evento (es. la colonna di fumo), non ancora mostrato al giocatore
 	private String evento;
@@ -101,29 +103,28 @@ public class LineaTemporaleMD implements Serializzabile {
 	}
 
 	/**
-	 * Scrive su una riga ora, giorno, se il gioco è finito, l'ultimo evento (anche vuoto) e poi, se ce ne sono, le città
-	 * distrutte, tutto separato da {@link #PIPE}.
+	 * Scrive su una riga ora, giorno, l'ultimo evento (anche vuoto) e poi, se ce ne sono, le città distrutte, tutto
+	 * separato da {@link #PIPE}. Se il gioco è finito non si scrive: una partita finita non si salva.
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		List<Object> campi = new ArrayList<>(Arrays.asList(
 				ora,
 				giorno,
-				giocoFinito,
 				facoltativo(pulisciCampo(evento))));
 		campi.addAll(cittaDistrutte);
 		stampaRiga(stream, campi);
 	}
 
 	/**
-	 * Rilegge la riga scritta da {@link #salva(PrintWriter)}: dopo i primi quattro campi, tutti gli altri sono città distrutte.
+	 * Rilegge la riga scritta da {@link #salva(PrintWriter)}: dopo i primi tre campi, tutti gli altri sono città distrutte.
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		LettoreCampi st = new LettoreCampi(stream.readLine());
 		ora = st.intero();
 		giorno = st.intero();
-		giocoFinito = st.booleano();
+		giocoFinito = false;
 		evento = st.testoFacoltativo();
 		cittaDistrutte.clear();
 		while (st.haAltriCampi()) {

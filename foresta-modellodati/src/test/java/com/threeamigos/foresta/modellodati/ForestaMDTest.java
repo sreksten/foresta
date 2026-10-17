@@ -1,14 +1,37 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * La mappa a video si ricostruisce quando cambia la versione della mappa: una partita nuova (o caricata) non deve
- * poter avere la stessa versione di quella disegnata prima, altrimenti si vedrebbe la mappa della partita precedente.
+ * La mappa della Foresta: le caselle, le informazioni che ne derivano (locazioni uniche, limiti dell'area conosciuta,
+ * versione della mappa) e il salvataggio, che le ricostruisce alla rilettura.
  */
 class ForestaMDTest {
+
+    /**
+     * Una mappa 4 x 3 tutta di radure, con la città di Nyena in (2, 1).
+     */
+    private static ForestaMD mappa() {
+        ForestaMD foresta = new ForestaMD();
+        foresta.reimposta(4, 3);
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 4; x++) {
+                foresta.impostaLocazione(new CoordinateMD(x, y), TipoLocazione.RADURA);
+            }
+        }
+        foresta.impostaLocazione(new CoordinateMD(2, 1), TipoLocazione.CITTA_NYENA);
+        foresta.aggiungiLocazioneUnica(TipoLocazione.CITTA_NYENA, new CoordinateMD(2, 1));
+        return foresta;
+    }
 
     @Test
     void unaPartitaNuovaNonRipeteLaVersioneDellaMappaPrecedente() {
@@ -20,5 +43,146 @@ class ForestaMDTest {
         int versione = secondaPartita.getVersioneMappa();
         secondaPartita.reimposta(3, 3);
         assertNotEquals(versione, secondaPartita.getVersioneMappa());
+    }
+
+    @Test
+    void unaMappaNuovaNonHaCaselleNeLocazioniUnicheNeAreaConosciuta() {
+        ForestaMD foresta = new ForestaMD();
+        foresta.reimposta(4, 3);
+        assertEquals(4, foresta.getDimensioneX());
+        assertEquals(3, foresta.getDimensioneY());
+        assertNull(foresta.ottieniLocazioneMD(new CoordinateMD(1, 1)));
+        assertNull(foresta.ottieniTipoLocazione(new CoordinateMD(1, 1)));
+        assertNull(foresta.ottieniCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+        assertEquals(-1, foresta.getMinXConosciuta());
+        assertEquals(-1, foresta.getMaxXConosciuta());
+        assertEquals(-1, foresta.getMinYConosciuta());
+        assertEquals(-1, foresta.getMaxYConosciuta());
+    }
+
+    @Test
+    void ogniCasellaHaLaSuaLocazione() {
+        ForestaMD foresta = mappa();
+        assertEquals(TipoLocazione.CITTA_NYENA, foresta.ottieniTipoLocazione(new CoordinateMD(2, 1)));
+        assertEquals(TipoLocazione.CITTA_NYENA, foresta.ottieniTipoLocazione(2, 1));
+        assertEquals(TipoLocazione.RADURA, foresta.ottieniTipoLocazione(1, 2));
+        assertNotSame(foresta.ottieniLocazioneMD(new CoordinateMD(0, 0)), foresta.ottieniLocazioneMD(new CoordinateMD(1, 0)),
+                "due radure sono due radure, non la stessa");
+    }
+
+    @Test
+    void unaLocazioneNuovaTieneSoloVisitataEConosciutaDellaCasella() {
+        ForestaMD foresta = mappa();
+        CoordinateMD casella = new CoordinateMD(1, 1);
+        foresta.impostaLocazioneVisitata(casella);
+        foresta.impostaLocazioneConosciuta(casella);
+        foresta.ottieniLocazioneMD(casella).setNome("La radura dei funghi");
+
+        foresta.impostaLocazione(casella, TipoLocazione.BOSCO);
+
+        assertEquals(TipoLocazione.BOSCO, foresta.ottieniTipoLocazione(casella));
+        assertTrue(foresta.isLocazioneVisitata(casella));
+        assertTrue(foresta.isLocazioneConosciuta(casella));
+        assertNotEquals("La radura dei funghi", foresta.ottieniLocazioneMD(casella).getNome(), "il nome era della radura");
+
+        // Su una casella né visitata né conosciuta non c'è niente da tenere
+        CoordinateMD altra = new CoordinateMD(3, 2);
+        foresta.impostaLocazione(altra, TipoLocazione.PALUDE);
+        assertFalse(foresta.isLocazioneVisitata(altra));
+        assertFalse(foresta.isLocazioneConosciuta(altra));
+    }
+
+    @Test
+    void leLocazioniUnicheSiAggiungonoESiDimenticano() {
+        ForestaMD foresta = mappa();
+        assertEquals(new CoordinateMD(2, 1), foresta.ottieniCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+        foresta.rimuoviLocazioneUnica(TipoLocazione.CITTA_NYENA);
+        assertNull(foresta.ottieniCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+    }
+
+    @Test
+    void visitareUnaCasellaETogliereIlSegnoCambiaLaVersioneDellaMappa() {
+        ForestaMD foresta = mappa();
+        CoordinateMD casella = new CoordinateMD(0, 2);
+        int versione = foresta.getVersioneMappa();
+
+        foresta.impostaLocazioneVisitata(casella);
+        assertTrue(foresta.isLocazioneVisitata(casella));
+        assertNotEquals(versione, foresta.getVersioneMappa());
+
+        versione = foresta.getVersioneMappa();
+        foresta.impostaLocazioneVisitata(casella, false);
+        assertFalse(foresta.isLocazioneVisitata(casella));
+        assertNotEquals(versione, foresta.getVersioneMappa());
+    }
+
+    @Test
+    void leCaselleConosciuteAllarganoLAreaConosciuta() {
+        ForestaMD foresta = mappa();
+        int versione = foresta.getVersioneMappa();
+
+        foresta.impostaLocazioneConosciuta(new CoordinateMD(2, 1));
+        assertTrue(foresta.isLocazioneConosciuta(new CoordinateMD(2, 1)));
+        assertFalse(foresta.isLocazioneConosciuta(new CoordinateMD(1, 1)));
+        assertNotEquals(versione, foresta.getVersioneMappa());
+        assertArea(foresta, 2, 2, 1, 1);
+
+        // Più in basso a sinistra, poi più in alto a destra: i limiti si allargano, e una casella interna non li cambia
+        foresta.impostaLocazioneConosciuta(new CoordinateMD(1, 2));
+        assertArea(foresta, 1, 2, 1, 2);
+        foresta.impostaLocazioneConosciuta(new CoordinateMD(3, 0));
+        assertArea(foresta, 1, 3, 0, 2);
+        foresta.impostaLocazioneConosciuta(new CoordinateMD(2, 1));
+        assertArea(foresta, 1, 3, 0, 2);
+    }
+
+    @Test
+    void conLaMappaCompletaTutteLeCaselleSonoConosciute() {
+        ForestaMD foresta = mappa();
+        foresta.ottieniMappa();
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 4; x++) {
+                assertTrue(foresta.isLocazioneConosciuta(new CoordinateMD(x, y)), x + "," + y);
+            }
+        }
+        assertArea(foresta, 0, 3, 0, 2);
+    }
+
+    @Test
+    void ilSalvataggioRicostruisceCaselleLocazioniUnicheEAreaConosciuta() throws IOException {
+        ForestaMD foresta = mappa();
+        foresta.impostaLocazioneConosciuta(new CoordinateMD(1, 2));
+        foresta.impostaLocazioneConosciuta(new CoordinateMD(3, 0));
+        foresta.impostaLocazioneVisitata(new CoordinateMD(1, 2));
+
+        StringWriter scritto = new StringWriter();
+        try (PrintWriter stream = new PrintWriter(scritto)) {
+            foresta.salva(stream);
+        }
+        assertEquals(1 + 4 * 3, scritto.toString().split("\n").length, "le dimensioni e una riga per casella");
+
+        ForestaMD riletta = new ForestaMD();
+        riletta.leggi(new BufferedReader(new StringReader(scritto.toString())));
+
+        assertEquals(4, riletta.getDimensioneX());
+        assertEquals(3, riletta.getDimensioneY());
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 4; x++) {
+                CoordinateMD casella = new CoordinateMD(x, y);
+                assertEquals(foresta.ottieniTipoLocazione(casella), riletta.ottieniTipoLocazione(casella));
+                assertEquals(foresta.isLocazioneConosciuta(casella), riletta.isLocazioneConosciuta(casella));
+                assertEquals(foresta.isLocazioneVisitata(casella), riletta.isLocazioneVisitata(casella));
+            }
+        }
+        // Le locazioni uniche e i limiti dell'area conosciuta non si salvano: si ricavano dalle caselle
+        assertEquals(new CoordinateMD(2, 1), riletta.ottieniCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+        assertArea(riletta, 1, 3, 0, 2);
+    }
+
+    private static void assertArea(ForestaMD foresta, int minX, int maxX, int minY, int maxY) {
+        assertEquals(minX, foresta.getMinXConosciuta(), "minX");
+        assertEquals(maxX, foresta.getMaxXConosciuta(), "maxX");
+        assertEquals(minY, foresta.getMinYConosciuta(), "minY");
+        assertEquals(maxY, foresta.getMaxYConosciuta(), "maxY");
     }
 }

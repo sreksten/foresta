@@ -943,6 +943,13 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gruppo.pernotta(Foresta.costruisciIstanza(gruppo.getCoordinate()).getTipoRiposo());
 		LineaTemporale.mattinoSeguente();
 		LineaTemporale.eventi(gruppo);
+		// Superato l'ultimo giorno la partita è persa subito: tornando ad ATTESA_DIREZIONE la si potrebbe ancora
+		// salvare, e la sconfitta si vedrebbe solo al passo seguente
+		if (LineaTemporale.isGiocoFinito()) {
+			BusEventi.pubblica(new NotificaTestoFrase(LineaTemporale.getEvento()));
+			stato = Stato.GIOCO_PERSO;
+			return Esito.CONTINUA_CON_INGRESSO;
+		}
 		stato = Stato.ATTESA_DIREZIONE;
 		return Esito.CONTINUA_CON_INGRESSO;
 	}

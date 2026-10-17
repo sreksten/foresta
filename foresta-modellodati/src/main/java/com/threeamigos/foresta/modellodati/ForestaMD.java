@@ -277,8 +277,7 @@ public class ForestaMD implements Serializzabile {
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
-		String line = stream.readLine();
-		LettoreCampi st = new LettoreCampi(line);
+		LettoreCampi st = new LettoreCampi(stream.readLine());
 		dimensioneX = st.intero();
 		dimensioneY = st.intero();
 		reimposta(dimensioneX, dimensioneY);
