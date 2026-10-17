@@ -20,6 +20,7 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
  * <p>
  * Qui ci sono solo i dati: i testi con cui lo si racconta al giocatore ("Coraggio -20% per 3 turni") li scrive
  * {@code TestoDeiModificatori}, in foresta-contratti.
+ *
  * @author Stefano Reksten
  */
 public class ModificatoreAttributoMD {
@@ -79,7 +80,8 @@ public class ModificatoreAttributoMD {
     }
 
     /**
-     * Come si applica la quantità: per esempio come variazione fissa, in percentuale o come valore a cui portare l'attributo.
+     * Come si applica la quantità: per esempio come variazione fissa, in percentuale
+     * o come valore a cui portare l'attributo.
      */
     public TipoModificatore getTipoModificatoreAttributo() {
         return tipoModificatore;

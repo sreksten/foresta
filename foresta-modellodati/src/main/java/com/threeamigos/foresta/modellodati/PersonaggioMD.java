@@ -1,7 +1,9 @@
 package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.tipi.*;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,9 +11,7 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.composto;
-import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
-import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+import static com.threeamigos.foresta.modellodati.Serializzabile.*;
 
 /**
  * I dati di un personaggio: la classe (mago, arpia...), il nome proprio facoltativo, se è vivo (o la causa della morte),
@@ -26,6 +26,8 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
  * chiamano nel costruttore per darsi i valori di partenza, e lì si leggono meglio di un {@code set(TipoAttributo.FORZA, ...)}.
  * <p>
  * Le regole del gioco (come cambiano gli attributi, come si combatte) stanno nel motore; qui ci sono solo i dati.
+ *
+ * @author Stefano Reksten
  */
 public class PersonaggioMD implements Serializzabile {
 
@@ -99,6 +101,9 @@ public class PersonaggioMD implements Serializzabile {
 	 * Modificatori permanenti agli attributi dei personaggi
 	 */
 	private final List<ModificatoreAttributoMD> modificatori = new ArrayList<>();
+	/**
+	 * Tattica del personaggio
+	 */
 	private TatticaMD tattica;
 	/**
 	 * Effetti di stato applicati al personaggio
@@ -263,9 +268,9 @@ public class PersonaggioMD implements Serializzabile {
 		return valoriAttributi.get(tipo);
 	}
 
-	// Piccola eccezione, TEMPO non è detto che ci sia.
 	/**
-	 * Come {@link #get(TipoAttributo)}, ma vuoto invece di lanciare un'eccezione: serve per l'attributo del tempo, che non tutti hanno.
+	 * Come {@link #get(TipoAttributo)}, ma vuoto invece di lanciare un'eccezione:
+	 * serve per l'attributo del tempo, che non tutti hanno.
 	 */
 	public Optional<Double> getOptional(TipoAttributo tipo) {
 		return Optional.ofNullable(valoriAttributi.get(tipo));
@@ -282,123 +287,41 @@ public class PersonaggioMD implements Serializzabile {
 		set(TipoAttributo.SALUTE, salute);
 	}
 
-
-
-
 	public void setForza(double forza) {
 		set(TipoAttributo.FORZA, forza);
 	}
-
-
-
 
 	public void setDestrezza(double destrezza) {
 		set(TipoAttributo.DESTREZZA, destrezza);
 	}
 
-
-
-
 	public void setCostituzione(double costituzione) {
 		set(TipoAttributo.COSTITUZIONE, costituzione);
 	}
-
-
-
 
 	public void setIntelligenza(double intelligenza) {
 		set(TipoAttributo.INTELLIGENZA, intelligenza);
 	}
 
-
-
-
 	public void setSaggezza(double saggezza) {
 		set(TipoAttributo.SAGGEZZA, saggezza);
 	}
-
-
-
 
 	public void setCarisma(double carisma) {
 		set(TipoAttributo.CARISMA, carisma);
 	}
 
-
-
-
 	public void setFortuna(double fortuna) {
 		set(TipoAttributo.FORTUNA, fortuna);
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	public void setMagia(double magia) {
 		set(TipoAttributo.MAGIA, magia);
 	}
 
-
-
-
-
-
-
-
-
-
-
-
 	public void setStanchezza(double stanchezza) {
 		set(TipoAttributo.STANCHEZZA, stanchezza);
 	}
-
-
-
-
-
-
-
 
 	public String getCausaTrapasso() {
 		return causaTrapasso;
@@ -563,9 +486,6 @@ public class PersonaggioMD implements Serializzabile {
 		}
 
 		String intestazioneTattica = stream.readLine();
-		if (intestazioneTattica == null) {
-			throw new IOException("Fine del salvataggio inattesa");
-		}
 		tattica = intestazioneTattica.isEmpty() ? null : TatticaMD.leggi(intestazioneTattica, stream);
 
 		artefatti.clear();

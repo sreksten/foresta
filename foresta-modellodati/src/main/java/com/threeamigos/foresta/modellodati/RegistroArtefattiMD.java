@@ -27,7 +27,7 @@ public class RegistroArtefattiMD implements Serializzabile {
 	// I magazzini dei negozi: più negozi della stessa città hanno la stessa coordinata
 	private final Map<TipoNegozio, Map<CoordinateMD, List<ArtefattoMD>>> magazzini = new EnumMap<>(TipoNegozio.class);
 	// Locazioni di artefatti smarriti di cui il giocatore ha avuto notizia (Informazioni, in
-	// locanda o per amicizia): vanno segnalate sulla mappa con Indicatore.gif finché
+	// locanda o per amicizia): vanno segnalate sulla mappa con l'indicatore finché
 	// l'artefatto non viene recuperato.
 	private final Set<CoordinateMD> localizzazioniConosciute = new HashSet<>();
 
@@ -208,7 +208,7 @@ public class RegistroArtefattiMD implements Serializzabile {
 	 */
 	public List<ArtefattoMD> getMagazzino(CoordinateMD coordinate, TipoNegozio negozio) {
 		List<ArtefattoMD> magazzino = magazzinoEsistente(coordinate, negozio);
-		return magazzino == null ? Collections.<ArtefattoMD>emptyList() : Collections.unmodifiableList(magazzino);
+		return magazzino == null ? Collections.emptyList() : Collections.unmodifiableList(magazzino);
 	}
 
 	// Null se il negozio non ha un magazzino in quella città
