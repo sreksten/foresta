@@ -34,7 +34,7 @@ Le missioni si dividono per come sono scritte:
 
 ## 2. Il registro (`RegistroMissioni`)
 
-`RegistroMissioni` è la facciata statica sul modello dati (`RegistroMissioniMD`: due mappe, attive e completate) e tiene in memoria gli elenchi di primo livello:
+`RegistroMissioni` è la facciata statica sul modello dati (`RegistroMissioniMD`: una mappa per identificativo, con le missioni di primo livello; una completata vi resta, con la proprietà `COMPLETA`) e tiene in memoria gli elenchi di primo livello:
 
 - le **predefinite** (le `MissionePredefinita` con `isPredefinita()`: la missione principale, le due di recupero, le leggende, gli incarichi e le altre che esistono dall'inizio) in tre elenchi: in corso, completate, fallite. All'inizio della partita (`reimposta`) se ne crea una per ogni valore; nessuna è attiva finché non si attiva da sola (§3). L'identificatore di una predefinita è il nome del suo valore;
 - le **secondarie di primo livello** (`aggiungiMissioneSecondaria`): missioni nate durante la partita fuori dall'albero della principale, per esempio l'incarico in città che ne ripete uno finito. Anche queste in corso, completate, fallite.
@@ -53,7 +53,7 @@ Le figlie non stanno in nessun elenco: una figlia completata o fallita resta den
 
 **Eventi di gioco.** `registrati()` (chiamato da `Main`) iscrive il registro al bus per contare ciò che le missioni a passi vogliono sapere: l'apertura di un combattimento, gli avversari sconfitti (con la casella), gli oggetti raccolti, i passaggi inosservati. Ognuno è girato a tutte le missioni a passi non finite (`registraEvento`).
 
-**Salvataggio e rilettura.** Si salvano i due elenchi di `RegistroMissioniMD` (attive e completate, ciascuno con tutto il proprio albero). `aggiornaDopoRilettura()` ricostruisce gli oggetti: per una predefinita crea l'istanza dal suo tipo, per le altre dalla `MissionePredefinita` dichiarata nel nodo, poi riattacca ricorsivamente le figlie (`setModelloDati` svuota la lista delle figlie costruite dal costruttore, perché la struttura appartiene al modello dati: figlie con identificatori diversi da quelli salvati farebbero sparire i progressi). Poi smista in corso/completate/fallite e ricostruisce i claim delle locazioni (§6).
+**Salvataggio e rilettura.** Si salva l'elenco di `RegistroMissioniMD`, ogni missione con tutto il proprio albero. `aggiornaDopoRilettura()` ricostruisce gli oggetti: per una predefinita crea l'istanza dal suo tipo, per le altre dalla `MissionePredefinita` dichiarata nel nodo, poi riattacca ricorsivamente le figlie (`setModelloDati` svuota la lista delle figlie costruite dal costruttore, perché la struttura appartiene al modello dati: figlie con identificatori diversi da quelli salvati farebbero sparire i progressi). Poi smista in corso/completate/fallite e ricostruisce i claim delle locazioni (§6).
 
 **Chi sa se la partita è vinta.** `Automa` chiede a `getMissionePrincipale()` se è completa per decidere fra `GIOCO_VINTO` e `GIOCO_PERSO` (vedi [`motore_di_gioco.md`](motore_di_gioco.md) §3).
 

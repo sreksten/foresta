@@ -63,4 +63,12 @@ class LettoreCampiTest {
         assertTrue(riletto.isVivo());
         assertEquals(com.threeamigos.foresta.tipi.TipoPersonaggio.GUERRIERO, riletto.getClasse());
     }
+
+    @Test
+    void unDecimaleRovinatoDaUnIOExceptionCheDiceDove() throws IOException {
+        LettoreCampi campi = new LettoreCampi("1.5|uno e mezzo");
+        assertEquals(1.5d, campi.decimale());
+        IOException errore = assertThrows(IOException.class, campi::decimale);
+        assertTrue(errore.getMessage().contains("uno e mezzo"), errore.getMessage());
+    }
 }

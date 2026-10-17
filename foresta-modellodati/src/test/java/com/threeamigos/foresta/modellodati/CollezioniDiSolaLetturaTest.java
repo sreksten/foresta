@@ -196,10 +196,9 @@ class CollezioniDiSolaLetturaTest {
 		registro.aggiungiMissione("m1", principale);
 		principale.aggiungiMissioneMD(secondaria);
 
-		assertThrows(UnsupportedOperationException.class, () -> registro.getMissioniAttive().clear());
-		assertThrows(UnsupportedOperationException.class, () -> registro.getMissioniCompletate().add(new MissioneMD()));
+		assertThrows(UnsupportedOperationException.class, () -> registro.getMissioni().clear());
 		assertThrows(UnsupportedOperationException.class, () -> principale.getMissioniMD().clear());
-		assertEquals(1, registro.getMissioniAttive().size());
+		assertEquals(1, registro.getMissioni().size());
 		assertEquals(1, principale.getMissioniMD().size());
 
 		principale.rimuoviMissioneMD(secondaria);

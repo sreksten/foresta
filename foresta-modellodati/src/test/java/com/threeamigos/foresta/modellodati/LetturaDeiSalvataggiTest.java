@@ -2,11 +2,13 @@ package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import org.junit.jupiter.api.Test;
 
@@ -183,6 +185,25 @@ class LetturaDeiSalvataggiTest {
 		oggetto.salva(stream);
 		stream.flush();
 		return scritto.toString();
+	}
+
+	@Test
+	void unPersonaggioTroncatoInQualunqueRigaDaUnErroreChiaro() throws IOException {
+		PersonaggioMD personaggio = new PersonaggioMD();
+		personaggio.setClasse(TipoPersonaggio.GUERRIERO);
+		personaggio.setVivo(true);
+		personaggio.setForza(12);
+		personaggio.aggiungiArtefatto(ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia"));
+		String[] righe = scrivi(personaggio).split("\n");
+		// Senza tattica la sua riga è vuota: troncato proprio lì, non deve diventare una NullPointerException
+		for (int quante = 0; quante < righe.length; quante++) {
+			StringBuilder troncato = new StringBuilder();
+			for (int i = 0; i < quante; i++) {
+				troncato.append(righe[i]).append('\n');
+			}
+			String testo = troncato.toString();
+			assertThrows(IOException.class, () -> new PersonaggioMD().leggi(lettore(testo)), "troncato dopo " + quante + " righe");
+		}
 	}
 
 	private static BufferedReader lettore(String testo) {

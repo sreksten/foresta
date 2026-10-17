@@ -400,4 +400,69 @@ class ArtefattoMDTest {
         assertEquals(coefficienteScala, incantamento.getCoefficienteScala(), 0.0001);
     }
 
+
+    @Test
+    void identificativoSetLeggendarioEFigliVisibili() {
+        ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia");
+        assertNotNull(artefatto.getUuid());
+        assertNotEquals(artefatto.getUuid(), creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia").getUuid());
+        artefatto.setPezzoDiSetLeggendario("SET_DEL_DRAGO", "LAMA");
+        assertEquals("SET_DEL_DRAGO", artefatto.getSetLeggendario());
+        assertEquals("LAMA", artefatto.getPezzoLeggendario());
+        artefatto.setFigliVisibili(false);
+        assertFalse(artefatto.isFigliVisibili());
+        artefatto.setFigliVisibili(true);
+        assertTrue(artefatto.isFigliVisibili());
+    }
+
+    @Test
+    void nomiVuotiONulli() {
+        ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia");
+        artefatto.setNome(null);
+        assertEquals(ArtefattoMD.NESSUN_NOME, artefatto.getNome());
+        artefatto.setNome("   ");
+        assertEquals(ArtefattoMD.NESSUN_NOME, artefatto.getNome());
+        artefatto.setNomeProprio(null);
+        assertNull(artefatto.getNomeProprio());
+        artefatto.setNomeProprio("  ");
+        assertNull(artefatto.getNomeProprio());
+    }
+
+    @Test
+    void conIlNomeProprioLaDescrizioneBreveMetteIlNomeEPoiLaDescrizioneSeCe() {
+        ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "la spada di fuoco", "che brucia i nemici");
+        assertEquals("che brucia i nemici", artefatto.getDescrizioneBreve(), "senza nome proprio, la sola descrizione");
+        artefatto.setNomeProprio("Diavolina");
+        assertEquals("la spada di fuoco, che brucia i nemici", artefatto.getDescrizioneBreve());
+        artefatto.setDescrizione("");
+        assertEquals("la spada di fuoco", artefatto.getDescrizioneBreve());
+        artefatto.setDescrizione(null);
+        assertEquals("la spada di fuoco", artefatto.getDescrizioneBreve());
+    }
+
+    @Test
+    void unModificatoreSulBersaglioStaSoloSuArmiEIngredienti() {
+        ModificatoreAttributoMD sulBersaglio = new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 0.0d,
+                "", UnitaDurataModificatore.TURNI, 3, BersaglioModificatore.BERSAGLIO);
+        creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia").addModificatore(sulBersaglio);
+        creaArtefatto(TipoArtefatto.PERGAMENA, "la pergamena", "che porta l'effetto").addModificatore(sulBersaglio);
+        ArtefattoMD elmo = creaArtefatto(TipoArtefatto.ELMO, "l'elmo", "che protegge");
+        IllegalArgumentException errore = assertThrows(IllegalArgumentException.class, () -> elmo.addModificatore(sulBersaglio));
+        assertTrue(errore.getMessage().contains("ELMO"), errore.getMessage());
+        elmo.addModificatore(sulBersaglio.suPortatore());
+    }
+
+    @Test
+    void modificatoriEIncantamentiSiTolgono() {
+        ArtefattoMD spada = creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia");
+        ModificatoreAttributoMD forza = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 2.0d);
+        spada.addModificatore(forza);
+        assertTrue(spada.removeModificatore(forza));
+        assertFalse(spada.removeModificatore(forza));
+        IncantamentoMD fuoco = new IncantamentoMD("Fuoco", TipoDanno.FUOCO, 5, 0.1d);
+        spada.addIncantamento(fuoco);
+        assertTrue(spada.getIncantamenti().contains(fuoco));
+        assertTrue(spada.removeIncantamento(fuoco));
+        assertFalse(spada.removeIncantamento(fuoco));
+    }
 }

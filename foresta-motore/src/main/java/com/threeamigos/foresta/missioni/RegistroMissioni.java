@@ -168,8 +168,7 @@ public class RegistroMissioni {
 	public static void aggiornaDopoRilettura() {
 		RegistroMissioniMD md = getRegistroMissioni();
 		pulisciElenchi();
-		aggiornaDopoRiletturaImpl(md.getMissioniAttive());
-		aggiornaDopoRiletturaImpl(md.getMissioniCompletate());
+		aggiornaDopoRiletturaImpl(md.getMissioni());
 		ricostruisciLocazioniOccupate();
 		ricostruisciLocazioniSegnalate();
 	}

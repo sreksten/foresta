@@ -486,6 +486,10 @@ public class PersonaggioMD implements Serializzabile {
 		}
 
 		String intestazioneTattica = stream.readLine();
+		if (intestazioneTattica == null) {
+			// Un salvataggio troncato dà sempre un'IOException, mai una NullPointerException (vedi LetturaDeiSalvataggiTest)
+			throw new IOException("Fine del salvataggio inattesa");
+		}
 		tattica = intestazioneTattica.isEmpty() ? null : TatticaMD.leggi(intestazioneTattica, stream);
 
 		artefatti.clear();

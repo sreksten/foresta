@@ -18,8 +18,11 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
 import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
- * Una condizione di una voce: il tipo, il parametro (del tipo che il tipo di predicato dichiara) e se è negata (<code>NON</code>). Immutabile.
- * Le condizioni di una voce sono in AND. Vedi tattiche_di_combattimento_automatiche.md §11.8.
+ * Una condizione di una voce: il tipo, il parametro (del tipo che il tipo di predicato dichiara) e se è negata
+ * (<code>NON</code>). È immutabile. Le condizioni di una voce sono in AND.
+ * Vedi tattiche_di_combattimento_automatiche.md §11.8.
+ *
+ * @author Stefano Reksten
  */
 public final class PredicatoMD {
 
@@ -156,19 +159,16 @@ public final class PredicatoMD {
 			filtri.add(FiltroMD.leggi(stream));
 		}
 		PredicatoMD predicato;
+		TipoParametro parametro = tipo.getParametro();
 		try {
-			switch (tipo.getParametro()) {
-				case SELEZIONE_CONFRONTO_E_NUMERO:
-					predicato = quanti(rosa, filtri, confronto, numero);
-					break;
-				case CONFRONTO_E_NUMERO:
-					predicato = conConfrontoENumero(tipo, confronto, numero);
-					break;
-				case NUMERO:
-					predicato = probabilita(numero);
-					break;
-				default:
-					throw new IOException("Parametro di predicato sconosciuto: " + tipo.getParametro());
+			// L'ultimo caso è il numero (la probabilità): un parametro che i predicati non usano finisce lì, e verifica lo rifiuta
+			if (parametro == TipoParametro.SELEZIONE_CONFRONTO_E_NUMERO) {
+				predicato = quanti(rosa, filtri, confronto, numero);
+			} else if (parametro == TipoParametro.CONFRONTO_E_NUMERO) {
+				predicato = conConfrontoENumero(tipo, confronto, numero);
+			} else {
+				verifica(tipo, TipoParametro.NUMERO);
+				predicato = probabilita(numero);
 			}
 		} catch (NullPointerException e) {
 			throw new IOException("Predicato " + tipo + " senza il suo parametro", e);

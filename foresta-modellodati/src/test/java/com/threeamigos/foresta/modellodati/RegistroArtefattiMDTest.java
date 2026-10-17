@@ -4,7 +4,10 @@ import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -70,6 +73,90 @@ class RegistroArtefattiMDTest {
         RegistroArtefattiMD ricaricato = salvaERileggi(registro);
         // Then
         assertNull(ricaricato.getArtefattoInLocazione(tempio));
+    }
+
+    @Test
+    void gliArtefattiDaDistribuireSiPrendonoUnoAllaVoltaENonSiSalvano() throws IOException {
+        RegistroArtefattiMD registro = new RegistroArtefattiMD();
+        ArtefattoMD primo = ArtefattoMDTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla");
+        ArtefattoMD secondo = ArtefattoMDTest.creaArtefatto(TipoArtefatto.TALISMANO, "il talismano", "che protegge");
+        registro.aggiungiArtefatto(primo);
+        registro.aggiungiArtefatto(secondo);
+        assertEquals(2, registro.getNumeroDisponibili());
+        assertSame(secondo, registro.rimuoviDisponibile(1));
+        assertEquals(1, registro.getNumeroDisponibili());
+
+        assertEquals(0, salvaERileggi(registro).getNumeroDisponibili(), "servono solo mentre si costruisce la foresta");
+    }
+
+    @Test
+    void leLocalizzazioniConosciuteSiSalvanoESiDimenticanoConLArtefatto() throws IOException {
+        RegistroArtefattiMD registro = new RegistroArtefattiMD();
+        CoordinateMD palude = new CoordinateMD(5, 6);
+        CoordinateMD grotta = new CoordinateMD(9, 2);
+        registro.addArtefattoInLocazione(ArtefattoMDTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla"), palude);
+        registro.addArtefattoInLocazione(ArtefattoMDTest.creaArtefatto(TipoArtefatto.ELMO, "l'elmo", "che protegge"), grotta);
+        registro.segnaLocalizzazioneConosciuta(palude);
+        assertTrue(registro.isLocalizzazioneConosciuta(palude));
+        assertFalse(registro.isLocalizzazioneConosciuta(grotta));
+        assertEquals(new HashSet<>(Arrays.asList(palude, grotta)), registro.getUbicazioniArtefattiSmarriti());
+        assertThrows(UnsupportedOperationException.class, () -> registro.getLocalizzazioniConosciute().clear());
+        assertThrows(UnsupportedOperationException.class, () -> registro.getUbicazioniArtefattiSmarriti().clear());
+
+        RegistroArtefattiMD ricaricato = salvaERileggi(registro);
+        assertEquals(Collections.singleton(palude), ricaricato.getLocalizzazioniConosciute());
+
+        ricaricato.rimuoviArtefattoInLocazione(palude);
+        assertFalse(ricaricato.isLocalizzazioneConosciuta(palude), "recuperato l'artefatto, la mappa non lo segnala più");
+    }
+
+    @Test
+    void iMagazziniSiCreanoScrivendoliNonLeggendoli() {
+        RegistroArtefattiMD registro = new RegistroArtefattiMD();
+        CoordinateMD citta = new CoordinateMD(7, 1);
+        ArtefattoMD spada = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia");
+        ArtefattoMD scudo = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SCUDO, "lo scudo", "che para");
+
+        assertTrue(registro.getMagazzino(citta, TipoNegozio.ARMAIOLO).isEmpty());
+        assertTrue(registro.getCoordinateMagazzini(TipoNegozio.ARMAIOLO).isEmpty(), "leggere un magazzino non lo crea");
+        assertFalse(registro.rimuoviDaMagazzino(citta, TipoNegozio.ARMAIOLO, spada));
+        registro.tieniInMagazzino(citta, TipoNegozio.ARMAIOLO, a -> true);
+
+        registro.aggiungiAMagazzino(citta, TipoNegozio.ARMAIOLO, spada);
+        registro.aggiungiAMagazzino(citta, TipoNegozio.ARMAIOLO, scudo);
+        assertEquals(Collections.singleton(citta), registro.getCoordinateMagazzini(TipoNegozio.ARMAIOLO));
+        assertThrows(UnsupportedOperationException.class, () -> registro.getMagazzino(citta, TipoNegozio.ARMAIOLO).clear());
+
+        registro.tieniInMagazzino(citta, TipoNegozio.ARMAIOLO, a -> a.getTipo() == TipoArtefatto.SCUDO);
+        assertEquals(Collections.singletonList(scudo), registro.getMagazzino(citta, TipoNegozio.ARMAIOLO));
+        assertTrue(registro.rimuoviDaMagazzino(citta, TipoNegozio.ARMAIOLO, scudo));
+        assertFalse(registro.rimuoviDaMagazzino(new CoordinateMD(1, 1), TipoNegozio.ARMAIOLO, scudo), "un'altra città non ha magazzino");
+    }
+
+    @Test
+    void reimpostareDimenticaTutto() {
+        RegistroArtefattiMD registro = new RegistroArtefattiMD();
+        CoordinateMD casella = new CoordinateMD(2, 2);
+        registro.aggiungiArtefatto(ArtefattoMDTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla"));
+        registro.addArtefattoInLocazione(ArtefattoMDTest.creaArtefatto(TipoArtefatto.ELMO, "l'elmo", "che protegge"), casella);
+        registro.segnaLocalizzazioneConosciuta(casella);
+        registro.aggiungiAMagazzino(casella, TipoNegozio.ARMAIOLO, ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia"));
+
+        registro.reimposta();
+
+        assertEquals(0, registro.getNumeroDisponibili());
+        assertTrue(registro.getUbicazioniArtefattiSmarriti().isEmpty());
+        assertTrue(registro.getLocalizzazioniConosciute().isEmpty());
+        assertTrue(registro.getCoordinateMagazzini(TipoNegozio.ARMAIOLO).isEmpty());
+    }
+
+    @Test
+    void unArtefattoSiPortaDietroLaSuaUbicazione() {
+        ArtefattoMD anello = ArtefattoMDTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla");
+        CoordinateMD palude = new CoordinateMD(5, 6);
+        RegistroArtefattiMD.ArtefattoESuaUbicazione informazione = new RegistroArtefattiMD.ArtefattoESuaUbicazione(anello, palude);
+        assertSame(anello, informazione.getArtefattoMD());
+        assertSame(palude, informazione.getCoordinate());
     }
 
     private static RegistroArtefattiMD salvaERileggi(RegistroArtefattiMD registro) throws IOException {

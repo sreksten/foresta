@@ -61,4 +61,11 @@ class TrofeiMDTest {
 			assertEquals(0, riletto.getProgresso(trofeo));
 		}
 	}
+
+    @Test
+    void leRigheVuoteSiSaltano() throws IOException {
+        TrofeiMD trofei = new TrofeiMD();
+        trofei.leggi(new BufferedReader(new StringReader("\n" + TipoTrofeo.PERDIGIORNO.name() + "|true|0\n\n")));
+        assertTrue(trofei.isVinto(TipoTrofeo.PERDIGIORNO));
+    }
 }

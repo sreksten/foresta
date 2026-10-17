@@ -18,8 +18,11 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
 import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
- * Un filtro di un selettore: il tipo, il parametro (del tipo che il tipo di filtro dichiara) e se è negato (<code>NON</code>). Immutabile.
- * Si costruisce con i metodi statici, che controllano che il parametro sia quello giusto. Vedi tattiche_di_combattimento_automatiche.md §11.5.
+ * Un filtro di un selettore: il tipo, il parametro (del tipo che il tipo di filtro dichiara) e
+ * se è negato (<code>NON</code>). È immutabile. Si costruisce con i metodi statici, che controllano che
+ * il parametro sia quello giusto. Vedi tattiche_di_combattimento_automatiche.md §11.5.
+ *
+ * @author Stefano Reksten
  */
 public final class FiltroMD {
 
@@ -207,31 +210,23 @@ public final class FiltroMD {
 		CategoriaPersonaggio categoria = campi.enumeratoFacoltativo(CategoriaPersonaggio.class);
 		TipoDanno tipoDanno = campi.enumeratoFacoltativo(TipoDanno.class);
 		FiltroMD filtro;
+		TipoParametro parametro = tipo.getParametro();
 		try {
-			switch (tipo.getParametro()) {
-				case NESSUNO:
-					filtro = senzaParametro(tipo);
-					break;
-				case CONFRONTO_E_NUMERO:
-					filtro = conConfrontoENumero(tipo, confronto, numero);
-					break;
-				case CONFRONTO:
-					filtro = conConfronto(tipo, confronto);
-					break;
-				case STATO:
-					filtro = conStato(tipo, stato);
-					break;
-				case CLASSE:
-					filtro = conClasse(tipo, classe);
-					break;
-				case CATEGORIA:
-					filtro = conCategoria(tipo, categoria);
-					break;
-				case TIPO_DANNO:
-					filtro = conTipoDanno(tipo, tipoDanno);
-					break;
-				default:
-					throw new IOException("Parametro di filtro sconosciuto: " + tipo.getParametro());
+			// L'ultimo caso è il tipo di danno: un parametro che i filtri non usano finisce lì, e la fabbrica lo rifiuta
+			if (parametro == TipoParametro.NESSUNO) {
+				filtro = senzaParametro(tipo);
+			} else if (parametro == TipoParametro.CONFRONTO_E_NUMERO) {
+				filtro = conConfrontoENumero(tipo, confronto, numero);
+			} else if (parametro == TipoParametro.CONFRONTO) {
+				filtro = conConfronto(tipo, confronto);
+			} else if (parametro == TipoParametro.STATO) {
+				filtro = conStato(tipo, stato);
+			} else if (parametro == TipoParametro.CLASSE) {
+				filtro = conClasse(tipo, classe);
+			} else if (parametro == TipoParametro.CATEGORIA) {
+				filtro = conCategoria(tipo, categoria);
+			} else {
+				filtro = conTipoDanno(tipo, tipoDanno);
 			}
 		} catch (NullPointerException e) {
 			throw new IOException("Filtro " + tipo + " senza il suo parametro", e);
