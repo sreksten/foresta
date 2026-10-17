@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.motore.ModalitaDiProva;
@@ -430,7 +431,6 @@ public class CalcolatoreCombattimento {
                     case ESPLOSIONE_DI_GAS:
                     case VAMPATA_TOSSICA:
                     case COAGULAZIONE_FORZATA:
-                    case FRANTUMAZIONE_DEL_GHIACCIO:
                     case DISGELO_VIOLENTO:
                     case SUPERCONDUZIONE:
                     case RIGETTO:
@@ -457,8 +457,8 @@ public class CalcolatoreCombattimento {
                         break;
 
                     case MIETITURA:
-                        // La SAGGEZZA del difensore riduce l'efficacia dei danni NECROTICO su un bersaglio MALEDETTO
-                        // (il moltiplicatore sta in moltiplicatoreDelleInterazioni)
+                        // Il danno raddoppia (l'ha già fatto moltiplicatoreDelleInterazioni); il minion quasi morto si
+                        // risveglia scheletro (PersonaggioBase.applicaRisultatoCombattimento)
                         dannoRisultante.setMietituraAttiva(true);
                         break;
 
@@ -482,6 +482,12 @@ public class CalcolatoreCombattimento {
                         Logger.log("tipo danno TAGLIENTE o PERFORANTE, critico automatico");
                         criticoAutomatico = true;
                         dannoRisultante.setColpoDiGrazia(true);
+                        break;
+
+                    case FRANTUMAZIONE_DEL_GHIACCIO:
+                        // Il ghiaccio va in pezzi: critico automatico, che non si somma a un critico vero
+                        Logger.log("tipo danno CONTUNDENTE su un CONGELATO, critico automatico");
+                        criticoAutomatico = true;
                         break;
 
                     case RISONANZA_SIGILLATA:
@@ -528,6 +534,7 @@ public class CalcolatoreCombattimento {
 
                 // Se il bersaglio era BAGNATO e la spada è di FUOCO, si attiva l'interazione Vaporizzazione
                 if (elementoMagico == TipoDanno.FUOCO && difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
+                    applicaGliStatiDellInterazione(TipoInterazioneConEffettiDiStato.VAPORIZZAZIONE, attaccante, difensore, dannoRisultante);
                     dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.VAPORIZZAZIONE);
                 }
 
@@ -535,7 +542,7 @@ public class CalcolatoreCombattimento {
                 // danno (non quello dell'arma) e, se il bersaglio è un minion quasi morto, lo fa risvegliare scheletro
                 if (elementoMagico == TipoDanno.NECROTICO && tipoDanno != TipoDanno.NECROTICO
                         && difensore.hasEffettoDiStato(TipoEffettoDiStato.MALEDETTO)) {
-                    dannoQuestoIncantamento = dannoQuestoIncantamento * moltiplicatoreMietitura(difensore);
+                    dannoQuestoIncantamento = dannoQuestoIncantamento * TipoInterazioneConEffettiDiStato.MIETITURA.getMoltiplicatore();
                     dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.MIETITURA);
                     dannoRisultante.setMietituraAttiva(true);
                 }
@@ -671,14 +678,6 @@ public class CalcolatoreCombattimento {
     }
 
     /**
-     * Di quanto la Mietitura moltiplica il danno necrotico su un bersaglio MALEDETTO: la SAGGEZZA del difensore ne
-     * riduce l'efficacia.
-     */
-    private static double moltiplicatoreMietitura(Personaggio difensore) {
-        return Math.max(1.0d, 2.0d - (difensore.getSaggezza() / 100.0));
-    }
-
-    /**
      * Il danno di un incantamento, mitigato dalla difesa del bersaglio contro il suo tipo di danno.
      * La parte fissa scala con il livello dell'oggetto (e per moltiplicatoreParteFissa), quella percentuale
      * con l'INTELLIGENZA e il moltiplicatore di danno magico di chi colpisce: una spada di fuoco rende di più
@@ -799,13 +798,16 @@ public class CalcolatoreCombattimento {
     }
 
     /**
-     * Quanto dura uno stato messo da una reazione: quanto dura di solito, salvo lo SCHIACCIAMENTO (un turno in più a terra),
+     * Quanto dura uno stato messo da una reazione: quanto dura di solito, salvo l'ALIMENTAZIONE_FIAMMA (il vento allunga il
+     * BRUCIATO: a quel che resta si somma una durata normale), lo SCHIACCIAMENTO (un turno in più a terra),
      * il FANGO (un RALLENTATO severo, due turni in più), il SOVRACCARICO_MENTALE (uno STORDITO pesante, 1-2 turni) e il
      * DISORIENTAMENTO (uno STORDITO di un turno).
      */
     private static int durataDelloStatoMesso(TipoInterazioneConEffettiDiStato interazione, Personaggio difensore,
                                              TipoEffettoDiStato stato) {
         switch (interazione) {
+            case ALIMENTAZIONE_FIAMMA:
+                return durataResidua(difensore, stato) + calcolaDurataStato(difensore, stato);
             case SCHIACCIAMENTO:
                 return calcolaDurataStato(difensore, stato) + 1;
             case FANGO:
@@ -817,6 +819,14 @@ public class CalcolatoreCombattimento {
             default:
                 return calcolaDurataStato(difensore, stato);
         }
+    }
+
+    /**
+     * I turni che restano allo stato del difensore, 0 se non ce l'ha.
+     */
+    private static int durataResidua(Personaggio difensore, TipoEffettoDiStato stato) {
+        return difensore.getEffettiDiStato().stream().filter(e -> e.getTipoEffettoDiStato() == stato)
+                .mapToInt(EffettoDiStatoMD::getDurata).max().orElse(0);
     }
 
     /**
@@ -886,15 +896,15 @@ public class CalcolatoreCombattimento {
     /**
      * Per quanto il difensore moltiplica il danno di quel tipo: quello della sua classe (debolezza, resistenza o immunità: vedi
      * Personaggio.getMoltiplicatoreDannoSubito) per i moltiplicatori delle interazioni attive (vedi {@link #interazioniAttive};
-     * TipoInterazioneConEffettiDiStato.getMoltiplicatore, più la MIETITURA, che dipende dalla SAGGEZZA del difensore). Meno di 1
+     * TipoInterazioneConEffettiDiStato.getMoltiplicatore; il critico automatico del COLPO_DI_GRAZIA e della
+     * FRANTUMAZIONE_DEL_GHIACCIO non c'è, perché si decide con il critico: lo aggiunge moltiplicatoreAtteso). Meno di 1
      * vuol dire che il difensore resiste, più di 1 che è debole.
      */
     public static double moltiplicatoreDelleInterazioni(Personaggio difensore, TipoDanno tipoDanno,
                                                         List<TipoInterazioneConEffettiDiStato> interazioni) {
         double moltiplicatore = difensore.getMoltiplicatoreDannoSubito(tipoDanno);
         for (TipoInterazioneConEffettiDiStato interazione : interazioni) {
-            moltiplicatore = moltiplicatore * (interazione == TipoInterazioneConEffettiDiStato.MIETITURA ?
-                    moltiplicatoreMietitura(difensore) : interazione.getMoltiplicatore());
+            moltiplicatore = moltiplicatore * interazione.getMoltiplicatore();
         }
         return moltiplicatore;
     }
@@ -927,7 +937,8 @@ public class CalcolatoreCombattimento {
      * vero usa le stesse funzioni.
      * <p>
      * Non tiene conto della probabilità ridotta con cui scattano le reazioni con gli stati e gli stati nativi contro chi resiste
-     * a quel tipo di danno (vedi {@link #fattoreEffetti}): conta le reazioni come se scattassero.
+     * a quel tipo di danno (vedi {@link #fattoreEffetti}): conta le reazioni come se scattassero. Il critico automatico
+     * (TipoInterazioneConEffettiDiStato.isCriticoAutomatico) conta ×2; il critico a caso no.
      */
     public static double moltiplicatoreAtteso(Personaggio difensore, TipoDanno tipoDanno) {
         return moltiplicatoreAtteso(difensore, tipoDanno, StatiPrevisti.NESSUNO);
@@ -961,7 +972,10 @@ public class CalcolatoreCombattimento {
             difesa = difesa * 0.8d;
         }
         difesa = difesa * fattoreDifesaDaStati(difensore, tipoDanno, interazioni, previsti);
-        return 100.0d / (100.0d + difesa) * moltiplicatoreDelleInterazioni(difensore, tipoDanno, interazioni);
+        // Il critico automatico (colpo di grazia, frantumazione) raddoppia il colpo: non è fra i moltiplicatori perché il
+        // calcolo vero lo decide insieme al critico
+        double critico = interazioni.stream().anyMatch(TipoInterazioneConEffettiDiStato::isCriticoAutomatico) ? 2.0d : 1.0d;
+        return 100.0d / (100.0d + difesa) * moltiplicatoreDelleInterazioni(difensore, tipoDanno, interazioni) * critico;
     }
 
     /**

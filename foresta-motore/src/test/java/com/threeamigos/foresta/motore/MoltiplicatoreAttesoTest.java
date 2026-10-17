@@ -92,11 +92,19 @@ class MoltiplicatoreAttesoTest {
         guerriero.addEffettoDiStato(TipoEffettoDiStato.CONGELATO, 3, 0);
         double difesaTagliente = CalcolatoreCombattimento.difesaContro(guerriero, TipoDanno.TAGLIENTE);
         assertEquals(100.0d / (100.0d + difesaTagliente * 1.5d), CalcolatoreCombattimento.moltiplicatoreAtteso(guerriero, TipoDanno.TAGLIENTE), DELTA);
-        // Il contundente frantuma il ghiaccio: danno doppio e la difesa di prima
+        // Il contundente frantuma il ghiaccio: critico automatico (danno doppio) e la difesa di prima
         assertEquals(2.0d * mitigazione(guerriero, TipoDanno.CONTUNDENTE),
                 CalcolatoreCombattimento.moltiplicatoreAtteso(guerriero, TipoDanno.CONTUNDENTE), DELTA);
         double difesaFulmine = CalcolatoreCombattimento.difesaContro(guerriero, TipoDanno.FULMINE);
         assertEquals(1.3d * 100.0d / (100.0d + difesaFulmine * 0.7d), CalcolatoreCombattimento.moltiplicatoreAtteso(guerriero, TipoDanno.FULMINE), DELTA);
+    }
+
+    @Test
+    void ilColpoDiGraziaSuChiEATerraContaDoppio() {
+        Personaggio guerriero = difensore(TipoPersonaggio.GUERRIERO);
+        guerriero.addEffettoDiStato(TipoEffettoDiStato.STORDITO, 3, 0);
+        assertEquals(2.0d * mitigazione(guerriero, TipoDanno.TAGLIENTE),
+                CalcolatoreCombattimento.moltiplicatoreAtteso(guerriero, TipoDanno.TAGLIENTE), DELTA);
     }
 
     @Test

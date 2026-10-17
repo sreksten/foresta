@@ -26,7 +26,7 @@ class MoltiplicatoriDelleInterazioniTest {
         attesi.put(REAZIONE_TOSSICA, 1.15);
         attesi.put(DILUIZIONE_EMATICA, 1.05);
         attesi.put(COAGULAZIONE_FORZATA, 1.05);
-        attesi.put(FRANTUMAZIONE_DEL_GHIACCIO, 2.0);
+        attesi.put(MIETITURA, 2.0);
         attesi.put(DISGELO_VIOLENTO, 1.5);
         attesi.put(SUPERCONDUZIONE, 1.3);
         attesi.put(PURIFICAZIONE, 1.5);

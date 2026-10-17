@@ -52,9 +52,13 @@ class InterazioniConGliStatiCaratterizzazioneTest {
      * il danno vero dei non morti non è più fra le interazioni ma nel campo {@code classe} (SACRO=2.0), con lo stesso
      * effetto sul danno. Da quando gli stati tolti e messi stanno nell'interazione (getStatiRimossi, getStatiApplicati),
      * SHOCK_DI_REALTA e SOVRACCARICO_MENTALE tolgono tutti e due gli stati di paura, SPAVENTATO e CONFUSO, e non solo
-     * quello che contava prima (396 righe su 8316 cambiano solo nell'elenco dei tolti).
+     * quello che contava prima (396 righe su 8316 cambiano solo nell'elenco dei tolti). Poi, solo negli stati (51 righe
+     * ciascuna): la VAPORIZZAZIONE mette ACCECATO, l'ESPLOSIONE_DI_GAS toglie BRUCIATO e AVVELENATO invece di mettere
+     * AVVELENATO, l'ALIMENTAZIONE_FIAMMA allunga il BRUCIATO (quel che resta più una durata normale), l'ESTINZIONE toglie
+     * anche il BAGNATO. Nel danno: la MIETITURA moltiplica per 2 e non più per 2 - SAGGEZZA/100 (51 righe), la
+     * FRANTUMAZIONE_DEL_GHIACCIO è un critico automatico invece di un ×2 che un critico vero portava a ×4 (44 righe).
      */
-    private static final String IMPRONTA_ATTESA = "1fd6bf8e6ac621c3534ebe15a7ee1c8ea41543a7edeb7c166919314c41f5746e";
+    private static final String IMPRONTA_ATTESA = "737704a52ef48ba7ef3dcb673a84768b20f73aa3ba764c2963c277ced6e76b2a";
 
     private static final TipoEffettoDiStato[] STATI = {
             TipoEffettoDiStato.BAGNATO, TipoEffettoDiStato.BRUCIATO, TipoEffettoDiStato.AVVELENATO, TipoEffettoDiStato.SANGUINAMENTO,

@@ -57,9 +57,7 @@ public enum TipoEffettoDiStato {
     /**
      * Danno da fuoco periodico. Può propagarsi ad altri elementi o oggetti vicini.
      */
-    // 💧 ACQUA ➔ Estinzione: dovrebbe consumare anche lo stato BAGNATO (oggi toglie solo BRUCIATO, e il BAGNATO che l'acqua mette resta).
-    // 💨 ARIA ➔ Alimentazione: il vento dovrebbe allungare il BRUCIATO o raddoppiarne il danno periodico nel turno successivo (oggi: +50% al danno del colpo).
-    // 🤢 VELENO ➔ Esplosione: dovrebbe essere un'esplosione di fuoco ad area che toglie entrambi gli stati (oggi: +30% al colpo, toglie BRUCIATO e mette AVVELENATO).
+    // 🤢 VELENO ➔ Esplosione: dovrebbe essere anche un'esplosione di fuoco ad area sui nemici vicini (oggi colpisce solo il bersaglio).
     BRUCIATO,
 
     /**
@@ -106,7 +104,6 @@ public enum TipoEffettoDiStato {
     /**
      * Il personaggio ha l'anima o le statistiche temporaneamente compromesse da un influsso oscuro.
      */
-    // 💀 NECROTICO ➔ Mietitura d'Anima: un minion sotto il 20% di vita dovrebbe morire e diventare uno scheletro alleato (non fatto); il danno non raddoppia sempre ma ×(2 - SAGGEZZA/100), almeno ×1.
     // ✨ SACRO ➔ Reazione di Rigetto: l'energia repressa dovrebbe esplodere con danni da Tuono/Sonico a tutti i nemici vicini (oggi toglie solo MALEDETTO).
     MALEDETTO,
 
@@ -118,13 +115,11 @@ public enum TipoEffettoDiStato {
      * Rende vulnerabili ai danni da Fulmine e Ghiaccio, ma aumenta la resistenza al Fuoco.
      */
     // ⚡ FULMINE ➔ Elettroconduzione: il danno dovrebbe propagarsi a tutti i bersagli vicini BAGNATI o nella stessa pozza (oggi solo +50% sul bersaglio).
-    // 🔥 FUOCO ➔ Vaporizzazione: la nuvola di vapore dovrebbe poter accecare (oggi niente ACCECATO).
     BAGNATO,
 
     /**
      * Il bersaglio è completamente bloccato nel ghiaccio.
      */
-    // 🔨 CONTUNDENTE ➔ Frantumazione: dovrebbe essere un critico automatico (×2, come il Colpo di Grazia); oggi è un moltiplicatore ×2, a cui può aggiungersi un critico vero (×4).
     CONGELATO,
 
     // =========================================================================

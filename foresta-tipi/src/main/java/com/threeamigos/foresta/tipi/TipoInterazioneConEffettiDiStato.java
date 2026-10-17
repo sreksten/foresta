@@ -17,7 +17,8 @@ import java.util.Set;
  * {@link #getStatiApplicati()}): l'INCIAMPO atterra chi era RALLENTATO, il CONGELAMENTO trasforma il BAGNATO in CONGELATO.
  * Sono scritti qui, e non solo nel calcolo del danno, perché li usano sia il calcolo vero sia le tattiche, che guardano
  * oltre il colpo di adesso (CalcolatoreCombattimento.statiCausabili). Durate e danni periodici degli stati messi sono
- * quelli normali, salvo le eccezioni che il calcolo del danno conosce (lo SCHIACCIAMENTO e il FANGO li allungano, il
+ * quelli normali, salvo le eccezioni che il calcolo del danno conosce (l'ALIMENTAZIONE_FIAMMA allunga il BRUCIATO che
+ * c'è già, lo SCHIACCIAMENTO e il FANGO allungano i loro stati, il
  * SOVRACCARICO_MENTALE e il DISORIENTAMENTO stordiscono per poco, la TOSSICITA_SETTICA raddoppia il danno del veleno).
  * <p>
  * I testi di ogni costante (DESCRIZIONE) non stanno qui ma nel file {@code tipo_interazione_con_effetti_di_stato_<lingua>.properties}, alla voce
@@ -48,7 +49,7 @@ public enum TipoInterazioneConEffettiDiStato {
             Collections.singletonList(TipoDanno.FUOCO),
             0.5d,
             Collections.singletonList(TipoEffettoDiStato.BAGNATO),
-            Collections.emptyList()),
+            Collections.singletonList(TipoEffettoDiStato.ACCECATO)),
 
     // Interazioni con BRUCIATO
     // + ARIA
@@ -57,13 +58,13 @@ public enum TipoInterazioneConEffettiDiStato {
             Collections.singletonList(TipoDanno.ARIA),
             1.5d,
             Collections.emptyList(),
-            Collections.emptyList()),
+            Collections.singletonList(TipoEffettoDiStato.BRUCIATO)),
     // + ACQUA
     ESTINZIONE(
             Collections.singletonList(TipoEffettoDiStato.BRUCIATO),
             Collections.singletonList(TipoDanno.ACQUA),
             1.0d,
-            Collections.singletonList(TipoEffettoDiStato.BRUCIATO),
+            Arrays.asList(TipoEffettoDiStato.BRUCIATO, TipoEffettoDiStato.BAGNATO),
             Collections.emptyList()),
     // + GELO
     SCIOGLIMENTO_TERMICO(
@@ -77,8 +78,8 @@ public enum TipoInterazioneConEffettiDiStato {
             Collections.singletonList(TipoEffettoDiStato.BRUCIATO),
             Collections.singletonList(TipoDanno.VELENO),
             1.3d,
-            Collections.singletonList(TipoEffettoDiStato.BRUCIATO),
-            Collections.singletonList(TipoEffettoDiStato.AVVELENATO)),
+            Arrays.asList(TipoEffettoDiStato.BRUCIATO, TipoEffettoDiStato.AVVELENATO),
+            Collections.emptyList()),
 
     // Interazioni con AVVELENATO
     // + FUOCO
@@ -121,7 +122,7 @@ public enum TipoInterazioneConEffettiDiStato {
     FRANTUMAZIONE_DEL_GHIACCIO(
             Collections.singletonList(TipoEffettoDiStato.CONGELATO),
             Collections.singletonList(TipoDanno.CONTUNDENTE),
-            2.0d,
+            1.0d,
             Collections.singletonList(TipoEffettoDiStato.CONGELATO),
             Collections.emptyList()),
     // + FUOCO
@@ -144,7 +145,7 @@ public enum TipoInterazioneConEffettiDiStato {
     MIETITURA(
             Collections.singletonList(TipoEffettoDiStato.MALEDETTO),
             Collections.singletonList(TipoDanno.NECROTICO),
-            1.0d,
+            2.0d,
             Collections.emptyList(),
             Collections.emptyList()),
     // + SACRO
@@ -365,12 +366,19 @@ public enum TipoInterazioneConEffettiDiStato {
 
     /**
      * Per quanto si moltiplica il danno quando l'interazione scatta: più di 1 per una debolezza (il fulmine su un
-     * BAGNATO, 1,5), meno di 1 per una resistenza (il fuoco su un BAGNATO, 0,5), 1 se non cambia il danno. Il solo
-     * moltiplicatore che non sta qui è quello della MIETITURA, che dipende dalla SAGGEZZA del difensore
-     * (CalcolatoreCombattimento.moltiplicatoreMietitura); i bonus che non sono un moltiplicatore (il danno puro della
-     * RISONANZA_SIGILLATA, la difesa del guscio di ghiaccio) restano nel calcolo del danno.
+     * BAGNATO, 1,5), meno di 1 per una resistenza (il fuoco su un BAGNATO, 0,5), 1 se non cambia il danno. I bonus che non
+     * sono un moltiplicatore (il danno puro della RISONANZA_SIGILLATA, la difesa del guscio di ghiaccio, il critico
+     * automatico del COLPO_DI_GRAZIA e della FRANTUMAZIONE_DEL_GHIACCIO) restano nel calcolo del danno.
      */
     public double getMoltiplicatore() {
         return moltiplicatore;
+    }
+
+    /**
+     * Se la reazione rende il colpo un critico automatico (×2, che non si somma a un critico vero): il COLPO_DI_GRAZIA su
+     * chi è a terra o stordito e la FRANTUMAZIONE_DEL_GHIACCIO.
+     */
+    public boolean isCriticoAutomatico() {
+        return this == COLPO_DI_GRAZIA || this == FRANTUMAZIONE_DEL_GHIACCIO;
     }
 }

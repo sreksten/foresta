@@ -416,7 +416,7 @@ punti diversi del codice, che ora si possono interrogare insieme con `Calcolator
 **Il punto 2** si legge così: `interazioniAttive(difensore, tipoDanno)` è **l'unico punto che decide quando scatta un'interazione con uno stato**: un ciclo
 sulle interazioni dell'enum, ognuna scatta se il difensore ha uno dei suoi stati (`getPrecondizioni`) e riceve uno dei suoi tipi di danno
 (`getInnescanti`); vuota se il difensore è immune. L'**ordine di dichiarazione dell'enum è l'ordine di applicazione** degli effetti (per stato).
-`moltiplicatoreDelleInterazioni` parte dal moltiplicatore della classe (`getMoltiplicatoreDannoSubito`) e lo moltiplica per quelli dell'enum (più la MIETITURA, che dipende dalla SAGGEZZA), e
+`moltiplicatoreDelleInterazioni` parte dal moltiplicatore della classe (`getMoltiplicatoreDannoSubito`) e lo moltiplica per quelli dell'enum (il critico automatico del colpo di grazia e della frantumazione, `isCriticoAutomatico`, lo aggiunge `moltiplicatoreAtteso` come ×2), e
 `fattoreDifesaDaStati` dà il cambio di difesa (guscio di ghiaccio ×1,5, superconduzione ×0,7). `calcolaDannoRisultante` chiama queste funzioni e **applica solo gli effetti** di ogni interazione (`switch`): così il danno vero e le tattiche
 non possono divergere. `moltiplicatoreAtteso(difensore, tipoDanno)` le compone con la difesa, senza dadi e senza cambiare niente.
 Il test `InterazioniConGliStatiCaratterizzazioneTest` confronta, a seme fisso, l'esito di 8316 colpi (3 difensori, ogni stato da solo e a coppie, ogni tipo di danno) con quello registrato prima del riordino di queste funzioni; `MoltiplicatoreAttesoTest`
