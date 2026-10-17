@@ -87,7 +87,7 @@ final class GestoreBotteghe {
 			case NEGOZIO_INCANTATORE:
 				stato = StatoInBottega.DA_INCANTATORE;
 				incantatore = new AutomaIncantatore(g, new BancoDiLavoro());
-				apriIncantatore("Mettete sul banco un artefatto e le pergamene da fondere.");
+				apriIncantatore("Mettete sul banco un artefatto e gli ingredienti magici da fondere.");
 				break;
 			default:
 				throw new IllegalArgumentException(ingresso + " non è l'ingresso di una bottega");

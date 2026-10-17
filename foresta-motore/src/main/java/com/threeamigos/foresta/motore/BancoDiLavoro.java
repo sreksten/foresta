@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Il banco di lavoro dell'incantatore: un artefatto incantabile e le pergamene da fondere.
+ * Il banco di lavoro dell'incantatore: un artefatto incantabile e gli ingredienti magici da fondere (pergamene, gemme, monili, gingilli, sigilli, aggiornamenti).
  * Vive solo mentre si è nella bottega e non si salva: uscendo, quel che resta torna nel gruppo.
  */
 public class BancoDiLavoro implements ScambiatoreArtefatti {

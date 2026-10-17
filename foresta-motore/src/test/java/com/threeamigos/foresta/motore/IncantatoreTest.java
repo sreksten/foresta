@@ -157,7 +157,7 @@ class IncantatoreTest {
     void rifiutiDellaFusione() {
         assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NESSUN_ARTEFATTO),
                 RegoleIncantatura.verifica(Collections.singletonList(pergamena(1)), 100));
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NESSUNA_PERGAMENA),
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NESSUN_INGREDIENTE),
                 RegoleIncantatura.verifica(Collections.singletonList(artefatto(TipoArtefatto.SPADA, 4)), 100));
         assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.PIU_ARTEFATTI),
                 RegoleIncantatura.verifica(Arrays.asList(artefatto(TipoArtefatto.SPADA, 4), artefatto(TipoArtefatto.ELMO, 4), pergamena(1)), 100));

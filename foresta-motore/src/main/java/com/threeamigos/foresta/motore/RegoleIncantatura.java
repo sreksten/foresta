@@ -181,7 +181,7 @@ public final class RegoleIncantatura {
 			return Optional.of(TipoMotivoRifiutoIncantatura.NON_INCANTABILE);
 		}
 		if (ingredienti.isEmpty() && aggiornamenti(banco) == 0) {
-			return Optional.of(TipoMotivoRifiutoIncantatura.NESSUNA_PERGAMENA);
+			return Optional.of(TipoMotivoRifiutoIncantatura.NESSUN_INGREDIENTE);
 		}
 		if (aggiornamenti(banco) > 0 && artefatto.getLivello() + aggiornamenti(banco) > livelloMassimoPerAggiornamenti()) {
 			return Optional.of(TipoMotivoRifiutoIncantatura.LIVELLO_DEL_MONDO_RAGGIUNTO);
