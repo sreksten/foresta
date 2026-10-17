@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.intermezzi.ElementoIntermezzo;
 import com.threeamigos.foresta.intermezzi.IntermezzoLocandaPrimaVisita;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
@@ -8,6 +9,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
@@ -120,16 +122,17 @@ class ScenarioNonSparateSulPianistaTest {
     }
 
     @Test
-    void conIlBardoOspiteDelGruppoNelleLocandeNuoveLaScenaESenzaDiLui() {
+    void conIlBardoOspiteDelGruppoNelleLocandeNuoveIlBardoEntraConIlGruppo() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(153)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
+            partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno", 1));
             NonSparateSulPianista pianista = pianista();
             CoordinateMD locanda = unaLocandaNelBosco();
             entraNellaLocanda(partita, pianista, locanda, 2);
             assertTrue(pianista.getScortato().isPresent(), "il bardo viaggia con il gruppo");
 
-            // In un'altra locanda, mai vista, il bardo non può essere seduto in un angolo: la scena c'è, ma senza di lui,
-            // e parla solo il locandiere
+            // In un'altra locanda, mai vista, il bardo non può essere seduto in un angolo: entra con il gruppo, subito dopo
+            // il capo come ogni ospite, e parla solo il locandiere
             CoordinateMD altra = unAltraLocandaNelBosco(locanda);
             partita.gruppo().setCoordinate(altra);
             LocazioneMD sede = Foresta.getLocazioneMD(altra);
@@ -139,7 +142,10 @@ class ScenarioNonSparateSulPianistaTest {
             assertTrue(scena.deveScattare(MomentoIntermezzo.INIZIO_LOCAZIONE));
             PaginaIntermezzo pagina = scena.getPagine().get(0);
             assertNull(pagina.getElemento("bardo"), "non è seduto nella locanda");
-            assertNotNull(pagina.getElemento("bardoOspite"), "entra con il gruppo, in fondo alla fila");
+            List<String> fila = pagina.getElementi().stream().map(ElementoIntermezzo::getId)
+                    .filter(id -> id.startsWith("personaggio") || id.startsWith("ospite") || id.equals("bardoOspite"))
+                    .collect(Collectors.toList());
+            assertEquals(Arrays.asList("personaggio0", "bardoOspite", "personaggio1"), fila, "il bardo entra secondo, dopo il capo");
             List<String> chiParla = pagina.getBattuteProgrammate().stream().map(b -> b.getBattuta().getIdElemento())
                     .distinct().collect(Collectors.toList());
             assertEquals(Collections.singletonList("locandiere"), chiParla);

@@ -29,9 +29,10 @@ import java.util.stream.Collectors;
  * {@link com.threeamigos.foresta.modellodati.IntermezziMD} è un semplice insieme
  * di stringhe senza vincoli di formato.
  * <p>
- * Mentre il bardo viaggia con il gruppo come ospite (NonSparateSulPianista lo riporta a casa) non può essere anche
- * seduto in un angolo della locanda: la scena c'è lo stesso, ma lui entra con il gruppo, barcollando in fondo alla fila;
- * niente fiaba né reazione del locandiere, che dà soltanto il benvenuto.
+ * Gli ospiti vivi del gruppo entrano subito dopo il capo, prima degli altri personaggi, come nelle scene dei negozi
+ * (ScenaNegozio). Mentre il bardo viaggia con il gruppo come ospite (NonSparateSulPianista lo riporta a casa) non può
+ * essere anche seduto in un angolo della locanda: entra con il gruppo, al suo posto di ospite, barcollando; niente fiaba
+ * né reazione del locandiere, che dà soltanto il benvenuto.
  */
 public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 
@@ -75,10 +76,22 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 	}
 
 	/**
-	 * Il bardo ospite del gruppo entra per ultimo, dopo i personaggi, al posto che gli spetta in fila: è ubriaco, quindi
-	 * barcolla (avanza a zig-zag) ed è più lento degli altri.
+	 * Chi entra camminando, al suo posto in fila: il posto decide quando parte e dove si ferma.
 	 */
-	private static ElementoIntermezzo bardoCheBarcollaInFondoAllaFila(int posizione) {
+	private static ElementoIntermezzo cammina(String id, TipoPersonaggio classe, int posizione) {
+		double targetX = X_TARGET_BASE - posizione * DISTANZA_FRA_PERSONAGGI;
+		return ElementoIntermezzo.personaggio(id, classe, X_PARTENZA_PERSONAGGI, Y_BARDO)
+				.orientaNelVersoDelMoto()
+				// Ritardo scaglionato: ognuno parte un po' dopo il precedente
+				.attendi(posizione * RITARDO_FRA_PARTENZE)
+				.poi(Tappa.inSecondi(SECONDI_CAMMINATA).verso(targetX, Y_BARDO));
+	}
+
+	/**
+	 * Il bardo ospite del gruppo entra al posto che gli spetta in fila: è ubriaco, quindi barcolla (avanza a zig-zag) ed
+	 * è più lento degli altri.
+	 */
+	private static ElementoIntermezzo bardoCheBarcolla(int posizione) {
 		double targetX = X_TARGET_BASE - posizione * DISTANZA_FRA_PERSONAGGI;
 		double secondiPerPasso = SECONDI_CAMMINATA * FATTORE_LENTEZZA_BARDO / PASSI_BARCOLLANTI;
 		ElementoIntermezzo bardo = ElementoIntermezzo.personaggio("bardoOspite", TipoPersonaggio.BARDO_DELLE_LOCANDE,
@@ -120,17 +133,20 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 					.conBocca(0.5, -0.15));
 		}
 
+		// Chi entra, nell'ordine: i personaggi, con gli ospiti subito dopo il capo
+		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+		List<Personaggio> ospiti = gruppo.getOspiti().stream().filter(Personaggio::isVivo).collect(Collectors.toList());
+		int posto = 0;
 		for (int i = 0; i < personaggiVivi.size(); i++) {
-			TipoPersonaggio classe = personaggiVivi.get(i).getClasse();
-			double targetX = X_TARGET_BASE - i * DISTANZA_FRA_PERSONAGGI;
-			pagina.conElemento(ElementoIntermezzo.personaggio("personaggio" + i, classe, X_PARTENZA_PERSONAGGI, Y_BARDO)
-					.orientaNelVersoDelMoto()
-					// Ritardo scaglionato: ogni personaggio parte un secondo dopo il precedente
-					.attendi(i * RITARDO_FRA_PARTENZE)
-					.poi(Tappa.inSecondi(SECONDI_CAMMINATA).verso(targetX, Y_BARDO)));
-		}
-		if (!bardoInScena) {
-			pagina.conElemento(bardoCheBarcollaInFondoAllaFila(personaggiVivi.size()));
+			Personaggio personaggio = personaggiVivi.get(i);
+			pagina.conElemento(cammina("personaggio" + i, personaggio.getClasse(), posto++));
+			if (personaggio == gruppo.getCapo()) {
+				for (int k = 0; k < ospiti.size(); k++) {
+					TipoPersonaggio classe = ospiti.get(k).getClasse();
+					pagina.conElemento(classe == TipoPersonaggio.BARDO_DELLE_LOCANDE
+							? bardoCheBarcolla(posto++) : cammina("ospite" + k, classe, posto++));
+				}
+			}
 		}
 
 		//double tempoFineCammino = (personaggiVivi.size() - 1) * RITARDO_FRA_PARTENZE + SECONDI_CAMMINATA;
