@@ -161,8 +161,8 @@ public class MissioneMD implements Serializzabile {
 		LettoreCampi campi = new LettoreCampi(stream.readLine());
 		id = campi.testo();
 		classe = campi.enumerato(MissionePredefinita.class);
-		nome = campi.testo();
-		descrizione = campi.testo();
+		nome = campi.testoFacoltativo();
+		descrizione = campi.testoFacoltativo();
 		descrizioneVisibile = campi.booleano();
 		int dimensioneElencoMissioniSecondarie = campi.intero();
 		MappaProprieta.leggi(new LettoreCampi(stream.readLine()), proprieta);

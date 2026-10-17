@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.UUID;
 
+import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
 import static com.threeamigos.foresta.modellodati.Serializzabile.senzaACapo;
 import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
@@ -58,14 +59,14 @@ public class MessaggioMD implements Serializzabile {
 	/**
 	 * Una riga per messaggio: uuid, il tipo (P o F) e il testo, ciascuno separato da "|".
 	 * Il testo viene riletto per intero dopo il secondo separatore, quindi può contenere
-	 * anche "|"; gli a capo diventano spazi.
+	 * anche "|"; gli a capo diventano spazi. Un testo che manca si scrive come campo vuoto, e si rilegge come testo vuoto.
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stampaRiga(stream,
 				uuid,
 				paragrafo ? PARAGRAFO : FRASE,
-				senzaACapo(testo));
+				facoltativo(senzaACapo(testo)));
 	}
 
 	/**

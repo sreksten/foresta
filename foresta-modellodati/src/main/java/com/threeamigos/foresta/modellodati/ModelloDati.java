@@ -18,6 +18,8 @@ import java.io.PrintWriter;
  * <li>IntermezziMD - gli intermezzi già mostrati</li>
  * </ul>
  * e se l'aiuto della barra delle icone è acceso (vedi DisplayableCanvasBarraIcone).
+ *
+ * @author Stefano Reksten
  */
 public class ModelloDati implements Serializzabile {
 
