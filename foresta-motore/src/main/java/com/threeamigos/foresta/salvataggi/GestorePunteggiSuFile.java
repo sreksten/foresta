@@ -3,7 +3,6 @@ package com.threeamigos.foresta.salvataggi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.modellodati.LettoreCampi;
-import com.threeamigos.foresta.modellodati.Serializzabile;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +13,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import com.threeamigos.foresta.strumenti.Punteggio;
+
+import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
  * La classifica nel file {@code forestaHS} della cartella {@code .foresta}.
@@ -68,11 +70,10 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 		try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(nomeFile()), StandardCharsets.UTF_8))) {
 			for (int posizione = 0; posizione < getConteggio(); posizione++) {
 				Punteggio punteggio = getPunteggio(posizione);
-				writer.print(Serializzabile.facoltativo(punteggio.getIdPartita()));
-				writer.print(Serializzabile.PIPE);
-				writer.print(punteggio.getNome());
-				writer.print(Serializzabile.PIPE);
-				writer.println(punteggio.getPunteggio());
+				stampaRiga(writer,
+						facoltativo(punteggio.getIdPartita()),
+						punteggio.getNome(),
+						punteggio.getPunteggio());
 			}
 			writer.flush();
 		} catch (Exception e) {

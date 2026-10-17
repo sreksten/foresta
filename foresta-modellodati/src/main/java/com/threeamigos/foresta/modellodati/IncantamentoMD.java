@@ -2,6 +2,10 @@ package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.tipi.TipoDanno;
 
+import java.io.IOException;
+
+import static com.threeamigos.foresta.modellodati.Serializzabile.composto;
+
 /**
  * Un incantamento di un artefatto: un danno elementale che si aggiunge a quello dell'arma. Il danno è composto da una
  * parte fissa e da una che cresce con l'attributo del portatore (vedi {@link #getCoefficienteScala()}).
@@ -57,5 +61,29 @@ public class IncantamentoMD {
      */
     public double getCoefficienteScala() {
         return coefficienteScala;
+    }
+
+    /**
+     * L'incantamento come campo di un salvataggio: tipo di danno, danno fisso, coefficiente e nome, separati da
+     * {@value MappaProprieta#SEPARATORE}. Il nome, testo libero, è l'ultimo: se contiene il separatore non sposta gli altri.
+     * Lo rilegge {@link #daCampo(LettoreCampi)}.
+     */
+    public String comeCampo() {
+        return composto(
+                tipoDannoElementale,
+                dannoBonusFisso,
+                coefficienteScala,
+                nomeIncantamento);
+    }
+
+    /**
+     * Rilegge il prossimo campo scritto da {@link #comeCampo()}.
+     */
+    public static IncantamentoMD daCampo(LettoreCampi campi) throws IOException {
+        LettoreCampi sottocampi = campi.sottocampi(4, 4);
+        TipoDanno tipoDanno = sottocampi.enumerato(TipoDanno.class);
+        int dannoBonusFisso = sottocampi.intero();
+        double coefficienteScala = sottocampi.decimale();
+        return new IncantamentoMD(sottocampi.testo(), tipoDanno, dannoBonusFisso, coefficienteScala);
     }
 }

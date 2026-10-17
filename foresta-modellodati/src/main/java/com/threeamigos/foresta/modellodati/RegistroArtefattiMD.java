@@ -8,6 +8,8 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.function.Predicate;
 
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+
 /**
  * Gli artefatti del mondo che non sono nell'inventario del gruppo: quelli ancora da distribuire, quelli smarriti nelle
  * locazioni (uno per casella, riconosciuti dalle coordinate), i magazzini dei negozi (per tipo di negozio e per città) e
@@ -103,22 +105,20 @@ public class RegistroArtefattiMD implements Serializzabile {
 	public void salva(PrintWriter stream) throws IOException {
 		stream.println(artefattiSmarriti.size());
 		for (Map.Entry<CoordinateMD, ArtefattoMD> entry : artefattiSmarriti.entrySet()) {
-			stream.print(entry.getKey().getX());
-			stream.print(PIPE);
-			stream.println(entry.getKey().getY());
+			stampaRiga(stream,
+					entry.getKey().getX(),
+					entry.getKey().getY());
 			entry.getValue().salva(stream);
 		}
 		stream.println(magazzini.values().stream().mapToInt(Map::size).sum());
 		for (Map.Entry<TipoNegozio, Map<CoordinateMD, List<ArtefattoMD>>> negozio : magazzini.entrySet()) {
 			for (Map.Entry<CoordinateMD, List<ArtefattoMD>> entry : negozio.getValue().entrySet()) {
 				CoordinateMD coordinate = entry.getKey();
-				stream.print(coordinate.getX());
-				stream.print(PIPE);
-				stream.print(coordinate.getY());
-				stream.print(PIPE);
-				stream.print(negozio.getKey().name());
-				stream.print(PIPE);
-				stream.println(entry.getValue().size());
+				stampaRiga(stream,
+						coordinate.getX(),
+						coordinate.getY(),
+						negozio.getKey(),
+						entry.getValue().size());
 				for (ArtefattoMD artefatto : entry.getValue()) {
 					artefatto.salva(stream);
 				}
@@ -126,9 +126,9 @@ public class RegistroArtefattiMD implements Serializzabile {
 		}
 		stream.println(localizzazioniConosciute.size());
 		for (CoordinateMD coordinate : localizzazioniConosciute) {
-			stream.print(coordinate.getX());
-			stream.print(PIPE);
-			stream.println(coordinate.getY());
+			stampaRiga(stream,
+					coordinate.getX(),
+					coordinate.getY());
 		}
 	}
 
@@ -137,25 +137,21 @@ public class RegistroArtefattiMD implements Serializzabile {
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
-		String line = stream.readLine();
-		int numeroPersonaggi = Integer.parseInt(line);
+		int numeroPersonaggi = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroPersonaggi; i++) {
-			line = stream.readLine();
-			LettoreCampi st = new LettoreCampi(line);
-			CoordinateMD coordinate = new CoordinateMD(Integer.parseInt(st.testo()), Integer.parseInt(st.testo()));
+			LettoreCampi st = new LettoreCampi(stream.readLine());
+			CoordinateMD coordinate = new CoordinateMD(st.intero(), st.intero());
 			ArtefattoMD artefatto = new ArtefattoMD();
 			artefatto.leggi(stream);
 			artefattiSmarriti.put(coordinate, artefatto);
 		}
-		line = stream.readLine();
-		int numeroMagazzini = Integer.parseInt(line);
+		int numeroMagazzini = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroMagazzini; i++) {
-			line = stream.readLine();
-			LettoreCampi st = new LettoreCampi(line);
-			int x = Integer.parseInt(st.testo());
-			int y = Integer.parseInt(st.testo());
-			TipoNegozio negozio = TipoNegozio.valueOf(st.testo());
-			int totale = Integer.parseInt(st.testo());
+			LettoreCampi st = new LettoreCampi(stream.readLine());
+			int x = st.intero();
+			int y = st.intero();
+			TipoNegozio negozio = st.enumerato(TipoNegozio.class);
+			int totale = st.intero();
 			List<ArtefattoMD> magazzino = magazzinoModificabile(new CoordinateMD(x, y), negozio);
 			for (int j = 0; j < totale; j++) {
 				ArtefattoMD artefatto = new ArtefattoMD();
@@ -163,12 +159,10 @@ public class RegistroArtefattiMD implements Serializzabile {
 				magazzino.add(artefatto);
 			}
 		}
-		line = stream.readLine();
-		int numeroLocalizzazioniConosciute = Integer.parseInt(line);
+		int numeroLocalizzazioniConosciute = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroLocalizzazioniConosciute; i++) {
-			line = stream.readLine();
-			LettoreCampi st = new LettoreCampi(line);
-			CoordinateMD coordinate = new CoordinateMD(Integer.parseInt(st.testo()), Integer.parseInt(st.testo()));
+			LettoreCampi st = new LettoreCampi(stream.readLine());
+			CoordinateMD coordinate = new CoordinateMD(st.intero(), st.intero());
 			localizzazioniConosciute.add(coordinate);
 		}
 	}

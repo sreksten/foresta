@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+
 /**
  * Una voce di tattica: il selettore (chi), le condizioni (quando, in AND) e una sequenza di azioni (che cosa: la prima applicabile al bersaglio
  * vince). Senza selettore vale quello di base della portata delle azioni. Si può disattivare senza toglierla. Immutabile.
@@ -164,8 +167,13 @@ public final class VoceMD {
 	 * Scrive la voce, il suo selettore (se c'è), le condizioni e le azioni (vedi FormatoTattiche)
 	 */
 	public void salva(PrintWriter stream) {
-		stream.println(String.join(Serializzabile.PIPE, "VOCE", String.valueOf(attiva), String.valueOf(selettore != null),
-				String.valueOf(condizioni.size()), String.valueOf(azioni.size()), Serializzabile.facoltativo(nome)));
+		stampaRiga(stream,
+				"VOCE",
+				attiva,
+				selettore != null,
+				condizioni.size(),
+				azioni.size(),
+				facoltativo(nome));
 		if (selettore != null) {
 			selettore.salva(stream);
 		}

@@ -84,7 +84,7 @@ public class RegistroMissioniMD implements Serializzabile {
 
 	private void leggiImpl(BufferedReader stream, Map<String, MissioneMD> missioni) throws IOException {
 		missioni.clear();
-		final int numeroMissioni = Integer.parseInt(stream.readLine());
+		final int numeroMissioni = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroMissioni; i++) {
 			MissioneMD missioneMD = new MissioneMD();
 			missioneMD.leggi(stream);

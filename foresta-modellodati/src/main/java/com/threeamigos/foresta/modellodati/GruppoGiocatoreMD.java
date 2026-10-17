@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+
 /**
  * Il gruppo del giocatore. Oltre a quanto tiene {@link GruppoMD} (personaggi, capo, pergamene e pozioni) porta con sé
  * le monete, le pietre preziose, la posizione sulla mappa, gli artefatti dell'inventario generale (quelli che nessun
@@ -124,8 +126,8 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	////////////////////////////////
 
 	/**
-	 * Azzera il gruppo per una partita nuova: oltre a quanto azzera {@link GruppoMD#reimposta()}, monete, pietre preziose,
-	 * artefatti, ospiti e ospiti vulnerabili, e il conto delle sfide vinte.
+	 * Azzera il gruppo per una partita nuova: oltre a quanto azzera {@link GruppoMD#reimposta()}, reimposta
+	 * monete, pietre preziose, artefatti, ospiti e ospiti vulnerabili, e il conto delle sfide vinte.
 	 */
 	public void reimposta() {
 		super.reimposta();
@@ -145,35 +147,25 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		super.salva(stream);
-		stream.print(monete);
-		stream.print(PIPE);
-		stream.print(preziosi);
-		stream.print(PIPE);
-		stream.print(incantesimi.size());
-		stream.print(PIPE);
+		List<Object> campi = new ArrayList<>(Arrays.asList(
+				monete,
+				preziosi,
+				incantesimi.size()));
 		for (Map.Entry<TipoIncantesimo, Integer> incantesimo : incantesimi.entrySet()) {
-			stream.print(incantesimo.getKey().name());
-			stream.print(PIPE);
-			stream.print(incantesimo.getValue());
-			stream.print(PIPE);
+			campi.add(incantesimo.getKey());
+			campi.add(incantesimo.getValue());
 		}
-		stream.print(pozioniSalute);
-		stream.print(PIPE);
-		stream.print(pozioniSaluteGrande);
-		stream.print(PIPE);
-		stream.print(pozioniMagia);
-		stream.print(PIPE);
-		stream.print(pozioniMagiaGrande);
-		stream.print(PIPE);
-		stream.print(pozioniAumentoLivello);
-		stream.print(PIPE);
-		stream.print(coordinate.getX());
-		stream.print(PIPE);
-		stream.print(coordinate.getY());
-		stream.print(PIPE);
-		stream.print(sfideVinte);
-		stream.print(PIPE);
-		stream.println(artefatti.size());
+		campi.addAll(Arrays.asList(
+				pozioniSalute,
+				pozioniSaluteGrande,
+				pozioniMagia,
+				pozioniMagiaGrande,
+				pozioniAumentoLivello,
+				coordinate.getX(),
+				coordinate.getY(),
+				sfideVinte,
+				artefatti.size()));
+		stampaRiga(stream, campi);
 
 		for (ArtefattoMD artefatto : artefatti) {
 			artefatto.salva(stream);
@@ -194,23 +186,22 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		super.leggi(stream);
-		String line = stream.readLine();
-		LettoreCampi st = new LettoreCampi(line);
-		monete = Integer.parseInt(st.testo());
-		preziosi = Integer.parseInt(st.testo());
+		LettoreCampi st = new LettoreCampi(stream.readLine());
+		monete = st.intero();
+		preziosi = st.intero();
 		incantesimi.clear();
 		int numeroIncantesimi = st.intero();
 		for (int i = 0; i < numeroIncantesimi; i++) {
 			incantesimi.put(st.enumerato(TipoIncantesimo.class), st.intero());
 		}
-		pozioniSalute = Integer.parseInt(st.testo());
-		pozioniSaluteGrande = Integer.parseInt(st.testo());
-		pozioniMagia = Integer.parseInt(st.testo());
-		pozioniMagiaGrande = Integer.parseInt(st.testo());
-		pozioniAumentoLivello = Integer.parseInt(st.testo());
-		coordinate = new CoordinateMD(Integer.parseInt(st.testo()), Integer.parseInt(st.testo()));
-		sfideVinte = Integer.parseInt(st.testo());
-		int numeroArtefatti = Integer.parseInt(st.testo());
+		pozioniSalute = st.intero();
+		pozioniSaluteGrande = st.intero();
+		pozioniMagia = st.intero();
+		pozioniMagiaGrande = st.intero();
+		pozioniAumentoLivello = st.intero();
+		coordinate = new CoordinateMD(st.intero(), st.intero());
+		sfideVinte = st.intero();
+		int numeroArtefatti = st.intero();
 
 		artefatti.clear();
 		for (int i = 0; i < numeroArtefatti; i++) {
@@ -219,14 +210,14 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 			artefatti.add(artefatto);
 		}
 		ospiti.clear();
-		int numeroOspiti = Integer.parseInt(stream.readLine());
+		int numeroOspiti = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroOspiti; i++) {
 			PersonaggioMD ospite = new PersonaggioMD();
 			ospite.leggi(stream);
 			ospiti.add(ospite);
 		}
 		ospitiVulnerabili.clear();
-		int numeroVulnerabili = Integer.parseInt(stream.readLine());
+		int numeroVulnerabili = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroVulnerabili; i++) {
 			ospitiVulnerabili.add(stream.readLine());
 		}

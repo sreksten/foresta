@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
-import com.threeamigos.foresta.modellodati.Serializzabile;
 import com.threeamigos.foresta.modellodati.LettoreCampi;
 import java.io.PrintWriter;
 import java.io.IOException;
@@ -14,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
  * Una condizione di una voce: il tipo, il parametro (del tipo che il tipo di predicato dichiara) e se è negata (<code>NON</code>). Immutabile.
@@ -125,8 +127,14 @@ public final class PredicatoMD {
 	 * Scrive il predicato e, per QUANTI, i suoi filtri (vedi FormatoTattiche)
 	 */
 	public void salva(PrintWriter stream) {
-		stream.println(String.join(Serializzabile.PIPE, "PREDICATO", tipo.name(), String.valueOf(negato), Serializzabile.facoltativo(confronto),
-				String.valueOf(numero), Serializzabile.facoltativo(rosa), String.valueOf(filtri.size())));
+		stampaRiga(stream,
+				"PREDICATO",
+				tipo,
+				negato,
+				facoltativo(confronto),
+				numero,
+				facoltativo(rosa),
+				filtri.size());
 		for (FiltroMD filtro : filtri) {
 			filtro.salva(stream);
 		}

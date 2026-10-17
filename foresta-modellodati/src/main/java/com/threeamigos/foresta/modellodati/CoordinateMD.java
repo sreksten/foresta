@@ -9,9 +9,6 @@ package com.threeamigos.foresta.modellodati;
  */
 public class CoordinateMD {
 
-	// Per l'hashCode: con lati della foresta fino a questa misura due caselle non hanno mai lo stesso hash
-	private static final int MAX_DIMENSIONE_LATO_FORESTA = 80;
-	
 	private int x;
 	private int y;
 	
@@ -55,12 +52,12 @@ public class CoordinateMD {
 	}
 	
 	/**
-	 * Combina colonna e riga in modo che, con una foresta di lato fino a {@value #MAX_DIMENSIONE_LATO_FORESTA}, due
-	 * caselle diverse non abbiano mai lo stesso valore.
+	 * Combina colonna e riga come Objects.hash, senza dipendere dalla misura della foresta: due coordinate uguali hanno
+	 * lo stesso valore, e due diverse lo condividono di rado (le mappe le distinguono comunque con equals).
 	 */
 	@Override
 	public int hashCode() {
-		return MAX_DIMENSIONE_LATO_FORESTA * x + y;
+		return 31 * x + y;
 	}
 
 	/**

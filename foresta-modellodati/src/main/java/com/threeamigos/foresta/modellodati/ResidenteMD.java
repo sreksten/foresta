@@ -4,6 +4,9 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.io.IOException;
 
+import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+
 /**
  * Chi ha un nome proprio nel mondo senza essere in un gruppo o in una locazione: il bardo e sua moglie, le persone di una
  * città, i campioni delle sfide... Vedi RegistroPersonaggiMD e nomi.md.
@@ -47,8 +50,12 @@ public class ResidenteMD {
 	}
 
 	void salva(java.io.PrintWriter stream, String chiave) {
-		stream.println(chiave + Serializzabile.PIPE + nome + Serializzabile.PIPE + Serializzabile.facoltativo(provenienza)
-				+ Serializzabile.PIPE + Serializzabile.facoltativo(classe) + Serializzabile.PIPE + sconfitto);
+		stampaRiga(stream,
+				chiave,
+				nome,
+				facoltativo(provenienza),
+				facoltativo(classe),
+				sconfitto);
 	}
 
 	/**

@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+
 /**
  * Il modello dati di una singola casella della Foresta. Ogni casella ha la sua
  * istanza: due locande non sono più la stessa locanda, e possono avere un nome
@@ -122,14 +124,16 @@ public class LocazioneMD implements Serializzabile {
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		stream.print(uuid);
-		stream.print(PIPE);
-		stream.print(tipo.name());
-		if (!proprieta.isEmpty()) {
-			stream.print(PIPE);
-			stream.print(MappaProprieta.salva(proprieta));
+		if (proprieta.isEmpty()) {
+			stampaRiga(stream,
+					uuid,
+					tipo);
+		} else {
+			stampaRiga(stream,
+					uuid,
+					tipo,
+					MappaProprieta.salva(proprieta));
 		}
-		stream.println();
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
-import com.threeamigos.foresta.modellodati.Serializzabile;
 import com.threeamigos.foresta.modellodati.LettoreCampi;
 import java.io.PrintWriter;
 import java.io.IOException;
@@ -10,6 +9,9 @@ import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
 import java.util.Objects;
+
+import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
  * Un'azione di una voce di tattica: il tipo e, per quelle che li hanno, i parametri: il criterio di scelta dell'incantesimo
@@ -122,8 +124,12 @@ public final class AzioneMD {
 	 * Scrive l'azione su una riga (vedi FormatoTattiche).
 	 */
 	public void salva(PrintWriter stream) {
-		stream.println(String.join(Serializzabile.PIPE, "AZIONE", tipo.name(), Serializzabile.facoltativo(criterio), String.valueOf(soloSePiuForteDellAttacco),
-				Serializzabile.facoltativo(armaDi)));
+		stampaRiga(stream,
+				"AZIONE",
+				tipo,
+				facoltativo(criterio),
+				soloSePiuForteDellAttacco,
+				facoltativo(armaDi));
 	}
 
 	/**

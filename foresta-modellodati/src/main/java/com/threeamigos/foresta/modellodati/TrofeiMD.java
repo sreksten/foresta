@@ -10,6 +10,8 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+
 /**
  * I trofei vinti e il progresso verso quelli che si conquistano accumulando partita dopo
  * partita (es. le locande visitate). Non fa parte di {@link ModelloDati}: non appartiene a
@@ -55,11 +57,10 @@ public class TrofeiMD implements Serializzabile {
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		for (TipoTrofeo trofeo : TipoTrofeo.values()) {
-			stream.print(trofeo.name());
-			stream.print(PIPE);
-			stream.print(isVinto(trofeo));
-			stream.print(PIPE);
-			stream.println(getProgresso(trofeo));
+			stampaRiga(stream,
+					trofeo,
+					isVinto(trofeo),
+					getProgresso(trofeo));
 		}
 	}
 

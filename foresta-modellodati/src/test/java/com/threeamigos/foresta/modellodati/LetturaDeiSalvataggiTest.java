@@ -1,7 +1,13 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
@@ -18,9 +24,58 @@ class LetturaDeiSalvataggiTest {
 	void isottocampiSiDividonoEUltimoTieneIlResto() throws IOException {
 		LettoreCampi campi = new LettoreCampi("FORZA§12|A§B§C§D§E§F§nota con § dentro|solo");
 
-		assertArrayEquals(new String[]{"FORZA", "12"}, campi.sottocampi(2, 2));
-		assertArrayEquals(new String[]{"A", "B", "C", "D", "E", "F", "nota con § dentro"}, campi.sottocampi(6, 7));
-		assertArrayEquals(new String[]{"solo"}, campi.sottocampi(1, 2));
+		LettoreCampi attributo = campi.sottocampi(2, 2);
+		assertEquals("FORZA", attributo.testo());
+		assertEquals(12, attributo.intero());
+		assertFalse(attributo.haAltriCampi());
+		LettoreCampi modificatore = campi.sottocampi(6, 7);
+		for (String atteso : new String[]{"A", "B", "C", "D", "E", "F", "nota con § dentro"}) {
+			assertEquals(atteso, modificatore.testo());
+		}
+		assertFalse(modificatore.haAltriCampi());
+		LettoreCampi solo = campi.sottocampi(1, 2);
+		assertEquals("solo", solo.testo());
+		assertFalse(solo.haAltriCampi());
+	}
+
+	@Test
+	void unNumeroRovinatoDaUnIOExceptionCheDiceDove() throws IOException {
+		LettoreCampi campi = new LettoreCampi("12|dodici");
+		assertEquals(12, campi.intero());
+		IOException errore = assertThrows(IOException.class, campi::intero);
+		assertTrue(errore.getMessage().contains("dodici"), errore.getMessage());
+	}
+
+	@Test
+	void unaRigaConUnSoloNumeroMancanteDaUnIOException() {
+		BufferedReader vuoto = new BufferedReader(new StringReader(""));
+		assertThrows(IOException.class, () -> LettoreCampi.leggiIntero(vuoto));
+	}
+
+	@Test
+	void modificatoriEffettiEIncantamentiSiRileggonoDalLoroCampo() throws IOException {
+		ModificatoreAttributoMD conNota = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.values()[0], 2.5d,
+				"nota con § dentro", UnitaDurataModificatore.PERMANENTE, 0, BersaglioModificatore.PORTATORE);
+		ModificatoreAttributoMD senzaNota = new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.values()[0], -1.0d);
+		EffettoDiStatoMD effetto = new EffettoDiStatoMD(TipoEffettoDiStato.BRUCIATO, 3, 4, 0.5d);
+		IncantamentoMD incantamento = new IncantamentoMD("fiamma § viva", TipoDanno.FUOCO, 4, 0.2d);
+
+		LettoreCampi campi = new LettoreCampi(String.join(Serializzabile.PIPE, conNota.comeCampo(), senzaNota.comeCampo(),
+				effetto.comeCampo(), incantamento.comeCampo()));
+
+		assertEquals(conNota, ModificatoreAttributoMD.daCampo(campi));
+		assertEquals(senzaNota, ModificatoreAttributoMD.daCampo(campi));
+		EffettoDiStatoMD effettoRiletto = EffettoDiStatoMD.daCampo(campi);
+		assertEquals(TipoEffettoDiStato.BRUCIATO, effettoRiletto.getTipoEffettoDiStato());
+		assertEquals(3, effettoRiletto.getDurata());
+		assertEquals(4, effettoRiletto.getDanniNelTempo());
+		assertEquals(0.5d, effettoRiletto.getIntensita());
+		IncantamentoMD incantamentoRiletto = IncantamentoMD.daCampo(campi);
+		assertEquals("fiamma § viva", incantamentoRiletto.getNomeIncantamento());
+		assertEquals(TipoDanno.FUOCO, incantamentoRiletto.getTipoDannoElementale());
+		assertEquals(4, incantamentoRiletto.getDannoBonusFisso());
+		assertEquals(0.2d, incantamentoRiletto.getCoefficienteScala());
+		assertFalse(campi.haAltriCampi());
 	}
 
 	@Test

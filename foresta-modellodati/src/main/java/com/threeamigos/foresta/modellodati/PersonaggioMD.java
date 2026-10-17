@@ -9,6 +9,10 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.threeamigos.foresta.modellodati.Serializzabile.composto;
+import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+
 /**
  * I dati di un personaggio: la classe (mago, arpia...), il nome proprio facoltativo, se è vivo (o la causa della morte),
  * livello, esperienza e punti abilità non ancora assegnati, se è un PNG e perché sta nel gruppo, gli artefatti che
@@ -490,35 +494,26 @@ public class PersonaggioMD implements Serializzabile {
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		stream.print(uuid);
-		stream.print(PIPE);
-		stream.print(classe.name());
-		stream.print(PIPE);
-		stream.print(Serializzabile.facoltativo(nome));
-		stream.print(PIPE);
-		stream.print(vivo);
-		stream.print(PIPE);
 		// La causa della morte c'e' solo per chi e' morto
-		stream.print(vivo ? "" : Serializzabile.facoltativo(causaTrapasso));
-		stream.print(PIPE);
-		stream.print(livello);
-		stream.print(PIPE);
-		stream.print(esperienza);
-		stream.print(PIPE);
-		stream.print(puntiAbilitaDisponibili);
-		stream.print(PIPE);
-		stream.print(artefatti.size());
-		stream.print(PIPE);
-		stream.print(png);
-		stream.print(PIPE);
-		stream.print(motivoNelGruppo.name());
-		stream.println();
+		stampaRiga(stream,
+				uuid,
+				classe,
+				facoltativo(nome),
+				vivo,
+				vivo ? "" : facoltativo(causaTrapasso),
+				livello,
+				esperienza,
+				puntiAbilitaDisponibili,
+				artefatti.size(),
+				png,
+				motivoNelGruppo);
 
-		stream.println(valoriMinimi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
-		stream.println(valoriMassimi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
-		stream.println(valoriAttributi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
-		stream.println(modificatori.stream().map(m -> m.getTipoAttributo().name() + MappaProprieta.SEPARATORE + m.getTipoModificatoreAttributo().name() + MappaProprieta.SEPARATORE + m.getQuantita() + MappaProprieta.SEPARATORE + m.getUnitaDurata().name() + MappaProprieta.SEPARATORE + m.getDurata() + MappaProprieta.SEPARATORE + m.getBersaglio().name() + MappaProprieta.SEPARATORE + m.getNote()).collect(Collectors.joining(PIPE)));
-		stream.println(effettiDiStato.stream().map(e -> e.getTipoEffettoDiStato().name() + MappaProprieta.SEPARATORE + e.getDurata() + MappaProprieta.SEPARATORE + e.getDanniNelTempo() + MappaProprieta.SEPARATORE + e.getIntensita()).collect(Collectors.joining(PIPE)));
+		// Un campo composto per valore (vedi LettoreCampi.sottocampi)
+		stampaRiga(stream, valoriMinimi.entrySet().stream().map(e -> composto(e.getKey(), e.getValue())).collect(Collectors.toList()));
+		stampaRiga(stream, valoriMassimi.entrySet().stream().map(e -> composto(e.getKey(), e.getValue())).collect(Collectors.toList()));
+		stampaRiga(stream, valoriAttributi.entrySet().stream().map(e -> composto(e.getKey(), e.getValue())).collect(Collectors.toList()));
+		stampaRiga(stream, modificatori.stream().map(ModificatoreAttributoMD::comeCampo).collect(Collectors.toList()));
+		stampaRiga(stream, effettiDiStato.stream().map(EffettoDiStatoMD::comeCampo).collect(Collectors.toList()));
 
 		// La tattica: una riga vuota se non ce n'è una, altrimenti la tattica con le sue voci
 		if (tattica == null) {
@@ -559,23 +554,12 @@ public class PersonaggioMD implements Serializzabile {
 		campi = new LettoreCampi(stream.readLine());
 		modificatori.clear();
 		while (campi.haAltriCampi()) {
-			// Fino a 7 sottocampi: la nota, l'ultimo, può contenere il separatore (e mancare)
-			String[] attributoValore = campi.sottocampi(6, 7);
-			ModificatoreAttributoMD modificatore = new ModificatoreAttributoMD(TipoAttributo.valueOf(attributoValore[0]),
-					TipoModificatore.valueOf(attributoValore[1]), Double.parseDouble(attributoValore[2]),
-					attributoValore.length > 6 ? attributoValore[6] : "",
-					UnitaDurataModificatore.valueOf(attributoValore[3]), Integer.parseInt(attributoValore[4]),
-					BersaglioModificatore.valueOf(attributoValore[5]));
-			modificatori.add(modificatore);
+			modificatori.add(ModificatoreAttributoMD.daCampo(campi));
 		}
 		campi = new LettoreCampi(stream.readLine());
 		effettiDiStato.clear();
 		while (campi.haAltriCampi()) {
-			String[] attributoValore = campi.sottocampi(4, 4);
-			EffettoDiStatoMD effettoDiStato = new EffettoDiStatoMD(TipoEffettoDiStato.valueOf(attributoValore[0]),
-					Integer.parseInt(attributoValore[1]), Integer.parseInt(attributoValore[2]),
-					Double.parseDouble(attributoValore[3]));
-			effettiDiStato.add(effettoDiStato);
+			effettiDiStato.add(EffettoDiStatoMD.daCampo(campi));
 		}
 
 		String intestazioneTattica = stream.readLine();
@@ -596,8 +580,8 @@ public class PersonaggioMD implements Serializzabile {
 		LettoreCampi campi = new LettoreCampi(linea);
 		mappa.clear();
 		while (campi.haAltriCampi()) {
-			String[] attributoValore = campi.sottocampi(2, 2);
-			mappa.put(TipoAttributo.valueOf(attributoValore[0]), Double.parseDouble(attributoValore[1]));
+			LettoreCampi sottocampi = campi.sottocampi(2, 2);
+			mappa.put(sottocampi.enumerato(TipoAttributo.class), sottocampi.decimale());
 		}
 	}
 }

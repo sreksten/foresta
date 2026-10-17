@@ -2,6 +2,10 @@ package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 
+import java.io.IOException;
+
+import static com.threeamigos.foresta.modellodati.Serializzabile.composto;
+
 /**
  * Uno stato alterato in corso su un personaggio (per esempio un veleno o l'ispirazione): di che tipo è, quanto dura
  * ancora, quanti danni infligge a ogni scatto del tempo (per gli stati che ne fanno) e, per quelli che hanno una forza,
@@ -76,5 +80,29 @@ public class EffettoDiStatoMD {
 
     public void setIntensita(double intensita) {
         this.intensita = intensita;
+    }
+
+    /**
+     * L'effetto come campo di un salvataggio: tipo, durata, danni nel tempo e intensità, separati da
+     * {@value MappaProprieta#SEPARATORE}. Lo rilegge {@link #daCampo(LettoreCampi)}.
+     */
+    public String comeCampo() {
+        return composto(
+                tipoEffettoDiStato,
+                valore,
+                danniNelTempo,
+                intensita);
+    }
+
+    /**
+     * Rilegge il prossimo campo scritto da {@link #comeCampo()}.
+     */
+    public static EffettoDiStatoMD daCampo(LettoreCampi campi) throws IOException {
+        LettoreCampi sottocampi = campi.sottocampi(4, 4);
+        return new EffettoDiStatoMD(
+                sottocampi.enumerato(TipoEffettoDiStato.class),
+                sottocampi.intero(),
+                sottocampi.intero(),
+                sottocampi.decimale());
     }
 }

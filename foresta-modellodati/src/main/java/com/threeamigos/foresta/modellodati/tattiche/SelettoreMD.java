@@ -3,7 +3,6 @@ package com.threeamigos.foresta.modellodati.tattiche;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
 import java.util.Objects;
-import com.threeamigos.foresta.modellodati.Serializzabile;
 import com.threeamigos.foresta.modellodati.LettoreCampi;
 import java.io.PrintWriter;
 import java.io.IOException;
@@ -13,6 +12,9 @@ import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
  * Chi è il bersaglio di una voce: una rosa di candidati, i filtri che li restringono (in AND, l'ordine non conta) e l'ordinamento che sceglie
@@ -55,8 +57,12 @@ public final class SelettoreMD {
 	 * Scrive il selettore e i suoi filtri (vedi FormatoTattiche)
 	 */
 	public void salva(PrintWriter stream) {
-		stream.println(String.join(Serializzabile.PIPE, "SELETTORE", rosa.name(), ordinamento.getTipo().name(),
-				Serializzabile.facoltativo(ordinamento.getTipoDanno()), String.valueOf(filtri.size())));
+		stampaRiga(stream,
+				"SELETTORE",
+				rosa,
+				ordinamento.getTipo(),
+				facoltativo(ordinamento.getTipoDanno()),
+				filtri.size());
 		for (FiltroMD filtro : filtri) {
 			filtro.salva(stream);
 		}

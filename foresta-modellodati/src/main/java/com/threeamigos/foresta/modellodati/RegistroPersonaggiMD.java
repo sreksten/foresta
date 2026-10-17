@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+
 /**
  * I personaggi del mondo che non stanno nel gruppo del giocatore: quelli ancora da distribuire, quelli che si trovano
  * nelle locazioni (uno per casella, riconosciuti dalle coordinate) e i residenti, che hanno un nome nel mondo senza
@@ -110,9 +112,9 @@ public class RegistroPersonaggiMD implements Serializzabile {
 	public void salva(PrintWriter stream) throws IOException {
 		stream.println(personaggiInLocazione.size());
 		for (Map.Entry<CoordinateMD, PersonaggioMD> entry : personaggiInLocazione.entrySet()) {
-			stream.print(entry.getKey().getX());
-			stream.print(PIPE);
-			stream.println(entry.getKey().getY());
+			stampaRiga(stream,
+					entry.getKey().getX(),
+					entry.getKey().getY());
 			entry.getValue().salva(stream);
 		}
 		stream.println(residenti.size());
@@ -126,18 +128,16 @@ public class RegistroPersonaggiMD implements Serializzabile {
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
-		String line = stream.readLine();
-		int numeroPersonaggi = Integer.parseInt(line);
+		int numeroPersonaggi = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroPersonaggi; i++) {
-			line = stream.readLine();
-			LettoreCampi st = new LettoreCampi(line);
-			CoordinateMD coordinate = new CoordinateMD(Integer.parseInt(st.testo()), Integer.parseInt(st.testo()));
+			LettoreCampi st = new LettoreCampi(stream.readLine());
+			CoordinateMD coordinate = new CoordinateMD(st.intero(), st.intero());
 			PersonaggioMD personaggio = new PersonaggioMD();
 			personaggio.leggi(stream);
 			personaggiInLocazione.put(coordinate, personaggio);
 		}
 		residenti.clear();
-		int numeroResidenti = Integer.parseInt(stream.readLine());
+		int numeroResidenti = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroResidenti; i++) {
 			LettoreCampi campi = new LettoreCampi(stream.readLine());
 			String chiave = campi.testo();

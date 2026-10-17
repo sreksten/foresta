@@ -5,9 +5,13 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
  * Le statistiche della partita: livello del gioco, punti esperienza, punteggio, turni giocati, mostri uccisi per
@@ -116,22 +120,18 @@ public class StatisticheMD implements Serializzabile {
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		stream.print(livello);
-		stream.print(PIPE);
-		stream.print(puntiEsperienza);
-		stream.print(PIPE);
-		stream.print(punti);
-		stream.print(PIPE);
-		stream.print(turniGiocati);
-		stream.print(PIPE);
-		stream.println(idPartita);
+		stampaRiga(stream,
+				livello,
+				puntiEsperienza,
+				punti,
+				turniGiocati,
+				idPartita);
+		List<Object> mostri = new ArrayList<>();
 		for (TipoPersonaggio classePersonaggio : TipoPersonaggio.values()) {
-			stream.print(classePersonaggio.name());
-			stream.print(PIPE);
-			stream.print(getMostriUccisi(classePersonaggio));
-			stream.print(PIPE);
+			mostri.add(classePersonaggio);
+			mostri.add(getMostriUccisi(classePersonaggio));
 		}
-		stream.println("");
+		stampaRiga(stream, mostri);
 	}
 
 	/**
@@ -139,19 +139,17 @@ public class StatisticheMD implements Serializzabile {
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
-		String line = stream.readLine();
-		LettoreCampi st = new LettoreCampi(line);
-		livello = Integer.parseInt(st.testo());
-		puntiEsperienza = Integer.parseInt(st.testo());
-		punti = Integer.parseInt(st.testo());
-		turniGiocati = Integer.parseInt(st.testo());
+		LettoreCampi st = new LettoreCampi(stream.readLine());
+		livello = st.intero();
+		puntiEsperienza = st.intero();
+		punti = st.intero();
+		turniGiocati = st.intero();
 		idPartita = st.testo();
 		mostriUccisi.clear();
 		TipoPersonaggio[] classi = TipoPersonaggio.values();
-		line = stream.readLine();
-		st = new LettoreCampi(line);
+		st = new LettoreCampi(stream.readLine());
 		for (int i = 0; i < classi.length; i++) {
-			mostriUccisi.put(TipoPersonaggio.valueOf(st.testo()), Integer.parseInt(st.testo()));
+			mostriUccisi.put(st.enumerato(TipoPersonaggio.class), st.intero());
 		}
 	}
 }

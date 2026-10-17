@@ -3,6 +3,9 @@ package com.threeamigos.foresta.modellodati;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Dichiara che un certo oggetto può essere scritto e riletto da un flusso di input/output
@@ -42,6 +45,38 @@ public interface Serializzabile {
 			return "";
 		}
 		return valore instanceof Enum ? ((Enum<?>) valore).name() : valore.toString();
+	}
+
+	/**
+	 * Come si scrive un valore in un campo: un enum con il suo nome, il resto come lo scriverebbe PrintWriter.print
+	 * (null diventa "null": per un campo che può mancare c'è {@link #facoltativo(Object)}).
+	 */
+	static String campo(Object valore) {
+		return valore instanceof Enum ? ((Enum<?>) valore).name() : String.valueOf(valore);
+	}
+
+	/**
+	 * Scrive una riga del salvataggio: i valori, uno per campo, separati da {@link #PIPE}, e poi l'a capo (vedi
+	 * {@link #campo(Object)}). Senza valori scrive una riga vuota. È quella che {@link LettoreCampi} rilegge campo per campo.
+	 */
+	static void stampaRiga(PrintWriter stream, Object... valori) {
+		stampaRiga(stream, Arrays.asList(valori));
+	}
+
+	/**
+	 * Come {@link #stampaRiga(PrintWriter, Object...)}, quando quanti sono i valori si sa solo scrivendo (per esempio
+	 * una lista riempita in un ciclo).
+	 */
+	static void stampaRiga(PrintWriter stream, Collection<?> valori) {
+		stream.println(valori.stream().map(Serializzabile::campo).collect(Collectors.joining(PIPE)));
+	}
+
+	/**
+	 * Più valori in un solo campo, separati da {@value MappaProprieta#SEPARATORE} (per esempio "FORZA§12"): quello che
+	 * {@link LettoreCampi#sottocampi(int, int)} rilegge.
+	 */
+	static String composto(Object... valori) {
+		return Arrays.stream(valori).map(Serializzabile::campo).collect(Collectors.joining(MappaProprieta.SEPARATORE));
 	}
 
 	/**

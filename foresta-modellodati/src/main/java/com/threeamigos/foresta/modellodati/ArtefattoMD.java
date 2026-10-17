@@ -6,17 +6,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
- * I dati di un artefatto: un oggetto del gioco con un tipo (un'arma, un'armatura, una pergamena, un ingrediente...), una
- * rarità, un nome con l'articolo (la spada di fuoco) ed eventualmente un nome proprio (Diavolina) e una descrizione,
+ * I dati di un artefatto: un oggetto del gioco con un tipo (un'arma, un'armatura, una pergamena, un ingrediente...),
+ * una rarità, un nome con l'articolo (la spada di fuoco) ed eventualmente un nome proprio (Diavolina) e una descrizione,
  * il livello, i danni base, il costo, il peso e lo slot che occupa mentre un personaggio lo porta.
  * <p>
  * Può portare dei {@link ModificatoreAttributoMD modificatori di attributo} e degli {@link IncantamentoMD incantamenti}.
  * Ogni artefatto ha un identificativo unico che il salvataggio conserva. Gli artefatti leggendari sono pezzi di un
  * set, riconosciuto da due chiavi (vedi {@link #setPezzoDiSetLeggendario}).
  * <p>
- * Contiene solo dati, con le poche regole di coerenza che servono a non scrivere un salvataggio rotto (per esempio
+ * Contiene solo dati, con le poche regole di coerenza che servono a non scrivere un salvataggio rovinato (per esempio
  * il carattere "|" si toglie dai nomi). Le regole del gioco stanno nel motore (vedi artefatti_e_incantamenti.md).
  *
  * @author Stefano Reksten
@@ -86,14 +90,14 @@ public class ArtefattoMD implements Serializzabile {
 	}
 
 	/**
-	 * Il pezzo del set leggendario che è l'artefatto (la chiave del leggendario), o null.
+	 * Il pezzo del set leggendario di cui l'artefatto fa parte, o null.
 	 */
 	public String getPezzoLeggendario() {
 		return pezzoLeggendario;
 	}
 
 	/**
-	 * Fa dell'artefatto quel pezzo di quel set leggendario.
+	 * Rende l'artefatto "quel" pezzo di "quel" set leggendario.
 	 */
 	public void setPezzoDiSetLeggendario(String setLeggendario, String pezzoLeggendario) {
 		this.setLeggendario = setLeggendario;
@@ -231,11 +235,10 @@ public class ArtefattoMD implements Serializzabile {
 	 * Aggiunge un modificatore.
 	 *
 	 * @throws IllegalArgumentException se il modificatore agisce sul bersaglio ma l'artefatto non è né un'arma né un
-	 * ingrediente: solo un'arma può mettere un modificatore sul bersaglio che colpisce, e un ingrediente (la pergamena) lo
-	 * porta per passarlo a un'arma
+	 * ingrediente: solo un'arma può mettere un modificatore sul bersaglio che colpisce, e un ingrediente (la pergamena)
+	 * lo porta per passarlo a un'arma
 	 */
 	public void addModificatore(ModificatoreAttributoMD modificatore) {
-		// Lo mette sul bersaglio un'arma che colpisce; un ingrediente (la pergamena) lo porta per passarlo a un'arma
 		if (modificatore.getBersaglio() == BersaglioModificatore.BERSAGLIO && tipo.getCategoria() != CategoriaArtefatto.ARMA
 				&& !tipo.isIngrediente()) {
 			throw new IllegalArgumentException("Un modificatore sul bersaglio sta solo su un'arma o su un ingrediente, non su " + tipo);
@@ -255,7 +258,7 @@ public class ArtefattoMD implements Serializzabile {
 	 * Toglie un modificatore (uno solo, se ce ne sono di uguali): serve alla fusione, quando un effetto migliore ne
 	 * prende il posto.
 	 *
-	 * @return se c'era
+	 * @return true se c'era
 	 */
 	public boolean removeModificatore(ModificatoreAttributoMD modificatore) {
 		return modificatori.remove(modificatore);
@@ -270,8 +273,8 @@ public class ArtefattoMD implements Serializzabile {
 	}
 
 	/**
-	 * Toglie tutti gli incantamenti: serve a chi vuole un artefatto "di base", senza gli incantamenti che il generatore dà ogni
-	 * tanto (la dotazione iniziale di un personaggio).
+	 * Toglie tutti gli incantamenti: serve a chi vuole un artefatto "di base", senza gli incantamenti che il generatore
+	 * dà ogni tanto (la dotazione iniziale di un personaggio).
 	 */
 	public void rimuoviTuttiGliIncantamenti() {
 		incantamenti.clear();
@@ -280,7 +283,7 @@ public class ArtefattoMD implements Serializzabile {
 	/**
 	 * Toglie un incantamento: serve alla fusione, quando un effetto migliore ne prende il posto.
 	 *
-	 * @return se c'era
+	 * @return true se c'era
 	 */
 	public boolean removeIncantamento(IncantamentoMD incantamento) {
 		return incantamenti.remove(incantamento);
@@ -317,63 +320,24 @@ public class ArtefattoMD implements Serializzabile {
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		stream.print(uuid);
-		stream.print(PIPE);
-		stream.print(tipo.name());
-		stream.print(PIPE);
-		stream.print(rarita.name());
-		stream.print(PIPE);
-		stream.print(Serializzabile.facoltativo(setLeggendario));
-		stream.print(PIPE);
-		stream.print(Serializzabile.facoltativo(pezzoLeggendario));
-		stream.print(PIPE);
-		stream.print(Serializzabile.facoltativo(nomeProprio));
-		stream.print(PIPE);
-		stream.print(nome);
-		stream.print(PIPE);
-		stream.print(Serializzabile.facoltativo(descrizione));
-		stream.print(PIPE);
-		stream.print(livello);
-		stream.print(PIPE);
-		stream.print(danni);
-		stream.print(PIPE);
-		stream.print(costoAcquisto);
-		stream.print(PIPE);
-		stream.print(peso);
-		stream.print(PIPE);
-		stream.print(figliVisibili);
-		stream.print(PIPE);
-		stream.print(Serializzabile.facoltativo(slotEquipaggiamento));
-		stream.print(PIPE);
-		stream.print(modificatori.size());
-		stream.print(PIPE);
-		stream.println(incantamenti.size());
-
-		for (ModificatoreAttributoMD modificatore : modificatori) {
-			stream.print(modificatore.getTipoAttributo().name());
-			stream.print(PIPE);
-			stream.print(modificatore.getTipoModificatoreAttributo().name());
-			stream.print(PIPE);
-			stream.print(modificatore.getQuantita());
-			stream.print(PIPE);
-			stream.print(modificatore.getUnitaDurata().name());
-			stream.print(PIPE);
-			stream.print(modificatore.getDurata());
-			stream.print(PIPE);
-			stream.print(modificatore.getBersaglio().name());
-			stream.print(PIPE);
-			stream.println(Serializzabile.facoltativo(modificatore.getNote()));
-		}
-
-		for (IncantamentoMD incantamento : incantamenti) {
-			stream.print(incantamento.getNomeIncantamento());
-			stream.print(PIPE);
-			stream.print(incantamento.getTipoDannoElementale().name());
-			stream.print(PIPE);
-			stream.print(incantamento.getDannoBonusFisso());
-			stream.print(PIPE);
-			stream.println(incantamento.getCoefficienteScala());
-		}
+		stampaRiga(stream,
+				uuid,
+				tipo,
+				rarita,
+				facoltativo(setLeggendario),
+				facoltativo(pezzoLeggendario),
+				facoltativo(nomeProprio),
+				nome,
+				facoltativo(descrizione),
+				livello,
+				danni,
+				costoAcquisto,
+				peso,
+				figliVisibili,
+				facoltativo(slotEquipaggiamento));
+		// Una riga per i modificatori e una per gli incantamenti, un campo composto ciascuno (vuote se non ce ne sono)
+		stampaRiga(stream, modificatori.stream().map(ModificatoreAttributoMD::comeCampo).collect(Collectors.toList()));
+		stampaRiga(stream, incantamenti.stream().map(IncantamentoMD::comeCampo).collect(Collectors.toList()));
 	}
 
 	/**
@@ -396,31 +360,15 @@ public class ArtefattoMD implements Serializzabile {
 		peso = campi.decimale();
 		figliVisibili = campi.booleano();
 		slotEquipaggiamento = campi.enumeratoFacoltativo(TipoSlotArtefatto.class);
-		int numeroModificatori = campi.intero();
-		int numeroIncantamenti = campi.intero();
 		modificatori.clear();
-		for (int i = 0; i < numeroModificatori; i++) {
-			campi = new LettoreCampi(stream.readLine());
-			TipoAttributo tipoAttributo = campi.enumerato(TipoAttributo.class);
-			TipoModificatore tipoModificatore = campi.enumerato(TipoModificatore.class);
-			double quantita = campi.decimale();
-			UnitaDurataModificatore unitaDurata = campi.enumerato(UnitaDurataModificatore.class);
-			int durata = campi.intero();
-			BersaglioModificatore bersaglio = campi.enumerato(BersaglioModificatore.class);
-			// Nota vuota: si rilegge come "", come la mette il costruttore a tre argomenti di
-			// ModificatoreAttributoMD, altrimenti il modificatore riletto non sarebbe più equals all'originale
-			String note = campi.testo();
-			modificatori.add(new ModificatoreAttributoMD(tipoAttributo, tipoModificatore, quantita, note, unitaDurata, durata,
-					bersaglio));
+		campi = new LettoreCampi(stream.readLine());
+		while (campi.haAltriCampi()) {
+			modificatori.add(ModificatoreAttributoMD.daCampo(campi));
 		}
 		incantamenti.clear();
-		for (int i = 0; i < numeroIncantamenti; i++) {
-			campi = new LettoreCampi(stream.readLine());
-			String nomeIncantamento = campi.testo();
-			TipoDanno tipoDannoElementale = campi.enumerato(TipoDanno.class);
-			int dannoBonusFisso = campi.intero();
-			double coefficienteScala = campi.decimale();
-			incantamenti.add(new IncantamentoMD(nomeIncantamento, tipoDannoElementale, dannoBonusFisso, coefficienteScala));
+		campi = new LettoreCampi(stream.readLine());
+		while (campi.haAltriCampi()) {
+			incantamenti.add(IncantamentoMD.daCampo(campi));
 		}
 	}
 }

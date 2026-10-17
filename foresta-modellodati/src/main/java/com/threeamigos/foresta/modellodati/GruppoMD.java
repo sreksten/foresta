@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+
 /**
  * I dati di un gruppo di personaggi: chi ne fa parte, chi è il capo e le scorte comuni (le pergamene degli incantesimi
  * e le cinque pozioni). Il gruppo del giocatore ne è una specializzazione ({@link GruppoGiocatoreMD}).
@@ -150,7 +152,9 @@ public class GruppoMD implements Serializzabile {
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		stream.println(personaggiMD.size() + PIPE + indiceCapo);
+		stampaRiga(stream,
+				personaggiMD.size(),
+				indiceCapo);
 		for (PersonaggioMD personaggio : personaggiMD) {
 			personaggio.salva(stream);
 		}

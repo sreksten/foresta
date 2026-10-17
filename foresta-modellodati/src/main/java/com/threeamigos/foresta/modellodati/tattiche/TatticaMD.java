@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
 import java.util.Objects;
-import com.threeamigos.foresta.modellodati.Serializzabile;
 import com.threeamigos.foresta.modellodati.LettoreCampi;
 import java.io.PrintWriter;
 import java.io.IOException;
@@ -9,6 +8,9 @@ import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
  * La tattica di un personaggio: una lista ordinata di voci (nessun tetto), di cui si esegue la prima eseguibile. Immutabile.
@@ -91,7 +93,10 @@ public final class TatticaMD {
 	 * Scrive la tattica e le sue voci (vedi FormatoTattiche)
 	 */
 	public void salva(PrintWriter stream) {
-		stream.println("TATTICA" + Serializzabile.PIPE + voci.size() + Serializzabile.PIPE + (disabilitata ? 1 : 0));
+		stampaRiga(stream,
+				"TATTICA",
+				voci.size(),
+				disabilitata ? 1 : 0);
 		for (VoceMD voce : voci) {
 			voce.salva(stream);
 		}

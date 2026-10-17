@@ -9,6 +9,8 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+
 /**
  * I dati della mappa della Foresta: una casella per ogni posizione, ciascuna con il suo {@link LocazioneMD}.
  * <p>
@@ -47,13 +49,13 @@ public class ForestaMD implements Serializzabile {
 	private Map<TipoLocazione, CoordinateMD> locazioniUniche;
 
 	// Cambia ogni volta che cambia visivamente la mappa (conosciuta/visitata),
-	// così chi disegna la mappa generale sa quando la sua cache è da ricostruire.
+	// così chi disegna la mappa generale (la UI) sa quando la sua cache è da ricostruire.
 	// Il contatore è unico per tutta l'esecuzione: se ogni partita ripartisse da 0,
 	// una partita nuova o caricata potrebbe avere la stessa versione di quella
 	// disegnata per ultima (morendo nella prima locazione, per esempio) e la mappa
 	// a video resterebbe quella vecchia.
-	// Non è un dato della partita (non si salva): sta qui, e non in chi disegna, perché solo questa classe sa quando la
-	// mappa cambia (lo incrementa nei suoi tre metodi che la modificano).
+	// Non è un dato della partita (non si salva): sta qui, e non in chi disegna, perché
+	// solo questa classe sa quando la mappa cambia (lo incrementa nei suoi tre metodi che la modificano).
 	private static final AtomicInteger ULTIMA_VERSIONE_MAPPA = new AtomicInteger();
 	private int versioneMappa;
 
@@ -88,7 +90,7 @@ public class ForestaMD implements Serializzabile {
 	////////////
 
 	/**
-	 * Posa sulla casella una locazione nuova: il modello dati precedente se ne va
+	 * Mette nella casella una locazione nuova. Il modello dati precedente se ne va
 	 * insieme alla locazione che rappresentava, e con lui il nome e il fatto di
 	 * essere stata portata a termine. Restano invece "visitata" e "conosciuta",
 	 * che sono della casella e non di quel che ci si trova sopra.
@@ -137,7 +139,8 @@ public class ForestaMD implements Serializzabile {
 	/**
 	 * Il modello dati della casella in quella posizione.
 	 *
-	 * @return il modello dati, o null se la casella non è ancora stata assegnata (succede solo mentre la foresta si costruisce)
+	 * @return il modello dati, o null se la casella non è ancora stata assegnata
+	 *         (succede solo mentre la foresta si costruisce)
 	 */
 	public LocazioneMD ottieniLocazioneMD(CoordinateMD coordinate) {
 		return arrayLocazioni[offset(coordinate.getX(), coordinate.getY())];
@@ -260,26 +263,24 @@ public class ForestaMD implements Serializzabile {
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		stream.print(dimensioneX);
-		stream.print(PIPE);
-		stream.println(dimensioneY);
-		// Le dimensioni fanno già da conteggio: seguono dimensioneX * dimensioneY
-		// righe in ordine row-major, una per casella
+		stampaRiga(stream,
+				dimensioneX,
+				dimensioneY);
 		for (LocazioneMD locazioneMD : arrayLocazioni) {
 			locazioneMD.salva(stream);
 		}
 	}
 
 	/**
-	 * Rilegge la mappa scritta da {@link #salva(PrintWriter)}. Mentre legge ricostruisce anche le informazioni derivate:
-	 * dove stanno le locazioni uniche e i limiti dell'area conosciuta.
+	 * Rilegge la mappa scritta da {@link #salva(PrintWriter)}. Mentre legge ricostruisce anche
+	 * le informazioni derivate: dove stanno le locazioni uniche e i limiti dell'area conosciuta.
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();
 		LettoreCampi st = new LettoreCampi(line);
-		dimensioneX = Integer.parseInt(st.testo());
-		dimensioneY = Integer.parseInt(st.testo());
+		dimensioneX = st.intero();
+		dimensioneY = st.intero();
 		reimposta(dimensioneX, dimensioneY);
 		for (int indice = 0; indice < arrayLocazioni.length; indice++) {
 			LocazioneMD locazioneMD = new LocazioneMD();

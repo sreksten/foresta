@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
+import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+
 /**
  * I dati di una missione: identificativo, classe, nome, descrizione e se la descrizione è già visibile al giocatore.
  * <p>
@@ -137,17 +140,13 @@ public class MissioneMD implements Serializzabile {
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		stream.print(id);
-		stream.print(PIPE);
-		stream.print(classe.name());
-		stream.print(PIPE);
-		stream.print(nome == null ? "" : nome);
-		stream.print(PIPE);
-		stream.print(descrizione == null ? "" : descrizione);
-		stream.print(PIPE);
-		stream.print(descrizioneVisibile);
-		stream.print(PIPE);
-		stream.println(missioniSecondarie.size());
+		stampaRiga(stream,
+				id,
+				classe,
+				facoltativo(nome),
+				facoltativo(descrizione),
+				descrizioneVisibile,
+				missioniSecondarie.size());
 		stream.println(MappaProprieta.salva(proprieta));
 		for (MissioneMD missioneMD : missioniSecondarie) {
 			missioneMD.salva(stream);

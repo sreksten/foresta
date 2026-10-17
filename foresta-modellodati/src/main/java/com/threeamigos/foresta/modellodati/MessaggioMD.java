@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.UUID;
 
+import static com.threeamigos.foresta.modellodati.Serializzabile.senzaACapo;
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+
 /**
  * Un messaggio mostrato al giocatore nel pannello di testo, con il modo in cui è
  * stato mostrato: come inizio di un nuovo paragrafo (NotificaTestoParagrafo) o come
@@ -59,11 +62,10 @@ public class MessaggioMD implements Serializzabile {
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		stream.print(uuid);
-		stream.print(PIPE);
-		stream.print(paragrafo ? PARAGRAFO : FRASE);
-		stream.print(PIPE);
-		stream.println(Serializzabile.senzaACapo(testo));
+		stampaRiga(stream,
+				uuid,
+				paragrafo ? PARAGRAFO : FRASE,
+				senzaACapo(testo));
 	}
 
 	/**

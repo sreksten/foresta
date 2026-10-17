@@ -5,8 +5,12 @@ import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Locale;
+
+import static com.threeamigos.foresta.modellodati.Serializzabile.composto;
+import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
 
 /**
  * Modifica di un certo scostamento (positivo o negativo) il valore base di un attributo di un personaggio.
@@ -163,6 +167,38 @@ public class ModificatoreAttributoMD {
         }
         ModificatoreAttributoMD other = (ModificatoreAttributoMD) obj;
         return stessoEffetto(other) && durata == other.durata;
+    }
+
+    /**
+     * Il modificatore come campo di un salvataggio: attributo, tipo, quantità, unità, durata, bersaglio e nota, separati da
+     * {@value MappaProprieta#SEPARATORE}. La nota, testo libero, è l'ultima: se contiene il separatore non sposta gli altri.
+     * Lo rilegge {@link #daCampo(LettoreCampi)}.
+     */
+    public String comeCampo() {
+        return composto(
+                tipoAttributo,
+                tipoModificatore,
+                quantita,
+                unitaDurata,
+                durata,
+                bersaglio,
+                facoltativo(note));
+    }
+
+    /**
+     * Rilegge il prossimo campo scritto da {@link #comeCampo()}. Una nota vuota si rilegge come "", come la mette il
+     * costruttore senza nota, così il modificatore riletto è equals all'originale.
+     */
+    public static ModificatoreAttributoMD daCampo(LettoreCampi campi) throws IOException {
+        LettoreCampi sottocampi = campi.sottocampi(6, 7);
+        TipoAttributo tipoAttributo = sottocampi.enumerato(TipoAttributo.class);
+        TipoModificatore tipoModificatore = sottocampi.enumerato(TipoModificatore.class);
+        double quantita = sottocampi.decimale();
+        UnitaDurataModificatore unitaDurata = sottocampi.enumerato(UnitaDurataModificatore.class);
+        int durata = sottocampi.intero();
+        BersaglioModificatore bersaglio = sottocampi.enumerato(BersaglioModificatore.class);
+        String note = sottocampi.haAltriCampi() ? sottocampi.testo() : "";
+        return new ModificatoreAttributoMD(tipoAttributo, tipoModificatore, quantita, note, unitaDurata, durata, bersaglio);
     }
 
     /**

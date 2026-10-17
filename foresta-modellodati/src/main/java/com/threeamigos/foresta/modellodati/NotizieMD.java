@@ -100,14 +100,14 @@ public class NotizieMD implements Serializzabile {
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		ultimiMessaggi.clear();
-		int numeroMessaggi = Integer.parseInt(stream.readLine());
+		int numeroMessaggi = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroMessaggi; i++) {
 			MessaggioMD messaggioMD = new MessaggioMD();
 			messaggioMD.leggi(stream);
 			ultimiMessaggi.add(messaggioMD);
 		}
 		ultimeNotizie.clear();
-		int numeroNotizie = Integer.parseInt(stream.readLine());
+		int numeroNotizie = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroNotizie; i++) {
 			NotiziaMD notizia = new NotiziaMD();
 			notizia.leggi(stream);

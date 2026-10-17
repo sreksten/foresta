@@ -167,6 +167,6 @@ public class ModelloDati implements Serializzabile {
 		registroMissioniMD.leggi(stream);
 		notizieMD.leggi(stream);
 		intermezziMD.leggi(stream);
-		aiutoAbilitato = Boolean.parseBoolean(stream.readLine());
+		aiutoAbilitato = LettoreCampi.leggiBooleano(stream);
 	}
 }

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.modellodati;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -24,6 +25,25 @@ public final class LettoreCampi {
 		}
 		this.riga = riga;
 		this.campi = riga.isEmpty() ? new String[0] : SEPARATORE.split(riga, -1);
+	}
+
+	private LettoreCampi(String riga, String[] campi) {
+		this.riga = riga;
+		this.campi = campi;
+	}
+
+	/**
+	 * La prossima riga del salvataggio, che contiene solo un numero intero (per esempio quanti elementi seguono).
+	 */
+	public static int leggiIntero(BufferedReader stream) throws IOException {
+		return new LettoreCampi(stream.readLine()).intero();
+	}
+
+	/**
+	 * La prossima riga del salvataggio, che contiene solo un valore vero o falso.
+	 */
+	public static boolean leggiBooleano(BufferedReader stream) throws IOException {
+		return new LettoreCampi(stream.readLine()).booleano();
 	}
 
 	/**
@@ -53,16 +73,30 @@ public final class LettoreCampi {
 
 	/**
 	 * Il prossimo campo come numero intero.
+	 *
+	 * @throws IOException anche se il campo non è un numero
 	 */
 	public int intero() throws IOException {
-		return Integer.parseInt(testo());
+		String testo = testo();
+		try {
+			return Integer.parseInt(testo);
+		} catch (NumberFormatException e) {
+			throw new IOException("\"" + testo + "\" non è un numero intero nella riga: " + riga, e);
+		}
 	}
 
 	/**
 	 * Il prossimo campo come numero decimale.
+	 *
+	 * @throws IOException anche se il campo non è un numero
 	 */
 	public double decimale() throws IOException {
-		return Double.parseDouble(testo());
+		String testo = testo();
+		try {
+			return Double.parseDouble(testo);
+		} catch (NumberFormatException e) {
+			throw new IOException("\"" + testo + "\" non è un numero nella riga: " + riga, e);
+		}
 	}
 
 	/**
@@ -81,18 +115,19 @@ public final class LettoreCampi {
 
 	/**
 	 * Il prossimo campo diviso nei suoi sottocampi, separati da {@value MappaProprieta#SEPARATORE} (per esempio
-	 * "FORZA§12" o i campi di un modificatore). Con {@code massimo} sottocampi l'ultimo tiene tutto il resto, anche
-	 * se contiene il separatore (è il caso di una nota). Meno di {@code minimo} sottocampi è un salvataggio rovinato.
+	 * "FORZA§12" o i campi di un modificatore), da leggere a loro volta con questi metodi. Con {@code massimo}
+	 * sottocampi l'ultimo tiene tutto il resto, anche se contiene il separatore (è il caso di una nota). Meno di
+	 * {@code minimo} sottocampi è un salvataggio rovinato.
 	 *
 	 * @throws IOException se il campo ha meno di {@code minimo} sottocampi
 	 */
-	public String[] sottocampi(int minimo, int massimo) throws IOException {
+	public LettoreCampi sottocampi(int minimo, int massimo) throws IOException {
 		String campo = testo();
 		String[] sottocampi = campo.split(MappaProprieta.SEPARATORE, massimo);
 		if (sottocampi.length < minimo) {
 			throw new IOException("Mancano sottocampi nel campo \"" + campo + "\" della riga: " + riga);
 		}
-		return sottocampi;
+		return new LettoreCampi(campo, sottocampi);
 	}
 
 	/**

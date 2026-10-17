@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+
 /**
  * Una notizia destinata alla schermata della mappa: un identificativo e un corpo
  * testuale. A differenza dei messaggi del pannello di testo, non è legata al
@@ -45,9 +47,9 @@ public class NotiziaMD implements Serializzabile {
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		stream.print(id);
-		stream.print(PIPE);
-		stream.println(corpo);
+		stampaRiga(stream,
+				id,
+				corpo);
 	}
 
 	/**
@@ -55,8 +57,7 @@ public class NotiziaMD implements Serializzabile {
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
-		String line = stream.readLine();
-		LettoreCampi st = new LettoreCampi(line);
+		LettoreCampi st = new LettoreCampi(stream.readLine());
 		id = st.testo();
 		corpo = st.testo();
 	}

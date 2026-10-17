@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
-import com.threeamigos.foresta.modellodati.Serializzabile;
 import com.threeamigos.foresta.modellodati.LettoreCampi;
 import java.io.PrintWriter;
 import java.io.IOException;

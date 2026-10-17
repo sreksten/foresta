@@ -4,10 +4,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import com.threeamigos.foresta.tipi.TipoLocazione;
+
+import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.modellodati.Serializzabile.pulisciCampo;
+import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
  * Il tempo della partita: giorno e ora correnti, le città distrutte, se il gioco è finito e l'ultimo evento
@@ -101,18 +106,13 @@ public class LineaTemporaleMD implements Serializzabile {
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		stream.print(ora);
-		stream.print(PIPE);
-		stream.print(giorno);
-		stream.print(PIPE);
-		stream.print(giocoFinito);
-		stream.print(PIPE);
-		stream.print(Serializzabile.facoltativo(Serializzabile.pulisciCampo(evento)));
-		for (TipoLocazione cittaDistrutta : cittaDistrutte) {
-			stream.print(PIPE);
-			stream.print(cittaDistrutta.name());
-		}
-		stream.println("");
+		List<Object> campi = new ArrayList<>(Arrays.asList(
+				ora,
+				giorno,
+				giocoFinito,
+				facoltativo(pulisciCampo(evento))));
+		campi.addAll(cittaDistrutte);
+		stampaRiga(stream, campi);
 	}
 
 	/**
@@ -120,10 +120,9 @@ public class LineaTemporaleMD implements Serializzabile {
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
-		String line = stream.readLine();
-		LettoreCampi st = new LettoreCampi(line);
-		ora = Integer.parseInt(st.testo());
-		giorno = Integer.parseInt(st.testo());
+		LettoreCampi st = new LettoreCampi(stream.readLine());
+		ora = st.intero();
+		giorno = st.intero();
 		giocoFinito = st.booleano();
 		evento = st.testoFacoltativo();
 		cittaDistrutte.clear();
