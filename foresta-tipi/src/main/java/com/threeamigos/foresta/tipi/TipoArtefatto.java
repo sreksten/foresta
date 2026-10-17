@@ -57,10 +57,8 @@ public enum TipoArtefatto {
     private final TipoSlotArtefatto tipoSlotArtefatto;
     private final TipoDanno tipoDanno;
 
+    // Un'arma ha sempre un tipo di danno, il resto mai: lo controlla TipoArtefattoTest su tutte le costanti
     TipoArtefatto(CategoriaArtefatto categoriaArtefatto, TipoCardinalitaArtefatto cardinalita, TipoSlotArtefatto tipoSlotArtefatto, TipoDanno tipoDanno) {
-        if (categoriaArtefatto != CategoriaArtefatto.ARMA) {
-            throw new IllegalArgumentException("Il Supertipo per l'artefatto deve essere ARMA");
-        }
         this.categoriaArtefatto = categoriaArtefatto;
         this.cardinalita = cardinalita;
         this.tipoSlotArtefatto = tipoSlotArtefatto;
@@ -68,13 +66,7 @@ public enum TipoArtefatto {
     }
 
     TipoArtefatto(CategoriaArtefatto categoriaArtefatto, TipoCardinalitaArtefatto cardinalita, TipoSlotArtefatto tipoSlotArtefatto) {
-        if (categoriaArtefatto == CategoriaArtefatto.ARMA) {
-            throw new IllegalArgumentException("Se il Supertipo per l'artefatto è ARMA occorre passare anche il TipoDanno");
-        }
-        this.categoriaArtefatto = categoriaArtefatto;
-        this.cardinalita = cardinalita;
-        this.tipoSlotArtefatto = tipoSlotArtefatto;
-        this.tipoDanno = null;
+        this(categoriaArtefatto, cardinalita, tipoSlotArtefatto, null);
     }
 
     /**

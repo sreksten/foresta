@@ -121,11 +121,21 @@ public final class Testi {
 
 	// Il file accanto alla classe indicata (nello stesso pacchetto); una lingua senza file vale un elenco vuoto
 	private static Properties leggi(Class<?> accanto, String nome) {
+		return leggi(accanto.getResourceAsStream(nome + ".properties"), nome);
+	}
+
+	/**
+	 * I testi di un flusso in UTF-8, che chiude; null vale un elenco vuoto.
+	 *
+	 * @throws IllegalStateException se il flusso non si legge
+	 */
+	static Properties leggi(InputStream flusso, String nome) {
 		Properties testi = new Properties();
-		try (InputStream flusso = accanto.getResourceAsStream(nome + ".properties")) {
-			if (flusso != null) {
-				testi.load(new InputStreamReader(flusso, StandardCharsets.UTF_8));
-			}
+		if (flusso == null) {
+			return testi;
+		}
+		try (InputStream daChiudere = flusso) {
+			testi.load(new InputStreamReader(daChiudere, StandardCharsets.UTF_8));
 		} catch (IOException e) {
 			throw new IllegalStateException("File di testi illeggibile: " + nome, e);
 		}

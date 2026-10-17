@@ -15,6 +15,9 @@ package com.threeamigos.foresta.tipi;
  */
 public class Costanti {
 
+    private Costanti() {
+    }
+
     // Amicizia e corruzione
     // Il tentativo di amicizia riesce se il carisma di chi lo fa è maggiore del tiro di un dado con queste facce: con un
     // carisma di una faccia in più il tentativo riesce sempre

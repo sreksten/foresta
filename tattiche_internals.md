@@ -74,9 +74,10 @@ Ogni azione dichiara la sua **portata**, cioè su che cosa agisce, e quindi come
 | `ARMA` | sempre `SE_STESSO`: dice chi cambia arma | `CAMBIA_ARMA` |
 
 Tutte le azioni di una **stessa voce** devono avere la stessa portata (lo controlla `VoceMD.problemi`). `TipoAzione.roseAmmesse(attoreDelGiocatore)` dice da
-quali rose può pescare il bersaglio: per esempio un attacco dei miei non colpisce gli ospiti, un attacco di un mostro sì.
+quali rose può pescare il bersaglio: per esempio un attacco dei miei non colpisce gli ospiti, un attacco di un mostro sì. Le rose sono dati della
+portata (`PortataAzione.roseAmmesse`, due insiemi per costante: per i miei e per i mostri).
 
-`TipoAzione.di(ClasseIncantesimo)` e `getClasseIncantesimo()` fanno da ponte fra l'azione e l'incantesimo. `INCANTESIMO_DI_DANNO` e `INCANTESIMO_DEL_REPERTORIO`
+`TipoAzione.di(ClasseIncantesimo)` e `getClasseIncantesimo()` fanno da ponte fra l'azione e l'incantesimo (`di(null)` dà null). `INCANTESIMO_DI_DANNO` e `INCANTESIMO_DEL_REPERTORIO`
 non hanno una classe fissa: sono due azioni "a criterio" che il valutatore trasforma in quella dell'incantesimo scelto (§8).
 
 ### 3.2 `TipoRosa`
@@ -549,7 +550,7 @@ altrimenti riparte da quella del motore. I pulsanti **Sì**/**No** compaiono sol
 Quando si aggiunge un valore a un enumerato bisogna toccare più punti; dove un test lo controlla è indicato.
 
 **Una nuova azione (`TipoAzione`)**
-1. `TipoAzione`: il valore, con descrizione, portata e classe di incantesimo (se c'è). Se ha una portata nuova, anche `PortataAzione` e `roseAmmesse`.
+1. `TipoAzione`: il valore, con descrizione, portata e classe di incantesimo (se c'è). Se ha una portata nuova, anche `PortataAzione`, con le sue rose.
 2. `Requisiti.motivoDelNo`: il `case` con i suoi requisiti (altrimenti finisce in `incantesimoSingolo`, che per un'azione senza classe risponde "azione sconosciuta").
 3. `EsecutoreTattiche.esegui`: il `case` che la esegue (altrimenti finisce in `lanciaUnIncantesimoDiDanno`). Se è un'azione a criterio, anche `Valutatore.decisioneSu`.
 4. `RegistroTattiche.azioniPossibili`: se non è per tutte le classi.
@@ -568,7 +569,7 @@ se non va offerto al giocatore, toglierlo da `predicatiAmmessi`.
 **Un nuovo ordinamento (`TipoOrdinamento`)**: il valore; il `case` in `Ordinamenti.scegli` oppure in `misura` (e in `descriviLeMisure` se non misura); `TestoTattica.spiega`; se guarda la storia di
 chi decide, `BozzaTattica.ordinamentiAmmessi`.
 
-**Una nuova rosa (`TipoRosa`)**: il valore con i lati per cui vale; una classe in `tattiche.rose` e la sua `registra` in `Rose`; `TipoAzione.roseAmmesse`; `TestoTattica.spiega(TipoRosa)`; il test
+**Una nuova rosa (`TipoRosa`)**: il valore con i lati per cui vale; una classe in `tattiche.rose` e la sua `registra` in `Rose`; le rose delle portate che la ammettono (`PortataAzione`); `TestoTattica.spiega(TipoRosa)`; il test
 `RosaTest`.
 
 **Una nuova tattica base**: `TatticheBase` (mostri: la classe in `ASTUZIA_MASSIMA` e, se è magica, nei tre elenchi; giocabili: `deiGiocabili`).

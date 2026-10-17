@@ -82,4 +82,15 @@ class NoteDeiPersonaggiTest {
 			assertFalse(note.getProperty(chiave).trim().isEmpty(), "nota vuota: " + chiave);
 		}
 	}
+
+	@Test
+	void unGiroDiRimandiSiFermaESiUsaLaNotaPredefinita() {
+		// Nel file di prova della lingua "zz" l'arpia rimanda al centauro e il centauro all'arpia
+		Testi.impostaLingua("zz");
+		try {
+			assertEquals("La nota predefinita di prova", NoteDeiPersonaggi.nota(TipoPersonaggio.ARPIA, "CHIAVE_DI_PROVA").get());
+		} finally {
+			Testi.impostaLingua(null);
+		}
+	}
 }

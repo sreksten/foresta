@@ -61,6 +61,30 @@ class TestiDelleEnumTest {
 	}
 
 	@Test
+	void ogniGetterDeiTestiLeggeLaSuaVoce() throws Exception {
+		for (Map.Entry<Class<? extends Enum<?>>, List<String>> enumerazione : ENUM.entrySet()) {
+			for (String voce : enumerazione.getValue()) {
+				// La voce NOME_SINGOLARE si legge con getNomeSingolare, e così via
+				java.lang.reflect.Method getter = enumerazione.getKey().getMethod(getterDi(voce));
+				for (Enum<?> costante : enumerazione.getKey().getEnumConstants()) {
+					assertEquals(Testi.testo(costante, voce).get(), getter.invoke(costante), costante + "." + voce);
+				}
+			}
+		}
+		for (TipoInterazioneConEffettiDiStato interazione : TipoInterazioneConEffettiDiStato.values()) {
+			assertEquals(Testi.testoOCostante(interazione, "AREA"), interazione.getTestoAdArea(), interazione.name());
+		}
+	}
+
+	private static String getterDi(String voce) {
+		StringBuilder nome = new StringBuilder("get");
+		for (String parola : voce.split("_")) {
+			nome.append(parola.charAt(0)).append(parola.substring(1).toLowerCase(java.util.Locale.ROOT));
+		}
+		return nome.toString();
+	}
+
+	@Test
 	void ogniInterazioneAdAreaHaLaSuaFrase() {
 		for (TipoInterazioneConEffettiDiStato interazione : TipoInterazioneConEffettiDiStato.values()) {
 			if (interazione.getDannoAdArea() != null) {

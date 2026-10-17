@@ -137,7 +137,7 @@ public final class Valutatore {
 			// ogni chiamata ritira il dado, quindi l'incantesimo di allora e questo possono essere diversi (entrambi fra i lanciabili)
 			classe = SceltaIncantesimo.scegli(azione, attore, bersaglio, contesto);
 			if (classe == null) {
-				// TipoAzione.di(null) darebbe ATTACCO_FISICO, la prima azione senza classe: un attacco che la tattica non ha chiesto
+				// Nessun incantesimo da lanciare: niente azione (non un attacco che la tattica non ha chiesto)
 				return null;
 			}
 			tipo = TipoAzione.di(classe);

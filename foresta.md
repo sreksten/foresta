@@ -83,7 +83,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 
 - **Java 8** (`maven.compiler.source/target = 1.8`), build **Maven**, sorgenti in UTF-8.
 - **Swing/AWT/Java2D** per tutta la grafica, nessuna libreria esterna. Nessuna dipendenza di runtime.
-- **JUnit 5** per i test e **JaCoCo** per la copertura. `mvn test` esegue la suite: al 2026-10-18 sono 1419 test, tutti verdi (16 saltati), distribuiti sui moduli. I test di scenario guidano partite intere senza UI (`PartitaDiTest`).
+- **JUnit 5** per i test e **JaCoCo** per la copertura. `mvn test` esegue la suite: al 2026-10-18 sono 1455 test, tutti verdi (16 saltati), distribuiti sui moduli. I test di scenario guidano partite intere senza UI (`PartitaDiTest`).
 - I salvataggi usano un formato testo proprietario a campi separati da `|` (`Serializzabile`), senza versione: la compatibilità con i salvataggi vecchi non è un obiettivo.
 - Al 2026-10-17: circa 715 file e 96.500 righe di codice (il motore ne ha 55.000, la UI 22.000), più circa 245 file e 36.000 righe di test.
 

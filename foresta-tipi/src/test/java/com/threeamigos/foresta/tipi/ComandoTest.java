@@ -12,10 +12,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Le descrizioni dei comandi, lette da comandi_it.properties.
@@ -69,6 +66,31 @@ class ComandoTest {
 			Comando comando = Comando.valueOf(chiave);
 			assertFalse(SENZA_DESCRIZIONE.contains(comando), "il file ha una voce per " + chiave + ", che dovrebbe esserne senza");
 			assertFalse(descrizioni.getProperty(chiave).trim().isEmpty(), "descrizione vuota: " + chiave);
+		}
+	}
+
+	@Test
+	void unComandoSiRitrovaDallaSuaPosizione() {
+		for (Comando comando : Comando.values()) {
+			assertSame(comando, Comando.of(comando.ordinal()));
+		}
+		assertThrows(IllegalArgumentException.class, () -> Comando.of(-1));
+		assertThrows(IllegalArgumentException.class, () -> Comando.of(Comando.values().length));
+	}
+
+	@Test
+	void iComandiDeiPersonaggiSonoOttoInFila() {
+		Comando[] personaggi = {Comando.PERSONAGGIO_1, Comando.PERSONAGGIO_2, Comando.PERSONAGGIO_3, Comando.PERSONAGGIO_4,
+				Comando.PERSONAGGIO_5, Comando.PERSONAGGIO_6, Comando.PERSONAGGIO_7, Comando.PERSONAGGIO_8};
+		for (int i = 0; i < personaggi.length; i++) {
+			assertSame(personaggi[i], Comando.ofPersonaggio(i));
+		}
+		assertThrows(IllegalArgumentException.class, () -> Comando.ofPersonaggio(-1));
+		assertThrows(IllegalArgumentException.class, () -> Comando.ofPersonaggio(8));
+
+		Set<Comando> deiPersonaggi = new HashSet<>(Arrays.asList(personaggi));
+		for (Comando comando : Comando.values()) {
+			assertEquals(deiPersonaggi.contains(comando), comando.isPersonaggio(), comando.name());
 		}
 	}
 }

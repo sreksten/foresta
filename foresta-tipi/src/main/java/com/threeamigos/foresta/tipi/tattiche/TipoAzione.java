@@ -4,8 +4,8 @@ import com.threeamigos.foresta.tipi.Testi;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
-import java.util.Collections;
-import java.util.EnumSet;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -68,16 +68,22 @@ public enum TipoAzione {
 		this.tipoIncantesimo = tipoIncantesimo;
 	}
 
-	/**
-	 * L'azione che lancia quell'incantesimo, o null se l'incantesimo non ne ha una
-	 */
-	public static TipoAzione di(TipoIncantesimo classe) {
+	// L'azione di ciascun incantesimo: ogni incantesimo ne ha una (lo controlla TipiDelleTatticheTest)
+	private static final Map<TipoIncantesimo, TipoAzione> PER_INCANTESIMO = new EnumMap<>(TipoIncantesimo.class);
+
+	static {
 		for (TipoAzione azione : values()) {
-			if (azione.tipoIncantesimo == classe) {
-				return azione;
+			if (azione.tipoIncantesimo != null) {
+				PER_INCANTESIMO.putIfAbsent(azione.tipoIncantesimo, azione);
 			}
 		}
-		return null;
+	}
+
+	/**
+	 * L'azione che lancia quell'incantesimo; null per null (non è un incantesimo: EnumMap.get(null) dà null).
+	 */
+	public static TipoAzione di(TipoIncantesimo classe) {
+		return PER_INCANTESIMO.get(classe);
 	}
 
 	public String getDescrizione() {
@@ -107,27 +113,10 @@ public enum TipoAzione {
 	}
 
 	/**
-	 * Le rose da cui il selettore di una voce con questa azione può pescare, per i personaggi del giocatore o per i mostri. Un attacco dei miei non
-	 * colpisce gli ospiti; per un mostro sì (sono fra i suoi bersagli). Le cure dei mostri non riguardano gli ospiti.
+	 * Le rose da cui il selettore di una voce con questa azione può pescare, per i personaggi del giocatore o per i mostri:
+	 * quelle della sua portata (vedi {@link PortataAzione#roseAmmesse(boolean)}).
 	 */
 	public Set<TipoRosa> roseAmmesse(boolean attoreDelGiocatore) {
-		switch (portata) {
-			case AVVERSARIO:
-				return attoreDelGiocatore ? EnumSet.of(TipoRosa.AVVERSARI)
-						: EnumSet.of(TipoRosa.AVVERSARI, TipoRosa.OSPITI, TipoRosa.AVVERSARI_E_OSPITI);
-			case ALLEATO:
-				return attoreDelGiocatore ? EnumSet.of(TipoRosa.SE_STESSO, TipoRosa.ALLEATI, TipoRosa.OSPITI, TipoRosa.ALLEATI_E_OSPITI)
-						: EnumSet.of(TipoRosa.SE_STESSO, TipoRosa.ALLEATI);
-			case ALLEATO_CADUTO:
-				return EnumSet.of(TipoRosa.ALLEATI_CADUTI);
-			case GRUPPO_ALLEATI:
-				return EnumSet.of(TipoRosa.ALLEATI);
-			case GRUPPO_AVVERSARI:
-				return EnumSet.of(TipoRosa.AVVERSARI);
-			case ARMA:
-				return EnumSet.of(TipoRosa.SE_STESSO);
-			default:
-				return Collections.emptySet();
-		}
+		return portata.roseAmmesse(attoreDelGiocatore);
 	}
 }
