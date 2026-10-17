@@ -1,12 +1,10 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.modellodati.IncantamentoMD;
-
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
@@ -81,7 +79,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	 * Gli incantamenti sono elementali o magici: il danno fisico lo dà già l'arma
 	 */
 	private static final List<TipoDanno> TIPI_DANNO_INCANTAMENTO = Arrays.stream(TipoDanno.values())
-			.filter(t -> t.getSuperTipo() != SupertipoDanno.FISICO)
+			.filter(t -> t.getSuperTipo() != CategoriaDanno.FISICO)
 			.collect(Collectors.toList());
 
 	private static final List<TipoArtefatto> TIPI_CASUALI = Arrays.stream(TipoArtefatto.values())
@@ -110,9 +108,9 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 				TipoAttributo.CORAGGIO, TipoAttributo.VALORE, TipoAttributo.CARICO_MASSIMO, TipoAttributo.POTERE_MAGICO));
 		// La gemma gli incantamenti elementali, il monile quelli magici
 		DANNI_DEGLI_INGREDIENTI.put(TipoArtefatto.GEMMA, TIPI_DANNO_INCANTAMENTO.stream()
-				.filter(t -> t.getSuperTipo() == SupertipoDanno.ELEMENTALE).collect(Collectors.toList()));
+				.filter(t -> t.getSuperTipo() == CategoriaDanno.ELEMENTALE).collect(Collectors.toList()));
 		DANNI_DEGLI_INGREDIENTI.put(TipoArtefatto.MONILE, TIPI_DANNO_INCANTAMENTO.stream()
-				.filter(t -> t.getSuperTipo() == SupertipoDanno.MAGICO).collect(Collectors.toList()));
+				.filter(t -> t.getSuperTipo() == CategoriaDanno.MAGICO).collect(Collectors.toList()));
 	}
 
 	private final Random random;
@@ -179,7 +177,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		if (Artefatto.di(md).isIncantabile() && random.nextDouble() < Costanti.ARTEFATTO_PROBABILITA_RARO) {
 			md.setRarita(TipoRaritaArtefatto.RARO);
 		}
-		switch (tipo.getSupertipo()) {
+		switch (tipo.getCategoria()) {
 			case ARMA:
 				completaArma(md, livelloEffettivo);
 				break;
@@ -246,7 +244,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 			md.setRarita(TipoRaritaArtefatto.RARO);
 		}
 		md.setNome(NOMI.get(tipo));
-		switch (tipo.getSupertipo()) {
+		switch (tipo.getCategoria()) {
 			case ARMA:
 				completaArma(md, livello);
 				break;

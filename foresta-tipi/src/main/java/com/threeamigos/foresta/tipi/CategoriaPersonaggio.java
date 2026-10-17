@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * Il genere di creatura di un Personaggio, per scegliere chi colpire o a chi rivolgere un'azione "per categoria" (un
+ * La categoria di creatura di un Personaggio, per scegliere chi colpire o a chi rivolgere un'azione "per categoria" (un
  * non morto, un volante...) durante l'esecuzione di una Tattica. Un {@link TipoPersonaggio} ne ha una o più:
  * per esempio, lo Spirito è sia NON_MORTO, sia VOLANTE.
  * <p>
@@ -15,21 +15,37 @@ import java.util.Map;
  */
 public enum CategoriaPersonaggio {
 
-	/** Ha forma umana: i giocanti, i goblin, la Strega... */
+	/**
+	 * Ha forma umana: i giocanti, i goblin, la Strega...
+	 */
 	UMANOIDE,
-	/** Un animale o una bestia, senza un corpo da umanoide */
+	/**
+	 * Un animale o una bestia, senza un corpo da umanoide
+	 */
 	BESTIA,
-	/** Un drago o un suo parente stretto: la Viverna, la Chimera-Drago */
+	/**
+	 * Un drago o un suo parente stretto: la Viverna, la Chimera-Drago
+	 */
 	DRACONICO,
-	/** Morto che continua ad agire: scheletri, spettri, spiriti, Lich */
+	/**
+	 * Morto che continua ad agire: scheletri, spettri, spiriti, Lich
+	 */
 	NON_MORTO,
-	/** Si muove in volo, fuori dalla portata di chi combatte a terra */
+	/**
+	 * Si muove in volo, fuori dalla portata di chi combatte a terra
+	 */
 	VOLANTE,
-	/** Di taglia esagerata, che sovrasta chi le sta davanti: il Gigante, il Titano, il Troll, l'Idra, il Drago... */
+	/**
+	 * Di taglia esagerata, che sovrasta chi le sta davanti: il Gigante, il Titano, il Troll, l'Idra, il Drago...
+	 */
 	GIGANTESCO,
-	/** Un corpo fatto di più creature: arpie, centauri, minotauri, chimere, chimere-drago */
+	/**
+	 * Un corpo fatto di più creature: arpie, centauri, minotauri, chimere, chimere-drago
+	 */
 	IBRIDO,
-	/** Una creatura fabbricata o animata, non nata: il gargoyle di pietra, un giorno i golem */
+	/**
+	 * Una creatura fabbricata o animata, non nata: il gargoyle di pietra, un giorno i golem
+	 */
 	COSTRUTTO;
 
 	// Quanto danno subisce, per tipo di danno, chi è di questa categoria. Tipi mancanti restituiscono 1

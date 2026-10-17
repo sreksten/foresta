@@ -16,8 +16,8 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
  * Sotto-missione di {@link CronacheDiUnFegatoEroico}: si conclude quando il gruppo
  * esce dalla locanda di una città precisa.
  * <p>
- * La città non è cablata nella classe ma vive fra le proprieta' del modello dati,
- * come fa {@link MuoviALocazione} con le coordinate: così una sola classe copre
+ * La città non è cablata nella classe ma vive fra le proprieta' del modello dati:
+ * così una sola classe copre
  * tutte le locande, e dopo un caricamento la ricostruzione polimorfica ritrova la
  * città senza bisogno di un costruttore con argomenti.
  */

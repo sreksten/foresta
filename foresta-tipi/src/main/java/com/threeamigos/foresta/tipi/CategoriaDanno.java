@@ -6,10 +6,19 @@ package com.threeamigos.foresta.tipi;
  *
  * @author Stefano Reksten
  */
-public enum SupertipoDanno {
+public enum CategoriaDanno {
 
+    /**
+     * Categoria per danno fisico
+     */
     FISICO,
+    /**
+     * Categoria per danno elementale
+     */
     ELEMENTALE,
+    /**
+     * Categoria per danno magico
+     */
     MAGICO
 
 }

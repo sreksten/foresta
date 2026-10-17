@@ -2,12 +2,11 @@ package com.threeamigos.foresta.tipi;
 
 
 /**
- * I tipi di danno, divisi in fisici, elementali e magici ({@link SupertipoDanno}). Ogni tipo ha un nome da mostrare e gli
- * {@link TipoEffettoDiStato stati alterati} che può causare.
+ * I tipi di danno, divisi in fisici, elementali e magici ({@link CategoriaDanno}). Ogni tipo ha un nome da mostrare
+ * e gli {@link TipoEffettoDiStato stati alterati} che può causare.
  * <p>
- * I commenti accanto a ciascun tipo, con il nome inglese a fianco, descrivono come ci si aspetta che si comporti: le
- * debolezze e le resistenze delle classi di personaggio ai vari tipi stanno in {@link TipoPersonaggio} e in
- * {@link CategoriaPersonaggio}.
+ * I commenti su a ciascun tipo descrivono come ci si aspetta che si comporti. Le debolezze e le resistenze delle classi
+ * di personaggio ai vari tipi stanno in {@link TipoPersonaggio} e in {@link CategoriaPersonaggio}.
  * <p>
  * I testi di ogni costante (NOME) non stanno qui ma nel file {@code tipo_danno_<lingua>.properties}, alla voce
  * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
@@ -17,54 +16,53 @@ package com.threeamigos.foresta.tipi;
 public enum TipoDanno {
 
     /** Impatti da armi smussate (martelli, mazze) o cadute. Efficace contro scheletri e armature pesanti. */
-    CONTUNDENTE(SupertipoDanno.FISICO, TipoEffettoDiStato.STORDITO, TipoEffettoDiStato.ATTERRATO), // Bludgeoning
+    CONTUNDENTE(CategoriaDanno.FISICO, TipoEffettoDiStato.STORDITO, TipoEffettoDiStato.ATTERRATO), // Bludgeoning
     /** Attacchi di punta (frecce, lance, morsi). Penetra i punti deboli delle corazze. */
-    PERFORANTE(SupertipoDanno.FISICO), // Piercing
+    PERFORANTE(CategoriaDanno.FISICO), // Piercing
     /** Tagli netti (spade, asce, artigli). Causa ferite esposte e sanguinamenti (DoT). */
-    TAGLIENTE(SupertipoDanno.FISICO, TipoEffettoDiStato.SANGUINAMENTO), // Slashing
+    TAGLIENTE(CategoriaDanno.FISICO, TipoEffettoDiStato.SANGUINAMENTO), // Slashing
 
     /** Spinte d'aria, lacerazioni da vuoto, tempeste e sbalzi di pressione. Spesso sposta o destabilizza i bersagli. */
-    ARIA(SupertipoDanno.ELEMENTALE, TipoEffettoDiStato.ATTERRATO), // Wind/Air
+    ARIA(CategoriaDanno.ELEMENTALE, TipoEffettoDiStato.ATTERRATO), // Wind
     /** Impatti idrici, annegamento, pressione idrostatica o getti corrosivi. Spesso spegne il fuoco o spinge i nemici. */
-    ACQUA(SupertipoDanno.ELEMENTALE, TipoEffettoDiStato.BAGNATO), // Water
+    ACQUA(CategoriaDanno.ELEMENTALE, TipoEffettoDiStato.BAGNATO), // Water
     /** Impatti da rocce, terremoti o sabbia. Perfetto per logorare le difese o accecare il bersaglio. */
-    TERRA(SupertipoDanno.ELEMENTALE, TipoEffettoDiStato.IMMOBILIZZATO, TipoEffettoDiStato.ACCECATO), // Earth
+    TERRA(CategoriaDanno.ELEMENTALE, TipoEffettoDiStato.IMMOBILIZZATO, TipoEffettoDiStato.ACCECATO), // Earth
     /** Brucia i bersagli, infiamma gli oggetti e spesso infligge danni nel tempo (DoT). */
-    FUOCO(SupertipoDanno.ELEMENTALE, TipoEffettoDiStato.BRUCIATO), // Fire
+    FUOCO(CategoriaDanno.ELEMENTALE, TipoEffettoDiStato.BRUCIATO), // Fire
     /** Danno rapido che spesso si propaga tra bersagli vicini, disattiva reazioni o stordisce. */
-    FULMINE(SupertipoDanno.ELEMENTALE, TipoEffettoDiStato.STORDITO), // Lightning
+    FULMINE(CategoriaDanno.ELEMENTALE, TipoEffettoDiStato.STORDITO), // Lightning
     /** Congela i fluidi corporei, rallenta i movimenti e riduce la velocità d'attacco. */
-    GELO(SupertipoDanno.ELEMENTALE, TipoEffettoDiStato.RALLENTATO, TipoEffettoDiStato.CONGELATO), // Cold/Ice
+    GELO(CategoriaDanno.ELEMENTALE, TipoEffettoDiStato.RALLENTATO, TipoEffettoDiStato.CONGELATO), // Cold/Ice
     /** Corrode armature, scioglie la carne e riduce permanentemente le difese della vittima. */
-    ACIDO(SupertipoDanno.ELEMENTALE), // Acid
+    ACIDO(CategoriaDanno.ELEMENTALE), // Acid
     /** Onde d'urto invisibili, vibrazioni e boati che spingono indietro i nemici o li assordano. */
-    SONICO(SupertipoDanno.ELEMENTALE, TipoEffettoDiStato.ASSORDATO), // Thunder/Sonic
+    SONICO(CategoriaDanno.ELEMENTALE, TipoEffettoDiStato.ASSORDATO), // Sonic
     /** Tossine che debilitano il bersaglio, riducendo le statistiche e consumando la salute lentamente (DoT). */
-    VELENO(SupertipoDanno.ELEMENTALE, TipoEffettoDiStato.AVVELENATO), // Poison
-
+    VELENO(CategoriaDanno.ELEMENTALE, TipoEffettoDiStato.AVVELENATO), // Poison
     /** Energia della morte e del decadimento. Dissangua la forza vitale e impedisce la cura. */
-    NECROTICO(SupertipoDanno.MAGICO, TipoEffettoDiStato.INFETTATO), // Necrotic
+    NECROTICO(CategoriaDanno.MAGICO, TipoEffettoDiStato.INFETTATO), // Necrotic
     /** Energia di luce divina e radiazioni celestiali. Devastante contro non-morti, demoni e oscurità. */
-    SACRO(SupertipoDanno.MAGICO, TipoEffettoDiStato.ACCECATO), // Holy/Radiant
+    SACRO(CategoriaDanno.MAGICO, TipoEffettoDiStato.ACCECATO), // Holy
     /** Attacchi mentali diretti (illusioni, telepatia). Ignora le armature fisiche e causa confusione o shock. */
-    PSICHICO(SupertipoDanno.MAGICO, TipoEffettoDiStato.CONFUSO, TipoEffettoDiStato.SPAVENTATO), // Psychic
+    PSICHICO(CategoriaDanno.MAGICO, TipoEffettoDiStato.CONFUSO, TipoEffettoDiStato.SPAVENTATO), // Psychic
     /** Energia magica pura, grezza e manipolata (es. Dardo Incantato). Il tipo di danno meno resistito. */
-    ARCANO(SupertipoDanno.MAGICO, TipoEffettoDiStato.SILENZIATO), // Arcane
+    ARCANO(CategoriaDanno.MAGICO, TipoEffettoDiStato.SILENZIATO), // Arcane
     /** L'assenza di tutto, la gravità o l'energia delle stelle. Astrazione spaziale che disintegra la materia. */
-    VUOTO(SupertipoDanno.MAGICO), // Void/Cosmic
+    VUOTO(CategoriaDanno.MAGICO), // Void
     /** Corruzione e influssi maligni. Può ridurre i punti vita o intaccare le statistiche massime dei personaggi. */
-    MALEDIZIONE(SupertipoDanno.MAGICO, TipoEffettoDiStato.MALEDETTO), // Curse
+    MALEDIZIONE(CategoriaDanno.MAGICO, TipoEffettoDiStato.MALEDETTO), // Curse
     ;
 
-    private final SupertipoDanno superTipo;
+    private final CategoriaDanno superTipo;
     private final TipoEffettoDiStato[] effetti;
 
-    TipoDanno(SupertipoDanno superTipo, TipoEffettoDiStato... effetti) {
+    TipoDanno(CategoriaDanno superTipo, TipoEffettoDiStato... effetti) {
         this.superTipo = superTipo;
         this.effetti = effetti;
     }
 
-    public SupertipoDanno getSuperTipo() {
+    public CategoriaDanno getSuperTipo() {
         return superTipo;
     }
 

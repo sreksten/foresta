@@ -13,24 +13,22 @@ public enum PortataIncantesimo {
 	 * ridefinendo IncantesimoMaleficoImpl.formulaGlobale. Morte non può mai esserlo.
 	 */
 	GLOBALE,
-
 	/**
-	 * Colpisce tutti i personaggi vivi del gruppo avversario
+	 * Colpisce tutti i personaggi vivi del gruppo avversario.
 	 */
 	GRUPPO,
-
 	/**
 	 * Colpisce fino a N personaggi vivi del gruppo avversario, con N il numero di bersagli di chi lo formula
-	 * (Personaggio.getBersagli)
+	 * (Personaggio.getBersagli).
 	 */
 	MULTIPLO,
-
 	/**
-	 * Su un solo personaggio: se l'incantesimo è benefico (Resurrezione) uno del nostro gruppo, scelto dal
-	 * giocatore; se è malefico (Morte) un avversario, per ora il primo ancora vivo (vedi LocazioneBase).
-	 * SOLO_VIVI esclude i morti, QUALSIASI no.
+	 * Sul un singolo personaggio ma del nostro gruppo inclusi quelli morti (per abilitare Resurrezione).
 	 */
-	SINGOLO_SOLO_VIVI,
-	SINGOLO_QUALSIASI
-
+	SINGOLO_QUALSIASI,
+	/**
+	 * Su un solo personaggio: se l'incantesimo è benefico uno del nostro gruppo, scelto dal giocatore;
+	 * se è malefico (Morte) un avversario, per ora il primo ancora vivo (vedi LocazioneBase).
+	 */
+	SINGOLO_SOLO_VIVI
 }

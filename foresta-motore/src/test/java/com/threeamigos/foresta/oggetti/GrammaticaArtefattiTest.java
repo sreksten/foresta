@@ -1,11 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.tipi.SupertipoDanno;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -107,7 +103,7 @@ class GrammaticaArtefattiTest {
                 assertFalse(nome.matches(".*[@\\[\\]{}|<>\"].*"), nome);
                 assertFalse(nome.contains("  "), nome);
                 for (TipoDanno danno : risultato.getDanni()) {
-                    assertNotSame(danno.getSuperTipo(), SupertipoDanno.FISICO, nome);
+                    assertNotSame(danno.getSuperTipo(), CategoriaDanno.FISICO, nome);
                 }
                 for (GrammaticaArtefatti.Modificatore modificatore : risultato.getModificatori()) {
                     assertTrue(modificatore.getIntensita() != 0 && Math.abs(modificatore.getIntensita()) <= 3, nome);

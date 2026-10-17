@@ -1,21 +1,21 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.DannoRisultante;
+import com.threeamigos.foresta.combattimento.FaseDiAttacco;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio.NotificaMorte;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.personaggi.Personaggio.NotificaMorte;
+import com.threeamigos.foresta.tipi.CategoriaDanno;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
-import com.threeamigos.foresta.tipi.SupertipoDanno;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.combattimento.DannoRisultante;
-import com.threeamigos.foresta.combattimento.FaseDiAttacco;
 
 /**
  * Simulatore di combattimento isolato (Monte Carlo Matrix Test), non collegato allo stato
@@ -228,7 +228,7 @@ public class CombatSimulatorMatrix {
 
     static void attacca(Personaggio attaccante, Personaggio difensore, FaseDiAttacco fase, StatisticheAttacco statistiche) {
         statistiche.tentativi++;
-        SupertipoDanno superTipoDanno = fase.getArma().getTipoDanno().getSuperTipo();
+        CategoriaDanno superTipoDanno = fase.getArma().getTipoDanno().getSuperTipo();
 
         // Controllo e gestione corretta dell'ordine dei parametri (Attaccante -> Difensore)
         if (CalcolatoreCombattimento.colpisce(attaccante, difensore, superTipoDanno)) {

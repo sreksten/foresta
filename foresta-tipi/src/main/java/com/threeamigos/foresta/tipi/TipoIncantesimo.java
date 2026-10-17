@@ -3,9 +3,9 @@ package com.threeamigos.foresta.tipi;
 /**
  * Gli incantesimi: un tipo di arma che il giocatore ha a disposizione per combattere gli avversari.
  * <p>Ogni incantesimo ha un nome (coincide con il nome dell'enumerato), una {@link CategoriaIncantesimo} (se è un
- * incantesimo che fa danno al gruppo avversario o apporta beneficio al gruppo del giocatore), una {@link PortataIncantesimo},
- * un {@link TipoDanno}. Ha anche un {@link Comando} associato che serve per passare la richiesta di lancio dalla UI
- * al motore.
+ * incantesimo che fa danno al gruppo avversario o apporta beneficio al gruppo del giocatore),
+ * una {@link PortataIncantesimo}, un {@link TipoDanno}. Ha anche un {@link Comando} associato che serve per passare
+ * la richiesta di lancio dalla UI al motore.
  * <p>
  * L'identificativo viene usato per salvare e rileggere il modello dati del gruppo del giocatore assieme alle quantità
  * disponibili per quel tipo di incantesimo.

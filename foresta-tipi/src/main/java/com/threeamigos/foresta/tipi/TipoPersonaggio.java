@@ -113,7 +113,7 @@ public enum TipoPersonaggio {
 		TROLL.moltiplicaIlDannoSubito(TipoDanno.ACIDO, 1.5d);
 		// Il gargoyle è di pietra: subisce solo il danno fisico, e la pietra si spacca a martellate
 		for (TipoDanno tipoDanno : TipoDanno.values()) {
-			if (tipoDanno.getSuperTipo() != SupertipoDanno.FISICO) {
+			if (tipoDanno.getSuperTipo() != CategoriaDanno.FISICO) {
 				GARGOYLE.moltiplicaIlDannoSubito(tipoDanno, 0.0d);
 			}
 		}

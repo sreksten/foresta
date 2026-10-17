@@ -7,25 +7,17 @@ import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.motore.ModalitaDiProva;
+import com.threeamigos.foresta.oggetti.ArmaNaturale;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.tipi.GradoIncantamento;
+import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
 import com.threeamigos.foresta.personaggi.OmbraFiamma;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.tipi.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.Locale;
-import com.threeamigos.foresta.oggetti.ArmaNaturale;
-import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.motore.ModalitaDiProva;
+import java.util.*;
 
 /**
  * Le regole del combattimento: se un colpo va a segno, quanto danno fa e quali stati alterati provoca, e le stime che le tattiche usano per
@@ -48,7 +40,7 @@ public class CalcolatoreCombattimento {
      * La probabilità, in percentuale, che l'attaccante colpisca il difensore con quel genere di danno (fisico o magico). Alcuni stati decidono da soli
      * l'esito; altrimenti si confronta l'attacco con la difesa, e il risultato resta fra un minimo e un massimo.
      */
-    public static int calcolaProbabilitaDiColpire(Personaggio attaccante, Personaggio difensore, SupertipoDanno tipoDanno) {
+    public static int calcolaProbabilitaDiColpire(Personaggio attaccante, Personaggio difensore, CategoriaDanno tipoDanno) {
 
         // DEBUG: in modalità di prova l'OmbraFiamma va sempre a segno, per poter testare
         // che il gioco sia completabile senza dover contare sulla fortuna dei tiri.
@@ -73,7 +65,7 @@ public class CalcolatoreCombattimento {
         double difesaTotale = 0.0d;
 
         // BIVIO LOGICO DI BILANCIAMENTO IN BASE AL TIPO DI DANNO
-        if (tipoDanno == SupertipoDanno.FISICO) {
+        if (tipoDanno == CategoriaDanno.FISICO) {
             // --- CALCOLO ASSE FISICO ---
             // Attaccante usa la coordinazione occhio-mano (Precisione + Destrezza)
             attaccoTotale = attaccante.getPrecisione() + attaccante.getDestrezza();
@@ -115,7 +107,7 @@ public class CalcolatoreCombattimento {
         }
 
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.ACCECATO)) {
-            if (tipoDanno == SupertipoDanno.FISICO) {
+            if (tipoDanno == CategoriaDanno.FISICO) {
                 // La cecità devasta la mira fisica
                 double penalitaAccecato = (attaccoTotale / 2.0d) * (1.0d - Math.min(1.0d, attaccante.getPercezione() / 100.0d));
                 attaccoTotale -= penalitaAccecato;
@@ -138,7 +130,7 @@ public class CalcolatoreCombattimento {
 
         // 4. APPLICAZIONE DEI MODIFICATORI DI STATO AL DIFENSORE
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.RALLENTATO)) {
-            if (tipoDanno == SupertipoDanno.FISICO) {
+            if (tipoDanno == CategoriaDanno.FISICO) {
                 difesaTotale = difesaTotale / 2.0d; // Rallentato distrugge la schivata fisica
             } else {
                 // Rallentato influisce pochissimo sulla barriera mistica passiva (Resistenza Magica)
@@ -188,7 +180,7 @@ public class CalcolatoreCombattimento {
     /**
      * Tira il dado e dice se il colpo va a segno, in base alla {@link #calcolaProbabilitaDiColpire probabilità di colpire}.
      */
-    public static boolean colpisce(Personaggio attaccante, Personaggio difensore, SupertipoDanno tipoDanno) {
+    public static boolean colpisce(Personaggio attaccante, Personaggio difensore, CategoriaDanno tipoDanno) {
 
         int probabilitaFinale = calcolaProbabilitaDiColpire(attaccante, difensore, tipoDanno);
 
@@ -311,7 +303,7 @@ public class CalcolatoreCombattimento {
         // 1. CALCOLO STATISTICHE EFFETTIVE
         // Determina se l'attacco scala su FORZA (Fisico) o INTELLIGENZA (Magico/Elementale)
         int statOffensiva;
-        boolean dannoNonFisico = tipoDanno.getSuperTipo() == SupertipoDanno.ELEMENTALE || tipoDanno.getSuperTipo() == SupertipoDanno.MAGICO;
+        boolean dannoNonFisico = tipoDanno.getSuperTipo() == CategoriaDanno.ELEMENTALE || tipoDanno.getSuperTipo() == CategoriaDanno.MAGICO;
         Logger.log(() -> "tipoDanno = " + tipoDanno + ", dannoNonFisico = " + dannoNonFisico);
         if (dannoNonFisico) {
             statOffensiva = attaccante.getIntelligenza();
@@ -965,7 +957,7 @@ public class CalcolatoreCombattimento {
         if (interazioni.contains(TipoInterazioneConEffettiDiStato.SUPERCONDUZIONE)) {
             return 0.7d;
         }
-        if (haLoStato(difensore, statiFuturi, TipoEffettoDiStato.CONGELATO) && tipoDanno.getSuperTipo() == SupertipoDanno.FISICO
+        if (haLoStato(difensore, statiFuturi, TipoEffettoDiStato.CONGELATO) && tipoDanno.getSuperTipo() == CategoriaDanno.FISICO
                 && tipoDanno != TipoDanno.CONTUNDENTE) {
             return 1.5d;
         }
@@ -1009,7 +1001,7 @@ public class CalcolatoreCombattimento {
         }
         List<TipoInterazioneConEffettiDiStato> interazioni = interazioniAttive(difensore, tipoDanno, statiFuturi);
         double difesa = difesaContro(difensore, tipoDanno);
-        if (tipoDanno.getSuperTipo() != SupertipoDanno.FISICO && haLoStato(difensore, statiFuturi, TipoEffettoDiStato.MENTE_FRATTURATA)) {
+        if (tipoDanno.getSuperTipo() != CategoriaDanno.FISICO && haLoStato(difensore, statiFuturi, TipoEffettoDiStato.MENTE_FRATTURATA)) {
             difesa = difesa * 0.8d;
         }
         difesa = difesa * fattoreDifesaDaStati(difensore, tipoDanno, interazioni, statiFuturi);
@@ -1050,7 +1042,7 @@ public class CalcolatoreCombattimento {
      * La difesa del personaggio senza i pezzi dell'equipaggiamento: COSTITUZIONE + PARATA per il fisico, RESISTENZA_MAGICA per il resto
      */
     public static double difesaBaseContro(Personaggio difensore, TipoDanno tipoDanno) {
-        boolean fisico = tipoDanno.getSuperTipo() == SupertipoDanno.FISICO;
+        boolean fisico = tipoDanno.getSuperTipo() == CategoriaDanno.FISICO;
         return fisico ? difensore.getCostituzione() + difensore.getParata() : difensore.getResistenzaMagica();
     }
 
@@ -1066,9 +1058,9 @@ public class CalcolatoreCombattimento {
     }
 
     private static boolean isPezzoDifensivo(Artefatto artefatto) {
-        SupertipoArtefatto supertipo = artefatto.getTipo().getSupertipo();
-        return supertipo == SupertipoArtefatto.SCUDO || supertipo == SupertipoArtefatto.ELMO
-                || supertipo == SupertipoArtefatto.ARMATURA || supertipo == SupertipoArtefatto.SCHINIERI;
+        CategoriaArtefatto supertipo = artefatto.getTipo().getCategoria();
+        return supertipo == CategoriaArtefatto.SCUDO || supertipo == CategoriaArtefatto.ELMO
+                || supertipo == CategoriaArtefatto.ARMATURA || supertipo == CategoriaArtefatto.SCHINIERI;
     }
 
     /**

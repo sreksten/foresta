@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.ui.schermate;
 
-import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoCommutazioneElenco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
@@ -8,31 +7,27 @@ import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
-import com.threeamigos.foresta.interfacce.VistaArtefatto;
-import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
-import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.interfacce.VistaPezzoDelSet;
-import com.threeamigos.foresta.interfacce.VistaScambio;
+import com.threeamigos.foresta.interfacce.*;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.tipi.CategoriaArtefatto;
 import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
-import com.threeamigos.foresta.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.ui.barra.Cartiglio;
+import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
+import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.sprite.SpriteATempo;
+import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.IntUnaryOperator;
 import java.util.Locale;
-import com.threeamigos.foresta.ui.barra.Cartiglio;
-import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
-import com.threeamigos.foresta.ui.immagini.ImageCache;
-import com.threeamigos.foresta.ui.sprite.SpriteATempo;
-import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import java.util.function.IntUnaryOperator;
 
 /**
  * Base delle schermate che scambiano artefatti fra due liste affiancate (inventario, commercianti, incantatore): disegna le due liste e traduce click e
@@ -400,8 +395,8 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
     public static Collection<VistaArtefatto> ordinaArtefattiDaDisegnare(Collection<? extends VistaArtefatto> artefatti) {
         java.util.List<VistaArtefatto> artefattiDaDisegnare = new ArrayList<>(artefatti);
         artefattiDaDisegnare.sort((a1, a2) -> {
-            int ordinaleSupertipo1 = a1.getTipo().getSupertipo().ordinal();
-            int ordinaleSupertipo2 = a2.getTipo().getSupertipo().ordinal();
+            int ordinaleSupertipo1 = a1.getTipo().getCategoria().ordinal();
+            int ordinaleSupertipo2 = a2.getTipo().getCategoria().ordinal();
             if (ordinaleSupertipo1 == ordinaleSupertipo2) {
                 int ordinaleTipo1 = a1.getTipo().ordinal();
                 int ordinaleTipo2 = a2.getTipo().ordinal();
@@ -500,13 +495,13 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
      * ordinaArtefattiDaDisegnare).
      */
     private static Image getImmagineSeparatore(TipoArtefatto tipo) {
-        return tipo == TipoArtefatto.MASCHERA ? ImageCache.separatoreMaschere : getImmagineSupertipo(tipo.getSupertipo());
+        return tipo == TipoArtefatto.MASCHERA ? ImageCache.separatoreMaschere : getImmagineSupertipo(tipo.getCategoria());
     }
 
     /**
      * L'immagine che separa nell'elenco un supertipo dal precedente.
      */
-    private static Image getImmagineSupertipo(SupertipoArtefatto supertipo) {
+    private static Image getImmagineSupertipo(CategoriaArtefatto supertipo) {
         switch (supertipo) {
             case ARMA:
                 return ImageCache.separatoreArmi;

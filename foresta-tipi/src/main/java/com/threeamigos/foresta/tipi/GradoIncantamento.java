@@ -2,7 +2,7 @@ package com.threeamigos.foresta.tipi;
 
 /**
  * I gradini degli effetti di un ingrediente magico e degli incantamenti degli artefatti (vedi
- * artefatti_e_incantamenti.md, §6). Il prezzo lo fa ListinoPergamene.
+ * artefatti_e_incantamenti.md). Il prezzo è calcolato tramite il ListinoPergamene.
  * <p>
  * Il nome di ogni grado ("minore", "medio", "maggiore") non sta qui ma nel file
  * {@code grado_incantamento_<lingua>.properties}, alla voce {@code COSTANTE.NOME}, in modo che il gioco si possa tradurre

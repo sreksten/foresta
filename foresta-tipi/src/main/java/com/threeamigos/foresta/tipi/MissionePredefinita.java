@@ -17,6 +17,8 @@ package com.threeamigos.foresta.tipi;
  * un intermezzo entrando in una locazione fa aspettare le altre (per esempio i negozi, che stanno prima degli incarichi
  * in città). Fra gli incarichi in città pronti nella stessa visita invece ne parte uno a caso (vedi
  * missioni.incarichi.SceltaDegliIncarichi). Un incarico ripetibile, finito, lascia la sua copia in fondo al registro.
+ *
+ * @author Stefano Reksten
  */
 public enum MissionePredefinita {
 
@@ -111,10 +113,6 @@ public enum MissionePredefinita {
 	IL_COLPO(true),
 	// Un incarico in città, ma solo se resta un leggendario da mettere in palio, e fra un torneo e l'altro passano 72 ore
 	IL_TORNEO(true),
-
-	// Basi per nuove missioni: oggi nessuno le crea
-	MUOVI_A_LOCAZIONE,
-	MISSIONE_SECONDARIA,
 
 	// Usate dai test, che inventano le loro missioni: non hanno una classe nel gioco
 	MISSIONE_DI_PROVA,

@@ -24,8 +24,10 @@ import java.util.concurrent.ConcurrentMap;
  * nel codice nessun testo da tradurre.</li>
  * </ul>
  * La lingua è l'italiano finché la piattaforma non ne sceglie un'altra con {@link #impostaLingua(String)}. Un testo che
- * manca nella lingua scelta si cerca in italiano, la lingua in cui il gioco è scritto: una traduzione incompleta non
- * lascia buchi.
+ * manca nella lingua scelta si cerca in italiano, la lingua in cui il gioco è scritto; in questo modo una traduzione
+ * incompleta non lascia buchi.
+ *
+ * @author Stefano Reksten
  */
 public final class Testi {
 

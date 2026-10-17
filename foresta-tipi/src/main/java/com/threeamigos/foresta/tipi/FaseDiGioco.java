@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.tipi;
 
 /**
- * Le fasi del gioco che il motore annuncia alla UI con InternoFaseDiGioco: quelle in cui la UI deve cambiare
- * schermata o animazione. Sono una piccola parte degli stati dell'Automa (che la UI non conosce).
+ * Le fasi del gioco che il motore annuncia alla UI con un evento InternoFaseDiGioco, ossia quelle in cui la UI
+ * deve cambiare schermata o animazione. Sono una piccola parte degli stati dell'Automa (che la UI non conosce).
  *
  * @author Stefano Reksten
  */

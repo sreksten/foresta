@@ -1,25 +1,13 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ListinoPergamene;
-import com.threeamigos.foresta.tipi.BersaglioModificatore;
-import com.threeamigos.foresta.tipi.SupertipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
+import com.threeamigos.foresta.tipi.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.IdentityHashMap;
-import java.util.Set;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -395,7 +383,7 @@ public final class RegoleIncantatura {
 	 * Un modificatore sul bersaglio lo mette un'arma quando colpisce: non ha senso su altro
 	 */
 	private static boolean isArma(Artefatto artefatto) {
-		return artefatto.getTipo().getSupertipo() == SupertipoArtefatto.ARMA;
+		return artefatto.getTipo().getCategoria() == CategoriaArtefatto.ARMA;
 	}
 
 	private static boolean haModificatoriSulBersaglio(List<Artefatto> ingredienti) {
@@ -404,7 +392,7 @@ public final class RegoleIncantatura {
 	}
 
 	private static boolean isLibro(Artefatto artefatto) {
-		return artefatto.getTipo().getSupertipo() == SupertipoArtefatto.POTENZIAMENTO_POTERE_MAGICO;
+		return artefatto.getTipo().getCategoria() == CategoriaArtefatto.POTENZIAMENTO_POTERE_MAGICO;
 	}
 
 	/**

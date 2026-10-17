@@ -8,6 +8,7 @@ package com.threeamigos.foresta.tipi;
  * @author Stefano Reksten
  */
 public enum StatoPezzoDelSet {
+
 	/**
 	 * È indossato dallo stesso Personaggio.
 	 */
@@ -20,4 +21,5 @@ public enum StatoPezzoDelSet {
 	 * Il gruppo non ce l'ha.
 	 */
 	DA_TROVARE
+
 }

@@ -1,25 +1,15 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
-import com.threeamigos.foresta.tipi.SupertipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoMotivoRifiutoEquipaggiamento;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
+import com.threeamigos.foresta.tipi.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.EnumSet;
-import java.util.Optional;
-import java.util.Set;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import java.util.*;
 
 /**
  * Regole a slot per l'equipaggiamento di un personaggio (vedi artefatti_e_incantamenti.md, §2 "Equipaggiamento"):
@@ -227,8 +217,8 @@ public final class RegoleEquipaggiamento {
 			}
 			Optional<ArtefattoMD> secondaria = occupato(equipaggiati, TipoSlotArtefatto.MANO_SECONDARIA);
 			// Con la doppia arma esce la più debole delle due (a parità la secondaria), purché la nuova possa stare nella secondaria
-			if (occupante.isPresent() && secondaria.isPresent() && occupante.get().getTipo().getSupertipo() == SupertipoArtefatto.ARMA
-					&& secondaria.get().getTipo().getSupertipo() == SupertipoArtefatto.ARMA
+			if (occupante.isPresent() && secondaria.isPresent() && occupante.get().getTipo().getCategoria() == CategoriaArtefatto.ARMA
+					&& secondaria.get().getTipo().getCategoria() == CategoriaArtefatto.ARMA
 					&& isArmaDaManoSecondaria(nuova.getTipo()) && puoImpugnareDueArmi(personaggio.getClasse())
 					&& dannoAtteso(personaggio, secondaria.get()) <= dannoAtteso(personaggio, occupante.get())) {
 				occupante = secondaria;
@@ -241,7 +231,7 @@ public final class RegoleEquipaggiamento {
 			}
 		}
 		for (ArtefattoMD uscente : uscenti) {
-			if (uscente.getTipo().getSupertipo() != SupertipoArtefatto.ARMA) {
+			if (uscente.getTipo().getCategoria() != CategoriaArtefatto.ARMA) {
 				return Optional.empty();
 			}
 		}
@@ -314,7 +304,7 @@ public final class RegoleEquipaggiamento {
 	 * tutto il resto lo possono portare tutti.
 	 */
 	static boolean puoUsare(TipoPersonaggio classe, TipoArtefatto tipo) {
-		boolean daTabella = tipo.getSupertipo() == SupertipoArtefatto.ARMA || tipo == TipoArtefatto.SCUDO
+		boolean daTabella = tipo.getCategoria() == CategoriaArtefatto.ARMA || tipo == TipoArtefatto.SCUDO
 				|| tipo == TipoArtefatto.LIBRO_MAGICO || tipo == TipoArtefatto.ARMATURA;
 		if (!daTabella) {
 			return true;

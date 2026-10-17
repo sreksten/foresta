@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.tipi;
 
 /**
- * I personaggi non combattenti del mondo che hanno un nome proprio e di cui si tneie traccia nel RegistroPersonaggi
- * (vedi RegistroPersonaggi.getResidente): ognuno dice di che classe è, a quale ambito appartiene e da quale produzione di
- * nomi.txt prende il nome. Vedi anche nomi.md.
+ * I personaggi non combattenti del mondo che hanno un nome proprio e di cui si tiene traccia nel RegistroPersonaggi
+ * (vedi RegistroPersonaggi.getResidente): ognuno dice di che classe è, a quale ambito appartiene e da quale produzione
+ * di nomi.txt prende il nome. Vedi anche nomi.md.
  * <p>
  * Il locandiere è qui per completezza, ma il suo nome non sta nel registro; viene tenuto assieme ai dati della
  * locanda dove lo si trova (vedi Locanda.LOCANDA_NOME_LOCANDIERE).

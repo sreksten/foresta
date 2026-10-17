@@ -5,7 +5,7 @@ import com.threeamigos.foresta.incantesimi.Fuoco;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.SupertipoDanno;
+import com.threeamigos.foresta.tipi.CategoriaDanno;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Disabled;
@@ -89,8 +89,8 @@ class AnalisiBossTest {
             Personaggio boss = FabbricaPersonaggi.crea(classeBoss, livello);
             attaccoFisico += pg.getPrecisione() + pg.getDestrezza();
             attaccoMagico += pg.getPrecisione() + pg.getIntelligenza();
-            colpisceFisico += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(pg, boss, SupertipoDanno.FISICO);
-            colpisceMagico += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(pg, boss, SupertipoDanno.MAGICO);
+            colpisceFisico += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(pg, boss, CategoriaDanno.FISICO);
+            colpisceMagico += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(pg, boss, CategoriaDanno.MAGICO);
             dannoArma += CalcolatoreCombattimento.calcolaDannoRisultante(pg, boss, pg.getArmaEquipaggiata()).getDanno();
             dannoFuoco += CalcolatoreCombattimento.calcolaDannoRisultante(pg, boss, new Fuoco(livello)).getDanno();
             colpisceBoss += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(boss, pg,
@@ -130,7 +130,7 @@ class AnalisiBossTest {
                 Personaggio mostro = FabbricaPersonaggi.crea(classeMostro, livello);
                 immune = mostro.isImmuneAIncantesimo(TipoIncantesimo.FUOCO);
                 salute += mostro.getSaluteMassima();
-                colpisce += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(mago, mostro, SupertipoDanno.MAGICO);
+                colpisce += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(mago, mostro, CategoriaDanno.MAGICO);
                 danno += CalcolatoreCombattimento.calcolaDannoRisultante(mago, mostro, new Fuoco(livello)).getDanno();
             }
             salute /= CAMPIONI;

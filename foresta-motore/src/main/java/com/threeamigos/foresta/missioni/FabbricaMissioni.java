@@ -64,8 +64,6 @@ public final class FabbricaMissioni {
 		COSTRUTTORI.put(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI, LaSfidaDeiCampioni::new);
 		COSTRUTTORI.put(MissionePredefinita.IL_CAMPIONE, IlCampione::new);
 		COSTRUTTORI.put(MissionePredefinita.VISITA_LOCANDA, VisitaLocanda::new);
-		COSTRUTTORI.put(MissionePredefinita.MUOVI_A_LOCAZIONE, MuoviALocazione::new);
-		COSTRUTTORI.put(MissionePredefinita.MISSIONE_SECONDARIA, MissioneSecondaria::new);
 	}
 
 	private FabbricaMissioni() {

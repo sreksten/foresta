@@ -2,22 +2,11 @@ package com.threeamigos.foresta.oggetti.leggendari;
 
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.tipi.SupertipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Locale;
 import com.threeamigos.foresta.oggetti.ModificatoreDelTesto;
+import com.threeamigos.foresta.tipi.*;
+
+import java.util.*;
 
 /**
  * Un oggetto leggendario già pronto, con le sue proprietà e la sua leggenda, letto da una riga di leggendari.txt (che
@@ -99,7 +88,7 @@ public final class OggettoLeggendario {
 		livello = Integer.parseInt(obbligatorio(campi, "LIVELLO"));
 		costo = Integer.parseInt(obbligatorio(campi, "COSTO"));
 		peso = Double.parseDouble(obbligatorio(campi, "PESO"));
-		boolean arma = tipo.getSupertipo() == SupertipoArtefatto.ARMA;
+		boolean arma = tipo.getCategoria() == CategoriaArtefatto.ARMA;
 		if (arma != campi.containsKey("DANNI")) {
 			throw new IllegalArgumentException("I danni ci sono per le armi, e solo per loro: " + riga);
 		}

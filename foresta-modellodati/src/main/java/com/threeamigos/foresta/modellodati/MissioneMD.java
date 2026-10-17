@@ -22,7 +22,8 @@ import java.util.*;
 public class MissioneMD implements Serializzabile {
 
 	private String id = UUID.randomUUID().toString();
-	private MissionePredefinita classe = MissionePredefinita.MISSIONE_SECONDARIA;
+	// La imposta la missione che costruisce questi dati (MissioneBase), o la lettura del salvataggio
+	private MissionePredefinita classe;
 	private String nome;
 	private String descrizione;
 	private boolean descrizioneVisibile = true;

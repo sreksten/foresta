@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.tipi;
 
 /**
- * Indica se un incantesimo fa bene o male al bersaglio. (Da non confondere con {@link TipoIncantesimo},
- * che li identifica uno per uno.)
+ * Categoria di un incantesimo - indica se un incantesimo fa bene o male al bersaglio.
+ * (Da non confondere con {@link TipoIncantesimo}, che li identifica uno per uno.)
  *
  * @author Stefano Reksten
  */

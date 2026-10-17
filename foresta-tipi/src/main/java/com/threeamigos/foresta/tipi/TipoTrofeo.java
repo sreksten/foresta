@@ -14,38 +14,38 @@ import java.util.List;
  */
 public enum TipoTrofeo {
 
-	PERDIGIORNO(SupertipoTrofeo.SPECIALE),
-	CACCIATORE_DI_TAGLIE(SupertipoTrofeo.MISSIONE),
-	RE_DI_CARTA_FORBICI_E_SASSO(SupertipoTrofeo.MISSIONE),
-	AMMAZZAGOBLIN(SupertipoTrofeo.UCCISIONE),
-	UCCIDI_IL_DRAGO(SupertipoTrofeo.UCCISIONE),
-	UCCIDI_LA_STREGA(SupertipoTrofeo.UCCISIONE),
-	UCCIDI_IL_LICH(SupertipoTrofeo.UCCISIONE),
-	UCCIDI_L_IDRA(SupertipoTrofeo.UCCISIONE),
-	UCCIDI_IL_MINOTAURO_GIGANTE(SupertipoTrofeo.UCCISIONE),
-	RAPINATORE(SupertipoTrofeo.BOTTINO),
-	LADRO_DI_PREZIOSI(SupertipoTrofeo.BOTTINO),
-	ARSENIO_LUPIN(SupertipoTrofeo.BOTTINO),
-	ESPERTO_SCASSINATORE(SupertipoTrofeo.BOTTINO),
-	CACCIATORE_DI_TESORI(SupertipoTrofeo.BOTTINO),
-	ESPERTO_CACCIATORE_DI_TESORI(SupertipoTrofeo.BOTTINO),
-	RIGATTIERE(SupertipoTrofeo.ACQUISTO),
-	COLLEZIONISTA(SupertipoTrofeo.ACQUISTO),
-	STUDIOSO(SupertipoTrofeo.ACQUISTO),
-	BOMBAROLO(SupertipoTrofeo.ACQUISTO),
-	CARTOGRAFO(SupertipoTrofeo.ACQUISTO),
-	TRAFFICONE(SupertipoTrofeo.ACQUISTO),
-	AMICO_DI_TUTTI(SupertipoTrofeo.DIPLOMAZIA),
-	CORRUTTORE(SupertipoTrofeo.DIPLOMAZIA),
-	NECROMANTE(SupertipoTrofeo.VARIE),
-	SBEVAZZONE(SupertipoTrofeo.VARIE),
-	TUTTI_I_SANTI(SupertipoTrofeo.VARIE),
-	SPELEOLOGO(SupertipoTrofeo.VARIE),
-	VERO_ROMPISCATOLE(SupertipoTrofeo.VARIE);
+	PERDIGIORNO(CategoriaTrofeo.SPECIALE),
+	CACCIATORE_DI_TAGLIE(CategoriaTrofeo.MISSIONE),
+	RE_DI_CARTA_FORBICI_E_SASSO(CategoriaTrofeo.MISSIONE),
+	AMMAZZAGOBLIN(CategoriaTrofeo.UCCISIONE),
+	UCCIDI_IL_DRAGO(CategoriaTrofeo.UCCISIONE),
+	UCCIDI_LA_STREGA(CategoriaTrofeo.UCCISIONE),
+	UCCIDI_IL_LICH(CategoriaTrofeo.UCCISIONE),
+	UCCIDI_L_IDRA(CategoriaTrofeo.UCCISIONE),
+	UCCIDI_IL_MINOTAURO_GIGANTE(CategoriaTrofeo.UCCISIONE),
+	RAPINATORE(CategoriaTrofeo.BOTTINO),
+	LADRO_DI_PREZIOSI(CategoriaTrofeo.BOTTINO),
+	ARSENIO_LUPIN(CategoriaTrofeo.BOTTINO),
+	ESPERTO_SCASSINATORE(CategoriaTrofeo.BOTTINO),
+	CACCIATORE_DI_TESORI(CategoriaTrofeo.BOTTINO),
+	ESPERTO_CACCIATORE_DI_TESORI(CategoriaTrofeo.BOTTINO),
+	RIGATTIERE(CategoriaTrofeo.ACQUISTO),
+	COLLEZIONISTA(CategoriaTrofeo.ACQUISTO),
+	STUDIOSO(CategoriaTrofeo.ACQUISTO),
+	BOMBAROLO(CategoriaTrofeo.ACQUISTO),
+	CARTOGRAFO(CategoriaTrofeo.ACQUISTO),
+	TRAFFICONE(CategoriaTrofeo.ACQUISTO),
+	AMICO_DI_TUTTI(CategoriaTrofeo.DIPLOMAZIA),
+	CORRUTTORE(CategoriaTrofeo.DIPLOMAZIA),
+	NECROMANTE(CategoriaTrofeo.VARIE),
+	SBEVAZZONE(CategoriaTrofeo.VARIE),
+	TUTTI_I_SANTI(CategoriaTrofeo.VARIE),
+	SPELEOLOGO(CategoriaTrofeo.VARIE),
+	VERO_ROMPISCATOLE(CategoriaTrofeo.VARIE);
 
-	private final SupertipoTrofeo supertipo;
+	private final CategoriaTrofeo supertipo;
 
-	TipoTrofeo(SupertipoTrofeo supertipo) {
+	TipoTrofeo(CategoriaTrofeo supertipo) {
 		this.supertipo = supertipo;
 	}
 
@@ -57,12 +57,12 @@ public enum TipoTrofeo {
 		return Testi.testoOCostante(this, "DESCRIZIONE");
 	}
 
-	public SupertipoTrofeo getSupertipo() {
+	public CategoriaTrofeo getSupertipo() {
 		return supertipo;
 	}
 
 	/**
-	 * Tutti i trofei raggruppati per tipologia, nell'ordine di {@link SupertipoTrofeo}.
+	 * Tutti i trofei raggruppati per tipologia, nell'ordine di {@link CategoriaTrofeo}.
 	 */
 	public static List<TipoTrofeo> perTipologia() {
 		List<TipoTrofeo> trofei = new ArrayList<>(Arrays.asList(values()));

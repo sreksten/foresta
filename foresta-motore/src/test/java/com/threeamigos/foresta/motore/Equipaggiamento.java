@@ -1,15 +1,11 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
-
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
-import com.threeamigos.foresta.tipi.GradoIncantamento;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;
 
@@ -223,7 +219,7 @@ public final class Equipaggiamento {
 			md.setLivello(livello);
 			md.setPeso(PESI.get(tipo));
 			md.setRarita(rarita);
-			switch (tipo.getSupertipo()) {
+			switch (tipo.getCategoria()) {
 				case ARMA:
 					int danni = GeneratoreArtefatti.danniMediArma(livello);
 					if (tipo == TipoArtefatto.SPADONE) {

@@ -58,7 +58,7 @@ class ArtefattoIncantabileTest {
 
     @Test
     void spadoneEArmaADueMani() {
-        assertEquals(SupertipoArtefatto.ARMA, TipoArtefatto.SPADONE.getSupertipo());
+        assertEquals(CategoriaArtefatto.ARMA, TipoArtefatto.SPADONE.getCategoria());
         assertEquals(TipoSlotArtefatto.ENTRAMBE_LE_MANI, TipoArtefatto.SPADONE.getSlotArtefatto());
         assertEquals(TipoDanno.TAGLIENTE, TipoArtefatto.SPADONE.getTipoDanno());
         assertInstanceOf(ArmaFisica.class, Artefatto.di(artefatto(TipoArtefatto.SPADONE, 3).getModelloDati()));

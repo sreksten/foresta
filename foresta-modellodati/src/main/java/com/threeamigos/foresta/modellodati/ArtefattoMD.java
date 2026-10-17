@@ -5,12 +5,7 @@ import com.threeamigos.foresta.tipi.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.UUID;
-import java.util.Locale;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * I dati di un artefatto: un oggetto del gioco con un tipo (un'arma, un'armatura, una pergamena, un ingrediente...), una
@@ -241,7 +236,7 @@ public class ArtefattoMD implements Serializzabile {
 	 */
 	public void addModificatore(ModificatoreAttributoMD modificatore) {
 		// Lo mette sul bersaglio un'arma che colpisce; un ingrediente (la pergamena) lo porta per passarlo a un'arma
-		if (modificatore.getBersaglio() == BersaglioModificatore.BERSAGLIO && tipo.getSupertipo() != SupertipoArtefatto.ARMA
+		if (modificatore.getBersaglio() == BersaglioModificatore.BERSAGLIO && tipo.getCategoria() != CategoriaArtefatto.ARMA
 				&& !tipo.isIngrediente()) {
 			throw new IllegalArgumentException("Un modificatore sul bersaglio sta solo su un'arma o su un ingrediente, non su " + tipo);
 		}

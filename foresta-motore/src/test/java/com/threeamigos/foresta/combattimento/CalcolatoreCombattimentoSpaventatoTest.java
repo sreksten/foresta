@@ -3,7 +3,7 @@ package com.threeamigos.foresta.combattimento;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
-import com.threeamigos.foresta.tipi.SupertipoDanno;
+import com.threeamigos.foresta.tipi.CategoriaDanno;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoModificatore;
@@ -38,10 +38,10 @@ class CalcolatoreCombattimentoSpaventatoTest {
     @Test
     void unoSpaventatoSiDifendePeggio() {
         // Given
-        int senzaSpavento = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(attaccante, difensore, SupertipoDanno.FISICO);
+        int senzaSpavento = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(attaccante, difensore, CategoriaDanno.FISICO);
         // When
         difensore.addEffettoDiStato(TipoEffettoDiStato.SPAVENTATO, 1, 0);
-        int conSpavento = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(attaccante, difensore, SupertipoDanno.FISICO);
+        int conSpavento = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(attaccante, difensore, CategoriaDanno.FISICO);
         // Then
         assertTrue(conSpavento > senzaSpavento, "spaventato " + conSpavento + ", non spaventato " + senzaSpavento);
     }
@@ -51,10 +51,10 @@ class CalcolatoreCombattimentoSpaventatoTest {
         // Given
         fissa(difensore, TipoAttributo.SAGGEZZA, 1000);
         fissa(difensore, TipoAttributo.CORAGGIO, 1000);
-        int senzaSpavento = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(attaccante, difensore, SupertipoDanno.FISICO);
+        int senzaSpavento = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(attaccante, difensore, CategoriaDanno.FISICO);
         // When
         difensore.addEffettoDiStato(TipoEffettoDiStato.SPAVENTATO, 1, 0);
-        int conSpavento = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(attaccante, difensore, SupertipoDanno.FISICO);
+        int conSpavento = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(attaccante, difensore, CategoriaDanno.FISICO);
         // Then
         assertTrue(conSpavento > senzaSpavento, "spaventato " + conSpavento + ", non spaventato " + senzaSpavento);
     }

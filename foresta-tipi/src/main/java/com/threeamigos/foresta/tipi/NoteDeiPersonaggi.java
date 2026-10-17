@@ -3,15 +3,16 @@ package com.threeamigos.foresta.tipi;
 import java.util.Optional;
 
 /**
- * Perché una classe di personaggio ha il moltiplicatore che ha per un attributo, in una frase: "Più piccolo di un umano e
- * storicamente costretto ad arrangiarsi con equipaggiamento leggero" per il carico massimo del goblin. Le frasi non stanno
- * nel codice ma nel file {@code note_personaggi_<lingua>.properties} (vedi {@link Testi}), una mappa (tipo di personaggio,
- * attributo) → nota.
+ * Il motivo per cui un certo tipo di personaggio ha il moltiplicatore che ha per un attributo, in una frase:
+ * "Più piccolo di un umano e costretto ad arrangiarsi con equipaggiamento leggero" per il carico massimo del goblin.
  * <p>
- * Le note sono per {@link TipoAttributo}, più {@link #DANNI_MAGICI} e {@link #DANNI_FISICI}, che sono moltiplicatori dei
- * danni e non attributi. Un tipo può usare le note di un altro tipo o di un gruppo (la voce {@code TIPO.COME=ALTRO} del
- * file: il capitano delle guardie ha quelle del guerriero, i non combattenti hanno le loro in comune), e per chi non ha
- * una nota propria vale la voce {@code PREDEFINITA.ATTRIBUTO}.
+ * Le frasi non stanno nel codice ma nel file {@code note_personaggi_<lingua>.properties} (vedi {@link Testi}),
+ * una mappa (tipo di personaggio, attributo) → nota.
+ * <p>
+ * Le note sono per {@link TipoAttributo}, più {@link #DANNI_MAGICI} e {@link #DANNI_FISICI}, che sono moltiplicatori
+ * dei danni e non attributi. Un tipo può usare le note di un altro tipo o di un gruppo (la voce
+ * {@code TIPO.COME=ALTRO} del file: il capitano delle guardie ha quelle del guerriero, i non combattenti hanno le loro
+ * in comune), e per chi non ha una nota propria vale la voce {@code PREDEFINITA.ATTRIBUTO}.
  *
  * @author Stefano Reksten
  */

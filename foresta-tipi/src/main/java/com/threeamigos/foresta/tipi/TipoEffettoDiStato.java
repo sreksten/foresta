@@ -3,8 +3,8 @@ package com.threeamigos.foresta.tipi;
 /**
  * Gli stati alterati che possono colpire un personaggio, dal rallentamento al berserk.
  * <p>
- * I commenti che accompagnano ogni stato ricordano come lo stato interagisce con i tipi di danno: sono la traccia
- * di progetto da cui nascono le reazioni vere, che il motore applica in base a {@link TipoInterazioneConEffettiDiStato}
+ * I commenti che accompagnano ogni stato ricordano come lo stato interagisce con i tipi di danno.
+ * Dali effetti di stato nascono le reazioni, che il motore applica in base a {@link TipoInterazioneConEffettiDiStato}
  * (vedi interazioni_effetti_di_stato.md). Quasi tutti gli stati sono un male da togliere; i vantaggi sono due
  * (vedi {@link #isBenefico()}).
  * <p>

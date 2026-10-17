@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.modellodati.IncantamentoMD;
-
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -9,24 +7,16 @@ import com.threeamigos.foresta.interfacce.OggettoConCosto;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
-import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.SupertipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoMotivoRifiutoEquipaggiamento;
-import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.strumenti.Misc;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Locale;
 import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.tipi.*;
+
+import java.util.*;
 
 /**
  * Un artefatto: un pezzo di equipaggiamento vero (arma, scudo, elmo, armatura, anello, ingrediente magico...), con un nome, un
@@ -51,7 +41,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, Vist
 	 * così da non perdere il tipo concreto quando un Artefatto viene rimaterializzato dal suo ArtefattoMD.
 	 */
 	public static Artefatto di(ArtefattoMD md) {
-		if (md.getTipo().getSupertipo() == SupertipoArtefatto.ARMA) {
+		if (md.getTipo().getCategoria() == CategoriaArtefatto.ARMA) {
 			return new ArmaFisica(md);
 		}
 		return new Artefatto(md);
@@ -129,7 +119,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, Vist
 	 * Armi, scudi, elmi, maschere, armature e schinieri, e il libro magico. Accessori e pergamene non si incantano.
 	 */
 	public boolean isIncantabile() {
-		switch (getTipo().getSupertipo()) {
+		switch (getTipo().getCategoria()) {
 			case ARMA:
 			case SCUDO:
 			case ELMO:

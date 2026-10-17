@@ -678,7 +678,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	private Optional<Arma> armaInSlot(TipoSlotArtefatto... slot) {
 		List<TipoSlotArtefatto> slotAmmessi = Arrays.asList(slot);
 		return md.getArtefatti().stream()
-				.filter(a -> a.getTipo().getSupertipo() == SupertipoArtefatto.ARMA)
+				.filter(a -> a.getTipo().getCategoria() == CategoriaArtefatto.ARMA)
 				.filter(a -> slotAmmessi.contains(RegoleEquipaggiamento.slotOccupato(a)))
 				.findFirst()
 				.map(a -> (Arma) Artefatto.di(a));
@@ -1385,7 +1385,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	private boolean haGuardiaAperta() {
 		return md.getArtefatti().stream()
-				.filter(a -> a.getTipo().getSupertipo() == SupertipoArtefatto.ARMA)
+				.filter(a -> a.getTipo().getCategoria() == CategoriaArtefatto.ARMA)
 				.map(RegoleEquipaggiamento::slotOccupato)
 				.anyMatch(slot -> slot == TipoSlotArtefatto.ENTRAMBE_LE_MANI || slot == TipoSlotArtefatto.MANO_SECONDARIA);
 	}

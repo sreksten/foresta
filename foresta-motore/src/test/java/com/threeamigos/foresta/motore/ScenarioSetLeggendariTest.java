@@ -1,17 +1,15 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
-import com.threeamigos.foresta.oggetti.leggendari.SetLeggendario;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
+import com.threeamigos.foresta.oggetti.leggendari.SetLeggendario;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
-import com.threeamigos.foresta.tipi.SupertipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -20,22 +18,11 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
-import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
 /**
  * I set leggendari: i pezzi di un set sono le righe di leggendari.txt che lo nominano, e chi li indossa tutti ha i
@@ -282,9 +269,9 @@ class ScenarioSetLeggendariTest {
     }
 
     private static boolean isPezzoDifensivo(Artefatto artefatto) {
-        SupertipoArtefatto supertipo = artefatto.getTipo().getSupertipo();
-        return supertipo == SupertipoArtefatto.SCUDO || supertipo == SupertipoArtefatto.ELMO
-                || supertipo == SupertipoArtefatto.ARMATURA || supertipo == SupertipoArtefatto.SCHINIERI;
+        CategoriaArtefatto supertipo = artefatto.getTipo().getCategoria();
+        return supertipo == CategoriaArtefatto.SCUDO || supertipo == CategoriaArtefatto.ELMO
+                || supertipo == CategoriaArtefatto.ARMATURA || supertipo == CategoriaArtefatto.SCHINIERI;
     }
 
     private static String italiano(double numero) {

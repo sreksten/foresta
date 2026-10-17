@@ -1,33 +1,28 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.ModificatoreAttivo;
-import com.threeamigos.foresta.oggetti.ModificatoreDelTesto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ListinoPergamene;
+import com.threeamigos.foresta.oggetti.ModificatoreDelTesto;
 import com.threeamigos.foresta.personaggi.Guerriero;
+import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.Collection;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.combattimento.DannoRisultante;
 
 /**
  * I modificatori di attributo a tempo (vedi modificatori_temporanei.md): durata in turni o in locazioni, bersaglio,
@@ -499,7 +494,7 @@ class ModificatoriTemporaneiTest {
         md.setDescrizione("che serve ai test");
         md.setLivello(3);
         md.setPeso(1);
-        md.setDanni(tipo.getSupertipo() == SupertipoArtefatto.ARMA ? 10 : 0);
+        md.setDanni(tipo.getCategoria() == CategoriaArtefatto.ARMA ? 10 : 0);
         return Artefatto.di(md);
     }
 
