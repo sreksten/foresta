@@ -19,6 +19,7 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -153,6 +154,18 @@ public class IlCorriere extends IncaricoInCitta {
 	@Override
 	protected boolean isPossibileQui() {
 		return !altreCitta().isEmpty();
+	}
+
+	/**
+	 * Con una sola città in piedi non c'è più niente da portare altrove.
+	 */
+	@Override
+	protected boolean puoAncoraOffrirsi() {
+		long inPiedi = Arrays.stream(TipoLocazione.values())
+				.filter(citta -> citta.getCategoria() == CategoriaLocazione.CITTA && !LineaTemporale.isCittaDistrutta(citta)
+						&& Foresta.getCoordinateLocazioneUnica(citta) != null)
+				.count();
+		return inPiedi >= 2;
 	}
 
 	@Override

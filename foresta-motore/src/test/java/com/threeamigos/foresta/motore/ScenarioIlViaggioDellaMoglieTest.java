@@ -38,6 +38,10 @@ class ScenarioIlViaggioDellaMoglieTest {
                 .map(IlViaggioDellaMoglie.class::cast).findFirst().orElseThrow(AssertionError::new);
     }
 
+    private static long viaggi() {
+        return RegistroMissioni.getTutteLeMissioni().stream().filter(IlViaggioDellaMoglie.class::isInstance).count();
+    }
+
     private static CoordinateMD unaLocandaNelBosco() {
         for (int x = 0; x < Foresta.getDimensioneX(); x++) {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {
@@ -133,6 +137,7 @@ class ScenarioIlViaggioDellaMoglieTest {
             assertTrue(viaggio.isCompleta());
             assertEquals(monete + 25, partita.gruppo().getMonete());
             assertTrue(partita.gruppo().getOspiti().isEmpty(), "la moglie è arrivata");
+            assertEquals(1, viaggi(), "il viaggio si fa una volta sola: completato, non ne lascia uno nuovo");
         }
     }
 
@@ -156,6 +161,7 @@ class ScenarioIlViaggioDellaMoglieTest {
             viaggio.controllaPreLocazione();
             assertTrue(viaggio.isFallita());
             assertTrue(partita.gruppo().getOspiti().isEmpty());
+            assertEquals(1, viaggi(), "il viaggio si fa una volta sola: fallito, non ne lascia uno nuovo");
         }
     }
 

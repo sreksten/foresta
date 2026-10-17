@@ -4,6 +4,8 @@ package com.threeamigos.foresta.tipi;
  * Le tre mosse di carta, forbici e sasso: la carta avvolge il sasso, il sasso rompe le forbici, le forbici tagliano la
  * carta. Ognuna corrisponde a un comando del giocatore ({@link Comando#CARTA}, {@link Comando#FORBICE},
  * {@link Comando#SASSO}).
+ *
+ * @author Stefano Reksten
  */
 public enum MossaCartaForbiciSasso {
 
@@ -29,8 +31,7 @@ public enum MossaCartaForbiciSasso {
 	}
 
 	/**
-	 * Se un personaggio di quella classe può partecipare a carta, forbici e sasso: l'ombrafiamma è un personaggio segreto,
-	 * per ora fuori dalla sfida (non sfida e non è un campione).
+	 * Se un personaggio di una data classe può partecipare a carta, forbici e sasso. L'OmbraFiamma non partecipa.
 	 */
 	public static boolean puoGiocare(TipoPersonaggio classe) {
 		return classe != TipoPersonaggio.OMBRAFIAMMA;

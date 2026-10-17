@@ -117,6 +117,9 @@ class ScenarioLeggendeTest {
     void entrandoInCittaLArmaioloRaccontaLaLeggendaESorgeIlTempioConIGuardiani() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(41)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> {
+                // Entrando in città si offre solo la leggenda (non gli incarichi, qualunque sia l'ordine del registro)
+                partita.rimandaLeMissioniCheSiOffrono();
+                partita.rendiDisponibile(trova(LaLeggendaDellArmaiolo.class));
                 partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA);
                 partita.eventi().ascolta(NotificaPaginaIntermezzo.class, NotificaAggiornamentoStatoMissione.class);
             });

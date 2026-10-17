@@ -1,11 +1,15 @@
 package com.threeamigos.foresta.tipi;
 
 /**
- * Dove sta un pezzo di un set leggendario, visto da un altro pezzo dello stesso set (vedi RegoleSetLeggendari.pezzi).
+ * Dove sta un singolo pezzo di un set leggendario, visto da un altro pezzo dello stesso set.
+ * <p>
+ * Vedi anche RegoleSetLeggendari.pezzi.
+ *
+ * @author Stefano Reksten
  */
 public enum StatoPezzoDelSet {
 	/**
-	 * Lo indossa chi indossa l'altro pezzo.
+	 * È indossato dallo stesso Personaggio.
 	 */
 	INDOSSATO,
 	/**

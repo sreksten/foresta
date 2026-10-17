@@ -7,6 +7,8 @@ package com.threeamigos.foresta.tipi;
  * Il nome di ogni grado ("minore", "medio", "maggiore") non sta qui ma nel file
  * {@code grado_incantamento_<lingua>.properties}, alla voce {@code COSTANTE.NOME}, in modo che il gioco si possa tradurre
  * (vedi {@link Testi}).
+ *
+ * @author Stefano Reksten
  */
 public enum GradoIncantamento {
 
@@ -37,7 +39,7 @@ public enum GradoIncantamento {
 
 	/**
 	 * Il grado degli effetti di un ingrediente magico: minore fino al livello 2, medio (nel nome non si dice) al
-	 * 3, maggiore dal 4.
+	 * 3, maggiore dal 5.
 	 */
 	public static GradoIncantamento perIngrediente(int livello) {
 		if (livello >= Costanti.INGREDIENTE_GRADO_MAGGIORE_DAL_LIVELLO) {

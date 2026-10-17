@@ -1,13 +1,21 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.intermezzi.IntermezzoLocandaPrimaVisita;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
+import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -109,6 +117,59 @@ class ScenarioNonSparateSulPianistaTest {
             assertTrue(ugolino.isVivo());
             assertTrue(partita.testi().stream().anyMatch(t -> t.contains("i mostri non si curano nemmeno di lui")), String.valueOf(partita.testi()));
         }
+    }
+
+    @Test
+    void conIlBardoOspiteDelGruppoNelleLocandeNuoveLaScenaESenzaDiLui() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(153)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
+            NonSparateSulPianista pianista = pianista();
+            CoordinateMD locanda = unaLocandaNelBosco();
+            entraNellaLocanda(partita, pianista, locanda, 2);
+            assertTrue(pianista.getScortato().isPresent(), "il bardo viaggia con il gruppo");
+
+            // In un'altra locanda, mai vista, il bardo non può essere seduto in un angolo: la scena c'è, ma senza di lui,
+            // e parla solo il locandiere
+            CoordinateMD altra = unAltraLocandaNelBosco(locanda);
+            partita.gruppo().setCoordinate(altra);
+            LocazioneMD sede = Foresta.getLocazioneMD(altra);
+            assertNull(sede.ottieniProprieta(Locanda.LOCANDA_VISITATA));
+            sede.aggiungiProprieta(Locanda.LOCANDA_DIALOGO, "Benvenuti! Qui si beve bene.");
+            IntermezzoLocandaPrimaVisita scena = new IntermezzoLocandaPrimaVisita();
+            assertTrue(scena.deveScattare(MomentoIntermezzo.INIZIO_LOCAZIONE));
+            PaginaIntermezzo pagina = scena.getPagine().get(0);
+            assertNull(pagina.getElemento("bardo"), "non è seduto nella locanda");
+            assertNotNull(pagina.getElemento("bardoOspite"), "entra con il gruppo, in fondo alla fila");
+            List<String> chiParla = pagina.getBattuteProgrammate().stream().map(b -> b.getBattuta().getIdElemento())
+                    .distinct().collect(Collectors.toList());
+            assertEquals(Collections.singletonList("locandiere"), chiParla);
+            assertEquals(Arrays.asList("Benvenuti!", "Qui si beve bene."), pagina.getBattuteProgrammate().stream()
+                    .map(b -> b.getBattuta().getTesto()).collect(Collectors.toList()), "solo il benvenuto, niente reazione alla fiaba");
+
+            // Riportato a casa il bardo, la scena torna
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(pianista.getCitta()));
+            pianista.controllaPreLocazione();
+            pianista.segnaIntermezzoPassoMostrato("VIAGGIO");
+            pianista.controllaInLocazione();
+            assertTrue(pianista.isCompleta());
+            partita.gruppo().setCoordinate(altra);
+            PaginaIntermezzo conBardo = new IntermezzoLocandaPrimaVisita().getPagine().get(0);
+            assertNotNull(conBardo.getElemento("bardo"));
+            assertNull(conBardo.getElemento("bardoOspite"));
+            assertTrue(conBardo.getBattuteProgrammate().stream().anyMatch(b -> "bardo".equals(b.getBattuta().getIdElemento())),
+                    "il bardo racconta la sua fiaba");
+        }
+    }
+
+    private static CoordinateMD unAltraLocandaNelBosco(CoordinateMD diversaDa) {
+        for (int x = 0; x < Foresta.getDimensioneX(); x++) {
+            for (int y = 0; y < Foresta.getDimensioneY(); y++) {
+                if (Foresta.getLocazione(x, y) == TipoLocazione.LOCANDA && !(x == diversaDa.getX() && y == diversaDa.getY())) {
+                    return new CoordinateMD(x, y);
+                }
+            }
+        }
+        throw new AssertionError("una sola locanda nel bosco");
     }
 
     private static int distanza(CoordinateMD a, CoordinateMD b) {

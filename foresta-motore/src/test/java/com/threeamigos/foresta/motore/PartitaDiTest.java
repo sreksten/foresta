@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.missioni.incarichi.SceltaDegliIncarichi;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaIncantatore;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
@@ -65,10 +66,15 @@ final class PartitaDiTest implements AutoCloseable {
 	private boolean orologioFermo;
 	private final java.util.Deque<String> ultimiTesti = new java.util.ArrayDeque<>();
 	private final boolean modalitaDiProvaPrecedente = ModalitaDiProva.isAttiva();
+	private static final String DISPONIBILE_DALLE = "DISPONIBILE_DALLE";
+	private final boolean sorteggioDegliIncarichiPrecedente = SceltaDegliIncarichi.isSorteggioAttivo();
 
 	private PartitaDiTest(long seme, GestoreSalvataggiInMemoria salvataggi, boolean modalitaDiProva) {
 		this.salvataggi = salvataggi;
         ModalitaDiProva.setAttiva(modalitaDiProva);
+		// I test guidano di solito un incarico alla volta: senza sorteggio parte il primo pronto, come vuole il test
+		// (chi prova il sorteggio lo riaccende con conSorteggioDegliIncarichi)
+		SceltaDegliIncarichi.setSorteggioAttivo(false);
 		BusEventi.azzera();
 		BusEventi.impostaConsegna(Runnable::run);
 		Dado.ripristina();
@@ -422,5 +428,36 @@ final class PartitaDiTest implements AutoCloseable {
 		// resterebbe accesa per tutti i test che seguono (la mappa tutta conosciuta, per esempio), e un test come
 		// BugMappaReimpostataTest passerebbe o fallirebbe a seconda dell'ordine in cui girano
 		ModalitaDiProva.setAttiva(modalitaDiProvaPrecedente);
+		SceltaDegliIncarichi.setSorteggioAttivo(sorteggioDegliIncarichiPrecedente);
+	}
+
+	/**
+	 * Rimanda all'infinito ogni missione che aspetta di offrirsi dopo una pausa (incarichi in città, negozi, leggende,
+	 * benedizioni, lealtà: quelle che guardano DISPONIBILE_DALLE), così che entrando in una locazione non ne parta nessuna.
+	 * Un test che ne vuole provare una la riapre con {@link #rendiDisponibile(Missione)}: non dipende dall'ordine in cui
+	 * il registro le controlla, che è quello di MissionePredefinita e può cambiare.
+	 */
+	void rimandaLeMissioniCheSiOffrono() {
+		for (Missione missione : RegistroMissioni.getTutteLeMissioni()) {
+			if (!missione.isAttiva() && !missione.isCompleta() && !missione.isFallita()) {
+				missione.aggiungiProprieta(DISPONIBILE_DALLE, String.valueOf(Long.MAX_VALUE));
+			}
+		}
+	}
+
+	/**
+	 * Riapre una missione rimandata da {@link #rimandaLeMissioniCheSiOffrono()}.
+	 */
+	<T extends Missione> T rendiDisponibile(T missione) {
+		missione.aggiungiProprieta(DISPONIBILE_DALLE, "0");
+		return missione;
+	}
+
+	/**
+	 * Riaccende il sorteggio degli incarichi in città (vedi SceltaDegliIncarichi), spento nelle partite di test.
+	 */
+	PartitaDiTest conSorteggioDegliIncarichi() {
+		SceltaDegliIncarichi.setSorteggioAttivo(true);
+		return this;
 	}
 }

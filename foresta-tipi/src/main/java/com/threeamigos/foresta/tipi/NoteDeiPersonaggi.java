@@ -12,6 +12,8 @@ import java.util.Optional;
  * danni e non attributi. Un tipo può usare le note di un altro tipo o di un gruppo (la voce {@code TIPO.COME=ALTRO} del
  * file: il capitano delle guardie ha quelle del guerriero, i non combattenti hanno le loro in comune), e per chi non ha
  * una nota propria vale la voce {@code PREDEFINITA.ATTRIBUTO}.
+ *
+ * @author Stefano Reksten
  */
 public final class NoteDeiPersonaggi {
 

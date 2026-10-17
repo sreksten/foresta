@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.GradoIncantamento;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import org.junit.jupiter.api.BeforeAll;
@@ -83,9 +85,12 @@ class GrammaticaIngredientiTest {
             int livello = 1 + i % 6;
             ArtefattoMD md = generatore.generaIngrediente(livello).getModelloDati();
             String nome = md.getNome();
-            String grado = livello <= 2 ? " minore " : livello == 3 ? " " : " maggiore ";
-            assertTrue(nome.matches("^(la|il) [a-z]+" + grado + "(del|della|dello|dell'|delle).*"), nome);
-            assertEquals(Math.min(3, livello), md.getModificatori().size() + md.getIncantamenti().size(), nome);
+            // Il grado si legge dalle regole (GradoIncantamento.perIngrediente, che usa Costanti): il medio nel nome non si dice
+            GradoIncantamento grado = GradoIncantamento.perIngrediente(livello);
+            String nelNome = grado == GradoIncantamento.MEDIO ? " " : " " + grado.getNome() + " ";
+            assertTrue(nome.matches("^(la|il) [a-z]+" + nelNome + "(del|della|dello|dell'|delle).*"), livello + ": " + nome);
+            assertEquals(Math.min(Costanti.INGREDIENTE_EFFETTI_MASSIMI, livello),
+                    md.getModificatori().size() + md.getIncantamenti().size(), nome);
         }
     }
 

@@ -41,6 +41,9 @@ import java.util.Optional;
  * </ol>
  * Se la città di partenza o quella di arrivo viene distrutta prima della fine, la missione fallisce. Il suo nome è "Il viaggio
  * di" e il nome della moglie del bardo.
+ * <p>
+ * Come NonSparateSulPianista si fa una volta sola: finita, bene o male, non ne lascia una nuova (non ridefinisce
+ * MissioneAPassi.isRipetibile, che è falso).
  */
 public class IlViaggioDellaMoglie extends MissioneAPassi {
 

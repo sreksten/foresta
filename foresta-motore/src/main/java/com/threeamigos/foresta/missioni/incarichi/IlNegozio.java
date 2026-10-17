@@ -144,6 +144,14 @@ public abstract class IlNegozio extends IncaricoInCitta {
 		return false;
 	}
 
+	/**
+	 * Il negozio è una storia sola, legata alla sua città: si offre appena può, senza sorteggio.
+	 */
+	@Override
+	protected boolean partecipaAlSorteggio() {
+		return false;
+	}
+
 	@Override
 	protected boolean isPossibileQui() {
 		return getCittaAssegnata() == GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();

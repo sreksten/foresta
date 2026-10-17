@@ -37,7 +37,8 @@ import java.util.Map;
  * <p>
  * Un incarico si prende in una città qualsiasi, ma solo a una visita tranquilla, in cui nessun'altra missione mostra un
  * intermezzo entrando in città: non alla prima visita, quando parte la missione della città, né quando si torna a
- * concluderne una; fra due incarichi pronti nella stessa visita parte il primo controllato, l'altro aspetta.
+ * concluderne una. Se nella stessa visita ne sono pronti più d'uno, ne parte uno solo, scelto a caso con più probabilità
+ * fra quelli non ancora affidati (vedi SceltaDegliIncarichi); gli altri aspettano.
  * <p>
  * Gli incarichi sono ripetibili (vedi MissioneAPassi.isRipetibile): finiti, bene o male, ne lasciano uno nuovo uguale,
  * che si può prendere dopo una pausa.
@@ -285,6 +286,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 			case INCARICO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::isIncaricoDaOffrire)
 						.esegui(() -> {
+							SceltaDegliIncarichi.affidato(this);
 							aggiungiProprieta(CITTA, gruppo.getTipoLocazioneCorrente().name());
 							aggiungiProprieta(LIVELLO_DELL_INCARICO, String.valueOf(Statistiche.getLivello()));
 							allIncarico();
@@ -336,11 +338,50 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	}
 
 	/**
+	 * Se l'incarico si offre adesso: è pronto (vedi {@link #isProntoPerOffrirsi()}) e, se anche altri lo sono, è quello
+	 * scelto (vedi SceltaDegliIncarichi).
+	 */
+	private boolean isIncaricoDaOffrire() {
+		return isProntoPerOffrirsi() && SceltaDegliIncarichi.tocca(this);
+	}
+
+	/**
 	 * Se il gruppo è dove l'incarico si offre: in una città qualsiasi a una visita tranquilla, e passata la pausa dopo
 	 * l'incarico precedente.
 	 */
-	private boolean isIncaricoDaOffrire() {
+	final boolean isProntoPerOffrirsi() {
 		return isDisponibile() && inUnaCitta() && isPossibileQui() && isVisitaTranquilla();
+	}
+
+	/**
+	 * Se l'incarico non si è ancora offerto: è al primo passo e non è finito.
+	 */
+	final boolean isInAttesaDiOffrirsi() {
+		return !isAttiva() && !isCompleta() && !isFallita() && INCARICO.equals(getPassoCorrente());
+	}
+
+	/**
+	 * Il giro in cui l'incarico è stato affidato (vedi SceltaDegliIncarichi), o -1 se non si è ancora offerto.
+	 */
+	final int getGiro() {
+		String giro = ottieniProprieta(SceltaDegliIncarichi.GIRO);
+		return giro == null ? -1 : Integer.parseInt(giro);
+	}
+
+	/**
+	 * Se l'incarico, quando è pronto insieme ad altri, è scelto a caso con loro (vedi SceltaDegliIncarichi): sì, salvo
+	 * gli incarichi che sono una storia sola legata a una città, che si offrono appena possono.
+	 */
+	protected boolean partecipaAlSorteggio() {
+		return true;
+	}
+
+	/**
+	 * Se l'incarico potrà ancora offrirsi in questa partita, in qualche città e prima o poi: un incarico che non potrà
+	 * più farlo non tiene aperto il giro del sorteggio (vedi SceltaDegliIncarichi).
+	 */
+	protected boolean puoAncoraOffrirsi() {
+		return true;
 	}
 
 	@Override

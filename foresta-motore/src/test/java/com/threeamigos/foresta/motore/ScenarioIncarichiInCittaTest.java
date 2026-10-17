@@ -62,8 +62,10 @@ class ScenarioIncarichiInCittaTest {
             CacciaAiGoblin caccia = trova(CacciaAiGoblin.class);
             assertFalse(caccia.isAttiva(), "alla prima visita non è ancora partito");
             CoordinateMD fleena = partita.gruppo().getCoordinate();
-            // L'armaiolo racconterebbe la sua leggenda prima di ogni incarico: qui non è ancora il momento
-            trova(LaLeggendaDellArmaiolo.class).aggiungiProprieta("DISPONIBILE_DALLE", String.valueOf(Long.MAX_VALUE));
+            // Rientrando può offrirsi solo la caccia: leggende, negozi e gli altri incarichi aspettano (qualunque sia l'ordine
+            // in cui il registro li controlla)
+            partita.rimandaLeMissioniCheSiOffrono();
+            partita.rendiDisponibile(caccia);
 
             // Si esce dalla città e ci si rientra da sud, come farebbe il giocatore
             partita.comando(Comando.ESCI_DA_CITTA);
@@ -74,7 +76,6 @@ class ScenarioIncarichiInCittaTest {
 
             assertTrue(caccia.isAttiva(), "alla seconda visita parte l'incarico");
             assertEquals("CACCIA", caccia.getPassoCorrente());
-            assertFalse(Alchimie.alchimista().isAttiva(), "uno per visita");
             assertTrue(partita.testi().stream().anyMatch(t -> t.contains("Il mercante pagherà")), String.valueOf(partita.testi()));
         }
     }

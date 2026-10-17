@@ -2,9 +2,10 @@ package com.threeamigos.foresta.tipi;
 
 /**
  * Su chi agisce un incantesimo: su tutta la locazione, su un gruppo, su più bersagli o su uno solo.
+ *
+ * @author Stefano Reksten
  */
 public enum PortataIncantesimo {
-	
 
 	/**
 	 * Un effetto su tutta la locazione o su chi lo formula, senza bersagli (al momento non ne esistono: un

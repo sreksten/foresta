@@ -126,9 +126,14 @@ class ScenarioTorneoTest {
      * Il gruppo è a Nyena, dove il borgomastro bandisce il torneo della Rosa: il gruppo si iscrive.
      */
     private static IlTorneo iscriviti(PartitaDiTest partita) {
-        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
-        IlTorneo torneo = RegistroMissioni.getTutteLeMissioni().stream().filter(IlTorneo.class::isInstance)
-                .map(IlTorneo.class::cast).findFirst().orElseThrow(AssertionError::new);
+        // Entrando in città non si offre niente da solo (nemmeno il torneo, che pescherebbe un torneo a caso): il torneo lo
+        // offre il test, con la Rosa, qualunque sia l'ordine in cui il registro controlla le missioni
+        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> {
+            partita.rimandaLeMissioniCheSiOffrono();
+            partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA);
+        });
+        IlTorneo torneo = partita.rendiDisponibile(RegistroMissioni.getTutteLeMissioni().stream().filter(IlTorneo.class::isInstance)
+                .map(IlTorneo.class::cast).findFirst().orElseThrow(AssertionError::new));
         torneo.aggiungiProprieta("PARAMETRO_" + IlTorneo.TORNEO, ROSA);
         torneo.controllaPreLocazione();
         torneo.segnaIntermezzoPassoMostrato("INCARICO");

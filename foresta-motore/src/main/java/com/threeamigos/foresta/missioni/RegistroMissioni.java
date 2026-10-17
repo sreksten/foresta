@@ -7,6 +7,7 @@ import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.interni.InternoPassaggioInosservato;
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaAperturaFinestraCombattimento;
 import com.threeamigos.foresta.missioni.incarichi.IlNegozio;
+import com.threeamigos.foresta.missioni.incarichi.SceltaDegliIncarichi;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.MissioneMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
@@ -80,6 +81,7 @@ public class RegistroMissioni {
 	private static CoordinateMD coordinataSenzaContenuto;
 
 	private static void pulisciElenchi() {
+		SceltaDegliIncarichi.dimentica();
 		locazioniOccupate.clear();
 		locazioniSegnalate.clear();
 		prossimoClaim = 0;

@@ -91,6 +91,14 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 		return getLeggendario() != null || PescaLeggendaria.restaUnLeggendario(PescaLeggendaria.giaPescati(this));
 	}
 
+	/**
+	 * Finiti i leggendari, i tornei non si bandiscono più.
+	 */
+	@Override
+	protected boolean puoAncoraOffrirsi() {
+		return isPossibileQui();
+	}
+
 	@Override
 	protected void allIncarico() {
 		getTorneo();

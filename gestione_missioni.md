@@ -170,6 +170,15 @@ Se la città in cui si riscuote viene distrutta, **ogni passo** (anche quelli de
 
 Un incarico si offre in una città qualsiasi, ma solo a una **visita tranquilla** (§5) e passata la pausa dopo l'incarico precedente; è ripetibile.
 
+**Quale incarico si offre** (`SceltaDegliIncarichi`). In una visita ne parte uno solo. Se ne sono pronti più d'uno, si sceglie a caso, così non partono sempre gli stessi (prima partiva il primo nell'ordine del registro):
+
+- le classi di incarico si dividono in quelle **non ancora affidate** nel giro corrente, che escono con il 75% di probabilità (`PROBABILITA_DI_UN_INCARICO_NUOVO`), e quelle **già affidate**, che escono con il 25%; se fra i pronti c'è un solo gruppo, si sceglie da quello;
+- quando nessuna classe in attesa di offrirsi è più da affidare nel giro, il giro ricomincia e tutte tornano nuove. Contano solo le classi che possono ancora offrirsi (`puoAncoraOffrirsi`): un torneo senza più leggendari, o un corriere con una sola città in piedi, non tengono aperto il giro;
+- il giro in cui un incarico è stato affidato è la sua proprietà `GIRO_DI_AFFIDAMENTO`, quindi si salva con la missione; la scelta di una visita invece non si salva (dopo una rilettura si sceglie di nuovo);
+- i negozi (`IlNegozio`) non partecipano: sono una storia sola legata alla loro città e si offrono appena possono (stanno prima degli incarichi nel registro).
+
+Le partite di test (`PartitaDiTest`) spengono il sorteggio, perché i test guidano un incarico alla volta: allora parte il primo pronto nell'ordine del registro. Lo riaccende `conSorteggioDegliIncarichi()` (vedi `ScenarioSorteggioDegliIncarichiTest`).
+
 `IncaricoDiCombattimento` aggiunge due passi al compito: `COVO` (la missione rivendica un posto della classe giusta, lo segna sulla mappa subito dopo l'accettazione) e `CACCIA` (a fine locazione, sconfitti tutti i nemici, si torna a riscuotere), con le stesse regole delle altre caselle rivendicate (§6). Anche recuperare un medaglione rubato o delle derrate sparite sono righe di questa famiglia (`TIPO=RECUPERO`).
 
 ## 9. Come si scrive una missione nuova

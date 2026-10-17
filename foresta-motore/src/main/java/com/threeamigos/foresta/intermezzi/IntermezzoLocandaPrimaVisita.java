@@ -28,6 +28,10 @@ import java.util.stream.Collectors;
  * {@link FabbricaIntermezzi#crea} crea una nuova istanza a ogni controllo e
  * {@link com.threeamigos.foresta.modellodati.IntermezziMD} è un semplice insieme
  * di stringhe senza vincoli di formato.
+ * <p>
+ * Mentre il bardo viaggia con il gruppo come ospite (NonSparateSulPianista lo riporta a casa) non può essere anche
+ * seduto in un angolo della locanda: la scena c'è lo stesso, ma lui entra con il gruppo, barcollando in fondo alla fila;
+ * niente fiaba né reazione del locandiere, che dà soltanto il benvenuto.
  */
 public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 
@@ -45,6 +49,10 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 	private static final double Y_LOCANDIERE = 0.6;
 	private static final double X_BARDO = 0.60;
 	private static final double Y_BARDO = 0.6;
+	// Il bardo ospite, ubriaco, entra barcollando: tanti tratti a zig-zag, alti e bassi di tanto, e più lento degli altri
+	private static final int PASSI_BARCOLLANTI = 6;
+	private static final double OSCILLAZIONE_BARDO = 0.015;
+	private static final double FATTORE_LENTEZZA_BARDO = 1.5;
 
 	// Centrato come lo sfondo, di cui ha le stesse dimensioni
 	private static final double X_FOREGROUND = 0.5;
@@ -66,20 +74,51 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 		return locazioneMD != null && locazioneMD.ottieniProprieta(Locanda.LOCANDA_VISITATA) == null;
 	}
 
+	/**
+	 * Il bardo ospite del gruppo entra per ultimo, dopo i personaggi, al posto che gli spetta in fila: è ubriaco, quindi
+	 * barcolla (avanza a zig-zag) ed è più lento degli altri.
+	 */
+	private static ElementoIntermezzo bardoCheBarcollaInFondoAllaFila(int posizione) {
+		double targetX = X_TARGET_BASE - posizione * DISTANZA_FRA_PERSONAGGI;
+		double secondiPerPasso = SECONDI_CAMMINATA * FATTORE_LENTEZZA_BARDO / PASSI_BARCOLLANTI;
+		ElementoIntermezzo bardo = ElementoIntermezzo.personaggio("bardoOspite", TipoPersonaggio.BARDO_DELLE_LOCANDE,
+						X_PARTENZA_PERSONAGGI, Y_BARDO)
+				.orientaNelVersoDelMoto()
+				.attendi(posizione * RITARDO_FRA_PARTENZE);
+		for (int passo = 1; passo <= PASSI_BARCOLLANTI; passo++) {
+			double x = X_PARTENZA_PERSONAGGI + (targetX - X_PARTENZA_PERSONAGGI) * passo / PASSI_BARCOLLANTI;
+			// Un passo su, uno giù; l'ultimo lo rimette in fila
+			double y = passo == PASSI_BARCOLLANTI ? Y_BARDO : Y_BARDO + (passo % 2 == 0 ? OSCILLAZIONE_BARDO : -OSCILLAZIONE_BARDO);
+			bardo.poi(Tappa.inSecondi(secondiPerPasso).verso(x, y));
+		}
+		return bardo;
+	}
+
+	/**
+	 * Il bardo della locanda è ospite del gruppo (lo stanno riportando a casa).
+	 */
+	private static boolean ilBardoViaggiaColGruppo() {
+		return GruppoGiocatore.getIstanza().getOspiti().stream()
+				.anyMatch(ospite -> ospite.getClasse() == TipoPersonaggio.BARDO_DELLE_LOCANDE);
+	}
+
 	@Override
 	public List<PaginaIntermezzo> getPagine() {
 		LocazioneMD locazioneMD = Locande.getLocazioneMDLocandaCorrente();
 		String dialogo = locazioneMD.ottieniProprieta(Locanda.LOCANDA_DIALOGO);
 
 		List<Personaggio> personaggiVivi = GruppoGiocatore.getIstanza().getPersonaggiVivi();
+		boolean bardoInScena = !ilBardoViaggiaColGruppo();
 
 		PaginaIntermezzo pagina = new PaginaIntermezzo()
 				.conSfondo(ImmagineIntermezzo.risorsa("fondinon2x2/InternoLocanda.gif"))
 				.conRitaglioSuSfondo()
 				.conElemento(ElementoIntermezzo.personaggio("locandiere", TipoPersonaggio.LOCANDIERE, X_LOCANDIERE, Y_LOCANDIERE)
-						.conBocca(0.5, -0.15))
-				.conElemento(ElementoIntermezzo.personaggio("bardo", TipoPersonaggio.BARDO_DELLE_LOCANDE, X_BARDO, Y_BARDO)
 						.conBocca(0.5, -0.15));
+		if (bardoInScena) {
+			pagina.conElemento(ElementoIntermezzo.personaggio("bardo", TipoPersonaggio.BARDO_DELLE_LOCANDE, X_BARDO, Y_BARDO)
+					.conBocca(0.5, -0.15));
+		}
 
 		for (int i = 0; i < personaggiVivi.size(); i++) {
 			TipoPersonaggio classe = personaggiVivi.get(i).getClasse();
@@ -90,23 +129,29 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 					.attendi(i * RITARDO_FRA_PARTENZE)
 					.poi(Tappa.inSecondi(SECONDI_CAMMINATA).verso(targetX, Y_BARDO)));
 		}
+		if (!bardoInScena) {
+			pagina.conElemento(bardoCheBarcollaInFondoAllaFila(personaggiVivi.size()));
+		}
 
 		//double tempoFineCammino = (personaggiVivi.size() - 1) * RITARDO_FRA_PARTENZE + SECONDI_CAMMINATA;
 		//pagina.conBattuta(BattutaIntermezzo.di("bardo", "C'era una volta...").daSecondo(tempoFineCammino + MARGINE_DOPO_CAMMINATA));
 
-		String fiaba = ProduttoreDiTestiCasuale.fiaba().get(0);
-		Collection<String> frasiFiaba = Arrays.stream(fiaba.split(REGEX_PER_SPEZZARE_FRASI))
-				.map(String::trim)
-				.collect(Collectors.toList());
+		// La fiaba del bardo e il locandiere che lo zittisce, se il bardo è seduto nella locanda
+		if (bardoInScena) {
+			String fiaba = ProduttoreDiTestiCasuale.fiaba().get(0);
+			Collection<String> frasiFiaba = Arrays.stream(fiaba.split(REGEX_PER_SPEZZARE_FRASI))
+					.map(String::trim)
+					.collect(Collectors.toList());
 
-		frasiFiaba.forEach(frase -> pagina.conBattuta(BattutaIntermezzo.di("bardo", frase)));
+			frasiFiaba.forEach(frase -> pagina.conBattuta(BattutaIntermezzo.di("bardo", frase)));
 
-		String reazioneLocandiere = ProduttoreDiTestiCasuale.reazioneLocandiere();
-		Collection<String> frasiReazioneLocandiere = Arrays.stream(reazioneLocandiere.split(REGEX_PER_SPEZZARE_FRASI))
-				.map(String::trim)
-				.collect(Collectors.toList());
+			String reazioneLocandiere = ProduttoreDiTestiCasuale.reazioneLocandiere();
+			Collection<String> frasiReazioneLocandiere = Arrays.stream(reazioneLocandiere.split(REGEX_PER_SPEZZARE_FRASI))
+					.map(String::trim)
+					.collect(Collectors.toList());
 
-		frasiReazioneLocandiere.forEach(frase -> pagina.conBattuta(BattutaIntermezzo.di("locandiere", frase)));
+			frasiReazioneLocandiere.forEach(frase -> pagina.conBattuta(BattutaIntermezzo.di("locandiere", frase)));
+		}
 
 		Collection<String> frasiLocandiere = Arrays.stream(dialogo.split(REGEX_PER_SPEZZARE_FRASI))
 				.map(String::trim)

@@ -182,9 +182,9 @@ public class Costanti {
     public static final int AGGIORNAMENTO_VALORE_PER_LIVELLO = 100;
     // Un ingrediente magico ha tanti effetti quanto il suo livello, fino a questo
     public static final int INGREDIENTE_EFFETTI_MASSIMI = 3;
-    // Grado degli effetti di un ingrediente magico: minore fino al livello 2, normale (MEDIO) al 3, maggiore dal 4
+    // Grado degli effetti di un ingrediente magico: minore fino al livello 2, normale (MEDIO) fino al 4, maggiore dal 5
     public static final int INGREDIENTE_GRADO_MEDIO_DAL_LIVELLO = 3;
-    public static final int INGREDIENTE_GRADO_MAGGIORE_DAL_LIVELLO = 4;
+    public static final int INGREDIENTE_GRADO_MAGGIORE_DAL_LIVELLO = 5;
     // Magazzini dei negozi di città, riforniti alla creazione del mondo e a ogni aumento del suo livello:
     // quanti artefatti per negozio, con livelli a rotazione fra livello del mondo - MAGAZZINO_DIVARIO_LIVELLO
     // e livello del mondo + MAGAZZINO_DIVARIO_LIVELLO (mai sotto 1)
