@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.combattimento.Ondata;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
@@ -7,13 +8,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.LineaTemporale;
-import com.threeamigos.foresta.combattimento.Ondata;
-import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
@@ -21,19 +16,13 @@ import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -105,7 +94,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	// Per la modalità di prova (vedi forzaPartenza): non si salva, vale solo per questa esecuzione
 	private BooleanSupplier partenzaForzata;
 
-	protected MissioneAPassi(ClasseMissione classe) {
+	protected MissioneAPassi(MissionePredefinita classe) {
 		super(classe);
 	}
 
@@ -912,7 +901,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 		boolean eraInCorso = !isCompleta() && !isFallita();
 		congedaScortato();
 		super.fallisciMissione();
-		if (eraInCorso && !ClasseMissione.isIdDiMissionePredefinita(getId())) {
+		if (eraInCorso && !MissionePredefinita.isIdDiMissionePredefinita(getId())) {
 			// Per le missioni predefinite l'avviso lo dà già MissioneBase
 			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "MISSIONE FALLITA", getNome()));
 		}

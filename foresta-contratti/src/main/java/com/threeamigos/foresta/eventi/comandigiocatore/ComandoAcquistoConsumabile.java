@@ -2,8 +2,8 @@ package com.threeamigos.foresta.eventi.comandigiocatore;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * Il giocatore chiede di acquistare un Consumabile da un alchimista.
@@ -14,14 +14,14 @@ import com.threeamigos.foresta.tipi.TipoConsumabile;
 public class ComandoAcquistoConsumabile extends EventoBase {
 
     private final TipoConsumabile tipoConsumabile;
-    private final ClasseIncantesimo classeIncantesimo;
+    private final TipoIncantesimo tipoIncantesimo;
     private final String uuidPersonaggio;
 
-    public ComandoAcquistoConsumabile(TipoConsumabile tipoConsumabile, ClasseIncantesimo classeIncantesimo,
+    public ComandoAcquistoConsumabile(TipoConsumabile tipoConsumabile, TipoIncantesimo tipoIncantesimo,
                                       String uuidPersonaggio) {
         super(TipoEvento.COMANDO_ACQUISTO_CONSUMABILE);
         this.tipoConsumabile = tipoConsumabile;
-        this.classeIncantesimo = classeIncantesimo;
+        this.tipoIncantesimo = tipoIncantesimo;
         this.uuidPersonaggio = uuidPersonaggio;
     }
 
@@ -29,8 +29,8 @@ public class ComandoAcquistoConsumabile extends EventoBase {
         return tipoConsumabile;
     }
 
-    public ClasseIncantesimo getClasseIncantesimo() {
-        return classeIncantesimo;
+    public TipoIncantesimo getClasseIncantesimo() {
+        return tipoIncantesimo;
     }
 
     public String getUuidPersonaggio() {

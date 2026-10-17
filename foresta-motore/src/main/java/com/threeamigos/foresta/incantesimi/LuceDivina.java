@@ -2,14 +2,10 @@ package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.*;
 
 /**
  * La luce sacra che brucia i non morti (il SACRO fa il doppio dei danni a chi è di categoria NON_MORTO): danni come il
@@ -42,8 +38,8 @@ public class LuceDivina extends IncantesimoMaleficoImpl implements Incantesimo {
 				&& !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
 	}
 
-	public ClasseIncantesimo getClasse() {
-		return ClasseIncantesimo.LUCE_DIVINA;
+	public TipoIncantesimo getClasse() {
+		return TipoIncantesimo.LUCE_DIVINA;
 	}
 
 	public int getCostoLancio() {

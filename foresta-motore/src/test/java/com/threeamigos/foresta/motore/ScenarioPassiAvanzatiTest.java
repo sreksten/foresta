@@ -2,21 +2,13 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
-import com.threeamigos.foresta.missioni.Costruzione;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
+import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.Ricompensa;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashMap;
@@ -25,7 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Gli ultimi passi del catalogo (passi_missioni.md, §2): GENERA_PARAMETRI, SORVEGLIA, EVITA_COMBATTIMENTO,
@@ -41,7 +32,7 @@ class ScenarioPassiAvanzatiTest {
         private final java.util.function.Function<MissioneDiUnPasso, Passo> passo;
 
         MissioneDiUnPasso(java.util.function.Function<MissioneDiUnPasso, Passo> passo) {
-            super(ClasseMissione.MISSIONE_DI_PROVA);
+            super(MissionePredefinita.MISSIONE_DI_PROVA);
             this.passo = passo;
         }
 

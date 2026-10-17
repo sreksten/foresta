@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.missioni;
+package com.threeamigos.foresta.tipi;
 
 /**
  *
@@ -7,7 +7,7 @@ package com.threeamigos.foresta.missioni;
 // Ogni tipo coperto da almeno una missione vera ha sopra un commento "Coperto da:" con le classi che lo coprono
 // (vedi passi_missioni.md, "Regole per chi aggiunge missioni"); i tipi impossibili nella Foresta sono commentati.
 /**
- * Il catalogo dei tipi di missione che il gioco può proporre, raggruppati per {@link SupertipoMissione}: ciascuno con un esempio. Non sono le classi concrete (quelle
+ * Il catalogo dei tipi di missione che il gioco può proporre, raggruppati per {@link CategoriaMissione}: ciascuno con un esempio. Non sono le classi concrete (quelle
  * sono le {@code ClasseMissione}), ma i generi di incarico. Sopra ogni tipo un commento "Coperto da:" dice quali missioni lo realizzano (vedi passi_missioni.md,
  * "Regole per chi aggiunge missioni"); quelli impossibili nella Foresta sono commentati.
  */
@@ -17,76 +17,76 @@ public enum TipoMissione {
     /**
      * Esempio: raccogliere funchi luminescenti o fiori di loto nero per un alchimista locale
      */
-    RACCOLTA_INGREDIENTI(SupertipoMissione.ACQUISIZIONE),
+    RACCOLTA_INGREDIENTI(CategoriaMissione.ACQUISIZIONE),
     // Coperto da: RichiestaDiMateriali (capitano delle guardie)
     /**
      * Esempio: raccogliere trofei da nemici sconfitti, scalpi, reliquie
      */
-    RACCOLTA_TROFEI(SupertipoMissione.ACQUISIZIONE),
+    RACCOLTA_TROFEI(CategoriaMissione.ACQUISIZIONE),
     // Coperto da: RichiestaDiMateriali (armaiolo: i cristalli delle grotte)
     /**
      * Esempio: raccogliere cristalli magici, cristalli energetici, cristalli rari
      */
-    RACCOLTA_CRISTALLI(SupertipoMissione.ACQUISIZIONE),
+    RACCOLTA_CRISTALLI(CategoriaMissione.ACQUISIZIONE),
     // Coperto da: RichiestaDiMateriali (alchimista: le parti dei mostri)
     /**
      * Esempio: raccogliere essenza magica, estratto vitale, energia pura
      */
-    RACCOLTA_ESSENZA(SupertipoMissione.ACQUISIZIONE),
+    RACCOLTA_ESSENZA(CategoriaMissione.ACQUISIZIONE),
     // Coperto da: RichiestaDiMateriali (armaiolo: i minerali delle grotte e delle rovine)
     /**
      * Esempio: estrarre minerali, gemme, cristalli da una miniera
      */
-    MINIERA(SupertipoMissione.ACQUISIZIONE),
+    MINIERA(CategoriaMissione.ACQUISIZIONE),
     // Coperto da: IncaricoDiCombattimento (un oggetto rubato o nascosto si recupera con una riga di INCARICO_DI_COMBATTIMENTO)
     /**
      * Esempio: ritrovare un amuleto o un cimelio di famiglia e riportarlo al legittimo proprietario
      */
-    RECUPERO(SupertipoMissione.ACQUISIZIONE),
+    RECUPERO(CategoriaMissione.ACQUISIZIONE),
     // Coperto da: IlCorriere (lettere, pegni, forzieri)
     /**
      * Esempio: portare un amuleto sacro o una lettera sigillata da un punto A ad un punto B
      */
-    TRASPORTO(SupertipoMissione.ACQUISIZIONE),
+    TRASPORTO(CategoriaMissione.ACQUISIZIONE),
     // Coperto da: LaLeggendaDellArmaiolo, LaLeggendaDelLocandiere (la leggenda è l'indizio, i guardiani del tempio, il leggendario il tesoro)
     /**
      * Esempio: esplorare un dungeon alla ricerca di un tesoro
      */
-    CACCIA_AL_TESORO(SupertipoMissione.ACQUISIZIONE),
+    CACCIA_AL_TESORO(CategoriaMissione.ACQUISIZIONE),
     /**
      * Esempio: forgiare un'arma leggendaria, creare una pozione rara, realizzare un artefatto magico
      */
-    ARTIGIANATO(SupertipoMissione.ACQUISIZIONE),
+    ARTIGIANATO(CategoriaMissione.ACQUISIZIONE),
     // Coperto da: IlNegozioDellArmaiolo, IlNegozioDellAlchimista, IlNegozioDelVenditoreDiPergamene, IlNegozioDellIncantatore (disinfestate le rovine, diventano una bottega)
     /**
      * Esempio: costruire una torre, erigere una statua, realizzare un ponte
      */
-    COSTRUZIONE(SupertipoMissione.ACQUISIZIONE),
+    COSTRUZIONE(CategoriaMissione.ACQUISIZIONE),
     // Coperto da: RichiestaDiMateriali (armaiolo: pelli e corni)
     /**
      * Esempio: cacciare cervi per le pelli, raccogliere ingredienti da animali, procacciare cibo
      */
-    CACCIA_ANIMALI(SupertipoMissione.ACQUISIZIONE),
+    CACCIA_ANIMALI(CategoriaMissione.ACQUISIZIONE),
     // Coperto da: RichiestaDiMateriali (locandiere: i pesci e le rane delle paludi)
     /**
      * Esempio: pescare nel fiume, raccogliere dal mare, catturare creature acquatiche
      */
-    PESCA(SupertipoMissione.ACQUISIZIONE),
+    PESCA(CategoriaMissione.ACQUISIZIONE),
     // Coperto da: LaSorveglianza (le rape giganti)
     /**
      * Esempio: piantare raccolti, coltivare orto, raccogliere grano
      */
-    AGRICOLTURA(SupertipoMissione.ACQUISIZIONE),
+    AGRICOLTURA(CategoriaMissione.ACQUISIZIONE),
     // Coperto da: RichiestaDiMateriali (alchimista: le erbe)
     /**
      * Esempio: raccogliere erbe, piante medicinali, funghi, bacche
      */
-    FORAGGIAMENTO(SupertipoMissione.ACQUISIZIONE),
+    FORAGGIAMENTO(CategoriaMissione.ACQUISIZIONE),
     // Coperto da: LaSorveglianza (le oche da guardia)
     /**
      * Esempio: allevare animali, bestiame, creature magiche
      */
-    ALLEVAMENTO(SupertipoMissione.ACQUISIZIONE),
+    ALLEVAMENTO(CategoriaMissione.ACQUISIZIONE),
     // Non fattibile nella Foresta: nella Foresta non ci sono né borse né banchieri che speculano.
     // /**
     //  * Esempio: speculazione, investimenti, gioco d'azzardo, trading
@@ -99,12 +99,12 @@ public enum TipoMissione {
     /**
      * Esempio: convincere un nobile a schierarsi dalla vostra parte o negoziare una tregua
      */
-    DIPLOMAZIA(SupertipoMissione.NEGOZIAZIONE),
+    DIPLOMAZIA(CategoriaMissione.NEGOZIAZIONE),
     // Coperto da: IlCorriere (l'accordo fra il mugnaio e il pescatore)
     /**
      * Esempio: fare da intermediario tra due fazioni in guerra, mediare una disputa commerciale
      */
-    MEDIAZIONE(SupertipoMissione.NEGOZIAZIONE),
+    MEDIAZIONE(CategoriaMissione.NEGOZIAZIONE),
     // Non adatto al tono del gioco: comprare e rivendere merci è un lavoro da mercanti, non un'avventura.
     // /**
     //  * Esempio: vendere merci, speculare su prezzi, guadagnare da commercio
@@ -114,7 +114,7 @@ public enum TipoMissione {
     /**
      * Esempio: partecipare ad asta, acquistare oggetti rari, offerta al ribasso
      */
-    ASTA(SupertipoMissione.NEGOZIAZIONE),
+    ASTA(CategoriaMissione.NEGOZIAZIONE),
     // Non adatto al tono del gioco: fare da sensale fra due mercanti non è un'avventura.
     // /**
     //  * Esempio: fare da broker, intermediario commerciale, mediatore
@@ -124,16 +124,16 @@ public enum TipoMissione {
     /**
      * Esempio: negoziare contratto, accordo legale, documento vincolante
      */
-    CONTRATTO(SupertipoMissione.NEGOZIAZIONE),
+    CONTRATTO(CategoriaMissione.NEGOZIAZIONE),
     /**
      * Esempio: scambiare ostaggi, negoziazione di rilascio, baratto persone
      */
-    SCAMBIO_OSTAGGI(SupertipoMissione.NEGOZIAZIONE),
+    SCAMBIO_OSTAGGI(CategoriaMissione.NEGOZIAZIONE),
     // Coperto da: IlCorriere (la tregua per il ponte)
     /**
      * Esempio: negoziare tregua, cessate il fuoco, armistizio
      */
-    NEGOZIAZIONE_TREGUA(SupertipoMissione.NEGOZIAZIONE),
+    NEGOZIAZIONE_TREGUA(CategoriaMissione.NEGOZIAZIONE),
 
     //----------
 
@@ -141,66 +141,66 @@ public enum TipoMissione {
     /**
      * Esempio: eliminare una specifica bestia o un bandito
      */
-    CACCIATORE_DI_TAGLIE(SupertipoMissione.COMBATTIMENTO),
+    CACCIATORE_DI_TAGLIE(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: IncaricoDiCombattimento (il troll del mulino, le arpie del fornaio, il cavaliere spergiuro, il mago del rospo)
     /**
      * Esempio: affrontare e sconfiggere un nemico specifico per motivi personali, riscatto, onore perso
      */
-    VENDETTA(SupertipoMissione.COMBATTIMENTO),
+    VENDETTA(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: IncaricoDiCombattimento (il campione del maestro d'armi, la campionessa delle guardie)
     /**
      * Esempio: combattere un duello per ripristinare l'onore, affrontare un campione in arena
      */
-    DUELLO(SupertipoMissione.COMBATTIMENTO),
+    DUELLO(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: IncaricoDiCombattimento (l'esercito della radura, la notte dei morti: a ondate)
     /**
      * Esempio: partecipare a battaglia large-scale, combattimento di massa, schieramento di truppe
      */
-    BATTAGLIA(SupertipoMissione.COMBATTIMENTO),
+    BATTAGLIA(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: SconfiggiLaStrega, SconfiggiIlLich, SconfiggiIlMinotauroGigante, SconfiggiLIdra, SconfiggiIlDrago
     /**
      * Esempio: assaltare una fortezza, conquistare una posizione, assedio di un castello
      */
-    ASSALTO(SupertipoMissione.COMBATTIMENTO),
+    ASSALTO(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: IncaricoDiCombattimento (i predoni nella radura)
     /**
      * Esempio: tendere imboscata, intrappolamento tattico, attacchi a sorpresa
      */
-    IMBOSCATA(SupertipoMissione.COMBATTIMENTO),
+    IMBOSCATA(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: CacciaAiGoblin
     /**
      * Esempio: attacchi rapidi, guerre di logoramento, tattiche di guerriglia
      */
-    GUERRIGLIA(SupertipoMissione.COMBATTIMENTO),
+    GUERRIGLIA(CategoriaMissione.COMBATTIMENTO),
     /**
      * Esempio: ritirata ordinata, battere in ritirata, riposizionamento tattico
      */
-    RITIRATA_TATTICA(SupertipoMissione.COMBATTIMENTO),
+    RITIRATA_TATTICA(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: IncaricoDiCombattimento (le chimere della radura)
     /**
      * Esempio: attacco diretto, cavalry charge, assalto frontale
      */
-    CARICA(SupertipoMissione.COMBATTIMENTO),
+    CARICA(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: IncaricoDiCombattimento (gli hobgoblin accerchiati)
     /**
      * Esempio: circondare nemici, accerchiamento tattico, movimento a pinza
      */
-    CIRCONDAMENTO(SupertipoMissione.COMBATTIMENTO),
+    CIRCONDAMENTO(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: IncaricoDiCombattimento (la strada sbarrata dagli hobgoblin, il cavaliere nero)
     /**
      * Esempio: bloccare passaggio, creare barricata, sbarramento
      */
-    BLOCCO(SupertipoMissione.COMBATTIMENTO),
+    BLOCCO(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: IncaricoDiCombattimento (la pattuglia di hobgoblin)
     /**
      * Esempio: combattimento minore, scaramucce, scontri limitati
      */
-    SCHERMAGLIA(SupertipoMissione.COMBATTIMENTO),
+    SCHERMAGLIA(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: LaSorveglianza (la torre assediata)
     /**
      * Esempio: difendere durante assedio, resistenza assediata
      */
-    ASSEDIO_DIFESA(SupertipoMissione.COMBATTIMENTO),
+    ASSEDIO_DIFESA(CategoriaMissione.COMBATTIMENTO),
     // Non fattibile nella Foresta: servono il mare e le navi.
     // /**
     //  * Esempio: battaglia navale, combattimento via mare, flotta
@@ -210,7 +210,7 @@ public enum TipoMissione {
     /**
      * Esempio: uscita tattica da fortezza, attacco sorpresa, sortita
      */
-    SORTITA(SupertipoMissione.COMBATTIMENTO),
+    SORTITA(CategoriaMissione.COMBATTIMENTO),
     // Non fattibile nella Foresta: nella Foresta non ci sono cavalli.
     // /**
     //  * Esempio: attacco di cavalleria, carica montata, charges
@@ -220,22 +220,22 @@ public enum TipoMissione {
     /**
      * Esempio: guerra di trincea, bunker, difesa statica
      */
-    TRINCEA(SupertipoMissione.COMBATTIMENTO),
+    TRINCEA(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: IncaricoDiCombattimento (il ponte dei troll)
     /**
      * Esempio: battaglia su ponte strategico, controllo passaggio, ponte conteso
      */
-    PONTE_TATTICO(SupertipoMissione.COMBATTIMENTO),
+    PONTE_TATTICO(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: IncaricoDiCombattimento (la rocca dei briganti)
     /**
      * Esempio: assedio offensivo, assalto a fortezza, conquista della rocca
      */
-    ASSEDIO_OFFENSIVO(SupertipoMissione.COMBATTIMENTO),
+    ASSEDIO_OFFENSIVO(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: IncaricoDiCombattimento (il rito del minotauro)
     /**
      * Esempio: combattimento rituale, duello cerimoniale, combattimento sacro
      */
-    COMBATTIMENTO_RITUALE(SupertipoMissione.COMBATTIMENTO),
+    COMBATTIMENTO_RITUALE(CategoriaMissione.COMBATTIMENTO),
     // Non fattibile nella Foresta: nessuno vola, nella Foresta.
     // /**
     //  * Esempio: battaglia aerea, combattimento in volo, scontro fra le nuvole
@@ -245,22 +245,22 @@ public enum TipoMissione {
     /**
      * Esempio: duello magico specializzato, scontro magico puro, battaglia di maghi
      */
-    DUELLO_MAGICO(SupertipoMissione.COMBATTIMENTO),
+    DUELLO_MAGICO(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: IncaricoDiCombattimento (la chimera-drago, le viverne)
     /**
      * Esempio: combattimento contro bestia rara, dominio selvatico, caccia bestia
      */
-    COMBATTIMENTO_BESTIA(SupertipoMissione.COMBATTIMENTO),
+    COMBATTIMENTO_BESTIA(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: IncaricoDiCombattimento (l'elfo dell'antica usanza)
     /**
      * Esempio: duello in stile antico, combattimento tradizionale, scontro eroico
      */
-    DUELLO_ANTICO(SupertipoMissione.COMBATTIMENTO),
+    DUELLO_ANTICO(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: IncaricoDiCombattimento (la cripta degli scheletri, la miniera dei goblin; a ondate: il nido sotto la montagna, le segrete del castello, il pozzo degli esperimenti)
     /**
      * Esempio: ripulire una cripta o una miniera invasa a non morti o ragni
      */
-    PULIZIA_DEI_DUNGEON(SupertipoMissione.COMBATTIMENTO),
+    PULIZIA_DEI_DUNGEON(CategoriaMissione.COMBATTIMENTO),
 
     //----------
 
@@ -268,105 +268,105 @@ public enum TipoMissione {
     /**
      * Esempio: liberare un fabbro elfo o un mago imprigionato
      */
-    SALVATAGGIO(SupertipoMissione.PROTEZIONE),
+    SALVATAGGIO(CategoriaMissione.PROTEZIONE),
     // Coperto da: IlPellegrino, NonSparateSulPianista, IlViaggioDellaMoglie, IlRapimento
     /**
      * Esempio: proteggere un mercante che attraversa un passo di montagna
      */
-    SCORTA(SupertipoMissione.PROTEZIONE),
+    SCORTA(CategoriaMissione.PROTEZIONE),
     // Coperto da: LaSorveglianza (le galline del fattore)
     /**
      * Esempio: difendere un villaggio dagli attacchi di goblin o da un drago
      */
-    DIFESA(SupertipoMissione.PROTEZIONE),
+    DIFESA(CategoriaMissione.PROTEZIONE),
     // Coperto da: IlCorriere (erbe e tinture per un malato)
     /**
      * Esempio: curare una malattia rara, guarire da un avvelenamento, resuscitare un alleato
      */
-    GUARIGIONE(SupertipoMissione.PROTEZIONE),
+    GUARIGIONE(CategoriaMissione.PROTEZIONE),
     // Coperto da: IlSoccorso (il taglialegna, il minatore, il cacciatore, il pastore)
     /**
      * Esempio: salvare qualcuno intrappolato in una caverna, estrarre feriti da un'area pericolosa
      */
-    SOCCORSO(SupertipoMissione.PROTEZIONE),
+    SOCCORSO(CategoriaMissione.PROTEZIONE),
     // Coperto da: IlSoccorso (il pastore della radura)
     /**
      * Esempio: evacuare civili da una zona di guerra, portare in sicurezza rifugiati
      */
-    EVACUAZIONE(SupertipoMissione.PROTEZIONE),
+    EVACUAZIONE(CategoriaMissione.PROTEZIONE),
     // Coperto da: IlCorriere (rimedi per un lazzaretto, sale contro il contagio)
     /**
      * Esempio: contenere un'epidemia, aiutare i malati, disinfestare un'area
      */
-    EPIDEMIA(SupertipoMissione.PROTEZIONE),
+    EPIDEMIA(CategoriaMissione.PROTEZIONE),
     // Coperto da: IlRituale (il pastore posseduto)
     /**
      * Esempio: esorcizzare una possessione demoniaca, liberare da controllo mentale
      */
-    POSSESSIONE(SupertipoMissione.PROTEZIONE),
+    POSSESSIONE(CategoriaMissione.PROTEZIONE),
     // Coperto da: LaSorveglianza (la capanna dei raffreddati)
     /**
      * Esempio: isolare malati, contenimento, prevenzione contagio
      */
-    QUARANTENA(SupertipoMissione.PROTEZIONE),
+    QUARANTENA(CategoriaMissione.PROTEZIONE),
     // Coperto da: IlRituale (la barriera di cristallo contro le arpie)
     /**
      * Esempio: creare barriera magica, protezione magica, scudo incantato
      */
-    BARRIERA_MAGICA(SupertipoMissione.PROTEZIONE),
+    BARRIERA_MAGICA(CategoriaMissione.PROTEZIONE),
     // Coperto da: IlSoccorso (il messaggero ferito)
     /**
      * Esempio: aiuto immediato a feriti, intervento d'emergenza, primo intervento
      */
-    PRIMO_SOCCORSO(SupertipoMissione.PROTEZIONE),
+    PRIMO_SOCCORSO(CategoriaMissione.PROTEZIONE),
     /**
      * Esempio: creare rifugio, accogliere profughi, fornire riparo
      */
-    RIFUGIO(SupertipoMissione.PROTEZIONE),
+    RIFUGIO(CategoriaMissione.PROTEZIONE),
     // Coperto da: IlCorriere (talismani e acqua sacra, urgenti)
     /**
      * Esempio: guarigione tramite magia, incantesimi curativi
      */
-    CURA_MAGICA(SupertipoMissione.PROTEZIONE),
+    CURA_MAGICA(CategoriaMissione.PROTEZIONE),
     // Coperto da: IlCorriere (antidoti e unguenti, urgenti)
     /**
      * Esempio: contrastare avvelenamento, antidoto, cura veleno
      */
-    ANTI_VELENO(SupertipoMissione.PROTEZIONE),
+    ANTI_VELENO(CategoriaMissione.PROTEZIONE),
     // Coperto da: IlRituale (il santuario dei viandanti)
     /**
      * Esempio: creare santuario, luogo sacro, area protetta consacrata
      */
-    SANTUARIO(SupertipoMissione.PROTEZIONE),
+    SANTUARIO(CategoriaMissione.PROTEZIONE),
     // Coperto da: LaSorveglianza (la grotta murata)
     /**
      * Esempio: contenere minaccia, limitazione, isolamento pericolo
      */
-    CONTENIMENTO(SupertipoMissione.PROTEZIONE),
+    CONTENIMENTO(CategoriaMissione.PROTEZIONE),
     // Coperto da: LaSorveglianza (il cerchio di pietre, la tomba dell'eremita)
     /**
      * Esempio: stare di guardia, sorveglianza notturna, vigilanza
      */
-    VIGILIA(SupertipoMissione.PROTEZIONE),
+    VIGILIA(CategoriaMissione.PROTEZIONE),
     // Coperto da: IlContrabbandiere (i gioielli di famiglia)
     /**
      * Esempio: nascondere, mascheramento, cela, nascondiglio
      */
-    OCCULTAMENTO(SupertipoMissione.PROTEZIONE),
+    OCCULTAMENTO(CategoriaMissione.PROTEZIONE),
     // Coperto da: IncaricoDiCombattimento (i fantasmi del pozzo, per una notte)
     /**
      * Esempio: protezione temporanea, scudo temporale, difesa limitata
      */
-    PROTEZIONE_TEMPORALE(SupertipoMissione.PROTEZIONE),
+    PROTEZIONE_TEMPORALE(CategoriaMissione.PROTEZIONE),
     // Coperto da: IlSoccorso (il copista in fuga)
     /**
      * Esempio: fornire asilo politico, rifugio da persecuzione, protezione rifugiati
      */
-    ASILO(SupertipoMissione.PROTEZIONE),
+    ASILO(CategoriaMissione.PROTEZIONE),
     /**
      * Esempio: rinforzare strutture, blindare difese, potenziare protezioni
      */
-    BLINDATURA(SupertipoMissione.PROTEZIONE),
+    BLINDATURA(CategoriaMissione.PROTEZIONE),
 
     //----------
 
@@ -374,118 +374,118 @@ public enum TipoMissione {
     /**
      * Esempio: indagare su sparizioni di persone scoprendo dietro congiure di streghe o vampiri
      */
-    INVESTIGAZIONE(SupertipoMissione.INVESTIGAZIONE),
+    INVESTIGAZIONE(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: IlCartografo
     /**
      * Esempio: esplorare le terre selvagge per scoprire nuovi insediamenti o rovine sconosciute
      */
-    ESPLORAZIONE(SupertipoMissione.INVESTIGAZIONE),
+    ESPLORAZIONE(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LIndagine (l'evaso)
     /**
      * Esempio: trovare persona scomparsa, rintracciare creatura selvatica, localizzare fuggitivo, cercare persona specifica, ricerca mirata, localizzazione target
      */
-    RINTRACCIAMENTO(SupertipoMissione.INVESTIGAZIONE),
+    RINTRACCIAMENTO(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LIndagine (la cura dimenticata)
     /**
      * Esempio: cercare informazioni in archivi, ricercare in biblioteche, studiare testi antichi, raccogliere dati
      */
-    RICERCA(SupertipoMissione.INVESTIGAZIONE),
+    RICERCA(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LIndagine (le lucciole della palude)
     /**
      * Esempio: approfondire uno studio accademico, scoprire il funzionamento di una magia, risolvere un mistero scientifico per pura conoscenza
      */
-    CURIOSITA_ACCADEMICA(SupertipoMissione.INVESTIGAZIONE),
+    CURIOSITA_ACCADEMICA(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LaSorveglianza (i contrabbandieri del bosco, i rumori della grotta)
     /**
      * Esempio: osservare, monitorare, pedinare qualcuno senza essere scoperti, seguire movimenti
      */
-    SORVEGLIANZA(SupertipoMissione.INVESTIGAZIONE),
+    SORVEGLIANZA(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LIndagine (la spia dei goblin)
     /**
      * Esempio: scoprire una spia nel nostro accampamento, smascherare un traditore, impedire lo spionaggio
      */
-    CONTROSPIONAGGIO(SupertipoMissione.INVESTIGAZIONE),
+    CONTROSPIONAGGIO(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LIndagine (i due goblin prigionieri)
     /**
      * Esempio: interrogare prigionieri, estrarre informazioni, interrogatorio forzato, estorsione confessioni
      */
-    INTERROGATORIO(SupertipoMissione.INVESTIGAZIONE),
+    INTERROGATORIO(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LIndagine (il grano maledetto)
     /**
      * Esempio: indagine profonda, inchiesta giudiziaria, investigazione complessa, analisi approfondita
      */
-    INCHIESTA(SupertipoMissione.INVESTIGAZIONE),
+    INCHIESTA(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LIndagine (la morte del pescatore)
     /**
      * Esempio: analisi scene crimine, raccolta prove, indizi forensici, esaminare corpi, cause di morte, autopsia
      */
-    FORENSICA(SupertipoMissione.INVESTIGAZIONE),
+    FORENSICA(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LIndagine (il ladro dei tetti)
     /**
      * Esempio: analizzare profilo criminale, psicologia criminale, prevedere comportamenti, profilazione psicologica
      */
-    PROFILING(SupertipoMissione.INVESTIGAZIONE),
+    PROFILING(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LIndagine (la scia viola)
     /**
      * Esempio: seguire tracce magiche, tracciamento soprannaturale, aura tracking, leggere presenze invisibili
      */
-    TRACCIA_MAGICA(SupertipoMissione.INVESTIGAZIONE),
+    TRACCIA_MAGICA(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LIndagine (le campane rubate)
     /**
      * Esempio: raccogliere testimonianze, interviste, deposizioni, interrogare testimoni
      */
-    TESTIMONI(SupertipoMissione.INVESTIGAZIONE),
+    TESTIMONI(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LIndagine (le luci nelle rovine)
     /**
      * Esempio: scoprire segreto, rivelare mistero, smascheramento, investigare fantasmi, paranormale, entità spettrali
      */
-    SCOPERTA_SEGRETO(SupertipoMissione.INVESTIGAZIONE),
+    SCOPERTA_SEGRETO(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LOggettoSmarrito (oggetti smarriti vicino a un posto; i leggendari hanno missioni a parte)
     /**
      * Esempio: cercare oggetto specifico, localizzazione oggetto, ricerca mirata, leggere storia di oggetti, psicometria
      */
-    RICERCA_OGGETTO(SupertipoMissione.INVESTIGAZIONE),
+    RICERCA_OGGETTO(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LIndagine (il drago di cartapesta)
     /**
      * Esempio: scoprire inganno, smascherare falsità, rivelare bugia, denudare inganni
      */
-    SCOPERTA_INGANNO(SupertipoMissione.INVESTIGAZIONE),
+    SCOPERTA_INGANNO(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LIndagine (le rune sulla porta)
     /**
      * Esempio: leggere rune, decifrare simboli magici, interpretazione runica, leggere aura
      */
-    LETTURA_RUNE(SupertipoMissione.INVESTIGAZIONE),
+    LETTURA_RUNE(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LaDocumentazione (le iscrizioni, gli affreschi, l'erbario, la guida delle locande)
     /**
      * Esempio: mappare un territorio sconosciuto, catalogare reperti archeologici, documenting scoperte
      */
-    DOCUMENTAZIONE(SupertipoMissione.INVESTIGAZIONE),
+    DOCUMENTAZIONE(CategoriaMissione.INVESTIGAZIONE),
     // Coperto da: LIndagine (la tomba del re antico)
     /**
      * Esempio: esplorare rovine perdute per ricomporre la storia di una civiltà attraverso iscrizioni magiche
      */
-    DECIFRAZIONE(SupertipoMissione.INVESTIGAZIONE),
+    DECIFRAZIONE(CategoriaMissione.INVESTIGAZIONE),
 
     //----------
 
     /**
      * Esempio: scalare i vertici di una data fazione o gilda
      */
-    FAZIONE(SupertipoMissione.PROGRESSIONE),
+    FAZIONE(CategoriaMissione.PROGRESSIONE),
     /**
      * Esempio: insegnare a un apprendista la magia, allenare una guardia, diventare maestro di una disciplina
      */
-    ADDESTRAMENTO(SupertipoMissione.PROGRESSIONE),
+    ADDESTRAMENTO(CategoriaMissione.PROGRESSIONE),
     // Coperto da: IncaricoDiCombattimento (la gara di magia)
     /**
      * Esempio: vincere una gara di magia, battere un campione in un duello, guadagnare un'elezione
      */
-    COMPETIZIONE(SupertipoMissione.PROGRESSIONE),
+    COMPETIZIONE(CategoriaMissione.PROGRESSIONE),
     // Coperto da: IlTorneo (la Rosa Appassita, la giostra degli incantatori, il Boccale Rovesciato)
     /**
      * Esempio: partecipare a torneo multi-round, competizione a eliminazione diretta
      */
-    TORNEO(SupertipoMissione.PROGRESSIONE),
+    TORNEO(CategoriaMissione.PROGRESSIONE),
     // Non fattibile nella Foresta: eredità e testamenti sono affari da notai, non da avventurieri.
     // /**
     //  * Esempio: ricevere eredità, ereditare titoli, ricevere lasciti
@@ -494,11 +494,11 @@ public enum TipoMissione {
     /**
      * Esempio: essere nominato a carica ufficiale, ricevere incarico importante
      */
-    NOMINA(SupertipoMissione.PROGRESSIONE),
+    NOMINA(CategoriaMissione.PROGRESSIONE),
     /**
      * Esempio: aderire a gilda, fratellanza, unirsi a ordine
      */
-    FRATELLANZA(SupertipoMissione.PROGRESSIONE),
+    FRATELLANZA(CategoriaMissione.PROGRESSIONE),
     // Non fattibile nella Foresta: nessuno del gruppo diventerà re: nella Foresta c'è già Sua Maestà.
     // /**
     //  * Esempio: diventare re/regina, ascendere al trono, incoronazione
@@ -507,35 +507,35 @@ public enum TipoMissione {
     /**
      * Esempio: migliorare status, avanzamento sociale, migliorare condizione
      */
-    ASCESA_SOCIALE(SupertipoMissione.PROGRESSIONE),
+    ASCESA_SOCIALE(CategoriaMissione.PROGRESSIONE),
     // Coperto da: IncaricoDiCombattimento (i titoli buffi di Sua Maestà, nella palude e fra le rovine)
     /**
      * Esempio: ottenere titolo nobile, blasone, titolo nobiliare
      */
-    TITOLO_NOBILIARE(SupertipoMissione.PROGRESSIONE),
+    TITOLO_NOBILIARE(CategoriaMissione.PROGRESSIONE),
     /**
      * Esempio: diventare maestro di un'arte, eccellenza, maestria
      */
-    MAESTRIA(SupertipoMissione.PROGRESSIONE),
+    MAESTRIA(CategoriaMissione.PROGRESSIONE),
     /**
      * Esempio: specializzarsi in disciplina specifica, focus expertise
      */
-    SPECIALIZZAZIONE(SupertipoMissione.PROGRESSIONE),
+    SPECIALIZZAZIONE(CategoriaMissione.PROGRESSIONE),
     // Da non sviluppare per ora: servirebbe un conto della fama del gruppo, che il gioco non tiene.
     /**
      * Esempio: guadagnare fama, notorietà, celebrità, rinomanza
      */
-    FAMA(SupertipoMissione.PROGRESSIONE),
+    FAMA(CategoriaMissione.PROGRESSIONE),
     // Da non sviluppare per ora: servirebbe un conto della reputazione del gruppo, che il gioco non tiene.
     /**
      * Esempio: migliorare reputazione, onore, prestigio, credibilità
      */
-    REPUTAZIONE(SupertipoMissione.PROGRESSIONE),
+    REPUTAZIONE(CategoriaMissione.PROGRESSIONE),
     // Da non sviluppare per ora: accumulare monete non è una missione, è il gioco.
     /**
      * Esempio: accumulare ricchezza, prosperità economica, tesoro
      */
-    RICCHEZZA(SupertipoMissione.PROGRESSIONE),
+    RICCHEZZA(CategoriaMissione.PROGRESSIONE),
     // Non fattibile nella Foresta: le genealogie nobili non si giocano a colpi di spada.
     // /**
     //  * Esempio: stabilire discendenza nobile, genealogia, stirpe
@@ -555,7 +555,7 @@ public enum TipoMissione {
     /**
      * Esempio: ricevere benedizione, favore divino, grazia divina
      */
-    BENEDIZIONE_RICEVERE(SupertipoMissione.PROGRESSIONE),
+    BENEDIZIONE_RICEVERE(CategoriaMissione.PROGRESSIONE),
     // Non fattibile nella Foresta: le successioni al trono non sono affari del gruppo.
     // /**
     //  * Esempio: assicurare successione, diritto successorio organizzato
@@ -564,11 +564,11 @@ public enum TipoMissione {
     /**
      * Esempio: accumulare risorse per potenziare una base o una fortezza
      */
-    GESTIONE(SupertipoMissione.PROGRESSIONE),
+    GESTIONE(CategoriaMissione.PROGRESSIONE),
     /**
      * Esempio: ricostruire una fortezza abbandonata
      */
-    RICOSTRUZIONE(SupertipoMissione.PROGRESSIONE),
+    RICOSTRUZIONE(CategoriaMissione.PROGRESSIONE),
 
     //----------
 
@@ -576,17 +576,17 @@ public enum TipoMissione {
     /**
      * Esempio: aiutare uno dei membri del gruppo a risolvere un problema personale
      */
-    LEALTA(SupertipoMissione.RELAZIONI),
+    LEALTA(CategoriaMissione.RELAZIONI),
     // Da non sviluppare per ora: sarebbe solo una raccolta di materiali (un regalo per gli sposi), già coperta.
     /**
      * Esempio: organizzare un matrimonio, celebrare nozze, preparare una cerimonia
      */
-    MATRIMONIO(SupertipoMissione.RELAZIONI),
+    MATRIMONIO(CategoriaMissione.RELAZIONI),
     // Da non sviluppare per ora: sarebbe solo una raccolta di materiali (le provviste per la festa), già coperta.
     /**
      * Esempio: celebrare una vittoria, organizzare festa, carnevale, banchetto
      */
-    CELEBRAZIONE(SupertipoMissione.RELAZIONI),
+    CELEBRAZIONE(CategoriaMissione.RELAZIONI),
     // Non fattibile nella Foresta: nessuno del gruppo si sposa per politica.
     // /**
     //  * Esempio: matrimonio diplomatico, unione politica, alleanza famigliare
@@ -596,17 +596,17 @@ public enum TipoMissione {
     /**
      * Esempio: riscattarsi, redenzione, cambio di vita
      */
-    RISCATTO(SupertipoMissione.RELAZIONI),
+    RISCATTO(CategoriaMissione.RELAZIONI),
     // Coperto da: IlRituale (il perdono del fratello)
     /**
      * Esempio: ottenere perdono, riconciliazione, pace interiore
      */
-    PERDONO(SupertipoMissione.RELAZIONI),
+    PERDONO(CategoriaMissione.RELAZIONI),
     // Coperto da: IlRituale (il falò del cavaliere)
     /**
      * Esempio: redenzione pubblica, riabilitazione sociale, ristabilire reputazione
      */
-    REDENZIONE_PUBBLICA(SupertipoMissione.RELAZIONI),
+    REDENZIONE_PUBBLICA(CategoriaMissione.RELAZIONI),
 
     //----------
 
@@ -614,7 +614,7 @@ public enum TipoMissione {
     /**
      * Esempio: rubare un artefatto da una camera del tesoro o un documento da una biblioteca
      */
-    FURTO(SupertipoMissione.ILLECITO),
+    FURTO(CategoriaMissione.ILLECITO),
     // Non adatto al tono del gioco: niente omicidi a sangue freddo, nemmeno tentati.
     // /**
     //  * Esempio: assassinare silenziosamente un nemico senza farsi scoprire
@@ -624,22 +624,22 @@ public enum TipoMissione {
     /**
      * Esempio: commercio nel mercato nero, merci illegali, contrabbando organizzato
      */
-    MERCATO_NERO(SupertipoMissione.NEGOZIAZIONE),
+    MERCATO_NERO(CategoriaMissione.NEGOZIAZIONE),
     // Coperto da: IlColpo (le scale dei goblin)
     /**
      * Esempio: sabotare i rifornimenti di un nemico o sabotare le difese di una fortezza
      */
-    SABOTAGGIO(SupertipoMissione.ILLECITO),
+    SABOTAGGIO(CategoriaMissione.ILLECITO),
     // Coperto da: IlColpo (la diga dei goblin)
     /**
      * Esempio: sabotaggio con esplosivi, demolizione, esplosione tattica
      */
-    ESPLOSIONE(SupertipoMissione.COMBATTIMENTO),
+    ESPLOSIONE(CategoriaMissione.COMBATTIMENTO),
     // Coperto da: LaSorveglianza (l'accampamento degli hobgoblin, il laboratorio del rivale)
     /**
      * Esempio: spiare una riunione importante, raccogliere informazioni senza farsi scoprire
      */
-    SPIONAGGIO(SupertipoMissione.ILLECITO),
+    SPIONAGGIO(CategoriaMissione.ILLECITO),
     // Non adatto al tono del gioco: ricattare qualcuno è meschino, non sgangherato.
     // /**
     //  * Esempio: ricattare qualcuno, estorcere denaro, blackmail, estorsione, estorsione sotto minaccia, minaccia per guadagni
@@ -648,12 +648,12 @@ public enum TipoMissione {
     /**
      * Esempio: truffare un mercante, ingannare un nobile, corrompere un ufficiale
      */
-    INGANNO(SupertipoMissione.ILLECITO),
+    INGANNO(CategoriaMissione.ILLECITO),
     // Coperto da: IlContrabbandiere (il vino senza dazio, le sete, il libro proibito)
     /**
      * Esempio: contrabbandare merci proibite attraverso un checkpoint
      */
-    CONTRABBANDO(SupertipoMissione.ILLECITO),
+    CONTRABBANDO(CategoriaMissione.ILLECITO),
     // Non fattibile nella Foresta: nella Foresta non ci sono fazioni da tradire.
     // /**
     //  * Esempio: tradire una fazione, passare ai nemici, rivegliarsi come spia
@@ -663,16 +663,16 @@ public enum TipoMissione {
     /**
      * Esempio: corrompere un ufficiale, offrire tangenti, bribery
      */
-    CORRUZIONE(SupertipoMissione.ILLECITO),
+    CORRUZIONE(CategoriaMissione.ILLECITO),
     // Coperto da: IlColpo (il registro dei confini)
     /**
      * Esempio: falsificare documenti, coniare monete false, creare oggetti contraffatti, falsificare firma, dipinto falso, sigillo ufficiale
      */
-    FALSIFICAZIONE(SupertipoMissione.ILLECITO),
+    FALSIFICAZIONE(CategoriaMissione.ILLECITO),
     /**
      * Esempio: rapire qualcuno per riscatto, prendere in ostaggio
      */
-    RAPIMENTO(SupertipoMissione.ILLECITO),
+    RAPIMENTO(CategoriaMissione.ILLECITO),
     // Non fattibile nella Foresta: servono il mare e le navi; le carovane da saccheggiare le copre BRIGANTAGGIO.
     // /**
     //  * Esempio: attaccare commercianti, razziare una costa, saccheggiare una carovana
@@ -682,22 +682,22 @@ public enum TipoMissione {
     /**
      * Esempio: avvelenare cibo/acqua, envenenonment, contaminazione
      */
-    AVVELENAMENTO(SupertipoMissione.ILLECITO),
+    AVVELENAMENTO(CategoriaMissione.ILLECITO),
     // Coperto da: IlColpo (i baffi alla statua)
     /**
      * Esempio: distruggere proprietà, vandalizzare edifici, rovinare strutture
      */
-    VANDALISMO(SupertipoMissione.ILLECITO),
+    VANDALISMO(CategoriaMissione.ILLECITO),
     // Coperto da: IlContrabbandiere (le reliquie false)
     /**
      * Esempio: frode finanziaria, schema fraudolento, imbroglio, matrimonio fraudolento
      */
-    FRODE(SupertipoMissione.ILLECITO),
+    FRODE(CategoriaMissione.ILLECITO),
     // Coperto da: IlContrabbandiere (i fogli satirici sul borgomastro)
     /**
      * Esempio: diffamare qualcuno, spargere voci calunniose, danneggiare reputazione
      */
-    DIFFAMAZIONE(SupertipoMissione.ILLECITO),
+    DIFFAMAZIONE(CategoriaMissione.ILLECITO),
     // Non adatto al tono del gioco: la schiavitù non fa ridere nemmeno nella Foresta.
     // /**
     //  * Esempio: ridurre in schiavitù, sfruttamento, servitù forzata
@@ -712,32 +712,32 @@ public enum TipoMissione {
     /**
      * Esempio: incendiare, fuoco appiccato, piromane, incendio intenzionale, fuoco premeditato, fuoco criminale
      */
-    INCENDIO(SupertipoMissione.ILLECITO),
+    INCENDIO(CategoriaMissione.ILLECITO),
     // Coperto da: IncaricoDiCombattimento (il rivale dell'alchimista)
     /**
      * Esempio: assassinare per denaro, omicidio su commissione, killer
      */
-    SICARIO(SupertipoMissione.ILLECITO),
+    SICARIO(CategoriaMissione.ILLECITO),
     // Coperto da: IlContrabbandiere (le monete col marchio)
     /**
      * Esempio: riciclare denaro sporco, lavaggio denaro
      */
-    RICICLAGGIO(SupertipoMissione.ILLECITO),
+    RICICLAGGIO(CategoriaMissione.ILLECITO),
     // Coperto da: IlColpo (la capanna della guaritrice)
     /**
      * Esempio: irruzione, invasione casa, violazione proprietà privata, imprigionamento illegale, sequestro
      */
-    VIOLAZIONE_DOMICILIO(SupertipoMissione.ILLECITO),
+    VIOLAZIONE_DOMICILIO(CategoriaMissione.ILLECITO),
     // Coperto da: IlColpo (l'idolo dei goblin)
     /**
      * Esempio: profanare luogo sacro, offesa religiosa, sacrilegio, bestemmia, profanazione religiosa
      */
-    SACRILEGIO(SupertipoMissione.ILLECITO),
+    SACRILEGIO(CategoriaMissione.ILLECITO),
     // Coperto da: IlContrabbandiere (le erbe proibite, le pozioni rubate, i folletti)
     /**
      * Esempio: traffico di merci proibite, smuggling su larga scala
      */
-    TRAFFICO(SupertipoMissione.ILLECITO),
+    TRAFFICO(CategoriaMissione.ILLECITO),
     // Non adatto al tono del gioco: rubare la vita a qualcuno non è una burla.
     // /**
     //  * Esempio: rubare identità, usurpazione, furto identità
@@ -747,7 +747,7 @@ public enum TipoMissione {
     /**
      * Esempio: rapire, furto a mano armata, rapinare
      */
-    BRIGANTAGGIO(SupertipoMissione.ILLECITO),
+    BRIGANTAGGIO(CategoriaMissione.ILLECITO),
     // Non adatto al tono del gioco: mandare in rovina un innocente con un falso giuramento non è sgangherato, è cattivo.
     // /**
     //  * Esempio: testimonianza falsa, perjury, giuramento falso
@@ -756,12 +756,12 @@ public enum TipoMissione {
     /**
      * Esempio: imbrogliare al gioco, baro, truffa al gioco d'azzardo
      */
-    IMBROGLIONE(SupertipoMissione.ILLECITO),
+    IMBROGLIONE(CategoriaMissione.ILLECITO),
     // Coperto da: IncaricoDiCombattimento (il brigante da catturare vivo)
     /**
      * Esempio: imprigionare qualcuno, tenere in carcere, reclusione
      */
-    CONFINAMENTO(SupertipoMissione.ILLECITO),
+    CONFINAMENTO(CategoriaMissione.ILLECITO),
     // Non adatto al tono del gioco: niente torture, nemmeno ai goblin.
     // /**
     //  * Esempio: tortura, estorsione confessione, interrogatorio forzato
@@ -779,27 +779,27 @@ public enum TipoMissione {
     /**
      * Esempio: purificare una terra corrotta, bonificare un luogo maledetto
      */
-    PURIFICAZIONE(SupertipoMissione.PROTEZIONE),
+    PURIFICAZIONE(CategoriaMissione.PROTEZIONE),
     // Coperto da: IlRituale (lo spirito della palude)
     /**
      * Esempio: spezzare una maledizione su uno spirito tormentato
      */
-    SPEZZATURA(SupertipoMissione.SPIRITUALE),
+    SPEZZATURA(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (la fonte dei neonati)
     /**
      * Esempio: benedire un luogo maledetto, purificare un'anima corrotta, benedire una coppia
      */
-    BENEDIZIONE(SupertipoMissione.SPIRITUALE),
+    BENEDIZIONE(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (la voce del conte)
     /**
      * Esempio: parlare con spiriti, comunicare con divinità, ottenere messaggi soprannaturali, negoziare con entità
      */
-    COMUNICAZIONE(SupertipoMissione.SPIRITUALE),
+    COMUNICAZIONE(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (la memoria delle pietre)
     /**
      * Esempio: visione del passato, retrocognizione, rivivere momenti passati, leggere storia di oggetti, psicometria
      */
-    VISIONE_PASSATO(SupertipoMissione.SPIRITUALE),
+    VISIONE_PASSATO(CategoriaMissione.SPIRITUALE),
     // Non fattibile nella Foresta: nessuno nel gruppo legge nel pensiero.
     // /**
     //  * Esempio: leggere mente, telepathy, penetrazione psichica, percepire pensieri altrui
@@ -809,62 +809,62 @@ public enum TipoMissione {
     /**
      * Esempio: visione del futuro, precognizione, profezia, astrologia, lettura stelle, predizioni, divinazione
      */
-    VISIONE_FUTURO(SupertipoMissione.SPIRITUALE),
+    VISIONE_FUTURO(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (il fuoco del solstizio)
     /**
      * Esempio: eseguire un rituale di evocazione per contattare uno spirito o sigillare un portale
      */
-    RITUALE(SupertipoMissione.SPIRITUALE),
+    RITUALE(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (il testamento del nonno)
     /**
      * Esempio: animare i non-morti, controllare scheletri, risvegliare cadaveri
      */
-    NECROMANZIA(SupertipoMissione.SPIRITUALE),
+    NECROMANZIA(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (il guardiano di pietra)
     /**
      * Esempio: evocare creature, convocare entità soprannaturali, richiamare spiriti
      */
-    EVOCAZIONE(SupertipoMissione.SPIRITUALE),
+    EVOCAZIONE(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (le zucche del vicino)
     /**
      * Esempio: lanciare maledizioni, infliggere curse, danneggiare tramite magia nera
      */
-    MALEDIZIONE(SupertipoMissione.SPIRITUALE),
+    MALEDIZIONE(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (la torre pendente)
     /**
      * Esempio: lanciare incantesimi complessi, magia avanzata, effetti magici potenti
      */
-    INCANTESIMO(SupertipoMissione.SPIRITUALE),
+    INCANTESIMO(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (il varco degli spettri)
     /**
      * Esempio: sigillare portali, incantesimi sigillo, chiudere varchi magici
      */
-    SIGILLO(SupertipoMissione.SPIRITUALE),
+    SIGILLO(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (il piombo e l'oro)
     /**
      * Esempio: trasformare metalli, alchemy, alchimia, trasmutazione
      */
-    TRASMUTAZIONE(SupertipoMissione.SPIRITUALE),
+    TRASMUTAZIONE(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (la congiunzione degli astri)
     /**
      * Esempio: astrologia, lettura stelle, predizioni, divinazione
      */
-    ASTRI(SupertipoMissione.SPIRITUALE),
+    ASTRI(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (l'occhio della palude)
     /**
      * Esempio: leggere il futuro, predizioni magiche, visioni
      */
-    DIVINAZIONE(SupertipoMissione.SPIRITUALE),
+    DIVINAZIONE(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (il drago che non c'è)
     /**
      * Esempio: creare illusioni magiche, inganno illusorio, miraggio
      */
-    ILLUSIONE(SupertipoMissione.SPIRITUALE),
+    ILLUSIONE(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (la pioggia di rane)
     /**
      * Esempio: contrastare magia, dispellare incantesimi, anti-magia
      */
-    ANTI_MAGIA(SupertipoMissione.SPIRITUALE),
+    ANTI_MAGIA(CategoriaMissione.SPIRITUALE),
     // Non fattibile nella Foresta: nessuno nel gruppo sa diventare invisibile (per non farsi vedere c'è il passare inosservati).
     // /**
     //  * Esempio: diventare invisibile, magia occultamento, mimetizzazione
@@ -874,7 +874,7 @@ public enum TipoMissione {
     /**
      * Esempio: canale energie magiche, conduit, canalizzazione
      */
-    CHANNELING(SupertipoMissione.SPIRITUALE),
+    CHANNELING(CategoriaMissione.SPIRITUALE),
     // Non fattibile nella Foresta: nella Foresta si va a piedi, non ci sono portali.
     // /**
     //  * Esempio: teletrasporto magico, portale, viaggio istantaneo
@@ -889,12 +889,12 @@ public enum TipoMissione {
     /**
      * Esempio: controllare elementi, dominio elementale, magia elementare
      */
-    CONTROLLO_ELEMENTALE(SupertipoMissione.SPIRITUALE),
+    CONTROLLO_ELEMENTALE(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (lo spirito della bottega)
     /**
      * Esempio: legare spiriti, connessione soprannaturale, legame spirituale
      */
-    LEGAME_SPIRITUALE(SupertipoMissione.SPIRITUALE),
+    LEGAME_SPIRITUALE(CategoriaMissione.SPIRITUALE),
     // Non fattibile nella Foresta: non c'è un piano astrale in cui andare.
     // /**
     //  * Esempio: viaggio astrale, proiezione eterica, corpo astrale, proiezione astrale conscia, controllo corpo astrale, viaggio etereo controllato
@@ -904,12 +904,12 @@ public enum TipoMissione {
     /**
      * Esempio: comunione con entità divina, connessione divina, unione sacra
      */
-    COMUNIONE(SupertipoMissione.SPIRITUALE),
+    COMUNIONE(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (la trance di fratello Anselmo)
     /**
      * Esempio: entrare in trance, meditazione profonda, stato alterato
      */
-    TRANCE(SupertipoMissione.SPIRITUALE),
+    TRANCE(CategoriaMissione.SPIRITUALE),
     // Non fattibile nella Foresta: nessuno nel gruppo fonde anime o esseri.
     // /**
     //  * Esempio: fusione di esseri/anime, unione spirituale, sincretismo
@@ -949,7 +949,7 @@ public enum TipoMissione {
     /**
      * Esempio: creazione di golem, animazione artificiale, creatura magica
      */
-    CREAZIONE_GOLEM(SupertipoMissione.SPIRITUALE),
+    CREAZIONE_GOLEM(CategoriaMissione.SPIRITUALE),
     // Non fattibile nella Foresta: nessuno nel gruppo divide esseri o anime.
     // /**
     //  * Esempio: divisione di esseri, scissione di anima, separazione magica
@@ -964,23 +964,23 @@ public enum TipoMissione {
     /**
      * Esempio: animazione di oggetti inanimati, enchantment animato, vita artificiale
      */
-    ANIMAZIONE_OGGETTI(SupertipoMissione.SPIRITUALE),
+    ANIMAZIONE_OGGETTI(CategoriaMissione.SPIRITUALE),
     // Coperto da: IlRituale (il patto con lo spirito del fiume)
     /**
      * Esempio: patto con demoni/entità, contratto spirituale, alleanza soprannaturale
      */
-    PATTO_ANIMA(SupertipoMissione.SPIRITUALE),
+    PATTO_ANIMA(CategoriaMissione.SPIRITUALE),
 
     ;
 
-    private final SupertipoMissione supertipoMissione;
+    private final CategoriaMissione categoriaMissione;
 
-    TipoMissione(SupertipoMissione supertipoMissione) {
-        this.supertipoMissione = supertipoMissione;
+    TipoMissione(CategoriaMissione categoriaMissione) {
+        this.categoriaMissione = categoriaMissione;
     }
 
-    public SupertipoMissione getSupertipoMissione() {
-        return supertipoMissione;
+    public CategoriaMissione getSupertipoMissione() {
+        return categoriaMissione;
     }
 
 }

@@ -1,60 +1,32 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.eventi.interni.InternoAcquistoArtefatto;
-import com.threeamigos.foresta.eventi.interni.InternoPrelievoArtefatto;
-import com.threeamigos.foresta.eventi.interni.InternoStoccaggioArtefatto;
-import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
-import com.threeamigos.foresta.eventi.interni.InternoIncantatura;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.comandigiocatore.*;
-import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStatistiche;
-import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
+import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
+import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.locazioni.Locazione;
-import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.GruppoGiocatoreMD;
-import com.threeamigos.foresta.modellodati.GruppoMD;
-import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.oggetti.ModificatoreDelTesto;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
+import com.threeamigos.foresta.oggetti.ModificatoreDelTesto;
 import com.threeamigos.foresta.oggetti.Oggetto;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
-import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.TipoRiposo;
-import com.threeamigos.foresta.strumenti.Logger;
-import com.threeamigos.foresta.strumenti.Misc;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.tipi.*;
+
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Un insieme di personaggi guidati da un giocatore
@@ -214,9 +186,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		ospiti.clear();
 		md.setMonete(Costanti.MONETE_INIZIALI);
 		md.setPreziosi(Costanti.PREZIOSI_INIZIALI);
-		md.setIncantesimi(ClasseIncantesimo.ARIA, 3);
-		md.setIncantesimi(ClasseIncantesimo.ACQUA, 3);
-		md.setIncantesimi(ClasseIncantesimo.TERRA, 3);
+		md.setIncantesimi(TipoIncantesimo.ARIA, 3);
+		md.setIncantesimi(TipoIncantesimo.ACQUA, 3);
+		md.setIncantesimi(TipoIncantesimo.TERRA, 3);
 		md.setPozioniSalute(Costanti.POZIONI_SALUTE_INIZIALI);
 		md.setPozioniSaluteGrande(0);
 		md.setPozioniMagia(0);
@@ -227,8 +199,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 
 		if (ModalitaDiProva.isAttiva()) {
 			md.setMonete(9999);
-			for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-				md.setIncantesimi(classeIncantesimo, 99);
+			for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
+				md.setIncantesimi(tipoIncantesimo, 99);
 			}
 			md.setPozioniSalute(99);
 			md.setPozioniSaluteGrande(99);
@@ -689,8 +661,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 
 		subMonete(calcolaPerdita.apply(md.getMonete()));
 		subPreziosi(calcolaPerdita.apply(md.getPreziosi()));
-		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-			subIncantesimi(classeIncantesimo, calcolaPerdita.apply(md.getIncantesimi(classeIncantesimo)));
+		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
+			subIncantesimi(tipoIncantesimo, calcolaPerdita.apply(md.getIncantesimi(tipoIncantesimo)));
 		}
 		subPozioniSalute(calcolaPerdita.apply(md.getPozioniSalute()));
 		subPozioniSaluteGrande(calcolaPerdita.apply(md.getPozioniSaluteGrande()));

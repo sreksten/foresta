@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.List;
 
@@ -41,13 +41,13 @@ public interface StrumentiDiSviluppo {
      */
     final class VoceMissione {
 
-        private final ClasseMissione classe;
+        private final MissionePredefinita classe;
         private final String nome;
         private final String descrizione;
         private final String stato;
         private final boolean forzabile;
 
-        public VoceMissione(ClasseMissione classe, String nome, String descrizione, String stato, boolean forzabile) {
+        public VoceMissione(MissionePredefinita classe, String nome, String descrizione, String stato, boolean forzabile) {
             this.classe = classe;
             this.nome = nome;
             this.descrizione = descrizione;
@@ -55,7 +55,7 @@ public interface StrumentiDiSviluppo {
             this.forzabile = forzabile;
         }
 
-        public ClasseMissione getClasse() {
+        public MissionePredefinita getClasse() {
             return classe;
         }
 
@@ -183,7 +183,7 @@ public interface StrumentiDiSviluppo {
      * parte, senza aspettarne le condizioni (la visita tranquilla, la pausa, le visite precedenti). Una missione già partita,
      * o che non si può forzare, è un errore.
      */
-    void forzaPartenza(ClasseMissione classe);
+    void forzaPartenza(MissionePredefinita classe);
 
     /**
      * Gli oggetti che un cofano può essere costretto a dare, con i leggendari del catalogo.
@@ -203,12 +203,12 @@ public interface StrumentiDiSviluppo {
     /**
      * Quante pergamene di quella classe ha il gruppo.
      */
-    int getIncantesimi(ClasseIncantesimo classe);
+    int getIncantesimi(TipoIncantesimo classe);
 
     /**
      * Porta le pergamene di quella classe a quel valore (almeno zero).
      */
-    void impostaIncantesimi(ClasseIncantesimo classe, int valore);
+    void impostaIncantesimi(TipoIncantesimo classe, int valore);
 
     /**
      * Dà quei punti esperienza a tutti i personaggi vivi del gruppo e al mondo, come dopo un combattimento.

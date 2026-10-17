@@ -4,31 +4,26 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaRefreshUI;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
+import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.missioni.leggende.ConLeggendario;
+import com.threeamigos.foresta.missioni.leggende.PescaLeggendaria;
+import com.threeamigos.foresta.missioni.richieste.CombattimentoRichiesto;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.missioni.Ricompensa;
-import com.threeamigos.foresta.missioni.leggende.ConLeggendario;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
-import com.threeamigos.foresta.missioni.leggende.PescaLeggendaria;
-import com.threeamigos.foresta.missioni.richieste.CombattimentoRichiesto;
 
 /**
  * Il torneo di carta, forbici e sasso (vedi carta_forbici_sasso.md): alla terza sfida vinta dal gruppo (vedi
@@ -61,7 +56,7 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 	private static final int LIVELLO_MASSIMO_ARTEFATTO = 10;
 
 	public LaSfidaDeiCampioni() {
-		super(ClasseMissione.LA_SFIDA_DEI_CAMPIONI);
+		super(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI);
 	}
 
 	/**

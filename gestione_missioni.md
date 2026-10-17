@@ -22,11 +22,11 @@ Tutto il codice è in `missioni/` (modello e missioni concrete), in `missioni/Re
 
 ### Le missioni formano un albero
 
-Ogni missione può avere **figlie** (`aggiungiMissione`, `getMissioniSecondarie`). L'albero è quello del modello dati: `MissioneMD` tiene l'identificatore (un UUID, o il nome della `ClasseMissione` predefinita per le radici predefinite), la `ClasseMissione`, nome, descrizione, flag di visibilità, la mappa delle proprietà e la lista delle figlie. Una missione non può essere figlia di sé stessa (un ciclo renderebbe infinite le ricorsioni di salvataggio e di ricostruzione). Un esempio è `SconfiggiIlDrago`, che nel costruttore ha come figlie le quattro missioni degli alleati.
+Ogni missione può avere **figlie** (`aggiungiMissione`, `getMissioniSecondarie`). L'albero è quello del modello dati: `MissioneMD` tiene l'identificatore (un UUID, o il nome della `MissionePredefinita` predefinita per le radici predefinite), la `MissionePredefinita`, nome, descrizione, flag di visibilità, la mappa delle proprietà e la lista delle figlie. Una missione non può essere figlia di sé stessa (un ciclo renderebbe infinite le ricorsioni di salvataggio e di ricostruzione). Un esempio è `SconfiggiIlDrago`, che nel costruttore ha come figlie le quattro missioni degli alleati.
 
 ### Classi di missione
 
-`tipi.ClasseMissione` elenca **ogni classe concreta** di missione, e `missioni.FabbricaMissioni` ne tiene il costruttore: è ciò che permette di ricostruire un albero dopo un caricamento, perché ogni nodo salvato dichiara la propria classe. Ne consegue una regola: **ogni missione che il gioco può creare, anche solo come figlia affidata a metà partita, deve stare in `ClasseMissione` e in `FabbricaMissioni`** (`FabbricheTest` controlla che ogni `ClasseMissione` si costruisca). Quelle che nascono con la partita stanno anche in `RegistroMissioni.TipoMissionePredefinita` (§2), che elenca solo le radici.
+`tipi.ClasseMissione` elenca **ogni classe concreta** di missione, e `missioni.FabbricaMissioni` ne tiene il costruttore: è ciò che permette di ricostruire un albero dopo un caricamento, perché ogni nodo salvato dichiara la propria classe. Ne consegue una regola: **ogni missione che il gioco può creare, anche solo come figlia affidata a metà partita, deve stare in `MissionePredefinita` e in `FabbricaMissioni`** (`FabbricheTest` controlla che ogni `MissionePredefinita` si costruisca). Quelle che nascono con la partita stanno anche in `RegistroMissioni.TipoMissionePredefinita` (§2), che elenca solo le radici.
 
 Le missioni si dividono per come sono scritte:
 - **a mano**, direttamente su `MissioneBase`: le principali (`SconfiggiIlDrago` e le quattro `Sconfiggi*` figlie) e alcune secondarie semplici (`VisitaLocanda`, `MuoviALocazione`, `CronacheDiUnFegatoEroico`, `NessunBoccaleLasciatoIndietro`, `DisturbatoreDellaQuietePubblica`, `MissioneSecondaria`);
@@ -36,7 +36,7 @@ Le missioni si dividono per come sono scritte:
 
 `RegistroMissioni` è la facciata statica sul modello dati (`RegistroMissioniMD`: due mappe, attive e completate) e tiene in memoria gli elenchi di primo livello:
 
-- le **predefinite** (le `ClasseMissione` con `isPredefinita()`: la missione principale, le due di recupero, le leggende, gli incarichi e le altre che esistono dall'inizio) in tre elenchi: in corso, completate, fallite. All'inizio della partita (`reimposta`) se ne crea una per ogni valore; nessuna è attiva finché non si attiva da sola (§3). L'identificatore di una predefinita è il nome del suo valore;
+- le **predefinite** (le `MissionePredefinita` con `isPredefinita()`: la missione principale, le due di recupero, le leggende, gli incarichi e le altre che esistono dall'inizio) in tre elenchi: in corso, completate, fallite. All'inizio della partita (`reimposta`) se ne crea una per ogni valore; nessuna è attiva finché non si attiva da sola (§3). L'identificatore di una predefinita è il nome del suo valore;
 - le **secondarie di primo livello** (`aggiungiMissioneSecondaria`): missioni nate durante la partita fuori dall'albero della principale, per esempio l'incarico in città che ne ripete uno finito. Anche queste in corso, completate, fallite.
 
 Le figlie non stanno in nessun elenco: una figlia completata o fallita resta dentro la sua madre con il proprio flag. Le interrogazioni principali:
@@ -53,7 +53,7 @@ Le figlie non stanno in nessun elenco: una figlia completata o fallita resta den
 
 **Eventi di gioco.** `registrati()` (chiamato da `Main`) iscrive il registro al bus per contare ciò che le missioni a passi vogliono sapere: l'apertura di un combattimento, gli avversari sconfitti (con la casella), gli oggetti raccolti, i passaggi inosservati. Ognuno è girato a tutte le missioni a passi non finite (`registraEvento`).
 
-**Salvataggio e rilettura.** Si salvano i due elenchi di `RegistroMissioniMD` (attive e completate, ciascuno con tutto il proprio albero). `aggiornaDopoRilettura()` ricostruisce gli oggetti: per una predefinita crea l'istanza dal suo tipo, per le altre dalla `ClasseMissione` dichiarata nel nodo, poi riattacca ricorsivamente le figlie (`setModelloDati` svuota la lista delle figlie costruite dal costruttore, perché la struttura appartiene al modello dati: figlie con identificatori diversi da quelli salvati farebbero sparire i progressi). Poi smista in corso/completate/fallite e ricostruisce i claim delle locazioni (§6).
+**Salvataggio e rilettura.** Si salvano i due elenchi di `RegistroMissioniMD` (attive e completate, ciascuno con tutto il proprio albero). `aggiornaDopoRilettura()` ricostruisce gli oggetti: per una predefinita crea l'istanza dal suo tipo, per le altre dalla `MissionePredefinita` dichiarata nel nodo, poi riattacca ricorsivamente le figlie (`setModelloDati` svuota la lista delle figlie costruite dal costruttore, perché la struttura appartiene al modello dati: figlie con identificatori diversi da quelli salvati farebbero sparire i progressi). Poi smista in corso/completate/fallite e ricostruisce i claim delle locazioni (§6).
 
 **Chi sa se la partita è vinta.** `Automa` chiede a `getMissionePrincipale()` se è completa per decidere fra `GIOCO_VINTO` e `GIOCO_PERSO` (vedi [`motore_di_gioco.md`](motore_di_gioco.md) §3).
 
@@ -175,7 +175,7 @@ Un incarico si offre in una città qualsiasi, ma solo a una **visita tranquilla*
 ## 9. Come si scrive una missione nuova
 
 1. Estendere `MissioneAPassi` (o `IncaricoInCitta` per un incarico) e implementare `passoIniziale()` e `costruisciPasso(id)`, componendo i passi già pronti di [`passi_missioni.md`](passi_missioni.md) e collegandoli con `poi`.
-2. Aggiungerla a `ClasseMissione` e a `FabbricaMissioni` (**obbligatorio**, altrimenti non si ricostruisce dopo un caricamento) e, se deve esistere dall'inizio, dichiararla predefinita in `ClasseMissione` (`(true)`, nell'ordine in cui va creata).
+2. Aggiungerla a `MissionePredefinita` e a `FabbricaMissioni` (**obbligatorio**, altrimenti non si ricostruisce dopo un caricamento) e, se deve esistere dall'inizio, dichiararla predefinita in `MissionePredefinita` (`(true)`, nell'ordine in cui va creata).
 3. Salvare in proprietà (`aggiungiProprieta` o `parametro`) tutto ciò che deve sopravvivere: i passi non si salvano e i campi Java si perdono.
 4. Se la condizione di un passo ha effetti (pesca un nome, cambia lo stato), spostarli nell'azione: la condizione può essere valutata più volte e per i passi con intermezzo anche in anticipo (`haUnIntermezzoInArrivo`).
 5. Se la missione vuole un luogo, rivendicarlo con `cercaLocazione` (o `RegistroMissioni.cerca`/`cercaOCostruisci`) e dare un `getRicordoDellaLocazione()`.
@@ -194,7 +194,7 @@ Un incarico si offre in una città qualsiasi, ma solo a una **visita tranquilla*
 ## 12. Osservazioni
 
 - **Due stili di missione.** Le principali e le più vecchie secondarie sono scritte direttamente su `MissioneBase` con flag e controlli a mano; tutto il resto è a passi. Non c'è un'unica via, e le prime non hanno gli intermezzi per passo, le domande, i contatori, i ripieghi.
-- **Predefinite e `ClasseMissione` da tenere allineate a mano.** Una missione dimenticata in `ClasseMissione` non dà errori in partita: fallisce solo alla rilettura di un salvataggio.
+- **Predefinite e `MissionePredefinita` da tenere allineate a mano.** Una missione dimenticata in `MissionePredefinita` non dà errori in partita: fallisce solo alla rilettura di un salvataggio.
 - **Un solo claim per missione.** `occupaLocazione` sovrascrive la coordinata precedente di quella missione (`LOCAZIONE_OCCUPATA` ha un solo valore): una missione che dovesse tenere insieme più luoghi non può. Quelli lasciati si conservano solo come ricordo, in `LOCAZIONI_GIA_OCCUPATE` (`x,y,numero` separati da `;`), per ricostruire dopo un caricamento chi ha avuto ogni coordinata.
 - **Condizioni con effetti.** `haUnIntermezzoInArrivo` valuta la condizione del passo corrente solo se ha un intermezzo, e dice nel Javadoc che quelle condizioni non devono avere effetti: è una convenzione non controllata.
 - **`getTutteLeMissioni()` costruisce una lista a ogni chiamata.** Viene chiamata una volta per evento di gioco (`registraEvento`), a ogni controllo dell'intermezzo e, tramite `isVisitaTranquilla`, una volta per ogni missione che la valuta (quindi O(N²) sul numero di missioni). Con qualche decina di missioni il costo è di microsecondi e scatta una volta per mossa del giocatore: è una scelta consapevole, non un difetto. Una cache dell'elenco richiederebbe di invalidarla in ogni punto che modifica l'albero (anche le sotto-missioni create dalle missioni stesse), col rischio di un elenco vecchio. Se le missioni crescessero molto, la via meno rischiosa è passare uno snapshot dal chiamante a `isVisitaTranquilla`, il che richiede di portare la lista fino alle condizioni dei passi.

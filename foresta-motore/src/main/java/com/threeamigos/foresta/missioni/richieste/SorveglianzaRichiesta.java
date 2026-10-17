@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.missioni.richieste;
 
+import com.threeamigos.foresta.missioni.AspettoDelMandante;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoMissione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Optional;
-import com.threeamigos.foresta.missioni.AspettoDelMandante;
-import com.threeamigos.foresta.missioni.TipoMissione;
 
 /**
  * Una sorveglianza (vedi LaSorveglianza), letta da una riga di SORVEGLIANZA in missioni.txt, che ne descrive i campi:

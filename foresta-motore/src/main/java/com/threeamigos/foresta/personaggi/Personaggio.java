@@ -1,21 +1,20 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
-
+import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
+import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
+import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.*;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 
 import java.util.Collection;
 import java.util.Optional;
-import com.threeamigos.foresta.combattimento.DannoRisultante;
 
 /**
  * Un personaggio: le letture stanno in VistaPersonaggio, che è quel che ne vede la UI.
@@ -119,7 +118,7 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
      * Gli incantesimi malefici che il personaggio sa lanciare per natura quando attacca (vedi PersonaggioBase): non servono
      * pergamene, li paga con la MAGIA. Vale per chi è magico (isMagico).
      */
-    java.util.Set<com.threeamigos.foresta.tipi.ClasseIncantesimo> getRepertorioIncantesimi();
+    java.util.Set<TipoIncantesimo> getRepertorioIncantesimi();
 
 	/**
 	 * Indica se questo personaggio sia un personaggio non giocante ossia
@@ -313,7 +312,7 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	/**
 	 * Un personaggio potrebbe essere immune a una certa classe di incantesimi (o più)
 	 */
-    boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo);
+    boolean isImmuneAIncantesimo(TipoIncantesimo tipoIncantesimo);
 	/**
 	 * Un personaggio potrebbe essere immune a certi tipi di attacco
 	 */
@@ -463,9 +462,9 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 
 	/**
 	 * Un Personaggio può formulare un incantesimo se ha abbastanza magia per farlo e se non è silenziato
-	 * @param classeIncantesimo il tipo di incantesimo che si vorrebbe lanciare
+	 * @param tipoIncantesimo il tipo di incantesimo che si vorrebbe lanciare
 	 */
-	boolean puoFormulare(ClasseIncantesimo classeIncantesimo);
+	boolean puoFormulare(TipoIncantesimo tipoIncantesimo);
 
 	/**
 	 * La forza di un personaggio, somma della forza base e dei modificatori di forza degli artefatti.

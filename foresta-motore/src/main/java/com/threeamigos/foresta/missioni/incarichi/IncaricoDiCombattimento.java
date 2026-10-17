@@ -3,21 +3,17 @@ package com.threeamigos.foresta.missioni.incarichi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
+import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.strumenti.Misc;
-import com.threeamigos.foresta.missioni.IncontroDiMissione;
-import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
 import com.threeamigos.foresta.missioni.richieste.CombattimentoRichiesto;
 import com.threeamigos.foresta.missioni.richieste.OndateDellaRiga;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 /**
  * In città qualcuno vuole sconfitto qualcosa che si nasconde nella foresta: una bestia rara, una banda in un covo, una
@@ -40,7 +36,7 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 	private static final String PRODUZIONE = "INCARICO_DI_COMBATTIMENTO";
 
 	public IncaricoDiCombattimento() {
-		super(ClasseMissione.INCARICO_DI_COMBATTIMENTO);
+		super(MissionePredefinita.INCARICO_DI_COMBATTIMENTO);
 	}
 
 	public CombattimentoRichiesto getIncarico() {

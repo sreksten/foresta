@@ -4,26 +4,26 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
 import com.threeamigos.foresta.missioni.leggende.ConLeggendario;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.leggende.PescaLeggendaria;
 import com.threeamigos.foresta.missioni.richieste.TorneoRichiesto;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * In città qualcuno bandisce un torneo (vedi {@link TorneoRichiesto}, da missioni.txt), con in palio un oggetto
@@ -51,7 +51,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	private static final String FINALE = "FINALE";
 
 	public IlTorneo() {
-		super(ClasseMissione.IL_TORNEO);
+		super(MissionePredefinita.IL_TORNEO);
 	}
 
 	public TorneoRichiesto getTorneo() {

@@ -167,7 +167,7 @@ I contenuti variabili sono in `missioni.txt` (e `leggendari.txt`), caricate da `
 
 ## 6. Mappatura `TipoMissione` → missione
 
-`TipoMissione` conta **190 tipi** in nove `SupertipoMissione`: acquisizione, combattimento, protezione, investigazione, progressione, negoziazione, illecito, relazioni, spirituale. L'elenco e i motivi stanno nei commenti dell'enum (§1). Stato:
+`TipoMissione` conta **190 tipi** in nove `CategoriaMissione`: acquisizione, combattimento, protezione, investigazione, progressione, negoziazione, illecito, relazioni, spirituale. L'elenco e i motivi stanno nei commenti dell'enum (§1). Stato:
 
 - **coperti**: 129, da almeno una missione;
 - **non fattibili nella Foresta**: 28 (commentati);

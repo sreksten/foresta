@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
 import java.util.ArrayList;
@@ -141,7 +141,7 @@ public final class ContestoTattico {
 	/**
 	 * Le pergamene di quell'incantesimo che il gruppo dell'attore ha con sé
 	 */
-	public int getPergamene(ClasseIncantesimo classe) {
+	public int getPergamene(TipoIncantesimo classe) {
 		return gruppoDegliAlleati == null ? 0 : gruppoDegliAlleati.getIncantesimi(classe);
 	}
 

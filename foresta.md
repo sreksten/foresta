@@ -10,18 +10,19 @@ L'estetica richiama i fantasy a schermate fisse degli anni '80: un font bitmap f
 
 ## Le meccaniche in breve
 
-- **Il gruppo.** Il giocatore crea il capo scegliendo nome, sesso e classe: Guerriero/Guerriera, Ladro/Ladra, Bardo/Cantastorie, Elfo/Elfa, Mago/Maga. Il gruppo arriva a 5 personaggi permanenti, reclutati in città e locande, più fino a 3 temporanei (aiuti, mercenari, ospiti scortati da una missione). Se muore il capo, la partita è persa.
+- **Il gruppo.** Il giocatore crea il capo scegliendo nome, sesso e classe: Guerriero/Guerriera, Ladro/Ladra, Bardo/Cantastorie, Elfo/Elfa, Mago/Maga, Sacerdote/Sacerdotessa. Il gruppo arriva a 5 personaggi permanenti, reclutati in città e locande, più fino a 3 temporanei (aiuti, mercenari, ospiti scortati da una missione). Se muore il capo, la partita è persa.
 - **La mappa.** La foresta è una griglia di **dimensione variabile**, in fase di taratura (oggi 20×20, `Foresta.DIMENSIONE_X`/`DIMENSIONE_Y`), generata a ogni partita: quattro città, locande, templi, grotte, paludi, rovine, radure, boschi e i castelli dei boss. Le caselle si scoprono vedendole, sentendone parlare o grazie alle missioni.
 - **Il tempo.** Muoversi e riposare fanno passare le ore. A 20, 25, 30 e 35 giorni il Drago distrugge una città; oltre il giorno 40 la partita è persa. Ci si può accampare per la notte.
-- **Il combattimento.** A turni, un round al secondo: il personaggio scelto attacca e l'avversario risponde. Le probabilità di colpire e il danno derivano dagli attributi (tiro su 100, non "d20 contro classe armatura"), con 18 effetti di stato che interagiscono con i tipi di danno. Esistono anche duelli, combattimenti fino alla resa e ondate di avversari. In alternativa al combattimento si può corrompere, stringere amicizia, fuggire o passare inosservati.
+- **Il combattimento.** A turni, un round al secondo: il personaggio scelto attacca e l'avversario risponde. Le probabilità di colpire e il danno derivano dagli attributi (tiro su 100, non "d20 contro classe armatura"), con 19 effetti di stato che interagiscono con i tipi di danno. Esistono anche duelli, combattimenti fino alla resa e ondate di avversari. In alternativa al combattimento si può corrompere, stringere amicizia, fuggire o passare inosservati.
 - **La progressione.** Esperienza con curva quadratica, punti abilità da spendere sugli attributi, livello del mondo che fa crescere mostri, bottino e negozi.
-- **Gli oggetti.** Artefatti generati proceduralmente con rarità, slot, incantamenti e set leggendari; ingredienti magici che l'incantatore fonde negli artefatti; dieci incantesimi da comprare come pergamene; pozioni.
+- **Gli oggetti.** Artefatti generati proceduralmente con rarità, slot, incantamenti e set leggendari; ingredienti magici che l'incantatore fonde negli artefatti; dodici incantesimi da comprare come pergamene (`TipoIncantesimo`; l'alba sacra Sacerdote e Sacerdotessa la conoscono per natura); il dardo arcano di Mago ed Elfo e i tre canti del Bardo, che non consumano pergamene; pozioni.
 - **I negozi.** Nelle città ci sono locanda, alchimista, armaiolo, venditore di pergamene e incantatore; nelle locande e negli incontri amichevoli si trovano offerte (pasti, informazioni, mappe, aiuti).
 - **Le missioni.** Oltre alle cinque principali, una grande famiglia di incarichi "a passi" (mandanti, corrieri, scorte, indagini, rituali, leggende...) con domande al giocatore e ricompense.
 - **Gli intermezzi.** Scene a pagine con sfondi, animazioni e battute a fumetto, che scattano in momenti precisi del gioco o alla fine di un passo di missione.
 - **Notizie e trofei.** Uscendo da una locanda esce una notizia satirica sulle malefatte del gruppo, che compare nel notiziario della mappa. I trofei valgono da una partita all'altra.
-- **Persistenza.** Cinque slot di salvataggio, classifica dei punteggi, trofei; tutto in file di testo in `~/.foresta/`.
+- **Persistenza.** Cinque slot di salvataggio più un salvataggio automatico (quando l'app va in background in un punto sicuro), classifica dei punteggi, trofei; tutto in file di testo in UTF-8 nella cartella che sceglie la piattaforma (sul desktop `~/.foresta/`).
 - **Testi generati.** Nomi di locande, templi, rovine e artefatti, fiabe, oroscopi, notizie e testi delle missioni vengono da grammatiche generative (`GrammarBean`).
+- **Testi fissi.** I nomi e le descrizioni delle enum di `tipi` (attributi, effetti di stato, incantesimi, comandi...) e le note dei personaggi stanno in file `.properties` per lingua, letti da `Testi` con ripiego sull'italiano; il resto dei testi è ancora nel codice e nelle grammatiche (vedi [`assessment_portabilita.md`](assessment_portabilita.md)).
 
 ## Architettura
 
@@ -57,7 +58,7 @@ Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo 
 
 | Modulo | Contiene | Dipende da |
 | :--- | :--- | :--- |
-| `foresta-tipi` | `tipi`: enum e costanti di base | nessuno |
+| `foresta-tipi` | `tipi`: enum e costanti di base (anche `Costanti`, i valori di bilanciamento), `Testi` e i file `.properties` dei testi delle enum | nessuno |
 | `foresta-modellodati` | `modellodati`: le classi `…MD`, solo dati (con la lettura e la scrittura dei salvataggi) | tipi |
 | `foresta-contratti` | `interfacce`, `eventi` (bus e classi degli eventi), le utilità di `strumenti` e i dati di `intermezzi` che servono alla UI | modellodati |
 | `foresta-motore` | il resto: `motore`, `combattimento`, `personaggi`, `oggetti`, `locazioni`, `missioni`, `incantesimi`, `canti`, `offerte`, `tattiche`, `trofei`, `testi`, `salvataggi`, la logica degli intermezzi, gli eventi interni che portano il dominio, le grammatiche `.txt` | contratti |
@@ -71,19 +72,20 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 
 `Main.main()`:
 
-1. registra sul bus i componenti che ascoltano tutta la partita: `SnifferBusEventi` (log di ogni evento), `Notizie`, `Statistiche`, `RegistroTrofei`, `RegistroArtefatti`, `RegistroMissioni`;
-2. legge gli argomenti: `ORIZZONTALE`/`VERTICALE`, `TUTTOSCHERMO`, `SALTALOGO`, `BARRACLASSICA` (barra icone fissa invece del Dock), `MODALITA_DI_PROVA`;
-3. installa i gestori su file di classifica, salvataggi e trofei (i trofei si leggono qui, una volta sola);
-4. crea l'`Automa` con il suo `Temporizzatore` e si iscrive a `InternoInterfacciaUtentePronta`;
-5. crea `ForestaUI`. Quando la finestra è pronta, l'evento arriva e l'automa parte con `inizia()`: mentre la UI traccia il logo, il motore precarica grammatiche e generatore di artefatti.
+1. installa il thread principale (`ThreadPrincipale` con l'`EsecutoreSwing`: tutta la logica gira sull'EDT);
+2. registra sul bus `SnifferBusEventi` (log di ogni evento), si iscrive a `NotificaUscitaDalGioco` (è l'unico punto che chiama `System.exit`) e fa registrare con `StatoDelMotore.registraComponenti()` i componenti che ascoltano tutta la partita: `Notizie`, `Statistiche`, `RegistroTrofei`, `RegistroArtefatti`, `RegistroMissioni`;
+3. legge gli argomenti: `ORIZZONTALE`/`VERTICALE`, `TUTTOSCHERMO`, `SALTALOGO`, `BARRACLASSICA` (barra icone fissa invece del Dock), `MODALITA_DI_PROVA`;
+4. installa i gestori su file di classifica, salvataggi e trofei (i trofei si leggono qui, una volta sola);
+5. crea l'`Automa` con il suo `Temporizzatore` e si iscrive a `InternoInterfacciaUtentePronta`;
+6. crea `VistaPartitaMotore` e `ForestaUI` (con un secondo temporizzatore per le animazioni), e in modalità di prova i trucchi sui dadi e la finestra di prova. Quando la finestra è pronta, l'evento arriva e l'automa parte con `inizia()`: mentre la UI traccia il logo, il motore precarica grammatiche e generatore di artefatti.
 
 ## Stack e build
 
 - **Java 8** (`maven.compiler.source/target = 1.8`), build **Maven**, sorgenti in UTF-8.
 - **Swing/AWT/Java2D** per tutta la grafica, nessuna libreria esterna. Nessuna dipendenza di runtime.
-- **JUnit 5** per i test e **JaCoCo** per la copertura. `mvn test` esegue la suite: al 2026-10-13 sono 1226 test, tutti verdi (16 saltati), distribuiti sui moduli. I test di scenario guidano partite intere senza UI (`PartitaDiTest`).
+- **JUnit 5** per i test e **JaCoCo** per la copertura. `mvn test` esegue la suite: al 2026-10-17 sono 1355 test, tutti verdi (16 saltati), distribuiti sui moduli. I test di scenario guidano partite intere senza UI (`PartitaDiTest`).
 - I salvataggi usano un formato testo proprietario a campi separati da `|` (`Serializzabile`), senza versione: la compatibilità con i salvataggi vecchi non è un obiettivo.
-- Circa 680 file e 95.000 righe di codice, più circa 220 file e 33.000 righe di test.
+- Al 2026-10-17: circa 715 file e 96.500 righe di codice (il motore ne ha 55.000, la UI 22.000), più circa 245 file e 36.000 righe di test.
 
 ## Mappa dei documenti
 
@@ -106,8 +108,9 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | [`nomi.md`](nomi.md) | Piano dei nomi dei personaggi non combattenti: `nomi.txt` condiviso, enumerato dei ruoli nominati e registro dei residenti |
 | [`tattiche_di_combattimento_automatiche.md`](tattiche_di_combattimento_automatiche.md) | Il combattimento a round e le tattiche automatiche di personaggi e mostri: round a coppie, azioni, bersagli e condizioni (con i giochi di riferimento), modello dati, salvataggio, tattiche base e schermata del giocatore |
 | [`tattiche_internals.md`](tattiche_internals.md) | Come funzionano le tattiche a livello di codice: il flusso da `LocazioneBase` a `EsecutoreTattiche`, il valutatore, rose, filtri, ordinamenti, predicati e requisiti, la scelta dell'incantesimo, la memoria dello scontro, il salvataggio, la schermata del giocatore e le ricette per aggiungere un pezzo |
+| [`didattico.md`](didattico.md) | Guida didattica alla struttura del gioco, con diagrammi ASCII: le parti, cosa fanno, come si parlano |
 | [`assessment.md`](assessment.md) | Valutazione dello stato del progetto e prossimi passi |
-| [`assessment_portabilita.md`](assessment_portabilita.md) | Cosa manca per portare il gioco su Android e iOS: testi, costanti, ciclo di vita dell'app, uscite dal processo, collezioni ancora vive |
+| [`assessment_portabilita.md`](assessment_portabilita.md) | Cosa manca per portare il gioco su Android e iOS: testi, costanti, ciclo di vita dell'app, uscite dal processo |
 | [`todo.md`](todo.md) | Cose da fare generali e bug noti |
 | [`revisione_documentazione.md`](revisione_documentazione.md) | Piano e avanzamento della revisione della documentazione |
 | `tipiDanno.md`, `tipiPersonaggio.md` | Appunti generici sul genere fantasy (tipi di danno, ruoli dei personaggi), non descrivono il codice |

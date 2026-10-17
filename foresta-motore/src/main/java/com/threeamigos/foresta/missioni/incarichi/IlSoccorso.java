@@ -1,15 +1,15 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
 import com.threeamigos.foresta.missioni.richieste.SoccorsoRichiesto;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * In città qualcuno chiede di riportare a casa una persona rimasta nella foresta, ferita o prigioniera, in mezzo a
@@ -25,7 +25,7 @@ public class IlSoccorso extends LaLiberazione {
 	private static final String CAPO = "CAPO";
 
 	public IlSoccorso() {
-		super(ClasseMissione.IL_SOCCORSO);
+		super(MissionePredefinita.IL_SOCCORSO);
 	}
 
 	public SoccorsoRichiesto getSoccorso() {

@@ -4,29 +4,16 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.locazioni.Bottega;
-import com.threeamigos.foresta.missioni.AspettoDelMandante;
-import com.threeamigos.foresta.missioni.IncontroDiMissione;
-import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
 import com.threeamigos.foresta.missioni.richieste.InfestazioneRichiesta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Quadrante;
-import com.threeamigos.foresta.motore.RegistroArtefatti;
-import com.threeamigos.foresta.motore.RegistroPersonaggi;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.PersonaggioNoto;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoNegozio;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +79,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	// La produzione di missioni.txt dei nomi di questa bottega
 	private final String produzioneDelNome;
 
-	protected IlNegozio(ClasseMissione classe, String nome, TipoLocazione bottega, PersonaggioNoto negoziante,
+	protected IlNegozio(MissionePredefinita classe, String nome, TipoLocazione bottega, PersonaggioNoto negoziante,
 						AspettoDelMandante aspetto, String mandante) {
 		super(classe);
 		this.nome = nome;

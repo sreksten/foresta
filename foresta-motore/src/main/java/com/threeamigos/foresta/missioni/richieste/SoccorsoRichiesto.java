@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.missioni.richieste;
 
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.missioni.AspettoDelMandante;
-import com.threeamigos.foresta.missioni.TipoMissione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoMissione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * Un soccorso (vedi IlSoccorso), letto da una riga di SOCCORSO in missioni.txt, che ne descrive i campi: chi lo

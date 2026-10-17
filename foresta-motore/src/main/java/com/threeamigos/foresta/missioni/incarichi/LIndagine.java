@@ -3,24 +3,24 @@ package com.threeamigos.foresta.missioni.incarichi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta.Indizio;
-import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
-import com.threeamigos.foresta.personaggi.Viandante;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.strumenti.Misc;
-
-import java.util.List;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
 import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta;
+import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta.Indizio;
 import com.threeamigos.foresta.missioni.richieste.OndateDellaRiga;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
+import com.threeamigos.foresta.personaggi.Viandante;
+import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
+
+import java.util.List;
 
 /**
  * In città qualcuno chiede di scoprire chi ha fatto qualcosa: chi ha rubato le campane, chi passa le notizie al nemico,
@@ -52,7 +52,7 @@ public class LIndagine extends IncaricoInCitta {
 	private static final String ERRORE = "ERRORE";
 
 	public LIndagine() {
-		super(ClasseMissione.L_INDAGINE);
+		super(MissionePredefinita.L_INDAGINE);
 	}
 
 	public IndagineRichiesta getIndagine() {

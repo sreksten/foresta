@@ -3,27 +3,17 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.interni.InternoEremitiIncontrati;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoLocazioneVisitata;
-import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.tipi.TipoTrofeo;
-import com.threeamigos.foresta.trofei.RegistroTrofei;
-import com.threeamigos.foresta.intermezzi.Intermezzo;
-import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
-import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
+import com.threeamigos.foresta.intermezzi.*;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.principali.IlGiroDelleSetteChiese;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.*;
+import com.threeamigos.foresta.trofei.RegistroTrofei;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -94,8 +84,8 @@ class ScenarioGiroDelleSetteChieseTest {
             giro.controllaPostLocazione();
             assertTrue(giro.getDescrizione().endsWith("Ne mancano sei."), giro.getDescrizione());
 
-            int luce = partita.gruppo().getIncantesimi(ClasseIncantesimo.LUCE_DIVINA);
-            int alba = partita.gruppo().getIncantesimi(ClasseIncantesimo.ALBA_SACRA);
+            int luce = partita.gruppo().getIncantesimi(TipoIncantesimo.LUCE_DIVINA);
+            int alba = partita.gruppo().getIncantesimi(TipoIncantesimo.ALBA_SACRA);
             int elementali = elementali(partita);
             for (int i = 1; i < 6; i++) {
                 partita.gruppo().setCoordinate(templi.get(i));
@@ -108,8 +98,8 @@ class ScenarioGiroDelleSetteChieseTest {
             partita.gruppo().setCoordinate(templi.get(6));
             giro.controllaPostLocazione();
             assertTrue(giro.isCompleta());
-            assertEquals(luce + 2, partita.gruppo().getIncantesimi(ClasseIncantesimo.LUCE_DIVINA));
-            assertEquals(alba + 2, partita.gruppo().getIncantesimi(ClasseIncantesimo.ALBA_SACRA));
+            assertEquals(luce + 2, partita.gruppo().getIncantesimi(TipoIncantesimo.LUCE_DIVINA));
+            assertEquals(alba + 2, partita.gruppo().getIncantesimi(TipoIncantesimo.ALBA_SACRA));
             assertEquals(elementali + 1, elementali(partita));
             Intermezzo ringraziamento = RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA);
             assertNotNull(ringraziamento);
@@ -126,7 +116,7 @@ class ScenarioGiroDelleSetteChieseTest {
 
     private static int elementali(PartitaDiTest partita) {
         int totale = 0;
-        for (ClasseIncantesimo classe : com.threeamigos.foresta.missioni.principali.IlGiroDelleSetteChiese.INCANTESIMI_ELEMENTALI) {
+        for (TipoIncantesimo classe : com.threeamigos.foresta.missioni.principali.IlGiroDelleSetteChiese.INCANTESIMI_ELEMENTALI) {
             totale += partita.gruppo().getIncantesimi(classe);
         }
         return totale;

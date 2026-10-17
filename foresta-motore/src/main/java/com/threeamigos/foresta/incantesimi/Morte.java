@@ -1,13 +1,13 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * Il colpo di grazia: se va a segno su un bersaglio sotto un quarto della salute massima gli toglie tutta la
@@ -20,8 +20,8 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 		super(livello);
 	}
 
-	public ClasseIncantesimo getClasse() {
-		return ClasseIncantesimo.MORTE;
+	public TipoIncantesimo getClasse() {
+		return TipoIncantesimo.MORTE;
 	}
 
 	public int getCostoLancio() {

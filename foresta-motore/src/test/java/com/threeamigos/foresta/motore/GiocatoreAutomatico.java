@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
@@ -16,15 +16,6 @@ import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.PortataIncantesimo;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoConsumabile;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoNegozio;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
@@ -79,9 +70,9 @@ final class GiocatoreAutomatico {
 	/**
 	 * Gli incantesimi di danno che il giocatore usa e compra (niente Morte, che può ritorcersi contro)
 	 */
-	private static final ClasseIncantesimo[] INCANTESIMI_DI_DANNO = {ClasseIncantesimo.FULMINE, ClasseIncantesimo.FUOCO,
-			ClasseIncantesimo.TERRA, ClasseIncantesimo.GELO, ClasseIncantesimo.VELENO, ClasseIncantesimo.ACQUA,
-			ClasseIncantesimo.ARIA};
+	private static final TipoIncantesimo[] INCANTESIMI_DI_DANNO = {TipoIncantesimo.FULMINE, TipoIncantesimo.FUOCO,
+			TipoIncantesimo.TERRA, TipoIncantesimo.GELO, TipoIncantesimo.VELENO, TipoIncantesimo.ACQUA,
+			TipoIncantesimo.ARIA};
 	private static final Comando[] DIREZIONI = {Comando.NORD, Comando.EST, Comando.SUD, Comando.OVEST};
 	private static final int[] DX = {0, 1, 0, -1};
 	private static final int[] DY = {-1, 0, 1, 0};
@@ -768,23 +759,23 @@ final class GiocatoreAutomatico {
 			pozioniComprate++;
 		}
 		boolean qualcunoPuoRisuscitare = gruppo.getPersonaggiVivi().stream()
-				.anyMatch(p -> p.getMagiaMassima() >= FabbricaIncantesimi.costoLancio(ClasseIncantesimo.RESURREZIONE));
+				.anyMatch(p -> p.getMagiaMassima() >= FabbricaIncantesimi.costoLancio(TipoIncantesimo.RESURREZIONE));
 		if (gruppo.getNumeroPersonaggi() > 1 && qualcunoPuoRisuscitare
-				&& gruppo.getIncantesimi(ClasseIncantesimo.RESURREZIONE) == 0
-				&& puoSpendere(gruppo, FabbricaIncantesimi.costoAcquisto(ClasseIncantesimo.RESURREZIONE), riserva)) {
-			if (compra(gruppo, TipoConsumabile.INCANTESIMO, ClasseIncantesimo.RESURREZIONE, null,
-					FabbricaIncantesimi.costoAcquisto(ClasseIncantesimo.RESURREZIONE))) {
+				&& gruppo.getIncantesimi(TipoIncantesimo.RESURREZIONE) == 0
+				&& puoSpendere(gruppo, FabbricaIncantesimi.costoAcquisto(TipoIncantesimo.RESURREZIONE), riserva)) {
+			if (compra(gruppo, TipoConsumabile.INCANTESIMO, TipoIncantesimo.RESURREZIONE, null,
+					FabbricaIncantesimi.costoAcquisto(TipoIncantesimo.RESURREZIONE))) {
 				pergameneComprate++;
 			}
 		}
 		// Pergamene di danno per chi sa usarle: le più convenienti per danno e costo
 		boolean mago = gruppo.getPersonaggiVivi().stream().anyMatch(GiocatoreAutomatico::usaIncantesimi);
 		if (mago) {
-			ClasseIncantesimo[] daComprare = {ClasseIncantesimo.FUOCO, ClasseIncantesimo.TERRA, ClasseIncantesimo.GELO,
-					ClasseIncantesimo.VELENO};
+			TipoIncantesimo[] daComprare = {TipoIncantesimo.FUOCO, TipoIncantesimo.TERRA, TipoIncantesimo.GELO,
+					TipoIncantesimo.VELENO};
 			int giro = 0;
 			while (pergameneDiDanno(gruppo) < 8 && giro < 8) {
-				ClasseIncantesimo classe = daComprare[giro++ % daComprare.length];
+				TipoIncantesimo classe = daComprare[giro++ % daComprare.length];
 				if (!puoSpendere(gruppo, FabbricaIncantesimi.costoAcquisto(classe), riserva + 10)
 						|| !compra(gruppo, TipoConsumabile.INCANTESIMO, classe, null, FabbricaIncantesimi.costoAcquisto(classe))) {
 					break;
@@ -827,7 +818,7 @@ final class GiocatoreAutomatico {
 		return gruppo.getMonete() - gruppo.prezzoAcquisto(costo) >= riserva;
 	}
 
-	private boolean compra(GruppoGiocatore gruppo, TipoConsumabile tipo, ClasseIncantesimo classe, Personaggio personaggio, int costo) {
+	private boolean compra(GruppoGiocatore gruppo, TipoConsumabile tipo, TipoIncantesimo classe, Personaggio personaggio, int costo) {
 		int prima = gruppo.getMonete();
 		partita.pubblica(new ComandoAcquistoConsumabile(tipo, classe, personaggio == null ? null : personaggio.getUuid()));
 		int spese = prima - gruppo.getMonete();
@@ -1022,7 +1013,7 @@ final class GiocatoreAutomatico {
 	 */
 	static final class Azione {
 		Comando scelta;
-		ClasseIncantesimo classe;
+		TipoIncantesimo classe;
 		double danno;
 	}
 
@@ -1080,7 +1071,7 @@ final class GiocatoreAutomatico {
 			}
 			double[] saluteA = saluteAvversari.clone();
 			double[] magiaA = avversari.stream().mapToDouble(Personaggio::getMagia).toArray();
-			Map<ClasseIncantesimo, Integer> pergamene = pergameneDelGruppo();
+			Map<TipoIncantesimo, Integer> pergamene = pergameneDelGruppo();
 			boolean impossibile = false;
 			int ultimoMio = -1;
 			int ultimoAvversario = -1;
@@ -1155,9 +1146,9 @@ final class GiocatoreAutomatico {
 			return stima;
 		}
 
-		Map<ClasseIncantesimo, Integer> pergameneDelGruppo() {
-			Map<ClasseIncantesimo, Integer> pergamene = new HashMap<>();
-			for (ClasseIncantesimo classe : INCANTESIMI_DI_DANNO) {
+		Map<TipoIncantesimo, Integer> pergameneDelGruppo() {
+			Map<TipoIncantesimo, Integer> pergamene = new HashMap<>();
+			for (TipoIncantesimo classe : INCANTESIMI_DI_DANNO) {
 				pergamene.put(classe, gruppo.getIncantesimi(classe));
 			}
 			return pergamene;
@@ -1180,7 +1171,7 @@ final class GiocatoreAutomatico {
 		 * @param saluteAvversari la salute di ciascun avversario (i morti hanno 0 o meno)
 		 */
 		Azione scegliAzione(Personaggio attore, List<Personaggio> avversari, double[] saluteAvversari, double magia,
-							Map<ClasseIncantesimo, Integer> pergamene) {
+							Map<TipoIncantesimo, Integer> pergamene) {
 			Azione azione = new Azione();
 			int primo = primoVivo(saluteAvversari);
 			if (primo < 0) {
@@ -1188,7 +1179,7 @@ final class GiocatoreAutomatico {
 			}
 			Personaggio bersaglio = avversari.get(primo);
 			azione.danno = Math.min(saluteAvversari[primo], mischia(attore, bersaglio));
-			for (ClasseIncantesimo classe : INCANTESIMI_DI_DANNO) {
+			for (TipoIncantesimo classe : INCANTESIMI_DI_DANNO) {
 				Incantesimo incantesimo = FabbricaIncantesimi.crea(classe, attore.getLivello());
 				if (pergamene.get(classe) <= 0 || magia < incantesimo.getCostoLancio() || !(incantesimo instanceof Arma)) {
 					continue;
@@ -1222,7 +1213,7 @@ final class GiocatoreAutomatico {
 		 * @return la magia consumata
 		 */
 		private double eseguiAzione(Personaggio attore, Azione azione, List<Personaggio> avversari, double[] salute,
-									Map<ClasseIncantesimo, Integer> pergamene) {
+									Map<TipoIncantesimo, Integer> pergamene) {
 			int primo = primoVivo(salute);
 			if (azione.scelta == null) {
 				salute[primo] -= mischia(attore, avversari.get(primo));
@@ -1318,7 +1309,7 @@ final class GiocatoreAutomatico {
 		 * I danni attesi di un incantesimo sugli avversari che raggiunge; con applica li toglie dalla salute
 		 */
 		private double dannoIncantesimo(Personaggio attore, List<Personaggio> avversari, double[] salute,
-										ClasseIncantesimo classe, boolean applica) {
+										TipoIncantesimo classe, boolean applica) {
 			Arma incantesimo = (Arma) FabbricaIncantesimi.crea(classe, attore.getLivello());
 			double danno = 0;
 			int bersagli = 0;
@@ -1352,18 +1343,18 @@ final class GiocatoreAutomatico {
 			if (!attaccante.isMagico() || magia <= 0) {
 				return new double[]{fisico, 0};
 			}
-			List<ClasseIncantesimo> possibili = new ArrayList<>();
-			for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
-				if (classe.getTipo() == com.threeamigos.foresta.tipi.TipoIncantesimo.MALEFICO
-						&& FabbricaIncantesimi.costoLancio(classe) <= magia && classe != ClasseIncantesimo.MORTE) {
+			List<TipoIncantesimo> possibili = new ArrayList<>();
+			for (TipoIncantesimo classe : TipoIncantesimo.values()) {
+				if (classe.getTipo() == CategoriaIncantesimo.MALEFICO
+						&& FabbricaIncantesimi.costoLancio(classe) <= magia && classe != TipoIncantesimo.MORTE) {
 					possibili.add(classe);
 				}
 			}
 			if (possibili.isEmpty()) {
 				return new double[]{fisico, 0};
 			}
-			ClasseIncantesimo scelto = possibili.get(0);
-			for (ClasseIncantesimo classe : possibili) {
+			TipoIncantesimo scelto = possibili.get(0);
+			for (TipoIncantesimo classe : possibili) {
 				if (((Arma) FabbricaIncantesimi.crea(classe, attaccante.getLivello())).getDanni()
 						> ((Arma) FabbricaIncantesimi.crea(scelto, attaccante.getLivello())).getDanni()) {
 					scelto = classe;
@@ -1372,7 +1363,7 @@ final class GiocatoreAutomatico {
 			double magico;
 			if (attaccante.getIntelligenza() < 5) {
 				double somma = 0;
-				for (ClasseIncantesimo classe : possibili) {
+				for (TipoIncantesimo classe : possibili) {
 					somma += atteso(attaccante, difensore, (Arma) FabbricaIncantesimi.crea(classe, attaccante.getLivello()), 1.0d, classe.name());
 				}
 				magico = somma / possibili.size();

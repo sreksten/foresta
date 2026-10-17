@@ -1,25 +1,21 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
 
 /**
  * Un ospite vulnerabile (un ostaggio, un ferito da soccorrere) non combatte ma gli avversari lo possono attaccare,
@@ -35,7 +31,7 @@ class ScenarioOspitiVulnerabiliTest {
         private final CoordinateMD casa;
 
         LiberaLOstaggio(CoordinateMD casa) {
-            super(ClasseMissione.MISSIONE_DI_PROVA);
+            super(MissionePredefinita.MISSIONE_DI_PROVA);
             this.casa = casa;
         }
 

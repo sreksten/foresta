@@ -10,10 +10,7 @@ import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Ladro;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +18,6 @@ import java.util.Collection;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import com.threeamigos.foresta.tipi.Costanti;
 
 /**
  * I moltiplicatori di danno delle classi (Costanti.*_MOLTIPLICATORE_DANNI_FISICI e _MAGICI): a parità di statistiche
@@ -58,7 +54,7 @@ class CalcolatoreCombattimentoClassiTest {
 
     @Test
     void ilMagoFaPiuDannoConGliIncantesimi() {
-        IncantesimoMalefico aria = (IncantesimoMalefico) FabbricaIncantesimi.crea(ClasseIncantesimo.ARIA, 5);
+        IncantesimoMalefico aria = (IncantesimoMalefico) FabbricaIncantesimi.crea(TipoIncantesimo.ARIA, 5);
         double ladro = danno(new Ladro("Riferimento", 5), aria);
         double mago = danno(new Mago("Merlino", 5), aria);
         double guerriero = danno(new Guerriero("Pippo", 5), aria);

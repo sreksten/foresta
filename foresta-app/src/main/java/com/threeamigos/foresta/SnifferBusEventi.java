@@ -1,28 +1,29 @@
 package com.threeamigos.foresta;
 
-import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
-
-import com.threeamigos.foresta.eventi.*;
-import com.threeamigos.foresta.eventi.comandigiocatore.*;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoBase;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoInvioTesto;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.interfacce.OggettoConCosto;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.Date;
-import java.util.stream.Collectors;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  * Ascolta tutti i tipi di evento del bus e ne scrive una riga nel log, con il tipo in testa per poterle cercare con grep:
@@ -385,7 +386,7 @@ public class SnifferBusEventi {
     }
 
     private void onEventoRichiestaAcquistoConsumabile(ComandoAcquistoConsumabile evento) {
-        ClasseIncantesimo incantesimo = evento.getClasseIncantesimo();
+        TipoIncantesimo incantesimo = evento.getClasseIncantesimo();
         Logger.log(() -> headerEvento(evento) + "Gruppo richiede di acquistare " + evento.getTipoConsumabile() +
                 (incantesimo != null ? (" " + incantesimo) : ""));
     }

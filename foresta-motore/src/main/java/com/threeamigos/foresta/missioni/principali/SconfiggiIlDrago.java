@@ -3,14 +3,14 @@ package com.threeamigos.foresta.missioni.principali;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaGlobale;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.LineaTemporale;
-import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * La missione principale: sconfiggere il Drago. Il suo castello è nascosto da un incantesimo finché non sono stati sconfitti tutti i suoi alleati: le missioni
@@ -19,7 +19,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 public class SconfiggiIlDrago extends MissioneBase implements Missione {
 
 	public SconfiggiIlDrago() {
-		super(ClasseMissione.SCONFIGGI_IL_DRAGO);
+		super(MissionePredefinita.SCONFIGGI_IL_DRAGO);
 		aggiungiMissione(new SconfiggiLaStrega());
 		aggiungiMissione(new SconfiggiIlLich());
 		aggiungiMissione(new SconfiggiIlMinotauroGigante());

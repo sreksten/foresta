@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -66,8 +66,8 @@ public class Chimera extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public Set<ClasseIncantesimo> getRepertorioIncantesimi() {
-		return EnumSet.of(ClasseIncantesimo.FUOCO, ClasseIncantesimo.VELENO);
+	public Set<TipoIncantesimo> getRepertorioIncantesimi() {
+		return EnumSet.of(TipoIncantesimo.FUOCO, TipoIncantesimo.VELENO);
 	}
 
 	@Override

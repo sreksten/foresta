@@ -1,17 +1,19 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
+import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.storie.IlCampione;
 import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
-import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
+import com.threeamigos.foresta.trofei.RegistroTrofei;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -20,8 +22,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 /**
  * La missione La sfida dei campioni (vedi carta_forbici_sasso.md): quattro campioni, ognuno con il suo posto segnato sulla
@@ -32,7 +32,7 @@ class ScenarioSfidaDeiCampioniTest {
     private static final Set<Comando> LE_TRE_MOSSE = new HashSet<>(Arrays.asList(Comando.CARTA, Comando.FORBICE, Comando.SASSO));
 
     private static LaSfidaDeiCampioni avviaLaSfida() {
-        return (LaSfidaDeiCampioni) RegistroMissioni.avvia(ClasseMissione.LA_SFIDA_DEI_CAMPIONI);
+        return (LaSfidaDeiCampioni) RegistroMissioni.avvia(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI);
     }
 
     private static LaSfidaDeiCampioni avviaLaMissione(PartitaDiTest partita) {
@@ -198,7 +198,7 @@ class ScenarioSfidaDeiCampioniTest {
             assertTrue(partita.leggi(Comando.NUMERO_2));
 
             assertEquals(3, partita.gruppo().getSfideVinte());
-            assertTrue(RegistroMissioni.isPartita(ClasseMissione.LA_SFIDA_DEI_CAMPIONI));
+            assertTrue(RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI));
             LaSfidaDeiCampioni riletta = RegistroMissioni.getTutteLeMissioni().stream()
                     .filter(LaSfidaDeiCampioni.class::isInstance).map(LaSfidaDeiCampioni.class::cast).findFirst()
                     .orElseThrow(AssertionError::new);

@@ -1,11 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoOfferta;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -71,8 +67,8 @@ public class Folletto extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public Set<ClasseIncantesimo> getRepertorioIncantesimi() {
-		return EnumSet.of(ClasseIncantesimo.ACQUA, ClasseIncantesimo.GELO, ClasseIncantesimo.ARIA);
+	public Set<TipoIncantesimo> getRepertorioIncantesimi() {
+		return EnumSet.of(TipoIncantesimo.ACQUA, TipoIncantesimo.GELO, TipoIncantesimo.ARIA);
 	}
 
 	@Override

@@ -1,24 +1,23 @@
 package com.threeamigos.foresta.tattiche.valutazione;
 
-import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
+import com.threeamigos.foresta.tipi.CategoriaIncantesimo;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.threeamigos.foresta.tattiche.ContestoTattico;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import java.util.Locale;
 
 /**
@@ -30,18 +29,18 @@ public final class SceltaIncantesimo {
 	/**
 	 * Gli incantesimi che "del repertorio" comprende: non la Morte (può ritorcersi contro chi la lancia), non il Silenzio, non i benefici
 	 */
-	public static final List<ClasseIncantesimo> ELEMENTALI = Arrays.asList(ClasseIncantesimo.ARIA, ClasseIncantesimo.ACQUA, ClasseIncantesimo.TERRA,
-			ClasseIncantesimo.FUOCO, ClasseIncantesimo.FULMINE, ClasseIncantesimo.GELO, ClasseIncantesimo.VELENO);
+	public static final List<TipoIncantesimo> ELEMENTALI = Arrays.asList(TipoIncantesimo.ARIA, TipoIncantesimo.ACQUA, TipoIncantesimo.TERRA,
+			TipoIncantesimo.FUOCO, TipoIncantesimo.FULMINE, TipoIncantesimo.GELO, TipoIncantesimo.VELENO);
 
 	/**
 	 * Gli incantesimi che "del repertorio" comprende: tutti i malefici, anche la Morte e il Silenzio (come scelgono i mostri oggi)
 	 */
-	static final List<ClasseIncantesimo> REPERTORIO = repertorio();
+	static final List<TipoIncantesimo> REPERTORIO = repertorio();
 
-	private static List<ClasseIncantesimo> repertorio() {
-		List<ClasseIncantesimo> malefici = new ArrayList<>();
-		for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
-			if (classe.getTipo() == com.threeamigos.foresta.tipi.TipoIncantesimo.MALEFICO) {
+	private static List<TipoIncantesimo> repertorio() {
+		List<TipoIncantesimo> malefici = new ArrayList<>();
+		for (TipoIncantesimo classe : TipoIncantesimo.values()) {
+			if (classe.getTipo() == CategoriaIncantesimo.MALEFICO) {
 				malefici.add(classe);
 			}
 		}
@@ -51,7 +50,7 @@ public final class SceltaIncantesimo {
 	/**
 	 * Fra quali incantesimi sceglie l'azione: gli elementali per INCANTESIMO_DI_DANNO, tutti i malefici per INCANTESIMO_DEL_REPERTORIO
 	 */
-	private static List<ClasseIncantesimo> elencoDi(AzioneMD azione) {
+	private static List<TipoIncantesimo> elencoDi(AzioneMD azione) {
 		return azione.getTipo() == TipoAzione.INCANTESIMO_DEL_REPERTORIO ? REPERTORIO : ELEMENTALI;
 	}
 
@@ -62,7 +61,7 @@ public final class SceltaIncantesimo {
 	 * Gli elementali che l'attore può lanciare adesso contro quel bersaglio: pagabili e disponibili, a cui non è immune (di classe o per una
 	 * scoperta) e che non sono già falliti troppe volte
 	 */
-	public static List<ClasseIncantesimo> lanciabiliContro(Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
+	public static List<TipoIncantesimo> lanciabiliContro(Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
 		return lanciabiliContro(attore, bersaglio, contesto, ELEMENTALI);
 	}
 
@@ -70,15 +69,15 @@ public final class SceltaIncantesimo {
 	 * I lanciabili fra quelli dell'elenco, nell'ordine dell'elenco (da cui "a parità vince il primo" negli altri criteri). Tutti i controlli, tranne la
 	 * pergamena, sono sul bersaglio: dipendono quindi da chi è colpito, non solo da chi lancia.
 	 */
-	private static List<ClasseIncantesimo> lanciabiliContro(Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
-															List<ClasseIncantesimo> elenco) {
-		List<ClasseIncantesimo> lanciabili = new ArrayList<>();
+	private static List<TipoIncantesimo> lanciabiliContro(Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
+														  List<TipoIncantesimo> elenco) {
+		List<TipoIncantesimo> lanciabili = new ArrayList<>();
 		if (bersaglio == null || bersaglio.isFuoriCombattimento()) {
 			return lanciabili;
 		}
-		for (ClasseIncantesimo classe : elenco) {
+		for (TipoIncantesimo classe : elenco) {
 			// Il Silenzio non si lancia su chi è già silenziato o è immune al silenzio
-			if (classe == ClasseIncantesimo.SILENZIO
+			if (classe == TipoIncantesimo.SILENZIO
 					&& (bersaglio.hasEffettoDiStato(com.threeamigos.foresta.tipi.TipoEffettoDiStato.SILENZIATO)
 					|| bersaglio.isImmuneAEffetto(com.threeamigos.foresta.tipi.TipoEffettoDiStato.SILENZIATO))) {
 				continue;
@@ -97,12 +96,12 @@ public final class SceltaIncantesimo {
 	/**
 	 * L'incantesimo scelto, o null se non se ne può lanciare nessuno (o, con <code>soloSePiuForteDellAttacco</code>, se le armi rendono di più)
 	 */
-	public static ClasseIncantesimo scegli(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
-		List<ClasseIncantesimo> lanciabili = lanciabiliContro(attore, bersaglio, contesto, elencoDi(azione));
+	public static TipoIncantesimo scegli(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
+		List<TipoIncantesimo> lanciabili = lanciabiliContro(attore, bersaglio, contesto, elencoDi(azione));
 		if (lanciabili.isEmpty()) {
 			return null;
 		}
-		ClasseIncantesimo scelto = secondoIlCriterio(azione, attore, bersaglio, contesto, lanciabili);
+		TipoIncantesimo scelto = secondoIlCriterio(azione, attore, bersaglio, contesto, lanciabili);
 		// Il confronto con l'attacco si fa solo sull'incantesimo già scelto: se il migliore secondo il criterio non batte le armi, non si prova con gli
 		// altri e l'azione non è applicabile (la voce passa alla sua azione successiva, di solito l'attacco fisico)
 		if (azione.isSoloSePiuForteDellAttacco()
@@ -115,8 +114,8 @@ public final class SceltaIncantesimo {
 	/**
 	 * Applica il criterio dell'azione a una lista non vuota di lanciabili; a parità di misura vince il primo dell'elenco
 	 */
-	private static ClasseIncantesimo secondoIlCriterio(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
-													   List<ClasseIncantesimo> lanciabili) {
+	private static TipoIncantesimo secondoIlCriterio(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
+													 List<TipoIncantesimo> lanciabili) {
 		switch (azione.getCriterio()) {
 			case A_CASO:
 				return lanciabili.get(Dado.tiraAncheAUnaFaccia(lanciabili.size()) - 1);
@@ -136,10 +135,10 @@ public final class SceltaIncantesimo {
 	 * criterio, per esempio "PIU_ADATTO: FUOCO 4.2, FULMINE 9.8"
 	 */
 	public static String descrivi(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
-		List<ClasseIncantesimo> lanciabili = lanciabiliContro(attore, bersaglio, contesto, elencoDi(azione));
+		List<TipoIncantesimo> lanciabili = lanciabiliContro(attore, bersaglio, contesto, elencoDi(azione));
 		StringBuilder sb = new StringBuilder(azione.getCriterio().name()).append(": ");
 		for (int i = 0; i < lanciabili.size(); i++) {
-			ClasseIncantesimo classe = lanciabili.get(i);
+			TipoIncantesimo classe = lanciabili.get(i);
 			if (i > 0) {
 				sb.append(", ");
 			}
@@ -172,14 +171,14 @@ public final class SceltaIncantesimo {
 	 * Il valore che un criterio massimizza per un incantesimo
 	 */
 	private interface Misura {
-		double di(ClasseIncantesimo classe);
+		double di(TipoIncantesimo classe);
 	}
 
 	/**
 	 * Quello con la misura più alta; a parità il primo
 	 */
-	private static ClasseIncantesimo migliore(List<ClasseIncantesimo> classi, Misura misura) {
-		ClasseIncantesimo migliore = classi.get(0);
+	private static TipoIncantesimo migliore(List<TipoIncantesimo> classi, Misura misura) {
+		TipoIncantesimo migliore = classi.get(0);
 		double valoreMigliore = misura.di(migliore);
 		for (int i = 1; i < classi.size(); i++) {
 			double valore = misura.di(classi.get(i));
@@ -194,14 +193,14 @@ public final class SceltaIncantesimo {
 	/**
 	 * L'incantesimo di quella classe come arma, al livello dell'attore (per chiedere al calcolatore il danno atteso senza lanciarlo)
 	 */
-	private static Arma incantesimo(Personaggio attore, ClasseIncantesimo classe) {
+	private static Arma incantesimo(Personaggio attore, TipoIncantesimo classe) {
 		return (Arma) FabbricaIncantesimi.crea(classe, attore.getLivello());
 	}
 
 	/**
 	 * Il danno atteso dell'incantesimo sul solo bersaglio principale
 	 */
-	static double dannoAttesoSuUno(Personaggio attore, Personaggio bersaglio, ClasseIncantesimo classe) {
+	static double dannoAttesoSuUno(Personaggio attore, Personaggio bersaglio, TipoIncantesimo classe) {
 		return CalcolatoreCombattimento.dannoAtteso(attore, bersaglio, incantesimo(attore, classe));
 	}
 
@@ -217,7 +216,7 @@ public final class SceltaIncantesimo {
 	 * Chi subisce l'incantesimo: il bersaglio principale e, se colpisce più bersagli (MULTIPLO), i successivi vivi dell'elenco degli
 	 * avversari, fino al numero di bersagli dell'attore
 	 */
-	public static List<Personaggio> bersagli(Personaggio attore, Personaggio principale, ClasseIncantesimo classe, ContestoTattico contesto) {
+	public static List<Personaggio> bersagli(Personaggio attore, Personaggio principale, TipoIncantesimo classe, ContestoTattico contesto) {
 		List<Personaggio> bersagli = new ArrayList<>();
 		bersagli.add(principale);
 		// Un mostro colpisce solo il bersaglio scelto, anche con un incantesimo a più bersagli (come sempre)
@@ -237,7 +236,7 @@ public final class SceltaIncantesimo {
 	/**
 	 * S3: la somma dei danni attesi sui bersagli (debolezze e resistenze di classe e di stati)
 	 */
-	private static double danniTotali(Personaggio attore, Personaggio bersaglio, ClasseIncantesimo classe, ContestoTattico contesto) {
+	private static double danniTotali(Personaggio attore, Personaggio bersaglio, TipoIncantesimo classe, ContestoTattico contesto) {
 		double totale = 0;
 		for (Personaggio colpito : bersagli(attore, bersaglio, classe, contesto)) {
 			totale += CalcolatoreCombattimento.dannoAtteso(attore, colpito, incantesimo(attore, classe));
@@ -248,7 +247,7 @@ public final class SceltaIncantesimo {
 	/**
 	 * Il danno atteso con il fattore dell'equipaggiamento osservato (1 se non si è visto niente)
 	 */
-	private static double dannoConLaConoscenza(Personaggio attore, Personaggio colpito, ClasseIncantesimo classe, ContestoTattico contesto) {
+	private static double dannoConLaConoscenza(Personaggio attore, Personaggio colpito, TipoIncantesimo classe, ContestoTattico contesto) {
 		return CalcolatoreCombattimento.dannoAtteso(attore, colpito, incantesimo(attore, classe))
 				* contesto.getStato().getFattoreEquipaggiamentoNoto(colpito, classe.getTipoDanno());
 	}
@@ -257,7 +256,7 @@ public final class SceltaIncantesimo {
 	 * S4: con più bersagli, la somma della quota di salute che l'incantesimo toglie a ciascuno (al massimo 1: chi verrebbe portato vicino alla
 	 * fine o ucciso pesa quanto uno ucciso); con uno solo, il suo danno atteso
 	 */
-	private static double misuraEsperta(Personaggio attore, Personaggio bersaglio, ClasseIncantesimo classe, ContestoTattico contesto) {
+	private static double misuraEsperta(Personaggio attore, Personaggio bersaglio, TipoIncantesimo classe, ContestoTattico contesto) {
 		List<Personaggio> colpiti = bersagli(attore, bersaglio, classe, contesto);
 		if (classe.getPortata() != PortataIncantesimo.MULTIPLO) {
 			return dannoConLaConoscenza(attore, bersaglio, classe, contesto);
@@ -269,8 +268,8 @@ public final class SceltaIncantesimo {
 		return totale;
 	}
 
-	private static ClasseIncantesimo piuAdattoEsperto(Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
-													  List<ClasseIncantesimo> lanciabili) {
+	private static TipoIncantesimo piuAdattoEsperto(Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
+													List<TipoIncantesimo> lanciabili) {
 		return migliore(lanciabili, c -> misuraEsperta(attore, bersaglio, c, contesto));
 	}
 
@@ -278,11 +277,11 @@ public final class SceltaIncantesimo {
 	 * Fra quelli il cui danno atteso (con la conoscenza dell'equipaggiamento) basta a uccidere il bersaglio principale, il meno caro: il prezzo della
 	 * pergamena per i miei, il costo di lancio in MAGIA per i mostri. Se nessuno basta, il più adatto esperto.
 	 */
-	private static ClasseIncantesimo piuEconomicoCheBasta(Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
-														  List<ClasseIncantesimo> lanciabili) {
-		ClasseIncantesimo economico = null;
+	private static TipoIncantesimo piuEconomicoCheBasta(Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
+														List<TipoIncantesimo> lanciabili) {
+		TipoIncantesimo economico = null;
 		int costoMinimo = Integer.MAX_VALUE;
-		for (ClasseIncantesimo classe : lanciabili) {
+		for (TipoIncantesimo classe : lanciabili) {
 			if (dannoConLaConoscenza(attore, bersaglio, classe, contesto) >= bersaglio.getSalute()) {
 				int costo = contesto.isMostro(attore) ? FabbricaIncantesimi.costoLancio(classe) : FabbricaIncantesimi.costoAcquisto(classe);
 				if (costo < costoMinimo) {

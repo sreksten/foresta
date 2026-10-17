@@ -1,19 +1,18 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.modellodati.ModelloDati;
-
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.incantesimi.Fuoco;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.SupertipoDanno;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
 /**
  * Quanto sono difficili Lich e Strega, che compaiono al livello del gioco: per ogni livello e classe giocante (con
@@ -68,13 +67,13 @@ class AnalisiBossTest {
                     boss.getVelocita() + boss.getDestrezza() + boss.getParata() * 0.5d,
                     boss.getVelocita(), boss.getDestrezza(), boss.getParata() / 2,
                     boss.getResistenzaMagica() + boss.getSaggezza(), boss.getResistenzaMagica(), boss.getSaggezza(),
-                    boss.isImmuneAIncantesimo(ClasseIncantesimo.FUOCO) ? ", immune al Fuoco" : "");
+                    boss.isImmuneAIncantesimo(TipoIncantesimo.FUOCO) ? ", immune al Fuoco" : "");
             out.printf("   %-9s %-22s %7s %8s %6s %7s | %7s %8s %6s %7s | %s%n",
                     "Classe", "Dotazione", "Att.fis", "Colpisce", "Danno", "Turni",
                     "Att.mag", "Fuoco", "Danno", "Turni", "Il boss lo butta giù in");
             for (TipoPersonaggio classePg : PG) {
                 stampaRiga(out, classeBoss, classePg, livello, boss.getSaluteMassima(),
-                        boss.isImmuneAIncantesimo(ClasseIncantesimo.FUOCO));
+                        boss.isImmuneAIncantesimo(TipoIncantesimo.FUOCO));
             }
         }
     }
@@ -129,7 +128,7 @@ class AnalisiBossTest {
                 Personaggio mago = FabbricaPersonaggi.crea(TipoPersonaggio.MAGO, livello);
                 equipaggiamento.equipaggia(mago);
                 Personaggio mostro = FabbricaPersonaggi.crea(classeMostro, livello);
-                immune = mostro.isImmuneAIncantesimo(ClasseIncantesimo.FUOCO);
+                immune = mostro.isImmuneAIncantesimo(TipoIncantesimo.FUOCO);
                 salute += mostro.getSaluteMassima();
                 colpisce += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(mago, mostro, SupertipoDanno.MAGICO);
                 danno += CalcolatoreCombattimento.calcolaDannoRisultante(mago, mostro, new Fuoco(livello)).getDanno();

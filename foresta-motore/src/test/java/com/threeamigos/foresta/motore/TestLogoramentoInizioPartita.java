@@ -1,34 +1,24 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.modellodati.ModelloDati;
-
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.FaseDiAttacco;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.locazioni.LocazioneBase;
-import com.threeamigos.foresta.personaggi.Bardo;
-import com.threeamigos.foresta.personaggi.Elfo;
-import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Guerriero;
-import com.threeamigos.foresta.personaggi.Ladro;
-import com.threeamigos.foresta.personaggi.Mago;
-import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.personaggi.*;
+import com.threeamigos.foresta.tipi.CategoriaIncantesimo;
+import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.combattimento.FaseDiAttacco;
+import java.util.*;
 
 /**
  * Il logoramento a inizio partita: un protagonista di livello 1 con la dotazione di base (EquipaggiamentoIniziale),
@@ -372,12 +362,12 @@ public class TestLogoramentoInizioPartita {
             out.printf("Guerriero: salute %d, res. magica %d, saggezza %d%n", g.getSaluteMassima(), g.getResistenzaMagica(), g.getSaggezza());
             for (TipoPersonaggio classe : MOSTRI_DEL_BOSCO) {
                 Personaggio m = FabbricaPersonaggi.crea(classe, 1);
-                if (!((com.threeamigos.foresta.personaggi.PersonaggioBase) m).isMagico()) {
+                if (!m.isMagico()) {
                     continue;
                 }
                 StringBuilder sb = new StringBuilder(String.format("%-13s magia %3d int %2d:", classe, m.getMagia(), m.getIntelligenza()));
-                for (com.threeamigos.foresta.tipi.ClasseIncantesimo ci : com.threeamigos.foresta.tipi.ClasseIncantesimo.values()) {
-                    if (ci.getTipo() != com.threeamigos.foresta.tipi.TipoIncantesimo.MALEFICO || FabbricaIncantesimi.costoLancio(ci) > m.getMagia()) {
+                for (TipoIncantesimo ci : TipoIncantesimo.values()) {
+                    if (ci.getTipo() != CategoriaIncantesimo.MALEFICO || FabbricaIncantesimi.costoLancio(ci) > m.getMagia()) {
                         continue;
                     }
                     com.threeamigos.foresta.incantesimi.IncantesimoMalefico inc =

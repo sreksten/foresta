@@ -8,14 +8,8 @@ import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.personaggi.Elfa;
-import com.threeamigos.foresta.personaggi.Elfo;
-import com.threeamigos.foresta.personaggi.Guerriero;
-import com.threeamigos.foresta.personaggi.Ladro;
-import com.threeamigos.foresta.personaggi.Mago;
-import com.threeamigos.foresta.personaggi.PersonaggioBase;
+import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tipi.*;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +17,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import com.threeamigos.foresta.tipi.Costanti;
 
 /**
  * Le regole di combattimento legate all'equipaggiamento (vedi artefatti_e_incantamenti.md, §2 "Combattimento"):
@@ -208,7 +201,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     void ilLibroMagicoAumentaIlDannoDegliIncantesimi() {
         Mago mago = new Mago("Merlino", 4);
         mago.addModificatore(new ModificatoreAttributoMD(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
-        IncantesimoMalefico aria = (IncantesimoMalefico) FabbricaIncantesimi.crea(ClasseIncantesimo.ARIA, 4);
+        IncantesimoMalefico aria = (IncantesimoMalefico) FabbricaIncantesimi.crea(TipoIncantesimo.ARIA, 4);
         int senzaLibro = CalcolatoreCombattimento.calcolaDannoRisultante(mago, difensore, aria).getDanno();
         mago.addArtefatto(artefatto(TipoArtefatto.LIBRO_MAGICO, 4));
         int conLibro = CalcolatoreCombattimento.calcolaDannoRisultante(mago, difensore, aria).getDanno();
@@ -223,7 +216,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
 
         Elfo elfo = new Elfo("Legolas", 4);
         elfo.addModificatore(new ModificatoreAttributoMD(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
-        IncantesimoMalefico aria = (IncantesimoMalefico) FabbricaIncantesimi.crea(ClasseIncantesimo.ARIA, 4);
+        IncantesimoMalefico aria = (IncantesimoMalefico) FabbricaIncantesimi.crea(TipoIncantesimo.ARIA, 4);
         int senzaLibro = CalcolatoreCombattimento.calcolaDannoRisultante(elfo, difensore, aria).getDanno();
         elfo.addArtefatto(artefatto(TipoArtefatto.LIBRO_MAGICO, 4));
         int conLibro = CalcolatoreCombattimento.calcolaDannoRisultante(elfo, difensore, aria).getDanno();

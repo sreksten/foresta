@@ -1,26 +1,20 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.combattimento.DannoRisultante;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
 import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
 import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
-import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.combattimento.DannoRisultante;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
-import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tattiche.valutazione.Filtri;
+import com.threeamigos.foresta.tattiche.valutazione.Ordinamenti;
+import com.threeamigos.foresta.tattiche.valutazione.Selettori;
+import com.threeamigos.foresta.tipi.*;
+import com.threeamigos.foresta.tipi.tattiche.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,9 +24,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.tattiche.valutazione.Filtri;
-import com.threeamigos.foresta.tattiche.valutazione.Ordinamenti;
-import com.threeamigos.foresta.tattiche.valutazione.Selettori;
 
 /**
  * Il "SU" di una voce di tattica: i filtri, gli ordinamenti e il selettore che li mette insieme (tattiche_di_combattimento_automatiche.md §11.5, §11.6).
@@ -168,7 +159,7 @@ class SelezioneTest {
         assertFalse(passa(magico, maga, contesto));
         // Un mostro di una classe magica lo è subito; uno che non lancia incantesimi no
         Personaggio strega = FabbricaPersonaggi.crea(TipoPersonaggio.STREGA, 1);
-        ContestoTattico delMostro = new ContestoTattico(goblin1, false, Arrays.asList(goblin1, strega), Arrays.asList(guerriero),
+        ContestoTattico delMostro = new ContestoTattico(goblin1, false, Arrays.asList(goblin1, strega), Collections.singletonList(guerriero),
                 Collections.emptyList());
         assertTrue(passa(magico, strega, delMostro));
         assertFalse(passa(magico, goblin1, delMostro));
@@ -399,7 +390,7 @@ class SelezioneTest {
 
     @Test
     void ogniIncantesimoHaLaSuaAzioneEOgniAzioneHaRoseValide() {
-        for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
+        for (TipoIncantesimo classe : TipoIncantesimo.values()) {
             boolean trovata = false;
             for (TipoAzione azione : TipoAzione.values()) {
                 trovata |= azione.getClasseIncantesimo() == classe;

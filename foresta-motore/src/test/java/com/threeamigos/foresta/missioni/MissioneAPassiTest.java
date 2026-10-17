@@ -5,7 +5,7 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.MissioneMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.LineaTemporale;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,12 +13,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,7 +35,7 @@ class MissioneAPassiTest {
         final List<String> eseguiti = new ArrayList<>();
 
         MissioneDiProvaAPassi() {
-            super(ClasseMissione.MISSIONE_DI_PROVA);
+            super(MissionePredefinita.MISSIONE_DI_PROVA);
         }
 
         @Override
@@ -163,7 +158,7 @@ class MissioneAPassiTest {
         final List<String> eseguiti = new ArrayList<>();
 
         MissioneASequenza() {
-            super(ClasseMissione.MISSIONE_DI_PROVA);
+            super(MissionePredefinita.MISSIONE_DI_PROVA);
         }
 
         @Override
@@ -206,7 +201,7 @@ class MissioneAPassiTest {
 
     @Test
     void unCicloFraPassiSempreConclusiVieneSegnalato() {
-        MissioneAPassi ciclica = new MissioneAPassi(ClasseMissione.MISSIONE_DI_PROVA) {
+        MissioneAPassi ciclica = new MissioneAPassi(MissionePredefinita.MISSIONE_DI_PROVA) {
             @Override
             protected String passoIniziale() {
                 return "A";
@@ -229,7 +224,7 @@ class MissioneAPassiTest {
         final List<String> eseguiti = new ArrayList<>();
 
         MissioneConConferma() {
-            super(ClasseMissione.MISSIONE_DI_PROVA);
+            super(MissionePredefinita.MISSIONE_DI_PROVA);
         }
 
         @Override
@@ -303,7 +298,7 @@ class MissioneAPassiTest {
         final List<String> eseguiti = new ArrayList<>();
 
         MissioneConPassiPronti() {
-            super(ClasseMissione.MISSIONE_DI_PROVA);
+            super(MissionePredefinita.MISSIONE_DI_PROVA);
         }
 
         @Override

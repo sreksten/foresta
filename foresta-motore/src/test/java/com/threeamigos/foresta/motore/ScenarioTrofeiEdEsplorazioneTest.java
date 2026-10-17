@@ -2,14 +2,15 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
-import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * I trofei che si prendono ai mostri (OggettiDaRaccogliere.daiNemici, con il ripiego) e l'esplorazione di caselle nuove
@@ -36,7 +36,7 @@ class ScenarioTrofeiEdEsplorazioneTest {
         private final Function<MissioneDiUnPasso, Passo> passo;
 
         MissioneDiUnPasso(Function<MissioneDiUnPasso, Passo> passo) {
-            super(ClasseMissione.MISSIONE_DI_PROVA);
+            super(MissionePredefinita.MISSIONE_DI_PROVA);
             this.passo = passo;
         }
 

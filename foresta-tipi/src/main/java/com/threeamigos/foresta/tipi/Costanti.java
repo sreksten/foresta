@@ -1,11 +1,14 @@
 package com.threeamigos.foresta.tipi;
 
 /**
- * Le costanti di bilanciamento del gioco, raccolte in un posto solo: cambiandole si cambia la difficoltà senza toccare le regole.
+ * Le costanti di bilanciamento del gioco, raccolte in un posto solo.
+ * Si possono cambiare qui per variare la difficoltà senza toccare le regole a giro per il codice.
  * <p>
  * Sono divise in sezioni, ciascuna aperta da un commento: amicizia e corruzione, carta forbici e sasso, artefatti, combattimento, e poi, per
  * ogni classe di personaggio, i valori di partenza ({@code GOBLIN_MAX_FORZA}, {@code GOBLIN_SALUTE_BASE}...) e i moltiplicatori con le loro note
- * ({@code GOBLIN_MOLTIPLICATORE_CRITICO}). Le note che spiegano ogni moltiplicatore (perché il goblin ha quel valore di critico) stanno nel file
+ * ({@code GOBLIN_MOLTIPLICATORE_CRITICO}).
+ * <p>
+ * Le note testuali che spiegano ogni moltiplicatore (perché il goblin ha quel valore di critico) stanno nel file
  * {@code note_personaggi_it.properties} e si leggono con {@link NoteDeiPersonaggi}.
  *
  * @author Stefano Reksten

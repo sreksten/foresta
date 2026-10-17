@@ -1,22 +1,22 @@
 package com.threeamigos.foresta.tattiche;
 
-import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
-import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
+import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
+import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tattiche.rose.Rose;
+import com.threeamigos.foresta.tattiche.valutazione.Predicati;
+import com.threeamigos.foresta.tattiche.valutazione.Requisiti;
+import com.threeamigos.foresta.tattiche.valutazione.SceltaIncantesimo;
+import com.threeamigos.foresta.tattiche.valutazione.Selettori;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.PortataAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.threeamigos.foresta.tattiche.rose.Rose;
-import com.threeamigos.foresta.tattiche.valutazione.Predicati;
-import com.threeamigos.foresta.tattiche.valutazione.Requisiti;
-import com.threeamigos.foresta.tattiche.valutazione.SceltaIncantesimo;
-import com.threeamigos.foresta.tattiche.valutazione.Selettori;
 
 /**
  * Scorre la tattica di un personaggio e decide che cosa fa (tattiche_di_combattimento_automatiche.md §1, §11): la prima voce eseguibile vince. Una voce è
@@ -131,7 +131,7 @@ public final class Valutatore {
 	private static Decisione decisioneSu(int indice, AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
 										 List<String> spiegazione) {
 		TipoAzione tipo = azione.getTipo();
-		ClasseIncantesimo classe = tipo.getClasseIncantesimo();
+		TipoIncantesimo classe = tipo.getClasseIncantesimo();
 		if (tipo == TipoAzione.INCANTESIMO_DI_DANNO || tipo == TipoAzione.INCANTESIMO_DEL_REPERTORIO) {
 			// Qui si sceglie davvero: i requisiti avevano chiamato la stessa scelta solo per sapere se c'era qualcosa da lanciare. Con il criterio A_CASO
 			// ogni chiamata ritira il dado, quindi l'incantesimo di allora e questo possono essere diversi (entrambi fra i lanciabili)

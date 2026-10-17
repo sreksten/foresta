@@ -3,11 +3,11 @@ package com.threeamigos.foresta.missioni.incarichi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.strumenti.Misc;
-import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
+import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 /**
  * Il cartografo: in città un cartografo vuole sapere che cosa c'è nella foresta, e paga il gruppo perché esplori un
@@ -22,7 +22,7 @@ public class IlCartografo extends IncaricoInCitta {
 	private static final String ESPLORAZIONE = "ESPLORAZIONE";
 
 	public IlCartografo() {
-		super(ClasseMissione.IL_CARTOGRAFO);
+		super(MissionePredefinita.IL_CARTOGRAFO);
 	}
 
 	/**

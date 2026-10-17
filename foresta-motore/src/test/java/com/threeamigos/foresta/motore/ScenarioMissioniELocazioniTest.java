@@ -1,29 +1,23 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
-
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaChiusuraFinestraCombattimento;
-import com.threeamigos.foresta.locazioni.Locazione;
-import com.threeamigos.foresta.missioni.*;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.LocazioneMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.personaggi.Guerriero;
-import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import com.threeamigos.foresta.missioni.FabbricaMissioni;
+import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.missioni.MissioneCheFallisce;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.principali.CronacheDiUnFegatoEroico;
 import com.threeamigos.foresta.missioni.principali.SconfiggiIlMinotauroGigante;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
+import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
+import com.threeamigos.foresta.personaggi.Guerriero;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Missioni fallite, citta' distrutte, locazioni delle missioni, annullamenti che non fanno passare il turno.
@@ -32,7 +26,7 @@ class ScenarioMissioniELocazioniTest {
 
 	@Test
 	void laMissioneCheFallisceFinisceTraLeFalliteAncheDopoUnSalvataggio() {
-		FabbricaMissioni.registra(ClasseMissione.MISSIONE_CHE_FALLISCE, MissioneCheFallisce::new);
+		FabbricaMissioni.registra(MissionePredefinita.MISSIONE_CHE_FALLISCE, MissioneCheFallisce::new);
 		try (PartitaDiTest partita = PartitaDiTest.nuova(21)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> {
 				partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA);

@@ -1,20 +1,14 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.personaggi.PersonaggioBase;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
-import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +17,6 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
 /**
  * Il fattore del danno atteso contro un difensore (CalcolatoreCombattimento.moltiplicatoreAtteso): la debolezza della
@@ -48,7 +41,7 @@ class MoltiplicatoreAttesoTest {
         // Le statistiche seguono il seme, ma qui si fissano comunque, così il test non dipende da come si tirano
         for (TipoAttributo attributo : new TipoAttributo[] {TipoAttributo.FORZA, TipoAttributo.DESTREZZA, TipoAttributo.COSTITUZIONE,
                 TipoAttributo.INTELLIGENZA, TipoAttributo.SAGGEZZA, TipoAttributo.CARISMA, TipoAttributo.FORTUNA}) {
-            ((PersonaggioBase) difensore).addModificatore(new ModificatoreAttributoMD(attributo, TipoModificatore.QUANTITA_ASSOLUTA, 12));
+            difensore.addModificatore(new ModificatoreAttributoMD(attributo, TipoModificatore.QUANTITA_ASSOLUTA, 12));
         }
         return difensore;
     }
@@ -149,7 +142,7 @@ class MoltiplicatoreAttesoTest {
     @Test
     void ilFulmineDopoLAcquaTrovaUnBagnatoEPesaDiPiu() {
         Personaggio guerriero = difensore(TipoPersonaggio.GUERRIERO);
-        Arma acqua = (Arma) FabbricaIncantesimi.crea(ClasseIncantesimo.ACQUA, 5);
+        Arma acqua = (Arma) FabbricaIncantesimi.crea(TipoIncantesimo.ACQUA, 5);
         assertEquals(java.util.EnumSet.of(TipoEffettoDiStato.BAGNATO), CalcolatoreCombattimento.statiCausabili(guerriero, acqua));
         double adesso = CalcolatoreCombattimento.moltiplicatoreAtteso(guerriero, TipoDanno.FULMINE);
         double dopo = CalcolatoreCombattimento.moltiplicatoreAttesoDopo(guerriero, TipoDanno.FULMINE, acqua);
@@ -161,7 +154,7 @@ class MoltiplicatoreAttesoTest {
     @Test
     void ilGeloPuoCausareIlCongelamentoEQuindiIlGuscioDiGhiaccio() {
         Personaggio guerriero = difensore(TipoPersonaggio.GUERRIERO);
-        Arma gelo = (Arma) FabbricaIncantesimi.crea(ClasseIncantesimo.GELO, 5);
+        Arma gelo = (Arma) FabbricaIncantesimi.crea(TipoIncantesimo.GELO, 5);
         assertTrue(CalcolatoreCombattimento.statiCausabili(guerriero, gelo).contains(TipoEffettoDiStato.CONGELATO));
         // Un CONGELATO ha un guscio che para i colpi di lama (x1,5 di difesa): il colpo che segue fa meno danno
         double adesso = CalcolatoreCombattimento.moltiplicatoreAtteso(guerriero, TipoDanno.TAGLIENTE);
@@ -173,7 +166,7 @@ class MoltiplicatoreAttesoTest {
     @Test
     void chiEImmuneAUnStatoOAUnTipoDiDannoNonLoRiceveDaiStatiCausabili() {
         Personaggio drago = difensore(TipoPersonaggio.DRAGO);
-        Arma fuoco = (Arma) FabbricaIncantesimi.crea(ClasseIncantesimo.FUOCO, 5);
+        Arma fuoco = (Arma) FabbricaIncantesimi.crea(TipoIncantesimo.FUOCO, 5);
         assertTrue(CalcolatoreCombattimento.statiCausabili(drago, fuoco).isEmpty(), "il Drago è immune al fuoco");
     }
 

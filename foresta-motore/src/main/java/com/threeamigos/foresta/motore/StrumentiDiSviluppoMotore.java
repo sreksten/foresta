@@ -13,21 +13,9 @@ import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -39,20 +27,20 @@ import java.util.concurrent.ConcurrentHashMap;
 public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
 
     // Le missioni che si offrono in locanda; le altre (incarichi e leggende) si offrono in città
-    private static final Set<ClasseMissione> IN_LOCANDA = EnumSet.of(
-            ClasseMissione.LA_LEGGENDA_DEL_LOCANDIERE,
-            ClasseMissione.NESSUN_BOCCALE_LASCIATO_INDIETRO,
-            ClasseMissione.NON_SPARATE_SUL_PIANISTA,
-            ClasseMissione.IL_VIAGGIO_DELLA_MOGLIE,
-            ClasseMissione.LA_BENEDIZIONE,
-            ClasseMissione.RICHIESTA_LOCANDIERE);
+    private static final Set<MissionePredefinita> IN_LOCANDA = EnumSet.of(
+            MissionePredefinita.LA_LEGGENDA_DEL_LOCANDIERE,
+            MissionePredefinita.NESSUN_BOCCALE_LASCIATO_INDIETRO,
+            MissionePredefinita.NON_SPARATE_SUL_PIANISTA,
+            MissionePredefinita.IL_VIAGGIO_DELLA_MOGLIE,
+            MissionePredefinita.LA_BENEDIZIONE,
+            MissionePredefinita.RICHIESTA_LOCANDIERE);
 
-    private static final Set<ClasseMissione> IN_CITTA_SENZA_INCARICO = EnumSet.of(
-            ClasseMissione.LA_LEGGENDA_DELL_ARMAIOLO,
-            ClasseMissione.LA_LEALTA);
+    private static final Set<MissionePredefinita> IN_CITTA_SENZA_INCARICO = EnumSet.of(
+            MissionePredefinita.LA_LEGGENDA_DELL_ARMAIOLO,
+            MissionePredefinita.LA_LEALTA);
 
     // Dove parte ogni missione: non cambia mai, e per saperlo di un incarico serve costruirlo
-    private static final Map<ClasseMissione, Optional<DovePartono>> DOVE_PARTONO = new ConcurrentHashMap<>();
+    private static final Map<MissionePredefinita, Optional<DovePartono>> DOVE_PARTONO = new ConcurrentHashMap<>();
 
     private static final List<TipoAttributo> MODIFICABILI = Collections.unmodifiableList(Arrays.asList(
             TipoAttributo.FORZA, TipoAttributo.DESTREZZA, TipoAttributo.COSTITUZIONE, TipoAttributo.INTELLIGENZA,
@@ -118,7 +106,7 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
     @Override
     public List<VoceMissione> getMissioni(DovePartono dove) {
         List<VoceMissione> voci = new ArrayList<>();
-        for (ClasseMissione classe : ClasseMissione.values()) {
+        for (MissionePredefinita classe : MissionePredefinita.values()) {
             if (classe.isPredefinita() && doveParte(classe) == dove) {
                 Missione missione = trova(classe);
                 voci.add(new VoceMissione(classe, nome(classe, missione), descrizione(missione), stato(missione), isForzabile(missione)));
@@ -128,7 +116,7 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
     }
 
     @Override
-    public void forzaPartenza(ClasseMissione classe) {
+    public void forzaPartenza(MissionePredefinita classe) {
         Missione missione = trova(classe);
         if (!isForzabile(missione)) {
             throw new IllegalStateException("La missione " + classe + " non si può forzare adesso");
@@ -203,12 +191,12 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
     }
 
     @Override
-    public int getIncantesimi(ClasseIncantesimo classe) {
+    public int getIncantesimi(TipoIncantesimo classe) {
         return GruppoGiocatore.getIstanza().getIncantesimi(classe);
     }
 
     @Override
-    public void impostaIncantesimi(ClasseIncantesimo classe, int valore) {
+    public void impostaIncantesimi(TipoIncantesimo classe, int valore) {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         gruppo.addIncantesimi(classe, Math.max(0, valore) - gruppo.getIncantesimi(classe));
         aggiornaLaUI();
@@ -258,11 +246,11 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
     /**
      * Dove si offre la missione: le leggende e le storie elencate in locanda, gli incarichi e il resto in città.
      */
-    static DovePartono doveParte(ClasseMissione classe) {
+    static DovePartono doveParte(MissionePredefinita classe) {
         return DOVE_PARTONO.computeIfAbsent(classe, StrumentiDiSviluppoMotore::calcolaDoveParte).orElse(null);
     }
 
-    private static Optional<DovePartono> calcolaDoveParte(ClasseMissione classe) {
+    private static Optional<DovePartono> calcolaDoveParte(MissionePredefinita classe) {
         if (IN_LOCANDA.contains(classe)) {
             return Optional.of(DovePartono.LOCANDA);
         }
@@ -282,7 +270,7 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
                 : tipo.getCategoria() == CategoriaLocazione.CITTA;
     }
 
-    private static Missione trova(ClasseMissione classe) {
+    private static Missione trova(MissionePredefinita classe) {
         for (Missione missione : RegistroMissioni.getMissioniNonCompletate()) {
             if (missione.getClasse() == classe) {
                 return missione;
@@ -291,7 +279,7 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
         return null;
     }
 
-    private static String nome(ClasseMissione classe, Missione missione) {
+    private static String nome(MissionePredefinita classe, Missione missione) {
         return missione != null ? missione.getNome() : classe.name();
     }
 

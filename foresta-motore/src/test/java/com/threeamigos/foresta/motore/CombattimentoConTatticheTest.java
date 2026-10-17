@@ -1,41 +1,22 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.eventi.interni.InternoDecisioneTattica;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modellodati.tattiche.*;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
-import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
-import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
-import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
-import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
-import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
-import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
+import com.threeamigos.foresta.tipi.*;
+import com.threeamigos.foresta.tipi.tattiche.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 /**
  * La tattica del personaggio comanda il combattimento automatico (tattiche_di_combattimento_automatiche.md §11): a ogni scatto del TIMER il personaggio
@@ -104,7 +85,7 @@ class CombattimentoConTatticheTest {
 
     /** Il gruppo parte con qualche pergamena: per il test si sa esattamente quali ci sono */
     private static void svuotaLePergamene(GruppoGiocatore gruppo) {
-        for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
+        for (TipoIncantesimo classe : TipoIncantesimo.values()) {
             gruppo.subIncantesimi(classe, gruppo.getIncantesimi(classe));
         }
         for (int i = gruppo.getPozioniSalute(); i > 0; i--) {
@@ -114,7 +95,7 @@ class CombattimentoConTatticheTest {
 
     private static int pergameneDiDanno(GruppoGiocatore gruppo) {
         int totale = 0;
-        for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
+        for (TipoIncantesimo classe : TipoIncantesimo.values()) {
             totale += gruppo.getIncantesimi(classe);
         }
         return totale;
@@ -128,7 +109,7 @@ class CombattimentoConTatticheTest {
             Personaggio mago = partita.gruppo().getCapo();
             mago.addMagia(mago.getMagiaMassima());
             svuotaLePergamene(partita.gruppo());
-            partita.gruppo().addIncantesimi(ClasseIncantesimo.FULMINE, 3);
+            partita.gruppo().addIncantesimi(TipoIncantesimo.FULMINE, 3);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             Personaggio bagnato = avversari.getPersonaggi().get(1);
             bagnato.addEffettoDiStato(TipoEffettoDiStato.BAGNATO, 5, 0);
@@ -140,7 +121,7 @@ class CombattimentoConTatticheTest {
             partita.eventi().svuota();
             scatta(locazione, partita, 1);
 
-            assertEquals(2, partita.gruppo().getIncantesimi(ClasseIncantesimo.FULMINE), "la pergamena si consuma");
+            assertEquals(2, partita.gruppo().getIncantesimi(TipoIncantesimo.FULMINE), "la pergamena si consuma");
             assertTrue(mago.getMagia() < magiaPrima, "il lancio costa MAGIA");
             InternoAzioneInCombattimento annuncio = partita.eventi().tutti(InternoAzioneInCombattimento.class).get(0);
             assertSame(mago, annuncio.getPersonaggio());
@@ -157,7 +138,7 @@ class CombattimentoConTatticheTest {
             Personaggio mago = partita.gruppo().getCapo();
             mago.addMagia(mago.getMagiaMassima());
             svuotaLePergamene(partita.gruppo());
-            partita.gruppo().addIncantesimi(ClasseIncantesimo.FUOCO, 5);
+            partita.gruppo().addIncantesimi(TipoIncantesimo.FUOCO, 5);
             // "Una volta per scontro" un incantesimo, poi sempre l'attacco fisico (il ripiego)
             VoceMD unaVolta = new VoceMD(null, Collections.singletonList(PredicatoMD.conConfrontoENumero(TipoPredicato.VOCE_USATA, Confronto.UGUALE, 0)),
                     Collections.singletonList(AzioneMD.incantesimoDiDanno(CriterioIncantesimo.PIU_POTENTE, false)));
@@ -253,11 +234,11 @@ class CombattimentoConTatticheTest {
             Locazione locazione = preparaLo(partita, 3);
             capo.addMagia(capo.getMagiaMassima());
             svuotaLePergamene(partita.gruppo());
-            partita.gruppo().addIncantesimi(ClasseIncantesimo.FULMINE, 2);
+            partita.gruppo().addIncantesimi(TipoIncantesimo.FULMINE, 2);
             GruppoAvversario.getIstanza().getPersonaggi().get(2).addEffettoDiStato(TipoEffettoDiStato.BAGNATO, 5, 0);
             iniziaLaMischia(locazione, partita);
             scatta(locazione, partita, 1);
-            assertEquals(1, partita.gruppo().getIncantesimi(ClasseIncantesimo.FULMINE), "ha lanciato il fulmine della sua tattica");
+            assertEquals(1, partita.gruppo().getIncantesimi(TipoIncantesimo.FULMINE), "ha lanciato il fulmine della sua tattica");
         }
     }
 
@@ -269,7 +250,7 @@ class CombattimentoConTatticheTest {
             Personaggio mago = partita.gruppo().getCapo();
             mago.addMagia(mago.getMagiaMassima());
             svuotaLePergamene(partita.gruppo());
-            partita.gruppo().addIncantesimi(ClasseIncantesimo.FULMINE, 1);
+            partita.gruppo().addIncantesimi(TipoIncantesimo.FULMINE, 1);
             Personaggio bagnato = GruppoAvversario.getIstanza().getPersonaggi().get(1);
             bagnato.addEffettoDiStato(TipoEffettoDiStato.BAGNATO, 5, 0);
             mago.setTattica(TatticaMD.di(

@@ -3,18 +3,18 @@ package com.threeamigos.foresta.missioni.incarichi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
+import com.threeamigos.foresta.missioni.IncontroDiMissione;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
+import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.strumenti.Misc;
-import com.threeamigos.foresta.missioni.IncontroDiMissione;
-import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
 
 /**
  * Il cacciatore di taglie: in città c'è un manifesto con una taglia sul capo di una banda di goblin, un hobgoblin. La
@@ -33,7 +33,7 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 	private static final String CACCIA = "CACCIA";
 
 	public CacciatoreDiTaglie() {
-		super(ClasseMissione.CACCIATORE_DI_TAGLIE);
+		super(MissionePredefinita.CACCIATORE_DI_TAGLIE);
 	}
 
 	/**

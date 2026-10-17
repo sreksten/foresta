@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.interfacce;
 
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 
@@ -45,7 +45,7 @@ public interface VistaGruppoGiocatore extends VistaGruppo {
 	 */
 	List<? extends VistaPezzoDelSet> getPezziDelSet(VistaArtefatto artefatto);
 
-	int getIncantesimi(ClasseIncantesimo classeIncantesimo);
+	int getIncantesimi(TipoIncantesimo tipoIncantesimo);
 
 	int getPozioniSalute();
 

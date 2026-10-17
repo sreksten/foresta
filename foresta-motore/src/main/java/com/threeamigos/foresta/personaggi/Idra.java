@@ -1,11 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.function.Function;
 
@@ -202,10 +198,10 @@ public class Idra extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
-		return classeIncantesimo == ClasseIncantesimo.TERRA ||
-				classeIncantesimo == ClasseIncantesimo.ACQUA ||
-				classeIncantesimo == ClasseIncantesimo.ARIA;
+	public boolean isImmuneAIncantesimo(TipoIncantesimo tipoIncantesimo) {
+		return tipoIncantesimo == TipoIncantesimo.TERRA ||
+				tipoIncantesimo == TipoIncantesimo.ACQUA ||
+				tipoIncantesimo == TipoIncantesimo.ARIA;
 	}
 
 	@Override

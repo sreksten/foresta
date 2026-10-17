@@ -1,24 +1,18 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoDecisioneTattica;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
-import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
-import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
-import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
+import com.threeamigos.foresta.modellodati.tattiche.*;
+import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
+import com.threeamigos.foresta.tipi.tattiche.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,9 +23,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.motore.Gruppo;
 
 /**
  * L'esecutore delle decisioni delle tattiche, da solo (senza una locazione): i gruppi sono fatti sul momento, come nelle simulazioni.
@@ -115,7 +106,7 @@ class EsecutoreTatticheTest {
 
     @Test
     void unIncantesimoConsumaLaPergamenaELaMagiaEColpisceSoloIlBersaglioDiUnMostro() {
-        miei.addIncantesimi(ClasseIncantesimo.FULMINE, 1);
+        miei.addIncantesimi(TipoIncantesimo.FULMINE, 1);
         int magia = mago.getMagia();
         TatticaMD lancia = TatticaMD.di(VoceMD.su(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO), AzioneMD.di(TipoAzione.FULMINE)));
         List<InternoDecisioneTattica> decisioni = new ArrayList<>();
@@ -127,7 +118,7 @@ class EsecutoreTatticheTest {
         } finally {
             BusEventi.impostaConsegna(null);
         }
-        assertEquals(0, miei.getIncantesimi(ClasseIncantesimo.FULMINE), "la pergamena si consuma");
+        assertEquals(0, miei.getIncantesimi(TipoIncantesimo.FULMINE), "la pergamena si consuma");
         assertTrue(mago.getMagia() < magia, "e costa MAGIA");
         assertEquals(1, decisioni.size());
         assertSame(mago, decisioni.get(0).getPersonaggio());

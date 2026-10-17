@@ -2,26 +2,19 @@ package com.threeamigos.foresta.missioni.principali;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.intermezzi.BattutaIntermezzo;
-import com.threeamigos.foresta.intermezzi.ElementoIntermezzo;
-import com.threeamigos.foresta.intermezzi.ImmagineIntermezzo;
-import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
-import com.threeamigos.foresta.intermezzi.Tappa;
-import com.threeamigos.foresta.intermezzi.Verso;
+import com.threeamigos.foresta.intermezzi.*;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Misc;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -46,8 +39,8 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 	public static final int TEMPLI_DA_LIBERARE = 7;
 	public static final int INCANTESIMI_LUCE_DIVINA = 2;
 	public static final int INCANTESIMI_ALBA_SACRA = 2;
-	public static final ClasseIncantesimo[] INCANTESIMI_ELEMENTALI = {ClasseIncantesimo.ARIA, ClasseIncantesimo.ACQUA,
-			ClasseIncantesimo.TERRA, ClasseIncantesimo.FUOCO, ClasseIncantesimo.FULMINE, ClasseIncantesimo.GELO};
+	public static final TipoIncantesimo[] INCANTESIMI_ELEMENTALI = {TipoIncantesimo.ARIA, TipoIncantesimo.ACQUA,
+			TipoIncantesimo.TERRA, TipoIncantesimo.FUOCO, TipoIncantesimo.FULMINE, TipoIncantesimo.GELO};
 
 	private static final String INIZIO = "INIZIO";
 	private static final String TEMPLI = "TEMPLI";
@@ -59,7 +52,7 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 	private static final String ID_SACERDOTE = "sacerdote";
 
 	public IlGiroDelleSetteChiese() {
-		super(ClasseMissione.IL_GIRO_DELLE_SETTE_CHIESE);
+		super(MissionePredefinita.IL_GIRO_DELLE_SETTE_CHIESE);
 	}
 
 	@Override
@@ -145,18 +138,18 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 	 */
 	private void premia() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		ClasseIncantesimo elementale = INCANTESIMI_ELEMENTALI[Dado.tiraAncheAUnaFaccia(INCANTESIMI_ELEMENTALI.length) - 1];
+		TipoIncantesimo elementale = INCANTESIMI_ELEMENTALI[Dado.tiraAncheAUnaFaccia(INCANTESIMI_ELEMENTALI.length) - 1];
 		aggiungiProprieta(INCANTESIMO_ELEMENTALE, elementale.name());
-		gruppo.addIncantesimi(ClasseIncantesimo.LUCE_DIVINA, INCANTESIMI_LUCE_DIVINA);
-		gruppo.addIncantesimi(ClasseIncantesimo.ALBA_SACRA, INCANTESIMI_ALBA_SACRA);
+		gruppo.addIncantesimi(TipoIncantesimo.LUCE_DIVINA, INCANTESIMI_LUCE_DIVINA);
+		gruppo.addIncantesimi(TipoIncantesimo.ALBA_SACRA, INCANTESIMI_ALBA_SACRA);
 		gruppo.addIncantesimi(elementale, 1);
 		BusEventi.pubblica(new NotificaTestoParagrafo("In dono dai devoti: " + Misc.getCardinaleM(INCANTESIMI_LUCE_DIVINA) + " "
-				+ ClasseIncantesimo.LUCE_DIVINA.getNomePlurale() + ", " + Misc.getCardinaleM(INCANTESIMI_ALBA_SACRA) + " "
-				+ ClasseIncantesimo.ALBA_SACRA.getNomePlurale() + " e un " + elementale.getNomeSingolare() + "."));
+				+ TipoIncantesimo.LUCE_DIVINA.getNomePlurale() + ", " + Misc.getCardinaleM(INCANTESIMI_ALBA_SACRA) + " "
+				+ TipoIncantesimo.ALBA_SACRA.getNomePlurale() + " e un " + elementale.getNomeSingolare() + "."));
 	}
 
-	private ClasseIncantesimo getIncantesimoElementale() {
-		return ClasseIncantesimo.valueOf(ottieniProprieta(INCANTESIMO_ELEMENTALE));
+	private TipoIncantesimo getIncantesimoElementale() {
+		return TipoIncantesimo.valueOf(ottieniProprieta(INCANTESIMO_ELEMENTALE));
 	}
 
 	/**
@@ -194,8 +187,8 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, "Sette templi liberi! Grazie a voi i devoti potranno tornare "
 						+ "in pellegrinaggio.").daSecondo(2))
 				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, "Accettate questi doni a nome loro: "
-						+ Misc.getCardinaleM(INCANTESIMI_LUCE_DIVINA) + " " + ClasseIncantesimo.LUCE_DIVINA.getNomePlurale() + ", "
-						+ Misc.getCardinaleM(INCANTESIMI_ALBA_SACRA) + " " + ClasseIncantesimo.ALBA_SACRA.getNomePlurale()
+						+ Misc.getCardinaleM(INCANTESIMI_LUCE_DIVINA) + " " + TipoIncantesimo.LUCE_DIVINA.getNomePlurale() + ", "
+						+ Misc.getCardinaleM(INCANTESIMI_ALBA_SACRA) + " " + TipoIncantesimo.ALBA_SACRA.getNomePlurale()
 						+ " e un " + getIncantesimoElementale().getNomeSingolare() + "."))
 				.conBattuta(BattutaIntermezzo.di(ID_EROE, "Siamo onorati. Che la Luce vi accompagni.")));
 	}

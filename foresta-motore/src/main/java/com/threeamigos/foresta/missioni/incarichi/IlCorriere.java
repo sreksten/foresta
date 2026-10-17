@@ -3,23 +3,23 @@ package com.threeamigos.foresta.missioni.incarichi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
+import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
+import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.richieste.Spedizione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
-import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.richieste.Spedizione;
 
 /**
  * In città qualcuno affida al gruppo una cosa da portare a qualcuno in un'altra città: una lettera, un pegno d'amore,
@@ -60,13 +60,13 @@ public class IlCorriere extends IncaricoInCitta {
 	private final String produzione;
 
 	public IlCorriere() {
-		this(ClasseMissione.IL_CORRIERE, "TRASPORTO");
+		this(MissionePredefinita.IL_CORRIERE, "TRASPORTO");
 	}
 
 	/**
 	 * Un corriere che pesca le spedizioni da quella produzione di missioni.txt.
 	 */
-	protected IlCorriere(ClasseMissione classe, String produzione) {
+	protected IlCorriere(MissionePredefinita classe, String produzione) {
 		super(classe);
 		this.produzione = produzione;
 	}

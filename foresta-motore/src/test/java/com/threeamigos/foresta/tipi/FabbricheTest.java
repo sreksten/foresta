@@ -43,9 +43,9 @@ class FabbricheTest {
 
     @Test
     void ogniClasseMissioneSiCostruisce() {
-        for (ClasseMissione classe : ClasseMissione.values()) {
+        for (MissionePredefinita classe : MissionePredefinita.values()) {
             // Le missioni di prova sono dei test, che le registrano da sé: nel gioco non esistono
-            if (classe == ClasseMissione.MISSIONE_DI_PROVA || classe == ClasseMissione.MISSIONE_CHE_FALLISCE) {
+            if (classe == MissionePredefinita.MISSIONE_DI_PROVA || classe == MissionePredefinita.MISSIONE_CHE_FALLISCE) {
                 continue;
             }
             assertNotNull(FabbricaMissioni.crea(classe), classe.name());
@@ -54,7 +54,7 @@ class FabbricheTest {
 
     @Test
     void ogniClasseIncantesimoSiCostruisceEHaICosti() {
-        for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
+        for (TipoIncantesimo classe : TipoIncantesimo.values()) {
             assertNotNull(FabbricaIncantesimi.crea(classe, 1), classe.name());
             FabbricaIncantesimi.costoAcquisto(classe);
             FabbricaIncantesimi.costoLancio(classe);

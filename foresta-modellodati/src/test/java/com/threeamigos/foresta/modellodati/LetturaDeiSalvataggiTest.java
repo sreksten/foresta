@@ -1,20 +1,12 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tutte le righe dei salvataggi si leggono con {@link LettoreCampi}: un salvataggio troncato o rovinato dà sempre un
@@ -80,14 +72,14 @@ class LetturaDeiSalvataggiTest {
 		// Given
 		MissioneMD principale = new MissioneMD();
 		principale.setId("m1");
-		principale.setClasse(ClasseMissione.values()[0]);
+		principale.setClasse(MissionePredefinita.values()[0]);
 		principale.setNome("La prova");
 		principale.setDescrizione("Una|descrizione");
 		principale.setDescrizioneVisibile(true);
 		principale.aggiungiProprieta("PASSO", "3");
 		MissioneMD secondaria = new MissioneMD();
 		secondaria.setId("m2");
-		secondaria.setClasse(ClasseMissione.values()[0]);
+		secondaria.setClasse(MissionePredefinita.values()[0]);
 		secondaria.setNome("");
 		principale.aggiungiMissioneMD(secondaria);
 
@@ -107,11 +99,11 @@ class LetturaDeiSalvataggiTest {
 
 	@Test
 	void unaMissioneTroncataDaUnErroreChiaro() {
-		assertThrows(IOException.class, () -> new MissioneMD().leggi(lettore("m1|" + ClasseMissione.values()[0].name())));
+		assertThrows(IOException.class, () -> new MissioneMD().leggi(lettore("m1|" + MissionePredefinita.values()[0].name())));
 		assertThrows(IOException.class, () -> new MissioneMD().leggi(lettore("")));
 		// La riga delle proprieta' manca del tutto
 		assertThrows(IOException.class, () -> new MissioneMD().leggi(
-				lettore("m1|" + ClasseMissione.values()[0].name() + "|n|d|true|0\n")));
+				lettore("m1|" + MissionePredefinita.values()[0].name() + "|n|d|true|0\n")));
 	}
 
 	@Test

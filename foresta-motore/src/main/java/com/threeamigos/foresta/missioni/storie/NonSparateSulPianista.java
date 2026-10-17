@@ -6,17 +6,17 @@ import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.intermezzi.ScenaInLocanda;
 import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
+import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.Passo;
 
 /**
  * Non sparate sul pianista: alla terza visita a una locanda nel bosco, a una visita tranquilla, il locandiere chiede
@@ -50,7 +50,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	private static final String LOCANDA = "LOCANDA";
 
 	public NonSparateSulPianista() {
-		super(ClasseMissione.NON_SPARATE_SUL_PIANISTA);
+		super(MissionePredefinita.NON_SPARATE_SUL_PIANISTA);
 	}
 
 	@Override

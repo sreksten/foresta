@@ -5,13 +5,7 @@ import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.ToIntFunction;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
@@ -19,6 +13,12 @@ import com.threeamigos.foresta.ui.testo.DoomdarkColorAlternante;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.ToIntFunction;
 
 /**
  * Gli incantesimi e le pozioni del gruppo: una lista scrollabile con la rotella del mouse, una voce per riga, con il
@@ -66,17 +66,17 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		this.topLeftY = topLeftY;
 
 		int maxIconWidth = 0;
-		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-			BufferedImage icona = ImageCache.spriteIncantesimi[classeIncantesimo.ordinal()];
+		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
+			BufferedImage icona = ImageCache.spriteIncantesimi[tipoIncantesimo.ordinal()];
 			maxIconWidth = Math.max(maxIconWidth, icona.getWidth());
-			righe.add(new Riga(icona, classeIncantesimo.getNome(), g -> g.getIncantesimi(classeIncantesimo)));
+			righe.add(new Riga(icona, tipoIncantesimo.getNome(), g -> g.getIncantesimi(tipoIncantesimo)));
 		}
 		righe.add(new Riga(ImageCache.spritePozioneSalute, "Salute", VistaGruppoGiocatore::getPozioniSalute));
 		righe.add(new Riga(ImageCache.spritePozioneSaluteGrande, "Salute grande", VistaGruppoGiocatore::getPozioniSaluteGrande));
 		righe.add(new Riga(ImageCache.spritePozioneMagia, "Magia", VistaGruppoGiocatore::getPozioniMagia));
 		righe.add(new Riga(ImageCache.spritePozioneMagiaGrande, "Magia grande", VistaGruppoGiocatore::getPozioniMagiaGrande));
 		righe.add(new Riga(ImageCache.spritePozioneAumentoLivello, "Aumento livello", VistaGruppoGiocatore::getPozioniAumentoLivello));
-		for (int i = ClasseIncantesimo.values().length; i < righe.size(); i++) {
+		for (int i = TipoIncantesimo.values().length; i < righe.size(); i++) {
 			maxIconWidth = Math.max(maxIconWidth, righe.get(i).icona.getWidth());
 		}
 
@@ -175,8 +175,8 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		}
 	}
 
-	private SpriteATempo costruisciSpritePerVariazioneIncantesimi(ClasseIncantesimo classeIncantesimo, int variazione) {
-		return costruisciSprite(classeIncantesimo.ordinal(), variazione, "Incantesimo " + classeIncantesimo + " variato");
+	private SpriteATempo costruisciSpritePerVariazioneIncantesimi(TipoIncantesimo tipoIncantesimo, int variazione) {
+		return costruisciSprite(tipoIncantesimo.ordinal(), variazione, "Incantesimo " + tipoIncantesimo + " variato");
 	}
 
 	/**
@@ -194,7 +194,7 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	}
 
 	private int indicePozione(int numeroPozione) {
-		return ClasseIncantesimo.values().length + numeroPozione;
+		return TipoIncantesimo.values().length + numeroPozione;
 	}
 
 	/**

@@ -4,19 +4,14 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.strumenti.ContestoLancio;
-import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.strumenti.ContestoLancio;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,14 +97,14 @@ public class Cofano extends OggettoBase implements Oggetto {
 				sb.append("non trova nulla.");
 			} else if (tipo == 1) {
 				sb.append("trova una pergamena con un ");
-				ClasseIncantesimo classeIncantesimo = FabbricaIncantesimi.casuale();
-				sb.append(classeIncantesimo.getNomeSingolare()).append('.');
-				gruppo.addIncantesimi(classeIncantesimo, 1);
+				TipoIncantesimo tipoIncantesimo = FabbricaIncantesimi.casuale();
+				sb.append(tipoIncantesimo.getNomeSingolare()).append('.');
+				gruppo.addIncantesimi(tipoIncantesimo, 1);
 			} else if (tipo == 2) {
 				sb.append("trova una pergamena con tre ");
-				ClasseIncantesimo classeIncantesimo = FabbricaIncantesimi.casuale();
-				sb.append(classeIncantesimo.getNomePlurale()).append('.');
-				gruppo.addIncantesimi(classeIncantesimo, 3);
+				TipoIncantesimo tipoIncantesimo = FabbricaIncantesimi.casuale();
+				sb.append(tipoIncantesimo.getNomePlurale()).append('.');
+				gruppo.addIncantesimi(tipoIncantesimo, 3);
 			} else if (tipo == 3) {
 				sb.append("trova una pozione della salute.");
 				gruppo.addPozioniSalute(1);

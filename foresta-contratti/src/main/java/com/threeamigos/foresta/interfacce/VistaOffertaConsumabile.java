@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
 
 /**
@@ -14,7 +14,7 @@ public interface VistaOffertaConsumabile {
 	/**
 	 * @return la classe dell'incantesimo in vendita, o null se l'offerta non è un incantesimo
 	 */
-	ClasseIncantesimo getClasseIncantesimo();
+	TipoIncantesimo getClasseIncantesimo();
 
 	/**
 	 * @return il personaggio a cui va l'aumento di magia, o null se l'offerta non è per un personaggio solo

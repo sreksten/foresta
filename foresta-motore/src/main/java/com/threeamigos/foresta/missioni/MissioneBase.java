@@ -5,7 +5,7 @@ import com.threeamigos.foresta.eventi.interni.InternoMissioneCompletata;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
 import com.threeamigos.foresta.modellodati.MissioneMD;
 import com.threeamigos.foresta.motore.GestoreProgressione;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public abstract class MissioneBase implements Missione {
 	protected MissioneMD md;
 	protected List<Missione> missioniSecondarie;
 
-	protected MissioneBase(ClasseMissione classe) {
+	protected MissioneBase(MissionePredefinita classe) {
 		md = new MissioneMD();
 		md.setClasse(classe);
 		missioniSecondarie = new ArrayList<>();
@@ -88,7 +88,7 @@ public abstract class MissioneBase implements Missione {
 	@Override
 	public void attivaMissione() {
 		md.aggiungiProprieta(ATTIVA, "S");
-		if (ClasseMissione.isIdDiMissionePredefinita(getId())) {
+		if (MissionePredefinita.isIdDiMissionePredefinita(getId())) {
 			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "NUOVA MISSIONE", getNome()));
 		}
 	}
@@ -124,7 +124,7 @@ public abstract class MissioneBase implements Missione {
 		}
 		md.aggiungiProprieta(FALLITA, AFFERMATIVO);
 		RegistroMissioni.fallisciMissione(this);
-		if (ClasseMissione.isIdDiMissionePredefinita(getId())) {
+		if (MissionePredefinita.isIdDiMissionePredefinita(getId())) {
 			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "MISSIONE FALLITA", getNome()));
 		}
 		md.setDescrizioneVisibile(false);

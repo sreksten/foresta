@@ -3,21 +3,20 @@ package com.threeamigos.foresta.missioni.incarichi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta.Indizio;
-import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.strumenti.Misc;
-
-import java.util.List;
 import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
 import com.threeamigos.foresta.missioni.richieste.DocumentazioneRichiesta;
-import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta;
+import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta.Indizio;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
+
+import java.util.List;
 
 /**
  * In città uno studioso chiede di documentare qualcosa nella foresta: copiare le iscrizioni di più rovine, descrivere
@@ -38,7 +37,7 @@ public class LaDocumentazione extends IncaricoInCitta {
 	private static final String REPERTO = "REPERTO_";
 
 	public LaDocumentazione() {
-		super(ClasseMissione.LA_DOCUMENTAZIONE);
+		super(MissionePredefinita.LA_DOCUMENTAZIONE);
 	}
 
 	public DocumentazioneRichiesta getDocumentazione() {

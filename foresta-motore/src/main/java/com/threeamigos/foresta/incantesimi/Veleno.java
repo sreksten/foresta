@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * L'incantesimo di Veleno: un incantesimo malefico di danno di Veleno (vedi {@link IncantesimoMaleficoImpl}). Costo e danni stanno nelle costanti {@code INCANTESIMO_VELENO_*}.
@@ -15,8 +15,8 @@ public class Veleno extends IncantesimoMaleficoImpl implements Incantesimo {
         super(livello);
     }
 
-    public ClasseIncantesimo getClasse() {
-        return ClasseIncantesimo.VELENO;
+    public TipoIncantesimo getClasse() {
+        return TipoIncantesimo.VELENO;
     }
 
     public int getCostoAcquisto() {

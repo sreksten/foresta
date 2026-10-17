@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.CategoriaIncantesimo;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
@@ -12,10 +12,10 @@ public final class ScortaDiPergamene {
 
 	public static final ScortaDiPergamene NESSUNA = new ScortaDiPergamene(null, 0);
 
-	private final ClasseIncantesimo incantesimo;
+	private final TipoIncantesimo incantesimo;
 	private final int quantita;
 
-	private ScortaDiPergamene(ClasseIncantesimo incantesimo, int quantita) {
+	private ScortaDiPergamene(TipoIncantesimo incantesimo, int quantita) {
 		this.incantesimo = incantesimo;
 		this.quantita = quantita;
 	}
@@ -23,14 +23,14 @@ public final class ScortaDiPergamene {
 	/**
 	 * @param incantesimo un incantesimo malefico, cioè che fa danno
 	 */
-	public static ScortaDiPergamene di(ClasseIncantesimo incantesimo, int quantita) {
-		if (incantesimo.getTipo() != TipoIncantesimo.MALEFICO) {
+	public static ScortaDiPergamene di(TipoIncantesimo incantesimo, int quantita) {
+		if (incantesimo.getTipo() != CategoriaIncantesimo.MALEFICO) {
 			throw new IllegalArgumentException("Nel simulatore si lanciano solo incantesimi malefici, non " + incantesimo);
 		}
 		return new ScortaDiPergamene(incantesimo, quantita);
 	}
 
-	public ClasseIncantesimo getIncantesimo() {
+	public TipoIncantesimo getIncantesimo() {
 		return incantesimo;
 	}
 

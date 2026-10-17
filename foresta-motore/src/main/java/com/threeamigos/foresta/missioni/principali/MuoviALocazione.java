@@ -2,13 +2,13 @@ package com.threeamigos.foresta.missioni.principali;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
+import com.threeamigos.foresta.missioni.MissioneBase;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.missioni.MissioneBase;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Una missione che chiede di raggiungere una locazione unica: finché non ci si è arrivati la locazione lampeggia sulla mappa, e arrivandoci la missione si completa.
@@ -16,7 +16,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 public class MuoviALocazione extends MissioneBase {
 
 	public MuoviALocazione() {
-		super(ClasseMissione.MUOVI_A_LOCAZIONE);
+		super(MissionePredefinita.MUOVI_A_LOCAZIONE);
 	}
 
 	private static final String COORDINATA_X = "COORDINATA_X";

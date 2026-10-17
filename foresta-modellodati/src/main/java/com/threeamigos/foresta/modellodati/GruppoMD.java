@@ -1,15 +1,11 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Collections;
+import java.util.*;
 
 /**
  * I dati di un gruppo di personaggi: chi ne fa parte, chi è il capo e le scorte comuni (le pergamene degli incantesimi
@@ -23,7 +19,7 @@ public class GruppoMD implements Serializzabile {
 
 	private final List<PersonaggioMD> personaggiMD = new ArrayList<>();
 	// Le scorte del gruppo: le pergamene degli incantesimi e le pozioni
-	protected final Map<ClasseIncantesimo, Integer> incantesimi = new EnumMap<>(ClasseIncantesimo.class);
+	protected final Map<TipoIncantesimo, Integer> incantesimi = new EnumMap<>(TipoIncantesimo.class);
 	protected int pozioniSalute;
 	protected int pozioniSaluteGrande;
 	protected int pozioniMagia;
@@ -43,15 +39,15 @@ public class GruppoMD implements Serializzabile {
 	/**
 	 * Imposta quante pergamene di quell'incantesimo ha il gruppo.
 	 */
-	public void setIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
-		incantesimi.put(classeIncantesimo, quantita);
+	public void setIncantesimi(TipoIncantesimo tipoIncantesimo, int quantita) {
+		incantesimi.put(tipoIncantesimo, quantita);
 	}
 
 	/**
 	 * Quante pergamene di quell'incantesimo ha il gruppo; zero se non ne ha.
 	 */
-	public int getIncantesimi(ClasseIncantesimo classeIncantesimo) {
-		return incantesimi.getOrDefault(classeIncantesimo, 0);
+	public int getIncantesimi(TipoIncantesimo tipoIncantesimo) {
+		return incantesimi.getOrDefault(tipoIncantesimo, 0);
 	}
 
 	public int getPozioniSalute() {

@@ -1,22 +1,17 @@
 package com.threeamigos.foresta.tattiche.valutazione;
 
-import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
-import com.threeamigos.foresta.incantesimi.AlbaSacra;
-import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.canti.CantoDelBardo;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
-import com.threeamigos.foresta.tipi.TipoCanto;
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
+import com.threeamigos.foresta.incantesimi.AlbaSacra;
+import com.threeamigos.foresta.incantesimi.DardoArcano;
+import com.threeamigos.foresta.incantesimi.LuceDivina;
+import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
+import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.tipi.tattiche.PortataAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.tattiche.ContestoTattico;
 
 /**
  * Quando un'azione si può fare (tattiche_di_combattimento_automatiche.md §11.9): i requisiti che l'azione porta, e che il giocatore non scrive. Per
@@ -80,13 +75,13 @@ public final class Requisiti {
 				}
 				return contro(azione, attore, bersaglio, TipoDanno.ARCANO, contesto);
 			case RESURREZIONE:
-				if (!puoLanciare(attore, ClasseIncantesimo.RESURREZIONE, contesto)) {
+				if (!puoLanciare(attore, TipoIncantesimo.RESURREZIONE, contesto)) {
 					return "manca la pergamena o la MAGIA per la Resurrezione";
 				}
 				return bersaglio == null || bersaglio.isVivo() || bersaglio.isInPanchina() ? "nessun caduto da risuscitare" : null;
 			// Un'azione su tutto il gruppo non ha un bersaglio: i requisiti guardano che nel gruppo ci sia qualcuno su cui valga la pena usarla
 			case ALBA_SACRA:
-				if (!AlbaSacra.puoLanciarlaInnata(attore) && !puoLanciare(attore, ClasseIncantesimo.ALBA_SACRA, contesto)) {
+				if (!AlbaSacra.puoLanciarlaInnata(attore) && !puoLanciare(attore, TipoIncantesimo.ALBA_SACRA, contesto)) {
 					return "manca l'Alba sacra innata o la pergamena con la MAGIA";
 				}
 				return esiste(contesto.getAlleati(), p -> haUnoStatoNegativo(p)) ? null : "nessun alleato ha uno stato da togliere";
@@ -143,7 +138,7 @@ public final class Requisiti {
 	 * Gli incantesimi di una classe precisa: ARIA, ACQUA, TERRA, FUOCO, FULMINE, GELO, VELENO, MORTE, SILENZIO, LUCE_DIVINA
 	 */
 	private static String incantesimoSingolo(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
-		ClasseIncantesimo classe = azione.getTipo().getClasseIncantesimo();
+		TipoIncantesimo classe = azione.getTipo().getClasseIncantesimo();
 		if (classe == null) {
 			return "azione sconosciuta " + azione.getTipo();
 		}
@@ -191,7 +186,7 @@ public final class Requisiti {
 	/**
 	 * Se l'incantesimo rende più dell'attacco con le armi sul bersaglio, in danni attesi (senza dadi: sempre lo stesso risultato per la stessa situazione)
 	 */
-	private static boolean piuForteDellAttacco(Personaggio attore, Personaggio bersaglio, ClasseIncantesimo classe) {
+	private static boolean piuForteDellAttacco(Personaggio attore, Personaggio bersaglio, TipoIncantesimo classe) {
 		return SceltaIncantesimo.dannoAttesoSuUno(attore, bersaglio, classe)
 				> com.threeamigos.foresta.combattimento.CalcolatoreCombattimento.dannoAttesoDellaMischia(attore, bersaglio);
 	}
@@ -200,14 +195,14 @@ public final class Requisiti {
 	 * Se l'attore può lanciare quell'incantesimo adesso: non è silenziato e ha la MAGIA, e ha una pergamena nel gruppo oppure è un mostro che lo
 	 * ha nel suo repertorio
 	 */
-	static boolean puoLanciare(Personaggio attore, ClasseIncantesimo classe, ContestoTattico contesto) {
+	static boolean puoLanciare(Personaggio attore, TipoIncantesimo classe, ContestoTattico contesto) {
 		if (!attore.puoFormulare(classe)) {
 			return false;
 		}
 		if (contesto.getPergamene(classe) > 0) {
 			return true;
 		}
-		if (classe == ClasseIncantesimo.LUCE_DIVINA && LuceDivina.puoLanciarlaInnata(attore)) {
+		if (classe == TipoIncantesimo.LUCE_DIVINA && LuceDivina.puoLanciarlaInnata(attore)) {
 			return true;
 		}
 		return contesto.isMostro(attore) && attore.isMagico() && attore.getRepertorioIncantesimi().contains(classe);

@@ -1,18 +1,19 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Silenzio;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,10 +30,10 @@ class SilenzioTest {
 
     @Test
     void ilComandoEIlPrezzoSonoQuelliDelSilenzio() {
-        assertEquals(ClasseIncantesimo.SILENZIO, ClasseIncantesimo.ofComando(Comando.SILENZIO));
-        assertEquals(5, FabbricaIncantesimi.costoAcquisto(ClasseIncantesimo.SILENZIO));
-        assertEquals(Costanti.INCANTESIMO_SILENZIO_COSTO_LANCIO, FabbricaIncantesimi.costoLancio(ClasseIncantesimo.SILENZIO));
-        assertEquals(ClasseIncantesimo.SILENZIO, FabbricaIncantesimi.crea(ClasseIncantesimo.SILENZIO, 1).getClasse());
+        assertEquals(TipoIncantesimo.SILENZIO, TipoIncantesimo.ofComando(Comando.SILENZIO));
+        assertEquals(5, FabbricaIncantesimi.costoAcquisto(TipoIncantesimo.SILENZIO));
+        assertEquals(Costanti.INCANTESIMO_SILENZIO_COSTO_LANCIO, FabbricaIncantesimi.costoLancio(TipoIncantesimo.SILENZIO));
+        assertEquals(TipoIncantesimo.SILENZIO, FabbricaIncantesimi.crea(TipoIncantesimo.SILENZIO, 1).getClasse());
     }
 
     @Test
@@ -53,7 +54,7 @@ class SilenzioTest {
         b.addEffettoDiStato(TipoEffettoDiStato.SILENZIATO, 2, 0);
         c.addEffettoDiStato(TipoEffettoDiStato.SILENZIATO, 4, 0);
         assertSame(b, Silenzio.scegliBersaglio(Arrays.asList(a, b, c)));
-        assertNull(Silenzio.scegliBersaglio(Arrays.asList()));
+        assertNull(Silenzio.scegliBersaglio(Collections.emptyList()));
     }
 
     @Test

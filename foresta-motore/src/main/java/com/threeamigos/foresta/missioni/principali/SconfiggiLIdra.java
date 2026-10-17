@@ -2,12 +2,12 @@ package com.threeamigos.foresta.missioni.principali;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * Sconfiggere l'Idra, alleata del Drago, nella Rocca del Sangue. È una figlia di {@link SconfiggiIlDrago}.
@@ -17,7 +17,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 public class SconfiggiLIdra extends MissioneBase implements Missione {
 
 	public SconfiggiLIdra() {
-		super(ClasseMissione.SCONFIGGI_L_IDRA);
+		super(MissionePredefinita.SCONFIGGI_L_IDRA);
 	}
 
     @Override

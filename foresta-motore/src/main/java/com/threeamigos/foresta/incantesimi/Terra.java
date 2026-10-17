@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * L'incantesimo di Terra: un incantesimo malefico di danno di Terra (vedi {@link IncantesimoMaleficoImpl}). Costo e danni stanno nelle costanti {@code INCANTESIMO_TERRA_*}.
@@ -13,8 +13,8 @@ public class Terra extends IncantesimoMaleficoImpl implements Incantesimo {
 		super(livello);
 	}
 
-	public ClasseIncantesimo getClasse() {
-		return ClasseIncantesimo.TERRA;
+	public TipoIncantesimo getClasse() {
+		return TipoIncantesimo.TERRA;
 	}
 
 	public int getCostoLancio() {

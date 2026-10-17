@@ -1,14 +1,14 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.*;
-import com.threeamigos.foresta.modellodati.GruppoMD;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.interfacce.VistaGruppo;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
+import com.threeamigos.foresta.modellodati.GruppoMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,27 +49,27 @@ public abstract class Gruppo implements VistaGruppo {
 	// annunciano alla UI; quelle del gruppo avversario no (sono scorte che i mostri hanno con sé, e che a scontro finito
 	// possono diventare bottino)
 
-	public final int getIncantesimi(ClasseIncantesimo classeIncantesimo) {
-		return getGruppoMD().getIncantesimi(classeIncantesimo);
+	public final int getIncantesimi(TipoIncantesimo tipoIncantesimo) {
+		return getGruppoMD().getIncantesimi(tipoIncantesimo);
 	}
 
 	/**
 	 * Aggiunge pergamene di quell'incantesimo alle scorte; il gruppo del giocatore lo annuncia alla UI.
 	 */
-	public final void addIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
-		int valorePrecedente = getGruppoMD().getIncantesimi(classeIncantesimo);
+	public final void addIncantesimi(TipoIncantesimo tipoIncantesimo, int quantita) {
+		int valorePrecedente = getGruppoMD().getIncantesimi(tipoIncantesimo);
 		int valoreAttuale = valorePrecedente + quantita;
-		getGruppoMD().setIncantesimi(classeIncantesimo, valoreAttuale);
+		getGruppoMD().setIncantesimi(tipoIncantesimo, valoreAttuale);
 		if (isGruppoGiocatore()) {
-			BusEventi.pubblica(new NotificaVariazioneDisponibilitaIncantesimi(classeIncantesimo, valorePrecedente, valoreAttuale));
+			BusEventi.pubblica(new NotificaVariazioneDisponibilitaIncantesimi(tipoIncantesimo, valorePrecedente, valoreAttuale));
 		}
 	}
 
 	/**
 	 * Toglie pergamene di quell'incantesimo dalle scorte.
 	 */
-	public final void subIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
-		addIncantesimi(classeIncantesimo, -quantita);
+	public final void subIncantesimi(TipoIncantesimo tipoIncantesimo, int quantita) {
+		addIncantesimi(tipoIncantesimo, -quantita);
 	}
 	
 	public final int getPozioniSalute() {

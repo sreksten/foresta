@@ -2,7 +2,7 @@ package com.threeamigos.foresta.tattiche;
 
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
 import java.util.Collections;
@@ -18,11 +18,11 @@ public final class Decisione {
 	private final int indiceVoce;
 	private final AzioneMD azione;
 	private final TipoAzione tipoEseguito;
-	private final ClasseIncantesimo incantesimo;
+	private final TipoIncantesimo incantesimo;
 	private final Personaggio bersaglio;
 	private final List<String> spiegazione;
 
-	Decisione(int indiceVoce, AzioneMD azione, TipoAzione tipoEseguito, ClasseIncantesimo incantesimo, Personaggio bersaglio, List<String> spiegazione) {
+	Decisione(int indiceVoce, AzioneMD azione, TipoAzione tipoEseguito, TipoIncantesimo incantesimo, Personaggio bersaglio, List<String> spiegazione) {
 		this.indiceVoce = indiceVoce;
 		this.azione = azione;
 		this.tipoEseguito = tipoEseguito;
@@ -66,7 +66,7 @@ public final class Decisione {
 	/**
 	 * L'incantesimo scelto per INCANTESIMO_DI_DANNO, o quello dell'azione se è un incantesimo; null altrimenti
 	 */
-	public ClasseIncantesimo getIncantesimo() {
+	public TipoIncantesimo getIncantesimo() {
 		return incantesimo;
 	}
 

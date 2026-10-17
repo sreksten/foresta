@@ -4,16 +4,16 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
+import com.threeamigos.foresta.missioni.IncontroDiMissione;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
+import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.missioni.IncontroDiMissione;
-import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
 
 /**
  * In città qualcuno chiede di riportare a casa una persona che sta in un posto pericoloso, in mano a dei nemici: un
@@ -41,7 +41,7 @@ public abstract class LaLiberazione extends IncaricoInCitta {
 	protected static final String LUTTO = "LUTTO";
 	protected static final String FALLIMENTO = "FALLIMENTO";
 
-	protected LaLiberazione(ClasseMissione classe) {
+	protected LaLiberazione(MissionePredefinita classe) {
 		super(classe);
 	}
 

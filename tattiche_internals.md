@@ -348,7 +348,7 @@ scelto (`TipoAzione.di(classe)`). Per `CAMBIA_ARMA` il bersaglio della decisione
 
 ### 9.2 `Decisione`
 
-Dati: `indiceVoce` (-1 per il ripiego), l'`AzioneMD` scritta nella voce, il `TipoAzione` **eseguito**, la `ClasseIncantesimo` (se è un incantesimo), il bersaglio (`null` per i gruppi e il cambio
+Dati: `indiceVoce` (-1 per il ripiego), l'`AzioneMD` scritta nella voce, il `TipoAzione` **eseguito**, la `TipoIncantesimo` (se è un incantesimo), il bersaglio (`null` per i gruppi e il cambio
 d'arma) e la spiegazione. `getIdentificativoVoce()` è `String.valueOf(indiceVoce)`, `null` per il ripiego: è la chiave con cui lo stato ricorda gli usi.
 
 ### 9.3 Il ripiego

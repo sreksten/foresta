@@ -6,37 +6,18 @@ import com.threeamigos.foresta.interfacce.StrumentiDiSviluppo.Scorta;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.strumenti.ContestoLancio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.strumenti.TrucchiDiSviluppo;
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTabbedPane;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.Timer;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.EnumMap;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.Locale;
 
 /**
  * La finestra per chi sviluppa, che si apre solo in modalità di prova: una finestra a parte, con un tab per ogni
@@ -276,7 +257,7 @@ public class FinestraDiProva {
     private class PannelloGruppo extends JPanel {
 
         private final Map<Scorta, JSpinner> scorte = new EnumMap<>(Scorta.class);
-        private final Map<ClasseIncantesimo, JSpinner> incantesimi = new EnumMap<>(ClasseIncantesimo.class);
+        private final Map<TipoIncantesimo, JSpinner> incantesimi = new EnumMap<>(TipoIncantesimo.class);
 
         PannelloGruppo() {
             super(new GridBagLayout());
@@ -293,7 +274,7 @@ public class FinestraDiProva {
                     }
                 });
             }
-            for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
+            for (TipoIncantesimo classe : TipoIncantesimo.values()) {
                 JSpinner spinner = nuovoSpinner();
                 incantesimi.put(classe, spinner);
                 add(new JLabel("Pergamene: " + classe.getNomePlurale()), cella(0, riga));

@@ -3,12 +3,12 @@ package com.threeamigos.foresta.missioni.principali;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.strumenti.Misc;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.missioni.MissioneBase;
 
 /**
  * Dieci locande sparse nella Foresta, quelle cittadine non contano. Tornare due volte
@@ -25,7 +25,7 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 	private static final String LOCANDE_CENSITE = "LOCANDE_CENSITE";
 
 	public NessunBoccaleLasciatoIndietro() {
-		super(ClasseMissione.NESSUN_BOCCALE_LASCIATO_INDIETRO);
+		super(MissionePredefinita.NESSUN_BOCCALE_LASCIATO_INDIETRO);
 	}
 
 	@Override

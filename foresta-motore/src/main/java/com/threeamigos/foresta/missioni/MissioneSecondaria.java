@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 /**
  * Una missione secondaria generica, senza comportamento: serve da contenitore per le missioni figlie di un'altra (la fabbrica la ricostruisce dopo un caricamento).
@@ -10,7 +10,7 @@ import com.threeamigos.foresta.tipi.ClasseMissione;
 public class MissioneSecondaria extends MissioneBase {
 
     public MissioneSecondaria() {
-        super(ClasseMissione.MISSIONE_SECONDARIA);
+        super(MissionePredefinita.MISSIONE_SECONDARIA);
     }
 
     @Override

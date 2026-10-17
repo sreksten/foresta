@@ -1,11 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,14 +30,14 @@ class ImmunitaDeiNonMortiTest {
             }
             controllati++;
             Personaggio p = crea(tipo);
-            assertTrue(p.isImmuneAIncantesimo(ClasseIncantesimo.MORTE), tipo.name());
-            assertTrue(p.isImmuneAIncantesimo(ClasseIncantesimo.VELENO), tipo.name());
+            assertTrue(p.isImmuneAIncantesimo(TipoIncantesimo.MORTE), tipo.name());
+            assertTrue(p.isImmuneAIncantesimo(TipoIncantesimo.VELENO), tipo.name());
             assertTrue(p.isImmuneATipoDanno(TipoDanno.VELENO), tipo.name());
             assertTrue(p.isImmuneAEffetto(TipoEffettoDiStato.SANGUINAMENTO), tipo.name());
             assertTrue(p.isImmuneAEffetto(TipoEffettoDiStato.INFETTATO), tipo.name());
             assertEquals(2.0d, p.getMoltiplicatoreDannoSubito(TipoDanno.SACRO), 1e-9, tipo.name());
             assertEquals(1.0d, p.getMoltiplicatoreDannoSubito(TipoDanno.FUOCO), 1e-9, tipo.name());
-            assertFalse(p.isImmuneAIncantesimo(ClasseIncantesimo.FUOCO), tipo.name());
+            assertFalse(p.isImmuneAIncantesimo(TipoIncantesimo.FUOCO), tipo.name());
         }
         assertEquals(6, controllati);
     }
@@ -50,7 +46,7 @@ class ImmunitaDeiNonMortiTest {
     void chiNonEUnNonMortoNonHaNienteDiTutto() {
         for (TipoPersonaggio tipo : new TipoPersonaggio[] {TipoPersonaggio.GOBLIN, TipoPersonaggio.STREGA, TipoPersonaggio.DRAGO}) {
             Personaggio p = crea(tipo);
-            assertFalse(p.isImmuneAIncantesimo(ClasseIncantesimo.MORTE), tipo.name());
+            assertFalse(p.isImmuneAIncantesimo(TipoIncantesimo.MORTE), tipo.name());
             assertFalse(p.isImmuneAEffetto(TipoEffettoDiStato.SANGUINAMENTO), tipo.name());
             assertEquals(1.0d, p.getMoltiplicatoreDannoSubito(TipoDanno.SACRO), 1e-9, tipo.name());
         }
@@ -76,7 +72,7 @@ class ImmunitaDeiNonMortiTest {
             Personaggio p = crea(tipo);
             assertTrue(p.isImmuneAEffetto(TipoEffettoDiStato.ATTERRATO), tipo.name());
             assertTrue(p.isImmuneATipoDanno(TipoDanno.ARIA) && p.isImmuneATipoDanno(TipoDanno.TERRA), tipo.name());
-            assertTrue(p.isImmuneAIncantesimo(ClasseIncantesimo.ARIA) && p.isImmuneAIncantesimo(ClasseIncantesimo.TERRA), tipo.name());
+            assertTrue(p.isImmuneAIncantesimo(TipoIncantesimo.ARIA) && p.isImmuneAIncantesimo(TipoIncantesimo.TERRA), tipo.name());
             assertFalse(p.isImmuneAEffetto(TipoEffettoDiStato.AVVELENATO), tipo.name());
         }
     }

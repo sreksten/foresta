@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * L'incantesimo di Acqua: un incantesimo malefico di danno di Acqua (vedi {@link IncantesimoMaleficoImpl}). Costo e danni stanno nelle costanti {@code INCANTESIMO_ACQUA_*}.
@@ -13,8 +13,8 @@ public class Acqua extends IncantesimoMaleficoImpl implements Incantesimo {
 		super(livello);
 	}
 
-	public ClasseIncantesimo getClasse() {
-		return ClasseIncantesimo.ACQUA;
+	public TipoIncantesimo getClasse() {
+		return TipoIncantesimo.ACQUA;
 	}
 
 	@Override

@@ -3,25 +3,25 @@ package com.threeamigos.foresta.missioni.incarichi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
+import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
+import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
+import com.threeamigos.foresta.missioni.richieste.OggettoSmarrito;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
-import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
-import com.threeamigos.foresta.missioni.richieste.OggettoSmarrito;
 
 /**
  * In città qualcuno ha perso qualcosa nella foresta, vicino a un posto che si ricorda (un tempio, delle rovine, una
@@ -56,7 +56,7 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 			TipoLocazione.PALUDE, TipoLocazione.ROVINE, TipoLocazione.TEMPIO, TipoLocazione.GROTTA);
 
 	public LOggettoSmarrito() {
-		super(ClasseMissione.L_OGGETTO_SMARRITO);
+		super(MissionePredefinita.L_OGGETTO_SMARRITO);
 	}
 
 	public OggettoSmarrito getSmarrito() {

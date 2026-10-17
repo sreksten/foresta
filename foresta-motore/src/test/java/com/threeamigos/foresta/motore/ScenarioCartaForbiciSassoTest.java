@@ -1,16 +1,11 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.eventi.interni.InternoAmiciziaStretta;
 import com.threeamigos.foresta.eventi.interni.InternoSfidaCartaForbiciSasso;
-import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.oggetti.FabbricaOggetti;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -78,12 +73,12 @@ class ScenarioCartaForbiciSassoTest {
             Dado.trucca(3);
             partita.comando(Comando.CARTA);
             assertTrue(lastEvent(partita).isFinale(), "l'ultima mano è l'ultima");
-            assertFalse(new HashSet<>(partita.comandiDisponibili()).equals(LE_TRE_MOSSE), "la sfida è finita");
+            assertNotEquals(new HashSet<>(partita.comandiDisponibili()), LE_TRE_MOSSE, "la sfida è finita");
             assertEquals(1, partita.gruppo().getSfideVinte());
             // Una delle frasi di GIOCATORE_VINCE (vedi sfide.txt), scelta a caso
             assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("L'Idra dice: \"Poffarre") || t.startsWith("L'Idra dice: \"Incredibile")),
                     String.valueOf(partita.testi()));
-            assertFalse(RegistroMissioni.isPartita(ClasseMissione.LA_SFIDA_DEI_CAMPIONI), "una sfida sola non basta");
+            assertFalse(RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI), "una sfida sola non basta");
         }
     }
 
@@ -144,7 +139,7 @@ class ScenarioCartaForbiciSassoTest {
         try (PartitaDiTest partita = sfidataDaLIdra(25)) {
             partita.gruppo().addSfidaVinta();
             partita.gruppo().addSfidaVinta();
-            assertFalse(RegistroMissioni.isPartita(ClasseMissione.LA_SFIDA_DEI_CAMPIONI));
+            assertFalse(RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI));
             Dado.trucca(1, 1);
             partita.comando(Comando.AMICIZIA);
             Dado.trucca(3, 3, 3);
@@ -153,7 +148,7 @@ class ScenarioCartaForbiciSassoTest {
             partita.comando(Comando.CARTA);
 
             assertEquals(3, partita.gruppo().getSfideVinte());
-            assertTrue(RegistroMissioni.isPartita(ClasseMissione.LA_SFIDA_DEI_CAMPIONI));
+            assertTrue(RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI));
             assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("L'Idra dice: \"") && t.contains("torneo")),
                     String.valueOf(partita.testi()));
         }
@@ -162,7 +157,7 @@ class ScenarioCartaForbiciSassoTest {
     @Test
     void conLaMissioneGiaPartitaChiStringeAmiciziaNonVieneSfidatoPiu() {
         try (PartitaDiTest partita = sfidataDaLIdra(25)) {
-            RegistroMissioni.avvia(ClasseMissione.LA_SFIDA_DEI_CAMPIONI);
+            RegistroMissioni.avvia(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI);
             // Il dado delle sfide non viene nemmeno tirato: l'amicizia va per l'offerta di sempre
             Dado.trucca(1);
             partita.comando(Comando.AMICIZIA);

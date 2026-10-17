@@ -3,15 +3,15 @@ package com.threeamigos.foresta.missioni.incarichi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.missioni.Mandante;
 import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
 import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.richieste.MaterialeRichiesto;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 /**
  * Un mandante in città (l'alchimista, l'armaiolo, il capitano delle guardie, il locandiere: vedi {@link Mandante})
@@ -31,7 +31,7 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 
 	private final Mandante mandante;
 
-	public RichiestaDiMateriali(ClasseMissione classe, Mandante mandante) {
+	public RichiestaDiMateriali(MissionePredefinita classe, Mandante mandante) {
 		super(classe);
 		this.mandante = mandante;
 	}
@@ -40,28 +40,28 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 	 * La richiesta dell'alchimista.
 	 */
 	public static RichiestaDiMateriali dellAlchimista() {
-		return new RichiestaDiMateriali(ClasseMissione.RICHIESTA_ALCHIMISTA, Mandante.ALCHIMISTA);
+		return new RichiestaDiMateriali(MissionePredefinita.RICHIESTA_ALCHIMISTA, Mandante.ALCHIMISTA);
 	}
 
 	/**
 	 * La richiesta dell'armaiolo.
 	 */
 	public static RichiestaDiMateriali dellArmaiolo() {
-		return new RichiestaDiMateriali(ClasseMissione.RICHIESTA_ARMAIOLO, Mandante.ARMAIOLO);
+		return new RichiestaDiMateriali(MissionePredefinita.RICHIESTA_ARMAIOLO, Mandante.ARMAIOLO);
 	}
 
 	/**
 	 * La richiesta del capitano delle guardie.
 	 */
 	public static RichiestaDiMateriali delCapitano() {
-		return new RichiestaDiMateriali(ClasseMissione.RICHIESTA_CAPITANO, Mandante.CAPITANO);
+		return new RichiestaDiMateriali(MissionePredefinita.RICHIESTA_CAPITANO, Mandante.CAPITANO);
 	}
 
 	/**
 	 * La richiesta del locandiere.
 	 */
 	public static RichiestaDiMateriali delLocandiere() {
-		return new RichiestaDiMateriali(ClasseMissione.RICHIESTA_LOCANDIERE, Mandante.LOCANDIERE);
+		return new RichiestaDiMateriali(MissionePredefinita.RICHIESTA_LOCANDIERE, Mandante.LOCANDIERE);
 	}
 
 	public Mandante getMandante() {

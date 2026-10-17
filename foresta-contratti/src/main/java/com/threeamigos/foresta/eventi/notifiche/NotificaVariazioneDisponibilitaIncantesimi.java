@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * Notifica un cambiamento nel totale degli incantesimi di un certo tipo disponibili nell'inventario del gruppo.
@@ -13,17 +13,17 @@ public class NotificaVariazioneDisponibilitaIncantesimi extends EventoBase {
 
     private final int valorePrecedente;
     private final int nuovoValore;
-    private final ClasseIncantesimo classeIncantesimo;
+    private final TipoIncantesimo tipoIncantesimo;
 
-    public NotificaVariazioneDisponibilitaIncantesimi(ClasseIncantesimo classeIncantesimo, int valorePrecedente, int nuovoValore) {
+    public NotificaVariazioneDisponibilitaIncantesimi(TipoIncantesimo tipoIncantesimo, int valorePrecedente, int nuovoValore) {
         super(TipoEvento.NOTIFICA_VARIAZIONE_DISPONIBILITA_INCANTESIMI);
-        this.classeIncantesimo = classeIncantesimo;
+        this.tipoIncantesimo = tipoIncantesimo;
         this.valorePrecedente = valorePrecedente;
         this.nuovoValore = nuovoValore;
     }
 
-    public ClasseIncantesimo getClasseIncantesimo() {
-        return classeIncantesimo;
+    public TipoIncantesimo getClasseIncantesimo() {
+        return tipoIncantesimo;
     }
 
     public int getValorePrecedente() {

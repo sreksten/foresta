@@ -10,23 +10,14 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.ContestoLancio;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.TrucchiDiSviluppo;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class StrumentiDiSviluppoMotoreTest {
 
@@ -99,10 +90,10 @@ class StrumentiDiSviluppoMotoreTest {
                 assertEquals(0, strumenti.getScorta(scorta), scorta.name());
             }
             assertEquals(0, partita.gruppo().getMonete());
-            strumenti.impostaIncantesimi(ClasseIncantesimo.FUOCO, 9);
-            assertEquals(9, partita.gruppo().getIncantesimi(ClasseIncantesimo.FUOCO));
-            strumenti.impostaIncantesimi(ClasseIncantesimo.FUOCO, 4);
-            assertEquals(4, strumenti.getIncantesimi(ClasseIncantesimo.FUOCO));
+            strumenti.impostaIncantesimi(TipoIncantesimo.FUOCO, 9);
+            assertEquals(9, partita.gruppo().getIncantesimi(TipoIncantesimo.FUOCO));
+            strumenti.impostaIncantesimi(TipoIncantesimo.FUOCO, 4);
+            assertEquals(4, strumenti.getIncantesimi(TipoIncantesimo.FUOCO));
         }
     }
 
@@ -124,12 +115,12 @@ class StrumentiDiSviluppoMotoreTest {
     @Test
     void leMissioniSonoDivisePerLuogoDiPartenza() {
         try (PartitaDiTest partita = partitaInCitta()) {
-            List<ClasseMissione> locanda = classi(strumenti.getMissioni(DovePartono.LOCANDA));
-            List<ClasseMissione> citta = classi(strumenti.getMissioni(DovePartono.CITTA));
-            assertTrue(locanda.contains(ClasseMissione.LA_LEGGENDA_DEL_LOCANDIERE));
-            assertTrue(locanda.contains(ClasseMissione.NON_SPARATE_SUL_PIANISTA));
-            assertTrue(citta.contains(ClasseMissione.CACCIA_AI_GOBLIN));
-            assertTrue(citta.contains(ClasseMissione.IL_NEGOZIO_DELL_ARMAIOLO));
+            List<MissionePredefinita> locanda = classi(strumenti.getMissioni(DovePartono.LOCANDA));
+            List<MissionePredefinita> citta = classi(strumenti.getMissioni(DovePartono.CITTA));
+            assertTrue(locanda.contains(MissionePredefinita.LA_LEGGENDA_DEL_LOCANDIERE));
+            assertTrue(locanda.contains(MissionePredefinita.NON_SPARATE_SUL_PIANISTA));
+            assertTrue(citta.contains(MissionePredefinita.CACCIA_AI_GOBLIN));
+            assertTrue(citta.contains(MissionePredefinita.IL_NEGOZIO_DELL_ARMAIOLO));
             assertTrue(locanda.stream().noneMatch(citta::contains));
         }
     }
@@ -138,15 +129,15 @@ class StrumentiDiSviluppoMotoreTest {
     void unaMissioneSiForzaEPartePrimaDelleSueCondizioni() {
         try (PartitaDiTest partita = partitaInCitta()) {
             MissioneAPassi missione = (MissioneAPassi) RegistroMissioni.getMissioniNonCompletate().stream()
-                    .filter(m -> m.getClasse() == ClasseMissione.CACCIA_AI_GOBLIN).findFirst().get();
-            VoceMissione prima = voce(DovePartono.CITTA, ClasseMissione.CACCIA_AI_GOBLIN);
+                    .filter(m -> m.getClasse() == MissionePredefinita.CACCIA_AI_GOBLIN).findFirst().get();
+            VoceMissione prima = voce(DovePartono.CITTA, MissionePredefinita.CACCIA_AI_GOBLIN);
             assertTrue(prima.isForzabile());
             String passoIniziale = missione.getPassoCorrente();
 
-            strumenti.forzaPartenza(ClasseMissione.CACCIA_AI_GOBLIN);
-            assertEquals("partenza forzata", voce(DovePartono.CITTA, ClasseMissione.CACCIA_AI_GOBLIN).getStato());
-            assertFalse(voce(DovePartono.CITTA, ClasseMissione.CACCIA_AI_GOBLIN).isForzabile());
-            assertThrows(IllegalStateException.class, () -> strumenti.forzaPartenza(ClasseMissione.CACCIA_AI_GOBLIN));
+            strumenti.forzaPartenza(MissionePredefinita.CACCIA_AI_GOBLIN);
+            assertEquals("partenza forzata", voce(DovePartono.CITTA, MissionePredefinita.CACCIA_AI_GOBLIN).getStato());
+            assertFalse(voce(DovePartono.CITTA, MissionePredefinita.CACCIA_AI_GOBLIN).isForzabile());
+            assertThrows(IllegalStateException.class, () -> strumenti.forzaPartenza(MissionePredefinita.CACCIA_AI_GOBLIN));
 
             // Il gruppo è in una città: al prossimo controllo la missione parte
             missione.controllaPreLocazione();
@@ -158,9 +149,9 @@ class StrumentiDiSviluppoMotoreTest {
     void unaMissioneForzataNonPartePerStradaFuoriDalLuogoGiusto() {
         try (PartitaDiTest partita = partitaInCitta()) {
             MissioneAPassi missione = (MissioneAPassi) RegistroMissioni.getMissioniNonCompletate().stream()
-                    .filter(m -> m.getClasse() == ClasseMissione.LA_LEGGENDA_DEL_LOCANDIERE).findFirst().get();
+                    .filter(m -> m.getClasse() == MissionePredefinita.LA_LEGGENDA_DEL_LOCANDIERE).findFirst().get();
             String passoIniziale = missione.getPassoCorrente();
-            strumenti.forzaPartenza(ClasseMissione.LA_LEGGENDA_DEL_LOCANDIERE);
+            strumenti.forzaPartenza(MissionePredefinita.LA_LEGGENDA_DEL_LOCANDIERE);
             // Il gruppo è in città, non in una locanda
             missione.controllaPreLocazione();
             assertEquals(passoIniziale, missione.getPassoCorrente());
@@ -183,11 +174,11 @@ class StrumentiDiSviluppoMotoreTest {
         assertEquals(TipoPersonaggio.DRAGO, Dado.scegli(ContestoLancio.TIPO_MOSTRO, ammessi));
     }
 
-    private List<ClasseMissione> classi(List<VoceMissione> voci) {
+    private List<MissionePredefinita> classi(List<VoceMissione> voci) {
         return voci.stream().map(VoceMissione::getClasse).collect(Collectors.toList());
     }
 
-    private VoceMissione voce(DovePartono dove, ClasseMissione classe) {
+    private VoceMissione voce(DovePartono dove, MissionePredefinita classe) {
         return strumenti.getMissioni(dove).stream().filter(v -> v.getClasse() == classe).findFirst().get();
     }
 }

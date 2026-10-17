@@ -1,21 +1,17 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -152,9 +147,9 @@ class RegistroTatticheTest {
         return contesto(strega, mago1);
     }
 
-    private ClasseIncantesimo piuPotenteChePuoPagare(Personaggio mostro) {
-        ClasseIncantesimo migliore = null;
-        for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
+    private TipoIncantesimo piuPotenteChePuoPagare(Personaggio mostro) {
+        TipoIncantesimo migliore = null;
+        for (TipoIncantesimo classe : TipoIncantesimo.values()) {
             if (mostro.getRepertorioIncantesimi().contains(classe) && FabbricaIncantesimi.costoLancio(classe) <= mostro.getMagia()
                     && !mago1.isImmuneAIncantesimo(classe)) {
                 if (migliore == null || ((IncantesimoMalefico) FabbricaIncantesimi.crea(classe, mostro.getLivello())).getDanni()
@@ -203,7 +198,7 @@ class RegistroTatticheTest {
     @Test
     void unMostroFurboLanciaIlPiuPotenteSoloSeRendePiuDelleArmi() {
         fissa(strega, TipoAttributo.INTELLIGENZA, 9);
-        ClasseIncantesimo piuPotente = piuPotenteChePuoPagare(strega);
+        TipoIncantesimo piuPotente = piuPotenteChePuoPagare(strega);
         Dado.trucca(10);
         Decisione d = decidi(strega, dellaStrega());
         double incantesimo = CalcolatoreCombattimento.dannoAtteso(strega, mago1,
@@ -238,7 +233,7 @@ class RegistroTatticheTest {
         for (int seme = 0; seme < 100; seme++) {
             Dado.impostaSeme(seme);
             Decisione d = decidi(strega, dellaStrega());
-            assertNotEquals(ClasseIncantesimo.SILENZIO, d.getIncantesimo(), "già silenziato");
+            assertNotEquals(TipoIncantesimo.SILENZIO, d.getIncantesimo(), "già silenziato");
         }
     }
 }

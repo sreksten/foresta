@@ -2,7 +2,7 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 /**
  * Missione di prova, per controllare nella finestra delle missioni come appare una missione fallita: si attiva al
@@ -11,7 +11,7 @@ import com.threeamigos.foresta.tipi.ClasseMissione;
 public class MissioneCheFallisce extends MissioneBase implements Missione {
 
     public MissioneCheFallisce() {
-        super(ClasseMissione.MISSIONE_CHE_FALLISCE);
+        super(MissionePredefinita.MISSIONE_CHE_FALLISCE);
     }
 
     @Override

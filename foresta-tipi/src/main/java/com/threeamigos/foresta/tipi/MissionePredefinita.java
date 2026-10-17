@@ -8,7 +8,7 @@ package com.threeamigos.foresta.tipi;
  * Le <i>predefinite</i> sono le missioni che esistono dall'inizio della partita, in questo ordine: il loro nome è
  * l'identificativo con cui la missione si salva. Le altre nascono durante il gioco (o nei test).
  */
-public enum ClasseMissione {
+public enum MissionePredefinita {
 
 	SCONFIGGI_IL_DRAGO(true),
 	LA_LEGGENDA_DELL_ARMAIOLO(true),
@@ -63,11 +63,11 @@ public enum ClasseMissione {
 
 	private final boolean predefinita;
 
-	ClasseMissione() {
+	MissionePredefinita() {
 		this(false);
 	}
 
-	ClasseMissione(boolean predefinita) {
+	MissionePredefinita(boolean predefinita) {
 		this.predefinita = predefinita;
 	}
 
@@ -88,8 +88,8 @@ public enum ClasseMissione {
 	/**
 	 * La classe della missione predefinita con quell'identificativo, o null se non è di una predefinita.
 	 */
-	public static ClasseMissione predefinitaConId(String id) {
-		for (ClasseMissione classe : values()) {
+	public static MissionePredefinita predefinitaConId(String id) {
+		for (MissionePredefinita classe : values()) {
 			if (classe.predefinita && classe.name().equals(id)) {
 				return classe;
 			}

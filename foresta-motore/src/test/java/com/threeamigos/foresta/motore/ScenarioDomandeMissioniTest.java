@@ -2,19 +2,20 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Una missione a passi pone una domanda al giocatore nel mezzo di una partita vera (gestione_missioni.md, §4).
@@ -29,7 +30,7 @@ class ScenarioDomandeMissioniTest {
         final List<String> eseguiti = new ArrayList<>();
 
         MissioneDelBivio() {
-            super(ClasseMissione.MISSIONE_DI_PROVA);
+            super(MissionePredefinita.MISSIONE_DI_PROVA);
         }
 
         @Override
@@ -75,7 +76,7 @@ class ScenarioDomandeMissioniTest {
             partita.comando(Comando.NUMERO_2);
             assertNotEquals(Stato.ATTESA_RISPOSTA_MISSIONE, partita.stato());
             assertEquals("2", missione.getRisposta("BIVIO"));
-            assertEquals(Arrays.asList("STRADA_2"), missione.eseguiti);
+            assertEquals(Collections.singletonList("STRADA_2"), missione.eseguiti);
             assertTrue(missione.isCompleta());
             assertSame(locazione, partita.gruppo().getLocazioneCorrente(), "la locazione non si costruisce di nuovo");
         }

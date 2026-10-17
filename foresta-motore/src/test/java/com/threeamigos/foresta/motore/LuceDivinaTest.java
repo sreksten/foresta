@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
@@ -8,13 +7,7 @@ import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Sacerdote;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.PortataIncantesimo;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -32,14 +25,14 @@ class LuceDivinaTest {
 
     @Test
     void ECaratterizzataComeIlFulmineMaSacraEAPiuBersagli() {
-        Incantesimo luce = FabbricaIncantesimi.crea(ClasseIncantesimo.LUCE_DIVINA, 5);
-        assertEquals(PortataIncantesimo.MULTIPLO, ClasseIncantesimo.LUCE_DIVINA.getPortata());
-        assertEquals(TipoDanno.SACRO, ClasseIncantesimo.LUCE_DIVINA.getTipoDanno());
-        assertEquals(Comando.LUCE_DIVINA, ClasseIncantesimo.LUCE_DIVINA.getComandoDiAttivazione());
+        Incantesimo luce = FabbricaIncantesimi.crea(TipoIncantesimo.LUCE_DIVINA, 5);
+        assertEquals(PortataIncantesimo.MULTIPLO, TipoIncantesimo.LUCE_DIVINA.getPortata());
+        assertEquals(TipoDanno.SACRO, TipoIncantesimo.LUCE_DIVINA.getTipoDanno());
+        assertEquals(Comando.LUCE_DIVINA, TipoIncantesimo.LUCE_DIVINA.getComandoDiAttivazione());
         assertEquals(Costanti.INCANTESIMO_FULMINE_DANNI, Costanti.INCANTESIMO_LUCE_DIVINA_DANNI);
         assertEquals(Costanti.INCANTESIMO_FULMINE_COSTO_LANCIO, luce.getCostoLancio());
-        assertEquals(FabbricaIncantesimi.costoAcquisto(ClasseIncantesimo.FULMINE),
-                FabbricaIncantesimi.costoAcquisto(ClasseIncantesimo.LUCE_DIVINA));
+        assertEquals(FabbricaIncantesimi.costoAcquisto(TipoIncantesimo.FULMINE),
+                FabbricaIncantesimi.costoAcquisto(TipoIncantesimo.LUCE_DIVINA));
     }
 
     @Test
@@ -86,7 +79,7 @@ class LuceDivinaTest {
             partita.eventi().ascolta(NotificaTestoFrase.class);
             int magiaPrima = sacerdote.getMagia();
 
-            FabbricaIncantesimi.crea(ClasseIncantesimo.LUCE_DIVINA, sacerdote.getLivello()).formula(sacerdote, null, avversari);
+            FabbricaIncantesimi.crea(TipoIncantesimo.LUCE_DIVINA, sacerdote.getLivello()).formula(sacerdote, null, avversari);
 
             assertTrue(frasi(partita).contains(FRASE_SULLO_SCHELETRO), frasi(partita).toString());
             assertEquals(magiaPrima - Costanti.INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO, sacerdote.getMagia());
@@ -104,7 +97,7 @@ class LuceDivinaTest {
             avversari.aggiungiPersonaggio(sacerdoteAvversario);
             partita.eventi().ascolta(NotificaTestoFrase.class);
 
-            FabbricaIncantesimi.crea(ClasseIncantesimo.LUCE_DIVINA, 5).formula(sacerdoteAvversario, null, partita.gruppo());
+            FabbricaIncantesimi.crea(TipoIncantesimo.LUCE_DIVINA, 5).formula(sacerdoteAvversario, null, partita.gruppo());
 
             assertFalse(frasi(partita).contains(FRASE_SULLO_SCHELETRO), frasi(partita).toString());
         }
@@ -113,7 +106,7 @@ class LuceDivinaTest {
     @Test
     void IMostriNonLaLanciano() {
         for (TipoPersonaggio classe : new TipoPersonaggio[]{TipoPersonaggio.LICH, TipoPersonaggio.STREGA, TipoPersonaggio.DRAGO}) {
-            assertFalse(FabbricaPersonaggi.crea(classe, 5).getRepertorioIncantesimi().contains(ClasseIncantesimo.LUCE_DIVINA), classe.name());
+            assertFalse(FabbricaPersonaggi.crea(classe, 5).getRepertorioIncantesimi().contains(TipoIncantesimo.LUCE_DIVINA), classe.name());
         }
     }
 

@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
+import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.missioni.IncontroDiMissione;
 
 /**
  * In città una donna chiede di liberare suo marito, rapito da una banda di goblin che lo tiene in una grotta (vedi
@@ -23,7 +23,7 @@ public class IlRapimento extends LaLiberazione {
 	private static final int RICOMPENSA = 35;
 
 	public IlRapimento() {
-		super(ClasseMissione.IL_RAPIMENTO);
+		super(MissionePredefinita.IL_RAPIMENTO);
 	}
 
 	/**

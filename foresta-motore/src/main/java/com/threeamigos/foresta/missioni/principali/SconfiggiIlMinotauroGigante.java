@@ -2,12 +2,12 @@ package com.threeamigos.foresta.missioni.principali;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * Sconfiggere il Minotauro Gigante, alleato del Drago, nella Torre della Paura. È una figlia di {@link SconfiggiIlDrago}.
@@ -17,7 +17,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 public class SconfiggiIlMinotauroGigante extends MissioneBase implements Missione {
 
 	public SconfiggiIlMinotauroGigante() {
-		super(ClasseMissione.SCONFIGGI_IL_MINOTAURO_GIGANTE);
+		super(MissionePredefinita.SCONFIGGI_IL_MINOTAURO_GIGANTE);
 	}
 
     @Override

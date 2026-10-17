@@ -1,19 +1,20 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoConsumabile;
 import com.threeamigos.foresta.interfacce.VistaOffertaConsumabile;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Il listino dell'alchimista lo costruisce il motore, che decide anche il prezzo di un acquisto: il comando della
@@ -37,7 +38,7 @@ class AlchimistaTest {
 			GruppoGiocatore gruppo = partita.gruppo();
 			List<? extends VistaOffertaConsumabile> offerte = OfferteAlchimista.elenco(gruppo);
 
-			for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
+			for (TipoIncantesimo classe : TipoIncantesimo.values()) {
 				assertEquals(1, offerte.stream().filter(o -> o.getTipo() == TipoConsumabile.INCANTESIMO
 						&& o.getClasseIncantesimo() == classe).count(), "un'offerta per " + classe);
 			}

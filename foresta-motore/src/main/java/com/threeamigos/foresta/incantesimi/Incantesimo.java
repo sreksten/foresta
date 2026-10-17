@@ -2,7 +2,7 @@ package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * Un evento soprannaturale che il giocatore può scatenare contro un gruppo
@@ -15,7 +15,7 @@ public interface Incantesimo {
 	/**
 	 * La classe dell'incantesimo
 	 */
-    ClasseIncantesimo getClasse();
+    TipoIncantesimo getClasse();
 
 	/**
 	 * Formula un incantesimo su un bersaglio

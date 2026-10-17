@@ -2,12 +2,12 @@ package com.threeamigos.foresta.missioni.principali;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneBase;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * Un boccale in ogni locanda cittadina. Una tappa per città, e la missione si chiude
@@ -16,7 +16,7 @@ import com.threeamigos.foresta.missioni.MissioneBase;
 public class CronacheDiUnFegatoEroico extends MissioneBase {
 
 	public CronacheDiUnFegatoEroico() {
-		super(ClasseMissione.CRONACHE_DI_UN_FEGATO_EROICO);
+		super(MissionePredefinita.CRONACHE_DI_UN_FEGATO_EROICO);
 		// Una tappa per città: se il mondo ne guadagnasse una, la missione la seguirebbe
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
 			if (tipoLocazione.getCategoria() == CategoriaLocazione.CITTA) {

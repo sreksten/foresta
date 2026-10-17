@@ -1,51 +1,39 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.canti.CantoDelBardo;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.tattiche.RegistroTattiche;
-import com.threeamigos.foresta.incantesimi.AlbaSacra;
-import com.threeamigos.foresta.incantesimi.LuceDivina;
-import com.threeamigos.foresta.canti.CantoDelBardo;
-import com.threeamigos.foresta.tipi.TipoCanto;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
-import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
-import com.threeamigos.foresta.incantesimi.Incantesimo;
+import com.threeamigos.foresta.incantesimi.*;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
-import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
-import com.threeamigos.foresta.intermezzi.Intermezzo;
-import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
+import com.threeamigos.foresta.intermezzi.*;
 import com.threeamigos.foresta.locazioni.Bottega;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.*;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.FaseDiGioco;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.strumenti.*;
+import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.Temporizzabile;
+import com.threeamigos.foresta.strumenti.Temporizzatore;
+import com.threeamigos.foresta.strumenti.TestataSalvataggio;
+import com.threeamigos.foresta.tattiche.RegistroTattiche;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
 import java.util.concurrent.Executor;
@@ -53,11 +41,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
-import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * Il motore di gioco: una macchina a stati finiti reattiva, senza ciclo di gioco. Avanza solo in risposta a due stimoli: i comandi del
@@ -1106,17 +1089,17 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			comandiPossibili.add(canto.getComando());
 		}
 		// Il Silenzio per primo, subito dopo le abilità innate: ultimo, prima di ANNULLA, si confondeva con lui
-		List<ClasseIncantesimo> inOrdine = new ArrayList<>(Arrays.asList(ClasseIncantesimo.values()));
-		inOrdine.remove(ClasseIncantesimo.SILENZIO);
-		inOrdine.add(0, ClasseIncantesimo.SILENZIO);
-		for (ClasseIncantesimo classeIncantesimo : inOrdine) {
-			if ((albaSacraInnata && classeIncantesimo == ClasseIncantesimo.ALBA_SACRA)
-					|| (luceDivinaInnata && classeIncantesimo == ClasseIncantesimo.LUCE_DIVINA)) {
+		List<TipoIncantesimo> inOrdine = new ArrayList<>(Arrays.asList(TipoIncantesimo.values()));
+		inOrdine.remove(TipoIncantesimo.SILENZIO);
+		inOrdine.add(0, TipoIncantesimo.SILENZIO);
+		for (TipoIncantesimo tipoIncantesimo : inOrdine) {
+			if ((albaSacraInnata && tipoIncantesimo == TipoIncantesimo.ALBA_SACRA)
+					|| (luceDivinaInnata && tipoIncantesimo == TipoIncantesimo.LUCE_DIVINA)) {
 				// Già fra i comandi, anche se il gruppo ha delle pergamene
 				continue;
 			}
-			if (gruppo.getIncantesimi(classeIncantesimo) > 0 && formulante.getMagia() >= FabbricaIncantesimi.crea(classeIncantesimo, formulante.getLivello()).getCostoLancio()) {
-				comandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
+			if (gruppo.getIncantesimi(tipoIncantesimo) > 0 && formulante.getMagia() >= FabbricaIncantesimi.crea(tipoIncantesimo, formulante.getLivello()).getCostoLancio()) {
+				comandiPossibili.add(tipoIncantesimo.getComandoDiAttivazione());
 			}
 		}
 		comandiPossibili.add(Comando.ANNULLA);
@@ -1127,8 +1110,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito entraInStatoAttesaIncantesimoQualsiasi() {
 		List<Comando> comandiPossibili = new ArrayList<>();
-		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-			comandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
+		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
+			comandiPossibili.add(tipoIncantesimo.getComandoDiAttivazione());
 		}
 		comandiPossibili.add(Comando.ANNULLA);
 		BusEventi.pubblica(new RichiestaSelezioneIncantesimoDaLanciare(comandiPossibili));
@@ -2120,7 +2103,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * diventa una delle azioni proponibili.
 	 */
 	private boolean isResurrezioneDisponibile() {
-		if (gruppo.getIncantesimi(ClasseIncantesimo.RESURREZIONE) <= 0) {
+		if (gruppo.getIncantesimi(TipoIncantesimo.RESURREZIONE) <= 0) {
 			return false;
 		}
 		boolean qualcunoMorto = gruppo.getPersonaggi().stream().anyMatch(p -> !p.isVivo() && p.isCurabile());
@@ -2128,9 +2111,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private void eseguiResurrezione(Personaggio formulante, Personaggio personaggioBersaglio) {
-		Incantesimo incantesimo = FabbricaIncantesimi.crea(ClasseIncantesimo.RESURREZIONE, formulante.getLivello());
+		Incantesimo incantesimo = FabbricaIncantesimi.crea(TipoIncantesimo.RESURREZIONE, formulante.getLivello());
 		incantesimo.formula(formulante, personaggioBersaglio, null);
-		gruppo.subIncantesimi(ClasseIncantesimo.RESURREZIONE, 1);
+		gruppo.subIncantesimi(TipoIncantesimo.RESURREZIONE, 1);
 	}
 
 	/**
@@ -2138,7 +2121,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * nell'ordine del gruppo; vuota se nessuno può farlo.
 	 */
 	private List<Personaggio> trovaFormulantiResurrezione() {
-		int costoLancio = FabbricaIncantesimi.crea(ClasseIncantesimo.RESURREZIONE, 1).getCostoLancio();
+		int costoLancio = FabbricaIncantesimi.crea(TipoIncantesimo.RESURREZIONE, 1).getCostoLancio();
 		List<Personaggio> formulanti = new ArrayList<>();
 		for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
 			if (personaggioCorrente.getMagia() >= costoLancio) {

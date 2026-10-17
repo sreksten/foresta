@@ -3,24 +3,19 @@ package com.threeamigos.foresta.missioni.incarichi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
+import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.richieste.MaterialeRichiesto;
+import com.threeamigos.foresta.missioni.richieste.RitualeRichiesto;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.threeamigos.foresta.missioni.IncontroDiMissione;
-import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
-import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
-import com.threeamigos.foresta.missioni.richieste.MaterialeRichiesto;
-import com.threeamigos.foresta.missioni.richieste.RitualeRichiesto;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
 
 /**
  * In città qualcuno chiede di celebrare un rito in un posto della foresta: sigillare un varco, benedire una fonte,
@@ -58,7 +53,7 @@ public class IlRituale extends IncaricoInCitta {
 	private static final String NON_ANCORA = "Non ancora";
 
 	public IlRituale() {
-		super(ClasseMissione.IL_RITUALE);
+		super(MissionePredefinita.IL_RITUALE);
 	}
 
 	public RitualeRichiesto getRituale() {

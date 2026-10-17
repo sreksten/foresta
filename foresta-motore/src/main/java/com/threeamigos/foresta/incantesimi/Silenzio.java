@@ -1,16 +1,16 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Logger;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.List;
 
@@ -24,8 +24,8 @@ public class Silenzio extends IncantesimoMaleficoImpl implements Incantesimo {
 		super(livello);
 	}
 
-	public ClasseIncantesimo getClasse() {
-		return ClasseIncantesimo.SILENZIO;
+	public TipoIncantesimo getClasse() {
+		return TipoIncantesimo.SILENZIO;
 	}
 
 	public int getCostoLancio() {

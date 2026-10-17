@@ -1,17 +1,11 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Il gruppo del giocatore. Oltre a quanto tiene {@link GruppoMD} (personaggi, capo, pergamene e pozioni) porta con sé
@@ -157,7 +151,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(incantesimi.size());
 		stream.print(PIPE);
-		for (Map.Entry<ClasseIncantesimo, Integer> incantesimo : incantesimi.entrySet()) {
+		for (Map.Entry<TipoIncantesimo, Integer> incantesimo : incantesimi.entrySet()) {
 			stream.print(incantesimo.getKey().name());
 			stream.print(PIPE);
 			stream.print(incantesimo.getValue());
@@ -207,7 +201,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		incantesimi.clear();
 		int numeroIncantesimi = st.intero();
 		for (int i = 0; i < numeroIncantesimi; i++) {
-			incantesimi.put(st.enumerato(ClasseIncantesimo.class), st.intero());
+			incantesimi.put(st.enumerato(TipoIncantesimo.class), st.intero());
 		}
 		pozioniSalute = Integer.parseInt(st.testo());
 		pozioniSaluteGrande = Integer.parseInt(st.testo());

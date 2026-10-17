@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.tipi.tattiche;
 
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.Testi;
 import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
-import com.threeamigos.foresta.tipi.Testi;
 
 /**
  * Le azioni che una voce di tattica può compiere (tattiche_di_combattimento_automatiche.md §11.9): le sole già disponibili nella barra dei
@@ -20,16 +20,16 @@ public enum TipoAzione {
 
 	/** L'attacco con l'arma impugnata */
 	ATTACCO_FISICO(PortataAzione.AVVERSARIO, null),
-	ARIA(PortataAzione.AVVERSARIO, ClasseIncantesimo.ARIA),
-	ACQUA(PortataAzione.AVVERSARIO, ClasseIncantesimo.ACQUA),
-	TERRA(PortataAzione.AVVERSARIO, ClasseIncantesimo.TERRA),
-	FUOCO(PortataAzione.AVVERSARIO, ClasseIncantesimo.FUOCO),
-	FULMINE(PortataAzione.AVVERSARIO, ClasseIncantesimo.FULMINE),
-	GELO(PortataAzione.AVVERSARIO, ClasseIncantesimo.GELO),
-	VELENO(PortataAzione.AVVERSARIO, ClasseIncantesimo.VELENO),
-	MORTE(PortataAzione.AVVERSARIO, ClasseIncantesimo.MORTE),
-	SILENZIO(PortataAzione.AVVERSARIO, ClasseIncantesimo.SILENZIO),
-	LUCE_DIVINA(PortataAzione.AVVERSARIO, ClasseIncantesimo.LUCE_DIVINA),
+	ARIA(PortataAzione.AVVERSARIO, TipoIncantesimo.ARIA),
+	ACQUA(PortataAzione.AVVERSARIO, TipoIncantesimo.ACQUA),
+	TERRA(PortataAzione.AVVERSARIO, TipoIncantesimo.TERRA),
+	FUOCO(PortataAzione.AVVERSARIO, TipoIncantesimo.FUOCO),
+	FULMINE(PortataAzione.AVVERSARIO, TipoIncantesimo.FULMINE),
+	GELO(PortataAzione.AVVERSARIO, TipoIncantesimo.GELO),
+	VELENO(PortataAzione.AVVERSARIO, TipoIncantesimo.VELENO),
+	MORTE(PortataAzione.AVVERSARIO, TipoIncantesimo.MORTE),
+	SILENZIO(PortataAzione.AVVERSARIO, TipoIncantesimo.SILENZIO),
+	LUCE_DIVINA(PortataAzione.AVVERSARIO, TipoIncantesimo.LUCE_DIVINA),
 	/** Uno dei sette incantesimi elementali, scelto con un criterio (non la Morte, non il Silenzio) */
 	INCANTESIMO_DI_DANNO(PortataAzione.AVVERSARIO, null),
 	/**
@@ -39,8 +39,8 @@ public enum TipoAzione {
 	INCANTESIMO_DEL_REPERTORIO(PortataAzione.AVVERSARIO, null),
 	/** L'attacco magico di base, con danno arcano */
 	DARDO_ARCANO(PortataAzione.AVVERSARIO, null),
-	RESURREZIONE(PortataAzione.ALLEATO_CADUTO, ClasseIncantesimo.RESURREZIONE),
-	ALBA_SACRA(PortataAzione.GRUPPO_ALLEATI, ClasseIncantesimo.ALBA_SACRA),
+	RESURREZIONE(PortataAzione.ALLEATO_CADUTO, TipoIncantesimo.RESURREZIONE),
+	ALBA_SACRA(PortataAzione.GRUPPO_ALLEATI, TipoIncantesimo.ALBA_SACRA),
 	/** Il canto del Bardo che cura un alleato (vedi bardo.md) */
 	CANTO_CURATIVO(PortataAzione.ALLEATO, null),
 	/** Il canto del Bardo che ipnotizza il gruppo avversario (vedi bardo.md) */
@@ -61,19 +61,19 @@ public enum TipoAzione {
 	CAMBIA_ARMA(PortataAzione.ARMA, null);
 
 	private final PortataAzione portata;
-	private final ClasseIncantesimo classeIncantesimo;
+	private final TipoIncantesimo tipoIncantesimo;
 
-	TipoAzione(PortataAzione portata, ClasseIncantesimo classeIncantesimo) {
+	TipoAzione(PortataAzione portata, TipoIncantesimo tipoIncantesimo) {
 		this.portata = portata;
-		this.classeIncantesimo = classeIncantesimo;
+		this.tipoIncantesimo = tipoIncantesimo;
 	}
 
 	/**
 	 * L'azione che lancia quell'incantesimo, o null se l'incantesimo non ne ha una
 	 */
-	public static TipoAzione di(ClasseIncantesimo classe) {
+	public static TipoAzione di(TipoIncantesimo classe) {
 		for (TipoAzione azione : values()) {
-			if (azione.classeIncantesimo == classe) {
+			if (azione.tipoIncantesimo == classe) {
 				return azione;
 			}
 		}
@@ -91,8 +91,8 @@ public enum TipoAzione {
 	/**
 	 * L'incantesimo che questa azione lancia, o null se non è un incantesimo di una classe precisa
 	 */
-	public ClasseIncantesimo getClasseIncantesimo() {
-		return classeIncantesimo;
+	public TipoIncantesimo getClasseIncantesimo() {
+		return tipoIncantesimo;
 	}
 
 	/**
@@ -103,7 +103,7 @@ public enum TipoAzione {
 		if (this == DARDO_ARCANO) {
 			return TipoDanno.ARCANO;
 		}
-		return classeIncantesimo == null ? null : classeIncantesimo.getTipoDanno();
+		return tipoIncantesimo == null ? null : tipoIncantesimo.getTipoDanno();
 	}
 
 	/**

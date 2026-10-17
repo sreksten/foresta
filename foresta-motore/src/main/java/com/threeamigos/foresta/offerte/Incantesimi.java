@@ -3,26 +3,26 @@ package com.threeamigos.foresta.offerte;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraIncantesimiEPozioni;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
-import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * L'offerta di alcune pergamene di un incantesimo scelto a caso, a metà del prezzo abituale per ciascuna. Occorrono le monete per pagarle.
  */
 public class Incantesimi implements Offerta {
 
-	private final ClasseIncantesimo classeIncantesimo;
+	private final TipoIncantesimo tipoIncantesimo;
 	private final int quantita;
 	private final int costo;
 
 	public Incantesimi() {
-		classeIncantesimo = FabbricaIncantesimi.casuale();
+		tipoIncantesimo = FabbricaIncantesimi.casuale();
 		quantita = Dado.tira(3);
-		costo = quantita * FabbricaIncantesimi.costoAcquisto(classeIncantesimo) / 2;
+		costo = quantita * FabbricaIncantesimi.costoAcquisto(tipoIncantesimo) / 2;
 	}
 
 	@Override
@@ -69,9 +69,9 @@ public class Incantesimi implements Offerta {
 			sb.append(Misc.getCardinaleM(quantita)).append(' ');
 		}
 		if (quantita == 1) {
-			sb.append(classeIncantesimo.getNomeSingolare());
+			sb.append(tipoIncantesimo.getNomeSingolare());
 		} else {
-			sb.append(classeIncantesimo.getNomePlurale());
+			sb.append(tipoIncantesimo.getNomePlurale());
 		}
 		sb.append('.');
 		return sb.toString();
@@ -80,7 +80,7 @@ public class Incantesimi implements Offerta {
 	@Override
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		gruppo.subMonete(costo);
-		gruppo.addIncantesimi(classeIncantesimo, quantita);
+		gruppo.addIncantesimi(tipoIncantesimo, quantita);
 		BusEventi.pubblica(new InternoMostraFinestraIncantesimiEPozioni());
 	}
 }

@@ -202,13 +202,13 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * tutti, Morte compresa; gli altri tutti tranne Morte. Le classi di mostri con un carattere preciso lo
 	 * restringono (l'Arpia l'Aria, i non morti il Gelo...).
 	 */
-	public Set<ClasseIncantesimo> getRepertorioIncantesimi() {
-		Set<ClasseIncantesimo> repertorio = EnumSet.noneOf(ClasseIncantesimo.class);
-		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
+	public Set<TipoIncantesimo> getRepertorioIncantesimi() {
+		Set<TipoIncantesimo> repertorio = EnumSet.noneOf(TipoIncantesimo.class);
+		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
 			// La Luce Divina è dei sacerdoti del giocatore e di chi la compra: i mostri non la lanciano
-			if (classeIncantesimo.getTipo() == TipoIncantesimo.MALEFICO && classeIncantesimo != ClasseIncantesimo.LUCE_DIVINA
-					&& (classeIncantesimo != ClasseIncantesimo.MORTE || isParteConValoriMassimi())) {
-				repertorio.add(classeIncantesimo);
+			if (tipoIncantesimo.getTipo() == CategoriaIncantesimo.MALEFICO && tipoIncantesimo != TipoIncantesimo.LUCE_DIVINA
+					&& (tipoIncantesimo != TipoIncantesimo.MORTE || isParteConValoriMassimi())) {
+				repertorio.add(tipoIncantesimo);
 			}
 		}
 		return repertorio;
@@ -238,8 +238,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	/**
 	 * I non morti sono immuni a Morte e Veleno
 	 */
-	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
-		return isNonMorto() && (classeIncantesimo == ClasseIncantesimo.MORTE || classeIncantesimo == ClasseIncantesimo.VELENO);
+	public boolean isImmuneAIncantesimo(TipoIncantesimo tipoIncantesimo) {
+		return isNonMorto() && (tipoIncantesimo == TipoIncantesimo.MORTE || tipoIncantesimo == TipoIncantesimo.VELENO);
 	}
 
 	/**
@@ -997,8 +997,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public boolean puoFormulare(ClasseIncantesimo classeIncantesimo) {
-		return getMagia() >= FabbricaIncantesimi.costoLancio(classeIncantesimo) && !hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
+	public boolean puoFormulare(TipoIncantesimo tipoIncantesimo) {
+		return getMagia() >= FabbricaIncantesimi.costoLancio(tipoIncantesimo) && !hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
 	}
 
 	// CARICO MASSIMO

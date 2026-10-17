@@ -1,17 +1,13 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.interfacce.VistaOffertaConsumabile;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Il listino dell'alchimista: nomi, descrizioni e costi di ciò che vende al gruppo. Lo costruisce il motore, che
@@ -34,7 +30,7 @@ public final class OfferteAlchimista {
 	 * L'offerta a cui corrisponde una richiesta di acquisto, se c'è: per gli incantesimi conta la classe, per
 	 * l'aumento di magia di un personaggio il suo uuid.
 	 */
-	static Optional<OffertaConsumabile> trova(GruppoGiocatore gruppo, TipoConsumabile tipo, ClasseIncantesimo classe,
+	static Optional<OffertaConsumabile> trova(GruppoGiocatore gruppo, TipoConsumabile tipo, TipoIncantesimo classe,
 											  String uuidPersonaggio) {
 		for (OffertaConsumabile offerta : costruisci(gruppo)) {
 			if (offerta.getTipo() != tipo) {
@@ -54,7 +50,7 @@ public final class OfferteAlchimista {
 
 	private static List<OffertaConsumabile> costruisci(GruppoGiocatore gruppo) {
 		List<OffertaConsumabile> offerte = new ArrayList<>();
-		for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
+		for (TipoIncantesimo classe : TipoIncantesimo.values()) {
 			String nome = classe.getNomeSingolare();
 			offerte.add(new OffertaConsumabile(TipoConsumabile.INCANTESIMO, classe, null,
 					nome.substring(0, 1).toUpperCase(Locale.ROOT) + nome.substring(1), classe.getEffetto(),
@@ -80,7 +76,7 @@ public final class OfferteAlchimista {
 		if (giocanti > 1) {
 			// Il secondo e i successivi costano il 75% del primo
 			long costo = Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO
-					+ (giocanti - 1) * Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO * 75 / 100;
+					+ (long) (giocanti - 1) * Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO * 75 / 100;
 			offerte.add(semplice(TipoConsumabile.AUMENTO_MAGIA_GRUPPO, "Aumento Magia massima",
 					"Aumenta la magia massima di tutto il gruppo", (int) costo));
 		}

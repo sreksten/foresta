@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import java.util.*;
 public class MissioneMD implements Serializzabile {
 
 	private String id = UUID.randomUUID().toString();
-	private ClasseMissione classe = ClasseMissione.MISSIONE_SECONDARIA;
+	private MissionePredefinita classe = MissionePredefinita.MISSIONE_SECONDARIA;
 	private String nome;
 	private String descrizione;
 	private boolean descrizioneVisibile = true;
@@ -37,11 +37,11 @@ public class MissioneMD implements Serializzabile {
 		this.id = id;
 	}
 
-	public ClasseMissione getClasse() {
+	public MissionePredefinita getClasse() {
 		return classe;
 	}
 
-	public void setClasse(ClasseMissione classe) {
+	public void setClasse(MissionePredefinita classe) {
 		this.classe = classe;
 	}
 
@@ -160,7 +160,7 @@ public class MissioneMD implements Serializzabile {
 	public void leggi(BufferedReader stream) throws IOException {
 		LettoreCampi campi = new LettoreCampi(stream.readLine());
 		id = campi.testo();
-		classe = campi.enumerato(ClasseMissione.class);
+		classe = campi.enumerato(MissionePredefinita.class);
 		nome = campi.testo();
 		descrizione = campi.testo();
 		descrizioneVisibile = campi.booleano();

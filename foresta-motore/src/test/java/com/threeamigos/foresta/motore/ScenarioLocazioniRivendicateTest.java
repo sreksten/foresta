@@ -1,19 +1,16 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.missioni.FabbricaMissioni;
-import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
+import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.principali.SconfiggiIlLich;
 import com.threeamigos.foresta.missioni.principali.SconfiggiIlMinotauroGigante;
 import com.threeamigos.foresta.missioni.principali.SconfiggiLIdra;
 import com.threeamigos.foresta.missioni.principali.SconfiggiLaStrega;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
-import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Le locazioni rivendicate dalle missioni (gestione_missioni.md, §6-7): i castelli che le missioni si procurano a
@@ -37,7 +33,7 @@ class ScenarioLocazioniRivendicateTest {
     static class MissioneDelTempio extends MissioneAPassi {
 
         MissioneDelTempio() {
-            super(ClasseMissione.MISSIONE_DI_PROVA);
+            super(MissionePredefinita.MISSIONE_DI_PROVA);
         }
 
         @Override
@@ -167,7 +163,7 @@ class ScenarioLocazioniRivendicateTest {
 
     @Test
     void dopoUnCaricamentoIClaimSiRicostruisconoEVinceLUltimo() {
-        FabbricaMissioni.registra(ClasseMissione.MISSIONE_DI_PROVA, MissioneDelTempio::new);
+        FabbricaMissioni.registra(MissionePredefinita.MISSIONE_DI_PROVA, MissioneDelTempio::new);
         try (PartitaDiTest partita = nuovaPartita(34)) {
             MissioneDelTempio prima = aggiungi(new MissioneDelTempio());
             MissioneDelTempio seconda = aggiungi(new MissioneDelTempio());
@@ -180,7 +176,7 @@ class ScenarioLocazioniRivendicateTest {
             assertTrue(partita.leggi(Comando.NUMERO_3));
 
             assertEquals(seconda.getId(), RegistroMissioni.getMissioneCheHaOccupato(tempio).map(Missione::getId).orElse(null));
-            assertTrue(RegistroMissioni.getMissioneCheHaOccupato(strega).orElse(null) instanceof SconfiggiLaStrega);
+            assertInstanceOf(SconfiggiLaStrega.class, RegistroMissioni.getMissioneCheHaOccupato(strega).orElse(null));
             // Un claim fatto dopo il caricamento vince su quelli di prima
             Missione primaRiletta = RegistroMissioni.getTutteLeMissioni().stream()
                     .filter(m -> m.getId().equals(prima.getId())).findFirst().orElseThrow(AssertionError::new);

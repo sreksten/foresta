@@ -1,17 +1,17 @@
 package com.threeamigos.foresta.incantesimi;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
-import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
+import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.tipi.CategoriaIncantesimo;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
-import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.strumenti.Logger;
 
 import java.util.List;
 
@@ -38,8 +38,8 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 		return livello;
 	}
 
-	public TipoIncantesimo getTipo() {
-		return TipoIncantesimo.MALEFICO;
+	public CategoriaIncantesimo getTipo() {
+		return CategoriaIncantesimo.MALEFICO;
 	}
 
 	/**

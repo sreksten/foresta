@@ -3,10 +3,11 @@ package com.threeamigos.foresta.canti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoCanto;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * Una capacità innata del Bardo e della Cantastorie: costa MAGIA, non consuma pergamene. Non è fra le
- * {@link com.threeamigos.foresta.tipi.ClasseIncantesimo} perché non è una pergamena: non si compra, non si trova e non
+ * {@link TipoIncantesimo} perché non è una pergamena: non si compra, non si trova e non
  * si conta nell'inventario del gruppo. Chi può cantare e quando si decide in {@link CantoDelBardo}.
  */
 public interface Canto {

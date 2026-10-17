@@ -1,37 +1,29 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.canti.FabbricaCanti;
+import com.threeamigos.foresta.combattimento.*;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.eventi.interni.InternoDecisioneTattica;
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaAperturaFinestraCombattimento;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.incantesimi.AlbaSacra;
-import com.threeamigos.foresta.incantesimi.LuceDivina;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
-import com.threeamigos.foresta.canti.FabbricaCanti;
-import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
-import com.threeamigos.foresta.incantesimi.Incantesimo;
-import com.threeamigos.foresta.tipi.TipoCanto;
+import com.threeamigos.foresta.incantesimi.*;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
+import com.threeamigos.foresta.motore.Gruppo;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Logger;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tattiche.valutazione.SceltaIncantesimo;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
+import com.threeamigos.foresta.tipi.TipoCanto;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
 import java.util.Collections;
 import java.util.List;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.combattimento.DannoRisultante;
-import com.threeamigos.foresta.combattimento.FaseDiAttacco;
-import com.threeamigos.foresta.combattimento.GruppoDiBersagli;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.motore.Gruppo;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.tattiche.valutazione.SceltaIncantesimo;
 
 /**
  * Esegue le decisioni delle tattiche (tattiche_di_combattimento_automatiche.md §11): il valutatore sceglie (<code>Valutatore.decidi</code>), qui si fa quello che ha
@@ -117,15 +109,15 @@ public final class EsecutoreTattiche {
 			// La Resurrezione consuma una pergamena se il gruppo ne ha una (consumaLaPergamena non fa niente se non ce ne sono)
 			case RESURREZIONE:
 				annuncia(attore, bersaglio);
-				FabbricaIncantesimi.crea(ClasseIncantesimo.RESURREZIONE, attore.getLivello()).formula(attore, bersaglio, null);
-				consumaLaPergamena(gruppoDellAttore, ClasseIncantesimo.RESURREZIONE);
+				FabbricaIncantesimi.crea(TipoIncantesimo.RESURREZIONE, attore.getLivello()).formula(attore, bersaglio, null);
+				consumaLaPergamena(gruppoDellAttore, TipoIncantesimo.RESURREZIONE);
 				break;
 			case ALBA_SACRA:
 				annuncia(attore, null);
-				FabbricaIncantesimi.crea(ClasseIncantesimo.ALBA_SACRA, attore.getLivello()).formula(attore, null, gruppoDellAttore);
+				FabbricaIncantesimi.crea(TipoIncantesimo.ALBA_SACRA, attore.getLivello()).formula(attore, null, gruppoDellAttore);
 				// Chi la conosce per natura (Sacerdote, Sacerdotessa) non consuma pergamene
 				if (!AlbaSacra.conosciutaDa(attore.getClasse())) {
-					consumaLaPergamena(gruppoDellAttore, ClasseIncantesimo.ALBA_SACRA);
+					consumaLaPergamena(gruppoDellAttore, TipoIncantesimo.ALBA_SACRA);
 				}
 				break;
 			// I canti sono tutti la stessa azione con un tipo diverso: il canto curativo ha un bersaglio, gli altri agiscono sul gruppo
@@ -234,7 +226,7 @@ public final class EsecutoreTattiche {
 	 * il principale). Il lancio, costo in MAGIA compreso, lo fa l'incantesimo; la pergamena si consuma se il gruppo ne ha una (altrimenti è il repertorio di un mostro).
 	 */
 	private void lanciaUnIncantesimoDiDanno(Personaggio attore, Decisione decisione, Gruppo gruppoDellAttore) {
-		ClasseIncantesimo classe = decisione.getIncantesimo();
+		TipoIncantesimo classe = decisione.getIncantesimo();
 		Personaggio bersaglio = decisione.getBersaglio();
 		Incantesimo incantesimo = FabbricaIncantesimi.crea(classe, attore.getLivello());
 		annuncia(attore, bersaglio);
@@ -249,7 +241,7 @@ public final class EsecutoreTattiche {
 			uccisioni.registra(attore, colpito);
 		}
 		// Chi la conosce per natura (Sacerdote, Sacerdotessa) non consuma pergamene
-		if (!(classe == ClasseIncantesimo.LUCE_DIVINA && LuceDivina.conosciutaDa(attore.getClasse()))) {
+		if (!(classe == TipoIncantesimo.LUCE_DIVINA && LuceDivina.conosciutaDa(attore.getClasse()))) {
 			consumaLaPergamena(gruppoDellAttore, classe);
 		}
 	}
@@ -258,7 +250,7 @@ public final class EsecutoreTattiche {
 	 * Toglie una pergamena di quella classe dalle scorte del gruppo, se ce n'è; senza, niente (un mostro non ne ha, un personaggio con il potere innato
 	 * non ne usa: chi chiama decide se chiamarlo)
 	 */
-	private static void consumaLaPergamena(Gruppo gruppoDellAttore, ClasseIncantesimo classe) {
+	private static void consumaLaPergamena(Gruppo gruppoDellAttore, TipoIncantesimo classe) {
 		if (gruppoDellAttore.getIncantesimi(classe) > 0) {
 			gruppoDellAttore.subIncantesimi(classe, 1);
 		}

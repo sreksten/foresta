@@ -6,7 +6,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneDisponibilitaP
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Le scorte di incantesimi e di pozioni sono di ogni gruppo, non solo di quello del giocatore: le variazioni di quello del
@@ -52,24 +53,24 @@ class ScorteDeiGruppiTest {
 
     @Test
     void ilGruppoAvversarioHaLeSueScorte() {
-        avversari.addIncantesimi(ClasseIncantesimo.FUOCO, 2);
+        avversari.addIncantesimi(TipoIncantesimo.FUOCO, 2);
         avversari.addPozioniSalute(1);
         avversari.addPozioniMagia(3);
-        assertEquals(2, avversari.getIncantesimi(ClasseIncantesimo.FUOCO));
+        assertEquals(2, avversari.getIncantesimi(TipoIncantesimo.FUOCO));
         assertEquals(1, avversari.getPozioniSalute());
         assertEquals(3, avversari.getPozioniMagia());
-        avversari.subIncantesimi(ClasseIncantesimo.FUOCO, 1);
-        assertEquals(1, avversari.getIncantesimi(ClasseIncantesimo.FUOCO));
+        avversari.subIncantesimi(TipoIncantesimo.FUOCO, 1);
+        assertEquals(1, avversari.getIncantesimi(TipoIncantesimo.FUOCO));
         // Non sono quelle del giocatore
-        assertEquals(0, giocatore.getIncantesimi(ClasseIncantesimo.FUOCO));
+        assertEquals(0, giocatore.getIncantesimi(TipoIncantesimo.FUOCO));
     }
 
     @Test
     void leVariazioniDelGruppoAvversarioNonSiAnnunciano() {
-        avversari.addIncantesimi(ClasseIncantesimo.GELO, 1);
+        avversari.addIncantesimi(TipoIncantesimo.GELO, 1);
         avversari.addPozioniSalute(2);
         assertTrue(annunci.isEmpty(), String.valueOf(annunci));
-        giocatore.addIncantesimi(ClasseIncantesimo.GELO, 1);
+        giocatore.addIncantesimi(TipoIncantesimo.GELO, 1);
         giocatore.addPozioniSalute(2);
         assertEquals(2, annunci.size());
     }
@@ -88,10 +89,10 @@ class ScorteDeiGruppiTest {
 
     @Test
     void leScorteDelGruppoAvversarioSiAzzeranoConLaLocazione() {
-        avversari.addIncantesimi(ClasseIncantesimo.ARIA, 2);
+        avversari.addIncantesimi(TipoIncantesimo.ARIA, 2);
         avversari.addPozioniMagia(1);
         avversari.reimposta();
-        assertEquals(0, avversari.getIncantesimi(ClasseIncantesimo.ARIA));
+        assertEquals(0, avversari.getIncantesimi(TipoIncantesimo.ARIA));
         assertEquals(0, avversari.getPozioniMagia());
     }
 }

@@ -4,15 +4,16 @@ import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.incarichi.CacciaAiGoblin;
+import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
+import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
+import com.threeamigos.foresta.missioni.incarichi.RichiestaDiMateriali;
+import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -20,11 +21,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.incarichi.CacciaAiGoblin;
-import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
-import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
-import com.threeamigos.foresta.missioni.incarichi.RichiestaDiMateriali;
-import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
 
 /**
  * Gli incarichi presi in città (IncaricoInCitta): la caccia ai goblin e le radici di mandragola dell'alchimista,
@@ -126,7 +122,7 @@ class ScenarioIncarichiInCittaTest {
                 radici = (OggettoMissione) mandragola.getOggettoInLocazione(casella, TipoLocazione.RADURA, false).orElse(null);
             }
             assertNotNull(radici, "prima o poi una radura le ha");
-            assertEquals(ClasseMissione.RICHIESTA_ALCHIMISTA.name(), radici.getIdMissione());
+            assertEquals(MissionePredefinita.RICHIESTA_ALCHIMISTA.name(), radici.getIdMissione());
             assertEquals("radice di mandragola", radici.getNomeSingolare());
             assertEquals("una ", radici.getAIS());
             assertTrue(radici.getQuantita() >= 1 && radici.getQuantita() <= 2);
@@ -212,7 +208,7 @@ class ScenarioIncarichiInCittaTest {
                 .alPiuPerLocazione(2);
 
         FunghiInOgniBosco() {
-            super(ClasseMissione.MISSIONE_DI_PROVA);
+            super(MissionePredefinita.MISSIONE_DI_PROVA);
         }
 
         @Override

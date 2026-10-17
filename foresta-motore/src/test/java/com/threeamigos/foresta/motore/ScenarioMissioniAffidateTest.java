@@ -2,10 +2,11 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Le missioni secondarie affidate durante una missione (vedi MissioneAPassi.affida): una o più, o una invece di
@@ -32,7 +32,7 @@ class ScenarioMissioniAffidateTest {
         boolean fallita;
 
         Incombenza(String nome) {
-            super(ClasseMissione.MISSIONE_DI_PROVA);
+            super(MissionePredefinita.MISSIONE_DI_PROVA);
             this.nome = nome;
         }
 
@@ -66,7 +66,7 @@ class ScenarioMissioniAffidateTest {
         int affidamenti;
 
         MissioneDelleIncombenze() {
-            super(ClasseMissione.MISSIONE_DI_PROVA);
+            super(MissionePredefinita.MISSIONE_DI_PROVA);
         }
 
         @Override

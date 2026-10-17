@@ -2,23 +2,15 @@ package com.threeamigos.foresta.missioni.storie;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
+import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.richieste.*;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.strumenti.Misc;
-import com.threeamigos.foresta.missioni.IncontroDiMissione;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
-import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.missioni.richieste.BenedizioneRichiesta;
-import com.threeamigos.foresta.missioni.richieste.CombattimentoRichiesto;
-import com.threeamigos.foresta.missioni.richieste.FavoreRichiesto;
-import com.threeamigos.foresta.missioni.richieste.LealtaRichiesta;
-import com.threeamigos.foresta.missioni.richieste.MaterialeRichiesto;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 /**
  * Il favore che un sacerdote chiede in cambio della sua benedizione (vedi LaBenedizione), o che un compagno chiede
@@ -52,7 +44,7 @@ public class IlFavore extends MissioneAPassi {
 	public static final String INGREDIENTE = "INGREDIENTE";
 
 	public IlFavore() {
-		super(ClasseMissione.IL_FAVORE);
+		super(MissionePredefinita.IL_FAVORE);
 	}
 
 	/**

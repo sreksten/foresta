@@ -5,22 +5,22 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaFraCompagni;
+import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
+import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.missioni.richieste.LealtaRichiesta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.richieste.LealtaRichiesta;
 
 /**
  * Il problema personale di un compagno (vedi {@link LealtaRichiesta}, da missioni.txt): una sera, intorno al fuoco
@@ -50,7 +50,7 @@ public class LaLealta extends MissioneAPassi {
 	private static final String NOME_DEL_COMPAGNO = "NOME_DEL_COMPAGNO";
 
 	public LaLealta() {
-		super(ClasseMissione.LA_LEALTA);
+		super(MissionePredefinita.LA_LEALTA);
 	}
 
 	public LealtaRichiesta getLealta() {

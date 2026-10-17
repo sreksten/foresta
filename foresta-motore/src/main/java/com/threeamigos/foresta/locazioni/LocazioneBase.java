@@ -1,19 +1,18 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.strumenti.ContestoLancio;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.canti.CantoDelBardo;
+import com.threeamigos.foresta.canti.FabbricaCanti;
+import com.threeamigos.foresta.combattimento.*;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.incantesimi.*;
-import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -22,40 +21,16 @@ import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tattiche.RegistroTattiche;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
-import com.threeamigos.foresta.tipi.PortataIncantesimo;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoIncantesimo;
-import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.strumenti.ContestoLancio;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.strumenti.Misc;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.Set;
-import com.threeamigos.foresta.canti.CantoDelBardo;
-import com.threeamigos.foresta.canti.FabbricaCanti;
-import com.threeamigos.foresta.tipi.TipoCanto;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.combattimento.DannoRisultante;
-import com.threeamigos.foresta.combattimento.FaseDiAttacco;
-import com.threeamigos.foresta.combattimento.Ondata;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
+import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.*;
+
+import java.util.*;
 
 /**
  * La locazione è un automa a stati finiti. Un gruppo mentre si sposta per
@@ -185,7 +160,7 @@ public abstract class LocazioneBase implements Locazione {
 		return statoLocazione == StatoLocazione.CHI_BEVE_POZIONE_SALUTE
 				|| statoLocazione == StatoLocazione.CHI_BEVE_POZIONE_SALUTE_GRANDE
 				|| (statoLocazione == StatoLocazione.SU_CHI_FORMULA && incantesimo != null
-				&& incantesimo.getClasse() == ClasseIncantesimo.RESURREZIONE);
+				&& incantesimo.getClasse() == TipoIncantesimo.RESURREZIONE);
 	}
 
 	@Override
@@ -576,8 +551,8 @@ public abstract class LocazioneBase implements Locazione {
 					opzioneCorruzioneDisponibile = false;
 					opzioneAmiciziaDisponibile = false;
 					Personaggio formulante = gruppo.getFormulante();
-					ClasseIncantesimo classeIncantesimo = ClasseIncantesimo.ofComando(azione);
-					incantesimo = FabbricaIncantesimi.crea(classeIncantesimo, formulante.getLivello());
+					TipoIncantesimo tipoIncantesimo = TipoIncantesimo.ofComando(azione);
+					incantesimo = FabbricaIncantesimi.crea(tipoIncantesimo, formulante.getLivello());
 					if (formulante.getMagia() < incantesimo.getCostoLancio()) {
 
 						// Non si dovrebbe più riuscire a entrare in questo ramo perché la scelta degli incantesimi è già stata filtrata
@@ -600,13 +575,13 @@ public abstract class LocazioneBase implements Locazione {
 						break;
 					}
 
-					PortataIncantesimo tipo = classeIncantesimo.getPortata();
+					PortataIncantesimo tipo = tipoIncantesimo.getPortata();
 					boolean suUnSoloBersaglio = tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI || tipo == PortataIncantesimo.SINGOLO_QUALSIASI;
-					annunciaAzione(formulante, suUnSoloBersaglio && classeIncantesimo.getTipo() != TipoIncantesimo.BENEFICO
+					annunciaAzione(formulante, suUnSoloBersaglio && tipoIncantesimo.getTipo() != CategoriaIncantesimo.BENEFICO
 							? gruppoAvversario.getPersonaggioVivo() : null);
 					// Un incantesimo benefico su un solo bersaglio (Resurrezione) si formula su un personaggio del gruppo,
 					// e occorre chiedere quale sia
-					if (suUnSoloBersaglio && classeIncantesimo.getTipo() == TipoIncantesimo.BENEFICO) {
+					if (suUnSoloBersaglio && tipoIncantesimo.getTipo() == CategoriaIncantesimo.BENEFICO) {
 						Logger.log(() -> "Incantesimo di tipo " + (tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI ? "SINGOLO_SOLO_VIVI" : "SINGOLO_QUALSIASI"));
 						int l = gruppo.getNumeroPersonaggi();
 						Personaggio personaggio;
@@ -628,7 +603,7 @@ public abstract class LocazioneBase implements Locazione {
 
 					// Un incantesimo benefico su tutto il gruppo (Alba Sacra) si formula sul proprio gruppo,
 					// non su quello avversario
-					if (!suUnSoloBersaglio && classeIncantesimo.getTipo() == TipoIncantesimo.BENEFICO) {
+					if (!suUnSoloBersaglio && tipoIncantesimo.getTipo() == CategoriaIncantesimo.BENEFICO) {
 						incantesimo.formula(formulante, null, gruppo);
 
 						if (!gruppo.getCapo().isVivo()) {
@@ -636,7 +611,7 @@ public abstract class LocazioneBase implements Locazione {
 						}
 
 						// Chi la conosce per natura (Sacerdote, Sacerdotessa) non consuma pergamene
-						if (!(incantesimo.getClasse() == ClasseIncantesimo.ALBA_SACRA && AlbaSacra.conosciutaDa(formulante.getClasse()))) {
+						if (!(incantesimo.getClasse() == TipoIncantesimo.ALBA_SACRA && AlbaSacra.conosciutaDa(formulante.getClasse()))) {
 							gruppo.subIncantesimi(incantesimo.getClasse(), 1);
 						}
 
@@ -676,7 +651,7 @@ public abstract class LocazioneBase implements Locazione {
 					}
 
 					// Chi la conosce per natura (Sacerdote, Sacerdotessa) non consuma pergamene
-					if (!(incantesimo.getClasse() == ClasseIncantesimo.LUCE_DIVINA && LuceDivina.conosciutaDa(formulante.getClasse()))) {
+					if (!(incantesimo.getClasse() == TipoIncantesimo.LUCE_DIVINA && LuceDivina.conosciutaDa(formulante.getClasse()))) {
 						gruppo.subIncantesimi(incantesimo.getClasse(), 1);
 					}
 
@@ -787,7 +762,7 @@ public abstract class LocazioneBase implements Locazione {
 							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " riesce a stringere amicizia."));
 
 					// Finché la missione La sfida dei campioni non è partita, a volte l'avversario sfida invece di offrire
-					if (!RegistroMissioni.isPartita(ClasseMissione.LA_SFIDA_DEI_CAMPIONI) && MossaCartaForbiciSasso.puoGiocare(gruppoAvversario.getCapo().getClasse())
+					if (!RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI) && MossaCartaForbiciSasso.puoGiocare(gruppoAvversario.getCapo().getClasse())
 							&& Dado.tira(100) <= Costanti.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO) {
 						return iniziaLaSfida();
 					}
@@ -1004,9 +979,9 @@ public abstract class LocazioneBase implements Locazione {
 		boolean incantesimoPossibile = gruppo.getPersonaggiVivi().stream()
 				.anyMatch(p -> DardoArcano.puoLanciarlo(p) || AlbaSacra.puoLanciarlaInnata(p) || LuceDivina.puoLanciarlaInnata(p)
 						|| !CantoDelBardo.cantiUtili(p, gruppo, gruppoAvversario).isEmpty());
-		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-			if (gruppo.getIncantesimi(classeIncantesimo) > 0 &&
-					gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.puoFormulare(classeIncantesimo))) {
+		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
+			if (gruppo.getIncantesimi(tipoIncantesimo) > 0 &&
+					gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.puoFormulare(tipoIncantesimo))) {
 				incantesimoPossibile = true;
 				break;
 			}
@@ -1845,9 +1820,9 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		if (vinta) {
 			gruppo.addSfidaVinta();
-			if (gruppo.getSfideVinte() >= Costanti.SFIDE_VINTE_PER_IL_TORNEO && !RegistroMissioni.isPartita(ClasseMissione.LA_SFIDA_DEI_CAMPIONI)) {
+			if (gruppo.getSfideVinte() >= Costanti.SFIDE_VINTE_PER_IL_TORNEO && !RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI)) {
 				BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \"" + ProduttoreDiTestiCasuale.fraseDelTorneo() + "\""));
-				RegistroMissioni.avvia(ClasseMissione.LA_SFIDA_DEI_CAMPIONI);
+				RegistroMissioni.avvia(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI);
 			}
 		}
 		setCompleta(true);
@@ -1865,7 +1840,7 @@ public abstract class LocazioneBase implements Locazione {
 	private String subisciUnoSpregio(Personaggio personaggio) {
 		switch (Dado.tira(5)) {
 			case 1:
-				ClasseIncantesimo quale = FabbricaIncantesimi.casuale();
+				TipoIncantesimo quale = FabbricaIncantesimi.casuale();
 				if (gruppo.getIncantesimi(quale) > 0) {
 					gruppo.subIncantesimi(quale, 1);
 					return "perde un " + quale.getNomeSingolare() + '.';

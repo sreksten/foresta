@@ -5,7 +5,7 @@ import com.threeamigos.foresta.intermezzi.ScenaInLocanda;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class LaLeggendaDelLocandiere extends LaLeggenda {
 	private static final int VISITE_PRECEDENTI = 2;
 
 	public LaLeggendaDelLocandiere() {
-		super(ClasseMissione.LA_LEGGENDA_DEL_LOCANDIERE);
+		super(MissionePredefinita.LA_LEGGENDA_DEL_LOCANDIERE);
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.ui.schermate;
 
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
@@ -10,19 +9,20 @@ import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaOffertaConsumabile;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.*;
-import java.util.List;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
 import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.*;
+import java.util.List;
 
 /**
  * La schermata dell'alchimista: elenca le offerte di pozioni e altri consumabili e permette di comprarle per il personaggio scelto.
@@ -56,7 +56,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
                 xMassimaZonaCentrale, yRigaMonete(), "Monete spese"));
 
         if (comando.getTipoConsumabile() == TipoConsumabile.INCANTESIMO) {
-            ClasseIncantesimo classe = comando.getClasseIncantesimo();
+            TipoIncantesimo classe = comando.getClasseIncantesimo();
             String descrizione = "Incantesimo acquistato: " + classe.getNomeSingolare();
             Point posizione = posizioneIncantesimoNellElencoSinistro(classe);
             if (posizione != null) {
@@ -73,10 +73,10 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
      * Cerca la posizione a schermo, nell'elenco di sinistra (inventario del gruppo), dell'icona
      * relativa all'incantesimo indicato, se attualmente visibile nella porzione scrollata a video.
      */
-    private Point posizioneIncantesimoNellElencoSinistro(ClasseIncantesimo classeIncantesimo) {
+    private Point posizioneIncantesimoNellElencoSinistro(TipoIncantesimo tipoIncantesimo) {
         List<Consumabile> consumabili = getElencoGruppo();
         ComponenteScorrevole<Consumabile> componenteScorrevole = costruisciComponenteScorrevoleConsumabili(consumabili, null, false);
-        Point posizione = componenteScorrevole.posizioneTitolo(c -> c.classeIncantesimo == classeIncantesimo);
+        Point posizione = componenteScorrevole.posizioneTitolo(c -> c.tipoIncantesimo == tipoIncantesimo);
         if (posizione == null) {
             return null;
         }
@@ -299,7 +299,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         Collection<Consumabile> disponibili = getElencoVenditore();
         Consumabile consumabile = trovaConsumabile(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y, true);
         if (consumabile != null) {
-            BusEventi.pubblica(new ComandoAcquistoConsumabile(consumabile.tipo, consumabile.classeIncantesimo,
+            BusEventi.pubblica(new ComandoAcquistoConsumabile(consumabile.tipo, consumabile.tipoIncantesimo,
                     consumabile.personaggio == null ? null : consumabile.personaggio.getUuid()));
         }
     }
@@ -307,9 +307,9 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
     private List<Consumabile> getElencoGruppo() {
         List<Consumabile> elencoGruppo = new ArrayList<>();
         VistaGruppoGiocatore gruppoGiocatore = vistaPartita.getGruppoGiocatore();
-        for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-            aggiungiSePosseduto(elencoGruppo, TipoConsumabile.INCANTESIMO, classeIncantesimo,
-                    gruppoGiocatore.getIncantesimi(classeIncantesimo));
+        for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
+            aggiungiSePosseduto(elencoGruppo, TipoConsumabile.INCANTESIMO, tipoIncantesimo,
+                    gruppoGiocatore.getIncantesimi(tipoIncantesimo));
         }
         aggiungiSePosseduto(elencoGruppo, TipoConsumabile.POZIONE_SALUTE, null, gruppoGiocatore.getPozioniSalute());
         aggiungiSePosseduto(elencoGruppo, TipoConsumabile.POZIONE_SALUTE_GRANDE, null, gruppoGiocatore.getPozioniSaluteGrande());
@@ -321,13 +321,13 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
     /**
      * Ciò che il gruppo ha si descrive come la voce del listino che lo vende (stesso nome, stessa descrizione)
      */
-    private void aggiungiSePosseduto(List<Consumabile> elenco, TipoConsumabile tipo, ClasseIncantesimo classeIncantesimo,
+    private void aggiungiSePosseduto(List<Consumabile> elenco, TipoConsumabile tipo, TipoIncantesimo tipoIncantesimo,
                                      int quantita) {
         if (quantita <= 0) {
             return;
         }
         for (VistaOffertaConsumabile offerta : offerte) {
-            if (offerta.getTipo() == tipo && offerta.getClasseIncantesimo() == classeIncantesimo) {
+            if (offerta.getTipo() == tipo && offerta.getClasseIncantesimo() == tipoIncantesimo) {
                 elenco.add(daOfferta(offerta, quantita));
                 return;
             }
@@ -374,19 +374,19 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         private final String nome;
         private final String descrizione;
         private final int quantita;
-        private final ClasseIncantesimo classeIncantesimo;
+        private final TipoIncantesimo tipoIncantesimo;
         private final VistaPersonaggio personaggio;
         private final int costo;
         private final Image icona;
 
         public Consumabile(TipoConsumabile tipo, String nome, String descrizione, int quantita,
-                           ClasseIncantesimo classeIncantesimo, VistaPersonaggio personaggio,
+                           TipoIncantesimo tipoIncantesimo, VistaPersonaggio personaggio,
                            int costo, Image icona) {
             this.tipo = tipo;
             this.nome = nome;
             this.descrizione = descrizione;
             this.quantita = quantita;
-            this.classeIncantesimo = classeIncantesimo;
+            this.tipoIncantesimo = tipoIncantesimo;
             this.personaggio = personaggio;
             this.costo = costo;
             this.icona = icona;
@@ -435,8 +435,8 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
      * Usiamo quindi, quando presente, il tratto che distingue le singole voci dello stesso tipo.
      */
     private Object chiaveVisibilita(Consumabile consumabile) {
-        if (consumabile.classeIncantesimo != null) {
-            return consumabile.classeIncantesimo;
+        if (consumabile.tipoIncantesimo != null) {
+            return consumabile.tipoIncantesimo;
         }
         if (consumabile.personaggio != null) {
             return consumabile.personaggio;

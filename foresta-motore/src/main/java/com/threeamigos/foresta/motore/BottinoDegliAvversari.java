@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +36,7 @@ public final class BottinoDegliAvversari {
 		for (Personaggio avversario : avversari) {
 			boolean umanoide = avversario.getClasse().isDellaCategoria(CategoriaPersonaggio.UMANOIDE);
 			if (Dado.tira(100) <= Costanti.PROBABILITA_PERGAMENA_PER_AVVERSARIO) {
-				ClasseIncantesimo pergamena = scegliLaPergamena(avversario, umanoide);
+				TipoIncantesimo pergamena = scegliLaPergamena(avversario, umanoide);
 				if (pergamena != null) {
 					gruppo.addIncantesimi(pergamena, 1);
 				}
@@ -47,13 +47,13 @@ public final class BottinoDegliAvversari {
 		}
 	}
 
-	private static ClasseIncantesimo scegliLaPergamena(Personaggio avversario, boolean umanoide) {
+	private static TipoIncantesimo scegliLaPergamena(Personaggio avversario, boolean umanoide) {
 		if (umanoide) {
-			ClasseIncantesimo[] tutti = ClasseIncantesimo.values();
+			TipoIncantesimo[] tutti = TipoIncantesimo.values();
 			return tutti[Dado.tiraAncheAUnaFaccia(tutti.length) - 1];
 		}
 		if (avversario.isMagico() && !avversario.getRepertorioIncantesimi().isEmpty()) {
-			List<ClasseIncantesimo> innati = new ArrayList<>(avversario.getRepertorioIncantesimi());
+			List<TipoIncantesimo> innati = new ArrayList<>(avversario.getRepertorioIncantesimi());
 			innati.sort(null);
 			return innati.get(Dado.tiraAncheAUnaFaccia(innati.size()) - 1);
 		}
@@ -66,7 +66,7 @@ public final class BottinoDegliAvversari {
 	 */
 	public static void raccogli(GruppoGiocatore giocatore, GruppoAvversario avversari) {
 		List<String> trovati = new ArrayList<>();
-		for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
+		for (TipoIncantesimo classe : TipoIncantesimo.values()) {
 			int quantita = avversari.getIncantesimi(classe);
 			if (quantita > 0) {
 				avversari.subIncantesimi(classe, quantita);

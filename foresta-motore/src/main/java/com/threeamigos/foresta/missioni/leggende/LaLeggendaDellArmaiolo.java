@@ -6,7 +6,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class LaLeggendaDellArmaiolo extends LaLeggenda {
 
 	public LaLeggendaDellArmaiolo() {
-		super(ClasseMissione.LA_LEGGENDA_DELL_ARMAIOLO);
+		super(MissionePredefinita.LA_LEGGENDA_DELL_ARMAIOLO);
 	}
 
 	@Override

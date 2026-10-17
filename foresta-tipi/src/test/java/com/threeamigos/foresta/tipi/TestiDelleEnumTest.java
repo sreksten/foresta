@@ -1,10 +1,6 @@
 package com.threeamigos.foresta.tipi;
 
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
+import com.threeamigos.foresta.tipi.tattiche.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,17 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * I testi delle costanti di enum, letti da un file per enum ({@code tipo_attributo_it.properties}...): ogni costante ha
@@ -35,24 +23,24 @@ class TestiDelleEnumTest {
 	private static final Map<Class<? extends Enum<?>>, List<String>> ENUM = new LinkedHashMap<>();
 
 	static {
-		ENUM.put(CategoriaPersonaggio.class, Arrays.asList("NOME"));
-		ENUM.put(ClasseIncantesimo.class, Arrays.asList("NOME", "NOME_SINGOLARE", "NOME_PLURALE", "EFFETTO"));
+		ENUM.put(CategoriaPersonaggio.class, Collections.singletonList("NOME"));
+		ENUM.put(TipoIncantesimo.class, Arrays.asList("NOME", "NOME_SINGOLARE", "NOME_PLURALE", "EFFETTO"));
 		ENUM.put(TipoArtefatto.class, Arrays.asList("DESCRIZIONE", "UTILIZZO"));
 		ENUM.put(TipoAttributo.class, Arrays.asList("NOME", "DESCRIZIONE"));
-		ENUM.put(TipoDanno.class, Arrays.asList("NOME"));
-		ENUM.put(TipoEffettoDiStato.class, Arrays.asList("DESCRIZIONE"));
-		ENUM.put(TipoInterazioneConEffettiDiStato.class, Arrays.asList("DESCRIZIONE"));
-		ENUM.put(TipoMotivoRifiutoIncantatura.class, Arrays.asList("FRASE"));
-		ENUM.put(TipoNegozio.class, Arrays.asList("NOME"));
-		ENUM.put(TipoRaritaArtefatto.class, Arrays.asList("NOME"));
+		ENUM.put(TipoDanno.class, Collections.singletonList("NOME"));
+		ENUM.put(TipoEffettoDiStato.class, Collections.singletonList("DESCRIZIONE"));
+		ENUM.put(TipoInterazioneConEffettiDiStato.class, Collections.singletonList("DESCRIZIONE"));
+		ENUM.put(TipoMotivoRifiutoIncantatura.class, Collections.singletonList("FRASE"));
+		ENUM.put(TipoNegozio.class, Collections.singletonList("NOME"));
+		ENUM.put(TipoRaritaArtefatto.class, Collections.singletonList("NOME"));
 		ENUM.put(TipoTrofeo.class, Arrays.asList("NOME", "DESCRIZIONE"));
 		ENUM.put(TipoCanto.class, Arrays.asList("NOME", "DESCRIZIONE"));
-		ENUM.put(GradoIncantamento.class, Arrays.asList("NOME"));
-		ENUM.put(TipoAzione.class, Arrays.asList("DESCRIZIONE"));
-		ENUM.put(TipoFiltro.class, Arrays.asList("DESCRIZIONE"));
-		ENUM.put(TipoOrdinamento.class, Arrays.asList("DESCRIZIONE"));
-		ENUM.put(TipoPredicato.class, Arrays.asList("DESCRIZIONE"));
-		ENUM.put(TipoRosa.class, Arrays.asList("DESCRIZIONE"));
+		ENUM.put(GradoIncantamento.class, Collections.singletonList("NOME"));
+		ENUM.put(TipoAzione.class, Collections.singletonList("DESCRIZIONE"));
+		ENUM.put(TipoFiltro.class, Collections.singletonList("DESCRIZIONE"));
+		ENUM.put(TipoOrdinamento.class, Collections.singletonList("DESCRIZIONE"));
+		ENUM.put(TipoPredicato.class, Collections.singletonList("DESCRIZIONE"));
+		ENUM.put(TipoRosa.class, Collections.singletonList("DESCRIZIONE"));
 	}
 
 	@AfterEach
@@ -78,12 +66,12 @@ class TestiDelleEnumTest {
 			if (locazione.isLocazioneUnica()) {
 				assertTrue(locazione.getNomeProprio() != null && !locazione.getNomeProprio().isEmpty(), "manca il nome di " + locazione);
 			} else {
-				assertEquals(null, locazione.getNomeProprio(), locazione + " non è unica e non ha un nome proprio");
+                assertNull(locazione.getNomeProprio(), locazione + " non è unica e non ha un nome proprio");
 			}
 			if (locazione.getCategoria() == CategoriaLocazione.CITTA) {
 				assertTrue(locazione.getNomeProprio().endsWith(locazione.getNomeDellaCitta()), locazione.getNomeProprio());
 			} else {
-				assertEquals(null, locazione.getNomeDellaCitta());
+                assertNull(locazione.getNomeDellaCitta());
 			}
 		}
 	}
@@ -102,7 +90,7 @@ class TestiDelleEnumTest {
 		String nomeDelFile = Testi.nomeDelFile(enumerazione) + "_it.properties";
 		Properties testi = new Properties();
 		try (InputStream flusso = enumerazione.getResourceAsStream(nomeDelFile)) {
-			assertTrue(flusso != null, "manca il file " + nomeDelFile);
+            assertNotNull(flusso, "manca il file " + nomeDelFile);
 			testi.load(new InputStreamReader(flusso, StandardCharsets.UTF_8));
 		}
 		Set<String> costanti = new HashSet<>();

@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 /**
  * Un corriere che porta da una città all'altra una merce che non dovrebbe girare: vino senza dazio, erbe proibite,
@@ -10,7 +10,7 @@ import com.threeamigos.foresta.tipi.ClasseMissione;
 public class IlContrabbandiere extends IlCorriere {
 
 	public IlContrabbandiere() {
-		super(ClasseMissione.IL_CONTRABBANDIERE, "CONTRABBANDO");
+		super(MissionePredefinita.IL_CONTRABBANDIERE, "CONTRABBANDO");
 	}
 
 	@Override

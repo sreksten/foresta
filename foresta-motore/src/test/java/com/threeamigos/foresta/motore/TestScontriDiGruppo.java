@@ -1,18 +1,20 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.modellodati.ModelloDati;
-
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.DannoRisultante;
+import com.threeamigos.foresta.combattimento.FaseDiAttacco;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.locazioni.LocazioneBase;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -22,9 +24,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.combattimento.DannoRisultante;
-import com.threeamigos.foresta.combattimento.FaseDiAttacco;
 
 /**
  * Scontri di un gruppo di personaggi giocanti (ognuno con la sua prima dotazione tipica, del suo livello) contro boss
@@ -247,7 +246,7 @@ public class TestScontriDiGruppo {
     }
 
     private static IncantesimoMalefico pergamena(Personaggio formulante) {
-        return (IncantesimoMalefico) FabbricaIncantesimi.crea(ClasseIncantesimo.FUOCO, formulante.getLivello());
+        return (IncantesimoMalefico) FabbricaIncantesimi.crea(TipoIncantesimo.FUOCO, formulante.getLivello());
     }
 
     private static List<Personaggio> bersagliDellaPergamena(Personaggio formulante, IncantesimoMalefico incantesimo,

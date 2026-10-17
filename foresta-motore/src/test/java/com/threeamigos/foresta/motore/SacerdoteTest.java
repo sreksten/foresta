@@ -1,16 +1,12 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Sacerdote;
 import com.threeamigos.foresta.personaggi.Sacerdotessa;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -101,7 +97,7 @@ class SacerdoteTest {
                 // In modalità di prova il gruppo ha tante pergamene di ogni incantesimo: l'alba sacra è comunque una sola
                 // scelta, e lanciarla non ne consuma
                 Personaggio sacerdote = partita.gruppo().getCapo();
-                int pergamene = partita.gruppo().getIncantesimi(ClasseIncantesimo.ALBA_SACRA);
+                int pergamene = partita.gruppo().getIncantesimi(TipoIncantesimo.ALBA_SACRA);
                 assertTrue(pergamene > 0);
                 partita.comando(Comando.INCANTESIMO);
                 Collection<Comando> scelte = partita.comandiDisponibili();
@@ -110,7 +106,7 @@ class SacerdoteTest {
                 int magiaPrima = sacerdote.getMagia();
                 partita.comando(Comando.ALBA_SACRA);
                 assertEquals(magiaPrima - Costanti.INCANTESIMO_ALBA_SACRA_COSTO_LANCIO, sacerdote.getMagia());
-                assertEquals(pergamene, partita.gruppo().getIncantesimi(ClasseIncantesimo.ALBA_SACRA));
+                assertEquals(pergamene, partita.gruppo().getIncantesimi(TipoIncantesimo.ALBA_SACRA));
             }
         }
         assertTrue(provato, "nessuna delle partite provate aveva avversari da affrontare all'inizio");

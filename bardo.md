@@ -1,21 +1,30 @@
 # Il Bardo
 
-I tre **canti** innati del Bardo e della Cantastorie (e del bardo della locanda), sul modello del dardo arcano di Mago ed Elfo e dell'alba sacra di Sacerdote e Sacerdotessa, e il Viandante e i personaggi non combattenti che non sono più dei Bardi. Il lavoro è stato fatto il 2026-10-10 (fasi 1-11 al §5); le sezioni 3-6 descrivono com'è il codice adesso, la 2 com'era prima. Le tre icone sono `CantoCurativo.gif`, `CantoIpnotico.gif` e `CantoDiValore.gif` in `img/icone`.
+I tre **canti** innati del Bardo e della Cantastorie (e del bardo della locanda), sul modello del dardo arcano di Mago
+ed Elfo e dell'alba sacra di Sacerdote e Sacerdotessa.
 
 ## 1. Obiettivi
 
-- Il Bardo (e la Cantastorie) ha tre capacità che costano `MAGIA`, non consumano pergamene, sono fra le scelte del comando incantesimi, occupano il turno e fanno rispondere l'avversario su chi le usa.
+- Il Bardo e la Cantastorie hanno tre capacità innate che costano `MAGIA`, non consumano pergamene, sono fra le scelte
+  del comando incantesimi, occupano il turno e fanno rispondere l'avversario su chi le usa.
 - Il gioco ha finalmente un curatore, un modo di colpire il morale del nemico e un modo di rafforzare il gruppo.
-- Il Viandante e i personaggi non combattenti non sono più dei Bardi: hanno le loro caratteristiche, e nessuna capacità del Bardo gli arriva per eredità. Il `BardoLocanda` invece è un bardo a tutti gli effetti.
 
 ## 2. Com'era prima
 
-- **Dardo arcano** (`incantesimi/DardoArcano`): un'`Arma` che non sta in `ClasseIncantesimo`, perché non è una pergamena. `conosciutoDa(TipoPersonaggio)` e `puoLanciarlo(Personaggio)` (vivo, conosce, ha la MAGIA, non è `SILENZIATO`) decidono chi lo lancia; `Automa.entraInStatoSceltaIncantesimoDaLanciare` lo aggiunge ai comandi; `LocazioneBase.lanciaDardoArcano` lo lancia; `LocazioneBase.impostaComandiPossibili` lo conta per abilitare il comando `INCANTESIMO`.
-- **Alba sacra** (`incantesimi/AlbaSacra`): invece è un `Incantesimo` di `ClasseIncantesimo`, e chi la conosce per natura non ne consuma le pergamene.
-- Le capacità dipendono dal **`TipoPersonaggio`** (`conosciutoDa(classe)`), non dalla classe Java: per questo `instanceof Bardo` non esiste da nessuna parte, e `PersonaggioNonCombattente`, `BardoLocanda` e `Viandante`, che estendono `Bardo`, non hanno il dardo né l'alba.
+- **Dardo arcano** (`incantesimi/DardoArcano`): un'`Arma` che non sta in `TipoIncantesimo`, perché non è una pergamena.
+  `conosciutoDa(TipoPersonaggio)` e `puoLanciarlo(Personaggio)` (vivo, conosce, ha la MAGIA, non è `SILENZIATO`)
+  decidono chi lo lancia; `Automa.entraInStatoSceltaIncantesimoDaLanciare` lo aggiunge ai comandi;
+  `LocazioneBase.lanciaDardoArcano` lo lancia; `LocazioneBase.impostaComandiPossibili` lo conta per abilitare il 
+  comando `INCANTESIMO`.
+- **Alba sacra** (`incantesimi/AlbaSacra`): invece è un `Incantesimo` di `TipoIncantesimo`, e chi la conosce per natura
+  non ne consuma le pergamene.
+- Le capacità dipendono dal **`TipoPersonaggio`** (`conosciutoDa(classe)`), non dalla classe Java, e `PersonaggioNonCombattente`,
+  `BardoLocanda` e `Viandante`, che estendono `Bardo`, non hanno il dardo né l'alba.
 - Il Bardo ha già la MAGIA (`BARDO_MAGIA_BASE` 40, `BARDO_LIVELLAMENTO_MAGIA` 18).
-- Gli effetti di stato (`TipoEffettoDiStato`) nascono da `addEffettoDiStato`, che ne rinfresca la durata se ce n'è già uno uguale (vedi `PersonaggioBase`), e scalano ogni turno in `LocazioneBase.trascorriTurnoEffettiDiStato`.
-- `Viandante` estendeva `Bardo` (fase 1, fatta): è un ospite di missione (scorta) con le caratteristiche del bardo, amichevole, e può essere un campione nella sfida a carta, forbici e sasso (`LaSfidaDeiCampioni.classiAmichevoli()`).
+- Gli effetti di stato (`TipoEffettoDiStato`) nascono da `addEffettoDiStato`, che ne rinfresca la durata se ce n'è già
+  uno uguale (vedi `PersonaggioBase`), e scalano ogni turno in `LocazioneBase.trascorriTurnoEffettiDiStato`.
+- `Viandante` estendeva `Bardo` (fase 1, fatta): è un ospite di missione (scorta) con le caratteristiche del bardo,
+  amichevole, e può essere un campione nella sfida a carta, forbici e sasso (`LaSfidaDeiCampioni.classiAmichevoli()`).
 
 ## 3. Decisioni
 

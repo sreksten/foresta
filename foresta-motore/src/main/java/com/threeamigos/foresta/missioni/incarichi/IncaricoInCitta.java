@@ -4,24 +4,20 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
+import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
+import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.LineaTemporale;
-import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.motore.RegistroPersonaggi;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Locale;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
-import com.threeamigos.foresta.missioni.Passo;
+import java.util.Map;
 
 /**
  * Un incarico preso in una città: un mandante chiede un servizio, il gruppo lo fa e torna in quella città a
@@ -57,7 +53,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	private static final String LIVELLO_DELL_INCARICO = "LIVELLO_DELL_INCARICO";
 	private static final String PREFISSO_CITTA = "CITTA_";
 
-	protected IncaricoInCitta(ClasseMissione classe) {
+	protected IncaricoInCitta(MissionePredefinita classe) {
 		super(classe);
 	}
 

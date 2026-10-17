@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * L'incantesimo di Gelo: un incantesimo malefico di danno di Gelo (vedi {@link IncantesimoMaleficoImpl}). Costo e danni stanno nelle costanti {@code INCANTESIMO_GELO_*}.
@@ -15,8 +15,8 @@ public class Gelo extends IncantesimoMaleficoImpl implements Incantesimo {
         super(livello);
     }
 
-    public ClasseIncantesimo getClasse() {
-        return ClasseIncantesimo.GELO;
+    public TipoIncantesimo getClasse() {
+        return TipoIncantesimo.GELO;
     }
 
     public int getCostoLancio() {

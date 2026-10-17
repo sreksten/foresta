@@ -1,7 +1,9 @@
 package com.threeamigos.foresta.tipi;
 
 /**
- * Il tipo di modifica da portare a un certo attributo
+ * Il tipo di modifica da portare a un certo attributo. Può essere una variazione di un numero fisso di punti,
+ * una variazione di una certa percentuale o una modifica che porta l'attributo a una data quantità prefissata.
+ *
  * @author Stefano Reksten
  */
 public enum TipoModificatore {

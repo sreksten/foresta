@@ -1,29 +1,29 @@
 package com.threeamigos.foresta.missioni.storie;
 
-import com.threeamigos.foresta.missioni.ProprietaDiMissione;
-import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.intermezzi.ScenaInLocanda;
 import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
+import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.ProprietaDiMissione;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Il viaggio della moglie: dopo che il gruppo ha riportato a casa il bardo (vedi NonSparateSulPianista), rientrando in una
@@ -61,7 +61,7 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 	private static final String ARRIVO = "ARRIVO";
 
 	public IlViaggioDellaMoglie() {
-		super(ClasseMissione.IL_VIAGGIO_DELLA_MOGLIE);
+		super(MissionePredefinita.IL_VIAGGIO_DELLA_MOGLIE);
 	}
 
 	/**

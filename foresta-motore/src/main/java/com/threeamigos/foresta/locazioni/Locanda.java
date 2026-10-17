@@ -1,11 +1,9 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
-import com.threeamigos.foresta.eventi.interni.InternoPastoConsumatoInLocanda;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
+import com.threeamigos.foresta.eventi.interni.InternoPastoConsumatoInLocanda;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
@@ -14,14 +12,12 @@ import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.Informazioni;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * La locanda, nel bosco o in città: il gruppo vi entra se ha le monete per pagare, e può mangiare, pernottare, ascoltare le notizie e le voci
@@ -336,10 +332,10 @@ public class Locanda extends LocazioneBase {
 			GruppoAvversario.getIstanza().rimuoviPersonaggio(personaggioDisponibile);
 			g.aggiungiPersonaggio(RegistroPersonaggi.preparaCompagno(personaggioDisponibile));
 			g.addMonete(Dado.tira(5, 15));
-			g.addIncantesimi(ClasseIncantesimo.ARIA, Dado.tira(0, 3));
-			g.addIncantesimi(ClasseIncantesimo.ACQUA, Dado.tira(0, 3));
-			g.addIncantesimi(ClasseIncantesimo.TERRA, Dado.tira(0, 3));
-			g.addIncantesimi(ClasseIncantesimo.FUOCO, Dado.tira(0, 3));
+			g.addIncantesimi(TipoIncantesimo.ARIA, Dado.tira(0, 3));
+			g.addIncantesimi(TipoIncantesimo.ACQUA, Dado.tira(0, 3));
+			g.addIncantesimi(TipoIncantesimo.TERRA, Dado.tira(0, 3));
+			g.addIncantesimi(TipoIncantesimo.FUOCO, Dado.tira(0, 3));
 			g.addPreziosi(Dado.tira(0, 10));
 			personaggioDisponibile = null;
 			BusEventi.pubblica(new InternoMostraFinestraStato());

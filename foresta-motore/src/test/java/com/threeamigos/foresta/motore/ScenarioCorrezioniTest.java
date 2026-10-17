@@ -1,32 +1,18 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
-
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Guerriero;
-import com.threeamigos.foresta.personaggi.Mago;
-import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.personaggi.Troll;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.personaggi.*;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 /**
  * Regressioni dei bug corretti dopo l'indagine sul codice.
@@ -154,12 +140,12 @@ class ScenarioCorrezioniTest {
 		mago.addMagia(mago.getMagiaMassima());
 		Guerriero compagno = new Guerriero("Compagno", 1);
 
-		Incantesimo resurrezione = FabbricaIncantesimi.crea(ClasseIncantesimo.RESURREZIONE, 5);
+		Incantesimo resurrezione = FabbricaIncantesimi.crea(TipoIncantesimo.RESURREZIONE, 5);
 		int prima = mago.getMagia();
 		resurrezione.formula(mago, compagno, null);
 		assertEquals(prima - resurrezione.getCostoLancio(), mago.getMagia());
 
-		Incantesimo morte = FabbricaIncantesimi.crea(ClasseIncantesimo.MORTE, 5);
+		Incantesimo morte = FabbricaIncantesimi.crea(TipoIncantesimo.MORTE, 5);
 		prima = mago.getMagia();
 		morte.formula(mago, new Troll(1), null);
 		assertEquals(prima - morte.getCostoLancio(), mago.getMagia());
@@ -200,10 +186,10 @@ class ScenarioCorrezioniTest {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(14)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
 					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
-			int prima = partita.gruppo().getIncantesimi(ClasseIncantesimo.FUOCO);
+			int prima = partita.gruppo().getIncantesimi(TipoIncantesimo.FUOCO);
 			assertTrue(prima >= 2);
 			partita.gruppo().fugge();
-			int dopo = partita.gruppo().getIncantesimi(ClasseIncantesimo.FUOCO);
+			int dopo = partita.gruppo().getIncantesimi(TipoIncantesimo.FUOCO);
 			assertTrue(dopo >= prima - prima / 2 && dopo <= prima, "da " + prima + " a " + dopo);
 		}
 	}

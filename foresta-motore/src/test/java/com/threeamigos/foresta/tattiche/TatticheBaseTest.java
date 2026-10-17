@@ -1,17 +1,18 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.Gruppo;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tattiche.valutazione.Astuzia;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import org.junit.jupiter.api.AfterEach;
@@ -27,7 +28,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.tattiche.valutazione.Astuzia;
 
 /**
  * Le tattiche base (TatticheBase): quelle dei mostri e quelle predefinite dei personaggi giocabili sono valide, si salvano e si rileggono, e
@@ -175,7 +175,7 @@ class TatticheBaseTest {
         feriscici(ferito, 0.2);
         Decisione decisione = Valutatore.decidi(TatticheBase.deiMostri(TipoPersonaggio.TITANO), perIMostri(hobgoblin, sano, ferito));
         assertEquals(TipoAzione.ATTACCO_FISICO, decisione.getTipoEseguito());
-        assertSame(ferito, decisione.getBersaglio(), "astuzia " + Astuzia.di(hobgoblin) + " " + decisione.getSpiegazione().toString());
+        assertSame(ferito, decisione.getBersaglio(), "astuzia " + Astuzia.di(hobgoblin) + " " + decisione.getSpiegazione());
     }
 
     // ---- i personaggi giocabili ----
@@ -250,7 +250,7 @@ class TatticheBaseTest {
         Personaggio guerriero = crea(TipoPersonaggio.GUERRIERO, 1);
         Personaggio goblin = crea(TipoPersonaggio.GOBLIN, 1);
         guerriero.subSalute(1_000_000, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
-        scorte.addIncantesimi(ClasseIncantesimo.RESURREZIONE, 1);
+        scorte.addIncantesimi(TipoIncantesimo.RESURREZIONE, 1);
         Decisione decisione = Valutatore.decidi(TatticheBase.deiGiocabili(TipoPersonaggio.SACERDOTE),
                 perIMiei(sacerdote, Arrays.asList(sacerdote, guerriero), goblin));
         assertEquals(TipoAzione.RESURREZIONE, decisione.getTipoEseguito());

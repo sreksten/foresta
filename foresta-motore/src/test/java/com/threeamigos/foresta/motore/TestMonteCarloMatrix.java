@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -14,9 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Monte Carlo Matrix Test per il bilanciamento dei combattimenti. Vedi piano_montecarlo_matrix.md.
@@ -61,7 +59,7 @@ public class TestMonteCarloMatrix {
     private static final List<TipoPersonaggio> CLASSI_TIPICHE = Arrays.asList(TipoPersonaggio.GUERRIERO,
             TipoPersonaggio.LADRO, TipoPersonaggio.ELFO, TipoPersonaggio.BARDO, TipoPersonaggio.MAGO);
     private static final List<ScortaDiPergamene> SCORTE_CONFRONTO = Arrays.asList(ScortaDiPergamene.NESSUNA,
-            ScortaDiPergamene.di(ClasseIncantesimo.FUOCO, 2), ScortaDiPergamene.di(ClasseIncantesimo.FUOCO, 5));
+            ScortaDiPergamene.di(TipoIncantesimo.FUOCO, 2), ScortaDiPergamene.di(TipoIncantesimo.FUOCO, 5));
     private static final int[] LIVELLI_CONFRONTO_CLASSI = {1, 5, 10};
     // Gli scenari del confronto fra classi: {quantità di mostri, livelli dei mostri sopra il PG}. Uno contro uno dal
     // livello 5 quasi tutti vincono: per distinguere le classi servono gruppi di mostri e mostri più forti.
@@ -138,7 +136,7 @@ public class TestMonteCarloMatrix {
         RisultatoMatrice senza = simulaConLoggerMuto(TipoPersonaggio.MAGO, Equipaggiamento.BASTONE_LIBRO_E_VESTE,
                 ScortaDiPergamene.NESSUNA, TipoPersonaggio.TROLL, 3, 5, 2_000);
         RisultatoMatrice con = simulaConLoggerMuto(TipoPersonaggio.MAGO, Equipaggiamento.BASTONE_LIBRO_E_VESTE,
-                ScortaDiPergamene.di(ClasseIncantesimo.FUOCO, 5), TipoPersonaggio.TROLL, 3, 5, 2_000);
+                ScortaDiPergamene.di(TipoIncantesimo.FUOCO, 5), TipoPersonaggio.TROLL, 3, 5, 2_000);
         System.out.printf("MAGO vs 3 TROLL, livello 5 -> senza pergamene win=%.2f%%, con 5 di fuoco win=%.2f%%%n",
                 senza.winRatePg, con.winRatePg);
         assertTrue(con.winRatePg > senza.winRatePg, "con " + con.winRatePg + ", senza " + senza.winRatePg);

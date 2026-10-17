@@ -1,29 +1,18 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.ToDoubleFunction;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 /**
  * Partite vere (senza la modalità di prova) giocate da un giocatore automatico, per avere dei numeri sul
@@ -416,8 +405,8 @@ class SimulazionePartiteTest {
 	}
 
 	private static void registraRisorse(GruppoGiocatore gruppo, Risultato risultato) {
-		int pergamene = Arrays.stream(ClasseIncantesimo.values())
-				.filter(c -> c != ClasseIncantesimo.RESURREZIONE)
+		int pergamene = Arrays.stream(TipoIncantesimo.values())
+				.filter(c -> c != TipoIncantesimo.RESURREZIONE)
 				.mapToInt(gruppo::getIncantesimi).sum();
 		if (pergamene == 0 && risultato.spostamentoFinePergamene < 0) {
 			risultato.spostamentoFinePergamene = risultato.spostamenti;

@@ -3,21 +3,17 @@ package com.threeamigos.foresta.missioni.incarichi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
+import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.strumenti.Misc;
-import com.threeamigos.foresta.missioni.IncontroDiMissione;
-import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
 import com.threeamigos.foresta.missioni.richieste.OndateDellaRiga;
 import com.threeamigos.foresta.missioni.richieste.SorveglianzaRichiesta;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 /**
  * In città qualcuno vuole che si tenga d'occhio un posto nella foresta: vegliare una tomba, scoprire chi passa da un
@@ -42,7 +38,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 	private static final String AGGUATO = "AGGUATO";
 
 	public LaSorveglianza() {
-		super(ClasseMissione.LA_SORVEGLIANZA);
+		super(MissionePredefinita.LA_SORVEGLIANZA);
 	}
 
 	public SorveglianzaRichiesta getSorveglianza() {

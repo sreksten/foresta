@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.function.Function;
 
@@ -196,7 +196,7 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
-		return classeIncantesimo == ClasseIncantesimo.TERRA;
+	public boolean isImmuneAIncantesimo(TipoIncantesimo tipoIncantesimo) {
+		return tipoIncantesimo == TipoIncantesimo.TERRA;
 	}
 }

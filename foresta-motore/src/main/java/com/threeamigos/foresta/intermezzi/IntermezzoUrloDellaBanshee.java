@@ -5,7 +5,7 @@ import com.threeamigos.foresta.missioni.ProprietaDiMissione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.strumenti.Misc;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -41,7 +41,7 @@ public class IntermezzoUrloDellaBanshee implements Intermezzo {
 	 */
 	private static Optional<Missione> getViaggioCompletato() {
 		return RegistroMissioni.getMissioniCompletate().stream()
-				.filter(missione -> missione.getClasse() == ClasseMissione.IL_VIAGGIO_DELLA_MOGLIE)
+				.filter(missione -> missione.getClasse() == MissionePredefinita.IL_VIAGGIO_DELLA_MOGLIE)
 				.findFirst();
 	}
 

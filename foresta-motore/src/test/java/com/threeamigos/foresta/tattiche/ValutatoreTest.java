@@ -1,34 +1,21 @@
 package com.threeamigos.foresta.tattiche;
 
-import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
-import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
-import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
-import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
-import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
-import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.modellodati.tattiche.*;
 import com.threeamigos.foresta.motore.Gruppo;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tattiche.valutazione.SceltaIncantesimo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.Confronto;
-import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
-import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
+import com.threeamigos.foresta.tipi.tattiche.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.tattiche.valutazione.SceltaIncantesimo;
 
 /**
  * Il valutatore: scorre la tattica di un personaggio e decide che cosa fa (tattiche_di_combattimento_automatiche.md §11).
@@ -122,8 +108,8 @@ class ValutatoreTest {
     void laSequenzaPassaAllAzioneSuccessivaQuandoLaPrimaNonSiPuoFare() {
         TatticaMD tattica = TatticaMD.di(voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO, classe(TipoPersonaggio.STREGA)),
                 TipoAzione.SILENZIO, TipoAzione.FULMINE, TipoAzione.ATTACCO_FISICO));
-        scorteDeiMiei.addIncantesimi(ClasseIncantesimo.SILENZIO, 1);
-        scorteDeiMiei.addIncantesimi(ClasseIncantesimo.FULMINE, 1);
+        scorteDeiMiei.addIncantesimi(TipoIncantesimo.SILENZIO, 1);
+        scorteDeiMiei.addIncantesimi(TipoIncantesimo.FULMINE, 1);
         ContestoTattico contesto = perIMiei(mago, goblin1, strega);
 
         Decisione silenzio = Valutatore.decidi(tattica, contesto);
@@ -138,7 +124,7 @@ class ValutatoreTest {
         assertTrue(spiegazioneContiene(fulmine, "SILENZIO scartata"));
 
         // Senza pergamene di fulmine: l'attacco fisico
-        scorteDeiMiei.subIncantesimi(ClasseIncantesimo.FULMINE, 1);
+        scorteDeiMiei.subIncantesimi(TipoIncantesimo.FULMINE, 1);
         assertEquals(TipoAzione.ATTACCO_FISICO, Valutatore.decidi(tattica, contesto).getTipoEseguito());
     }
 
@@ -146,7 +132,7 @@ class ValutatoreTest {
     void ilLichEImmuneAlSilenzioEQuindiNonSiProvaNemmeno() {
         TatticaMD tattica = TatticaMD.di(voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO, classe(TipoPersonaggio.LICH)),
                 TipoAzione.SILENZIO, TipoAzione.ATTACCO_FISICO));
-        scorteDeiMiei.addIncantesimi(ClasseIncantesimo.SILENZIO, 1);
+        scorteDeiMiei.addIncantesimi(TipoIncantesimo.SILENZIO, 1);
         Decisione decisione = Valutatore.decidi(tattica, perIMiei(mago, lich));
         assertEquals(TipoAzione.ATTACCO_FISICO, decisione.getTipoEseguito());
         assertTrue(spiegazioneContiene(decisione, "immune al silenzio"), decisione.getSpiegazione().toString());
@@ -156,7 +142,7 @@ class ValutatoreTest {
     void dopoDueFallimentiPerCasoSiRinunciaEUnaRiuscitaAzzeraIlConto() {
         TatticaMD tattica = TatticaMD.di(voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO, classe(TipoPersonaggio.STREGA)),
                 TipoAzione.SILENZIO, TipoAzione.ATTACCO_FISICO));
-        scorteDeiMiei.addIncantesimi(ClasseIncantesimo.SILENZIO, 3);
+        scorteDeiMiei.addIncantesimi(TipoIncantesimo.SILENZIO, 3);
         ContestoTattico contesto = perIMiei(mago, strega);
         StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
         stato.registraEsitoAzione(mago, strega, TipoAzione.SILENZIO, EsitoAzione.MANCATA);
@@ -174,7 +160,7 @@ class ValutatoreTest {
     @Test
     void UnImmunitaScopertaValePerTuttiEDaSubito() {
         TatticaMD tattica = TatticaMD.di(voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO), TipoAzione.FULMINE, TipoAzione.ATTACCO_FISICO));
-        scorteDeiMiei.addIncantesimi(ClasseIncantesimo.FULMINE, 2);
+        scorteDeiMiei.addIncantesimi(TipoIncantesimo.FULMINE, 2);
         ContestoTattico delMago = perIMiei(mago, goblin1);
         ContestoTattico delBardo = perIMiei(bardo, goblin1);
         bardo.addMagia(bardo.getMagiaMassima());
@@ -251,7 +237,7 @@ class ValutatoreTest {
     void laResurrezioneVuoleUnCadutoELaPergamena() {
         TatticaMD tattica = TatticaMD.di(voce(su(TipoRosa.ALLEATI_CADUTI, TipoOrdinamento.PRIMO), TipoAzione.RESURREZIONE));
         ContestoTattico contesto = perIMiei(mago, goblin1);
-        scorteDeiMiei.addIncantesimi(ClasseIncantesimo.RESURREZIONE, 1);
+        scorteDeiMiei.addIncantesimi(TipoIncantesimo.RESURREZIONE, 1);
         assertTrue(Valutatore.decidi(tattica, contesto).isRipiego(), "nessun caduto");
         guerriero.subSalute(1_000_000, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
         Decisione decisione = Valutatore.decidi(tattica, contesto);
@@ -262,7 +248,7 @@ class ValutatoreTest {
     @Test
     void deboleAllAzioneSceglieChiSubisceDiPiuLAzioneDellaVoce() {
         goblin2.addEffettoDiStato(TipoEffettoDiStato.BAGNATO, 3, 0);
-        scorteDeiMiei.addIncantesimi(ClasseIncantesimo.FULMINE, 1);
+        scorteDeiMiei.addIncantesimi(TipoIncantesimo.FULMINE, 1);
         TatticaMD tattica = TatticaMD.di(voce(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO, FiltroMD.senzaParametro(TipoFiltro.DEBOLE_ALL_AZIONE)),
                 TipoAzione.FULMINE));
         Decisione decisione = Valutatore.decidi(tattica, perIMiei(mago, goblin1, goblin2));
@@ -288,10 +274,10 @@ class ValutatoreTest {
                 contesto);
     }
 
-    private static final List<ClasseIncantesimo> TRE = Arrays.asList(ClasseIncantesimo.FUOCO, ClasseIncantesimo.FULMINE, ClasseIncantesimo.GELO);
+    private static final List<TipoIncantesimo> TRE = Arrays.asList(TipoIncantesimo.FUOCO, TipoIncantesimo.FULMINE, TipoIncantesimo.GELO);
 
     private void pergameneDelleTre() {
-        for (ClasseIncantesimo classe : TRE) {
+        for (TipoIncantesimo classe : TRE) {
             scorteDeiMiei.addIncantesimi(classe, 1);
         }
     }
@@ -304,8 +290,8 @@ class ValutatoreTest {
         // Il fulmine su un bagnato pesa 1,5 e il fuoco 0,5
         assertEquals(TipoAzione.FULMINE, conCriterio(CriterioIncantesimo.PIU_ADATTO, mago, contesto).getTipoEseguito());
         assertEquals(TipoAzione.FULMINE, conCriterio(CriterioIncantesimo.PIU_ADATTO_ESPERTO, mago, contesto).getTipoEseguito());
-        ClasseIncantesimo piuPotente = TRE.get(0);
-        for (ClasseIncantesimo classe : TRE) {
+        TipoIncantesimo piuPotente = TRE.get(0);
+        for (TipoIncantesimo classe : TRE) {
             if (((IncantesimoMalefico) FabbricaIncantesimi.crea(classe, 1)).getDanni()
                     > ((IncantesimoMalefico) FabbricaIncantesimi.crea(piuPotente, 1)).getDanni()) {
                 piuPotente = classe;
@@ -316,8 +302,8 @@ class ValutatoreTest {
 
     @Test
     void aCasoSceglieFraQuelliLanciabiliEIncantesimoDiDannoNonComprendeMorteESilenzio() {
-        scorteDeiMiei.addIncantesimi(ClasseIncantesimo.MORTE, 1);
-        scorteDeiMiei.addIncantesimi(ClasseIncantesimo.SILENZIO, 1);
+        scorteDeiMiei.addIncantesimi(TipoIncantesimo.MORTE, 1);
+        scorteDeiMiei.addIncantesimi(TipoIncantesimo.SILENZIO, 1);
         ContestoTattico contesto = perIMiei(mago, goblin1);
         assertTrue(SceltaIncantesimo.lanciabiliContro(mago, goblin1, contesto).isEmpty());
         assertTrue(conCriterio(CriterioIncantesimo.A_CASO, mago, contesto).isRipiego());
@@ -334,8 +320,8 @@ class ValutatoreTest {
         ContestoTattico contesto = perIMiei(mago, goblin1);
         // Con un goblin quasi morto bastano tutti: il meno caro
         goblin1.subSalute(goblin1.getSalute() - 1, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
-        ClasseIncantesimo menoCaro = TRE.get(0);
-        for (ClasseIncantesimo classe : TRE) {
+        TipoIncantesimo menoCaro = TRE.get(0);
+        for (TipoIncantesimo classe : TRE) {
             if (FabbricaIncantesimi.costoAcquisto(classe) < FabbricaIncantesimi.costoAcquisto(menoCaro)) {
                 menoCaro = classe;
             }
@@ -368,9 +354,9 @@ class ValutatoreTest {
 
     @Test
     void soloSePiuForteDellAttaccoLoLasciaPerLeArmiQuandoRendonoDiPiu() {
-        scorteDeiMiei.addIncantesimi(ClasseIncantesimo.FULMINE, 1);
+        scorteDeiMiei.addIncantesimi(TipoIncantesimo.FULMINE, 1);
         ContestoTattico contesto = perIMiei(guerriero, goblin1);
-        double incantesimo = CalcolatoreCombattimento.dannoAtteso(guerriero, goblin1, (com.threeamigos.foresta.interfacce.Arma) FabbricaIncantesimi.crea(ClasseIncantesimo.FULMINE, 1));
+        double incantesimo = CalcolatoreCombattimento.dannoAtteso(guerriero, goblin1, (com.threeamigos.foresta.interfacce.Arma) FabbricaIncantesimi.crea(TipoIncantesimo.FULMINE, 1));
         double mischia = CalcolatoreCombattimento.dannoAttesoDellaMischia(guerriero, goblin1);
         TatticaMD tattica = TatticaMD.di(new VoceMD(null, Collections.emptyList(), Arrays.asList(
                 AzioneMD.incantesimoDiDanno(CriterioIncantesimo.PIU_ADATTO, true), AzioneMD.di(TipoAzione.ATTACCO_FISICO))));

@@ -1,9 +1,12 @@
 package com.threeamigos.foresta.tipi;
 
 /**
- * Tutto ciò che il giocatore può comandare (le scelte nel menu, i personaggi da selezionare, le direzioni, le mosse di
- * carta, forbici e sasso) più alcuni comandi generati dal sistema, come {@link #TIMER}. La UI li manda al motore come
- * eventi (vedi comandigiocatore). Molti hanno una {@link #getDescrizione() descrizione} da mostrare, scritta in un file
+ * Tutto ciò che il giocatore può chiedere al motore di fare o scegliere tramite un comando (solitamente un bottone)
+ * lanciato dalla UI, come le scelte nel menu, i personaggi da selezionare, le direzioni, le mosse di
+ * carta, forbici e sasso; più alcuni comandi generati dal sistema, come {@link #TIMER}. La UI non li manda direttamente
+ * al motore ma genera degli eventi a cui il motore si è registrato come listener.
+ * <p>
+ * Molti hanno una {@link #getDescrizione() descrizione} da mostrare, scritta in un file
  * di testi per lingua e non qui, in modo che il gioco si possa tradurre.
  *
  * @author Stefano Reksten
@@ -14,7 +17,8 @@ public enum Comando {
 	MASCHIO,
 	FEMMINA,
 
-	// All'inizio del gioco, per scegliere la classe del proprio personaggio
+	// All'inizio del gioco, per scegliere il tipo del proprio personaggio.
+	// E si, classi e razze sono mischiate ma ce ne faremo una ragione.
 	GUERRIERA,
 	GUERRIERO,
 	LADRA,
@@ -38,7 +42,7 @@ public enum Comando {
 	FUGA,
 	PASSA_INOSSERVATO,
 
-	// Quando occorre scegliere un particolare componente del gruppo
+	// Quando occorre scegliere un particolare componente del gruppo, ad esempio chi debba formulare un incantesimo
 	PERSONAGGIO_1,
 	PERSONAGGIO_2,
 	PERSONAGGIO_3,
@@ -48,7 +52,19 @@ public enum Comando {
 	PERSONAGGIO_7,
 	PERSONAGGIO_8,
 
-	// Selezione di un tipo di incantesimo
+	// Scelta dell'incantesimo da formulare:
+	// L'incantesimo innato di Mago ed Elfo, che non consuma pergamene e che è disponibile solo a questi
+	DARDO_ARCANO,
+
+	// I canti innati del Bardo e della Cantastorie, che non consumano pergamene e che sono disponibili solo a questi
+	CANTO_CURATIVO,
+	CANTO_IPNOTICO,
+	CANTO_DI_VALORE,
+	// Il canto che il bardo della locanda insegna al gruppo
+	URLO_DELLA_BANSHEE,
+
+	// Incantesimi disponibili a chiunque abbia una pergamena
+	SILENZIO,
 	ARIA,
 	ACQUA,
 	TERRA,
@@ -58,17 +74,9 @@ public enum Comando {
 	VELENO,
 	MORTE,
 	RESURREZIONE,
+	// Questi ultimi sono anche abilità innate dei Sacerdoti. In effetti dovrebbero essere abilità innate.
 	ALBA_SACRA,
-	SILENZIO,
 	LUCE_DIVINA,
-	// L'incantesimo innato di Mago ed Elfo, che non consuma pergamene
-	DARDO_ARCANO,
-	// I canti innati del Bardo e della Cantastorie, che non consumano pergamene
-	CANTO_CURATIVO,
-	CANTO_IPNOTICO,
-	CANTO_DI_VALORE,
-	// Il canto che il bardo della locanda insegna al gruppo (vedi IntermezzoUrloDellaBanshee)
-	URLO_DELLA_BANSHEE,
 
 	// Direzione verso la quale muoversi
 	NORD,
@@ -78,6 +86,7 @@ public enum Comando {
 
 	// Scelte possibili al completamento di una locazione
 	ACCAMPAMENTO,
+	// Scelte possibili anche durante un combattimento
 	POZIONE_SALUTE,
 	POZIONE_SALUTE_GRANDE,
 	POZIONE_MAGIA,
@@ -85,6 +94,7 @@ public enum Comando {
 	POZIONE_AUMENTO_LIVELLO,
 	MAPPA,
 	INVENTARIO,
+
 	// Nell'intro, per riprendere una partita salvata; in gioco, per salvare
 	FLOPPY_CARICA,
 	FLOPPY_SALVA,
@@ -108,14 +118,17 @@ public enum Comando {
 	FUSIONE,
 	ESCI_DA_CITTA,
 
-	// Dall'alchimista, sceglie se agire su un personaggio o su tutto il gruppo
+	// Durante la presa di un Artefatto, Gruppo serve a metterlo nell'inventario del gruppo invece che ad assegnarlo
+	// a un personaggio particolare
 	GRUPPO,
+	// Non è più in uso al momento
 	SINGOLO,
 
 	SI,
 	NO,
 	ANNULLA,
 
+	// Abilita o disabilita i cartigli di aiuto
 	AIUTO,
 	NO_AIUTO,
 
@@ -134,6 +147,7 @@ public enum Comando {
 	DESTRA,
 	SINISTRA,
 
+	// Per il gioco di carta, forbici e sasso
 	CARTA,
 	FORBICE,
 	SASSO,
@@ -141,7 +155,7 @@ public enum Comando {
 	// Azione automaticamente generata dal sistema quando si è in una locazione, per le animazioni
 	TIMER,
 
-	// Top secret
+	// Vecchi comandi (e icone) non più in uso (servivano a condurre test iniziali)
 	RUTTOLOMEO,
 	STORPSGORBLIN;
 

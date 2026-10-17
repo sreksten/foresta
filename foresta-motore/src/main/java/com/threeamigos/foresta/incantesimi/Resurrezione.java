@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * La resurrezione: un incantesimo benefico su un solo personaggio del gruppo. Se è caduto, risorge; se è ancora vivo, la sua salute torna al massimo e
@@ -20,8 +20,8 @@ public class Resurrezione implements Incantesimo {
 		this.livello = livello;
 	}
 
-	public ClasseIncantesimo getClasse() {
-		return ClasseIncantesimo.RESURREZIONE;
+	public TipoIncantesimo getClasse() {
+		return TipoIncantesimo.RESURREZIONE;
 	}
 
 	public int getLivello() {

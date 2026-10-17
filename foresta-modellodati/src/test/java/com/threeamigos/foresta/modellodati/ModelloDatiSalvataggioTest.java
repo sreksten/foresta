@@ -1,18 +1,12 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Salva e rilegge in fila, sullo stesso flusso, le parti del modello dati lette con LettoreCampi
@@ -44,7 +38,7 @@ class ModelloDatiSalvataggioTest {
         modello.getGruppoGiocatoreMD().addPersonaggioMD(morto);
         modello.getGruppoGiocatoreMD().aggiungiArtefatto(
                 ArtefattoMDTest.creaArtefatto(TipoArtefatto.PERGAMENA, "la pergamena minore", "che trasmette un effetto"));
-        modello.getGruppoGiocatoreMD().setIncantesimi(ClasseIncantesimo.FUOCO, 4);
+        modello.getGruppoGiocatoreMD().setIncantesimi(TipoIncantesimo.FUOCO, 4);
         modello.getLineaTemporaleMD().setGiocoFinito(true);
         modello.getLineaTemporaleMD().setEvento("Gwendolyn vede levarsi una colonna di fumo a nord");
         modello.getLineaTemporaleMD().addCittaDistrutta(TipoLocazione.CITTA_RUUNA);
@@ -57,7 +51,7 @@ class ModelloDatiSalvataggioTest {
         }
         // Then
         assertEquals(primo, salva(riletto));
-        assertEquals(4, riletto.getGruppoGiocatoreMD().getIncantesimi(ClasseIncantesimo.FUOCO));
+        assertEquals(4, riletto.getGruppoGiocatoreMD().getIncantesimi(TipoIncantesimo.FUOCO));
         assertTrue(riletto.getLineaTemporaleMD().isGiocoFinito());
         assertEquals("Gwendolyn vede levarsi una colonna di fumo a nord", riletto.getLineaTemporaleMD().getEvento());
         assertEquals(Collections.singletonList(TipoLocazione.CITTA_RUUNA), riletto.getLineaTemporaleMD().getCittaDistrutte());

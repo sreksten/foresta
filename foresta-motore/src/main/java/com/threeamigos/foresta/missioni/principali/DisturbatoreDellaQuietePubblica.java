@@ -2,12 +2,12 @@ package com.threeamigos.foresta.missioni.principali;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
+import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
-import com.threeamigos.foresta.missioni.MissioneBase;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * Dieci eremiti disturbati nel loro ritiro. Il conteggio avviene all'incontro, quando
@@ -22,7 +22,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 	private static final String EREMITI_INCONTRATI = "EREMITI_INCONTRATI";
 
 	public DisturbatoreDellaQuietePubblica() {
-		super(ClasseMissione.DISTURBATORE_DELLA_QUIETE_PUBBLICA);
+		super(MissionePredefinita.DISTURBATORE_DELLA_QUIETE_PUBBLICA);
 	}
 
 	@Override

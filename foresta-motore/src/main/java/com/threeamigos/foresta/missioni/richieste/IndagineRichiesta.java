@@ -1,16 +1,11 @@
 package com.threeamigos.foresta.missioni.richieste;
 
+import com.threeamigos.foresta.missioni.AspettoDelMandante;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoMissione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import com.threeamigos.foresta.missioni.AspettoDelMandante;
-import com.threeamigos.foresta.missioni.TipoMissione;
+import java.util.*;
 
 /**
  * Un'indagine (vedi LIndagine), letta da una riga di INDAGINE in missioni.txt, che ne descrive i campi: chi la chiede,

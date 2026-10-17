@@ -3,14 +3,14 @@ package com.threeamigos.foresta.missioni.principali;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.missioni.MissioneBase;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.missioni.MissioneBase;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Sotto-missione di {@link CronacheDiUnFegatoEroico}: si conclude quando il gruppo
@@ -28,7 +28,7 @@ public class VisitaLocanda extends MissioneBase {
 	private static final String NOME_LOCANDA = "NOME_LOCANDA";
 
 	public VisitaLocanda() {
-		super(ClasseMissione.VISITA_LOCANDA);
+		super(MissionePredefinita.VISITA_LOCANDA);
 	}
 
 	public void setCitta(TipoLocazione tipoCitta) {

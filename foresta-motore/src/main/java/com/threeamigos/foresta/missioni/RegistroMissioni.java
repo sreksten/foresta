@@ -1,31 +1,31 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.combattimento.Ondata;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.interni.InternoPassaggioInosservato;
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaAperturaFinestraCombattimento;
+import com.threeamigos.foresta.missioni.incarichi.IlNegozio;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.MissioneMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.RegistroMissioniMD;
+import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.Quadrante;
+import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.missioni.incarichi.IlNegozio;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.*;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.combattimento.Ondata;
-import com.threeamigos.foresta.motore.Quadrante;
-import com.threeamigos.foresta.motore.RegistroArtefatti;
 
 /**
- * Le missioni della partita: quelle predefinite ({@link ClasseMissione#isPredefinita}), in tre elenchi (in corso, completate, fallite), e le secondarie nate durante il gioco, anch'esse
+ * Le missioni della partita: quelle predefinite ({@link MissionePredefinita#isPredefinita}), in tre elenchi (in corso, completate, fallite), e le secondarie nate durante il gioco, anch'esse
  * in tre elenchi. Le controlla a ogni locazione (prima, durante, dopo), consegna loro gli eventi di gioco (avversari sconfitti, oggetti raccolti, combattimenti) e tiene i
  * conti delle locazioni che le missioni rivendicano, segnano sulla mappa o svuotano, e delle ricerche di una casella adatta (vedi gestione_missioni.md, §6-7). I dati stanno nel
  * {@code RegistroMissioniMD} e si salvano con la partita.
@@ -39,12 +39,12 @@ public class RegistroMissioni {
 	private RegistroMissioni() {
 	}
 
-	private static final Map<ClasseMissione, Missione> elencoMissioniPredefinite = new EnumMap<>(ClasseMissione.class);
-	private static final Map<ClasseMissione, Missione> elencoMissioniPredefiniteCompletate = new EnumMap<>(ClasseMissione.class);
+	private static final Map<MissionePredefinita, Missione> elencoMissioniPredefinite = new EnumMap<>(MissionePredefinita.class);
+	private static final Map<MissionePredefinita, Missione> elencoMissioniPredefiniteCompletate = new EnumMap<>(MissionePredefinita.class);
 	private static final List<Missione> elencoMissioniSecondarie = new ArrayList<>();
 	private static final List<Missione> elencoMissioniSecondarieCompletate = new ArrayList<>();
 	// Le missioni concluse senza successo (vedi Missione.fallisciMissione)
-	private static final Map<ClasseMissione, Missione> elencoMissioniPredefiniteFallite = new EnumMap<>(ClasseMissione.class);
+	private static final Map<MissionePredefinita, Missione> elencoMissioniPredefiniteFallite = new EnumMap<>(MissionePredefinita.class);
 	private static final List<Missione> elencoMissioniSecondarieFallite = new ArrayList<>();
 
 	/**
@@ -148,7 +148,7 @@ public class RegistroMissioni {
 		md.reimposta();
 		pulisciElenchi();
 
-		for (ClasseMissione classe : ClasseMissione.values()) {
+		for (MissionePredefinita classe : MissionePredefinita.values()) {
 			if (!classe.isPredefinita()) {
 				continue;
 			}
@@ -619,7 +619,7 @@ public class RegistroMissioni {
 
 	private static void aggiornaDopoRiletturaImpl(Collection<MissioneMD> missioni) {
 		for (MissioneMD missioneMD : missioni) {
-			ClasseMissione tipoMissionePredefinita = ClasseMissione.predefinitaConId(missioneMD.getId());
+			MissionePredefinita tipoMissionePredefinita = MissionePredefinita.predefinitaConId(missioneMD.getId());
 			if (tipoMissionePredefinita != null) {
 				Missione missione = ricostruisci(FabbricaMissioni.crea(tipoMissionePredefinita), missioneMD);
 				if (missione.isFallita()) {
@@ -673,14 +673,14 @@ public class RegistroMissioni {
 	/**
 	 * Se una missione di quella classe è già partita in questa partita, in corso, finita o fallita.
 	 */
-	public static boolean isPartita(ClasseMissione classe) {
+	public static boolean isPartita(MissionePredefinita classe) {
 		return getTutteLeMissioni().stream().anyMatch(missione -> missione.getClasse() == classe);
 	}
 
 	/**
 	 * Fa partire una missione che parte da sola (vedi Missione.avviaDaSola) e la restituisce.
 	 */
-	public static Missione avvia(ClasseMissione classe) {
+	public static Missione avvia(MissionePredefinita classe) {
 		Missione missione = FabbricaMissioni.crea(classe);
 		missione.avviaDaSola();
 		return missione;
@@ -762,7 +762,7 @@ public class RegistroMissioni {
 	 */
 	public static void fallisciMissione(Missione missione) {
 		togliSegnalino(missione);
-		ClasseMissione tipoMissione = ClasseMissione.predefinitaConId(missione.getId());
+		MissionePredefinita tipoMissione = MissionePredefinita.predefinitaConId(missione.getId());
 		if (tipoMissione != null) {
 			elencoMissioniPredefinite.remove(tipoMissione);
 			elencoMissioniPredefiniteFallite.put(tipoMissione, missione);
@@ -776,9 +776,9 @@ public class RegistroMissioni {
 	 * ma e' proprio allora che l'Automa chiede se lo sia per decidere tra vittoria e sconfitta.
 	 */
 	public static Missione getMissionePrincipale() {
-		Missione missione = elencoMissioniPredefinite.get(ClasseMissione.SCONFIGGI_IL_DRAGO);
+		Missione missione = elencoMissioniPredefinite.get(MissionePredefinita.SCONFIGGI_IL_DRAGO);
 		if (missione == null) {
-			missione = elencoMissioniPredefiniteCompletate.get(ClasseMissione.SCONFIGGI_IL_DRAGO);
+			missione = elencoMissioniPredefiniteCompletate.get(MissionePredefinita.SCONFIGGI_IL_DRAGO);
 		}
 		return missione;
 	}
@@ -789,7 +789,7 @@ public class RegistroMissioni {
 	 */
 	public static void completaMissione(Missione missione) {
 		togliSegnalino(missione);
-		ClasseMissione tipoMissione = ClasseMissione.predefinitaConId(missione.getId());
+		MissionePredefinita tipoMissione = MissionePredefinita.predefinitaConId(missione.getId());
 		if (tipoMissione != null) {
 			elencoMissioniPredefinite.remove(tipoMissione);
 			elencoMissioniPredefiniteCompletate.put(tipoMissione, missione);

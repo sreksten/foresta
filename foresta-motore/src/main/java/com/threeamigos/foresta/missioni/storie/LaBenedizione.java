@@ -1,35 +1,31 @@
 package com.threeamigos.foresta.missioni.storie;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInLocanda;
 import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.richieste.BenedizioneRichiesta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
+import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Sacerdote;
 import com.threeamigos.foresta.personaggi.Sacerdotessa;
 import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
-import com.threeamigos.foresta.missioni.richieste.BenedizioneRichiesta;
 
 /**
  * In una locanda, dalla terza visita in poi, un sacerdote o una sacerdotessa offre al gruppo una benedizione in cambio
@@ -72,7 +68,7 @@ public class LaBenedizione extends MissioneAPassi {
 	private static final int OPZIONI_MASSIME = 5;
 
 	public LaBenedizione() {
-		super(ClasseMissione.LA_BENEDIZIONE);
+		super(MissionePredefinita.LA_BENEDIZIONE);
 	}
 
 	public BenedizioneRichiesta getBenedizione() {

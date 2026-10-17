@@ -1,13 +1,13 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
@@ -41,8 +41,8 @@ public class AlbaSacra  implements Incantesimo {
                 && !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
     }
 
-    public ClasseIncantesimo getClasse() {
-        return ClasseIncantesimo.ALBA_SACRA;
+    public TipoIncantesimo getClasse() {
+        return TipoIncantesimo.ALBA_SACRA;
     }
 
     public int getLivello() {

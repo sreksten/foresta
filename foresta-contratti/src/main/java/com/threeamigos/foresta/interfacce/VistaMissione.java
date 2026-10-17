@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public interface VistaMissione {
 
 	String getId();
 
-	ClasseMissione getClasse();
+	MissionePredefinita getClasse();
 
 	String getNome();
 

@@ -2,7 +2,7 @@ package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.tipi.ClasseMissione;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -28,7 +28,7 @@ public class IntermezzoEremitaRompiscatole implements Intermezzo {
 	@Override
 	public boolean deveScattare(MomentoIntermezzo momento) {
 		return momento == MomentoIntermezzo.LOCAZIONE_COMPLETATA && RegistroMissioni.getMissioniCompletate().stream()
-				.anyMatch(missione -> missione.getClasse() == ClasseMissione.DISTURBATORE_DELLA_QUIETE_PUBBLICA);
+				.anyMatch(missione -> missione.getClasse() == MissionePredefinita.DISTURBATORE_DELLA_QUIETE_PUBBLICA);
 	}
 
 	@Override

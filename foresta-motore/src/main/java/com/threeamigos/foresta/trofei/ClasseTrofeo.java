@@ -1,24 +1,11 @@
 package com.threeamigos.foresta.trofei;
 
-import com.threeamigos.foresta.eventi.interni.InternoAmiciziaStretta;
-import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.eventi.interni.InternoCorruzioneRiuscita;
-import com.threeamigos.foresta.eventi.interni.InternoEremitiIncontrati;
-import com.threeamigos.foresta.eventi.interni.InternoMissioneCompletata;
-import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
-import com.threeamigos.foresta.eventi.interni.InternoPastoConsumatoInLocanda;
-import com.threeamigos.foresta.eventi.interni.InternoScheletroRisvegliato;
-import com.threeamigos.foresta.eventi.interni.InternoLocazioneVisitata;
+import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tipi.TipoConsumabile;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.TipoTrofeo;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.function.IntPredicate;
 import java.util.function.Supplier;
@@ -34,7 +21,7 @@ public enum ClasseTrofeo {
 			InternoMissioneCompletata.class, evento -> 1, 50)),
 	// La missione La sfida dei campioni, una sola per partita (vedi LaSfidaDeiCampioni nel catalogo delle missioni)
 	RE_DI_CARTA_FORBICI_E_SASSO(() -> new TrofeoAContatore<>(TipoTrofeo.RE_DI_CARTA_FORBICI_E_SASSO,
-			InternoMissioneCompletata.class, evento -> evento.getMissione().getClasse() == ClasseMissione.LA_SFIDA_DEI_CAMPIONI ? 1 : 0, 1)),
+			InternoMissioneCompletata.class, evento -> evento.getMissione().getClasse() == MissionePredefinita.LA_SFIDA_DEI_CAMPIONI ? 1 : 0, 1)),
 	// Chi viene respinto dall'oste per mancanza di monete non mangia, e non conta
 	SBEVAZZONE(() -> new TrofeoAContatore<>(TipoTrofeo.SBEVAZZONE,
 			InternoPastoConsumatoInLocanda.class, evento -> 1, 100)),

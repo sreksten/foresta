@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.missioni.richieste;
 
+import com.threeamigos.foresta.missioni.AspettoDelMandante;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoMissione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.EnumSet;
 import java.util.Set;
-import com.threeamigos.foresta.missioni.AspettoDelMandante;
-import com.threeamigos.foresta.missioni.TipoMissione;
 
 /**
  * Un incarico di combattimento (vedi IncaricoDiCombattimento), letto da una riga di INCARICO_DI_COMBATTIMENTO in
