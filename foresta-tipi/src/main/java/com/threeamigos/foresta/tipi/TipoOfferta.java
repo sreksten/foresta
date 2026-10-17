@@ -1,12 +1,14 @@
 package com.threeamigos.foresta.tipi;
 
 /**
- * I servizi che un incontro amichevole o una locanda possono proporre. L'offerta vera la costruisce
- * offerte.FabbricaOfferte.
+ * I servizi che un incontro amichevole può proporre.
+ * <p>
+ * L'offerta vera la costruisce offerte.FabbricaOfferte.
  *
  * @author Stefano Reksten
  */
 public enum TipoOfferta {
+
 	/** Un avversario si unisce al gruppo per un periodo limitato, senza chiedere niente */
 	AIUTO_GRATUITO,
 	/** Un avversario si unisce al gruppo per un periodo limitato, in cambio di monete */

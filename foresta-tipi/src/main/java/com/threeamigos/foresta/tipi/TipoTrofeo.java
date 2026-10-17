@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * I trofei che il giocatore può vincere. A differenza delle missioni non scadono mai e
- * valgono da una partita all'altra: una volta vinto, un trofeo non si perde più.
+ * valgono da una partita all'altra. Una volta vinto, un trofeo non si perde più.
  * <p>
  * I testi di ogni costante (NOME, DESCRIZIONE) non stanno qui ma nel file {@code tipo_trofeo_<lingua>.properties}, alla voce
  * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).

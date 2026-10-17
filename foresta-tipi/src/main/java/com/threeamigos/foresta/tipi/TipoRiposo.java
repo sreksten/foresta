@@ -9,8 +9,17 @@ package com.threeamigos.foresta.tipi;
  */
 public enum TipoRiposo {
 
+    /**
+     * In una locazione in cui non si sono incontrati avversari.
+     */
     ALL_APERTO_SENZA_FUOCO(0.5),
+    /**
+     * All'accampamento.
+     */
     ALL_APERTO_CON_FUOCO(1.0),
+    /**
+     * In una locanda.
+     */
     AL_COPERTO(1.5);
 
     private final double moltiplicatore;
