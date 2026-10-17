@@ -1,9 +1,11 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.LOggettoSmarrito;
 import com.threeamigos.foresta.missioni.richieste.OggettoSmarrito;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -14,8 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * L'oggetto smarrito: si cerca a non più di due passi da un posto segnato sulla mappa, e si riporta a chi l'ha perso.
@@ -54,7 +54,7 @@ class ScenarioOggettoSmarritoTest {
             assertTrue(Foresta.isLocazioneConosciuta(posto));
             assertTrue(Math.abs(casella.getX() - posto.getX()) + Math.abs(casella.getY() - posto.getY()) <= LOggettoSmarrito.RAGGIO);
             TipoLocazione tipo = Foresta.getLocazione(casella);
-            assertTrue(tipo.getCategoria() == CategoriaLocazione.STANDARD && tipo != TipoLocazione.LOCANDA, String.valueOf(tipo));
+            assertTrue(tipo.getCategoriaLocazione() == CategoriaLocazione.STANDARD && tipo != TipoLocazione.LOCANDA, String.valueOf(tipo));
             assertEquals("La fede nuziale del mugnaio", smarrito.getNome());
             assertTrue(smarrito.getDescrizione().startsWith("Cerca la fede nuziale che il mugnaio di Nyena ha perso vicino"), smarrito.getDescrizione());
 

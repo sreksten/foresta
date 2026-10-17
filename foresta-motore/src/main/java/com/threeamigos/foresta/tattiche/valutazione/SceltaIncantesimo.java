@@ -40,7 +40,7 @@ public final class SceltaIncantesimo {
 	private static List<TipoIncantesimo> repertorio() {
 		List<TipoIncantesimo> malefici = new ArrayList<>();
 		for (TipoIncantesimo classe : TipoIncantesimo.values()) {
-			if (classe.getTipo() == CategoriaIncantesimo.MALEFICO) {
+			if (classe.getCategoriaIncantesimo() == CategoriaIncantesimo.MALEFICO) {
 				malefici.add(classe);
 			}
 		}

@@ -32,7 +32,7 @@ public class VisitaLocanda extends MissioneBase {
 	}
 
 	public void setCitta(TipoLocazione tipoCitta) {
-		if (tipoCitta.getCategoria() != CategoriaLocazione.CITTA) {
+		if (tipoCitta.getCategoriaLocazione() != CategoriaLocazione.CITTA) {
 			throw new IllegalArgumentException(tipoCitta.name() + " non è una città");
 		}
 		aggiungiProprieta(CITTA, tipoCitta.name());

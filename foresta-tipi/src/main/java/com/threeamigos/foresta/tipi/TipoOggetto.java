@@ -41,18 +41,25 @@ public enum TipoOggetto {
 	}
 
 	/**
-	 * Se se ne può creare un'istanza qualsiasi con FabbricaOggetti: non per gli artefatti e gli oggetti delle
+	 * La quantità massima per locazione.
+	 */
+	public final int getQuantitaMassima() {
+		return quantitaMassima;
+	}
+
+	/**
+	 * Il valore di acquisto.
+	 */
+	public final int getValore() {
+		return valore;
+	}
+
+	/**
+	 * Se sia possibile crearne un'istanza qualsiasi con FabbricaOggetti: non per gli artefatti e gli oggetti delle
 	 * missioni, che nascono altrove.
 	 */
 	public boolean isGenerabile() {
 		return generabile;
 	}
 
-	public final int getQuantitaMassima() {
-		return quantitaMassima;
-	}
-
-	public final int getValore() {
-		return valore;
-	}
 }

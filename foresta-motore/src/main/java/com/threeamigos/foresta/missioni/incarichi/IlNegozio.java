@@ -102,7 +102,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 			}
 			if (libere.isEmpty()) {
 				for (TipoLocazione tipo : TipoLocazione.values()) {
-					if (tipo.getCategoria() == CategoriaLocazione.CITTA) {
+					if (tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 						libere.add(tipo);
 					}
 				}

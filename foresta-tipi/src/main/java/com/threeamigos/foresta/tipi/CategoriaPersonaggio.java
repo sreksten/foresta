@@ -48,10 +48,6 @@ public enum CategoriaPersonaggio {
 	 */
 	COSTRUTTO;
 
-	// Quanto danno subisce, per tipo di danno, chi è di questa categoria. Tipi mancanti restituiscono 1
-	// (danno non modificato)
-	private final Map<TipoDanno, Double> moltiplicatoriDannoSubito = new EnumMap<>(TipoDanno.class);
-
 	// Le debolezze e le resistenze comuni a una categoria (quelle di una sola classe stanno in TipoPersonaggio).
 	// Vedi anche debolezze_e_resistenze.md
 	static {
@@ -66,6 +62,10 @@ public enum CategoriaPersonaggio {
 		COSTRUTTO.modifica(TipoDanno.VELENO, 0.0d);
 		COSTRUTTO.modifica(TipoDanno.PSICHICO, 0.0d);
 	}
+
+	// Quanto danno subisce, per tipo di danno, chi è di questa categoria. Tipi mancanti restituiscono 1
+	// (danno non modificato)
+	private final Map<TipoDanno, Double> moltiplicatoriDannoSubito = new EnumMap<>(TipoDanno.class);
 
 	CategoriaPersonaggio() {
 	}
@@ -88,4 +88,5 @@ public enum CategoriaPersonaggio {
 	public String getNome() {
 		return Testi.testoOCostante(this, "NOME");
 	}
+
 }

@@ -65,7 +65,7 @@ public class Cofano extends OggettoBase implements Oggetto {
 		int min;
 		int max;
 		int tipo;
-		if (tipoLocazione.getCategoria() == CategoriaLocazione.CASTELLO) {
+		if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CASTELLO) {
 			min = 1;
 			max = 6;
 		} else {

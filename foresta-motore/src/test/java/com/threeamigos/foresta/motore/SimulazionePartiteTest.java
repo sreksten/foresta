@@ -452,13 +452,13 @@ class SimulazionePartiteTest {
 					TipoLocazione tipo = corrente.getTipoLocazione();
 					if (tipo == TipoLocazione.LOCANDA) {
 						risultato.visiteLocande++;
-					} else if (tipo.getCategoria() == CategoriaLocazione.CITTA) {
+					} else if (tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 						risultato.visiteCitta++;
 					} else {
 						List<Personaggio> avversari = GruppoAvversario.getIstanza().getPersonaggiVivi();
 						if (!avversari.isEmpty()) {
 							scontro = new Scontro(avversari.get(0).getClasse(),
-									tipo.getCategoria() == CategoriaLocazione.CASTELLO);
+									tipo.getCategoriaLocazione() == CategoriaLocazione.CASTELLO);
 							risultato.scontri.add(scontro);
 						}
 					}
@@ -532,7 +532,7 @@ class SimulazionePartiteTest {
 				risultato.moneteGuadagnate += monete - monetePrima;
 				risultato.guadagnatePerLivello.merge(Statistiche.getLivello(), monete - monetePrima, Integer::sum);
 				TipoLocazione dove = locazione == null ? null : locazione.getTipoLocazione();
-				if (dove != null && dove.getCategoria() == CategoriaLocazione.CITTA) {
+				if (dove != null && dove.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 					risultato.guadagnateInCitta += monete - monetePrima;
 				} else if (dove == TipoLocazione.LOCANDA) {
 					risultato.guadagnateInLocanda += monete - monetePrima;
@@ -542,7 +542,7 @@ class SimulazionePartiteTest {
 			}
 			if (gruppo.getNumeroPersonaggi() > personaggiPrima && locazione != null) {
 				TipoLocazione tipo = locazione.getTipoLocazione();
-				if (tipo == TipoLocazione.LOCANDA || tipo.getCategoria() == CategoriaLocazione.CITTA) {
+				if (tipo == TipoLocazione.LOCANDA || tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 					risultato.reclutati += gruppo.getNumeroPersonaggi() - personaggiPrima;
 				} else {
 					risultato.mercenari += gruppo.getNumeroPersonaggi() - personaggiPrima;

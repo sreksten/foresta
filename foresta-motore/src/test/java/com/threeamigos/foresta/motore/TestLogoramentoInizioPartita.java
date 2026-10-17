@@ -345,7 +345,7 @@ public class TestLogoramentoInizioPartita {
                         livello, g.getPrecisione(), g.getDestrezza(), g.getVelocita(), g.getParata(), g.getResistenzaMagica(),
                         g.getSaggezza(), g.getIntelligenza(), g.getSaluteMassima(),
                         l.getPrecisione(), l.getDestrezza(), l.getVelocita(), l.getParata(), l.getResistenzaMagica(),
-                        l.getSaggezza(), l.getIntelligenza(), l.getSaluteMassima(), l.getArmaEquipaggiata().getTipoDanno().getSuperTipo());
+                        l.getSaggezza(), l.getIntelligenza(), l.getSaluteMassima(), l.getArmaEquipaggiata().getTipoDanno().getCategoriaDanno());
             }
         } finally {
             System.setOut(out);
@@ -367,13 +367,13 @@ public class TestLogoramentoInizioPartita {
                 }
                 StringBuilder sb = new StringBuilder(String.format("%-13s magia %3d int %2d:", classe, m.getMagia(), m.getIntelligenza()));
                 for (TipoIncantesimo ci : TipoIncantesimo.values()) {
-                    if (ci.getTipo() != CategoriaIncantesimo.MALEFICO || FabbricaIncantesimi.costoLancio(ci) > m.getMagia()) {
+                    if (ci.getCategoriaIncantesimo() != CategoriaIncantesimo.MALEFICO || FabbricaIncantesimi.costoLancio(ci) > m.getMagia()) {
                         continue;
                     }
                     com.threeamigos.foresta.incantesimi.IncantesimoMalefico inc =
                             (com.threeamigos.foresta.incantesimi.IncantesimoMalefico) FabbricaIncantesimi.crea(ci, 1);
                     sb.append(String.format(" %s %d%%x%d", ci, CalcolatoreCombattimento.calcolaProbabilitaDiColpire(m, g,
-                            inc.getTipoDanno().getSuperTipo()), CalcolatoreCombattimento.calcolaDannoRisultante(m, g, inc).getDanno()));
+                            inc.getTipoDanno().getCategoriaDanno()), CalcolatoreCombattimento.calcolaDannoRisultante(m, g, inc).getDanno()));
                 }
                 out.println(sb);
             }
@@ -507,7 +507,7 @@ public class TestLogoramentoInizioPartita {
      * Un colpo come nel gioco: se va a segno il risultato (danno ed effetti di stato) si applica al difensore
      */
     private static void colpisci(Personaggio attaccante, Personaggio difensore, Arma arma, double fattore) {
-        if (CalcolatoreCombattimento.colpisce(attaccante, difensore, arma.getTipoDanno().getSuperTipo())) {
+        if (CalcolatoreCombattimento.colpisce(attaccante, difensore, arma.getTipoDanno().getCategoriaDanno())) {
             difensore.applicaRisultatoCombattimento(CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, arma, fattore));
         }
     }

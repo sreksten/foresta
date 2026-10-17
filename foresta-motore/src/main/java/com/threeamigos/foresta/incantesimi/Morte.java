@@ -59,7 +59,7 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 			return;
 		}
 		if (bersaglio.getSalute() < bersaglio.getSaluteMassima() / 4
-				&& CalcolatoreCombattimento.colpisce(formulante, bersaglio, getTipoDanno().getSuperTipo())) {
+				&& CalcolatoreCombattimento.colpisce(formulante, bersaglio, getTipoDanno().getCategoriaDanno())) {
 			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo ha ucciso " + nomeBersaglio + "."));
 			// Tutta la salute rimasta: la morte passa da subSalute come per ogni altro colpo (causa, immortali)
 			bersaglio.subSalute(bersaglio.getSalute(), formulante, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);

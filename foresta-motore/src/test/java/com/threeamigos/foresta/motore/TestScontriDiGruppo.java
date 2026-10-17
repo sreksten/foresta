@@ -229,7 +229,7 @@ public class TestScontriDiGruppo {
     }
 
     private static void colpisci(Personaggio attaccante, Personaggio difensore, Arma arma, double fattore) {
-        if (CalcolatoreCombattimento.colpisce(attaccante, difensore, arma.getTipoDanno().getSuperTipo())) {
+        if (CalcolatoreCombattimento.colpisce(attaccante, difensore, arma.getTipoDanno().getCategoriaDanno())) {
             DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, arma, fattore);
             difensore.applicaRisultatoCombattimento(risultato);
         }
@@ -263,7 +263,7 @@ public class TestScontriDiGruppo {
     }
 
     private static double attesa(Personaggio attaccante, Personaggio difensore, Arma arma, double fattore) {
-        return CalcolatoreCombattimento.calcolaProbabilitaDiColpire(attaccante, difensore, arma.getTipoDanno().getSuperTipo())
+        return CalcolatoreCombattimento.calcolaProbabilitaDiColpire(attaccante, difensore, arma.getTipoDanno().getCategoriaDanno())
                 / 100.0d * CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, arma, fattore).getDanno();
     }
 

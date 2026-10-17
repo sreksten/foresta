@@ -1,12 +1,7 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.locazioni.Bosco;
-import com.threeamigos.foresta.locazioni.FabbricaLocazioni;
-import com.threeamigos.foresta.locazioni.Locanda;
-import com.threeamigos.foresta.locazioni.Locazione;
-import com.threeamigos.foresta.locazioni.Rovine;
-import com.threeamigos.foresta.locazioni.Tempio;
+import com.threeamigos.foresta.locazioni.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ForestaMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
@@ -14,20 +9,15 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.strumenti.Misc;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
+
+import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * La mappa della Foresta di questa partita: una griglia di 20 per 20 caselle, ciascuna con la sua locazione. I dati stanno nel
@@ -168,7 +158,7 @@ public class Foresta {
 
 		int numeroCitta = 0;
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
-			if (tipoLocazione.getCategoria() == CategoriaLocazione.CITTA) {
+			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 				numeroCitta++;
 			}
 		}
@@ -271,7 +261,7 @@ public class Foresta {
 	private static void costruisciCittaEPosizionaPersonaggi(List<ProduttoreDiTestiCasuale.DatiLocanda> poolDatiLocanda) {
 		List<Quadrante> quadranti = Quadrante.inOrdineCasuale();
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
-			if (tipoLocazione.getCategoria() == CategoriaLocazione.CITTA) {
+			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 				CoordinateMD coordinate = quadranti.isEmpty()
 						? costruisciLocazioneUnica(tipoLocazione, false)
 						: costruisciLocazioneUnica(tipoLocazione, getCoordinateLibere(quadranti.remove(0)), false);

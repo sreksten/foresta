@@ -189,7 +189,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 		TipoLocazione piuVicina = null;
 		int distanzaMinima = Integer.MAX_VALUE;
 		for (TipoLocazione tipo : TipoLocazione.values()) {
-			if (tipo.getCategoria() != CategoriaLocazione.CITTA || LineaTemporale.isCittaDistrutta(tipo)) {
+			if (tipo.getCategoriaLocazione() != CategoriaLocazione.CITTA || LineaTemporale.isCittaDistrutta(tipo)) {
 				continue;
 			}
 			CoordinateMD citta = Foresta.getCoordinateLocazioneUnica(tipo);

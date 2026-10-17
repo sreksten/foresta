@@ -101,7 +101,7 @@ class TestiDelleEnumTest {
 			} else {
                 assertNull(locazione.getNomeProprio(), locazione + " non è unica e non ha un nome proprio");
 			}
-			if (locazione.getCategoria() == CategoriaLocazione.CITTA) {
+			if (locazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 				assertTrue(locazione.getNomeProprio().endsWith(locazione.getNomeDellaCitta()), locazione.getNomeProprio());
 			} else {
                 assertNull(locazione.getNomeDellaCitta());

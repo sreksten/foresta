@@ -94,7 +94,7 @@ class AnalisiBossTest {
             dannoArma += CalcolatoreCombattimento.calcolaDannoRisultante(pg, boss, pg.getArmaEquipaggiata()).getDanno();
             dannoFuoco += CalcolatoreCombattimento.calcolaDannoRisultante(pg, boss, new Fuoco(livello)).getDanno();
             colpisceBoss += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(boss, pg,
-                    boss.getArmaEquipaggiata().getTipoDanno().getSuperTipo());
+                    boss.getArmaEquipaggiata().getTipoDanno().getCategoriaDanno());
             dannoBoss += CalcolatoreCombattimento.calcolaDannoRisultante(boss, pg, boss.getArmaEquipaggiata()).getDanno();
             salutePg += pg.getSaluteMassima();
         }

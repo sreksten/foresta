@@ -219,7 +219,7 @@ public class CalcolatoreCombattimento {
                 fattoreEffetti(vicino, tipoDanno));
         double difesa = difesaContro(vicino, tipoDanno);
         risultato.setFattoreEquipaggiamento((100.0d + difesaBaseContro(vicino, tipoDanno)) / (100.0d + difesa));
-        if (tipoDanno.getSuperTipo() != CategoriaDanno.FISICO && vicino.hasEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA)) {
+        if (tipoDanno.getCategoriaDanno() != CategoriaDanno.FISICO && vicino.hasEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA)) {
             difesa = difesa * 0.8d;
         }
         difesa = difesa * fattoreDifesaDaStati(vicino, tipoDanno, interazioni);
@@ -314,7 +314,7 @@ public class CalcolatoreCombattimento {
     }
 
     private static double dannoAtteso(Personaggio attaccante, Personaggio difensore, Arma arma, double fattoreDellaFase) {
-        double probabilita = calcolaProbabilitaDiColpire(attaccante, difensore, arma.getTipoDanno().getSuperTipo()) / 100.0d;
+        double probabilita = calcolaProbabilitaDiColpire(attaccante, difensore, arma.getTipoDanno().getCategoriaDanno()) / 100.0d;
         return probabilita * dannoAttesoDellArma(attaccante, arma) * fattoreDellaFase * moltiplicatoreAtteso(difensore, arma.getTipoDanno());
     }
 
@@ -372,7 +372,7 @@ public class CalcolatoreCombattimento {
         // 1. CALCOLO STATISTICHE EFFETTIVE
         // Determina se l'attacco scala su FORZA (Fisico) o INTELLIGENZA (Magico/Elementale)
         int statOffensiva;
-        boolean dannoNonFisico = tipoDanno.getSuperTipo() == CategoriaDanno.ELEMENTALE || tipoDanno.getSuperTipo() == CategoriaDanno.MAGICO;
+        boolean dannoNonFisico = tipoDanno.getCategoriaDanno() == CategoriaDanno.ELEMENTALE || tipoDanno.getCategoriaDanno() == CategoriaDanno.MAGICO;
         Logger.log(() -> "tipoDanno = " + tipoDanno + ", dannoNonFisico = " + dannoNonFisico);
         if (dannoNonFisico) {
             statOffensiva = attaccante.getIntelligenza();
@@ -996,7 +996,7 @@ public class CalcolatoreCombattimento {
         if (interazioni.contains(TipoInterazioneConEffettiDiStato.SUPERCONDUZIONE)) {
             return 0.7d;
         }
-        if (previsti.ha(difensore, TipoEffettoDiStato.CONGELATO) && tipoDanno.getSuperTipo() == CategoriaDanno.FISICO
+        if (previsti.ha(difensore, TipoEffettoDiStato.CONGELATO) && tipoDanno.getCategoriaDanno() == CategoriaDanno.FISICO
                 && tipoDanno != TipoDanno.CONTUNDENTE) {
             return 1.5d;
         }
@@ -1042,7 +1042,7 @@ public class CalcolatoreCombattimento {
         }
         List<TipoInterazioneConEffettiDiStato> interazioni = interazioniAttive(difensore, tipoDanno, previsti);
         double difesa = difesaContro(difensore, tipoDanno);
-        if (tipoDanno.getSuperTipo() != CategoriaDanno.FISICO && previsti.ha(difensore, TipoEffettoDiStato.MENTE_FRATTURATA)) {
+        if (tipoDanno.getCategoriaDanno() != CategoriaDanno.FISICO && previsti.ha(difensore, TipoEffettoDiStato.MENTE_FRATTURATA)) {
             difesa = difesa * 0.8d;
         }
         difesa = difesa * fattoreDifesaDaStati(difensore, tipoDanno, interazioni, previsti);
@@ -1086,7 +1086,7 @@ public class CalcolatoreCombattimento {
      * La difesa del personaggio senza i pezzi dell'equipaggiamento: COSTITUZIONE + PARATA per il fisico, RESISTENZA_MAGICA per il resto
      */
     public static double difesaBaseContro(Personaggio difensore, TipoDanno tipoDanno) {
-        boolean fisico = tipoDanno.getSuperTipo() == CategoriaDanno.FISICO;
+        boolean fisico = tipoDanno.getCategoriaDanno() == CategoriaDanno.FISICO;
         return fisico ? difensore.getCostituzione() + difensore.getParata() : difensore.getResistenzaMagica();
     }
 

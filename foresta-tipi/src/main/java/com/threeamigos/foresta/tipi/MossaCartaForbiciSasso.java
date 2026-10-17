@@ -13,23 +13,6 @@ public enum MossaCartaForbiciSasso {
 	FORBICE(Comando.FORBICE),
 	SASSO(Comando.SASSO);
 
-	private final Comando comando;
-
-	MossaCartaForbiciSasso(Comando comando) {
-		this.comando = comando;
-	}
-
-	public Comando getComando() {
-		return comando;
-	}
-
-	/**
-	 * Se questa mossa batte l'altra: una mossa non batte mai se stessa.
-	 */
-	public boolean batte(MossaCartaForbiciSasso altra) {
-		return (this == CARTA && altra == SASSO) || (this == SASSO && altra == FORBICE) || (this == FORBICE && altra == CARTA);
-	}
-
 	/**
 	 * Se un personaggio di una data classe può partecipare a carta, forbici e sasso. L'OmbraFiamma non partecipa.
 	 */
@@ -48,4 +31,22 @@ public enum MossaCartaForbiciSasso {
 		}
 		return null;
 	}
+
+	private final Comando comando;
+
+	MossaCartaForbiciSasso(Comando comando) {
+		this.comando = comando;
+	}
+
+	public Comando getComando() {
+		return comando;
+	}
+
+	/**
+	 * Se questa mossa batte l'altra: una mossa non batte mai se stessa.
+	 */
+	public boolean batte(MossaCartaForbiciSasso altra) {
+		return (this == CARTA && altra == SASSO) || (this == SASSO && altra == FORBICE) || (this == FORBICE && altra == CARTA);
+	}
+
 }

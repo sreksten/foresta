@@ -69,21 +69,6 @@ public enum TipoArtefatto {
         this(categoriaArtefatto, cardinalita, tipoSlotArtefatto, null);
     }
 
-    /**
-     * Pergamena, gemma, monile, gingillo o sigillo: un ingrediente magico da fondere su un artefatto
-     */
-    public boolean isIngrediente() {
-        return categoriaArtefatto == CategoriaArtefatto.INCANTAMENTO;
-    }
-
-    /**
-     * Un oggetto che fa salire di un livello l'artefatto su cui lo si fonde, invece di dargli degli effetti. È anche un
-     * ingrediente (si mette sul banco dell'incantatore come gli altri), ma non lo si compra né lo si vende.
-     */
-    public boolean isAggiornamento() {
-        return this == AGGIORNAMENTO;
-    }
-
     public CategoriaArtefatto getCategoria() {
         return categoriaArtefatto;
     }
@@ -106,6 +91,21 @@ public enum TipoArtefatto {
 
     public String getUtilizzo() {
         return Testi.testoOCostante(this, "UTILIZZO");
+    }
+
+    /**
+     * Pergamena, gemma, monile, gingillo o sigillo: un ingrediente magico da fondere su un artefatto
+     */
+    public boolean isIngrediente() {
+        return categoriaArtefatto == CategoriaArtefatto.INCANTAMENTO;
+    }
+
+    /**
+     * Un oggetto che fa salire di un livello l'artefatto su cui lo si fonde, invece di dargli degli effetti. È anche un
+     * ingrediente (si mette sul banco dell'incantatore come gli altri), ma non lo si compra né lo si vende.
+     */
+    public boolean isAggiornamento() {
+        return this == AGGIORNAMENTO;
     }
 
 }

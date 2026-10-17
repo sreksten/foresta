@@ -80,9 +80,9 @@ class DatiDeiTipiTest {
     @Test
     void ogniTipoDiMissioneHaLaSuaCategoria() {
         for (TipoMissione tipo : TipoMissione.values()) {
-            assertNotNull(tipo.getSupertipoMissione(), tipo.name());
+            assertNotNull(tipo.getCategoriaMissione(), tipo.name());
         }
-        assertSame(CategoriaMissione.ACQUISIZIONE, TipoMissione.RACCOLTA_INGREDIENTI.getSupertipoMissione());
-        assertSame(CategoriaMissione.SPIRITUALE, TipoMissione.RITUALE.getSupertipoMissione());
+        assertSame(CategoriaMissione.ACQUISIZIONE, TipoMissione.RACCOLTA_INGREDIENTI.getCategoriaMissione());
+        assertSame(CategoriaMissione.SPIRITUALE, TipoMissione.RITUALE.getCategoriaMissione());
     }
 }

@@ -269,14 +269,14 @@ public enum TipoAttributo {
      */
     TEMPO(CategoriaAttributo.RISORSA_DINAMICA);
 
-    private final CategoriaAttributo supertipo;
+    private final CategoriaAttributo categoriaAttributo;
 
     TipoAttributo(CategoriaAttributo supertipo) {
-        this.supertipo = supertipo;
+        this.categoriaAttributo = supertipo;
     }
 
-    public CategoriaAttributo getSupertipo() {
-        return supertipo;
+    public CategoriaAttributo getCategoriaAttributo() {
+        return categoriaAttributo;
     }
 
     public String getNome() {
@@ -288,10 +288,11 @@ public enum TipoAttributo {
     }
 
     public boolean isPrimario() {
-        return supertipo == CategoriaAttributo.PRIMARIO;
+        return categoriaAttributo == CategoriaAttributo.PRIMARIO;
     }
 
     public boolean isSecondario() {
-        return supertipo == CategoriaAttributo.SECONDARIO;
+        return categoriaAttributo == CategoriaAttributo.SECONDARIO;
     }
+
 }

@@ -94,7 +94,7 @@ public class Silenzio extends IncantesimoMaleficoImpl implements Incantesimo {
 			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo non ha effetto su " + nomeBersaglio + "."));
 			return;
 		}
-		if (!CalcolatoreCombattimento.colpisce(formulante, bersaglio, getTipoDanno().getSuperTipo())) {
+		if (!CalcolatoreCombattimento.colpisce(formulante, bersaglio, getTipoDanno().getCategoriaDanno())) {
 			Logger.log("L'incantesimo non va a segno");
 			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo non va a segno su " + nomeBersaglio + "."));
 			return;

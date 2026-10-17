@@ -22,4 +22,5 @@ public enum CategoriaLocazione {
 	 * I castelli dei boss, ciascuno con un nome proprio.
 	 */
 	CASTELLO
+
 }

@@ -118,23 +118,6 @@ public enum MissionePredefinita {
 	MISSIONE_DI_PROVA,
 	MISSIONE_CHE_FALLISCE;
 
-	private final boolean predefinita;
-
-	MissionePredefinita() {
-		this(false);
-	}
-
-	MissionePredefinita(boolean predefinita) {
-		this.predefinita = predefinita;
-	}
-
-	/**
-	 * Dice se la missione esiste dall'inizio della partita.
-	 */
-	public boolean isPredefinita() {
-		return predefinita;
-	}
-
 	/**
 	 * Dice se quell'identificativo è quello di una missione predefinita.
 	 */
@@ -153,4 +136,22 @@ public enum MissionePredefinita {
 		}
 		return null;
 	}
+
+	private final boolean predefinita;
+
+	MissionePredefinita() {
+		this(false);
+	}
+
+	MissionePredefinita(boolean predefinita) {
+		this.predefinita = predefinita;
+	}
+
+	/**
+	 * Dice se la missione esiste dall'inizio della partita.
+	 */
+	public boolean isPredefinita() {
+		return predefinita;
+	}
+
 }

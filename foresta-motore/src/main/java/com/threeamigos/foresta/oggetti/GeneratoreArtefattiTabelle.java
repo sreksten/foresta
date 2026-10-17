@@ -79,7 +79,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	 * Gli incantamenti sono elementali o magici: il danno fisico lo dà già l'arma
 	 */
 	private static final List<TipoDanno> TIPI_DANNO_INCANTAMENTO = Arrays.stream(TipoDanno.values())
-			.filter(t -> t.getSuperTipo() != CategoriaDanno.FISICO)
+			.filter(t -> t.getCategoriaDanno() != CategoriaDanno.FISICO)
 			.collect(Collectors.toList());
 
 	private static final List<TipoArtefatto> TIPI_CASUALI = Arrays.stream(TipoArtefatto.values())
@@ -108,9 +108,9 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 				TipoAttributo.CORAGGIO, TipoAttributo.VALORE, TipoAttributo.CARICO_MASSIMO, TipoAttributo.POTERE_MAGICO));
 		// La gemma gli incantamenti elementali, il monile quelli magici
 		DANNI_DEGLI_INGREDIENTI.put(TipoArtefatto.GEMMA, TIPI_DANNO_INCANTAMENTO.stream()
-				.filter(t -> t.getSuperTipo() == CategoriaDanno.ELEMENTALE).collect(Collectors.toList()));
+				.filter(t -> t.getCategoriaDanno() == CategoriaDanno.ELEMENTALE).collect(Collectors.toList()));
 		DANNI_DEGLI_INGREDIENTI.put(TipoArtefatto.MONILE, TIPI_DANNO_INCANTAMENTO.stream()
-				.filter(t -> t.getSuperTipo() == CategoriaDanno.MAGICO).collect(Collectors.toList()));
+				.filter(t -> t.getCategoriaDanno() == CategoriaDanno.MAGICO).collect(Collectors.toList()));
 	}
 
 	private final Random random;

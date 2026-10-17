@@ -332,12 +332,12 @@ final class GiocatoreAutomatico {
 				if (tipo == null || c.equals(qui)) {
 					continue;
 				}
-				if (tipo.getCategoria() == CategoriaLocazione.CITTA) {
+				if (tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 					citta.add(c);
 				} else if (tipo == TipoLocazione.LOCANDA) {
 					locande.add(c);
 				}
-				if ((tipo == TipoLocazione.LOCANDA || tipo.getCategoria() == CategoriaLocazione.CITTA)
+				if ((tipo == TipoLocazione.LOCANDA || tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA)
 						&& Foresta.getLocazioneMD(c).ottieniProprieta(Locanda.LOCANDA_VISITATA) == null) {
 					locandeNuove.add(c);
 				}
@@ -1345,7 +1345,7 @@ final class GiocatoreAutomatico {
 			}
 			List<TipoIncantesimo> possibili = new ArrayList<>();
 			for (TipoIncantesimo classe : TipoIncantesimo.values()) {
-				if (classe.getTipo() == CategoriaIncantesimo.MALEFICO
+				if (classe.getCategoriaIncantesimo() == CategoriaIncantesimo.MALEFICO
 						&& FabbricaIncantesimi.costoLancio(classe) <= magia && classe != TipoIncantesimo.MORTE) {
 					possibili.add(classe);
 				}
@@ -1410,7 +1410,7 @@ final class GiocatoreAutomatico {
 
 		private double atteso(Personaggio attaccante, Personaggio difensore, Arma arma, double fattore, String chiave) {
 			double probabilita = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(attaccante, difensore,
-					arma.getTipoDanno().getSuperTipo()) / 100.0d;
+					arma.getTipoDanno().getCategoriaDanno()) / 100.0d;
 			Map<String, Double> perArma = danniMedi.computeIfAbsent(attaccante, k -> new IdentityHashMap<>())
 					.computeIfAbsent(difensore, k -> new HashMap<>());
 			String chiaveCompleta = chiave + '@' + fattore;
@@ -1493,7 +1493,7 @@ final class GiocatoreAutomatico {
 			if (tipo == null || tipo == TipoLocazione.BOSCO || tipo == TipoLocazione.RADURA) {
 				return 1.0d;
 			}
-			switch (tipo.getCategoria()) {
+			switch (tipo.getCategoriaLocazione()) {
 				case CITTA:
 					return 0.2d;
 				case CASTELLO:
@@ -1566,7 +1566,7 @@ final class GiocatoreAutomatico {
 				int x = nodo / dimY;
 				int y = nodo % dimY;
 				TipoLocazione qui = nota(x, y);
-				if (nodo != partenza && qui != null && qui.getCategoria() == CategoriaLocazione.CASTELLO) {
+				if (nodo != partenza && qui != null && qui.getCategoriaLocazione() == CategoriaLocazione.CASTELLO) {
 					continue;
 				}
 				for (int d = 0; d < 4; d++) {

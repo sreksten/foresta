@@ -29,7 +29,7 @@ final class Locande {
 			return tipo == TipoLocazione.LOCANDA;
 		}
 		if (momento == MomentoIntermezzo.INGRESSO_LOCANDA_IN_CITTA) {
-			return tipo.getCategoria() == CategoriaLocazione.CITTA;
+			return tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA;
 		}
 		return false;
 	}
@@ -40,7 +40,7 @@ final class Locande {
 	static LocazioneMD getLocazioneMDLocandaCorrente() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		TipoLocazione tipo = gruppo.getTipoLocazioneCorrente();
-		if (tipo != TipoLocazione.LOCANDA && tipo.getCategoria() != CategoriaLocazione.CITTA) {
+		if (tipo != TipoLocazione.LOCANDA && tipo.getCategoriaLocazione() != CategoriaLocazione.CITTA) {
 			return null;
 		}
 		return Foresta.getLocazioneMD(gruppo.getCoordinate());

@@ -141,7 +141,7 @@ class GeneratoreArtefattiTest {
             assertEquals(grado != GradoIncantamento.MEDIO, md.getNome().contains(" " + grado.getNome()), md.getNome());
             for (IncantamentoMD incantamento : md.getIncantamenti()) {
                 assertTrue(GeneratoreArtefattiTabelle.danniDi(tipo).contains(incantamento.getTipoDannoElementale()), md.getNome());
-                assertNotEquals(CategoriaDanno.FISICO, incantamento.getTipoDannoElementale().getSuperTipo());
+                assertNotEquals(CategoriaDanno.FISICO, incantamento.getTipoDannoElementale().getCategoriaDanno());
                 assertTrue(incantamento.getDannoBonusFisso() == 0 || incantamento.getDannoBonusFisso() == grado.getBonusFisso());
                 assertTrue(incantamento.getCoefficienteScala() == 0 || incantamento.getCoefficienteScala() == grado.getCoefficiente());
                 assertTrue(incantamento.getDannoBonusFisso() > 0 || incantamento.getCoefficienteScala() > 0);

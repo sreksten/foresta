@@ -34,4 +34,5 @@ public enum CategoriaTrofeo {
 	 * Tutto il resto
 	 */
 	VARIE
+
 }

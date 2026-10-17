@@ -2170,8 +2170,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 		TipoLocazione tipoLocazione = gruppo.getTipoLocazioneCorrente();
 		// Nei castelli non si riposa (getTipoRiposo lancia un'eccezione): ci si resta dopo una fuga
-		return tipoLocazione.getCategoria() != CategoriaLocazione.CITTA &&
-				tipoLocazione.getCategoria() != CategoriaLocazione.CASTELLO &&
+		return tipoLocazione.getCategoriaLocazione() != CategoriaLocazione.CITTA &&
+				tipoLocazione.getCategoriaLocazione() != CategoriaLocazione.CASTELLO &&
 				tipoLocazione != TipoLocazione.LOCANDA &&
 				!tipoLocazione.isBottega() &&
 				tipoLocazione != TipoLocazione.PALUDE;

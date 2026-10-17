@@ -4,9 +4,9 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LineaTemporaleMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.strumenti.Misc;
 
 /**
  * Il tempo della partita: giorno e ora, le città distrutte e l'ultimo evento da mostrare. I dati stanno nel {@code LineaTemporaleMD}.
@@ -176,14 +176,14 @@ public class LineaTemporale {
 	}
 
 	public static boolean isCittaDistrutta(TipoLocazione citta) {
-		if (citta.getCategoria() != CategoriaLocazione.CITTA) {
+		if (citta.getCategoriaLocazione() != CategoriaLocazione.CITTA) {
 			throw new IllegalArgumentException();
 		}
 		return getLineaTemporaleMD().isCittaDistrutta(citta);
 	}
 
 	public static void setCittaDistrutta(TipoLocazione citta) {
-		if (citta.getCategoria() != CategoriaLocazione.CITTA) {
+		if (citta.getCategoriaLocazione() != CategoriaLocazione.CITTA) {
 			throw new IllegalArgumentException();
 		}
 		getLineaTemporaleMD().addCittaDistrutta(citta);

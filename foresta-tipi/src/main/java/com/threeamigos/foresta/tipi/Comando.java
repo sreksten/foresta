@@ -159,6 +159,8 @@ public enum Comando {
 	RUTTOLOMEO,
 	STORPSGORBLIN;
 
+	private static final String FILE_DESCRIZIONI = "comandi";
+
 	public static final int MAX_MOVIMENTO = 5;
 
 	/**
@@ -166,31 +168,13 @@ public enum Comando {
 	 *
 	 * @throws IllegalArgumentException se la posizione non esiste
 	 */
-	public static final Comando of(int ordinal) {
+	public static Comando of(int ordinal) {
 		for (Comando azioneCorrente : Comando.values()) {
 			if (azioneCorrente.ordinal() == ordinal) {
 				return azioneCorrente;
 			}
 		}
 		throw new IllegalArgumentException();
-	}
-
-	private static final String FILE_DESCRIZIONI = "comandi";
-
-	/**
-	 * Quello che il comando fa, per il cartiglio della barra delle icone ("Salva la partita"), nella lingua dei testi
-	 * (vedi {@link Testi}); null per i comandi che non hanno una descrizione (gli slot numerici, le frecce di
-	 * scorrimento, il timer). Le descrizioni stanno nel file {@code comandi_<lingua>.properties}, non qui.
-	 */
-	public String getDescrizione() {
-		return Testi.get(FILE_DESCRIZIONI, name()).orElse(null);
-	}
-
-	/**
-	 * Se il comando indica uno dei personaggi del gruppo (PERSONAGGIO_1 ... PERSONAGGIO_8).
-	 */
-	public boolean isPersonaggio() {
-		return ordinal() >= PERSONAGGIO_1.ordinal() && ordinal() <= PERSONAGGIO_8.ordinal();
 	}
 
 	/**
@@ -217,6 +201,22 @@ public enum Comando {
 			return PERSONAGGIO_8;
 		}
 		throw new IllegalArgumentException();
+	}
+
+	/**
+	 * Quello che il comando fa, per il cartiglio della barra delle icone ("Salva la partita"), nella lingua dei testi
+	 * (vedi {@link Testi}); null per i comandi che non hanno una descrizione (gli slot numerici, le frecce di
+	 * scorrimento, il timer). Le descrizioni stanno nel file {@code comandi_<lingua>.properties}, non qui.
+	 */
+	public String getDescrizione() {
+		return Testi.get(FILE_DESCRIZIONI, name()).orElse(null);
+	}
+
+	/**
+	 * Se il comando indica uno dei personaggi del gruppo (PERSONAGGIO_1 ... PERSONAGGIO_8).
+	 */
+	public boolean isPersonaggio() {
+		return ordinal() >= PERSONAGGIO_1.ordinal() && ordinal() <= PERSONAGGIO_8.ordinal();
 	}
 
 }

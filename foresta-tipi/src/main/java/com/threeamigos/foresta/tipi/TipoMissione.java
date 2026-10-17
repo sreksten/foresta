@@ -997,9 +997,7 @@ public enum TipoMissione {
      * Esempio: patto con demoni/entità, contratto spirituale, alleanza soprannaturale.
      * Coperto da: IlRituale (il patto con lo spirito del fiume)
      */
-    PATTO_ANIMA(CategoriaMissione.SPIRITUALE),
-
-    ;
+    PATTO_ANIMA(CategoriaMissione.SPIRITUALE);
 
     private final CategoriaMissione categoriaMissione;
 
@@ -1007,7 +1005,7 @@ public enum TipoMissione {
         this.categoriaMissione = categoriaMissione;
     }
 
-    public CategoriaMissione getSupertipoMissione() {
+    public CategoriaMissione getCategoriaMissione() {
         return categoriaMissione;
     }
 

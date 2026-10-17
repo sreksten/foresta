@@ -1,37 +1,27 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.missioni.incarichi.SceltaDegliIncarichi;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaIncantatore;
-import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
-import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioFornitore;
-import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioGruppo;
-import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaTattiche;
-import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaTrofei;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.RichiestaConComandi;
-import com.threeamigos.foresta.eventi.comandigiocatore.*;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoInvioTesto;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
-import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneDirezione;
-import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneIncantesimoDaLanciare;
-import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneMissione;
-import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
+import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.missioni.incarichi.SceltaDegliIncarichi;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 /**
  * Una partita guidata da un test al posto del giocatore e della UI: manda comandi e testi all'Automa come farebbe
@@ -254,7 +244,7 @@ final class PartitaDiTest implements AutoCloseable {
 	 */
 	void spostaGruppoIn(TipoLocazione locazioneUnica) {
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(locazioneUnica);
-		if (coordinate == null && locazioneUnica.getCategoria() == CategoriaLocazione.CASTELLO) {
+		if (coordinate == null && locazioneUnica.getCategoriaLocazione() == CategoriaLocazione.CASTELLO) {
 			// I castelli li rivendicano le loro missioni al primo controllo della partita: qui lo si anticipa
 			RegistroMissioni.getMissionePrincipale().getMissioniSecondarie().forEach(Missione::controllaPreLocazione);
 			coordinate = Foresta.getCoordinateLocazioneUnica(locazioneUnica);

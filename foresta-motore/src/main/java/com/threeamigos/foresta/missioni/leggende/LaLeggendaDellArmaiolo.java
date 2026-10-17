@@ -24,7 +24,7 @@ public class LaLeggendaDellArmaiolo extends LaLeggenda {
 	@Override
 	protected boolean isPostoDelRacconto() {
 		TipoLocazione tipo = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
-		return tipo != null && tipo.getCategoria() == CategoriaLocazione.CITTA
+		return tipo != null && tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA
 				&& !LineaTemporale.isCittaDistrutta(tipo);
 	}
 
@@ -36,7 +36,7 @@ public class LaLeggendaDellArmaiolo extends LaLeggenda {
 	@Override
 	protected String getNarratoreConNome() {
 		TipoLocazione citta = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
-		if (citta == null || citta.getCategoria() != CategoriaLocazione.CITTA) {
+		if (citta == null || citta.getCategoriaLocazione() != CategoriaLocazione.CITTA) {
 			return getNarratore();
 		}
 		return getNarratore() + ", " + RegistroPersonaggi.getResidente(PersonaggioNoto.ARMAIOLO, citta).getNome() + ",";

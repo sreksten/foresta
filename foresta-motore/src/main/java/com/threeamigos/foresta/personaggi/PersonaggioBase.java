@@ -206,7 +206,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		Set<TipoIncantesimo> repertorio = EnumSet.noneOf(TipoIncantesimo.class);
 		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
 			// La Luce Divina è dei sacerdoti del giocatore e di chi la compra: i mostri non la lanciano
-			if (tipoIncantesimo.getTipo() == CategoriaIncantesimo.MALEFICO && tipoIncantesimo != TipoIncantesimo.LUCE_DIVINA
+			if (tipoIncantesimo.getCategoriaIncantesimo() == CategoriaIncantesimo.MALEFICO && tipoIncantesimo != TipoIncantesimo.LUCE_DIVINA
 					&& (tipoIncantesimo != TipoIncantesimo.MORTE || isParteConValoriMassimi())) {
 				repertorio.add(tipoIncantesimo);
 			}
@@ -560,7 +560,7 @@ public abstract class PersonaggioBase implements Personaggio {
 				return;
 			}
 			Arma arma = fase.getArma();
-			if (CalcolatoreCombattimento.colpisce(this, bersaglio, arma.getTipoDanno().getSuperTipo())) {
+			if (CalcolatoreCombattimento.colpisce(this, bersaglio, arma.getTipoDanno().getCategoriaDanno())) {
 				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(this, bersaglio, arma, fase.getFattore());
 				Logger.log(() -> getNome() + " colpisce " + bersaglio.getNome() + " assegnando " + risultato.getDanno() + " danni");
 				bersaglio.applicaRisultatoCombattimento(risultato);

@@ -51,27 +51,26 @@ public enum TipoDanno {
     /** L'assenza di tutto, la gravità o l'energia delle stelle. Astrazione spaziale che disintegra la materia. */
     VUOTO(CategoriaDanno.MAGICO), // Void
     /** Corruzione e influssi maligni. Può ridurre i punti vita o intaccare le statistiche massime dei personaggi. */
-    MALEDIZIONE(CategoriaDanno.MAGICO, TipoEffettoDiStato.MALEDETTO), // Curse
-    ;
+    MALEDIZIONE(CategoriaDanno.MAGICO, TipoEffettoDiStato.MALEDETTO); // Curse
 
-    private final CategoriaDanno superTipo;
+    private final CategoriaDanno categoriaDanno;
     private final TipoEffettoDiStato[] effetti;
 
-    TipoDanno(CategoriaDanno superTipo, TipoEffettoDiStato... effetti) {
-        this.superTipo = superTipo;
+    TipoDanno(CategoriaDanno categoriaDanno, TipoEffettoDiStato... effetti) {
+        this.categoriaDanno = categoriaDanno;
         this.effetti = effetti;
     }
 
-    public CategoriaDanno getSuperTipo() {
-        return superTipo;
-    }
-
-    public String getNome() {
-        return Testi.testoOCostante(this, "NOME");
+    public CategoriaDanno getCategoriaDanno() {
+        return categoriaDanno;
     }
 
     public TipoEffettoDiStato[] getEffetti() {
         return effetti;
+    }
+
+    public String getNome() {
+        return Testi.testoOCostante(this, "NOME");
     }
 
     /**

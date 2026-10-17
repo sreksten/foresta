@@ -24,7 +24,7 @@ public final class ScortaDiPergamene {
 	 * @param incantesimo un incantesimo malefico, cioè che fa danno
 	 */
 	public static ScortaDiPergamene di(TipoIncantesimo incantesimo, int quantita) {
-		if (incantesimo.getTipo() != CategoriaIncantesimo.MALEFICO) {
+		if (incantesimo.getCategoriaIncantesimo() != CategoriaIncantesimo.MALEFICO) {
 			throw new IllegalArgumentException("Nel simulatore si lanciano solo incantesimi malefici, non " + incantesimo);
 		}
 		return new ScortaDiPergamene(incantesimo, quantita);

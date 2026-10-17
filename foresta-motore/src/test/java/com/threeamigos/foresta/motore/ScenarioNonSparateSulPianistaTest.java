@@ -80,7 +80,7 @@ class ScenarioNonSparateSulPianistaTest {
             assertNotNull(citta);
             CoordinateMD casa = Foresta.getCoordinateLocazioneUnica(citta);
             for (TipoLocazione altra : TipoLocazione.values()) {
-                CoordinateMD coordinate = altra.getCategoria() == CategoriaLocazione.CITTA
+                CoordinateMD coordinate = altra.getCategoriaLocazione() == CategoriaLocazione.CITTA
                         ? Foresta.getCoordinateLocazioneUnica(altra) : null;
                 if (coordinate != null) {
                     assertTrue(distanza(locanda, casa) <= distanza(locanda, coordinate), altra + " è più vicina di " + citta);

@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
@@ -12,14 +10,10 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.RegistroArtefattiMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
+import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -399,7 +393,7 @@ public class RegistroArtefatti {
 	 */
 	private static boolean haUnNegozio(CoordinateMD coordinate, TipoNegozio negozio) {
 		TipoLocazione tipo = Foresta.getLocazione(coordinate);
-		return tipo.getCategoria() == CategoriaLocazione.CITTA
+		return tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA
 				|| tipo == (negozio == TipoNegozio.ARMAIOLO ? TipoLocazione.ARMAIOLO : TipoLocazione.VENDITORE_DI_PERGAMENE);
 	}
 

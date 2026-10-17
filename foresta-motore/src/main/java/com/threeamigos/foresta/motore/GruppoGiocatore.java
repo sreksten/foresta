@@ -586,7 +586,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		TipoLocazione tipoLocazione = getTipoLocazioneCorrente();
 		int ore = LineaTemporale.oreFinoAlMattino();
 		boolean alCoperto = tipoLocazione == TipoLocazione.LOCANDA
-				|| tipoLocazione.getCategoria() == CategoriaLocazione.CITTA;
+				|| tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA;
 		Logger.log(() -> "Pernottamento al coperto? " + alCoperto);
 		if (alCoperto) {
 			StringBuilder sb = new StringBuilder("La stanchezza accumulata ed il tepore delle coperte fanno addormentare subito ");

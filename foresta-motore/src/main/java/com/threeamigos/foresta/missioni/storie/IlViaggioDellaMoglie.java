@@ -246,7 +246,7 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 			return altre;
 		}
 		for (TipoLocazione tipo : TipoLocazione.values()) {
-			if (tipo.getCategoria() == CategoriaLocazione.CITTA && tipo != partenza.get() && !isCittaDistrutta(tipo)
+			if (tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA && tipo != partenza.get() && !isCittaDistrutta(tipo)
 					&& Foresta.getCoordinateLocazioneUnica(tipo) != null) {
 				altre.add(tipo);
 			}

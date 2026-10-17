@@ -1,14 +1,17 @@
 package com.threeamigos.foresta.offerte;
 
-import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.RegistroArtefattiMD;
-import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.motore.GruppoAvversario;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +39,7 @@ public class Informazioni implements Offerta {
 				.append(" viene a sapere che ");
 		TipoLocazione tipoLocazione = gruppo.getTipoLocazioneCorrente();
 		int tipo;
-		if (tipoLocazione.getCategoria() == CategoriaLocazione.CITTA) {
+		if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 			// Qualsiasi informazione ma non quelle sulle citta' visto che gia' ci siamo
 			tipo = Dado.tira(2, 3);
 		} else {
@@ -59,7 +62,7 @@ public class Informazioni implements Offerta {
 	private void informazioniSuCitta(GruppoGiocatore gruppo, StringBuilder sb) {
 		List<TipoLocazione> citta = new ArrayList<>();
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
-			if (tipoLocazione.getCategoria() == CategoriaLocazione.CITTA &&
+			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA &&
 					Foresta.getCoordinateLocazioneUnica(tipoLocazione) != null) {
 				citta.add(tipoLocazione);
 			}
@@ -82,7 +85,7 @@ public class Informazioni implements Offerta {
 		if (coordinate == null) {
 			List<TipoLocazione> castelli = new ArrayList<>();
 			for (TipoLocazione corrente : TipoLocazione.values()) {
-				if (corrente.getCategoria() == CategoriaLocazione.CASTELLO &&
+				if (corrente.getCategoriaLocazione() == CategoriaLocazione.CASTELLO &&
 						Foresta.getCoordinateLocazioneUnica(corrente) != null) {
 					castelli.add(corrente);
 				}

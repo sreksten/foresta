@@ -143,7 +143,7 @@ public class IlCorriere extends IncaricoInCitta {
 		TipoLocazione qui = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
 		List<TipoLocazione> altre = new ArrayList<>();
 		for (TipoLocazione citta : TipoLocazione.values()) {
-			if (citta.getCategoria() == CategoriaLocazione.CITTA && citta != qui
+			if (citta.getCategoriaLocazione() == CategoriaLocazione.CITTA && citta != qui
 					&& !LineaTemporale.isCittaDistrutta(citta) && Foresta.getCoordinateLocazioneUnica(citta) != null) {
 				altre.add(citta);
 			}
@@ -162,7 +162,7 @@ public class IlCorriere extends IncaricoInCitta {
 	@Override
 	protected boolean puoAncoraOffrirsi() {
 		long inPiedi = Arrays.stream(TipoLocazione.values())
-				.filter(citta -> citta.getCategoria() == CategoriaLocazione.CITTA && !LineaTemporale.isCittaDistrutta(citta)
+				.filter(citta -> citta.getCategoriaLocazione() == CategoriaLocazione.CITTA && !LineaTemporale.isCittaDistrutta(citta)
 						&& Foresta.getCoordinateLocazioneUnica(citta) != null)
 				.count();
 		return inPiedi >= 2;

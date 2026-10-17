@@ -182,7 +182,7 @@ public final class EsecutoreTattiche {
 		// Una fase per ogni arma impugnata (principale e secondaria); il fattore ne riduce il danno. Il tiro per colpire si fa fase per fase
 		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(attore, bersaglio)) {
 			Arma arma = fase.getArma();
-			boolean colpisce = CalcolatoreCombattimento.colpisce(attore, bersaglio, arma.getTipoDanno().getSuperTipo());
+			boolean colpisce = CalcolatoreCombattimento.colpisce(attore, bersaglio, arma.getTipoDanno().getCategoriaDanno());
 			if (colpisce) {
 				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(attore, bersaglio, arma, fase.getFattore());
 				bersaglio.applicaRisultatoCombattimento(risultato);
@@ -210,7 +210,7 @@ public final class EsecutoreTattiche {
 		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " scaglia un dardo arcano contro "
 				+ bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + "."));
-		if (CalcolatoreCombattimento.colpisce(formulante, bersaglio, dardo.getTipoDanno().getSuperTipo())) {
+		if (CalcolatoreCombattimento.colpisce(formulante, bersaglio, dardo.getTipoDanno().getCategoriaDanno())) {
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.DARDO_ARCANO, EsitoAzione.RIUSCITA);
 			bersaglio.applicaRisultatoCombattimento(CalcolatoreCombattimento.calcolaDannoRisultante(formulante, bersaglio, dardo));
 			uccisioni.registra(formulante, bersaglio);

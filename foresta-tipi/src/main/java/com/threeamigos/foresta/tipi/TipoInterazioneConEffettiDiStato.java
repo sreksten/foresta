@@ -1,11 +1,6 @@
 package com.threeamigos.foresta.tipi;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Le reazioni fra un tipo di danno e uno stato del difensore: una reazione scatta se il difensore ha almeno uno degli stati
@@ -83,7 +78,6 @@ public enum TipoInterazioneConEffettiDiStato {
 
     // Interazioni con AVVELENATO
     // + FUOCO
-    // Il veleno si incendia: rimuove AVVELENATO, applica BRUCIATO, piccolo bonus di danno (effetto simile a Esplosione di gas, ma nel verso opposto)
     VAMPATA_TOSSICA(
             Collections.singletonList(TipoEffettoDiStato.AVVELENATO),
             Collections.singletonList(TipoDanno.FUOCO),
@@ -91,7 +85,6 @@ public enum TipoInterazioneConEffettiDiStato {
             Collections.singletonList(TipoEffettoDiStato.AVVELENATO),
             Collections.singletonList(TipoEffettoDiStato.BRUCIATO)),
     // + ACIDO
-    // +15% danno (non gestiamo corrosione/usura dell'armatura, vedi nota nel roadmap)
     REAZIONE_TOSSICA(
             Collections.singletonList(TipoEffettoDiStato.AVVELENATO),
             Collections.singletonList(TipoDanno.ACIDO),
@@ -101,7 +94,6 @@ public enum TipoInterazioneConEffettiDiStato {
 
     // Interazioni con SANGUINAMENTO
     // + ACQUA
-    // Riduce il danno periodico da sanguinamento, piccolo bonus di danno
     DILUIZIONE_EMATICA(
             Collections.singletonList(TipoEffettoDiStato.SANGUINAMENTO),
             Collections.singletonList(TipoDanno.ACQUA),
@@ -109,7 +101,6 @@ public enum TipoInterazioneConEffettiDiStato {
             Collections.emptyList(),
             Collections.emptyList()),
     // + GELO
-    // Rimuove SANGUINAMENTO, applica RALLENTATO, piccolo bonus di danno
     COAGULAZIONE_FORZATA(
             Collections.singletonList(TipoEffettoDiStato.SANGUINAMENTO),
             Collections.singletonList(TipoDanno.GELO),
@@ -156,7 +147,6 @@ public enum TipoInterazioneConEffettiDiStato {
             Collections.singletonList(TipoEffettoDiStato.MALEDETTO),
             Collections.emptyList()),
     // + VUOTO
-    // Rimuove MALEDETTO, brucia il 25% dei MP massimi e infligge un danno pari agli MP persi
     COLLASSO_ENTROPICO(
             Collections.singletonList(TipoEffettoDiStato.MALEDETTO),
             Collections.singletonList(TipoDanno.VUOTO),
@@ -189,7 +179,6 @@ public enum TipoInterazioneConEffettiDiStato {
 
     // Interazioni con STORDITO / ATTERRATO (fisica, non elementale)
     // + TAGLIENTE / PERFORANTE
-    // NON uccide il personaggio ma infligge automaticamente un critico a 2x il danno normale
     COLPO_DI_GRAZIA(
             Arrays.asList(TipoEffettoDiStato.STORDITO, TipoEffettoDiStato.ATTERRATO),
             Arrays.asList(TipoDanno.TAGLIENTE, TipoDanno.PERFORANTE),
@@ -199,7 +188,6 @@ public enum TipoInterazioneConEffettiDiStato {
 
     // Interazioni con ATTERRATO (fisica, non elementale)
     // + CONTUNDENTE
-    // Raddoppia il danno fisico e ne estende l'atterramento
     SCHIACCIAMENTO(
             Collections.singletonList(TipoEffettoDiStato.ATTERRATO),
             Collections.singletonList(TipoDanno.CONTUNDENTE),
@@ -209,7 +197,6 @@ public enum TipoInterazioneConEffettiDiStato {
 
     // Interazioni con RALLENTATO
     // + TERRA / CONTUNDENTE
-    // Il bersaglio non riesce a scartare l'impatto: +30% danno e viene ATTERRATO
     INCIAMPO(
             Collections.singletonList(TipoEffettoDiStato.RALLENTATO),
             Arrays.asList(TipoDanno.TERRA, TipoDanno.CONTUNDENTE),
@@ -219,7 +206,6 @@ public enum TipoInterazioneConEffettiDiStato {
 
     // Interazioni con IMMOBILIZZATO
     // + FUOCO
-    // Il fuoco distrugge all'istante l'immobilizzazione: rimuove IMMOBILIZZATO, +50% danno
     INCENDIO_LIBERATORIO(
             Collections.singletonList(TipoEffettoDiStato.IMMOBILIZZATO),
             Collections.singletonList(TipoDanno.FUOCO),
@@ -227,7 +213,6 @@ public enum TipoInterazioneConEffettiDiStato {
             Collections.singletonList(TipoEffettoDiStato.IMMOBILIZZATO),
             Collections.emptyList()),
     // + CONTUNDENTE / TERRA
-    // Il bersaglio non può assecondare il colpo muovendo le gambe: +30% danno
     IMPATTO_RIGIDO(
             Collections.singletonList(TipoEffettoDiStato.IMMOBILIZZATO),
             Arrays.asList(TipoDanno.CONTUNDENTE, TipoDanno.TERRA),
@@ -237,7 +222,6 @@ public enum TipoInterazioneConEffettiDiStato {
 
     // Interazioni con SPAVENTATO / CONFUSO
     // + ARCANO
-    // Trasforma lo stato in uno STORDITO pesante (1-2 turni)
     SOVRACCARICO_MENTALE(
             Arrays.asList(TipoEffettoDiStato.SPAVENTATO, TipoEffettoDiStato.CONFUSO),
             Collections.singletonList(TipoDanno.ARCANO),
@@ -245,7 +229,6 @@ public enum TipoInterazioneConEffettiDiStato {
             Arrays.asList(TipoEffettoDiStato.SPAVENTATO, TipoEffettoDiStato.CONFUSO),
             Collections.singletonList(TipoEffettoDiStato.STORDITO)),
     // + danno FISICO (qualsiasi tipo)
-    // Il dolore acuto interrompe subito lo stato e infligge il 20% di danno in più
     SHOCK_DI_REALTA(
             Arrays.asList(TipoEffettoDiStato.SPAVENTATO, TipoEffettoDiStato.CONFUSO),
             Arrays.asList(TipoDanno.TAGLIENTE, TipoDanno.PERFORANTE, TipoDanno.CONTUNDENTE),
@@ -255,7 +238,6 @@ public enum TipoInterazioneConEffettiDiStato {
 
     // Interazioni con CONFUSO (esclusiva, non condivisa con SPAVENTATO)
     // + VUOTO
-    // Rimuove CONFUSO, +50% danno, applica MENTE_FRATTURATA
     FOLLIA_COSMICA(
             Collections.singletonList(TipoEffettoDiStato.CONFUSO),
             Collections.singletonList(TipoDanno.VUOTO),
@@ -265,7 +247,6 @@ public enum TipoInterazioneConEffettiDiStato {
 
     // Interazioni con ACCECATO
     // + ARIA
-    // Rimuove ACCECATO, piccolo bonus di danno
     DISPERSIONE(
             Collections.singletonList(TipoEffettoDiStato.ACCECATO),
             Collections.singletonList(TipoDanno.ARIA),
@@ -273,7 +254,6 @@ public enum TipoInterazioneConEffettiDiStato {
             Collections.singletonList(TipoEffettoDiStato.ACCECATO),
             Collections.emptyList()),
     // + ACQUA
-    // Applica RALLENTATO severo, piccolo bonus di danno
     FANGO(
             Collections.singletonList(TipoEffettoDiStato.ACCECATO),
             Collections.singletonList(TipoDanno.ACQUA),
@@ -283,7 +263,6 @@ public enum TipoInterazioneConEffettiDiStato {
 
     // Interazioni con ASSORDATO
     // + SONICO
-    // Trasforma in STORDITO di 1 turno, piccolo bonus di danno
     DISORIENTAMENTO(
             Collections.singletonList(TipoEffettoDiStato.ASSORDATO),
             Collections.singletonList(TipoDanno.SONICO),
@@ -293,7 +272,6 @@ public enum TipoInterazioneConEffettiDiStato {
 
     // Interazioni con SILENZIATO
     // + ARCANO
-    // +30% danno Puro che ignora le difese
     RISONANZA_SIGILLATA(
             Collections.singletonList(TipoEffettoDiStato.SILENZIATO),
             Collections.singletonList(TipoDanno.ARCANO),
@@ -301,13 +279,16 @@ public enum TipoInterazioneConEffettiDiStato {
             Collections.emptyList(),
             Collections.emptyList()),
     // + PSICHICO
-    // +50% danno, estende anche ACCECATO
     ISOLAMENTO_SENSORIALE(
             Collections.singletonList(TipoEffettoDiStato.SILENZIATO),
             Collections.singletonList(TipoDanno.PSICHICO),
             1.5d,
             Collections.emptyList(),
             Collections.singletonList(TipoEffettoDiStato.ACCECATO));
+
+    private static Set<TipoEffettoDiStato> insieme(Collection<TipoEffettoDiStato> stati) {
+        return stati.isEmpty() ? EnumSet.noneOf(TipoEffettoDiStato.class) : EnumSet.copyOf(stati);
+    }
 
     private final Collection<TipoEffettoDiStato> precondizioni;
     private final Collection<TipoDanno> innescanti;
@@ -333,35 +314,18 @@ public enum TipoInterazioneConEffettiDiStato {
         this.statiApplicati = Collections.unmodifiableSet(insieme(aggiunti));
     }
 
-    private static Set<TipoEffettoDiStato> insieme(Collection<TipoEffettoDiStato> stati) {
-        return stati.isEmpty() ? EnumSet.noneOf(TipoEffettoDiStato.class) : EnumSet.copyOf(stati);
-    }
-
     /**
-     * Gli stati che la reazione, quando scatta, toglie al difensore (se li ha). Si tolgono dopo aver messo quelli nuovi
-     * di tutto il colpo: uno stato messo da una reazione e tolto da un'altra non resta.
+     * Gli effetti di stato necessari (ne basta uno) perché la reazione si inneschi.
      */
-    public Set<TipoEffettoDiStato> getStatiRimossi() {
-        return statiRimossi;
-    }
-
-    /**
-     * Gli stati che la reazione, quando scatta, mette al difensore.
-     */
-    public Set<TipoEffettoDiStato> getStatiApplicati() {
-        return statiApplicati;
-    }
-
     public Collection<TipoEffettoDiStato> getPrecondizioni() {
         return precondizioni;
     }
 
+    /**
+     * I tipi di danno necessari perché la reazione si inneschi.
+     */
     public Collection<TipoDanno> getInnescanti() {
         return innescanti;
-    }
-
-    public String getDescrizione() {
-        return Testi.testoOCostante(this, "DESCRIZIONE");
     }
 
     /**
@@ -375,17 +339,38 @@ public enum TipoInterazioneConEffettiDiStato {
     }
 
     /**
-     * Se la reazione rende il colpo un critico automatico (×2, che non si somma a un critico vero): il COLPO_DI_GRAZIA su
-     * chi è a terra o stordito e la FRANTUMAZIONE_DEL_GHIACCIO.
+     * Gli stati che la reazione, quando scatta, toglie al difensore (se li ha).
+     * Si tolgono dopo aver messo quelli nuovi di tutto il colpo:
+     * uno stato messo da una reazione e tolto da un'altra non resta.
+     */
+    public Set<TipoEffettoDiStato> getStatiRimossi() {
+        return statiRimossi;
+    }
+
+    /**
+     * Gli stati che la reazione, quando scatta, mette al difensore.
+     */
+    public Set<TipoEffettoDiStato> getStatiApplicati() {
+        return statiApplicati;
+    }
+
+    public String getDescrizione() {
+        return Testi.testoOCostante(this, "DESCRIZIONE");
+    }
+
+    /**
+     * Se la reazione rende il colpo un critico automatico (×2, che non si somma a un critico vero):
+     * il COLPO_DI_GRAZIA su chi è a terra o stordito e la FRANTUMAZIONE_DEL_GHIACCIO.
      */
     public boolean isCriticoAutomatico() {
         return this == COLPO_DI_GRAZIA || this == FRANTUMAZIONE_DEL_GHIACCIO;
     }
 
     /**
-     * Il tipo di danno con cui la reazione investe anche i vicini del bersaglio nella fila del suo gruppo, o null se resta sul
-     * bersaglio: l'ESPLOSIONE_DI_GAS il FUOCO, il RIGETTO il SONICO, l'ELETTROCUZIONE il FULMINE (lei però solo sui BAGNATI
-     * attaccati al bersaglio, la sua pozza). Quanto e come lo dice il calcolo del danno (CalcolatoreCombattimento.calcolaDannoAdArea).
+     * Il tipo di danno con cui la reazione investe anche i vicini del bersaglio nella fila del suo gruppo,
+     * o null se resta sul bersaglio: l'ESPLOSIONE_DI_GAS il FUOCO, il RIGETTO il SONICO, l'ELETTROCUZIONE il FULMINE
+     * (questo però si applica solo ai vicini con stato BAGNATO, inteso come nella stessa pozza).
+     * Quanto e come lo dice il calcolo del danno (CalcolatoreCombattimento.calcolaDannoAdArea).
      */
     public TipoDanno getDannoAdArea() {
         switch (this) {

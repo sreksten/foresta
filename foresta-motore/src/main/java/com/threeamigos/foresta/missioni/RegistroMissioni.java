@@ -510,7 +510,7 @@ public class RegistroMissioni {
 	 * del Drago, che arriva dopo, va dovunque.
 	 */
 	public static CoordinateMD rivendicaPerLocazioneUnica(TipoLocazione locazioneUnica, TipoLocazione suCasellaDi, Missione missione) {
-		Quadrante quadrante = locazioneUnica.getCategoria() == CategoriaLocazione.CASTELLO
+		Quadrante quadrante = locazioneUnica.getCategoriaLocazione() == CategoriaLocazione.CASTELLO
 				&& locazioneUnica != TipoLocazione.CASTELLO_DRAGO
 				? quadranteSenza(CategoriaLocazione.CASTELLO) : null;
 		Optional<CoordinateMD> coordinate = cercaOCostruisci(suCasellaDi, missione, quadrante);
@@ -528,7 +528,7 @@ public class RegistroMissioni {
 	static Quadrante quadranteSenza(CategoriaLocazione categoria) {
 		List<Quadrante> liberi = Quadrante.inOrdineCasuale();
 		for (TipoLocazione tipo : TipoLocazione.values()) {
-			if (tipo.getCategoria() == categoria && tipo.isLocazioneUnica()) {
+			if (tipo.getCategoriaLocazione() == categoria && tipo.isLocazioneUnica()) {
 				CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(tipo);
 				if (coordinate != null) {
 					liberi.remove(Quadrante.di(coordinate));

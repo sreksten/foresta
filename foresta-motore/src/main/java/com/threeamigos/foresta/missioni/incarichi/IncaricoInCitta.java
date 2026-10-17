@@ -391,7 +391,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 
 	private boolean inUnaCitta() {
 		TipoLocazione tipo = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
-		return tipo != null && tipo.getCategoria() == CategoriaLocazione.CITTA
+		return tipo != null && tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA
 				&& !LineaTemporale.isCittaDistrutta(tipo);
 	}
 

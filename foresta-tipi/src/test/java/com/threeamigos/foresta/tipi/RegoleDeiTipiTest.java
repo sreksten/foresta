@@ -125,7 +125,7 @@ class RegoleDeiTipiTest {
 
         for (TipoIncantesimo incantesimo : TipoIncantesimo.values()) {
             assertSame(incantesimo, TipoIncantesimo.ofComando(incantesimo.getComandoDiAttivazione()));
-            assertNotNull(incantesimo.getTipo(), incantesimo.name());
+            assertNotNull(incantesimo.getCategoriaIncantesimo(), incantesimo.name());
             assertNotNull(incantesimo.getPortata(), incantesimo.name());
         }
         IllegalArgumentException errore = assertThrows(IllegalArgumentException.class, () -> TipoIncantesimo.ofComando(Comando.FUGA));
@@ -138,7 +138,7 @@ class RegoleDeiTipiTest {
     void unTipoDiDannoHaEffettiDiStatoSeNeElencaQualcuno() {
         for (TipoDanno tipo : TipoDanno.values()) {
             assertEquals(tipo.getEffetti().length > 0, tipo.hasEffettiDiStato(), tipo.name());
-            assertNotNull(tipo.getSuperTipo(), tipo.name());
+            assertNotNull(tipo.getCategoriaDanno(), tipo.name());
         }
         assertTrue(Arrays.asList(TipoDanno.SONICO.getEffetti()).contains(TipoEffettoDiStato.ASSORDATO));
     }
@@ -155,8 +155,8 @@ class RegoleDeiTipiTest {
     @Test
     void unAttributoEPrimarioOSecondarioSecondoLaSuaCategoria() {
         for (TipoAttributo attributo : TipoAttributo.values()) {
-            assertEquals(attributo.getSupertipo() == CategoriaAttributo.PRIMARIO, attributo.isPrimario(), attributo.name());
-            assertEquals(attributo.getSupertipo() == CategoriaAttributo.SECONDARIO, attributo.isSecondario(), attributo.name());
+            assertEquals(attributo.getCategoriaAttributo() == CategoriaAttributo.PRIMARIO, attributo.isPrimario(), attributo.name());
+            assertEquals(attributo.getCategoriaAttributo() == CategoriaAttributo.SECONDARIO, attributo.isSecondario(), attributo.name());
         }
         assertTrue(TipoAttributo.FORZA.isPrimario());
     }

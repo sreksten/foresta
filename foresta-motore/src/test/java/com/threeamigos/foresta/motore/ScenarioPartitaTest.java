@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -100,7 +100,7 @@ class ScenarioPartitaTest {
 			partita.comando(Comando.PERGAMENA).testo("Arsenio");
 			StringBuilder magazzini = new StringBuilder();
 			for (TipoLocazione citta : TipoLocazione.values()) {
-				if (citta.getCategoria() == CategoriaLocazione.CITTA) {
+				if (citta.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 					for (TipoNegozio negozio : TipoNegozio.values()) {
 						RegistroArtefatti.getScambiatorePerNegozio(Foresta.getCoordinateLocazioneUnica(citta), negozio)
 								.getInventario()

@@ -45,10 +45,19 @@ public enum TipoTrofeo {
 	SPELEOLOGO(CategoriaTrofeo.VARIE),
 	VERO_ROMPISCATOLE(CategoriaTrofeo.VARIE);
 
-	private final CategoriaTrofeo supertipo;
+	/**
+	 * Tutti i trofei raggruppati per tipologia, nell'ordine di {@link CategoriaTrofeo}.
+	 */
+	public static List<TipoTrofeo> perTipologia() {
+		List<TipoTrofeo> trofei = new ArrayList<>(Arrays.asList(values()));
+		trofei.sort(Comparator.comparing(TipoTrofeo::getCategoriaTrofeo));
+		return trofei;
+	}
 
-	TipoTrofeo(CategoriaTrofeo supertipo) {
-		this.supertipo = supertipo;
+	private final CategoriaTrofeo categoriaTrofeo;
+
+	TipoTrofeo(CategoriaTrofeo categoriaTrofeo) {
+		this.categoriaTrofeo = categoriaTrofeo;
 	}
 
 	public String getNome() {
@@ -59,16 +68,8 @@ public enum TipoTrofeo {
 		return Testi.testoOCostante(this, "DESCRIZIONE");
 	}
 
-	public CategoriaTrofeo getSupertipo() {
-		return supertipo;
+	public CategoriaTrofeo getCategoriaTrofeo() {
+		return categoriaTrofeo;
 	}
 
-	/**
-	 * Tutti i trofei raggruppati per tipologia, nell'ordine di {@link CategoriaTrofeo}.
-	 */
-	public static List<TipoTrofeo> perTipologia() {
-		List<TipoTrofeo> trofei = new ArrayList<>(Arrays.asList(values()));
-		trofei.sort(Comparator.comparing(TipoTrofeo::getSupertipo));
-		return trofei;
-	}
 }

@@ -36,12 +36,10 @@ public enum TipoMotivoNelGruppo {
 	}
 
 	/**
-	 * Se il personaggio entra nel gruppo per sua scelta (si unisce, si offre di accompagnarlo, accetta un
-	 * ingaggio) e quindi, entrando, può dirsi contento. Non lo è chi vi viene portato senza essere stato interpellato,
-	 * come lo Scheletro risvegliato dalla MIETITURA: per lui il testo dice soltanto che entra nel gruppo.
+	 * Se il personaggio resta per un numero di turni (il suo tempo) e poi se ne va.
 	 */
-	public boolean isEntraVolentieri() {
-		return entraVolentieri;
+	public boolean isATempo() {
+		return aTempo;
 	}
 
 	/**
@@ -52,9 +50,12 @@ public enum TipoMotivoNelGruppo {
 	}
 
 	/**
-	 * Se il personaggio resta per un numero di turni (il suo tempo) e poi se ne va.
+	 * Se il personaggio entra nel gruppo per sua scelta (si unisce, si offre di accompagnarlo, accetta un
+	 * ingaggio) e quindi, entrando, può dirsi contento. Non lo è chi vi viene portato senza essere stato interpellato,
+	 * come lo Scheletro risvegliato dalla MIETITURA: per lui il testo dice soltanto che entra nel gruppo.
 	 */
-	public boolean isATempo() {
-		return aTempo;
+	public boolean isEntraVolentieri() {
+		return entraVolentieri;
 	}
+
 }

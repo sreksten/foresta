@@ -34,9 +34,6 @@ public final class NoteDeiPersonaggi {
 	// Un tipo che rimanda a un altro che rimanda a un altro...: oltre questo si smette (un giro nel file)
 	private static final int RIMANDI_MASSIMI = 4;
 
-	private NoteDeiPersonaggi() {
-	}
-
 	/**
 	 * La nota di quel tipo di personaggio per quell'attributo, se c'è.
 	 */
@@ -63,4 +60,8 @@ public final class NoteDeiPersonaggi {
 		}
 		return Testi.get(FILE, PREDEFINITA + "." + chiave);
 	}
+
+	private NoteDeiPersonaggi() {
+	}
+
 }

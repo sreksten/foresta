@@ -46,7 +46,7 @@ class NomiDeiPersonaggiDelMondoTest {
 	private static List<TipoLocazione> citta() {
 		List<TipoLocazione> citta = new ArrayList<>();
 		for (TipoLocazione tipo : TipoLocazione.values()) {
-			if (tipo.getCategoria() == CategoriaLocazione.CITTA) {
+			if (tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 				citta.add(tipo);
 			}
 		}

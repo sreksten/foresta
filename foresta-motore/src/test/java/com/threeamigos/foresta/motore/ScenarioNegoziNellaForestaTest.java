@@ -8,21 +8,12 @@ import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioForni
 import com.threeamigos.foresta.locazioni.Bottega;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.missioni.incarichi.IlNegozio;
-import com.threeamigos.foresta.missioni.incarichi.IlNegozioDellAlchimista;
-import com.threeamigos.foresta.missioni.incarichi.IlNegozioDellArmaiolo;
-import com.threeamigos.foresta.missioni.incarichi.IlNegozioDellIncantatore;
-import com.threeamigos.foresta.missioni.incarichi.IlNegozioDelVenditoreDiPergamene;
+import com.threeamigos.foresta.missioni.incarichi.*;
 import com.threeamigos.foresta.missioni.richieste.InfestazioneRichiesta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoNegozio;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -79,7 +70,7 @@ class ScenarioNegoziNellaForestaTest {
                 Set<TipoLocazione> citta = EnumSet.noneOf(TipoLocazione.class);
                 for (IlNegozio negozio : negozi()) {
                     assertNotNull(negozio.getCittaAssegnata());
-                    assertEquals(CategoriaLocazione.CITTA, negozio.getCittaAssegnata().getCategoria());
+                    assertEquals(CategoriaLocazione.CITTA, negozio.getCittaAssegnata().getCategoriaLocazione());
                     citta.add(negozio.getCittaAssegnata());
                 }
                 assertEquals(4, citta.size(), "una per città: " + citta);
@@ -93,7 +84,7 @@ class ScenarioNegoziNellaForestaTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             IlNegozio armaiolo = trova(IlNegozioDellArmaiolo.class);
             for (TipoLocazione citta : TipoLocazione.values()) {
-                if (citta.getCategoria() == CategoriaLocazione.CITTA && citta != armaiolo.getCittaAssegnata()) {
+                if (citta.getCategoriaLocazione() == CategoriaLocazione.CITTA && citta != armaiolo.getCittaAssegnata()) {
                     partita.gruppo().setCoordinate(coordinateDi(citta));
                     armaiolo.controllaPreLocazione();
                     assertEquals("INCARICO", armaiolo.getPassoCorrente(), citta.name());

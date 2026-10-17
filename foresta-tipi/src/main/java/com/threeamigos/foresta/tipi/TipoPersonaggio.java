@@ -65,15 +65,9 @@ public enum TipoPersonaggio {
 	// Solo per le missioni di scorta: non si incontra e non si recluta
 	VIANDANTE(CategoriaPersonaggio.UMANOIDE);
 
-	private final Set<CategoriaPersonaggio> categorie;
-	// Quanto danno subisce, per tipo di danno, questa classe in più di quanto dicono le sue categorie: i tipi che mancano valgono 1.
-	// La mappa è modificabile ma solo da qui: la riempie il blocco static qui sotto, tramite un metodo privato, e da fuori
-	// nessuno può cambiarla; renderla immutabile vorrebbe dire costruirla altrove e passarla ai costruttori delle costanti,
-	// con più codice e nessun rischio in meno.
-	private final Map<TipoDanno, Double> dannoSubito = new EnumMap<>(TipoDanno.class);
+	// Il ruolo di chi lo condivide con un'altra classe (quella al maschile). Se non c'è, si assume il proprio ruolo
+	private static final Map<TipoPersonaggio, TipoPersonaggio> RUOLI = new EnumMap<>(TipoPersonaggio.class);
 
-	// Le debolezze e le resistenze della classe (quelle comuni a una categoria stanno in CategoriaPersonaggio)
-	// Tabella provvisoria, con le sue ragioni in debolezze_e_resistenze.md
 	static {
 		// Gli spiriti incorporei: aria e terra li attraversano, i colpi fisici fanno la metà, sono creature del gelo e
 		// l'energia necrotica non li ferisce (con la categoria NON_MORTO, che li rende deboli al sacro e immuni al veleno)
@@ -115,7 +109,7 @@ public enum TipoPersonaggio {
 		TROLL.moltiplicaIlDannoSubito(TipoDanno.ACIDO, 1.5d);
 		// Il gargoyle è di pietra: subisce solo il danno fisico, e la pietra si spacca a martellate
 		for (TipoDanno tipoDanno : TipoDanno.values()) {
-			if (tipoDanno.getSuperTipo() != CategoriaDanno.FISICO) {
+			if (tipoDanno.getCategoriaDanno() != CategoriaDanno.FISICO) {
 				GARGOYLE.moltiplicaIlDannoSubito(tipoDanno, 0.0d);
 			}
 		}
@@ -128,7 +122,23 @@ public enum TipoPersonaggio {
 		// Il folletto teme il ferro: lame e punte lo feriscono di più
 		FOLLETTO.moltiplicaIlDannoSubito(TipoDanno.TAGLIENTE, 1.25d);
 		FOLLETTO.moltiplicaIlDannoSubito(TipoDanno.PERFORANTE, 1.25d);
+
+		// Assegnazione dell'equivalenza dei ruoli
+		RUOLI.put(MAGA, MAGO);
+		RUOLI.put(ELFA, ELFO);
+		RUOLI.put(LADRA, LADRO);
+		RUOLI.put(GUERRIERA, GUERRIERO);
+		RUOLI.put(CANTASTORIE, BARDO);
+		RUOLI.put(SACERDOTESSA, SACERDOTE);
 	}
+
+	// Le categorie della classe: almeno una, più d'una per chi è di due generi (lo Spirito è NON_MORTO e VOLANTE)
+	private final Set<CategoriaPersonaggio> categorie;
+
+	// Quanto danno subisce, per tipo di danno, questa classe in più di quanto dicono le sue categorie: i tipi che
+	// mancano valgono 1. La mappa è modificabile ma solo da qui: la riempie il blocco static tramite un metodo privato,
+	// e da fuori nessuno può cambiarla.
+	private final Map<TipoDanno, Double> dannoSubito = new EnumMap<>(TipoDanno.class);
 
 	TipoPersonaggio(CategoriaPersonaggio... categorie) {
 		this.categorie = Collections.unmodifiableSet(EnumSet.copyOf(Arrays.asList(categorie)));
@@ -167,18 +177,6 @@ public enum TipoPersonaggio {
 	 */
 	public TipoPersonaggio getRuolo() {
 		return RUOLI.getOrDefault(this, this);
-	}
-
-	// Il ruolo di chi lo condivide con un'altra classe: quella al maschile. Chi non c'è è il ruolo di sé stesso
-	private static final Map<TipoPersonaggio, TipoPersonaggio> RUOLI = new EnumMap<>(TipoPersonaggio.class);
-
-	static {
-		RUOLI.put(MAGA, MAGO);
-		RUOLI.put(ELFA, ELFO);
-		RUOLI.put(LADRA, LADRO);
-		RUOLI.put(GUERRIERA, GUERRIERO);
-		RUOLI.put(CANTASTORIE, BARDO);
-		RUOLI.put(SACERDOTESSA, SACERDOTE);
 	}
 
 	/**

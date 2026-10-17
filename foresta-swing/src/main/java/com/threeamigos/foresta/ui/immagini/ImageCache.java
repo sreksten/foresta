@@ -173,13 +173,13 @@ public class ImageCache {
 		locazioni.put(TipoLocazione.BOSCO, BufferedImageBuilder.buildBufferedImage(RISORSA_BOSCO, zoom));
 		d = BufferedImageBuilder.buildBufferedImage("locazioni/Castello.gif", zoom);
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
-			if (tipoLocazione.getCategoria() == CategoriaLocazione.CASTELLO) {
+			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CASTELLO) {
 				locazioni.put(tipoLocazione, d);
 			}
 		}
 		d = BufferedImageBuilder.buildBufferedImage("locazioni/Citta.gif", zoom);
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
-			if (tipoLocazione.getCategoria() == CategoriaLocazione.CITTA) {
+			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 				locazioni.put(tipoLocazione, d);
 			}
 		}
@@ -204,13 +204,13 @@ public class ImageCache {
 		mappa.put(TipoLocazione.BOSCO, mappaVariantiBosco[0]);
 		d = BufferedImageBuilder.buildBufferedImage("mappa/Castello.gif", zoom);
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
-			if (tipoLocazione.getCategoria() == CategoriaLocazione.CASTELLO) {
+			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CASTELLO) {
 				mappa.put(tipoLocazione, d);
 			}
 		}
 		d = BufferedImageBuilder.buildBufferedImage("mappa/Citta.gif", zoom);
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
-			if (tipoLocazione.getCategoria() == CategoriaLocazione.CITTA) {
+			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 				mappa.put(tipoLocazione, d);
 			}
 		}

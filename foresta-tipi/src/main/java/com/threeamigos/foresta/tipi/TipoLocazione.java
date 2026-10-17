@@ -49,10 +49,14 @@ public enum TipoLocazione {
 	CASTELLO_STREGA(CategoriaLocazione.CASTELLO),
 	CASTELLO_DRAGO(CategoriaLocazione.CASTELLO);
 
-	private final CategoriaLocazione categoria;
+	private final CategoriaLocazione categoriaLocazione;
 
-	TipoLocazione(CategoriaLocazione categoria) {
-		this.categoria = categoria;
+	TipoLocazione(CategoriaLocazione categoriaLocazione) {
+		this.categoriaLocazione = categoriaLocazione;
+	}
+
+	public CategoriaLocazione getCategoriaLocazione() {
+		return categoriaLocazione;
 	}
 
 	/**
@@ -70,7 +74,7 @@ public enum TipoLocazione {
 	 * suoi abitanti ("Mastro Ferruccio da Ruuna").
 	 */
 	public String getNomeDellaCitta() {
-		if (categoria != CategoriaLocazione.CITTA) {
+		if (categoriaLocazione != CategoriaLocazione.CITTA) {
 			return null;
 		}
 		// Una voce a sé e non il nome proprio senza l'articolo ("la città di "): quel prefisso è italiano, e in un'altra
@@ -86,11 +90,7 @@ public enum TipoLocazione {
 		return this == ALCHIMISTA || this == ARMAIOLO || this == VENDITORE_DI_PERGAMENE || this == INCANTATORE;
 	}
 
-	public CategoriaLocazione getCategoria() {
-		return categoria;
-	}
-
 	public final boolean isLocazioneUnica() {
-		return categoria != CategoriaLocazione.STANDARD;
+		return categoriaLocazione != CategoriaLocazione.STANDARD;
 	}
 }

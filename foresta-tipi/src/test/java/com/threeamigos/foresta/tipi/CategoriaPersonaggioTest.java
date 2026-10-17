@@ -45,7 +45,7 @@ class CategoriaPersonaggioTest {
         assertEquals(0.75d, TipoPersonaggio.GARGOYLE.getMoltiplicatoreDannoSubito(TipoDanno.TAGLIENTE), 1e-9);
         assertEquals(1.5d, TipoPersonaggio.GARGOYLE.getMoltiplicatoreDannoSubito(TipoDanno.CONTUNDENTE), 1e-9);
         for (TipoDanno tipoDanno : TipoDanno.values()) {
-            if (tipoDanno.getSuperTipo() != CategoriaDanno.FISICO) {
+            if (tipoDanno.getCategoriaDanno() != CategoriaDanno.FISICO) {
                 assertEquals(0.0d, TipoPersonaggio.GARGOYLE.getMoltiplicatoreDannoSubito(tipoDanno), 1e-9, tipoDanno.name());
             }
         }

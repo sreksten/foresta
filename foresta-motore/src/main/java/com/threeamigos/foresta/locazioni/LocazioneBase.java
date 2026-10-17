@@ -577,11 +577,11 @@ public abstract class LocazioneBase implements Locazione {
 
 					PortataIncantesimo tipo = tipoIncantesimo.getPortata();
 					boolean suUnSoloBersaglio = tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI || tipo == PortataIncantesimo.SINGOLO_QUALSIASI;
-					annunciaAzione(formulante, suUnSoloBersaglio && tipoIncantesimo.getTipo() != CategoriaIncantesimo.BENEFICO
+					annunciaAzione(formulante, suUnSoloBersaglio && tipoIncantesimo.getCategoriaIncantesimo() != CategoriaIncantesimo.BENEFICO
 							? gruppoAvversario.getPersonaggioVivo() : null);
 					// Un incantesimo benefico su un solo bersaglio (Resurrezione) si formula su un personaggio del gruppo,
 					// e occorre chiedere quale sia
-					if (suUnSoloBersaglio && tipoIncantesimo.getTipo() == CategoriaIncantesimo.BENEFICO) {
+					if (suUnSoloBersaglio && tipoIncantesimo.getCategoriaIncantesimo() == CategoriaIncantesimo.BENEFICO) {
 						Logger.log(() -> "Incantesimo di tipo " + (tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI ? "SINGOLO_SOLO_VIVI" : "SINGOLO_QUALSIASI"));
 						int l = gruppo.getNumeroPersonaggi();
 						Personaggio personaggio;
@@ -603,7 +603,7 @@ public abstract class LocazioneBase implements Locazione {
 
 					// Un incantesimo benefico su tutto il gruppo (Alba Sacra) si formula sul proprio gruppo,
 					// non su quello avversario
-					if (!suUnSoloBersaglio && tipoIncantesimo.getTipo() == CategoriaIncantesimo.BENEFICO) {
+					if (!suUnSoloBersaglio && tipoIncantesimo.getCategoriaIncantesimo() == CategoriaIncantesimo.BENEFICO) {
 						incantesimo.formula(formulante, null, gruppo);
 
 						if (!gruppo.getCapo().isVivo()) {
@@ -1714,7 +1714,7 @@ public abstract class LocazioneBase implements Locazione {
 	 */
 	private boolean isPassaggioPossibile() {
 		return !passaggioEscluso && statoLocazione == StatoLocazione.IN_LOCAZIONE
-				&& gruppo.getTipoLocazioneCorrente().getCategoria() == CategoriaLocazione.STANDARD
+				&& gruppo.getTipoLocazioneCorrente().getCategoriaLocazione() == CategoriaLocazione.STANDARD
 				&& !gruppoAvversario.getPersonaggiVivi().isEmpty() && !gruppoAvversario.isDaAffrontare() && !gruppoAvversario.isDuello()
 				&& !gruppoAvversario.hasOndateSuccessive();
 	}
@@ -1877,7 +1877,7 @@ public abstract class LocazioneBase implements Locazione {
 		Personaggio avversario = gruppoAvversario.getCapo();
 		FaseDiAttacco fase = CalcolatoreCombattimento.fasiDiAttacco(avversario).get(0);
 		Arma arma = fase.getArma();
-		if (!CalcolatoreCombattimento.colpisce(avversario, personaggio, arma.getTipoDanno().getSuperTipo())) {
+		if (!CalcolatoreCombattimento.colpisce(avversario, personaggio, arma.getTipoDanno().getCategoriaDanno())) {
 			return null;
 		}
 		DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(avversario, personaggio, arma, fase.getFattore());

@@ -96,7 +96,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 			stato.registraEsitoAzione(formulante, personaggioBersaglio, azione, EsitoAzione.IMMUNE);
 			return;
 		}
-		if (!CalcolatoreCombattimento.colpisce(formulante, personaggioBersaglio, getTipoDanno().getSuperTipo())) {
+		if (!CalcolatoreCombattimento.colpisce(formulante, personaggioBersaglio, getTipoDanno().getCategoriaDanno())) {
 			Logger.log("L'incantesimo non va a segno");
 			stato.registraEsitoAzione(formulante, personaggioBersaglio, azione, EsitoAzione.MANCATA);
 			return;

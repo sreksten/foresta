@@ -33,13 +33,27 @@ public enum TipoIncantesimo {
 	SILENZIO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.GRUPPO, TipoDanno.ARCANO, Comando.SILENZIO),
 	LUCE_DIVINA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.SACRO, Comando.LUCE_DIVINA);
 
-	private final CategoriaIncantesimo tipo;
+	/**
+	 * L'incantesimo che il comando attiva.
+	 *
+	 * @throws IllegalArgumentException se il comando non attiva nessun incantesimo
+	 */
+	public static TipoIncantesimo ofComando(Comando comando) {
+		for (TipoIncantesimo corrente : values()) {
+			if (comando == corrente.comandoDiAttivazione) {
+				return corrente;
+			}
+		}
+		throw new IllegalArgumentException("Comando invalido per incantesimo: " + comando);
+	}
+
+	private final CategoriaIncantesimo categoriaIncantesimo;
 	private final PortataIncantesimo portata;
 	private final TipoDanno tipoDanno;
 	private final Comando comandoDiAttivazione;
 
-	TipoIncantesimo(CategoriaIncantesimo tipo, PortataIncantesimo portata, TipoDanno tipoDanno, Comando comando) {
-		this.tipo = tipo;
+	TipoIncantesimo(CategoriaIncantesimo categoriaIncantesimo, PortataIncantesimo portata, TipoDanno tipoDanno, Comando comando) {
+		this.categoriaIncantesimo = categoriaIncantesimo;
 		this.portata = portata;
 		this.tipoDanno = tipoDanno;
 		this.comandoDiAttivazione = comando;
@@ -48,8 +62,15 @@ public enum TipoIncantesimo {
 	/**
 	 * Il tipo di questo incantesimo: BENEFICO, MALEFICO
 	 */
-	public CategoriaIncantesimo getTipo() {
-		return tipo;
+	public CategoriaIncantesimo getCategoriaIncantesimo() {
+		return categoriaIncantesimo;
+	}
+
+	/**
+	 * La portata di questo incantesimo; GLOBALE, GRUPPO, SINGOLO_SOLO_VIVI, SINGOLO_QUALSIASI
+	 */
+	public PortataIncantesimo getPortata() {
+		return portata;
 	}
 
 	/**
@@ -60,10 +81,10 @@ public enum TipoIncantesimo {
 	}
 
 	/**
-	 * La portata di questo incantesimo; GLOBALE, GRUPPO, SINGOLO_SOLO_VIVI, SINGOLO_QUALSIASI
+	 * Il comando di attivazione di questo incantesimo
 	 */
-	public PortataIncantesimo getPortata() {
-		return portata;
+	public Comando getComandoDiAttivazione() {
+		return comandoDiAttivazione;
 	}
 
 	/**
@@ -94,21 +115,4 @@ public enum TipoIncantesimo {
 		return Testi.testoOCostante(this, "EFFETTO");
 	}
 
-	public Comando getComandoDiAttivazione() {
-		return comandoDiAttivazione;
-	}
-
-	/**
-	 * L'incantesimo che il comando attiva.
-	 *
-	 * @throws IllegalArgumentException se il comando non attiva nessun incantesimo
-	 */
-	public static TipoIncantesimo ofComando(Comando comando) {
-		for (TipoIncantesimo corrente : values()) {
-			if (comando == corrente.comandoDiAttivazione) {
-				return corrente;
-			}
-		}
-		throw new IllegalArgumentException("Comando invalido per incantesimo: " + comando);
-	}
 }

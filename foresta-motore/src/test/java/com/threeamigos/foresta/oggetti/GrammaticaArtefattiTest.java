@@ -103,7 +103,7 @@ class GrammaticaArtefattiTest {
                 assertFalse(nome.matches(".*[@\\[\\]{}|<>\"].*"), nome);
                 assertFalse(nome.contains("  "), nome);
                 for (TipoDanno danno : risultato.getDanni()) {
-                    assertNotSame(danno.getSuperTipo(), CategoriaDanno.FISICO, nome);
+                    assertNotSame(danno.getCategoriaDanno(), CategoriaDanno.FISICO, nome);
                 }
                 for (GrammaticaArtefatti.Modificatore modificatore : risultato.getModificatori()) {
                     assertTrue(modificatore.getIntensita() != 0 && Math.abs(modificatore.getIntensita()) <= 3, nome);

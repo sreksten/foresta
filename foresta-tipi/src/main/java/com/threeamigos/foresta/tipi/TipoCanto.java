@@ -25,6 +25,18 @@ public enum TipoCanto {
 	// (vedi CantoDelBardo.isUrloDellaBansheeAppreso)
 	URLO_DELLA_BANSHEE(Comando.URLO_DELLA_BANSHEE);
 
+	/**
+	 * @return il canto scelto con quel comando, o null se il comando non è di un canto
+	 */
+	public static TipoCanto ofComando(Comando comando) {
+		for (TipoCanto tipo : values()) {
+			if (tipo.comando == comando) {
+				return tipo;
+			}
+		}
+		return null;
+	}
+
 	private final Comando comando;
 
 	TipoCanto(Comando comando) {
@@ -36,18 +48,6 @@ public enum TipoCanto {
 	 */
 	public Comando getComando() {
 		return comando;
-	}
-
-	/**
-	 * @return il canto scelto con quel comando, o null se il comando non è di un canto
-	 */
-	public static TipoCanto ofComando(Comando comando) {
-		for (TipoCanto tipo : values()) {
-			if (tipo.comando == comando) {
-				return tipo;
-			}
-		}
-		return null;
 	}
 
 	public String getNome() {

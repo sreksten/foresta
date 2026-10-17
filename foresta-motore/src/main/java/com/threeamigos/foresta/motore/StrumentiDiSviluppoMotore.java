@@ -267,7 +267,7 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
         }
         return dove == DovePartono.LOCANDA
                 ? tipo == TipoLocazione.LOCANDA
-                : tipo.getCategoria() == CategoriaLocazione.CITTA;
+                : tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA;
     }
 
     private static Missione trova(MissionePredefinita classe) {

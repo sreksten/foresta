@@ -254,7 +254,7 @@ class ScenarioIncarichiInCittaTest {
                 CoordinateMD coordinate = new CoordinateMD(x, y);
                 CoordinateMD sud = new CoordinateMD(x, y + 1);
                 if (Foresta.getLocazione(x, y) == TipoLocazione.BOSCO && !Foresta.isLocazioneVisitata(coordinate)
-                        && Foresta.getLocazione(x, y + 1).getCategoria() == CategoriaLocazione.STANDARD
+                        && Foresta.getLocazione(x, y + 1).getCategoriaLocazione() == CategoriaLocazione.STANDARD
                         && RegistroArtefatti.getArtefattoInLocazione(coordinate) == null
                         && !RegistroMissioni.getMissioneCheHaOccupato(sud).isPresent()) {
                     return coordinate;

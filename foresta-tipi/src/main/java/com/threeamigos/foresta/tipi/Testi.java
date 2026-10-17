@@ -45,9 +45,6 @@ public final class Testi {
 	// non deve costruire stringhe per trovare il file
 	private static final ConcurrentMap<Class<?>, ConcurrentMap<String, Properties>> CACHE_DELLE_ENUM = new ConcurrentHashMap<>();
 
-	private Testi() {
-	}
-
 	/**
 	 * Sceglie la lingua dei testi, con il suo codice a due lettere ("it", "en"); con null o vuoto torna l'italiano.
 	 */
@@ -141,4 +138,8 @@ public final class Testi {
 		}
 		return testi;
 	}
+
+	private Testi() {
+	}
+
 }

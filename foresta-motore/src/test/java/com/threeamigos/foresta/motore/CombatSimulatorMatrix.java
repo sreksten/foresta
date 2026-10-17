@@ -203,11 +203,11 @@ public class CombatSimulatorMatrix {
             return false;
         }
         DardoArcano dardo = new DardoArcano(pg);
-        double conDardo = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(pg, bersaglio, dardo.getTipoDanno().getSuperTipo())
+        double conDardo = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(pg, bersaglio, dardo.getTipoDanno().getCategoriaDanno())
                 * CalcolatoreCombattimento.calcolaDannoRisultante(pg, bersaglio, dardo).getDanno();
         double conArmi = 0.0d;
         for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(pg)) {
-            conArmi += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(pg, bersaglio, fase.getArma().getTipoDanno().getSuperTipo())
+            conArmi += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(pg, bersaglio, fase.getArma().getTipoDanno().getCategoriaDanno())
                     * CalcolatoreCombattimento.calcolaDannoRisultante(pg, bersaglio, fase.getArma(), fase.getFattore()).getDanno();
         }
         return conDardo > conArmi;
@@ -228,7 +228,7 @@ public class CombatSimulatorMatrix {
 
     static void attacca(Personaggio attaccante, Personaggio difensore, FaseDiAttacco fase, StatisticheAttacco statistiche) {
         statistiche.tentativi++;
-        CategoriaDanno superTipoDanno = fase.getArma().getTipoDanno().getSuperTipo();
+        CategoriaDanno superTipoDanno = fase.getArma().getTipoDanno().getCategoriaDanno();
 
         // Controllo e gestione corretta dell'ordine dei parametri (Attaccante -> Difensore)
         if (CalcolatoreCombattimento.colpisce(attaccante, difensore, superTipoDanno)) {

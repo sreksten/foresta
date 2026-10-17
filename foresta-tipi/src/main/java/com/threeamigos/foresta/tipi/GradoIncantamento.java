@@ -16,14 +16,6 @@ public enum GradoIncantamento {
 	MEDIO(10, 0.10),
 	MAGGIORE(15, 0.20);
 
-	private final int bonusFisso;
-	private final double coefficiente;
-
-	GradoIncantamento(int bonusFisso, double coefficiente) {
-		this.bonusFisso = bonusFisso;
-		this.coefficiente = coefficiente;
-	}
-
 	/**
 	 * Il grado adatto al livello di riferimento: minore fino al 3, medio dal 4 al 7, maggiore dall'8 in su.
 	 */
@@ -51,8 +43,12 @@ public enum GradoIncantamento {
 		return MINORE;
 	}
 
-	public String getNome() {
-		return Testi.testoOCostante(this, "NOME");
+	private final int bonusFisso;
+	private final double coefficiente;
+
+	GradoIncantamento(int bonusFisso, double coefficiente) {
+		this.bonusFisso = bonusFisso;
+		this.coefficiente = coefficiente;
 	}
 
 	public int getBonusFisso() {
@@ -72,4 +68,9 @@ public enum GradoIncantamento {
 	public int getGradino() {
 		return ordinal() + 1;
 	}
+
+	public String getNome() {
+		return Testi.testoOCostante(this, "NOME");
+	}
+
 }
