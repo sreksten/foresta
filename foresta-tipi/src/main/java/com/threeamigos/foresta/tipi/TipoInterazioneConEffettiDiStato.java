@@ -381,4 +381,29 @@ public enum TipoInterazioneConEffettiDiStato {
     public boolean isCriticoAutomatico() {
         return this == COLPO_DI_GRAZIA || this == FRANTUMAZIONE_DEL_GHIACCIO;
     }
+
+    /**
+     * Il tipo di danno con cui la reazione investe anche i vicini del bersaglio nella fila del suo gruppo, o null se resta sul
+     * bersaglio: l'ESPLOSIONE_DI_GAS il FUOCO, il RIGETTO il SONICO, l'ELETTROCUZIONE il FULMINE (lei però solo sui BAGNATI
+     * attaccati al bersaglio, la sua pozza). Quanto e come lo dice il calcolo del danno (CalcolatoreCombattimento.calcolaDannoAdArea).
+     */
+    public TipoDanno getDannoAdArea() {
+        switch (this) {
+            case ESPLOSIONE_DI_GAS:
+                return TipoDanno.FUOCO;
+            case RIGETTO:
+                return TipoDanno.SONICO;
+            case ELETTROCUZIONE:
+                return TipoDanno.FULMINE;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * La frase con cui il danno ad area investe un vicino ("L'esplosione investe"), seguita dal nome del vicino.
+     */
+    public String getTestoAdArea() {
+        return Testi.testoOCostante(this, "AREA");
+    }
 }

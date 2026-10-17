@@ -56,9 +56,10 @@ class InterazioniConGliStatiCaratterizzazioneTest {
      * ciascuna): la VAPORIZZAZIONE mette ACCECATO, l'ESPLOSIONE_DI_GAS toglie BRUCIATO e AVVELENATO invece di mettere
      * AVVELENATO, l'ALIMENTAZIONE_FIAMMA allunga il BRUCIATO (quel che resta più una durata normale), l'ESTINZIONE toglie
      * anche il BAGNATO. Nel danno: la MIETITURA moltiplica per 2 e non più per 2 - SAGGEZZA/100 (51 righe), la
-     * FRANTUMAZIONE_DEL_GHIACCIO è un critico automatico invece di un ×2 che un critico vero portava a ×4 (44 righe).
+     * FRANTUMAZIONE_DEL_GHIACCIO è un critico automatico invece di un ×2 che un critico vero portava a ×4 (44 righe). Poi il
+     * testo mostra anche il danno ad area (getDanniAdArea) di ELETTROCUZIONE, ESPLOSIONE_DI_GAS e RIGETTO (153 righe, il resto uguale).
      */
-    private static final String IMPRONTA_ATTESA = "737704a52ef48ba7ef3dcb673a84768b20f73aa3ba764c2963c277ced6e76b2a";
+    private static final String IMPRONTA_ATTESA = "feda1798dcd1dc873c4cf1dee2098e1ce7fcc6e69eaa4808975d8333137baba8";
 
     private static final TipoEffettoDiStato[] STATI = {
             TipoEffettoDiStato.BAGNATO, TipoEffettoDiStato.BRUCIATO, TipoEffettoDiStato.AVVELENATO, TipoEffettoDiStato.SANGUINAMENTO,
@@ -140,8 +141,11 @@ class InterazioniConGliStatiCaratterizzazioneTest {
                             .append(" sifone=").append(r.getSifoneVitale())
                             .append(" diluizione=").append(r.isDiluizioneEmaticaAttiva())
                             .append(" collasso=").append(r.isCollassoEntropicoAttivo())
-                            .append(" mietitura=").append(r.isMietituraAttiva())
-                            .append('\n');
+                            .append(" mietitura=").append(r.isMietituraAttiva());
+                    for (DannoRisultante.DannoAdArea area : r.getDanniAdArea()) {
+                        testo.append(" area=").append(area.getTipoDanno()).append(':').append(Math.round(area.getDannoGrezzo()));
+                    }
+                    testo.append('\n');
                 }
             }
         }

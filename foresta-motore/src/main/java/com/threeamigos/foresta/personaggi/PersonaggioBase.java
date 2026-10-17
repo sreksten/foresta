@@ -612,6 +612,20 @@ public abstract class PersonaggioBase implements Personaggio {
 			}
 		}
 
+		// Le reazioni ad area investono anche i vicini nella fila del gruppo (CalcolatoreCombattimento.viciniInvestiti);
+		// il colpo che arriva ai vicini non ne porta altre (calcolaDannoAdArea)
+		if (!risultato.getDanniAdArea().isEmpty()) {
+			Gruppo gruppoDifensore = GruppoGiocatore.getIstanza().contiene(this) ?
+					GruppoGiocatore.getIstanza() : GruppoAvversario.getIstanza();
+			for (DannoRisultante.DannoAdArea area : risultato.getDanniAdArea()) {
+				for (Personaggio vicino : CalcolatoreCombattimento.viciniInvestiti(gruppoDifensore.getPersonaggi(), this, area.getInterazione())) {
+					BusEventi.pubblica(new NotificaTestoFrase(area.getInterazione().getTestoAdArea() + " "
+							+ vicino.getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.'));
+					vicino.applicaRisultatoCombattimento(CalcolatoreCombattimento.calcolaDannoAdArea(risultato.getAttaccante(), vicino, area));
+				}
+			}
+		}
+
 		if (risultato.getSifoneVitale() > 0) {
 			Personaggio attaccante = risultato.getAttaccante();
 			int sifone = risultato.getSifoneVitale();

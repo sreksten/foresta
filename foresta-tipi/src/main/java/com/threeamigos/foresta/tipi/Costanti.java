@@ -295,6 +295,11 @@ public class Costanti {
     // Per quanti turni uno Scheletro nato dalla MIETITURA accompagna il gruppo
     public static final int MIETITURA_DURATA_TURNI = 4;
 
+    // Combattimento
+    // La quota del danno grezzo di un colpo che una reazione ad area (esplosione di gas, rigetto, elettrocuzione) porta ai
+    // vicini del bersaglio, prima della loro difesa
+    public static final double DANNO_AD_AREA_QUOTA = 0.5d;
+
     // Dall'alchimista
     public static final int COSTO_POZIONE_SALUTE = 5;
     public static final int COSTO_POZIONE_SALUTE_GRANDE = 15;

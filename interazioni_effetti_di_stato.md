@@ -6,7 +6,7 @@
 > `CalcolatoreCombattimento.interazioniAttive` è l'unico punto che decide quando un'interazione scatta, e
 > `calcolaDannoRisultante` applica le conseguenze in modo generico (`applicaGliStatiDellInterazione`); nel suo `switch`
 > restano solo gli effetti che non sono stati (critico automatico, sifone, collasso entropico, cura della purificazione,
-> danno puro della risonanza, diluizione, mietitura) e le eccezioni a durata e danno periodico degli stati messi
+> danno puro della risonanza, diluizione, mietitura, danno ad area) e le eccezioni a durata e danno periodico degli stati messi
 > (`durataDelloStatoMesso`, `dannoDelloStatoMesso`). `PersonaggioBase.applicaRisultatoCombattimento` mette gli stati, poi
 > li toglie (uno stato messo da una reazione e tolto da un'altra non resta) e pubblica `NotificaInterazionePersonaggio`.
 > I salvataggi **non** devono restare retrocompatibili: il formato si cambia liberamente.
@@ -50,6 +50,21 @@ atterra), `statiTolti` quelli che le reazioni gli tolgono (il FUOCO scioglie un 
 tipoDanno, arma)` stima il colpo che segue con gli uni e senza gli altri. `ConseguenzeDelleInterazioniTest` controlla che il calcolo
 vero tolga e metta quel che l'enum dichiara.
 
+## Danni ad area
+
+Tre reazioni investono anche i vicini del bersaglio (`TipoInterazioneConEffettiDiStato.getDannoAdArea`):
+
+| Reazione | Danno ai vicini | Chi |
+| :--- | :--- | :--- |
+| `ESPLOSIONE_DI_GAS` (BRUCIATO + VELENO) | `FUOCO` | chi sta subito prima e subito dopo il bersaglio |
+| `RIGETTO` (MALEDETTO + SACRO) | `SONICO` | chi sta subito prima e subito dopo il bersaglio |
+| `ELETTROCUZIONE` (BAGNATO + FULMINE) | `FULMINE` | i BAGNATI attaccati al bersaglio da una parte e dall'altra, finché la pozza non si interrompe |
+
+- **Chi è vicino.** Il gioco non ha uno spazio: i vicini sono quelli accanto al bersaglio nella fila del suo gruppo (`Gruppo.getPersonaggi`, l'ordine in cui sono entrati), contando solo chi è in campo; un caduto o chi si è arreso non separa. Lo decide `CalcolatoreCombattimento.viciniInvestiti`.
+- **Quanto.** Il calcolo del colpo mette in `DannoRisultante.getDanniAdArea` la reazione e metà del danno grezzo del colpo (`Costanti.DANNO_AD_AREA_QUOTA`, prima della difesa, degli incantamenti e del critico). `PersonaggioBase.applicaRisultatoCombattimento`, dopo aver subito il colpo, lo porta a ogni vicino con `CalcolatoreCombattimento.calcolaDannoAdArea`: niente tiro per colpire né critico; la difesa del vicino contro quel tipo di danno, la sua classe (un immune non subisce niente) e le reazioni con i suoi stati, di cui contano il danno e gli stati tolti e messi (il fulmine su un vicino BAGNATO fa ×1,5). Gli stati nativi del tipo di danno non si tirano.
+- **Niente catene.** Il colpo ai vicini (`DannoRisultante.isColpoAdArea`) non porta altre reazioni ad area, e non cambia l'avversario scelto da chi attacca (`StatoDelCombattimento.registraColpo`).
+- **A video.** Per ogni vicino una frase, dal file dei testi dell'enum (voce `AREA`: "L'esplosione investe anche il goblin 2."); i danni e le reazioni del vicino si vedono come per un colpo normale.
+
 ## 0. Prerequisito: da `TipoInterazioneElementale` a `TipoInterazioneConEffettiDiStato` — ✅ fatto
 
 "Colpo di Grazia" (STORDITO/ATTERRATO + TAGLIENTE/PERFORANTE) è un'interazione fisica, non elementale, e prima era
@@ -69,7 +84,7 @@ già porta con sé.
 
 ## 1. Già a posto — nessun intervento
 
-- [x] BAGNATO: ELETTROCUZIONE (FULMINE), CONGELAMENTO (GELO), VAPORIZZAZIONE (FUOCO) — nota: la descrizione originale di ELETTROCUZIONE ("si propaga automaticamente a tutti i bersagli vicini BAGNATI o nella stessa pozza") non è implementata: oggi applica solo `moltiplicatoreDannoStato * 1.5` sul singolo difensore già colpito. Vedi nota architetturale sotto RIGETTO (§2, MALEDETTO) per come andrebbe fatta la propagazione.
+- [x] BAGNATO: ELETTROCUZIONE (FULMINE), CONGELAMENTO (GELO), VAPORIZZAZIONE (FUOCO) — l'elettrocuzione si propaga nella pozza dei BAGNATI vicini (vedi «Danni ad area»)
 - [x] BRUCIATO: ALIMENTAZIONE_FIAMMA (ARIA), ESTINZIONE (ACQUA), SCIOGLIMENTO_TERMICO (GELO), ESPLOSIONE_DI_GAS (VELENO)
 - [x] CONGELATO: FRANTUMAZIONE_DEL_GHIACCIO (CONTUNDENTE), DISGELO_VIOLENTO (FUOCO), SUPERCONDUZIONE (FULMINE)
   — la Frantumazione è un critico automatico (×2, come il Colpo di Grazia, e non si somma a un critico vero), non più un moltiplicatore ×2 a cui un critico vero poteva aggiungersi (×4)
@@ -80,15 +95,9 @@ già porta con sé.
 - [x] Colpo di Grazia: c'è già (righe 314-321) e ora è anche un `TipoInterazioneConEffettiDiStato.COLPO_DI_GRAZIA` (§0)
 - [x] Schiacciamento (ATTERRATO + CONTUNDENTE): raddoppia il danno fisico (`moltiplicatoreDannoStato * 2.0`) ed estende la durata di ATTERRATO di un turno (`calcolaDurataStato(...) + 1`, sfruttando il "rinforzo" già gestito da `PersonaggioBase.addEffettoDiStato`); nuovo valore `TipoInterazioneConEffettiDiStato.SCHIACCIAMENTO`, gestito anche in `ForestaUI`
 
-### MALEDETTO — parzialmente chiuso
+### MALEDETTO — ✅ chiuso
 - [x] Mietitura (NECROTICO): il moltiplicatore è ×2 (fino al 2026-10-17 era `max(1.0, 2.0 - saggezza/100)`); in più, se il bersaglio è un minion avversario (non-boss) sceso sotto il 20% di vita, muore all'istante e viene sostituito da uno Scheletro alleato aggiunto al gruppo del giocatore; nuovo campo `DannoRisultante.mietituraAttiva` (flag, sul modello di `collassoEntropicoAttivo`), consumato in `PersonaggioBase.applicaRisultatoCombattimento`. Lo Scheletro (e in futuro un eventuale "Controllo Mentale") è nel gruppo con il motivo `TipoMotivoNelGruppo.MIETITURA` (`Personaggio.setMotivoNelGruppo`): è un personaggio a tempo come quelli di AiutoGratuito/AiutoMercenario, per `Costanti.MIETITURA_DURATA_TURNI` turni, ma se muore torna polvere ("Lo Scheletro torna ad essere polvere.") e lascia il gruppo subito dopo l'azione in cui è caduto (`GruppoGiocatore.congedaChiNonRisorge`, chiamato da `LocazioneBase` dopo ogni azione e a fine round, con `Automa` come ultima rete) invece di restare da morto: non si può risuscitare. Da vivo non è nemmeno un bersaglio possibile delle cure: `Personaggio.isCurabile` è falso per un non morto del gruppo del giocatore, e pozioni di salute (la scelta di chi beve in `Automa.scegliPersonaggio`, con `Locazione.isSceltaDiUnaCura`), canto curativo, Resurrezione e le tattiche automatiche non lo propongono. Se per questo di candidati ne resta uno solo (di solito il capo, con accanto lo scheletro vivo ma non curabile: non vuol dire che gli altri siano morti), `Automa.scegliPersonaggio` lo sceglie senza chiedere, come quando c'è un solo personaggio in campo. A gruppo pieno (`Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE`) il minion muore lo stesso, ma senza scheletro. Il danno `MALEDIZIONE` infligge `MALEDETTO` (`TipoDanno`), da cui parte la Mietitura di un danno NECROTICO, che sia il danno base dell'arma o un suo incantamento (in quel caso il moltiplicatore vale solo per il danno dell'incantamento). La Falce del Tristo Mietitore (`leggendari.txt`, uno spadone con incantamenti MALEDIZIONE e NECROTICO) li ha entrambi; la maledizione però si applica con la probabilità di ogni incantamento, per cui la Falce non miete a ogni colpo. Per ospitarlo il gruppo giocatore passa da 5 a 8 slot totali: 5 permanenti invariati (`Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE`) + 3 temporanei nuovi (`Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE`, nuovi `Comando.PERSONAGGIO_6/7/8`); il riquadro del gruppo (`DisplayableCanvasRiquadroGruppo`) ora scorre con la rotella (`saltaPrimi`/`personaggiVisibili`, mirror di `DisplayableCanvasBarraIcone`) invece di tagliare i personaggi oltre il quinto.
-- [ ] RIGETTO (SACRO): oggi rimuove solo MALEDETTO; manca il danno ad area Tuono/Sonico ai nemici vicini.
-  **Nota architetturale (discussione 2026-09-28, non implementata):**
-  - Il gioco non ha un concetto spaziale di "vicinanza": l'unico precedente di effetto ad area (`curaAdArea`, Purificazione) risolve "area" come "tutti i vivi del gruppo del difensore, escluso lui stesso" (`PersonaggioBase.applicaRisultatoCombattimento`, via `GruppoGiocatore`/`GruppoAvversario`). La propagazione di RIGETTO/ELETTROCUZIONE andrebbe risolta allo stesso modo.
-  - `DannoRisultante` andrebbe esteso con un `dannoAdArea` che porta un `TipoDanno` **esplicito**, non implicito dal `tipoDanno` del colpo scatenante: RIGETTO scatena SONICO/TUONO da un innesco SACRO, mentre un'eventuale propagazione di ELETTROCUZIONE riuserebbe FULMINE. Serve quindi una coppia `(TipoDanno, quantità)`, non solo un intero come `curaAdArea`.
-  - Perché il danno ad area scateni a sua volta altre reazioni sul bersaglio secondario (es. FULMINE ad area su un vicino BAGNATO che fa scattare ELETTROCUZIONE anche su di lui) senza duplicare la logica delle interazioni: aggiungere un nuovo overload `calcolaDannoRisultante(Personaggio attaccante, Personaggio difensore, TipoDanno tipoDanno, int dannoFisso)` che salta il calcolo da statistiche/arma e riusa la sezione delle interazioni esistente con un danno grezzo già dato; `applicaRisultatoCombattimento` richiamerebbe questo overload per ogni altro vivo nel gruppo del difensore e applicherebbe recursivamente il `DannoRisultante` risultante.
-  - Decisione ancora aperta: quanto danno SONICO/TUONO infligge l'esplosione di RIGETTO (nessuna formula nel testo originale) — es. una percentuale del danno mitigato del colpo scatenante, come il 50% di `curaAdArea`.
-  - Discussa anche l'idea di generalizzare la propagazione a *tutti* gli incantesimi con `PortataIncantesimo.MULTIPLO` (Aria, Acqua, Terra, Fuoco, Fulmine, Gelo, Veleno in `TipoIncantesimo`): scartata come feature generica sempre attiva, perché MULTIPLO già colpisce fino a N bersagli scelti direttamente in base a `formulante.getBersagli()` (vedi `IncantesimoMaleficoImpl.formula`/`colpisci`, ognuno con il proprio tiro per colpire e la propria risoluzione di reazioni) — una propagazione incondizionata al resto del gruppo, sommata a questo, renderebbe ogni incantesimo elementale MULTIPLO di fatto equivalente a GRUPPO indipendentemente dalla statistica bersagli del lanciatore, ed è quindi troppo forte. La propagazione ad area va tenuta come effetto secondario legato a una reazione specifica (RIGETTO, eventuale ELETTROCUZIONE), non come proprietà generale di MULTIPLO.
+- [x] RIGETTO (SACRO): rimuove MALEDETTO e l'energia repressa investe con danno SONICO i vicini del bersaglio (vedi «Danni ad area»). La propagazione resta legata a tre reazioni precise e non agli incantesimi `MULTIPLO`, che già scelgono fino a N bersagli ognuno con il suo tiro: propagarli tutti al resto del gruppo li avrebbe resi di fatto incantesimi `GRUPPO`.
 - [x] Collasso Entropico (VUOTO): rimuove MALEDETTO; brucia il 25% dei MP massimi del difensore, limitato ai MP realmente disponibili (`Math.min(round(getMagiaMassima() * 0.25), getMagia())`), e infligge un danno alla salute pari agli MP effettivamente persi (non al 25% nominale, se il bersaglio ne aveva meno); nuovo campo `DannoRisultante.collassoEntropicoAttivo` (flag, sul modello di `diluizioneEmaticaAttiva`) gestito in `PersonaggioBase.applicaRisultatoCombattimento` via `subMagia`/`subSalute` diretti sul difensore stesso; nuovo valore `TipoInterazioneConEffettiDiStato.COLLASSO_ENTROPICO`, gestito anche in `ForestaUI`
 
 ### INFETTATO — ✅ chiuso
@@ -146,4 +155,6 @@ già porta con sé.
 
 ## Da fare / idee aperte
 
+- Le tattiche non vedono il danno ad area: `moltiplicatoreAtteso` e `dannoAtteso` guardano solo il bersaglio. Un avversario BRUCIATO, MALEDETTO o BAGNATO in mezzo alla fila vale di più di quello che dicono le stime.
+- La quota del danno ad area è una sola per le tre reazioni (`DANNO_AD_AREA_QUOTA`, 50%); se servisse, si può dichiarare per reazione nell'enum.
 - Le tattiche non usano ancora le stime "dopo l'azione" (`moltiplicatoreAttesoDopo`, `statiCausabili`): oggi il valutatore guarda solo gli stati di adesso (`moltiplicatoreAtteso`, `DEBOLE_A`). Collegarle vorrebbe dire, per esempio, preferire un bersaglio già RALLENTATO per chi colpisce di TERRA prima di un compagno con la lama (l'INCIAMPO prepara il COLPO_DI_GRAZIA).

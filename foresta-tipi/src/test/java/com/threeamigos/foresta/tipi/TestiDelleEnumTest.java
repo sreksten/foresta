@@ -61,6 +61,15 @@ class TestiDelleEnumTest {
 	}
 
 	@Test
+	void ogniInterazioneAdAreaHaLaSuaFrase() {
+		for (TipoInterazioneConEffettiDiStato interazione : TipoInterazioneConEffettiDiStato.values()) {
+			if (interazione.getDannoAdArea() != null) {
+				assertTrue(Testi.testo(interazione, "AREA").filter(t -> !t.trim().isEmpty()).isPresent(), "manca " + interazione + ".AREA");
+			}
+		}
+	}
+
+	@Test
 	void iNomiDelleLocazioniUnicheSonoNelFile() {
 		for (TipoLocazione locazione : TipoLocazione.values()) {
 			if (locazione.isLocazioneUnica()) {
@@ -79,9 +88,16 @@ class TestiDelleEnumTest {
 	@Test
 	void neiFileNonCiSonoVociPerCostantiOVociCheNonEsistono() throws IOException {
 		for (Map.Entry<Class<? extends Enum<?>>, List<String>> enumerazione : ENUM.entrySet()) {
+			if (enumerazione.getKey() == TipoInterazioneConEffettiDiStato.class) {
+				continue;
+			}
 			verificaIlFile(enumerazione.getKey(), new HashSet<>(enumerazione.getValue()),
 					enumerazione.getKey().getEnumConstants().length * enumerazione.getValue().size());
 		}
+		// Le interazioni: la descrizione per tutte, la frase del danno ad area per quelle che ne hanno uno
+		long adArea = Arrays.stream(TipoInterazioneConEffettiDiStato.values()).filter(i -> i.getDannoAdArea() != null).count();
+		verificaIlFile(TipoInterazioneConEffettiDiStato.class, new HashSet<>(Arrays.asList("DESCRIZIONE", "AREA")),
+				TipoInterazioneConEffettiDiStato.values().length + (int) adArea);
 		// Le locazioni: il nome proprio per le nove uniche, quello della città per le quattro città
 		verificaIlFile(TipoLocazione.class, new HashSet<>(Arrays.asList("NOME_PROPRIO", "NOME_DELLA_CITTA")), 9 + 4);
 	}

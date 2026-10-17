@@ -647,6 +647,7 @@ Domande aperte:
 - **Il round a coppie** (§3.1): rimisurare il bilanciamento, e decidere se ridurre l'annuncio "X attacca Y" a ogni azione (oggi sempre, anche per aiutare a leggere il log); la velocità del `TIMER` (ogni scatto è mezzo scambio) è rimasta com'era.
 - **`PIU_ECONOMICO_CHE_BASTA`** (§11.10): basta se il danno atteso è almeno la salute attuale del bersaglio, o serve un margine? E l'esatta ripartizione delle fasce di astuzia nelle tattiche dei mostri magici: entrambi da tarare con le simulazioni.
 - **Variabili locali** (un valore calcolato una volta e usato più volte nella lista, per esempio "il bersaglio scelto"): non servono finché il selettore è anche una condizione (§11.2); se ne riparla se serviranno.
+- **Il danno ad area** delle reazioni (esplosione di gas, rigetto, elettrocuzione: `interazioni_effetti_di_stato.md`, «Danni ad area»): le stime (`dannoAtteso`, `moltiplicatoreAtteso`) guardano solo il bersaglio, quindi non preferiscono chi sta in mezzo alla fila o in una pozza di BAGNATI.
 
 Le altre cose da fare sono in §8.
 

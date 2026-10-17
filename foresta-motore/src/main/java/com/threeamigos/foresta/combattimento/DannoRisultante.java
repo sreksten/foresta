@@ -12,12 +12,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Il risultato di un colpo, prima che il difensore lo subisca: il danno e il suo tipo, le interazioni fra tipo di danno e stati scattate, le
  * debolezze e resistenze di classe che hanno contato, gli stati alterati e i modificatori da aggiungere o togliere, l'effetto dell'equipaggiamento
- * difensivo e gli effetti speciali (colpo di grazia, cura ad area, sifone vitale, mietitura...).
+ * difensivo e gli effetti speciali (colpo di grazia, cura e danno ad area, sifone vitale, mietitura...).
  * <p>
  * Lo costruisce {@link CalcolatoreCombattimento} e lo applica il difensore con {@code applicaRisultatoCombattimento}.
  *
@@ -43,6 +44,37 @@ public class DannoRisultante {
     private boolean diluizioneEmaticaAttiva = false;
     private boolean collassoEntropicoAttivo = false;
     private boolean mietituraAttiva = false;
+    // Le reazioni che investono anche i vicini del difensore (vedi TipoInterazioneConEffettiDiStato.getDannoAdArea)
+    private final List<DannoAdArea> danniAdArea = new ArrayList<>();
+    // Se questo è il colpo che una reazione ad area porta a un vicino, e non un colpo scelto da chi attacca
+    private boolean colpoAdArea = false;
+
+    /**
+     * Il danno che una reazione porta ai vicini del difensore: il tipo di danno e la quota del danno grezzo del colpo, prima
+     * della difesa di ciascun vicino.
+     */
+    public static final class DannoAdArea {
+
+        private final TipoInterazioneConEffettiDiStato interazione;
+        private final double dannoGrezzo;
+
+        public DannoAdArea(TipoInterazioneConEffettiDiStato interazione, double dannoGrezzo) {
+            this.interazione = interazione;
+            this.dannoGrezzo = dannoGrezzo;
+        }
+
+        public TipoInterazioneConEffettiDiStato getInterazione() {
+            return interazione;
+        }
+
+        public TipoDanno getTipoDanno() {
+            return interazione.getDannoAdArea();
+        }
+
+        public double getDannoGrezzo() {
+            return dannoGrezzo;
+        }
+    }
 
     public DannoRisultante(Personaggio attaccante, Personaggio bersaglio) {
         this.attaccante = attaccante;
@@ -185,6 +217,22 @@ public class DannoRisultante {
 
     public void setMietituraAttiva(boolean mietituraAttiva) {
         this.mietituraAttiva = mietituraAttiva;
+    }
+
+    public void addDannoAdArea(DannoAdArea dannoAdArea) {
+        danniAdArea.add(dannoAdArea);
+    }
+
+    public List<DannoAdArea> getDanniAdArea() {
+        return Collections.unmodifiableList(danniAdArea);
+    }
+
+    public boolean isColpoAdArea() {
+        return colpoAdArea;
+    }
+
+    public void setColpoAdArea(boolean colpoAdArea) {
+        this.colpoAdArea = colpoAdArea;
     }
 
 }

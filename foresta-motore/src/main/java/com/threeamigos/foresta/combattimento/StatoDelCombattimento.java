@@ -425,7 +425,8 @@ public class StatoDelCombattimento {
 		if (difensore == null) {
 			return;
 		}
-		if (attaccante != null && attaccante != difensore) {
+		// Chi è investito da una reazione ad area non l'ha scelto l'attaccante
+		if (attaccante != null && attaccante != difensore && !risultato.isColpoAdArea()) {
 			scheda(attaccante).ultimoAvversario = difensore;
 			scheda(difensore).ultimoAttaccante = attaccante;
 		}

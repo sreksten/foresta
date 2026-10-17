@@ -5,8 +5,7 @@ package com.threeamigos.foresta.tipi;
  * <p>
  * Dagli effetti di stato nascono le reazioni con i tipi di danno: sono tutte dichiarate in {@link TipoInterazioneConEffettiDiStato}
  * (precondizioni, innescanti, moltiplicatore, stati tolti e aggiunti), e il motore le applica da lì (vedi
- * interazioni_effetti_di_stato.md). I commenti accanto agli stati dicono solo quello che le reazioni dovrebbero fare e
- * ancora non fanno. Quasi tutti gli stati sono un male da togliere; i vantaggi sono due
+ * interazioni_effetti_di_stato.md). Quasi tutti gli stati sono un male da togliere; i vantaggi sono due
  * (vedi {@link #isBenefico()}).
  * <p>
  * I testi di ogni costante (DESCRIZIONE) non stanno qui ma nel file {@code tipo_effetto_di_stato_<lingua>.properties}, alla voce
@@ -57,7 +56,6 @@ public enum TipoEffettoDiStato {
     /**
      * Danno da fuoco periodico. Può propagarsi ad altri elementi o oggetti vicini.
      */
-    // 🤢 VELENO ➔ Esplosione: dovrebbe essere anche un'esplosione di fuoco ad area sui nemici vicini (oggi colpisce solo il bersaglio).
     BRUCIATO,
 
     /**
@@ -104,7 +102,6 @@ public enum TipoEffettoDiStato {
     /**
      * Il personaggio ha l'anima o le statistiche temporaneamente compromesse da un influsso oscuro.
      */
-    // ✨ SACRO ➔ Reazione di Rigetto: l'energia repressa dovrebbe esplodere con danni da Tuono/Sonico a tutti i nemici vicini (oggi toglie solo MALEDETTO).
     MALEDETTO,
 
     // =========================================================================
@@ -114,7 +111,6 @@ public enum TipoEffettoDiStato {
     /**
      * Rende vulnerabili ai danni da Fulmine e Ghiaccio, ma aumenta la resistenza al Fuoco.
      */
-    // ⚡ FULMINE ➔ Elettroconduzione: il danno dovrebbe propagarsi a tutti i bersagli vicini BAGNATI o nella stessa pozza (oggi solo +50% sul bersaglio).
     BAGNATO,
 
     /**

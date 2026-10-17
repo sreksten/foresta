@@ -200,6 +200,74 @@ public class CalcolatoreCombattimento {
     }
 
     /**
+     * Il colpo che una reazione ad area (DannoRisultante.getDanniAdArea) porta a un vicino del bersaglio. Non tira per colpire né
+     * per il critico e non guarda l'arma: parte dalla quota del danno grezzo del colpo che l'ha scatenata e passa dalla difesa
+     * del vicino contro quel tipo di danno, dalla sua classe (un immune non subisce niente) e dalle reazioni con i suoi stati,
+     * di cui contano il danno e gli stati tolti e messi; gli altri effetti di quelle reazioni no, e nemmeno un altro danno ad
+     * area: le reazioni ad area non fanno catena. Gli stati nativi del tipo di danno non si tirano.
+     */
+    public static DannoRisultante calcolaDannoAdArea(Personaggio attaccante, Personaggio vicino, DannoRisultante.DannoAdArea area) {
+        TipoDanno tipoDanno = area.getTipoDanno();
+        DannoRisultante risultato = new DannoRisultante(attaccante, vicino);
+        risultato.setTipoDanno(tipoDanno);
+        risultato.setColpoAdArea(true);
+        risultato.addReazioneDiClasse(tipoDanno, vicino.getMoltiplicatoreDannoSubito(tipoDanno));
+        if (vicino.isImmuneATipoDanno(tipoDanno)) {
+            return risultato;
+        }
+        List<TipoInterazioneConEffettiDiStato> interazioni = interazioniCheScattano(interazioniAttive(vicino, tipoDanno),
+                fattoreEffetti(vicino, tipoDanno));
+        double difesa = difesaContro(vicino, tipoDanno);
+        risultato.setFattoreEquipaggiamento((100.0d + difesaBaseContro(vicino, tipoDanno)) / (100.0d + difesa));
+        if (tipoDanno.getSuperTipo() != CategoriaDanno.FISICO && vicino.hasEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA)) {
+            difesa = difesa * 0.8d;
+        }
+        difesa = difesa * fattoreDifesaDaStati(vicino, tipoDanno, interazioni);
+        for (TipoInterazioneConEffettiDiStato interazione : interazioni) {
+            applicaGliStatiDellInterazione(interazione, attaccante, vicino, risultato);
+            risultato.addInterazione(interazione);
+        }
+        double danno = Math.floor(area.getDannoGrezzo() * 100.0d / (100.0d + difesa)
+                * moltiplicatoreDelleInterazioni(vicino, tipoDanno, interazioni));
+        risultato.setDanno(Math.max(1, (int) danno));
+        Logger.log(() -> area.getInterazione() + " investe " + vicino.getNome() + " con " + risultato.getDanno() + " danni " + tipoDanno);
+        return risultato;
+    }
+
+    /**
+     * Chi una reazione ad area investe, nella fila del gruppo del bersaglio (chi è fuori combattimento non conta e non
+     * separa): chi sta subito prima e subito dopo di lui; per l'ELETTROCUZIONE, invece, i BAGNATI attaccati a lui da una
+     * parte e dall'altra, finché la pozza non si interrompe.
+     */
+    public static List<Personaggio> viciniInvestiti(List<Personaggio> fila, Personaggio bersaglio, TipoInterazioneConEffettiDiStato interazione) {
+        List<Personaggio> inCampo = new ArrayList<>();
+        for (Personaggio personaggio : fila) {
+            if (personaggio == bersaglio || !personaggio.isFuoriCombattimento()) {
+                inCampo.add(personaggio);
+            }
+        }
+        int posizione = inCampo.indexOf(bersaglio);
+        List<Personaggio> vicini = new ArrayList<>();
+        if (posizione < 0) {
+            return vicini;
+        }
+        boolean nellaPozza = interazione == TipoInterazioneConEffettiDiStato.ELETTROCUZIONE;
+        for (int verso : new int[]{-1, 1}) {
+            for (int i = posizione + verso; i >= 0 && i < inCampo.size(); i += verso) {
+                Personaggio vicino = inCampo.get(i);
+                if (nellaPozza && !vicino.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
+                    break;
+                }
+                vicini.add(vicino);
+                if (!nellaPozza) {
+                    break;
+                }
+            }
+        }
+        return vicini;
+    }
+
+    /**
      * Uno degli effetti di stato che quel tipo di danno può provocare, a caso; null se non ne provoca
      */
     private static TipoEffettoDiStato effettoDiStatoCasuale(TipoDanno tipoDanno) {
@@ -420,20 +488,26 @@ public class CalcolatoreCombattimento {
                 applicaGliStatiDellInterazione(interazione, attaccante, difensore, dannoRisultante);
                 dannoRisultante.addInterazione(interazione);
                 switch (interazione) {
-                    // Cambiano solo il danno (l'ha già fatto moltiplicatoreDelleInterazioni) o gli stati (qui sopra)
+                    // Investono anche i vicini del difensore, con metà del danno grezzo di questo colpo (PersonaggioBase lo
+                    // distribuisce, calcolaDannoAdArea lo calcola per ciascuno)
                     case ELETTROCUZIONE:
+                    case ESPLOSIONE_DI_GAS:
+                    case RIGETTO:
+                        dannoRisultante.addDannoAdArea(new DannoRisultante.DannoAdArea(interazione,
+                                dannoOffensivoGrezzo * Costanti.DANNO_AD_AREA_QUOTA));
+                        break;
+
+                    // Cambiano solo il danno (l'ha già fatto moltiplicatoreDelleInterazioni) o gli stati (qui sopra)
                     case ALIMENTAZIONE_FIAMMA:
                     case REAZIONE_TOSSICA:
                     case CONGELAMENTO:
                     case VAPORIZZAZIONE:
                     case ESTINZIONE:
                     case SCIOGLIMENTO_TERMICO:
-                    case ESPLOSIONE_DI_GAS:
                     case VAMPATA_TOSSICA:
                     case COAGULAZIONE_FORZATA:
                     case DISGELO_VIOLENTO:
                     case SUPERCONDUZIONE:
-                    case RIGETTO:
                     case TOSSICITA_SETTICA:
                     case SCHIACCIAMENTO:
                     case INCIAMPO:
