@@ -8,8 +8,10 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
 import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
- * Chi ha un nome proprio nel mondo senza essere in un gruppo o in una locazione: il bardo e sua moglie, le persone di una
- * città, i campioni delle sfide... Vedi RegistroPersonaggiMD e nomi.md.
+ * Chi ha un nome proprio nel mondo senza essere in un gruppo o in una locazione: il bardo e sua moglie,
+ * le persone di una città, i campioni delle sfide... Vedi RegistroPersonaggiMD e nomi.md.
+ *
+ * @author Stefano Reksten
  */
 public class ResidenteMD {
 

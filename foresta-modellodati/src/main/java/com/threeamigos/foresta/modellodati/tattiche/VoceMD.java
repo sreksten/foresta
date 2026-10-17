@@ -17,9 +17,12 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
 import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
- * Una voce di tattica: il selettore (chi), le condizioni (quando, in AND) e una sequenza di azioni (che cosa: la prima applicabile al bersaglio
- * vince). Senza selettore vale quello di base della portata delle azioni. Si può disattivare senza toglierla. Immutabile.
+ * Una voce di tattica: il selettore (chi), le condizioni (quando, in AND) e una sequenza di azioni (che cosa:
+ * la prima applicabile al bersaglio vince). Senza selettore vale quello di base della portata delle azioni.
+ * Si può disattivare senza toglierla. È immutabile.
  * Vedi tattiche_di_combattimento_automatiche.md §11.2.
+ *
+ * @author Stefano Reksten
  */
 public final class VoceMD {
 

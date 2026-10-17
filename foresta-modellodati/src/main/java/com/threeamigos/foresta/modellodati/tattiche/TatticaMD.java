@@ -13,10 +13,14 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
 import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
- * La tattica di un personaggio: una lista ordinata di voci (nessun tetto), di cui si esegue la prima eseguibile. Immutabile.
- * Può essere <b>disabilitata</b>: succede a una tattica letta da un salvataggio che ha errori (voci incoerenti), che non si esegue ma si conserva perché il
- * giocatore la corregga nella schermata delle tattiche; chi la esegue la tratta come se non ci fosse.
+ * La tattica di un personaggio: una lista ordinata di voci (nessun tetto), di cui si esegue la prima eseguibile.
+ * È immutabile.
+ * Può essere <b>disabilitata</b>: succede a una tattica letta da un salvataggio che ha errori (voci incoerenti),
+ * che non si esegue ma si conserva perché il giocatore la corregga nella schermata delle tattiche;
+ * chi la esegue la tratta come se non ci fosse.
  * Vedi tattiche_di_combattimento_automatiche.md §11.
+ *
+ * @author Stefano Reksten
  */
 public final class TatticaMD {
 

@@ -17,9 +17,13 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
 import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
- * Chi è il bersaglio di una voce: una rosa di candidati, i filtri che li restringono (in AND, l'ordine non conta) e l'ordinamento che sceglie
- * uno fra i rimasti. Se non ne resta nessuno la voce non è eseguibile; per le azioni su un gruppo intero serve solo come test di esistenza.
- * Immutabile. Sono solo dati: chi li applica è <code>tattiche.Selettori</code>. Vedi tattiche_di_combattimento_automatiche.md §11.2.
+ * Chi è il bersaglio di una voce: una rosa di candidati, i filtri che li restringono (in AND, l'ordine non conta) e
+ * l'ordinamento che sceglie uno fra i rimasti. Se non ne resta nessuno la voce non è eseguibile.
+ * Per le azioni su un gruppo intero serve solo come test di esistenza. È immutabile.
+ * Sono solo dati: chi li applica è <code>tattiche.Selettori</code>.
+ * Vedi tattiche_di_combattimento_automatiche.md §11.2.
+ *
+ * @author Stefano Reksten
  */
 public final class SelettoreMD {
 

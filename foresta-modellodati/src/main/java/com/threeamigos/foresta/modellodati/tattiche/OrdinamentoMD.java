@@ -11,7 +11,10 @@ import com.threeamigos.foresta.tipi.tattiche.TipoParametro;
 import java.util.Objects;
 
 /**
- * Come un selettore sceglie uno fra i candidati rimasti: il tipo e, per quelli che lo vogliono, un tipo di danno. Immutabile.
+ * Come un selettore sceglie uno fra i candidati rimasti: il tipo e, per quelli che lo vogliono, un tipo di danno.
+ * È immutabile.
+ *
+ * @author Stefano Reksten
  */
 public final class OrdinamentoMD {
 

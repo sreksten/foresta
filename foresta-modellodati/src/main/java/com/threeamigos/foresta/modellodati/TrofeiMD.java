@@ -17,6 +17,8 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
  * partita (es. le locande visitate). Non fa parte di {@link ModelloDati}: non appartiene a
  * una partita ma passa dall'una all'altra, quindi non viene mai reimpostato e si salva in
  * un file a parte.
+ *
+ * @author Stefano Reksten
  */
 public class TrofeiMD implements Serializzabile {
 

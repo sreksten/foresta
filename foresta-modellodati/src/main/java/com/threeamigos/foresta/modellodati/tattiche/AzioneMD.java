@@ -14,9 +14,11 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
 import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 
 /**
- * Un'azione di una voce di tattica: il tipo e, per quelle che li hanno, i parametri: il criterio di scelta dell'incantesimo
- * (INCANTESIMO_DI_DANNO), se rinunciare quando l'attacco con le armi rende di più, il tipo di danno dell'arma voluta (CAMBIA_ARMA).
- * Immutabile. Vedi tattiche_di_combattimento_automatiche.md §11.9 e §11.10.
+ * Un'azione di una voce di tattica: il tipo e, per quelle che li hanno, i parametri: il criterio di scelta
+ * dell'incantesimo (INCANTESIMO_DI_DANNO), se rinunciare quando l'attacco con le armi rende di più, il tipo di danno
+ * dell'arma voluta (CAMBIA_ARMA). È immutabile. Vedi tattiche_di_combattimento_automatiche.md §11.9 e §11.10.
+ *
+ * @author Stefano Reksten
  */
 public final class AzioneMD {
 
