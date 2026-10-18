@@ -106,7 +106,7 @@ Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
   - nel precaricamento di `Automa`, che si può sostituire perché il costruttore principale riceve un `Executor`;
   - nella UI: ridisegno, `ImageCache`, `ForestaUI`.
 - **`instanceof` nel motore:** 30. Pochi per un dominio con molte classi di personaggi e oggetti; le capacità si decidono per lo più dal `TipoPersonaggio` (vedi [`bardo.md`](bardo.md)).
-- **`TODO`/`FIXME`:** 16 in tutto, 13 nel motore (5 in `PersonaggioBase`) e 3 nella UI (2 in `DisplayableCanvas`, sul vecchio flusso dell'oroscopo). Quelli generali stanno in [`todo.md`](todo.md).
+- **`TODO`/`FIXME`:** 18 in tutto, 17 nel motore (6 in `PersonaggioBase`) e uno nella UI (in `DisplayableCanvasScambiatoreArtefatti`). Quelli generali stanno in [`todo.md`](todo.md).
 - **Test saltati.** I 16 test saltati sono simulazioni e analisi da lanciare a mano: `SimulazionePartiteTest`, `TestScontriDiGruppo`, `AnalisiBossTest`, `TestMonteCarloMatrix`, `TestLogoramentoInizioPartita`, `TestGenerazionePersonaggi`. Non sono test rotti.
 - **Rapporti stantii senza `clean`.** `target/surefire-reports` conserva i rapporti di classi di test che non esistono più (`Tmp*`, `Scratch*`): sommandoli si contavano 1402 test invece di 1355. E il `jacoco.exec`, che si accumula da un'esecuzione all'altra, teneva nel rapporto classi già rinominate (`ClasseMissione`, `SupertipoMissione`). Dopo una rinomina o per misurare serve `mvn clean test`.
 

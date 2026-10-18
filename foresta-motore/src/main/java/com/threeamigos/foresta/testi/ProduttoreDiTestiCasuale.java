@@ -307,30 +307,70 @@ public class ProduttoreDiTestiCasuale {
 	}
 
 	/**
-	 * Un oroscopo a caso, a righe.
+	 * Un oroscopo a caso, la domanda del capo del gruppo, che vive nella Foresta e dell'oroscopo non capisce una parola, e
+	 * come l'alchimista glissa (vedi oroscopo.txt). Il capo chiede dell'ultima cosa annotata con [TEMA=FORMA:nome] nella
+	 * grammatica, con le domande DOMANDA_FORMA, che si accordano al genere e al numero; se l'oroscopo non ne cita nessuna, fa
+	 * una domanda generica.
 	 */
-	public static List<String> oroscopo() {
-		List<String> oroscopo = oroscopi.produce();
-		oroscopi.reset();
-		return oroscopo;
+	public static DialogoSullOroscopo dialogoSullOroscopo() {
+		try {
+			String prodotto = String.join(" ", oroscopi.produce("DIALOGO_SULL_OROSCOPO"));
+			int separatore = prodotto.lastIndexOf('/');
+			String oroscopo = prodotto.substring(0, separatore).trim();
+			String tema = prodotto.substring(separatore + 1).trim();
+			int duePunti = tema.indexOf(':');
+			if (duePunti < 0) {
+				return new DialogoSullOroscopo(oroscopo, null, produciSulTema("DOMANDA_GENERICA", null),
+						produciSulTema("RISPOSTA_SULL_OROSCOPO", null));
+			}
+			String forma = tema.substring(0, duePunti);
+			String nome = tema.substring(duePunti + 1);
+			return new DialogoSullOroscopo(oroscopo, nome, produciSulTema("DOMANDA_" + forma, nome),
+					produciSulTema("RISPOSTA_SULL_OROSCOPO", nome));
+		} finally {
+			oroscopi.reset();
+		}
+	}
+
+	private static String produciSulTema(String produzione, String tema) {
+		if (tema != null) {
+			oroscopi.addFixedProduction("TEMA", tema);
+		}
+		return String.join(" ", oroscopi.produce(produzione)).trim();
 	}
 
 	/**
-	 * Quel che chiede il capo del gruppo, che vive nella Foresta e dell'oroscopo non capisce una parola (vedi oroscopo.txt).
+	 * L'oroscopo letto dall'alchimista, la cosa di cui il capo chiede (con l'articolo, null se fa una domanda generica), la
+	 * domanda e la risposta.
 	 */
-	public static String domandaSullOroscopo() {
-		String domanda = String.join(" ", oroscopi.produce("DOMANDA_SULL_OROSCOPO")).trim();
-		oroscopi.reset();
-		return domanda;
-	}
+	public static class DialogoSullOroscopo {
+		private final String oroscopo;
+		private final String tema;
+		private final String domanda;
+		private final String risposta;
 
-	/**
-	 * Come l'alchimista glissa sulla domanda del capo (vedi oroscopo.txt).
-	 */
-	public static String rispostaSullOroscopo() {
-		String risposta = String.join(" ", oroscopi.produce("RISPOSTA_SULL_OROSCOPO")).trim();
-		oroscopi.reset();
-		return risposta;
+		DialogoSullOroscopo(String oroscopo, String tema, String domanda, String risposta) {
+			this.oroscopo = oroscopo;
+			this.tema = tema;
+			this.domanda = domanda;
+			this.risposta = risposta;
+		}
+
+		public String getOroscopo() {
+			return oroscopo;
+		}
+
+		public String getTema() {
+			return tema;
+		}
+
+		public String getDomanda() {
+			return domanda;
+		}
+
+		public String getRisposta() {
+			return risposta;
+		}
 	}
 
 	/**

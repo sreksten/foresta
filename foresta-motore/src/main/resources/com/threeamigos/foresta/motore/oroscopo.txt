@@ -1,3 +1,13 @@
+// L'oroscopo che l'alchimista legge al gruppo che entra in bottega, con la domanda del capo e la risposta
+// dell'alchimista (vedi ProduttoreDiTestiCasuale.dialogoSullOroscopo e IntermezzoOroscopo).
+//
+// Il capo vive nella Foresta e chiede che cosa sia una delle cose che ha appena sentito. Ogni cosa che lo può
+// confondere, quando viene citata, si annota con [TEMA=FORMA:nome]: FORMA è MS, FS, MP o FP (maschile o femminile,
+// singolare o plurale) e sceglie le domande DOMANDA_<FORMA>, il nome (con l'articolo determinativo) è quel che il
+// capo chiede, [#TEMA] nelle domande e nelle risposte. Vale l'ultima cosa annotata; se l'oroscopo non ne cita
+// nessuna il capo fa una domanda generica (DOMANDA_GENERICA).
+DIALOGO_SULL_OROSCOPO
+	[OROSCOPO]/[#TEMA?]
 OROSCOPO
 	[SEGNO]: [PREVISIONE]
 SEGNO
@@ -6,49 +16,92 @@ SEGNO
 	Segno delle mani nel muso
 	Segno di chiavi sulla portiera
 	Segno di chiavi sulla fiancata della vostra macchina nuova
-	Segno del sistemista
-	Segno del programmatore
+	[TEMA=MS:il sistemista]Segno del sistemista
+	[TEMA=MS:il programmatore]Segno del programmatore
 	Segno di scasso sulla porta di casa
 	Brutto segno
 	Segno che era meglio rimanere a casa
 	Vergine - se ne esistono ancora -
-	Segno del caffè sulla tastiera
+	[TEMA=FS:la tastiera]Segno del caffè sulla tastiera
 	Segno del tecnico che non arriva
-	Segno della stampante inceppata
-	Segno del ticket mai chiuso
+	[TEMA=FS:la stampante]Segno della stampante inceppata
+	[TEMA=MS:il ticket]Segno del ticket mai chiuso
 	Segno della riunione che poteva essere una mail
 	Segno del capo in ferie, purtroppo per poco
 	Ascendente lunedì mattina
-	Segno del badge dimenticato a casa
+	[TEMA=MS:il badge]Segno del badge dimenticato a casa
 PREVISIONE
 	[PIANETA] [RELAZIONE] [AZIONE]. [CHIOSA]
 PIANETA
-	Marte | Mercurio | Giove | Venere | Saturno | Urano | Nettuno | Plutone
-	la Luna | il Sole | la cometa di Halley | il satellite delle previsioni del tempo
+	[TEMA=MS:Marte]Marte
+	[TEMA=MS:Mercurio]Mercurio
+	[TEMA=MS:Giove]Giove
+	[TEMA=FS:Venere]Venere
+	[TEMA=MS:Saturno]Saturno
+	[TEMA=MS:Urano]Urano
+	[TEMA=MS:Nettuno]Nettuno
+	[TEMA=MS:Plutone]Plutone
+	la Luna | il Sole
+	[TEMA=FS:la cometa di Halley]la cometa di Halley
+	[TEMA=MS:il satellite]il satellite delle previsioni del tempo
 QUALCOSA
 	[QUALCOSA_SINGOLARE] | [QUALCOSA_PLURALE]
 QUALCOSA_SINGOLARE
-	il nuovo kernel Linux | il server principale della vostra azienda | il periodo di ferie dei sistemisti
-	il disco di boot | il lettore CD-ROM | il server di dominio | il server di posta
-	la burocratizzazione informatica della vostra azienda | la documentazione interna
-	la partita della Nazionale | la gestione politico-economica della vostra azienda
-	l'ultima tempesta solare | l'ultimo best-seller del vostro autore preferito
-	l'infrastruttura di sicurezza | il servizio di videosorveglianza
-	il layer di persistenza delle vostre applicazioni | il layer di rete
+	[TEMA=MS:il kernel Linux]il nuovo kernel Linux
+	[TEMA=MS:il server]il server principale della vostra azienda
+	[TEMA=MP:i sistemisti]il periodo di ferie dei sistemisti
+	[TEMA=MS:il disco di boot]il disco di boot
+	[TEMA=MS:il lettore CD-ROM]il lettore CD-ROM
+	[TEMA=MS:il server di dominio]il server di dominio
+	[TEMA=MS:il server di posta]il server di posta
+	[TEMA=FS:la burocratizzazione informatica]la burocratizzazione informatica della vostra azienda
+	la documentazione interna
+	[TEMA=FS:la Nazionale]la partita della Nazionale
+	la gestione politico-economica della vostra azienda
+	[TEMA=FS:la tempesta solare]l'ultima tempesta solare
+	[TEMA=MS:il best-seller]l'ultimo best-seller del vostro autore preferito
+	[TEMA=FS:l'infrastruttura di sicurezza]l'infrastruttura di sicurezza
+	[TEMA=FS:la videosorveglianza]il servizio di videosorveglianza
+	[TEMA=MS:il layer di persistenza]il layer di persistenza delle vostre applicazioni
+	[TEMA=MS:il layer di rete]il layer di rete
 	una gita di religiose | una gita scolastica | la burocrazia statale
-	il firewall aziendale | il gruppo di continuità | la macchinetta del caffè | il fax dell'ufficio acquisti
-	il nuovo gestionale | la intranet aziendale | il backup della notte scorsa | il router del piano di sopra
-	il collega che risponde a tutti | la stampante di rete | l'aggiornamento automatico del sistema operativo
+	[TEMA=MS:il firewall]il firewall aziendale
+	[TEMA=MS:il gruppo di continuità]il gruppo di continuità
+	[TEMA=FS:la macchinetta del caffè]la macchinetta del caffè
+	[TEMA=MS:il fax]il fax dell'ufficio acquisti
+	[TEMA=MS:il gestionale]il nuovo gestionale
+	[TEMA=FS:la intranet]la intranet aziendale
+	[TEMA=MS:il backup]il backup della notte scorsa
+	[TEMA=MS:il router]il router del piano di sopra
+	il collega che risponde a tutti
+	[TEMA=FS:la stampante di rete]la stampante di rete
+	[TEMA=MS:il sistema operativo]l'aggiornamento automatico del sistema operativo
 	il piano ferie | la mensa aziendale | il parcheggio dei dipendenti
 QUALCOSA_PLURALE
-	i programmi legacy | i protocolli di trasmissione dati | i servizi pubblici
-	i nuovi assunti | i neo-laureati recentemente assunti | i flussi dati | le onde radio
-	le ultime riunioni dirigenziali | le telecamere di videosorveglianza | gli addetti alle pulizie
-	le piante ornamentali sparse per i locali | i commerciali | gli impiegati | le forze dell'ordine
-	le strutture antincendio
-	gli aggiornamenti notturni | i consulenti esterni | i cavi di rete sotto la moquette | le password scadute
-	i distributori automatici | i fogli di calcolo condivisi | le mail in copia nascosta | i colleghi del marketing
-	le slide della riunione | i server in sala macchine | le cartucce del toner
+	[TEMA=MP:i programmi legacy]i programmi legacy
+	[TEMA=MP:i protocolli di trasmissione dati]i protocolli di trasmissione dati
+	i servizi pubblici | i nuovi assunti
+	[TEMA=MP:i neo-laureati]i neo-laureati recentemente assunti
+	[TEMA=MP:i flussi dati]i flussi dati
+	[TEMA=FP:le onde radio]le onde radio
+	[TEMA=FP:le riunioni dirigenziali]le ultime riunioni dirigenziali
+	[TEMA=FP:le telecamere]le telecamere di videosorveglianza
+	gli addetti alle pulizie
+	le piante ornamentali sparse per i locali
+	[TEMA=MP:i commerciali]i commerciali
+	gli impiegati | le forze dell'ordine
+	[TEMA=FP:le strutture antincendio]le strutture antincendio
+	[TEMA=MP:gli aggiornamenti]gli aggiornamenti notturni
+	[TEMA=MP:i consulenti esterni]i consulenti esterni
+	[TEMA=MP:i cavi di rete]i cavi di rete sotto la moquette
+	[TEMA=FP:le password]le password scadute
+	[TEMA=MP:i distributori automatici]i distributori automatici
+	[TEMA=MP:i fogli di calcolo]i fogli di calcolo condivisi
+	[TEMA=FP:le mail]le mail in copia nascosta
+	[TEMA=MS:il marketing]i colleghi del marketing
+	[TEMA=FP:le slide]le slide della riunione
+	[TEMA=MP:i server]i server in sala macchine
+	[TEMA=MS:il toner]le cartucce del toner
 RELAZIONE
 	in congiunzione con [QUALCOSA]
 	in trigono a [QUALCOSA]
@@ -75,11 +128,11 @@ AZIONE
 	farà sì che [QUALCOSA_SINGOLARE] vi procuri noie da [GIORNO_SETTIMANALE] per [PERIODO_DI_TEMPO]
 	farà sì che [QUALCOSA_PLURALE] vi procurino noie per [PERIODO_DI_TEMPO] cominciando da [GIORNO_SETTIMANALE]
 DANNO
-	una perdita di dati sul vostro disco rigido
-	una intrusione di ignoti cracker
-	una formattazione a basso livello del cluster di database
-	una invasione di virus e malware
-	una revoca delle licenze d'uso del parco software
+	[TEMA=MS:il disco rigido]una perdita di dati sul vostro disco rigido
+	[TEMA=MP:i cracker]una intrusione di ignoti cracker
+	[TEMA=MS:il cluster di database]una formattazione a basso livello del cluster di database
+	[TEMA=MP:i malware]una invasione di virus e malware
+	[TEMA=MS:il parco software]una revoca delle licenze d'uso del parco software
 	una denuncia per violazione di brevetto
 	una ennesima modifica delle specifiche di progetto
 	un tentativo di documentare i flussi aziendali
@@ -93,32 +146,32 @@ DANNO
 	una riduzione di personale
 	un trasferimento verso [LOCALITA_SPREGEVOLE]
 	un aggiornamento che non si può annullare
-	una schermata blu nel momento meno opportuno
+	[TEMA=FS:la schermata blu]una schermata blu nel momento meno opportuno
 	una riunione straordinaria il venerdì alle sei di sera
 	una password dimenticata proprio adesso
 	la scomparsa misteriosa della vostra spillatrice
 	una perdita di pacchetti, di dati e di pazienza
 	un riavvio inatteso a metà del lavoro
-	un audit a sorpresa
+	[TEMA=MS:l'audit]un audit a sorpresa
 INSOFFERENZA
 	al mal di denti del vostro collega
 	alle bevande zuccherate
-	al traffico sulla rete
+	[TEMA=FS:la rete]al traffico sulla rete
 	alle luci natalizie
 	alla mattinata di [GIORNO_SETTIMANALE]
 	ai progetti di gruppo
 	agli sport acquatici
 	ai felini
 	alle farfalle notturne
-	ai gadget ipertecnologici
-	ai telefoni cellulari
+	[TEMA=MP:i gadget ipertecnologici]ai gadget ipertecnologici
+	[TEMA=MP:i telefoni cellulari]ai telefoni cellulari
 	al mal di pancia
 	alle mezze stagioni, anche se non esistono più
 	alle minigonne
-	al sito web della vostra azienda
-	alla ADSL
-	alle videoconferenze col microfono acceso
-	agli aggiornamenti obbligatori
+	[TEMA=MS:il sito web]al sito web della vostra azienda
+	[TEMA=FS:la ADSL]alla ADSL
+	[TEMA=FP:le videoconferenze]alle videoconferenze col microfono acceso
+	[TEMA=MP:gli aggiornamenti]agli aggiornamenti obbligatori
 	ai colleghi che dicono "da me funziona"
 	alle mail che cominciano con "come da accordi"
 	al rumore della ventola del portatile
@@ -137,10 +190,10 @@ SUGGERIMENTO
 	cucinare quello che avete in frigo
 	andare a pesca di trote
 	tornare a giocare online
-	perdere un po' di tempo in chat
-	perdere un po' di tempo su un multiuser dungeon
+	[TEMA=FS:la chat]perdere un po' di tempo in chat
+	[TEMA=MS:il multiuser dungeon]perdere un po' di tempo su un multiuser dungeon
 	documentare tutti i flussi aziendali
-	giocare a PacMan
+	[TEMA=MS:PacMan]giocare a PacMan
 	trovare una nuova professione
 	cercare il pelo nell'uovo
 	cercare l'ago nel pagliaio
@@ -163,7 +216,7 @@ LOCALITA_SPREGEVOLE
 	il cimitero comunale
 	una scuola religiosa in Afghanistan
 	l'ufficio reclami
-	la sala macchine senza aria condizionata
+	[TEMA=FS:la sala macchine]la sala macchine senza aria condizionata
 	la filiale distaccata in fondo alla valle
 	l'archivio nel seminterrato
 CHIOSA
@@ -180,8 +233,8 @@ CHIOSA
 	Barbapapà consiglia di [SUGGERIMENTO].
 	La prudenza consiglia: [SUGGERIMENTO].
 	Chi la fa, l'aspetti.
-	Se non funziona, staccate e riattaccate la spina.
-	Fate sempre un backup, anche dell'oroscopo.
+	[TEMA=FS:la spina]Se non funziona, staccate e riattaccate la spina.
+	[TEMA=MS:il backup]Fate sempre un backup, anche dell'oroscopo.
 	Ogni lasciata è persa, ogni salvata è recuperata.
 	Il lunedì, purtroppo, torna sempre.
 	Chi trova un collega disponibile, trova un tesoro.
@@ -192,15 +245,15 @@ ATTENZIONE
 	attenzione a non correre per le scale con oggetti taglienti
 	date un occhio ai semafori
 	evitate il traffico urbano
-	osservate la legge Urbani
+	[TEMA=FS:la legge Urbani]osservate la legge Urbani
 	evitate le code in autostrada
 	evitate gli energumeni alticci
 	attenzione alle guardie del corpo
 	occhio alla penna
 	non credete agli oroscopi
 	evitate le scale mobili ferme
-	tenete lontani i liquidi dalla tastiera
-	non aprite gli allegati che non aspettavate
+	[TEMA=FS:la tastiera]tenete lontani i liquidi dalla tastiera
+	[TEMA=MP:gli allegati]non aprite gli allegati che non aspettavate
 	diffidate di chi vi chiede "hai un minuto?"
 SPREGIO
 	[SPREGIO_CHIOSA]
@@ -220,44 +273,88 @@ SPREGIO_CHIOSA_1
 SPREGIO_CHIOSA_2
 	sputerà nel piatto in cui dovrete mangiare
 	cercherà di mettervi in cattiva luce con [PERSONA]
-	scriverà dati a casaccio nel database aziendale
+	[TEMA=MS:il database]scriverà dati a casaccio nel database aziendale
 	parlerà male di voi con [PERSONA]
+// Monouso: nello stesso oroscopo una persona non compare due volte
 PERSONA$
 	un collega di lavoro | il vostro capo | il vostro partner | il vostro vicino di casa
 	la vostra vicina di casa | il vostro commercialista | il vigile di quartiere | il postino
 	il lattaio | il vostro edicolante di fiducia | l'uomo della strada | la fotomodella dei vostri sogni
 	un noto giornalista | un noto commediografo | una pattuglia dei carabinieri
 	un gruppo di hooligans | il bullo del quartiere | il bagnino
-	il tecnico della manutenzione | il responsabile delle risorse umane | il collega della scrivania accanto
-	il nuovo stagista | il consulente esterno | la segretaria del direttore
+	il tecnico della manutenzione | il collega della scrivania accanto | il nuovo stagista
+	[TEMA=FP:le risorse umane]il responsabile delle risorse umane
+	[TEMA=MS:il consulente esterno]il consulente esterno
+	la segretaria del direttore
 PERIODO_DI_TEMPO
 	un'ora | un giorno | una settimana | un mese | un trimestre | un semestre | un anno
-DOMANDA_SULL_OROSCOPO
-	Perdonate l'ignoranza, ma che cos'è [COSA_OSCURA]? Una specie di drago?
-	Nella Foresta non abbiamo mai visto [COSA_OSCURA]. Morde?
-	Aspettate: [COSA_OSCURA] si combatte con la spada o con la magia?
-	Non ho capito una parola. [COSA_OSCURA_MAIUSCOLA] è un incantesimo?
-	E chi sarebbero [CHI_OSCURO]? Una gilda? Una banda di briganti?
-	Devo temere [CHI_OSCURO]? Quanti sono? Sono armati?
+DOMANDA_MS
+	Perdonate l'ignoranza, ma che cos'è [#TEMA]? Una specie di drago?
+	Nella Foresta non abbiamo mai visto [#TEMA]. Morde?
+	Aspettate: [#TEMA] si combatte con la spada o con la magia?
+	^[#TEMA]? Mai sentito nominare. Si mangia?
+	E dove si trova [#TEMA]? È lontano da qui?
+	Non ho capito una parola. ^[#TEMA] è un incantesimo?
+	Scusate, ma [#TEMA] è amico o nemico?
+	Ho sentito bene? ^[#TEMA]? E sarebbe pericoloso?
+	Quanto costa [#TEMA]? Si trova al mercato?
+	Il nostro mago non ha mai nominato [#TEMA]. Siete sicuri che esista?
+DOMANDA_FS
+	Perdonate l'ignoranza, ma che cos'è [#TEMA]? Una specie di strega?
+	Nella Foresta non abbiamo mai visto [#TEMA]. Morde?
+	Aspettate: [#TEMA] si combatte con la spada o con la magia?
+	^[#TEMA]? Mai sentita nominare. Si mangia?
+	E dove si trova [#TEMA]? È lontana da qui?
+	Non ho capito una parola. ^[#TEMA] è una maledizione?
+	Scusate, ma [#TEMA] è amica o nemica?
+	Ho sentito bene? ^[#TEMA]? E sarebbe pericolosa?
+	Quanto costa [#TEMA]? Si trova al mercato?
+	Il nostro mago non ha mai nominato [#TEMA]. Siete sicuri che esista?
+DOMANDA_MP
+	Perdonate l'ignoranza, ma che cosa sono [#TEMA]? Una specie di draghi?
+	Nella Foresta non abbiamo mai visto [#TEMA]. Mordono?
+	Aspettate: [#TEMA] si combattono con la spada o con la magia?
+	^[#TEMA]? Mai sentiti nominare. Si mangiano?
+	Devo temere [#TEMA]? Quanti sono? Sono armati?
+	E dove si trovano [#TEMA]? Sono lontani da qui?
+	Non ho capito una parola. ^[#TEMA] sono una gilda? Una banda di briganti?
+	Scusate, ma [#TEMA] sono amici o nemici?
+	Quanto costano [#TEMA]? Si trovano al mercato?
+	Il nostro mago non ha mai nominato [#TEMA]. Siete sicuri che esistano?
+DOMANDA_FP
+	Perdonate l'ignoranza, ma che cosa sono [#TEMA]? Una specie di streghe?
+	Nella Foresta non abbiamo mai visto [#TEMA]. Mordono?
+	Aspettate: [#TEMA] si combattono con la spada o con la magia?
+	^[#TEMA]? Mai sentite nominare. Si mangiano?
+	Devo temere [#TEMA]? Quante sono? Sono armate?
+	E dove si trovano [#TEMA]? Sono lontane da qui?
+	Non ho capito una parola. ^[#TEMA] sono delle fate? Delle streghe?
+	Scusate, ma [#TEMA] sono amiche o nemiche?
+	Quanto costano [#TEMA]? Si trovano al mercato?
+	Il nostro mago non ha mai nominato [#TEMA]. Siete sicuri che esistano?
+DOMANDA_GENERICA
 	Ma voi le stelle le leggete o ve le inventate?
-	Scusate, ma questo [PIANETA_OSCURO] in che casa abita? Posso andare a trovarlo?
-COSA_OSCURA
-	un server | un kernel | un disco rigido | un database | un firewall | un fax | una stampante di rete
-	una ADSL | un telefono cellulare | un lettore CD-ROM | un backup | un gestionale | un ticket
-COSA_OSCURA_MAIUSCOLA
-	Un server | Un kernel | Un disco rigido | Un database | Un firewall | Una stampante di rete | Un backup
-CHI_OSCURO
-	i sistemisti | i commerciali | i cracker | i consulenti esterni | i colleghi del marketing | i neo-laureati
-PIANETA_OSCURO
-	Plutone | Urano | Nettuno | Saturno
+	Non ho capito una parola. Ma è una cosa buona o cattiva?
+	Scusate, ma in che lingua parlano le vostre stelle?
+	E questo sarebbe un buon giorno per andare a caccia di goblin, o no?
 RISPOSTA_SULL_OROSCOPO
+    [INIZIO_RISPOSTA] [CHIOSA_RISPOSTA]
+INIZIO_RISPOSTA
 	Termini tecnici dell'arte astrologica: le stelle parlano per enigmi, e io traduco.
 	Diciamo che è una cosa che si capisce meglio dopo la terza pozione.
 	Le stelle non si spiegano, si interpretano. E le interpreto a pagamento.
 	È una lunga storia, e il tempo è denaro. Il vostro, possibilmente.
 	Lo capirete a tempo debito. Oppure mai, che forse è anche meglio.
-	È una creatura delle terre lontane, molto rara. Ma parliamo d'affari.
+	Roba delle terre lontane, molto rara da queste parti.
 	Mio nonno lo sapeva. Purtroppo è morto prima di dirmelo.
 	Lasciate perdere: anche le stelle, ogni tanto, dicono sciocchezze.
 	È roba da sistemisti. No, non chiedetemi che cosa sia un sistemista.
 	Ah, che domande! Piuttosto, guardate che belle pozioni ho oggi.
+	Meno si sa di [#TEMA? | queste cose], meglio si dorme.
+	Se ve lo spiegassi, poi dovrei trasformarvi in rospi. Meglio di no.
+CHIOSA_RISPOSTA
+	Ma parliamo di voi.
+    Ma parliamo d'affari.
+    Ma veniamo a noi.
+    Ma veniamo al motivo della vostra visita.
+    Ma veniamo al dunque.
