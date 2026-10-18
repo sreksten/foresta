@@ -82,10 +82,7 @@ I nomi di questi personaggi sono fatti (liste, registro, testi delle missioni, s
 
 ## Grafica e immagini
 
-- Immagini degli artefatti che mancano per la rivelazione (`SpriteRivelazioneArtefatto`), da mettere in `img/oggetti`:
-  - protezioni: Veste;
-  - accessori: Talismano, Ninnolo;
-  - ingredienti magici (oggi usano l'icona della pergamena): Pergamena, Gemma, Monile, Gingillo, Sigillo.
+- **La veste per il ladro e per il sacerdote.** `img/oggetti/Veste.gif` è una veste da mago, e la rivelazione (`SpriteRivelazioneArtefatto`) la mostra per ogni veste; servono le immagini delle altre due, e il modo di scegliere quella giusta (oggi una veste non sa per chi è).
 - **Immagini a metà risoluzione con zoom a runtime** (`LivelloDiZoom`, argomento `ZOOM=n`, predefinito 2). Sono già dimezzate nei file e ingrandite al caricamento: locazioni, personaggi, oggetti, mappa, alfabeto, i loghi PNG, 19 fondi e le icone (composte da `ClasseIcona`). Restano senza zoom:
   - **`img/icone/`**: le icone dei comandi sono 32×32 con sfondo trasparente e le compone `ClasseIcona` (sfondo, ombra, disegno, zoom). Non sono ancora 32×32 `Moneta`, `PietraPreziosa` e `Tempo` (27×28, sprite caricati da `ImageCache`), `Missione-birra-grande` e `ComponenteScorrevole-*` (16×16);
   - **`img/fondinon2x2/`**, 24 fondi non a blocchi 2×2 (`Cartiglio-*`, `SferaMagica`, `SfondoStoria`, `Separatore`, `Separatore-Armature/Armi/Elmi/LibriMagici/Schinieri/Scudi`, `Foreground*` e `Interno*` di Alchimista/Armaiolo/Incantatore/Locanda/VenditoreDiPergamene, `Luna`, `Mimas`, `LunaHHGTTG`): vanno riguardati a mano; una volta sistemati ognuno si dimezza, si rimette in `fondi/` e si carica con lo zoom. Per gli sfondi degli intermezzi va anche estesa la regola per prefisso in `DisplayableCanvasIntermezzo.risorsa()`, che oggi ingrandisce solo `locazioni/` e `personaggi/`.

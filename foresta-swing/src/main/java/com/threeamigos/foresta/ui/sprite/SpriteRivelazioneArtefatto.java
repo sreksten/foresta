@@ -17,7 +17,9 @@ import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.barra.ClasseIcona;
+import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.ClassiOggettoImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
@@ -53,6 +55,16 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 			new Color(255, 236, 190), new Color(255, 214, 92), new Color(255, 190, 70), new Color(255, 225, 120)
 	};
 	private static final Map<TipoDanno, Color> COLORI_ELEMENTI = new EnumMap<>(TipoDanno.class);
+	// La veste, gli ingredienti magici, il talismano e il ninnolo non si trovano nelle locazioni, quindi non sono in ClassiOggettoImmagine
+	// Per ora la veste è quella del mago, anche per il ladro e il sacerdote
+	private static final BufferedImage VESTE = BufferedImageBuilder.buildBufferedImage("oggetti/Veste.gif", LivelloDiZoom.valore());
+	private static final BufferedImage TALISMANO = BufferedImageBuilder.buildBufferedImage("oggetti/Talismano.gif", LivelloDiZoom.valore());
+	private static final BufferedImage NINNOLO = BufferedImageBuilder.buildBufferedImage("oggetti/Ninnolo.gif", LivelloDiZoom.valore());
+	private static final BufferedImage PERGAMENA = BufferedImageBuilder.buildBufferedImage("oggetti/Pergamena.gif", LivelloDiZoom.valore());
+	private static final BufferedImage GEMMA = BufferedImageBuilder.buildBufferedImage("oggetti/Gemma.gif", LivelloDiZoom.valore());
+	private static final BufferedImage MONILE = BufferedImageBuilder.buildBufferedImage("oggetti/Monile.gif", LivelloDiZoom.valore());
+	private static final BufferedImage GINGILLO = BufferedImageBuilder.buildBufferedImage("oggetti/Gingillo.gif", LivelloDiZoom.valore());
+	private static final BufferedImage SIGILLO = BufferedImageBuilder.buildBufferedImage("oggetti/Sigillo.gif", LivelloDiZoom.valore());
 
 	static {
 		COLORI_ELEMENTI.put(TipoDanno.ARIA, new Color(200, 235, 255));
@@ -322,14 +334,21 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 	}
 
 	/**
-	 * L'immagine dell'oggetto, dove c'è: gli ingredienti hanno l'icona della pergamena, i tipi senza immagine
-	 * mostrano solo il cerchio. Un artefatto con un aspetto suo (i libri tecnici) ha l'immagine di quello.
+	 * L'immagine dell'oggetto, dove c'è: gli ingredienti magici hanno la loro, l'aggiornamento l'icona della pergamena, i
+	 * tipi senza immagine mostrano solo il cerchio. Un artefatto con un aspetto suo (i libri tecnici) ha l'immagine di quello.
 	 */
 	private static BufferedImage immagine(TipoArtefatto tipo) {
-		if (tipo.isIngrediente()) {
-			return ClasseIcona.PERGAMENA.getIcona();
-		}
 		switch (tipo) {
+			case PERGAMENA:
+				return PERGAMENA;
+			case GEMMA:
+				return GEMMA;
+			case MONILE:
+				return MONILE;
+			case GINGILLO:
+				return GINGILLO;
+			case SIGILLO:
+				return SIGILLO;
 			case SPADA:
 				return ClassiOggettoImmagine.getImmagine(TipoOggetto.SPADA);
 			case SPADONE:
@@ -350,14 +369,20 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 				return ClassiOggettoImmagine.getImmagine(TipoOggetto.ELMO);
 			case MASCHERA:
 				return ClassiOggettoImmagine.getImmagine(TipoOggetto.MASCHERA);
+			case VESTE:
+				return VESTE;
 			case ARMATURA:
 				return ClassiOggettoImmagine.getImmagine(TipoOggetto.ARMATURA);
 			case SCHINIERI:
 				return ClassiOggettoImmagine.getImmagine(TipoOggetto.SCHINIERI);
 			case ANELLO:
 				return ClassiOggettoImmagine.getImmagine(TipoOggetto.ANELLO);
+			case TALISMANO:
+				return TALISMANO;
+			case NINNOLO:
+				return NINNOLO;
 			default:
-				return null;
+				return tipo.isIngrediente() ? ClasseIcona.PERGAMENA.getIcona() : null;
 		}
 	}
 
