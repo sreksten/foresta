@@ -341,20 +341,21 @@ RISPOSTA_SULL_OROSCOPO
     [INIZIO_RISPOSTA] [CHIOSA_RISPOSTA]
 INIZIO_RISPOSTA
 	Termini tecnici dell'arte astrologica: le stelle parlano per enigmi, e io traduco.
-	Diciamo che è una cosa che si capisce meglio dopo la terza pozione.
+	Diciamo che è una cosa che si capisce meglio dopo { la terza pozione | il terzo boccale di Sglord }.
 	Le stelle non si spiegano, si interpretano. E le interpreto a pagamento.
 	È una lunga storia, e il tempo è denaro. Il vostro, possibilmente.
 	Lo capirete a tempo debito. Oppure mai, che forse è anche meglio.
-	Roba delle terre lontane, molto rara da queste parti.
-	Mio nonno lo sapeva. Purtroppo è morto prima di dirmelo.
+	Roba delle terre lontane, molto rara da queste parti. { Fortunatamente. | }
+	Mio nonno lo sapeva. Purtroppo è morto prima di dirmelo. { Ma io vivo bene lo stesso. | }
 	Lasciate perdere: anche le stelle, ogni tanto, dicono sciocchezze.
 	È roba da sistemisti. No, non chiedetemi che cosa sia un sistemista.
-	Ah, che domande! Piuttosto, guardate che belle pozioni ho oggi.
+	Ah, che domande! Meglio sorvolare.
 	Meno si sa di [#TEMA? | queste cose], meglio si dorme.
-	Se ve lo spiegassi, poi dovrei trasformarvi in rospi. Meglio di no.
+	Se ve lo spiegassi, poi dovrei trasformarvi in { rospi | salamandre | lumache }. Meglio di no.
 CHIOSA_RISPOSTA
 	Ma parliamo di voi.
     Ma parliamo d'affari.
     Ma veniamo a noi.
     Ma veniamo al motivo della vostra visita.
     Ma veniamo al dunque.
+    Piuttosto, guardate che belle pozioni ho oggi.
