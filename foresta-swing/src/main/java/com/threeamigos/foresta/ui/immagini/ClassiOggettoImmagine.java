@@ -29,6 +29,8 @@ public enum ClassiOggettoImmagine {
     MASCHERA(TipoOggetto.MASCHERA, "oggetti/Maschera.gif"),
     ARMATURA(TipoOggetto.ARMATURA, "oggetti/Armatura.gif"),
     SCHINIERI(TipoOggetto.SCHINIERI, "oggetti/Schinieri.gif"),
+    // Non si trova per terra: è l'aspetto dei libri tecnici (vedi ArtefattoMD.getAspetto)
+    LIBRO_TECNICO(TipoOggetto.LIBRO_TECNICO, "oggetti/LibroTecnico.gif"),
     // Per ora un sacchetto generico per tutti gli oggetti delle missioni
     OGGETTO_MISSIONE(TipoOggetto.OGGETTO_MISSIONE, "oggetti/OggettoMissione.gif"),
     // Gli artefatti non si mostrano nelle locazioni

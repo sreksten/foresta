@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
 import com.threeamigos.foresta.locazioni.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
@@ -153,6 +154,7 @@ public class Foresta {
 		RegistroMissioni.reimposta();
 		RegistroArtefatti.reimposta();
 		Statistiche.reimposta();
+		IntermezzoLibroTecnico.reimposta();
 
 		getForestaMD().reimposta(DIMENSIONE_X, DIMENSIONE_Y);
 

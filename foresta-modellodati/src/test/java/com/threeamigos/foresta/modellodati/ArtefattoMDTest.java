@@ -307,6 +307,18 @@ class ArtefattoMDTest {
         // Then
         assertEquals(TipoArtefatto.SPADONE, ricaricato.getTipo());
         assertNull(ricaricato.getSlotEquipaggiamento());
+        assertNull(ricaricato.getAspetto(), "l'aspetto è quello del tipo");
+    }
+
+    @Test
+    void salvaERicaricaLAspetto() throws IOException {
+        // Given: un libro magico con l'aspetto di un libro tecnico
+        ArtefattoMD libro = creaArtefatto(TipoArtefatto.LIBRO_MAGICO, "il Manuale di Unix System V", "che aiuta a far gli spregi ar CDA");
+        libro.setAspetto(TipoOggetto.LIBRO_TECNICO);
+        // When
+        ArtefattoMD ricaricato = salvaERileggi(libro);
+        // Then
+        assertEquals(TipoOggetto.LIBRO_TECNICO, ricaricato.getAspetto());
     }
 
     @Test

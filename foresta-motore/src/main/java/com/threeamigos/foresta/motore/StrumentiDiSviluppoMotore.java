@@ -11,6 +11,7 @@ import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
@@ -237,6 +238,10 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
             case Cofano.OGGETTO_SPECIALE_AGGIORNAMENTO:
                 return "Un aggiornamento";
             default:
+                if (codice.startsWith(Cofano.PREFISSO_LIBRO_TECNICO)) {
+                    String chiaveLibro = codice.substring(Cofano.PREFISSO_LIBRO_TECNICO.length());
+                    return "Libro tecnico: " + LibroTecnico.getLibro(chiaveLibro).map(LibroTecnico::getNome).orElse(chiaveLibro);
+                }
                 String chiave = codice.substring(Cofano.PREFISSO_LEGGENDARIO.length());
                 String nome = CatalogoLeggendari.getLeggendario(chiave).map(OggettoLeggendario::getNomeBreve).orElse(chiave);
                 return "Leggendario: " + nome;

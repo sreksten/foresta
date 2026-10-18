@@ -107,6 +107,13 @@ public class RegistroIntermezzi {
 	}
 
 	/**
+	 * Se l'intermezzo con quell'identificativo è già scattato (vedi Intermezzo.getId).
+	 */
+	public static boolean isScattato(String id) {
+		return getIntermezziMD().isScattato(id);
+	}
+
+	/**
 	 * Ricorda che l'intermezzo è scattato: quelli dei passi nella loro missione, gli altri in IntermezziMD.
 	 */
 	public static void segnaScattato(Intermezzo intermezzo) {

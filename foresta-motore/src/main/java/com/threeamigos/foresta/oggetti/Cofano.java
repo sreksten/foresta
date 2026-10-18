@@ -7,6 +7,8 @@ import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
+import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.strumenti.ContestoLancio;
 import com.threeamigos.foresta.strumenti.Dado;
@@ -16,10 +18,12 @@ import com.threeamigos.foresta.tipi.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Un cofano: il gruppo che lo apre trova qualcosa a caso fra una pergamena, tre pergamene, una pozione (della salute, della salute
- * grande o della magia), monete o pietre preziose. Con una piccola probabilità c'è anche un ingrediente magico o un artefatto.
+ * grande o della magia), monete o pietre preziose. Con una piccola probabilità c'è anche un ingrediente magico o un artefatto, e
+ * molto di rado un libro tecnico (vedi LibroTecnico), che il capo legge subito in un intermezzo.
  */
 public class Cofano extends OggettoBase implements Oggetto {
 
@@ -92,6 +96,7 @@ public class Cofano extends OggettoBase implements Oggetto {
 			if (trovato != null) {
 				gruppo.addArtefatto(trovato);
 				BusEventi.pubblica(new NotificaArtefattoTrovato(trovato, Statistiche.getLivello()));
+				LibroTecnico.di(trovato).ifPresent(IntermezzoLibroTecnico::trovato);
 				sb.append("trova ").append(trovato.getNomeCompleto()).append(": finisce nell'inventario del gruppo.");
 			} else if (tipo == 0) {
 				sb.append("non trova nulla.");
@@ -131,19 +136,40 @@ public class Cofano extends OggettoBase implements Oggetto {
 
 	/**
 	 * Con probabilità 10% un ingrediente magico, con un altro 10% un artefatto casuale, con un altro 3% un oggetto che fa salire di
-	 * livello un artefatto (si trova solo qui), altrimenti null (vedi Costanti).
+	 * livello un artefatto (si trova solo qui), con un altro 0,5% un libro tecnico non ancora trovato (si trova solo qui, ed è null
+	 * se sono già stati trovati tutti), altrimenti null (vedi Costanti).
 	 */
 	static Artefatto artefattoRaro(double tiro, GeneratoreArtefatti generatore, int livello) {
-		if (tiro < Costanti.COFANO_PROBABILITA_PERGAMENA) {
+		double soglia = Costanti.COFANO_PROBABILITA_PERGAMENA;
+		if (tiro < soglia) {
 			return generatore.generaIngrediente(livello);
 		}
-		if (tiro < Costanti.COFANO_PROBABILITA_PERGAMENA + Costanti.COFANO_PROBABILITA_ARTEFATTO) {
+		soglia += Costanti.COFANO_PROBABILITA_ARTEFATTO;
+		if (tiro < soglia) {
 			return generatore.generaArtefattoCasuale(livello);
 		}
-		if (tiro < Costanti.COFANO_PROBABILITA_PERGAMENA + Costanti.COFANO_PROBABILITA_ARTEFATTO + Costanti.COFANO_PROBABILITA_AGGIORNAMENTO) {
+		soglia += Costanti.COFANO_PROBABILITA_AGGIORNAMENTO;
+		if (tiro < soglia) {
 			return generatore.generaAggiornamento(livello);
 		}
+		soglia += Costanti.COFANO_PROBABILITA_LIBRO_TECNICO;
+		if (tiro < soglia) {
+			return libroTecnicoDaTrovare(generatore, livello);
+		}
 		return null;
+	}
+
+	/**
+	 * Un libro tecnico a caso fra quelli non ancora trovati nella partita, o null se sono stati trovati tutti.
+	 */
+	private static Artefatto libroTecnicoDaTrovare(GeneratoreArtefatti generatore, int livello) {
+		List<LibroTecnico> daTrovare = LibroTecnico.tutti().stream()
+				.filter(libro -> !IntermezzoLibroTecnico.isTrovato(libro))
+				.collect(Collectors.toList());
+		if (daTrovare.isEmpty()) {
+			return null;
+		}
+		return daTrovare.get(Dado.tiraAncheAUnaFaccia(daTrovare.size()) - 1).costruisci(generatore, livello);
 	}
 
 	/**
@@ -157,16 +183,21 @@ public class Cofano extends OggettoBase implements Oggetto {
 	public static final String OGGETTO_SPECIALE_AGGIORNAMENTO = "AGGIORNAMENTO";
 	/** Seguito dalla chiave del leggendario nel CatalogoLeggendari. */
 	public static final String PREFISSO_LEGGENDARIO = "LEGGENDARIO:";
+	/** Seguito dalla chiave del libro tecnico (vedi LibroTecnico). */
+	public static final String PREFISSO_LIBRO_TECNICO = "LIBRO_TECNICO:";
 
 	/**
 	 * Gli oggetti speciali che un cofano può essere costretto a dare (vedi ContestoLancio.COFANO_OGGETTO): quelli generati
-	 * dal livello e ogni leggendario del catalogo.
+	 * dal livello, ogni leggendario del catalogo e ogni libro tecnico (anche se già trovato).
 	 */
 	public static List<String> opzioniOggettoSpeciale() {
 		List<String> opzioni = new ArrayList<>(Arrays.asList(OGGETTO_SPECIALE_CASUALE, OGGETTO_SPECIALE_NESSUNO,
 				OGGETTO_SPECIALE_INGREDIENTE, OGGETTO_SPECIALE_ARTEFATTO, OGGETTO_SPECIALE_AGGIORNAMENTO));
 		for (String chiave : CatalogoLeggendari.getTuttiILeggendari().keySet()) {
 			opzioni.add(PREFISSO_LEGGENDARIO + chiave);
+		}
+		for (LibroTecnico libro : LibroTecnico.tutti()) {
+			opzioni.add(PREFISSO_LIBRO_TECNICO + libro.getChiave());
 		}
 		return opzioni;
 	}
@@ -192,6 +223,11 @@ public class Cofano extends OggettoBase implements Oggetto {
 			case OGGETTO_SPECIALE_CASUALE:
 				return artefattoRaro(Dado.probabilita(), generatore, livello);
 			default:
+				if (voluto.startsWith(PREFISSO_LIBRO_TECNICO)) {
+					return LibroTecnico.getLibro(voluto.substring(PREFISSO_LIBRO_TECNICO.length()))
+							.map(libro -> libro.costruisci(generatore, livello))
+							.orElseGet(() -> artefattoRaro(Dado.probabilita(), generatore, livello));
+				}
 				return CatalogoLeggendari.getLeggendario(voluto.substring(PREFISSO_LEGGENDARIO.length()))
 						.map(OggettoLeggendario::costruisci)
 						.orElseGet(() -> artefattoRaro(Dado.probabilita(), generatore, livello));

@@ -297,8 +297,9 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 	 */
 	private BufferedImage risorsa(String percorso) {
 		if (!immaginiRisorse.containsKey(percorso)) {
-			// Le locazioni e i personaggi stanno nei file a metà risoluzione, come in ImageCache
-			boolean mezzaRisoluzione = percorso.startsWith("locazioni/") || percorso.startsWith("personaggi/");
+			// Le locazioni, i personaggi e gli oggetti stanno nei file a metà risoluzione, come in ImageCache
+			boolean mezzaRisoluzione = percorso.startsWith("locazioni/") || percorso.startsWith("personaggi/")
+					|| percorso.startsWith("oggetti/");
 			BufferedImage caricata = BufferedImageBuilder.provaACaricare(percorso, mezzaRisoluzione ? LivelloDiZoom.valore() : 1.0);
 			if (caricata == null) {
 				BusEventi.pubblica(new InternoErrore("Immagine di intermezzo non trovata: " + percorso));

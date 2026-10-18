@@ -177,10 +177,11 @@ public class Costanti {
     // Probabilità che un artefatto incantabile generato sia raro (i leggendari non si generano)
     public static final double ARTEFATTO_PROBABILITA_RARO = 0.1;
     // Esiti rari di ogni cofano aperto: 10% una pergamena, 10% un artefatto casuale, 3% un oggetto che fa salire di livello un
-    // artefatto (vedi TipoArtefatto.AGGIORNAMENTO): 23% in tutto
+    // artefatto (vedi TipoArtefatto.AGGIORNAMENTO), 0,5% un libro tecnico non ancora trovato (vedi leggendari.txt): 23,5% in tutto
     public static final double COFANO_PROBABILITA_PERGAMENA = 0.10;
     public static final double COFANO_PROBABILITA_ARTEFATTO = 0.10;
     public static final double COFANO_PROBABILITA_AGGIORNAMENTO = 0.03;
+    public static final double COFANO_PROBABILITA_LIBRO_TECNICO = 0.005;
     // Quanto vale, per livello, un oggetto che fa salire di livello un artefatto (non si compra né si vende)
     public static final int AGGIORNAMENTO_VALORE_PER_LIVELLO = 100;
     // Un ingrediente magico ha tanti effetti quanto il suo livello, fino a questo

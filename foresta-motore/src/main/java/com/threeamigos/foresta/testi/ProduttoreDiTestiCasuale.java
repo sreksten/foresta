@@ -41,6 +41,7 @@ public class ProduttoreDiTestiCasuale {
 	private static GrammarBean sfide;
 	private static final String OGGETTO_LEGGENDARIO = "OGGETTO_LEGGENDARIO";
 	private static final String SET_LEGGENDARIO = "SET_LEGGENDARIO";
+	private static final String LIBRO_TECNICO = "LIBRO_TECNICO";
 
 	private ProduttoreDiTestiCasuale() {
 	}
@@ -284,6 +285,30 @@ public class ProduttoreDiTestiCasuale {
 	 */
 	public static List<String> tuttiISetLeggendari() {
 		return tutteLeRigheLeggendarie(SET_LEGGENDARIO);
+	}
+
+	/**
+	 * Tutti i libri tecnici di leggendari.txt (vedi LibroTecnico), in ordine casuale.
+	 */
+	public static List<String> tuttiILibriTecnici() {
+		return tutteLeRigheLeggendarie(LIBRO_TECNICO);
+	}
+
+	/**
+	 * Quel che il capo legge sulla copertina di un libro tecnico (vedi LETTURA_LIBRO_TECNICO in leggendari.txt).
+	 *
+	 * @param titolo il titolo fra virgolette e la descrizione: "The C Programming Language", di B. Kernighan e D. Ritchie
+	 */
+	public static synchronized String letturaDelLibroTecnico(String titolo) {
+		leggendari.addFixedProduction("TITOLO", titolo);
+		return leggendari.produce("LETTURA_LIBRO_TECNICO").get(0).trim();
+	}
+
+	/**
+	 * Come il capo chiude la questione, dopo aver sfogliato un libro tecnico (vedi CONCLUSIONE_LIBRO_TECNICO in leggendari.txt).
+	 */
+	public static synchronized String conclusioneSulLibroTecnico() {
+		return leggendari.produce("CONCLUSIONE_LIBRO_TECNICO").get(0).trim();
 	}
 
 	/**

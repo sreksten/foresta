@@ -26,6 +26,7 @@ public final class FabbricaIntermezzi {
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_INCANTATORE, tipo -> new IntermezzoBenvenutoNegozio(tipo, NegozioInScena.INCANTATORE, "Benvenuti nel mio laboratorio di incantamenti. Posso migliorare le vostre armi con quel pizzico di magia in più."));
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_ACCAMPAMENTO, tipo -> new IntermezzoAccampamento());
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_EREMITA_ROMPISCATOLE, tipo -> new IntermezzoEremitaRompiscatole());
+		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_LIBRO_TECNICO, tipo -> new IntermezzoLibroTecnico());
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_NOTTE_ARMAIOLO, tipo -> new IntermezzoNonChiudeteMai(tipo, NegozioInScena.ARMAIOLO));
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_NOTTE_ALCHIMISTA, tipo -> new IntermezzoNonChiudeteMai(tipo, NegozioInScena.ALCHIMISTA));
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_NOTTE_VENDITORE_DI_PERGAMENE, tipo -> new IntermezzoNonChiudeteMai(tipo, NegozioInScena.VENDITORE_DI_PERGAMENE));

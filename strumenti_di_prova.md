@@ -31,7 +31,7 @@ prova hanno un `ContestoLancio`:
 | `TIPO_MOSTRO` | `LocazioneBase.crea` | Il tipo di mostro, fra quelli possibili in quella locazione per il livello del capo |
 | `NUMERO_MOSTRI` | `LocazioneBase.crea` | Quanti mostri di quel tipo; il valore voluto vale solo se rientra nel limite della locazione (altrimenti va al caso) |
 | `COFANO_ESITO` | `Cofano.prendi` | Che cosa c'è dentro, da 0 (niente) a 7 (pietre preziose); nei castelli lo 0 non esce |
-| `COFANO_OGGETTO` | `Cofano.prendi` | L'oggetto speciale: niente, un ingrediente, un artefatto, un aggiornamento, o un leggendario del catalogo |
+| `COFANO_OGGETTO` | `Cofano.prendi` | L'oggetto speciale: niente, un ingrediente, un artefatto, un aggiornamento, un leggendario del catalogo o un libro tecnico (anche se già trovato; il suo intermezzo però scatta solo la prima volta) |
 
 **Regole.**
 

@@ -108,7 +108,8 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 				coloriRaggi.add(Color.WHITE);
 			}
 		}
-		this.immagine = immagine(artefatto.getTipo());
+		this.immagine = artefatto.getAspetto() != null ? ClassiOggettoImmagine.getImmagine(artefatto.getAspetto())
+				: immagine(artefatto.getTipo());
 		this.pannello = pannello(artefatto, Math.min(area.width - 48, 900));
 		int altezzaTotale = 2 * raggio + 12 + pannello.getHeight();
 		int alto = area.y + Math.max(6, (area.height - altezzaTotale) / 2);
@@ -322,7 +323,7 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 
 	/**
 	 * L'immagine dell'oggetto, dove c'è: gli ingredienti hanno l'icona della pergamena, i tipi senza immagine
-	 * mostrano solo il cerchio.
+	 * mostrano solo il cerchio. Un artefatto con un aspetto suo (i libri tecnici) ha l'immagine di quello.
 	 */
 	private static BufferedImage immagine(TipoArtefatto tipo) {
 		if (tipo.isIngrediente()) {

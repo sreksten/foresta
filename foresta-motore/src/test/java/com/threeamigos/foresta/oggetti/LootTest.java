@@ -8,6 +8,7 @@ import com.threeamigos.foresta.personaggi.Ladro;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -137,7 +138,10 @@ class LootTest {
         // Poi, di rado, un oggetto che fa salire di livello un artefatto: si trova solo nei cofani
         assertTrue(Cofano.artefattoRaro(0.20, generatore, 3).getTipo().isAggiornamento());
         assertTrue(Cofano.artefattoRaro(0.229, generatore, 3).getTipo().isAggiornamento());
-        assertNull(Cofano.artefattoRaro(0.23, generatore, 3));
+        // Poi, rarissimo, un libro tecnico (finché ce ne sono da trovare)
+        assertEquals(TipoOggetto.LIBRO_TECNICO, Cofano.artefattoRaro(0.23, generatore, 3).getAspetto());
+        assertEquals(TipoOggetto.LIBRO_TECNICO, Cofano.artefattoRaro(0.2349, generatore, 3).getAspetto());
+        assertNull(Cofano.artefattoRaro(0.2351, generatore, 3));
         assertNull(Cofano.artefattoRaro(0.99, generatore, 3));
     }
 

@@ -60,9 +60,11 @@ class DatiDeiTipiTest {
     }
 
     @Test
-    void gliOggettiGenerabiliSonoTuttiTranneArtefattiEOggettiDiMissione() {
+    void gliOggettiGenerabiliSonoTuttiTranneArtefattiOggettiDiMissioneELibriTecnici() {
         for (TipoOggetto oggetto : TipoOggetto.values()) {
-            assertEquals(oggetto != TipoOggetto.ARTEFATTO && oggetto != TipoOggetto.OGGETTO_MISSIONE, oggetto.isGenerabile(), oggetto.name());
+            boolean generabile = oggetto != TipoOggetto.ARTEFATTO && oggetto != TipoOggetto.OGGETTO_MISSIONE
+                    && oggetto != TipoOggetto.LIBRO_TECNICO;
+            assertEquals(generabile, oggetto.isGenerabile(), oggetto.name());
             assertTrue(oggetto.getQuantitaMassima() >= 1, oggetto.name());
             assertTrue(oggetto.getValore() > 0, oggetto.name());
         }

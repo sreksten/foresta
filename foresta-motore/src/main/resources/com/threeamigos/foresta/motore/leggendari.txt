@@ -323,3 +323,44 @@ DELL_OGGETTO
 
 L_OGGETTO
     l'oggetto leggendario
+
+// ---------------------------------------------------------------------------------------------
+// I libri tecnici (vedi LibroTecnico e IntermezzoLibroTecnico): libri magici leggendari di cui nessuno racconta la
+// leggenda. Si trovano solo nei cofani, molto di rado, e ognuno al più una volta per partita; hanno l'aspetto di
+// TipoOggetto.LIBRO_TECNICO e i modificatori e gli incantamenti di un libro magico normale del livello del mondo,
+// raddoppiati. Appena trovato, il capo del gruppo ne legge il titolo in un intermezzo. Una riga per libro, campi
+// CHIAVE=valore separati da ";":
+//   CHIAVE=        l'identificativo del libro, diverso per ogni riga: non va più cambiato;
+//   NOME=          il titolo come sta sulla copertina, con l'articolo se ce l'ha;
+//   DESCRIZIONE=   la descrizione, "che ...", o il sottotitolo;
+//   BATTUTA=       quel che il capo dice sfogliandolo, almeno una: se ne sceglie una a caso.
+// ---------------------------------------------------------------------------------------------
+
+LIBRO_TECNICO$
+    CHIAVE=MANUALE_UNIX_SYSTEM_V;NOME=il Manuale di Unix System V;DESCRIZIONE=che aiuta a far gli spregi ar CDA;\
+    BATTUTA=Qui dice che tutto è un file. Anche io sono un file?;\
+    BATTUTA=C'è un capitolo intero su come uccidere i processi. Senza nemmeno una spada.;\
+    BATTUTA=Un incantesimo di due lettere, ls, che mostra tutto quello che si possiede. Comodo, per l'inventario.
+
+    CHIAVE=THE_C_PROGRAMMING_LANGUAGE;NOME=The C Programming Language;DESCRIZIONE=di B. Kernighan e D. Ritchie;\
+    BATTUTA=Il primo incantesimo del libro fa comparire due parole, hello, world. Tutto qui?;\
+    BATTUTA=Parla di puntatori. Ne ho contati sette in una pagina, e nessuno indica niente.;\
+    BATTUTA=Dice che tutto comincia da main. Il nostro viaggio, invece, è cominciato da un eremita.
+
+// Quel che il capo legge sulla copertina: TITOLO lo fissa il codice prima di produrre, con il titolo e la descrizione
+// del libro (vedi ProduttoreDiTestiCasuale.letturaDelLibroTecnico). Il valore scritto qui sotto serve solo a far
+// esistere la produzione.
+LETTURA_LIBRO_TECNICO
+    Che cos'è questo? Un libro... C'è scritto [*TITOLO].
+    Un libro! Vediamo un po'... [*TITOLO].
+    Sulla copertina c'è scritto [*TITOLO]. Mai sentito.
+
+TITOLO
+    il titolo del libro
+
+// Come il capo chiude la questione, dopo averlo sfogliato
+CONCLUSIONE_LIBRO_TECNICO
+    Deve essere una roba di quelle di cui parla spesso l'Alchimista.
+    Deve essere una roba di quelle di cui parla spesso l'Alchimista. Gliene chiederò conto, la prossima volta.
+    Non c'è nemmeno una figura. Sembra un libro di incantesimi scritto da qualcuno che odiava i maghi.
+    Lo tengo. Se non altro, sotto la testa fa un ottimo cuscino.

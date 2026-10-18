@@ -1827,17 +1827,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					.costruisci();
 			personaggio.addArtefatto(cazzabubbolo);
 
-			Artefatto manualeUnix = CostruttoreArtefatto.istanza()
-					.setTipo(TipoArtefatto.LIBRO_MAGICO)
-					.setNome("il Manuale di Unix System 5")
-					.setDescrizione("che aiuta a far gli spregi ar CDA")
-					.setLivello(1)
-					.setDanniBase(0)
-					.setCostoAcquisto(20)
-					.setPeso(1)
-					.setModificatore(TipoAttributo.SAGGEZZA, TipoModificatore.VARIAZIONE_PERCENTUALE, 30)
-					.costruisci();
-			personaggio.addArtefatto(manualeUnix);
 
 			Artefatto occhiali = CostruttoreArtefatto.istanza()
 					.setTipo(TipoArtefatto.NINNOLO)

@@ -3,6 +3,7 @@ package com.threeamigos.foresta.interfacce;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 
 import java.util.Collection;
@@ -73,6 +74,12 @@ public interface VistaArtefatto {
 	 * La chiave del pezzo di set leggendario, o null se non è un pezzo di un set
 	 */
 	String getPezzoLeggendario();
+
+	/**
+	 * L'oggetto di cui l'artefatto ha l'aspetto nelle schermate, se non è quello del suo tipo (i libri tecnici hanno quello
+	 * di TipoOggetto.LIBRO_TECNICO); null se è quello del tipo
+	 */
+	TipoOggetto getAspetto();
 
 	/**
 	 * Per i testi, il set di cui l'artefatto è un pezzo: "Pezzo del Corredo di RomyJona (bonus x1,5)"; vuoto se non è

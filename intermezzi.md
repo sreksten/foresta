@@ -48,7 +48,7 @@ Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
    COSTRUTTORI.put(TipoIntermezzo.INCONTRO_CON_L_EREMITA, tipo -> new IncontroConLEremita());
    ```
 
-   L'ordine dell'enum conta: se due intermezzi scattano nello stesso momento, vengono mostrati uno dopo l'altro in quell'ordine. `getId()` deve restituire il nome della costante: è ciò che viene salvato per ricordare che l'intermezzo è già scattato.
+   L'ordine dell'enum conta: se due intermezzi scattano nello stesso momento, vengono mostrati uno dopo l'altro in quell'ordine. `getId()` deve restituire il nome della costante: è ciò che viene salvato per ricordare che l'intermezzo è già scattato. Fa eccezione `IntermezzoLibroTecnico` (il capo legge il titolo di un libro tecnico appena trovato in un cofano, a fine locazione): il suo identificativo è il nome della costante seguito dalla chiave del libro, così `IntermezziMD` ricorda quali libri sono già stati trovati e un cofano non ridà lo stesso libro nella stessa partita.
 
    Un intermezzo può essere **di ripiego** (`isDiRipiego()`): scatta solo se nel momento non ne scatta, e non ne è già scattato, nessun altro, né fisso né di un passo di missione. Lo sono gli intermezzi notturni dei negozi e `IntermezzoLocandaVisitaSuccessiva`, che cede il posto a un incarico che si affida in quella locanda (per esempio `IlViaggioDellaMoglie`) e si vede alla prima visita in cui non scatta altro.
 
@@ -157,7 +157,7 @@ Un'immagine si indica con `ImmagineIntermezzo`:
 | :--- | :--- | :--- |
 | Personaggio | `ImmagineIntermezzo.personaggio(TipoPersonaggio.X)` oppure la scorciatoia `ElementoIntermezzo.personaggio(id, classe, x, y)` | Le stesse immagini delle locazioni |
 | Illustrazione di una locazione | `ImmagineIntermezzo.locazione(TipoLocazione.X)` | Adatta come sfondo |
-| Risorsa qualsiasi | `ImmagineIntermezzo.risorsa("intermezzi/Tramonto.png")` | Percorso relativo a `foresta-swing/src/main/resources/com/threeamigos/foresta/img/` |
+| Risorsa qualsiasi | `ImmagineIntermezzo.risorsa("intermezzi/Tramonto.png")` | Percorso relativo a `foresta-swing/src/main/resources/com/threeamigos/foresta/img/`; quelle in `locazioni/`, `personaggi/` e `oggetti/` sono a metà risoluzione e si ingrandiscono con lo zoom |
 | Sprite sheet | `ImmagineIntermezzo.spriteSheet("intermezzi/Pipistrello.png", colonne, righe, fotogrammiAlSecondo)` | Vedi sotto |
 | Animazione via codice | `ImmagineIntermezzo.animazione(Animazione.X)` | Vedi §8 |
 

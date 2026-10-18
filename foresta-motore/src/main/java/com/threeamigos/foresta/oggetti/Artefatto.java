@@ -95,6 +95,11 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, Vist
 	}
 
 	@Override
+	public final TipoOggetto getAspetto() {
+		return md.getAspetto();
+	}
+
+	@Override
 	public final Optional<String> getDescrizioneSet() {
 		return RegoleSetLeggendari.descrizioneSet(md);
 	}

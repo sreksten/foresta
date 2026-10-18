@@ -14,7 +14,8 @@ import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
 /**
  * I dati di un artefatto: un oggetto del gioco con un tipo (un'arma, un'armatura, una pergamena, un ingrediente...),
  * una rarità, un nome con l'articolo (la spada di fuoco) ed eventualmente un nome proprio (Diavolina) e una descrizione,
- * il livello, i danni base, il costo, il peso e lo slot che occupa mentre un personaggio lo porta.
+ * il livello, i danni base, il costo, il peso, lo slot che occupa mentre un personaggio lo porta e, se non è quello del
+ * suo tipo, l'aspetto con cui compare nelle schermate.
  * <p>
  * Può portare dei {@link ModificatoreAttributoMD modificatori di attributo} e degli {@link IncantamentoMD incantamenti}.
  * Ogni artefatto ha un identificativo unico che il salvataggio conserva. Gli artefatti leggendari sono pezzi di un
@@ -73,6 +74,9 @@ public class ArtefattoMD implements Serializzabile {
 	private int danni;
 	protected int costoAcquisto;
 	private double peso;
+	// L'oggetto di cui ha l'aspetto nelle schermate, se non è quello del suo tipo (i libri tecnici hanno quello di
+	// TipoOggetto.LIBRO_TECNICO); null se è quello del tipo
+	private TipoOggetto aspetto;
 	// Stato per la UI: se false, l'elenco modificatori/incantamenti resta chiuso.
 	private boolean figliVisibili = true;
 	private final List<ModificatoreAttributoMD> modificatori = new ArrayList<>();
@@ -195,6 +199,17 @@ public class ArtefattoMD implements Serializzabile {
 
 	public void setPeso(double peso) {
 		this.peso = peso;
+	}
+
+	/**
+	 * L'oggetto di cui l'artefatto ha l'aspetto nelle schermate, se non è quello del suo tipo; null se è quello del tipo.
+	 */
+	public TipoOggetto getAspetto() {
+		return aspetto;
+	}
+
+	public void setAspetto(TipoOggetto aspetto) {
+		this.aspetto = aspetto;
 	}
 
 	/**
@@ -334,7 +349,8 @@ public class ArtefattoMD implements Serializzabile {
 				costoAcquisto,
 				peso,
 				figliVisibili,
-				facoltativo(slotEquipaggiamento));
+				facoltativo(slotEquipaggiamento),
+				facoltativo(aspetto));
 		// Una riga per i modificatori e una per gli incantamenti, un campo composto ciascuno (vuote se non ce ne sono)
 		stampaRiga(stream, modificatori.stream().map(ModificatoreAttributoMD::comeCampo).collect(Collectors.toList()));
 		stampaRiga(stream, incantamenti.stream().map(IncantamentoMD::comeCampo).collect(Collectors.toList()));
@@ -360,6 +376,7 @@ public class ArtefattoMD implements Serializzabile {
 		peso = campi.decimale();
 		figliVisibili = campi.booleano();
 		slotEquipaggiamento = campi.enumeratoFacoltativo(TipoSlotArtefatto.class);
+		aspetto = campi.enumeratoFacoltativo(TipoOggetto.class);
 		modificatori.clear();
 		campi = new LettoreCampi(stream.readLine());
 		while (campi.haAltriCampi()) {
