@@ -11,29 +11,23 @@ import java.util.List;
 
 /**
  * Il giocatore richiede l'apertura dell'inventario di un fornitore col quale si possono effettuare unicamente acquisti
- * ma non vendite. Porta il listino, che il motore costruisce a ogni apertura, e l'oroscopo con cui l'alchimista
- * accoglie il gruppo.
+ * ma non vendite. Porta il listino, che il motore costruisce a ogni apertura (l'oroscopo dell'alchimista sta nel suo
+ * intermezzo d'ingresso, IntermezzoOroscopo).
  *
  * @author Stefano Reksten
  */
 public class RichiestaAperturaInventarioFornitore extends RichiestaConComandi {
 
     private final List<VistaOffertaConsumabile> offerte;
-    private final String oroscopo;
 
     public RichiestaAperturaInventarioFornitore(Collection<Comando> possibilita,
-                                              List<? extends VistaOffertaConsumabile> offerte, String oroscopo) {
+                                              List<? extends VistaOffertaConsumabile> offerte) {
         super(TipoEvento.RICHIESTA_APERTURA_INVENTARIO_FORNITORE, possibilita);
         this.offerte = Collections.unmodifiableList(offerte);
-        this.oroscopo = oroscopo;
     }
 
     public List<VistaOffertaConsumabile> getOfferte() {
         return offerte;
-    }
-
-    public String getOroscopo() {
-        return oroscopo;
     }
 
 }

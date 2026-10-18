@@ -18,7 +18,6 @@ import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.motore.RegoleIncantatura;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.tipi.TipoNegozio;
@@ -73,8 +72,7 @@ final class GestoreBotteghe {
 				stato = StatoInBottega.DA_ALCHIMISTA;
 				List<Comando> comandiPossibili = new ArrayList<>();
 				comandiPossibili.add(Comando.ANNULLA);
-				BusEventi.pubblica(new RichiestaAperturaInventarioFornitore(comandiPossibili, OfferteAlchimista.elenco(g),
-						String.join(" ", ProduttoreDiTestiCasuale.oroscopo())));
+				BusEventi.pubblica(new RichiestaAperturaInventarioFornitore(comandiPossibili, OfferteAlchimista.elenco(g)));
 				break;
 			case NEGOZIO_ARMAIOLO:
 				stato = StatoInBottega.DA_ARMAIOLO;

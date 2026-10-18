@@ -374,7 +374,7 @@ public class ForestaUI implements Temporizzabile {
 	private void gestisciEventoRichiestaAperturaInventarioFornitore(RichiestaAperturaInventarioFornitore evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.impostaOfferteAlchimista(evento.getOfferte());
-		displayableCanvas.alchimista(evento.getOroscopo());
+		displayableCanvas.alchimista();
 	}
 
 	private void gestisciEventoRichiestaAperturaInventarioGruppo(RichiestaAperturaInventarioGruppo evento) {

@@ -316,6 +316,24 @@ public class ProduttoreDiTestiCasuale {
 	}
 
 	/**
+	 * Quel che chiede il capo del gruppo, che vive nella Foresta e dell'oroscopo non capisce una parola (vedi oroscopo.txt).
+	 */
+	public static String domandaSullOroscopo() {
+		String domanda = String.join(" ", oroscopi.produce("DOMANDA_SULL_OROSCOPO")).trim();
+		oroscopi.reset();
+		return domanda;
+	}
+
+	/**
+	 * Come l'alchimista glissa sulla domanda del capo (vedi oroscopo.txt).
+	 */
+	public static String rispostaSullOroscopo() {
+		String risposta = String.join(" ", oroscopi.produce("RISPOSTA_SULL_OROSCOPO")).trim();
+		oroscopi.reset();
+		return risposta;
+	}
+
+	/**
 	 * Una notizia della locanda, fra quelle del suo repertorio (NOTIZIE_ + identificativo, in locande.txt) che si applicano al gruppo
 	 * (vedi {@link #validaNotizia}) e che non sono fra le ultime già pubblicate (MASSIMO_NOTIZIE_RICORDATE, in tutto il mondo).
 	 * <p>

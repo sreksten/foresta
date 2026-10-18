@@ -12,10 +12,19 @@ SEGNO
 	Brutto segno
 	Segno che era meglio rimanere a casa
 	Vergine - se ne esistono ancora -
+	Segno del caffè sulla tastiera
+	Segno del tecnico che non arriva
+	Segno della stampante inceppata
+	Segno del ticket mai chiuso
+	Segno della riunione che poteva essere una mail
+	Segno del capo in ferie, purtroppo per poco
+	Ascendente lunedì mattina
+	Segno del badge dimenticato a casa
 PREVISIONE
 	[PIANETA] [RELAZIONE] [AZIONE]. [CHIOSA]
 PIANETA
 	Marte | Mercurio | Giove | Venere | Saturno | Urano | Nettuno | Plutone
+	la Luna | il Sole | la cometa di Halley | il satellite delle previsioni del tempo
 QUALCOSA
 	[QUALCOSA_SINGOLARE] | [QUALCOSA_PLURALE]
 QUALCOSA_SINGOLARE
@@ -27,22 +36,32 @@ QUALCOSA_SINGOLARE
 	l'infrastruttura di sicurezza | il servizio di videosorveglianza
 	il layer di persistenza delle vostre applicazioni | il layer di rete
 	una gita di religiose | una gita scolastica | la burocrazia statale
+	il firewall aziendale | il gruppo di continuità | la macchinetta del caffè | il fax dell'ufficio acquisti
+	il nuovo gestionale | la intranet aziendale | il backup della notte scorsa | il router del piano di sopra
+	il collega che risponde a tutti | la stampante di rete | l'aggiornamento automatico del sistema operativo
+	il piano ferie | la mensa aziendale | il parcheggio dei dipendenti
 QUALCOSA_PLURALE
 	i programmi legacy | i protocolli di trasmissione dati | i servizi pubblici
 	i nuovi assunti | i neo-laureati recentemente assunti | i flussi dati | le onde radio
 	le ultime riunioni dirigenziali | le telecamere di videosorveglianza | gli addetti alle pulizie
 	le piante ornamentali sparse per i locali | i commerciali | gli impiegati | le forze dell'ordine
 	le strutture antincendio
+	gli aggiornamenti notturni | i consulenti esterni | i cavi di rete sotto la moquette | le password scadute
+	i distributori automatici | i fogli di calcolo condivisi | le mail in copia nascosta | i colleghi del marketing
+	le slide della riunione | i server in sala macchine | le cartucce del toner
 RELAZIONE
 	in congiunzione con [QUALCOSA]
 	in trigono a [QUALCOSA]
 	in quadrato a [QUALCOSA]
-	opposto a [QUALCOSA]
+	in posizione opposta a [QUALCOSA]
 	in cuspide con [QUALCOSA]
 	nella [CARDINALE] casa
-	alleato a [QUALCOSA]
+	in alleanza con [QUALCOSA]
 	in associazione a delinquere con [QUALCOSA_SINGOLARE] e [QUALCOSA_PLURALE]
 	in opposizione a [QUALCOSA]
+	in retrogrado rispetto a [QUALCOSA]
+	in riunione permanente con [QUALCOSA]
+	in conflitto di versione con [QUALCOSA]
 
 CARDINALE
 	prima | seconda | terza | quarta | quinta | sesta | settima | ottava | nona | decima | ennesima | ultima
@@ -53,8 +72,8 @@ AZIONE
 	vi renderà insofferenti [INSOFFERENZA] | vi farà star male almeno fino a [GIORNO_SETTIMANALE]
 	vi procurerà problemi legati a [QUALCOSA] fino a [GIORNO_SETTIMANALE]
 	vi suggerisce di [SUGGERIMENTO]
-	farà si che [QUALCOSA_SINGOLARE] vi procuri noie da [GIORNO_SETTIMANALE] per [PERIODO_DI_TEMPO]
-	farà si che [QUALCOSA_PLURALE] vi procurino noie per [PERIODO_DI_TEMPO] cominciando da [GIORNO_SETTIMANALE]
+	farà sì che [QUALCOSA_SINGOLARE] vi procuri noie da [GIORNO_SETTIMANALE] per [PERIODO_DI_TEMPO]
+	farà sì che [QUALCOSA_PLURALE] vi procurino noie per [PERIODO_DI_TEMPO] cominciando da [GIORNO_SETTIMANALE]
 DANNO
 	una perdita di dati sul vostro disco rigido
 	una intrusione di ignoti cracker
@@ -73,6 +92,14 @@ DANNO
 	una riduzione di stipendio
 	una riduzione di personale
 	un trasferimento verso [LOCALITA_SPREGEVOLE]
+	un aggiornamento che non si può annullare
+	una schermata blu nel momento meno opportuno
+	una riunione straordinaria il venerdì alle sei di sera
+	una password dimenticata proprio adesso
+	la scomparsa misteriosa della vostra spillatrice
+	una perdita di pacchetti, di dati e di pazienza
+	un riavvio inatteso a metà del lavoro
+	un audit a sorpresa
 INSOFFERENZA
 	al mal di denti del vostro collega
 	alle bevande zuccherate
@@ -90,6 +117,11 @@ INSOFFERENZA
 	alle minigonne
 	al sito web della vostra azienda
 	alla ADSL
+	alle videoconferenze col microfono acceso
+	agli aggiornamenti obbligatori
+	ai colleghi che dicono "da me funziona"
+	alle mail che cominciano con "come da accordi"
+	al rumore della ventola del portatile
 SUGGERIMENTO
 	documentare il codice sviluppato
 	rinunciare a quel viaggio a cui sospiravate, cambiando meta: [LOCALITA_SPREGEVOLE]
@@ -114,15 +146,26 @@ SUGGERIMENTO
 	cercare l'ago nel pagliaio
 	togliervi tutto quel che avete sullo stomaco
 	prendere un digestivo
+	spegnere e riaccendere, e non solo il computer
+	cambiare la password, e stavolta scriverla da qualche parte
+	non rispondere a tutti
+	leggere il manuale, almeno l'indice
+	chiudere tutti i ticket aperti prima che si riaprano da soli
+	evitare di salvare solo sul desktop
+	fingervi in ferie fino a [GIORNO_SETTIMANALE]
 LOCALITA_SPREGEVOLE
 	San Vittore
-	Abu Grahib
+	Abu Ghraib
 	Guantanamo
 	Regina Coeli
 	la discarica comunale
 	il pronto soccorso
 	il cimitero comunale
 	una scuola religiosa in Afghanistan
+	l'ufficio reclami
+	la sala macchine senza aria condizionata
+	la filiale distaccata in fondo alla valle
+	l'archivio nel seminterrato
 CHIOSA
 	Per i nati nella prima decade [ATTENZIONE].
 	Per i nati nella seconda decade [ATTENZIONE].
@@ -137,19 +180,28 @@ CHIOSA
 	Barbapapà consiglia di [SUGGERIMENTO].
 	La prudenza consiglia: [SUGGERIMENTO].
 	Chi la fa, l'aspetti.
+	Se non funziona, staccate e riattaccate la spina.
+	Fate sempre un backup, anche dell'oroscopo.
+	Ogni lasciata è persa, ogni salvata è recuperata.
+	Il lunedì, purtroppo, torna sempre.
+	Chi trova un collega disponibile, trova un tesoro.
 ATTENZIONE
 	prestate molta attenzione alla vostra buona stella che cercherà di cadervi sul capo: vista la massa, potrebbe fare parecchio male
 	guardatevi da [PERSONA] che [SPREGIO]
 	occhio alle bucce di banana
 	attenzione a non correre per le scale con oggetti taglienti
-	date un'occhio ai semafori
+	date un occhio ai semafori
 	evitate il traffico urbano
 	osservate la legge Urbani
 	evitate le code in autostrada
 	evitate gli energumeni alticci
 	attenzione alle guardie del corpo
 	occhio alla penna
-	non credere agli oroscopi
+	non credete agli oroscopi
+	evitate le scale mobili ferme
+	tenete lontani i liquidi dalla tastiera
+	non aprite gli allegati che non aspettavate
+	diffidate di chi vi chiede "hai un minuto?"
 SPREGIO
 	[SPREGIO_CHIOSA]
 	grazie ad una breccia nella sicurezza [SPREGIO_CHIOSA]
@@ -163,16 +215,49 @@ SPREGIO_CHIOSA_1
 	intaserà completamente il traffico in uscita sulla rete
 	cancellerà diversi documenti
 	annullerà un importante progetto
+	dimenticherà di avvisarvi della riunione
+	vi lascerà in copia in tutte le mail
 SPREGIO_CHIOSA_2
 	sputerà nel piatto in cui dovrete mangiare
 	cercherà di mettervi in cattiva luce con [PERSONA]
 	scriverà dati a casaccio nel database aziendale
-	parlerò male di voi con [PERSONA]
-PERSONA
+	parlerà male di voi con [PERSONA]
+PERSONA$
 	un collega di lavoro | il vostro capo | il vostro partner | il vostro vicino di casa
 	la vostra vicina di casa | il vostro commercialista | il vigile di quartiere | il postino
 	il lattaio | il vostro edicolante di fiducia | l'uomo della strada | la fotomodella dei vostri sogni
 	un noto giornalista | un noto commediografo | una pattuglia dei carabinieri
 	un gruppo di hooligans | il bullo del quartiere | il bagnino
+	il tecnico della manutenzione | il responsabile delle risorse umane | il collega della scrivania accanto
+	il nuovo stagista | il consulente esterno | la segretaria del direttore
 PERIODO_DI_TEMPO
 	un'ora | un giorno | una settimana | un mese | un trimestre | un semestre | un anno
+DOMANDA_SULL_OROSCOPO
+	Perdonate l'ignoranza, ma che cos'è [COSA_OSCURA]? Una specie di drago?
+	Nella Foresta non abbiamo mai visto [COSA_OSCURA]. Morde?
+	Aspettate: [COSA_OSCURA] si combatte con la spada o con la magia?
+	Non ho capito una parola. [COSA_OSCURA_MAIUSCOLA] è un incantesimo?
+	E chi sarebbero [CHI_OSCURO]? Una gilda? Una banda di briganti?
+	Devo temere [CHI_OSCURO]? Quanti sono? Sono armati?
+	Ma voi le stelle le leggete o ve le inventate?
+	Scusate, ma questo [PIANETA_OSCURO] in che casa abita? Posso andare a trovarlo?
+COSA_OSCURA
+	un server | un kernel | un disco rigido | un database | un firewall | un fax | una stampante di rete
+	una ADSL | un telefono cellulare | un lettore CD-ROM | un backup | un gestionale | un ticket
+COSA_OSCURA_MAIUSCOLA
+	Un server | Un kernel | Un disco rigido | Un database | Un firewall | Una stampante di rete | Un backup
+CHI_OSCURO
+	i sistemisti | i commerciali | i cracker | i consulenti esterni | i colleghi del marketing | i neo-laureati
+PIANETA_OSCURO
+	Plutone | Urano | Nettuno | Saturno
+RISPOSTA_SULL_OROSCOPO
+	Termini tecnici dell'arte astrologica: le stelle parlano per enigmi, e io traduco.
+	Diciamo che è una cosa che si capisce meglio dopo la terza pozione.
+	Le stelle non si spiegano, si interpretano. E le interpreto a pagamento.
+	È una lunga storia, e il tempo è denaro. Il vostro, possibilmente.
+	Lo capirete a tempo debito. Oppure mai, che forse è anche meglio.
+	È una creatura delle terre lontane, molto rara. Ma parliamo d'affari.
+	Mio nonno lo sapeva. Purtroppo è morto prima di dirmelo.
+	Lasciate perdere: anche le stelle, ogni tanto, dicono sciocchezze.
+	È roba da sistemisti. No, non chiedetemi che cosa sia un sistemista.
+	Ah, che domande! Piuttosto, guardate che belle pozioni ho oggi.

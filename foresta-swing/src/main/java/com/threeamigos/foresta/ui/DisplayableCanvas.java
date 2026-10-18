@@ -1052,13 +1052,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	/**
-	 * @param oroscopo il testo con cui l'alchimista accoglie il gruppo, scelto dal motore
+	 * Apre la schermata dell'alchimista, che chiede che cosa serve (l'oroscopo del giorno lo dice nell'intermezzo
+	 * d'ingresso).
 	 */
-	public void alchimista(String oroscopo) {
+	public void alchimista() {
 		stato = StatoDisplayableCanvas.STATO_ALCHIMISTA;
-		// FIXME: capire come gestire l'oroscopo a modo e se si possa allargare il fumetto dinamicamente.
-		// FIXME: fatto quello, si può dismettere tutto il vecchio flusso.
-		notificaFumetto(oroscopo, alchimista.getCoordinateFumetto());
 		notificaFumetto("Cosa posso fare per voi?", alchimista.getCoordinateFumetto());
 		repaint();
 	}

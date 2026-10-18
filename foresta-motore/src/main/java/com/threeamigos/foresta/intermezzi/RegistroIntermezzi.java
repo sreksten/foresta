@@ -8,6 +8,8 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.motore.ModalitaDiProva;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Facciata su {@link IntermezziMD}: sceglie il prossimo intermezzo da mostrare e
@@ -20,6 +22,9 @@ public class RegistroIntermezzi {
 	// Se nel momento in corso è già scattato un intermezzo: quelli di ripiego non devono
 	// sommarsi agli altri (vedi Intermezzo.isDiRipiego)
 	private static boolean scattatoNelMomento;
+	// Gli intermezzi ripetibili già mostrati nel momento in corso: non si segnano come scattati, ma in uno stesso momento
+	// (un ingresso) scattano una volta sola, altrimenti finito l'uno ricomincerebbe subito
+	private static final Set<String> ripetibiliDelMomento = new HashSet<>();
 
 	private RegistroIntermezzi() {
 	}
@@ -30,6 +35,7 @@ public class RegistroIntermezzi {
 	 */
 	public static void nuovoMomento() {
 		scattatoNelMomento = false;
+		ripetibiliDelMomento.clear();
 	}
 
 	/**
@@ -69,7 +75,7 @@ public class RegistroIntermezzi {
 			}
 			Intermezzo intermezzo = FabbricaIntermezzi.crea(tipoIntermezzo);
 			if (intermezzo.isDiRipiego() == diRipiego && !getIntermezziMD().isScattato(intermezzo.getId())
-					&& intermezzo.deveScattare(momento)) {
+					&& !ripetibiliDelMomento.contains(intermezzo.getId()) && intermezzo.deveScattare(momento)) {
 				return intermezzo;
 			}
 		}
@@ -106,6 +112,8 @@ public class RegistroIntermezzi {
 	public static void segnaScattato(Intermezzo intermezzo) {
 		if (intermezzo instanceof IntermezzoDiPasso) {
 			((IntermezzoDiPasso) intermezzo).segnaMostrato();
+		} else if (intermezzo.isRipetibile()) {
+			ripetibiliDelMomento.add(intermezzo.getId());
 		} else {
 			getIntermezziMD().aggiungiScattato(intermezzo.getId());
 		}

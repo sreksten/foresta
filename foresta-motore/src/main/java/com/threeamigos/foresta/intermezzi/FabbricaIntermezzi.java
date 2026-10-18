@@ -21,7 +21,7 @@ public final class FabbricaIntermezzi {
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_URLO_DELLA_BANSHEE, tipo -> new IntermezzoUrloDellaBanshee());
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_LOCANDA_VISITA_SUCCESSIVA, tipo -> new IntermezzoLocandaVisitaSuccessiva());
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_ARMAIOLO, tipo -> new IntermezzoBenvenutoNegozio(tipo, NegozioInScena.ARMAIOLO, "Benvenuto nella mia bottega da armaiolo. Compro e vendo armi, armature, elmi, tutto della migliore qualità."));
-		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_ALCHIMISTA, tipo -> new IntermezzoBenvenutoNegozio(tipo, NegozioInScena.ALCHIMISTA, "Benvenuti nella mia bottega da Alchimista! Posso vendervi incantesimi, pozioni, mappe oppure incrementare il vostro potere magico."));
+		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_ALCHIMISTA, tipo -> new IntermezzoOroscopo(tipo, "Benvenuti nella mia bottega da Alchimista! Posso vendervi incantesimi, pozioni, mappe oppure incrementare il vostro potere magico."));
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_VENDITORE_DI_PERGAMENE, tipo -> new IntermezzoBenvenutoNegozio(tipo, NegozioInScena.VENDITORE_DI_PERGAMENE, "Benvenuti nel mio negozio di Pergamene, Amuleti, Gingilli e Ninnoli vari! Questi sono gli ingredienti di base necessari per migliorare le vostre armi."));
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_INCANTATORE, tipo -> new IntermezzoBenvenutoNegozio(tipo, NegozioInScena.INCANTATORE, "Benvenuti nel mio laboratorio di incantamenti. Posso migliorare le vostre armi con quel pizzico di magia in più."));
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_ACCAMPAMENTO, tipo -> new IntermezzoAccampamento());

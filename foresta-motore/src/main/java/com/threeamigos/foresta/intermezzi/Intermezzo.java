@@ -9,7 +9,7 @@ import java.util.List;
  * animate, testo, dialoghi a fumetti) mostrate a tutto schermo
  * quando si verificano determinate condizioni di gioco. Come una Missione ha un innesco,
  * ma a differenza di questa non ha progressi: una volta mostrato, il registro lo segna
- * come già scattato e non si ripete più.
+ * come già scattato e non si ripete più (salvo che sia ripetibile, vedi {@link #isRipetibile()}).
  * <p>
  * Le pagine avanzano al click sulla pergamena e, se {@link #getSecondiPerPagina()} è
  * maggiore di zero, anche da sole: dopo quel numero di secondi, ma non prima che i dialoghi
@@ -40,6 +40,13 @@ public interface Intermezzo {
 	 * nessun altro intermezzo: una scenetta che non deve sommarsi a un benvenuto o a una storia.
 	 */
 	default boolean isDiRipiego() {
+		return false;
+	}
+
+	/**
+	 * Un intermezzo ripetibile scatta ogni volta che il suo innesco lo chiede: il registro non lo segna come già scattato.
+	 */
+	default boolean isRipetibile() {
 		return false;
 	}
 

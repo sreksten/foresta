@@ -8,4 +8,18 @@
  a un : ad un 
  a uno : ad uno 
  a una : ad una 
+ di il : del 
+ di lo : dello 
+ di la : della 
+ di l': dell'
+ di i : dei 
+ di gli : degli 
+ di le : delle 
+ da il : dal 
+ da lo : dallo 
+ da la : dalla 
+ da l': dall'
+ da i : dai 
+ da gli : dagli 
+ da le : dalle 
  ,:,
