@@ -13,4 +13,5 @@ public class InternoPreparazioneLocazione extends EventoBase {
     public InternoPreparazioneLocazione() {
         super(TipoEvento.INTERNO_PREPARAZIONE_LOCAZIONE);
     }
+
 }

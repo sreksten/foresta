@@ -32,21 +32,6 @@ public final class ImmagineIntermezzo {
 		ANIMAZIONE
 	}
 
-	private final Tipo tipo;
-	private TipoPersonaggio classePersonaggio;
-	private TipoLocazione tipoLocazione;
-	private String risorsa;
-	private Animazione animazione;
-	// Solo per gli sprite sheet
-	private int colonne;
-	private int righe;
-	private double fotogrammiAlSecondo;
-	private int[] sequenza;
-
-	private ImmagineIntermezzo(Tipo tipo) {
-		this.tipo = tipo;
-	}
-
 	/**
 	 * L'immagine di una classe di personaggio.
 	 */
@@ -119,6 +104,21 @@ public final class ImmagineIntermezzo {
 		return percorso;
 	}
 
+	private final Tipo tipo;
+	private TipoPersonaggio classePersonaggio;
+	private TipoLocazione tipoLocazione;
+	private String risorsa;
+	private Animazione animazione;
+	// Solo per gli sprite sheet
+	private int colonne;
+	private int righe;
+	private double fotogrammiAlSecondo;
+	private int[] sequenza;
+
+	private ImmagineIntermezzo(Tipo tipo) {
+		this.tipo = tipo;
+	}
+
 	public Tipo getTipo() {
 		return tipo;
 	}
@@ -176,4 +176,5 @@ public final class ImmagineIntermezzo {
 				return "risorsa " + risorsa;
 		}
 	}
+
 }

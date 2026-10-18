@@ -28,4 +28,5 @@ public class InternoCaricamentoCompletato extends EventoBase {
     public List<MessaggioMD> getUltimiMessaggi() {
         return ultimiMessaggi;
     }
+
 }

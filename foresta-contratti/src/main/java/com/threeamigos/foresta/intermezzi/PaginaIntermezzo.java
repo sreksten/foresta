@@ -45,6 +45,30 @@ public class PaginaIntermezzo {
 		this.testo = testo;
 	}
 
+	public String getTesto() {
+		return testo;
+	}
+
+	public ImmagineIntermezzo getSfondo() {
+		return sfondo;
+	}
+
+	public TipoStiramento getTipoStiramentoSfondo() {
+		return tipoStiramentoSfondo;
+	}
+
+	public boolean isRitaglioSuSfondo() {
+		return ritaglioSuSfondo;
+	}
+
+	public List<ElementoIntermezzo> getElementi() {
+		return Collections.unmodifiableList(new ArrayList<>(elementi.values()));
+	}
+
+	public double getDurata() {
+		return durata;
+	}
+
 	/**
 	 * Sfondo senza stiramento: a dimensione nativa, centrato.
 	 */
@@ -72,10 +96,6 @@ public class PaginaIntermezzo {
 	public PaginaIntermezzo conRitaglioSuSfondo() {
 		ritaglioSuSfondo = true;
 		return this;
-	}
-
-	public boolean isRitaglioSuSfondo() {
-		return ritaglioSuSfondo;
 	}
 
 	/**
@@ -112,22 +132,6 @@ public class PaginaIntermezzo {
 		return this;
 	}
 
-	public String getTesto() {
-		return testo;
-	}
-
-	public ImmagineIntermezzo getSfondo() {
-		return sfondo;
-	}
-
-	public TipoStiramento getTipoStiramentoSfondo() {
-		return tipoStiramentoSfondo;
-	}
-
-	public List<ElementoIntermezzo> getElementi() {
-		return Collections.unmodifiableList(new ArrayList<>(elementi.values()));
-	}
-
 	public ElementoIntermezzo getElemento(String id) {
 		return elementi.get(id);
 	}
@@ -137,10 +141,6 @@ public class PaginaIntermezzo {
 	 */
 	public boolean hasDurata() {
 		return !Double.isNaN(durata);
-	}
-
-	public double getDurata() {
-		return durata;
 	}
 
 	/**
@@ -194,4 +194,5 @@ public class PaginaIntermezzo {
 		}
 		return fine;
 	}
+
 }

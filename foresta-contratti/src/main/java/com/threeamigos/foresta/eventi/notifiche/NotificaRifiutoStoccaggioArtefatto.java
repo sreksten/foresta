@@ -22,4 +22,5 @@ public class NotificaRifiutoStoccaggioArtefatto extends NotificaRifiutoSpostamen
     public NotificaRifiutoStoccaggioArtefatto(VistaScambio scambio, OggettoConPeso oggetto, String uuidRichiesta) {
         super(TipoEvento.NOTIFICA_RIFIUTO_STOCCAGGIO_ARTEFATTO, scambio, oggetto, uuidRichiesta);
     }
+
 }

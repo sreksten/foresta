@@ -19,4 +19,5 @@ public class NotificaRifiutoIncantatura extends EventoBase {
     public TipoMotivoRifiutoIncantatura getMotivo() {
         return motivo;
     }
+
 }

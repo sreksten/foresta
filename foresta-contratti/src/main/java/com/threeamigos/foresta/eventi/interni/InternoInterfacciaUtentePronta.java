@@ -14,4 +14,5 @@ public class InternoInterfacciaUtentePronta extends EventoBase {
     public InternoInterfacciaUtentePronta() {
         super(TipoEvento.INTERNO_INTERFACCIA_UTENTE_PRONTA);
     }
+
 }

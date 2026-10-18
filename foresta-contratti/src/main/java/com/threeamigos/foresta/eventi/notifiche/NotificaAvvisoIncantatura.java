@@ -19,4 +19,5 @@ public class NotificaAvvisoIncantatura extends EventoBase {
     public String getFrase() {
         return frase;
     }
+
 }

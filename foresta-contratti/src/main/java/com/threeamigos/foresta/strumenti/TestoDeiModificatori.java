@@ -15,9 +15,6 @@ import java.util.Locale;
  */
 public final class TestoDeiModificatori {
 
-	private TestoDeiModificatori() {
-	}
-
 	/**
 	 * L'effetto, per esempio "Fortuna porta a 0" o "Coraggio -20%".
 	 */
@@ -82,4 +79,8 @@ public final class TestoDeiModificatori {
 		}
 		return sb.toString();
 	}
+
+	private TestoDeiModificatori() {
+	}
+
 }

@@ -35,4 +35,5 @@ public class RichiestaAperturaInventarioFornitore extends RichiestaConComandi {
     public String getOroscopo() {
         return oroscopo;
     }
+
 }

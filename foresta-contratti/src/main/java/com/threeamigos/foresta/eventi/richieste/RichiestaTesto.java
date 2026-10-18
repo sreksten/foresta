@@ -33,4 +33,5 @@ public class RichiestaTesto extends EventoBase {
     public String getTestoPredefinito() {
         return testoPredefinito;
     }
+
 }

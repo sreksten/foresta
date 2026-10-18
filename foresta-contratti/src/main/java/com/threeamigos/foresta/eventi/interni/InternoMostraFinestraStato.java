@@ -13,4 +13,5 @@ public class InternoMostraFinestraStato extends EventoBase {
     public InternoMostraFinestraStato() {
         super(TipoEvento.INTERNO_MOSTRA_FINESTRA_STATO);
     }
+
 }

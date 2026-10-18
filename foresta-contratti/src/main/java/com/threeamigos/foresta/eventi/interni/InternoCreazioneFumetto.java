@@ -21,4 +21,5 @@ public class InternoCreazioneFumetto extends EventoBase {
     public String getFrase() {
         return frase;
     }
+
 }

@@ -15,10 +15,13 @@ import java.util.Collections;
 public interface Arma {
 
     int getDanni();
+
     int getLivello();
+
     TipoDanno getTipoDanno();
 
     boolean isIncantata();
+
     Collection<IncantamentoMD> getIncantamenti();
 
     /**

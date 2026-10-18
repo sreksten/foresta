@@ -33,4 +33,5 @@ public class NotificaAggiornamentoStatoMissione extends EventoBase {
     public String getDescrizione() {
         return descrizione;
     }
+
 }

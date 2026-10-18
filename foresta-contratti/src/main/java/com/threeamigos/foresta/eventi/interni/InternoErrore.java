@@ -20,4 +20,5 @@ public class InternoErrore extends EventoBase {
     public String getMessaggio() {
         return messaggio;
     }
+
 }

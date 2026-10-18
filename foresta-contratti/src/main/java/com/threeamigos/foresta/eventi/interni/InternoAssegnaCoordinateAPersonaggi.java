@@ -12,4 +12,5 @@ public class InternoAssegnaCoordinateAPersonaggi extends EventoBase {
     public InternoAssegnaCoordinateAPersonaggi() {
         super(TipoEvento.INTERNO_ASSEGNA_COORDINATE_A_PERSONAGGI);
     }
+
 }

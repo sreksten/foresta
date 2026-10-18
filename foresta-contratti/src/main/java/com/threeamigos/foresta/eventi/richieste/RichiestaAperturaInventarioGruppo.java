@@ -35,4 +35,5 @@ public class RichiestaAperturaInventarioGruppo extends RichiestaConComandi {
     public VistaPersonaggio getPersonaggio() {
         return personaggio;
     }
+
 }

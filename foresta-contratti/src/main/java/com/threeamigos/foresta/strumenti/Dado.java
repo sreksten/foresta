@@ -106,7 +106,6 @@ public class Dado {
         return trucco.intValue();
     }
 
-
     /**
      * Simula un lancio di dado a N facce con N &gt;= 1.
      * <p> Questa funzione è utile quando occorre passare la dimensione di un array o di una lista per recuperare
@@ -246,4 +245,5 @@ public class Dado {
         }
         return t.scelta(contesto, ammessi).filter(ammessi::contains);
     }
+
 }

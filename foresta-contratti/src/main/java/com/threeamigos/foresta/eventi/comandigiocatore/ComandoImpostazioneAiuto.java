@@ -19,4 +19,5 @@ public class ComandoImpostazioneAiuto extends EventoBase {
     public boolean isAbilitato() {
         return abilitato;
     }
+
 }

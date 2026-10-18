@@ -11,6 +11,24 @@ import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
  */
 public class InternoSfidaCartaForbiciSasso extends EventoBase {
 
+    /**
+     * La sfida comincia: entrambi con il sasso in mano, zero a zero.
+     */
+    public static InternoSfidaCartaForbiciSasso apre() {
+        return new InternoSfidaCartaForbiciSasso(MossaCartaForbiciSasso.SASSO, MossaCartaForbiciSasso.SASSO, 0, 0, false, true);
+    }
+
+    /**
+     * Una mano è stata giocata: le due mosse e il punteggio dopo la mano; {@code finale} se con questa mano la sfida è
+     * finita, e il riquadro può dissolversi.
+     */
+    public static InternoSfidaCartaForbiciSasso mano(MossaCartaForbiciSasso mossaDelGiocatore,
+                                                     MossaCartaForbiciSasso mossaDellAvversario, int punteggioDelGiocatore,
+                                                     int punteggioDellAvversario, boolean finale) {
+        return new InternoSfidaCartaForbiciSasso(mossaDelGiocatore, mossaDellAvversario, punteggioDelGiocatore,
+                punteggioDellAvversario, finale, false);
+    }
+
     private final MossaCartaForbiciSasso mossaDelGiocatore;
     private final MossaCartaForbiciSasso mossaDellAvversario;
     private final int punteggioDelGiocatore;
@@ -30,24 +48,6 @@ public class InternoSfidaCartaForbiciSasso extends EventoBase {
         this.inizio = inizio;
     }
 
-    /**
-     * La sfida comincia: entrambi con il sasso in mano, zero a zero.
-     */
-    public static InternoSfidaCartaForbiciSasso apre() {
-        return new InternoSfidaCartaForbiciSasso(MossaCartaForbiciSasso.SASSO, MossaCartaForbiciSasso.SASSO, 0, 0, false, true);
-    }
-
-    /**
-     * Una mano è stata giocata: le due mosse e il punteggio dopo la mano; {@code finale} se con questa mano la sfida è
-     * finita, e il riquadro può dissolversi.
-     */
-    public static InternoSfidaCartaForbiciSasso mano(MossaCartaForbiciSasso mossaDelGiocatore,
-                                                     MossaCartaForbiciSasso mossaDellAvversario, int punteggioDelGiocatore,
-                                                     int punteggioDellAvversario, boolean finale) {
-        return new InternoSfidaCartaForbiciSasso(mossaDelGiocatore, mossaDellAvversario, punteggioDelGiocatore,
-                punteggioDellAvversario, finale, false);
-    }
-
     public MossaCartaForbiciSasso getMossaDelGiocatore() {
         return mossaDelGiocatore;
     }
@@ -60,6 +60,14 @@ public class InternoSfidaCartaForbiciSasso extends EventoBase {
         return punteggioDelGiocatore;
     }
 
+    public int getPunteggioDellAvversario() {
+        return punteggioDellAvversario;
+    }
+
+    public boolean isFinale() {
+        return finale;
+    }
+
     /**
      * Se è l'evento con cui la sfida comincia, e non quello di una mano.
      */
@@ -67,11 +75,4 @@ public class InternoSfidaCartaForbiciSasso extends EventoBase {
         return inizio;
     }
 
-    public boolean isFinale() {
-        return finale;
-    }
-
-    public int getPunteggioDellAvversario() {
-        return punteggioDellAvversario;
-    }
 }

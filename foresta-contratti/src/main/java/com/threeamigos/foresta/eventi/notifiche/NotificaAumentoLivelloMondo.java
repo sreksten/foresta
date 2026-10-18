@@ -20,4 +20,5 @@ public class NotificaAumentoLivelloMondo extends EventoBase {
     public int getLivello() {
         return livello;
     }
+
 }

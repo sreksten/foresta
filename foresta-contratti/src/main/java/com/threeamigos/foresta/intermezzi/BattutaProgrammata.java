@@ -30,4 +30,5 @@ public final class BattutaProgrammata {
 	public boolean isVisibileAl(double secondi) {
 		return secondi >= inizio && secondi < fine;
 	}
+
 }

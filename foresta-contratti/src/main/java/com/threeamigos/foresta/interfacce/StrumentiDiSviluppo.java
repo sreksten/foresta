@@ -230,4 +230,5 @@ public interface StrumentiDiSviluppo {
      * è come se il mondo fosse salito di livello (artefatti, annuncio); scendendo cambia solo da lì in poi quello che si genera.
      */
     void impostaLivelloDelMondo(int livello);
+
 }

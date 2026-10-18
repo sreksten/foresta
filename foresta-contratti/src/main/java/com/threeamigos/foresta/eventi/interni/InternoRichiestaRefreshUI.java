@@ -13,4 +13,5 @@ public class InternoRichiestaRefreshUI extends EventoBase {
     public InternoRichiestaRefreshUI() {
         super(TipoEvento.INTERNO_RICHIESTA_REFRESH_UI);
     }
+
 }

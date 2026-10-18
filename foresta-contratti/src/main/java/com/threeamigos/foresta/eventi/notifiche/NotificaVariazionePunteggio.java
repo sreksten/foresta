@@ -26,4 +26,5 @@ public class NotificaVariazionePunteggio extends EventoBase {
     public int getNuovoValore() {
         return nuovoValore;
     }
+
 }

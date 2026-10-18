@@ -40,4 +40,5 @@ public interface Temporizzatore {
 	 * Non fa niente se non c'era nulla da riprendere.
 	 */
 	void riprendi();
+
 }

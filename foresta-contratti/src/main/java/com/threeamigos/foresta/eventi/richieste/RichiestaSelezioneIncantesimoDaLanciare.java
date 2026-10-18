@@ -16,4 +16,5 @@ public class RichiestaSelezioneIncantesimoDaLanciare extends RichiestaConComandi
     public RichiestaSelezioneIncantesimoDaLanciare(Collection<Comando> possibilita) {
         super(TipoEvento.RICHIESTA_SELEZIONE_INCANTESIMO_DA_LANCIARE, possibilita);
     }
+
 }

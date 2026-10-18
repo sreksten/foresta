@@ -10,8 +10,6 @@ import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
  * della foresta.
  */
 public class Misc {
-	
-	private Misc() {}
 
 	public static final String IL = "il ";
 	public static final String LO = "lo ";
@@ -46,7 +44,7 @@ public class Misc {
 	public static final String EGLI = "Egli";
 	public static final String ESSA = "Essa";
 	public static final String ESSO = "Esso";
-	
+
 	private static final String NORD = "nord";
 	private static final String EST = "est";
 	private static final String SUD = "sud";
@@ -54,6 +52,36 @@ public class Misc {
 
 	private static final String[] cardinali = {
 			"zero", "uno", "due", "tre", "quattro", "cinque", "sei", "sette", "otto", "nove", "dieci"
+	};
+
+	private static final String[] ordinali = {
+			null, "prim", "second", "terz", "quart", "quint", "sest", "settim", "ottav", "non", "decim",
+			"undic", "dodic", "tredic", "quattordic", "quindic", "sedic", "diciassett", "diciott", "diciannov",
+			"vent", "ventun", "ventidu", "ventitre", "ventiquattr", "venticinqu", "ventisei", "ventisett", "ventott", "ventinov",
+			"trent", "trentun", "trentadu", "trentatre", "trentaquattr", "trentacinqu", "trentasei", "trentasett", "trentott", "trentanov",
+			"quarant", "quarantun"
+	};
+
+	private static final String ESIM = "esim";
+
+	public static final String[] STORIA = {
+			"molto, molto tempo fa, quando il mondo era da poco stato creato,",
+			"un gruppo di eroi venne riunito per liberarlo dalla minaccia dei draghi.",
+			"questi, invece di comportarsi da bravi ragazzi, presto cominciarono a degenerare",
+			"andando per locande a sbevazzare e a cercare compagne di sbornie e avventure",
+			"finche' un giorno il piu' scoppiato di tutti sbaglio' strada e si ritrovo' in un postaccio conosciuto come"
+	};
+
+	public static final String[] PERSO = {
+			"con la morte del cacciatore, il drago ha finalmente via libera... la foresta e' perduta!",
+	};
+
+	public static final String[] VINTO = {
+			"congratulazioni!",
+			"la foresta e' stata liberata",
+			"i tuoi amici sono venuti per offrirti doni come loro salvatore",
+			"possa la pace oggi conquistata durare a lungo!",
+			""
 	};
 
 	/**
@@ -101,16 +129,6 @@ public class Misc {
 		else
 			return getCardinaleM(numero);
 	}
-
-	private static final String[] ordinali = {
-			null, "prim", "second", "terz", "quart", "quint", "sest", "settim", "ottav", "non", "decim",
-			"undic", "dodic", "tredic", "quattordic", "quindic", "sedic", "diciassett", "diciott", "diciannov",
-			"vent", "ventun", "ventidu", "ventitre", "ventiquattr", "venticinqu", "ventisei", "ventisett", "ventott", "ventinov",
-			"trent", "trentun", "trentadu", "trentatre", "trentaquattr", "trentacinqu", "trentasei", "trentasett", "trentott", "trentanov",
-			"quarant", "quarantun"
-	};
-
-	private static final String ESIM = "esim";
 
 	public static String getOrdinaleM(int numero) {
 		return getOrdinaleM(numero, false);
@@ -216,23 +234,6 @@ public class Misc {
 		return sb.toString();
 	}
 
-	public static final String[] STORIA = {
-			"molto, molto tempo fa, quando il mondo era da poco stato creato,",
-			"un gruppo di eroi venne riunito per liberarlo dalla minaccia dei draghi.",
-			"questi, invece di comportarsi da bravi ragazzi, presto cominciarono a degenerare",
-			"andando per locande a sbevazzare e a cercare compagne di sbornie e avventure",
-			"finche' un giorno il piu' scoppiato di tutti sbaglio' strada e si ritrovo' in un postaccio conosciuto come"
-	};
+	private Misc() {}
 
-	public static final String[] PERSO = {
-			"con la morte del cacciatore, il drago ha finalmente via libera... la foresta e' perduta!",
-	};
-
-	public static final String[] VINTO = {
-			"congratulazioni!",
-			"la foresta e' stata liberata",
-			"i tuoi amici sono venuti per offrirti doni come loro salvatore",
-			"possa la pace oggi conquistata durare a lungo!",
-			""
-	};
 }

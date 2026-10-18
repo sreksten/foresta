@@ -29,4 +29,5 @@ public class NotificaConsumoPuntoAbilitaPersonaggio extends EventoSuPersonaggio 
     public TipoAttributo getTipoAttributo() {
         return tipoAttributo;
     }
+
 }

@@ -26,4 +26,5 @@ public class NotificaVariazioneDisponibilitaMonete extends EventoBase {
     public int getNuovoValore() {
         return nuovoValore;
     }
+
 }

@@ -15,4 +15,5 @@ public class RichiestaSelezioneMissione extends RichiestaConComandi {
     public RichiestaSelezioneMissione(Collection<Comando> possibilita) {
         super(TipoEvento.RICHIESTA_SELEZIONE_MISSIONE, possibilita);
     }
+
 }

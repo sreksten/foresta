@@ -23,6 +23,19 @@ public final class BattutaIntermezzo {
 	static final double SECONDI_BASE = 1.0;
 	static final double SECONDI_PER_CARATTERE = 0.06;
 
+	/** Una battuta detta dall'elemento con l'identificativo indicato. */
+	public static BattutaIntermezzo di(String idElemento, String testo) {
+		if (idElemento == null || idElemento.isEmpty()) {
+			throw new IllegalArgumentException("Manca chi dice la battuta");
+		}
+		return new BattutaIntermezzo(idElemento, Double.NaN, Double.NaN, testo);
+	}
+
+	/** Una battuta il cui fumetto punta a un punto fisso dello schermo (in frazioni). */
+	public static BattutaIntermezzo daPunto(double x, double y, String testo) {
+		return new BattutaIntermezzo(null, x, y, testo);
+	}
+
 	private final String idElemento;
 	private final double puntoX;
 	private final double puntoY;
@@ -44,17 +57,41 @@ public final class BattutaIntermezzo {
 		this.testo = testo;
 	}
 
-	/** Una battuta detta dall'elemento con l'identificativo indicato. */
-	public static BattutaIntermezzo di(String idElemento, String testo) {
-		if (idElemento == null || idElemento.isEmpty()) {
-			throw new IllegalArgumentException("Manca chi dice la battuta");
-		}
-		return new BattutaIntermezzo(idElemento, Double.NaN, Double.NaN, testo);
+	/** L'identificativo di chi parla, o null se il fumetto punta a un punto fisso. */
+	public String getIdElemento() {
+		return idElemento;
 	}
 
-	/** Una battuta il cui fumetto punta a un punto fisso dello schermo (in frazioni). */
-	public static BattutaIntermezzo daPunto(double x, double y, String testo) {
-		return new BattutaIntermezzo(null, x, y, testo);
+	public double getPuntoX() {
+		return puntoX;
+	}
+
+	public double getPuntoY() {
+		return puntoY;
+	}
+
+	public String getTesto() {
+		return testo;
+	}
+
+	double getInizio() {
+		return daSecondo;
+	}
+
+	public double getNuvolaX() {
+		return nuvolaX;
+	}
+
+	public double getNuvolaY() {
+		return nuvolaY;
+	}
+
+	public double getLarghezza() {
+		return larghezza;
+	}
+
+	public boolean isCentrataOrizzontalmente() {
+		return centrataOrizzontalmente;
 	}
 
 	/** Secondi dall'inizio della pagina a cui compare il fumetto. */
@@ -99,36 +136,11 @@ public final class BattutaIntermezzo {
 		return this;
 	}
 
-	/** L'identificativo di chi parla, o null se il fumetto punta a un punto fisso. */
-	public String getIdElemento() {
-		return idElemento;
-	}
-
-	public double getPuntoX() {
-		return puntoX;
-	}
-
-	public double getPuntoY() {
-		return puntoY;
-	}
-
-	public String getTesto() {
-		return testo;
-	}
-
 	/**
 	 * Dice se la posizione del fumetto è fissata ({@link #nuvolaA}) invece di essere automatica.
 	 */
 	public boolean hasPosizioneNuvola() {
 		return !Double.isNaN(nuvolaX);
-	}
-
-	public double getNuvolaX() {
-		return nuvolaX;
-	}
-
-	public double getNuvolaY() {
-		return nuvolaY;
 	}
 
 	/**
@@ -138,20 +150,8 @@ public final class BattutaIntermezzo {
 		return !Double.isNaN(larghezza);
 	}
 
-	public double getLarghezza() {
-		return larghezza;
-	}
-
-	public boolean isCentrataOrizzontalmente() {
-		return centrataOrizzontalmente;
-	}
-
 	boolean hasInizio() {
 		return !Double.isNaN(daSecondo);
-	}
-
-	double getInizio() {
-		return daSecondo;
 	}
 
 	double getDurata() {
@@ -160,4 +160,5 @@ public final class BattutaIntermezzo {
 		}
 		return Math.min(DURATA_MASSIMA, Math.max(DURATA_MINIMA, SECONDI_BASE + SECONDI_PER_CARATTERE * testo.length()));
 	}
+
 }

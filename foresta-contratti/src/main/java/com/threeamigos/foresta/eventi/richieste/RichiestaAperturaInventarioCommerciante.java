@@ -35,4 +35,5 @@ public class RichiestaAperturaInventarioCommerciante extends RichiestaConComandi
     public VistaScambio getScambio() {
         return scambio;
     }
+
 }

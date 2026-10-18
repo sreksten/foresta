@@ -11,4 +11,5 @@ public class InternoScheletroRisvegliato extends EventoBase {
     public InternoScheletroRisvegliato() {
         super(TipoEvento.INTERNO_SCHELETRO_RISVEGLIATO);
     }
+
 }

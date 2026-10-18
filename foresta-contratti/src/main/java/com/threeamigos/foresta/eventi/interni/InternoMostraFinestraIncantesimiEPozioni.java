@@ -13,4 +13,5 @@ public class InternoMostraFinestraIncantesimiEPozioni extends EventoBase {
     public InternoMostraFinestraIncantesimiEPozioni() {
         super(TipoEvento.INTERNO_MOSTRA_FINESTRA_INCANTESIMI_E_POZIONI);
     }
+
 }

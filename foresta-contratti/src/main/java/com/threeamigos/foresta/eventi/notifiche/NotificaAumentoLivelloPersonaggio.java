@@ -27,4 +27,5 @@ public class NotificaAumentoLivelloPersonaggio extends EventoSuPersonaggio {
     public int getLivelloAttuale() {
         return livelloAttuale;
     }
+
 }

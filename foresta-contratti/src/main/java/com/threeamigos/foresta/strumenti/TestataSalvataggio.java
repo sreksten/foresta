@@ -32,4 +32,5 @@ public class TestataSalvataggio {
     public VistaGruppoGiocatore getGruppoGiocatore() {
         return gruppoGiocatore;
     }
+
 }

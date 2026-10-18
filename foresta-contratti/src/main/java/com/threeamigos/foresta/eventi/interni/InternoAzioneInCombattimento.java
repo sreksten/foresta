@@ -25,4 +25,5 @@ public class InternoAzioneInCombattimento extends EventoSuPersonaggio {
     public VistaPersonaggio getBersaglio() {
         return bersaglio;
     }
+
 }

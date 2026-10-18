@@ -13,4 +13,5 @@ public class InternoMostraFinestraStatistiche extends EventoBase {
     public InternoMostraFinestraStatistiche() {
         super(TipoEvento.INTERNO_MOSTRA_FINESTRA_STATISTICHE);
     }
+
 }

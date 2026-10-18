@@ -40,9 +40,6 @@ public final class ThreadPrincipale {
 
     private static volatile Esecutore esecutore = SUBITO;
 
-    private ThreadPrincipale() {
-    }
-
     /**
      * Installa l'esecutore del toolkit grafico; con null si torna all'esecuzione immediata.
      */
@@ -68,4 +65,8 @@ public final class ThreadPrincipale {
     public static void accoda(Runnable operazione) {
         esecutore.accoda(operazione);
     }
+
+    private ThreadPrincipale() {
+    }
+
 }

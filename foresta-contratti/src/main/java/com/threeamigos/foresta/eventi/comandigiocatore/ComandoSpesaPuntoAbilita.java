@@ -25,4 +25,5 @@ public class ComandoSpesaPuntoAbilita extends EventoBase {
     public TipoAttributo getAttributo() {
         return attributo;
     }
+
 }

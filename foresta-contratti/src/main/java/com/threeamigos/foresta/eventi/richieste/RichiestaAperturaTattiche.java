@@ -44,11 +44,12 @@ public class RichiestaAperturaTattiche extends RichiestaConComandi {
         return tattica;
     }
 
+    public TatticaMD getTatticaPredefinita() {
+        return tatticaPredefinita;
+    }
+
     public Set<TipoAzione> getAzioniPossibili() {
         return azioniPossibili;
     }
 
-    public TatticaMD getTatticaPredefinita() {
-        return tatticaPredefinita;
-    }
 }

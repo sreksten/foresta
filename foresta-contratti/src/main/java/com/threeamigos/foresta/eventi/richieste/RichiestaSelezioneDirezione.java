@@ -16,4 +16,5 @@ public class RichiestaSelezioneDirezione extends RichiestaConComandi {
     public RichiestaSelezioneDirezione(Collection<Comando> possibilita) {
         super(TipoEvento.RICHIESTA_SELEZIONE_DIREZIONE, possibilita);
     }
+
 }

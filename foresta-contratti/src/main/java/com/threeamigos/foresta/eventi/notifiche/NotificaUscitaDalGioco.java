@@ -35,6 +35,10 @@ public class NotificaUscitaDalGioco extends EventoBase {
         return codice;
     }
 
+    public String getMotivo() {
+        return motivo;
+    }
+
     /**
      * Se l'uscita è dovuta a un errore da cui non si può ripartire.
      */
@@ -42,7 +46,4 @@ public class NotificaUscitaDalGioco extends EventoBase {
         return codice != 0;
     }
 
-    public String getMotivo() {
-        return motivo;
-    }
 }

@@ -26,4 +26,5 @@ public class NotificaVariazioneDisponibilitaPozioniSalute extends EventoBase {
     public int getNuovoValore() {
         return nuovoValore;
     }
+
 }

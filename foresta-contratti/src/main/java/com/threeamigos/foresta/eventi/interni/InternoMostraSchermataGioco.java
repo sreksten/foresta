@@ -13,4 +13,5 @@ public class InternoMostraSchermataGioco extends EventoBase {
     public InternoMostraSchermataGioco() {
         super(TipoEvento.INTERNO_MOSTRA_SCHERMATA_GIOCO);
     }
+
 }

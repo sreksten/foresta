@@ -43,4 +43,5 @@ public interface DestinazioneDiLog {
 	 * Scrive un'eccezione con la sua traccia.
 	 */
 	void scrivi(Exception e);
+
 }

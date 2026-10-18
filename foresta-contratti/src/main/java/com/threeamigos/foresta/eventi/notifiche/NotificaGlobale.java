@@ -37,4 +37,5 @@ public class NotificaGlobale extends EventoBase {
     public String getMessaggio() {
         return messaggio;
     }
+
 }

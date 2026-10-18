@@ -20,4 +20,5 @@ public class NotificaErroreCaricamento extends EventoBase {
     public Exception getException() {
         return exception;
     }
+
 }

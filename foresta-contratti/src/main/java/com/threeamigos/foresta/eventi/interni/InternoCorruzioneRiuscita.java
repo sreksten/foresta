@@ -24,4 +24,5 @@ public class InternoCorruzioneRiuscita extends EventoBase {
     public List<TipoPersonaggio> getAvversari() {
         return avversari;
     }
+
 }

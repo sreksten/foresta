@@ -32,4 +32,5 @@ public class InternoException extends EventoBase {
     public Exception getException() {
         return exception;
     }
+
 }

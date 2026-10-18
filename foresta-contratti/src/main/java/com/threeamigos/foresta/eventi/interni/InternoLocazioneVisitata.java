@@ -20,4 +20,5 @@ public class InternoLocazioneVisitata extends EventoBase {
     public TipoLocazione getTipo() {
         return tipo;
     }
+
 }

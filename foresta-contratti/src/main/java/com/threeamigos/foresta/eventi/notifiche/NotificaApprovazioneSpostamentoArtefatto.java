@@ -49,4 +49,5 @@ public abstract class NotificaApprovazioneSpostamentoArtefatto<T> extends Evento
     public String getUuidRichiesta() {
         return uuidRichiesta;
     }
+
 }

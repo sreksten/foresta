@@ -70,4 +70,5 @@ public class NotificaVariazioneEffettoDiStatoPersonaggio extends EventoSuPersona
     public int getNuovoValore() {
         return nuovoValore;
     }
+
 }

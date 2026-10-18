@@ -22,4 +22,5 @@ public class RichiestaConComandi extends EventoBase {
     public Collection<Comando> getPossibilita() {
         return possibilita;
     }
+
 }

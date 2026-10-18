@@ -27,4 +27,5 @@ public class NotificaTestoParagrafo extends EventoBase {
     public String getMessaggio() {
         return messaggio;
     }
+
 }

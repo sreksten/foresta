@@ -24,4 +24,5 @@ public interface TruccatoreDiDadi {
      * ignorato da {@link Dado}.
      */
     <T> Optional<T> scelta(ContestoLancio contesto, List<T> ammessi);
+
 }

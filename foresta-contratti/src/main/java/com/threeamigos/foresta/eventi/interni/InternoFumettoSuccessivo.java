@@ -21,4 +21,5 @@ public class InternoFumettoSuccessivo extends EventoBase {
     public double getSecondi() {
         return secondi;
     }
+
 }

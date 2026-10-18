@@ -20,4 +20,5 @@ public class NotificaApprovazioneAcquistoArtefatto extends NotificaApprovazioneS
     public NotificaApprovazioneAcquistoArtefatto(VistaScambio scambio, OggettoConCosto oggetto, String uuidRichiesta) {
         super(TipoEvento.NOTIFICA_APPROVAZIONE_ACQUISTO_ARTEFATTO, scambio, oggetto, uuidRichiesta);
     }
+
 }

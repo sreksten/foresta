@@ -26,4 +26,5 @@ public class NotificaVariazioneDisponibilitaPozioniSaluteGrandi extends EventoBa
     public int getNuovoValore() {
         return nuovoValore;
     }
+
 }

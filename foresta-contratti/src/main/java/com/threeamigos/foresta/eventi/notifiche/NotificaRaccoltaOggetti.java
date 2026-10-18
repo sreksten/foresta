@@ -13,4 +13,5 @@ public class NotificaRaccoltaOggetti extends EventoBase {
     public NotificaRaccoltaOggetti() {
         super(TipoEvento.NOTIFICA_RACCOLTA_OGGETTI);
     }
+
 }

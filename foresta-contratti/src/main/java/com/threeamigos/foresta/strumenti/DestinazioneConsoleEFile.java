@@ -16,23 +16,6 @@ import java.util.Locale;
  */
 public final class DestinazioneConsoleEFile implements DestinazioneDiLog {
 
-	// Null se non si scrive su file
-	private final PrintWriter fileWriter;
-
-	/**
-	 * Legge la cartella di log dalla proprietà di sistema {@value Logger#PROPRIETA_CARTELLA_DI_LOG}.
-	 */
-	public DestinazioneConsoleEFile() {
-		this(System.getProperty(Logger.PROPRIETA_CARTELLA_DI_LOG));
-	}
-
-	/**
-	 * @param cartellaDiLog la cartella dei file di log; null o vuota per scrivere solo sulla console
-	 */
-	public DestinazioneConsoleEFile(String cartellaDiLog) {
-		this.fileWriter = apriFileDiLog(cartellaDiLog);
-	}
-
 	/**
 	 * Oltre alla console, teniamo traccia dei log anche su file: la console non è
 	 * sempre visibile (es. lancio senza terminale), e serve poter consultare i log
@@ -59,6 +42,23 @@ public final class DestinazioneConsoleEFile implements DestinazioneDiLog {
 		}
 	}
 
+	// Null se non si scrive su file
+	private final PrintWriter fileWriter;
+
+	/**
+	 * Legge la cartella di log dalla proprietà di sistema {@value Logger#PROPRIETA_CARTELLA_DI_LOG}.
+	 */
+	public DestinazioneConsoleEFile() {
+		this(System.getProperty(Logger.PROPRIETA_CARTELLA_DI_LOG));
+	}
+
+	/**
+	 * @param cartellaDiLog la cartella dei file di log; null o vuota per scrivere solo sulla console
+	 */
+	public DestinazioneConsoleEFile(String cartellaDiLog) {
+		this.fileWriter = apriFileDiLog(cartellaDiLog);
+	}
+
 	@Override
 	public void scrivi(String messaggio) {
 		System.out.println(messaggio);
@@ -74,4 +74,5 @@ public final class DestinazioneConsoleEFile implements DestinazioneDiLog {
 			e.printStackTrace(fileWriter);
 		}
 	}
+
 }

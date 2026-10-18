@@ -28,4 +28,5 @@ public class NotificaRifiutoAcquistoConsumabile extends EventoBase {
     public ComandoAcquistoConsumabile getEventoRichiestaAcquistoConsumabile() {
         return comandoAcquistoConsumabile;
     }
+
 }

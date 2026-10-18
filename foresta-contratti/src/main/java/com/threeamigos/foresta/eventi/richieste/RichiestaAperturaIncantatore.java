@@ -32,4 +32,5 @@ public class RichiestaAperturaIncantatore extends RichiestaConComandi {
     public String getMessaggio() {
         return messaggio;
     }
+
 }

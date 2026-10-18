@@ -20,4 +20,5 @@ public class InternoMessaggio extends EventoBase {
     public String getMessaggioInterno() {
         return messaggioInterno;
     }
+
 }

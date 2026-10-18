@@ -14,4 +14,5 @@ public class RichiestaAperturaTrofei extends RichiestaConComandi {
     public RichiestaAperturaTrofei(Collection<Comando> possibilita) {
         super(TipoEvento.RICHIESTA_APERTURA_TROFEI, possibilita);
     }
+
 }

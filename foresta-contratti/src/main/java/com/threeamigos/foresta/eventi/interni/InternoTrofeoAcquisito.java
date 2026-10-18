@@ -19,4 +19,5 @@ public class InternoTrofeoAcquisito extends EventoBase {
     public TipoTrofeo getTrofeo() {
         return trofeo;
     }
+
 }

@@ -26,4 +26,5 @@ public class NotificaVariazioneDisponibilitaPozioniAumentoLivello extends Evento
     public int getNuovoValore() {
         return nuovoValore;
     }
+
 }

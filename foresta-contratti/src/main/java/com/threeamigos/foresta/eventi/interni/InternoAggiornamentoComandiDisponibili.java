@@ -21,4 +21,5 @@ public class InternoAggiornamentoComandiDisponibili extends RichiestaConComandi 
     public InternoAggiornamentoComandiDisponibili(Collection<Comando> possibilita) {
         super(TipoEvento.INTERNO_AGGIORNAMENTO_COMANDI_DISPONIBILI, possibilita);
     }
+
 }

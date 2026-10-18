@@ -13,4 +13,5 @@ public class RichiestaVisualizzazioneMappa extends EventoBase {
     public RichiestaVisualizzazioneMappa() {
         super(TipoEvento.RICHIESTA_VISUALIZZAZIONE_MAPPA);
     }
+
 }

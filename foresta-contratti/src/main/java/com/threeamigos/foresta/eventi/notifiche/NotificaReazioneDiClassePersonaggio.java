@@ -33,4 +33,5 @@ public class NotificaReazioneDiClassePersonaggio extends EventoSuPersonaggio {
     public double getMoltiplicatore() {
         return moltiplicatore;
     }
+
 }

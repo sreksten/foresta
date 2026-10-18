@@ -40,4 +40,5 @@ public class ComandoScambioArtefatto extends EventoBase {
     public String getUuidArtefatto() {
         return uuidArtefatto;
     }
+
 }

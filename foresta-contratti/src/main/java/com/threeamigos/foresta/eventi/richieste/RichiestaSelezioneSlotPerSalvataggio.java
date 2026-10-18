@@ -23,4 +23,5 @@ public class RichiestaSelezioneSlotPerSalvataggio extends EventoBase {
     public Collection<TestataSalvataggio> getSalvataggiDisponibili() {
         return salvataggiDisponibili;
     }
+
 }

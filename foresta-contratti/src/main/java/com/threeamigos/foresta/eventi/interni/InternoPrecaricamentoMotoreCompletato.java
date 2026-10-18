@@ -11,4 +11,5 @@ public class InternoPrecaricamentoMotoreCompletato extends EventoBase {
     public InternoPrecaricamentoMotoreCompletato() {
         super(TipoEvento.INTERNO_PRECARICAMENTO_MOTORE_COMPLETATO);
     }
+
 }

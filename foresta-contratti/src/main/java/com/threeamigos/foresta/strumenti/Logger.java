@@ -18,9 +18,6 @@ public class Logger {
 
 	private static volatile DestinazioneDiLog destinazione;
 
-	private Logger() {
-	}
-
 	/**
 	 * Cambia la destinazione dei messaggi, da fare prima del primo messaggio (una destinazione già creata, per esempio
 	 * quella su file, resta aperta). Con null si torna a quella del desktop.
@@ -78,4 +75,8 @@ public class Logger {
 	public static void log(Exception e) {
 		destinazione().scrivi(e);
 	}
+
+	private Logger() {
+	}
+
 }

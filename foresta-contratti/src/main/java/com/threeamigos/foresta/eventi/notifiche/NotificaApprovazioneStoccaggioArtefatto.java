@@ -19,4 +19,5 @@ public class NotificaApprovazioneStoccaggioArtefatto extends NotificaApprovazion
     public NotificaApprovazioneStoccaggioArtefatto(VistaScambio scambio, OggettoConPeso oggetto, String uuidRichiesta) {
         super(TipoEvento.NOTIFICA_APPROVAZIONE_STOCCAGGIO_ARTEFATTO, scambio, oggetto, uuidRichiesta);
     }
+
 }

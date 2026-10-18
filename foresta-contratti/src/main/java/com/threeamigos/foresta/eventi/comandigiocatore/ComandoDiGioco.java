@@ -21,4 +21,5 @@ public class ComandoDiGioco extends EventoBase {
     public Comando getComando() {
         return comando;
     }
+
 }

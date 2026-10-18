@@ -39,4 +39,5 @@ public class NotificaVariazioneConoscenzaMappa extends EventoBase {
     public int getAY() {
         return aY;
     }
+
 }

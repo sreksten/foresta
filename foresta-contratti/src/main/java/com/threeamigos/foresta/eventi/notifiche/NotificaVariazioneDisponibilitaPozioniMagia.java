@@ -26,4 +26,5 @@ public class NotificaVariazioneDisponibilitaPozioniMagia extends EventoBase {
     public int getNuovoValore() {
         return nuovoValore;
     }
+
 }

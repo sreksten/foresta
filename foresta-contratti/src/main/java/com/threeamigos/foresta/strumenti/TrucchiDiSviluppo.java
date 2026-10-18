@@ -20,14 +20,21 @@ public final class TrucchiDiSviluppo implements TruccatoreDiDadi {
 
     private static final TrucchiDiSviluppo ISTANZA = new TrucchiDiSviluppo();
 
+    public static TrucchiDiSviluppo istanza() {
+        return ISTANZA;
+    }
+
+    private static void controllaTipo(ContestoLancio contesto, boolean scelta) {
+        if (contesto.isScelta() != scelta) {
+            throw new IllegalArgumentException(
+                    contesto + (contesto.isScelta() ? " sceglie un elemento, non un numero" : " dà un numero, non sceglie un elemento"));
+        }
+    }
+
     private final Map<ContestoLancio, Integer> numeri = new EnumMap<>(ContestoLancio.class);
     private final Map<ContestoLancio, Object> elementi = new EnumMap<>(ContestoLancio.class);
 
     private TrucchiDiSviluppo() {
-    }
-
-    public static TrucchiDiSviluppo istanza() {
-        return ISTANZA;
     }
 
     /**
@@ -89,10 +96,4 @@ public final class TrucchiDiSviluppo implements TruccatoreDiDadi {
         return Optional.of((T) voluto);
     }
 
-    private static void controllaTipo(ContestoLancio contesto, boolean scelta) {
-        if (contesto.isScelta() != scelta) {
-            throw new IllegalArgumentException(
-                    contesto + (contesto.isScelta() ? " sceglie un elemento, non un numero" : " dà un numero, non sceglie un elemento"));
-        }
-    }
 }

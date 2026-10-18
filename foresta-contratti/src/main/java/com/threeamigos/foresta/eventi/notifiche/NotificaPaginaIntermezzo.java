@@ -37,4 +37,5 @@ public class NotificaPaginaIntermezzo extends EventoBase {
     public int getTotalePagine() {
         return totalePagine;
     }
+
 }

@@ -25,4 +25,5 @@ public class NotificaApprovazioneIncantatura extends EventoBase {
     public int getCosto() {
         return costo;
     }
+
 }

@@ -26,4 +26,5 @@ public class ComandoImpostaTattica extends EventoBase {
     public TatticaMD getTattica() {
         return tattica;
     }
+
 }

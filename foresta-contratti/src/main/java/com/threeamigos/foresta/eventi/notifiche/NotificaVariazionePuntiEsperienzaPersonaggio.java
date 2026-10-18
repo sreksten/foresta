@@ -27,4 +27,5 @@ public class NotificaVariazionePuntiEsperienzaPersonaggio extends EventoBase {
     public int getNuovoValore() {
         return nuovoValore;
     }
+
 }

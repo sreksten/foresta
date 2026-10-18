@@ -27,4 +27,5 @@ public class NotificaArtefattoTrovato extends EventoBase {
     public int getLivelloMondo() {
         return livelloMondo;
     }
+
 }

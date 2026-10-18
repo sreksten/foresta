@@ -23,4 +23,5 @@ public class RichiestaSelezioneSiNo extends RichiestaConComandi {
     protected RichiestaSelezioneSiNo(TipoEvento tipoEvento) {
         super(tipoEvento, SI_NO);
     }
+
 }

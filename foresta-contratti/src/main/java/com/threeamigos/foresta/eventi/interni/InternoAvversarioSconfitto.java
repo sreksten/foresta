@@ -20,4 +20,5 @@ public class InternoAvversarioSconfitto extends EventoBase {
     public TipoPersonaggio getClasse() {
         return classe;
     }
+
 }

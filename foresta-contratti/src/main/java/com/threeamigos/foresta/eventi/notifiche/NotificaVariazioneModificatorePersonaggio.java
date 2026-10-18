@@ -60,4 +60,5 @@ public class NotificaVariazioneModificatorePersonaggio extends EventoSuPersonagg
     public int getNuovaDurata() {
         return nuovaDurata;
     }
+
 }

@@ -13,6 +13,15 @@ package com.threeamigos.foresta.intermezzi;
  */
 public final class Tappa {
 
+	/**
+	 * Una tappa che dura quei secondi.
+	 *
+	 * @throws IllegalArgumentException se la durata non è positiva
+	 */
+	public static Tappa inSecondi(double secondi) {
+		return new Tappa(secondi);
+	}
+
 	private final double secondi;
 	private double x = Double.NaN;
 	private double y = Double.NaN;
@@ -27,13 +36,8 @@ public final class Tappa {
 		this.secondi = secondi;
 	}
 
-	/**
-	 * Una tappa che dura quei secondi.
-	 *
-	 * @throws IllegalArgumentException se la durata non è positiva
-	 */
-	public static Tappa inSecondi(double secondi) {
-		return new Tappa(secondi);
+	double getSecondi() {
+		return secondi;
 	}
 
 	/** Posizione del centro dell'immagine, in frazioni dello schermo. */
@@ -67,10 +71,6 @@ public final class Tappa {
 		return this;
 	}
 
-	double getSecondi() {
-		return secondi;
-	}
-
 	/**
 	 * Lo stato di arrivo, completando con quello di partenza i valori non indicati.
 	 */
@@ -82,4 +82,5 @@ public final class Tappa {
 				Double.isNaN(opacita) ? partenza.getOpacita() : opacita,
 				verso == null ? partenza.getVerso() : verso);
 	}
+
 }

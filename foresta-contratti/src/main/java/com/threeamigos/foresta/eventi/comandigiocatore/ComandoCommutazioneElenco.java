@@ -12,17 +12,6 @@ import com.threeamigos.foresta.eventi.TipoEvento;
  */
 public class ComandoCommutazioneElenco extends EventoBase {
 
-    private final String idScambio;
-    private final String uuidArtefatto;
-    private final String idMissione;
-
-    private ComandoCommutazioneElenco(String idScambio, String uuidArtefatto, String idMissione) {
-        super(TipoEvento.COMANDO_COMMUTAZIONE_ELENCO);
-        this.idScambio = idScambio;
-        this.uuidArtefatto = uuidArtefatto;
-        this.idMissione = idMissione;
-    }
-
     /**
      * @param idScambio lo scambio aperto in cui sta l'artefatto
      * @param uuidArtefatto l'artefatto di cui aprire o chiudere l'elenco dei modificatori
@@ -36,6 +25,17 @@ public class ComandoCommutazioneElenco extends EventoBase {
      */
     public static ComandoCommutazioneElenco missione(String idMissione) {
         return new ComandoCommutazioneElenco(null, null, idMissione);
+    }
+
+    private final String idScambio;
+    private final String uuidArtefatto;
+    private final String idMissione;
+
+    private ComandoCommutazioneElenco(String idScambio, String uuidArtefatto, String idMissione) {
+        super(TipoEvento.COMANDO_COMMUTAZIONE_ELENCO);
+        this.idScambio = idScambio;
+        this.uuidArtefatto = uuidArtefatto;
+        this.idMissione = idMissione;
     }
 
     /**
@@ -58,4 +58,5 @@ public class ComandoCommutazioneElenco extends EventoBase {
     public String getIdMissione() {
         return idMissione;
     }
+
 }

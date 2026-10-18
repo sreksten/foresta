@@ -37,4 +37,5 @@ public class InternoPuliziaCacheDinamicaImmagini extends EventoBase {
     public int getElementiDopo() {
         return elementiDopo;
     }
+
 }

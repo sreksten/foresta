@@ -12,4 +12,5 @@ public class InternoUiOccupata extends EventoBase {
     public InternoUiOccupata() {
         super(TipoEvento.INTERNO_UI_OCCUPATA);
     }
+
 }

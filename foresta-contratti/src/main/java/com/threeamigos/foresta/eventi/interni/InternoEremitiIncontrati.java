@@ -19,4 +19,5 @@ public class InternoEremitiIncontrati extends EventoBase {
     public int getQuantita() {
         return quantita;
     }
+
 }

@@ -45,4 +45,5 @@ public class InternoFaseDiGioco extends EventoBase {
     public Collection<Comando> getComandiPossibili() {
         return comandiPossibili;
     }
+
 }

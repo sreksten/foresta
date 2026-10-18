@@ -12,4 +12,5 @@ public class RichiestaUscitaDalGioco extends RichiestaSelezioneSiNo {
     public RichiestaUscitaDalGioco() {
         super(TipoEvento.RICHIESTA_USCITA_DAL_GIOCO);
     }
+
 }

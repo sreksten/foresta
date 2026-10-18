@@ -8,4 +8,5 @@ package com.threeamigos.foresta.interfacce;
 public interface OggettoConPeso {
 
     double getPeso();
+
 }

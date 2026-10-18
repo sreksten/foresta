@@ -12,4 +12,5 @@ public class InternoPastoConsumatoInLocanda extends EventoBase {
     public InternoPastoConsumatoInLocanda() {
         super(TipoEvento.INTERNO_PASTO_CONSUMATO_IN_LOCANDA);
     }
+
 }

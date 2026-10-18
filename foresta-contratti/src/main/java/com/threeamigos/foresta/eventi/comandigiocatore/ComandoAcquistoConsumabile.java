@@ -36,4 +36,5 @@ public class ComandoAcquistoConsumabile extends EventoBase {
     public String getUuidPersonaggio() {
         return uuidPersonaggio;
     }
+
 }

@@ -22,4 +22,5 @@ public class NotificaRifiutoVenditaArtefatto extends NotificaRifiutoSpostamentoA
     public NotificaRifiutoVenditaArtefatto(VistaScambio scambio, OggettoConCosto oggetto, String uuidRichiesta) {
         super(TipoEvento.NOTIFICA_RIFIUTO_VENDITA_ARTEFATTO, scambio, oggetto, uuidRichiesta);
     }
+
 }

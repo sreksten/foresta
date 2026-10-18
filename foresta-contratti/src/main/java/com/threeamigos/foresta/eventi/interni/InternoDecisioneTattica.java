@@ -52,11 +52,12 @@ public class InternoDecisioneTattica extends EventoSuPersonaggio {
         return indiceVoce;
     }
 
+    public List<String> getSpiegazione() {
+        return spiegazione;
+    }
+
     public boolean isRipiego() {
         return indiceVoce < 0;
     }
 
-    public List<String> getSpiegazione() {
-        return spiegazione;
-    }
 }

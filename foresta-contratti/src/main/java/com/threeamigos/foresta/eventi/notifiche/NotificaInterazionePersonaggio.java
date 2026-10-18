@@ -29,4 +29,5 @@ public class NotificaInterazionePersonaggio extends EventoSuPersonaggio {
     public TipoInterazioneConEffettiDiStato getTipoInterazione() {
         return tipoInterazione;
     }
+
 }

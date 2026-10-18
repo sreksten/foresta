@@ -11,4 +11,5 @@ public class InternoUiInattiva extends EventoBase {
     public InternoUiInattiva() {
         super(TipoEvento.INTERNO_UI_INATTIVA);
     }
+
 }

@@ -24,4 +24,5 @@ public class ComandoSpostaPersonaggio extends EventoBase {
     public boolean isVersoDestra() {
         return versoDestra;
     }
+
 }

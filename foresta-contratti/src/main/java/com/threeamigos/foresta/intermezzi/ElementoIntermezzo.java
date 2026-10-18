@@ -31,6 +31,19 @@ public final class ElementoIntermezzo {
 	private static final double BOCCA_X = 0.5;
 	private static final double BOCCA_Y = 0.15;
 
+	/**
+	 * @param x frazione della larghezza dello schermo a cui cade il centro dell'immagine
+	 * @param y frazione dell'altezza dello schermo a cui cade il centro dell'immagine
+	 */
+	public static ElementoIntermezzo di(String id, ImmagineIntermezzo immagine, double x, double y) {
+		return new ElementoIntermezzo(id, immagine, x, y);
+	}
+
+	/** Scorciatoia per l'immagine di una classe di personaggio. */
+	public static ElementoIntermezzo personaggio(String id, TipoPersonaggio classePersonaggio, double x, double y) {
+		return new ElementoIntermezzo(id, ImmagineIntermezzo.personaggio(classePersonaggio), x, y);
+	}
+
 	private final String id;
 	private final ImmagineIntermezzo immagine;
 	private StatoElemento statoIniziale;
@@ -50,17 +63,20 @@ public final class ElementoIntermezzo {
 		this.statoIniziale = new StatoElemento(x, y, 1, 1, null);
 	}
 
-	/**
-	 * @param x frazione della larghezza dello schermo a cui cade il centro dell'immagine
-	 * @param y frazione dell'altezza dello schermo a cui cade il centro dell'immagine
-	 */
-	public static ElementoIntermezzo di(String id, ImmagineIntermezzo immagine, double x, double y) {
-		return new ElementoIntermezzo(id, immagine, x, y);
+	public String getId() {
+		return id;
 	}
 
-	/** Scorciatoia per l'immagine di una classe di personaggio. */
-	public static ElementoIntermezzo personaggio(String id, TipoPersonaggio classePersonaggio, double x, double y) {
-		return new ElementoIntermezzo(id, ImmagineIntermezzo.personaggio(classePersonaggio), x, y);
+	public ImmagineIntermezzo getImmagine() {
+		return immagine;
+	}
+
+	public double getBoccaX() {
+		return boccaX;
+	}
+
+	public double getBoccaY() {
+		return boccaY;
 	}
 
 	/**
@@ -127,22 +143,6 @@ public final class ElementoIntermezzo {
 	public ElementoIntermezzo ripeti(Ripetizione ripetizione) {
 		this.ripetizione = ripetizione;
 		return this;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public ImmagineIntermezzo getImmagine() {
-		return immagine;
-	}
-
-	public double getBoccaX() {
-		return boccaX;
-	}
-
-	public double getBoccaY() {
-		return boccaY;
 	}
 
 	/**
@@ -225,4 +225,5 @@ public final class ElementoIntermezzo {
 		}
 		return stato;
 	}
+
 }

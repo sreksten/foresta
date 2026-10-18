@@ -22,10 +22,6 @@ public class NotificaVariazioneDisponibilitaIncantesimi extends EventoBase {
         this.nuovoValore = nuovoValore;
     }
 
-    public TipoIncantesimo getClasseIncantesimo() {
-        return tipoIncantesimo;
-    }
-
     public int getValorePrecedente() {
         return valorePrecedente;
     }
@@ -33,4 +29,9 @@ public class NotificaVariazioneDisponibilitaIncantesimi extends EventoBase {
     public int getNuovoValore() {
         return nuovoValore;
     }
+
+    public TipoIncantesimo getClasseIncantesimo() {
+        return tipoIncantesimo;
+    }
+
 }

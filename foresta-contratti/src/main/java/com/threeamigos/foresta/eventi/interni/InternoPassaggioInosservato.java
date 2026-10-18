@@ -12,4 +12,5 @@ public class InternoPassaggioInosservato extends EventoBase {
     public InternoPassaggioInosservato() {
         super(TipoEvento.INTERNO_PASSAGGIO_INOSSERVATO);
     }
+
 }

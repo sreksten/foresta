@@ -21,4 +21,5 @@ public class InternoRichiestaAperturaFinestraCombattimento extends EventoSuPerso
     public VistaPersonaggio getAvversario() {
         return avversario;
     }
+
 }

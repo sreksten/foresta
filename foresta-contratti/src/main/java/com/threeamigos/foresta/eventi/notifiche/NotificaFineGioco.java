@@ -20,4 +20,5 @@ public class NotificaFineGioco extends EventoBase {
     public boolean isCompletatoConSuccesso() {
         return completatoConSuccesso;
     }
+
 }

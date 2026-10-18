@@ -13,4 +13,5 @@ public class NotificaMostraStatisticheFineGioco extends EventoBase {
     public NotificaMostraStatisticheFineGioco() {
         super(TipoEvento.NOTIFICA_MOSTRA_STATISTICHE_FINE_GIOCO);
     }
+
 }

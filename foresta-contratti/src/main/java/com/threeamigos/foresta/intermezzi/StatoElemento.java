@@ -59,4 +59,5 @@ public final class StatoElemento {
 				opacita + (arrivo.opacita - opacita) * frazione,
 				arrivo.verso);
 	}
+
 }

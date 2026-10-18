@@ -30,9 +30,6 @@ public class BusEventi {
 
     private static volatile Consumer<Runnable> consegna = CONSEGNA_SU_THREAD_PRINCIPALE;
 
-    private BusEventi() {
-    }
-
     /**
      * Registra un gestore per gli eventi di quel tipo: ne bastano quelli della classe indicata, non le sue sottoclassi.
      */
@@ -95,4 +92,8 @@ public class BusEventi {
     public static void azzera() {
         sottoscrittori.clear();
     }
+
+    private BusEventi() {
+    }
+
 }

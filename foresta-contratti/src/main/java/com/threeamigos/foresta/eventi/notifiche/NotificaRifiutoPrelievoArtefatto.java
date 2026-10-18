@@ -29,4 +29,5 @@ public class NotificaRifiutoPrelievoArtefatto extends NotificaRifiutoSpostamento
     public String getMotivo() {
         return motivo;
     }
+
 }

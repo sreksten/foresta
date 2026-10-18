@@ -24,4 +24,5 @@ public class InternoAmiciziaStretta extends EventoBase {
     public List<TipoPersonaggio> getAvversari() {
         return avversari;
     }
+
 }

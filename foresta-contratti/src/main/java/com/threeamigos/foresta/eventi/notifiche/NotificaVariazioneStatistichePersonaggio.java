@@ -51,4 +51,5 @@ public class NotificaVariazioneStatistichePersonaggio extends EventoSuPersonaggi
     public double getNuovoValore() {
         return nuovoValore;
     }
+
 }

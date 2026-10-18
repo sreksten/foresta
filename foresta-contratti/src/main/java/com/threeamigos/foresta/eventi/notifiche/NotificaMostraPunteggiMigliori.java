@@ -13,4 +13,5 @@ public class NotificaMostraPunteggiMigliori extends EventoBase {
     public NotificaMostraPunteggiMigliori() {
         super(TipoEvento.NOTIFICA_MOSTRA_PUNTEGGI_MIGLIORI);
     }
+
 }

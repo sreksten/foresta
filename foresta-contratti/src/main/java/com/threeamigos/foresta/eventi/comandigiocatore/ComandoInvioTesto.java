@@ -20,4 +20,5 @@ public class ComandoInvioTesto extends EventoBase {
     public String getTesto() {
         return testo;
     }
+
 }
