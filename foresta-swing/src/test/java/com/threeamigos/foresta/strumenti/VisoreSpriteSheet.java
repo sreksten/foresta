@@ -11,28 +11,43 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Uno strumento per chi disegna: apre uno sprite sheet di 3x3 fotogrammi e ne mostra l'animazione, letti da sinistra a
- * destra e dall'alto in basso. L'immagine si trascina sulla finestra (o si passa come argomento); in basso si scelgono quanti
- * fotogrammi usare (da 1 a 9, i primi) e quanti millisecondi far passare fra uno e l'altro. L'animazione è ingrandita
- * quanto sta nella finestra, a multipli interi per non sfocare i pixel, su una scacchiera che mostra la trasparenza.
+ * Uno strumento per chi disegna: apre uno sprite sheet e ne mostra l'animazione, con i fotogrammi letti da sinistra a destra
+ * e dall'alto in basso. L'immagine si trascina sulla finestra (o si passa come argomento). In basso si scelgono quanti
+ * fotogrammi ci sono in ogni riga e quante righe ci sono (da 1 a 7), quanti fotogrammi ha l'animazione (da 1 a 25, i primi:
+ * l'ultima riga può essere incompleta, e se la griglia ne ha meno si usano tutti i suoi), il primo e l'ultimo del giro (si
+ * ripetono solo i fotogrammi fra i due; se uno supera l'altro se lo porta dietro) e quanti millisecondi far passare fra un
+ * fotogramma e l'altro; un tasto ferma l'animazione e la fa ripartire. L'animazione è ingrandita quanto sta nella finestra,
+ * a multipli interi per non sfocare i pixel, su una scacchiera che mostra la trasparenza.
  * <p>
  * Non fa parte del gioco: si lancia a mano, dal modulo foresta-swing.
  */
 public class VisoreSpriteSheet {
 
-	private static final int LATO = 3;
-	private static final int FOTOGRAMMI_MASSIMI = LATO * LATO;
+	private static final int LATO_MASSIMO = 7;
+	private static final int FOTOGRAMMI_MASSIMI = 25;
+	private static final int LATO_INIZIALE = 5;
 	private static final int ATTESA_MINIMA = 20;
 	private static final int ATTESA_MASSIMA = 1000;
 	private static final int ATTESA_INIZIALE = 120;
 
-	private final JFrame finestra = new JFrame("Sprite sheet 3x3: trascina qui un'immagine");
+	private final JFrame finestra = new JFrame("Sprite sheet: trascina qui un'immagine");
 	private final Animazione animazione = new Animazione();
-	private final JSlider cursoreFotogrammi = new JSlider(1, FOTOGRAMMI_MASSIMI, FOTOGRAMMI_MASSIMI);
+	private final JSlider cursoreColonne = new JSlider(1, LATO_MASSIMO, LATO_INIZIALE);
+	private final JSlider cursoreRighe = new JSlider(1, LATO_MASSIMO, LATO_INIZIALE);
+	private final JSlider cursoreFotogrammi = new JSlider(1, FOTOGRAMMI_MASSIMI, LATO_INIZIALE * LATO_INIZIALE);
+	private final JSlider cursorePrimo = new JSlider(1, FOTOGRAMMI_MASSIMI, 1);
+	private final JSlider cursoreUltimo = new JSlider(1, FOTOGRAMMI_MASSIMI, FOTOGRAMMI_MASSIMI);
 	private final JSlider cursoreAttesa = new JSlider(ATTESA_MINIMA, ATTESA_MASSIMA, ATTESA_INIZIALE);
+	private final JLabel etichettaColonne = new JLabel();
+	private final JLabel etichettaRighe = new JLabel();
 	private final JLabel etichettaFotogrammi = new JLabel();
+	private final JLabel etichettaPrimo = new JLabel();
+	private final JLabel etichettaUltimo = new JLabel();
 	private final JLabel etichettaAttesa = new JLabel();
 	private final Timer timer = new Timer(ATTESA_INIZIALE, e -> animazione.avanti());
+	private final JButton avviaFerma = new JButton("Ferma");
+	private File file;
+	private BufferedImage foglio;
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
@@ -44,11 +59,33 @@ public class VisoreSpriteSheet {
 	}
 
 	private VisoreSpriteSheet() {
-		cursoreFotogrammi.setMajorTickSpacing(1);
-		cursoreFotogrammi.setPaintTicks(true);
-		cursoreFotogrammi.setPaintLabels(true);
-		cursoreFotogrammi.setSnapToTicks(true);
+		for (JSlider cursore : new JSlider[] {cursoreColonne, cursoreRighe}) {
+			cursore.setMajorTickSpacing(1);
+			cursore.setPaintTicks(true);
+			cursore.setPaintLabels(true);
+			cursore.setSnapToTicks(true);
+			cursore.addChangeListener(e -> aggiornaGriglia());
+		}
+		for (JSlider cursore : new JSlider[] {cursoreFotogrammi, cursorePrimo, cursoreUltimo}) {
+			cursore.setMajorTickSpacing(1);
+			cursore.setPaintTicks(true);
+			cursore.setPaintLabels(true);
+			cursore.setSnapToTicks(true);
+		}
 		cursoreFotogrammi.addChangeListener(e -> aggiornaFotogrammi());
+		// Il primo del giro non può superare l'ultimo: chi si muove si porta dietro l'altro
+		cursorePrimo.addChangeListener(e -> {
+			if (cursoreUltimo.getValue() < cursorePrimo.getValue()) {
+				cursoreUltimo.setValue(cursorePrimo.getValue());
+			}
+			aggiornaGiro();
+		});
+		cursoreUltimo.addChangeListener(e -> {
+			if (cursorePrimo.getValue() > cursoreUltimo.getValue()) {
+				cursorePrimo.setValue(cursoreUltimo.getValue());
+			}
+			aggiornaGiro();
+		});
 		cursoreAttesa.setMajorTickSpacing(200);
 		cursoreAttesa.setMinorTickSpacing(20);
 		cursoreAttesa.setPaintTicks(true);
@@ -56,8 +93,18 @@ public class VisoreSpriteSheet {
 
 		JPanel comandi = new JPanel(new GridBagLayout());
 		comandi.setBorder(new EmptyBorder(6, 10, 8, 10));
-		aggiungiRiga(comandi, 0, etichettaFotogrammi, cursoreFotogrammi);
-		aggiungiRiga(comandi, 1, etichettaAttesa, cursoreAttesa);
+		aggiungiRiga(comandi, 0, etichettaColonne, cursoreColonne);
+		aggiungiRiga(comandi, 1, etichettaRighe, cursoreRighe);
+		aggiungiRiga(comandi, 2, etichettaFotogrammi, cursoreFotogrammi);
+		aggiungiRiga(comandi, 3, etichettaPrimo, cursorePrimo);
+		aggiungiRiga(comandi, 4, etichettaUltimo, cursoreUltimo);
+		aggiungiRiga(comandi, 5, etichettaAttesa, cursoreAttesa);
+		avviaFerma.addActionListener(e -> avviaOFerma());
+		GridBagConstraints posizioneTasto = new GridBagConstraints();
+		posizioneTasto.gridy = 6;
+		posizioneTasto.gridwidth = 2;
+		posizioneTasto.insets = new Insets(6, 0, 0, 0);
+		comandi.add(avviaFerma, posizioneTasto);
 
 		finestra.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		finestra.setLayout(new BorderLayout());
@@ -65,9 +112,10 @@ public class VisoreSpriteSheet {
 		finestra.add(comandi, BorderLayout.SOUTH);
 		finestra.setTransferHandler(new GestoreTrascinamento());
 		animazione.setTransferHandler(finestra.getTransferHandler());
-		finestra.setSize(600, 640);
+		finestra.setSize(760, 860);
 		finestra.setLocationRelativeTo(null);
-		aggiornaFotogrammi();
+		aggiornaGriglia();
+		aggiornaGiro();
 		aggiornaAttesa();
 		finestra.setVisible(true);
 		timer.start();
@@ -78,7 +126,9 @@ public class VisoreSpriteSheet {
 		c.gridy = riga;
 		c.anchor = GridBagConstraints.WEST;
 		c.insets = new Insets(2, 0, 2, 8);
-		etichetta.setPreferredSize(new Dimension(150, etichetta.getPreferredSize().height));
+		// Larga abbastanza per il testo più lungo, così i cursori restano allineati; l'altezza si prende dal font, perché
+		// l'etichetta qui è ancora vuota
+		etichetta.setPreferredSize(new Dimension(250, etichetta.getFontMetrics(etichetta.getFont()).getHeight()));
 		pannello.add(etichetta, c);
 		c.gridx = 1;
 		c.weightx = 1;
@@ -86,9 +136,46 @@ public class VisoreSpriteSheet {
 		pannello.add(cursore, c);
 	}
 
+	/**
+	 * Cambiate le colonne o le righe, si ritaglia di nuovo il foglio.
+	 */
+	private void aggiornaGriglia() {
+		int colonne = cursoreColonne.getValue();
+		int righe = cursoreRighe.getValue();
+		etichettaColonne.setText("Fotogrammi per riga: " + colonne);
+		etichettaRighe.setText("Righe: " + righe);
+		if (foglio != null) {
+			animazione.setFoglio(foglio, colonne, righe);
+			finestra.setTitle(file.getName() + " (" + foglio.getWidth() + "x" + foglio.getHeight() + ", fotogrammi di "
+					+ foglio.getWidth() / colonne + "x" + foglio.getHeight() / righe + ")");
+		}
+		aggiornaFotogrammi();
+	}
+
 	private void aggiornaFotogrammi() {
-		etichettaFotogrammi.setText("Fotogrammi: " + cursoreFotogrammi.getValue());
-		animazione.setNumeroFotogrammi(cursoreFotogrammi.getValue());
+		int voluti = cursoreFotogrammi.getValue();
+		int griglia = cursoreColonne.getValue() * cursoreRighe.getValue();
+		etichettaFotogrammi.setText("Fotogrammi in tutto: " + Math.min(voluti, griglia) + (voluti > griglia ? " (griglia piena)" : ""));
+		animazione.setNumeroFotogrammi(voluti);
+	}
+
+	private void aggiornaGiro() {
+		etichettaPrimo.setText("Primo del giro: " + cursorePrimo.getValue());
+		etichettaUltimo.setText("Ultimo del giro: " + cursoreUltimo.getValue());
+		animazione.setGiro(cursorePrimo.getValue(), cursoreUltimo.getValue());
+	}
+
+	/**
+	 * Ferma l'animazione sul fotogramma corrente, o la fa ripartire da lì.
+	 */
+	private void avviaOFerma() {
+		if (timer.isRunning()) {
+			timer.stop();
+			avviaFerma.setText("Avvia");
+		} else {
+			timer.start();
+			avviaFerma.setText("Ferma");
+		}
 	}
 
 	private void aggiornaAttesa() {
@@ -102,9 +189,9 @@ public class VisoreSpriteSheet {
 			if (immagine == null) {
 				throw new IOException("non è un'immagine che Java sa leggere");
 			}
-			animazione.setFoglio(immagine);
-			finestra.setTitle(file.getName() + " (" + immagine.getWidth() + "x" + immagine.getHeight() + ", fotogrammi di "
-					+ immagine.getWidth() / LATO + "x" + immagine.getHeight() / LATO + ")");
+			this.file = file;
+			foglio = immagine;
+			aggiornaGriglia();
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(finestra, "Non riesco ad aprire " + file.getName() + ": " + e.getMessage(),
 					"Sprite sheet", JOptionPane.ERROR_MESSAGE);
@@ -150,33 +237,63 @@ public class VisoreSpriteSheet {
 		private static final Color SCURO = new Color(160, 160, 160);
 
 		private BufferedImage[] fotogrammi;
-		private int numeroFotogrammi = FOTOGRAMMI_MASSIMI;
+		private int numeroFotogrammi = 1;
+		// Il primo e l'ultimo fotogramma del giro, da 1: si ripetono solo quelli in mezzo
+		private int primo = 1;
+		private int ultimo = 1;
+		// Da 0
 		private int corrente;
 
 		Animazione() {
 			setBackground(Color.DARK_GRAY);
 		}
 
-		void setFoglio(BufferedImage foglio) {
-			int larghezza = foglio.getWidth() / LATO;
-			int altezza = foglio.getHeight() / LATO;
-			BufferedImage[] nuovi = new BufferedImage[FOTOGRAMMI_MASSIMI];
-			for (int i = 0; i < FOTOGRAMMI_MASSIMI; i++) {
-				nuovi[i] = foglio.getSubimage(i % LATO * larghezza, i / LATO * altezza, larghezza, altezza);
+		void setFoglio(BufferedImage foglio, int colonne, int righe) {
+			int larghezza = Math.max(1, foglio.getWidth() / colonne);
+			int altezza = Math.max(1, foglio.getHeight() / righe);
+			BufferedImage[] nuovi = new BufferedImage[colonne * righe];
+			for (int i = 0; i < nuovi.length; i++) {
+				nuovi[i] = foglio.getSubimage(i % colonne * larghezza, i / colonne * altezza, larghezza, altezza);
 			}
 			fotogrammi = nuovi;
-			corrente = 0;
+			corrente = primoVero() - 1;
 			repaint();
 		}
 
 		void setNumeroFotogrammi(int numero) {
-			numeroFotogrammi = numero;
-			corrente %= numero;
+			numeroFotogrammi = fotogrammi == null ? numero : Math.min(numero, fotogrammi.length);
+			rientraNelGiro();
+		}
+
+		void setGiro(int primo, int ultimo) {
+			this.primo = primo;
+			this.ultimo = ultimo;
+			rientraNelGiro();
+		}
+
+		/**
+		 * L'ultimo del giro, che non va oltre i fotogrammi dell'animazione.
+		 */
+		private int ultimoVero() {
+			return Math.min(ultimo, numeroFotogrammi);
+		}
+
+		/**
+		 * Il primo del giro, che non va oltre l'ultimo.
+		 */
+		private int primoVero() {
+			return Math.min(primo, ultimoVero());
+		}
+
+		private void rientraNelGiro() {
+			if (corrente < primoVero() - 1 || corrente > ultimoVero() - 1) {
+				corrente = primoVero() - 1;
+			}
 			repaint();
 		}
 
 		void avanti() {
-			corrente = (corrente + 1) % numeroFotogrammi;
+			corrente = corrente + 1 > ultimoVero() - 1 ? primoVero() - 1 : corrente + 1;
 			repaint();
 		}
 
@@ -185,7 +302,7 @@ public class VisoreSpriteSheet {
 			super.paintComponent(g);
 			if (fotogrammi == null) {
 				g.setColor(Color.LIGHT_GRAY);
-				String testo = "Trascina qui uno sprite sheet di 3x3 fotogrammi";
+				String testo = "Trascina qui uno sprite sheet";
 				FontMetrics metriche = g.getFontMetrics();
 				g.drawString(testo, (getWidth() - metriche.stringWidth(testo)) / 2, getHeight() / 2);
 				return;
@@ -204,7 +321,8 @@ public class VisoreSpriteSheet {
 			}
 			g.drawImage(fotogramma, x, y, w, h, null);
 			g.setColor(Color.WHITE);
-			g.drawString("Fotogramma " + (corrente + 1) + " di " + numeroFotogrammi + ", ingrandito " + scala + "x", 10, getHeight() - 10);
+			g.drawString("Fotogramma " + (corrente + 1) + " di " + numeroFotogrammi + ", giro da " + primoVero() + " a " + ultimoVero()
+					+ ", ingrandito " + scala + "x", 10, getHeight() - 10);
 		}
 	}
 }
