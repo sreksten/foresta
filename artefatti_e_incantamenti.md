@@ -52,7 +52,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 
 ### Grafica e interfaccia
 
-- [ ] **Immagini degli oggetti per terra:** spada e scudo si trovano nelle locazioni, ma elmo e armatura sono commentati nel `Bosco` finché mancano `oggetti/Elmo.gif` e `oggetti/Armatura.gif`, e lo spadone non ha nemmeno un oggetto (potrebbe riusare l'immagine della spada). Oggi questi pezzi si hanno solo dai cofani (5% di artefatto casuale), dall'armaiolo e dai templi: le dotazioni tipiche del simulatore sono più complete di quel che un giocatore trova davvero.
+- [ ] **Immagini degli oggetti per terra:** nel `Bosco` si trovano spada, spadone, mazza, ascia, lancia, scudo, elmo, maschera, armatura e schinieri (`TipoOggetto`, un oggetto per tipo in `oggetti/`, l'immagine in `ClassiOggettoImmagine`). Non hanno ancora un oggetto per terra né un'immagine il bastone magico, il libro magico, la veste, il talismano e il ninnolo: questi pezzi si hanno solo dai cofani (5% di artefatto casuale), dall'armaiolo e dai templi.
 - [ ] **Icona del dardo arcano:** per ora il comando `DARDO_ARCANO` usa l'icona generica degli incantesimi (`icone/Incantesimo.gif`, TODO in `ClasseIcona`).
 - [ ] **Immagine dell'incantatore** (`img/personaggi/Incantatore.gif`): è 31×70, metà delle altre (il venditore è 62×140), va ingrandita.
 - [ ] **Nome proprio nell'inventario:** come presentarlo, da riguardare con la resa grafica.

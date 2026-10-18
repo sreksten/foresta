@@ -19,6 +19,9 @@ public enum ClassiOggettoImmagine {
     SCUDO(TipoOggetto.SCUDO, "oggetti/Scudo.gif"),
     SPADA(TipoOggetto.SPADA, "oggetti/Spada.gif"),
     SPADONE(TipoOggetto.SPADONE, "oggetti/Spadone.gif"),
+    MAZZA(TipoOggetto.MAZZA, "oggetti/Mazza.gif"),
+    ASCIA(TipoOggetto.ASCIA, "oggetti/Ascia.gif"),
+    LANCIA(TipoOggetto.LANCIA, "oggetti/Lancia.gif"),
     ELMO(TipoOggetto.ELMO, "oggetti/Elmo.gif"),
     // Per ora una copia dell'elmo, da ridisegnare
     MASCHERA(TipoOggetto.MASCHERA, "oggetti/Maschera.gif"),

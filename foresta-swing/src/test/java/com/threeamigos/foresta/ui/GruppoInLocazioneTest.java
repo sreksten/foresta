@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -15,8 +16,10 @@ import com.threeamigos.foresta.ui.immagini.VersiDeiPersonaggi;
 import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroLocazione;
 
 /**
- * Il gruppo del giocatore nel riquadro della locazione: a destra, il capo più in basso e vicino al bordo, gli altri
- * verso il centro, senza sovrapporsi, e un poco più in alto.
+ * I personaggi nel riquadro della locazione: lo spazio si divide in quattro, il gruppo si dispone attorno alla terza
+ * colonna e gli avversari attorno alla prima, con il personaggio centrale (o lo spazio fra i due centrali) sulla colonna;
+ * una fila che non ci sta occupa tutta la sua metà, con i centri a passo uguale; chi è più vicino al centro sta più in
+ * alto.
  */
 class GruppoInLocazioneTest {
 
@@ -24,58 +27,101 @@ class GruppoInLocazioneTest {
 		return new BufferedImage(larghezza, altezza, BufferedImage.TYPE_INT_ARGB);
 	}
 
-	private static final int LARGHEZZA = 600;
-	private static final int OGGETTO = 40;
+	// Lo spazio a disposizione e lo spazio libero in mezzo (un cofano): le colonne stanno a 300 e a 900, ogni fila ha uno
+	// spazio largo 600 - 70 = 530, che comincia a 670 (il gruppo) o finisce a 530 (gli avversari)
+	private static final int LARGHEZZA = 1200;
+	private static final int CENTRO = 140;
+	private static final int D = DisplayableCanvasRiquadroLocazione.DISTANZA_FRA_PERSONAGGI;
+
+	private static List<BufferedImage> immagini(int numero, int larghezza) {
+		List<BufferedImage> immagini = new ArrayList<>();
+		for (int i = 0; i < numero; i++) {
+			immagini.add(immagine(larghezza, 140));
+		}
+		return immagini;
+	}
 
 	@Test
-	void ilCapoStaAccantoAllOggettoEGliAltriVannoVersoDestraEInBasso() {
-		List<BufferedImage> immagini = Arrays.asList(immagine(60, 140), immagine(60, 140), immagine(60, 140));
-		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiGruppo(100, LARGHEZZA, OGGETTO, 320, immagini);
-		assertEquals(3, posizioni.size());
-		// Il capo parte a destra dell'oggetto, che sta al centro dello spazio, a poca distanza
-		assertEquals(100 + (LARGHEZZA + OGGETTO) / 2 + DisplayableCanvasRiquadroLocazione.STACCO_DALL_OGGETTO, posizioni.get(0).x);
-		for (int i = 1; i < posizioni.size(); i++) {
-			assertTrue(posizioni.get(i).x > posizioni.get(i - 1).x, "ogni personaggio è più verso il bordo del precedente");
-			assertTrue(posizioni.get(i).y > posizioni.get(i - 1).y, "ogni personaggio è più in basso del precedente");
-		}
-		// L'ultimo non esce dallo spazio e poggia un passo sopra il fondo
-		Point ultimo = posizioni.get(2);
-		assertTrue(ultimo.x + 60 <= 100 + LARGHEZZA);
-		assertEquals(ImageCache.SPACING + 320 - 6, ultimo.y + 140);
-		// Il primo parte da tanti passi dal fondo quanti sono i personaggi
+	void unGruppoDispariCheCiStaHaIlPersonaggioCentraleSullaTerzaColonna() {
+		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiGruppo(100, LARGHEZZA, CENTRO, 320, immagini(3, 60));
+		int colonna = 100 + LARGHEZZA * 3 / 4;
+		assertEquals(colonna - 30, posizioni.get(1).x, "il centrale è centrato sulla colonna");
+		assertEquals(posizioni.get(1).x - D - 60, posizioni.get(0).x, "il primo, a sinistra, verso il centro");
+		assertEquals(posizioni.get(1).x + 60 + D, posizioni.get(2).x);
+		// Più si va verso il bordo, più si scende
+		assertTrue(posizioni.get(1).y > posizioni.get(0).y);
+		assertTrue(posizioni.get(2).y > posizioni.get(1).y);
+		assertEquals(ImageCache.SPACING + 320 - 6, posizioni.get(2).y + 140);
 		assertEquals(ImageCache.SPACING + 320 - 3 * 6, posizioni.get(0).y + 140);
 	}
 
 	@Test
-	void gliAvversariSpecchianoIlGruppoASinistraDellOggetto() {
-		List<BufferedImage> immagini = Arrays.asList(immagine(60, 140), immagine(60, 140));
-		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiAvversari(100, LARGHEZZA, OGGETTO, 320, immagini);
-		assertEquals(100 + (LARGHEZZA - OGGETTO) / 2 - DisplayableCanvasRiquadroLocazione.STACCO_DALL_OGGETTO,
-				posizioni.get(0).x + 60);
-		assertTrue(posizioni.get(1).x < posizioni.get(0).x);
-		assertTrue(posizioni.get(1).y > posizioni.get(0).y);
+	void unGruppoPariCheCiStaHaLaColonnaFraIDueCentrali() {
+		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiGruppo(0, LARGHEZZA, CENTRO, 320, immagini(4, 100));
+		int colonna = LARGHEZZA * 3 / 4;
+		assertEquals(colonna - D / 2 - 100, posizioni.get(1).x);
+		assertEquals(colonna + D / 2, posizioni.get(2).x);
+		assertEquals(posizioni.get(1).x - D - 100, posizioni.get(0).x);
 	}
 
 	@Test
-	void ognunoStaSubitoDopoIlPrecedenteSenzaSovrapporsi() {
-		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiGruppo(0, LARGHEZZA, OGGETTO, 320,
-				Arrays.asList(immagine(112, 142), immagine(56, 138)));
-		assertEquals(DisplayableCanvasRiquadroLocazione.DISTANZA_FRA_PERSONAGGI, posizioni.get(1).x - (posizioni.get(0).x + 112));
+	void unoSoloStaCentratoSullaSuaColonna() {
+		assertEquals(LARGHEZZA * 3 / 4 - 30,
+				DisplayableCanvasRiquadroLocazione.disponiGruppo(0, LARGHEZZA, CENTRO, 320, immagini(1, 60)).get(0).x);
+		assertEquals(LARGHEZZA / 4 - 30,
+				DisplayableCanvasRiquadroLocazione.disponiAvversari(0, LARGHEZZA, CENTRO, 320, immagini(1, 60)).get(0).x);
 	}
 
 	@Test
-	void ilGruppoNonEsceDalloSpazioEAccorciaLeDistanze() {
-		List<BufferedImage> immagini = Arrays.asList(immagine(60, 140), immagine(60, 140), immagine(60, 140), immagine(60, 140),
-				immagine(60, 140), immagine(60, 140), immagine(60, 140), immagine(60, 140));
-		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiGruppo(100, LARGHEZZA, OGGETTO, 320, immagini);
-		for (Point posizione : posizioni) {
-			assertTrue(posizione.x + 60 <= 100 + LARGHEZZA, "nessuno esce a destra");
+	void gliAvversariCheCiStannoSonoAttornoAllaPrimaColonnaIlPrimoVersoIlCentro() {
+		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiAvversari(0, LARGHEZZA, CENTRO, 320, immagini(3, 60));
+		assertEquals(LARGHEZZA / 4 - 30, posizioni.get(1).x);
+		assertEquals(posizioni.get(1).x + 60 + D, posizioni.get(0).x, "il primo è più vicino al centro");
+		assertEquals(posizioni.get(1).x - D - 60, posizioni.get(2).x);
+		assertTrue(posizioni.get(1).y > posizioni.get(0).y, "più si va verso il bordo, più si scende");
+	}
+
+	@Test
+	void unGruppoCheNonCiStaSiDisponePerIlCentroAPassoUguale() {
+		// Otto larghi 100 (più gli spazi) non stanno in 530: il passo è (530 - 50 - 50) / 7
+		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiGruppo(0, LARGHEZZA, CENTRO, 320, immagini(8, 100));
+		for (int i = 0; i < 8; i++) {
+			assertEquals(Math.round(670 + 50 + i * 430 / 7.0d), posizioni.get(i).x + 50, "il centro del personaggio " + i);
+		}
+		assertEquals(LARGHEZZA, posizioni.get(7).x + 100, "l'ultimo arriva al bordo");
+	}
+
+	@Test
+	void gliAvversariCheNonCiStannoSiDispongonoASpecchio() {
+		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiAvversari(0, LARGHEZZA, CENTRO, 320, immagini(8, 100));
+		for (int i = 0; i < 8; i++) {
+			assertEquals(Math.round(530 - 50 - i * 430 / 7.0d), posizioni.get(i).x + 50, "il centro dell'avversario " + i);
+		}
+		assertEquals(0, posizioni.get(7).x, "l'ultimo arriva al bordo");
+	}
+
+	@Test
+	void conImmaginiDiverseContanoLaMetaDelPrimoEDellUltimo() {
+		// Il primo largo 300 (braccia aperte), l'ultimo largo 100, sei in tutto: passo (530 - 150 - 50) / 5 = 66, a centri
+		// uguali qualunque sia la larghezza di quelli in mezzo
+		List<BufferedImage> immagini = Arrays.asList(immagine(300, 140), immagine(60, 140), immagine(200, 140), immagine(60, 140),
+				immagine(60, 140), immagine(100, 140));
+		List<Point> posizioni = DisplayableCanvasRiquadroLocazione.disponiGruppo(0, LARGHEZZA, CENTRO, 320, immagini);
+		for (int i = 0; i < 6; i++) {
+			assertEquals(670 + 150 + i * 66, posizioni.get(i).x + immagini.get(i).getWidth() / 2, "il centro del personaggio " + i);
 		}
 	}
 
 	@Test
+	void unoSoloPiuLargoDellaSuaMetaStaComunqueSullaColonna() {
+		assertEquals(LARGHEZZA * 3 / 4 - 300,
+				DisplayableCanvasRiquadroLocazione.disponiGruppo(0, LARGHEZZA, CENTRO, 320, immagini(1, 600)).get(0).x);
+	}
+
+	@Test
 	void unGruppoVuotoNonHaPosizioni() {
-		assertTrue(DisplayableCanvasRiquadroLocazione.disponiGruppo(0, LARGHEZZA, OGGETTO, 320, Collections.emptyList()).isEmpty());
+		assertTrue(DisplayableCanvasRiquadroLocazione.disponiGruppo(0, LARGHEZZA, CENTRO, 320, Collections.emptyList()).isEmpty());
+		assertTrue(DisplayableCanvasRiquadroLocazione.disponiAvversari(0, LARGHEZZA, CENTRO, 320, Collections.emptyList()).isEmpty());
 	}
 
 	@Test
