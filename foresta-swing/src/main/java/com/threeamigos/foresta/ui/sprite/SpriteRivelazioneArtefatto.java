@@ -339,6 +339,10 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 				return ClassiOggettoImmagine.getImmagine(TipoOggetto.ASCIA);
 			case LANCIA:
 				return ClassiOggettoImmagine.getImmagine(TipoOggetto.LANCIA);
+			case BASTONE_MAGICO:
+				return ClassiOggettoImmagine.getImmagine(TipoOggetto.BASTONE_MAGICO);
+			case LIBRO_MAGICO:
+				return ClassiOggettoImmagine.getImmagine(TipoOggetto.LIBRO_MAGICO);
 			case SCUDO:
 				return ClassiOggettoImmagine.getImmagine(TipoOggetto.SCUDO);
 			case ELMO:

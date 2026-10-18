@@ -83,8 +83,6 @@ I nomi di questi personaggi sono fatti (liste, registro, testi delle missioni, s
 ## Grafica e immagini
 
 - Immagini degli artefatti che mancano per la rivelazione (`SpriteRivelazioneArtefatto`), da mettere in `img/oggetti`:
-  - armi: BastoneMagico;
-  - libro magico: LibroMagico;
   - protezioni: Veste;
   - accessori: Talismano, Ninnolo;
   - ingredienti magici (oggi usano l'icona della pergamena): Pergamena, Gemma, Monile, Gingillo, Sigillo.

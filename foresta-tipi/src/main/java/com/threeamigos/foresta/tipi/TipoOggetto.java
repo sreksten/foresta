@@ -20,6 +20,8 @@ public enum TipoOggetto {
 	MAZZA(1, 100),
 	ASCIA(1, 100),
 	LANCIA(1, 100),
+	BASTONE_MAGICO(1, 100),
+	LIBRO_MAGICO(1, 100),
 	ELMO(1, 100),
 	MASCHERA(1, 100),
 	ARMATURA(1, 100),

@@ -22,6 +22,8 @@ public enum ClassiOggettoImmagine {
     MAZZA(TipoOggetto.MAZZA, "oggetti/Mazza.gif"),
     ASCIA(TipoOggetto.ASCIA, "oggetti/Ascia.gif"),
     LANCIA(TipoOggetto.LANCIA, "oggetti/Lancia.gif"),
+    BASTONE_MAGICO(TipoOggetto.BASTONE_MAGICO, "oggetti/BastoneMagico.gif"),
+    LIBRO_MAGICO(TipoOggetto.LIBRO_MAGICO, "oggetti/LibroMagico.gif"),
     ELMO(TipoOggetto.ELMO, "oggetti/Elmo.gif"),
     // Per ora una copia dell'elmo, da ridisegnare
     MASCHERA(TipoOggetto.MASCHERA, "oggetti/Maschera.gif"),

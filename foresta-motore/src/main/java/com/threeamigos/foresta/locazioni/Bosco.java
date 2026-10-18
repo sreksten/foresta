@@ -81,6 +81,8 @@ public class Bosco extends LocazioneBase {
 			TipoOggetto.MAZZA,
 			TipoOggetto.ASCIA,
 			TipoOggetto.LANCIA,
+			TipoOggetto.BASTONE_MAGICO,
+			// Il libro magico no: nel bosco se ne troverebbero troppi, viene dai cofani (l'artefatto casuale)
 			TipoOggetto.ARMATURA,
 			TipoOggetto.ELMO,
 			TipoOggetto.MASCHERA,

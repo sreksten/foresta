@@ -52,7 +52,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 
 ### Grafica e interfaccia
 
-- [ ] **Immagini degli oggetti per terra:** nel `Bosco` si trovano spada, spadone, mazza, ascia, lancia, scudo, elmo, maschera, armatura e schinieri (`TipoOggetto`, un oggetto per tipo in `oggetti/`, l'immagine in `ClassiOggettoImmagine`). Non hanno ancora un oggetto per terra né un'immagine il bastone magico, il libro magico, la veste, il talismano e il ninnolo: questi pezzi si hanno solo dai cofani (5% di artefatto casuale), dall'armaiolo e dai templi.
+- [ ] **Immagini degli oggetti per terra:** nel `Bosco` si trovano spada, spadone, mazza, ascia, lancia, bastone magico, scudo, elmo, maschera, armatura e schinieri (`TipoOggetto`, un oggetto per tipo in `oggetti/`, l'immagine in `ClassiOggettoImmagine`). Il libro magico ha oggetto e immagine (anche per la rivelazione) ma nel bosco non c'è, perché se ne troverebbero troppi: viene dai cofani, con l'artefatto casuale. Non hanno ancora un oggetto per terra né un'immagine la veste, il talismano e il ninnolo: questi pezzi si hanno solo dai cofani (5% di artefatto casuale), dall'armaiolo e dai templi.
 - [ ] **Icona del dardo arcano:** per ora il comando `DARDO_ARCANO` usa l'icona generica degli incantesimi (`icone/Incantesimo.gif`, TODO in `ClasseIcona`).
 - [ ] **Immagine dell'incantatore** (`img/personaggi/Incantatore.gif`): è 31×70, metà delle altre (il venditore è 62×140), va ingrandita.
 - [ ] **Nome proprio nell'inventario:** come presentarlo, da riguardare con la resa grafica.
