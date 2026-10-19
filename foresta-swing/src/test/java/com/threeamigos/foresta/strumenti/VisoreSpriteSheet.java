@@ -16,7 +16,8 @@ import java.util.List;
  * fotogrammi ci sono in ogni riga e quante righe ci sono (da 1 a 7), quanti fotogrammi ha l'animazione (da 1 a 25, i primi:
  * l'ultima riga può essere incompleta, e se la griglia ne ha meno si usano tutti i suoi), il primo e l'ultimo del giro (si
  * ripetono solo i fotogrammi fra i due; se uno supera l'altro se lo porta dietro) e quanti millisecondi far passare fra un
- * fotogramma e l'altro; un tasto ferma l'animazione e la fa ripartire. L'animazione è ingrandita quanto sta nella finestra,
+ * fotogramma e l'altro; un tasto ferma l'animazione e la fa ripartire, e ad animazione ferma un ultimo cursore mostra il
+ * fotogramma che si vuole (mentre gira, il cursore è spento e segue l'animazione). L'animazione è ingrandita quanto sta nella finestra,
  * a multipli interi per non sfocare i pixel, su una scacchiera che mostra la trasparenza.
  * <p>
  * Non fa parte del gioco: si lancia a mano, dal modulo foresta-swing.
@@ -44,7 +45,12 @@ public class VisoreSpriteSheet {
 	private final JLabel etichettaPrimo = new JLabel();
 	private final JLabel etichettaUltimo = new JLabel();
 	private final JLabel etichettaAttesa = new JLabel();
-	private final Timer timer = new Timer(ATTESA_INIZIALE, e -> animazione.avanti());
+	private final JSlider cursoreMostrato = new JSlider(1, FOTOGRAMMI_MASSIMI, 1);
+	private final JLabel etichettaMostrato = new JLabel();
+	private final Timer timer = new Timer(ATTESA_INIZIALE, e -> {
+		animazione.avanti();
+		sincronizzaMostrato();
+	});
 	private final JButton avviaFerma = new JButton("Ferma");
 	private File file;
 	private BufferedImage foglio;
@@ -66,7 +72,7 @@ public class VisoreSpriteSheet {
 			cursore.setSnapToTicks(true);
 			cursore.addChangeListener(e -> aggiornaGriglia());
 		}
-		for (JSlider cursore : new JSlider[] {cursoreFotogrammi, cursorePrimo, cursoreUltimo}) {
+		for (JSlider cursore : new JSlider[] {cursoreFotogrammi, cursorePrimo, cursoreUltimo, cursoreMostrato}) {
 			cursore.setMajorTickSpacing(1);
 			cursore.setPaintTicks(true);
 			cursore.setPaintLabels(true);
@@ -99,9 +105,18 @@ public class VisoreSpriteSheet {
 		aggiungiRiga(comandi, 3, etichettaPrimo, cursorePrimo);
 		aggiungiRiga(comandi, 4, etichettaUltimo, cursoreUltimo);
 		aggiungiRiga(comandi, 5, etichettaAttesa, cursoreAttesa);
+		aggiungiRiga(comandi, 6, etichettaMostrato, cursoreMostrato);
+		// Il cursore comanda solo ad animazione ferma; mentre gira lo muove il timer
+		cursoreMostrato.setEnabled(false);
+		cursoreMostrato.addChangeListener(e -> {
+			if (!timer.isRunning()) {
+				animazione.mostra(cursoreMostrato.getValue());
+			}
+			etichettaMostrato.setText("Fotogramma mostrato: " + animazione.getMostrato());
+		});
 		avviaFerma.addActionListener(e -> avviaOFerma());
 		GridBagConstraints posizioneTasto = new GridBagConstraints();
-		posizioneTasto.gridy = 6;
+		posizioneTasto.gridy = 7;
 		posizioneTasto.gridwidth = 2;
 		posizioneTasto.insets = new Insets(6, 0, 0, 0);
 		comandi.add(avviaFerma, posizioneTasto);
@@ -112,7 +127,7 @@ public class VisoreSpriteSheet {
 		finestra.add(comandi, BorderLayout.SOUTH);
 		finestra.setTransferHandler(new GestoreTrascinamento());
 		animazione.setTransferHandler(finestra.getTransferHandler());
-		finestra.setSize(760, 860);
+		finestra.setSize(760, 920);
 		finestra.setLocationRelativeTo(null);
 		aggiornaGriglia();
 		aggiornaGiro();
@@ -157,12 +172,22 @@ public class VisoreSpriteSheet {
 		int griglia = cursoreColonne.getValue() * cursoreRighe.getValue();
 		etichettaFotogrammi.setText("Fotogrammi in tutto: " + Math.min(voluti, griglia) + (voluti > griglia ? " (griglia piena)" : ""));
 		animazione.setNumeroFotogrammi(voluti);
+		sincronizzaMostrato();
+	}
+
+	/**
+	 * Porta il cursore del fotogramma mostrato su quello che l'animazione mostra davvero.
+	 */
+	private void sincronizzaMostrato() {
+		cursoreMostrato.setValue(animazione.getMostrato());
+		etichettaMostrato.setText("Fotogramma mostrato: " + animazione.getMostrato());
 	}
 
 	private void aggiornaGiro() {
 		etichettaPrimo.setText("Primo del giro: " + cursorePrimo.getValue());
 		etichettaUltimo.setText("Ultimo del giro: " + cursoreUltimo.getValue());
 		animazione.setGiro(cursorePrimo.getValue(), cursoreUltimo.getValue());
+		sincronizzaMostrato();
 	}
 
 	/**
@@ -172,7 +197,9 @@ public class VisoreSpriteSheet {
 		if (timer.isRunning()) {
 			timer.stop();
 			avviaFerma.setText("Avvia");
+			cursoreMostrato.setEnabled(true);
 		} else {
+			cursoreMostrato.setEnabled(false);
 			timer.start();
 			avviaFerma.setText("Ferma");
 		}
@@ -290,6 +317,21 @@ public class VisoreSpriteSheet {
 				corrente = primoVero() - 1;
 			}
 			repaint();
+		}
+
+		/**
+		 * Mostra quel fotogramma (da 1), uno qualunque dell'animazione, anche fuori dal giro.
+		 */
+		void mostra(int fotogramma) {
+			corrente = Math.max(1, Math.min(fotogramma, numeroFotogrammi)) - 1;
+			repaint();
+		}
+
+		/**
+		 * Il fotogramma mostrato, da 1.
+		 */
+		int getMostrato() {
+			return corrente + 1;
 		}
 
 		void avanti() {
