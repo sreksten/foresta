@@ -1,165 +1,337 @@
 # Assessment di Foresta
 
-Valutazione del codice al **2026-10-17**, rifatta da zero. I numeri sono misurati sul working tree di quel giorno (`wc -l`, `grep`, JaCoCo da `mvn test`); i giudizi sono segnati come **Giudizio**. Le cose da fare per il porting su Android e iOS sono in [`assessment_portabilita.md`](assessment_portabilita.md): qui c'è solo il riassunto.
+Valutazione del codice al **2026-10-19**, con una revisione completa dei sorgenti modulo per modulo, dal basso (`foresta-tipi`) fino a `foresta-app`. I numeri sono misurati sul working tree di quel giorno (`wc -l`, `grep`, JaCoCo da `mvn clean test`); i giudizi sono segnati come **Giudizio**. I difetti trovati sono nel §5, con un codice (A1, M3, B12…) per richiamarli. Le cose da fare per il porting su Android e iOS sono in [`assessment_portabilita.md`](assessment_portabilita.md): qui c'è solo il riassunto.
 
 ## 1. Sintesi
 
 - Il gioco è **completo e giocabile** da inizio a fine (creazione del gruppo, esplorazione, combattimento a round con tattiche, negozi, incantatore, missioni, intermezzi, trofei, salvataggi, classifica).
-- La **separazione fra le parti è garantita dal compilatore**: sei moduli Maven in fila (tipi, modellodati, contratti, motore, swing, app). La UI non vede il motore, ma soltanto viste in sola lettura ed eventi. Era il limite principale dell'assessment del 2026-10-05, ed è risolto.
-- La **base di test è ampia e veloce**: 1355 test verdi (16 saltati), 81% delle righe del motore coperte, e test di scenario che giocano partite intere senza UI.
-- Il **debito tecnico è concentrato** in quattro classi del motore che continuano a crescere (`PersonaggioBase`, `Automa`, `LocazioneBase`, `GrammarBean`) e nello stato statico (registri e singleton).
-- Il problema che più pesa sul gioco non è nel codice ma nel **bilanciamento**: boss, incantesimi a più bersagli ed economia (vedi [`todo.md`](todo.md)).
-- **Giudizio:** il progetto è in buona salute e ben documentato. Il codice è pronto per un porting del motore; la parte cara resta la UI, che va riscritta. Conviene ridurre le classi grandi un pezzo alla volta, quando si interviene su di loro.
+- La **separazione fra le parti è garantita dal compilatore**: sei moduli Maven in fila (tipi, modellodati, contratti, motore, swing, app). La UI non vede il motore, ma soltanto viste in sola lettura ed eventi.
+- La **base di test è ampia e veloce**: 1543 test verdi (16 saltati); `tipi` e `modellodati` sono coperti quasi al 100% dai loro test, il motore all'85%.
+- La **revisione ha trovato 4 difetti di gravità alta**, tutti nella logica di gioco e non nell'infrastruttura (§5.1):
+  - gli avversari uccisi dal danno ad area non si contano;
+  - il capo del gruppo cambia quando esce un altro personaggio;
+  - La Benedizione può portare il gruppo a 9 personaggi, e il gioco va in crash;
+  - un carattere senza glifo (per esempio "ü" in un nome) manda in eccezione il disegno a ogni fotogramma.
+- **L'infrastruttura è solida.** Il bus, il `Dado`, i salvataggi di partita, gli scambi di artefatti, i prezzi e le copie difensive sono stati controllati e sono a posto. Non c'è nessuna `ConcurrentModificationException` raggiungibile, e i salvataggi sono simmetrici campo per campo.
+- **I difetti medi sono soprattutto regole di gioco incoerenti**: effetti di stato, ospiti, tempo in locanda, testi delle ricompense. Nella UI sono comportamenti sbagliati (§5.2).
+- Il **debito tecnico** resta concentrato nelle quattro classi grandi del motore e nello stato statico (§3).
+- **Giudizio:** il progetto è in buona salute. I difetti alti si correggono con interventi piccoli e locali; conviene farlo subito, con un test ciascuno. L'orientamento verticale resta rotto (noto) ed è rimandato in fondo.
 
 ## 2. Misure
 
 | Modulo | Codice (file / righe) | Test (file / righe) | Test eseguiti | Copertura righe (JaCoCo) |
 | :--- | ---: | ---: | ---: | ---: |
-| `foresta-tipi` | 57 / 6.100 | 8 / 570 | 31 | 57% |
-| `foresta-modellodati` | 36 / 5.400 | 11 / 1.400 | 70 | 60%* |
-| `foresta-contratti` | 168 / 7.200 | 9 / 640 | 39 | 40%* |
-| `foresta-motore` | 356 / 55.000 | 185 / 30.500 | 1176 (16 saltati) | 81% |
-| `foresta-swing` | 95 / 22.000 | 12 / 1.500 | 52 | 26%* |
-| `foresta-app` | 3 / 740 | 19 / 1.600 | 34 | 26% |
-| **Totale** | **715 / 96.500** | **244 / 36.200** | **1355** | **62%** |
+| `foresta-tipi` | 57 / 6.600 | 12 / 1.100 | 68 | 100% |
+| `foresta-modellodati` | 36 / 5.500 | 27 / 3.700 | 193 | 99,7% |
+| `foresta-contratti` | 168 / 7.400 | 9 / 640 | 39 | 40%* |
+| `foresta-motore` | 363 / 55.900 | 190 / 31.200 | 1154 (16 saltati) | 85% |
+| `foresta-swing` | 95 / 22.100 | 13 / 1.900 | 56 | 27%* |
+| `foresta-app` | 3 / 740 | 19 / 1.600 | 33 | 27% |
+| **Totale** | **722 / 98.300** | **270 / 40.200** | **1543** | **66%** |
 
-\* JaCoCo conta solo i test del modulo stesso: modellodati e contratti sono esercitati molto di più dai test del motore, e la UI dai test di `foresta-app`. Le percentuali di questi moduli sono quindi più basse del vero.
+\* JaCoCo conta solo i test del modulo stesso: contratti è esercitato molto di più dai test del motore, e la UI dai test di `foresta-app`. Le percentuali di questi moduli sono quindi più basse del vero.
 
-Nel motore la copertura è alta quasi ovunque (`trofei` 100%, `testi` 95%, `combattimento` 94%, `intermezzi` 94%, `canti` 93%, `tattiche` 88%, `missioni` 86%, `motore` 84%). È bassa in `offerte` (23%), `salvataggi` (64%), `personaggi` (68%) e `locazioni` (71%).
+Nel motore la copertura è alta quasi ovunque (`trofei` 100%, `testi` e `intermezzi` 95%, `combattimento` 94%, `canti` 93%, `tattiche` 89%, `incantesimi` 88%, `missioni` 87%, `motore` 85%). È bassa in `offerte` (24%), `salvataggi` (65%), `personaggi` (69%) e `locazioni` (72%). Non è un caso che molti difetti medi del §5 stiano proprio in `personaggi` e `locazioni`.
 
 Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 
-| Classe | Righe | Note | Il 2026-10-05 |
-| :--- | ---: | :--- | ---: |
-| `testi/GrammarBean` | 2533 | Motore di grammatiche, con un suo manuale e assessment ([`GrammarBean.md`](GrammarBean.md)) | — |
-| `personaggi/PersonaggioBase` | 2342 | 197 metodi; 5 dei 13 `TODO`/`FIXME` del motore | 2072 |
-| `motore/Automa` | 2288 | 32 stati, 70 `case`, 35 campi, 119 metodi | 1976 |
-| `locazioni/LocazioneBase` | 1944 | Combattimento a round, azioni, canti, sfida | 1522 |
-| `ui/DisplayableCanvas` | 1631 | Il canvas principale | 1296 |
-| `tipi/Costanti` | 1613 | 1353 costanti di bilanciamento | 2054 |
-| `missioni/MissioneAPassi` | 1274 | | — |
-| `combattimento/CalcolatoreCombattimento` | 1247 | 20 metodi statici pubblici | — |
-| `ui/tattiche/DisplayableCanvasTattiche` | 1136 | | — |
-| `tipi/TipoMissione` | 986 | Spostato in `tipi` dal refactoring in corso | — |
+| Classe | Righe | Il 2026-10-17 |
+| :--- | ---: | ---: |
+| `testi/GrammarBean` | 2533 | 2533 |
+| `personaggi/PersonaggioBase` | 2356 | 2342 |
+| `motore/Automa` | 2284 | 2288 |
+| `locazioni/LocazioneBase` | 1944 | 1944 |
+| `ui/DisplayableCanvas` | 1629 | 1631 |
+| `tipi/Costanti` | 1625 | 1613 |
+| `combattimento/CalcolatoreCombattimento` | 1283 | 1247 |
+| `missioni/MissioneAPassi` | 1274 | 1274 |
+| `ui/tattiche/DisplayableCanvasTattiche` | 1133 | 1136 |
+| `tipi/TipoMissione` | 1012 | 986 |
 
 ## 3. Architettura
 
 ### Punti di forza
 
 - **Moduli in fila, controllati dal compilatore.** Ogni modulo vede solo quelli sopra di lui. Quello che il compilatore non vede, cioè `java.awt`, `javax.swing`, `javax.imageio` e `javax.sound` fuori da `foresta-swing`, `Locale.ROOT`, `System.exit` e il `Logger`, lo controllano i test che leggono i sorgenti (`DipendenzeDalToolkitGraficoTest`, `ConvenzioniDiPortabilitaTest`).
-- **La UI legge da viste e scrive con eventi.** `VistaPartita` e `VistaScambio` sono in sola lettura, e verso il motore vanno solo comandi con identificativi. Anche le collezioni del modello dati sono esposte in sola lettura, con metodi espliciti per cambiarle.
-- **Un solo thread per la logica.** `ThreadPrincipale` (sul desktop l'EDT) esegue motore e UI. Il temporizzatore pianifica gli impulsi e scarta quelli superati da un cambio di stato. Il bus isola gli errori degli iscritti (`motore_di_gioco.md` §2 e §4).
-- **Punti di aggancio per la piattaforma.** Le piattaforme si agganciano a:
-  - il ciclo di vita, con `inBackground`/`inPrimoPiano` e il salvataggio automatico;
-  - l'uscita, con `NotificaUscitaDalGioco`;
-  - la cartella dei file, con `GestoreSuFile(File)`;
-  - la destinazione del log;
-  - la lingua dei testi, con `Testi`.
-
-  Il motore usa solo `java.io` e `java.util`.
-- **Testabilità.** Gli strumenti sono:
-  - `Dado`, l'unica sorgente di caso, con seme e lanci truccati per contesto;
-  - `PartitaDiTest`, che guida una partita dal bus;
-  - il temporizzatore manuale;
-  - le simulazioni e il giocatore automatico per il bilanciamento.
-
-  Tutti i test girano senza UI.
-- **Contenuto a basso costo.** Le missioni a passi hanno un vocabolario piccolo di passi riutilizzabili. Le grammatiche producono nomi, notizie, testi di missione e artefatti. Gli intermezzi sono a pagine, con un'anteprima per gli autori.
-- **Documentazione.** Ci sono 27 documenti `.md` nella radice, con la mappa in [`foresta.md`](foresta.md). La revisione dei javadoc è completa: un `package-info.java` per pacchetto, e javadoc per tutte le classi e per i metodi non banali.
+- **La UI legge da viste e scrive con eventi.** `VistaPartita` e `VistaScambio` sono in sola lettura, e verso il motore vanno solo comandi con identificativi. Le collezioni del modello dati sono esposte in sola lettura, con copie nei costruttori.
+- **Un solo thread per la logica.** Il bus consegna sempre sul thread principale (sul desktop l'EDT), dove girano anche i tick del temporizzatore: fra eventi e stato non ci sono corse. L'unico thread estraneo è l'animatore di `DisplayableCanvas` (B40).
+- **Salvataggi di partita.** `LettoreCampi` conserva i campi vuoti, i testi liberi passano da `pulisciCampo`, un file troncato dà `IOException`, e la scrittura passa da un file temporaneo. Ogni coppia `salva`/`leggi` è stata confrontata campo per campo; le poche asimmetrie sono nel §5.3.
+- **Testabilità.** Ci sono `Dado` con seme e trucchi per contesto, `PartitaDiTest`, il temporizzatore manuale e i simulatori. Tutti i test girano senza UI.
+- **Contenuto a basso costo.** Missioni a passi, grammatiche e intermezzi a pagine. Uno script ha verificato che ogni riferimento `[produzione]` nelle grammatiche esiste e che tutte le immagini citate dal codice ci sono.
+- **Documentazione.** 27 documenti `.md` nella radice, con la mappa in [`foresta.md`](foresta.md); un `package-info.java` per pacchetto.
 
 ### Problemi, in ordine di priorità
 
-1. **Classi grandi che crescono.** Dal 2026-10-05:
-   - `PersonaggioBase` è passata da 2072 a 2342 righe;
-   - `Automa` da 1976 a 2288;
-   - `LocazioneBase` da 1522 a 1944.
-
-   Ogni funzione nuova aggiunge a `Automa` uno stato, un gestore e qualche campo, e a `LocazioneBase` un ramo del combattimento. `Costanti` invece è scesa da 2054 a 1613 righe, perché i testi sono andati nei file di risorse.
-   **Giudizio:** è il debito più concreto. Ci sono tagli naturali da fare quando si tocca la zona:
-   - per `Automa`, altri sotto-automi come `AutomaInventario` e `AutomaIncantatore` (per esempio creazione del gruppo, combattimento, fine partita);
+1. **Classi grandi.** `PersonaggioBase`, `Automa` e `LocazioneBase` sono stabili dal 2026-10-17, ma restano le zone dove la revisione ha trovato più difetti: il combattimento a round in `LocazioneBase` (M3, M4, M7) e gli effetti di stato in `PersonaggioBase` (M5, M9, B15).
+   **Giudizio:** i tagli naturali restano quelli già indicati:
+   - per `Automa`, altri sotto-automi (creazione del gruppo, combattimento, fine partita);
    - per `LocazioneBase`, il combattimento a round in una classe sua;
-   - per `PersonaggioBase`, attributi e modificatori da una parte, equipaggiamento dall'altra, effetti di stato da un'altra ancora.
-2. **Stato statico.** Lo stato della partita vive in registri e singleton:
-   - `getIstanza()` compare in 64 file del motore, `ModelloDati.getIstanza()` in 15;
-   - alcune classi sono fatte di soli metodi statici: `RegistroMissioni` (36 metodi statici pubblici), `ProduttoreDiTestiCasuale` (30), `Foresta` (28), `CalcolatoreCombattimento` (20), `RegoleIncantatura` (17);
-   - nel motore ci sono 23 campi statici non `final`.
-
-   `StatoDelMotore.azzera()` e `PartitaDiTest` riportano tutto a vuoto, quindi i test funzionano. Però un processo tiene una sola partita, e una piattaforma che chiude l'app perde lo stato. Il salvataggio automatico lo copre, ma non lo elimina.
-   **Giudizio:** per un gioco single-player è accettabile. Si può tenere così, a patto di non aggiungere altri registri statici.
-3. **Il motore è un modulo solo.** I suoi pacchetti si richiamano a vicenda: `motore`, `personaggi`, `locazioni`, `missioni` e `oggetti` sono un unico grafo. Il primo taglio possibile è il modulo `foresta-missioni`, con il piano in [`todo.md`](todo.md). Il refactoring in corso, che porta `TipoMissione`, `CategoriaMissione` e `MissionePredefinita` in `tipi`, va in quella direzione.
-4. **Due stili di missione.** 12 classi estendono ancora `MissioneBase`, cioè le principali e le secondarie più vecchie. Altre 10 estendono `MissioneAPassi` direttamente, più le loro figlie. Le prime non hanno intermezzi per passo, domande, contatori e ripieghi (`gestione_missioni.md` §12).
-   **Giudizio:** conviene portarle sui passi solo quando se ne cambia il contenuto.
-5. **Il salvataggio fa parte del modello dati.** Le classi `…MD` portano `salva` e `leggi`, il formato a `|` non ha numero di versione, e un nome di costante cambiato rompe i salvataggi vecchi: è successo con `BARDO_DELLE_LOCANDE`, sistemato a mano.
-   La politica attuale è che i salvataggi non debbano restare compatibili. Se cambiasse, servirebbero:
-   - un numero di versione;
-   - alias per le costanti rinominate;
-   - migrazioni;
-   - salvataggi d'esempio da rileggere nei test.
-
-   Il formato (testo o JSON) conta meno. È una decisione ancora aperta.
+   - per `PersonaggioBase`, attributi e modificatori, equipaggiamento ed effetti di stato separati.
+2. **Stato statico.** Lo stato della partita vive in registri e singleton. `StatoDelMotore.azzera()` va bene per i test, ma non per "ripartire pulito" su una piattaforma mobile come suggerisce la sua javadoc. `Automa` e `LocazioneBase` tengono i vecchi gruppi in campi `final`, e il vecchio `GruppoGiocatore` resta iscritto al bus (M20). In più `Foresta.reimposta` dimentica intermezzi e notizie (M2).
+   **Giudizio:** accettabile per un gioco single-player, a patto di non aggiungere registri statici e di correggere M2.
+3. **Il motore è un modulo solo.** `motore`, `personaggi`, `locazioni`, `missioni` e `oggetti` sono un unico grafo. Il primo taglio possibile resta `foresta-missioni` ([`todo.md`](todo.md)).
+4. **Due stili di missione.** Restano missioni che estendono `MissioneBase`. Il controllo dopo la risposta a una domanda rifà i `controlla*` di tutte le missioni, e quindi richiede che quelle scritte a mano siano idempotenti: oggi `DisturbatoreDellaQuietePubblica` non lo è (M15). Il vincolo andrebbe scritto in `gestione_missioni.md`.
+5. **Errori degli iscritti.** Il bus cattura le eccezioni e pubblica `InternoException`, ma l'unico iscritto è lo sniffer, che scrive nel log. Un errore a metà di una transizione lascia l'`Automa` in uno stato intermedio, senza nessun segnale per il giocatore (M19).
 
 ## 4. Qualità del codice
 
-- **Gestione degli errori.** Ci sono 15 `catch` generici (`Exception`, `Throwable`, `RuntimeException`), quasi tutti nei gestori su file (salvataggi, punteggi, trofei) e in `GrammarBean`. È una scelta difendibile per l'I/O, dove un file rovinato non deve fermare il gioco. `printStackTrace` compare solo nella destinazione di log su console. `System.out` compare solo lì, in `ImageCache` e in righe commentate di `Finestra`.
-- **Thread.** I thread si creano solo in quattro punti:
-  - nel temporizzatore desktop (`TemporizzatoreJ2SE`);
-  - nel precaricamento di `Automa`, che si può sostituire perché il costruttore principale riceve un `Executor`;
-  - nella UI: ridisegno, `ImageCache`, `ForestaUI`.
-- **`instanceof` nel motore:** 30. Pochi per un dominio con molte classi di personaggi e oggetti; le capacità si decidono per lo più dal `TipoPersonaggio` (vedi [`bardo.md`](bardo.md)).
-- **`TODO`/`FIXME`:** 18 in tutto, 17 nel motore (6 in `PersonaggioBase`) e uno nella UI (in `DisplayableCanvasScambiatoreArtefatti`). Quelli generali stanno in [`todo.md`](todo.md).
-- **Test saltati.** I 16 test saltati sono simulazioni e analisi da lanciare a mano: `SimulazionePartiteTest`, `TestScontriDiGruppo`, `AnalisiBossTest`, `TestMonteCarloMatrix`, `TestLogoramentoInizioPartita`, `TestGenerazionePersonaggi`. Non sono test rotti.
-- **Rapporti stantii senza `clean`.** `target/surefire-reports` conserva i rapporti di classi di test che non esistono più (`Tmp*`, `Scratch*`): sommandoli si contavano 1402 test invece di 1355. E il `jacoco.exec`, che si accumula da un'esecuzione all'altra, teneva nel rapporto classi già rinominate (`ClasseMissione`, `SupertipoMissione`). Dopo una rinomina o per misurare serve `mvn clean test`.
+- **Gestione degli errori.** I `catch` generici stanno quasi tutti nei gestori su file e in `GrammarBean`, ed è una scelta difendibile. Però trofei e classifica si scrivono sul posto, non su un file temporaneo come i salvataggi (M18).
+- **`TODO`/`FIXME`:** 18. Due segnalano difetti veri: la fuga a danno fisso (M11) e la "morte per codardia" da veleno (B16). Gli altri riguardano funzioni future.
+- **Codice morto.** C'è un po' di codice che non si raggiunge (B35, B41):
+  - quattro classi di eventi con sprite mai pubblicate, e due eventi con il `TipoEvento` sbagliato;
+  - metodi di `PersonaggioBase` mai chiamati;
+  - passi pronti di `MissioneAPassi` usati solo dai test;
+  - produzioni delle grammatiche mai usate, fra cui 12 `NOTIZIE_CITTA` che non escono mai.
+- **Convenzioni.** `TestoTattica` usa `Locale.ITALIAN` invece di `Locale.ROOT`. `SnifferBusEventi` costruisce una stringa di log fuori dal fornitore, e `ConvenzioniDiPortabilitaTest` non se ne accorge.
+- **Test saltati.** I 16 test saltati sono simulazioni da lanciare a mano, non test rotti.
+- **Rapporti stantii.** Dopo una rinomina o per misurare serve `mvn clean test`: senza `clean`, `surefire-reports` e `jacoco.exec` tengono classi che non esistono più.
 
-## 5. Portabilità (riassunto)
+## 5. Difetti trovati dalla revisione del 2026-10-19
+
+Ogni voce è stata verificata sul codice chiamante. **C** sta per *confermato* (lo scenario si innesca), **P** per *plausibile* (dipende da condizioni rare o non ancora raggiungibili). I percorsi sono relativi a `…/` del modulo indicato.
+
+### 5.1 Gravità alta
+
+| Cod. | Dove | Difetto | Scenario | Correzione | |
+| :--- | :--- | :--- | :--- | :--- | :---: |
+| A1 | motore: `personaggi/PersonaggioBase:617-627`, `tattiche/EsecutoreTattiche:160-219`, `locazioni/LocazioneBase:1368-1392` | Gli avversari uccisi da ELETTROCUZIONE, ESPLOSIONE_DI_GAS e RIGETTO sui vicini non passano da `registraMorteAvversario`: niente esperienza, punti, `InternoAvversarioSconfitto` | Goblin BAGNATI e un Fulmine: i vicini morti non contano per Caccia ai goblin né per un boss da abbattere | A fine azione, `registraMorteAvversario` su tutti gli avversari (non solo i vivi); è già idempotente | C |
+| A2 | motore: `motore/Gruppo:438-446` | `rimuoviPersonaggio` rimette capo il primo della lista anche se chi esce non è il capo; il capo si può spostare con `spostaPersonaggio` | Si sposta il capo a destra nelle tattiche, poi scade un compagno a tempo: il capo è un altro, e la sconfitta, LaLealta e il salvataggio dipendono da lui | Riassegnare il capo solo se `p == capo` | C |
+| A3 | motore: `missioni/storie/LaBenedizione:172-178, 264-272` | Il sacerdote entra senza controllare il tetto totale di 8 | Con 8 personaggi si arriva a 9: `Comando.ofPersonaggio(8)` lancia in tutti i menu di scelta del personaggio | Fare la domanda COMPAGNO solo se `getNumeroPersonaggi() < MAX_PERSONAGGI_GRUPPO_TOTALE` (il superamento dei 5 permanenti è voluto) | C |
+| A4 | swing: `ui/testo/DoomdarkTextProducer:21, 52` | `getGlyphData` senza protezione per i caratteri che il font non ha; `FontTool.getWidth` invece li salta. Il `Prompt` blocca solo `\|` | Un nome come "Jürgen", "Peña" o "Bob_": il riquadro del gruppo lancia a ogni repaint; il nome resta nel salvataggio | Glifo di riserva (o salto) in un punto solo, coerente con la misura; in più filtrare l'input del `Prompt` | C |
+
+### 5.2 Gravità media
+
+**Combattimento e personaggi**
+
+| Cod. | Dove | Difetto | |
+| :--- | :--- | :--- | :---: |
+| M3 | `locazioni/LocazioneBase:456-461, 827-832` | Uscire da CHI_COMBATTE o CHI_DUELLA, o un canto o dardo non partito, fa trascorrere un turno di effetti senza che gli avversari agiscano: si avvelenano i mostri "gratis" ripetendo l'interruzione | C |
+| M4 | `locazioni/LocazioneBase:1408-1427` e QUALE_FORMULA, pozioni | Chi è CONGELATO, ATTERRATO o STORDITO può usare SINGOLO_ATTACCO, incantesimi e pozioni: `isIncapaceDiAgire` si controlla solo nella mischia automatica | C |
+| M5 | `LocazioneBase:1376-1392`, `motore/Automa:776`, `PersonaggioBase:606-619` | Gli ospiti vulnerabili ricevono stati che non scadono mai (tick e pulizia scorrono solo i personaggi). In `applicaRisultatoCombattimento` un ospite colpito è trattato come avversario: la Purificazione cura i mostri | C (P per la Purificazione) |
+| M6 | `tattiche/TatticheBase:293, 300`, `incantesimi/Morte:61` | Morte: la tattica usa 100·s/m < 25, l'incantesimo s < m/4 intero; con s=2, m=10 si ritorce sul mostro. Morte e Silenzio non registrano l'esito, quindi i tentativi falliti non fermano la ripetizione; la magia "a caso" può pescare Morte su un bersaglio sano | C |
+| M7 | `LocazioneBase:1876-1896` | Lo spregio dopo un'amicizia o corruzione fallita limita il danno a salute−1, ma applica stati e danno ad area, e il tick che segue può uccidere: GIOCO_PERSO per il capo | C |
+| M8 | `PersonaggioBase:1029-1051` | Il carico massimo non è moltiplicato per `getMoltiplicatoreCarico()`, contro javadoc e `motore_di_gioco.md` §8: Guerriero e Maga, Drago e Goblin portano lo stesso peso. Correggerlo vuol dire ritarare pesi e test | C |
+| M9 | `PersonaggioBase:363-381` | Gli effetti di stato restano su chi muore e tornano con la resurrezione (veleno e sanguinamento possono riuccidere al primo turno) | C |
+| M10 | `PersonaggioBase:944-953`, `motore/RegistroPersonaggi:99-104` | Un compagno reclutato a livello alto entra con salute e magia del livello 1 (al livello 9, 25-33% della salute massima) | C |
+| M11 | `PersonaggioBase:525-527` | La fuga toglie 50-100 punti fissi: al livello 1 un Mago muore nel 41% circa delle fughe (TODO già nel codice) | C |
+
+**Motore, missioni, trofei e testi**
+
+| Cod. | Dove | Difetto | |
+| :--- | :--- | :--- | :---: |
+| M1 | `motore/GruppoGiocatore:584`, `locazioni/Locanda:284` | Pernottare in locanda fa riposare fino al mattino ma non sposta l'orologio (lo fa solo l'accampamento): il riposo è gratis e aggira la scadenza del drago | C |
+| M2 | `motore/Foresta:148-200` | `Foresta.reimposta` non azzera `IntermezziMD` e `NotizieMD`: una nuova partita nella stessa sessione non mostra l'intro né gli intermezzi di prima visita, e il notiziario mostra le notizie vecchie | C |
+| M12 | `missioni/incarichi/{CacciaAiGoblin,LaTagliaSullaBanda,CacciatoreDiTaglie,IlPellegrino,IlRapimento,IlTorneo}` | I testi promettono la costante `RICOMPENSA` (la paga base), mentre si paga `getRicompensa()`, cioè la base per il livello del mondo ("15 monete promesse", ne arrivano 45) | C |
+| M13 | `missioni/incarichi/IlRituale:94-96, 191-216` | Il ripiego della raccolta rivendica un'altra casella e sposta `getPosto()`: rito e guardiano finiscono nel posto del ripiego | C |
+| M14 | `missioni/MissioneAPassi:720-753` | `combatti` a ondata singola somma gli sconfitti di più visite, anche dopo una fuga: la banda risulta sgominata mentre è viva | C |
+| M15 | `missioni/principali/DisturbatoreDellaQuietePubblica:55-86` | Non idempotente: dopo una domanda in IN_LOCAZIONE l'`Automa` rifà il controllo e l'eremita conta 2 | C (raro) |
+| M16 | `trofei/RegistroTrofei:49` | Il progresso in sospeso si azzera a ogni preparazione di locazione: le missioni completate in PRE_LOCAZIONE (LaBenedizione) non contano per CACCIATORE_DI_TAGLIE | C (P per l'accampamento) |
+| M17 | `testi/ProduttoreDiTestiCasuale:505` | `LETTERA_FINALE` si accorda sempre con il capo anche quando il soggetto è il ladro o il bardo (`locande.txt` righe 300, 349, 511): "Gualtiero è stata vista" | C |
+| M18 | modellodati: `TrofeiMD:82`; motore: `trofei/RegistroTrofei:41, 104`, `salvataggi/GestoreTrofeiSuFile:64`, `GestorePunteggiSuFile:69` | Un nome di trofeo sconosciuto ferma la lettura, `RegistroTrofei` ignora il fallimento e alla prima locazione riscrive il file: trofei persi per sempre. Trofei e classifica si scrivono sul posto, senza file temporaneo e senza `checkError` | C |
+| M19 | contratti: `eventi/BusEventi:57-79` | Gli errori degli iscritti finiscono solo nel log (unico iscritto a `InternoException` è lo sniffer): una transizione a metà lascia il gioco bloccato senza messaggio. Un `Error` invece interrompe la consegna agli altri iscritti | C (P le conseguenze) |
+| M20 | motore: `motore/StatoDelMotore:139-144`; contratti: `BusEventi:46-51` | `azzera()` lascia i vecchi gruppi nei campi `final` di `Automa`/`LocazioneBase` e il vecchio `GruppoGiocatore` iscritto al bus (e `cancellati` non può togliere una lambda). Oggi lo chiamano solo i test | P |
+| M21 | motore: `motore/Automa:324-347, 1668` | Il salvataggio automatico si cancella solo a fine partita: dopo una partita nuova o un caricamento, una ripresa su mobile può ricaricare la partita vecchia | P (solo mobile) |
+
+**Interfaccia (foresta-swing)**
+
+| Cod. | Dove | Difetto | |
+| :--- | :--- | :--- | :---: |
+| M22 | `ui/schermate/DisplayableCanvas{ScambiatoreArtefatti:461,ScambiatoreConsumabili:298,Inventario:367}` | I `processaDoppioClick*` non controllano il tasto: un doppio click destro o centrale compra, vende o spende un punto abilità | C |
+| M23 | `ui/DisplayableCanvas:443-446` | Ogni variazione di statistiche, anche di un mostro, rimette davanti il riquadro del Gruppo | C |
+| M24 | `ui/Prompt:252-264`, `ui/tattiche/DisplayableCanvasTattiche:199-203` | Il campo di rinomina della tattica resta aperto quando si lascia la voce o la schermata; l'Invio scrive su una bozza scartata | C |
+| M25 | `ui/riquadri/DisplayableCanvasRiquadroMappa:110` | Il ritaglio delle nuvole della minimappa usa l'offset x anche per y: le nuvole non si vedono mai | C |
+| M26 | `ui/riquadri/DisplayableCanvasRiquadroGruppo:511, 532` | Gli sprite di Valore e Carisma usano la riga 1 invece della 2 | C |
+| M27 | `ui/sprite/SpriteRivelazioneArtefatto:183` | L'animazione avanza di un passo fisso a ogni repaint: muovendo il mouse la rivelazione accelera | C |
+| M28 | `ui/sfx/CloudManager:39-41, 117` | `nextInt(clip.height - cloudHeight)` può ricevere ≤ 0 con una zona conosciuta "a corridoio"; nuvole statiche mai azzerate fra una partita e l'altra | P |
+| M29 | `ui/tattiche/CasellaADiscesa:81-94`, `ui/componenti/ComponenteScorrevole:129-132` | Un menu con zero scelte o un componente alto 0 crea una `BufferedImage` alta 0 e lancia a ogni fotogramma | P |
+
+### 5.3 Gravità bassa
+
+**foresta-tipi e foresta-modellodati**
+
+- B1 `ArtefattoMD:346/372`: la descrizione scritta con `facoltativo` è riletta con `testo()`, quindi null torna "". La rivelazione aggiunge una riga vuota. (C)
+- B2 `LettoreCampi:115`: un nome di enum non valido dà `IllegalArgumentException` invece di `IOException`; oggi è assorbito dai chiamanti. (C)
+- B3 `ModificatoreAttributoMD:52, 158, 175`: una nota null torna "", e il modificatore riletto non è più `equals`. Il confronto fra double usa `==`. (P)
+- B4 `MappaProprieta:34`: un valore null si salva come la stringa "null". (P, latente)
+- B5 `ResidenteMD:56`: la chiave `CAMPIONE:<nome>` non passa da `pulisciCampo`. (P)
+- B6 `GruppoMD:167`, `RegistroPersonaggiMD:130`, `RegistroArtefattiMD:195`: `leggi` aggiunge invece di sostituire, contro la javadoc. Oggi è innocuo grazie a `reimposta()`. (C, latente)
+- B7 `GruppoGiocatoreMD:222`: con un file troncato si aggiunge null agli ospiti, e la lettura della sola testata passa senza errore. (C)
+- B8 `ForestaMD:48, 59, 234`: `offset()` non controlla i limiti, e gli array restano null prima di `reimposta`. (P)
+- B9 `CoordinateMD:27, 35`: è mutabile ma usata come chiave di mappa; i setter non hanno chiamanti. (C)
+- B10 `TipoDanno:68`: `getEffetti()` espone l'array interno dell'enum. `ModelloDati:27`: l'istanza non è `volatile`. (P)
+- B11 `Costanti:249`: commento fuori posto (POZIONI_SALUTE_INIZIALI). `Comando.SINGOLO`, `RUTTOLOMEO` e `STORPSGORBLIN` sono in uso solo per le icone. (C)
+
+**foresta-contratti**
+
+- B12 `strumenti/Misc:177-231`: a distanza 0 esce "a zero ore di cammino verso ovest", per esempio quando la città distrutta è quella in cui si trova il gruppo. (C)
+- B13 `strumenti/Misc:57-63`: `getOrdinaleImpl` dà "nullo" per 0 e un'eccezione da 42 in su. (P)
+- B14 Costanti di `TipoEvento` sbagliate: `InternoException` usa INTERNO_ERRORE; in swing, `InternoCreazioneSpriteInDissolvenza` e `…FumettoATempo` usano …A_TEMPO. Altri punti:
+  - `ThreadPrincipale.SUBITO` esegue `accoda` subito, senza esecutore installato (P);
+  - un `UUID.randomUUID()` per ogni evento;
+  - `Dado:101` può andare in overflow su intervalli enormi (teorico).
+
+**foresta-motore**
+
+- B15 `PersonaggioBase:1083-1137`: `subSalute` non controlla `isVivo()`, quindi la morte viene annunciata due volte (collasso entropico, doppio danno periodico, doppia resa in duello). (C)
+- B16 `PersonaggioBase:1130-1135`: chi muore per veleno o sanguinamento risulta "morto per troppa codardia" (FIXME). (C)
+- B17 `PersonaggioBase:127-131`: il flag PNG dipende dal costruttore (costruttori `(int)` dei residenti), e BARDO e BARDO_DELLE_LOCANDE non sono coerenti. (C l'incoerenza)
+- B18 `PersonaggioBase:796`: la preposizione articolata con un nome proprio dà un doppio spazio ("i gusti  di Pippo"). (C)
+- B19 `PersonaggioBase:1486-1491`: `subStanchezza` notifica un valore negativo. `:1638`: la variazione temporanea del carico conta i modificatori due volte. `:1136-1146`: la notifica di morte esce prima di `setSalute(0)`. `:881-889`: `limitaEntroMassimi` può restituire un valore negativo. (C/P)
+- B20 `LocazioneBase:969-971`: SINGOLO_ATTACCO è offerto in mischia ma ignorato. `:437-440` e `:1528-1533`: rami irraggiungibili, e il secondo manderebbe l'`Automa` in IllegalStateException (IN_COMBATTIMENTO non ha un gestore d'ingresso). (C, latente)
+- B21 `CalcolatoreCombattimento:674, 705`: divisione per la FORZA del difensore senza la guardia `> 0` della riga 725. (P)
+- B22 `tattiche/valutazione/Requisiti:201-207`: il Canto ipnotico non esclude gli immuni e può ripetersi a vuoto. (P)
+- B23 `locazioni/Castello*.azzeraLocazione`: non chiamano `super`. (P, effetto minimo)
+- B24 `motore/Automa:1482, 1517, 1531, 1566, 610`: un comando inatteso in MAPPA, INVENTARIO, TROFEI, TATTICHE o nella scelta della classe lancia un'eccezione invece di essere ignorato. (P)
+- B25 `motore/LineaTemporale:83-90`: `oreFinoAlMattino` usa 8 scritto a mano invece di `PRIMA_ORA_DEL_MATTINO`. (C, fragilità)
+- B26 `salvataggi/GestoreSalvataggiSuFile:91-131`: niente `sync()` prima della rinomina. Su Windows, se la seconda rinomina fallisce, resta solo il `.tmp`. (P)
+- B27 `missioni/storie/NonSparateSulPianista:101, 187-208`: la condizione rivela la città più vicina anche quando la missione non parte. (C)
+- B28 Missioni con ripieghi:
+  - `LOggettoSmarrito:95-97, 177`: NPE con il ripiego in città (P);
+  - `IlNegozio:197-199`: IllegalStateException senza rovine né boschi nel quadrante (P);
+  - `LaLealta`: fallisce anche se il compagno caduto poi risorge (P, scelta di design);
+  - le copie degli incarichi ripetibili non annunciano "NUOVA MISSIONE" (P).
+- B29 `intermezzi/IntermezzoLibroTecnico:259, 284`: i libri trovati e non ancora letti sono statici e non si salvano. (P)
+- B30 Testi: `SconfiggiLIdra:52` dice "è stato sconfitta". `offerte/Informazioni:396` ha un doppio spazio. (C)
+- B31 `TipoMissione`: mancano le note "// Coperto da:" per LaSfidaDeiCampioni, IlCampione, IlGiroDelleSetteChiese, CronacheDiUnFegatoEroico, NessunBoccaleLasciatoIndietro e DisturbatoreDellaQuietePubblica. (C)
+- B32 `testi/GrammarBean`:
+  - `[chiave]` su una chiave solo assegnata passa la validazione ma fallisce a runtime (`:1630` contro `:2386`);
+  - le produzioni derivate dipendono dall'ordine della HashMap (`:1150-1209`);
+  - il messaggio di `:1142` stampa la riga invece del numero.
+
+  Oggi nessuna grammatica usa queste forme. (C/P, latente)
+- B33 `testi/ProduttoreDiTestiCasuale`:
+  - `:427` (`indexOf("-")`), `:343` e `:557` fanno parsing senza controlli;
+  - gli stream delle grammatiche non vengono chiusi (`:62-90`).
+
+  Oggi le grammatiche sono conformi. (P)
+- B34 `oggetti/GeneratoreArtefattiTabelle:400`: `conGrado` dà per scontato che il nome cominci con il nome comune. `offerte/Informazioni:384`: `tiraAncheAUnaFaccia(0)` senza castelli rimasti (non raggiungibile). `RegistroTrofei:104`: NPE senza un gestore impostato. (P)
+- B35 Codice morto nel motore:
+  - in `PersonaggioBase`: `calcolaStanchezza`, `subCarisma`, `add<Primario>`, `getQuantitaEffettoDiStato` e `puoPrendere(Artefatto)`;
+  - `InternoPersonaggioArreso` non ha nessun iscritto;
+  - i lanci di `Dado` sprecati in `impostaValoriDiPartenza`;
+  - i passi di `MissioneAPassi` usati solo dai test;
+  - le produzioni morte di `fiabe.txt` e `locande.txt`, fra cui 12 `NOTIZIE_CITTA` che non escono mai.
+
+  (C)
+
+**foresta-swing e foresta-app**
+
+- B36 Iniziali e NPE nei testi:
+  - `ui/schermate/Notiziario:68, 137, 195`: una notizia vuota o con caratteri non supportati lancia o scrive nel log a ogni fotogramma;
+  - `substring(0, 1)` su un nome vuoto (`DisplayableCanvasScambiatoreArtefatti:295, 316`, `DisplayableCanvasIncantatore:52`);
+  - `DisplayableCanvasIntroOutro:246-253` non ha il try/catch della selezione da caricare.
+
+  (C/P)
+- B37 Riquadri:
+  - `DisplayableCanvasRiquadroGruppo:264` e `…IncantesimiEPozioni:192` passano a `setRitaglio` il Rectangle vivo;
+  - `:217` e `:135` fanno `setClip(null)` invece di ripristinare il clip;
+  - `DisplayableCanvasRiquadroLocazione:322` usa le coordinate degli avversari senza controllo di null;
+  - `DisplayableCanvas:1205` fa la dissolvenza di morte anche a un PNG che risorge.
+
+  (C/P)
+- B38 Comportamento:
+  - gli scorrimenti degli scambiatori non si azzerano alla riapertura;
+  - "Nuova voce" nelle tattiche non mostra Sì/No;
+  - la bozza delle tattiche si perde cambiando personaggio;
+  - i nomi del riquadro di combattimento si accorciano di due caratteri alla volta;
+  - il menu a discesa non si apre sulla scelta corrente;
+  - `TestoTattica` usa `Locale.ITALIAN`;
+  - il nome della classe in tattiche viene da `name()` invece che da `Testi`.
+
+  (C)
+- B39 Sprite:
+  - `SpriteAnnuncioGlobale:145, 190`: la misura degli spazi (10) non coincide con il disegno (11), e la riga più larga si taglia;
+  - `SpriteFumetto:122`: la punta usa la larghezza massima (latente).
+
+  (C/P)
+- B40 Thread e avvio:
+  - `ForestaUI:87`: l'`invokeLater` di creazione parte prima delle iscrizioni, e `InternoFaseDiGioco` potrebbe perdersi (P);
+  - il thread animatore di `DisplayableCanvas:518-536` legge campi non volatili (P);
+  - `Prompt:184-189` si riprende il fuoco anche da un'altra finestra (P);
+  - `BufferedImageBuilder:36` chiama `System.exit(1)` anche nei caricamenti pigri a partita in corso (C, nessun innesco oggi).
+- B41 Codice morto e piccoli difetti:
+  - quattro eventi con sprite mai pubblicati;
+  - `ImageCache.imageMap`, `set`/`get(String)` e lo shutdown hook inutile;
+  - `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif` inutilizzati;
+  - `fermaThreadAnimazione` mai chiamato;
+  - `variaLivello` in `DisplayableCanvasRiquadroLocazione`;
+  - `ComandiPossibili.add`/`set` usati solo dai test.
+
+  (C)
+- B42 `foresta-app`:
+  - `SnifferBusEventi:114-115` si iscrive due volte a `InternoVenditaArtefatto`;
+  - `:395` costruisce la stringa di log fuori dal fornitore;
+  - `:315` ha l'etichetta doppia;
+  - `Main:49-67` ignora senza log gli argomenti sconosciuti, e `ZOOM` non valido esce con un'eccezione nuda;
+  - `FinestraDiProva.PannelloDadi`: la tendina non mostra il valore del trucco attivo dopo una ricostruzione (solo modalità di prova).
+
+  (C)
+
+### 5.4 Ipotesi controllate e scartate
+
+- **Concorrenza delle collezioni.** Non c'è nessuna `ConcurrentModificationException` raggiungibile: si scorrono sempre copie (`getPersonaggiVivi`, `getTutteLeMissioni`), e il bus usa `CopyOnWriteArrayList`.
+- **Ricompense ed esperienza.** Niente doppie ricompense o doppi completamenti di missione. Niente esperienza duplicata (`avversariSconfitti`).
+- **Oggetti e prezzi.** Scambi, acquisti, vendite e prelievi non duplicano né perdono artefatti. Vendita al massimo al 75%, acquisto almeno all'80%.
+- **`Dado` e trucchi.** I limiti sono coerenti, e un trucco fuori intervallo viene ignorato.
+- **Risorse.** I glifi dei font sono coerenti. Le immagini referenziate esistono tutte, e le mappature delle immagini coprono tutti i tipi di personaggio, oggetto e incantesimo.
+- **Grammatiche.** Nessun riferimento mancante; i marcatori `<mod:>` e `<danno:>` sono validi.
+- **Testi delle enum.** Nessuna chiave mancante nei `.properties`.
+- **Combattimento.** Niente round infiniti; la fine del combattimento si intercetta sempre, anche con le ondate.
+
+## 6. Portabilità (riassunto)
 
 Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 - **Già pronto:** il motore usa solo `java.io` e `java.util`, non ha dipendenze dal toolkit grafico, ha la cartella dei file iniettabile, il ciclo di vita dell'app e l'uscita affidata alla piattaforma.
-- **I testi delle enum di `tipi` sono in file per lingua.** Restano nel codice i testi del motore e delle schermate, alcune enum fuori da `tipi` (`NegozioInScena`, `Mandante`) e `FUGA_IGNOMINIA_NOTA`.
+- **Emerso dalla revisione:** prima di usare `StatoDelMotore.azzera()` e la ripresa su mobile vanno risolti M20 e M21.
 - **Ancora aperto:**
   - `Costanti` come dati;
-  - un salvataggio automatico più frequente;
-  - il ciclo di vita chiamato da una UI vera;
-  - le uscite dal processo della UI Swing (`System.exit` in `BufferedImageBuilder`, `addShutdownHook` in `ImageCache`, `EXIT_ON_CLOSE`).
+  - le uscite dal processo della UI Swing (`System.exit` in `BufferedImageBuilder`, `EXIT_ON_CLOSE`, che chiude senza passare dal motore).
 - **Il grosso resta la UI.** Va riscritta (libGDX è la scelta più naturale per restare in Java) e va ripensato l'input per il tocco.
 
-## 6. Rischi tecnici
+## 7. Rischi tecnici
 
 | Rischio | Fatto | Gravità |
 | :--- | :--- | :--- |
-| Notizie malformate | `cercaNotiziaLocanda` cerca il primo `-` con `indexOf` e chiama `substring` senza controllare il risultato (`testi/ProduttoreDiTestiCasuale.java:344-345`). Un'alternativa della grammatica senza `-` dà un'eccezione. Dopo i tentativi la ricerca restituisce `null`, e non lancia più eccezioni | Media: un'eccezione sul thread principale all'uscita da una locanda |
-| Copertura di negozi e salvataggi | `offerte` 23%, `salvataggi` 64% | Media: sono le parti in cui un errore costa monete o partite |
-| UI poco coperta | `foresta-swing` 26% con i soli test suoi | Media: i bug di layout si scoprono giocando |
-| Costanti rinominate e salvataggi | Nel salvataggio finiscono i nomi delle costanti delle enum | Bassa finché la compatibilità non è un obiettivo |
-| Copia delle costanti `static final` | I primitivi di `Costanti` sono copiati nelle classi che li usano: una compilazione incrementale parziale può tenere valori vecchi | Bassa: basta `mvn clean` dopo un ritocco di bilanciamento |
-| Modalità verticale | Rotta: barra icone sovrapposta e finestra larga al massimo 400 px (`todo.md`) | Bassa sul desktop; da ripensare comunque per i telefoni |
+| Nomi con caratteri fuori dal font | A4: un carattere accentato in un nome rende la partita inutilizzabile anche dopo il caricamento | Alta |
+| Stato del gruppo incoerente | A2 (capo sbagliato) e A3 (9 personaggi) | Alta |
+| Trofei e classifica | M18: un file rovinato o una costante rinominata cancellano trofei o classifica | Media |
+| Copertura di `personaggi`, `locazioni`, `offerte`, `salvataggi` | 69%, 72%, 24%, 65% | Media: in `personaggi` e `locazioni` sta metà dei difetti medi |
+| Errori silenziosi del bus | M19 | Media |
+| Copia delle costanti `static final` | Una compilazione incrementale parziale può tenere valori vecchi | Bassa: basta `mvn clean` |
+| Modalità verticale | Rotta: barra icone sovrapposta, area di contenuto fissa a 640 px in una finestra larga al massimo 400 (`todo.md`, `motore_grafico.md` §12) | Bassa sul desktop; rimandata in fondo |
 
-## 7. Prossimi passi consigliati
+## 8. Prossimi passi consigliati
 
-1. **Bilanciamento.** È la cosa che più incide sul gioco:
-   - ripartire il danno degli incantesimi a più bersagli, e adeguare la valutazione delle tattiche;
-   - rendere i boss scalfibili;
-   - rivedere l'economia di metà partita.
-
-   Il piano è in [`todo.md`](todo.md) e [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md).
-2. **Notizie robuste.** Controllare il formato `ID-testo` al caricamento della grammatica, oppure con un test che produca tutte le alternative di `locande.txt`, e scartare la riga malformata invece di lanciare.
-3. **Test su `offerte` e `salvataggi`.** Servono il giro completo di acquisto e vendita con i prezzi, e una lettura e scrittura di ogni slot, dell'automatico e dei casi di file rovinato.
-4. **Tagliare `Automa`, `LocazioneBase` e `PersonaggioBase`** quando si interviene su di loro (vedi §3).
-5. **Decidere sulla compatibilità dei salvataggi** (§3, punto 5), prima di altre rinomine di costanti.
-6. **Modulo `foresta-missioni`**, seguendo il piano di [`todo.md`](todo.md), dopo aver chiuso il refactoring in corso dei tipi delle missioni.
+1. **Correggere i quattro difetti alti** (A1-A4), ciascuno con un test.
+2. **Correggere i medi certi e a basso rischio:** M1, M2, M3, M4, M9, M10, M12, M16, M17, M18 e tutta la UI (M22-M27).
+3. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M7 (spregio), M8 (carico), M11 (fuga), M14 (sconfitti fra visite), B28 (LaLealta).
+4. **Un vero gestore di `InternoException`** (M19).
+5. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
+6. **Bilanciamento:** come da [`todo.md`](todo.md).
+7. **Tagliare le classi grandi** quando si interviene su di loro (§3).
+8. **Modalità verticale**, per ultima.
 
 ## Osservazioni
 
-- **Come sono fatte le misure.** Righe e file sono contati con `wc -l` sui sorgenti `src/main` e `src/test`, senza `risorse_e_documenti_vari`. I test e la copertura vengono da `mvn clean test` del 2026-10-17 (i `jacoco.csv` dei moduli).
-- **Un refactoring era in corso.** Le misure includono un refactoring non ancora committato, che porta i tipi degli incantesimi e delle missioni in `tipi`: `ClasseIncantesimo` diventa `TipoIncantesimo`, il vecchio `TipoIncantesimo` diventa `CategoriaIncantesimo`, `SupertipoMissione` diventa `CategoriaMissione` e `ClasseMissione` diventa `MissionePredefinita`.
-- **Due difetti trovati durante l'assessment.** Facevano fallire `foresta-tipi`, e sono stati corretti:
-  - la nota `BARDO_LOCANDA.COME` era rimasta indietro dopo la rinomina in `BARDO_DELLE_LOCANDE`;
-  - il file `classe_incantesimo_it.properties` non era stato rinominato insieme all'enum.
+- **Come è stata fatta la revisione.** Lettura integrale dei sorgenti, divisi in nove parti:
+  - tipi e modellodati;
+  - contratti;
+  - motore, salvataggi ed eventi;
+  - personaggi;
+  - combattimento, locazioni, canti, incantesimi e tattiche;
+  - missioni e intermezzi;
+  - oggetti, offerte, testi e trofei;
+  - schermate, riquadri, barra, tattiche e app;
+  - sprite, testo, immagini, sfx e sviluppo.
 
-  Tutti e due li hanno presi i test sui file dei testi (`NoteDeiPersonaggiTest`, `TestiDelleEnumTest`).
-- **Due difetti del 2026-10-05 non ci sono più.** Allora l'interfaccia `FornitoreMissione` non aveva utilizzatori, e la ricerca delle notizie lanciava un'eccezione dopo i tentativi. L'interfaccia non esiste più, e la ricerca ora restituisce `null`.
+  Ogni ipotesi è stata verificata leggendo i chiamanti; A2, A3, A4, M1 e M8 sono stati ricontrollati a parte. A1 lo hanno trovato in modo indipendente due parti diverse della revisione.
+- **Misure.** Righe e file sono contati con `wc -l` su `src/main` e `src/test`. Test e copertura vengono da `mvn clean test` del 2026-10-19, tutti verdi.
+- **Il rischio delle notizie malformate** del 2026-10-17 è ora B33: le grammatiche attuali sono conformi, quindi non si innesca.
 
 ## Da fare / idee aperte
 
-- Ripetere le misure dopo ogni grande intervento, e confrontare le righe delle classi della tabella del §2 per vedere se il debito scende.
-- Valutare un report JaCoCo aggregato (`report-aggregate` in `foresta-app`), che conti la copertura di modellodati, contratti e swing data dai test degli altri moduli.
+- Ripetere le misure dopo ogni grande intervento, e confrontare le righe delle classi della tabella del §2.
+- Valutare un report JaCoCo aggregato (`report-aggregate` in `foresta-app`).
+- Un test che produca tutte le alternative delle grammatiche e le disegni con i font, per prendere insieme B33 e A4.
+- Scrivere in `gestione_missioni.md` il vincolo di idempotenza dei `controlla*` delle missioni scritte a mano (M15).
