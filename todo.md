@@ -51,14 +51,12 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità bassa: foresta-swing e foresta-app
 
-- B41. Codice morto in swing:
-  - quattro eventi con sprite mai pubblicati;
-  - `ImageCache.imageMap`, `set`/`get(String)` e lo shutdown hook inutile;
-  - `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif`;
-  - il doppio caricamento di `spriteAumentoLivello`;
-  - `variaLivello` e il parametro `locazione` di `xOggetto` in `RiquadroLocazione`;
-  - `ComandiPossibili.add`/`set` usati solo dai test;
-  - un javadoc fuori posto in `DisplayableCanvasScambiatore`.
+- B41a. Quattro eventi con sprite mai pubblicati.
+- B41b. `ImageCache.imageMap`, `set`/`get(String)` e lo shutdown hook inutile.
+- B41c. `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif` mai usati.
+- B41d. Il doppio caricamento di `spriteAumentoLivello`.
+- B41e. `variaLivello` e il parametro `locazione` di `xOggetto` in `RiquadroLocazione` mai usati.
+- B41f. `ComandiPossibili.add`/`set` usati solo dai test.
 
 ## Architettura
 

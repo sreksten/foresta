@@ -128,14 +128,12 @@ Nessun difetto aperto.
 
 **foresta-swing e foresta-app**
 
-- B41 Codice morto e piccoli difetti:
-  - quattro eventi con sprite mai pubblicati;
-  - `ImageCache.imageMap`, `set`/`get(String)` e lo shutdown hook inutile;
-  - `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif` inutilizzati;
-  - `variaLivello` in `DisplayableCanvasRiquadroLocazione`;
-  - `ComandiPossibili.add`/`set` usati solo dai test.
-
-  (C)
+- B41a Quattro eventi con sprite mai pubblicati. (C)
+- B41b `ImageCache.imageMap`, `set`/`get(String)` e lo shutdown hook inutile. (C)
+- B41c `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif` mai usati. (C)
+- B41d Il doppio caricamento di `spriteAumentoLivello`. (C)
+- B41e `variaLivello` e il parametro `locazione` di `xOggetto` in `RiquadroLocazione` mai usati. (C)
+- B41f `ComandiPossibili.add`/`set` usati solo dai test. (C)
 
 ### 5.4 Ipotesi controllate e scartate
 

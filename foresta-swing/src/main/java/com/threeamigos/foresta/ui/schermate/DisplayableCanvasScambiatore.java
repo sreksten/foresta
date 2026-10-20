@@ -65,16 +65,18 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     protected static final int PASSO_SCORRIMENTO = 2;
 
     /**
-     * Usiamo l'immagine del Ladro come riferimento per disegnar eil personaggio centrale della finestra di scambio
+     * Usiamo l'immagine del Ladro come riferimento per disegnare il personaggio centrale della finestra di scambio
      */
     protected static final int ALTEZZA_LADRO = ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.LADRO).getHeight(null);
 
     /**
-     * Larghezza globale della finestra di scambio
+     * Lo stato della partita, in sola lettura: monete, prezzi, personaggi e inventario del gruppo
      */
-    // Lo stato della partita, in sola lettura: monete, prezzi, personaggi e inventario del gruppo
     protected final VistaPartita vistaPartita;
 
+    /**
+     * Larghezza globale della finestra di scambio
+     */
     protected final int width;
     /**
      * Altezza globale della finestra di scambio
