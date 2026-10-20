@@ -60,19 +60,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità bassa: foresta-swing e foresta-app
 
-- B38. Comportamento:
-  - gli `offsetYZona*` degli scambiatori non si azzerano alla riapertura;
-  - gli `spriteLocali` sopravvivono alla chiusura;
-  - "Nuova voce" non mostra Sì/No (`isModificata` ignora le voci vuote);
-  - la bozza delle tattiche si perde cambiando personaggio;
-  - "Posto 1 di N" per chi non è permanente;
-  - i nomi del riquadro di combattimento si accorciano di due caratteri alla volta;
-  - il menu a discesa non si apre sulla scelta corrente;
-  - `TestoTattica` usa `Locale.ITALIAN`;
-  - il nome della classe in tattiche viene da `name()` invece che da `Testi`;
-  - il javadoc di `riferimentoTitoloAllaQuota` è sbagliato;
-  - `DisplayableCanvasBarraIconeDock:189` lascia NEAREST_NEIGHBOR;
-  - `RiquadroMissioni:203` non limita `offsetY`.
 - B39. Sprite:
   - in `SpriteAnnuncioGlobale` la misura degli spazi (10) non coincide con il disegno (11);
   - (P) in `SpriteFumetto:122` la punta usa la larghezza massima.

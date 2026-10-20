@@ -185,4 +185,12 @@ public enum TipoPersonaggio {
 	public boolean stessoRuoloDi(TipoPersonaggio altra) {
 		return getRuolo() == altra.getRuolo();
 	}
+
+	/**
+	 * Il nome della classe, per i testi (l'iniziale è maiuscola, senza articolo)
+	 */
+	public String getNome() {
+		return Testi.testoOCostante(this, "NOME");
+	}
+
 }

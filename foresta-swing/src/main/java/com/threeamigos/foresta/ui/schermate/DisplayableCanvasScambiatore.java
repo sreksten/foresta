@@ -142,6 +142,16 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     private final List<SpriteInterface> spriteLocali = new ArrayList<>();
 
     /**
+     * Chiamato quando la schermata si apre: le liste ripartono dall'alto e gli sprite della volta scorsa, anche se non finiti, non ricompaiono.
+     */
+    public void apri() {
+        offsetYZonaSinistra = 0;
+        offsetYZonaCentrale = 0;
+        offsetYZonaDestra = 0;
+        spriteLocali.clear();
+    }
+
+    /**
      * Aggiunge uno sprite che resta confinato in questa schermata.
      */
     protected void aggiungiSpriteLocale(SpriteInterface sprite) {

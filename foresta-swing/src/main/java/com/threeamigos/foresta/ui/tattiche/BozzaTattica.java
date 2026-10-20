@@ -179,6 +179,18 @@ final class BozzaTattica {
 		return toTattica().equals(da(tattica).toTattica());
 	}
 
+	/**
+	 * Se c'è una voce ancora senza azioni (appena aggiunta): non entra nella tattica da mandare al motore, ma impedisce di confermare
+	 */
+	boolean haVociSenzaAzioni() {
+		for (Voce voce : voci) {
+			if (voce.azioni.isEmpty()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	// ------------------------------------------------------------------ le voci
 
 	/**

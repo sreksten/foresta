@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui.tattiche;
 
 import com.threeamigos.foresta.modellodati.tattiche.*;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.tattiche.*;
 
 import java.util.ArrayList;
@@ -58,7 +59,12 @@ final class TestoTattica {
 
 	/** Un nome di enumerato per i testi: MINOTAURO_GIGANTE diventa "minotauro gigante" */
 	static String nome(Enum<?> valore) {
-		return valore.name().toLowerCase(Locale.ITALIAN).replace('_', ' ');
+		return valore.name().toLowerCase(Locale.ROOT).replace('_', ' ');
+	}
+
+	/** Il nome di una classe, dai testi della lingua: "minotauro gigante" */
+	static String nome(TipoPersonaggio classe) {
+		return classe.getNome().toLowerCase(Locale.ROOT);
 	}
 
 	/**
@@ -71,7 +77,7 @@ final class TestoTattica {
 		if (filtro.isNegato() && !conConfronto) {
 			sb.append("senza ");
 		}
-		sb.append(filtro.getTipoFiltro().getDescrizione().toLowerCase(Locale.ITALIAN));
+		sb.append(filtro.getTipoFiltro().getDescrizione().toLowerCase(Locale.ROOT));
 		if (conConfronto) {
 			sb.append(' ').append(relazione(filtro.getConfronto(), filtro.isNegato()));
 			if (filtro.getTipoFiltro().getParametro() == TipoParametro.CONFRONTO_E_NUMERO) {
@@ -79,13 +85,13 @@ final class TestoTattica {
 			}
 		}
 		if (filtro.getTipoEffettoDiStato() != null) {
-			sb.append(' ').append(filtro.getTipoEffettoDiStato().getDescrizione().toLowerCase(Locale.ITALIAN));
+			sb.append(' ').append(filtro.getTipoEffettoDiStato().getDescrizione().toLowerCase(Locale.ROOT));
 		} else if (filtro.getTipoPersonaggio() != null) {
 			sb.append(' ').append(nome(filtro.getTipoPersonaggio()));
 		} else if (filtro.getCategoriaPersonaggio() != null) {
-			sb.append(' ').append(filtro.getCategoriaPersonaggio().getNome().toLowerCase(Locale.ITALIAN));
+			sb.append(' ').append(filtro.getCategoriaPersonaggio().getNome().toLowerCase(Locale.ROOT));
 		} else if (filtro.getTipoDanno() != null) {
-			sb.append(' ').append(filtro.getTipoDanno().getNome().toLowerCase(Locale.ITALIAN));
+			sb.append(' ').append(filtro.getTipoDanno().getNome().toLowerCase(Locale.ROOT));
 		}
 		return sb.toString();
 	}
@@ -105,8 +111,8 @@ final class TestoTattica {
 	 * L'ordinamento a parole, con il tipo di danno se ne ha uno
 	 */
 	static String ordinamento(OrdinamentoMD ordinamento) {
-		String testo = ordinamento.getTipoOrdinamento().getDescrizione().toLowerCase(Locale.ITALIAN);
-		return ordinamento.getTipoDanno() == null ? testo : testo + " " + ordinamento.getTipoDanno().getNome().toLowerCase(Locale.ITALIAN);
+		String testo = ordinamento.getTipoOrdinamento().getDescrizione().toLowerCase(Locale.ROOT);
+		return ordinamento.getTipoDanno() == null ? testo : testo + " " + ordinamento.getTipoDanno().getNome().toLowerCase(Locale.ROOT);
 	}
 
 	/**
@@ -132,13 +138,13 @@ final class TestoTattica {
 			case PROBABILITA:
 				return (predicato.isNegato() ? "non nel " : "nel ") + predicato.getNumero() + "% dei casi";
 			case QUANTI:
-				sb.append("quanti: ").append(predicato.getTipoRosa().getDescrizione().toLowerCase(Locale.ITALIAN));
+				sb.append("quanti: ").append(predicato.getTipoRosa().getDescrizione().toLowerCase(Locale.ROOT));
 				if (!predicato.getFiltri().isEmpty()) {
 					sb.append(" (").append(filtri(predicato.getFiltri())).append(')');
 				}
 				break;
 			default:
-				sb.append(predicato.getTipoPredicato().getDescrizione().toLowerCase(Locale.ITALIAN));
+				sb.append(predicato.getTipoPredicato().getDescrizione().toLowerCase(Locale.ROOT));
 		}
 		sb.append(' ').append(relazione(predicato.getTipoConfronto(), predicato.isNegato())).append(' ').append(predicato.getNumero());
 		return sb.toString();
@@ -153,7 +159,7 @@ final class TestoTattica {
 			sb.append(": ").append(criterio(azione.getCriterio()));
 		}
 		if (azione.getArmaDi() != null) {
-			sb.append(" di ").append(azione.getArmaDi().getNome().toLowerCase(Locale.ITALIAN));
+			sb.append(" di ").append(azione.getArmaDi().getNome().toLowerCase(Locale.ROOT));
 		}
 		if (azione.isSoloSePiuForteDellAttacco()) {
 			sb.append(", solo se più forte dell'attacco");

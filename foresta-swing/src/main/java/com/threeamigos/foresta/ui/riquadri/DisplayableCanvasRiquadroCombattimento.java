@@ -206,7 +206,7 @@ public class DisplayableCanvasRiquadroCombattimento implements Finestra {
 					String azione = testoAzione;
 					int l = larghezzaMassimaBarra - 2 * SPAZIATURA;
 					while (azione.length() > 1 && FontTool.getWidth(fontMedium, azione) > l) {
-						azione = azione.substring(0, azione.length() - 2);
+						azione = azione.substring(0, azione.length() - 1);
 					}
 					disegnaTestoConOmbra(graphics, azione, xBarra + SPAZIATURA, y, DoomdarkColorModel.Color.YELLOW, true);
 				}
@@ -233,7 +233,7 @@ public class DisplayableCanvasRiquadroCombattimento implements Finestra {
 	private String nomeEntro(VistaPersonaggio personaggio, int larghezzaMassima) {
 		String nome = personaggio.getNome(VistaPersonaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		while (nome.length() > 1 && FontTool.getWidth(fontMedium, nome) > larghezzaMassima) {
-			nome = nome.substring(0, nome.length() - 2);
+			nome = nome.substring(0, nome.length() - 1);
 		}
 		return nome;
 	}

@@ -134,16 +134,6 @@ Nessun difetto aperto.
 
 **foresta-swing e foresta-app**
 
-- B38 Comportamento:
-  - gli scorrimenti degli scambiatori non si azzerano alla riapertura;
-  - "Nuova voce" nelle tattiche non mostra Sì/No;
-  - la bozza delle tattiche si perde cambiando personaggio;
-  - i nomi del riquadro di combattimento si accorciano di due caratteri alla volta;
-  - il menu a discesa non si apre sulla scelta corrente;
-  - `TestoTattica` usa `Locale.ITALIAN`;
-  - il nome della classe in tattiche viene da `name()` invece che da `Testi`.
-
-  (C)
 - B39 Sprite:
   - `SpriteAnnuncioGlobale:145, 190`: la misura degli spazi (10) non coincide con il disegno (11), e la riga più larga si taglia;
   - `SpriteFumetto:122`: la punta usa la larghezza massima (latente).

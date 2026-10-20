@@ -173,21 +173,23 @@ public class DisplayableCanvasBarraIconeDock extends DisplayableCanvasBarraIcone
 		graphics.setColor(Color.black);
 		graphics.fillRect(offsetX, offsetY, larghezza, altezza);
 		ricalcola();
-		Object interpolazione = graphics.getRenderingHint(RenderingHints.KEY_INTERPOLATION);
-		// Pixel netti: niente sfocatura sulle icone ingrandite
-		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-		for (int i = 0; i < rettangoli.size(); i++) {
-			Rectangle r = rettangoli.get(i);
-			int x = offsetX + r.x;
-			int y = offsetY + r.y;
-			graphics.drawImage(iconeVisibili.get(i).icona, x, y, r.width, r.height, null);
-			if (r.contains(mouseX, mouseY)) {
-				graphics.setColor(mousePremuto ? Color.white : Color.lightGray);
-				graphics.drawRect(x, y, r.width - 1, r.height - 1);
+		// Una copia del contesto: su un Graphics2D nuovo l'hint di interpolazione vale null e non si potrebbe ripristinare
+		Graphics2D icone = (Graphics2D) graphics.create();
+		try {
+			// Pixel netti: niente sfocatura sulle icone ingrandite
+			icone.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+			for (int i = 0; i < rettangoli.size(); i++) {
+				Rectangle r = rettangoli.get(i);
+				int x = offsetX + r.x;
+				int y = offsetY + r.y;
+				icone.drawImage(iconeVisibili.get(i).icona, x, y, r.width, r.height, null);
+				if (r.contains(mouseX, mouseY)) {
+					icone.setColor(mousePremuto ? Color.white : Color.lightGray);
+					icone.drawRect(x, y, r.width - 1, r.height - 1);
+				}
 			}
-		}
-		if (interpolazione != null) {
-			graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, interpolazione);
+		} finally {
+			icone.dispose();
 		}
 		copyright(graphics);
 	}

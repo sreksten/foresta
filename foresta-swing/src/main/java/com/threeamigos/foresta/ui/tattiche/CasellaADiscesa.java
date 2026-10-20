@@ -94,6 +94,14 @@ final class CasellaADiscesa<T> {
 		this.altezza = altezzaScelta;
 		this.y = yScelta;
 		this.x = Math.max(MARGINE, Math.min(ancoraX, larghezzaSchermo - larghezza - MARGINE));
+		// Se l'elenco scorre, si apre con la scelta corrente a metà altezza invece che in cima
+		int altezzaScelta1 = font.getHeight() + 2 * INTERLINEA;
+		for (int i = 0; i < scelte.size(); i++) {
+			if (scelte.get(i).valore.equals(corrente)) {
+				offset = costruisci(null).limitaOffset(altezzaInterna(), i * altezzaScelta1 - (altezzaInterna() - altezzaScelta1) / 2);
+				break;
+			}
+		}
 	}
 
 	boolean isAperta() {

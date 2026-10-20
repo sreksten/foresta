@@ -129,6 +129,19 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	}
 
 	/**
+	 * La bozza di un personaggio lasciato a metà: vale ancora se la sua tattica nel motore è quella da cui partiva
+	 */
+	private static final class BozzaLasciata {
+		final BozzaTattica bozza;
+		final TatticaMD applicata;
+
+		BozzaLasciata(BozzaTattica bozza, TatticaMD applicata) {
+			this.bozza = bozza;
+			this.applicata = applicata;
+		}
+	}
+
+	/**
 	 * Un elenco di filtri che la bozza sa modificare: quello di una voce o quello di una condizione QUANTI
 	 */
 	private interface ListaFiltri {
@@ -149,6 +162,8 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	// Le azioni che la classe del personaggio può avere nella tattica; null: tutte
 	private java.util.Set<TipoAzione> azioniPossibili;
 	private BozzaTattica bozza = BozzaTattica.da(TatticaMD.VUOTA);
+	// Le bozze modificate e non confermate di chi si è lasciato per un altro personaggio (per UUID), con la tattica da cui partivano
+	private final Map<String, BozzaLasciata> bozzeLasciate = new HashMap<>();
 	private CasellaADiscesa<?> menu;
 	// Il pezzo che ha aperto il menu: la sua spiegazione resta nel riquadro destro finché il mouse non è su una scelta
 	private String titoloMenu;
@@ -235,13 +250,18 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 
 	/**
 	 * Mostra la tattica del personaggio. Se è lo stesso di prima e la tattica nel motore non è cambiata la bozza resta com'è (arriva di nuovo
-	 * la richiesta quando si sposta il personaggio nel gruppo); altrimenti si riparte da quella del motore.
+	 * la richiesta quando si sposta il personaggio nel gruppo); altrimenti si riparte da quella del motore, a meno che il personaggio sia stato
+	 * lasciato con una bozza a metà e la sua tattica nel motore non sia cambiata nel frattempo.
 	 */
 	public void impostaTattica(VistaPersonaggio nuovo, TatticaMD tattica, TatticaMD tatticaPredefinita, java.util.Set<TipoAzione> azioniPossibili) {
 		boolean stesso = personaggio != null && personaggio.getUuid().equals(nuovo.getUuid());
 		if (!(stesso && tattica.equals(applicata))) {
 			annullaLaRichiestaDiTesto();
-			bozza = BozzaTattica.da(tattica);
+			if (personaggio != null && !stesso && isModificata()) {
+				bozzeLasciate.put(personaggio.getUuid(), new BozzaLasciata(bozza, applicata));
+			}
+			BozzaLasciata lasciata = bozzeLasciate.remove(nuovo.getUuid());
+			bozza = lasciata != null && lasciata.applicata.equals(tattica) ? lasciata.bozza : BozzaTattica.da(tattica);
 			offsetYZonaSinistra = 0;
 		}
 		personaggio = nuovo;
@@ -255,7 +275,8 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	 * Se la bozza è diversa dalla tattica applicata nel motore (a parte l'attacco di riserva): i pulsanti Sì e No hanno senso solo allora
 	 */
 	private boolean isModificata() {
-		return !bozza.descrive(applicata);
+		// Una voce appena aggiunta, ancora senza azioni, non entra nella tattica da mandare al motore, ma la bozza è comunque cambiata
+		return !bozza.descrive(applicata) || bozza.haVociSenzaAzioni();
 	}
 
 	// ============================================================== il disegno
@@ -335,23 +356,33 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 
 		// Il posto nel gruppo: le frecce lo spostano a sinistra o a destra
 		List<? extends VistaPersonaggio> permanenti = permanenti();
-		int posto = 0;
+		int posto = -1;
 		for (int i = 0; i < permanenti.size(); i++) {
 			if (permanenti.get(i).getUuid().equals(personaggio.getUuid())) {
 				posto = i;
 			}
 		}
-		puoSpostareASinistra = posto > 0;
-		puoSpostareADestra = posto < permanenti.size() - 1;
 		int lato = ICONA_SINISTRA.getWidth();
 		int centro = width / 2;
-		Image postoTesto = ImageCache.get("Posto " + (posto + 1) + " di " + permanenti.size(), DoomdarkColorModel.Color.MEDIUM_GRAY);
-		int mezzoTesto = postoTesto.getWidth(null) / 2;
-		areaSposta[0] = new Rectangle(centro - mezzoTesto - 2 * SPACING - lato, y, lato, lato);
-		areaSposta[1] = new Rectangle(centro + mezzoTesto + 2 * SPACING, y, lato, lato);
-		disegnaIcona(graphics, ICONA_SINISTRA, areaSposta[0], puoSpostareASinistra);
-		disegnaIcona(graphics, ICONA_DESTRA, areaSposta[1], puoSpostareADestra);
-		graphics.drawImage(postoTesto, centro - mezzoTesto, y + (lato - postoTesto.getHeight(null)) / 2, null);
+		if (posto < 0) {
+			// Chi è nel gruppo a tempo non ha un posto da spostare
+			puoSpostareASinistra = false;
+			puoSpostareADestra = false;
+			areaSposta[0] = null;
+			areaSposta[1] = null;
+			Image aTempo = ImageCache.get("Con il gruppo a tempo", DoomdarkColorModel.Color.MEDIUM_GRAY);
+			graphics.drawImage(aTempo, centro - aTempo.getWidth(null) / 2, y + (lato - aTempo.getHeight(null)) / 2, null);
+		} else {
+			puoSpostareASinistra = posto > 0;
+			puoSpostareADestra = posto < permanenti.size() - 1;
+			Image postoTesto = ImageCache.get("Posto " + (posto + 1) + " di " + permanenti.size(), DoomdarkColorModel.Color.MEDIUM_GRAY);
+			int mezzoTesto = postoTesto.getWidth(null) / 2;
+			areaSposta[0] = new Rectangle(centro - mezzoTesto - 2 * SPACING - lato, y, lato, lato);
+			areaSposta[1] = new Rectangle(centro + mezzoTesto + 2 * SPACING, y, lato, lato);
+			disegnaIcona(graphics, ICONA_SINISTRA, areaSposta[0], puoSpostareASinistra);
+			disegnaIcona(graphics, ICONA_DESTRA, areaSposta[1], puoSpostareADestra);
+			graphics.drawImage(postoTesto, centro - mezzoTesto, y + (lato - postoTesto.getHeight(null)) / 2, null);
+		}
 		y += lato + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
 		// Conferma e annulla, solo se c'è qualcosa da confermare
@@ -709,8 +740,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	}
 
 	private static String etichettaClasse(TipoPersonaggio classe) {
-		String nome = TestoTattica.nome(classe);
-		return Character.toUpperCase(nome.charAt(0)) + nome.substring(1);
+		return classe.getNome();
 	}
 
 	private List<Riga> costruisciRighe() {

@@ -200,8 +200,8 @@ public class ComponenteScorrevole<T> {
     }
 
     /**
-     * Riporta il riferimento del nodo il cui titolo occupa la quota indicata, oppure null
-     * se a quella quota non c'è il titolo di un nodo (spazio vuoto, o riga di descrizione).
+     * Riporta il riferimento del nodo che occupa la quota indicata (con la sua descrizione e i suoi spazi, non solo
+     * il titolo), oppure null se la quota è sopra la lista o oltre l'ultimo nodo.
      *
      * @param quota espressa in coordinate della lista, quindi comprensiva dell'offset
      *              di scorrimento con cui la lista è stata prodotta

@@ -42,6 +42,7 @@ import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroTesto;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasCommerciante;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIncantatore;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIntermezzo;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatore;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIntroOutro;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasInventario;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasMappaATuttoSchermo;
@@ -999,7 +1000,34 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		if (stato == StatoDisplayableCanvas.STATO_TATTICHE && nuovo != StatoDisplayableCanvas.STATO_TATTICHE) {
 			tattiche.annullaLaRichiestaDiTesto();
 		}
+		if (nuovo != stato) {
+			DisplayableCanvasScambiatore aperto = scambiatoreDelloStato(nuovo);
+			// Dalle pagine dei trofei e delle tattiche si torna all'inventario com'era
+			boolean ritornoAllInventario = nuovo == StatoDisplayableCanvas.STATO_INVENTARIO
+					&& (stato == StatoDisplayableCanvas.STATO_TROFEI || stato == StatoDisplayableCanvas.STATO_TATTICHE);
+			if (aperto != null && !ritornoAllInventario) {
+				aperto.apri();
+			}
+		}
 		stato = nuovo;
+	}
+
+	/**
+	 * La schermata di scambio che quello stato mostra, o null se non ne mostra una.
+	 */
+	private DisplayableCanvasScambiatore scambiatoreDelloStato(StatoDisplayableCanvas s) {
+		switch (s) {
+			case STATO_INVENTARIO:
+				return inventario;
+			case STATO_COMMERCIANTE:
+				return commerciante;
+			case STATO_ALCHIMISTA:
+				return alchimista;
+			case STATO_INCANTATORE:
+				return incantatore;
+			default:
+				return null;
+		}
 	}
 
 	/**
