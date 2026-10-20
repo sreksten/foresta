@@ -60,7 +60,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 - B20. `LocazioneBase`:
   - SINGOLO_ATTACCO è offerto in mischia ma ignorato (righe 969-971);
   - i rami irraggiungibili delle righe 437-440 e 1528-1533 (MAPPA/INVENTARIO in combattimento, e IN_COMBATTIMENTO non ha un gestore d'ingresso).
-- B22 (P). `Requisiti:201-207`: il Canto ipnotico non esclude gli immuni.
 - B23 (P). `Castello*.azzeraLocazione`: non chiamano `super`.
 - B24 (P). `Automa:1482, 1517, 1531, 1566, 610`: i comandi inattesi lanciano un'eccezione invece di essere ignorati con `comandoNonValido`.
 - B25. `LineaTemporale.oreFinoAlMattino`: usare `PRIMA_ORA_DEL_MATTINO` invece di 8.

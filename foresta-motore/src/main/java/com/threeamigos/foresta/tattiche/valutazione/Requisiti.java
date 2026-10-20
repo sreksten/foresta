@@ -209,14 +209,17 @@ public final class Requisiti {
 	}
 
 	/**
-	 * I canti che agiscono sul gruppo avversario (ipnotico, urlo della Banshee): servono se c'è almeno un avversario in campo non già spaventato o confuso
+	 * I canti che agiscono sul gruppo avversario (ipnotico, urlo della Banshee): servono se c'è almeno un avversario in campo non già spaventato o
+	 * confuso e che non sia immune a tutti e due gli stati (un canto contro soli immuni non produrrebbe niente e si ripeterebbe a vuoto)
 	 */
 	private static String canto(Personaggio attore, TipoCanto canto, ContestoTattico contesto) {
 		if (!CantoDelBardo.puoCantare(attore, canto)) {
 			return "il canto non si può cantare";
 		}
 		return esiste(contesto.getAvversari(), p -> !p.isFuoriCombattimento() && !p.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO)
-				&& !p.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)) ? null : "tutti gli avversari sono già spaventati o confusi";
+				&& !p.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)
+				&& !(p.isImmuneAEffetto(TipoEffettoDiStato.SPAVENTATO) && p.isImmuneAEffetto(TipoEffettoDiStato.CONFUSO)))
+				? null : "tutti gli avversari sono già spaventati o confusi, o immuni";
 	}
 
 	/**
