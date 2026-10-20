@@ -104,7 +104,6 @@ Nessun difetto aperto.
 | Cod. | Dove | Difetto | |
 | :--- | :--- | :--- | :---: |
 | M13 | `missioni/incarichi/IlRituale:94-96, 191-216` | Il ripiego della raccolta rivendica un'altra casella e sposta `getPosto()`: rito e guardiano finiscono nel posto del ripiego | C |
-| M14 | `missioni/MissioneAPassi:720-753` | `combatti` a ondata singola somma gli sconfitti di più visite, anche dopo una fuga: la banda risulta sgominata mentre è viva | C |
 | M15 | `missioni/principali/DisturbatoreDellaQuietePubblica:55-86` | Non idempotente: dopo una domanda in IN_LOCAZIONE l'`Automa` rifà il controllo e l'eremita conta 2 | C (raro) |
 | M16 | `trofei/RegistroTrofei:49` | Il progresso in sospeso si azzera a ogni preparazione di locazione: le missioni completate in PRE_LOCAZIONE (LaBenedizione) non contano per CACCIATORE_DI_TAGLIE | C (P per l'accampamento) |
 | M17 | `testi/ProduttoreDiTestiCasuale:505` | `LETTERA_FINALE` si accorda sempre con il capo anche quando il soggetto è il ladro o il bardo (`locande.txt` righe 300, 349, 511): "Gualtiero è stata vista" | C |
@@ -283,7 +282,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 ## 8. Prossimi passi consigliati
 
 1. **Correggere i medi certi e a basso rischio:** M16, M17, M18 e tutta la UI (M22-M27).
-2. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M11 (fuga), M14 (sconfitti fra visite), B28 (LaLealta).
+2. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M11 (fuga), B28 (LaLealta).
 3. **Un vero gestore di `InternoException`** (M19).
 4. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
 5. **Bilanciamento:** come da [`todo.md`](todo.md).

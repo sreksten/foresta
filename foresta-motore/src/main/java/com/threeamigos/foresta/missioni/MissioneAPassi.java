@@ -715,7 +715,8 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * COMBATTI(bersaglio): finché è il passo corrente, nella locazione in quelle coordinate ci sono gli avversari
 	 * dell'incontro, al posto di quelli che ci sarebbero stati; si conclude a fine locazione, lì, quando il gruppo
 	 * ne ha sconfitti lì quanti ne erano, di ogni classe e in tutte le ondate (vedi IncontroDiMissione.poi): quelli
-	 * della stessa classe sconfitti altrove non contano.
+	 * della stessa classe sconfitti altrove non contano, e nemmeno quelli di una visita precedente (a ogni visita gli avversari ricompaiono
+	 * tutti, e si ricomincia a contare).
 	 */
 	protected final Passo combatti(Supplier<CoordinateMD> dove, IncontroDiMissione incontro) {
 		return Passo.quando(MomentoControllo.POST_LOCAZIONE,
@@ -746,11 +747,9 @@ public abstract class MissioneAPassi extends MissioneBase {
 		if (incontro == null) {
 			return Optional.empty();
 		}
-		// A ondate si ricomincia dalla prima a ogni visita: e si ricomincia anche a contare gli sconfitti, perché
-		// non basti mettere insieme quelli di più visite senza mai battere l'ultima ondata
-		if (incontro.getNumeroDiOndate() > 1) {
-			incontro.getSconfittiRichiesti().keySet().forEach(classe -> azzeraConteggio(eventoSconfittoIn(classe, coordinate)));
-		}
+		// A ogni visita gli avversari ricompaiono tutti (e a ondate si ricomincia dalla prima): si ricomincia anche a contare gli sconfitti,
+		// perché non basti mettere insieme quelli di più visite, magari dopo una fuga, per dare per sgominata una banda che è ancora viva
+		incontro.getSconfittiRichiesti().keySet().forEach(classe -> azzeraConteggio(eventoSconfittoIn(classe, coordinate)));
 		return Optional.of(incontro.crea());
 	}
 

@@ -49,7 +49,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
   - Incarichi: CacciaAiGoblin, LaTagliaSullaBanda, CacciatoreDiTaglie, IlPellegrino, IlRapimento, IlTorneo.
 - **M13, il rito cambia posto.** In IlRituale (righe 94-96 e 191-216) il ripiego della raccolta rivendica un'altra casella e sposta `getPosto()`.
   - Correzione: salvare la coordinata del rito in un parametro proprio.
-- **M14, sconfitti sommati fra le visite (regola).** In `MissioneAPassi.combatti` a ondata singola (righe 720-753) gli sconfitti di più visite si sommano, anche dopo una fuga.
   - Correzione: azzerare a ogni visita.
 - **M15, eremiti contati due volte.** `DisturbatoreDellaQuietePubblica` (righe 55-86) non è idempotente: dopo una domanda in IN_LOCAZIONE l'Automa rifà il controllo (`Automa:1916`) e l'eremita conta due volte.
   - Scrivere il vincolo di idempotenza in `gestione_missioni.md`.
