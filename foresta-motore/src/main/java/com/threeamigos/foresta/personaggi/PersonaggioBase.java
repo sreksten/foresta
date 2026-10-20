@@ -366,6 +366,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		md.setVivo(false);
 		md.setCausaTrapasso(causaTrapasso);
+		// Con la morte finiscono anche gli effetti di stato: non devono tornare, e magari riuccidere, con la resurrezione. Senza notifiche:
+		// un morto non ha niente da mostrare (la UI disegnerebbe lo sprite grigio della rimozione)
+		new ArrayList<>(md.getEffettiDiStato()).forEach(md::togliEffettoDiStato);
 		BusEventi.pubblica(new NotificaVariazioneStatoVitalePersonaggio(this, false));
 	}
 

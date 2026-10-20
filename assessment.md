@@ -106,7 +106,6 @@ Ogni voce è stata verificata sul codice chiamante. **C** sta per *confermato* (
 | M5 | `LocazioneBase:1376-1392`, `motore/Automa:776`, `PersonaggioBase:606-619` | Gli ospiti vulnerabili ricevono stati che non scadono mai (tick e pulizia scorrono solo i personaggi). In `applicaRisultatoCombattimento` un ospite colpito è trattato come avversario: la Purificazione cura i mostri | C (P per la Purificazione) |
 | M6 | `tattiche/TatticheBase:293, 300`, `incantesimi/Morte:61` | Morte: la tattica usa 100·s/m < 25, l'incantesimo s < m/4 intero; con s=2, m=10 si ritorce sul mostro. Morte e Silenzio non registrano l'esito, quindi i tentativi falliti non fermano la ripetizione; la magia "a caso" può pescare Morte su un bersaglio sano | C |
 | M8 | `PersonaggioBase:1029-1051` | Il carico massimo non è moltiplicato per `getMoltiplicatoreCarico()`, contro javadoc e `motore_di_gioco.md` §8: Guerriero e Maga, Drago e Goblin portano lo stesso peso. Correggerlo vuol dire ritarare pesi e test | C |
-| M9 | `PersonaggioBase:363-381` | Gli effetti di stato restano su chi muore e tornano con la resurrezione (veleno e sanguinamento possono riuccidere al primo turno) | C |
 | M10 | `PersonaggioBase:944-953`, `motore/RegistroPersonaggi:99-104` | Un compagno reclutato a livello alto entra con salute e magia del livello 1 (al livello 9, 25-33% della salute massima) | C |
 | M11 | `PersonaggioBase:525-527` | La fuga toglie 50-100 punti fissi: al livello 1 un Mago muore nel 41% circa delle fughe (TODO già nel codice) | C |
 
@@ -297,7 +296,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 ## 8. Prossimi passi consigliati
 
 1. **I difetti alti (A1-A4) sono corretti**, ciascuno con un test.
-2. **Correggere i medi certi e a basso rischio:** M1, M2, M3, M4, M9, M10, M12, M16, M17, M18 e tutta la UI (M22-M27).
+2. **Correggere i medi certi e a basso rischio:** M1, M2, M3, M4, M10, M12, M16, M17, M18 e tutta la UI (M22-M27).
 3. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M8 (carico), M11 (fuga), M14 (sconfitti fra visite), B28 (LaLealta).
 4. **Un vero gestore di `InternoException`** (M19).
 5. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
