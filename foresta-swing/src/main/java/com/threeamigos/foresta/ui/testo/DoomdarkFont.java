@@ -18,6 +18,18 @@ public interface DoomdarkFont {
 	byte[] getGlyphData(char c);
 
 	/**
+	 * Se il font ha il carattere: chi lo scrive o lo misura salta gli altri (vedi {@link UnsupportedCharacterException}).
+	 */
+	default boolean supportaIlCarattere(char c) {
+		try {
+			getGlyphWidth(c);
+			return true;
+		} catch (UnsupportedCharacterException e) {
+			return false;
+		}
+	}
+
+	/**
 	 * Lanciata quando si chiede un carattere che il font non ha (per esempio una minuscola accentata).
 	 */
 	class UnsupportedCharacterException extends RuntimeException {

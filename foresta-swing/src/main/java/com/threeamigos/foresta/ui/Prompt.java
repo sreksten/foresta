@@ -15,6 +15,8 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.function.Consumer;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
+import com.threeamigos.foresta.ui.testo.DoomdarkFontSmall;
 
 /**
  * Il campo in cui il giocatore scrive un testo (il nome di un personaggio, il suo nome in classifica...): l'invio lo manda al motore come comando, o a chi lo ha chiesto per sé.
@@ -34,11 +36,30 @@ public class Prompt extends JPanel implements ActionListener {
 	// finestra già aperta (a fine logo, vedi ForestaUI), comparirebbe anche con il Prompt nascosto e senza cornice
 	private final JTextField tf;
 
+	// I due font del gioco hanno gli stessi caratteri
+	private static final DoomdarkFont FONT_DEI_TESTI = DoomdarkFontSmall.getInstance();
+
 	// Chi ha chiesto il testo per sé (la UI, senza passare dal motore): se c'è, l'invio lo riceve lui invece del bus
 	private Consumer<String> alInvio;
 
 	public String getText() {
-		return Serializzabile.pulisciCampo(tf.getText());
+		return soloCaratteriDelFont(Serializzabile.pulisciCampo(tf.getText()));
+	}
+
+	/**
+	 * Toglie i caratteri che il font del gioco non sa disegnare (una "ü", un "_"...): un nome così non si leggerebbe, e il riquadro del gruppo non saprebbe scriverlo.
+	 */
+	static String soloCaratteriDelFont(String testo) {
+		if (testo == null) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder(testo.length());
+		for (char c : testo.toCharArray()) {
+			if (FONT_DEI_TESTI.supportaIlCarattere(c)) {
+				sb.append(c);
+			}
+		}
+		return sb.toString();
 	}
 
 	public Prompt() {
@@ -48,11 +69,12 @@ public class Prompt extends JPanel implements ActionListener {
 		setLayout(null);
 		tf = new JTextField();
 		tf.addFocusListener(new MyFocusListener());
-		// Il "|" separa i campi dei salvataggi: non si lascia nemmeno scrivere
+		// Il "|" separa i campi dei salvataggi, e il font non ha tutti i caratteri: quelli che non si possono disegnare non si lasciano scrivere
 		tf.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				if (e.getKeyChar() == '|') {
+				char c = e.getKeyChar();
+				if (!Character.isISOControl(c) && !FONT_DEI_TESTI.supportaIlCarattere(c)) {
 					e.consume();
 				}
 			}

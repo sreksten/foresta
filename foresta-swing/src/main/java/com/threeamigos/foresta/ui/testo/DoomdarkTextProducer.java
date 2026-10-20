@@ -1,15 +1,29 @@
 package com.threeamigos.foresta.ui.testo;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoErrore;
+
 import java.awt.*;
 import java.awt.image.MemoryImageSource;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Trasforma una stringa in un'immagine scritta con un font bitmap e un colore, anche su più righe entro una larghezza massima.
  */
 public class DoomdarkTextProducer {
 	
+	// I caratteri mancanti già segnalati: un testo si ridisegna spesso, l'errore basta una volta per carattere
+	private static final Set<Character> CARATTERI_SEGNALATI = ConcurrentHashMap.newKeySet();
+
 	private DoomdarkTextProducer() {
+	}
+
+	private static void segnalaCarattereMancante(char c, String testo) {
+		if (CARATTERI_SEGNALATI.add(c)) {
+			BusEventi.pubblica(new InternoErrore("Carattere non supportato dal font: '" + c + "' [" + (int) c + "] nel testo \"" + testo + "\""));
+		}
 	}
 
 	private static Image buildImageSource(String resource, DoomdarkFont font, DoomdarkColorModel.Color color) {
@@ -18,6 +32,10 @@ public class DoomdarkTextProducer {
 		int[] textData = new int[imageWidth * fontHeight]; // buffer per l'immagine temporanea
 		int textDataIndex = 0;
 		for (int charIndex = 0; charIndex < resource.length(); charIndex++) {
+			if (!font.supportaIlCarattere(resource.charAt(charIndex))) {
+				segnalaCarattereMancante(resource.charAt(charIndex), resource);
+				continue; // come FontTool.getWidth, che non gli lascia posto
+			}
 			byte[] charData = font.getGlyphData(resource.charAt(charIndex));
 			int charWidth = charData[0]; // larghezza del carattere
 			int dataWidth = font.getDataWidthInBytes();
@@ -49,6 +67,10 @@ public class DoomdarkTextProducer {
 			int textDataIndex = currentStringIndex * imageWidth * fontHeight;
 			String resource = strings.get(currentStringIndex);
 			for (int charIndex = 0; charIndex < resource.length(); charIndex++) {
+				if (!font.supportaIlCarattere(resource.charAt(charIndex))) {
+					segnalaCarattereMancante(resource.charAt(charIndex), resource);
+					continue; // come FontTool.getWidth, che non gli lascia posto
+				}
 				byte[] charData = font.getGlyphData(resource.charAt(charIndex));
 				int charWidth = charData[0]; // larghezza del carattere
 				int dataWidth = font.getDataWidthInBytes();
