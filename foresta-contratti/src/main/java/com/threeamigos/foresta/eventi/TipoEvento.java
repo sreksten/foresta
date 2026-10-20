@@ -497,9 +497,13 @@ public enum TipoEvento {
      */
     INTERNO_RICHIESTA_REINIZIALIZZAZIONE_UI,
     /**
-     * Mostra al giocatore o chiude la finestra del combattimento
+     * Mostra al giocatore la finestra del combattimento
      */
-    INTERNO_STATO_FINESTRA_COMBATTIMENTO,
+    INTERNO_RICHIESTA_APERTURA_FINESTRA_COMBATTIMENTO,
+    /**
+     * Chiude la finestra del combattimento
+     */
+    INTERNO_RICHIESTA_CHIUSURA_FINESTRA_COMBATTIMENTO,
     /**
      * Cambio di stato dell'automa principale che informa la UI
      */

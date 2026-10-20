@@ -51,7 +51,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità bassa: foresta-swing e foresta-app
 
-- B41a. Quattro eventi con sprite mai pubblicati.
 - B41b. `ImageCache.imageMap`, `set`/`get(String)` e lo shutdown hook inutile.
 - B41c. `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif` mai usati.
 - B41d. Il doppio caricamento di `spriteAumentoLivello`.
@@ -61,7 +60,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 ## Architettura
 
 - **Rivedere i javadoc di classi e metodi** (in italiano) per la didattica: fatto per `foresta-modellodati`, `foresta-tipi`, `foresta-contratti` e, in `foresta-motore`, per `personaggi`, `oggetti`, `motore`, `combattimento`, `locazioni`, `incantesimi`, `canti`, `offerte`, `trofei`, `testi`, `salvataggi`, `intermezzi` e `missioni` (con i cinque sottopacchetti); e `tattiche` (con i sottopacchetti `rose` e `valutazione`) del motore; fatto anche per `foresta-swing` (con i suoi sottopacchetti) e `foresta-app`: la revisione è completa. La regola: javadoc di classe per tutte, di metodo per quelli non banali (non per i semplici getter e setter), un `package-info.java` per ogni pacchetto.
-- `InternoRichiestaAperturaFinestraCombattimento` e `InternoRichiestaChiusuraFinestraCombattimento` usano lo stesso `TipoEvento` (`INTERNO_STATO_FINESTRA_COMBATTIMENTO`): da distinguere, se serve.
 - **Salvataggi fuori dal modello dati.** Le classi `…MD` portano ancora `salva` e `leggi` (formato di file). Per toglierli servono getter e setter in quasi tutti i MD (`leggi` scrive direttamente nei campi privati) e un serializzatore per classe, in un solo commit perché `ModelloDati` richiama tutto a catena (circa 870 righe in 24 file); non è necessario per il porting (usano solo `java.io`).
 - **Spezzare il motore.** I suoi pacchetti si richiamano a vicenda (`motore`, `personaggi`, `oggetti`, `locazioni`, `missioni`, `incantesimi`...) e per ora restano un modulo solo. Il primo taglio possibile è il modulo `foresta-missioni` (vedi sotto); i leggendari sono già in `oggetti.leggendari`, indipendenti dalle missioni.
 - **Modulo `foresta-missioni`.** Nel motore resterebbe il meccanismo (la radice di `missioni`: `Missione`, `MissioneBase`, `MissioneAPassi`, `Passo`, `RegistroMissioni`, `IncontroDiMissione`, `Mandante`, `Ricompensa`, `IntermezzoDiPasso`...); nel nuovo modulo, che dipende dal motore, il catalogo (`missioni.{principali,incarichi,richieste,leggende,storie}`, quasi tutte le 89 classi). Il motore deve prima smettere di nominare il catalogo. Passi, in ordine:

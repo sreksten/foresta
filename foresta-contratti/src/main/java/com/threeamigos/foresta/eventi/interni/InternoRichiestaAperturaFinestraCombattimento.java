@@ -14,7 +14,7 @@ public class InternoRichiestaAperturaFinestraCombattimento extends EventoSuPerso
     private final VistaPersonaggio avversario;
 
     public InternoRichiestaAperturaFinestraCombattimento(VistaPersonaggio combattente, VistaPersonaggio avversario) {
-        super(TipoEvento.INTERNO_STATO_FINESTRA_COMBATTIMENTO, combattente);
+        super(TipoEvento.INTERNO_RICHIESTA_APERTURA_FINESTRA_COMBATTIMENTO, combattente);
         this.avversario = avversario;
     }
 

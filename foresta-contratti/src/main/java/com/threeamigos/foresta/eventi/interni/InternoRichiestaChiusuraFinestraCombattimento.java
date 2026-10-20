@@ -11,7 +11,7 @@ import com.threeamigos.foresta.eventi.TipoEvento;
 public class InternoRichiestaChiusuraFinestraCombattimento extends EventoBase {
 
     public InternoRichiestaChiusuraFinestraCombattimento() {
-        super(TipoEvento.INTERNO_STATO_FINESTRA_COMBATTIMENTO);
+        super(TipoEvento.INTERNO_RICHIESTA_CHIUSURA_FINESTRA_COMBATTIMENTO);
     }
 
 }

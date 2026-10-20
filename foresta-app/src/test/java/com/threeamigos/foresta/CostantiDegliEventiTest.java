@@ -31,9 +31,6 @@ class CostantiDegliEventiTest {
 		ECCEZIONI.put("RichiestaSelezioneSiNo", "RICHIESTA_SELEZIONE_SI_O_NO");
 		// "Exception" in italiano
 		ECCEZIONI.put("InternoException", "INTERNO_ECCEZIONE");
-		// Aprire e chiudere la finestra del combattimento sono due richieste dello stesso "stato della finestra"
-		ECCEZIONI.put("InternoRichiestaAperturaFinestraCombattimento", "INTERNO_STATO_FINESTRA_COMBATTIMENTO");
-		ECCEZIONI.put("InternoRichiestaChiusuraFinestraCombattimento", "INTERNO_STATO_FINESTRA_COMBATTIMENTO");
 	}
 
 	/** Il nome della classe in maiuscolo con i trattini bassi fra le parole ("RefreshUI" → "REFRESH_UI", "SpriteATempo" → "SPRITE_A_TEMPO") */

@@ -73,7 +73,7 @@ Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 - **Gestione degli errori.** I `catch` generici stanno quasi tutti nei gestori su file e in `GrammarBean`, ed è una scelta difendibile.
 - **`TODO`/`FIXME`:** Riguardano funzioni future o rifiniture.
 - **Codice morto.** C'è un po' di codice che non si raggiunge (B35, B41):
-  - quattro classi di eventi con sprite mai pubblicate, e due eventi con il `TipoEvento` sbagliato;
+  - quattro classi di eventi con sprite mai pubblicate (`InternoCreazioneSprite` + `AnnuncioGlobale`, `EffettoDiStato`, `FumettoATempo`, `InDissolvenza`): sono pronte e funzionanti, con il loro gestore in `DisplayableCanvas` e l'iscrizione nello sniffer, ma oggi gli sprite si creano direttamente. Si tengono come risorsa per usi futuri (chi vuole mostrare uno sprite senza conoscere il canvas pubblica l'evento) e non sono un difetto;
   - metodi di `PersonaggioBase` mai chiamati;
   - passi pronti di `MissioneAPassi` usati solo dai test;
   - produzioni delle grammatiche mai usate, fra cui 12 `NOTIZIE_CITTA` che non escono mai.
@@ -128,7 +128,6 @@ Nessun difetto aperto.
 
 **foresta-swing e foresta-app**
 
-- B41a Quattro eventi con sprite mai pubblicati. (C)
 - B41b `ImageCache.imageMap`, `set`/`get(String)` e lo shutdown hook inutile. (C)
 - B41c `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif` mai usati. (C)
 - B41d Il doppio caricamento di `spriteAumentoLivello`. (C)
