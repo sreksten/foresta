@@ -13,7 +13,6 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -207,44 +206,38 @@ class ScenarioBenedizioneTest {
     }
 
     @Test
-    void agruppoPienoIlSacerdotePrendeIlPostoDiChiHaMenoTempo() {
+    void conCinqueFissiIlSacerdoteNonEntraEIlGruppoLoSente() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(243)) {
-            LaBenedizione benedizione = arrivaAlTempioConGruppoPieno(partita, 4, 3);
-            Personaggio ospiteLungo = partita.gruppo().getPersonaggi().get(5);
-            Personaggio ospiteBreve = partita.gruppo().getPersonaggi().get(6);
-            Personaggio ospiteMedio = partita.gruppo().getPersonaggi().get(7);
-            ospiteLungo.setTempo(5);
-            ospiteBreve.setTempo(1);
-            ospiteMedio.setTempo(3);
+            LaBenedizione benedizione = arrivaAlTempio(partita, 4, 0);
 
-            benedizione.rispondi(Passo.SI);
-            benedizione.controllaPreLocazione();
-
-            assertEquals(Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE, partita.gruppo().getNumeroPersonaggi());
-            assertFalse(partita.gruppo().getPersonaggi().contains(ospiteBreve));
-            assertTrue(partita.gruppo().getPersonaggi().contains(ospiteLungo));
-            assertTrue(partita.gruppo().getPersonaggi().contains(ospiteMedio));
-            assertTrue(partita.testi().contains(ospiteBreve.getNome() + " lascia il gruppo per far posto al nuovo arrivato."), String.valueOf(partita.testi()));
+            assertEquals(5, partita.gruppo().getNumeroPersonaggi());
+            assertTrue(benedizione.isCompleta());
+            assertNull(benedizione.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE));
+            assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("Siete già in cinque: non penso abbiate bisogno anche dell'aiuto d")),
+                    String.valueOf(partita.testi()));
         }
     }
 
     @Test
-    void agruppoPienoSenzaOspitiIlSacerdoteNonEntraENonSiChiedeNiente() {
+    void gliOspitiATempoNonContanoFraIFissi() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(244)) {
-            LaBenedizione benedizione = arrivaAlTempioConGruppoPieno(partita, 7, 0);
+            LaBenedizione benedizione = arrivaAlTempio(partita, 3, 3);
 
-            assertEquals(Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE, partita.gruppo().getNumeroPersonaggi());
-            assertTrue(benedizione.isCompleta());
-            assertNull(benedizione.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE));
-            assertEquals(Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE, partita.gruppo().getNumeroPersonaggi());
+            Passo proposta = benedizione.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE);
+            assertNotNull(proposta);
+            assertTrue(proposta.isConferma());
+            benedizione.rispondi(Passo.SI);
+            benedizione.controllaPreLocazione();
+            assertEquals(8, partita.gruppo().getNumeroPersonaggi());
+            assertEquals(5, partita.gruppo().getNumeroPersonaggiPermanenti());
         }
     }
 
     /**
-     * Fa il favore e porta il gruppo al tempio con "permanenti" compagni (più il capo) e "ospiti" a tempo, poi riceve la benedizione.
+     * Fa il favore e porta il gruppo al tempio con "permanenti" compagni (più il capo) e "aTempo" aiuti a tempo, poi riceve la benedizione.
      * Se la proposta del sacerdote è ancora aperta resta in attesa della risposta.
      */
-    private static LaBenedizione arrivaAlTempioConGruppoPieno(PartitaDiTest partita, int permanenti, int ospiti) {
+    private static LaBenedizione arrivaAlTempio(PartitaDiTest partita, int permanenti, int aTempo) {
         LaBenedizione benedizione = incontraLaSacerdotessa(partita);
         IlFavore favore = (IlFavore) benedizione.getMissioniAffidate(LaBenedizione.FAVORE).get(0);
         favore.controllaInLocazione();
@@ -258,13 +251,12 @@ class ScenarioBenedizioneTest {
         for (int i = 0; i < permanenti; i++) {
             partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno" + i, 1));
         }
-        for (int i = 0; i < ospiti; i++) {
+        for (int i = 0; i < aTempo; i++) {
             Guerriero ospite = new Guerriero("Ospite" + i, 1);
             ospite.setMotivoNelGruppo(TipoMotivoNelGruppo.AIUTO_GRATUITO);
             ospite.setTempo(3);
             partita.gruppo().aggiungiPersonaggio(ospite);
         }
-        assertEquals(Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE, partita.gruppo().getNumeroPersonaggi());
         partita.gruppo().setCoordinate(benedizione.getTempio());
         benedizione.controllaPreLocazione();
         benedizione.rispondi("1");

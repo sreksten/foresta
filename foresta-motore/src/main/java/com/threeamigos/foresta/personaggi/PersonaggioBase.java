@@ -702,11 +702,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		return md.getMotivoNelGruppo().isATempo();
 	}
 
-	@Override
-	public int getTempo() {
-		return (int) md.getOptional(TipoAttributo.TEMPO).orElse(0.0d).doubleValue();
-	}
-
 	public void setTempo(int tempo) {
 		double quantitaPrecedente = md.getOptional(TipoAttributo.TEMPO).orElse(0.0d);
 		md.set(TipoAttributo.TEMPO, tempo);

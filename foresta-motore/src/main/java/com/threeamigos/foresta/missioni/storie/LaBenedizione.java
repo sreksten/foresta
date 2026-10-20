@@ -25,9 +25,7 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -167,36 +165,23 @@ public class LaBenedizione extends MissioneAPassi {
 		GruppoGiocatore.getIstanza().addPozioniAumentoLivello(1);
 		BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(getBenedizione().getMandante())
 				+ " vi consegna anche una piccola ampolla luminosa: una Pozione dell'Aumento di Livello."));
+		if (!ilGruppoHaPosto()) {
+			BusEventi.pubblica(new NotificaTestoParagrafo("Siete già in " + Misc.getCardinaleM(Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE)
+					+ ": non penso abbiate bisogno anche dell'aiuto " + Misc.conPreposizione("di", getBenedizione().getMandante()) + "."));
+		}
 	}
 
 	/**
-	 * Il personaggio a tempo che resta meno nel gruppo: è lui a lasciare il posto al sacerdote quando il gruppo è al completo.
+	 * Il sacerdote può entrare solo se il gruppo ha meno del massimo di personaggi fissi: non contano gli ospiti e chi è a tempo.
 	 */
-	private static Optional<Personaggio> ospiteInPartenza() {
-		return GruppoGiocatore.getIstanza().getPersonaggi().stream()
-				.filter(Personaggio::isATempo)
-				.min(Comparator.comparingInt(Personaggio::getTempo));
+	private static boolean ilGruppoHaPosto() {
+		return GruppoGiocatore.getIstanza().getNumeroPersonaggiPermanenti() < Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE;
 	}
 
 	/**
-	 * Il sacerdote può entrare se c'è posto, o se un ospite a tempo può lasciarglielo.
-	 */
-	private static boolean sacerdotePuoEntrare() {
-		return GruppoGiocatore.getIstanza().getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE || ospiteInPartenza().isPresent();
-	}
-
-	/**
-	 * Un sacerdote o una sacerdotessa, a caso, entra nel gruppo: se questo ha già il numero massimo di personaggi, l'ospite a tempo
-	 * che ne ha meno ancora lo lascia (e lo si racconta).
+	 * Un sacerdote o una sacerdotessa, a caso, entra nel gruppo.
 	 */
 	private void accogliUnSacerdote() {
-		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.getNumeroPersonaggi() >= Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE) {
-			Personaggio partente = ospiteInPartenza().orElseThrow(IllegalStateException::new);
-			gruppo.rimuoviPersonaggio(partente);
-			BusEventi.pubblica(new NotificaTestoParagrafo(partente.getNome()
-					+ " lascia il gruppo per far posto al nuovo arrivato."));
-		}
 		Personaggio sacerdote = Dado.tiraAncheAUnaFaccia(2) == 1
 				? new Sacerdote(ProduttoreDiTestiCasuale.nomeSacerdote(), 1)
 				: new Sacerdotessa(ProduttoreDiTestiCasuale.nomeSacerdotessa(), 1);
@@ -287,7 +272,7 @@ public class LaBenedizione extends MissioneAPassi {
 			case PREMIO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> true)
 						.esegui(this::premia)
-						.poi(() -> sacerdotePuoEntrare() ? COMPAGNO : Passo.FINE);
+						.poi(() -> ilGruppoHaPosto() ? COMPAGNO : Passo.FINE);
 			case COMPAGNO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> true)
 						.chiediConferma(Misc.inizialeMaiuscola(benedizione.getMandante()) + " chiede se desiderate che un sacerdote o una sacerdotessa vi accompagni in pianta stabile. Accettate?")
