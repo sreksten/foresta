@@ -59,7 +59,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 ### Gravità media: interfaccia
 
 - **M22, doppio click con qualsiasi tasto.** I `processaDoppioClick*` di ScambiatoreArtefatti (riga 461), ScambiatoreConsumabili (riga 298) e Inventario (riga 367) non controllano il tasto. Un doppio click destro o centrale compra, vende o spende un punto abilità.
-- **M23, Gruppo sempre davanti.** In `DisplayableCanvas:443-446` ogni variazione di statistiche, anche di un mostro, rimette davanti il riquadro del Gruppo.
   - Correzione: farlo solo per i personaggi del gruppo.
 - **M24, rinomina che resta aperta.** Il `Prompt` per rinominare una tattica resta aperto quando si lascia la schermata, e l'Invio scrive su una bozza ormai scartata (`Prompt:252-264`, `DisplayableCanvasTattiche:199-203`).
 - **M26, sprite sulla riga sbagliata.** `DisplayableCanvasRiquadroGruppo:511, 532` disegna gli sprite di Valore e Carisma con `fontHeight * 1` invece di `* 2`.

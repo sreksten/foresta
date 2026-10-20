@@ -111,7 +111,6 @@ Nessun difetto aperto.
 | Cod. | Dove | Difetto | |
 | :--- | :--- | :--- | :---: |
 | M22 | `ui/schermate/DisplayableCanvas{ScambiatoreArtefatti:461,ScambiatoreConsumabili:298,Inventario:367}` | I `processaDoppioClick*` non controllano il tasto: un doppio click destro o centrale compra, vende o spende un punto abilità | C |
-| M23 | `ui/DisplayableCanvas:443-446` | Ogni variazione di statistiche, anche di un mostro, rimette davanti il riquadro del Gruppo | C |
 | M24 | `ui/Prompt:252-264`, `ui/tattiche/DisplayableCanvasTattiche:199-203` | Il campo di rinomina della tattica resta aperto quando si lascia la voce o la schermata; l'Invio scrive su una bozza scartata | C |
 | M26 | `ui/riquadri/DisplayableCanvasRiquadroGruppo:511, 532` | Gli sprite di Valore e Carisma usano la riga 1 invece della 2 | C |
 | M27 | `ui/sprite/SpriteRivelazioneArtefatto:183` | L'animazione avanza di un passo fisso a ogni repaint: muovendo il mouse la rivelazione accelera | C |
@@ -273,7 +272,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 ## 8. Prossimi passi consigliati
 
-1. **Correggere i medi certi e a basso rischio:** la UI (M22-M24, M26, M27).
+1. **Correggere i medi certi e a basso rischio:** la UI (M22, M24, M26, M27).
 2. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M11 (fuga), B28 (LaLealta).
 3. **Un vero gestore di `InternoException`** (M19).
 4. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).

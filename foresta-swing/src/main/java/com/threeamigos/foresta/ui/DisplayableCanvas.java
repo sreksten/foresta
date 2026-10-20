@@ -441,7 +441,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	private void gestisciEventoVariazioneStatistichePersonaggio(NotificaVariazioneStatistichePersonaggio evento) {
-		primoPiano(TipoFinestra.STATO);
+		// Il riquadro del gruppo viene davanti solo se cambia qualcosa dei miei: le statistiche di un mostro non lo riguardano
+		if (vistaPartita.getGruppoGiocatore().contiene(evento.getPersonaggio())) {
+			primoPiano(TipoFinestra.STATO);
+		}
 		riquadroGruppo.gestisciEventoVariazioneStatistichePersonaggio(evento);
 	}
 
@@ -595,7 +598,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	/**
 	 * I riquadri impilati nell'ordine dello stack: il primo è il più in alto, l'ultimo il più in basso e davanti agli altri
 	 */
-	private List<TipoFinestra> riquadriImpilati() {
+	List<TipoFinestra> riquadriImpilati() {
 		List<TipoFinestra> impilati = new ArrayList<>(RIQUADRI_IMPILATI);
 		for (TipoFinestra finestra : new ArrayList<>(stackElementiGrafici)) {
 			if (isRiquadroImpilato(finestra)) {
