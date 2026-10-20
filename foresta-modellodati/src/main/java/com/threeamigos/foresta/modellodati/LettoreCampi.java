@@ -112,7 +112,20 @@ public final class LettoreCampi {
 	 * Il prossimo campo come valore dell'enum, in base al suo nome; un campo vuoto non è valido (per quelli che possono mancare vedi {@link #enumeratoFacoltativo}).
 	 */
 	public <E extends Enum<E>> E enumerato(Class<E> classe) throws IOException {
-		return Enum.valueOf(classe, testo());
+		return valoreDi(classe, testo());
+	}
+
+	/**
+	 * Il valore dell'enum con quel nome.
+	 *
+	 * @throws IOException se non esiste: un salvataggio rovinato, o scritto da una versione diversa
+	 */
+	private <E extends Enum<E>> E valoreDi(Class<E> classe, String nome) throws IOException {
+		try {
+			return Enum.valueOf(classe, nome);
+		} catch (IllegalArgumentException e) {
+			throw new IOException("\"" + nome + "\" non è un valore di " + classe.getSimpleName() + " nella riga: " + riga, e);
+		}
 	}
 
 	/**
@@ -147,6 +160,6 @@ public final class LettoreCampi {
 	 */
 	public <E extends Enum<E>> E enumeratoFacoltativo(Class<E> classe) throws IOException {
 		String testo = testo();
-		return testo.isEmpty() ? null : Enum.valueOf(classe, testo);
+		return testo.isEmpty() ? null : valoreDi(classe, testo);
 	}
 }

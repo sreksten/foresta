@@ -44,6 +44,16 @@ class LettoreCampiTest {
     }
 
     @Test
+    void unNomeDiEnumeratoSconosciutoEUnErroreDiLettura() throws IOException {
+        IOException obbligatorio = assertThrows(IOException.class,
+                () -> new LettoreCampi("NON_ESISTE").enumerato(TipoSlotArtefatto.class));
+        assertTrue(obbligatorio.getMessage().contains("NON_ESISTE"), obbligatorio.getMessage());
+        assertTrue(obbligatorio.getMessage().contains("TipoSlotArtefatto"), obbligatorio.getMessage());
+        assertThrows(IOException.class, () -> new LettoreCampi("NON_ESISTE").enumeratoFacoltativo(TipoSlotArtefatto.class));
+        assertThrows(IOException.class, () -> new LettoreCampi("").enumerato(TipoSlotArtefatto.class));
+    }
+
+    @Test
     void unPersonaggioSenzaNomeSiSalvaESiRilegge() throws IOException {
         // Given: un nome vuoto vale come nessun nome
         PersonaggioMD personaggio = new PersonaggioMD();

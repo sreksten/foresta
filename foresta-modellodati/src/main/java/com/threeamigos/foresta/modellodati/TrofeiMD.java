@@ -82,8 +82,9 @@ public class TrofeiMD implements Serializzabile {
 			LettoreCampi campi = new LettoreCampi(riga);
 			TipoTrofeo trofeo;
 			try {
-				trofeo = campi.enumerato(TipoTrofeo.class);
+				trofeo = TipoTrofeo.valueOf(campi.testo());
 			} catch (IllegalArgumentException e) {
+				// Un trofeo che il gioco non ha più non rovina il caricamento
 				continue;
 			}
 			if (campi.booleano()) {

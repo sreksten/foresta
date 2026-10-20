@@ -68,4 +68,11 @@ class TrofeiMDTest {
         trofei.leggi(new BufferedReader(new StringReader("\n" + TipoTrofeo.PERDIGIORNO.name() + "|true|0\n\n")));
         assertTrue(trofei.isVinto(TipoTrofeo.PERDIGIORNO));
     }
+
+    @Test
+    void unTrofeoSconosciutoSiSaltaSenzaRovinareIlCaricamento() throws IOException {
+        TrofeiMD trofei = new TrofeiMD();
+        trofei.leggi(new BufferedReader(new StringReader("TROFEO_TOLTO|true|5\n" + TipoTrofeo.PERDIGIORNO.name() + "|true|0\n")));
+        assertTrue(trofei.isVinto(TipoTrofeo.PERDIGIORNO));
+    }
 }

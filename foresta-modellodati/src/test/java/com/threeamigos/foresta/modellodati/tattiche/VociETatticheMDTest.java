@@ -170,7 +170,7 @@ class VociETatticheMDTest {
     void unaTatticaIlleggibileDaUnErroreChiaro() {
         IOException nomeSconosciuto = assertThrows(IOException.class,
                 () -> TatticaMD.leggi(lettore("TATTICA|1|0\nVOCE|true|false|0|1|\nAZIONE|NON_ESISTE||false|\n")));
-        assertTrue(nomeSconosciuto.getMessage().contains("incoerente"), nomeSconosciuto.getMessage());
+        assertTrue(nomeSconosciuto.getMessage().contains("NON_ESISTE"), nomeSconosciuto.getMessage());
         IOException etichetta = assertThrows(IOException.class, () -> TatticaMD.leggi(lettore("VOCE|1|0\n")));
         assertTrue(etichetta.getMessage().contains("atteso TATTICA"), etichetta.getMessage());
         IOException senzaAzioni = assertThrows(IOException.class, () -> TatticaMD.leggi(lettore("TATTICA|1|0\nVOCE|true|false|0|0|\n")));
