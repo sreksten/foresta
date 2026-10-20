@@ -78,10 +78,11 @@ public abstract class SpriteBase implements SpriteInterface {
 	protected abstract BufferedImage buildImage();
 
 	/**
-	 * Limita il disegno dello sprite a quest'area, in coordinate del canvas
+	 * Limita il disegno dello sprite a quest'area, in coordinate del canvas (se ne tiene una copia)
 	 */
 	public final void setRitaglio(Rectangle ritaglio) {
-		this.ritaglio = ritaglio;
+		// Una copia: i riquadri spostano la loro area (y) quando cambiano posizione
+		this.ritaglio = ritaglio == null ? null : new Rectangle(ritaglio);
 	}
 
 	@Override

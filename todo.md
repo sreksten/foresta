@@ -60,11 +60,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità bassa: foresta-swing e foresta-app
 
-- B37. Riquadri:
-  - `setRitaglio(areaLista)` passa il Rectangle vivo (`RiquadroGruppo:264`, `RiquadroIncantesimiEPozioni:192`);
-  - `setClip(null)` invece di ripristinare il clip (righe 217 e 135);
-  - `RiquadroLocazione:322` usa le coordinate degli avversari senza controllo di null;
-  - `DisplayableCanvas:1205` fa la dissolvenza di morte anche a un PNG che risorge.
 - B38. Comportamento:
   - gli `offsetYZona*` degli scambiatori non si azzerano alla riapertura;
   - gli `spriteLocali` sopravvivono alla chiusura;

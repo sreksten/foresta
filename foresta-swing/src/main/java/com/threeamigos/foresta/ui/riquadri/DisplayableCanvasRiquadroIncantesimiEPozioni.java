@@ -116,6 +116,7 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
 		IntestazioneRiquadro.disegna(graphics, "Incantesimi e pozioni", topLeftX, topLeftY, ImageCache.corniceGrande.getWidth());
 
+		Shape clipOriginale = graphics.getClip();
 		graphics.setClip(areaLista);
 
 		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
@@ -132,7 +133,7 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		}
 		disegnaFrecce(graphics);
 
-		graphics.setClip(null);
+		graphics.setClip(clipOriginale);
 	}
 
 	private int yDellaRiga(int indice) {

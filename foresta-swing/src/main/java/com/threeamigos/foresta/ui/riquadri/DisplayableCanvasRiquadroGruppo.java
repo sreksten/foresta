@@ -124,6 +124,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 		List<? extends VistaPersonaggio> ospiti = g.getOspiti();
 		// L'elenco può essere cambiato dall'ultimo scorrimento: l'offset va rimesso nei limiti
 		offsetY = Math.min(offsetY, offsetMassimo());
+		Shape clipOriginale = graphics.getClip();
 		graphics.setClip(areaLista);
 		VistaPersonaggio p;
 		for (int i = 0; i < l; i++) {
@@ -214,7 +215,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 			graphics.drawImage(ImageCache.get(stato, fontMedium, DoomdarkColorModel.Color.DARK_GRAY, innerWidth), locXOffset, locYOffset, null);
 		}
 		disegnaFrecce(graphics);
-		graphics.setClip(null);
+		graphics.setClip(clipOriginale);
 	}
 
 	private int numeroBlocchi() {

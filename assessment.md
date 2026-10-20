@@ -134,13 +134,6 @@ Nessun difetto aperto.
 
 **foresta-swing e foresta-app**
 
-- B37 Riquadri:
-  - `DisplayableCanvasRiquadroGruppo:264` e `…IncantesimiEPozioni:192` passano a `setRitaglio` il Rectangle vivo;
-  - `:217` e `:135` fanno `setClip(null)` invece di ripristinare il clip;
-  - `DisplayableCanvasRiquadroLocazione:322` usa le coordinate degli avversari senza controllo di null;
-  - `DisplayableCanvas:1205` fa la dissolvenza di morte anche a un PNG che risorge.
-
-  (C/P)
 - B38 Comportamento:
   - gli scorrimenti degli scambiatori non si azzerano alla riapertura;
   - "Nuova voce" nelle tattiche non mostra Sì/No;

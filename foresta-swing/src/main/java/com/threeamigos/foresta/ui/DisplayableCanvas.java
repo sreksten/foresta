@@ -1217,12 +1217,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * Segnala con uno sprite che un personaggio è morto o è tornato in vita.
 	 */
 	public void notificaVariazioneStatoVitale(VistaPersonaggio personaggio) {
-		if (personaggio.isPNG()) {
+		if (!personaggio.isVivo()) {
 			aggiungiSprite(riquadroLocazione.notificaMorte(personaggio));
-		} else {
-			if (!personaggio.isVivo()) {
-				aggiungiSprite(riquadroLocazione.notificaMorte(personaggio));
-			}
+		}
+		if (!personaggio.isPNG()) {
 			primoPiano(TipoFinestra.STATO);
 		}
 	}

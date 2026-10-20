@@ -320,7 +320,9 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		for (VistaPersonaggio personaggioCorrente : gng.getPersonaggiVivi()) {
 			BufferedImage d = mappaImmagini.get(personaggioCorrente);
 			CoordinateMD coordinate = mappaCoordinate.get(personaggioCorrente);
-			disegnaPersonaggio(graphics, personaggioCorrente, d, coordinate.getX(), coordinate.getY(), agente, bersaglio);
+			if (coordinate != null && d != null) {
+				disegnaPersonaggio(graphics, personaggioCorrente, d, coordinate.getX(), coordinate.getY(), agente, bersaglio);
+			}
 		}
 
 		// Il gruppo, dal primo all'ultimo, come gli avversari
