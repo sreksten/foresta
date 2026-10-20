@@ -60,7 +60,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
   - Correzione: farlo solo per i personaggi del gruppo.
 - **M24, rinomina che resta aperta.** Il `Prompt` per rinominare una tattica resta aperto quando si lascia la schermata, e l'Invio scrive su una bozza ormai scartata (`Prompt:252-264`, `DisplayableCanvasTattiche:199-203`).
   - Conviene unificare i nove metodi quasi uguali.
-- **M27, rivelazione che accelera.** `SpriteRivelazioneArtefatto:183` avanza di un passo fisso a ogni repaint, quindi muovendo il mouse la rivelazione va più veloce.
   - Correzione: misurare il tempo come fa `SpriteBase`.
 - **M28, nuvole della mappa (P).** In `CloudManager:117`, `nextInt` può ricevere un valore ≤ 0. Le nuvole sono statiche e non si azzerano fra una partita e l'altra.
 

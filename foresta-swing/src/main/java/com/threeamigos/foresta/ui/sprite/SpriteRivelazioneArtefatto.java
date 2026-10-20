@@ -9,7 +9,6 @@ import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.strumenti.Temporizzatore;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -17,6 +16,7 @@ import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+import java.util.function.LongSupplier;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.barra.ClasseIcona;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
@@ -43,7 +43,6 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 	private static final float ANTICIPAZIONE = 0.25f;
 	private static final float APERTURA = 0.35f;
 	private static final float USCITA = 0.5f;
-	private static final float FOTOGRAMMA = 1f / Temporizzatore.FRAME_PER_SECONDO;
 
 	// Per gradino di splendore (0-3): raggio del cerchio, numero di raggi, lunghezza massima in raggi, scintille
 	private static final int[] RAGGIO = {64, 76, 88, 100};
@@ -100,12 +99,24 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 	private float durata = DURATA;
 	private float secondi;
 	private boolean attivo = true;
+	// Il tempo passa in secondi veri, non a ogni disegno: la UI ridisegna anche per il mouse che si muove, e la rivelazione non deve accelerare
+	private final LongSupplier orologioNanosecondi;
+	private long ultimoFotogrammaNanosecondi = -1;
 
 	/**
 	 * @param area         dove sta la rivelazione, centrata: tutto lo schermo
 	 * @param destinazione dove vola all'uscita (il riquadro del gruppo)
 	 */
 	public SpriteRivelazioneArtefatto(VistaArtefatto artefatto, int livelloMondo, Rectangle area, Point destinazione) {
+		this(artefatto, livelloMondo, area, destinazione, System::nanoTime);
+	}
+
+	/**
+	 * @param orologioNanosecondi l'orologio con cui si misura il tempo che passa fra un disegno e l'altro: nel gioco System.nanoTime
+	 */
+	SpriteRivelazioneArtefatto(VistaArtefatto artefatto, int livelloMondo, Rectangle area, Point destinazione,
+							   LongSupplier orologioNanosecondi) {
+		this.orologioNanosecondi = orologioNanosecondi;
 		this.gradino = splendore(artefatto, livelloMondo);
 		this.raggio = RAGGIO[gradino];
 		this.colore = COLORE[gradino];
@@ -170,6 +181,13 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 		return attivo;
 	}
 
+	/**
+	 * Da quanti secondi è cominciata, per i test.
+	 */
+	float getSecondi() {
+		return secondi;
+	}
+
 	@Override
 	public void anima(Graphics2D graphics) {
 		Graphics2D g = (Graphics2D) graphics.create();
@@ -180,7 +198,11 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 		} finally {
 			g.dispose();
 		}
-		secondi += FOTOGRAMMA;
+		long adesso = orologioNanosecondi.getAsLong();
+		if (ultimoFotogrammaNanosecondi >= 0) {
+			secondi += (adesso - ultimoFotogrammaNanosecondi) / 1_000_000_000f;
+		}
+		ultimoFotogrammaNanosecondi = adesso;
 		if (secondi >= durata) {
 			attivo = false;
 		}
