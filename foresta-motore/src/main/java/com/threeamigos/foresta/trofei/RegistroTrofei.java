@@ -110,7 +110,8 @@ public class RegistroTrofei {
 				}
 			}
 		} while (vintoQualcosa);
-		if (modificato) {
+		// Senza un gestore impostato (una partita di prova) i trofei restano in memoria
+		if (modificato && gestoreTrofei != null) {
 			gestoreTrofei.salva(trofeiMD);
 		}
 	}

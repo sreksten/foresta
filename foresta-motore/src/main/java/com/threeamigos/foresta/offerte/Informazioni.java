@@ -90,6 +90,10 @@ public class Informazioni implements Offerta {
 					castelli.add(corrente);
 				}
 			}
+			if (castelli.isEmpty()) {
+				sb.append("tutti i castelli sono stati distrutti dal Drago.");
+				return;
+			}
 			int indice = Dado.tiraAncheAUnaFaccia(castelli.size()) - 1;
 			tipoLocazione = castelli.get(indice);
 			coordinate = Foresta.getCoordinateLocazioneUnica(tipoLocazione);

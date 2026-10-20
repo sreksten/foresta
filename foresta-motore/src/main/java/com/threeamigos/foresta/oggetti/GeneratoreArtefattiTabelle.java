@@ -390,13 +390,17 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 
 	/**
 	 * Il grado nel nome, subito dopo il nome comune: "la gemma minore del Drago", "la gemma del Drago",
-	 * "la gemma maggiore del Drago".
+	 * "la gemma maggiore del Drago". Se il nome (uscito dalla grammatica) non comincia con il nome comune, il grado
+	 * va in fondo: "la pietra del Drago minore".
 	 */
 	private static String conGrado(String nome, TipoArtefatto tipo, GradoIncantamento grado) {
 		if (grado == GradoIncantamento.MEDIO) {
 			return nome;
 		}
 		String nomeComune = NOMI.get(tipo);
+		if (!nome.startsWith(nomeComune)) {
+			return nome + ' ' + grado.getNome();
+		}
 		return nomeComune + ' ' + grado.getNome() + nome.substring(nomeComune.length());
 	}
 
