@@ -671,7 +671,7 @@ public class CalcolatoreCombattimento {
 
             // --- TRAGUARDO 1: Stato dell'arma Principale (es. TAGLIENTE ➔ SANGUINAMENTO) ---
             if (!immuneATipoDannoBase && tipoDanno.hasEffettiDiStato()) {
-                double probStatoFisico = ((dannoMitigato * 100.0d) / difensore.getForza()) + (attaccante.getFuria() * 2.0d);
+                double probStatoFisico = percentualeControForza(dannoMitigato, difensore) + (attaccante.getFuria() * 2.0d);
                 if (Dado.tira(100) <= probStatoFisico * fattoreEffetti(difensore, tipoDanno)) {
                     TipoEffettoDiStato effettoFisico = effettoDiStatoCasuale(tipoDanno);
                     if (effettoFisico != null) {
@@ -702,7 +702,7 @@ public class CalcolatoreCombattimento {
                         // La riserva di MAGIA non conta: un guerriero senza mana con INTELLIGENZA 10 aggiunge 10 punti,
                         // un mago con INTELLIGENZA 20 e un bastone +20% ne aggiunge 24.
                         double contributoMagico = attaccante.getIntelligenza() * attaccante.getPotereMagico() / 100.0d;
-                        double probStatoMagico = ((dannoQuestoIncantamentoProc * 100.0d) / difensore.getForza()) + contributoMagico;
+                        double probStatoMagico = percentualeControForza(dannoQuestoIncantamentoProc, difensore) + contributoMagico;
                         if (Dado.tira(100) <= probStatoMagico * fattoreEffetti(difensore, elemento)) {
                             TipoEffettoDiStato effettoMagico = effettoDiStatoCasuale(elemento);
                             if (effettoMagico != null) {
@@ -722,9 +722,7 @@ public class CalcolatoreCombattimento {
             if (!immuneATipoDannoBase) {
                 for (ModificatoreAttributoMD modificatore : arma.getModificatoriSulBersaglio()) {
                     double contributoMagico = attaccante.getIntelligenza() * attaccante.getPotereMagico() / 100.0d;
-                    double probModificatore = difensore.getForza() > 0
-                            ? ((dannoTotaleCombinato * 100.0d) / difensore.getForza()) + contributoMagico
-                            : 100.0d;
+                    double probModificatore = percentualeControForza(dannoTotaleCombinato, difensore) + contributoMagico;
                     if (Dado.tira(100) <= probModificatore * fattoreEffetti(difensore, tipoDanno)) {
                         dannoRisultante.addModificatoreDaAggiungere(modificatore.suPortatore());
                         Logger.log(() -> "L'arma applica il modificatore: " + modificatore.getTipoAttributo() + " " + modificatore.getQuantita());
@@ -767,6 +765,14 @@ public class CalcolatoreCombattimento {
             danno = danno * 0.5d;
         }
         return danno;
+    }
+
+    /**
+     * Il colpo in percentuale della FORZA del difensore: la base della probabilità che scattino stati e modificatori. Un difensore
+     * senza FORZA non regge niente, quindi vale 100 (e non una divisione per zero).
+     */
+    private static double percentualeControForza(double danno, Personaggio difensore) {
+        return difensore.getForza() > 0 ? (danno * 100.0d) / difensore.getForza() : 100.0d;
     }
 
     /**
