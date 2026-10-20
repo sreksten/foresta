@@ -12,6 +12,7 @@ import com.threeamigos.foresta.incantesimi.*;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
+import com.threeamigos.foresta.salvataggi.SalvataggioInMemoria;
 import com.threeamigos.foresta.intermezzi.*;
 import com.threeamigos.foresta.locazioni.Bottega;
 import com.threeamigos.foresta.locazioni.Locazione;
@@ -95,6 +96,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	// Eseguiti quando arriva un comando reale del giocatore (o inoltrato come tale).
 	private final Map<Stato, Function<Comando, Esito>> gestoriComando;
 	private final Temporizzatore temporizzatore;
+	// L'ultima fine di locazione, in memoria: una rete di sicurezza se si muore per errore (vedi SalvataggioInMemoria)
+	private final SalvataggioInMemoria salvataggioInMemoria = new SalvataggioInMemoria();
 	// Come togliere dal bus i comandi e gli eventi che l'automa ascolta (vedi chiudi)
 	private final List<Runnable> iscrizioni = new ArrayList<>();
 	private final GestoreSalvataggi gestoreSalvataggi;
@@ -308,6 +311,13 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	/**
+	 * Il salvataggio automatico in memoria, per i test.
+	 */
+	SalvataggioInMemoria getSalvataggioInMemoria() {
+		return salvataggioInMemoria;
+	}
+
+	/**
 	 * L'avvio del gioco: il primissimo stato, LOGO_INIZIALE. La UI traccia il logo 3AM e intanto carica le sue
 	 * risorse; qui si caricano quelle del motore (grammatiche, generatore di artefatti). Quando entrambi hanno
 	 * finito si passa all'INTRO, e al logo non si torna piu'.
@@ -395,10 +405,22 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Collection<Comando> getComandiPossibiliInStatoIntro() {
 		Collection<Comando> comandiPossibili = new ArrayList<>();
 		comandiPossibili.add(Comando.PERGAMENA);
-		if (!gestoreSalvataggi.getSalvataggiDisponibili().isEmpty()) {
+		if (!getSalvataggiDaCaricare().isEmpty()) {
 			comandiPossibili.add(Comando.FLOPPY_CARICA);
 		}
 		return comandiPossibili;
+	}
+
+	/**
+	 * Da dove si può caricare: gli slot salvati dal giocatore e, per ultimo, il salvataggio automatico in memoria se c'è.
+	 */
+	private List<TestataSalvataggio> getSalvataggiDaCaricare() {
+		List<TestataSalvataggio> salvataggi = new ArrayList<>(gestoreSalvataggi.getSalvataggiDisponibili());
+		TestataSalvataggio inMemoria = salvataggioInMemoria.getTestata();
+		if (inMemoria != null) {
+			salvataggi.add(inMemoria);
+		}
+		return salvataggi;
 	}
 
 	private void onEventoTestoDisponibile(ComandoInvioTesto evento) {
@@ -509,8 +531,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				return Esito.FERMATI;
 			case FLOPPY_CARICA:
 				stato = Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE;
-				Collection<TestataSalvataggio> salvataggiDisponibili = gestoreSalvataggi.getSalvataggiDisponibili();
-				BusEventi.pubblica(new RichiestaSelezioneSlotPerRilettura(salvataggiDisponibili));
+				BusEventi.pubblica(new RichiestaSelezioneSlotPerRilettura(getSalvataggiDaCaricare()));
 				return Esito.FERMATI;
 			default:
 				comandoNonValido(comando);
@@ -519,7 +540,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito gestisciComandoInStatoPreGameSelezionaSalvataggioDaLeggere(Comando comando) {
-		if (comando != Comando.ANNULLA && gestoreSalvataggi.leggi(comando)) {
+		boolean daMemoria = comando == GestoreSalvataggi.SLOT_IN_MEMORIA;
+		if (comando != Comando.ANNULLA && (daMemoria ? salvataggioInMemoria.leggi() : gestoreSalvataggi.leggi(comando))) {
+			if (!daMemoria) {
+				// Caricata un'altra partita, quella dell'ultima fine di locazione in memoria non vale più
+				salvataggioInMemoria.elimina();
+			}
 			if (comando != Comando.SALVATAGGIO_AUTOMATICO) {
 				// Caricata un'altra partita, quella del salvataggio automatico non vale più. Riprendere proprio dal salvataggio automatico
 				// invece non lo cancella: resta il punto da cui ripartire se l'app viene chiusa di nuovo prima di un altro background
@@ -543,6 +569,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		Foresta.reimposta();
 		// Il salvataggio automatico è di una partita che non è più questa: una ripresa non deve riportarla
 		gestoreSalvataggi.elimina(Comando.SALVATAGGIO_AUTOMATICO);
+		salvataggioInMemoria.elimina();
 		personaggio = null;
 
 		nomePersonaggio = testoDisponibile.trim();
@@ -1267,6 +1294,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 		Statistiche.incrementaTurniGiocati();
 
+		// Fine di una locazione, e si può già salvare a mano: questo è lo stato da cui riprendere se si muore per errore
+		salvataggioInMemoria.salva();
 		stato = Stato.ATTESA_DIREZIONE;
 		return Esito.CONTINUA_CON_INGRESSO;
 	}
@@ -1350,7 +1379,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				// Le testate dei salvataggi per la schermata di scelta: la UI non legge i salvataggi da sé
 				BusEventi.pubblica(new RichiestaSelezioneSlotPerSalvataggio(gestoreSalvataggi.getSalvataggiDisponibili()));
 				BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.SALVATAGGIO_DA_SCRIVERE,
-						Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5,
+						Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4,
 						Comando.NO));
 				return Esito.FERMATI;
 			default:
@@ -1671,6 +1700,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
 			stato = Stato.ATTESA_DIREZIONE;
 			return Esito.CONTINUA_CON_INGRESSO;
+		} else if (comando != Comando.ANNULLA && !GestoreSalvataggi.SLOT_MANUALI.contains(comando)) {
+			// Si salva solo negli slot del giocatore: il salvataggio automatico in memoria non si scrive a mano
+			return Esito.FERMATI;
 		} else if (comando != null) {
 			if (comando != Comando.ANNULLA && !gestoreSalvataggi.salva(comando)) {
 				// Senza un salvataggio valido non si propone di uscire: si torna al gioco

@@ -31,7 +31,8 @@ final class GestoreSalvataggiInMemoria implements GestoreSalvataggi {
 	public List<TestataSalvataggio> getSalvataggiDisponibili() {
 		List<TestataSalvataggio> testate = new ArrayList<>();
 		for (Map.Entry<Comando, String> salvataggio : salvataggi.entrySet()) {
-			if (salvataggio.getKey() == Comando.SALVATAGGIO_AUTOMATICO) {
+			if (!SLOT_MANUALI.contains(salvataggio.getKey())) {
+				// Né il salvataggio automatico su disco né quello in memoria stanno nell'elenco di questo gestore
 				continue;
 			}
 			try (BufferedReader reader = new BufferedReader(new StringReader(salvataggio.getValue()))) {

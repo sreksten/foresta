@@ -273,6 +273,10 @@ final class PartitaDiTest implements AutoCloseable {
 		return automa.getStato();
 	}
 
+	com.threeamigos.foresta.salvataggi.SalvataggioInMemoria salvataggioInMemoria() {
+		return automa.getSalvataggioInMemoria();
+	}
+
 	GruppoGiocatore gruppo() {
 		return GruppoGiocatore.getIstanza();
 	}

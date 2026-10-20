@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
+import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
@@ -246,8 +247,8 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	public void selezioneSlotDaSalvare(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
 		disegnaStringaCentrataConACapoAutomatico(graphics, "seleziona lo slot per il salvataggio", 50);
-		List<Comando> comandi = new ArrayList<>(Arrays.asList(Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4,
-                Comando.NUMERO_5));
+		// Si salva solo negli slot del giocatore: la quinta riga è il salvataggio automatico in memoria, che compare solo fra quelli da caricare
+		List<Comando> comandi = new ArrayList<>(GestoreSalvataggi.SLOT_MANUALI);
 		for (TestataSalvataggio testata : salvataggiDisponibili) {
 			comandi.remove(testata.getId());
 			disegnaElencoPersonaggiDaElencoClassi(graphics, testata);

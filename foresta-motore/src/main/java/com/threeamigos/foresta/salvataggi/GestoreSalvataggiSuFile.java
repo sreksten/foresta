@@ -46,8 +46,7 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements GestoreSal
 	public List<TestataSalvataggio> getSalvataggiDisponibili() {
 		File directorySalvataggi = recuperaDirectory();
 		List<TestataSalvataggio> salvataggi = new ArrayList<>();
-        Comando[] salvataggiDisponibili = { Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5 };
-		for (Comando id: salvataggiDisponibili) {
+		for (Comando id : SLOT_MANUALI) {
 			try {
 				File fileSalvataggio = new File(directorySalvataggi.getPath() + File.separatorChar + id.name() + POSTFISSO_FILE);
 				if (fileSalvataggio.exists() && fileSalvataggio.canRead()) {
