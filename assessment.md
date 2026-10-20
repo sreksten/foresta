@@ -106,9 +106,7 @@ Nessun difetto aperto.
 
 **Interfaccia (foresta-swing)**
 
-| Cod. | Dove | Difetto | |
-| :--- | :--- | :--- | :---: |
-| M24 | `ui/Prompt:252-264`, `ui/tattiche/DisplayableCanvasTattiche:199-203` | Il campo di rinomina della tattica resta aperto quando si lascia la voce o la schermata; l'Invio scrive su una bozza scartata | C |
+Nessun difetto aperto.
 
 ### 5.3 Gravità bassa
 
@@ -254,13 +252,12 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 ## 8. Prossimi passi consigliati
 
-1. **Correggere i medi certi e a basso rischio:** la UI (M24).
-2. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M11 (fuga), B28 (LaLealta).
-3. **Un vero gestore di `InternoException`** (M19).
-4. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
-5. **Bilanciamento:** come da [`todo.md`](todo.md).
-6. **Tagliare le classi grandi** quando si interviene su di loro (§3).
-7. **Modalità verticale**, per ultima.
+1. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M11 (fuga), B28 (LaLealta).
+2. **Un vero gestore di `InternoException`** (M19).
+3. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
+4. **Bilanciamento:** come da [`todo.md`](todo.md).
+5. **Tagliare le classi grandi** quando si interviene su di loro (§3).
+6. **Modalità verticale**, per ultima.
 
 ## Osservazioni
 

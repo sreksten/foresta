@@ -234,7 +234,7 @@ public class ForestaUI implements Temporizzabile {
 		Logger.log(() -> "Orientamento: " + orientamento);
 		displayableCanvas = new DisplayableCanvas(larghezza, altezza, orientamentoCanvas(orientamento), SPESSORE_BARRA_ICONE, barraDock,
 				gestorePunteggi, vistaPartita);
-		displayableCanvas.setRichiestaTesto(prompt::mostra);
+		displayableCanvas.setRichiestaTesto(prompt::mostra, prompt::annulla);
 		interfacciaCompleta = true;
 	}
 

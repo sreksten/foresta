@@ -165,6 +165,9 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 
 	// Per rinominare una voce: chi chiede un testo al giocatore (testo predefinito, e chi riceve quello confermato)
 	private java.util.function.BiConsumer<String, Consumer<String>> richiestaTesto;
+	private Consumer<Consumer<String>> annullaRichiestaTesto;
+	// Chi aspetta il nome di una voce, finché il giocatore non risponde o la richiesta decade
+	private Consumer<String> richiestaInCorso;
 	// Il nome di una voce si clicca per ripiegarla; due click ravvicinati sullo stesso nome la rinominano
 	private static final long INTERVALLO_DOPPIO_CLICK_MS = 400;
 	private BozzaTattica.Voce ultimaVoceCliccata;
@@ -175,8 +178,25 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		altezzaRiga = Math.max(fontRiga.getHeight(), 12) + 2 * MARGINE_RIGA;
 	}
 
-	public void setRichiestaTesto(java.util.function.BiConsumer<String, Consumer<String>> richiestaTesto) {
+	/**
+	 * @param richiestaTesto chi chiede un testo al giocatore: il testo predefinito e chi riceve quello confermato
+	 * @param annullaRichiesta chi chiude la richiesta di prima se non serve più, riconoscendola da chi doveva riceverla
+	 */
+	public void setRichiestaTesto(java.util.function.BiConsumer<String, Consumer<String>> richiestaTesto,
+								  Consumer<Consumer<String>> annullaRichiesta) {
 		this.richiestaTesto = richiestaTesto;
+		this.annullaRichiestaTesto = annullaRichiesta;
+	}
+
+	/**
+	 * Se si sta ancora aspettando il nome di una voce, lo si smette di aspettare: la bozza è cambiata, o si è lasciata la schermata, e
+	 * l'Invio non deve scrivere su una voce che non c'è più.
+	 */
+	public void annullaLaRichiestaDiTesto() {
+		if (richiestaInCorso != null && annullaRichiestaTesto != null) {
+			annullaRichiestaTesto.accept(richiestaInCorso);
+		}
+		richiestaInCorso = null;
 	}
 
 	private static String nomeDellaVoce(BozzaTattica.Voce voce, int indice) {
@@ -186,7 +206,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	/**
 	 * Un click sul nome ripiega o riapre la voce; il secondo click ravvicinato annulla il primo e chiede il nuovo nome.
 	 */
-	private void clickSulNome(BozzaTattica.Voce voce, int indice) {
+	void clickSulNome(BozzaTattica.Voce voce, int indice) {
 		long ora = System.currentTimeMillis();
 		boolean doppio = voce == ultimaVoceCliccata && ora - ultimoClickSulNome <= INTERVALLO_DOPPIO_CLICK_MS;
 		voce.chiusa = !voce.chiusa;
@@ -197,10 +217,19 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		}
 		ultimaVoceCliccata = null;
 		if (richiestaTesto != null) {
-			richiestaTesto.accept(nomeDellaVoce(voce, indice), testo -> {
+			annullaLaRichiestaDiTesto();
+			BozzaTattica bozzaDellaRichiesta = bozza;
+			Consumer<String> risposta = testo -> {
+				richiestaInCorso = null;
+				// La bozza di allora potrebbe non essere più quella (si è cambiato personaggio o si è tornati alla tattica applicata)
+				if (bozza != bozzaDellaRichiesta) {
+					return;
+				}
 				String nuovo = testo.trim();
 				voce.nome = nuovo.isEmpty() ? BozzaTattica.nomePredefinito(indice) : nuovo;
-			});
+			};
+			richiestaInCorso = risposta;
+			richiestaTesto.accept(nomeDellaVoce(voce, indice), risposta);
 		}
 	}
 
@@ -211,6 +240,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	public void impostaTattica(VistaPersonaggio nuovo, TatticaMD tattica, TatticaMD tatticaPredefinita, java.util.Set<TipoAzione> azioniPossibili) {
 		boolean stesso = personaggio != null && personaggio.getUuid().equals(nuovo.getUuid());
 		if (!(stesso && tattica.equals(applicata))) {
+			annullaLaRichiestaDiTesto();
 			bozza = BozzaTattica.da(tattica);
 			offsetYZonaSinistra = 0;
 		}
@@ -1121,10 +1151,12 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 			return true;
 		}
 		if (areaNo != null && areaNo.contains(x, y)) {
+			annullaLaRichiestaDiTesto();
 			bozza = BozzaTattica.da(applicata);
 			return true;
 		}
 		if (areaPredefinita != null && areaPredefinita.contains(x, y)) {
+			annullaLaRichiestaDiTesto();
 			bozza = BozzaTattica.da(predefinita);
 			return true;
 		}

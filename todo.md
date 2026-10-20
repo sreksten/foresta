@@ -39,10 +39,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 - **M19, errori del bus silenziosi.** In `BusEventi` (righe 57-79) l'unico iscritto a `InternoException` è lo sniffer, quindi una transizione a metà resta bloccata in silenzio. Un `Error` interrompe la consegna agli altri iscritti.
   - Servono un gestore vero e niente ripetizione dell'errore a ogni tick in `TemporizzatoreJ2SE`.
 
-### Gravità media: interfaccia
-
-- **M24, rinomina che resta aperta.** Il `Prompt` per rinominare una tattica resta aperto quando si lascia la schermata, e l'Invio scrive su una bozza ormai scartata (`Prompt:252-264`, `DisplayableCanvasTattiche:199-203`).
-
 ### Gravità bassa: foresta-tipi e foresta-modellodati
 
 - B1. `ArtefattoMD:372`: la descrizione si rilegge con `testo()` invece di `testoFacoltativo()`, quindi null torna "".

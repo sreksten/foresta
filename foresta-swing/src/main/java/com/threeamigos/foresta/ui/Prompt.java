@@ -111,6 +111,16 @@ public class Prompt extends JPanel implements ActionListener {
 	}
 
 	/**
+	 * Chiude il Prompt se sta ancora aspettando proprio quella risposta (chi l'aveva chiesta non la vuole più): se nel frattempo ne
+	 * aspetta un'altra, o è già chiuso, non fa niente.
+	 */
+	public void annulla(Consumer<String> alInvioDaAnnullare) {
+		if (isVisible() && alInvio != null && alInvio == alInvioDaAnnullare) {
+			setVisible(false);
+		}
+	}
+
+	/**
 	 * Mostra il Prompt già compilato con un testo, con il cursore in fondo.
 	 */
 	public void mostra(String testoPredefinito) {

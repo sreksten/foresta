@@ -125,7 +125,7 @@ class DisplayableCanvasTatticheTest {
         schermata.setRichiestaTesto((predefinito, alla) -> {
             richiesto[0] = predefinito;
             conferma[0] = alla;
-        });
+        }, richiesta -> { });
         disegna(schermata);
         schermata.attivaPezzo("Nuova voce");
         // Il nome predefinito è "Tattica" e il numero

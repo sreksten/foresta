@@ -194,7 +194,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		stackElementiGrafici.add(TipoFinestra.SFIDA);
 		// INTRO_OUTRO e MAPPA_A_TUTTO_SCHERMO non appartengono allo stack: occupano
 		// da soli tutto lo schermo e sono scelti in base allo stato del canvas.
-		stato = StatoDisplayableCanvas.STATO_INTRO;
+		cambiaStato(StatoDisplayableCanvas.STATO_INTRO);
 		setSize(width, height);
 		setBackground(Color.black);
 		BufferedImage immagineLocazione = ImageCache.locazioni.get(TipoLocazione.BOSCO);
@@ -490,7 +490,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 */
 	public void selezioneSlotSalvataggioDaCaricare(Collection<TestataSalvataggio> salvataggiDisponibili) {
 		riquadroIntroOutro.setSalvataggiDisponibili(salvataggiDisponibili);
-		stato = StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_CARICARE;
+		cambiaStato(StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_CARICARE);
 		repaint();
 	}
 
@@ -922,7 +922,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * STATO_INTRO (è lo stato iniziale del canvas, all'avvio del gioco).
 	 */
 	public void avviaIntro() {
-		stato = StatoDisplayableCanvas.STATO_INTRO;
+		cambiaStato(StatoDisplayableCanvas.STATO_INTRO);
 		if (introDallaClassifica) {
 			riquadroIntroOutro.posizionaSuPunteggi();
 			introDallaClassifica = false;
@@ -948,7 +948,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	public void iniziaGioco() {
 		// Se si torna al gioco da un intermezzo, le sue immagini non servono più
 		intermezzo.svuota();
-		stato = StatoDisplayableCanvas.STATO_IN_GIOCO;
+		cambiaStato(StatoDisplayableCanvas.STATO_IN_GIOCO);
 		abortisciFumetto();
 		if (!annunciGlobaliRimandati.isEmpty()) {
 			codaAnnunciGlobali.addAll(annunciGlobaliRimandati);
@@ -962,7 +962,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * Passa alla mappa a tutto schermo, centrata sul gruppo.
 	 */
 	public void mappa() {
-		stato = StatoDisplayableCanvas.STATO_MAPPA;
+		cambiaStato(StatoDisplayableCanvas.STATO_MAPPA);
 		mappaATuttoSchermo.centraSuGiocatore();
 		repaint();
 	}
@@ -971,7 +971,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * Passa all'inventario.
 	 */
 	public void inventario() {
-		stato = StatoDisplayableCanvas.STATO_INVENTARIO;
+		cambiaStato(StatoDisplayableCanvas.STATO_INVENTARIO);
 		repaint();
 	}
 
@@ -980,15 +980,26 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 */
 	public void trofei() {
 		paginaTrofei.apri();
-		stato = StatoDisplayableCanvas.STATO_TROFEI;
+		cambiaStato(StatoDisplayableCanvas.STATO_TROFEI);
 		repaint();
 	}
 
 	/**
 	 * Chi sa chiedere un testo al giocatore per conto della UI (il Prompt), per la schermata delle tattiche che rinomina le voci
 	 */
-	public void setRichiestaTesto(java.util.function.BiConsumer<String, java.util.function.Consumer<String>> richiestaTesto) {
-		tattiche.setRichiestaTesto(richiestaTesto);
+	public void setRichiestaTesto(java.util.function.BiConsumer<String, java.util.function.Consumer<String>> richiestaTesto,
+								  java.util.function.Consumer<java.util.function.Consumer<String>> annullaRichiesta) {
+		tattiche.setRichiestaTesto(richiestaTesto, annullaRichiesta);
+	}
+
+	/**
+	 * Cambia la schermata mostrata: lasciando quella delle tattiche, il nome di una voce che si stava scrivendo non si aspetta più.
+	 */
+	private void cambiaStato(StatoDisplayableCanvas nuovo) {
+		if (stato == StatoDisplayableCanvas.STATO_TATTICHE && nuovo != StatoDisplayableCanvas.STATO_TATTICHE) {
+			tattiche.annullaLaRichiestaDiTesto();
+		}
+		stato = nuovo;
 	}
 
 	/**
@@ -997,7 +1008,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	public void tattiche(VistaPersonaggio personaggio, TatticaMD tattica, TatticaMD tatticaPredefinita,
 						 java.util.Set<com.threeamigos.foresta.tipi.tattiche.TipoAzione> azioniPossibili) {
 		tattiche.impostaTattica(personaggio, tattica, tatticaPredefinita, azioniPossibili);
-		stato = StatoDisplayableCanvas.STATO_TATTICHE;
+		cambiaStato(StatoDisplayableCanvas.STATO_TATTICHE);
 		repaint();
 	}
 
@@ -1013,7 +1024,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * Passa alla schermata del commerciante, che accoglie il gruppo con un fumetto.
 	 */
 	public void commerciante() {
-		stato = StatoDisplayableCanvas.STATO_COMMERCIANTE;
+		cambiaStato(StatoDisplayableCanvas.STATO_COMMERCIANTE);
 		notificaFumetto("Come posso aiutarvi?", commerciante.getCoordinateFumetto());
 		repaint();
 	}
@@ -1031,7 +1042,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * @param messaggio il fumetto con cui accoglie l'incantatore, o null per nessuno
 	 */
 	public void incantatore(String messaggio) {
-		stato = StatoDisplayableCanvas.STATO_INCANTATORE;
+		cambiaStato(StatoDisplayableCanvas.STATO_INCANTATORE);
 		if (messaggio != null) {
 			notificaFumetto(messaggio, incantatore.getCoordinateFumetto());
 		}
@@ -1059,7 +1070,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * d'ingresso).
 	 */
 	public void alchimista() {
-		stato = StatoDisplayableCanvas.STATO_ALCHIMISTA;
+		cambiaStato(StatoDisplayableCanvas.STATO_ALCHIMISTA);
 		notificaFumetto("Cosa posso fare per voi?", alchimista.getCoordinateFumetto());
 		repaint();
 	}
@@ -1079,7 +1090,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 */
 	public void selezioneSlotSalvataggioDaSalvare(Collection<TestataSalvataggio> salvataggiDisponibili) {
 		riquadroIntroOutro.setSalvataggiDisponibili(salvataggiDisponibili);
-		stato = StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_SALVARE;
+		cambiaStato(StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_SALVARE);
 		repaint();
 	}
 	
@@ -1087,7 +1098,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * Passa alla schermata che chiede conferma per uscire dal gioco.
 	 */
 	public void confermaUscita() {
-		stato = StatoDisplayableCanvas.STATO_CONFERMA_USCITA;
+		cambiaStato(StatoDisplayableCanvas.STATO_CONFERMA_USCITA);
 		repaint();
 	}
 	
@@ -1096,7 +1107,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 */
 	public void perso() {
 		if (stato != StatoDisplayableCanvas.STATO_PERSO) {
-			stato = StatoDisplayableCanvas.STATO_PERSO;
+			cambiaStato(StatoDisplayableCanvas.STATO_PERSO);
 			riquadroIntroOutro.resettaSequenza();
 		} else {
 			riquadroIntroOutro.incrementaSequenza(Misc.PERSO.length);
@@ -1109,7 +1120,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 */
 	public void vinto() {
 		if (stato != StatoDisplayableCanvas.STATO_VINTO) {
-			stato = StatoDisplayableCanvas.STATO_VINTO;
+			cambiaStato(StatoDisplayableCanvas.STATO_VINTO);
 			riquadroIntroOutro.resettaSequenza();
 		} else {
 			riquadroIntroOutro.incrementaSequenza(Misc.VINTO.length);
@@ -1121,7 +1132,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * Passa alla schermata delle statistiche di fine partita.
 	 */
 	public void mostraStatistiche() {
-		stato = StatoDisplayableCanvas.STATO_STATISTICHE;
+		cambiaStato(StatoDisplayableCanvas.STATO_STATISTICHE);
 		repaint();
 	}
 
@@ -1129,7 +1140,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * Passa alla schermata dei punteggi migliori; l'introduzione che segue parte da quella classifica.
 	 */
 	public void mostraPunteggi() {
-		stato = StatoDisplayableCanvas.STATO_PUNTEGGI;
+		cambiaStato(StatoDisplayableCanvas.STATO_PUNTEGGI);
 		// Il motore torna subito all'intro: che parta dalla classifica appena aggiornata
 		introDallaClassifica = true;
 		repaint();
@@ -1139,7 +1150,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * Passa all'intermezzo e ne mostra la pagina.
 	 */
 	public void mostraPaginaIntermezzo(PaginaIntermezzo pagina) {
-		stato = StatoDisplayableCanvas.STATO_INTERMEZZO;
+		cambiaStato(StatoDisplayableCanvas.STATO_INTERMEZZO);
 		intermezzo.mostra(pagina);
 		repaint();
 	}
@@ -1156,7 +1167,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * Mostra un messaggio a tutto schermo, in caratteri grandi.
 	 */
 	public void scriviGrande(String messaggio) {
-		stato = StatoDisplayableCanvas.STATO_MESSAGGIO;
+		cambiaStato(StatoDisplayableCanvas.STATO_MESSAGGIO);
 		riquadroIntroOutro.impostaMessaggio(messaggio);
 		repaint();
 	}
