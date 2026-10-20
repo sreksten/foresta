@@ -107,8 +107,13 @@ public class Informazioni implements Offerta {
 			ArtefattoMD artefatto = informazioni.getArtefattoMD();
 			Foresta.setLocazioneConosciuta(informazioni.getCoordinate());
 			RegistroArtefatti.segnaLocalizzazioneConosciuta(informazioni.getCoordinate());
-			sb.append(artefatto.getNomeCompleto())
-			.append(", si trova in un tempio ")
+			String nomeCompleto = artefatto.getNomeCompleto();
+			sb.append(nomeCompleto);
+			// Con il nome proprio o la descrizione il nome completo è un inciso ("Diavolina, la spada di fuoco, che brucia"): la virgola lo chiude
+			if (nomeCompleto.indexOf(',') >= 0) {
+				sb.append(',');
+			}
+			sb.append(" si trova in un tempio ")
 			.append(Misc.getDirezione(gruppo, informazioni.getCoordinate()));
 		}
 	}
