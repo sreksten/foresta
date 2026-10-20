@@ -134,11 +134,6 @@ Nessun difetto aperto.
 
 **foresta-swing e foresta-app**
 
-- B39 Sprite:
-  - `SpriteAnnuncioGlobale:145, 190`: la misura degli spazi (10) non coincide con il disegno (11), e la riga più larga si taglia;
-  - `SpriteFumetto:122`: la punta usa la larghezza massima (latente).
-
-  (C/P)
 - B40 Thread e avvio:
   - `ForestaUI:87`: l'`invokeLater` di creazione parte prima delle iscrizioni, e `InternoFaseDiGioco` potrebbe perdersi (P);
   - il thread animatore di `DisplayableCanvas:518-536` legge campi non volatili (P);

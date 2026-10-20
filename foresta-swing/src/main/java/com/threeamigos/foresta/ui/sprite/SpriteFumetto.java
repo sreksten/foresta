@@ -25,7 +25,8 @@ public class SpriteFumetto extends SpriteBase {
     private static final int DIMENSIONE_SMUSSAMENTO_BORDO = 8;
 
     private final String testo;
-    private final int larghezza;
+    // La larghezza massima: la nuvola può essere più stretta, la sua larghezza vera è quella dell'immagine
+    private final int larghezzaMassima;
     private int altezza;
     private final int puntaVersoX;
     private final int puntaVersoY;
@@ -50,7 +51,7 @@ public class SpriteFumetto extends SpriteBase {
     public SpriteFumetto(String testo, int maxLarghezza, int xIniziale, int yIniziale, DoomdarkFont font, DoomdarkColorModel.Color colore,
                   int puntaVersoX, int puntaVersoY) {
         this.testo = testo;
-        this.larghezza = maxLarghezza;
+        this.larghezzaMassima = maxLarghezza;
         this.font = font;
         this.colore = colore;
         this.puntaVersoX = puntaVersoX;
@@ -68,7 +69,7 @@ public class SpriteFumetto extends SpriteBase {
 
     @Override
     protected BufferedImage buildImage() {
-        BufferedImage nuvola = costruisciNuvola(testo, larghezza, font, colore);
+        BufferedImage nuvola = costruisciNuvola(testo, larghezzaMassima, font, colore);
         this.altezza = nuvola.getHeight();
         return nuvola;
     }
@@ -119,7 +120,8 @@ public class SpriteFumetto extends SpriteBase {
         final int y = Math.round(yf);
         g.drawImage(immagine, x, y - immagine.getHeight(null), null);
 
-        disegnaPunta(g, x, y, larghezza, altezza, puntaVersoX, puntaVersoY);
+        // La punta parte dai bordi della nuvola com'è, che è larga quanto il suo testo più largo e non quanto il massimo
+        disegnaPunta(g, x, y, immagine.getWidth(null), altezza, puntaVersoX, puntaVersoY);
     }
 
     /**

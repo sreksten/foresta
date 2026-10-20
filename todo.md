@@ -60,9 +60,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità bassa: foresta-swing e foresta-app
 
-- B39. Sprite:
-  - in `SpriteAnnuncioGlobale` la misura degli spazi (10) non coincide con il disegno (11);
-  - (P) in `SpriteFumetto:122` la punta usa la larghezza massima.
 - B40 (P). Thread e avvio:
   - `ForestaUI:87`: l'`invokeLater` va messo dopo le iscrizioni;
   - il thread animatore di `DisplayableCanvas` legge campi non volatili;

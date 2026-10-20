@@ -74,14 +74,14 @@ public class SpriteAnnuncioGlobale extends SpriteBase {
 		while (st.hasMoreTokens()) {
 			String parola = st.nextToken();
 			int larghezzaParola = larghezzaParola(parola);
-			if (larghezzaRiga > 0 && larghezzaRiga + LARGHEZZA_SPAZIO + larghezzaParola > larghezzaMassima) {
+			if (larghezzaRiga > 0 && larghezzaRiga + LARGHEZZA_SPAZIO + SPAZIATURA_CARATTERI + larghezzaParola > larghezzaMassima) {
 				righe.add(riga.toString());
 				riga = new StringBuilder();
 				larghezzaRiga = 0;
 			}
 			if (riga.length() > 0) {
 				riga.append(" ");
-				larghezzaRiga += LARGHEZZA_SPAZIO;
+				larghezzaRiga += LARGHEZZA_SPAZIO + SPAZIATURA_CARATTERI;
 			}
 			riga.append(parola);
 			larghezzaRiga += larghezzaParola;
@@ -92,6 +92,9 @@ public class SpriteAnnuncioGlobale extends SpriteBase {
 		return righe;
 	}
 
+	/**
+	 * La larghezza di un testo come lo si disegna: ogni carattere, lo spazio compreso, avanza della sua larghezza più la spaziatura.
+	 */
 	private static int larghezzaParola(String parola) {
 		int larghezza = 0;
 		for (int i = 0; i < parola.length(); i++) {
@@ -142,7 +145,7 @@ public class SpriteAnnuncioGlobale extends SpriteBase {
 
 		int larghezzaTesto = 0;
 		for (String riga : tutteLeRighe) {
-			larghezzaTesto = Math.max(larghezzaTesto, larghezzaParola(riga.replace(" ", "")) + spaziInRiga(riga) * LARGHEZZA_SPAZIO);
+			larghezzaTesto = Math.max(larghezzaTesto, larghezzaParola(riga));
 		}
 		int altezzaTesto = righeEtichetta.size() * altezzaRiga + DIVARIO_GRUPPI + righeNome.size() * altezzaRiga;
 
@@ -163,16 +166,6 @@ public class SpriteAnnuncioGlobale extends SpriteBase {
 		return testo;
 	}
 
-	private static int spaziInRiga(String riga) {
-		int spazi = 0;
-		for (int i = 0; i < riga.length(); i++) {
-			if (riga.charAt(i) == ' ') {
-				spazi++;
-			}
-		}
-		return spazi;
-	}
-
 	private static int altezzaMassimaGlifi(List<String> righe) {
 		int altezza = 0;
 		for (String riga : righe) {
@@ -187,7 +180,7 @@ public class SpriteAnnuncioGlobale extends SpriteBase {
 	}
 
 	private static void disegnaRigaCentrata(Graphics2D g, String riga, int larghezzaTotale, int y) {
-		int larghezzaRiga = larghezzaParola(riga.replace(" ", "")) + spaziInRiga(riga) * LARGHEZZA_SPAZIO;
+		int larghezzaRiga = larghezzaParola(riga);
 		int x = (larghezzaTotale - larghezzaRiga) >> 1;
 		for (int i = 0; i < riga.length(); i++) {
 			char c = riga.charAt(i);
