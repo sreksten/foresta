@@ -127,7 +127,6 @@ Nessun difetto aperto.
 - B6 `GruppoMD:167`, `RegistroPersonaggiMD:130`, `RegistroArtefattiMD:195`: `leggi` aggiunge invece di sostituire, contro la javadoc. Oggi è innocuo grazie a `reimposta()`. (C, latente)
 - B7 `GruppoGiocatoreMD:222`: con un file troncato si aggiunge null agli ospiti, e la lettura della sola testata passa senza errore. (C)
 - B8 `ForestaMD:48, 59, 234`: `offset()` non controlla i limiti, e gli array restano null prima di `reimposta`. (P)
-- B9 `CoordinateMD:27, 35`: è mutabile ma usata come chiave di mappa; i setter non hanno chiamanti. (C)
 - B10 `TipoDanno:68`: `getEffetti()` espone l'array interno dell'enum. `ModelloDati:27`: l'istanza non è `volatile`. (P)
 - B11 `Costanti:249`: commento fuori posto (POZIONI_SALUTE_INIZIALI). `Comando.SINGOLO`, `RUTTOLOMEO` e `STORPSGORBLIN` sono in uso solo per le icone. (C)
 

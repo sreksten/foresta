@@ -16,15 +16,24 @@ import static org.junit.jupiter.api.Assertions.*;
 class CoordinateMDTest {
 
     @Test
-    void colonnaERigaSiLeggonoESiCambiano() {
-        CoordinateMD coordinate = new CoordinateMD();
-        assertEquals(0, coordinate.getX());
-        assertEquals(0, coordinate.getY());
-        coordinate.setX(3);
-        coordinate.setY(7);
+    void colonnaERigaSiLeggono() {
+        CoordinateMD coordinate = new CoordinateMD(3, 7);
         assertEquals(3, coordinate.getX());
         assertEquals(7, coordinate.getY());
-        assertEquals(new CoordinateMD(3, 7), coordinate);
+    }
+
+    @Test
+    void sonoImmutabiliPerPotersiUsareDaChiave() {
+        // Un valore che cambia mentre sta in una mappa la renderebbe irraggiungibile: niente setter e campi final
+        for (String metodo : new String[]{"setX", "setY"}) {
+            assertThrows(NoSuchMethodException.class, () -> CoordinateMD.class.getMethod(metodo, int.class), metodo);
+        }
+        for (java.lang.reflect.Field campo : CoordinateMD.class.getDeclaredFields()) {
+            if (campo.isSynthetic()) {
+                continue; // per esempio $jacocoData, aggiunto da JaCoCo nelle misure di copertura
+            }
+            assertTrue(java.lang.reflect.Modifier.isFinal(campo.getModifiers()), "il campo " + campo.getName() + " dev'essere final");
+        }
     }
 
     @Test

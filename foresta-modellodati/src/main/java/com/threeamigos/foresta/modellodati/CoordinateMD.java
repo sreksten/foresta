@@ -2,18 +2,16 @@ package com.threeamigos.foresta.modellodati;
 
 /**
  * Una posizione sulla mappa della Foresta: <code>x</code> è la colonna e <code>y</code> la riga di una casella.
- * Dato puro, senza logica: due coordinate con gli stessi valori sono uguali ({@link #equals(Object)}) e hanno lo
- * stesso {@link #hashCode()}, quindi si possono usare come chiavi di una mappa (come fanno i registri).
+ * Dato puro, senza logica, e immutabile: due coordinate con gli stessi valori sono uguali ({@link #equals(Object)}) e hanno lo
+ * stesso {@link #hashCode()}, quindi si possono usare come chiavi di una mappa (come fanno i registri), senza che un cambio di valore
+ * le faccia perdere nella mappa. Per spostarsi se ne crea un'altra.
  *
  * @author Stefano Reksten
  */
 public class CoordinateMD {
 
-	private int x;
-	private int y;
-
-	public CoordinateMD() {
-	}
+	private final int x;
+	private final int y;
 
 	public CoordinateMD(int x, int y) {
 		this.x = x;
@@ -24,16 +22,8 @@ public class CoordinateMD {
 		return x;
 	}
 
-	public void setX(int x) {
-		this.x = x;
-	}
-
 	public int getY() {
 		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
 	}
 
 	/**
