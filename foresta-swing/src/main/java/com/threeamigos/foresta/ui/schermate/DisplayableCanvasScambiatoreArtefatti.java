@@ -10,6 +10,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto
 import com.threeamigos.foresta.interfacce.*;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.CategoriaArtefatto;
@@ -26,7 +27,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.IntUnaryOperator;
 
 /**
@@ -292,7 +292,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
             // In grande il nome proprio (o il nome), in piccolo la descrizione
             // TODO da riguardare con la resa grafica
             String nome = artefatto.getNomeBreve();
-            nome = nome.substring(0, 1).toUpperCase(Locale.ROOT) + nome.substring(1);
+            nome = Misc.inizialeMaiuscola(nome);
             ComponenteScorrevole<VistaArtefatto>.Nodo nodo = componenteScorrevole.creaNodo(
                     nome, font, colore,
                     valore(artefatto, parteAttiva),
@@ -313,7 +313,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
                     DoomdarkColorModel.Color colorePezzo = colorePezzo(pezzo.getStato());
                     nodo.creaNodo(
                             pezzo.getTipo().getDescrizione(), font, colorePezzo,
-                            noto ? pezzo.getNome().substring(0, 1).toUpperCase(Locale.ROOT) + pezzo.getNome().substring(1) : "???",
+                            noto ? Misc.inizialeMaiuscola(pezzo.getNome()) : "???",
                             fontSmall, colorePezzo,
                             null, null, null,
                             null, artefatto);

@@ -251,7 +251,11 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		List<Comando> comandi = new ArrayList<>(GestoreSalvataggi.SLOT_MANUALI);
 		for (TestataSalvataggio testata : salvataggiDisponibili) {
 			comandi.remove(testata.getId());
-			disegnaElencoPersonaggiDaElencoClassi(graphics, testata);
+			try {
+				disegnaElencoPersonaggiDaElencoClassi(graphics, testata);
+			} catch (Exception e) {
+				BusEventi.pubblica(new InternoException("Durante lettura intestazione del file di salvataggio " + testata.getId(), e));
+			}
 		}
 		for (Comando slotDisponibile : comandi) {
 			int numero = numeroDaComando(slotDisponibile);

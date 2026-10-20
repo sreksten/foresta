@@ -134,12 +134,6 @@ Nessun difetto aperto.
 
 **foresta-swing e foresta-app**
 
-- B36 Iniziali e NPE nei testi:
-  - `ui/schermate/Notiziario:68, 137, 195`: una notizia vuota o con caratteri non supportati lancia o scrive nel log a ogni fotogramma;
-  - `substring(0, 1)` su un nome vuoto (`DisplayableCanvasScambiatoreArtefatti:295, 316`, `DisplayableCanvasIncantatore:52`);
-  - `DisplayableCanvasIntroOutro:246-253` non ha il try/catch della selezione da caricare.
-
-  (C/P)
 - B37 Riquadri:
   - `DisplayableCanvasRiquadroGruppo:264` e `…IncantesimiEPozioni:192` passano a `setRitaglio` il Rectangle vivo;
   - `:217` e `:135` fanno `setClip(null)` invece di ripristinare il clip;

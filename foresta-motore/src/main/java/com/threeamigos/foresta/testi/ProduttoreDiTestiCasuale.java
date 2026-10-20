@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.testi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.eventi.notifiche.NotificaUscitaDalGioco;
 import com.threeamigos.foresta.modellodati.ModelloDati;
@@ -443,6 +444,11 @@ public class ProduttoreDiTestiCasuale {
 			}
 			contenuto = contenuto.replace("NOME_LOCANDA", nomeLocanda);
 			contenuto = contenuto.replace("NOME_LOCANDIERE", nomeLocandiere);
+			if (contenuto.trim().isEmpty()) {
+				// Una notizia vuota non si mostra: è un difetto della grammatica, e si prova con un'altra
+				BusEventi.pubblica(new InternoErrore("Notizia vuota: " + notizia));
+				continue;
+			}
 			return new NotiziaMD(identificativo, contenuto);
 		}
 		return null;

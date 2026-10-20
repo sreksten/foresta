@@ -60,10 +60,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità bassa: foresta-swing e foresta-app
 
-- B36. Testi vuoti o sconosciuti:
-  - `Notiziario`: una notizia vuota dà un'immagine larga 0, e i caratteri non supportati scrivono nel log a ogni fotogramma;
-  - `substring(0, 1)` su un nome vuoto (`DisplayableCanvasScambiatoreArtefatti:295, 316`, `DisplayableCanvasIncantatore:52`);
-  - `DisplayableCanvasIntroOutro.selezioneSlotDaSalvare` non ha il try/catch.
 - B37. Riquadri:
   - `setRitaglio(areaLista)` passa il Rectangle vivo (`RiquadroGruppo:264`, `RiquadroIncantesimiEPozioni:192`);
   - `setClip(null)` invece di ripristinare il clip (righe 217 e 135);
