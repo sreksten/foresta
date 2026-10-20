@@ -28,6 +28,9 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 	// non fa nulla. Cosi' nessun TIMER arriva all'automa dopo un cambio di stato.
 	private final AtomicInteger pianificazione = new AtomicInteger();
 	private Temporizzabile temporizzabile;
+	// Gli impulsi falliti di fila (sul thread principale): una riuscita li azzera
+	private static final int MAX_IMPULSI_FALLITI_DI_FILA = 3;
+	private int impulsiFalliti;
 
 	// Il ritmo dell'ultimo inizia/iniziaDopo, per riprenderlo dopo una sospensione; 0 se non ci sono impulsi da fare
 	private int periodoAttivo;
@@ -53,6 +56,7 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 
 	private void pianifica(int ritardoIniziale, int millisecondi) {
 		fermaLaPianificazioneInCorso();
+		impulsiFalliti = 0;
 		periodoAttivo = millisecondi;
 		if (sospeso) {
 			// Il ritmo e' ricordato: gli impulsi partono alla ripresa
@@ -70,8 +74,15 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 				}
 				try {
 					temporizzabile.tick();
+					impulsiFalliti = 0;
 				} catch (RuntimeException e) {
 					BusEventi.pubblica(new InternoException(e));
+					// Un impulso che fallisce ogni secondo riempirebbe il log e infastidirebbe il giocatore con lo stesso errore: dopo qualche
+					// fallimento di fila gli impulsi si fermano (i comandi del giocatore continuano ad arrivare)
+					if (++impulsiFalliti >= MAX_IMPULSI_FALLITI_DI_FILA) {
+						BusEventi.pubblica(new InternoException("Impulsi fermati dopo " + impulsiFalliti + " errori di fila", e));
+						termina();
+					}
 				}
 			}),
                 ritardoIniziale,

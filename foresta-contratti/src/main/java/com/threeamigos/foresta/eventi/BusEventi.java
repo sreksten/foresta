@@ -69,15 +69,20 @@ public class BusEventi {
     /**
      * Consegna a un solo iscritto: se fallisce, gli altri ricevono comunque l'evento (la UI resta aggiornata, le
      * notizie registrate) e chi ha pubblicato non si trova l'eccezione a meta' di una transizione. L'errore
-     * finisce nel log e sul bus come InternoException, tranne quando a fallire e' proprio chi ascolta quelle.
+     * finisce nel log e sul bus come InternoException (la UI lo dice al giocatore), tranne quando a fallire e' proprio
+     * chi ascolta quelle. Vale anche per gli {@link Error} (una classe che non si carica, un'asserzione): solo quelli della macchina
+     * virtuale, come la memoria finita, non si fermano qui.
      */
     private static void consegnaA(Consumer<Object> iscritto, Object evento) {
         try {
             iscritto.accept(evento);
-        } catch (RuntimeException e) {
-            Logger.log(e);
+        } catch (VirtualMachineError e) {
+            throw e;
+        } catch (RuntimeException | Error e) {
+            Exception eccezione = e instanceof Exception ? (Exception) e : new RuntimeException(e);
+            Logger.log(eccezione);
             if (!(evento instanceof InternoException)) {
-                pubblica(new InternoException("Durante la consegna di " + evento.getClass().getSimpleName(), e));
+                pubblica(new InternoException("Durante la consegna di " + evento.getClass().getSimpleName(), eccezione));
             }
         }
     }

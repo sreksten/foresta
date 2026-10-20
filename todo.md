@@ -34,11 +34,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 - **M11, danno della fuga (regola).** Il danno è fisso, 50-100 punti (`PersonaggioBase:525-527`, c'è già un TODO): al livello 1 è spesso mortale.
   - Proposta: una percentuale della salute massima.
 
-### Gravità media: motore, missioni, trofei e testi
-
-- **M19, errori del bus silenziosi.** In `BusEventi` (righe 57-79) l'unico iscritto a `InternoException` è lo sniffer, quindi una transizione a metà resta bloccata in silenzio. Un `Error` interrompe la consegna agli altri iscritti.
-  - Servono un gestore vero e niente ripetizione dell'errore a ogni tick in `TemporizzatoreJ2SE`.
-
 ### Gravità bassa: foresta-tipi e foresta-modellodati
 
 - B1. `ArtefattoMD:372`: la descrizione si rilegge con `testo()` invece di `testoFacoltativo()`, quindi null torna "".

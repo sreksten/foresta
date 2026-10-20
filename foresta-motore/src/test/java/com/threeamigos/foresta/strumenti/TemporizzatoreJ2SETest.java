@@ -141,4 +141,28 @@ class TemporizzatoreJ2SETest {
             Thread.sleep(5);
         }
     }
+
+    @Test
+    void unImpulsoCheFallisceSempreSiFermaDopoQualcheErroreDiFila() throws Exception {
+        java.util.List<com.threeamigos.foresta.eventi.interni.InternoException> errori = new java.util.concurrent.CopyOnWriteArrayList<>();
+        com.threeamigos.foresta.eventi.BusEventi.iscriviti(com.threeamigos.foresta.eventi.interni.InternoException.class, errori::add);
+        TemporizzatoreJ2SE temporizzatore = new TemporizzatoreJ2SE();
+        AtomicInteger impulsi = new AtomicInteger();
+        temporizzatore.setTemporizzabile(() -> {
+            impulsi.incrementAndGet();
+            throw new IllegalStateException("guasto");
+        });
+
+        temporizzatore.inizia(5);
+        Thread.sleep(400);
+        eseguiESpetta(() -> { });
+        int dopoUnPo = impulsi.get();
+        Thread.sleep(200);
+        eseguiESpetta(() -> { });
+
+        temporizzatore.termina();
+        assertEquals(3, dopoUnPo, "dopo tre errori di fila gli impulsi si fermano");
+        assertEquals(3, impulsi.get(), "e non ne arrivano altri");
+        assertEquals(4, errori.size(), "tre errori più l'avviso che gli impulsi si sono fermati");
+    }
 }

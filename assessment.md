@@ -67,7 +67,6 @@ Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
    **Giudizio:** accettabile per un gioco single-player, a patto di non aggiungere registri statici.
 3. **Il motore è un modulo solo.** `motore`, `personaggi`, `locazioni`, `missioni` e `oggetti` sono un unico grafo. Il primo taglio possibile resta `foresta-missioni` ([`todo.md`](todo.md)).
 4. **Due stili di missione.** Restano missioni che estendono `MissioneBase`. Il controllo dopo la risposta a una domanda rifà i `controlla*` di tutte le missioni, e quindi richiede che quelle scritte a mano siano idempotenti (il vincolo è scritto in `gestione_missioni.md`).
-5. **Errori degli iscritti.** Il bus cattura le eccezioni e pubblica `InternoException`, ma l'unico iscritto è lo sniffer, che scrive nel log. Un errore a metà di una transizione lascia l'`Automa` in uno stato intermedio, senza nessun segnale per il giocatore (M19).
 
 ## 4. Qualità del codice
 
@@ -100,9 +99,7 @@ Nessun difetto aperto.
 
 **Motore, missioni, trofei e testi**
 
-| Cod. | Dove | Difetto | |
-| :--- | :--- | :--- | :---: |
-| M19 | contratti: `eventi/BusEventi:57-79` | Gli errori degli iscritti finiscono solo nel log (unico iscritto a `InternoException` è lo sniffer): una transizione a metà lascia il gioco bloccato senza messaggio. Un `Error` invece interrompe la consegna agli altri iscritti | C (P le conseguenze) |
+Nessun difetto aperto.
 
 **Interfaccia (foresta-swing)**
 
@@ -246,18 +243,16 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 | Rischio | Fatto | Gravità |
 | :--- | :--- | :--- |
 | Copertura di `personaggi`, `locazioni`, `offerte`, `salvataggi` | 69%, 72%, 24%, 65% | Media: in `personaggi` e `locazioni` sta metà dei difetti medi |
-| Errori silenziosi del bus | M19 | Media |
 | Copia delle costanti `static final` | Una compilazione incrementale parziale può tenere valori vecchi | Bassa: basta `mvn clean` |
 | Modalità verticale | Rotta: barra icone sovrapposta, area di contenuto fissa a 640 px in una finestra larga al massimo 400 (`todo.md`, `motore_grafico.md` §12) | Bassa sul desktop; rimandata in fondo |
 
 ## 8. Prossimi passi consigliati
 
 1. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M11 (fuga), B28 (LaLealta).
-2. **Un vero gestore di `InternoException`** (M19).
-3. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
-4. **Bilanciamento:** come da [`todo.md`](todo.md).
-5. **Tagliare le classi grandi** quando si interviene su di loro (§3).
-6. **Modalità verticale**, per ultima.
+2. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
+3. **Bilanciamento:** come da [`todo.md`](todo.md).
+4. **Tagliare le classi grandi** quando si interviene su di loro (§3).
+5. **Modalità verticale**, per ultima.
 
 ## Osservazioni
 

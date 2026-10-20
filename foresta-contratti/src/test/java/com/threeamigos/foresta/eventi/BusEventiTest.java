@@ -75,4 +75,30 @@ class BusEventiTest {
         assertEquals(primo, uno.getUuid(), "è sempre lo stesso per lo stesso evento");
         org.junit.jupiter.api.Assertions.assertNotEquals(primo, altro.getUuid());
     }
+
+    @Test
+    void unErrorePureNonTogliELEventoAgliAltriEFinisceSulBus() {
+        List<String> ricevuti = new ArrayList<>();
+        List<InternoException> errori = new ArrayList<>();
+        BusEventi.iscriviti(String.class, s -> {
+            throw new NoClassDefFoundError("classe mancante");
+        });
+        BusEventi.iscriviti(String.class, ricevuti::add);
+        BusEventi.iscriviti(InternoException.class, errori::add);
+
+        BusEventi.pubblica("ciao");
+
+        assertEquals(1, ricevuti.size(), "gli altri iscritti ricevono l'evento");
+        assertEquals(1, errori.size());
+        assertEquals(NoClassDefFoundError.class, errori.get(0).getException().getCause().getClass());
+    }
+
+    @Test
+    void glErroriDellaMacchinaVirtualeNonSiInghiottono() {
+        BusEventi.iscriviti(String.class, s -> {
+            throw new OutOfMemoryError("memoria finita");
+        });
+
+        org.junit.jupiter.api.Assertions.assertThrows(OutOfMemoryError.class, () -> BusEventi.pubblica("ciao"));
+    }
 }

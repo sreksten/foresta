@@ -121,7 +121,7 @@ INIZIO_LOCAZIONE ─ controllo missioni PRE_LOCAZIONE ─ evento della linea tem
 `BusEventi` è un publish/subscribe **sincrono per classe esatta** (`evento.getClass()`: iscriversi a una superclasse non intercetta le sottoclassi), con `iscriviti`, `cancellati`, `pubblica`.
 
 - **Consegna sul thread principale.** `pubblica` consegna subito se già sul thread principale (`ThreadPrincipale`), altrimenti accoda. La consegna è sostituibile con `impostaConsegna` (i test usano `Runnable::run` per riceverla subito sul loro thread) e `azzera()` toglie tutti gli iscritti.
-- **Isolamento degli errori.** Ogni iscritto è chiamato in un `try`: se uno solleva un'eccezione gli altri ricevono comunque l'evento, l'errore va nel `Logger` e sul bus come `InternoException`, a meno che a fallire sia proprio chi ascolta quelle. Chi ha pubblicato non si trova l'eccezione a metà di una transizione.
+- **Isolamento degli errori.** Ogni iscritto è chiamato in un `try`: se uno solleva un'eccezione gli altri ricevono comunque l'evento, l'errore va nel `Logger` e sul bus come `InternoException`, a meno che a fallire sia proprio chi ascolta quelle. Vale anche per gli `Error` (non per quelli della macchina virtuale, come la memoria finita, che si propagano). Chi ha pubblicato non si trova l'eccezione a metà di una transizione. La UI (`ForestaUI`, con `SegnalatoreDegliErrori`) dice al giocatore che c'è stato un errore interno, una volta sola se si ripete uguale; e `TemporizzatoreJ2SE` ferma gli impulsi dopo tre errori di fila, invece di ripeterli a ogni secondo.
 - Sottoscrittori in `CopyOnWriteArrayList`; nessuna garanzia di ordine fra iscritti allo stesso evento.
 
 Gli eventi sono organizzati per **direzione e intento**:
