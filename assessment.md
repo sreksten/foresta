@@ -94,7 +94,6 @@ Ogni voce è stata verificata sul codice chiamante. **C** sta per *confermato* (
 
 | Cod. | Dove | Difetto | Scenario | Correzione | |
 | :--- | :--- | :--- | :--- | :--- | :---: |
-| A3 | motore: `missioni/storie/LaBenedizione:172-178, 264-272` | Il sacerdote entra senza controllare il tetto totale di 8 | Con 8 personaggi si arriva a 9: `Comando.ofPersonaggio(8)` lancia in tutti i menu di scelta del personaggio | Fare la domanda COMPAGNO solo se `getNumeroPersonaggi() < MAX_PERSONAGGI_GRUPPO_TOTALE` (il superamento dei 5 permanenti è voluto) | C |
 | A4 | swing: `ui/testo/DoomdarkTextProducer:21, 52` | `getGlyphData` senza protezione per i caratteri che il font non ha; `FontTool.getWidth` invece li salta. Il `Prompt` blocca solo `\|` | Un nome come "Jürgen", "Peña" o "Bob_": il riquadro del gruppo lancia a ogni repaint; il nome resta nel salvataggio | Glifo di riserva (o salto) in un punto solo, coerente con la misura; in più filtrare l'input del `Prompt` | C |
 
 ### 5.2 Gravità media
@@ -292,7 +291,6 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 | Rischio | Fatto | Gravità |
 | :--- | :--- | :--- |
 | Nomi con caratteri fuori dal font | A4: un carattere accentato in un nome rende la partita inutilizzabile anche dopo il caricamento | Alta |
-| Stato del gruppo incoerente | A3 (9 personaggi) | Alta |
 | Trofei e classifica | M18: un file rovinato o una costante rinominata cancellano trofei o classifica | Media |
 | Copertura di `personaggi`, `locazioni`, `offerte`, `salvataggi` | 69%, 72%, 24%, 65% | Media: in `personaggi` e `locazioni` sta metà dei difetti medi |
 | Errori silenziosi del bus | M19 | Media |
@@ -301,7 +299,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 ## 8. Prossimi passi consigliati
 
-1. **Correggere i difetti alti rimasti** (A3-A4), ciascuno con un test.
+1. **Correggere i difetti alti rimasti** (A4), ciascuno con un test.
 2. **Correggere i medi certi e a basso rischio:** M1, M2, M3, M4, M9, M10, M12, M16, M17, M18 e tutta la UI (M22-M27).
 3. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M7 (spregio), M8 (carico), M11 (fuga), M14 (sconfitti fra visite), B28 (LaLealta).
 4. **Un vero gestore di `InternoException`** (M19).
@@ -323,7 +321,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
   - schermate, riquadri, barra, tattiche e app;
   - sprite, testo, immagini, sfx e sviluppo.
 
-  Ogni ipotesi è stata verificata leggendo i chiamanti; A3, A4, M1 e M8 sono stati ricontrollati a parte.
+  Ogni ipotesi è stata verificata leggendo i chiamanti; A4, M1 e M8 sono stati ricontrollati a parte.
 - **Misure.** Righe e file sono contati con `wc -l` su `src/main` e `src/test`. Test e copertura vengono da `mvn clean test` del 2026-10-19, tutti verdi.
 - **Il rischio delle notizie malformate** del 2026-10-17 è ora B33: le grammatiche attuali sono conformi, quindi non si innesca.
 

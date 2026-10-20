@@ -301,6 +301,10 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
     boolean isATempo();
 	/**
+	 * Quanti turni restano a un personaggio a tempo prima che lasci il gruppo (0 per chi non lo è).
+	 */
+    int getTempo();
+	/**
 	 * Diminuisce il numero di turni per i quali un PNG rimane con un giocatore.
 	 * Quando la funzione restituisce 0 (o meno) il PNG lascia il gruppo.
 	 */
