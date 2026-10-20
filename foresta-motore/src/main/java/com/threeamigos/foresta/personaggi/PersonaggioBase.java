@@ -92,7 +92,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	private boolean daAffrontare;
 
 	/**
-	 * Crea un personaggio non giocante di quella classe e di quel livello, con i valori di partenza: i boss con salute e magia piene,
+	 * Crea un personaggio (non giocante: lo diventa entrando nel gruppo) di quella classe e di quel livello, con i valori di partenza: i boss con salute e magia piene,
 	 * gli altri con un valore fra il 75% e il 100% dei massimi.
 	 */
 	public PersonaggioBase(TipoPersonaggio classe, int livello) {
@@ -121,13 +121,12 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	/**
-	 * Un personaggio giocante (il giocatore o uno dei personaggi che si incontrano
-	 * nelle locande)
+	 * Un personaggio con un nome proprio (il giocatore, uno di quelli che si incontrano nelle locande, un residente). Come tutti
+	 * nasce PNG: smette di esserlo quando entra a far parte del gruppo (vedi GruppoGiocatore.aggiungiPersonaggio).
 	 */
 	public PersonaggioBase(String nome, TipoPersonaggio classe, int livello) {
 		this(classe, livello);
 		md.setNome(nome);
-		md.setPng(false);
 	}
 
 	int getQuantitaMassima() {

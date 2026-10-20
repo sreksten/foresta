@@ -3,6 +3,7 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.GestoreProgressione;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -46,7 +47,7 @@ class EquipaggiamentoInizialeTest {
             Personaggio compagno = RegistroPersonaggi.preparaCompagno(new Guerriero("Reginald", 1));
             assertTrue(compagno.getLivello() >= 3 && compagno.getLivello() <= 5, "livello " + compagno.getLivello());
             assertEquals("Reginald", compagno.getNomeProprio().orElse(null));
-            assertFalse(compagno.isPNG());
+            assertTrue(compagno.isPNG(), "è un PNG finché non entra nel gruppo");
             assertEquals(GestoreProgressione.getXpNecessariPerLivello(compagno.getLivello()), compagno.getEsperienza());
             assertEquals(compagno.getLivello() - 1, compagno.getPuntiAbilitaDisponibili());
             assertEquals(2, compagno.getModelloDati().getArtefatti().size());
@@ -61,6 +62,9 @@ class EquipaggiamentoInizialeTest {
     void ilCompagnoReclutatoContinuaAGuadagnareEsperienza() {
         ModelloDati.getIstanza().getStatisticheMD().setLivello(5);
         Personaggio compagno = RegistroPersonaggi.preparaCompagno(new Guerriero("Reginald", 1));
+        // Un PNG non accumula esperienza: lo smette di essere entrando nel gruppo
+        GruppoGiocatore.getIstanza().aggiungiPersonaggio(compagno);
+        assertFalse(compagno.isPNG());
         int prima = compagno.getEsperienza();
         compagno.addPuntiEsperienza(10);
         assertEquals(prima + 10, compagno.getEsperienza());

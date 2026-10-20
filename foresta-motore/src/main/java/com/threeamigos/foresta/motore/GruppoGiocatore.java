@@ -253,6 +253,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	@Override
 	public final void aggiungiPersonaggio(Personaggio personaggio) {
 		super.aggiungiPersonaggio(personaggio);
+		diventaMembro(personaggio);
 		String nome = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		boolean volentieri = personaggio.getMotivoNelGruppo().isEntraVolentieri();
 		BusEventi.pubblica(new NotificaTestoFrase(nome + (volentieri ? " è felice di poter far parte del gruppo."
@@ -266,6 +267,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	 */
 	public final void aggiungiPersonaggioSenzaNotificare(Personaggio personaggio) {
 		super.aggiungiPersonaggio(personaggio);
+		diventaMembro(personaggio);
 		md.addPersonaggioMD(personaggio.getModelloDati());
 		allineaIndiceCapo();
 	}
@@ -285,6 +287,16 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		md.riordinaPersonaggiMD(inOrdine);
 		allineaIndiceCapo();
 		return true;
+	}
+
+	/**
+	 * Chi entra nel gruppo per restare (il giocatore, un compagno reclutato) smette di essere un PNG, se ha un nome proprio (un personaggio giocante ne ha sempre uno); chi ci sta a tempo (un aiuto, lo
+	 * Scheletro della Mietitura) lo resta, come gli ospiti (vedi {@link #aggiungiOspite(Personaggio)}), che non passano da qui.
+	 */
+	private void diventaMembro(Personaggio personaggio) {
+		if (!personaggio.getMotivoNelGruppo().isATempo() && personaggio.getNomeProprio().isPresent()) {
+			personaggio.getModelloDati().setPng(false);
+		}
 	}
 
 	/**

@@ -50,7 +50,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 ### Gravità bassa: foresta-motore
 
 - B16. `PersonaggioBase:1130-1135`: chi muore per veleno o sanguinamento risulta "morto per troppa codardia" (FIXME).
-- B17. `PersonaggioBase:127-131`: il flag PNG dipende dal costruttore dei residenti (`(int livello)`), e BARDO e BARDO_DELLE_LOCANDE non sono coerenti.
 - B18. `PersonaggioBase:796`: `" di " + nome` dà un doppio spazio; deve essere `"di " + nome`.
 - B19. Piccoli difetti in `PersonaggioBase`:
   - `subStanchezza` notifica un valore negativo;
