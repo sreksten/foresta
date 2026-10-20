@@ -671,17 +671,16 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		}
 	}
 
-	// TODO riguardare la fuga, oggi troppo penalizzante: oltre a perdere fino a metà di
-	// monete, preziosi, incantesimi e pozioni, ogni personaggio vivo subisce da 50 a 100
-	// danni (PersonaggioBase.fugge), e se muore il capo la partita è persa.
 	/**
-	 * Il gruppo fugge: subisce gravi ferite e perde molte delle cose che ha con sé.
+	 * Il gruppo fugge: ogni personaggio vivo subisce delle ferite (vedi {@link Personaggio#fugge}) e il gruppo perde una parte delle sue
+	 * scorte, il {@value Costanti#FUGA_PERDITA_CONSUMABILI_PERCENTUALE}% di ognuna (arrotondato per difetto: con poche pozioni non se ne
+	 * perdono): monete, preziosi, pergamene e pozioni. Gli artefatti restano.
 	 */
 	public final void fugge() {
 		BusEventi.pubblica(new NotificaTestoFrase(chiMaiuscolo() + ", in preda al panico, cerca la salvezza nella fuga!" +
-				" Sfortunatamente riceve gravi ferite e perde molte delle cose in suo possesso!"));
+				" Sfortunatamente riceve delle ferite e perde una parte delle cose in suo possesso!"));
 
-		Function<Integer, Integer> calcolaPerdita = m -> Dado.tiraAncheSenzaRange(0, m / 2);
+		Function<Integer, Integer> calcolaPerdita = m -> m * Costanti.FUGA_PERDITA_CONSUMABILI_PERCENTUALE / 100;
 
 		subMonete(calcolaPerdita.apply(md.getMonete()));
 		subPreziosi(calcolaPerdita.apply(md.getPreziosi()));

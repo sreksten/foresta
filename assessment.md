@@ -71,7 +71,7 @@ Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 ## 4. Qualità del codice
 
 - **Gestione degli errori.** I `catch` generici stanno quasi tutti nei gestori su file e in `GrammarBean`, ed è una scelta difendibile.
-- **`TODO`/`FIXME`:** 18. Due segnalano difetti veri: la fuga a danno fisso (M11) e la "morte per codardia" da veleno (B16). Gli altri riguardano funzioni future.
+- **`TODO`/`FIXME`:** 18. Uno segnala un difetto vero: la "morte per codardia" da veleno (B16). Gli altri riguardano funzioni future.
 - **Codice morto.** C'è un po' di codice che non si raggiunge (B35, B41):
   - quattro classi di eventi con sprite mai pubblicate, e due eventi con il `TipoEvento` sbagliato;
   - metodi di `PersonaggioBase` mai chiamati;
@@ -95,7 +95,6 @@ Nessun difetto aperto.
 
 | Cod. | Dove | Difetto | |
 | :--- | :--- | :--- | :---: |
-| M11 | `PersonaggioBase:525-527` | La fuga toglie 50-100 punti fissi: al livello 1 un Mago muore nel 41% circa delle fughe (TODO già nel codice) | C |
 
 **Motore, missioni, trofei e testi**
 
@@ -248,7 +247,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 ## 8. Prossimi passi consigliati
 
-1. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M11 (fuga), B28 (LaLealta).
+1. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: B28 (LaLealta).
 2. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
 3. **Bilanciamento:** come da [`todo.md`](todo.md).
 4. **Tagliare le classi grandi** quando si interviene su di loro (§3).

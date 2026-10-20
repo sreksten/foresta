@@ -30,8 +30,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità media: combattimento e personaggi
 
-- **M11, danno della fuga (regola).** Il danno è fisso, 50-100 punti (`PersonaggioBase:525-527`, c'è già un TODO): al livello 1 è spesso mortale.
-  - Proposta: una percentuale della salute massima.
 
 ### Gravità bassa: foresta-tipi e foresta-modellodati
 

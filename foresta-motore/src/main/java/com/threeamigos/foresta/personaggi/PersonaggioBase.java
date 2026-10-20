@@ -539,9 +539,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		subStanchezza(risultatoRiposo.getAbbassamentoStanchezza());
 	}
 
-	// TODO la salute dovrebbe essere aggiustata in base al livello probabilmente
+	/**
+	 * Fuggire costa una quota della salute massima (da {@link Costanti#FUGA_DANNO_MINIMO_PERCENTUALE} a
+	 * {@link Costanti#FUGA_DANNO_MASSIMO_PERCENTUALE}%, quindi cresce con il livello, a differenza di un danno fisso), ma non uccide mai:
+	 * chi fugge perché sta male resta in piedi con almeno un punto. Il resto del prezzo è l'ignominia, che per qualche locazione
+	 * toglie coraggio, valore e carisma.
+	 */
 	public void fugge() {
-		subSalute(Dado.tira(50, 100), null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+		int danno = Math.max(1, getSaluteMassima() * Dado.tira(Costanti.FUGA_DANNO_MINIMO_PERCENTUALE, Costanti.FUGA_DANNO_MASSIMO_PERCENTUALE) / 100);
+		danno = Math.min(danno, Math.max(0, getSalute() - 1));
+		if (danno > 0) {
+			subSalute(danno, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
+		}
 		if (!isVivo()) {
 			return;
 		}
