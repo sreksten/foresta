@@ -341,7 +341,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		TipoOggetto tipoOggetto = g.getTipoOggettoInLocazione();
 		if (tipoOggetto != null && tipoOggetto != TipoOggetto.ARTEFATTO) {
 			BufferedImage d = ClassiOggettoImmagine.getImmagine(tipoOggetto);
-			graphics.drawImage(d, xOggetto(locazione, d), yOggetto(locazione, d), null);
+			graphics.drawImage(d, xOggetto(d), yOggetto(locazione, d), null);
 		}
 	}
 	
@@ -364,10 +364,6 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		}
 		return new SpriteInDissolvenza(personaggio.getNome(), mappaImmagini.get(personaggio),
 				coordinate.getX(), coordinate.getY());
-	}
-
-	SpriteInterface variaLivello(VistaPersonaggio personaggio, int variazione) {
-		return spriteATempo(personaggio, ImageCache.spriteAumentoLivello, variazione, "Livello aumentato");
 	}
 
 	/**
@@ -438,7 +434,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		TipoOggetto tipoOggetto = g.getTipoOggettoInLocazione();
 		if (tipoOggetto != null && tipoOggetto != TipoOggetto.ARTEFATTO) {
 			BufferedImage d = ClassiOggettoImmagine.getImmagine(tipoOggetto);
-			return new SpriteATempo(d, xOggetto(locazione, d), yOggetto(locazione, d),
+			return new SpriteATempo(d, xOggetto(d), yOggetto(locazione, d),
 					"Raccolto oggetto " + tipoOggetto);
 		}
 		return null;
@@ -447,7 +443,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	/**
 	 * L'oggetto che si trova in locazione sta al centro dello spazio a disposizione, in basso: i lati sono dei due gruppi
 	 */
-	private int xOggetto(BufferedImage locazione, BufferedImage oggetto) {
+	private int xOggetto(BufferedImage oggetto) {
 		return topLeftX + (larghezzaDisponibile - oggetto.getWidth()) / 2;
 	}
 

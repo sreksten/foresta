@@ -129,7 +129,6 @@ Nessun difetto aperto.
 **foresta-swing e foresta-app**
 
 - B41c `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif` mai usati. (C)
-- B41e `variaLivello` e il parametro `locazione` di `xOggetto` in `RiquadroLocazione` mai usati. (C)
 - B41f `ComandiPossibili.add`/`set` usati solo dai test. (C)
 
 ### 5.4 Ipotesi controllate e scartate
