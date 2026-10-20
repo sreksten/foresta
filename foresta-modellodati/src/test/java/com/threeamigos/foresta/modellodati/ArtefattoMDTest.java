@@ -105,6 +105,21 @@ class ArtefattoMDTest {
     }
 
     @Test
+    void laDescrizioneAssenteRestaNullDopoIlSalvataggio() throws IOException {
+        ArtefattoMD artefatto = new ArtefattoMD();
+        artefatto.setTipo(TipoArtefatto.SPADA);
+        artefatto.setNome("una spada");
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        artefatto.salva(printWriter);
+        printWriter.flush();
+        ArtefattoMD ricaricato = new ArtefattoMD();
+        ricaricato.leggi(new BufferedReader(new StringReader(stringWriter.toString())));
+        assertNull(ricaricato.getDescrizione());
+        assertEquals("una spada", ricaricato.getNomeCompleto());
+    }
+
+    @Test
     void salvaERicaricaTuttiITipiDiModificatore() throws IOException {
         // Given
         ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.ANELLO, "un Anello magico della Sirena", "che aumenta il Carisma");
@@ -265,7 +280,7 @@ class ArtefattoMDTest {
         ArtefattoMD ricaricato = salvaERileggi(artefatto);
         // Then: i campi vuoti non spostano quelli che seguono
         assertEquals(ArtefattoMD.NESSUN_NOME, ricaricato.getNome());
-        assertEquals("", ricaricato.getDescrizione());
+        assertNull(ricaricato.getDescrizione());
         assertEquals(3, ricaricato.getLivello());
         assertEquals(7, ricaricato.getDanni());
         assertTrue(ricaricato.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 1)));

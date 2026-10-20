@@ -158,7 +158,9 @@ public class ArtefattoMD implements Serializzabile {
 	}
 
 	public void setDescrizione(String descrizione) {
-		this.descrizione = Serializzabile.pulisciCampo(descrizione);
+		// Vuota o assente è la stessa cosa (null), come dopo un salvataggio
+		String pulita = Serializzabile.pulisciCampo(descrizione);
+		this.descrizione = pulita == null || pulita.isEmpty() ? null : pulita;
 	}
 
 	public TipoSlotArtefatto getSlotEquipaggiamento() {
@@ -369,7 +371,7 @@ public class ArtefattoMD implements Serializzabile {
 		pezzoLeggendario = campi.testoFacoltativo();
 		nomeProprio = campi.testoFacoltativo();
 		nome = campi.testo();
-		descrizione = campi.testo();
+		descrizione = campi.testoFacoltativo();
 		livello = campi.intero();
 		danni = campi.intero();
 		costoAcquisto = campi.intero();

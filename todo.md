@@ -33,7 +33,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità bassa: foresta-tipi e foresta-modellodati
 
-- B1. `ArtefattoMD:372`: la descrizione si rilegge con `testo()` invece di `testoFacoltativo()`, quindi null torna "".
 - B2. `LettoreCampi.enumerato` (riga 115): un nome di enum non valido deve dare `IOException`.
 - B3 (P). `ModificatoreAttributoMD`:
   - null nella nota torna "", e il riletto non è più `equals`;
