@@ -33,7 +33,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità bassa: foresta-tipi e foresta-modellodati
 
-- B11. `Costanti:249` ha un commento fuori posto. `Comando.SINGOLO`, `RUTTOLOMEO` e `STORPSGORBLIN` sono usati solo dalle icone.
 
 ### Gravità bassa: foresta-contratti
 
