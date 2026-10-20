@@ -63,20 +63,23 @@ public abstract class GestoreSuFile {
 	}
 
 	/**
-	 * Scrive prima su un file temporaneo (in UTF-8) e lo sostituisce alla destinazione solo se è stato scritto per intero: un errore a
-	 * metà lascia intatto il file che c'era.
+	 * Scrive prima su un file temporaneo (in UTF-8) e lo sostituisce alla destinazione solo se è stato scritto per intero e portato sul
+	 * disco (non solo nella memoria del sistema operativo): un errore a metà lascia intatto il file che c'era.
 	 *
 	 * @throws IOException se la scrittura o la sostituzione non riescono
 	 */
 	protected static void scriviSostituendo(File destinazione, Scrittura scrittura) throws IOException {
 		File temporaneo = new File(destinazione.getPath() + ".tmp");
-		try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(temporaneo), StandardCharsets.UTF_8)))) {
+		try (FileOutputStream flusso = new FileOutputStream(temporaneo);
+			 PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(flusso, StandardCharsets.UTF_8)))) {
 			scrittura.scrivi(writer);
+			writer.flush();
 			// PrintWriter non lancia eccezioni sugli errori di scrittura: vanno chiesti
 			if (writer.checkError()) {
 				throw new IOException("Errore di scrittura di " + destinazione.getPath());
 			}
+			// Senza, una rinomina arrivata sul disco prima dei dati lascerebbe un file vuoto se il sistema si ferma proprio lì
+			flusso.getFD().sync();
 		} catch (IOException | RuntimeException e) {
 			temporaneo.delete();
 			throw e;
@@ -91,19 +94,35 @@ public abstract class GestoreSuFile {
 
 	/**
 	 * Mette il file temporaneo al posto della destinazione. Dove {@link File#renameTo(File)} sostituisce un file che c'è già (macOS,
-	 * Linux, Android, iOS) lo fa in un colpo solo; dove no (Windows) si toglie prima il vecchio file, e un errore a metà lascia comunque
-	 * il file nuovo nel temporaneo.
+	 * Linux, Android, iOS) lo fa in un colpo solo; dove no (Windows) il vecchio file si mette prima da parte (con l'estensione
+	 * {@code .bak}) e si cancella solo a cose fatte. In ogni caso, se non riesce, la destinazione resta com'era e il temporaneo si può
+	 * buttare.
+	 *
+	 * @throws IOException se la sostituzione non riesce
 	 */
 	protected static void sostituisci(File temporaneo, File destinazione) throws IOException {
 		if (temporaneo.renameTo(destinazione)) {
 			return;
 		}
-		if (destinazione.exists() && !destinazione.delete()) {
+		if (!destinazione.exists()) {
+			throw new IOException("Impossibile spostare " + temporaneo.getPath() + " in " + destinazione.getPath());
+		}
+		File daParte = new File(destinazione.getPath() + ".bak");
+		if (daParte.exists() && !daParte.delete()) {
+			throw new IOException("Impossibile sostituire " + destinazione.getPath());
+		}
+		if (!destinazione.renameTo(daParte)) {
 			throw new IOException("Impossibile sostituire " + destinazione.getPath());
 		}
 		if (!temporaneo.renameTo(destinazione)) {
+			// Il vecchio file torna al suo posto
+			if (!daParte.renameTo(destinazione)) {
+				throw new IOException("Impossibile spostare " + temporaneo.getPath() + " in " + destinazione.getPath()
+						+ " e rimettere a posto il vecchio file, che è in " + daParte.getPath());
+			}
 			throw new IOException("Impossibile spostare " + temporaneo.getPath() + " in " + destinazione.getPath());
 		}
+		daParte.delete();
 	}
 
 	/**

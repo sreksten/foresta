@@ -51,9 +51,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
   - SINGOLO_ATTACCO è offerto in mischia ma ignorato (righe 969-971);
   - i rami irraggiungibili delle righe 437-440 e 1528-1533 (MAPPA/INVENTARIO in combattimento, e IN_COMBATTIMENTO non ha un gestore d'ingresso).
 - B24 (P). `Automa:1482, 1517, 1531, 1566, 610`: i comandi inattesi lanciano un'eccezione invece di essere ignorati con `comandoNonValido`.
-- B26 (P). `GestoreSalvataggiSuFile`:
-  - manca `sync()` prima della rinomina;
-  - su Windows, se la seconda rinomina fallisce, il salvataggio resta solo nel `.tmp`.
 - B27. `NonSparateSulPianista:187-208`: la condizione rivela la città più vicina anche quando la missione non parte.
 - B29 (P). `IntermezzoLibroTecnico.daLeggere`: è statico e non si salva.
 - B31. `TipoMissione`: mancano le note "// Coperto da:" per LaSfidaDeiCampioni, IlCampione, IlGiroDelleSetteChiese, CronacheDiUnFegatoEroico, NessunBoccaleLasciatoIndietro e DisturbatoreDellaQuietePubblica.

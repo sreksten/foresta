@@ -83,8 +83,8 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements GestoreSal
 	}
 
 	/**
-	 * Scrive prima su un file temporaneo e lo sostituisce al salvataggio solo se è stato scritto per intero:
-	 * un errore a metà lascia intatto il salvataggio che c'era.
+	 * Scrive prima su un file temporaneo e lo sostituisce al salvataggio solo se è stato scritto per intero
+	 * (vedi {@link #scriviSostituendo}): un errore a metà lascia intatto il salvataggio che c'era.
 	 */
 	@Override
 	public boolean salva(Comando id) {
@@ -94,37 +94,24 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements GestoreSal
 			BusEventi.pubblica(new InternoMessaggio("Tentativo di scrittura su file non scrivibile: " + id));
 			return false;
 		}
-		File fileTemporaneo = new File(fileSalvataggio.getPath() + ".tmp");
-		try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(fileTemporaneo), StandardCharsets.UTF_8)))) {
-			// Intestazione
-			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-            String sb = id +
-                    "|" +
-                    gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-                    " - giorno " +
-                    LineaTemporale.getGiorno() +
-                    ", ora " +
-                    LineaTemporale.getOra();
-			writer.println(sb);
+		try {
+			scriviSostituendo(fileSalvataggio, writer -> {
+				// Intestazione
+				GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+				String sb = id +
+						"|" +
+						gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+						" - giorno " +
+						LineaTemporale.getGiorno() +
+						", ora " +
+						LineaTemporale.getOra();
+				writer.println(sb);
 
-			ModelloDati.getIstanza().salva(writer);
-
-			// PrintWriter non lancia eccezioni sugli errori di scrittura: vanno chiesti
-			if (writer.checkError()) {
-				throw new IOException("Errore di scrittura del salvataggio " + id);
-			}
+				ModelloDati.getIstanza().salva(writer);
+			});
+			return true;
 		} catch (Exception e) {
 			BusEventi.pubblica(new InternoException(e));
-			fileTemporaneo.delete();
-			return false;
-		}
-		try {
-			sostituisci(fileTemporaneo, fileSalvataggio);
-			return true;
-		} catch (IOException e) {
-			BusEventi.pubblica(new InternoException(e));
-			fileTemporaneo.delete();
 			return false;
 		}
 	}

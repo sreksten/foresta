@@ -133,4 +133,15 @@ class GestoreTrofeiSuFileTest {
 		assertEquals(java.util.Collections.singletonList("nuovo"), Files.readAllLines(file, StandardCharsets.UTF_8));
 		assertFalse(Files.exists(home.resolve("trofei.tmp")));
 	}
+
+	@Test
+	void seLaSostituzioneFallisceIlFileDiPrimaTornaAlSuoPostoESenzaBak() throws IOException {
+		Path file = home.resolve("trofei");
+		Files.write(file, java.util.Collections.singletonList("vecchio"), StandardCharsets.UTF_8);
+		// Il temporaneo non esiste: la rinomina fallisce dopo che il vecchio file è stato messo da parte
+		assertThrows(IOException.class, () -> GestoreSuFile.sostituisci(home.resolve("trofei.tmp").toFile(), file.toFile()));
+
+		assertEquals(java.util.Collections.singletonList("vecchio"), Files.readAllLines(file, StandardCharsets.UTF_8));
+		assertFalse(Files.exists(home.resolve("trofei.bak")), "il vecchio file non resta da parte");
+	}
 }
