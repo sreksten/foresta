@@ -32,7 +32,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
   - Correzione: `turnoGestitoDalRound = true`, oppure `return` nei rami che non sono azioni.
   - Correzione: controllare `isIncapaceDiAgire`, oppure escludere gli incapaci dalla scelta.
-- **M5, ospiti vulnerabili.** Gli stati non scadono mai, perché tick e pulizia scorrono solo i personaggi (`LocazioneBase:1376-1392`, `Automa:776`).
   - Correzione: includere `getOspitiBersaglio()`.
   - (P) In `PersonaggioBase:606-619` un ospite colpito è trattato come avversario, e la Purificazione cura i mostri.
 - **M6, Morte (regola).**

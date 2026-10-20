@@ -355,9 +355,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.set(TipoAttributo.SALUTE, 1);
 		inPanchina = true;
 		String nome = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		BusEventi.pubblica(new NotificaTestoFrase(nome + (GruppoGiocatore.getIstanza().contiene(this)
+		BusEventi.pubblica(new NotificaTestoFrase(nome + (appartieneAlGruppoDelGiocatore()
 				? " ammette la sconfitta e si fa da parte." : " abbassa le armi e si arrende.")));
 		BusEventi.pubblica(new InternoPersonaggioArreso(this));
+	}
+
+	/**
+	 * Se sta dalla parte del giocatore: nel suo gruppo o fra i suoi ospiti (un ospite vulnerabile non è nella lista dei personaggi, ma non è
+	 * un avversario: per esempio la Purificazione che lo colpisce cura il gruppo del giocatore, non i mostri).
+	 */
+	private boolean appartieneAlGruppoDelGiocatore() {
+		GruppoGiocatore giocatore = GruppoGiocatore.getIstanza();
+		return giocatore.contiene(this) || giocatore.getOspiti().contains(this);
 	}
 
 	public void muore(String causaTrapasso) {
@@ -606,7 +615,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 
 		if (risultato.getCuraAdArea() > 0) {
-			Gruppo gruppoDifensore = GruppoGiocatore.getIstanza().contiene(this) ?
+			Gruppo gruppoDifensore = appartieneAlGruppoDelGiocatore() ?
 					GruppoGiocatore.getIstanza() : GruppoAvversario.getIstanza();
 			for (Personaggio alleato : gruppoDifensore.getPersonaggiVivi()) {
 				if (alleato != this) {
@@ -618,7 +627,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		// Le reazioni ad area investono anche i vicini nella fila del gruppo (CalcolatoreCombattimento.viciniInvestiti);
 		// il colpo che arriva ai vicini non ne porta altre (calcolaDannoAdArea)
 		if (!risultato.getDanniAdArea().isEmpty()) {
-			Gruppo gruppoDifensore = GruppoGiocatore.getIstanza().contiene(this) ?
+			Gruppo gruppoDifensore = appartieneAlGruppoDelGiocatore() ?
 					GruppoGiocatore.getIstanza() : GruppoAvversario.getIstanza();
 			for (DannoRisultante.DannoAdArea area : risultato.getDanniAdArea()) {
 				for (Personaggio vicino : CalcolatoreCombattimento.viciniInvestiti(gruppoDifensore.getPersonaggi(), this, area.getInterazione())) {
@@ -1101,7 +1110,7 @@ public abstract class PersonaggioBase implements Personaggio {
 					if (md.getNome() == null) {
 						boolean isGruppoAvversario;
 						Gruppo gruppo;
-						if (GruppoGiocatore.getIstanza().contiene(this)) {
+						if (appartieneAlGruppoDelGiocatore()) {
 							isGruppoAvversario = false;
 							gruppo = GruppoGiocatore.getIstanza();
 						} else {

@@ -774,6 +774,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// Chi è nel gruppo per un motivo che finisce con la sua morte (lo Scheletro della Mietitura) se ne va: di norma l'ha già fatto, subito dopo l'azione in cui è caduto
 		gruppo.congedaChiNonRisorge();
 		gruppo.getPersonaggiVivi().forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
+		gruppo.getOspiti().stream().filter(Personaggio::isVivo).forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
 		locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
 		gruppo.setLocazioneCorrente(locazioneCorrente);
 		locazioneCorrente.crea(gruppo, gruppoAvversario);
@@ -1229,6 +1230,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			personaggioCorrente.addStanchezza(1);
 			personaggioCorrente.addSalute(personaggioCorrente.getRigenerazioneSalute());
 			personaggioCorrente.addMagia(personaggioCorrente.getRigenerazioneMagia());
+		}
+
+		// Anche i modificatori a tempo degli ospiti vulnerabili scadono
+		for (Personaggio ospite : gruppo.getOspitiBersaglio()) {
+			ospite.riduciModificatori(UnitaDurataModificatore.LOCAZIONI);
 		}
 
 		Statistiche.incrementaTurniGiocati();

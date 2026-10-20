@@ -1487,6 +1487,12 @@ public abstract class LocazioneBase implements Locazione {
 			personaggio.riduciEffettiDiStato();
 			personaggio.riduciModificatori(UnitaDurataModificatore.TURNI);
 		}
+		// Anche gli ospiti vulnerabili, che possono essere colpiti e avere degli stati, non sono fra i personaggi del gruppo
+		for (Personaggio ospite : gruppo.getOspitiBersaglio()) {
+			ospite.applicaDanniDaEffettiDiStato();
+			ospite.riduciEffettiDiStato();
+			ospite.riduciModificatori(UnitaDurataModificatore.TURNI);
+		}
 		gruppo.congedaChiNonRisorge();
 		if (!gruppo.getCapo().isVivo()) {
 			return Stato.GIOCO_PERSO;

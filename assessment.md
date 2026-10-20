@@ -62,7 +62,7 @@ Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 
 ### Problemi, in ordine di priorità
 
-1. **Classi grandi.** `PersonaggioBase`, `Automa` e `LocazioneBase` sono stabili dal 2026-10-17, ma restano le zone dove la revisione ha trovato più difetti: il combattimento a round in `LocazioneBase` (M3, M4, M7) e gli effetti di stato in `PersonaggioBase` (M5, M9, B15).
+1. **Classi grandi.** `PersonaggioBase`, `Automa` e `LocazioneBase` sono stabili dal 2026-10-17, ma restano le zone dove la revisione ha trovato più difetti: il combattimento a round in `LocazioneBase` (M3, M4, M7) e gli effetti di stato in `PersonaggioBase` (M9, B15).
    **Giudizio:** i tagli naturali restano quelli già indicati:
    - per `Automa`, altri sotto-automi (creazione del gruppo, combattimento, fine partita);
    - per `LocazioneBase`, il combattimento a round in una classe sua;
@@ -101,7 +101,6 @@ Ogni voce è stata verificata sul codice chiamante. **C** sta per *confermato* (
 
 | Cod. | Dove | Difetto | |
 | :--- | :--- | :--- | :---: |
-| M5 | `LocazioneBase:1376-1392`, `motore/Automa:776`, `PersonaggioBase:606-619` | Gli ospiti vulnerabili ricevono stati che non scadono mai (tick e pulizia scorrono solo i personaggi). In `applicaRisultatoCombattimento` un ospite colpito è trattato come avversario: la Purificazione cura i mostri | C (P per la Purificazione) |
 | M6 | `tattiche/TatticheBase:293, 300`, `incantesimi/Morte:61` | Morte: la tattica usa 100·s/m < 25, l'incantesimo s < m/4 intero; con s=2, m=10 si ritorce sul mostro. Morte e Silenzio non registrano l'esito, quindi i tentativi falliti non fermano la ripetizione; la magia "a caso" può pescare Morte su un bersaglio sano | C |
 | M8 | `PersonaggioBase:1029-1051` | Il carico massimo non è moltiplicato per `getMoltiplicatoreCarico()`, contro javadoc e `motore_di_gioco.md` §8: Guerriero e Maga, Drago e Goblin portano lo stesso peso. Correggerlo vuol dire ritarare pesi e test | C |
 | M10 | `PersonaggioBase:944-953`, `motore/RegistroPersonaggi:99-104` | Un compagno reclutato a livello alto entra con salute e magia del livello 1 (al livello 9, 25-33% della salute massima) | C |
