@@ -78,14 +78,14 @@ public class LineaTemporale {
 	}
 
 	/**
-	 * Quante ore mancano alle otto del mattino, che sono quelle del mattino seguente se è già passata quell'ora oggi.
+	 * Quante ore mancano al mattino (vedi {@link LineaTemporaleMD#PRIMA_ORA_DEL_MATTINO}), che è quello seguente se è già passata quell'ora oggi.
 	 */
 	public static int oreFinoAlMattino() {
 		int ora = getOra();
-		if (ora >= 8) {
-			return 32 - ora; // 24 ore - ora corrente + 8 ore
+		if (ora >= LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO) {
+			return 24 + LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO - ora; // 24 ore - ora corrente + l'ora del mattino
 		} else {
-			return 8 - ora; // dopo mezzanotte: fino alle 8 dello stesso giorno
+			return LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO - ora; // dopo mezzanotte: fino al mattino dello stesso giorno
 		}
 	}
 
