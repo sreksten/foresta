@@ -296,6 +296,10 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
     @Override
     public void processaDoppioClick(int x, int y, Tasto tasto) {
+        // Come il click singolo, solo con il tasto sinistro: un doppio click destro o centrale non compra
+        if (tasto != Tasto.SINISTRO) {
+            return;
+        }
         Collection<Consumabile> disponibili = getElencoVenditore();
         Consumabile consumabile = trovaConsumabile(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y, true);
         if (consumabile != null) {

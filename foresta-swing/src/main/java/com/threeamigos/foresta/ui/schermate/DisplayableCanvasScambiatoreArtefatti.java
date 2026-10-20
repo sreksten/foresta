@@ -459,7 +459,8 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
 
     @Override
     public void processaDoppioClick(int x, int y, Tasto tasto) {
-        if (scambio == null) {
+        // Come il click singolo, solo con il tasto sinistro: un doppio click destro o centrale non compra, non vende e non spende punti
+        if (tasto != Tasto.SINISTRO || scambio == null) {
             return;
         }
         if (processaDoppioClickPersonaggio(x, y, tasto)) {

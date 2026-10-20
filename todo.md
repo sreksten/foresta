@@ -57,7 +57,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità media: interfaccia
 
-- **M22, doppio click con qualsiasi tasto.** I `processaDoppioClick*` di ScambiatoreArtefatti (riga 461), ScambiatoreConsumabili (riga 298) e Inventario (riga 367) non controllano il tasto. Un doppio click destro o centrale compra, vende o spende un punto abilità.
   - Correzione: farlo solo per i personaggi del gruppo.
 - **M24, rinomina che resta aperta.** Il `Prompt` per rinominare una tattica resta aperto quando si lascia la schermata, e l'Invio scrive su una bozza ormai scartata (`Prompt:252-264`, `DisplayableCanvasTattiche:199-203`).
   - Conviene unificare i nove metodi quasi uguali.
