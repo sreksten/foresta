@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
+import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.IlRituale;
@@ -177,6 +178,30 @@ class ScenarioRitualeTest {
         rituale.controllaInLocazione();
         assertTrue(rituale.isAttiva());
         return rituale;
+    }
+
+    @Test
+    void ilRipiegoDellaRaccoltaNonSpostaIlPostoDelRito() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(216)) {
+            IlRituale rituale = prendiLIncarico(partita, VARCO);
+            CoordinateMD rovine = rituale.getPosto();
+            assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(rovine));
+
+            // Passate le ore al ripiego, la missione ne rivendica un altro per gli ingredienti che mancano
+            LineaTemporale.aggiungiOre(OggettiDaRaccogliere.ORE_AL_RIPIEGO);
+            rituale.controllaPreLocazione();
+            CoordinateMD ripiego = rituale.getRipiego(rituale.getIngredienti());
+            assertNotNull(ripiego, "il ripiego è scattato");
+            assertNotEquals(rovine, ripiego);
+
+            // Il rito resta dov'era, anche dopo un salvataggio
+            assertEquals(rovine, rituale.getPosto());
+            partita.salva(Comando.NUMERO_2);
+            assertTrue(partita.leggi(Comando.NUMERO_2));
+            IlRituale riletto = RegistroMissioni.getTutteLeMissioni().stream().filter(IlRituale.class::isInstance)
+                    .map(IlRituale.class::cast).filter(m -> m.isAttiva()).findFirst().orElseThrow(AssertionError::new);
+            assertEquals(rovine, riletto.getPosto());
+        }
     }
 
     private static void raccogliGliIngredienti(PartitaDiTest partita, IlRituale rituale) {

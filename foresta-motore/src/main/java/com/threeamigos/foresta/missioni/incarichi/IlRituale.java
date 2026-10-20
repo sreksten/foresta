@@ -45,6 +45,8 @@ public class IlRituale extends IncaricoInCitta {
 	 */
 	public static final String INGREDIENTE = "INGREDIENTE";
 	private static final String CAPO = "CAPO";
+	// Il posto del rito, "x,y", fissato appena la missione lo trova: la raccolta può rivendicare un'altra casella (il ripiego)
+	private static final String POSTO = "POSTO";
 	private static final String LUOGO = "LUOGO";
 	private static final String RACCOLTA = "RACCOLTA";
 	private static final String RINVIO = "RINVIO";
@@ -92,7 +94,12 @@ public class IlRituale extends IncaricoInCitta {
 	 * Il posto del rito, o null finché la missione non l'ha trovato.
 	 */
 	public CoordinateMD getPosto() {
-		return RegistroMissioni.getLocazioneOccupata(this);
+		String posto = ottieniProprieta(POSTO);
+		if (posto == null) {
+			return null;
+		}
+		String[] parti = posto.split(",");
+		return new CoordinateMD(Integer.parseInt(parti[0]), Integer.parseInt(parti[1]));
 	}
 
 	private boolean nelPosto() {
@@ -184,6 +191,9 @@ public class IlRituale extends IncaricoInCitta {
 			case LUOGO:
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, rituale.getLuogo())
 						.esegui(() -> {
+							// La casella appena rivendicata è quella del rito: il ripiego della raccolta ne rivendicherà un'altra
+							CoordinateMD occupata = RegistroMissioni.getLocazioneOccupata(this);
+							aggiungiProprieta(POSTO, occupata.getX() + "," + occupata.getY());
 							Foresta.setLocazioneConosciuta(getPosto());
 							BusEventi.pubblica(new NotificaTestoParagrafo("Il posto del rito è segnato sulla mappa."));
 						})

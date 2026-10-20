@@ -47,7 +47,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 ### Gravità media: motore, missioni, trofei e testi
 
   - Incarichi: CacciaAiGoblin, LaTagliaSullaBanda, CacciatoreDiTaglie, IlPellegrino, IlRapimento, IlTorneo.
-- **M13, il rito cambia posto.** In IlRituale (righe 94-96 e 191-216) il ripiego della raccolta rivendica un'altra casella e sposta `getPosto()`.
   - Correzione: salvare la coordinata del rito in un parametro proprio.
   - Correzione: azzerare a ogni visita.
   - Scrivere il vincolo di idempotenza in `gestione_missioni.md`.
