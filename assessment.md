@@ -136,7 +136,6 @@ Nessun difetto aperto.
 - B28 Missioni con ripieghi:
   - `LOggettoSmarrito:95-97, 177`: NPE con il ripiego in città (P);
   - `IlNegozio:197-199`: IllegalStateException senza rovine né boschi nel quadrante (P);
-  - `LaLealta`: fallisce anche se il compagno caduto poi risorge (P, scelta di design);
   - le copie degli incarichi ripetibili non annunciano "NUOVA MISSIONE" (P).
 - B29 `intermezzi/IntermezzoLibroTecnico:259, 284`: i libri trovati e non ancora letti sono statici e non si salvano. (P)
 - B30 Testi: `SconfiggiLIdra:52` dice "è stato sconfitta". `offerte/Informazioni:396` ha un doppio spazio. (C)
@@ -246,11 +245,10 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 ## 8. Prossimi passi consigliati
 
-1. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: B28 (LaLealta).
-2. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
-3. **Bilanciamento:** come da [`todo.md`](todo.md).
-4. **Tagliare le classi grandi** quando si interviene su di loro (§3).
-5. **Modalità verticale**, per ultima.
+1. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
+2. **Bilanciamento:** come da [`todo.md`](todo.md).
+3. **Tagliare le classi grandi** quando si interviene su di loro (§3).
+4. **Modalità verticale**, per ultima.
 
 ## Osservazioni
 

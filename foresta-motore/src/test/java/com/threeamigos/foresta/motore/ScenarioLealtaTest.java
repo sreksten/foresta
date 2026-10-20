@@ -144,19 +144,46 @@ class ScenarioLealtaTest {
     }
 
     @Test
-    void seIlCompagnoMuoreLaLealtaFallisceEConLeiIlFavore() {
+    void seIlCompagnoLasciaIlGruppoLaLealtaFallisceEConLeiIlFavore() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(253)) {
             Guerriera bruna = new Guerriera("Bruna", 1);
             LaLealta lealta = preparaLAccampamento(partita, bruna);
             partita.comando(Comando.ACCAMPAMENTO);
             Missione favore = lealta.getMissioniAffidate(LaLealta.FAVORE).get(0);
 
-            bruna.subSalute(bruna.getSalute() + 1, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
-            assertFalse(bruna.isVivo());
+            partita.gruppo().rimuoviPersonaggio(bruna);
             lealta.controllaPostLocazione();
             assertTrue(lealta.isFallita());
             assertTrue(favore.isFallita());
             assertTrue(partita.testi().contains("Bruna non è più con il gruppo: il favore non serve più."), String.valueOf(partita.testi()));
+        }
+    }
+
+    @Test
+    void seIlCompagnoMuoreLaLealtaAspettaChePoiResusciti() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(255)) {
+            Guerriera bruna = new Guerriera("Bruna", 1);
+            LaLealta lealta = preparaLAccampamento(partita, bruna);
+            partita.comando(Comando.ACCAMPAMENTO);
+            IlFavore favore = (IlFavore) lealta.getMissioniAffidate(LaLealta.FAVORE).get(0);
+            favore.controllaInLocazione();
+            partita.gruppo().setCoordinate(favore.getPosto());
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
+            favore.controllaPostLocazione();
+            assertTrue(favore.isCompleta());
+
+            bruna.subSalute(bruna.getSalute() + 1, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
+            assertFalse(bruna.isVivo());
+            lealta.controllaPostLocazione();
+            assertFalse(lealta.isFallita(), "il compagno è ancora nel gruppo");
+            assertFalse(lealta.isCompleta(), "non si ringrazia da morti");
+            assertTrue(bruna.getModelloDati().getModificatori().stream().noneMatch(m -> LealtaRichiesta.NOTA.equals(m.getNote())));
+
+            bruna.resuscita();
+            lealta.controllaPostLocazione();
+            assertTrue(lealta.isCompleta());
+            assertTrue(bruna.getModelloDati().getModificatori().stream().anyMatch(m -> LealtaRichiesta.NOTA.equals(m.getNote())));
         }
     }
 

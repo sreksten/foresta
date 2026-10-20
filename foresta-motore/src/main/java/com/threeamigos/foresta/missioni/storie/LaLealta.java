@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
  * dell'accampamento, un compagno che non è il capo del gruppo confida qualcosa e chiede un favore, che è una missione
  * secondaria che la lealtà affida (vedi {@link IlFavore} e {@link MissioneAPassi#affida}). Fatto il favore, alla fine
  * della locazione il compagno ringrazia e riceve un modificatore permanente, con la nota {@link LealtaRichiesta#NOTA}:
- * chi ce l'ha non chiede più niente. Si ripete, con un altro compagno. Se il compagno muore o lascia il gruppo, la
- * lealtà fallisce, e con lei il favore.
+ * chi ce l'ha non chiede più niente. Si ripete, con un altro compagno. Se il compagno lascia il gruppo, la lealtà
+ * fallisce, e con lei il favore; se muore, aspetta che resusciti.
  * <ol>
  * <li>INCONTRO, all'accampamento, se c'è un compagno che non ha ancora chiesto niente: l'intermezzo della confidenza;</li>
  * <li>FAVORE, subito: la missione si attiva e affida il favore;</li>
@@ -152,8 +152,13 @@ public class LaLealta extends MissioneAPassi {
 		super.fallisciMissione();
 	}
 
+	/**
+	 * Il compagno è perso solo se ha lasciato il gruppo: se è morto ma è ancora nel gruppo si può resuscitarlo, e la
+	 * lealtà aspetta (il ringraziamento non scatta finché è morto).
+	 */
 	private boolean isCompagnoPerso() {
-		return !getCompagno().isPresent();
+		String uuid = ottieniProprieta(COMPAGNO);
+		return GruppoGiocatore.getIstanza().getPersonaggi().stream().noneMatch(p -> p.getModelloDati().getUuid().equals(uuid));
 	}
 
 	private String testoSeIlCompagnoEPerso() {
@@ -199,7 +204,7 @@ public class LaLealta extends MissioneAPassi {
 						.falliscoSe(this::isCompagnoPerso, this::testoSeIlCompagnoEPerso)
 						.poi(() -> sonoRiusciteLeAffidate(FAVORE) ? RINGRAZIAMENTO : FALLIMENTO);
 			case RINGRAZIAMENTO:
-				return Passo.quando(MomentoControllo.POST_LOCAZIONE, () -> true)
+				return Passo.quando(MomentoControllo.POST_LOCAZIONE, () -> getCompagno().isPresent())
 						.falliscoSe(this::isCompagnoPerso, this::testoSeIlCompagnoEPerso)
 						.esegui(this::premia)
 						.conIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA, this::getPagineDelRingraziamento)

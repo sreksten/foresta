@@ -72,7 +72,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 - B28 (P). Missioni:
   - `LOggettoSmarrito`: NPE con il ripiego in città;
   - `IlNegozio.trovaLeRovine`: eccezione senza un ripiego sulla mappa intera;
-  - `LaLealta`: fallisce anche se il compagno poi risorge (regola);
   - le copie degli incarichi ripetibili non annunciano "NUOVA MISSIONE";
   - `MissioneBase.completaMissione` non ha una guardia contro la doppia chiamata.
 - B29 (P). `IntermezzoLibroTecnico.daLeggere`: è statico e non si salva.
