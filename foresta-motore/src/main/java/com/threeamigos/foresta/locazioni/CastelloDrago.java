@@ -31,9 +31,10 @@ public class CastelloDrago extends LocazioneUnica {
 
 	@Override
 	public void azzeraLocazione(GruppoGiocatore g) {
+		// La base libera la locazione dagli avversari rimasti, la segna visitata se completa e toglie la furia al gruppo
+		super.azzeraLocazione(g);
 		if (isCompleta()) {
 			LineaTemporale.setDragoSconfitto(true);
-			g.setLocazioneCorrenteVisitata();
 			Foresta.distruggiLocazioneUnica(getTipoLocazione(), TipoLocazione.ROVINE);
 		}
 	}

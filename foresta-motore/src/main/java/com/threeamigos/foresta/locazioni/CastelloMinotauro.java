@@ -33,8 +33,9 @@ public class CastelloMinotauro extends LocazioneUnica {
 	
 	@Override
 	public void azzeraLocazione(GruppoGiocatore g) {
+		// La base libera la locazione dagli avversari rimasti, la segna visitata se completa e toglie la furia al gruppo
+		super.azzeraLocazione(g);
 		if (isCompleta()) {
-			g.setLocazioneCorrenteVisitata();
 			Foresta.distruggiLocazioneUnica(getTipoLocazione(), TipoLocazione.ROVINE);
 		}
 	}
