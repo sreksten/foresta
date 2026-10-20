@@ -6,7 +6,6 @@ import com.threeamigos.foresta.tipi.TipoOfferta;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
 
-import java.util.function.Function;
 
 /**
  * Il minotauro: creatura umanoide e ibrida, corrompibile ma non amichevole. Con la corruzione offre un aiuto a pagamento o la
@@ -34,16 +33,8 @@ public class Minotauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
+	protected void impostaValoriDiPartenza() {
 		setCorrompibile(true);
-
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_FORZA)));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_DESTREZZA)));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_COSTITUZIONE)));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_INTELLIGENZA)));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_SAGGEZZA)));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_CARISMA)));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.MINOTAURO_MAX_NUMERO);
 	}

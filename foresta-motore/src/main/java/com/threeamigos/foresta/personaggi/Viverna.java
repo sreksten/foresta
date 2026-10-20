@@ -8,7 +8,6 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * La viverna: bestia draconica e volante. Nel suo repertorio c'è il Veleno; è immune agli incantesimi di Fuoco.
@@ -33,14 +32,7 @@ public class Viverna extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.VIVERNA_MAX_FORZA)));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.VIVERNA_MAX_DESTREZZA)));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.VIVERNA_MAX_COSTITUZIONE)));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.VIVERNA_MAX_INTELLIGENZA)));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.VIVERNA_MAX_SAGGEZZA)));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.VIVERNA_MAX_CARISMA)));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.VIVERNA_MAX_FORTUNA)));
+	protected void impostaValoriDiPartenza() {
 
 		setQuantitaMassima(Costanti.VIVERNA_MAX_NUMERO);
 	}

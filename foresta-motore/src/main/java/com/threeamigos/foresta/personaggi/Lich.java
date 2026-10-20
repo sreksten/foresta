@@ -6,7 +6,6 @@ import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
 
-import java.util.function.Function;
 
 /**
  * Il lich: non morto, boss del suo castello. Parte con salute e magia piene; oltre a ciò che vale per tutti i non morti è
@@ -32,14 +31,7 @@ public class Lich extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.LICH_MAX_FORZA)));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.LICH_MAX_DESTREZZA)));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.LICH_MAX_COSTITUZIONE)));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.LICH_MAX_INTELLIGENZA)));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.LICH_MAX_SAGGEZZA)));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.LICH_MAX_CARISMA)));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.LICH_MAX_FORTUNA)));
+	protected void impostaValoriDiPartenza() {
 
 		setQuantitaMassima(Costanti.LICH_MAX_NUMERO);
 	}

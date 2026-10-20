@@ -6,7 +6,6 @@ import com.threeamigos.foresta.tipi.TipoOfferta;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
 
-import java.util.function.Function;
 
 /**
  * L'eremita: umanoide, corrompibile e amichevole. Con l'amicizia offre aiuto, incantesimi, informazioni, mappe e un pasto;
@@ -32,17 +31,9 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
+	protected void impostaValoriDiPartenza() {
 		setCorrompibile(true);
 		setAmichevole(true);
-
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.EREMITA_MAX_FORZA)));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.EREMITA_MAX_DESTREZZA)));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.EREMITA_MAX_COSTITUZIONE)));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.EREMITA_MAX_INTELLIGENZA)));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.EREMITA_MAX_SAGGEZZA)));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.EREMITA_MAX_CARISMA)));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.EREMITA_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.EREMITA_MAX_NUMERO);
 	}

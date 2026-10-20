@@ -169,7 +169,7 @@ cambia anche i lanciatori di incantesimi.
 L'**astuzia** (`Astuzia.di`) parte dal **massimo di classe** ed è ridotta da una **rampa sul livello** (quello del personaggio, che nei mostri è del mondo):
 `astuzia = massimo × min(1, ASTUZIA_PARTENZA + ASTUZIA_PER_LIVELLO × (livello − 1))`, con `Costanti.ASTUZIA_PARTENZA` = 0,4 e `ASTUZIA_PER_LIVELLO` = 0,075: il 40% del massimo al livello 1, pieno al livello 9. Un'Ombra Nera
 è così tonta all'inizio e diventa più ostica col salire del mondo, e i boss al livello 1 sono un po' meno furbi (Strega e Lich al terzo livello). Il massimo di classe non è un tetto dell'INTELLIGENZA vera: è un valore base che la
-formula del livello fa crescere (`getAttributoAdeguatoALivello`) e che la distribuzione casuale dei punti sposta, quindi l'attuale può essere molto sotto (Mago: 55 contro 18 a livello 1) o sopra (Goblin: 4 contro 6–11): per questo
+distribuzione dei punti di `LanciatoreDeiDadi` (un budget che cresce col livello, ripartito in parte a caso) sostituisce, quindi l'attuale può essere molto sotto (Mago: 55 contro 18 a livello 1) o sopra (Goblin: 4 contro 6–11): per questo
 non si parte dall'INTELLIGENZA attuale, che fra i livelli 1 e 9 cresce troppo poco perché l'astuzia si muova.
 
 **Il campo da gioco è il livello 1–9**: difficilmente si arriva al 10. Livello di astuzia (1–4) ai livelli 1 / 3 / 5 / 7 / 9:

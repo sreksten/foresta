@@ -3,7 +3,6 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.*;
 
-import java.util.function.Function;
 
 /**
  * Il gargoyle: costrutto volante. È immune a tutti gli incantesimi e agli stati sanguinamento, infezione, avvelenamento e
@@ -29,14 +28,7 @@ public class Gargoyle extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_FORZA)));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_DESTREZZA)));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_COSTITUZIONE)));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_INTELLIGENZA)));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_SAGGEZZA)));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_CARISMA)));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_FORTUNA)));
+	protected void impostaValoriDiPartenza() {
 
 		setQuantitaMassima(Costanti.GARGOYLE_MAX_NUMERO);
 	}

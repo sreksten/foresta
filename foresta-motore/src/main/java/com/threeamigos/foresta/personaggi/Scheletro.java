@@ -6,7 +6,6 @@ import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
 
-import java.util.function.Function;
 
 /**
  * Lo scheletro: non morto. Oltre a ciò che vale per tutti i non morti è immune ad avvelenamento e spavento.
@@ -31,14 +30,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SCHELETRO_MAX_FORZA)));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SCHELETRO_MAX_DESTREZZA)));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.SCHELETRO_MAX_COSTITUZIONE)));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SCHELETRO_MAX_INTELLIGENZA)));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SCHELETRO_MAX_SAGGEZZA)));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.SCHELETRO_MAX_CARISMA)));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.SCHELETRO_MAX_FORTUNA)));
+	protected void impostaValoriDiPartenza() {
 
 		setQuantitaMassima(Costanti.SCHELETRO_MAX_NUMERO);
 	}

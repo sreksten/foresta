@@ -8,7 +8,6 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * L'arpia: creatura umanoide, ibrida e volante. Nel suo repertorio c'è l'incantesimo dell'Aria, a cui è immune.
@@ -33,14 +32,7 @@ public class Arpia extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_FORZA)));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_DESTREZZA)));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_COSTITUZIONE)));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_INTELLIGENZA)));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_SAGGEZZA)));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_CARISMA)));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_FORTUNA)));
+	protected void impostaValoriDiPartenza() {
 
 		setQuantitaMassima(Costanti.ARPIA_MAX_NUMERO);
 	}

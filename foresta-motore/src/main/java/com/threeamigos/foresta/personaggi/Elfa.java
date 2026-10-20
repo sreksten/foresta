@@ -5,7 +5,6 @@ import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
 
-import java.util.function.Function;
 
 /**
  * L'elfa: l'Elfo al femminile, con lo stesso ruolo e le stesse capacità (vedi {@link Elfo}).
@@ -34,17 +33,9 @@ public class Elfa extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
+	protected void impostaValoriDiPartenza() {
 		setCorrompibile(true);
 		setAmichevole(true);
-
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFA_MAX_FORZA)));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFA_MAX_DESTREZZA)));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFA_MAX_COSTITUZIONE)));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFA_MAX_INTELLIGENZA)));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFA_MAX_SAGGEZZA)));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFA_MAX_CARISMA)));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFA_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.ELFA_MAX_NUMERO);
 	}

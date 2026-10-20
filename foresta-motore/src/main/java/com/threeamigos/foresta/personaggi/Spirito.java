@@ -5,7 +5,6 @@ import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
 
-import java.util.function.Function;
 
 /**
  * Lo spirito: non morto volante, ma amichevole, con le capacità comuni descritte in {@link NonMortoVolante}.
@@ -30,16 +29,8 @@ public class Spirito extends NonMortoVolante {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
+	protected void impostaValoriDiPartenza() {
 		setAmichevole(true);
-
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_FORZA)));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_DESTREZZA)));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_COSTITUZIONE)));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_INTELLIGENZA)));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_SAGGEZZA)));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_CARISMA)));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.SPIRITO_MAX_NUMERO);
 	}

@@ -5,7 +5,6 @@ import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
 
-import java.util.function.Function;
 
 /**
  * L'elfo giocante, al maschile: umanoide, corrompibile e amichevole. Come il Mago ha il dardo arcano come incantesimo
@@ -35,17 +34,9 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
+	protected void impostaValoriDiPartenza() {
 		setCorrompibile(true);
 		setAmichevole(true);
-
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFO_MAX_FORZA)));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFO_MAX_DESTREZZA)));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFO_MAX_COSTITUZIONE)));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFO_MAX_INTELLIGENZA)));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFO_MAX_SAGGEZZA)));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFO_MAX_CARISMA)));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFO_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.ELFO_MAX_NUMERO);
 	}

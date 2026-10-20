@@ -8,7 +8,6 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * La chimera: bestia ibrida. Nel suo repertorio ci sono il Fuoco e il Veleno.
@@ -33,14 +32,7 @@ public class Chimera extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERA_MAX_FORZA)));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERA_MAX_DESTREZZA)));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERA_MAX_COSTITUZIONE)));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERA_MAX_INTELLIGENZA)));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERA_MAX_SAGGEZZA)));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERA_MAX_CARISMA)));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERA_MAX_FORTUNA)));
+	protected void impostaValoriDiPartenza() {
 
 		setQuantitaMassima(Costanti.CHIMERA_MAX_NUMERO);
 	}

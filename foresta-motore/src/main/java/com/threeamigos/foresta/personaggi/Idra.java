@@ -3,7 +3,6 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.*;
 
-import java.util.function.Function;
 
 /**
  * L'idra: bestia gigantesca, boss del suo castello. Parte con salute e magia piene; è immune agli incantesimi di Terra, Acqua e
@@ -30,14 +29,7 @@ public class Idra extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_FORZA)));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_DESTREZZA)));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_COSTITUZIONE)));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_INTELLIGENZA)));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_SAGGEZZA)));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_CARISMA)));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_FORTUNA)));
+	protected void impostaValoriDiPartenza() {
 
 		setQuantitaMassima(Costanti.IDRA_MAX_NUMERO);
 	}

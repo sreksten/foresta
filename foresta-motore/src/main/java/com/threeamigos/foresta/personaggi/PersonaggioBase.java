@@ -111,8 +111,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		// Questo imposta salute, magia e stanchezza
 		impostaValoriDiPartenzaGenerali(funzionePerValoriIniziali, livello);
 
-		// Queste impostano il resto - LanciatoreDeiDadi sovrascrive
-		impostaValoriDiPartenza(funzionePerValoriIniziali);
+		// Questo imposta il resto (quantità massima, corrompibile, amichevole)
+		impostaValoriDiPartenza();
 		// Gli attributi primari vengono dal budget della classe (LanciatoreDeiDadi), boss compresi
 		LanciatoreDeiDadi.tiraDadiPer(classe, getLivello(), md);
 
@@ -883,27 +883,10 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	/**
-	 * Chiamato alla creazione: la classe concreta imposta i suoi attributi primari, la quantità massima per locazione e i suoi
-	 * indicatori (corrompibile, amichevole).
-	 *
-	 * @param funzione dato il valore massimo di un attributo, dà quello di partenza: lo stesso valore per i boss, uno scelto a
-	 * caso fra il 75% e il 100% per gli altri
+	 * Chiamato alla creazione: la classe concreta imposta la quantità massima per locazione e i suoi indicatori (corrompibile,
+	 * amichevole). Gli attributi primari non si impostano qui: li distribuisce LanciatoreDeiDadi, dal budget della classe.
 	 */
-	protected abstract void impostaValoriDiPartenza(Function<Integer, Integer> funzione);
-
-	/**
-	 * Il valore di un attributo di base per il livello del personaggio: cresce con la radice del livello, secondo la formula
-	 * {@code base + base/2 · (√(livello + 3) − 2)}.
-	 */
-	protected int getAttributoAdeguatoALivello(double valoreBase) {
-		/*
-		 * Applichiamo il metodo Curva con radice e spostamento.
-		 * valore = valoreBase + moltiplicatore * (radice(livello + 3) - 2)
-		 */
-		double moltiplicatore = valoreBase / 2.0d;
-
-		return (int)(valoreBase + moltiplicatore * (Math.sqrt(getLivello() + 3) - 2));
-	}
+	protected abstract void impostaValoriDiPartenza();
 
 	/**
 	 * Funzione che limita il valore di un attributo al suo massimo (valore base più modifica da artefatti). Non restituisce mai meno di 0

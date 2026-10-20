@@ -122,7 +122,6 @@ Nessun difetto aperto.
 
   Oggi nessuna grammatica usa queste forme. (C/P, latente)
 - B35a Codice morto in `PersonaggioBase`: `calcolaStanchezza`, `subCarisma`, `add<Primario>`, `getQuantitaEffettoDiStato` e `puoPrendere(Artefatto)`. (C)
-- B35c I lanci di `Dado` sprecati in `impostaValoriDiPartenza`. (C)
 - B35d I passi di `MissioneAPassi` usati solo dai test. (C)
 - B35e Le produzioni morte di `fiabe.txt` e `locande.txt`, fra cui 12 `NOTIZIE_CITTA` che non escono mai. (C)
 

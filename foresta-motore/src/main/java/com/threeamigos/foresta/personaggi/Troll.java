@@ -6,7 +6,6 @@ import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
-import java.util.function.Function;
 
 /**
  * Il troll: creatura umanoide e gigantesca, corrompibile ma non amichevole. È immune agli incantesimi di Terra.
@@ -31,16 +30,8 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
+	protected void impostaValoriDiPartenza() {
 		setCorrompibile(true);
-
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_FORZA)));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_DESTREZZA)));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_COSTITUZIONE)));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_INTELLIGENZA)));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_SAGGEZZA)));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_CARISMA)));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.TROLL_MAX_NUMERO);
 	}

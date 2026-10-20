@@ -5,7 +5,6 @@ import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
-import java.util.function.Function;
 
 /**
  * Chi nelle scene non combatte: il locandiere, l'armaiolo, l'alchimista, il venditore di pergamene, l'incantatore, la
@@ -33,16 +32,9 @@ public abstract class PersonaggioNonCombattente extends PersonaggioBase implemen
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
+	protected void impostaValoriDiPartenza() {
 		setCorrompibile(false);
 		setAmichevole(false);
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(getMaxStatistica(TipoAttributo.FORZA))));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(getMaxStatistica(TipoAttributo.DESTREZZA))));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(getMaxStatistica(TipoAttributo.COSTITUZIONE))));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(getMaxStatistica(TipoAttributo.INTELLIGENZA))));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(getMaxStatistica(TipoAttributo.SAGGEZZA))));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(getMaxStatistica(TipoAttributo.CARISMA))));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(getMaxStatistica(TipoAttributo.FORTUNA))));
 		setQuantitaMassima(Costanti.NON_COMBATTENTE_MAX_NUMERO);
 	}
 

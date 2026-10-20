@@ -47,6 +47,14 @@ class ScenarioNegoziNellaForestaTest {
         return Foresta.getCoordinateLocazioneUnica(citta);
     }
 
+    /**
+     * Da che parte della città (verso il basso della mappa, +1, o verso l'alto, -1) c'è posto per la bottega e per un passo prima di
+     * arrivarci: la città, sorteggiata, può stare vicino a un bordo.
+     */
+    private static int latoLibero(CoordinateMD citta) {
+        return citta.getY() + 2 < Foresta.getDimensioneY() ? 1 : -1;
+    }
+
     @Test
     void leGrammaticheSiLeggono() {
         for (int i = 0; i < 300; i++) {
@@ -166,8 +174,9 @@ class ScenarioNegoziNellaForestaTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(90)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             CoordinateMD posto = coordinateDi(TipoLocazione.CITTA_NYENA);
-            Foresta.costruisciLocazione(new CoordinateMD(posto.getX(), posto.getY() + 1), TipoLocazione.ROVINE);
-            CoordinateMD bottega = new CoordinateMD(posto.getX(), posto.getY() + 1);
+            int lato = latoLibero(posto);
+            Foresta.costruisciLocazione(new CoordinateMD(posto.getX(), posto.getY() + lato), TipoLocazione.ROVINE);
+            CoordinateMD bottega = new CoordinateMD(posto.getX(), posto.getY() + lato);
             Object[][] botteghe = {
                     {TipoLocazione.ARMAIOLO, Comando.NEGOZIO_ARMAIOLO, RichiestaAperturaInventarioCommerciante.class},
                     {TipoLocazione.VENDITORE_DI_PERGAMENE, Comando.NEGOZIO_VENDITORE_DI_PERGAMENE, RichiestaAperturaInventarioCommerciante.class},
@@ -204,7 +213,10 @@ class ScenarioNegoziNellaForestaTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(91)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             CoordinateMD citta = partita.gruppo().getCoordinate();
-            CoordinateMD bottega = new CoordinateMD(citta.getX(), citta.getY() + 1);
+            // La bottega sta sotto la città o, se lì non c'è posto, sopra; si parte da due caselle di distanza e si fa un passo verso la città
+            int lato = latoLibero(citta);
+            Comando versoLaCitta = lato > 0 ? Comando.NORD : Comando.SUD;
+            CoordinateMD bottega = new CoordinateMD(citta.getX(), citta.getY() + lato);
             Foresta.costruisciLocazione(bottega, TipoLocazione.ARMAIOLO);
             Foresta.getLocazioneMD(bottega).setNome("la Fucina di Mastro Prova");
             Foresta.getLocazioneMD(bottega).aggiungiProprieta(Bottega.NEGOZIANTE, "Mastro Prova da Nyena");
@@ -212,9 +224,9 @@ class ScenarioNegoziNellaForestaTest {
             BusEventi.iscriviti(RichiestaAperturaInventarioCommerciante.class, aperture::add);
 
             partita.comando(Comando.ESCI_DA_CITTA);
-            partita.gruppo().setCoordinate(new CoordinateMD(citta.getX(), citta.getY() + 2));
+            partita.gruppo().setCoordinate(new CoordinateMD(citta.getX(), citta.getY() + 2 * lato));
             partita.assertStato(Stato.SCELTA_DIREZIONE);
-            partita.comando(Comando.NORD).comando(Comando.NUMERO_1);
+            partita.comando(versoLaCitta).comando(Comando.NUMERO_1);
             assertEquals(bottega, partita.gruppo().getCoordinate());
             // Il primo ingresso mostra l'intermezzo del negozio: lo si lascia andare avanti
             for (int i = 0; i < 100 && aperture.isEmpty(); i++) {

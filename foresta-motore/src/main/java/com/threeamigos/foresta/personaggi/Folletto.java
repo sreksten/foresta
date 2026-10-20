@@ -5,7 +5,6 @@ import com.threeamigos.foresta.tipi.*;
 
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * Il folletto: creatura umanoide e volante, corrompibile e amichevole. Nel suo repertorio ci sono Acqua, Gelo e Aria; con
@@ -31,17 +30,9 @@ public class Folletto extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
+	protected void impostaValoriDiPartenza() {
 		setCorrompibile(true);
 		setAmichevole(true);
-
-		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.FOLLETTO_MAX_FORZA)));
-		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.FOLLETTO_MAX_DESTREZZA)));
-		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.FOLLETTO_MAX_COSTITUZIONE)));
-		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.FOLLETTO_MAX_INTELLIGENZA)));
-		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.FOLLETTO_MAX_SAGGEZZA)));
-		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.FOLLETTO_MAX_CARISMA)));
-		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.FOLLETTO_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.FOLLETTO_MAX_NUMERO);
 	}
