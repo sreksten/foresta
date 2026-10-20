@@ -51,7 +51,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
   - Correzione: salvare la coordinata del rito in un parametro proprio.
   - Correzione: azzerare a ogni visita.
   - Scrivere il vincolo di idempotenza in `gestione_missioni.md`.
-- **M16, trofeo che perde i progressi.** `RegistroTrofei:49` azzera il progresso in sospeso a ogni preparazione di locazione: le missioni completate in PRE_LOCAZIONE (LaBenedizione) non contano per CACCIATORE_DI_TAGLIE.
   - (P) Lo stesso può succedere nell'accampamento.
 - **M17, genere delle notizie.** `LETTERA_FINALE` (`ProduttoreDiTestiCasuale:505`) si accorda sempre con il capo, anche quando il soggetto è il ladro o il bardo (`locande.txt`, righe 300, 349 e 511).
 - **M18, trofei e classifica fragili.**

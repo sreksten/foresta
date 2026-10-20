@@ -312,13 +312,26 @@ class TrofeiTest {
 	void unBossUccisoInUnoScontroInCuiSiMuoreNonConta() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.DRAGO));
-			// Il gruppo muore: la fine della locazione non arriva, e la partita successiva
-			// prepara una nuova locazione
+			// Il gruppo muore: la fine della locazione non arriva, e la partita finisce (l'automa scarta il sospeso: vedi
+			// Automa.entraInStatoGiocoPerso); quando poi se ne prepara un'altra la fine arriva, senza niente da contare
+			RegistroTrofei.scartaIlProgressoInSospeso();
 			partita.pubblica(new InternoPreparazioneLocazione());
 			partita.pubblica(new InternoFineLocazione());
 
 			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.UCCIDI_IL_DRAGO));
 			assertEquals(0, RegistroTrofei.getProgresso(TipoTrofeo.UCCIDI_IL_DRAGO));
+		}
+	}
+
+	@Test
+	void quelloCheContaPrimaDellaPreparazioneDellaLocazioneNonSiPerde() {
+		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
+			// Per esempio una missione completata a inizio locazione, prima che la locazione si prepari
+			partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.DRAGO));
+			partita.pubblica(new InternoPreparazioneLocazione());
+			partita.pubblica(new InternoFineLocazione());
+
+			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.UCCIDI_IL_DRAGO));
 		}
 	}
 

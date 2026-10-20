@@ -104,7 +104,6 @@ Nessun difetto aperto.
 | Cod. | Dove | Difetto | |
 | :--- | :--- | :--- | :---: |
 | M13 | `missioni/incarichi/IlRituale:94-96, 191-216` | Il ripiego della raccolta rivendica un'altra casella e sposta `getPosto()`: rito e guardiano finiscono nel posto del ripiego | C |
-| M16 | `trofei/RegistroTrofei:49` | Il progresso in sospeso si azzera a ogni preparazione di locazione: le missioni completate in PRE_LOCAZIONE (LaBenedizione) non contano per CACCIATORE_DI_TAGLIE | C (P per l'accampamento) |
 | M17 | `testi/ProduttoreDiTestiCasuale:505` | `LETTERA_FINALE` si accorda sempre con il capo anche quando il soggetto è il ladro o il bardo (`locande.txt` righe 300, 349, 511): "Gualtiero è stata vista" | C |
 | M18 | modellodati: `TrofeiMD:82`; motore: `trofei/RegistroTrofei:41, 104`, `salvataggi/GestoreTrofeiSuFile:64`, `GestorePunteggiSuFile:69` | Un nome di trofeo sconosciuto ferma la lettura, `RegistroTrofei` ignora il fallimento e alla prima locazione riscrive il file: trofei persi per sempre. Trofei e classifica si scrivono sul posto, senza file temporaneo e senza `checkError` | C |
 | M19 | contratti: `eventi/BusEventi:57-79` | Gli errori degli iscritti finiscono solo nel log (unico iscritto a `InternoException` è lo sniffer): una transizione a metà lascia il gioco bloccato senza messaggio. Un `Error` invece interrompe la consegna agli altri iscritti | C (P le conseguenze) |
@@ -280,7 +279,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 ## 8. Prossimi passi consigliati
 
-1. **Correggere i medi certi e a basso rischio:** M16, M17, M18 e tutta la UI (M22-M27).
+1. **Correggere i medi certi e a basso rischio:** M17, M18 e tutta la UI (M22-M27).
 2. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M11 (fuga), B28 (LaLealta).
 3. **Un vero gestore di `InternoException`** (M19).
 4. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).

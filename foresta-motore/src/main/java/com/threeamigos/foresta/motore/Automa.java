@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.trofei.RegistroTrofei;
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -818,7 +819,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	/**
 	 * Quello che i trofei contano all'arrivo, a locazione pronta: la prima visita alla casella e gli eremiti che il gruppo ha
-	 * davanti. Dopo InternoPreparazioneLocazione, che scarta il progresso in sospeso.
+	 * davanti.
 	 */
 	private void pubblicaIncontri() {
 		LocazioneMD modelloDati = locazioneCorrente.getModelloDati();
@@ -1674,6 +1675,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito entraInStatoGiocoPerso() {
+		// Il progresso dei trofei dell'ultima locazione, che non è finita, non conta
+		RegistroTrofei.scartaIlProgressoInSospeso();
 		gestoreSalvataggi.elimina(Comando.SALVATAGGIO_AUTOMATICO);
 		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));

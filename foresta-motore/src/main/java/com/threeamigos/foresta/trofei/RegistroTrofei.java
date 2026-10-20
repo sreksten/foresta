@@ -2,7 +2,7 @@ package com.threeamigos.foresta.trofei;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
-import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
+import com.threeamigos.foresta.eventi.interni.InternoCaricamentoCompletato;
 import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
 import com.threeamigos.foresta.interfacce.GestoreTrofei;
 import com.threeamigos.foresta.modellodati.TrofeiMD;
@@ -19,8 +19,10 @@ import java.util.Map;
  * <p>
  * Quanto si guadagna in una locazione resta in sospeso e conta solo se il gruppo ne esce
  * vivo: alla fine della locazione diventa progresso, si controllano i trofei e si salva.
- * Se il gruppo muore la fine della locazione non arriva, e il sospeso si scarta quando
- * se ne prepara una nuova.
+ * Se il gruppo muore la fine della locazione non arriva, e il sospeso si scarta
+ * ({@link #scartaIlProgressoInSospeso}) quando la partita finisce, ne comincia una nuova o se ne carica
+ * una. Non quando si prepara una locazione: le missioni completate prima (a inizio locazione, o
+ * all'accampamento) hanno già contato per i trofei, e il loro progresso deve restare.
  */
 public class RegistroTrofei {
 
@@ -46,11 +48,19 @@ public class RegistroTrofei {
 	 * che lo fanno avanzare.
 	 */
 	public static void registrati() {
-		BusEventi.iscriviti(InternoPreparazioneLocazione.class, evento -> progressiInSospeso.clear());
+		BusEventi.iscriviti(InternoCaricamentoCompletato.class, evento -> scartaIlProgressoInSospeso());
 		BusEventi.iscriviti(InternoFineLocazione.class, evento -> fineLocazione());
 		for (ClasseTrofeo classeTrofeo : ClasseTrofeo.values()) {
 			classeTrofeo.getIstanza().registrati();
 		}
+	}
+
+	/**
+	 * Dimentica quanto si è guadagnato dall'ultima fine di una locazione: serve quando quella partita non prosegue
+	 * (il gruppo è morto, se ne comincia o se ne carica un'altra), perché non conti per la prossima.
+	 */
+	public static void scartaIlProgressoInSospeso() {
+		progressiInSospeso.clear();
 	}
 
 	public static boolean isVinto(TipoTrofeo trofeo) {

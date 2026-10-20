@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.trofei.RegistroTrofei;
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
 import com.threeamigos.foresta.locazioni.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
@@ -155,6 +156,8 @@ public class Foresta {
 		RegistroArtefatti.reimposta();
 		Statistiche.reimposta();
 		IntermezzoLibroTecnico.reimposta();
+		// Quello che la partita precedente aveva guadagnato per i trofei e non aveva ancora consolidato non vale per questa
+		RegistroTrofei.scartaIlProgressoInSospeso();
 		// Gli intermezzi già visti e le notizie sono di una partita: la nuova ricomincia da capo (l'intro, le prime visite)
 		ModelloDati.getIstanza().getIntermezziMD().reimposta();
 		ModelloDati.getIstanza().getNotizieMD().reimposta();
