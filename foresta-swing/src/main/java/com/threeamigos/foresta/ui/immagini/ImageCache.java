@@ -300,7 +300,8 @@ public class ImageCache {
 		spriteMoneta = BufferedImageBuilder.buildBufferedImage("icone/Moneta.gif");
 		spritePietraPreziosa = BufferedImageBuilder.buildBufferedImage("icone/PietraPreziosa.gif");
 		spriteTempo = BufferedImageBuilder.buildBufferedImage("icone/Tempo.gif");
-		spriteAumentoLivello = BufferedImageBuilder.buildBufferedImage("icone/AumentoLivello.gif");
+		// Lo stesso disegno della pozione: un solo caricamento, due nomi per due usi (la pozione e il livello guadagnato)
+		spriteAumentoLivello = spritePozioneAumentoLivello;
 		spriteGruppo = BufferedImageBuilder.buildBufferedImage("icone/Gruppo.gif");
 
 		missioneBirra = BufferedImageBuilder.buildBufferedImage("icone/Missione-birra-grande.gif", zoom);

@@ -130,7 +130,6 @@ Nessun difetto aperto.
 
 - B41b `ImageCache.imageMap`, `set`/`get(String)` e lo shutdown hook inutile. (C)
 - B41c `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif` mai usati. (C)
-- B41d Il doppio caricamento di `spriteAumentoLivello`. (C)
 - B41e `variaLivello` e il parametro `locazione` di `xOggetto` in `RiquadroLocazione` mai usati. (C)
 - B41f `ComandiPossibili.add`/`set` usati solo dai test. (C)
 
