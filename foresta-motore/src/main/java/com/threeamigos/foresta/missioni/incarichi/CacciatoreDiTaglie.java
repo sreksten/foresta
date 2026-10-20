@@ -116,7 +116,7 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 				.parlaIlMandante("Cercate lavoro? Leggete qui: ricercato, vivo o morto, " + getRicercato() + ".")
 				.parlaIlMandante("È un hobgoblin, il capo di una banda di goblin che assalta chiunque passi. Si nasconde fra certe rovine.")
 				.parlaIlCapo("Dove, esattamente?")
-				.parlaIlMandante("Se lo sapessi lo avrei già preso io. Portatemi la prova che è morto e avrete " + RICOMPENSA + " monete.");
+				.parlaIlMandante("Se lo sapessi lo avrei già preso io. Portatemi la prova che è morto e avrete " + getRicompensa() + " monete.");
 	}
 
 	@Override
@@ -129,12 +129,12 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 
 	@Override
 	protected String testoAccettazione() {
-		return "La taglia su " + getRicercato() + " vale " + RICOMPENSA + " monete.";
+		return "La taglia su " + getRicercato() + " vale " + getRicompensa() + " monete.";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return "La taglia di " + RICOMPENSA + " monete su " + getRicercato() + " è vostra.";
+		return "La taglia di " + getRicompensa() + " monete su " + getRicercato() + " è vostra.";
 	}
 
 	@Override

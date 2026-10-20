@@ -106,7 +106,7 @@ public class LaTagliaSullaBanda extends IncaricoInCitta {
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conCapitano()
 				.parlaIlMandante("Avete visto l'avviso? C'è una taglia su " + getCapobanda() + ", il capo degli hobgoblin.")
-				.parlaIlMandante("Lui e la sua banda si nascondono in un bosco qui vicino. " + RICOMPENSA + " monete a chi li sistema.")
+				.parlaIlMandante("Lui e la sua banda si nascondono in un bosco qui vicino. " + getRicompensa() + " monete a chi li sistema.")
 				.parlaIlCapo("Dicci dov'è il bosco.");
 	}
 
@@ -120,12 +120,12 @@ public class LaTagliaSullaBanda extends IncaricoInCitta {
 
 	@Override
 	protected String testoAccettazione() {
-		return "La taglia su " + getCapobanda() + " vale " + RICOMPENSA + " monete.";
+		return "La taglia su " + getCapobanda() + " vale " + getRicompensa() + " monete.";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return "La taglia di " + RICOMPENSA + " monete è vostra.";
+		return "La taglia di " + getRicompensa() + " monete è vostra.";
 	}
 
 	@Override

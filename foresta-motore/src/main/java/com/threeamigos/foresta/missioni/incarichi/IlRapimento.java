@@ -122,14 +122,14 @@ public class IlRapimento extends LaLiberazione {
 				.parlaIlMandante("Lo tengono in una grotta qui vicino, e il loro capo, " + getCapobanda()
 						+ ", chiede un riscatto che non posso pagare.")
 				.parlaIlCapo("Il riscatto glielo portiamo noi, a modo nostro.")
-				.parlaIlMandante("Riportatemelo vivo e avrete " + RICOMPENSA + " monete.");
+				.parlaIlMandante("Riportatemelo vivo e avrete " + getRicompensa() + " monete.");
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
 				.parlaIlMandante(getOstaggio() + "! Sei tornato!")
-				.parlaIlMandante("Non so come ringraziarvi. Ecco le " + RICOMPENSA + " monete.")
+				.parlaIlMandante("Non so come ringraziarvi. Ecco le " + getRicompensa() + " monete.")
 				.parlaIlCapo("Tenetelo d'occhio, la prossima volta.");
 	}
 
@@ -143,12 +143,12 @@ public class IlRapimento extends LaLiberazione {
 
 	@Override
 	protected String testoAccettazione() {
-		return "La moglie di " + getOstaggio() + " pagherà " + RICOMPENSA + " monete per riaverlo a casa vivo.";
+		return "La moglie di " + getOstaggio() + " pagherà " + getRicompensa() + " monete per riaverlo a casa vivo.";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return "La moglie di " + getOstaggio() + " paga le " + RICOMPENSA + " monete promesse.";
+		return "La moglie di " + getOstaggio() + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

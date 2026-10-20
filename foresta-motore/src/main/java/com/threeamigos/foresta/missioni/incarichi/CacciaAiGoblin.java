@@ -57,7 +57,7 @@ public class CacciaAiGoblin extends IncaricoInCitta {
 		return ScenaInCitta.conMandante()
 				.parlaIlMandante("Ehi, voi! Avete l'aria di gente che sa menare le mani.")
 				.parlaIlMandante("I goblin assaltano le mie carovane appena escono dalla città. Ne sconfiggete "
-						+ GOBLIN_DA_SCONFIGGERE + " e vi do " + RICOMPENSA + " monete.")
+						+ GOBLIN_DA_SCONFIGGERE + " e vi do " + getRicompensa() + " monete.")
 				.parlaIlCapo("Goblin? Affare fatto.");
 	}
 
@@ -70,12 +70,12 @@ public class CacciaAiGoblin extends IncaricoInCitta {
 
 	@Override
 	protected String testoAccettazione() {
-		return "Il mercante pagherà " + RICOMPENSA + " monete per " + GOBLIN_DA_SCONFIGGERE + " goblin sconfitti.";
+		return "Il mercante pagherà " + getRicompensa() + " monete per " + GOBLIN_DA_SCONFIGGERE + " goblin sconfitti.";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return "Il mercante paga le " + RICOMPENSA + " monete promesse.";
+		return "Il mercante paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

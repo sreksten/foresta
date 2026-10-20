@@ -157,7 +157,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 		GruppoGiocatore.getIstanza().addArtefatto(leggendario);
 		BusEventi.pubblica(new NotificaArtefattoTrovato(leggendario, Statistiche.getLivello()));
 		BusEventi.pubblica(new NotificaTestoParagrafo(testo(torneo.getFinale()) + " Il giudice di gara consegna al gruppo "
-				+ getLeggendario().getNomeBreve() + ": finisce nell'inventario del gruppo. La borsa di " + torneo.getMonete()
+				+ getLeggendario().getNomeBreve() + ": finisce nell'inventario del gruppo. La borsa di " + getRicompensa()
 				+ " monete aspetta a " + getNomeCitta() + "."));
 	}
 
@@ -236,7 +236,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 				.parlaIlMandante(testo(torneo.getRichiesta()))
 				.parlaIlMandante("Si combatte " + TestiDeiLuoghi.dentro(torneo.getLuogo()) + " qui vicino, uno contro uno e fino alla resa: "
 						+ "due turni, e in finale " + ilCampione() + ". In palio " + inPalio() + ", e una borsa di "
-						+ torneo.getMonete() + " monete.")
+						+ getRicompensa() + " monete.")
 				.parlaIlCapo(testo(torneo.getBattutaDelCapo()))
 				.parlaIlMandante(testo(torneo.getRisposta()));
 	}

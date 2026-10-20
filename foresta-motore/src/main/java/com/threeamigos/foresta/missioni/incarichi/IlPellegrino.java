@@ -121,7 +121,7 @@ public class IlPellegrino extends IncaricoInCitta {
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conMandante()
 				.parlaIlMandante("Scusate, andate verso la foresta? Mio fratello " + getPellegrino() + " vuole andare in pellegrinaggio a un tempio.")
-				.parlaIlMandante("Da solo non ci arriva vivo. Accompagnatelo, e al ritorno vi darò " + RICOMPENSA + " monete.")
+				.parlaIlMandante("Da solo non ci arriva vivo. Accompagnatelo, e al ritorno vi darò " + getRicompensa() + " monete.")
 				.parlaIlCapo("Sa almeno tenere in mano una spada?")
 				.parlaIlMandante("Sa pregare. Molto.");
 	}
@@ -130,18 +130,18 @@ public class IlPellegrino extends IncaricoInCitta {
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
 				.parlaIlMandante(getPellegrino() + " è arrivato " + Misc.conPreposizione("a", getNomeDelTempio()) + "? Che il cielo vi benedica!")
-				.parlaIlMandante("Ecco le " + RICOMPENSA + " monete.")
+				.parlaIlMandante("Ecco le " + getRicompensa() + " monete.")
 				.parlaIlCapo("Ha pregato anche per noi, speriamo.");
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return getPellegrino() + " viaggerà con il gruppo fino al tempio. Ricompensa al ritorno: " + RICOMPENSA + " monete.";
+		return getPellegrino() + " viaggerà con il gruppo fino al tempio. Ricompensa al ritorno: " + getRicompensa() + " monete.";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return "La sorella di " + getPellegrino() + " paga le " + RICOMPENSA + " monete promesse.";
+		return "La sorella di " + getPellegrino() + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override
