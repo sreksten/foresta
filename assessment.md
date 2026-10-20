@@ -71,7 +71,7 @@ Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 ## 4. Qualità del codice
 
 - **Gestione degli errori.** I `catch` generici stanno quasi tutti nei gestori su file e in `GrammarBean`, ed è una scelta difendibile.
-- **`TODO`/`FIXME`:** 18. Uno segnala un difetto vero: la "morte per codardia" da veleno (B16). Gli altri riguardano funzioni future.
+- **`TODO`/`FIXME`:** Riguardano funzioni future o rifiniture.
 - **Codice morto.** C'è un po' di codice che non si raggiunge (B35, B41):
   - quattro classi di eventi con sprite mai pubblicate, e due eventi con il `TipoEvento` sbagliato;
   - metodi di `PersonaggioBase` mai chiamati;
@@ -121,7 +121,6 @@ Nessun difetto aperto.
 
 **foresta-motore**
 
-- B16 `PersonaggioBase:1130-1135`: chi muore per veleno o sanguinamento risulta "morto per troppa codardia" (FIXME). (C)
 - B17 `PersonaggioBase:127-131`: il flag PNG dipende dal costruttore (costruttori `(int)` dei residenti), e BARDO e BARDO_DELLE_LOCANDE non sono coerenti. (C l'incoerenza)
 - B18 `PersonaggioBase:796`: la preposizione articolata con un nome proprio dà un doppio spazio ("i gusti  di Pippo"). (C)
 - B19 `PersonaggioBase:1486-1491`: `subStanchezza` notifica un valore negativo. `:1638`: la variazione temporanea del carico conta i modificatori due volte. `:1136-1146`: la notifica di morte esce prima di `setSalute(0)`. `:881-889`: `limitaEntroMassimi` può restituire un valore negativo. (C/P)

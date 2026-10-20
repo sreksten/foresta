@@ -1101,8 +1101,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, salutePrecedente, saluteCorrente));
 	}
 
-	//FIXME sono convinto che questo metodo sia un po' troppo un pout-pourri. Include sia la morte che la notifica. Andrebbe spezzato
-	//perché in caso di danni nel tempo non c'è un attaccante e la morte risulterebbe per troppa codardia. Quantomeno va rivisto.
 	public void subSalute(int quantita, Personaggio avversario, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
 		// Un morto non subisce altri danni: la sua morte non va annunciata due volte (doppio danno periodico, collasso, doppia resa)
 		if (!isVivo()) {
@@ -1167,8 +1165,8 @@ public abstract class PersonaggioBase implements Personaggio {
 				if (avversario != null) {
 					md.setCausaTrapasso("Uccis" + getLetteraFinaleAttributo() + " " + avversario.getDa() + avversario.getNomeSingolare() + ".");
 				} else {
-					// FIXME se si muore per effetti di stato?
-					md.setCausaTrapasso("Mort" + getLetteraFinaleAttributo() + " per troppa codardia.");
+					// Senza un attaccante il danno viene dagli effetti di stato (veleno, sanguinamento...)
+					md.setCausaTrapasso("Mort" + getLetteraFinaleAttributo() + " per i danni nel tempo.");
 				}
 				muore(md.getCausaTrapasso());
 			}
