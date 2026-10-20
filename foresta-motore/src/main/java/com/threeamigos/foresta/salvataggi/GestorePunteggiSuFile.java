@@ -7,10 +7,7 @@ import com.threeamigos.foresta.modellodati.LettoreCampi;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import com.threeamigos.foresta.strumenti.Punteggio;
 
@@ -48,7 +45,8 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 	 * Legge la classifica dal file, una riga per punteggio; dice se ci è riuscito.
 	 */
 	public boolean carica() {
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(nomeFile()), StandardCharsets.UTF_8))) {
+		File file = new File(nomeFile());
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
 			for (int posizione = 0; posizione < getConteggio(); posizione++) {
 				LettoreCampi campi = new LettoreCampi(reader.readLine());
 				String idPartita = campi.testoFacoltativo();
@@ -58,24 +56,29 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 			}
 		} catch (Exception e) {
 			BusEventi.pubblica(new InternoException(e));
+			// Il file si mette da parte (se c'è): la prossima scrittura non deve cancellare la classifica che c'era
+			if (file.exists()) {
+				mettiDaParteIlFileRovinato(file);
+			}
 			return false;
 		}
 		return true;
 	}
 
 	/**
-	 * Scrive la classifica nel file, una riga per punteggio; dice se ci è riuscito.
+	 * Scrive la classifica nel file, una riga per punteggio, passando da un file temporaneo; dice se ci è riuscito.
 	 */
 	public boolean salva() {
-		try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(nomeFile()), StandardCharsets.UTF_8))) {
-			for (int posizione = 0; posizione < getConteggio(); posizione++) {
-				Punteggio punteggio = getPunteggio(posizione);
-				stampaRiga(writer,
-						facoltativo(punteggio.getIdPartita()),
-						punteggio.getNome(),
-						punteggio.getPunteggio());
-			}
-			writer.flush();
+		try {
+			scriviSostituendo(new File(nomeFile()), writer -> {
+				for (int posizione = 0; posizione < getConteggio(); posizione++) {
+					Punteggio punteggio = getPunteggio(posizione);
+					stampaRiga(writer,
+							facoltativo(punteggio.getIdPartita()),
+							punteggio.getNome(),
+							punteggio.getPunteggio());
+				}
+			});
 		} catch (Exception e) {
 			BusEventi.pubblica(new InternoException(e));
 			return false;

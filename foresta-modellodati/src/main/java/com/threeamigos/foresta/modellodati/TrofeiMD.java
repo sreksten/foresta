@@ -67,7 +67,8 @@ public class TrofeiMD implements Serializzabile {
 	}
 
 	/**
-	 * Un trofeo che manca dal file non è stato vinto e non ha progressi.
+	 * Un trofeo che manca dal file non è stato vinto e non ha progressi, e una riga di un trofeo che non esiste più (una costante rinominata o
+	 * tolta) si salta: non deve impedire di leggere gli altri.
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
@@ -79,7 +80,12 @@ public class TrofeiMD implements Serializzabile {
 				continue;
 			}
 			LettoreCampi campi = new LettoreCampi(riga);
-			TipoTrofeo trofeo = campi.enumerato(TipoTrofeo.class);
+			TipoTrofeo trofeo;
+			try {
+				trofeo = campi.enumerato(TipoTrofeo.class);
+			} catch (IllegalArgumentException e) {
+				continue;
+			}
 			if (campi.booleano()) {
 				vinti.add(trofeo);
 			}

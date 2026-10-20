@@ -82,4 +82,19 @@ class GestorePunteggiTest {
         assertEquals("Stefano:10000 Johan:9000 Arsenio:8500 Alessandra:8000 Peter Porker:7000 Judah:6000 Brunilde:5200 "
                 + "Jona:5000 Jamaikan:2000 Cosimo:1000", nomi(classifica));
     }
+
+    @Test
+    void unaClassificaRovinataSiMetteDaParteEPartiDaQuellaPredefinita(@org.junit.jupiter.api.io.TempDir java.nio.file.Path cartella) throws IOException {
+        java.nio.file.Files.write(cartella.resolve("forestaHS"), java.util.Arrays.asList("p1|Stefano|10000", "p2|Johan|non un numero"),
+                java.nio.charset.StandardCharsets.UTF_8);
+
+        // La classifica si legge già nel costruttore: non riuscendoci riparte da quella predefinita, e la scrive
+        GestorePunteggiSuFile classifica = new GestorePunteggiSuFile(cartella.toFile());
+
+        assertEquals(10, classifica.getConteggio());
+        assertTrue(java.nio.file.Files.readAllLines(cartella.resolve("forestaHS.rovinato"), java.nio.charset.StandardCharsets.UTF_8)
+                .contains("p1|Stefano|10000"), "il file rovinato si conserva");
+        assertTrue(java.nio.file.Files.isRegularFile(cartella.resolve("forestaHS")), "e la classifica predefinita si scrive a parte");
+        assertTrue(new GestorePunteggiSuFile(cartella.toFile()).carica());
+    }
 }

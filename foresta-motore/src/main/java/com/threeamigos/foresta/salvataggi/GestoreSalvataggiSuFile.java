@@ -130,23 +130,6 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements GestoreSal
 		}
 	}
 
-	/**
-	 * Mette il file temporaneo al posto del salvataggio. Dove {@link File#renameTo(File)} sostituisce un file che c'è
-	 * già (macOS, Linux, Android, iOS) lo fa in un colpo solo; dove no (Windows) si toglie prima il vecchio file, e un
-	 * errore a metà lascia comunque il salvataggio nuovo nel file temporaneo.
-	 */
-	private static void sostituisci(File temporaneo, File destinazione) throws IOException {
-		if (temporaneo.renameTo(destinazione)) {
-			return;
-		}
-		if (destinazione.exists() && !destinazione.delete()) {
-			throw new IOException("Impossibile sostituire il salvataggio " + destinazione.getPath());
-		}
-		if (!temporaneo.renameTo(destinazione)) {
-			throw new IOException("Impossibile spostare " + temporaneo.getPath() + " in " + destinazione.getPath());
-		}
-	}
-
 	@Override
 	public void elimina(Comando id) {
 		File fileSalvataggio = new File(recuperaDirectory().getPath() + File.separatorChar + id.name() + POSTFISSO_FILE);

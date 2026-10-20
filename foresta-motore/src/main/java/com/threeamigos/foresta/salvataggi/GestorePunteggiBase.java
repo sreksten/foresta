@@ -21,8 +21,8 @@ abstract class GestorePunteggiBase extends GestoreSuFile implements GestorePunte
 
 	/**
 	 * Se la classifica non si riesce a leggere (file assente, ma anche rovinato o troncato) si riparte da
-	 * quella predefinita e la si salva subito, sovrascrivendo il file illeggibile: è voluto, perché da un
-	 * file rovinato non c'è niente da recuperare e la classifica non è un dato prezioso come un salvataggio.
+	 * quella predefinita e la si salva subito. Un file rovinato non si sovrascrive: chi lo legge lo mette da
+	 * parte con l'estensione {@code .rovinato}, così quello che conteneva di buono si può ancora recuperare.
 	 */
 	public GestorePunteggiBase() {
 		this(null);

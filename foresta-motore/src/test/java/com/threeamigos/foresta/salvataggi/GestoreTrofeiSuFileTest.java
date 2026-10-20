@@ -79,4 +79,58 @@ class GestoreTrofeiSuFileTest {
 		assertTrue(new GestoreTrofeiSuFile(cartella.toFile()).carica(riletti));
 		assertEquals(2, riletti.getProgresso(TipoTrofeo.SBEVAZZONE));
 	}
+
+	@Test
+	void unTrofeoChePiuNonEsisteNonImpedisceDiLeggereGliAltri() throws IOException {
+		Path cartella = home.resolve("trofei");
+		Files.createDirectories(cartella);
+		Files.write(cartella.resolve("trofei"), java.util.Arrays.asList("TROFEO_RINOMINATO|true|5", "SBEVAZZONE|true|3"), StandardCharsets.UTF_8);
+
+		TrofeiMD trofei = new TrofeiMD();
+		assertTrue(new GestoreTrofeiSuFile(cartella.toFile()).carica(trofei));
+
+		assertTrue(trofei.isVinto(TipoTrofeo.SBEVAZZONE));
+		assertEquals(3, trofei.getProgresso(TipoTrofeo.SBEVAZZONE));
+	}
+
+	@Test
+	void unFileRovinatoSiMetteDaParteENonSiSovrascrive() throws IOException {
+		Path cartella = home.resolve("trofei");
+		Files.createDirectories(cartella);
+		Files.write(cartella.resolve("trofei"), java.util.Arrays.asList("SBEVAZZONE|true|3", "RIGATTIERE|true|non un numero"), StandardCharsets.UTF_8);
+		GestoreTrofeiSuFile gestore = new GestoreTrofeiSuFile(cartella.toFile());
+
+		assertFalse(gestore.carica(new TrofeiMD()));
+
+		// Il file rovinato resta in un'altra posizione, e la scrittura che segue non lo tocca
+		assertFalse(Files.exists(cartella.resolve("trofei")));
+		assertTrue(Files.readAllLines(cartella.resolve("trofei.rovinato"), StandardCharsets.UTF_8).contains("SBEVAZZONE|true|3"));
+		assertTrue(gestore.salva(new TrofeiMD()));
+		assertTrue(Files.readAllLines(cartella.resolve("trofei.rovinato"), StandardCharsets.UTF_8).contains("SBEVAZZONE|true|3"));
+	}
+
+	@Test
+	void unaScritturaCheFallisceAMetaLasciaIlFileDiPrima() throws IOException {
+		Path file = home.resolve("trofei");
+		Files.write(file, java.util.Collections.singletonList("vecchio"), StandardCharsets.UTF_8);
+
+		assertThrows(IOException.class, () -> GestoreSuFile.scriviSostituendo(file.toFile(), writer -> {
+			writer.println("nuovo, ma incompleto");
+			throw new IOException("disco pieno");
+		}));
+
+		assertEquals(java.util.Collections.singletonList("vecchio"), Files.readAllLines(file, StandardCharsets.UTF_8));
+		assertFalse(Files.exists(home.resolve("trofei.tmp")), "il file temporaneo non resta");
+	}
+
+	@Test
+	void unaScritturaRiuscitaSostituisceIlFileESenzaTemporanei() throws IOException {
+		Path file = home.resolve("trofei");
+		Files.write(file, java.util.Collections.singletonList("vecchio"), StandardCharsets.UTF_8);
+
+		GestoreSuFile.scriviSostituendo(file.toFile(), writer -> writer.println("nuovo"));
+
+		assertEquals(java.util.Collections.singletonList("nuovo"), Files.readAllLines(file, StandardCharsets.UTF_8));
+		assertFalse(Files.exists(home.resolve("trofei.tmp")));
+	}
 }

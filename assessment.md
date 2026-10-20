@@ -71,7 +71,7 @@ Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 
 ## 4. Qualità del codice
 
-- **Gestione degli errori.** I `catch` generici stanno quasi tutti nei gestori su file e in `GrammarBean`, ed è una scelta difendibile. Però trofei e classifica si scrivono sul posto, non su un file temporaneo come i salvataggi (M18).
+- **Gestione degli errori.** I `catch` generici stanno quasi tutti nei gestori su file e in `GrammarBean`, ed è una scelta difendibile.
 - **`TODO`/`FIXME`:** 18. Due segnalano difetti veri: la fuga a danno fisso (M11) e la "morte per codardia" da veleno (B16). Gli altri riguardano funzioni future.
 - **Codice morto.** C'è un po' di codice che non si raggiunge (B35, B41):
   - quattro classi di eventi con sprite mai pubblicate, e due eventi con il `TipoEvento` sbagliato;
@@ -105,7 +105,6 @@ Nessun difetto aperto.
 | :--- | :--- | :--- | :---: |
 | M13 | `missioni/incarichi/IlRituale:94-96, 191-216` | Il ripiego della raccolta rivendica un'altra casella e sposta `getPosto()`: rito e guardiano finiscono nel posto del ripiego | C |
 | M17 | `testi/ProduttoreDiTestiCasuale:505` | `LETTERA_FINALE` si accorda sempre con il capo anche quando il soggetto è il ladro o il bardo (`locande.txt` righe 300, 349, 511): "Gualtiero è stata vista" | C |
-| M18 | modellodati: `TrofeiMD:82`; motore: `trofei/RegistroTrofei:41, 104`, `salvataggi/GestoreTrofeiSuFile:64`, `GestorePunteggiSuFile:69` | Un nome di trofeo sconosciuto ferma la lettura, `RegistroTrofei` ignora il fallimento e alla prima locazione riscrive il file: trofei persi per sempre. Trofei e classifica si scrivono sul posto, senza file temporaneo e senza `checkError` | C |
 | M19 | contratti: `eventi/BusEventi:57-79` | Gli errori degli iscritti finiscono solo nel log (unico iscritto a `InternoException` è lo sniffer): una transizione a metà lascia il gioco bloccato senza messaggio. Un `Error` invece interrompe la consegna agli altri iscritti | C (P le conseguenze) |
 | M20 | motore: `motore/StatoDelMotore:139-144`; contratti: `BusEventi:46-51` | `azzera()` lascia i vecchi gruppi nei campi `final` di `Automa`/`LocazioneBase` e il vecchio `GruppoGiocatore` iscritto al bus (e `cancellati` non può togliere una lambda). Oggi lo chiamano solo i test | P |
 | M21 | motore: `motore/Automa:324-347, 1668` | Il salvataggio automatico si cancella solo a fine partita: dopo una partita nuova o un caricamento, una ripresa su mobile può ricaricare la partita vecchia | P (solo mobile) |
@@ -271,7 +270,6 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 | Rischio | Fatto | Gravità |
 | :--- | :--- | :--- |
-| Trofei e classifica | M18: un file rovinato o una costante rinominata cancellano trofei o classifica | Media |
 | Copertura di `personaggi`, `locazioni`, `offerte`, `salvataggi` | 69%, 72%, 24%, 65% | Media: in `personaggi` e `locazioni` sta metà dei difetti medi |
 | Errori silenziosi del bus | M19 | Media |
 | Copia delle costanti `static final` | Una compilazione incrementale parziale può tenere valori vecchi | Bassa: basta `mvn clean` |
@@ -279,7 +277,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 ## 8. Prossimi passi consigliati
 
-1. **Correggere i medi certi e a basso rischio:** M17, M18 e tutta la UI (M22-M27).
+1. **Correggere i medi certi e a basso rischio:** M17 e tutta la UI (M22-M27).
 2. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M11 (fuga), B28 (LaLealta).
 3. **Un vero gestore di `InternoException`** (M19).
 4. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).

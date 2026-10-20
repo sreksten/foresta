@@ -8,10 +8,7 @@ import com.threeamigos.foresta.modellodati.TrofeiMD;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -53,18 +50,19 @@ public final class GestoreTrofeiSuFile extends GestoreSuFile implements GestoreT
 			trofeiMD.leggi(reader);
 		} catch (Exception e) {
 			BusEventi.pubblica(new InternoException(e));
+			// Il file si mette da parte: la prossima scrittura non deve cancellare i trofei che c'erano
+			mettiDaParteIlFileRovinato(file);
 			return false;
 		}
 		return true;
 	}
 
 	/**
-	 * Scrive i trofei nel file; dice se ci è riuscito.
+	 * Scrive i trofei nel file, passando da un file temporaneo; dice se ci è riuscito.
 	 */
 	public boolean salva(TrofeiMD trofeiMD) {
-		try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(nomeFile()), StandardCharsets.UTF_8))) {
-			trofeiMD.salva(writer);
-			writer.flush();
+		try {
+			scriviSostituendo(new File(nomeFile()), trofeiMD::salva);
 		} catch (Exception e) {
 			BusEventi.pubblica(new InternoException(e));
 			return false;
