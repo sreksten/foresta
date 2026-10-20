@@ -1104,6 +1104,10 @@ public abstract class PersonaggioBase implements Personaggio {
 	//FIXME sono convinto che questo metodo sia un po' troppo un pout-pourri. Include sia la morte che la notifica. Andrebbe spezzato
 	//perché in caso di danni nel tempo non c'è un attaccante e la morte risulterebbe per troppa codardia. Quantomeno va rivisto.
 	public void subSalute(int quantita, Personaggio avversario, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
+		// Un morto non subisce altri danni: la sua morte non va annunciata due volte (doppio danno periodico, collasso, doppia resa)
+		if (!isVivo()) {
+			return;
+		}
 		if (quantita <= 0) {
 			if (notificaFerite == Personaggio.NotificaFerite.SI) {
 				String sb = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA) +

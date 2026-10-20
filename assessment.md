@@ -58,7 +58,7 @@ Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 
 ### Problemi, in ordine di priorità
 
-1. **Classi grandi.** `PersonaggioBase`, `Automa` e `LocazioneBase` sono stabili dal 2026-10-17, ma restano le zone dove la revisione ha trovato più difetti: il combattimento a round in `LocazioneBase` e gli effetti di stato in `PersonaggioBase` (B15).
+1. **Classi grandi.** `PersonaggioBase`, `Automa` e `LocazioneBase` sono stabili dal 2026-10-17, ma restano le zone dove la revisione ha trovato più difetti: il combattimento a round in `LocazioneBase` e gli effetti di stato in `PersonaggioBase`.
    **Giudizio:** i tagli naturali restano quelli già indicati:
    - per `Automa`, altri sotto-automi (creazione del gruppo, combattimento, fine partita);
    - per `LocazioneBase`, il combattimento a round in una classe sua;
@@ -121,7 +121,6 @@ Nessun difetto aperto.
 
 **foresta-motore**
 
-- B15 `PersonaggioBase:1083-1137`: `subSalute` non controlla `isVivo()`, quindi la morte viene annunciata due volte (collasso entropico, doppio danno periodico, doppia resa in duello). (C)
 - B16 `PersonaggioBase:1130-1135`: chi muore per veleno o sanguinamento risulta "morto per troppa codardia" (FIXME). (C)
 - B17 `PersonaggioBase:127-131`: il flag PNG dipende dal costruttore (costruttori `(int)` dei residenti), e BARDO e BARDO_DELLE_LOCANDE non sono coerenti. (C l'incoerenza)
 - B18 `PersonaggioBase:796`: la preposizione articolata con un nome proprio dà un doppio spazio ("i gusti  di Pippo"). (C)
