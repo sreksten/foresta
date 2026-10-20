@@ -1056,8 +1056,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		double potenzaFisica = PESO_PER_RADICE_FORZA * Math.sqrt(get(md, TipoAttributo.FORZA));
 		double resistenzaFisica = PESO_PER_RADICE_COSTITUZIONE * Math.sqrt(get(md, TipoAttributo.COSTITUZIONE));
 
-		// Il potenziale di carico totale del corpo
-		double potenziale = potenzaFisica + resistenzaFisica;
+		// Il potenziale di carico totale del corpo, per il moltiplicatore di classe (un Guerriero porta più di una Maga, un Drago più di un Goblin)
+		double potenziale = (potenzaFisica + resistenzaFisica) * moltiplicatori.getMoltiplicatoreCarico();
 
         return getQuantitaModificata(md, potenziale, TipoAttributo.CARICO_MASSIMO);
 	}

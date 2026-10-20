@@ -38,7 +38,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
   - La soglia della tattica (`TatticheBase:293, 300`, 100·s/m < 25) non coincide con quella dell'incantesimo (`Morte:61`, s < m/4 con divisione intera), che quindi si ritorce sul mostro.
   - Morte e Silenzio non chiamano `registraEsitoAzione`.
   - La magia "a caso" può pescare Morte su un bersaglio sano.
-- **M8, carico senza classe (regola).** `calcolaCaricoMassimo` (`PersonaggioBase:1029-1051`) non moltiplica per `getMoltiplicatoreCarico()`, contro quanto dicono la javadoc e `motore_di_gioco.md` §8. Correggerlo vuol dire ritarare pesi e test.
   - Correzione: `rimuoviTuttiGliEffettiDiStato()` in `muore` o in `resuscita`.
   - Da decidere anche per i modificatori temporanei negativi.
 - **M10, reclutati deboli.** `impostaLivelloDopoReclutamento` (`PersonaggioBase:944-953`) alza il livello ma lascia salute e magia del livello 1.
