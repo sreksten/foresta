@@ -227,6 +227,28 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 	}
 
 	/**
+	 * La riga del blocco di un personaggio in cui è scritto un valore: 0 il nome, 1 salute, magia e livello, 2 coraggio, valore, stanchezza e
+	 * carisma (vedi disegnaStatus). Serve a mettere lo sprite di una variazione sopra il valore che cambia.
+	 */
+	static int rigaDelValore(TipoAttributo attributo) {
+		switch (attributo) {
+			case SALUTE:
+			case SALUTE_MASSIMA:
+			case MAGIA:
+			case MAGIA_MASSIMA:
+			case LIVELLO:
+				return 1;
+			case CORAGGIO:
+			case VALORE:
+			case STANCHEZZA:
+			case CARISMA:
+				return 2;
+			default:
+				throw new IllegalArgumentException("Il riquadro del gruppo non mostra " + attributo);
+		}
+	}
+
+	/**
 	 * La quota a cui è disegnato il blocco di un personaggio (o ospite), tenendo conto dello scorrimento: può essere
 	 * fuori dalla lista
 	 */
@@ -341,7 +363,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteAumentoLivello;
-		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 1;
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * rigaDelValore(TipoAttributo.LIVELLO);
 		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetLivello, y, "Livello variato"));
 	}
 
@@ -403,7 +425,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 1;
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * rigaDelValore(TipoAttributo.SALUTE);
 		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSalute, y, "Salute variata"));
 	}
 
@@ -424,7 +446,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 1;
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * rigaDelValore(TipoAttributo.SALUTE_MASSIMA);
 		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSaluteMassima, y, "Salute massima variata"));
 	}
 
@@ -445,7 +467,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteMagia;
-		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 1;
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * rigaDelValore(TipoAttributo.MAGIA);
 		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagia, y, "Magia variata"));
 	}
 
@@ -466,7 +488,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteMagia;
-		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 1;
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * rigaDelValore(TipoAttributo.MAGIA_MASSIMA);
 		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagiaMassima, y, "Magia massima variata"));
 	}
 
@@ -487,7 +509,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 2;
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * rigaDelValore(TipoAttributo.CORAGGIO);
 		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetCoraggio, y, "Coraggio variato"));
 	}
 
@@ -508,7 +530,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 1;
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * rigaDelValore(TipoAttributo.VALORE);
 		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetValore, y, "Valore variato"));
 	}
 
@@ -529,7 +551,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteAmicizia;
-		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 1;
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * rigaDelValore(TipoAttributo.CARISMA);
 		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetCarisma, y, "Carisma variato"));
 	}
 
@@ -550,7 +572,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 2;
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * rigaDelValore(TipoAttributo.STANCHEZZA);
 		DoomdarkColorModel.Color color = variazione < 0 ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
 		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, color, rightXOffsetStanchezza, y, "Stanchezza variata"));
 	}
