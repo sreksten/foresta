@@ -82,6 +82,52 @@ class CicloDiVitaTest {
 	}
 
 	@Test
+	void ripresaLaPartitaIlSalvataggioAutomaticoResta() {
+		GestoreSalvataggiInMemoria salvataggi = new GestoreSalvataggiInMemoria();
+		try (PartitaDiTest prima = PartitaDiTest.nuovaConSalvataggi(147, salvataggi)) {
+			iniziaInCitta(prima).comando(Comando.ESCI_DA_CITTA);
+			prima.inBackground();
+		}
+		try (PartitaDiTest dopo = PartitaDiTest.nuovaConSalvataggi(148, salvataggi)) {
+			assertTrue(dopo.riprendiPartitaInterrotta());
+
+			assertTrue(salvataggi.contiene(Comando.SALVATAGGIO_AUTOMATICO), "è il punto da cui ripartire se l'app si richiude prima di un altro background");
+		}
+	}
+
+	@Test
+	void unaPartitaNuovaCancellaIlSalvataggioAutomaticoDiQuellaDiPrima() {
+		GestoreSalvataggiInMemoria salvataggi = new GestoreSalvataggiInMemoria();
+		try (PartitaDiTest prima = PartitaDiTest.nuovaConSalvataggi(149, salvataggi)) {
+			iniziaInCitta(prima).comando(Comando.ESCI_DA_CITTA);
+			prima.inBackground();
+			assertTrue(salvataggi.contiene(Comando.SALVATAGGIO_AUTOMATICO));
+		}
+		try (PartitaDiTest dopo = PartitaDiTest.nuovaConSalvataggi(150, salvataggi)) {
+			iniziaInCitta(dopo);
+
+			assertFalse(salvataggi.contiene(Comando.SALVATAGGIO_AUTOMATICO), "la partita nuova non può essere sostituita da quella vecchia");
+		}
+	}
+
+	@Test
+	void caricareUnAltroSalvataggioCancellaQuelloAutomatico() {
+		GestoreSalvataggiInMemoria salvataggi = new GestoreSalvataggiInMemoria();
+		try (PartitaDiTest prima = PartitaDiTest.nuovaConSalvataggi(151, salvataggi)) {
+			iniziaInCitta(prima).comando(Comando.ESCI_DA_CITTA);
+			salvataggi.salva(Comando.NUMERO_1);
+			prima.inBackground();
+			assertTrue(salvataggi.contiene(Comando.SALVATAGGIO_AUTOMATICO));
+		}
+		try (PartitaDiTest dopo = PartitaDiTest.nuovaConSalvataggi(152, salvataggi)) {
+			dopo.comando(Comando.FLOPPY_CARICA).comando(Comando.NUMERO_1);
+
+			assertTrue(dopo.stato() == Stato.ATTESA_DIREZIONE || dopo.stato() == Stato.SCELTA_DIREZIONE, "" + dopo.stato());
+			assertFalse(salvataggi.contiene(Comando.SALVATAGGIO_AUTOMATICO), "l'automatico è di un'altra partita");
+		}
+	}
+
+	@Test
 	void senzaSalvataggioAutomaticoNonSiRiprendeNienteESiRestaAllIntro() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(145)) {
 			assertFalse(partita.riprendiPartitaInterrotta());

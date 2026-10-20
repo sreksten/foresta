@@ -17,7 +17,7 @@ public interface ControlloreDiGioco {
 	 * temporizzatore si ferma e, se la partita è in un punto sicuro (fra una locazione e l'altra, dove si può
 	 * salvare anche a mano), si scrive il salvataggio automatico, perché il sistema può chiudere l'app senza
 	 * preavviso. Altrove non si scrive niente, e resta il salvataggio automatico di un background precedente, se c'è (è lo stato
-	 * dell'ultima volta che l'app è uscita dal primo piano in un punto sicuro, non dell'ultimo punto sicuro attraversato).
+	 * dell'ultima volta che l'app è uscita dal primo piano in un punto sicuro, non dell'ultimo punto sicuro attraversato). Il salvataggio automatico si cancella a fine partita, a una partita nuova e quando si carica un altro salvataggio.
 	 */
 	void inBackground();
 

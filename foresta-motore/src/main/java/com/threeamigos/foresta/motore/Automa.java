@@ -520,6 +520,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciComandoInStatoPreGameSelezionaSalvataggioDaLeggere(Comando comando) {
 		if (comando != Comando.ANNULLA && gestoreSalvataggi.leggi(comando)) {
+			if (comando != Comando.SALVATAGGIO_AUTOMATICO) {
+				// Caricata un'altra partita, quella del salvataggio automatico non vale più. Riprendere proprio dal salvataggio automatico
+				// invece non lo cancella: resta il punto da cui ripartire se l'app viene chiusa di nuovo prima di un altro background
+				gestoreSalvataggi.elimina(Comando.SALVATAGGIO_AUTOMATICO);
+			}
 			RiletturaPartita.ricostruisci();
 			gruppo.getLocazioneCorrente().azzeraLocazione(gruppo);
 			stato = Stato.ATTESA_DIREZIONE;
@@ -536,6 +541,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciTestoInStatoPreGameAttesaNomePersonaggio(String testoDisponibile) {
 		Foresta.reimposta();
+		// Il salvataggio automatico è di una partita che non è più questa: una ripresa non deve riportarla
+		gestoreSalvataggi.elimina(Comando.SALVATAGGIO_AUTOMATICO);
 		personaggio = null;
 
 		nomePersonaggio = testoDisponibile.trim();

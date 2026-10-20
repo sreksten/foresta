@@ -104,7 +104,6 @@ Nessun difetto aperto.
 | Cod. | Dove | Difetto | |
 | :--- | :--- | :--- | :---: |
 | M19 | contratti: `eventi/BusEventi:57-79` | Gli errori degli iscritti finiscono solo nel log (unico iscritto a `InternoException` è lo sniffer): una transizione a metà lascia il gioco bloccato senza messaggio. Un `Error` invece interrompe la consegna agli altri iscritti | C (P le conseguenze) |
-| M21 | motore: `motore/Automa:324-347, 1668` | Il salvataggio automatico si cancella solo a fine partita: dopo una partita nuova o un caricamento, una ripresa su mobile può ricaricare la partita vecchia | P (solo mobile) |
 
 **Interfaccia (foresta-swing)**
 
@@ -249,7 +248,6 @@ Nessun difetto aperto.
 Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 - **Già pronto:** il motore usa solo `java.io` e `java.util`, non ha dipendenze dal toolkit grafico, ha la cartella dei file iniettabile, il ciclo di vita dell'app e l'uscita affidata alla piattaforma.
-- **Emerso dalla revisione:** prima di usare la ripresa su mobile va risolto M21.
 - **Ancora aperto:**
   - `Costanti` come dati;
   - le uscite dal processo della UI Swing (`System.exit` in `BufferedImageBuilder`, `EXIT_ON_CLOSE`, che chiude senza passare dal motore).
