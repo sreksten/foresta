@@ -94,7 +94,6 @@ Ogni voce è stata verificata sul codice chiamante. **C** sta per *confermato* (
 
 | Cod. | Dove | Difetto | Scenario | Correzione | |
 | :--- | :--- | :--- | :--- | :--- | :---: |
-| A1 | motore: `personaggi/PersonaggioBase:617-627`, `tattiche/EsecutoreTattiche:160-219`, `locazioni/LocazioneBase:1368-1392` | Gli avversari uccisi da ELETTROCUZIONE, ESPLOSIONE_DI_GAS e RIGETTO sui vicini non passano da `registraMorteAvversario`: niente esperienza, punti, `InternoAvversarioSconfitto` | Goblin BAGNATI e un Fulmine: i vicini morti non contano per Caccia ai goblin né per un boss da abbattere | A fine azione, `registraMorteAvversario` su tutti gli avversari (non solo i vivi); è già idempotente | C |
 | A2 | motore: `motore/Gruppo:438-446` | `rimuoviPersonaggio` rimette capo il primo della lista anche se chi esce non è il capo; il capo si può spostare con `spostaPersonaggio` | Si sposta il capo a destra nelle tattiche, poi scade un compagno a tempo: il capo è un altro, e la sconfitta, LaLealta e il salvataggio dipendono da lui | Riassegnare il capo solo se `p == capo` | C |
 | A3 | motore: `missioni/storie/LaBenedizione:172-178, 264-272` | Il sacerdote entra senza controllare il tetto totale di 8 | Con 8 personaggi si arriva a 9: `Comando.ofPersonaggio(8)` lancia in tutti i menu di scelta del personaggio | Fare la domanda COMPAGNO solo se `getNumeroPersonaggi() < MAX_PERSONAGGI_GRUPPO_TOTALE` (il superamento dei 5 permanenti è voluto) | C |
 | A4 | swing: `ui/testo/DoomdarkTextProducer:21, 52` | `getGlyphData` senza protezione per i caratteri che il font non ha; `FontTool.getWidth` invece li salta. Il `Prompt` blocca solo `\|` | Un nome come "Jürgen", "Peña" o "Bob_": il riquadro del gruppo lancia a ogni repaint; il nome resta nel salvataggio | Glifo di riserva (o salto) in un punto solo, coerente con la misura; in più filtrare l'input del `Prompt` | C |
@@ -303,7 +302,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 ## 8. Prossimi passi consigliati
 
-1. **Correggere i quattro difetti alti** (A1-A4), ciascuno con un test.
+1. **Correggere i difetti alti rimasti** (A2-A4), ciascuno con un test.
 2. **Correggere i medi certi e a basso rischio:** M1, M2, M3, M4, M9, M10, M12, M16, M17, M18 e tutta la UI (M22-M27).
 3. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M7 (spregio), M8 (carico), M11 (fuga), M14 (sconfitti fra visite), B28 (LaLealta).
 4. **Un vero gestore di `InternoException`** (M19).
@@ -325,7 +324,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
   - schermate, riquadri, barra, tattiche e app;
   - sprite, testo, immagini, sfx e sviluppo.
 
-  Ogni ipotesi è stata verificata leggendo i chiamanti; A2, A3, A4, M1 e M8 sono stati ricontrollati a parte. A1 lo hanno trovato in modo indipendente due parti diverse della revisione.
+  Ogni ipotesi è stata verificata leggendo i chiamanti; A2, A3, A4, M1 e M8 sono stati ricontrollati a parte.
 - **Misure.** Righe e file sono contati con `wc -l` su `src/main` e `src/test`. Test e copertura vengono da `mvn clean test` del 2026-10-19, tutti verdi.
 - **Il rischio delle notizie malformate** del 2026-10-17 è ora B33: le grammatiche attuali sono conformi, quindi non si innesca.
 
