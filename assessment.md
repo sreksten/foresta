@@ -103,7 +103,6 @@ Nessun difetto aperto.
 
 | Cod. | Dove | Difetto | |
 | :--- | :--- | :--- | :---: |
-| M2 | `motore/Foresta:148-200` | `Foresta.reimposta` non azzera `IntermezziMD` e `NotizieMD`: una nuova partita nella stessa sessione non mostra l'intro né gli intermezzi di prima visita, e il notiziario mostra le notizie vecchie | C |
 | M12 | `missioni/incarichi/{CacciaAiGoblin,LaTagliaSullaBanda,CacciatoreDiTaglie,IlPellegrino,IlRapimento,IlTorneo}` | I testi promettono la costante `RICOMPENSA` (la paga base), mentre si paga `getRicompensa()`, cioè la base per il livello del mondo ("15 monete promesse", ne arrivano 45) | C |
 | M13 | `missioni/incarichi/IlRituale:94-96, 191-216` | Il ripiego della raccolta rivendica un'altra casella e sposta `getPosto()`: rito e guardiano finiscono nel posto del ripiego | C |
 | M14 | `missioni/MissioneAPassi:720-753` | `combatti` a ondata singola somma gli sconfitti di più visite, anche dopo una fuga: la banda risulta sgominata mentre è viva | C |
@@ -284,7 +283,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 ## 8. Prossimi passi consigliati
 
-1. **Correggere i medi certi e a basso rischio:** M2, M12, M16, M17, M18 e tutta la UI (M22-M27).
+1. **Correggere i medi certi e a basso rischio:** M12, M16, M17, M18 e tutta la UI (M22-M27).
 2. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M11 (fuga), M14 (sconfitti fra visite), B28 (LaLealta).
 3. **Un vero gestore di `InternoException`** (M19).
 4. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).

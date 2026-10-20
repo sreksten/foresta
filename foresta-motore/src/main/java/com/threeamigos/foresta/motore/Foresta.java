@@ -155,6 +155,9 @@ public class Foresta {
 		RegistroArtefatti.reimposta();
 		Statistiche.reimposta();
 		IntermezzoLibroTecnico.reimposta();
+		// Gli intermezzi già visti e le notizie sono di una partita: la nuova ricomincia da capo (l'intro, le prime visite)
+		ModelloDati.getIstanza().getIntermezziMD().reimposta();
+		ModelloDati.getIstanza().getNotizieMD().reimposta();
 
 		getForestaMD().reimposta(DIMENSIONE_X, DIMENSIONE_Y);
 
