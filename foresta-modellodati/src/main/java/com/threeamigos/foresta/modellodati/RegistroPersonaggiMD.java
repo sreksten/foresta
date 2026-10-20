@@ -45,14 +45,16 @@ public class RegistroPersonaggiMD implements Serializzabile {
 	 * @return il residente con quella chiave, o null se non c'è
 	 */
 	public final ResidenteMD getResidente(String chiave) {
-		return residenti.get(chiave);
+		return residenti.get(Serializzabile.pulisciCampo(chiave));
 	}
 
 	/**
 	 * Aggiunge un residente con la sua chiave (vedi tipi.PersonaggioNoto); un residente con la stessa chiave viene sostituito.
+	 * La chiave si pulisce come ogni campo di un salvataggio (senza "|" né a capo): le chiavi dei campioni portano il loro nome, che il
+	 * residente ha già pulito, e una chiave sporca spezzerebbe la riga salvata.
 	 */
 	public final void aggiungiResidente(String chiave, ResidenteMD residente) {
-		residenti.put(chiave, residente);
+		residenti.put(Serializzabile.pulisciCampo(chiave), residente);
 	}
 
 	/**

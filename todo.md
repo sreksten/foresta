@@ -77,7 +77,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
   - `quantita` si confronta con `==` invece di `Double.compare`;
   - c'è un `import Locale` inutile.
 - B4 (P). `MappaProprieta.aggiungiProprieta`: va rifiutato il valore null, che oggi si salva come la stringa "null".
-- B5 (P). `ResidenteMD:56`: la chiave `CAMPIONE:<nome>` non passa da `pulisciCampo`.
 - B6. `GruppoMD.leggi`, `RegistroPersonaggiMD.leggi` e `RegistroArtefattiMD.leggi` aggiungono invece di sostituire: svuotare, oppure allineare la javadoc.
 - B7. `GruppoGiocatoreMD:222`: con un file troncato si aggiunge null agli ospiti; usare `LettoreCampi`.
 - B8 (P). `ForestaMD`: `offset()` non controlla i limiti, e gli array restano null prima di `reimposta`.

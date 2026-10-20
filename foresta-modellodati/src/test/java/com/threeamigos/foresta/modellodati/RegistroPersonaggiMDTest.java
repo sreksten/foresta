@@ -60,6 +60,22 @@ class RegistroPersonaggiMDTest {
     }
 
     @Test
+    void laChiaveDiUnResidenteSiPulisceEdETroveraAnchePrimaDellaPulizia() throws IOException {
+        RegistroPersonaggiMD registro = new RegistroPersonaggiMD();
+        ResidenteMD campione = new ResidenteMD("Ro|sa", null, TipoPersonaggio.GUERRIERA);
+        registro.aggiungiResidente("CAMPIONE:Ro|sa", campione);
+
+        assertSame(campione, registro.getResidente("CAMPIONE:Ro|sa"));
+        assertSame(campione, registro.getResidente("CAMPIONE:Rosa"));
+        assertEquals(Collections.singleton("CAMPIONE:Rosa"), registro.getResidenti().keySet());
+
+        // E il salvataggio si rilegge: il | nella chiave spezzerebbe la riga
+        RegistroPersonaggiMD riletto = salvaERileggi(registro, new RegistroPersonaggiMD());
+        assertEquals("Rosa", riletto.getResidente("CAMPIONE:Ro|sa").getNome());
+        assertEquals(TipoPersonaggio.GUERRIERA, riletto.getResidente("CAMPIONE:Rosa").getClasse());
+    }
+
+    @Test
     void iResidentiSiRitrovanoDallaLoroChiave() {
         RegistroPersonaggiMD registro = new RegistroPersonaggiMD();
         ResidenteMD bardo = new ResidenteMD("Lino|il Bardo", null, null);
