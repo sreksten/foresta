@@ -101,6 +101,8 @@ public class NonSparateSulPianista extends MissioneAPassi {
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> isTerzaVisitaAUnaLocanda() && cittaPiuVicina() != null && isVisitaTranquilla())
 						.esegui(() -> {
 							getBardo();
+							// Il locandiere dice dove abita il bardo: da qui la città è nota, non prima (la condizione si controlla a ogni ingresso)
+							Foresta.setLocazioneConosciuta(Foresta.getCoordinateLocazioneUnica(cittaPiuVicina()));
 							CoordinateMD locanda = gruppo.getCoordinate();
 							aggiungiProprieta(LOCANDA, locanda.getX() + "," + locanda.getY());
 						})
@@ -182,7 +184,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	/**
-	 * La città ancora in piedi più vicina al gruppo, o null se non ce n'è più nessuna.
+	 * La città ancora in piedi più vicina al gruppo, o null se non ce n'è più nessuna. Non fa conoscere la città al giocatore.
 	 */
 	private TipoLocazione cittaPiuVicina() {
 		CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
@@ -201,9 +203,6 @@ public class NonSparateSulPianista extends MissioneAPassi {
 				distanzaMinima = distanza;
 				piuVicina = tipo;
 			}
-		}
-		if (piuVicina != null) {
-			Foresta.setLocazioneConosciuta(Foresta.getCoordinateLocazioneUnica(piuVicina));
 		}
 		return piuVicina;
 	}

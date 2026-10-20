@@ -68,6 +68,8 @@ class ScenarioNonSparateSulPianistaTest {
 
             entraNellaLocanda(partita, pianista, locanda, 2);
             assertTrue(pianista.isAttiva());
+            assertTrue(Foresta.isLocazioneConosciuta(Foresta.getCoordinateLocazioneUnica(pianista.getCitta())),
+                    "il locandiere ha detto dove abita il bardo");
             assertEquals("VIAGGIO", pianista.getPassoCorrente());
             Personaggio ugolino = pianista.getScortato().orElseThrow(AssertionError::new);
             assertEquals(pianista.getBardo(), ugolino.getNome());
