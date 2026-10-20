@@ -132,7 +132,6 @@ Nessun difetto aperto.
 - B26 `salvataggi/GestoreSalvataggiSuFile:91-131`: niente `sync()` prima della rinomina. Su Windows, se la seconda rinomina fallisce, resta solo il `.tmp`. (P)
 - B27 `missioni/storie/NonSparateSulPianista:101, 187-208`: la condizione rivela la città più vicina anche quando la missione non parte. (C)
 - B29 `intermezzi/IntermezzoLibroTecnico:259, 284`: i libri trovati e non ancora letti sono statici e non si salvano. (P)
-- B30 Testi: `SconfiggiLIdra:52` dice "è stato sconfitta". `offerte/Informazioni:396` ha un doppio spazio. (C)
 - B31 `TipoMissione`: mancano le note "// Coperto da:" per LaSfidaDeiCampioni, IlCampione, IlGiroDelleSetteChiese, CronacheDiUnFegatoEroico, NessunBoccaleLasciatoIndietro e DisturbatoreDellaQuietePubblica. (C)
 - B32 `testi/GrammarBean`:
   - `[chiave]` su una chiave solo assegnata passa la validazione ma fallisce a runtime (`:1630` contro `:2386`);

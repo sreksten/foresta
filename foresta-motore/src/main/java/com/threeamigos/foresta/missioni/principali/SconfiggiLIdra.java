@@ -49,7 +49,7 @@ public class SconfiggiLIdra extends MissioneBase implements Missione {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         if (gruppo.getTipoLocazioneCorrente() == TipoLocazione.CASTELLO_IDRA && gruppo.getLocazioneCorrente().isCompleta()) {
             completaMissione();
-            BusEventi.pubblica(new NotificaTestoParagrafo("L'Idra è stato sconfitta!"));
+            BusEventi.pubblica(new NotificaTestoParagrafo("L'Idra è stata sconfitta!"));
         }
     }
 

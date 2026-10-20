@@ -102,7 +102,7 @@ public class Informazioni implements Offerta {
 	private void informazioneSuArtefatti(GruppoGiocatore gruppo, StringBuilder sb) {
 		RegistroArtefattiMD.ArtefattoESuaUbicazione informazioni = RegistroArtefatti.getArtefattoCasuale();
 		if (informazioni == null) {
-			sb.append(" tutti gli artefatti sono stati recuperati da intrepidi eroi.");
+			sb.append("tutti gli artefatti sono stati recuperati da intrepidi eroi.");
 		} else {
 			ArtefattoMD artefatto = informazioni.getArtefattoMD();
 			Foresta.setLocazioneConosciuta(informazioni.getCoordinate());
