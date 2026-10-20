@@ -40,13 +40,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità bassa: foresta-motore
 
-- B16. `PersonaggioBase:1130-1135`: chi muore per veleno o sanguinamento risulta "morto per troppa codardia" (FIXME).
-- B18. `PersonaggioBase:796`: `" di " + nome` dà un doppio spazio; deve essere `"di " + nome`.
-- B19. Piccoli difetti in `PersonaggioBase`:
-  - `subStanchezza` notifica un valore negativo;
-  - la variazione temporanea del carico conta i modificatori due volte (riga 1638);
-  - la notifica di morte esce prima di `setSalute(0)`, e `resuscita` non notifica la salute;
-  - `limitaEntroMassimi` deve restituire almeno 0.
 - B20. `LocazioneBase`:
   - SINGOLO_ATTACCO è offerto in mischia ma ignorato (righe 969-971);
   - i rami irraggiungibili delle righe 437-440 e 1528-1533 (MAPPA/INVENTARIO in combattimento, e IN_COMBATTIMENTO non ha un gestore d'ingresso).

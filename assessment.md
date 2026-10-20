@@ -115,7 +115,6 @@ Nessun difetto aperto.
 
 **foresta-motore**
 
-- B19 `PersonaggioBase:1486-1491`: `subStanchezza` notifica un valore negativo. `:1638`: la variazione temporanea del carico conta i modificatori due volte. `:1136-1146`: la notifica di morte esce prima di `setSalute(0)`. `:881-889`: `limitaEntroMassimi` può restituire un valore negativo. (C/P)
 - B20 `LocazioneBase:969-971`: SINGOLO_ATTACCO è offerto in mischia ma ignorato. `:437-440` e `:1528-1533`: rami irraggiungibili, e il secondo manderebbe l'`Automa` in IllegalStateException (IN_COMBATTIMENTO non ha un gestore d'ingresso). (C, latente)
 - B24 `motore/Automa:1482, 1517, 1531, 1566, 610`: un comando inatteso in MAPPA, INVENTARIO, TROFEI, TATTICHE o nella scelta della classe lancia un'eccezione invece di essere ignorato. (P)
 - B29 `intermezzi/IntermezzoLibroTecnico:259, 284`: i libri trovati e non ancora letti sono statici e non si salvano. (P)

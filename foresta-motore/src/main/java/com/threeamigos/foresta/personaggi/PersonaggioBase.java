@@ -390,9 +390,14 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void resuscita() {
-		md.set(TipoAttributo.SALUTE, (int)(calcolaSaluteMassima() / 10.0d));
+		int salutePrecedente = (int) md.get(TipoAttributo.SALUTE);
+		int stanchezzaPrecedente = (int) md.get(TipoAttributo.STANCHEZZA);
+		int salute = (int)(calcolaSaluteMassima() / 10.0d);
+		md.set(TipoAttributo.SALUTE, salute);
 		md.set(TipoAttributo.STANCHEZZA, 9);
 		md.setVivo(true);
+		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, salutePrecedente, salute));
+		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.STANCHEZZA, stanchezzaPrecedente, 9));
 		BusEventi.pubblica(new NotificaVariazioneStatoVitalePersonaggio(this, true));
 	}
 
@@ -901,7 +906,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	/**
-	 * Funzione che limita il valore di un attributo al suo massimo (valore base più modifica da artefatti)
+	 * Funzione che limita il valore di un attributo al suo massimo (valore base più modifica da artefatti). Non restituisce mai meno di 0
+	 * per un'aggiunta: se il valore è già sopra il massimo (per esempio è scaduto un bonus), non lo si abbassa aggiungendo.
 	 */
 	private int limitaEntroMassimi(int valoreAttuale, int valoreMassimo, int quantitaDaAggiungere) {
 		if (valoreMassimo == PersonaggioMD.SENZA_LIMITE) {
@@ -910,7 +916,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		if (valoreAttuale + quantitaDaAggiungere <= valoreMassimo) {
 			return quantitaDaAggiungere;
 		}
-		return valoreMassimo - valoreAttuale;
+		return Math.max(0, valoreMassimo - valoreAttuale);
 	}
 
 	// LIVELLO - non è un attributo con un massimo
@@ -1059,7 +1065,13 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * e sul moltiplicatore della classe, mantenendo i rendimenti decrescenti.
 	 */
 	private static double calcolaCaricoMassimo(PersonaggioMD md, Personaggio moltiplicatori) {
+		return getQuantitaModificata(md, potenzialeDiCarico(md, moltiplicatori), TipoAttributo.CARICO_MASSIMO);
+	}
 
+	/**
+	 * Il carico massimo prima dei modificatori di CARICO_MASSIMO.
+	 */
+	private static double potenzialeDiCarico(PersonaggioMD md, Personaggio moltiplicatori) {
 		if (moltiplicatori.getMoltiplicatoreCarico() == 0.0) {
 			// Fantasmi vari
 			return 0.0;
@@ -1077,9 +1089,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		double resistenzaFisica = PESO_PER_RADICE_COSTITUZIONE * Math.sqrt(get(md, TipoAttributo.COSTITUZIONE));
 
 		// Il potenziale di carico totale del corpo, per il moltiplicatore di classe (un Guerriero porta più di una Maga, un Drago più di un Goblin)
-		double potenziale = (potenzaFisica + resistenzaFisica) * moltiplicatori.getMoltiplicatoreCarico();
-
-        return getQuantitaModificata(md, potenziale, TipoAttributo.CARICO_MASSIMO);
+		return (potenzaFisica + resistenzaFisica) * moltiplicatori.getMoltiplicatoreCarico();
 	}
 
 	// SALUTE
@@ -1124,6 +1134,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		if (salute <= 0) {
 			salute = 0;
 			if (!isImmortale()) {
+				// Prima la salute, poi la morte: chi ascolta la notifica di morte trova già 0
+				md.setSalute(0);
 				md.setVivo(false);
 				StringBuilder sb;
 				// Chi lascia il gruppo appena muore (lo Scheletro della Mietitura) non ha ferite da raccontare: se ne occupa il gruppo
@@ -1519,8 +1531,8 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public void subStanchezza(int quantita) {
 		int quantitaPrecedente = (int) md.get(TipoAttributo.STANCHEZZA);
-		int quantitaAttuale = quantitaPrecedente - quantita;
-		md.setStanchezza(Math.max(quantitaAttuale, 0));
+		int quantitaAttuale = Math.max(quantitaPrecedente - quantita, 0);
+		md.setStanchezza(quantitaAttuale);
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.STANCHEZZA, quantitaPrecedente, quantitaAttuale));
 	}
 
@@ -1672,7 +1684,8 @@ public abstract class PersonaggioBase implements Personaggio {
 			case RIGENERAZIONE_MAGIA:
 				return 5.0d + getMagiaMassima() * Costanti.RIGENERAZIONE_MAGIA_QUOTA_MAGIA_MASSIMA;
 			case CARICO_MASSIMO:
-				return md.getMassimo(tipoAttributo).orElse(0.0d);
+				// Quello salvato ha già i modificatori: applicandoli di nuovo la variazione dei temporanei verrebbe contata due volte
+				return potenzialeDiCarico(md, this);
 			default:
 				return md.getOptional(tipoAttributo).orElse(0.0d);
 		}
