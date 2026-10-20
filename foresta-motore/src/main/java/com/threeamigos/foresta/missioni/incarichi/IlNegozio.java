@@ -154,7 +154,8 @@ public abstract class IlNegozio extends IncaricoInCitta {
 
 	@Override
 	protected boolean isPossibileQui() {
-		return getCittaAssegnata() == GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
+		return getCittaAssegnata() == GruppoGiocatore.getIstanza().getTipoLocazioneCorrente()
+				&& (getCovo() != null || RegistroMissioni.esisteUnPostoPer(TipoLocazione.ROVINE, this));
 	}
 
 	/**
@@ -175,7 +176,9 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	}
 
 	/**
-	 * Le rovine dello stesso quadrante della città, se ce ne sono di libere; altrimenti quelle di un altro quadrante.
+	 * Le rovine dello stesso quadrante della città, se ce ne sono di libere; altrimenti quelle di un altro quadrante; se
+	 * in nessun quadrante ce ne sono, si costruiscono nel proprio e, in mancanza, dovunque sulla mappa (l'incarico non si
+	 * offre se non c'è posto da nessuna parte: vedi {@link #isPossibileQui()}).
 	 */
 	private void trovaLeRovine() {
 		if (getCovo() != null) {
@@ -194,7 +197,8 @@ public abstract class IlNegozio extends IncaricoInCitta {
 				return;
 			}
 		}
-		if (!RegistroMissioni.cercaOCostruisci(TipoLocazione.ROVINE, this, proprio).isPresent()) {
+		if (!RegistroMissioni.cercaOCostruisci(TipoLocazione.ROVINE, this, proprio).isPresent()
+				&& !RegistroMissioni.cercaOCostruisci(TipoLocazione.ROVINE, this).isPresent()) {
 			throw new IllegalStateException("Nessun posto per le rovine di " + getNome());
 		}
 	}

@@ -900,7 +900,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 		boolean eraInCorso = !isCompleta() && !isFallita();
 		congedaScortato();
 		super.fallisciMissione();
-		if (eraInCorso && !MissionePredefinita.isIdDiMissionePredefinita(getId())) {
+		if (eraInCorso && !isDiClassePredefinita()) {
 			// Per le missioni predefinite l'avviso lo dà già MissioneBase
 			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "MISSIONE FALLITA", getNome()));
 		}
@@ -909,6 +909,9 @@ public abstract class MissioneAPassi extends MissioneBase {
 
 	@Override
 	public void completaMissione() {
+		if (isCompleta()) {
+			return;
+		}
 		congedaScortato();
 		super.completaMissione();
 		lasciaUnaMissioneNuova();

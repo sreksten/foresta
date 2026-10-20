@@ -46,6 +46,7 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 	 */
 	public static final int RAGGIO = 2;
 	private static final String CASELLA = "CASELLA";
+	private static final String POSTO = "POSTO";
 	private static final String PARTENZA = "PARTENZA";
 	private static final String RICERCA = "RICERCA";
 	private static final String SEPARATORE = ",";
@@ -67,14 +68,17 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 	 * Il posto vicino a cui l'oggetto è stato perso, o null finché l'incarico non si offre.
 	 */
 	public CoordinateMD getPosto() {
-		return RegistroMissioni.getLocazioneOccupata(this);
+		return leggiCoordinate(ottieniProprieta(POSTO));
 	}
 
 	/**
 	 * La casella in cui sta l'oggetto, o null finché l'incarico non si offre.
 	 */
 	public CoordinateMD getCasella() {
-		String valore = ottieniProprieta(CASELLA);
+		return leggiCoordinate(ottieniProprieta(CASELLA));
+	}
+
+	private static CoordinateMD leggiCoordinate(String valore) {
 		if (valore == null) {
 			return null;
 		}
@@ -95,6 +99,8 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 		CoordinateMD posto = RegistroMissioni.cercaOCostruisci(tipo, this)
 				// Solo se nella foresta non c'è più neanche un bosco o una palude: allora l'ha perso appena fuori città
 				.orElseGet(() -> Foresta.getCoordinateLocazioneUnica(getCitta()));
+		// Il posto si ricorda a parte: se è la città (il ripiego) la missione non lo rivendica
+		aggiungiProprieta(POSTO, posto.getX() + SEPARATORE + posto.getY());
 		List<CoordinateMD> nascondigli = nascondigliAttorno(posto);
 		CoordinateMD casella = nascondigli.isEmpty() ? posto : nascondigli.get(Dado.tiraAncheAUnaFaccia(nascondigli.size()) - 1);
 		aggiungiProprieta(CASELLA, casella.getX() + SEPARATORE + casella.getY());

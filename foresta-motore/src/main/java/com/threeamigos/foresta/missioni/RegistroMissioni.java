@@ -437,6 +437,24 @@ public class RegistroMissioni {
 	}
 
 	/**
+	 * Se su tutta la mappa c'è un posto per quella classe di locazione, senza cambiare niente: una casella disponibile di
+	 * quella classe o, per costruirla, un bosco o una palude disponibile (vedi {@link #cercaOCostruisci}).
+	 */
+	public static boolean esisteUnPostoPer(TipoLocazione richiesta, Missione missione) {
+		CoordinateMD gruppo = GruppoGiocatore.getIstanza().getCoordinate();
+		for (CoordinateMD coordinate : aQuadratiConcentrici(null)) {
+			TipoLocazione tipo = Foresta.getLocazione(coordinate);
+			if (!coordinate.equals(gruppo)
+					&& (tipo == richiesta || tipo == TipoLocazione.BOSCO || tipo == TipoLocazione.PALUDE)
+					&& isDisponibile(coordinate, missione)
+					&& RegistroArtefatti.getArtefattoInLocazione(coordinate) == null) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Le caselle della mappa, o del quadrante se non è null, a quadrati concentrici attorno a una casella a caso.
 	 */
 	private static List<CoordinateMD> aQuadratiConcentrici(Quadrante quadrante) {

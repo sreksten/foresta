@@ -88,7 +88,7 @@ public abstract class MissioneBase implements Missione {
 	@Override
 	public void attivaMissione() {
 		md.aggiungiProprieta(ATTIVA, "S");
-		if (MissionePredefinita.isIdDiMissionePredefinita(getId())) {
+		if (isDiClassePredefinita()) {
 			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "NUOVA MISSIONE", getNome()));
 		}
 	}
@@ -98,8 +98,22 @@ public abstract class MissioneBase implements Missione {
 		return md.ottieniProprieta(COMPLETA) != null;
 	}
 
+	/**
+	 * Se la missione è di una classe predefinita, anche se è una copia con un altro id (le missioni ripetibili): è quella
+	 * di cui si annunciano la partenza e la fine.
+	 */
+	protected final boolean isDiClassePredefinita() {
+		return md.getClasse().isPredefinita();
+	}
+
+	/**
+	 * Completa la missione una volta sola: una seconda chiamata non ripaga né riannuncia niente.
+	 */
 	@Override
 	public void completaMissione() {
+		if (isCompleta()) {
+			return;
+		}
 		md.aggiungiProprieta(COMPLETA, "S");
 		RegistroMissioni.completaMissione(this);
 		BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "MISSIONE COMPLETATA", getNome()));
@@ -124,7 +138,7 @@ public abstract class MissioneBase implements Missione {
 		}
 		md.aggiungiProprieta(FALLITA, AFFERMATIVO);
 		RegistroMissioni.fallisciMissione(this);
-		if (MissionePredefinita.isIdDiMissionePredefinita(getId())) {
+		if (isDiClassePredefinita()) {
 			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "MISSIONE FALLITA", getNome()));
 		}
 		md.setDescrizioneVisibile(false);
