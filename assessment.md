@@ -128,7 +128,6 @@ Nessun difetto aperto.
 
 **foresta-swing e foresta-app**
 
-- B41b `ImageCache.imageMap`, `set`/`get(String)` e lo shutdown hook inutile. (C)
 - B41c `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif` mai usati. (C)
 - B41e `variaLivello` e il parametro `locazione` di `xOggetto` in `RiquadroLocazione` mai usati. (C)
 - B41f `ComandiPossibili.add`/`set` usati solo dai test. (C)
@@ -142,6 +141,11 @@ Nessun difetto aperto.
 - **Risorse.** I glifi dei font sono coerenti. Le immagini referenziate esistono tutte, e le mappature delle immagini coprono tutti i tipi di personaggio, oggetto e incantesimo.
 - **Grammatiche.** Nessun riferimento mancante; i marcatori `<mod:>` e `<danno:>` sono validi.
 - **Testi delle enum.** Nessuna chiave mancante nei `.properties`.
+- **Cache delle scritte (`ImageCache.cacheDinamica`).** Funziona, e le `WeakReference` costano poco. Misurata il 2026-10-21 con un banco di prova esterno (headless, il vero `DoomdarkTextProducer` e il vero `drawImage`): 80 scritte per fotogramma a 60 fps, di cui una parte con un numero che cambia, 15 secondi per prova, spazzatura simulata da 20 a 200 MB/s, heap di default (16 GB di RAM) e `-Xmx96m`. Ricostruire una scritta (costruzione più prima conversione al disegno) costa circa 29 µs.
+  - Senza cache si ricostruiscono tutte le scritte a ogni fotogramma: 4.800 al secondo, il 14-16% del tempo (circa 2,5 ms su 16,7).
+  - Con `WeakReference` si ricostruiscono lo 0,3-0,5% delle richieste con 20 MB/s di spazzatura, l'1% con 60 MB/s e il 2,6% con 200 MB/s (126 al secondo); con 96 MB di heap si arriva al 6,6% (318 al secondo) a 200 MB/s. In tempo sono 0,3-0,7% (1,6% nel caso peggiore). Le scritte non si perdono a una a una: dopo ogni collezione del garbage collector si rigenerano in blocco, perché l'unico riferimento forte sparisce a fine `paint`.
+  - Con `SoftReference` o con un riferimento forte si ricostruiscono sempre e solo i testi che cambiano (9 al secondo, lo 0,19%, 0,17% del tempo), in ogni condizione provata.
+  - Limiti della misura: il carico è simulato (non ho misurato quanto alloca il gioco vero) e il costo di ricostruzione vale per questo Mac; su telefono, con una CPU da 3 a 10 volte più lenta, il blocco di ricostruzioni subito dopo un GC potrebbe costare 10-20 ms in un solo fotogramma. Se servirà, il passaggio a `SoftReference` è una modifica da poche righe (il reaper resta utile), da provare sul dispositivo.
 - **Combattimento.** Niente round infiniti; la fine del combattimento si intercetta sempre, anche con le ondate.
 
 ## 6. Portabilità (riassunto)

@@ -3,7 +3,6 @@ package com.threeamigos.foresta.ui.immagini;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoPuliziaCacheDinamicaImmagini;
 import com.threeamigos.foresta.intermezzi.Verso;
-import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -19,7 +18,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.ref.WeakReference;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -110,9 +108,6 @@ public class ImageCache {
 	public static BufferedImage componenteScorrevoleFrecciaSu;
 	public static BufferedImage componenteScorrevoleFrecciaGiu;
 	public static BufferedImage frecciaGiuPersonaggioAttivo;
-
-
-	private static final Map<String, BufferedImage> imageMap = new HashMap<>();
 
 	// Utilizziamo una mappa thread-safe che ospita riferimenti deboli alle immagini,
 	// in modo da tenere in cache le stringhe usate più di frequente ma potendo ripulire
@@ -311,20 +306,8 @@ public class ImageCache {
 		componenteScorrevoleFrecciaGiu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaGiu.gif");
 		frecciaGiuPersonaggioAttivo = BufferedImageBuilder.buildBufferedImage("icone/Giu.gif");
 
-		// Avvia il reaper in background ogni minuto
+		// Avvia il reaper in background ogni minuto: è un thread daemon, finisce da solo con la JVM
 		avviaReaper(1, TimeUnit.MINUTES);
-		// Inietta un thread provvederà alla chiusura del reaper allo shutdown
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			Logger.log("[SHUTDOWN] Intercettata chiusura del gioco. Arresto del Reaper.");
-			spegniReaper();
-		}, "ImageCache-Shutdown-Cleanup"));
-	}
-
-	/**
-	 * Chiamare alla chiusura del gioco per spegnere il thread di pulizia della cache in modo pulito.
-	 */
-	public static void spegniReaper() {
-		reaperExecutor.shutdown();
 	}
 
 	/**
@@ -376,19 +359,6 @@ public class ImageCache {
 		}, periodo, periodo, unitaTempo);
 	}
 
-	/**
-	 * Memorizza un'immagine con quel nome.
-	 */
-	public static void set(String nomeImmagine, BufferedImage displayable) {
-		imageMap.put(nomeImmagine, displayable);
-	}
-	
-	/**
-	 * L'immagine con quel nome, o null se non c'è.
-	 */
-	public static BufferedImage get(String nomeImmagine) {
-		return imageMap.get(nomeImmagine);
-	}
 
 	/**
 	 * L'immagine della variante di bosco indicata (1-based, vedi Bosco.getVarianteMappa),
