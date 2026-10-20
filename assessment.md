@@ -103,7 +103,6 @@ Nessun difetto aperto.
 
 | Cod. | Dove | Difetto | |
 | :--- | :--- | :--- | :---: |
-| M1 | `motore/GruppoGiocatore:584`, `locazioni/Locanda:284` | Pernottare in locanda fa riposare fino al mattino ma non sposta l'orologio (lo fa solo l'accampamento): il riposo è gratis e aggira la scadenza del drago | C |
 | M2 | `motore/Foresta:148-200` | `Foresta.reimposta` non azzera `IntermezziMD` e `NotizieMD`: una nuova partita nella stessa sessione non mostra l'intro né gli intermezzi di prima visita, e il notiziario mostra le notizie vecchie | C |
 | M12 | `missioni/incarichi/{CacciaAiGoblin,LaTagliaSullaBanda,CacciatoreDiTaglie,IlPellegrino,IlRapimento,IlTorneo}` | I testi promettono la costante `RICOMPENSA` (la paga base), mentre si paga `getRicompensa()`, cioè la base per il livello del mondo ("15 monete promesse", ne arrivano 45) | C |
 | M13 | `missioni/incarichi/IlRituale:94-96, 191-216` | Il ripiego della raccolta rivendica un'altra casella e sposta `getPosto()`: rito e guardiano finiscono nel posto del ripiego | C |
@@ -285,7 +284,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 ## 8. Prossimi passi consigliati
 
-1. **Correggere i medi certi e a basso rischio:** M1, M2, M12, M16, M17, M18 e tutta la UI (M22-M27).
+1. **Correggere i medi certi e a basso rischio:** M2, M12, M16, M17, M18 e tutta la UI (M22-M27).
 2. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M11 (fuga), M14 (sconfitti fra visite), B28 (LaLealta).
 3. **Un vero gestore di `InternoException`** (M19).
 4. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
@@ -306,7 +305,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
   - schermate, riquadri, barra, tattiche e app;
   - sprite, testo, immagini, sfx e sviluppo.
 
-  Ogni ipotesi è stata verificata leggendo i chiamanti; M1 è stato ricontrollato a parte.
+  Ogni ipotesi è stata verificata leggendo i chiamanti.
 - **Misure.** Righe e file sono contati con `wc -l` su `src/main` e `src/test`. Test e copertura vengono da `mvn clean test` del 2026-10-19, tutti verdi.
 - **Il rischio delle notizie malformate** del 2026-10-17 è ora B33: le grammatiche attuali sono conformi, quindi non si innesca.
 

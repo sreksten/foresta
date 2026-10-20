@@ -579,7 +579,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	}
 
 	/**
-	 * Fa passare la notte al gruppo, fino al mattino, con il tipo di riposo indicato.
+	 * Fa passare la notte al gruppo, fino al mattino, con il tipo di riposo indicato: l'orologio arriva alle otto del mattino, e gli eventi
+	 * che dipendono dal giorno (il drago e le città) hanno la loro occasione di accadere, in una locanda come all'accampamento.
 	 */
 	public final void pernotta(TipoRiposo tipoRiposo) {
 		Logger.log("Inizio pernottamento");
@@ -623,6 +624,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		}
 		getPersonaggiVivi().forEach(p -> p.riposa(ore, tipoRiposo));
 		getOspitiVulnerabiliVivi().forEach(p -> p.riposa(ore, tipoRiposo));
+		LineaTemporale.mattinoSeguente();
+		LineaTemporale.eventi(this);
 		BusEventi.pubblica(new NotificaTestoFrase("Il sole sorge e l'avventura ricomincia."));
 	}
 

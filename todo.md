@@ -46,7 +46,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità media: motore, missioni, trofei e testi
 
-- **M1, notte gratis in locanda.** `GruppoGiocatore.pernotta` dalla Locanda (riga 284) fa riposare ma non chiama `LineaTemporale.mattinoSeguente()` né `eventi(gruppo)`: lo fa solo l'accampamento (`Automa:943-945`).
 - **M2, nuova partita sporca.** `Foresta.reimposta` (righe 148-200) non azzera `IntermezziMD` e `NotizieMD`: una nuova partita nella stessa sessione eredita intermezzi già visti e notizie.
 - **M12, ricompense promesse sbagliate.** I testi usano la costante `RICOMPENSA` (o `getMonete()`), mentre si paga `getRicompensa()`, che è la base per il livello del mondo.
   - Incarichi: CacciaAiGoblin, LaTagliaSullaBanda, CacciatoreDiTaglie, IlPellegrino, IlRapimento, IlTorneo.

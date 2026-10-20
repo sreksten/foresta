@@ -942,8 +942,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// Dalla casella, non da locazioneCorrente: dopo un caricamento questa e' null, e dopo un castello
 		// completato e' ancora il castello mentre sulla casella ci sono le rovine
 		gruppo.pernotta(Foresta.costruisciIstanza(gruppo.getCoordinate()).getTipoRiposo());
-		LineaTemporale.mattinoSeguente();
-		LineaTemporale.eventi(gruppo);
 		// Superato l'ultimo giorno la partita è persa subito: tornando ad ATTESA_DIREZIONE la si potrebbe ancora
 		// salvare, e la sconfitta si vedrebbe solo al passo seguente
 		if (LineaTemporale.isGiocoFinito()) {
@@ -1208,6 +1206,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			if (RegistroMissioni.getMissionePrincipale().isCompleta()) {
 				stato = Stato.GIOCO_VINTO;
 			} else {
+				// Il tempo è finito durante la locazione (la notte in una locanda): la sconfitta si racconta qui
+				String evento = LineaTemporale.getEvento();
+				if (evento != null) {
+					BusEventi.pubblica(new NotificaTestoFrase(evento));
+				}
 				stato = Stato.GIOCO_PERSO;
 			}
 			return Esito.CONTINUA_CON_INGRESSO;
