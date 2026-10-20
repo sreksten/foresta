@@ -114,7 +114,6 @@ Nessun difetto aperto.
 | M24 | `ui/Prompt:252-264`, `ui/tattiche/DisplayableCanvasTattiche:199-203` | Il campo di rinomina della tattica resta aperto quando si lascia la voce o la schermata; l'Invio scrive su una bozza scartata | C |
 | M27 | `ui/sprite/SpriteRivelazioneArtefatto:183` | L'animazione avanza di un passo fisso a ogni repaint: muovendo il mouse la rivelazione accelera | C |
 | M28 | `ui/sfx/CloudManager:39-41, 117` | `nextInt(clip.height - cloudHeight)` può ricevere ≤ 0 con una zona conosciuta "a corridoio"; nuvole statiche mai azzerate fra una partita e l'altra | P |
-| M29 | `ui/tattiche/CasellaADiscesa:81-94`, `ui/componenti/ComponenteScorrevole:129-132` | Un menu con zero scelte o un componente alto 0 crea una `BufferedImage` alta 0 e lancia a ogni fotogramma | P |
 
 ### 5.3 Gravità bassa
 

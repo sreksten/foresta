@@ -65,7 +65,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 - **M27, rivelazione che accelera.** `SpriteRivelazioneArtefatto:183` avanza di un passo fisso a ogni repaint, quindi muovendo il mouse la rivelazione va più veloce.
   - Correzione: misurare il tempo come fa `SpriteBase`.
 - **M28, nuvole della mappa (P).** In `CloudManager:117`, `nextInt` può ricevere un valore ≤ 0. Le nuvole sono statiche e non si azzerano fra una partita e l'altra.
-- **M29, menu vuoti (P).** `CasellaADiscesa` e `ComponenteScorrevole` con zero scelte o altezza 0 creano una `BufferedImage` alta 0. Lo stesso in `DisplayableCanvasRiquadroMissioni:72`.
 
 ### Gravità bassa: foresta-tipi e foresta-modellodati
 

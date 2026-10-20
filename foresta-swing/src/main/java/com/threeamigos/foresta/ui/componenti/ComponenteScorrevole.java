@@ -123,13 +123,16 @@ public class ComponenteScorrevole<T> {
      * Disegna una porzione dell'elenco, alta al più quell'altezza e a partire da quella posizione di scorrimento.
      */
     public Image produci(int altezzaMassima, int offset) {
+        // Un menu senza scelte o un riquadro senza altezza chiedono un'immagine vuota: BufferedImage non la crea (e lancerebbe a ogni
+        // fotogramma), quindi si produce comunque almeno un pixel
+        altezzaMassima = Math.max(1, altezzaMassima);
 
         List<Nodo> contenuto = espandiNodi();
 
         int altezzaImmagine = Math.max(calcolaAltezzaMassimaNodi(), altezzaMassima);
         offset = limitaOffset(altezzaImmagine, altezzaMassima, offset);
 
-        BufferedImage risultato = new BufferedImage(larghezza, altezzaImmagine, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage risultato = new BufferedImage(Math.max(1, larghezza), altezzaImmagine, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g2d = risultato.createGraphics();
 
@@ -176,7 +179,7 @@ public class ComponenteScorrevole<T> {
         }
 
         g2d.dispose();
-        return risultato.getSubimage(0, offset, larghezza, altezzaMassima);
+        return risultato.getSubimage(0, offset, risultato.getWidth(), altezzaMassima);
     }
 
     private List<Nodo> espandiNodi() {
