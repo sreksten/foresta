@@ -18,7 +18,21 @@ import com.threeamigos.foresta.trofei.RegistroTrofei;
  */
 public final class StatoDelMotore {
 
+	// L'automa in funzione: ne vale uno solo, e quando se ne crea un altro (o si azzera) il vecchio si chiude
+	private static Automa automaAttivo;
+
 	private StatoDelMotore() {
+	}
+
+	/**
+	 * Un automa nuovo è nato: se ce n'era uno, lo si chiude (smette di ascoltare il bus), così i comandi del giocatore non li gestiscono
+	 * due automi, uno dei quali con i gruppi della partita di prima.
+	 */
+	static void automaCreato(Automa nuovo) {
+		if (automaAttivo != null && automaAttivo != nuovo) {
+			automaAttivo.chiudi();
+		}
+		automaAttivo = nuovo;
 	}
 
 	/**
@@ -36,8 +50,16 @@ public final class StatoDelMotore {
 	/**
 	 * Azzera lo stato statico: un modello dati vuoto, nessun gruppo, nessun combattimento. Non tocca il bus, i dadi
 	 * né i trofei, che passano da una partita all'altra.
+	 * <p>
+	 * L'{@link Automa} in funzione si chiude: tiene i gruppi della partita di prima nei suoi campi, e dopo l'azzeramento
+	 * non è più utilizzabile. Per ripartire se ne crea uno nuovo (e si richiama {@link #registraComponenti()} se si è
+	 * azzerato anche il bus). Il vecchio gruppo del giocatore smette di ascoltare il bus.
 	 */
 	public static void azzera() {
+		if (automaAttivo != null) {
+			automaAttivo.chiudi();
+			automaAttivo = null;
+		}
 		ModelloDati.setIstanza(new ModelloDati());
 		GruppoGiocatore.azzeraIstanza();
 		GruppoAvversario.azzeraIstanza();

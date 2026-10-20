@@ -51,4 +51,17 @@ class BusEventiTest {
         });
         BusEventi.pubblica("ciao");
     }
+
+    @Test
+    void laIscrizioneSiToglieAncheSeEUnaLambda() {
+        List<String> ricevuti = new ArrayList<>();
+        Runnable togli = BusEventi.iscriviti(String.class, s -> ricevuti.add(s));
+
+        BusEventi.pubblica("uno");
+        togli.run();
+        BusEventi.pubblica("due");
+
+        assertEquals(1, ricevuti.size());
+        assertEquals("uno", ricevuti.get(0));
+    }
 }

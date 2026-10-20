@@ -32,12 +32,16 @@ public class BusEventi {
 
     /**
      * Registra un gestore per gli eventi di quel tipo: ne bastano quelli della classe indicata, non le sue sottoclassi.
+     *
+     * @return come togliere l'iscrizione: funziona anche per una lambda, che {@link #cancellati} non saprebbe ritrovare
+     * a chi non ne tiene il riferimento
      */
     @SuppressWarnings("unchecked")
-    public static <T> void iscriviti(Class<T> eventType, Consumer<T> listener) {
+    public static <T> Runnable iscriviti(Class<T> eventType, Consumer<T> listener) {
         sottoscrittori
                 .computeIfAbsent(eventType, k -> new CopyOnWriteArrayList<>())
                 .add((Consumer<Object>) listener);
+        return () -> cancellati(eventType, listener);
     }
 
     /**

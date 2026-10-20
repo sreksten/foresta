@@ -63,8 +63,8 @@ Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
    - per `Automa`, altri sotto-automi (creazione del gruppo, combattimento, fine partita);
    - per `LocazioneBase`, il combattimento a round in una classe sua;
    - per `PersonaggioBase`, attributi e modificatori, equipaggiamento ed effetti di stato separati.
-2. **Stato statico.** Lo stato della partita vive in registri e singleton. `StatoDelMotore.azzera()` va bene per i test, ma non per "ripartire pulito" su una piattaforma mobile come suggerisce la sua javadoc. `Automa` e `LocazioneBase` tengono i vecchi gruppi in campi `final`, e il vecchio `GruppoGiocatore` resta iscritto al bus (M20). In più `Foresta.reimposta` dimentica intermezzi e notizie (M2).
-   **Giudizio:** accettabile per un gioco single-player, a patto di non aggiungere registri statici e di correggere M2.
+2. **Stato statico.** Lo stato della partita vive in registri e singleton. `StatoDelMotore.azzera()` chiude l'`Automa` in funzione e il vecchio `GruppoGiocatore` esce dal bus: per ripartire si crea un automa nuovo.
+   **Giudizio:** accettabile per un gioco single-player, a patto di non aggiungere registri statici.
 3. **Il motore è un modulo solo.** `motore`, `personaggi`, `locazioni`, `missioni` e `oggetti` sono un unico grafo. Il primo taglio possibile resta `foresta-missioni` ([`todo.md`](todo.md)).
 4. **Due stili di missione.** Restano missioni che estendono `MissioneBase`. Il controllo dopo la risposta a una domanda rifà i `controlla*` di tutte le missioni, e quindi richiede che quelle scritte a mano siano idempotenti (il vincolo è scritto in `gestione_missioni.md`).
 5. **Errori degli iscritti.** Il bus cattura le eccezioni e pubblica `InternoException`, ma l'unico iscritto è lo sniffer, che scrive nel log. Un errore a metà di una transizione lascia l'`Automa` in uno stato intermedio, senza nessun segnale per il giocatore (M19).
@@ -106,7 +106,6 @@ Nessun difetto aperto.
 | M13 | `missioni/incarichi/IlRituale:94-96, 191-216` | Il ripiego della raccolta rivendica un'altra casella e sposta `getPosto()`: rito e guardiano finiscono nel posto del ripiego | C |
 | M17 | `testi/ProduttoreDiTestiCasuale:505` | `LETTERA_FINALE` si accorda sempre con il capo anche quando il soggetto è il ladro o il bardo (`locande.txt` righe 300, 349, 511): "Gualtiero è stata vista" | C |
 | M19 | contratti: `eventi/BusEventi:57-79` | Gli errori degli iscritti finiscono solo nel log (unico iscritto a `InternoException` è lo sniffer): una transizione a metà lascia il gioco bloccato senza messaggio. Un `Error` invece interrompe la consegna agli altri iscritti | C (P le conseguenze) |
-| M20 | motore: `motore/StatoDelMotore:139-144`; contratti: `BusEventi:46-51` | `azzera()` lascia i vecchi gruppi nei campi `final` di `Automa`/`LocazioneBase` e il vecchio `GruppoGiocatore` iscritto al bus (e `cancellati` non può togliere una lambda). Oggi lo chiamano solo i test | P |
 | M21 | motore: `motore/Automa:324-347, 1668` | Il salvataggio automatico si cancella solo a fine partita: dopo una partita nuova o un caricamento, una ripresa su mobile può ricaricare la partita vecchia | P (solo mobile) |
 
 **Interfaccia (foresta-swing)**
@@ -260,7 +259,7 @@ Nessun difetto aperto.
 Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 - **Già pronto:** il motore usa solo `java.io` e `java.util`, non ha dipendenze dal toolkit grafico, ha la cartella dei file iniettabile, il ciclo di vita dell'app e l'uscita affidata alla piattaforma.
-- **Emerso dalla revisione:** prima di usare `StatoDelMotore.azzera()` e la ripresa su mobile vanno risolti M20 e M21.
+- **Emerso dalla revisione:** prima di usare la ripresa su mobile va risolto M21.
 - **Ancora aperto:**
   - `Costanti` come dati;
   - le uscite dal processo della UI Swing (`System.exit` in `BufferedImageBuilder`, `EXIT_ON_CLOSE`, che chiude senza passare dal motore).

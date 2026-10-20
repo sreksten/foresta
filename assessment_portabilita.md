@@ -22,7 +22,7 @@ Prima di spostarli va deciso se il gioco avrà una versione inglese (per gli sto
 
 ### Ciclo di vita dell'app
 
-- I singleton restano statici (`ModelloDati.getIstanza()` è usato in 64 file del motore). Una piattaforma che chiude l'app in background perde lo stato statico: `StatoDelMotore.azzera()` e il salvataggio automatico lo coprono, ma non lo eliminano.
+- I singleton restano statici (`ModelloDati.getIstanza()` è usato in 64 file del motore). Una piattaforma che chiude l'app in background perde lo stato statico: `StatoDelMotore.azzera()` (che chiude l'automa e stacca il vecchio gruppo dal bus: poi se ne crea uno nuovo) e il salvataggio automatico lo coprono, ma non lo eliminano.
 - Il salvataggio automatico si scrive solo quando l'app va in background in un punto sicuro (fra una locazione e l'altra). Un'app chiusa dal sistema a metà di una locazione riparte dall'ultimo salvataggio automatico, cioè dall'ultima volta che è andata in background in un punto sicuro (o da niente, e un salvataggio automatico di una sessione precedente resta). Scriverlo a ogni ingresso in `ATTESA_DIREZIONE` ridurrebbe la perdita, al costo di una scrittura per locazione.
 - La UI Swing non chiama `inBackground()` e `inPrimoPiano()` (sul desktop non servono). La piattaforma mobile deve chiamarli dal suo ciclo di vita, e sospendere anche il temporizzatore della UI (`temporizzatoreUI` in `Main`).
 

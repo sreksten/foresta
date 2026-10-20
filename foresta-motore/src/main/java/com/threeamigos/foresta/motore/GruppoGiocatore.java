@@ -58,7 +58,19 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	 * Serve ai test, che ricostruiscono una partita da zero a ogni prova.
 	 */
 	public static void azzeraIstanza() {
+		if (istanza != null) {
+			// Il vecchio gruppo non deve restare iscritto al bus: gestirebbe anch'esso gli eventi, insieme al nuovo
+			istanza.disiscriviti();
+		}
 		istanza = null;
+	}
+
+	/**
+	 * Toglie dal bus gli eventi che questo gruppo ascolta.
+	 */
+	private void disiscriviti() {
+		iscrizioni.forEach(Runnable::run);
+		iscrizioni.clear();
 	}
 
 	private GruppoGiocatore(GruppoGiocatoreMD gruppoGiocatoreMD) {
@@ -67,12 +79,12 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 
 	public GruppoGiocatore() {
 		super();
-		BusEventi.iscriviti(InternoStoccaggioArtefatto.class, this::suEventoRichiestaStoccaggioArtefatto);
-		BusEventi.iscriviti(InternoPrelievoArtefatto.class, this::suEventoRichiestaPrelievoArtefatto);
-		BusEventi.iscriviti(InternoAcquistoArtefatto.class, this::suEventoRichiestaAcquistoArtefatto);
-		BusEventi.iscriviti(InternoVenditaArtefatto.class, this::suEventoRichiestaVenditaArtefatto);
-		BusEventi.iscriviti(InternoIncantatura.class, this::suEventoIncantatura);
-		BusEventi.iscriviti(ComandoAcquistoConsumabile.class, this::suEventoRichiestaAcquistoConsumabile);
+		iscrizioni.add(BusEventi.iscriviti(InternoStoccaggioArtefatto.class, this::suEventoRichiestaStoccaggioArtefatto));
+		iscrizioni.add(BusEventi.iscriviti(InternoPrelievoArtefatto.class, this::suEventoRichiestaPrelievoArtefatto));
+		iscrizioni.add(BusEventi.iscriviti(InternoAcquistoArtefatto.class, this::suEventoRichiestaAcquistoArtefatto));
+		iscrizioni.add(BusEventi.iscriviti(InternoVenditaArtefatto.class, this::suEventoRichiestaVenditaArtefatto));
+		iscrizioni.add(BusEventi.iscriviti(InternoIncantatura.class, this::suEventoIncantatura));
+		iscrizioni.add(BusEventi.iscriviti(ComandoAcquistoConsumabile.class, this::suEventoRichiestaAcquistoConsumabile));
 	}
 
 	/**
@@ -173,6 +185,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return md;
 	}
 	private final List<Personaggio> ospiti = new ArrayList<>();
+	// Come togliere dal bus gli eventi che il gruppo ascolta (vedi azzeraIstanza)
+	private final List<Runnable> iscrizioni = new ArrayList<>();
 	private Locazione locazioneCorrente;
 
 	// Serve per passare chi formula un incantesimo all'automa dalla locazione base.

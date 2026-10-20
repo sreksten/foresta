@@ -95,6 +95,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	// Eseguiti quando arriva un comando reale del giocatore (o inoltrato come tale).
 	private final Map<Stato, Function<Comando, Esito>> gestoriComando;
 	private final Temporizzatore temporizzatore;
+	// Come togliere dal bus i comandi e gli eventi che l'automa ascolta (vedi chiudi)
+	private final List<Runnable> iscrizioni = new ArrayList<>();
 	private final GestoreSalvataggi gestoreSalvataggi;
 	private final GestorePunteggi gestorePunteggi;
 
@@ -182,27 +184,28 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		this.orologioNanosecondi = orologioNanosecondi;
 		temporizzatore.setTemporizzabile(this);
 
-		BusEventi.iscriviti(ComandoDiGioco.class, this::onEventoComandoDiGioco);
-		BusEventi.iscriviti(ComandoInvioTesto.class, this::onEventoTestoDisponibile);
+		StatoDelMotore.automaCreato(this);
+		ascolta(ComandoDiGioco.class, this::onEventoComandoDiGioco);
+		ascolta(ComandoInvioTesto.class, this::onEventoTestoDisponibile);
 		// Gli spostamenti di artefatti nella schermata di scambio aperta: li fa lo scambio stesso
-		BusEventi.iscriviti(ComandoScambioArtefatto.class, AutomaScambiatoreArtefatti::esegui);
-		BusEventi.iscriviti(ComandoSpesaPuntoAbilita.class, this::onComandoSpesaPuntoAbilita);
-		BusEventi.iscriviti(ComandoImpostaTattica.class, this::onComandoImpostaTattica);
-		BusEventi.iscriviti(ComandoSpostaPersonaggio.class, this::onComandoSpostaPersonaggio);
-		BusEventi.iscriviti(ComandoCommutazioneElenco.class, Automa::onComandoCommutazioneElenco);
+		ascolta(ComandoScambioArtefatto.class, AutomaScambiatoreArtefatti::esegui);
+		ascolta(ComandoSpesaPuntoAbilita.class, this::onComandoSpesaPuntoAbilita);
+		ascolta(ComandoImpostaTattica.class, this::onComandoImpostaTattica);
+		ascolta(ComandoSpostaPersonaggio.class, this::onComandoSpostaPersonaggio);
+		ascolta(ComandoCommutazioneElenco.class, Automa::onComandoCommutazioneElenco);
 		// L'interruttore dell'aiuto vale in ogni stato: non passa dalla macchina a stati
-		BusEventi.iscriviti(ComandoImpostazioneAiuto.class,
+		ascolta(ComandoImpostazioneAiuto.class,
 				e -> ModelloDati.getIstanza().setAiutoAbilitato(e.isAbilitato()));
-		BusEventi.iscriviti(InternoFineLogoIniziale.class, e -> {
+		ascolta(InternoFineLogoIniziale.class, e -> {
 			logoInizialeMostrato = true;
 			passaAllIntroSePronto();
 		});
-		BusEventi.iscriviti(InternoPrecaricamentoMotoreCompletato.class, e -> {
+		ascolta(InternoPrecaricamentoMotoreCompletato.class, e -> {
 			motorePrecaricato = true;
 			passaAllIntroSePronto();
 		});
-		BusEventi.iscriviti(InternoUiOccupata.class, e -> uiOccupata = true);
-		BusEventi.iscriviti(InternoUiInattiva.class, e -> {
+		ascolta(InternoUiOccupata.class, e -> uiOccupata = true);
+		ascolta(InternoUiInattiva.class, e -> {
 			uiOccupata = false;
 			if (stato == Stato.ATTESA_UI_PER_INTERMEZZO) {
 				prosegui(avviaProssimoIntermezzo(momentoIntermezzoInAttesa, statoDopoIntermezzoInAttesa));
@@ -618,6 +621,20 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * Gli intermezzi di apertura vanno mostrati prima di INIZIO_LOCAZIONE: lì partono i
 	 * controlli delle missioni, le cui notifiche comparirebbero già durante l'intermezzo.
 	 */
+	private <T> void ascolta(Class<T> classeEvento, Consumer<T> gestore) {
+		iscrizioni.add(BusEventi.iscriviti(classeEvento, gestore));
+	}
+
+	/**
+	 * Smette di ascoltare il bus e ferma il battito: un automa che si lascia da parte (perché ne parte uno nuovo, o dopo
+	 * {@link StatoDelMotore#azzera()}) non deve continuare a reagire ai comandi del giocatore insieme al nuovo.
+	 */
+	public void chiudi() {
+		iscrizioni.forEach(Runnable::run);
+		iscrizioni.clear();
+		temporizzatore.termina();
+	}
+
 	private Esito entraInStatoInizioGioco() {
 		return avviaIntermezzi(MomentoIntermezzo.INIZIO_GIOCO, Stato.INIZIO_LOCAZIONE);
 	}
