@@ -161,10 +161,11 @@ public class GruppoMD implements Serializzabile {
 	}
 
 	/**
-	 * Rilegge i personaggi scritti da {@link #salva(PrintWriter)} e li aggiunge a quelli già presenti.
+	 * Rilegge i personaggi scritti da {@link #salva(PrintWriter)}, al posto di quelli già presenti.
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
+		personaggiMD.clear();
 		LettoreCampi campi = new LettoreCampi(stream.readLine());
 		int numeroPersonaggi = campi.intero();
 		indiceCapo = campi.intero();

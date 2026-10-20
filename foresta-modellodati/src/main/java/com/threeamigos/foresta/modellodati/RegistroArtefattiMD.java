@@ -189,10 +189,13 @@ public class RegistroArtefattiMD implements Serializzabile {
 	}
 
 	/**
-	 * Rilegge ciò che scrive {@link #salva(PrintWriter)}, aggiungendolo a quello che c'è già.
+	 * Rilegge ciò che scrive {@link #salva(PrintWriter)}, al posto di quello che c'è già (artefatti smarriti, magazzini e luoghi conosciuti).
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
+		artefattiSmarriti.clear();
+		magazzini.clear();
+		localizzazioniConosciute.clear();
 		int numeroPersonaggi = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroPersonaggi; i++) {
 			LettoreCampi st = new LettoreCampi(stream.readLine());

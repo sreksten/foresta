@@ -126,10 +126,11 @@ public class RegistroPersonaggiMD implements Serializzabile {
 	}
 
 	/**
-	 * Rilegge ciò che scrive {@link #salva(PrintWriter)}, sostituendo i residenti ricordati finora.
+	 * Rilegge ciò che scrive {@link #salva(PrintWriter)}, al posto dei personaggi nelle locazioni e dei residenti ricordati finora.
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
+		personaggiInLocazione.clear();
 		int numeroPersonaggi = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroPersonaggi; i++) {
 			LettoreCampi st = new LettoreCampi(stream.readLine());
