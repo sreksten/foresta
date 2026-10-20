@@ -52,7 +52,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 ### Gravità bassa: foresta-swing e foresta-app
 
 - B41c. `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif` mai usati.
-- B41f. `ComandiPossibili.add`/`set` usati solo dai test.
 
 ## Architettura
 

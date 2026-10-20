@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +59,7 @@ class BarraIconeAiutoTest {
         // Given
         DisplayableCanvasBarraIcone barra = new DisplayableCanvasBarraIcone(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE,
                 0, ALTEZZA_SCHERMO - 70, LARGHEZZA_SCHERMO, 70, new VistaPartitaMotore());
-        ComandiPossibili.set(Comando.NORD, Comando.SUD);
+        ComandiPossibili.set(Arrays.asList(Comando.NORD, Comando.SUD));
         // When
         barra.impostaAzioni();
         // Then: l'aiuto parte acceso, quindi l'icona è quella per spegnerlo

@@ -26,43 +26,11 @@ public class ComandiPossibili {
 	}
 
 	/**
-	 * Aggiunge un comando a quelli possibili.
-	 */
-	public static void add(Comando comando) {
-		comandiPossibili.add(comando);
-	}
-	
-	/**
-	 * Aggiunge dei comandi a quelli possibili.
-	 */
-	public static void add(Comando ... comandi) {
-		for (Comando comando : comandi) {
-			add(comando);
-		}
-	}
-
-	/**
 	 * Sostituisce i comandi possibili con questi.
 	 */
 	public static void set(Collection<Comando> comandi) {
 		reimposta();
 		comandiPossibili.addAll(comandi);
-	}
-
-	/**
-	 * Sostituisce i comandi possibili con questi.
-	 */
-	public static void set(Comando ... comandi) {
-		reimposta();
-		add(comandi);
-	}
-	
-	/**
-	 * Sostituisce i comandi possibili con questo solo.
-	 */
-	public static void set(Comando comando) {
-		reimposta();
-		add(comando);
 	}
 
 	/**
