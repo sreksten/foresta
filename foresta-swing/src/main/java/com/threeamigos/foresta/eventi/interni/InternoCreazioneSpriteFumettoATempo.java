@@ -15,7 +15,7 @@ public class InternoCreazioneSpriteFumettoATempo extends EventoBase {
     private final SpriteFumetto spriteFumetto;
 
     public InternoCreazioneSpriteFumettoATempo(SpriteFumetto spriteFumetto) {
-        super(TipoEvento.INTERNO_CREAZIONE_SPRITE_A_TEMPO);
+        super(TipoEvento.INTERNO_CREAZIONE_SPRITE_FUMETTO_A_TEMPO);
         this.spriteFumetto = spriteFumetto;
     }
 

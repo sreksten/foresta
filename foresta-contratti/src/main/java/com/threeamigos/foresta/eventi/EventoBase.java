@@ -9,14 +9,18 @@ import java.util.UUID;
  */
 public class EventoBase {
 
-    private final String uuid = UUID.randomUUID().toString();
+    // Si genera alla prima richiesta: quasi nessuno lo chiede, e gli eventi sono centinaia a ogni locazione
+    private String uuid;
     private final TipoEvento tipoEvento;
 
     protected EventoBase(TipoEvento tipoEvento) {
         this.tipoEvento = tipoEvento;
     }
 
-    public String getUuid() {
+    public synchronized String getUuid() {
+        if (uuid == null) {
+            uuid = UUID.randomUUID().toString();
+        }
         return uuid;
     }
 

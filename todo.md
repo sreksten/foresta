@@ -81,14 +81,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 - B12. `Misc.getDirezione`: a distanza 0 esce "a zero ore di cammino verso ovest", per esempio quando la città distrutta è proprio quella in cui sta il gruppo.
 - B13 (P). `Misc.getOrdinaleImpl`: dà "nullo" per 0 e un'eccezione da 42 in su.
-- B14. Costanti di `TipoEvento` sbagliate:
-  - `InternoException` usa INTERNO_ERRORE;
-  - in swing, `InternoCreazioneSpriteInDissolvenza` e `…FumettoATempo` usano …A_TEMPO.
-
-  Inoltre:
-  - (P) `ThreadPrincipale.SUBITO`, senza esecutore installato, non accoda;
-  - c'è un `UUID.randomUUID()` per ogni evento;
-  - `Dado:101` può andare in overflow su intervalli enormi.
 
 ### Gravità bassa: foresta-motore
 

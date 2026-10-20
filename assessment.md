@@ -129,10 +129,6 @@ Nessun difetto aperto.
 
 - B12 `strumenti/Misc:177-231`: a distanza 0 esce "a zero ore di cammino verso ovest", per esempio quando la città distrutta è quella in cui si trova il gruppo. (C)
 - B13 `strumenti/Misc:57-63`: `getOrdinaleImpl` dà "nullo" per 0 e un'eccezione da 42 in su. (P)
-- B14 Costanti di `TipoEvento` sbagliate: `InternoException` usa INTERNO_ERRORE; in swing, `InternoCreazioneSpriteInDissolvenza` e `…FumettoATempo` usano …A_TEMPO. Altri punti:
-  - `ThreadPrincipale.SUBITO` esegue `accoda` subito, senza esecutore installato (P);
-  - un `UUID.randomUUID()` per ogni evento;
-  - `Dado:101` può andare in overflow su intervalli enormi (teorico).
 
 **foresta-motore**
 

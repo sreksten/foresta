@@ -15,7 +15,7 @@ public class InternoCreazioneSpriteInDissolvenza extends EventoBase {
     private final SpriteInDissolvenza spriteInDissolvenza;
 
     public InternoCreazioneSpriteInDissolvenza(SpriteInDissolvenza spriteInDissolvenza) {
-        super(TipoEvento.INTERNO_CREAZIONE_SPRITE_A_TEMPO);
+        super(TipoEvento.INTERNO_CREAZIONE_SPRITE_IN_DISSOLVENZA);
         this.spriteInDissolvenza = spriteInDissolvenza;
     }
 

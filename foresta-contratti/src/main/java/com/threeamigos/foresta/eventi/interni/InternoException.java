@@ -14,13 +14,13 @@ public class InternoException extends EventoBase {
     private final Exception exception;
 
     public InternoException(String messaggio, Exception exception) {
-        super(TipoEvento.INTERNO_ERRORE);
+        super(TipoEvento.INTERNO_ECCEZIONE);
         this.messaggio = messaggio;
         this.exception = exception;
     }
 
     public InternoException(Exception exception) {
-        super(TipoEvento.INTERNO_ERRORE);
+        super(TipoEvento.INTERNO_ECCEZIONE);
         this.messaggio = null;
         this.exception = exception;
     }

@@ -98,7 +98,12 @@ public class Dado {
     private static int intero(int min, int max) {
         Number trucco = TRUCCHI.pollFirst();
         if (trucco == null) {
-            return SORGENTE.nextInt(max - min + 1) + min;
+            // Con un intervallo enorme (per esempio tutti gli int) max - min + 1 uscirebbe dagli int
+            long ampiezza = (long) max - min + 1;
+            if (ampiezza <= Integer.MAX_VALUE) {
+                return SORGENTE.nextInt((int) ampiezza) + min;
+            }
+            return (int) (min + (long) (SORGENTE.nextDouble() * ampiezza));
         }
         if (!(trucco instanceof Integer) || trucco.intValue() < min || trucco.intValue() > max) {
             throw new IllegalStateException("Trucco " + trucco + " non valido per un lancio da " + min + " a " + max);

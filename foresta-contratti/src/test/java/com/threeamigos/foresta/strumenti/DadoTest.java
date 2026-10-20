@@ -75,4 +75,15 @@ class DadoTest {
         }
         return lanci;
     }
+
+    @Test
+    void unIntervalloEnormeNonVaInOverflow() {
+        for (int i = 0; i < 1000; i++) {
+            Dado.tira(Integer.MIN_VALUE, Integer.MAX_VALUE);
+            int positivo = Dado.tira(0, Integer.MAX_VALUE);
+            assertEquals(true, positivo >= 0);
+            int negativo = Dado.tira(Integer.MIN_VALUE, 0);
+            assertEquals(true, negativo <= 0);
+        }
+    }
 }

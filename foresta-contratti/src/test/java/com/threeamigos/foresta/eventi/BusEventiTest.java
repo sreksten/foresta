@@ -64,4 +64,15 @@ class BusEventiTest {
         assertEquals(1, ricevuti.size());
         assertEquals("uno", ricevuti.get(0));
     }
+
+    @Test
+    void ognEventoHaIlSuoUuidChiSiGeneraAllaPrimaRichiesta() {
+        EventoBase uno = new EventoBase(TipoEvento.INTERNO_ERRORE) { };
+        EventoBase altro = new EventoBase(TipoEvento.INTERNO_ERRORE) { };
+
+        String primo = uno.getUuid();
+
+        assertEquals(primo, uno.getUuid(), "è sempre lo stesso per lo stesso evento");
+        org.junit.jupiter.api.Assertions.assertNotEquals(primo, altro.getUuid());
+    }
 }
