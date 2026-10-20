@@ -1062,7 +1062,10 @@ public abstract class LocazioneBase implements Locazione {
 		List<Personaggio> chiAgisce = chiPuoAgire();
 		// Possiamo combattere? Oppure, vogliamo cambiare chi combatte?
 		if (qualcunoPuoAgire && (statoLocazione != StatoLocazione.IN_COMBATTIMENTO || chiAgisce.size() > 1)) {
-			comandiPossibili.add(Comando.SINGOLO_ATTACCO);
+			// Nella mischia COMBATTIMENTO cambia chi combatte; l'attacco singolo c'è solo fuori, dove è un'azione a sé
+			if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO) {
+				comandiPossibili.add(Comando.SINGOLO_ATTACCO);
+			}
 			comandiPossibili.add(Comando.COMBATTIMENTO);
 		}
 		// Se stiamo combattendo possiamo interrompere la schermaglia (non quella che prosegue da sola perché nessuno può agire)
@@ -1652,12 +1655,6 @@ public abstract class LocazioneBase implements Locazione {
 			if (stato.isPresent()) {
 				return stato.get();
 			}
-		}
-		if (azione == Comando.MAPPA) {
-			return Stato.MAPPA;
-		}
-		if (azione == Comando.INVENTARIO) {
-			return Stato.INVENTARIO;
 		}
 		if (azione == Comando.POZIONE_SALUTE) {
 			if (chiPuoAgire().size() > 1) {

@@ -40,9 +40,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità bassa: foresta-motore
 
-- B20. `LocazioneBase`:
-  - SINGOLO_ATTACCO è offerto in mischia ma ignorato (righe 969-971);
-  - i rami irraggiungibili delle righe 437-440 e 1528-1533 (MAPPA/INVENTARIO in combattimento, e IN_COMBATTIMENTO non ha un gestore d'ingresso).
 - B32. `GrammarBean`:
   - `[chiave]` su una chiave solo assegnata passa la validazione ma fallisce a runtime;
   - le produzioni derivate dipendono dall'ordine della HashMap;

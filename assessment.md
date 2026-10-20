@@ -115,7 +115,6 @@ Nessun difetto aperto.
 
 **foresta-motore**
 
-- B20 `LocazioneBase:969-971`: SINGOLO_ATTACCO è offerto in mischia ma ignorato. `:437-440` e `:1528-1533`: rami irraggiungibili, e il secondo manderebbe l'`Automa` in IllegalStateException (IN_COMBATTIMENTO non ha un gestore d'ingresso). (C, latente)
 - B32 `testi/GrammarBean`:
   - `[chiave]` su una chiave solo assegnata passa la validazione ma fallisce a runtime (`:1630` contro `:2386`);
   - le produzioni derivate dipendono dall'ordine della HashMap (`:1150-1209`);
