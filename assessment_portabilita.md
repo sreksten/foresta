@@ -30,7 +30,7 @@ Prima di spostarli va deciso se il gioco avrà una versione inglese (per gli sto
 
 Sono della UI Swing e si sostituiscono con lei:
 
-- `BufferedImageBuilder` chiude il gioco con `System.exit(1)` se manca una risorsa grafica di base (fail fast, vedi `motore_grafico.md`);
+- `BufferedImageBuilder` pubblica `NotificaUscitaDalGioco(1, …)` e lancia un'eccezione se manca una risorsa grafica di base (fail fast, vedi `motore_grafico.md`); come si esce lo decide la piattaforma;
 - `ImageCache` ferma il suo thread di pulizia in un gancio di chiusura (`addShutdownHook`);
 - la finestra si chiude con la X (`EXIT_ON_CLOSE`) senza passare dalla conferma di uscita né dal salvataggio.
 

@@ -85,8 +85,6 @@ public class ForestaUI implements Temporizzabile {
 		this.temporizzatore = temporizzatore;
 		temporizzatore.setTemporizzabile(this);
 
-		SwingUtilities.invokeLater(this::creaEMostraInterfacciaUtente);
-
 		BusEventi.iscriviti(InternoCaricamentoCompletato.class, this::gestisciEventoCaricamentoCompletato);
 		// Un errore interno lo si dice al giocatore (oltre che nel log dello sniffer): senza, una transizione a metà lascerebbe il gioco fermo e muto
 		SegnalatoreDegliErrori segnalatoreDegliErrori = new SegnalatoreDegliErrori(messaggio -> {
@@ -145,6 +143,9 @@ public class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(NotificaVariazioneModificatorePersonaggio.class, this::gestisciEventoVariazioneModificatore);
 		BusEventi.iscriviti(NotificaVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
 		BusEventi.iscriviti(NotificaVariazioneStatoVitalePersonaggio.class, this::gestisciEventoVariazioneStatoVitalePersonaggio);
+
+		// Per ultimo: l'interfaccia, appena pronta, pubblica eventi a cui il motore risponde, e le iscrizioni devono esserci già tutte
+		SwingUtilities.invokeLater(this::creaEMostraInterfacciaUtente);
 	}
 	
 	/**

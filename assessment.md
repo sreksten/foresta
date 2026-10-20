@@ -134,16 +134,10 @@ Nessun difetto aperto.
 
 **foresta-swing e foresta-app**
 
-- B40 Thread e avvio:
-  - `ForestaUI:87`: l'`invokeLater` di creazione parte prima delle iscrizioni, e `InternoFaseDiGioco` potrebbe perdersi (P);
-  - il thread animatore di `DisplayableCanvas:518-536` legge campi non volatili (P);
-  - `Prompt:184-189` si riprende il fuoco anche da un'altra finestra (P);
-  - `BufferedImageBuilder:36` chiama `System.exit(1)` anche nei caricamenti pigri a partita in corso (C, nessun innesco oggi).
 - B41 Codice morto e piccoli difetti:
   - quattro eventi con sprite mai pubblicati;
   - `ImageCache.imageMap`, `set`/`get(String)` e lo shutdown hook inutile;
   - `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif` inutilizzati;
-  - `fermaThreadAnimazione` mai chiamato;
   - `variaLivello` in `DisplayableCanvasRiquadroLocazione`;
   - `ComandiPossibili.add`/`set` usati solo dai test.
 

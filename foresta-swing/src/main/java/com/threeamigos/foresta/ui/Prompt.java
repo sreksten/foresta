@@ -28,7 +28,12 @@ public class Prompt extends JPanel implements ActionListener {
 	private class MyFocusListener extends FocusAdapter {
 		@Override
 		public void focusLost(FocusEvent e) {
-			e.getComponent().requestFocus();
+			// Il fuoco si riprende solo se è passato a un altro componente della stessa finestra (un click sul canvas):
+			// non se è passato a un'altra applicazione o a un'altra finestra, come quella di prova
+			Component altro = e.getOppositeComponent();
+			if (isShowing() && altro != null && SwingUtilities.getWindowAncestor(altro) == SwingUtilities.getWindowAncestor(e.getComponent())) {
+				e.getComponent().requestFocus();
+			}
 		}
 	}
 

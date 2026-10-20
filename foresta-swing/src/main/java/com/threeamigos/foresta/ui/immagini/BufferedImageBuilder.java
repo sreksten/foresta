@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui.immagini;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.notifiche.NotificaUscitaDalGioco;
 import com.threeamigos.foresta.strumenti.Logger;
 
 import javax.imageio.ImageIO;
@@ -31,9 +33,10 @@ public class BufferedImageBuilder {
 		if (resource != null && !resource.isEmpty()) {
 			BufferedImage immagine = provaACaricare(resource, zoom);
 			if (immagine == null) {
-				// Codice d'uscita diverso da 0, perché chi lancia il gioco da uno script veda l'errore
+				// Codice d'uscita diverso da 0, perché chi lancia il gioco da uno script veda l'errore; come si esce lo decide la piattaforma
 				Logger.log(() -> "Risorsa grafica di base mancante o illeggibile: " + resource);
-				System.exit(1);
+				BusEventi.pubblica(new NotificaUscitaDalGioco(1, "Risorsa grafica di base mancante o illeggibile: " + resource));
+				throw new IllegalStateException("Risorsa grafica di base mancante o illeggibile: " + resource);
 			}
 			return immagine;
 		}

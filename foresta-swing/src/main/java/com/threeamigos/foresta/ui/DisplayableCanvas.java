@@ -27,6 +27,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIcone;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIconeDock;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
@@ -94,7 +95,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		STATO_INTERMEZZO
 	}
 
-	private StatoDisplayableCanvas stato;
+	// Letto anche dal thread di animazione (vedi run)
+	private volatile StatoDisplayableCanvas stato;
 	private final ArrayList<TipoFinestra> stackElementiGrafici;
 
 	private final Map<Finestra, Rectangle> mappaCoordinateElementiGrafici = new HashMap<>();
@@ -131,12 +133,13 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasIntermezzo intermezzo;
 
 	private final ArrayList<SpriteInterface> sprites;
-	private final List<SpriteAnnuncioGlobale> codaAnnunciGlobali = new ArrayList<>();
+	// Letta anche dal thread di animazione (vedi run)
+	private final List<SpriteAnnuncioGlobale> codaAnnunciGlobali = new CopyOnWriteArrayList<>();
 	// Un annuncio richiesto mentre è ancora a schermo l'ultima pagina di un intermezzo
 	// (es. una missione attivata da un controllo dell'Automa a cascata, prima che la UI
 	// torni al gioco) va rimandato: disegnarlo subito lo sovrapporrebbe all'intermezzo.
 	private final List<SpriteAnnuncioGlobale> annunciGlobaliRimandati = new ArrayList<>();
-	private SpriteAnnuncioGlobale annuncioGlobaleAttivo;
+	private volatile SpriteAnnuncioGlobale annuncioGlobaleAttivo;
 	private final List<SpriteFumetto> codaFumetti = new ArrayList<>();
 	// Gli artefatti trovati nei cofani e nei templi, mostrati uno alla volta (vedi SpriteRivelazioneArtefatto)
 	private final List<SpriteRivelazioneArtefatto> codaRivelazioni = new ArrayList<>();
@@ -151,8 +154,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final int altezzaSchermo;
 	private final int altezzaTotaleSchermo;
 
-	private transient Thread animatore;
-	private boolean animatoreInAzione = false;
+	private transient volatile Thread animatore;
+	private volatile boolean animatoreInAzione = false;
 	// La prossima intro deve partire dalla classifica invece che dai loghi (vedi mostraPunteggi)
 	private boolean introDallaClassifica = false;
 
@@ -501,8 +504,16 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		avviaThreadAnimazione();
 	}
 	
+	@Override
+	public void removeNotify() {
+		fermaThreadAnimazione();
+		super.removeNotify();
+	}
+
 	private void avviaThreadAnimazione() {
 		if (animatore == null || !animatoreInAzione) {
+			// Il flag si alza qui e non nel nuovo thread: due addNotify ravvicinati non ne fanno partire due
+			animatoreInAzione = true;
 			animatore = new Thread(this);
 			animatore.setDaemon(true);
 			animatore.start();
@@ -512,7 +523,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	/**
 	 * Ferma il thread che ridisegna a ogni fotogramma.
 	 */
-	public void fermaThreadAnimazione() {
+	private void fermaThreadAnimazione() {
 		animatoreInAzione = false;
 	}
 
@@ -520,13 +531,13 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * Il ciclo di animazione: a cadenza fissa fa avanzare gli sprite e chiede il ridisegno, senza contenere logica di gioco.
 	 */
 	public void run() {
-		animatoreInAzione = true;
 		// Cadenza fissa: la scadenza del fotogramma successivo si calcola dalla precedente,
 		// non da quando finisce il sonno, altrimenti i ritardi di sleep() si accumulano e
 		// il ritmo effettivo scende sotto FRAME_PER_SECONDO (e diventa irregolare).
 		long periodoNanos = 1_000_000_000L / Temporizzatore.FRAME_PER_SECONDO;
 		long prossimoFotogramma = System.nanoTime();
-		while (animatoreInAzione) {
+		// Se il canvas viene tolto e rimesso prima che questo thread si accorga dello stop, quello nuovo non deve trovarlo ancora in corsa
+		while (animatoreInAzione && animatore == Thread.currentThread()) {
 			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO || stato == StatoDisplayableCanvas.STATO_MAPPA
 					|| stato == StatoDisplayableCanvas.STATO_INTRO
 					|| stato == StatoDisplayableCanvas.STATO_INVENTARIO || stato == StatoDisplayableCanvas.STATO_COMMERCIANTE
@@ -1400,10 +1411,6 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		// processaDoppioClick scatterebbero entrambi per un solo doppio click).
 		//
 		// Limiti noti, lasciati così perché oggi innocui:
-		// - il timer ricorda la finestra cliccata e nessuno lo ferma quando la schermata cambia: se entro
-		//   l'intervallo la schermata si chiude, processaClick scatta lo stesso sulla finestra che non si vede
-		//   più (oggi apre o chiude al massimo i dettagli di un oggetto). Per correggerlo basterebbe controllare
-		//   nel timer che la finestra sia ancora quella mostrata, o fermare il timer a ogni cambio di schermata;
 		// - l'intervallo è fisso a 175 ms, mentre Swing riconosce il doppio click con quello del sistema (di
 		//   solito 400-500 ms): un doppio click più lento di 175 ms fa scattare sia il click singolo sia il
 		//   doppio. Con l'intervallo del sistema il click singolo risponderebbe più lentamente.
@@ -1551,7 +1558,12 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				finestra.processaDoppioClick(x, y, tasto);
 				repaint();
 			} else {
+				final StatoDisplayableCanvas statoAlClick = stato;
 				timerClickSingolo = new Timer(intervalloDoppioClick, evento -> {
+					// Se nell'attesa la schermata è cambiata il click non vale più: la finestra cliccata non si vede
+					if (stato != statoAlClick) {
+						return;
+					}
 					finestra.processaClick(x, y, tasto);
 					repaint();
 				});

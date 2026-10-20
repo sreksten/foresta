@@ -60,13 +60,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità bassa: foresta-swing e foresta-app
 
-- B40 (P). Thread e avvio:
-  - `ForestaUI:87`: l'`invokeLater` va messo dopo le iscrizioni;
-  - il thread animatore di `DisplayableCanvas` legge campi non volatili;
-  - `fermaThreadAnimazione` è morto, e `animatoreInAzione` si imposta tardi;
-  - il `Prompt` si riprende il fuoco da altre finestre;
-  - `BufferedImageBuilder:36` chiama `System.exit(1)` anche nei caricamenti pigri;
-  - il timer del click singolo non si ferma cambiando schermata.
 - B41. Codice morto in swing:
   - quattro eventi con sprite mai pubblicati;
   - `ImageCache.imageMap`, `set`/`get(String)` e lo shutdown hook inutile;
