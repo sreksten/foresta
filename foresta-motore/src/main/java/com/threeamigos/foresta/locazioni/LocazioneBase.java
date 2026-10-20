@@ -1132,6 +1132,7 @@ public abstract class LocazioneBase implements Locazione {
 	 */
 	private Stato dopoAzioneDelGiocatore(Personaggio chi) {
 		gruppo.congedaChiNonRisorge();
+		registraMorteDegliAvversari();
 		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {
 			return null;
 		}
@@ -1145,6 +1146,7 @@ public abstract class LocazioneBase implements Locazione {
 			}
 			agisceUnAvversario(avversario);
 			gruppo.congedaChiNonRisorge();
+			registraMorteDegliAvversari();
 			if (!gruppo.getCapo().isVivo()) {
 				return Stato.GIOCO_PERSO;
 			}
@@ -1373,7 +1375,18 @@ public abstract class LocazioneBase implements Locazione {
 		}
 	}
 
+	/**
+	 * Conta tutti gli avversari caduti, anche quelli che nessun colpo diretto ha ucciso: i vicini colpiti da una reazione ad area
+	 * (elettrocuzione, esplosione di gas, rigetto) non passano da registraUccisione. Idempotente.
+	 */
+	private void registraMorteDegliAvversari() {
+		for (Personaggio avversario : gruppoAvversario.getPersonaggi()) {
+			registraMorteAvversario(avversario);
+		}
+	}
+
 	private Stato trascorriTurnoEffettiDiStato() {
+		registraMorteDegliAvversari();
 		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
 			personaggio.applicaDanniDaEffettiDiStato();
 			personaggio.riduciEffettiDiStato();
