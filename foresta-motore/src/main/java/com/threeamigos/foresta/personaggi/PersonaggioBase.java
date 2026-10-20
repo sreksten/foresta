@@ -378,6 +378,11 @@ public abstract class PersonaggioBase implements Personaggio {
 		// Con la morte finiscono anche gli effetti di stato: non devono tornare, e magari riuccidere, con la resurrezione. Senza notifiche:
 		// un morto non ha niente da mostrare (la UI disegnerebbe lo sprite grigio della rimozione)
 		new ArrayList<>(md.getEffettiDiStato()).forEach(md::togliEffettoDiStato);
+		// Lo stesso per i modificatori a tempo (anche i negativi): restano solo quelli permanenti, come le benedizioni e l'equipaggiamento
+		List<ModificatoreAttributoMD> aTempo = md.getModificatori().stream().filter(ModificatoreAttributoMD::isTemporaneo).collect(Collectors.toList());
+		if (!aTempo.isEmpty()) {
+			modificaModificatori(() -> aTempo.forEach(md::togliModificatore));
+		}
 		BusEventi.pubblica(new NotificaVariazioneStatoVitalePersonaggio(this, false));
 	}
 

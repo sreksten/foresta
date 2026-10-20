@@ -30,7 +30,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità media: combattimento e personaggi
 
-- **Modificatori temporanei di chi muore (da decidere).** Alla morte ora si tolgono gli effetti di stato (`PersonaggioBase.muore`), ma i modificatori temporanei negativi restano su chi muore e tornano con la resurrezione: da decidere se toglierli anche loro.
 - **M11, danno della fuga (regola).** Il danno è fisso, 50-100 punti (`PersonaggioBase:525-527`, c'è già un TODO): al livello 1 è spesso mortale.
   - Proposta: una percentuale della salute massima.
 

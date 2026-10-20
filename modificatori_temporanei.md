@@ -27,7 +27,7 @@ I `ModificatoreAttributoMD` possono durare un tempo e un'arma può metterli sul 
 | Bersaglio | Un'enum `BersaglioModificatore { PORTATORE, BERSAGLIO }`; il default è `PORTATORE`. |
 | Dove vale `BERSAGLIO` | Solo sulle armi. Vale per entrambe le mani: applica il modificatore l'arma che sferra il colpo. |
 | Se il modificatore si applica | Stessa formula degli effetti di stato degli incantamenti elementali (vedi §5). |
-| Quando scade | Resta finché non scade e passa da una locazione all'altra. I turni scalano nei combattimenti, le locazioni a fine locazione. |
+| Quando scade | Resta finché non scade e passa da una locazione all'altra. I turni scalano nei combattimenti, le locazioni a fine locazione. Finisce anche con la morte di chi lo porta (come gli effetti di stato): non torna con la resurrezione. |
 | Alba Sacra | Toglie tutti i modificatori temporanei dai personaggi del gruppo bersaglio, malus e bonus. |
 | Sintassi nei file | `MOD=FORTUNA =0 @BERSAGLIO 3TURNI` (`TURNI` o `LOCAZIONI`, con uno spazio facoltativo dopo il numero: `3 TURNI`; tutto in maiuscolo come il resto); senza `@BERSAGLIO` e senza durata è come oggi. |
 | Salvataggi | Niente retrocompatibilità. |
