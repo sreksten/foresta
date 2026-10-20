@@ -68,6 +68,27 @@ class ScenarioDanniAdAreaTest {
     }
 
     @Test
+    void ilColpoSenzaViciniNonPortaReazioniAdArea() {
+        try (PartitaDiTest partita = partita()) {
+            List<Personaggio> fila = goblin(3);
+            fila.forEach(GruppoAvversario.getIstanza()::aggiungiPersonaggio);
+            Personaggio bersaglio = fila.get(1);
+            bersaglio.addEffettoDiStato(TipoEffettoDiStato.BRUCIATO, 3, 0);
+            Personaggio arsenio = partita.gruppo().getCapo();
+            int[] saluteDiPrima = fila.stream().mapToInt(Personaggio::getSalute).toArray();
+
+            DannoRisultante colpo = CalcolatoreCombattimento.calcolaDannoRisultante(arsenio, bersaglio, arma(TipoDanno.VELENO));
+            assertEquals(1, colpo.getDanniAdArea().size());
+            colpo.togliDanniAdArea();
+            bersaglio.applicaRisultatoCombattimento(colpo);
+
+            assertTrue(colpo.getDanniAdArea().isEmpty());
+            assertEquals(saluteDiPrima[0], fila.get(0).getSalute());
+            assertEquals(saluteDiPrima[2], fila.get(2).getSalute());
+        }
+    }
+
+    @Test
     void lElettrocuzioneCorreNellaPozzaFinoAChiNonEBagnato() {
         try (PartitaDiTest partita = partita()) {
             List<Personaggio> fila = goblin(5);

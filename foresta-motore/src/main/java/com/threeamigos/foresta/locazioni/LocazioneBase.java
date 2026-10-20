@@ -1880,9 +1880,11 @@ public abstract class LocazioneBase implements Locazione {
 
 	/**
 	 * Un solo attacco del capo degli avversari, con l'arma principale: se colpisce, si calcola il danno come in ogni
-	 * combattimento (difese comprese) ma si limita al {@value #SPREGIO_FERITE_MASSIME_PERCENTUALE}% della salute che il
-	 * personaggio ha adesso (almeno un punto) e comunque in modo che gliene resti almeno uno: per un tentativo di amicizia
-	 * o di corruzione non si muore. Gli effetti di stato del colpo si applicano.
+	 * combattimento (difese comprese) ma il danno diretto si limita al {@value #SPREGIO_FERITE_MASSIME_PERCENTUALE}% della
+	 * salute che il personaggio ha adesso (almeno un punto) e comunque in modo che gliene resti almeno uno. Il colpo non
+	 * investe i vicini (niente reazioni ad area: è una colluttazione fra due soli). Gli effetti di stato del colpo si
+	 * applicano interi, e il turno degli effetti che segue può farli scattare: chi è avvelenato o bruciato può quindi
+	 * morire anche per un tentativo di amicizia o di corruzione fallito.
 	 *
 	 * @return la descrizione delle ferite, null se il colpo non arriva o non fa niente
 	 */
@@ -1898,6 +1900,7 @@ public abstract class LocazioneBase implements Locazione {
 		int tetto = Math.min(Math.max(1, salute * SPREGIO_FERITE_MASSIME_PERCENTUALE / 100), Math.max(0, salute - 1));
 		int danno = Math.min(risultato.getDanno(), tetto);
 		risultato.setDanno(danno);
+		risultato.togliDanniAdArea();
 		personaggio.applicaRisultatoCombattimento(risultato);
 		if (danno <= 0 && risultato.getEffettiDiStatoDaAggiungere().isEmpty()) {
 			return null;

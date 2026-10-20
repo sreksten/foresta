@@ -55,7 +55,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
   - La soglia della tattica (`TatticheBase:293, 300`, 100·s/m < 25) non coincide con quella dell'incantesimo (`Morte:61`, s < m/4 con divisione intera), che quindi si ritorce sul mostro.
   - Morte e Silenzio non chiamano `registraEsitoAzione`.
   - La magia "a caso" può pescare Morte su un bersaglio sano.
-- **M7, lo spregio uccide (regola).** Dopo un'amicizia o una corruzione fallita il danno è limitato a salute − 1, ma stati e danno ad area si applicano, e il tick che segue può uccidere il capo (`LocazioneBase:1876-1896`).
 - **M8, carico senza classe (regola).** `calcolaCaricoMassimo` (`PersonaggioBase:1029-1051`) non moltiplica per `getMoltiplicatoreCarico()`, contro quanto dicono la javadoc e `motore_di_gioco.md` §8. Correggerlo vuol dire ritarare pesi e test.
 - **M9, effetti oltre la morte.** Gli effetti di stato restano su chi muore e tornano con la resurrezione (`PersonaggioBase:363-381`).
   - Correzione: `rimuoviTuttiGliEffettiDiStato()` in `muore` o in `resuscita`.

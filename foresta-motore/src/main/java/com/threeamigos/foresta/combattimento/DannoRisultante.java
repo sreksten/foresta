@@ -223,6 +223,13 @@ public class DannoRisultante {
         danniAdArea.add(dannoAdArea);
     }
 
+    /**
+     * Toglie le reazioni ad area: il colpo investe solo il difensore.
+     */
+    public void togliDanniAdArea() {
+        danniAdArea.clear();
+    }
+
     public List<DannoAdArea> getDanniAdArea() {
         return Collections.unmodifiableList(danniAdArea);
     }
