@@ -65,8 +65,11 @@ public enum TipoDanno {
         return categoriaDanno;
     }
 
+    /**
+     * Gli stati alterati che questo tipo di danno può causare: una copia, perché l'array è di un'enum e chi lo modificasse lo cambierebbe per tutti.
+     */
     public TipoEffettoDiStato[] getEffetti() {
-        return effetti;
+        return effetti.clone();
     }
 
     public String getNome() {

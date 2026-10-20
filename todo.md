@@ -79,7 +79,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 - B6. `GruppoMD.leggi`, `RegistroPersonaggiMD.leggi` e `RegistroArtefattiMD.leggi` aggiungono invece di sostituire: svuotare, oppure allineare la javadoc.
 - B7. `GruppoGiocatoreMD:222`: con un file troncato si aggiunge null agli ospiti; usare `LettoreCampi`.
 - B8 (P). `ForestaMD`: `offset()` non controlla i limiti, e gli array restano null prima di `reimposta`.
-- B10 (P). `TipoDanno.getEffetti()` espone l'array interno, e `ModelloDati.istanza` non è `volatile`.
 - B11. `Costanti:249` ha un commento fuori posto. `Comando.SINGOLO`, `RUTTOLOMEO` e `STORPSGORBLIN` sono usati solo dalle icone.
 
 ### Gravità bassa: foresta-contratti

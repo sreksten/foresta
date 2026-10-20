@@ -23,8 +23,8 @@ import java.io.PrintWriter;
  */
 public class ModelloDati implements Serializzabile {
 
-	// L'istanza di modello dati su cui il gioco si basa
-	private static ModelloDati istanza = new ModelloDati();
+	// L'istanza di modello dati su cui il gioco si basa (volatile: la imposta chi carica o azzera, e la leggono tutti, anche da altri thread)
+	private static volatile ModelloDati istanza = new ModelloDati();
 
 	/**
 	 * L'istanza del modello dati su cui si basa la partita in corso.

@@ -15,6 +15,27 @@ import static org.junit.jupiter.api.Assertions.*;
 class RegoleDeiTipiTest {
 
     @Test
+    void gliEffettiDiUnTipoDiDannoNonSiCambianoDaFuori() {
+        TipoDanno danno = null;
+        for (TipoDanno tipo : TipoDanno.values()) {
+            if (tipo.hasEffettiDiStato()) {
+                danno = tipo;
+                break;
+            }
+        }
+        assertNotNull(danno, "almeno un tipo di danno causa degli stati");
+        TipoEffettoDiStato[] prima = danno.getEffetti();
+        TipoEffettoDiStato[] copia = danno.getEffetti();
+        assertNotSame(prima, copia);
+
+        // Chi riceve l'array lo può cambiare senza toccare l'enum
+        Arrays.fill(prima, null);
+
+        assertArrayEquals(copia, danno.getEffetti());
+        assertNotNull(danno.getEffetti()[0]);
+    }
+
+    @Test
     void cartaBatteSassoSassoBatteForbiceForbiceBatteCarta() {
         for (MossaCartaForbiciSasso mossa : MossaCartaForbiciSasso.values()) {
             for (MossaCartaForbiciSasso altra : MossaCartaForbiciSasso.values()) {
