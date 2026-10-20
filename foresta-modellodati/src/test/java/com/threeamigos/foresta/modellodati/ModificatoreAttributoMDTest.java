@@ -94,6 +94,21 @@ class ModificatoreAttributoMDTest {
     }
 
     @Test
+    void unaNotaNullEVuotaEIlModificatoreRilettoELoStesso() throws IOException {
+        ModificatoreAttributoMD senzaNota = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 2.0d, null);
+        assertEquals("", senzaNota.getNote());
+        assertEquals(senzaNota, ModificatoreAttributoMD.daCampo(new LettoreCampi(senzaNota.comeCampo())));
+        assertEquals(senzaNota, new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 2.0d));
+    }
+
+    @Test
+    void laQuantitaSiConfrontaComeUnDouble() {
+        ModificatoreAttributoMD nan = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, Double.NaN);
+        assertEquals(nan, new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, Double.NaN));
+        assertEquals(nan.hashCode(), new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, Double.NaN).hashCode());
+    }
+
+    @Test
     void unCampoSenzaNotaSiRileggeConLaNotaVuota() throws IOException {
         ModificatoreAttributoMD riletto = ModificatoreAttributoMD.daCampo(new LettoreCampi("FORZA§VARIAZIONE_FISSA§2.0§PERMANENTE§0§PORTATORE§true"));
         assertEquals(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 2.0d), riletto);

@@ -33,10 +33,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità bassa: foresta-tipi e foresta-modellodati
 
-- B3 (P). `ModificatoreAttributoMD`:
-  - null nella nota torna "", e il riletto non è più `equals`;
-  - `quantita` si confronta con `==` invece di `Double.compare`;
-  - c'è un `import Locale` inutile.
 - B7. `GruppoGiocatoreMD:222`: con un file troncato si aggiunge null agli ospiti; usare `LettoreCampi`.
 - B8 (P). `ForestaMD`: `offset()` non controlla i limiti, e gli array restano null prima di `reimposta`.
 - B11. `Costanti:249` ha un commento fuori posto. `Comando.SINGOLO`, `RUTTOLOMEO` e `STORPSGORBLIN` sono usati solo dalle icone.

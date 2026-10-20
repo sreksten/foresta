@@ -7,7 +7,6 @@ import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Locale;
 
 import static com.threeamigos.foresta.modellodati.Serializzabile.composto;
 import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
@@ -37,7 +36,7 @@ public class ModificatoreAttributoMD {
     /**
      * Un modificatore che l'Alba Sacra può togliere (vedi l'altro costruttore).
      *
-     * @param note una nota libera, spesso vuota; il carattere "|" si toglie
+     * @param note una nota libera, spesso vuota (null vale come vuota); il carattere "|" si toglie
      * @param durata 0 per un modificatore permanente, almeno 1 per uno a tempo (nell'unità indicata)
      * @throws IllegalArgumentException se la durata non è coerente con l'unità: un permanente deve avere durata 0 e uno a
      * tempo almeno 1
@@ -62,7 +61,9 @@ public class ModificatoreAttributoMD {
         this.tipoAttributo = tipoAttributo;
         this.tipoModificatore = tipoModificatore;
         this.quantita = quantita;
-        this.note = Serializzabile.pulisciCampo(note);
+        // Mai null: una nota assente è vuota, come dopo un salvataggio
+        String pulita = Serializzabile.pulisciCampo(note);
+        this.note = pulita == null ? "" : pulita;
         this.unitaDurata = unitaDurata;
         this.durata = durata;
         this.bersaglio = bersaglio;
@@ -176,7 +177,7 @@ public class ModificatoreAttributoMD {
      */
     public boolean stessoEffetto(ModificatoreAttributoMD altro) {
         return tipoAttributo == altro.tipoAttributo && tipoModificatore == altro.tipoModificatore
-                && quantita == altro.quantita && Objects.equals(note, altro.note)
+                && Double.compare(quantita, altro.quantita) == 0 && Objects.equals(note, altro.note)
                 && unitaDurata == altro.unitaDurata && bersaglio == altro.bersaglio && rimovibile == altro.rimovibile;
     }
 

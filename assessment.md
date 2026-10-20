@@ -108,7 +108,6 @@ Nessun difetto aperto.
 
 **foresta-tipi e foresta-modellodati**
 
-- B3 `ModificatoreAttributoMD:52, 158, 175`: una nota null torna "", e il modificatore riletto non è più `equals`. Il confronto fra double usa `==`. (P)
 - B7 `GruppoGiocatoreMD:222`: con un file troncato si aggiunge null agli ospiti, e la lettura della sola testata passa senza errore. (C)
 - B8 `ForestaMD:48, 59, 234`: `offset()` non controlla i limiti, e gli array restano null prima di `reimposta`. (P)
 - B11 `Costanti:249`: commento fuori posto (POZIONI_SALUTE_INIZIALI). `Comando.SINGOLO`, `RUTTOLOMEO` e `STORPSGORBLIN` sono in uso solo per le icone. (C)
