@@ -76,7 +76,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità bassa: foresta-contratti
 
-- B12. `Misc.getDirezione`: a distanza 0 esce "a zero ore di cammino verso ovest", per esempio quando la città distrutta è proprio quella in cui sta il gruppo.
 - B13 (P). `Misc.getOrdinaleImpl`: dà "nullo" per 0 e un'eccezione da 42 in su.
 
 ### Gravità bassa: foresta-motore

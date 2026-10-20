@@ -124,7 +124,6 @@ Nessun difetto aperto.
 
 **foresta-contratti**
 
-- B12 `strumenti/Misc:177-231`: a distanza 0 esce "a zero ore di cammino verso ovest", per esempio quando la città distrutta è quella in cui si trova il gruppo. (C)
 - B13 `strumenti/Misc:57-63`: `getOrdinaleImpl` dà "nullo" per 0 e un'eccezione da 42 in su. (P)
 
 **foresta-motore**

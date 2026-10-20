@@ -121,6 +121,18 @@ public class LineaTemporale {
 	 * dopo il giorno 40 il gioco è perduto. La distruzione di una città viene annunciata con una colonna di fumo nella sua direzione.
 	 */
 	public static void eventi(GruppoGiocatore gruppo) {
+		eventi(gruppo, false);
+	}
+
+	/**
+	 * Come {@link #eventi}, per l'alba dopo una notte passata dal gruppo dov'è: se la città che cade è proprio quella in cui dormiva, scampa
+	 * per un pelo (invece di arrivarci a cosa fatta, come chi ci cammina).
+	 */
+	public static void eventiDiNotte(GruppoGiocatore gruppo) {
+		eventi(gruppo, true);
+	}
+
+	private static void eventi(GruppoGiocatore gruppo, boolean dormiva) {
 		int giorno = getGiorno();
 		String nome = gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		if (giorno > 40) {
@@ -128,13 +140,13 @@ public class LineaTemporale {
 			setGiocoFinito(true);
 		} else {
 			if (giorno >= 35 && !isCittaDistrutta(TipoLocazione.CITTA_MALGAARD)) {
-				distruggiCitta(TipoLocazione.CITTA_MALGAARD, gruppo, nome);
+				distruggiCitta(TipoLocazione.CITTA_MALGAARD, gruppo, nome, dormiva);
 			} else if (giorno >= 30 && !isCittaDistrutta(TipoLocazione.CITTA_FLEENA)) {
-				distruggiCitta(TipoLocazione.CITTA_FLEENA, gruppo, nome);
+				distruggiCitta(TipoLocazione.CITTA_FLEENA, gruppo, nome, dormiva);
 			} else if (giorno >= 25 && !isCittaDistrutta(TipoLocazione.CITTA_NYENA)) {
-				distruggiCitta(TipoLocazione.CITTA_NYENA, gruppo, nome);
+				distruggiCitta(TipoLocazione.CITTA_NYENA, gruppo, nome, dormiva);
 			} else if (giorno >= 20 && !isCittaDistrutta(TipoLocazione.CITTA_RUUNA)) {
-				distruggiCitta(TipoLocazione.CITTA_RUUNA, gruppo, nome);
+				distruggiCitta(TipoLocazione.CITTA_RUUNA, gruppo, nome, dormiva);
 			}
 		}
 	}
@@ -142,12 +154,21 @@ public class LineaTemporale {
 	/**
 	 * Il drago distrugge una citta': al suo posto restano delle rovine. La direzione del fumo si calcola prima, finche'
 	 * la citta' e' ancora sulla mappa. Le missioni che andavano concluse li' falliscono al turno successivo (vedi
-	 * isCittaDistrutta).
+	 * isCittaDistrutta). Se il gruppo è proprio in quella città non vede una colonna di fumo da lontano: se ci dormiva, scampa per un pelo,
+	 * e se ci è appena arrivato trova solo le rovine.
 	 */
-	private static void distruggiCitta(TipoLocazione citta, GruppoGiocatore gruppo, String nome) {
+	private static void distruggiCitta(TipoLocazione citta, GruppoGiocatore gruppo, String nome, boolean dormiva) {
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(citta);
 		if (coordinate != null) {
-			setEvento(nome + COLONNA + Misc.getDirezione(gruppo, coordinate));
+			String nomeCitta = citta.getNomeDellaCitta();
+			if (!coordinate.equals(gruppo.getCoordinate())) {
+				setEvento(nome + COLONNA + Misc.getDirezione(gruppo, coordinate));
+			} else if (dormiva) {
+				setEvento("Un boato scuote " + nomeCitta + " prima dell'alba: il Drago! " + gruppo.chiMaiuscolo()
+						+ " riesce a fuggire per un pelo tra le fiamme, e di " + nomeCitta + " non restano che rovine fumanti.");
+			} else {
+				setEvento("Dove sorgeva " + nomeCitta + " " + gruppo.chi() + " trova solo le rovine: il Drago è passato di qui.");
+			}
 		}
 		setCittaDistrutta(citta);
 		Foresta.distruggiLocazioneUnica(citta, TipoLocazione.ROVINE);

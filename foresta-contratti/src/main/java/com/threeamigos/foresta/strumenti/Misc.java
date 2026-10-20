@@ -175,6 +175,10 @@ public class Misc {
 		int dy = (daY > aY ? daY - aY : aY - daY);
 		StringBuilder sb = new StringBuilder();
 		int distanza = dx + dy;
+		if (distanza == 0) {
+			// Nello stesso punto non c'è una direzione: "a zero ore di cammino verso ovest" non vuol dire niente
+			return "proprio qui.";
+		}
 		if (distanza > 36) {
 			if (distanza > 50)
 				sb.append("molto ");

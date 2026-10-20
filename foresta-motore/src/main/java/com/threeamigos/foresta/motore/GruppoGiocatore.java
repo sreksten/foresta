@@ -639,7 +639,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		getPersonaggiVivi().forEach(p -> p.riposa(ore, tipoRiposo));
 		getOspitiVulnerabiliVivi().forEach(p -> p.riposa(ore, tipoRiposo));
 		LineaTemporale.mattinoSeguente();
-		LineaTemporale.eventi(this);
+		LineaTemporale.eventiDiNotte(this);
+		if (alCoperto && LineaTemporale.isCittaDistrutta(tipoLocazione)) {
+			// La città in cui si dormiva è caduta stanotte: lo si racconta subito, non alla locazione dopo
+			String evento = LineaTemporale.getEvento();
+			if (evento != null) {
+				BusEventi.pubblica(new NotificaTestoParagrafo(evento));
+			}
+		}
 		BusEventi.pubblica(new NotificaTestoFrase("Il sole sorge e l'avventura ricomincia."));
 	}
 
