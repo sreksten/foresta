@@ -433,15 +433,12 @@ public abstract class Gruppo implements VistaGruppo {
 	}
 
 	/**
-	 * Toglie il personaggio dal gruppo; il capo diventa il primo dei personaggi rimasti.
+	 * Toglie il personaggio dal gruppo; se era il capo, il nuovo capo è il primo dei personaggi rimasti, altrimenti il capo resta quello che era.
 	 */
 	public void rimuoviPersonaggio(Personaggio p) {
-		if (p.equals(capo)) {
-			capo = null;
-		}
 		personaggi.remove(p);
-		if (!personaggi.isEmpty()) {
-			capo = personaggi.get(0);
+		if (p.equals(capo)) {
+			capo = personaggi.isEmpty() ? null : personaggi.get(0);
 		}
 	}
 
