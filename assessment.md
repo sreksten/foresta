@@ -124,11 +124,7 @@ Nessun difetto aperto.
   - il messaggio di `:1142` stampa la riga invece del numero.
 
   Oggi nessuna grammatica usa queste forme. (C/P, latente)
-- B33 `testi/ProduttoreDiTestiCasuale`:
-  - `:427` (`indexOf("-")`), `:343` e `:557` fanno parsing senza controlli;
-  - gli stream delle grammatiche non vengono chiusi (`:62-90`).
-
-  Oggi le grammatiche sono conformi. (P)
+- B33 `testi/ProduttoreDiTestiCasuale`: i due `locande.reset()` durante la partita (`reazioneLocandiere` e `getNotiziaLocanda`) potrebbero essere inutili: 20000 chiamate di `getNotiziaLocanda` senza reset non hanno dato eccezioni, ma in un solo scenario, e il commento di `NotiziaLocandaEsauritaTest` parla di eccezioni nelle partite lunghe. Da verificare prima di toglierli. (P)
 - B34 `oggetti/GeneratoreArtefattiTabelle:400`: `conGrado` dà per scontato che il nome cominci con il nome comune. `offerte/Informazioni:384`: `tiraAncheAUnaFaccia(0)` senza castelli rimasti (non raggiungibile). `RegistroTrofei:104`: NPE senza un gestore impostato. (P)
 - B35 Codice morto nel motore:
   - in `PersonaggioBase`: `calcolaStanchezza`, `subCarisma`, `add<Primario>`, `getQuantitaEffettoDiStato` e `puoPrendere(Artefatto)`;
@@ -243,10 +239,9 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
   Ogni ipotesi è stata verificata leggendo i chiamanti.
 - **Misure.** Righe e file sono contati con `wc -l` su `src/main` e `src/test`. Test e copertura vengono da `mvn clean test` del 2026-10-19, tutti verdi.
-- **Il rischio delle notizie malformate** del 2026-10-17 è ora B33: le grammatiche attuali sono conformi, quindi non si innesca.
 
 ## Da fare / idee aperte
 
 - Ripetere le misure dopo ogni grande intervento, e confrontare le righe delle classi della tabella del §2.
 - Valutare un report JaCoCo aggregato (`report-aggregate` in `foresta-app`).
-- Un test che produca tutte le alternative delle grammatiche e le disegni con i font, per prendere B33 e i caratteri che il font non ha.
+- Un test che produca tutte le alternative delle grammatiche e le disegni con i font, per prendere le produzioni malformate e i caratteri che il font non ha.

@@ -49,10 +49,7 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
   - `[chiave]` su una chiave solo assegnata passa la validazione ma fallisce a runtime;
   - le produzioni derivate dipendono dall'ordine della HashMap;
   - il messaggio della riga 1142 stampa la riga invece del numero.
-- B33 (P). `ProduttoreDiTestiCasuale`:
-  - `indexOf("-")` (riga 427), `lastIndexOf('/')` (riga 343) e `split("/")` (riga 557) senza controlli;
-  - gli stream delle grammatiche non vengono chiusi (righe 62-90; usare `fromResource`);
-  - `locande.reset()` è inutile, e la javadoc delle notizie è fuorviante.
+- B33 (P). `ProduttoreDiTestiCasuale`: verificare se i due `locande.reset()` durante la partita (`reazioneLocandiere` e `getNotiziaLocanda`) servono: 20000 chiamate senza reset non hanno dato eccezioni, ma in un solo scenario.
 - B34 (P). Altri:
   - `GeneratoreArtefattiTabelle.conGrado` dà per scontato il nome comune all'inizio;
   - `Informazioni:384` chiama `tiraAncheAUnaFaccia(0)` senza castelli;

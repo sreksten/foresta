@@ -59,27 +59,27 @@ public class ProduttoreDiTestiCasuale {
 			fiabe = GrammarBean.fromResource(ProduttoreDiTestiCasuale.class,
 					"/com/threeamigos/foresta/motore/fiabe.txt",
 					"/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt");
-			oroscopi = new GrammarBean(
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/oroscopo.txt"),
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
+			oroscopi = GrammarBean.fromResource(ProduttoreDiTestiCasuale.class,
+					"/com/threeamigos/foresta/motore/oroscopo.txt",
+					"/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt");
 			locande = GrammarBean.fromResource(ProduttoreDiTestiCasuale.class,
 					"/com/threeamigos/foresta/motore/locande.txt",
 					"/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt");
-			templi = new GrammarBean(
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/templi.txt"),
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
-			rovine = new GrammarBean(
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/rovine.txt"),
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
-			aggiornamenti = new GrammarBean(
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/artefatti2.txt"), null);
+			templi = GrammarBean.fromResource(ProduttoreDiTestiCasuale.class,
+					"/com/threeamigos/foresta/motore/templi.txt",
+					"/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt");
+			rovine = GrammarBean.fromResource(ProduttoreDiTestiCasuale.class,
+					"/com/threeamigos/foresta/motore/rovine.txt",
+					"/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt");
+			aggiornamenti = GrammarBean.fromResource(ProduttoreDiTestiCasuale.class,
+					"/com/threeamigos/foresta/motore/artefatti2.txt", null);
 			missioni = GrammarBean.fromResource(ProduttoreDiTestiCasuale.class,
 					"/com/threeamigos/foresta/motore/missioni.txt",
 					"/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt");
-			leggendari = new GrammarBean(
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/leggendari.txt"), null);
-			sfide = new GrammarBean(
-					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/sfide.txt"), null);
+			leggendari = GrammarBean.fromResource(ProduttoreDiTestiCasuale.class,
+					"/com/threeamigos/foresta/motore/leggendari.txt", null);
+			sfide = GrammarBean.fromResource(ProduttoreDiTestiCasuale.class,
+					"/com/threeamigos/foresta/motore/sfide.txt", null);
 		} catch (InvalidGrammarException | IOException e) {
 			// Senza grammatiche il gioco non puo' andare avanti: si segnala l'errore e si chiede alla piattaforma di
 			// terminare. Il bus consegna gli eventi nell'ordine in cui sono pubblicati, quindi chi ascolta le
@@ -341,8 +341,12 @@ public class ProduttoreDiTestiCasuale {
 		try {
 			String prodotto = String.join(" ", oroscopi.produce("DIALOGO_SULL_OROSCOPO"));
 			int separatore = prodotto.lastIndexOf('/');
-			String oroscopo = prodotto.substring(0, separatore).trim();
-			String tema = prodotto.substring(separatore + 1).trim();
+			// Un oroscopo senza tema ("testo/FORMA:nome") non rompe il dialogo: il capo fa la domanda generica
+			String oroscopo = (separatore < 0 ? prodotto : prodotto.substring(0, separatore)).trim();
+			String tema = separatore < 0 ? "" : prodotto.substring(separatore + 1).trim();
+			if (separatore < 0) {
+				Logger.log(() -> "Oroscopo senza tema, manca il '/': " + prodotto);
+			}
 			int duePunti = tema.indexOf(':');
 			if (duePunti < 0) {
 				return new DialogoSullOroscopo(oroscopo, null, produciSulTema("DOMANDA_GENERICA", null),
@@ -424,7 +428,12 @@ public class ProduttoreDiTestiCasuale {
 		for (int tentativo = 0; tentativo < MASSIMO_TENTATIVI_NOTIZIA_LOCANDA; tentativo++) {
 			List<String> notizie = locande.produce("NOTIZIE_" + identificativoLocanda);
 			String notizia = notizie.get(0);
-			int posizioneSeparatore = notizia.indexOf("-");
+			int posizioneSeparatore = notizia.indexOf('-');
+			if (posizioneSeparatore < 0) {
+				// Una notizia malformata (manca "ID-") si salta, come una che non si applica al gruppo
+				Logger.log(() -> "Notizia della locanda senza identificativo, manca il '-': " + notizia);
+				continue;
+			}
 			String identificativo = notizia.substring(0, posizioneSeparatore);
 			if (escludiLeRecenti && ModelloDati.getIstanza().getNotizieMD().getUltimeNotizie().stream().anyMatch(n -> n.getId().equals(identificativo))) {
 				// La notizia è già stata pubblicata tra le ultime, ne scegliamo un'altra
@@ -570,7 +579,12 @@ public class ProduttoreDiTestiCasuale {
 			if (produzioni.size() > 1) {
 				throw new IllegalArgumentException("La grammatica produce più di una riga di produzione per " + locande.getRootNode());
 			}
-			String[] token = produzioni.get(0).split("/");
+			// Con -1 i campi finali vuoti restano (una locanda senza dialogo o senza recensione)
+			String[] token = produzioni.get(0).split("/", -1);
+			if (token.length < 5) {
+				throw new IllegalArgumentException("La produzione di una locanda ha " + token.length
+						+ " campi invece di 5 (nome/identificativo/locandiere/recensione/dialogo): " + produzioni.get(0));
+			}
 			String nomeLocanda = token[0];
 			String identificativoLocanda = token[1];
 			String nomeLocandiere = token[2];
