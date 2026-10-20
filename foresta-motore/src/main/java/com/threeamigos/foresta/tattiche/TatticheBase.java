@@ -290,13 +290,13 @@ public final class TatticheBase {
 	}
 
 	/**
-	 * Da 31: il Colpo di Morte sul quasi caduto (sotto un quarto della salute, dove uccide: altrimenti si ritorce contro chi lo lancia), il Silenzio
+	 * Da 31: il Colpo di Morte sul quasi caduto (sotto la soglia di Morte, {@link com.threeamigos.foresta.incantesimi.Morte#puoUccidere}, dove uccide: altrimenti si ritorce contro chi lo lancia), il Silenzio
 	 * sull'incantatore con più magia, il colpo finale e gli incantesimi più adatti conoscendo l'equipaggiamento.
 	 */
 	private static List<VoceMD> fasciaStratega(TipoPersonaggio classe, boolean magico, int incantesimo) {
 		List<VoceMD> voci = new ArrayList<>();
 		PredicatoMD fascia = daAstuzia(SOGLIA_STRATEGA);
-		SelettoreMD quasiCaduto = su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.MENO_SALUTE, sotto(25));
+		SelettoreMD quasiCaduto = su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.MENO_SALUTE, sotto(Costanti.INCANTESIMO_MORTE_SOGLIA_SALUTE_PERCENTUALE));
 		SelettoreMD ferito = su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.MENO_SALUTE, sotto(35));
 		SelettoreMD piuFerito = su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.MENO_SALUTE);
 		SelettoreMD incantatore = su(TipoRosa.AVVERSARI, TipoOrdinamento.PIU_MAGIA, magico());

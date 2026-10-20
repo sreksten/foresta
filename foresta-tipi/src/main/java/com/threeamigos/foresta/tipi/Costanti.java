@@ -223,6 +223,8 @@ public class Costanti {
     public static final int INCANTESIMO_MORTE_COSTO_ACQUISTO = 5;
     public static final int INCANTESIMO_MORTE_COSTO_LANCIO = 5;
     public static final int INCANTESIMO_MORTE_DANNI = 0;
+    // Morte uccide solo chi ha meno di questa percentuale della salute massima: la usano sia l'incantesimo sia la tattica che lo sceglie
+    public static final int INCANTESIMO_MORTE_SOGLIA_SALUTE_PERCENTUALE = 25;
 
     public static final int INCANTESIMO_RESURREZIONE_COSTO_ACQUISTO = 15;
     public static final int INCANTESIMO_RESURREZIONE_COSTO_LANCIO = 15;

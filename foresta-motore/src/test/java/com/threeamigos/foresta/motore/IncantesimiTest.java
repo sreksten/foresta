@@ -2,7 +2,11 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.incantesimi.Fulmine;
 import com.threeamigos.foresta.incantesimi.Fuoco;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.incantesimi.Morte;
+import com.threeamigos.foresta.incantesimi.Silenzio;
+import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
@@ -126,6 +130,81 @@ class IncantesimiTest {
         GruppoAvversario avversari = GruppoAvversario.getIstanza();
         avversari.aggiungiPersonaggio(bersaglio);
         assertThrows(IllegalArgumentException.class, () -> new Morte(5).formula(mago, null, avversari));
+    }
+
+    @Test
+    void morteUccideSottoUnQuartoSenzaArrotondamentiAncheConUnaSaluteMassimaNonDivisibilePerQuattro() {
+        // Given: una salute massima che non si divide per quattro, e un bersaglio al di sotto del 25% ma non sotto la divisione intera
+        if (bersaglio.getSaluteMassima() % 4 == 0) {
+            bersaglio.addSaluteMassima(1, "prova");
+        }
+        int massima = bersaglio.getSaluteMassima();
+        assertNotEquals(0, massima % 4);
+        int salute = massima / 4;
+        assertTrue(100 * salute < 25 * massima, "con " + salute + " su " + massima + " è sotto il 25%");
+        ferisciFinoA(bersaglio, salute);
+        assertTrue(Morte.puoUccidere(bersaglio));
+        bersaglio.addEffettoDiStato(TipoEffettoDiStato.STORDITO, 1, 0);
+        // When
+        new Morte(5).formula(mago, bersaglio, null);
+        // Then
+        assertFalse(bersaglio.isVivo(), "Morte uccide con " + salute + " su " + massima);
+    }
+
+    @Test
+    void morteNonUccideAlDiSopraDellaSoglia() {
+        ferisciFinoA(bersaglio, (bersaglio.getSaluteMassima() * 25 + 99) / 100 + 1);
+        assertFalse(Morte.puoUccidere(bersaglio));
+    }
+
+    @Test
+    void morteRegistraGliEsitiCosiICheTentativiFallitiFermanoLaRipetizione() {
+        // Given: bersaglio sano e STORDITO (colpito di sicuro): Morte si ritorce contro il mago, e il tentativo fallito si ricorda
+        StatoDelCombattimento.azzeraIstanza();
+        bersaglio.addEffettoDiStato(TipoEffettoDiStato.STORDITO, 1, 0);
+        // When
+        new Morte(5).formula(mago, bersaglio, null);
+        // Then
+        StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
+        assertEquals(1, stato.getTentativiFalliti(mago, bersaglio, TipoAzione.MORTE));
+        new Morte(5).formula(mago, bersaglio, null);
+        assertEquals(2, stato.getTentativiFalliti(mago, bersaglio, TipoAzione.MORTE));
+        // Una riuscita li azzera
+        ferisciFinoA(bersaglio, 1);
+        new Morte(5).formula(mago, bersaglio, null);
+        assertEquals(0, stato.getTentativiFalliti(mago, bersaglio, TipoAzione.MORTE));
+    }
+
+    @Test
+    void morteSuChiEImmuneSiRicordaComeImmunitaScoperta() {
+        StatoDelCombattimento.azzeraIstanza();
+        Scheletro scheletro = new Scheletro(5);
+        scheletro.addEffettoDiStato(TipoEffettoDiStato.STORDITO, 1, 0);
+
+        new Morte(5).formula(mago, scheletro, null);
+
+        assertTrue(StatoDelCombattimento.getIstanza().isImmunitaScoperta(scheletro, TipoAzione.MORTE));
+    }
+
+    @Test
+    void silenzioRegistraGliEsiti() {
+        StatoDelCombattimento.azzeraIstanza();
+        StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
+        // Un colpo mancato (il bersaglio non è stordito, e il dado dà il massimo) conta come tentativo fallito
+        Dado.trucca(100);
+        try {
+            new Silenzio(5).formula(mago, bersaglio, null);
+        } finally {
+            Dado.ripristina();
+        }
+        assertFalse(bersaglio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO));
+        assertEquals(1, stato.getTentativiFalliti(mago, bersaglio, TipoAzione.SILENZIO));
+
+        // Un colpo riuscito azzera i tentativi e silenzia
+        bersaglio.addEffettoDiStato(TipoEffettoDiStato.STORDITO, 1, 0);
+        new Silenzio(5).formula(mago, bersaglio, null);
+        assertTrue(bersaglio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO));
+        assertEquals(0, stato.getTentativiFalliti(mago, bersaglio, TipoAzione.SILENZIO));
     }
 
     private static void ferisciFinoA(Personaggio personaggio, int salute) {

@@ -96,7 +96,6 @@ Nessun difetto aperto.
 
 | Cod. | Dove | Difetto | |
 | :--- | :--- | :--- | :---: |
-| M6 | `tattiche/TatticheBase:293, 300`, `incantesimi/Morte:61` | Morte: la tattica usa 100·s/m < 25, l'incantesimo s < m/4 intero; con s=2, m=10 si ritorce sul mostro. Morte e Silenzio non registrano l'esito, quindi i tentativi falliti non fermano la ripetizione; la magia "a caso" può pescare Morte su un bersaglio sano | C |
 | M11 | `PersonaggioBase:525-527` | La fuga toglie 50-100 punti fissi: al livello 1 un Mago muore nel 41% circa delle fughe (TODO già nel codice) | C |
 
 **Motore, missioni, trofei e testi**
@@ -256,7 +255,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 ## 8. Prossimi passi consigliati
 
 1. **Correggere i medi certi e a basso rischio:** la UI (M24).
-2. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M11 (fuga), B28 (LaLealta).
+2. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M11 (fuga), B28 (LaLealta).
 3. **Un vero gestore di `InternoException`** (M19).
 4. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
 5. **Bilanciamento:** come da [`todo.md`](todo.md).

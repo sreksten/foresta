@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
@@ -11,6 +12,8 @@ import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
+import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
+import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
 import java.util.List;
 
@@ -89,16 +92,20 @@ public class Silenzio extends IncantesimoMaleficoImpl implements Incantesimo {
 	@Override
 	protected void colpisci(Personaggio formulante, Personaggio bersaglio) {
 		String nomeBersaglio = bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-		if (bersaglio.isImmuneAIncantesimo(getClasse())) {
+		StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
+		if (bersaglio.isImmuneAIncantesimo(getClasse()) || bersaglio.isImmuneAEffetto(TipoEffettoDiStato.SILENZIATO)) {
 			Logger.log("Bersaglio immune all'incantesimo");
 			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo non ha effetto su " + nomeBersaglio + "."));
+			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.SILENZIO, EsitoAzione.IMMUNE);
 			return;
 		}
 		if (!CalcolatoreCombattimento.colpisce(formulante, bersaglio, getTipoDanno().getCategoriaDanno())) {
 			Logger.log("L'incantesimo non va a segno");
 			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo non va a segno su " + nomeBersaglio + "."));
+			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.SILENZIO, EsitoAzione.MANCATA);
 			return;
 		}
+		stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.SILENZIO, EsitoAzione.RIUSCITA);
 		bersaglio.addEffettoDiStato(TipoEffettoDiStato.SILENZIATO,
 				CalcolatoreCombattimento.calcolaDurataStato(bersaglio, TipoEffettoDiStato.SILENZIATO), 0);
 	}

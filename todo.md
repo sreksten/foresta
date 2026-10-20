@@ -30,37 +30,18 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità media: combattimento e personaggi
 
-  - Correzione: `turnoGestitoDalRound = true`, oppure `return` nei rami che non sono azioni.
-  - Correzione: controllare `isIncapaceDiAgire`, oppure escludere gli incapaci dalla scelta.
-  - Correzione: includere `getOspitiBersaglio()`.
-  - (P) In `PersonaggioBase:606-619` un ospite colpito è trattato come avversario, e la Purificazione cura i mostri.
-- **M6, Morte (regola).**
-  - La soglia della tattica (`TatticheBase:293, 300`, 100·s/m < 25) non coincide con quella dell'incantesimo (`Morte:61`, s < m/4 con divisione intera), che quindi si ritorce sul mostro.
-  - Morte e Silenzio non chiamano `registraEsitoAzione`.
-  - La magia "a caso" può pescare Morte su un bersaglio sano.
-  - Correzione: `rimuoviTuttiGliEffettiDiStato()` in `muore` o in `resuscita`.
-  - Da decidere anche per i modificatori temporanei negativi.
-  - Correzione: riscalarle ai nuovi massimi.
+- **Modificatori temporanei di chi muore (da decidere).** Alla morte ora si tolgono gli effetti di stato (`PersonaggioBase.muore`), ma i modificatori temporanei negativi restano su chi muore e tornano con la resurrezione: da decidere se toglierli anche loro.
 - **M11, danno della fuga (regola).** Il danno è fisso, 50-100 punti (`PersonaggioBase:525-527`, c'è già un TODO): al livello 1 è spesso mortale.
   - Proposta: una percentuale della salute massima.
 
 ### Gravità media: motore, missioni, trofei e testi
 
-  - Incarichi: CacciaAiGoblin, LaTagliaSullaBanda, CacciatoreDiTaglie, IlPellegrino, IlRapimento, IlTorneo.
-  - Correzione: salvare la coordinata del rito in un parametro proprio.
-  - Correzione: azzerare a ogni visita.
-  - Scrivere il vincolo di idempotenza in `gestione_missioni.md`.
-  - (P) Lo stesso può succedere nell'accampamento.
 - **M19, errori del bus silenziosi.** In `BusEventi` (righe 57-79) l'unico iscritto a `InternoException` è lo sniffer, quindi una transizione a metà resta bloccata in silenzio. Un `Error` interrompe la consegna agli altri iscritti.
   - Servono un gestore vero e niente ripetizione dell'errore a ogni tick in `TemporizzatoreJ2SE`.
-  - Correzione: cancellarlo anche a partita nuova, dopo un caricamento e all'uscita.
 
 ### Gravità media: interfaccia
 
-  - Correzione: farlo solo per i personaggi del gruppo.
 - **M24, rinomina che resta aperta.** Il `Prompt` per rinominare una tattica resta aperto quando si lascia la schermata, e l'Invio scrive su una bozza ormai scartata (`Prompt:252-264`, `DisplayableCanvasTattiche:199-203`).
-  - Conviene unificare i nove metodi quasi uguali.
-  - Correzione: misurare il tempo come fa `SpriteBase`.
 
 ### Gravità bassa: foresta-tipi e foresta-modellodati
 
