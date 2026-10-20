@@ -819,7 +819,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		String nome = md.getNome();
 		if (nome != null) {
-			return includiPreposizioneArticolata ? " di " + nome : nome;
+			return includiPreposizioneArticolata ? "di " + nome : nome;
 		} else if (!isPNG()) {
 			throw new IllegalStateException("Personaggio giocante senza nome!");
 		}

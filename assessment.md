@@ -122,7 +122,6 @@ Nessun difetto aperto.
 **foresta-motore**
 
 - B17 `PersonaggioBase:127-131`: il flag PNG dipende dal costruttore (costruttori `(int)` dei residenti), e BARDO e BARDO_DELLE_LOCANDE non sono coerenti. (C l'incoerenza)
-- B18 `PersonaggioBase:796`: la preposizione articolata con un nome proprio dà un doppio spazio ("i gusti  di Pippo"). (C)
 - B19 `PersonaggioBase:1486-1491`: `subStanchezza` notifica un valore negativo. `:1638`: la variazione temporanea del carico conta i modificatori due volte. `:1136-1146`: la notifica di morte esce prima di `setSalute(0)`. `:881-889`: `limitaEntroMassimi` può restituire un valore negativo. (C/P)
 - B20 `LocazioneBase:969-971`: SINGOLO_ATTACCO è offerto in mischia ma ignorato. `:437-440` e `:1528-1533`: rami irraggiungibili, e il secondo manderebbe l'`Automa` in IllegalStateException (IN_COMBATTIMENTO non ha un gestore d'ingresso). (C, latente)
 - B21 `CalcolatoreCombattimento:674, 705`: divisione per la FORZA del difensore senza la guardia `> 0` della riga 725. (P)
