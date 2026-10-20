@@ -11,8 +11,9 @@ import java.util.Random;
 /**
  * Genera e mantiene un unico set di nuvole condiviso tra le varie viste della mappa
  * (riquadro mappa e mappa a tutto schermo), in modo che risultino coerenti tra loro
- * quando si passa da una vista all'altra. La generazione è quella "storica" di
- * DisplayableCanvasMappaATuttoSchermo, basata sull'ingombro a schermo della mappa conosciuta.
+ * quando si passa da una vista all'altra. Le nuvole vagano su tutta la foresta, anche sulle caselle che
+ * il gruppo non conosce ancora: l'area su cui nascono e si muovono è quella della mappa intera, disegnata come la
+ * mostra la mappa a tutto schermo (centrata, con la casella (0, 0) in alto a sinistra).
  */
 public class CloudManager {
 
@@ -39,6 +40,16 @@ public class CloudManager {
 		if (clouds == null) {
 			genera(mappa, width, height, larghezzaIcona, altezzaIcona);
 		}
+	}
+
+	/**
+	 * Dimentica le nuvole: le prossime si generano sull'area conosciuta della partita che comincia (o che si carica), non su quella
+	 * della partita di prima.
+	 */
+	public static void azzera() {
+		clouds = null;
+		clipCanonico = null;
+		ultimoAggiornamentoNanos = -1;
 	}
 
 	/**
@@ -90,13 +101,11 @@ public class CloudManager {
 	private static void genera(VistaMappa mappa, int width, int height, int larghezzaIcona, int altezzaIcona) {
 		Random rand = new Random();
 
-		int daX = mappa.getMinXConosciuta();
-		int aX = mappa.getMaxXConosciuta();
-		int daY = mappa.getMinYConosciuta();
-		int aY = mappa.getMaxYConosciuta();
-
-		int larghezzaMappa = (aX - daX + 1) * larghezzaIcona;
-		int altezzaMappa = (aY - daY + 1) * altezzaIcona;
+		// Tutta la foresta, non solo la parte conosciuta
+		int daX = 0;
+		int daY = 0;
+		int larghezzaMappa = mappa.getDimensioneX() * larghezzaIcona;
+		int altezzaMappa = mappa.getDimensioneY() * altezzaIcona;
 		int coordinataSchermoX = (width - larghezzaMappa) >> 1;
 		int coordinataSchermoY = (height - altezzaMappa) >> 1;
 
@@ -108,13 +117,16 @@ public class CloudManager {
 
 		clouds = new ArrayList<>();
 		for (int i = 0; i < NUMERO_NUVOLE; i++) {
-			int cloudWidth = (int) (clipCanonico.width * 0.3) + rand.nextInt((int) (clipCanonico.width * 0.3));
-			int cloudHeight = cloudWidth / 2;
+			// Con un'area conosciuta piccola o a corridoio i limiti non devono scendere sotto uno: nextInt(0) lancia, e un'immagine di
+			// zero pixel non si crea. La nuvola, poi, non è più alta dell'area
+			int larghezzaMinima = Math.max(1, (int) (clipCanonico.width * 0.3));
+			int cloudWidth = larghezzaMinima + rand.nextInt(larghezzaMinima);
+			int cloudHeight = Math.max(1, Math.min(cloudWidth / 2, clipCanonico.height));
 
 			BufferedImage singleCloudPattern = CloudGenerator.generateCloud(cloudWidth, cloudHeight);
 
 			float startX = clipCanonico.x + rand.nextInt(clipCanonico.width) - cloudWidth;
-			float startY = clipCanonico.y + rand.nextInt(clipCanonico.height - cloudHeight);
+			float startY = clipCanonico.y + rand.nextInt(Math.max(1, clipCanonico.height - cloudHeight));
 
 			// Pixel al secondo: le nuvole più grandi (quindi più vicine) scorrono più veloci
 			float speed = 3.5f + ((float) cloudWidth / clipCanonico.width) * 13.5f;

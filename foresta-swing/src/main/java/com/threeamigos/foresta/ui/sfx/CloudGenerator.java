@@ -29,13 +29,15 @@ public class CloudGenerator {
         // Numero di "soffici cerchi" che comporranno la nuvola (es. tra 5 e 8)
         int numPuffs = 5 + rand.nextInt(4);
 
+        // Una nuvola minuscola (un'area conosciuta stretta) non deve dare limiti nulli a nextInt né un raggio nullo alla sfumatura
+        int lato = Math.max(4, Math.min(width, height));
         for (int i = 0; i < numPuffs; i++) {
             // Calcola dimensioni casuali per ogni singolo puff di nuvola
-            int puffRadius = Math.min(width, height) / 3 + rand.nextInt(Math.min(width, height) / 4);
+            int puffRadius = lato / 3 + rand.nextInt(lato / 4);
 
             // Posiziona i cerchi principalmente verso il centro dell'immagine
-            int centerX = width / 2 + (rand.nextInt(width / 2) - width / 4);
-            int centerY = height / 2 + (rand.nextInt(height / 4) - height / 8);
+            int centerX = width / 2 + (rand.nextInt(Math.max(1, width / 2)) - width / 4);
+            int centerY = height / 2 + (rand.nextInt(Math.max(1, height / 4)) - height / 8);
 
             // Definisce i colori della sfumatura radiale:
             // Al centro il cerchio è bianco semitrasparente, al bordo diventa completamente trasparente

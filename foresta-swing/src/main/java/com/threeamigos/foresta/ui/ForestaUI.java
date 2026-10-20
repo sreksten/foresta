@@ -20,6 +20,7 @@ import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.strumenti.Temporizzabile;
 import com.threeamigos.foresta.strumenti.Temporizzatore;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
+import com.threeamigos.foresta.ui.sfx.CloudManager;
 import com.threeamigos.foresta.ui.sfx.TracciatoreLogo;
 
 import javax.swing.*;
@@ -319,6 +320,8 @@ public class ForestaUI implements Temporizzabile {
 	}
 
 	private void gestisciEventoCaricamentoCompletato(InternoCaricamentoCompletato evento) {
+		// Caricata un'altra partita: le nuvole della mappa si rigenerano sulla sua area conosciuta
+		CloudManager.azzera();
 		displayableCanvas.ripristinaMessaggi(evento.getUltimiMessaggi());
 	}
 
@@ -504,6 +507,8 @@ public class ForestaUI implements Temporizzabile {
 				break;
 
 			case NOME_PERSONAGGIO:
+				// Comincia una partita nuova: le nuvole della mappa si rigenerano sulla sua area conosciuta
+				CloudManager.azzera();
 				temporizzatore.termina();
 				displayableCanvas.scriviGrande("Scegli il nome del tuo personaggio o lascialo vuoto per un personaggio casuale.");
 				prompt.setVisible(true);

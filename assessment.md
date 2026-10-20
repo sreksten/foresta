@@ -110,7 +110,6 @@ Nessun difetto aperto.
 | Cod. | Dove | Difetto | |
 | :--- | :--- | :--- | :---: |
 | M24 | `ui/Prompt:252-264`, `ui/tattiche/DisplayableCanvasTattiche:199-203` | Il campo di rinomina della tattica resta aperto quando si lascia la voce o la schermata; l'Invio scrive su una bozza scartata | C |
-| M28 | `ui/sfx/CloudManager:39-41, 117` | `nextInt(clip.height - cloudHeight)` può ricevere ≤ 0 con una zona conosciuta "a corridoio"; nuvole statiche mai azzerate fra una partita e l'altra | P |
 
 ### 5.3 Gravità bassa
 
