@@ -28,7 +28,6 @@ public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements 
 	private final int larghezzaSchermo;
 	private final int altezzaSchermo;
 
-	private final int minOffsetPerNuvole;
     private final int larghezzaRiquadroMappa;
 
 	public DisplayableCanvasRiquadroMappa(int topLeftX, int topLeftY, int larghezzaSchermo, int altezzaSchermo,
@@ -40,7 +39,6 @@ public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements 
 		this.altezzaSchermo = altezzaSchermo;
 
         int larghezzaSingolaIcona = ImageCache.mappa.get(TipoLocazione.BOSCO).getWidth();
-		minOffsetPerNuvole = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA;
 		larghezzaRiquadroMappa = 7 * larghezzaSingolaIcona;
 
 		registratiAEventi();
@@ -107,10 +105,11 @@ public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements 
 		Composite originalComposite = graphics.getComposite();
 
 		// 3. APPLICA LA CLIP: Da adesso in poi si colora SOLO dentro questo quadrato
-		graphics.clipRect(minOffsetPerNuvole, minOffsetPerNuvole, larghezzaRiquadroMappa, larghezzaRiquadroMappa);
+		Rectangle areaDelleNuvole = areaDelleNuvole(topLeftX, topLeftY, larghezzaRiquadroMappa);
+		graphics.clipRect(areaDelleNuvole.x, areaDelleNuvole.y, areaDelleNuvole.width, areaDelleNuvole.height);
 
 		// (Opzionale) Per vedere dove finisce il riquadro
-		//graphics.setColor(Color.RED); graphics.drawRect(minOffsetPerNuvole, minOffsetPerNuvole, larghezzaRiquadroMappa, larghezzaRiquadroMappa);
+		//graphics.setColor(Color.RED); graphics.drawRect(areaDelleNuvole.x, areaDelleNuvole.y, areaDelleNuvole.width, areaDelleNuvole.height);
 
 		// 4. Imposta la trasparenza e disegna le nuvole condivise con la mappa a tutto schermo
 		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.45f));
@@ -123,6 +122,15 @@ public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements 
 
 		// Aggiorna la posizione delle nuvolette
 		CloudManager.aggiorna();
+	}
+
+	/**
+	 * Dove si vedono le nuvole: il quadrato della mappa dentro la cornice, cioè spostato del bordo interno rispetto all'angolo in alto a
+	 * sinistra del riquadro, in x con la x dell'angolo e in y con la sua y (che di solito sono diverse).
+	 */
+	static Rectangle areaDelleNuvole(int topLeftX, int topLeftY, int larghezzaRiquadroMappa) {
+		return new Rectangle(topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA, topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA,
+				larghezzaRiquadroMappa, larghezzaRiquadroMappa);
 	}
 
 	private void gestisciEventoVariazioneMappa(NotificaVariazioneConoscenzaMappa evento) {
