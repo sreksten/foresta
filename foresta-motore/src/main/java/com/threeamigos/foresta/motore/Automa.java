@@ -645,7 +645,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				personaggio = new Sacerdote(nomePersonaggio, 1);
 				break;
 			default:
-				throw new IllegalArgumentException();
+				comandoNonValido(comando);
+				return Esito.FERMATI;
 		}
 		inizializzaGioco();
 		return Esito.CONTINUA_CON_INGRESSO;
@@ -1542,7 +1543,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
 			return Esito.CONTINUA_CON_INGRESSO;
 		} else {
-			throw new IllegalArgumentException();
+			comandoNonValido(comando);
+			return Esito.FERMATI;
 		}
 	}
 
@@ -1577,7 +1579,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				stato = Stato.TATTICHE;
 				return Esito.CONTINUA_CON_INGRESSO;
 			default:
-				throw new IllegalArgumentException();
+				comandoNonValido(comando);
+				return Esito.FERMATI;
 		}
 	}
 
@@ -1591,7 +1594,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciComandoInStatoTrofei(Comando comando) {
 		if (comando != Comando.ANNULLA) {
-			throw new IllegalArgumentException();
+			comandoNonValido(comando);
+			return Esito.FERMATI;
 		}
 		stato = Stato.INVENTARIO;
 		return Esito.CONTINUA_CON_INGRESSO;
@@ -1626,7 +1630,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				richiediAperturaTattiche();
 				return Esito.FERMATI;
 			default:
-				throw new IllegalArgumentException();
+				comandoNonValido(comando);
+				return Esito.FERMATI;
 		}
 	}
 
