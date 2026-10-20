@@ -68,12 +68,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
   - `variaLivello` e il parametro `locazione` di `xOggetto` in `RiquadroLocazione`;
   - `ComandiPossibili.add`/`set` usati solo dai test;
   - un javadoc fuori posto in `DisplayableCanvasScambiatore`.
-- B42. `foresta-app` e strumenti:
-  - `SnifferBusEventi:114-115` si iscrive due volte a `InternoVenditaArtefatto`;
-  - `SnifferBusEventi:395` costruisce la stringa di log fuori dal fornitore;
-  - `SnifferBusEventi:315` ha l'etichetta doppia;
-  - `Main` ignora senza log gli argomenti sconosciuti, e `ZOOM` non valido esce con un'eccezione nuda;
-  - in `FinestraDiProva.PannelloDadi` la tendina non mostra il valore del trucco attivo.
 
 ## Architettura
 

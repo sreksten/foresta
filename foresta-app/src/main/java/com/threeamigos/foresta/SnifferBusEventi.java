@@ -112,7 +112,6 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoStoccaggioArtefatto.class, this::onEventoRichiestaStoccaggioArtefatto);
         BusEventi.iscriviti(RichiestaTesto.class, this::onEventoRichiestaTesto);
         BusEventi.iscriviti(InternoVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
-        BusEventi.iscriviti(InternoVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
         BusEventi.iscriviti(RichiestaVisualizzazioneMappa.class, this::onEventoRichiestaVisualizzazioneMappa);
         BusEventi.iscriviti(NotificaRifiutoAcquistoArtefatto.class, this::onEventoRifiutoAcquistoArtefatto);
         BusEventi.iscriviti(NotificaRifiutoAcquistoConsumabile.class, this::onEventoRifiutoAcquistoConsumabile);
@@ -312,7 +311,7 @@ public class SnifferBusEventi {
     }
 
     private void onEventoNotificaGlobale(NotificaGlobale evento) {
-        Logger.log(() -> String.format(Locale.ROOT, "%s - %s - %s - %s - %s", new Date(), evento.getTipoEvento(), evento.getEtichetta(), evento.getEtichetta(), evento.getMessaggio()));
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s - %s - %s", new Date(), evento.getTipoEvento(), evento.getEtichetta(), evento.getMessaggio()));
     }
 
     private void onEventoParagrafo(NotificaTestoParagrafo evento) {
@@ -392,9 +391,8 @@ public class SnifferBusEventi {
     }
 
     private void onEventoRichiestaAperturaFinestraCombattimento(InternoRichiestaAperturaFinestraCombattimento evento) {
-        String notifica = "Attiva - " + formattaStatistichePersonaggio(evento.getPersonaggio()) + " vs " +
-                formattaStatistichePersonaggio(evento.getAvversario());
-        Logger.log(() -> headerEvento(evento) + notifica);
+        Logger.log(() -> headerEvento(evento) + "Attiva - " + formattaStatistichePersonaggio(evento.getPersonaggio()) + " vs " +
+                formattaStatistichePersonaggio(evento.getAvversario()));
     }
 
     private void onEventoRichiestaAperturaInventarioCommerciante(RichiestaAperturaInventarioCommerciante evento) {

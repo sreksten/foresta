@@ -142,14 +142,6 @@ Nessun difetto aperto.
   - `ComandiPossibili.add`/`set` usati solo dai test.
 
   (C)
-- B42 `foresta-app`:
-  - `SnifferBusEventi:114-115` si iscrive due volte a `InternoVenditaArtefatto`;
-  - `:395` costruisce la stringa di log fuori dal fornitore;
-  - `:315` ha l'etichetta doppia;
-  - `Main:49-67` ignora senza log gli argomenti sconosciuti, e `ZOOM` non valido esce con un'eccezione nuda;
-  - `FinestraDiProva.PannelloDadi`: la tendina non mostra il valore del trucco attivo dopo una ricostruzione (solo modalità di prova).
-
-  (C)
 
 ### 5.4 Ipotesi controllate e scartate
 

@@ -77,6 +77,21 @@ public final class TrucchiDiSviluppo implements TruccatoreDiDadi {
         return numeri.containsKey(contesto) || elementi.containsKey(contesto);
     }
 
+    /**
+     * Il numero voluto dal trucco acceso su quel contesto, se ce n'è uno.
+     */
+    public synchronized OptionalInt getNumero(ContestoLancio contesto) {
+        Integer valore = numeri.get(contesto);
+        return valore == null ? OptionalInt.empty() : OptionalInt.of(valore);
+    }
+
+    /**
+     * L'elemento voluto dal trucco acceso su quel contesto, se ce n'è uno.
+     */
+    public synchronized Optional<Object> getElemento(ContestoLancio contesto) {
+        return Optional.ofNullable(elementi.get(contesto));
+    }
+
     @Override
     public synchronized OptionalInt lancio(ContestoLancio contesto, int min, int max) {
         Integer valore = numeri.get(contesto);

@@ -42,9 +42,8 @@ public class Main {
 	private static boolean barraDock = true;
 
 	/**
-	 * Imposta le opzioni di avvio dagli argomenti; quelli sconosciuti sono ignorati.
-	 *
-	 * @throws NumberFormatException se il valore di {@code ZOOM=} non è un numero
+	 * Imposta le opzioni di avvio dagli argomenti; quelli sconosciuti, e uno {@code ZOOM=} che non è un numero positivo,
+	 * sono ignorati con una riga nel log.
 	 */
 	private static void leggiArgomenti(String[] args) {
         for (String arg : args) {
@@ -59,9 +58,16 @@ public class Main {
             } else if (arg.equalsIgnoreCase("BARRACLASSICA")) {
                 barraDock = false;
             } else if (arg.toUpperCase(Locale.ROOT).startsWith("ZOOM=")) {
-                LivelloDiZoom.imposta(Double.parseDouble(arg.substring("ZOOM=".length())));
+                try {
+                    LivelloDiZoom.imposta(Double.parseDouble(arg.substring("ZOOM=".length())));
+                } catch (IllegalArgumentException e) {
+                    // Anche NumberFormatException: un valore che non è un numero, o non è positivo, lascia lo zoom predefinito
+                    Logger.log(() -> "Argomento ignorato, lo zoom resta " + LivelloDiZoom.valore() + ": " + arg);
+                }
             } else if (arg.equalsIgnoreCase("MODALITA_DI_PROVA")) {
                 ModalitaDiProva.setAttiva(true);
+            } else {
+                Logger.log(() -> "Argomento sconosciuto ignorato: " + arg);
             }
         }
 	}

@@ -425,6 +425,7 @@ public class FinestraDiProva {
             JCheckBox acceso = new JCheckBox(contesto.getDescrizione(), trucchi.isAcceso(contesto));
             add(acceso, cella(0, riga));
             JComboBox<Object> valore = new JComboBox<>(opzioni(contesto));
+            selezionaIlValoreDelTrucco(contesto, valore);
             add(valore, cella(1, riga));
             Runnable applica = () -> {
                 if (acceso.isSelected() && valore.getSelectedItem() != null) {
@@ -440,6 +441,26 @@ public class FinestraDiProva {
             };
             acceso.addActionListener(e -> applica.run());
             valore.addActionListener(e -> applica.run());
+        }
+
+        /**
+         * Il pannello si ricostruisce spesso (vedi ricostruisciITab): la tendina deve mostrare il valore del trucco già acceso, non la prima voce.
+         */
+        private void selezionaIlValoreDelTrucco(ContestoLancio contesto, JComboBox<Object> valore) {
+            trucchi.getNumero(contesto).ifPresent(numero -> {
+                int indice = indiceDelNumero(contesto, numero);
+                if (indice >= 0 && indice < valore.getItemCount()) {
+                    valore.setSelectedIndex(indice);
+                }
+            });
+            trucchi.getElemento(contesto).ifPresent(voluto -> {
+                for (int i = 0; i < valore.getItemCount(); i++) {
+                    if (elemento(contesto, valore.getItemAt(i)).equals(voluto)) {
+                        valore.setSelectedIndex(i);
+                        return;
+                    }
+                }
+            });
         }
 
         private Object[] opzioni(ContestoLancio contesto) {
@@ -482,6 +503,13 @@ public class FinestraDiProva {
                 default:
                     return indice + 1;
             }
+        }
+
+        /**
+         * L'inverso di {@link #numero}: la posizione della voce che dà quel numero.
+         */
+        private int indiceDelNumero(ContestoLancio contesto, int numero) {
+            return contesto == ContestoLancio.COFANO_ESITO ? numero : numero - 1;
         }
 
         private Object elemento(ContestoLancio contesto, Object scelto) {
