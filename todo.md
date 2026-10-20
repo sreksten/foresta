@@ -31,7 +31,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 ### Gravità media: combattimento e personaggi
 
   - Correzione: `turnoGestitoDalRound = true`, oppure `return` nei rami che non sono azioni.
-- **M4, incapaci che agiscono.** Chi è CONGELATO, ATTERRATO o STORDITO può attaccare, formulare e bere con le azioni manuali (`LocazioneBase:1408-1427`, QUALE_FORMULA, CHI_BEVE_*).
   - Correzione: controllare `isIncapaceDiAgire`, oppure escludere gli incapaci dalla scelta.
 - **M5, ospiti vulnerabili.** Gli stati non scadono mai, perché tick e pulizia scorrono solo i personaggi (`LocazioneBase:1376-1392`, `Automa:776`).
   - Correzione: includere `getOspitiBersaglio()`.

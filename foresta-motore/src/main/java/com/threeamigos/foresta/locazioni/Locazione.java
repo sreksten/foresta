@@ -26,6 +26,14 @@ public interface Locazione {
 	}
 
 	/**
+	 * Se il giocatore sta scegliendo chi compie un'azione (attacca, formula, beve, tratta) con degli avversari in campo: fra i candidati non
+	 * ci sono i personaggi incapaci di agire (vedi Personaggio.isIncapaceDiAgire).
+	 */
+	default boolean isSceltaDiChiAgisce() {
+		return false;
+	}
+
+	/**
 	 * Se il giocatore sta scegliendo chi beve una pozione dell'aumento di livello: fra i candidati non ci sono i personaggi
 	 * già al livello massimo.
 	 */

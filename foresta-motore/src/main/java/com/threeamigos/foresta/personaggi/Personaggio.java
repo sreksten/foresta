@@ -136,6 +136,14 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 * un bersaglio come gli altri (un gruppo di soli non morti ha comunque un "più ferito").
 	 */
     boolean isCurabile();
+
+	/**
+	 * Se per un effetto di stato (ATTERRATO, CONGELATO, STORDITO) il personaggio salta il turno: non attacca, non formula, non canta, non beve.
+	 */
+    default boolean isIncapaceDiAgire() {
+		return hasEffettoDiStato(TipoEffettoDiStato.ATTERRATO) || hasEffettoDiStato(TipoEffettoDiStato.CONGELATO)
+				|| hasEffettoDiStato(TipoEffettoDiStato.STORDITO);
+	}
 	/**
 	 * Indica se il personaggio sia vivo
 	 */

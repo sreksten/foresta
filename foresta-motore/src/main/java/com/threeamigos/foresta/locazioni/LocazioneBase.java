@@ -31,6 +31,7 @@ import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * La locazione è un automa a stati finiti. Un gruppo mentre si sposta per
@@ -122,6 +123,10 @@ public abstract class LocazioneBase implements Locazione {
 	// nessuna azione (si è solo scelto chi combatte o chi duella, o un canto o un dardo non sono partiti): senza che gli avversari agiscano
 	// non passa nessun turno, altrimenti ripetendo la scelta si avvelenerebbero i mostri "gratis"
 	private boolean turnoGestitoDalRound;
+
+	// Nessuno dei miei può agire (tutti storditi, congelati o atterrati) e gli avversari sono ancora in campo: il combattimento procede da solo, a
+	// ogni battito, saltando i miei (vedi avviaLaMischiaForzata), finché qualcuno non si riprende. La fuga resta sempre possibile
+	private boolean mischiaForzata;
 
 	private enum StatoLocazione {
 		NUOVA_LOCAZIONE,
@@ -339,7 +344,88 @@ public abstract class LocazioneBase implements Locazione {
 			// Vinto lo scontro: le scorte che gli avversari non hanno usato sono bottino
 			BottinoDegliAvversari.raccogli(gruppo, gruppoAvversario);
 		}
+		if (stato == Stato.FINE_LOCAZIONE || stato == Stato.GIOCO_PERSO) {
+			mischiaForzata = false;
+		} else if ((stato == Stato.IN_LOCAZIONE || (stato == Stato.IN_COMBATTIMENTO && !mischiaForzata)) && nessunoPuoAgire()) {
+			return avviaLaMischiaForzata();
+		}
 		return stato;
+	}
+
+	/**
+	 * I miei personaggi che possono agire adesso: quelli in campo e, se ci sono avversari, non incapaci di agire (storditi, congelati, atterrati).
+	 */
+	private List<Personaggio> chiPuoAgire() {
+		List<Personaggio> inCampo = gruppo.getPersonaggiVivi();
+		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {
+			return inCampo;
+		}
+		return inCampo.stream().filter(p -> !p.isIncapaceDiAgire()).collect(Collectors.toList());
+	}
+
+	/**
+	 * Se ci sono avversari e dei miei in campo, ma nessuno è in grado di agire.
+	 */
+	private boolean nessunoPuoAgire() {
+		return !gruppo.getPersonaggiVivi().isEmpty() && chiPuoAgire().isEmpty();
+	}
+
+	/**
+	 * Nessuno dei miei può agire: non c'è niente da scegliere, e il turno passa da solo. Si passa alla mischia automatica, che salta chi non
+	 * può agire, fa agire gli avversari e fa scendere gli effetti di stato a fine round; si torna al giocatore appena qualcuno si riprende.
+	 * La fuga resta fra i comandi.
+	 */
+	private Stato avviaLaMischiaForzata() {
+		if (!mischiaForzata) {
+			mischiaForzata = true;
+			BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() + " non è in grado di agire."));
+		}
+		statoLocazione = StatoLocazione.IN_COMBATTIMENTO;
+		impostaComandiPossibili();
+		return Stato.IN_COMBATTIMENTO;
+	}
+
+	@Override
+	public boolean isSceltaDiChiAgisce() {
+		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {
+			return false;
+		}
+		switch (statoLocazione) {
+			case CHI_ESEGUE_SINGOLO_ATTACCO:
+			case CHI_COMBATTE:
+			case CHI_FORMULA:
+			case CHI_CORROMPE:
+			case CHI_FA_AMICIZIA:
+			case CHI_BEVE_POZIONE_SALUTE:
+			case CHI_BEVE_POZIONE_SALUTE_GRANDE:
+			case CHI_BEVE_POZIONE_MAGIA:
+			case CHI_BEVE_POZIONE_MAGIA_GRANDE:
+			case CHI_BEVE_POZIONE_AUMENTO_LIVELLO:
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	/**
+	 * I comandi che chiedono a un personaggio di agire: senza nessuno in grado di farlo non si possono dare.
+	 */
+	private static boolean isComandoDiChiAgisce(Comando azione) {
+		switch (azione) {
+			case SINGOLO_ATTACCO:
+			case COMBATTIMENTO:
+			case INCANTESIMO:
+			case CORRUZIONE:
+			case AMICIZIA:
+			case POZIONE_SALUTE:
+			case POZIONE_SALUTE_GRANDE:
+			case POZIONE_MAGIA:
+			case POZIONE_MAGIA_GRANDE:
+			case POZIONE_AUMENTO_LIVELLO:
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	/**
@@ -971,23 +1057,26 @@ public abstract class LocazioneBase implements Locazione {
 			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibili));
 			return;
 		}
+		// Se nessuno è in grado di agire restano solo la fuga e le azioni che non sono di un personaggio
+		boolean qualcunoPuoAgire = !nessunoPuoAgire();
+		List<Personaggio> chiAgisce = chiPuoAgire();
 		// Possiamo combattere? Oppure, vogliamo cambiare chi combatte?
-		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO || gruppo.getNumeroPersonaggiVivi() > 1) {
+		if (qualcunoPuoAgire && (statoLocazione != StatoLocazione.IN_COMBATTIMENTO || chiAgisce.size() > 1)) {
 			comandiPossibili.add(Comando.SINGOLO_ATTACCO);
 			comandiPossibili.add(Comando.COMBATTIMENTO);
 		}
-		// Se stiamo combattendo possiamo interrompere la schermaglia
-		if (statoLocazione == StatoLocazione.IN_COMBATTIMENTO) {
+		// Se stiamo combattendo possiamo interrompere la schermaglia (non quella che prosegue da sola perché nessuno può agire)
+		if (statoLocazione == StatoLocazione.IN_COMBATTIMENTO && !mischiaForzata) {
 			comandiPossibili.add(Comando.INTERRUZIONE_COMBATTIMENTO);
 		}
 		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo,
 		// oppure se un Mago o un Elfo vivo ha la MAGIA per il dardo arcano, o un Sacerdote per l'alba sacra
-		boolean incantesimoPossibile = gruppo.getPersonaggiVivi().stream()
+		boolean incantesimoPossibile = chiAgisce.stream()
 				.anyMatch(p -> DardoArcano.puoLanciarlo(p) || AlbaSacra.puoLanciarlaInnata(p) || LuceDivina.puoLanciarlaInnata(p)
 						|| !CantoDelBardo.cantiUtili(p, gruppo, gruppoAvversario).isEmpty());
 		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
 			if (gruppo.getIncantesimi(tipoIncantesimo) > 0 &&
-					gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.puoFormulare(tipoIncantesimo))) {
+					chiAgisce.stream().anyMatch(p -> p.puoFormulare(tipoIncantesimo))) {
 				incantesimoPossibile = true;
 				break;
 			}
@@ -996,29 +1085,29 @@ public abstract class LocazioneBase implements Locazione {
 			comandiPossibili.add(Comando.INCANTESIMO);
 		}
 		// Possiamo corrompere gli avversari?
-		if (opzioneCorruzioneDisponibile) {
+		if (qualcunoPuoAgire && opzioneCorruzioneDisponibile) {
 			comandiPossibili.add(Comando.CORRUZIONE);
 		}
 		// Possiamo fare amicizia?
-		if (opzioneAmiciziaDisponibile) {
+		if (qualcunoPuoAgire && opzioneAmiciziaDisponibile) {
 			comandiPossibili.add(Comando.AMICIZIA);
 		}
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO) {
 			comandiPossibili.add(Comando.MAPPA);
 		}
-		if (gruppo.getPozioniSalute() > 0) {
+		if (qualcunoPuoAgire && gruppo.getPozioniSalute() > 0) {
 			comandiPossibili.add(Comando.POZIONE_SALUTE);
 		}
-		if (gruppo.getPozioniSaluteGrande() > 0) {
+		if (qualcunoPuoAgire && gruppo.getPozioniSaluteGrande() > 0) {
 			comandiPossibili.add(Comando.POZIONE_SALUTE_GRANDE);
 		}
-		if (gruppo.getPozioniMagia() > 0) {
+		if (qualcunoPuoAgire && gruppo.getPozioniMagia() > 0) {
 			comandiPossibili.add(Comando.POZIONE_MAGIA);
 		}
-		if (gruppo.getPozioniMagiaGrande() > 0) {
+		if (qualcunoPuoAgire && gruppo.getPozioniMagiaGrande() > 0) {
 			comandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
 		}
-		if (gruppo.isPozioneAumentoLivelloUtilizzabile()) {
+		if (qualcunoPuoAgire && gruppo.isPozioneAumentoLivelloUtilizzabile()) {
 			comandiPossibili.add(Comando.POZIONE_AUMENTO_LIVELLO);
 		}
 		// Possiamo sempre controllare l'inventario
@@ -1507,14 +1596,28 @@ public abstract class LocazioneBase implements Locazione {
 				fineRound = statoDelCombattimento.registraAzione(attore);
 			}
 		}
-		if (fineRound) {
-			return Optional.ofNullable(trascorriTurnoEffettiDiStato());
+		Stato dopoGliEffetti = fineRound ? trascorriTurnoEffettiDiStato() : null;
+		if (dopoGliEffetti == null && mischiaForzata && !nessunoPuoAgire()) {
+			// Qualcuno si è ripreso: si torna a scegliere che cosa fare
+			mischiaForzata = false;
+			BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
+			statoLocazione = StatoLocazione.IN_LOCAZIONE;
+			combattente = null;
+			impostaComandiPossibili();
+			return Optional.of(Stato.IN_LOCAZIONE);
 		}
-		return Optional.empty();
+		return Optional.ofNullable(dopoGliEffetti);
 	}
 
 	private Stato gestisciCombattimento(Comando azione) {
 		Logger.log("LocazioneBase.IN_COMBATTIMENTO");
+		if (azione == Comando.INTERRUZIONE_COMBATTIMENTO && mischiaForzata) {
+			// Il combattimento prosegue da solo finché nessuno può agire: non c'è niente da interrompere
+			return Stato.IN_COMBATTIMENTO;
+		}
+		if (azione != Comando.TIMER && isComandoDiChiAgisce(azione) && nessunoPuoAgire()) {
+			return Stato.IN_COMBATTIMENTO;
+		}
 		if (azione == Comando.INTERRUZIONE_COMBATTIMENTO) {
 			BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
@@ -1551,61 +1654,61 @@ public abstract class LocazioneBase implements Locazione {
 			return Stato.INVENTARIO;
 		}
 		if (azione == Comando.POZIONE_SALUTE) {
-			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+			if (chiPuoAgire().size() > 1) {
 				// Bere interrompe la mischia (come l'incantesimo): la sua finestra si chiude
 				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				Personaggio unico = gruppo.getPersonaggiVivi().get(0);
+				Personaggio unico = chiPuoAgire().get(0);
 				gruppo.consumaPozioneSalute(unico);
 				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}
 		if (azione == Comando.POZIONE_SALUTE_GRANDE) {
-			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+			if (chiPuoAgire().size() > 1) {
 				// Bere interrompe la mischia (come l'incantesimo): la sua finestra si chiude
 				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE_GRANDE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				Personaggio unico = gruppo.getPersonaggiVivi().get(0);
+				Personaggio unico = chiPuoAgire().get(0);
 				gruppo.consumaPozioneSaluteGrande(unico);
 				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}
 		if (azione == Comando.POZIONE_MAGIA) {
-			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+			if (chiPuoAgire().size() > 1) {
 				// Bere interrompe la mischia (come l'incantesimo): la sua finestra si chiude
 				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				Personaggio unico = gruppo.getPersonaggiVivi().get(0);
+				Personaggio unico = chiPuoAgire().get(0);
 				gruppo.consumaPozioneMagia(unico);
 				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}
 		if (azione == Comando.POZIONE_MAGIA_GRANDE) {
-			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+			if (chiPuoAgire().size() > 1) {
 				// Bere interrompe la mischia (come l'incantesimo): la sua finestra si chiude
 				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA_GRANDE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				Personaggio unico = gruppo.getPersonaggiVivi().get(0);
+				Personaggio unico = chiPuoAgire().get(0);
 				gruppo.consumaPozioneMagiaGrande(unico);
 				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}
 		if (azione == Comando.POZIONE_AUMENTO_LIVELLO) {
-			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+			if (chiPuoAgire().size() > 1) {
 				// Bere interrompe la mischia (come l'incantesimo): la sua finestra si chiude
 				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_AUMENTO_LIVELLO;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				Personaggio unico = gruppo.getPersonaggiVivi().get(0);
+				Personaggio unico = chiPuoAgire().get(0);
 				gruppo.consumaPozioneAumentoLivello(unico);
 				return dopoUnaPozioneNellaMischia(unico);
 			}
@@ -1627,6 +1730,11 @@ public abstract class LocazioneBase implements Locazione {
 	
 	private Stato gestisciInLocazione(Comando azione) {
 		BusEventi.pubblica(new InternoMessaggio("LocazioneBase.IN_LOCAZIONE, Comando: " + azione));
+		if (azione != null && isComandoDiChiAgisce(azione) && nessunoPuoAgire()) {
+			// Nessuno può agire: un comando di questo genere, arrivato comunque, non fa niente e non fa passare nessun turno
+			turnoGestitoDalRound = true;
+			return null;
+		}
 		if (azione != null) {
 			switch (azione) {
 

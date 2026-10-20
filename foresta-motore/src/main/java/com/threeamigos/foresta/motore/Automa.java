@@ -2034,6 +2034,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Comando scegliPersonaggio(boolean ancheSeMorto) {
 		boolean cura = isSceltaDiUnaCura();
 		boolean aumentoDiLivello = isSceltaDiUnAumentoDiLivello();
+		// Chi sceglie a mano chi agisce, con degli avversari in campo, non propone chi è incapace di agire
+		boolean agisce = locazioneCorrente != null && locazioneCorrente.isSceltaDiChiAgisce();
 		if (gruppo.getNumeroPersonaggiVivi() == 1 && !ancheSeMorto && !aumentoDiLivello) {
 			// L'unico in campo: non per forza il primo del gruppo, se gli altri sono morti o in panchina
 			Comando unico = Comando.ofPersonaggio(gruppo.getPersonaggi().indexOf(gruppo.getPersonaggiVivi().get(0)));
@@ -2044,7 +2046,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			int i = 0;
 			for (Personaggio personaggioCorrente : gruppo.getPersonaggi()) {
 				if ((ancheSeMorto || !personaggioCorrente.isFuoriCombattimento()) && !(cura && !personaggioCorrente.isCurabile())
-						&& !(aumentoDiLivello && personaggioCorrente.isAlLivelloMassimo())) {
+						&& !(aumentoDiLivello && personaggioCorrente.isAlLivelloMassimo())
+						&& !(agisce && personaggioCorrente.isIncapaceDiAgire())) {
 					comandiPossibili.add(Comando.ofPersonaggio(i));
 				}
 				i++;
@@ -2054,6 +2057,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				// che gli altri siano morti, e quindi che il gioco sia perso: di solito è il capo, con accanto uno Scheletro della
 				// Mietitura vivo ma non curabile. Si sceglie lui senza chiedere, come quando c'è un solo personaggio in campo
 				BusEventi.pubblica(new InternoMessaggio("Automa::scegliPersonaggio(cura): automaticamente " + comandiPossibili.get(0)));
+				return comandiPossibili.get(0);
+			}
+			if (agisce && comandiPossibili.size() == 1) {
+				// Uno solo è in grado di agire: non c'è nulla da scegliere
+				BusEventi.pubblica(new InternoMessaggio("Automa::scegliPersonaggio(azione): automaticamente " + comandiPossibili.get(0)));
 				return comandiPossibili.get(0);
 			}
 			if (aumentoDiLivello && comandiPossibili.size() == 1) {
