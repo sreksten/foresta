@@ -103,9 +103,8 @@ public class ProduttoreDiTestiCasuale {
 	 * Una reazione a caso del locandiere, per esempio quando il gruppo gli dice cosa vuole.
 	 */
 	public static String reazioneLocandiere() {
-		List<String> reazioneLocandiere = locande.produce("REAZIONE_LOCANDIERE");
-		locande.reset();
-		return reazioneLocandiere.get(0);
+		// Niente reset: REAZIONE_LOCANDIERE non usa produzioni monouso, non si esaurisce
+		return locande.produce("REAZIONE_LOCANDIERE").get(0);
 	}
 
 	/**
@@ -406,18 +405,17 @@ public class ProduttoreDiTestiCasuale {
 	 * Una notizia della locanda, fra quelle del suo repertorio (NOTIZIE_ + identificativo, in locande.txt) che si applicano al gruppo
 	 * (vedi {@link #validaNotizia}) e che non sono fra le ultime già pubblicate (MASSIMO_NOTIZIE_RICORDATE, in tutto il mondo).
 	 * <p>
-	 * Il repertorio di una locanda è piccolo (cinque notizie): in una partita lunga, tornandoci spesso, o con un gruppo a cui si
-	 * applicano poche notizie, si possono esaurire. In quel caso la grammatica delle locande si <b>azzera</b> (le sue produzioni one-shot
-	 * tornano intere) e si ammettono anche le notizie recenti, ripetere una notizia è meglio che non averne. Se nemmeno così ce n'è una
-	 * applicabile (tutte parlano di classi che nel gruppo non ci sono) non c'è nessuna notizia e il metodo restituisce null: la locanda
-	 * non ha niente da raccontare. Non solleva eccezioni per questo.
+	 * Le notizie non sono monouso, la grammatica non si esaurisce: si pesca a caso fino a {@value #MASSIMO_TENTATIVI_NOTIZIA_LOCANDA}
+	 * volte, scartando le recenti e quelle che non si applicano. Se tutti i tentativi vanno a vuoto (le notizie che si applicano al
+	 * gruppo sono poche e già pubblicate) si riprova ammettendo anche le recenti, ripetere una notizia è meglio che non averne. Se
+	 * nemmeno così ce n'è una applicabile il metodo restituisce null: la locanda non ha niente da raccontare. Non solleva eccezioni per
+	 * questo.
 	 *
 	 * @return la notizia, o null se la locanda non ne ha una applicabile
 	 */
 	public static NotiziaMD getNotiziaLocanda(String identificativoLocanda, String nomeLocanda, String nomeLocandiere) {
 		NotiziaMD notizia = cercaNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere, true);
 		if (notizia == null) {
-			locande.reset();
 			notizia = cercaNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere, false);
 		}
 		return notizia;

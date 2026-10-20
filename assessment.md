@@ -124,7 +124,6 @@ Nessun difetto aperto.
   - il messaggio di `:1142` stampa la riga invece del numero.
 
   Oggi nessuna grammatica usa queste forme. (C/P, latente)
-- B33 `testi/ProduttoreDiTestiCasuale`: i due `locande.reset()` durante la partita (`reazioneLocandiere` e `getNotiziaLocanda`) potrebbero essere inutili: 20000 chiamate di `getNotiziaLocanda` senza reset non hanno dato eccezioni, ma in un solo scenario, e il commento di `NotiziaLocandaEsauritaTest` parla di eccezioni nelle partite lunghe. Da verificare prima di toglierli. (P)
 - B34 `oggetti/GeneratoreArtefattiTabelle:400`: `conGrado` dà per scontato che il nome cominci con il nome comune. `offerte/Informazioni:384`: `tiraAncheAUnaFaccia(0)` senza castelli rimasti (non raggiungibile). `RegistroTrofei:104`: NPE senza un gestore impostato. (P)
 - B35 Codice morto nel motore:
   - in `PersonaggioBase`: `calcolaStanchezza`, `subCarisma`, `add<Primario>`, `getQuantitaEffettoDiStato` e `puoPrendere(Artefatto)`;
