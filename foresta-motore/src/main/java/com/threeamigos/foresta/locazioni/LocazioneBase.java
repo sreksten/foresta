@@ -118,7 +118,9 @@ public abstract class LocazioneBase implements Locazione {
 	private Gruppo gruppoBersaglio;
 
 	// Il turno di un'azione del giocatore è già stato chiuso da dopoAzioneDelGiocatore (che a fine round fa trascorrere gli effetti di
-	// stato): il passaggio generico di impostaAzioniImpl non deve farli trascorrere una seconda volta
+	// stato): il passaggio generico di impostaAzioniImpl non deve farli trascorrere una seconda volta. Vale anche quando non c'è stata
+	// nessuna azione (si è solo scelto chi combatte o chi duella, o un canto o un dardo non sono partiti): senza che gli avversari agiscano
+	// non passa nessun turno, altrimenti ripetendo la scelta si avvelenerebbero i mostri "gratis"
 	private boolean turnoGestitoDalRound;
 
 	private enum StatoLocazione {
@@ -458,6 +460,7 @@ public abstract class LocazioneBase implements Locazione {
 					return annullaScelta();
 				}
 				gestisciChiCombatte(azione);
+				turnoGestitoDalRound = true;
 				break;
 
 			case CHI_DUELLA:
@@ -465,6 +468,7 @@ public abstract class LocazioneBase implements Locazione {
 					return rifiutaIlDuello();
 				}
 				gestisciChiDuella(azione);
+				turnoGestitoDalRound = true;
 				break;
 
 			case SFIDA_CARTA_FORBICI_SASSO:
@@ -866,10 +870,10 @@ public abstract class LocazioneBase implements Locazione {
 		opzioneCorruzioneDisponibile = false;
 		opzioneAmiciziaDisponibile = false;
 		// Il comando poteva essere stato dato quando il canto serviva e non serve più (e viceversa)
-		if (!CantoDelBardo.cantiUtili(cantore, gruppo, gruppoAvversario).contains(tipo)) {
-			return null;
-		}
-		if (!FabbricaCanti.crea(tipo, cantore).canta(cantore, gruppo, gruppoAvversario)) {
+		if (!CantoDelBardo.cantiUtili(cantore, gruppo, gruppoAvversario).contains(tipo)
+				|| !FabbricaCanti.crea(tipo, cantore).canta(cantore, gruppo, gruppoAvversario)) {
+			// Il canto non è partito: non è stata fatta nessuna azione, e quindi non passa nessun turno
+			turnoGestitoDalRound = true;
 			return null;
 		}
 		statoDelCombattimento.registraIncantesimoLanciato(cantore);
@@ -891,6 +895,8 @@ public abstract class LocazioneBase implements Locazione {
 		opzioneAmiciziaDisponibile = false;
 		Personaggio bersaglio = gruppoAvversario.getPersonaggioVivo();
 		if (bersaglio == null || !DardoArcano.puoLanciarlo(formulante)) {
+			// Il dardo non è partito: non è stata fatta nessuna azione, e quindi non passa nessun turno
+			turnoGestitoDalRound = true;
 			return null;
 		}
 		esecutore().scagliaIlDardo(formulante, bersaglio);

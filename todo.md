@@ -28,23 +28,8 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 
 Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono quelli di [`assessment.md`](assessment.md) §5, che ha anche gli scenari: A vale per gravità alta, M per media, B per bassa. "(P)" segna un difetto plausibile, cioè con un innesco raro o non ancora raggiungibile; gli altri sono confermati. Ogni correzione va con un test. Le voci segnate come **regola** cambiano il bilanciamento, e vanno decise prima di toccarle.
 
-### Gravità alta
-
-- **A1, uccisioni ad area non contate.** Gli avversari uccisi da ELETTROCUZIONE, ESPLOSIONE_DI_GAS o RIGETTO sui vicini non passano da `registraMorteAvversario`. Si perdono esperienza, punti e `InternoAvversarioSconfitto`, quindi anche missioni e trofei.
-  - Dove: `PersonaggioBase:617-627`, `EsecutoreTattiche:160-219`, `LocazioneBase:1368-1392`.
-  - Correzione: a fine azione, `registraMorteAvversario` su tutti gli avversari, non solo sui vivi.
-- **A2, il capo cambia senza motivo.** `Gruppo.rimuoviPersonaggio` (riga 438) rimette capo il primo della lista anche quando esce un altro personaggio, e il capo si può spostare con `spostaPersonaggio`.
-  - Correzione: riassegnare il capo solo se `p == capo`, e annullarlo se il gruppo resta vuoto.
-  - Test: si toglie un non-capo dopo aver spostato il capo.
-- **A3, La Benedizione oltre il tetto.** `LaBenedizione.accogliUnSacerdote` (righe 172 e 264) aggiunge il sacerdote anche con 8 personaggi. Con 9, `Comando.ofPersonaggio(8)` lancia un'eccezione in tutti i menu di scelta del personaggio.
-  - Correzione: fare la domanda solo se `getNumeroPersonaggi() < MAX_PERSONAGGI_GRUPPO_TOTALE`. Il superamento dei 5 permanenti è voluto.
-- **A4, caratteri senza glifo.** `DoomdarkTextProducer` (righe 21 e 52) chiama `getGlyphData` senza protezione, mentre `FontTool.getWidth` salta i caratteri mancanti. Un nome come "Jürgen" o "Bob_" fa lanciare il riquadro del gruppo a ogni fotogramma, e il nome resta nel salvataggio.
-  - Correzione: un glifo di riserva, o il salto, in un solo punto e coerente con la misura.
-  - Filtrare anche l'input del `Prompt`.
-
 ### Gravità media: combattimento e personaggi
 
-- **M3, turno di effetti gratis.** Uscire da CHI_COMBATTE o CHI_DUELLA, o un canto o un dardo che non partono, fanno passare un turno di effetti senza che gli avversari agiscano (`LocazioneBase:456-461, 827-832`).
   - Correzione: `turnoGestitoDalRound = true`, oppure `return` nei rami che non sono azioni.
 - **M4, incapaci che agiscono.** Chi è CONGELATO, ATTERRATO o STORDITO può attaccare, formulare e bere con le azioni manuali (`LocazioneBase:1408-1427`, QUALE_FORMULA, CHI_BEVE_*).
   - Correzione: controllare `isIncapaceDiAgire`, oppure escludere gli incapaci dalla scelta.

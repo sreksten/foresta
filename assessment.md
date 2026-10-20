@@ -101,7 +101,6 @@ Ogni voce è stata verificata sul codice chiamante. **C** sta per *confermato* (
 
 | Cod. | Dove | Difetto | |
 | :--- | :--- | :--- | :---: |
-| M3 | `locazioni/LocazioneBase:456-461, 827-832` | Uscire da CHI_COMBATTE o CHI_DUELLA, o un canto o dardo non partito, fa trascorrere un turno di effetti senza che gli avversari agiscano: si avvelenano i mostri "gratis" ripetendo l'interruzione | C |
 | M4 | `locazioni/LocazioneBase:1408-1427` e QUALE_FORMULA, pozioni | Chi è CONGELATO, ATTERRATO o STORDITO può usare SINGOLO_ATTACCO, incantesimi e pozioni: `isIncapaceDiAgire` si controlla solo nella mischia automatica | C |
 | M5 | `LocazioneBase:1376-1392`, `motore/Automa:776`, `PersonaggioBase:606-619` | Gli ospiti vulnerabili ricevono stati che non scadono mai (tick e pulizia scorrono solo i personaggi). In `applicaRisultatoCombattimento` un ospite colpito è trattato come avversario: la Purificazione cura i mostri | C (P per la Purificazione) |
 | M6 | `tattiche/TatticheBase:293, 300`, `incantesimi/Morte:61` | Morte: la tattica usa 100·s/m < 25, l'incantesimo s < m/4 intero; con s=2, m=10 si ritorce sul mostro. Morte e Silenzio non registrano l'esito, quindi i tentativi falliti non fermano la ripetizione; la magia "a caso" può pescare Morte su un bersaglio sano | C |
@@ -296,7 +295,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 ## 8. Prossimi passi consigliati
 
 1. **I difetti alti (A1-A4) sono corretti**, ciascuno con un test.
-2. **Correggere i medi certi e a basso rischio:** M1, M2, M3, M4, M10, M12, M16, M17, M18 e tutta la UI (M22-M27).
+2. **Correggere i medi certi e a basso rischio:** M1, M2, M4, M10, M12, M16, M17, M18 e tutta la UI (M22-M27).
 3. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M8 (carico), M11 (fuga), M14 (sconfitti fra visite), B28 (LaLealta).
 4. **Un vero gestore di `InternoException`** (M19).
 5. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
