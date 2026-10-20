@@ -297,7 +297,7 @@ NOTIZIE_FURIA_DEL_GIORNO_DOPO
 NOTIZIE_GUARDIA_ADDORMENTATA
     GUA1-Disastro Igienico - Chiusa per bonifica la taverna La Guardia Addormentata: EROE ha scambiato il pozzo dell'acqua potabile per una vasca da bagno termale, lavandoci dentro le calze di lana da battaglia.
     GUA2-Domande al Muro - ArrestatLETTERA_FINALE EROE davanti alla Guardia Addormentata per aver preso alla lettera il cartello dell'oste, passando sei ore a confessare i suoi crimini contro una parete di mattoni.
-    GUA3-Tappa del Ladro - Un picco insolito di borseggi alla Guardia Addormentata mette in allarme le guardie vere; LADRO è statLETTERA_FINALE vistLETTERA_FINALE contare monete d'oro nello spazio sul retro.
+    GUA3-Tappa del Ladro - Un picco insolito di borseggi alla Guardia Addormentata mette in allarme le guardie vere; LADRO è statLETTERA_FINALE_LADRO vistLETTERA_FINALE_LADRO contare monete d'oro nello spazio sul retro.
     GUA4-Porta Aperta - L'oste della Guardia Addormentata, NOME_LOCANDIERE, accusa EROE di aver lasciato la porta spalancata, facendo entrare un blocco di aria pulita che ha fatto fuggire l'intera clientela di furfanti.
     [NOTIZIE_LOCANDA]
 
@@ -346,7 +346,7 @@ NOTIZIE_FUNGO_ALLUCINOGENO
 NOTIZIE_GOBLIN_CORTESE
     GC1-Danni Burocratici - Il vicario del regno avvia un'indagine: EROE ha firmato il registro degli ospiti illustri usando il sangue del Goblin Cortese, il quale ha protestato perché macchiava il suo tovagliolo pulito.
     GC2-Scimitarra da Taglio - Tensione alla Tana del Goblin Cortese: EROE ha accusato l'oste, NOME_LOCANDIERE, di aver usato troppa Destrezza nell'affettare il formaggio, chiedendo un tiro salvezza preventivo sulla cena.
-    GC3-Formaggio di Spada - LADRO tenta di rubare la scimitarra affetta-formaggio del Goblin Cortese, venendo però punitLETTERA_FINALE con una severa lezione di galateo e l'obbligo di usare il tovagliolo.
+    GC3-Formaggio di Spada - LADRO tenta di rubare la scimitarra affetta-formaggio del Goblin Cortese, venendo però punitLETTERA_FINALE_LADRO con una severa lezione di galateo e l'obbligo di usare il tovagliolo.
     GC4-Sidro di Tana - EROE lascia una recensione orribile sulla corteccia della Tana del Goblin Cortese: "“Il sidro è buono, ma l'oste pulisce il bancone troppo spesso per i miei standard avventurosi\"".
     [NOTIZIE_LOCANDA]
 
@@ -508,7 +508,7 @@ NOTIZIE_FORZIERE_VUOTO
 NOTIZIE_PANE_E_SPADA
     PS1-Pane Raffermo - GUERRIERO rompe lo scudo tentando di tagliare il pane raffermo di Pane e Spada, chiedendo all'oste NOME_LOCANDIERE un risarcimento in monete d'oro del regno.
     PS2-Lama del Servizio - Tensione al Pane e Spada: EROE si lamenta della birra calda e l'oste NOME_LOCANDIERE risponde estraendo una scimitarra arrugginita dal bancone per aggiornare il livello di gradimento del cliente.
-    PS3-Niente Fronzoli - BARDO viene cacciatLETTERA_FINALE a calci da Pane e Spada dopo aver chiesto un tovagliolo di seta pulito per asciugarsi la schiuma della birra calda dalla bocca.
+    PS3-Niente Fronzoli - BARDO viene cacciatLETTERA_FINALE_BARDO a calci da Pane e Spada dopo aver chiesto un tovagliolo di seta pulito per asciugarsi la schiuma della birra calda dalla bocca.
     PS4-Mangia e Combatti - EROE viene scaraventatLETTERA_FINALE fuori da Pane e Spada direttamente sul timer del round, con l'ordine tassativo di andare a fare rissa con i Goblin nella foresta vicina.
     [NOTIZIE_LOCANDA]
 

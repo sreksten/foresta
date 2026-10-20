@@ -51,7 +51,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
   - Correzione: azzerare a ogni visita.
   - Scrivere il vincolo di idempotenza in `gestione_missioni.md`.
   - (P) Lo stesso può succedere nell'accampamento.
-- **M17, genere delle notizie.** `LETTERA_FINALE` (`ProduttoreDiTestiCasuale:505`) si accorda sempre con il capo, anche quando il soggetto è il ladro o il bardo (`locande.txt`, righe 300, 349 e 511).
 - **M19, errori del bus silenziosi.** In `BusEventi` (righe 57-79) l'unico iscritto a `InternoException` è lo sniffer, quindi una transizione a metà resta bloccata in silenzio. Un `Error` interrompe la consegna agli altri iscritti.
   - Servono un gestore vero e niente ripetizione dell'errore a ogni tick in `TemporizzatoreJ2SE`.
 - **M21, salvataggio automatico vecchio (P).** Si cancella solo a fine partita (`Automa:324-347, 1668`).

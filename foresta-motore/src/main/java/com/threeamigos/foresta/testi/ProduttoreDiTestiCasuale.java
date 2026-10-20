@@ -449,7 +449,7 @@ public class ProduttoreDiTestiCasuale {
 	 * @param contenuto il contenuto da controllare
 	 * @return null se il contenuto non è applicabile al gruppo dei personaggi, una stringa con le debite sostituzioni fatte altrimenti
 	 */
-	private static String validaNotizia(String contenuto) {
+	static String validaNotizia(String contenuto) {
 		// Occorre vedere se tante volte appare uno dei personaggi del gruppo o più di uno.
 		boolean applicabile = true;
 		Collection<Personaggio> personaggiVivi = GruppoGiocatore.getIstanza().getPersonaggiVivi();
@@ -460,6 +460,7 @@ public class ProduttoreDiTestiCasuale {
 			if (!applicabile) {
 				return null;
 			}
+			contenuto = concordaConLaClasse(contenuto, "BARDO", TipoPersonaggio.BARDO, TipoPersonaggio.CANTASTORIE);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.CANTASTORIE, TipoPersonaggio.BARDO);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.BARDO, TipoPersonaggio.CANTASTORIE);
 		}
@@ -469,6 +470,7 @@ public class ProduttoreDiTestiCasuale {
 			if (!applicabile) {
 				return null;
 			}
+			contenuto = concordaConLaClasse(contenuto, "LADRO", TipoPersonaggio.LADRO, TipoPersonaggio.LADRA);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.LADRA, TipoPersonaggio.LADRO);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.LADRO, TipoPersonaggio.LADRA);
 
@@ -504,6 +506,20 @@ public class ProduttoreDiTestiCasuale {
 		contenuto = contenuto.replace("EROE", eroe.getNomeProprio().orElseThrow(() -> new IllegalStateException("Personaggio senza nome proprio")));
 		contenuto = contenuto.replace("LETTERA_FINALE", eroe.getLetteraFinaleAttributo());
 		return contenuto;
+	}
+
+	/**
+	 * Le notizie il cui soggetto non è il capo ("BARDO viene cacciatLETTERA_FINALE_BARDO") accordano il participio con quel personaggio, non con
+	 * il capo (che si accorda con LETTERA_FINALE, vedi validaNotizia). Va fatto prima di sostituire i nomi, che contengono la stessa parola.
+	 *
+	 * @param classe la classe che dà il nome al segnaposto, di cui si cerca il personaggio vivo (o la sua variante di genere)
+	 */
+	private static String concordaConLaClasse(String contenuto, String classe, TipoPersonaggio principale, TipoPersonaggio alternativa) {
+		String segnaposto = "LETTERA_FINALE_" + classe;
+		if (!contenuto.contains(segnaposto)) {
+			return contenuto;
+		}
+		return contenuto.replace(segnaposto, trova(principale, alternativa).getLetteraFinaleAttributo());
 	}
 
 	private static String sostituisci(String contenuto, TipoPersonaggio classe1, TipoPersonaggio classe2) {
