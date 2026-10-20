@@ -108,7 +108,6 @@ Nessun difetto aperto.
 
 **foresta-tipi e foresta-modellodati**
 
-- B8 `ForestaMD:48, 59, 234`: `offset()` non controlla i limiti, e gli array restano null prima di `reimposta`. (P)
 - B11 `Costanti:249`: commento fuori posto (POZIONI_SALUTE_INIZIALI). `Comando.SINGOLO`, `RUTTOLOMEO` e `STORPSGORBLIN` sono in uso solo per le icone. (C)
 
 **foresta-contratti**

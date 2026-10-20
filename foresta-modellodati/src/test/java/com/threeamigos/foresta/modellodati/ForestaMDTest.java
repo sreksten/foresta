@@ -179,6 +179,34 @@ class ForestaMDTest {
         assertArea(riletta, 1, 3, 0, 2);
     }
 
+    @Test
+    void unaPosizioneFuoriDallaMappaEUnErrore() {
+        ForestaMD foresta = mappa();
+        // Senza il controllo (4, 0) sarebbe la casella (0, 1) e (-1, 1) la (3, 0)
+        for (int[] fuori : new int[][]{{4, 0}, {-1, 1}, {0, 3}, {0, -1}}) {
+            CoordinateMD coordinate = new CoordinateMD(fuori[0], fuori[1]);
+            assertThrows(IllegalArgumentException.class, () -> foresta.ottieniLocazioneMD(coordinate));
+            assertThrows(IllegalArgumentException.class, () -> foresta.ottieniTipoLocazione(coordinate));
+            assertThrows(IllegalArgumentException.class, () -> foresta.impostaLocazione(coordinate, TipoLocazione.RADURA));
+        }
+    }
+
+    @Test
+    void unaMappaNonAncoraPreparataEVuotaENonDaNullPointerException() {
+        ForestaMD foresta = new ForestaMD();
+        assertNull(foresta.ottieniCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+        assertArea(foresta, -1, -1, -1, -1);
+        assertThrows(IllegalArgumentException.class, () -> foresta.ottieniTipoLocazione(0, 0));
+        foresta.aggiungiLocazioneUnica(TipoLocazione.CITTA_NYENA, new CoordinateMD(0, 0));
+        assertEquals(new CoordinateMD(0, 0), foresta.ottieniCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+    }
+
+    @Test
+    void dimensioniNonValideNelSalvataggioSonoUnErrore() {
+        assertThrows(IOException.class, () -> new ForestaMD().leggi(new BufferedReader(new StringReader("0|3\n"))));
+        assertThrows(IOException.class, () -> new ForestaMD().leggi(new BufferedReader(new StringReader("-4|3\n"))));
+    }
+
     private static void assertArea(ForestaMD foresta, int minX, int maxX, int minY, int maxY) {
         assertEquals(minX, foresta.getMinXConosciuta(), "minX");
         assertEquals(maxX, foresta.getMaxXConosciuta(), "maxX");

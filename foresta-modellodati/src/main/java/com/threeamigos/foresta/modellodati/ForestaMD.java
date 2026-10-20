@@ -45,18 +45,18 @@ public class ForestaMD implements Serializzabile {
 	 * l'indice è x + y * dimensioneX. Ognuna ha il suo modello dati, quindi
 	 * due locande sono due locande e non la stessa.
 	 */
-	private LocazioneMD[] arrayLocazioni;
+	private LocazioneMD[] arrayLocazioni = new LocazioneMD[0];
 
 	// Stato derivato dalle caselle conosciute: serve al viewport della mappa
 	// a tutto schermo, e tenerlo aggiornato nel setter costa meno che ricavarlo.
-	private int minXConosciuta;
-	private int maxXConosciuta;
-	private int minYConosciuta;
-	private int maxYConosciuta;
+	private int minXConosciuta = -1;
+	private int maxXConosciuta = -1;
+	private int minYConosciuta = -1;
+	private int maxYConosciuta = -1;
 
 	// Serve tenerne traccia per le informazioni che i PNG danno al gruppo.
 	// Si potrebbe fare anche un ciclo su tutta la foresta ma così si fa prima.
-	private Map<TipoLocazione, CoordinateMD> locazioniUniche;
+	private Map<TipoLocazione, CoordinateMD> locazioniUniche = new EnumMap<>(TipoLocazione.class);
 
 	private int versioneMappa;
 
@@ -231,7 +231,14 @@ public class ForestaMD implements Serializzabile {
 
 	// implementazioni private che dipendono dal modello dati
 
+	/**
+	 * L'indice della casella nell'array. Una posizione fuori dalla mappa (o su una mappa non ancora preparata con
+	 * {@link #reimposta}) è un errore: senza il controllo una colonna oltre il bordo finirebbe nella riga dopo.
+	 */
 	private int offset(int x, int y) {
+		if (x < 0 || x >= dimensioneX || y < 0 || y >= dimensioneY) {
+			throw new IllegalArgumentException("Posizione (" + x + ", " + y + ") fuori dalla mappa " + dimensioneX + "x" + dimensioneY);
+		}
 		return x + y * dimensioneX;
 	}
 
@@ -279,9 +286,12 @@ public class ForestaMD implements Serializzabile {
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		LettoreCampi st = new LettoreCampi(stream.readLine());
-		dimensioneX = st.intero();
-		dimensioneY = st.intero();
-		reimposta(dimensioneX, dimensioneY);
+		int colonne = st.intero();
+		int righe = st.intero();
+		if (colonne < 1 || righe < 1) {
+			throw new IOException("Dimensioni della mappa non valide: " + colonne + "x" + righe);
+		}
+		reimposta(colonne, righe);
 		for (int indice = 0; indice < arrayLocazioni.length; indice++) {
 			LocazioneMD locazioneMD = new LocazioneMD();
 			locazioneMD.leggi(stream);
