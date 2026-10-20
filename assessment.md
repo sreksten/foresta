@@ -117,7 +117,6 @@ Nessun difetto aperto.
 
 - B20 `LocazioneBase:969-971`: SINGOLO_ATTACCO è offerto in mischia ma ignorato. `:437-440` e `:1528-1533`: rami irraggiungibili, e il secondo manderebbe l'`Automa` in IllegalStateException (IN_COMBATTIMENTO non ha un gestore d'ingresso). (C, latente)
 - B24 `motore/Automa:1482, 1517, 1531, 1566, 610`: un comando inatteso in MAPPA, INVENTARIO, TROFEI, TATTICHE o nella scelta della classe lancia un'eccezione invece di essere ignorato. (P)
-- B29 `intermezzi/IntermezzoLibroTecnico:259, 284`: i libri trovati e non ancora letti sono statici e non si salvano. (P)
 - B31 `TipoMissione`: mancano le note "// Coperto da:" per LaSfidaDeiCampioni, IlCampione, IlGiroDelleSetteChiese, CronacheDiUnFegatoEroico, NessunBoccaleLasciatoIndietro e DisturbatoreDellaQuietePubblica. (C)
 - B32 `testi/GrammarBean`:
   - `[chiave]` su una chiave solo assegnata passa la validazione ma fallisce a runtime (`:1630` contro `:2386`);

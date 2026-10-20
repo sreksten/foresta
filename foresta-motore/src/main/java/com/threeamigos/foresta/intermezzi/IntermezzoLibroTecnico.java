@@ -26,6 +26,8 @@ public class IntermezzoLibroTecnico implements Intermezzo {
 	private static final String IMMAGINE_LIBRO = "oggetti/LibroTecnico.gif";
 
 	// I libri trovati e non ancora letti, nell'ordine in cui sono stati trovati: di solito uno, ma un cofano doppio ne può dare due
+	// Non si salva: fra la raccolta e la scena non può cadere nessun salvataggio, perché il gioco salva solo fra una locazione e l'altra
+	// (vedi Automa.isInUnPuntoSicuro) e gli intermezzi di fine locazione scattano tutti prima di tornare a uno di quegli stati
 	private static final List<LibroTecnico> daLeggere = new ArrayList<>();
 
 	private final LibroTecnico libro;
