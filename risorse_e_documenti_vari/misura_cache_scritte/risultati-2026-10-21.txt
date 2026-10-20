@@ -1,0 +1,27 @@
+=== heap: predefinito
+weak   spazz= 20.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=376 (0.52%)  25.1 ricostr/s  tempo ricostr.=3.1 ms/s (0.31% del tempo)  GC=3 (0.2/s)  voci in cache=136
+soft   spazz= 20.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=136 (0.19%)  9.1 ricostr/s  tempo ricostr.=1.8 ms/s (0.18% del tempo)  GC=3 (0.2/s)  voci in cache=136
+strong spazz= 20.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=136 (0.19%)  9.1 ricostr/s  tempo ricostr.=1.6 ms/s (0.16% del tempo)  GC=3 (0.2/s)  voci in cache=136
+
+weak   spazz= 60.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=696 (0.97%)  46.4 ricostr/s  tempo ricostr.=4.6 ms/s (0.46% del tempo)  GC=7 (0.5/s)  voci in cache=136
+soft   spazz= 60.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=136 (0.19%)  9.1 ricostr/s  tempo ricostr.=1.7 ms/s (0.17% del tempo)  GC=7 (0.5/s)  voci in cache=136
+strong spazz= 60.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=136 (0.19%)  9.1 ricostr/s  tempo ricostr.=1.9 ms/s (0.19% del tempo)  GC=7 (0.5/s)  voci in cache=136
+
+weak   spazz=200.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=1896 (2.63%)  126.4 ricostr/s  tempo ricostr.=7.3 ms/s (0.73% del tempo)  GC=22 (1.5/s)  voci in cache=136
+soft   spazz=200.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=136 (0.19%)  9.1 ricostr/s  tempo ricostr.=1.7 ms/s (0.17% del tempo)  GC=21 (1.4/s)  voci in cache=136
+strong spazz=200.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=136 (0.19%)  9.1 ricostr/s  tempo ricostr.=1.8 ms/s (0.18% del tempo)  GC=21 (1.4/s)  voci in cache=136
+
+=== heap: -Xmx96m
+weak   spazz= 20.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=616 (0.86%)  41.1 ricostr/s  tempo ricostr.=4.4 ms/s (0.44% del tempo)  GC=6 (0.4/s)  voci in cache=136
+soft   spazz= 20.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=136 (0.19%)  9.1 ricostr/s  tempo ricostr.=1.8 ms/s (0.18% del tempo)  GC=6 (0.4/s)  voci in cache=136
+strong spazz= 20.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=136 (0.19%)  9.1 ricostr/s  tempo ricostr.=1.8 ms/s (0.18% del tempo)  GC=6 (0.4/s)  voci in cache=136
+
+weak   spazz= 60.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=1576 (2.19%)  105.1 ricostr/s  tempo ricostr.=7.0 ms/s (0.70% del tempo)  GC=18 (1.2/s)  voci in cache=136
+soft   spazz= 60.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=136 (0.19%)  9.1 ricostr/s  tempo ricostr.=1.6 ms/s (0.16% del tempo)  GC=18 (1.2/s)  voci in cache=136
+strong spazz= 60.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=136 (0.19%)  9.1 ricostr/s  tempo ricostr.=1.7 ms/s (0.17% del tempo)  GC=17 (1.1/s)  voci in cache=136
+
+weak   spazz=200.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=4768 (6.62%)  317.9 ricostr/s  tempo ricostr.=16.4 ms/s (1.64% del tempo)  GC=58 (3.9/s)  voci in cache=136
+soft   spazz=200.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=136 (0.19%)  9.1 ricostr/s  tempo ricostr.=1.6 ms/s (0.16% del tempo)  GC=55 (3.7/s)  voci in cache=136
+strong spazz=200.0 MB/s  scritte= 80  fotogrammi=900  richieste=72000  ricostruite=136 (0.19%)  9.1 ricostr/s  tempo ricostr.=1.9 ms/s (0.19% del tempo)  GC=55 (3.7/s)  voci in cache=136
+
+FINITO
