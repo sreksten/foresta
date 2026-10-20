@@ -9,17 +9,23 @@ import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 /**
  * Dieci eremiti disturbati nel loro ritiro. Il conteggio avviene all'incontro, quando
  * il gruppo avversario è appena stato popolato e descritto: quel che succede dopo -
- * battaglia, amicizia, corruzione o fuga - non cambia il conto.
+ * battaglia, amicizia, corruzione o fuga - non cambia il conto. Si contano gli eremiti, uno per uno, non i controlli: l'automa rifà
+ * i controlli anche dopo la risposta a una domanda, e lo stesso eremita non deve contare due volte.
  */
 public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 
 	private static final int EREMITI_DA_INCONTRARE = 10;
 
 	private static final String DESCRIZIONE_BASE = "Angustia " + Misc.getCardinaleM(EREMITI_DA_INCONTRARE) + " Eremiti";
-	private static final String EREMITI_INCONTRATI = "EREMITI_INCONTRATI";
+	// Gli identificativi degli eremiti già contati, separati da virgole
+	private static final String EREMITI_CONTATI = "EREMITI_CONTATI";
 
 	public DisturbatoreDellaQuietePubblica() {
 		super(MissionePredefinita.DISTURBATORE_DELLA_QUIETE_PUBBLICA);
@@ -56,13 +62,15 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 		if (isCompleta()) {
 			return;
 		}
-		int eremiti = 0;
+		Set<String> contati = getEremitiContati();
+		boolean nuovi = false;
 		for (Personaggio personaggio : GruppoAvversario.getIstanza().getPersonaggi()) {
-			if (personaggio.getClasse() == TipoPersonaggio.EREMITA) {
-				eremiti++;
+			if (personaggio.getClasse() == TipoPersonaggio.EREMITA && contati.add(personaggio.getModelloDati().getUuid())) {
+				nuovi = true;
 			}
 		}
-		if (eremiti == 0) {
+		if (!nuovi) {
+			// Nessun eremita, o già contati da un controllo precedente di questo stesso incontro
 			return;
 		}
 		if (!isAttiva()) {
@@ -72,8 +80,8 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 		}
 		// Si conta l'incontro, non il suo esito: qui la locazione è appena stata
 		// descritta e nessuno ha ancora alzato le mani
-		int incontrati = getEremitiIncontrati() + eremiti;
-		aggiungiProprieta(EREMITI_INCONTRATI, String.valueOf(incontrati));
+		int incontrati = contati.size();
+		aggiungiProprieta(EREMITI_CONTATI, String.join(",", contati));
 		if (incontrati >= EREMITI_DA_INCONTRARE) {
 			completaMissione();
 			BusEventi.pubblica(new NotificaTestoParagrafo("Dieci Eremiti su dieci confermano che la Foresta era " +
@@ -91,7 +99,15 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 	}
 
 	private int getEremitiIncontrati() {
-		String incontrati = ottieniProprieta(EREMITI_INCONTRATI);
-		return incontrati == null ? 0 : Integer.parseInt(incontrati);
+		return getEremitiContati().size();
+	}
+
+	private Set<String> getEremitiContati() {
+		String contati = ottieniProprieta(EREMITI_CONTATI);
+		Set<String> eremiti = new LinkedHashSet<>();
+		if (contati != null && !contati.isEmpty()) {
+			eremiti.addAll(Arrays.asList(contati.split(",")));
+		}
+		return eremiti;
 	}
 }

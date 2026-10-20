@@ -50,7 +50,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 - **M13, il rito cambia posto.** In IlRituale (righe 94-96 e 191-216) il ripiego della raccolta rivendica un'altra casella e sposta `getPosto()`.
   - Correzione: salvare la coordinata del rito in un parametro proprio.
   - Correzione: azzerare a ogni visita.
-- **M15, eremiti contati due volte.** `DisturbatoreDellaQuietePubblica` (righe 55-86) non è idempotente: dopo una domanda in IN_LOCAZIONE l'Automa rifà il controllo (`Automa:1916`) e l'eremita conta due volte.
   - Scrivere il vincolo di idempotenza in `gestione_missioni.md`.
 - **M16, trofeo che perde i progressi.** `RegistroTrofei:49` azzera il progresso in sospeso a ogni preparazione di locazione: le missioni completate in PRE_LOCAZIONE (LaBenedizione) non contano per CACCIATORE_DI_TAGLIE.
   - (P) Lo stesso può succedere nell'accampamento.

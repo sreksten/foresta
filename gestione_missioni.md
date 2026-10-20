@@ -66,6 +66,8 @@ Non c'è una "assegnazione" delle missioni: **ognuna decide da sé quando partir
 - ogni missione `Sconfiggi*` degli alleati, a `PRE_LOCAZIONE`, cerca di rivendicare un bosco su cui costruire il suo castello (§6) e si attiva solo se ci riesce, altrimenti riprova al controllo successivo;
 - un incarico in città si offre da sé quando il gruppo è nella città giusta (§8).
 
+**I controlli devono essere idempotenti.** Dopo la risposta a una domanda in locazione l'automa rifà i controlli di tutte le missioni sulla stessa situazione, quindi un controllo ripetuto non deve contare due volte la stessa cosa. Le missioni a passi lo sono per costruzione (un passo concluso passa al successivo); quelle scritte a mano (`MissioneBase`) devono ricordarsi che cosa hanno già contato: per esempio `DisturbatoreDellaQuietePubblica` tiene gli identificativi degli eremiti contati, non un contatore.
+
 Dopo ogni controllo, l'automa guarda se una missione a passi ha una **domanda** da porre al giocatore e, in quel caso, va in `ATTESA_RISPOSTA_MISSIONE`; vedi [`motore_di_gioco.md`](motore_di_gioco.md) §3 per il flusso e §4 per i comandi.
 
 ## 4. Le missioni a passi

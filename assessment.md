@@ -66,7 +66,7 @@ Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 2. **Stato statico.** Lo stato della partita vive in registri e singleton. `StatoDelMotore.azzera()` va bene per i test, ma non per "ripartire pulito" su una piattaforma mobile come suggerisce la sua javadoc. `Automa` e `LocazioneBase` tengono i vecchi gruppi in campi `final`, e il vecchio `GruppoGiocatore` resta iscritto al bus (M20). In più `Foresta.reimposta` dimentica intermezzi e notizie (M2).
    **Giudizio:** accettabile per un gioco single-player, a patto di non aggiungere registri statici e di correggere M2.
 3. **Il motore è un modulo solo.** `motore`, `personaggi`, `locazioni`, `missioni` e `oggetti` sono un unico grafo. Il primo taglio possibile resta `foresta-missioni` ([`todo.md`](todo.md)).
-4. **Due stili di missione.** Restano missioni che estendono `MissioneBase`. Il controllo dopo la risposta a una domanda rifà i `controlla*` di tutte le missioni, e quindi richiede che quelle scritte a mano siano idempotenti: oggi `DisturbatoreDellaQuietePubblica` non lo è (M15). Il vincolo andrebbe scritto in `gestione_missioni.md`.
+4. **Due stili di missione.** Restano missioni che estendono `MissioneBase`. Il controllo dopo la risposta a una domanda rifà i `controlla*` di tutte le missioni, e quindi richiede che quelle scritte a mano siano idempotenti (il vincolo è scritto in `gestione_missioni.md`).
 5. **Errori degli iscritti.** Il bus cattura le eccezioni e pubblica `InternoException`, ma l'unico iscritto è lo sniffer, che scrive nel log. Un errore a metà di una transizione lascia l'`Automa` in uno stato intermedio, senza nessun segnale per il giocatore (M19).
 
 ## 4. Qualità del codice
@@ -104,7 +104,6 @@ Nessun difetto aperto.
 | Cod. | Dove | Difetto | |
 | :--- | :--- | :--- | :---: |
 | M13 | `missioni/incarichi/IlRituale:94-96, 191-216` | Il ripiego della raccolta rivendica un'altra casella e sposta `getPosto()`: rito e guardiano finiscono nel posto del ripiego | C |
-| M15 | `missioni/principali/DisturbatoreDellaQuietePubblica:55-86` | Non idempotente: dopo una domanda in IN_LOCAZIONE l'`Automa` rifà il controllo e l'eremita conta 2 | C (raro) |
 | M16 | `trofei/RegistroTrofei:49` | Il progresso in sospeso si azzera a ogni preparazione di locazione: le missioni completate in PRE_LOCAZIONE (LaBenedizione) non contano per CACCIATORE_DI_TAGLIE | C (P per l'accampamento) |
 | M17 | `testi/ProduttoreDiTestiCasuale:505` | `LETTERA_FINALE` si accorda sempre con il capo anche quando il soggetto è il ladro o il bardo (`locande.txt` righe 300, 349, 511): "Gualtiero è stata vista" | C |
 | M18 | modellodati: `TrofeiMD:82`; motore: `trofei/RegistroTrofei:41, 104`, `salvataggi/GestoreTrofeiSuFile:64`, `GestorePunteggiSuFile:69` | Un nome di trofeo sconosciuto ferma la lettura, `RegistroTrofei` ignora il fallimento e alla prima locazione riscrive il file: trofei persi per sempre. Trofei e classifica si scrivono sul posto, senza file temporaneo e senza `checkError` | C |
@@ -311,4 +310,3 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 - Ripetere le misure dopo ogni grande intervento, e confrontare le righe delle classi della tabella del §2.
 - Valutare un report JaCoCo aggregato (`report-aggregate` in `foresta-app`).
 - Un test che produca tutte le alternative delle grammatiche e le disegni con i font, per prendere B33 e i caratteri che il font non ha.
-- Scrivere in `gestione_missioni.md` il vincolo di idempotenza dei `controlla*` delle missioni scritte a mano (M15).
