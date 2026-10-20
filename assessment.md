@@ -121,14 +121,10 @@ Nessun difetto aperto.
   - il messaggio di `:1142` stampa la riga invece del numero.
 
   Oggi nessuna grammatica usa queste forme. (C/P, latente)
-- B35 Codice morto nel motore:
-  - in `PersonaggioBase`: `calcolaStanchezza`, `subCarisma`, `add<Primario>`, `getQuantitaEffettoDiStato` e `puoPrendere(Artefatto)`;
-  - `InternoPersonaggioArreso` non ha nessun iscritto;
-  - i lanci di `Dado` sprecati in `impostaValoriDiPartenza`;
-  - i passi di `MissioneAPassi` usati solo dai test;
-  - le produzioni morte di `fiabe.txt` e `locande.txt`, fra cui 12 `NOTIZIE_CITTA` che non escono mai.
-
-  (C)
+- B35a Codice morto in `PersonaggioBase`: `calcolaStanchezza`, `subCarisma`, `add<Primario>`, `getQuantitaEffettoDiStato` e `puoPrendere(Artefatto)`. (C)
+- B35c I lanci di `Dado` sprecati in `impostaValoriDiPartenza`. (C)
+- B35d I passi di `MissioneAPassi` usati solo dai test. (C)
+- B35e Le produzioni morte di `fiabe.txt` e `locande.txt`, fra cui 12 `NOTIZIE_CITTA` che non escono mai. (C)
 
 **foresta-swing e foresta-app**
 

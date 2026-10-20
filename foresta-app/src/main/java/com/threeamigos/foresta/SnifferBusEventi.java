@@ -2,9 +2,7 @@ package com.threeamigos.foresta;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.EventoBase;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoInvioTesto;
+import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
@@ -139,6 +137,114 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(NotificaVariazionePuntiEsperienzaPersonaggio.class, this::onEventoVariazionePuntiEsperienza);
         BusEventi.iscriviti(NotificaVariazioneStatistichePersonaggio.class, this::onEventoVariazioneStatistichePersonaggio);
         BusEventi.iscriviti(NotificaVariazioneStatoVitalePersonaggio.class, this::onEventoVariazioneStatoVitalePersonaggio);
+        // Lo sniffer ascolta qualsiasi evento: chi aggiunge un evento nuovo lo iscrive qui (lo controlla SnifferBusEventiTest)
+        BusEventi.iscriviti(ComandoCommutazioneElenco.class, this::onEventoCommutazioneElenco);
+        BusEventi.iscriviti(ComandoImpostaTattica.class, this::onEventoImpostaTattica);
+        BusEventi.iscriviti(ComandoImpostazioneAiuto.class, this::onEventoImpostazioneAiuto);
+        BusEventi.iscriviti(ComandoScambioArtefatto.class, this::onEventoScambioArtefatto);
+        BusEventi.iscriviti(ComandoSpesaPuntoAbilita.class, this::onEventoSpesaPuntoAbilita);
+        BusEventi.iscriviti(ComandoSpostaPersonaggio.class, this::onEventoSpostaPersonaggio);
+        BusEventi.iscriviti(InternoAssegnaCoordinateAPersonaggi.class, e -> Logger.log(() -> headerEvento(e)));
+        BusEventi.iscriviti(InternoCaricamentoCompletato.class, this::onEventoCaricamentoCompletato);
+        BusEventi.iscriviti(InternoFineLogoIniziale.class, e -> Logger.log(() -> headerEvento(e)));
+        BusEventi.iscriviti(InternoFumettoSuccessivo.class, this::onEventoFumettoSuccessivo);
+        BusEventi.iscriviti(InternoIncantatura.class, this::onEventoIncantatura);
+        BusEventi.iscriviti(InternoPassaggioInosservato.class, e -> Logger.log(() -> headerEvento(e)));
+        BusEventi.iscriviti(InternoPersonaggioArreso.class, this::onEventoPersonaggioArreso);
+        BusEventi.iscriviti(InternoPrecaricamentoMotoreCompletato.class, e -> Logger.log(() -> headerEvento(e)));
+        BusEventi.iscriviti(InternoSfidaCartaForbiciSasso.class, this::onEventoSfidaCartaForbiciSasso);
+        BusEventi.iscriviti(InternoUiInattiva.class, e -> Logger.log(() -> headerEvento(e)));
+        BusEventi.iscriviti(InternoUiOccupata.class, e -> Logger.log(() -> headerEvento(e)));
+        BusEventi.iscriviti(NotificaApprovazioneIncantatura.class, this::onEventoApprovazioneIncantatura);
+        BusEventi.iscriviti(NotificaAvvisoIncantatura.class, this::onEventoAvvisoIncantatura);
+        BusEventi.iscriviti(NotificaPaginaIntermezzo.class, this::onEventoPaginaIntermezzo);
+        BusEventi.iscriviti(NotificaRifiutoIncantatura.class, this::onEventoRifiutoIncantatura);
+        BusEventi.iscriviti(RichiestaAperturaIncantatore.class, this::onEventoRichiestaAperturaIncantatore);
+        BusEventi.iscriviti(RichiestaAperturaTattiche.class, this::onEventoRichiestaAperturaTattiche);
+        BusEventi.iscriviti(RichiestaAperturaTrofei.class, this::onEventoRichiestaAperturaTrofei);
+        BusEventi.iscriviti(RichiestaSelezioneMissione.class, this::onEventoRichiestaSelezioneMissione);
+    }
+
+    private void onEventoCommutazioneElenco(ComandoCommutazioneElenco evento) {
+        Logger.log(() -> headerEvento(evento) + "Scambio " + evento.getIdScambio() + ", artefatto " + evento.getUuidArtefatto()
+                + ", missione " + evento.getIdMissione());
+    }
+
+    private void onEventoImpostaTattica(ComandoImpostaTattica evento) {
+        Logger.log(() -> headerEvento(evento) + "Personaggio " + evento.getUuidPersonaggio() + ", voci: "
+                + (evento.getTattica() == null ? "nessuna tattica" : evento.getTattica().getVoci().size()));
+    }
+
+    private void onEventoImpostazioneAiuto(ComandoImpostazioneAiuto evento) {
+        Logger.log(() -> headerEvento(evento) + (evento.isAbilitato() ? "Aiuto abilitato" : "Aiuto disabilitato"));
+    }
+
+    private void onEventoScambioArtefatto(ComandoScambioArtefatto evento) {
+        Logger.log(() -> headerEvento(evento) + "Scambio " + evento.getIdScambio() + ", artefatto " + evento.getUuidArtefatto()
+                + ", destinazione " + evento.getDestinazione());
+    }
+
+    private void onEventoSpesaPuntoAbilita(ComandoSpesaPuntoAbilita evento) {
+        Logger.log(() -> headerEvento(evento) + "Personaggio " + evento.getUuidPersonaggio() + ", attributo " + evento.getAttributo());
+    }
+
+    private void onEventoSpostaPersonaggio(ComandoSpostaPersonaggio evento) {
+        Logger.log(() -> headerEvento(evento) + "Personaggio " + evento.getUuidPersonaggio() + " verso "
+                + (evento.isVersoDestra() ? "destra" : "sinistra"));
+    }
+
+    private void onEventoCaricamentoCompletato(InternoCaricamentoCompletato evento) {
+        Logger.log(() -> headerEvento(evento) + "Ultimi messaggi: " + evento.getUltimiMessaggi().size());
+    }
+
+    private void onEventoFumettoSuccessivo(InternoFumettoSuccessivo evento) {
+        Logger.log(() -> headerEvento(evento) + "Fra " + evento.getSecondi() + " secondi");
+    }
+
+    private void onEventoIncantatura(InternoIncantatura evento) {
+        Logger.log(() -> headerEvento(evento) + "Nome proprio: " + evento.getNomeProprio());
+    }
+
+    private void onEventoPersonaggioArreso(InternoPersonaggioArreso evento) {
+        Logger.log(() -> headerEvento(evento) + evento.getPersonaggio().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
+    }
+
+    private void onEventoSfidaCartaForbiciSasso(InternoSfidaCartaForbiciSasso evento) {
+        Logger.log(() -> headerEvento(evento) + (evento.isInizio() ? "Inizio" : evento.isFinale() ? "Fine" : "Mano")
+                + " - Giocatore: " + evento.getMossaDelGiocatore() + " (" + evento.getPunteggioDelGiocatore() + "), Avversario: "
+                + evento.getMossaDellAvversario() + " (" + evento.getPunteggioDellAvversario() + ")");
+    }
+
+    private void onEventoApprovazioneIncantatura(NotificaApprovazioneIncantatura evento) {
+        Logger.log(() -> headerEvento(evento) + evento.getArtefatto().getNomeBreve() + ", costo " + evento.getCosto());
+    }
+
+    private void onEventoAvvisoIncantatura(NotificaAvvisoIncantatura evento) {
+        Logger.log(() -> headerEvento(evento) + evento.getFrase());
+    }
+
+    private void onEventoPaginaIntermezzo(NotificaPaginaIntermezzo evento) {
+        Logger.log(() -> headerEvento(evento) + "Pagina " + evento.getNumeroPagina() + " di " + evento.getTotalePagine());
+    }
+
+    private void onEventoRifiutoIncantatura(NotificaRifiutoIncantatura evento) {
+        Logger.log(() -> headerEvento(evento) + evento.getMotivo());
+    }
+
+    private void onEventoRichiestaAperturaIncantatore(RichiestaAperturaIncantatore evento) {
+        Logger.log(() -> headerEvento(evento) + "Comandi: " + evento.getPossibilita() + ", messaggio: " + evento.getMessaggio());
+    }
+
+    private void onEventoRichiestaAperturaTattiche(RichiestaAperturaTattiche evento) {
+        Logger.log(() -> headerEvento(evento) + "Personaggio " + evento.getPersonaggio().getUuid() + ", comandi: " + evento.getPossibilita());
+    }
+
+    private void onEventoRichiestaAperturaTrofei(RichiestaAperturaTrofei evento) {
+        Logger.log(() -> headerEvento(evento) + "Comandi: " + evento.getPossibilita());
+    }
+
+    private void onEventoRichiestaSelezioneMissione(RichiestaSelezioneMissione evento) {
+        Logger.log(() -> headerEvento(evento) + "Comandi: " + evento.getPossibilita());
     }
 
     private void onEventoAggiornamentoStatoMissione(NotificaAggiornamentoStatoMissione evento) {

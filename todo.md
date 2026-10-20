@@ -44,12 +44,10 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
   - `[chiave]` su una chiave solo assegnata passa la validazione ma fallisce a runtime;
   - le produzioni derivate dipendono dall'ordine della HashMap;
   - il messaggio della riga 1142 stampa la riga invece del numero.
-- B35. Codice morto nel motore:
-  - in `PersonaggioBase`: `calcolaStanchezza`, `subCarisma`, `add<Primario>`, `getQuantitaEffettoDiStato` e `puoPrendere(Artefatto)`;
-  - `InternoPersonaggioArreso` non ha nessun iscritto;
-  - i lanci di `Dado` sprecati in `impostaValoriDiPartenza`;
-  - i passi di `MissioneAPassi` usati solo dai test;
-  - le produzioni morte: `fiabe.txt` (ISTANTE_PRECISO_OOP, GIORNO_DELLA_SETTIMANA, OTTENUTO, RACCONTO_BREVE) e `locande.txt` (GESTORE_NOTE, NOTIZIE_CITTA, 12 notizie che non escono mai).
+- B35a. Codice morto in `PersonaggioBase`: `calcolaStanchezza`, `subCarisma`, `add<Primario>`, `getQuantitaEffettoDiStato` e `puoPrendere(Artefatto)`.
+- B35c. I lanci di `Dado` sprecati in `impostaValoriDiPartenza`.
+- B35d. I passi di `MissioneAPassi` usati solo dai test.
+- B35e. Le produzioni morte: `fiabe.txt` (ISTANTE_PRECISO_OOP, GIORNO_DELLA_SETTIMANA, OTTENUTO, RACCONTO_BREVE) e `locande.txt` (GESTORE_NOTE, NOTIZIE_CITTA, 12 notizie che non escono mai).
 
 ### Gravità bassa: foresta-swing e foresta-app
 
