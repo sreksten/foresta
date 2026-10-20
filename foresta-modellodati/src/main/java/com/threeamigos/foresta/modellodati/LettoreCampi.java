@@ -42,6 +42,14 @@ public final class LettoreCampi {
 	}
 
 	/**
+	 * La prossima riga del salvataggio, che contiene solo un testo (per esempio un uuid); un file finito prima o una riga vuota
+	 * sono un errore, non un null.
+	 */
+	public static String leggiTesto(BufferedReader stream) throws IOException {
+		return new LettoreCampi(stream.readLine()).testo();
+	}
+
+	/**
 	 * La prossima riga del salvataggio, che contiene solo un valore vero o falso.
 	 */
 	public static boolean leggiBooleano(BufferedReader stream) throws IOException {

@@ -97,6 +97,24 @@ class GruppoGiocatoreMDTest {
     }
 
     @Test
+    void unFileTroncatoNegliOspitiVulnerabiliEUnErrore() throws IOException {
+        GruppoGiocatoreMD gruppo = new GruppoGiocatoreMD();
+        gruppo.addPersonaggioMD(personaggio(TipoPersonaggio.GUERRIERO, "Arsenio"));
+        gruppo.setCoordinate(new CoordinateMD(5, 6));
+        PersonaggioMD bardo = personaggio(TipoPersonaggio.BARDO_DELLE_LOCANDE, "Lino");
+        gruppo.aggiungiOspite(bardo);
+        gruppo.aggiungiOspiteVulnerabile(bardo.getUuid());
+        StringWriter scritto = new StringWriter();
+        try (PrintWriter stream = new PrintWriter(scritto)) {
+            gruppo.salva(stream);
+        }
+        // Senza l'ultima riga, l'uuid dell'ospite vulnerabile
+        String completo = scritto.toString();
+        String troncato = completo.substring(0, completo.lastIndexOf(bardo.getUuid()));
+        assertThrows(IOException.class, () -> new GruppoGiocatoreMD().leggi(new BufferedReader(new StringReader(troncato))));
+    }
+
+    @Test
     void ospitiEOspitiVulnerabiliSiAggiungonoESiTolgono() {
         GruppoGiocatoreMD gruppo = new GruppoGiocatoreMD();
         PersonaggioMD bardo = personaggio(TipoPersonaggio.BARDO_DELLE_LOCANDE, "Lino");

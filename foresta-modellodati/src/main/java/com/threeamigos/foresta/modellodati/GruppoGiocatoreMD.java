@@ -219,7 +219,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		ospitiVulnerabili.clear();
 		int numeroVulnerabili = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroVulnerabili; i++) {
-			ospitiVulnerabili.add(stream.readLine());
+			ospitiVulnerabili.add(LettoreCampi.leggiTesto(stream));
 		}
 	}
 
