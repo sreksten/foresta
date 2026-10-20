@@ -205,9 +205,9 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	void riduciModificatori(UnitaDurataModificatore unitaDurata);
 
 	/**
-	 * Toglie tutti i modificatori che scadono, benefici o no (vedi AlbaSacra)
+	 * Toglie i modificatori che scadono, benefici o no, tranne quelli non rimovibili come l'ignominia della fuga (vedi AlbaSacra)
 	 */
-	void rimuoviTuttiIModificatoriTemporanei();
+	void rimuoviIModificatoriTemporaneiRimovibili();
 	/**
 	 * Il personaggio muore a causa di qualcosa
 	 */

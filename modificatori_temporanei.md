@@ -71,7 +71,7 @@ I `ModificatoreAttributoMD` possono durare un tempo e un'arma può metterli sul 
 
 ### 5.4 Alba Sacra
 
-`AlbaSacra.formula` chiama anche `rimuoviTuttiIModificatoriTemporanei()` su ogni personaggio del gruppo bersaglio (`PersonaggioBase`, rimuove i modificatori con unità diversa da `PERMANENTE`, ricalcola e notifica). La benedizione, la lealtà e i bonus permanenti restano.
+`AlbaSacra.formula` chiama anche `rimuoviIModificatoriTemporaneiRimovibili()` su ogni personaggio del gruppo bersaglio (`PersonaggioBase`, rimuove i modificatori con unità diversa da `PERMANENTE` e `isRimovibile()`; l'ignominia della fuga è l'unica non rimovibile, ricalcola e notifica). La benedizione, la lealtà e i bonus permanenti restano.
 
 ### 5.5 Regole degli oggetti
 

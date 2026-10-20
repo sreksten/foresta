@@ -78,8 +78,24 @@ class ModificatoreAttributoMDTest {
     }
 
     @Test
+    void ilFlagRimovibileSiConservaNelleCopieNelCampoEInEquals() throws IOException {
+        ModificatoreAttributoMD fisso = new ModificatoreAttributoMD(TipoAttributo.CORAGGIO, TipoModificatore.VARIAZIONE_PERCENTUALE,
+                -20.0d, "ignominia", UnitaDurataModificatore.LOCAZIONI, 3, BersaglioModificatore.PORTATORE, false);
+        assertTrue(aTempo(3).isRimovibile(), "di norma è rimovibile");
+        assertFalse(fisso.isRimovibile());
+        assertFalse(fisso.conDurata(2).isRimovibile());
+        assertFalse(fisso.conQuantita(-10.0d).isRimovibile());
+        assertFalse(fisso.suPortatore().isRimovibile());
+        assertFalse(fisso.stessoEffetto(new ModificatoreAttributoMD(TipoAttributo.CORAGGIO, TipoModificatore.VARIAZIONE_PERCENTUALE,
+                -20.0d, "ignominia", UnitaDurataModificatore.LOCAZIONI, 3, BersaglioModificatore.PORTATORE)));
+        ModificatoreAttributoMD riletto = ModificatoreAttributoMD.daCampo(new LettoreCampi(fisso.comeCampo()));
+        assertEquals(fisso, riletto);
+        assertFalse(riletto.isRimovibile());
+    }
+
+    @Test
     void unCampoSenzaNotaSiRileggeConLaNotaVuota() throws IOException {
-        ModificatoreAttributoMD riletto = ModificatoreAttributoMD.daCampo(new LettoreCampi("FORZA§VARIAZIONE_FISSA§2.0§PERMANENTE§0§PORTATORE"));
+        ModificatoreAttributoMD riletto = ModificatoreAttributoMD.daCampo(new LettoreCampi("FORZA§VARIAZIONE_FISSA§2.0§PERMANENTE§0§PORTATORE§true"));
         assertEquals(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 2.0d), riletto);
     }
 }

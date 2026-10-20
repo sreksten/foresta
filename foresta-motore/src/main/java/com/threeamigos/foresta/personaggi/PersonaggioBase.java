@@ -559,7 +559,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		for (TipoAttributo attributo : new TipoAttributo[] {TipoAttributo.CORAGGIO, TipoAttributo.VALORE, TipoAttributo.CARISMA}) {
 			addModificatore(new ModificatoreAttributoMD(attributo, TipoModificatore.VARIAZIONE_PERCENTUALE,
 					-Costanti.FUGA_IGNOMINIA_PERCENTUALE, Costanti.FUGA_IGNOMINIA_NOTA, UnitaDurataModificatore.LOCAZIONI,
-					Costanti.FUGA_IGNOMINIA_LOCAZIONI + 1, BersaglioModificatore.PORTATORE));
+					Costanti.FUGA_IGNOMINIA_LOCAZIONI + 1, BersaglioModificatore.PORTATORE, false));
 		}
 	}
 
@@ -1570,9 +1570,11 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public void rimuoviTuttiIModificatoriTemporanei() {
+	public void rimuoviIModificatoriTemporaneiRimovibili() {
 		for (ModificatoreAttributoMD modificatore : getModificatoriTemporanei()) {
-			rimuoviModificatore(modificatore);
+			if (modificatore.isRimovibile()) {
+				rimuoviModificatore(modificatore);
+			}
 		}
 	}
 

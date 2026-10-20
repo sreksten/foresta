@@ -74,7 +74,7 @@ ed Elfo e dell'alba sacra di Sacerdote e Sacerdotessa.
 
 ## 6. Alba Sacra
 
-Non cambia. `AlbaSacra.formula` toglie tutti gli effetti di stato (`rimuoviTuttiGliEffettiDiStato`) e tutti i modificatori a tempo (`rimuoviTuttiIModificatoriTemporanei`), quindi anche `ISPIRATO`: l'Alba fa pulito, come si è deciso, e non si introduce nessuna distinzione fra effetti buoni e cattivi.
+Non cambia. `AlbaSacra.formula` toglie tutti gli effetti di stato (`rimuoviTuttiGliEffettiDiStato`) e tutti i modificatori a tempo (`rimuoviIModificatoriTemporaneiRimovibili`, esclusa l'ignominia della fuga, che non è rimovibile), quindi anche `ISPIRATO`: l'Alba fa pulito, come si è deciso, e non si introduce nessuna distinzione fra effetti buoni e cattivi.
 
 ## 7. Decisioni prese lungo il lavoro
 

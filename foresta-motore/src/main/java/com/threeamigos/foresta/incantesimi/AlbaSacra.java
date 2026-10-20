@@ -54,7 +54,7 @@ public class AlbaSacra  implements Incantesimo {
     }
 
     /**
-     * Toglie a tutto il gruppo bersaglio gli stati alterati negativi e i modificatori temporanei, e fa pagare il lancio a chi lo formula.
+     * Toglie a tutto il gruppo bersaglio gli stati alterati negativi e i modificatori temporanei rimovibili (non l'ignominia della fuga), e fa pagare il lancio a chi lo formula.
      */
     public void formula(Personaggio formulante, Personaggio personaggioBersaglio, Gruppo gruppoBersaglio) {
 
@@ -63,7 +63,7 @@ public class AlbaSacra  implements Incantesimo {
 
         for (Personaggio personaggio : gruppoBersaglio.getPersonaggi()) {
             personaggio.rimuoviGliEffettiDiStatoNegativi();
-            personaggio.rimuoviTuttiIModificatoriTemporanei();
+            personaggio.rimuoviIModificatoriTemporaneiRimovibili();
         }
         formulante.subMagia(getCostoLancio());
         StatoDelCombattimento.getIstanza().registraIncantesimoLanciato(formulante);

@@ -32,8 +32,11 @@ public class ModificatoreAttributoMD {
     private final UnitaDurataModificatore unitaDurata;
     private final int durata;
     private final BersaglioModificatore bersaglio;
+    private final boolean rimovibile;
 
     /**
+     * Un modificatore che l'Alba Sacra può togliere (vedi l'altro costruttore).
+     *
      * @param note una nota libera, spesso vuota; il carattere "|" si toglie
      * @param durata 0 per un modificatore permanente, almeno 1 per uno a tempo (nell'unità indicata)
      * @throws IllegalArgumentException se la durata non è coerente con l'unità: un permanente deve avere durata 0 e uno a
@@ -42,6 +45,16 @@ public class ModificatoreAttributoMD {
     public ModificatoreAttributoMD(TipoAttributo tipoAttributo, TipoModificatore tipoModificatore,
                                  double quantita, String note, UnitaDurataModificatore unitaDurata, int durata,
                                  BersaglioModificatore bersaglio) {
+        this(tipoAttributo, tipoModificatore, quantita, note, unitaDurata, durata, bersaglio, true);
+    }
+
+    /**
+     * @param rimovibile false se nemmeno l'Alba Sacra può toglierlo prima della scadenza (l'ignominia della fuga)
+     * @see #ModificatoreAttributoMD(TipoAttributo, TipoModificatore, double, String, UnitaDurataModificatore, int, BersaglioModificatore)
+     */
+    public ModificatoreAttributoMD(TipoAttributo tipoAttributo, TipoModificatore tipoModificatore,
+                                 double quantita, String note, UnitaDurataModificatore unitaDurata, int durata,
+                                 BersaglioModificatore bersaglio, boolean rimovibile) {
         if (unitaDurata == UnitaDurataModificatore.PERMANENTE ? durata != 0 : durata < 1) {
             throw new IllegalArgumentException("Un modificatore permanente ha durata 0, uno a tempo almeno 1: "
                     + unitaDurata + " " + durata);
@@ -53,6 +66,7 @@ public class ModificatoreAttributoMD {
         this.unitaDurata = unitaDurata;
         this.durata = durata;
         this.bersaglio = bersaglio;
+        this.rimovibile = rimovibile;
     }
 
     /**
@@ -120,6 +134,13 @@ public class ModificatoreAttributoMD {
     }
 
     /**
+     * Dice se l'Alba Sacra può toglierlo prima della scadenza.
+     */
+    public boolean isRimovibile() {
+        return rimovibile;
+    }
+
+    /**
      * Dice se il modificatore ha una scadenza.
      */
     public boolean isTemporaneo() {
@@ -131,7 +152,7 @@ public class ModificatoreAttributoMD {
      */
     public ModificatoreAttributoMD conDurata(int nuovaDurata) {
         return new ModificatoreAttributoMD(tipoAttributo, tipoModificatore, quantita, note, unitaDurata, nuovaDurata,
-                bersaglio);
+                bersaglio, rimovibile);
     }
 
     /**
@@ -139,7 +160,7 @@ public class ModificatoreAttributoMD {
      */
     public ModificatoreAttributoMD suPortatore() {
         return new ModificatoreAttributoMD(tipoAttributo, tipoModificatore, quantita, note, unitaDurata, durata,
-                BersaglioModificatore.PORTATORE);
+                BersaglioModificatore.PORTATORE, rimovibile);
     }
 
     /**
@@ -147,7 +168,7 @@ public class ModificatoreAttributoMD {
      */
     public ModificatoreAttributoMD conQuantita(double nuovaQuantita) {
         return new ModificatoreAttributoMD(tipoAttributo, tipoModificatore, nuovaQuantita, note, unitaDurata, durata,
-                bersaglio);
+                bersaglio, rimovibile);
     }
 
     /**
@@ -156,11 +177,11 @@ public class ModificatoreAttributoMD {
     public boolean stessoEffetto(ModificatoreAttributoMD altro) {
         return tipoAttributo == altro.tipoAttributo && tipoModificatore == altro.tipoModificatore
                 && quantita == altro.quantita && Objects.equals(note, altro.note)
-                && unitaDurata == altro.unitaDurata && bersaglio == altro.bersaglio;
+                && unitaDurata == altro.unitaDurata && bersaglio == altro.bersaglio && rimovibile == altro.rimovibile;
     }
 
     /**
-     * Il modificatore come campo di un salvataggio: attributo, tipo, quantità, unità, durata, bersaglio e nota, separati da
+     * Il modificatore come campo di un salvataggio: attributo, tipo, quantità, unità, durata, bersaglio, se è rimovibile e nota, separati da
      * {@value MappaProprieta#SEPARATORE}. La nota, testo libero, è l'ultima: se contiene il separatore non sposta gli altri.
      * Lo rilegge {@link #daCampo(LettoreCampi)}.
      */
@@ -172,6 +193,7 @@ public class ModificatoreAttributoMD {
                 unitaDurata,
                 durata,
                 bersaglio,
+                rimovibile,
                 facoltativo(note));
     }
 
@@ -180,15 +202,16 @@ public class ModificatoreAttributoMD {
      * costruttore senza nota, così il modificatore riletto è equals all'originale.
      */
     public static ModificatoreAttributoMD daCampo(LettoreCampi campi) throws IOException {
-        LettoreCampi sottocampi = campi.sottocampi(6, 7);
+        LettoreCampi sottocampi = campi.sottocampi(7, 8);
         TipoAttributo tipoAttributo = sottocampi.enumerato(TipoAttributo.class);
         TipoModificatore tipoModificatore = sottocampi.enumerato(TipoModificatore.class);
         double quantita = sottocampi.decimale();
         UnitaDurataModificatore unitaDurata = sottocampi.enumerato(UnitaDurataModificatore.class);
         int durata = sottocampi.intero();
         BersaglioModificatore bersaglio = sottocampi.enumerato(BersaglioModificatore.class);
+        boolean rimovibile = sottocampi.booleano();
         String note = sottocampi.haAltriCampi() ? sottocampi.testo() : "";
-        return new ModificatoreAttributoMD(tipoAttributo, tipoModificatore, quantita, note, unitaDurata, durata, bersaglio);
+        return new ModificatoreAttributoMD(tipoAttributo, tipoModificatore, quantita, note, unitaDurata, durata, bersaglio, rimovibile);
     }
 
     /**
@@ -208,7 +231,7 @@ public class ModificatoreAttributoMD {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(tipoAttributo, tipoModificatore, quantita, note, unitaDurata, durata, bersaglio);
+        return Objects.hash(tipoAttributo, tipoModificatore, quantita, note, unitaDurata, durata, bersaglio, rimovibile);
     }
 
 }

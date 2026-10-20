@@ -301,7 +301,7 @@ class ModificatoriTemporaneiTest {
         guerriero.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 3, "benedizione"));
         int forza = guerriero.getForza();
 
-        guerriero.rimuoviTuttiIModificatoriTemporanei();
+        guerriero.rimuoviIModificatoriTemporaneiRimovibili();
 
         assertTrue(guerriero.getModificatoriTemporanei().isEmpty());
         assertTrue(guerriero.getFortuna() > 0);
@@ -460,6 +460,20 @@ class ModificatoriTemporaneiTest {
             capo.addMagia(1000);
             new AlbaSacra(1).formula(capo, capo, partita.gruppo());
             assertTrue(capo.getModificatoriTemporanei().isEmpty());
+        }
+    }
+
+    @Test
+    void lAlbaSacraNonTogliLIgnominiaDellaFuga() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(78)) {
+            partita.iniziaCon("Elia", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
+            com.threeamigos.foresta.personaggi.Personaggio capo = partita.gruppo().getCapo();
+            capo.fugge();
+            capo.addModificatore(fortunaAZero(UnitaDurataModificatore.TURNI, 4));
+            capo.addMagia(1000);
+            new AlbaSacra(1).formula(capo, capo, partita.gruppo());
+            assertEquals(3, capo.getModificatoriTemporanei().size(), "restano coraggio, valore e carisma");
+            assertTrue(capo.getModificatoriTemporanei().stream().noneMatch(ModificatoreAttributoMD::isRimovibile));
         }
     }
 
