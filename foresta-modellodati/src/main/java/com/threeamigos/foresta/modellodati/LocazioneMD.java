@@ -80,10 +80,10 @@ public class LocazioneMD implements Serializzabile {
 
 	/**
 	 * Imposta una proprietà (o ne sostituisce il valore). Il carattere "|" si toglie dal valore, perché separa i campi
-	 * nel salvataggio. Per le proprietà che valgono per la sola presenza si usa {@link #AFFERMATIVO}.
+	 * nel salvataggio, e un valore null si rifiuta. Per le proprietà che valgono per la sola presenza si usa {@link #AFFERMATIVO}.
 	 */
 	public void aggiungiProprieta(String nome, String valore) {
-		proprieta.put(nome, Serializzabile.pulisciCampo(valore));
+		proprieta.put(nome, MappaProprieta.pulisciValore(nome, valore));
 	}
 
 	/**

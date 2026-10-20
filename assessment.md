@@ -124,7 +124,6 @@ Nessun difetto aperto.
 - B1 `ArtefattoMD:346/372`: la descrizione scritta con `facoltativo` è riletta con `testo()`, quindi null torna "". La rivelazione aggiunge una riga vuota. (C)
 - B2 `LettoreCampi:115`: un nome di enum non valido dà `IllegalArgumentException` invece di `IOException`; oggi è assorbito dai chiamanti. (C)
 - B3 `ModificatoreAttributoMD:52, 158, 175`: una nota null torna "", e il modificatore riletto non è più `equals`. Il confronto fra double usa `==`. (P)
-- B4 `MappaProprieta:34`: un valore null si salva come la stringa "null". (P, latente)
 - B6 `GruppoMD:167`, `RegistroPersonaggiMD:130`, `RegistroArtefattiMD:195`: `leggi` aggiunge invece di sostituire, contro la javadoc. Oggi è innocuo grazie a `reimposta()`. (C, latente)
 - B7 `GruppoGiocatoreMD:222`: con un file troncato si aggiunge null agli ospiti, e la lettura della sola testata passa senza errore. (C)
 - B8 `ForestaMD:48, 59, 234`: `offset()` non controlla i limiti, e gli array restano null prima di `reimposta`. (P)

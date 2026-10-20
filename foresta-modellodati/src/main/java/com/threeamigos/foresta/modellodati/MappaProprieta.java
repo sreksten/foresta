@@ -24,6 +24,20 @@ final class MappaProprieta {
 	}
 
 	/**
+	 * Il valore di una proprietà pronto per il salvataggio: senza i caratteri che spezzerebbero la riga (vedi
+	 * {@link Serializzabile#pulisciCampo}). Un valore null si rifiuta: si salverebbe come la stringa "null", e riletto sarebbe un testo
+	 * qualunque; per togliere una proprietà c'è {@code rimuoviProprieta}.
+	 *
+	 * @throws IllegalArgumentException se il valore è null
+	 */
+	static String pulisciValore(String nome, String valore) {
+		if (valore == null) {
+			throw new IllegalArgumentException("La proprietà " + nome + " non può avere un valore null: per toglierla si usa rimuoviProprieta");
+		}
+		return Serializzabile.pulisciCampo(valore);
+	}
+
+	/**
 	 * Serializza la mappa in una sequenza di token "chiave§valore" pronta per essere unita
 	 * al resto della riga con {@link Serializzabile#PIPE}. Non emette nulla se la mappa è vuota.
 	 */

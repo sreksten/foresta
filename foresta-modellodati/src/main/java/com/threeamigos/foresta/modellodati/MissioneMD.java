@@ -89,10 +89,10 @@ public class MissioneMD implements Serializzabile {
 	}
 
 	/**
-	 * Imposta una proprietà (o ne sostituisce il valore). Il carattere "|" si toglie dal valore.
+	 * Imposta una proprietà (o ne sostituisce il valore). Il carattere "|" si toglie dal valore, e un valore null si rifiuta.
 	 */
 	public void aggiungiProprieta(String nome, String valore) {
-		proprieta.put(nome, Serializzabile.pulisciCampo(valore));
+		proprieta.put(nome, MappaProprieta.pulisciValore(nome, valore));
 	}
 
 	/**
