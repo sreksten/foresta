@@ -40,7 +40,6 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
   - La magia "a caso" può pescare Morte su un bersaglio sano.
   - Correzione: `rimuoviTuttiGliEffettiDiStato()` in `muore` o in `resuscita`.
   - Da decidere anche per i modificatori temporanei negativi.
-- **M10, reclutati deboli.** `impostaLivelloDopoReclutamento` (`PersonaggioBase:944-953`) alza il livello ma lascia salute e magia del livello 1.
   - Correzione: riscalarle ai nuovi massimi.
 - **M11, danno della fuga (regola).** Il danno è fisso, 50-100 punti (`PersonaggioBase:525-527`, c'è già un TODO): al livello 1 è spesso mortale.
   - Proposta: una percentuale della salute massima.

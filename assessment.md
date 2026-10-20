@@ -6,16 +6,12 @@ Valutazione del codice al **2026-10-19**, con una revisione completa dei sorgent
 
 - Il gioco è **completo e giocabile** da inizio a fine (creazione del gruppo, esplorazione, combattimento a round con tattiche, negozi, incantatore, missioni, intermezzi, trofei, salvataggi, classifica).
 - La **separazione fra le parti è garantita dal compilatore**: sei moduli Maven in fila (tipi, modellodati, contratti, motore, swing, app). La UI non vede il motore, ma soltanto viste in sola lettura ed eventi.
-- La **base di test è ampia e veloce**: 1543 test verdi (16 saltati); `tipi` e `modellodati` sono coperti quasi al 100% dai loro test, il motore all'85%.
-- La **revisione ha trovato 4 difetti di gravità alta**, tutti nella logica di gioco e non nell'infrastruttura (§5.1):
-  - gli avversari uccisi dal danno ad area non si contano;
-  - il capo del gruppo cambia quando esce un altro personaggio;
-  - La Benedizione può portare il gruppo a 9 personaggi, e il gioco va in crash;
-  - un carattere senza glifo (per esempio "ü" in un nome) manda in eccezione il disegno a ogni fotogramma.
+- La **base di test è ampia e veloce**: 1543 test verdi (16 saltati; 1559 dopo le correzioni dei difetti); `tipi` e `modellodati` sono coperti quasi al 100% dai loro test, il motore all'85%.
+- I **4 difetti di gravità alta** trovati dalla revisione (tutti nella logica di gioco, non nell'infrastruttura) sono stati corretti, ciascuno con un test.
 - **L'infrastruttura è solida.** Il bus, il `Dado`, i salvataggi di partita, gli scambi di artefatti, i prezzi e le copie difensive sono stati controllati e sono a posto. Non c'è nessuna `ConcurrentModificationException` raggiungibile, e i salvataggi sono simmetrici campo per campo.
 - **I difetti medi sono soprattutto regole di gioco incoerenti**: effetti di stato, ospiti, tempo in locanda, testi delle ricompense. Nella UI sono comportamenti sbagliati (§5.2).
 - Il **debito tecnico** resta concentrato nelle quattro classi grandi del motore e nello stato statico (§3).
-- **Giudizio:** il progetto è in buona salute. I difetti alti si correggono con interventi piccoli e locali; conviene farlo subito, con un test ciascuno. L'orientamento verticale resta rotto (noto) ed è rimandato in fondo.
+- **Giudizio:** il progetto è in buona salute. I difetti alti si sono corretti con interventi piccoli e locali, con un test ciascuno; i medi si affrontano a uno a uno. L'orientamento verticale resta rotto (noto) ed è rimandato in fondo.
 
 ## 2. Misure
 
@@ -62,7 +58,7 @@ Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 
 ### Problemi, in ordine di priorità
 
-1. **Classi grandi.** `PersonaggioBase`, `Automa` e `LocazioneBase` sono stabili dal 2026-10-17, ma restano le zone dove la revisione ha trovato più difetti: il combattimento a round in `LocazioneBase` (M3, M4, M7) e gli effetti di stato in `PersonaggioBase` (M9, B15).
+1. **Classi grandi.** `PersonaggioBase`, `Automa` e `LocazioneBase` sono stabili dal 2026-10-17, ma restano le zone dove la revisione ha trovato più difetti: il combattimento a round in `LocazioneBase` e gli effetti di stato in `PersonaggioBase` (B15).
    **Giudizio:** i tagli naturali restano quelli già indicati:
    - per `Automa`, altri sotto-automi (creazione del gruppo, combattimento, fine partita);
    - per `LocazioneBase`, il combattimento a round in una classe sua;
@@ -92,8 +88,7 @@ Ogni voce è stata verificata sul codice chiamante. **C** sta per *confermato* (
 
 ### 5.1 Gravità alta
 
-| Cod. | Dove | Difetto | Scenario | Correzione | |
-| :--- | :--- | :--- | :--- | :--- | :---: |
+Nessun difetto aperto.
 
 ### 5.2 Gravità media
 
@@ -102,7 +97,6 @@ Ogni voce è stata verificata sul codice chiamante. **C** sta per *confermato* (
 | Cod. | Dove | Difetto | |
 | :--- | :--- | :--- | :---: |
 | M6 | `tattiche/TatticheBase:293, 300`, `incantesimi/Morte:61` | Morte: la tattica usa 100·s/m < 25, l'incantesimo s < m/4 intero; con s=2, m=10 si ritorce sul mostro. Morte e Silenzio non registrano l'esito, quindi i tentativi falliti non fermano la ripetizione; la magia "a caso" può pescare Morte su un bersaglio sano | C |
-| M10 | `PersonaggioBase:944-953`, `motore/RegistroPersonaggi:99-104` | Un compagno reclutato a livello alto entra con salute e magia del livello 1 (al livello 9, 25-33% della salute massima) | C |
 | M11 | `PersonaggioBase:525-527` | La fuga toglie 50-100 punti fissi: al livello 1 un Mago muore nel 41% circa delle fughe (TODO già nel codice) | C |
 
 **Motore, missioni, trofei e testi**
@@ -291,14 +285,13 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 ## 8. Prossimi passi consigliati
 
-1. **I difetti alti (A1-A4) sono corretti**, ciascuno con un test.
-2. **Correggere i medi certi e a basso rischio:** M1, M2, M10, M12, M16, M17, M18 e tutta la UI (M22-M27).
-3. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M11 (fuga), M14 (sconfitti fra visite), B28 (LaLealta).
-4. **Un vero gestore di `InternoException`** (M19).
-5. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
-6. **Bilanciamento:** come da [`todo.md`](todo.md).
-7. **Tagliare le classi grandi** quando si interviene su di loro (§3).
-8. **Modalità verticale**, per ultima.
+1. **Correggere i medi certi e a basso rischio:** M1, M2, M12, M16, M17, M18 e tutta la UI (M22-M27).
+2. **Decidere le regole di gioco** dove la correzione cambia il bilanciamento: M6 (Morte), M11 (fuga), M14 (sconfitti fra visite), B28 (LaLealta).
+3. **Un vero gestore di `InternoException`** (M19).
+4. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
+5. **Bilanciamento:** come da [`todo.md`](todo.md).
+6. **Tagliare le classi grandi** quando si interviene su di loro (§3).
+7. **Modalità verticale**, per ultima.
 
 ## Osservazioni
 

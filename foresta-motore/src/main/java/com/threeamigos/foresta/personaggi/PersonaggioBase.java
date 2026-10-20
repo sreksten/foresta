@@ -959,9 +959,16 @@ public abstract class PersonaggioBase implements Personaggio {
 		if (nuovoLivello <= livelloAttuale) {
 			return;
 		}
+		double saluteMassimaPrima = calcolaSaluteMassima();
+		double magiaMassimaPrima = getMagiaMassima();
+		double frazioneSalute = saluteMassimaPrima > 0 ? md.get(TipoAttributo.SALUTE) / saluteMassimaPrima : 1.0d;
+		double frazioneMagia = magiaMassimaPrima > 0 ? md.get(TipoAttributo.MAGIA) / magiaMassimaPrima : 1.0d;
 		md.setLivello(nuovoLivello);
 		md.setEsperienza(Math.max(md.getEsperienza(), GestoreProgressione.getXpNecessariPerLivello(nuovoLivello)));
 		md.setPuntiAbilitaDisponibili(md.getPuntiAbilitaDisponibili() + nuovoLivello - livelloAttuale);
+		// Salute e magia crescono con il livello: chi arriva ne ha la stessa frazione che aveva (di solito tutta), non i punti del livello 1
+		md.set(TipoAttributo.SALUTE, (int) (calcolaSaluteMassima() * frazioneSalute));
+		md.set(TipoAttributo.MAGIA, (int) (getMagiaMassima() * frazioneMagia));
 	}
 
 	@Override
