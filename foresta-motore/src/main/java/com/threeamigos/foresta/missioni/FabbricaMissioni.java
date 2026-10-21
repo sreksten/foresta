@@ -31,6 +31,7 @@ public final class FabbricaMissioni {
 		COSTRUTTORI.put(MissionePredefinita.NESSUN_BOCCALE_LASCIATO_INDIETRO, NessunBoccaleLasciatoIndietro::new);
 		COSTRUTTORI.put(MissionePredefinita.DISTURBATORE_DELLA_QUIETE_PUBBLICA, DisturbatoreDellaQuietePubblica::new);
 		COSTRUTTORI.put(MissionePredefinita.IL_GIRO_DELLE_SETTE_CHIESE, IlGiroDelleSetteChiese::new);
+		COSTRUTTORI.put(MissionePredefinita.IL_VIANDANTE, IlViandante::new);
 		COSTRUTTORI.put(MissionePredefinita.CACCIA_AI_GOBLIN, CacciaAiGoblin::new);
 		COSTRUTTORI.put(MissionePredefinita.RICHIESTA_ALCHIMISTA, RichiestaDiMateriali::dellAlchimista);
 		COSTRUTTORI.put(MissionePredefinita.RICHIESTA_ARMAIOLO, RichiestaDiMateriali::dellArmaiolo);

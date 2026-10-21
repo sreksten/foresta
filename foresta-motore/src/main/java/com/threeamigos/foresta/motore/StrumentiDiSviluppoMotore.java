@@ -36,6 +36,10 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
             MissionePredefinita.LA_BENEDIZIONE,
             MissionePredefinita.RICHIESTA_LOCANDIERE);
 
+    // Le missioni che si offrono entrando in un bosco (un incontro fortuito)
+    private static final Set<MissionePredefinita> NEL_BOSCO = EnumSet.of(
+            MissionePredefinita.IL_VIANDANTE);
+
     private static final Set<MissionePredefinita> IN_CITTA_SENZA_INCARICO = EnumSet.of(
             MissionePredefinita.LA_LEGGENDA_DELL_ARMAIOLO,
             MissionePredefinita.LA_LEALTA);
@@ -249,7 +253,7 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
     }
 
     /**
-     * Dove si offre la missione: le leggende e le storie elencate in locanda, gli incarichi e il resto in città.
+     * Dove si offre la missione: le leggende e le storie elencate in locanda, il viandante in un bosco, gli incarichi e il resto in città.
      */
     static DovePartono doveParte(MissionePredefinita classe) {
         return DOVE_PARTONO.computeIfAbsent(classe, StrumentiDiSviluppoMotore::calcolaDoveParte).orElse(null);
@@ -258,6 +262,9 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
     private static Optional<DovePartono> calcolaDoveParte(MissionePredefinita classe) {
         if (IN_LOCANDA.contains(classe)) {
             return Optional.of(DovePartono.LOCANDA);
+        }
+        if (NEL_BOSCO.contains(classe)) {
+            return Optional.of(DovePartono.BOSCO);
         }
         if (IN_CITTA_SENZA_INCARICO.contains(classe) || FabbricaMissioni.crea(classe) instanceof IncaricoInCitta) {
             return Optional.of(DovePartono.CITTA);
@@ -270,9 +277,14 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
         if (tipo == null) {
             return false;
         }
-        return dove == DovePartono.LOCANDA
-                ? tipo == TipoLocazione.LOCANDA
-                : tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA;
+        switch (dove) {
+            case LOCANDA:
+                return tipo == TipoLocazione.LOCANDA;
+            case BOSCO:
+                return tipo == TipoLocazione.BOSCO;
+            default:
+                return tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA;
+        }
     }
 
     private static Missione trova(MissionePredefinita classe) {

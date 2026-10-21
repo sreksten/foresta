@@ -65,18 +65,27 @@ Una finestra a parte con questi tab (in colonna a sinistra, con il contenuto all
   quelli che servono per quel livello (`Statistiche.impostaLivelloDelMondo`), altrimenti il livello risalirebbe al primo punto
   guadagnato. Salendo si annuncia come un aumento vero (`NotificaAumentoLivelloMondo`: artefatti, UI); scendendo no, perché chi ascolta
   conosce solo gli aumenti, e cambia solo quello che si genera da lì in poi.
-- **Missioni in locanda** e **Missioni in città**: le missioni predefinite che si offrono lì, con la descrizione (se non ce l'hanno, il nome; il nome è nel suggerimento), lo stato (da cominciare,
+- **Missioni in locanda**, **Missioni in città** e **Missioni nel bosco**: le missioni predefinite che si offrono lì, con la descrizione (se non ce l'hanno, il nome; il nome è nel suggerimento), lo stato (da cominciare,
   partenza forzata, in corso, completata, fallita) e un pulsante "Forza".
 - **Dadi**: una riga per contesto, con la casella per accenderlo e il valore voluto.
 
 ### Forzare una missione
 
 "Forza" non avvia la missione sul posto: dice alla missione (`MissioneAPassi.forzaPartenza`) che al prossimo controllo in cui il gruppo
-è in una locanda (o in una città, per gli incarichi) il suo **passo iniziale si consideri concluso**, senza guardare le condizioni che
-il passo si dà da sé (visita tranquilla, pausa dopo un altro incarico, numero di visite). Le azioni del passo si eseguono come sempre,
-quindi gli intermezzi e il resto partono normalmente. La richiesta non si salva e vale una volta sola.
-Per sapere dove si offre una missione c'è un elenco fisso in `StrumentiDiSviluppoMotore`: quelle di locanda sono scritte a mano, le
-altre sono città se sono un `IncaricoInCitta` (o la leggenda dell'armaiolo e la lealtà). Le missioni scritte a mano su `MissioneBase`
+è in una locanda (o in una città, per gli incarichi, o in un bosco, per il viandante) il suo **passo iniziale si consideri concluso**,
+senza guardare le condizioni che il passo si dà da sé (visita tranquilla, pausa dopo un altro incarico, numero di visite). Le azioni
+del passo si eseguono come sempre, quindi gli intermezzi e il resto partono normalmente. La richiesta non si salva e vale una volta
+sola. Finché la missione non è partita davvero (cioè attiva) lo stato resta "partenza forzata".
+Per sapere dove si offre una missione c'è un elenco fisso in `StrumentiDiSviluppoMotore`: quelle di locanda sono scritte a mano, quelle
+del bosco pure (oggi solo `IlViandante`), le altre sono città se sono un `IncaricoInCitta` (o la leggenda dell'armaiolo e la lealtà).
+Una missione il cui primo passo non è la condizione che la fa partire davvero, come `IlViandante` (prima fissa i suoi parametri e poi
+aspetta il bosco e il giorno), chiede nella condizione del passo giusto `isInLuogoDellaPartenzaForzata()`: da lì, forzata, parte
+al primo bosco anche il primo giorno.
+
+Per provare le missioni nuove: **`LaForgia`** (Missioni in città, l'armaiolo): forzarla in una città, poi raccogliere il metallo e il trofeo
+(le monete e il livello del mondo si impostano dai tab Gruppo e Statistiche, e il trucco `TIPO_MOSTRO` dei dadi porta il mostro che serve),
+tornare in città per la forgiatura, lasciar passare 12 ore e tornare a ritirare l'arma. **`IlViandante`** (Missioni nel bosco): forzarla,
+entrare in un bosco, andare nella città indicata (compare sulla mappa), sconfiggere i mostri chiesti e tornare al bosco dell'incontro. Le missioni scritte a mano su `MissioneBase`
 (per esempio `NessunBoccaleLasciatoIndietro`) compaiono nell'elenco ma non si possono forzare.
 
 ## 4. Come si aggiunge un trucco

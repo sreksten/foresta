@@ -59,6 +59,7 @@ public class FinestraDiProva {
         finestra.getContentPane().add(tab, BorderLayout.CENTER);
         pannelliMissioni.add(new PannelloMissioni(DovePartono.LOCANDA));
         pannelliMissioni.add(new PannelloMissioni(DovePartono.CITTA));
+        pannelliMissioni.add(new PannelloMissioni(DovePartono.BOSCO));
         finestra.setSize(520, 560);
         finestra.setLocation(40, 40);
         timer = new Timer(INTERVALLO_RINFRESCO_MS, e -> rinfresca());
@@ -356,10 +357,20 @@ public class FinestraDiProva {
             this.dove = dove;
             setBorder(BorderFactory.createEmptyBorder(MARGINE, MARGINE, MARGINE, MARGINE));
             JLabel nota = new JLabel("<html>\"Forza\" fa partire la missione al prossimo controllo in "
-                    + (dove == DovePartono.LOCANDA ? "una locanda" : "una città")
-                    + ", senza aspettarne le condizioni.</html>");
+                    + luogo(dove) + ", senza aspettarne le condizioni.</html>");
             add(nota, BorderLayout.NORTH);
             add(elenco, BorderLayout.CENTER);
+        }
+
+        private String luogo(DovePartono dove) {
+            switch (dove) {
+                case LOCANDA:
+                    return "una locanda";
+                case BOSCO:
+                    return "un bosco";
+                default:
+                    return "una città";
+            }
         }
 
         void aggiorna() {

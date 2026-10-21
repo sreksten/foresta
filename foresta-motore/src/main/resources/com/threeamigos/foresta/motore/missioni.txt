@@ -2,8 +2,8 @@
 // riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
 // l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; le cose da portare da una città all'altra,
 // anche di contrabbando; gli oggetti smarriti nella foresta; gli incarichi di combattimento, le sorveglianze, i
-// soccorsi, le indagini, i riti, le benedizioni, le lealtà, i tornei, le documentazioni, i colpi, le botteghe nella Foresta e le armi
-// che l'armaiolo forgia.
+// soccorsi, le indagini, i riti, le benedizioni, le lealtà, i tornei, le documentazioni, i colpi, le botteghe nella Foresta, le armi
+// che l'armaiolo forgia e i viandanti che si incontrano nel bosco.
 // I nomi sono tutti maschili, perché i testi delle missioni parlano di "suo marito" e "sua moglie".
 //
 // Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
@@ -151,6 +151,32 @@ FORGIA
     CHIAVE=VIPERA_CORTESE;TIPO=LANCIA;ELEMENTO=VELENO;ATTRIBUTO=DESTREZZA;NOME=la Lancia della Vipera Cortese;BREVE=la Lancia della Vipera Cortese;DESCRIZIONE=che saluta sempre prima di pungere;PESO=3;RICHIESTA=Mi è venuta voglia di forgiare una lancia velenosa, ma dai buoni modi.;BATTUTA=Una lancia con i buoni modi? Che vuol dire?;RISPOSTA=Che vi avvisa prima di pungere. Poi punge lo stesso.;CONSEGNA=La Lancia della Vipera Cortese. Un po' di rispetto: si offende facilmente.
     CHIAVE=MONTAGNA_PAZIENTE;TIPO=SPADONE;ELEMENTO=TERRA;ATTRIBUTO=FORZA;NOME=lo Spadone della Montagna Paziente;BREVE=lo Spadone della Montagna Paziente;DESCRIZIONE=che pesa come una montagna ma colpisce solo quando serve;PESO=6;RICHIESTA=Per uno spadone ci vuole tempo e tanto metallo. Ma un buono spadone, signori, vale l'attesa.;BATTUTA=Quanto tempo?;RISPOSTA=Quanto una montagna per accorgersi di essere stata spostata.;CONSEGNA=Lo Spadone della Montagna Paziente. Reggetelo con due mani e un po' di dignità.
     CHIAVE=FIAMMA_FREDDA;TIPO=BASTONE_MAGICO;ELEMENTO=SACRO;ATTRIBUTO=POTERE_MAGICO;NOME=il Bastone della Fiamma Fredda;BREVE=il Bastone della Fiamma Fredda;DESCRIZIONE=che fa luce senza scaldare;PESO=2;RICHIESTA=Un bastone per i maghi, con una fiamma che non scotta. Gli incantatori ne vanno matti.;BATTUTA=Una fiamma che non scotta? A cosa serve?;RISPOSTA=A fare scena. E, ogni tanto, a salvare la vita.;CONSEGNA=Il Bastone della Fiamma Fredda. Non è un cero, non usatelo come tale.
+
+// ---------------------------------------------------------------------------------------------
+// Il viandante (vedi IlViandante e ViandanteRichiesto): un incontro fortuito nel bosco, dopo qualche giorno di cammino
+// ---------------------------------------------------------------------------------------------
+//
+// Una riga per richiesta, campi CHIAVE=valore separati da ";":
+//   CHIAVE: l'identificativo della riga;
+//   NEMICO: la classe dei mostri da sconfiggere (un TipoPersonaggio che si incontra nella Foresta);
+//   NUMERO: quanti, minimo-massimo (per esempio 2-4);
+//   PLURALE: come si dicono al plurale, senza articolo (la missione scrive "tre troll");
+//   MONETE: quante monete per ogni mostro sconfitto, per il primo livello del mondo (la missione le moltiplica per il livello);
+//   RICHIESTA: quello che dice il viandante per chiedere aiuto: %CITTA% è la città in cui va il gruppo (la missione sceglie una
+//     città in piedi quando il viandante si fa incontrare);
+//   BATTUTA: la risposta del capo;
+//   RISPOSTA: la replica del viandante;
+//   ARRIVO: quello che si legge arrivando in città;
+//   RITORNO: quello che dice il viandante quando il gruppo torna da lui.
+// Nei testi non si usa il ";".
+
+VIANDANTE
+    CHIAVE=TROLL_DEL_PONTE;NEMICO=TROLL;NUMERO=2-3;PLURALE=troll;MONETE=7;RICHIESTA=Fermatevi un momento, viandanti. Dalle parti di %CITTA% dei troll hanno preso casa sotto un ponte e chiedono il pedaggio a tutti. Io non ho più niente da dare.;BATTUTA=E se andassimo là a spiegare loro come funziona il commercio?;RISPOSTA=Spiegateglielo con la spada. È l'unica lingua che capiscono. Poi tornate qui, che ci sono io ad aspettarvi.;ARRIVO=Siete a %CITTA%. I troll del ponte, dicono, si fanno vedere soprattutto di notte e dopo mangiato.;RITORNO=Ce l'avete fatta! Il ponte è libero, e io posso passare senza aprire il borsello. Prendete quello che vi avevo promesso.
+    CHIAVE=ARPIE_DEL_BUCATO;NEMICO=ARPIA;NUMERO=2-4;PLURALE=arpie;MONETE=6;RICHIESTA=Salve! Le arpie dalle parti di %CITTA% mi hanno rubato tutto il bucato, e le lenzuola non erano nemmeno mie. Vi pago bene se le fate smettere.;BATTUTA=Le lenzuola o le arpie?;RISPOSTA=Le arpie. Le lenzuola si ricomprano. Poi tornate qui a riferire.;ARRIVO=Siete a %CITTA%. Nell'aria passano brandelli di stoffa e una nota stridula e soddisfatta.;RITORNO=Niente più arpie, niente più lenzuola volanti. Vi devo molto, e vi pago pure.
+    CHIAVE=GOBLIN_DEL_POLLAIO;NEMICO=GOBLIN;NUMERO=3-4;PLURALE=goblin;MONETE=5;RICHIESTA=Amici! Dalle parti di %CITTA% dei goblin mi portano via le galline ogni notte. Non ne posso più di uova strapazzate dalla paura.;BATTUTA=Le galline sono sicure di volersi far salvare?;RISPOSTA=Sono galline, non fanno molte domande. Sconfiggeteli e tornate da me.;ARRIVO=Siete a %CITTA%. Un pollaio vuoto e un'impronta che somiglia a una zampa di goblin: avete capito tutto.;RITORNO=Le galline cantano di nuovo. Vi ringrazio a nome mio e a nome delle uova.
+    CHIAVE=SCHELETRI_DEL_CIMITERO;NEMICO=SCHELETRO;NUMERO=2-4;PLURALE=scheletri;MONETE=7;RICHIESTA=Buon giorno, forestieri. Nel vecchio cimitero vicino a %CITTA% gli scheletri non stanno più al loro posto e vanno in giro a salutare. Nessuno dorme più.;BATTUTA=Salutano? Hanno ancora qualcosa da dire?;RISPOSTA=Soltanto ciao. Ma ripetuto tutta la notte. Rimetteteli a riposo e venite a dirmelo.;ARRIVO=Siete a %CITTA%. Il cimitero è lì vicino. Da lì viene un lieve rumore di ossa che si mettono in fila.;RITORNO=Il silenzio, finalmente. Gli scheletri riposano e io con loro. Tenete, ve lo siete guadagnato.
+    CHIAVE=MINOTAURO_DEL_LABIRINTO;NEMICO=MINOTAURO;NUMERO=1-2;PLURALE=minotauri;MONETE=12;RICHIESTA=Un attimo, viaggiatori! Dalle parti di %CITTA% un minotauro ha preso possesso di un labirinto di siepi e non lascia uscire più nessuno. Neanche i giardinieri.;BATTUTA=E noi dovremmo entrarci?;RISPOSTA=Dovreste farlo uscire, in un certo senso. Poi tornate qui.;ARRIVO=Siete a %CITTA%. Il labirinto di siepi si vede da lontano. I giardinieri, invece, no.;RITORNO=Il labirinto è tornato un labirinto soltanto. Che bella notizia. Ecco la vostra parte.
+    CHIAVE=FANTASMI_DEL_MULINO;NEMICO=FANTASMA;NUMERO=2-3;PLURALE=fantasmi;MONETE=9;RICHIESTA=Fermi, per favore! Dalle parti di %CITTA% dei fantasmi hanno occupato un mulino e spostano i sacchi di farina durante la notte. Il mugnaio ha rinunciato a contarli.;BATTUTA=I fantasmi spostano la farina? E poi?;RISPOSTA=Poi niente. Ed è proprio questo che fa impazzire il mugnaio. Mandateli via e tornate qui.;ARRIVO=Siete a %CITTA%. Il mulino bianco di farina si vede da lontano, e le pale girano senza vento.;RITORNO=Il mugnaio dorme e i sacchi stanno dove li ha messi. Vi devo davvero un compenso.
 
 // ---------------------------------------------------------------------------------------------
 // Spedizioni da una città all'altra (vedi IlCorriere e Spedizione)

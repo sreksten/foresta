@@ -44,7 +44,7 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
   - le produzioni derivate dipendono dall'ordine della HashMap;
   - il messaggio della riga 1142 stampa la riga invece del numero.
 - B35a. Codice morto in `PersonaggioBase`: `calcolaStanchezza`, `subCarisma`, `add<Primario>`, `getQuantitaEffettoDiStato` e `puoPrendere(Artefatto)`.
-- B35d. Passi pronti di `MissioneAPassi` che nessuna missione usa, solo i test: `tornaAlPuntoDiPartenza`, `evitaCombattimento`, `generaParametri`, le sequenze di passi (`impostaSequenzaPassi`, `leggiSequenzaPassi`, `prossimoNellaSequenza`) e `getPassiConIntermezzoInAttesa`; `vai` (due versioni) non lo chiama nessuno, nemmeno i test. `costruisci`, `attendiOre`, `dialogo` e `contaFinche` ora li usa `LaForgia`. Idee per usarli: una consegna riservata (`evitaCombattimento`), un incarico a più tappe in locazioni scelte a caso (sequenze di passi e `vai`).
+- B35d. Passi pronti di `MissioneAPassi` che nessuna missione usa, solo i test: `evitaCombattimento`, le sequenze di passi (`impostaSequenzaPassi`, `leggiSequenzaPassi`, `prossimoNellaSequenza`) e `getPassiConIntermezzoInAttesa`. `costruisci`, `attendiOre`, `dialogo` e `contaFinche` li usa `LaForgia`; `generaParametri`, `vai` e `tornaAlPuntoDiPartenza` li usa `IlViandante`. Idee per usare gli altri: una consegna riservata (`evitaCombattimento`), un incarico a più tappe in locazioni scelte a caso (sequenze di passi e `vai`).
 - B35e. Le produzioni morte: `fiabe.txt` (ISTANTE_PRECISO_OOP, GIORNO_DELLA_SETTIMANA, OTTENUTO, RACCONTO_BREVE) e `locande.txt` (GESTORE_NOTE, NOTIZIE_CITTA, 12 notizie che non escono mai).
 
 ### Gravità bassa: foresta-swing e foresta-app

@@ -71,6 +71,10 @@ public enum MissionePredefinita {
 	// Scatta non appena si ripulisce il primo tempio.
 	IL_GIRO_DELLE_SETTE_CHIESE(true),
 
+	// Dopo due o tre giorni, entrando in un bosco a una visita tranquilla: un viandante chiede di andare in una città, sconfiggere dei
+	// mostri e tornare da lui.
+	IL_VIANDANTE(true),
+
 	// Le leggende: l'armaiolo racconta in una città qualsiasi, il locandiere dalla terza visita alla stessa locanda nel
 	// bosco. Entrambe a una visita tranquilla, se resta un leggendario da pescare e se nessuna leggenda è stata
 	// raccontata nelle ultime 36 ore; sono ripetibili.

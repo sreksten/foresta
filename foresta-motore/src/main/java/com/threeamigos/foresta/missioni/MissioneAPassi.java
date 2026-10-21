@@ -109,10 +109,20 @@ public abstract class MissioneAPassi extends MissioneBase {
 	}
 
 	/**
-	 * Se la partenza è stata forzata (vedi {@link #forzaPartenza}) e la missione non è ancora partita.
+	 * Se la partenza è stata forzata (vedi {@link #forzaPartenza}) e la missione non è ancora partita: finché non è attiva, anche
+	 * se ha già fatto qualche passo per prepararsi (un incarico che si è offerto e aspetta l'accettazione).
 	 */
 	public final boolean isPartenzaForzata() {
-		return partenzaForzata != null && ottieniProprieta(PASSO_CORRENTE) == null;
+		return partenzaForzata != null && !isAttiva() && !isCompleta() && !isFallita();
+	}
+
+	/**
+	 * Per la modalità di prova: la partenza è stata forzata (vedi {@link #forzaPartenza}) e il gruppo è nel luogo giusto. Una missione
+	 * che per cominciare non ha come primo passo la sua condizione (come IlViandante, che prima fissa i suoi parametri) lo chiede
+	 * nella condizione del passo che la fa partire davvero, al posto delle sue.
+	 */
+	protected final boolean isInLuogoDellaPartenzaForzata() {
+		return isPartenzaForzata() && partenzaForzata.getAsBoolean();
 	}
 
 	/**

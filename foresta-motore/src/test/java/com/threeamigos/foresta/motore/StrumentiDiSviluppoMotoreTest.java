@@ -122,7 +122,93 @@ class StrumentiDiSviluppoMotoreTest {
             assertTrue(citta.contains(MissionePredefinita.CACCIA_AI_GOBLIN));
             assertTrue(citta.contains(MissionePredefinita.IL_NEGOZIO_DELL_ARMAIOLO));
             assertTrue(locanda.stream().noneMatch(citta::contains));
+            // La forgia è un incarico in città, il viandante si incontra in un bosco
+            assertTrue(citta.contains(MissionePredefinita.LA_FORGIA));
+            List<MissionePredefinita> boschi = classi(strumenti.getMissioni(DovePartono.BOSCO));
+            assertEquals(java.util.Collections.singletonList(MissionePredefinita.IL_VIANDANTE), boschi);
+            assertTrue(locanda.stream().noneMatch(boschi::contains));
+            assertTrue(citta.stream().noneMatch(boschi::contains));
         }
+    }
+
+    @Test
+    void laForgiaSiForzaInCittaSenzaAspettareLaVisitaTranquilla() {
+        try (PartitaDiTest partita = partitaInCitta()) {
+            MissioneAPassi forgia = missione(MissionePredefinita.LA_FORGIA);
+            // Né la pausa né il sorteggio la farebbero partire da sola
+            partita.rimandaLeMissioniCheSiOffrono();
+            forgia.controllaPreLocazione();
+            assertEquals("INCARICO", forgia.getPassoCorrente());
+            assertEquals("da cominciare", voce(DovePartono.CITTA, MissionePredefinita.LA_FORGIA).getStato());
+
+            strumenti.forzaPartenza(MissionePredefinita.LA_FORGIA);
+            forgia.controllaPreLocazione();
+            assertEquals("ACCETTAZIONE", forgia.getPassoCorrente());
+            // Finché non è partita davvero, per la finestra di prova è ancora "forzata" e non si può forzare di nuovo
+            assertEquals("partenza forzata", voce(DovePartono.CITTA, MissionePredefinita.LA_FORGIA).getStato());
+            assertFalse(voce(DovePartono.CITTA, MissionePredefinita.LA_FORGIA).isForzabile());
+            forgia.segnaIntermezzoPassoMostrato("INCARICO");
+            forgia.controllaInLocazione();
+            assertEquals("in corso", voce(DovePartono.CITTA, MissionePredefinita.LA_FORGIA).getStato());
+            assertEquals("RACCOLTA_METALLO", forgia.getPassoCorrente());
+        }
+    }
+
+    @Test
+    void ilViandanteSiForzaEIncontraSubitoEntrandoInUnBosco() {
+        try (PartitaDiTest partita = partitaInCitta()) {
+            MissioneAPassi viandante = missione(MissionePredefinita.IL_VIANDANTE);
+            partita.rimandaLeMissioniCheSiOffrono();
+            VoceMissione prima = voce(DovePartono.BOSCO, MissionePredefinita.IL_VIANDANTE);
+            assertEquals("da cominciare", prima.getStato());
+            assertTrue(prima.isForzabile());
+            strumenti.forzaPartenza(MissionePredefinita.IL_VIANDANTE);
+
+            // In città il viandante non c'è: la missione fissa i suoi parametri e aspetta un bosco
+            viandante.controllaPreLocazione();
+            assertEquals("INCONTRO", viandante.getPassoCorrente());
+            assertEquals("partenza forzata", voce(DovePartono.BOSCO, MissionePredefinita.IL_VIANDANTE).getStato());
+            assertFalse(voce(DovePartono.BOSCO, MissionePredefinita.IL_VIANDANTE).isForzabile());
+
+            // Al primo giorno, in un bosco, senza aspettare il giorno dell'incontro
+            assertEquals(1, LineaTemporale.getGiorno());
+            partita.gruppo().setCoordinate(primaCasellaDi(TipoLocazione.BOSCO));
+            viandante.controllaPreLocazione();
+            assertEquals("ACCETTAZIONE", viandante.getPassoCorrente());
+            viandante.segnaIntermezzoPassoMostrato("INCONTRO");
+            viandante.controllaInLocazione();
+            assertEquals("in corso", voce(DovePartono.BOSCO, MissionePredefinita.IL_VIANDANTE).getStato());
+            assertEquals("ANDATA", viandante.getPassoCorrente());
+        }
+    }
+
+    @Test
+    void ilViandanteNonSiForzaInUnaRadura() {
+        try (PartitaDiTest partita = partitaInCitta()) {
+            MissioneAPassi viandante = missione(MissionePredefinita.IL_VIANDANTE);
+            partita.rimandaLeMissioniCheSiOffrono();
+            strumenti.forzaPartenza(MissionePredefinita.IL_VIANDANTE);
+            partita.gruppo().setCoordinate(primaCasellaDi(TipoLocazione.RADURA));
+            viandante.controllaPreLocazione();
+            assertEquals("INCONTRO", viandante.getPassoCorrente());
+        }
+    }
+
+    private MissioneAPassi missione(MissionePredefinita classe) {
+        return (MissioneAPassi) RegistroMissioni.getMissioniNonCompletate().stream()
+                .filter(m -> m.getClasse() == classe).findFirst().get();
+    }
+
+    private static com.threeamigos.foresta.modellodati.CoordinateMD primaCasellaDi(TipoLocazione tipo) {
+        for (int y = 0; y < Foresta.getDimensioneY(); y++) {
+            for (int x = 0; x < Foresta.getDimensioneX(); x++) {
+                com.threeamigos.foresta.modellodati.CoordinateMD coordinate = new com.threeamigos.foresta.modellodati.CoordinateMD(x, y);
+                if (Foresta.getLocazione(coordinate) == tipo) {
+                    return coordinate;
+                }
+            }
+        }
+        throw new AssertionError("nella mappa non c'è nessuna casella " + tipo);
     }
 
     @Test

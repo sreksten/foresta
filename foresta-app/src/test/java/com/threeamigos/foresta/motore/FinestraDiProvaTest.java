@@ -32,11 +32,15 @@ class FinestraDiProvaTest {
             List<String> titoli = finestra.getTitoliDeiTab();
             int personaggi = partita.gruppo().getPersonaggi().size();
             assertTrue(personaggi >= 1);
-            assertEquals(personaggi + 5, titoli.size());
+            assertEquals(personaggi + 6, titoli.size());
             assertEquals(partita.gruppo().getPersonaggi().get(0).getNome(), titoli.get(0));
             assertEquals("Gruppo", titoli.get(personaggi));
             assertEquals("Statistiche", titoli.get(personaggi + 1));
-            assertEquals("Dadi", titoli.get(personaggi + 4));
+            // Le missioni, divise per il posto in cui si offrono: la forgia è fra quelle in città, il viandante fra quelle nel bosco
+            assertEquals("Missioni in locanda", titoli.get(personaggi + 2));
+            assertEquals("Missioni in città", titoli.get(personaggi + 3));
+            assertEquals("Missioni nel bosco", titoli.get(personaggi + 4));
+            assertEquals("Dadi", titoli.get(personaggi + 5));
         }
     }
 }

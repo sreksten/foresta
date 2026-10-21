@@ -23,7 +23,8 @@ public interface StrumentiDiSviluppo {
      */
     enum DovePartono {
         LOCANDA("In locanda"),
-        CITTA("In città");
+        CITTA("In città"),
+        BOSCO("Nel bosco");
 
         private final String descrizione;
 
