@@ -139,6 +139,19 @@ class GrammarBeanTest {
         GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
                 () -> new GrammarBean("\tx\n"));
         assertTrue(ex.getMessage().contains("Missing parent production"));
+        assertTrue(ex.getMessage().startsWith("Line 1"));
+    }
+
+    @Test
+    void plainReferenceToAnOnlyAssignedKeyIsInvalidAtLoadTime() {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t[k=x][k]\n"));
+        assertTrue(ex.getMessage().contains("is not defined"));
+    }
+
+    @Test
+    void hashReferenceToAnAssignedKeyIsValid() throws Exception {
+        assertEquals("x", new GrammarBean("ROOT\n\t[k=x][#k]\n").produce().get(0));
     }
 
     @Test

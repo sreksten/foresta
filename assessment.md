@@ -114,12 +114,6 @@ Nessun difetto aperto.
 
 **foresta-motore**
 
-- B32 `testi/GrammarBean`:
-  - `[chiave]` su una chiave solo assegnata passa la validazione ma fallisce a runtime (`:1630` contro `:2386`);
-  - le produzioni derivate dipendono dall'ordine della HashMap (`:1150-1209`);
-  - il messaggio di `:1142` stampa la riga invece del numero.
-
-  Oggi nessuna grammatica usa queste forme. (C/P, latente)
 - B35a Codice morto in `PersonaggioBase`: `calcolaStanchezza`, `subCarisma`, `add<Primario>`, `getQuantitaEffettoDiStato` e `puoPrendere(Artefatto)`. (C)
 - B35d Passi pronti di `MissioneAPassi` che nessuna missione usa (solo i test): `evitaCombattimento`, le sequenze di passi e `getPassiConIntermezzoInAttesa`. Gli altri li usano `LaForgia` e `IlViandante`. (C)
 - B35e Le produzioni morte di `fiabe.txt` e `locande.txt`, fra cui 12 `NOTIZIE_CITTA` che non escono mai. (C)

@@ -458,7 +458,7 @@ public class GrammarBean {
 	 */
 	private int inlineProductionCounter = 0;
 
-	private final Map<String, Collection<String>> derivedProductions = new HashMap<>();
+	private final Map<String, Collection<String>> derivedProductions = new LinkedHashMap<>();
 
 	/**
 	 * Un frame per ogni chiamata ricorsiva attiva (non ancora ritornata) a
@@ -1139,7 +1139,7 @@ public class GrammarBean {
 					currentProduction = handleProduction(currentLineNumber, line);
 				} else {
 					if (currentProduction == null) {
-						throw new InvalidGrammarException(LINE + line + ": Missing parent production. Lines beginning with TAB or space must be preceded by a production.");
+						throw new InvalidGrammarException(position(currentLineNumber) + ": Missing parent production. Lines beginning with TAB or space must be preceded by a production.");
 					}
 					handleChildren(line, currentLineNumber, currentProduction);
 				}
@@ -1198,7 +1198,7 @@ public class GrammarBean {
 			currentProduction = currentProduction.substring(0, currentProduction.indexOf(DERIVED_MARKER)).trim();
 
 			if (!derivingProductions.isEmpty()) {
-				Collection<String> associatedProducers = derivedProductions.computeIfAbsent(currentProduction, k -> new HashSet<>());
+				Collection<String> associatedProducers = derivedProductions.computeIfAbsent(currentProduction, k -> new LinkedHashSet<>());
 				for (String derivingProduction : derivingProductions.split(" ")) {
 					if (derivingProduction.equals(currentProduction)) {
 						throw new InvalidGrammarException(position(currentLineNumber) + ": Production " + currentProduction + " derives from itself");
@@ -1612,7 +1612,8 @@ public class GrammarBean {
 			}
 			return;
 		}
-		if (thisProduction.startsWith(GLOBAL_FIXED_PRODUCTION_MARKER) || thisProduction.startsWith(LOCAL_FIXED_PRODUCTION_MARKER)) {
+		boolean isFixed = thisProduction.startsWith(GLOBAL_FIXED_PRODUCTION_MARKER) || thisProduction.startsWith(LOCAL_FIXED_PRODUCTION_MARKER);
+		if (isFixed) {
 			thisProduction = thisProduction.substring(1);
 			if (thisProduction.isEmpty()) {
 				throw new InvalidGrammarException("Empty fixed production present (" + GLOBAL_FIXED_PRODUCTION_MARKER
@@ -1627,7 +1628,9 @@ public class GrammarBean {
 			checkTokensValidity(thisProduction.substring(equalsPosition + ASSIGNMENT_MARKER.length()), assignedKeys);
 			return;
 		}
-		if (productionsMap.get(thisProduction) == null && !assignedKeys.contains(thisProduction) && !thisProduction.startsWith(REFERENCE_MARKER)
+		// senza marcatore [chiave] cerca solo fra le produzioni: una chiave solo assegnata si legge con [#chiave], [*chiave] o [!chiave]
+		if (productionsMap.get(thisProduction) == null && !(isFixed && assignedKeys.contains(thisProduction))
+				&& !thisProduction.startsWith(REFERENCE_MARKER)
 				&& !isStaticName(thisProduction)) {
 			throw new InvalidGrammarException(PRODUCTION + thisProduction + " is not defined");
 		}
