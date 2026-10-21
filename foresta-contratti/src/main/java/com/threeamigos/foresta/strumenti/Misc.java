@@ -134,6 +134,12 @@ public class Misc {
 		return getOrdinaleM(numero, false);
 	}
 
+	/**
+	 * L'ordinale maschile in lettere ("primo", "undicesimo", "quarantunesimo"), con l'articolo davanti se richiesto.
+	 * Vale da 1 a 41: i numeri da contare nel gioco non vanno oltre (il tempo finisce al giorno 40, i gruppi sono di pochi
+	 * personaggi), quindi fuori da questo intervallo non c'è un ripiego: 0 dà "nullo" e da 42 in su lancia
+	 * {@code ArrayIndexOutOfBoundsException}. Se un giorno servono numeri più alti si allunga {@code ordinali}.
+	 */
 	public static String getOrdinaleM(int numero, boolean articolo) {
 		return getOrdinaleImpl(numero, articolo, IL, "o");
 	}
@@ -142,6 +148,9 @@ public class Misc {
 		return getOrdinaleF(numero, false);
 	}
 
+	/**
+	 * Come {@link #getOrdinaleM(int, boolean)}, al femminile ("prima", "undicesima"): vale da 1 a 41.
+	 */
 	public static String getOrdinaleF(int numero, boolean articolo) {
 		return getOrdinaleImpl(numero, articolo, LA, "a");
 	}

@@ -2,7 +2,8 @@
 // riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
 // l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; le cose da portare da una città all'altra,
 // anche di contrabbando; gli oggetti smarriti nella foresta; gli incarichi di combattimento, le sorveglianze, i
-// soccorsi, le indagini, i riti, le benedizioni, le lealtà, i tornei, le documentazioni, i colpi e le botteghe nella Foresta.
+// soccorsi, le indagini, i riti, le benedizioni, le lealtà, i tornei, le documentazioni, i colpi, le botteghe nella Foresta e le armi
+// che l'armaiolo forgia.
 // I nomi sono tutti maschili, perché i testi delle missioni parlano di "suo marito" e "sua moglie".
 //
 // Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
@@ -106,6 +107,50 @@ RICHIESTA_LOCANDIERE
     F;rana verde;rane verdi;LUOGHI PALUDE;4-5;4;Rane? Davvero?;Le cosce di rana fritte sono il piatto più richiesto della locanda. Dopo la birra.
     F;lumaca di palude;lumache di palude;LUOGHI PALUDE;4-5;4;Lumache? Almeno non scappano.;Appunto. Sono le uniche che non vi faranno correre.
     M;germano reale;germani reali;LUOGHI PALUDE;2-3;8;Dobbiamo spennarli noi?;Se li spennate voi vi do una moneta in più. Scherzo. Portateli e basta.
+
+// ---------------------------------------------------------------------------------------------
+// La forgia (vedi LaForgia e ForgiaRichiesta): l'armaiolo forgia un'arma molto migliore delle altre, se il gruppo gli porta un
+// metallo e un trofeo e paga il lavoro
+// ---------------------------------------------------------------------------------------------
+//
+// FORGIA_METALLO e FORGIA_TROFEO sono materiali nello stesso formato di RICHIESTA_ARMAIOLO (otto campi, vedi sopra): il metallo
+// si raccoglie in certi luoghi (LUOGHI), il trofeo si prende a certi mostri (NEMICI). Il prezzo per pezzo qui non conta, perché
+// l'armaiolo non paga: si fa pagare.
+//
+// FORGIA è l'arma, una riga di campi CHIAVE=valore separati da ";":
+//   CHIAVE: l'identificativo della riga, che entra in quello dell'oggetto;
+//   TIPO: il TipoArtefatto, un'arma (SPADA, ASCIA, MAZZA, LANCIA, SPADONE, BASTONE_MAGICO);
+//   ELEMENTO: il TipoDanno del suo incantamento (FUOCO, GELO, FULMINE...);
+//   ATTRIBUTO: l'attributo che il suo modificatore percentuale fa crescere (FORZA, DESTREZZA, POTERE_MAGICO...);
+//   NOME e BREVE: il nome con l'articolo, e come se ne parla;
+//   DESCRIZIONE: "che ..." (nell'inventario);
+//   PESO: quanto pesa;
+//   RICHIESTA: che cosa vuole forgiare l'armaiolo, la sua battuta nell'intermezzo;
+//   BATTUTA: la risposta del capo;
+//   RISPOSTA: la replica dell'armaiolo;
+//   CONSEGNA: quello che dice quando la consegna.
+// Il danno, il livello e il resto dei valori li calcola la missione dal livello del mondo (vedi Costanti.FORGIA_*).
+// Nei testi non si usa il ";".
+
+FORGIA_METALLO
+    F;pepita di ferro nero;pepite di ferro nero;LUOGHI GROTTA;4-5;7;Che ne fate, un'incudine?;Una lama che non si spunta. L'incudine ce l'ho già.
+    M;frammento di mithril;frammenti di mithril;LUOGHI GROTTA ROVINE;3-4;10;Quello che luccica nelle leggende?;Quello che luccica quando lo trovate. Il resto sono leggende.
+    M;lingotto di bronzo antico;lingotti di bronzo antico;LUOGHI ROVINE;4-5;7;Antico quanto?;Abbastanza da sapere come si faceva una spada prima che si facessero male.
+    M;cristallo di quarzo fumé;cristalli di quarzo fumé;LUOGHI GROTTA;4-5;7;Il quarzo non si rompe?;Si rompe male. Ma fuso nella lama la fa cantare.
+
+FORGIA_TROFEO
+    F;scaglia di viverna;scaglie di viverna;NEMICI VIVERNA;2-3;12;E dove si prende una scaglia di viverna?;Dalla viverna. Possibilmente mentre è occupata a guardare altrove.
+    M;corno di minotauro;corni di minotauro;NEMICI MINOTAURO;2-3;9;Corni? Per una lama?;Per temprarla. Un corno nell'acqua di spegnimento e l'acciaio impara a non spezzarsi.
+    F;pelle di troll;pelli di troll;NEMICI TROLL;2-3;9;Per l'elsa?;Per l'impugnatura. Non scivola mai, nemmeno nei momenti peggiori.
+    M;dente di hobgoblin;denti di hobgoblin;NEMICI HOBGOBLIN;3-4;6;Anche questo, per una spada?;Ridotto in polvere. Dà mordente. Letteralmente.
+
+FORGIA
+    CHIAVE=ALBA_ROSSA;TIPO=SPADA;ELEMENTO=FUOCO;ATTRIBUTO=FORZA;NOME=la Spada dell'Alba Rossa;BREVE=la Spada dell'Alba Rossa;DESCRIZIONE=che scalda la mano di chi la impugna;PESO=2;RICHIESTA=Voglio forgiare una spada come non ne faccio da vent'anni, con una lama che prende fuoco al momento giusto.;BATTUTA=Una lama che prende fuoco? E se si brucia il fodero?;RISPOSTA=Il fodero lo pagate voi. Quello è un altro mestiere.;CONSEGNA=Eccola: la Spada dell'Alba Rossa. Non toccatela subito, scotta ancora.
+    CHIAVE=GELO_NERO;TIPO=ASCIA;ELEMENTO=GELO;ATTRIBUTO=FORZA;NOME=l'Ascia del Gelo Nero;BREVE=l'Ascia del Gelo Nero;DESCRIZIONE=che lascia la brina dove colpisce;PESO=3;RICHIESTA=Ho in mente un'ascia che fa venire i brividi anche a chi la guarda soltanto.;BATTUTA=Brividi di paura o brividi di freddo?;RISPOSTA=Tutti e due. È il bello del ferro buono.;CONSEGNA=L'Ascia del Gelo Nero. Prendetela con i guanti, vi prego: la brina non perdona.
+    CHIAVE=TUONO_PIGRO;TIPO=MAZZA;ELEMENTO=FULMINE;ATTRIBUTO=FORZA;NOME=la Mazza del Tuono Pigro;BREVE=la Mazza del Tuono Pigro;DESCRIZIONE=il cui tuono arriva sempre un attimo dopo il colpo;PESO=3;RICHIESTA=Una mazza con un fulmine dentro. Sulla carta è semplice. Sul ferro un po' meno.;BATTUTA=Un fulmine in una mazza? E non vi esplode in mano?;RISPOSTA=Soltanto qualche volta. Non vi ho mai promesso niente di diverso.;CONSEGNA=Ecco la Mazza del Tuono Pigro. Il rumore, però, lo sentirete dopo.
+    CHIAVE=VIPERA_CORTESE;TIPO=LANCIA;ELEMENTO=VELENO;ATTRIBUTO=DESTREZZA;NOME=la Lancia della Vipera Cortese;BREVE=la Lancia della Vipera Cortese;DESCRIZIONE=che saluta sempre prima di pungere;PESO=3;RICHIESTA=Mi è venuta voglia di forgiare una lancia velenosa, ma dai buoni modi.;BATTUTA=Una lancia con i buoni modi? Che vuol dire?;RISPOSTA=Che vi avvisa prima di pungere. Poi punge lo stesso.;CONSEGNA=La Lancia della Vipera Cortese. Un po' di rispetto: si offende facilmente.
+    CHIAVE=MONTAGNA_PAZIENTE;TIPO=SPADONE;ELEMENTO=TERRA;ATTRIBUTO=FORZA;NOME=lo Spadone della Montagna Paziente;BREVE=lo Spadone della Montagna Paziente;DESCRIZIONE=che pesa come una montagna ma colpisce solo quando serve;PESO=6;RICHIESTA=Per uno spadone ci vuole tempo e tanto metallo. Ma un buono spadone, signori, vale l'attesa.;BATTUTA=Quanto tempo?;RISPOSTA=Quanto una montagna per accorgersi di essere stata spostata.;CONSEGNA=Lo Spadone della Montagna Paziente. Reggetelo con due mani e un po' di dignità.
+    CHIAVE=FIAMMA_FREDDA;TIPO=BASTONE_MAGICO;ELEMENTO=SACRO;ATTRIBUTO=POTERE_MAGICO;NOME=il Bastone della Fiamma Fredda;BREVE=il Bastone della Fiamma Fredda;DESCRIZIONE=che fa luce senza scaldare;PESO=2;RICHIESTA=Un bastone per i maghi, con una fiamma che non scotta. Gli incantatori ne vanno matti.;BATTUTA=Una fiamma che non scotta? A cosa serve?;RISPOSTA=A fare scena. E, ogni tanto, a salvare la vita.;CONSEGNA=Il Bastone della Fiamma Fredda. Non è un cero, non usatelo come tale.
 
 // ---------------------------------------------------------------------------------------------
 // Spedizioni da una città all'altra (vedi IlCorriere e Spedizione)

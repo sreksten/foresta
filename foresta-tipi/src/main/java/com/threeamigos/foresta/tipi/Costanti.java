@@ -333,6 +333,14 @@ public class Costanti {
     public static final int COFANI_IN_CASTELLO_MINOTAURO = 5;
     public static final int COFANI_IN_CASTELLO_STREGA = 5;
 
+    // La forgia (vedi LaForgia): quante monete costa far forgiare l'arma per ogni livello del mondo, quante ore passano a forgiarla
+    // (il gruppo le passa sul posto) e quante ore di gioco devono passare perché la lama si raffreddi, e di quanto il suo danno
+    // supera quello di un'arma comune del suo livello (tarate il 2026-10-21: vedi economia.md, "La forgia")
+    public static final int FORGIA_MONETE_PER_LIVELLO = 10;
+    public static final int FORGIA_ORE_DI_LAVORO = 6;
+    public static final int FORGIA_ORE_DI_ATTESA = 12;
+    public static final double FORGIA_MOLTIPLICATORE_DANNI = 1.4d;
+
     // Foresta
     public static final int COSTO_MAPPA_DELLA_ZONA = 10;
     public static final int COSTO_MAPPA_DELLA_FORESTA = 20;

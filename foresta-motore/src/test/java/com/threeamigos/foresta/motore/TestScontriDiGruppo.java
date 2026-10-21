@@ -48,6 +48,13 @@ public class TestScontriDiGruppo {
 
     private static final int TURNI_MASSIMI = 200;
 
+    /**
+     * Un ritocco all'equipaggiamento tipico di ogni personaggio, dato il suo posto nel gruppo (0 è il capo): per le prove che cambiano
+     * qualcosa, come ConfrontoConLaForgia. Di norma non fa niente.
+     */
+    java.util.function.BiConsumer<Personaggio, Integer> ritocco = (personaggio, posto) -> {
+    };
+
     private static final PrintStream NULL_STREAM = new PrintStream(new OutputStream() {
         @Override
         public void write(int b) {
@@ -148,6 +155,7 @@ public class TestScontriDiGruppo {
         for (TipoPersonaggio classe : classi) {
             Personaggio pg = FabbricaPersonaggi.crea(classe, livello);
             Equipaggiamento.tipiciPer(classe).get(0).equipaggia(pg);
+            ritocco.accept(pg, gruppo.size());
             gruppo.add(pg);
         }
         List<Personaggio> avversari = new ArrayList<>();

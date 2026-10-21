@@ -8,6 +8,7 @@ import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.Ricompensa;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
@@ -99,6 +100,14 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	protected final int getLivelloDellIncarico() {
 		String livello = ottieniProprieta(LIVELLO_DELL_INCARICO);
 		return livello != null ? Integer.parseInt(livello) : Statistiche.getLivello();
+	}
+
+	/**
+	 * Che cosa riceve il gruppo alla fine: di norma le monete della paga ({@link #getRicompensa()}), ma un incarico può
+	 * dare anche altro, per esempio un'arma (vedi LaForgia).
+	 */
+	protected Ricompensa getRicompensaFinale() {
+		return Ricompensa.inMonete(getRicompensa());
 	}
 
 	/**
@@ -312,7 +321,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 						.falliscoSe(this::isCittaDistrutta, this::testoCittaDistrutta)
 						.poi(RICOMPENSA);
 			case RICOMPENSA:
-				return ricompensa(MomentoControllo.IN_LOCAZIONE, getRicompensa(), this::testoRicompensa)
+				return ricompensa(MomentoControllo.IN_LOCAZIONE, getRicompensaFinale(), this::testoRicompensa)
 						.falliscoSe(this::isCittaDistrutta, this::testoCittaDistrutta)
 						.poi(Passo.FINE);
 			default:

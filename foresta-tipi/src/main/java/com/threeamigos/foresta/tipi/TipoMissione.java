@@ -54,7 +54,7 @@ public enum TipoMissione {
     CACCIA_AL_TESORO(CategoriaMissione.ACQUISIZIONE),
     /**
      * Esempio: forgiare un'arma leggendaria, creare una pozione rara, realizzare un artefatto magico.
-     * NON COPERTO
+     * Coperto da: LaForgia (l'armaiolo forgia un'arma leggendaria con un metallo, un trofeo e le monete del gruppo)
      */
     ARTIGIANATO(CategoriaMissione.ACQUISIZIONE),
     /**

@@ -111,7 +111,6 @@ Nessun difetto aperto.
 
 **foresta-contratti**
 
-- B13 `strumenti/Misc:57-63`: `getOrdinaleImpl` dà "nullo" per 0 e un'eccezione da 42 in su. (P)
 
 **foresta-motore**
 
@@ -122,7 +121,7 @@ Nessun difetto aperto.
 
   Oggi nessuna grammatica usa queste forme. (C/P, latente)
 - B35a Codice morto in `PersonaggioBase`: `calcolaStanchezza`, `subCarisma`, `add<Primario>`, `getQuantitaEffettoDiStato` e `puoPrendere(Artefatto)`. (C)
-- B35d I passi di `MissioneAPassi` usati solo dai test. (C)
+- B35d Passi pronti di `MissioneAPassi` che nessuna missione usa (solo i test): `tornaAlPuntoDiPartenza`, `evitaCombattimento`, `generaParametri`, le sequenze di passi e `getPassiConIntermezzoInAttesa`; `vai` non lo chiama nessuno. `costruisci`, `attendiOre` e `dialogo` ora li usa `LaForgia`. (C)
 - B35e Le produzioni morte di `fiabe.txt` e `locande.txt`, fra cui 12 `NOTIZIE_CITTA` che non escono mai. (C)
 
 **foresta-swing e foresta-app**
@@ -143,6 +142,7 @@ Nessun difetto aperto.
   - Con `WeakReference` si ricostruiscono lo 0,3-0,5% delle richieste con 20 MB/s di spazzatura, l'1% con 60 MB/s e il 2,6% con 200 MB/s (126 al secondo); con 96 MB di heap si arriva al 6,6% (318 al secondo) a 200 MB/s. In tempo sono 0,3-0,7% (1,6% nel caso peggiore). Le scritte non si perdono a una a una: dopo ogni collezione del garbage collector si rigenerano in blocco, perché l'unico riferimento forte sparisce a fine `paint`.
   - Con `SoftReference` o con un riferimento forte si ricostruiscono sempre e solo i testi che cambiano (9 al secondo, lo 0,19%, 0,17% del tempo), in ogni condizione provata.
   - Limiti della misura: il carico è simulato (non ho misurato quanto alloca il gioco vero) e il costo di ricostruzione vale per questo Mac; su telefono, con una CPU da 3 a 10 volte più lenta, il blocco di ricostruzioni subito dopo un GC potrebbe costare 10-20 ms in un solo fotogramma. Se servirà, il passaggio a `SoftReference` è una modifica da poche righe (il reaper resta utile), da provare sul dispositivo.
+- **Ordinali di `Misc` (ex B13).** `getOrdinaleM/F` vale da 1 a 41 (0 dà "nullo", da 42 in su un'eccezione), e nessun chiamante esce da lì: `DisturbatoreDellaQuietePubblica` 1–9, `Cofano` 1–5, i mostri che muoiono 1–6 (l'ordinale parte da 1 in `GruppoAvversario.aggiungiPersonaggio` e riparte a ogni ondata) e il giorno al più 40 (al 41 il gioco è già perso e il testo non si genera). Non è un difetto: l'intervallo è scritto nel javadoc, e non si stimano numeri più alti. La parte in lingua italiana di `Misc` va comunque rivista per una versione inglese (vedi `todo.md`).
 - **Combattimento.** Niente round infiniti; la fine del combattimento si intercetta sempre, anche con le ondate.
 
 ## 6. Portabilità (riassunto)

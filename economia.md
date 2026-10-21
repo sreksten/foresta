@@ -125,6 +125,39 @@ Limiti delle misure:
 - **Non fanno le missioni**, quindi la parte pagata col livello non è misurata.
 - **Non provano a costruire armi nuove**: comprano pozioni, pergamene e la mappa, e rivendono gli artefatti. Quanto "sperimentare" costi lo dice il listino, non questa simulazione.
 
+## La forgia
+
+`LaForgia` (l'armaiolo forgia un'arma leggendaria per chi gli porta un metallo, un trofeo e le monete del lavoro; vedi `passi_missioni.md`) è un'uscita di monete e un'entrata di forza. Valori tarati il 2026-10-21 con il listino del gioco (`ListinoPergamene`) e con scontri simulati (`ConfrontoConLaForgia`, sugli stessi gruppi e avversari di `TestScontriDiGruppo`).
+
+**Che cosa vale l'arma.** Una forgiata a quel livello (media delle sei armi, 600 prove per livello) contro una spada incantata del negozio:
+
+| Livello | Danno comune | Danno forgiata | Effetti forgiata, a listino | Spada incantata del negozio |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 | 17 | 26 | 11 | non nasce incantata |
+| 3 | 19 | 29 | 35 | 30 |
+| 5 | 21 | 32 | 63 | 68 |
+| 8 | 24 | 37 | 129 | 129 |
+| 10 | 26 | 39 | 187 | 156 |
+| 12 | 28 | 42 | 256 | 182 |
+
+Il danno è il 40% in più di quello di un'arma comune dello stesso tipo (la tabella è la media delle sei armi: lo spadone, a due mani, e il bastone, dimezzato, si compensano), e gli effetti valgono quanto quelli di una spada incantata fino al livello 8, e più oltre. Il metallo e il trofeo valgono circa 56 monete al prezzo per pezzo delle righe di `FORGIA_*`, a qualunque livello.
+
+**Il costo in monete.** Prima 20 per livello (100 al livello 5, 200 al 10), che sommato ai materiali costava più del doppio di una spada incantata del negozio (156 contro 68 al livello 5). Ora **10 per livello**: 30 al livello 3, 50 al 5, 80 all'8, 100 al 10. Con i materiali fa 106 al livello 5 e 156 al 10, contro un valore di mercato dell'arma (base 5 + 5 per livello, più gli effetti) di 93 e 242: più caro al livello 5 di una spada del negozio, ma con più danno e a scelta di tipo, e con uno sconto dal livello 8 in poi. Le entrate di un livello (col giocatore automatico, senza missioni: 38-73 monete fino al livello 5, e fino a 827 nel modello del livello 10) lo coprono con una missione di materiali, che paga circa 33 per livello.
+
+**Che cosa cambia in combattimento.** Vittorie del gruppo e round medi per scontro, con l'arma tipica di ogni classe, con un'arma forgiata solo al capo (la prima ottenuta) e a tutti (300 scontri per casella, senza pergamene né pozioni):
+
+| Livello, avversario | Senza | Solo il capo | Tutti |
+| --- | ---: | ---: | ---: |
+| 5, Idra (3 personaggi) | 94,7% (4,2) | 100% (2,1) | 100% (1,6) |
+| 5, Drago (3 personaggi) | 28,0% (4,4) | 38,0% (4,2) | 56,0% (3,9) |
+| 5, Drago (4 personaggi) | 100% (4,4) | 100% (4,2) | 99,7% (3,2) |
+| 8, Drago (3 personaggi) | 55,7% (3,7) | 60,7% (3,4) | 79,7% (3,0) |
+| 8, Troll al massimo (3 personaggi) | 100% (4,7) | 100% (2,7) | 100% (2,4) |
+
+Una sola arma forgiata dimezza quasi la durata di uno scontro contro i boss comuni e di molto meno quella contro il Drago, dove il gruppo di tre personaggi resta un testa o croce anche con tutte e tre le armi forgiate: non rompe il gioco, ma aiuta. Il bastone magico forgiato tiene il danno dimezzato e il `POTERE_MAGICO` per livello dei bastoni normali (altrimenti perderebbe forza rispetto a quello che sostituisce).
+
+**Limiti.** Il simulatore dà ai gruppi con l'equipaggiamento tipico percentuali di vittoria molto più alte di quelle del giocatore vero (non ci sono le pozioni da gestire, né le fughe), quindi i valori assoluti contano poco: contano i confronti. I livelli 1 e 2 non sono stati misurati. Le monete in meno rispetto a prima (10 invece di 20) sono una scelta di bilancio, non un'ottimizzazione: se la forgia dovesse risultare troppo comune si alza il costo, o si allungano le ore (`FORGIA_ORE_DI_LAVORO`, `FORGIA_ORE_DI_ATTESA`).
+
 ## Che cosa non torna
 
 1. **Le entrate dalle celle dipendono dall'esplorazione, non dal livello.** Un gruppo che combatte in celle già visitate (i mostri ricompaiono) guadagna esperienza ma nemmeno una moneta. Esaurita la mappa, o le celle vicine, le entrate dalle celle si fermano mentre i prezzi salgono: restano le missioni, che si ripetono, e i preziosi che si portano dietro.

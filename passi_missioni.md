@@ -111,6 +111,7 @@ Le ricompense in monete di questo catalogo sono le paghe del primo livello del m
 | Missione | Compito |
 | :--- | :--- |
 | `RichiestaDiMateriali` (quattro mandanti: `dellAlchimista`, `dellArmaiolo`, `delCapitano`, `delLocandiere`) | materiali da raccogliere (erbe, minerali, pesci) o da prendere a certi mostri (trofei), da `RICHIESTA_*` di `missioni.txt` (`MaterialeRichiesto`: genere, nome, provenienza `LUOGHI`/`NEMICI`, quantità, prezzo per pezzo, battute); `RACCOLTA`, poi consegna; paga tanto per pezzo più cinque |
+| `LaForgia` | l'armaiolo (`Mandante.ARMAIOLO`) forgia un'arma molto migliore: `RACCOLTA_METALLO` e `RACCOLTA_TROFEO` (due `raccogli`, da `FORGIA_METALLO` e `FORGIA_TROFEO` di `missioni.txt`, nel formato di `MaterialeRichiesto`), `FORGIATURA` (`costruisci` nella città: consuma i materiali, `FORGIA_MONETE_PER_LIVELLO` per livello e `FORGIA_ORE_DI_LAVORO` ore), `SALUTO` (`dialogo`), `RAFFREDDAMENTO` (`attendiOre` di `FORGIA_ORE_DI_ATTESA`), poi `RITORNO` e, al posto delle monete, un'arma leggendaria costruita al volo (`ForgiaRichiesta`, da `FORGIA` di `missioni.txt`: tipo, elemento dell'incantamento, attributo, testi; i valori vengono dal livello): una che almeno un personaggio del gruppo può impugnare |
 | `IlCorriere` | portare una cosa da una città a un'altra (`Spedizione`, da `TRASPORTO`): `PARTENZA` (la destinazione compare sulla mappa), `VIAGGIO`; paga di più quanto è lontana; le **spedizioni urgenti** hanno una scadenza (il doppio della distanza, più 12 ore di margine) e se il gruppo arriva tardi la missione fallisce |
 | `IlContrabbandiere` | come il corriere, ma di nascosto (righe di `CONTRABBANDO`): se per strada il gruppo combatte, la voce si sparge e la missione fallisce |
 | `LOggettoSmarrito` | qualcuno ha perso qualcosa vicino a un posto (tempio, rovine, locanda, grotta; da `OGGETTO_SMARRITO`): il posto compare sulla mappa e l'oggetto sta in una casella a non più di 2 passi (`RAGGIO`), anche già visitata (`nellaCasella`); il posto si salva a parte (`POSTO`) perché, se nella foresta non c'è più né un bosco né una palude da trasformare, l'oggetto si perde appena fuori città e il posto è la città, che la missione non rivendica |
@@ -169,11 +170,11 @@ I contenuti variabili sono in `missioni.txt` (e `leggendari.txt`), caricate da `
 
 `TipoMissione` conta **190 tipi** in nove `CategoriaMissione`: acquisizione, combattimento, protezione, investigazione, progressione, negoziazione, illecito, relazioni, spirituale. L'elenco e i motivi stanno nei commenti dell'enum (§1). Stato:
 
-- **coperti**: 129, da almeno una missione;
+- **coperti**: 130, da almeno una missione;
 - **non fattibili nella Foresta**: 28 (commentati);
 - **non adatti al tono**: 9 (commentati);
 - **da non sviluppare per ora**: 6;
-- **non coperti, non annotati**: 18, candidati per missioni future.
+- **non coperti, non annotati**: 17, candidati per missioni future.
 
 ### Acquisizione
 
@@ -183,7 +184,8 @@ I contenuti variabili sono in `missioni.txt` (e `leggendari.txt`), caricate da `
 - `IlCorriere`: `TRASPORTO`
 - `LaLeggendaDellArmaiolo`, `LaLeggendaDelLocandiere`: `CACCIA_AL_TESORO` (la leggenda è l'indizio, i guardiani del tempio, il leggendario il tesoro)
 - `LaSorveglianza`: `AGRICOLTURA` (le rape giganti), `ALLEVAMENTO` (le oche da guardia)
-- non fattibile: `BORSA`. Non coperti: `ARTIGIANATO`
+- `LaForgia`: `ARTIGIANATO` (l'armaiolo forgia un'arma leggendaria)
+- non fattibile: `BORSA`
 
 ### Combattimento
 
@@ -241,6 +243,6 @@ I contenuti variabili sono in `missioni.txt` (e `leggendari.txt`), caricate da `
 
 - **Pochi scheletri, molta varietà.** Quasi tutto il catalogo si riduce a un piccolo numero di forme: (a) arrivare in un posto, combattere o raccogliere, tornare a riscuotere (`IncaricoInCitta` e le sue figlie); (b) arrivare e rispondere a una domanda con un ramo sull'esito (rituali, indagini); (c) resistere a ondate (battaglie, pulizie di dungeon); (d) tenere d'occhio un posto nel tempo (sorveglianze). Il contenuto vero sta nelle **grammatiche**: una missione nuova di una famiglia esistente è quasi sempre una riga nuova di `missioni.txt`, con il suo `TIPO=`.
 - **L'annotazione dei tipi è manuale.** Nessun test controlla che le righe `Coperto da:` dicano il vero (le classi citate esistono tutte, ma niente verifica che una classe copra davvero quel tipo, né che un tipo con `Coperto da:` sia raggiungibile da una riga di grammatica).
-- **Il passo `COSTRUISCI` e il tipo `ARTIGIANATO`/`COSTRUZIONE`.** Il passo c'è, ma nessuna missione lo usa: il solo uso nel catalogo è nei test (`ScenarioPassiAvanzatiTest`).
-- **Diciotto tipi non coperti e non annotati** (§6) sono i candidati naturali per le prossime famiglie: `RITIRATA_TATTICA`, `SCAMBIO_OSTAGGI`, `INGANNO`, `IMBROGLIONE`, `RAPIMENTO`, `RIFUGIO`, `BLINDATURA`, `ARTIGIANATO`, `COSTRUZIONE`, più i nove di progressione.
+- **Il passo `COSTRUISCI` e il tipo `ARTIGIANATO`/`COSTRUZIONE`.** Oggi lo usa `LaForgia` (con `attendiOre`, `dialogo` e `raccogli`, che si appoggia a `contaFinche`). Restano senza una missione che li usi `tornaAlPuntoDiPartenza`, `evitaCombattimento`, `generaParametri`, `vai` (due versioni, nemmeno nei test) e le sequenze di passi (`impostaSequenzaPassi`, `leggiSequenzaPassi`, `prossimoNellaSequenza`): sono nei test e aspettano un incarico che li usi (vedi `todo.md`).
+- **Diciassette tipi non coperti e non annotati** (§6) sono i candidati naturali per le prossime famiglie: `RITIRATA_TATTICA`, `SCAMBIO_OSTAGGI`, `INGANNO`, `IMBROGLIONE`, `RAPIMENTO`, `RIFUGIO`, `BLINDATURA`, `COSTRUZIONE`, più i nove di progressione.
 - **Le missioni ripetibili si accumulano.** Ogni incarico in città, finito, ne lascia un altro fra le secondarie di primo livello; per non sovrapporsi, gli incarichi che aspettano una visita tranquilla partono a una per volta (vedi [`gestione_missioni.md`](gestione_missioni.md) §5).

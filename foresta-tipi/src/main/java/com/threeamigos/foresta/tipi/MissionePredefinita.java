@@ -95,6 +95,7 @@ public enum MissionePredefinita {
 	RICHIESTA_ARMAIOLO(true),
 	RICHIESTA_CAPITANO(true),
 	RICHIESTA_LOCANDIERE(true),
+	LA_FORGIA(true),
 	LA_TAGLIA_SULLA_BANDA(true),
 	IL_PELLEGRINO(true),
 	IL_RAPIMENTO(true),

@@ -36,6 +36,7 @@ public final class FabbricaMissioni {
 		COSTRUTTORI.put(MissionePredefinita.RICHIESTA_ARMAIOLO, RichiestaDiMateriali::dellArmaiolo);
 		COSTRUTTORI.put(MissionePredefinita.RICHIESTA_CAPITANO, RichiestaDiMateriali::delCapitano);
 		COSTRUTTORI.put(MissionePredefinita.RICHIESTA_LOCANDIERE, RichiestaDiMateriali::delLocandiere);
+		COSTRUTTORI.put(MissionePredefinita.LA_FORGIA, LaForgia::new);
 		COSTRUTTORI.put(MissionePredefinita.LA_TAGLIA_SULLA_BANDA, LaTagliaSullaBanda::new);
 		COSTRUTTORI.put(MissionePredefinita.IL_PELLEGRINO, IlPellegrino::new);
 		COSTRUTTORI.put(MissionePredefinita.IL_RAPIMENTO, IlRapimento::new);

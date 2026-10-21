@@ -12,6 +12,7 @@ Il gioco è scritto in italiano. Sono già in un file per lingua, letti da `Test
 
 - `FUGA_IGNOMINIA_NOTA` in `Costanti`: finisce nel salvataggio come nota di un modificatore, quindi spostarla vuol dire anche decidere come si confronta e come si salva;
 - le enum fuori da `foresta-tipi` con testi da mostrare: `NegozioInScena` (singolare e plurale), e le frasi di `Mandante` (mescolate a identificativi: vanno separate) e, nello strumento di sviluppo, `DovePartono` e `ContestoLancio`; `Testi.testo(costante, voce)` funziona per qualunque enum, con il file accanto all'enum nel suo modulo;
+- `Misc` (in `foresta-contratti`): articoli, preposizioni, cardinali e ordinali in lettere, direzioni e i testi di storia, sconfitta e vittoria (vedi `todo.md`);
 - il resto dei testi del motore e delle schermate (messaggi, fumetti, intermezzi, grammatiche `.txt`).
 
 Prima di spostarli va deciso se il gioco avrà una versione inglese (per gli store). Se non l'avrà, i testi possono restare dove sono.
@@ -31,7 +32,6 @@ Prima di spostarli va deciso se il gioco avrà una versione inglese (per gli sto
 Sono della UI Swing e si sostituiscono con lei:
 
 - `BufferedImageBuilder` pubblica `NotificaUscitaDalGioco(1, …)` e lancia un'eccezione se manca una risorsa grafica di base (fail fast, vedi `motore_grafico.md`); come si esce lo decide la piattaforma;
-- `ImageCache` ferma il suo thread di pulizia in un gancio di chiusura (`addShutdownHook`);
 - la finestra si chiude con la X (`EXIT_ON_CLOSE`) senza passare dalla conferma di uscita né dal salvataggio.
 
 Una UI mobile userà `NotificaUscitaDalGioco` per l'errore fatale e il ciclo di vita dell'app al posto del gancio.
