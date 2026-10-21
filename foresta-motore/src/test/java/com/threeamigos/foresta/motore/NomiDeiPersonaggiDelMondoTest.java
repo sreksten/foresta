@@ -168,9 +168,9 @@ class NomiDeiPersonaggiDelMondoTest {
 	}
 
 	@Test
-	void ilBorgomastroEUnUomoELaLevatriceUnaDonna() {
+	void ilBorgomastroHaLaClasseSuaELaLevatriceEUnaDonna() {
 		ResidenteMD borgomastro = RegistroPersonaggi.getResidente(PersonaggioNoto.BORGOMASTRO, citta().get(0));
-		assertEquals(TipoPersonaggio.UOMO, borgomastro.getClasse());
+		assertEquals(TipoPersonaggio.BORGOMASTRO, borgomastro.getClasse());
 		assertEquals(borgomastro.getNome(), RegistroPersonaggi.costruisciPersonaggio(borgomastro).getNomeProprio().orElse(null));
 		ResidenteMD levatrice = RegistroPersonaggi.getResidente(PersonaggioNoto.LEVATRICE);
 		assertEquals(TipoPersonaggio.DONNA, levatrice.getClasse());

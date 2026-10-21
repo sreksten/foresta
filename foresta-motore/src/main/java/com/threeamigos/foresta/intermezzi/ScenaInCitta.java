@@ -56,6 +56,13 @@ public final class ScenaInCitta {
 	}
 
 	/**
+	 * Il borgomastro della città, con l'immagine sua.
+	 */
+	public static ScenaInCitta conBorgomastro() {
+		return con(TipoPersonaggio.BORGOMASTRO);
+	}
+
+	/**
 	 * Come {@link #conMandante()}, ma una donna: una Donna (che ha l'aspetto della moglie del bardo).
 	 */
 	public static ScenaInCitta conMandantessa() {

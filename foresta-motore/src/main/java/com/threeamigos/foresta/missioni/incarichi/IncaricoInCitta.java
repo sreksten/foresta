@@ -209,6 +209,13 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	}
 
 	/**
+	 * La scena in città con chi parla a nome del mandante: il borgomastro, che ha un'immagine sua, oppure un Uomo qualunque.
+	 */
+	protected static ScenaInCitta scenaDel(String mandante) {
+		return "il borgomastro".equals(mandante) ? ScenaInCitta.conBorgomastro() : ScenaInCitta.conMandante();
+	}
+
+	/**
 	 * Come {@link #mandante}, ma senza la virgola finale: per quando il mandante è seguito da un segno di punteggiatura.
 	 */
 	protected final String mandanteSenzaVirgolaFinale(String mandante) {

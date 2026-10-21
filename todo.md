@@ -107,7 +107,7 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 I nomi di questi personaggi sono fatti (liste, registro, testi delle missioni, schermate dei negozi): quello che resta e le idee aperte sono in [`nomi.md`](nomi.md) §8.
 
-- **Immagini e tipi propri per borgomastro e levatrice**, e per i mandanti senza personaggio proprio (mugnaio, mercante, fabbro, notaio, vedove...): oggi sono un `Uomo` o una `Donna` (`AspettoDelMandante`), con l'immagine e il verso del locandiere e della moglie del bardo.
+- **Immagini e tipi propri per la levatrice**, e per i mandanti senza personaggio proprio (mugnaio, mercante, fabbro, notaio, vedove...): oggi sono un `Uomo` o una `Donna` (`AspettoDelMandante`), con l'immagine e il verso del locandiere e della moglie del bardo.
 - **La levatrice e le altre comparse nelle scene**: il nome c'è, nessuna scena le chiede.
 - **Un punto della UI che elenchi i campioni incontrati** (nome, classe, se sconfitti): i dati sono già nel registro dei personaggi; si può mettere nella schermata delle statistiche o in quella dei trofei.
 - Le **missioni di scorta** ("salva il locandiere", "salva l'alchimista"...; "Il viaggio di" la moglie del bardo c'è già: `IlViaggioDellaMoglie`) con `MissioneAPassi.prendiInScorta`, al posto del Viandante: `RegistroPersonaggi.costruisciPersonaggio(residente, livello)` ne fa il `Personaggio` da dare al `Supplier`, come già fa `NonSparateSulPianista` con il `BardoLocanda`. Solo il locandiere non è nel registro: il suo nome sta nella locanda (`Locanda.LOCANDA_NOME_LOCANDIERE`).

@@ -91,6 +91,7 @@ public class LanciatoreDeiDadi {
             case INCANTATORE:
             case MOGLIE_DEL_BARDO:
             case UOMO:
+            case BORGOMASTRO:
             case DONNA:
             return BARDO;
             case CENTAURO: return CENTAURO;
@@ -159,6 +160,7 @@ public class LanciatoreDeiDadi {
             case INCANTATORE:
             case MOGLIE_DEL_BARDO:
             case UOMO:
+            case BORGOMASTRO:
             case DONNA:
             case ELFA:
             case ELFO:

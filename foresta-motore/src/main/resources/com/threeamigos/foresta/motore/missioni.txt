@@ -272,7 +272,7 @@ OGGETTO_SMARRITO
 // Una riga per incarico, campi CHIAVE=valore separati da ";" (una riga lunga si spezza con una "\" in fondo):
 //   CHIAVE=     l'identificativo, diverso per ogni riga;
 //   TIPO=       il TipoMissione che copre (VENDETTA, COMBATTIMENTO_BESTIA, DUELLO, BLOCCO...);
-//   ASPETTO=    chi compare nella scena in città: un personaggio (CAPITANO, ARMAIOLO, ALCHIMISTA, LOCANDIERE,
+//   ASPETTO=    chi compare nella scena in città: un personaggio (BORGOMASTRO, CAPITANO, ARMAIOLO, ALCHIMISTA, LOCANDIERE,
 //               VENDITORE_DI_PERGAMENE, INCANTATORE, SACERDOTE, SACERDOTESSA, MAGO, MAGA, GUERRIERO, LADRO) oppure,
 //               se il mandante non ne ha uno, QUALUNQUE (un uomo) o DONNA;
 //   MANDANTE=   chi chiede, con l'articolo (il mugnaio);
@@ -334,7 +334,7 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=I ladri sono a terra e il medaglione è di nuovo nelle vostre mani.;\
     RINGRAZIAMENTO=Il mio medaglione! Siete tornati davvero! Grazie, grazie di cuore.;\
     RICORDO=In questa grotta i ladri nascondevano il medaglione rubato.
-    CHIAVE=DERRATE_SPARITE;TIPO=RECUPERO;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;NEMICO=TROLL;NUMERO=LIVELLO:4;LUOGO=ROVINE;\
+    CHIAVE=DERRATE_SPARITE;TIPO=RECUPERO;ASPETTO=BORGOMASTRO;MANDANTE=il borgomastro;NEMICO=TROLL;NUMERO=LIVELLO:4;LUOGO=ROVINE;\
     MONETE=20;TITOLO=Recupera le derrate alimentari;\
     RICHIESTA=Forestieri! La città ha bisogno di voi. Una banda di troll ha fatto sparire il carico di derrate per l'inverno.;\
     BATTUTA=Ai troll ci pensiamo noi.;RISPOSTA=Riportate le derrate e la città non patirà la fame.;\
@@ -438,7 +438,7 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=%CAPO% abbassa la spada e vi stringe la mano: finalmente qualcuno degno.;\
     RINGRAZIAMENTO=Le mie guardie possono uscire dall'infermeria a testa alta. Più o meno.;\
     RICORDO=In questa radura %CAPO% sfidava a duello le guardie.
-    CHIAVE=DUELLO_DELL_ELFO;TIPO=DUELLO_ANTICO;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;NEMICO=ELFO;NUMERO=1;\
+    CHIAVE=DUELLO_DELL_ELFO;TIPO=DUELLO_ANTICO;ASPETTO=BORGOMASTRO;MANDANTE=il borgomastro;NEMICO=ELFO;NUMERO=1;\
     CAPO=NOME_CAMPIONE;RESA=SI;DUELLO=SI;LUOGO=BOSCO;MONETE=40;TITOLO=Il duello dell'antica usanza;\
     RICHIESTA=Un elfo, %CAPO%, dice che il bosco qui vicino è suo per un'antica usanza, e che si può contestare solo con un duello alla vecchia maniera.;\
     BATTUTA=Alla vecchia maniera?;RISPOSTA=Niente trucchi, niente fughe, e prima ci si inchina. Inchinatevi, mi raccomando.;\
@@ -508,7 +508,7 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=%CAPO% è sconfitto. Giura che è solo un graffio, ma si sposta dal sentiero.;\
     RINGRAZIAMENTO=Il sentiero è libero! Le mie merci passano, e il cavaliere nero, dicono, adesso chiede l'elemosina.;\
     RICORDO=In questo bosco il cavaliere nero %CAPO% non lasciava passare nessuno.
-    CHIAVE=GARA_DI_MAGIA;TIPO=COMPETIZIONE;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;NEMICO=MAGO;NUMERO=1;CAPO=NOME_MAGO;\
+    CHIAVE=GARA_DI_MAGIA;TIPO=COMPETIZIONE;ASPETTO=BORGOMASTRO;MANDANTE=il borgomastro;NEMICO=MAGO;NUMERO=1;CAPO=NOME_MAGO;\
     RESA=SI;DUELLO=SI;LUOGO=RADURA;MONETE=40;TITOLO=La gara di magia;\
     RICHIESTA=Per la fiera, la città sfida %CAPO%, il mago della valle, a una gara di magia. Il nostro mago si è ammalato. Di paura.;\
     BATTUTA=E vince chi?;RISPOSTA=Chi resta in piedi per ultimo. È una gara di magia, ma in valle la fanno così.;\
@@ -929,7 +929,7 @@ INDAGINE
     VITTORIA=La chimera della palude è sconfitta.;\
     RINGRAZIAMENTO=Adesso so com'è andata. Non mi ridà mio marito, ma almeno non ci sarà un'altra vedova.;\
     RICORDO=In questa palude viveva la chimera che uccise un pescatore.
-    CHIAVE=GRANO_MALEDETTO;TIPO=INCHIESTA;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;MONETE=45;TITOLO=Il grano maledetto;\
+    CHIAVE=GRANO_MALEDETTO;TIPO=INCHIESTA;ASPETTO=BORGOMASTRO;MANDANTE=il borgomastro;MONETE=45;TITOLO=Il grano maledetto;\
     RICHIESTA=Nei magazzini il grano si copre di una muffa che, giuro, canticchia. Se va avanti così, quest'inverno moriremo di fame.;\
     BATTUTA=Canticchia?;RISPOSTA=Sottovoce. Ma canticchia.;\
     INDIZIO_1=RADURA:Nella radura qualcuno ha tagliato degli alberi giovani. Ai ceppi sono legati dei nastri sottili, colorati, di fattura elfica.;\
@@ -979,7 +979,7 @@ INDAGINE
     VITTORIA=Gli spettri svaniscono, e fra le rovine brilla la pietra lunare.;\
     RINGRAZIAMENTO=La mia pietra lunare! Stanotte la chiudo in un cassetto di piombo. Gli spettri il piombo non lo attraversano.;\
     RICORDO=Fra queste rovine si erano rintanati gli spettri che rubarono la pietra lunare.
-    CHIAVE=RUNE_SULLA_PORTA;TIPO=LETTURA_RUNE;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;MONETE=40;TITOLO=Le rune sulla porta;\
+    CHIAVE=RUNE_SULLA_PORTA;TIPO=LETTURA_RUNE;ASPETTO=BORGOMASTRO;MANDANTE=il borgomastro;MONETE=40;TITOLO=Le rune sulla porta;\
     RICHIESTA=Stamattina sulla porta della città c'erano delle rune incise, enormi. Nessuno sa leggerle, e nessuno sa chi le ha incise.;\
     BATTUTA=Enormi quanto?;RISPOSTA=Bisogna salire su una scala per vederle tutte. Già questo mi preoccupa.;\
     INDIZIO_1=ROVINE:Su una colonna fra le rovine ci sono le stesse rune, incise all'altezza di tre uomini, con accanto il disegno di una mano grande come un carro.;\
@@ -1142,7 +1142,7 @@ RITUALE
     VITTORIA=Il gargoyle si inchina: siete degni. Vi segue fino alla bottega dell'armaiolo, e si piazza sul tetto.;\
     RINGRAZIAMENTO=Da quando c'è il gargoyle sul tetto, nessuno mi ruba più niente. E nessun cliente entra più. Dovrò pensarci.;\
     RICORDO=Fra queste rovine fu evocato un guardiano di pietra.
-    CHIAVE=BARRIERA_CONTRO_LE_ARPIE;TIPO=BARRIERA_MAGICA;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;LUOGO=RADURA;\
+    CHIAVE=BARRIERA_CONTRO_LE_ARPIE;TIPO=BARRIERA_MAGICA;ASPETTO=BORGOMASTRO;MANDANTE=il borgomastro;LUOGO=RADURA;\
     GENERE=M;INGREDIENTE=cristallo di quarzo;INGREDIENTI=cristalli di quarzo;DOVE=LUOGHI GROTTA;QUANTITA=4;\
     DOMANDA=La radura domina la strada per la città. Piantate i cristalli e alzate la barriera?;\
     NEMICO=ARPIA;NUMERO=3;MONETE=40;TITOLO=La barriera di cristallo;\
@@ -1267,7 +1267,7 @@ RITUALE
     RITO=Lo spaventapasseri sbatte gli occhi di bottone, agita le braccia di paglia, e i corvi scappano gracchiando. Poi vi saluta.;\
     RINGRAZIAMENTO=Non c'è più un corvo in tutta la valle. Lo spaventapasseri, però, adesso vuole essere pagato.;\
     RICORDO=In questa radura c'è uno spaventapasseri che saluta chi passa.
-    CHIAVE=DRAGO_CHE_NON_C_E;TIPO=ILLUSIONE;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;LUOGO=BOSCO;\
+    CHIAVE=DRAGO_CHE_NON_C_E;TIPO=ILLUSIONE;ASPETTO=BORGOMASTRO;MANDANTE=il borgomastro;LUOGO=BOSCO;\
     GENERE=M;INGREDIENTE=fiore di aconito;INGREDIENTI=fiori di aconito;DOVE=LUOGHI RADURA;QUANTITA=4;\
     DOMANDA=È il bosco dove si nascondono i briganti. Bruciate l'aconito ed evocate l'illusione?;\
     NEMICO=GUERRIERO;NUMERO=2;MONETE=40;TITOLO=Il drago che non c'è;\
@@ -1544,7 +1544,7 @@ LEALTA
 // Nei testi %CAMPIONE% è il nome del campione. Nei testi non si usa il ";".
 
 TORNEO
-    CHIAVE=ROSA_APPASSITA;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;TITOLO=Il torneo della Rosa Appassita;LUOGO=RADURA;\
+    CHIAVE=ROSA_APPASSITA;ASPETTO=BORGOMASTRO;MANDANTE=il borgomastro;TITOLO=Il torneo della Rosa Appassita;LUOGO=RADURA;\
     SFIDANTI=GUERRIERO ELFA;CAMPIONE=GUERRIERA;NOME=NOME_CAMPIONESSA;MONETE=40;\
     RICHIESTA=Ogni anno bandiamo il torneo della Rosa Appassita. Si chiama così perché la rosa del primo premio, quella vera, è appassita trent'anni fa, e nessuno ha avuto il coraggio di buttarla. Quest'anno il premio è un altro, per fortuna.;\
     BATTUTA=E il regolamento?;RISPOSTA=L'ho scritto io. Chi si arrende perde, chi perde può riprovare, chi vince vince. È un regolamento molto moderno.;\

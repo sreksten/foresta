@@ -2060,6 +2060,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			case INCANTATORE:
 			case MOGLIE_DEL_BARDO:
 			case UOMO:
+			case BORGOMASTRO:
 			case DONNA:
 				// I bardi ammaliano o spaventano folle intere: Carisma (70%) + Intelligenza (30%)
 				statPrincipale = get(md, TipoAttributo.CARISMA);

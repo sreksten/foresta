@@ -17,7 +17,7 @@ public enum PersonaggioNoto {
 	BARDO_DELLE_LOCANDE(TipoPersonaggio.BARDO_DELLE_LOCANDE, Ambito.GLOBALE, "NOME_MASCHILE", false),
 	MOGLIE_DEL_BARDO(TipoPersonaggio.MOGLIE_DEL_BARDO, Ambito.GLOBALE, "NOME_MOGLIE", false),
 
-	BORGOMASTRO(TipoPersonaggio.UOMO, Ambito.PER_CITTA, "NOME_ALTISONANTE", true),
+	BORGOMASTRO(TipoPersonaggio.BORGOMASTRO, Ambito.PER_CITTA, "NOME_ALTISONANTE", true),
 	CAPITANO(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, Ambito.PER_CITTA, "NOME_CAPITANO", true),
 	ALCHIMISTA(TipoPersonaggio.ALCHIMISTA, Ambito.PER_CITTA, "NOME_MASTRO", true),
 	ARMAIOLO(TipoPersonaggio.ARMAIOLO, Ambito.PER_CITTA, "NOME_MASTRO", true),
@@ -67,7 +67,7 @@ public enum PersonaggioNoto {
 	}
 
 	/**
-	 * La classe del personaggio (il borgomastro è un Uomo e la levatrice una Donna, finché non avranno una classe loro), o
+	 * La classe del personaggio (la levatrice è una Donna, finché non avrà una classe sua), o
 	 * null se la dà la missione (il campione).
 	 */
 	public TipoPersonaggio getTipo() {

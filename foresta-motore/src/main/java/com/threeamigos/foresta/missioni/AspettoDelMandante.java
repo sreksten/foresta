@@ -14,6 +14,7 @@ public enum AspettoDelMandante {
 
 	QUALUNQUE(ScenaInCitta::conMandante),
 	DONNA(ScenaInCitta::conMandantessa),
+	BORGOMASTRO(TipoPersonaggio.BORGOMASTRO),
 	CAPITANO(TipoPersonaggio.CAPITANO_DELLE_GUARDIE),
 	ARMAIOLO(TipoPersonaggio.ARMAIOLO),
 	ALCHIMISTA(TipoPersonaggio.ALCHIMISTA),

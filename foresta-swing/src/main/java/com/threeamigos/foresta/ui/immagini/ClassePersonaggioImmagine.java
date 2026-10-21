@@ -60,6 +60,7 @@ public enum ClassePersonaggioImmagine {
     VIANDANTE(TipoPersonaggio.VIANDANTE, "personaggi/Viandante.gif", "icone/Viandante.gif"),
     BARDO_LOCANDA(TipoPersonaggio.BARDO_DELLE_LOCANDE, "personaggi/BardoLocanda.gif", "icone/BardoLocanda.gif"),
     CAPITANO_DELLE_GUARDIE(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, "personaggi/CapitanoDelleGuardie.gif", "icone/CapitanoDelleGuardie.gif"),
+    BORGOMASTRO(TipoPersonaggio.BORGOMASTRO, "personaggi/Borgomastro.gif"),
     UOMO(TipoPersonaggio.UOMO, "personaggi/Uomo.gif", "icone/Uomo.gif"),
     DONNA(TipoPersonaggio.DONNA, "personaggi/Donna.gif", "icone/Donna.gif");
 

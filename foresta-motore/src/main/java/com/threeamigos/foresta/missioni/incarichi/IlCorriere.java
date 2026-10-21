@@ -259,7 +259,7 @@ public class IlCorriere extends IncaricoInCitta {
 		if (isDiNascosto()) {
 			quando += " E che nessuno vi noti: niente combattimenti per strada, o la voce arriva alle guardie.";
 		}
-		return ScenaInCitta.conMandante()
+		return scenaDel(spedizione.getMittente())
 				.parlaIlMandante(spedizione.getRichiesta())
 				.parlaIlMandante("Portate " + spedizione.getQuestoOggetto() + " " + Misc.conPreposizione("a", getDestinatarioDiCitta()) + "."
 						+ quando + " Alla consegna avrete " + getRicompensa() + " monete.")
@@ -269,7 +269,7 @@ public class IlCorriere extends IncaricoInCitta {
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
-		return ScenaInCitta.conMandante()
+		return scenaDel(getSpedizione().getDestinatario())
 				.parlaIlMandante(getSpedizione().getRingraziamento())
 				.parlaIlMandante("Ecco le " + getRicompensa() + " monete, ve le siete guadagnate.");
 	}

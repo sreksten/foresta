@@ -3,7 +3,7 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
- * Un uomo senza una classe propria (il borgomastro, i mandanti qualunque): un personaggio non combattente (vedi
+ * Un uomo senza una classe propria (i mandanti qualunque): un personaggio non combattente (vedi
  * PersonaggioNonCombattente) con l'immagine e il verso del locandiere.
  */
 public class Uomo extends PersonaggioNonCombattente {
