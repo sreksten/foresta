@@ -1,12 +1,12 @@
 # Assessment di Foresta
 
-Valutazione del codice al **2026-10-19**, con una revisione completa dei sorgenti modulo per modulo, dal basso (`foresta-tipi`) fino a `foresta-app`. I numeri sono misurati sul working tree di quel giorno (`wc -l`, `grep`, JaCoCo da `mvn clean test`); i giudizi sono segnati come **Giudizio**. I difetti trovati sono nel §5, con un codice (A1, M3, B12…) per richiamarli. Le cose da fare per il porting su Android e iOS sono in [`assessment_portabilita.md`](assessment_portabilita.md): qui c'è solo il riassunto.
+Valutazione del codice al **2026-10-19** (revisione), con le misure e i difetti aggiornati al **2026-10-22**, con una revisione completa dei sorgenti modulo per modulo, dal basso (`foresta-tipi`) fino a `foresta-app`. I numeri sono misurati sul working tree di quel giorno (`wc -l`, `grep`, JaCoCo da `mvn clean test`); i giudizi sono segnati come **Giudizio**. I difetti trovati sono nel §5, con un codice (A1, M3, B12…) per richiamarli. Le cose da fare per il porting su Android e iOS sono in [`assessment_portabilita.md`](assessment_portabilita.md): qui c'è solo il riassunto.
 
 ## 1. Sintesi
 
 - Il gioco è **completo e giocabile** da inizio a fine (creazione del gruppo, esplorazione, combattimento a round con tattiche, negozi, incantatore, missioni, intermezzi, trofei, salvataggi, classifica).
 - La **separazione fra le parti è garantita dal compilatore**: sei moduli Maven in fila (tipi, modellodati, contratti, motore, swing, app). La UI non vede il motore, ma soltanto viste in sola lettura ed eventi.
-- La **base di test è ampia e veloce**: 1543 test verdi (16 saltati; 1559 dopo le correzioni dei difetti); `tipi` e `modellodati` sono coperti quasi al 100% dai loro test, il motore all'85%.
+- La **base di test è ampia e veloce**: 1672 test verdi (16 saltati); `tipi` e `modellodati` sono coperti quasi al 100% dai loro test, il motore all'83%.
 - I **4 difetti di gravità alta** trovati dalla revisione (tutti nella logica di gioco, non nell'infrastruttura) sono stati corretti, ciascuno con un test.
 - **L'infrastruttura è solida.** Il bus, il `Dado`, i salvataggi di partita, gli scambi di artefatti, i prezzi e le copie difensive sono stati controllati e sono a posto. Non c'è nessuna `ConcurrentModificationException` raggiungibile, e i salvataggi sono simmetrici campo per campo.
 - **I difetti medi sono soprattutto regole di gioco incoerenti**: effetti di stato, ospiti, tempo in locanda, testi delle ricompense. Nella UI sono comportamenti sbagliati (§5.2).
@@ -17,32 +17,32 @@ Valutazione del codice al **2026-10-19**, con una revisione completa dei sorgent
 
 | Modulo | Codice (file / righe) | Test (file / righe) | Test eseguiti | Copertura righe (JaCoCo) |
 | :--- | ---: | ---: | ---: | ---: |
-| `foresta-tipi` | 57 / 6.600 | 12 / 1.100 | 68 | 100% |
-| `foresta-modellodati` | 36 / 5.500 | 27 / 3.700 | 193 | 99,7% |
-| `foresta-contratti` | 168 / 7.400 | 9 / 640 | 39 | 40%* |
-| `foresta-motore` | 363 / 55.900 | 190 / 31.200 | 1154 (16 saltati) | 85% |
-| `foresta-swing` | 95 / 22.100 | 13 / 1.900 | 56 | 27%* |
-| `foresta-app` | 3 / 740 | 19 / 1.600 | 33 | 27% |
-| **Totale** | **722 / 98.300** | **270 / 40.200** | **1543** | **66%** |
+| `foresta-tipi` | 57 / 6.600 | 12 / 1.100 | 69 | 99,9% |
+| `foresta-modellodati` | 36 / 5.600 | 28 / 4.000 | 209 | 99,6% |
+| `foresta-contratti` | 168 / 7.400 | 9 / 700 | 44 | 41%* |
+| `foresta-motore` | 368 / 57.200 | 214 / 33.600 | 1232 (16 saltati) | 83% |
+| `foresta-swing` | 96 / 22.400 | 14 / 1.900 | 59 | 27%* |
+| `foresta-app` | 3 / 850 | 30 / 2.300 | 59 | 28% |
+| **Totale** | **728 / 100.100** | **307 / 43.700** | **1672** | **67%** |
 
 \* JaCoCo conta solo i test del modulo stesso: contratti è esercitato molto di più dai test del motore, e la UI dai test di `foresta-app`. Le percentuali di questi moduli sono quindi più basse del vero.
 
-Nel motore la copertura è alta quasi ovunque (`trofei` 100%, `testi` e `intermezzi` 95%, `combattimento` 94%, `canti` 93%, `tattiche` 89%, `incantesimi` 88%, `missioni` 87%, `motore` 85%). È bassa in `offerte` (24%), `salvataggi` (65%), `personaggi` (69%) e `locazioni` (72%). Non è un caso che molti difetti medi del §5 stiano proprio in `personaggi` e `locazioni`.
+Nel motore la copertura è alta quasi ovunque (`trofei` 100%, `testi` e `intermezzi` 95%, `missioni` 95%, `combattimento` 94%, `canti` 93%, `incantesimi` 89%, `tattiche` 87%, `motore` 86%). È bassa in `offerte` (25%), `personaggi` (67%) e `locazioni` (73%); `salvataggi` sale all'80%. Non è un caso che molti difetti medi del §5 stiano proprio in `personaggi` e `locazioni`.
 
 Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 
-| Classe | Righe | Il 2026-10-17 |
+| Classe | Righe | Il 2026-10-19 |
 | :--- | ---: | ---: |
-| `testi/GrammarBean` | 2533 | 2533 |
-| `personaggi/PersonaggioBase` | 2356 | 2342 |
-| `motore/Automa` | 2284 | 2288 |
-| `locazioni/LocazioneBase` | 1944 | 1944 |
-| `ui/DisplayableCanvas` | 1629 | 1631 |
-| `tipi/Costanti` | 1625 | 1613 |
-| `combattimento/CalcolatoreCombattimento` | 1283 | 1247 |
-| `missioni/MissioneAPassi` | 1274 | 1274 |
-| `ui/tattiche/DisplayableCanvasTattiche` | 1133 | 1136 |
-| `tipi/TipoMissione` | 1012 | 986 |
+| `testi/GrammarBean` | 2536 | 2533 |
+| `personaggi/PersonaggioBase` | 2388 | 2356 |
+| `motore/Automa` | 2365 | 2284 |
+| `locazioni/LocazioneBase` | 2077 | 1944 |
+| `ui/DisplayableCanvas` | 1681 | 1629 |
+| `tipi/Costanti` | 1642 | 1625 |
+| `combattimento/CalcolatoreCombattimento` | 1289 | 1283 |
+| `missioni/MissioneAPassi` | 1286 | 1274 |
+| `ui/tattiche/DisplayableCanvasTattiche` | 1195 | 1133 |
+| `tipi/TipoMissione` | 1012 | 1012 |
 
 ## 3. Architettura
 
@@ -178,7 +178,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
   - sprite, testo, immagini, sfx e sviluppo.
 
   Ogni ipotesi è stata verificata leggendo i chiamanti.
-- **Misure.** Righe e file sono contati con `wc -l` su `src/main` e `src/test`. Test e copertura vengono da `mvn clean test` del 2026-10-19, tutti verdi.
+- **Misure.** Righe e file sono contati con `wc -l` su `src/main` e `src/test`. Test e copertura vengono da `mvn clean test` del 2026-10-22, tutti verdi.
 
 ## Da fare / idee aperte
 
