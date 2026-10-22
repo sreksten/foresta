@@ -145,11 +145,12 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	}
 
 	/**
-	 * Il negozio è una storia sola, legata alla sua città: si offre appena può, senza sorteggio.
+	 * Se la città del negozio è distrutta non si offrirà mai più.
 	 */
 	@Override
-	protected boolean partecipaAlSorteggio() {
-		return false;
+	protected boolean puoAncoraOffrirsi() {
+		TipoLocazione citta = getCittaAssegnata();
+		return citta != null && !LineaTemporale.isCittaDistrutta(citta);
 	}
 
 	@Override

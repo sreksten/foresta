@@ -385,14 +385,6 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	}
 
 	/**
-	 * Se l'incarico, quando è pronto insieme ad altri, è scelto a caso con loro (vedi SceltaDegliIncarichi): sì, salvo
-	 * gli incarichi che sono una storia sola legata a una città, che si offrono appena possono.
-	 */
-	protected boolean partecipaAlSorteggio() {
-		return true;
-	}
-
-	/**
 	 * Se l'incarico potrà ancora offrirsi in questa partita, in qualche città e prima o poi: un incarico che non potrà
 	 * più farlo non tiene aperto il giro del sorteggio (vedi SceltaDegliIncarichi).
 	 */

@@ -177,7 +177,7 @@ Un incarico si offre in una città qualsiasi, ma solo a una **visita tranquilla*
 - le classi di incarico si dividono in quelle **non ancora affidate** nel giro corrente, che escono con il 75% di probabilità (`PROBABILITA_DI_UN_INCARICO_NUOVO`), e quelle **già affidate**, che escono con il 25%; se fra i pronti c'è un solo gruppo, si sceglie da quello;
 - quando nessuna classe in attesa di offrirsi è più da affidare nel giro, il giro ricomincia e tutte tornano nuove. Contano solo le classi che possono ancora offrirsi (`puoAncoraOffrirsi`): un torneo senza più leggendari, o un corriere con una sola città in piedi, non tengono aperto il giro;
 - il giro in cui un incarico è stato affidato è la sua proprietà `GIRO_DI_AFFIDAMENTO`, quindi si salva con la missione; la scelta di una visita invece non si salva (dopo una rilettura si sceglie di nuovo);
-- i negozi (`IlNegozio`) non partecipano: sono una storia sola legata alla loro città e si offrono appena possono (stanno prima degli incarichi nel registro).
+- i negozi (`IlNegozio`) partecipano come gli altri, ma si offrono solo nella loro città e una volta sola; se la città è distrutta non tengono aperto il giro (`puoAncoraOffrirsi`).
 
 Le partite di test (`PartitaDiTest`) spengono il sorteggio, perché i test guidano un incarico alla volta: allora parte il primo pronto nell'ordine del registro. Lo riaccende `conSorteggioDegliIncarichi()` (vedi `ScenarioSorteggioDegliIncarichiTest`).
 

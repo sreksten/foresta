@@ -26,9 +26,6 @@ import java.util.Set;
  * Il giro in cui un incarico è stato affidato si scrive nella sua proprietà {@link #GIRO}, così si salva con la missione:
  * il giro corrente è il più alto scritto, o quello dopo se in quello non resta niente da affidare.
  * <p>
- * Restano fuori dal sorteggio gli incarichi che non vi partecipano (i negozi, che sono una storia sola legata alla loro
- * città): se sono pronti si offrono come prima.
- * <p>
  * Il sorteggio si può spegnere ({@link #setSorteggioAttivo(boolean)}): allora parte il primo incarico pronto nell'ordine
  * del registro. Lo spengono i test che guidano un incarico alla volta, chiamandone direttamente i controlli.
  */
@@ -58,7 +55,7 @@ public final class SceltaDegliIncarichi {
 	 * Se tocca a quell'incarico, pronto a offrirsi, partire in questa visita.
 	 */
 	static boolean tocca(IncaricoInCitta incarico) {
-		if (!sorteggioAttivo || !incarico.partecipaAlSorteggio()) {
+		if (!sorteggioAttivo) {
 			return true;
 		}
 		String visita = visitaCorrente();
@@ -76,9 +73,7 @@ public final class SceltaDegliIncarichi {
 	 * L'incarico si è offerto: lo si segna nel giro corrente.
 	 */
 	static void affidato(IncaricoInCitta incarico) {
-		if (incarico.partecipaAlSorteggio()) {
-			incarico.aggiungiProprieta(GIRO, String.valueOf(giroCorrente()));
-		}
+		incarico.aggiungiProprieta(GIRO, String.valueOf(giroCorrente()));
 	}
 
 	/**
@@ -175,7 +170,7 @@ public final class SceltaDegliIncarichi {
 	private static List<IncaricoInCitta> incarichiDelSorteggio() {
 		List<IncaricoInCitta> incarichi = new ArrayList<>();
 		for (Missione missione : RegistroMissioni.getTutteLeMissioni()) {
-			if (missione instanceof IncaricoInCitta && ((IncaricoInCitta) missione).partecipaAlSorteggio()) {
+			if (missione instanceof IncaricoInCitta) {
 				incarichi.add((IncaricoInCitta) missione);
 			}
 		}

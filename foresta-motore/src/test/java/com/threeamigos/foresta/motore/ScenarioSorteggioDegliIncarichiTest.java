@@ -28,8 +28,8 @@ class ScenarioSorteggioDegliIncarichiTest {
     private static final String GIRO = "GIRO_DI_AFFIDAMENTO";
 
     /**
-     * Una partita col sorteggio acceso, il gruppo a Fleena: leggende e negozi, che non sono del sorteggio e si
-     * offrirebbero prima, sono rimandati.
+     * Una partita col sorteggio acceso, il gruppo a Fleena: leggende e negozi, che si offrirebbero prima delle
+     * altre storie, sono rimandati.
      */
     private static PartitaDiTest aFleena(long seme) {
         PartitaDiTest partita = PartitaDiTest.nuova(seme).conSorteggioDegliIncarichi();
@@ -104,6 +104,9 @@ class ScenarioSorteggioDegliIncarichiTest {
         try (PartitaDiTest partita = aFleena(7)) {
             List<IncaricoInCitta> incarichi = incarichiInAttesa();
             incarichi.forEach(i -> i.aggiungiProprieta(GIRO, "0"));
+            // I negozi, rimandati, aspettano di offrirsi come gli altri: contano anche loro per chiudere il giro
+            RegistroMissioni.getTutteLeMissioni().stream().filter(m -> m instanceof IlNegozio)
+                    .forEach(m -> m.aggiungiProprieta(GIRO, "0"));
             assertEquals("1", controllaLaVisita(incarichi).ottieniProprieta(GIRO), "nel giro 0 non restava niente da affidare");
         }
     }
