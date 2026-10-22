@@ -7,6 +7,11 @@ import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.*;
+import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
+import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
+import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
+import com.threeamigos.foresta.tattiche.RegistroTattiche;
+import com.threeamigos.foresta.tattiche.TatticheBase;
 import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,7 +87,7 @@ class ChiericoEDruidoTest {
         assertEquals("Druido", TipoPersonaggio.DRUIDO.getNome());
         for (TipoPersonaggio classe : Arrays.asList(TipoPersonaggio.CHIERICO, TipoPersonaggio.CHIERICA, TipoPersonaggio.DRUIDO, TipoPersonaggio.DRUIDA)) {
             assertEquals(classe, FabbricaPersonaggi.crea(classe, 1).getClasse());
-            assertTrue(classe.isSoloDiProva(), classe.name());
+            assertEquals(classe == TipoPersonaggio.DRUIDO || classe == TipoPersonaggio.DRUIDA, classe.isSoloDiProva(), classe.name());
             assertTrue(classe.isDellaCategoria(CategoriaPersonaggio.UMANOIDE));
         }
         assertFalse(TipoPersonaggio.SACERDOTE.isSoloDiProva());
@@ -153,19 +158,37 @@ class ChiericoEDruidoTest {
         }
     }
 
-    // --- Alba sacra e luce divina del chierico
+    // --- Alba sacra e luce divina sono del sacerdote, non del chierico
 
     @Test
-    void ilChiericoHaInnateAlbaSacraELuceDivina() {
+    void ilChiericoNonHaInnateAlbaSacraELuceDivina() {
         for (TipoPersonaggio classe : Arrays.asList(TipoPersonaggio.CHIERICO, TipoPersonaggio.CHIERICA)) {
-            assertTrue(AlbaSacra.conosciutaDa(classe), classe.name());
-            assertTrue(LuceDivina.conosciutaDa(classe), classe.name());
+            assertFalse(AlbaSacra.conosciutaDa(classe), classe.name());
+            assertFalse(LuceDivina.conosciutaDa(classe), classe.name());
             assertFalse(DardoArcano.conosciutoDa(classe), classe.name());
+            assertFalse(RegistroTattiche.azioniPossibili(classe).contains(TipoAzione.ALBA_SACRA), classe.name());
         }
-        assertTrue(AlbaSacra.puoLanciarlaInnata(chierico()));
-        assertTrue(LuceDivina.puoLanciarlaInnata(chierico()));
+        assertFalse(AlbaSacra.puoLanciarlaInnata(chierico()));
+        assertFalse(LuceDivina.puoLanciarlaInnata(chierico()));
+        assertTrue(AlbaSacra.conosciutaDa(TipoPersonaggio.SACERDOTE));
+        assertTrue(LuceDivina.conosciutaDa(TipoPersonaggio.SACERDOTESSA));
         assertFalse(AlbaSacra.conosciutaDa(TipoPersonaggio.DRUIDO));
         assertFalse(LuceDivina.conosciutaDa(TipoPersonaggio.DRUIDA));
+    }
+
+    @Test
+    void laTatticaDelChiericoNonUsaAlbaSacraELuceDivina() {
+        TatticaMD tattica = TatticheBase.deiGiocabili(TipoPersonaggio.CHIERICO);
+        List<TipoAzione> azioni = new java.util.ArrayList<>();
+        for (VoceMD voce : tattica.getVoci()) {
+            for (AzioneMD azione : voce.getAzioni()) {
+                azioni.add(azione.getTipo());
+            }
+        }
+        assertFalse(azioni.contains(TipoAzione.ALBA_SACRA));
+        assertFalse(azioni.contains(TipoAzione.LUCE_DIVINA));
+        assertTrue(azioni.contains(TipoAzione.IMPOSIZIONE_DELLE_MANI));
+        assertTrue(azioni.contains(TipoAzione.SCACCIARE_I_NON_MORTI));
     }
 
     // --- Chi ha le abilità
@@ -470,10 +493,10 @@ class ChiericoEDruidoTest {
         assertEquals(Arrays.asList(TipoAbilita.SCACCIARE_I_NON_MORTI, TipoAbilita.IMPOSIZIONE_DELLE_MANI), utili);
     }
 
-    // --- La scelta iniziale: solo in modalità di prova
+    // --- La scelta iniziale: il chierico sempre, il druido solo in modalità di prova
 
     @Test
-    void inModalitaDiProvaSiScelgonoAncheChiericoEDruido() {
+    void inModalitaDiProvaSiScegliAncheIlDruido() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(21)) {
             partita.comando(Comando.PERGAMENA);
             partita.testo("Elia");
@@ -491,7 +514,7 @@ class ChiericoEDruidoTest {
     }
 
     @Test
-    void sceltiInProvaSonoIlCapoDelGruppo() {
+    void sceltiSonoIlCapoDelGruppo() {
         for (Object[] scelta : new Object[][]{{Comando.MASCHIO, Comando.CHIERICO, TipoPersonaggio.CHIERICO},
                 {Comando.FEMMINA, Comando.CHIERICA, TipoPersonaggio.CHIERICA}, {Comando.MASCHIO, Comando.DRUIDO, TipoPersonaggio.DRUIDO},
                 {Comando.FEMMINA, Comando.DRUIDA, TipoPersonaggio.DRUIDA}}) {
@@ -503,29 +526,29 @@ class ChiericoEDruidoTest {
     }
 
     @Test
-    void senzaLaModalitaDiProvaNonSiScelgono() {
+    void senzaLaModalitaDiProvaNonSiSceglieIlDruido() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(24)) {
             partita.comando(Comando.PERGAMENA);
             partita.testo("Elia");
             partita.comando(Comando.MASCHIO);
-            assertEquals(6, partita.comandiDisponibili().size(), partita.comandiDisponibili().toString());
-            assertFalse(partita.comandiDisponibili().contains(Comando.CHIERICO));
+            assertEquals(7, partita.comandiDisponibili().size(), partita.comandiDisponibili().toString());
+            assertTrue(partita.comandiDisponibili().contains(Comando.CHIERICO));
             assertFalse(partita.comandiDisponibili().contains(Comando.DRUIDO));
             // E se il comando arriva lo stesso, si rifiuta
-            assertThrows(AssertionError.class, () -> partita.comando(Comando.CHIERICO));
+            assertThrows(AssertionError.class, () -> partita.comando(Comando.DRUIDO));
         }
     }
 
     @Test
-    void nonCompaionoFraIChampioniDellaSfidaSenzaProva() {
+    void soloIlDruidoNonCompareFraIChampioniDellaSfidaSenzaProva() {
         boolean prova = ModalitaDiProva.isAttiva();
         try {
             ModalitaDiProva.setAttiva(false);
-            assertFalse(com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni.classiAmichevoli().contains(TipoPersonaggio.CHIERICO));
+            assertTrue(com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni.classiAmichevoli().contains(TipoPersonaggio.CHIERICO));
             assertFalse(com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni.classiAmichevoli().contains(TipoPersonaggio.DRUIDA));
             assertTrue(com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni.classiAmichevoli().contains(TipoPersonaggio.SACERDOTE));
             ModalitaDiProva.setAttiva(true);
-            assertTrue(com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni.classiAmichevoli().contains(TipoPersonaggio.CHIERICO));
+            assertTrue(com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni.classiAmichevoli().contains(TipoPersonaggio.DRUIDA));
         } finally {
             ModalitaDiProva.setAttiva(prova);
         }

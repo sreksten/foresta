@@ -600,16 +600,16 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		List<Comando> classi = new ArrayList<>();
 		if (comando == Comando.FEMMINA) {
 			classi.addAll(Arrays.asList(Comando.GUERRIERA, Comando.LADRA, Comando.CANTASTORIE, Comando.ELFA, Comando.MAGA,
-					Comando.SACERDOTESSA));
-			// Chierica e druida mancano ancora di grafica propria: per ora si scelgono solo in modalità di prova
+					Comando.SACERDOTESSA, Comando.CHIERICA));
+			// La druida manca ancora di grafica propria: per ora si sceglie solo in modalità di prova
 			if (ModalitaDiProva.isAttiva()) {
-				classi.addAll(Arrays.asList(Comando.CHIERICA, Comando.DRUIDA));
+				classi.add(Comando.DRUIDA);
 			}
 		} else {
 			classi.addAll(Arrays.asList(Comando.GUERRIERO, Comando.LADRO, Comando.BARDO, Comando.ELFO, Comando.MAGO,
-					Comando.SACERDOTE));
+					Comando.SACERDOTE, Comando.CHIERICO));
 			if (ModalitaDiProva.isAttiva()) {
-				classi.addAll(Arrays.asList(Comando.CHIERICO, Comando.DRUIDO));
+				classi.add(Comando.DRUIDO);
 			}
 		}
 		BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.CLASSE_PERSONAGGIO, classi.toArray(new Comando[0])));
@@ -655,7 +655,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				personaggio = new Sacerdote(nomePersonaggio, 1);
 				break;
 			case CHIERICA:
+				personaggio = new Chierica(nomePersonaggio, 1);
+				break;
 			case CHIERICO:
+				personaggio = new Chierico(nomePersonaggio, 1);
+				break;
 			case DRUIDA:
 			case DRUIDO:
 				// Il comando non è fra le scelte se non in modalità di prova, ma lo si rifiuta comunque
@@ -674,16 +678,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Personaggio creaPersonaggioSoloDiProva(Comando comando) {
-		switch (comando) {
-			case CHIERICA:
-				return new Chierica(nomePersonaggio, 1);
-			case CHIERICO:
-				return new Chierico(nomePersonaggio, 1);
-			case DRUIDA:
-				return new Druida(nomePersonaggio, 1);
-			default:
-				return new Druido(nomePersonaggio, 1);
-		}
+		return comando == Comando.DRUIDA ? new Druida(nomePersonaggio, 1) : new Druido(nomePersonaggio, 1);
 	}
 
 	/**

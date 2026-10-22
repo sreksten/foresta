@@ -49,7 +49,7 @@ public enum TipoPersonaggio {
 	OMBRAFIAMMA(CategoriaPersonaggio.UMANOIDE),
 	SACERDOTE(CategoriaPersonaggio.UMANOIDE),
 	SACERDOTESSA(CategoriaPersonaggio.UMANOIDE),
-	// Chierico e druido: per ora si scelgono solo in modalità di prova (la grafica è incompleta)
+	// Chierico e druido: il druido per ora si sceglie solo in modalità di prova (la grafica è incompleta)
 	CHIERICA(CategoriaPersonaggio.UMANOIDE),
 	CHIERICO(CategoriaPersonaggio.UMANOIDE),
 	DRUIDA(CategoriaPersonaggio.UMANOIDE),
@@ -175,11 +175,11 @@ public enum TipoPersonaggio {
 	}
 
 	/**
-	 * Se la classe si può usare solo in modalità di prova: il chierico e il druido (con le forme femminili), finché la loro
-	 * grafica è una copia di quella di guerriero e bardo. Chi la usa (la scelta iniziale, le classi dei campioni) lo guarda.
+	 * Se la classe si può usare solo in modalità di prova: il druido (e la druida), finché la sua
+	 * grafica è una copia di quella di bardo e cantastorie. Chi la usa (la scelta iniziale, le classi dei campioni) lo guarda.
 	 */
 	public boolean isSoloDiProva() {
-		return this == CHIERICO || this == CHIERICA || this == DRUIDO || this == DRUIDA;
+		return this == DRUIDO || this == DRUIDA;
 	}
 
 	public boolean isDellaCategoria(CategoriaPersonaggio categoria) {

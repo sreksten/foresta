@@ -7,10 +7,9 @@ import com.threeamigos.foresta.strumenti.Misc;
 
 
 /**
- * Il chierico giocante, al maschile: il sacerdote che combatte in prima linea, con mazza, scudo e armatura. Come il
- * Sacerdote ha l'alba sacra e la luce divina innate (vedi AlbaSacra.puoLanciarlaInnata e LuceDivina.puoLanciarlaInnata),
- * ma meno forti perché ha meno magia, e sa scacciare i non morti (vedi {@code ScacciareINonMorti}) e imporre le mani
- * ({@code ImposizioneDelleMani}). Il femminile è la {@link Chierica}.
+ * Il chierico giocante, al maschile: il sacerdote che combatte in prima linea, con mazza, scudo e armatura. Non ha l'alba
+ * sacra e la luce divina innate (sono del Sacerdote): sa scacciare i non morti (vedi {@code ScacciareINonMorti}) e imporre
+ * le mani ({@code ImposizioneDelleMani}). Il femminile è la {@link Chierica}.
  */
 public class Chierico extends PersonaggioBase implements Personaggio {
 

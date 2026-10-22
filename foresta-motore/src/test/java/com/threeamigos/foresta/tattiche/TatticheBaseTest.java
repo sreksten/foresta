@@ -211,7 +211,7 @@ class TatticheBaseTest {
         assertFalse(RegistroTattiche.azioniPossibili(TipoPersonaggio.GUERRIERO).contains(TipoAzione.DARDO_ARCANO));
         // Le abilità di chierico e druido sono solo di chi le conosce
         assertTrue(RegistroTattiche.azioniPossibili(TipoPersonaggio.CHIERICA).contains(TipoAzione.SCACCIARE_I_NON_MORTI));
-        assertTrue(RegistroTattiche.azioniPossibili(TipoPersonaggio.CHIERICO).contains(TipoAzione.ALBA_SACRA));
+        assertFalse(RegistroTattiche.azioniPossibili(TipoPersonaggio.CHIERICO).contains(TipoAzione.ALBA_SACRA), "è del sacerdote");
         assertFalse(RegistroTattiche.azioniPossibili(TipoPersonaggio.CHIERICO).contains(TipoAzione.RADICI));
         assertTrue(RegistroTattiche.azioniPossibili(TipoPersonaggio.DRUIDA).contains(TipoAzione.RADICI));
         assertTrue(RegistroTattiche.azioniPossibili(TipoPersonaggio.DRUIDO).contains(TipoAzione.PELLE_DI_CORTECCIA));

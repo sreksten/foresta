@@ -472,19 +472,16 @@ public final class TatticheBase {
 	}
 
 	/**
-	 * Il sacerdote che combatte: tiene in piedi i compagni (imposizione delle mani, pozioni, alba sacra), scaccia e brucia i non morti, e per il resto
-	 * colpisce con la mazza il più ferito.
+	 * Il chierico, che combatte in prima linea: tiene in piedi i compagni (imposizione delle mani, pozioni), scaccia i non morti, e per il resto colpisce con
+	 * la mazza il più ferito. Niente alba sacra e luce divina: sono del solo sacerdote.
 	 */
 	private static TatticaMD chierico() {
 		return tattica(
 				pozioniDiSalute(30, true),
 				voce("Imposizione delle mani", su(TipoRosa.ALLEATI_E_OSPITI, TipoOrdinamento.MENO_SALUTE, sotto(50)), condizioni(null),
 						AzioneMD.di(TipoAzione.IMPOSIZIONE_DELLE_MANI)),
-				voce("Alba sacra", su(TipoRosa.ALLEATI, TipoOrdinamento.PRIMO), condizioni(alleatiConUnStatoNegativo(2), dopoRound(3)), AzioneMD.di(TipoAzione.ALBA_SACRA)),
 				voce("Scacciare i non morti", su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.SCACCIARE_I_NON_MORTI)),
 				pozioniDiMagia(15),
-				voce("Luce divina sui non morti", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE,
-						FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.NON_MORTO)), condizioni(null), AzioneMD.di(TipoAzione.LUCE_DIVINA)),
 				voce("Colpisce il più ferito", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), attacco()));
 	}
 

@@ -1,7 +1,7 @@
 # Chierico e druido
 
-Due classi giocanti, ognuna con la forma femminile (`CHIERICO`/`CHIERICA`, `DRUIDO`/`DRUIDA`), e le sei **abilità** innate che le distinguono. Per ora
-(la grafica è una copia di quella di guerriero e bardo) **si scelgono solo in modalità di prova**.
+Due classi giocanti, ognuna con la forma femminile (`CHIERICO`/`CHIERICA`, `DRUIDO`/`DRUIDA`), e le sei **abilità** innate che le distinguono. Il Chierico
+e la Chierica si scelgono come le altre classi; il Druido e la Druida, finché la grafica è una copia di quella di bardo e cantastorie, **solo in modalità di prova**.
 
 ## 1. Le classi
 
@@ -12,7 +12,7 @@ Due classi giocanti, ognuna con la forma femminile (`CHIERICO`/`CHIERICA`, `DRUI
 | Armi | Mazza, spada, scudo, armatura; né bastone né libro; niente doppia arma | Bastone magico, lancia, libro magico; né scudo né armatura (di metallo); niente doppia arma. **Non esistono archi nel gioco**, quindi non li usa |
 | Dotazione iniziale | Mazza e scudo | Bastone magico e veste |
 | Resistenze (`TipoPersonaggio`) | `NECROTICO` e `MALEDIZIONE` ×0,75 | `ACQUA`, `TERRA`, `VELENO` ×0,75; `FUOCO` ×1,25, `TAGLIENTE` ×1,1 |
-| Magia innata | **Alba sacra** e **Luce Divina** come il Sacerdote (`AlbaSacra.conosciutaDa`, `LuceDivina.conosciutaDa`), più deboli solo perché `MAGIA_BASE` (30 contro 45) e `DANNI_MAGICI` (1,0 contro 1,4) sono minori | nessuna dei sacerdoti, né il dardo arcano |
+| Magia innata | Nessuna: **Alba sacra** e **Luce Divina** sono del solo Sacerdote (`AlbaSacra.conosciutaDa`, `LuceDivina.conosciutaDa`), il chierico ha le due abilità (scacciare i non morti, imposizione delle mani) e può comunque lanciare gli incantesimi con le pergamene | nessuna dei sacerdoti, né il dardo arcano |
 | Abilità | Scacciare i non morti, Imposizione delle mani | Radici, Sciame, Pelle di corteccia, Rigenerazione |
 
 Il ruolo (`TipoPersonaggio.getRuolo`) è lo stesso nelle due forme: le tattiche non le distinguono. I testi (note dei moltiplicatori) hanno la voce del
@@ -42,17 +42,18 @@ cofani, negozi o repertorio dei mostri.
 
 I valori stanno in `Costanti` (`ABILITA_*`).
 
-## 3. Solo in modalità di prova
+## 3. Chi si sceglie e chi è solo di prova
 
-`TipoPersonaggio.isSoloDiProva()` dice quali classi lo sono. `Automa` offre `CHIERICO`/`CHIERICA`/`DRUIDO`/`DRUIDA` fra le classi di inizio partita solo con la modalità di
-prova (e rifiuta il comando altrimenti); `LaSfidaDeiCampioni.classiAmichevoli` le esclude dai campioni senza la prova. Nessun mostro e nessun compagno
-reclutabile è di queste classi: in prova si possono aggiungere dalla finestra di prova (`FinestraDiProva`), che usa `FabbricaPersonaggi`.
+Il Chierico e la Chierica (che hanno la loro grafica) si scelgono fra le classi di inizio partita come le altre, e possono essere campioni della sfida a carta, forbici e
+sasso. Il Druido e la Druida sono ancora solo di prova: `TipoPersonaggio.isSoloDiProva()` dice quali classi lo sono, `Automa` li offre solo con la modalità di prova (e
+rifiuta il comando altrimenti), `LaSfidaDeiCampioni.classiAmichevoli` li esclude dai campioni senza la prova. Nessun mostro e nessun compagno reclutabile è di queste
+classi: in prova si possono aggiungere dalla finestra di prova (`FinestraDiProva`), che usa `FabbricaPersonaggi`.
 
 ## Osservazioni
 
-- **Immagini.** Le quattro immagini dei personaggi e delle icone di classe sono copie di quelle di Guerriero, Guerriera, Bardo e Cantastorie; le icone delle sei
-  abilità (`img/icone/ScacciareINonMorti.gif`, `ImposizioneDelleMani.gif`, `Radici.gif`, `Sciame.gif`, `PelleDiCorteccia.gif`, `Rigenerazione.gif`) sono copie di
-  `Pergamena.gif`. Vanno disegnate prima di togliere il vincolo della modalità di prova (vedi [`todo.md`](todo.md)).
+- **Immagini.** Quelle di Chierico e Chierica (personaggi, icone di classe e icone delle sue due abilità) sono vere; le quattro di Druido e Druida (personaggi e icone di classe) sono ancora copie di quelle di Bardo e Cantastorie; le icone delle quattro
+  abilità del druido (`img/icone/Radici.gif`, `Sciame.gif`, `PelleDiCorteccia.gif`, `Rigenerazione.gif`) sono copie di
+  `Pergamena.gif`. Vanno disegnate, quelle del Druido prima di togliergli il vincolo della modalità di prova (vedi [`todo.md`](todo.md)).
 - I valori sono un primo giro, mai provati con le simulazioni (`SimulazionePartiteTest`, `TestScontriDiGruppo`).
 - Radici e Sciame usano le immunità dell'incantesimo di Terra e di Veleno e registrano l'esito dei colpi come `TERRA` e `VELENO` (`TipoAzione.di`); essendo azioni su
   un gruppo, i requisiti delle tattiche non guardano le immunità scoperte di un bersaglio solo.
@@ -60,8 +61,7 @@ reclutabile è di queste classi: in prova si possono aggiungere dalla finestra d
 
 ## Da fare / idee aperte
 
-- Le immagini vere, poi togliere `isSoloDiProva` e decidere se compaiono come compagni reclutabili o come avversari.
+- Le immagini vere del Druido e della Druida, poi togliere `isSoloDiProva`; e decidere se i chierici e i druidi compaiono come compagni reclutabili o come avversari.
 - Provare e ritoccare i numeri (soprattutto la Pelle di corteccia e la Rigenerazione, che durano 4 turni).
-- Se la versione "debole" dell'Alba sacra e della Luce Divina del Chierico deve essere più marcata di quella data dalla magia e dai moltiplicatori, servirà un parametro
-  negli incantesimi (costo e danno propri del Chierico).
+- Se il Chierico, senza Alba sacra e Luce Divina, risulta ora troppo debole rispetto al Sacerdote, si può dargli un'abilità in più o ritoccare i valori (vedi i numeri da provare).
 - Le armi del Druido, se un giorno ci saranno gli archi.

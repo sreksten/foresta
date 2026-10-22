@@ -9,7 +9,7 @@ import com.threeamigos.foresta.tipi.*;
 
 /**
  * La luce sacra che brucia i non morti (il SACRO fa il doppio dei danni a chi è di categoria NON_MORTO): danni come il
- * Fulmine, su più avversari. È innata per Sacerdote, Sacerdotessa, Chierico e Chierica, che la lanciano con la sola MAGIA, e per gli altri
+ * Fulmine, su più avversari. È innata per Sacerdote e Sacerdotessa, che la lanciano con la sola MAGIA, e per gli altri
  * una pergamena come ogni incantesimo.
  * <p>
  * Non fa distinzioni: chi la invoca ne investe anche un non morto del proprio gruppo (lo Scheletro della Mietitura), che
@@ -22,11 +22,10 @@ public class LuceDivina extends IncantesimoMaleficoImpl implements Incantesimo {
 	}
 
 	/**
-	 * @return true se la classe sa lanciare la luce divina senza pergamene (Sacerdote, Sacerdotessa, Chierico e Chierica)
+	 * @return true se la classe sa lanciare la luce divina senza pergamene (Sacerdote e Sacerdotessa)
 	 */
 	public static boolean conosciutaDa(TipoPersonaggio classe) {
-		return classe == TipoPersonaggio.SACERDOTE || classe == TipoPersonaggio.SACERDOTESSA
-				|| classe == TipoPersonaggio.CHIERICO || classe == TipoPersonaggio.CHIERICA;
+		return classe == TipoPersonaggio.SACERDOTE || classe == TipoPersonaggio.SACERDOTESSA;
 	}
 
 	/**
