@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -72,7 +74,16 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 			return false;
 		}
 		LocazioneMD locazioneMD = Locande.getLocazioneMDLocandaCorrente();
-		return locazioneMD != null && locazioneMD.ottieniProprieta(Locanda.LOCANDA_VISITATA) == null;
+		return locazioneMD != null && locazioneMD.ottieniProprieta(Locanda.LOCANDA_VISITATA) == null && !staPerAffidareIlBardo();
+	}
+
+	/**
+	 * Se in questa locanda, mai visitata, il locandiere sta per chiedere di riportare a casa il bardo (NonSparateSulPianista):
+	 * la sua scena fa da benvenuto, e il bardo non può essere anche seduto nell'angolo a raccontare la fiaba.
+	 */
+	private static boolean staPerAffidareIlBardo() {
+		return RegistroMissioni.getTutteLeMissioni().stream()
+				.anyMatch(m -> m instanceof NonSparateSulPianista && ((NonSparateSulPianista) m).staPerAffidareIlBardo());
 	}
 
 	/**

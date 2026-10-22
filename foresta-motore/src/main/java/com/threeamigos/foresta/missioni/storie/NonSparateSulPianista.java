@@ -19,7 +19,8 @@ import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
- * Non sparate sul pianista: alla terza visita a una locanda nel bosco, a una visita tranquilla, il locandiere chiede
+ * Non sparate sul pianista: alla terza visita a una locanda in tutto (di città o del bosco, contate insieme), se si è in
+ * una locanda nel bosco e a una visita tranquilla, il locandiere chiede
  * di riportare a casa un bardo che ha preso una sbronza solenne e non si regge in piedi, nella città più vicina. Il
  * bardo viaggia con il gruppo come ospite, ma **non vulnerabile**: è così ubriaco che i mostri non si curano di lui, quindi
  * non viene attaccato e non può morire. Arrivati, sua moglie paga e se lo porta in casa. Se la città viene distrutta, la
@@ -27,7 +28,8 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
  * RegistroPersonaggi). Si fa una volta sola: finita, bene o male, non ne lascia una nuova (poi il bardo chiede un altro favore,
  * vedi IlViaggioDellaMoglie).
  * <ol>
- * <li>INCARICO, a inizio locazione, in una locanda nel bosco alla terza visita: l'intermezzo con il locandiere;</li>
+ * <li>INCARICO, a inizio locazione, in una locanda nel bosco alla terza visita a una locanda qualsiasi: l'intermezzo con il
+ * locandiere, che prende il posto della scena del primo ingresso se la locanda è nuova (vedi IntermezzoLocandaPrimaVisita);</li>
  * <li>ACCETTAZIONE, in locazione, nella stessa locanda: il bardo si unisce al gruppo e la missione si ricorda la
  * città più vicina;</li>
  * <li>VIAGGIO, a inizio locazione, fino alla città;</li>
@@ -37,7 +39,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 public class NonSparateSulPianista extends MissioneAPassi {
 
 	private static final String BARDO = "BARDO";
-	// La terza visita: le visite precedenti alla locanda sono già contate quando si entra
+	// La terza visita: le visite precedenti alle locande sono già contate quando si entra
 	private static final int VISITE_PRECEDENTI = 2;
 	// La paga base, per il primo livello del mondo: si moltiplica per il livello di quando il bardo si affida al gruppo
 	private static final int RICOMPENSA = 20;
@@ -170,8 +172,33 @@ public class NonSparateSulPianista extends MissioneAPassi {
 		if (gruppo.getTipoLocazioneCorrente() != TipoLocazione.LOCANDA) {
 			return false;
 		}
-		String visite = Foresta.getLocazioneMD(gruppo.getCoordinate()).ottieniProprieta(Locanda.LOCANDA_VISITE);
-		return visite != null && Integer.parseInt(visite) >= VISITE_PRECEDENTI;
+		return visiteATutteLeLocande() >= VISITE_PRECEDENTI;
+	}
+
+	/**
+	 * Quante volte il gruppo è entrato in una locanda, nel bosco o in città, in tutta la partita.
+	 */
+	private int visiteATutteLeLocande() {
+		int visite = 0;
+		for (int y = 0; y < Foresta.getDimensioneY(); y++) {
+			for (int x = 0; x < Foresta.getDimensioneX(); x++) {
+				CoordinateMD coordinate = new CoordinateMD(x, y);
+				TipoLocazione tipo = Foresta.getLocazione(coordinate);
+				if (tipo == TipoLocazione.LOCANDA || tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
+					String visiteQui = Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locanda.LOCANDA_VISITE);
+					visite += visiteQui == null ? 0 : Integer.parseInt(visiteQui);
+				}
+			}
+		}
+		return visite;
+	}
+
+	/**
+	 * Se il locandiere sta per affidare il bardo al gruppo in questa locanda: la scena del primo ingresso gli cede il posto
+	 * (vedi IntermezzoLocandaPrimaVisita).
+	 */
+	public boolean staPerAffidareIlBardo() {
+		return INCARICO.equals(getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
 	}
 
 	private boolean nellaLocanda() {

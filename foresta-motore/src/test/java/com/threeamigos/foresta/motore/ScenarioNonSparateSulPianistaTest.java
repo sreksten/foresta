@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Non sparate sul pianista: alla terza visita a una locanda il locandiere affida al gruppo un bardo ubriaco,
+ * Non sparate sul pianista: alla terza visita a una locanda (di città o del bosco, contate insieme) il locandiere affida al gruppo un bardo ubriaco,
  * da riportare a casa nella città più vicina.
  */
 class ScenarioNonSparateSulPianistaTest {
@@ -166,6 +166,56 @@ class ScenarioNonSparateSulPianistaTest {
             assertNull(conBardo.getElemento("bardoOspite"));
             assertTrue(conBardo.getBattuteProgrammate().stream().anyMatch(b -> "bardo".equals(b.getBattuta().getIdElemento())),
                     "il bardo racconta la sua fiaba");
+        }
+    }
+
+    @Test
+    void laTerzaVisitaContaTutteLeLocandeEBastaChiSiaNuova() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(154)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
+            NonSparateSulPianista pianista = pianista();
+            CoordinateMD prima = unaLocandaNelBosco();
+            CoordinateMD nuova = unAltraLocandaNelBosco(prima);
+            CoordinateMD citta = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_FLEENA);
+            Foresta.getLocazioneMD(prima).aggiungiProprieta(Locanda.LOCANDA_VISITE, "1");
+            Foresta.getLocazioneMD(citta).aggiungiProprieta(Locanda.LOCANDA_VISITE, "1");
+
+            // In città la missione non parte, per quante visite ci siano
+            partita.gruppo().setCoordinate(citta);
+            pianista.controllaPreLocazione();
+            assertFalse(pianista.isAttiva());
+            assertNull(pianista.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
+
+            // In una locanda del bosco mai vista, è la terza visita in tutto: il locandiere sostituisce il benvenuto
+            partita.gruppo().setCoordinate(nuova);
+            assertNull(Foresta.getLocazioneMD(nuova).ottieniProprieta(Locanda.LOCANDA_VISITATA));
+            assertTrue(new IntermezzoLocandaPrimaVisita().deveScattare(MomentoIntermezzo.INIZIO_LOCAZIONE));
+            pianista.controllaPreLocazione();
+            assertTrue(pianista.staPerAffidareIlBardo());
+            assertFalse(new IntermezzoLocandaPrimaVisita().deveScattare(MomentoIntermezzo.INIZIO_LOCAZIONE),
+                    "il bardo è il tema dell'incarico: niente fiaba nell'angolo");
+        }
+    }
+
+    @Test
+    void conIlBardoOspiteAncheInUnaLocandaDiCittaNonRaccontaLaFiaba() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(155)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
+            NonSparateSulPianista pianista = pianista();
+            entraNellaLocanda(partita, pianista, unaLocandaNelBosco(), 2);
+            assertTrue(pianista.getScortato().isPresent());
+
+            CoordinateMD citta = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_FLEENA);
+            partita.gruppo().setCoordinate(citta);
+            LocazioneMD sede = Foresta.getLocazioneMD(citta);
+            sede.aggiungiProprieta(Locanda.LOCANDA_DIALOGO, "Benvenuti! Qui si beve bene.");
+            IntermezzoLocandaPrimaVisita scena = new IntermezzoLocandaPrimaVisita();
+            assertTrue(scena.deveScattare(MomentoIntermezzo.INGRESSO_LOCANDA_IN_CITTA));
+            PaginaIntermezzo pagina = scena.getPagine().get(0);
+            assertNull(pagina.getElemento("bardo"));
+            assertNotNull(pagina.getElemento("bardoOspite"));
+            assertEquals(Collections.singletonList("locandiere"), pagina.getBattuteProgrammate().stream()
+                    .map(b -> b.getBattuta().getIdElemento()).distinct().collect(Collectors.toList()));
         }
     }
 
