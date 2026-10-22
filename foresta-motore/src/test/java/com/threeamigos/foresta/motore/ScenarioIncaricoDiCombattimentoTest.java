@@ -49,7 +49,8 @@ class ScenarioIncaricoDiCombattimentoTest {
                 TipoMissione.DUELLO_ANTICO, TipoMissione.DUELLO_MAGICO, TipoMissione.COMBATTIMENTO_RITUALE, TipoMissione.BLOCCO,
                 TipoMissione.PONTE_TATTICO, TipoMissione.SORTITA, TipoMissione.CARICA, TipoMissione.COMPETIZIONE,
                 TipoMissione.CONFINAMENTO, TipoMissione.BRIGANTAGGIO, TipoMissione.ASSEDIO_OFFENSIVO, TipoMissione.CIRCONDAMENTO,
-                TipoMissione.SICARIO, TipoMissione.TITOLO_NOBILIARE, TipoMissione.BATTAGLIA, TipoMissione.RECUPERO), tipi);
+                TipoMissione.SICARIO, TipoMissione.TITOLO_NOBILIARE, TipoMissione.BATTAGLIA, TipoMissione.RECUPERO,
+                TipoMissione.RITIRATA_TATTICA, TipoMissione.RIFUGIO, TipoMissione.BLINDATURA, TipoMissione.RAPIMENTO), tipi);
 
         assertThrows(IllegalArgumentException.class, () -> CombattimentoRichiesto.da(TROLL + ";COLORE=VERDE"));
         assertEquals("Teodolinda", CombattimentoRichiesto.da(TROLL.replace("CAPO=SI", "CAPO=Teodolinda")).pescaNomeDelCapo());

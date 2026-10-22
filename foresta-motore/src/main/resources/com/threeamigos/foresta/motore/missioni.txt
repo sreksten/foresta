@@ -78,6 +78,9 @@ RICHIESTA_ALCHIMISTA
     F;scaglia di viverna;scaglie di viverna;NEMICI VIVERNA;2-3;12;A cosa vi servono?;Polverizzate, curano le ustioni. Ironico, vero?
     F;polvere di folletto;polveri di folletto;NEMICI FOLLETTO;3-4;7;Si raccoglie con il cucchiaino?;Si raccoglie in fretta, prima che il folletto se ne accorga.
     M;lamento di fantasma;lamenti di fantasma;NEMICI FANTASMA;2-3;9;E come si mette un lamento in una boccetta?;Tappandola subito.
+    M;lichene dorato;licheni dorati;LUOGHI GROTTA ROVINE;3-4;6;Dorato come l'oro?;Come l'oro dei pazzi. Per la pozione basta e avanza.
+    F;ortica di palude;ortiche di palude;LUOGHI PALUDE;3-5;5;Bruciano, vero?;Un poco. Mettete i guanti, e pensate a qualcosa di allegro.
+    F;coda di salamandra;code di salamandra;LUOGHI PALUDE GROTTA;2-4;7;Ricresce, la coda?;Alla salamandra sì. Lei, almeno, non protesta.
 
 RICHIESTA_ARMAIOLO
     F;pepita di ferro nero;pepite di ferro nero;LUOGHI GROTTA;3-4;7;Picconi ce li date voi?;Le mani le avete.
@@ -87,6 +90,9 @@ RICHIESTA_ARMAIOLO
     F;scaglia di viverna;scaglie di viverna;NEMICI VIVERNA;2-3;12;Per farci cosa?;Uno scudo che non brucia.
     M;corno di minotauro;corni di minotauro;NEMICI MINOTAURO;2-3;9;Corni? Per le armi?;Per i manici. Non si scheggiano mai.
     F;pelle di troll;pelli di troll;NEMICI TROLL;2-3;9;Non puzzano un po'?;Un po' tanto. Ma un'armatura di pelle di troll si ricuce da sola.
+    M;blocco di pietra focaia;blocchi di pietra focaia;LUOGHI GROTTA;3-4;7;Per le scintille?;Per le scintille e per la buona fama delle mie lame.
+    M;artiglio di chimera;artigli di chimera;NEMICI CHIMERA;2-3;11;Quale dei tre, scusate?;Uno qualsiasi, purché sia intero.
+    M;frammento di ferro celeste;frammenti di ferro celeste;LUOGHI RADURA ROVINE;2-3;10;È caduto dal cielo?;Dal cielo, sì. Nessuno l'ha visto cadere, quindi è anche un mistero. Costa di più.
 
 RICHIESTA_CAPITANO
     M/F;orecchio di goblin;orecchie di goblin;NEMICI GOBLIN;3-4;6;Prove? Non vi fidate di noi?;Mi fido delle prove.
@@ -95,6 +101,9 @@ RICHIESTA_CAPITANO
     M;corno di minotauro;corni di minotauro;NEMICI MINOTAURO;3-4;7;Tutti e due i corni?;Uno basta. Il minotauro non protesterà.
     F;piuma di arpia;piume di arpia;NEMICI ARPIA;3-4;6;Non volano via?;Le arpie sì. Le piume, se le tenete strette, no.
     M;dente di troll;denti di troll;NEMICI TROLL;3-4;7;Ne hanno parecchi, i troll.;Uno a testa. Non fate i pignoli.
+    M;zoccolo di centauro;zoccoli di centauro;NEMICI CENTAURO;2-3;8;Si lasciano togliere gli zoccoli?;Non da vivi. Ma voi sapete come fare.
+    M;pugnale di goblin;pugnali di goblin;NEMICI GOBLIN;3-4;6;Non li usano più?;Li usano ancora, per questo li voglio qui, nell'armeria.
+    M;ciuffo di chimera;ciuffi di chimera;NEMICI CHIMERA;2-3;9;Quale delle teste?;La più pelosa. Si capisce a occhio.
 
 RICHIESTA_LOCANDIERE
     F;carpa;carpe;LUOGHI PALUDE;3-5;5;Si pescano con la lenza?;Con la lenza, con le mani, con la pazienza. Basta che arrivino.
@@ -107,6 +116,8 @@ RICHIESTA_LOCANDIERE
     F;rana verde;rane verdi;LUOGHI PALUDE;4-5;4;Rane? Davvero?;Le cosce di rana fritte sono il piatto più richiesto della locanda. Dopo la birra.
     F;lumaca di palude;lumache di palude;LUOGHI PALUDE;4-5;4;Lumache? Almeno non scappano.;Appunto. Sono le uniche che non vi faranno correre.
     M;germano reale;germani reali;LUOGHI PALUDE;2-3;8;Dobbiamo spennarli noi?;Se li spennate voi vi do una moneta in più. Scherzo. Portateli e basta.
+    M;granchio di palude;granchi di palude;LUOGHI PALUDE;3-5;5;Pizzicano?;Solo quando hanno fame. O quando passate voi.
+    F;scardola;scardole;LUOGHI PALUDE;3-5;5;Con tutte quelle lische?;Fritte non si sentono. Fate finta di niente.
 
 // ---------------------------------------------------------------------------------------------
 // La forgia (vedi LaForgia e ForgiaRichiesta): l'armaiolo forgia un'arma molto migliore delle altre, se il gruppo gli porta un
@@ -177,6 +188,12 @@ VIANDANTE
     CHIAVE=SCHELETRI_DEL_CIMITERO;NEMICO=SCHELETRO;NUMERO=2-4;PLURALE=scheletri;MONETE=7;RICHIESTA=Buon giorno, forestieri. Nel vecchio cimitero vicino a %CITTA% gli scheletri non stanno più al loro posto e vanno in giro a salutare. Nessuno dorme più.;BATTUTA=Salutano? Hanno ancora qualcosa da dire?;RISPOSTA=Soltanto ciao. Ma ripetuto tutta la notte. Rimetteteli a riposo e venite a dirmelo.;ARRIVO=Siete a %CITTA%. Il cimitero è lì vicino. Da lì viene un lieve rumore di ossa che si mettono in fila.;RITORNO=Il silenzio, finalmente. Gli scheletri riposano e io con loro. Tenete, ve lo siete guadagnato.
     CHIAVE=MINOTAURO_DEL_LABIRINTO;NEMICO=MINOTAURO;NUMERO=1-2;PLURALE=minotauri;MONETE=12;RICHIESTA=Un attimo, viaggiatori! Dalle parti di %CITTA% un minotauro ha preso possesso di un labirinto di siepi e non lascia uscire più nessuno. Neanche i giardinieri.;BATTUTA=E noi dovremmo entrarci?;RISPOSTA=Dovreste farlo uscire, in un certo senso. Poi tornate qui.;ARRIVO=Siete a %CITTA%. Il labirinto di siepi si vede da lontano. I giardinieri, invece, no.;RITORNO=Il labirinto è tornato un labirinto soltanto. Che bella notizia. Ecco la vostra parte.
     CHIAVE=FANTASMI_DEL_MULINO;NEMICO=FANTASMA;NUMERO=2-3;PLURALE=fantasmi;MONETE=9;RICHIESTA=Fermi, per favore! Dalle parti di %CITTA% dei fantasmi hanno occupato un mulino e spostano i sacchi di farina durante la notte. Il mugnaio ha rinunciato a contarli.;BATTUTA=I fantasmi spostano la farina? E poi?;RISPOSTA=Poi niente. Ed è proprio questo che fa impazzire il mugnaio. Mandateli via e tornate qui.;ARRIVO=Siete a %CITTA%. Il mulino bianco di farina si vede da lontano, e le pale girano senza vento.;RITORNO=Il mugnaio dorme e i sacchi stanno dove li ha messi. Vi devo davvero un compenso.
+    CHIAVE=FOLLETTI_DEL_LATTE;NEMICO=FOLLETTO;NUMERO=2-3;PLURALE=folletti;MONETE=6;RICHIESTA=Un attimo, viandanti. Dalle parti di %CITTA% dei folletti mungono le mie mucche di notte e lasciano il secchio pieno di sassolini. Il latte non lo rivedo più.;BATTUTA=Sassolini, di che tipo?;RISPOSTA=Di quelli che fanno rumore nei denti. Mandateli via e tornate a dirmelo.;ARRIVO=Siete a %CITTA%. Sul bordo del secchio c'è un sassolino lucido e un foglietto: Grazie per il latte.;RITORNO=Le mucche dormono, il latte è mio, i sassolini nel prato. Prendete la ricompensa e un bicchiere, se vi va.
+    CHIAVE=VIVERNA_DEL_FIENILE;NEMICO=VIVERNA;NUMERO=1-2;PLURALE=viverne;MONETE=8;RICHIESTA=Fermi, amici. Una viverna ha preso dimora nel fienile vicino a %CITTA% e dorme sul fieno migliore. Le mie bestie non entrano più nemmeno a mangiare.;BATTUTA=La viverna ha pagato l'affitto?;RISPOSTA=Con una coda in testa, ogni tanto. Sconfiggetela e venite a riferire.;ARRIVO=Siete a %CITTA%. Dal fienile esce un russare lungo e un odore di fieno bruciacchiato.;RITORNO=Il fienile è di nuovo il mio, e il fieno quasi tutto intero. Ecco quello che vi dovevo.
+    CHIAVE=HOBGOBLIN_DEL_DAZIO;NEMICO=HOBGOBLIN;NUMERO=2-3;PLURALE=hobgoblin;MONETE=7;RICHIESTA=Salve, viandanti. Dalle parti di %CITTA% degli hobgoblin hanno aperto un dazio abusivo sulla strada, e rilasciano pure la ricevuta. Sono già a tre ricevute, e non ho più monete.;BATTUTA=La ricevuta è valida?;RISPOSTA=Non è questo il punto. Liberate la strada e tornate, vi dirò io quanto vale.;ARRIVO=Siete a %CITTA%. Sul bordo della strada un cartello storto dice: Dazio, pagare qui. Il resto è illeggibile.;RITORNO=Strada libera e niente ricevute! Prendete la vostra paga, e anche le mie ricevute: fanno da combustibile.
+    CHIAVE=SPETTRI_DELLA_LOCANDA;NEMICO=SPETTRO;NUMERO=2-3;PLURALE=spettri;MONETE=9;RICHIESTA=Buon giorno. Nella vecchia locanda vicino a %CITTA% degli spettri offrono da bere a chi passa. Il boccale è vuoto, ma il conto è pieno.;BATTUTA=Il conto di chi?;RISPOSTA=Di chi ha accettato. Liberateli, e fate la cortesia di non assaggiare niente.;ARRIVO=Siete a %CITTA%. Dalla locanda arriva un tintinnio di boccali che nessuno tiene in mano.;RITORNO=La locanda è tranquilla e il conto è chiuso. Per fortuna non ci avete bevuto. Ecco quanto vi spetta.
+    CHIAVE=CENTAURI_DELLA_CORSA;NEMICO=CENTAURO;NUMERO=2-3;PLURALE=centauri;MONETE=8;RICHIESTA=Forestieri! Dei centauri vicino a %CITTA% sfidano a corsa chiunque passi, e vincono sempre, perché hanno il doppio delle gambe. Chi perde paga la posta, e poi la strada.;BATTUTA=Ci sono sfide leali, con loro?;RISPOSTA=Per loro sì. Per noi, mai. Fate in modo che la smettano, e tornate da me.;ARRIVO=Siete a %CITTA%. In lontananza si sente uno zoccolio, e una voce che grida: Chi accetta?;RITORNO=Niente più corse truccate! Ecco la vostra paga, e se volete un consiglio, ai centauri non rispondete mai: Va bene.
+    CHIAVE=CHIMERA_DEL_MERCATO;NEMICO=CHIMERA;NUMERO=1-2;PLURALE=chimere;MONETE=10;RICHIESTA=Fermatevi, per favore. Una chimera è scesa dai boschi vicino a %CITTA% e ha mangiato tutto il banco dei formaggi, e i formaggi non erano nemmeno del banco. Il mercato è in lutto.;BATTUTA=Con quale testa mangia?;RISPOSTA=Con tutte, e a turno. Cacciatela via e tornate: il mercato vi sarà grato.;ARRIVO=Siete a %CITTA%. Fra le casse rovesciate c'è una crosta di formaggio e un artiglio che non è di gallina.;RITORNO=Il mercato apre di nuovo e i formaggi sono salvi, quelli che restano. Prendete la ricompensa e un assaggio.
 
 // ---------------------------------------------------------------------------------------------
 // Spedizioni da una città all'altra (vedi IlCorriere e Spedizione)
@@ -214,6 +231,14 @@ TRASPORTO
     M;trattato d'alleanza;il borgomastro;il consiglio dei mercanti;CON_CALMA;20;Da soli i goblin ci schiacciano, ma insieme alle altre città forse no. Questo trattato lo propone. Va consegnato a mano, con un bell'inchino.;E se non lo firmano?;Allora inchinatevi di più.;Un'alleanza! Lo firmiamo subito, e brindiamo stasera. Anzi, adesso.
     F;proposta di tregua;il capitano delle guardie;il capitano della milizia;URGENTE;22;Le nostre guardie e la loro milizia si prendono a sassate per un ponte che nessuno usa più. Questa tregua mette fine alla faccenda, se arriva prima della prossima sassaiola.;E il ponte?;Lo dividiamo a metà. Una metà a testa, e la campata in mezzo alle capre.;Una tregua, finalmente! I miei uomini avevano finito i sassi.
     F;proposta d'accordo;il mugnaio;il pescatore;CON_CALMA;14;Il pescatore dice che il mio mulino gli spaventa i pesci, io dico che i suoi pesci mi intasano la ruota. Ho scritto un accordo, ma lui da me non lo accetterebbe mai.;E da noi sì?;Da voi forse. Siete neutrali. E grossi.;Un accordo? Il mulino si ferma la domenica, e io pesco solo dopo il tramonto. Si può fare.
+    M;cesto di mele;la fattoressa;il pasticciere;CON_CALMA;12;Le mele del mio frutteto sono le migliori del regno, e il pasticciere lo sa. Il mio carro invece si è rotto.;Quante mele?;Quante ne reggete. E mangiatene non più di due, che le conto.;Le mele! Ne mancano due, ma chiudo un occhio: i corrieri devono pur mangiare.
+    F;fiala di medicina per la tosse;il medico condotto;la maestra del villaggio;URGENTE;18;La maestra tossisce da una settimana, e i bambini ormai ripetono la tosse a memoria.;Perché è urgente?;Perché stanno imparando anche la febbre.;Finalmente! Un sorso e riprendo la lezione. I bambini avranno qualcosa da ridire.
+    M;sacco di farina;il mugnaio;la fornaia;CON_CALMA;11;Il fiume è in secca e le mie macine girano a vuoto. La farina è già pronta, e la fornaia ha il forno acceso.;E perché non ci va lui?;Perché se lascio il mulino, la farina si scorda di chi è.;La farina! Il forno ha aspettato come un cane fedele. Adesso comincia il pane.
+    F;pergamena d'invito;la contessa;il borgomastro;CON_CALMA;16;Do un ballo fra una settimana. Il borgomastro è invitato, ma deve saperlo da me prima che da chiunque altro.;Perché?;Perché poi si crede importante. Lo è, ma non così tanto.;Un invito della contessa! Ci vado di sicuro, e porto anche un dono. Purché sia piccolo.
+    M;barilotto di inchiostro nero;lo scrivano;il cartografo;CON_CALMA;13;Il cartografo ha finito l'inchiostro a metà della mappa. Le strade ora finiscono in un puntino.;E il puntino dove va?;In nessun posto. Per questo gli serve l'inchiostro.;Inchiostro! Adesso le strade arrivano da qualche parte. Almeno sulla carta.
+    M;ferro di cavallo fortunato;il maniscalco;il cavaliere errante;CON_CALMA;15;Un cavaliere ha dimenticato da me il ferro del suo cavallo. Ed è il ferro fortunato: senza, il cavallo inciampa nella sua stessa ombra.;Non può comprarne un altro?;Quello fortunato no, è solo suo.;Il mio ferro! Adesso posso partire. Il cavallo, per la verità, si era già avviato a piedi.
+    F;cassetta di antidoto contro i funghi;il guaritore;la locandiera;URGENTE;22;La locandiera ha servito gli stessi funghi a tutta la sala. Alcuni gli sono piaciuti troppo, e adesso ridono da due giorni.;Ridono e basta?;Anche sulle pareti, ultimamente. Muovetevi.;Il rimedio! Subito un cucchiaio a ognuno. Poi la locanda riapre, ma senza funghi.
+    M;vaso di miele di bosco;l'apicoltore;l'erborista;CON_CALMA;13;Il miele di quest'anno è quello buono, e l'erborista lo aspetta per le sue pozioni. Le mie api non gradiscono i corrieri: portatelo piano.;Le api ci seguono?;Solo se ne ruberete un po'. Anche una cucchiaiata.;Il miele! Che profumo di fiori. Nessuna ape al seguito? Meglio così, avevo già troppi ospiti.
 
 // ---------------------------------------------------------------------------------------------
 // Contrabbando da una città all'altra (vedi IlContrabbandiere)
@@ -235,6 +260,10 @@ CONTRABBANDO
     F;risma di fogli satirici;lo stampatore;il banditore;CON_CALMA;18;Ho stampato dei fogli sul borgomastro. Non sono veri, ma fanno ridere. Il banditore li leggerà in piazza, se arrivano senza che le guardie li vedano.;E se il borgomastro si arrabbia?;Si arrabbierà. È questo che fa ridere.;Questi sì che li leggo volentieri! Domani in piazza ci sarà la folla.
     M;cofanetto di gioielli di famiglia;la nobildonna decaduta;la sua vecchia balia;URGENTE;20;Domani arrivano gli esattori a pignorare tutto. I gioielli di mia nonna, però, non li avranno: nascondeteli dalla mia vecchia balia.;E se gli esattori ci fermano?;Non vi fermeranno, se non vi vedono. Non fatevi vedere.;I gioielli della signorina! Li terrò sotto il pavimento della stalla, nessuno ci guarda mai.
     M;baule di reliquie false;il mercante di reliquie;il priore di campagna;CON_CALMA;20;Queste sono le ossa di un santo. Di tre santi, a dire il vero, a giudicare dal numero di gambe. Il priore le vuole per la sua cappella, e le guardie farebbero troppe domande.;Sono vere?;Sono ossa. Su questo non vi mento.;Le sacre reliquie! Tre gambe... doveva essere un santo molto veloce.
+    M;carico di sale non tassato;il salinaro;l'oste;CON_CALMA;20;Il sale ha una gabella che farebbe piangere una roccia. Il mio sale senza gabella è soltanto sale.;Allora perché di nascosto?;Perché le guardie amano molto la gabella.;Che sapore! Quello vero, senza tasse. Nessuno ne parlerà, tranne la minestra.
+    F;gabbia di pappagalli parlanti;il mercante di spezie;la nobildonna;CON_CALMA;22;Questi pappagalli sono stati addestrati a ripetere tutto. Anche cose che non dovrebbero ripetere.;Per esempio?;Un segreto, due indirizzi e il nome del borgomastro. Coprite la gabbia con un panno.;Che dolci uccellini! Il panno lo tengo, i segreti li ascolto. In privato.
+    M;rotolo di mappe del tesoro;il rigattiere;il cartografo;CON_CALMA;21;Queste mappe non esistono, e se vi fermano, dite proprio così.;Come non esistono?;Sono di un tesoro che il re ha già dichiarato di non avere.;Le mappe del tesoro che non c'è! Perfette: le copio e le restituisco, e questa conversazione non c'è mai stata.
+    F;cassa di fuochi d'artificio;il fuochista;l'organizzatore della festa;CON_CALMA;24;I fuochi d'artificio in città sono vietati, perché l'ultima volta il fienile ha preso fuoco. Anzi, due fienili.;Quindi sono sicuri?;Quasi. Evitate le candele e i ragionamenti.;Che botti! Quelli veri, quelli proibiti. La festa ora sì che ha un senso.
 
 // ---------------------------------------------------------------------------------------------
 // Oggetti smarriti nella foresta (vedi LOggettoSmarrito e OggettoSmarrito)
@@ -264,6 +293,14 @@ OGGETTO_SMARRITO
     M;sigillo di famiglia;il cavaliere decaduto;ROVINE;16;Prima è caduto in rovina il castello, poi è caduto il nome, e alla fine è caduto anche il sigillo. Da una tasca bucata.;Vale qualcosa?;Per me sì. Per un ricettatore, molto di più.;Il sigillo della mia casata! Un giorno lo rimetteremo sul portone. Quando avremo di nuovo un portone.
     M;pettine di tartaruga;la moglie del borgomastro;LOCANDA TEMPIO;12;Sono passata a prendere una tisana e ho perso il pettine. Mio marito dice che sono distratta. Io dico che è distratto il pettine.;E se è pieno di nodi?;Lo pulisco io. Voi trovatelo.;Il mio pettine! Adesso mio marito dovrà trovare un'altra cosa di cui lamentarsi.
     F;borraccia di rame;il carrettiere;GROTTA LOCANDA;10;Ho fatto sosta per far riposare il mulo e ho dimenticato la borraccia. Era di mio padre, e prima ancora di suo padre.;E dentro c'era ancora qualcosa?;Vino di mio nonno. Non bevetelo.;La borraccia di famiglia! Il vino di mio nonno è ancora lì? Meglio così.
+    M;cappello a tre punte;il capitano in pensione;LOCANDA;12;Ho posato il cappello su una sedia per bere un goccio. Un goccio lungo tre giorni.;Tre giorni?;Il cappello almeno ha avuto il buonsenso di aspettarmi.;Il mio cappello! Ha ancora la piuma, e un'altra piuma che non è sua. Meglio non chiedere.
+    F;borraccia d'argento;la viaggiatrice;GROTTA ROVINE;14;L'ho appoggiata a una pietra mentre scacciavo un pipistrello. Il pipistrello ha vinto.;E la pietra?;La pietra non si è mossa, a differenza di me.;Ancora mezza piena! Di vino di mia nonna, non di acqua, ve lo giuro.
+    M;ditale d'oro;la sarta;TEMPIO LOCANDA;10;Cucivo il manto di una statua e il ditale è caduto in un angolo. La statua non ha detto niente.;Era una statua muta?;Era di legno. Parlano poco, i santi di legno.;Il mio ditale! Adesso finisco il manto, e il santo smette di prendere freddo.
+    F;chiave di casa;il custode del cimitero;ROVINE TEMPIO;10;Facevo il giro delle tombe e la chiave è scivolata via. Ora sono chiuso fuori dal mio stesso cancello.;Non potete scavalcarlo?;Con la schiena che ho? Scavalcatelo voi.;La chiave! Adesso rientro dal portone, come le persone perbene.
+    M;rosario di legno;la nonna del fornaio;TEMPIO;9;Ce l'avevo in mano durante la preghiera, poi ho acceso una candela, e poi... Dov'è finito?;Dove l'avete visto per l'ultima volta?;Se lo sapessi non vi chiederei di cercarlo.;Ecco il mio rosario! Ho pregato per voi tutta la sera. In anticipo, per sicurezza.
+    F;borsa degli attrezzi;il fabbro;GROTTA;13;Sono venuto a cercare del minerale, e ho posato la borsa un momento. Un momento molto lungo, a quanto pare.;C'è dentro qualcosa di prezioso?;Il martello di mio padre. Cioè tutto.;Il martello di mio padre! Sembra pesare ancora più di prima.
+    M;mantello rosso;il giovane cavaliere;LOCANDA ROVINE;12;L'ho tolto per sembrare meno nobile in locanda. Ha funzionato così bene che nessuno mi ha fermato quando l'ho dimenticato.;Sembrare meno nobile?;Pagavo il conto a prezzo pieno, si vede.;Il mio mantello! Rosso come l'onore di famiglia, e cucito con altrettanta pazienza.
+    F;boccetta d'acqua santa;il sagrestano;TEMPIO GROTTA;11;L'ho riempita alla fonte e l'ho posata un attimo: ora è sparita, e il parroco chiede dove sia finita la benedizione di domenica.;Ne serve molta, di benedizione?;Quanta ne basta per una domenica.;L'acqua santa! La fonte ne ha sempre in abbondanza, a pensarci. Ma questa è quella giusta.
 
 // ---------------------------------------------------------------------------------------------
 // Incarichi di combattimento (vedi IncaricoDiCombattimento e CombattimentoRichiesto)
@@ -571,6 +608,36 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=Il feudo è libero dalle bestie. Restano le zanzare, ma quelle fanno parte del titolo.;\
     RINGRAZIAMENTO=Squillino le trombe! Anzi, la tromba: l'altra è dal ricettatore. Da oggi siete [#TITOLO_NOBILE], con tutti gli onori e nessuna rendita.;\
     RICORDO=Questa palude è il feudo di un [#TITOLO_NOBILE], con tutti gli onori e nessuna rendita.
+    CHIAVE=RETROGUARDIA_DELLA_CAROVANA;TIPO=RITIRATA_TATTICA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=HOBGOBLIN;NUMERO=3;\
+    ONDATA_2=GOBLIN 4;ARRIVO_2=Gli hobgoblin cadono, ma dagli alberi spuntano quattro goblin, convinti di essere arrivati in tempo per l'inseguimento.;\
+    LUOGO=BOSCO;MONETE=40;TITOLO=La retroguardia della carovana;\
+    RICHIESTA=Una carovana si ritira dal fronte e degli hobgoblin la inseguono lungo il bosco. Serve una retroguardia che tenga duro finché i carri sono passati.;\
+    BATTUTA=E poi anche noi ci ritiriamo?;RISPOSTA=Con ordine, ma sì. Una ritirata fatta bene è una vittoria con l'aria stanca.;\
+    VITTORIA=Gli inseguitori sono a terra, e in fondo al bosco gli ultimi carri scompaiono: la carovana è salva.;\
+    RINGRAZIAMENTO=La carovana è arrivata al sicuro, ruote comprese. Vi mandano un barile di sidro e un grazie scritto male.;\
+    RICORDO=In questo bosco una retroguardia tenne duro, mentre una carovana si metteva in salvo.
+    CHIAVE=CASA_DEI_PROFUGHI;TIPO=RIFUGIO;ASPETTO=SACERDOTE;MANDANTE=il sacerdote;NEMICO=SCHELETRO;NUMERO=4;LUOGO=ROVINE;MONETE=30;\
+    TITOLO=La casa dei profughi;\
+    RICHIESTA=Delle famiglie senza più una casa vorrebbero ripararsi nelle rovine di un vecchio convento. Ma sono già occupate, e gli inquilini non pagano l'affitto.;\
+    BATTUTA=Gli inquilini sono vivi?;RISPOSTA=Non esattamente. Per questo non avranno obiezioni a cambiare indirizzo.;\
+    VITTORIA=Gli scheletri crollano in un mucchio d'ossa. Le rovine sono libere, e sembrano quasi accoglienti.;\
+    RINGRAZIAMENTO=Le famiglie sono già dentro e stanno spazzando il pavimento. Dicono che l'ossario è comodo per la legna.;\
+    RICORDO=In queste rovine trovarono un rifugio i profughi, una volta ripulite dagli scheletri.
+    CHIAVE=LA_PALIZZATA;TIPO=BLINDATURA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=GOBLIN;NUMERO=5;\
+    ONDATA_2=HOBGOBLIN 2;ARRIVO_2=Con i goblin a terra, due hobgoblin avanzano a testa bassa, certi che nessuno ne avesse ancora abbastanza.;\
+    LUOGO=RADURA;MONETE=40;TITOLO=La palizzata;\
+    RICHIESTA=Il villaggio sta rinforzando la palizzata della radura, ma i carpentieri non lavorano con i goblin fra i piedi. Serve chi li tenga lontani finché l'ultimo palo è piantato.;\
+    BATTUTA=Quanto ci vuole, per l'ultimo palo?;RISPOSTA=Ora che me lo chiedete, un po'. Ma tenete duro.;\
+    VITTORIA=I goblin e gli hobgoblin si ritirano, e dietro di voi l'ultimo palo trova il suo posto con un colpo di maglio.;\
+    RINGRAZIAMENTO=La palizzata è finita e regge. I carpentieri vi hanno inciso il nome su un palo, un po' storto.;\
+    RICORDO=In questa radura una palizzata fu rinforzata mentre un gruppo la difendeva dai goblin.
+    CHIAVE=RISCATTO_DEL_CAPOBANDA;TIPO=RAPIMENTO;ASPETTO=QUALUNQUE;MANDANTE=il barone squattrinato;NEMICO=HOBGOBLIN;NUMERO=1;CAPO=SI;RESA=SI;LUOGO=BOSCO;\
+    MONETE=40;TITOLO=Il riscatto del capobanda;\
+    RICHIESTA=Le mie terre sono ipotecate fino al tetto. Voglio catturare il capobanda %CAPO% e chiedere un riscatto ai suoi. Vivo, mi raccomando: i cadaveri non pagano.;\
+    BATTUTA=E se i suoi non vogliono pagare?;RISPOSTA=Allora lo tengo io. Mi ha già dato più spunti di conversazione di mia moglie.;\
+    VITTORIA=%CAPO% si arrende e si lascia legare, con l'aria di chi ha già capito quanto vale.;\
+    RINGRAZIAMENTO=%CAPO% è nella mia cantina e i suoi stanno già contrattando. Il riscatto basterà quasi per i debiti. Prendete la vostra parte.;\
+    RICORDO=In questo bosco il capobanda %CAPO% fu catturato vivo, perché qualcuno ne chiedesse il riscatto.
 
 // I titoli nobiliari buffi che Sua Maestà concede (vedi le righe di TITOLO_NOBILIARE qui sopra) e i nemici da
 // sconfiggere per averli, pescati a caso. Le alternative pesano poco perché le righe che le usano non escano più
@@ -1571,6 +1638,24 @@ TORNEO
     FINALE=%CAMPIONE% si arrende e ordina da bere per tutti. Il conto, naturalmente, lo lascia a voi. Scherza. Forse.;\
     RINGRAZIAMENTO=Un vincitore nuovo, dopo sei anni! I boccali della locanda non sono mai stati così rovesciati.;\
     RICORDO=In questo bosco si combatte ogni anno il torneo del Boccale Rovesciato.
+    CHIAVE=CAVOLO_D_ORO;ASPETTO=QUALUNQUE;MANDANTE=il fattore;TITOLO=Il torneo del Cavolo d'Oro;LUOGO=RADURA;\
+    SFIDANTI=ELFA LADRO;CAMPIONE=MAGA;NOME=NOME_CAMPIONESSA;MONETE=35;\
+    RICHIESTA=Ogni anno il fattore bandisce il torneo del Cavolo d'Oro. Il cavolo, in realtà, è di bronzo dipinto, ma nessuno ha mai avuto il coraggio di dirlo ai finalisti.;\
+    BATTUTA=Si combatte per un cavolo?;RISPOSTA=Si combatte per l'onore. Il cavolo è solo la scusa, e il pubblico porta la verdura.;\
+    PRIMO_TURNO=L'elfa si arrende con un inchino, e vi regala un cavolo vero, per consolazione.;\
+    SECONDO_TURNO=Il ladro si arrende, e il pubblico gli lancia una pioggia di verdure. Alcune gli sembrano familiari.;\
+    FINALE=%CAMPIONE% si arrende e vi consegna il cavolo con le due mani, come una reliquia. Il pubblico applaude e lancia ortaggi.;\
+    RINGRAZIAMENTO=Un nuovo vincitore del Cavolo d'Oro! Il fattore non lo dirà a nessuno: il cavolo è di bronzo. Ma questo resta fra noi.;\
+    RICORDO=In questa radura si combatte ogni anno il torneo del Cavolo d'Oro.
+    CHIAVE=TRE_CAMPANE;ASPETTO=SACERDOTE;MANDANTE=il sacerdote;TITOLO=Il torneo delle Tre Campane;LUOGO=BOSCO;\
+    SFIDANTI=GUERRIERA LADRO;CAMPIONE=GUERRIERO;NOME=NOME_CAMPIONE;MONETE=40;\
+    RICHIESTA=Il torneo delle Tre Campane si apre al suono di tre campane, che nessuno sa più dove siano. Si usa un cucchiaio contro una pentola, e il sacerdote finge di non accorgersene.;\
+    BATTUTA=E il torneo come funziona?;RISPOSTA=Come tutti: prima si combatte, poi si fa pace, poi si litiga per il premio.;\
+    PRIMO_TURNO=La guerriera si arrende, e saluta con la pentola.;\
+    SECONDO_TURNO=Il ladro si arrende, e la borsa che vi aveva sfilato la ritrovate in tasca, con un biglietto: Scherzavo.;\
+    FINALE=%CAMPIONE% si arrende e batte il cucchiaio sulla pentola tre volte, per le tre campane. Il bosco si riempie di un suono dolce, per essere una pentola.;\
+    RINGRAZIAMENTO=Le tre campane sono tornate a suonare, sia pure in versione pentola. Il sacerdote vi benedice, e sottovoce vi ringrazia per il premio.;\
+    RICORDO=In questo bosco si combatte ogni anno il torneo delle Tre Campane.
 
 // ---------------------------------------------------------------------------------------------
 // Documentazioni (vedi LaDocumentazione e DocumentazioneRichiesta)
@@ -1611,6 +1696,33 @@ DOCUMENTAZIONE
     REPERTO_1=LOCANDA:In questa locanda la zuppa è buona, il vino annacquato e il locandiere racconta sempre la stessa storia.;\
     REPERTO_2=LOCANDA:Qui la birra è eccellente, i letti duri come sassi e il gatto della locanda ruba il formaggio dai piatti.;\
     RINGRAZIAMENTO=Zuppa buona, birra eccellente, un gatto ladro. La mia guida sarà un successo. La mia locanda, naturalmente, avrà tre stelle.
+    CHIAVE=CANTI_DEI_VIANDANTI;ASPETTO=QUALUNQUE;MANDANTE=il menestrello;MONETE=30;TITOLO=I canti dei viandanti;\
+    RICHIESTA=Voglio raccogliere i canti che si cantano per le strade della foresta, per non farli morire con chi li canta. Ma io ho la voce fragile e il fiato corto.;\
+    BATTUTA=Dovremmo cantarli noi?;RISPOSTA=Annotateli e basta. Se poi li cantate anche, tanto meglio per i vostri compagni di viaggio.;\
+    REPERTO_1=LOCANDA:In questa locanda si canta una ballata sul pozzo senza fondo: tutti sbagliano la seconda strofa, a turno e con convinzione.;\
+    REPERTO_2=RADURA:Nella radura qualcuno ha inciso su una pietra un ritornello sul vento d'autunno. Dopo il terzo verso, la pietra è consumata.;\
+    REPERTO_3=TEMPIO:Nel tempio i fedeli intonano un inno antico. Chi arriva in ritardo canta una nota sopra gli altri, e nessuno se ne lamenta.;\
+    RINGRAZIAMENTO=Una ballata con la strofa sbagliata, un ritornello consumato, un inno con una nota in più. Il mio canzoniere sarà un successo, soprattutto dove sbaglia.
+    CHIAVE=FAUNA_DELLA_PALUDE;ASPETTO=ALCHIMISTA;MANDANTE=il naturalista;MONETE=30;TITOLO=La fauna della palude;\
+    RICHIESTA=Sto scrivendo un libro sugli animali della palude, ma i miei stivali sono troppo nuovi per bagnarsi. Descrivetemi quello che vedete.;\
+    BATTUTA=E se si avvicinano troppo?;RISPOSTA=Allora annotate in fretta. E sbrigatevi a scappare.;\
+    REPERTO_1=PALUDE:Fra le canne nuota un pesce con due occhi sul dorso: guarda sempre in alto, in cerca di guai.;\
+    REPERTO_2=GROTTA:Nella grotta vicina vive un pipistrello bianco che dorme a testa in giù. O almeno, così sembra al buio.;\
+    REPERTO_3=RADURA:Nella radura un'oca selvatica fa la guardia a un nido vuoto. Non vuole che si sappia.;\
+    RINGRAZIAMENTO=Un pesce che guarda in su, un pipistrello bianco, un'oca che custodisce il vuoto. Il mio libro avrà almeno tre capitoli e un punto interrogativo.
+    CHIAVE=STELLE_DELLA_FORESTA;ASPETTO=MAGO;MANDANTE=il mago;MONETE=35;TITOLO=Le stelle della foresta;\
+    RICHIESTA=Per il mio atlante ho bisogno di un cielo senza le luci della città. La torre ne è piena, e la mia vista non è più quella di una volta.;\
+    BATTUTA=Dovremmo guardare il cielo?;RISPOSTA=E descriverlo, nei tre posti dove si vede meglio. Ma senza svegliare i fantasmi, che sono permalosi.;\
+    REPERTO_1=RADURA:Dalla radura si vedono sette stelle in fila, come le perle di una collana. La più piccola sembra occhieggiare.;\
+    REPERTO_2=ROVINE:Fra le rovine, il cielo ha un buco nero dove dovrebbe esserci una stella. Dicono che non sia mai stata lì.;\
+    REPERTO_3=GROTTA:Il cielo, dalla grotta, è un cerchio piccolo con una sola stella. Da sola, a quanto pare, basta.;\
+    RINGRAZIAMENTO=Sette perle, un buco, una stella sola. Il mio atlante diventa finalmente interessante, e anche un po' inquietante.
+    CHIAVE=STORIE_DEL_FOCOLARE;ASPETTO=DONNA;MANDANTE=la nonna;MONETE=25;TITOLO=Le storie del focolare;\
+    RICHIESTA=Conosco tante storie, ma la memoria non è più quella di una volta. Vorrei che mi raccontaste quelle che sentite nei posti dove si raccontano.;\
+    BATTUTA=Ci pagate per ascoltare?;RISPOSTA=Vi pago per ricordare. Ascoltare è gratis, e a volte conviene.;\
+    REPERTO_1=LOCANDA:Nella locanda raccontano del cavaliere che sposò un pozzo, e della dote che il pozzo non volle mai restituire.;\
+    REPERTO_2=TEMPIO:Nel tempio un vecchio racconta del santo che predicava ai pesci e ottenne, in cambio, sei cene di fila.;\
+    RINGRAZIAMENTO=Un cavaliere sposato a un pozzo, un santo che predica ai pesci. Le mie storie del focolare sono salve, e anche un po' più strane.
 
 // ---------------------------------------------------------------------------------------------
 // Colpi (vedi IlColpo e ColpoRichiesto)
@@ -1699,6 +1811,22 @@ COLPO
     SCOPERTI=I goblin di %CAPO% vi hanno sorpresi davanti all'idolo: adesso lo sorvegliano giorno e notte. Il colpo è fallito.;\
     RINGRAZIAMENTO=I goblin non escono più dalla grotta: credono che il loro dio sia offeso. Lo sarei anch'io, con quei baffi.;\
     RICORDO=In questa grotta c'era un idolo dei goblin, con i baffi e un secchio in testa.
+    CHIAVE=CARTELLO_DEL_PEDAGGIO;TIPO=INGANNO;ASPETTO=QUALUNQUE;MANDANTE=il contadino;LUOGO=ROVINE;NEMICO=HOBGOBLIN;NUMERO=2;\
+    MONETE=35;TITOLO=Il cartello del pedaggio;\
+    RICHIESTA=Degli hobgoblin si fanno pagare un pedaggio fra delle rovine. Voglio che attacchiate un cartello nel loro accampamento: Strada chiusa per peste. E che se ne vadano da soli.;\
+    BATTUTA=Ci crederanno?;RISPOSTA=Sono hobgoblin. Credono a tutto quello che c'è scritto, purché sia scritto grosso.;\
+    COLPO=Appendete il cartello alla porta, senza svegliare nessuno. Al mattino gli hobgoblin lo leggono, sbiancano e se ne vanno di corsa.;\
+    SCOPERTI=Gli hobgoblin vi hanno visti, e il cartello è finito nel fuoco. Il pedaggio è ancora lì.;\
+    RINGRAZIAMENTO=Gli hobgoblin sono spariti senza lasciare nemmeno il pedaggio. Se tornano, ho già pronto un altro cartello: Rogna.;\
+    RICORDO=In queste rovine un cartello falso fece scappare una banda di hobgoblin.
+    CHIAVE=DADI_TRUCCATI;TIPO=IMBROGLIONE;ASPETTO=LOCANDIERE;MANDANTE=il locandiere;LUOGO=GROTTA;NEMICO=GOBLIN;NUMERO=3;\
+    MONETE=30;TITOLO=I dadi truccati;\
+    RICHIESTA=In una grotta dei goblin giocano a dadi con chi passa, e vincono sempre. Sostituite i loro dadi truccati con questi, che sono truccati meglio.;\
+    BATTUTA=Truccati da chi?;RISPOSTA=Da me. Ma io perdo sempre, quindi i miei sono onesti, in pratica.;\
+    COLPO=Scambiate i dadi sul tavolo con quelli del locandiere. Al primo tiro il goblin perde tutto, e il suo pubblico lo prende in giro.;\
+    SCOPERTI=I goblin vi hanno visti con i dadi in mano. Il banco ha vinto, e voi siete rimasti senza.;\
+    RINGRAZIAMENTO=I goblin hanno perso perfino le mutande, a quanto si dice. Ecco la vostra parte.;\
+    RICORDO=In questa grotta dei goblin giocavano a dadi truccati, finché qualcuno non li truccò meglio.
 
 // ---------------------------------------------------------------------------------------------
 // Le botteghe nella Foresta (vedi IlNegozio e le sue quattro sottoclassi)

@@ -171,11 +171,11 @@ I contenuti variabili sono in `missioni.txt` (e `leggendari.txt`), caricate da `
 
 `TipoMissione` conta **190 tipi** in nove `CategoriaMissione`: acquisizione, combattimento, protezione, investigazione, progressione, negoziazione, illecito, relazioni, spirituale. L'elenco e i motivi stanno nei commenti dell'enum (§1). Stato:
 
-- **coperti**: 130, da almeno una missione;
+- **coperti**: 136, da almeno una missione;
 - **non fattibili nella Foresta**: 28 (commentati);
 - **non adatti al tono**: 9 (commentati);
 - **da non sviluppare per ora**: 6;
-- **non coperti, non annotati**: 17, candidati per missioni future.
+- **non coperti, non annotati**: 10, candidati per missioni future.
 
 ### Acquisizione
 
@@ -190,13 +190,13 @@ I contenuti variabili sono in `missioni.txt` (e `leggendari.txt`), caricate da `
 
 ### Combattimento
 
-- `IncaricoDiCombattimento`: `VENDETTA`, `DUELLO`, `BATTAGLIA`, `IMBOSCATA`, `CARICA`, `CIRCONDAMENTO`, `BLOCCO`, `SCHERMAGLIA`, `SORTITA`, `PONTE_TATTICO`, `ASSEDIO_OFFENSIVO`, `COMBATTIMENTO_RITUALE`, `DUELLO_MAGICO`, `COMBATTIMENTO_BESTIA`, `DUELLO_ANTICO`, `PULIZIA_DEI_DUNGEON`
+- `IncaricoDiCombattimento`: `VENDETTA`, `DUELLO`, `BATTAGLIA`, `IMBOSCATA`, `CARICA`, `CIRCONDAMENTO`, `BLOCCO`, `SCHERMAGLIA`, `SORTITA`, `PONTE_TATTICO`, `ASSEDIO_OFFENSIVO`, `COMBATTIMENTO_RITUALE`, `DUELLO_MAGICO`, `COMBATTIMENTO_BESTIA`, `DUELLO_ANTICO`, `PULIZIA_DEI_DUNGEON`, `RITIRATA_TATTICA` (la retroguardia della carovana)
 - `CacciatoreDiTaglie`, `LaTagliaSullaBanda`: `CACCIATORE_DI_TAGLIE`
 - le cinque `Sconfiggi*`: `ASSALTO`
 - `CacciaAiGoblin`: `GUERRIGLIA`
 - `LaSorveglianza`: `ASSEDIO_DIFESA` (la torre assediata), `TRINCEA` (il guado da tenere)
 - `IlColpo`: `ESPLOSIONE` (la diga dei goblin)
-- non fattibili: `FLOTTA`, `CAVALLERIA`, `BATTAGLIA_AEREA`. Non coperto: `RITIRATA_TATTICA`
+- non fattibili: `FLOTTA`, `CAVALLERIA`, `BATTAGLIA_AEREA`.
 
 ### Protezione
 
@@ -204,8 +204,7 @@ I contenuti variabili sono in `missioni.txt` (e `leggendari.txt`), caricate da `
 - `LaSorveglianza`: `DIFESA`, `QUARANTENA`, `CONTENIMENTO`, `VIGILIA`
 - `IlCorriere`: `GUARIGIONE`, `EPIDEMIA`, `CURA_MAGICA`, `ANTI_VELENO` (rimedi e antidoti, spesso urgenti)
 - `IlRituale`: `POSSESSIONE`, `BARRIERA_MAGICA`, `SANTUARIO`, `PURIFICAZIONE`
-- `IlContrabbandiere`: `OCCULTAMENTO`; `IncaricoDiCombattimento`: `PROTEZIONE_TEMPORALE` (i fantasmi del pozzo, per una notte)
-- non coperti: `RIFUGIO`, `BLINDATURA`
+- `IlContrabbandiere`: `OCCULTAMENTO`; `IncaricoDiCombattimento`: `PROTEZIONE_TEMPORALE` (i fantasmi del pozzo, per una notte), `RIFUGIO` (le rovine ripulite per i profughi), `BLINDATURA` (la palizzata da difendere)
 
 ### Investigazione
 
@@ -225,10 +224,10 @@ I contenuti variabili sono in `missioni.txt` (e `leggendari.txt`), caricate da `
 
 ### Illecito
 
-- `IlColpo`: `FURTO`, `SABOTAGGIO`, `FALSIFICAZIONE`, `AVVELENAMENTO`, `VANDALISMO`, `INCENDIO`, `VIOLAZIONE_DOMICILIO`, `SACRILEGIO`
+- `IlColpo`: `FURTO`, `SABOTAGGIO`, `FALSIFICAZIONE`, `AVVELENAMENTO`, `VANDALISMO`, `INCENDIO`, `VIOLAZIONE_DOMICILIO`, `SACRILEGIO`, `INGANNO` (il cartello falso), `IMBROGLIONE` (i dadi truccati)
 - `IlContrabbandiere`: `CONTRABBANDO`, `CORRUZIONE`, `FRODE`, `DIFFAMAZIONE`, `RICICLAGGIO`, `TRAFFICO`
-- `IncaricoDiCombattimento`: `SICARIO`, `BRIGANTAGGIO`, `CONFINAMENTO`; `LaSorveglianza`: `SPIONAGGIO`
-- non fattibili: `TRADIMENTO`, `PIRATERIA`, `SEDIZIONE`. Non adatti al tono: `ASSASSINIO`, `RICATTO`, `SCHIAVITU`, `FURTO_IDENTITA`, `FALSA_TESTIMONIANZA`, `TORTURA`, `TENTATIVO_OMICIDIO`. Non coperti: `INGANNO`, `RAPIMENTO`, `IMBROGLIONE`
+- `IncaricoDiCombattimento`: `SICARIO`, `BRIGANTAGGIO`, `CONFINAMENTO`, `RAPIMENTO` (il capobanda catturato vivo per il riscatto); `LaSorveglianza`: `SPIONAGGIO`
+- non fattibili: `TRADIMENTO`, `PIRATERIA`, `SEDIZIONE`. Non adatti al tono: `ASSASSINIO`, `RICATTO`, `SCHIAVITU`, `FURTO_IDENTITA`, `FALSA_TESTIMONIANZA`, `TORTURA`, `TENTATIVO_OMICIDIO`.
 
 ### Relazioni
 
@@ -245,5 +244,5 @@ I contenuti variabili sono in `missioni.txt` (e `leggendari.txt`), caricate da `
 - **Pochi scheletri, molta varietà.** Quasi tutto il catalogo si riduce a un piccolo numero di forme: (a) arrivare in un posto, combattere o raccogliere, tornare a riscuotere (`IncaricoInCitta` e le sue figlie); (b) arrivare e rispondere a una domanda con un ramo sull'esito (rituali, indagini); (c) resistere a ondate (battaglie, pulizie di dungeon); (d) tenere d'occhio un posto nel tempo (sorveglianze). Il contenuto vero sta nelle **grammatiche**: una missione nuova di una famiglia esistente è quasi sempre una riga nuova di `missioni.txt`, con il suo `TIPO=`.
 - **L'annotazione dei tipi è manuale.** Nessun test controlla che le righe `Coperto da:` dicano il vero (le classi citate esistono tutte, ma niente verifica che una classe copra davvero quel tipo, né che un tipo con `Coperto da:` sia raggiungibile da una riga di grammatica).
 - **Il passo `COSTRUISCI` e il tipo `ARTIGIANATO`/`COSTRUZIONE`.** Oggi lo usa `LaForgia` (con `attendiOre`, `dialogo` e `raccogli`, che si appoggia a `contaFinche`); `IlViandante` usa `generaParametri`, `vai` e `tornaAlPuntoDiPartenza`. Restano senza una missione che li usi `evitaCombattimento` e le sequenze di passi (`impostaSequenzaPassi`, `leggiSequenzaPassi`, `prossimoNellaSequenza`): sono nei test e aspettano un incarico che li usi (vedi `todo.md`).
-- **Diciassette tipi non coperti e non annotati** (§6) sono i candidati naturali per le prossime famiglie: `RITIRATA_TATTICA`, `SCAMBIO_OSTAGGI`, `INGANNO`, `IMBROGLIONE`, `RAPIMENTO`, `RIFUGIO`, `BLINDATURA`, `COSTRUZIONE`, più i nove di progressione.
+- **Dieci tipi non coperti e non annotati** (§6) sono i candidati naturali per le prossime famiglie: `SCAMBIO_OSTAGGI`, più i nove di progressione (`FAZIONE`, `ADDESTRAMENTO`, `NOMINA`, `FRATELLANZA`, `ASCESA_SOCIALE`, `MAESTRIA`, `SPECIALIZZAZIONE`, `GESTIONE`, `RICOSTRUZIONE`).
 - **Le missioni ripetibili si accumulano.** Ogni incarico in città, finito, ne lascia un altro fra le secondarie di primo livello; per non sovrapporsi, gli incarichi che aspettano una visita tranquilla partono a una per volta (vedi [`gestione_missioni.md`](gestione_missioni.md) §5).

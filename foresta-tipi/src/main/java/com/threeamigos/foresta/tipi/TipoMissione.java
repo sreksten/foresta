@@ -177,7 +177,7 @@ public enum TipoMissione {
     GUERRIGLIA(CategoriaMissione.COMBATTIMENTO),
     /**
      * Esempio: ritirata ordinata, battere in ritirata, riposizionamento tattico.
-     * NON COPERTO
+     * Coperto da: IncaricoDiCombattimento (la retroguardia della carovana: a ondate)
      */
     RITIRATA_TATTICA(CategoriaMissione.COMBATTIMENTO),
     /**
@@ -326,7 +326,7 @@ public enum TipoMissione {
     PRIMO_SOCCORSO(CategoriaMissione.PROTEZIONE),
     /**
      * Esempio: creare rifugio, accogliere profughi, fornire riparo.
-     * NON COPERTO
+     * Coperto da: IncaricoDiCombattimento (la casa dei profughi: ripulire le rovine perché ci si ripari)
      */
     RIFUGIO(CategoriaMissione.PROTEZIONE),
     /**
@@ -371,7 +371,7 @@ public enum TipoMissione {
     ASILO(CategoriaMissione.PROTEZIONE),
     /**
      * Esempio: rinforzare strutture, blindare difese, potenziare protezioni.
-     * NON COPERTO
+     * Coperto da: IncaricoDiCombattimento (la palizzata: tenere lontani i goblin finché è rinforzata)
      */
     BLINDATURA(CategoriaMissione.PROTEZIONE),
 
@@ -667,7 +667,7 @@ public enum TipoMissione {
     // RICATTO(CategoriaMissione.ILLECITO),
     /**
      * Esempio: truffare un mercante, ingannare un nobile, corrompere un ufficiale.
-     * NON COPERTO
+     * Coperto da: IlColpo (il cartello del pedaggio: un cartello falso fa scappare gli hobgoblin)
      */
     INGANNO(CategoriaMissione.ILLECITO),
     /**
@@ -693,7 +693,7 @@ public enum TipoMissione {
     FALSIFICAZIONE(CategoriaMissione.ILLECITO),
     /**
      * Esempio: rapire qualcuno per riscatto, prendere in ostaggio.
-     * NON COPERTO
+     * Coperto da: IncaricoDiCombattimento (il riscatto del capobanda: catturarlo vivo, a resa)
      */
     RAPIMENTO(CategoriaMissione.ILLECITO),
     // /**
@@ -780,7 +780,7 @@ public enum TipoMissione {
     // FALSA_TESTIMONIANZA(CategoriaMissione.ILLECITO),
     /**
      * Esempio: imbrogliare al gioco, baro, truffa al gioco d'azzardo.
-     * NON COPERTO
+     * Coperto da: IlColpo (i dadi truccati: scambiare i dadi dei goblin)
      */
     IMBROGLIONE(CategoriaMissione.ILLECITO),
     /**
