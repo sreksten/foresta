@@ -23,7 +23,7 @@ public final class RegoleEquipaggiamento {
 	// Armi, scudo, libro e armatura che ogni classe giocabile usa (vedi artefatti_e_incantamenti.md, §2,
 	// "Equipaggiamento secondo la classe"). Elmo, vesti e accessori li portano tutti. L'armatura la portano tutti
 	// tranne il Ladro, che non la usa mai (agisce con la destrezza), il Mago (la magia non si fa in armatura) e il
-	// Sacerdote (un chierico in armatura sarebbe un'altra classe, che non c'è); chi
+	// Sacerdote (un sacerdote in armatura è il Chierico); chi
 	// può portarla chiede una FORZA minima.
 	// Le classi che non sono qui (i mostri, l'Ombrafiamma) non hanno limiti.
 	private static final Set<TipoArtefatto> GUERRIERO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.SPADONE,
@@ -35,6 +35,11 @@ public final class RegoleEquipaggiamento {
 	private static final Set<TipoArtefatto> BARDO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.SCUDO, TipoArtefatto.ARMATURA);
 	private static final Set<TipoArtefatto> MAGO = EnumSet.of(TipoArtefatto.BASTONE_MAGICO, TipoArtefatto.LIBRO_MAGICO);
 	private static final Set<TipoArtefatto> SACERDOTE = EnumSet.of(TipoArtefatto.BASTONE_MAGICO, TipoArtefatto.MAZZA, TipoArtefatto.LIBRO_MAGICO);
+	// Il chierico è il sacerdote che combatte in prima linea: mazza (e spada), scudo e armatura, ma né bastone né libro
+	private static final Set<TipoArtefatto> CHIERICO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.MAZZA, TipoArtefatto.SCUDO,
+			TipoArtefatto.ARMATURA);
+	// Il druido è l'incantatore della natura: bastone, lancia e libro, niente metallo (né scudo né armatura); non ci sono archi
+	private static final Set<TipoArtefatto> DRUIDO = EnumSet.of(TipoArtefatto.BASTONE_MAGICO, TipoArtefatto.LANCIA, TipoArtefatto.LIBRO_MAGICO);
 
 	/**
 	 * Lo slot che l'artefatto occuperebbe, oppure il motivo per cui non si può prendere.
@@ -334,6 +339,12 @@ public final class RegoleEquipaggiamento {
 			case SACERDOTE:
 			case SACERDOTESSA:
 				return SACERDOTE;
+			case CHIERICO:
+			case CHIERICA:
+				return CHIERICO;
+			case DRUIDO:
+			case DRUIDA:
+				return DRUIDO;
 			default:
 				return null;
 		}

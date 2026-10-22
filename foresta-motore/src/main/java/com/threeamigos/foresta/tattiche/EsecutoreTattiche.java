@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.abilita.FabbricaAbilita;
 import com.threeamigos.foresta.canti.FabbricaCanti;
 import com.threeamigos.foresta.combattimento.*;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -17,6 +18,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.tattiche.valutazione.SceltaIncantesimo;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
+import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
@@ -132,6 +134,26 @@ public final class EsecutoreTattiche {
 				break;
 			case CANTO_DI_VALORE:
 				canta(attore, TipoCanto.DI_VALORE, null, gruppoDellAttore, gruppoNemico);
+				break;
+			// Le abilità di chierico e druido: come i canti, la stessa azione con un tipo diverso; quelle con un bersaglio (imposizione delle mani,
+			// rigenerazione) lo ricevono, le altre agiscono su un gruppo
+			case SCACCIARE_I_NON_MORTI:
+				usaUnAbilita(attore, TipoAbilita.SCACCIARE_I_NON_MORTI, null, gruppoDellAttore, gruppoNemico);
+				break;
+			case IMPOSIZIONE_DELLE_MANI:
+				usaUnAbilita(attore, TipoAbilita.IMPOSIZIONE_DELLE_MANI, bersaglio, gruppoDellAttore, gruppoNemico);
+				break;
+			case RADICI:
+				usaUnAbilita(attore, TipoAbilita.RADICI, null, gruppoDellAttore, gruppoNemico);
+				break;
+			case SCIAME:
+				usaUnAbilita(attore, TipoAbilita.SCIAME, null, gruppoDellAttore, gruppoNemico);
+				break;
+			case PELLE_DI_CORTECCIA:
+				usaUnAbilita(attore, TipoAbilita.PELLE_DI_CORTECCIA, null, gruppoDellAttore, gruppoNemico);
+				break;
+			case RIGENERAZIONE:
+				usaUnAbilita(attore, TipoAbilita.RIGENERAZIONE, bersaglio, gruppoDellAttore, gruppoNemico);
 				break;
 			// Le pozioni si prendono dalle scorte del gruppo dell'attore e si ricorda l'alleato scelto, per ULTIMO_SCELTO e SCELTO_L_ULTIMA_VOLTA. Il
 			// bersaglio è annunciato come null: l'attore beve o dà da bere, non attacca nessuno
@@ -264,6 +286,16 @@ public final class EsecutoreTattiche {
 		if (FabbricaCanti.crea(tipo, cantore).cantaSu(cantore, bersaglio, gruppoDelCantore, gruppoNemico)) {
 			stato.registraIncantesimoLanciato(cantore);
 			annuncia(cantore, null);
+		}
+	}
+
+	/**
+	 * Come {@link #canta}, per un'abilità innata di chierico o druido: se è partita conta come incantesimo lanciato e si annuncia.
+	 */
+	private void usaUnAbilita(Personaggio utilizzatore, TipoAbilita tipo, Personaggio bersaglio, Gruppo gruppoDelloUtilizzatore, Gruppo gruppoNemico) {
+		if (FabbricaAbilita.crea(tipo, utilizzatore).usaSu(utilizzatore, bersaglio, gruppoDelloUtilizzatore, gruppoNemico)) {
+			stato.registraIncantesimoLanciato(utilizzatore);
+			annuncia(utilizzatore, null);
 		}
 	}
 

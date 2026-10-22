@@ -49,6 +49,18 @@ public enum TipoAzione {
 	URLO_DELLA_BANSHEE(PortataAzione.GRUPPO_AVVERSARI, null),
 	/** Il canto del Bardo che ispira il gruppo alleato (stato ISPIRATO, vedi bardo.md) */
 	CANTO_DI_VALORE(PortataAzione.GRUPPO_ALLEATI, null),
+	/** L'abilità del Chierico che spaventa i non morti avversari (vedi TipoAbilita) */
+	SCACCIARE_I_NON_MORTI(PortataAzione.GRUPPO_AVVERSARI, null),
+	/** L'abilità del Chierico che cura un alleato */
+	IMPOSIZIONE_DELLE_MANI(PortataAzione.ALLEATO, null),
+	/** L'abilità del Druido: danno di Terra a più avversari */
+	RADICI(PortataAzione.GRUPPO_AVVERSARI, null),
+	/** L'abilità del Druido: danno di Veleno a più avversari */
+	SCIAME(PortataAzione.GRUPPO_AVVERSARI, null),
+	/** L'abilità del Druido che rafforza la difesa di tutto il gruppo alleato */
+	PELLE_DI_CORTECCIA(PortataAzione.GRUPPO_ALLEATI, null),
+	/** L'abilità del Druido che fa guarire un alleato un poco a ogni turno */
+	RIGENERAZIONE(PortataAzione.ALLEATO, null),
 	/** Dà a un alleato una pozione della salute */
 	POZIONE_SALUTE(PortataAzione.ALLEATO, null),
 	/** Dà a un alleato una pozione della magia */
@@ -108,6 +120,12 @@ public enum TipoAzione {
 	public TipoDanno getTipoDanno() {
 		if (this == DARDO_ARCANO) {
 			return TipoDanno.ARCANO;
+		}
+		if (this == RADICI) {
+			return TipoDanno.TERRA;
+		}
+		if (this == SCIAME) {
+			return TipoDanno.VELENO;
 		}
 		return tipoIncantesimo == null ? null : tipoIncantesimo.getTipoDanno();
 	}

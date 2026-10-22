@@ -48,4 +48,38 @@ class StatisticheMDTest {
         assertEquals(1, riletta.getMostriUccisi(TipoPersonaggio.TROLL));
         assertEquals(0, riletta.getMostriUccisi(TipoPersonaggio.DRAGO));
     }
+
+    @Test
+    void siScrivonoSoloIMostriUccisiConIlNomeDellaClasse() throws Exception {
+        StatisticheMD statistiche = new StatisticheMD();
+        statistiche.addMostroUcciso(TipoPersonaggio.GOBLIN);
+        statistiche.addMostroUcciso(TipoPersonaggio.GOBLIN);
+        StringWriter scritto = new StringWriter();
+        try (PrintWriter stream = new PrintWriter(scritto)) {
+            statistiche.salva(stream);
+        }
+        String[] righe = scritto.toString().split("\\R");
+        assertEquals("GOBLIN|2", righe[1]);
+    }
+
+    @Test
+    void unSalvataggioSenzaMostriOSenzaLeClassiNuoveSiLegge() throws Exception {
+        StatisticheMD senzaMostri = new StatisticheMD();
+        senzaMostri.leggi(new BufferedReader(new StringReader("1|0|0|0|id\n\n")));
+        assertEquals(0, senzaMostri.getMostriUccisi(TipoPersonaggio.GOBLIN));
+        // Un elenco più corto di quello di oggi (scritto prima che esistessero chierico e druido)
+        StatisticheMD vecchia = new StatisticheMD();
+        vecchia.leggi(new BufferedReader(new StringReader("1|0|0|0|id\nARPIA|0|GOBLIN|3|SACERDOTESSA|1\n")));
+        assertEquals(3, vecchia.getMostriUccisi(TipoPersonaggio.GOBLIN));
+        assertEquals(1, vecchia.getMostriUccisi(TipoPersonaggio.SACERDOTESSA));
+        assertEquals(0, vecchia.getMostriUccisi(TipoPersonaggio.DRUIDO));
+    }
+
+    @Test
+    void unaClasseCheNonEsistePiuSiSalta() throws Exception {
+        StatisticheMD statistiche = new StatisticheMD();
+        statistiche.leggi(new BufferedReader(new StringReader("1|0|0|0|id\nGOBLIN|3|BASILISCO|7|TROLL|1\n")));
+        assertEquals(3, statistiche.getMostriUccisi(TipoPersonaggio.GOBLIN));
+        assertEquals(1, statistiche.getMostriUccisi(TipoPersonaggio.TROLL));
+    }
 }

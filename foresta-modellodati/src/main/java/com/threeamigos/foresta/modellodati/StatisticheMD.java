@@ -116,7 +116,7 @@ public class StatisticheMD implements Serializzabile {
 
 	/**
 	 * Scrive una riga con livello, punti esperienza, punteggio, turni e identificativo della partita, poi una riga
-	 * con i mostri uccisi di ogni classe, nella forma classe e numero.
+	 * con i mostri uccisi, nella forma nome della classe e numero, solo per le classi con almeno un ucciso.
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
@@ -126,10 +126,13 @@ public class StatisticheMD implements Serializzabile {
 				punti,
 				turniGiocati,
 				idPartita);
+		// Solo le classi con almeno un ucciso, col nome dell'enum: una classe nuova non cambia il formato dei salvataggi
 		List<Object> mostri = new ArrayList<>();
-		for (TipoPersonaggio classePersonaggio : TipoPersonaggio.values()) {
-			mostri.add(classePersonaggio);
-			mostri.add(getMostriUccisi(classePersonaggio));
+		for (Map.Entry<TipoPersonaggio, Integer> uccisi : mostriUccisi.entrySet()) {
+			if (uccisi.getValue() > 0) {
+				mostri.add(uccisi.getKey());
+				mostri.add(uccisi.getValue());
+			}
 		}
 		stampaRiga(stream, mostri);
 	}
@@ -146,10 +149,16 @@ public class StatisticheMD implements Serializzabile {
 		turniGiocati = st.intero();
 		idPartita = st.testo();
 		mostriUccisi.clear();
-		TipoPersonaggio[] classi = TipoPersonaggio.values();
 		st = new LettoreCampi(stream.readLine());
-		for (int i = 0; i < classi.length; i++) {
-			mostriUccisi.put(st.enumerato(TipoPersonaggio.class), st.intero());
+		while (st.haAltriCampi()) {
+			String nome = st.testo();
+			int uccisi = st.intero();
+			// Una classe che non esiste più (salvataggio di un'altra versione) si salta: le statistiche non valgono un salvataggio perso
+			try {
+				mostriUccisi.put(TipoPersonaggio.valueOf(nome), uccisi);
+			} catch (IllegalArgumentException e) {
+				// saltata
+			}
 		}
 	}
 

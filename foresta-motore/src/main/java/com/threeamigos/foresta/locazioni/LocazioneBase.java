@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.abilita.AbilitaInnate;
+import com.threeamigos.foresta.abilita.FabbricaAbilita;
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.canti.FabbricaCanti;
 import com.threeamigos.foresta.combattimento.*;
@@ -630,6 +632,13 @@ public abstract class LocazioneBase implements Locazione {
 					}
 					statoLocazione = StatoLocazione.IN_LOCAZIONE;
 					break;
+				} else if (TipoAbilita.ofComando(azione) != null) {
+					Stato statoDopoLAbilita = usaUnaAbilita(gruppo.getFormulante(), TipoAbilita.ofComando(azione), gruppo, gruppoAvversario);
+					if (statoDopoLAbilita != null) {
+						return statoDopoLAbilita;
+					}
+					statoLocazione = StatoLocazione.IN_LOCAZIONE;
+					break;
 				} else if (azione == Comando.DARDO_ARCANO) {
 					Stato statoDopoIlDardo = lanciaDardoArcano(gruppo.getFormulante(), gruppo, gruppoAvversario);
 					if (statoDopoIlDardo != null) {
@@ -972,6 +981,31 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
+	 * Un'abilità innata di Chierico o Druido: costa MAGIA, non consuma pergamene, occupa il turno e l'avversario risponde (vedi
+	 * {@link AbilitaInnate}).
+	 *
+	 * @return lo stato in cui passare se lo scontro finisce (avversari tutti morti o gioco perso), altrimenti null
+	 */
+	private Stato usaUnaAbilita(Personaggio utilizzatore, TipoAbilita tipo, GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
+		opzioneCorruzioneDisponibile = false;
+		opzioneAmiciziaDisponibile = false;
+		// Il comando poteva essere stato dato quando l'abilità serviva e non serve più (e viceversa)
+		if (!AbilitaInnate.abilitaUtili(utilizzatore, gruppo, gruppoAvversario).contains(tipo)
+				|| !FabbricaAbilita.crea(tipo, utilizzatore).usa(utilizzatore, gruppo, gruppoAvversario)) {
+			// L'abilità non è partita: non è stata fatta nessuna azione, e quindi non passa nessun turno
+			turnoGestitoDalRound = true;
+			return null;
+		}
+		statoDelCombattimento.registraIncantesimoLanciato(utilizzatore);
+		annunciaAzione(utilizzatore, null);
+		if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
+			setCompleta(true);
+			return Stato.FINE_LOCAZIONE;
+		}
+		return dopoAzioneDelGiocatore(utilizzatore);
+	}
+
+	/**
 	 * Il dardo arcano di Mago ed Elfo contro il primo avversario vivo: costa MAGIA, non consuma pergamene.
 	 *
 	 * @return lo stato in cui passare se lo scontro finisce (avversari tutti morti o gioco perso), altrimenti null
@@ -1073,10 +1107,11 @@ public abstract class LocazioneBase implements Locazione {
 			comandiPossibili.add(Comando.INTERRUZIONE_COMBATTIMENTO);
 		}
 		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo,
-		// oppure se un Mago o un Elfo vivo ha la MAGIA per il dardo arcano, o un Sacerdote per l'alba sacra
+		// oppure se un Mago o un Elfo vivo ha la MAGIA per il dardo arcano, o un Sacerdote per l'alba sacra, o un Chierico o un Druido per le sue abilità
 		boolean incantesimoPossibile = chiAgisce.stream()
 				.anyMatch(p -> DardoArcano.puoLanciarlo(p) || AlbaSacra.puoLanciarlaInnata(p) || LuceDivina.puoLanciarlaInnata(p)
-						|| !CantoDelBardo.cantiUtili(p, gruppo, gruppoAvversario).isEmpty());
+						|| !CantoDelBardo.cantiUtili(p, gruppo, gruppoAvversario).isEmpty()
+						|| !AbilitaInnate.abilitaUtili(p, gruppo, gruppoAvversario).isEmpty());
 		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
 			if (gruppo.getIncantesimi(tipoIncantesimo) > 0 &&
 					chiAgisce.stream().anyMatch(p -> p.puoFormulare(tipoIncantesimo))) {

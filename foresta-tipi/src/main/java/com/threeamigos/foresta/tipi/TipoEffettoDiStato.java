@@ -134,7 +134,13 @@ public enum TipoEffettoDiStato {
      * percentuale che dipende dal livello di chi canta (EffettoDiStatoMD.getIntensita), per qualche turno.
      * Non ha danni nel tempo né interazioni con i tipi di danno.
      */
-    ISPIRATO;
+    ISPIRATO,
+
+    /**
+     * L'effetto della rigenerazione del Druido: a ogni turno chi lo ha guarisce di una quantità fissata quando
+     * l'effetto è messo (EffettoDiStatoMD.getIntensita). Non ha interazioni con i tipi di danno.
+     */
+    RIGENERAZIONE;
 
 
     TipoEffettoDiStato() {
@@ -145,10 +151,10 @@ public enum TipoEffettoDiStato {
     }
 
     /**
-     * Se l'effetto è un vantaggio per chi lo ha: l'ispirazione del Bardo e il berserk del Guerriero. Gli altri sono
+     * Se l'effetto è un vantaggio per chi lo ha: l'ispirazione del Bardo, il berserk del Guerriero e la rigenerazione del Druido. Gli altri sono
      * un male da togliere (per esempio con l'Alba sacra).
      */
     public boolean isBenefico() {
-        return this == ISPIRATO || this == BERSERK;
+        return this == ISPIRATO || this == BERSERK || this == RIGENERAZIONE;
     }
 }

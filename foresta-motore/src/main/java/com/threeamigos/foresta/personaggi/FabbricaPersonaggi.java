@@ -53,6 +53,10 @@ public final class FabbricaPersonaggi {
 		COSTRUTTORI.put(TipoPersonaggio.OMBRAFIAMMA, OmbraFiamma::new);
 		COSTRUTTORI.put(TipoPersonaggio.SACERDOTE, Sacerdote::new);
 		COSTRUTTORI.put(TipoPersonaggio.SACERDOTESSA, Sacerdotessa::new);
+		COSTRUTTORI.put(TipoPersonaggio.CHIERICA, Chierica::new);
+		COSTRUTTORI.put(TipoPersonaggio.CHIERICO, Chierico::new);
+		COSTRUTTORI.put(TipoPersonaggio.DRUIDA, Druida::new);
+		COSTRUTTORI.put(TipoPersonaggio.DRUIDO, Druido::new);
 		COSTRUTTORI.put(TipoPersonaggio.LOCANDIERE, Locandiere::new);
 		COSTRUTTORI.put(TipoPersonaggio.ARMAIOLO, Armaiolo::new);
 		COSTRUTTORI.put(TipoPersonaggio.ALCHIMISTA, Alchimista::new);

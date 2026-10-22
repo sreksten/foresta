@@ -59,6 +59,11 @@ public final class VersiDeiPersonaggi {
 		VERSI.put(TipoPersonaggio.OMBRAFIAMMA, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.SACERDOTE, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.SACERDOTESSA, Verso.DESTRA);
+		// Come guerriero e guerriera, bardo e cantastorie, di cui per ora hanno l'immagine
+		VERSI.put(TipoPersonaggio.CHIERICO, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.CHIERICA, Verso.DESTRA);
+		VERSI.put(TipoPersonaggio.DRUIDO, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.DRUIDA, Verso.DESTRA);
 		// I non combattenti
 		VERSI.put(TipoPersonaggio.LOCANDIERE, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.ARMAIOLO, Verso.SINISTRA);

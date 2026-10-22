@@ -2043,6 +2043,8 @@ public abstract class PersonaggioBase implements Personaggio {
 			case MAGA:
 			case SACERDOTE:
 			case SACERDOTESSA:
+			case DRUIDO:
+			case DRUIDA:
 			case LICH:
 			case STREGA:
 				// I maghi concatenano minacce con la mente: Intelligenza (70%) + Saggezza (30%)
@@ -2078,6 +2080,8 @@ public abstract class PersonaggioBase implements Personaggio {
 
 			case GUERRIERO:
 			case GUERRIERA:
+			case CHIERICO:
+			case CHIERICA:
 			case CAPITANO_DELLE_GUARDIE:
 			case MINOTAURO:
 			case MINOTAURO_GIGANTE:
@@ -2276,6 +2280,10 @@ public abstract class PersonaggioBase implements Personaggio {
 			if (effettoDiStato.getDanniNelTempo() > 0) {
 				subSalute(effettoDiStato.getDanniNelTempo(), null,
 						Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
+			}
+			// La rigenerazione del Druido: la quantità che guarisce a ogni turno sta nell'intensità dell'effetto
+			if (effettoDiStato.getTipoEffettoDiStato() == TipoEffettoDiStato.RIGENERAZIONE && isVivo() && isCurabile()) {
+				addSalute((int) effettoDiStato.getIntensita());
 			}
 		}
 	}

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tattiche.valutazione;
 
+import com.threeamigos.foresta.abilita.AbilitaInnate;
+import com.threeamigos.foresta.abilita.PelleDiCorteccia;
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
@@ -30,7 +32,8 @@ public final class Requisiti {
 	 * Le azioni che curano: quelle che non possono avere come bersaglio un non morto del gruppo del giocatore (la Resurrezione compresa)
 	 */
 	private static boolean isUnaCura(TipoAzione tipo) {
-		return tipo == TipoAzione.CANTO_CURATIVO || tipo == TipoAzione.POZIONE_SALUTE
+		return tipo == TipoAzione.CANTO_CURATIVO || tipo == TipoAzione.IMPOSIZIONE_DELLE_MANI || tipo == TipoAzione.RIGENERAZIONE
+				|| tipo == TipoAzione.POZIONE_SALUTE
 				|| tipo == TipoAzione.POZIONE_SALUTE_GRANDE || tipo == TipoAzione.RESURREZIONE;
 	}
 
@@ -100,6 +103,33 @@ public final class Requisiti {
 				}
 				return esiste(contesto.getAlleati(), p -> !p.isFuoriCombattimento() && !p.hasEffettoDiStato(TipoEffettoDiStato.ISPIRATO))
 						? null : "tutti sono già ispirati";
+			// Le abilità innate di chierico e druido costano MAGIA e non consumano pergamene
+			case SCACCIARE_I_NON_MORTI:
+				if (!AbilitaInnate.puoUsare(attore, TipoAbilita.SCACCIARE_I_NON_MORTI)) {
+					return "scacciare i non morti non si può usare";
+				}
+				return esiste(contesto.getAvversari(), AbilitaInnate::isDaScacciare) ? null : "nessun non morto da scacciare";
+			case IMPOSIZIONE_DELLE_MANI:
+				if (!AbilitaInnate.puoUsare(attore, TipoAbilita.IMPOSIZIONE_DELLE_MANI)) {
+					return "l'imposizione delle mani non si può usare";
+				}
+				return bersaglio != null && bersaglio.isVivo() && bersaglio.getSalute() < bersaglio.getSaluteMassima() ? null : "il bersaglio non è ferito";
+			case RADICI:
+				return abilitaDiDanno(attore, TipoAbilita.RADICI, contesto);
+			case SCIAME:
+				return abilitaDiDanno(attore, TipoAbilita.SCIAME, contesto);
+			case PELLE_DI_CORTECCIA:
+				if (!AbilitaInnate.puoUsare(attore, TipoAbilita.PELLE_DI_CORTECCIA)) {
+					return "la pelle di corteccia non si può usare";
+				}
+				return esiste(contesto.getAlleati(), p -> !p.isFuoriCombattimento() && !haLaPelleDiCorteccia(p))
+						? null : "tutti hanno già la pelle di corteccia";
+			case RIGENERAZIONE:
+				if (!AbilitaInnate.puoUsare(attore, TipoAbilita.RIGENERAZIONE)) {
+					return "la rigenerazione non si può usare";
+				}
+				return bersaglio != null && bersaglio.isVivo() && bersaglio.getSalute() < bersaglio.getSaluteMassima()
+						&& !bersaglio.hasEffettoDiStato(TipoEffettoDiStato.RIGENERAZIONE) ? null : "il bersaglio non è ferito o si rigenera già";
 			// Le pozioni vengono dalle scorte del gruppo (ContestoTattico). Quelle normali e quelle grandi sono azioni distinte: una voce le elenca in
 			// sequenza per scegliere quale usare per prima (vedi TatticheBase.pozioniDiSalute)
 			case POZIONE_SALUTE:
@@ -220,6 +250,20 @@ public final class Requisiti {
 				&& !p.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)
 				&& !(p.isImmuneAEffetto(TipoEffettoDiStato.SPAVENTATO) && p.isImmuneAEffetto(TipoEffettoDiStato.CONFUSO)))
 				? null : "tutti gli avversari sono già spaventati o confusi, o immuni";
+	}
+
+	/**
+	 * Le abilità che fanno danno a più avversari (radici, sciame): servono se c'è un avversario in campo
+	 */
+	private static String abilitaDiDanno(Personaggio attore, TipoAbilita tipo, ContestoTattico contesto) {
+		if (!AbilitaInnate.puoUsare(attore, tipo)) {
+			return "l'abilità non si può usare";
+		}
+		return esiste(contesto.getAvversari(), p -> !p.isFuoriCombattimento()) ? null : "nessun avversario in campo";
+	}
+
+	private static boolean haLaPelleDiCorteccia(Personaggio personaggio) {
+		return personaggio.getModificatoriTemporanei().stream().anyMatch(m -> PelleDiCorteccia.NOTA.equals(m.getNote()));
 	}
 
 	/**

@@ -36,6 +36,11 @@ public enum ClasseIcona {
 	MAGO(Comando.MAGO, TipoPersonaggio.MAGO, "icone/Mago.gif", Sfondo.VERDE),
 	SACERDOTESSA(Comando.SACERDOTESSA, TipoPersonaggio.SACERDOTESSA, "icone/Sacerdotessa.gif", Sfondo.VERDE),
 	SACERDOTE(Comando.SACERDOTE, TipoPersonaggio.SACERDOTE, "icone/Sacerdote.gif", Sfondo.VERDE),
+	/* Solo in modalità di prova (la grafica è una copia di quella di guerriero e bardo) */
+	CHIERICA(Comando.CHIERICA, TipoPersonaggio.CHIERICA, "icone/Chierica.gif", Sfondo.VERDE),
+	CHIERICO(Comando.CHIERICO, TipoPersonaggio.CHIERICO, "icone/Chierico.gif", Sfondo.VERDE),
+	DRUIDA(Comando.DRUIDA, TipoPersonaggio.DRUIDA, "icone/Druida.gif", Sfondo.VERDE),
+	DRUIDO(Comando.DRUIDO, TipoPersonaggio.DRUIDO, "icone/Druido.gif", Sfondo.VERDE),
 	/* Solo via trucco */
 	OMBRAFIAMMA(TipoPersonaggio.OMBRAFIAMMA, "icone/OmbraFiamma.gif", Sfondo.VERDE),
 	/* Personaggi che possono essere ospitati/giocati */
@@ -85,6 +90,13 @@ public enum ClasseIcona {
 	CANTO_IPNOTICO(Comando.CANTO_IPNOTICO, "icone/CantoIpnotico.gif", Sfondo.VERDE),
 	CANTO_DI_VALORE(Comando.CANTO_DI_VALORE, "icone/CantoDiValore.gif", Sfondo.VERDE),
 	URLO_DELLA_BANSHEE(Comando.URLO_DELLA_BANSHEE, "icone/UrloDellaBanshee.gif", Sfondo.VERDE),
+	/* Le abilità innate di chierico e druido, che non richiedono pergamene (per ora tutte con la grafica della pergamena: da disegnare, vedi todo.md) */
+	SCACCIARE_I_NON_MORTI(Comando.SCACCIARE_I_NON_MORTI, "icone/ScacciareINonMorti.gif", Sfondo.VERDE),
+	IMPOSIZIONE_DELLE_MANI(Comando.IMPOSIZIONE_DELLE_MANI, "icone/ImposizioneDelleMani.gif", Sfondo.VERDE),
+	RADICI(Comando.RADICI, "icone/Radici.gif", Sfondo.VERDE),
+	SCIAME(Comando.SCIAME, "icone/Sciame.gif", Sfondo.VERDE),
+	PELLE_DI_CORTECCIA(Comando.PELLE_DI_CORTECCIA, "icone/PelleDiCorteccia.gif", Sfondo.VERDE),
+	RIGENERAZIONE(Comando.RIGENERAZIONE, "icone/Rigenerazione.gif", Sfondo.VERDE),
 	/* Incantesimi */
 	ARIA(Comando.ARIA,"icone/Aria.gif", Sfondo.VERDE),
 	ACQUA(Comando.ACQUA, "icone/Acqua.gif", Sfondo.VERDE),

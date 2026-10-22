@@ -338,6 +338,10 @@ public final class TatticheBase {
 				return sacerdote();
 			case BARDO:
 				return bardo();
+			case CHIERICO:
+				return chierico();
+			case DRUIDO:
+				return druido();
 			default:
 				return null;
 		}
@@ -464,6 +468,38 @@ public final class TatticheBase {
 				voce("Urlo e canto ipnotico", su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO), condizioni(piuDiUnAvversario), AzioneMD.di(TipoAzione.URLO_DELLA_BANSHEE),
 						AzioneMD.di(TipoAzione.CANTO_IPNOTICO)),
 				pozioniDiMagia(20),
+				voce("Colpisce il più ferito", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), danno(CriterioIncantesimo.PIU_ADATTO, true), attacco()));
+	}
+
+	/**
+	 * Il sacerdote che combatte: tiene in piedi i compagni (imposizione delle mani, pozioni, alba sacra), scaccia e brucia i non morti, e per il resto
+	 * colpisce con la mazza il più ferito.
+	 */
+	private static TatticaMD chierico() {
+		return tattica(
+				pozioniDiSalute(30, true),
+				voce("Imposizione delle mani", su(TipoRosa.ALLEATI_E_OSPITI, TipoOrdinamento.MENO_SALUTE, sotto(50)), condizioni(null),
+						AzioneMD.di(TipoAzione.IMPOSIZIONE_DELLE_MANI)),
+				voce("Alba sacra", su(TipoRosa.ALLEATI, TipoOrdinamento.PRIMO), condizioni(alleatiConUnStatoNegativo(2), dopoRound(3)), AzioneMD.di(TipoAzione.ALBA_SACRA)),
+				voce("Scacciare i non morti", su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.SCACCIARE_I_NON_MORTI)),
+				pozioniDiMagia(15),
+				voce("Luce divina sui non morti", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE,
+						FiltroMD.conCategoria(TipoFiltro.CATEGORIA, CategoriaPersonaggio.NON_MORTO)), condizioni(null), AzioneMD.di(TipoAzione.LUCE_DIVINA)),
+				voce("Colpisce il più ferito", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), attacco()));
+	}
+
+	/**
+	 * L'incantatore della natura: protegge il gruppo con la pelle di corteccia, fa rigenerare chi sta male, ferma e avvelena gli avversari con le radici
+	 * e lo sciame, e per il resto usa un incantesimo o il bastone sul più ferito.
+	 */
+	private static TatticaMD druido() {
+		return tattica(
+				pozioniDiSalute(30, false),
+				voce("Rigenerazione", su(TipoRosa.ALLEATI_E_OSPITI, TipoOrdinamento.MENO_SALUTE, sotto(70)), condizioni(null), AzioneMD.di(TipoAzione.RIGENERAZIONE)),
+				voce("Pelle di corteccia", su(TipoRosa.ALLEATI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.PELLE_DI_CORTECCIA)),
+				pozioniDiMagia(20),
+				voce("Radici e sciame", su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.RADICI),
+						AzioneMD.di(TipoAzione.SCIAME)),
 				voce("Colpisce il più ferito", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), danno(CriterioIncantesimo.PIU_ADATTO, true), attacco()));
 	}
 }

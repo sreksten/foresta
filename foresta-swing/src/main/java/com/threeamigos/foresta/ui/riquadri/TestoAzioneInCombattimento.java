@@ -36,6 +36,18 @@ final class TestoAzioneInCombattimento {
 				return "Intona il Canto di Valore";
 			case URLO_DELLA_BANSHEE:
 				return "Lancia l'Urlo della Banshee";
+			case SCACCIARE_I_NON_MORTI:
+				return "Scaccia i non morti";
+			case IMPOSIZIONE_DELLE_MANI:
+				return bersaglio == null ? "Impone le mani" : "Impone le mani su" + su;
+			case RADICI:
+				return "Fa spuntare le radici";
+			case SCIAME:
+				return "Evoca lo sciame";
+			case PELLE_DI_CORTECCIA:
+				return "Evoca la pelle di corteccia";
+			case RIGENERAZIONE:
+				return bersaglio == null ? "Invoca la rigenerazione" : "Fa rigenerare" + su;
 			case POZIONE_SALUTE:
 			case POZIONE_SALUTE_GRANDE:
 			case POZIONE_MAGIA:

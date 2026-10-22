@@ -101,7 +101,7 @@ class TatticheBaseTest {
     @Test
     void ogniGiocabileHaUnaPredefinitaValidaEIlDueGeneriHannoLaStessa() throws Exception {
         for (TipoPersonaggio classe : Arrays.asList(TipoPersonaggio.GUERRIERO, TipoPersonaggio.LADRO, TipoPersonaggio.MAGO,
-                TipoPersonaggio.ELFO, TipoPersonaggio.SACERDOTE, TipoPersonaggio.BARDO)) {
+                TipoPersonaggio.ELFO, TipoPersonaggio.SACERDOTE, TipoPersonaggio.BARDO, TipoPersonaggio.CHIERICO, TipoPersonaggio.DRUIDO)) {
             TatticaMD tattica = TatticheBase.deiGiocabili(classe);
             assertNotNull(tattica, classe.name());
             assertFalse(tattica.getVoci().isEmpty());
@@ -111,6 +111,8 @@ class TatticheBaseTest {
         assertEquals(TatticheBase.deiGiocabili(TipoPersonaggio.MAGO), TatticheBase.deiGiocabili(TipoPersonaggio.MAGA));
         assertEquals(TatticheBase.deiGiocabili(TipoPersonaggio.BARDO), TatticheBase.deiGiocabili(TipoPersonaggio.CANTASTORIE));
         assertEquals(TatticheBase.deiGiocabili(TipoPersonaggio.SACERDOTE), RegistroTattiche.predefinitaDelGiocabile(TipoPersonaggio.SACERDOTESSA));
+        assertEquals(TatticheBase.deiGiocabili(TipoPersonaggio.CHIERICO), RegistroTattiche.predefinitaDelGiocabile(TipoPersonaggio.CHIERICA));
+        assertEquals(TatticheBase.deiGiocabili(TipoPersonaggio.DRUIDO), RegistroTattiche.predefinitaDelGiocabile(TipoPersonaggio.DRUIDA));
         assertEquals(TatticaMD.VUOTA, RegistroTattiche.predefinitaDelGiocabile(TipoPersonaggio.GOBLIN));
     }
 
@@ -207,9 +209,19 @@ class TatticheBaseTest {
         assertTrue(RegistroTattiche.azioniPossibili(TipoPersonaggio.CANTASTORIE).contains(TipoAzione.CANTO_DI_VALORE));
         assertTrue(RegistroTattiche.azioniPossibili(TipoPersonaggio.SACERDOTESSA).contains(TipoAzione.ALBA_SACRA));
         assertFalse(RegistroTattiche.azioniPossibili(TipoPersonaggio.GUERRIERO).contains(TipoAzione.DARDO_ARCANO));
+        // Le abilità di chierico e druido sono solo di chi le conosce
+        assertTrue(RegistroTattiche.azioniPossibili(TipoPersonaggio.CHIERICA).contains(TipoAzione.SCACCIARE_I_NON_MORTI));
+        assertTrue(RegistroTattiche.azioniPossibili(TipoPersonaggio.CHIERICO).contains(TipoAzione.ALBA_SACRA));
+        assertFalse(RegistroTattiche.azioniPossibili(TipoPersonaggio.CHIERICO).contains(TipoAzione.RADICI));
+        assertTrue(RegistroTattiche.azioniPossibili(TipoPersonaggio.DRUIDA).contains(TipoAzione.RADICI));
+        assertTrue(RegistroTattiche.azioniPossibili(TipoPersonaggio.DRUIDO).contains(TipoAzione.PELLE_DI_CORTECCIA));
+        assertFalse(RegistroTattiche.azioniPossibili(TipoPersonaggio.DRUIDO).contains(TipoAzione.IMPOSIZIONE_DELLE_MANI));
+        assertFalse(RegistroTattiche.azioniPossibili(TipoPersonaggio.DRUIDO).contains(TipoAzione.ALBA_SACRA));
+        assertFalse(RegistroTattiche.azioniPossibili(TipoPersonaggio.SACERDOTE).contains(TipoAzione.RIGENERAZIONE));
+        assertFalse(RegistroTattiche.azioniPossibili(TipoPersonaggio.MAGO).contains(TipoAzione.SCIAME));
         // Le predefinite usano solo azioni della loro classe
         for (TipoPersonaggio classe : Arrays.asList(TipoPersonaggio.GUERRIERO, TipoPersonaggio.LADRO, TipoPersonaggio.MAGO, TipoPersonaggio.ELFO,
-                TipoPersonaggio.SACERDOTE, TipoPersonaggio.BARDO)) {
+                TipoPersonaggio.SACERDOTE, TipoPersonaggio.BARDO, TipoPersonaggio.CHIERICO, TipoPersonaggio.DRUIDO)) {
             for (VoceMD voce : TatticheBase.deiGiocabili(classe).getVoci()) {
                 for (AzioneMD azione : voce.getAzioni()) {
                     assertTrue(RegistroTattiche.azioniPossibili(classe).contains(azione.getTipo()), classe + ": " + azione.getTipo());

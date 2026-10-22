@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.trofei.RegistroTrofei;
+import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -596,13 +597,22 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciComandoInStatoPreGameAttesaSessoPersonaggio(Comando comando) {
 		stato = Stato.PRE_GAME_ATTESA_CLASSE_PERSONAGGIO;
+		List<Comando> classi = new ArrayList<>();
 		if (comando == Comando.FEMMINA) {
-			BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.CLASSE_PERSONAGGIO, Comando.GUERRIERA, Comando.LADRA,
-					Comando.CANTASTORIE, Comando.ELFA, Comando.MAGA, Comando.SACERDOTESSA));
+			classi.addAll(Arrays.asList(Comando.GUERRIERA, Comando.LADRA, Comando.CANTASTORIE, Comando.ELFA, Comando.MAGA,
+					Comando.SACERDOTESSA));
+			// Chierica e druida mancano ancora di grafica propria: per ora si scelgono solo in modalità di prova
+			if (ModalitaDiProva.isAttiva()) {
+				classi.addAll(Arrays.asList(Comando.CHIERICA, Comando.DRUIDA));
+			}
 		} else {
-			BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.CLASSE_PERSONAGGIO, Comando.GUERRIERO, Comando.LADRO,
-					Comando.BARDO, Comando.ELFO, Comando.MAGO, Comando.SACERDOTE));
+			classi.addAll(Arrays.asList(Comando.GUERRIERO, Comando.LADRO, Comando.BARDO, Comando.ELFO, Comando.MAGO,
+					Comando.SACERDOTE));
+			if (ModalitaDiProva.isAttiva()) {
+				classi.addAll(Arrays.asList(Comando.CHIERICO, Comando.DRUIDO));
+			}
 		}
+		BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.CLASSE_PERSONAGGIO, classi.toArray(new Comando[0])));
 		return Esito.FERMATI;
 	}
 
@@ -644,12 +654,36 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case SACERDOTE:
 				personaggio = new Sacerdote(nomePersonaggio, 1);
 				break;
+			case CHIERICA:
+			case CHIERICO:
+			case DRUIDA:
+			case DRUIDO:
+				// Il comando non è fra le scelte se non in modalità di prova, ma lo si rifiuta comunque
+				if (!ModalitaDiProva.isAttiva()) {
+					comandoNonValido(comando);
+					return Esito.FERMATI;
+				}
+				personaggio = creaPersonaggioSoloDiProva(comando);
+				break;
 			default:
 				comandoNonValido(comando);
 				return Esito.FERMATI;
 		}
 		inizializzaGioco();
 		return Esito.CONTINUA_CON_INGRESSO;
+	}
+
+	private Personaggio creaPersonaggioSoloDiProva(Comando comando) {
+		switch (comando) {
+			case CHIERICA:
+				return new Chierica(nomePersonaggio, 1);
+			case CHIERICO:
+				return new Chierico(nomePersonaggio, 1);
+			case DRUIDA:
+				return new Druida(nomePersonaggio, 1);
+			default:
+				return new Druido(nomePersonaggio, 1);
+		}
 	}
 
 	/**
@@ -1146,6 +1180,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// Bardo e Cantastorie hanno i canti, che non consumano pergamene e si cantano solo contro avversari vivi
 		for (TipoCanto canto : CantoDelBardo.cantiUtili(formulante, gruppo, gruppoAvversario)) {
 			comandiPossibili.add(canto.getComando());
+		}
+		// Chierico e Druido hanno le loro abilità, che non consumano pergamene e si usano solo contro avversari vivi
+		for (TipoAbilita abilita : AbilitaInnate.abilitaUtili(formulante, gruppo, gruppoAvversario)) {
+			comandiPossibili.add(abilita.getComando());
 		}
 		// Il Silenzio per primo, subito dopo le abilità innate: ultimo, prima di ANNULLA, si confondeva con lui
 		List<TipoIncantesimo> inOrdine = new ArrayList<>(Arrays.asList(TipoIncantesimo.values()));

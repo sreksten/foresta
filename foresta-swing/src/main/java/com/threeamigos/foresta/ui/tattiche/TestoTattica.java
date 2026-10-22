@@ -388,6 +388,18 @@ final class TestoTattica {
 				return "L'urlo che spaventa e confonde gli avversari, con più probabilità del canto ipnotico. Il bardo lo impara durante il gioco.";
 			case CANTO_DI_VALORE:
 				return "Il canto del bardo che rafforza coraggio e precisione di tutto il gruppo. Si canta solo se qualcuno non è già ispirato.";
+			case SCACCIARE_I_NON_MORTI:
+				return "L'abilità del chierico che spaventa i non morti, a seconda del loro coraggio. Si usa solo se c'è un non morto non già spaventato.";
+			case IMPOSIZIONE_DELLE_MANI:
+				return "L'abilità del chierico che cura un compagno ferito, poco ma senza pergamene.";
+			case RADICI:
+				return "L'abilità del druido che fa danno di terra a più avversari, e può immobilizzarli o accecarli. Non costa pergamene.";
+			case SCIAME:
+				return "L'abilità del druido che fa danno di veleno a più avversari, e può avvelenarli. Non costa pergamene.";
+			case PELLE_DI_CORTECCIA:
+				return "L'abilità del druido che rafforza parata e resistenza magica di tutto il gruppo per qualche turno. Si usa solo se qualcuno non l'ha già.";
+			case RIGENERAZIONE:
+				return "L'abilità del druido che fa guarire un compagno ferito un poco a ogni turno. Non si usa su chi si rigenera già.";
 			case POZIONE_SALUTE:
 				return "Beve una pozione della Salute dalla scorta del gruppo. Funziona solo se il bersaglio è ferito.";
 			case POZIONE_SALUTE_GRANDE:

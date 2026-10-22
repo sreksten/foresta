@@ -185,7 +185,8 @@ class RegoleDeiTipiTest {
     @Test
     void gliStatiBeneficiSonoLIspirazioneEIlBerserk() {
         for (TipoEffettoDiStato stato : TipoEffettoDiStato.values()) {
-            assertEquals(stato == TipoEffettoDiStato.ISPIRATO || stato == TipoEffettoDiStato.BERSERK, stato.isBenefico(), stato.name());
+            assertEquals(stato == TipoEffettoDiStato.ISPIRATO || stato == TipoEffettoDiStato.BERSERK
+					|| stato == TipoEffettoDiStato.RIGENERAZIONE, stato.isBenefico(), stato.name());
         }
     }
 

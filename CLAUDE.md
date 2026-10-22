@@ -9,7 +9,7 @@ Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo 
 | `foresta-tipi` | `tipi`: enum e costanti di base (anche `Costanti`, i valori di bilanciamento) | nessuno |
 | `foresta-modellodati` | `modellodati`: le classi `…MD`, solo dati (con la lettura e la scrittura dei salvataggi) | tipi |
 | `foresta-contratti` | `interfacce`, `eventi` (bus e classi degli eventi), le utilità di `strumenti` (anche `Dado`, l'unica sorgente di caso) e i dati di `intermezzi` che servono alla UI | modellodati |
-| `foresta-motore` | il resto: `motore`, `combattimento`, `personaggi`, `oggetti`, `locazioni`, `missioni`, `incantesimi`, `canti`, `offerte`, `tattiche`, `trofei`, `testi`, `salvataggi`, la logica degli intermezzi, gli eventi interni che portano il dominio, le grammatiche `.txt` | contratti |
+| `foresta-motore` | il resto: `motore`, `combattimento`, `personaggi`, `oggetti`, `locazioni`, `missioni`, `incantesimi`, `canti`, `abilita`, `offerte`, `tattiche`, `trofei`, `testi`, `salvataggi`, la logica degli intermezzi, gli eventi interni che portano il dominio, le grammatiche `.txt` | contratti |
 | `foresta-swing` | `ui` (e gli eventi con sprite), le immagini | contratti |
 | `foresta-app` | `Main`, `SnifferBusEventi` e i test che usano motore e UI insieme | motore, swing |
 
@@ -28,6 +28,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | Debolezze, resistenze e immunità di classe ai tipi di danno | `…/tipi/CategoriaPersonaggio`, `TipoPersonaggio` (tabelle), `…/personaggi/PersonaggioBase` (`getMoltiplicatoreDannoSubito`), `…/combattimento/CalcolatoreCombattimento`, `…/ui/TestoReazioneDiClasse` | `debolezze_e_resistenze.md` |
 | Modificatori di attributo a tempo, armi che li mettono sul bersaglio | `…/modellodati/ModificatoreAttributoMD`, `…/oggetti/ModificatoreDelTesto`, `PersonaggioBase`, `CalcolatoreCombattimento` | `modificatori_temporanei.md` |
 | Canti del Bardo (curativo, ipnotico, di valore), effetto di stato `ISPIRATO` | `…/canti/Canto*`, `…/tipi/TipoCanto`, `FabbricaCanti`, `…/locazioni/LocazioneBase` (`cantaUnCanto`), `…/motore/Automa` | `bardo.md` |
+| Chierico e druido (solo in modalità di prova), abilità innate (scacciare i non morti, imposizione delle mani, radici, sciame, pelle di corteccia, rigenerazione), effetto di stato `RIGENERAZIONE` | `…/personaggi/{Chierico,Chierica,Druido,Druida}`, `…/abilita/*`, `…/tipi/TipoAbilita`, `…/tipi/TipoPersonaggio` (`isSoloDiProva`), `…/locazioni/LocazioneBase` (`usaUnaAbilita`), `…/motore/Automa` | `chierico_e_druido.md` |
 | Tattiche di combattimento (rose di candidati, contesto, valutatore, tattiche base dei mostri `TatticheBase`) | `…/tattiche` (logica; sottopacchetti `rose` e `valutazione`), `…/modellodati/tattiche` (dati, suffisso `MD`), `…/tipi/tattiche` | `tattiche_di_combattimento_automatiche.md` §11, `tattiche_internals.md` (il codice) |
 | Testi che dipendono dalla lingua (in italiano in file `.properties`; ogni altra lingua è un file accanto con `_<lingua>`): i nomi e le descrizioni delle enum di `foresta-tipi` (un file per enum, `tipo_attributo_it.properties`, chiave `COSTANTE.VOCE`), le note dei moltiplicatori di classe (`note_personaggi_it`), le descrizioni dei comandi (`comandi_it`), i motivi di rifiuto dell'equipaggiamento (`rifiuti_equipaggiamento_it`) | `…/tipi/Testi` (caricatore per lingua; `Testi.testo(costante, voce)` per le enum), `…/tipi/NoteDeiPersonaggi` (mappa tipo di personaggio, attributo → nota); risorse in `foresta-tipi/src/main/resources/com/threeamigos/foresta/tipi/` (e `…/tipi/tattiche/`) | `assessment_portabilita.md` |
 | Personaggi e gruppi | `…/personaggi`, `…/motore/Gruppo*`, `GestoreProgressione` | `motore_di_gioco.md` §8 |
@@ -75,7 +76,7 @@ Panoramica in `motore_grafico.md`.
 
 ## Build e test
 
-`mvn test` dalla radice esegue i test di tutti i moduli (JUnit 5, in `src/test/java` di ciascuno); al 2026-10-22 sono 1672, tutti verdi (16 saltati).
+`mvn test` dalla radice esegue i test di tutti i moduli (JUnit 5, in `src/test/java` di ciascuno); al 2026-10-22 sono 1705, tutti verdi (16 saltati).
 I test stanno nel modulo più basso che vede tutto quello che usano; i test di motore e UI insieme sono in `foresta-app`, che usa gli helper dei test del motore (`PartitaDiTest` e simili) tramite il suo `test-jar`.
 Le dipendenze fra moduli le controlla il compilatore. Il compilatore non vede invece che nessuno fuori da `foresta-swing` usi `java.awt`, `javax.swing`, `javax.imageio` o `javax.sound` (fanno parte del JDK): lo controlla `ui/DipendenzeDalToolkitGraficoTest` in `foresta-app`, che legge i sorgenti (con `SorgentiDelProgetto`). Allo stesso modo `ConvenzioniDiPortabilitaTest` vieta le chiamate che dipendono dalla lingua del dispositivo senza `Locale` (`String.format`, `toLowerCase()`, `toUpperCase()`, `SimpleDateFormat`): si passa sempre `Locale.ROOT`. Il thread principale si raggiunge da `strumenti/ThreadPrincipale` (Swing lo installa con `ui/EsecutoreSwing` in `Main`).
 `mvn package` scrive nella radice il jar eseguibile con le dipendenze, `foresta-0.0.1-SNAPSHOT-jar-with-dependencies.jar`.

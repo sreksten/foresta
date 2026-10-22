@@ -12,7 +12,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * L'alba sacra: un incantesimo benefico che toglie al gruppo gli stati alterati negativi e i modificatori temporanei (lasciando l'ispirazione e il
- * berserk). Sacerdote e Sacerdotessa lo sanno lanciare senza pergamene, se hanno la magia necessaria.
+ * berserk). Sacerdote, Sacerdotessa, Chierico e Chierica lo sanno lanciare senza pergamene, se hanno la magia necessaria.
  *
  * @author Stefano Reksten
  */
@@ -25,10 +25,11 @@ public class AlbaSacra  implements Incantesimo {
     }
 
     /**
-     * @return true se la classe sa lanciare l'alba sacra senza pergamene (Sacerdote e Sacerdotessa)
+     * @return true se la classe sa lanciare l'alba sacra senza pergamene (Sacerdote, Sacerdotessa, Chierico e Chierica)
      */
     public static boolean conosciutaDa(TipoPersonaggio classe) {
-        return classe == TipoPersonaggio.SACERDOTE || classe == TipoPersonaggio.SACERDOTESSA;
+        return classe == TipoPersonaggio.SACERDOTE || classe == TipoPersonaggio.SACERDOTESSA
+        		|| classe == TipoPersonaggio.CHIERICO || classe == TipoPersonaggio.CHIERICA;
     }
 
     /**

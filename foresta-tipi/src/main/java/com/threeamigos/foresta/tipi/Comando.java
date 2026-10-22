@@ -31,6 +31,11 @@ public enum Comando {
 	MAGO,
 	SACERDOTESSA,
 	SACERDOTE,
+	// Solo in modalità di prova, finché la loro grafica non è completa
+	CHIERICA,
+	CHIERICO,
+	DRUIDA,
+	DRUIDO,
 
 	// Le scelte tipiche all'interno di una locazione standard
 	SINGOLO_ATTACCO,
@@ -62,6 +67,13 @@ public enum Comando {
 	CANTO_DI_VALORE,
 	// Il canto che il bardo della locanda insegna al gruppo
 	URLO_DELLA_BANSHEE,
+	// Le abilità innate di chierico e druido (vedi TipoAbilita)
+	SCACCIARE_I_NON_MORTI,
+	IMPOSIZIONE_DELLE_MANI,
+	RADICI,
+	SCIAME,
+	PELLE_DI_CORTECCIA,
+	RIGENERAZIONE,
 
 	// Incantesimi disponibili a chiunque abbia una pergamena
 	SILENZIO,

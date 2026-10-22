@@ -45,6 +45,12 @@ public final class EquipaggiamentoIniziale {
 			case SACERDOTE:
 			case SACERDOTESSA:
 				return Arrays.asList(TipoArtefatto.BASTONE_MAGICO, TipoArtefatto.VESTE);
+			case CHIERICO:
+			case CHIERICA:
+				return Arrays.asList(TipoArtefatto.MAZZA, TipoArtefatto.SCUDO);
+			case DRUIDO:
+			case DRUIDA:
+				return Arrays.asList(TipoArtefatto.BASTONE_MAGICO, TipoArtefatto.VESTE);
 			default:
 				return Collections.emptyList();
 		}

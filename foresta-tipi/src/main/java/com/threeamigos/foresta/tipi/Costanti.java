@@ -101,6 +101,33 @@ public class Costanti {
     public static final int CANTO_DI_VALORE_DURATA = 4;
     public static final double CANTO_CURATIVO_DIVISORE_SAGGEZZA = 50.0;
 
+    // Le abilità innate di Chierico e Druido (vedi TipoAbilita): costano MAGIA, non consumano pergamene
+    public static final int ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO = 4;
+    // Scacciare i non morti: ognuno cede con la SOGGEZIONE del chierico contro il suo CORAGGIO, e prende SPAVENTATO
+    public static final int ABILITA_IMPOSIZIONE_DELLE_MANI_COSTO_LANCIO = 5;
+    // L'imposizione delle mani cura ABILITA_IMPOSIZIONE_DELLE_MANI_BASE × √livello, aumentato della SAGGEZZA divisa per
+    // ABILITA_IMPOSIZIONE_DELLE_MANI_DIVISORE_SAGGEZZA (meno del canto curativo: il chierico ha meno magia del bardo)
+    public static final double ABILITA_IMPOSIZIONE_DELLE_MANI_BASE = 20.0;
+    public static final double ABILITA_IMPOSIZIONE_DELLE_MANI_DIVISORE_SAGGEZZA = 50.0;
+    // Radici e Sciame: danni di Terra e di Veleno su più avversari, un poco meno di una pergamena e per un poco più di MAGIA
+    public static final int ABILITA_RADICI_COSTO_LANCIO = 3;
+    public static final int ABILITA_RADICI_DANNI = 40;
+    public static final int ABILITA_SCIAME_COSTO_LANCIO = 3;
+    public static final int ABILITA_SCIAME_DANNI = 40;
+    // La pelle di corteccia dà a tutto il gruppo, per ABILITA_PELLE_DI_CORTECCIA_DURATA turni, questa percentuale in più di parata
+    // e di resistenza magica (con un modificatore temporaneo)
+    public static final int ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO = 5;
+    public static final double ABILITA_PELLE_DI_CORTECCIA_PERCENTUALE_PARATA = 30.0;
+    public static final double ABILITA_PELLE_DI_CORTECCIA_PERCENTUALE_RESISTENZA_MAGICA = 20.0;
+    public static final int ABILITA_PELLE_DI_CORTECCIA_DURATA = 4;
+    // La rigenerazione dà RIGENERAZIONE a un personaggio per ABILITA_RIGENERAZIONE_DURATA turni: a ogni turno guarisce di
+    // ABILITA_RIGENERAZIONE_BASE più questa quota della sua salute massima, aumentata dalla SAGGEZZA del druido
+    public static final int ABILITA_RIGENERAZIONE_COSTO_LANCIO = 4;
+    public static final int ABILITA_RIGENERAZIONE_DURATA = 4;
+    public static final int ABILITA_RIGENERAZIONE_BASE = 5;
+    public static final double ABILITA_RIGENERAZIONE_QUOTA_SALUTE_MASSIMA = 0.05;
+    public static final double ABILITA_RIGENERAZIONE_DIVISORE_SAGGEZZA = 50.0;
+
     // Un'arma fino a tanti livelli sotto quello di chi la impugna rende ancora tutta la parte dell'eroe; oltre, la parte
     // dell'eroe cala in proporzione (vedi CalcolatoreCombattimento.calcolaDannoRisultante)
     public static final int TOLLERANZA_LIVELLO_ARMA = 2;
@@ -752,6 +779,138 @@ public class Costanti {
     public static final double SACERDOTESSA_MOLTIPLICATORE_DANNI_FISICI = 0.8;
     public static final double SACERDOTESSA_MOLTIPLICATORE_RECUPERO_FISICO = 0.9;
     public static final double SACERDOTESSA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.3;
+
+    // Chierico e Chierica: il sacerdote che combatte in prima linea (mazza, scudo, armatura): fra il Sacerdote e il Guerriero,
+    // con più salute e parata del primo e più magia del secondo
+    public static final int CHIERICO_MAX_CARISMA = 8;
+    public static final int CHIERICO_MAX_FORZA = 35;
+    public static final int CHIERICO_MAX_DESTREZZA = 25;
+    public static final int CHIERICO_MAX_COSTITUZIONE = 40;
+    public static final int CHIERICO_MAX_INTELLIGENZA = 25;
+    public static final int CHIERICO_MAX_SAGGEZZA = 40;
+    public static final int CHIERICO_MAX_FORTUNA = 10;
+    public static final int CHIERICO_MAX_NUMERO = 1;
+    public static final int CHIERICO_PUNTI_ESPERIENZA = 25;
+    public static final int CHIERICO_SALUTE_BASE = 130;
+    public static final int CHIERICO_MAGIA_BASE = 30;
+    public static final int CHIERICO_LIVELLAMENTO_MAGIA = 14;
+    public static final double CHIERICO_MOLTIPLICATORE_CARICO = 1.1;
+    public static final double CHIERICO_MOLTIPLICATORE_CRITICO = 1.0;
+    public static final double CHIERICO_MOLTIPLICATORE_PRECISIONE = 1.0;
+    public static final double CHIERICO_MOLTIPLICATORE_VELOCITA = 0.9;
+    public static final double CHIERICO_MOLTIPLICATORE_FURTIVITA = 0.8;
+    public static final double CHIERICO_MOLTIPLICATORE_PARATA = 1.3;
+    public static final double CHIERICO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
+    public static final double CHIERICO_MOLTIPLICATORE_PERCEZIONE = 1.0;
+    public static final double CHIERICO_MOLTIPLICATORE_SOGGEZIONE = 1.1;
+    public static final double CHIERICO_MOLTIPLICATORE_FURIA = 1.0;
+    public static final double CHIERICO_MOLTIPLICATORE_CORAGGIO = 1.2;
+    public static final double CHIERICO_MOLTIPLICATORE_VALORE = 1.2;
+    public static final double CHIERICO_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
+    public static final double CHIERICO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
+    public static final double CHIERICO_MOLTIPLICATORE_STANCHEZZA = 1.0;
+    public static final double CHIERICO_MOLTIPLICATORE_DANNI_MAGICI = 1.0;
+    public static final double CHIERICO_MOLTIPLICATORE_DANNI_FISICI = 1.0;
+    public static final double CHIERICO_MOLTIPLICATORE_RECUPERO_FISICO = 1.2;
+    public static final double CHIERICO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.0;
+
+    public static final int CHIERICA_MAX_CARISMA = 8;
+    public static final int CHIERICA_MAX_FORZA = 35;
+    public static final int CHIERICA_MAX_DESTREZZA = 25;
+    public static final int CHIERICA_MAX_COSTITUZIONE = 40;
+    public static final int CHIERICA_MAX_INTELLIGENZA = 25;
+    public static final int CHIERICA_MAX_SAGGEZZA = 40;
+    public static final int CHIERICA_MAX_FORTUNA = 10;
+    public static final int CHIERICA_MAX_NUMERO = 1;
+    public static final int CHIERICA_PUNTI_ESPERIENZA = 25;
+    public static final int CHIERICA_SALUTE_BASE = 130;
+    public static final int CHIERICA_MAGIA_BASE = 30;
+    public static final int CHIERICA_LIVELLAMENTO_MAGIA = 14;
+    public static final double CHIERICA_MOLTIPLICATORE_CARICO = 1.1;
+    public static final double CHIERICA_MOLTIPLICATORE_CRITICO = 1.0;
+    public static final double CHIERICA_MOLTIPLICATORE_PRECISIONE = 1.0;
+    public static final double CHIERICA_MOLTIPLICATORE_VELOCITA = 0.9;
+    public static final double CHIERICA_MOLTIPLICATORE_FURTIVITA = 0.8;
+    public static final double CHIERICA_MOLTIPLICATORE_PARATA = 1.3;
+    public static final double CHIERICA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
+    public static final double CHIERICA_MOLTIPLICATORE_PERCEZIONE = 1.0;
+    public static final double CHIERICA_MOLTIPLICATORE_SOGGEZIONE = 1.1;
+    public static final double CHIERICA_MOLTIPLICATORE_FURIA = 1.0;
+    public static final double CHIERICA_MOLTIPLICATORE_CORAGGIO = 1.2;
+    public static final double CHIERICA_MOLTIPLICATORE_VALORE = 1.2;
+    public static final double CHIERICA_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
+    public static final double CHIERICA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
+    public static final double CHIERICA_MOLTIPLICATORE_STANCHEZZA = 1.0;
+    public static final double CHIERICA_MOLTIPLICATORE_DANNI_MAGICI = 1.0;
+    public static final double CHIERICA_MOLTIPLICATORE_DANNI_FISICI = 1.0;
+    public static final double CHIERICA_MOLTIPLICATORE_RECUPERO_FISICO = 1.2;
+    public static final double CHIERICA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.0;
+
+    // Druido e Druida: l'incantatore della natura, con più Percezione, Saggezza e recupero magico del Mago ma meno magia
+    // base, e senza armatura né scudo
+    public static final int DRUIDO_MAX_CARISMA = 8;
+    public static final int DRUIDO_MAX_FORZA = 25;
+    public static final int DRUIDO_MAX_DESTREZZA = 30;
+    public static final int DRUIDO_MAX_COSTITUZIONE = 35;
+    public static final int DRUIDO_MAX_INTELLIGENZA = 40;
+    public static final int DRUIDO_MAX_SAGGEZZA = 45;
+    public static final int DRUIDO_MAX_FORTUNA = 15;
+    public static final int DRUIDO_MAX_NUMERO = 1;
+    public static final int DRUIDO_PUNTI_ESPERIENZA = 25;
+    public static final int DRUIDO_SALUTE_BASE = 110;
+    public static final int DRUIDO_MAGIA_BASE = 40;
+    public static final int DRUIDO_LIVELLAMENTO_MAGIA = 20;
+    public static final double DRUIDO_MOLTIPLICATORE_CARICO = 0.85;
+    public static final double DRUIDO_MOLTIPLICATORE_CRITICO = 1.0;
+    public static final double DRUIDO_MOLTIPLICATORE_PRECISIONE = 1.1;
+    public static final double DRUIDO_MOLTIPLICATORE_VELOCITA = 1.1;
+    public static final double DRUIDO_MOLTIPLICATORE_FURTIVITA = 1.1;
+    public static final double DRUIDO_MOLTIPLICATORE_PARATA = 0.9;
+    public static final double DRUIDO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
+    public static final double DRUIDO_MOLTIPLICATORE_PERCEZIONE = 1.3;
+    public static final double DRUIDO_MOLTIPLICATORE_SOGGEZIONE = 1.1;
+    public static final double DRUIDO_MOLTIPLICATORE_FURIA = 1.0;
+    public static final double DRUIDO_MOLTIPLICATORE_CORAGGIO = 1.1;
+    public static final double DRUIDO_MOLTIPLICATORE_VALORE = 1.0;
+    public static final double DRUIDO_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
+    public static final double DRUIDO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
+    public static final double DRUIDO_MOLTIPLICATORE_STANCHEZZA = 0.9;
+    public static final double DRUIDO_MOLTIPLICATORE_DANNI_MAGICI = 1.2;
+    public static final double DRUIDO_MOLTIPLICATORE_DANNI_FISICI = 0.9;
+    public static final double DRUIDO_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
+    public static final double DRUIDO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
+
+    public static final int DRUIDA_MAX_CARISMA = 8;
+    public static final int DRUIDA_MAX_FORZA = 25;
+    public static final int DRUIDA_MAX_DESTREZZA = 30;
+    public static final int DRUIDA_MAX_COSTITUZIONE = 35;
+    public static final int DRUIDA_MAX_INTELLIGENZA = 40;
+    public static final int DRUIDA_MAX_SAGGEZZA = 45;
+    public static final int DRUIDA_MAX_FORTUNA = 15;
+    public static final int DRUIDA_MAX_NUMERO = 1;
+    public static final int DRUIDA_PUNTI_ESPERIENZA = 25;
+    public static final int DRUIDA_SALUTE_BASE = 110;
+    public static final int DRUIDA_MAGIA_BASE = 40;
+    public static final int DRUIDA_LIVELLAMENTO_MAGIA = 20;
+    public static final double DRUIDA_MOLTIPLICATORE_CARICO = 0.85;
+    public static final double DRUIDA_MOLTIPLICATORE_CRITICO = 1.0;
+    public static final double DRUIDA_MOLTIPLICATORE_PRECISIONE = 1.1;
+    public static final double DRUIDA_MOLTIPLICATORE_VELOCITA = 1.1;
+    public static final double DRUIDA_MOLTIPLICATORE_FURTIVITA = 1.1;
+    public static final double DRUIDA_MOLTIPLICATORE_PARATA = 0.9;
+    public static final double DRUIDA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
+    public static final double DRUIDA_MOLTIPLICATORE_PERCEZIONE = 1.3;
+    public static final double DRUIDA_MOLTIPLICATORE_SOGGEZIONE = 1.1;
+    public static final double DRUIDA_MOLTIPLICATORE_FURIA = 1.0;
+    public static final double DRUIDA_MOLTIPLICATORE_CORAGGIO = 1.1;
+    public static final double DRUIDA_MOLTIPLICATORE_VALORE = 1.0;
+    public static final double DRUIDA_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
+    public static final double DRUIDA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
+    public static final double DRUIDA_MOLTIPLICATORE_STANCHEZZA = 0.9;
+    public static final double DRUIDA_MOLTIPLICATORE_DANNI_MAGICI = 1.2;
+    public static final double DRUIDA_MOLTIPLICATORE_DANNI_FISICI = 0.9;
+    public static final double DRUIDA_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
+    public static final double DRUIDA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
 
     // I personaggi non combattenti (locandiere, armaiolo, alchimista, venditore di pergamene, incantatore, moglie del
     // bardo): come il bardo ma un poco meno, e senza capacità proprie (vedi PersonaggioNonCombattente)

@@ -49,6 +49,11 @@ public enum TipoPersonaggio {
 	OMBRAFIAMMA(CategoriaPersonaggio.UMANOIDE),
 	SACERDOTE(CategoriaPersonaggio.UMANOIDE),
 	SACERDOTESSA(CategoriaPersonaggio.UMANOIDE),
+	// Chierico e druido: per ora si scelgono solo in modalità di prova (la grafica è incompleta)
+	CHIERICA(CategoriaPersonaggio.UMANOIDE),
+	CHIERICO(CategoriaPersonaggio.UMANOIDE),
+	DRUIDA(CategoriaPersonaggio.UMANOIDE),
+	DRUIDO(CategoriaPersonaggio.UMANOIDE),
 
 	// Non combattenti: compaiono nelle scene e come ospiti delle missioni di scorta; non si incontrano e non si reclutano
 	LOCANDIERE(CategoriaPersonaggio.UMANOIDE),
@@ -125,6 +130,20 @@ public enum TipoPersonaggio {
 		FOLLETTO.moltiplicaIlDannoSubito(TipoDanno.TAGLIENTE, 1.25d);
 		FOLLETTO.moltiplicaIlDannoSubito(TipoDanno.PERFORANTE, 1.25d);
 
+		// Il chierico serve il sacro e ne è protetto: il necrotico e le maledizioni lo feriscono meno
+		for (TipoPersonaggio chierico : EnumSet.of(CHIERICO, CHIERICA)) {
+			chierico.moltiplicaIlDannoSubito(TipoDanno.NECROTICO, 0.75d);
+			chierico.moltiplicaIlDannoSubito(TipoDanno.MALEDIZIONE, 0.75d);
+		}
+		// Il druido vive di terra, acqua e veleni, ma soffre il fuoco e le lame
+		for (TipoPersonaggio druido : EnumSet.of(DRUIDO, DRUIDA)) {
+			druido.moltiplicaIlDannoSubito(TipoDanno.ACQUA, 0.75d);
+			druido.moltiplicaIlDannoSubito(TipoDanno.TERRA, 0.75d);
+			druido.moltiplicaIlDannoSubito(TipoDanno.VELENO, 0.75d);
+			druido.moltiplicaIlDannoSubito(TipoDanno.FUOCO, 1.25d);
+			druido.moltiplicaIlDannoSubito(TipoDanno.TAGLIENTE, 1.1d);
+		}
+
 		// Assegnazione dell'equivalenza dei ruoli
 		RUOLI.put(MAGA, MAGO);
 		RUOLI.put(ELFA, ELFO);
@@ -132,6 +151,8 @@ public enum TipoPersonaggio {
 		RUOLI.put(GUERRIERA, GUERRIERO);
 		RUOLI.put(CANTASTORIE, BARDO);
 		RUOLI.put(SACERDOTESSA, SACERDOTE);
+		RUOLI.put(CHIERICA, CHIERICO);
+		RUOLI.put(DRUIDA, DRUIDO);
 	}
 
 	// Le categorie della classe: almeno una, più d'una per chi è di due generi (lo Spirito è NON_MORTO e VOLANTE)
@@ -151,6 +172,14 @@ public enum TipoPersonaggio {
 	 */
 	public Set<CategoriaPersonaggio> getCategorie() {
 		return categorie;
+	}
+
+	/**
+	 * Se la classe si può usare solo in modalità di prova: il chierico e il druido (con le forme femminili), finché la loro
+	 * grafica è una copia di quella di guerriero e bardo. Chi la usa (la scelta iniziale, le classi dei campioni) lo guarda.
+	 */
+	public boolean isSoloDiProva() {
+		return this == CHIERICO || this == CHIERICA || this == DRUIDO || this == DRUIDA;
 	}
 
 	public boolean isDellaCategoria(CategoriaPersonaggio categoria) {
@@ -175,7 +204,7 @@ public enum TipoPersonaggio {
 
 	/**
 	 * Il ruolo della classe, a meno del genere: Mago e Maga, Elfo e Elfa, Ladro e Ladra, Guerriero e Guerriera, Bardo e Cantastorie,
-	 * Sacerdote e Sacerdotessa sono lo stesso ruolo (le tattiche non devono distinguerli); ogni altra classe ha il suo.
+	 * Sacerdote e Sacerdotessa, Chierico e Chierica, Druido e Druida sono lo stesso ruolo (le tattiche non devono distinguerli); ogni altra classe ha il suo.
 	 */
 	public TipoPersonaggio getRuolo() {
 		return RUOLI.getOrDefault(this, this);

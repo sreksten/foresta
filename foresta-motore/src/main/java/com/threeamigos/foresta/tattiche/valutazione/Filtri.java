@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tattiche.valutazione;
 
+import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
@@ -107,7 +108,7 @@ public final class Filtri {
 	}
 
 	/**
-	 * Chi sa fare magie adesso (§7.5, F3): per una classe con un'abilità innata (Dardo arcano, Alba sacra, canti) conta quella, se non è
+	 * Chi sa fare magie adesso (§7.5, F3): per una classe con un'abilità innata (Dardo arcano, Alba sacra, canti, abilità di chierico e druido) conta quella, se non è
 	 * silenziato e ha la MAGIA per almeno una; per un mostro di una classe magica, se non è silenziato e ha MAGIA; per gli altri, se non è
 	 * silenziato, ha MAGIA e ha già lanciato un incantesimo in questo combattimento.
 	 */
@@ -116,9 +117,10 @@ public final class Filtri {
 			return false;
 		}
 		TipoPersonaggio classe = candidato.getClasse();
-		if (DardoArcano.conosciutoDa(classe) || AlbaSacra.conosciutaDa(classe) || CantoDelBardo.conosciutoDa(classe)) {
+		if (DardoArcano.conosciutoDa(classe) || AlbaSacra.conosciutaDa(classe) || CantoDelBardo.conosciutoDa(classe)
+				|| AbilitaInnate.conosciutaDa(classe)) {
 			return DardoArcano.puoLanciarlo(candidato) || AlbaSacra.puoLanciarlaInnata(candidato) || LuceDivina.puoLanciarlaInnata(candidato)
-					|| !CantoDelBardo.cantiPossibili(candidato).isEmpty();
+					|| !CantoDelBardo.cantiPossibili(candidato).isEmpty() || !AbilitaInnate.abilitaPossibili(candidato).isEmpty();
 		}
 		if (contesto.isMostro(candidato)) {
 			return candidato.isMagico() && candidato.getMagia() > 0;
