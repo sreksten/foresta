@@ -194,11 +194,14 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	/**
-	 * Se il locandiere sta per affidare il bardo al gruppo in questa locanda: la scena del primo ingresso gli cede il posto
-	 * (vedi IntermezzoLocandaPrimaVisita).
+	 * Se il locandiere sta per affidare il bardo al gruppo in questa locanda, o l'ha appena fatto con la sua scena e il bardo
+	 * non si è ancora unito al gruppo (succede in locazione, dopo gli intermezzi di inizio locazione): la scena del primo
+	 * ingresso gli cede il posto (vedi IntermezzoLocandaPrimaVisita), e non scatta nemmeno dopo la sua, con il bardo
+	 * seduto nell'angolo.
 	 */
 	public boolean staPerAffidareIlBardo() {
-		return INCARICO.equals(getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
+		return INCARICO.equals(getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE))
+				|| (ACCETTAZIONE.equals(getPassoCorrente()) && nellaLocanda());
 	}
 
 	private boolean nellaLocanda() {
