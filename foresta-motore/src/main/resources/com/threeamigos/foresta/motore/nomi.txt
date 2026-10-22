@@ -128,6 +128,7 @@ NOME_SACERDOTE$
 
 NOME_SACERDOTESSA$
     Suor Daliso | Suor Chidea | Suor Presa | Suor Ridente | Suor Reale | Suor Tita | Sorella Intronata
+    Suor Veglianza | Suor Teggiata
 
 // ---------------------------------------------------------------------------------------------
 // Cognomi, uno per riga, in ordine alfabetico: la somma dei cognomi dei locandieri e dei protagonisti delle fiabe

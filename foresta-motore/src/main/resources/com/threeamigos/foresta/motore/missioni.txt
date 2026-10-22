@@ -406,7 +406,7 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=Nella cripta adesso regna il silenzio.;\
     RINGRAZIAMENTO=Che riposino in pace. Stavolta per davvero.;\
     RICORDO=Queste rovine erano una cripta inquieta, finché qualcuno non la fece tacere.
-    CHIAVE=GOBLIN_DELLA_MINIERA;TIPO=PULIZIA_DEI_DUNGEON;ASPETTO=ARMAIOLO;MANDANTE=l'armaiolo;NEMICO=GOBLIN;NUMERO=5;CAPO=SI;\
+    CHIAVE=GOBLIN_DELLA_MINIERA;TIPO=PULIZIA_DEI_DUNGEON;ASPETTO=ARMAIOLO;MANDANTE=l'armaiolo;NEMICO=GOBLIN;NUMERO=5;CAPO=SI HOBGOBLIN;\
     LUOGO=GROTTA;MONETE=35;TITOLO=La miniera occupata;\
     RICHIESTA=La grotta dove scavo il ferro è stata occupata dai goblin di %CAPO%. Senza ferro, niente spade.;\
     BATTUTA=E senza spade, come li cacciamo?;RISPOSTA=Con quelle che avete. Le ultime che ho fatto.;\
@@ -511,7 +511,7 @@ INCARICO_DI_COMBATTIMENTO
     RINGRAZIAMENTO=Finalmente le mie merci passano il ponte. Ma qual era l'indovinello?;\
     RICORDO=In questa palude due troll tenevano il ponte.
     CHIAVE=FATTORIA_ASSEDIATA;TIPO=SORTITA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=GOBLIN;NUMERO=6;\
-    CAPO=SI;LUOGO=RADURA;MONETE=40;TITOLO=La fattoria assediata;\
+    CAPO=SI HOBGOBLIN;LUOGO=RADURA;MONETE=40;TITOLO=La fattoria assediata;\
     RICHIESTA=I goblin di %CAPO% assediano una fattoria in una radura. Dentro i contadini resistono, ma hanno finito le provviste.;\
     BATTUTA=E noi cosa facciamo?;RISPOSTA=Arrivate da fuori, loro escono da dentro, e i goblin si trovano in mezzo.;\
     VITTORIA=I contadini escono dalla fattoria: l'assedio di %CAPO% è rotto.;\

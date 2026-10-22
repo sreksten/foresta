@@ -65,7 +65,11 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 			nemici.aDuello();
 		}
 		if (incarico.isConCapo()) {
-			nemici.conCapo(getCapo());
+			if (incarico.getClasseDelCapo() != null) {
+				nemici.conCapo(getCapo(), incarico.getClasseDelCapo());
+			} else {
+				nemici.conCapo(getCapo());
+			}
 		}
 		return incarico.getOndate().aggiungiA(nemici, this::getCapoDellOndata, this::testo);
 	}

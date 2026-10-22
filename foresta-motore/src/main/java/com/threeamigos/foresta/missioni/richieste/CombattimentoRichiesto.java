@@ -158,6 +158,13 @@ public final class CombattimentoRichiesto {
 		return capo.pescaNome();
 	}
 
+	/**
+	 * La classe del capo se non è uno della banda (un hobgoblin a capo dei goblin), altrimenti null. Solo se c'è un capo.
+	 */
+	public TipoPersonaggio getClasseDelCapo() {
+		return capo.getClasse();
+	}
+
 	public TipoLocazione getLuogo() {
 		return luogo;
 	}

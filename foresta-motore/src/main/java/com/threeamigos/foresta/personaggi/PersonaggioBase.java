@@ -845,7 +845,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	/**
 	 * Il numero che distingue un avversario dagli altri della stessa specie nel suo gruppo ("Viverna 2"): la sua posizione nel gruppo
-	 * (vedi GruppoAvversario.aggiungiPersonaggio), e solo se ce n'è più d'uno con lo stesso nome; altrimenti niente. Non cambia quando
+	 * (vedi GruppoAvversario.aggiungiPersonaggio; conta per specie), e solo se ce n'è più d'uno con lo stesso nome; altrimenti niente. Non cambia quando
 	 * qualcuno cade, così un mostro si riconosce per tutto lo scontro.
 	 */
 	private String suffissoOrdinale() {
@@ -856,9 +856,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		if (!avversari.contiene(this)) {
 			return "";
 		}
-		String specie = getNomeSingolare();
-		long dellaStessaSpecie = avversari.getPersonaggi().stream().filter(p -> specie.equals(p.getNomeSingolare())).count();
-		return dellaStessaSpecie > 1 ? " " + ordinale : "";
+		return avversari.contaDellaStessaSpecie(this) > 1 ? " " + ordinale : "";
 	}
 
 	@Override
@@ -1134,7 +1132,7 @@ public abstract class PersonaggioBase implements Personaggio {
 							isGruppoAvversario = true;
 							gruppo = GruppoAvversario.getIstanza();
 						}
-						if (gruppo.getNumeroPersonaggi() > 1 && isGruppoAvversario) {
+						if (isGruppoAvversario && GruppoAvversario.getIstanza().contaDellaStessaSpecie(this) > 1) {
 							if (getSesso() == Personaggio.Sesso.MASCHIO) {
 								sb.append(Misc.getOrdinaleM(ordinale, true));
 							} else {

@@ -41,10 +41,10 @@ public class IlRapimento extends LaLiberazione {
 	}
 
 	/**
-	 * La banda di goblin dei rapitori, con il loro capo.
+	 * La banda di goblin dei rapitori, con un hobgoblin a capo.
 	 */
 	public IncontroDiMissione getRapitori() {
-		return IncontroDiMissione.di(TipoPersonaggio.GOBLIN, RAPITORI).conCapo(getCapobanda());
+		return IncontroDiMissione.di(TipoPersonaggio.GOBLIN, RAPITORI).conCapo(getCapobanda(), TipoPersonaggio.HOBGOBLIN);
 	}
 
 	@Override

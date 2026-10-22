@@ -76,13 +76,28 @@ public class GruppoAvversario extends Gruppo {
 	}
 
 	/**
-	 * L'avversario prende come ordinale la sua posizione nel gruppo, che serve a distinguere i mostri della stessa specie (vedi
-	 * PersonaggioBase.getNome); i gruppi misti (specie diverse insieme) funzionano allo stesso modo.
+	 * L'avversario prende come ordinale la sua posizione fra i mostri della sua specie nel gruppo (il primo scheletro, il secondo
+	 * scheletro, il primo goblin, il terzo scheletro...), che serve a distinguerli (vedi PersonaggioBase.getNome): così il gruppo può
+	 * essere eterogeneo, ogni specie conta per sé.
 	 */
 	@Override
 	public void aggiungiPersonaggio(Personaggio p) {
-		p.setOrdinale(getNumeroPersonaggi() + 1);
+		p.setOrdinale(contaDellaStessaSpecie(p) + 1);
 		super.aggiungiPersonaggio(p);
+	}
+
+	/**
+	 * Quanti personaggi del gruppo (anche caduti) hanno la stessa specie di {@code p}, lui compreso se è già nel gruppo.
+	 */
+	public int contaDellaStessaSpecie(Personaggio p) {
+		String specie = p.getNomeSingolare();
+		int quanti = 0;
+		for (Personaggio altro : personaggi) {
+			if (specie.equals(altro.getNomeSingolare())) {
+				quanti++;
+			}
+		}
+		return quanti;
 	}
 
 	public Personaggio getPersonaggioVivo() {

@@ -53,8 +53,11 @@ class ScenarioRapimentoTest {
             assertTrue(Foresta.isLocazioneConosciuta(covo));
             assertTrue(Foresta.getCoordinateDaSegnalare().contains(covo));
             List<Personaggio> banda = RegistroMissioni.getIncontroMissione(covo).orElseThrow(AssertionError::new);
-            assertEquals(4, banda.size());
-            assertEquals(rapimento.getCapobanda(), banda.get(0).getNome());
+            // I rapitori sono dei goblin, con un hobgoblin a capo che viene dopo la banda
+            assertEquals(IlRapimento.RAPITORI + 1, banda.size());
+            Personaggio capobanda = banda.get(banda.size() - 1);
+            assertEquals(TipoPersonaggio.HOBGOBLIN, capobanda.getClasse());
+            assertEquals(rapimento.getCapobanda(), capobanda.getNome());
 
             Personaggio armando = liberaArmando(partita, rapimento);
             assertEquals(rapimento.getOstaggio(), armando.getNome());
