@@ -652,7 +652,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		getOspitiVulnerabiliVivi().forEach(p -> p.riposa(ore, tipoRiposo));
 		LineaTemporale.mattinoSeguente();
 		LineaTemporale.eventiDiNotte(this);
-		if (alCoperto && LineaTemporale.isCittaDistrutta(tipoLocazione)) {
+		// La locanda fuori città non può cadere: solo una città può essere distrutta
+		if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA && LineaTemporale.isCittaDistrutta(tipoLocazione)) {
 			// La città in cui si dormiva è caduta stanotte: lo si racconta subito, non alla locazione dopo
 			String evento = LineaTemporale.getEvento();
 			if (evento != null) {

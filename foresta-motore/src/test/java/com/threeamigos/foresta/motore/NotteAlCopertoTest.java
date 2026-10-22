@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
@@ -47,5 +48,29 @@ class NotteAlCopertoTest {
             assertEquals(41, LineaTemporale.getGiorno());
             assertTrue(LineaTemporale.isGiocoFinito());
         }
+    }
+
+    @Test
+    void laNotteInUnaLocandaFuoriCittaNonFaCrollareIlGioco() {
+        try (PartitaDiTest partita = partita(305)) {
+            partita.gruppo().setCoordinate(unaLocanda());
+            assertEquals(TipoLocazione.LOCANDA, partita.gruppo().getTipoLocazioneCorrente());
+            int giorno = LineaTemporale.getGiorno();
+
+            partita.gruppo().pernotta(TipoRiposo.AL_COPERTO);
+
+            assertEquals(giorno + 1, LineaTemporale.getGiorno());
+        }
+    }
+
+    private static CoordinateMD unaLocanda() {
+        for (int x = 0; x < Foresta.getDimensioneX(); x++) {
+            for (int y = 0; y < Foresta.getDimensioneY(); y++) {
+                if (Foresta.getLocazione(x, y) == TipoLocazione.LOCANDA) {
+                    return new CoordinateMD(x, y);
+                }
+            }
+        }
+        throw new AssertionError("Nessuna locanda nella Foresta");
     }
 }
