@@ -174,14 +174,6 @@ public enum TipoPersonaggio {
 		return categorie;
 	}
 
-	/**
-	 * Se la classe si può usare solo in modalità di prova: il druido (e la druida), finché la sua
-	 * grafica è una copia di quella di bardo e cantastorie. Chi la usa (la scelta iniziale, le classi dei campioni) lo guarda.
-	 */
-	public boolean isSoloDiProva() {
-		return this == DRUIDO || this == DRUIDA;
-	}
-
 	public boolean isDellaCategoria(CategoriaPersonaggio categoria) {
 		return categorie.contains(categoria);
 	}

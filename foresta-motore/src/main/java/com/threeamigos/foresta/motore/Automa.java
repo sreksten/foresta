@@ -600,17 +600,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		List<Comando> classi = new ArrayList<>();
 		if (comando == Comando.FEMMINA) {
 			classi.addAll(Arrays.asList(Comando.GUERRIERA, Comando.LADRA, Comando.CANTASTORIE, Comando.ELFA, Comando.MAGA,
-					Comando.SACERDOTESSA, Comando.CHIERICA));
-			// La druida manca ancora di grafica propria: per ora si sceglie solo in modalità di prova
-			if (ModalitaDiProva.isAttiva()) {
-				classi.add(Comando.DRUIDA);
-			}
+					Comando.SACERDOTESSA, Comando.CHIERICA, Comando.DRUIDA));
 		} else {
 			classi.addAll(Arrays.asList(Comando.GUERRIERO, Comando.LADRO, Comando.BARDO, Comando.ELFO, Comando.MAGO,
-					Comando.SACERDOTE, Comando.CHIERICO));
-			if (ModalitaDiProva.isAttiva()) {
-				classi.add(Comando.DRUIDO);
-			}
+					Comando.SACERDOTE, Comando.CHIERICO, Comando.DRUIDO));
 		}
 		BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.CLASSE_PERSONAGGIO, classi.toArray(new Comando[0])));
 		return Esito.FERMATI;
@@ -661,13 +654,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				personaggio = new Chierico(nomePersonaggio, 1);
 				break;
 			case DRUIDA:
+				personaggio = new Druida(nomePersonaggio, 1);
+				break;
 			case DRUIDO:
-				// Il comando non è fra le scelte se non in modalità di prova, ma lo si rifiuta comunque
-				if (!ModalitaDiProva.isAttiva()) {
-					comandoNonValido(comando);
-					return Esito.FERMATI;
-				}
-				personaggio = creaPersonaggioSoloDiProva(comando);
+				personaggio = new Druido(nomePersonaggio, 1);
 				break;
 			default:
 				comandoNonValido(comando);
@@ -675,10 +665,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 		inizializzaGioco();
 		return Esito.CONTINUA_CON_INGRESSO;
-	}
-
-	private Personaggio creaPersonaggioSoloDiProva(Comando comando) {
-		return comando == Comando.DRUIDA ? new Druida(nomePersonaggio, 1) : new Druido(nomePersonaggio, 1);
 	}
 
 	/**

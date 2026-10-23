@@ -42,18 +42,15 @@ cofani, negozi o repertorio dei mostri.
 
 I valori stanno in `Costanti` (`ABILITA_*`).
 
-## 3. Chi si sceglie e chi è solo di prova
+## 3. Chi si sceglie
 
-Il Chierico e la Chierica (che hanno la loro grafica) si scelgono fra le classi di inizio partita come le altre, e possono essere campioni della sfida a carta, forbici e
-sasso. Il Druido e la Druida sono ancora solo di prova: `TipoPersonaggio.isSoloDiProva()` dice quali classi lo sono, `Automa` li offre solo con la modalità di prova (e
-rifiuta il comando altrimenti), `LaSfidaDeiCampioni.classiAmichevoli` li esclude dai campioni senza la prova. Nessun mostro e nessun compagno reclutabile è di queste
-classi: in prova si possono aggiungere dalla finestra di prova (`FinestraDiProva`), che usa `FabbricaPersonaggi`.
+Chierico, Chierica, Druido e Druida si scelgono fra le classi di inizio partita come le altre (`Automa`), anche senza la modalità di prova, e possono essere campioni della
+sfida a carta, forbici e sasso (`LaSfidaDeiCampioni.classiAmichevoli`). Nessun mostro e nessun compagno reclutabile è di queste classi: in prova si possono aggiungere dalla
+finestra di prova (`FinestraDiProva`), che usa `FabbricaPersonaggi`.
 
 ## Osservazioni
 
-- **Immagini.** Quelle di Chierico e Chierica (personaggi, icone di classe e icone delle sue due abilità) sono vere; le quattro di Druido e Druida (personaggi e icone di classe) sono ancora copie di quelle di Bardo e Cantastorie; le icone delle quattro
-  abilità del druido (`img/icone/Radici.gif`, `Sciame.gif`, `PelleDiCorteccia.gif`, `Rigenerazione.gif`) sono copie di
-  `Pergamena.gif`. Vanno disegnate, quelle del Druido prima di togliergli il vincolo della modalità di prova (vedi [`todo.md`](todo.md)).
+- **Immagini.** Quelle di Chierico, Chierica, Druido e Druida (personaggi, icone di classe e icone delle abilità) sono vere.
 - I valori sono un primo giro, mai provati con le simulazioni (`SimulazionePartiteTest`, `TestScontriDiGruppo`).
 - Radici e Sciame usano le immunità dell'incantesimo di Terra e di Veleno e registrano l'esito dei colpi come `TERRA` e `VELENO` (`TipoAzione.di`); essendo azioni su
   un gruppo, i requisiti delle tattiche non guardano le immunità scoperte di un bersaglio solo.
@@ -61,7 +58,7 @@ classi: in prova si possono aggiungere dalla finestra di prova (`FinestraDiProva
 
 ## Da fare / idee aperte
 
-- Le immagini vere del Druido e della Druida, poi togliere `isSoloDiProva`; e decidere se i chierici e i druidi compaiono come compagni reclutabili o come avversari.
+- Decidere se i chierici e i druidi compaiono come compagni reclutabili o come avversari.
 - Provare e ritoccare i numeri (soprattutto la Pelle di corteccia e la Rigenerazione, che durano 4 turni).
 - Se il Chierico, senza Alba sacra e Luce Divina, risulta ora troppo debole rispetto al Sacerdote, si può dargli un'abilità in più o ritoccare i valori (vedi i numeri da provare).
 - Le armi del Druido, se un giorno ci saranno gli archi.

@@ -40,7 +40,6 @@ public class RegistroPersonaggi {
 		aggiungiPersonaggio(new Guerriera("Elleran", 1));
 		aggiungiPersonaggio(new Guerriero("Roderick", 1));
 		aggiungiPersonaggio(new Guerriera("Wendy", 1));
-		aggiungiPersonaggio(new Guerriero("Frederick", 1));
 
 		aggiungiPersonaggio(new Ladro("Gabriel", 1));
 		aggiungiPersonaggio(new Ladra("Filean", 1));
@@ -58,6 +57,12 @@ public class RegistroPersonaggi {
 
 		aggiungiPersonaggio(new Sacerdote(ProduttoreDiTestiCasuale.nomeSacerdote(), 1));
 		aggiungiPersonaggio(new Sacerdotessa(ProduttoreDiTestiCasuale.nomeSacerdotessa(), 1));
+
+		aggiungiPersonaggio(new Chierico("Frederick", 1));
+		aggiungiPersonaggio(new Chierica("Elowen", 1));
+
+		aggiungiPersonaggio(new Druido("Alder", 1));
+		aggiungiPersonaggio(new Druida("Hazel", 1));
 	}
 
 	/**

@@ -9,7 +9,6 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.leggende.ConLeggendario;
 import com.threeamigos.foresta.missioni.leggende.PescaLeggendaria;
 import com.threeamigos.foresta.missioni.richieste.CombattimentoRichiesto;
-import com.threeamigos.foresta.motore.ModalitaDiProva;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
@@ -197,9 +196,6 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 	public static List<TipoPersonaggio> classiAmichevoli() {
 		List<TipoPersonaggio> classi = new ArrayList<>();
 		for (TipoPersonaggio classe : TipoPersonaggio.values()) {
-			if (classe.isSoloDiProva() && !ModalitaDiProva.isAttiva()) {
-				continue;
-			}
 			if (FabbricaPersonaggi.modello(classe).isAmichevole() && MossaCartaForbiciSasso.puoGiocare(classe)) {
 				classi.add(classe);
 			}

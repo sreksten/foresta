@@ -87,11 +87,8 @@ class ChiericoEDruidoTest {
         assertEquals("Druido", TipoPersonaggio.DRUIDO.getNome());
         for (TipoPersonaggio classe : Arrays.asList(TipoPersonaggio.CHIERICO, TipoPersonaggio.CHIERICA, TipoPersonaggio.DRUIDO, TipoPersonaggio.DRUIDA)) {
             assertEquals(classe, FabbricaPersonaggi.crea(classe, 1).getClasse());
-            assertEquals(classe == TipoPersonaggio.DRUIDO || classe == TipoPersonaggio.DRUIDA, classe.isSoloDiProva(), classe.name());
             assertTrue(classe.isDellaCategoria(CategoriaPersonaggio.UMANOIDE));
         }
-        assertFalse(TipoPersonaggio.SACERDOTE.isSoloDiProva());
-        assertFalse(TipoPersonaggio.BARDO.isSoloDiProva());
     }
 
     @Test
@@ -493,18 +490,18 @@ class ChiericoEDruidoTest {
         assertEquals(Arrays.asList(TipoAbilita.SCACCIARE_I_NON_MORTI, TipoAbilita.IMPOSIZIONE_DELLE_MANI), utili);
     }
 
-    // --- La scelta iniziale: il chierico sempre, il druido solo in modalità di prova
+    // --- La scelta iniziale: chierico e druido come le altre classi, con o senza modalità di prova
 
     @Test
-    void inModalitaDiProvaSiScegliAncheIlDruido() {
-        try (PartitaDiTest partita = PartitaDiTest.nuova(21)) {
+    void siSceglieIlDruidoSenzaLaModalitaDiProva() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(21)) {
             partita.comando(Comando.PERGAMENA);
             partita.testo("Elia");
             partita.comando(Comando.MASCHIO);
             assertTrue(partita.comandiDisponibili().containsAll(Arrays.asList(Comando.CHIERICO, Comando.DRUIDO)), partita.comandiDisponibili().toString());
             assertFalse(partita.comandiDisponibili().contains(Comando.CHIERICA));
         }
-        try (PartitaDiTest partita = PartitaDiTest.nuova(22)) {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(22)) {
             partita.comando(Comando.PERGAMENA);
             partita.testo("Giulia");
             partita.comando(Comando.FEMMINA);
@@ -526,29 +523,24 @@ class ChiericoEDruidoTest {
     }
 
     @Test
-    void senzaLaModalitaDiProvaNonSiSceglieIlDruido() {
+    void senzaLaModalitaDiProvaLeClassiDaSceglierePerSessoSonoOtto() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(24)) {
             partita.comando(Comando.PERGAMENA);
             partita.testo("Elia");
             partita.comando(Comando.MASCHIO);
-            assertEquals(7, partita.comandiDisponibili().size(), partita.comandiDisponibili().toString());
-            assertTrue(partita.comandiDisponibili().contains(Comando.CHIERICO));
-            assertFalse(partita.comandiDisponibili().contains(Comando.DRUIDO));
-            // E se il comando arriva lo stesso, si rifiuta
-            assertThrows(AssertionError.class, () -> partita.comando(Comando.DRUIDO));
+            assertEquals(8, partita.comandiDisponibili().size(), partita.comandiDisponibili().toString());
+            assertTrue(partita.comandiDisponibili().containsAll(Arrays.asList(Comando.CHIERICO, Comando.DRUIDO)));
         }
     }
 
     @Test
-    void soloIlDruidoNonCompareFraIChampioniDellaSfidaSenzaProva() {
+    void ChiericiEDruidiSonoCampioniDellaSfidaAncheSenzaProva() {
         boolean prova = ModalitaDiProva.isAttiva();
         try {
             ModalitaDiProva.setAttiva(false);
-            assertTrue(com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni.classiAmichevoli().contains(TipoPersonaggio.CHIERICO));
-            assertFalse(com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni.classiAmichevoli().contains(TipoPersonaggio.DRUIDA));
-            assertTrue(com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni.classiAmichevoli().contains(TipoPersonaggio.SACERDOTE));
-            ModalitaDiProva.setAttiva(true);
-            assertTrue(com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni.classiAmichevoli().contains(TipoPersonaggio.DRUIDA));
+            for (TipoPersonaggio classe : Arrays.asList(TipoPersonaggio.CHIERICO, TipoPersonaggio.CHIERICA, TipoPersonaggio.DRUIDO, TipoPersonaggio.DRUIDA)) {
+                assertTrue(com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni.classiAmichevoli().contains(classe), classe.name());
+            }
         } finally {
             ModalitaDiProva.setAttiva(prova);
         }
