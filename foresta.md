@@ -104,7 +104,8 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | [`debolezze_e_resistenze.md`](debolezze_e_resistenze.md) | Debolezze, resistenze e immunità di classe e di categoria ai tipi di danno (tabella provvisoria) |
 | [`modificatori_temporanei.md`](modificatori_temporanei.md) | Piano per i modificatori di attributo a tempo (turni o locazioni) e per le armi che li applicano al bersaglio |
 | [`bardo.md`](bardo.md) | I tre canti innati del Bardo (curativo, ipnotico, di valore) e il Viandante e i non combattenti come classi a sé |
-| [`chierico_e_druido.md`](chierico_e_druido.md) | Le classi Chierico e Druido (solo in modalità di prova) e le sei abilità innate che costano magia |
+| [`chierico_e_druido.md`](chierico_e_druido.md) | Le classi Chierico e Druido e le sei abilità innate che costano magia, con le simulazioni che le hanno provate |
+| [`bestiario.md`](bestiario.md) | Il bestiario: le voci, come si sbloccano, le caratteristiche di classe che si scoprono (immunità, debolezze), la scheda con le note dei moltiplicatori |
 | [`GrammarBean.md`](GrammarBean.md) | Manuale e assessment del motore di grammatiche |
 | [`nomi.md`](nomi.md) | Piano dei nomi dei personaggi non combattenti: `nomi.txt` condiviso, enumerato dei ruoli nominati e registro dei residenti |
 | [`tattiche_di_combattimento_automatiche.md`](tattiche_di_combattimento_automatiche.md) | Il combattimento a round e le tattiche automatiche di personaggi e mostri: round a coppie, azioni, bersagli e condizioni (con i giochi di riferimento), modello dati, salvataggio, tattiche base e schermata del giocatore |

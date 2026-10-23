@@ -29,7 +29,10 @@ Le interazioni con gli *stati* del difensore (un bagnato e il fulmine) sono un'a
   dal grigio verso il **verde** man mano che la debolezza cresce (verde pieno a ×2), dal grigio verso il **rosso** man mano che
   la resistenza cresce, **rosso acceso** per l'immunità.
 - Restano a parte, perché non sono tipi di danno, le immunità a un **incantesimo** (Morte non ha un tipo di danno) e a uno **stato**
-  (Sanguinamento, Infettato...), in `PersonaggioBase.isImmuneAIncantesimo` e `isImmuneAEffetto` e negli override delle classi.
+  (Sanguinamento, Infettato...). Sono dati di classe come i moltiplicatori: stanno in `TipoPersonaggio` (con quelle delle categorie in `CategoriaPersonaggio`: i non
+  morti sono immuni a Morte, Veleno, Sanguinamento e Infettato) e si leggono con `TipoPersonaggio.isImmuneAIncantesimo` e `isImmuneAEffetto`. `PersonaggioBase.isImmuneAIncantesimo`
+  e `isImmuneAEffetto` guardano la classe **e** il singolo personaggio (`isImmuneAIncantesimoPerIstanza`, `isImmuneAEffettoPerIstanza`, di norma falsi: il
+  Guerriero in berserk non si confonde né si spaventa). Il bestiario (`bestiario.md`) legge le immunità e i moltiplicatori di classe da `TipoPersonaggio.getCaratteristiche()`.
 
 ## 2. La tabella
 

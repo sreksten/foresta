@@ -182,17 +182,4 @@ public class Gargoyle extends PersonaggioBase implements Personaggio {
 				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
 		}
 	}
-
-	@Override
-	public boolean isImmuneAIncantesimo(TipoIncantesimo tipoIncantesimo) {
-		return true;
-	}
-
-	@Override
-	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
-		return effettoStato == TipoEffettoDiStato.SANGUINAMENTO ||
-				effettoStato == TipoEffettoDiStato.INFETTATO ||
-				effettoStato == TipoEffettoDiStato.AVVELENATO ||
-				effettoStato == TipoEffettoDiStato.IMMOBILIZZATO;
-	}
 }

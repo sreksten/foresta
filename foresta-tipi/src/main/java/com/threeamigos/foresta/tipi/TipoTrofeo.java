@@ -43,7 +43,8 @@ public enum TipoTrofeo {
 	SBEVAZZONE(CategoriaTrofeo.VARIE),
 	TUTTI_I_SANTI(CategoriaTrofeo.VARIE),
 	SPELEOLOGO(CategoriaTrofeo.VARIE),
-	VERO_ROMPISCATOLE(CategoriaTrofeo.VARIE);
+	VERO_ROMPISCATOLE(CategoriaTrofeo.VARIE),
+	ENCICLOPEDISTA(CategoriaTrofeo.VARIE);
 
 	/**
 	 * Tutti i trofei raggruppati per tipologia, nell'ordine di {@link CategoriaTrofeo}.

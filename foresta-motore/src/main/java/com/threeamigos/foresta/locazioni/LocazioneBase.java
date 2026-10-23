@@ -1974,6 +1974,10 @@ public abstract class LocazioneBase implements Locazione {
 		boolean vinta = sfida.haVintoIlGiocatore();
 		boolean diUnCampione = gruppoAvversario.isSfidaACartaForbiciSasso();
 		sfida = null;
+		if (vinta) {
+			// Lo sfidante non si uccide, ma per il bestiario è un incontro riuscito
+			BusEventi.pubblica(new InternoSfidaVinta(gruppoAvversario.getCapo().getClasse()));
+		}
 		statoLocazione = StatoLocazione.IN_LOCAZIONE;
 		haStrettoAmicizia = true;
 		BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \""

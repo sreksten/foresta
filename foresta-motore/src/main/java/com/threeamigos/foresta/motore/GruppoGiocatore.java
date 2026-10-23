@@ -2,6 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoPersonaggioEntratoNelGruppo;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
@@ -297,6 +298,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		if (!personaggio.getMotivoNelGruppo().isATempo() && personaggio.getNomeProprio().isPresent()) {
 			personaggio.getModelloDati().setPng(false);
 		}
+		// Anche chi ci sta a tempo e chi si ritrova in un gruppo ricaricato: il bestiario sblocca la voce della sua classe
+		BusEventi.pubblica(new InternoPersonaggioEntratoNelGruppo(personaggio.getClasse()));
 	}
 
 	/**

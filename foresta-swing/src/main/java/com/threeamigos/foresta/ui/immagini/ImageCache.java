@@ -434,6 +434,28 @@ public class ImageCache {
 	}
 
 	/**
+	 * La sagoma dell'immagine di quel colore: dove l'immagine è opaca, il colore pieno; il resto resta trasparente. Serve a ombre e silhouette
+	 * (l'ombra dei fumetti e degli sprite, le voci del bestiario ancora chiuse).
+	 */
+	public static BufferedImage sagomaScura(BufferedImage sorgente, Color colore) {
+		BufferedImage sagoma = BufferedImageBuilder.creaCompatibile(sorgente.getWidth(), sorgente.getHeight(), Transparency.TRANSLUCENT);
+		Graphics2D g = sagoma.createGraphics();
+		g.drawImage(sorgente, 0, 0, null);
+		g.setComposite(AlphaComposite.SrcIn);
+		g.setColor(colore);
+		g.fillRect(0, 0, sagoma.getWidth(), sagoma.getHeight());
+		g.dispose();
+		return sagoma;
+	}
+
+	/**
+	 * Come {@link #sagomaScura(BufferedImage, Color)}, ricordata per la classe e il colore: per le silhouette che si ridisegnano a ogni fotogramma.
+	 */
+	public static Image getSagomaDelPersonaggio(TipoPersonaggio classe, Verso verso, Color colore, Supplier<BufferedImage> immagine) {
+		return getComposta(Arrays.asList("sagomaDelPersonaggio", classe, verso, colore), () -> sagomaScura(immagine.get(), colore));
+	}
+
+	/**
 	 * Un testo a capo entro la larghezza indicata, con l'interlinea indicata fra le righe: un'immagine larga esattamente
 	 * {@code larghezza}, composta dalle righe di {@code get(testo, font, colore)}. A differenza di quella a capo con
 	 * la sola larghezza massima, qui l'altezza di ogni riga è quella che serve a chi impagina (vedi ComponenteScorrevole).

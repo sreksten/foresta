@@ -40,6 +40,7 @@ import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroMissioni;
 import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroSfida;
 import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroStatistiche;
 import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroTesto;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasBestiario;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasCommerciante;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIncantatore;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIntermezzo;
@@ -88,6 +89,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		STATO_PUNTEGGI,
 		STATO_INVENTARIO,
 		STATO_TROFEI,
+		STATO_BESTIARIO,
 		STATO_TATTICHE,
 		STATO_COMMERCIANTE,
 		STATO_ALCHIMISTA,
@@ -124,6 +126,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasMappaATuttoSchermo mappaATuttoSchermo;
 	private final transient DisplayableCanvasInventario inventario;
 	private final transient DisplayableCanvasTrofei paginaTrofei;
+	private final transient DisplayableCanvasBestiario bestiario;
 	private final transient DisplayableCanvasTattiche tattiche;
 	// Armaiolo e venditore di pergamene: una sola schermata, che cambia secondo il negozio
 	private final transient DisplayableCanvasCommerciante commerciante;
@@ -325,6 +328,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		paginaTrofei = new DisplayableCanvasTrofei(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		mappaCoordinateElementiGrafici.put(paginaTrofei, new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto));
+
+		bestiario = new DisplayableCanvasBestiario(larghezzaContenuto, altezzaContenuto, vistaPartita);
+		mappaCoordinateElementiGrafici.put(bestiario, new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto));
 
 		tattiche = new DisplayableCanvasTattiche(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		mappaCoordinateElementiGrafici.put(tattiche, new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto));
@@ -884,6 +890,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			disegnaFumetto(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_TROFEI) {
 			paginaTrofei.disegna(graphics);
+		} else if (stato == StatoDisplayableCanvas.STATO_BESTIARIO) {
+			bestiario.disegna(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_TATTICHE) {
 			tattiche.disegna(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_COMMERCIANTE) {
@@ -942,6 +950,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 		if (stato == StatoDisplayableCanvas.STATO_TROFEI) {
 			return paginaTrofei;
+		}
+		if (stato == StatoDisplayableCanvas.STATO_BESTIARIO) {
+			return bestiario;
 		}
 		if (stato == StatoDisplayableCanvas.STATO_TATTICHE) {
 			return tattiche;
@@ -1031,6 +1042,15 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	/**
+	 * Il bestiario, aperto dall'inventario.
+	 */
+	public void bestiario() {
+		bestiario.apri();
+		cambiaStato(StatoDisplayableCanvas.STATO_BESTIARIO);
+		repaint();
+	}
+
+	/**
 	 * Chi sa chiedere un testo al giocatore per conto della UI (il Prompt), per la schermata delle tattiche che rinomina le voci
 	 */
 	public void setRichiestaTesto(java.util.function.BiConsumer<String, java.util.function.Consumer<String>> richiestaTesto,
@@ -1047,9 +1067,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 		if (nuovo != stato) {
 			DisplayableCanvasScambiatore aperto = scambiatoreDelloStato(nuovo);
-			// Dalle pagine dei trofei e delle tattiche si torna all'inventario com'era
+			// Dalle pagine dei trofei, del bestiario e delle tattiche si torna all'inventario com'era
 			boolean ritornoAllInventario = nuovo == StatoDisplayableCanvas.STATO_INVENTARIO
-					&& (stato == StatoDisplayableCanvas.STATO_TROFEI || stato == StatoDisplayableCanvas.STATO_TATTICHE);
+					&& (stato == StatoDisplayableCanvas.STATO_TROFEI || stato == StatoDisplayableCanvas.STATO_BESTIARIO
+					|| stato == StatoDisplayableCanvas.STATO_TATTICHE);
 			if (aperto != null && !ritornoAllInventario) {
 				aperto.apri();
 			}

@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -21,18 +20,5 @@ public abstract class NonMortoVolante extends PersonaggioBase implements Persona
 	@Override
 	public Set<TipoIncantesimo> getRepertorioIncantesimi() {
 		return EnumSet.of(TipoIncantesimo.GELO);
-	}
-
-	@Override
-	public boolean isImmuneAIncantesimo(TipoIncantesimo tipoIncantesimo) {
-		return super.isImmuneAIncantesimo(tipoIncantesimo) ||
-				tipoIncantesimo == TipoIncantesimo.ARIA ||
-				tipoIncantesimo == TipoIncantesimo.TERRA;
-	}
-
-	@Override
-	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
-		return super.isImmuneAEffetto(effettoStato) ||
-				effettoStato == TipoEffettoDiStato.ATTERRATO;
 	}
 }

@@ -78,6 +78,10 @@ public enum TipoEvento {
      */
     RICHIESTA_APERTURA_TATTICHE,
     /**
+     * Richiesta di vedere il bestiario, dall'inventario
+     */
+    RICHIESTA_APERTURA_BESTIARIO,
+    /**
      * Richiede di visualizzare la mappa conosciuta della foresta a schermo intero
      */
     RICHIESTA_VISUALIZZAZIONE_MAPPA,
@@ -511,6 +515,22 @@ public enum TipoEvento {
     /**
      * Il giocatore ha vinto un trofeo
      */
-    INTERNO_TROFEO_ACQUISITO
+    INTERNO_TROFEO_ACQUISITO,
+    /**
+     * Una voce del bestiario si è sbloccata per la prima volta
+     */
+    INTERNO_VOCE_DEL_BESTIARIO_SBLOCCATA,
+    /**
+     * Si è visto come una classe reagisce a un tipo di danno, a un incantesimo o a un effetto di stato
+     */
+    INTERNO_CARATTERISTICA_OSSERVATA,
+    /**
+     * Un personaggio è entrato a far parte del gruppo del giocatore
+     */
+    INTERNO_PERSONAGGIO_ENTRATO_NEL_GRUPPO,
+    /**
+     * Il gruppo ha vinto una sfida a carta, forbici e sasso
+     */
+    INTERNO_SFIDA_VINTA
 
 }

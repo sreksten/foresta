@@ -171,11 +171,6 @@ public class Arpia extends PersonaggioBase implements Personaggio {
 
 
 	@Override
-	public boolean isImmuneAIncantesimo(TipoIncantesimo tipoIncantesimo) {
-		return tipoIncantesimo == TipoIncantesimo.ARIA;
-	}
-
-	@Override
 	public double getMaxStatistica(TipoAttributo tipoAttributo) {
 		switch (tipoAttributo) {
 			case FORZA:

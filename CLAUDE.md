@@ -42,6 +42,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | Testi generati, grammatiche | `…/testi/GrammarBean`, `ProduttoreDiTestiCasuale`, risorse `motore/*.txt` | `GrammarBean.md` |
 | Oggetti che fanno salire di livello un artefatto (solo nei cofani, si usano con la fusione) | `…/tipi/TipoArtefatto` (`AGGIORNAMENTO`), `…/oggetti/GeneratoreArtefattiTabelle`, `Cofano`, `…/motore/RegoleIncantatura`; **i nomi sono nella grammatica `foresta-motore/src/main/resources/com/threeamigos/foresta/motore/artefatti2.txt`** (produzione `NOME_AGGIORNAMENTO`) | `artefatti_e_incantamenti.md` |
 | Trofei | `…/trofei` (anche `RegistroTrofei`) | `motore_di_gioco.md` §10 |
+| Bestiario (voci, sblocchi, scoperte, scheda; immunità e caratteristiche generali di classe; moltiplicatori con le loro note) | `…/bestiario/RegistroBestiario`, `…/modellodati/BestiarioMD`, `…/tipi/{TipoPersonaggio,CaratteristicaDiClasse,MoltiplicatoreDiClasse,AbilitaInnataDiClasse}`, `…/personaggi/MoltiplicatoriDiClasse`, `…/abilita/AbilitaInnateDiClasse`, `…/trofei/TrofeoEnciclopedista`, `…/ui/schermate/{DisplayableCanvasBestiario,ImmagineBestiario}` | `bestiario.md` |
 | Nomi dei personaggi, residenti del mondo (bardo, città, campioni) | risorsa `motore/nomi.txt`, `…/tipi/PersonaggioNoto`, `…/modellodati/ResidenteMD`, `…/motore/RegistroPersonaggi`, `ProduttoreDiTestiCasuale` | `nomi.md` |
 
 ## Schermate (tutte in `…/ui`, divise in sottopacchetti)
@@ -57,7 +58,7 @@ Panoramica in `motore_grafico.md`.
 - Inventario, commerciante e incantatore estendono `DisplayableCanvasScambiatoreArtefatti` (astratta, due liste di oggetti affiancate), che estende `DisplayableCanvasScambiatore`: un comportamento comune alle tre schermate va lì.
 - Incantatore: `DisplayableCanvasIncantatore` (+ `…/motore/AutomaIncantatore`, `BancoDiLavoro`).
 - Tattiche di combattimento del giocatore: `DisplayableCanvasTattiche` (estende `DisplayableCanvasScambiatore`; apertura dall'inventario con `MOSTRA_TATTICHE`; `BozzaTattica` per le modifiche, `CasellaADiscesa` per i menu, `TestoTattica` per i testi); `tattiche_di_combattimento_automatiche.md` §11.15.
-- Trofei: `DisplayableCanvasTrofei`. Intermezzi: `DisplayableCanvasIntermezzo`, `AnimazioniIntermezzo`.
+- Trofei: `DisplayableCanvasTrofei`. Bestiario: `DisplayableCanvasBestiario` (con `ImmagineBestiario`). Intermezzi: `DisplayableCanvasIntermezzo`, `AnimazioniIntermezzo`.
 - Intro, slot di salvataggio, fine partita, statistiche, punteggi: `DisplayableCanvasIntroOutro`.
 - Mappa a tutto schermo e notiziario: `DisplayableCanvasMappaATuttoSchermo`, `DisegnatoreMappa`, `Notiziario`.
 - Riquadri della schermata di gioco: `DisplayableCanvasRiquadro{Locazione,Gruppo,Combattimento,Mappa,Missioni,Testo,Statistiche,IncantesimiEPozioni}`.
@@ -76,7 +77,7 @@ Panoramica in `motore_grafico.md`.
 
 ## Build e test
 
-`mvn test` dalla radice esegue i test di tutti i moduli (JUnit 5, in `src/test/java` di ciascuno); al 2026-10-22 sono 1705, tutti verdi (16 saltati).
+`mvn test` dalla radice esegue i test di tutti i moduli (JUnit 5, in `src/test/java` di ciascuno); al 2026-10-23 sono 1776, tutti verdi (20 saltati, fra cui le analisi manuali di `AnalisiAbilitaInnateTest`).
 I test stanno nel modulo più basso che vede tutto quello che usano; i test di motore e UI insieme sono in `foresta-app`, che usa gli helper dei test del motore (`PartitaDiTest` e simili) tramite il suo `test-jar`.
 Le dipendenze fra moduli le controlla il compilatore. Il compilatore non vede invece che nessuno fuori da `foresta-swing` usi `java.awt`, `javax.swing`, `javax.imageio` o `javax.sound` (fanno parte del JDK): lo controlla `ui/DipendenzeDalToolkitGraficoTest` in `foresta-app`, che legge i sorgenti (con `SorgentiDelProgetto`). Allo stesso modo `ConvenzioniDiPortabilitaTest` vieta le chiamate che dipendono dalla lingua del dispositivo senza `Locale` (`String.format`, `toLowerCase()`, `toUpperCase()`, `SimpleDateFormat`): si passa sempre `Locale.ROOT`. Il thread principale si raggiunge da `strumenti/ThreadPrincipale` (Swing lo installa con `ui/EsecutoreSwing` in `Main`).
 `mvn package` scrive nella radice il jar eseguibile con le dipendenze, `foresta-0.0.1-SNAPSHOT-jar-with-dependencies.jar`.

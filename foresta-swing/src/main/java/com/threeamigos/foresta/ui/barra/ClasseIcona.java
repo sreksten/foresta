@@ -146,6 +146,8 @@ public enum ClasseIcona {
 	AIUTO(Comando.AIUTO, "icone/Aiuto.gif", Sfondo.VERDE),
 	NO_AIUTO(Comando.NO_AIUTO, "icone/Aiuto.gif", Sfondo.ROSSO),
 	MOSTRA_TROFEI(Comando.MOSTRA_TROFEI, "icone/Trofei.gif", Sfondo.VERDE),
+	// Per ora la copia dell'icona del goblin (vedi todo.md)
+	MOSTRA_BESTIARIO(Comando.MOSTRA_BESTIARIO, "icone/Bestiario.gif", Sfondo.VERDE),
 	MOSTRA_TATTICHE(Comando.MOSTRA_TATTICHE, "icone/TatticheAttacco.gif", Sfondo.VERDE),
 	PERGAMENA(Comando.PERGAMENA, "icone/Pergamena.gif", Sfondo.GRIGIO),
 

@@ -148,6 +148,8 @@ public enum Comando {
 	MOSTRA_TROFEI,
 	// Dall'inventario, la schermata delle tattiche di combattimento
 	MOSTRA_TATTICHE,
+	// Dall'inventario, il bestiario: i personaggi incontrati e quel che si è scoperto di loro
+	MOSTRA_BESTIARIO,
 
 	// Usata per chiedere conferma all'utente prima di andare avanti
 	PERGAMENA,

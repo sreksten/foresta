@@ -1,10 +1,13 @@
 package com.threeamigos.foresta.interfacce;
 
 import com.threeamigos.foresta.modellodati.NotiziaMD;
+import com.threeamigos.foresta.tipi.AbilitaInnataDiClasse;
+import com.threeamigos.foresta.tipi.MoltiplicatoreDiClasse;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Lo stato della partita come lo vede la UI: in sola lettura, al posto di GruppoGiocatore.getIstanza(), Foresta,
@@ -57,6 +60,29 @@ public interface VistaPartita {
 	 * A che punto è il trofeo, da 0 all'obiettivo, accumulato partita dopo partita
 	 */
 	int getProgressoTrofeo(TipoTrofeo trofeo);
+
+	/**
+	 * Se la voce del bestiario di quella classe (o di quella che ne condivide il ruolo) è sbloccata: chiusa, il bestiario ne mostra solo la
+	 * silhouette e "???"
+	 */
+	boolean isVoceDelBestiarioSbloccata(TipoPersonaggio classe);
+
+	/**
+	 * Le chiavi (vedi CaratteristicaDiClasse.getChiave) delle caratteristiche già scoperte della voce di quella classe: di quelle che la
+	 * classe ha davvero, il bestiario scrive solo queste
+	 */
+	Set<String> getCaratteristicheScoperte(TipoPersonaggio classe);
+
+	/**
+	 * I moltiplicatori di quella classe (carico, furtività, danni...) con la nota che spiega perché ha quel valore, nell'ordine in cui il
+	 * bestiario li mostra. Sono della classe e non del ruolo: il Mago e la Maga possono averli diversi, e chi mostra la voce li chiede a tutte e due
+	 */
+	List<MoltiplicatoreDiClasse> getMoltiplicatoriDiClasse(TipoPersonaggio classe);
+
+	/**
+	 * Le capacità innate di quella classe (le abilità del Chierico, i canti del Bardo, il dardo arcano...), per il bestiario; vuoto per chi non ne ha
+	 */
+	List<AbilitaInnataDiClasse> getAbilitaInnate(TipoPersonaggio classe);
 
 	/**
 	 * Il nome, con la provenienza, del personaggio di quel mestiere (armaiolo, alchimista, venditore di pergamene,

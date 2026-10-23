@@ -2,7 +2,6 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
 
@@ -183,12 +182,5 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 			default:
 				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
 		}
-	}
-
-	@Override
-	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
-		return super.isImmuneAEffetto(effettoStato) ||
-				effettoStato == TipoEffettoDiStato.AVVELENATO ||
-				effettoStato == TipoEffettoDiStato.SPAVENTATO;
 	}
 }

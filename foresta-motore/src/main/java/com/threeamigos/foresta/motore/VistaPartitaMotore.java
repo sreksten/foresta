@@ -15,9 +15,15 @@ import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
+import com.threeamigos.foresta.bestiario.RegistroBestiario;
+import com.threeamigos.foresta.abilita.AbilitaInnateDiClasse;
+import com.threeamigos.foresta.personaggi.MoltiplicatoriDiClasse;
+import com.threeamigos.foresta.tipi.AbilitaInnataDiClasse;
+import com.threeamigos.foresta.tipi.MoltiplicatoreDiClasse;
 import com.threeamigos.foresta.trofei.ClasseTrofeo;
 
 import java.util.List;
+import java.util.Set;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 
@@ -103,6 +109,26 @@ public class VistaPartitaMotore implements VistaPartita {
 	@Override
 	public int getProgressoTrofeo(TipoTrofeo trofeo) {
 		return ClasseTrofeo.di(trofeo).getProgresso();
+	}
+
+	@Override
+	public boolean isVoceDelBestiarioSbloccata(TipoPersonaggio classe) {
+		return RegistroBestiario.isSbloccata(classe);
+	}
+
+	@Override
+	public Set<String> getCaratteristicheScoperte(TipoPersonaggio classe) {
+		return RegistroBestiario.getCaratteristicheScoperte(classe);
+	}
+
+	@Override
+	public List<MoltiplicatoreDiClasse> getMoltiplicatoriDiClasse(TipoPersonaggio classe) {
+		return MoltiplicatoriDiClasse.di(classe);
+	}
+
+	@Override
+	public List<AbilitaInnataDiClasse> getAbilitaInnate(TipoPersonaggio classe) {
+		return AbilitaInnateDiClasse.di(classe);
 	}
 
 	@Override

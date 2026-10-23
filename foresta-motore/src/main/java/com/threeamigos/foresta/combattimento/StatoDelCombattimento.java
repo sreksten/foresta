@@ -1,10 +1,13 @@
 package com.threeamigos.foresta.combattimento;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoCaratteristicaOsservata;
 import com.threeamigos.foresta.eventi.interni.InternoInizioRound;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.CaratteristicaDiClasse;
 import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import com.threeamigos.foresta.strumenti.Logger;
@@ -432,6 +435,8 @@ public class StatoDelCombattimento {
 		}
 		if (risultato.getTipoDanno() != null) {
 			registraReazione(difensore, risultato.getTipoDanno(), risultato.getFattoreEquipaggiamento());
+			// Il bestiario si ricorda di come la classe subisce quel tipo di danno (non vale solo per lo scontro)
+			BusEventi.pubblica(new InternoCaratteristicaOsservata(difensore.getClasse(), CaratteristicaDiClasse.Genere.DANNO, risultato.getTipoDanno()));
 		}
 	}
 
@@ -525,6 +530,11 @@ public class StatoDelCombattimento {
 				break;
 			default:
 				immunitaScoperte.computeIfAbsent(bersaglio, b -> EnumSet.noneOf(TipoAzione.class)).add(azione);
+				// Anche il bestiario ricorda che quella classe è immune all'incantesimo (se l'azione ne lancia uno)
+				TipoIncantesimo incantesimo = azione.getClasseIncantesimo();
+				if (incantesimo != null) {
+					BusEventi.pubblica(new InternoCaratteristicaOsservata(bersaglio.getClasse(), CaratteristicaDiClasse.Genere.INCANTESIMO, incantesimo));
+				}
 				break;
 		}
 	}

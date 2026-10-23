@@ -198,7 +198,7 @@ public class Guerriera extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
+	protected boolean isImmuneAEffettoPerIstanza(TipoEffettoDiStato effettoStato) {
 		return (effettoStato == TipoEffettoDiStato.CONFUSO ||
 				effettoStato == TipoEffettoDiStato.SPAVENTATO) &&
 				hasEffettoDiStato(TipoEffettoDiStato.BERSERK);

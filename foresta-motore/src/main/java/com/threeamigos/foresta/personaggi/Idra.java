@@ -188,17 +188,4 @@ public class Idra extends PersonaggioBase implements Personaggio {
 	public boolean isParteConValoriMassimi() {
 		return true;
 	}
-
-	@Override
-	public boolean isImmuneAIncantesimo(TipoIncantesimo tipoIncantesimo) {
-		return tipoIncantesimo == TipoIncantesimo.TERRA ||
-				tipoIncantesimo == TipoIncantesimo.ACQUA ||
-				tipoIncantesimo == TipoIncantesimo.ARIA;
-	}
-
-	@Override
-	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
-		return effettoStato == TipoEffettoDiStato.CONFUSO ||
-				effettoStato == TipoEffettoDiStato.STORDITO;
-	}
 }

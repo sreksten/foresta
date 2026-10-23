@@ -7,7 +7,8 @@ import java.util.Optional;
  * "Più piccolo di un umano e costretto ad arrangiarsi con equipaggiamento leggero" per il carico massimo del goblin.
  * <p>
  * Le frasi non stanno nel codice ma nel file {@code note_personaggi_<lingua>.properties} (vedi {@link Testi}),
- * una mappa (tipo di personaggio, attributo) → nota.
+ * una mappa (tipo di personaggio, attributo) → nota. Le mostra il bestiario, accanto al valore di ogni moltiplicatore
+ * (vedi {@link MoltiplicatoreDiClasse}).
  * <p>
  * Le note sono per {@link TipoAttributo}, più {@link #DANNI_MAGICI} e {@link #DANNI_FISICI}, che sono moltiplicatori
  * dei danni e non attributi. Un tipo può usare le note di un altro tipo o di un gruppo (la voce

@@ -8,6 +8,7 @@ import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.motore.Automa;
 import com.threeamigos.foresta.motore.StatoDelMotore;
+import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.strumenti.*;
@@ -20,6 +21,7 @@ import com.threeamigos.foresta.motore.StrumentiDiSviluppoMotore;
 import com.threeamigos.foresta.ui.sviluppo.FinestraDiProva;
 import com.threeamigos.foresta.salvataggi.GestorePunteggiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreSalvataggiSuFile;
+import com.threeamigos.foresta.salvataggi.GestoreBestiarioSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreTrofeiSuFile;
 import java.util.Locale;
 
@@ -96,6 +98,8 @@ public class Main {
 		GestorePunteggi gestorePunteggi = new GestorePunteggiSuFile();
 		// I trofei vinti valgono da una partita all'altra: si rileggono una volta sola, all'avvio
 		RegistroTrofei.impostaGestoreTrofei(new GestoreTrofeiSuFile());
+		// Come i trofei, il bestiario vale da una partita all'altra
+		RegistroBestiario.impostaGestoreBestiario(new GestoreBestiarioSuFile());
 
 		Temporizzatore temporizzatoreAutoma = new TemporizzatoreJ2SE();
 		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatoreAutoma, new GestoreSalvataggiSuFile(), gestorePunteggi);

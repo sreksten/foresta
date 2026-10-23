@@ -226,19 +226,29 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 	
 	/**
-	 * Se è un non morto (categoria NON_MORTO): le immunità agli incantesimi e agli stati comuni a tutti i non morti stanno
-	 * qui sotto, le altre nelle singole classi, che ridefiniscono questi metodi aggiungendo le proprie e chiamando super.
-	 * (Le debolezze e le immunità ai tipi di danno stanno in CategoriaPersonaggio e TipoPersonaggio.)
+	 * Se è un non morto (categoria NON_MORTO).
+	 * (Le debolezze e le immunità della classe ai tipi di danno, agli incantesimi e agli effetti di stato stanno in CategoriaPersonaggio e
+	 * TipoPersonaggio, dove le legge anche il bestiario.)
 	 */
 	private boolean isNonMorto() {
 		return getClasse().isDellaCategoria(CategoriaPersonaggio.NON_MORTO);
 	}
 
 	/**
-	 * I non morti sono immuni a Morte e Veleno
+	 * Immune a un incantesimo: lo è la sua classe (i non morti, a Morte e Veleno; vedi TipoPersonaggio.isImmuneAIncantesimo) oppure, in più, lui in
+	 * particolare (vedi {@link #isImmuneAIncantesimoPerIstanza})
 	 */
 	public boolean isImmuneAIncantesimo(TipoIncantesimo tipoIncantesimo) {
-		return isNonMorto() && (tipoIncantesimo == TipoIncantesimo.MORTE || tipoIncantesimo == TipoIncantesimo.VELENO);
+		return getClasse().isImmuneAIncantesimo(tipoIncantesimo) || isImmuneAIncantesimoPerIstanza(tipoIncantesimo);
+	}
+
+	/**
+	 * Le immunità agli incantesimi che non sono della classe ma di questo personaggio: di norma nessuna. Serve a chi vuole un personaggio particolare
+	 * (un goblin di una missione) con un'immunità che gli altri della sua classe non hanno, o che dipende dal suo stato. Non entrano nel bestiario,
+	 * che descrive le classi.
+	 */
+	protected boolean isImmuneAIncantesimoPerIstanza(TipoIncantesimo tipoIncantesimo) {
+		return false;
 	}
 
 	/**
@@ -256,10 +266,19 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	/**
-	 * I non morti non sanguinano e non si infettano
+	 * Immune a un effetto di stato: lo è la sua classe (i non morti non sanguinano e non si infettano; vedi TipoPersonaggio.isImmuneAEffetto)
+	 * oppure, in più, lui in particolare (vedi {@link #isImmuneAEffettoPerIstanza})
 	 */
 	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
-		return isNonMorto() && (effettoStato == TipoEffettoDiStato.SANGUINAMENTO || effettoStato == TipoEffettoDiStato.INFETTATO);
+		return getClasse().isImmuneAEffetto(effettoStato) || isImmuneAEffettoPerIstanza(effettoStato);
+	}
+
+	/**
+	 * Le immunità agli effetti di stato che non sono della classe ma di questo personaggio: di norma nessuna. Il Guerriero, per esempio, non si
+	 * confonde e non si spaventa finché è in berserk. Non entrano nel bestiario, che descrive le classi.
+	 */
+	protected boolean isImmuneAEffettoPerIstanza(TipoEffettoDiStato effettoStato) {
+		return false;
 	}
 	
 	/**
@@ -2230,6 +2249,8 @@ public abstract class PersonaggioBase implements Personaggio {
 			return;
 		}
 		if (isImmuneAEffetto(tipoEffettoDiStato)) {
+			// Il bestiario si ricorda dell'immunità, se è della classe (non quella di un solo personaggio)
+			BusEventi.pubblica(new InternoCaratteristicaOsservata(getClasse(), CaratteristicaDiClasse.Genere.EFFETTO, tipoEffettoDiStato));
 			BusEventi.pubblica(new InternoMessaggio(
 					getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
 							" è immune a " + tipoEffettoDiStato.getDescrizione() + "."));

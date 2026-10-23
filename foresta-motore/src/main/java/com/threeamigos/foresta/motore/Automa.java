@@ -237,6 +237,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriIngresso.put(Stato.MAPPA, this::entraInStatoMappa);
 		gestoriIngresso.put(Stato.INVENTARIO, this::entraInStatoInventario);
 		gestoriIngresso.put(Stato.TROFEI, this::entraInStatoTrofei);
+		gestoriIngresso.put(Stato.BESTIARIO, this::entraInStatoBestiario);
 		gestoriIngresso.put(Stato.TATTICHE, this::entraInStatoTattiche);
 		// Uscendo da MAPPA o INVENTARIO aperti mentre si era IN_LOCAZIONE si torna qui
 		// tramite CONTINUA_CON_INGRESSO (statoPrecedente vale IN_LOCAZIONE), con comando
@@ -286,6 +287,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.MAPPA, this::gestisciComandoInStatoMappa);
 		gestoriComando.put(Stato.INVENTARIO, this::gestisciComandoInStatoInventario);
 		gestoriComando.put(Stato.TROFEI, this::gestisciComandoInStatoTrofei);
+		gestoriComando.put(Stato.BESTIARIO, this::gestisciComandoInStatoBestiario);
 		gestoriComando.put(Stato.TATTICHE, this::gestisciComandoInStatoTattiche);
 		gestoriComando.put(Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE, this::gestisciComandoInStatoSelezioneSalvataggioDaScrivere);
 		gestoriComando.put(Stato.CONFERMA_USCITA, this::gestisciComandoInStatoConfermaUscita);
@@ -375,6 +377,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case MAPPA:
 			case INVENTARIO:
 			case TROFEI:
+			case BESTIARIO:
 			case TATTICHE:
 				return statoPrecedente == Stato.ATTESA_DIREZIONE;
 			default:
@@ -1594,6 +1597,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case MOSTRA_TROFEI:
 				stato = Stato.TROFEI;
 				return Esito.CONTINUA_CON_INGRESSO;
+			case MOSTRA_BESTIARIO:
+				stato = Stato.BESTIARIO;
+				return Esito.CONTINUA_CON_INGRESSO;
 			case MOSTRA_TATTICHE:
 				stato = Stato.TATTICHE;
 				return Esito.CONTINUA_CON_INGRESSO;
@@ -1612,6 +1618,23 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito gestisciComandoInStatoTrofei(Comando comando) {
+		if (comando != Comando.ANNULLA) {
+			comandoNonValido(comando);
+			return Esito.FERMATI;
+		}
+		stato = Stato.INVENTARIO;
+		return Esito.CONTINUA_CON_INGRESSO;
+	}
+
+	/**
+	 * Il bestiario: l'unico comando è ANNULLA, che torna all'inventario. Le voci e quel che si è scoperto la UI li legge dalla VistaPartita.
+	 */
+	private Esito entraInStatoBestiario() {
+		BusEventi.pubblica(new RichiestaAperturaBestiario(Collections.singletonList(Comando.ANNULLA)));
+		return Esito.FERMATI;
+	}
+
+	private Esito gestisciComandoInStatoBestiario(Comando comando) {
 		if (comando != Comando.ANNULLA) {
 			comandoNonValido(comando);
 			return Esito.FERMATI;
@@ -2329,6 +2352,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			}
 		}
 		comandiPossibili.add(Comando.MOSTRA_TROFEI);
+		comandiPossibili.add(Comando.MOSTRA_BESTIARIO);
 		comandiPossibili.add(Comando.MOSTRA_TATTICHE);
 		comandiPossibili.add(Comando.ANNULLA);
 

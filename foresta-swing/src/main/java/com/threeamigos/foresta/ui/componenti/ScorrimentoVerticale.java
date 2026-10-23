@@ -105,6 +105,28 @@ public final class ScorrimentoVerticale {
 	}
 
 	/**
+	 * Di quanti pixel l'immagine è scorsa dalla cima (0 se è in cima): per risalire da un punto dell'area a un punto dell'immagine, per esempio
+	 * la riga di un elenco su cui si è cliccato
+	 */
+	public int getScorrimento() {
+		return (int) Math.round(-y);
+	}
+
+	/**
+	 * Se il punto (nelle coordinate di chi disegna) è dentro l'area
+	 */
+	public boolean contiene(int x, int y) {
+		return area.contains(x, y);
+	}
+
+	/**
+	 * La cima dell'area, nelle coordinate di chi disegna
+	 */
+	public int getCima() {
+		return area.y;
+	}
+
+	/**
 	 * Se sopra l'area c'è ancora un pezzo d'immagine.
 	 */
 	boolean haAltroSopra() {

@@ -3,6 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 /**
@@ -37,19 +38,20 @@ public final class StatoDelMotore {
 
 	/**
 	 * Fa iscrivere al bus i componenti che tengono il conto di ciò che succede in gioco: gli ultimi messaggi e notizie,
-	 * le statistiche, i trofei, gli artefatti e le missioni. Dopo un {@code BusEventi.azzera()} va richiamato.
+	 * le statistiche, i trofei, il bestiario, gli artefatti e le missioni. Dopo un {@code BusEventi.azzera()} va richiamato.
 	 */
 	public static void registraComponenti() {
 		Notizie.registrati();
 		Statistiche.registrati();
 		RegistroTrofei.registrati();
+		RegistroBestiario.registrati();
 		RegistroArtefatti.registrati();
 		RegistroMissioni.registrati();
 	}
 
 	/**
 	 * Azzera lo stato statico: un modello dati vuoto, nessun gruppo, nessun combattimento. Non tocca il bus, i dadi
-	 * né i trofei, che passano da una partita all'altra.
+	 * né i trofei e il bestiario, che passano da una partita all'altra.
 	 * <p>
 	 * L'{@link Automa} in funzione si chiude: tiene i gruppi della partita di prima nei suoi campi, e dopo l'azzeramento
 	 * non è più utilizzabile. Per ripartire se ne crea uno nuovo (e si richiama {@link #registraComponenti()} se si è

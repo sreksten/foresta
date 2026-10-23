@@ -3,7 +3,6 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 
@@ -184,10 +183,5 @@ public class Troll extends PersonaggioBase implements Personaggio {
 			default:
 				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
 		}
-	}
-
-	@Override
-	public boolean isImmuneAIncantesimo(TipoIncantesimo tipoIncantesimo) {
-		return tipoIncantesimo == TipoIncantesimo.TERRA;
 	}
 }

@@ -85,6 +85,10 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(NotificaRaccoltaOggetti.class, this::onEventoRaccoltaOggetti);
         BusEventi.iscriviti(InternoTrofeoAcquisito.class, this::onEventoTrofeoAcquisito);
         BusEventi.iscriviti(InternoAvversarioSconfitto.class, this::onEventoAvversarioSconfitto);
+        BusEventi.iscriviti(InternoVoceDelBestiarioSbloccata.class, this::onEventoVoceDelBestiarioSbloccata);
+        BusEventi.iscriviti(InternoCaratteristicaOsservata.class, this::onEventoCaratteristicaOsservata);
+        BusEventi.iscriviti(InternoPersonaggioEntratoNelGruppo.class, this::onEventoPersonaggioEntratoNelGruppo);
+        BusEventi.iscriviti(InternoSfidaVinta.class, this::onEventoSfidaVinta);
         BusEventi.iscriviti(InternoFineLocazione.class, this::onEventoFineLocazione);
         BusEventi.iscriviti(InternoPastoConsumatoInLocanda.class, this::onEventoPastoConsumatoInLocanda);
         BusEventi.iscriviti(InternoLocazioneVisitata.class, this::onEventoLocazioneVisitata);
@@ -162,6 +166,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(RichiestaAperturaIncantatore.class, this::onEventoRichiestaAperturaIncantatore);
         BusEventi.iscriviti(RichiestaAperturaTattiche.class, this::onEventoRichiestaAperturaTattiche);
         BusEventi.iscriviti(RichiestaAperturaTrofei.class, this::onEventoRichiestaAperturaTrofei);
+        BusEventi.iscriviti(RichiestaAperturaBestiario.class, this::onEventoRichiestaAperturaBestiario);
         BusEventi.iscriviti(RichiestaSelezioneMissione.class, this::onEventoRichiestaSelezioneMissione);
     }
 
@@ -240,6 +245,10 @@ public class SnifferBusEventi {
     }
 
     private void onEventoRichiestaAperturaTrofei(RichiestaAperturaTrofei evento) {
+        Logger.log(() -> headerEvento(evento) + "Comandi: " + evento.getPossibilita());
+    }
+
+    private void onEventoRichiestaAperturaBestiario(RichiestaAperturaBestiario evento) {
         Logger.log(() -> headerEvento(evento) + "Comandi: " + evento.getPossibilita());
     }
 
@@ -444,6 +453,22 @@ public class SnifferBusEventi {
 
     private void onEventoAvversarioSconfitto(InternoAvversarioSconfitto evento) {
         Logger.log(() -> headerEvento(evento) + "Sconfitto: " + evento.getClasse());
+    }
+
+    private void onEventoVoceDelBestiarioSbloccata(InternoVoceDelBestiarioSbloccata evento) {
+        Logger.log(() -> headerEvento(evento) + "Voce sbloccata: " + evento.getVoce());
+    }
+
+    private void onEventoCaratteristicaOsservata(InternoCaratteristicaOsservata evento) {
+        Logger.log(() -> headerEvento(evento) + evento.getClasse() + ": " + evento.getGenere() + " " + evento.getValore());
+    }
+
+    private void onEventoPersonaggioEntratoNelGruppo(InternoPersonaggioEntratoNelGruppo evento) {
+        Logger.log(() -> headerEvento(evento) + "Nel gruppo: " + evento.getClasse());
+    }
+
+    private void onEventoSfidaVinta(InternoSfidaVinta evento) {
+        Logger.log(() -> headerEvento(evento) + "Sfida vinta contro: " + evento.getAvversario());
     }
 
     private void onEventoFineLocazione(InternoFineLocazione evento) {

@@ -189,14 +189,4 @@ public class ChimeraDrago extends PersonaggioBase implements Personaggio {
 				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
 		}
 	}
-
-	@Override
-	public boolean isImmuneAIncantesimo(TipoIncantesimo tipoIncantesimo) {
-		return tipoIncantesimo == TipoIncantesimo.FUOCO;
-	}
-
-	@Override
-	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
-		return effettoStato == TipoEffettoDiStato.BRUCIATO;
-	}
 }

@@ -50,6 +50,8 @@ public enum Stato {
 	INVENTARIO,
 	// La pagina dei trofei, aperta dall'inventario: con ANNULLA si torna all'inventario
 	TROFEI,
+	// Il bestiario, aperto dall'inventario: con ANNULLA si torna all'inventario
+	BESTIARIO,
 	// La schermata delle tattiche, aperta dall'inventario: con ANNULLA si torna all'inventario
 	TATTICHE,
 

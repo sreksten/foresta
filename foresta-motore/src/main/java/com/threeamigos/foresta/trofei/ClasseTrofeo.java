@@ -67,7 +67,9 @@ public enum ClasseTrofeo {
 	CARTOGRAFO(() -> new TrofeoAContatore<>(TipoTrofeo.CARTOGRAFO, NotificaApprovazioneAcquistoConsumabile.class,
 			evento -> consumabileComprato(evento) == TipoConsumabile.MAPPA_COMPLETA_FORESTA ? 1 : 0, 1)),
 	TRAFFICONE(() -> new TrofeoAContatore<>(TipoTrofeo.TRAFFICONE, NotificaApprovazioneIncantatura.class,
-			evento -> 1, 50));
+			evento -> 1, 50)),
+	// Tutte le voci del bestiario, da una partita all'altra (vedi RegistroBestiario)
+	ENCICLOPEDISTA(TrofeoEnciclopedista::new);
 
 	private final Supplier<Trofeo> supplier;
 

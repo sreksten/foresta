@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.sprite;
 
+import com.threeamigos.foresta.ui.immagini.ImageCache;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -53,7 +54,7 @@ public abstract class SpriteBase implements SpriteInterface {
 	}
 
 	private BufferedImage applicaOmbra(BufferedImage sorgente, Color colore, int scostamento) {
-		BufferedImage ombra = creaSagomaScura(sorgente, colore);
+		BufferedImage ombra = ImageCache.sagomaScura(sorgente, colore);
 		int larghezzaTotale = sorgente.getWidth() + scostamento * 2;
 		int altezzaTotale = sorgente.getHeight() + scostamento * 2;
 		BufferedImage risultato = new BufferedImage(larghezzaTotale, altezzaTotale, BufferedImage.TYPE_INT_ARGB);
@@ -184,16 +185,5 @@ public abstract class SpriteBase implements SpriteInterface {
 			return 1.0f;
 		}
 		return Math.max(0.0f, 1.0f - (secondiTrascorsi - sogliaInSecondi) / (durataInSecondi - sogliaInSecondi));
-	}
-
-	private static BufferedImage creaSagomaScura(BufferedImage sorgente, Color colore) {
-		BufferedImage sagoma = new BufferedImage(sorgente.getWidth(), sorgente.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = sagoma.createGraphics();
-		g.drawImage(sorgente, 0, 0, null);
-		g.setComposite(AlphaComposite.SrcIn);
-		g.setColor(colore);
-		g.fillRect(0, 0, sagoma.getWidth(), sagoma.getHeight());
-		g.dispose();
-		return sagoma;
 	}
 }

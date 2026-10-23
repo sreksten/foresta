@@ -1,7 +1,9 @@
 package com.threeamigos.foresta.tipi;
 
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * La categoria di creatura di un Personaggio, per scegliere chi colpire o a chi rivolgere un'azione "per categoria" (un
@@ -61,11 +63,18 @@ public enum CategoriaPersonaggio {
 		// Ciò che è fabbricato non respira, non ha una mente e non ha sangue
 		COSTRUTTO.modifica(TipoDanno.VELENO, 0.0d);
 		COSTRUTTO.modifica(TipoDanno.PSICHICO, 0.0d);
+		// I non morti non hanno una forza vitale da prosciugare, né sangue da perdere o un corpo che si infetta
+		NON_MORTO.immuneAIncantesimi.addAll(EnumSet.of(TipoIncantesimo.MORTE, TipoIncantesimo.VELENO));
+		NON_MORTO.immuneAEffetti.addAll(EnumSet.of(TipoEffettoDiStato.SANGUINAMENTO, TipoEffettoDiStato.INFETTATO));
 	}
 
 	// Quanto danno subisce, per tipo di danno, chi è di questa categoria. Tipi mancanti restituiscono 1
 	// (danno non modificato)
 	private final Map<TipoDanno, Double> moltiplicatoriDannoSubito = new EnumMap<>(TipoDanno.class);
+
+	// Gli incantesimi e gli effetti di stato a cui è immune chi è di questa categoria
+	private final Set<TipoIncantesimo> immuneAIncantesimi = EnumSet.noneOf(TipoIncantesimo.class);
+	private final Set<TipoEffettoDiStato> immuneAEffetti = EnumSet.noneOf(TipoEffettoDiStato.class);
 
 	CategoriaPersonaggio() {
 	}
@@ -80,6 +89,20 @@ public enum CategoriaPersonaggio {
 	 */
 	public double getMoltiplicatoreDannoSubito(TipoDanno tipoDanno) {
 		return moltiplicatoriDannoSubito.getOrDefault(tipoDanno, 1.0d);
+	}
+
+	/**
+	 * Se chi è di questa categoria è immune a quell'incantesimo (i non morti lo sono a Morte e Veleno)
+	 */
+	public boolean isImmuneAIncantesimo(TipoIncantesimo tipoIncantesimo) {
+		return immuneAIncantesimi.contains(tipoIncantesimo);
+	}
+
+	/**
+	 * Se chi è di questa categoria è immune a quell'effetto di stato (i non morti non sanguinano e non si infettano)
+	 */
+	public boolean isImmuneAEffetto(TipoEffettoDiStato tipoEffettoDiStato) {
+		return immuneAEffetti.contains(tipoEffettoDiStato);
 	}
 
 	/**

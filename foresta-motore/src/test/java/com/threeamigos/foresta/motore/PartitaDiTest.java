@@ -16,6 +16,7 @@ import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ final class PartitaDiTest implements AutoCloseable {
 	private final TemporizzatoreManuale temporizzatore = new TemporizzatoreManuale();
 	private final GestoreSalvataggiInMemoria salvataggi;
 	private final GestoreTrofeiInMemoria trofei = new GestoreTrofeiInMemoria();
+	private final GestoreBestiarioInMemoria bestiario = new GestoreBestiarioInMemoria();
 	private final RegistratoreEventi registratore = new RegistratoreEventi();
 	private Collection<Comando> comandiDisponibili = new ArrayList<>();
 	private int erroriVisti;
@@ -72,6 +74,8 @@ final class PartitaDiTest implements AutoCloseable {
 		StatoDelMotore.azzera();
 		// I trofei passano da una partita all'altra: ogni test riparte senza nessun trofeo vinto
 		RegistroTrofei.impostaGestoreTrofei(trofei);
+		// Come i trofei, anche il bestiario riparte vuoto a ogni test
+		RegistroBestiario.impostaGestoreBestiario(bestiario);
 		StatoDelMotore.registraComponenti();
 
 		registratore.ascolta(InternoErrore.class, InternoException.class, InternoFaseDiGioco.class,
@@ -88,6 +92,7 @@ final class PartitaDiTest implements AutoCloseable {
 		BusEventi.iscriviti(RichiestaAperturaIncantatore.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaAperturaInventarioGruppo.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaAperturaTrofei.class, this::aggiornaComandi);
+		BusEventi.iscriviti(RichiestaAperturaBestiario.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaAperturaTattiche.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneSiNo.class, this::aggiornaComandi);
@@ -294,6 +299,10 @@ final class PartitaDiTest implements AutoCloseable {
 	 */
 	Collection<Comando> comandiDisponibili() {
 		return comandiDisponibili;
+	}
+
+	GestoreBestiarioInMemoria bestiario() {
+		return bestiario;
 	}
 
 	GestoreTrofeiInMemoria trofei() {

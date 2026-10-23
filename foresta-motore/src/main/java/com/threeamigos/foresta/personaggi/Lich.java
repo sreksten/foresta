@@ -2,7 +2,6 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Misc;
 
@@ -189,13 +188,5 @@ public class Lich extends PersonaggioBase implements Personaggio {
 	@Override
 	public boolean isParteConValoriMassimi() {
 		return true;
-	}
-
-	@Override
-	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
-		return super.isImmuneAEffetto(effettoStato) ||
-				effettoStato == TipoEffettoDiStato.AVVELENATO ||
-				effettoStato == TipoEffettoDiStato.SPAVENTATO ||
-				effettoStato == TipoEffettoDiStato.SILENZIATO;
 	}
 }
