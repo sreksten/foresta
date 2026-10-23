@@ -353,10 +353,10 @@ INCARICO_DI_COMBATTIMENTO
     RICHIESTA=Fra delle rovine i morti si sono messi a camminare. Tutti insieme, in fila, come a una processione. Qualcuno li comanda, e non è il parroco.;\
     BATTUTA=E chi li comanda?;RISPOSTA=Lo scoprirete quando avrete sistemato quelli in prima fila.;\
     ONDATA_2=SPETTRO 2;ARRIVO_2=Gli scheletri crollano in un mucchio d'ossa, ma dai muri escono due spettri, gelidi come la cantina del parroco.;\
-    ONDATA_3=MAGO 1 NOME_MAGO;ARRIVO_3=Dall'ombra esce un negromante, %CAPO_3%, che batte piano le mani: “Complimenti. Ma adesso tocca a me.”;\
+    ONDATA_3=MAGO 1 NOME_MAGO;ARRIVO_3=Dall'ombra esce un necromante, %CAPO_3%, che batte piano le mani: “Complimenti. Ma adesso tocca a me.”;\
     VITTORIA=%CAPO_3% è sconfitto, e i morti tornano a dormire. Questa volta per sempre, si spera.;\
     RINGRAZIAMENTO=I morti riposano, e il parroco è tornato a dormire anche lui. Era ora.;\
-    RICORDO=Fra queste rovine il negromante %CAPO_3% fece camminare i morti, per una notte.
+    RICORDO=Fra queste rovine il necromante %CAPO_3% fece camminare i morti, per una notte.
     CHIAVE=TROLL_DEL_MULINO;TIPO=VENDETTA;ASPETTO=QUALUNQUE;MANDANTE=il mugnaio;NEMICO=TROLL;NUMERO=1;CAPO=SI;LUOGO=GROTTA;\
     MONETE=35;TITOLO=La vendetta del mugnaio;\
     RICHIESTA=Un troll di nome %CAPO% ha sfasciato il mulino di mio padre. Con mio padre dentro. Voglio che paghi.;\
@@ -975,14 +975,14 @@ INDAGINE
     BATTUTA=Più vuoto?;RISPOSTA=I morti. Spariscono i morti.;\
     INDIZIO_1=ROVINE:Fra le rovine ci sono candele nere consumate e un grande cerchio disegnato col gesso. Dentro il cerchio, ossa sparse.;\
     INDIZIO_2=TEMPIO:Il custode del tempio dice che mancano tre libri proibiti, sui morti che camminano. Li aveva chiesti un uomo vestito di nero, con le dita sporche di gesso.;\
-    DOMANDA=Che cosa succede nelle rovine?;SOSPETTI=Ci sono i fantasmi/Un negromante risveglia i morti/Gli spiriti della palude fanno scherzi;\
+    DOMANDA=Che cosa succede nelle rovine?;SOSPETTI=Ci sono i fantasmi/Un necromante risveglia i morti/Gli spiriti della palude fanno scherzi;\
     COLPEVOLE=2;NEMICO=SCHELETRO;NUMERO=4;LUOGO=GROTTA;\
-    ONDATA_2=MAGO 1 NOME_MAGO;ARRIVO_2=Crollato l'ultimo scheletro, dal fondo della grotta avanza il negromante, %CAPO_2%, con un libro aperto in mano.;\
-    SMASCHERAMENTO=Gesso, candele nere, libri sui morti che camminano: è un negromante. E ha portato i suoi morti in una grotta.;\
+    ONDATA_2=MAGO 1 NOME_MAGO;ARRIVO_2=Crollato l'ultimo scheletro, dal fondo della grotta avanza il necromante, %CAPO_2%, con un libro aperto in mano.;\
+    SMASCHERAMENTO=Gesso, candele nere, libri sui morti che camminano: è un necromante. E ha portato i suoi morti in una grotta.;\
     ERRORE=Vi siete sbagliati, e mentre cercate dove non dovreste, il cimitero si svuota del tutto. Il sacerdote chiude la porta.;\
     VITTORIA=Gli scheletri sono tornati polvere, e %CAPO_2% non risveglierà più nessuno. I tre libri tornano al tempio.;\
     RINGRAZIAMENTO=I morti possono tornare a riposare. Domani li rimettiamo al loro posto, uno per uno.;\
-    RICORDO=In questa grotta il negromante %CAPO_2% nascondeva i suoi scheletri.
+    RICORDO=In questa grotta il necromante %CAPO_2% nascondeva i suoi scheletri.
     CHIAVE=MORTE_DEL_PESCATORE;TIPO=FORENSICA;ASPETTO=DONNA;MANDANTE=la vedova del pescatore;MONETE=35;\
     TITOLO=La morte del pescatore;\
     RICHIESTA=Mio marito è morto in una palude, dove andava a pescare. Dicono che è stato un incidente. Io non ci credo.;\

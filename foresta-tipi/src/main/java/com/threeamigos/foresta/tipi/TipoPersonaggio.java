@@ -104,7 +104,7 @@ public enum TipoPersonaggio {
 		SCHELETRO.moltiplicaIlDannoSubito(TipoDanno.PERFORANTE, 0.5d);
 		SCHELETRO.moltiplicaIlDannoSubito(TipoDanno.TAGLIENTE, 0.75d);
 		SCHELETRO.immuneAEffetti.addAll(EnumSet.of(TipoEffettoDiStato.AVVELENATO, TipoEffettoDiStato.SPAVENTATO));
-		// Il lich è un negromante che si è fatto di ghiaccio e di tempesta
+		// Il lich è un necromante che si è fatto di ghiaccio e di tempesta
 		LICH.moltiplicaIlDannoSubito(TipoDanno.GELO, 0.5d);
 		LICH.moltiplicaIlDannoSubito(TipoDanno.FULMINE, 0.5d);
 		LICH.immuneAEffetti.addAll(EnumSet.of(TipoEffettoDiStato.AVVELENATO, TipoEffettoDiStato.SPAVENTATO, TipoEffettoDiStato.SILENZIATO));

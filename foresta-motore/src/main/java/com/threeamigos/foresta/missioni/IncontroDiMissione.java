@@ -6,11 +6,7 @@ import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Gli avversari che una missione mette in una locazione al posto di quelli che ci sarebbero stati (vedi
@@ -29,7 +25,7 @@ import java.util.Objects;
  * possono evitare). Le ondate in arrivo tolgono le stesse scorciatoie anche alle guardie.
  * <pre>
  * IncontroDiMissione.di(TipoPersonaggio.SCHELETRO, 3)
- *         .poi(IncontroDiMissione.di(TipoPersonaggio.MAGO, 1).conCapo("Mortimer"), "Il negromante esce dall'ombra!");
+ *         .poi(IncontroDiMissione.di(TipoPersonaggio.MAGO, 1).conCapo("Mortimer"), "Il necromante esce dall'ombra!");
  * </pre>
  */
 public final class IncontroDiMissione {
