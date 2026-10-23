@@ -1,15 +1,11 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.modellodati.RegistroPersonaggiMD;
-import com.threeamigos.foresta.modellodati.ResidenteMD;
 import com.threeamigos.foresta.locazioni.Bottega;
+import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.personaggi.*;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
+import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -17,7 +13,6 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 
 /**
  * I personaggi del mondo che non stanno nel gruppo del giocatore: quelli da distribuire nelle locazioni, quelli già posati nelle caselle e i residenti,
@@ -62,7 +57,7 @@ public class RegistroPersonaggi {
 		aggiungiPersonaggio(new Chierica("Elowen", 1));
 
 		aggiungiPersonaggio(new Druido("Alder", 1));
-		aggiungiPersonaggio(new Druida("Hazel", 1));
+		aggiungiPersonaggio(new Druida("Morla", 1));
 	}
 
 	/**

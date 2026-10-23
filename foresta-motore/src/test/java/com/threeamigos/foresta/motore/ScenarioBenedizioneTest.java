@@ -8,6 +8,7 @@ import com.threeamigos.foresta.missioni.richieste.FavoreRichiesto;
 import com.threeamigos.foresta.missioni.storie.IlFavore;
 import com.threeamigos.foresta.missioni.storie.LaBenedizione;
 import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.missioni.OffertaDelSacerdote;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
@@ -124,7 +125,9 @@ class ScenarioBenedizioneTest {
             benedizione.controllaPreLocazione();
             assertEquals(personaggi + 1, partita.gruppo().getNumeroPersonaggi());
             Personaggio nuovo = partita.gruppo().getPersonaggi().get(personaggi);
-            assertTrue(nuovo.getClasse() == TipoPersonaggio.SACERDOTE || nuovo.getClasse() == TipoPersonaggio.SACERDOTESSA);
+            assertEquals(benedizione.getBenedizione().getClasse(), nuovo.getClasse(), "entra chi ha commissionato la missione");
+            assertTrue(partita.gruppo().isSacerdoteAccolto());
+            assertFalse(OffertaDelSacerdote.puoProporsi(), "un'altra missione non lo offrirà di nuovo");
             assertFalse(nuovo.isATempo());
 
             assertTrue(benedizione.isCompleta());
@@ -219,6 +222,20 @@ class ScenarioBenedizioneTest {
     }
 
     @Test
+    void seUnSacerdoteEGiaEntratoLaBenedizioneNonLoRipropone() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(245)) {
+            int pozioni = partita.gruppo().getPozioniAumentoLivello();
+            LaBenedizione benedizione = arrivaAlTempio(partita, 1, 0, true);
+
+            assertNull(benedizione.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE));
+            assertTrue(benedizione.isCompleta());
+            assertEquals(pozioni + 1, partita.gruppo().getPozioniAumentoLivello(), "il premio c'è comunque");
+            assertEquals(2, partita.gruppo().getNumeroPersonaggiPermanenti());
+            assertTrue(partita.testi().stream().noneMatch(t -> t.startsWith("Siete già in")), String.valueOf(partita.testi()));
+        }
+    }
+
+    @Test
     void gliOspitiATempoNonContanoFraIFissi() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(244)) {
             LaBenedizione benedizione = arrivaAlTempio(partita, 3, 3);
@@ -238,6 +255,14 @@ class ScenarioBenedizioneTest {
      * Se la proposta del sacerdote è ancora aperta resta in attesa della risposta.
      */
     private static LaBenedizione arrivaAlTempio(PartitaDiTest partita, int permanenti, int aTempo) {
+        return arrivaAlTempio(partita, permanenti, aTempo, false);
+    }
+
+    /**
+     * Come sopra; con "sacerdoteGiaAccolto" un sacerdote offerto da un'altra missione (il Giro delle Sette Chiese) è già entrato nel gruppo
+     * prima che la benedizione sia data (cioè prima di arrivare al tempio).
+     */
+    private static LaBenedizione arrivaAlTempio(PartitaDiTest partita, int permanenti, int aTempo, boolean sacerdoteGiaAccolto) {
         LaBenedizione benedizione = incontraLaSacerdotessa(partita);
         IlFavore favore = (IlFavore) benedizione.getMissioniAffidate(LaBenedizione.FAVORE).get(0);
         favore.controllaInLocazione();
@@ -258,6 +283,7 @@ class ScenarioBenedizioneTest {
             partita.gruppo().aggiungiPersonaggio(ospite);
         }
         partita.gruppo().setCoordinate(benedizione.getTempio());
+        partita.gruppo().setSacerdoteAccolto(sacerdoteGiaAccolto);
         benedizione.controllaPreLocazione();
         benedizione.rispondi("1");
         benedizione.controllaPreLocazione();

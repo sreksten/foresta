@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.*;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
+import com.threeamigos.foresta.missioni.OffertaDelSacerdote;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
@@ -30,7 +31,9 @@ import java.util.List;
  * <ol>
  * <li>INIZIO, a fine locazione, se il gruppo ha ripulito un tempio: l'intermezzo della presentazione;</li>
  * <li>TEMPLI, a fine locazione: ogni tempio ripulito si segna e si conta;</li>
- * <li>RINGRAZIAMENTO, subito: l'intermezzo del ringraziamento e il premio.</li>
+ * <li>RINGRAZIAMENTO, subito: l'intermezzo del ringraziamento e il premio;</li>
+ * <li>COMPAGNO, se il gruppo ha posto e nessun sacerdote offerto da una missione è già entrato (vedi {@link OffertaDelSacerdote}): il sacerdote
+ * si offre di unirsi al gruppo.</li>
  * </ol>
  * Un tempio è ripulito quando il gruppo ne esce dopo aver sconfitto tutti i suoi custodi: fuggire non basta.
  */
@@ -45,6 +48,7 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 	private static final String INIZIO = "INIZIO";
 	private static final String TEMPLI = "TEMPLI";
 	private static final String RINGRAZIAMENTO = "RINGRAZIAMENTO";
+	private static final String COMPAGNO = "COMPAGNO";
 	private static final String SACERDOTE = "SACERDOTE";
 	private static final String INCANTESIMO_ELEMENTALE = "INCANTESIMO_ELEMENTALE";
 
@@ -146,6 +150,7 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 		BusEventi.pubblica(new NotificaTestoParagrafo("In dono dai devoti: " + Misc.getCardinaleM(INCANTESIMI_LUCE_DIVINA) + " "
 				+ TipoIncantesimo.LUCE_DIVINA.getNomePlurale() + ", " + Misc.getCardinaleM(INCANTESIMI_ALBA_SACRA) + " "
 				+ TipoIncantesimo.ALBA_SACRA.getNomePlurale() + " e un " + elementale.getNomeSingolare() + "."));
+		OffertaDelSacerdote.avvisaSeIlGruppoEPieno(getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "la sacerdotessa" : "il sacerdote");
 	}
 
 	private TipoIncantesimo getIncantesimoElementale() {
@@ -214,6 +219,16 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 				return Passo.quando(MomentoControllo.POST_LOCAZIONE, () -> true)
 						.esegui(this::premia)
 						.conIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA, this::getPagineDelRingraziamento)
+						.poi(() -> OffertaDelSacerdote.puoProporsi() ? COMPAGNO : Passo.FINE);
+			case COMPAGNO:
+				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> true)
+						.chiediConferma(Misc.inizialeMaiuscola(getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "la sacerdotessa" : "il sacerdote")
+								+ " chiede se desiderate che si unisca a voi in pianta stabile. Accettate?")
+						.esegui(() -> {
+							if (Passo.SI.equals(getRisposta(COMPAGNO))) {
+								OffertaDelSacerdote.accogli(getSacerdote());
+							}
+						})
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);

@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.missioni.storie;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
@@ -13,14 +12,9 @@ import com.threeamigos.foresta.missioni.richieste.BenedizioneRichiesta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.personaggi.Sacerdote;
-import com.threeamigos.foresta.personaggi.Sacerdotessa;
-import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -43,7 +37,7 @@ import java.util.stream.Collectors;
  * <li>ARRIVO, a inizio locazione, nel tempio: il tempio è sicuro, niente avversari né oggetti a caso (vedi
  * RegistroMissioni.sopprimiContenutoLocazione);</li>
  * <li>SCELTA, se nel gruppo c'è più di un personaggio in campo, o DIRETTA: la benedizione;</li>
- * <li>solo la prima volta, PREMIO (la pozione) e COMPAGNO (se il gruppo vuole un sacerdote o una sacerdotessa fra i suoi).</li>
+ * <li>solo la prima volta, PREMIO (la pozione) e COMPAGNO (se il gruppo vuole che il sacerdote che ha commissionato la missione si unisca, e nessun altro sacerdote offerto da una missione è già entrato: vedi {@link OffertaDelSacerdote}).</li>
  * </ol>
  */
 public class LaBenedizione extends MissioneAPassi {
@@ -165,28 +159,7 @@ public class LaBenedizione extends MissioneAPassi {
 		GruppoGiocatore.getIstanza().addPozioniAumentoLivello(1);
 		BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(getBenedizione().getMandante())
 				+ " vi consegna anche una piccola ampolla luminosa: una Pozione dell'Aumento di Livello."));
-		if (!ilGruppoHaPosto()) {
-			BusEventi.pubblica(new NotificaTestoParagrafo("Siete già in " + Misc.getCardinaleM(Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE)
-					+ ": non penso abbiate bisogno anche dell'aiuto " + Misc.conPreposizione("di", getBenedizione().getMandante()) + "."));
-		}
-	}
-
-	/**
-	 * Il sacerdote può entrare solo se il gruppo ha meno del massimo di personaggi fissi: non contano gli ospiti e chi è a tempo.
-	 */
-	private static boolean ilGruppoHaPosto() {
-		return GruppoGiocatore.getIstanza().getNumeroPersonaggiPermanenti() < Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE;
-	}
-
-	/**
-	 * Un sacerdote o una sacerdotessa, a caso, entra nel gruppo.
-	 */
-	private void accogliUnSacerdote() {
-		Personaggio sacerdote = Dado.tiraAncheAUnaFaccia(2) == 1
-				? new Sacerdote(ProduttoreDiTestiCasuale.nomeSacerdote(), 1)
-				: new Sacerdotessa(ProduttoreDiTestiCasuale.nomeSacerdotessa(), 1);
-		GruppoGiocatore.getIstanza().aggiungiPersonaggio(RegistroPersonaggi.preparaCompagno(sacerdote));
-		BusEventi.pubblica(new InternoMostraFinestraStato());
+		OffertaDelSacerdote.avvisaSeIlGruppoEPieno(getBenedizione().getMandante());
 	}
 
 	private List<PaginaIntermezzo> getPagineDellIncontro() {
@@ -272,13 +245,13 @@ public class LaBenedizione extends MissioneAPassi {
 			case PREMIO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> true)
 						.esegui(this::premia)
-						.poi(() -> ilGruppoHaPosto() ? COMPAGNO : Passo.FINE);
+						.poi(() -> OffertaDelSacerdote.puoProporsi() ? COMPAGNO : Passo.FINE);
 			case COMPAGNO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> true)
-						.chiediConferma(Misc.inizialeMaiuscola(benedizione.getMandante()) + " chiede se desiderate che un sacerdote o una sacerdotessa vi accompagni in pianta stabile. Accettate?")
+						.chiediConferma(Misc.inizialeMaiuscola(benedizione.getMandante()) + " chiede se desiderate che si unisca a voi in pianta stabile. Accettate?")
 						.esegui(() -> {
 							if (Passo.SI.equals(getRisposta(COMPAGNO))) {
-								accogliUnSacerdote();
+								OffertaDelSacerdote.accogli(benedizione.getClasse());
 							}
 						})
 						.poi(Passo.FINE);

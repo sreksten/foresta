@@ -63,6 +63,15 @@ class GruppoGiocatoreMDTest {
     }
 
     @Test
+    void ilSacerdoteAccoltoSiAzzeraConUnaPartitaNuova() {
+        GruppoGiocatoreMD gruppo = new GruppoGiocatoreMD();
+        assertFalse(gruppo.isSacerdoteAccolto());
+        gruppo.setSacerdoteAccolto(true);
+        gruppo.reimposta();
+        assertFalse(gruppo.isSacerdoteAccolto());
+    }
+
+    @Test
     void ilGruppoCompletoSiSalvaESiRilegge() throws IOException {
         GruppoGiocatoreMD gruppo = new GruppoGiocatoreMD();
         gruppo.addPersonaggioMD(personaggio(TipoPersonaggio.GUERRIERO, "Arsenio"));
@@ -74,6 +83,7 @@ class GruppoGiocatoreMDTest {
         gruppo.setMonete(250);
         gruppo.setPreziosi(4);
         gruppo.setSfideVinte(1);
+        gruppo.setSacerdoteAccolto(true);
         gruppo.setCoordinate(new CoordinateMD(5, 6));
         gruppo.aggiungiArtefatto(ArtefattoMDTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla"));
         PersonaggioMD bardo = personaggio(TipoPersonaggio.BARDO_DELLE_LOCANDE, "Lino");
@@ -90,6 +100,7 @@ class GruppoGiocatoreMDTest {
         assertEquals(250, riletto.getMonete());
         assertEquals(4, riletto.getPreziosi());
         assertEquals(1, riletto.getSfideVinte());
+        assertTrue(riletto.isSacerdoteAccolto());
         assertEquals(new CoordinateMD(5, 6), riletto.getCoordinate());
         assertEquals("l'anello", riletto.getArtefatti().iterator().next().getNome());
         assertEquals("Lino", riletto.getOspitiMD().get(0).getNome());

@@ -351,6 +351,17 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		md.setSfideVinte(md.getSfideVinte() + 1);
 	}
 
+	/**
+	 * Se un sacerdote offerto da una missione è già entrato nel gruppo (vedi OffertaDelSacerdote).
+	 */
+	public final boolean isSacerdoteAccolto() {
+		return md.isSacerdoteAccolto();
+	}
+
+	public final void setSacerdoteAccolto(boolean accolto) {
+		md.setSacerdoteAccolto(accolto);
+	}
+
 	public final int getMonete() {
 		return md.getMonete();
 	}

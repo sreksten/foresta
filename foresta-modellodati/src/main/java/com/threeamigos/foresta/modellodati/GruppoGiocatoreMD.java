@@ -36,6 +36,11 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	private final Set<String> ospitiVulnerabili = new HashSet<>();
 	// Le sfide a carta, forbici e sasso vinte in tutta la partita (vedi carta_forbici_sasso.md)
 	private int sfideVinte;
+	// Vale per tutta la partita e si salva con il gruppo. Diventa vero quando un sacerdote o una sacerdotessa entra nel gruppo
+	// accettando l'offerta di una missione (La Benedizione, Il Giro delle Sette Chiese): da allora nessuna missione lo ripropone,
+	// così se ne ottiene al più uno. Un rifiuto, o un gruppo già al completo, non lo alzano: l'altra missione può ancora offrirlo.
+	// Chi lo legge e lo scrive: OffertaDelSacerdote. Si azzera con una partita nuova (reimposta).
+	private boolean sacerdoteAccolto;
 
 	public int getMonete() {
 		return monete;
@@ -99,6 +104,19 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		this.sfideVinte = sfideVinte;
 	}
 
+	/**
+	 * Se un sacerdote offerto da una missione (la benedizione, il giro delle sette chiese) è già entrato nel gruppo.
+	 * Finché è falso le missioni possono offrirne uno (se il gruppo ha posto); quando è vero non ne offrono più.
+	 * Vedi il commento del campo.
+	 */
+	public boolean isSacerdoteAccolto() {
+		return sacerdoteAccolto;
+	}
+
+	public void setSacerdoteAccolto(boolean sacerdoteAccolto) {
+		this.sacerdoteAccolto = sacerdoteAccolto;
+	}
+
 	public void aggiungiOspite(PersonaggioMD ospite) {
 		ospiti.add(ospite);
 	}
@@ -137,6 +155,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		ospiti.clear();
 		ospitiVulnerabili.clear();
 		sfideVinte = 0;
+		sacerdoteAccolto = false;
 	}
 
 	/**
@@ -164,6 +183,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 				coordinate.getX(),
 				coordinate.getY(),
 				sfideVinte,
+				sacerdoteAccolto,
 				artefatti.size()));
 		stampaRiga(stream, campi);
 
@@ -201,6 +221,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		pozioniAumentoLivello = st.intero();
 		coordinate = new CoordinateMD(st.intero(), st.intero());
 		sfideVinte = st.intero();
+		sacerdoteAccolto = st.booleano();
 		int numeroArtefatti = st.intero();
 
 		artefatti.clear();

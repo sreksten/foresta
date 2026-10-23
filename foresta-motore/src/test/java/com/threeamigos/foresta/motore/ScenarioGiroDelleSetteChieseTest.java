@@ -5,6 +5,8 @@ import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoLocazioneVisitata;
 import com.threeamigos.foresta.intermezzi.*;
 import com.threeamigos.foresta.locazioni.Tempio;
+import com.threeamigos.foresta.missioni.OffertaDelSacerdote;
+import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.principali.IlGiroDelleSetteChiese;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
@@ -12,6 +14,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
+import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 import org.junit.jupiter.api.Test;
@@ -97,7 +100,7 @@ class ScenarioGiroDelleSetteChieseTest {
 
             partita.gruppo().setCoordinate(templi.get(6));
             giro.controllaPostLocazione();
-            assertTrue(giro.isCompleta());
+            assertFalse(giro.isCompleta(), "prima l'offerta del sacerdote");
             assertEquals(luce + 2, partita.gruppo().getIncantesimi(TipoIncantesimo.LUCE_DIVINA));
             assertEquals(alba + 2, partita.gruppo().getIncantesimi(TipoIncantesimo.ALBA_SACRA));
             assertEquals(elementali + 1, elementali(partita));
@@ -106,6 +109,89 @@ class ScenarioGiroDelleSetteChieseTest {
             String grazie = testo(ringraziamento.getPagine().get(0));
             assertTrue(grazie.contains("due incantesimi della Luce Divina"), grazie);
             assertTrue(grazie.contains("due incantesimi dell'Alba Sacra"), grazie);
+        }
+    }
+
+    private static IlGiroDelleSetteChiese giroAlRingraziamento(PartitaDiTest partita, int compagniGiaNelGruppo) {
+        avvia(partita);
+        IlGiroDelleSetteChiese giro = giro();
+        for (int i = 0; i < compagniGiaNelGruppo; i++) {
+            partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno" + i, 1));
+        }
+        List<CoordinateMD> templi = templi();
+        for (int i = 0; i < 7; i++) {
+            partita.gruppo().setCoordinate(templi.get(i));
+            giro.controllaPostLocazione();
+        }
+        return giro;
+    }
+
+    @Test
+    void alTermineIlSacerdoteSiOffreEAccettandoEntraNelGruppo() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(302)) {
+            IlGiroDelleSetteChiese giro = giroAlRingraziamento(partita, 0);
+            assertFalse(partita.gruppo().isSacerdoteAccolto());
+            Passo proposta = giro.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE);
+            assertNotNull(proposta);
+            assertTrue(proposta.isConferma());
+
+            giro.rispondi(Passo.SI);
+            giro.controllaPreLocazione();
+
+            assertEquals(2, partita.gruppo().getNumeroPersonaggiPermanenti());
+            assertTrue(partita.gruppo().isSacerdoteAccolto());
+            assertFalse(OffertaDelSacerdote.puoProporsi(), "la benedizione non lo offrirà di nuovo");
+            assertTrue(giro.isCompleta());
+            TipoPersonaggio classe = partita.gruppo().getPersonaggi().get(1).getClasse();
+            assertTrue(classe == TipoPersonaggio.SACERDOTE || classe == TipoPersonaggio.SACERDOTESSA, classe.name());
+        }
+    }
+
+    @Test
+    void rifiutandoNonEntraENonPrecludeUnaProssimaOfferta() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(303)) {
+            IlGiroDelleSetteChiese giro = giroAlRingraziamento(partita, 0);
+            giro.rispondi(Passo.NO);
+            giro.controllaPreLocazione();
+
+            assertEquals(1, partita.gruppo().getNumeroPersonaggiPermanenti());
+            assertFalse(partita.gruppo().isSacerdoteAccolto());
+            assertTrue(giro.isCompleta());
+            assertTrue(OffertaDelSacerdote.puoProporsi());
+        }
+    }
+
+    @Test
+    void conCinqueFissiIlSacerdoteDiceCheSieteTroppiENonEntra() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(304)) {
+            IlGiroDelleSetteChiese giro = giroAlRingraziamento(partita, 4);
+
+            assertNull(giro.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE));
+            assertTrue(giro.isCompleta());
+            assertEquals(5, partita.gruppo().getNumeroPersonaggiPermanenti());
+            assertFalse(partita.gruppo().isSacerdoteAccolto());
+            assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("Siete già in cinque: non penso abbiate bisogno anche dell'aiuto d")),
+                    String.valueOf(partita.testi()));
+        }
+    }
+
+    @Test
+    void seUnSacerdoteEGiaEntratoIlGiroNonLoRipropone() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(305)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            partita.gruppo().setSacerdoteAccolto(true);
+            partita.comando(Comando.ESCI_DA_CITTA);
+            IlGiroDelleSetteChiese giro = giro();
+            List<CoordinateMD> templi = templi();
+            for (int i = 0; i < 7; i++) {
+                partita.gruppo().setCoordinate(templi.get(i));
+                giro.controllaPostLocazione();
+            }
+
+            assertNull(giro.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE));
+            assertTrue(giro.isCompleta());
+            assertEquals(1, partita.gruppo().getNumeroPersonaggiPermanenti());
+            assertTrue(partita.testi().stream().noneMatch(t -> t.startsWith("Siete già in")), String.valueOf(partita.testi()));
         }
     }
 
