@@ -1,7 +1,7 @@
 # Chierico e druido
 
-Due classi giocanti, ognuna con la forma femminile (`CHIERICO`/`CHIERICA`, `DRUIDO`/`DRUIDA`), e le sei **abilità** innate che le distinguono. Il Chierico
-e la Chierica si scelgono come le altre classi; il Druido e la Druida, finché la grafica è una copia di quella di bardo e cantastorie, **solo in modalità di prova**.
+Due classi giocanti, ognuna con la forma femminile (`CHIERICO`/`CHIERICA`, `DRUIDO`/`DRUIDA`), e le sei **abilità** innate che le distinguono. Si scelgono
+come le altre classi a inizio partita e compaiono fra i compagni reclutabili in locanda.
 
 ## 1. Le classi
 
@@ -45,8 +45,9 @@ I valori stanno in `Costanti` (`ABILITA_*`).
 ## 3. Chi si sceglie
 
 Chierico, Chierica, Druido e Druida si scelgono fra le classi di inizio partita come le altre (`Automa`), anche senza la modalità di prova, e possono essere campioni della
-sfida a carta, forbici e sasso (`LaSfidaDeiCampioni.classiAmichevoli`). Nessun mostro e nessun compagno reclutabile è di queste classi: in prova si possono aggiungere dalla
-finestra di prova (`FinestraDiProva`), che usa `FabbricaPersonaggi`.
+sfida a carta, forbici e sasso (`LaSfidaDeiCampioni.classiAmichevoli`). Fra i compagni reclutabili in locanda (`RegistroPersonaggi`) ci sono Frederick (Chierico),
+Elowen (Chierica), Alder (Druido) e Hazel (Druida). Nessun mostro è di queste classi; in prova si possono aggiungere dalla finestra di prova (`FinestraDiProva`), che
+usa `FabbricaPersonaggi`.
 
 ## 4. Simulazioni
 
@@ -87,7 +88,7 @@ Minotauro gigante, Troll, Strega e Drago:
 
 ## Da fare / idee aperte
 
-- Decidere se i chierici e i druidi compaiono come compagni reclutabili o come avversari.
+- Decidere se i chierici e i druidi compaiono anche come avversari (oggi no, sono solo giocabili e reclutabili).
 - Ritoccare i numeri: se l'Imposizione delle mani risulta troppo forte a livello 3–5 la leva è la cura (`ABILITA_IMPOSIZIONE_DELLE_MANI_BASE`), non il costo; in alternativa un limite di
   lanci per scontro o una pausa fra due usi (il predicato `ROUND_DALL_ULTIMO_USO` delle tattiche esiste già).
 - Rivedere la tattica del druido: la Pelle di corteccia, scritta prima delle radici e dello sciame, gli toglie azioni utili. Va messa dopo, o resa condizionale (per esempio solo contro più avversari).
