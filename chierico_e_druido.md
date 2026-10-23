@@ -48,10 +48,39 @@ Chierico, Chierica, Druido e Druida si scelgono fra le classi di inizio partita 
 sfida a carta, forbici e sasso (`LaSfidaDeiCampioni.classiAmichevoli`). Nessun mostro e nessun compagno reclutabile è di queste classi: in prova si possono aggiungere dalla
 finestra di prova (`FinestraDiProva`), che usa `FabbricaPersonaggi`.
 
+## 4. Simulazioni
+
+`AnalisiAbilitaInnateTest` (in `foresta-motore`, test; si attiva con `-Danalisi=true`, quindi `mvn test` normale la salta) fa agire i miei personaggi con la loro
+tattica predefinita (`TatticheBase.chierico()` e `druido()`) nel round a coppie di `RoundASimulato`, contro i mostri con le loro tattiche base, senza pozioni né
+pergamene e a salute e magia piene. I parametri sono `-Diterazioni=<n>` e, per `sensibilita`, `-Dclassi=CHIERICO,DRUIDO,...`; i metodi sono `analisi` (numeri di
+partenza e scontri), `catene` (12 scontri di seguito con il solo recupero di fine locazione), `contributo` (la stessa tattica con le voci di un'abilità disattivate) e
+`sensibilita` (una prova stretta da ripetere a ogni variante dei numeri). Per esempio:
+`mvn test -pl foresta-motore -am -Dtest='AnalisiAbilitaInnateTest#sensibilita' -Dsurefire.failIfNoSpecifiedTests=false -Danalisi=true -Diterazioni=300`.
+
+Risultati dei numeri attuali (200–300 scontri per cella, errore circa ±3 punti), con un gruppo di tre (X, Guerriero, Ladro; X è il capo) contro Idra,
+Minotauro gigante, Troll, Strega e Drago:
+
+- **La magia non è il limite.** Ogni personaggio ha una sola azione per round e uno scontro dura 3–6 round, quindi si lanciano 0,2–2 abilità a scontro. In una catena di 12
+  scontri il chierico inizia gli scontri con l'85–97% della magia e il druido con il 78–94% (da solo come supporto, il druido spende circa quanto recupera: 10–12 contro
+  11–12 a scontro). A limitare il gruppo è la salute.
+- **L'Imposizione delle mani è l'unica abilità che pesa molto**, contro nemici fisici e a livello 3–5: a livello 3 il gruppo vince contro l'Idra il 67,5% con l'abilità e il
+  20% senza, contro il Minotauro gigante il 91% e il 55,5%, contro il Troll il 100% e il 76%. A livello 8 pesa poco e contro Strega e Lich niente.
+- **Il costo e il prezzo in salute non la frenano:** con costo 8 o 12 la media delle vittorie cala di 0–7 punti, con il 25% o il 50% della cura tolto al chierico di 0–3
+  (il bersaglio tipico è il capo, cioè il chierico stesso, e in quel caso non scatta). **La cura sì:** con la base a 14 invece di 20 la media a livello 3 e 5 passa da
+  67,5% e 63,6% a 60,3% e 55,8%, e a livello 8 non cambia.
+- **Scacciare i non morti** pesa poco. **Rigenerazione** e **Radici e sciame** sono forti ma situazionali (Rigenerazione contro il Troll a livello 3: 98% contro 70,5% senza; Radici
+  contro il Minotauro gigante a livello 5: 63% contro 25,5% senza).
+- **La Pelle di corteccia, nella tattica attuale, è una perdita netta:** il druido spende l'azione a proteggere invece di attaccare (contro il Minotauro gigante a livello 5
+  il gruppo vince il 79% senza la pelle e il 63% con), e il druido senza nessuna abilità spesso batte quello con tutte (contro Strega e Lich a livello 3: 89% e 94% contro
+  72,5% e 81,5%).
+- **Rispetto alle altre classi** (media delle vittorie su quegli avversari, livello 3 / 5 / 8): Chierico 67,5 / 63,6 / 92,1 %, Druido 64,3 / 63,3 / 80,7 %, Bardo 63,2 / 72,3 / 79,3 %,
+  Sacerdote 59,1 / 60,4 / 74,3 %, Guerriero 64,4 / 68,3 / 73,4 %. Stanno nella fascia delle classi esistenti; il Bardo cura più dell'Imposizione (30 × √livello contro 20, costo 4
+  contro 5). Il Chierico a livello 8 sta sopra le altre, ma lì le abilità contano poco: pesano le sue statistiche di classe.
+
 ## Osservazioni
 
 - **Immagini.** Quelle di Chierico, Chierica, Druido e Druida (personaggi, icone di classe e icone delle abilità) sono vere.
-- I valori sono un primo giro, mai provati con le simulazioni (`SimulazionePartiteTest`, `TestScontriDiGruppo`).
+- I valori sono un primo giro, provati con le simulazioni della sezione 4 ma non con partite intere (`SimulazionePartiteTest`) né con pozioni e pergamene.
 - Radici e Sciame usano le immunità dell'incantesimo di Terra e di Veleno e registrano l'esito dei colpi come `TERRA` e `VELENO` (`TipoAzione.di`); essendo azioni su
   un gruppo, i requisiti delle tattiche non guardano le immunità scoperte di un bersaglio solo.
 - Il Druido è fuori da `CantoDelBardo`: non canta.
@@ -59,6 +88,9 @@ finestra di prova (`FinestraDiProva`), che usa `FabbricaPersonaggi`.
 ## Da fare / idee aperte
 
 - Decidere se i chierici e i druidi compaiono come compagni reclutabili o come avversari.
-- Provare e ritoccare i numeri (soprattutto la Pelle di corteccia e la Rigenerazione, che durano 4 turni).
+- Ritoccare i numeri: se l'Imposizione delle mani risulta troppo forte a livello 3–5 la leva è la cura (`ABILITA_IMPOSIZIONE_DELLE_MANI_BASE`), non il costo; in alternativa un limite di
+  lanci per scontro o una pausa fra due usi (il predicato `ROUND_DALL_ULTIMO_USO` delle tattiche esiste già).
+- Rivedere la tattica del druido: la Pelle di corteccia, scritta prima delle radici e dello sciame, gli toglie azioni utili. Va messa dopo, o resa condizionale (per esempio solo contro più avversari).
+- Provare le abilità in partite intere e con pozioni e pergamene, e capire se il Chierico a livello 8 è forte per le sue statistiche.
 - Se il Chierico, senza Alba sacra e Luce Divina, risulta ora troppo debole rispetto al Sacerdote, si può dargli un'abilità in più o ritoccare i valori (vedi i numeri da provare).
 - Le armi del Druido, se un giorno ci saranno gli archi.

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
+import com.threeamigos.foresta.tattiche.Decisione;
+import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 
 /**
  * Il round a coppie del gioco (vedi tattiche_di_combattimento_automatiche.md §3 e {@link StatoDelCombattimento}) per le simulazioni che
@@ -96,6 +98,15 @@ final class RoundASimulato {
      */
     int getAzioni() {
         return azioni;
+    }
+
+    /**
+     * Per i decisori che fanno agire i miei con una tattica, come il gioco: la stessa esecuzione degli avversari
+     *
+     * @return la decisione presa, o null se non c'era niente da fare
+     */
+    Decisione agisciConLaTattica(Personaggio chi, TatticaMD tattica) {
+        return esecutore.agisci(chi, tattica);
     }
 
     List<Personaggio> mieiVivi() {
