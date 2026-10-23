@@ -29,7 +29,7 @@ NOME_CAMPIONESSA
     [NOME_DI_CAMPIONESSA] [EPITETO_DI_CAMPIONESSA]
 
 // ---------------------------------------------------------------------------------------------
-// Briganti e maghi (vedi CAPO=NOME_BRIGANTE e CAPO=NOME_MAGO): capi di bande di ladri, maghi rivali
+// Briganti, maghi e necromanti (vedi CAPO=NOME_BRIGANTE, CAPO=NOME_MAGO e NOME_NECROMANTE): capi di bande di ladri, maghi rivali, chi comanda i morti
 // ---------------------------------------------------------------------------------------------
 
 NOME_BRIGANTE
@@ -37,6 +37,20 @@ NOME_BRIGANTE
 
 NOME_MAGO
     Mastro [NOME_MASCHILE]
+
+NOME_NECROMANTE
+    Mortimer [SOPRANNOME_NECROMANTE]
+    [NOME_MASCHILE] [SOPRANNOME_NECROMANTE]
+
+SOPRANNOME_NECROMANTE
+    il Pallido
+    il Cavamorti
+    Mano d'Ossa
+    il Sussurratore
+    dalle Candele Nere
+    il Tombarolo
+    Veste di Cenere
+    l'Ultimo a Ridere
 
 // ---------------------------------------------------------------------------------------------
 // Capibanda di goblin e hobgoblin (vedi LaTagliaSullaBanda e IlRapimento): a volte con un soprannome (le liste sono in nomi.txt)
@@ -316,7 +330,7 @@ OGGETTO_SMARRITO
 //   NEMICO=, NUMERO=  chi va sconfitto (un TipoPersonaggio) e quanti; NUMERO=LIVELLO:4 vuol dire tanti quanto il livello del
 //               mondo di quando l'incarico si offre, al massimo quattro;
 //   CAPO=       facoltativo: uno di loro ha un nome e un livello in più. SI pesca il nome da NOME_CAPOBANDA,
-//               NOME_CAMPIONE, NOME_CAMPIONESSA, NOME_BRIGANTE o NOME_MAGO da lì, qualunque altra cosa è il nome stesso
+//               NOME_CAMPIONE, NOME_CAMPIONESSA, NOME_BRIGANTE, NOME_MAGO o NOME_NECROMANTE da lì, qualunque altra cosa è il nome stesso
 //               (CAPO=Teodolinda), quando i testi lo dicono. Fra i nemici vanno bene anche le classi del gruppo:
 //               GUERRIERO, MAGA, LADRO, ELFO...;
 //   RESA=       facoltativo, SI se si combatte fino alla resa e non all'ultimo sangue (un duello): sconfitti, i nemici
@@ -353,7 +367,7 @@ INCARICO_DI_COMBATTIMENTO
     RICHIESTA=Fra delle rovine i morti si sono messi a camminare. Tutti insieme, in fila, come a una processione. Qualcuno li comanda, e non è il parroco.;\
     BATTUTA=E chi li comanda?;RISPOSTA=Lo scoprirete quando avrete sistemato quelli in prima fila.;\
     ONDATA_2=SPETTRO 2;ARRIVO_2=Gli scheletri crollano in un mucchio d'ossa, ma dai muri escono due spettri, gelidi come la cantina del parroco.;\
-    ONDATA_3=MAGO 1 NOME_MAGO;ARRIVO_3=Dall'ombra esce un necromante, %CAPO_3%, che batte piano le mani: “Complimenti. Ma adesso tocca a me.”;\
+    ONDATA_3=NECROMANTE 1 NOME_NECROMANTE;ARRIVO_3=Dall'ombra esce un necromante, %CAPO_3%, che batte piano le mani: “Complimenti. Ma adesso tocca a me.”;\
     VITTORIA=%CAPO_3% è sconfitto, e i morti tornano a dormire. Questa volta per sempre, si spera.;\
     RINGRAZIAMENTO=I morti riposano, e il parroco è tornato a dormire anche lui. Era ora.;\
     RICORDO=Fra queste rovine il necromante %CAPO_3% fece camminare i morti, per una notte.
@@ -977,7 +991,7 @@ INDAGINE
     INDIZIO_2=TEMPIO:Il custode del tempio dice che mancano tre libri proibiti, sui morti che camminano. Li aveva chiesti un uomo vestito di nero, con le dita sporche di gesso.;\
     DOMANDA=Che cosa succede nelle rovine?;SOSPETTI=Ci sono i fantasmi/Un necromante risveglia i morti/Gli spiriti della palude fanno scherzi;\
     COLPEVOLE=2;NEMICO=SCHELETRO;NUMERO=4;LUOGO=GROTTA;\
-    ONDATA_2=MAGO 1 NOME_MAGO;ARRIVO_2=Crollato l'ultimo scheletro, dal fondo della grotta avanza il necromante, %CAPO_2%, con un libro aperto in mano.;\
+    ONDATA_2=NECROMANTE 1 NOME_NECROMANTE;ARRIVO_2=Crollato l'ultimo scheletro, dal fondo della grotta avanza il necromante, %CAPO_2%, con un libro aperto in mano.;\
     SMASCHERAMENTO=Gesso, candele nere, libri sui morti che camminano: è un necromante. E ha portato i suoi morti in una grotta.;\
     ERRORE=Vi siete sbagliati, e mentre cercate dove non dovreste, il cimitero si svuota del tutto. Il sacerdote chiude la porta.;\
     VITTORIA=Gli scheletri sono tornati polvere, e %CAPO_2% non risveglierà più nessuno. I tre libri tornano al tempio.;\

@@ -66,6 +66,7 @@ Le altre categorie (umanoide, bestia, draconico, gigantesco, ibrido) non hanno r
 | **Idra** | fuoco ×1,5, acido ×1,5 | | terra, acqua, aria, veleno | creatura delle paludi e velenosa; il fuoco e l'acido impediscono alle teste di ricrescere |
 | **Troll** | fuoco ×1,5, acido ×1,5 | | | si rigenera, ma non dal fuoco e dall'acido |
 | **Gargoyle** | contundente ×1,5 | perforante ×0,75, tagliente ×0,75 | tutto ciò che non è fisico (e veleno e psichico, dal costrutto) | è di pietra: subisce solo i colpi fisici, e la pietra si spacca a martellate |
+| **Necromante** | sacro ×1,25 | necrotico ×0,5 | | vive di energia necrotica, ma è vivo: la luce sacra lo ferisce di più |
 | **Strega** | fuoco ×1,5 | maledizione ×0,5 | | "al rogo"; le maledizioni sono il suo mestiere |
 | **Folletto** | tagliente ×1,25, perforante ×1,25 | | | teme il ferro (le fate e i folletti soffrono il "ferro freddo") |
 

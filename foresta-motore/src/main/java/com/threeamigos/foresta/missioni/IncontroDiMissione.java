@@ -25,7 +25,7 @@ import java.util.*;
  * possono evitare). Le ondate in arrivo tolgono le stesse scorciatoie anche alle guardie.
  * <pre>
  * IncontroDiMissione.di(TipoPersonaggio.SCHELETRO, 3)
- *         .poi(IncontroDiMissione.di(TipoPersonaggio.MAGO, 1).conCapo("Mortimer"), "Il necromante esce dall'ombra!");
+ *         .poi(IncontroDiMissione.di(TipoPersonaggio.NECROMANTE, 1).conCapo("Mortimer"), "Il necromante esce dall'ombra!");
  * </pre>
  */
 public final class IncontroDiMissione {

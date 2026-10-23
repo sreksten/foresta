@@ -304,13 +304,13 @@ class ScenarioBestiarioTest {
             iniziaDaMaga(partita);
             partita.eventi().ascolta(InternoTrofeoAcquisito.class);
             com.threeamigos.foresta.trofei.Trofeo trofeo = com.threeamigos.foresta.trofei.ClasseTrofeo.di(TipoTrofeo.ENCICLOPEDISTA);
-            assertEquals(32, trofeo.getObiettivo());
+            assertEquals(33, trofeo.getObiettivo());
             assertEquals(1, trofeo.getProgresso(), "la voce del Mago, del personaggio scelto");
 
             for (TipoPersonaggio voce : TipoPersonaggio.getVociDelBestiario()) {
                 partita.pubblica(new InternoAvversarioSconfitto(voce));
             }
-            assertEquals(32, trofeo.getProgresso());
+            assertEquals(33, trofeo.getProgresso());
             assertFalse(RegistroTrofei.isVinto(TipoTrofeo.ENCICLOPEDISTA), "i trofei si controllano solo a fine locazione");
             partita.pubblica(new InternoFineLocazione());
 

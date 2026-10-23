@@ -2064,6 +2064,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			case DRUIDA:
 			case LICH:
 			case STREGA:
+			case NECROMANTE:
 				// I maghi concatenano minacce con la mente: Intelligenza (70%) + Saggezza (30%)
 				statPrincipale = get(md, TipoAttributo.INTELLIGENZA);
 				statSecondaria = get(md, TipoAttributo.SAGGEZZA);

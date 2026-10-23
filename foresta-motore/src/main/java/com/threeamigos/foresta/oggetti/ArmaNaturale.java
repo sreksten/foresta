@@ -103,6 +103,7 @@ public class ArmaNaturale implements Arma {
             case SPIRITO:
             case OMBRA_NERA:
             case LICH:
+            case NECROMANTE:
                 return TipoAttaccoNaturale.DISSIPAZIONE_ANIMA;
             case OMBRAFIAMMA:
                 return TipoAttaccoNaturale.FIAMMA_VIVA;

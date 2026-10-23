@@ -38,6 +38,7 @@ public final class VersiDeiPersonaggi {
 		VERSI.put(TipoPersonaggio.LICH, Verso.DESTRA);
 		VERSI.put(TipoPersonaggio.MINOTAURO, Verso.DESTRA);
 		VERSI.put(TipoPersonaggio.MINOTAURO_GIGANTE, Verso.DESTRA);
+		VERSI.put(TipoPersonaggio.NECROMANTE, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.OMBRA_NERA, Verso.DESTRA);
 		VERSI.put(TipoPersonaggio.SCHELETRO, Verso.DESTRA);
 		VERSI.put(TipoPersonaggio.SPETTRO, Verso.DESTRA);

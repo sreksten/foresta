@@ -32,6 +32,7 @@ public final class FabbricaPersonaggi {
 		COSTRUTTORI.put(TipoPersonaggio.LICH, Lich::new);
 		COSTRUTTORI.put(TipoPersonaggio.MINOTAURO, Minotauro::new);
 		COSTRUTTORI.put(TipoPersonaggio.MINOTAURO_GIGANTE, MinotauroGigante::new);
+		COSTRUTTORI.put(TipoPersonaggio.NECROMANTE, Necromante::new);
 		COSTRUTTORI.put(TipoPersonaggio.OMBRA_NERA, OmbraNera::new);
 		COSTRUTTORI.put(TipoPersonaggio.SCHELETRO, Scheletro::new);
 		COSTRUTTORI.put(TipoPersonaggio.SPETTRO, Spettro::new);

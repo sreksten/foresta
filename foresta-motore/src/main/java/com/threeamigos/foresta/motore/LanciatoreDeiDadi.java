@@ -78,6 +78,8 @@ public class LanciatoreDeiDadi {
 
     // Il Mago Supremo dei non-morti
     private static final int[] LICH = { 5, 10, 15, 30, 20, 15, 5 };
+    // Il Necromante: un mago che punta su Intelligenza e Saggezza, con un po' di Carisma per spaventare
+    private static final int[] NECROMANTE = { 5, 10, 15, 35, 25, 5, 5 };
     private static final int[] STREGA = { 7, 13, 10, 25, 20, 20, 5 };
     private static final int[] DRAGO = { 22, 11, 20, 14, 13, 16, 4 };
 
@@ -118,6 +120,7 @@ public class LanciatoreDeiDadi {
             case LADRA:
             case LADRO: return LADRO;
             case LICH: return LICH;
+            case NECROMANTE: return NECROMANTE;
             case MAGA:
             case MAGO: return MAGO;
             case SACERDOTE:
@@ -179,6 +182,7 @@ public class LanciatoreDeiDadi {
             case LADRO:
             case MAGA:
             case MAGO:
+            case NECROMANTE:
             case SACERDOTE:
             case SACERDOTESSA:
             case CHIERICO:
@@ -271,7 +275,7 @@ public class LanciatoreDeiDadi {
         int resto = budgetTotaleAtteso - sommaAttuale;
 
         // Assegniamo il resto degli arrotondamenti alla statistica chiave dell'archetipo
-        if (classePersonaggio == TipoPersonaggio.MAGO || classePersonaggio == TipoPersonaggio.MAGA ||
+        if (classePersonaggio == TipoPersonaggio.MAGO || classePersonaggio == TipoPersonaggio.MAGA || classePersonaggio == TipoPersonaggio.NECROMANTE ||
                 classePersonaggio == TipoPersonaggio.LICH || classePersonaggio == TipoPersonaggio.STREGA) {
             intelligenzaInt += resto;
         } else if (classePersonaggio == TipoPersonaggio.SACERDOTE || classePersonaggio == TipoPersonaggio.SACERDOTESSA

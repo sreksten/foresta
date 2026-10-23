@@ -65,6 +65,21 @@ class NomiDelleMissioniTest {
         }
     }
 
+    @Test
+    void ancheINecromantiSiRiprendonoDopoLEsaurimento() {
+        ProduttoreDiTestiCasuale.resetProduzioni();
+        try {
+            for (int i = 0; i < 500; i++) {
+                String nome = ProduttoreDiTestiCasuale.rigaDiMissioni("NOME_NECROMANTE");
+                assertFalse(nome.isEmpty());
+                assertTrue(Character.isUpperCase(nome.charAt(0)), nome);
+                assertFalse(nome.contains("[") || nome.contains("  "), nome);
+            }
+        } finally {
+            ProduttoreDiTestiCasuale.resetProduzioni();
+        }
+    }
+
     private static void verificaNomi(Supplier<String> generatore, int diversiAlmeno) {
         Set<String> nomi = new HashSet<>();
         for (int i = 0; i < 300; i++) {

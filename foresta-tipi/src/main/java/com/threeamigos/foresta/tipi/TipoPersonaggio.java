@@ -27,6 +27,7 @@ public enum TipoPersonaggio {
 	LICH(CategoriaPersonaggio.NON_MORTO),
 	MINOTAURO(CategoriaPersonaggio.UMANOIDE, CategoriaPersonaggio.IBRIDO),
 	MINOTAURO_GIGANTE(CategoriaPersonaggio.UMANOIDE, CategoriaPersonaggio.IBRIDO, CategoriaPersonaggio.GIGANTESCO),
+	NECROMANTE(CategoriaPersonaggio.UMANOIDE),
 	OMBRA_NERA(CategoriaPersonaggio.NON_MORTO, CategoriaPersonaggio.VOLANTE),
 	SCHELETRO(CategoriaPersonaggio.NON_MORTO),
 	SPETTRO(CategoriaPersonaggio.NON_MORTO, CategoriaPersonaggio.VOLANTE),
@@ -149,6 +150,9 @@ public enum TipoPersonaggio {
 		GARGOYLE.immuneATuttiGliIncantesimi = true;
 		GARGOYLE.immuneAEffetti.addAll(EnumSet.of(TipoEffettoDiStato.SANGUINAMENTO, TipoEffettoDiStato.INFETTATO,
 				TipoEffettoDiStato.AVVELENATO, TipoEffettoDiStato.IMMOBILIZZATO));
+		// Il necromante vive di energia necrotica e ne è temprato, ma è vivo: la luce sacra lo ferisce più del normale
+		NECROMANTE.moltiplicaIlDannoSubito(TipoDanno.NECROTICO, 0.5d);
+		NECROMANTE.moltiplicaIlDannoSubito(TipoDanno.SACRO, 1.25d);
 		// La strega: al rogo, e le maledizioni sono il suo mestiere
 		STREGA.moltiplicaIlDannoSubito(TipoDanno.FUOCO, 1.5d);
 		STREGA.moltiplicaIlDannoSubito(TipoDanno.MALEDIZIONE, 0.5d);

@@ -115,7 +115,7 @@ class CaratteristicheDiClasseTest {
 	void leVociSonoUnaPerRuoloEPartonoDaiMostriEDaiGiocanti() {
 		List<TipoPersonaggio> voci = TipoPersonaggio.getVociDelBestiario();
 
-		assertEquals(32, voci.size(), voci.toString());
+		assertEquals(33, voci.size(), voci.toString());
 		assertEquals(voci.size(), new HashSet<>(voci).size(), "nessuna voce ripetuta");
 		for (TipoPersonaggio voce : voci) {
 			assertEquals(voce, voce.getRuolo(), voce + " non è la classe al maschile del suo ruolo");

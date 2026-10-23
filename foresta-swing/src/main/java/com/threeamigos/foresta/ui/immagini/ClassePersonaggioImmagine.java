@@ -45,6 +45,7 @@ public enum ClassePersonaggioImmagine {
     DRUIDO(TipoPersonaggio.DRUIDO, "personaggi/Druido.gif", "icone/Druido.gif"),
     MINOTAURO(TipoPersonaggio.MINOTAURO, "personaggi/Minotauro.gif", "icone/Minotauro.gif"),
     MINOTAURO_GIGANTE(TipoPersonaggio.MINOTAURO_GIGANTE, "personaggi/MinotauroGigante.gif"),
+    NECROMANTE(TipoPersonaggio.NECROMANTE, "personaggi/Necromante.gif"),
     OMBRAFIAMMA(TipoPersonaggio.OMBRAFIAMMA, "personaggi/OmbraFiamma.gif", "icone/OmbraFiamma.gif"),
     OMBRA_NERA(TipoPersonaggio.OMBRA_NERA, "personaggi/OmbraNera.gif"),
     SCHELETRO(TipoPersonaggio.SCHELETRO, "personaggi/Scheletro.gif"),

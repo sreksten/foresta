@@ -44,11 +44,11 @@ public final class TatticheBase {
 	/** Le classi che sanno fare magie (vedi PersonaggioBase.getRepertorioIncantesimi) */
 	private static final Set<TipoPersonaggio> MAGICI = EnumSet.of(TipoPersonaggio.ARPIA, TipoPersonaggio.CENTAURO, TipoPersonaggio.CHIMERA,
 			TipoPersonaggio.CHIMERA_DRAGO, TipoPersonaggio.DRAGO, TipoPersonaggio.EREMITA, TipoPersonaggio.FANTASMA, TipoPersonaggio.FOLLETTO,
-			TipoPersonaggio.GARGOYLE, TipoPersonaggio.IDRA, TipoPersonaggio.LICH, TipoPersonaggio.OMBRA_NERA, TipoPersonaggio.OMBRAFIAMMA,
+			TipoPersonaggio.GARGOYLE, TipoPersonaggio.IDRA, TipoPersonaggio.LICH, TipoPersonaggio.NECROMANTE, TipoPersonaggio.OMBRA_NERA, TipoPersonaggio.OMBRAFIAMMA,
 			TipoPersonaggio.SPETTRO, TipoPersonaggio.SPIRITO, TipoPersonaggio.STREGA, TipoPersonaggio.VIVERNA);
 	/** Quelle che hanno il Silenzio nel repertorio */
 	private static final Set<TipoPersonaggio> CON_SILENZIO = EnumSet.of(TipoPersonaggio.CENTAURO, TipoPersonaggio.DRAGO, TipoPersonaggio.EREMITA,
-			TipoPersonaggio.GARGOYLE, TipoPersonaggio.IDRA, TipoPersonaggio.LICH, TipoPersonaggio.OMBRAFIAMMA, TipoPersonaggio.STREGA);
+			TipoPersonaggio.GARGOYLE, TipoPersonaggio.IDRA, TipoPersonaggio.LICH, TipoPersonaggio.NECROMANTE, TipoPersonaggio.OMBRAFIAMMA, TipoPersonaggio.STREGA);
 	/** Quelle che hanno la Morte nel repertorio (i boss) */
 	private static final Set<TipoPersonaggio> CON_MORTE = EnumSet.of(TipoPersonaggio.DRAGO, TipoPersonaggio.IDRA, TipoPersonaggio.LICH,
 			TipoPersonaggio.OMBRAFIAMMA, TipoPersonaggio.STREGA);
@@ -75,6 +75,7 @@ public final class TatticheBase {
 		ASTUZIA_MASSIMA.put(TipoPersonaggio.LICH, Costanti.LICH_MAX_INTELLIGENZA);
 		ASTUZIA_MASSIMA.put(TipoPersonaggio.MINOTAURO, Costanti.MINOTAURO_MAX_INTELLIGENZA);
 		ASTUZIA_MASSIMA.put(TipoPersonaggio.MINOTAURO_GIGANTE, Costanti.MINOTAUROGIGANTE_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.NECROMANTE, Costanti.NECROMANTE_MAX_INTELLIGENZA);
 		ASTUZIA_MASSIMA.put(TipoPersonaggio.OMBRA_NERA, Costanti.OMBRANERA_MAX_INTELLIGENZA);
 		ASTUZIA_MASSIMA.put(TipoPersonaggio.OMBRAFIAMMA, Costanti.OMBRAFIAMMA_MAX_INTELLIGENZA);
 		ASTUZIA_MASSIMA.put(TipoPersonaggio.SCHELETRO, Costanti.SCHELETRO_MAX_INTELLIGENZA);

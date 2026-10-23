@@ -1701,6 +1701,40 @@ public class Costanti {
     public static final double LICH_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
     public static final double LICH_MOLTIPLICATORE_RECUPERO_MAGICO = 1.6;
 
+    // Il Necromante: avversario umano oscuro, un mago che ha fatto dei morti il suo esercito. Come il Mago per forza e magia, ma più temibile a vedersi
+    public static final int NECROMANTE_MAX_CARISMA = 6;
+    public static final int NECROMANTE_MAX_FORZA = 15;
+    public static final int NECROMANTE_MAX_DESTREZZA = 20;
+    public static final int NECROMANTE_MAX_COSTITUZIONE = 20;
+    public static final int NECROMANTE_MAX_INTELLIGENZA = 55;
+    public static final int NECROMANTE_MAX_SAGGEZZA = 40;
+    public static final int NECROMANTE_MAX_FORTUNA = 10;
+    public static final int NECROMANTE_MAX_NUMERO = 1;
+    public static final int NECROMANTE_PUNTI_ESPERIENZA = 40;
+
+    public static final int NECROMANTE_SALUTE_BASE = 80;
+    public static final int NECROMANTE_MAGIA_BASE = 60;
+    public static final int NECROMANTE_LIVELLAMENTO_MAGIA = 34;
+    public static final double NECROMANTE_MOLTIPLICATORE_CARICO = 0.8;
+    public static final double NECROMANTE_MOLTIPLICATORE_CRITICO = 0.8;
+    public static final double NECROMANTE_MOLTIPLICATORE_PRECISIONE = 1.0;
+    public static final double NECROMANTE_MOLTIPLICATORE_VELOCITA = 0.9;
+    public static final double NECROMANTE_MOLTIPLICATORE_FURTIVITA = 0.9;
+    public static final double NECROMANTE_MOLTIPLICATORE_PARATA = 0.6;
+    public static final double NECROMANTE_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+    public static final double NECROMANTE_MOLTIPLICATORE_PERCEZIONE = 1.1;
+    public static final double NECROMANTE_MOLTIPLICATORE_SOGGEZIONE = 1.3;
+    public static final double NECROMANTE_MOLTIPLICATORE_FURIA = 0.8;
+    public static final double NECROMANTE_MOLTIPLICATORE_CORAGGIO = 1.2;
+    public static final double NECROMANTE_MOLTIPLICATORE_VALORE = 1.0;
+    public static final double NECROMANTE_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
+    public static final double NECROMANTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
+    public static final double NECROMANTE_MOLTIPLICATORE_STANCHEZZA = 1.4;
+    public static final double NECROMANTE_MOLTIPLICATORE_DANNI_MAGICI = 2.0;
+    public static final double NECROMANTE_MOLTIPLICATORE_DANNI_FISICI = 0.5;
+    public static final double NECROMANTE_MOLTIPLICATORE_RECUPERO_FISICO = 0.7;
+    public static final double NECROMANTE_MOLTIPLICATORE_RECUPERO_MAGICO = 1.5;
+
     public static final int MINOTAUROGIGANTE_MAX_CARISMA = 0;
     public static final int MINOTAUROGIGANTE_MAX_FORZA = 70;
     public static final int MINOTAUROGIGANTE_MAX_DESTREZZA = 30;
