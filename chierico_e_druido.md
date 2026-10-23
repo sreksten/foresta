@@ -37,7 +37,7 @@ cofani, negozi o repertorio dei mostri.
 | Imposizione delle mani | Chierico | Cura il più ferito: 20 × √livello, aumentata dalla `SAGGEZZA` (meno del canto curativo, che è 30 × √livello) | 5 |
 | Radici | Druido | Danno di `TERRA` (40) a più avversari, come un incantesimo: tiro per colpire, immunità e `IMMOBILIZZATO`/`ACCECATO` del tipo di danno | 3 |
 | Sciame | Druido | Come le radici, con danno di `VELENO` (40) e `AVVELENATO` | 3 |
-| Pelle di corteccia | Druido | A tutto il gruppo, per 4 turni, +30% di `PARATA` e +20% di `RESISTENZA_MAGICA` con due modificatori temporanei (vedi [`modificatori_temporanei.md`](modificatori_temporanei.md)) che l'Alba sacra non toglie; non si raddoppia, si rinfresca | 5 |
+| Pelle di corteccia | Druido | A tutto il gruppo, per 4 turni, `10 × √livello` punti (17 a livello 3, 22 a livello 5, 28 a livello 8) di `PARATA` e di `RESISTENZA_MAGICA`, punti fissi e non una percentuale (vedi §4), con due modificatori temporanei (vedi [`modificatori_temporanei.md`](modificatori_temporanei.md)) che l'Alba sacra non toglie; non si raddoppia, si rinfresca | 5 |
 | Rigenerazione | Druido | `RIGENERAZIONE` (nuovo effetto di stato benefico) a un alleato per 4 turni: a ogni turno guarisce di (5 + 5% della salute massima) × (1 + `SAGGEZZA`/50), quantità che sta nell'intensità dell'effetto (`PersonaggioBase.applicaDanniDaEffettiDiStato`) | 4 |
 
 I valori stanno in `Costanti` (`ABILITA_*`).
@@ -57,6 +57,12 @@ pergamene e a salute e magia piene. I parametri sono `-Diterazioni=<n>` e, per `
 partenza e scontri), `catene` (12 scontri di seguito con il solo recupero di fine locazione), `contributo` (la stessa tattica con le voci di un'abilità disattivate) e
 `sensibilita` (una prova stretta da ripetere a ogni variante dei numeri). Per esempio:
 `mvn test -pl foresta-motore -am -Dtest='AnalisiAbilitaInnateTest#sensibilita' -Dsurefire.failIfNoSpecifiedTests=false -Danalisi=true -Diterazioni=300`.
+Per la pelle di corteccia ci sono `pelleContro` (il druido con tutte le abilità, senza la pelle, con la sola pelle, senza nessuna, in un gruppo di cinque contro un
+gruppo di avversari: `-Dnemico=VIVERNA -Dquantita=5 -Dlivelli=3,5,8`) e `pelleCondizionata` (la voce della pelle con condizioni diverse: dal secondo round,
+con un ferito, contro almeno quattro avversari).
+
+`RoundASimulato` porta il numero di round dello stato del combattimento al passo del suo giro (nel gioco lo fa la lista dei turni): prima restava a 1, e le condizioni sul
+round (`ROUND`, `ROUND_DALL_ULTIMO_USO`, di cui sono fatte anche le tattiche base dei mostri) non scattavano mai. I primi numeri qui sotto sono di prima della correzione.
 
 Risultati dei numeri attuali (200–300 scontri per cella, errore circa ±3 punti), con un gruppo di tre (X, Guerriero, Ladro; X è il capo) contro Idra,
 Minotauro gigante, Troll, Strega e Drago:
@@ -71,9 +77,25 @@ Minotauro gigante, Troll, Strega e Drago:
   67,5% e 63,6% a 60,3% e 55,8%, e a livello 8 non cambia.
 - **Scacciare i non morti** pesa poco. **Rigenerazione** e **Radici e sciame** sono forti ma situazionali (Rigenerazione contro il Troll a livello 3: 98% contro 70,5% senza; Radici
   contro il Minotauro gigante a livello 5: 63% contro 25,5% senza).
-- **La Pelle di corteccia, nella tattica attuale, è una perdita netta:** il druido spende l'azione a proteggere invece di attaccare (contro il Minotauro gigante a livello 5
-  il gruppo vince il 79% senza la pelle e il 63% con), e il druido senza nessuna abilità spesso batte quello con tutte (contro Strega e Lich a livello 3: 89% e 94% contro
-  72,5% e 81,5%).
+- **La Pelle di corteccia in percentuale era inutile, e in punti fissi è utile.** La prima versione dava +30% di parata e +20% di resistenza magica: chi non è un guerriero
+  ha parata 1–11 e resistenza magica 5–18 ai livelli 3–8, quindi dava 0–3 punti e la probabilità di essere colpiti scendeva di 0–2 punti percentuali (il Guerriero a livello 5,
+  dal 32% al 30% contro una viverna): costava l'azione del druido, che altrimenti andava a Radici, Sciame o Rigenerazione (a livello 8 contro cinque viverne 3,4 round
+  con la pelle e 2,4 senza), e non migliorava nessun esito, nemmeno al raddoppio delle percentuali o con le condizioni sulla tattica. Con **`10 × √livello` punti fissi**
+  (gruppo di cinque con il druido, 400–500 scontri; "senza" è la tattica senza la pelle):
+
+  | Avversari | Livello | Vittorie con / senza | Salute residua con / senza | Caduti con / senza | Round con / senza |
+  | :--- | :--- | :--- | :--- | :--- | :--- |
+  | 5 viverne | 3 | 96,4% / 95,0% | 68% / 58% | 1,06 / 1,49 | 5,3 / 5,2 |
+  | 5 viverne | 5 | 99,8% / 99,6% | 75% / 67% | 0,79 / 1,06 | 4,1 / 3,5 |
+  | 5 viverne | 8 | 100% / 100% | 82% / 80% | 0,25 / 0,28 | 3,2 / 2,5 |
+  | 3 streghe | 5 | **68,2% / 58,0%** | 63% / 59% | 2,73 / 3,24 | 4,9 / 4,5 |
+  | 3 streghe | 8 | **89,4% / 77,8%** | 70% / 63% | 1,65 / 2,41 | 4,4 / 4,1 |
+  | 5 hobgoblin | 5 | 100% / 100% | 79% / 80% | 0 / 0 | 3,2 / 2,3 |
+
+  Serve contro avversari pericolosi (le viverne a livello 3–5, le streghe, che colpiscono con la magia) e negli scontri facili non fa danni ma costa circa un round
+  (la prima azione del druido). Le condizioni sulla tattica (dal secondo round, con un ferito sotto il 70%, contro almeno quattro avversari) **non migliorano** l'uso
+  immediato: contro le streghe il bonus serve fin dal primo round, e solo "dal secondo round" ne conserva quasi tutto (68,0% contro 70,3% a livello 5), quindi la voce
+  resta com'è, la prima dopo le cure.
 - **Rispetto alle altre classi** (media delle vittorie su quegli avversari, livello 3 / 5 / 8): Chierico 67,5 / 63,6 / 92,1 %, Druido 64,3 / 63,3 / 80,7 %, Bardo 63,2 / 72,3 / 79,3 %,
   Sacerdote 59,1 / 60,4 / 74,3 %, Guerriero 64,4 / 68,3 / 73,4 %. Stanno nella fascia delle classi esistenti; il Bardo cura più dell'Imposizione (30 × √livello contro 20, costo 4
   contro 5). Il Chierico a livello 8 sta sopra le altre, ma lì le abilità contano poco: pesano le sue statistiche di classe.
@@ -91,7 +113,7 @@ Minotauro gigante, Troll, Strega e Drago:
 - Decidere se i chierici e i druidi compaiono anche come avversari (oggi no, sono solo giocabili e reclutabili).
 - Ritoccare i numeri: se l'Imposizione delle mani risulta troppo forte a livello 3–5 la leva è la cura (`ABILITA_IMPOSIZIONE_DELLE_MANI_BASE`), non il costo; in alternativa un limite di
   lanci per scontro o una pausa fra due usi (il predicato `ROUND_DALL_ULTIMO_USO` delle tattiche esiste già).
-- Rivedere la tattica del druido: la Pelle di corteccia, scritta prima delle radici e dello sciame, gli toglie azioni utili. Va messa dopo, o resa condizionale (per esempio solo contro più avversari).
+- Rifare le misure principali (Imposizione delle mani, contributo delle abilità, catene) con il `RoundASimulato` corretto: i numeri sopra, a parte quelli della pelle, sono di prima della correzione.
 - Provare le abilità in partite intere e con pozioni e pergamene, e capire se il Chierico a livello 8 è forte per le sue statistiche.
 - Se il Chierico, senza Alba sacra e Luce Divina, risulta ora troppo debole rispetto al Sacerdote, si può dargli un'abilità in più o ritoccare i valori (vedi i numeri da provare).
 - Le armi del Druido, se un giorno ci saranno gli archi.

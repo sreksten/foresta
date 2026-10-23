@@ -14,8 +14,9 @@ import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 
 /**
  * L'abilità del Druido che rafforza la difesa di tutto il gruppo: a ogni personaggio vivo dà due modificatori temporanei, parata e resistenza magica
- * in percentuale (ABILITA_PELLE_DI_CORTECCIA_*), per qualche turno di combattimento. L'Alba sacra non li toglie. Usarla di nuovo non raddoppia
- * l'effetto: rinfresca la durata (vedi Personaggio.addModificatore).
+ * di un numero fisso di punti (ABILITA_PELLE_DI_CORTECCIA_BASE_* per la radice quadrata del livello del druido), per qualche turno di combattimento.
+ * Sono punti e non una percentuale: chi non è un guerriero ha pochissima parata e resistenza magica, e una percentuale non cambierebbe niente. L'Alba
+ * sacra non li toglie. Usarla di nuovo non raddoppia l'effetto: rinfresca la durata (vedi Personaggio.addModificatore).
  */
 public class PelleDiCorteccia implements Abilita {
 
@@ -24,7 +25,24 @@ public class PelleDiCorteccia implements Abilita {
 	 */
 	public static final String NOTA = "Pelle di corteccia";
 
+	private final int livello;
+
 	public PelleDiCorteccia(Personaggio utilizzatore) {
+		this.livello = utilizzatore.getLivello();
+	}
+
+	/**
+	 * Quanti punti di parata dà a ognuno del gruppo
+	 */
+	public int getPuntiParata() {
+		return (int) Math.round(Costanti.ABILITA_PELLE_DI_CORTECCIA_BASE_PARATA * Math.sqrt(livello));
+	}
+
+	/**
+	 * Quanti punti di resistenza magica dà a ognuno del gruppo
+	 */
+	public int getPuntiResistenzaMagica() {
+		return (int) Math.round(Costanti.ABILITA_PELLE_DI_CORTECCIA_BASE_RESISTENZA_MAGICA * Math.sqrt(livello));
 	}
 
 	@Override
@@ -43,15 +61,14 @@ public class PelleDiCorteccia implements Abilita {
 		BusEventi.pubblica(new NotificaTestoFrase(utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ricopre il gruppo di una pelle di corteccia."));
 		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
-			personaggio.addModificatore(modificatore(TipoAttributo.PARATA, Costanti.ABILITA_PELLE_DI_CORTECCIA_PERCENTUALE_PARATA));
-			personaggio.addModificatore(modificatore(TipoAttributo.RESISTENZA_MAGICA,
-					Costanti.ABILITA_PELLE_DI_CORTECCIA_PERCENTUALE_RESISTENZA_MAGICA));
+			personaggio.addModificatore(modificatore(TipoAttributo.PARATA, getPuntiParata()));
+			personaggio.addModificatore(modificatore(TipoAttributo.RESISTENZA_MAGICA, getPuntiResistenzaMagica()));
 		}
 		return true;
 	}
 
-	private static ModificatoreAttributoMD modificatore(TipoAttributo attributo, double percentuale) {
-		return new ModificatoreAttributoMD(attributo, TipoModificatore.VARIAZIONE_PERCENTUALE, percentuale, NOTA,
+	private static ModificatoreAttributoMD modificatore(TipoAttributo attributo, int punti) {
+		return new ModificatoreAttributoMD(attributo, TipoModificatore.VARIAZIONE_FISSA, punti, NOTA,
 				UnitaDurataModificatore.TURNI, Costanti.ABILITA_PELLE_DI_CORTECCIA_DURATA, BersaglioModificatore.PORTATORE, false);
 	}
 }

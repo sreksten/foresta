@@ -114,11 +114,13 @@ public class Costanti {
     public static final int ABILITA_RADICI_DANNI = 40;
     public static final int ABILITA_SCIAME_COSTO_LANCIO = 3;
     public static final int ABILITA_SCIAME_DANNI = 40;
-    // La pelle di corteccia dà a tutto il gruppo, per ABILITA_PELLE_DI_CORTECCIA_DURATA turni, questa percentuale in più di parata
-    // e di resistenza magica (con un modificatore temporaneo)
+    // La pelle di corteccia dà a tutto il gruppo, per ABILITA_PELLE_DI_CORTECCIA_DURATA turni, un numero fisso di punti in più di parata
+    // e di resistenza magica (con un modificatore temporaneo): la base per la radice quadrata del livello del druido, come l'imposizione delle
+    // mani. Sono punti e non una percentuale perché chi non è un guerriero ha pochissima parata e resistenza magica (da 1 a 18 punti ai livelli
+    // da 3 a 8): una percentuale su quei valori non cambia la probabilità di essere colpiti (vedi chierico_e_druido.md, §4)
     public static final int ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO = 5;
-    public static final double ABILITA_PELLE_DI_CORTECCIA_PERCENTUALE_PARATA = 30.0;
-    public static final double ABILITA_PELLE_DI_CORTECCIA_PERCENTUALE_RESISTENZA_MAGICA = 20.0;
+    public static final double ABILITA_PELLE_DI_CORTECCIA_BASE_PARATA = 10.0;
+    public static final double ABILITA_PELLE_DI_CORTECCIA_BASE_RESISTENZA_MAGICA = 10.0;
     public static final int ABILITA_PELLE_DI_CORTECCIA_DURATA = 4;
     // La rigenerazione dà RIGENERAZIONE a un personaggio per ABILITA_RIGENERAZIONE_DURATA turni: a ogni turno guarisce di
     // ABILITA_RIGENERAZIONE_BASE più questa quota della sua salute massima, aumentata dalla SAGGEZZA del druido

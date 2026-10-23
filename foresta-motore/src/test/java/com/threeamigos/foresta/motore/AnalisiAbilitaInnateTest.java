@@ -6,8 +6,18 @@ import com.threeamigos.foresta.abilita.Rigenerazione;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.locazioni.LocazioneBase;
 import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
+import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
+import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
+import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
+import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
+import com.threeamigos.foresta.tipi.tattiche.TipoConfronto;
+import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
+import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
+import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
+import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Dado;
@@ -344,6 +354,163 @@ class AnalisiAbilitaInnateTest {
             System.setOut(out);
             BusEventi.azzera();
         }
+    }
+
+    /**
+     * La pelle di corteccia in un gruppo di cinque contro un gruppo di avversari (di norma cinque viverne): lo stesso gruppo con il druido che usa la
+     * tattica predefinita, senza la pelle o senza nessuna abilità. Parametri: -Dnemico=VIVERNA -Dquantita=5 -Dgruppo=GUERRIERO,LADRO,MAGO,ELFO.
+     * Il druido è l'ultimo del gruppo.
+     */
+    @Test
+    @EnabledIfSystemProperty(named = "analisi", matches = "true")
+    void pelleContro() {
+        PrintStream out = System.out;
+        BusEventi.azzera();
+        BusEventi.impostaConsegna(Runnable::run);
+        System.setOut(NULL_STREAM);
+        try {
+            int iterazioni = Integer.getInteger("iterazioni", 300);
+            TipoPersonaggio nemico = TipoPersonaggio.valueOf(System.getProperty("nemico", "VIVERNA"));
+            int quantita = Integer.getInteger("quantita", 5);
+            List<TipoPersonaggio> altri = new ArrayList<>();
+            for (String nome : System.getProperty("gruppo", "GUERRIERO,LADRO,MAGO,ELFO").split(",")) {
+                altri.add(TipoPersonaggio.valueOf(nome));
+            }
+            List<TipoPersonaggio> gruppo = new ArrayList<>(altri);
+            gruppo.add(TipoPersonaggio.DRUIDO);
+            Object[][] varianti = {
+                    {"piene", new String[0]},
+                    {"senza pelle", new String[]{"Pelle"}},
+                    {"senza abilità", new String[]{"Pelle", "Rigenerazione", "Radici"}},
+                    {"solo pelle", new String[]{"Rigenerazione", "Radici"}}};
+            out.printf("%nPELLE: %s + DRUIDO contro %d %s%n", altri, quantita, nemico);
+            out.printf("%-4s %-15s | %8s %7s %7s %8s | %s%n", "liv", "druido", "vittorie", "round", "caduti", "salute", "lanci a scontro (pelle / altre)");
+            for (String nomeLivello : System.getProperty("livelli", "3,5,8,10").split(",")) {
+                int livello = Integer.parseInt(nomeLivello);
+                for (Object[] v : varianti) {
+                    String[] togli = (String[]) v[1];
+                    tattica = pg -> {
+                        TatticaMD base = RegistroTattiche.predefinitaDelGiocabile(pg.getClasse());
+                        if (pg.getClasse() != TipoPersonaggio.DRUIDO || togli.length == 0) {
+                            return base;
+                        }
+                        List<VoceMD> voci = new ArrayList<>();
+                        for (VoceMD voce : base.getVoci()) {
+                            boolean daTogliere = false;
+                            for (String parte : togli) {
+                                daTogliere |= voce.getNome() != null && voce.getNome().contains(parte);
+                            }
+                            voci.add(daTogliere ? voce.disattivata() : voce);
+                        }
+                        return new TatticaMD(voci);
+                    };
+                    int vittorie = 0;
+                    double round = 0, caduti = 0, salute = 0, pelle = 0, altre = 0;
+                    for (int i = 0; i < iterazioni; i++) {
+                        Esito e = scontro(gruppo, nemico, quantita, livello);
+                        if (e.vittoria) {
+                            vittorie++;
+                            salute += e.saluteResidua;
+                        }
+                        round += e.round;
+                        caduti += e.caduti;
+                        pelle += e.azioni.getOrDefault(TipoAzione.PELLE_DI_CORTECCIA, 0);
+                        altre += e.azioni.getOrDefault(TipoAzione.RADICI, 0) + e.azioni.getOrDefault(TipoAzione.SCIAME, 0)
+                                + e.azioni.getOrDefault(TipoAzione.RIGENERAZIONE, 0);
+                    }
+                    out.printf("%-4d %-15s | %7.1f%% %7.1f %7.2f %7.0f%% | %.2f / %.2f%n", livello, v[0], 100.0 * vittorie / iterazioni,
+                            round / iterazioni, caduti / iterazioni, vittorie == 0 ? 0 : 100.0 * salute / vittorie, pelle / iterazioni, altre / iterazioni);
+                }
+            }
+        } finally {
+            tattica = pg -> RegistroTattiche.predefinitaDelGiocabile(pg.getClasse());
+            System.setOut(out);
+            BusEventi.azzera();
+        }
+    }
+
+    /**
+     * La voce della pelle di corteccia nella tattica del druido, con condizioni diverse: l'alternativa di sempre (nessuna), nessuna pelle, dal secondo
+     * round, solo con un alleato sotto il 70% di salute, solo contro almeno quattro avversari, e due combinazioni. Stessi parametri di pelleContro, più
+     * -Dvarianti=elenco dei nomi per sceglierne alcune.
+     */
+    @Test
+    @EnabledIfSystemProperty(named = "analisi", matches = "true")
+    void pelleCondizionata() {
+        PrintStream out = System.out;
+        BusEventi.azzera();
+        BusEventi.impostaConsegna(Runnable::run);
+        System.setOut(NULL_STREAM);
+        try {
+            int iterazioni = Integer.getInteger("iterazioni", 300);
+            TipoPersonaggio nemico = TipoPersonaggio.valueOf(System.getProperty("nemico", "VIVERNA"));
+            int quantita = Integer.getInteger("quantita", 5);
+            List<TipoPersonaggio> gruppo = new ArrayList<>();
+            for (String nome : System.getProperty("gruppo", "GUERRIERO,LADRO,MAGO,ELFO").split(",")) {
+                gruppo.add(TipoPersonaggio.valueOf(nome));
+            }
+            gruppo.add(TipoPersonaggio.DRUIDO);
+            List<FiltroMD> nessunFiltro = new ArrayList<>();
+            FiltroMD sotto70 = FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, TipoConfronto.MINORE, 70);
+            PredicatoMD dalSecondoRound = PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND, TipoConfronto.MAGGIORE, 1);
+            PredicatoMD almenoQuattro = PredicatoMD.quanti(TipoRosa.AVVERSARI, nessunFiltro, TipoConfronto.MAGGIORE, 3);
+            PredicatoMD almenoTre = PredicatoMD.quanti(TipoRosa.AVVERSARI, nessunFiltro, TipoConfronto.MAGGIORE, 2);
+            SelettoreMD tutti = new SelettoreMD(TipoRosa.ALLEATI, nessunFiltro, OrdinamentoMD.di(TipoOrdinamento.PRIMO));
+            SelettoreMD conUnFerito = new SelettoreMD(TipoRosa.ALLEATI, Arrays.asList(sotto70), OrdinamentoMD.di(TipoOrdinamento.MENO_SALUTE));
+            Map<String, VoceMD> varianti = new LinkedHashMap<>();
+            varianti.put("sempre (attuale)", null);
+            varianti.put("mai", VoceMD.su(tutti, AzioneMD.di(TipoAzione.PELLE_DI_CORTECCIA)).disattivata());
+            varianti.put("dal 2o round", voceDellaPelle(tutti, dalSecondoRound));
+            varianti.put("con un ferito <70%", voceDellaPelle(conUnFerito));
+            varianti.put("con 4+ avversari", voceDellaPelle(tutti, almenoQuattro));
+            varianti.put("ferito <70% e 3+ avv.", voceDellaPelle(conUnFerito, almenoTre));
+            varianti.put("ferito <70% dal 2o", voceDellaPelle(conUnFerito, dalSecondoRound));
+            String scelte = System.getProperty("varianti");
+            out.printf("%nPELLE CONDIZIONATA: %s contro %d %s%n", gruppo, quantita, nemico);
+            out.printf("%-4s %-24s | %8s %7s %7s %8s | %s%n", "liv", "pelle", "vittorie", "round", "caduti", "salute", "pelle a scontro");
+            for (String nomeLivello : System.getProperty("livelli", "3,5,8").split(",")) {
+                int livello = Integer.parseInt(nomeLivello);
+                for (Map.Entry<String, VoceMD> variante : varianti.entrySet()) {
+                    if (scelte != null && !Arrays.asList(scelte.split(";")).contains(variante.getKey())) {
+                        continue;
+                    }
+                    VoceMD nuovaVoce = variante.getValue();
+                    tattica = pg -> {
+                        TatticaMD base = RegistroTattiche.predefinitaDelGiocabile(pg.getClasse());
+                        if (pg.getClasse() != TipoPersonaggio.DRUIDO || nuovaVoce == null) {
+                            return base;
+                        }
+                        List<VoceMD> voci = new ArrayList<>();
+                        for (VoceMD voce : base.getVoci()) {
+                            voci.add(voce.getNome() != null && voce.getNome().contains("Pelle") ? nuovaVoce : voce);
+                        }
+                        return new TatticaMD(voci);
+                    };
+                    int vittorie = 0;
+                    double round = 0, caduti = 0, salute = 0, pelle = 0;
+                    for (int i = 0; i < iterazioni; i++) {
+                        Esito e = scontro(gruppo, nemico, quantita, livello);
+                        if (e.vittoria) {
+                            vittorie++;
+                            salute += e.saluteResidua;
+                        }
+                        round += e.round;
+                        caduti += e.caduti;
+                        pelle += e.azioni.getOrDefault(TipoAzione.PELLE_DI_CORTECCIA, 0);
+                    }
+                    out.printf("%-4d %-24s | %7.1f%% %7.1f %7.2f %7.0f%% | %.2f%n", livello, variante.getKey(), 100.0 * vittorie / iterazioni,
+                            round / iterazioni, caduti / iterazioni, vittorie == 0 ? 0 : 100.0 * salute / vittorie, pelle / iterazioni);
+                }
+            }
+        } finally {
+            tattica = pg -> RegistroTattiche.predefinitaDelGiocabile(pg.getClasse());
+            System.setOut(out);
+            BusEventi.azzera();
+        }
+    }
+
+    private static VoceMD voceDellaPelle(SelettoreMD selettore, PredicatoMD... condizioni) {
+        return new VoceMD(selettore, Arrays.asList(condizioni), Collections.singletonList(AzioneMD.di(TipoAzione.PELLE_DI_CORTECCIA)), true, "Pelle di corteccia");
     }
 
     private void tabellaDeiNumeri(PrintStream out) {

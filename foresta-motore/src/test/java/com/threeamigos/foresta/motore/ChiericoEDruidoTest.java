@@ -449,7 +449,9 @@ class ChiericoEDruidoTest {
         assertTrue(FabbricaAbilita.crea(TipoAbilita.PELLE_DI_CORTECCIA, druido).usa(druido, compagni, avversari));
 
         assertEquals(magia - Costanti.ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO, druido.getMagia());
-        assertTrue(guerriero.getParata() > parata);
+        PelleDiCorteccia pelle = new PelleDiCorteccia(druido);
+        assertEquals(Math.round(10.0d * Math.sqrt(druido.getLivello())), pelle.getPuntiParata());
+        assertEquals(parata + pelle.getPuntiParata(), guerriero.getParata(), "punti fissi, non una percentuale della parata del guerriero");
         for (Personaggio personaggio : compagni.getPersonaggi()) {
             assertEquals(2, personaggio.getModificatoriTemporanei().size());
             for (ModificatoreAttributoMD modificatore : personaggio.getModificatoriTemporanei()) {

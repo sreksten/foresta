@@ -138,6 +138,7 @@ final class RoundASimulato {
      */
     Esito eseguiRound(Decisore decisore) {
         round++;
+        allineaIlRoundDelloStato();
         int n = mieiVivi().size();
         int m = avversariVivi().size();
         for (int k = 0; k < Math.max(n, m); k++) {
@@ -155,6 +156,21 @@ final class RoundASimulato {
             }
         }
         return trascorriTurnoEffettiDiStato();
+    }
+
+    /**
+     * Il numero del round dello stato del combattimento è quello che leggono le condizioni delle tattiche (ROUND, ROUND_DALL_ULTIMO_USO) e che si
+     * ricorda per le voci usate. Nel gioco lo fa avanzare la lista dei turni (StatoDelCombattimento.registraAzione), che qui non c'è perché il giro lo
+     * fa questa classe: lo si porta al passo con il proprio contatore, altrimenti resta a 1 e quelle condizioni non scattano mai.
+     */
+    private void allineaIlRoundDelloStato() {
+        try {
+            java.lang.reflect.Field campo = StatoDelCombattimento.class.getDeclaredField("round");
+            campo.setAccessible(true);
+            campo.setInt(StatoDelCombattimento.getIstanza(), round);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("StatoDelCombattimento non ha più il campo round", e);
+        }
     }
 
     private Esito agisceUnoDeiMiei(Decisore decisore) {
