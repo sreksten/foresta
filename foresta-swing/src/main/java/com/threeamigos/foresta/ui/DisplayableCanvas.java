@@ -728,8 +728,42 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	@Override
 	public void paintComponent(Graphics graphics) {
+		if (!PROFILO) {
+			super.paintComponent(graphics);
+			aggiornaSchermo((Graphics2D)graphics);
+			return;
+		}
+		long inizio = System.nanoTime();
 		super.paintComponent(graphics);
+		long dopoSuper = System.nanoTime();
 		aggiornaSchermo((Graphics2D)graphics);
+		long fine = System.nanoTime();
+		profiloPaint(fine - inizio, dopoSuper - inizio, inizio);
+	}
+
+	// PROFILO TEMPORANEO (-Dforesta.profilo=true): tempi di paintComponent per schermata, ogni due secondi
+	private static final boolean PROFILO = Boolean.getBoolean("foresta.profilo");
+	private long profiloInizioFinestra = 0;
+	private long profiloTotale = 0, profiloMax = 0, profiloSuper = 0;
+	private int profiloConta = 0;
+
+	private void profiloPaint(long durata, long durataSuper, long inizio) {
+		if (profiloInizioFinestra == 0) {
+			profiloInizioFinestra = inizio;
+		}
+		profiloTotale += durata;
+		profiloSuper += durataSuper;
+		profiloMax = Math.max(profiloMax, durata);
+		profiloConta++;
+		long trascorso = System.nanoTime() - profiloInizioFinestra;
+		if (trascorso >= 2_000_000_000L) {
+			System.out.println(String.format(Locale.ROOT, "PROFILO stato=%s %dx%d paint=%d in %.1fs (%.1f fps) medio=%.2f ms (super %.2f) max=%.2f ms",
+					stato, getWidth(), getHeight(), profiloConta, trascorso / 1e9, profiloConta * 1e9 / trascorso,
+					profiloTotale / 1e6 / profiloConta, profiloSuper / 1e6 / profiloConta, profiloMax / 1e6));
+			profiloInizioFinestra = 0;
+			profiloTotale = profiloMax = profiloSuper = 0;
+			profiloConta = 0;
+		}
 	}
 
 
@@ -1334,6 +1368,27 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	/**
+	 * Come {@link #notificaAnnuncioGlobale}, ma per annunci che si ripetono a raffica (per esempio un punto abilità speso
+	 * dopo l'altro): quello in corso e quelli in coda dello stesso genere vengono scartati e il nuovo parte subito, invece di
+	 * aspettare che sfilino tutti. Gli annunci di altro genere (una missione completata) non si toccano.
+	 */
+	public void notificaAnnuncioGlobaleSostituibile(String etichetta, String messaggio) {
+		SpriteAnnuncioGlobale annuncio = new SpriteAnnuncioGlobale(etichetta, messaggio, larghezzaSchermo, altezzaSchermo).sostituibile();
+		if (stato == StatoDisplayableCanvas.STATO_INTERMEZZO) {
+			annunciGlobaliRimandati.removeIf(SpriteAnnuncioGlobale::isSostituibile);
+			annunciGlobaliRimandati.add(annuncio);
+			return;
+		}
+		codaAnnunciGlobali.removeIf(SpriteAnnuncioGlobale::isSostituibile);
+		SpriteAnnuncioGlobale inCorso = annuncioGlobaleAttivo;
+		if (inCorso != null && inCorso.isSostituibile()) {
+			annuncioGlobaleAttivo = null;
+		}
+		codaAnnunciGlobali.add(annuncio);
+		BusEventi.pubblica(new InternoUiOccupata());
+	}
+
+	/**
 	 * Mostra con uno sprite l'effetto di stato appena subito da un personaggio.
 	 */
 	public void aggiungiEffettoDiStato(VistaPersonaggio personaggio, TipoEffettoDiStato effettoDiStato, DoomdarkColorModel.Color colore) {
@@ -1670,12 +1725,61 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			int y = risultatoRicerca.yRelativoAFinestra;
 
 			int rotazioni = e.getWheelRotation();
+			int passi = finestra.passiPerScattoDellaRotella();
+			if (passi <= 1) {
+				consegnaRotella(finestra, x, y, rotazioni);
+				repaint();
+				return;
+			}
+			// Se il cursore è passato a un'altra finestra, quel che restava per la precedente si consegna subito
+			if (finestraRotella != null && finestraRotella != finestra) {
+				consegnaRotellaInSospeso();
+			}
+			finestraRotella = finestra;
+			xRotella = x;
+			yRotella = y;
+			rotazioniInSospeso += rotazioni * passi;
+			if (!timerRotella.isRunning()) {
+				timerRotella.start();
+			}
+		}
+
+		// Uno scatto della rotella si divide in più passi, consegnati a uno o due per fotogramma: lo scorrimento
+		// risulta fluido come col trackpad. Il timer gira sull'EDT, come gli eventi del mouse, e si ferma a coda vuota.
+		private Finestra finestraRotella;
+		private int xRotella;
+		private int yRotella;
+		private int rotazioniInSospeso;
+		private final Timer timerRotella = new Timer(1000 / Temporizzatore.FRAME_PER_SECONDO, evento -> consegnaUnPassoDiRotella());
+
+		private void consegnaUnPassoDiRotella() {
+			if (rotazioniInSospeso == 0) {
+				timerRotella.stop();
+				return;
+			}
+			// Più la coda è lunga più passi per fotogramma, così una rotella girata in fretta non resta indietro
+			int passi = Math.max(1, (Math.abs(rotazioniInSospeso) + 3) / 4);
+			int consegnati = Math.min(passi, Math.abs(rotazioniInSospeso)) * Integer.signum(rotazioniInSospeso);
+			rotazioniInSospeso -= consegnati;
+			consegnaRotella(finestraRotella, xRotella, yRotella, consegnati);
+			repaint();
+			if (rotazioniInSospeso == 0) {
+				timerRotella.stop();
+			}
+		}
+
+		private void consegnaRotellaInSospeso() {
+			int daConsegnare = rotazioniInSospeso;
+			rotazioniInSospeso = 0;
+			consegnaRotella(finestraRotella, xRotella, yRotella, daConsegnare);
+		}
+
+		private void consegnaRotella(Finestra finestra, int x, int y, int rotazioni) {
 			if (rotazioni < 0) {
 				finestra.processaRotella(x, y, -rotazioni, Finestra.MovimentoRotella.SU);
-			} else {
+			} else if (rotazioni > 0) {
 				finestra.processaRotella(x, y, rotazioni, Finestra.MovimentoRotella.GIU);
 			}
-			repaint();
 		}
 	}
 }

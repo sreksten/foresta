@@ -2,9 +2,11 @@ package com.threeamigos.foresta.ui.testo;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
+import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 
 import java.awt.*;
-import java.awt.image.MemoryImageSource;
+import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,8 +28,9 @@ public class DoomdarkTextProducer {
 		}
 	}
 
-	private static Image buildImageSource(String resource, DoomdarkFont font, DoomdarkColorModel.Color color) {
-		int imageWidth = FontTool.getWidth(font, resource);
+	private static BufferedImage buildImageSource(String resource, DoomdarkFont font, DoomdarkColorModel.Color color) {
+		// Un testo vuoto darebbe un'immagine larga zero, che BufferedImage non crea: si produce comunque un pixel
+		int imageWidth = Math.max(1, FontTool.getWidth(font, resource));
 		int fontHeight = font.getHeight();
 		int[] textData = new int[imageWidth * fontHeight]; // buffer per l'immagine temporanea
 		int textDataIndex = 0;
@@ -47,12 +50,27 @@ public class DoomdarkTextProducer {
 			}
 			textDataIndex++;
 		}
-		return Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(imageWidth, fontHeight, 
-						DoomdarkColorModel.getColorModel(color), textData, 0, imageWidth));
+		return creaImmagine(imageWidth, fontHeight, color, textData);
+	}
+
+	/**
+	 * Dai bit dei caratteri (0 sfondo, 1 primo piano) a un'immagine nel formato dello schermo, non a un'immagine
+	 * del Toolkit: quest'ultima la grafica non sa tenerla in memoria video, e ogni disegno la riconverte.
+	 */
+	private static BufferedImage creaImmagine(int larghezza, int altezza, DoomdarkColorModel.Color color, int[] bit) {
+		IndexColorModel modello = DoomdarkColorModel.getColorModel(color);
+		int[] argb = new int[]{modello.getRGB(0), modello.getRGB(1)};
+		int[] pixel = new int[larghezza * altezza];
+		for (int i = 0; i < pixel.length && i < bit.length; i++) {
+			pixel[i] = argb[bit[i]];
+		}
+		BufferedImage immagine = BufferedImageBuilder.creaCompatibile(larghezza, altezza, Transparency.TRANSLUCENT);
+		immagine.setRGB(0, 0, larghezza, altezza, pixel, 0, larghezza);
+		return immagine;
 	}
 
 	// Rendering del testo
-	private static Image buildImageSource(String multiLineResource, DoomdarkFont font, DoomdarkColorModel.Color color, int maxWidth) {
+	private static BufferedImage buildImageSource(String multiLineResource, DoomdarkFont font, DoomdarkColorModel.Color color, int maxWidth) {
 		List<String> strings = FontTool.split(font, multiLineResource, maxWidth);
 		int imageWidth = 0;
 		for (String string : strings) {
@@ -61,6 +79,7 @@ public class DoomdarkTextProducer {
 				imageWidth = stringWidth;
 			}
 		}
+		imageWidth = Math.max(1, imageWidth);
 		int fontHeight = font.getHeight();
 		int[] textData = new int[imageWidth * fontHeight * strings.size()]; // buffer per l'immagine temporanea
 		for (int currentStringIndex = 0; currentStringIndex < strings.size(); currentStringIndex++) {
@@ -83,8 +102,7 @@ public class DoomdarkTextProducer {
 				textDataIndex++;
 			}
 		}
-		return Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(imageWidth, fontHeight * strings.size(), 
-						DoomdarkColorModel.getColorModel(color), textData, 0, imageWidth));
+		return creaImmagine(imageWidth, fontHeight * strings.size(), color, textData);
 	}
 
 	public static Image getImage(int number, DoomdarkFont font) {

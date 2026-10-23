@@ -17,7 +17,21 @@ public class BufferedImageBuilder {
 	private BufferedImageBuilder() {
 	}
 
-	private static final GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+	/**
+	 * Un'immagine vuota nel formato dello schermo, così che disegnarla non richieda conversioni (e la grafica possa
+	 * tenerla in memoria video). Senza schermo (test, ambienti senza interfaccia grafica) è una semplice ARGB/RGB.
+	 */
+	public static BufferedImage creaCompatibile(int larghezza, int altezza, int trasparenza) {
+		if (!GraphicsEnvironment.isHeadless()) {
+			try {
+				return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()
+						.createCompatibleImage(larghezza, altezza, trasparenza);
+			} catch (HeadlessException e) {
+				// ripiego sotto
+			}
+		}
+		return new BufferedImage(larghezza, altezza, trasparenza == Transparency.OPAQUE ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB);
+	}
 
 	/**
 	 * Carica una risorsa grafica all'avvio: un'immagine mancante è un errore fatale.
@@ -90,7 +104,7 @@ public class BufferedImageBuilder {
 		}
 		int larghezza = (int) Math.round(img.getWidth() * zoom);
 		int altezza = (int) Math.round(img.getHeight() * zoom);
-		BufferedImage copy = gc.createCompatibleImage(larghezza, altezza, img.getTransparency());
+		BufferedImage copy = creaCompatibile(larghezza, altezza, img.getTransparency());
 		Graphics2D g2d = copy.createGraphics();
 		if (zoom != 1.0) {
 			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);

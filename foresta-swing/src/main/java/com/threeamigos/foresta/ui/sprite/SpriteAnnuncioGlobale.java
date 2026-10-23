@@ -32,6 +32,7 @@ public class SpriteAnnuncioGlobale extends SpriteBase {
 	private final String descrizione;
 	private final int larghezzaSchermo;
 	private final int altezzaSchermo;
+	private boolean sostituibile;
 
 	public SpriteAnnuncioGlobale(String titolo, String descrizione, int larghezzaSchermo, int altezzaSchermo) {
 		this.titolo = titolo;
@@ -44,6 +45,19 @@ public class SpriteAnnuncioGlobale extends SpriteBase {
 				0, 0,
 				0, 0,
 				SCALA_INIZIALE, SCALA_FINALE);
+	}
+
+	/**
+	 * Un annuncio sostituibile, quando ne arriva un altro dello stesso genere, non aspetta il suo turno né finisce la sua
+	 * animazione: il nuovo prende subito il suo posto (vedi DisplayableCanvas.notificaAnnuncioGlobaleSostituibile).
+	 */
+	public SpriteAnnuncioGlobale sostituibile() {
+		this.sostituibile = true;
+		return this;
+	}
+
+	public boolean isSostituibile() {
+		return sostituibile;
 	}
 
 	public String getTitolo() {

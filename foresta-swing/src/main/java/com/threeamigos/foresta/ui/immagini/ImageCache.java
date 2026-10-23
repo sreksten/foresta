@@ -13,11 +13,15 @@ import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 import com.threeamigos.foresta.ui.testo.DoomdarkTextProducer;
+import com.threeamigos.foresta.ui.testo.FontTool;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.ref.WeakReference;
+import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -32,6 +36,11 @@ import java.util.function.Supplier;
 public class ImageCache {
 
 	public static final int SPACING = 4;
+
+	private static final int MASSIMO_COMPOSTE = 1024;
+	private static final int MASSIMO_PORZIONI = 24;
+	private static final Map<List<Object>, Image> composte = lru(MASSIMO_COMPOSTE);
+	private static final Map<List<Object>, Image> porzioni = lru(MASSIMO_PORZIONI);
 	
 	// Le risorse di cui serve la dimensione prima di caricare le immagini (vedi ForestaUI.calcolaDimensioniFinestra):
 	// sono costanti, quindi usarle non inizializza ImageCache
@@ -422,6 +431,68 @@ public class ImageCache {
 			perVerso.put(verso, new WeakReference<>(immagine));
 		}
 		return immagine;
+	}
+
+	/**
+	 * Un testo a capo entro la larghezza indicata, con l'interlinea indicata fra le righe: un'immagine larga esattamente
+	 * {@code larghezza}, composta dalle righe di {@code get(testo, font, colore)}. A differenza di quella a capo con
+	 * la sola larghezza massima, qui l'altezza di ogni riga è quella che serve a chi impagina (vedi ComponenteScorrevole).
+	 */
+	public static Image getTestoACapo(String testo, DoomdarkFont font, DoomdarkColorModel.Color colore, int larghezza, int interlinea) {
+		return getComposta(Arrays.asList("testoACapo", font, colore, testo, larghezza, interlinea), () -> {
+			List<String> righe = FontTool.split(font, testo, larghezza);
+			BufferedImage canvas = BufferedImageBuilder.creaCompatibile(larghezza, (font.getHeight() + interlinea) * righe.size(), Transparency.TRANSLUCENT);
+			Graphics2D g2d = canvas.createGraphics();
+			int y = 0;
+			for (String riga : righe) {
+				g2d.drawImage(get(riga, font, colore), 0, y, null);
+				y += font.getHeight() + interlinea;
+			}
+			g2d.dispose();
+			return canvas;
+		});
+	}
+
+	/**
+	 * Un'immagine composta da altre (per esempio livello e prezzo di un artefatto), costruita la prima volta che la
+	 * chiave compare e poi riusata. La chiave dice di cosa si tratta: se contiene immagini valgono per identità, quindi
+	 * le sorgenti devono venire da {@code get}, che dà sempre la stessa. A differenza della cache dinamica dei testi
+	 * qui il riferimento è forte (le più vecchie si scartano oltre {@value #MASSIMO_COMPOSTE}), perché la composta
+	 * sarebbe altrimenti ricostruita ogni volta che nessuno la tiene in mano, cioè a ogni fotogramma.
+	 */
+	public static Image getComposta(List<Object> chiave, Supplier<Image> costruttore) {
+		return getInLru(composte, chiave, costruttore);
+	}
+
+	/**
+	 * La porzione visibile di una lista scorrevole già disegnata. Tenuta a parte da {@link #getComposta} perché ogni
+	 * porzione è grande (l'area di un riquadro), quindi se ne tengono poche: {@value #MASSIMO_PORZIONI}.
+	 */
+	public static Image getPorzione(List<Object> chiave, Supplier<Image> costruttore) {
+		return getInLru(porzioni, chiave, costruttore);
+	}
+
+	private static Image getInLru(Map<List<Object>, Image> lru, List<Object> chiave, Supplier<Image> costruttore) {
+		synchronized (lru) {
+			Image inCache = lru.get(chiave);
+			if (inCache != null) {
+				return inCache;
+			}
+		}
+		Image costruita = costruttore.get();
+		synchronized (lru) {
+			lru.put(chiave, costruita);
+		}
+		return costruita;
+	}
+
+	private static <K, V> Map<K, V> lru(int massimo) {
+		return new LinkedHashMap<K, V>(16, 0.75f, true) {
+			@Override
+			protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+				return size() > massimo;
+			}
+		};
 	}
 
 	private static Image get(DoomdarkFont font, DoomdarkColorModel.Color colore, String chiave, Supplier<Image> costruttore) {

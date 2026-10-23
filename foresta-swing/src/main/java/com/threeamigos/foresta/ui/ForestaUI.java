@@ -565,7 +565,8 @@ public class ForestaUI implements Temporizzabile {
 
 	private void gestisciEventoConsumoPuntoAbilita(NotificaConsumoPuntoAbilitaPersonaggio evento) {
 		TipoAttributo tipoAttributo = evento.getTipoAttributo();
-		displayableCanvas.notificaAnnuncioGlobale("AUMENTO", tipoAttributo.getNome().toUpperCase(Locale.ROOT));
+		// Si può spendere un punto dopo l'altro, anche su personaggi diversi: ogni annuncio sostituisce il precedente
+		displayableCanvas.notificaAnnuncioGlobaleSostituibile("AUMENTO", tipoAttributo.getNome().toUpperCase(Locale.ROOT));
 	}
 
 	private void gestisciEventoFineGioco(NotificaFineGioco evento) {

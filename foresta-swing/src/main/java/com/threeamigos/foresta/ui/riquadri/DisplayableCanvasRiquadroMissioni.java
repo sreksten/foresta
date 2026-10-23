@@ -197,6 +197,11 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 	}
 
 	@Override
+	public int passiPerScattoDellaRotella() {
+		return PASSI_PER_SCATTO_DELLE_LISTE;
+	}
+
+	@Override
 	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
 		if (movimentoRotella == MovimentoRotella.SU) {
 			offsetY = Math.max(0, offsetY - numeroRotazioni * PASSO_SCORRIMENTO);

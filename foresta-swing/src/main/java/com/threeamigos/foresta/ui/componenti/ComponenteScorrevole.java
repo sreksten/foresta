@@ -3,8 +3,10 @@ package com.threeamigos.foresta.ui.componenti;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
+import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
@@ -132,9 +134,28 @@ public class ComponenteScorrevole<T> {
         int altezzaImmagine = Math.max(calcolaAltezzaMassimaNodi(), altezzaMassima);
         offset = limitaOffset(altezzaImmagine, altezzaMassima, offset);
 
-        BufferedImage risultato = new BufferedImage(Math.max(1, larghezza), altezzaImmagine, BufferedImage.TYPE_INT_ARGB);
+        // I nodi sono nuovi a ogni fotogramma, ma le loro immagini sono quelle in cache: se non è cambiato niente
+        // (stesse immagini, stesse posizioni, stesso scorrimento) la porzione di prima è ancora giusta
+        List<Object> firma = new ArrayList<>();
+        firma.addAll(Arrays.asList(larghezza, altezzaMassima, offset, altezzaImmagine, interlinea, larghezzaIndentazione));
+        for (Nodo nodo : contenuto) {
+            firma.add(nodo.icona);
+            firma.add(nodo.chiave);
+            firma.add(nodo.valore);
+            firma.add(nodo.isFigliVisibili() ? nodo.descrizione : null);
+            firma.add(nodo.indentazione);
+        }
+        final int altezzaMassimaFinale = altezzaMassima;
+        final int offsetFinale = offset;
+        return ImageCache.getPorzione(firma, () -> disegnaPorzione(contenuto, altezzaMassimaFinale, offsetFinale));
+    }
+
+    private Image disegnaPorzione(List<Nodo> contenuto, int altezzaMassima, int offset) {
+        // Si disegna solo la porzione visibile, non l'intera lista
+        BufferedImage risultato = BufferedImageBuilder.creaCompatibile(Math.max(1, larghezza), altezzaMassima, Transparency.TRANSLUCENT);
 
         Graphics2D g2d = risultato.createGraphics();
+        g2d.translate(0, -offset);
 
         final int SPACING = ImageCache.SPACING;
 
@@ -179,7 +200,7 @@ public class ComponenteScorrevole<T> {
         }
 
         g2d.dispose();
-        return risultato.getSubimage(0, offset, risultato.getWidth(), altezzaMassima);
+        return risultato;
     }
 
     private List<Nodo> espandiNodi() {
@@ -295,18 +316,7 @@ public class ComponenteScorrevole<T> {
 
         private Image creaImmagine(DoomdarkFont font, DoomdarkColorModel.Color color, String testo, int larghezza) {
             // Un valore molto largo non deve lasciare alla chiave una larghezza negativa: l'immagine non si creerebbe
-            larghezza = Math.max(larghezza, font.getHeight());
-            List<String> testi = FontTool.split(font, testo, larghezza);
-            BufferedImage canvas = new BufferedImage(larghezza, (font.getHeight() + interlinea) * testi.size(), BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2d = canvas.createGraphics();
-            int y = 0;
-            for (String s : testi) {
-                Image image = ImageCache.get(s, font, color);
-                g2d.drawImage(image, 0, y, null);
-                y += font.getHeight() + interlinea;
-            }
-            g2d.dispose();
-            return canvas;
+            return ImageCache.getTestoACapo(testo, font, color, Math.max(larghezza, font.getHeight()), interlinea);
         }
 
         /**

@@ -22,9 +22,11 @@ import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 
+import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.IntUnaryOperator;
@@ -36,6 +38,7 @@ import java.util.function.IntUnaryOperator;
  * @author Stefano Reksten
  */
 public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasScambiatore {
+
 
     // Lo scambio aperto, in sola lettura: gli spostamenti si chiedono con ComandoScambioArtefatto
     protected VistaScambio scambio;
@@ -227,14 +230,17 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
         }
         Image costo = ImageCache.get(String.valueOf(prezzo.applyAsInt(artefatto.getCostoAcquisto())), fontSmall,
                 DoomdarkColorModel.Color.YELLOW);
-        int larghezzaLivello = livello.getWidth(null) + ImageCache.SPACING;
-        BufferedImage valore = new BufferedImage(larghezzaLivello + costo.getWidth(null),
-                Math.max(livello.getHeight(null), costo.getHeight(null)), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = valore.createGraphics();
-        g2d.drawImage(livello, 0, 0, null);
-        g2d.drawImage(costo, larghezzaLivello, 0, null);
-        g2d.dispose();
-        return valore;
+        // Livello e costo vengono da ImageCache.get, quindi sempre le stesse immagini: la coppia identifica il valore composto
+        return ImageCache.getComposta(Arrays.asList("valoreArtefatto", livello, costo), () -> {
+            int larghezzaLivello = livello.getWidth(null) + ImageCache.SPACING;
+            BufferedImage valore = BufferedImageBuilder.creaCompatibile(larghezzaLivello + costo.getWidth(null),
+                    Math.max(livello.getHeight(null), costo.getHeight(null)), Transparency.TRANSLUCENT);
+            Graphics2D g2d = valore.createGraphics();
+            g2d.drawImage(livello, 0, 0, null);
+            g2d.drawImage(costo, larghezzaLivello, 0, null);
+            g2d.dispose();
+            return valore;
+        });
     }
 
     private int disegnaElenco(Graphics2D graphics, Collection<? extends VistaArtefatto> artefatti, int x, int offset,

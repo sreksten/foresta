@@ -1088,6 +1088,12 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	}
 
 	@Override
+	public int passiPerScattoDellaRotella() {
+		// il menu a discesa ha già un passo suo
+		return menu != null && menu.isAperta() ? 1 : super.passiPerScattoDellaRotella();
+	}
+
+	@Override
 	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
 		if (menu != null && menu.isAperta()) {
 			menu.rotella(numeroRotazioni, movimentoRotella == MovimentoRotella.SU);

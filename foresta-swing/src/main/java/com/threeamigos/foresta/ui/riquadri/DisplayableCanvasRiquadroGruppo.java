@@ -338,6 +338,11 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 	}
 
 	@Override
+	public int passiPerScattoDellaRotella() {
+		return PASSI_PER_SCATTO_DELLE_LISTE;
+	}
+
+	@Override
 	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
 		int spostamento = numeroRotazioni * PASSO_SCORRIMENTO;
 		offsetY = movimentoRotella == MovimentoRotella.SU ? offsetY - spostamento : offsetY + spostamento;

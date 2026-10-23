@@ -357,6 +357,11 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     }
 
     @Override
+    public int passiPerScattoDellaRotella() {
+    	return PASSI_PER_SCATTO_DELLE_LISTE;
+    }
+
+    @Override
     public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
         if (movimentoRotella == MovimentoRotella.SU) {
             if (x >= xMinimaZonaSinistra && x < xMassimaZonaSinistra) {
