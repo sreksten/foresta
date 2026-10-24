@@ -194,6 +194,19 @@ public class CalcolatoreCombattimento {
     }
 
     /**
+     * La quota del danno che subisce un bersaglio di un incantesimo (o di un'abilità di danno) a più bersagli, secondo la sua posizione:
+     * 0 per il principale, che lo subisce intero, poi un quarto in meno a ogni posizione, fino a un quarto del danno
+     * (vedi Costanti.INCANTESIMO_MULTIPLO_RIDUZIONE_PER_POSIZIONE). Lo applicano sia il lancio sia la valutazione delle tattiche, perché
+     * scelgano per il danno vero.
+     *
+     * @param posizione la posizione del bersaglio fra i colpiti, dal principale (0)
+     */
+    public static double quotaDelDannoPerPosizione(int posizione) {
+        return Math.max(Costanti.INCANTESIMO_MULTIPLO_QUOTA_MINIMA,
+                1.0d - Costanti.INCANTESIMO_MULTIPLO_RIDUZIONE_PER_POSIZIONE * Math.max(0, posizione));
+    }
+
+    /**
      * Il risultato di un colpo pieno con quell'arma: il danno, gli stati alterati e le reazioni che ne seguono.
      */
     public static DannoRisultante calcolaDannoRisultante(Personaggio attaccante, Personaggio difensore, Arma arma) {
@@ -314,7 +327,11 @@ public class CalcolatoreCombattimento {
         return dannoAtteso(attaccante, difensore, arma, 1.0d);
     }
 
-    private static double dannoAtteso(Personaggio attaccante, Personaggio difensore, Arma arma, double fattoreDellaFase) {
+    /**
+     * Come {@link #dannoAtteso(Personaggio, Personaggio, Arma)} per la quota del danno che l'arma fa in quella fase, o che un bersaglio
+     * subisce in una posizione di un incantesimo a più bersagli (vedi {@link #quotaDelDannoPerPosizione}).
+     */
+    public static double dannoAtteso(Personaggio attaccante, Personaggio difensore, Arma arma, double fattoreDellaFase) {
         double probabilita = calcolaProbabilitaDiColpire(attaccante, difensore, arma.getTipoDanno().getCategoriaDanno()) / 100.0d;
         return probabilita * dannoAttesoDellArma(attaccante, arma) * fattoreDellaFase * moltiplicatoreAtteso(difensore, arma.getTipoDanno());
     }
@@ -636,8 +653,9 @@ public class CalcolatoreCombattimento {
             if (libro.isPresent()) {
                 // Il bonus del libro è danno dell'incantesimo: prende tutto il moltiplicatore magico della classe.
                 // Un elfo ne ha solo una parte
+                // Con più bersagli il bonus del libro si ripartisce come il resto del danno (fattore è la quota del bersaglio)
                 double dannoLibro = dannoIncantamento(attaccante, difensore, bonusLibroMagico(libro.get(), tipoDanno),
-                        libro.get().getLivello(), fattoreLibroMagico(attaccante), moltiplicatoreDanniMagici(attaccante));
+                        libro.get().getLivello(), fattoreLibroMagico(attaccante) * fattore, moltiplicatoreDanniMagici(attaccante));
                 dannoElementaleFinale += dannoLibro;
                 Logger.log(() -> String.format(Locale.ROOT, "[LIBRO MAGICO] Danno bonus: %.2f", dannoLibro));
             }

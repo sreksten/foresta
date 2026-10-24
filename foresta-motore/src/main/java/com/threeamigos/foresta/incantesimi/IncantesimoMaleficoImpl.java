@@ -45,7 +45,8 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 	/**
 	 * Un incantesimo GLOBALE agisce su tutta la locazione; altrimenti con un bersaglio colpisce solo lui (è il caso
 	 * dei mostri, che lanciano sempre su un personaggio), e con un gruppo colpisce tutti i vivi (GRUPPO) o fino al
-	 * numero di bersagli di chi lo formula (MULTIPLO).
+	 * numero di bersagli di chi lo formula (MULTIPLO). Con più bersagli il danno si ripartisce per posizione: il primo lo subisce
+	 * intero, gli altri una quota minore (vedi CalcolatoreCombattimento.quotaDelDannoPerPosizione).
 	 */
 	public void formula(Personaggio formulante, Personaggio personaggioBersaglio, Gruppo gruppoBersaglio) {
 		if (getClasse().getPortata() == PortataIncantesimo.GLOBALE) {
@@ -60,8 +61,13 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 			}
 			annuncia(formulante, bersagli.size() > 1 ? "il gruppo" :
 					bersagli.get(0).getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
-			for (Personaggio bersaglio : bersagli) {
-				colpisci(formulante, bersaglio);
+			boolean ripartito = getClasse().getPortata() == PortataIncantesimo.MULTIPLO;
+			for (int posizione = 0; posizione < bersagli.size(); posizione++) {
+				if (ripartito) {
+					colpisci(formulante, bersagli.get(posizione), CalcolatoreCombattimento.quotaDelDannoPerPosizione(posizione));
+				} else {
+					colpisci(formulante, bersagli.get(posizione));
+				}
 			}
 		} else {
 			throw new IllegalArgumentException("Non so come formulare questo incantesimo!");
@@ -89,6 +95,14 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 	 * danno risultante si applica al bersaglio. L'esito viene registrato nello stato del combattimento.
 	 */
 	protected void colpisci(Personaggio formulante, Personaggio personaggioBersaglio) {
+		colpisci(formulante, personaggioBersaglio, 1.0d);
+	}
+
+	/**
+	 * Come {@link #colpisci(Personaggio, Personaggio)}, ma il bersaglio subisce solo quella quota del danno (vedi
+	 * CalcolatoreCombattimento.quotaDelDannoPerPosizione): gli stati alterati dipendono dal colpo, non dalla quota.
+	 */
+	protected void colpisci(Personaggio formulante, Personaggio personaggioBersaglio, double quotaDelDanno) {
 		TipoAzione azione = TipoAzione.di(getClasse());
 		StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
 		if (personaggioBersaglio.isImmuneAIncantesimo(getClasse())) {
@@ -102,7 +116,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 			return;
 		}
 		stato.registraEsitoAzione(formulante, personaggioBersaglio, azione, EsitoAzione.RIUSCITA);
-		DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(formulante, personaggioBersaglio, this);
+		DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(formulante, personaggioBersaglio, this, quotaDelDanno);
 		personaggioBersaglio.applicaRisultatoCombattimento(risultato);
 	}
 }

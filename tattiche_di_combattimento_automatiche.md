@@ -874,7 +874,7 @@ Escluse (§5): fuga, corruzione, amicizia, passare inosservati. **Non c'è un'az
 - **`INCANTESIMO_DI_DANNO`** sceglie fra i sette incantesimi elementali che il personaggio può lanciare adesso; **non comprende `MORTE`** (può ritorcersi contro chi la lancia), `SILENZIO` e i benefici, che restano azioni esplicite.
   Il criterio è un parametro dell'azione. `INCANTESIMO_DEL_REPERTORIO` riproduce invece la scelta dei mostri di un tempo (§11.13).
 - **Pozioni:** quattro azioni (Salute e Magia, normale e grande: ognuna beve solo la sua); la scelta fra normale e grande la scrive la voce, con l'ordine delle azioni (§11.16).
-- **Incantesimi a più bersagli** (`MULTIPLO`, fino a `NUMERO_BERSAGLI`): il selettore sceglie il **bersaglio principale** e gli altri sono i successivi vivi dell'elenco degli avversari.
+- **Incantesimi a più bersagli** (`MULTIPLO`, fino a `NUMERO_BERSAGLI`): il selettore sceglie il **bersaglio principale** e gli altri sono i successivi vivi dell'elenco degli avversari. Il danno si ripartisce per posizione (principale intero, poi 75%, 50%, 25%: `CalcolatoreCombattimento.quotaDelDannoPerPosizione`) e la valutazione somma i danni attesi con le stesse quote.
 - **Un test** controlla che ogni valore di `TipoIncantesimo` abbia il suo `TipoAzione` (un nuovo incantesimo senza azione fa fallire il test).
 
 **Il bersaglio scelto, per tutte le azioni.** L'`EsecutoreTattiche` (§11.14) esegue ogni azione sul bersaglio scelto dal valutatore (per i `MULTIPLO` il principale). Le azioni manuali del giocatore (barra dei comandi) continuano a scegliere da sole: l'attacco colpisce il primo avversario vivo (`PersonaggioBase.attaccaConLeArmi`),

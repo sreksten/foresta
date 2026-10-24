@@ -63,6 +63,10 @@ public class Costanti {
     public static final double GUARDIA_APERTA_FATTORE_PARATA = 0.75;
     // La seconda fase di attacco, con l'arma nella mano secondaria, fa il 40% (danno base e incantamenti)
     public static final double DOPPIA_ARMA_FATTORE_SECONDA_ARMA = 0.4;
+    // Un incantesimo a più bersagli (MULTIPLO) o un'abilità di danno ripartisce il danno per posizione: il bersaglio principale lo subisce
+    // intero, ogni successivo un quarto in meno del precedente, fino a una quota minima (100%, 75%, 50%, 25%, 25%...)
+    public static final double INCANTESIMO_MULTIPLO_RIDUZIONE_PER_POSIZIONE = 0.25;
+    public static final double INCANTESIMO_MULTIPLO_QUOTA_MINIMA = 0.25;
     // Su elmo, scudo, armatura e schinieri la parte percentuale di un incantamento vale la metà, perché moltiplica
     // una difesa che cresce già con il livello
     public static final double RESISTENZA_FATTORE_PERCENTUALE = 0.5;

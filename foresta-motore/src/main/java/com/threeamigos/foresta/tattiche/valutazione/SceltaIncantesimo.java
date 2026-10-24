@@ -156,7 +156,7 @@ public final class SceltaIncantesimo {
 					sb.append(String.format(Locale.ROOT, " %.2f", misuraEsperta(attore, bersaglio, classe, contesto)));
 					break;
 				default:
-					double danno = dannoConLaConoscenza(attore, bersaglio, classe, contesto);
+					double danno = dannoConLaConoscenza(attore, bersaglio, classe, contesto, 0);
 					sb.append(String.format(Locale.ROOT, " %.1f (%s)", danno, danno >= bersaglio.getSalute() ? "basta" : "non basta"));
 					break;
 			}
@@ -238,8 +238,10 @@ public final class SceltaIncantesimo {
 	 */
 	private static double danniTotali(Personaggio attore, Personaggio bersaglio, TipoIncantesimo classe, ContestoTattico contesto) {
 		double totale = 0;
-		for (Personaggio colpito : bersagli(attore, bersaglio, classe, contesto)) {
-			totale += CalcolatoreCombattimento.dannoAtteso(attore, colpito, incantesimo(attore, classe));
+		List<Personaggio> colpiti = bersagli(attore, bersaglio, classe, contesto);
+		for (int posizione = 0; posizione < colpiti.size(); posizione++) {
+			totale += CalcolatoreCombattimento.dannoAtteso(attore, colpiti.get(posizione), incantesimo(attore, classe),
+					CalcolatoreCombattimento.quotaDelDannoPerPosizione(posizione));
 		}
 		return totale;
 	}
@@ -247,8 +249,10 @@ public final class SceltaIncantesimo {
 	/**
 	 * Il danno atteso con il fattore dell'equipaggiamento osservato (1 se non si è visto niente)
 	 */
-	private static double dannoConLaConoscenza(Personaggio attore, Personaggio colpito, TipoIncantesimo classe, ContestoTattico contesto) {
-		return CalcolatoreCombattimento.dannoAtteso(attore, colpito, incantesimo(attore, classe))
+	private static double dannoConLaConoscenza(Personaggio attore, Personaggio colpito, TipoIncantesimo classe, ContestoTattico contesto,
+											   int posizione) {
+		return CalcolatoreCombattimento.dannoAtteso(attore, colpito, incantesimo(attore, classe),
+				CalcolatoreCombattimento.quotaDelDannoPerPosizione(posizione))
 				* contesto.getStato().getFattoreEquipaggiamentoNoto(colpito, classe.getTipoDanno());
 	}
 
@@ -259,11 +263,12 @@ public final class SceltaIncantesimo {
 	private static double misuraEsperta(Personaggio attore, Personaggio bersaglio, TipoIncantesimo classe, ContestoTattico contesto) {
 		List<Personaggio> colpiti = bersagli(attore, bersaglio, classe, contesto);
 		if (classe.getPortata() != PortataIncantesimo.MULTIPLO) {
-			return dannoConLaConoscenza(attore, bersaglio, classe, contesto);
+			return dannoConLaConoscenza(attore, bersaglio, classe, contesto, 0);
 		}
 		double totale = 0;
-		for (Personaggio colpito : colpiti) {
-			totale += Math.min(1.0d, dannoConLaConoscenza(attore, colpito, classe, contesto) / Math.max(1, colpito.getSalute()));
+		for (int posizione = 0; posizione < colpiti.size(); posizione++) {
+			Personaggio colpito = colpiti.get(posizione);
+			totale += Math.min(1.0d, dannoConLaConoscenza(attore, colpito, classe, contesto, posizione) / Math.max(1, colpito.getSalute()));
 		}
 		return totale;
 	}
@@ -282,7 +287,7 @@ public final class SceltaIncantesimo {
 		TipoIncantesimo economico = null;
 		int costoMinimo = Integer.MAX_VALUE;
 		for (TipoIncantesimo classe : lanciabili) {
-			if (dannoConLaConoscenza(attore, bersaglio, classe, contesto) >= bersaglio.getSalute()) {
+			if (dannoConLaConoscenza(attore, bersaglio, classe, contesto, 0) >= bersaglio.getSalute()) {
 				int costo = contesto.isMostro(attore) ? FabbricaIncantesimi.costoLancio(classe) : FabbricaIncantesimi.costoAcquisto(classe);
 				if (costo < costoMinimo) {
 					economico = classe;

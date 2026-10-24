@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.abilita;
 
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
@@ -44,8 +45,9 @@ abstract class AbilitaDiDanno implements Abilita {
 		BusEventi.pubblica(new NotificaTestoFrase(utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " " + getAnnuncio()));
 		Colpo colpo = new Colpo(utilizzatore.getLivello());
-		for (Personaggio bersaglio : bersagli) {
-			colpo.colpisciUno(utilizzatore, bersaglio);
+		// Il danno si ripartisce per posizione, come per gli incantesimi a più bersagli
+		for (int posizione = 0; posizione < bersagli.size(); posizione++) {
+			colpo.colpisciUno(utilizzatore, bersagli.get(posizione), CalcolatoreCombattimento.quotaDelDannoPerPosizione(posizione));
 		}
 		utilizzatore.subMagia(getCostoLancio());
 		return true;
@@ -80,8 +82,8 @@ abstract class AbilitaDiDanno implements Abilita {
 			return AbilitaDiDanno.this.getDanni();
 		}
 
-		private void colpisciUno(Personaggio utilizzatore, Personaggio bersaglio) {
-			colpisci(utilizzatore, bersaglio);
+		private void colpisciUno(Personaggio utilizzatore, Personaggio bersaglio, double quotaDelDanno) {
+			colpisci(utilizzatore, bersaglio, quotaDelDanno);
 		}
 	}
 }
