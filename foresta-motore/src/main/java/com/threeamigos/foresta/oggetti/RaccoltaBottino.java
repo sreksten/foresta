@@ -54,7 +54,7 @@ public final class RaccoltaBottino {
 	 * @return true se è stato preso; false se occorre dire chi lo prende (più personaggi possono usarlo e il comando non
 	 *         lo indica)
 	 */
-	public static boolean raccogli(Oggetto oggetto, GruppoGiocatore gruppo, Comando azione) {
+	public static boolean raccogli(Bottino oggetto, GruppoGiocatore gruppo, Comando azione) {
 		if (oggetto instanceof Artefatto) {
 			// Un artefatto già fatto (quello di un tempio): niente punti, il suo valore sta nel pezzo di equipaggiamento
 			return raccogliArtefatto(gruppo, azione, (Artefatto) oggetto);

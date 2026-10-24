@@ -4,7 +4,7 @@ import com.threeamigos.foresta.combattimento.Ondata;
 import com.threeamigos.foresta.interfacce.VistaMissione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.MissioneMD;
-import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -86,7 +86,7 @@ public interface Missione extends VistaMissione {
 	 *
 	 * @param visitata se il gruppo aveva già completato la locazione in una visita precedente
 	 */
-	default Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, TipoLocazione tipo, boolean visitata) {
+	default Optional<Bottino> getOggettoInLocazione(CoordinateMD coordinate, TipoLocazione tipo, boolean visitata) {
 		return Optional.empty();
 	}
 

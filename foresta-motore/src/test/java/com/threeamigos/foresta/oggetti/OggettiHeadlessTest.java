@@ -54,7 +54,7 @@ class OggettiHeadlessTest {
             }
             for (TipoOggetto tipo : TipoOggetto.values()) {
                 if (tipo.isGenerabile()) {
-                    Oggetto oggetto = FabbricaOggetti.crea(tipo);
+                    Bottino oggetto = FabbricaOggetti.crea(tipo);
                     if (oggetto == null || oggetto.getClasse() != tipo) {
                         throw new IllegalStateException("istanza sbagliata per " + tipo);
                     }

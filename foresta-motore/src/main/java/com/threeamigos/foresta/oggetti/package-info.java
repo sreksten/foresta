@@ -3,10 +3,11 @@
  * <p>
  * Ci sono due concetti vicini, da tenere distinti:
  * <ul>
- * <li>l'{@link com.threeamigos.foresta.oggetti.Oggetto} è qualcosa che si trova in una locazione e si può prendere: monete,
- * pietre preziose, un cofano, un anello, un oggetto di una missione. Non si salva;</li>
+ * <li>il {@link com.threeamigos.foresta.oggetti.Bottino} è qualcosa che si trova in una locazione e si può prendere: monete,
+ * pietre preziose, un cofano, un anello, un oggetto di una missione. Non si salva, ed è solo un dato: cosa succede quando il
+ * gruppo lo prende lo decide {@link com.threeamigos.foresta.oggetti.RaccoltaBottino};</li>
  * <li>l'{@link com.threeamigos.foresta.oggetti.Artefatto} è un pezzo di equipaggiamento vero (un'arma, uno scudo, un ingrediente
- * magico...), con il suo {@code ArtefattoMD} che si salva. Un artefatto trovato in una locazione è anche un oggetto, e
+ * magico...), con il suo {@code ArtefattoMD} che si salva. Un artefatto trovato in una locazione è anche bottino, e
  * {@link com.threeamigos.foresta.oggetti.OggettoArtefatto} ne è il collegamento.</li>
  * </ul>
  * <p>

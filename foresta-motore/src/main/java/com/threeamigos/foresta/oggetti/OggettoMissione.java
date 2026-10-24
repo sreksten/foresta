@@ -13,7 +13,7 @@ import java.util.Objects;
  * {@link MissioneAPassi#oggettoDiMissioneRaccolto}). Come ogni oggetto delle locazioni non si salva: se il gruppo
  * non lo prende, alla prossima visita la missione decide di nuovo se c'è.
  */
-public class OggettoMissione extends OggettoBase implements Oggetto {
+public class OggettoMissione extends OggettoBase implements Bottino {
 
 	private final String idMissione;
 	private final String chiave;

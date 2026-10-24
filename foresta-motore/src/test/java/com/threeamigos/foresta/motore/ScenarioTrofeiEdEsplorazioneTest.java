@@ -8,7 +8,7 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
-import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -87,7 +87,7 @@ class ScenarioTrofeiEdEsplorazioneTest {
 
             // Due goblin: al più due orecchie, anche in una casella già visitata e in qualunque locazione
             avversari(TipoPersonaggio.GOBLIN, 2);
-            Oggetto orecchie = caccia.getOggettoInLocazione(casella, TipoLocazione.ROVINE, true).orElseThrow(AssertionError::new);
+            Bottino orecchie = caccia.getOggettoInLocazione(casella, TipoLocazione.ROVINE, true).orElseThrow(AssertionError::new);
             assertTrue(orecchie.getQuantita() >= 1 && orecchie.getQuantita() <= 2, String.valueOf(orecchie.getQuantita()));
             assertEquals("orecchio di goblin", orecchie.getNomeSingolare());
 

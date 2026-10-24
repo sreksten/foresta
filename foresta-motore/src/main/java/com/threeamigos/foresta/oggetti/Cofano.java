@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * grande o della magia), monete o pietre preziose. Con una piccola probabilità c'è anche un ingrediente magico o un artefatto, e
  * molto di rado un libro tecnico (vedi LibroTecnico), che il capo legge subito in un intermezzo.
  */
-public class Cofano extends OggettoBase implements Oggetto {
+public class Cofano extends OggettoBase implements Bottino {
 
 	public Cofano() {
 		super();

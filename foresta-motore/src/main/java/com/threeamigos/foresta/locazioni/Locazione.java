@@ -4,7 +4,7 @@ import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Stato;
-import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
@@ -122,7 +122,7 @@ public interface Locazione {
 	/**
 	 * Un oggetto speciale custodito nella locazione
 	 */
-    Oggetto getOggetto();
+    Bottino getOggetto();
 	
 	/**
 	 * Una volta preso, l'oggetto viene tolto dalla locazione (per evitare che venga preso due volte);
@@ -134,7 +134,7 @@ public interface Locazione {
 	 * Mette nella locazione l'oggetto di una missione (vedi RegistroMissioni.getOggettoMissione) al posto di quello
 	 * che c'era, a meno che non sia l'artefatto del registro: quello resta.
 	 */
-    void collocaOggettoMissione(Oggetto oggetto);
+    void collocaOggettoMissione(Bottino oggetto);
 
 	TipoRiposo getTipoRiposo();
 }

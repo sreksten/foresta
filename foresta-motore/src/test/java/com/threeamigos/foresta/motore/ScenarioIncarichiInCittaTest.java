@@ -12,7 +12,7 @@ import com.threeamigos.foresta.missioni.incarichi.RichiestaDiMateriali;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
-import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
@@ -178,7 +178,7 @@ class ScenarioIncarichiInCittaTest {
 
             // Lì ci sono tutte quelle che mancano, anche se la casella era già stata visitata; altrove, nelle
             // locazioni visitate, niente
-            Oggetto lì = mandragola.getOggettoInLocazione(ripiego, Foresta.getLocazione(ripiego), true).orElseThrow(AssertionError::new);
+            Bottino lì = mandragola.getOggettoInLocazione(ripiego, Foresta.getLocazione(ripiego), true).orElseThrow(AssertionError::new);
             assertEquals(Alchimie.RADICI - 1, lì.getQuantita());
             assertEquals(Optional.empty(), mandragola.getOggettoInLocazione(
                     new CoordinateMD(ripiego.getX() == 0 ? 1 : 0, ripiego.getY()), TipoLocazione.BOSCO, true));
@@ -239,7 +239,7 @@ class ScenarioIncarichiInCittaTest {
             assertEquals(bosco, partita.gruppo().getCoordinate());
 
             // I funghi sono ancora lì, se qualcuno li custodisce; se sono incustoditi il gruppo li ha già presi
-            Oggetto oggetto = partita.gruppo().getLocazioneCorrente().getOggetto();
+            Bottino oggetto = partita.gruppo().getLocazioneCorrente().getOggetto();
             assertTrue(oggetto instanceof OggettoMissione || funghi.getContatore("FUNGHI") > 0, String.valueOf(oggetto));
             assertTrue(partita.testi().stream().anyMatch(t -> t.contains("fungo porcino") || t.contains("funghi porcini")),
                     String.valueOf(partita.testi()));

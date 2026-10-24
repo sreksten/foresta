@@ -33,7 +33,7 @@ import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
-import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.strumenti.Temporizzabile;
@@ -1125,7 +1125,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * Chi è a tempo non è mai un candidato: se ne andrebbe subito portandosi via l'oggetto.
 	 */
 	private List<Comando> comandiDestinatarioOggetto() {
-		Oggetto oggetto = locazioneCorrente.getOggetto();
+		Bottino oggetto = locazioneCorrente.getOggetto();
 		Optional<Artefatto> artefatto = oggetto == null ? Optional.empty() : oggetto.getArtefatto();
 		if (artefatto.isPresent()) {
 			return RaccoltaBottino.candidati(gruppo, artefatto.get());
@@ -1238,7 +1238,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// Recuperiamo l'oggetto se fattibile
 		if (locazioneCorrente.isCompleta()) {
 			if (!locazioneCorrente.isHaStrettoAmicizia()) {
-				Oggetto oggetto = locazioneCorrente.getOggetto();
+				Bottino oggetto = locazioneCorrente.getOggetto();
 				if (oggetto != null) {
 					BusEventi.pubblica(new InternoMessaggio("Tentativo di recupero oggetto utilizzando l'azione " + comando));
 					if (!RaccoltaBottino.raccogli(oggetto, gruppo, comando)) {

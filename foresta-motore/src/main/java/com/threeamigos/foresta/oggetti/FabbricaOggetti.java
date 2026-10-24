@@ -11,7 +11,7 @@ import java.util.function.Supplier;
  */
 public final class FabbricaOggetti {
 
-	private static final Map<TipoOggetto, Supplier<Oggetto>> COSTRUTTORI = new EnumMap<>(TipoOggetto.class);
+	private static final Map<TipoOggetto, Supplier<Bottino>> COSTRUTTORI = new EnumMap<>(TipoOggetto.class);
 
 	static {
 		COSTRUTTORI.put(TipoOggetto.ANELLO, Anello::new);
@@ -42,8 +42,8 @@ public final class FabbricaOggetti {
 	 *
 	 * @throws IllegalArgumentException se il tipo non si genera così (per esempio gli oggetti delle missioni)
 	 */
-	public static Oggetto crea(TipoOggetto tipo) {
-		Supplier<Oggetto> costruttore = COSTRUTTORI.get(tipo);
+	public static Bottino crea(TipoOggetto tipo) {
+		Supplier<Bottino> costruttore = COSTRUTTORI.get(tipo);
 		if (costruttore == null) {
 			throw new IllegalArgumentException(tipo + " non si genera così");
 		}

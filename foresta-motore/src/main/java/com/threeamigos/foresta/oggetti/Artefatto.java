@@ -20,9 +20,9 @@ import java.util.*;
  * raccoglie ({@link #raccogli}), a chi può andare ({@link #candidati}) e come lo si dà a un personaggio ({@link #consegna}).
  * Lo si ricrea dal modello dati con {@link #di(ArtefattoMD)}, che sceglie la sottoclasse giusta.
  * <p>
- * Un artefatto è anche un {@link Oggetto}, perché il gruppo lo trova nelle locazioni come ogni altro bottino.
+ * Un artefatto è anche un {@link Bottino}, perché il gruppo lo trova nelle locazioni come ogni altro bottino.
  */
-public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, VistaArtefatto {
+public class Artefatto implements Bottino, OggettoConCosto, OggettoConPeso, VistaArtefatto {
 
 	protected final ArtefattoMD md;
 

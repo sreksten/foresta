@@ -6,7 +6,7 @@ import com.threeamigos.foresta.strumenti.Dado;
  * La base degli oggetti delle locazioni: tiene la quantità, che di solito si tira a caso fra uno e il massimo della classe, e
  * quando l'oggetto viene preso assegna i punti del suo valore e riapre le finestre di stato e di statistiche.
  */
-public abstract class OggettoBase implements Oggetto {
+public abstract class OggettoBase implements Bottino {
 	
 	protected int quantita;
 	

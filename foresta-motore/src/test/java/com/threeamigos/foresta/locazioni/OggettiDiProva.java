@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.oggetti.Bottino;
 
 /**
  * Per i test di altri package: mette nella locazione l'oggetto che il gruppo raccoglierà a
@@ -11,7 +11,7 @@ public final class OggettiDiProva {
 	private OggettiDiProva() {
 	}
 
-	public static void impostaOggetto(Locazione locazione, Oggetto oggetto) {
+	public static void impostaOggetto(Locazione locazione, Bottino oggetto) {
 		((LocazioneBase) locazione).setOggetto(oggetto);
 	}
 }

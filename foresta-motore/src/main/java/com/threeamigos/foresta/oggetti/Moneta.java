@@ -6,7 +6,7 @@ import com.threeamigos.foresta.tipi.TipoOggetto;
 /**
  * Alcune monete d'oro: prese, si aggiungono alle monete del gruppo.
  */
-public class Moneta extends OggettoBase implements Oggetto {
+public class Moneta extends OggettoBase implements Bottino {
 
 	public Moneta() {
 		super();

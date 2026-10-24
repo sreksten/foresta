@@ -10,7 +10,7 @@ import java.util.Optional;
  * con l'oggetto, al livello di riferimento, così è già noto quando si sceglie chi lo prende
  * (vedi {@link Artefatto#raccogli}).
  */
-public abstract class OggettoArtefatto extends OggettoBase implements Oggetto {
+public abstract class OggettoArtefatto extends OggettoBase implements Bottino {
 
 	private final Artefatto artefatto;
 

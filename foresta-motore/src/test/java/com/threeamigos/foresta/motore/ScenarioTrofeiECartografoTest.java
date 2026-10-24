@@ -6,7 +6,7 @@ import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
 import com.threeamigos.foresta.missioni.Mandante;
 import com.threeamigos.foresta.missioni.incarichi.RichiestaDiMateriali;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
@@ -67,7 +67,7 @@ class ScenarioTrofeiECartografoTest {
             for (int i = 0; i < 3; i++) {
                 avversari.aggiungiPersonaggio(FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1));
             }
-            Oggetto orecchie = capitano.getOggettoInLocazione(new CoordinateMD(0, 0), TipoLocazione.ROVINE, true)
+            Bottino orecchie = capitano.getOggettoInLocazione(new CoordinateMD(0, 0), TipoLocazione.ROVINE, true)
                     .orElseThrow(AssertionError::new);
             assertEquals("orecchie di goblin", orecchie.getNomePlurale());
             RaccoltaBottino.raccogli(new com.threeamigos.foresta.oggetti.OggettoMissione(capitano.getId(), RichiestaDiMateriali.MATERIALE,

@@ -6,7 +6,7 @@ import com.threeamigos.foresta.tipi.TipoOggetto;
 /**
  * Alcune pietre preziose: prese, si aggiungono ai preziosi del gruppo.
  */
-public class PietraPreziosa extends OggettoBase implements Oggetto {
+public class PietraPreziosa extends OggettoBase implements Bottino {
 
 	public PietraPreziosa() {
 		super();

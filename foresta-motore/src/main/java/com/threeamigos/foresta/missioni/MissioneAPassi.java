@@ -11,7 +11,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
-import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -400,7 +400,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * fortunata, quanti ne mancano fino a quelli che possono stare in una locazione.
 	 */
 	@Override
-	public Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, TipoLocazione tipo, boolean visitata) {
+	public Optional<Bottino> getOggettoInLocazione(CoordinateMD coordinate, TipoLocazione tipo, boolean visitata) {
 		if (!isAttiva() || isCompleta() || isFallita() || Passo.FINE.equals(getPassoCorrente())) {
 			return Optional.empty();
 		}
@@ -439,7 +439,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * I trofei custoditi dagli avversari della locazione, se fra loro ce n'è di quelli giusti: con la probabilità
 	 * data, al più uno per avversario e quanti ne possono stare in una locazione, mai più di quanti ne mancano.
 	 */
-	private Optional<Oggetto> getTrofeo(OggettiDaRaccogliere oggetti, int mancanti) {
+	private Optional<Bottino> getTrofeo(OggettiDaRaccogliere oggetti, int mancanti) {
 		long portatori = GruppoAvversario.getIstanza().getPersonaggiVivi().stream()
 				.filter(avversario -> oggetti.getNemici().contains(avversario.getClasse()))
 				.count();

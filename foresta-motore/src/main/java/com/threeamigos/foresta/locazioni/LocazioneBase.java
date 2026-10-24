@@ -22,7 +22,7 @@ import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.FabbricaOggetti;
-import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -72,7 +72,7 @@ public abstract class LocazioneBase implements Locazione {
 	 */
 	private LocazioneMD md = new LocazioneMD(getTipoLocazione());
 
-	private Oggetto oggettoCorrente;
+	private Bottino oggettoCorrente;
 	// Se il gruppo può (ancora) tentare di corrompere gli avversari
 	private boolean opzioneCorruzioneDisponibile;
 	// Se il gruppo può (ancora) cercare di fare amicizia
@@ -312,7 +312,7 @@ public abstract class LocazioneBase implements Locazione {
 				int indice = Dado.tiraAncheAUnaFaccia(o.length) - 1;
 				TipoOggetto tipoOggetto = o[indice];
 				Logger.log(() -> "Classe oggetto " + tipoOggetto);
-				Oggetto probabileOggetto = FabbricaOggetti.crea(tipoOggetto);
+				Bottino probabileOggetto = FabbricaOggetti.crea(tipoOggetto);
 				if (probabileOggetto.getQuantita() > 0) {
 					setOggetto(probabileOggetto);
 				}
@@ -1226,7 +1226,7 @@ public abstract class LocazioneBase implements Locazione {
 	 */
 	protected String descrizioneMostriEOggetti(GruppoGiocatore gruppoGiocatore, GruppoAvversario gruppoAvversario) {
 		int numeroAvversari = gruppoAvversario.getNumeroPersonaggi();
-		Oggetto o = getOggetto();
+		Bottino o = getOggetto();
 		int numeroOggetti = (o == null ? 0 : o.getQuantita());
 		StringBuilder sb = new StringBuilder(gruppoGiocatore.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 		if (numeroAvversari == 0 && numeroOggetti == 0) {
@@ -1386,7 +1386,7 @@ public abstract class LocazioneBase implements Locazione {
 				personaggio.hasEffettoDiStato(TipoEffettoDiStato.STORDITO);
 	}
 
-	protected void setOggetto(Oggetto oggetto) {
+	protected void setOggetto(Bottino oggetto) {
 		if (oggetto != null && oggetto.getQuantita() > 0) {
 			this.oggettoCorrente = oggetto;
 		} else {
@@ -1394,7 +1394,7 @@ public abstract class LocazioneBase implements Locazione {
 		}
 	}
 
-	public Oggetto getOggetto() {
+	public Bottino getOggetto() {
 		return oggettoCorrente;
 	}
 
@@ -1416,7 +1416,7 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	@Override
-	public void collocaOggettoMissione(Oggetto oggetto) {
+	public void collocaOggettoMissione(Bottino oggetto) {
 		if (!(oggettoCorrente instanceof Artefatto)) {
 			setOggetto(oggetto);
 		}

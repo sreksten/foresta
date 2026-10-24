@@ -16,7 +16,7 @@ import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Quadrante;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
-import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
@@ -345,7 +345,7 @@ public class RegistroMissioni {
 	 * Missione.getOggettoInLocazione), se ce n'è uno: chiede prima alla missione che ha rivendicato la casella, poi
 	 * alle altre in corso, e vince la prima che risponde.
 	 */
-	public static Optional<Oggetto> getOggettoMissione(CoordinateMD coordinate, TipoLocazione tipo, boolean visitata) {
+	public static Optional<Bottino> getOggettoMissione(CoordinateMD coordinate, TipoLocazione tipo, boolean visitata) {
 		List<Missione> candidate = new ArrayList<>();
 		getMissioneCheHaOccupato(coordinate).ifPresent(candidate::add);
 		for (Missione missione : getTutteLeMissioni()) {
@@ -355,7 +355,7 @@ public class RegistroMissioni {
 		}
 		for (Missione missione : candidate) {
 			if (missione.isAttiva() && !missione.isCompleta() && !missione.isFallita()) {
-				Optional<Oggetto> oggetto = missione.getOggettoInLocazione(coordinate, tipo, visitata);
+				Optional<Bottino> oggetto = missione.getOggettoInLocazione(coordinate, tipo, visitata);
 				if (oggetto.isPresent()) {
 					return oggetto;
 				}

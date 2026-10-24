@@ -18,7 +18,7 @@ import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 import com.threeamigos.foresta.oggetti.ModificatoreDelTesto;
-import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
@@ -488,7 +488,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 
 	@Override
 	public TipoOggetto getTipoOggettoInLocazione() {
-		Oggetto oggetto = locazioneCorrente == null ? null : locazioneCorrente.getOggetto();
+		Bottino oggetto = locazioneCorrente == null ? null : locazioneCorrente.getOggetto();
 		return oggetto == null ? null : oggetto.getClasse();
 	}
 
