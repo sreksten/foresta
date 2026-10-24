@@ -7,7 +7,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;

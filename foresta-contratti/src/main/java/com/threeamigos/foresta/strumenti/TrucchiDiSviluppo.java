@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.strumenti;
 
+import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
+import com.threeamigos.foresta.strumenti.dado.TruccatoreDiDadi;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;

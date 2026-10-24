@@ -8,7 +8,7 @@ import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;

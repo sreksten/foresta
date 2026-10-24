@@ -11,7 +11,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.*;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 

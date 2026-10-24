@@ -16,7 +16,7 @@ import com.threeamigos.foresta.missioni.richieste.MaterialeRichiesto;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.MissionePredefinita;

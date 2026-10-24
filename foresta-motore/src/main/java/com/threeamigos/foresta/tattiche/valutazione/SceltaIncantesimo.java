@@ -7,7 +7,7 @@ import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tipi.CategoriaIncantesimo;
 import com.threeamigos.foresta.tipi.Costanti;

@@ -8,7 +8,7 @@ import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tattiche.valutazione.Astuzia;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;

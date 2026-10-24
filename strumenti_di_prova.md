@@ -8,10 +8,10 @@ sa che esiste.
 
 | Pezzo | Modulo | Che cosa fa |
 | :--- | :--- | :--- |
-| `strumenti/ContestoLancio` | contratti | L'elenco dei lanci che si possono truccare, ognuno con la sua descrizione |
-| `strumenti/TruccatoreDiDadi` | contratti | L'interfaccia che `Dado` consulta prima di tirare un lancio con contesto |
+| `strumenti/dado/ContestoLancio` | strumenti | L'elenco dei lanci che si possono truccare, ognuno con la sua descrizione |
+| `strumenti/dado/TruccatoreDiDadi` | strumenti | L'interfaccia che `Dado` consulta prima di tirare un lancio con contesto |
 | `strumenti/TrucchiDiSviluppo` | contratti | L'implementazione: un trucco permanente per contesto, che resta finché non lo si spegne |
-| `strumenti/Dado` | contratti | `tira(contesto, …)`, `tiraAncheAUnaFaccia(contesto, N)`, `scegli(contesto, elenco)`, `sceltaVoluta(contesto, elenco)` |
+| `strumenti/dado/Dado` | strumenti | `tira(contesto, …)`, `tiraAncheAUnaFaccia(contesto, N)`, `scegli(contesto, elenco)`, `sceltaVoluta(contesto, elenco)` |
 | `interfacce/StrumentiDiSviluppo` | contratti | Quello che la finestra può fare alla partita: personaggi, partenza delle missioni, oggetti dei cofani |
 | `motore/StrumentiDiSviluppoMotore` | motore | L'implementazione sul gruppo e sul registro delle missioni |
 | `ui/sviluppo/FinestraDiProva` | swing | La finestra a tab (personaggi, gruppo, statistiche, missioni, dadi); la crea `Main` solo in modalità di prova |

@@ -6,7 +6,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.IlNegozio;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
 import com.threeamigos.foresta.missioni.leggende.LaLeggenda;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;

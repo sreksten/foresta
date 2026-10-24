@@ -5,7 +5,7 @@ import com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD;
 import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
 import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
 

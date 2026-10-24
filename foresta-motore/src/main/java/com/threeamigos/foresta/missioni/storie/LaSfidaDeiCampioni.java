@@ -14,7 +14,7 @@ import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;

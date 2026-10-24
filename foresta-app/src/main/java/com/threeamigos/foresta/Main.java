@@ -1,7 +1,7 @@
 package com.threeamigos.foresta;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.eventi.notifiche.NotificaUscitaDalGioco;
 import com.threeamigos.foresta.eventi.interni.InternoInterfacciaUtentePronta;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;

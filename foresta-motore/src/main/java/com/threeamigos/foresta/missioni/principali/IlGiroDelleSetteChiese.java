@@ -13,7 +13,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoLocazione;

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui.testo;
 
 import com.threeamigos.foresta.modellodati.NotizieMD;
-import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont.UnsupportedCharacterException;
 
 import java.awt.image.MemoryImageSource;

@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.strumenti;
+package com.threeamigos.foresta.strumenti.logger;
 
 import java.io.File;
 import java.io.FileOutputStream;

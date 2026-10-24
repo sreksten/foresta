@@ -13,7 +13,7 @@ import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import org.junit.jupiter.api.AfterEach;

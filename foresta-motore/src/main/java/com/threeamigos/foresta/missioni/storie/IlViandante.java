@@ -19,7 +19,7 @@ import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;

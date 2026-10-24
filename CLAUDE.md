@@ -6,7 +6,7 @@ Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo 
 
 | Modulo | Contiene | Dipende da |
 | :--- | :--- | :--- |
-| `foresta-strumenti` | `strumenti`: `Dado` (l'unica sorgente di caso) con `ContestoLancio` e `TruccatoreDiDadi`, e il registro `Logger` con `DestinazioneDiLog` e `DestinazioneConsoleEFile` | nessuno |
+| `foresta-strumenti` | `strumenti.dado`: `Dado` (l'unica sorgente di caso) con `ContestoLancio` e `TruccatoreDiDadi`; `strumenti.logger`: il registro `Logger` con `DestinazioneDiLog` e `DestinazioneConsoleEFile` | nessuno |
 | `foresta-testi` | `testi`: `Testi` (il caricatore dei testi per lingua), `Articoli` (articoli e preposizioni articolate), `Numeri` (cardinali e ordinali in lettere) e `GrammarBean` (produce testi da una grammatica) | strumenti |
 | `foresta-serializzazione` | `serializzazione`: `Serializzabile`, `LettoreCampi`, `MappaProprieta` (scrittura e lettura dei salvataggi a righe) | nessuno |
 | `foresta-attributi` | `attributi` (`CalcolatoreAttributiSecondari`, le formule dei secondari), `attributi.tipi` (`TipoAttributo`, `CategoriaAttributo`), `modificatori` (`ModificatoreAttributoMD`) e `modificatori.tipi` (`TipoModificatore`, `UnitaDurataModificatore`, `BersaglioModificatore`): solo gli attributi e le modifiche che si possono fare loro, niente personaggi né oggetti | testi, serializzazione |
@@ -42,7 +42,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | Negozi ed economia | `…/offerte`, `…/motore/RegoleContrattazione`, `OfferteAlchimista` | `economia.md` |
 | Missioni (infrastruttura) | `…/missioni/MissioneAPassi`, `Passo`, `RegistroMissioni` | `gestione_missioni.md` |
 | Missioni (catalogo) | `…/missioni/{principali,incarichi,richieste,leggende,storie}` | `passi_missioni.md` |
-| Finestra di prova (solo in modalità di prova): personaggi, missioni da forzare, trucchi sui dadi per contesto | `…/strumenti/{Dado,ContestoLancio,TruccatoreDiDadi,TrucchiDiSviluppo}`, `…/interfacce/StrumentiDiSviluppo`, `…/motore/StrumentiDiSviluppoMotore`, `…/ui/sviluppo/FinestraDiProva` | `strumenti_di_prova.md` |
+| Finestra di prova (solo in modalità di prova): personaggi, missioni da forzare, trucchi sui dadi per contesto | `…/strumenti/dado/{Dado,ContestoLancio,TruccatoreDiDadi}`, `…/strumenti/TrucchiDiSviluppo`, `…/interfacce/StrumentiDiSviluppo`, `…/motore/StrumentiDiSviluppoMotore`, `…/ui/sviluppo/FinestraDiProva` | `strumenti_di_prova.md` |
 | Carta, forbici e sasso (sfida, missione dei campioni) | `…/motore/PartitaCartaForbiciSasso`, `…/locazioni/LocazioneBase`, `…/missioni/storie/LaSfidaDeiCampioni`, `IlCampione`, `…/ui/DisplayableCanvasRiquadroSfida` | `carta_forbici_sasso.md` |
 | Intermezzi | `…/intermezzi` (anche `RegistroIntermezzi`) | `intermezzi.md` |
 | Testi generati, grammatiche | `…/testi/GrammarBean`, `ProduttoreDiTestiCasuale`, risorse `motore/*.txt` | `GrammarBean.md` |

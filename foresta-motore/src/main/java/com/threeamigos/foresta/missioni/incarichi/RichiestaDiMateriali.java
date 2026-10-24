@@ -9,7 +9,7 @@ import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.richieste.MaterialeRichiesto;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 

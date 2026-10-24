@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.strumenti;
+package com.threeamigos.foresta.strumenti.logger;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

@@ -4,8 +4,8 @@ package com.threeamigos.foresta.testi;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import com.threeamigos.foresta.strumenti.Logger;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.logger.Logger;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 
 /**
  * Legge un file di grammatica in formato testuale e lo usa per generare ("produrre") testo

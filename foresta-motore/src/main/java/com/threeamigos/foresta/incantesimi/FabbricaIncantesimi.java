@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.incantesimi;
 
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 

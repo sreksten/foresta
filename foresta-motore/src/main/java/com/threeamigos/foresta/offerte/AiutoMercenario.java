@@ -4,7 +4,7 @@ import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;

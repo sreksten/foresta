@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.interni.InternoAmiciziaStretta;
 import com.threeamigos.foresta.eventi.interni.InternoSfidaCartaForbiciSasso;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.oggetti.FabbricaOggetti;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 

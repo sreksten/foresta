@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.strumenti;
+package com.threeamigos.foresta.strumenti.logger;
 
 /**
  * Dove va a finire quel che il gioco scrive con {@link Logger}. Il desktop usa {@link DestinazioneConsoleEFile};

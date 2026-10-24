@@ -1,5 +1,7 @@
-package com.threeamigos.foresta.strumenti;
+package com.threeamigos.foresta.strumenti.dado;
 
+import com.threeamigos.foresta.strumenti.logger.Logger;
+import com.threeamigos.foresta.strumenti.logger.DestinazioneDiLog;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

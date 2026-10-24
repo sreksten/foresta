@@ -359,7 +359,7 @@ Nessuna voce eseguibile: `Rose.di(AVVERSARI).candidati` e, se ce n'è uno, attac
 
 ## 10. Il caso: dove si tira il dado
 
-Tutto il caso passa da `strumenti.Dado` (l'unica sorgente, che in modalità di prova si può truccare). Nelle tattiche si tira in **tre soli posti**:
+Tutto il caso passa da `strumenti.dado.Dado` (l'unica sorgente, che in modalità di prova si può truccare). Nelle tattiche si tira in **tre soli posti**:
 
 | Dove | Cosa |
 | :--- | :--- |

@@ -12,7 +12,7 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.richieste.LealtaRichiesta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 

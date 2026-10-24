@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.strumenti;
 
+import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

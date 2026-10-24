@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;

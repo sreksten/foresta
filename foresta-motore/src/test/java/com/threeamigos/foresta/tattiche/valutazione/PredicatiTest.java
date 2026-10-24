@@ -6,7 +6,7 @@ import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
 import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
 import com.threeamigos.foresta.tipi.Costanti;

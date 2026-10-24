@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.testi;
 
-import com.threeamigos.foresta.strumenti.DestinazioneDiLog;
-import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.logger.DestinazioneDiLog;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.testi.GrammarBean.InvalidGrammarException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

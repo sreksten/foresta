@@ -19,8 +19,8 @@ import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
 import com.threeamigos.foresta.personaggi.OmbraFiamma;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;

@@ -6,8 +6,8 @@ import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
 import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
-import com.threeamigos.foresta.strumenti.ContestoLancio;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;

@@ -2,7 +2,7 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 
 /**

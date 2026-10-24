@@ -5,7 +5,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.IlColpo;
 import com.threeamigos.foresta.missioni.richieste.ColpoRichiesto;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;

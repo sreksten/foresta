@@ -15,7 +15,7 @@ import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tattiche.valutazione.SceltaIncantesimo;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.TipoAbilita;

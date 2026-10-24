@@ -2,7 +2,7 @@ package com.threeamigos.foresta.ui.immagini;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaUscitaDalGioco;
-import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

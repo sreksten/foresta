@@ -14,7 +14,7 @@ import com.threeamigos.foresta.modellodati.RegistroArtefattiMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;

@@ -2,7 +2,7 @@ package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 

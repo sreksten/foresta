@@ -7,7 +7,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tipi.CategoriaIncantesimo;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;

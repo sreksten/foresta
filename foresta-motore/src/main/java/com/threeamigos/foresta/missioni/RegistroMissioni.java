@@ -18,7 +18,7 @@ import com.threeamigos.foresta.motore.Quadrante;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;

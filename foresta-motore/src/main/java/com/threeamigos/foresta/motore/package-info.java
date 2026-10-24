@@ -12,7 +12,7 @@
  * <p>
  * <b>Le regole.</b> Equipaggiamento, incantatura, contrattazione, riposo, progressione dei livelli e la distribuzione dei punti
  * alla creazione dei personaggi; le costanti di bilanciamento stanno in {@link com.threeamigos.foresta.tipi.Costanti}, e il caso è
- * tutto in {@link com.threeamigos.foresta.strumenti.Dado}, così nei test si può fissare il seme.
+ * tutto in {@link com.threeamigos.foresta.strumenti.dado.Dado}, così nei test si può fissare il seme.
  * <p>
  * Le regole che riguardano un dominio preciso stanno nei loro pacchetti: {@code combattimento}, {@code personaggi}, {@code oggetti},
  * {@code locazioni}, {@code missioni}, {@code incantesimi}, {@code canti}, {@code tattiche}, {@code testi} e {@code salvataggi}.

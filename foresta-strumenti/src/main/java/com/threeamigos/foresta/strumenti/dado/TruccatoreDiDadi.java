@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.strumenti;
+package com.threeamigos.foresta.strumenti.dado;
 
 import java.util.List;
 import java.util.Optional;

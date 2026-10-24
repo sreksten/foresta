@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 
 /**
  * La base degli oggetti delle locazioni: tiene la quantità, che di solito si tira a caso fra uno e il massimo della classe, e

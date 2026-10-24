@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.strumenti;
+package com.threeamigos.foresta.strumenti.dado;
 
 /**
  * Per che cosa si sta lanciando il dado: chi sviluppa può truccare il lancio di un contesto solo (vedi

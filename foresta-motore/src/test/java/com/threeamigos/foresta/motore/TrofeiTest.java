@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.eventi.interni.InternoAmiciziaStretta;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.interni.InternoCorruzioneRiuscita;

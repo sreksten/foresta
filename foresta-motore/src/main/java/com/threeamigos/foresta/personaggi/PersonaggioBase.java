@@ -31,8 +31,8 @@ import com.threeamigos.foresta.oggetti.ArmaNaturale;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.SpadaNormalmenteNascosta;
 import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
-import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.tipi.*;
 

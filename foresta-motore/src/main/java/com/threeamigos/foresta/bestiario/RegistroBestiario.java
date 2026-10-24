@@ -10,7 +10,7 @@ import com.threeamigos.foresta.eventi.interni.InternoSfidaVinta;
 import com.threeamigos.foresta.eventi.interni.InternoVoceDelBestiarioSbloccata;
 import com.threeamigos.foresta.interfacce.GestoreBestiario;
 import com.threeamigos.foresta.modellodati.BestiarioMD;
-import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tipi.CaratteristicaDiClasse;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 

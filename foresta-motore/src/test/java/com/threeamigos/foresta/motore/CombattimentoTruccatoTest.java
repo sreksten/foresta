@@ -4,7 +4,7 @@ import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Ladro;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.danni.tipi.CategoriaDanno;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -20,7 +20,7 @@ import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tattiche.Decisione;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.tipi.TipoArtefatto;

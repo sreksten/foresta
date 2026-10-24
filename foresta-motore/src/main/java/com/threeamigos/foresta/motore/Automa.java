@@ -35,7 +35,7 @@ import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.personaggi.*;
-import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.strumenti.Temporizzabile;
 import com.threeamigos.foresta.strumenti.Temporizzatore;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;

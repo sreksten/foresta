@@ -16,7 +16,7 @@ import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
-import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.strumenti.Temporizzabile;
 import com.threeamigos.foresta.strumenti.Temporizzatore;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;

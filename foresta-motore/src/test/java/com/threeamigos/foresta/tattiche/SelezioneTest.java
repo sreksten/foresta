@@ -11,7 +11,7 @@ import com.threeamigos.foresta.modellodati.tattiche.SelettoreMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
-import com.threeamigos.foresta.strumenti.Dado;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tattiche.valutazione.Filtri;
 import com.threeamigos.foresta.tattiche.valutazione.Ordinamenti;
 import com.threeamigos.foresta.tattiche.valutazione.Selettori;
