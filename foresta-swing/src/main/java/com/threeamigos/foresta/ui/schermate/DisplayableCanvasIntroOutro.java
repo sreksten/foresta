@@ -40,6 +40,8 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	private static final int MARGINE_LOGHI = 20;
 	// Il logo 3AM sta in basso a destra, a questa distanza dai due bordi
 	private static final int MARGINE_LOGO_3AM = 20;
+	// Fra una riga e l'altra della storia, oltre all'altezza di riga normale: un terzo dell'altezza delle lettere
+	private static final int INTERLINEA_STORIA = TestoGrande.ALTEZZA_GLIFO / 3;
 	// L'alone nero attorno alle lettere della storia e ai loghi, perché si vedano sullo sfondo
 	private static final int RAGGIO_ALONE = 6;
 	private static final double SECONDI_DISSOLVENZA = 1;
@@ -412,7 +414,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	private BufferedImage immagineStoria() {
 		if (immagineStoria == null) {
 			immagineStoria = TestoGrande.conAlone(
-					TestoGrande.immagine(String.join(" ", Misc.STORIA), width - 2 * RAGGIO_ALONE, true), RAGGIO_ALONE);
+					TestoGrande.immagine(String.join(" ", Misc.STORIA), width - 2 * RAGGIO_ALONE, true, INTERLINEA_STORIA), RAGGIO_ALONE);
 		}
 		return immagineStoria;
 	}

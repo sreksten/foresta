@@ -53,21 +53,62 @@ final class ImmagineBestiario {
 	private static final DoomdarkFont MEDIO = DoomdarkFontMedium.getInstance();
 	private static final DoomdarkFont PICCOLO = DoomdarkFontSmall.getInstance();
 
+	// Lo svolazzo che separa i mostri dai personaggi giocanti nell'elenco. È fra i file non a blocchi 2x2 (fondinon2x2): si legge senza zoom
+	private static final String RISORSA_SEPARATORE = "fondinon2x2/Separatore.gif";
+
 	private ImmagineBestiario() {
+	}
+
+	/**
+	 * L'indice della prima voce dopo i mostri (l'ultimo è la viverna), davanti alla quale sta il separatore dell'elenco; -1 se non c'è niente da
+	 * separare.
+	 */
+	static int indiceDelSeparatore(List<TipoPersonaggio> voci) {
+		int dopoIMostri = 0;
+		for (int i = 0; i < voci.size(); i++) {
+			if (voci.get(i).ordinal() <= TipoPersonaggio.VIVERNA.ordinal()) {
+				dopoIMostri = i + 1;
+			}
+		}
+		return dopoIMostri > 0 && dopoIMostri < voci.size() ? dopoIMostri : -1;
+	}
+
+	/**
+	 * La riga dell'elenco in cui sta la voce: dopo il separatore, che ha una riga sua, le voci scendono di una
+	 */
+	static int rigaDellaVoce(List<TipoPersonaggio> voci, int voce) {
+		int separatore = indiceDelSeparatore(voci);
+		return separatore >= 0 && voce >= separatore ? voce + 1 : voce;
+	}
+
+	/**
+	 * La voce che sta in quella riga dell'elenco, o -1 per la riga del separatore o fuori dall'elenco
+	 */
+	static int voceDellaRiga(List<TipoPersonaggio> voci, int riga) {
+		int separatore = indiceDelSeparatore(voci);
+		if (riga < 0 || riga == separatore) {
+			return -1;
+		}
+		int voce = separatore >= 0 && riga > separatore ? riga - 1 : riga;
+		return voce < voci.size() ? voce : -1;
+	}
+
+	private static int numeroDiRighe(List<TipoPersonaggio> voci) {
+		return voci.size() + (indiceDelSeparatore(voci) >= 0 ? 1 : 0);
 	}
 
 	/**
 	 * L'elenco delle voci, una per riga alta {@link #ALTEZZA_RIGA_ELENCO}, con quella scelta in evidenza
 	 */
 	static BufferedImage elenco(VistaPartita vista, List<TipoPersonaggio> voci, int scelta, int larghezza) {
-		BufferedImage immagine = BufferedImageBuilder.creaCompatibile(Math.max(1, larghezza), Math.max(1, voci.size() * ALTEZZA_RIGA_ELENCO),
+		BufferedImage immagine = BufferedImageBuilder.creaCompatibile(Math.max(1, larghezza), Math.max(1, numeroDiRighe(voci) * ALTEZZA_RIGA_ELENCO),
 				Transparency.TRANSLUCENT);
 		Graphics2D g = immagine.createGraphics();
 		try {
 			for (int i = 0; i < voci.size(); i++) {
 				TipoPersonaggio voce = voci.get(i);
 				boolean aperta = vista.isVoceDelBestiarioSbloccata(voce);
-				int y = i * ALTEZZA_RIGA_ELENCO;
+				int y = rigaDellaVoce(voci, i) * ALTEZZA_RIGA_ELENCO;
 				if (i == scelta) {
 					g.setColor(COLORE_SELEZIONE);
 					g.fillRect(0, y, larghezza, ALTEZZA_RIGA_ELENCO);
@@ -85,10 +126,24 @@ final class ImmagineBestiario {
 				Image testo = ImageCache.get(aperta ? voce.getNomeDellaVoce() : CHIUSA, MEDIO, colore, Math.max(MEDIO.getHeight(), larghezza - xTesto - MARGINE_RIGA));
 				g.drawImage(testo, xTesto, y + (ALTEZZA_RIGA_ELENCO - testo.getHeight(null)) / 2, null);
 			}
+			int separatore = indiceDelSeparatore(voci);
+			if (separatore >= 0) {
+				Image svolazzo = separatore(Math.max(1, larghezza - 2 * MARGINE_RIGA));
+				g.drawImage(svolazzo, (larghezza - svolazzo.getWidth(null)) / 2,
+						separatore * ALTEZZA_RIGA_ELENCO + (ALTEZZA_RIGA_ELENCO - svolazzo.getHeight(null)) / 2, null);
+			}
 		} finally {
 			g.dispose();
 		}
 		return immagine;
+	}
+
+	/**
+	 * Lo svolazzo fra i mostri e i personaggi giocanti, ridotto se non ci sta nella larghezza
+	 */
+	private static BufferedImage separatore(int larghezzaMassima) {
+		return (BufferedImage) ImageCache.getComposta(Arrays.<Object>asList("separatoreBestiario", larghezzaMassima),
+				() -> adatta(BufferedImageBuilder.buildBufferedImage(RISORSA_SEPARATORE), larghezzaMassima, ALTEZZA_RIGA_ELENCO));
 	}
 
 	/**

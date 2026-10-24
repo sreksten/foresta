@@ -33,7 +33,7 @@ import java.util.List;
  * <li>TEMPLI, a fine locazione: ogni tempio ripulito si segna e si conta;</li>
  * <li>RINGRAZIAMENTO, subito: l'intermezzo del ringraziamento e il premio;</li>
  * <li>COMPAGNO, se il gruppo ha posto e nessun sacerdote offerto da una missione è già entrato (vedi {@link OffertaDelSacerdote}): il sacerdote
- * si offre di unirsi al gruppo.</li>
+ * si offre di unirsi al gruppo, a fine locazione, subito dopo il settimo tempio.</li>
  * </ol>
  * Un tempio è ripulito quando il gruppo ne esce dopo aver sconfitto tutti i suoi custodi: fuggire non basta.
  */
@@ -221,8 +221,10 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 						.conIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA, this::getPagineDelRingraziamento)
 						.poi(() -> OffertaDelSacerdote.puoProporsi() ? COMPAGNO : Passo.FINE);
 			case COMPAGNO:
-				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> true)
-						.chiediConferma(Misc.inizialeMaiuscola(getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "la sacerdotessa" : "il sacerdote")
+				// A fine locazione, subito dopo il settimo tempio (e prima della scena del ringraziamento, che si mostra dopo i controlli), non alla
+				// partenza per la locazione dopo
+				return Passo.quando(MomentoControllo.POST_LOCAZIONE, () -> true)
+						.chiediConferma("Liberato anche l'ultimo tempio, " + (getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "la sacerdotessa" : "il sacerdote")
 								+ " chiede se desiderate che si unisca a voi in pianta stabile. Accettate?")
 						.esegui(() -> {
 							if (Passo.SI.equals(getRisposta(COMPAGNO))) {

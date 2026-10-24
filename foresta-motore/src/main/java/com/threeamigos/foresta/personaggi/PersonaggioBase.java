@@ -1653,7 +1653,9 @@ public abstract class PersonaggioBase implements Personaggio {
 				}
 				break;
 			case RIMOZIONE:
-				BusEventi.pubblica(new NotificaTestoFrase("Per " + nome.substring(0, 1).toLowerCase(Locale.ROOT) + nome.substring(1)
+				// "Per il guerriero" ma "Per Aldo": l'iniziale minuscola è solo dell'articolo, un nome proprio resta com'è
+				BusEventi.pubblica(new NotificaTestoFrase("Per "
+						+ getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
 						+ " non vale più: " + effetto + "."));
 				break;
 			default:

@@ -131,12 +131,12 @@ class ScenarioGiroDelleSetteChieseTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(302)) {
             IlGiroDelleSetteChiese giro = giroAlRingraziamento(partita, 0);
             assertFalse(partita.gruppo().isSacerdoteAccolto());
-            Passo proposta = giro.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE);
+            Passo proposta = giro.getDomandaDaPorre(Passo.MomentoControllo.POST_LOCAZIONE);
             assertNotNull(proposta);
             assertTrue(proposta.isConferma());
 
             giro.rispondi(Passo.SI);
-            giro.controllaPreLocazione();
+            giro.controllaPostLocazione();
 
             assertEquals(2, partita.gruppo().getNumeroPersonaggiPermanenti());
             assertTrue(partita.gruppo().isSacerdoteAccolto());
@@ -152,7 +152,7 @@ class ScenarioGiroDelleSetteChieseTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(303)) {
             IlGiroDelleSetteChiese giro = giroAlRingraziamento(partita, 0);
             giro.rispondi(Passo.NO);
-            giro.controllaPreLocazione();
+            giro.controllaPostLocazione();
 
             assertEquals(1, partita.gruppo().getNumeroPersonaggiPermanenti());
             assertFalse(partita.gruppo().isSacerdoteAccolto());
@@ -166,7 +166,7 @@ class ScenarioGiroDelleSetteChieseTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(304)) {
             IlGiroDelleSetteChiese giro = giroAlRingraziamento(partita, 4);
 
-            assertNull(giro.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE));
+            assertNull(giro.getDomandaDaPorre(Passo.MomentoControllo.POST_LOCAZIONE));
             assertTrue(giro.isCompleta());
             assertEquals(5, partita.gruppo().getNumeroPersonaggiPermanenti());
             assertFalse(partita.gruppo().isSacerdoteAccolto());
@@ -188,7 +188,7 @@ class ScenarioGiroDelleSetteChieseTest {
                 giro.controllaPostLocazione();
             }
 
-            assertNull(giro.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE));
+            assertNull(giro.getDomandaDaPorre(Passo.MomentoControllo.POST_LOCAZIONE));
             assertTrue(giro.isCompleta());
             assertEquals(1, partita.gruppo().getNumeroPersonaggiPermanenti());
             assertTrue(partita.testi().stream().noneMatch(t -> t.startsWith("Siete già in")), String.valueOf(partita.testi()));

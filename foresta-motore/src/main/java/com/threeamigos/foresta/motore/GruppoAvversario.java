@@ -3,6 +3,8 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import com.threeamigos.foresta.combattimento.Ondata;
@@ -16,6 +18,10 @@ public class GruppoAvversario extends Gruppo {
 	// Le ondate che arrivano, una dopo l'altra, quando gli avversari in campo sono sconfitti tutti (vedi Ondata). Non
 	// si salvano: si salva solo fra una locazione e l'altra, mai a metà combattimento
 	private final Deque<Ondata> ondateSuccessive = new ArrayDeque<>();
+
+	// Chi è caduto ed è stato tolto dal gruppo prima che lo scontro lo contasse (il minion della Mietitura, che muore e viene sostituito da uno
+	// scheletro del giocatore): chi conta gli sconfitti lo trova qui (vedi getCadutiRimossi)
+	private final List<Personaggio> cadutiRimossi = new ArrayList<>();
 
 	private GruppoAvversario() {
 		super();
@@ -43,6 +49,32 @@ public class GruppoAvversario extends Gruppo {
 		// Le scorte che i mostri avevano con sé (vedi Gruppo.getGruppoMD) se ne vanno con loro
 		getGruppoMD().reimposta();
 		ondateSuccessive.clear();
+		cadutiRimossi.clear();
+	}
+
+	/**
+	 * Toglie il personaggio dal gruppo; se era già fuori combattimento lo ricorda fra {@link #getCadutiRimossi()}, così non sfugge al conteggio
+	 * degli sconfitti.
+	 */
+	@Override
+	public void rimuoviPersonaggio(Personaggio p) {
+		if (p.isFuoriCombattimento() && personaggi.contains(p) && !cadutiRimossi.contains(p)) {
+			cadutiRimossi.add(p);
+		}
+		super.rimuoviPersonaggio(p);
+	}
+
+	@Override
+	public void rimuoviPersonaggi() {
+		super.rimuoviPersonaggi();
+		cadutiRimossi.clear();
+	}
+
+	/**
+	 * Chi è caduto ed è stato tolto dal gruppo (un minion mietuto) da quando il gruppo si è formato.
+	 */
+	public List<Personaggio> getCadutiRimossi() {
+		return Collections.unmodifiableList(cadutiRimossi);
 	}
 
 	/**

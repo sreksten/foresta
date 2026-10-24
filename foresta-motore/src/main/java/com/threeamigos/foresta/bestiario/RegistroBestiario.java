@@ -10,6 +10,7 @@ import com.threeamigos.foresta.eventi.interni.InternoSfidaVinta;
 import com.threeamigos.foresta.eventi.interni.InternoVoceDelBestiarioSbloccata;
 import com.threeamigos.foresta.interfacce.GestoreBestiario;
 import com.threeamigos.foresta.modellodati.BestiarioMD;
+import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.tipi.CaratteristicaDiClasse;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -93,6 +94,7 @@ public final class RegistroBestiario {
 	 * Sblocca la voce di quella classe; non fa niente se la classe non ha una voce (un non combattente) o se era già sbloccata.
 	 */
 	static void sblocca(TipoPersonaggio classe) {
+		Logger.log(() -> "Bestiario: richiesto lo sblocco di " + classe + (classe.hasVoceNelBestiario() ? "" : " (non ha una voce)"));
 		if (!classe.hasVoceNelBestiario()) {
 			return;
 		}

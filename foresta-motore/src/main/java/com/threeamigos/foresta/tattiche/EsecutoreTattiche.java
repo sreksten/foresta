@@ -296,6 +296,12 @@ public final class EsecutoreTattiche {
 		if (FabbricaAbilita.crea(tipo, utilizzatore).usaSu(utilizzatore, bersaglio, gruppoDelloUtilizzatore, gruppoNemico)) {
 			stato.registraIncantesimoLanciato(utilizzatore);
 			annuncia(utilizzatore, null);
+			// Le radici, lo sciame e lo scacciare i non morti colpiscono più avversari: chi è caduto conta come sconfitto (vedi Uccisioni)
+			for (Personaggio nemico : gruppoNemico.getPersonaggi()) {
+				if (nemico.isFuoriCombattimento()) {
+					uccisioni.registra(utilizzatore, nemico);
+				}
+			}
 		}
 	}
 

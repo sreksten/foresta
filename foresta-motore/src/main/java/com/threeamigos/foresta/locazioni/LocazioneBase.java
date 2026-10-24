@@ -340,6 +340,10 @@ public abstract class LocazioneBase implements Locazione {
 	@Override
 	public Stato impostaAzioni(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario, Comando azione) {
 		Stato stato = impostaAzioniImpl(gruppo, gruppoAvversario, azione);
+		// Chiunque sia caduto in questa azione, e comunque (attacco, incantesimo, abilità, canto, effetto di stato, reazione...), conta come
+		// sconfitto per esperienza, bestiario e trofei: qui, prima che lo scontro finisca o arrivi un'altra ondata, perché nessun ramo
+		// di impostaAzioniImpl che termina in anticipo se lo dimentichi. Idempotente: chi è già stato contato non si conta due volte
+		registraMorteDegliAvversari();
 		if (stato != Stato.GIOCO_PERSO) {
 			evocaGliScheletri();
 		}
@@ -1590,6 +1594,10 @@ public abstract class LocazioneBase implements Locazione {
 	private void registraMorteDegliAvversari() {
 		for (Personaggio avversario : gruppoAvversario.getPersonaggi()) {
 			registraMorteAvversario(avversario);
+		}
+		// Anche chi è caduto ed è già stato tolto dal gruppo (un minion mietuto): ci vuole una copia, perché contarlo può far crollare altri
+		for (Personaggio caduto : new ArrayList<>(gruppoAvversario.getCadutiRimossi())) {
+			registraMorteAvversario(caduto);
 		}
 	}
 

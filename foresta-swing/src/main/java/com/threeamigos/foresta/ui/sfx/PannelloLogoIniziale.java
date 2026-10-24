@@ -29,6 +29,7 @@ public final class PannelloLogoIniziale extends JComponent {
 		// resta da solo per due secondi e poi svanisce anche lui: si passa al gioco da una finestra nera.
 		effetto = TracciatoreLogo.costruttore(scritta)
 				.immagineDaMostrare(logo)
+				.raggioTorcia(50)
 				.coloreSfondo(null)
 				.sfumaScie(true)
 				.fotogrammiPausa(PAUSA_MS / TracciatoreLogo.INTERVALLO_FOTOGRAMMA_MS)

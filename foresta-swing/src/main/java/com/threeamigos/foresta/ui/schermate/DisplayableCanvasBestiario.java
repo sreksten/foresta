@@ -136,7 +136,7 @@ public class DisplayableCanvasBestiario implements Finestra {
 		} else if (scheda.isSullaFrecciaGiu(x, y)) {
 			scheda.scorri(SCATTI_PER_CLIC * PASSO_SCORRIMENTO);
 		} else if (elenco.contiene(x, y)) {
-			scegli((y - elenco.getCima() + elenco.getScorrimento()) / ImmagineBestiario.ALTEZZA_RIGA_ELENCO);
+			scegli(ImmagineBestiario.voceDellaRiga(voci, (y - elenco.getCima() + elenco.getScorrimento()) / ImmagineBestiario.ALTEZZA_RIGA_ELENCO));
 		}
 	}
 
@@ -159,7 +159,7 @@ public class DisplayableCanvasBestiario implements Finestra {
 			return;
 		}
 		scegli(riga);
-		int sopra = riga * ImmagineBestiario.ALTEZZA_RIGA_ELENCO;
+		int sopra = ImmagineBestiario.rigaDellaVoce(voci, riga) * ImmagineBestiario.ALTEZZA_RIGA_ELENCO;
 		int sotto = sopra + ImmagineBestiario.ALTEZZA_RIGA_ELENCO;
 		int scorrimento = elenco.getScorrimento();
 		if (sopra < scorrimento) {

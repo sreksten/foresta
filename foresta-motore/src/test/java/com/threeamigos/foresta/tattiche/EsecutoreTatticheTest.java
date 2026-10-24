@@ -88,6 +88,26 @@ class EsecutoreTatticheTest {
     }
 
     @Test
+    void leRadiciDelDruidoRegistranoGliAvversariCheUccidono() {
+        // Un'abilità colpisce più avversari insieme: chi cade conta come sconfitto (bestiario, trofei, punti), come con un incantesimo
+        Personaggio druido = FabbricaPersonaggi.crea(TipoPersonaggio.DRUIDO, 1);
+        druido.addMagia(druido.getMagiaMassima());
+        Gruppo druidi = gruppo(true, druido);
+        Gruppo nemici = gruppo(false, goblin, strega);
+        goblin.subSalute(goblin.getSalute() - 1, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
+        TatticaMD radici = TatticaMD.di(VoceMD.su(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO), AzioneMD.di(TipoAzione.RADICI)));
+        EsecutoreTattiche conIDruidi = new EsecutoreTattiche(druidi, nemici, StatoDelCombattimento.getIstanza(),
+                (uccisore, vittima) -> uccisioni.add(uccisore.getNome() + ">" + vittima.getNome()));
+        for (int i = 0; i < 50 && goblin.isVivo(); i++) {
+            Decisione d = conIDruidi.agisci(druido, radici);
+            assertNotNull(d);
+            assertEquals(TipoAzione.RADICI, d.getTipoEseguito());
+        }
+        assertFalse(goblin.isVivo());
+        assertEquals(1, uccisioni.stream().filter(u -> u.endsWith(">" + goblin.getNome())).count(), uccisioni.toString());
+    }
+
+    @Test
     void unMioAttaccoCheUccideIlPrimoPassaAlProssimoELFermaQuandoFinisconoGliAvversari() {
         goblin.subSalute(goblin.getSalute() - 1, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
         strega.subSalute(strega.getSalute() - 1, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);

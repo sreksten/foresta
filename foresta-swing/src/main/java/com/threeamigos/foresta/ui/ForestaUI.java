@@ -96,6 +96,7 @@ public class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(NotificaErroreCaricamento.class, this::gestisciEventoErroreCaricamento);
 		BusEventi.iscriviti(NotificaGlobale.class, this::gestisciEventoNotificaGlobale);
 		BusEventi.iscriviti(InternoTrofeoAcquisito.class, this::gestisciEventoTrofeoAcquisito);
+		BusEventi.iscriviti(InternoVoceDelBestiarioSbloccata.class, this::gestisciEventoVoceDelBestiarioSbloccata);
 		BusEventi.iscriviti(InternoAggiornamentoComandiDisponibili.class, this::gestisciEventoComandiDisponibili);
 		BusEventi.iscriviti(NotificaConsumoPuntoAbilitaPersonaggio.class, this::gestisciEventoConsumoPuntoAbilita);
 		BusEventi.iscriviti(NotificaFineGioco.class, this::gestisciEventoFineGioco);
@@ -344,6 +345,11 @@ public class ForestaUI implements Temporizzabile {
 
 	private void gestisciEventoTrofeoAcquisito(InternoTrofeoAcquisito evento) {
 		displayableCanvas.notificaAnnuncioGlobale("Trofeo vinto", evento.getTrofeo().getNome());
+	}
+
+	private void gestisciEventoVoceDelBestiarioSbloccata(InternoVoceDelBestiarioSbloccata evento) {
+		// Il nome della voce, che per chi ha due forme le dice tutte e due ("Mago e Maga")
+		displayableCanvas.notificaAnnuncioGlobale("Nuova voce", evento.getVoce().getNomeDellaVoce());
 	}
 
 	private void gestisciEventoPaginaIntermezzo(NotificaPaginaIntermezzo evento) {

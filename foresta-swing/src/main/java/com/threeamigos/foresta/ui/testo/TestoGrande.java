@@ -28,7 +28,10 @@ public final class TestoGrande {
 	 */
 	public static final int ALTEZZA_RIGA = 36;
 	private static final int LARGHEZZA_SPAZIO = 10;
-	private static final int ALTEZZA_GLIFO = 28;
+	/**
+	 * L'altezza delle lettere.
+	 */
+	public static final int ALTEZZA_GLIFO = 28;
 	/**
 	 * Quanto della luminosità resta al testo grigio scuro.
 	 */
@@ -156,15 +159,24 @@ public final class TestoGrande {
 	 * a sinistra.
 	 */
 	public static BufferedImage immagine(String testo, int larghezzaMassima, boolean centrato) {
+		return immagine(testo, larghezzaMassima, centrato, 0);
+	}
+
+	/**
+	 * Come {@link #immagine(String, int, boolean)}, ma con {@code interlinea} pixel in più fra una riga e l'altra, oltre ai
+	 * {@link #ALTEZZA_RIGA}.
+	 */
+	public static BufferedImage immagine(String testo, int larghezzaMassima, boolean centrato, int interlinea) {
 		List<String> righe = righe(testo, larghezzaMassima);
+		int passo = ALTEZZA_RIGA + interlinea;
 		BufferedImage immagine = new BufferedImage(Math.max(1, larghezzaMassima),
-				Math.max(1, (righe.size() - 1) * ALTEZZA_RIGA + ALTEZZA_GLIFO), BufferedImage.TYPE_INT_ARGB);
+				Math.max(1, (righe.size() - 1) * passo + ALTEZZA_GLIFO), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = immagine.createGraphics();
 		try {
 			for (int i = 0; i < righe.size(); i++) {
 				String riga = righe.get(i);
 				int x = centrato ? (larghezzaMassima - larghezza(riga)) / 2 : 0;
-				disegnaRiga(graphics, riga, x, i * ALTEZZA_RIGA);
+				disegnaRiga(graphics, riga, x, i * passo);
 			}
 		} finally {
 			graphics.dispose();
