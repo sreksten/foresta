@@ -870,7 +870,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				gruppoAvversario.rimuoviPersonaggi();
 				avversari.forEach(gruppoAvversario::aggiungiPersonaggio);
 				// ...con le ondate che arrivano dopo, se la missione ne vuole (vedi LocazioneBase.impostaAzioni)
-				gruppoAvversario.setOndateSuccessive(RegistroMissioni.getOndateSuccessiveMissione(gruppo.getCoordinate()));
+				locazioneCorrente.setOndateSuccessive(RegistroMissioni.getOndateSuccessiveMissione(gruppo.getCoordinate()));
 			});
 			if (gruppoAvversario.isSfidaACartaForbiciSasso() || RegistroMissioni.isLocazioneSenzaOggetti(gruppo.getCoordinate())) {
 				// Un campione de La sfida dei campioni: lì si gioca e basta, niente oggetti, né suoi né di altre missioni. Lo stesso
@@ -1887,7 +1887,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 		if (!ModalitaDiProva.isAttiva()) {
 			// In modalità di prova ha già i suoi artefatti potenti (vedi sotto)
-			EquipaggiamentoIniziale.equipaggia(personaggio);
+			EquipaggiamentoIniziale.equipaggia(personaggio, Statistiche.getLivello());
 		}
 
 		// Solo in modalità di prova: artefatti potenti e punti abilità al primo personaggio

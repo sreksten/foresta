@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
@@ -226,7 +227,7 @@ public class LIndagine extends IncaricoInCitta {
 						.esegui(() -> {
 							// Un colpevole che si arrende viene portato in città dal gruppo; negli altri casi non c'è nessuno da mostrare
 							if (indagine.isFinoAllaResa() && indagine.isConCapo()) {
-								accogliOspite(new Viandante(getCapo(), EquipaggiamentoIniziale.livelloCasualeDalMondo()), false);
+								accogliOspite(new Viandante(getCapo(), EquipaggiamentoIniziale.livelloCasuale(Statistiche.getLivello())), false);
 							}
 						})
 						.poi(RITORNO);

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.combattimento.Ondata;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -787,7 +788,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * {@link #scorta(MomentoControllo, Supplier, Supplier)}).
 	 */
 	protected final Passo prendiInScorta(MomentoControllo momento, BooleanSupplier quando, String nome, boolean vulnerabile) {
-		return prendiInScorta(momento, quando, () -> new Viandante(nome, EquipaggiamentoIniziale.livelloCasualeDalMondo()), vulnerabile);
+		return prendiInScorta(momento, quando, () -> new Viandante(nome, EquipaggiamentoIniziale.livelloCasuale(Statistiche.getLivello())), vulnerabile);
 	}
 
 	/**

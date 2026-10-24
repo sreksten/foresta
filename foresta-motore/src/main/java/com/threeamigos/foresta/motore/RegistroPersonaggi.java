@@ -98,8 +98,8 @@ public class RegistroPersonaggi {
 	 */
 	public static Personaggio preparaCompagno(Personaggio compagno) {
 		// Prima il livello, poi la dotazione: i pezzi non possono superare il livello di chi li porta
-		compagno.impostaLivelloDopoReclutamento(EquipaggiamentoIniziale.livelloCasualeDalMondo());
-		EquipaggiamentoIniziale.equipaggia(compagno);
+		compagno.impostaLivelloDopoReclutamento(EquipaggiamentoIniziale.livelloCasuale(Statistiche.getLivello()));
+		EquipaggiamentoIniziale.equipaggia(compagno, Statistiche.getLivello());
 		return compagno;
 	}
 

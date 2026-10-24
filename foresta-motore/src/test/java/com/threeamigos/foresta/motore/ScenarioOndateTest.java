@@ -58,7 +58,7 @@ class ScenarioOndateTest {
                     .poi(IncontroDiMissione.di(TipoPersonaggio.HOBGOBLIN, 2), "Arrivano due hobgoblin!")
                     .poi(IncontroDiMissione.di(TipoPersonaggio.TROLL, 1).conCapo("Gruk"), "Arriva Gruk!");
             incontro.crea().forEach(avversari::aggiungiPersonaggio);
-            avversari.setOndateSuccessive(incontro.creaOndateSuccessive());
+            locazione.setOndateSuccessive(incontro.creaOndateSuccessive());
 
             // All'ingresso: niente corruzione, amicizia o passaggio inosservato
             assertEquals(Stato.IN_LOCAZIONE, locazione.impostaAzioni(partita.gruppo(), avversari, null));
@@ -78,7 +78,7 @@ class ScenarioOndateTest {
             sconfiggiTutti(avversari);
             assertEquals(Stato.IN_LOCAZIONE, locazione.impostaAzioni(partita.gruppo(), avversari, null));
             assertEquals("Gruk", avversari.getPersonaggioVivo().getNome());
-            assertFalse(avversari.hasOndateSuccessive());
+            assertFalse(locazione.hasOndateSuccessive());
 
             // Sconfitto anche lui, la locazione finisce
             sconfiggiTutti(avversari);

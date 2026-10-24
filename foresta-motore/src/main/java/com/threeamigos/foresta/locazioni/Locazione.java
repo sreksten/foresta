@@ -15,6 +15,20 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public interface Locazione {
 
+	/**
+	 * Le ondate di rinforzi che arrivano in questa locazione, una dopo l'altra, quando gli avversari in campo sono stati sconfitti tutti
+	 * (vedi Ondata); di default nessuna.
+	 */
+	default void setOndateSuccessive(java.util.List<com.threeamigos.foresta.combattimento.Ondata> ondate) {
+	}
+
+	/**
+	 * Se arriverà ancora un'ondata, sconfitti gli avversari in campo.
+	 */
+	default boolean hasOndateSuccessive() {
+		return false;
+	}
+
 	TipoLocazione getTipoLocazione();
 
 	/**

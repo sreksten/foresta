@@ -5,7 +5,6 @@ import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -59,17 +58,21 @@ public final class EquipaggiamentoIniziale {
 	/**
 	 * Il livello del mondo meno un numero a caso fra 0 e 2, mai sotto 1: quello dei compagni reclutati e dei
 	 * pezzi della dotazione
+	 *
+	 * @param livelloDelMondo il livello di riferimento del gioco
 	 */
-	public static int livelloCasualeDalMondo() {
-		return Math.max(1, Statistiche.getLivello() - Dado.tira(0, 2));
+	public static int livelloCasuale(int livelloDelMondo) {
+		return Math.max(1, livelloDelMondo - Dado.tira(0, 2));
 	}
 
 	/**
 	 * Dà al personaggio la dotazione della sua classe
+	 *
+	 * @param livelloDelMondo il livello di riferimento del gioco, da cui dipende il livello dei pezzi
 	 */
-	public static void equipaggia(Personaggio personaggio) {
+	public static void equipaggia(Personaggio personaggio, int livelloDelMondo) {
 		for (TipoArtefatto tipo : perClasse(personaggio.getClasse())) {
-			int livello = Math.min(personaggio.getLivello(), livelloCasualeDalMondo());
+			int livello = Math.min(personaggio.getLivello(), livelloCasuale(livelloDelMondo));
 			Artefatto artefatto = GeneratoreArtefatti.istanza().generaArtefatto(tipo, livello);
 			// Di base: niente rarità, incantamenti o nome proprio che il generatore dà ogni tanto
 			ArtefattoMD md = artefatto.getModelloDati();

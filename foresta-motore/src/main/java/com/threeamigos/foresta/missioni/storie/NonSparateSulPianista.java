@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
@@ -113,7 +114,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 			case ACCETTAZIONE:
 				return prendiInScorta(MomentoControllo.IN_LOCAZIONE, this::nellaLocanda,
 								() -> RegistroPersonaggi.costruisciPersonaggio(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE),
-										EquipaggiamentoIniziale.livelloCasualeDalMondo()), false)
+										EquipaggiamentoIniziale.livelloCasuale(Statistiche.getLivello())), false)
 						.esegui(() -> {
 							aggiungiProprieta(CITTA, cittaPiuVicina().name());
 							aggiungiProprieta(LIVELLO_DELL_INCARICO, String.valueOf(Statistiche.getLivello()));

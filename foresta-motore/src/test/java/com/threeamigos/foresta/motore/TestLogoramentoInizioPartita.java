@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
@@ -421,7 +422,7 @@ public class TestLogoramentoInizioPartita {
     private static Personaggio nuovoProtagonista(TipoPersonaggio classe) {
         ModelloDati.setIstanza(new ModelloDati());
         Personaggio pg = conNome(classe);
-        EquipaggiamentoIniziale.equipaggia(pg);
+        EquipaggiamentoIniziale.equipaggia(pg, Statistiche.getLivello());
         return pg;
     }
 

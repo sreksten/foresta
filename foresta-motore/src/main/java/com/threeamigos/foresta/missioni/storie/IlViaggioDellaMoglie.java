@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
@@ -158,7 +159,7 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 			case PARTENZA:
 				return prendiInScorta(MomentoControllo.IN_LOCAZIONE, () -> gruppo.getTipoLocazioneCorrente() == getCittaDiPartenza(),
 								() -> RegistroPersonaggi.costruisciPersonaggio(RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO),
-										EquipaggiamentoIniziale.livelloCasualeDalMondo()), false)
+										EquipaggiamentoIniziale.livelloCasuale(Statistiche.getLivello())), false)
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(getMoglie() + " si unisce al gruppo: va accompagnata "
 								+ Articoli.conPreposizione("a", getCittaDiArrivo().getNomeProprio()) + ".")))
 						.poi(VIAGGIO);

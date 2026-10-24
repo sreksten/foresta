@@ -68,6 +68,10 @@ public abstract class LocazioneBase implements Locazione {
 	private final GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
 	private final StatoDelCombattimento statoDelCombattimento = StatoDelCombattimento.getIstanza();
 
+	// Le ondate che arrivano dopo gli avversari in campo, una dopo l'altra. Non si salvano: si salva solo fra una locazione e l'altra, mai a metà
+	// combattimento
+	private final Deque<Ondata> ondateSuccessive = new ArrayDeque<>();
+
 	/**
 	 * Lo stato durevole della casella: nome, visitata, conosciuta, completa.
 	 * Sopravvive alla visita e al salvataggio.
@@ -356,7 +360,7 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		// Non si guarda se la locazione è completa: quando l'ultimo avversario muore per un veleno non lo è ancora
 		if (stato == Stato.FINE_LOCAZIONE && gruppoAvversario.getPersonaggiVivi().isEmpty()) {
-			if (gruppoAvversario.hasOndateSuccessive()) {
+			if (hasOndateSuccessive()) {
 				return arrivaLaProssimaOndata();
 			}
 			// Vinto lo scontro: le scorte che gli avversari non hanno usato sono bottino
@@ -446,14 +450,27 @@ public abstract class LocazioneBase implements Locazione {
 		}
 	}
 
+	@Override
+	public void setOndateSuccessive(List<Ondata> ondate) {
+		ondateSuccessive.clear();
+		ondateSuccessive.addAll(ondate);
+	}
+
+	@Override
+	public boolean hasOndateSuccessive() {
+		return !ondateSuccessive.isEmpty();
+	}
+
 	/**
-	 * Sconfitti tutti gli avversari in campo, ne arriva un'altra ondata (vedi GruppoAvversario.prossimaOndata): la
+	 * Sconfitti tutti gli avversari in campo, ne arriva un'altra ondata (vedi {@link Ondata}): la
 	 * locazione non è più completa, la finestra di combattimento si chiude e si torna a scegliere che cosa fare. Tutti
 	 * i punti in cui un combattimento si vince (la mischia, gli incantesimi, il dardo, i veleni) passano di qui.
 	 */
 	private Stato arrivaLaProssimaOndata() {
 		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
-		Ondata ondata = gruppoAvversario.prossimaOndata();
+		Ondata ondata = ondateSuccessive.removeFirst();
+		gruppoAvversario.rimuoviPersonaggi();
+		ondata.getAvversari().forEach(gruppoAvversario::aggiungiPersonaggio);
 		BottinoDegliAvversari.fornisciLeScorte(gruppoAvversario, ondata.getAvversari());
 		statoDelCombattimento.nuovaOndata();
 		combattente = null;
@@ -1392,7 +1409,7 @@ public abstract class LocazioneBase implements Locazione {
 			// Né con degli avversari che una missione vuole sconfitti (vedi Personaggio.isDaAffrontare): un capobanda con
 			// una taglia non si corrompe, e una banda non diventa amica. E nemmeno con delle ondate in arrivo: corrotta
 			// la prima, non arriverebbero le altre
-			if (!gruppoAvversario.hasOndateSuccessive() && !gruppoAvversario.isDaAffrontare()) {
+			if (!hasOndateSuccessive() && !gruppoAvversario.isDaAffrontare()) {
 				Personaggio p;
 				for (int i = 0; i < numeroAvversari; i++) {
 					p = gruppoAvversario.getPersonaggio(i);
@@ -1917,7 +1934,7 @@ public abstract class LocazioneBase implements Locazione {
 		return !passaggioEscluso && statoLocazione == StatoLocazione.IN_LOCAZIONE
 				&& gruppo.getTipoLocazioneCorrente().getCategoriaLocazione() == CategoriaLocazione.STANDARD
 				&& !gruppoAvversario.getPersonaggiVivi().isEmpty() && !gruppoAvversario.isDaAffrontare() && !gruppoAvversario.isDuello()
-				&& !gruppoAvversario.hasOndateSuccessive();
+				&& !hasOndateSuccessive();
 	}
 
 	/**

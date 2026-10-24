@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.modellodati.ModelloDati;
@@ -30,7 +31,7 @@ class EquipaggiamentoInizialeTest {
         for (TipoPersonaggio classe : new TipoPersonaggio[]{TipoPersonaggio.GUERRIERO, TipoPersonaggio.LADRA,
                 TipoPersonaggio.ELFO, TipoPersonaggio.CANTASTORIE, TipoPersonaggio.MAGA}) {
             Personaggio personaggio = FabbricaPersonaggi.crea(classe, 1);
-            EquipaggiamentoIniziale.equipaggia(personaggio);
+            EquipaggiamentoIniziale.equipaggia(personaggio, Statistiche.getLivello());
             Collection<TipoArtefatto> tipi = personaggio.getModelloDati().getArtefatti().stream().map(ArtefattoMD::getTipo)
                     .collect(Collectors.toList());
             assertEquals(EquipaggiamentoIniziale.perClasse(classe).size(), tipi.size(), classe + ": " + tipi);
