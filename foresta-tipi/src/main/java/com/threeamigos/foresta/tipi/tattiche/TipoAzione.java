@@ -31,7 +31,8 @@ public enum TipoAzione {
 	VELENO(PortataAzione.AVVERSARIO, TipoIncantesimo.VELENO),
 	MORTE(PortataAzione.AVVERSARIO, TipoIncantesimo.MORTE),
 	SILENZIO(PortataAzione.AVVERSARIO, TipoIncantesimo.SILENZIO),
-	LUCE_DIVINA(PortataAzione.AVVERSARIO, TipoIncantesimo.LUCE_DIVINA),
+	/** L'abilità del Sacerdote: danno sacro a più avversari, il doppio ai non morti (vedi TipoAbilita) */
+	LUCE_DIVINA(PortataAzione.AVVERSARIO, null),
 	/** Uno dei sette incantesimi elementali, scelto con un criterio (non la Morte, non il Silenzio) */
 	INCANTESIMO_DI_DANNO(PortataAzione.AVVERSARIO, null),
 	/**

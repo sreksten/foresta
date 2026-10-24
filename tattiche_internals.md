@@ -66,7 +66,7 @@ Ogni azione dichiara la sua **portata**, cioè su che cosa agisce, e quindi come
 
 | Portata | Selettore | Azioni |
 | :--- | :--- | :--- |
-| `AVVERSARIO` | sceglie il bersaglio fra gli avversari | `ATTACCO_FISICO`, i dieci incantesimi di classe (`ARIA`…`LUCE_DIVINA`), `INCANTESIMO_DI_DANNO`, `INCANTESIMO_DEL_REPERTORIO`, `DARDO_ARCANO` |
+| `AVVERSARIO` | sceglie il bersaglio fra gli avversari | `ATTACCO_FISICO`, gli incantesimi di classe (`ARIA`…`SILENZIO`) e `LUCE_DIVINA` (un'abilità del Sacerdote), `INCANTESIMO_DI_DANNO`, `INCANTESIMO_DEL_REPERTORIO`, `DARDO_ARCANO` |
 | `ALLEATO` | sceglie il bersaglio fra gli alleati (anche chi decide) | `CANTO_CURATIVO`, le quattro pozioni |
 | `ALLEATO_CADUTO` | sceglie il bersaglio fra i caduti | `RESURREZIONE` |
 | `GRUPPO_ALLEATI` | è solo un test di esistenza | `ALBA_SACRA`, `CANTO_DI_VALORE` |

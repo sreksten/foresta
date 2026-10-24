@@ -21,10 +21,14 @@ public final class AbilitaInnate {
 	}
 
 	/**
-	 * @return true se la classe ha almeno un'abilità innata (Chierico, Druido, Mago, Elfo e le loro forme femminili)
+	 * @return true se la classe ha almeno un'abilità innata (Chierico, Druido, Sacerdote, Mago, Elfo e le loro forme femminili)
 	 */
 	public static boolean conosciutaDa(TipoPersonaggio classe) {
-		return isDelChierico(classe) || isDelDruido(classe) || isDelDardo(classe);
+		return isDelChierico(classe) || isDelDruido(classe) || isDelSacerdote(classe) || isDelDardo(classe);
+	}
+
+	private static boolean isDelSacerdote(TipoPersonaggio classe) {
+		return classe == TipoPersonaggio.SACERDOTE || classe == TipoPersonaggio.SACERDOTESSA;
 	}
 
 	private static boolean isDelDardo(TipoPersonaggio classe) {
@@ -40,7 +44,7 @@ public final class AbilitaInnate {
 	}
 
 	/**
-	 * Se la classe conosce quell'abilità: Scacciare i non morti e Imposizione delle mani sono del chierico, il dardo arcano è di Mago ed
+	 * Se la classe conosce quell'abilità: Scacciare i non morti e Imposizione delle mani sono del chierico, la luce divina è del sacerdote, il dardo arcano è di Mago ed
 	 * Elfo, le altre del druido.
 	 */
 	public static boolean conosciutaDa(TipoPersonaggio classe, TipoAbilita tipo) {
@@ -48,6 +52,8 @@ public final class AbilitaInnate {
 			case SCACCIARE_I_NON_MORTI:
 			case IMPOSIZIONE_DELLE_MANI:
 				return isDelChierico(classe);
+			case LUCE_DIVINA:
+				return isDelSacerdote(classe);
 			case DARDO_ARCANO:
 				return isDelDardo(classe);
 			default:

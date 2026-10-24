@@ -12,6 +12,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +21,8 @@ import java.util.List;
  * Un'abilità innata che fa danno (le radici e lo sciame del Druido, il dardo arcano di Mago ed Elfo): è essa stessa l'attacco magico, un
  * {@link Arma} che non si impugna. Il tiro per colpire e il danno sono quelli di ogni attacco (vedi {@link ColpoMagico}), con danni e costo propri
  * e senza pergamene: i bersagli sono i primi avversari vivi, fino al NUMERO_BERSAGLI di chi la usa (uno solo per il dardo), e il danno si
- * ripartisce per posizione. Chi la usa dice alla UI chi agisce e su chi prima di colpire.
+ * ripartisce per posizione. Se chi la usa ha già scelto un bersaglio (una tattica) si comincia da lui. L'abilità dice alla UI chi agisce e su chi
+ * prima di colpire.
  */
 public abstract class AbilitaDiDanno implements Abilita, Arma {
 
@@ -98,9 +100,14 @@ public abstract class AbilitaDiDanno implements Abilita, Arma {
 			return false;
 		}
 		int massimo = getNumeroBersagli(utilizzatore);
-		if (massimo == 1 && scelto != null && scelto.isVivo()) {
-			bersagli = Collections.singletonList(scelto);
-		} else if (bersagli.size() > massimo) {
+		if (scelto != null && scelto.isVivo() && bersagli.contains(scelto)) {
+			// Il bersaglio scelto (da una tattica) per primo, poi gli altri avversari vivi nel loro ordine
+			List<Personaggio> inOrdine = new ArrayList<>(bersagli);
+			inOrdine.remove(scelto);
+			inOrdine.add(0, scelto);
+			bersagli = inOrdine;
+		}
+		if (bersagli.size() > massimo) {
 			bersagli = bersagli.subList(0, massimo);
 		}
 		AnnuncioDellAzione.azione(utilizzatore, bersagli.size() == 1 ? bersagli.get(0) : null, TipoAzione.di(getTipo()));
@@ -108,10 +115,23 @@ public abstract class AbilitaDiDanno implements Abilita, Arma {
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " " + getAnnuncio(bersagli)));
 		// Il danno si ripartisce per posizione, come per gli incantesimi a più bersagli
 		for (int posizione = 0; posizione < bersagli.size(); posizione++) {
-			ColpoMagico.colpisci(utilizzatore, bersagli.get(posizione), this, getTipoAzione(), getTipoIncantesimo(),
-					CalcolatoreCombattimento.quotaDelDannoPerPosizione(posizione));
+			colpisci(utilizzatore, bersagli.get(posizione), CalcolatoreCombattimento.quotaDelDannoPerPosizione(posizione));
 		}
+		dopoIColpi(utilizzatore);
 		utilizzatore.subMagia(getCostoLancio());
 		return true;
+	}
+
+	/**
+	 * Un colpo su un bersaglio: il bersaglio subisce quella quota del danno (vedi CalcolatoreCombattimento.quotaDelDannoPerPosizione).
+	 */
+	protected void colpisci(Personaggio utilizzatore, Personaggio bersaglio, double quotaDelDanno) {
+		ColpoMagico.colpisci(utilizzatore, bersaglio, this, getTipoAzione(), getTipoIncantesimo(), quotaDelDanno);
+	}
+
+	/**
+	 * Quel che l'abilità fa in più dopo aver colpito i bersagli, prima di pagare la MAGIA. Per default niente.
+	 */
+	protected void dopoIColpi(Personaggio utilizzatore) {
 	}
 }

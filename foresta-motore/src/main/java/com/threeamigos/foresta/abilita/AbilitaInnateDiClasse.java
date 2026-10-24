@@ -2,7 +2,6 @@ package com.threeamigos.foresta.abilita;
 
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
-import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.*;
 
@@ -13,7 +12,7 @@ import java.util.List;
 /**
  * Le capacità innate di una classe, tutte insieme e con i loro testi, per il bestiario: le abilità del Chierico e del Druido, i canti del Bardo,
  * l'Alba Sacra e la Luce Divina del Sacerdote, il dardo arcano di Mago ed Elfo. Ognuna sa già chi la conosce (AbilitaInnate, CantoDelBardo, AlbaSacra,
- * LuceDivina, DardoArcano): qui si raccolgono. L'Urlo della Banshee, che si impara per una missione, non c'è.
+ * AlbaSacra): qui si raccolgono. L'Urlo della Banshee, che si impara per una missione, non c'è.
  */
 public final class AbilitaInnateDiClasse {
 
@@ -37,9 +36,6 @@ public final class AbilitaInnateDiClasse {
 		}
 		if (AlbaSacra.conosciutaDa(classe)) {
 			abilita.add(daIncantesimo(TipoIncantesimo.ALBA_SACRA));
-		}
-		if (LuceDivina.conosciutaDa(classe)) {
-			abilita.add(daIncantesimo(TipoIncantesimo.LUCE_DIVINA));
 		}
 		return Collections.unmodifiableList(abilita);
 	}

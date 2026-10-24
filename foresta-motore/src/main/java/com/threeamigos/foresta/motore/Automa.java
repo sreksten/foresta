@@ -1162,16 +1162,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (albaSacraInnata) {
 			comandiPossibili.add(Comando.ALBA_SACRA);
 		}
-		// Sacerdote e Sacerdotessa hanno anche la luce divina, che non consuma pergamene
-		boolean luceDivinaInnata = LuceDivina.puoLanciarlaInnata(formulante);
-		if (luceDivinaInnata) {
-			comandiPossibili.add(Comando.LUCE_DIVINA);
-		}
 		// Bardo e Cantastorie hanno i canti, che non consumano pergamene e si cantano solo contro avversari vivi
 		for (TipoCanto canto : CantoDelBardo.cantiUtili(formulante, gruppo, gruppoAvversario)) {
 			comandiPossibili.add(canto.getComando());
 		}
-		// Chierico, Druido, Mago ed Elfo hanno le loro abilità (compreso il dardo arcano), che non consumano pergamene e si usano solo contro avversari vivi
+		// Chierico, Druido, Sacerdote, Mago ed Elfo hanno le loro abilità (compresa la luce divina e il dardo arcano), che non consumano pergamene e si usano solo contro avversari vivi
 		for (TipoAbilita abilita : AbilitaInnate.abilitaUtili(formulante, gruppo, gruppoAvversario)) {
 			comandiPossibili.add(abilita.getComando());
 		}
@@ -1180,8 +1175,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		inOrdine.remove(TipoIncantesimo.SILENZIO);
 		inOrdine.add(0, TipoIncantesimo.SILENZIO);
 		for (TipoIncantesimo tipoIncantesimo : inOrdine) {
-			if ((albaSacraInnata && tipoIncantesimo == TipoIncantesimo.ALBA_SACRA)
-					|| (luceDivinaInnata && tipoIncantesimo == TipoIncantesimo.LUCE_DIVINA)) {
+			if (albaSacraInnata && tipoIncantesimo == TipoIncantesimo.ALBA_SACRA) {
 				// Già fra i comandi, anche se il gruppo ha delle pergamene
 				continue;
 			}

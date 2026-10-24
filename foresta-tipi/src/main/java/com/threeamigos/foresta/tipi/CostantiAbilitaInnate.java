@@ -65,6 +65,13 @@ public final class CostantiAbilitaInnate {
     public static final double ABILITA_RIGENERAZIONE_DIVISORE_SAGGEZZA = 50.0;
 
     /**
+     * La luce divina del Sacerdote: danno sacro su più avversari (il doppio ai non morti), e investe anche i non morti del proprio gruppo.
+     */
+    public static final int ABILITA_LUCE_DIVINA_COSTO_LANCIO = 10;
+
+    public static final int ABILITA_LUCE_DIVINA_DANNI = 100;
+
+    /**
      * Il dardo arcano, l'incantesimo innato di Mago ed Elfo: su un solo bersaglio, per poca MAGIA e senza consumare
      * pergamene. Al Mago rende di più (una pergamena di fuoco fa 50) e costa meno che all'Elfo, che è
      * un po' meno bravo con la magia e in cambio sa combattere

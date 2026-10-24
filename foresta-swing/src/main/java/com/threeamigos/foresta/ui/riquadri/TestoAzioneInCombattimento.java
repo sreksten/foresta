@@ -28,6 +28,8 @@ final class TestoAzioneInCombattimento {
 				return bersaglio == null ? "Lancia la Resurrezione" : "Resuscita" + su;
 			case ALBA_SACRA:
 				return "Invoca l'Alba Sacra";
+			case LUCE_DIVINA:
+				return bersaglio == null ? "Invoca la Luce Divina" : "Invoca la Luce Divina contro" + su;
 			case CANTO_CURATIVO:
 				return bersaglio == null ? "Intona il Canto Curativo" : "Intona il Canto Curativo per" + su;
 			case CANTO_IPNOTICO:

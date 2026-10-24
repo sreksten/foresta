@@ -362,7 +362,6 @@ final class TestoTattica {
 			case FULMINE:
 			case GELO:
 			case VELENO:
-			case LUCE_DIVINA:
 				return "Lancia l'incantesimo se la pergamena è disponibile e ha la Magia sufficiente per formularlo. Non viene lanciato se il bersaglio è immune.";
 			case MORTE:
 				return "Il colpo di grazia: se va a segno su chi ha meno di un quarto della salute lo uccide, altrimenti si ritorce contro chi lo lancia. "
@@ -392,6 +391,8 @@ final class TestoTattica {
 				return "L'abilità del chierico che spaventa i non morti, a seconda del loro coraggio. Si usa solo se c'è un non morto non già spaventato.";
 			case IMPOSIZIONE_DELLE_MANI:
 				return "L'abilità del chierico che cura un compagno ferito, poco ma senza pergamene.";
+			case LUCE_DIVINA:
+				return "L'abilità del sacerdote che fa danno sacro a più avversari (il doppio ai non morti) e investe anche i non morti del gruppo. Non costa pergamene.";
 			case RADICI:
 				return "L'abilità del druido che fa danno di terra a più avversari, e può immobilizzarli o accecarli. Non costa pergamene.";
 			case SCIAME:

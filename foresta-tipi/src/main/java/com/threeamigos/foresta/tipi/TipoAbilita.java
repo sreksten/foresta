@@ -3,7 +3,7 @@ package com.threeamigos.foresta.tipi;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
- * Le abilità innate del Chierico e del Druido, del Mago e dell'Elfo (e delle loro forme femminili), simili ai canti del Bardo: costano MAGIA, non
+ * Le abilità innate del Chierico, del Druido, del Sacerdote, del Mago e dell'Elfo (e delle loro forme femminili), simili ai canti del Bardo: costano MAGIA, non
  * consumano pergamene, non si comprano né si trovano.
  * <p>
  * Come per {@link TipoCanto}, ogni abilità è associata a un {@link Comando} usato dalla UI per chiederne l'uso al motore.
@@ -25,6 +25,8 @@ public enum TipoAbilita {
 	SCIAME(Comando.SCIAME),
 	PELLE_DI_CORTECCIA(Comando.PELLE_DI_CORTECCIA),
 	RIGENERAZIONE(Comando.RIGENERAZIONE),
+	// Del sacerdote
+	LUCE_DIVINA(Comando.LUCE_DIVINA),
 	// Del mago e dell'elfo
 	DARDO_ARCANO(Comando.DARDO_ARCANO);
 
@@ -86,6 +88,8 @@ public enum TipoAbilita {
 				return CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO;
 			case RIGENERAZIONE:
 				return CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_COSTO_LANCIO;
+			case LUCE_DIVINA:
+				return CostantiAbilitaInnate.ABILITA_LUCE_DIVINA_COSTO_LANCIO;
 			case DARDO_ARCANO:
 				return classe == TipoPersonaggio.MAGO || classe == TipoPersonaggio.MAGA
 						? CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO : CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO;

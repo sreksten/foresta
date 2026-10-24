@@ -108,6 +108,9 @@ public final class EsecutoreTattiche {
 			case DARDO_ARCANO:
 				usaUnAbilita(attore, TipoAbilita.DARDO_ARCANO, bersaglio, gruppoDellAttore, gruppoNemico);
 				break;
+			case LUCE_DIVINA:
+				usaUnAbilita(attore, TipoAbilita.LUCE_DIVINA, bersaglio, gruppoDellAttore, gruppoNemico);
+				break;
 			// La Resurrezione consuma una pergamena se il gruppo ne ha una (consumaLaPergamena non fa niente se non ce ne sono)
 			case RESURREZIONE:
 				annuncia(attore, bersaglio);
@@ -180,7 +183,7 @@ public final class EsecutoreTattiche {
 			case CAMBIA_ARMA:
 				cambiaArma(attore, decisione);
 				break;
-			// Tutto il resto sono incantesimi di una classe precisa: ARIA, ACQUA, ..., MORTE, SILENZIO, LUCE_DIVINA. INCANTESIMO_DI_DANNO e
+			// Tutto il resto sono incantesimi di una classe precisa: ARIA, ACQUA, ..., MORTE, SILENZIO. INCANTESIMO_DI_DANNO e
 			// INCANTESIMO_DEL_REPERTORIO non arrivano qui: il Valutatore li ha già trasformati in quello scelto (Decisione.getTipoEseguito)
 			default:
 				lanciaUnIncantesimoDiDanno(attore, decisione, gruppoDellAttore);
@@ -240,10 +243,7 @@ public final class EsecutoreTattiche {
 		for (Personaggio colpito : colpiti) {
 			uccisioni.registra(attore, colpito);
 		}
-		// Chi la conosce per natura (Sacerdote, Sacerdotessa) non consuma pergamene
-		if (!(classe == TipoIncantesimo.LUCE_DIVINA && LuceDivina.conosciutaDa(attore.getClasse()))) {
-			consumaLaPergamena(gruppoDellAttore, classe);
-		}
+		consumaLaPergamena(gruppoDellAttore, classe);
 	}
 
 	/**

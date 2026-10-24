@@ -28,6 +28,8 @@ public final class FabbricaAbilita {
 				return new PelleDiCorteccia(utilizzatore);
 			case RIGENERAZIONE:
 				return new Rigenerazione(utilizzatore);
+			case LUCE_DIVINA:
+				return new LuceDivina(utilizzatore);
 			case DARDO_ARCANO:
 				return new DardoArcano(utilizzatore);
 			default:

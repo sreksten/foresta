@@ -151,8 +151,14 @@ public enum TipoPersonaggio {
 		GARGOYLE.moltiplicaIlDannoSubito(TipoDanno.CONTUNDENTE, 1.5d);
 		GARGOYLE.moltiplicaIlDannoSubito(TipoDanno.PERFORANTE, 0.75d);
 		GARGOYLE.moltiplicaIlDannoSubito(TipoDanno.TAGLIENTE, 0.75d);
-		// Nessun incantesimo lo tocca, e la pietra non sanguina, non si infetta, non si avvelena e non si immobilizza
+		// Nessun incantesimo lo tocca, e nessun danno che non sia fisico (elementale o magico, di un incantesimo o di un'abilità); la pietra non
+		// sanguina, non si infetta, non si avvelena e non si immobilizza
 		GARGOYLE.immuneATuttiGliIncantesimi = true;
+		for (TipoDanno tipoDanno : TipoDanno.values()) {
+			if (tipoDanno.getCategoriaDanno() != CategoriaDanno.FISICO) {
+				GARGOYLE.moltiplicaIlDannoSubito(tipoDanno, 0.0d);
+			}
+		}
 		GARGOYLE.immuneAEffetti.addAll(EnumSet.of(TipoEffettoDiStato.SANGUINAMENTO, TipoEffettoDiStato.INFETTATO,
 				TipoEffettoDiStato.AVVELENATO, TipoEffettoDiStato.IMMOBILIZZATO));
 		// Il necromante vive di energia necrotica e ne è temprato, ma è vivo: la luce sacra lo ferisce più del normale

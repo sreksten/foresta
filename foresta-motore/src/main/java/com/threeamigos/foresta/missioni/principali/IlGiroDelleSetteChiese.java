@@ -40,7 +40,6 @@ import java.util.List;
 public class IlGiroDelleSetteChiese extends MissioneAPassi {
 
 	public static final int TEMPLI_DA_LIBERARE = 7;
-	public static final int INCANTESIMI_LUCE_DIVINA = 2;
 	public static final int INCANTESIMI_ALBA_SACRA = 2;
 	public static final TipoIncantesimo[] INCANTESIMI_ELEMENTALI = {TipoIncantesimo.ARIA, TipoIncantesimo.ACQUA,
 			TipoIncantesimo.TERRA, TipoIncantesimo.FUOCO, TipoIncantesimo.FULMINE, TipoIncantesimo.GELO};
@@ -138,17 +137,15 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 	}
 
 	/**
-	 * Due Luce Divina, due Alba Sacra e un incantesimo elementale a caso, che si ricorda per il ringraziamento.
+	 * Due Alba Sacra e un incantesimo elementale a caso, che si ricorda per il ringraziamento.
 	 */
 	private void premia() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		TipoIncantesimo elementale = INCANTESIMI_ELEMENTALI[Dado.tiraAncheAUnaFaccia(INCANTESIMI_ELEMENTALI.length) - 1];
 		aggiungiProprieta(INCANTESIMO_ELEMENTALE, elementale.name());
-		gruppo.addIncantesimi(TipoIncantesimo.LUCE_DIVINA, INCANTESIMI_LUCE_DIVINA);
 		gruppo.addIncantesimi(TipoIncantesimo.ALBA_SACRA, INCANTESIMI_ALBA_SACRA);
 		gruppo.addIncantesimi(elementale, 1);
-		BusEventi.pubblica(new NotificaTestoParagrafo("In dono dai devoti: " + Numeri.getCardinaleM(INCANTESIMI_LUCE_DIVINA) + " "
-				+ TipoIncantesimo.LUCE_DIVINA.getNomePlurale() + ", " + Numeri.getCardinaleM(INCANTESIMI_ALBA_SACRA) + " "
+		BusEventi.pubblica(new NotificaTestoParagrafo("In dono dai devoti: " + Numeri.getCardinaleM(INCANTESIMI_ALBA_SACRA) + " "
 				+ TipoIncantesimo.ALBA_SACRA.getNomePlurale() + " e un " + elementale.getNomeSingolare() + "."));
 		OffertaDelSacerdote.avvisaSeIlGruppoEPieno(getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "la sacerdotessa" : "il sacerdote");
 	}
@@ -192,7 +189,6 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, "Sette templi liberi! Grazie a voi i devoti potranno tornare "
 						+ "in pellegrinaggio.").daSecondo(2))
 				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, "Accettate questi doni a nome loro: "
-						+ Numeri.getCardinaleM(INCANTESIMI_LUCE_DIVINA) + " " + TipoIncantesimo.LUCE_DIVINA.getNomePlurale() + ", "
 						+ Numeri.getCardinaleM(INCANTESIMI_ALBA_SACRA) + " " + TipoIncantesimo.ALBA_SACRA.getNomePlurale()
 						+ " e un " + getIncantesimoElementale().getNomeSingolare() + "."))
 				.conBattuta(BattutaIntermezzo.di(ID_EROE, "Siamo onorati. Che la Luce vi accompagni.")));

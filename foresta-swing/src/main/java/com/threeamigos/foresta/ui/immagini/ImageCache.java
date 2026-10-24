@@ -287,7 +287,6 @@ public class ImageCache {
 		spriteIncantesimi[TipoIncantesimo.RESURREZIONE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Resurrezione.gif");
 		spriteIncantesimi[TipoIncantesimo.ALBA_SACRA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/AlbaSacra.gif");
 		spriteIncantesimi[TipoIncantesimo.SILENZIO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Silenzio.gif");
-		spriteIncantesimi[TipoIncantesimo.LUCE_DIVINA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/LuceDivina.gif");
 
 		spriteAmicizia = BufferedImageBuilder.buildBufferedImage("icone/Amicizia.gif");
 		spriteCombattimento = BufferedImageBuilder.buildBufferedImage("icone/Combattimento.gif");

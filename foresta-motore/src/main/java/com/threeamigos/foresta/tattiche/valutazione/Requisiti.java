@@ -7,7 +7,6 @@ import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
-import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -81,6 +80,12 @@ public final class Requisiti {
 					return "il dardo arcano non si può lanciare (classe, MAGIA o silenzio)";
 				}
 				return contro(azione, attore, bersaglio, TipoDanno.ARCANO, contesto);
+			// La luce divina del Sacerdote: come il dardo, costa solo MAGIA
+			case LUCE_DIVINA:
+				if (!AbilitaInnate.puoUsare(attore, TipoAbilita.LUCE_DIVINA)) {
+					return "la luce divina non si può invocare (classe, MAGIA o silenzio)";
+				}
+				return contro(azione, attore, bersaglio, TipoDanno.SACRO, contesto);
 			case RESURREZIONE:
 				if (!puoLanciare(attore, TipoIncantesimo.RESURREZIONE, contesto)) {
 					return "manca la pergamena o la MAGIA per la Resurrezione";
@@ -169,7 +174,7 @@ public final class Requisiti {
 	}
 
 	/**
-	 * Gli incantesimi di una classe precisa: ARIA, ACQUA, TERRA, FUOCO, FULMINE, GELO, VELENO, MORTE, SILENZIO, LUCE_DIVINA
+	 * Gli incantesimi di una classe precisa: ARIA, ACQUA, TERRA, FUOCO, FULMINE, GELO, VELENO, MORTE, SILENZIO
 	 */
 	private static String incantesimoSingolo(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
 		TipoIncantesimo classe = azione.getTipo().getClasseIncantesimo();
@@ -234,9 +239,6 @@ public final class Requisiti {
 			return false;
 		}
 		if (contesto.getPergamene(classe) > 0) {
-			return true;
-		}
-		if (classe == TipoIncantesimo.LUCE_DIVINA && LuceDivina.puoLanciarlaInnata(attore)) {
 			return true;
 		}
 		return contesto.isMostro(attore) && attore.isMagico() && attore.getRepertorioIncantesimi().contains(classe);

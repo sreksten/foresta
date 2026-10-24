@@ -88,7 +88,6 @@ class ScenarioGiroDelleSetteChieseTest {
             giro.controllaPostLocazione();
             assertTrue(giro.getDescrizione().endsWith("Ne mancano sei."), giro.getDescrizione());
 
-            int luce = partita.gruppo().getIncantesimi(TipoIncantesimo.LUCE_DIVINA);
             int alba = partita.gruppo().getIncantesimi(TipoIncantesimo.ALBA_SACRA);
             int elementali = elementali(partita);
             for (int i = 1; i < 6; i++) {
@@ -102,13 +101,12 @@ class ScenarioGiroDelleSetteChieseTest {
             partita.gruppo().setCoordinate(templi.get(6));
             giro.controllaPostLocazione();
             assertFalse(giro.isCompleta(), "prima l'offerta del sacerdote");
-            assertEquals(luce + 2, partita.gruppo().getIncantesimi(TipoIncantesimo.LUCE_DIVINA));
             assertEquals(alba + 2, partita.gruppo().getIncantesimi(TipoIncantesimo.ALBA_SACRA));
             assertEquals(elementali + 1, elementali(partita));
             Intermezzo ringraziamento = RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA);
             assertNotNull(ringraziamento);
             String grazie = testo(ringraziamento.getPagine().get(0));
-            assertTrue(grazie.contains("due incantesimi della Luce Divina"), grazie);
+            assertFalse(grazie.contains("Luce Divina"), "la luce divina non è più una pergamena: " + grazie);
             assertTrue(grazie.contains("due incantesimi dell'Alba Sacra"), grazie);
         }
     }

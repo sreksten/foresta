@@ -758,10 +758,7 @@ public abstract class LocazioneBase implements Locazione {
 						return Stato.GIOCO_PERSO;
 					}
 
-					// Chi la conosce per natura (Sacerdote, Sacerdotessa) non consuma pergamene
-					if (!(incantesimo.getClasse() == TipoIncantesimo.LUCE_DIVINA && LuceDivina.conosciutaDa(formulante.getClasse()))) {
-						gruppo.subIncantesimi(incantesimo.getClasse(), 1);
-					}
+					gruppo.subIncantesimi(incantesimo.getClasse(), 1);
 
 					if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
 						setCompleta(true);
@@ -1097,9 +1094,9 @@ public abstract class LocazioneBase implements Locazione {
 			comandiPossibili.add(Comando.INTERRUZIONE_COMBATTIMENTO);
 		}
 		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo,
-		// oppure se un Sacerdote ha la MAGIA per l'alba sacra o la luce divina, o se qualcuno può usare un'abilità innata (Chierico, Druido, Mago, Elfo) o un canto
+		// oppure se un Sacerdote ha la MAGIA per l'alba sacra, o se qualcuno può usare un'abilità innata (Chierico, Druido, Sacerdote, Mago, Elfo) o un canto
 		boolean incantesimoPossibile = chiAgisce.stream()
-				.anyMatch(p -> AlbaSacra.puoLanciarlaInnata(p) || LuceDivina.puoLanciarlaInnata(p)
+				.anyMatch(p -> AlbaSacra.puoLanciarlaInnata(p)
 						|| !CantoDelBardo.cantiUtili(p, gruppo, gruppoAvversario).isEmpty()
 						|| !AbilitaInnate.abilitaUtili(p, gruppo, gruppoAvversario).isEmpty());
 		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {

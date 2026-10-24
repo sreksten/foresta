@@ -11,7 +11,7 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 ## Da fare per prime
 
 - Controllare i bug trovati in assessment.md
-- **Alba Sacra e Luce Divina** sono anche abilità innate dei Sacerdoti. In effetti dovrebbero essere unicamente abilità innate.
+- **Alba Sacra** è anche un'abilità innata dei Sacerdoti. In effetti dovrebbe essere unicamente un'abilità innata (la Luce Divina lo è già: `abilita.LuceDivina`, non esiste più come pergamena).
 - **Amicizia**: si basa su un tiro sul carisma, ma se il carisma è superiore al numero di facce il tiro riesce sempre; occorrerebbe mettere un cap.
 - **Più incantesimi e un'economia da rivedere.** A metà partita il gruppo non ha più le monete per comprare incantesimi o artefatti: i soldi non bastano e le fonti sono poche. Servono un modo per recuperare più incantesimi e una revisione dell'economia del mondo (vedi [`economia.md`](economia.md), "Che cosa non torna"). Una delle poche strade praticabili, oltre alle missioni, è il bottino lasciato dai mostri sconfitti: aggiungervi anche le monete. Oggi non ci sono, e `economia.md` lo dichiara scelta voluta (scheletri e spettri non hanno niente da lasciare, un bottino solo per alcuni sarebbe incoerente): la decisione va rivista, per esempio dando le monete solo alle classi che portano una borsa (vedi `BottinoDegliAvversari` per le pergamene). Da stabilire quante, in funzione del livello del mondo e dell'avversario, senza far crollare i prezzi dei negozi.
 - **Viaggio rapido.** Un modo per tornare in una locazione già visitata senza rifare la strada (città, locande, templi...), probabilmente a pagamento o a costo di tempo (ore di gioco, con la notte e gli eventi della linea temporale). Da decidere da dove si parte (mappa a tutto schermo?), cosa succede strada facendo e se vale per ogni tipo di locazione.
@@ -74,7 +74,7 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
   | Tipo di danno | Incantesimo oggi | Manca? | Effetto di stato nativo (`TipoDanno.getEffetti`) |
   | :--- | :--- | :--- | :--- |
   | Aria, Acqua, Terra, Fuoco, Fulmine, Gelo, Veleno | Aria, Acqua, Terra, Fuoco, Fulmine, Gelo, Veleno | no | atterrato, bagnato, immobilizzato o accecato, bruciato, stordito, rallentato o congelato, avvelenato |
-  | **Sacro** | Luce Divina (innata di Sacerdote e Sacerdotessa, a pergamena per gli altri; colpisce anche lo Scheletro alleato) | no | accecato (interagisce con `MALEDETTO`, `INFETTATO`: Rigetto, Purificazione) |
+  | **Sacro** | Luce Divina (abilità innata di Sacerdote e Sacerdotessa; colpisce anche lo Scheletro alleato) | no | accecato (interagisce con `MALEDETTO`, `INFETTATO`: Rigetto, Purificazione) |
   | **Necrotico** | solo Morte, che non fa un danno vero: uccide chi ha meno di un quarto della salute massima, altrimenti si ritorce contro chi la lancia (gli toglie un quarto della salute) | **sì**, un incantesimo che faccia danno necrotico come gli altri | infettato (interagisce con `MALEDETTO`: Mietitura) |
   | **Acido** | nessuno | **sì** | nessuno (interagisce con `AVVELENATO`: Reazione Tossica) |
   | **Sonico** | nessuno | **sì** | assordato (interagisce con `ASSORDATO`: Disorientamento) |

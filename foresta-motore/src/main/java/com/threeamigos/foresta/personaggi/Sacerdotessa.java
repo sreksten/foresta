@@ -8,7 +8,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * Come il Maga, ma con Saggezza e robustezza al posto della sola Intelligenza, e senza dardo arcano: il suo incantesimo
- * innato sono l'alba sacra e la luce divina, che non consumano pergamene (vedi AlbaSacra.puoLanciarlaInnata e LuceDivina.puoLanciarlaInnata). Usa il bastone magico e la mazza.
+ * innato sono l'alba sacra, che non consuma pergamene (vedi AlbaSacra.puoLanciarlaInnata), e la luce divina, una sua abilità innata (vedi abilita.LuceDivina). Usa il bastone magico e la mazza.
  */
 public class Sacerdotessa extends PersonaggioBase implements Personaggio {
 

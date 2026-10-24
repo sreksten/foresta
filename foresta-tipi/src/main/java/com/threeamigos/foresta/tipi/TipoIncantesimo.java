@@ -33,8 +33,7 @@ public enum TipoIncantesimo {
 	MORTE(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.SINGOLO_SOLO_VIVI, TipoDanno.NECROTICO, Comando.MORTE),
 	RESURREZIONE(CategoriaIncantesimo.BENEFICO, PortataIncantesimo.SINGOLO_QUALSIASI, null, Comando.RESURREZIONE),
 	ALBA_SACRA(CategoriaIncantesimo.BENEFICO, PortataIncantesimo.GRUPPO, null, Comando.ALBA_SACRA),
-	SILENZIO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.GRUPPO, TipoDanno.ARCANO, Comando.SILENZIO),
-	LUCE_DIVINA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.SACRO, Comando.LUCE_DIVINA);
+	SILENZIO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.GRUPPO, TipoDanno.ARCANO, Comando.SILENZIO);
 
 	/**
 	 * L'incantesimo che il comando attiva.
@@ -145,8 +144,6 @@ public enum TipoIncantesimo {
 				return CostantiIncantesimi.INCANTESIMO_ALBA_SACRA_COSTO_LANCIO;
 			case SILENZIO:
 				return CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_LANCIO;
-			case LUCE_DIVINA:
-				return CostantiIncantesimi.INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO;
 			default:
 				throw new IllegalStateException("Costo non previsto per " + this);
 		}
@@ -179,8 +176,6 @@ public enum TipoIncantesimo {
 				return CostantiIncantesimi.INCANTESIMO_ALBA_SACRA_COSTO_ACQUISTO;
 			case SILENZIO:
 				return CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_ACQUISTO;
-			case LUCE_DIVINA:
-				return CostantiIncantesimi.INCANTESIMO_LUCE_DIVINA_COSTO_ACQUISTO;
 			default:
 				throw new IllegalStateException("Costo non previsto per " + this);
 		}

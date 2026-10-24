@@ -204,8 +204,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	public Set<TipoIncantesimo> getRepertorioIncantesimi() {
 		Set<TipoIncantesimo> repertorio = EnumSet.noneOf(TipoIncantesimo.class);
 		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
-			// La Luce Divina è dei sacerdoti del giocatore e di chi la compra: i mostri non la lanciano
-			if (tipoIncantesimo.getCategoriaIncantesimo() == CategoriaIncantesimo.MALEFICO && tipoIncantesimo != TipoIncantesimo.LUCE_DIVINA
+			if (tipoIncantesimo.getCategoriaIncantesimo() == CategoriaIncantesimo.MALEFICO
 					&& (tipoIncantesimo != TipoIncantesimo.MORTE || isParteConValoriMassimi())) {
 				repertorio.add(tipoIncantesimo);
 			}
