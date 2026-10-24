@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
-import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
+import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
 import java.util.ArrayList;

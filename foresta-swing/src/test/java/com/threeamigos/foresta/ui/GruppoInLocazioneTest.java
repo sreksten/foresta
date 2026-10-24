@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.immagini.VersiDeiPersonaggi;
+import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -11,9 +14,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import com.threeamigos.foresta.ui.immagini.ImageCache;
-import com.threeamigos.foresta.ui.immagini.VersiDeiPersonaggi;
-import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroLocazione;
 
 /**
  * I personaggi nel riquadro della locazione: lo spazio si divide in quattro, il gruppo si dispone attorno alla terza

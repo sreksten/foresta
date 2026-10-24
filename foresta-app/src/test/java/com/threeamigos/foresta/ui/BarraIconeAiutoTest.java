@@ -6,20 +6,18 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoImpostazioneAiuto;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.ui.barra.ComandiPossibili;
+import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIcone;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import com.threeamigos.foresta.ui.barra.ComandiPossibili;
-import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIcone;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * L'interruttore dell'aiuto in fondo alla barra delle icone, e il cartiglio dell'aiuto che resta dentro lo schermo.

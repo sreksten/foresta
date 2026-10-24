@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.eventi.comandigiocatore;
 
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 
 /**
  * Il giocatore spende un punto abilità di un personaggio su un attributo primario (doppio click nell'inventario).

@@ -1,13 +1,10 @@
 package com.threeamigos.foresta.strumenti;
 
-import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.dado.TruccatoreDiDadi;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalInt;
+
+import java.util.*;
 
 /**
  * I trucchi che chi sviluppa accende dalla finestra di prova: per ogni {@link ContestoLancio} un trucco permanente

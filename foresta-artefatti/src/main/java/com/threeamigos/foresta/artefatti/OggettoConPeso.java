@@ -7,6 +7,9 @@ package com.threeamigos.foresta.artefatti;
  */
 public interface OggettoConPeso {
 
+    /**
+     * Il peso dell'oggetto.
+     */
     double getPeso();
 
 }

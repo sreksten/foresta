@@ -1,17 +1,13 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.serializzazione.Serializzabile;
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
+import com.threeamigos.foresta.serializzazione.Serializzabile;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 

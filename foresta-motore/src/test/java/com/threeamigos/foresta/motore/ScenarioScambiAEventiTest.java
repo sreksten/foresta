@@ -1,16 +1,16 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioGruppo;
+import com.threeamigos.foresta.artefatti.VistaArtefatto;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoCommutazioneElenco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpesaPuntoAbilita;
-import com.threeamigos.foresta.artefatti.VistaArtefatto;
+import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioGruppo;
 import com.threeamigos.foresta.interfacce.VistaMissione;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 

@@ -1,15 +1,14 @@
 package com.threeamigos.foresta.ui.tattiche;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.util.List;
-import java.util.function.Consumer;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+
+import java.awt.*;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Il menu a discesa della schermata delle tattiche: un popup che si apre sotto (o sopra, se sotto non c'è posto) il punto cliccato, con le scelte nel

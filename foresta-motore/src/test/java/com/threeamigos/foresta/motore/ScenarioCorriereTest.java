@@ -1,15 +1,17 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
+import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.IlContrabbandiere;
 import com.threeamigos.foresta.missioni.incarichi.IlCorriere;
-import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.richieste.Spedizione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -17,8 +19,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 
 /**
  * Il corriere: una cosa da portare da una città all'altra, che il destinatario paga alla consegna; le spedizioni

@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
 import com.threeamigos.foresta.tipi.TipoBottino;
 

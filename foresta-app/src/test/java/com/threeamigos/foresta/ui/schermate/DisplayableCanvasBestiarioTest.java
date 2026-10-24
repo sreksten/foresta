@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.abilita.AbilitaInnateDiClasse;
 import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
@@ -7,7 +8,6 @@ import com.threeamigos.foresta.interfacce.GestoreBestiario;
 import com.threeamigos.foresta.modellodati.BestiarioMD;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.personaggi.MoltiplicatoriDiClasse;
-import com.threeamigos.foresta.abilita.AbilitaInnateDiClasse;
 import com.threeamigos.foresta.tipi.AbilitaInnataDiClasse;
 import com.threeamigos.foresta.tipi.CaratteristicaDiClasse;
 import com.threeamigos.foresta.tipi.MoltiplicatoreDiClasse;
@@ -20,12 +20,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Il bestiario a schermo: si disegna con tutte le voci chiuse e con tutte aperte, un clic su una riga ne sceglie la voce, e tutti i testi che mostra

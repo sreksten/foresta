@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.ui.schermate;
 
-import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;

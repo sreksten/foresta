@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -13,14 +13,29 @@ import java.util.Collections;
  */
 public interface Arma {
 
+    /**
+     * I danni base dell'arma, prima di incantamenti e attributi.
+     */
     int getDanni();
 
+    /**
+     * Il livello dell'arma.
+     */
     int getLivello();
 
+    /**
+     * Il tipo di danno fisico che l'arma dà.
+     */
     TipoDanno getTipoDanno();
 
+    /**
+     * Se l'arma ha almeno un incantamento.
+     */
     boolean isIncantata();
 
+    /**
+     * Gli incantamenti dell'arma.
+     */
     Collection<IncantamentoMD> getIncantamenti();
 
     /**

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.tipi.tattiche;
 
-import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.EnumMap;

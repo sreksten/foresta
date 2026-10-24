@@ -1,8 +1,5 @@
 package com.threeamigos.foresta.artefatti.tipi;
 
-import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
-import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
-import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.testi.Testi;
 
@@ -21,48 +18,114 @@ import com.threeamigos.foresta.testi.Testi;
  */
 public enum TipoArtefatto {
 
+    /**
+     * Una spada, a una mano: danno tagliente.
+     */
     SPADA(CategoriaArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.TAGLIENTE),
+    /**
+     * Una mazza, a una mano: danno contundente.
+     */
     MAZZA(CategoriaArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.CONTUNDENTE),
+    /**
+     * Un'ascia, a una mano: danno tagliente.
+     */
     ASCIA(CategoriaArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.TAGLIENTE),
     /** Arma a due mani. */
     SPADONE(CategoriaArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ENTRAMBE_LE_MANI, TipoDanno.TAGLIENTE),
     /** Arma a due mani, come lo spadone: la falce e il falcione. */
     FALCE(CategoriaArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ENTRAMBE_LE_MANI, TipoDanno.TAGLIENTE),
+    /**
+     * Una lancia, a una mano: danno perforante.
+     */
     LANCIA(CategoriaArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.PERFORANTE),
 
+    /**
+     * Un bastone magico: danno contundente, aumenta il potere magico.
+     */
     BASTONE_MAGICO(CategoriaArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.CONTUNDENTE),
 
+    /**
+     * Un libro magico: aumenta il potere magico, si tiene nella mano secondaria.
+     */
     LIBRO_MAGICO(CategoriaArtefatto.POTENZIAMENTO_POTERE_MAGICO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_SECONDARIA),
 
+    /**
+     * Uno scudo, nella mano secondaria.
+     */
     SCUDO(CategoriaArtefatto.SCUDO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_SECONDARIA),
 
+    /**
+     * Un elmo, per la testa.
+     */
     ELMO(CategoriaArtefatto.ELMO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.TESTA),
 
+    /**
+     * Un'armatura, per il corpo.
+     */
     ARMATURA(CategoriaArtefatto.ARMATURA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.CORPO),
+    /**
+     * Una veste, per il corpo: protegge dalla magia.
+     */
     VESTE(CategoriaArtefatto.ARMATURA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.CORPO),
+    /**
+     * Una maschera, per il volto.
+     */
     MASCHERA(CategoriaArtefatto.ARMATURA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.VOLTO),
 
+    /**
+     * Un paio di schinieri, per le gambe.
+     */
     SCHINIERI(CategoriaArtefatto.SCHINIERI, TipoCardinalitaArtefatto.PAIO, TipoSlotArtefatto.GAMBE),
 
+    /**
+     * Un anello, un accessorio.
+     */
     ANELLO(CategoriaArtefatto.ALTRO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ACCESSORIO),
+    /**
+     * Un talismano, un accessorio.
+     */
     TALISMANO(CategoriaArtefatto.ALTRO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ACCESSORIO),
+    /**
+     * Un ninnolo, un accessorio.
+     */
     NINNOLO(CategoriaArtefatto.ALTRO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ACCESSORIO),
 
     // Ingredienti magici: si comprano dal venditore di pergamene e si fondono sugli artefatti dall'incantatore.
     // Ognuno ha la sua specialità (vedi GeneratoreArtefattiTabelle e ingredienti.txt).
+    /**
+     * Una pergamena: un ingrediente magico che dà modificatori alle caratteristiche primarie.
+     */
     PERGAMENA(CategoriaArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO),
+    /**
+     * Una gemma: un ingrediente magico che dà incantamenti elementali.
+     */
     GEMMA(CategoriaArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO),
+    /**
+     * Un monile: un ingrediente magico che dà incantamenti magici.
+     */
     MONILE(CategoriaArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO),
+    /**
+     * Un gingillo: un ingrediente magico che dà modificatori agli attributi d'attacco.
+     */
     GINGILLO(CategoriaArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO),
+    /**
+     * Un sigillo: un ingrediente magico che dà modificatori agli attributi di difesa.
+     */
     SIGILLO(CategoriaArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO),
 
     // Un oggetto che sul banco dell'incantatore fa salire di un livello un artefatto, invece di dargli degli effetti: si trova
     // solo nei cofani, non si compra né si vende (vedi isAggiornamento, RegoleIncantatura e artefatti2.txt per i nomi).
+    /**
+     * Un oggetto che fa salire di un livello un artefatto.
+     */
     AGGIORNAMENTO(CategoriaArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO),
 
     // Un libro leggendario che sul banco dell'incantatore, invece di dare effetti, riprogramma l'artefatto: lo spezza negli
     // ingredienti dei suoi incantamenti. Si trova solo nei cofani, non si compra né si vende (vedi isRiprogrammazione,
     // RegoleIncantatura e LibroTecnico: è The C Programming Language).
+    /**
+     * Un libro che riprogramma un artefatto, spezzandolo negli ingredienti dei suoi incantamenti.
+     */
     RIPROGRAMMAZIONE(CategoriaArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO);
 
     private final CategoriaArtefatto categoriaArtefatto;
@@ -82,26 +145,44 @@ public enum TipoArtefatto {
         this(categoriaArtefatto, cardinalita, tipoSlotArtefatto, null);
     }
 
+    /**
+     * La categoria dell'artefatto.
+     */
     public CategoriaArtefatto getCategoria() {
         return categoriaArtefatto;
     }
 
+    /**
+     * Se si conta per singolo pezzo o per paio.
+     */
     public TipoCardinalitaArtefatto getCardinalita() {
         return cardinalita;
     }
 
+    /**
+     * Lo slot in cui si equipaggia.
+     */
     public TipoSlotArtefatto getSlotArtefatto() {
         return tipoSlotArtefatto;
     }
 
+    /**
+     * Il tipo di danno fisico, per le armi; null per gli altri.
+     */
     public TipoDanno getTipoDanno() {
         return tipoDanno;
     }
 
+    /**
+     * La descrizione del tipo, per i testi.
+     */
     public String getDescrizione() {
         return Testi.testoOCostante(this, "DESCRIZIONE");
     }
 
+    /**
+     * A che cosa serve, per i testi.
+     */
     public String getUtilizzo() {
         return Testi.testoOCostante(this, "UTILIZZO");
     }

@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.modificatori;
 
-import com.threeamigos.foresta.serializzazione.Serializzabile;
-import com.threeamigos.foresta.serializzazione.MappaProprieta;
-import com.threeamigos.foresta.serializzazione.LettoreCampi;
-import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
+import com.threeamigos.foresta.serializzazione.MappaProprieta;
+import com.threeamigos.foresta.serializzazione.Serializzabile;
 
 import java.io.IOException;
 import java.util.Objects;

@@ -11,6 +11,9 @@ import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
  */
 public interface GeneratoreArtefatti {
 
+	/**
+	 * Il generatore del gioco, con le sue tabelle e la sua grammatica.
+	 */
 	static GeneratoreArtefatti istanza() {
 		return GeneratoreArtefattiTabelle.ISTANZA;
 	}

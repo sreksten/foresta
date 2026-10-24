@@ -1,17 +1,17 @@
 package com.threeamigos.foresta.ui.schermate;
 
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoVenditaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoNegozio;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * La bottega di un commerciante di artefatti (armaiolo o venditore di pergamene): a sinistra l'inventario

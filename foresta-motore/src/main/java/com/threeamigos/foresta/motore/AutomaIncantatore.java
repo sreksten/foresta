@@ -1,17 +1,13 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAvvisoIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
 import com.threeamigos.foresta.interfacce.VistaBancoDiLavoro;
-import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * La bottega dell'incantatore: a sinistra l'inventario del gruppo, a destra il banco di lavoro.

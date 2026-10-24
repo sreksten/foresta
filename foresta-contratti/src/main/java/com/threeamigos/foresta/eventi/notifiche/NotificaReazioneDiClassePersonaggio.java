@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
 
 /**
  * Un Personaggio, per la sua classe, è debole, resiste o è immune a un tipo di danno che ha appena subito (vedi

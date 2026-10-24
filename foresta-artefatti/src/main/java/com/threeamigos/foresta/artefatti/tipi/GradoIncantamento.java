@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.artefatti.tipi;
 
 import com.threeamigos.foresta.artefatti.CostantiArtefatti;
-import com.threeamigos.foresta.artefatti.ListinoPergamene;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -16,8 +15,17 @@ import com.threeamigos.foresta.testi.Testi;
  */
 public enum GradoIncantamento {
 
+	/**
+	 * Il grado degli incantamenti dei primi livelli.
+	 */
 	MINORE(5, 0.05),
+	/**
+	 * Il grado degli incantamenti dei livelli intermedi.
+	 */
 	MEDIO(10, 0.10),
+	/**
+	 * Il grado degli incantamenti dei livelli alti.
+	 */
 	MAGGIORE(15, 0.20);
 
 	/**
@@ -55,6 +63,9 @@ public enum GradoIncantamento {
 		this.coefficiente = coefficiente;
 	}
 
+	/**
+	 * I danni fissi che un incantamento di questo grado aggiunge.
+	 */
 	public int getBonusFisso() {
 		return bonusFisso;
 	}
@@ -73,6 +84,9 @@ public enum GradoIncantamento {
 		return ordinal() + 1;
 	}
 
+	/**
+	 * Il nome del grado, per i testi.
+	 */
 	public String getNome() {
 		return Testi.testoOCostante(this, "NOME");
 	}

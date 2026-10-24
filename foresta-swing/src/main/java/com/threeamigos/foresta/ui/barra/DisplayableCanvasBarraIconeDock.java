@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.ui.barra;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.ui.DisplayableCanvas;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import com.threeamigos.foresta.ui.DisplayableCanvas;
 
 /**
  * La barra delle icone come il Dock di macOS: l'icona sotto il cursore si ingrandisce, le vicine un po' meno man

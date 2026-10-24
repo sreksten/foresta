@@ -3,12 +3,9 @@ package com.threeamigos.foresta.modellodati;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -147,9 +144,7 @@ class MissioneMDTest {
 
     private static List<MissioneMD> listaDi(MissioneMD... missioni) {
         List<MissioneMD> lista = new ArrayList<>();
-        for (MissioneMD missione : missioni) {
-            lista.add(missione);
-        }
+        Collections.addAll(lista, missioni);
         return lista;
     }
 }

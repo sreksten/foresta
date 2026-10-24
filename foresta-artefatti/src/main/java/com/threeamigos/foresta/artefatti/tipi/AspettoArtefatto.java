@@ -1,8 +1,5 @@
 package com.threeamigos.foresta.artefatti.tipi;
 
-import com.threeamigos.foresta.artefatti.SpadaNormalmenteNascosta;
-import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
-
 /**
  * L'aspetto speciale di un artefatto: l'immagine che ha nelle schermate quando non è quella del suo {@link TipoArtefatto}. Gli
  * artefatti normali non ne hanno uno (il loro aspetto è il loro tipo: una spada ha l'immagine di una spada); lo hanno i pochi

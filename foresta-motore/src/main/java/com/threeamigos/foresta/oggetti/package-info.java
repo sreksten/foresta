@@ -20,4 +20,3 @@
  */
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.artefatti.ArtefattoMD;

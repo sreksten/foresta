@@ -1,14 +1,14 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.canti.CantoCurativo;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
-import com.threeamigos.foresta.tattiche.valutazione.Requisiti;
 import com.threeamigos.foresta.tattiche.rose.Rose;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tattiche.valutazione.Requisiti;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
@@ -90,7 +90,7 @@ class CureENonMortiTest {
     void unGruppoAvversarioDiSoliNonMortiHaSempreUnPiuFerito() {
         ferisci(scheletroAvversario);
         ContestoTattico contesto = new ContestoTattico(goblin, false, Collections.singletonList(goblin),
-                Arrays.asList(scheletroAvversario), Collections.emptyList());
+                Collections.singletonList(scheletroAvversario), Collections.emptyList());
         assertEquals(Collections.singletonList(scheletroAvversario), Rose.di(TipoRosa.AVVERSARI).candidati(contesto));
     }
 

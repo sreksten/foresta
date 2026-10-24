@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.strumenti;
+package com.threeamigos.foresta.temporizzatore;
 
 /**
  * Un oggetto che può rispondere a un "tick" di un temporizzatore

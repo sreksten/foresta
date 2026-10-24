@@ -7,7 +7,13 @@ package com.threeamigos.foresta.artefatti.tipi;
  */
 public enum TipoCardinalitaArtefatto {
 
+    /**
+     * Un solo pezzo.
+     */
     SINGOLO,
+    /**
+     * Un paio di pezzi.
+     */
     PAIO
 
 }

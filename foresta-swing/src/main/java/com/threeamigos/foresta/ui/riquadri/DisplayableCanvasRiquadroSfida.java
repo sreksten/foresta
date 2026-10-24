@@ -1,21 +1,18 @@
 package com.threeamigos.foresta.ui.riquadri;
 
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
-
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import com.threeamigos.foresta.ui.DisplayableCanvas;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.TestoGrande;
-import com.threeamigos.foresta.ui.DisplayableCanvas;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Il riquadro della sfida a carta, forbici e sasso (vedi carta_forbici_sasso.md): la cornice larga

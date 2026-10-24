@@ -1,19 +1,20 @@
 package com.threeamigos.foresta.interfacce;
 
 import com.threeamigos.foresta.artefatti.Arma;
-import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.artefatti.IncantamentoMD;
-import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.motore.Statistiche;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Un'arma "dà" un tipo di danno se è il suo, o se è quello di uno dei suoi incantamenti.

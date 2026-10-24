@@ -1,32 +1,26 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.SorgentiDelProgetto;
-
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasCommerciante;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIncantatore;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatore;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatoreConsumabili;
+import com.threeamigos.foresta.ui.testo.*;
 import org.junit.jupiter.api.Test;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.ui.schermate.DisplayableCanvasCommerciante;
-import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIncantatore;
-import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatore;
-import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatoreConsumabili;
-import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontSmall;
-import com.threeamigos.foresta.ui.testo.FontTool;
 
 /**
  * Nelle schermate dell'armaiolo, dell'alchimista, del venditore di pergamene e dell'incantatore il nome del negoziante

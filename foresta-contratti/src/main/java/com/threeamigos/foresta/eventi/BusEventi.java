@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.eventi;
 
 import com.threeamigos.foresta.eventi.interni.InternoException;
+import com.threeamigos.foresta.temporizzatore.ThreadPrincipale;
 import com.threeamigos.foresta.strumenti.logger.Logger;
-import com.threeamigos.foresta.strumenti.ThreadPrincipale;
 
 import java.util.List;
 import java.util.Map;

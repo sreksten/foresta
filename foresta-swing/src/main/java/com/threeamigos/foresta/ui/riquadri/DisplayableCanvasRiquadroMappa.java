@@ -7,14 +7,14 @@ import com.threeamigos.foresta.interfacce.VistaMappa;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.ui.sfx.CloudManager;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.schermate.DisegnatoreMappa;
+import com.threeamigos.foresta.ui.sfx.CloudManager;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * La minimappa della schermata di gioco: le caselle conosciute attorno al gruppo.

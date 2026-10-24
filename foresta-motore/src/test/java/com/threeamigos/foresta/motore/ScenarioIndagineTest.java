@@ -1,10 +1,12 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta;
-import com.threeamigos.foresta.missioni.incarichi.LIndagine;
 import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.missioni.incarichi.LIndagine;
+import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -15,8 +17,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 
 /**
  * L'indagine: gli indizi in posti segnati sulla mappa uno alla volta, poi la scelta del colpevole; se è quello giusto

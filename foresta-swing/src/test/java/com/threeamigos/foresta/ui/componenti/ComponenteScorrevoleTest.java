@@ -1,14 +1,13 @@
 package com.threeamigos.foresta.ui.componenti;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+import org.junit.jupiter.api.Test;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Un elenco si scorre (e l'aiuto delle schermate di scambio lo dice) solo se è più alto dello spazio in cui lo si

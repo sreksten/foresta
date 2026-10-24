@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.tattiche;
 
 import com.threeamigos.foresta.abilita.FabbricaAbilita;
+import com.threeamigos.foresta.artefatti.Arma;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.canti.FabbricaCanti;
 import com.threeamigos.foresta.combattimento.*;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -9,11 +11,9 @@ import com.threeamigos.foresta.eventi.interni.InternoDecisioneTattica;
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaAperturaFinestraCombattimento;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.incantesimi.*;
-import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tattiche.valutazione.SceltaIncantesimo;

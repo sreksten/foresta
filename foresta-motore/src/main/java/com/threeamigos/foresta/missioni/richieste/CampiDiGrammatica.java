@@ -1,11 +1,6 @@
 package com.threeamigos.foresta.missioni.richieste;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * I campi di una riga di grammatica scritta come CHIAVE=valore separati da ";" (vedi missioni.txt): li legge e

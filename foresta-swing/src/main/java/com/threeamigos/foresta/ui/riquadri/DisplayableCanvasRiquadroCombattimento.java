@@ -2,10 +2,6 @@ package com.threeamigos.foresta.ui.riquadri;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.List;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
@@ -14,6 +10,10 @@ import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 import com.threeamigos.foresta.ui.testo.FontTool;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
  * Il riquadro del combattimento: tutti i personaggi della locazione, dei due gruppi, nell'ordine in cui agiscono nel round (vedi

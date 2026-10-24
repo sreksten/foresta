@@ -1,18 +1,13 @@
 package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
-import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.serializzazione.Serializzabile;
-import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.artefatti.tipi.*;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
+import com.threeamigos.foresta.serializzazione.Serializzabile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -84,6 +79,9 @@ public class ArtefattoMD implements Serializzabile {
 	private TipoSlotArtefatto slotEquipaggiamento;
 	private int livello;
 	private int danni;
+	/**
+	 * Il prezzo d'acquisto.
+	 */
 	protected int costoAcquisto;
 	private double peso;
 	// L'aspetto speciale nelle schermate, se non è quello del suo tipo (i libri tecnici hanno AspettoArtefatto.LIBRO_TECNICO);
@@ -101,18 +99,30 @@ public class ArtefattoMD implements Serializzabile {
 		return uuid;
 	}
 
+	/**
+	 * Il tipo di artefatto.
+	 */
 	public TipoArtefatto getTipo() {
 		return tipo;
 	}
 
+	/**
+	 * Imposta il tipo di artefatto.
+	 */
 	public void setTipo(TipoArtefatto tipo) {
 		this.tipo = tipo;
 	}
 
+	/**
+	 * La rarità.
+	 */
 	public TipoRaritaArtefatto getRarita() {
 		return rarita;
 	}
 
+	/**
+	 * Imposta la rarità.
+	 */
 	public void setRarita(TipoRaritaArtefatto rarita) {
 		this.rarita = rarita;
 	}
@@ -139,6 +149,9 @@ public class ArtefattoMD implements Serializzabile {
 		this.pezzoLeggendario = pezzoLeggendario;
 	}
 
+	/**
+	 * Il soprannome, o null.
+	 */
 	public String getNomeProprio() {
 		return nomeProprio;
 	}
@@ -153,6 +166,9 @@ public class ArtefattoMD implements Serializzabile {
 		this.nomeProprio = pulito == null || pulito.trim().isEmpty() ? null : pulito;
 	}
 
+	/**
+	 * Il nome, con l'articolo.
+	 */
 	public String getNome() {
 		return nome;
 	}
@@ -165,52 +181,88 @@ public class ArtefattoMD implements Serializzabile {
 		this.nome = pulito == null || pulito.trim().isEmpty() ? NESSUN_NOME : pulito;
 	}
 
+	/**
+	 * La descrizione, "che ...", o null.
+	 */
 	public String getDescrizione() {
 		return descrizione;
 	}
 
+	/**
+	 * Imposta la descrizione; una vuota vale come nessuna.
+	 */
 	public void setDescrizione(String descrizione) {
 		// Vuota o assente è la stessa cosa (null), come dopo un salvataggio
 		String pulita = Serializzabile.pulisciCampo(descrizione);
 		this.descrizione = pulita == null || pulita.isEmpty() ? null : pulita;
 	}
 
+	/**
+	 * Lo slot in cui si equipaggia.
+	 */
 	public TipoSlotArtefatto getSlotEquipaggiamento() {
 		return slotEquipaggiamento;
 	}
 
+	/**
+	 * Imposta lo slot in cui si equipaggia.
+	 */
 	public void setSlotEquipaggiamento(TipoSlotArtefatto slotEquipaggiamento) {
 		this.slotEquipaggiamento = slotEquipaggiamento;
 	}
 
+	/**
+	 * Il livello.
+	 */
 	public int getLivello() {
 		return livello;
 	}
 
+	/**
+	 * Imposta il livello.
+	 */
 	public void setLivello(int livello) {
 		this.livello = livello;
 	}
 
+	/**
+	 * I danni base.
+	 */
 	public int getDanni() {
 		return danni;
 	}
 
+	/**
+	 * Imposta i danni base.
+	 */
 	public void setDanni(int danniBase) {
 		this.danni = danniBase;
 	}
 
+	/**
+	 * Il prezzo d'acquisto.
+	 */
 	public int getCostoAcquisto() {
 		return costoAcquisto;
 	}
 
+	/**
+	 * Imposta il prezzo d'acquisto.
+	 */
 	public void setCostoAcquisto(int costoAcquisto) {
 		this.costoAcquisto = costoAcquisto;
 	}
 
+	/**
+	 * Il peso.
+	 */
 	public double getPeso() {
 		return peso;
 	}
 
+	/**
+	 * Imposta il peso.
+	 */
 	public void setPeso(double peso) {
 		this.peso = peso;
 	}
@@ -236,6 +288,9 @@ public class ArtefattoMD implements Serializzabile {
 		return figliVisibili;
 	}
 
+	/**
+	 * Imposta se l'elenco dei figli è aperto nell'inventario.
+	 */
 	public void setFigliVisibili(boolean figliVisibili) {
 		this.figliVisibili = figliVisibili;
 	}
@@ -279,7 +334,7 @@ public class ArtefattoMD implements Serializzabile {
 	}
 
 	private String getNomeEDescrizione() {
-		return descrizione == null || descrizione.isEmpty() ? nome : nome + ", " + descrizione;
+		return descrizione == null ? nome : nome + ", " + descrizione;
 	}
 
 	/**

@@ -1,24 +1,21 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.Arma;
+import com.threeamigos.foresta.artefatti.IncantamentoMD;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.artefatti.Arma;
-import com.threeamigos.foresta.artefatti.IncantamentoMD;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -59,7 +56,7 @@ class ScenarioDanniAdAreaTest {
             List<Personaggio> fila = goblin(5);
             assertEquals(Arrays.asList(fila.get(1), fila.get(3)),
                     CalcolatoreCombattimento.viciniInvestiti(fila, fila.get(2), TipoInterazioneConEffettiDiStato.ESPLOSIONE_DI_GAS));
-            assertEquals(Arrays.asList(fila.get(1)),
+            assertEquals(Collections.singletonList(fila.get(1)),
                     CalcolatoreCombattimento.viciniInvestiti(fila, fila.get(0), TipoInterazioneConEffettiDiStato.RIGETTO));
             fila.get(3).subSalute(10000, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
             assertEquals(Arrays.asList(fila.get(1), fila.get(4)),

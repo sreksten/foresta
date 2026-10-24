@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 /**

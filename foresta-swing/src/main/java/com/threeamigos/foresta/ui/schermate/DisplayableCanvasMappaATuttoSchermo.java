@@ -1,17 +1,17 @@
 package com.threeamigos.foresta.ui.schermate;
 
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.testi.Articoli;
+import com.threeamigos.foresta.ui.Finestra;
+import com.threeamigos.foresta.ui.barra.Cartiglio;
+import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sfx.CloudManager;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.threeamigos.foresta.ui.Finestra;
-import com.threeamigos.foresta.ui.barra.Cartiglio;
-import com.threeamigos.foresta.ui.immagini.ImageCache;
 
 /**
  * La mappa della foresta a tutto schermo: si trascina con il mouse, mostra il nome della casella sotto il cursore e, in alto, il notiziario.

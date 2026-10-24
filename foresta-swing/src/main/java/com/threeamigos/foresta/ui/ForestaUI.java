@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
@@ -10,18 +11,24 @@ import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.temporizzatore.Temporizzabile;
+import com.threeamigos.foresta.temporizzatore.Temporizzatore;
+import com.threeamigos.foresta.strumenti.TestataSalvataggio;
+import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.FaseDiGioco;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
-import com.threeamigos.foresta.strumenti.logger.Logger;
-import com.threeamigos.foresta.strumenti.Temporizzabile;
-import com.threeamigos.foresta.strumenti.Temporizzatore;
-import com.threeamigos.foresta.strumenti.TestataSalvataggio;
+import com.threeamigos.foresta.ui.barra.ClasseIcona;
+import com.threeamigos.foresta.ui.barra.ComandiPossibili;
+import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
+import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroCombattimento;
 import com.threeamigos.foresta.ui.sfx.CloudManager;
+import com.threeamigos.foresta.ui.sfx.PannelloLogoIniziale;
 import com.threeamigos.foresta.ui.sfx.TracciatoreLogo;
+import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.TestoReazioneDiClasse;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,14 +36,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
-import com.threeamigos.foresta.ui.barra.ClasseIcona;
-import com.threeamigos.foresta.ui.barra.ComandiPossibili;
-import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
-import com.threeamigos.foresta.ui.immagini.ImageCache;
-import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroCombattimento;
-import com.threeamigos.foresta.ui.sfx.PannelloLogoIniziale;
-import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.TestoReazioneDiClasse;
 
 /**
  * La classe radice dell'interfaccia: crea la finestra (sul thread di Swing), il canvas e il prompt, mostra il logo iniziale mentre carica le risorse e poi lascia il posto alla schermata di gioco. Si iscrive,

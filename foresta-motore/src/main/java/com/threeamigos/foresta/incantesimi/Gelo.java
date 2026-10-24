@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**

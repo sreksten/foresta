@@ -1,16 +1,14 @@
 package com.threeamigos.foresta.ui.testo;
 
-import java.awt.Graphics2D;
+import com.threeamigos.foresta.ui.immagini.ImageCache;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.awt.image.RescaleOp;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.StringTokenizer;
-import java.util.Locale;
-import com.threeamigos.foresta.ui.immagini.ImageCache;
 
 /**
  * Il testo nell'alfabeto grande, quello della storia: solo lettere minuscole senza accento, cifre e ' , . ? (vedi

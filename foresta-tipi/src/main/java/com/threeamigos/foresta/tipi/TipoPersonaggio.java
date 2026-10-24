@@ -1,9 +1,10 @@
 package com.threeamigos.foresta.tipi;
 
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.danni.tipi.CategoriaDanno;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.testi.Testi;
+
 import java.util.*;
 
 /**

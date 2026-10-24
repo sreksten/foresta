@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.CacciatoreDiTaglie;
 import com.threeamigos.foresta.missioni.incarichi.IlRapimento;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
@@ -14,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Il cacciatore di taglie: la banda di goblin si nasconde fra rovine non segnate sulla mappa, basta abbattere il capo,

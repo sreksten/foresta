@@ -4,11 +4,7 @@ import com.threeamigos.foresta.interfacce.GestoreTrofei;
 import com.threeamigos.foresta.modellodati.TrofeiMD;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.Arrays;
 
 /**

@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.trofei;
 
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
-import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.function.IntPredicate;

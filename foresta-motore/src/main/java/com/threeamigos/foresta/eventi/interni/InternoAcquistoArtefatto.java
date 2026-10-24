@@ -1,10 +1,9 @@
 package com.threeamigos.foresta.eventi.interni;
 
-import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.OggettoConCosto;
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
-import com.threeamigos.foresta.artefatti.OggettoConCosto;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
 

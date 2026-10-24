@@ -1,20 +1,10 @@
 package com.threeamigos.foresta.tipi;
 
 import com.threeamigos.foresta.artefatti.CostantiArtefatti;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoCardinalitaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.GradoIncantamento;
+import com.threeamigos.foresta.artefatti.tipi.*;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.attributi.tipi.CategoriaAttributo;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 

@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.tattiche.valutazione;
 
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.Costanti;
 
 /**
  * L'astuzia di un personaggio per le tattiche (tattiche_di_combattimento_automatiche.md §4, formula B): l'intelligenza massima della sua classe per

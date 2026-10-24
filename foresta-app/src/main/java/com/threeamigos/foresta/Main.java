@@ -1,28 +1,28 @@
 package com.threeamigos.foresta;
 
+import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.strumenti.logger.Logger;
-import com.threeamigos.foresta.eventi.notifiche.NotificaUscitaDalGioco;
 import com.threeamigos.foresta.eventi.interni.InternoInterfacciaUtentePronta;
+import com.threeamigos.foresta.eventi.notifiche.NotificaUscitaDalGioco;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
-import com.threeamigos.foresta.motore.Automa;
-import com.threeamigos.foresta.motore.StatoDelMotore;
-import com.threeamigos.foresta.bestiario.RegistroBestiario;
+import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.salvataggi.GestoreBestiarioSuFile;
+import com.threeamigos.foresta.salvataggi.GestorePunteggiSuFile;
+import com.threeamigos.foresta.salvataggi.GestoreSalvataggiSuFile;
+import com.threeamigos.foresta.salvataggi.GestoreTrofeiSuFile;
+import com.threeamigos.foresta.temporizzatore.Temporizzatore;
+import com.threeamigos.foresta.temporizzatore.TemporizzatoreJ2SE;
+import com.threeamigos.foresta.temporizzatore.ThreadPrincipale;
+import com.threeamigos.foresta.strumenti.TrucchiDiSviluppo;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
-import com.threeamigos.foresta.motore.VistaPartitaMotore;
-import com.threeamigos.foresta.strumenti.*;
 import com.threeamigos.foresta.ui.EsecutoreSwing;
 import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Orientamento;
-import com.threeamigos.foresta.motore.ModalitaDiProva;
-import com.threeamigos.foresta.motore.StrumentiDiSviluppoMotore;
 import com.threeamigos.foresta.ui.sviluppo.FinestraDiProva;
-import com.threeamigos.foresta.salvataggi.GestorePunteggiSuFile;
-import com.threeamigos.foresta.salvataggi.GestoreSalvataggiSuFile;
-import com.threeamigos.foresta.salvataggi.GestoreBestiarioSuFile;
-import com.threeamigos.foresta.salvataggi.GestoreTrofeiSuFile;
+
 import java.util.Locale;
 
 /**

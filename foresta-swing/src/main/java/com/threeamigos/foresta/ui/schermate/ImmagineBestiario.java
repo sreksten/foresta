@@ -9,26 +9,12 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
-import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontSmall;
-import com.threeamigos.foresta.ui.testo.TestoGrande;
+import com.threeamigos.foresta.ui.testo.*;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.Transparency;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Le due immagini del bestiario (vedi DisplayableCanvasBestiario): l'elenco delle voci, a sinistra, e la scheda della voce scelta, a destra.
@@ -142,7 +128,7 @@ final class ImmagineBestiario {
 	 * Lo svolazzo fra i mostri e i personaggi giocanti, ridotto se non ci sta nella larghezza
 	 */
 	private static BufferedImage separatore(int larghezzaMassima) {
-		return (BufferedImage) ImageCache.getComposta(Arrays.<Object>asList("separatoreBestiario", larghezzaMassima),
+		return (BufferedImage) ImageCache.getComposta(Arrays.asList("separatoreBestiario", larghezzaMassima),
 				() -> adatta(BufferedImageBuilder.buildBufferedImage(RISORSA_SEPARATORE), larghezzaMassima, ALTEZZA_RIGA_ELENCO));
 	}
 
@@ -151,7 +137,7 @@ final class ImmagineBestiario {
 	 * alcune classi hanno, vedi ClassePersonaggioImmagine.getIcona, per ora non si usano qui, perché le altre classi non ce l'hanno)
 	 */
 	private static BufferedImage iconaDellaVoce(TipoPersonaggio voce) {
-		return (BufferedImage) ImageCache.getComposta(Arrays.<Object>asList("iconaDaImmagine", voce),
+		return (BufferedImage) ImageCache.getComposta(Arrays.asList("iconaDaImmagine", voce),
 				() -> adatta(ClassePersonaggioImmagine.getImmagine(voce), LATO_ICONA, LATO_ICONA));
 	}
 
@@ -159,7 +145,7 @@ final class ImmagineBestiario {
 		if (icona == null) {
 			return null;
 		}
-		return ImageCache.getComposta(Arrays.<Object>asList("sagomaIcona", voce, COLORE_SILHOUETTE), () -> ImageCache.sagomaScura(icona, COLORE_SILHOUETTE));
+		return ImageCache.getComposta(Arrays.asList("sagomaIcona", voce, COLORE_SILHOUETTE), () -> ImageCache.sagomaScura(icona, COLORE_SILHOUETTE));
 	}
 
 	/**
@@ -399,7 +385,7 @@ final class ImmagineBestiario {
 	 */
 	private static List<TipoPersonaggio> forme(TipoPersonaggio voce) {
 		TipoPersonaggio femminile = voce.getFormaFemminile();
-		return femminile == null ? Arrays.asList(voce) : Arrays.asList(femminile, voce);
+		return femminile == null ? Collections.singletonList(voce) : Arrays.asList(femminile, voce);
 	}
 
 	private static Pezzo titolo(String testo) {

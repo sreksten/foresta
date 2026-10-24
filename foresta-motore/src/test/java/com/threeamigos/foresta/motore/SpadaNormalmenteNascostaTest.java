@@ -1,22 +1,16 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
-import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
-import com.threeamigos.foresta.eventi.interni.InternoSpadaNascostaImpugnata;
-import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
-import com.threeamigos.foresta.intermezzi.FabbricaIntermezzi;
-import com.threeamigos.foresta.intermezzi.Intermezzo;
-import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
-import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
-import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.SpadaNormalmenteNascosta;
 import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
-import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
+import com.threeamigos.foresta.eventi.interni.InternoSpadaNascostaImpugnata;
+import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
+import com.threeamigos.foresta.intermezzi.*;
+import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
-import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 import org.junit.jupiter.api.Test;
@@ -92,12 +86,12 @@ class SpadaNormalmenteNascostaTest {
 			Statistiche.impostaLivelloDelMondo(1);
 			SpadaNormalmenteNascosta spada = SpadaNormalmenteNascosta.costruisci(com.threeamigos.foresta.artefatti.GeneratoreArtefatti.istanza(), Statistiche.getLivello());
 			assertEquals(1, spada.getLivello());
-			int danniAlLivello1 = ((com.threeamigos.foresta.artefatti.Arma) spada).getDanni();
+			int danniAlLivello1 = spada.getDanni();
 
 			Statistiche.impostaLivelloDelMondo(6);
 			assertEquals(6, spada.getLivello());
 			assertEquals(6, Artefatto.di(spada.getModelloDati()).getLivello(), "anche ricostruita dal modello dati");
-			assertTrue(((com.threeamigos.foresta.artefatti.Arma) spada).getDanni() > danniAlLivello1);
+			assertTrue(spada.getDanni() > danniAlLivello1);
 		}
 	}
 

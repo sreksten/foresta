@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.tipi;
 
-import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.testi.Testi;
+
 import java.util.Locale;
 
 

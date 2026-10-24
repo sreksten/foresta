@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.missioni.richieste;
 
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**

@@ -1,21 +1,21 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.abilita.*;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
-import com.threeamigos.foresta.abilita.*;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.tattiche.TatticheBase;
 import com.threeamigos.foresta.tipi.*;
@@ -106,7 +106,7 @@ class ChiericoEDruidoTest {
         Personaggio chierica = FabbricaPersonaggi.modello(TipoPersonaggio.CHIERICA);
         assertEquals(chierico.getMoltiplicatoreParata(), chierica.getMoltiplicatoreParata());
         assertEquals(chierico.getMoltiplicatoreDanniFisici(), chierica.getMoltiplicatoreDanniFisici());
-        assertEquals(((PersonaggioBase) chierico).getSaluteBase(), ((PersonaggioBase) chierica).getSaluteBase());
+        assertEquals(chierico.getSaluteBase(), chierica.getSaluteBase());
         Personaggio druido = FabbricaPersonaggi.modello(TipoPersonaggio.DRUIDO);
         Personaggio druida = FabbricaPersonaggi.modello(TipoPersonaggio.DRUIDA);
         assertEquals(druido.getMoltiplicatoreDanniMagici(), druida.getMoltiplicatoreDanniMagici());

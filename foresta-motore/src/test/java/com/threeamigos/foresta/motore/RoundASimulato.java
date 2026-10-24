@@ -1,16 +1,16 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tattiche.RegistroTattiche;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tattiche.Decisione;
+import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
+import com.threeamigos.foresta.tattiche.RegistroTattiche;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
-import com.threeamigos.foresta.tattiche.Decisione;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 
 /**
  * Il round a coppie del gioco (vedi tattiche_di_combattimento_automatiche.md §3 e {@link StatoDelCombattimento}) per le simulazioni che

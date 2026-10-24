@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.artefatti;
 
 import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -19,18 +19,39 @@ public interface VistaArtefatto {
 	 */
 	String getUuid();
 
+	/**
+	 * Il tipo di artefatto.
+	 */
 	TipoArtefatto getTipo();
 
+	/**
+	 * La rarità.
+	 */
 	TipoRaritaArtefatto getRarita();
 
+	/**
+	 * Il nome, con l'articolo.
+	 */
 	String getNome();
 
+	/**
+	 * Il nome breve, senza il soprannome.
+	 */
 	String getNomeBreve();
 
+	/**
+	 * La descrizione, "che ...".
+	 */
 	String getDescrizione();
 
+	/**
+	 * La descrizione breve, con il nome se c'è un soprannome.
+	 */
 	String getDescrizioneBreve();
 
+	/**
+	 * Il soprannome, se ce l'ha.
+	 */
 	Optional<String> getNomeProprio();
 
 	/**
@@ -38,14 +59,29 @@ public interface VistaArtefatto {
 	 */
 	String getNomeCompleto();
 
+	/**
+	 * Il livello.
+	 */
 	int getLivello();
 
+	/**
+	 * I danni base (zero se non è un'arma).
+	 */
 	int getDanni();
 
+	/**
+	 * Il prezzo d'acquisto.
+	 */
 	int getCostoAcquisto();
 
+	/**
+	 * Il peso.
+	 */
 	double getPeso();
 
+	/**
+	 * Se si può incantare.
+	 */
 	boolean isIncantabile();
 
 	/**
@@ -60,8 +96,14 @@ public interface VistaArtefatto {
 		return getIncantamenti().size() + getModificatori().size();
 	}
 
+	/**
+	 * I modificatori permanenti di attributo.
+	 */
 	Collection<ModificatoreAttributoMD> getModificatori();
 
+	/**
+	 * Gli incantamenti.
+	 */
 	Collection<IncantamentoMD> getIncantamenti();
 
 	/**

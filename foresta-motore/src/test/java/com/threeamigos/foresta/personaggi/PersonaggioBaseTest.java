@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 

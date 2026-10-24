@@ -1,27 +1,22 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.SorgentiDelProgetto;
-
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Il motore non conosce il toolkit grafico: nessun sorgente fuori dal modulo foresta-swing usa java.awt, javax.swing, javax.imageio o
  * javax.sound. Così motore, dominio, eventi e interfacce si possono isolare in un modulo che non dipende da Swing
- * (e riusare con un altro front-end). Il thread principale si raggiunge da {@code strumenti.ThreadPrincipale}.
+ * (e riusare con un altro front-end). Il thread principale si raggiunge da {@code temporizzatore.ThreadPrincipale}.
  */
 class DipendenzeDalToolkitGraficoTest {
 

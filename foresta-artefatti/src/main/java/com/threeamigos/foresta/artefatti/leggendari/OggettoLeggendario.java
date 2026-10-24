@@ -1,13 +1,12 @@
 package com.threeamigos.foresta.artefatti.leggendari;
 
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.CostruttoreArtefatto;
 import com.threeamigos.foresta.artefatti.ModificatoreDelTesto;
-import com.threeamigos.foresta.artefatti.tipi.*;
+import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 
 import java.util.*;
 
@@ -133,6 +132,9 @@ public final class OggettoLeggendario {
 		return chiave;
 	}
 
+	/**
+	 * Il tipo di artefatto che il leggendario è.
+	 */
 	public TipoArtefatto getTipo() {
 		return tipo;
 	}

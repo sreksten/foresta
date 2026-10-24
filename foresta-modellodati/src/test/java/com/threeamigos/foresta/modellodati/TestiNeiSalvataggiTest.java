@@ -1,23 +1,16 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.serializzazione.MappaProprieta;
-import com.threeamigos.foresta.serializzazione.Serializzabile;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.serializzazione.MappaProprieta;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Il salvataggio è a righe con i campi separati da "|": i testi liberi non devono poter spezzare la riga né spostare i
@@ -67,9 +60,9 @@ class TestiNeiSalvataggiTest {
 		vivoRiletto.leggi(lettore(scrivi(vivoConUnaCausa)));
 
 		// Then
-		assertEquals(false, mortoRiletto.isVivo());
+        assertFalse(mortoRiletto.isVivo());
 		assertEquals("vivo", mortoRiletto.getCausaTrapasso());
-		assertEquals(true, vivoRiletto.isVivo());
+        assertTrue(vivoRiletto.isVivo());
 		assertNull(vivoRiletto.getCausaTrapasso(), "chi e' vivo non ha una causa di morte");
 	}
 
@@ -111,7 +104,7 @@ class TestiNeiSalvataggiTest {
 		// Then
 		assertEquals(1, scritto.toString().split("\\R").length, "una riga sola");
 		assertEquals("uno due|tre quattro", riletto.getTesto());
-		assertEquals(true, riletto.isParagrafo());
+        assertTrue(riletto.isParagrafo());
 	}
 
 	private static String scrivi(PersonaggioMD personaggio) throws IOException {

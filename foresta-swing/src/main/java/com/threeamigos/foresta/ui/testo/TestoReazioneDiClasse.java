@@ -2,7 +2,7 @@ package com.threeamigos.foresta.ui.testo;
 
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * Il testo che sale sopra un personaggio quando, per la sua classe, è debole, resiste o è immune a un tipo di danno: dice al

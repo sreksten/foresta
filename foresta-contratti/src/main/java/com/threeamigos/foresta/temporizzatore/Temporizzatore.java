@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.strumenti;
+package com.threeamigos.foresta.temporizzatore;
 
 /**
  * Il temporizzatore serve per far ricevere ad un oggetto un impulso

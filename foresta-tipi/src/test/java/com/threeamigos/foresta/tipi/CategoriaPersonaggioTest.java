@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.tipi;
 
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.danni.tipi.CategoriaDanno;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;

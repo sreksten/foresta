@@ -1,11 +1,12 @@
 package com.threeamigos.foresta.ui.sfx;
 
 
+import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
+import com.threeamigos.foresta.ui.immagini.ImageCache;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
-import com.threeamigos.foresta.ui.immagini.ImageCache;
 
 /**
  * Il primo contenuto della finestra, nello stato LOGO_INIZIALE: il logo 3AM completo, di cui il

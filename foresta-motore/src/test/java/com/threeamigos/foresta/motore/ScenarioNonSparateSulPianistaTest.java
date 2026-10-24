@@ -1,13 +1,8 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.intermezzi.ElementoIntermezzo;
-import com.threeamigos.foresta.intermezzi.Intermezzo;
-import com.threeamigos.foresta.intermezzi.IntermezzoLocandaPrimaVisita;
-import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
-import com.threeamigos.foresta.missioni.IntermezzoDiPasso;
-import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
+import com.threeamigos.foresta.intermezzi.*;
 import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.missioni.IntermezzoDiPasso;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
@@ -214,7 +209,7 @@ class ScenarioNonSparateSulPianistaTest {
             // Come fa Automa agli intermezzi di inizio locazione: prima la scena del locandiere, e poi, se qualcosa scatta ancora, il resto
             RegistroIntermezzi.nuovoMomento();
             Intermezzo scenaDelLocandiere = RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE);
-            assertTrue(scenaDelLocandiere instanceof IntermezzoDiPasso, String.valueOf(scenaDelLocandiere));
+            assertInstanceOf(IntermezzoDiPasso.class, scenaDelLocandiere, String.valueOf(scenaDelLocandiere));
             RegistroIntermezzi.segnaScattato(scenaDelLocandiere);
 
             Intermezzo dopo = RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE);

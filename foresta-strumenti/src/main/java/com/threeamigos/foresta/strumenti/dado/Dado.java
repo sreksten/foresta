@@ -1,10 +1,6 @@
 package com.threeamigos.foresta.strumenti.dado;
 
-import java.util.Deque;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**

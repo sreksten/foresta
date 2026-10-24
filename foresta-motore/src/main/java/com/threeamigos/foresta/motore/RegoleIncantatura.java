@@ -1,16 +1,13 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.*;
 import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
-import com.threeamigos.foresta.artefatti.IncantamentoMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.artefatti.Artefatto;
-import com.threeamigos.foresta.artefatti.IngredienteDelCoreDump;
-import com.threeamigos.foresta.artefatti.ListinoPergamene;
-import com.threeamigos.foresta.tipi.*;
+import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 
 import java.util.*;
 import java.util.stream.Collectors;

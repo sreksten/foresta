@@ -3,7 +3,9 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.tipi.*;
+import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

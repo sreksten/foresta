@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.artefatti.tipi.GradoIncantamento;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.GradoIncantamento;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.tattiche.*;
 import org.junit.jupiter.api.AfterEach;

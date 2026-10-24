@@ -4,14 +4,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * La destinazione del Logger si può cambiare, come fa una piattaforma che ha un registro suo.
@@ -71,7 +68,7 @@ class LoggerTest {
 		// Then
 		assertTrue(Logger.isAttivo());
 		assertEquals(1, costruzioni.get());
-		assertEquals(Arrays.asList("costruito 1"), scritto);
+		assertEquals(Collections.singletonList("costruito 1"), scritto);
 	}
 
 	@Test
@@ -97,6 +94,6 @@ class LoggerTest {
 		assertTrue(Logger.isAttivo(), "quella del desktop scrive");
 		DestinazioneDiLog prima = Logger.creaLaDestinazionePredefinita();
 		assertSame(prima, Logger.creaLaDestinazionePredefinita(), "se c'è già, la riusa");
-		assertTrue(prima instanceof DestinazioneConsoleEFile);
+        assertInstanceOf(DestinazioneConsoleEFile.class, prima);
 	}
 }

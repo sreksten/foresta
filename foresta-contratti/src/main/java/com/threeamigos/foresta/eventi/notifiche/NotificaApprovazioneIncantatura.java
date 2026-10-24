@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
+import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.artefatti.VistaArtefatto;
 
 /**
  * La fusione è riuscita: l'artefatto incantato è tornato nell'inventario del gruppo.

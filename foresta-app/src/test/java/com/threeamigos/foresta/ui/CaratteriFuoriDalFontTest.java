@@ -2,14 +2,10 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
-import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontSmall;
-import com.threeamigos.foresta.ui.testo.DoomdarkTextProducer;
-import com.threeamigos.foresta.ui.testo.FontTool;
+import com.threeamigos.foresta.ui.testo.*;
 import org.junit.jupiter.api.Test;
 
-import java.awt.Image;
+import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 

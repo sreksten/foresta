@@ -14,7 +14,8 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Il file del bestiario, in una home temporanea al posto di quella vera. Come per i trofei (vedi GestoreTrofeiSuFileTest, che prova anche la

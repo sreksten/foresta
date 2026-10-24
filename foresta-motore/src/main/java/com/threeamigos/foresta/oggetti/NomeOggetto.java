@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
+import com.threeamigos.foresta.testi.Articoli;
 
 import java.util.Objects;
 

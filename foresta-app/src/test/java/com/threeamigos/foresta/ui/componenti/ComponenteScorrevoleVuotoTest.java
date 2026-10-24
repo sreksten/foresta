@@ -2,7 +2,7 @@ package com.threeamigos.foresta.ui.componenti;
 
 import org.junit.jupiter.api.Test;
 
-import java.awt.Image;
+import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;

@@ -1,12 +1,11 @@
 package com.threeamigos.foresta.tattiche.rose;
 
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.threeamigos.foresta.tattiche.ContestoTattico;
 
 /**
  * Gli ospiti vulnerabili vivi del gruppo del giocatore: da proteggere per i miei personaggi, bersagli per i mostri.

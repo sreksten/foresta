@@ -5,11 +5,7 @@ import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Gli oggetti che un passo di raccolta chiede di trovare (vedi {@link MissioneAPassi#raccogli(Passo.MomentoControllo,

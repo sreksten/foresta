@@ -1,22 +1,10 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.personaggi.Bardo;
-import com.threeamigos.foresta.personaggi.Cantastorie;
-import com.threeamigos.foresta.personaggi.Elfa;
-import com.threeamigos.foresta.personaggi.Elfo;
-import com.threeamigos.foresta.personaggi.Guerriero;
-import com.threeamigos.foresta.personaggi.Ladro;
-import com.threeamigos.foresta.personaggi.Maga;
-import com.threeamigos.foresta.personaggi.Mago;
-import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.personaggi.Sacerdote;
-import com.threeamigos.foresta.personaggi.Sacerdotessa;
-import com.threeamigos.foresta.personaggi.Troll;
-import com.threeamigos.foresta.personaggi.Viandante;
+import com.threeamigos.foresta.personaggi.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

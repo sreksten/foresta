@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.ui.sprite;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Un'icona, con eventualmente una variazione scritta a fianco (per esempio "+5" in verde o "-3" in rosso), che sale e sfuma in poco più di un secondo: per segnalare un cambiamento di

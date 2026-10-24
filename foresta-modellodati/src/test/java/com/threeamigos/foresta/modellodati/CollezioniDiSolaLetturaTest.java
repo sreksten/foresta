@@ -1,23 +1,22 @@
 package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.artefatti.ArtefattoMD;
-import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Le collezioni che il modello dati mostra sono di sola lettura: chi vuole cambiarle passa dai metodi che lo dicono,
@@ -215,7 +214,7 @@ class CollezioniDiSolaLetturaTest {
 		assertThrows(UnsupportedOperationException.class, () -> linea.getCittaDistrutte().add(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA));
 
 		linea.addCittaDistrutta(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA);
-		assertEquals(Arrays.asList(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA), linea.getCittaDistrutte());
+		assertEquals(Collections.singletonList(TipoLocazione.CITTA_RUUNA), linea.getCittaDistrutte());
 		assertTrue(linea.isCittaDistrutta(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA));
 	}
 

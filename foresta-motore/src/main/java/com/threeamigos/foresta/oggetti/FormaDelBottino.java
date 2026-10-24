@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoBottino;
 
 import java.util.Optional;

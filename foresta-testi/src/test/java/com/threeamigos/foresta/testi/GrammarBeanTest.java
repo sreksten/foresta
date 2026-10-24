@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.testi;
 
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -10,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.strumenti.dado.Dado;
 
 class GrammarBeanTest {
 

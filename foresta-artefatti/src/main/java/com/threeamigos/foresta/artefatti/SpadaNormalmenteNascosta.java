@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.artefatti;
 
 import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
-import java.util.function.IntSupplier;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+
+import java.util.function.IntSupplier;
 
 /**
  * La .spada normalmente nascosta: una spada con attributi a caso, come gli altri artefatti, che il gruppo ottiene solo con
@@ -20,6 +21,9 @@ public class SpadaNormalmenteNascosta extends ArmaFisica {
 	private static volatile IntSupplier fonteDelLivello;
 	private static final String DESCRIZIONE = "che ls non mostra";
 
+	/**
+	 * La spada sui dati dati (vedi {@link #isQuesta}).
+	 */
 	public SpadaNormalmenteNascosta(ArtefattoMD md) {
 		super(md);
 	}

@@ -1,24 +1,24 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.canti.CantoDelBardo;
-import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.IntermezzoUrloDellaBanshee;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
+import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.storie.IlViaggioDellaMoglie;
 import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.personaggi.Bardo;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Il bardo della locanda insegna al gruppo l'Urlo della Banshee, la prima volta che entra in una locanda nel bosco dopo
@@ -113,7 +113,7 @@ class ScenarioUrloDellaBansheeTest {
 
             // La prima volta in una locanda nel bosco, dopo il viaggio, il bardo insegna il canto
             Intermezzo intermezzo = prossimoIntermezzoNellaLocanda(partita, locanda);
-            assertTrue(intermezzo instanceof IntermezzoUrloDellaBanshee, String.valueOf(intermezzo));
+            assertInstanceOf(IntermezzoUrloDellaBanshee.class, intermezzo, String.valueOf(intermezzo));
             assertFalse(intermezzo.isDiRipiego(), "non è un intermezzo di ripiego");
             assertEquals(TipoIntermezzo.INTERMEZZO_URLO_DELLA_BANSHEE.name(), intermezzo.getId());
             assertFalse(intermezzo.getPagine().isEmpty(), "la scena si costruisce");

@@ -1,17 +1,12 @@
 package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoCardinalitaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.GradoIncantamento;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.danni.tipi.CategoriaDanno;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.artefatti.tipi.*;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.danni.tipi.CategoriaDanno;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -76,11 +71,11 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	 * Accessori: l'attributo che migliorano e la descrizione che lo dice
 	 */
 	private static final Object[][] ACCESSORI = {
-			{ TipoAttributo.CARISMA, "che aumenta il Carisma", "che aumentano il Carisma" },
-			{ TipoAttributo.CORAGGIO, "che aumenta il Coraggio", "che aumentano il Coraggio" },
-			{ TipoAttributo.VALORE, "che aumenta il Valore", "che aumentano il Valore" },
-			{ TipoAttributo.FORTUNA, "che porta Fortuna", "che portano Fortuna" },
-			{ TipoAttributo.PERCEZIONE, "che acuisce i sensi", "che acuiscono i sensi" }
+			{ TipoAttributo.CARISMA, "che aumenta il Carisma" },
+			{ TipoAttributo.CORAGGIO, "che aumenta il Coraggio" },
+			{ TipoAttributo.VALORE, "che aumenta il Valore" },
+			{ TipoAttributo.FORTUNA, "che porta Fortuna" },
+			{ TipoAttributo.PERCEZIONE, "che acuisce i sensi" }
 	};
 
 	/**
@@ -211,11 +206,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 				break;
 			default:
 				Object[] accessorio = ACCESSORI[random.nextInt(ACCESSORI.length)];
-				if (tipo.getCardinalita() == TipoCardinalitaArtefatto.SINGOLO) {
-					md.setDescrizione((String) accessorio[1]);
-				} else {
-					md.setDescrizione((String) accessorio[2]);
-				}
+				md.setDescrizione((String) accessorio[1]);
 				md.addModificatore((TipoAttributo) accessorio[0], TipoModificatore.VARIAZIONE_FISSA, livelloEffettivo, "");
 				break;
 		}
@@ -258,22 +249,15 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	 */
 	private Artefatto generaDaGrammatica(ArtefattoMD md, int livello) {
 		TipoArtefatto tipo = md.getTipo();
-		if (Artefatto.di(md).isIncantabile() && random.nextDouble() < CostantiArtefatti.ARTEFATTO_PROBABILITA_RARO) {
+		// La grammatica conosce solo armi e pezzi difensivi, che sono tutti incantabili
+		if (random.nextDouble() < CostantiArtefatti.ARTEFATTO_PROBABILITA_RARO) {
 			md.setRarita(TipoRaritaArtefatto.RARO);
 		}
 		md.setNome(NOMI.get(tipo));
-		switch (tipo.getCategoria()) {
-			case ARMA:
-				completaArma(md, livello);
-				break;
-			case SCUDO:
-			case ELMO:
-			case ARMATURA:
-			case SCHINIERI:
-				completaProtezione(md, livello);
-				break;
-			default:
-				break;
+		if (tipo.getCategoria() == CategoriaArtefatto.ARMA) {
+			completaArma(md, livello);
+		} else {
+			completaProtezione(md, livello);
 		}
 		int effetti = Artefatto.di(md).getEffettiMassimi() - md.getModificatori().size() - md.getIncantamenti().size() - 1;
 		GrammaticaArtefatti.Risultato risultato = grammatica.genera(tipo, effetti);
@@ -427,7 +411,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	 * "la gemma maggiore del Drago". Se il nome (uscito dalla grammatica) non comincia con il nome comune, il grado
 	 * va in fondo: "la pietra del Drago minore".
 	 */
-	private static String conGrado(String nome, TipoArtefatto tipo, GradoIncantamento grado) {
+	static String conGrado(String nome, TipoArtefatto tipo, GradoIncantamento grado) {
 		if (grado == GradoIncantamento.MEDIO) {
 			return nome;
 		}

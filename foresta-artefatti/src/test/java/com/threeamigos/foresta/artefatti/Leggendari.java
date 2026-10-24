@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 
 /**
  * Gli oggetti leggendari di leggendari.txt, per i test: si cercano per chiave, che non cambia, così i nomi e le

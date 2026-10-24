@@ -3,8 +3,7 @@ package com.threeamigos.foresta.ui.riquadri;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.*;
 
 /**
  * L'intestazione di un riquadro della schermata di gioco, come quelle delle due liste dell'inventario: scritta grigia

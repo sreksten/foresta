@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.interfacce;
 
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Collection;

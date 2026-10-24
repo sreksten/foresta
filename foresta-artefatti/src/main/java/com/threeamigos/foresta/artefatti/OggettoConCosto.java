@@ -7,6 +7,9 @@ package com.threeamigos.foresta.artefatti;
  */
 public interface OggettoConCosto {
 
+    /**
+     * Il prezzo a cui l'oggetto si compra, in monete.
+     */
     int getCostoAcquisto();
 
 }

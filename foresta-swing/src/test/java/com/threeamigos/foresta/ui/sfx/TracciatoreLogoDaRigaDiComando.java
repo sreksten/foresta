@@ -4,7 +4,6 @@ import com.threeamigos.foresta.ui.sfx.TracciatoreLogo.Verso;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,8 +11,10 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Prova {@link TracciatoreLogo} da riga di comando: legge le opzioni, imposta l'effetto con il suo Costruttore e

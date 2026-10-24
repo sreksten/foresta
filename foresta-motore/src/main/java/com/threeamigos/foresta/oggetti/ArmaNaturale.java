@@ -2,8 +2,8 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.artefatti.IncantamentoMD;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio; // Presumo sia la tua Enum delle 30 classi
 
 import java.util.Collection;

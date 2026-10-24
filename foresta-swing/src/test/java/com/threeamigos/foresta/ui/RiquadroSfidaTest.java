@@ -1,11 +1,10 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
+import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroSfida;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroSfida;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RiquadroSfidaTest {
 
@@ -17,7 +16,7 @@ class RiquadroSfidaTest {
         for (MossaCartaForbiciSasso mossa : MossaCartaForbiciSasso.values()) {
             for (String lato : new String[]{"-sx.gif", "-dx.gif"}) {
                 String risorsa = "/com/threeamigos/foresta/img/fondi/" + DisplayableCanvasRiquadroSfida.nomeDellaMano(mossa) + lato;
-                assertTrue(DisplayableCanvasRiquadroSfida.class.getResource(risorsa) != null, "manca " + risorsa);
+                assertNotNull(DisplayableCanvasRiquadroSfida.class.getResource(risorsa), "manca " + risorsa);
             }
         }
     }

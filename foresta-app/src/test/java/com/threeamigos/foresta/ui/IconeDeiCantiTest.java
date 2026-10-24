@@ -1,14 +1,14 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoCanto;
+import com.threeamigos.foresta.ui.barra.ClasseIcona;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.ui.barra.ClasseIcona;
 
 /**
  * Ogni canto del Bardo ha il suo comando e la sua icona (vedi bardo.md, fase 3).

@@ -1,12 +1,10 @@
 package com.threeamigos.foresta.ui.immagini;
 
-import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
 import com.threeamigos.foresta.tipi.TipoBottino;
+import com.threeamigos.foresta.ui.LivelloDiZoom;
 
 import java.awt.image.BufferedImage;
-import com.threeamigos.foresta.ui.LivelloDiZoom;
 
 /**
  * Le immagini degli oggetti che si trovano nelle locazioni. Stanno qui e non in TipoBottino perché il motore

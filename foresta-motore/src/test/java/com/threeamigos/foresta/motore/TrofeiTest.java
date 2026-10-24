@@ -1,20 +1,11 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.eventi.interni.InternoAmiciziaStretta;
-import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.eventi.interni.InternoCorruzioneRiuscita;
-import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
-import com.threeamigos.foresta.eventi.interni.InternoMissioneCompletata;
-import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
-import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
-import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
+import com.threeamigos.foresta.eventi.interni.*;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoBottino;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.TipoTrofeo;
+import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.tipi.*;
+import com.threeamigos.foresta.trofei.RegistroTrofei;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -23,8 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 /**
  * I trofei: quanto si guadagna in una locazione conta solo se il gruppo ne esce vivo, il

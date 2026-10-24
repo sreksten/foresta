@@ -1,13 +1,9 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.Ondata;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.List;
-import com.threeamigos.foresta.combattimento.Ondata;
+import java.util.*;
 
 /**
  * Il gruppo dei mostri che il gruppo del giocatore affronta in una locazione. Esiste una sola istanza, che si svuota a ogni locazione; tiene anche

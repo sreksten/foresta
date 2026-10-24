@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.missioni.richieste;
 
+import com.threeamigos.foresta.missioni.AspettoDelMandante;
 import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta.Indizio;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import com.threeamigos.foresta.missioni.AspettoDelMandante;
 
 /**
  * Una documentazione (vedi LaDocumentazione), letta da una riga di DOCUMENTAZIONE in missioni.txt, che ne descrive i

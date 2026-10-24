@@ -4,10 +4,10 @@ import com.threeamigos.foresta.interfacce.VistaMappa;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.ui.immagini.ImageCache;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import com.threeamigos.foresta.ui.immagini.ImageCache;
 
 /**
  * Disegna la mappa della foresta con le caselle che il gruppo conosce: base comune della minimappa e della mappa a tutto schermo.

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * Una voce del listino dell'alchimista, come la vede la UI: il motore la costruisce a ogni apertura della bottega

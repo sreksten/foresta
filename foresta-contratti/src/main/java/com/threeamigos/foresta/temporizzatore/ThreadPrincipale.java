@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.strumenti;
+package com.threeamigos.foresta.temporizzatore;
 
 /**
  * Il thread su cui gira tutta la logica di gioco (per Swing l'Event Dispatch Thread, per un altro front-end il suo

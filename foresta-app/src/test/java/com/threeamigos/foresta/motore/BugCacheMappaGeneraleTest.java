@@ -1,16 +1,16 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.ui.AccessoMappaGeneralePerTest;
 import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Riproduzione del bug in todo.md passando per la cache statica di DisegnatoreMappa

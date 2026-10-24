@@ -1,8 +1,10 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.locazioni.Rovine;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.testi.Articoli;
+import com.threeamigos.foresta.testi.ProduttoreDiLuoghiCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
@@ -13,8 +15,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.testi.ProduttoreDiLuoghiCasuale;
 
 /**
  * Le rovine hanno un nome: dalla grammatica rovine.txt quelle che ci sono dall'inizio, da quello che c'era prima

@@ -2,7 +2,8 @@ package com.threeamigos.foresta.strumenti.dado;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * I contesti dei lanci che si possono truccare: ognuno ha un nome per la finestra di prova, e solo due scelgono fra elementi

@@ -1,13 +1,14 @@
 package com.threeamigos.foresta.ui.sprite;
 
+import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.testo.TestoGrande;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.Locale;
-import com.threeamigos.foresta.ui.immagini.ImageCache;
-import com.threeamigos.foresta.ui.testo.TestoGrande;
+import java.util.StringTokenizer;
 
 /**
  * Annuncia a schermo, con le lettere di {@link ImageCache}, che una missione è

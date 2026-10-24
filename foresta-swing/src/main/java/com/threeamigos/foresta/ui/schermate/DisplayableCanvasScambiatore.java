@@ -2,21 +2,17 @@ package com.threeamigos.foresta.ui.schermate;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.CoordinateFumetto;
 import com.threeamigos.foresta.ui.sprite.SpriteInterface;
-import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontSmall;
-import com.threeamigos.foresta.ui.testo.FontTool;
+import com.threeamigos.foresta.ui.testo.*;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * La base per disegnare una interazione tra due elenchi di oggetti scambiabili:

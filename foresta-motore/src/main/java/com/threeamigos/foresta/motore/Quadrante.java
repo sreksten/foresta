@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -3,11 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.interfacce.GestoreBestiario;
 import com.threeamigos.foresta.modellodati.BestiarioMD;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.Arrays;
 
 /**

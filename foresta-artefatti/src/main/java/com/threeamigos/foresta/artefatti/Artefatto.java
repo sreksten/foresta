@@ -1,15 +1,14 @@
 package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
-import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.artefatti.leggendari.RegoleSetLeggendari;
-import com.threeamigos.foresta.artefatti.tipi.*;
+import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Un artefatto: un pezzo di equipaggiamento vero (arma, scudo, elmo, armatura, anello, ingrediente magico...), con un nome, un
@@ -21,8 +20,14 @@ import java.util.*;
  */
 public class Artefatto implements OggettoConCosto, OggettoConPeso, VistaArtefatto {
 
+	/**
+	 * I dati dell'artefatto, che si salvano con la partita.
+	 */
 	protected final ArtefattoMD md;
 
+	/**
+	 * Un artefatto sui dati dati.
+	 */
 	public Artefatto(ArtefattoMD artefattoMD) {
 		this.md = artefattoMD;
 	}
@@ -191,6 +196,9 @@ public class Artefatto implements OggettoConCosto, OggettoConPeso, VistaArtefatt
 		md.setFigliVisibili(false);
 	}
 
+	/**
+	 * I dati dell'artefatto, per salvarlo o modificarlo.
+	 */
 	public ArtefattoMD getModelloDati() {
 		return md;
 	}

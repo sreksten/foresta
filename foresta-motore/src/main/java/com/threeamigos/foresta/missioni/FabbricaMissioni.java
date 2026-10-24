@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.missioni.incarichi.*;
-import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelLocandiere;
 import com.threeamigos.foresta.missioni.leggende.LaFalceDelTristoMietitore;
+import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelLocandiere;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
 import com.threeamigos.foresta.missioni.principali.*;
 import com.threeamigos.foresta.missioni.storie.*;

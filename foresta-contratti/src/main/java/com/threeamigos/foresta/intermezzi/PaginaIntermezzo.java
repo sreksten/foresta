@@ -3,11 +3,7 @@ package com.threeamigos.foresta.intermezzi;
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.tipi.Costanti;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Una pagina di intermezzo, composta a strati: lo sfondo (un'immagine che copre tutto

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.richieste;
 
+import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
@@ -7,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.IntFunction;
 import java.util.function.UnaryOperator;
-import com.threeamigos.foresta.missioni.IncontroDiMissione;
 
 /**
  * Le ondate di una riga di grammatica (vedi IncontroDiMissione.poi): dopo i nemici della riga (NEMICO=, NUMERO=,

@@ -1,14 +1,9 @@
 package com.threeamigos.foresta.ui.componenti;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Composite;
-import java.awt.GradientPaint;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Un'immagine che scorre in verticale dentro un'area, che ne mostra solo la parte che ci sta. Si usa in due modi:

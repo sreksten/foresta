@@ -1,13 +1,12 @@
 package com.threeamigos.foresta.ui.schermate;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
-
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.componenti.ScorrimentoVerticale;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.TestoGrande;
+
+import java.awt.*;
 
 /**
  * La pagina dei trofei, che si apre dall'inventario (comando MOSTRA_TROFEI) e si chiude con ANNULLA: il titolo in

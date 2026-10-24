@@ -1,31 +1,23 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.interfacce.VistaGruppo;
-import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
-import com.threeamigos.foresta.interfacce.VistaMappa;
+import com.threeamigos.foresta.abilita.AbilitaInnateDiClasse;
+import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.interfacce.VistaPersonaggio;
+import com.threeamigos.foresta.interfacce.*;
 import com.threeamigos.foresta.locazioni.Bosco;
 import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.TipoTrofeo;
-import com.threeamigos.foresta.bestiario.RegistroBestiario;
-import com.threeamigos.foresta.abilita.AbilitaInnateDiClasse;
 import com.threeamigos.foresta.personaggi.MoltiplicatoriDiClasse;
-import com.threeamigos.foresta.tipi.AbilitaInnataDiClasse;
-import com.threeamigos.foresta.tipi.MoltiplicatoreDiClasse;
+import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.trofei.ClasseTrofeo;
+import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 import java.util.List;
 import java.util.Set;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 /**
  * La vista in sola lettura della partita che il motore dà alla UI (vedi VistaPartita). Non tiene stato: a ogni

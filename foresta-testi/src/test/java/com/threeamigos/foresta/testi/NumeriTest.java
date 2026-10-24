@@ -2,7 +2,8 @@ package com.threeamigos.foresta.testi;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * I numeri in lettere: i cardinali fino a dieci, gli ordinali fino a 41 e il loro articolo.

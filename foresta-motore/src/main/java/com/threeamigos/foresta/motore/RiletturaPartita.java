@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Dopo che un GestoreSalvataggi ha letto una partita e installato il nuovo ModelloDati (via ModelloDati.setIstanza),

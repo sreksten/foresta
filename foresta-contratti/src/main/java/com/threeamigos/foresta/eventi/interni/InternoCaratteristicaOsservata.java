@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.eventi.interni;
 
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.tipi.CaratteristicaDiClasse;

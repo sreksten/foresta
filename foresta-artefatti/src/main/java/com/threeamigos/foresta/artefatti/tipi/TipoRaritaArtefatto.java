@@ -18,8 +18,17 @@ public enum TipoRaritaArtefatto {
 
 	// L'ultimo numero è il tetto al numero di effetti (incantamenti più modificatori) di un artefatto, qualunque sia il
 	// suo livello
+	/**
+	 * Un artefatto comune: due effetti in meno del livello, al più tre.
+	 */
 	COMUNE(-1, 3),
+	/**
+	 * Un artefatto raro: tanti effetti quanto il livello, al più quattro.
+	 */
 	RARO(0, 4),
+	/**
+	 * Un artefatto leggendario: un effetto in più del livello, al più cinque.
+	 */
 	LEGGENDARIO(1, 5);
 
 	private final int scartoSulLivello;
@@ -30,6 +39,9 @@ public enum TipoRaritaArtefatto {
 		this.tettoEffetti = tettoEffetti;
 	}
 
+	/**
+	 * Il nome della rarità, per i testi.
+	 */
 	public String getNome() {
 		return Testi.testoOCostante(this, "NOME");
 	}

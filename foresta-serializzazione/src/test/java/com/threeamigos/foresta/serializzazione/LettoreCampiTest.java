@@ -2,7 +2,9 @@ package com.threeamigos.foresta.serializzazione;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -96,7 +98,7 @@ class LettoreCampiTest {
         assertEquals(-7, campi.intero());
         IOException errore = assertThrows(IOException.class, campi::intero);
         assertTrue(errore.getMessage().contains("sette"), errore.getMessage());
-        assertTrue(errore.getCause() instanceof NumberFormatException);
+        assertInstanceOf(NumberFormatException.class, errore.getCause());
     }
 
     @Test

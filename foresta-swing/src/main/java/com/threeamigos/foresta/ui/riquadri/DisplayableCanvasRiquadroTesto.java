@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.ui.riquadri;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkTextRectangle2x;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Il riquadro di testo in cui scorrono le frasi che raccontano la partita.

@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.ui.sprite;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Notifica di interazione elementale o effetto di stato da sovrapporre a un nemico.

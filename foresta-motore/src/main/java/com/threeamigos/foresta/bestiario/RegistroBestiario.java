@@ -1,13 +1,7 @@
 package com.threeamigos.foresta.bestiario;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.interni.InternoAmiciziaStretta;
-import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.eventi.interni.InternoCaratteristicaOsservata;
-import com.threeamigos.foresta.eventi.interni.InternoCorruzioneRiuscita;
-import com.threeamigos.foresta.eventi.interni.InternoPersonaggioEntratoNelGruppo;
-import com.threeamigos.foresta.eventi.interni.InternoSfidaVinta;
-import com.threeamigos.foresta.eventi.interni.InternoVoceDelBestiarioSbloccata;
+import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.interfacce.GestoreBestiario;
 import com.threeamigos.foresta.modellodati.BestiarioMD;
 import com.threeamigos.foresta.strumenti.logger.Logger;

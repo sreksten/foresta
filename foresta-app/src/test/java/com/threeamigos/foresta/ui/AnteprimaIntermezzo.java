@@ -10,6 +10,9 @@ import com.threeamigos.foresta.motore.PartitaDiAnteprima;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIntermezzo;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIntroOutro;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,9 +27,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import com.threeamigos.foresta.ui.immagini.ImageCache;
-import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIntermezzo;
-import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIntroOutro;
 
 /**
  * Strumento di sviluppo: mostra un intermezzo senza dover giocare fino al punto in cui

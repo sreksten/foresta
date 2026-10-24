@@ -5,7 +5,8 @@ import com.threeamigos.foresta.testi.Testi;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * I testi per lingua applicati ai dati veri dei tipi (le prove del caricatore stanno in foresta-testi).

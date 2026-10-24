@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.modificatori;
 
-import com.threeamigos.foresta.serializzazione.LettoreCampi;
-import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -67,7 +67,7 @@ class ModificatoreAttributoMDTest {
         ModificatoreAttributoMD modificatore = aTempo(3);
         assertEquals(aTempo(3), modificatore);
         assertEquals(aTempo(3).hashCode(), modificatore.hashCode());
-        assertFalse(modificatore.equals("paura"));
+        assertNotEquals("paura", modificatore);
         assertNotEquals(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_PERCENTUALE, -20.0d, "paura",
                 UnitaDurataModificatore.TURNI, 3, BersaglioModificatore.BERSAGLIO), modificatore, "un altro attributo");
         assertNotEquals(new ModificatoreAttributoMD(TipoAttributo.CORAGGIO, TipoModificatore.VARIAZIONE_FISSA, -20.0d, "paura",

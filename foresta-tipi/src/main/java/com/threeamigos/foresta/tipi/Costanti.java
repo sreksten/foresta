@@ -1,8 +1,5 @@
 package com.threeamigos.foresta.tipi;
 
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
-
 /**
  * Le costanti di bilanciamento del gioco, raccolte in un posto solo.
  * Si possono cambiare qui per variare la difficoltà senza toccare le regole a giro per il codice.

@@ -3,6 +3,8 @@ package com.threeamigos.foresta.combattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoInizioRound;
 import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.motore.GruppoAvversario;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -15,8 +17,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 
 /**
  * Il round e il round-robin dello StatoDelCombattimento.
@@ -73,8 +73,8 @@ class StatoDelCombattimentoTest {
         assertEquals(java.util.Collections.singletonList(1), roundAnnunciati);
     }
 
-    private static StatoDelCombattimento.Lato G = StatoDelCombattimento.Lato.GIOCATORE;
-    private static StatoDelCombattimento.Lato A = StatoDelCombattimento.Lato.AVVERSARI;
+    private static final StatoDelCombattimento.Lato G = StatoDelCombattimento.Lato.GIOCATORE;
+    private static final StatoDelCombattimento.Lato A = StatoDelCombattimento.Lato.AVVERSARI;
 
     private void ricominciaConGruppiNuovi() {
         StatoDelCombattimento.azzeraIstanza();

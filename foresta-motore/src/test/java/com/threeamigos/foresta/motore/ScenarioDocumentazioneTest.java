@@ -1,8 +1,10 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.missioni.richieste.DocumentazioneRichiesta;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.LaDocumentazione;
+import com.threeamigos.foresta.missioni.richieste.DocumentazioneRichiesta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
@@ -12,8 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 
 /**
  * La documentazione: i posti da documentare si segnano sulla mappa uno alla volta; in ognuno si annota che cosa si è

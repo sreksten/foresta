@@ -3,19 +3,7 @@ package com.threeamigos.foresta.ui.schermate;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazioneFumetto;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
-import com.threeamigos.foresta.intermezzi.BattutaIntermezzo;
-import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
-import com.threeamigos.foresta.intermezzi.ElementoIntermezzo;
-import com.threeamigos.foresta.intermezzi.ImmagineIntermezzo;
-import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
-import com.threeamigos.foresta.intermezzi.StatoElemento;
-import com.threeamigos.foresta.intermezzi.TipoStiramento;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Map;
+import com.threeamigos.foresta.intermezzi.*;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
@@ -28,6 +16,12 @@ import com.threeamigos.foresta.ui.sprite.SpriteRivelazioneArtefatto;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 /**
  * La schermata a tutto schermo degli intermezzi. Disegna una {@link PaginaIntermezzo} a

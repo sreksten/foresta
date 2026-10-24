@@ -1,13 +1,14 @@
 package com.threeamigos.foresta.artefatti;
 
+import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * La prima battuta della leggenda dice di quale oggetto si parla, a meno che la prima battuta dell'oggetto non lo

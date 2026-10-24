@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
 import com.threeamigos.foresta.eventi.interni.InternoIncantatura;
@@ -9,15 +10,7 @@ import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaIncantatore;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioFornitore;
 import com.threeamigos.foresta.eventi.richieste.RichiestaTesto;
-import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
-import com.threeamigos.foresta.motore.AutomaIncantatore;
-import com.threeamigos.foresta.motore.BancoDiLavoro;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.OfferteAlchimista;
-import com.threeamigos.foresta.motore.RegistroArtefatti;
-import com.threeamigos.foresta.motore.RegoleIncantatura;
-import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
-import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.tipi.TipoNegozio;

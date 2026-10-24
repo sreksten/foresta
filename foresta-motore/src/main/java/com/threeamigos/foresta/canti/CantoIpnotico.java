@@ -1,18 +1,18 @@
 package com.threeamigos.foresta.canti;
 
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.TipoCanto;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.threeamigos.foresta.tipi.TipoCanto;
 
 /**
  * Il canto che scuote il morale degli avversari: a caso {@code SPAVENTATO} o {@code CONFUSO} (lo stesso per tutti

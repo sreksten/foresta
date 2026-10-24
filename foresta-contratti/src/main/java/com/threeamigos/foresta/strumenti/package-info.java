@@ -1,9 +1,6 @@
 /**
- * Le piccole utilità condivise: il registro di log, le funzioni di testo, il temporizzatore che manda un impulso a intervalli
- * ({@link com.threeamigos.foresta.strumenti.Temporizzatore}), il modo di eseguire qualcosa sul thread principale del toolkit grafico
- * ({@link com.threeamigos.foresta.strumenti.ThreadPrincipale}) e i dati che descrivono un salvataggio o un punteggio.
- * <p>
- * Il pacchetto è diviso fra più moduli: qui stanno le classi che l'interfaccia può usare; quelle che dipendono dal dominio stanno nel
- * motore.
+ * Alcune utilità condivise che l'interfaccia può usare: le funzioni di testo e di direzione, i dati che descrivono un salvataggio o un
+ * punteggio e gli strumenti per la finestra di prova. Il registro di log e i dadi stanno in {@code foresta-strumenti}, il temporizzatore
+ * e il thread principale in {@code temporizzatore}.
  */
 package com.threeamigos.foresta.strumenti;

@@ -3,9 +3,11 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.IntermezzoLocandaVisitaSuccessiva;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
+import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 import com.threeamigos.foresta.locazioni.Locanda;
-import com.threeamigos.foresta.missioni.storie.IlViaggioDellaMoglie;
 import com.threeamigos.foresta.missioni.IntermezzoDiPasso;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.missioni.storie.IlViaggioDellaMoglie;
 import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
@@ -18,8 +20,6 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 
 /**
  * Il viaggio della moglie: dopo aver riportato a casa il bardo (vedi NonSparateSulPianista), rientrando in una locanda
@@ -190,7 +190,7 @@ class ScenarioIlViaggioDellaMoglieTest {
             RegistroIntermezzi.nuovoMomento();
             Intermezzo dopo = RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE);
             assertNotNull(dopo);
-            assertTrue(dopo instanceof IntermezzoLocandaVisitaSuccessiva, String.valueOf(dopo.getId()));
+            assertInstanceOf(IntermezzoLocandaVisitaSuccessiva.class, dopo, String.valueOf(dopo.getId()));
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.List;

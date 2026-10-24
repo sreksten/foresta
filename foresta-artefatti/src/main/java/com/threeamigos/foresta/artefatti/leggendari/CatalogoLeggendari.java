@@ -1,17 +1,10 @@
 package com.threeamigos.foresta.artefatti.leggendari;
 
+import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
 
 /**
  * Tutti i leggendari e i set leggendari di leggendari.txt, per chiave. I pezzi di un set sono i leggendari che lo
@@ -86,11 +79,25 @@ public final class CatalogoLeggendari {
 	}
 
 	private static synchronized void carica() {
-		if (set != null) {
-			return;
+		if (set == null) {
+			caricaDa(ProduttoreDiArtefattiCasuale.tuttiISetLeggendari(), ProduttoreDiArtefattiCasuale.tuttiGliOggettiLeggendari(),
+					ProduttoreDiArtefattiCasuale.tuttiIBottiniLeggendari());
 		}
+	}
+
+	/**
+	 * Torna a leggere il catalogo dalla grammatica al prossimo uso, per i test che lo hanno riempito con righe sue.
+	 */
+	static synchronized void reimposta() {
+		set = null;
+	}
+
+	/**
+	 * Costruisce il catalogo dalle righe date, controllandole; se qualcosa non va non cambia niente.
+	 */
+	static synchronized void caricaDa(List<String> righeDeiSet, List<String> righeDeiLeggendari, List<String> righeDeiBottini) {
 		Map<String, SetLeggendario> tuttiISet = new HashMap<>();
-		for (String riga : ProduttoreDiArtefattiCasuale.tuttiISetLeggendari()) {
+		for (String riga : righeDeiSet) {
 			SetLeggendario letto = SetLeggendario.da(riga);
 			if (tuttiISet.put(letto.getChiave(), letto) != null) {
 				throw new IllegalStateException("Set leggendario ripetuto: " + letto.getChiave());
@@ -99,7 +106,7 @@ public final class CatalogoLeggendari {
 		Map<String, OggettoLeggendario> tuttiILeggendari = new HashMap<>();
 		Map<String, Set<String>> pezziDeiSet = new HashMap<>();
 		Map<String, Set<TipoSlotArtefatto>> slotDeiSet = new HashMap<>();
-		for (String riga : ProduttoreDiArtefattiCasuale.tuttiGliOggettiLeggendari()) {
+		for (String riga : righeDeiLeggendari) {
 			OggettoLeggendario leggendario = OggettoLeggendario.da(riga);
 			if (tuttiILeggendari.put(leggendario.getChiave(), leggendario) != null) {
 				throw new IllegalStateException("Leggendario ripetuto: " + leggendario.getChiave());
@@ -115,7 +122,7 @@ public final class CatalogoLeggendari {
 			aggiungiSlot(slotDeiSet.computeIfAbsent(chiaveSet, k -> EnumSet.noneOf(TipoSlotArtefatto.class)), leggendario);
 		}
 		Map<String, OggettoLeggendario> tuttiIBottini = new HashMap<>();
-		for (String riga : ProduttoreDiArtefattiCasuale.tuttiIBottiniLeggendari()) {
+		for (String riga : righeDeiBottini) {
 			OggettoLeggendario leggendario = OggettoLeggendario.da(riga);
 			if (tuttiILeggendari.containsKey(leggendario.getChiave()) || tuttiIBottini.put(leggendario.getChiave(), leggendario) != null) {
 				throw new IllegalStateException("Leggendario ripetuto: " + leggendario.getChiave());

@@ -1,15 +1,10 @@
 package com.threeamigos.foresta.missioni.richieste;
 
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Un oggetto smarrito nella foresta da ritrovare (vedi LOggettoSmarrito), letto da una riga di missioni.txt: genere

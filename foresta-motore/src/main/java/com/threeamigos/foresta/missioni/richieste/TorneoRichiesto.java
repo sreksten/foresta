@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.missioni.richieste;
 
+import com.threeamigos.foresta.missioni.AspettoDelMandante;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.threeamigos.foresta.missioni.AspettoDelMandante;
 
 /**
  * Un torneo (vedi IlTorneo), letto da una riga di TORNEO in missioni.txt, che ne descrive i campi: chi lo bandisce,

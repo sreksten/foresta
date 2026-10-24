@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.artefatti.tipi;
 
-import com.threeamigos.foresta.artefatti.Arma;
-
 /**
  * I posti in cui un personaggio porta un artefatto, ciascuno con il proprio limite: un elmo in testa, un'arma per mano,
  * un paio di schinieri sulle gambe e così via.

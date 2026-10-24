@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
-import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 

@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * La pagina dei trofei: si apre dall'inventario con MOSTRA_TROFEI, offre solo ANNULLA e con quello si torna

@@ -1,15 +1,14 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
-import java.util.Objects;
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
-import java.io.PrintWriter;
-import java.io.IOException;
+
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.threeamigos.foresta.serializzazione.Serializzabile.facoltativo;
 import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**

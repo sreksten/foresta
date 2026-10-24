@@ -2,8 +2,8 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 
-import java.util.function.Supplier;
 import java.util.Locale;
+import java.util.function.Supplier;
 
 /**
  * Chi chiede dei materiali in città (vedi RichiestaDiMateriali): l'alchimista, l'armaiolo, il capitano delle guardie, il

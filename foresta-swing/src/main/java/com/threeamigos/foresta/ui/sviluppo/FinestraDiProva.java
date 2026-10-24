@@ -1,14 +1,14 @@
 package com.threeamigos.foresta.ui.sviluppo;
 
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.interfacce.StrumentiDiSviluppo;
 import com.threeamigos.foresta.interfacce.StrumentiDiSviluppo.DovePartono;
 import com.threeamigos.foresta.interfacce.StrumentiDiSviluppo.Scorta;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.TrucchiDiSviluppo;
+import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 

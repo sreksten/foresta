@@ -1,12 +1,10 @@
 package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
-import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
-import com.threeamigos.foresta.artefatti.leggendari.SetLeggendario;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.CaricatoreDiGrammatiche;
+import com.threeamigos.foresta.testi.GrammaticaNonValidaException;
 import com.threeamigos.foresta.testi.GrammaticaPigra;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +31,7 @@ public final class ProduttoreDiArtefattiCasuale {
 	}
 
 	/**
-	 * Carica subito le grammatiche, invece di aspettare il primo uso (vedi {@link PrecaricatoreDeiTesti#precarica()}).
+	 * Carica subito le grammatiche, invece di aspettare il primo uso (vedi {@code PrecaricatoreDeiTesti.precarica()}, nel motore).
 	 *
 	 * @throws GrammaticaNonValidaException se una grammatica manca o non è valida
 	 */

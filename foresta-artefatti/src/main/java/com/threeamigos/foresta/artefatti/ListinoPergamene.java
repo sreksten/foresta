@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.artefatti;
 
 
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -120,11 +120,9 @@ public final class ListinoPergamene {
 				return CostantiArtefatti.PERGAMENA_PREZZO_PER_PERCENTO_DI_ATTRIBUTO * 100 * quantita / valoreTipico(modificatore.getTipoAttributo());
 			case VARIAZIONE_PERCENTUALE:
 				return CostantiArtefatti.PERGAMENA_PREZZO_PER_PERCENTO_DI_ATTRIBUTO * quantita;
-			case QUANTITA_ASSOLUTA:
-				// "Porta a 0" vale un prezzo fisso, non 5 × 0
-				return quantita == 0 ? CostantiArtefatti.PERGAMENA_PREZZO_PORTA_A_ZERO : CostantiArtefatti.PERGAMENA_PREZZO_PER_PUNTO_ASSOLUTO * quantita;
 			default:
-				throw new IllegalArgumentException("Tipo di modificatore non gestito: " + modificatore.getTipoModificatoreAttributo());
+				// QUANTITA_ASSOLUTA: "porta a 0" vale un prezzo fisso, non 5 × 0
+				return quantita == 0 ? CostantiArtefatti.PERGAMENA_PREZZO_PORTA_A_ZERO : CostantiArtefatti.PERGAMENA_PREZZO_PER_PUNTO_ASSOLUTO * quantita;
 		}
 	}
 

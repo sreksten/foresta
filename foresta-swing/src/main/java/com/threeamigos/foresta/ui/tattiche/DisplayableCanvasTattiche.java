@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui.tattiche;
 
-import com.threeamigos.foresta.artefatti.Arma;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoImpostaTattica;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpostaPersonaggio;
@@ -8,8 +9,6 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.modellodati.tattiche.*;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.tattiche.*;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;

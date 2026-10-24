@@ -1,17 +1,18 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.artefatti.VistaArtefatto;
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatoreArtefatti;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatoreArtefatti;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OrdinamentoArtefattiTest {
 

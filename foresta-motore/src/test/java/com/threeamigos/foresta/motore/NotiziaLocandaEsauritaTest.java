@@ -2,12 +2,13 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.NotiziaMD;
+import com.threeamigos.foresta.testi.NotizieDelleLocande;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.testi.NotizieDelleLocande;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Con le notizie proprie della locanda tutte fra le ultime pubblicate, NotizieDelleLocande trova comunque una notizia (fra le

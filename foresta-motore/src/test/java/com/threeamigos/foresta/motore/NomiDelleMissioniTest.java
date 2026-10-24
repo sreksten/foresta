@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
+import com.threeamigos.foresta.testi.ProduttoriDiTesti;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -7,8 +9,6 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
-import com.threeamigos.foresta.testi.ProduttoriDiTesti;
 
 /**
  * La grammatica missioni.txt dà i nomi di ostaggi e capibanda.

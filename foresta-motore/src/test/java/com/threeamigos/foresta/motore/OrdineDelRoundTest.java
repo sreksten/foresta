@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * L'ordine in cui la UI mostra i personaggi del combattimento (StatoDelCombattimento.getOrdineDelRound): lo stesso del piano del

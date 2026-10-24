@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.effettidistato;
 
-import com.threeamigos.foresta.serializzazione.MappaProprieta;
-import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
+import com.threeamigos.foresta.serializzazione.MappaProprieta;
 
 import java.io.IOException;
 

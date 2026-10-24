@@ -2,7 +2,6 @@ package com.threeamigos.foresta.tipi;
 
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.testi.Testi;
-import java.util.Locale;
 
 /**
  * Il moltiplicatore che una classe di personaggi ha per un attributo (il carico massimo, la furtività...) o per i danni (magici o fisici), con la

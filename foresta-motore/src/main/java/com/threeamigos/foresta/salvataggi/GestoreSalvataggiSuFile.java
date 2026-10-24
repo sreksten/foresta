@@ -6,19 +6,18 @@ import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.eventi.notifiche.NotificaErroreCaricamento;
 import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
 import com.threeamigos.foresta.modellodati.GruppoGiocatoreMD;
-import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.serializzazione.Serializzabile;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
+import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.tipi.Comando;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 
 /**
  * I salvataggi su file: cinque slot, un file di testo ciascuno nella cartella {@code .foresta}, sempre in UTF-8. La prima riga è l'intestazione (slot, capo

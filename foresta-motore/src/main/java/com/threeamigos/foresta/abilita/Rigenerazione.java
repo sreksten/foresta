@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.abilita;
 
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoAbilita;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 
 import java.util.Optional;
 

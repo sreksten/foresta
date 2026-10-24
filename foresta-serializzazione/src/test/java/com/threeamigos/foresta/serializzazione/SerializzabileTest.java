@@ -8,7 +8,8 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Come si scrive una riga di un salvataggio: i campi separati da "|", gli enum con il loro nome, i campi che possono

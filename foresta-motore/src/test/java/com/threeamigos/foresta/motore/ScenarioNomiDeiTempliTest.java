@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.testi.Articoli;
+import com.threeamigos.foresta.testi.ProduttoreDiLuoghiCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.testi.ProduttoreDiLuoghiCasuale;
 
 /**
  * I templi hanno un nome preso da templi.txt, diverso per ognuno, che si salva con la casella.

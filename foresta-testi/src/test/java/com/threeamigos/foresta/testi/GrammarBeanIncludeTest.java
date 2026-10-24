@@ -4,7 +4,6 @@ import com.threeamigos.foresta.testi.GrammarBean.InvalidGrammarException;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;

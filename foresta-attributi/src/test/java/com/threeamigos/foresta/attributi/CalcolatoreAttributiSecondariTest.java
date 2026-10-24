@@ -2,7 +2,8 @@ package com.threeamigos.foresta.attributi;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Le formule degli attributi secondari: la somma pesata delle radici dei due primari, per il moltiplicatore della classe,

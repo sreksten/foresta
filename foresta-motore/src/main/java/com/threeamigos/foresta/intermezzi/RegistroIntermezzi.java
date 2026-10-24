@@ -3,11 +3,12 @@ package com.threeamigos.foresta.intermezzi;
 import com.threeamigos.foresta.missioni.IntermezzoDiPasso;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.IntermezziMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.motore.ModalitaDiProva;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
+
 import java.util.HashSet;
 import java.util.Set;
 

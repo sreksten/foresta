@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.testi.GrammarBean.InvalidGrammarException;
-import com.threeamigos.foresta.testi.GrammarBean;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.strumenti.logger.Logger;
+import com.threeamigos.foresta.testi.GrammarBean;
+import com.threeamigos.foresta.testi.GrammarBean.InvalidGrammarException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,7 +71,7 @@ final class GrammaticaArtefatti {
 		return caricaOppureNull(GRAMMATICA_INGREDIENTI);
 	}
 
-	private static GrammaticaArtefatti caricaOppureNull(String file) {
+	static GrammaticaArtefatti caricaOppureNull(String file) {
 		try (InputStream grammatica = GrammaticaArtefatti.class.getResourceAsStream(file);
 			 InputStream postProduzione = GrammaticaArtefatti.class.getResourceAsStream(POST_PRODUZIONE)) {
 			return new GrammaticaArtefatti(new GrammarBean(grammatica, postProduzione));

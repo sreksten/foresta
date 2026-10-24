@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.trofei;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoCaricamentoCompletato;
+import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
 import com.threeamigos.foresta.interfacce.GestoreTrofei;
 import com.threeamigos.foresta.modellodati.TrofeiMD;

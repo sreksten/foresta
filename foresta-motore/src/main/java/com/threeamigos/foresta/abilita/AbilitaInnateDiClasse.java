@@ -1,15 +1,11 @@
 package com.threeamigos.foresta.abilita;
 
-import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.LuceDivina;
-import com.threeamigos.foresta.tipi.AbilitaInnataDiClasse;
-import com.threeamigos.foresta.tipi.TipoAbilita;
-import com.threeamigos.foresta.tipi.TipoCanto;
-import com.threeamigos.foresta.tipi.TipoIncantesimo;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.testi.Testi;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,14 +1,15 @@
 package com.threeamigos.foresta.ui.sprite;
 
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.FontTool;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Il fumetto di un personaggio: un riquadro con il testo e una punta che indica chi parla, che cresce verso l'alto da un punto e svanisce dopo qualche secondo.

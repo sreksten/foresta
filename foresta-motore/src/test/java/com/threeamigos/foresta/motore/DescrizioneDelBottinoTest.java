@@ -1,20 +1,21 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.oggetti.FormaDelBottino;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.locazioni.OggettiDiProva;
 import com.threeamigos.foresta.locazioni.Radura;
-import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.BottinoArtefatto;
-import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
+import com.threeamigos.foresta.oggetti.FormaDelBottino;
 import com.threeamigos.foresta.oggetti.Moneta;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Come la locazione dice ciò che il gruppo vede: un artefatto già fatto (quello di un tempio) con il suo nome completo, le

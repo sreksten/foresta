@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
+import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.artefatti.VistaArtefatto;
 
 /**
  * Il gruppo ha trovato un artefatto o un ingrediente magico in un cofano, o ha preso l'artefatto di un tempio:

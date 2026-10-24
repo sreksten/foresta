@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.strumenti.ThreadPrincipale;
+import com.threeamigos.foresta.temporizzatore.ThreadPrincipale;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 /**
  * Il thread principale di Swing: l'Event Dispatch Thread.

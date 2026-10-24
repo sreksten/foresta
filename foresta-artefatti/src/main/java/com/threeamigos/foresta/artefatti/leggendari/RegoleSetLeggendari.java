@@ -1,25 +1,17 @@
 package com.threeamigos.foresta.artefatti.leggendari;
 
-import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.artefatti.VistaPezzoDelSet;
 import com.threeamigos.foresta.artefatti.ArtefattoMD;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.artefatti.VistaPezzoDelSet;
 import com.threeamigos.foresta.artefatti.tipi.StatoPezzoDelSet;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.testi.Articoli;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -195,7 +187,8 @@ public final class RegoleSetLeggendari {
 	}
 
 	private static OggettoLeggendario leggendario(String chiave) {
-		return CatalogoLeggendari.getLeggendario(chiave).orElseThrow(() -> new IllegalStateException("Leggendario che non c'è: " + chiave));
+		// Le chiavi dei pezzi di un set vengono dal catalogo, quindi ci sono sempre
+		return CatalogoLeggendari.getTuttiILeggendari().get(chiave);
 	}
 
 	private static Optional<SetLeggendario> set(ArtefattoMD artefatto) {

@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.ui.componenti;
 
+import com.threeamigos.foresta.ui.testo.TestoGrande;
 import org.junit.jupiter.api.Test;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.ui.testo.TestoGrande;
 
 /**
  * Lo scorrimento verticale, senza disegnare: dove sta l'immagine, quando arriva, quando esce, e i limiti dello

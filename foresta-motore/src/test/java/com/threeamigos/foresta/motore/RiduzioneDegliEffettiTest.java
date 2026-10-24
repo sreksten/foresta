@@ -1,30 +1,31 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.artefatti.Arma;
-import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
 import com.threeamigos.foresta.artefatti.IncantamentoMD;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.DannoRisultante;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.personaggi.PersonaggioBase;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.combattimento.DannoRisultante;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Chi resiste a un tipo di danno (moltiplicatore fra 0 e 1) ne subisce meno anche gli effetti: gli stati nativi del tipo di danno
@@ -61,7 +62,7 @@ class RiduzioneDegliEffettiTest {
         // degli stati nativi è il danno contro la FORZA del difensore, e deve restare lontana dal 100%
         for (TipoAttributo attributo : new TipoAttributo[] {TipoAttributo.FORZA, TipoAttributo.DESTREZZA, TipoAttributo.COSTITUZIONE,
                 TipoAttributo.INTELLIGENZA, TipoAttributo.SAGGEZZA, TipoAttributo.CARISMA, TipoAttributo.FORTUNA}) {
-            ((PersonaggioBase) guerriero).addModificatore(new ModificatoreAttributoMD(attributo, TipoModificatore.QUANTITA_ASSOLUTA,
+            guerriero.addModificatore(new ModificatoreAttributoMD(attributo, TipoModificatore.QUANTITA_ASSOLUTA,
                     attributo == TipoAttributo.FORZA ? forza : 12));
         }
         return guerriero;
@@ -184,9 +185,9 @@ class RiduzioneDegliEffettiTest {
             @Override public int getLivello() { return 5; }
             @Override public TipoDanno getTipoDanno() { return TipoDanno.GELO; }
             @Override public boolean isIncantata() { return false; }
-            @Override public Collection<IncantamentoMD> getIncantamenti() { return Arrays.asList(); }
+            @Override public Collection<IncantamentoMD> getIncantamenti() { return Collections.emptyList(); }
             @Override public Collection<ModificatoreAttributoMD> getModificatoriSulBersaglio() {
-                return Arrays.asList(new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 0));
+                return Collections.singletonList(new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 0));
             }
         };
         Prova modificatore = r -> !r.getModificatoriDaAggiungere().isEmpty();

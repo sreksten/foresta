@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.artefatti;
 
 
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -16,6 +16,9 @@ import java.util.stream.Collectors;
  */
 public class ArmaFisica extends Artefatto implements Arma {
 
+    /**
+     * Un'arma sui dati dati.
+     */
     public ArmaFisica(ArtefattoMD md) {
         super(md);
     }

@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.artefatti.tipi;
 
-import com.threeamigos.foresta.artefatti.leggendari.RegoleSetLeggendari;
-
 /**
  * Dove sta un singolo pezzo di un set leggendario, visto da un altro pezzo dello stesso set.
  * <p>

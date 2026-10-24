@@ -2,7 +2,7 @@ package com.threeamigos.foresta.ui.riquadri;
 
 import org.junit.jupiter.api.Test;
 
-import java.awt.Rectangle;
+import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

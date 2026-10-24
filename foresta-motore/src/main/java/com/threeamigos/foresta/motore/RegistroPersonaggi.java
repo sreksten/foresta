@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.locazioni.Bottega;
 import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;

@@ -1,26 +1,12 @@
 package com.threeamigos.foresta.artefatti.leggendari;
 
+import com.threeamigos.foresta.artefatti.*;
 import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
-import com.threeamigos.foresta.artefatti.VistaArtefatto;
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
-import com.threeamigos.foresta.artefatti.IncantamentoMD;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.artefatti.Artefatto;
-import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
-import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Un libro tecnico, letto da una riga di leggendari.txt (che ne descrive il formato): un libro leggendario di cui nessuno
@@ -116,16 +102,30 @@ public final class LibroTecnico {
 	 */
 	public static synchronized Collection<LibroTecnico> tutti() {
 		if (libri == null) {
-			Map<String, LibroTecnico> letti = new LinkedHashMap<>();
-			for (String riga : ProduttoreDiArtefattiCasuale.tuttiILibriTecnici()) {
-				LibroTecnico libro = da(riga);
-				if (letti.put(libro.getChiave(), libro) != null) {
-					throw new IllegalStateException("Libro tecnico ripetuto: " + libro.getChiave());
-				}
-			}
-			libri = Collections.unmodifiableMap(letti);
+			libri = leggi(ProduttoreDiArtefattiCasuale.tuttiILibriTecnici());
 		}
 		return libri.values();
+	}
+
+	/**
+	 * Torna a leggere i libri dalla grammatica al prossimo uso, per i test che li hanno sostituiti con righe loro.
+	 */
+	static synchronized void reimposta() {
+		libri = null;
+	}
+
+	/**
+	 * Legge le righe date, controllando che le chiavi siano tutte diverse.
+	 */
+	static Map<String, LibroTecnico> leggi(List<String> righe) {
+		Map<String, LibroTecnico> letti = new LinkedHashMap<>();
+		for (String riga : righe) {
+			LibroTecnico libro = da(riga);
+			if (letti.put(libro.getChiave(), libro) != null) {
+				throw new IllegalStateException("Libro tecnico ripetuto: " + libro.getChiave());
+			}
+		}
+		return Collections.unmodifiableMap(letti);
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 
 /**
  * Quel che resta di un incantamento quando una riprogrammazione va male (vedi RegoleIncantatura.riprogramma): un ingrediente di tipo
