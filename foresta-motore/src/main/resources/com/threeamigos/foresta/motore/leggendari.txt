@@ -349,7 +349,7 @@ L_OGGETTO
 // ---------------------------------------------------------------------------------------------
 
 LIBRO_TECNICO$
-    CHIAVE=MANUALE_UNIX_SYSTEM_V;NOME=il Manuale di Unix System V;DESCRIZIONE=che aiuta a far gli spregi ar CDA;DANNI_MAGICI=2;\
+    CHIAVE=MANUALE_UNIX_SYSTEM_V;NOME=il Manuale di Unix System V;DESCRIZIONE=che spiega tutto, tranne come si esce dall'editor;DANNI_MAGICI=2;\
     BATTUTA=Qui dice che tutto è un file. Anche io sono un file?;\
     BATTUTA=C'è un capitolo intero su come uccidere i processi. Senza nemmeno una spada.;\
     BATTUTA=Un incantesimo di due lettere, ls, che mostra tutto quello che si possiede. Comodo, per l'inventario.

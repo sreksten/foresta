@@ -55,7 +55,7 @@ class LibroTecnicoTest {
 		assertEquals(2, LibroTecnico.tutti().size());
 		LibroTecnico unix = LibroTecnico.getLibro(UNIX).orElseThrow(AssertionError::new);
 		assertEquals("il Manuale di Unix System V", unix.getNome());
-		assertEquals("\"Il Manuale di Unix System V\", che aiuta a far gli spregi ar CDA", unix.getTitoloDaLeggere());
+		assertEquals("\"Il Manuale di Unix System V\", che spiega tutto, tranne come si esce dall'editor", unix.getTitoloDaLeggere());
 		LibroTecnico kr = LibroTecnico.getLibro(K_AND_R).orElseThrow(AssertionError::new);
 		assertEquals("\"The C Programming Language\", di B. Kernighan e D. Ritchie", kr.getTitoloDaLeggere());
 		assertFalse(kr.getBattute().isEmpty());
@@ -82,7 +82,7 @@ class LibroTecnicoTest {
 		assertEquals(TipoArtefatto.LIBRO_MAGICO, libro.getTipo());
 		assertEquals("il Manuale di Unix System V", libro.getNome());
 		assertNull(libro.getModelloDati().getNomeProprio(), "il titolo è il nome: niente nome proprio");
-		assertEquals("che aiuta a far gli spregi ar CDA", libro.getModelloDati().getDescrizione());
+		assertEquals("che spiega tutto, tranne come si esce dall'editor", libro.getModelloDati().getDescrizione());
 		ModificatoreAttributoMD modificatore = libro.getModelloDati().getModificatori().iterator().next();
 		assertEquals(30, modificatore.getQuantita(), 1e-9);
 		IncantamentoMD incantamento = libro.getModelloDati().getIncantamenti().iterator().next();

@@ -328,7 +328,7 @@ class ArtefattoMDTest {
     @Test
     void salvaERicaricaLAspetto() throws IOException {
         // Given: un libro magico con l'aspetto di un libro tecnico
-        ArtefattoMD libro = creaArtefatto(TipoArtefatto.LIBRO_MAGICO, "il Manuale di Unix System V", "che aiuta a far gli spregi ar CDA");
+        ArtefattoMD libro = creaArtefatto(TipoArtefatto.LIBRO_MAGICO, "il Manuale di Unix System V", "che spiega tutto, tranne come si esce dall'editor");
         libro.setAspetto(TipoOggetto.LIBRO_TECNICO);
         // When
         ArtefattoMD ricaricato = salvaERileggi(libro);

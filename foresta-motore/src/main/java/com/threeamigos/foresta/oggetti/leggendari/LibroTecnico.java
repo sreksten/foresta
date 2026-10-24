@@ -190,7 +190,7 @@ public final class LibroTecnico {
 
 	/**
 	 * Il titolo come lo legge chi ha il libro in mano, fra virgolette e con la descrizione: "\"Il Manuale di Unix System
-	 * V\", che aiuta a far gli spregi ar CDA".
+	 * V\", che spiega tutto, tranne come si esce dall'editor".
 	 */
 	public String getTitoloDaLeggere() {
 		return '"' + nome.substring(0, 1).toUpperCase(Locale.ROOT) + nome.substring(1) + "\", " + descrizione;
