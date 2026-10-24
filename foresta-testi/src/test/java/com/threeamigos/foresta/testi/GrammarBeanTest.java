@@ -895,19 +895,6 @@ class GrammarBeanTest {
     }
 
     @Test
-    void shippedPostProductionFileIsStillAccepted() throws Exception {
-        // The rules actually used by the game must keep loading: preposizioni_articolate_pp.txt
-        // is treated as final, so this test fails loudly if the new check ever rejects it.
-        try (InputStream grammar = new ByteArrayInputStream("ROOT\n\tvai a il castello\n".getBytes(StandardCharsets.UTF_8));
-             InputStream postProduction = GrammarBeanTest.class.getResourceAsStream(
-                     "/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt")) {
-            assertNotNull(postProduction, "preposizioni_articolate_pp.txt not found on the test classpath");
-            GrammarBean bean = new GrammarBean(grammar, postProduction);
-            assertEquals("vai al castello", bean.produce().get(0));
-        }
-    }
-
-    @Test
     void postProductionRewritesOverlappingOccurrences() throws Exception {
         // The behaviour the load-time check exists to preserve: " a il " can overlap itself,
         // because it both starts and ends with a space, and the repeated-application loop

@@ -9,6 +9,14 @@
 
     <artifactId>foresta-testi</artifactId>
     <name>foresta-testi</name>
-    <description>Il caricatore dei testi per lingua (classe Testi): non dipende da nessun altro modulo</description>
+    <description>I testi: il caricatore per lingua (Testi), gli articoli e i numeri in lettere, e il produttore di testi da una grammatica (GrammarBean)</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>foresta-strumenti</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>

@@ -355,9 +355,9 @@ class GrammarBeanStaticTest {
     @Test
     void LeGrammaticheDaRisorsaCondividonoLaStaticaPerURL() throws Exception {
         GrammarBean a = GrammarBean.fromResource(GrammarBeanStaticTest.class,
-                "/com/threeamigos/foresta/motore/include_prova/statica_a.txt", null);
+                "/com/threeamigos/foresta/testi/include_prova/statica_a.txt", null);
         GrammarBean b = GrammarBean.fromResource(GrammarBeanStaticTest.class,
-                "/com/threeamigos/foresta/motore/include_prova/statica_b.txt", null);
+                "/com/threeamigos/foresta/testi/include_prova/statica_b.txt", null);
         Set<String> usciti = new HashSet<>();
         usciti.add(a.produce("RADICE").get(0));
         usciti.add(b.produce("RADICE").get(0).replace("il signor ", ""));

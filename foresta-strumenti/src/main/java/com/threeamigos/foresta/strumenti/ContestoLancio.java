@@ -28,6 +28,9 @@ public enum ContestoLancio {
         this.scelta = scelta;
     }
 
+    /**
+     * Il nome del contesto, come lo mostra la finestra di prova.
+     */
     public String getDescrizione() {
         return descrizione;
     }

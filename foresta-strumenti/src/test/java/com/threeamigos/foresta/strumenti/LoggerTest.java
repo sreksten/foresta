@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -87,5 +88,15 @@ class LoggerTest {
 		// Then
 		assertFalse(Logger.isAttivo());
 		assertEquals(0, costruzioni.get(), "il fornitore non e' stato chiamato");
+	}
+
+	@Test
+	void senzaDestinazioneInstallataSiCreaQuellaDelDesktopUnaVoltaSola() {
+		Logger.impostaDestinazione(null);
+
+		assertTrue(Logger.isAttivo(), "quella del desktop scrive");
+		DestinazioneDiLog prima = Logger.creaLaDestinazionePredefinita();
+		assertSame(prima, Logger.creaLaDestinazionePredefinita(), "se c'è già, la riusa");
+		assertTrue(prima instanceof DestinazioneConsoleEFile);
 	}
 }

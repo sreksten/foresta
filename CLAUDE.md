@@ -6,14 +6,15 @@ Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo 
 
 | Modulo | Contiene | Dipende da |
 | :--- | :--- | :--- |
-| `foresta-testi` | `testi`: `Testi` (il caricatore dei testi per lingua), `Articoli` (articoli e preposizioni articolate) e `Numeri` (cardinali e ordinali in lettere) | nessuno |
+| `foresta-strumenti` | `strumenti`: `Dado` (l'unica sorgente di caso) con `ContestoLancio` e `TruccatoreDiDadi`, e il registro `Logger` con `DestinazioneDiLog` e `DestinazioneConsoleEFile` | nessuno |
+| `foresta-testi` | `testi`: `Testi` (il caricatore dei testi per lingua), `Articoli` (articoli e preposizioni articolate), `Numeri` (cardinali e ordinali in lettere) e `GrammarBean` (produce testi da una grammatica) | strumenti |
 | `foresta-serializzazione` | `serializzazione`: `Serializzabile`, `LettoreCampi`, `MappaProprieta` (scrittura e lettura dei salvataggi a righe) | nessuno |
 | `foresta-attributi` | `attributi` (`CalcolatoreAttributiSecondari`, le formule dei secondari), `attributi.tipi` (`TipoAttributo`, `CategoriaAttributo`), `modificatori` (`ModificatoreAttributoMD`) e `modificatori.tipi` (`TipoModificatore`, `UnitaDurataModificatore`, `BersaglioModificatore`): solo gli attributi e le modifiche che si possono fare loro, niente personaggi né oggetti | testi, serializzazione |
 | `foresta-effettidistato` | `effettidistato.tipi` (`TipoEffettoDiStato`) e `effettidistato` (`EffettoDiStatoMD`): solo gli effetti di stato | testi, serializzazione |
 | `foresta-danni` | `danni.tipi`: `TipoDanno`, `CategoriaDanno`, `TipoInterazioneConEffettiDiStato`: solo i danni e le loro interazioni con gli effetti di stato | testi, effettidistato |
 | `foresta-tipi` | `tipi`: enum e costanti di base (anche `Costanti`, i valori di bilanciamento) | testi, attributi, danni |
 | `foresta-modellodati` | `modellodati`: le classi `…MD`, solo dati (con la lettura e la scrittura dei salvataggi) | tipi, serializzazione |
-| `foresta-contratti` | `interfacce`, `eventi` (bus e classi degli eventi), le utilità di `strumenti` (anche `Dado`, l'unica sorgente di caso) e i dati di `intermezzi` che servono alla UI | modellodati |
+| `foresta-contratti` | `interfacce`, `eventi` (bus e classi degli eventi), le utilità di `strumenti` (quelle che non stanno in `foresta-strumenti`) e i dati di `intermezzi` che servono alla UI | modellodati |
 | `foresta-motore` | il resto: `motore`, `combattimento`, `personaggi`, `oggetti`, `locazioni`, `missioni`, `incantesimi`, `canti`, `abilita`, `offerte`, `tattiche`, `trofei`, `testi`, `salvataggi`, la logica degli intermezzi, gli eventi interni che portano il dominio, le grammatiche `.txt` | contratti |
 | `foresta-swing` | `ui` (e gli eventi con sprite), le immagini | contratti |
 | `foresta-app` | `Main`, `SnifferBusEventi` e i test che usano motore e UI insieme | motore, swing |

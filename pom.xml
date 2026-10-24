@@ -9,6 +9,7 @@
 
     <!-- Dall'alto verso il basso nell'ordine di dipendenza: ogni modulo conosce solo quelli sopra di lui -->
     <modules>
+        <module>foresta-strumenti</module>
         <module>foresta-testi</module>
         <module>foresta-serializzazione</module>
         <module>foresta-attributi</module>

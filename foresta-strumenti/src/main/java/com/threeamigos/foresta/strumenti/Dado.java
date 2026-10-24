@@ -21,7 +21,11 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  *
  * @author Stefano Reksten
  */
-public class Dado {
+public final class Dado {
+
+    // Una classe di soli metodi statici: non si istanzia
+    private Dado() {
+    }
 
     private static final Random SORGENTE = new Random();
 

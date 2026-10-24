@@ -10,7 +10,6 @@ import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.strumenti.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;

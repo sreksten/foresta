@@ -1,0 +1,3 @@
+RADICE
+    ciao
+#include_static <non_esiste.txt>

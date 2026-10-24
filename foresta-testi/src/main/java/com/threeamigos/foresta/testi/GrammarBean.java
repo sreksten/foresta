@@ -922,7 +922,7 @@ public class GrammarBean {
 		@Override
 		public List<WeightedAlternative> get(Object key) {
 			List<WeightedAlternative> own = super.get(key);
-			if (own != null || staticSections.isEmpty() || !(key instanceof String)) {
+			if (own != null || staticSections.isEmpty()) {
 				return own;
 			}
 			synchronized (STATIC_LOCK) {
@@ -1030,10 +1030,12 @@ public class GrammarBean {
 	 * esaurita viene rimossa dalle produzioni condivise insieme ai suoi dipendenti, e questa grammatica pota le proprie
 	 * alternative che la usavano. Va chiamato tenendo {@link #STATIC_LOCK}.
 	 */
-	private String getStaticProduction(String production) {
+	String getStaticProduction(String production) {
 		StaticSection section = staticSectionOf(production);
 		List<WeightedAlternative> alternatives = section.current.get(production);
-		if (alternatives == null || alternatives.isEmpty()) {
+		// Una produzione esaurita viene tolta dalle condivise (vedi sotto): se un altro thread la esaurisce fra il controllo di
+		// chi ci chiama e questo punto, la lista non c'è più
+		if (alternatives == null) {
 			throw new IllegalArgumentException(PRODUCTION + production + " is empty!");
 		}
 		WeightedAlternative chosen = pick(alternatives);
@@ -1086,7 +1088,7 @@ public class GrammarBean {
 	 * Dove si trova una riga del sorgente, per i messaggi di errore: "Line N", più il file e la riga da cui proviene quando il
 	 * sorgente include altri file ("Line 120 (nomi.txt:12)").
 	 */
-	private String position(int lineNumber) {
+	String position(int lineNumber) {
 		if (sourceOrigins == null || lineNumber < 1 || lineNumber > sourceOrigins.size()) {
 			return LINE + lineNumber;
 		}
@@ -1155,7 +1157,7 @@ public class GrammarBean {
 				if (valueProductions == null) {
 					throw new InvalidGrammarException("Production " + derivedProduction + " refers to an undeclared production: " + value);
 				}
-				productionsMap.computeIfAbsent(derivedProduction, k -> new ArrayList<>()).addAll(valueProductions);
+				productionsMap.get(derivedProduction).addAll(valueProductions);
 			}
 		}
 	}
@@ -1310,7 +1312,7 @@ public class GrammarBean {
 		for (int i = 0; i < line.length(); i++) {
 			char c = line.charAt(i);
 			if (inQuotes) {
-				if (c == ESCAPE_CHAR && i + 1 < line.length() && line.charAt(i + 1) == QUOTE_CHAR) {
+				if (isEscapeOf(line, i, QUOTE_CHAR)) {
 					current.append(c).append(line.charAt(i + 1));
 					i++;
 				} else if (c == QUOTE_CHAR) {
@@ -1376,6 +1378,21 @@ public class GrammarBean {
 	}
 
 	/**
+	 * Dice se in {@code text[i]} c'è un escape: un {@link #ESCAPE_CHAR} seguito da un altro carattere (come ultimo carattere
+	 * del testo è un carattere qualunque).
+	 */
+	static boolean isEscape(String text, int i) {
+		return text.charAt(i) == ESCAPE_CHAR && i + 1 < text.length();
+	}
+
+	/**
+	 * Dice se in {@code text[i]} c'è l'escape proprio di {@code escaped}, per esempio {@code \"} o {@code \[}.
+	 */
+	static boolean isEscapeOf(String text, int i, char escaped) {
+		return isEscape(text, i) && text.charAt(i + 1) == escaped;
+	}
+
+	/**
 	 * Trova l'indice della prossima {@link #OPENING_BRACE} a partire da {@code fromIndex} (compreso) che non si trovi
 	 * dentro un tratto letterale grezzo ({@code "..."}), così che ad esempio in <code>"a {b} c"</code> l'intero
 	 * testo (graffa compresa) sia trattato come letterale, non come gruppo di alternative in linea.
@@ -1386,7 +1403,7 @@ public class GrammarBean {
 		for (int i = fromIndex; i < child.length(); i++) {
 			char c = child.charAt(i);
 			if (inQuotes) {
-				if (c == ESCAPE_CHAR && i + 1 < child.length() && child.charAt(i + 1) == QUOTE_CHAR) {
+				if (isEscapeOf(child, i, QUOTE_CHAR)) {
 					i++;
 				} else if (c == QUOTE_CHAR) {
 					inQuotes = false;
@@ -1415,13 +1432,13 @@ public class GrammarBean {
 		for (int i = 0; i < text.length(); i++) {
 			char c = text.charAt(i);
 			if (inQuotes) {
-				if (c == ESCAPE_CHAR && i + 1 < text.length() && text.charAt(i + 1) == QUOTE_CHAR) {
+				if (isEscapeOf(text, i, QUOTE_CHAR)) {
 					result.append(QUOTE_CHAR);
 					i++;
-				} else if (c == ESCAPE_CHAR && i + 1 < text.length() && text.charAt(i + 1) == OPENING_BRACKET.charAt(0)) {
+				} else if (isEscapeOf(text, i, OPENING_BRACKET.charAt(0))) {
 					result.append(LITERAL_OPENING_BRACKET_PLACEHOLDER);
 					i++;
-				} else if (c == ESCAPE_CHAR && i + 1 < text.length() && text.charAt(i + 1) == CLOSING_BRACKET.charAt(0)) {
+				} else if (isEscapeOf(text, i, CLOSING_BRACKET.charAt(0))) {
 					result.append(LITERAL_CLOSING_BRACKET_PLACEHOLDER);
 					i++;
 				} else if (c == QUOTE_CHAR) {
@@ -1453,7 +1470,7 @@ public class GrammarBean {
 		for (int i = openingBraceIndex; i < child.length(); i++) {
 			char c = child.charAt(i);
 			if (inQuotes) {
-				if (c == ESCAPE_CHAR && i + 1 < child.length() && child.charAt(i + 1) == QUOTE_CHAR) {
+				if (isEscapeOf(child, i, QUOTE_CHAR)) {
 					i++;
 				} else if (c == QUOTE_CHAR) {
 					inQuotes = false;
@@ -1879,7 +1896,7 @@ public class GrammarBean {
 	public boolean canProduce(String production) {
 		refreshStatic();
 		List<WeightedAlternative> alternatives = currentProductionsMap.get(production);
-		return alternatives != null && !alternatives.isEmpty();
+		return alternatives != null;
 	}
 
 	List<WeightedAlternative> getProductions(String rootProduction) {
@@ -2119,7 +2136,7 @@ public class GrammarBean {
 		for (int i = 0; i < tokenBody.length(); i++) {
 			char c = tokenBody.charAt(i);
 			if (inQuotes) {
-				if (c == ESCAPE_CHAR && i + 1 < tokenBody.length()) {
+				if (isEscape(tokenBody, i)) {
 					i++;
 				} else if (c == QUOTE_CHAR) {
 					inQuotes = false;
@@ -2197,7 +2214,7 @@ public class GrammarBean {
 		for (int i = 0; i < tokenBody.length(); i++) {
 			char c = tokenBody.charAt(i);
 			if (inQuotes) {
-				if (c == ESCAPE_CHAR && i + 1 < tokenBody.length()) {
+				if (isEscape(tokenBody, i)) {
 					i++;
 				} else if (c == QUOTE_CHAR) {
 					inQuotes = false;
@@ -2449,7 +2466,9 @@ public class GrammarBean {
 		}
 		double r = rnd.nextDouble() * totalWeight;
 		double cumulativeWeight = 0;
-		for (WeightedAlternative alternative : productions) {
+		// L'ultima alternativa non si confronta: se le precedenti non bastano, r cade nel suo intervallo
+		for (int i = 0; i < productions.size() - 1; i++) {
+			WeightedAlternative alternative = productions.get(i);
 			cumulativeWeight += alternative.weight;
 			if (r < cumulativeWeight) {
 				return alternative;
@@ -2526,9 +2545,15 @@ public class GrammarBean {
 		return intermediateProduction.replaceAll(SPACE_BEFORE_PUNCTUATION_REGEX, "");
 	}
 
+	/**
+	 * La grammatica (o la sua postproduzione) non è valida o non si può leggere: il messaggio dice dove e perché.
+	 */
 	public static class InvalidGrammarException extends Exception {
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * @param error cosa non va nella grammatica
+		 */
 		public InvalidGrammarException(String error) {
 			super(error);
 		}

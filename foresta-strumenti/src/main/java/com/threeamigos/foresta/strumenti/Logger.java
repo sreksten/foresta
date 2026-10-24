@@ -28,16 +28,16 @@ public class Logger {
 
 	private static DestinazioneDiLog destinazione() {
 		DestinazioneDiLog corrente = destinazione;
-		if (corrente == null) {
-			synchronized (Logger.class) {
-				corrente = destinazione;
-				if (corrente == null) {
-					corrente = new DestinazioneConsoleEFile();
-					destinazione = corrente;
-				}
-			}
+		return corrente != null ? corrente : creaLaDestinazionePredefinita();
+	}
+
+	// La destinazione del desktop, creata una volta sola alla prima necessità (e non all'avvio, perché una piattaforma ne può
+	// installare una sua prima che serva): se due thread arrivano insieme, il secondo trova già quella del primo
+	static synchronized DestinazioneDiLog creaLaDestinazionePredefinita() {
+		if (destinazione == null) {
+			destinazione = new DestinazioneConsoleEFile();
 		}
-		return corrente;
+		return destinazione;
 	}
 
 	/**

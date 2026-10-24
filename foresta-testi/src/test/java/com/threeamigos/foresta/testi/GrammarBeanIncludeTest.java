@@ -178,14 +178,14 @@ class GrammarBeanIncludeTest {
     @Test
     void daRisorsaLeggeIFileDellaStessaCartellaEDelleSottocartelle() throws Exception {
         GrammarBean bean = GrammarBean.fromResource(GrammarBeanIncludeTest.class,
-                "/com/threeamigos/foresta/motore/include_prova/principale.txt", null);
+                "/com/threeamigos/foresta/testi/include_prova/principale.txt", null);
         assertEquals("Aldo Rossi", bean.produce("RADICE").get(0));
     }
 
     @Test
     void daRisorsaDiceSeLaRisorsaManca() {
         InvalidGrammarException e = assertThrows(InvalidGrammarException.class, () -> GrammarBean.fromResource(
-                GrammarBeanIncludeTest.class, "/com/threeamigos/foresta/motore/include_prova/non_esiste.txt", null));
+                GrammarBeanIncludeTest.class, "/com/threeamigos/foresta/testi/include_prova/non_esiste.txt", null));
         assertTrue(e.getMessage().contains("not found"), e.getMessage());
     }
 
