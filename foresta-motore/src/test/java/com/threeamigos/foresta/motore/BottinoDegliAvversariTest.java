@@ -75,10 +75,10 @@ class BottinoDegliAvversariTest {
     void ancheUnUmanoideMagicoPortaUnIncantesimoQualsiasiEnonSoloDelSuoRepertorio() {
         Personaggio strega = FabbricaPersonaggi.crea(TipoPersonaggio.STREGA, 1);
         assertTrue(strega.isMagico());
-        // La decima classe è l'Alba Sacra, che non è fra i malefici del suo repertorio
-        Dado.trucca(1, 10, 99);
+        // La nona classe è la Resurrezione, che non è fra i malefici del suo repertorio
+        Dado.trucca(1, 9, 99);
         BottinoDegliAvversari.fornisciLeScorte(avversari, Collections.singletonList(strega));
-        assertEquals(1, avversari.getIncantesimi(TipoIncantesimo.ALBA_SACRA));
+        assertEquals(1, avversari.getIncantesimi(TipoIncantesimo.RESURREZIONE));
     }
 
     @Test

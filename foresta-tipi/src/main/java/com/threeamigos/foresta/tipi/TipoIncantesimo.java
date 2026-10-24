@@ -32,7 +32,6 @@ public enum TipoIncantesimo {
 	VELENO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.VELENO, Comando.VELENO),
 	MORTE(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.SINGOLO_SOLO_VIVI, TipoDanno.NECROTICO, Comando.MORTE),
 	RESURREZIONE(CategoriaIncantesimo.BENEFICO, PortataIncantesimo.SINGOLO_QUALSIASI, null, Comando.RESURREZIONE),
-	ALBA_SACRA(CategoriaIncantesimo.BENEFICO, PortataIncantesimo.GRUPPO, null, Comando.ALBA_SACRA),
 	SILENZIO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.GRUPPO, TipoDanno.ARCANO, Comando.SILENZIO);
 
 	/**
@@ -140,8 +139,6 @@ public enum TipoIncantesimo {
 				return CostantiIncantesimi.INCANTESIMO_MORTE_COSTO_LANCIO;
 			case RESURREZIONE:
 				return CostantiIncantesimi.INCANTESIMO_RESURREZIONE_COSTO_LANCIO;
-			case ALBA_SACRA:
-				return CostantiIncantesimi.INCANTESIMO_ALBA_SACRA_COSTO_LANCIO;
 			case SILENZIO:
 				return CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_LANCIO;
 			default:
@@ -172,8 +169,6 @@ public enum TipoIncantesimo {
 				return CostantiIncantesimi.INCANTESIMO_MORTE_COSTO_ACQUISTO;
 			case RESURREZIONE:
 				return CostantiIncantesimi.INCANTESIMO_RESURREZIONE_COSTO_ACQUISTO;
-			case ALBA_SACRA:
-				return CostantiIncantesimi.INCANTESIMO_ALBA_SACRA_COSTO_ACQUISTO;
 			case SILENZIO:
 				return CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_ACQUISTO;
 			default:

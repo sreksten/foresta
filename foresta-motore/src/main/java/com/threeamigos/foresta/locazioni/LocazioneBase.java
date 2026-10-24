@@ -709,35 +709,6 @@ public abstract class LocazioneBase implements Locazione {
 						return Stato.SCELTA_PERSONAGGIO_QUALSIASI;
 					}
 
-					// Un incantesimo benefico su tutto il gruppo (Alba Sacra) si formula sul proprio gruppo,
-					// non su quello avversario
-					if (!suUnSoloBersaglio && tipoIncantesimo.getCategoriaIncantesimo() == CategoriaIncantesimo.BENEFICO) {
-						incantesimo.formula(formulante, null, gruppo);
-
-						if (!gruppo.getCapo().isVivo()) {
-							return Stato.GIOCO_PERSO;
-						}
-
-						// Chi la conosce per natura (Sacerdote, Sacerdotessa) non consuma pergamene
-						if (!(incantesimo.getClasse() == TipoIncantesimo.ALBA_SACRA && AlbaSacra.conosciutaDa(formulante.getClasse()))) {
-							gruppo.subIncantesimi(incantesimo.getClasse(), 1);
-						}
-
-						{
-							Stato dopoLAzione = dopoAzioneDelGiocatore(formulante);
-							if (dopoLAzione != null) {
-								return dopoLAzione;
-							}
-						}
-
-						if (!gruppo.getCapo().isVivo()) {
-							return Stato.GIOCO_PERSO;
-						}
-
-						statoLocazione = StatoLocazione.IN_LOCAZIONE;
-						break;
-					}
-
 					// Altrimenti l'incantesimo agisce sul gruppo avversario (tutto o fino al numero di bersagli del
 					// formulante, secondo la portata), su un solo avversario (Morte) o su tutta la locazione: il lancio,
 					// costo in MAGIA compreso, lo fa l'incantesimo. Gli avversari che uccide contano nelle statistiche e
@@ -995,6 +966,7 @@ public abstract class LocazioneBase implements Locazione {
 		opzioneCorruzioneDisponibile = false;
 		opzioneAmiciziaDisponibile = false;
 		// Il comando poteva essere stato dato quando l'abilità serviva e non serve più (e viceversa)
+		boolean cerano = gruppoAvversario.getNumeroPersonaggiVivi() > 0;
 		if (!AbilitaInnate.abilitaUtili(utilizzatore, gruppo, gruppoAvversario).contains(tipo)
 				|| !FabbricaAbilita.crea(tipo, utilizzatore).usa(utilizzatore, gruppo, gruppoAvversario)) {
 			// L'abilità non è partita: non è stata fatta nessuna azione, e quindi non passa nessun turno
@@ -1008,7 +980,8 @@ public abstract class LocazioneBase implements Locazione {
 				registraUccisione(utilizzatore, avversario);
 			}
 		}
-		if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
+		// Fuori dagli scontri (l'alba sacra) non ci sono avversari da sconfiggere: la locazione non finisce
+		if (cerano && gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
 			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
 		}
@@ -1094,10 +1067,9 @@ public abstract class LocazioneBase implements Locazione {
 			comandiPossibili.add(Comando.INTERRUZIONE_COMBATTIMENTO);
 		}
 		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo,
-		// oppure se un Sacerdote ha la MAGIA per l'alba sacra, o se qualcuno può usare un'abilità innata (Chierico, Druido, Sacerdote, Mago, Elfo) o un canto
+		// oppure se un Sacerdote ha la MAGIA per l'alba sacra, o se qualcuno può usare un'abilità innata (Chierico, Druido, Sacerdote, Mago, Elfo; compresa l'alba sacra, se serve) o un canto
 		boolean incantesimoPossibile = chiAgisce.stream()
-				.anyMatch(p -> AlbaSacra.puoLanciarlaInnata(p)
-						|| !CantoDelBardo.cantiUtili(p, gruppo, gruppoAvversario).isEmpty()
+				.anyMatch(p -> !CantoDelBardo.cantiUtili(p, gruppo, gruppoAvversario).isEmpty()
 						|| !AbilitaInnate.abilitaUtili(p, gruppo, gruppoAvversario).isEmpty());
 		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
 			if (gruppo.getIncantesimi(tipoIncantesimo) > 0 &&

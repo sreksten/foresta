@@ -15,8 +15,7 @@ ed Elfo e dell'alba sacra di Sacerdote e Sacerdotessa.
   anche un'`Arma` magica. `AbilitaInnate.conosciutaDa` e `puoUsare` (vivo, conosce, ha la MAGIA, non è `SILENZIATO`) decidono chi lo lancia;
   `Automa.entraInStatoSceltaIncantesimoDaLanciare` lo mette fra i comandi con le altre abilità innate e `LocazioneBase.usaUnaAbilita` lo
   esegue (un solo bersaglio: quello scelto, o il primo avversario vivo).
-- **Alba sacra** (`incantesimi/AlbaSacra`): invece è un `Incantesimo` di `TipoIncantesimo`, e chi la conosce per natura
-  non ne consuma le pergamene.
+- **Alba sacra** (`abilita/AlbaSacra`): un'abilità innata di supporto del Sacerdote (`TipoAbilita.ALBA_SACRA`), non più una pergamena.
 - Le capacità dipendono dal **`TipoPersonaggio`** (`conosciutoDa(classe)`), non dalla classe Java, e `PersonaggioNonCombattente`,
   `BardoLocanda` e `Viandante`, che estendono `Bardo`, non hanno il dardo né l'alba.
 - Il Bardo ha già la MAGIA (`BARDO_MAGIA_BASE` 40, `BARDO_LIVELLAMENTO_MAGIA` 18).
@@ -73,7 +72,7 @@ ed Elfo e dell'alba sacra di Sacerdote e Sacerdotessa.
 
 ## 6. Alba Sacra
 
-Non cambia. `AlbaSacra.formula` toglie tutti gli effetti di stato (`rimuoviTuttiGliEffettiDiStato`) e tutti i modificatori a tempo (`rimuoviIModificatoriTemporaneiRimovibili`, esclusa l'ignominia della fuga, che non è rimovibile), quindi anche `ISPIRATO`: l'Alba fa pulito, come si è deciso, e non si introduce nessuna distinzione fra effetti buoni e cattivi.
+Non cambia. `AlbaSacra.usa` toglie tutti gli effetti di stato (`rimuoviTuttiGliEffettiDiStato`) e tutti i modificatori a tempo (`rimuoviIModificatoriTemporaneiRimovibili`, esclusa l'ignominia della fuga, che non è rimovibile), quindi anche `ISPIRATO`: l'Alba fa pulito, come si è deciso, e non si introduce nessuna distinzione fra effetti buoni e cattivi.
 
 ## 7. Decisioni prese lungo il lavoro
 

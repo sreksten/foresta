@@ -26,6 +26,7 @@ public enum TipoAbilita {
 	PELLE_DI_CORTECCIA(Comando.PELLE_DI_CORTECCIA),
 	RIGENERAZIONE(Comando.RIGENERAZIONE),
 	// Del sacerdote
+	ALBA_SACRA(Comando.ALBA_SACRA),
 	LUCE_DIVINA(Comando.LUCE_DIVINA),
 	// Del mago e dell'elfo
 	DARDO_ARCANO(Comando.DARDO_ARCANO);
@@ -88,6 +89,8 @@ public enum TipoAbilita {
 				return CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO;
 			case RIGENERAZIONE:
 				return CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_COSTO_LANCIO;
+			case ALBA_SACRA:
+				return CostantiAbilitaInnate.ABILITA_ALBA_SACRA_COSTO_LANCIO;
 			case LUCE_DIVINA:
 				return CostantiAbilitaInnate.ABILITA_LUCE_DIVINA_COSTO_LANCIO;
 			case DARDO_ARCANO:

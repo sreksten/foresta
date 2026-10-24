@@ -1,11 +1,13 @@
-package com.threeamigos.foresta.incantesimi;
+package com.threeamigos.foresta.abilita;
 
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.Gruppo;
+import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +40,7 @@ class AlbaSacraTest {
         gruppo.aggiungiPersonaggio(sacerdote);
         gruppo.aggiungiPersonaggio(guerriero);
 
-        new AlbaSacra(3).formula(sacerdote, null, gruppo);
+        FabbricaAbilita.crea(TipoAbilita.ALBA_SACRA, sacerdote).usa(sacerdote, gruppo, GruppoAvversario.getIstanza());
 
         assertTrue(sacerdote.hasEffettoDiStato(TipoEffettoDiStato.ISPIRATO));
         assertFalse(sacerdote.hasEffettoDiStato(TipoEffettoDiStato.AVVELENATO));

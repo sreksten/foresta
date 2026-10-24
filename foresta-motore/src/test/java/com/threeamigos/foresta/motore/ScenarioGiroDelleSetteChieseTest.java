@@ -88,7 +88,6 @@ class ScenarioGiroDelleSetteChieseTest {
             giro.controllaPostLocazione();
             assertTrue(giro.getDescrizione().endsWith("Ne mancano sei."), giro.getDescrizione());
 
-            int alba = partita.gruppo().getIncantesimi(TipoIncantesimo.ALBA_SACRA);
             int elementali = elementali(partita);
             for (int i = 1; i < 6; i++) {
                 partita.gruppo().setCoordinate(templi.get(i));
@@ -101,13 +100,14 @@ class ScenarioGiroDelleSetteChieseTest {
             partita.gruppo().setCoordinate(templi.get(6));
             giro.controllaPostLocazione();
             assertFalse(giro.isCompleta(), "prima l'offerta del sacerdote");
-            assertEquals(alba + 2, partita.gruppo().getIncantesimi(TipoIncantesimo.ALBA_SACRA));
-            assertEquals(elementali + 1, elementali(partita));
+            assertEquals(elementali + com.threeamigos.foresta.missioni.principali.IlGiroDelleSetteChiese.INCANTESIMI_IN_DONO.length, elementali(partita));
             Intermezzo ringraziamento = RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA);
             assertNotNull(ringraziamento);
             String grazie = testo(ringraziamento.getPagine().get(0));
             assertFalse(grazie.contains("Luce Divina"), "la luce divina non è più una pergamena: " + grazie);
-            assertTrue(grazie.contains("due incantesimi dell'Alba Sacra"), grazie);
+            assertFalse(grazie.contains("Alba Sacra"), "l'alba sacra non è più una pergamena: " + grazie);
+            assertTrue(grazie.contains("per aiutarvi durante il vostro viaggio"), grazie);
+            assertTrue(grazie.contains("un incantesimo del Fulmine") || grazie.contains("Fulmine"), grazie);
         }
     }
 
@@ -201,7 +201,7 @@ class ScenarioGiroDelleSetteChieseTest {
 
     private static int elementali(PartitaDiTest partita) {
         int totale = 0;
-        for (TipoIncantesimo classe : com.threeamigos.foresta.missioni.principali.IlGiroDelleSetteChiese.INCANTESIMI_ELEMENTALI) {
+        for (TipoIncantesimo classe : com.threeamigos.foresta.missioni.principali.IlGiroDelleSetteChiese.INCANTESIMI_IN_DONO) {
             totale += partita.gruppo().getIncantesimi(classe);
         }
         return totale;

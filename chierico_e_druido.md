@@ -12,7 +12,7 @@ come le altre classi a inizio partita e compaiono fra i compagni reclutabili in 
 | Armi | Mazza, spada, scudo, armatura; né bastone né libro; niente doppia arma | Bastone magico, lancia, libro magico; né scudo né armatura (di metallo); niente doppia arma. **Non esistono archi nel gioco**, quindi non li usa |
 | Dotazione iniziale | Mazza e scudo | Bastone magico e veste |
 | Resistenze (`TipoPersonaggio`) | `NECROTICO` e `MALEDIZIONE` ×0,75 | `ACQUA`, `TERRA`, `VELENO` ×0,75; `FUOCO` ×1,25, `TAGLIENTE` ×1,1 |
-| Magia innata | Nessuna: **Alba sacra** e **Luce Divina** sono del solo Sacerdote (`AlbaSacra.conosciutaDa`, `AbilitaInnate.conosciutaDa(classe, TipoAbilita.LUCE_DIVINA)`), il chierico ha le due abilità (scacciare i non morti, imposizione delle mani) e può comunque lanciare gli incantesimi con le pergamene | nessuna dei sacerdoti, né il dardo arcano |
+| Magia innata | Nessuna: **Alba sacra** e **Luce Divina** sono del solo Sacerdote (`AbilitaInnate.conosciutaDa(classe, TipoAbilita.ALBA_SACRA)`, `AbilitaInnate.conosciutaDa(classe, TipoAbilita.LUCE_DIVINA)`), il chierico ha le due abilità (scacciare i non morti, imposizione delle mani) e può comunque lanciare gli incantesimi con le pergamene | nessuna dei sacerdoti, né il dardo arcano |
 | Abilità | Scacciare i non morti, Imposizione delle mani | Radici, Sciame, Pelle di corteccia, Rigenerazione |
 
 Il ruolo (`TipoPersonaggio.getRuolo`) è lo stesso nelle due forme: le tattiche non le distinguono. I testi (note dei moltiplicatori) hanno la voce del

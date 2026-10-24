@@ -24,7 +24,6 @@ public final class FabbricaIncantesimi {
 		COSTRUTTORI.put(TipoIncantesimo.VELENO, Veleno::new);
 		COSTRUTTORI.put(TipoIncantesimo.MORTE, Morte::new);
 		COSTRUTTORI.put(TipoIncantesimo.RESURREZIONE, Resurrezione::new);
-		COSTRUTTORI.put(TipoIncantesimo.ALBA_SACRA, AlbaSacra::new);
 		COSTRUTTORI.put(TipoIncantesimo.SILENZIO, Silenzio::new);
 	}
 

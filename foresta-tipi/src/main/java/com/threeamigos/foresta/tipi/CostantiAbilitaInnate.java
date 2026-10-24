@@ -65,6 +65,11 @@ public final class CostantiAbilitaInnate {
     public static final double ABILITA_RIGENERAZIONE_DIVISORE_SAGGEZZA = 50.0;
 
     /**
+     * L'alba sacra del Sacerdote: toglie al gruppo gli stati alterati negativi e i modificatori temporanei.
+     */
+    public static final int ABILITA_ALBA_SACRA_COSTO_LANCIO = 5;
+
+    /**
      * La luce divina del Sacerdote: danno sacro su più avversari (il doppio ai non morti), e investe anche i non morti del proprio gruppo.
      */
     public static final int ABILITA_LUCE_DIVINA_COSTO_LANCIO = 10;

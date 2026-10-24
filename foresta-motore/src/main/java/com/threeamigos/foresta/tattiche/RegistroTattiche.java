@@ -87,7 +87,7 @@ public final class RegistroTattiche {
 		if (!com.threeamigos.foresta.abilita.AbilitaInnate.conosciutaDa(classe, com.threeamigos.foresta.tipi.TipoAbilita.DARDO_ARCANO)) {
 			possibili.remove(TipoAzione.DARDO_ARCANO);
 		}
-		if (!com.threeamigos.foresta.incantesimi.AlbaSacra.conosciutaDa(classe)) {
+		if (!com.threeamigos.foresta.abilita.AbilitaInnate.conosciutaDa(classe, com.threeamigos.foresta.tipi.TipoAbilita.ALBA_SACRA)) {
 			possibili.remove(TipoAzione.ALBA_SACRA);
 		}
 		// Le abilità di chierico e druido hanno un'azione con lo stesso nome: sono di chi le conosce

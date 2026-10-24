@@ -9,7 +9,6 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.eventi.interni.InternoDecisioneTattica;
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaAperturaFinestraCombattimento;
-import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.incantesimi.*;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.motore.Gruppo;
@@ -21,8 +20,6 @@ import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
-import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
 import java.util.Collections;
 import java.util.List;
@@ -118,12 +115,7 @@ public final class EsecutoreTattiche {
 				consumaLaPergamena(gruppoDellAttore, TipoIncantesimo.RESURREZIONE);
 				break;
 			case ALBA_SACRA:
-				annuncia(attore, null);
-				FabbricaIncantesimi.crea(TipoIncantesimo.ALBA_SACRA, attore.getLivello()).formula(attore, null, gruppoDellAttore);
-				// Chi la conosce per natura (Sacerdote, Sacerdotessa) non consuma pergamene
-				if (!AlbaSacra.conosciutaDa(attore.getClasse())) {
-					consumaLaPergamena(gruppoDellAttore, TipoIncantesimo.ALBA_SACRA);
-				}
+				usaUnAbilita(attore, TipoAbilita.ALBA_SACRA, null, gruppoDellAttore, gruppoNemico);
 				break;
 			// I canti sono tutti la stessa azione con un tipo diverso: il canto curativo ha un bersaglio, gli altri agiscono sul gruppo
 			case CANTO_CURATIVO:

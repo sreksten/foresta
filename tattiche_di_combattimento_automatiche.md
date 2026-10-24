@@ -204,7 +204,7 @@ una scelta del giocatore (§3) e passare inosservati non è possibile dopo una v
 | **Silenzio** | idem | idem; 5 `MAGIA` | un avversario: sul gruppo il primo vivo non silenziato, altrimenti col silenzio più corto; su un personaggio proprio lui | mette `SILENZIATO`, senza danni; con le tattiche: "un avversario magico non silenziato" |
 | **Morte** | idem | idem; solo sui vivi | un avversario (`SINGOLO_SOLO_VIVI`) | |
 | **Resurrezione** | chi la sa | pergamena e `MAGIA` | un solo bersaglio, anche morto (`SINGOLO_QUALSIASI`), ma solo un compagno del gruppo (e mai un non morto del gruppo, vedi `Personaggio.isCurabile`); il danno ai non morti lo fa la Luce Divina, non lei | su un alleato caduto |
-| **Alba sacra** | Sacerdote/Sacerdotessa (innata) e chi ha la pergamena | `MAGIA` | tutto il gruppo (toglie stati e modificatori temporanei) | tipicamente se qualcuno ha uno stato negativo |
+| **Alba sacra** | Sacerdote/Sacerdotessa (abilità innata) | `MAGIA` | tutto il gruppo (toglie stati e modificatori temporanei) | tipicamente se qualcuno ha uno stato negativo |
 | **Dardo arcano** | Mago, Maga, Elfo, Elfa (innato) | `MAGIA` | un avversario | |
 | **Canto curativo** | Bardo, Cantastorie, bardo della locanda | `MAGIA` (4); solo se qualcuno è ferito | il più ferito | |
 | **Canto ipnotico** | idem | `MAGIA` (3); solo contro avversari vivi | fino a `NUMERO_BERSAGLI` avversari (`SPAVENTATO` o `CONFUSO`) | |
@@ -863,7 +863,7 @@ Escluse (§5): fuga, corruzione, amicizia, passare inosservati. **Non c'è un'az
   silenziato); `MORTE` vuole un bersaglio vivo.
 - **`DARDO_ARCANO`, canti:** la `MAGIA`, e la classe che li sa (Mago, Maga, Elfo, Elfa; Bardo, Cantastorie, il bardo della locanda). `CANTO_CURATIVO` vuole qualcuno ferito, `CANTO_IPNOTICO` e `URLO_DELLA_BANSHEE` avversari vivi
   non già `SPAVENTATO` o `CONFUSO`, e l'Urlo che il gruppo l'abbia imparato.
-- **`ALBA_SACRA`:** usa quella innata se il personaggio ce l'ha (Sacerdote, Sacerdotessa), altrimenti la pergamena; vuole almeno un alleato con uno stato diverso da `ISPIRATO` (i modificatori temporanei non si leggono dal personaggio).
+- **`ALBA_SACRA`:** è un'abilità innata (Sacerdote, Sacerdotessa), niente pergamene; vuole almeno un alleato con uno stato diverso da `ISPIRATO` (i modificatori temporanei non si leggono dal personaggio).
 - **`RESURREZIONE`:** la pergamena, la `MAGIA`, un compagno caduto (non in panchina).
 - **Pozioni:** una del tipo nel gruppo; la Salute vuole un ferito, la Magia chi non ha la `MAGIA` piena.
 - **`CAMBIA_ARMA`:** solo per i miei personaggi, se c'è un'arma da prendere (`armiPerCambio`), il controllo preventivo del cambio e il massimo di cambi (§5).

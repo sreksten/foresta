@@ -1,8 +1,6 @@
 package com.threeamigos.foresta.abilita;
 
 import com.threeamigos.foresta.canti.CantoDelBardo;
-import com.threeamigos.foresta.incantesimi.AlbaSacra;
-import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;
@@ -34,13 +32,6 @@ public final class AbilitaInnateDiClasse {
 				abilita.add(new AbilitaInnataDiClasse(tipo.getNome(), tipo.getDescrizione()));
 			}
 		}
-		if (AlbaSacra.conosciutaDa(classe)) {
-			abilita.add(daIncantesimo(TipoIncantesimo.ALBA_SACRA));
-		}
 		return Collections.unmodifiableList(abilita);
-	}
-
-	private static AbilitaInnataDiClasse daIncantesimo(TipoIncantesimo incantesimo) {
-		return new AbilitaInnataDiClasse(incantesimo.getNome(), incantesimo.getEffetto());
 	}
 }

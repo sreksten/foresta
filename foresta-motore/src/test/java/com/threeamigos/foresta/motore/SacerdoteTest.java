@@ -1,16 +1,16 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.personaggi.Guerriero;
+import com.threeamigos.foresta.abilita.FabbricaAbilita;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.abilita.AbilitaInnate;
-import com.threeamigos.foresta.tipi.CostantiIncantesimi;
+import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Sacerdote;
 import com.threeamigos.foresta.personaggi.Sacerdotessa;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,25 +47,25 @@ class SacerdoteTest {
     void nonHannoIlDardoArcano() {
         assertFalse(AbilitaInnate.conosciutaDa(TipoPersonaggio.SACERDOTE, TipoAbilita.DARDO_ARCANO));
         assertFalse(AbilitaInnate.conosciutaDa(TipoPersonaggio.SACERDOTESSA, TipoAbilita.DARDO_ARCANO));
-        assertFalse(AlbaSacra.conosciutaDa(TipoPersonaggio.MAGO));
-        assertFalse(AlbaSacra.conosciutaDa(TipoPersonaggio.ELFA));
-        assertTrue(AlbaSacra.conosciutaDa(TipoPersonaggio.SACERDOTE));
-        assertTrue(AlbaSacra.conosciutaDa(TipoPersonaggio.SACERDOTESSA));
+        assertFalse(AbilitaInnate.conosciutaDa(TipoPersonaggio.MAGO, TipoAbilita.ALBA_SACRA));
+        assertFalse(AbilitaInnate.conosciutaDa(TipoPersonaggio.ELFA, TipoAbilita.ALBA_SACRA));
+        assertTrue(AbilitaInnate.conosciutaDa(TipoPersonaggio.SACERDOTE, TipoAbilita.ALBA_SACRA));
+        assertTrue(AbilitaInnate.conosciutaDa(TipoPersonaggio.SACERDOTESSA, TipoAbilita.ALBA_SACRA));
     }
 
     @Test
     void serveAbbastanzaMagiaEBisognaPoterParlare() {
         Personaggio sacerdote = new Sacerdote("Elia", 1);
-        assertTrue(AlbaSacra.puoLanciarlaInnata(sacerdote));
-        sacerdote.subMagia(sacerdote.getMagia() - (CostantiIncantesimi.INCANTESIMO_ALBA_SACRA_COSTO_LANCIO - 1));
-        assertFalse(AlbaSacra.puoLanciarlaInnata(sacerdote));
+        assertTrue(AbilitaInnate.puoUsare(sacerdote, TipoAbilita.ALBA_SACRA));
+        sacerdote.subMagia(sacerdote.getMagia() - (CostantiAbilitaInnate.ABILITA_ALBA_SACRA_COSTO_LANCIO - 1));
+        assertFalse(AbilitaInnate.puoUsare(sacerdote, TipoAbilita.ALBA_SACRA));
 
         Personaggio muta = new Sacerdotessa("Giuditta", 1);
-        assertTrue(AlbaSacra.puoLanciarlaInnata(muta));
+        assertTrue(AbilitaInnate.puoUsare(muta, TipoAbilita.ALBA_SACRA));
         muta.addEffettoDiStato(TipoEffettoDiStato.SILENZIATO, 3, 0);
-        assertFalse(AlbaSacra.puoLanciarlaInnata(muta));
+        assertFalse(AbilitaInnate.puoUsare(muta, TipoAbilita.ALBA_SACRA));
 
-        assertFalse(AlbaSacra.puoLanciarlaInnata(new Mago("Merlino", 1)));
+        assertFalse(AbilitaInnate.puoUsare(new Mago("Merlino", 1), TipoAbilita.ALBA_SACRA));
     }
 
     @Test
@@ -90,31 +90,31 @@ class SacerdoteTest {
     }
 
     @Test
-    void laLanciaSenzaConsumarePergamene() {
-        boolean provato = false;
-        for (long seme = 1; seme <= 40 && !provato; seme++) {
-            try (PartitaDiTest partita = PartitaDiTest.nuova(seme)) {
-                partita.iniziaCon("Elia", Comando.MASCHIO, Comando.SACERDOTE, () -> { });
-                if (!partita.comandiDisponibili().contains(Comando.INCANTESIMO)) {
-                    continue;
-                }
-                provato = true;
-                // In modalità di prova il gruppo ha tante pergamene di ogni incantesimo: l'alba sacra è comunque una sola
-                // scelta, e lanciarla non ne consuma
-                Personaggio sacerdote = partita.gruppo().getCapo();
-                int pergamene = partita.gruppo().getIncantesimi(TipoIncantesimo.ALBA_SACRA);
-                assertTrue(pergamene > 0);
-                partita.comando(Comando.INCANTESIMO);
-                Collection<Comando> scelte = partita.comandiDisponibili();
-                assertEquals(1, scelte.stream().filter(c -> c == Comando.ALBA_SACRA).count(), scelte.toString());
-                assertFalse(scelte.contains(Comando.DARDO_ARCANO));
-                int magiaPrima = sacerdote.getMagia();
-                partita.comando(Comando.ALBA_SACRA);
-                assertEquals(magiaPrima - CostantiIncantesimi.INCANTESIMO_ALBA_SACRA_COSTO_LANCIO, sacerdote.getMagia());
-                assertEquals(pergamene, partita.gruppo().getIncantesimi(TipoIncantesimo.ALBA_SACRA));
+    void laInvocaSoloSeServeEAncheFuoriDagliScontri() {
+        Personaggio sacerdote = new Sacerdote("Elia", 5);
+        Personaggio compagno = new Guerriero("Wendy", 5);
+        Gruppo gruppo = new Gruppo() {
+            @Override
+            public boolean isGruppoGiocatore() {
+                return true;
             }
-        }
-        assertTrue(provato, "nessuna delle partite provate aveva avversari da affrontare all'inizio");
+        };
+        gruppo.aggiungiPersonaggio(sacerdote);
+        gruppo.aggiungiPersonaggio(compagno);
+        GruppoAvversario nessuno = GruppoAvversario.getIstanza();
+        nessuno.reimposta();
+
+        // Senza stati da togliere non serve
+        assertFalse(AbilitaInnate.abilitaUtili(sacerdote, gruppo, nessuno).contains(TipoAbilita.ALBA_SACRA));
+
+        // Con uno stato negativo serve, anche senza avversari: e non ci sono pergamene di mezzo
+        compagno.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO, 3, 0);
+        assertTrue(AbilitaInnate.abilitaUtili(sacerdote, gruppo, nessuno).contains(TipoAbilita.ALBA_SACRA));
+        int magiaPrima = sacerdote.getMagia();
+        assertTrue(FabbricaAbilita.crea(TipoAbilita.ALBA_SACRA, sacerdote).usa(sacerdote, gruppo, nessuno));
+        assertEquals(magiaPrima - CostantiAbilitaInnate.ABILITA_ALBA_SACRA_COSTO_LANCIO, sacerdote.getMagia());
+        assertFalse(compagno.hasEffettoDiStato(TipoEffettoDiStato.AVVELENATO));
+        assertFalse(AbilitaInnate.abilitaUtili(sacerdote, gruppo, nessuno).contains(TipoAbilita.ALBA_SACRA), "ora non serve più");
     }
 
     @Test

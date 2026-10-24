@@ -6,7 +6,6 @@ import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
@@ -73,7 +72,7 @@ public final class Filtri {
 	 * Se ha almeno un effetto di stato che è un male da togliere: qualunque tranne quelli benefici (ISPIRATO, BERSERK)
 	 */
 	static boolean haUnoStatoNegativo(Personaggio personaggio) {
-		return personaggio.getEffettiDiStato().stream().anyMatch(e -> !e.getTipoEffettoDiStato().isBenefico());
+		return AbilitaInnate.haUnoStatoNegativo(personaggio);
 	}
 
 	/**
@@ -115,10 +114,9 @@ public final class Filtri {
 			return false;
 		}
 		TipoPersonaggio classe = candidato.getClasse();
-		if (AlbaSacra.conosciutaDa(classe) || CantoDelBardo.conosciutoDa(classe)
+		if (CantoDelBardo.conosciutoDa(classe)
 				|| AbilitaInnate.conosciutaDa(classe)) {
-			return AlbaSacra.puoLanciarlaInnata(candidato)
-					|| !CantoDelBardo.cantiPossibili(candidato).isEmpty() || !AbilitaInnate.abilitaPossibili(candidato).isEmpty();
+			return !CantoDelBardo.cantiPossibili(candidato).isEmpty() || !AbilitaInnate.abilitaPossibili(candidato).isEmpty();
 		}
 		if (contesto.isMostro(candidato)) {
 			return candidato.isMagico() && candidato.getMagia() > 0;

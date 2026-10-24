@@ -40,16 +40,17 @@ import java.util.List;
 public class IlGiroDelleSetteChiese extends MissioneAPassi {
 
 	public static final int TEMPLI_DA_LIBERARE = 7;
-	public static final int INCANTESIMI_ALBA_SACRA = 2;
-	public static final TipoIncantesimo[] INCANTESIMI_ELEMENTALI = {TipoIncantesimo.ARIA, TipoIncantesimo.ACQUA,
-			TipoIncantesimo.TERRA, TipoIncantesimo.FUOCO, TipoIncantesimo.FULMINE, TipoIncantesimo.GELO};
+	/**
+	 * Gli incantesimi che i devoti regalano a fine missione, uno per tipo.
+	 */
+	public static final TipoIncantesimo[] INCANTESIMI_IN_DONO = {TipoIncantesimo.ARIA, TipoIncantesimo.ACQUA,
+			TipoIncantesimo.TERRA, TipoIncantesimo.FUOCO, TipoIncantesimo.FULMINE};
 
 	private static final String INIZIO = "INIZIO";
 	private static final String TEMPLI = "TEMPLI";
 	private static final String RINGRAZIAMENTO = "RINGRAZIAMENTO";
 	private static final String COMPAGNO = "COMPAGNO";
 	private static final String SACERDOTE = "SACERDOTE";
-	private static final String INCANTESIMO_ELEMENTALE = "INCANTESIMO_ELEMENTALE";
 
 	private static final String ID_EROE = "eroe";
 	private static final String ID_SACERDOTE = "sacerdote";
@@ -137,21 +138,29 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 	}
 
 	/**
-	 * Due Alba Sacra e un incantesimo elementale a caso, che si ricorda per il ringraziamento.
+	 * Un incantesimo di ogni tipo in dono (vedi {@link #INCANTESIMI_IN_DONO}), per aiutare il gruppo durante il viaggio.
 	 */
 	private void premia() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		TipoIncantesimo elementale = INCANTESIMI_ELEMENTALI[Dado.tiraAncheAUnaFaccia(INCANTESIMI_ELEMENTALI.length) - 1];
-		aggiungiProprieta(INCANTESIMO_ELEMENTALE, elementale.name());
-		gruppo.addIncantesimi(TipoIncantesimo.ALBA_SACRA, INCANTESIMI_ALBA_SACRA);
-		gruppo.addIncantesimi(elementale, 1);
-		BusEventi.pubblica(new NotificaTestoParagrafo("In dono dai devoti: " + Numeri.getCardinaleM(INCANTESIMI_ALBA_SACRA) + " "
-				+ TipoIncantesimo.ALBA_SACRA.getNomePlurale() + " e un " + elementale.getNomeSingolare() + "."));
+		for (TipoIncantesimo incantesimo : INCANTESIMI_IN_DONO) {
+			gruppo.addIncantesimi(incantesimo, 1);
+		}
+		BusEventi.pubblica(new NotificaTestoParagrafo("In dono dai devoti, per aiutarvi durante il vostro viaggio: " + elencoDeiDoni() + "."));
 		OffertaDelSacerdote.avvisaSeIlGruppoEPieno(getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "la sacerdotessa" : "il sacerdote");
 	}
 
-	private TipoIncantesimo getIncantesimoElementale() {
-		return TipoIncantesimo.valueOf(ottieniProprieta(INCANTESIMO_ELEMENTALE));
+	/**
+	 * "un incantesimo dell'Aria, un incantesimo dell'Acqua e un incantesimo del Fulmine"
+	 */
+	private static String elencoDeiDoni() {
+		StringBuilder elenco = new StringBuilder();
+		for (int i = 0; i < INCANTESIMI_IN_DONO.length; i++) {
+			if (i > 0) {
+				elenco.append(i == INCANTESIMI_IN_DONO.length - 1 ? " e " : ", ");
+			}
+			elenco.append("un ").append(INCANTESIMI_IN_DONO[i].getNomeSingolare());
+		}
+		return elenco.toString();
 	}
 
 	/**
@@ -188,9 +197,8 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 		return Collections.singletonList(scenaNelTempio("Sette templi liberi.")
 				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, "Sette templi liberi! Grazie a voi i devoti potranno tornare "
 						+ "in pellegrinaggio.").daSecondo(2))
-				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, "Accettate questi doni a nome loro: "
-						+ Numeri.getCardinaleM(INCANTESIMI_ALBA_SACRA) + " " + TipoIncantesimo.ALBA_SACRA.getNomePlurale()
-						+ " e un " + getIncantesimoElementale().getNomeSingolare() + "."))
+				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, "Accettate questi doni a nome loro, per aiutarvi durante il vostro viaggio: "
+						+ elencoDeiDoni() + "."))
 				.conBattuta(BattutaIntermezzo.di(ID_EROE, "Siamo onorati. Che la Luce vi accompagni.")));
 	}
 

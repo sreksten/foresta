@@ -6,7 +6,6 @@ import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -93,8 +92,8 @@ public final class Requisiti {
 				return bersaglio == null || bersaglio.isVivo() || bersaglio.isInPanchina() ? "nessun caduto da risuscitare" : null;
 			// Un'azione su tutto il gruppo non ha un bersaglio: i requisiti guardano che nel gruppo ci sia qualcuno su cui valga la pena usarla
 			case ALBA_SACRA:
-				if (!AlbaSacra.puoLanciarlaInnata(attore) && !puoLanciare(attore, TipoIncantesimo.ALBA_SACRA, contesto)) {
-					return "manca l'Alba sacra innata o la pergamena con la MAGIA";
+				if (!AbilitaInnate.puoUsare(attore, TipoAbilita.ALBA_SACRA)) {
+					return "l'Alba sacra non si può invocare (classe, MAGIA o silenzio)";
 				}
 				return esiste(contesto.getAlleati(), p -> haUnoStatoNegativo(p)) ? null : "nessun alleato ha uno stato da togliere";
 			case CANTO_CURATIVO:

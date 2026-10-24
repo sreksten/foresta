@@ -8,7 +8,8 @@ import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.incantesimi.AlbaSacra;
+import com.threeamigos.foresta.abilita.FabbricaAbilita;
+import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.interfacce.ModificatoreAttivo;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
@@ -462,7 +463,7 @@ class ModificatoriTemporaneiTest {
             com.threeamigos.foresta.personaggi.Personaggio capo = partita.gruppo().getCapo();
             capo.addModificatore(fortunaAZero(UnitaDurataModificatore.TURNI, 4));
             capo.addMagia(1000);
-            new AlbaSacra(1).formula(capo, capo, partita.gruppo());
+            FabbricaAbilita.crea(TipoAbilita.ALBA_SACRA, capo).usa(capo, partita.gruppo(), GruppoAvversario.getIstanza());
             assertTrue(capo.getModificatoriTemporanei().isEmpty());
         }
     }
@@ -475,7 +476,7 @@ class ModificatoriTemporaneiTest {
             capo.fugge();
             capo.addModificatore(fortunaAZero(UnitaDurataModificatore.TURNI, 4));
             capo.addMagia(1000);
-            new AlbaSacra(1).formula(capo, capo, partita.gruppo());
+            FabbricaAbilita.crea(TipoAbilita.ALBA_SACRA, capo).usa(capo, partita.gruppo(), GruppoAvversario.getIstanza());
             assertEquals(3, capo.getModificatoriTemporanei().size(), "restano coraggio, valore e carisma");
             assertTrue(capo.getModificatoriTemporanei().stream().noneMatch(ModificatoreAttributoMD::isRimovibile));
         }

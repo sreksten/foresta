@@ -270,7 +270,7 @@ Due blocchi, nell'ordine; il primo che fallisce dà il motivo.
 | `INCANTESIMO_DI_DANNO`, `…_DEL_REPERTORIO` | `SceltaIncantesimo.scegli(...)` non è `null` |
 | `DARDO_ARCANO` | `AbilitaInnate.puoUsare(attore, TipoAbilita.DARDO_ARCANO)` (classe, MAGIA, silenzio) e `contro(...)` |
 | `RESURREZIONE` | si può lanciare (pergamena e MAGIA) e il bersaglio non è vivo né in panchina |
-| `ALBA_SACRA` | innata o con pergamena e MAGIA, e **qualcuno** degli alleati ha uno stato negativo |
+| `ALBA_SACRA` | abilità innata del Sacerdote (`AbilitaInnate.puoUsare`) e **qualcuno** degli alleati ha uno stato negativo |
 | `CANTO_CURATIVO` | `CantoDelBardo.puoCantare` e il bersaglio è vivo e ferito |
 | `CANTO_IPNOTICO`, `URLO_DELLA_BANSHEE` | si può cantare e c'è un avversario in campo né spaventato né confuso |
 | `CANTO_DI_VALORE` | si può cantare e c'è un alleato in campo non ancora `ISPIRATO` |
@@ -383,7 +383,7 @@ sotto il personaggio prima che accada (`ForestaUI.gestisciEventoDecisioneTattica
 | `ATTACCO_FISICO` | un mio: `attaccaConLeArmi` di questa classe; un mostro: `AttaccoConLeArmi.esegui(attore, bersaglio)` | i colpi, via `ApplicazioneDelRisultato.applica` → `registraColpo` |
 | `DARDO_ARCANO` | `usaUnAbilita` (il dardo è un'abilità di danno, `ColpoMagico`): annuncio, tiro per colpire, danno, costo in MAGIA | esito (`RIUSCITA`/`MANCATA`), incantesimo lanciato, uccisioni |
 | `RESURREZIONE` | formula l'incantesimo e consuma la pergamena | — |
-| `ALBA_SACRA` | formula sul gruppo; non consuma la pergamena se è innata | — |
+| `ALBA_SACRA` | `usaUnAbilita`: toglie stati negativi e modificatori temporanei al gruppo | incantesimo lanciato |
 | i quattro canti | `canta(...)` → `FabbricaCanti.crea(tipo, cantore).cantaSu(...)` | incantesimo lanciato, solo se il canto ha avuto luogo |
 | le quattro pozioni | `gruppo.consuma…(bersaglio)` | l'alleato scelto (`registraAlleato`) |
 | `CAMBIA_ARMA` | prende la prima arma di `armiPerCambio`; solo con un `GruppoGiocatore` | — |

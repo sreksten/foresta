@@ -43,7 +43,8 @@ public enum TipoAzione {
 	/** L'attacco magico di base, con danno arcano */
 	DARDO_ARCANO(PortataAzione.AVVERSARIO, null),
 	RESURREZIONE(PortataAzione.ALLEATO_CADUTO, TipoIncantesimo.RESURREZIONE),
-	ALBA_SACRA(PortataAzione.GRUPPO_ALLEATI, TipoIncantesimo.ALBA_SACRA),
+	/** L'abilità del Sacerdote che toglie al gruppo gli stati negativi (vedi TipoAbilita) */
+	ALBA_SACRA(PortataAzione.GRUPPO_ALLEATI, null),
 	/** Il canto del Bardo che cura un alleato (vedi bardo.md) */
 	CANTO_CURATIVO(PortataAzione.ALLEATO, null),
 	/** Il canto del Bardo che ipnotizza il gruppo avversario (vedi bardo.md) */

@@ -6,7 +6,6 @@ import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
@@ -165,16 +164,16 @@ class ChiericoEDruidoTest {
     @Test
     void ilChiericoNonHaInnateAlbaSacraELuceDivina() {
         for (TipoPersonaggio classe : Arrays.asList(TipoPersonaggio.CHIERICO, TipoPersonaggio.CHIERICA)) {
-            assertFalse(AlbaSacra.conosciutaDa(classe), classe.name());
+            assertFalse(AbilitaInnate.conosciutaDa(classe, TipoAbilita.ALBA_SACRA), classe.name());
             assertFalse(AbilitaInnate.conosciutaDa(classe, TipoAbilita.LUCE_DIVINA), classe.name());
             assertFalse(AbilitaInnate.conosciutaDa(classe, TipoAbilita.DARDO_ARCANO), classe.name());
             assertFalse(RegistroTattiche.azioniPossibili(classe).contains(TipoAzione.ALBA_SACRA), classe.name());
         }
-        assertFalse(AlbaSacra.puoLanciarlaInnata(chierico()));
+        assertFalse(AbilitaInnate.puoUsare(chierico(), TipoAbilita.ALBA_SACRA));
         assertFalse(AbilitaInnate.puoUsare(chierico(), TipoAbilita.LUCE_DIVINA));
-        assertTrue(AlbaSacra.conosciutaDa(TipoPersonaggio.SACERDOTE));
+        assertTrue(AbilitaInnate.conosciutaDa(TipoPersonaggio.SACERDOTE, TipoAbilita.ALBA_SACRA));
         assertTrue(AbilitaInnate.conosciutaDa(TipoPersonaggio.SACERDOTESSA, TipoAbilita.LUCE_DIVINA));
-        assertFalse(AlbaSacra.conosciutaDa(TipoPersonaggio.DRUIDO));
+        assertFalse(AbilitaInnate.conosciutaDa(TipoPersonaggio.DRUIDO, TipoAbilita.ALBA_SACRA));
         assertFalse(AbilitaInnate.conosciutaDa(TipoPersonaggio.DRUIDA, TipoAbilita.LUCE_DIVINA));
     }
 

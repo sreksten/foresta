@@ -44,7 +44,7 @@ public final class AbilitaInnate {
 	}
 
 	/**
-	 * Se la classe conosce quell'abilità: Scacciare i non morti e Imposizione delle mani sono del chierico, la luce divina è del sacerdote, il dardo arcano è di Mago ed
+	 * Se la classe conosce quell'abilità: Scacciare i non morti e Imposizione delle mani sono del chierico, l'alba sacra e la luce divina sono del sacerdote, il dardo arcano è di Mago ed
 	 * Elfo, le altre del druido.
 	 */
 	public static boolean conosciutaDa(TipoPersonaggio classe, TipoAbilita tipo) {
@@ -52,6 +52,7 @@ public final class AbilitaInnate {
 			case SCACCIARE_I_NON_MORTI:
 			case IMPOSIZIONE_DELLE_MANI:
 				return isDelChierico(classe);
+			case ALBA_SACRA:
 			case LUCE_DIVINA:
 				return isDelSacerdote(classe);
 			case DARDO_ARCANO:
@@ -99,10 +100,21 @@ public final class AbilitaInnate {
 	}
 
 	/**
+	 * Se il personaggio ha uno stato che l'alba sacra toglie con vantaggio: qualunque tranne quelli benefici (ISPIRATO, BERSERK)
+	 */
+	public static boolean haUnoStatoNegativo(Personaggio personaggio) {
+		return personaggio.getEffettiDiStato().stream().anyMatch(e -> !e.getTipoEffettoDiStato().isBenefico());
+	}
+
+	/**
 	 * Se l'abilità serve adesso, in uno scontro: contro avversari vivi, e (a seconda dell'abilità) se c'è un non morto da scacciare, un ferito da
 	 * curare o da far rigenerare
 	 */
 	public static boolean serve(TipoAbilita tipo, Gruppo gruppo, Gruppo gruppoAvversario) {
+		// L'alba sacra serve a chi ha uno stato da togliere, anche fuori dagli scontri
+		if (tipo == TipoAbilita.ALBA_SACRA) {
+			return gruppo.getPersonaggi().stream().anyMatch(p -> !p.isFuoriCombattimento() && haUnoStatoNegativo(p));
+		}
 		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {
 			return false;
 		}

@@ -16,7 +16,7 @@ I `ModificatoreAttributoMD` possono durare un tempo e un'arma può metterli sul 
 - `PersonaggioBase.getQuantitaModificata` unisce i modificatori locali con quelli di **tutti** gli artefatti dell'inventario personale: `QUANTITA_ASSOLUTA` (vince il minimo), poi la somma dei fissi, poi la somma delle percentuali.
 - Gli effetti di stato scalano in `LocazioneBase.trascorriTurnoEffettiDiStato` (`riduciEffettiDiStato`, per gruppo e avversari). Le armi li mettono in `DannoRisultante.effettiDiStatoDaAggiungere` (`CalcolatoreCombattimento`, sezione 6) e `ApplicazioneDelRisultato.applica` li applica al bersaglio.
 - I personaggi a tempo scalano in `Automa.entraInStatoFineLocazione2`, solo se vivi: lo stesso punto serve per le locazioni.
-- `AlbaSacra.formula` chiama `rimuoviTuttiGliEffettiDiStato` su ogni personaggio di `gruppoBersaglio`.
+- `AlbaSacra.usa` chiama `rimuoviGliEffettiDiStatoNegativi` su ogni personaggio del gruppo di chi la invoca.
 
 ## 3. Decisioni
 
@@ -71,7 +71,7 @@ I `ModificatoreAttributoMD` possono durare un tempo e un'arma può metterli sul 
 
 ### 5.4 Alba Sacra
 
-`AlbaSacra.formula` chiama anche `rimuoviIModificatoriTemporaneiRimovibili()` su ogni personaggio del gruppo bersaglio (`PersonaggioBase`, rimuove i modificatori con unità diversa da `PERMANENTE` e `isRimovibile()`; l'ignominia della fuga è l'unica non rimovibile, ricalcola e notifica). La benedizione, la lealtà e i bonus permanenti restano.
+`AlbaSacra.usa` chiama anche `rimuoviIModificatoriTemporaneiRimovibili()` su ogni personaggio del gruppo (`PersonaggioBase`, rimuove i modificatori con unità diversa da `PERMANENTE` e `isRimovibile()`; l'ignominia della fuga è l'unica non rimovibile, ricalcola e notifica). La benedizione, la lealtà e i bonus permanenti restano.
 
 ### 5.5 Regole degli oggetti
 
