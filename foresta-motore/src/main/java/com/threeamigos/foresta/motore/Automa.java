@@ -1251,7 +1251,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 						BusEventi.pubblica(new InternoOggettoRaccolto(oggetto.getClasse(), oggetto.getQuantita(),
 								oggetto.getArtefatto().orElse(null), locazioneCorrente.isCustodita()));
 						// L'artefatto di un tempio (quello del registro) si mostra con la rivelazione, come quelli dei cofani
-						if (oggetto.getClasse() == TipoOggetto.ARTEFATTO) {
+						if (oggetto.isDaRivelare()) {
 							oggetto.getArtefatto().ifPresent(a -> BusEventi.pubblica(new NotificaArtefattoTrovato(a, Statistiche.getLivello())));
 						}
 						BusEventi.pubblica(new InternoMessaggio("Oggetto raccolto."));

@@ -101,6 +101,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoCorruzioneRiuscita.class, this::onEventoCorruzioneRiuscita);
         BusEventi.iscriviti(InternoScheletroRisvegliato.class, this::onEventoScheletroRisvegliato);
         BusEventi.iscriviti(InternoOggettoRaccolto.class, this::onEventoOggettoRaccolto);
+        BusEventi.iscriviti(InternoArtefattoTrovato.class, this::onEventoArtefattoTrovato);
         BusEventi.iscriviti(InternoMissioneCompletata.class, this::onEventoMissioneCompletata);
         BusEventi.iscriviti(InternoAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
         BusEventi.iscriviti(ComandoAcquistoConsumabile.class, this::onEventoRichiestaAcquistoConsumabile);
@@ -509,6 +510,11 @@ public class SnifferBusEventi {
 
     private void onEventoMissioneCompletata(InternoMissioneCompletata evento) {
         Logger.log(() -> headerEvento(evento) + "Missione completata: " + evento.getMissione().getNome());
+    }
+
+    private void onEventoArtefattoTrovato(InternoArtefattoTrovato evento) {
+        Logger.log(() -> headerEvento(evento) + "Artefatto trovato: " + evento.getArtefatto().getNomeCompleto()
+                + (evento.isCustodito() ? ", custodito" : ", incustodito"));
     }
 
     private void onEventoOggettoRaccolto(InternoOggettoRaccolto evento) {

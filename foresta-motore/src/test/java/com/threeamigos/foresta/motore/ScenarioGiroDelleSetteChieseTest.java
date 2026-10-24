@@ -239,7 +239,9 @@ class ScenarioGiroDelleSetteChieseTest {
             conArtefatto.crea(partita.gruppo(), avversari);
             assertEquals(0, avversari.getNumeroPersonaggi());
             assertNotNull(conArtefatto.getOggetto());
-            assertEquals(TipoOggetto.ARTEFATTO, conArtefatto.getOggetto().getClasse());
+            // Un elmo: il bottino ha la forma del suo artefatto (e il suo sprite), ma si descrive e si rivela come artefatto già fatto
+            assertEquals(TipoOggetto.ELMO, conArtefatto.getOggetto().getClasse());
+            assertTrue(conArtefatto.getOggetto().isDaRivelare());
         }
     }
 

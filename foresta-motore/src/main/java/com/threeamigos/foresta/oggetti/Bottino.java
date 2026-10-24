@@ -44,4 +44,12 @@ public interface Bottino extends OggettoConArticoli {
 	default Optional<Artefatto> getArtefatto() {
 		return Optional.empty();
 	}
+
+	/**
+	 * Se è un artefatto già fatto (quello di un tempio): la locazione lo descrive con il suo nome completo e, quando lo si prende, lo
+	 * si mostra con la rivelazione. Falso per il resto del bottino.
+	 */
+	default boolean isDaRivelare() {
+		return false;
+	}
 }

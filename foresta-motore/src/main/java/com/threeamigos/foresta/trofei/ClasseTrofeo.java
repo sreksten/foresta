@@ -59,7 +59,7 @@ public enum ClasseTrofeo {
 	COLLEZIONISTA(() -> acquistoDallArmaiolo(TipoTrofeo.COLLEZIONISTA, livello -> livello >= 5)),
 	STUDIOSO(() -> new TrofeoAContatore<>(TipoTrofeo.STUDIOSO, NotificaApprovazioneAcquistoArtefatto.class,
 			evento -> artefattoComprato(evento).getTipo().isIngrediente() ? 1 : 0, 100)),
-	// Gli artefatti degli avversari: l'oggetto della locazione, se custodito
+	// Gli artefatti degli avversari: ogni artefatto ottenuto (dal bottino, da un tempio, da un cofano), se la locazione era custodita
 	CACCIATORE_DI_TESORI(() -> bottino(TipoTrofeo.CACCIATORE_DI_TESORI, livello -> true)),
 	ESPERTO_CACCIATORE_DI_TESORI(() -> bottino(TipoTrofeo.ESPERTO_CACCIATORE_DI_TESORI, livello -> livello >= 5)),
 	BOMBAROLO(() -> new TrofeoAContatore<>(TipoTrofeo.BOMBAROLO, NotificaApprovazioneAcquistoConsumabile.class,
@@ -108,8 +108,8 @@ public enum ClasseTrofeo {
 	}
 
 	private static Trofeo bottino(TipoTrofeo tipo, IntPredicate livello) {
-		return new TrofeoAContatore<>(tipo, InternoOggettoRaccolto.class,
-				evento -> evento.isCustodito() && evento.getArtefatto().filter(a -> livello.test(a.getLivello())).isPresent() ? 1 : 0, 100);
+		return new TrofeoAContatore<>(tipo, InternoArtefattoTrovato.class,
+				evento -> evento.isCustodito() && livello.test(evento.getArtefatto().getLivello()) ? 1 : 0, 100);
 	}
 
 	private static Artefatto artefattoComprato(NotificaApprovazioneAcquistoArtefatto evento) {

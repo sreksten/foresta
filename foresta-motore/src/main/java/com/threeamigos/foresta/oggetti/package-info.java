@@ -8,8 +8,9 @@
  * gruppo lo prende lo decide {@link com.threeamigos.foresta.oggetti.RaccoltaBottino};</li>
  * <li>l'{@link com.threeamigos.foresta.oggetti.Artefatto} è un pezzo di equipaggiamento vero (un'arma, uno scudo, un ingrediente
  * magico...), con il suo {@code ArtefattoMD} che si salva. Un artefatto trovato in una locazione sta dentro un bottino:
- * {@link com.threeamigos.foresta.oggetti.BottinoArtefatto} per uno già fatto (quello di un tempio),
- * {@link com.threeamigos.foresta.oggetti.OggettoArtefatto} per una spada, uno scudo... il cui artefatto nasce con lui.</li>
+ * {@link com.threeamigos.foresta.oggetti.BottinoArtefatto}, sia per uno già fatto (quello di un tempio, che si rivela quando lo si
+ * prende) sia per una spada, uno scudo... per terra, il cui artefatto nasce con lui. Quali forme esistono lo dice
+ * {@link com.threeamigos.foresta.oggetti.FormaDelBottino}.</li>
  * </ul>
  * <p>
  * Gli artefatti si generano a caso con {@link com.threeamigos.foresta.oggetti.GeneratoreArtefatti} (per il bottino e per i negozi),

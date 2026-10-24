@@ -94,7 +94,7 @@ class ScenarioLeggendeTest {
             assertEquals(livelloDelCatalogo, nelTempio.getLivello());
             ModelloDati.getIstanza().getStatisticheMD().setLivello(livelloDelMondo);
             Tempio tempio = new Tempio();
-            tempio.collocaOggettoMissione(new com.threeamigos.foresta.oggetti.BottinoArtefatto(nelTempio));
+            tempio.collocaOggettoMissione(com.threeamigos.foresta.oggetti.BottinoArtefatto.giaFatto(nelTempio));
             tempio.rimuoviOggetto();
             assertEquals(livelloDelMondo, nelTempio.getLivello());
 

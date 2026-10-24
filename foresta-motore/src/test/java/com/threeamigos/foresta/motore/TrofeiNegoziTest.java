@@ -2,6 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.interni.InternoAcquistoArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoArtefattoTrovato;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
@@ -112,10 +113,11 @@ class TrofeiNegoziTest {
 	void iCacciatoriDiTesoriContanoGliArtefattiCustoditiSecondoIlLivello() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			for (int i = 0; i < 50; i++) {
-				partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.ARTEFATTO, 1, artefatto(TipoArtefatto.SPADA, 5), true));
-				partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.SPADA, 1, artefatto(TipoArtefatto.SPADA, 4), true));
-				partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.ARTEFATTO, 1, artefatto(TipoArtefatto.SPADA, 5), false));
+				partita.pubblica(new InternoArtefattoTrovato(artefatto(TipoArtefatto.SPADA, 5), true));
+				partita.pubblica(new InternoArtefattoTrovato(artefatto(TipoArtefatto.SPADA, 4), true));
+				partita.pubblica(new InternoArtefattoTrovato(artefatto(TipoArtefatto.SPADA, 5), false));
 			}
+			// Le monete non sono artefatti
 			partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.MONETA, 2, null, true));
 			partita.pubblica(new InternoFineLocazione());
 

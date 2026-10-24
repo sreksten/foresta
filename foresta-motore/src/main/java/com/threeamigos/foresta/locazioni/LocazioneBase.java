@@ -304,7 +304,7 @@ public abstract class LocazioneBase implements Locazione {
 		// Vediamo quali artefatti sono presenti in questa locazione.
 		Artefatto a = getArtefatto(g);
 		if (a != null) {
-			setOggetto(new BottinoArtefatto(a));
+			setOggetto(BottinoArtefatto.giaFatto(a));
 		} else if (!isLocazioneVisitata()) {
 			// Non ci sono artefatti, creiamo un oggetto.
 			TipoOggetto[] o = getPossibiliOggetti();
@@ -1252,9 +1252,8 @@ public abstract class LocazioneBase implements Locazione {
 			}
 			if (numeroOggetti > 0) {
 				if (numeroOggetti == 1) {
-					if (o.getClasse() == TipoOggetto.ARTEFATTO) {
-						Artefatto artefatto = (Artefatto)o;
-						sb.append(artefatto.getNomeCompleto());
+					if (o.isDaRivelare()) {
+						sb.append(o.getArtefatto().orElseThrow(IllegalStateException::new).getNomeCompleto());
 					} else {
 						sb.append(o.getAIS()).append(o.getNomeSingolare());
 					}
@@ -1404,7 +1403,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * avrebbe una copia in più.
 	 */
 	public void rimuoviOggetto() {
-		if (oggettoCorrente instanceof BottinoArtefatto) {
+		if (oggettoCorrente != null && oggettoCorrente.isDaRivelare()) {
 			// L'unico artefatto che una locazione può offrire è quello del registro (vedi crea):
 			// una volta raccolto va tolto, altrimenti a ogni nuova visita si ripresenta e se
 			// ne ottengono infinite copie. Corruzione e fuga usano setOggetto(null), che invece
@@ -1418,7 +1417,7 @@ public abstract class LocazioneBase implements Locazione {
 
 	@Override
 	public void collocaOggettoMissione(Bottino oggetto) {
-		if (!(oggettoCorrente instanceof BottinoArtefatto)) {
+		if (oggettoCorrente == null || !oggettoCorrente.isDaRivelare()) {
 			setOggetto(oggetto);
 		}
 	}

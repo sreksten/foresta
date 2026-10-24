@@ -265,7 +265,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
   - Nessuno lo chiama ancora: lo useranno il loot (fase 4) e i negozi (fase 5).
   - Test: `GeneratoreArtefattiTest` (11). Tutta la suite è verde (267 test).
 - [x] **Fase 4 (loot).**
-  - `Spada` e `Scudo` estendono il nuovo `OggettoArtefatto`, che genera l'artefatto nel costruttore, al livello di riferimento: così è già noto quando si sceglie chi lo prende. `Elmo` e `Armatura` ci sono, con le loro voci in `TipoOggetto`, in `FabbricaOggetti` e in `ClassiOggettoImmagine` (immagine `null`), ma restano commentati nell'elenco degli oggetti del `Bosco` finché mancano le immagini.
+  - Le spade, gli scudi, gli elmi… sono un `BottinoArtefatto` (forme in `FormaDelBottino`, costruito da `FabbricaOggetti`), che genera l'artefatto alla nascita, al livello di riferimento: così è già noto quando si sceglie chi lo prende. L'artefatto già fatto di un tempio è lo stesso `BottinoArtefatto` (`giaFatto`), con in più la rivelazione. Ogni artefatto ottenuto (bottino, tempio, cofano, anello magico), tranne gli ingredienti magici, fa salire un poco di livello (`acquisisciArtefattoMinore`) e pubblica `InternoArtefattoTrovato`, che conta per i trofei dei tesori degli avversari se la locazione era custodita.
   - L'anello magico costruisce il suo artefatto nel costruttore; quelli non magici restano senza effetto.
   - Una sola logica di raccolta, `RaccoltaBottino.raccogliArtefatto`, per loot, anelli e artefatti dei templi. I candidati sono i personaggi vivi che possono equipaggiare l'artefatto (`RaccoltaBottino.candidati`, con `puoEquipaggiare`). Nessun candidato: va nel gruppo con un messaggioMD (anche le pergamene); uno solo: va a lui; più di uno: sceglie il giocatore. Il messaggioMD usa il verbo del tipo ("Pippo impugna la spada d'argento, …").
   - `Bottino.getArtefatto()` dice quale artefatto porta un oggetto trovato; l'`Automa` lo usa per proporre in `SCELTA_DESTINATARIO_OGGETTO` solo i candidati più `GRUPPO`, e rifiuta un personaggio che non è fra i candidati.
@@ -359,7 +359,7 @@ Ogni fase si può provare e committare da sola.
 - Livello di riferimento: `Statistiche.getLivello()` (lo stesso dei mostri).
 
 ### Fase 4: loot
-- **Candidati.** `Spada`, `Scudo` e `Anello` (se magico) generano l'artefatto **prima** della scelta e propongono i candidati secondo §2, più `GRUPPO`. I nuovi `Elmo` e `Armatura` si scrivono ma restano commentati finché non ci sono le immagini.
+- **Candidati.** Le forme (`FormaDelBottino`) e l'`Anello` (se magico) generano l'artefatto **prima** della scelta e propongono i candidati secondo §2, più `GRUPPO`. 
 - **Filtro dei candidati.** Lo stato `SCELTA_DESTINATARIO_OGGETTO` esiste già (vivi + `GRUPPO`). Resta da filtrare i personaggi con `puoEquipaggiare(artefatto)`.
 - **Un solo candidato:** l'oggetto va a lui senza domanda.
 - **Nessun candidato:** l'oggetto va direttamente nel gruppo, anche quando chi c'è ha già occupato lo slot.

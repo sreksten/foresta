@@ -3,10 +3,12 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStatistiche;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
+import com.threeamigos.foresta.eventi.interni.InternoArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
+import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
@@ -56,12 +58,7 @@ public final class RaccoltaBottino {
 	 */
 	public static boolean raccogli(Bottino oggetto, GruppoGiocatore gruppo, Comando azione) {
 		if (oggetto instanceof BottinoArtefatto) {
-			// Un artefatto già fatto (quello di un tempio): niente punti, il suo valore sta nel pezzo di equipaggiamento
-			return raccogliArtefatto(gruppo, azione, oggetto.getArtefatto().orElseThrow(IllegalStateException::new));
-		}
-		if (oggetto instanceof OggettoArtefatto) {
-			Artefatto artefatto = oggetto.getArtefatto().orElseThrow(IllegalStateException::new);
-			if (!raccogliArtefatto(gruppo, azione, artefatto)) {
+			if (!raccogliArtefatto(gruppo, azione, oggetto.getArtefatto().orElseThrow(IllegalStateException::new))) {
 				return false;
 			}
 		} else if (oggetto instanceof Anello) {
@@ -106,7 +103,6 @@ public final class RaccoltaBottino {
 				return false;
 			}
 			Statistiche.addPunti(Costanti.ANELLO_MAGICO_PUNTEGGIO);
-			GestoreProgressione.acquisisciArtefattoMinore();
 		}
 		return true;
 	}
@@ -143,6 +139,7 @@ public final class RaccoltaBottino {
 			}
 			if (trovato != null) {
 				gruppo.addArtefatto(trovato);
+				registraArtefattoOttenuto(gruppo, trovato);
 				BusEventi.pubblica(new NotificaArtefattoTrovato(trovato, Statistiche.getLivello()));
 				LibroTecnico.di(trovato).ifPresent(IntermezzoLibroTecnico::trovato);
 				sb.append("trova ").append(trovato.getNomeCompleto()).append(": finisce nell'inventario del gruppo.");
@@ -194,6 +191,26 @@ public final class RaccoltaBottino {
 	 * @return true se l'artefatto è stato raccolto
 	 */
 	public static boolean raccogliArtefatto(GruppoGiocatore gruppo, Comando comando, Artefatto artefatto) {
+		if (!consegnaArtefatto(gruppo, comando, artefatto)) {
+			return false;
+		}
+		registraArtefattoOttenuto(gruppo, artefatto);
+		return true;
+	}
+
+	// Un artefatto ottenuto (da un cofano, dal bottino, da un tempio, da un anello magico) fa salire un poco di livello e conta per i
+	// trofei dei tesori degli avversari; gli ingredienti magici no, come nei trofei degli acquisti.
+	private static void registraArtefattoOttenuto(GruppoGiocatore gruppo, Artefatto artefatto) {
+		if (artefatto.getTipo().isIngrediente()) {
+			return;
+		}
+		Locazione locazione = gruppo.getLocazioneCorrente();
+		BusEventi.pubblica(new InternoArtefattoTrovato(artefatto, locazione != null && locazione.isCustodita()));
+		GestoreProgressione.acquisisciArtefattoMinore();
+	}
+
+	// Chi prende l'artefatto: vedi raccogliArtefatto
+	private static boolean consegnaArtefatto(GruppoGiocatore gruppo, Comando comando, Artefatto artefatto) {
 		if (comando == null || comando == Comando.TIMER) {
 			List<Comando> candidati = candidati(gruppo, artefatto);
 			if (candidati.isEmpty()) {

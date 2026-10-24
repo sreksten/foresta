@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.motore.GruppoAvversario;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.oggetti.Bottino;
 
 /**
@@ -13,5 +15,12 @@ public final class OggettiDiProva {
 
 	public static void impostaOggetto(Locazione locazione, Bottino oggetto) {
 		((LocazioneBase) locazione).setOggetto(oggetto);
+	}
+
+	/**
+	 * Come la locazione dice ciò che il gruppo vede: i mostri che la custodiscono e il bottino.
+	 */
+	public static String descrizioneMostriEOggetti(Locazione locazione, GruppoGiocatore gruppo, GruppoAvversario avversari) {
+		return ((LocazioneBase) locazione).descrizioneMostriEOggetti(gruppo, avversari);
 	}
 }

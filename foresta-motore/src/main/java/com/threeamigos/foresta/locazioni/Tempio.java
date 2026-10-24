@@ -79,7 +79,7 @@ public class Tempio extends LocazioneBase {
 		if (isRipulito(getModelloDati())) {
 			// Niente mostri né cofano; un artefatto, se c'è, si trova lì e il gruppo lo prende come in ogni locazione senza custodi
 			if (a != null) {
-				setOggetto(new BottinoArtefatto(a));
+				setOggetto(BottinoArtefatto.giaFatto(a));
 			}
 			return;
 		}
@@ -90,7 +90,7 @@ public class Tempio extends LocazioneBase {
 			}
 		} else {
 			nViverne = Dado.tira(4, 7);
-			setOggetto(new BottinoArtefatto(a));
+			setOggetto(BottinoArtefatto.giaFatto(a));
 		}
 		Personaggio p;
 		for (int i = 0; i < nViverne; i++) {

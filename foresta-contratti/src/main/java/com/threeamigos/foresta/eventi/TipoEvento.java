@@ -461,6 +461,10 @@ public enum TipoEvento {
      */
     INTERNO_OGGETTO_RACCOLTO,
     /**
+     * Il gruppo ha ottenuto un artefatto (non un ingrediente magico) trovandolo
+     */
+    INTERNO_ARTEFATTO_TROVATO,
+    /**
      * Il gruppo, o almeno uno dei suoi personaggi, ha consumato un pasto in una locanda
      */
     INTERNO_PASTO_CONSUMATO_IN_LOCANDA,
