@@ -23,6 +23,7 @@ import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.FabbricaOggetti;
 import com.threeamigos.foresta.oggetti.Bottino;
+import com.threeamigos.foresta.oggetti.BottinoArtefatto;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -303,7 +304,7 @@ public abstract class LocazioneBase implements Locazione {
 		// Vediamo quali artefatti sono presenti in questa locazione.
 		Artefatto a = getArtefatto(g);
 		if (a != null) {
-			setOggetto(a);
+			setOggetto(new BottinoArtefatto(a));
 		} else if (!isLocazioneVisitata()) {
 			// Non ci sono artefatti, creiamo un oggetto.
 			TipoOggetto[] o = getPossibiliOggetti();
@@ -1403,21 +1404,21 @@ public abstract class LocazioneBase implements Locazione {
 	 * avrebbe una copia in più.
 	 */
 	public void rimuoviOggetto() {
-		if (oggettoCorrente instanceof Artefatto) {
+		if (oggettoCorrente instanceof BottinoArtefatto) {
 			// L'unico artefatto che una locazione può offrire è quello del registro (vedi crea):
 			// una volta raccolto va tolto, altrimenti a ogni nuova visita si ripresenta e se
 			// ne ottengono infinite copie. Corruzione e fuga usano setOggetto(null), che invece
 			// lo lascia al suo posto.
 			RegistroArtefatti.rimuoviArtefattoInLocazione(gruppo.getCoordinate());
 			// Un leggendario custodito in un tempio è nato molto prima: lo si ottiene al livello del mondo di adesso
-			OggettoLeggendario.alLivelloDelMondo((Artefatto) oggettoCorrente);
+			OggettoLeggendario.alLivelloDelMondo(oggettoCorrente.getArtefatto().orElseThrow(IllegalStateException::new));
 		}
 		oggettoCorrente = null;
 	}
 
 	@Override
 	public void collocaOggettoMissione(Bottino oggetto) {
-		if (!(oggettoCorrente instanceof Artefatto)) {
+		if (!(oggettoCorrente instanceof BottinoArtefatto)) {
 			setOggetto(oggetto);
 		}
 	}

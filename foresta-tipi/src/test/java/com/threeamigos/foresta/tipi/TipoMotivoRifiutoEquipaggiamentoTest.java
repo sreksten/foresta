@@ -58,7 +58,7 @@ class TipoMotivoRifiutoEquipaggiamentoTest {
 	@Test
 	void ilFileNonHaVociPerMotiviCheNonEsistono() throws IOException {
 		Properties testi = new Properties();
-		try (InputStream flusso = TipoMotivoRifiutoEquipaggiamento.class.getResourceAsStream("rifiuti_equipaggiamento_it.properties")) {
+		try (InputStream flusso = Testi.class.getResourceAsStream("rifiuti_equipaggiamento_it.properties")) {
 			testi.load(new InputStreamReader(flusso, StandardCharsets.UTF_8));
 		}
 		Set<String> motivi = new HashSet<>();

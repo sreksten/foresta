@@ -7,8 +7,9 @@
  * pietre preziose, un cofano, un anello, un oggetto di una missione. Non si salva, ed è solo un dato: cosa succede quando il
  * gruppo lo prende lo decide {@link com.threeamigos.foresta.oggetti.RaccoltaBottino};</li>
  * <li>l'{@link com.threeamigos.foresta.oggetti.Artefatto} è un pezzo di equipaggiamento vero (un'arma, uno scudo, un ingrediente
- * magico...), con il suo {@code ArtefattoMD} che si salva. Un artefatto trovato in una locazione è anche bottino, e
- * {@link com.threeamigos.foresta.oggetti.OggettoArtefatto} ne è il collegamento.</li>
+ * magico...), con il suo {@code ArtefattoMD} che si salva. Un artefatto trovato in una locazione sta dentro un bottino:
+ * {@link com.threeamigos.foresta.oggetti.BottinoArtefatto} per uno già fatto (quello di un tempio),
+ * {@link com.threeamigos.foresta.oggetti.OggettoArtefatto} per una spada, uno scudo... il cui artefatto nasce con lui.</li>
  * </ul>
  * <p>
  * Gli artefatti si generano a caso con {@link com.threeamigos.foresta.oggetti.GeneratoreArtefatti} (per il bottino e per i negozi),

@@ -17,12 +17,10 @@ import java.util.*;
  * livello, un costo, un peso e, se ce ne sono, modificatori di attributo e incantamenti.
  * <p>
  * È un involucro sul suo {@link ArtefattoMD}, che ne tiene i dati e si salva; qui stanno le regole: cosa succede quando lo si
- * raccoglie ({@link #raccogli}), a chi può andare ({@link #candidati}) e come lo si dà a un personaggio ({@link #consegna}).
+ * raccoglie, a chi può andare e come lo si dà a un personaggio lo decide {@code RaccoltaBottino}, nel motore.
  * Lo si ricrea dal modello dati con {@link #di(ArtefattoMD)}, che sceglie la sottoclasse giusta.
- * <p>
- * Un artefatto è anche un {@link Bottino}, perché il gruppo lo trova nelle locazioni come ogni altro bottino.
  */
-public class Artefatto implements Bottino, OggettoConCosto, OggettoConPeso, VistaArtefatto {
+public class Artefatto implements OggettoConCosto, OggettoConPeso, VistaArtefatto {
 
 	protected final ArtefattoMD md;
 
@@ -192,43 +190,6 @@ public class Artefatto implements Bottino, OggettoConCosto, OggettoConPeso, Vist
 	 */
 	public void nascondiFigli() {
 		md.setFigliVisibili(false);
-	}
-
-	@Override
-	public Optional<Artefatto> getArtefatto() {
-		return Optional.of(this);
-	}
-
-	public int getQuantita() {
-		return 1;
-	}
-
-	public String getNomePlurale() {
-		return "artefatti";
-	}
-
-	public String getNomeSingolare() {
-		return "artefatto";
-	}
-
-	public String getAIS() {
-		return Articoli.UN;
-	}
-
-	public String getAIP() {
-		return Articoli.ALCUNI;
-	}
-
-	public String getADS() {
-		return Articoli.L_APOSTROFO;
-	}
-
-	public String getADP() {
-		return Articoli.GLI;
-	}
-
-	public TipoOggetto getClasse() {
-		return TipoOggetto.ARTEFATTO;
 	}
 
 	public ArtefattoMD getModelloDati() {

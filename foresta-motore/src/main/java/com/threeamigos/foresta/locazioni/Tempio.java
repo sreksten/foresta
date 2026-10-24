@@ -11,6 +11,7 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.oggetti.BottinoArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
@@ -78,7 +79,7 @@ public class Tempio extends LocazioneBase {
 		if (isRipulito(getModelloDati())) {
 			// Niente mostri né cofano; un artefatto, se c'è, si trova lì e il gruppo lo prende come in ogni locazione senza custodi
 			if (a != null) {
-				setOggetto(a);
+				setOggetto(new BottinoArtefatto(a));
 			}
 			return;
 		}
@@ -89,7 +90,7 @@ public class Tempio extends LocazioneBase {
 			}
 		} else {
 			nViverne = Dado.tira(4, 7);
-			setOggetto(a);
+			setOggetto(new BottinoArtefatto(a));
 		}
 		Personaggio p;
 		for (int i = 0; i < nViverne; i++) {

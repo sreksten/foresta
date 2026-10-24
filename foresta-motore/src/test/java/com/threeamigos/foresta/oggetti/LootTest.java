@@ -91,7 +91,7 @@ class LootTest {
         secondo.getModelloDati().setVivo(false);
         Artefatto spada = artefatto(TipoArtefatto.SPADA, 1);
         assertEquals(Collections.singletonList(Comando.PERSONAGGIO_1), RaccoltaBottino.candidati(gruppo, spada));
-        assertTrue(RaccoltaBottino.raccogli(spada, gruppo, null));
+        assertTrue(RaccoltaBottino.raccogli(new BottinoArtefatto(spada), gruppo, null));
         assertEquals(1, primo.getInventario().size());
     }
 
@@ -99,7 +99,7 @@ class LootTest {
     void unArtefattoDiLivelloTroppoAltoVaNelGruppo() {
         Artefatto spada = artefatto(TipoArtefatto.SPADA, 3);
         assertTrue(RaccoltaBottino.candidati(gruppo, spada).isEmpty());
-        assertTrue(RaccoltaBottino.raccogli(spada, gruppo, null));
+        assertTrue(RaccoltaBottino.raccogli(new BottinoArtefatto(spada), gruppo, null));
         assertEquals(1, gruppo.getInventario().size());
     }
 
@@ -107,7 +107,7 @@ class LootTest {
     void gliIngredientiVannoSempreNelGruppo() {
         Artefatto pergamena = new GeneratoreArtefattiTabelle(new Random(1)).generaIngrediente(1);
         assertTrue(RaccoltaBottino.candidati(gruppo, pergamena).isEmpty());
-        assertTrue(RaccoltaBottino.raccogli(pergamena, gruppo, null));
+        assertTrue(RaccoltaBottino.raccogli(new BottinoArtefatto(pergamena), gruppo, null));
         assertEquals(1, gruppo.getInventario().size());
     }
 
@@ -118,7 +118,7 @@ class LootTest {
         gruppoDelLadro.aggiungiPersonaggioSenzaNotificare(ladro);
         ladro.addArtefatto(artefatto(TipoArtefatto.SPADA, 1));
         Artefatto seconda = artefatto(TipoArtefatto.SPADA, 1);
-        assertTrue(RaccoltaBottino.raccogli(seconda, gruppoDelLadro, null));
+        assertTrue(RaccoltaBottino.raccogli(new BottinoArtefatto(seconda), gruppoDelLadro, null));
         assertEquals(TipoSlotArtefatto.MANO_SECONDARIA, seconda.getModelloDati().getSlotEquipaggiamento());
     }
 

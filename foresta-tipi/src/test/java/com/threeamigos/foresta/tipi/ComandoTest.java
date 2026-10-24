@@ -60,7 +60,7 @@ class ComandoTest {
 	@Test
 	void ilFileNonHaVociPerComandiCheNonEsistonoONulle() throws IOException {
 		Properties descrizioni = new Properties();
-		try (InputStream flusso = Comando.class.getResourceAsStream("comandi_it.properties")) {
+		try (InputStream flusso = Testi.class.getResourceAsStream("comandi_it.properties")) {
 			descrizioni.load(new InputStreamReader(flusso, StandardCharsets.UTF_8));
 		}
 		for (String chiave : descrizioni.stringPropertyNames()) {

@@ -12,8 +12,9 @@ import java.util.Optional;
  * eventualmente quale artefatto porta ({@link #getArtefatto()}).
  * <p>
  * Il bottino delle locazioni non si salva: se il gruppo non lo prende, alla visita successiva la locazione decide di nuovo che
- * cosa c'è. Un {@link Artefatto} è anche bottino, ma è il pezzo di equipaggiamento vero, che si conserva e si salva con
- * il suo {@code ArtefattoMD}.
+ * cosa c'è. Un {@link Artefatto} non è bottino: è il pezzo di equipaggiamento vero, che si conserva e si salva con
+ * il suo {@code ArtefattoMD}. Quando il gruppo ne trova uno già fatto (quello di un tempio) lo trova dentro un
+ * {@link BottinoArtefatto}.
  */
 public interface Bottino extends OggettoConArticoli {
 

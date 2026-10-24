@@ -28,7 +28,7 @@ class ArtefattoPrendiTest {
     @Test
     void conGruppoFinisceNellInventarioDelGruppo() {
         // When
-        boolean preso = RaccoltaBottino.raccogli(artefatto(1), gruppo, Comando.GRUPPO);
+        boolean preso = RaccoltaBottino.raccogli(new BottinoArtefatto(artefatto(1)), gruppo, Comando.GRUPPO);
         // Then
         assertTrue(preso);
         assertEquals(1, gruppo.getInventario().size());
@@ -38,7 +38,7 @@ class ArtefattoPrendiTest {
     @Test
     void ilPersonaggioPrendeUnArtefattoCheRientraNelSuoCarico() {
         // When
-        boolean preso = RaccoltaBottino.raccogli(artefatto(1), gruppo, Comando.PERSONAGGIO_1);
+        boolean preso = RaccoltaBottino.raccogli(new BottinoArtefatto(artefatto(1)), gruppo, Comando.PERSONAGGIO_1);
         // Then
         assertTrue(preso);
         assertEquals(1, guerriero.getInventario().size());
@@ -48,7 +48,7 @@ class ArtefattoPrendiTest {
     @Test
     void unArtefattoTroppoPesanteFinisceNellInventarioDelGruppo() {
         // When
-        boolean preso = RaccoltaBottino.raccogli(artefatto(100_000), gruppo, Comando.PERSONAGGIO_1);
+        boolean preso = RaccoltaBottino.raccogli(new BottinoArtefatto(artefatto(100_000)), gruppo, Comando.PERSONAGGIO_1);
         // Then: l'oggetto è comunque raccolto, ma dal gruppo
         assertTrue(preso);
         assertTrue(guerriero.getInventario().isEmpty());
@@ -61,7 +61,7 @@ class ArtefattoPrendiTest {
         Artefatto spada = artefatto(1);
         spada.getModelloDati().setLivello(2);
         // When
-        boolean preso = RaccoltaBottino.raccogli(spada, gruppo, Comando.PERSONAGGIO_1);
+        boolean preso = RaccoltaBottino.raccogli(new BottinoArtefatto(spada), gruppo, Comando.PERSONAGGIO_1);
         // Then
         assertTrue(preso);
         assertTrue(guerriero.getInventario().isEmpty());
@@ -71,9 +71,9 @@ class ArtefattoPrendiTest {
     @Test
     void unaSecondaSpadaPerIlGuerrieroFinisceNellInventarioDelGruppo() {
         // Given
-        RaccoltaBottino.raccogli(artefatto(1), gruppo, Comando.PERSONAGGIO_1);
+        RaccoltaBottino.raccogli(new BottinoArtefatto(artefatto(1)), gruppo, Comando.PERSONAGGIO_1);
         // When
-        boolean preso = RaccoltaBottino.raccogli(artefatto(1), gruppo, Comando.PERSONAGGIO_1);
+        boolean preso = RaccoltaBottino.raccogli(new BottinoArtefatto(artefatto(1)), gruppo, Comando.PERSONAGGIO_1);
         // Then
         assertTrue(preso);
         assertEquals(1, guerriero.getInventario().size());
@@ -84,7 +84,7 @@ class ArtefattoPrendiTest {
     @Test
     void senzaComandoEConUnSoloCandidatoLoPrendeLui() {
         // When
-        boolean preso = RaccoltaBottino.raccogli(artefatto(1), gruppo, null);
+        boolean preso = RaccoltaBottino.raccogli(new BottinoArtefatto(artefatto(1)), gruppo, null);
         // Then
         assertTrue(preso);
         assertEquals(1, guerriero.getInventario().size());

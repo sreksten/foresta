@@ -65,7 +65,7 @@ class NoteDeiPersonaggiTest {
 	@Test
 	void ilFileNonHaChiaviConErroriDiBattitura() throws IOException {
 		Properties note = new Properties();
-		try (InputStream flusso = NoteDeiPersonaggi.class.getResourceAsStream("note_personaggi_it.properties")) {
+		try (InputStream flusso = Testi.class.getResourceAsStream("note_personaggi_it.properties")) {
 			note.load(new InputStreamReader(flusso, StandardCharsets.UTF_8));
 		}
 		Set<String> tipi = new HashSet<>(Arrays.asList("NON_COMBATTENTE", "PREDEFINITA"));

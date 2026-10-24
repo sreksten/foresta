@@ -55,9 +55,9 @@ public final class RaccoltaBottino {
 	 *         lo indica)
 	 */
 	public static boolean raccogli(Bottino oggetto, GruppoGiocatore gruppo, Comando azione) {
-		if (oggetto instanceof Artefatto) {
+		if (oggetto instanceof BottinoArtefatto) {
 			// Un artefatto già fatto (quello di un tempio): niente punti, il suo valore sta nel pezzo di equipaggiamento
-			return raccogliArtefatto(gruppo, azione, (Artefatto) oggetto);
+			return raccogliArtefatto(gruppo, azione, oggetto.getArtefatto().orElseThrow(IllegalStateException::new));
 		}
 		if (oggetto instanceof OggettoArtefatto) {
 			Artefatto artefatto = oggetto.getArtefatto().orElseThrow(IllegalStateException::new);
