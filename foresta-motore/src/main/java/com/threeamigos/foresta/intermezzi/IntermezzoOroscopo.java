@@ -33,7 +33,8 @@ public class IntermezzoOroscopo implements Intermezzo {
 
 	@Override
 	public boolean deveScattare(MomentoIntermezzo momento) {
-		return NegozioInScena.ALCHIMISTA.isIngresso(momento);
+		// Se è già scattato un altro intermezzo all'ingresso (la spada nascosta) è lui a dare il benvenuto
+		return NegozioInScena.ALCHIMISTA.isIngresso(momento) && !RegistroIntermezzi.isScattatoNelMomento();
 	}
 
 	/**

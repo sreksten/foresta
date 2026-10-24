@@ -19,6 +19,8 @@ public enum TipoIntermezzo {
 	INTERMEZZO_LOCANDA_PRIMA_VISITA,
 	/** Il bardo della locanda insegna al gruppo l'Urlo della Banshee, dopo il viaggio della moglie */
 	INTERMEZZO_URLO_DELLA_BANSHEE,
+	/** L'alchimista spiega "ls -la" a chi ha trovato il Manuale di Unix System V e rivela la spada normalmente nascosta; sta prima dell'alchimista di tutti i giorni, a cui cede il posto */
+	INTERMEZZO_SPADA_NASCOSTA,
 	/** Gli intermezzi che si vedono alla prima visita nei negozi */
 	INTERMEZZO_ARMAIOLO,
 	INTERMEZZO_ALCHIMISTA,

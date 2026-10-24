@@ -24,6 +24,7 @@ import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.immagini.VersiDeiPersonaggi;
 import com.threeamigos.foresta.ui.sprite.AnimazioneImmagine;
 import com.threeamigos.foresta.ui.sprite.SpriteFumetto;
+import com.threeamigos.foresta.ui.sprite.SpriteRivelazioneArtefatto;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
@@ -69,6 +70,9 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 	// Dove sono stati disegnati gli elementi in questo frame, e in che verso, per puntare i fumetti
 	private final Map<String, Rectangle> posizioni = new HashMap<>();
 	private final Map<String, Boolean> versi = new HashMap<>();
+	// La rivelazione dell'artefatto della pagina (vedi PaginaIntermezzo.conRivelazioneDiArtefatto), una volta sola per pagina
+	private SpriteRivelazioneArtefatto rivelazione;
+	private boolean rivelazioneConclusa;
 
 	public DisplayableCanvasIntermezzo(int width, int height, DisplayableCanvasIntroOutro testo) {
 		this.width = width;
@@ -81,6 +85,8 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 	 */
 	public void mostra(PaginaIntermezzo pagina) {
 		this.pagina = pagina;
+		rivelazione = null;
+		rivelazioneConclusa = false;
 		inizioPaginaNanosecondi = System.nanoTime();
 		nuvole.clear();
 	}
@@ -89,6 +95,10 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 	 * La pagina continua come se fosse comparsa quei secondi fa: per saltare al fumetto successivo.
 	 */
 	public void saltaA(double secondi) {
+		// Chi salta avanti non aspetta l'artefatto: la rivelazione si chiude
+		if (rivelazione != null) {
+			rivelazione.concludi();
+		}
 		inizioPaginaNanosecondi = System.nanoTime() - (long) (secondi * 1_000_000_000L);
 	}
 
@@ -97,6 +107,7 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 	 */
 	public void svuota() {
 		pagina = null;
+		rivelazione = null;
 		nuvole.clear();
 		immaginiRisorse.clear();
 		fotogrammiSpriteSheet.clear();
@@ -138,12 +149,36 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 			graphicsImmagini.dispose();
 		}
 
+		disegnaRivelazione(graphics);
+
 		testo.scriviTestoCentrato(graphics, pagina.getTesto());
 
 		for (BattutaProgrammata battutaProgrammata : pagina.getBattuteProgrammate()) {
 			if (battutaProgrammata.isVisibileAl(secondi)) {
 				disegnaFumetto(graphics, battutaProgrammata.getBattuta());
 			}
+		}
+	}
+
+	/**
+	 * La rivelazione dell'artefatto della pagina, se ce n'è una e non è finita: parte quando l'elemento di destinazione (il capo) è
+	 * stato disegnato e quindi se ne conosce il posto, e al termine vola verso di lui.
+	 */
+	private void disegnaRivelazione(Graphics2D graphics) {
+		if (pagina.getRivelazioneArtefatto() == null || rivelazioneConclusa) {
+			return;
+		}
+		if (rivelazione == null) {
+			Rectangle destinazione = posizioni.get(pagina.getIdDestinazioneRivelazione());
+			if (destinazione == null) {
+				return;
+			}
+			rivelazione = new SpriteRivelazioneArtefatto(pagina.getRivelazioneArtefatto(), pagina.getLivelloMondoRivelazione(),
+					new Rectangle(0, 0, width, height), new Point((int) destinazione.getCenterX(), (int) destinazione.getCenterY()));
+		}
+		rivelazione.anima(graphics);
+		if (!rivelazione.isAttivo()) {
+			rivelazioneConclusa = true;
 		}
 	}
 

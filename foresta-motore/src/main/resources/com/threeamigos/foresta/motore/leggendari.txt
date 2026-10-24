@@ -370,5 +370,5 @@ TITOLO
 CONCLUSIONE_LIBRO_TECNICO
     Deve essere una roba di quelle di cui parla spesso l'Alchimista.
     Deve essere una roba di quelle di cui parla spesso l'Alchimista. Gliene chiederò conto, la prossima volta.
-    Non c'è nemmeno una figura. Sembra un libro di incantesimi scritto da qualcuno che odiava i maghi.
-    Lo tengo. Se non altro, sotto la testa fa un ottimo cuscino.
+    Non c'è nemmeno una figura. Sembra un libro di incantesimi scritto da qualcuno che odiava i maghi. Magari l'Alchimista ne sa qualcosa di più.
+    Chi lo sa, magari l'Alchimista può aiutarci a { decifrarlo | capire cosa c'è scritto }.

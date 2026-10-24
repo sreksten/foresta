@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.interfacce.VistaArtefatto;
+import com.threeamigos.foresta.tipi.Costanti;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -35,6 +38,9 @@ public class PaginaIntermezzo {
 	private final Map<String, ElementoIntermezzo> elementi = new LinkedHashMap<>();
 	private final List<BattutaIntermezzo> battute = new ArrayList<>();
 	private double durata = Double.NaN;
+	private VistaArtefatto rivelazioneArtefatto;
+	private int livelloMondoRivelazione;
+	private String idDestinazioneRivelazione;
 
 	/** Una pagina senza testo in alto, solo immagini e fumetti. */
 	public PaginaIntermezzo() {
@@ -121,6 +127,42 @@ public class PaginaIntermezzo {
 		}
 		battute.add(battuta);
 		return this;
+	}
+
+	/**
+	 * All'inizio della pagina rivela un artefatto con l'effetto di quando se ne trova uno (cerchio, raggi e pannello con le sue
+	 * proprietà, per {@link Costanti#SECONDI_RIVELAZIONE_ARTEFATTO} secondi), che poi vola verso quell'elemento: in un intermezzo
+	 * l'inventario del gruppo non si vede, e di solito la destinazione è il capo. Le battute che devono seguire la rivelazione
+	 * vanno fatte partire dopo (vedi {@link BattutaIntermezzo#daSecondo}).
+	 *
+	 * @throws IllegalArgumentException se la destinazione non è un elemento già aggiunto alla pagina
+	 */
+	public PaginaIntermezzo conRivelazioneDiArtefatto(VistaArtefatto artefatto, int livelloMondo, String idDestinazione) {
+		if (!elementi.containsKey(idDestinazione)) {
+			throw new IllegalArgumentException("La rivelazione vola verso un elemento che non è nella pagina: " + idDestinazione);
+		}
+		rivelazioneArtefatto = artefatto;
+		livelloMondoRivelazione = livelloMondo;
+		idDestinazioneRivelazione = idDestinazione;
+		return this;
+	}
+
+	/**
+	 * L'artefatto da rivelare all'inizio della pagina, o null.
+	 */
+	public VistaArtefatto getRivelazioneArtefatto() {
+		return rivelazioneArtefatto;
+	}
+
+	public int getLivelloMondoRivelazione() {
+		return livelloMondoRivelazione;
+	}
+
+	/**
+	 * L'elemento verso cui vola l'artefatto rivelato, o null se la pagina non ne rivela.
+	 */
+	public String getIdDestinazioneRivelazione() {
+		return idDestinazioneRivelazione;
 	}
 
 	/**

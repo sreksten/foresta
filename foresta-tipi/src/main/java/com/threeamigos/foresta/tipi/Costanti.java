@@ -382,6 +382,8 @@ public class Costanti {
     // Intermezzi (vedi intermezzi.Intermezzo): secondi dopo cui una pagina avanza da sola;
     // con 0 avanza solo al click sulla pergamena
     public static final int SECONDI_PER_PAGINA_INTERMEZZO = 8;
+    // Quanto dura la rivelazione di un artefatto trovato, uscita compresa (vedi SpriteRivelazioneArtefatto e PaginaIntermezzo.conRivelazioneDiArtefatto)
+    public static final float SECONDI_RIVELAZIONE_ARTEFATTO = 5.0f;
 
     // Personaggio
     public static final int MAX_STANCHEZZA = 9;

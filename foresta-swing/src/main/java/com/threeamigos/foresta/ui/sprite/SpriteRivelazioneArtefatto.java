@@ -4,6 +4,7 @@ import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.BersaglioModificatore;
@@ -37,7 +38,7 @@ import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
  */
 public class SpriteRivelazioneArtefatto implements SpriteInterface {
 
-	private static final float DURATA = 5.0f; // 3.4f;
+	private static final float DURATA = Costanti.SECONDI_RIVELAZIONE_ARTEFATTO;
 	// Con altre rivelazioni in coda (un cofano nei castelli ne vale cinque) si accorcia la sosta
 	private static final float DURATA_CON_CODA = 2.2f;
 	private static final float ANTICIPAZIONE = 0.25f;
@@ -174,6 +175,13 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 		if (secondi < DURATA_CON_CODA - USCITA) {
 			durata = DURATA_CON_CODA;
 		}
+	}
+
+	/**
+	 * La chiude subito, senza l'uscita: quando chi guarda salta avanti.
+	 */
+	public void concludi() {
+		attivo = false;
 	}
 
 	@Override

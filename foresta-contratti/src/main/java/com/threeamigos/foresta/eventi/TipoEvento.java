@@ -473,6 +473,10 @@ public enum TipoEvento {
      */
     INTERNO_EREMITI_INCONTRATI,
     /**
+     * Un personaggio del gruppo ha equipaggiato la spada normalmente nascosta
+     */
+    INTERNO_SPADA_NASCOSTA_IMPUGNATA,
+    /**
      * Il motore chiede alla UI di portare in primo piano il riquadro dello stato del gruppo
      */
     INTERNO_MOSTRA_FINESTRA_STATO,

@@ -32,6 +32,11 @@ public enum TipoOggetto {
 	 * oggetti.leggendari.LibroTecnico e ArtefattoMD.getAspetto)
 	 */
 	LIBRO_TECNICO(1, 100, false),
+	/**
+	 * Non si trova per terra: dà l'aspetto alla spada normalmente nascosta, che il gruppo ottiene solo con un intermezzo (vedi
+	 * oggetti.leggendari.SpadaNormalmenteNascosta e ArtefattoMD.getAspetto)
+	 */
+	SPADA_NORMALMENTE_NASCOSTA(1, 100, false),
 	/** Gli artefatti non vanno mai restituiti tra gli oggetti che una locazione può nascondere! */
 	ARTEFATTO(1, 100, false),
 	/** Neanche gli oggetti delle missioni: li mettono nelle locazioni le missioni (vedi OggettoMissione) */

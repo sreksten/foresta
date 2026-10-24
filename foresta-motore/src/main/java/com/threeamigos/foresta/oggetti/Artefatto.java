@@ -41,6 +41,9 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, Vist
 	 * così da non perdere il tipo concreto quando un Artefatto viene rimaterializzato dal suo ArtefattoMD.
 	 */
 	public static Artefatto di(ArtefattoMD md) {
+		if (SpadaNormalmenteNascosta.isQuesta(md)) {
+			return new SpadaNormalmenteNascosta(md);
+		}
 		if (md.getTipo().getCategoria() == CategoriaArtefatto.ARMA) {
 			return new ArmaFisica(md);
 		}
@@ -153,7 +156,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, Vist
 		return getRarita().getEffettiMassimi(getLivello());
 	}
 
-	public final int getLivello() {
+	public int getLivello() {
 		return md.getLivello();
 	}
 

@@ -20,6 +20,7 @@ import com.threeamigos.foresta.offerte.FabbricaOfferte;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.ArmaNaturale;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.SpadaNormalmenteNascosta;
 import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Logger;
@@ -2386,6 +2387,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		TipoSlotArtefatto slot = RegoleEquipaggiamento.valuta(this, artefattoMD).getSlot();
 		artefattoMD.setSlotEquipaggiamento(slot != null ? slot : artefattoMD.getTipo().getSlotArtefatto());
 		md.aggiungiArtefatto(artefattoMD);
+		if (a instanceof SpadaNormalmenteNascosta) {
+			BusEventi.pubblica(new InternoSpadaNascostaImpugnata());
+		}
 		// I modificatori dell'artefatto sui primari cambiano anche i secondari che ne derivano
 		ricalcolaAttributiSecondari();
 		limitaAiMassimi();

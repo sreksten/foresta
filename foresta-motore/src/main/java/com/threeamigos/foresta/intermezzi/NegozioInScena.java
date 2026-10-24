@@ -79,6 +79,32 @@ enum NegozioInScena {
 	}
 
 	/**
+	 * Una pagina ferma in questo locale, a gruppo già entrato: il negoziante al suo posto e il capo di fronte a lui. Chi la usa
+	 * aggiunge le battute (quelle del negoziante hanno l'identificativo {@link #getIdNegoziante}) e gli elementi che servono, che
+	 * restano sopra al primo piano.
+	 */
+	PaginaIntermezzo paginaConCapo(String idCapo, TipoPersonaggio classeCapo) {
+		PaginaIntermezzo pagina = new PaginaIntermezzo()
+				.conSfondo(ImmagineIntermezzo.risorsa(sfondo))
+				.conRitaglioSuSfondo()
+				.conElemento(ElementoIntermezzo.personaggio(idNegoziante, negoziante, xNegoziante, yNegoziante).conBocca(0.5, -0.15))
+				.conElemento(ElementoIntermezzo.personaggio(idCapo, classeCapo, xArrivoCapo, yNegoziante)
+						.conBocca(0.5, -0.15)
+						.guarda(Verso.DESTRA));
+		if (primoPiano != null) {
+			pagina.conElemento(ElementoIntermezzo.di("foreground", ImmagineIntermezzo.risorsa(primoPiano), 0.5, 0.5));
+		}
+		return pagina;
+	}
+
+	/**
+	 * L'identificativo con cui le battute indicano il negoziante.
+	 */
+	String getIdNegoziante() {
+		return idNegoziante;
+	}
+
+	/**
 	 * La scena di questo locale: il negoziante al suo posto e il gruppo che entra in fila, capo in testa.
 	 */
 	ScenaNegozio entraIlGruppo() {

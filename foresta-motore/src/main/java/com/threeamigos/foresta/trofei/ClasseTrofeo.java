@@ -69,7 +69,10 @@ public enum ClasseTrofeo {
 	TRAFFICONE(() -> new TrofeoAContatore<>(TipoTrofeo.TRAFFICONE, NotificaApprovazioneIncantatura.class,
 			evento -> 1, 50)),
 	// Tutte le voci del bestiario, da una partita all'altra (vedi RegistroBestiario)
-	ENCICLOPEDISTA(TrofeoEnciclopedista::new);
+	ENCICLOPEDISTA(TrofeoEnciclopedista::new),
+	// La spada normalmente nascosta, quando un personaggio la equipaggia (vedi IntermezzoSpadaNascosta)
+	TROVAROBE(() -> new TrofeoAContatore<>(TipoTrofeo.TROVAROBE,
+			InternoSpadaNascostaImpugnata.class, evento -> 1, 1));
 
 	private final Supplier<Trofeo> supplier;
 

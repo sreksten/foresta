@@ -93,6 +93,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoPastoConsumatoInLocanda.class, this::onEventoPastoConsumatoInLocanda);
         BusEventi.iscriviti(InternoLocazioneVisitata.class, this::onEventoLocazioneVisitata);
         BusEventi.iscriviti(InternoEremitiIncontrati.class, this::onEventoEremitiIncontrati);
+        BusEventi.iscriviti(InternoSpadaNascostaImpugnata.class, this::onEventoSpadaNascostaImpugnata);
         BusEventi.iscriviti(InternoAmiciziaStretta.class, this::onEventoAmiciziaStretta);
         BusEventi.iscriviti(InternoCorruzioneRiuscita.class, this::onEventoCorruzioneRiuscita);
         BusEventi.iscriviti(InternoScheletroRisvegliato.class, this::onEventoScheletroRisvegliato);
@@ -485,6 +486,10 @@ public class SnifferBusEventi {
 
     private void onEventoEremitiIncontrati(InternoEremitiIncontrati evento) {
         Logger.log(() -> headerEvento(evento) + "Eremiti: " + evento.getQuantita());
+    }
+
+    private void onEventoSpadaNascostaImpugnata(InternoSpadaNascostaImpugnata evento) {
+        Logger.log(() -> headerEvento(evento) + "La spada normalmente nascosta è stata impugnata");
     }
 
     private void onEventoAmiciziaStretta(InternoAmiciziaStretta evento) {
