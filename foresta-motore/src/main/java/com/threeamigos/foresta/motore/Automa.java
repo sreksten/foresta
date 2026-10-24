@@ -29,6 +29,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
+import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
@@ -1102,10 +1103,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	/**
 	 * Come SCELTA_AUTOMATICA_PERSONAGGIO, ma al posto di ANNULLA c'è GRUPPO: rinunciare
 	 * all'oggetto non ha senso, mentre lo si può riporre nell'inventario del gruppo.
-	 * Con ANNULLA, per giunta, Oggetto.prendi riceveva un comando che non indica nessun
+	 * Con ANNULLA, per giunta, RaccoltaBottino.raccogli riceveva un comando che non indica nessun
 	 * personaggio e Gruppo.getPersonaggio andava fuori dalla lista.
 	 * Si propongono solo i candidati (vedi comandiDestinatarioOggetto); di solito ce ne sono
-	 * almeno due, perché con uno solo o nessuno ci pensa già Artefatto.raccogli.
+	 * almeno due, perché con uno solo o nessuno ci pensa già RaccoltaBottino.raccogliArtefatto.
 	 */
 	private Esito entraInStatoSceltaDestinatarioOggetto() {
 		List<Comando> comandiPossibili = comandiDestinatarioOggetto();
@@ -1127,7 +1128,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		Oggetto oggetto = locazioneCorrente.getOggetto();
 		Optional<Artefatto> artefatto = oggetto == null ? Optional.empty() : oggetto.getArtefatto();
 		if (artefatto.isPresent()) {
-			return Artefatto.candidati(gruppo, artefatto.get());
+			return RaccoltaBottino.candidati(gruppo, artefatto.get());
 		}
 		List<Comando> vivi = new ArrayList<>();
 		int i = 0;
@@ -1226,7 +1227,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	/**
 	 * Corpo condiviso fra ingresso automatico (comando nullo) e reazione a un
 	 * comando reale: la logica di FINE_LOCAZIONE non distingue i due casi, usa
-	 * "comando" solo come dato da passare a Oggetto.prendi(...).
+	 * "comando" solo come dato da passare a RaccoltaBottino.raccogli(...).
 	 */
 	private Esito eseguiFineLocazione(Comando comando) {
 		temporizzatore.termina();
@@ -1240,7 +1241,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				Oggetto oggetto = locazioneCorrente.getOggetto();
 				if (oggetto != null) {
 					BusEventi.pubblica(new InternoMessaggio("Tentativo di recupero oggetto utilizzando l'azione " + comando));
-					if (!oggetto.prendi(gruppo, comando)) {
+					if (!RaccoltaBottino.raccogli(oggetto, gruppo, comando)) {
 						BusEventi.pubblica(new InternoMessaggio("L'oggetto non si lascia prendere con l'azione " + comando));
 						statoPrecedente = Stato.FINE_LOCAZIONE;
 						stato = Stato.SCELTA_DESTINATARIO_OGGETTO;

@@ -1,19 +1,13 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.interfacce.OggettoConCosto;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
 import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
@@ -200,131 +194,9 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, Vist
 		md.setFigliVisibili(false);
 	}
 
-	/**
-	 * Interfaccia Oggetto
-	 */
-	@Override
-	public boolean prendi(GruppoGiocatore gruppo, Comando comando) {
-		return raccogli(gruppo, comando, this);
-	}
-
 	@Override
 	public Optional<Artefatto> getArtefatto() {
 		return Optional.of(this);
-	}
-
-	/**
-	 * Chi raccoglie un artefatto (vedi artefatti_e_incantamenti.md, §2 "Loot"). Senza comando si guardano
-	 * i candidati, cioè i personaggi vivi che possono equipaggiarlo ({@link #candidati}):
-	 * <ul>
-	 * <li>nessuno (anche perché chi c'è ha già occupato quello slot, o è una pergamena): va nel gruppo;</li>
-	 * <li>uno solo: va direttamente a lui;</li>
-	 * <li>più di uno: sceglie il giocatore (Stato.SCELTA_DESTINATARIO_OGGETTO) e si restituisce false.</li>
-	 * </ul>
-	 * Con GRUPPO va nell'inventario del gruppo, con un personaggio a quel personaggio.
-	 *
-	 * @return true se l'artefatto è stato raccolto
-	 */
-	public static boolean raccogli(GruppoGiocatore gruppo, Comando comando, Artefatto artefatto) {
-		if (comando == null || comando == Comando.TIMER) {
-			List<Comando> candidati = candidati(gruppo, artefatto);
-			if (candidati.isEmpty()) {
-				gruppo.addArtefatto(artefatto);
-				if (troppoPesante(gruppo, artefatto)) {
-					BusEventi.pubblica(new NotificaTestoParagrafo(comeSoggetto(artefatto)
-							+ " è troppo pesante da portare, quindi viene messo nell'inventario del gruppo."));
-				} else {
-					BusEventi.pubblica(new NotificaTestoFrase(comeSoggetto(artefatto)
-							+ " viene messo nell'inventario del gruppo: nessuno può utilizzarlo in questo momento."));
-				}
-				return true;
-			}
-			if (candidati.size() > 1) {
-				BusEventi.pubblica(new NotificaTestoFrase("Chi prende " + artefatto.getNomeCompleto() + "?"));
-				return false;
-			}
-			comando = candidati.get(0);
-		}
-		if (comando == Comando.GRUPPO) {
-			riponiNelGruppo(gruppo, artefatto);
-			return true;
-		}
-		Personaggio p = gruppo.getPersonaggio(comando);
-		if (consegna(gruppo, p, artefatto)) {
-			BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA)
-					+ ' ' + artefatto.getTipo().getUtilizzo() + ' ' + artefatto.getNomeCompleto() + '.'));
-		}
-		return true;
-	}
-
-	/**
-	 * I comandi dei personaggi vivi che possono equipaggiare l'artefatto: slot libero, livello
-	 * sufficiente, mani libere, carico. Le pergamene non hanno mai candidati. Chi è a tempo non è
-	 * un candidato: se ne andrebbe subito portandosi via l'artefatto.
-	 */
-	public static List<Comando> candidati(GruppoGiocatore gruppo, Artefatto artefatto) {
-		List<Comando> candidati = new ArrayList<>();
-		List<Personaggio> personaggi = gruppo.getPersonaggi();
-		for (int i = 0; i < personaggi.size(); i++) {
-			Personaggio personaggio = personaggi.get(i);
-			if (personaggio.isVivo() && !personaggio.isATempo() && !personaggio.puoEquipaggiare(artefatto).isPresent()) {
-				candidati.add(Comando.ofPersonaggio(i));
-			}
-		}
-		return candidati;
-	}
-
-	/**
-	 * true se almeno un personaggio vivo potrebbe equipaggiare l'artefatto e ne è impedito solo dal peso
-	 * (TROPPO_CARICO è l'ultimo controllo di {@link Personaggio#puoEquipaggiare}).
-	 */
-	private static boolean troppoPesante(GruppoGiocatore gruppo, Artefatto artefatto) {
-		for (Personaggio personaggio : gruppo.getPersonaggi()) {
-			if (personaggio.isVivo() && !personaggio.isATempo() && personaggio.puoEquipaggiare(artefatto)
-					.filter(esito -> esito.getMotivo() == TipoMotivoRifiutoEquipaggiamento.TROPPO_CARICO).isPresent()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Mette l'artefatto raccolto nell'inventario del gruppo, per scelta del giocatore.
-	 */
-	public static void riponiNelGruppo(GruppoGiocatore gruppo, Artefatto artefatto) {
-		gruppo.addArtefatto(artefatto);
-		BusEventi.pubblica(new NotificaTestoFrase(comeSoggetto(artefatto)
-				+ " viene messo nell'inventario del gruppo."));
-	}
-
-	/**
-	 * Dà l'artefatto al personaggio se lo può equipaggiare (peso, slot, livello...), altrimenti lo mette
-	 * nell'inventario del gruppo spiegando il perché. Restituisce true se l'ha preso il personaggio.
-	 */
-	public static boolean consegna(GruppoGiocatore gruppo, Personaggio personaggio, Artefatto artefatto) {
-		Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> motivoRifiuto = personaggio.puoEquipaggiare(artefatto);
-		if (!motivoRifiuto.isPresent()) {
-			personaggio.addArtefatto(artefatto);
-			return true;
-		}
-		gruppo.addArtefatto(artefatto);
-		// TODO oggi i personaggi del gruppo non si vedono a video: quando ci saranno, il
-		// rifiuto andrà mostrato anche lì (es. un fumetto sul personaggio).
-		BusEventi.pubblica(new NotificaTestoParagrafo(comeSoggetto(artefatto)
-				+ " resta nell'inventario del gruppo: "
-				+ personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
-				+ ' ' + motivoRifiuto.get() + '.'));
-		return false;
-	}
-
-	/**
-	 * Forma completa con l'iniziale maiuscola, da usare come soggetto a inizio frase: se contiene
-	 * un inciso ("Diavolina, la spada di fuoco, che brucia i nemici") lo chiude con una virgola.
-	 */
-	private static String comeSoggetto(Artefatto artefatto) {
-		String nome = artefatto.getNomeCompleto();
-		nome = nome.substring(0, 1).toUpperCase(Locale.ROOT) + nome.substring(1);
-		return nome.contains(", ") ? nome + ',' : nome;
 	}
 
 	public int getQuantita() {

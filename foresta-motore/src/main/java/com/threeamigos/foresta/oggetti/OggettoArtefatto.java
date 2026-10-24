@@ -1,8 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 
 import java.util.Optional;
@@ -24,14 +22,6 @@ public abstract class OggettoArtefatto extends OggettoBase implements Oggetto {
 	@Override
 	public Optional<Artefatto> getArtefatto() {
 		return Optional.of(artefatto);
-	}
-
-	@Override
-	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
-		if (!Artefatto.raccogli(gruppo, azione, artefatto)) {
-			return false;
-		}
-		return super.prendi(gruppo, azione);
 	}
 
 	public String getNome() {

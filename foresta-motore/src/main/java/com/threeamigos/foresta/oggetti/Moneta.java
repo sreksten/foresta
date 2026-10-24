@@ -1,8 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 
 /**
@@ -42,9 +40,5 @@ public class Moneta extends OggettoBase implements Oggetto {
 		return TipoOggetto.MONETA;
 	}
 
-	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
-		gruppo.addMonete(quantita);
-		return super.prendi(gruppo, azione);
-	}
 }
 

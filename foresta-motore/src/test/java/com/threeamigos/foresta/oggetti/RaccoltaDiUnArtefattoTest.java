@@ -59,7 +59,7 @@ class RaccoltaDiUnArtefattoTest {
 	void sePerLaClasseUnoLoUsaMaNonLoRegge() {
 		gruppo.aggiungiPersonaggio(new Guerriero("Pippo", 5));
 
-		Artefatto.raccogli(gruppo, null, spada(100_000));
+		RaccoltaBottino.raccogliArtefatto(gruppo, null, spada(100_000));
 
 		assertEquals(1, paragrafi.size(), "frasi: " + frasi);
 		assertTrue(paragrafi.get(0).contains("è troppo pesante da portare"), paragrafi.get(0));
@@ -69,7 +69,7 @@ class RaccoltaDiUnArtefattoTest {
 	void seNessunoLoUsaNonEPerIlPeso() {
 		gruppo.aggiungiPersonaggio(new Mago("Merlino", 5));
 
-		Artefatto.raccogli(gruppo, null, spada(100_000));
+		RaccoltaBottino.raccogliArtefatto(gruppo, null, spada(100_000));
 
 		assertTrue(paragrafi.isEmpty(), "paragrafi: " + paragrafi);
 		assertTrue(frasi.stream().anyMatch(f -> f.contains("nessuno può utilizzarlo in questo momento")), "frasi: " + frasi);

@@ -224,20 +224,20 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
 - [x] **`RegistroArtefatti.costruisciArtefatto` usa `Artefatto.di`**: un'arma presa al tempio torna un `ArmaFisica`. Prima `getArmaEquipaggiata()` falliva con `ClassCastException`.
 - [x] **L'artefatto del tempio si toglie dal registro** una volta raccolto (`LocazioneBase.rimuoviOggetto`). Corruzione e fuga lo lasciano al suo posto.
 - [x] **L'anello "del Valore" aumenta il `VALORE`**, non la `FORZA`.
-- [x] **Controllo del peso** in `Artefatto.prendi` e `Anello.prendi` (`Artefatto.consegna`). Se il personaggio è troppo carico, l'oggetto va nell'inventario del gruppo con un messaggioMD. `Personaggio.puoPrendere` è nell'interfaccia e lo usa anche il prelievo.
+- [x] **Controllo del peso** in `RaccoltaBottino.raccogli` (`RaccoltaBottino.consegna`). Se il personaggio è troppo carico, l'oggetto va nell'inventario del gruppo con un messaggioMD. `Personaggio.puoPrendere` è nell'interfaccia e lo usa anche il prelievo.
 - [x] **Note vuote dei modificatori:** `-` si rilegge come `""`, quindi il modificatore riletto è `equals` all'originale.
 - [x] **Test** (13, verdi): `ArtefattoMDTest`, `RegistroArtefattiMDTest`, `RegistroArtefattiTest`.
 - [x] **`TipoArtefatto.getSlotArtefatto()`** (aggiunto da Stefano).
 - [x] **Chi raccoglie l'oggetto di fine locazione:** nuovo stato `SCELTA_DESTINATARIO_OGGETTO`, che propone i personaggi vivi più `GRUPPO` al posto di `ANNULLA`.
   - Scegliendo `ANNULLA` si andava in `IndexOutOfBoundsException` (bug §5.1).
-  - `Artefatto.prendi` e `Anello.prendi` gestiscono `GRUPPO` (`Artefatto.riponiNelGruppo`).
+  - `RaccoltaBottino.raccogli` gestisce `GRUPPO` (`RaccoltaBottino.riponiNelGruppo`).
   - Nuovo `Comando.isPersonaggio()`.
 - [x] **Pozioni di magia grandi** (bug §5.2-§5.4): notifica giusta in `addPozioniMagiaGrande`, voce corretta nell'inventario dell'alchimista, e anche loro si perdono nella fuga. In `GruppoGiocatore.fugge` c'è un TODO per rivedere la fuga, oggi troppo penalizzante.
 - [x] **BERSERK sul danno fisico** (bug §5.6), con `CalcolatoreCombattimentoBerserkTest`: il guerriero ferito passa da 58 a 80 danni con un'arma fisica, e il danno resta uguale con un'arma elementale. Il critico è neutralizzato per rendere il test deterministico.
 - [x] **Test:** `ArtefattoPrendiTest` (5), che copre `GRUPPO`, personaggio, troppo carico, scelta lasciata all'automa e `isPersonaggio`. In tutto 18 test su artefatti e raccolta, tutti verdi.
 - [x] **Fase 1 (modello).**
   - `ArtefattoMD.nomeProprio` (null se manca, oggi salvato come campo vuoto), con `normalizzaNomeProprio` per i nomi scelti dal giocatore (iniziali maiuscole, il resto com'è; vuoto → nessun nome). Da chiamare quando arriverà il `Prompt`.
-  - Presentazione: `getNomeCompleto()` (forma completa, usata in `LocazioneBase`, `Informazioni`, `PersonaggioBase`, `Artefatto.prendi`/`riponiNelGruppo`/`consegna` e `Anello.prendi`), `getNomeBreve()` e `getDescrizioneBreve()` per l'inventario. Nei messaggi in cui l'artefatto è soggetto l'inciso si chiude con una virgola.
+  - Presentazione: `getNomeCompleto()` (forma completa, usata in `LocazioneBase`, `Informazioni`, `PersonaggioBase`, `RaccoltaBottino.raccogli`/`riponiNelGruppo`/`consegna`), `getNomeBreve()` e `getDescrizioneBreve()` per l'inventario. Nei messaggi in cui l'artefatto è soggetto l'inciso si chiude con una virgola.
   - Nell'inventario il testo piccolo ora è la descrizione (o "nome, descrizione" con il nome proprio) al posto del tipo ("Spada"): da riguardare con la resa grafica.
   - `Artefatto.isIncantabile()` e `getEffettiMassimi()`, oggi secondo la rarità (vedi §2, "Rarità").
   - `SlotArtefatto.ENTRAMBE_LE_MANI`, `TipoArtefatto.SPADONE`; `TipoArtefatto.INCANTAMENTO` si presenta come "Pergamena".
@@ -267,7 +267,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
 - [x] **Fase 4 (loot).**
   - `Spada` e `Scudo` estendono il nuovo `OggettoArtefatto`, che genera l'artefatto nel costruttore, al livello di riferimento: così è già noto quando si sceglie chi lo prende. `Elmo` e `Armatura` ci sono, con le loro voci in `TipoOggetto`, in `FabbricaOggetti` e in `ClassiOggettoImmagine` (immagine `null`), ma restano commentati nell'elenco degli oggetti del `Bosco` finché mancano le immagini.
   - L'anello magico costruisce il suo artefatto nel costruttore; quelli non magici restano senza effetto.
-  - Una sola logica di raccolta, `Artefatto.raccogli`, per loot, anelli e artefatti dei templi. I candidati sono i personaggi vivi che possono equipaggiare l'artefatto (`Artefatto.candidati`, con `puoEquipaggiare`). Nessun candidato: va nel gruppo con un messaggioMD (anche le pergamene); uno solo: va a lui; più di uno: sceglie il giocatore. Il messaggioMD usa il verbo del tipo ("Pippo impugna la spada d'argento, …").
+  - Una sola logica di raccolta, `RaccoltaBottino.raccogliArtefatto`, per loot, anelli e artefatti dei templi. I candidati sono i personaggi vivi che possono equipaggiare l'artefatto (`RaccoltaBottino.candidati`, con `puoEquipaggiare`). Nessun candidato: va nel gruppo con un messaggioMD (anche le pergamene); uno solo: va a lui; più di uno: sceglie il giocatore. Il messaggioMD usa il verbo del tipo ("Pippo impugna la spada d'argento, …").
   - `Oggetto.getArtefatto()` dice quale artefatto porta un oggetto; l'`Automa` lo usa per proporre in `SCELTA_DESTINATARIO_OGGETTO` solo i candidati più `GRUPPO`, e rifiuta un personaggio che non è fra i candidati.
   - `Cofano`: per ogni cofano, 5% una pergamena e 5% un artefatto casuale, che vanno nel gruppo (`Costanti.COFANO_PROBABILITA_*`).
   - Test: `LootTest` (10) e `ArtefattoPrendiTest` aggiornato. Tutta la suite è verde (291 test).
@@ -330,7 +330,7 @@ Ogni fase si può provare e committare da sola.
 
 ### Fase 1: modello
 - `ArtefattoMD.nomeProprio` facoltativo, salvato come campo vuoto quando manca.
-- Un metodo di presentazione unico per la forma completa (§2, "Nome proprio"), usato in `LocazioneBase`, `Informazioni`, `PersonaggioBase` e `Artefatto.prendi`/`Anello.prendi`, dove oggi `nome + ", " + descrizione` è ripetuto a mano. Nell'inventario: nome proprio (o nome) in grande, descrizione nel nodo secondario.
+- Un metodo di presentazione unico per la forma completa (§2, "Nome proprio"), usato in `LocazioneBase`, `Informazioni`, `PersonaggioBase` e `RaccoltaBottino.raccogli`, dove oggi `nome + ", " + descrizione` è ripetuto a mano. Nell'inventario: nome proprio (o nome) in grande, descrizione nel nodo secondario.
 - `Artefatto.isIncantabile()` (armi, scudi, elmi, armature) e `getEffettiMassimi()` = `min(5, livello − 1)`.
 - `SlotArtefatto.ENTRAMBE_LE_MANI` e `TipoArtefatto.SPADONE`.
 - `ArtefattoMD.slotEquipaggiamento`, salvato come campo vuoto quando è `null`.

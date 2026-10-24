@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.missioni.Mandante;
 import com.threeamigos.foresta.missioni.richieste.MaterialeRichiesto;
 import com.threeamigos.foresta.missioni.incarichi.RichiestaDiMateriali;
@@ -94,8 +95,7 @@ class ScenarioRichiesteDiMaterialiTest {
             avversari.aggiungiPersonaggio(FabbricaPersonaggi.crea(TipoPersonaggio.VIVERNA, 1));
             assertTrue(armaiolo.getOggettoInLocazione(new CoordinateMD(0, 0), TipoLocazione.TEMPIO, true).isPresent());
 
-            new OggettoMissione(armaiolo.getId(), RichiestaDiMateriali.MATERIALE, armaiolo.getMateriali().getNome(), 2)
-                    .prendi(partita.gruppo(), null);
+            RaccoltaBottino.raccogli(new OggettoMissione(armaiolo.getId(), RichiestaDiMateriali.MATERIALE, armaiolo.getMateriali().getNome(), 2), partita.gruppo(), null);
             armaiolo.controllaPostLocazione();
             int monete = partita.gruppo().getMonete();
             partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
@@ -132,8 +132,7 @@ class ScenarioRichiesteDiMaterialiTest {
             }
             assertFalse(nelBosco);
 
-            new OggettoMissione(alchimista.getId(), RichiestaDiMateriali.MATERIALE, alchimista.getMateriali().getNome(), 3)
-                    .prendi(partita.gruppo(), null);
+            RaccoltaBottino.raccogli(new OggettoMissione(alchimista.getId(), RichiestaDiMateriali.MATERIALE, alchimista.getMateriali().getNome(), 3), partita.gruppo(), null);
             alchimista.controllaPostLocazione();
             int monete = partita.gruppo().getMonete();
             alchimista.controllaPreLocazione();
@@ -168,8 +167,7 @@ class ScenarioRichiesteDiMaterialiTest {
             assertFalse(nelBosco);
             assertTrue(inPalude);
 
-            new OggettoMissione(locandiere.getId(), RichiestaDiMateriali.MATERIALE, locandiere.getMateriali().getNome(), 3)
-                    .prendi(partita.gruppo(), null);
+            RaccoltaBottino.raccogli(new OggettoMissione(locandiere.getId(), RichiestaDiMateriali.MATERIALE, locandiere.getMateriali().getNome(), 3), partita.gruppo(), null);
             locandiere.controllaPostLocazione();
             int monete = partita.gruppo().getMonete();
             locandiere.controllaPreLocazione();

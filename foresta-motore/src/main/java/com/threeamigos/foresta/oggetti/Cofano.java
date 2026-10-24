@@ -1,12 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.testi.Numeri;
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
-import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
@@ -62,77 +56,6 @@ public class Cofano extends OggettoBase implements Oggetto {
 
 	public TipoOggetto getClasse() {
 		return TipoOggetto.COFANO;
-	}
-
-	@Override
-	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
-		TipoLocazione tipoLocazione = gruppo.getTipoLocazioneCorrente();
-		int min;
-		int max;
-		int tipo;
-		if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CASTELLO) {
-			min = 1;
-			max = 6;
-		} else {
-			min = 0;
-			max = 7;
-		}
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < quantita; i++) {
-			tipo = Dado.tira(ContestoLancio.COFANO_ESITO, min, max);
-			// Di rado, al posto dell'esito solito, una pergamena o un artefatto casuale, che vanno nel gruppo
-			Artefatto trovato = artefattoRaro();
-			sb.append("Aprendo il");
-			if (quantita > 1) {
-				sb.append(' ').append(Numeri.getOrdinaleM(i + 1, false));
-			}
-			if (Dado.tira(2) == 1) {
-				sb.append(" cofano, ");
-			} else {
-				sb.append(" forziere, ");
-			}
-			if (i == 0) {
-				sb.append(gruppo.chi()).append(' ');
-			}
-			if (trovato != null) {
-				gruppo.addArtefatto(trovato);
-				BusEventi.pubblica(new NotificaArtefattoTrovato(trovato, Statistiche.getLivello()));
-				LibroTecnico.di(trovato).ifPresent(IntermezzoLibroTecnico::trovato);
-				sb.append("trova ").append(trovato.getNomeCompleto()).append(": finisce nell'inventario del gruppo.");
-			} else if (tipo == 0) {
-				sb.append("non trova nulla.");
-			} else if (tipo == 1) {
-				sb.append("trova una pergamena con un ");
-				TipoIncantesimo tipoIncantesimo = FabbricaIncantesimi.casuale();
-				sb.append(tipoIncantesimo.getNomeSingolare()).append('.');
-				gruppo.addIncantesimi(tipoIncantesimo, 1);
-			} else if (tipo == 2) {
-				sb.append("trova una pergamena con tre ");
-				TipoIncantesimo tipoIncantesimo = FabbricaIncantesimi.casuale();
-				sb.append(tipoIncantesimo.getNomePlurale()).append('.');
-				gruppo.addIncantesimi(tipoIncantesimo, 3);
-			} else if (tipo == 3) {
-				sb.append("trova una pozione della salute.");
-				gruppo.addPozioniSalute(1);
-			} else if (tipo == 4) {
-				sb.append("trova una pozione della salute grande.");
-				gruppo.addPozioniSaluteGrande(1);
-			} else if (tipo == 5) {
-				sb.append("trova una pozione della magia.");
-				gruppo.addPozioniMagia(1);
-			} else if (tipo == 6) {
-				sb.append("trova alcune monete d'oro.");
-				gruppo.addMonete(Dado.tira(5, 10));
-			} else if (tipo == 7) {
-				sb.append("trova alcune pietre preziose.");
-				gruppo.addPreziosi(Dado.tira(5, 10));
-			}
-			if (i < quantita - 1) {
-				sb.append(' ');
-			}
-		}
-		BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
-		return super.prendi(gruppo, azione);
 	}
 
 	/**
@@ -207,7 +130,7 @@ public class Cofano extends OggettoBase implements Oggetto {
 	 * L'oggetto speciale del cofano: quello che chi sviluppa ha voluto (vedi {@link #opzioniOggettoSpeciale}), altrimenti
 	 * quello del tiro di probabilità.
 	 */
-	private static Artefatto artefattoRaro() {
+	static Artefatto artefattoRaro() {
 		String voluto = Dado.sceltaVoluta(ContestoLancio.COFANO_OGGETTO, opzioniOggettoSpeciale())
 				.orElse(OGGETTO_SPECIALE_CASUALE);
 		GeneratoreArtefatti generatore = GeneratoreArtefatti.istanza();

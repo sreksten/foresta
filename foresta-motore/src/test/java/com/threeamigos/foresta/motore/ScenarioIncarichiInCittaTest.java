@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.*;
@@ -129,8 +130,7 @@ class ScenarioIncarichiInCittaTest {
             assertTrue(radici.getQuantita() >= 1 && radici.getQuantita() <= 2);
 
             // Raccolte tutte (anche in due volte), non ne crescono più e si torna dall'alchimista
-            new OggettoMissione(radici.getIdMissione(), RichiestaDiMateriali.MATERIALE, mandragola.getMateriali().getNome(), 3)
-                    .prendi(partita.gruppo(), null);
+            RaccoltaBottino.raccogli(new OggettoMissione(radici.getIdMissione(), RichiestaDiMateriali.MATERIALE, mandragola.getMateriali().getNome(), 3), partita.gruppo(), null);
             assertEquals(3, mandragola.getContatore(RichiestaDiMateriali.MATERIALE));
             for (int i = 0; i < 200; i++) {
                 mandragola.getOggettoInLocazione(casella, TipoLocazione.BOSCO, false)
@@ -138,7 +138,7 @@ class ScenarioIncarichiInCittaTest {
             }
             mandragola.controllaPostLocazione();
             assertEquals("RACCOLTA", mandragola.getPassoCorrente());
-            radici.prendi(partita.gruppo(), null);
+            RaccoltaBottino.raccogli(radici, partita.gruppo(), null);
             mandragola.controllaPostLocazione();
             assertEquals("RITORNO", mandragola.getPassoCorrente());
             for (int i = 0; i < 50; i++) {
@@ -160,8 +160,7 @@ class ScenarioIncarichiInCittaTest {
                     () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             RichiestaDiMateriali mandragola = prendiIncaricoAllaSecondaVisita(Alchimie.conLaMandragola());
             OggettiDaRaccogliere radici = mandragola.getMateriali();
-            new OggettoMissione(mandragola.getId(), RichiestaDiMateriali.MATERIALE, radici.getNome(), 1)
-                    .prendi(partita.gruppo(), null);
+            RaccoltaBottino.raccogli(new OggettoMissione(mandragola.getId(), RichiestaDiMateriali.MATERIALE, radici.getNome(), 1), partita.gruppo(), null);
 
             // Prima dei tre giorni non si ripiega
             LineaTemporale.aggiungiOre(OggettiDaRaccogliere.ORE_AL_RIPIEGO - 1);
@@ -191,8 +190,7 @@ class ScenarioIncarichiInCittaTest {
             assertEquals(ripiego, riletta.getRipiego(radici));
 
             // Raccolte, la missione va avanti come sempre
-            riletta.getOggettoInLocazione(ripiego, Foresta.getLocazione(ripiego), true).orElseThrow(AssertionError::new)
-                    .prendi(partita.gruppo(), null);
+            RaccoltaBottino.raccogli(riletta.getOggettoInLocazione(ripiego, Foresta.getLocazione(ripiego), true).orElseThrow(AssertionError::new), partita.gruppo(), null);
             riletta.controllaPostLocazione();
             assertEquals("RITORNO", riletta.getPassoCorrente());
         }

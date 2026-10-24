@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.LOggettoSmarrito;
 import com.threeamigos.foresta.missioni.richieste.OggettoSmarrito;
@@ -70,7 +71,7 @@ class ScenarioOggettoSmarritoTest {
             smarrito.controllaPreLocazione();
             assertNull(smarrito.getRipiego(smarrito.getOggettoDaCercare()));
 
-            new OggettoMissione(smarrito.getId(), LOggettoSmarrito.OGGETTO, smarrito.getSmarrito().getNome(), 1).prendi(partita.gruppo(), null);
+            RaccoltaBottino.raccogli(new OggettoMissione(smarrito.getId(), LOggettoSmarrito.OGGETTO, smarrito.getSmarrito().getNome(), 1), partita.gruppo(), null);
             smarrito.controllaPostLocazione();
             assertEquals("Hai trovato la fede nuziale: riportala al mugnaio di Nyena.", smarrito.getDescrizione());
 

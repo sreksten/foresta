@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
 import com.threeamigos.foresta.missioni.Passo;
@@ -91,7 +92,7 @@ class ScenarioTrofeiEdEsplorazioneTest {
             assertEquals("orecchio di goblin", orecchie.getNomeSingolare());
 
             // Mai più di quante ne mancano
-            orecchie.prendi(partita.gruppo(), null);
+            RaccoltaBottino.raccogli(orecchie, partita.gruppo(), null);
             avversari(TipoPersonaggio.GOBLIN, 4);
             int mancanti = 3 - caccia.getContatore("ORECCHIE");
             for (int i = 0; i < 20; i++) {

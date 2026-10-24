@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
@@ -62,7 +63,7 @@ class ScenarioLaForgiaTest {
             ForgiaRichiesta arma = forgia.getArma();
             assertTrue(forgia.getNome().contains(arma.getNomeBreve()), forgia.getNome());
             assertTrue(forgia.getDescrizione().contains(arma.getNomeBreve()), forgia.getDescrizione());
-            assertFalse(Artefatto.candidati(partita.gruppo(), arma.leggendario(1).costruisci()).isEmpty(),
+            assertFalse(RaccoltaBottino.candidati(partita.gruppo(), arma.leggendario(1).costruisci()).isEmpty(),
                     "l'arma scelta la può impugnare qualcuno del gruppo");
             int costo = forgia.getCosto();
             assertEquals(Costanti.FORGIA_MONETE_PER_LIVELLO * Statistiche.getLivello(), costo);
@@ -130,7 +131,7 @@ class ScenarioLaForgiaTest {
     }
 
     private static void raccogli(LaForgia forgia, PartitaDiTest partita, String chiave, MaterialeRichiesto materiale, int quantita) {
-        new OggettoMissione(forgia.getId(), chiave, materiale.getNome(), quantita).prendi(partita.gruppo(), null);
+        RaccoltaBottino.raccogli(new OggettoMissione(forgia.getId(), chiave, materiale.getNome(), quantita), partita.gruppo(), null);
         assertEquals(quantita, forgia.getContatore(chiave));
     }
 

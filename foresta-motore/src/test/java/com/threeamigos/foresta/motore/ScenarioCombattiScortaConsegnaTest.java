@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.missioni.incarichi.IlPellegrino;
@@ -135,9 +136,8 @@ class ScenarioCombattiScortaConsegnaTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             RichiestaDiMateriali mandragola = prendiIncaricoAllaSecondaVisita(Alchimie.conLaMandragola());
-            new OggettoMissione(mandragola.getId(), RichiestaDiMateriali.MATERIALE,
-                    mandragola.getMateriali().getNome(), Alchimie.RADICI)
-                    .prendi(partita.gruppo(), null);
+            RaccoltaBottino.raccogli(new OggettoMissione(mandragola.getId(), RichiestaDiMateriali.MATERIALE,
+                    mandragola.getMateriali().getNome(), Alchimie.RADICI), partita.gruppo(), null);
             mandragola.controllaPostLocazione();
             assertEquals("RITORNO", mandragola.getPassoCorrente());
 

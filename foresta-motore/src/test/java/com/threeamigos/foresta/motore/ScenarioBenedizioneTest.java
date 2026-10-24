@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Locazione;
@@ -177,8 +178,7 @@ class ScenarioBenedizioneTest {
             assertEquals("RACCOLTA", favore.getPassoCorrente());
             assertTrue(favore.getDescrizione().startsWith("Per il sacerdote della terra: raccogli quattro fiori di loto bianco"),
                     favore.getDescrizione());
-            new com.threeamigos.foresta.oggetti.OggettoMissione(favore.getId(), IlFavore.INGREDIENTE, favore.getIngredienti().getNome(), 4)
-                    .prendi(partita.gruppo(), null);
+            RaccoltaBottino.raccogli(new com.threeamigos.foresta.oggetti.OggettoMissione(favore.getId(), IlFavore.INGREDIENTE, favore.getIngredienti().getNome(), 4), partita.gruppo(), null);
             favore.controllaPostLocazione();
             assertTrue(favore.isCompleta());
             benedizione.controllaPostLocazione();

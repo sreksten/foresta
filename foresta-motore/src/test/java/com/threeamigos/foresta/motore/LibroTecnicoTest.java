@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.intermezzi.FabbricaIntermezzi;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
@@ -133,7 +134,7 @@ class LibroTecnicoTest {
 			LibroTecnico kr = LibroTecnico.getLibro(K_AND_R).orElseThrow(AssertionError::new);
 			assertFalse(IntermezzoLibroTecnico.isTrovato(kr));
 
-			new Cofano(1).prendi(partita.gruppo(), Comando.GRUPPO);
+			RaccoltaBottino.raccogli(new Cofano(1), partita.gruppo(), Comando.GRUPPO);
 
 			Artefatto trovato = partita.gruppo().getInventario().stream()
 					.filter(artefatto -> artefatto.getAspetto() == TipoOggetto.LIBRO_TECNICO)

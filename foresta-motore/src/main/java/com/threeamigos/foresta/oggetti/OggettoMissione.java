@@ -2,9 +2,6 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 
 import java.util.Objects;
@@ -72,11 +69,4 @@ public class OggettoMissione extends OggettoBase implements Oggetto {
 		return nome.getADP();
 	}
 
-	@Override
-	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
-		RegistroMissioni.getMissione(idMissione)
-				.filter(MissioneAPassi.class::isInstance)
-				.ifPresent(m -> ((MissioneAPassi) m).oggettoDiMissioneRaccolto(chiave, quantita));
-		return super.prendi(gruppo, azione);
-	}
 }

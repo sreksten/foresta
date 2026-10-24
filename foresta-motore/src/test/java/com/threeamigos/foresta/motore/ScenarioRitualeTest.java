@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
 import com.threeamigos.foresta.missioni.Passo;
@@ -205,7 +206,7 @@ class ScenarioRitualeTest {
     }
 
     private static void raccogliGliIngredienti(PartitaDiTest partita, IlRituale rituale) {
-        new OggettoMissione(rituale.getId(), IlRituale.INGREDIENTE, rituale.getIngredienti().getNome(), 3).prendi(partita.gruppo(), null);
+        RaccoltaBottino.raccogli(new OggettoMissione(rituale.getId(), IlRituale.INGREDIENTE, rituale.getIngredienti().getNome(), 3), partita.gruppo(), null);
         rituale.controllaPostLocazione();
         assertEquals(IlRituale.RITO, rituale.getPassoCorrente());
     }

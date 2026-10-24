@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.missioni.*;
@@ -153,7 +154,7 @@ class ScenarioPassiAvanzatiTest {
             missione.controllaInLocazione();
             assertFalse(missione.isCompleta(), "mancano le assi");
 
-            new OggettoMissione(missione.getId(), "ASSI", assi.getNome(), 4).prendi(partita.gruppo(), null);
+            RaccoltaBottino.raccogli(new OggettoMissione(missione.getId(), "ASSI", assi.getNome(), 4), partita.gruppo(), null);
             partita.gruppo().addMonete(10 - partita.gruppo().getMonete());
             long oraPrima = LineaTemporale.getGiorno() * 24L + LineaTemporale.getOra();
             missione.controllaInLocazione();

@@ -387,7 +387,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	}
 
 	/**
-	 * Il gruppo ha raccolto un oggetto di questa missione (vedi OggettoMissione.prendi).
+	 * Il gruppo ha raccolto un oggetto di questa missione (vedi RaccoltaBottino.raccogli).
 	 */
 	public final void oggettoDiMissioneRaccolto(String chiave, int quantita) {
 		if (!isCompleta() && !isFallita()) {

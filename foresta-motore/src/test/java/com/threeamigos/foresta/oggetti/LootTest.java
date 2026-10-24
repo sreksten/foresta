@@ -48,13 +48,13 @@ class LootTest {
     void conPiuCandidatiSceglieIlGiocatore() {
         Spada spada = new Spada();
         assertEquals(Arrays.asList(Comando.PERSONAGGIO_1, Comando.PERSONAGGIO_2),
-                Artefatto.candidati(gruppo, spada.getArtefatto().get()));
+                RaccoltaBottino.candidati(gruppo, spada.getArtefatto().get()));
         // Senza comando non la prende nessuno: la scelta passa all'automa
-        assertFalse(spada.prendi(gruppo, null));
+        assertFalse(RaccoltaBottino.raccogli(spada, gruppo, null));
         assertTrue(primo.getInventario().isEmpty());
         assertTrue(secondo.getInventario().isEmpty());
         // Scelto il secondo, la prende lui
-        assertTrue(spada.prendi(gruppo, Comando.PERSONAGGIO_2));
+        assertTrue(RaccoltaBottino.raccogli(spada, gruppo, Comando.PERSONAGGIO_2));
         assertEquals(1, secondo.getInventario().size());
     }
 
@@ -64,8 +64,8 @@ class LootTest {
         primo.addArtefatto(artefatto(TipoArtefatto.SPADA, 1));
         Spada spada = new Spada();
         // When: resta un solo candidato
-        assertEquals(Collections.singletonList(Comando.PERSONAGGIO_2), Artefatto.candidati(gruppo, spada.getArtefatto().get()));
-        boolean presa = spada.prendi(gruppo, null);
+        assertEquals(Collections.singletonList(Comando.PERSONAGGIO_2), RaccoltaBottino.candidati(gruppo, spada.getArtefatto().get()));
+        boolean presa = RaccoltaBottino.raccogli(spada, gruppo, null);
         // Then: va a lui senza domanda
         assertTrue(presa);
         assertEquals(1, primo.getInventario().size());
@@ -79,7 +79,7 @@ class LootTest {
         primo.addArtefatto(artefatto(TipoArtefatto.SCUDO, 1));
         secondo.addArtefatto(artefatto(TipoArtefatto.SCUDO, 1));
         // When
-        boolean preso = new Scudo().prendi(gruppo, null);
+        boolean preso = RaccoltaBottino.raccogli(new Scudo(), gruppo, null);
         // Then: niente sostituzioni, lo scudo nuovo va nel gruppo e non è equipaggiato
         assertTrue(preso);
         assertEquals(1, gruppo.getInventario().size());
@@ -90,24 +90,24 @@ class LootTest {
     void iMortiNonSonoCandidati() {
         secondo.getModelloDati().setVivo(false);
         Artefatto spada = artefatto(TipoArtefatto.SPADA, 1);
-        assertEquals(Collections.singletonList(Comando.PERSONAGGIO_1), Artefatto.candidati(gruppo, spada));
-        assertTrue(spada.prendi(gruppo, null));
+        assertEquals(Collections.singletonList(Comando.PERSONAGGIO_1), RaccoltaBottino.candidati(gruppo, spada));
+        assertTrue(RaccoltaBottino.raccogli(spada, gruppo, null));
         assertEquals(1, primo.getInventario().size());
     }
 
     @Test
     void unArtefattoDiLivelloTroppoAltoVaNelGruppo() {
         Artefatto spada = artefatto(TipoArtefatto.SPADA, 3);
-        assertTrue(Artefatto.candidati(gruppo, spada).isEmpty());
-        assertTrue(spada.prendi(gruppo, null));
+        assertTrue(RaccoltaBottino.candidati(gruppo, spada).isEmpty());
+        assertTrue(RaccoltaBottino.raccogli(spada, gruppo, null));
         assertEquals(1, gruppo.getInventario().size());
     }
 
     @Test
     void gliIngredientiVannoSempreNelGruppo() {
         Artefatto pergamena = new GeneratoreArtefattiTabelle(new Random(1)).generaIngrediente(1);
-        assertTrue(Artefatto.candidati(gruppo, pergamena).isEmpty());
-        assertTrue(pergamena.prendi(gruppo, null));
+        assertTrue(RaccoltaBottino.candidati(gruppo, pergamena).isEmpty());
+        assertTrue(RaccoltaBottino.raccogli(pergamena, gruppo, null));
         assertEquals(1, gruppo.getInventario().size());
     }
 
@@ -118,13 +118,13 @@ class LootTest {
         gruppoDelLadro.aggiungiPersonaggioSenzaNotificare(ladro);
         ladro.addArtefatto(artefatto(TipoArtefatto.SPADA, 1));
         Artefatto seconda = artefatto(TipoArtefatto.SPADA, 1);
-        assertTrue(seconda.prendi(gruppoDelLadro, null));
+        assertTrue(RaccoltaBottino.raccogli(seconda, gruppoDelLadro, null));
         assertEquals(TipoSlotArtefatto.MANO_SECONDARIA, seconda.getModelloDati().getSlotEquipaggiamento());
     }
 
     @Test
     void conGruppoVaNelGruppoAncheSeQualcunoPotrebbePrenderlo() {
-        assertTrue(new Spada().prendi(gruppo, Comando.GRUPPO));
+        assertTrue(RaccoltaBottino.raccogli(new Spada(), gruppo, Comando.GRUPPO));
         assertEquals(1, gruppo.getInventario().size());
     }
 

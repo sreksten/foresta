@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.missioni.incarichi.IlCartografo;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
 import com.threeamigos.foresta.missioni.Mandante;
@@ -69,8 +70,8 @@ class ScenarioTrofeiECartografoTest {
             Oggetto orecchie = capitano.getOggettoInLocazione(new CoordinateMD(0, 0), TipoLocazione.ROVINE, true)
                     .orElseThrow(AssertionError::new);
             assertEquals("orecchie di goblin", orecchie.getNomePlurale());
-            new com.threeamigos.foresta.oggetti.OggettoMissione(capitano.getId(), RichiestaDiMateriali.MATERIALE,
-                    capitano.getMateriali().getNome(), 3).prendi(partita.gruppo(), null);
+            RaccoltaBottino.raccogli(new com.threeamigos.foresta.oggetti.OggettoMissione(capitano.getId(), RichiestaDiMateriali.MATERIALE,
+                    capitano.getMateriali().getNome(), 3), partita.gruppo(), null);
             capitano.controllaPostLocazione();
             assertEquals("RITORNO", capitano.getPassoCorrente());
 

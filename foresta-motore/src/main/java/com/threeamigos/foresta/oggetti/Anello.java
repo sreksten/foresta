@@ -3,11 +3,8 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
@@ -80,6 +77,34 @@ public class Anello extends OggettoBase implements Oggetto {
 				.costruisci();
 	}
 
+	/**
+	 * Se è un anello magico (uno su sei): allora porta un artefatto.
+	 */
+	public boolean isMagico() {
+		return anelloMagico;
+	}
+
+	/**
+	 * Di quale dei tre tipi è l'anello magico (1 aumenta il valore, 2 il coraggio, 3 il carisma); -1 se non è magico.
+	 */
+	public int getTipoDiMagia() {
+		return tipo;
+	}
+
+	/**
+	 * Se la magia dell'anello è già stata annunciata: un anello rifiutato e ripreso non si annuncia due volte.
+	 */
+	public boolean isMagiaAnnunciata() {
+		return notificato;
+	}
+
+	/**
+	 * Ricorda che la magia dell'anello è stata annunciata.
+	 */
+	public void segnaMagiaAnnunciata() {
+		notificato = true;
+	}
+
 	@Override
 	public Optional<Artefatto> getArtefatto() {
 		return Optional.ofNullable(artefatto);
@@ -113,27 +138,4 @@ public class Anello extends OggettoBase implements Oggetto {
 		return TipoOggetto.ANELLO;
 	}
 
-	@Override
-	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
-		if (anelloMagico) {
-			if (!notificato) {
-				StringBuilder sb = new StringBuilder("Questo è un anello magico, che fa aumentare ");
-				if (tipo == 1)
-					sb.append("il valore in combattimento");
-				else if (tipo == 2)
-					sb.append("il coraggio");
-				else
-					sb.append("il carisma");
-				sb.append("!");
-				BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
-				notificato = true;
-			}
-			if (!Artefatto.raccogli(gruppo, azione, artefatto)) {
-				return false;
-			}
-			Statistiche.addPunti(Costanti.ANELLO_MAGICO_PUNTEGGIO);
-			GestoreProgressione.acquisisciArtefattoMinore();
-		}
-		return super.prendi(gruppo, azione);
-	}
 }

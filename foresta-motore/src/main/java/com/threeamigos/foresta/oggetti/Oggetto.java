@@ -1,14 +1,12 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 
 import java.util.Optional;
 
 /**
- * Qualcosa che il gruppo trova in una locazione e può prendere: monete, pietre preziose, un cofano, un anello, un oggetto di
+ * Qualcosa che il gruppo trova in una locazione e può prendere (come lo prende lo decide {@link RaccoltaBottino}): monete, pietre preziose, un cofano, un anello, un oggetto di
  * una missione o un artefatto.
  * <p>
  * Gli oggetti delle locazioni non si salvano: se il gruppo non li prende, alla visita successiva la locazione decide di nuovo che
@@ -35,16 +33,6 @@ public interface Oggetto extends OggettoConArticoli {
 	 * Quanti oggetti il gruppo giocante ha trovato
 	 */
     int getQuantita();
-
-	/**
-	 * @param azione il numero del personaggio che prende l'oggetto, scelto tra
-	 *        Azione.INVALIDA (in questo caso il personaggio principale del gruppo prende
-	 *        l'oggetto) e Azione.PERSONAGGIO_[1|2|3|4|5].
-	 * @return true se è possibile prendere l'oggetto mediante Azione.AZIONE_INVALIDA
-	 *         false se occorre specificare il personaggio attivo, ossia il personaggio che
-	 *         prende l'oggetto e ne subisce le conseguenze.
-	 */
-    boolean prendi(GruppoGiocatore gruppo, Comando azione);
 
 	/**
 	 * L'artefatto che l'oggetto consegna a chi lo prende, se ne ha uno (artefatti dei templi,
