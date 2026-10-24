@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Silenzio;
@@ -7,7 +8,6 @@ import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,8 +31,8 @@ class SilenzioTest {
     @Test
     void ilComandoEIlPrezzoSonoQuelliDelSilenzio() {
         assertEquals(TipoIncantesimo.SILENZIO, TipoIncantesimo.ofComando(Comando.SILENZIO));
-        assertEquals(5, FabbricaIncantesimi.costoAcquisto(TipoIncantesimo.SILENZIO));
-        assertEquals(Costanti.INCANTESIMO_SILENZIO_COSTO_LANCIO, FabbricaIncantesimi.costoLancio(TipoIncantesimo.SILENZIO));
+        assertEquals(5, TipoIncantesimo.SILENZIO.getCostoAcquisto());
+        assertEquals(CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_LANCIO, TipoIncantesimo.SILENZIO.getCostoLancio());
         assertEquals(TipoIncantesimo.SILENZIO, FabbricaIncantesimi.crea(TipoIncantesimo.SILENZIO, 1).getClasse());
     }
 

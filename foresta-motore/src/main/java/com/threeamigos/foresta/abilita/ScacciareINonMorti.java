@@ -7,7 +7,6 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 
 import java.util.ArrayList;
@@ -29,11 +28,6 @@ public class ScacciareINonMorti implements Abilita {
 	@Override
 	public TipoAbilita getTipo() {
 		return TipoAbilita.SCACCIARE_I_NON_MORTI;
-	}
-
-	@Override
-	public int getCostoLancio() {
-		return Costanti.ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO;
 	}
 
 	/**

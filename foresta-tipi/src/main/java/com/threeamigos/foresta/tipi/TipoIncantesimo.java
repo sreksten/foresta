@@ -13,7 +13,7 @@ import com.threeamigos.foresta.testi.Testi;
  * L'identificativo viene usato per salvare e rileggere il modello dati del gruppo del giocatore assieme alle quantità
  * disponibili per quel tipo di incantesimo.
  * <p>
- * Le istanze di incantesimo assieme al costo di acquisto e di lancio li dà incantesimi.FabbricaIncantesimi.
+ * Il costo di acquisto e di lancio lo dà questa enum (i valori sono in {@link CostantiIncantesimi}); le istanze di incantesimo le dà incantesimi.FabbricaIncantesimi.
  * <p>
  * I testi di ogni costante (NOME, NOME_SINGOLARE, NOME_PLURALE, EFFETTO) non stanno qui ma nel file
  * {@code classe_incantesimo_<lingua>.properties}, alla voce {@code COSTANTE.VOCE}, in modo che il gioco si possa
@@ -118,4 +118,71 @@ public enum TipoIncantesimo {
 		return Testi.testoOCostante(this, "EFFETTO");
 	}
 
+	/**
+	 * I punti di MAGIA che costa lanciarlo.
+	 */
+	public int getCostoLancio() {
+		switch (this) {
+			case ARIA:
+				return CostantiIncantesimi.INCANTESIMO_ARIA_COSTO_LANCIO;
+			case ACQUA:
+				return CostantiIncantesimi.INCANTESIMO_ACQUA_COSTO_LANCIO;
+			case TERRA:
+				return CostantiIncantesimi.INCANTESIMO_TERRA_COSTO_LANCIO;
+			case FUOCO:
+				return CostantiIncantesimi.INCANTESIMO_FUOCO_COSTO_LANCIO;
+			case FULMINE:
+				return CostantiIncantesimi.INCANTESIMO_FULMINE_COSTO_LANCIO;
+			case GELO:
+				return CostantiIncantesimi.INCANTESIMO_GELO_COSTO_LANCIO;
+			case VELENO:
+				return CostantiIncantesimi.INCANTESIMO_VELENO_COSTO_LANCIO;
+			case MORTE:
+				return CostantiIncantesimi.INCANTESIMO_MORTE_COSTO_LANCIO;
+			case RESURREZIONE:
+				return CostantiIncantesimi.INCANTESIMO_RESURREZIONE_COSTO_LANCIO;
+			case ALBA_SACRA:
+				return CostantiIncantesimi.INCANTESIMO_ALBA_SACRA_COSTO_LANCIO;
+			case SILENZIO:
+				return CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_LANCIO;
+			case LUCE_DIVINA:
+				return CostantiIncantesimi.INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO;
+			default:
+				throw new IllegalStateException("Costo non previsto per " + this);
+		}
+	}
+
+	/**
+	 * Le monete che costa una pergamena.
+	 */
+	public int getCostoAcquisto() {
+		switch (this) {
+			case ARIA:
+				return CostantiIncantesimi.INCANTESIMO_ARIA_COSTO_ACQUISTO;
+			case ACQUA:
+				return CostantiIncantesimi.INCANTESIMO_ACQUA_COSTO_ACQUISTO;
+			case TERRA:
+				return CostantiIncantesimi.INCANTESIMO_TERRA_COSTO_ACQUISTO;
+			case FUOCO:
+				return CostantiIncantesimi.INCANTESIMO_FUOCO_COSTO_ACQUISTO;
+			case FULMINE:
+				return CostantiIncantesimi.INCANTESIMO_FULMINE_COSTO_ACQUISTO;
+			case GELO:
+				return CostantiIncantesimi.INCANTESIMO_GELO_COSTO_ACQUISTO;
+			case VELENO:
+				return CostantiIncantesimi.INCANTESIMO_VELENO_COSTO_ACQUISTO;
+			case MORTE:
+				return CostantiIncantesimi.INCANTESIMO_MORTE_COSTO_ACQUISTO;
+			case RESURREZIONE:
+				return CostantiIncantesimi.INCANTESIMO_RESURREZIONE_COSTO_ACQUISTO;
+			case ALBA_SACRA:
+				return CostantiIncantesimi.INCANTESIMO_ALBA_SACRA_COSTO_ACQUISTO;
+			case SILENZIO:
+				return CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_ACQUISTO;
+			case LUCE_DIVINA:
+				return CostantiIncantesimi.INCANTESIMO_LUCE_DIVINA_COSTO_ACQUISTO;
+			default:
+				throw new IllegalStateException("Costo non previsto per " + this);
+		}
+	}
 }

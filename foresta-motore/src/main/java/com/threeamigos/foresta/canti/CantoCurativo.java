@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.canti;
 
+import com.threeamigos.foresta.tipi.CostantiCanti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoCanto;
 
 import java.util.Optional;
@@ -28,17 +28,12 @@ public class CantoCurativo implements Canto {
 		return TipoCanto.CURATIVO;
 	}
 
-	@Override
-	public int getCostoLancio() {
-		return Costanti.CANTO_CURATIVO_COSTO_LANCIO;
-	}
-
 	/**
 	 * Quanta salute restituisce, prima del limite del massimo di chi la riceve
 	 */
 	public int getCura() {
-		return (int) Math.round(Costanti.CANTO_CURATIVO_BASE * Math.sqrt(livello)
-				* (1.0d + saggezza / Costanti.CANTO_CURATIVO_DIVISORE_SAGGEZZA));
+		return (int) Math.round(CostantiCanti.CANTO_CURATIVO_BASE * Math.sqrt(livello)
+				* (1.0d + saggezza / CostantiCanti.CANTO_CURATIVO_DIVISORE_SAGGEZZA));
 	}
 
 	/**

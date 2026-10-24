@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
@@ -17,16 +17,12 @@ public class Fuoco extends IncantesimoMaleficoImpl implements Incantesimo {
 		return TipoIncantesimo.FUOCO;
 	}
 
-	public int getCostoLancio() {
-		return Costanti.INCANTESIMO_FUOCO_COSTO_LANCIO;
-	}
-
 	@Override
 	public TipoDanno getTipoDanno() {
 		return TipoDanno.FUOCO;
 	}
 
 	public int getDanni() {
-		return Costanti.INCANTESIMO_FUOCO_DANNI;
+		return CostantiIncantesimi.INCANTESIMO_FUOCO_DANNI;
 	}
 }

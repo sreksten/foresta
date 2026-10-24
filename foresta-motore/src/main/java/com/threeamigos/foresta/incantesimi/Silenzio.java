@@ -10,7 +10,6 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.logger.Logger;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
@@ -29,10 +28,6 @@ public class Silenzio extends IncantesimoMaleficoImpl implements Incantesimo {
 
 	public TipoIncantesimo getClasse() {
 		return TipoIncantesimo.SILENZIO;
-	}
-
-	public int getCostoLancio() {
-		return Costanti.INCANTESIMO_SILENZIO_COSTO_LANCIO;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.combattimento;
 
+import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.IncantamentoMD;
@@ -204,14 +205,14 @@ public class CalcolatoreCombattimento {
     /**
      * La quota del danno che subisce un bersaglio di un incantesimo (o di un'abilità di danno) a più bersagli, secondo la sua posizione:
      * 0 per il principale, che lo subisce intero, poi un quarto in meno a ogni posizione, fino a un quarto del danno
-     * (vedi Costanti.INCANTESIMO_MULTIPLO_RIDUZIONE_PER_POSIZIONE). Lo applicano sia il lancio sia la valutazione delle tattiche, perché
+     * (vedi CostantiIncantesimi.INCANTESIMO_MULTIPLO_RIDUZIONE_PER_POSIZIONE). Lo applicano sia il lancio sia la valutazione delle tattiche, perché
      * scelgano per il danno vero.
      *
      * @param posizione la posizione del bersaglio fra i colpiti, dal principale (0)
      */
     public static double quotaDelDannoPerPosizione(int posizione) {
-        return Math.max(Costanti.INCANTESIMO_MULTIPLO_QUOTA_MINIMA,
-                1.0d - Costanti.INCANTESIMO_MULTIPLO_RIDUZIONE_PER_POSIZIONE * Math.max(0, posizione));
+        return Math.max(CostantiIncantesimi.INCANTESIMO_MULTIPLO_QUOTA_MINIMA,
+                1.0d - CostantiIncantesimi.INCANTESIMO_MULTIPLO_RIDUZIONE_PER_POSIZIONE * Math.max(0, posizione));
     }
 
     /**
@@ -443,7 +444,7 @@ public class CalcolatoreCombattimento {
         int dannoBaseArma = (int) Math.round(arma.getDanni() * livelloDiCombattimento(arma.getLivello()));
         if (isIncantesimo(arma)) {
             // Il danno proprio dell'incantesimo: il resto lo fanno l'INTELLIGENZA e il moltiplicatore magico di chi la lancia
-            dannoBaseArma = (int) Math.round(dannoBaseArma * Costanti.INCANTESIMO_FATTORE_DANNI);
+            dannoBaseArma = (int) Math.round(dannoBaseArma * CostantiIncantesimi.INCANTESIMO_FATTORE_DANNI);
         }
 
         if (Logger.isAttivo()) {

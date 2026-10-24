@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.interfacce.OggettoConCostoDiLancio;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
@@ -10,7 +11,7 @@ import com.threeamigos.foresta.tipi.TipoIncantesimo;
  * o sulla locazione
  */
 
-public interface Incantesimo {
+public interface Incantesimo extends OggettoConCostoDiLancio {
 
 	/**
 	 * La classe dell'incantesimo
@@ -33,7 +34,10 @@ public interface Incantesimo {
 	int getLivello();
 
 	/**
-	 * Quanti punti di magia costa lanciarlo
+	 * Quanti punti di magia costa lanciarlo: lo dice il suo tipo.
 	 */
-    int getCostoLancio();
+	@Override
+	default int getCostoLancio() {
+		return getClasse().getCostoLancio();
+	}
 }

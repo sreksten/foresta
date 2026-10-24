@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
@@ -8,7 +9,6 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Sacerdote;
 import com.threeamigos.foresta.personaggi.Sacerdotessa;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +56,7 @@ class SacerdoteTest {
     void serveAbbastanzaMagiaEBisognaPoterParlare() {
         Personaggio sacerdote = new Sacerdote("Elia", 1);
         assertTrue(AlbaSacra.puoLanciarlaInnata(sacerdote));
-        sacerdote.subMagia(sacerdote.getMagia() - (Costanti.INCANTESIMO_ALBA_SACRA_COSTO_LANCIO - 1));
+        sacerdote.subMagia(sacerdote.getMagia() - (CostantiIncantesimi.INCANTESIMO_ALBA_SACRA_COSTO_LANCIO - 1));
         assertFalse(AlbaSacra.puoLanciarlaInnata(sacerdote));
 
         Personaggio muta = new Sacerdotessa("Giuditta", 1);
@@ -109,7 +109,7 @@ class SacerdoteTest {
                 assertFalse(scelte.contains(Comando.DARDO_ARCANO));
                 int magiaPrima = sacerdote.getMagia();
                 partita.comando(Comando.ALBA_SACRA);
-                assertEquals(magiaPrima - Costanti.INCANTESIMO_ALBA_SACRA_COSTO_LANCIO, sacerdote.getMagia());
+                assertEquals(magiaPrima - CostantiIncantesimi.INCANTESIMO_ALBA_SACRA_COSTO_LANCIO, sacerdote.getMagia());
                 assertEquals(pergamene, partita.gruppo().getIncantesimi(TipoIncantesimo.ALBA_SACRA));
             }
         }

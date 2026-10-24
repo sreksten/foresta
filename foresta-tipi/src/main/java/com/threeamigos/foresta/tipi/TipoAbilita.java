@@ -58,4 +58,26 @@ public enum TipoAbilita {
 	public String getDescrizione() {
 		return Testi.testoOCostante(this, "DESCRIZIONE");
 	}
+
+	/**
+	 * I punti di MAGIA che costa usarla.
+	 */
+	public int getCostoLancio() {
+		switch (this) {
+			case SCACCIARE_I_NON_MORTI:
+				return CostantiAbilitaInnate.ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO;
+			case IMPOSIZIONE_DELLE_MANI:
+				return CostantiAbilitaInnate.ABILITA_IMPOSIZIONE_DELLE_MANI_COSTO_LANCIO;
+			case RADICI:
+				return CostantiAbilitaInnate.ABILITA_RADICI_COSTO_LANCIO;
+			case SCIAME:
+				return CostantiAbilitaInnate.ABILITA_SCIAME_COSTO_LANCIO;
+			case PELLE_DI_CORTECCIA:
+				return CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO;
+			case RIGENERAZIONE:
+				return CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_COSTO_LANCIO;
+			default:
+				throw new IllegalStateException("Costo non previsto per " + this);
+		}
+	}
 }

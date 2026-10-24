@@ -9,13 +9,11 @@ import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.attributi.CalcolatoreAttributiSecondari;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
-import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.interfacce.ModificatoreAttivo;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
@@ -26,7 +24,6 @@ import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.oggetti.ArmaNaturale;
 import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.*;
 
@@ -916,7 +913,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public boolean puoFormulare(TipoIncantesimo tipoIncantesimo) {
-		return getMagia() >= FabbricaIncantesimi.costoLancio(tipoIncantesimo) && !hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
+		return getMagia() >= tipoIncantesimo.getCostoLancio() && !hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
 	}
 
 	// CARICO MASSIMO

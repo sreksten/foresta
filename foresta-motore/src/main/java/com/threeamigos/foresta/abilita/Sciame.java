@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.abilita;
 
+import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
@@ -25,18 +25,13 @@ public class Sciame extends AbilitaDiDanno {
 	}
 
 	@Override
-	public int getCostoLancio() {
-		return Costanti.ABILITA_SCIAME_COSTO_LANCIO;
-	}
-
-	@Override
 	protected TipoDanno getTipoDanno() {
 		return TipoDanno.VELENO;
 	}
 
 	@Override
 	protected int getDanni() {
-		return Costanti.ABILITA_SCIAME_DANNI;
+		return CostantiAbilitaInnate.ABILITA_SCIAME_DANNI;
 	}
 
 	@Override

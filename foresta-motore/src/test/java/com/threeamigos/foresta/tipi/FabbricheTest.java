@@ -56,8 +56,8 @@ class FabbricheTest {
     void ogniClasseIncantesimoSiCostruisceEHaICosti() {
         for (TipoIncantesimo classe : TipoIncantesimo.values()) {
             assertNotNull(FabbricaIncantesimi.crea(classe, 1), classe.name());
-            FabbricaIncantesimi.costoAcquisto(classe);
-            FabbricaIncantesimi.costoLancio(classe);
+            classe.getCostoAcquisto();
+            classe.getCostoLancio();
         }
     }
 

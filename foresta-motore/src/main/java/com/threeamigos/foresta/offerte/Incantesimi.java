@@ -22,7 +22,7 @@ public class Incantesimi implements Offerta {
 	public Incantesimi() {
 		tipoIncantesimo = FabbricaIncantesimi.casuale();
 		quantita = Dado.tira(3);
-		costo = quantita * FabbricaIncantesimi.costoAcquisto(tipoIncantesimo) / 2;
+		costo = quantita * tipoIncantesimo.getCostoAcquisto() / 2;
 	}
 
 	@Override

@@ -53,7 +53,7 @@ public final class CantoDelBardo {
 	public static boolean puoCantare(Personaggio personaggio, TipoCanto tipo) {
 		return personaggio.isVivo() && conosciutoDa(personaggio.getClasse(), tipo)
 				&& !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)
-				&& personaggio.getMagia() >= FabbricaCanti.crea(tipo, personaggio).getCostoLancio();
+				&& personaggio.getMagia() >= tipo.getCostoLancio();
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.canti;
 
+import com.threeamigos.foresta.interfacce.OggettoConCostoDiLancio;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoCanto;
@@ -10,14 +11,17 @@ import com.threeamigos.foresta.tipi.TipoIncantesimo;
  * {@link TipoIncantesimo} perché non è una pergamena: non si compra, non si trova e non
  * si conta nell'inventario del gruppo. Chi può cantare e quando si decide in {@link CantoDelBardo}.
  */
-public interface Canto {
+public interface Canto extends OggettoConCostoDiLancio {
 
 	TipoCanto getTipo();
 
 	/**
-	 * La MAGIA che costa
+	 * La MAGIA che costa: la dice il suo tipo.
 	 */
-	int getCostoLancio();
+	@Override
+	default int getCostoLancio() {
+		return getTipo().getCostoLancio();
+	}
 
 	/**
 	 * Canta: fa l'effetto e scala la MAGIA al cantore. Il turno e la risposta avversaria li gestisce chi lo chiama.

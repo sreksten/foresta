@@ -154,7 +154,7 @@ class RegistroTatticheTest {
     private TipoIncantesimo piuPotenteChePuoPagare(Personaggio mostro) {
         TipoIncantesimo migliore = null;
         for (TipoIncantesimo classe : TipoIncantesimo.values()) {
-            if (mostro.getRepertorioIncantesimi().contains(classe) && FabbricaIncantesimi.costoLancio(classe) <= mostro.getMagia()
+            if (mostro.getRepertorioIncantesimi().contains(classe) && classe.getCostoLancio() <= mostro.getMagia()
                     && !mago1.isImmuneAIncantesimo(classe)) {
                 if (migliore == null || ((IncantesimoMalefico) FabbricaIncantesimi.crea(classe, mostro.getLivello())).getDanni()
                         > ((IncantesimoMalefico) FabbricaIncantesimi.crea(migliore, mostro.getLivello())).getDanni()) {

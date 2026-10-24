@@ -7,7 +7,6 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoCanto;
 
 import java.util.ArrayList;
@@ -30,11 +29,6 @@ public class CantoIpnotico implements Canto {
 	@Override
 	public TipoCanto getTipo() {
 		return TipoCanto.IPNOTICO;
-	}
-
-	@Override
-	public int getCostoLancio() {
-		return Costanti.CANTO_IPNOTICO_COSTO_LANCIO;
 	}
 
 	/**

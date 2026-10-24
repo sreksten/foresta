@@ -59,4 +59,22 @@ public enum TipoCanto {
 	public String getDescrizione() {
 		return Testi.testoOCostante(this, "DESCRIZIONE");
 	}
+
+	/**
+	 * I punti di MAGIA che costa cantarlo.
+	 */
+	public int getCostoLancio() {
+		switch (this) {
+			case CURATIVO:
+				return CostantiCanti.CANTO_CURATIVO_COSTO_LANCIO;
+			case IPNOTICO:
+				return CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO;
+			case DI_VALORE:
+				return CostantiCanti.CANTO_DI_VALORE_COSTO_LANCIO;
+			case URLO_DELLA_BANSHEE:
+				return CostantiCanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO;
+			default:
+				throw new IllegalStateException("Costo non previsto per " + this);
+		}
+	}
 }

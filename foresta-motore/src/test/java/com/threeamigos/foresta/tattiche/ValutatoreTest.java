@@ -322,7 +322,7 @@ class ValutatoreTest {
         goblin1.subSalute(goblin1.getSalute() - 1, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
         TipoIncantesimo menoCaro = TRE.get(0);
         for (TipoIncantesimo classe : TRE) {
-            if (FabbricaIncantesimi.costoAcquisto(classe) < FabbricaIncantesimi.costoAcquisto(menoCaro)) {
+            if (classe.getCostoAcquisto() < menoCaro.getCostoAcquisto()) {
                 menoCaro = classe;
             }
         }

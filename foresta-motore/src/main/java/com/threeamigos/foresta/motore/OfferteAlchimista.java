@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.interfacce.VistaOffertaConsumabile;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Costanti;
@@ -54,7 +53,7 @@ public final class OfferteAlchimista {
 			String nome = classe.getNomeSingolare();
 			offerte.add(new OffertaConsumabile(TipoConsumabile.INCANTESIMO, classe, null,
 					nome.substring(0, 1).toUpperCase(Locale.ROOT) + nome.substring(1), classe.getEffetto(),
-					FabbricaIncantesimi.costoAcquisto(classe)));
+					classe.getCostoAcquisto()));
 		}
 		offerte.add(semplice(TipoConsumabile.POZIONE_SALUTE, "Pozione della Salute",
 				"Fa riacquistare punti di Salute", Costanti.COSTO_POZIONE_SALUTE));

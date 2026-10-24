@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiCanti;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
@@ -11,7 +12,6 @@ import com.threeamigos.foresta.personaggi.Goblin;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
@@ -97,7 +97,7 @@ class ScenarioCantiDelBardoTest {
             long colpiti = avversari.getPersonaggiVivi().stream()
                     .filter(a -> a.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO) || a.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)).count();
             assertTrue(colpiti >= 1, "almeno un avversario ha ceduto");
-            assertEquals(magia - Costanti.CANTO_IPNOTICO_COSTO_LANCIO, bardo.getMagia());
+            assertEquals(magia - CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO, bardo.getMagia());
         }
     }
 
@@ -119,7 +119,7 @@ class ScenarioCantiDelBardoTest {
             locazione.impostaAzioni(partita.gruppo(), avversari, Comando.INCANTESIMO);
             locazione.impostaAzioni(partita.gruppo(), avversari, Comando.PERSONAGGIO_1);
             locazione.impostaAzioni(partita.gruppo(), avversari, Comando.CANTO_CURATIVO);
-            assertEquals(magia - Costanti.CANTO_CURATIVO_COSTO_LANCIO, bardo.getMagia());
+            assertEquals(magia - CostantiCanti.CANTO_CURATIVO_COSTO_LANCIO, bardo.getMagia());
             assertTrue(bardo.getSalute() > salute - 1, "è stato curato (al netto dei colpi della risposta)");
         }
     }
@@ -134,7 +134,7 @@ class ScenarioCantiDelBardoTest {
             locazione.impostaAzioni(partita.gruppo(), avversari, Comando.PERSONAGGIO_1);
             locazione.impostaAzioni(partita.gruppo(), avversari, Comando.CANTO_DI_VALORE);
             assertTrue(bardo.hasEffettoDiStato(TipoEffettoDiStato.ISPIRATO));
-            assertEquals(magia - Costanti.CANTO_DI_VALORE_COSTO_LANCIO, bardo.getMagia());
+            assertEquals(magia - CostantiCanti.CANTO_DI_VALORE_COSTO_LANCIO, bardo.getMagia());
         }
     }
 

@@ -499,7 +499,7 @@ Cosa se ne ricava:
 
 ### 13.3 Pergamene e dardo arcano (2026-09-25)
 
-**Danno delle pergamene.** Abbassare il danno di tutte le pergamene (`Costanti.INCANTESIMO_FATTORE_DANNI`)
+**Danno delle pergamene.** Abbassare il danno di tutte le pergamene (`CostantiIncantesimi.INCANTESIMO_FATTORE_DANNI`)
 punisce soprattutto il Mago, che vive di pergamene. Con 2 pergamene di fuoco contro un Troll a livello 1:
 
 | Fattore | Mago | Ladro | Guerriero |
@@ -540,8 +540,8 @@ Senza il dardo, il Mago senza pergamene vinceva lo 0,6% contro un mostro solo.
 
 Ritocchi decisi dopo questo giro (2026-09-25), **non ancora misurati**: la prova è stata interrotta, va
 rilanciata `testConfrontoClassi` e aggiornata questa sezione.
-- **Elfo:** il dardo arcano gli costa 4 di `MAGIA` invece di 2 (`Costanti.DARDO_ARCANO_COSTO_LANCIO_ELFO`).
-- **Mago:** il suo dardo fa 40 × livello invece di 30 (`Costanti.DARDO_ARCANO_DANNI_MAGO`).
+- **Elfo:** il dardo arcano gli costa 4 di `MAGIA` invece di 2 (`CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO`).
+- **Mago:** il suo dardo fa 40 × livello invece di 30 (`CostantiAbilitaInnate.DARDO_ARCANO_DANNI_MAGO`).
 - **Ladro e Bardo:** i moltiplicatori fisici restano quelli di prima (1,0 e 0,9); si sistemeranno più avanti, in
   altro modo.
 - Restano da fissare gli obiettivi per classe, e da dare al Bardo il suo ruolo di supporto.

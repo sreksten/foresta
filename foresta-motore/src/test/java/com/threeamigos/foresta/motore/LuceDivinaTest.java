@@ -32,10 +32,10 @@ class LuceDivinaTest {
         assertEquals(PortataIncantesimo.MULTIPLO, TipoIncantesimo.LUCE_DIVINA.getPortata());
         assertEquals(TipoDanno.SACRO, TipoIncantesimo.LUCE_DIVINA.getTipoDanno());
         assertEquals(Comando.LUCE_DIVINA, TipoIncantesimo.LUCE_DIVINA.getComandoDiAttivazione());
-        assertEquals(Costanti.INCANTESIMO_FULMINE_DANNI, Costanti.INCANTESIMO_LUCE_DIVINA_DANNI);
-        assertEquals(Costanti.INCANTESIMO_FULMINE_COSTO_LANCIO, luce.getCostoLancio());
-        assertEquals(FabbricaIncantesimi.costoAcquisto(TipoIncantesimo.FULMINE),
-                FabbricaIncantesimi.costoAcquisto(TipoIncantesimo.LUCE_DIVINA));
+        assertEquals(CostantiIncantesimi.INCANTESIMO_FULMINE_DANNI, CostantiIncantesimi.INCANTESIMO_LUCE_DIVINA_DANNI);
+        assertEquals(CostantiIncantesimi.INCANTESIMO_FULMINE_COSTO_LANCIO, luce.getCostoLancio());
+        assertEquals(TipoIncantesimo.FULMINE.getCostoAcquisto(),
+                TipoIncantesimo.LUCE_DIVINA.getCostoAcquisto());
     }
 
     @Test
@@ -44,15 +44,15 @@ class LuceDivinaTest {
         Personaggio sacerdotessa = FabbricaPersonaggi.crea(TipoPersonaggio.SACERDOTESSA, 5);
         Personaggio guerriero = FabbricaPersonaggi.crea(TipoPersonaggio.GUERRIERO, 5);
         for (Personaggio p : new Personaggio[]{sacerdote, sacerdotessa, guerriero}) {
-            p.getModelloDati().set(TipoAttributo.MAGIA, Costanti.INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO);
+            p.getModelloDati().set(TipoAttributo.MAGIA, CostantiIncantesimi.INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO);
         }
         assertTrue(LuceDivina.puoLanciarlaInnata(sacerdote));
         assertTrue(LuceDivina.puoLanciarlaInnata(sacerdotessa));
         assertFalse(LuceDivina.puoLanciarlaInnata(guerriero), "gli altri hanno bisogno di una pergamena");
 
-        sacerdote.getModelloDati().set(TipoAttributo.MAGIA, Costanti.INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO - 1);
+        sacerdote.getModelloDati().set(TipoAttributo.MAGIA, CostantiIncantesimi.INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO - 1);
         assertFalse(LuceDivina.puoLanciarlaInnata(sacerdote));
-        sacerdote.getModelloDati().set(TipoAttributo.MAGIA, Costanti.INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO);
+        sacerdote.getModelloDati().set(TipoAttributo.MAGIA, CostantiIncantesimi.INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO);
         sacerdote.addEffettoDiStato(TipoEffettoDiStato.SILENZIATO, 3, 0);
         assertFalse(LuceDivina.puoLanciarlaInnata(sacerdote), "il silenzio impedisce di lanciarla");
     }
@@ -85,7 +85,7 @@ class LuceDivinaTest {
             FabbricaIncantesimi.crea(TipoIncantesimo.LUCE_DIVINA, sacerdote.getLivello()).formula(sacerdote, null, avversari);
 
             assertTrue(frasi(partita).contains(FRASE_SULLO_SCHELETRO), frasi(partita).toString());
-            assertEquals(magiaPrima - Costanti.INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO, sacerdote.getMagia());
+            assertEquals(magiaPrima - CostantiIncantesimi.INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO, sacerdote.getMagia());
         }
     }
 

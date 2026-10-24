@@ -368,7 +368,7 @@ public class TestLogoramentoInizioPartita {
                 }
                 StringBuilder sb = new StringBuilder(String.format("%-13s magia %3d int %2d:", classe, m.getMagia(), m.getIntelligenza()));
                 for (TipoIncantesimo ci : TipoIncantesimo.values()) {
-                    if (ci.getCategoriaIncantesimo() != CategoriaIncantesimo.MALEFICO || FabbricaIncantesimi.costoLancio(ci) > m.getMagia()) {
+                    if (ci.getCategoriaIncantesimo() != CategoriaIncantesimo.MALEFICO || ci.getCostoLancio() > m.getMagia()) {
                         continue;
                     }
                     com.threeamigos.foresta.incantesimi.IncantesimoMalefico inc =

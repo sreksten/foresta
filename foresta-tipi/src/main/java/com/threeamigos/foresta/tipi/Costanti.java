@@ -63,10 +63,6 @@ public class Costanti {
     public static final double GUARDIA_APERTA_FATTORE_PARATA = 0.75;
     // La seconda fase di attacco, con l'arma nella mano secondaria, fa il 40% (danno base e incantamenti)
     public static final double DOPPIA_ARMA_FATTORE_SECONDA_ARMA = 0.4;
-    // Un incantesimo a più bersagli (MULTIPLO) o un'abilità di danno ripartisce il danno per posizione: il bersaglio principale lo subisce
-    // intero, ogni successivo un quarto in meno del precedente, fino a una quota minima (100%, 75%, 50%, 25%, 25%...)
-    public static final double INCANTESIMO_MULTIPLO_RIDUZIONE_PER_POSIZIONE = 0.25;
-    public static final double INCANTESIMO_MULTIPLO_QUOTA_MINIMA = 0.25;
     // Su elmo, scudo, armatura e schinieri la parte percentuale di un incantamento vale la metà, perché moltiplica
     // una difesa che cresce già con il livello
     public static final double RESISTENZA_FATTORE_PERCENTUALE = 0.5;
@@ -74,65 +70,6 @@ public class Costanti {
     public static final double LIBRO_MAGICO_MAGGIORAZIONE = 0.25;
     // L'elfo sa usare il libro magico, ma non bene come il mago: del bonus agli incantesimi gliene resta questa quota
     public static final double LIBRO_MAGICO_FATTORE_ELFO = 0.5;
-
-    // Quota del danno base di un incantesimo (INCANTESIMO_*_DANNI × livello) che vale in combattimento: una pergamena
-    // deve aiutare chiunque la lanci, ma essere devastante solo in mano al Mago (moltiplicatore magico 2,0)
-    public static final double INCANTESIMO_FATTORE_DANNI = 1.0;
-    // Il dardo arcano, l'incantesimo innato di Mago ed Elfo: su un solo bersaglio, per poca MAGIA e senza consumare
-    // pergamene. Al Mago rende di più (una pergamena di fuoco fa 50) e costa meno che all'Elfo, che è
-    // un po' meno bravo con la magia e in cambio sa combattere
-    public static final int DARDO_ARCANO_DANNI_MAGO = 20;
-    public static final int DARDO_ARCANO_DANNI_ELFO = 15;
-    public static final int DARDO_ARCANO_COSTO_LANCIO_MAGO = 2;
-    public static final int DARDO_ARCANO_COSTO_LANCIO_ELFO = 4;
-
-    // I canti innati del Bardo e della Cantastorie (vedi bardo.md): costano MAGIA, non consumano pergamene
-    public static final int CANTO_CURATIVO_COSTO_LANCIO = 4;
-    public static final int CANTO_IPNOTICO_COSTO_LANCIO = 3;
-    public static final int CANTO_DI_VALORE_COSTO_LANCIO = 5;
-    // L'Urlo della Banshee, il canto ipnotico potenziato: costa di più, la SOGGEZIONE del cantore vale di più contro il CORAGGIO
-    // di chi ascolta, e chi cede prende SPAVENTATO e CONFUSO insieme
-    public static final int CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO = 6;
-    public static final double CANTO_URLO_DELLA_BANSHEE_MOLTIPLICATORE_SOGGEZIONE = 1.5;
-    // Il canto curativo guarisce CANTO_CURATIVO_BASE × √livello, aumentato della SAGGEZZA divisa per questo valore
-    public static final double CANTO_CURATIVO_BASE = 30.0;
-    // Il canto di valore dà ISPIRATO a tutto il gruppo: coraggio e precisione crescono di CANTO_DI_VALORE_PERCENTUALE_BASE
-    // più CANTO_DI_VALORE_PERCENTUALE_PER_LIVELLO per ogni livello del cantore, al più CANTO_DI_VALORE_PERCENTUALE_MASSIMA,
-    // per CANTO_DI_VALORE_DURATA turni
-    public static final double CANTO_DI_VALORE_PERCENTUALE_BASE = 20.0;
-    public static final double CANTO_DI_VALORE_PERCENTUALE_PER_LIVELLO = 2.5;
-    public static final double CANTO_DI_VALORE_PERCENTUALE_MASSIMA = 50.0;
-    public static final int CANTO_DI_VALORE_DURATA = 4;
-    public static final double CANTO_CURATIVO_DIVISORE_SAGGEZZA = 50.0;
-
-    // Le abilità innate di Chierico e Druido (vedi TipoAbilita): costano MAGIA, non consumano pergamene
-    public static final int ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO = 4;
-    // Scacciare i non morti: ognuno cede con la SOGGEZIONE del chierico contro il suo CORAGGIO, e prende SPAVENTATO
-    public static final int ABILITA_IMPOSIZIONE_DELLE_MANI_COSTO_LANCIO = 5;
-    // L'imposizione delle mani cura ABILITA_IMPOSIZIONE_DELLE_MANI_BASE × √livello, aumentato della SAGGEZZA divisa per
-    // ABILITA_IMPOSIZIONE_DELLE_MANI_DIVISORE_SAGGEZZA (meno del canto curativo: il chierico ha meno magia del bardo)
-    public static final double ABILITA_IMPOSIZIONE_DELLE_MANI_BASE = 20.0;
-    public static final double ABILITA_IMPOSIZIONE_DELLE_MANI_DIVISORE_SAGGEZZA = 50.0;
-    // Radici e Sciame: danni di Terra e di Veleno su più avversari, un poco meno di una pergamena e per un poco più di MAGIA
-    public static final int ABILITA_RADICI_COSTO_LANCIO = 3;
-    public static final int ABILITA_RADICI_DANNI = 40;
-    public static final int ABILITA_SCIAME_COSTO_LANCIO = 3;
-    public static final int ABILITA_SCIAME_DANNI = 40;
-    // La pelle di corteccia dà a tutto il gruppo, per ABILITA_PELLE_DI_CORTECCIA_DURATA turni, un numero fisso di punti in più di parata
-    // e di resistenza magica (con un modificatore temporaneo): la base per la radice quadrata del livello del druido, come l'imposizione delle
-    // mani. Sono punti e non una percentuale perché chi non è un guerriero ha pochissima parata e resistenza magica (da 1 a 18 punti ai livelli
-    // da 3 a 8): una percentuale su quei valori non cambia la probabilità di essere colpiti (vedi chierico_e_druido.md, §4)
-    public static final int ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO = 5;
-    public static final double ABILITA_PELLE_DI_CORTECCIA_BASE_PARATA = 10.0;
-    public static final double ABILITA_PELLE_DI_CORTECCIA_BASE_RESISTENZA_MAGICA = 10.0;
-    public static final int ABILITA_PELLE_DI_CORTECCIA_DURATA = 4;
-    // La rigenerazione dà RIGENERAZIONE a un personaggio per ABILITA_RIGENERAZIONE_DURATA turni: a ogni turno guarisce di
-    // ABILITA_RIGENERAZIONE_BASE più questa quota della sua salute massima, aumentata dalla SAGGEZZA del druido
-    public static final int ABILITA_RIGENERAZIONE_COSTO_LANCIO = 4;
-    public static final int ABILITA_RIGENERAZIONE_DURATA = 4;
-    public static final int ABILITA_RIGENERAZIONE_BASE = 5;
-    public static final double ABILITA_RIGENERAZIONE_QUOTA_SALUTE_MASSIMA = 0.05;
-    public static final double ABILITA_RIGENERAZIONE_DIVISORE_SAGGEZZA = 50.0;
 
     // Un'arma fino a tanti livelli sotto quello di chi la impugna rende ancora tutta la parte dell'eroe; oltre, la parte
     // dell'eroe cala in proporzione (vedi CalcolatoreCombattimento.calcolaDannoRisultante)
@@ -190,54 +127,6 @@ public class Costanti {
     // A ogni aumento del livello del mondo l'armaiolo scarta gli artefatti di livello inferiore al livello
     // del mondo meno questo scarto
     public static final int MAGAZZINO_SCARTO_SOTTO_LIVELLO = 2;
-
-    // Incantesimi
-    public static final int INCANTESIMO_ACQUA_COSTO_ACQUISTO = 5;
-    public static final int INCANTESIMO_ACQUA_COSTO_LANCIO = 1;
-    public static final int INCANTESIMO_ACQUA_DANNI = 45;
-
-    public static final int INCANTESIMO_ARIA_COSTO_ACQUISTO = 5;
-    public static final int INCANTESIMO_ARIA_COSTO_LANCIO = 1;
-    public static final int INCANTESIMO_ARIA_DANNI = 35;
-
-    public static final int INCANTESIMO_FULMINE_COSTO_ACQUISTO = 15;
-    public static final int INCANTESIMO_FULMINE_COSTO_LANCIO = 10;
-    public static final int INCANTESIMO_FULMINE_DANNI = 100;
-
-    public static final int INCANTESIMO_FUOCO_COSTO_ACQUISTO = 5;
-    public static final int INCANTESIMO_FUOCO_COSTO_LANCIO = 3;
-    public static final int INCANTESIMO_FUOCO_DANNI = 50;
-
-    public static final int INCANTESIMO_LUCE_DIVINA_COSTO_ACQUISTO = 15;
-    public static final int INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO = 10;
-    public static final int INCANTESIMO_LUCE_DIVINA_DANNI = 100;
-
-    public static final int INCANTESIMO_MORTE_COSTO_ACQUISTO = 5;
-    public static final int INCANTESIMO_MORTE_COSTO_LANCIO = 5;
-    public static final int INCANTESIMO_MORTE_DANNI = 0;
-    // Morte uccide solo chi ha meno di questa percentuale della salute massima: la usano sia l'incantesimo sia la tattica che lo sceglie
-    public static final int INCANTESIMO_MORTE_SOGLIA_SALUTE_PERCENTUALE = 25;
-
-    public static final int INCANTESIMO_RESURREZIONE_COSTO_ACQUISTO = 15;
-    public static final int INCANTESIMO_RESURREZIONE_COSTO_LANCIO = 15;
-
-    public static final int INCANTESIMO_ALBA_SACRA_COSTO_ACQUISTO = 5;
-    public static final int INCANTESIMO_ALBA_SACRA_COSTO_LANCIO = 5;
-
-    public static final int INCANTESIMO_SILENZIO_COSTO_ACQUISTO = 5;
-    public static final int INCANTESIMO_SILENZIO_COSTO_LANCIO = 5;
-
-    public static final int INCANTESIMO_TERRA_COSTO_ACQUISTO = 5;
-    public static final int INCANTESIMO_TERRA_COSTO_LANCIO = 2;
-    public static final int INCANTESIMO_TERRA_DANNI = 50;
-
-    public static final int INCANTESIMO_GELO_COSTO_ACQUISTO = 5;
-    public static final int INCANTESIMO_GELO_COSTO_LANCIO = 2;
-    public static final int INCANTESIMO_GELO_DANNI = 50;
-
-    public static final int INCANTESIMO_VELENO_COSTO_ACQUISTO = 5;
-    public static final int INCANTESIMO_VELENO_COSTO_LANCIO = 2;
-    public static final int INCANTESIMO_VELENO_DANNI = 50;
 
     // Pozioni
     // Le pozioni di salute con cui il gruppo parte

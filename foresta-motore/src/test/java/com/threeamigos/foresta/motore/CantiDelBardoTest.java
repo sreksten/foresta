@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiCanti;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.canti.*;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
@@ -9,7 +10,6 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.personaggi.*;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
@@ -98,7 +98,7 @@ class CantiDelBardoTest {
         assertEquals(CANTI_DI_BASE, CantoDelBardo.cantiPossibili(bardo));
 
         // Con poca magia si canta solo quello che costa poco
-        bardo.subMagia(bardo.getMagia() - Costanti.CANTO_IPNOTICO_COSTO_LANCIO);
+        bardo.subMagia(bardo.getMagia() - CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO);
         assertEquals(java.util.Collections.singletonList(TipoCanto.IPNOTICO), CantoDelBardo.cantiPossibili(bardo));
         bardo.subMagia(bardo.getMagia());
         assertTrue(CantoDelBardo.cantiPossibili(bardo).isEmpty());
@@ -117,9 +117,9 @@ class CantiDelBardoTest {
     @Test
     void ognuniCantoCostaLaSuaMagia() {
         Bardo bardo = bardo();
-        assertEquals(Costanti.CANTO_CURATIVO_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.CURATIVO, bardo).getCostoLancio());
-        assertEquals(Costanti.CANTO_IPNOTICO_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.IPNOTICO, bardo).getCostoLancio());
-        assertEquals(Costanti.CANTO_DI_VALORE_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.DI_VALORE, bardo).getCostoLancio());
+        assertEquals(CostantiCanti.CANTO_CURATIVO_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.CURATIVO, bardo).getCostoLancio());
+        assertEquals(CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.IPNOTICO, bardo).getCostoLancio());
+        assertEquals(CostantiCanti.CANTO_DI_VALORE_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.DI_VALORE, bardo).getCostoLancio());
         assertInstanceOf(CantoCurativo.class, FabbricaCanti.crea(TipoCanto.CURATIVO, bardo));
         assertInstanceOf(CantoIpnotico.class, FabbricaCanti.crea(TipoCanto.IPNOTICO, bardo));
         assertInstanceOf(CantoDiValore.class, FabbricaCanti.crea(TipoCanto.DI_VALORE, bardo));
@@ -149,7 +149,7 @@ class CantiDelBardoTest {
 
         assertEquals(Math.min(grave.getSaluteMassima(), saluteGrave + canto.getCura()), grave.getSalute());
         assertEquals(saluteLieve, lieve.getSalute(), "cura uno solo");
-        assertEquals(magia - Costanti.CANTO_CURATIVO_COSTO_LANCIO, bardo.getMagia());
+        assertEquals(magia - CostantiCanti.CANTO_CURATIVO_COSTO_LANCIO, bardo.getMagia());
     }
 
     @Test
@@ -202,8 +202,8 @@ class CantiDelBardoTest {
     @Test
     void l_UrloDellaBansheeCostaDiPiuEUsaIlSuoCanto() {
         Bardo bardo = bardo();
-        assertEquals(Costanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.URLO_DELLA_BANSHEE, bardo).getCostoLancio());
-        assertTrue(Costanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO > Costanti.CANTO_IPNOTICO_COSTO_LANCIO);
+        assertEquals(CostantiCanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.URLO_DELLA_BANSHEE, bardo).getCostoLancio());
+        assertTrue(CostantiCanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO > CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO);
         assertInstanceOf(UrloDellaBanshee.class, FabbricaCanti.crea(TipoCanto.URLO_DELLA_BANSHEE, bardo));
     }
 
@@ -237,7 +237,7 @@ class CantiDelBardoTest {
                 .filter(g -> g.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO) && g.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)).count();
         assertEquals(2, colpiti, "fino al numero di bersagli, ognuno con tutti e due gli stati");
         assertEquals(2, Arrays.asList(uno, due, tre).stream().filter(CantiDelBardoTest::haSpaventatoOConfuso).count(), "nessuno ha uno stato solo");
-        assertEquals(magia - Costanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO, bardo.getMagia());
+        assertEquals(magia - CostantiCanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO, bardo.getMagia());
     }
 
     @Test
@@ -274,7 +274,7 @@ class CantiDelBardoTest {
 
         long colpiti = Arrays.asList(uno, due, tre).stream().filter(CantiDelBardoTest::haSpaventatoOConfuso).count();
         assertEquals(2, colpiti);
-        assertEquals(magia - Costanti.CANTO_IPNOTICO_COSTO_LANCIO, bardo.getMagia());
+        assertEquals(magia - CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO, bardo.getMagia());
     }
 
     @Test
@@ -351,10 +351,10 @@ class CantiDelBardoTest {
 
         for (Personaggio p : Arrays.asList(bardo, vivo)) {
             assertTrue(p.hasEffettoDiStato(TipoEffettoDiStato.ISPIRATO), p.getNomeSingolare());
-            assertEquals(Costanti.CANTO_DI_VALORE_DURATA, p.getEffettiDiStato().iterator().next().getDurata());
+            assertEquals(CostantiCanti.CANTO_DI_VALORE_DURATA, p.getEffettiDiStato().iterator().next().getDurata());
         }
         assertFalse(morto.hasEffettoDiStato(TipoEffettoDiStato.ISPIRATO));
-        assertEquals(magia - Costanti.CANTO_DI_VALORE_COSTO_LANCIO, bardo.getMagia());
+        assertEquals(magia - CostantiCanti.CANTO_DI_VALORE_COSTO_LANCIO, bardo.getMagia());
     }
 
     @Test
@@ -388,12 +388,12 @@ class CantiDelBardoTest {
         double variazione = guerriero.getVariazioneDaTemporanei(TipoAttributo.CORAGGIO);
         guerriero.riduciEffettiDiStato();
         guerriero.riduciEffettiDiStato();
-        assertEquals(Costanti.CANTO_DI_VALORE_DURATA - 2, guerriero.getEffettiDiStato().iterator().next().getDurata());
+        assertEquals(CostantiCanti.CANTO_DI_VALORE_DURATA - 2, guerriero.getEffettiDiStato().iterator().next().getDurata());
 
         new CantoDiValore(secondo).canta(secondo, compagni, avversari);
 
         assertEquals(1, guerriero.getEffettiDiStato().size());
-        assertEquals(Costanti.CANTO_DI_VALORE_DURATA, guerriero.getEffettiDiStato().iterator().next().getDurata());
+        assertEquals(CostantiCanti.CANTO_DI_VALORE_DURATA, guerriero.getEffettiDiStato().iterator().next().getDurata());
         assertEquals(variazione, guerriero.getVariazioneDaTemporanei(TipoAttributo.CORAGGIO), 1e-9);
     }
 
@@ -421,7 +421,7 @@ class CantiDelBardoTest {
         compagni.aggiungiPersonaggio(guerriero);
         Bardo bardo = bardo();
         new CantoDiValore(bardo).canta(bardo, compagni, avversari);
-        for (int turno = 0; turno < Costanti.CANTO_DI_VALORE_DURATA; turno++) {
+        for (int turno = 0; turno < CostantiCanti.CANTO_DI_VALORE_DURATA; turno++) {
             guerriero.riduciEffettiDiStato();
         }
         assertFalse(guerriero.hasEffettoDiStato(TipoEffettoDiStato.ISPIRATO));

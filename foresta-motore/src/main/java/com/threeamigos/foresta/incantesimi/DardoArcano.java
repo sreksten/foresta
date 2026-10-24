@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
+import com.threeamigos.foresta.interfacce.OggettoConCostoDiLancio;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.artefatti.IncantamentoMD;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
@@ -20,7 +22,7 @@ import java.util.Collections;
  * Non è fra le {@link TipoIncantesimo}, perché non è una pergamena: non si compra, non si trova e non si conta
  * nell'inventario del gruppo.
  */
-public class DardoArcano implements Arma {
+public class DardoArcano implements Arma, OggettoConCostoDiLancio {
 
 	private final int livello;
 	private final boolean delMago;
@@ -62,16 +64,16 @@ public class DardoArcano implements Arma {
 	}
 
 	private static int costoLancio(TipoPersonaggio classe) {
-		return isMago(classe) ? Costanti.DARDO_ARCANO_COSTO_LANCIO_MAGO : Costanti.DARDO_ARCANO_COSTO_LANCIO_ELFO;
+		return isMago(classe) ? CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO : CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO;
 	}
 
 	public int getCostoLancio() {
-		return delMago ? Costanti.DARDO_ARCANO_COSTO_LANCIO_MAGO : Costanti.DARDO_ARCANO_COSTO_LANCIO_ELFO;
+		return delMago ? CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO : CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO;
 	}
 
 	@Override
 	public int getDanni() {
-		return delMago ? Costanti.DARDO_ARCANO_DANNI_MAGO : Costanti.DARDO_ARCANO_DANNI_ELFO;
+		return delMago ? CostantiAbilitaInnate.DARDO_ARCANO_DANNI_MAGO : CostantiAbilitaInnate.DARDO_ARCANO_DANNI_ELFO;
 	}
 
 	@Override

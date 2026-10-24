@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.abilita;
 
+import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
@@ -9,7 +10,6 @@ import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 
 /**
@@ -35,24 +35,19 @@ public class PelleDiCorteccia implements Abilita {
 	 * Quanti punti di parata dà a ognuno del gruppo
 	 */
 	public int getPuntiParata() {
-		return (int) Math.round(Costanti.ABILITA_PELLE_DI_CORTECCIA_BASE_PARATA * Math.sqrt(livello));
+		return (int) Math.round(CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_BASE_PARATA * Math.sqrt(livello));
 	}
 
 	/**
 	 * Quanti punti di resistenza magica dà a ognuno del gruppo
 	 */
 	public int getPuntiResistenzaMagica() {
-		return (int) Math.round(Costanti.ABILITA_PELLE_DI_CORTECCIA_BASE_RESISTENZA_MAGICA * Math.sqrt(livello));
+		return (int) Math.round(CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_BASE_RESISTENZA_MAGICA * Math.sqrt(livello));
 	}
 
 	@Override
 	public TipoAbilita getTipo() {
 		return TipoAbilita.PELLE_DI_CORTECCIA;
-	}
-
-	@Override
-	public int getCostoLancio() {
-		return Costanti.ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO;
 	}
 
 	@Override
@@ -69,6 +64,6 @@ public class PelleDiCorteccia implements Abilita {
 
 	private static ModificatoreAttributoMD modificatore(TipoAttributo attributo, int punti) {
 		return new ModificatoreAttributoMD(attributo, TipoModificatore.VARIAZIONE_FISSA, punti, NOTA,
-				UnitaDurataModificatore.TURNI, Costanti.ABILITA_PELLE_DI_CORTECCIA_DURATA, BersaglioModificatore.PORTATORE, false);
+				UnitaDurataModificatore.TURNI, CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_DURATA, BersaglioModificatore.PORTATORE, false);
 	}
 }

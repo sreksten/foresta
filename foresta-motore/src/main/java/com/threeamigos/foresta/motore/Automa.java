@@ -1189,7 +1189,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				// Già fra i comandi, anche se il gruppo ha delle pergamene
 				continue;
 			}
-			if (gruppo.getIncantesimi(tipoIncantesimo) > 0 && formulante.getMagia() >= FabbricaIncantesimi.crea(tipoIncantesimo, formulante.getLivello()).getCostoLancio()) {
+			if (gruppo.getIncantesimi(tipoIncantesimo) > 0 && formulante.getMagia() >= tipoIncantesimo.getCostoLancio()) {
 				comandiPossibili.add(tipoIncantesimo.getComandoDiAttivazione());
 			}
 		}
@@ -2250,7 +2250,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * nell'ordine del gruppo; vuota se nessuno può farlo.
 	 */
 	private List<Personaggio> trovaFormulantiResurrezione() {
-		int costoLancio = FabbricaIncantesimi.crea(TipoIncantesimo.RESURREZIONE, 1).getCostoLancio();
+		int costoLancio = TipoIncantesimo.RESURREZIONE.getCostoLancio();
 		List<Personaggio> formulanti = new ArrayList<>();
 		for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
 			if (personaggioCorrente.getMagia() >= costoLancio) {

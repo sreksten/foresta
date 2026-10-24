@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.canti;
 
+import com.threeamigos.foresta.tipi.CostantiCanti;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -7,7 +8,6 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoCanto;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Il canto ipnotico potenziato (vedi {@link CantoIpnotico}), che il bardo della locanda insegna al gruppo dopo il viaggio
  * della moglie: lo stesso numero di bersagli scelti a caso fra gli avversari vivi, ma la SOGGEZIONE del cantore pesa di più
- * contro il CORAGGIO di chi ascolta (Costanti.CANTO_URLO_DELLA_BANSHEE_MOLTIPLICATORE_SOGGEZIONE) e chi cede, con un solo
+ * contro il CORAGGIO di chi ascolta (CostantiCanti.CANTO_URLO_DELLA_BANSHEE_MOLTIPLICATORE_SOGGEZIONE) e chi cede, con un solo
  * tiro, prende <b>sia</b> {@code SPAVENTATO} <b>sia</b> {@code CONFUSO}. Costa più del canto ipnotico.
  */
 public class UrloDellaBanshee implements Canto {
@@ -33,16 +33,11 @@ public class UrloDellaBanshee implements Canto {
 		return TipoCanto.URLO_DELLA_BANSHEE;
 	}
 
-	@Override
-	public int getCostoLancio() {
-		return Costanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO;
-	}
-
 	/**
 	 * La probabilità, su 100, che l'avversario ceda: quella del canto ipnotico con la soggezione del cantore moltiplicata.
 	 */
 	public static double probabilitaDiCedere(Personaggio cantore, Personaggio avversario) {
-		return CantoIpnotico.probabilitaDiCedere(cantore, avversario, Costanti.CANTO_URLO_DELLA_BANSHEE_MOLTIPLICATORE_SOGGEZIONE);
+		return CantoIpnotico.probabilitaDiCedere(cantore, avversario, CostantiCanti.CANTO_URLO_DELLA_BANSHEE_MOLTIPLICATORE_SOGGEZIONE);
 	}
 
 	@Override

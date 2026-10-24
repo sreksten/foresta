@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.modellodati.tattiche.*;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
 import com.threeamigos.foresta.tipi.Costanti;
@@ -297,7 +298,7 @@ public final class TatticheBase {
 	private static List<VoceMD> fasciaStratega(TipoPersonaggio classe, boolean magico, int incantesimo) {
 		List<VoceMD> voci = new ArrayList<>();
 		PredicatoMD fascia = daAstuzia(SOGLIA_STRATEGA);
-		SelettoreMD quasiCaduto = su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.MENO_SALUTE, sotto(Costanti.INCANTESIMO_MORTE_SOGLIA_SALUTE_PERCENTUALE));
+		SelettoreMD quasiCaduto = su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.MENO_SALUTE, sotto(CostantiIncantesimi.INCANTESIMO_MORTE_SOGLIA_SALUTE_PERCENTUALE));
 		SelettoreMD ferito = su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.MENO_SALUTE, sotto(35));
 		SelettoreMD piuFerito = su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.MENO_SALUTE);
 		SelettoreMD incantatore = su(TipoRosa.AVVERSARI, TipoOrdinamento.PIU_MAGIA, magico());

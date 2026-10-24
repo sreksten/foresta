@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.abilita;
 
+import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 
 import java.util.Optional;
@@ -28,18 +28,13 @@ public class Rigenerazione implements Abilita {
 		return TipoAbilita.RIGENERAZIONE;
 	}
 
-	@Override
-	public int getCostoLancio() {
-		return Costanti.ABILITA_RIGENERAZIONE_COSTO_LANCIO;
-	}
-
 	/**
 	 * Quanta salute guarisce a ogni turno chi la riceve
 	 */
 	public int getCuraPerTurno(Personaggio bersaglio) {
-		return (int) Math.round((Costanti.ABILITA_RIGENERAZIONE_BASE
-				+ Costanti.ABILITA_RIGENERAZIONE_QUOTA_SALUTE_MASSIMA * bersaglio.getSaluteMassima())
-				* (1.0d + saggezza / Costanti.ABILITA_RIGENERAZIONE_DIVISORE_SAGGEZZA));
+		return (int) Math.round((CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_BASE
+				+ CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_QUOTA_SALUTE_MASSIMA * bersaglio.getSaluteMassima())
+				* (1.0d + saggezza / CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_DIVISORE_SAGGEZZA));
 	}
 
 	@Override
@@ -64,7 +59,7 @@ public class Rigenerazione implements Abilita {
 		utilizzatore.subMagia(getCostoLancio());
 		BusEventi.pubblica(new NotificaTestoFrase(nome + " fa rigenerare "
 				+ bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + "."));
-		bersaglio.addEffettoDiStato(TipoEffettoDiStato.RIGENERAZIONE, Costanti.ABILITA_RIGENERAZIONE_DURATA, 0,
+		bersaglio.addEffettoDiStato(TipoEffettoDiStato.RIGENERAZIONE, CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_DURATA, 0,
 				getCuraPerTurno(bersaglio));
 		return true;
 	}

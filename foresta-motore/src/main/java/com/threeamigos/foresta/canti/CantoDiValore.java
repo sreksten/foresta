@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.canti;
 
+import com.threeamigos.foresta.tipi.CostantiCanti;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoCanto;
 
 /**
@@ -28,17 +28,12 @@ public class CantoDiValore implements Canto {
 		return TipoCanto.DI_VALORE;
 	}
 
-	@Override
-	public int getCostoLancio() {
-		return Costanti.CANTO_DI_VALORE_COSTO_LANCIO;
-	}
-
 	/**
 	 * La percentuale di coraggio e di precisione in più, per il livello del cantore
 	 */
 	public double getIntensita() {
-		return Math.min(Costanti.CANTO_DI_VALORE_PERCENTUALE_MASSIMA,
-				Costanti.CANTO_DI_VALORE_PERCENTUALE_BASE + Costanti.CANTO_DI_VALORE_PERCENTUALE_PER_LIVELLO * livello);
+		return Math.min(CostantiCanti.CANTO_DI_VALORE_PERCENTUALE_MASSIMA,
+				CostantiCanti.CANTO_DI_VALORE_PERCENTUALE_BASE + CostantiCanti.CANTO_DI_VALORE_PERCENTUALE_PER_LIVELLO * livello);
 	}
 
 	@Override
@@ -47,7 +42,7 @@ public class CantoDiValore implements Canto {
 		BusEventi.pubblica(new NotificaTestoFrase(cantore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " intona un canto di valore: il gruppo si sente più coraggioso e preciso."));
 		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
-			personaggio.addEffettoDiStato(TipoEffettoDiStato.ISPIRATO, Costanti.CANTO_DI_VALORE_DURATA, 0, getIntensita());
+			personaggio.addEffettoDiStato(TipoEffettoDiStato.ISPIRATO, CostantiCanti.CANTO_DI_VALORE_DURATA, 0, getIntensita());
 		}
 		return true;
 	}

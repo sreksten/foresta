@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -7,7 +8,6 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -38,16 +38,12 @@ public class LuceDivina extends IncantesimoMaleficoImpl implements Incantesimo {
 	 */
 	public static boolean puoLanciarlaInnata(Personaggio personaggio) {
 		return personaggio.isVivo() && conosciutaDa(personaggio.getClasse())
-				&& personaggio.getMagia() >= Costanti.INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO
+				&& personaggio.getMagia() >= CostantiIncantesimi.INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO
 				&& !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
 	}
 
 	public TipoIncantesimo getClasse() {
 		return TipoIncantesimo.LUCE_DIVINA;
-	}
-
-	public int getCostoLancio() {
-		return Costanti.INCANTESIMO_LUCE_DIVINA_COSTO_LANCIO;
 	}
 
 	@Override
@@ -56,7 +52,7 @@ public class LuceDivina extends IncantesimoMaleficoImpl implements Incantesimo {
 	}
 
 	public int getDanni() {
-		return Costanti.INCANTESIMO_LUCE_DIVINA_DANNI;
+		return CostantiIncantesimi.INCANTESIMO_LUCE_DIVINA_DANNI;
 	}
 
 	/**

@@ -28,10 +28,6 @@ public class Resurrezione implements Incantesimo {
 		return livello;
 	}
 
-	public int getCostoLancio() {
-		return Costanti.INCANTESIMO_RESURREZIONE_COSTO_LANCIO;
-	}
-
 	/**
 	 * Resuscita il bersaglio, o ne reintegra la salute se è vivo, e fa pagare il lancio a chi lo formula.
 	 */

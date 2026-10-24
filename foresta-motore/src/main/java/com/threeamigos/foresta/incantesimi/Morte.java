@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
@@ -28,17 +29,13 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 		return TipoIncantesimo.MORTE;
 	}
 
-	public int getCostoLancio() {
-		return Costanti.INCANTESIMO_MORTE_COSTO_LANCIO;
-	}
-
 	@Override
 	public TipoDanno getTipoDanno() {
 		return TipoDanno.NECROTICO;
 	}
 
 	public int getDanni() {
-		return Costanti.INCANTESIMO_MORTE_DANNI;
+		return CostantiIncantesimi.INCANTESIMO_MORTE_DANNI;
 	}
 
 	/**
@@ -46,7 +43,7 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 	 * salute massima, senza arrotondamenti (con 10 di salute massima uccide con 2, che è il 20%). È la stessa soglia della tattica che lo sceglie.
 	 */
 	public static boolean puoUccidere(Personaggio bersaglio) {
-		return 100 * bersaglio.getSalute() < Costanti.INCANTESIMO_MORTE_SOGLIA_SALUTE_PERCENTUALE * bersaglio.getSaluteMassima();
+		return 100 * bersaglio.getSalute() < CostantiIncantesimi.INCANTESIMO_MORTE_SOGLIA_SALUTE_PERCENTUALE * bersaglio.getSaluteMassima();
 	}
 
 	/**

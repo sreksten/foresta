@@ -232,7 +232,7 @@ class ChiericoEDruidoTest {
         assertTrue(AbilitaInnate.abilitaPossibili(new Mago("Merlino", 5)).isEmpty());
 
         // Con poca magia si fa solo quello che costa poco
-        druido.subMagia(druido.getMagia() - Costanti.ABILITA_RADICI_COSTO_LANCIO);
+        druido.subMagia(druido.getMagia() - CostantiAbilitaInnate.ABILITA_RADICI_COSTO_LANCIO);
         assertTrue(AbilitaInnate.puoUsare(druido, TipoAbilita.RADICI));
         assertFalse(AbilitaInnate.puoUsare(druido, TipoAbilita.PELLE_DI_CORTECCIA));
         druido.subMagia(druido.getMagia());
@@ -250,12 +250,12 @@ class ChiericoEDruidoTest {
     void ognunaCostaLaSuaMagia() {
         Chierico chierico = chierico();
         Druido druido = druido();
-        assertEquals(Costanti.ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO, FabbricaAbilita.crea(TipoAbilita.SCACCIARE_I_NON_MORTI, chierico).getCostoLancio());
-        assertEquals(Costanti.ABILITA_IMPOSIZIONE_DELLE_MANI_COSTO_LANCIO, FabbricaAbilita.crea(TipoAbilita.IMPOSIZIONE_DELLE_MANI, chierico).getCostoLancio());
-        assertEquals(Costanti.ABILITA_RADICI_COSTO_LANCIO, FabbricaAbilita.crea(TipoAbilita.RADICI, druido).getCostoLancio());
-        assertEquals(Costanti.ABILITA_SCIAME_COSTO_LANCIO, FabbricaAbilita.crea(TipoAbilita.SCIAME, druido).getCostoLancio());
-        assertEquals(Costanti.ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO, FabbricaAbilita.crea(TipoAbilita.PELLE_DI_CORTECCIA, druido).getCostoLancio());
-        assertEquals(Costanti.ABILITA_RIGENERAZIONE_COSTO_LANCIO, FabbricaAbilita.crea(TipoAbilita.RIGENERAZIONE, druido).getCostoLancio());
+        assertEquals(CostantiAbilitaInnate.ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO, FabbricaAbilita.crea(TipoAbilita.SCACCIARE_I_NON_MORTI, chierico).getCostoLancio());
+        assertEquals(CostantiAbilitaInnate.ABILITA_IMPOSIZIONE_DELLE_MANI_COSTO_LANCIO, FabbricaAbilita.crea(TipoAbilita.IMPOSIZIONE_DELLE_MANI, chierico).getCostoLancio());
+        assertEquals(CostantiAbilitaInnate.ABILITA_RADICI_COSTO_LANCIO, FabbricaAbilita.crea(TipoAbilita.RADICI, druido).getCostoLancio());
+        assertEquals(CostantiAbilitaInnate.ABILITA_SCIAME_COSTO_LANCIO, FabbricaAbilita.crea(TipoAbilita.SCIAME, druido).getCostoLancio());
+        assertEquals(CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO, FabbricaAbilita.crea(TipoAbilita.PELLE_DI_CORTECCIA, druido).getCostoLancio());
+        assertEquals(CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_COSTO_LANCIO, FabbricaAbilita.crea(TipoAbilita.RIGENERAZIONE, druido).getCostoLancio());
         for (TipoAbilita tipo : TipoAbilita.values()) {
             Personaggio chi = AbilitaInnate.conosciutaDa(TipoPersonaggio.CHIERICO, tipo) ? chierico : druido;
             assertSame(tipo, FabbricaAbilita.crea(tipo, chi).getTipo());
@@ -283,7 +283,7 @@ class ChiericoEDruidoTest {
         assertTrue(AbilitaInnate.serve(TipoAbilita.SCACCIARE_I_NON_MORTI, compagni, avversari));
         assertEquals(100.0d, ScacciareINonMorti.probabilitaDiCedere(chierico, spettro), 1e-9);
         assertTrue(FabbricaAbilita.crea(TipoAbilita.SCACCIARE_I_NON_MORTI, chierico).usa(chierico, compagni, avversari));
-        assertEquals(magia - Costanti.ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO, chierico.getMagia());
+        assertEquals(magia - CostantiAbilitaInnate.ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO, chierico.getMagia());
         assertTrue(spettro.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO));
         assertFalse(goblin.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO));
         // Ora è già spaventato: non serve più
@@ -329,7 +329,7 @@ class ChiericoEDruidoTest {
 
         assertEquals(Math.min(grave.getSaluteMassima(), saluteGrave + imposizione.getCura()), grave.getSalute());
         assertEquals(saluteLieve, lieve.getSalute(), "ne cura uno solo");
-        assertEquals(magia - Costanti.ABILITA_IMPOSIZIONE_DELLE_MANI_COSTO_LANCIO, chierico.getMagia());
+        assertEquals(magia - CostantiAbilitaInnate.ABILITA_IMPOSIZIONE_DELLE_MANI_COSTO_LANCIO, chierico.getMagia());
     }
 
     @Test
@@ -365,13 +365,13 @@ class ChiericoEDruidoTest {
 
         assertTrue(rigenerazione.usa(druido, compagni, avversari));
 
-        assertEquals(magia - Costanti.ABILITA_RIGENERAZIONE_COSTO_LANCIO, druido.getMagia());
+        assertEquals(magia - CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_COSTO_LANCIO, druido.getMagia());
         assertTrue(ferito.hasEffettoDiStato(TipoEffettoDiStato.RIGENERAZIONE));
         assertEquals(salute, ferito.getSalute(), "non guarisce subito");
         ferito.applicaDanniDaEffettiDiStato();
         assertEquals(salute + cura, ferito.getSalute());
         // L'effetto dura qualche turno e poi finisce
-        for (int turno = 1; turno < Costanti.ABILITA_RIGENERAZIONE_DURATA; turno++) {
+        for (int turno = 1; turno < CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_DURATA; turno++) {
             ferito.riduciEffettiDiStato();
             assertTrue(ferito.hasEffettoDiStato(TipoEffettoDiStato.RIGENERAZIONE));
         }
@@ -412,7 +412,7 @@ class ChiericoEDruidoTest {
             assertTrue(fatto);
             assertTrue(goblin.getSalute() < salute || !goblin.isVivo(), tipo + " dovrebbe aver ferito il goblin");
             assertTrue(druido.getMagia() < magia);
-            assertEquals(0, (magia - druido.getMagia()) % (tipo == TipoAbilita.RADICI ? Costanti.ABILITA_RADICI_COSTO_LANCIO : Costanti.ABILITA_SCIAME_COSTO_LANCIO));
+            assertEquals(0, (magia - druido.getMagia()) % (tipo == TipoAbilita.RADICI ? CostantiAbilitaInnate.ABILITA_RADICI_COSTO_LANCIO : CostantiAbilitaInnate.ABILITA_SCIAME_COSTO_LANCIO));
         }
     }
 
@@ -454,7 +454,7 @@ class ChiericoEDruidoTest {
 
         assertTrue(FabbricaAbilita.crea(TipoAbilita.PELLE_DI_CORTECCIA, druido).usa(druido, compagni, avversari));
 
-        assertEquals(magia - Costanti.ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO, druido.getMagia());
+        assertEquals(magia - CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO, druido.getMagia());
         PelleDiCorteccia pelle = new PelleDiCorteccia(druido);
         assertEquals(Math.round(10.0d * Math.sqrt(druido.getLivello())), pelle.getPuntiParata());
         assertEquals(parata + pelle.getPuntiParata(), guerriero.getParata(), "punti fissi, non una percentuale della parata del guerriero");
@@ -463,7 +463,7 @@ class ChiericoEDruidoTest {
             for (ModificatoreAttributoMD modificatore : personaggio.getModificatoriTemporanei()) {
                 assertEquals(PelleDiCorteccia.NOTA, modificatore.getNote());
                 assertEquals(UnitaDurataModificatore.TURNI, modificatore.getUnitaDurata());
-                assertEquals(Costanti.ABILITA_PELLE_DI_CORTECCIA_DURATA, modificatore.getDurata());
+                assertEquals(CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_DURATA, modificatore.getDurata());
             }
         }
         guerriero.rimuoviIModificatoriTemporaneiRimovibili();
@@ -472,7 +472,7 @@ class ChiericoEDruidoTest {
         FabbricaAbilita.crea(TipoAbilita.PELLE_DI_CORTECCIA, druido).usa(druido, compagni, avversari);
         assertEquals(2, guerriero.getModificatoriTemporanei().size());
         // Passano i turni e finisce
-        for (int turno = 0; turno < Costanti.ABILITA_PELLE_DI_CORTECCIA_DURATA; turno++) {
+        for (int turno = 0; turno < CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_DURATA; turno++) {
             guerriero.riduciModificatori(UnitaDurataModificatore.TURNI);
         }
         assertTrue(guerriero.getModificatoriTemporanei().isEmpty());

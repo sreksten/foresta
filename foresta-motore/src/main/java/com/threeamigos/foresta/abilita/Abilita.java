@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.abilita;
 
+import com.threeamigos.foresta.interfacce.OggettoConCostoDiLancio;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoAbilita;
@@ -9,14 +10,17 @@ import com.threeamigos.foresta.tipi.TipoAbilita;
  * {@link com.threeamigos.foresta.tipi.TipoIncantesimo} perché non è una pergamena: non si compra, non si trova e non si conta nell'inventario del
  * gruppo. Chi può usarla e quando si decide in {@link AbilitaInnate}.
  */
-public interface Abilita {
+public interface Abilita extends OggettoConCostoDiLancio {
 
 	TipoAbilita getTipo();
 
 	/**
-	 * La MAGIA che costa
+	 * La MAGIA che costa: la dice il suo tipo.
 	 */
-	int getCostoLancio();
+	@Override
+	default int getCostoLancio() {
+		return getTipo().getCostoLancio();
+	}
 
 	/**
 	 * Usa l'abilità: fa l'effetto e scala la MAGIA a chi la usa. Il turno e la risposta avversaria li gestisce chi la chiama.

@@ -288,7 +288,7 @@ public final class SceltaIncantesimo {
 		int costoMinimo = Integer.MAX_VALUE;
 		for (TipoIncantesimo classe : lanciabili) {
 			if (dannoConLaConoscenza(attore, bersaglio, classe, contesto, 0) >= bersaglio.getSalute()) {
-				int costo = contesto.isMostro(attore) ? FabbricaIncantesimi.costoLancio(classe) : FabbricaIncantesimi.costoAcquisto(classe);
+				int costo = contesto.isMostro(attore) ? classe.getCostoLancio() : classe.getCostoAcquisto();
 				if (costo < costoMinimo) {
 					economico = classe;
 					costoMinimo = costo;

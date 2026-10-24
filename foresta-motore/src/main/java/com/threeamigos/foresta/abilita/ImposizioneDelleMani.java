@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.abilita;
 
+import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
 import com.threeamigos.foresta.canti.CantoCurativo;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 
 import java.util.Optional;
@@ -29,17 +29,12 @@ public class ImposizioneDelleMani implements Abilita {
 		return TipoAbilita.IMPOSIZIONE_DELLE_MANI;
 	}
 
-	@Override
-	public int getCostoLancio() {
-		return Costanti.ABILITA_IMPOSIZIONE_DELLE_MANI_COSTO_LANCIO;
-	}
-
 	/**
 	 * Quanta salute restituisce, prima del limite del massimo di chi la riceve
 	 */
 	public int getCura() {
-		return (int) Math.round(Costanti.ABILITA_IMPOSIZIONE_DELLE_MANI_BASE * Math.sqrt(livello)
-				* (1.0d + saggezza / Costanti.ABILITA_IMPOSIZIONE_DELLE_MANI_DIVISORE_SAGGEZZA));
+		return (int) Math.round(CostantiAbilitaInnate.ABILITA_IMPOSIZIONE_DELLE_MANI_BASE * Math.sqrt(livello)
+				* (1.0d + saggezza / CostantiAbilitaInnate.ABILITA_IMPOSIZIONE_DELLE_MANI_DIVISORE_SAGGEZZA));
 	}
 
 	@Override

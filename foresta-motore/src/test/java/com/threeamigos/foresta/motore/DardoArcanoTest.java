@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
@@ -10,7 +11,6 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.personaggi.*;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,20 +55,20 @@ class DardoArcanoTest {
     void alMagoRendeDiPiuECostaMenoCheAllElfo() {
         Mago mago = new Mago("Merlino", 5);
         Elfo elfo = new Elfo("Legolas", 5);
-        assertEquals(Costanti.DARDO_ARCANO_DANNI_MAGO, new DardoArcano(mago).getDanni());
-        assertEquals(Costanti.DARDO_ARCANO_DANNI_ELFO, new DardoArcano(elfo).getDanni());
-        assertEquals(Costanti.DARDO_ARCANO_COSTO_LANCIO_MAGO, new DardoArcano(mago).getCostoLancio());
-        assertEquals(Costanti.DARDO_ARCANO_COSTO_LANCIO_ELFO, new DardoArcano(elfo).getCostoLancio());
+        assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_DANNI_MAGO, new DardoArcano(mago).getDanni());
+        assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_DANNI_ELFO, new DardoArcano(elfo).getDanni());
+        assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO, new DardoArcano(mago).getCostoLancio());
+        assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO, new DardoArcano(elfo).getCostoLancio());
         assertTrue(danno(mago) > danno(elfo));
     }
 
     @Test
     void lElfoHaBisognoDiPiuMagia() {
         Elfo elfo = new Elfo("Legolas", 5);
-        elfo.subMagia(elfo.getMagia() - Costanti.DARDO_ARCANO_COSTO_LANCIO_MAGO);
+        elfo.subMagia(elfo.getMagia() - CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO);
         assertFalse(DardoArcano.puoLanciarlo(elfo));
         Mago mago = new Mago("Merlino", 5);
-        mago.subMagia(mago.getMagia() - Costanti.DARDO_ARCANO_COSTO_LANCIO_MAGO);
+        mago.subMagia(mago.getMagia() - CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO);
         assertTrue(DardoArcano.puoLanciarlo(mago));
     }
 
