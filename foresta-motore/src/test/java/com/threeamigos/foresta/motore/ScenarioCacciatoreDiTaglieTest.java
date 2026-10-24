@@ -36,7 +36,7 @@ class ScenarioCacciatoreDiTaglieTest {
     @Test
     void laBandaVaCercataBastaAbbattereIlCapoEPoiSiRiscuote() {
         // Senza trucchi: in modalità di prova la mappa è già tutta svelata
-        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(161)) {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(164)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             CacciatoreDiTaglie taglia = prendiLIncarico(partita, CacciatoreDiTaglie.class);
             String ricercato = taglia.getRicercato();

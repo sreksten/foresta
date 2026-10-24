@@ -101,7 +101,7 @@ class ScenarioDuelliTest {
 
     @Test
     void ilDuelloPersoNonUccideNessunoELoSfidanteAspettaLaRivincita() {
-        try (PartitaDiTest partita = PartitaDiTest.nuova(226)) {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(230)) {
             IncaricoDiCombattimento sfida = prendiLaSfida(partita);
             CoordinateMD covo = sfida.getCovo();
             Personaggio arsenio = partita.gruppo().getCapo();

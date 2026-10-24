@@ -20,6 +20,8 @@ public enum TipoArtefatto {
     ASCIA(CategoriaArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.TAGLIENTE),
     /** Arma a due mani. */
     SPADONE(CategoriaArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ENTRAMBE_LE_MANI, TipoDanno.TAGLIENTE),
+    /** Arma a due mani, come lo spadone: la falce e il falcione. */
+    FALCE(CategoriaArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ENTRAMBE_LE_MANI, TipoDanno.TAGLIENTE),
     LANCIA(CategoriaArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.PERFORANTE),
 
     BASTONE_MAGICO(CategoriaArtefatto.ARMA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.MANO_PRINCIPALE, TipoDanno.CONTUNDENTE),
@@ -98,6 +100,14 @@ public enum TipoArtefatto {
      */
     public boolean isIngrediente() {
         return categoriaArtefatto == CategoriaArtefatto.INCANTAMENTO;
+    }
+
+    /**
+     * Se il generatore può produrne a caso (nel loot, nei negozi, nei cofani): no per la falce, che esiste solo come leggendario di bottino
+     * (la Falce del Tristo Mietitore, vedi leggendari.txt).
+     */
+    public boolean isGenerabileACaso() {
+        return this != FALCE;
     }
 
     /**

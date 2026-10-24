@@ -43,6 +43,7 @@ public class ProduttoreDiTestiCasuale {
 	private static final String OGGETTO_LEGGENDARIO = "OGGETTO_LEGGENDARIO";
 	private static final String SET_LEGGENDARIO = "SET_LEGGENDARIO";
 	private static final String LIBRO_TECNICO = "LIBRO_TECNICO";
+	private static final String LEGGENDARIO_DI_BOTTINO = "LEGGENDARIO_DI_BOTTINO";
 
 	private ProduttoreDiTestiCasuale() {
 	}
@@ -278,6 +279,13 @@ public class ProduttoreDiTestiCasuale {
 	 */
 	public static List<String> tuttiGliOggettiLeggendari() {
 		return tutteLeRigheLeggendarie(OGGETTO_LEGGENDARIO);
+	}
+
+	/**
+	 * Tutti i leggendari di bottino di leggendari.txt: quelli che lascia un avversario, e che nessuna leggenda racconta.
+	 */
+	public static List<String> tuttiIBottiniLeggendari() {
+		return tutteLeRigheLeggendarie(LEGGENDARIO_DI_BOTTINO);
 	}
 
 	/**

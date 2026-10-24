@@ -42,6 +42,7 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
 
     private static final Set<MissionePredefinita> IN_CITTA_SENZA_INCARICO = EnumSet.of(
             MissionePredefinita.LA_LEGGENDA_DELL_ARMAIOLO,
+            MissionePredefinita.LA_FALCE_DEL_TRISTO_MIETITORE,
             MissionePredefinita.LA_LEALTA);
 
     // Dove parte ogni missione: non cambia mai, e per saperlo di un incarico serve costruirlo

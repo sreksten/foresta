@@ -2,6 +2,7 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.missioni.incarichi.*;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelLocandiere;
+import com.threeamigos.foresta.missioni.leggende.LaFalceDelTristoMietitore;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
 import com.threeamigos.foresta.missioni.principali.*;
 import com.threeamigos.foresta.missioni.storie.*;
@@ -27,6 +28,7 @@ public final class FabbricaMissioni {
 		COSTRUTTORI.put(MissionePredefinita.SCONFIGGI_LA_STREGA, SconfiggiLaStrega::new);
 		COSTRUTTORI.put(MissionePredefinita.LA_LEGGENDA_DELL_ARMAIOLO, LaLeggendaDellArmaiolo::new);
 		COSTRUTTORI.put(MissionePredefinita.LA_LEGGENDA_DEL_LOCANDIERE, LaLeggendaDelLocandiere::new);
+		COSTRUTTORI.put(MissionePredefinita.LA_FALCE_DEL_TRISTO_MIETITORE, LaFalceDelTristoMietitore::new);
 		COSTRUTTORI.put(MissionePredefinita.CRONACHE_DI_UN_FEGATO_EROICO, CronacheDiUnFegatoEroico::new);
 		COSTRUTTORI.put(MissionePredefinita.NESSUN_BOCCALE_LASCIATO_INDIETRO, NessunBoccaleLasciatoIndietro::new);
 		COSTRUTTORI.put(MissionePredefinita.DISTURBATORE_DELLA_QUIETE_PUBBLICA, DisturbatoreDellaQuietePubblica::new);

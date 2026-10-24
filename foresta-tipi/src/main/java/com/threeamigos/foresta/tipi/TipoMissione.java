@@ -49,7 +49,8 @@ public enum TipoMissione {
     /**
      * Esempio: esplorare un dungeon alla ricerca di un tesoro.
      * Coperto da: LaLeggendaDellArmaiolo, LaLeggendaDelLocandiere (la leggenda è l'indizio, i guardiani del tempio,
-     * il leggendario il tesoro)
+     * il leggendario il tesoro), LaFalceDelTristoMietitore (la voce di una Morte con la falce è l'indizio, un necromante
+     * con i suoi scheletri la guardia, la Falce il tesoro)
      */
     CACCIA_AL_TESORO(CategoriaMissione.ACQUISIZIONE),
     /**

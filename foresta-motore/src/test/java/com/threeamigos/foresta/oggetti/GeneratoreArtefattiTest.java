@@ -82,7 +82,9 @@ class GeneratoreArtefattiTest {
             visti.add(generatore.generaArtefattoCasuale(3).getTipo());
         }
         assertTrue(visti.stream().noneMatch(TipoArtefatto::isIngrediente));
-        assertEquals(Arrays.stream(TipoArtefatto.values()).filter(t -> !t.isIngrediente()).count(), visti.size());
+        // Tutti i tipi che non sono ingredienti, tranne la falce, che esiste solo come leggendario di bottino
+        assertFalse(visti.contains(TipoArtefatto.FALCE));
+        assertEquals(Arrays.stream(TipoArtefatto.values()).filter(t -> !t.isIngrediente() && t.isGenerabileACaso()).count(), visti.size());
     }
 
     @Test

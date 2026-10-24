@@ -334,6 +334,9 @@ public class Costanti {
     // Oltre ai 5 permanenti, fino a 3 slot aggiuntivi per personaggi temporanei
     // (AiutoGratuito, AiutoMercenario, lo Scheletro da MIETITURA)
     public static final int MAX_PERSONAGGI_GRUPPO_TOTALE = 8;
+    // Il necromante, finché è vivo, evoca uno scheletro ogni volta che ne cadono due; al più tante evocazioni per scontro
+    public static final int NECROMANTE_SCHELETRI_PER_EVOCAZIONE = 2;
+    public static final int NECROMANTE_EVOCAZIONI_MASSIME = 4;
     // Per quanti turni uno Scheletro nato dalla MIETITURA accompagna il gruppo
     public static final int MIETITURA_DURATA_TURNI = 4;
 

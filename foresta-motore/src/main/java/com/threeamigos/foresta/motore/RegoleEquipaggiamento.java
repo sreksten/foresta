@@ -26,7 +26,7 @@ public final class RegoleEquipaggiamento {
 	// Sacerdote (un sacerdote in armatura è il Chierico); chi
 	// può portarla chiede una FORZA minima.
 	// Le classi che non sono qui (i mostri, l'Ombrafiamma) non hanno limiti.
-	private static final Set<TipoArtefatto> GUERRIERO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.SPADONE,
+	private static final Set<TipoArtefatto> GUERRIERO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.SPADONE, TipoArtefatto.FALCE,
 			TipoArtefatto.MAZZA, TipoArtefatto.ASCIA, TipoArtefatto.LANCIA, TipoArtefatto.SCUDO, TipoArtefatto.ARMATURA);
 	private static final Set<TipoArtefatto> LADRO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.MAZZA, TipoArtefatto.ASCIA);
 	// L'elfo sa usare anche il libro magico, ma ne ha metà del bonus (vedi Costanti.LIBRO_MAGICO_FATTORE_ELFO)

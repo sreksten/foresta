@@ -17,6 +17,7 @@ public enum TipoOggetto {
 	SCUDO(1, 100),
 	SPADA(1, 100),
 	SPADONE(1, 100),
+	FALCE(1, 100),
 	MAZZA(1, 100),
 	ASCIA(1, 100),
 	LANCIA(1, 100),

@@ -22,6 +22,7 @@ public final class FabbricaOggetti {
 		COSTRUTTORI.put(TipoOggetto.SCUDO, Scudo::new);
 		COSTRUTTORI.put(TipoOggetto.SPADA, Spada::new);
 		COSTRUTTORI.put(TipoOggetto.SPADONE, Spadone::new);
+		COSTRUTTORI.put(TipoOggetto.FALCE, Falce::new);
 		COSTRUTTORI.put(TipoOggetto.MAZZA, Mazza::new);
 		COSTRUTTORI.put(TipoOggetto.ASCIA, Ascia::new);
 		COSTRUTTORI.put(TipoOggetto.LANCIA, Lancia::new);

@@ -82,7 +82,15 @@ SPADONE_LEGGENDARIO$
     LEGGENDA=Un giorno lo perse fra gli alberi e non se ne accorse nemmeno.;\
     LEGGENDA=Per un uomo è uno spadone che spacca le montagne. Per un gigante, una scheggia.
 
-    TIPO=SPADONE;NOME=la Falce del Tristo Mietitore;CHIAVE=FALCE_DEL_TRISTO_MIETITORE;BREVE=la Falce del Tristo Mietitore;\
+// ---------------------------------------------------------------------------------------------
+// I leggendari di bottino: stessa riga degli altri, ma nessuna leggenda li racconta e non si pescano. Li lascia un avversario
+// preciso, o una missione che li dà come premio (la Falce del Tristo Mietitore: vedi LaFalceDelTristoMietitore, che ne
+// riprende anche le battute della leggenda). Hanno le chiavi in comune con gli altri leggendari, si cercano per chiave
+// (CatalogoLeggendari.getLeggendario) e non sono in OGGETTO_LEGGENDARIO.
+// ---------------------------------------------------------------------------------------------
+
+LEGGENDARIO_DI_BOTTINO$
+    TIPO=FALCE;NOME=la Falce del Tristo Mietitore;CHIAVE=FALCE_DEL_TRISTO_MIETITORE;BREVE=la Falce del Tristo Mietitore;\
     DESCRIZIONE=che miete anche chi non è ancora maturo;LIVELLO=5;DANNI=20;COSTO=60;PESO=4;\
     MOD=CORAGGIO +10%;MOD=SOGGEZIONE +3;\
     INCANTAMENTO=MALEDIZIONE 12 0.15 Ombra sul Raccolto;INCANTAMENTO=NECROTICO 12 0.15 Mietitura d'Anima;\

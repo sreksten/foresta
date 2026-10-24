@@ -92,13 +92,10 @@ final class ImmagineBestiario {
 	}
 
 	/**
-	 * L'icona della voce, a 32 pixel di lato al più: quella della classe, o se non ne ha una la sua immagine ridotta
+	 * L'icona della voce, a 32 pixel di lato al più: l'immagine della classe ridotta, per tutte allo stesso modo (le icone disegnate a mano che
+	 * alcune classi hanno, vedi ClassePersonaggioImmagine.getIcona, per ora non si usano qui, perché le altre classi non ce l'hanno)
 	 */
 	private static BufferedImage iconaDellaVoce(TipoPersonaggio voce) {
-		BufferedImage icona = ClassePersonaggioImmagine.getIcona(voce);
-		if (icona != null) {
-			return icona;
-		}
 		return (BufferedImage) ImageCache.getComposta(Arrays.<Object>asList("iconaDaImmagine", voce),
 				() -> adatta(ClassePersonaggioImmagine.getImmagine(voce), LATO_ICONA, LATO_ICONA));
 	}

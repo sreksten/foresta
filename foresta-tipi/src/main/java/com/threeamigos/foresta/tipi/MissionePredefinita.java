@@ -80,6 +80,9 @@ public enum MissionePredefinita {
 	// raccontata nelle ultime 36 ore; sono ripetibili.
 	LA_LEGGENDA_DELL_ARMAIOLO(true),
 	LA_LEGGENDA_DEL_LOCANDIERE(true),
+	// Un personaggio a caso, in una città, giura di aver visto la Morte con la sua falce nelle rovine; è un necromante, e la sua falce è il premio.
+	// A una visita tranquilla; si offre una volta sola.
+	LA_FALCE_DEL_TRISTO_MIETITORE(true),
 
 	// I negozi: a inizio partita ogni città riceve una di queste quattro missioni, a caso; ciascuna si offre come un
 	// incarico in città (vedi sotto), ma solo nella sua città, e non si ripete. A completamento si costruisce un nuovo

@@ -91,6 +91,13 @@ public interface Missione extends VistaMissione {
 	}
 
 	/**
+	 * Se la missione vuole quella locazione senza oggetti (né il suo né uno a caso): il premio della missione basta.
+	 */
+	default boolean isLocazioneSenzaOggetti(CoordinateMD coordinate) {
+		return false;
+	}
+
+	/**
 	 * Le ondate di avversari che arrivano, nella locazione in cui il gruppo sta entrando, dopo quelli di
 	 * {@link #getIncontroInLocazione} (vedi IncontroDiMissione.poi). Vuota se non ce ne sono.
 	 */

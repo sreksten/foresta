@@ -365,6 +365,14 @@ public class RegistroMissioni {
 	}
 
 	/**
+	 * Se una missione in corso vuole quella locazione senza oggetti (vedi Missione.isLocazioneSenzaOggetti).
+	 */
+	public static boolean isLocazioneSenzaOggetti(CoordinateMD coordinate) {
+		return getTutteLeMissioni().stream()
+				.anyMatch(m -> m.isAttiva() && !m.isCompleta() && !m.isFallita() && m.isLocazioneSenzaOggetti(coordinate));
+	}
+
+	/**
 	 * Gli avversari che una missione in corso vuole nella locazione in cui il gruppo sta entrando (vedi
 	 * Missione.getIncontroInLocazione), se ce ne sono: vince la prima missione che risponde.
 	 */

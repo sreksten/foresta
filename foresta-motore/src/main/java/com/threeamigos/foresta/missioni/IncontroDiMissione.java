@@ -35,6 +35,8 @@ public final class IncontroDiMissione {
 	private String nomeDelCapo;
 	// La classe del capo se non è uno della banda, altrimenti null
 	private TipoPersonaggio classeDelCapo;
+	// Il capo di un'altra classe sta in mezzo alla banda e non in fondo
+	private boolean capoAlCentro;
 	private boolean finoAllaResa;
 	private boolean aDuello;
 	private boolean aCartaForbiciSasso;
@@ -184,6 +186,16 @@ public final class IncontroDiMissione {
 	}
 
 	/**
+	 * Come {@link #conCapo(String, TipoPersonaggio)}, ma il capo sta in mezzo alla banda, non in fondo: con quattro scheletri e un necromante,
+	 * due scheletri, il necromante e due scheletri.
+	 */
+	public IncontroDiMissione conCapoAlCentro(String nome, TipoPersonaggio classe) {
+		conCapo(nome, classe);
+		this.capoAlCentro = true;
+		return this;
+	}
+
+	/**
 	 * La classe del capo: la sua, se non è uno della banda, altrimenti quella della banda.
 	 */
 	public TipoPersonaggio getClasseDelCapo() {
@@ -203,7 +215,7 @@ public final class IncontroDiMissione {
 	}
 
 	/**
-	 * Gli avversari, al livello del mondo. Un capo di un'altra classe viene dopo la banda, così il gruppo avversario
+	 * Gli avversari, al livello del mondo. Un capo di un'altra classe viene dopo la banda (o in mezzo, vedi conCapoAlCentro), così il gruppo avversario
 	 * si presenta con la classe della banda ("quattro goblin").
 	 */
 	public List<Personaggio> crea() {
@@ -226,7 +238,7 @@ public final class IncontroDiMissione {
 			capo.getModelloDati().setNome(nomeDelCapo);
 			capo.setFinoAllaResa(finoAllaResa);
 			capo.setDaAffrontare(!aggirabile);
-			avversari.add(capo);
+			avversari.add(capoAlCentro ? numero / 2 : avversari.size(), capo);
 		}
 		return avversari;
 	}

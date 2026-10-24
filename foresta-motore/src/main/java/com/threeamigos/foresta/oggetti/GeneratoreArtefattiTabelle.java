@@ -28,6 +28,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	static {
 		nomeEPeso(TipoArtefatto.SPADA, "la spada", 1);
 		nomeEPeso(TipoArtefatto.SPADONE, "lo spadone", 3);
+		nomeEPeso(TipoArtefatto.FALCE, "la falce", 3);
 		nomeEPeso(TipoArtefatto.MAZZA, "la mazza", 2);
 		nomeEPeso(TipoArtefatto.ASCIA, "l'ascia", 2);
 		nomeEPeso(TipoArtefatto.LANCIA, "la lancia", 2);
@@ -83,7 +84,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 			.collect(Collectors.toList());
 
 	private static final List<TipoArtefatto> TIPI_CASUALI = Arrays.stream(TipoArtefatto.values())
-			.filter(t -> !t.isIngrediente())
+			.filter(t -> !t.isIngrediente() && t.isGenerabileACaso())
 			.collect(Collectors.toList());
 
 	private static final List<TipoArtefatto> INGREDIENTI = Arrays.stream(TipoArtefatto.values())

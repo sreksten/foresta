@@ -87,6 +87,11 @@ public abstract class LocazioneBase implements Locazione {
 	 * Gli avversari di cui si è già contata la sconfitta: chi si arrende resta vivo, e non va contato due volte.
 	 */
 	private final Set<Personaggio> avversariSconfitti = Collections.newSetFromMap(new IdentityHashMap<>());
+	// L'evocazione del necromante (vedi contaLoScheletroCaduto): gli scheletri caduti da quando ne ha evocato uno, le evocazioni che
+	// aspettano il momento buono (a metà di un ciclo sugli avversari non si può aggiungerne) e quelle già fatte
+	private int scheletriCaduti;
+	private int evocazioniDaFare;
+	private int evocazioniFatte;
 	/**
 	 * Se il gruppo non può più passare inosservato in questa locazione: ci ha già provato (si prova una volta sola),
 	 * o ha già fatto qualcos'altro (vedi isAzione).
@@ -335,6 +340,9 @@ public abstract class LocazioneBase implements Locazione {
 	@Override
 	public Stato impostaAzioni(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario, Comando azione) {
 		Stato stato = impostaAzioniImpl(gruppo, gruppoAvversario, azione);
+		if (stato != Stato.GIOCO_PERSO) {
+			evocaGliScheletri();
+		}
 		if (stato != Stato.GIOCO_PERSO && stato != Stato.FINE_LOCAZIONE && isDuelloPerso()) {
 			return perdiIlDuello();
 		}
@@ -1188,11 +1196,30 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
+	 * Gli avversari per classe, nell'ordine in cui compare ognuna: "cinque Scheletri", "tre Goblin e un Hobgoblin", "quattro Scheletri e un
+	 * Necromante".
+	 */
+	private String descrizioneDegliAvversari(GruppoAvversario gruppoAvversario) {
+		Map<TipoPersonaggio, List<Personaggio>> perClasse = new LinkedHashMap<>();
+		for (Personaggio avversario : gruppoAvversario.getPersonaggi()) {
+			perClasse.computeIfAbsent(avversario.getClasse(), c -> new ArrayList<>()).add(avversario);
+		}
+		List<String> parti = new ArrayList<>();
+		for (List<Personaggio> classe : perClasse.values()) {
+			Personaggio p = classe.get(0);
+			parti.add(classe.size() == 1 ? p.getAIS() + p.getNomeSingolare() : Misc.getCardinaleM(classe.size()) + " " + p.getNomePlurale());
+		}
+		if (parti.size() == 1) {
+			return parti.get(0);
+		}
+		return String.join(", ", parti.subList(0, parti.size() - 1)) + " e " + parti.get(parti.size() - 1);
+	}
+
+	/**
 	 * La descrizione dei presenti
 	 */
 	protected String descrizioneMostriEOggetti(GruppoGiocatore gruppoGiocatore, GruppoAvversario gruppoAvversario) {
 		int numeroAvversari = gruppoAvversario.getNumeroPersonaggi();
-		Personaggio p = gruppoAvversario.getCapo();
 		Oggetto o = getOggetto();
 		int numeroOggetti = (o == null ? 0 : o.getQuantita());
 		StringBuilder sb = new StringBuilder(gruppoGiocatore.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
@@ -1201,35 +1228,18 @@ public abstract class LocazioneBase implements Locazione {
 		} else {
 			sb.append(" vede ");
 			if (numeroAvversari > 0) {
-				if (numeroAvversari == 1) {
-					sb.append(p.getAIS()).append(p.getNomeSingolare());
-					if (numeroOggetti > 0) {
-						switch (Dado.tira(3)) {
-							case 1:
-								sb.append(" che protegge ");
-								break;
-							case 2:
-								sb.append(" che custodisce ");
-								break;
-							default:
-								sb.append(" che sorveglia ");
-								break;
-						}
-					}
-				} else {
-					sb.append(Misc.getCardinaleM(numeroAvversari)).append(' ').append(p.getNomePlurale());
-					if (numeroOggetti > 0) {
-						switch (Dado.tira(3)) {
-							case 1:
-								sb.append(" che proteggono ");
-								break;
-							case 2:
-								sb.append(" che custodiscono ");
-								break;
-							default:
-								sb.append(" che sorvegliano ");
-								break;
-						}
+				sb.append(descrizioneDegliAvversari(gruppoAvversario));
+				if (numeroOggetti > 0) {
+					switch (Dado.tira(3)) {
+						case 1:
+							sb.append(numeroAvversari == 1 ? " che protegge " : " che proteggono ");
+							break;
+						case 2:
+							sb.append(numeroAvversari == 1 ? " che custodisce " : " che custodiscono ");
+							break;
+						default:
+							sb.append(numeroAvversari == 1 ? " che sorveglia " : " che sorvegliano ");
+							break;
 					}
 				}
 			}
@@ -1505,6 +1515,71 @@ public abstract class LocazioneBase implements Locazione {
 			BusEventi.pubblica(new InternoAvversarioSconfitto(vittima.getClasse()));
 			Statistiche.addPunti(vittima.getSaluteMassima());
 			gruppo.addPuntiEsperienza(vittima.getPuntiEsperienza());
+			contaLoScheletroCaduto(vittima);
+			facciCrollareGliScheletri(vittima);
+		}
+	}
+
+	/**
+	 * Caduto un necromante, gli scheletri che era lui a tenere in piedi crollano in un mucchio d'ossa, e contano come sconfitti.
+	 */
+	private void facciCrollareGliScheletri(Personaggio vittima) {
+		if (vittima.getClasse() != TipoPersonaggio.NECROMANTE) {
+			return;
+		}
+		List<Personaggio> scheletri = gruppoAvversario.getPersonaggiVivi().stream()
+				.filter(p -> p.getClasse() == TipoPersonaggio.SCHELETRO).collect(Collectors.toList());
+		if (scheletri.isEmpty()) {
+			return;
+		}
+		BusEventi.pubblica(new NotificaTestoParagrafo(vittima.getNome() + " è caduto: " + (scheletri.size() == 1
+				? "lo scheletro che teneva in piedi crolla in un mucchio d'ossa." : "gli scheletri che teneva in piedi crollano in un mucchio d'ossa.")));
+		for (Personaggio scheletro : scheletri) {
+			scheletro.muore("è crollato in un mucchio d'ossa");
+			registraMorteAvversario(scheletro);
+		}
+	}
+
+	/**
+	 * Un necromante vivo evoca uno scheletro ogni volta che ne cadono due (Costanti.NECROMANTE_SCHELETRI_PER_EVOCAZIONE), finché è vivo e
+	 * al più Costanti.NECROMANTE_EVOCAZIONI_MASSIME volte per scontro: qui si conta e si segna che serve un'evocazione, che si fa subito dopo
+	 * l'azione (vedi evocaGliScheletri).
+	 */
+	private void contaLoScheletroCaduto(Personaggio vittima) {
+		if (vittima.getClasse() != TipoPersonaggio.SCHELETRO || !haUnNecromanteVivo()) {
+			return;
+		}
+		scheletriCaduti++;
+		if (scheletriCaduti >= Costanti.NECROMANTE_SCHELETRI_PER_EVOCAZIONE) {
+			scheletriCaduti -= Costanti.NECROMANTE_SCHELETRI_PER_EVOCAZIONE;
+			evocazioniDaFare++;
+		}
+	}
+
+	private Optional<Personaggio> getNecromanteVivo() {
+		return gruppoAvversario.getPersonaggiVivi().stream().filter(p -> p.getClasse() == TipoPersonaggio.NECROMANTE).findFirst();
+	}
+
+	private boolean haUnNecromanteVivo() {
+		return getNecromanteVivo().isPresent();
+	}
+
+	/**
+	 * Fa le evocazioni che aspettavano: il necromante, se è ancora vivo, richiama uno scheletro, che entra nel gruppo avversario.
+	 */
+	private void evocaGliScheletri() {
+		while (evocazioniDaFare > 0) {
+			evocazioniDaFare--;
+			Optional<Personaggio> necromante = getNecromanteVivo();
+			if (!necromante.isPresent() || evocazioniFatte >= Costanti.NECROMANTE_EVOCAZIONI_MASSIME) {
+				continue;
+			}
+			evocazioniFatte++;
+			Personaggio scheletro = FabbricaPersonaggi.crea(TipoPersonaggio.SCHELETRO, Statistiche.getLivello());
+			scheletro.setDaAffrontare(true);
+			gruppoAvversario.aggiungiPersonaggio(scheletro);
+			BusEventi.pubblica(new InternoAssegnaCoordinateAPersonaggi());
+			BusEventi.pubblica(new NotificaTestoParagrafo(necromante.get().getNome() + " evoca un altro scheletro, che esce dalla terra e si unisce alla battaglia."));
 		}
 	}
 

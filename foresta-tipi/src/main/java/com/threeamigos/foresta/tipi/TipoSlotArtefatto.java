@@ -32,7 +32,7 @@ public enum TipoSlotArtefatto {
      */
     MANO_SECONDARIA,
     /**
-     * Armi a due mani (Spadone): occupa sia la mano principale sia la secondaria
+     * Armi a due mani (Spadone, Falce): occupa sia la mano principale sia la secondaria
      */
     ENTRAMBE_LE_MANI,
     /**

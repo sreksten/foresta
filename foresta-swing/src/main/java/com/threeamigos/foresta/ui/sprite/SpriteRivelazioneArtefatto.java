@@ -375,6 +375,8 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 				return ClassiOggettoImmagine.getImmagine(TipoOggetto.SPADA);
 			case SPADONE:
 				return ClassiOggettoImmagine.getImmagine(TipoOggetto.SPADONE);
+			case FALCE:
+				return ClassiOggettoImmagine.getImmagine(TipoOggetto.FALCE);
 			case MAZZA:
 				return ClassiOggettoImmagine.getImmagine(TipoOggetto.MAZZA);
 			case ASCIA:

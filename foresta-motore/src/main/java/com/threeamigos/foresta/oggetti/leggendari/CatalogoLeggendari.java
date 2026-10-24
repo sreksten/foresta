@@ -28,6 +28,7 @@ public final class CatalogoLeggendari {
 			TipoSlotArtefatto.CORPO, TipoSlotArtefatto.GAMBE, TipoSlotArtefatto.MANO_PRINCIPALE, TipoSlotArtefatto.MANO_SECONDARIA);
 
 	private static Map<String, OggettoLeggendario> leggendari;
+	private static Map<String, OggettoLeggendario> bottini;
 	private static Map<String, SetLeggendario> set;
 	private static Map<String, Set<String>> pezzi;
 
@@ -35,11 +36,21 @@ public final class CatalogoLeggendari {
 	}
 
 	/**
-	 * Il leggendario con quella chiave.
+	 * Il leggendario con quella chiave, anche fra quelli di bottino.
 	 */
 	public static Optional<OggettoLeggendario> getLeggendario(String chiave) {
 		carica();
-		return Optional.ofNullable(leggendari.get(chiave));
+		OggettoLeggendario trovato = leggendari.get(chiave);
+		return Optional.ofNullable(trovato != null ? trovato : bottini.get(chiave));
+	}
+
+	/**
+	 * I leggendari di bottino, per chiave: li lascia un avversario e nessuna leggenda li racconta, quindi non sono fra quelli di
+	 * {@link #getTuttiILeggendari()}, che sono la riserva da cui si pescano le leggende.
+	 */
+	public static Map<String, OggettoLeggendario> getTuttiIBottini() {
+		carica();
+		return bottini;
 	}
 
 	/**
@@ -103,6 +114,16 @@ public final class CatalogoLeggendari {
 			pezziDeiSet.computeIfAbsent(chiaveSet, k -> new LinkedHashSet<>()).add(leggendario.getChiave());
 			aggiungiSlot(slotDeiSet.computeIfAbsent(chiaveSet, k -> EnumSet.noneOf(TipoSlotArtefatto.class)), leggendario);
 		}
+		Map<String, OggettoLeggendario> tuttiIBottini = new HashMap<>();
+		for (String riga : ProduttoreDiTestiCasuale.tuttiIBottiniLeggendari()) {
+			OggettoLeggendario leggendario = OggettoLeggendario.da(riga);
+			if (tuttiILeggendari.containsKey(leggendario.getChiave()) || tuttiIBottini.put(leggendario.getChiave(), leggendario) != null) {
+				throw new IllegalStateException("Leggendario ripetuto: " + leggendario.getChiave());
+			}
+			if (leggendario.getSet() != null) {
+				throw new IllegalStateException(leggendario.getChiave() + " è di bottino e non può far parte di un set");
+			}
+		}
 		for (String chiaveSet : tuttiISet.keySet()) {
 			if (pezziDeiSet.getOrDefault(chiaveSet, Collections.emptySet()).size() < 2) {
 				throw new IllegalStateException("Il set " + chiaveSet + " ha meno di due pezzi");
@@ -115,6 +136,7 @@ public final class CatalogoLeggendari {
 			pezziDeiSet.put(chiaveSet, Collections.unmodifiableSet(inOrdine));
 		}
 		leggendari = Collections.unmodifiableMap(tuttiILeggendari);
+		bottini = Collections.unmodifiableMap(tuttiIBottini);
 		pezzi = Collections.unmodifiableMap(pezziDeiSet);
 		set = Collections.unmodifiableMap(tuttiISet);
 	}

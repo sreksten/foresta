@@ -69,7 +69,7 @@ Le scoperte valgono anche per una voce ancora chiusa: la scheda le mostra solo d
 (`isVoceDelBestiarioSbloccata`, `getCaratteristicheScoperte`, `getMoltiplicatoriDiClasse`, `getAbilitaInnate`), mai dai singoli del motore.
 
 `DisplayableCanvasBestiario` (`ui/schermate`) ha a sinistra l'elenco (un `ScorrimentoVerticale`, una riga per voce con l'icona e il nome, "???" e l'icona in
-silhouette se chiusa; l'icona di chi non ne ha una è la sua immagine ridotta) e a destra la scheda della voce scelta con un clic; in alto "n/32". L'ombra del drago è
+silhouette se chiusa; l'icona è per tutte l'immagine della classe ridotta a 32 px, anche per chi ha un'icona disegnata a mano, che per ora qui non si usa) e a destra la scheda della voce scelta con un clic; in alto "n/33". L'ombra del drago è
 dietro, più tenue che nei trofei. La rotella scorre il pannello sotto il mouse (a passi piccoli e consegnati a uno o due per fotogramma, vedi
 `Finestra.passiPerScattoDellaRotella`). Le due immagini (`ImmagineBestiario`) sono composte come quella dei trofei.
 
@@ -118,7 +118,7 @@ davvero, quindi ogni voce si può sbloccare), `ScenarioBestiarioTest` (sblocchi,
 
 ## Da fare / idee aperte
 
-- Un'icona vera per il bottone, e un'icona piccola per i mostri che non ce l'hanno (oggi è l'immagine ridotta).
+- Un'icona vera per il bottone, e icone piccole disegnate per tutte le voci, da usare al posto dell'immagine ridotta (oggi per tutte è l'immagine ridotta).
 - Avvisare il giocatore quando una voce si sblocca (l'evento `InternoVoceDelBestiarioSbloccata` c'è già, la UI non lo usa).
 - Mostrare nella scheda quanti ne ha sconfitti e incontrati, e gli incantesimi dei mostri con un repertorio (`getRepertorioIncantesimi`).
 - Se i non combattenti o l'`OMBRAFIAMMA` dovranno avere una voce, e come si sbloccano.
