@@ -111,6 +111,7 @@ class ScenarioLaFalceDelTristoMietitoreTest {
                     String.valueOf(partita.testi()));
             assertFalse(partita.testi().stream().anyMatch(t -> t.contains("Aprendo il cofano")), "nelle rovine del necromante non c'è nessun oggetto");
             assertTrue(missione.isCompleta(), partita.stato() + " " + missione.getPassoCorrente() + " " + partita.testi());
+            assertTrue(partita.testi().stream().noneMatch(t -> t.contains("_")), "un testo con un trattino basso: " + partita.testi().stream().filter(t -> t.contains("_")).collect(Collectors.toList()));
             String falce = Leggendari.con(LaFalceDelTristoMietitore.CHIAVE_DELLA_FALCE).getNome();
             assertTrue(partita.gruppo().getInventario().stream().anyMatch(a -> a.getTipo() == TipoArtefatto.FALCE && falce.equals(a.getNome())));
         }

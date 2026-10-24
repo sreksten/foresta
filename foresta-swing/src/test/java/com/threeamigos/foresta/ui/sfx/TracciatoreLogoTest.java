@@ -157,4 +157,51 @@ class TracciatoreLogoTest {
         BufferedImage vuota = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB);
         assertThrows(IllegalStateException.class, () -> TracciatoreLogo.costruttore(vuota).costruisci());
     }
+
+    private static BufferedImage leggi(String nome) throws IOException {
+        return ImageIO.read(TracciatoreLogoTest.class.getResource("/com/threeamigos/foresta/img/" + nome));
+    }
+
+    private static boolean nero(int argb) {
+        return (argb >>> 24) > 0 && ((argb >> 16) & 0xff) < 40 && ((argb >> 8) & 0xff) < 40 && (argb & 0xff) < 40;
+    }
+
+    @Test
+    void nelLogoSenzaOmbraTrovaLeStesseQuattroFormeEIlLogoCompletoSiMostraAlSuoPosto() throws IOException {
+        BufferedImage scritta = leggi("3AM_logo_senza_ombra.gif");
+        BufferedImage completo = leggi("3AM_logo_completo.gif");
+        TracciatoreLogo effetto = TracciatoreLogo.costruttore(scritta).immagineDaMostrare(completo).costruisci();
+        assertTrue(effetto.getDiagnostica().get(0).startsWith("4 forma/e rilevate (3 contorni esterni, 1 buchi interni)"),
+                effetto.getDiagnostica().get(0));
+        assertEquals(completo.getWidth(), effetto.getLarghezza());
+        assertEquals(completo.getHeight(), effetto.getAltezza());
+    }
+
+    @Test
+    void laScrittaDelLogoSenzaOmbraStaEsattamenteSopraQuellaDelLogoCompleto() throws IOException {
+        BufferedImage scritta = leggi("3AM_logo_senza_ombra.gif");
+        BufferedImage completo = leggi("3AM_logo_completo.gif");
+        assertEquals(completo.getWidth(), scritta.getWidth());
+        assertEquals(completo.getHeight(), scritta.getHeight());
+        int neri = 0;
+        int sovrapposti = 0;
+        for (int y = 0; y < scritta.getHeight(); y++) {
+            for (int x = 0; x < scritta.getWidth(); x++) {
+                if (nero(scritta.getRGB(x, y))) {
+                    neri++;
+                    if (nero(completo.getRGB(x, y))) {
+                        sovrapposti++;
+                    }
+                }
+            }
+        }
+        assertTrue(neri > 0);
+        assertTrue(sovrapposti >= neri * 0.99, sovrapposti + " pixel neri su " + neri + " stanno anche sul logo completo");
+    }
+
+    @Test
+    void limmagineDaMostrareDeveAvereLaDimensioneDelLogoDaTracciare() {
+        BufferedImage altra = new BufferedImage(logo3AM.getWidth() + 1, logo3AM.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        assertThrows(IllegalArgumentException.class, () -> TracciatoreLogo.costruttore(logo3AM).immagineDaMostrare(altra).costruisci());
+    }
 }

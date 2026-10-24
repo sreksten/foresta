@@ -45,6 +45,10 @@ public class ImageCache {
 	// Le risorse di cui serve la dimensione prima di caricare le immagini (vedi ForestaUI.calcolaDimensioniFinestra):
 	// sono costanti, quindi usarle non inizializza ImageCache
 	public static final String RISORSA_LOGO_3AM = "Logo3AM.png";
+	// Il logo iniziale: quello completo, con la pergamena e gli uccelli, si mostra; da quello senza ombra, con la sola scritta nera
+	// esattamente nello stesso posto, si traccia il contorno (vedi TracciatoreLogo.Costruttore.immagineDaMostrare). Si usano senza zoom
+	public static final String RISORSA_LOGO_3AM_COMPLETO = "3AM_logo_completo.gif";
+	public static final String RISORSA_LOGO_3AM_SENZA_OMBRA = "3AM_logo_senza_ombra.gif";
 	public static final String RISORSA_CORNICE_GRANDE = "fondi/CorniceGrande.gif";
 	public static final String RISORSA_CORNICE_MAPPA = "fondi/CorniceMappa.gif";
 	// Non si disegna più: serve solo a ForestaUI per le dimensioni della finestra

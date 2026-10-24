@@ -52,6 +52,13 @@ import java.util.List;
  *    sempre l'immagine ORIGINALE per intero, sfondo compreso: la regione
  *    serve solo a decidere DOVE cercare il logo, mai cosa disegnare.
  *
+ * 1ter) IMMAGINE DA MOSTRARE (opzionale, {@link Costruttore#immagineDaMostrare})
+ *    -----------------------------------------------------------------------
+ *    Se il logo da rivelare è un disegno ricco (la scritta nera dentro una pergamena con uccelli e facce) e la scritta
+ *    sta in un'altra immagine, a sé, della stessa dimensione e con la scritta ESATTAMENTE nello stesso posto, i
+ *    contorni si cercano su quella (il {@code logo} del costruttore, con la sua trasparenza) e la resa, torcia compresa,
+ *    usa l'altra. Così non serve nessuna regione e nessun pixel scuro del resto del disegno finisce fra i contorni.
+ *
  * 2) TRACCIAMENTO DEL CONTORNO ESTERNO (tracciamento del bordo di Moore, "Moore-Neighbor")
  *    -----------------------------------------------------------------------
  *    Un logo puo' contenere piu' forme non collegate tra loro (es. lettere
@@ -268,6 +275,7 @@ public final class TracciatoreLogo {
     //  L'effetto
     // =========================================================================
 
+    // L'immagine che si disegna: quella da cui si traccia, o l'altra che il costruttore ha chiesto di mostrare al suo posto
     private final BufferedImage logo;
     private final List<Corridore> corridori;
     private final int fotogrammiPerGiro;
@@ -284,7 +292,7 @@ public final class TracciatoreLogo {
 
     private TracciatoreLogo(Costruttore c, List<Corridore> corridori, int fotogrammiPerGiro, int raggioTorcia,
                             List<String> diagnostica) {
-        this.logo = c.logo;
+        this.logo = c.daMostrare != null ? c.daMostrare : c.logo;
         this.corridori = corridori;
         this.fotogrammiPerGiro = fotogrammiPerGiro;
         this.fotogrammiDissolvenza = c.fotogrammiDissolvenza;
@@ -390,6 +398,7 @@ public final class TracciatoreLogo {
         private final BufferedImage logo;
         private PredicatoSfondo sfondo;
         private Rectangle regione;
+        private BufferedImage daMostrare;
         private final List<SpecificaCorridore> corridoriEspliciti = new ArrayList<>();
         private List<Verso> versi = Collections.emptyList();
         private List<Integer> ritardi = Collections.emptyList();
@@ -423,6 +432,15 @@ public final class TracciatoreLogo {
         /** Un criterio di sfondo qualsiasi. */
         public Costruttore sfondo(PredicatoSfondo sfondo) {
             this.sfondo = Objects.requireNonNull(sfondo, "sfondo");
+            return this;
+        }
+
+        /**
+         * Si disegna questa immagine al posto del logo da cui si traccia (vedi punto 1ter): deve avere la stessa dimensione, con il
+         * disegno da tracciare esattamente nello stesso posto. Null per disegnare il logo stesso.
+         */
+        public Costruttore immagineDaMostrare(BufferedImage daMostrare) {
+            this.daMostrare = daMostrare;
             return this;
         }
 
@@ -537,6 +555,10 @@ public final class TracciatoreLogo {
          */
         public TracciatoreLogo costruisci() {
             List<String> diagnostica = new ArrayList<>();
+            if (daMostrare != null && (daMostrare.getWidth() != logo.getWidth() || daMostrare.getHeight() != logo.getHeight())) {
+                throw new IllegalArgumentException("l'immagine da mostrare (" + daMostrare.getWidth() + "x" + daMostrare.getHeight()
+                        + ") deve avere la dimensione del logo da tracciare (" + logo.getWidth() + "x" + logo.getHeight() + ")");
+            }
             PredicatoSfondo predicatoSfondo = sfondo;
             if (predicatoSfondo == null) {
                 if (!logo.getColorModel().hasAlpha()) {

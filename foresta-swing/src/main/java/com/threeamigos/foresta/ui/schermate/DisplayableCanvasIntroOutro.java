@@ -36,10 +36,10 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	// dissolvenza ai bordi
 	private static final double VELOCITA = 30;
 	private static final int FASCIA = 40;
-	// I loghi compaiono quando la storia è salita almeno tanto sopra di loro
+	// Il logo della Foresta compare quando la storia è salita almeno tanto sopra di lui
 	private static final int MARGINE_LOGHI = 20;
-	// Fra la cima del logo 3AM e quella del logo della Foresta
-	private static final int DISTANZA_LOGHI = 60;
+	// Il logo 3AM sta in basso a destra, a questa distanza dai due bordi
+	private static final int MARGINE_LOGO_3AM = 20;
 	// L'alone nero attorno alle lettere della storia e ai loghi, perché si vedano sullo sfondo
 	private static final int RAGGIO_ALONE = 6;
 	private static final double SECONDI_DISSOLVENZA = 1;
@@ -325,11 +325,12 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 			scorrimento.avanza(secondi, VELOCITA);
 		}
 		secondiFase += secondi;
-		// I loghi arrivano quando la storia non ci finirebbe sopra, e restano un poco dopo che è uscita; il loro
-		// centro sta a un terzo dello schermo
+		// Il logo della Foresta arriva quando la storia non ci finirebbe sopra, e resta un poco dopo che è uscita; il suo
+		// centro sta a un terzo dello schermo. Il logo 3AM sta in basso a destra, dove la storia non passa mai quando arriva
+		// il logo della Foresta, e compare e svanisce insieme a lui
 		BufferedImage logo3AM = ImageCache.logo3AM;
 		BufferedImage logoForesta = ImageCache.logoForesta;
-		int cimaLoghi = height / 3 - (DISTANZA_LOGHI + logoForesta.getHeight()) / 2;
+		int cimaLoghi = height / 3 - logoForesta.getHeight() / 2;
 		if (secondiLoghi < 0 && scorrimento.getFondo() <= cimaLoghi - MARGINE_LOGHI) {
 			secondiLoghi = 0;
 		}
@@ -353,10 +354,10 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 				logo3AMConAlone = TestoGrande.conAlone(logo3AM, RAGGIO_ALONE);
 				logoForestaConAlone = TestoGrande.conAlone(logoForesta, RAGGIO_ALONE);
 			}
-			disegnaConOpacita(graphics, logo3AMConAlone, ((width - logo3AM.getWidth()) >> 1) - RAGGIO_ALONE,
-					cimaLoghi - RAGGIO_ALONE, opacita);
+			disegnaConOpacita(graphics, logo3AMConAlone, width - MARGINE_LOGO_3AM - logo3AM.getWidth() - RAGGIO_ALONE,
+					height - MARGINE_LOGO_3AM - logo3AM.getHeight() - RAGGIO_ALONE, opacita);
 			disegnaConOpacita(graphics, logoForestaConAlone, ((width - logoForesta.getWidth()) >> 1) - RAGGIO_ALONE,
-					cimaLoghi + DISTANZA_LOGHI - RAGGIO_ALONE, opacita);
+					cimaLoghi - RAGGIO_ALONE, opacita);
 		}
 		if (uscita >= 1) {
 			passaA(Fase.CLASSIFICA);

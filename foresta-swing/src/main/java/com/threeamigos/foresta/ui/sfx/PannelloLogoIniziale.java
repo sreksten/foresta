@@ -4,13 +4,12 @@ package com.threeamigos.foresta.ui.sfx;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 
 /**
- * Il primo contenuto della finestra, nello stato LOGO_INIZIALE: il logo 3AM tracciato una volta dal
- * {@link TracciatoreLogo}, centrato sulla finestra, su fondo nero: le scie svaniscono mentre il logo compare, poi il
+ * Il primo contenuto della finestra, nello stato LOGO_INIZIALE: il logo 3AM completo, di cui il
+ * {@link TracciatoreLogo} traccia una volta la scritta (da un'immagine senza ombra, con la scritta nello stesso punto), centrato sulla finestra, su fondo nero: le scie svaniscono mentre il logo compare, poi il
  * logo resta da solo per due secondi e svanisce. Non usa ImageCache: il logo lo carica da se',
  * mentre le altre immagini si caricano in background.
  */
@@ -23,10 +22,13 @@ public final class PannelloLogoIniziale extends JComponent {
 	private final TracciatoreLogo effetto;
 
 	public PannelloLogoIniziale(int larghezza, int altezza) {
-		BufferedImage logo = BufferedImageBuilder.buildBufferedImage(ImageCache.RISORSA_LOGO_3AM, LivelloDiZoom.valore());
+		// Il disegno si mostra intero, ma i contorni si cercano sulla sola scritta, che sta nello stesso punto dell'altra immagine
+		BufferedImage scritta = BufferedImageBuilder.buildBufferedImage(ImageCache.RISORSA_LOGO_3AM_SENZA_OMBRA);
+		BufferedImage logo = BufferedImageBuilder.buildBufferedImage(ImageCache.RISORSA_LOGO_3AM_COMPLETO);
 		// Lo sfondo lo dipinge il pannello, su tutta la finestra. Le scie svaniscono mentre il logo compare, il logo
 		// resta da solo per due secondi e poi svanisce anche lui: si passa al gioco da una finestra nera.
-		effetto = TracciatoreLogo.costruttore(logo)
+		effetto = TracciatoreLogo.costruttore(scritta)
+				.immagineDaMostrare(logo)
 				.coloreSfondo(null)
 				.sfumaScie(true)
 				.fotogrammiPausa(PAUSA_MS / TracciatoreLogo.INTERVALLO_FOTOGRAMMA_MS)
