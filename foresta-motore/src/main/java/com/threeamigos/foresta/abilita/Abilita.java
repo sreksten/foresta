@@ -6,7 +6,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 
 /**
- * Una capacità innata del Chierico o del Druido: costa MAGIA, non consuma pergamene. Non è fra le
+ * Una capacità innata di una classe (Chierico, Druido, Sacerdote, Mago, Elfo): costa MAGIA, non consuma pergamene. Non è fra le
  * {@link com.threeamigos.foresta.tipi.TipoIncantesimo} perché non è una pergamena: non si compra, non si trova e non si conta nell'inventario del
  * gruppo. Chi può usarla e quando si decide in {@link AbilitaInnate}.
  */

@@ -7,8 +7,8 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 
 /**
- * Il mago giocante, al maschile: umanoide, corrompibile e amichevole. Vive di magia: ha il dardo arcano come incantesimo
- * innato, che non consuma pergamene. Il femminile è la {@link Maga}.
+ * Il mago giocante, al maschile: umanoide, corrompibile e amichevole. Vive di magia: ha il dardo arcano come abilità
+ * innata, che non consuma pergamene. Il femminile è la {@link Maga}.
  */
 public class Mago extends PersonaggioBase implements Personaggio {
 

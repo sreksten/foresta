@@ -957,7 +957,7 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
-	 * Un'abilità innata di Chierico o Druido: costa MAGIA, non consuma pergamene, occupa il turno e l'avversario risponde (vedi
+	 * Un'abilità innata (di Chierico, Druido, Sacerdote, Mago o Elfo): costa MAGIA, non consuma pergamene, occupa il turno e l'avversario risponde (vedi
 	 * {@link AbilitaInnate}).
 	 *
 	 * @return lo stato in cui passare se lo scontro finisce (avversari tutti morti o gioco perso), altrimenti null

@@ -8,7 +8,7 @@ package com.threeamigos.foresta.tipi;
 public final class CostantiAbilitaInnate {
 
     /**
-     * Le abilità innate di Chierico e Druido (vedi TipoAbilita): costano MAGIA, non consumano pergamene
+     * Le abilità innate di Chierico, Druido, Sacerdote, Mago ed Elfo (vedi TipoAbilita): costano MAGIA, non consumano pergamene
      */
     public static final int ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO = 4;
 

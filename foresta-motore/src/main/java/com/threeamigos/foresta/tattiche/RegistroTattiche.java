@@ -74,7 +74,7 @@ public final class RegistroTattiche {
 
 	/**
 	 * Le azioni che un personaggio di quella classe può avere nella tattica: tutte tranne quelle che sono una caratteristica di altre classi (i canti del
-	 * bardo, il dardo arcano di maghi ed elfi, l'Alba sacra dei sacerdoti, le abilità di chierico e druido) e quelle solo dei mostri. Gli incantesimi in generale si lanciano da pergamena,
+	 * bardo, il dardo arcano di maghi ed elfi, l'Alba sacra e la Luce divina dei sacerdoti, le abilità di chierico e druido) e quelle solo dei mostri. Gli incantesimi in generale si lanciano da pergamena,
 	 * quindi li può avere chiunque. I canti sono di chi sa cantare; l'Urlo della Banshee lo si impara, ma resta fra le azioni (se non si conosce ancora, i requisiti lo saltano).
 	 */
 	public static java.util.Set<TipoAzione> azioniPossibili(TipoPersonaggio classe) {

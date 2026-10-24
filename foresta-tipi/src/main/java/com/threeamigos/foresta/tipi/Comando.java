@@ -60,7 +60,7 @@ public enum Comando {
 	PERSONAGGIO_8,
 
 	// Scelta dell'incantesimo da formulare:
-	// L'incantesimo innato di Mago ed Elfo, che non consuma pergamene e che è disponibile solo a questi
+	// L'abilità innata di Mago ed Elfo, che non consuma pergamene e che è disponibile solo a questi
 	DARDO_ARCANO,
 
 	// I canti innati del Bardo e della Cantastorie, che non consumano pergamene e che sono disponibili solo a questi
