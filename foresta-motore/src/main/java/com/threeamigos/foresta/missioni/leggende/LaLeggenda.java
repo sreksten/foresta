@@ -18,7 +18,7 @@ import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -253,7 +253,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 		Racconto racconto = nuovoRacconto();
 		// Si dice subito di quale oggetto si parla, se la leggenda non lo fa da sé
 		if (!leggendario.laLeggendaNominaLOggetto()) {
-			racconto.narra(ProduttoreDiTestiCasuale.introduzioneDellaLeggenda(leggendario.getNomeBreve()));
+			racconto.narra(ProduttoreDiArtefattiCasuale.introduzioneDellaLeggenda(leggendario.getNomeBreve()));
 		}
 		// Se è un altro pezzo di un set già cominciato, il narratore lo dice subito
 		PescaLeggendaria.battutaDelSet(leggendario, giaPescati()).ifPresent(racconto::narra);

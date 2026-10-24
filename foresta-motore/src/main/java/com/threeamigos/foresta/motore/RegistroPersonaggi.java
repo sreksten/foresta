@@ -5,7 +5,7 @@ import com.threeamigos.foresta.locazioni.Bottega;
 import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -50,8 +50,8 @@ public class RegistroPersonaggi {
 		aggiungiPersonaggio(new Mago("Merlin", 1));
 		aggiungiPersonaggio(new Maga("LeFey", 1));
 
-		aggiungiPersonaggio(new Sacerdote(ProduttoreDiTestiCasuale.nomeSacerdote(), 1));
-		aggiungiPersonaggio(new Sacerdotessa(ProduttoreDiTestiCasuale.nomeSacerdotessa(), 1));
+		aggiungiPersonaggio(new Sacerdote(ProduttoreDiMissioniCasuale.nomeSacerdote(), 1));
+		aggiungiPersonaggio(new Sacerdotessa(ProduttoreDiMissioniCasuale.nomeSacerdotessa(), 1));
 
 		aggiungiPersonaggio(new Chierico("Frederick", 1));
 		aggiungiPersonaggio(new Chierica("Elowen", 1));
@@ -172,7 +172,7 @@ public class RegistroPersonaggi {
 			if (noto.getProduzioneNomi() == null) {
 				throw new IllegalStateException(noto + " non ha un nome da nomi.txt: lo decide chi lo crea");
 			}
-			residente = new ResidenteMD(ProduttoreDiTestiCasuale.nomeDiPersonaggioNoto(noto.getProduzioneNomi()),
+			residente = new ResidenteMD(ProduttoreDiMissioniCasuale.nomeDiPersonaggioNoto(noto.getProduzioneNomi()),
 					noto.isConProvenienza() ? provenienza : null, noto.getTipo());
 			getRegistroMD().aggiungiResidente(chiave, residente);
 		}

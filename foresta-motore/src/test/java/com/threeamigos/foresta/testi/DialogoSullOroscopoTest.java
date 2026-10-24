@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.testi;
 
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale.DialogoSullOroscopo;
+import com.threeamigos.foresta.testi.ProduttoreDiOroscopiCasuale.DialogoSullOroscopo;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -19,11 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Il capo chiede di una cosa che l'alchimista ha appena citato nell'oroscopo, con le domande accordate al genere e al numero
- * (vedi oroscopo.txt e ProduttoreDiTestiCasuale.dialogoSullOroscopo).
+ * (vedi oroscopo.txt e ProduttoreDiOroscopiCasuale.dialogoSullOroscopo).
  */
 class DialogoSullOroscopoTest {
 
-	private static final String GRAMMATICA = "/com/threeamigos/foresta/motore/oroscopo.txt";
+	private static final String GRAMMATICA = "/com/threeamigos/foresta/testi/oroscopo.txt";
 	private static final Pattern ARTICOLO = Pattern.compile("^(il|lo|la|i|gli|le|l') ?");
 
 	private static String grammatica() throws IOException {
@@ -52,7 +52,7 @@ class DialogoSullOroscopoTest {
 		boolean generica = false;
 		boolean sulTema = false;
 		for (int i = 0; i < 500; i++) {
-			DialogoSullOroscopo dialogo = ProduttoreDiTestiCasuale.dialogoSullOroscopo();
+			DialogoSullOroscopo dialogo = ProduttoreDiOroscopiCasuale.dialogoSullOroscopo();
 			assertFalse(dialogo.getOroscopo().isEmpty());
 			assertFalse(dialogo.getOroscopo().contains("/"), dialogo.getOroscopo());
 			for (String testo : new String[] {dialogo.getDomanda(), dialogo.getRisposta()}) {

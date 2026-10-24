@@ -9,7 +9,7 @@ import com.threeamigos.foresta.missioni.incarichi.IlRituale;
 import com.threeamigos.foresta.missioni.richieste.RitualeRichiesto;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoMissione;
@@ -45,7 +45,7 @@ class ScenarioRitualeTest {
         Set<String> chiavi = new HashSet<>();
         Set<TipoMissione> tipi = EnumSet.noneOf(TipoMissione.class);
         for (int i = 0; i < 600; i++) {
-            RitualeRichiesto rituale = RitualeRichiesto.da(ProduttoreDiTestiCasuale.rigaDiMissioni("RITUALE"));
+            RitualeRichiesto rituale = RitualeRichiesto.da(ProduttoreDiMissioniCasuale.rigaDiMissioni("RITUALE"));
             chiavi.add(rituale.getChiave());
             tipi.add(rituale.getTipo());
         }

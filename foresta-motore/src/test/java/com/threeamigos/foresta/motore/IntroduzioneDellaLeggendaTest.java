@@ -8,7 +8,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
 
 /**
  * La prima battuta della leggenda dice di quale oggetto si parla, a meno che la prima battuta dell'oggetto non lo
@@ -20,15 +20,15 @@ class IntroduzioneDellaLeggendaTest {
     void ogniIntroduzioneNominaLOggettoConLaPreposizioneGiusta() {
         Set<String> varianti = new HashSet<>();
         for (int i = 0; i < 300; i++) {
-            String frase = ProduttoreDiTestiCasuale.introduzioneDellaLeggenda("lo Scudo Fiscale");
+            String frase = ProduttoreDiArtefattiCasuale.introduzioneDellaLeggenda("lo Scudo Fiscale");
             assertTrue(frase.contains("Scudo Fiscale"), frase);
             assertFalse(frase.contains("di lo ") || frase.contains("[") || frase.contains("oggetto leggendario"), frase);
             varianti.add(frase);
         }
         assertTrue(varianti.size() >= 6, "le frasi devono variare: " + varianti);
         assertTrue(varianti.stream().anyMatch(f -> f.contains("dello Scudo Fiscale")), String.valueOf(varianti));
-        assertTrue(ProduttoreDiTestiCasuale.introduzioneDellaLeggenda("l'Elmo del Pensiero Laterale").contains("Elmo del Pensiero Laterale"));
-        assertTrue(ProduttoreDiTestiCasuale.introduzioneDellaLeggenda("gli Scarponi Chiodati di RomyJona").contains("Scarponi"));
+        assertTrue(ProduttoreDiArtefattiCasuale.introduzioneDellaLeggenda("l'Elmo del Pensiero Laterale").contains("Elmo del Pensiero Laterale"));
+        assertTrue(ProduttoreDiArtefattiCasuale.introduzioneDellaLeggenda("gli Scarponi Chiodati di RomyJona").contains("Scarponi"));
     }
 
     @Test

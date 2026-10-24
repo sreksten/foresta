@@ -10,7 +10,7 @@ import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.richieste.MaterialeRichiesto;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 /**
@@ -69,7 +69,7 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 	}
 
 	public MaterialeRichiesto getMateriale() {
-		return MaterialeRichiesto.da(parametro(MATERIALE, () -> ProduttoreDiTestiCasuale.materialeRichiesto(mandante.getProduzione())));
+		return MaterialeRichiesto.da(parametro(MATERIALE, () -> ProduttoreDiMissioniCasuale.materialeRichiesto(mandante.getProduzione())));
 	}
 
 	/**

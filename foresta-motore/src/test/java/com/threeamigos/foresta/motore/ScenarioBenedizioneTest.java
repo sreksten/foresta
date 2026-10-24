@@ -27,7 +27,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 
 /**
  * La benedizione: in una locanda un sacerdote chiede un favore, che è una missione secondaria; fatto il favore, in un
@@ -57,7 +57,7 @@ class ScenarioBenedizioneTest {
     void ogniBenedizioneSiLegge() {
         Set<String> chiavi = new HashSet<>();
         for (int i = 0; i < 200; i++) {
-            BenedizioneRichiesta benedizione = BenedizioneRichiesta.da(ProduttoreDiTestiCasuale.rigaDiMissioni("BENEDIZIONE"));
+            BenedizioneRichiesta benedizione = BenedizioneRichiesta.da(ProduttoreDiMissioniCasuale.rigaDiMissioni("BENEDIZIONE"));
             assertNotNull(benedizione.nuovoModificatore());
             chiavi.add(benedizione.getChiave());
         }

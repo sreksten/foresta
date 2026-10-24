@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
 
 /**
  * Tutti i leggendari e i set leggendari di leggendari.txt, per chiave. I pezzi di un set sono i leggendari che lo
@@ -90,7 +90,7 @@ public final class CatalogoLeggendari {
 			return;
 		}
 		Map<String, SetLeggendario> tuttiISet = new HashMap<>();
-		for (String riga : ProduttoreDiTestiCasuale.tuttiISetLeggendari()) {
+		for (String riga : ProduttoreDiArtefattiCasuale.tuttiISetLeggendari()) {
 			SetLeggendario letto = SetLeggendario.da(riga);
 			if (tuttiISet.put(letto.getChiave(), letto) != null) {
 				throw new IllegalStateException("Set leggendario ripetuto: " + letto.getChiave());
@@ -99,7 +99,7 @@ public final class CatalogoLeggendari {
 		Map<String, OggettoLeggendario> tuttiILeggendari = new HashMap<>();
 		Map<String, Set<String>> pezziDeiSet = new HashMap<>();
 		Map<String, Set<TipoSlotArtefatto>> slotDeiSet = new HashMap<>();
-		for (String riga : ProduttoreDiTestiCasuale.tuttiGliOggettiLeggendari()) {
+		for (String riga : ProduttoreDiArtefattiCasuale.tuttiGliOggettiLeggendari()) {
 			OggettoLeggendario leggendario = OggettoLeggendario.da(riga);
 			if (tuttiILeggendari.put(leggendario.getChiave(), leggendario) != null) {
 				throw new IllegalStateException("Leggendario ripetuto: " + leggendario.getChiave());
@@ -115,7 +115,7 @@ public final class CatalogoLeggendari {
 			aggiungiSlot(slotDeiSet.computeIfAbsent(chiaveSet, k -> EnumSet.noneOf(TipoSlotArtefatto.class)), leggendario);
 		}
 		Map<String, OggettoLeggendario> tuttiIBottini = new HashMap<>();
-		for (String riga : ProduttoreDiTestiCasuale.tuttiIBottiniLeggendari()) {
+		for (String riga : ProduttoreDiArtefattiCasuale.tuttiIBottiniLeggendari()) {
 			OggettoLeggendario leggendario = OggettoLeggendario.da(riga);
 			if (tuttiILeggendari.containsKey(leggendario.getChiave()) || tuttiIBottini.put(leggendario.getChiave(), leggendario) != null) {
 				throw new IllegalStateException("Leggendario ripetuto: " + leggendario.getChiave());

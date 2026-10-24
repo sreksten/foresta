@@ -19,7 +19,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 
 /**
  * Il torneo: in città qualcuno lo bandisce, con in palio un leggendario; nella lizza segnata sulla mappa si combattono
@@ -37,7 +37,7 @@ class ScenarioTorneoTest {
     void ogniTorneoSiLegge() {
         Set<String> chiavi = new HashSet<>();
         for (int i = 0; i < 100; i++) {
-            TorneoRichiesto torneo = TorneoRichiesto.da(ProduttoreDiTestiCasuale.rigaDiMissioni(IlTorneo.TORNEO));
+            TorneoRichiesto torneo = TorneoRichiesto.da(ProduttoreDiMissioniCasuale.rigaDiMissioni(IlTorneo.TORNEO));
             assertEquals(TorneoRichiesto.SFIDANTI_PRIMA_DELLA_FINALE, torneo.getSfidanti().size());
             assertFalse(torneo.pescaNomeDelCampione().isEmpty());
             chiavi.add(torneo.getChiave());

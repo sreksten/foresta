@@ -21,7 +21,7 @@ import com.threeamigos.foresta.oggetti.ModificatoreDelTesto;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
@@ -952,7 +952,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			List<Artefatto> restituiti = RegoleIncantatura.riprogramma(banco);
 			subMonete(costo);
 			restituiti.forEach(this::addArtefatto);
-			BusEventi.pubblica(new NotificaAvvisoIncantatura(ProduttoreDiTestiCasuale.erroreDiRiprogrammazione()));
+			BusEventi.pubblica(new NotificaAvvisoIncantatura(ProduttoreDiArtefattiCasuale.erroreDiRiprogrammazione()));
 			return Optional.empty();
 		}
 		Artefatto incantato = RegoleIncantatura.fondi(banco, nomeProprio);

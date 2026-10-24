@@ -2,7 +2,7 @@ package com.threeamigos.foresta.missioni.incarichi;
 
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -30,14 +30,14 @@ public class IlRapimento extends LaLiberazione {
 	 * Il nome dell'ostaggio, da missioni.txt.
 	 */
 	public String getOstaggio() {
-		return parametro(OSTAGGIO, ProduttoreDiTestiCasuale::nomeOstaggio);
+		return parametro(OSTAGGIO, ProduttoreDiMissioniCasuale::nomeOstaggio);
 	}
 
 	/**
 	 * Il nome del capo dei rapitori, da missioni.txt.
 	 */
 	public String getCapobanda() {
-		return parametro(CAPOBANDA, ProduttoreDiTestiCasuale::nomeCapobanda);
+		return parametro(CAPOBANDA, ProduttoreDiMissioniCasuale::nomeCapobanda);
 	}
 
 	/**

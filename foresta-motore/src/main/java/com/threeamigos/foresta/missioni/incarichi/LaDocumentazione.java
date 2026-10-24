@@ -14,7 +14,7 @@ import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta.Indizio;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class LaDocumentazione extends IncaricoInCitta {
 	}
 
 	public DocumentazioneRichiesta getDocumentazione() {
-		return DocumentazioneRichiesta.da(parametro(DOCUMENTAZIONE, () -> ProduttoreDiTestiCasuale.rigaDiMissioni(DOCUMENTAZIONE)));
+		return DocumentazioneRichiesta.da(parametro(DOCUMENTAZIONE, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni(DOCUMENTAZIONE)));
 	}
 
 	/**

@@ -1,4 +1,4 @@
-// Le frasi della sfida a carta, forbici e sasso (vedi carta_forbici_sasso.md e ProduttoreDiTestiCasuale.fraseDiSfida e
+// Le frasi della sfida a carta, forbici e sasso (vedi carta_forbici_sasso.md e ProduttoreDiSfideCasuale.fraseDiSfida e
 // le altre): quello che dice l'avversario quando sfida il capo del gruppo, quando perde, quando vince e quando, alla
 // terza sfida persa, lo manda al torneo. E i nomi dei leggendari costruiti al volo per la ricompensa della missione
 // La sfida dei campioni, quando il catalogo non ne ha più (vedi LaSfidaDeiCampioni).

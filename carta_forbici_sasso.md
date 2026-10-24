@@ -19,7 +19,7 @@ la spegne, senza nemmeno tirare il dado.
 | La partita a tre mani vinte | `motore/PartitaCartaForbiciSasso` |
 | Innesco, stato, esito | `locazioni/LocazioneBase` (`StatoLocazione.SFIDA_CARTA_FORBICI_SASSO`, `iniziaLaSfida`, `giocaUnaMano`, `concludiLaSfida`) |
 | Il riquadro | `ui/riquadri/DisplayableCanvasRiquadroSfida`, evento `eventi/interni/InternoSfidaCartaForbiciSasso` |
-| Le frasi | `motore/sfide.txt`, `ProduttoreDiTestiCasuale.fraseDiSfida` e le altre |
+| Le frasi | `testi/sfide.txt`, `ProduttoreDiSfideCasuale.fraseDiSfida` e le altre |
 | La missione | `missioni/storie/LaSfidaDeiCampioni`, `missioni/storie/IlCampione` |
 | Il trofeo | `TipoTrofeo.RE_DI_CARTA_FORBICI_E_SASSO`, `ClasseTrofeo` |
 
@@ -106,8 +106,8 @@ missione è una `ConLeggendario`); se il catalogo è finito, uno costruito al vo
 
 ## 4. I testi
 
-`motore/sfide.txt` (formato di `GrammarBean`) ha le produzioni `SFIDA`, `GIOCATORE_VINCE`, `GIOCATORE_PERDE`, `TORNEO` e
-`NOME_LEGGENDARIO_DEI_CAMPIONI`; `ProduttoreDiTestiCasuale` ha un metodo per ognuna.
+`testi/sfide.txt` (formato di `GrammarBean`) ha le produzioni `SFIDA`, `GIOCATORE_VINCE`, `GIOCATORE_PERDE`, `TORNEO` e
+`NOME_LEGGENDARIO_DEI_CAMPIONI`; `ProduttoreDiSfideCasuale` ha un metodo per ognuna.
 
 ## 5. I test
 

@@ -6,7 +6,7 @@ import com.threeamigos.foresta.missioni.incarichi.LaSorveglianza;
 import com.threeamigos.foresta.missioni.richieste.SorveglianzaRichiesta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoMissione;
@@ -39,7 +39,7 @@ class ScenarioSorveglianzaTest {
         Set<String> chiavi = new HashSet<>();
         Set<TipoMissione> tipi = EnumSet.noneOf(TipoMissione.class);
         for (int i = 0; i < 300; i++) {
-            SorveglianzaRichiesta sorveglianza = SorveglianzaRichiesta.da(ProduttoreDiTestiCasuale.rigaDiMissioni("SORVEGLIANZA"));
+            SorveglianzaRichiesta sorveglianza = SorveglianzaRichiesta.da(ProduttoreDiMissioniCasuale.rigaDiMissioni("SORVEGLIANZA"));
             if (!sorveglianza.isConCapo()) {
                 assertFalse(sorveglianza.getRiga().contains("%CAPO%"), sorveglianza.getRiga());
             }

@@ -10,7 +10,7 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -37,7 +37,7 @@ public class LaTagliaSullaBanda extends IncaricoInCitta {
 	 * Il nome del capobanda, da missioni.txt.
 	 */
 	public String getCapobanda() {
-		return parametro(CAPOBANDA, ProduttoreDiTestiCasuale::nomeCapobanda);
+		return parametro(CAPOBANDA, ProduttoreDiMissioniCasuale::nomeCapobanda);
 	}
 
 	/**

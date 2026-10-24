@@ -21,7 +21,7 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -55,7 +55,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	}
 
 	public TorneoRichiesto getTorneo() {
-		return TorneoRichiesto.da(parametro(TORNEO, () -> ProduttoreDiTestiCasuale.rigaDiMissioni(TORNEO)));
+		return TorneoRichiesto.da(parametro(TORNEO, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni(TORNEO)));
 	}
 
 	/**

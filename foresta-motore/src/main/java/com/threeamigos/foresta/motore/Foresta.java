@@ -14,7 +14,8 @@ import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.logger.Logger;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiLocandeCasuale;
+import com.threeamigos.foresta.testi.ProduttoriDiTesti;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -148,7 +149,7 @@ public class Foresta {
 	 */
 	static void reimposta() {
 		// Reset produzioni one-shot (nomi locande, fiabe, oroscopi) per la nuova partita
-		ProduttoreDiTestiCasuale.resetProduzioni();
+		ProduttoriDiTesti.resetProduzioni();
 
 		RegistroPersonaggi.reimposta();
 		LineaTemporale.reimposta();
@@ -171,7 +172,7 @@ public class Foresta {
 			}
 		}
 		int numeroLocandeMax = Math.max(RegistroPersonaggi.getNumeroPersonaggiDisponibili(), (getDimensioneX() + getDimensioneY()) >> 2);
-		List<ProduttoreDiTestiCasuale.DatiLocanda> poolDatiLocanda = ProduttoreDiTestiCasuale.getDatiLocanda(numeroCitta + numeroLocandeMax);
+		List<ProduttoreDiLocandeCasuale.DatiLocanda> poolDatiLocanda = ProduttoreDiLocandeCasuale.getDatiLocanda(numeroCitta + numeroLocandeMax);
 
 		costruisciCittaEPosizionaPersonaggi(poolDatiLocanda);
 		// Dopo i locandieri e le persone delle città, e senza azzerare i nomi: nessuno ha il nome di un altro
@@ -266,7 +267,7 @@ public class Foresta {
 	/**
 	 * Costruisce le città, una per quadrante (in ordine casuale), e ci piazza un personaggio a caso
 	 */
-	private static void costruisciCittaEPosizionaPersonaggi(List<ProduttoreDiTestiCasuale.DatiLocanda> poolDatiLocanda) {
+	private static void costruisciCittaEPosizionaPersonaggi(List<ProduttoreDiLocandeCasuale.DatiLocanda> poolDatiLocanda) {
 		List<Quadrante> quadranti = Quadrante.inOrdineCasuale();
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
 			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
@@ -287,7 +288,7 @@ public class Foresta {
 	/**
 	 * Costruisce le locande e piazza i rimanenti personaggi disponibili
 	 */
-	private static void costruisciLocandeEPosizionaPersonaggi(List<ProduttoreDiTestiCasuale.DatiLocanda> poolDatiLocanda) {
+	private static void costruisciLocandeEPosizionaPersonaggi(List<ProduttoreDiLocandeCasuale.DatiLocanda> poolDatiLocanda) {
 		int locandeCostruite = 0;
 		Personaggio personaggioDisponibile;
 		while ((personaggioDisponibile = RegistroPersonaggi.getPersonaggioDisponibile()) != null) {
@@ -315,7 +316,7 @@ public class Foresta {
 		costruisci(TipoLocazione.TEMPIO, templiSenzaArtefatto);
 	}
 
-	private static void costruisci(TipoLocazione tipoLocazione, Personaggio personaggio, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
+	private static void costruisci(TipoLocazione tipoLocazione, Personaggio personaggio, ProduttoreDiLocandeCasuale.DatiLocanda datiLocanda) {
 		if (tipoLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + tipoLocazione.name());
 		}
@@ -325,7 +326,7 @@ public class Foresta {
 		RegistroPersonaggi.addPersonaggioInLocazione(personaggio, coordinate);
 	}
 
-	private static void costruisci(TipoLocazione tipoLocazione, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
+	private static void costruisci(TipoLocazione tipoLocazione, ProduttoreDiLocandeCasuale.DatiLocanda datiLocanda) {
 		if (tipoLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + tipoLocazione.name());
 		}

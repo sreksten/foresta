@@ -109,7 +109,7 @@ class IntestazioneDelNegozianteTest {
     @Test
     void iNomiSiPossonoScrivereConIFontDoomdark() throws IOException {
         List<String> testi = new ArrayList<>();
-        List<String> righe = Files.readAllLines(SorgentiDelProgetto.risorsaDelMotore("nomi.txt"), StandardCharsets.UTF_8);
+        List<String> righe = Files.readAllLines(SorgentiDelProgetto.grammaticaDeiTesti("nomi.txt"), StandardCharsets.UTF_8);
         String lista = null;
         for (String riga : righe) {
             if (riga.matches("[A-Z_]+\\$?")) {

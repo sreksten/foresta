@@ -6,7 +6,7 @@ import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.richieste.CombattimentoRichiesto;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoMissione;
@@ -33,7 +33,7 @@ class ScenarioIncaricoDiCombattimentoTest {
         Set<String> chiavi = new HashSet<>();
         Set<TipoMissione> tipi = EnumSet.noneOf(TipoMissione.class);
         for (int i = 0; i < 1000; i++) {
-            CombattimentoRichiesto incarico = CombattimentoRichiesto.da(ProduttoreDiTestiCasuale.rigaDiMissioni("INCARICO_DI_COMBATTIMENTO"));
+            CombattimentoRichiesto incarico = CombattimentoRichiesto.da(ProduttoreDiMissioniCasuale.rigaDiMissioni("INCARICO_DI_COMBATTIMENTO"));
             assertTrue(incarico.getNumero(1) > 0 && incarico.getMonete() > 0, incarico.getRiga());
             assertFalse(incarico.getVittoria().isEmpty() || incarico.getRingraziamento().isEmpty(), incarico.getRiga());
             if (!incarico.isConCapo()) {

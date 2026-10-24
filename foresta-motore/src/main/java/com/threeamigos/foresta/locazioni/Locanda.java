@@ -13,7 +13,8 @@ import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.Informazioni;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.NotizieDelleLocande;
+import com.threeamigos.foresta.testi.ProduttoreDiLocandeCasuale;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class Locanda extends LocazioneBase {
 
 	/**
 	 * Nome, identificativo, recensione e dialogo pescati dal pool di
-	 * ProduttoreDiTestiCasuale.DatiLocanda quando la locanda (o la città che la ospita)
+	 * ProduttoreDiLocandeCasuale.DatiLocanda quando la locanda (o la città che la ospita)
 	 * viene costruita. L'identificativo è quello assegnato nella grammatica (es.
 	 * CINGHIALE_VEGANO) e resta lo stesso indipendentemente dal nome pubblicato: serve
 	 * a collegare questa istanza di locanda alle sue notizie proprie ({@code NOTIZIE_<IDENTIFICATIVO>}
@@ -122,7 +123,7 @@ public class Locanda extends LocazioneBase {
 	/**
 	 * Scrive nel modello dati della casella i dati della locanda (nome, identificativo, locandiere, recensione e dialogo); in una locanda in città il nome sta a parte, perché quello della casella è della città.
 	 */
-	public static void impostaDatiLocanda(LocazioneMD modelloDati, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
+	public static void impostaDatiLocanda(LocazioneMD modelloDati, ProduttoreDiLocandeCasuale.DatiLocanda datiLocanda) {
 		if (modelloDati.getTipo() == TipoLocazione.LOCANDA) {
 			modelloDati.setNome(datiLocanda.getNome());
 		} else {
@@ -356,7 +357,7 @@ public class Locanda extends LocazioneBase {
 	 * fatto sosta (non quando viene respinto sulla porta per mancanza di monete).
 	 */
 	private void generaNotizia() {
-		NotiziaMD notizia = ProduttoreDiTestiCasuale.getNotiziaLocanda(getIdentificativo(), getNome(), getNomeLocandiere());
+		NotiziaMD notizia = NotizieDelleLocande.getNotiziaLocanda(getIdentificativo(), getNome(), getNomeLocandiere());
 		if (notizia == null) {
 			// Niente di applicabile al gruppo nel repertorio della locanda: stavolta non c'è niente da raccontare
 			return;

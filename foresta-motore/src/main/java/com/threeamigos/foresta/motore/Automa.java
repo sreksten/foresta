@@ -40,7 +40,7 @@ import com.threeamigos.foresta.strumenti.Temporizzabile;
 import com.threeamigos.foresta.strumenti.Temporizzatore;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.PrecaricatoreDeiTesti;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
@@ -336,7 +336,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		motorePrecaricato = false;
 		BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.LOGO_INIZIALE));
 		esecutorePrecaricamento.execute(() -> {
-			ProduttoreDiTestiCasuale.precarica();
+			PrecaricatoreDeiTesti.precarica();
 			GeneratoreArtefatti.precarica();
 			BusEventi.pubblica(new InternoPrecaricamentoMotoreCompletato());
 		});

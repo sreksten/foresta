@@ -13,7 +13,7 @@ import com.threeamigos.foresta.missioni.richieste.LealtaRichiesta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class LaLealta extends MissioneAPassi {
 	}
 
 	public LealtaRichiesta getLealta() {
-		return LealtaRichiesta.da(parametro(LEALTA, () -> ProduttoreDiTestiCasuale.rigaDiMissioni(LEALTA)));
+		return LealtaRichiesta.da(parametro(LEALTA, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni(LEALTA)));
 	}
 
 	@Override

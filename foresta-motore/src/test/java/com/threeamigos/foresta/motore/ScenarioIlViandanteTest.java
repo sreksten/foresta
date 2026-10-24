@@ -8,7 +8,7 @@ import com.threeamigos.foresta.missioni.richieste.ViandanteRichiesto;
 import com.threeamigos.foresta.missioni.storie.IlViandante;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -25,7 +25,7 @@ class ScenarioIlViandanteTest {
     @Test
     void leRigheDellaGrammaticaSonoValide() {
         for (int i = 0; i < 300; i++) {
-            ViandanteRichiesto richiesta = ViandanteRichiesto.da(ProduttoreDiTestiCasuale.rigaDiMissioni("VIANDANTE"));
+            ViandanteRichiesto richiesta = ViandanteRichiesto.da(ProduttoreDiMissioniCasuale.rigaDiMissioni("VIANDANTE"));
             assertTrue(richiesta.getRichiesta("Ruuna").contains("Ruuna"), richiesta.getChiave());
             assertTrue(richiesta.getArrivo("Ruuna").contains("Ruuna"), richiesta.getChiave());
             assertFalse(richiesta.getRichiesta("Ruuna").contains(ViandanteRichiesto.CITTA));

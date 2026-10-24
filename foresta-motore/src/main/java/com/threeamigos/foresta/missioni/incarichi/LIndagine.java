@@ -17,7 +17,7 @@ import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.personaggi.Viandante;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public class LIndagine extends IncaricoInCitta {
 	}
 
 	public IndagineRichiesta getIndagine() {
-		return IndagineRichiesta.da(parametro(INDAGINE, () -> ProduttoreDiTestiCasuale.rigaDiMissioni(INDAGINE)));
+		return IndagineRichiesta.da(parametro(INDAGINE, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni(INDAGINE)));
 	}
 
 	/**

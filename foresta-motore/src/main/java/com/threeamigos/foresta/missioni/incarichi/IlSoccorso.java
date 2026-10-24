@@ -8,7 +8,7 @@ import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
 import com.threeamigos.foresta.missioni.richieste.SoccorsoRichiesto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -30,14 +30,14 @@ public class IlSoccorso extends LaLiberazione {
 	}
 
 	public SoccorsoRichiesto getSoccorso() {
-		return SoccorsoRichiesto.da(parametro(SOCCORSO, () -> ProduttoreDiTestiCasuale.rigaDiMissioni(SOCCORSO)));
+		return SoccorsoRichiesto.da(parametro(SOCCORSO, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni(SOCCORSO)));
 	}
 
 	/**
 	 * Il nome di chi va riportato a casa, da missioni.txt (come gli ostaggi).
 	 */
 	public String getNomeDellaPersona() {
-		return parametro(NOME, ProduttoreDiTestiCasuale::nomeOstaggio);
+		return parametro(NOME, ProduttoreDiMissioniCasuale::nomeOstaggio);
 	}
 
 	/**

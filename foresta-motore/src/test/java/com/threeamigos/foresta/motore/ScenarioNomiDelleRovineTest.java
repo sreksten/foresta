@@ -14,7 +14,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiLuoghiCasuale;
 
 /**
  * Le rovine hanno un nome: dalla grammatica rovine.txt quelle che ci sono dall'inizio, da quello che c'era prima
@@ -26,7 +26,7 @@ class ScenarioNomiDelleRovineTest {
     void laGrammaticaDaNomiConLArticoloEVari() {
         Set<String> nomi = new HashSet<>();
         for (int i = 0; i < 300; i++) {
-            String nome = ProduttoreDiTestiCasuale.nomeRovine();
+            String nome = ProduttoreDiLuoghiCasuale.nomeRovine();
             assertTrue(nome.matches("(il|lo|la|i|gli|le|l') ?\\S.*"), nome);
             assertFalse(nome.contains("[") || nome.contains("{") || nome.contains("  "), nome);
             assertTrue(nome.matches(".* (del|dello|della|dell'|dei|degli|delle)\\b.*") || nome.contains(" dell'"), nome);

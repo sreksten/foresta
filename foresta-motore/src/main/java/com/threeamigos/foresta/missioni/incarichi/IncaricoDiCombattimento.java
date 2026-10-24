@@ -13,7 +13,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 /**
@@ -41,7 +41,7 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 	}
 
 	public CombattimentoRichiesto getIncarico() {
-		return CombattimentoRichiesto.da(parametro(INCARICO, () -> ProduttoreDiTestiCasuale.rigaDiMissioni(PRODUZIONE)));
+		return CombattimentoRichiesto.da(parametro(INCARICO, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni(PRODUZIONE)));
 	}
 
 	/**

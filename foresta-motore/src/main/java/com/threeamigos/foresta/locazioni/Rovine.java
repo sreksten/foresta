@@ -7,7 +7,7 @@ import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiLuoghiCasuale;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -39,7 +39,7 @@ public class Rovine extends LocazioneBase {
 	 */
 	public static String getNome(LocazioneMD modelloDati) {
 		if (modelloDati.getNome() == null) {
-			modelloDati.setNome(Foresta.nomeNuovo(TipoLocazione.ROVINE, ProduttoreDiTestiCasuale::nomeRovine));
+			modelloDati.setNome(Foresta.nomeNuovo(TipoLocazione.ROVINE, ProduttoreDiLuoghiCasuale::nomeRovine));
 		}
 		return modelloDati.getNome();
 	}

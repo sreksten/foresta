@@ -13,7 +13,7 @@ import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -73,7 +73,7 @@ public class IlCorriere extends IncaricoInCitta {
 	}
 
 	public Spedizione getSpedizione() {
-		return Spedizione.da(parametro(SPEDIZIONE, () -> ProduttoreDiTestiCasuale.rigaDiMissioni(produzione)));
+		return Spedizione.da(parametro(SPEDIZIONE, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni(produzione)));
 	}
 
 	/**

@@ -89,13 +89,13 @@ Tutti dichiarano `throws InvalidGrammarException, IOException`. **Tutta la valid
 tutto il calcolo dei pesi avvengono nel costruttore**: se la grammatica è accettata, i pesi
 sono già fissati e non cambiano più per tutta la vita dell'oggetto.
 
-Uso tipico nel progetto — è così che `ProduttoreDiTestiCasuale` carica `fiabe.txt` e
+Uso tipico nel progetto — è così che `CaricatoreDiGrammatiche` carica `fiabe.txt` e
 `oroscopo.txt`, le due grammatiche usate dal gioco:
 
 ```java
 GrammarBean bean = new GrammarBean(
         MiaClasse.class.getResourceAsStream("/com/threeamigos/foresta/motore/artefatti.txt"),
-        MiaClasse.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
+        MiaClasse.class.getResourceAsStream("/com/threeamigos/foresta/testi/preposizioni_articolate_pp.txt"));
 ```
 
 ### Metodi
@@ -391,7 +391,7 @@ giusta in assoluto, perché i due scopi possibili sono opposti:
 
 | Scopo | `reset()` | Perché |
 | :--- | :--- | :--- |
-| **Risultati indipendenti** — una fiaba per ogni richiesta (`ProduttoreDiTestiCasuale.fiaba()`) | dopo **ogni** `produce()` | Ogni risultato deve pescare dall'insieme completo. Senza reset i serbatoi si svuotano di chiamata in chiamata: i risultati impoveriscono e alla fine la generazione fallisce. |
+| **Risultati indipendenti** — una fiaba per ogni richiesta (`ProduttoreDiFiabeCasuale.fiaba()`) | dopo **ogni** `produce()` | Ogni risultato deve pescare dall'insieme completo. Senza reset i serbatoi si svuotano di chiamata in chiamata: i risultati impoveriscono e alla fine la generazione fallisce. |
 | **Una serie deliberatamente senza ripetizioni** — cinque personaggi tutti diversi | **solo all'inizio** della serie | È esattamente ciò a cui serve il `$`. Resettare fra un elemento e l'altro lo annullerebbe, e i personaggi potrebbero ripetersi. |
 
 Nel secondo caso la **lunghezza della serie è limitata dal serbatoio one-shot più piccolo** che

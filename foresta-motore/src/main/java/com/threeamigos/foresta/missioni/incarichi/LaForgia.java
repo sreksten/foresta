@@ -17,7 +17,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
@@ -61,11 +61,11 @@ public class LaForgia extends IncaricoInCitta {
 	}
 
 	public MaterialeRichiesto getMetallo() {
-		return MaterialeRichiesto.da(parametro(METALLO, () -> ProduttoreDiTestiCasuale.materialeRichiesto("FORGIA_METALLO")));
+		return MaterialeRichiesto.da(parametro(METALLO, () -> ProduttoreDiMissioniCasuale.materialeRichiesto("FORGIA_METALLO")));
 	}
 
 	public MaterialeRichiesto getTrofeo() {
-		return MaterialeRichiesto.da(parametro(TROFEO, () -> ProduttoreDiTestiCasuale.materialeRichiesto("FORGIA_TROFEO")));
+		return MaterialeRichiesto.da(parametro(TROFEO, () -> ProduttoreDiMissioniCasuale.materialeRichiesto("FORGIA_TROFEO")));
 	}
 
 	public int getQuantitaDelMetallo() {
@@ -102,7 +102,7 @@ public class LaForgia extends IncaricoInCitta {
 	private String scegliLaRigaDellArma() {
 		String riga = null;
 		for (int i = 0; i < TENTATIVI_PER_L_ARMA; i++) {
-			riga = ProduttoreDiTestiCasuale.rigaDiMissioni("FORGIA");
+			riga = ProduttoreDiMissioniCasuale.rigaDiMissioni("FORGIA");
 			Artefatto arma = ForgiaRichiesta.da(riga).leggendario(getLivelloDellIncarico()).costruisci();
 			if (!RaccoltaBottino.candidati(GruppoGiocatore.getIstanza(), arma).isEmpty()) {
 				return riga;

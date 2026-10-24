@@ -22,7 +22,7 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -97,7 +97,7 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 	 * Il necromante, con il nome che gli ha dato la missione.
 	 */
 	public String getNomeDelNecromante() {
-		return parametro(NECROMANTE, () -> ProduttoreDiTestiCasuale.rigaDiMissioni("NOME_NECROMANTE"));
+		return parametro(NECROMANTE, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni("NOME_NECROMANTE"));
 	}
 
 	/**

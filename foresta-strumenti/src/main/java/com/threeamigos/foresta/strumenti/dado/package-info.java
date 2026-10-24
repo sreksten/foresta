@@ -4,6 +4,7 @@
  * ({@link com.threeamigos.foresta.strumenti.dado.ContestoLancio}) che, in modalità di prova, un
  * {@link com.threeamigos.foresta.strumenti.dado.TruccatoreDiDadi} può decidere.
  * <p>
- * Non dipende da nessun altro modulo del progetto; scrive gli errori nel registro del sottopacchetto {@code logger}.
+ * Non dipende da nessun altro modulo del progetto, né dal registro del sottopacchetto {@code logger}: un lancio non valido lancia
+ * un'eccezione il cui messaggio dice il metodo e i parametri.
  */
 package com.threeamigos.foresta.strumenti.dado;

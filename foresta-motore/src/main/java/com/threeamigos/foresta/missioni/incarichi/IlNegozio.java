@@ -12,7 +12,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;
@@ -167,12 +167,12 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	protected void allIncarico() {
 		getNomeDelNegoziante();
 		for (String produzione : new String[] {PARENTE, CAUSA, EREDITA, APPELLO, BATTUTA, RISPOSTA, VITTORIA, RINGRAZIAMENTO, APERTURA}) {
-			parametro(produzione, () -> ProduttoreDiTestiCasuale.rigaDiMissioni("NEGOZIO_" + produzione));
+			parametro(produzione, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni("NEGOZIO_" + produzione));
 		}
-		parametro(NEMICI, () -> ProduttoreDiTestiCasuale.rigaDiMissioni("NEGOZIO_NEMICI"));
+		parametro(NEMICI, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni("NEGOZIO_NEMICI"));
 		trovaLeRovine();
 		parametro(NOME_ROVINA, () -> TestiDeiLuoghi.nome(getCovo()));
-		parametro(NOME_BOTTEGA, () -> ProduttoreDiTestiCasuale.rigaDiMissioni(produzioneDelNome)
+		parametro(NOME_BOTTEGA, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni(produzioneDelNome)
 				.replace(SEGNAPOSTO_NOME, getNomeDelNegoziante()));
 	}
 
@@ -205,7 +205,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	}
 
 	private InfestazioneRichiesta getInfestazione() {
-		return InfestazioneRichiesta.da(parametro(NEMICI, () -> ProduttoreDiTestiCasuale.rigaDiMissioni("NEGOZIO_NEMICI")));
+		return InfestazioneRichiesta.da(parametro(NEMICI, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni("NEGOZIO_NEMICI")));
 	}
 
 	/**

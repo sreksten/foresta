@@ -7,7 +7,8 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
+import com.threeamigos.foresta.testi.ProduttoriDiTesti;
 
 /**
  * La grammatica missioni.txt dà i nomi di ostaggi e capibanda.
@@ -16,31 +17,31 @@ class NomiDelleMissioniTest {
 
     @Test
     void ostaggiECapibandaHannoNomiVari() {
-        verificaNomi(ProduttoreDiTestiCasuale::nomeOstaggio, 10);
-        verificaNomi(ProduttoreDiTestiCasuale::nomeCapobanda, 15);
+        verificaNomi(ProduttoreDiMissioniCasuale::nomeOstaggio, 10);
+        verificaNomi(ProduttoreDiMissioniCasuale::nomeCapobanda, 15);
     }
 
     @Test
     void qualcheCapobandaHaUnSoprannome() {
         boolean conSoprannome = false;
         for (int i = 0; i < 200 && !conSoprannome; i++) {
-            conSoprannome = ProduttoreDiTestiCasuale.nomeCapobanda().contains(" ");
+            conSoprannome = ProduttoreDiMissioniCasuale.nomeCapobanda().contains(" ");
         }
         assertTrue(conSoprannome);
     }
 
     /**
      * I nomi maschili sono one-shot e condivisi (nomi.txt): finché ce ne sono non si ripetono, e quando sono finiti
-     * ProduttoreDiTestiCasuale azzera le sezioni statiche e riparte, invece di lanciare IllegalArgumentException.
+     * ProduttoreDiMissioniCasuale azzera le sezioni statiche e riparte, invece di lanciare IllegalArgumentException.
      */
     @Test
     void quandoINomiFinisconoSiRipartePerNonLanciare() {
-        ProduttoreDiTestiCasuale.resetProduzioni();
+        ProduttoriDiTesti.resetProduzioni();
         try {
             Set<String> visti = new HashSet<>();
             int primaRipetizione = -1;
             for (int i = 0; i < 500; i++) {
-                String nome = ProduttoreDiTestiCasuale.nomeOstaggio();
+                String nome = ProduttoreDiMissioniCasuale.nomeOstaggio();
                 if (!visti.add(nome) && primaRipetizione < 0) {
                     primaRipetizione = i;
                 }
@@ -48,35 +49,35 @@ class NomiDelleMissioniTest {
             assertTrue(primaRipetizione > 50, "i nomi dovrebbero finire prima di ripetersi, non subito: " + primaRipetizione);
             assertEquals(visti.size(), primaRipetizione, "nessun nome si ripete finché ce ne sono di nuovi");
         } finally {
-            ProduttoreDiTestiCasuale.resetProduzioni();
+            ProduttoriDiTesti.resetProduzioni();
         }
     }
 
     @Test
     void ancheIMaghiSiRiprendonoDopoLEsaurimento() {
-        ProduttoreDiTestiCasuale.resetProduzioni();
+        ProduttoriDiTesti.resetProduzioni();
         try {
             for (int i = 0; i < 500; i++) {
-                String nome = ProduttoreDiTestiCasuale.rigaDiMissioni("NOME_MAGO");
+                String nome = ProduttoreDiMissioniCasuale.rigaDiMissioni("NOME_MAGO");
                 assertTrue(nome.startsWith("Mastro "), nome);
             }
         } finally {
-            ProduttoreDiTestiCasuale.resetProduzioni();
+            ProduttoriDiTesti.resetProduzioni();
         }
     }
 
     @Test
     void ancheINecromantiSiRiprendonoDopoLEsaurimento() {
-        ProduttoreDiTestiCasuale.resetProduzioni();
+        ProduttoriDiTesti.resetProduzioni();
         try {
             for (int i = 0; i < 500; i++) {
-                String nome = ProduttoreDiTestiCasuale.rigaDiMissioni("NOME_NECROMANTE");
+                String nome = ProduttoreDiMissioniCasuale.rigaDiMissioni("NOME_NECROMANTE");
                 assertFalse(nome.isEmpty());
                 assertTrue(Character.isUpperCase(nome.charAt(0)), nome);
                 assertFalse(nome.contains("[") || nome.contains("  "), nome);
             }
         } finally {
-            ProduttoreDiTestiCasuale.resetProduzioni();
+            ProduttoriDiTesti.resetProduzioni();
         }
     }
 

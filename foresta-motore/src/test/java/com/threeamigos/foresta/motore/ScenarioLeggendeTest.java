@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
 
 /**
  * Le leggende: l'armaiolo in città o il locandiere in una locanda raccontano la leggenda di un oggetto leggendario di
@@ -44,7 +44,7 @@ class ScenarioLeggendeTest {
 
     @Test
     void ogniLeggendarioSiLeggeESiCostruisce() {
-        List<OggettoLeggendario> leggendari = ProduttoreDiTestiCasuale.tuttiGliOggettiLeggendari().stream()
+        List<OggettoLeggendario> leggendari = ProduttoreDiArtefattiCasuale.tuttiGliOggettiLeggendari().stream()
                 .map(OggettoLeggendario::da).collect(Collectors.toList());
         Set<String> chiavi = leggendari.stream().map(OggettoLeggendario::getChiave).collect(Collectors.toSet());
         assertEquals(leggendari.size(), chiavi.size(), "la chiave identifica il leggendario");
@@ -107,10 +107,10 @@ class ScenarioLeggendeTest {
 
     @Test
     void unLeggendarioSiPescaUnaVoltaSolaFinchéCeNeSono() {
-        List<String> tutti = ProduttoreDiTestiCasuale.tuttiGliOggettiLeggendari();
+        List<String> tutti = ProduttoreDiArtefattiCasuale.tuttiGliOggettiLeggendari();
         String ultimo = tutti.get(0);
-        assertEquals(Optional.of(ultimo), ProduttoreDiTestiCasuale.oggettoLeggendario(riga -> !riga.equals(ultimo)));
-        assertEquals(Optional.empty(), ProduttoreDiTestiCasuale.oggettoLeggendario(riga -> true));
+        assertEquals(Optional.of(ultimo), ProduttoreDiArtefattiCasuale.oggettoLeggendario(riga -> !riga.equals(ultimo)));
+        assertEquals(Optional.empty(), ProduttoreDiArtefattiCasuale.oggettoLeggendario(riga -> true));
     }
 
     @Test

@@ -16,7 +16,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 
 /**
  * L'indagine: gli indizi in posti segnati sulla mappa uno alla volta, poi la scelta del colpevole; se è quello giusto
@@ -35,7 +35,7 @@ class ScenarioIndagineTest {
     void ogniIndagineSiLegge() {
         Set<String> chiavi = new HashSet<>();
         for (int i = 0; i < 600; i++) {
-            IndagineRichiesta indagine = IndagineRichiesta.da(ProduttoreDiTestiCasuale.rigaDiMissioni("INDAGINE"));
+            IndagineRichiesta indagine = IndagineRichiesta.da(ProduttoreDiMissioniCasuale.rigaDiMissioni("INDAGINE"));
             if (!indagine.isConCapo()) {
                 assertFalse(indagine.getRiga().contains("%CAPO%"), indagine.getRiga());
             }

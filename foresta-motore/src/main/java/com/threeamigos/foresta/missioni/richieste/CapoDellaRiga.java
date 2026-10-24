@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni.richieste;
 
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Optional;
@@ -60,6 +60,6 @@ final class CapoDellaRiga {
 	 * Il nome del capo: quello scritto nella riga, o uno pescato dalla sua produzione.
 	 */
 	String pescaNome() {
-		return isFisso() ? valore : ProduttoreDiTestiCasuale.rigaDiMissioni(valore);
+		return isFisso() ? valore : ProduttoreDiMissioniCasuale.rigaDiMissioni(valore);
 	}
 }

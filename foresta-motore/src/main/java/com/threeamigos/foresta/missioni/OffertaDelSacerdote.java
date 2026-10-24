@@ -10,7 +10,7 @@ import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Sacerdote;
 import com.threeamigos.foresta.personaggi.Sacerdotessa;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -53,8 +53,8 @@ public final class OffertaDelSacerdote {
 	 */
 	public static void accogli(TipoPersonaggio classe) {
 		Personaggio sacerdote = classe == TipoPersonaggio.SACERDOTESSA
-				? new Sacerdotessa(ProduttoreDiTestiCasuale.nomeSacerdotessa(), 1)
-				: new Sacerdote(ProduttoreDiTestiCasuale.nomeSacerdote(), 1);
+				? new Sacerdotessa(ProduttoreDiMissioniCasuale.nomeSacerdotessa(), 1)
+				: new Sacerdote(ProduttoreDiMissioniCasuale.nomeSacerdote(), 1);
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		gruppo.aggiungiPersonaggio(RegistroPersonaggi.preparaCompagno(sacerdote));
 		gruppo.setSacerdoteAccolto(true);

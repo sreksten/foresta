@@ -1702,7 +1702,7 @@ DESCRIZIONE_MALEDIZIONE_PROTEZIONE_PLURALE
     che allontanano il malocchio | che scongiurano le maledizioni | che fanno le corna alla sfortuna
 
 // NOME_AGGIORNAMENTO: i nomi degli oggetti che fanno salire di un livello un artefatto (vedi TipoArtefatto.AGGIORNAMENTO,
-// RegoleIncantatura e ProduttoreDiTestiCasuale.nomeAggiornamento): si trovano solo nei cofani e si fondono sull'artefatto
+// RegoleIncantatura e ProduttoreDiArtefattiCasuale.nomeAggiornamento): si trovano solo nei cofani e si fondono sull'artefatto
 // dall'incantatore. Un nome è l'oggetto (la pergamena, il ninnolo, il gingillo...) con il suo articolo e quello che promette,
 // in stile burocratico-informatico come lo Scudo Fiscale: aggiornamenti, patch, condoni e piani casa. Un nome per riga, con
 // l'articolo davanti.

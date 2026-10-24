@@ -1,5 +1,5 @@
 // L'oroscopo che l'alchimista legge al gruppo che entra in bottega, con la domanda del capo e la risposta
-// dell'alchimista (vedi ProduttoreDiTestiCasuale.dialogoSullOroscopo e IntermezzoOroscopo).
+// dell'alchimista (vedi ProduttoreDiOroscopiCasuale.dialogoSullOroscopo e IntermezzoOroscopo).
 //
 // Il capo vive nella Foresta e chiede che cosa sia una delle cose che ha appena sentito. Ogni cosa che lo può
 // confondere, quando viene citata, si annota con [TEMA=FORMA:nome]: FORMA è MS, FS, MP o FP (maschile o femminile,

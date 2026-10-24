@@ -9,7 +9,7 @@ import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiLuoghiCasuale;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.BottinoArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -67,7 +67,7 @@ public class Tempio extends LocazioneBase {
 	 */
 	public static String getNome(LocazioneMD modelloDati) {
 		if (modelloDati.getNome() == null) {
-			modelloDati.setNome(Foresta.nomeNuovo(TipoLocazione.TEMPIO, ProduttoreDiTestiCasuale::nomeTempio));
+			modelloDati.setNome(Foresta.nomeNuovo(TipoLocazione.TEMPIO, ProduttoreDiLuoghiCasuale::nomeTempio));
 		}
 		return modelloDati.getNome();
 	}

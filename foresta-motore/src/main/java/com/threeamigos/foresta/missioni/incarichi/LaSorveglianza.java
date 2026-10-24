@@ -13,7 +13,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 /**
@@ -43,7 +43,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 	}
 
 	public SorveglianzaRichiesta getSorveglianza() {
-		return SorveglianzaRichiesta.da(parametro(SORVEGLIANZA, () -> ProduttoreDiTestiCasuale.rigaDiMissioni(SORVEGLIANZA)));
+		return SorveglianzaRichiesta.da(parametro(SORVEGLIANZA, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni(SORVEGLIANZA)));
 	}
 
 	/**

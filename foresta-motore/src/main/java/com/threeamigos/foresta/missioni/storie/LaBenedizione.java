@@ -14,7 +14,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -67,7 +67,7 @@ public class LaBenedizione extends MissioneAPassi {
 	}
 
 	public BenedizioneRichiesta getBenedizione() {
-		return BenedizioneRichiesta.da(parametro(BENEDIZIONE, () -> ProduttoreDiTestiCasuale.rigaDiMissioni(BENEDIZIONE)));
+		return BenedizioneRichiesta.da(parametro(BENEDIZIONE, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni(BENEDIZIONE)));
 	}
 
 	/**

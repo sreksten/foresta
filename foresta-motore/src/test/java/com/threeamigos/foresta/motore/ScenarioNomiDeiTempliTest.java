@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiLuoghiCasuale;
 
 /**
  * I templi hanno un nome preso da templi.txt, diverso per ognuno, che si salva con la casella.
@@ -24,7 +24,7 @@ class ScenarioNomiDeiTempliTest {
     void laGrammaticaDaNomiConLArticoloEVari() {
         Set<String> nomi = new HashSet<>();
         for (int i = 0; i < 300; i++) {
-            String nome = ProduttoreDiTestiCasuale.nomeTempio();
+            String nome = ProduttoreDiLuoghiCasuale.nomeTempio();
             assertTrue(nome.matches("(il|lo|la|l') ?\\S.*"), nome);
             assertFalse(nome.contains("[") || nome.contains("{") || nome.contains("  "), nome);
             assertTrue(nome.contains(" del") || nome.contains(" dell"), nome);

@@ -5,7 +5,7 @@ import com.threeamigos.foresta.locazioni.LocazioneBase;
 import com.threeamigos.foresta.missioni.richieste.ForgiaRichiesta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.CategoriaArtefatto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
@@ -105,7 +105,7 @@ class ConfrontoConLaForgia {
         }
         ForgiaRichiesta riga;
         do {
-            riga = ForgiaRichiesta.da(ProduttoreDiTestiCasuale.rigaDiMissioni("FORGIA"));
+            riga = ForgiaRichiesta.da(ProduttoreDiMissioniCasuale.rigaDiMissioni("FORGIA"));
         } while (riga.getTipo() != arma.get().getTipo());
         personaggio.removeArtefatto(arma.get());
         personaggio.addArtefatto(riga.leggendario(personaggio.getLivello()).costruisci());

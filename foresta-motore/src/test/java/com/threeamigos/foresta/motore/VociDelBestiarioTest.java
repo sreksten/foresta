@@ -36,7 +36,7 @@ class VociDelBestiarioTest {
 
 	private static Set<TipoPersonaggio> nemiciDelleMissioni() throws IOException {
 		Set<TipoPersonaggio> nemici = EnumSet.noneOf(TipoPersonaggio.class);
-		try (InputStream flusso = VociDelBestiarioTest.class.getResourceAsStream("/com/threeamigos/foresta/motore/missioni.txt")) {
+		try (InputStream flusso = VociDelBestiarioTest.class.getResourceAsStream("/com/threeamigos/foresta/testi/missioni.txt")) {
 			assertNotNull(flusso, "missioni.txt");
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(flusso, StandardCharsets.UTF_8))) {
 				String riga;

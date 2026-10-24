@@ -19,7 +19,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 
 /**
  * Le richieste di materiali dell'alchimista, dell'armaiolo, del capitano delle guardie e del locandiere: ogni riga di missioni.txt si
@@ -36,7 +36,7 @@ class ScenarioRichiesteDiMaterialiTest {
         for (Mandante mandante : Mandante.values()) {
             Set<String> plurali = new HashSet<>();
             for (int i = 0; i < 300; i++) {
-                MaterialeRichiesto materiale = MaterialeRichiesto.da(ProduttoreDiTestiCasuale.materialeRichiesto(mandante.getProduzione()));
+                MaterialeRichiesto materiale = MaterialeRichiesto.da(ProduttoreDiMissioniCasuale.materialeRichiesto(mandante.getProduzione()));
                 assertTrue(materiale.getPrezzo() > 0);
                 assertFalse(materiale.getBattutaDelCapo().isEmpty());
                 assertFalse(materiale.getRispostaDelMandante().isEmpty());

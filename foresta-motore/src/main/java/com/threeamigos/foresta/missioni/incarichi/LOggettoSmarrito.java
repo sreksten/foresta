@@ -15,7 +15,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -62,7 +62,7 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 	}
 
 	public OggettoSmarrito getSmarrito() {
-		return OggettoSmarrito.da(parametro(SMARRITO, ProduttoreDiTestiCasuale::oggettoSmarrito));
+		return OggettoSmarrito.da(parametro(SMARRITO, ProduttoreDiMissioniCasuale::oggettoSmarrito));
 	}
 
 	/**

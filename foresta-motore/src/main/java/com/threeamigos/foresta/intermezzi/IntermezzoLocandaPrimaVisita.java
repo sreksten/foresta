@@ -6,7 +6,8 @@ import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiFiabeCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiLocandeCasuale;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -165,14 +166,14 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 
 		// La fiaba del bardo e il locandiere che lo zittisce, se il bardo è seduto nella locanda
 		if (bardoInScena) {
-			String fiaba = ProduttoreDiTestiCasuale.fiaba().get(0);
+			String fiaba = ProduttoreDiFiabeCasuale.fiaba().get(0);
 			Collection<String> frasiFiaba = Arrays.stream(fiaba.split(REGEX_PER_SPEZZARE_FRASI))
 					.map(String::trim)
 					.collect(Collectors.toList());
 
 			frasiFiaba.forEach(frase -> pagina.conBattuta(BattutaIntermezzo.di("bardo", frase)));
 
-			String reazioneLocandiere = ProduttoreDiTestiCasuale.reazioneLocandiere();
+			String reazioneLocandiere = ProduttoreDiLocandeCasuale.reazioneLocandiere();
 			Collection<String> frasiReazioneLocandiere = Arrays.stream(reazioneLocandiere.split(REGEX_PER_SPEZZARE_FRASI))
 					.map(String::trim)
 					.collect(Collectors.toList());

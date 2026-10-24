@@ -7,7 +7,7 @@ Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo 
 | Modulo | Contiene | Dipende da |
 | :--- | :--- | :--- |
 | `foresta-strumenti` | `strumenti.dado`: `Dado` (l'unica sorgente di caso) con `ContestoLancio` e `TruccatoreDiDadi`; `strumenti.logger`: il registro `Logger` con `DestinazioneDiLog` e `DestinazioneConsoleEFile` | nessuno |
-| `foresta-testi` | `testi`: `Testi` (il caricatore dei testi per lingua), `Articoli` (articoli e preposizioni articolate), `Numeri` (cardinali e ordinali in lettere) e `GrammarBean` (produce testi da una grammatica) | strumenti |
+| `foresta-testi` | `testi`: `Testi` (il caricatore dei testi per lingua), `Articoli` (articoli e preposizioni articolate), `Numeri` (cardinali e ordinali in lettere) `GrammarBean` (produce testi da una grammatica) e i produttori di testi a caso con le loro grammatiche (fiabe, oroscopi, luoghi, sfide, missioni, locande) | strumenti |
 | `foresta-serializzazione` | `serializzazione`: `Serializzabile`, `LettoreCampi`, `MappaProprieta` (scrittura e lettura dei salvataggi a righe) | nessuno |
 | `foresta-attributi` | `attributi` (`CalcolatoreAttributiSecondari`, le formule dei secondari), `attributi.tipi` (`TipoAttributo`, `CategoriaAttributo`), `modificatori` (`ModificatoreAttributoMD`) e `modificatori.tipi` (`TipoModificatore`, `UnitaDurataModificatore`, `BersaglioModificatore`): solo gli attributi e le modifiche che si possono fare loro, niente personaggi né oggetti | testi, serializzazione |
 | `foresta-effettidistato` | `effettidistato.tipi` (`TipoEffettoDiStato`) e `effettidistato` (`EffettoDiStatoMD`): solo gli effetti di stato | testi, serializzazione |
@@ -45,11 +45,11 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | Finestra di prova (solo in modalità di prova): personaggi, missioni da forzare, trucchi sui dadi per contesto | `…/strumenti/dado/{Dado,ContestoLancio,TruccatoreDiDadi}`, `…/strumenti/TrucchiDiSviluppo`, `…/interfacce/StrumentiDiSviluppo`, `…/motore/StrumentiDiSviluppoMotore`, `…/ui/sviluppo/FinestraDiProva` | `strumenti_di_prova.md` |
 | Carta, forbici e sasso (sfida, missione dei campioni) | `…/motore/PartitaCartaForbiciSasso`, `…/locazioni/LocazioneBase`, `…/missioni/storie/LaSfidaDeiCampioni`, `IlCampione`, `…/ui/DisplayableCanvasRiquadroSfida` | `carta_forbici_sasso.md` |
 | Intermezzi | `…/intermezzi` (anche `RegistroIntermezzi`) | `intermezzi.md` |
-| Testi generati, grammatiche | `…/testi/GrammarBean`, `ProduttoreDiTestiCasuale`, risorse `motore/*.txt` | `GrammarBean.md` |
+| Testi generati, grammatiche | `…/testi/GrammarBean`, i produttori `…/testi/ProduttoreDi…Casuale` (fiabe, oroscopi, luoghi, sfide, missioni, locande), `ProduttoriDiTesti` e `CaricatoreDiGrammatiche` (modulo `foresta-testi`, grammatiche in `foresta-testi/src/main/resources/…/testi/*.txt`); `ProduttoreDiArtefattiCasuale`, `NotizieDelleLocande` e `PrecaricatoreDeiTesti` (modulo `foresta-motore`, con `leggendari.txt` e `artefatti2.txt` in `motore/`) | `GrammarBean.md` |
 | Oggetti che fanno salire di livello un artefatto (solo nei cofani, si usano con la fusione) | `…/tipi/TipoArtefatto` (`AGGIORNAMENTO`), `…/oggetti/GeneratoreArtefattiTabelle`, `Cofano`, `…/motore/RegoleIncantatura`; **i nomi sono nella grammatica `foresta-motore/src/main/resources/com/threeamigos/foresta/motore/artefatti2.txt`** (produzione `NOME_AGGIORNAMENTO`) | `artefatti_e_incantamenti.md` |
 | Trofei | `…/trofei` (anche `RegistroTrofei`) | `motore_di_gioco.md` §10 |
 | Bestiario (voci, sblocchi, scoperte, scheda; immunità e caratteristiche generali di classe; moltiplicatori con le loro note) | `…/bestiario/RegistroBestiario`, `…/modellodati/BestiarioMD`, `…/tipi/{TipoPersonaggio,CaratteristicaDiClasse,MoltiplicatoreDiClasse,AbilitaInnataDiClasse}`, `…/personaggi/MoltiplicatoriDiClasse`, `…/abilita/AbilitaInnateDiClasse`, `…/trofei/TrofeoEnciclopedista`, `…/ui/schermate/{DisplayableCanvasBestiario,ImmagineBestiario}` | `bestiario.md` |
-| Nomi dei personaggi, residenti del mondo (bardo, città, campioni) | risorsa `motore/nomi.txt`, `…/tipi/PersonaggioNoto`, `…/modellodati/ResidenteMD`, `…/motore/RegistroPersonaggi`, `ProduttoreDiTestiCasuale` | `nomi.md` |
+| Nomi dei personaggi, residenti del mondo (bardo, città, campioni) | risorsa `testi/nomi.txt`, `…/tipi/PersonaggioNoto`, `…/modellodati/ResidenteMD`, `…/motore/RegistroPersonaggi`, `ProduttoreDiMissioniCasuale` | `nomi.md` |
 
 ## Schermate (tutte in `…/ui`, divise in sottopacchetti)
 

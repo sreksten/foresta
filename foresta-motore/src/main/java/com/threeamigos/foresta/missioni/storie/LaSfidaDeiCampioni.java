@@ -15,7 +15,8 @@ import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiSfideCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -89,7 +90,7 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 	 * di sfide.txt, e i modificatori forti come quelli del catalogo.
 	 */
 	public static OggettoLeggendario costruisciUnLeggendario(int livello) {
-		String nome = ProduttoreDiTestiCasuale.nomeLeggendarioDeiCampioni();
+		String nome = ProduttoreDiSfideCasuale.nomeLeggendarioDeiCampioni();
 		String breve = nome;
 		String chiave = "CAMPIONI_" + Math.abs(nome.hashCode()) + "_" + livello;
 		String riga = "TIPO=ANELLO;NOME=" + nome + ";CHIAVE=" + chiave + ";BREVE=" + breve + ";"
@@ -182,7 +183,7 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 			TipoPersonaggio classe = classi.get(Dado.tiraAncheAUnaFaccia(classi.size()) - 1);
 			TipoLocazione luogo = luoghi.remove(Dado.tiraAncheAUnaFaccia(luoghi.size()) - 1);
 			boolean donna = FabbricaPersonaggi.modello(classe).getSesso() == Personaggio.Sesso.FEMMINA;
-			String nome = ProduttoreDiTestiCasuale.rigaDiMissioni(donna ? "NOME_CAMPIONESSA" : "NOME_CAMPIONE");
+			String nome = ProduttoreDiMissioniCasuale.rigaDiMissioni(donna ? "NOME_CAMPIONESSA" : "NOME_CAMPIONE");
 			RegistroPersonaggi.registraCampione(nome, classe);
 			campioni.add(IlCampione.di(classe, nome, luogo));
 		}

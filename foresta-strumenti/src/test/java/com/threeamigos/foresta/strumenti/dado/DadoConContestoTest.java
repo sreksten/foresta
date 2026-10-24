@@ -1,12 +1,8 @@
 package com.threeamigos.foresta.strumenti.dado;
 
-import com.threeamigos.foresta.strumenti.logger.Logger;
-import com.threeamigos.foresta.strumenti.logger.DestinazioneDiLog;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -21,30 +17,13 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class DadoConContestoTest {
 
-    private final List<String> registro = new ArrayList<>();
     private boolean contestoUsato;
-
-    @BeforeEach
-    void registroAttivo() {
-        Logger.impostaDestinazione(new DestinazioneDiLog() {
-            @Override
-            public void scrivi(String messaggio) {
-                registro.add(messaggio);
-            }
-
-            @Override
-            public void scrivi(Exception e) {
-                registro.add(e.toString());
-            }
-        });
-    }
 
     @AfterEach
     void ripristina() {
         Dado.impostaTruccatore(null);
         Dado.ripristina();
         Dado.impostaSeme(System.nanoTime());
-        Logger.impostaDestinazione(null);
     }
 
     private static TruccatoreDiDadi truccatore(OptionalInt lancio, Optional<?> scelta) {
@@ -62,9 +41,9 @@ class DadoConContestoTest {
         };
     }
 
-    private void assertErroreNelRegistro() {
-        assertEquals(1, registro.size(), registro.toString());
-        assertTrue(registro.get(0).contains("ERRORE FATALE"), registro.get(0));
+    private static void assertErrore(String atteso, Runnable lancio) {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, lancio::run);
+        assertTrue(e.getMessage().contains(atteso), e.getMessage());
     }
 
     @Test
@@ -81,27 +60,14 @@ class DadoConContestoTest {
     }
 
     @Test
-    void unNumeroDiFacceNonValidoEUnErroreCheSiScriveNelRegistro() {
-        assertThrows(IllegalArgumentException.class, () -> Dado.tiraAncheAUnaFaccia(0));
-        assertErroreNelRegistro();
-        registro.clear();
-        assertThrows(IllegalArgumentException.class, () -> Dado.tira(1));
-        assertErroreNelRegistro();
-        registro.clear();
-        assertThrows(IllegalArgumentException.class, () -> Dado.tiraAncheSenzaRange(4, 3));
-        assertErroreNelRegistro();
-        registro.clear();
-        assertThrows(IllegalArgumentException.class, () -> Dado.tira(5, 5));
-        assertErroreNelRegistro();
-        registro.clear();
-        assertThrows(IllegalArgumentException.class, () -> Dado.tira(ContestoLancio.NUMERO_MOSTRI, 5, 5));
-        assertErroreNelRegistro();
-        registro.clear();
-        assertThrows(IllegalArgumentException.class, () -> Dado.tira(ContestoLancio.NUMERO_MOSTRI, 1));
-        assertErroreNelRegistro();
-        registro.clear();
-        assertThrows(IllegalArgumentException.class, () -> Dado.tiraAncheAUnaFaccia(ContestoLancio.NUMERO_MOSTRI, 0));
-        assertErroreNelRegistro();
+    void unNumeroDiFacceNonValidoEUnErroreCheDiceMetodoEParametri() {
+        assertErrore("Dado.tiraAncheAUnaFaccia(0): il numero di facce deve essere maggiore di zero", () -> Dado.tiraAncheAUnaFaccia(0));
+        assertErrore("Dado.tira(1): il numero di facce deve essere maggiore di 1", () -> Dado.tira(1));
+        assertErrore("Dado.tiraAncheSenzaRange(4, 3): il valore minimo deve essere minore o uguale", () -> Dado.tiraAncheSenzaRange(4, 3));
+        assertErrore("Dado.tira(5, 5): il valore minimo deve essere minore del valore massimo", () -> Dado.tira(5, 5));
+        assertErrore("Dado.tira(NUMERO_MOSTRI, 5, 5): il valore minimo", () -> Dado.tira(ContestoLancio.NUMERO_MOSTRI, 5, 5));
+        assertErrore("Dado.tira(NUMERO_MOSTRI, 1): il numero di facce deve essere maggiore di 1", () -> Dado.tira(ContestoLancio.NUMERO_MOSTRI, 1));
+        assertErrore("Dado.tiraAncheAUnaFaccia(NUMERO_MOSTRI, 0): il numero di facce", () -> Dado.tiraAncheAUnaFaccia(ContestoLancio.NUMERO_MOSTRI, 0));
     }
 
     @Test
@@ -189,6 +155,6 @@ class DadoConContestoTest {
 
     @Test
     void nonSiSceglieFraNiente() {
-        assertThrows(IllegalArgumentException.class, () -> Dado.scegli(ContestoLancio.TIPO_MOSTRO, Collections.<String>emptyList()));
+        assertErrore("Dado.scegli(TIPO_MOSTRO): non c'è niente da scegliere", () -> Dado.scegli(ContestoLancio.TIPO_MOSTRO, Collections.<String>emptyList()));
     }
 }

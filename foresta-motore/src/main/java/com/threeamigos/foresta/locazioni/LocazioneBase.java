@@ -32,7 +32,7 @@ import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiSfideCasuale;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
@@ -2024,7 +2024,7 @@ public abstract class LocazioneBase implements Locazione {
 		opzioneAmiciziaDisponibile = false;
 		opzioneCorruzioneDisponibile = false;
 		BusEventi.pubblica(InternoSfidaCartaForbiciSasso.apre());
-		BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \"" + ProduttoreDiTestiCasuale.fraseDiSfida() + "\""));
+		BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \"" + ProduttoreDiSfideCasuale.fraseDiSfida() + "\""));
 		impostaComandiPossibili();
 		return Stato.IN_LOCAZIONE;
 	}
@@ -2066,7 +2066,7 @@ public abstract class LocazioneBase implements Locazione {
 		statoLocazione = StatoLocazione.IN_LOCAZIONE;
 		haStrettoAmicizia = true;
 		BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \""
-				+ (vinta ? ProduttoreDiTestiCasuale.fraseSeIlGiocatoreVince() : ProduttoreDiTestiCasuale.fraseSeIlGiocatorePerde()) + "\""));
+				+ (vinta ? ProduttoreDiSfideCasuale.fraseSeIlGiocatoreVince() : ProduttoreDiSfideCasuale.fraseSeIlGiocatorePerde()) + "\""));
 		if (diUnCampione) {
 			setCompleta(vinta);
 			setOggetto(null);
@@ -2075,7 +2075,7 @@ public abstract class LocazioneBase implements Locazione {
 		if (vinta) {
 			gruppo.addSfidaVinta();
 			if (gruppo.getSfideVinte() >= Costanti.SFIDE_VINTE_PER_IL_TORNEO && !RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI)) {
-				BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \"" + ProduttoreDiTestiCasuale.fraseDelTorneo() + "\""));
+				BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \"" + ProduttoreDiSfideCasuale.fraseDelTorneo() + "\""));
 				RegistroMissioni.avvia(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI);
 			}
 		}

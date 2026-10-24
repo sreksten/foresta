@@ -7,10 +7,10 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.NotizieDelleLocande;
 
 /**
- * Con le notizie proprie della locanda tutte fra le ultime pubblicate, ProduttoreDiTestiCasuale trova comunque una notizia (fra le
+ * Con le notizie proprie della locanda tutte fra le ultime pubblicate, NotizieDelleLocande trova comunque una notizia (fra le
  * generiche di NOTIZIE_LOCANDA o, se i tentativi vanno a vuoto, ammettendo le recenti), senza sollevare eccezioni: un tempo dopo
  * venti tentativi ne sollevava una, che fermava le partite lunghe.
  */
@@ -25,7 +25,7 @@ class NotiziaLocandaEsauritaTest {
             }
             for (int volta = 0; volta < 30; volta++) {
                 NotiziaMD notizia = assertDoesNotThrow(() ->
-                        ProduttoreDiTestiCasuale.getNotiziaLocanda("BOCCALE_CAPOVOLTO", "il Boccale Capovolto", "Oste"));
+                        NotizieDelleLocande.getNotiziaLocanda("BOCCALE_CAPOVOLTO", "il Boccale Capovolto", "Oste"));
                 // Un Guerriero solo: le notizie che parlano di altre classi non si applicano, ma altre sì (EROE, GUERRIERO, quelle generiche)
                 assertNotNull(notizia);
             }

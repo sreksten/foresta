@@ -8,7 +8,7 @@ import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
@@ -359,7 +359,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		int livelloEffettivo = Math.max(1, livello);
 		ArtefattoMD md = new ArtefattoMD();
 		md.setTipo(TipoArtefatto.AGGIORNAMENTO);
-		md.setNome(ProduttoreDiTestiCasuale.nomeAggiornamento());
+		md.setNome(ProduttoreDiArtefattiCasuale.nomeAggiornamento());
 		md.setDescrizione("che fa aumentare di un livello un Artefatto");
 		md.setLivello(livelloEffettivo);
 		md.setPeso(PESI.get(TipoArtefatto.AGGIORNAMENTO));

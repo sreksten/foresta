@@ -20,7 +20,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -165,7 +165,7 @@ public class IlViandante extends MissioneAPassi {
 	private Map<String, Supplier<String>> parametri() {
 		Map<String, Supplier<String>> parametri = new LinkedHashMap<>();
 		parametri.put(GIORNO, () -> String.valueOf(Dado.tira(GIORNO_MINIMO, GIORNO_MASSIMO)));
-		parametri.put(RIGA, () -> ProduttoreDiTestiCasuale.rigaDiMissioni("VIANDANTE"));
+		parametri.put(RIGA, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni("VIANDANTE"));
 		// La riga è già stata fissata: generaParametri le scrive nell'ordine in cui le trova
 		parametri.put(QUANTITA, () -> {
 			ViandanteRichiesto richiesta = getRichiesta();

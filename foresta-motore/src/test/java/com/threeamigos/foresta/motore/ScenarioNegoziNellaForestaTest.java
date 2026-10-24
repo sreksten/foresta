@@ -12,7 +12,7 @@ import com.threeamigos.foresta.missioni.incarichi.*;
 import com.threeamigos.foresta.missioni.richieste.InfestazioneRichiesta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
@@ -58,11 +58,11 @@ class ScenarioNegoziNellaForestaTest {
     @Test
     void leGrammaticheSiLeggono() {
         for (int i = 0; i < 300; i++) {
-            InfestazioneRichiesta infestazione = InfestazioneRichiesta.da(ProduttoreDiTestiCasuale.rigaDiMissioni("NEGOZIO_NEMICI"));
+            InfestazioneRichiesta infestazione = InfestazioneRichiesta.da(ProduttoreDiMissioniCasuale.rigaDiMissioni("NEGOZIO_NEMICI"));
             assertFalse(infestazione.getDescrizione().isEmpty());
             for (String produzione : new String[] {"PARENTE", "CAUSA", "EREDITA", "APPELLO", "BATTUTA", "RISPOSTA", "VITTORIA",
                     "RINGRAZIAMENTO", "APERTURA", "NOME_ALCHIMISTA", "NOME_ARMAIOLO", "NOME_VENDITORE_DI_PERGAMENE", "NOME_INCANTATORE"}) {
-                String riga = ProduttoreDiTestiCasuale.rigaDiMissioni("NEGOZIO_" + produzione);
+                String riga = ProduttoreDiMissioniCasuale.rigaDiMissioni("NEGOZIO_" + produzione);
                 assertFalse(riga.isEmpty() || riga.contains("[") || riga.contains("]"), produzione + ": " + riga);
             }
         }

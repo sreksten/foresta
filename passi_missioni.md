@@ -2,7 +2,7 @@
 
 Il vocabolario dei passi con cui si scrivono le missioni a passi, le missioni concrete che li usano e la mappatura dei tipi di missione (`TipoMissione`) sulle missioni che li coprono. L'infrastruttura (`Passo`, `MissioneAPassi`, registro, claim, intermezzi) è in [`gestione_missioni.md`](gestione_missioni.md); qui si descrive **che cosa c'è**, non come funziona il motore.
 
-Il codice è in `missioni/`; le grammatiche in `foresta-motore/src/main/resources/com/threeamigos/foresta/motore/missioni.txt` e `leggendari.txt`.
+Il codice è in `missioni/`; le grammatiche in `foresta-testi/src/main/resources/com/threeamigos/foresta/testi/missioni.txt` e in `foresta-motore/src/main/resources/com/threeamigos/foresta/motore/leggendari.txt`.
 
 ## 1. Regole per chi aggiunge missioni
 
@@ -161,7 +161,7 @@ Le ricompense in monete di questo catalogo sono le paghe del primo livello del m
 
 ## 5. Le grammatiche delle missioni
 
-I contenuti variabili sono in `missioni.txt` (e `leggendari.txt`), caricate da `ProduttoreDiTestiCasuale` (vedi [`motore_di_gioco.md`](motore_di_gioco.md) §11). Una riga di grammatica è una lista di campi `CHIAVE=valore` separati da `;`, letta da `CampiDiGrammatica`, che **controlla** i campi: uno sconosciuto, ripetuto o mancante si scopre subito. Una riga lunga si spezza con `\`. Classi di lettura: `CombattimentoRichiesto`, `SorveglianzaRichiesta`, `SoccorsoRichiesto`, `IndagineRichiesta`, `RitualeRichiesto`, `BenedizioneRichiesta`, `FavoreRichiesto`, `LealtaRichiesta`, `ColpoRichiesto`, `DocumentazioneRichiesta`, `TorneoRichiesto`, `MaterialeRichiesto`, `Spedizione`, `OggettoSmarrito`.
+I contenuti variabili sono in `missioni.txt` (e `leggendari.txt`), caricate da `ProduttoreDiMissioniCasuale` e `ProduttoreDiArtefattiCasuale` (vedi [`motore_di_gioco.md`](motore_di_gioco.md) §11). Una riga di grammatica è una lista di campi `CHIAVE=valore` separati da `;`, letta da `CampiDiGrammatica`, che **controlla** i campi: uno sconosciuto, ripetuto o mancante si scopre subito. Una riga lunga si spezza con `\`. Classi di lettura: `CombattimentoRichiesto`, `SorveglianzaRichiesta`, `SoccorsoRichiesto`, `IndagineRichiesta`, `RitualeRichiesto`, `BenedizioneRichiesta`, `FavoreRichiesto`, `LealtaRichiesta`, `ColpoRichiesto`, `DocumentazioneRichiesta`, `TorneoRichiesto`, `MaterialeRichiesto`, `Spedizione`, `OggettoSmarrito`.
 
 - **Nomi di personaggi** (produzioni di nomi): ostaggi, bardi, pellegrini, campioni e campionesse (con nome e epiteto), briganti, maghi, capibanda, goblin.
 - **Campi comuni**: `CAPO=` (`CapoDellaRiga`: `SI` per un nome da `NOME_CAPOBANDA`, il nome di un'altra produzione di nomi, o il nome stesso quando i testi lo dicono), `NEMICO=`/`NUMERO=` (una `TipoPersonaggio`, anche le classi del gruppo), `LUOGO=` (grotta, rovine, bosco, palude, radura), `MONETE=`, `TIPO=` (il `TipoMissione`), `RESA=`, `DUELLO=`, `ONDATA_2=`/`ARRIVO_2=` e `ONDATA_3=`/`ARRIVO_3=` (`OndateDellaRiga`), un modificatore permanente `ATTRIBUTO TIPO QUANTITA` (`ModificatoreDellaRiga`, solo aumenti). Nei testi `%CAPO%` è il nome del capo; nei testi non si usa il `;` e non vanno usati `[ ] { } | "` (sintassi di `GrammarBean`).

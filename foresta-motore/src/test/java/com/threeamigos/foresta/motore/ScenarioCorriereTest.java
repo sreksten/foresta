@@ -18,7 +18,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 
 /**
  * Il corriere: una cosa da portare da una città all'altra, che il destinatario paga alla consegna; le spedizioni
@@ -36,7 +36,7 @@ class ScenarioCorriereTest {
         boolean urgenti = false;
         boolean conCalma = false;
         for (int i = 0; i < 300; i++) {
-            Spedizione spedizione = Spedizione.da(ProduttoreDiTestiCasuale.spedizione());
+            Spedizione spedizione = Spedizione.da(ProduttoreDiMissioniCasuale.spedizione());
             assertFalse("aeiou".contains(spedizione.getOggetto().substring(0, 1)), spedizione.getOggetto());
             assertFalse(spedizione.getRingraziamento().isEmpty());
             urgenti |= spedizione.isUrgente();
@@ -133,7 +133,7 @@ class ScenarioCorriereTest {
     void ogniMerceDiContrabbandoSiLegge() {
         Set<String> oggetti = new HashSet<>();
         for (int i = 0; i < 200; i++) {
-            Spedizione spedizione = Spedizione.da(ProduttoreDiTestiCasuale.rigaDiMissioni("CONTRABBANDO"));
+            Spedizione spedizione = Spedizione.da(ProduttoreDiMissioniCasuale.rigaDiMissioni("CONTRABBANDO"));
             assertFalse("aeiou".contains(spedizione.getOggetto().substring(0, 1)), spedizione.getOggetto());
             oggetti.add(spedizione.getOggetto());
         }

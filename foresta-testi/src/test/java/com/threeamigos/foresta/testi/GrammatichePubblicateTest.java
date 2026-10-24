@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Le regole di postproduzione che il gioco pubblica (nel motore) devono continuare a essere accettate da {@link GrammarBean}.
+ * Le regole di postproduzione che il gioco pubblica (in questo modulo) devono continuare a essere accettate da {@link GrammarBean}.
  */
 class GrammatichePubblicateTest {
 
@@ -19,7 +19,7 @@ class GrammatichePubblicateTest {
         // is treated as final, so this test fails loudly if the new check ever rejects it.
         try (InputStream grammar = new ByteArrayInputStream("ROOT\n\tvai a il castello\n".getBytes(StandardCharsets.UTF_8));
              InputStream postProduction = GrammatichePubblicateTest.class.getResourceAsStream(
-                     "/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt")) {
+                     "/com/threeamigos/foresta/testi/preposizioni_articolate_pp.txt")) {
             assertNotNull(postProduction, "preposizioni_articolate_pp.txt not found on the test classpath");
             GrammarBean bean = new GrammarBean(grammar, postProduction);
             assertEquals("vai al castello", bean.produce().get(0));

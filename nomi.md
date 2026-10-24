@@ -6,7 +6,7 @@ tengono in un registro, che si salva con la partita.
 
 ## 1. Le liste: `nomi.txt`
 
-Risorsa `foresta-motore/src/main/resources/com/threeamigos/foresta/motore/nomi.txt`. `locande.txt` e `missioni.txt` la includono con
+Risorsa `foresta-testi/src/main/resources/com/threeamigos/foresta/testi/nomi.txt`. `locande.txt` e `missioni.txt` la includono con
 `#include_static` (una sezione condivisa: un nome uscito in una grammatica non esce più in nessun'altra), `fiabe.txt` con
 `#include` normale (le fiabe si azzerano a ogni racconto: hanno una copia tutta loro). Vedi [`GrammarBean.md`](GrammarBean.md)
 §4.7 (one-shot), §4.11 e §4.12.
@@ -20,7 +20,7 @@ Risorsa `foresta-motore/src/main/resources/com/threeamigos/foresta/motore/nomi.t
 | `TITOLO$` | 35 | "il Barone"… |
 | `DEGLI_LOCANDE$` | 35 | con le note tra parentesi che descrivono il locandiere: restano così |
 | `DEGLI_ALTISONANTE$` | 35 | senza note: "dei Signori della Luna", "di Altomonte" |
-| `NOME_SACERDOTE$`, `NOME_SACERDOTESSA$` | 5 + 7 | "Fra' …", "Suor …": i due sacerdoti da reclutare e quelli che la benedizione manda nel gruppo (`ProduttoreDiTestiCasuale.nomeSacerdote`, `nomeSacerdotessa`) |
+| `NOME_SACERDOTE$`, `NOME_SACERDOTESSA$` | 5 + 7 | "Fra' …", "Suor …": i due sacerdoti da reclutare e quelli che la benedizione manda nel gruppo (`ProduttoreDiMissioniCasuale.nomeSacerdote`, `nomeSacerdotessa`) |
 | `NOME_COMPARSA` | 20 | non one-shot: si ripete |
 
 Le radici per i personaggi del mondo: `NOME_MASTRO` ("Mastro [NOME_MASCHILE]"), `NOME_CAPITANO` (`[NOME_MASCHILE]`),
@@ -56,7 +56,7 @@ sacerdotessa, che vengono da `NOME_SACERDOTE` e `NOME_SACERDOTESSA`.
 In `Foresta.reimposta()`, dopo `resetProduzioni()`, in quest'ordine e **senza altri reset in mezzo**:
 
 1. i 21 locandieri (le 4 locande delle città più `max(compagni disponibili, (DIMENSIONE_X + DIMENSIONE_Y) / 4)` = 17), con
-   `ProduttoreDiTestiCasuale.getDatiLocanda`, che pesca tutto insieme: **non va richiamato a partita avviata** (vedi il suo
+   `ProduttoreDiLocandeCasuale.getDatiLocanda`, che pesca tutto insieme: **non va richiamato a partita avviata** (vedi il suo
    javadoc);
 2. per ogni città borgomastro, capitano e i quattro artigiani (`RegistroPersonaggi.creaIResidentiDellaCitta`);
 3. il bardo e la moglie (`creaIlBardoESuaMoglie`).
@@ -65,7 +65,7 @@ Servono 21 + 24 + 1 = 46 nomi maschili su 98, e i pool delle altre liste (35) co
 si ripete.
 
 Durante la partita ostaggi, pellegrini e maghi delle missioni pescano dallo stesso `NOME_MASCHILE`. Quando finisce,
-`ProduttoreDiTestiCasuale.produciDaMissioni` (usata da `nomeOstaggio`, `nomePellegrino`, `nomeDiPersonaggioNoto` e
+`ProduttoreDiMissioniCasuale.produciDaMissioni` (usata da `nomeOstaggio`, `nomePellegrino`, `nomeDiPersonaggioNoto` e
 `rigaDiMissioni`) vede che `canProduce` è falso, azzera le sezioni statiche e riparte. Dopo un reset un ostaggio può avere il
 nome di un residente: è accettato.
 

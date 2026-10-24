@@ -3,7 +3,7 @@ package com.threeamigos.foresta.missioni.leggende;
 import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -71,7 +71,7 @@ public final class PescaLeggendaria {
 		if (pezzoMancante.isPresent()) {
 			return CatalogoLeggendari.getLeggendario(pezzoMancante.get()).orElseThrow(IllegalStateException::new).getRiga();
 		}
-		return ProduttoreDiTestiCasuale.oggettoLeggendario(riga -> giaPescati.contains(OggettoLeggendario.da(riga).getChiave()))
+		return ProduttoreDiArtefattiCasuale.oggettoLeggendario(riga -> giaPescati.contains(OggettoLeggendario.da(riga).getChiave()))
 				.orElseThrow(IllegalStateException::new);
 	}
 

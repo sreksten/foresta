@@ -16,7 +16,7 @@ import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.dado.TruccatoreDiDadi;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
@@ -109,8 +109,8 @@ class LibroTecnicoTest {
 		boolean alchimista = false;
 		boolean incantatore = false;
 		for (int i = 0; i < 300; i++) {
-			String perUnix = ProduttoreDiTestiCasuale.conclusioneSulLibroTecnico(unix.getChiave());
-			String perKr = ProduttoreDiTestiCasuale.conclusioneSulLibroTecnico(kr.getChiave());
+			String perUnix = ProduttoreDiArtefattiCasuale.conclusioneSulLibroTecnico(unix.getChiave());
+			String perKr = ProduttoreDiArtefattiCasuale.conclusioneSulLibroTecnico(kr.getChiave());
 			assertFalse(perUnix.isEmpty());
 			assertFalse(perKr.isEmpty());
 			// Il Manuale di Unix ha a che fare con l'Alchimista, il libro sul C con l'Incantatore: mai l'altro

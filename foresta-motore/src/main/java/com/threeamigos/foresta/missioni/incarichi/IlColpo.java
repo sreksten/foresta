@@ -15,7 +15,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 /**
@@ -40,7 +40,7 @@ public class IlColpo extends IncaricoInCitta {
 	}
 
 	public ColpoRichiesto getColpo() {
-		return ColpoRichiesto.da(parametro(COLPO, () -> ProduttoreDiTestiCasuale.rigaDiMissioni(COLPO)));
+		return ColpoRichiesto.da(parametro(COLPO, () -> ProduttoreDiMissioniCasuale.rigaDiMissioni(COLPO)));
 	}
 
 	/**

@@ -1,4 +1,4 @@
-// I nomi dei personaggi delle missioni (vedi ProduttoreDiTestiCasuale): gli ostaggi da liberare, i bardi da
+// I nomi dei personaggi delle missioni (vedi ProduttoreDiMissioniCasuale): gli ostaggi da liberare, i bardi da
 // riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
 // l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; le cose da portare da una città all'altra,
 // anche di contrabbando; gli oggetti smarriti nella foresta; gli incarichi di combattimento, le sorveglianze, i

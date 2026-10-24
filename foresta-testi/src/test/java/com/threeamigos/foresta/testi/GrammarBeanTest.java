@@ -1271,7 +1271,7 @@ class GrammarBeanTest {
     void beansCreatedBackToBackDoNotShareTheSameRandomSequence() throws Exception {
         // Regression: rnd used to be seeded from System.currentTimeMillis(), whose resolution is
         // a millisecond, so two beans built one after another (exactly what
-        // ProduttoreDiTestiCasuale's static initializer does) drew the identical sequence.
+        // the game's text producers do when they load their grammars) drew the identical sequence.
         // Now every bean draws from Dado's single source, so interleaved draws differ anyway.
         GrammarBean first = new GrammarBean("ROOT\n\ta|b|c|d|e|f|g|h\n");
         GrammarBean second = new GrammarBean("ROOT\n\ta|b|c|d|e|f|g|h\n");

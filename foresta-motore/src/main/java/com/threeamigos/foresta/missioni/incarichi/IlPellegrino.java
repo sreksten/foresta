@@ -12,7 +12,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -39,7 +39,7 @@ public class IlPellegrino extends IncaricoInCitta {
 	 * Il nome del pellegrino, da missioni.txt: la missione si ripete con altri pellegrini.
 	 */
 	public String getPellegrino() {
-		return parametro(PELLEGRINO, ProduttoreDiTestiCasuale::nomePellegrino);
+		return parametro(PELLEGRINO, ProduttoreDiMissioniCasuale::nomePellegrino);
 	}
 
 	@Override

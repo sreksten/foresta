@@ -6,7 +6,7 @@ import com.threeamigos.foresta.missioni.incarichi.IlColpo;
 import com.threeamigos.foresta.missioni.richieste.ColpoRichiesto;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoMissione;
@@ -31,7 +31,7 @@ class ScenarioColpoTest {
     void ogniColpoSiLegge() {
         Set<TipoMissione> tipi = EnumSet.noneOf(TipoMissione.class);
         for (int i = 0; i < 300; i++) {
-            tipi.add(ColpoRichiesto.da(ProduttoreDiTestiCasuale.rigaDiMissioni("COLPO")).getTipo());
+            tipi.add(ColpoRichiesto.da(ProduttoreDiMissioniCasuale.rigaDiMissioni("COLPO")).getTipo());
         }
         assertEquals(EnumSet.of(TipoMissione.FURTO, TipoMissione.SABOTAGGIO, TipoMissione.VANDALISMO, TipoMissione.INCENDIO,
                 TipoMissione.VIOLAZIONE_DOMICILIO, TipoMissione.AVVELENAMENTO, TipoMissione.ESPLOSIONE, TipoMissione.FALSIFICAZIONE,

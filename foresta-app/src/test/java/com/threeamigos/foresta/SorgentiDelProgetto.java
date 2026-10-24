@@ -63,9 +63,9 @@ public final class SorgentiDelProgetto {
 	}
 
 	/**
-	 * Un file di risorse del motore, come nomi.txt.
+	 * Una grammatica dei testi, come nomi.txt.
 	 */
-	public static Path risorsaDelMotore(String nome) {
-		return radice().resolve("foresta-motore/src/main/resources/com/threeamigos/foresta/motore/" + nome);
+	public static Path grammaticaDeiTesti(String nome) {
+		return radice().resolve("foresta-testi/src/main/resources/com/threeamigos/foresta/testi/" + nome);
 	}
 }

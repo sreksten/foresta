@@ -946,7 +946,7 @@ public class GrammarBean {
 	 * Ripristina le produzioni condivise di ogni sezione statica caricata finora: ciò che era stato consumato tramite una qualsiasi grammatica
 	 * torna disponibile. Ogni grammatica che include una sezione statica ricostruisce inoltre le proprie produzioni la volta
 	 * successiva che viene usata (comprese quelle monouso proprie), così che nulla resti potato per un nome che è tornato. Si chiama
-	 * all'inizio di una partita (vedi {@code ProduttoreDiTestiCasuale.resetProduzioni}).
+	 * all'inizio di una partita (vedi {@code ProduttoriDiTesti.resetProduzioni}).
 	 */
 	public static void resetStaticProductions() {
 		synchronized (STATIC_LOCK) {

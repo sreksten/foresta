@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.strumenti.dado;
 
-import com.threeamigos.foresta.strumenti.logger.Logger;
 import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
@@ -128,8 +127,7 @@ public final class Dado {
      */
     public static int tiraAncheAUnaFaccia(int N) {
         if (N < 1) {
-            Logger.log(() -> "**************************ERRORE FATALE! Dado tira(" + N + ")");
-            throw new IllegalArgumentException("Il numero di facce deve essere maggiore di zero");
+            throw new IllegalArgumentException("Dado.tiraAncheAUnaFaccia(" + N + "): il numero di facce deve essere maggiore di zero");
         }
         if (N == 1) {
             return 1;
@@ -146,8 +144,7 @@ public final class Dado {
      */
     public static int tiraAncheSenzaRange(int min, int max) {
         if (min > max) {
-            Logger.log(() -> "**************************ERRORE FATALE! Dado tira(" + min + ", " + max + ")");
-            throw new IllegalArgumentException("Il valore minimo deve essere minore o uguale al valore massimo");
+            throw new IllegalArgumentException("Dado.tiraAncheSenzaRange(" + min + ", " + max + "): il valore minimo deve essere minore o uguale al valore massimo");
         }
         if (min == max) {
             return min;
@@ -162,8 +159,7 @@ public final class Dado {
      */
     public static int tira(int N) {
         if (N <= 1) {
-            Logger.log(() -> "**************************ERRORE FATALE! Dado tira(" + N + ")");
-            throw new IllegalArgumentException("Il numero di facce deve essere maggiore di 1");
+            throw new IllegalArgumentException("Dado.tira(" + N + "): il numero di facce deve essere maggiore di 1");
         }
         return tira(1, N);
     }
@@ -176,8 +172,7 @@ public final class Dado {
      */
     public static int tira(int min, int max) {
         if (min >= max) {
-            Logger.log(() -> "**************************ERRORE FATALE! Dado tira(" + min + ", " + max + ")");
-            throw new IllegalArgumentException("Il valore minimo deve essere minore al valore massimo");
+            throw new IllegalArgumentException("Dado.tira(" + min + ", " + max + "): il valore minimo deve essere minore del valore massimo");
         }
         return intero(min, max);
     }
@@ -188,8 +183,7 @@ public final class Dado {
      */
     public static int tira(ContestoLancio contesto, int min, int max) {
         if (min >= max) {
-            Logger.log(() -> "**************************ERRORE FATALE! Dado tira(" + contesto + ", " + min + ", " + max + ")");
-            throw new IllegalArgumentException("Il valore minimo deve essere minore al valore massimo");
+            throw new IllegalArgumentException("Dado.tira(" + contesto + ", " + min + ", " + max + "): il valore minimo deve essere minore del valore massimo");
         }
         if (TRUCCHI.isEmpty()) {
             TruccatoreDiDadi t = truccatore;
@@ -208,8 +202,7 @@ public final class Dado {
      */
     public static int tira(ContestoLancio contesto, int N) {
         if (N <= 1) {
-            Logger.log(() -> "**************************ERRORE FATALE! Dado tira(" + contesto + ", " + N + ")");
-            throw new IllegalArgumentException("Il numero di facce deve essere maggiore di 1");
+            throw new IllegalArgumentException("Dado.tira(" + contesto + ", " + N + "): il numero di facce deve essere maggiore di 1");
         }
         return tira(contesto, 1, N);
     }
@@ -220,8 +213,7 @@ public final class Dado {
      */
     public static int tiraAncheAUnaFaccia(ContestoLancio contesto, int N) {
         if (N < 1) {
-            Logger.log(() -> "**************************ERRORE FATALE! Dado tira(" + contesto + ", " + N + ")");
-            throw new IllegalArgumentException("Il numero di facce deve essere maggiore di zero");
+            throw new IllegalArgumentException("Dado.tiraAncheAUnaFaccia(" + contesto + ", " + N + "): il numero di facce deve essere maggiore di zero");
         }
         if (N == 1) {
             return 1;
@@ -235,7 +227,7 @@ public final class Dado {
      */
     public static <T> T scegli(ContestoLancio contesto, List<T> ammessi) {
         if (ammessi.isEmpty()) {
-            throw new IllegalArgumentException("Non c'è niente da scegliere");
+            throw new IllegalArgumentException("Dado.scegli(" + contesto + "): non c'è niente da scegliere");
         }
         Optional<T> voluto = sceltaVoluta(contesto, ammessi);
         if (voluto.isPresent()) {

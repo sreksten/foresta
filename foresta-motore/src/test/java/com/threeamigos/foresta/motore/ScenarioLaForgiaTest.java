@@ -10,7 +10,7 @@ import com.threeamigos.foresta.missioni.richieste.MaterialeRichiesto;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
@@ -29,9 +29,9 @@ class ScenarioLaForgiaTest {
     @Test
     void leRigheDellaGrammaticaSonoValideEDannoUnLeggendarioMigliore() {
         for (int i = 0; i < 300; i++) {
-            ForgiaRichiesta arma = ForgiaRichiesta.da(ProduttoreDiTestiCasuale.rigaDiMissioni("FORGIA"));
-            assertFalse(MaterialeRichiesto.da(ProduttoreDiTestiCasuale.materialeRichiesto("FORGIA_METALLO")).isTrofeo());
-            assertTrue(MaterialeRichiesto.da(ProduttoreDiTestiCasuale.materialeRichiesto("FORGIA_TROFEO")).isTrofeo());
+            ForgiaRichiesta arma = ForgiaRichiesta.da(ProduttoreDiMissioniCasuale.rigaDiMissioni("FORGIA"));
+            assertFalse(MaterialeRichiesto.da(ProduttoreDiMissioniCasuale.materialeRichiesto("FORGIA_METALLO")).isTrofeo());
+            assertTrue(MaterialeRichiesto.da(ProduttoreDiMissioniCasuale.materialeRichiesto("FORGIA_TROFEO")).isTrofeo());
             for (int livello = 1; livello <= 12; livello++) {
                 Artefatto forgiata = arma.leggendario(livello).costruisci();
                 assertEquals(TipoRaritaArtefatto.LEGGENDARIO, forgiata.getRarita(), arma.getChiave());

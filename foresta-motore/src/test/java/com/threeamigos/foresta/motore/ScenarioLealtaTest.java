@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 
 /**
  * La lealtà: una sera, all'accampamento, un compagno confida un problema e chiede un favore, che è una missione
@@ -46,7 +46,7 @@ class ScenarioLealtaTest {
     void ogniLealtaSiLegge() {
         Set<String> chiavi = new HashSet<>();
         for (int i = 0; i < 200; i++) {
-            LealtaRichiesta lealta = LealtaRichiesta.da(ProduttoreDiTestiCasuale.rigaDiMissioni(LaLealta.LEALTA));
+            LealtaRichiesta lealta = LealtaRichiesta.da(ProduttoreDiMissioniCasuale.rigaDiMissioni(LaLealta.LEALTA));
             assertEquals(LealtaRichiesta.NOTA, lealta.nuovoModificatore().getNote());
             chiavi.add(lealta.getChiave());
         }

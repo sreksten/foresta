@@ -312,7 +312,7 @@ SET_LEGGENDARIO$
 
 // ---------------------------------------------------------------------------------------------
 // L'introduzione della leggenda: la prima battuta del narratore, che dice di quale oggetto si parla (vedi
-// ProduttoreDiTestiCasuale.introduzioneDellaLeggenda). Non si usa se la prima LEGGENDA dell'oggetto lo nomina già.
+// ProduttoreDiArtefattiCasuale.introduzioneDellaLeggenda). Non si usa se la prima LEGGENDA dell'oggetto lo nomina già.
 // DELL_OGGETTO e L_OGGETTO li fissa il codice prima di produrre, con il nome breve dell'oggetto: "dello Scudo Fiscale"
 // e "lo Scudo Fiscale". I valori scritti qui sotto servono solo a far esistere le produzioni.
 // ---------------------------------------------------------------------------------------------
@@ -360,7 +360,7 @@ LIBRO_TECNICO$
     BATTUTA=Dice che tutto comincia da main. Il nostro viaggio, invece, è cominciato da un eremita.
 
 // Quel che il capo legge sulla copertina: TITOLO lo fissa il codice prima di produrre, con il titolo e la descrizione
-// del libro (vedi ProduttoreDiTestiCasuale.letturaDelLibroTecnico). Il valore scritto qui sotto serve solo a far
+// del libro (vedi ProduttoreDiArtefattiCasuale.letturaDelLibroTecnico). Il valore scritto qui sotto serve solo a far
 // esistere la produzione.
 LETTURA_LIBRO_TECNICO
     Che cos'è questo? Un libro... C'è scritto [*TITOLO].
@@ -371,7 +371,7 @@ TITOLO
     il titolo del libro
 
 // Come il capo chiude la questione, dopo averlo sfogliato: una produzione per libro, CONCLUSIONE_ seguito dalla sua chiave
-// (vedi ProduttoreDiTestiCasuale.conclusioneSulLibroTecnico), perché rimanda a chi può dirgliene di più. Il Manuale di Unix
+// (vedi ProduttoreDiArtefattiCasuale.conclusioneSulLibroTecnico), perché rimanda a chi può dirgliene di più. Il Manuale di Unix
 // System V ha a che fare con l'Alchimista (vedi IntermezzoSpadaNascosta), The C Programming Language con l'Incantatore.
 CONCLUSIONE_MANUALE_UNIX_SYSTEM_V
     [PERSONAGGIO_LIBRO_TECNICO=Alchimista][CONCLUSIONE_LIBRO_TECNICO]

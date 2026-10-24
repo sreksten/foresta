@@ -199,7 +199,7 @@ I **trofei** sono obiettivi che valgono da una partita all'altra (contatori di g
 
 ## 10. Testi generati
 
-Quasi tutto il testo vario viene da **grammatiche** (`GrammarBean`) scritte in file `.txt`: nomi di locande, templi, rovine e artefatti, fiabe, oroscopi, notizie e testi delle missioni. `ProduttoreDiTestiCasuale` le carica e le interroga; le produzioni *one-shot* garantiscono che certi elementi non si ripetano nella stessa partita. Vedi [`GrammarBean.md`](GrammarBean.md).
+Quasi tutto il testo vario viene da **grammatiche** (`GrammarBean`) scritte in file `.txt`: nomi di locande, templi, rovine e artefatti, fiabe, oroscopi, notizie e testi delle missioni. I produttori di testi (`ProduttoreDi…Casuale`) le caricano e le interrogano; le produzioni *one-shot* garantiscono che certi elementi non si ripetano nella stessa partita. Vedi [`GrammarBean.md`](GrammarBean.md).
 
 ## 11. Dati e salvataggi
 

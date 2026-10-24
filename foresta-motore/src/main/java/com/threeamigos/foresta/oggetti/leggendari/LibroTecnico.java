@@ -6,7 +6,7 @@ import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
@@ -117,7 +117,7 @@ public final class LibroTecnico {
 	public static synchronized Collection<LibroTecnico> tutti() {
 		if (libri == null) {
 			Map<String, LibroTecnico> letti = new LinkedHashMap<>();
-			for (String riga : ProduttoreDiTestiCasuale.tuttiILibriTecnici()) {
+			for (String riga : ProduttoreDiArtefattiCasuale.tuttiILibriTecnici()) {
 				LibroTecnico libro = da(riga);
 				if (letti.put(libro.getChiave(), libro) != null) {
 					throw new IllegalStateException("Libro tecnico ripetuto: " + libro.getChiave());

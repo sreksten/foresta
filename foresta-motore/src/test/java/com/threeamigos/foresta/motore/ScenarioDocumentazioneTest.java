@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 
 /**
  * La documentazione: i posti da documentare si segnano sulla mappa uno alla volta; in ognuno si annota che cosa si è
@@ -29,7 +29,7 @@ class ScenarioDocumentazioneTest {
     void ogniDocumentazioneSiLegge() {
         Set<String> chiavi = new HashSet<>();
         for (int i = 0; i < 200; i++) {
-            chiavi.add(DocumentazioneRichiesta.da(ProduttoreDiTestiCasuale.rigaDiMissioni("DOCUMENTAZIONE")).getChiave());
+            chiavi.add(DocumentazioneRichiesta.da(ProduttoreDiMissioniCasuale.rigaDiMissioni("DOCUMENTAZIONE")).getChiave());
         }
         assertTrue(chiavi.size() >= 4, String.valueOf(chiavi));
         assertThrows(IllegalArgumentException.class, () -> DocumentazioneRichiesta.da(ISCRIZIONI.replace("REPERTO_2=TEMPIO:Una regina.;", "")));

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale.DialogoSullOroscopo;
+import com.threeamigos.foresta.testi.ProduttoreDiOroscopiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiOroscopiCasuale.DialogoSullOroscopo;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
 import java.util.List;
@@ -47,7 +47,7 @@ public class IntermezzoOroscopo implements Intermezzo {
 
 	@Override
 	public List<PaginaIntermezzo> getPagine() {
-		DialogoSullOroscopo dialogo = ProduttoreDiTestiCasuale.dialogoSullOroscopo();
+		DialogoSullOroscopo dialogo = ProduttoreDiOroscopiCasuale.dialogoSullOroscopo();
 		ScenaNegozio scena = NegozioInScena.ALCHIMISTA.entraIlGruppo();
 		for (String frase : dialogo.getOroscopo().split(FINE_FRASE)) {
 			scena.parlaIlNegoziante(frase);

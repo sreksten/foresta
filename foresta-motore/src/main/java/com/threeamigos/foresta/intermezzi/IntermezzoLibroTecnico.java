@@ -3,7 +3,7 @@ package com.threeamigos.foresta.intermezzi;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
 import java.util.ArrayList;
@@ -82,8 +82,8 @@ public class IntermezzoLibroTecnico implements Intermezzo {
 						.conBocca(0.5, -0.15)
 						.guarda(Verso.DESTRA))
 				.conElemento(ElementoIntermezzo.di(LIBRO, ImmagineIntermezzo.risorsa(IMMAGINE_LIBRO), 0.55, 0.66))
-				.conBattuta(BattutaIntermezzo.di(CAPO, ProduttoreDiTestiCasuale.letturaDelLibroTecnico(libro.getTitoloDaLeggere())))
+				.conBattuta(BattutaIntermezzo.di(CAPO, ProduttoreDiArtefattiCasuale.letturaDelLibroTecnico(libro.getTitoloDaLeggere())))
 				.conBattuta(BattutaIntermezzo.di(CAPO, battute.get(Dado.tiraAncheAUnaFaccia(battute.size()) - 1)))
-				.conBattuta(BattutaIntermezzo.di(CAPO, ProduttoreDiTestiCasuale.conclusioneSulLibroTecnico(libro.getChiave()))));
+				.conBattuta(BattutaIntermezzo.di(CAPO, ProduttoreDiArtefattiCasuale.conclusioneSulLibroTecnico(libro.getChiave()))));
 	}
 }
