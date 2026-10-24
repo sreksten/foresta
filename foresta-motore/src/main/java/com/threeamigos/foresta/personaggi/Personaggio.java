@@ -13,7 +13,6 @@ import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
-import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.Collection;
@@ -323,9 +322,11 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
     int decrementaTempo();
 	/**
-	 * Ogni personaggio puo' fare differenti tipi di offerta, a seconda della sua classe.
+	 * Ogni personaggio puo' fare differenti tipi di offerta, a seconda della sua classe: questo è il tipo di quella che fa a chi gli fa
+	 * amicizia o lo corrompe ({@code azione}), scelto a caso fra i suoi (a gruppo pieno nessuno si può unire, quindi senza gli aiuti), o
+	 * null se non ne ha. A creare l'offerta ci pensa chi la usa (vedi FabbricaOfferte).
 	 */
-    Offerta getOfferta(Comando azione);
+    TipoOfferta getOfferta(Comando azione);
 	/**
 	 * Un personaggio potrebbe essere immune a una certa classe di incantesimi (o più)
 	 */

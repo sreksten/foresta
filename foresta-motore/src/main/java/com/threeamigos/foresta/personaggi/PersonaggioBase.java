@@ -23,8 +23,6 @@ import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.offerte.FabbricaOfferte;
-import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.ArmaNaturale;
 import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.strumenti.dado.Dado;
@@ -647,7 +645,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return md.getMotivoNelGruppo();
 	}
 
-	public Offerta getOfferta(Comando azione) {
+	public TipoOfferta getOfferta(Comando azione) {
 		TipoOfferta[] offerte = null;
 		if (isAmichevole() && azione == Comando.AMICIZIA) {
 			offerte = getOfferteAmicizia();
@@ -662,7 +660,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		if (offerte.length > 0) {
 			int indice = Dado.tiraAncheAUnaFaccia(offerte.length) - 1;
-			return FabbricaOfferte.crea(offerte[indice]);
+			return offerte[indice];
 		}
 		return null;
 	}

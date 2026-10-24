@@ -20,6 +20,7 @@ import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.offerte.FabbricaOfferte;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.BottinoArtefatto;
@@ -822,7 +823,7 @@ public abstract class LocazioneBase implements Locazione {
 					BusEventi.pubblica(new InternoCorruzioneRiuscita(classiAvversariVivi()));
 					setOggetto(null);
 
-					offerta = gruppoAvversario.getCapo().getOfferta(Comando.CORRUZIONE);
+					offerta = creaOfferta(gruppoAvversario.getCapo().getOfferta(Comando.CORRUZIONE));
 					if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
 						BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
 						if (offerta.isGratuita(gruppo, gruppoAvversario)) {
@@ -880,7 +881,7 @@ public abstract class LocazioneBase implements Locazione {
 							&& Dado.tira(100) <= Costanti.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO) {
 						return iniziaLaSfida();
 					}
-					offerta = gruppoAvversario.getCapo().getOfferta(Comando.AMICIZIA);
+					offerta = creaOfferta(gruppoAvversario.getCapo().getOfferta(Comando.AMICIZIA));
 					if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
 						BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
 						if (offerta.isGratuita(gruppo, gruppoAvversario)) {
@@ -1642,6 +1643,13 @@ public abstract class LocazioneBase implements Locazione {
 	 *
 	 * @return FINE_LOCAZIONE se non resta nessun avversario, altrimenti vuoto
 	 */
+	/**
+	 * L'offerta di quel tipo, o null se il personaggio non ne faceva.
+	 */
+	private static Offerta creaOfferta(TipoOfferta tipo) {
+		return tipo == null ? null : FabbricaOfferte.crea(tipo);
+	}
+
 	private Optional<Stato> attaccaConLeArmi(Personaggio attore) {
 		return attaccaConLeArmi(attore, gruppoAvversario.getPersonaggioVivo());
 	}

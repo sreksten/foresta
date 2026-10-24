@@ -73,6 +73,14 @@ Panoramica in `motore_grafico.md`.
 - Barra icone: `DisplayableCanvasBarraIconeDock` (default) e `DisplayableCanvasBarraIcone` (con argomento `BARRACLASSICA`).
 - Testo: font bitmap `DoomdarkFont*`, `DoomdarkTextRectangle*`. Prompt di input: `Prompt`.
 
+## Come si lavora (regole di collaborazione)
+
+- **Non prendere iniziative sul disegno.** Se l'utente ha detto dove sta una cosa ("deve rimanere nel personaggio", "va nel sottoprogetto"), ci resta. Se si pensa che sia sbagliato, non si fa di testa propria: si spiega perché e si aspetta che l'utente si convinca.
+- **Prima di cancellare qualcosa si chiede**: classi, enum, test, campi dei file di dati. Se un ostacolo sembra risolvibile eliminando, la prima ipotesi è spostare, e in ogni caso si dice cosa si perde.
+- **Prima di una scorporazione o di una modifica che cambia la forma del codice** (togliere un metodo da un'interfaccia, spostare logica da una classe a un'altra, cambiare le dipendenze fra moduli) si dice all'utente che cosa si sta per fare e perché, e si aspetta l'ok.
+- Si procede per passi che compilano; a ogni passo si avvisa e si aspetta la revisione prima del commit, che si fa solo su richiesta.
+- Se un passo non funziona, si ripristina lo stato committato solo se l'utente lo chiede; altrimenti si dice com'è la situazione.
+
 ## Convenzioni
 
 - La documentazione `.md` sta tutta nella radice (panoramica e mappa dei documenti in `foresta.md`) del progetto e descrive lo stato attuale (la storia è in git).
