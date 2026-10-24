@@ -6,7 +6,7 @@ import com.threeamigos.foresta.eventi.interni.InternoInizioRound;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CaratteristicaDiClasse;
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;

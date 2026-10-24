@@ -5,8 +5,8 @@ import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.tipi.CategoriaArtefatto;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 
 import java.util.Locale;
 

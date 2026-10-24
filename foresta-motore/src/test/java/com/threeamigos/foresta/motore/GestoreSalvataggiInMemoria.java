@@ -2,7 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
 import com.threeamigos.foresta.modellodati.GruppoGiocatoreMD;
-import com.threeamigos.foresta.modellodati.LettoreCampi;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;

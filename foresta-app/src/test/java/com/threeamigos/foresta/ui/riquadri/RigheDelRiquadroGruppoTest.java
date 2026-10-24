@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui.riquadri;
 
-import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.serializzazione.Serializzabile;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,9 +12,9 @@ import java.util.List;
 
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
-import static com.threeamigos.foresta.modellodati.Serializzabile.pulisciCampo;
-import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.pulisciCampo;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**
  * Il tempo della partita: giorno e ora correnti, le città distrutte, se il gioco è finito e l'ultimo evento

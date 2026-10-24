@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni.richieste;
 
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**

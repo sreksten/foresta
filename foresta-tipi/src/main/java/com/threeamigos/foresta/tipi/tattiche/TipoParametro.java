@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.tipi.tattiche;
 
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+
 /**
  * Il tipo del parametro di un filtro, di un ordinamento o di un predicato: la lettura controlla che ci sia e sia giusto, e la scheda del
  * giocatore mostra l'editor adatto (un numero, un menu di stati...).

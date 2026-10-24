@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.serializzazione.Serializzabile;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;

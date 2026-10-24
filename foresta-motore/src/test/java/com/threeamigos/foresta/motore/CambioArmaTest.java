@@ -10,7 +10,7 @@ import com.threeamigos.foresta.personaggi.Ladro;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoEquipaggiamento;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

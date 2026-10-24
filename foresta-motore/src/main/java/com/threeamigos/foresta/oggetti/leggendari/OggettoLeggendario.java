@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.oggetti.leggendari;
 
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;

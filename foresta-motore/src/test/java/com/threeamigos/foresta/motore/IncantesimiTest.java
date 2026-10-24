@@ -8,14 +8,14 @@ import com.threeamigos.foresta.incantesimi.Silenzio;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Scheletro;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

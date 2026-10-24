@@ -4,7 +4,7 @@ import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.GradoIncantamento;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

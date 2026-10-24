@@ -1,5 +1,8 @@
 package com.threeamigos.foresta;
 
+import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.comandigiocatore.*;
@@ -9,7 +12,7 @@ import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.interfacce.OggettoConCosto;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
 import com.threeamigos.foresta.oggetti.Artefatto;

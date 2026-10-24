@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
 import com.threeamigos.foresta.modellodati.GruppoGiocatoreMD;
-import com.threeamigos.foresta.modellodati.LettoreCampi;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;

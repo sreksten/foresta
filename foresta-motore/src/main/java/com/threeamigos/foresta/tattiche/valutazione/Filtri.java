@@ -10,8 +10,8 @@ import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
 

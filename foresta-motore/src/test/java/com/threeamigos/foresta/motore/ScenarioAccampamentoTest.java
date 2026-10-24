@@ -6,11 +6,11 @@ import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.richieste.LealtaRichiesta;
 import com.threeamigos.foresta.modellodati.IntermezziMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

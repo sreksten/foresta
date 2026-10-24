@@ -9,7 +9,7 @@ import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Personaggio.NotificaMorte;
-import com.threeamigos.foresta.tipi.CategoriaDanno;
+import com.threeamigos.foresta.danni.tipi.CategoriaDanno;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 

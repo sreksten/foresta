@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;

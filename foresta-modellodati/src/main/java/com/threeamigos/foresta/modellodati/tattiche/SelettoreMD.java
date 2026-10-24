@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
-import com.threeamigos.foresta.modellodati.LettoreCampi;
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 
@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
-import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**
  * Chi è il bersaglio di una voce: una rosa di candidati, i filtri che li restringono (in AND, l'ordine non conta) e

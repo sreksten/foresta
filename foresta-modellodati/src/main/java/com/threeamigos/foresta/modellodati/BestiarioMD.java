@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.serializzazione.Serializzabile;
+import com.threeamigos.foresta.serializzazione.MappaProprieta;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.io.BufferedReader;
@@ -12,7 +15,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**
  * Il bestiario: quali voci si sono sbloccate e quali caratteristiche si sono scoperte, per ogni voce. Una voce è un ruolo

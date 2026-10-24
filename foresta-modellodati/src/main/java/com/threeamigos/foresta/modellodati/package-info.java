@@ -18,11 +18,14 @@
  * {@code togli…}, {@code riordina…}), così nessuno modifica per sbaglio un elenco che appartiene al modello. Una vista
  * di una lista si confronta con {@code equals} come la lista.
  * <p>
- * <b>Salvataggio.</b> Ogni classe che si salva implementa {@link com.threeamigos.foresta.modellodati.Serializzabile}:
+ * <b>Salvataggio.</b> Ogni classe che si salva implementa {@link com.threeamigos.foresta.serializzazione.Serializzabile}:
  * scrive un testo a righe, con i campi separati da {@code |}, e lo rilegge con
- * {@link com.threeamigos.foresta.modellodati.LettoreCampi}. Il formato non deve restare compatibile con le versioni
+ * {@link com.threeamigos.foresta.serializzazione.LettoreCampi}. Il formato non deve restare compatibile con le versioni
  * precedenti.
  * <p>
- * Questo modulo dipende solo dai tipi di base (<code>tipi</code>) e non conosce motore, eventi né interfaccia.
+ * Questo modulo dipende solo dai tipi di base (<code>tipi</code>) e dalla serializzazione (<code>serializzazione</code>) e non conosce motore, eventi né interfaccia.
  */
 package com.threeamigos.foresta.modellodati;
+
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
+import com.threeamigos.foresta.serializzazione.Serializzabile;

@@ -1,5 +1,10 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.attributi.tipi.CategoriaAttributo;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -13,27 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * cosa tratta un negozio, il ruolo di una classe, quanti effetti regge un artefatto...
  */
 class RegoleDeiTipiTest {
-
-    @Test
-    void gliEffettiDiUnTipoDiDannoNonSiCambianoDaFuori() {
-        TipoDanno danno = null;
-        for (TipoDanno tipo : TipoDanno.values()) {
-            if (tipo.hasEffettiDiStato()) {
-                danno = tipo;
-                break;
-            }
-        }
-        assertNotNull(danno, "almeno un tipo di danno causa degli stati");
-        TipoEffettoDiStato[] prima = danno.getEffetti();
-        TipoEffettoDiStato[] copia = danno.getEffetti();
-        assertNotSame(prima, copia);
-
-        // Chi riceve l'array lo può cambiare senza toccare l'enum
-        Arrays.fill(prima, null);
-
-        assertArrayEquals(copia, danno.getEffetti());
-        assertNotNull(danno.getEffetti()[0]);
-    }
 
     @Test
     void cartaBatteSassoSassoBatteForbiceForbiceBatteCarta() {
@@ -158,51 +142,11 @@ class RegoleDeiTipiTest {
     }
 
     @Test
-    void unTipoDiDannoHaEffettiDiStatoSeNeElencaQualcuno() {
-        for (TipoDanno tipo : TipoDanno.values()) {
-            assertEquals(tipo.getEffetti().length > 0, tipo.hasEffettiDiStato(), tipo.name());
-            assertNotNull(tipo.getCategoriaDanno(), tipo.name());
-        }
-        assertTrue(Arrays.asList(TipoDanno.SONICO.getEffetti()).contains(TipoEffettoDiStato.ASSORDATO));
-    }
-
-    @Test
     void leBottegheDellaForestaSonoQuattro() {
         Set<TipoLocazione> botteghe = EnumSet.of(TipoLocazione.ALCHIMISTA, TipoLocazione.ARMAIOLO,
                 TipoLocazione.VENDITORE_DI_PERGAMENE, TipoLocazione.INCANTATORE);
         for (TipoLocazione locazione : TipoLocazione.values()) {
             assertEquals(botteghe.contains(locazione), locazione.isBottega(), locazione.name());
         }
-    }
-
-    @Test
-    void unAttributoEPrimarioOSecondarioSecondoLaSuaCategoria() {
-        for (TipoAttributo attributo : TipoAttributo.values()) {
-            assertEquals(attributo.getCategoriaAttributo() == CategoriaAttributo.PRIMARIO, attributo.isPrimario(), attributo.name());
-            assertEquals(attributo.getCategoriaAttributo() == CategoriaAttributo.SECONDARIO, attributo.isSecondario(), attributo.name());
-        }
-        assertTrue(TipoAttributo.FORZA.isPrimario());
-    }
-
-    @Test
-    void gliStatiBeneficiSonoLIspirazioneEIlBerserk() {
-        for (TipoEffettoDiStato stato : TipoEffettoDiStato.values()) {
-            assertEquals(stato == TipoEffettoDiStato.ISPIRATO || stato == TipoEffettoDiStato.BERSERK
-					|| stato == TipoEffettoDiStato.RIGENERAZIONE, stato.isBenefico(), stato.name());
-        }
-    }
-
-    @Test
-    void ogniInterazioneHaPrecondizioniEInnescanti() {
-        for (TipoInterazioneConEffettiDiStato interazione : TipoInterazioneConEffettiDiStato.values()) {
-            assertFalse(interazione.getPrecondizioni().isEmpty(), interazione.name());
-            assertFalse(interazione.getInnescanti().isEmpty(), interazione.name());
-            assertNotNull(interazione.getStatiRimossi(), interazione.name());
-            assertNotNull(interazione.getStatiApplicati(), interazione.name());
-            assertEquals(interazione == TipoInterazioneConEffettiDiStato.COLPO_DI_GRAZIA
-                    || interazione == TipoInterazioneConEffettiDiStato.FRANTUMAZIONE_DEL_GHIACCIO, interazione.isCriticoAutomatico(), interazione.name());
-        }
-        assertTrue(TipoInterazioneConEffettiDiStato.CONGELAMENTO.getStatiApplicati().contains(TipoEffettoDiStato.CONGELATO));
-        assertTrue(TipoInterazioneConEffettiDiStato.CONGELAMENTO.getStatiRimossi().contains(TipoEffettoDiStato.BAGNATO));
     }
 }

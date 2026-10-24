@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.testi.Testi;
+
 /**
  * Le abilità innate del Chierico e del Druido (e delle loro forme femminili), simili ai canti del Bardo: costano MAGIA, non
  * consumano pergamene, non si comprano né si trovano.

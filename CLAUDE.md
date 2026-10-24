@@ -6,14 +6,19 @@ Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo 
 
 | Modulo | Contiene | Dipende da |
 | :--- | :--- | :--- |
-| `foresta-tipi` | `tipi`: enum e costanti di base (anche `Costanti`, i valori di bilanciamento) | nessuno |
-| `foresta-modellodati` | `modellodati`: le classi `…MD`, solo dati (con la lettura e la scrittura dei salvataggi) | tipi |
+| `foresta-testi` | `testi.Testi`, il caricatore dei testi per lingua (solo quella classe) | nessuno |
+| `foresta-serializzazione` | `serializzazione`: `Serializzabile`, `LettoreCampi`, `MappaProprieta` (scrittura e lettura dei salvataggi a righe) | nessuno |
+| `foresta-attributi` | `attributi` (`CalcolatoreAttributiSecondari`, le formule dei secondari), `attributi.tipi` (`TipoAttributo`, `CategoriaAttributo`), `modificatori` (`ModificatoreAttributoMD`) e `modificatori.tipi` (`TipoModificatore`, `UnitaDurataModificatore`, `BersaglioModificatore`): solo gli attributi e le modifiche che si possono fare loro, niente personaggi né oggetti | testi, serializzazione |
+| `foresta-effettidistato` | `effettidistato.tipi` (`TipoEffettoDiStato`) e `effettidistato` (`EffettoDiStatoMD`): solo gli effetti di stato | testi, serializzazione |
+| `foresta-danni` | `danni.tipi`: `TipoDanno`, `CategoriaDanno`, `TipoInterazioneConEffettiDiStato`: solo i danni e le loro interazioni con gli effetti di stato | testi, effettidistato |
+| `foresta-tipi` | `tipi`: enum e costanti di base (anche `Costanti`, i valori di bilanciamento) | testi, attributi, danni |
+| `foresta-modellodati` | `modellodati`: le classi `…MD`, solo dati (con la lettura e la scrittura dei salvataggi) | tipi, serializzazione |
 | `foresta-contratti` | `interfacce`, `eventi` (bus e classi degli eventi), le utilità di `strumenti` (anche `Dado`, l'unica sorgente di caso) e i dati di `intermezzi` che servono alla UI | modellodati |
 | `foresta-motore` | il resto: `motore`, `combattimento`, `personaggi`, `oggetti`, `locazioni`, `missioni`, `incantesimi`, `canti`, `abilita`, `offerte`, `tattiche`, `trofei`, `testi`, `salvataggi`, la logica degli intermezzi, gli eventi interni che portano il dominio, le grammatiche `.txt` | contratti |
 | `foresta-swing` | `ui` (e gli eventi con sprite), le immagini | contratti |
 | `foresta-app` | `Main`, `SnifferBusEventi` e i test che usano motore e UI insieme | motore, swing |
 
-Un pacchetto può stare in più moduli (`strumenti`, `intermezzi`, `eventi.interni`): quel che conta è il modulo, non il pacchetto.
+Un pacchetto può stare in più moduli (`testi`, `strumenti`, `intermezzi`, `eventi.interni`): quel che conta è il modulo, non il pacchetto.
 Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbreviato `…/` sotto), `src/main/resources/com/threeamigos/foresta` e `src/test/java`. Tutti i file sono UTF-8.
 
 ## Dove trovare le cose
@@ -24,13 +29,13 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | Bus eventi | `…/eventi` (`notifiche`, `richieste`, `interni`, `comandigiocatore`) | `motore_di_gioco.md` §4 |
 | Salvataggi e modello dati | `…/modellodati`, `…/interfacce/GestoreSalvataggi`, `…/salvataggi/GestoreSalvataggiSuFile`, `…/motore/RiletturaPartita` | `motore_di_gioco.md` §5 |
 | Mappa, tempo, locazioni | `…/motore/Foresta`, `LineaTemporale`, `…/locazioni` | `motore_di_gioco.md` §6 |
-| Combattimento | `…/combattimento/CalcolatoreCombattimento`, `Ondata`, `StatoDelCombattimento`, `…/modellodati/EffettoDiStatoMD` | `motore_di_gioco.md` §7, `interazioni_effetti_di_stato.md` |
+| Combattimento | `…/combattimento/CalcolatoreCombattimento`, `Ondata`, `StatoDelCombattimento`, `…/effettidistato/EffettoDiStatoMD`, `…/danni/tipi/*` | `motore_di_gioco.md` §7, `interazioni_effetti_di_stato.md` |
 | Debolezze, resistenze e immunità di classe ai tipi di danno | `…/tipi/CategoriaPersonaggio`, `TipoPersonaggio` (tabelle), `…/personaggi/PersonaggioBase` (`getMoltiplicatoreDannoSubito`), `…/combattimento/CalcolatoreCombattimento`, `…/ui/TestoReazioneDiClasse` | `debolezze_e_resistenze.md` |
-| Modificatori di attributo a tempo, armi che li mettono sul bersaglio | `…/modellodati/ModificatoreAttributoMD`, `…/oggetti/ModificatoreDelTesto`, `PersonaggioBase`, `CalcolatoreCombattimento` | `modificatori_temporanei.md` |
+| Modificatori di attributo a tempo, armi che li mettono sul bersaglio | `…/modificatori/ModificatoreAttributoMD` (in `foresta-attributi`), `…/oggetti/ModificatoreDelTesto`, `PersonaggioBase`, `CalcolatoreCombattimento` | `modificatori_temporanei.md` |
 | Canti del Bardo (curativo, ipnotico, di valore), effetto di stato `ISPIRATO` | `…/canti/Canto*`, `…/tipi/TipoCanto`, `FabbricaCanti`, `…/locazioni/LocazioneBase` (`cantaUnCanto`), `…/motore/Automa` | `bardo.md` |
 | Chierico e druido, abilità innate (scacciare i non morti, imposizione delle mani, radici, sciame, pelle di corteccia, rigenerazione), effetto di stato `RIGENERAZIONE` | `…/personaggi/{Chierico,Chierica,Druido,Druida}`, `…/abilita/*`, `…/tipi/TipoAbilita`, `…/locazioni/LocazioneBase` (`usaUnaAbilita`), `…/motore/Automa` | `chierico_e_druido.md` |
 | Tattiche di combattimento (rose di candidati, contesto, valutatore, tattiche base dei mostri `TatticheBase`) | `…/tattiche` (logica; sottopacchetti `rose` e `valutazione`), `…/modellodati/tattiche` (dati, suffisso `MD`), `…/tipi/tattiche` | `tattiche_di_combattimento_automatiche.md` §11, `tattiche_internals.md` (il codice) |
-| Testi che dipendono dalla lingua (in italiano in file `.properties`; ogni altra lingua è un file accanto con `_<lingua>`): i nomi e le descrizioni delle enum di `foresta-tipi` (un file per enum, `tipo_attributo_it.properties`, chiave `COSTANTE.VOCE`), le note dei moltiplicatori di classe (`note_personaggi_it`), le descrizioni dei comandi (`comandi_it`), i motivi di rifiuto dell'equipaggiamento (`rifiuti_equipaggiamento_it`) | `…/tipi/Testi` (caricatore per lingua; `Testi.testo(costante, voce)` per le enum), `…/tipi/NoteDeiPersonaggi` (mappa tipo di personaggio, attributo → nota); risorse in `foresta-tipi/src/main/resources/com/threeamigos/foresta/tipi/` (e `…/tipi/tattiche/`) | `assessment_portabilita.md` |
+| Testi che dipendono dalla lingua (in italiano in file `.properties`; ogni altra lingua è un file accanto con `_<lingua>`): i nomi e le descrizioni delle enum di `foresta-tipi` (un file per enum accanto all'enum, per esempio `tipo_attributo_it.properties` in `foresta-attributi`, chiave `COSTANTE.VOCE`), le note dei moltiplicatori di classe (`note_personaggi_it`), le descrizioni dei comandi (`comandi_it`), i motivi di rifiuto dell'equipaggiamento (`rifiuti_equipaggiamento_it`) | `…/testi/Testi` (in `foresta-testi`; caricatore per lingua; `Testi.testo(costante, voce)` per le enum), `…/tipi/NoteDeiPersonaggi` (mappa tipo di personaggio, attributo → nota); risorse in `foresta-tipi/src/main/resources/com/threeamigos/foresta/tipi/` (e `…/tipi/tattiche/`) per le enum, e in `…/resources/com/threeamigos/foresta/testi/` per i file letti con `Testi.get(file, chiave)` (`note_personaggi`, `comandi`, `rifiuti_equipaggiamento`, `caratteristica_di_classe`) | `assessment_portabilita.md` |
 | Personaggi e gruppi | `…/personaggi`, `…/motore/Gruppo*`, `GestoreProgressione` | `motore_di_gioco.md` §8 |
 | Oggetti, artefatti, incantatore | `…/oggetti` (i leggendari e i loro set in `…/oggetti/leggendari`: `OggettoLeggendario`, `SetLeggendario`, `CatalogoLeggendari`, `RegoleSetLeggendari`), `…/motore/Automa{Inventario,AcquistiArtefatti,Incantatore,ScambiatoreArtefatti}`, `Regole*` | `artefatti_e_incantamenti.md` |
 | Negozi ed economia | `…/offerte`, `…/motore/RegoleContrattazione`, `OfferteAlchimista` | `economia.md` |

@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,18 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * modello dati della partita in corso.
  */
 class ValoriPiccoliMDTest {
-
-    @Test
-    void unEffettoDiStatoCambiaDurataDanniEIntensita() {
-        EffettoDiStatoMD effetto = new EffettoDiStatoMD(TipoEffettoDiStato.AVVELENATO, 3, 5);
-        assertEquals(0.0d, effetto.getIntensita(), "senza intensità");
-        effetto.setDurata(2);
-        effetto.setDanniNelTempo(4);
-        effetto.setIntensita(0.5d);
-        assertEquals(2, effetto.getDurata());
-        assertEquals(4, effetto.getDanniNelTempo());
-        assertEquals(0.5d, effetto.getIntensita());
-    }
 
     @Test
     void unaNotiziaTieneIdentificativoECorpoSenzaSeparatore() {

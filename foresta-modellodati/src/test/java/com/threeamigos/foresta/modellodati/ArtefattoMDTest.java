@@ -1,5 +1,11 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 

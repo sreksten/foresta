@@ -2,7 +2,7 @@ package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 
 import java.util.Collection;
 import java.util.Collections;

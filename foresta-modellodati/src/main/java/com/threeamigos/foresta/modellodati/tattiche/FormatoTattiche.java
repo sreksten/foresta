@@ -1,13 +1,13 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
-import com.threeamigos.foresta.modellodati.LettoreCampi;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
  * Il formato di salvataggio delle tattiche (tattiche_di_combattimento_automatiche.md §11.12): una riga per elemento,
- * campi separati da {@link com.threeamigos.foresta.modellodati.Serializzabile#PIPE}, la prima parola dice di che
+ * campi separati da {@link com.threeamigos.foresta.serializzazione.Serializzabile#PIPE}, la prima parola dice di che
  * elemento si tratta. I campi che possono mancare restano vuoti; gli elementi che ne contengono altri dicono
  * quanti sono, e questi seguono nelle righe successive.
  * <pre>

@@ -1,13 +1,14 @@
 package com.threeamigos.foresta.tipi.tattiche;
 
-import com.threeamigos.foresta.tipi.Testi;
+import com.threeamigos.foresta.testi.Testi;
+
 
 /**
  * Come un selettore sceglie <i>uno</i> fra i candidati rimasti dopo i filtri; a parità vince il primo della rosa
  * (tattiche_di_combattimento_automatiche.md §11.6). La logica è in <code>tattiche.Ordinamenti</code>.
  * <p>
  * I testi di ogni costante (DESCRIZIONE) non stanno qui ma nel file {@code tipo_ordinamento_<lingua>.properties}, alla voce
- * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link com.threeamigos.foresta.tipi.Testi}).
+ * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
  */
 public enum TipoOrdinamento {
 

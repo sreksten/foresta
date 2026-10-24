@@ -2,8 +2,8 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
+import com.threeamigos.foresta.serializzazione.Serializzabile;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 

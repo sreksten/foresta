@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.testi.Testi;
+
 /**
  * Tutto ciò che il giocatore può chiedere al motore di fare o scegliere tramite un comando (solitamente un bottone)
  * lanciato dalla UI, come le scelte nel menu, i personaggi da selezionare, le direzioni, le mosse di

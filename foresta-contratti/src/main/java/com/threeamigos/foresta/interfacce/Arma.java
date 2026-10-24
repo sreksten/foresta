@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.interfacce;
 
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 
 import java.util.Collection;
 import java.util.Collections;

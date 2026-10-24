@@ -2,15 +2,15 @@ package com.threeamigos.foresta.abilita;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoAbilita;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
 
 /**
  * L'abilità del Druido che rafforza la difesa di tutto il gruppo: a ogni personaggio vivo dà due modificatori temporanei, parata e resistenza magica

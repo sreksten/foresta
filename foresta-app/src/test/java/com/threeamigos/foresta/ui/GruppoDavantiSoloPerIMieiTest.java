@@ -8,7 +8,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.personaggi.Goblin;
 import com.threeamigos.foresta.personaggi.Guerriero;
-import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

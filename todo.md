@@ -26,7 +26,7 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 
 ## Bugfixing
 
-Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono quelli di [`assessment.md`](assessment.md) §5, che ha anche gli scenari: A vale per gravità alta, M per media, B per bassa. "(P)" segna un difetto plausibile, cioè con un innesco raro o non ancora raggiungibile; gli altri sono confermati. Ogni correzione va con un test. Le voci segnate come **regola** cambiano il bilanciamento, e vanno decise prima di toccarle.
+Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono quelli di [`assessment.md`](assessment.md) §5: A vale per gravità alta, M per media, B per bassa. "(P)" segna un difetto plausibile, cioè con un innesco raro o non ancora raggiungibile; gli altri sono confermati. Ogni correzione va con un test. Le voci segnate come **regola** cambiano il bilanciamento, e vanno decise prima di toccarle.
 
 ### Gravità media: combattimento e personaggi
 

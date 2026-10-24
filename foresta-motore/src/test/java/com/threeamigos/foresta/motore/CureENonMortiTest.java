@@ -8,7 +8,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tattiche.valutazione.Requisiti;
 import com.threeamigos.foresta.tattiche.rose.Rose;
-import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoRosa;

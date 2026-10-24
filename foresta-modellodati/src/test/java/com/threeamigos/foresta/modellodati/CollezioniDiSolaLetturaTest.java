@@ -1,9 +1,11 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import org.junit.jupiter.api.Test;
 
@@ -174,7 +176,7 @@ class CollezioniDiSolaLetturaTest {
 	void unArtefattoNonLasciaModificareModificatoriEIncantamenti() {
 		ArtefattoMD spada = artefatto("spada");
 		spada.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 1));
-		spada.addIncantamento("Fiamma", com.threeamigos.foresta.tipi.TipoDanno.FUOCO, 5, 0.1);
+		spada.addIncantamento("Fiamma", com.threeamigos.foresta.danni.tipi.TipoDanno.FUOCO, 5, 0.1);
 
 		assertThrows(UnsupportedOperationException.class, () -> spada.getModificatori().clear());
 		assertThrows(UnsupportedOperationException.class, () -> spada.getIncantamenti().clear());

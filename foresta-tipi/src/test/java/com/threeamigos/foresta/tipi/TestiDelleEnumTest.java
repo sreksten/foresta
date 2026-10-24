@@ -1,5 +1,10 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.tattiche.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -147,7 +152,7 @@ class TestiDelleEnumTest {
 	}
 
 	@Test
-	void ilNomeDelFileESiDeriveDalNomeDellEnum() {
+	void ilNomeDelFileDeiTestiDelleEnumDelGiocoEQuelloAtteso() {
 		assertEquals("tipo_attributo", Testi.nomeDelFile(TipoAttributo.class));
 		assertEquals("tipo_interazione_con_effetti_di_stato", Testi.nomeDelFile(TipoInterazioneConEffettiDiStato.class));
 		assertEquals("tipo_rosa", Testi.nomeDelFile(TipoRosa.class));
@@ -162,11 +167,5 @@ class TestiDelleEnumTest {
 		assertEquals(italiano, TipoAttributo.FORZA.getNome());
 		assertEquals("Forza", TipoAttributo.FORZA.getNome());
 		assertEquals(TipoRosa.ALLEATI.getDescrizione(), Testi.testo(TipoRosa.ALLEATI, "DESCRIZIONE").get());
-	}
-
-	@Test
-	void unaVoceCheNonEsisteDaUnRisultatoVuotoOIlNomeDellaCostante() {
-		assertFalse(Testi.testo(TipoAttributo.FORZA, "NON_ESISTE").isPresent());
-		assertEquals("FORZA", Testi.testoOCostante(TipoAttributo.FORZA, "NON_ESISTE"));
 	}
 }

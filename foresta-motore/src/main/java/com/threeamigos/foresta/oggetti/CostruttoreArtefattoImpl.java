@@ -2,11 +2,11 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 
 /**
  * L'implementazione del costruttore a passi di {@link CostruttoreArtefatto}: raccoglie i dati in un {@code ArtefattoMD} e alla fine ne fa un {@link Artefatto}.

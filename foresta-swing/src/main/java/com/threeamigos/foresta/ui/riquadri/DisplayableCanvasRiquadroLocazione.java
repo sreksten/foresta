@@ -6,8 +6,8 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.intermezzi.Verso;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 

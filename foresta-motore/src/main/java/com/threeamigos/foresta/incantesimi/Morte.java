@@ -7,7 +7,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.EsitoAzione;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;

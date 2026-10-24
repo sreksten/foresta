@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.salvataggi;
 
-import com.threeamigos.foresta.modellodati.LettoreCampi;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

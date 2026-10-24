@@ -1,13 +1,17 @@
 package com.threeamigos.foresta.combattimento;
 
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.danni.tipi.CategoriaDanno;
+import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
+import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.motore.ModalitaDiProva;
 import com.threeamigos.foresta.oggetti.ArmaNaturale;
 import com.threeamigos.foresta.oggetti.Artefatto;

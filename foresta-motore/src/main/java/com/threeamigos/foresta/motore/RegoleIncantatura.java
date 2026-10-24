@@ -1,8 +1,10 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.IngredienteDelCoreDump;
 import com.threeamigos.foresta.oggetti.ListinoPergamene;

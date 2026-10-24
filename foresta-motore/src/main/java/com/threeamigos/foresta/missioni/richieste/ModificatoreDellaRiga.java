@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.missioni.richieste;
 
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 
 /**
  * Un modificatore permanente scritto in una riga di missioni.txt come ATTRIBUTO TIPO QUANTITA, per esempio

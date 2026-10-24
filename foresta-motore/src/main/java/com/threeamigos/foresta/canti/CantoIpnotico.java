@@ -7,7 +7,7 @@ import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 
 import java.util.ArrayList;
 import java.util.Collections;

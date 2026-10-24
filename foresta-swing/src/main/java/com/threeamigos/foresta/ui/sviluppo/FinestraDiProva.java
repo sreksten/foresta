@@ -8,7 +8,7 @@ import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.strumenti.ContestoLancio;
 import com.threeamigos.foresta.strumenti.TrucchiDiSviluppo;
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
-import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 

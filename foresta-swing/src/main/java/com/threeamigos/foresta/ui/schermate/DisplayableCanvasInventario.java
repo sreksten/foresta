@@ -6,9 +6,9 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpesaPuntoAbilita;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
 import com.threeamigos.foresta.interfacce.*;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

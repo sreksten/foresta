@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.combattimento;
 
-import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
 
 import java.util.ArrayList;
 import java.util.Collection;

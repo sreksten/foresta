@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.testi.Testi;
+
 
 /**
  * Quanto è raro un artefatto. Decide quanti effetti (incantamenti più modificatori) può avere:

@@ -7,7 +7,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneStatistichePer
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.tipi.tattiche;
 
-import com.threeamigos.foresta.tipi.Testi;
+import com.threeamigos.foresta.testi.Testi;
+
 
 /**
  * La rosa di candidati da cui pesca il selettore di una voce di tattica, prima dei filtri (vedi tattiche_di_combattimento_automatiche.md §11.3).
@@ -10,7 +11,7 @@ import com.threeamigos.foresta.tipi.Testi;
  * "Alleati" e "avversari" sono quelli dell'<b>attore</b>: per un mio personaggio gli avversari sono i mostri, per un mostro sono i miei personaggi.
  * <p>
  * I testi di ogni costante (DESCRIZIONE) non stanno qui ma nel file {@code tipo_rosa_<lingua>.properties}, alla voce
- * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link com.threeamigos.foresta.tipi.Testi}).
+ * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
  */
 public enum TipoRosa {
 

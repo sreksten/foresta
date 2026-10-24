@@ -1,5 +1,13 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.attributi.CalcolatoreAttributiSecondari;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.combattimento.FaseDiAttacco;
@@ -12,8 +20,8 @@ import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.ModificatoreAttivo;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.FabbricaOfferte;
@@ -1073,24 +1081,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * Il carico massimo prima dei modificatori di CARICO_MASSIMO.
 	 */
 	private static double potenzialeDiCarico(PersonaggioMD md, Personaggio moltiplicatori) {
-		if (moltiplicatori.getMoltiplicatoreCarico() == 0.0) {
-			// Fantasmi vari
-			return 0.0;
-		}
-
-		// Per calcolare il CARICO massimo trasportabile in modo realistico, si attinge a due attributi primari fisici:
-		// FORZA (Peso Maggiore): La potenza muscolare determina la capacità di sollevare oggetti pesanti.
-		// COSTITUZIONE (Peso Minore): La struttura fisica e la tempra determinano la tolleranza a camminare a lungo
-		// sotto sforzo senza affaticarsi.
-		final double PESO_PER_RADICE_FORZA = 12.0;
-		final double PESO_PER_RADICE_COSTITUZIONE = 6.0;
-
-		// Applichiamo i diminishing returns grezzi tramite radice quadrata
-		double potenzaFisica = PESO_PER_RADICE_FORZA * Math.sqrt(get(md, TipoAttributo.FORZA));
-		double resistenzaFisica = PESO_PER_RADICE_COSTITUZIONE * Math.sqrt(get(md, TipoAttributo.COSTITUZIONE));
-
-		// Il potenziale di carico totale del corpo, per il moltiplicatore di classe (un Guerriero porta più di una Maga, un Drago più di un Goblin)
-		return (potenzaFisica + resistenzaFisica) * moltiplicatori.getMoltiplicatoreCarico();
+		return CalcolatoreAttributiSecondari.potenzialeDiCarico(get(md, TipoAttributo.FORZA), get(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreCarico());
 	}
 
 	// SALUTE
@@ -1775,225 +1766,61 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * e sul moltiplicatore della classe, mantenendo i rendimenti decrescenti.
 	 */
 	private static int calcolaCritico(PersonaggioMD md, Personaggio moltiplicatori) {
-		// Costanti per calibrare la curva (es. con Destrezza 25 e Fortuna 25, il Ladro ha ~15% di critico)
-		// Critico deve essere alimentato da due forze distinte:
-		// DESTREZZA (Peso Maggiore - 70%): Rappresenta la precisione chirurgica nel colpire i punti vitali scoperti
-		// (giugulare, fessure dell'armatura).
-		// FORTUNA (Peso Minore - 30%): Rappresenta il fato favorevole che fa deviare il colpo all'ultimo millisecondo
-		// nel punto giusto.
-		final double COEFFICIENTE_DESTREZZA = 2.0;
-		final double COEFFICIENTE_FORTUNA = 0.8;
-
-		// Calcolo della precisione letale grezza con Diminishing Returns
-		double precisioneGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(get(md, TipoAttributo.DESTREZZA))) +
-				(COEFFICIENTE_FORTUNA * Math.sqrt(get(md, TipoAttributo.FORTUNA)));
-
-		// Applicazione del moltiplicatore di archetipo
-		double criticoFinale = precisioneGrezza * moltiplicatori.getMoltiplicatoreCritico();
-
-		// Cap per evitare che superi il 100% (o il 95% se vuoi sempre un margine di fallimento)
-		if (criticoFinale > 100.0) {
-			criticoFinale = 100.0;
-		}
-
-		// Arrotondamento a due decimali
-		return (int)criticoFinale;
+		return CalcolatoreAttributiSecondari.critico(get(md, TipoAttributo.DESTREZZA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreCritico());
 	}
 
 	public abstract double getMoltiplicatorePrecisione();
 
 	private static int calcolaPrecisione(PersonaggioMD md, Personaggio moltiplicatori) {
-		// Per rispecchiare la descrizione ("precisione oculare, stabilità della mano e coordinazione occhio-mano"),
-		// la Precisione deve essere alimentata da due forze distinte:
-		// DESTREZZA (Peso Maggiore - 80%): La coordinazione motoria fine, i riflessi e la fermezza muscolare.
-		// INTELLIGENZA (Peso Minore - 20%): La capacità logica di calcolare la traiettoria del bersaglio, anticiparne
-		// i movimenti e non farsi ingannare dalle illusioni.
-		final double COEFFICIENTE_DESTREZZA = 0.8;
-		final double COEFFICIENTE_INTELLIGENZA = 0.2;
-
-		// Calcolo della precisione grezza con Diminishing Returns
-		double precisioneGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(get(md, TipoAttributo.DESTREZZA))) +
-				(COEFFICIENTE_INTELLIGENZA * Math.sqrt(get(md, TipoAttributo.INTELLIGENZA)));
-
-		// Applicazione del moltiplicatore di archetipo
-		double precisioneFinale = precisioneGrezza * moltiplicatori.getMoltiplicatorePrecisione();
-
-		return (int)precisioneFinale;
+		return CalcolatoreAttributiSecondari.precisione(get(md, TipoAttributo.DESTREZZA), get(md, TipoAttributo.INTELLIGENZA), moltiplicatori.getMoltiplicatorePrecisione());
 	}
 
 	public abstract double getMoltiplicatoreVelocita();
 
 	private static int calcolaVelocita(PersonaggioMD md, Personaggio moltiplicatori) {
-		// Per rispecchiare la descrizione ("precisione oculare, stabilità della mano e coordinazione occhio-mano"),
-		// la Precisione deve essere alimentata da due forze distinte:
-		// DESTREZZA (Peso Maggiore - 80%): La coordinazione motoria fine, i riflessi e la fermezza muscolare.
-		// INTELLIGENZA (Peso Minore - 20%): La capacità logica di calcolare la traiettoria del bersaglio, anticiparne
-		// i movimenti e non farsi ingannare dalle illusioni.
-		final double COEFFICIENTE_DESTREZZA = 0.85;
-		final double COEFFICIENTE_FORTUNA = 0.15;
-
-		// Calcolo della precisione grezza con Diminishing Returns
-		double velocitaGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(get(md, TipoAttributo.DESTREZZA))) +
-				(COEFFICIENTE_FORTUNA * Math.sqrt(get(md, TipoAttributo.FORTUNA)));
-
-		// Applicazione del moltiplicatore di archetipo
-		double velocitaFinale = velocitaGrezza * moltiplicatori.getMoltiplicatoreVelocita();
-
-		return (int)velocitaFinale;
+		return CalcolatoreAttributiSecondari.velocita(get(md, TipoAttributo.DESTREZZA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreVelocita());
 	}
 
 	public abstract double getMoltiplicatoreFurtivita();
 
 	private static int calcolaFurtivita(PersonaggioMD md, Personaggio moltiplicatori) {
-		// Per rispecchiare il concetto di "muoversi senza farsi notare e agire nell'ombra", la Furtività deve
-		// attingere a due forze distinte:
-		// DESTREZZA (Peso Maggiore - 75%): La grazia nei movimenti, il controllo totale del corpo e la coordinazione
-		// millimetrica per non fare rumore (es. evitare rami secchi o passi pesanti).
-		// FORTUNA (Peso Minore - 25%): Il tempismo perfetto che fa muovere il personaggio proprio quando la guardia
-		// nemica si gira dall'altra parte o un rumore ambientale (es. un tuono o il vento) copre i suoi passi.
-		final double COEFFICIENTE_DESTREZZA = 0.75;
-		final double COEFFICIENTE_FORTUNA = 0.25;
-
-		// Calcolo della furtivita grezza con Diminishing Returns
-		double furtivitaGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(get(md, TipoAttributo.DESTREZZA))) +
-				(COEFFICIENTE_FORTUNA * Math.sqrt(get(md, TipoAttributo.FORTUNA)));
-
-		// Applicazione del moltiplicatore di archetipo
-		double furtivitaFinale = furtivitaGrezza * moltiplicatori.getMoltiplicatoreFurtivita();
-
-		return (int)furtivitaFinale;
+		return CalcolatoreAttributiSecondari.furtivita(get(md, TipoAttributo.DESTREZZA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreFurtivita());
 	}
 
 	public abstract double getMoltiplicatoreParata();
 
 	private static int calcolaParata(PersonaggioMD md, Personaggio moltiplicatori) {
-		// Per rispecchiare il concetto di "frapporre l'arma o lo scudo tra sé e il colpo nemico", la Parata
-		// deve attingere a due forze distinte:
-		// FORZA (Peso Maggiore - 70%): La potenza muscolare necessaria a reggere l'impatto di un colpo pesante senza
-		// farsi spezzare la guardia.
-		// DESTREZZA (Peso Minore - 30%): I riflessi e la coordinazione occhio-mano per posizionare lo scudo o la lama
-		// nell'angolo esatto prima dell'impatto.
-		final double COEFFICIENTE_FORZA = 0.70;
-		final double COEFFICIENTE_DESTREZZA = 0.30;
-
-		// Calcolo della precisione letale grezza con Diminishing Returns
-		double parataGrezza = (COEFFICIENTE_FORZA * Math.sqrt(get(md, TipoAttributo.FORZA))) +
-				(COEFFICIENTE_DESTREZZA * Math.sqrt(get(md, TipoAttributo.DESTREZZA)));
-
-		// Applicazione del moltiplicatore di archetipo
-		double parataFinale = parataGrezza * moltiplicatori.getMoltiplicatoreParata();
-
-		return (int)parataFinale;
+		return CalcolatoreAttributiSecondari.parata(get(md, TipoAttributo.FORZA), get(md, TipoAttributo.DESTREZZA), moltiplicatori.getMoltiplicatoreParata());
 	}
 
 	public abstract double getMoltiplicatoreResistenzaMagica();
 
 	private static int calcolaResistenzaMagica(PersonaggioMD md, Personaggio moltiplicatori) {
-		// Per rispecchiare una difesa basata sul controllo dei flussi energetici e sulla fermezza d'animo, la
-		// Resistenza Magica deve attingere a due forze della mente e dello spirito:
-		// SAGGEZZA (Peso Maggiore - 70%): La consapevolezza spirituale e la connessione con il divino che agiscono come
-		// uno scudo naturale contro le corruzioni dell'anima e gli anatemi.
-		// INTELLIGENZA (Peso Minore - 30%): La comprensione logica della struttura degli incantesimi, che permette di
-		// "dissipare" o deviare la trama magica prima dell'impatto.
-		final double COEFFICIENTE_SAGGEZZA = 0.70;
-		final double COEFFICIENTE_INTELLIGENZA = 0.30;
-
-		// Calcolo della resistenza magica grezza con Diminishing Returns
-		double resistenzaMagicaGrezza = (COEFFICIENTE_SAGGEZZA * Math.sqrt(get(md, TipoAttributo.SAGGEZZA))) +
-				(COEFFICIENTE_INTELLIGENZA * Math.sqrt(get(md, TipoAttributo.INTELLIGENZA)));
-
-		// Applicazione del moltiplicatore di archetipo
-		double resistenzaMagicaFinale = resistenzaMagicaGrezza * moltiplicatori.getMoltiplicatoreResistenzaMagica();
-
-		return (int)resistenzaMagicaFinale;
+		return CalcolatoreAttributiSecondari.resistenzaMagica(get(md, TipoAttributo.SAGGEZZA), get(md, TipoAttributo.INTELLIGENZA), moltiplicatori.getMoltiplicatoreResistenzaMagica());
 	}
 
 	public abstract double getMoltiplicatorePercezione();
 
 	private static int calcolaPercezione(PersonaggioMD md, Personaggio moltiplicatori) {
-		// Per rispecchiare fedelmente il concetto di "sensi acuti, vista sviluppata e udito sopraffino", la Percezione
-		// deve attingere a due forze distinte:
-		// SAGGEZZA (Peso Maggiore - 75%): La consapevolezza spirituale, l'intuito e la connessione con l'ambiente
-		// circostante (il "sesto senso").
-		// DESTREZZA (Peso Minore - 25%): La prontezza di riflessi oculari e la rapidità nel volgere lo sguardo o
-		// l'orecchio verso uno stimolo improvviso.
-		final double COEFFICIENTE_SAGGEZZA = 0.75;
-		final double COEFFICIENTE_DESTREZZA = 0.25;
-
-		// Calcolo della precisione letale grezza con Diminishing Returns
-		double percezioneGrezza = (COEFFICIENTE_SAGGEZZA * Math.sqrt(get(md, TipoAttributo.SAGGEZZA))) +
-				(COEFFICIENTE_DESTREZZA * Math.sqrt(get(md, TipoAttributo.DESTREZZA)));
-
-		// Applicazione del moltiplicatore di archetipo
-		double percezioneFinale = percezioneGrezza * moltiplicatori.getMoltiplicatorePercezione();
-
-		return (int)percezioneFinale;
+		return CalcolatoreAttributiSecondari.percezione(get(md, TipoAttributo.SAGGEZZA), get(md, TipoAttributo.DESTREZZA), moltiplicatori.getMoltiplicatorePercezione());
 	}
 
 	public abstract double getMoltiplicatoreSoggezione();
 
 	private static int calcolaSoggezione(PersonaggioMD md, Personaggio moltiplicatori) {
-		// Per rispecchiare il concetto di "forza della personalità combinata all'aura di terrore", la Soggezione
-		// deve attingere a due forze distinte:
-		// CARISMA (Peso Maggiore - 70%): Il magnetismo, la forza della personalità e la capacità di imporre la propria
-		// volontà o presenza sugli altri.
-		// FORZA (Peso Minore - 30%): La stazza e la potenza muscolare visibile che intimidiscono fisicamente chiunque
-		// si trovi davanti.
-		final double COEFFICIENTE_CARISMA = 0.70;
-		final double COEFFICIENTE_FORZA = 0.30;
-
-		// Calcolo della precisione letale grezza con Diminishing Returns
-		double soggezioneGrezza = (COEFFICIENTE_CARISMA * Math.sqrt(get(md, TipoAttributo.CARISMA))) +
-				(COEFFICIENTE_FORZA * Math.sqrt(get(md, TipoAttributo.FORZA)));
-
-		// Applicazione del moltiplicatore di archetipo
-		double soggezioneFinale = soggezioneGrezza * moltiplicatori.getMoltiplicatoreSoggezione();
-
-		return (int)soggezioneFinale;
+		return CalcolatoreAttributiSecondari.soggezione(get(md, TipoAttributo.CARISMA), get(md, TipoAttributo.FORZA), moltiplicatori.getMoltiplicatoreSoggezione());
 	}
 
 	public abstract double getMoltiplicatoreFuria();
 
 	private static int calcolaFuria(PersonaggioMD md, Personaggio moltiplicatori) {
-		// Per rispecchiare una statistica basata sull'impulso distruttivo e sulla resistenza al dolore, la Furia
-		// deve attingere a due forze puramente fisiche ed emotive:
-		// FORZA (Peso Maggiore - 75%): La potenza muscolare grezza che alimenta la violenza dei colpi durante lo stato
-		// di rabbia.
-		// FORTUNA (Peso Minore - 25%): L'elemento caotico e imprevedibile del fato che premia l'audacia di chi attacca
-		// alla cieca senza difendersi.
-		final double COEFFICIENTE_FORZA = 0.75;
-		final double COEFFICIENTE_FORTUNA = 0.25;
-
-		// Calcolo della precisione letale grezza con Diminishing Returns
-		double furiaGrezza = (COEFFICIENTE_FORZA * Math.sqrt(get(md, TipoAttributo.FORZA))) +
-				(COEFFICIENTE_FORTUNA * Math.sqrt(get(md, TipoAttributo.FORTUNA)));
-
-		// Applicazione del moltiplicatore di archetipo
-		double furiaFinale = furiaGrezza * moltiplicatori.getMoltiplicatoreFuria();
-
-		return (int)furiaFinale;
+		return CalcolatoreAttributiSecondari.furia(get(md, TipoAttributo.FORZA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreFuria());
 	}
 
 	public abstract double getMoltiplicatoreCoraggio();
 
 	private static int calcolaCoraggio(PersonaggioMD md, Personaggio moltiplicatori) {
-		// Per rispecchiare il concetto di "forza della personalità e forza di volontà", il Coraggio deve attingere a
-		// due forze della mente e dell'identità:
-		// CARISMA (Peso Maggiore - 75%): La forza dell'ego e la stabilità della personalità, che impediscono al
-		// personaggio di farsi intimidire o manipolare.
-		// COSTITUZIONE (Peso Minore - 25%): La stabilità biologica (es. controllo del battito cardiaco e
-		// dell'adrenalina), che impedisce al corpo di cedere al panico fisico.
-		final double COEFFICIENTE_CARISMA = 0.75;
-		final double COEFFICIENTE_COSTITUZIONE = 0.25;
-
-		// Calcolo della precisione letale grezza con Diminishing Returns
-		double coraggioGrezzo = (COEFFICIENTE_CARISMA * Math.sqrt(get(md, TipoAttributo.CARISMA))) +
-				(COEFFICIENTE_COSTITUZIONE * Math.sqrt(get(md, TipoAttributo.COSTITUZIONE)));
-
-		// Applicazione del moltiplicatore di archetipo
-		double coraggioFinale = coraggioGrezzo * moltiplicatori.getMoltiplicatoreCoraggio();
-
-		return (int)coraggioFinale;
+		return CalcolatoreAttributiSecondari.coraggio(get(md, TipoAttributo.CARISMA), get(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreCoraggio());
 	}
 
 	/**
@@ -2007,45 +1834,13 @@ public abstract class PersonaggioBase implements Personaggio {
 
 
 	private static int calcolaContrattazione(PersonaggioMD md, Personaggio moltiplicatori) {
-		// Per rispecchiare il concetto di "strappare un prezzo migliore a chi vende o compra", la Contrattazione
-		// deve attingere a due forze distinte:
-		// CARISMA (Peso Maggiore - 60%): La parlantina, la faccia tosta e la capacità di convincere il mercante che
-		// quell'affare lo sta facendo lui.
-		// FORTUNA (Peso Minore - 40%): Beccare il mercante nella giornata buona, notare il difetto sulla merce al
-		// momento giusto, arrivare quando ha fretta di liberarsi del magazzino.
-		final double COEFFICIENTE_CARISMA = 0.60;
-		final double COEFFICIENTE_FORTUNA = 0.40;
-
-		// Calcolo della contrattazione grezza con Diminishing Returns
-		double contrattazioneGrezza = (COEFFICIENTE_CARISMA * Math.sqrt(get(md, TipoAttributo.CARISMA))) +
-				(COEFFICIENTE_FORTUNA * Math.sqrt(get(md, TipoAttributo.FORTUNA)));
-
-		// Applicazione del moltiplicatore di archetipo
-		double contrattazioneFinale = contrattazioneGrezza * moltiplicatori.getMoltiplicatoreContrattazione();
-
-		return (int)contrattazioneFinale;
+		return CalcolatoreAttributiSecondari.contrattazione(get(md, TipoAttributo.CARISMA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreContrattazione());
 	}
 
 	public abstract double getMoltiplicatoreValore();
 
 	private static int calcolaValore(PersonaggioMD md, Personaggio moltiplicatori) {
-		// Per rispecchiare il concetto di "spirito di sacrificio ed eroismo guidato dalla stabilità biologica", il
-		// Valore deve attingere a due forze distinte:
-		// SAGGEZZA (Peso Maggiore - 70%): La consapevolezza morale, la connessione spirituale e la rettitudine che
-		// spingono a compiere il gesto eroico o a difendere i deboli.
-		// COSTITUZIONE (Peso Minore - 30%): La riserva di salute e la tempra fisica necessarie a sopportare l'impatto
-		// dei danni mitigati o dei colpi intercettati per gli altri.
-		final double COEFFICIENTE_SAGGEZZA = 0.70;
-		final double COEFFICIENTE_COSTITUZIONE = 0.30;
-
-		// Calcolo del valore grezzo con Diminishing Returns
-		double valoreGrezzo = (COEFFICIENTE_SAGGEZZA * Math.sqrt(get(md, TipoAttributo.SAGGEZZA))) +
-				(COEFFICIENTE_COSTITUZIONE * Math.sqrt(get(md, TipoAttributo.COSTITUZIONE)));
-
-		// Applicazione del moltiplicatore di archetipo
-		double valoreFinale = valoreGrezzo * moltiplicatori.getMoltiplicatoreValore();
-
-		return (int)valoreFinale;
+		return CalcolatoreAttributiSecondari.valore(get(md, TipoAttributo.SAGGEZZA), get(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreValore());
 	}
 
 	public abstract double getMoltiplicatoreNumeroBersagli();
@@ -2054,8 +1849,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		// Recuperiamo la classe per capire qual è la forza trainante del personaggio
 		TipoPersonaggio classe = moltiplicatori.getClasse();
 
-		double statPrincipale;
-		double statSecondaria;
+		int statPrincipale;
+		int statSecondaria;
 
 		// BIVIO DI BILANCIAMENTO IN BASE ALL'ARCHETIPO DI CLASSE
 		switch (classe) {
@@ -2122,19 +1917,8 @@ public abstract class PersonaggioBase implements Personaggio {
 				break;
 		}
 
-		// PESI DELLA FORMULA ADATTIVA (70% Potere di Classe, 30% Controllo Secondario)
-		final double COEFFICIENTE_PRIMARIO = 0.70;
-		final double COEFFICIENTE_SECONDARIO = 0.30;
-
-		// Calcolo del valore grezzo con Diminishing Returns protetto da radice
-		double numeroGrezzo = (COEFFICIENTE_PRIMARIO * Math.sqrt(statPrincipale)) +
-				(COEFFICIENTE_SECONDARIO * Math.sqrt(statSecondaria));
-
-		// Applicazione del moltiplicatore di archetipo (molto utile per i Boss o le abilità AoE)
-		double valoreFinale = numeroGrezzo * moltiplicatori.getMoltiplicatoreNumeroBersagli();
-
-		// Restituisce il numero di bersagli calcolato, garantendo il minimo di 1
-		return (int) Math.max(1, Math.floor(valoreFinale));
+		// La formula (70% la forza trainante, 30% quella di appoggio, minimo 1 bersaglio) sta nel calcolatore degli attributi
+		return CalcolatoreAttributiSecondari.numeroBersagli(statPrincipale, statSecondaria, moltiplicatori.getMoltiplicatoreNumeroBersagli());
 	}
 
 

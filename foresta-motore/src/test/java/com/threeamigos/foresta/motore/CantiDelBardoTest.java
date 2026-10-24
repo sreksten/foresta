@@ -1,10 +1,13 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.canti.*;
 import com.threeamigos.foresta.intermezzi.IntermezzoUrloDellaBanshee;
 import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -438,11 +441,11 @@ class CantiDelBardoTest {
         writer.flush();
         com.threeamigos.foresta.modellodati.PersonaggioMD riletto = new com.threeamigos.foresta.modellodati.PersonaggioMD();
         riletto.leggi(new java.io.BufferedReader(new java.io.StringReader(scritto.toString())));
-        com.threeamigos.foresta.modellodati.EffettoDiStatoMD ispirato = riletto.getEffettiDiStato().stream()
+        com.threeamigos.foresta.effettidistato.EffettoDiStatoMD ispirato = riletto.getEffettiDiStato().stream()
                 .filter(e -> e.getTipoEffettoDiStato() == TipoEffettoDiStato.ISPIRATO).findFirst().get();
         assertEquals(3, ispirato.getDurata());
         assertEquals(32.5, ispirato.getIntensita(), 1e-9);
-        com.threeamigos.foresta.modellodati.EffettoDiStatoMD veleno = riletto.getEffettiDiStato().stream()
+        com.threeamigos.foresta.effettidistato.EffettoDiStatoMD veleno = riletto.getEffettiDiStato().stream()
                 .filter(e -> e.getTipoEffettoDiStato() == TipoEffettoDiStato.AVVELENATO).findFirst().get();
         assertEquals(4, veleno.getDanniNelTempo());
         assertEquals(0.0, veleno.getIntensita());

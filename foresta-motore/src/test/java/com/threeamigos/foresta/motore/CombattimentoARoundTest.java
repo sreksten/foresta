@@ -62,8 +62,8 @@ class CombattimentoARoundTest {
     }
 
     private static void resistente(Personaggio p) {
-        p.addModificatore(new com.threeamigos.foresta.modellodati.ModificatoreAttributoMD(com.threeamigos.foresta.tipi.TipoAttributo.COSTITUZIONE,
-                com.threeamigos.foresta.tipi.TipoModificatore.QUANTITA_ASSOLUTA, 1000));
+        p.addModificatore(new com.threeamigos.foresta.modificatori.ModificatoreAttributoMD(com.threeamigos.foresta.attributi.tipi.TipoAttributo.COSTITUZIONE,
+                com.threeamigos.foresta.modificatori.tipi.TipoModificatore.QUANTITA_ASSOLUTA, 1000));
         p.addSalute(1_000_000);
     }
 

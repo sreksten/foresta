@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.testi.Testi;
+
 /**
  * I gradini degli effetti di un ingrediente magico e degli incantamenti degli artefatti (vedi
  * artefatti_e_incantamenti.md). Il prezzo è calcolato tramite il ListinoPergamene.

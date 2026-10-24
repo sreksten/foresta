@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.tipi.tattiche;
 
-import com.threeamigos.foresta.tipi.Testi;
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.testi.Testi;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.EnumMap;
@@ -14,7 +14,7 @@ import java.util.Set;
  * ({@link PortataAzione}) e da quali rose può pescare il bersaglio; i suoi requisiti (la magia, la pergamena...) li verifica chi valuta la tattica.
  * <p>
  * I testi di ogni costante (DESCRIZIONE) non stanno qui ma nel file {@code tipo_azione_<lingua>.properties}, alla voce
- * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link com.threeamigos.foresta.tipi.Testi}).
+ * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
  */
 public enum TipoAzione {
 

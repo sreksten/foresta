@@ -3,8 +3,8 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.testi.GrammarBean.InvalidGrammarException;
 import com.threeamigos.foresta.testi.GrammarBean;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.strumenti.Logger;
 
 import java.io.IOException;

@@ -9,6 +9,11 @@
 
     <!-- Dall'alto verso il basso nell'ordine di dipendenza: ogni modulo conosce solo quelli sopra di lui -->
     <modules>
+        <module>foresta-testi</module>
+        <module>foresta-serializzazione</module>
+        <module>foresta-attributi</module>
+        <module>foresta-effettidistato</module>
+        <module>foresta-danni</module>
         <module>foresta-tipi</module>
         <module>foresta-modellodati</module>
         <module>foresta-contratti</module>

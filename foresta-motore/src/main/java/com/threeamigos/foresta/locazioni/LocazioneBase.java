@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.abilita.FabbricaAbilita;
 import com.threeamigos.foresta.canti.CantoDelBardo;

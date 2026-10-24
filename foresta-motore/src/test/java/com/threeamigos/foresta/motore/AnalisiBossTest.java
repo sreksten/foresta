@@ -5,7 +5,7 @@ import com.threeamigos.foresta.incantesimi.Fuoco;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.CategoriaDanno;
+import com.threeamigos.foresta.danni.tipi.CategoriaDanno;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Disabled;

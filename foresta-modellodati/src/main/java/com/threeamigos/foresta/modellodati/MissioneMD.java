@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.serializzazione.Serializzabile;
+import com.threeamigos.foresta.serializzazione.MappaProprieta;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 import java.io.BufferedReader;
@@ -7,8 +10,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
-import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**
  * I dati di una missione: identificativo, classe, nome, descrizione e se la descrizione è già visibile al giocatore.

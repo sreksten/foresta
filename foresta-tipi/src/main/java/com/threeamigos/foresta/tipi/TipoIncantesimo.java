@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.testi.Testi;
+
 /**
  * Gli incantesimi: un tipo di arma che il giocatore ha a disposizione per combattere gli avversari.
  * <p>Ogni incantesimo ha un nome (coincide con il nome dell'enumerato), una {@link CategoriaIncantesimo} (se è un

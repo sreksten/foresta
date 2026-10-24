@@ -1,17 +1,15 @@
 # Assessment di Foresta
 
-Valutazione del codice al **2026-10-19** (revisione), con le misure e i difetti aggiornati al **2026-10-22**, con una revisione completa dei sorgenti modulo per modulo, dal basso (`foresta-tipi`) fino a `foresta-app`. I numeri sono misurati sul working tree di quel giorno (`wc -l`, `grep`, JaCoCo da `mvn clean test`); i giudizi sono segnati come **Giudizio**. I difetti trovati sono nel §5, con un codice (A1, M3, B12…) per richiamarli. Le cose da fare per il porting su Android e iOS sono in [`assessment_portabilita.md`](assessment_portabilita.md): qui c'è solo il riassunto.
+Valutazione del codice al **2026-10-19** (revisione), con le misure e i difetti aggiornati al **2026-10-22**, con una revisione completa dei sorgenti modulo per modulo, dal basso (`foresta-tipi`) fino a `foresta-app`. I numeri sono misurati sul working tree di quel giorno (`wc -l`, `grep`, JaCoCo da `mvn clean test`); i giudizi sono segnati come **Giudizio**. I difetti ancora aperti sono nel §5, con un codice (B35, B41…) per richiamarli. Le cose da fare per il porting su Android e iOS sono in [`assessment_portabilita.md`](assessment_portabilita.md): qui c'è solo il riassunto.
 
 ## 1. Sintesi
 
 - Il gioco è **completo e giocabile** da inizio a fine (creazione del gruppo, esplorazione, combattimento a round con tattiche, negozi, incantatore, missioni, intermezzi, trofei, salvataggi, classifica).
 - La **separazione fra le parti è garantita dal compilatore**: sei moduli Maven in fila (tipi, modellodati, contratti, motore, swing, app). La UI non vede il motore, ma soltanto viste in sola lettura ed eventi.
 - La **base di test è ampia e veloce**: 1672 test verdi (16 saltati); `tipi` e `modellodati` sono coperti quasi al 100% dai loro test, il motore all'83%.
-- I **4 difetti di gravità alta** trovati dalla revisione (tutti nella logica di gioco, non nell'infrastruttura) sono stati corretti, ciascuno con un test.
 - **L'infrastruttura è solida.** Il bus, il `Dado`, i salvataggi di partita, gli scambi di artefatti, i prezzi e le copie difensive sono stati controllati e sono a posto. Non c'è nessuna `ConcurrentModificationException` raggiungibile, e i salvataggi sono simmetrici campo per campo.
-- **I difetti medi sono soprattutto regole di gioco incoerenti**: effetti di stato, ospiti, tempo in locanda, testi delle ricompense. Nella UI sono comportamenti sbagliati (§5.2).
 - Il **debito tecnico** resta concentrato nelle quattro classi grandi del motore e nello stato statico (§3).
-- **Giudizio:** il progetto è in buona salute. I difetti alti si sono corretti con interventi piccoli e locali, con un test ciascuno; i medi si affrontano a uno a uno. L'orientamento verticale resta rotto (noto) ed è rimandato in fondo.
+- **Giudizio:** il progetto è in buona salute. Non ci sono difetti aperti di gravità alta o media: restano del codice morto (§5) e il debito tecnico (§3). L'orientamento verticale resta rotto (noto) ed è rimandato in fondo.
 
 ## 2. Misure
 
@@ -27,7 +25,7 @@ Valutazione del codice al **2026-10-19** (revisione), con le misure e i difetti 
 
 \* JaCoCo conta solo i test del modulo stesso: contratti è esercitato molto di più dai test del motore, e la UI dai test di `foresta-app`. Le percentuali di questi moduli sono quindi più basse del vero.
 
-Nel motore la copertura è alta quasi ovunque (`trofei` 100%, `testi` e `intermezzi` 95%, `missioni` 95%, `combattimento` 94%, `canti` 93%, `incantesimi` 89%, `tattiche` 87%, `motore` 86%). È bassa in `offerte` (25%), `personaggi` (67%) e `locazioni` (73%); `salvataggi` sale all'80%. Non è un caso che molti difetti medi del §5 stiano proprio in `personaggi` e `locazioni`.
+Nel motore la copertura è alta quasi ovunque (`trofei` 100%, `testi` e `intermezzi` 95%, `missioni` 95%, `combattimento` 94%, `canti` 93%, `incantesimi` 89%, `tattiche` 87%, `motore` 86%). È bassa in `offerte` (25%), `personaggi` (67%) e `locazioni` (73%); `salvataggi` sale all'80%.
 
 Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 
@@ -50,8 +48,8 @@ Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 
 - **Moduli in fila, controllati dal compilatore.** Ogni modulo vede solo quelli sopra di lui. Quello che il compilatore non vede, cioè `java.awt`, `javax.swing`, `javax.imageio` e `javax.sound` fuori da `foresta-swing`, `Locale.ROOT`, `System.exit` e il `Logger`, lo controllano i test che leggono i sorgenti (`DipendenzeDalToolkitGraficoTest`, `ConvenzioniDiPortabilitaTest`).
 - **La UI legge da viste e scrive con eventi.** `VistaPartita` e `VistaScambio` sono in sola lettura, e verso il motore vanno solo comandi con identificativi. Le collezioni del modello dati sono esposte in sola lettura, con copie nei costruttori.
-- **Un solo thread per la logica.** Il bus consegna sempre sul thread principale (sul desktop l'EDT), dove girano anche i tick del temporizzatore: fra eventi e stato non ci sono corse. L'unico thread estraneo è l'animatore di `DisplayableCanvas` (B40).
-- **Salvataggi di partita.** `LettoreCampi` conserva i campi vuoti, i testi liberi passano da `pulisciCampo`, un file troncato dà `IOException`, e la scrittura passa da un file temporaneo. Ogni coppia `salva`/`leggi` è stata confrontata campo per campo; le poche asimmetrie sono nel §5.3.
+- **Un solo thread per la logica.** Il bus consegna sempre sul thread principale (sul desktop l'EDT), dove girano anche i tick del temporizzatore: fra eventi e stato non ci sono corse. L'unico thread estraneo è l'animatore di `DisplayableCanvas`.
+- **Salvataggi di partita.** `LettoreCampi` conserva i campi vuoti, i testi liberi passano da `pulisciCampo`, un file troncato dà `IOException`, e la scrittura passa da un file temporaneo. Ogni coppia `salva`/`leggi` è stata confrontata campo per campo, e sono simmetriche.
 - **Testabilità.** Ci sono `Dado` con seme e trucchi per contesto, `PartitaDiTest`, il temporizzatore manuale e i simulatori. Tutti i test girano senza UI.
 - **Contenuto a basso costo.** Missioni a passi, grammatiche e intermezzi a pagine. Uno script ha verificato che ogni riferimento `[produzione]` nelle grammatiche esiste e che tutte le immagini citate dal codice ci sono.
 - **Documentazione.** 27 documenti `.md` nella radice, con la mappa in [`foresta.md`](foresta.md); un `package-info.java` per pacchetto.
@@ -72,57 +70,29 @@ Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 
 - **Gestione degli errori.** I `catch` generici stanno quasi tutti nei gestori su file e in `GrammarBean`, ed è una scelta difendibile.
 - **`TODO`/`FIXME`:** Riguardano funzioni future o rifiniture.
-- **Codice morto.** C'è un po' di codice che non si raggiunge (B35, B41):
+- **Codice morto.** C'è un po' di codice che non si raggiunge (B35, B41, §5):
   - quattro classi di eventi con sprite mai pubblicate (`InternoCreazioneSprite` + `AnnuncioGlobale`, `EffettoDiStato`, `FumettoATempo`, `InDissolvenza`): sono pronte e funzionanti, con il loro gestore in `DisplayableCanvas` e l'iscrizione nello sniffer, ma oggi gli sprite si creano direttamente. Si tengono come risorsa per usi futuri (chi vuole mostrare uno sprite senza conoscere il canvas pubblica l'evento) e non sono un difetto;
   - metodi di `PersonaggioBase` mai chiamati;
   - passi pronti di `MissioneAPassi` usati solo dai test;
   - produzioni delle grammatiche mai usate, fra cui 12 `NOTIZIE_CITTA` che non escono mai.
-- **Convenzioni.** `TestoTattica` usa `Locale.ITALIAN` invece di `Locale.ROOT`. `SnifferBusEventi` costruisce una stringa di log fuori dal fornitore, e `ConvenzioniDiPortabilitaTest` non se ne accorge.
-- **Test saltati.** I 16 test saltati sono simulazioni da lanciare a mano, non test rotti.
+- **Test saltati.** I 22 test saltati sono simulazioni da lanciare a mano, non test rotti.
 - **Rapporti stantii.** Dopo una rinomina o per misurare serve `mvn clean test`: senza `clean`, `surefire-reports` e `jacoco.exec` tengono classi che non esistono più.
 
-## 5. Difetti trovati dalla revisione del 2026-10-19
+## 5. Difetti aperti
 
-Ogni voce è stata verificata sul codice chiamante. **C** sta per *confermato* (lo scenario si innesca), **P** per *plausibile* (dipende da condizioni rare o non ancora raggiungibili). I percorsi sono relativi a `…/` del modulo indicato.
+Rimasti dalla revisione del 2026-10-19 e ricontrollati sul codice: tutti di gravità bassa, e tutti confermati (lo scenario si innesca). Il resto è stato corretto. I percorsi sono relativi a `…/` del modulo indicato.
 
-### 5.1 Gravità alta
+### 5.1 foresta-motore
 
-Nessun difetto aperto.
+- B35a Codice morto in `PersonaggioBase`: `calcolaStanchezza`, `subCarisma`, `add<Primario>` (tranne `addCarisma`, che usa `LocazioneBase`), `getQuantitaEffettoDiStato` (la usa solo un test) e `puoPrendere(Artefatto)`.
+- B35d Passi pronti di `MissioneAPassi` che nessuna missione usa (solo i test): `evitaCombattimento`, le sequenze di passi e `getPassiConIntermezzoInAttesa`. Gli altri li usano `LaForgia` e `IlViandante`.
+- B35e Le produzioni morte di `fiabe.txt` e `locande.txt`, fra cui 12 `NOTIZIE_CITTA` che non escono mai (nessuna locanda ha l'identificativo `CITTA`).
 
-### 5.2 Gravità media
+### 5.2 foresta-swing e foresta-app
 
-**Combattimento e personaggi**
+- B41c `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif` mai usati.
 
-| Cod. | Dove | Difetto | |
-| :--- | :--- | :--- | :---: |
-
-**Motore, missioni, trofei e testi**
-
-Nessun difetto aperto.
-
-**Interfaccia (foresta-swing)**
-
-Nessun difetto aperto.
-
-### 5.3 Gravità bassa
-
-**foresta-tipi e foresta-modellodati**
-
-
-**foresta-contratti**
-
-
-**foresta-motore**
-
-- B35a Codice morto in `PersonaggioBase`: `calcolaStanchezza`, `subCarisma`, `add<Primario>`, `getQuantitaEffettoDiStato` e `puoPrendere(Artefatto)`. (C)
-- B35d Passi pronti di `MissioneAPassi` che nessuna missione usa (solo i test): `evitaCombattimento`, le sequenze di passi e `getPassiConIntermezzoInAttesa`. Gli altri li usano `LaForgia` e `IlViandante`. (C)
-- B35e Le produzioni morte di `fiabe.txt` e `locande.txt`, fra cui 12 `NOTIZIE_CITTA` che non escono mai. (C)
-
-**foresta-swing e foresta-app**
-
-- B41c `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif` mai usati. (C)
-
-### 5.4 Ipotesi controllate e scartate
+### 5.3 Ipotesi controllate e scartate
 
 - **Concorrenza delle collezioni.** Non c'è nessuna `ConcurrentModificationException` raggiungibile: si scorrono sempre copie (`getPersonaggiVivi`, `getTutteLeMissioni`), e il bus usa `CopyOnWriteArrayList`.
 - **Ricompense ed esperienza.** Niente doppie ricompense o doppi completamenti di missione. Niente esperienza duplicata (`avversariSconfitti`).
@@ -146,14 +116,14 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 - **Già pronto:** il motore usa solo `java.io` e `java.util`, non ha dipendenze dal toolkit grafico, ha la cartella dei file iniettabile, il ciclo di vita dell'app e l'uscita affidata alla piattaforma.
 - **Ancora aperto:**
   - `Costanti` come dati;
-  - le uscite dal processo della UI Swing (`System.exit` in `BufferedImageBuilder`, `EXIT_ON_CLOSE`, che chiude senza passare dal motore).
+  - l'uscita dal processo della UI Swing (`EXIT_ON_CLOSE` in `ForestaUI`, che chiude senza passare dal motore).
 - **Il grosso resta la UI.** Va riscritta (libGDX è la scelta più naturale per restare in Java) e va ripensato l'input per il tocco.
 
 ## 7. Rischi tecnici
 
 | Rischio | Fatto | Gravità |
 | :--- | :--- | :--- |
-| Copertura di `personaggi`, `locazioni`, `offerte`, `salvataggi` | 69%, 72%, 24%, 65% | Media: in `personaggi` e `locazioni` sta metà dei difetti medi |
+| Copertura di `personaggi`, `locazioni`, `offerte`, `salvataggi` | 69%, 72%, 24%, 65% | Media: sono le zone dove la revisione ha trovato più difetti, e hanno meno rete di sicurezza |
 | Copia delle costanti `static final` | Una compilazione incrementale parziale può tenere valori vecchi | Bassa: basta `mvn clean` |
 | Modalità verticale | Rotta: barra icone sovrapposta, area di contenuto fissa a 640 px in una finestra larga al massimo 400 (`todo.md`, `motore_grafico.md` §12) | Bassa sul desktop; rimandata in fondo |
 

@@ -3,9 +3,9 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 
 import java.util.EnumMap;
 import java.util.Map;

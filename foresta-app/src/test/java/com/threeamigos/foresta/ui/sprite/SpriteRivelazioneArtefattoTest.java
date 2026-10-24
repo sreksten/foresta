@@ -3,9 +3,9 @@ package com.threeamigos.foresta.ui.sprite;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 import org.junit.jupiter.api.Test;
 

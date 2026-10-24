@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.tipi.tattiche;
 
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import org.junit.jupiter.api.Test;
 

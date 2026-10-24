@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaRefreshUI;
 import com.threeamigos.foresta.interfacce.StrumentiDiSviluppo;

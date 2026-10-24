@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.testi.Testi;
+
 /**
  * I canti innati del Bardo e della Cantastorie, simili alle abilità di Maghi e Sacerdoti (anche se queste possono
  * essere lanciate anche da chi possiede una pergamena equivalente).

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.testi.Testi;
+
 /**
  * I negozi che comprano e vendono artefatti. Più negozi della stessa città stanno sulla stessa casella:
  * il loro magazzino si riconosce da coordinate e tipo di negozio.

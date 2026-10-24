@@ -1,11 +1,13 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.serializzazione.Serializzabile;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.io.IOException;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
-import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**
  * Chi ha un nome proprio nel mondo senza essere in un gruppo o in una locazione: il bardo e sua moglie,

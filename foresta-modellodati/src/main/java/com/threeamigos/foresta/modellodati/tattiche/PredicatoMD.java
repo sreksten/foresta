@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
-import com.threeamigos.foresta.modellodati.LettoreCampi;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.tipi.tattiche.TipoConfronto;
 import com.threeamigos.foresta.tipi.tattiche.TipoParametro;
 import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
@@ -14,8 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
-import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**
  * Una condizione di una voce: il tipo, il parametro (del tipo che il tipo di predicato dichiara) e se è negata

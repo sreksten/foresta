@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.strumenti;
 
-import com.threeamigos.foresta.tipi.BersaglioModificatore;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 
 import java.util.Locale;
 

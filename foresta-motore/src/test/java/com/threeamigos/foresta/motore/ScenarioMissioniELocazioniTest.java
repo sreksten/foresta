@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaChiusuraFinestraCombattimento;
 import com.threeamigos.foresta.missioni.FabbricaMissioni;
 import com.threeamigos.foresta.missioni.Missione;
@@ -9,7 +12,7 @@ import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.principali.CronacheDiUnFegatoEroico;
 import com.threeamigos.foresta.missioni.principali.SconfiggiIlMinotauroGigante;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
+import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 import com.threeamigos.foresta.personaggi.Guerriero;

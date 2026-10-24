@@ -2,7 +2,7 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoInvioTesto;
-import com.threeamigos.foresta.modellodati.Serializzabile;
+import com.threeamigos.foresta.serializzazione.Serializzabile;
 
 import javax.swing.*;
 import java.awt.*;

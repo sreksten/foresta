@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tattiche.valutazione;
 
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.abilita.PelleDiCorteccia;
 import com.threeamigos.foresta.canti.CantoDelBardo;

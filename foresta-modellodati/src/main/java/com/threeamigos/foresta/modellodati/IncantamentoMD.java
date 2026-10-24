@@ -1,10 +1,13 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.serializzazione.Serializzabile;
+import com.threeamigos.foresta.serializzazione.MappaProprieta;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 
 import java.io.IOException;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.composto;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.composto;
 
 /**
  * Un incantamento di un artefatto: un danno elementale che si aggiunge a quello dell'arma. Il danno è composto da una

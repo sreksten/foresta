@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.modellodati.ModelloDati;

@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.serializzazione.MappaProprieta;
+import com.threeamigos.foresta.serializzazione.Serializzabile;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
@@ -22,20 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * campi, e a parità di dati il testo scritto è sempre lo stesso.
  */
 class TestiNeiSalvataggiTest {
-
-	@Test
-	void pulisciCampoTogliePipeETrasformaGliACapoInSpazi() {
-		assertEquals("Pippo", Serializzabile.pulisciCampo("Pip|po"));
-		assertEquals("uno due", Serializzabile.pulisciCampo("uno\ndue"));
-		assertEquals("uno due", Serializzabile.pulisciCampo("uno\r\ndue"));
-		assertEquals("uno due tre", Serializzabile.pulisciCampo("uno\rdue\ntre"));
-		assertNull(Serializzabile.pulisciCampo(null));
-	}
-
-	@Test
-	void senzaACapoLasciaIlPipe() {
-		assertEquals("a|b c", Serializzabile.senzaACapo("a|b\nc"));
-	}
 
 	@Test
 	void unNomeConACapoPipeESeparatoreDiMappeSiRileggeSenzaSpostareICampi() throws IOException {
@@ -124,12 +112,6 @@ class TestiNeiSalvataggiTest {
 		assertEquals(1, scritto.toString().split("\\R").length, "una riga sola");
 		assertEquals("uno due|tre quattro", riletto.getTesto());
 		assertEquals(true, riletto.isParagrafo());
-	}
-
-	@Test
-	void unaChiaveDiProprietaConACapoNonSiSalva() {
-		assertThrows(IllegalStateException.class,
-				() -> MappaProprieta.salva(java.util.Collections.singletonMap("CHIAVE\nSTORTA", "valore")));
 	}
 
 	private static String scrivi(PersonaggioMD personaggio) throws IOException {

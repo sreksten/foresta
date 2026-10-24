@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 
 /**
  * Un modificatore che sta agendo su un personaggio, con la sua fonte (il nome dell'artefatto che lo porta o la nota

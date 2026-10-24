@@ -1,13 +1,14 @@
 package com.threeamigos.foresta.tipi.tattiche;
 
-import com.threeamigos.foresta.tipi.Testi;
+import com.threeamigos.foresta.testi.Testi;
+
 
 /**
  * Le condizioni di una voce di tattica che non sono un controllo su un personaggio (quelli sono filtri di un selettore):
  * tattiche_di_combattimento_automatiche.md §11.8. Qui c'è solo il nome e il tipo del parametro; chi risponde è <code>tattiche.Predicati</code>.
  * <p>
  * I testi di ogni costante (DESCRIZIONE) non stanno qui ma nel file {@code tipo_predicato_<lingua>.properties}, alla voce
- * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link com.threeamigos.foresta.tipi.Testi}).
+ * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
  */
 public enum TipoPredicato {
 

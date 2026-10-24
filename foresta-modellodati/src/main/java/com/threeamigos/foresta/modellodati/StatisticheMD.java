@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.serializzazione.Serializzabile;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.io.BufferedReader;
@@ -11,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**
  * Le statistiche della partita: livello del gioco, punti esperienza, punteggio, turni giocati, mostri uccisi per

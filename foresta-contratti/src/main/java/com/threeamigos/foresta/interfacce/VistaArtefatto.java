@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.interfacce;
 
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;

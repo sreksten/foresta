@@ -1,13 +1,14 @@
 package com.threeamigos.foresta.tipi.tattiche;
 
-import com.threeamigos.foresta.tipi.Testi;
+import com.threeamigos.foresta.testi.Testi;
+
 
 /**
  * I filtri di un selettore: restringono i candidati di una rosa (tattiche_di_combattimento_automatiche.md §11.5). Qui c'è solo il nome e il tipo del
  * parametro; chi risponde "sì" o "no" per un candidato è <code>tattiche.Filtri</code>.
  * <p>
  * I testi di ogni costante (DESCRIZIONE) non stanno qui ma nel file {@code tipo_filtro_<lingua>.properties}, alla voce
- * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link com.threeamigos.foresta.tipi.Testi}).
+ * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
  */
 public enum TipoFiltro {
 

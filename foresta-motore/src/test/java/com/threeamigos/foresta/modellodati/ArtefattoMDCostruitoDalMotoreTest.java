@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;

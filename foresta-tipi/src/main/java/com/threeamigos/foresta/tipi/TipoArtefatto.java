@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.testi.Testi;
+
 /**
  * I tipi di artefatto, dalla spada alla pergamena. Ogni tipo dichiara la sua {@link CategoriaArtefatto}, la
  * {@link TipoCardinalitaArtefatto cardinalità} (singolo o a paio), lo {@link TipoSlotArtefatto slot} che occupa, per le

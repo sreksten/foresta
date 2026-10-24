@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class EnumDelModuloTest {
 
     private static List<Class<?>> enumDelModulo() throws IOException, URISyntaxException, ClassNotFoundException {
-        Path radice = Paths.get(TipoDanno.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        Path radice = Paths.get(TipoMissione.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         List<String> nomi;
         try (Stream<Path> file = Files.walk(radice)) {
             nomi = file.map(p -> radice.relativize(p).toString())

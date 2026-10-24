@@ -1,7 +1,11 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.serializzazione.Serializzabile;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -11,7 +15,7 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.*;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.*;
 
 /**
  * I dati di un personaggio: la classe (mago, arpia...), il nome proprio facoltativo, se è vivo (o la causa della morte),

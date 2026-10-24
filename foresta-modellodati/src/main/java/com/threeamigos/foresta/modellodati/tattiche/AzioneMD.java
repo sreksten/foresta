@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.modellodati.tattiche;
 
-import com.threeamigos.foresta.modellodati.LettoreCampi;
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 
@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Objects;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
-import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**
  * Un'azione di una voce di tattica: il tipo e, per quelle che li hanno, i parametri: il criterio di scelta

@@ -78,8 +78,8 @@ public final class SceltaIncantesimo {
 		for (TipoIncantesimo classe : elenco) {
 			// Il Silenzio non si lancia su chi è già silenziato o è immune al silenzio
 			if (classe == TipoIncantesimo.SILENZIO
-					&& (bersaglio.hasEffettoDiStato(com.threeamigos.foresta.tipi.TipoEffettoDiStato.SILENZIATO)
-					|| bersaglio.isImmuneAEffetto(com.threeamigos.foresta.tipi.TipoEffettoDiStato.SILENZIATO))) {
+					&& (bersaglio.hasEffettoDiStato(com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato.SILENZIATO)
+					|| bersaglio.isImmuneAEffetto(com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato.SILENZIATO))) {
 				continue;
 			}
 			TipoAzione azione = TipoAzione.di(classe);

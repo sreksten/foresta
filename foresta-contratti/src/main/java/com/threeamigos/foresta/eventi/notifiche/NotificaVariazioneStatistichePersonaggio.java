@@ -3,7 +3,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 
 /**
  * Un Personaggio riceve una variazione a uno dei suoi Attributi (questo può provocare un ricalcolo delle

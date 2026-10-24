@@ -1,10 +1,12 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.serializzazione.Serializzabile;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**
  * Una notizia destinata alla schermata della mappa: un identificativo e un corpo

@@ -3,7 +3,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 
 /**
  * Un Personaggio subisce una variazione di un Modificatore di Attributo: lo riceve, gli cambia la durata

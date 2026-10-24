@@ -9,10 +9,10 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtef
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
 import com.threeamigos.foresta.interfacce.*;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
-import com.threeamigos.foresta.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.CategoriaArtefatto;
 import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
 import com.threeamigos.foresta.tipi.TipoArtefatto;

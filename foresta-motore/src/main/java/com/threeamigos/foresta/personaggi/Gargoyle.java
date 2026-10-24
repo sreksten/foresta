@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.*;
 

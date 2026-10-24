@@ -2,7 +2,7 @@ package com.threeamigos.foresta.salvataggi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
-import com.threeamigos.foresta.modellodati.LettoreCampi;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,8 +11,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import com.threeamigos.foresta.strumenti.Punteggio;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.facoltativo;
-import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.facoltativo;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**
  * La classifica nel file {@code forestaHS} della cartella {@code .foresta}.

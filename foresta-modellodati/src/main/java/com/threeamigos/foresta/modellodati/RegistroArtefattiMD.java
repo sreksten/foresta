@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.serializzazione.Serializzabile;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 
 import java.io.BufferedReader;
@@ -8,7 +10,7 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.function.Predicate;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**
  * Gli artefatti del mondo che non sono nell'inventario del gruppo: quelli ancora da distribuire, quelli smarriti nelle

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.testi.Testi;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

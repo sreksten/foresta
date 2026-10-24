@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.interfacce.StrumentiDiSviluppo.DovePartono;
 import com.threeamigos.foresta.interfacce.StrumentiDiSviluppo.Scorta;
 import com.threeamigos.foresta.interfacce.StrumentiDiSviluppo.VoceMissione;

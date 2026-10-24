@@ -1,15 +1,19 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
+import com.threeamigos.foresta.serializzazione.Serializzabile;
+import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;

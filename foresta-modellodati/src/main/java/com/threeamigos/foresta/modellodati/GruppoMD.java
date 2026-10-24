@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.serializzazione.Serializzabile;
+import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.io.BufferedReader;
@@ -7,7 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
-import static com.threeamigos.foresta.modellodati.Serializzabile.stampaRiga;
+import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**
  * I dati di un gruppo di personaggi: chi ne fa parte, chi è il capo e le scorte comuni (le pergamene degli incantesimi
