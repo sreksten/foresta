@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.canti;
 
+import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
+import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
 import com.threeamigos.foresta.tipi.CostantiCanti;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
@@ -49,6 +51,7 @@ public class UrloDellaBanshee implements Canto {
 		Collections.shuffle(ascoltatori, Dado.sorgente());
 		List<Personaggio> bersagli = ascoltatori.subList(0, Math.min(numeroBersagli, ascoltatori.size()));
 
+		AnnuncioDellAzione.azione(cantore, bersagli.size() == 1 ? bersagli.get(0) : null, TipoAzione.URLO_DELLA_BANSHEE);
 		cantore.subMagia(getCostoLancio());
 		BusEventi.pubblica(new NotificaTestoFrase(cantore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " lancia l'Urlo della Banshee."));

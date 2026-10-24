@@ -2,6 +2,8 @@ package com.threeamigos.foresta.tipi.tattiche;
 
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.testi.Testi;
+import com.threeamigos.foresta.tipi.TipoAbilita;
+import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.EnumMap;
@@ -96,6 +98,20 @@ public enum TipoAzione {
 	 */
 	public static TipoAzione di(TipoIncantesimo classe) {
 		return PER_INCANTESIMO.get(classe);
+	}
+
+	/**
+	 * L'azione che usa quell'abilità innata: ha lo stesso nome.
+	 */
+	public static TipoAzione di(TipoAbilita tipo) {
+		return valueOf(tipo.name());
+	}
+
+	/**
+	 * L'azione che intona quel canto: ha il suo nome preceduto da CANTO_, tranne l'Urlo della Banshee.
+	 */
+	public static TipoAzione di(TipoCanto tipo) {
+		return tipo == TipoCanto.URLO_DELLA_BANSHEE ? URLO_DELLA_BANSHEE : valueOf("CANTO_" + tipo.name());
 	}
 
 	public String getDescrizione() {

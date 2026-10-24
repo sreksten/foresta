@@ -2,7 +2,6 @@ package com.threeamigos.foresta.abilita;
 
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.*;
@@ -41,10 +40,6 @@ public final class AbilitaInnateDiClasse {
 		}
 		if (LuceDivina.conosciutaDa(classe)) {
 			abilita.add(daIncantesimo(TipoIncantesimo.LUCE_DIVINA));
-		}
-		if (DardoArcano.conosciutoDa(classe)) {
-			abilita.add(new AbilitaInnataDiClasse(Testi.get("caratteristica_di_classe", "ABILITA.DARDO_ARCANO.NOME").orElse("DARDO_ARCANO"),
-					Testi.get("caratteristica_di_classe", "ABILITA.DARDO_ARCANO.DESCRIZIONE").orElse("")));
 		}
 		return Collections.unmodifiableList(abilita);
 	}

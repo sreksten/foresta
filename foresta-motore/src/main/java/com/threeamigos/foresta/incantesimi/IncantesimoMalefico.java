@@ -26,6 +26,11 @@ public interface IncantesimoMalefico extends Incantesimo, Arma {
 	 * Un incantesimo di suo è già incantato
 	 */
 	@Override
+	default boolean isMagica() {
+		return true;
+	}
+
+	@Override
 	default boolean isIncantata() {
 		return false;
 	}

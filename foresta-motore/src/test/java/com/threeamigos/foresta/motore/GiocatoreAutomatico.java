@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
@@ -11,7 +12,7 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabil
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
+import com.threeamigos.foresta.abilita.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.interfacce.VistaScambio;
@@ -1192,7 +1193,7 @@ final class GiocatoreAutomatico {
 					azione.scelta = classe.getComandoDiAttivazione();
 				}
 			}
-			if (DardoArcano.conosciutoDa(attore.getClasse()) && magia >= costoDardo(attore)) {
+			if (AbilitaInnate.conosciutaDa(attore.getClasse(), TipoAbilita.DARDO_ARCANO) && magia >= costoDardo(attore)) {
 				double danno = Math.min(saluteAvversari[primo], atteso(attore, bersaglio, new DardoArcano(attore), 1.0d, "DARDO"));
 				if (danno > azione.danno) {
 					azione.danno = danno;

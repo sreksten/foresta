@@ -106,7 +106,7 @@ public final class EsecutoreTattiche {
 				}
 				break;
 			case DARDO_ARCANO:
-				scagliaIlDardo(attore, bersaglio);
+				usaUnAbilita(attore, TipoAbilita.DARDO_ARCANO, bersaglio, gruppoDellAttore, gruppoNemico);
 				break;
 			// La Resurrezione consuma una pergamena se il gruppo ne ha una (consumaLaPergamena non fa niente se non ce ne sono)
 			case RESURREZIONE:
@@ -222,28 +222,6 @@ public final class EsecutoreTattiche {
 	}
 
 	/**
-	 * Il dardo arcano contro un bersaglio (costa MAGIA, non consuma pergamene): l'esito si ricorda per le tattiche
-	 */
-	public void scagliaIlDardo(Personaggio formulante, Personaggio bersaglio) {
-		// Un incantesimo "fatto in casa": non passa dalla fabbrica degli incantesimi, quindi l'esito (colpito, mancato) lo registra qui e non in
-		// IncantesimoMaleficoImpl come per gli altri. Il costo in MAGIA si paga comunque, anche se il dardo manca
-		DardoArcano dardo = new DardoArcano(formulante);
-		annuncia(formulante, bersaglio);
-		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " scaglia un dardo arcano contro "
-				+ bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + "."));
-		if (CalcolatoreCombattimento.colpisce(formulante, bersaglio, dardo.getTipoDanno().getCategoriaDanno())) {
-			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.DARDO_ARCANO, EsitoAzione.RIUSCITA);
-			ApplicazioneDelRisultato.applica(bersaglio, CalcolatoreCombattimento.calcolaDannoRisultante(formulante, bersaglio, dardo));
-			uccisioni.registra(formulante, bersaglio);
-		} else {
-			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.DARDO_ARCANO, EsitoAzione.MANCATA);
-		}
-		formulante.subMagia(dardo.getCostoLancio());
-		stato.registraIncantesimoLanciato(formulante);
-	}
-
-	/**
 	 * Un incantesimo di danno, la Morte o il Silenzio contro il bersaglio scelto; con più bersagli (MULTIPLO) il principale e i successivi vivi (per un mostro solo
 	 * il principale). Il lancio, costo in MAGIA compreso, lo fa l'incantesimo; la pergamena si consuma se il gruppo ne ha una (altrimenti è il repertorio di un mostro).
 	 */
@@ -285,7 +263,6 @@ public final class EsecutoreTattiche {
 	private void canta(Personaggio cantore, TipoCanto tipo, Personaggio bersaglio, Gruppo gruppoDelCantore, Gruppo gruppoNemico) {
 		if (FabbricaCanti.crea(tipo, cantore).cantaSu(cantore, bersaglio, gruppoDelCantore, gruppoNemico)) {
 			stato.registraIncantesimoLanciato(cantore);
-			annuncia(cantore, null);
 		}
 	}
 
@@ -295,7 +272,6 @@ public final class EsecutoreTattiche {
 	private void usaUnAbilita(Personaggio utilizzatore, TipoAbilita tipo, Personaggio bersaglio, Gruppo gruppoDelloUtilizzatore, Gruppo gruppoNemico) {
 		if (FabbricaAbilita.crea(tipo, utilizzatore).usaSu(utilizzatore, bersaglio, gruppoDelloUtilizzatore, gruppoNemico)) {
 			stato.registraIncantesimoLanciato(utilizzatore);
-			annuncia(utilizzatore, null);
 			// Le radici, lo sciame e lo scacciare i non morti colpiscono più avversari: chi è caduto conta come sconfitto (vedi Uccisioni)
 			for (Personaggio nemico : gruppoNemico.getPersonaggi()) {
 				if (nemico.isFuoriCombattimento()) {

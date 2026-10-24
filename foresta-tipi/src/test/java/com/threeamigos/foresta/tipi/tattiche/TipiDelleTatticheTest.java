@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tipi.tattiche;
 
+import com.threeamigos.foresta.tipi.TipoCanto;
+import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import org.junit.jupiter.api.Test;
@@ -69,7 +71,14 @@ class TipiDelleTatticheTest {
             assertSame(incantesimo, azione.getClasseIncantesimo());
             assertSame(incantesimo.getTipoDanno(), azione.getTipoDanno(), incantesimo.name());
         }
-        assertNull(TipoAzione.di(null), "senza incantesimo non c'è un'azione che lo lancia");
+        assertNull(TipoAzione.di((TipoIncantesimo) null), "senza incantesimo non c'è un'azione che lo lancia");
+        for (TipoAbilita abilita : TipoAbilita.values()) {
+            assertEquals(abilita.name(), TipoAzione.di(abilita).name());
+        }
+        assertEquals(TipoAzione.CANTO_CURATIVO, TipoAzione.di(TipoCanto.CURATIVO));
+        assertEquals(TipoAzione.CANTO_IPNOTICO, TipoAzione.di(TipoCanto.IPNOTICO));
+        assertEquals(TipoAzione.CANTO_DI_VALORE, TipoAzione.di(TipoCanto.DI_VALORE));
+        assertEquals(TipoAzione.URLO_DELLA_BANSHEE, TipoAzione.di(TipoCanto.URLO_DELLA_BANSHEE));
         assertSame(TipoDanno.ARCANO, TipoAzione.DARDO_ARCANO.getTipoDanno(), "il dardo arcano non è un incantesimo ma fa danno arcano");
         assertNull(TipoAzione.ATTACCO_FISICO.getTipoDanno(), "dipende dall'arma");
         assertNull(TipoAzione.CANTO_CURATIVO.getTipoDanno());

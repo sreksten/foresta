@@ -7,7 +7,6 @@ import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -78,7 +77,7 @@ public final class Requisiti {
 						? "nessun incantesimo adatto da lanciare contro " + nome(bersaglio) : null;
 			// Il dardo arcano non consuma pergamene: costa solo MAGIA, e lo possono lanciare solo le classi che lo conoscono
 			case DARDO_ARCANO:
-				if (!DardoArcano.puoLanciarlo(attore)) {
+				if (!AbilitaInnate.puoUsare(attore, TipoAbilita.DARDO_ARCANO)) {
 					return "il dardo arcano non si può lanciare (classe, MAGIA o silenzio)";
 				}
 				return contro(azione, attore, bersaglio, TipoDanno.ARCANO, contesto);

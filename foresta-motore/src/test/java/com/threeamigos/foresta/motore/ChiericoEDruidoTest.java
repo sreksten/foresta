@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.abilita.*;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
@@ -168,7 +168,7 @@ class ChiericoEDruidoTest {
         for (TipoPersonaggio classe : Arrays.asList(TipoPersonaggio.CHIERICO, TipoPersonaggio.CHIERICA)) {
             assertFalse(AlbaSacra.conosciutaDa(classe), classe.name());
             assertFalse(LuceDivina.conosciutaDa(classe), classe.name());
-            assertFalse(DardoArcano.conosciutoDa(classe), classe.name());
+            assertFalse(AbilitaInnate.conosciutaDa(classe, TipoAbilita.DARDO_ARCANO), classe.name());
             assertFalse(RegistroTattiche.azioniPossibili(classe).contains(TipoAzione.ALBA_SACRA), classe.name());
         }
         assertFalse(AlbaSacra.puoLanciarlaInnata(chierico()));
@@ -209,7 +209,8 @@ class ChiericoEDruidoTest {
                     classi++;
                 }
             }
-            assertEquals(2, classi, tipo.name() + ": maschile e femminile");
+            // Il dardo arcano è di due classi, ognuna con la sua forma maschile e femminile
+            assertEquals(tipo == TipoAbilita.DARDO_ARCANO ? 4 : 2, classi, tipo.name() + ": maschile e femminile");
         }
         assertNull(TipoAbilita.ofComando(Comando.CANTO_CURATIVO));
         assertNull(TipoAbilita.ofComando(Comando.ANNULLA));
@@ -229,7 +230,9 @@ class ChiericoEDruidoTest {
         Druido druido = druido();
         assertEquals(Arrays.asList(TipoAbilita.RADICI, TipoAbilita.SCIAME, TipoAbilita.PELLE_DI_CORTECCIA, TipoAbilita.RIGENERAZIONE),
                 AbilitaInnate.abilitaPossibili(druido));
-        assertTrue(AbilitaInnate.abilitaPossibili(new Mago("Merlino", 5)).isEmpty());
+        // Il mago non ha le abilità del chierico e del druido, ma ha il dardo arcano
+        assertEquals(Arrays.asList(TipoAbilita.DARDO_ARCANO), AbilitaInnate.abilitaPossibili(new Mago("Merlino", 5)));
+        assertTrue(AbilitaInnate.abilitaPossibili(new Ladro("Pippo", 5)).isEmpty());
 
         // Con poca magia si fa solo quello che costa poco
         druido.subMagia(druido.getMagia() - CostantiAbilitaInnate.ABILITA_RADICI_COSTO_LANCIO);

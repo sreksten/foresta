@@ -268,7 +268,7 @@ Due blocchi, nell'ordine; il primo che fallisce dà il motivo.
 | :--- | :--- |
 | `ATTACCO_FISICO` | c'è un bersaglio in campo |
 | `INCANTESIMO_DI_DANNO`, `…_DEL_REPERTORIO` | `SceltaIncantesimo.scegli(...)` non è `null` |
-| `DARDO_ARCANO` | `DardoArcano.puoLanciarlo` (classe, MAGIA, silenzio) e `contro(...)` |
+| `DARDO_ARCANO` | `AbilitaInnate.puoUsare(attore, TipoAbilita.DARDO_ARCANO)` (classe, MAGIA, silenzio) e `contro(...)` |
 | `RESURREZIONE` | si può lanciare (pergamena e MAGIA) e il bersaglio non è vivo né in panchina |
 | `ALBA_SACRA` | innata o con pergamena e MAGIA, e **qualcuno** degli alleati ha uno stato negativo |
 | `CANTO_CURATIVO` | `CantoDelBardo.puoCantare` e il bersaglio è vivo e ferito |
@@ -381,7 +381,7 @@ sotto il personaggio prima che accada (`ForestaUI.gestisciEventoDecisioneTattica
 | Tipo eseguito | Cosa fa | Cosa ricorda nello stato |
 | :--- | :--- | :--- |
 | `ATTACCO_FISICO` | un mio: `attaccaConLeArmi` di questa classe; un mostro: `AttaccoConLeArmi.esegui(attore, bersaglio)` | i colpi, via `ApplicazioneDelRisultato.applica` → `registraColpo` |
-| `DARDO_ARCANO` | `scagliaIlDardo`: tiro per colpire, danno, costo in MAGIA | esito (`RIUSCITA`/`MANCATA`), incantesimo lanciato |
+| `DARDO_ARCANO` | `usaUnAbilita` (il dardo è un'abilità di danno, `ColpoMagico`): annuncio, tiro per colpire, danno, costo in MAGIA | esito (`RIUSCITA`/`MANCATA`), incantesimo lanciato, uccisioni |
 | `RESURREZIONE` | formula l'incantesimo e consuma la pergamena | — |
 | `ALBA_SACRA` | formula sul gruppo; non consuma la pergamena se è innata | — |
 | i quattro canti | `canta(...)` → `FabbricaCanti.crea(tipo, cantore).cantaSu(...)` | incantesimo lanciato, solo se il canto ha avuto luogo |
@@ -394,9 +394,11 @@ Note:
 - **Gli uccisi** dei miei personaggi vanno a un `RegistroUccisioni` (in gioco, `LocazioneBase.registraUccisione`: esperienza e punti). Quelli dei mostri no.
 - **L'attacco dei miei** ripete il bersaglio per ogni arma; se la prima ha ucciso il bersaglio, il colpo successivo passa al **primo avversario ancora in piedi**. Se non ce ne sono, il
   turno finisce.
-- **Dove si scrive l'esito di un'azione.** Per gli incantesimi di classe lo scrive `IncantesimoMaleficoImpl.colpisci` (`IMMUNE`, `MANCATA`, `RIUSCITA`); per il dardo lo scrive
-  `scagliaIlDardo`, perché non passa dalla fabbrica degli incantesimi. Gli esiti alimentano i requisiti (§7.2).
-- `annuncia(attore, bersaglio)` pubblica `InternoAzioneInCombattimento`, con cui il riquadro del combattimento mostra chi agisce e su chi.
+- **Dove si scrive l'esito di un'azione.** Per gli incantesimi di classe lo scrive `IncantesimoMaleficoImpl.colpisci` (`IMMUNE`, `MANCATA`, `RIUSCITA`); per le abilità di danno (radici, sciame,
+  dardo arcano) lo scrive `ColpoMagico.colpisci`, lo stesso metodo che usano gli incantesimi. Gli esiti alimentano i requisiti (§7.2).
+- `annuncia(attore, bersaglio)` pubblica `InternoAzioneInCombattimento`, con cui il riquadro del combattimento mostra chi agisce e su chi. Le abilità innate e i
+  canti non passano di qui: si annunciano da sole (`AnnuncioDellAzione.azione(attore, bersaglio, azione)`) appena sanno che agiranno, prima dell'effetto, con
+  il bersaglio se è uno solo (anche un compagno) e senza se sono più di uno; l'evento porta il `TipoAzione`, così il riquadro scrive "Impone le mani su X".
 
 ## 12. La memoria dello scontro: `StatoDelCombattimento`
 

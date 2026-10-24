@@ -28,6 +28,8 @@ public final class FabbricaAbilita {
 				return new PelleDiCorteccia(utilizzatore);
 			case RIGENERAZIONE:
 				return new Rigenerazione(utilizzatore);
+			case DARDO_ARCANO:
+				return new DardoArcano(utilizzatore);
 			default:
 				throw new IllegalArgumentException("TipoAbilita non gestito: " + tipo);
 		}

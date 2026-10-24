@@ -1157,10 +1157,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito entraInStatoSceltaIncantesimoDaLanciare() {
 		List<Comando> comandiPossibili = new ArrayList<>();
 		Personaggio formulante = gruppo.getFormulante();
-		// Mago ed Elfo hanno anche il dardo arcano, che non consuma pergamene
-		if (DardoArcano.puoLanciarlo(formulante)) {
-			comandiPossibili.add(Comando.DARDO_ARCANO);
-		}
 		// Sacerdote e Sacerdotessa hanno l'alba sacra, che non consuma pergamene
 		boolean albaSacraInnata = AlbaSacra.puoLanciarlaInnata(formulante);
 		if (albaSacraInnata) {
@@ -1175,7 +1171,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		for (TipoCanto canto : CantoDelBardo.cantiUtili(formulante, gruppo, gruppoAvversario)) {
 			comandiPossibili.add(canto.getComando());
 		}
-		// Chierico e Druido hanno le loro abilità, che non consumano pergamene e si usano solo contro avversari vivi
+		// Chierico, Druido, Mago ed Elfo hanno le loro abilità (compreso il dardo arcano), che non consumano pergamene e si usano solo contro avversari vivi
 		for (TipoAbilita abilita : AbilitaInnate.abilitaUtili(formulante, gruppo, gruppoAvversario)) {
 			comandiPossibili.add(abilita.getComando());
 		}

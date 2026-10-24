@@ -467,8 +467,9 @@ public class ForestaUI implements Temporizzabile {
 		infoCombattimento.setAvversario(evento.getBersaglio());
 		if (!infoCombattimento.haAzionePer(evento.getPersonaggio())) {
 			// Fuori dalla tattica: l'azione non ha una decisione, si scrive che attacca il bersaglio (se c'è)
-			infoCombattimento.setAzione(evento.getPersonaggio(),
-					DisplayableCanvasRiquadroCombattimento.azionePredefinita(evento.getBersaglio()));
+			infoCombattimento.setAzione(evento.getPersonaggio(), evento.getAzione() != null
+					? DisplayableCanvasRiquadroCombattimento.testoDellAzione(evento.getAzione(), evento.getPersonaggio(), evento.getBersaglio())
+					: DisplayableCanvasRiquadroCombattimento.azionePredefinita(evento.getBersaglio()));
 		}
 		infoCombattimento.setVisible(true);
 		rinfresca();

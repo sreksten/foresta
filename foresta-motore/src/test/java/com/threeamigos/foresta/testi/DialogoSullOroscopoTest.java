@@ -51,7 +51,8 @@ class DialogoSullOroscopoTest {
 	void ilCapoChiedeDiUnaCosaCheHaAppenaSentito() {
 		boolean generica = false;
 		boolean sulTema = false;
-		for (int i = 0; i < 500; i++) {
+		// Circa un oroscopo su cento non cita niente: con 500 prove la domanda generica mancava una volta su 400, con 5000 mai
+		for (int i = 0; i < 5000; i++) {
 			DialogoSullOroscopo dialogo = ProduttoreDiOroscopiCasuale.dialogoSullOroscopo();
 			assertFalse(dialogo.getOroscopo().isEmpty());
 			assertFalse(dialogo.getOroscopo().contains("/"), dialogo.getOroscopo());

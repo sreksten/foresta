@@ -655,13 +655,6 @@ public abstract class LocazioneBase implements Locazione {
 					}
 					statoLocazione = StatoLocazione.IN_LOCAZIONE;
 					break;
-				} else if (azione == Comando.DARDO_ARCANO) {
-					Stato statoDopoIlDardo = lanciaDardoArcano(gruppo.getFormulante(), gruppo, gruppoAvversario);
-					if (statoDopoIlDardo != null) {
-						return statoDopoIlDardo;
-					}
-					statoLocazione = StatoLocazione.IN_LOCAZIONE;
-					break;
 				} else {
 					opzioneCorruzioneDisponibile = false;
 					opzioneAmiciziaDisponibile = false;
@@ -988,7 +981,6 @@ public abstract class LocazioneBase implements Locazione {
 			return null;
 		}
 		statoDelCombattimento.registraIncantesimoLanciato(cantore);
-		annunciaAzione(cantore, null);
 		if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
 			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
@@ -1013,36 +1005,18 @@ public abstract class LocazioneBase implements Locazione {
 			return null;
 		}
 		statoDelCombattimento.registraIncantesimoLanciato(utilizzatore);
-		annunciaAzione(utilizzatore, null);
+		// Chi è caduto per l'abilità conta subito come sconfitto
+		for (Personaggio avversario : gruppoAvversario.getPersonaggi()) {
+			if (avversario.isFuoriCombattimento()) {
+				registraUccisione(utilizzatore, avversario);
+			}
+		}
 		if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
 			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
 		}
 		return dopoAzioneDelGiocatore(utilizzatore);
 	}
-
-	/**
-	 * Il dardo arcano di Mago ed Elfo contro il primo avversario vivo: costa MAGIA, non consuma pergamene.
-	 *
-	 * @return lo stato in cui passare se lo scontro finisce (avversari tutti morti o gioco perso), altrimenti null
-	 */
-	private Stato lanciaDardoArcano(Personaggio formulante, GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		opzioneCorruzioneDisponibile = false;
-		opzioneAmiciziaDisponibile = false;
-		Personaggio bersaglio = gruppoAvversario.getPersonaggioVivo();
-		if (bersaglio == null || !DardoArcano.puoLanciarlo(formulante)) {
-			// Il dardo non è partito: non è stata fatta nessuna azione, e quindi non passa nessun turno
-			turnoGestitoDalRound = true;
-			return null;
-		}
-		esecutore().scagliaIlDardo(formulante, bersaglio);
-		if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
-			setCompleta(true);
-			return Stato.FINE_LOCAZIONE;
-		}
-		return dopoAzioneDelGiocatore(formulante);
-	}
-
 	// La tattica di un personaggio (tattiche_di_combattimento_automatiche.md §11): in combattimento automatico agiscono con quella i miei personaggi e i
 	// mostri (la sua, o quella base della loro classe, RegistroTattiche). Le azioni manuali del giocatore (la barra dei comandi) non passano di qui.
 
@@ -1123,9 +1097,9 @@ public abstract class LocazioneBase implements Locazione {
 			comandiPossibili.add(Comando.INTERRUZIONE_COMBATTIMENTO);
 		}
 		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo,
-		// oppure se un Mago o un Elfo vivo ha la MAGIA per il dardo arcano, o un Sacerdote per l'alba sacra, o un Chierico o un Druido per le sue abilità
+		// oppure se un Sacerdote ha la MAGIA per l'alba sacra o la luce divina, o se qualcuno può usare un'abilità innata (Chierico, Druido, Mago, Elfo) o un canto
 		boolean incantesimoPossibile = chiAgisce.stream()
-				.anyMatch(p -> DardoArcano.puoLanciarlo(p) || AlbaSacra.puoLanciarlaInnata(p) || LuceDivina.puoLanciarlaInnata(p)
+				.anyMatch(p -> AlbaSacra.puoLanciarlaInnata(p) || LuceDivina.puoLanciarlaInnata(p)
 						|| !CantoDelBardo.cantiUtili(p, gruppo, gruppoAvversario).isEmpty()
 						|| !AbilitaInnate.abilitaUtili(p, gruppo, gruppoAvversario).isEmpty());
 		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {

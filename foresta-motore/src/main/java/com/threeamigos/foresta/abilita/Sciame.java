@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.abilita;
 
+import java.util.List;
 import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -12,6 +13,7 @@ import com.threeamigos.foresta.tipi.TipoIncantesimo;
 public class Sciame extends AbilitaDiDanno {
 
 	public Sciame(Personaggio utilizzatore) {
+		super(utilizzatore);
 	}
 
 	@Override
@@ -25,17 +27,17 @@ public class Sciame extends AbilitaDiDanno {
 	}
 
 	@Override
-	protected TipoDanno getTipoDanno() {
+	public TipoDanno getTipoDanno() {
 		return TipoDanno.VELENO;
 	}
 
 	@Override
-	protected int getDanni() {
+	public int getDanni() {
 		return CostantiAbilitaInnate.ABILITA_SCIAME_DANNI;
 	}
 
 	@Override
-	protected String getAnnuncio() {
+	protected String getAnnuncio(List<Personaggio> bersagli) {
 		return "evoca uno sciame di insetti velenosi.";
 	}
 }

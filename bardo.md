@@ -11,11 +11,10 @@ ed Elfo e dell'alba sacra di Sacerdote e Sacerdotessa.
 
 ## 2. Com'era prima
 
-- **Dardo arcano** (`incantesimi/DardoArcano`): un'`Arma` che non sta in `TipoIncantesimo`, perché non è una pergamena.
-  `conosciutoDa(TipoPersonaggio)` e `puoLanciarlo(Personaggio)` (vivo, conosce, ha la MAGIA, non è `SILENZIATO`)
-  decidono chi lo lancia; `Automa.entraInStatoSceltaIncantesimoDaLanciare` lo aggiunge ai comandi;
-  `LocazioneBase.lanciaDardoArcano` lo lancia; `LocazioneBase.impostaComandiPossibili` lo conta per abilitare il 
-  comando `INCANTESIMO`.
+- **Dardo arcano** (`abilita/DardoArcano`): un'abilità innata di danno di Mago ed Elfo (`AbilitaDiDanno`, `TipoAbilita.DARDO_ARCANO`), che è
+  anche un'`Arma` magica. `AbilitaInnate.conosciutaDa` e `puoUsare` (vivo, conosce, ha la MAGIA, non è `SILENZIATO`) decidono chi lo lancia;
+  `Automa.entraInStatoSceltaIncantesimoDaLanciare` lo mette fra i comandi con le altre abilità innate e `LocazioneBase.usaUnaAbilita` lo
+  esegue (un solo bersaglio: quello scelto, o il primo avversario vivo).
 - **Alba sacra** (`incantesimi/AlbaSacra`): invece è un `Incantesimo` di `TipoIncantesimo`, e chi la conosce per natura
   non ne consuma le pergamene.
 - Le capacità dipendono dal **`TipoPersonaggio`** (`conosciutoDa(classe)`), non dalla classe Java, e `PersonaggioNonCombattente`,

@@ -84,7 +84,7 @@ public final class RegistroTattiche {
 			possibili.removeAll(java.util.EnumSet.of(TipoAzione.CANTO_CURATIVO, TipoAzione.CANTO_IPNOTICO, TipoAzione.CANTO_DI_VALORE,
 					TipoAzione.URLO_DELLA_BANSHEE));
 		}
-		if (!com.threeamigos.foresta.incantesimi.DardoArcano.conosciutoDa(classe)) {
+		if (!com.threeamigos.foresta.abilita.AbilitaInnate.conosciutaDa(classe, com.threeamigos.foresta.tipi.TipoAbilita.DARDO_ARCANO)) {
 			possibili.remove(TipoAzione.DARDO_ARCANO);
 		}
 		if (!com.threeamigos.foresta.incantesimi.AlbaSacra.conosciutaDa(classe)) {

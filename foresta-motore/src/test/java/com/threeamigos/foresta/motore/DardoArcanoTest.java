@@ -1,12 +1,14 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.TipoAbilita;
+import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
+import com.threeamigos.foresta.abilita.DardoArcano;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
@@ -33,22 +35,22 @@ class DardoArcanoTest {
 
     @Test
     void loConosconoSoloMagoEdElfo() {
-        assertTrue(DardoArcano.conosciutoDa(TipoPersonaggio.MAGO));
-        assertTrue(DardoArcano.conosciutoDa(TipoPersonaggio.MAGA));
-        assertTrue(DardoArcano.conosciutoDa(TipoPersonaggio.ELFO));
-        assertTrue(DardoArcano.conosciutoDa(TipoPersonaggio.ELFA));
-        assertFalse(DardoArcano.conosciutoDa(TipoPersonaggio.GUERRIERO));
-        assertFalse(DardoArcano.conosciutoDa(TipoPersonaggio.LADRO));
-        assertFalse(DardoArcano.conosciutoDa(TipoPersonaggio.BARDO));
+        assertTrue(AbilitaInnate.conosciutaDa(TipoPersonaggio.MAGO, TipoAbilita.DARDO_ARCANO));
+        assertTrue(AbilitaInnate.conosciutaDa(TipoPersonaggio.MAGA, TipoAbilita.DARDO_ARCANO));
+        assertTrue(AbilitaInnate.conosciutaDa(TipoPersonaggio.ELFO, TipoAbilita.DARDO_ARCANO));
+        assertTrue(AbilitaInnate.conosciutaDa(TipoPersonaggio.ELFA, TipoAbilita.DARDO_ARCANO));
+        assertFalse(AbilitaInnate.conosciutaDa(TipoPersonaggio.GUERRIERO, TipoAbilita.DARDO_ARCANO));
+        assertFalse(AbilitaInnate.conosciutaDa(TipoPersonaggio.LADRO, TipoAbilita.DARDO_ARCANO));
+        assertFalse(AbilitaInnate.conosciutaDa(TipoPersonaggio.BARDO, TipoAbilita.DARDO_ARCANO));
     }
 
     @Test
     void serveAbbastanzaMagia() {
         Mago mago = new Mago("Merlino", 5);
-        assertTrue(DardoArcano.puoLanciarlo(mago));
+        assertTrue(AbilitaInnate.puoUsare(mago, TipoAbilita.DARDO_ARCANO));
         mago.subMagia(mago.getMagia());
-        assertFalse(DardoArcano.puoLanciarlo(mago));
-        assertFalse(DardoArcano.puoLanciarlo(new Ladro("Pippo", 5)));
+        assertFalse(AbilitaInnate.puoUsare(mago, TipoAbilita.DARDO_ARCANO));
+        assertFalse(AbilitaInnate.puoUsare(new Ladro("Pippo", 5), TipoAbilita.DARDO_ARCANO));
     }
 
     @Test
@@ -66,10 +68,10 @@ class DardoArcanoTest {
     void lElfoHaBisognoDiPiuMagia() {
         Elfo elfo = new Elfo("Legolas", 5);
         elfo.subMagia(elfo.getMagia() - CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO);
-        assertFalse(DardoArcano.puoLanciarlo(elfo));
+        assertFalse(AbilitaInnate.puoUsare(elfo, TipoAbilita.DARDO_ARCANO));
         Mago mago = new Mago("Merlino", 5);
         mago.subMagia(mago.getMagia() - CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO);
-        assertTrue(DardoArcano.puoLanciarlo(mago));
+        assertTrue(AbilitaInnate.puoUsare(mago, TipoAbilita.DARDO_ARCANO));
     }
 
     @Test

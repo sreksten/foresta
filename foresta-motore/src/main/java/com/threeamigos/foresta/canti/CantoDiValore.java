@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.canti;
 
+import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
+import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
 import com.threeamigos.foresta.tipi.CostantiCanti;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -38,6 +40,7 @@ public class CantoDiValore implements Canto {
 
 	@Override
 	public boolean canta(Personaggio cantore, Gruppo gruppo, Gruppo gruppoAvversario) {
+		AnnuncioDellAzione.azione(cantore, null, TipoAzione.CANTO_DI_VALORE);
 		cantore.subMagia(getCostoLancio());
 		BusEventi.pubblica(new NotificaTestoFrase(cantore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " intona un canto di valore: il gruppo si sente più coraggioso e preciso."));

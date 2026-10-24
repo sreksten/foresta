@@ -16,8 +16,6 @@ import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
-import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.motore.ModalitaDiProva;
 import com.threeamigos.foresta.oggetti.ArmaNaturale;
@@ -1146,7 +1144,7 @@ public class CalcolatoreCombattimento {
      * (INCANTESIMO_FATTORE_DANNI, bonus del libro magico)
      */
     private static boolean isIncantesimo(Arma arma) {
-        return arma instanceof IncantesimoMalefico || arma instanceof DardoArcano;
+        return arma.isMagica();
     }
 
     /**

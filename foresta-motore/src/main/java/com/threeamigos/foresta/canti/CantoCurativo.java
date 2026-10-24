@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.canti;
 
+import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
+import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
 import com.threeamigos.foresta.tipi.CostantiCanti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
@@ -75,6 +77,7 @@ public class CantoCurativo implements Canto {
 			return false;
 		}
 		Personaggio bersaglio = ferito.get();
+		AnnuncioDellAzione.azione(cantore, bersaglio, TipoAzione.CANTO_CURATIVO);
 		int saluteInizio = bersaglio.getSalute();
 		bersaglio.addSalute(getCura());
 		cantore.subMagia(getCostoLancio());

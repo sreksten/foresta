@@ -21,10 +21,14 @@ public final class AbilitaInnate {
 	}
 
 	/**
-	 * @return true se la classe ha almeno un'abilità innata (Chierico, Chierica, Druido, Druida)
+	 * @return true se la classe ha almeno un'abilità innata (Chierico, Druido, Mago, Elfo e le loro forme femminili)
 	 */
 	public static boolean conosciutaDa(TipoPersonaggio classe) {
-		return isDelChierico(classe) || isDelDruido(classe);
+		return isDelChierico(classe) || isDelDruido(classe) || isDelDardo(classe);
+	}
+
+	private static boolean isDelDardo(TipoPersonaggio classe) {
+		return classe == TipoPersonaggio.MAGO || classe == TipoPersonaggio.MAGA || classe == TipoPersonaggio.ELFO || classe == TipoPersonaggio.ELFA;
 	}
 
 	private static boolean isDelChierico(TipoPersonaggio classe) {
@@ -36,13 +40,16 @@ public final class AbilitaInnate {
 	}
 
 	/**
-	 * Se la classe conosce quell'abilità: Scacciare i non morti e Imposizione delle mani sono del chierico, le altre del druido.
+	 * Se la classe conosce quell'abilità: Scacciare i non morti e Imposizione delle mani sono del chierico, il dardo arcano è di Mago ed
+	 * Elfo, le altre del druido.
 	 */
 	public static boolean conosciutaDa(TipoPersonaggio classe, TipoAbilita tipo) {
 		switch (tipo) {
 			case SCACCIARE_I_NON_MORTI:
 			case IMPOSIZIONE_DELLE_MANI:
 				return isDelChierico(classe);
+			case DARDO_ARCANO:
+				return isDelDardo(classe);
 			default:
 				return isDelDruido(classe);
 		}
@@ -54,7 +61,7 @@ public final class AbilitaInnate {
 	public static boolean puoUsare(Personaggio personaggio, TipoAbilita tipo) {
 		return personaggio.isVivo() && conosciutaDa(personaggio.getClasse(), tipo)
 				&& !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)
-				&& personaggio.getMagia() >= tipo.getCostoLancio();
+				&& personaggio.getMagia() >= tipo.getCostoLancio(personaggio.getClasse());
 	}
 
 	/**

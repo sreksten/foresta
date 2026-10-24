@@ -1,9 +1,10 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.TipoAbilita;
+import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Sacerdote;
@@ -44,8 +45,8 @@ class SacerdoteTest {
 
     @Test
     void nonHannoIlDardoArcano() {
-        assertFalse(DardoArcano.conosciutoDa(TipoPersonaggio.SACERDOTE));
-        assertFalse(DardoArcano.conosciutoDa(TipoPersonaggio.SACERDOTESSA));
+        assertFalse(AbilitaInnate.conosciutaDa(TipoPersonaggio.SACERDOTE, TipoAbilita.DARDO_ARCANO));
+        assertFalse(AbilitaInnate.conosciutaDa(TipoPersonaggio.SACERDOTESSA, TipoAbilita.DARDO_ARCANO));
         assertFalse(AlbaSacra.conosciutaDa(TipoPersonaggio.MAGO));
         assertFalse(AlbaSacra.conosciutaDa(TipoPersonaggio.ELFA));
         assertTrue(AlbaSacra.conosciutaDa(TipoPersonaggio.SACERDOTE));

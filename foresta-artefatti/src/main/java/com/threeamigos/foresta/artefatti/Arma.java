@@ -34,6 +34,14 @@ public interface Arma {
     boolean isIncantata();
 
     /**
+     * Se è un attacco magico (un incantesimo, il dardo arcano, un'abilità di danno) e non un'arma: i danni scalano con l'INTELLIGENZA e con
+     * il potere magico di chi lo usa. Un'arma, anche incantata, non lo è.
+     */
+    default boolean isMagica() {
+        return false;
+    }
+
+    /**
      * Gli incantamenti dell'arma.
      */
     Collection<IncantamentoMD> getIncantamenti();

@@ -1,12 +1,14 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.TipoAbilita;
+import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.combattimento.FaseDiAttacco;
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
+import com.threeamigos.foresta.abilita.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.locazioni.LocazioneBase;
@@ -206,7 +208,7 @@ public class TestScontriDiGruppo {
             return;
         }
         double conMischia = atteseMischia(chi, bersaglio);
-        double conDardo = DardoArcano.puoLanciarlo(chi) ? atteseDardo(chi, bersaglio) : 0;
+        double conDardo = AbilitaInnate.puoUsare(chi, TipoAbilita.DARDO_ARCANO) ? atteseDardo(chi, bersaglio) : 0;
         boolean puoPergamena = scorta[0] > 0 && chi.getMagia() >= pergamena(chi).getCostoLancio();
         double conPergamena = puoPergamena ? attesePergamena(chi, avversari) : 0;
         if (conPergamena > conMischia && conPergamena >= conDardo) {

@@ -7,7 +7,6 @@ import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.LuceDivina;
 import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -117,9 +116,9 @@ public final class Filtri {
 			return false;
 		}
 		TipoPersonaggio classe = candidato.getClasse();
-		if (DardoArcano.conosciutoDa(classe) || AlbaSacra.conosciutaDa(classe) || CantoDelBardo.conosciutoDa(classe)
+		if (AlbaSacra.conosciutaDa(classe) || CantoDelBardo.conosciutoDa(classe)
 				|| AbilitaInnate.conosciutaDa(classe)) {
-			return DardoArcano.puoLanciarlo(candidato) || AlbaSacra.puoLanciarlaInnata(candidato) || LuceDivina.puoLanciarlaInnata(candidato)
+			return AlbaSacra.puoLanciarlaInnata(candidato) || LuceDivina.puoLanciarlaInnata(candidato)
 					|| !CantoDelBardo.cantiPossibili(candidato).isEmpty() || !AbilitaInnate.abilitaPossibili(candidato).isEmpty();
 		}
 		if (contesto.isMostro(candidato)) {

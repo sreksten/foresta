@@ -29,7 +29,7 @@ class IconeDelleAbilitaTest {
 			assertSame(tipo, TipoAbilita.ofComando(comando));
 			assertNotNull(ClasseIcona.ofComando(comando).getIcona(), comando.name());
 		}
-		assertEquals(6, comandi.size());
+		assertEquals(TipoAbilita.values().length, comandi.size());
 	}
 
 	@Test

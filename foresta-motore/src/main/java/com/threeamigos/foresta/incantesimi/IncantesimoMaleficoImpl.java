@@ -2,6 +2,7 @@ package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.ColpoMagico;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -104,20 +105,6 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 	 * CalcolatoreCombattimento.quotaDelDannoPerPosizione): gli stati alterati dipendono dal colpo, non dalla quota.
 	 */
 	protected void colpisci(Personaggio formulante, Personaggio personaggioBersaglio, double quotaDelDanno) {
-		TipoAzione azione = TipoAzione.di(getClasse());
-		StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
-		if (personaggioBersaglio.isImmuneAIncantesimo(getClasse())) {
-			Logger.log("Bersaglio immune all'incantesimo");
-			stato.registraEsitoAzione(formulante, personaggioBersaglio, azione, EsitoAzione.IMMUNE);
-			return;
-		}
-		if (!CalcolatoreCombattimento.colpisce(formulante, personaggioBersaglio, getTipoDanno().getCategoriaDanno())) {
-			Logger.log("L'incantesimo non va a segno");
-			stato.registraEsitoAzione(formulante, personaggioBersaglio, azione, EsitoAzione.MANCATA);
-			return;
-		}
-		stato.registraEsitoAzione(formulante, personaggioBersaglio, azione, EsitoAzione.RIUSCITA);
-		DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(formulante, personaggioBersaglio, this, quotaDelDanno);
-		ApplicazioneDelRisultato.applica(personaggioBersaglio, risultato);
+		ColpoMagico.colpisci(formulante, personaggioBersaglio, this, TipoAzione.di(getClasse()), getClasse(), quotaDelDanno);
 	}
 }

@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.TipoAbilita;
+import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
@@ -68,7 +69,7 @@ class PersonaggiNonCombattentiTest {
     @Test
     void nonHannoCapacitaPropriePerNaturaENonSiIncontranoComeAmici() {
         for (TipoPersonaggio tipo : NON_COMBATTENTI) {
-            assertFalse(DardoArcano.conosciutoDa(tipo));
+            assertFalse(AbilitaInnate.conosciutaDa(tipo, TipoAbilita.DARDO_ARCANO));
             assertFalse(AlbaSacra.conosciutaDa(tipo));
             Personaggio modello = FabbricaPersonaggi.modello(tipo);
             assertFalse(modello.isAmichevole(), tipo + " non è un avversario con cui fare amicizia");

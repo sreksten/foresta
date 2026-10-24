@@ -1,10 +1,12 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.TipoAbilita;
+import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.combattimento.FaseDiAttacco;
 import com.threeamigos.foresta.danni.tipi.CategoriaDanno;
-import com.threeamigos.foresta.incantesimi.DardoArcano;
+import com.threeamigos.foresta.abilita.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
@@ -199,7 +201,7 @@ public class CombatSimulatorMatrix {
      * il danno deve essere maggiore di quella delle sue fasi di attacco con le armi.
      */
     static boolean conviene(Personaggio pg, Personaggio bersaglio) {
-        if (!DardoArcano.puoLanciarlo(pg)) {
+        if (!AbilitaInnate.puoUsare(pg, TipoAbilita.DARDO_ARCANO)) {
             return false;
         }
         DardoArcano dardo = new DardoArcano(pg);

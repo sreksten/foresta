@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.abilita;
 
+import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
+import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
 import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
 import com.threeamigos.foresta.canti.CantoCurativo;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -56,6 +58,7 @@ public class ImposizioneDelleMani implements Abilita {
 			return false;
 		}
 		Personaggio bersaglio = ferito.get();
+		AnnuncioDellAzione.azione(utilizzatore, bersaglio, TipoAzione.IMPOSIZIONE_DELLE_MANI);
 		int saluteInizio = bersaglio.getSalute();
 		bersaglio.addSalute(getCura());
 		utilizzatore.subMagia(getCostoLancio());

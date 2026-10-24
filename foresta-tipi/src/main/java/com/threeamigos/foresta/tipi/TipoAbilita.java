@@ -3,7 +3,7 @@ package com.threeamigos.foresta.tipi;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
- * Le abilità innate del Chierico e del Druido (e delle loro forme femminili), simili ai canti del Bardo: costano MAGIA, non
+ * Le abilità innate del Chierico e del Druido, del Mago e dell'Elfo (e delle loro forme femminili), simili ai canti del Bardo: costano MAGIA, non
  * consumano pergamene, non si comprano né si trovano.
  * <p>
  * Come per {@link TipoCanto}, ogni abilità è associata a un {@link Comando} usato dalla UI per chiederne l'uso al motore.
@@ -24,7 +24,9 @@ public enum TipoAbilita {
 	RADICI(Comando.RADICI),
 	SCIAME(Comando.SCIAME),
 	PELLE_DI_CORTECCIA(Comando.PELLE_DI_CORTECCIA),
-	RIGENERAZIONE(Comando.RIGENERAZIONE);
+	RIGENERAZIONE(Comando.RIGENERAZIONE),
+	// Del mago e dell'elfo
+	DARDO_ARCANO(Comando.DARDO_ARCANO);
 
 	/**
 	 * @return l'abilità scelta con quel comando, o null se il comando non è di un'abilità
@@ -60,9 +62,17 @@ public enum TipoAbilita {
 	}
 
 	/**
-	 * I punti di MAGIA che costa usarla.
+	 * I punti di MAGIA che costa usarla, per chi la usa con il costo base (quello del Mago per il dardo arcano).
 	 */
 	public int getCostoLancio() {
+		return getCostoLancio(TipoPersonaggio.MAGO);
+	}
+
+	/**
+	 * I punti di MAGIA che costa usarla a quella classe: uguale per tutti, tranne il dardo arcano, che costa meno al Mago (e alla Maga) che
+	 * all'Elfo (e all'Elfa).
+	 */
+	public int getCostoLancio(TipoPersonaggio classe) {
 		switch (this) {
 			case SCACCIARE_I_NON_MORTI:
 				return CostantiAbilitaInnate.ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO;
@@ -76,6 +86,9 @@ public enum TipoAbilita {
 				return CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO;
 			case RIGENERAZIONE:
 				return CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_COSTO_LANCIO;
+			case DARDO_ARCANO:
+				return classe == TipoPersonaggio.MAGO || classe == TipoPersonaggio.MAGA
+						? CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO : CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO;
 			default:
 				throw new IllegalStateException("Costo non previsto per " + this);
 		}
