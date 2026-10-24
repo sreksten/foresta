@@ -126,12 +126,12 @@ memoria del combattimento; a fine round passano gli effetti di stato.
   sfuggita, quindi la sa chiunque e non ha un osservatore. Per ogni coppia (personaggio colpito, tipo di danno) si ricorda di quanto l'**equipaggiamento difensivo** ha cambiato il
   danno (`DannoRisultante.getFattoreEquipaggiamento`: il rapporto fra la mitigazione con i pezzi e quella con la sola difesa di base, `difesaContro` / `difesaBaseContro`; 1 se
   non conta, meno di 1 se protegge). È la parte che le tattiche non possono prevedere: classe e stati li dà già `moltiplicatoreAtteso`, e il fattore osservato si moltiplica per
-  quello. Lo registra ogni colpo andato a segno (`PersonaggioBase.applicaRisultatoCombattimento` → `registraColpo`; le previsioni delle tattiche, che chiamano il calcolo senza
+  quello. Lo registra ogni colpo andato a segno (`ApplicazioneDelRisultato.applica` → `registraColpo`; le previsioni delle tattiche, che chiamano il calcolo senza
   applicarlo, non lasciano tracce); una nuova osservazione sostituisce la vecchia; `getFattoreEquipaggiamentoNoto` dà 1 se non si è visto niente. Pubbliche sono anche le **immunità scoperte** (`isImmunitaScoperta`, §11.7).
 
 Regole (decise):
 
-- **Che cosa è fatto e dove si aggiorna**: i colpi (ultimo avversario, ultimo attaccante, reazione) in `applicaRisultatoCombattimento`; "ha lanciato" in `formula` degli incantesimi, nel canto e nel dardo arcano; l'ultimo alleato nella Resurrezione. I cambi d'arma e le armi valutate li registra `GruppoGiocatore.cambiaArma` / `puoCambiareArma` (§5); le voci usate le registra l'`EsecutoreTattiche` (`registraUsoVoce`, §11.14), gli esiti delle azioni (`registraEsitoAzione`) gli incantesimi e il dardo.
+- **Che cosa è fatto e dove si aggiorna**: i colpi (ultimo avversario, ultimo attaccante, reazione) in `ApplicazioneDelRisultato.applica`; "ha lanciato" in `formula` degli incantesimi, nel canto e nel dardo arcano; l'ultimo alleato nella Resurrezione. I cambi d'arma e le armi valutate li registra `GruppoGiocatore.cambiaArma` / `puoCambiareArma` (§5); le voci usate le registra l'`EsecutoreTattiche` (`registraUsoVoce`, §11.14), gli esiti delle azioni (`registraEsitoAzione`) gli incantesimi e il dardo.
 - **Non si salva**: un combattimento non si interrompe mai per salvare (il comando non è disponibile), quindi lo stato è transitorio e si perde con il
   combattimento. Le tattiche di ogni personaggio, invece, sì (§1).
 - **La conoscenza è pubblica**, anche quella sulle immunità scoperte (§11.7): vale per i personaggi del giocatore e per i mostri, e quello che si è imparato sul comportamento di un personaggio lo sa chiunque, in
@@ -877,7 +877,7 @@ Escluse (§5): fuga, corruzione, amicizia, passare inosservati. **Non c'è un'az
 - **Incantesimi a più bersagli** (`MULTIPLO`, fino a `NUMERO_BERSAGLI`): il selettore sceglie il **bersaglio principale** e gli altri sono i successivi vivi dell'elenco degli avversari. Il danno si ripartisce per posizione (principale intero, poi 75%, 50%, 25%: `CalcolatoreCombattimento.quotaDelDannoPerPosizione`) e la valutazione somma i danni attesi con le stesse quote.
 - **Un test** controlla che ogni valore di `TipoIncantesimo` abbia il suo `TipoAzione` (un nuovo incantesimo senza azione fa fallire il test).
 
-**Il bersaglio scelto, per tutte le azioni.** L'`EsecutoreTattiche` (§11.14) esegue ogni azione sul bersaglio scelto dal valutatore (per i `MULTIPLO` il principale). Le azioni manuali del giocatore (barra dei comandi) continuano a scegliere da sole: l'attacco colpisce il primo avversario vivo (`PersonaggioBase.attaccaConLeArmi`),
+**Il bersaglio scelto, per tutte le azioni.** L'`EsecutoreTattiche` (§11.14) esegue ogni azione sul bersaglio scelto dal valutatore (per i `MULTIPLO` il principale). Le azioni manuali del giocatore (barra dei comandi) continuano a scegliere da sole: l'attacco colpisce il primo avversario vivo (`AttaccoConLeArmi.esegui`),
 gli incantesimi i primi vivi, il dardo il primo, il Silenzio il primo non silenziato (`Silenzio.scegliBersaglio`), il canto curativo il più ferito.
 
 ### 11.10 Il criterio di scelta dell'incantesimo di danno

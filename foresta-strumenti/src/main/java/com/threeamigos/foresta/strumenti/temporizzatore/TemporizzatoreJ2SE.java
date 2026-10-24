@@ -1,13 +1,13 @@
-package com.threeamigos.foresta.temporizzatore;
+package com.threeamigos.foresta.strumenti.temporizzatore;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.interni.InternoException;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 import java.util.concurrent.atomic.AtomicInteger;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 
 /**
  * Il temporizzatore basato sull'esecutore pianificato di Java: gli impulsi si pianificano su un thread a parte, ma ognuno viene eseguito sul thread principale
@@ -35,6 +35,23 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 	// Il ritmo dell'ultimo inizia/iniziaDopo, per riprenderlo dopo una sospensione; 0 se non ci sono impulsi da fare
 	private int periodoAttivo;
 	private boolean sospeso;
+	// A chi si dice che un impulso è fallito: il messaggio (null per un semplice fallimento) e l'eccezione
+	private final BiConsumer<String, RuntimeException> segnalaErrore;
+
+	/**
+	 * Un temporizzatore che scrive nel registro gli impulsi falliti.
+	 */
+	public TemporizzatoreJ2SE() {
+		this((messaggio, errore) -> Logger.log(errore));
+	}
+
+	/**
+	 * Un temporizzatore che dice a {@code segnalaErrore} quando un impulso fallisce, con un messaggio (null se è un semplice fallimento)
+	 * e l'eccezione.
+	 */
+	public TemporizzatoreJ2SE(BiConsumer<String, RuntimeException> segnalaErrore) {
+		this.segnalaErrore = segnalaErrore;
+	}
 
 	public synchronized void setTemporizzabile(Temporizzabile temporizzabile) {
 		this.temporizzabile = temporizzabile;
@@ -64,7 +81,7 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 		}
 		int questaPianificazione = pianificazione.get();
 		timerTask = executor.scheduleWithFixedDelay(
-			// Il tick va eseguito sul thread principale: processaComando() pubblica eventi via BusEventi, che
+			// Il tick va eseguito sul thread principale: processaComando() pubblica eventi sul bus, che
 			// se chiamato da un thread diverso li accoda. Questo apre una
 			// finestra in cui lo stato di gioco è già cambiato (es. un personaggio è morto) ma la
 			// UI non l'ha ancora saputo, causando artefatti visivi (es. flicker alla morte di un mostro).
@@ -76,11 +93,11 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 					temporizzabile.tick();
 					impulsiFalliti = 0;
 				} catch (RuntimeException e) {
-					BusEventi.pubblica(new InternoException(e));
+					segnalaErrore.accept(null, e);
 					// Un impulso che fallisce ogni secondo riempirebbe il log e infastidirebbe il giocatore con lo stesso errore: dopo qualche
 					// fallimento di fila gli impulsi si fermano (i comandi del giocatore continuano ad arrivare)
 					if (++impulsiFalliti >= MAX_IMPULSI_FALLITI_DI_FILA) {
-						BusEventi.pubblica(new InternoException("Impulsi fermati dopo " + impulsiFalliti + " errori di fila", e));
+						segnalaErrore.accept("Impulsi fermati dopo " + impulsiFalliti + " errori di fila", e);
 						termina();
 					}
 				}

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.locazioni.Locazione;
@@ -66,7 +67,7 @@ class ScenarioStatiDegliOspitiTest {
             DannoRisultante colpo = new DannoRisultante(goblin, ospite);
             colpo.setDanno(0);
             colpo.setCuraAdArea(20);
-            ospite.applicaRisultatoCombattimento(colpo);
+            ApplicazioneDelRisultato.applica(ospite, colpo);
 
             assertTrue(capo.getSalute() > saluteCapo, "il gruppo del giocatore è curato");
             assertEquals(saluteGoblin, goblin.getSalute(), "gli avversari no");

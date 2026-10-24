@@ -2142,7 +2142,7 @@ public abstract class LocazioneBase implements Locazione {
 		int danno = Math.min(risultato.getDanno(), tetto);
 		risultato.setDanno(danno);
 		risultato.togliDanniAdArea();
-		personaggio.applicaRisultatoCombattimento(risultato);
+		ApplicazioneDelRisultato.applica(personaggio, risultato);
 		if (danno <= 0 && risultato.getEffettiDiStatoDaAggiungere().isEmpty()) {
 			return null;
 		}

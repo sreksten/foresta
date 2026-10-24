@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
 import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
@@ -178,7 +179,7 @@ class ScenarioBestiarioTest {
         DannoRisultante risultato = new DannoRisultante(attaccante, difensore);
         risultato.setTipoDanno(tipoDanno);
         risultato.setDanno(1);
-        difensore.applicaRisultatoCombattimento(risultato);
+        ApplicazioneDelRisultato.applica(difensore, risultato);
     }
 
     @Test

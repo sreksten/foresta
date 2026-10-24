@@ -3,7 +3,6 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
@@ -113,10 +112,6 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 
     void setTattica(com.threeamigos.foresta.modellodati.tattiche.TatticaMD tattica);
 
-    /**
-     * Un attacco con le sue armi (la seconda arma compresa) contro quel bersaglio, senza incantesimi, finché il bersaglio resta in combattimento
-     */
-    void attaccaConLeArmi(Personaggio bersaglio);
 
     /**
      * Gli incantesimi malefici che il personaggio sa lanciare per natura quando attacca (vedi PersonaggioBase): non servono
@@ -216,6 +211,16 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 * Il personaggio muore a causa di qualcosa
 	 */
     void muore(String causaTrapasso);
+
+    /**
+     * Se sta dalla parte del giocatore: nel suo gruppo o fra i suoi ospiti.
+     */
+    boolean appartieneAlGruppoDelGiocatore();
+
+    /**
+     * I boss: partono con salute e magia piene e non possono essere mietuti.
+     */
+    boolean isParteConValoriMassimi();
 	/**
 	 * Cosa ha provocato la morte del personaggio?
 	 */
@@ -591,12 +596,6 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 
 	// Modificatori di stato
 
-	/**
-	 * Applica al personaggio il risultato di un colpo: gli toglie la salute, gli aggiunge gli stati alterati (per lo stesso stato tiene
-	 * quello che dura di più) e i modificatori, gli toglie gli stati da rimuovere e pubblica le notifiche delle interazioni e delle
-	 * reazioni di classe. L'eventuale cura ad area va agli alleati.
-	 */
-	void applicaRisultatoCombattimento(DannoRisultante risultato);
 
 	/**
 	 * Effetti di stato attivi sul personaggio

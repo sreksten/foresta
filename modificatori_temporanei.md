@@ -14,7 +14,7 @@ I `ModificatoreAttributoMD` possono durare un tempo e un'arma può metterli sul 
 
 - `ModificatoreAttributoMD` è immutabile: attributo, tipo, quantità, nota. Sta in `PersonaggioMD.modificatori` (benedizioni, lealtà, `addSalute`/`addMagia`) e in `ArtefattoMD.modificatori`; i salvataggi li scrivono in `PersonaggioMD` (`|` e `§`) e in `ArtefattoMD` (una riga per modificatore).
 - `PersonaggioBase.getQuantitaModificata` unisce i modificatori locali con quelli di **tutti** gli artefatti dell'inventario personale: `QUANTITA_ASSOLUTA` (vince il minimo), poi la somma dei fissi, poi la somma delle percentuali.
-- Gli effetti di stato scalano in `LocazioneBase.trascorriTurnoEffettiDiStato` (`riduciEffettiDiStato`, per gruppo e avversari). Le armi li mettono in `DannoRisultante.effettiDiStatoDaAggiungere` (`CalcolatoreCombattimento`, sezione 6) e `PersonaggioBase.applicaRisultatoCombattimento` li applica al bersaglio.
+- Gli effetti di stato scalano in `LocazioneBase.trascorriTurnoEffettiDiStato` (`riduciEffettiDiStato`, per gruppo e avversari). Le armi li mettono in `DannoRisultante.effettiDiStatoDaAggiungere` (`CalcolatoreCombattimento`, sezione 6) e `ApplicazioneDelRisultato.applica` li applica al bersaglio.
 - I personaggi a tempo scalano in `Automa.entraInStatoFineLocazione2`, solo se vivi: lo stesso punto serve per le locazioni.
 - `AlbaSacra.formula` chiama `rimuoviTuttiGliEffettiDiStato` su ogni personaggio di `gruppoBersaglio`.
 
@@ -65,7 +65,7 @@ I `ModificatoreAttributoMD` possono durare un tempo e un'arma può metterli sul 
 
 - Dopo il blocco degli stati degli incantamenti (sezione 6 di `CalcolatoreCombattimento`), per ogni modificatore `BERSAGLIO` dell'arma che colpisce si fa lo stesso tiro degli incantamenti elementali (`probStatoMagico`: danno del colpo contro la forza del difensore più l'intelligenza pesata dal potere magico). Se riesce, `DannoRisultante.addModificatoreDaAggiungere` mette una copia sul portatore, con la sua durata.
 - Il danno del colpo che serve al tiro è quello complessivo di quell'arma (i modificatori non hanno un elemento).
-- `PersonaggioBase.applicaRisultatoCombattimento` applica i modificatori con `addModificatore`, tenendo il più lungo se ce ne sono due uguali.
+- `ApplicazioneDelRisultato.applica` applica i modificatori con `addModificatore`, tenendo il più lungo se ce ne sono due uguali.
 - **Immunità.** Un bersaglio immune al tipo di danno dell'arma (`isImmuneATipoDanno(tipoDanno)`, la stessa `immuneATipoDannoBase` che azzera il danno base) è immune anche ai modificatori che quell'arma applica: per lui il tiro non si fa nemmeno. Vale come per gli effetti di stato dell'arma. L'immunità a un singolo effetto di stato (`isImmuneAEffetto`) non c'entra: i modificatori non sono effetti di stato.
 - Le armi secondarie fanno lo stesso: nessun caso a parte.
 
@@ -109,7 +109,7 @@ Il numero e l'unità si possono scrivere attaccati o separati da uno spazio (`3T
 2. [x] **Modello e salvataggi**: `UnitaDurataModificatore`, `BersaglioModificatore`, i tre campi di `ModificatoreAttributoMD` (con `conDurata`, `suPortatore`, `conQuantita`, `stessoEffetto`, le descrizioni per i testi), scrittura e lettura in `ArtefattoMD` e `PersonaggioMD`.
 3. [x] **Calcolo e scadenza**: filtro del bersaglio, nessuna somma di doppioni, ricalcolo, scalare per turni (`LocazioneBase.trascorriTurnoEffettiDiStato`) e per locazioni (`Automa.entraInStatoFineLocazione2`), `NotificaVariazioneModificatorePersonaggio` al posto di `NotificaAggiuntaModificatorePersonaggio`.
 4. [x] **Alba Sacra** e **fuga** (`Costanti.FUGA_IGNOMINIA_*`: −20% di coraggio, valore e carisma per 3 locazioni dopo quella della fuga, quindi durata 4). Oltre all'ignominia, fuggire costa a ogni personaggio dal 30% al 50% della sua salute massima (`Costanti.FUGA_DANNO_*_PERCENTUALE`, `PersonaggioBase.fugge`; a fine locazione ognuno recupera dal 16 al 35%, secondo la classe), e non uccide mai: lascia almeno un punto di salute. Il gruppo perde inoltre il 20% delle scorte (monete, preziosi, pergamene e pozioni, arrotondato per difetto: `Costanti.FUGA_PERDITA_CONSUMABILI_PERCENTUALE`, `GruppoGiocatore.fugge`); gli artefatti restano.
-5. [x] **Armi**: `Arma.getModificatoriSulBersaglio`, il tiro in `CalcolatoreCombattimento` ("Traguardo 3"), `DannoRisultante.modificatoriDaAggiungere`, applicazione in `applicaRisultatoCombattimento`, immunità.
+5. [x] **Armi**: `Arma.getModificatoriSulBersaglio`, il tiro in `CalcolatoreCombattimento` ("Traguardo 3"), `DannoRisultante.modificatoriDaAggiungere`, applicazione in `ApplicazioneDelRisultato.applica`, immunità.
 6. [x] **Sintassi, prezzo, incantatore**: `ModificatoreDelTesto`, `ListinoPergamene.prezzo`, `RegoleIncantatura`; la Spada della Sfortuna di RomyJona in `leggendari.txt` (§10).
 7. [x] **UI**: rivelazione e scambio, scheda del personaggio (colori, giallo, nodo dei temporanei), riquadro del gruppo.
 8. [x] **Documenti**: questo, `artefatti_e_incantamenti.md`, `motore_di_gioco.md`, `interazioni_effetti_di_stato.md`, `foresta.md`, `CLAUDE.md`.

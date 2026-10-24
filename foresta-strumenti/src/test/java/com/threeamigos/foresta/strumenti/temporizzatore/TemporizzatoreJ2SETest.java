@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.temporizzatore;
+package com.threeamigos.foresta.strumenti.temporizzatore;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -144,9 +144,8 @@ class TemporizzatoreJ2SETest {
 
     @Test
     void unImpulsoCheFallisceSempreSiFermaDopoQualcheErroreDiFila() throws Exception {
-        java.util.List<com.threeamigos.foresta.eventi.interni.InternoException> errori = new java.util.concurrent.CopyOnWriteArrayList<>();
-        com.threeamigos.foresta.eventi.BusEventi.iscriviti(com.threeamigos.foresta.eventi.interni.InternoException.class, errori::add);
-        TemporizzatoreJ2SE temporizzatore = new TemporizzatoreJ2SE();
+        java.util.List<String> errori = new java.util.concurrent.CopyOnWriteArrayList<>();
+        TemporizzatoreJ2SE temporizzatore = new TemporizzatoreJ2SE((messaggio, errore) -> errori.add(String.valueOf(messaggio)));
         AtomicInteger impulsi = new AtomicInteger();
         temporizzatore.setTemporizzabile(() -> {
             impulsi.incrementAndGet();
@@ -164,5 +163,45 @@ class TemporizzatoreJ2SETest {
         assertEquals(3, dopoUnPo, "dopo tre errori di fila gli impulsi si fermano");
         assertEquals(3, impulsi.get(), "e non ne arrivano altri");
         assertEquals(4, errori.size(), "tre errori più l'avviso che gli impulsi si sono fermati");
+        assertEquals("null", errori.get(0));
+        assertTrue(errori.get(3).startsWith("Impulsi fermati dopo 3 errori di fila"));
+    }
+
+    @Test
+    void senzaGestoreGliErroriVannoNelRegistro() throws Exception {
+        TemporizzatoreJ2SE temporizzatore = new TemporizzatoreJ2SE();
+        AtomicInteger impulsi = new AtomicInteger();
+        temporizzatore.setTemporizzabile(() -> {
+            impulsi.incrementAndGet();
+            throw new IllegalStateException("guasto");
+        });
+        temporizzatore.inizia(5);
+        attendi(() -> impulsi.get() >= 3);
+        eseguiESpetta(() -> { });
+        temporizzatore.termina();
+        assertEquals(3, impulsi.get());
+    }
+
+    @Test
+    void iniziaDopoFaPartireIlPrimoImpulsoInRitardo() throws Exception {
+        TemporizzatoreJ2SE temporizzatore = new TemporizzatoreJ2SE();
+        AtomicInteger impulsi = new AtomicInteger();
+        temporizzatore.setTemporizzabile(impulsi::incrementAndGet);
+        temporizzatore.iniziaDopo(20);
+        assertEquals(0, impulsi.get());
+        attendi(() -> impulsi.get() >= 2);
+        temporizzatore.termina();
+        assertTrue(impulsi.get() >= 2);
+    }
+
+    @Test
+    void riprendiSenzaSospensioneNonFaNiente() throws Exception {
+        TemporizzatoreJ2SE temporizzatore = new TemporizzatoreJ2SE();
+        AtomicInteger impulsi = new AtomicInteger();
+        temporizzatore.setTemporizzabile(impulsi::incrementAndGet);
+        temporizzatore.riprendi();
+        Thread.sleep(50);
+        eseguiESpetta(() -> { });
+        assertEquals(0, impulsi.get());
     }
 }

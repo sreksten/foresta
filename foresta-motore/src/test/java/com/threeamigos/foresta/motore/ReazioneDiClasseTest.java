@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.artefatti.IncantamentoMD;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
@@ -56,7 +57,7 @@ class ReazioneDiClasseTest {
 
     private void colpisci(Personaggio difensore, Arma arma) {
         Personaggio attaccante = FabbricaPersonaggi.crea(TipoPersonaggio.LADRO, 5);
-        difensore.applicaRisultatoCombattimento(CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, arma));
+        ApplicazioneDelRisultato.applica(difensore, CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, arma));
     }
 
     @Test

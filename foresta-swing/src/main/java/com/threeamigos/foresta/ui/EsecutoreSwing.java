@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.temporizzatore.ThreadPrincipale;
+import com.threeamigos.foresta.strumenti.temporizzatore.ThreadPrincipale;
 
 import javax.swing.*;
 

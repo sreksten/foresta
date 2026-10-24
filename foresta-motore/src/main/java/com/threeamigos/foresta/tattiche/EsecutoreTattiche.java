@@ -102,7 +102,7 @@ public final class EsecutoreTattiche {
 				if (deiMiei) {
 					attaccaConLeArmi(attore, bersaglio);
 				} else {
-					attore.attaccaConLeArmi(bersaglio);
+					AttaccoConLeArmi.esegui(attore, bersaglio);
 				}
 				break;
 			case DARDO_ARCANO:
@@ -207,7 +207,7 @@ public final class EsecutoreTattiche {
 			boolean colpisce = CalcolatoreCombattimento.colpisce(attore, bersaglio, arma.getTipoDanno().getCategoriaDanno());
 			if (colpisce) {
 				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(attore, bersaglio, arma, fase.getFattore());
-				bersaglio.applicaRisultatoCombattimento(risultato);
+				ApplicazioneDelRisultato.applica(bersaglio, risultato);
 				if (bersaglio.isFuoriCombattimento()) {
 					uccisioni.registra(attore, bersaglio);
 					// Il colpo successivo passa al primo avversario ancora in piedi (non al "prossimo" della rosa): coerente con il ripiego del Valutatore
@@ -234,7 +234,7 @@ public final class EsecutoreTattiche {
 				+ bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + "."));
 		if (CalcolatoreCombattimento.colpisce(formulante, bersaglio, dardo.getTipoDanno().getCategoriaDanno())) {
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.DARDO_ARCANO, EsitoAzione.RIUSCITA);
-			bersaglio.applicaRisultatoCombattimento(CalcolatoreCombattimento.calcolaDannoRisultante(formulante, bersaglio, dardo));
+			ApplicazioneDelRisultato.applica(bersaglio, CalcolatoreCombattimento.calcolaDannoRisultante(formulante, bersaglio, dardo));
 			uccisioni.registra(formulante, bersaglio);
 		} else {
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.DARDO_ARCANO, EsitoAzione.MANCATA);

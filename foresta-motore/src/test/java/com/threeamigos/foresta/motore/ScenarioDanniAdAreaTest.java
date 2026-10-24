@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.artefatti.IncantamentoMD;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
@@ -77,7 +78,7 @@ class ScenarioDanniAdAreaTest {
             DannoRisultante colpo = CalcolatoreCombattimento.calcolaDannoRisultante(arsenio, bersaglio, arma(TipoDanno.VELENO));
             assertEquals(1, colpo.getDanniAdArea().size());
             colpo.togliDanniAdArea();
-            bersaglio.applicaRisultatoCombattimento(colpo);
+            ApplicazioneDelRisultato.applica(bersaglio, colpo);
 
             assertTrue(colpo.getDanniAdArea().isEmpty());
             assertEquals(saluteDiPrima[0], fila.get(0).getSalute());
@@ -112,7 +113,7 @@ class ScenarioDanniAdAreaTest {
             assertTrue(colpo.getInterazioni().contains(TipoInterazioneConEffettiDiStato.ESPLOSIONE_DI_GAS));
             assertEquals(1, colpo.getDanniAdArea().size());
             assertEquals(TipoDanno.FUOCO, colpo.getDanniAdArea().get(0).getTipoDanno());
-            bersaglio.applicaRisultatoCombattimento(colpo);
+            ApplicazioneDelRisultato.applica(bersaglio, colpo);
 
             assertTrue(fila.get(0).getSalute() < saluteDiPrima[0], "il vicino di sinistra");
             assertTrue(fila.get(2).getSalute() < saluteDiPrima[2], "il vicino di destra");

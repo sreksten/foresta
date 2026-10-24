@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
@@ -117,6 +118,6 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 		}
 		stato.registraEsitoAzione(formulante, personaggioBersaglio, azione, EsitoAzione.RIUSCITA);
 		DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(formulante, personaggioBersaglio, this, quotaDelDanno);
-		personaggioBersaglio.applicaRisultatoCombattimento(risultato);
+		ApplicazioneDelRisultato.applica(personaggioBersaglio, risultato);
 	}
 }

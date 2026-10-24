@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.temporizzatore;
+package com.threeamigos.foresta.strumenti.temporizzatore;
 
 /**
  * Un oggetto che può rispondere a un "tick" di un temporizzatore
@@ -7,6 +7,9 @@ package com.threeamigos.foresta.temporizzatore;
  */
 public interface Temporizzabile {
 
+    /**
+     * Un impulso del temporizzatore.
+     */
     void tick();
 
 }

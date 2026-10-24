@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.AttaccoConLeArmi;
+import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
@@ -48,7 +50,7 @@ class ScenarioMietituraTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(251)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             Personaggio goblin = minionQuasiMorto(partita);
-            goblin.applicaRisultatoCombattimento(mietitura(partita.gruppo().getCapo(), goblin));
+            ApplicazioneDelRisultato.applica(goblin, mietitura(partita.gruppo().getCapo(), goblin));
 
             assertFalse(goblin.isVivo());
             assertEquals(2, partita.gruppo().getNumeroPersonaggi());
@@ -65,7 +67,7 @@ class ScenarioMietituraTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             partita.eventi().ascolta(NotificaTestoFrase.class);
             Personaggio goblin = minionQuasiMorto(partita);
-            goblin.applicaRisultatoCombattimento(mietitura(partita.gruppo().getCapo(), goblin));
+            ApplicazioneDelRisultato.applica(goblin, mietitura(partita.gruppo().getCapo(), goblin));
 
             List<String> frasi = partita.eventi().tutti(NotificaTestoFrase.class).stream()
                     .map(NotificaTestoFrase::getMessaggio).collect(Collectors.toList());
@@ -91,7 +93,7 @@ class ScenarioMietituraTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(259)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             Personaggio goblin = minionQuasiMorto(partita);
-            goblin.applicaRisultatoCombattimento(mietitura(partita.gruppo().getCapo(), goblin));
+            ApplicazioneDelRisultato.applica(goblin, mietitura(partita.gruppo().getCapo(), goblin));
             Personaggio scheletro = partita.gruppo().getPersonaggio(1);
             partita.eventi().ascolta(NotificaTestoFrase.class);
 
@@ -115,7 +117,7 @@ class ScenarioMietituraTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(256)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             Personaggio goblin = minionQuasiMorto(partita);
-            goblin.applicaRisultatoCombattimento(mietitura(partita.gruppo().getCapo(), goblin));
+            ApplicazioneDelRisultato.applica(goblin, mietitura(partita.gruppo().getCapo(), goblin));
             partita.pubblica(new InternoFineLocazione());
 
             assertTrue(RegistroTrofei.isVinto(TipoTrofeo.NECROMANTE));
@@ -130,7 +132,7 @@ class ScenarioMietituraTest {
                 partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno" + partita.gruppo().getNumeroPersonaggi(), 1));
             }
             Personaggio goblin = minionQuasiMorto(partita);
-            goblin.applicaRisultatoCombattimento(mietitura(partita.gruppo().getCapo(), goblin));
+            ApplicazioneDelRisultato.applica(goblin, mietitura(partita.gruppo().getCapo(), goblin));
 
             assertFalse(goblin.isVivo());
             assertEquals(Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE, partita.gruppo().getNumeroPersonaggi());
@@ -159,7 +161,7 @@ class ScenarioMietituraTest {
             assertTrue(risultato.isMietituraAttiva());
             assertTrue(risultato.getInterazioni().contains(TipoInterazioneConEffettiDiStato.MIETITURA));
 
-            goblin.applicaRisultatoCombattimento(risultato);
+            ApplicazioneDelRisultato.applica(goblin, risultato);
             assertFalse(goblin.isVivo());
             Personaggio scheletro = partita.gruppo().getPersonaggio(partita.gruppo().getNumeroPersonaggi() - 1);
             assertEquals(TipoMotivoNelGruppo.MIETITURA, scheletro.getMotivoNelGruppo());
@@ -176,7 +178,7 @@ class ScenarioMietituraTest {
         Arrays.fill(unoDopoUno, 1);
         Dado.trucca(unoDopoUno);
         try {
-            attaccante.attaccaConLeArmi(bersaglio);
+            AttaccoConLeArmi.esegui(attaccante, bersaglio);
             assertEquals(0, Dado.trucchiRimasti(), "il colpo lancia meno dadi di quelli previsti");
         } finally {
             Dado.ripristina();

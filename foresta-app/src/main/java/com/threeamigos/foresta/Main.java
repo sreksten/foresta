@@ -2,6 +2,7 @@ package com.threeamigos.foresta;
 
 import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.eventi.interni.InternoInterfacciaUtentePronta;
 import com.threeamigos.foresta.eventi.notifiche.NotificaUscitaDalGioco;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
@@ -11,9 +12,9 @@ import com.threeamigos.foresta.salvataggi.GestoreBestiarioSuFile;
 import com.threeamigos.foresta.salvataggi.GestorePunteggiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreSalvataggiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreTrofeiSuFile;
-import com.threeamigos.foresta.temporizzatore.Temporizzatore;
-import com.threeamigos.foresta.temporizzatore.TemporizzatoreJ2SE;
-import com.threeamigos.foresta.temporizzatore.ThreadPrincipale;
+import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
+import com.threeamigos.foresta.strumenti.temporizzatore.TemporizzatoreJ2SE;
+import com.threeamigos.foresta.strumenti.temporizzatore.ThreadPrincipale;
 import com.threeamigos.foresta.strumenti.TrucchiDiSviluppo;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
@@ -77,6 +78,11 @@ public class Main {
 	/**
 	 * Avvia il gioco: il resto del lavoro lo fanno gli eventi, perché la finestra, quando è pronta, avvisa l'automa che può cominciare.
 	 */
+	// Un impulso fallito si dice a tutti sul bus: la UI lo mostra al giocatore
+	private static void segnalaImpulsoFallito(String messaggio, RuntimeException errore) {
+		BusEventi.pubblica(messaggio == null ? new InternoException(errore) : new InternoException(messaggio, errore));
+	}
+
 	public static void main(String[] args) throws Exception {
 
 		// Tutta la logica di gioco gira sull'Event Dispatch Thread di Swing
@@ -101,7 +107,7 @@ public class Main {
 		// Come i trofei, il bestiario vale da una partita all'altra
 		RegistroBestiario.impostaGestoreBestiario(new GestoreBestiarioSuFile());
 
-		Temporizzatore temporizzatoreAutoma = new TemporizzatoreJ2SE();
+		Temporizzatore temporizzatoreAutoma = new TemporizzatoreJ2SE(Main::segnalaImpulsoFallito);
 		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatoreAutoma, new GestoreSalvataggiSuFile(), gestorePunteggi);
 
 		// Ci si iscrive prima di creare la UI: ForestaUI pubblica InternoInterfacciaUtentePronta sul thread principale,
@@ -114,7 +120,7 @@ public class Main {
 		}
 
 		VistaPartitaMotore vistaPartita = new VistaPartitaMotore();
-		Temporizzatore temporizzatoreUI = new TemporizzatoreJ2SE();
+		Temporizzatore temporizzatoreUI = new TemporizzatoreJ2SE(Main::segnalaImpulsoFallito);
 		new ForestaUI(orientamento, tuttoSchermo, saltaLogo, barraDock, gestorePunteggi, vistaPartita,
 				temporizzatoreUI);
 

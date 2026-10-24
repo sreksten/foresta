@@ -380,7 +380,7 @@ sotto il personaggio prima che accada (`ForestaUI.gestisciEventoDecisioneTattica
 
 | Tipo eseguito | Cosa fa | Cosa ricorda nello stato |
 | :--- | :--- | :--- |
-| `ATTACCO_FISICO` | un mio: `attaccaConLeArmi` di questa classe; un mostro: `attore.attaccaConLeArmi` (in `PersonaggioBase`) | i colpi, via `applicaRisultatoCombattimento` → `registraColpo` |
+| `ATTACCO_FISICO` | un mio: `attaccaConLeArmi` di questa classe; un mostro: `AttaccoConLeArmi.esegui(attore, bersaglio)` | i colpi, via `ApplicazioneDelRisultato.applica` → `registraColpo` |
 | `DARDO_ARCANO` | `scagliaIlDardo`: tiro per colpire, danno, costo in MAGIA | esito (`RIUSCITA`/`MANCATA`), incantesimo lanciato |
 | `RESURREZIONE` | formula l'incantesimo e consuma la pergamena | — |
 | `ALBA_SACRA` | formula sul gruppo; non consuma la pergamena se è innata | — |
@@ -405,7 +405,7 @@ interessa la **scheda** di ogni personaggio (una `IdentityHashMap`, non dimentic
 
 | Scheda | Chi la scrive | Chi la legge |
 | :--- | :--- | :--- |
-| `ultimoAvversario`, `ultimoAttaccante` | `registraColpo` (da `PersonaggioBase.applicaRisultatoCombattimento`) | `ULTIMO_SCELTO`, `ULTIMO_ATTACCANTE`, `SCELTO_L_ULTIMA_VOLTA`, `MI_HA_ATTACCATO_PER_ULTIMO` |
+| `ultimoAvversario`, `ultimoAttaccante` | `registraColpo` (da `ApplicazioneDelRisultato.applica`) | `ULTIMO_SCELTO`, `ULTIMO_ATTACCANTE`, `SCELTO_L_ULTIMA_VOLTA`, `MI_HA_ATTACCATO_PER_ULTIMO` |
 | `ultimoAlleato` | `registraAlleato` (pozioni, `EsecutoreTattiche`) | `ULTIMO_SCELTO`, `SCELTO_L_ULTIMA_VOLTA` |
 | `haLanciato` | `registraIncantesimoLanciato` | `MAGICO` (per chi non ha poteri innati) |
 | `vociUsate` / `usiDelleVoci` | `registraUsoVoce` | `ROUND_DALL_ULTIMO_USO`, `VOCE_USATA` |

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
 import com.threeamigos.foresta.artefatti.*;
 import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
@@ -205,7 +206,7 @@ class ModificatoriTemporaneiTest {
 
         DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(guerriero, bersaglio, arma);
         assertEquals(1, risultato.getModificatoriDaAggiungere().size());
-        bersaglio.applicaRisultatoCombattimento(risultato);
+        ApplicazioneDelRisultato.applica(bersaglio, risultato);
 
         assertEquals(0, bersaglio.getFortuna());
         ModificatoreAttributoMD sulBersaglio = bersaglio.getModificatoriTemporanei().iterator().next();
@@ -219,7 +220,7 @@ class ModificatoriTemporaneiTest {
             bersaglio.riduciModificatori(UnitaDurataModificatore.TURNI);
         }
         assertEquals(2, bersaglio.getModificatoriTemporanei().iterator().next().getDurata());
-        bersaglio.applicaRisultatoCombattimento(CalcolatoreCombattimento.calcolaDannoRisultante(guerriero, bersaglio, arma));
+        ApplicazioneDelRisultato.applica(bersaglio, CalcolatoreCombattimento.calcolaDannoRisultante(guerriero, bersaglio, arma));
         assertEquals(1, bersaglio.getModificatoriTemporanei().size());
         assertEquals(5, bersaglio.getModificatoriTemporanei().iterator().next().getDurata());
 

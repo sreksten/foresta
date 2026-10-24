@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.AttaccoConLeArmi;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
@@ -45,7 +46,7 @@ class ScenarioCorrezioniTest {
 		int salutePrima = guerriero.getSalute();
 		for (int i = 0; i < 20 && guerriero.getSalute() == salutePrima; i++) {
 			Dado.trucca(1); // il tiro per colpire (d100): con 1 si colpisce sempre
-			troll.attaccaConLeArmi(guerriero);
+			AttaccoConLeArmi.esegui(troll, guerriero);
 			Dado.ripristina();
 		}
 		assertTrue(guerriero.getSalute() < salutePrima, "il troll non ha mai fatto danno");

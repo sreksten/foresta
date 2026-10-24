@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
@@ -239,7 +240,7 @@ public class TestScontriDiGruppo {
     private static void colpisci(Personaggio attaccante, Personaggio difensore, Arma arma, double fattore) {
         if (CalcolatoreCombattimento.colpisce(attaccante, difensore, arma.getTipoDanno().getCategoriaDanno())) {
             DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, arma, fattore);
-            difensore.applicaRisultatoCombattimento(risultato);
+            ApplicazioneDelRisultato.applica(difensore, risultato);
         }
     }
 

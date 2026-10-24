@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.FaseDiAttacco;
@@ -508,7 +509,7 @@ public class TestLogoramentoInizioPartita {
      */
     private static void colpisci(Personaggio attaccante, Personaggio difensore, Arma arma, double fattore) {
         if (CalcolatoreCombattimento.colpisce(attaccante, difensore, arma.getTipoDanno().getCategoriaDanno())) {
-            difensore.applicaRisultatoCombattimento(CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, arma, fattore));
+            ApplicazioneDelRisultato.applica(difensore, CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, arma, fattore));
         }
     }
 

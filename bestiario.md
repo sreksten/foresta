@@ -55,7 +55,7 @@ magia senza che lo siano tutti i goblin. Le immunità di un singolo personaggio 
 **Quando si scopre.** Un evento `InternoCaratteristicaOsservata` parte in tre punti, e il registro lo trasforma in una scoperta solo se la classe ha davvero quella
 caratteristica (un colpo che fa il danno normale non scopre niente):
 
-- un colpo di un certo tipo di danno va a segno (`StatoDelCombattimento.registraColpo`, chiamato da `PersonaggioBase.applicaRisultatoCombattimento`);
+- un colpo di un certo tipo di danno va a segno (`StatoDelCombattimento.registraColpo`, chiamato da `ApplicazioneDelRisultato.applica`);
 - un incantesimo o un'azione viene respinta per immunità (`StatoDelCombattimento.registraEsitoAzione` con `EsitoAzione.IMMUNE`); contro un'immunità a tutti gli
   incantesimi ne basta uno;
 - un effetto di stato viene rifiutato perché il bersaglio è immune (`PersonaggioBase.addEffettoDiStato`).

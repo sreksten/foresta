@@ -1,0 +1,49 @@
+package com.threeamigos.foresta.combattimento;
+
+import com.threeamigos.foresta.artefatti.Arma;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.logger.Logger;
+
+/**
+ * L'attacco con le armi di un personaggio: sta fuori dal personaggio perché conosce il calcolo del combattimento.
+ */
+public final class AttaccoConLeArmi {
+
+	private AttaccoConLeArmi() {
+	}
+
+	/**
+	 * Un attacco con le sue armi (la seconda arma compresa) contro quel bersaglio, ognuna sull'asse del suo tipo di danno, finché il bersaglio resta
+	 * in combattimento. Lo esegue l'EsecutoreTattiche per i mostri; chi lancia incantesimi e sceglie il bersaglio lo decide la tattica.
+	 */
+	public static void esegui(Personaggio attaccante, Personaggio bersaglio) {
+		BusEventi.pubblica(new InternoAzioneInCombattimento(attaccante, bersaglio));
+		esegui(attaccante, bersaglio, true);
+	}
+
+	private static void esegui(Personaggio attaccante, Personaggio bersaglio, boolean annunciaAttacco) {
+		Logger.log(() -> attaccante.getNome() + " attacca " + bersaglio.getNome());
+		if (annunciaAttacco) {
+			// Gli avversari della stessa specie si distinguono per il numero ("La viverna 2"), quindi sempre l'articolo determinativo
+			String messaggio = attaccante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+					" attacca " + bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.';
+			BusEventi.pubblica(new NotificaTestoFrase(messaggio));
+		}
+		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(attaccante, bersaglio)) {
+			if (bersaglio.isFuoriCombattimento()) {
+				return;
+			}
+			Arma arma = fase.getArma();
+			if (CalcolatoreCombattimento.colpisce(attaccante, bersaglio, arma.getTipoDanno().getCategoriaDanno())) {
+				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, bersaglio, arma, fase.getFattore());
+				Logger.log(() -> attaccante.getNome() + " colpisce " + bersaglio.getNome() + " assegnando " + risultato.getDanno() + " danni");
+				ApplicazioneDelRisultato.applica(bersaglio, risultato);
+			} else {
+				Logger.log(() -> attaccante.getNome() + " non colpisce " + bersaglio.getNome());
+			}
+		}
+	}
+}

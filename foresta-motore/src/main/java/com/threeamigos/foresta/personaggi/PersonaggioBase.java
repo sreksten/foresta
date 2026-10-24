@@ -8,10 +8,6 @@ import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
 import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.attributi.CalcolatoreAttributiSecondari;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.combattimento.DannoRisultante;
-import com.threeamigos.foresta.combattimento.FaseDiAttacco;
-import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
@@ -291,14 +287,11 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 	
 	/**
-	 * I boss: partono con salute e magia piene e non possono essere mietuti (vedi applicaRisultatoCombattimento)
+	 * I boss: partono con salute e magia piene e non possono essere mietuti (vedi ApplicazioneDelRisultato)
 	 */
+	@Override
 	public boolean isParteConValoriMassimi() {
 		return false;
-	}
-
-	private boolean isServitoreAvversario() {
-		return !isParteConValoriMassimi() && GruppoAvversario.getIstanza().contiene(this);
 	}
 
 	public boolean isPNG() {
@@ -391,7 +384,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * Se sta dalla parte del giocatore: nel suo gruppo o fra i suoi ospiti (un ospite vulnerabile non è nella lista dei personaggi, ma non è
 	 * un avversario: per esempio la Purificazione che lo colpisce cura il gruppo del giocatore, non i mostri).
 	 */
-	private boolean appartieneAlGruppoDelGiocatore() {
+	@Override
+	public boolean appartieneAlGruppoDelGiocatore() {
 		GruppoGiocatore giocatore = GruppoGiocatore.getIstanza();
 		return giocatore.contiene(this) || giocatore.getOspiti().contains(this);
 	}
@@ -592,141 +586,6 @@ public abstract class PersonaggioBase implements Personaggio {
 			addModificatore(new ModificatoreAttributoMD(attributo, TipoModificatore.VARIAZIONE_PERCENTUALE,
 					-Costanti.FUGA_IGNOMINIA_PERCENTUALE, Costanti.FUGA_IGNOMINIA_NOTA, UnitaDurataModificatore.LOCAZIONI,
 					Costanti.FUGA_IGNOMINIA_LOCAZIONI + 1, BersaglioModificatore.PORTATORE, false));
-		}
-	}
-
-	/**
-	 * Un attacco con le sue armi (la seconda arma compresa) contro quel bersaglio, ognuna sull'asse del suo tipo di danno, finché il bersaglio resta
-	 * in combattimento. Lo esegue l'EsecutoreTattiche per i mostri; chi lancia incantesimi e sceglie il bersaglio lo decide la tattica.
-	 */
-	@Override
-	public void attaccaConLeArmi(Personaggio bersaglio) {
-		BusEventi.pubblica(new InternoAzioneInCombattimento(this, bersaglio));
-		attaccaConLeArmi(bersaglio, true);
-	}
-
-	private void attaccaConLeArmi(Personaggio bersaglio, boolean annunciaAttacco) {
-		Logger.log(() -> getNome() + " attacca " + bersaglio.getNome());
-		if (annunciaAttacco) {
-			// Gli avversari della stessa specie si distinguono per il numero ("La viverna 2"), quindi sempre l'articolo determinativo
-			String messaggio = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-					" attacca " + bersaglio.getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.';
-			BusEventi.pubblica(new NotificaTestoFrase(messaggio));
-		}
-		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(this, bersaglio)) {
-			if (bersaglio.isFuoriCombattimento()) {
-				return;
-			}
-			Arma arma = fase.getArma();
-			if (CalcolatoreCombattimento.colpisce(this, bersaglio, arma.getTipoDanno().getCategoriaDanno())) {
-				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(this, bersaglio, arma, fase.getFattore());
-				Logger.log(() -> getNome() + " colpisce " + bersaglio.getNome() + " assegnando " + risultato.getDanno() + " danni");
-				bersaglio.applicaRisultatoCombattimento(risultato);
-			} else {
-				Logger.log(() -> getNome() + " non colpisce " + bersaglio.getNome());
-			}
-		}
-	}
-
-	@Override
-	public void applicaRisultatoCombattimento(DannoRisultante risultato) {
-		StatoDelCombattimento.getIstanza().registraColpo(risultato);
-		subSalute(risultato.getDanno(), risultato.getAttaccante(), Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
-
-		// Il risultato del combattimento potrebbe cercare di applicare più di una volta lo stesso effetto di stato;
-		// in questo caso, manteniamo solo il maggiore
-		Map<TipoEffettoDiStato, EffettoDiStatoMD> mappaFiltrata = risultato.getEffettiDiStatoDaAggiungere().stream()
-				.collect(Collectors.toMap(
-						EffettoDiStatoMD::getTipoEffettoDiStato, // Chiave della mappa: il tipo di stato (es. CONGELATO)
-						effetto -> effetto,       // Valore della mappa: l'oggetto effetto stesso
-						// Funzione di risoluzione conflitti: se la chiave esiste già, confronta le durate e tiene il maggiore
-						(effettoEsistente, nuovoEffetto) ->
-								nuovoEffetto.getDurata() > effettoEsistente.getDurata() ? nuovoEffetto : effettoEsistente
-				));
-
-		for (EffettoDiStatoMD effetto : mappaFiltrata.values()) {
-			addEffettoDiStato(effetto.getTipoEffettoDiStato(), effetto.getDurata(), effetto.getDanniNelTempo(), effetto.getIntensita());
-		}
-		for (ModificatoreAttributoMD modificatore : risultato.getModificatoriDaAggiungere()) {
-			addModificatore(modificatore);
-		}
-		for (TipoEffettoDiStato tipoEffettoDiStato: risultato.getEffettiDiStatoDaRimuovere()) {
-			rimuoviEffettoDiStato(tipoEffettoDiStato);
-		}
-		for (TipoInterazioneConEffettiDiStato interazione : risultato.getInterazioni()) {
-			BusEventi.pubblica(new NotificaInterazionePersonaggio(this, interazione));
-		}
-		for (Map.Entry<TipoDanno, Double> reazione : risultato.getReazioniDiClasse().entrySet()) {
-			BusEventi.pubblica(new NotificaReazioneDiClassePersonaggio(this, reazione.getKey(), reazione.getValue()));
-		}
-
-		if (risultato.getCuraAdArea() > 0) {
-			Gruppo gruppoDifensore = appartieneAlGruppoDelGiocatore() ?
-					GruppoGiocatore.getIstanza() : GruppoAvversario.getIstanza();
-			for (Personaggio alleato : gruppoDifensore.getPersonaggiVivi()) {
-				if (alleato != this) {
-					alleato.addSalute(risultato.getCuraAdArea());
-				}
-			}
-		}
-
-		// Le reazioni ad area investono anche i vicini nella fila del gruppo (CalcolatoreCombattimento.viciniInvestiti);
-		// il colpo che arriva ai vicini non ne porta altre (calcolaDannoAdArea)
-		if (!risultato.getDanniAdArea().isEmpty()) {
-			Gruppo gruppoDifensore = appartieneAlGruppoDelGiocatore() ?
-					GruppoGiocatore.getIstanza() : GruppoAvversario.getIstanza();
-			for (DannoRisultante.DannoAdArea area : risultato.getDanniAdArea()) {
-				for (Personaggio vicino : CalcolatoreCombattimento.viciniInvestiti(gruppoDifensore.getPersonaggi(), this, area.getInterazione())) {
-					BusEventi.pubblica(new NotificaTestoFrase(area.getInterazione().getTestoAdArea() + " "
-							+ vicino.getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.'));
-					vicino.applicaRisultatoCombattimento(CalcolatoreCombattimento.calcolaDannoAdArea(risultato.getAttaccante(), vicino, area));
-				}
-			}
-		}
-
-		if (risultato.getSifoneVitale() > 0) {
-			Personaggio attaccante = risultato.getAttaccante();
-			int sifone = risultato.getSifoneVitale();
-			int capienzaMagia = attaccante.getMagiaMassima() - attaccante.getMagia();
-			int perMagia = Math.min(sifone, capienzaMagia);
-			if (perMagia > 0) {
-				attaccante.addMagia(perMagia);
-			}
-			int eccedenza = sifone - perMagia;
-			if (eccedenza > 0) {
-				attaccante.addSalute(eccedenza);
-			}
-		}
-
-		if (risultato.isDiluizioneEmaticaAttiva()) {
-			md.getEffettiDiStato().stream()
-					.filter(effetto -> effetto.getTipoEffettoDiStato() == TipoEffettoDiStato.SANGUINAMENTO)
-					.findFirst()
-					.ifPresent(effetto -> effetto.setDanniNelTempo(effetto.getDanniNelTempo() / 2));
-		}
-
-		if (risultato.isCollassoEntropicoAttivo()) {
-			int mpBruciato = Math.min((int) Math.round(getMagiaMassima() * 0.25d), getMagia());
-			if (mpBruciato > 0) {
-				subMagia(mpBruciato);
-				subSalute(mpBruciato, risultato.getAttaccante(), Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
-			}
-		}
-
-		if (risultato.isMietituraAttiva() && isServitoreAvversario() && getSalute() * 5 < getSaluteMassima()) {
-			// A gruppo pieno il minion muore lo stesso, ma lo scheletro non ha posto
-			boolean cePosto = GruppoGiocatore.getIstanza().getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE;
-			if (isVivo()) {
-				muore(cePosto ? "è stato mietuto e si è risvegliato come scheletro" : "è stato mietuto");
-			}
-			GruppoAvversario.getIstanza().rimuoviPersonaggio(this);
-			if (cePosto) {
-				Scheletro scheletro = new Scheletro(getLivello());
-				scheletro.setMotivoNelGruppo(TipoMotivoNelGruppo.MIETITURA);
-				scheletro.setTempo(Costanti.MIETITURA_DURATA_TURNI + 1);
-				GruppoGiocatore.getIstanza().aggiungiPersonaggio(scheletro);
-				BusEventi.pubblica(new InternoScheletroRisvegliato());
-			}
 		}
 	}
 

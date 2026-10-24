@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.temporizzatore;
+package com.threeamigos.foresta.strumenti.temporizzatore;
 
 /**
  * Il temporizzatore serve per far ricevere ad un oggetto un impulso
@@ -9,8 +9,14 @@ public interface Temporizzatore {
 	// Le animazioni avanzano in base al tempo reale, non per fotogramma: alzarlo le rende
 	// più fluide senza cambiarne la velocità. A 30 lo scorrimento del notiziario scattava
 	// visibilmente, perché ogni fotogramma lo spostava di diversi pixel.
+	/**
+	 * I fotogrammi al secondo delle animazioni.
+	 */
 	int FRAME_PER_SECONDO = 60;
 
+	/**
+	 * Dice a chi mandare gli impulsi.
+	 */
 	void setTemporizzabile(Temporizzabile temporizzabile);
 
 	/**
@@ -25,6 +31,9 @@ public interface Temporizzatore {
 	 */
 	void iniziaDopo(int millisecondi);
 
+	/**
+	 * Ferma gli impulsi per sempre, anche quelli già accodati.
+	 */
 	void termina();
 
 	/**

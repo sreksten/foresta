@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.temporizzatore.Temporizzabile;
-import com.threeamigos.foresta.temporizzatore.Temporizzatore;
+import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzabile;
+import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 
 /**
  * Un temporizzatore per i test: non scatta mai da solo. Ricorda se l'automa lo ha avviato e con che periodo,
