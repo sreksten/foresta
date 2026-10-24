@@ -92,7 +92,16 @@ class ProduttoriDiTestiTest {
 		assertNonVuoto(dialogo.getOroscopo(), "oroscopo");
 		assertNonVuoto(dialogo.getDomanda(), "domanda");
 		assertNonVuoto(dialogo.getRisposta(), "risposta");
-		assertNotNull(dialogo.getTema(), "gli oroscopi del gioco hanno sempre un tema");
+	}
+
+	@Test
+	void quasiTuttiGliOroscopiDelGiocoHannoUnTema() {
+		// Qualcuno non ce l'ha (il capo fa allora la domanda generica): su molti tentativi, però, il tema si trova
+		boolean trovato = false;
+		for (int i = 0; i < 200 && !trovato; i++) {
+			trovato = ProduttoreDiOroscopiCasuale.dialogoSullOroscopo().getTema() != null;
+		}
+		assertTrue(trovato, "nessun oroscopo con un tema in 200 tentativi");
 	}
 
 	// ------------------------------------------------------------------------------------------ oroscopi malformati

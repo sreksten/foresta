@@ -13,10 +13,16 @@ public class EventoBase {
     private String uuid;
     private final TipoEvento tipoEvento;
 
+    /**
+     * Un evento del tipo dato.
+     */
     protected EventoBase(TipoEvento tipoEvento) {
         this.tipoEvento = tipoEvento;
     }
 
+    /**
+     * L'identificativo dell'evento, generato alla prima richiesta.
+     */
     public synchronized String getUuid() {
         if (uuid == null) {
             uuid = UUID.randomUUID().toString();
@@ -24,6 +30,9 @@ public class EventoBase {
         return uuid;
     }
 
+    /**
+     * Il tipo dell'evento.
+     */
     public TipoEvento getTipoEvento() {
         return tipoEvento;
     }

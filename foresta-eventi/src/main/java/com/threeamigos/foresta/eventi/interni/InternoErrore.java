@@ -10,13 +10,22 @@ import com.threeamigos.foresta.eventi.TipoEvento;
  */
 public class InternoErrore extends EventoBase {
 
+    /**
+     * Il messaggio d'errore.
+     */
     public final String messaggio;
 
+    /**
+     * Un evento con quel messaggio.
+     */
     public InternoErrore(String messaggio) {
         super(TipoEvento.INTERNO_ERRORE);
         this.messaggio = messaggio;
     }
 
+    /**
+     * Il messaggio d'errore.
+     */
     public String getMessaggio() {
         return messaggio;
     }
