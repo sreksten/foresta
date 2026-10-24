@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.missioni.richieste;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -103,7 +103,7 @@ public final class OggettoSmarrito {
 	 * L'oggetto con l'articolo: "la fede nuziale".
 	 */
 	public String getOggettoConArticolo() {
-		return (femminile ? Misc.LA : Misc.IL) + oggetto;
+		return (femminile ? Articoli.LA : Articoli.IL) + oggetto;
 	}
 
 	/**

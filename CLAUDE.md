@@ -6,7 +6,7 @@ Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo 
 
 | Modulo | Contiene | Dipende da |
 | :--- | :--- | :--- |
-| `foresta-testi` | `testi.Testi`, il caricatore dei testi per lingua (solo quella classe) | nessuno |
+| `foresta-testi` | `testi`: `Testi` (il caricatore dei testi per lingua), `Articoli` (articoli e preposizioni articolate) e `Numeri` (cardinali e ordinali in lettere) | nessuno |
 | `foresta-serializzazione` | `serializzazione`: `Serializzabile`, `LettoreCampi`, `MappaProprieta` (scrittura e lettura dei salvataggi a righe) | nessuno |
 | `foresta-attributi` | `attributi` (`CalcolatoreAttributiSecondari`, le formule dei secondari), `attributi.tipi` (`TipoAttributo`, `CategoriaAttributo`), `modificatori` (`ModificatoreAttributoMD`) e `modificatori.tipi` (`TipoModificatore`, `UnitaDurataModificatore`, `BersaglioModificatore`): solo gli attributi e le modifiche che si possono fare loro, niente personaggi né oggetti | testi, serializzazione |
 | `foresta-effettidistato` | `effettidistato.tipi` (`TipoEffettoDiStato`) e `effettidistato` (`EffettoDiStatoMD`): solo gli effetti di stato | testi, serializzazione |

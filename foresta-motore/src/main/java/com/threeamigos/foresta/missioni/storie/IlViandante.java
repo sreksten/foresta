@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.BattutaIntermezzo;
@@ -19,7 +20,6 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -141,7 +141,7 @@ public class IlViandante extends MissioneAPassi {
 		if (richiesta == null || !isAttiva()) {
 			return "Prima o poi, nei boschi, si incontra qualcuno che ha bisogno di aiuto.";
 		}
-		String mostri = Misc.getCardinaleM(getQuantita()) + " " + richiesta.getPlurale();
+		String mostri = Numeri.getCardinaleM(getQuantita()) + " " + richiesta.getPlurale();
 		switch (getPassoCorrente()) {
 			case CACCIA:
 				return "Sei a " + nomeDellaCitta() + ": sconfiggi " + mostri + ", dovunque. Finora: "
@@ -212,7 +212,7 @@ public class IlViandante extends MissioneAPassi {
 		aggiungiProprieta(LIVELLO_DELL_INCONTRO, String.valueOf(Statistiche.getLivello()));
 		ViandanteRichiesto richiesta = getRichiesta();
 		BusEventi.pubblica(new NotificaTestoParagrafo("Il viandante vi chiede di andare a " + nomeDellaCitta() + ", di sconfiggere "
-				+ Misc.getCardinaleM(getQuantita()) + " " + richiesta.getPlurale() + " e di tornare da lui. Vi pagherà "
+				+ Numeri.getCardinaleM(getQuantita()) + " " + richiesta.getPlurale() + " e di tornare da lui. Vi pagherà "
 				+ getMonete() + " monete."));
 		attivaMissione();
 	}

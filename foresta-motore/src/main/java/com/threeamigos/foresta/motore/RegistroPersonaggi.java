@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.locazioni.Bottega;
 import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -186,7 +186,7 @@ public class RegistroPersonaggi {
 		if (residente.getProvenienza() == null) {
 			return residente.getNome();
 		}
-		return residente.getNome() + " " + Misc.conPreposizione("da", residente.getProvenienza());
+		return residente.getNome() + " " + Articoli.conPreposizione("da", residente.getProvenienza());
 	}
 
 	/**

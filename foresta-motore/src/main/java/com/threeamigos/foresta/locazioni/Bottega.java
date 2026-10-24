@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Stato;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
@@ -46,8 +46,8 @@ public abstract class Bottega extends LocazioneBase {
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
 		String negoziante = getNegoziante(getModelloDati());
-		BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva " + Misc.conPreposizione("a", getNome()) + ". "
-				+ (negoziante == null ? "" : Misc.inizialeMaiuscola(negoziante) + " vi aspetta sulla porta della sua bottega.")));
+		BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva " + Articoli.conPreposizione("a", getNome()) + ". "
+				+ (negoziante == null ? "" : Articoli.inizialeMaiuscola(negoziante) + " vi aspetta sulla porta della sua bottega.")));
 	}
 
 	@Override

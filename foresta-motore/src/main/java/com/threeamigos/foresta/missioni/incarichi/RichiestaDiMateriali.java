@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
@@ -9,7 +10,6 @@ import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.richieste.MaterialeRichiesto;
 import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
@@ -96,7 +96,7 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 
 	@Override
 	public String getNome() {
-		return Misc.inizialeMaiuscola(mandante.getNome()) + " e " + getMateriale().getPluraleConArticolo();
+		return Articoli.inizialeMaiuscola(mandante.getNome()) + " e " + getMateriale().getPluraleConArticolo();
 	}
 
 	@Override
@@ -104,9 +104,9 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 		MaterialeRichiesto materiale = getMateriale();
 		if (RITORNO.equals(getPassoCorrente())) {
 			return "Hai " + materiale.getTutti() + " " + materiale.getPluraleConArticolo() + ": porta" + materiale.getPronome()
-					+ " " + Misc.conPreposizione("a", mandanteDiCittaSenzaVirgolaFinale(mandante.getNome())) + ".";
+					+ " " + Articoli.conPreposizione("a", mandanteDiCittaSenzaVirgolaFinale(mandante.getNome())) + ".";
 		}
-		return Misc.inizialeMaiuscola(mandanteDiCitta(mandante.getNome())) + " ti ha chiesto " + materiale.quanti(getQuantita())
+		return Articoli.inizialeMaiuscola(mandanteDiCitta(mandante.getNome())) + " ti ha chiesto " + materiale.quanti(getQuantita())
 				+ ", che " + materiale.getDaDoveViene() + ". Finora: " + getContatore(MATERIALE) + ".";
 	}
 
@@ -122,7 +122,7 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 		}
 		MaterialeRichiesto materiale = getMateriale();
 		return raccogli(MomentoControllo.POST_LOCAZIONE, getMateriali())
-				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(materiale.getPluraleConArticolo())
+				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Articoli.inizialeMaiuscola(materiale.getPluraleConArticolo())
 						+ " ci sono " + materiale.getTutti() + ": " + mandanteDiCitta(mandante.getNome()) + " "
 						+ materiale.getPronome() + " aspetta.")))
 				.poi(RITORNO);
@@ -136,8 +136,8 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 	@Override
 	protected String testoConsegna() {
 		MaterialeRichiesto materiale = getMateriale();
-		return Misc.inizialeMaiuscola((materiale.isFemminile() ? Misc.LE : Misc.I) + materiale.quanti(getQuantita()))
-				+ " passano " + Misc.conPreposizione("a", mandanteSenzaVirgolaFinale(mandante.getNome())) + ", " + mandante.allaConsegna(materiale.getPronome()) + ".";
+		return Articoli.inizialeMaiuscola((materiale.isFemminile() ? Articoli.LE : Articoli.I) + materiale.quanti(getQuantita()))
+				+ " passano " + Articoli.conPreposizione("a", mandanteSenzaVirgolaFinale(mandante.getNome())) + ", " + mandante.allaConsegna(materiale.getPronome()) + ".";
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 		MaterialeRichiesto materiale = getMateriale();
 		return mandante.nuovaScena()
 				.parlaIlMandante(mandante.getApertura(nomeDelMandante(mandante.getNome())))
-				.parlaIlMandante("Mi servono " + materiale.quanti(getQuantita()) + ". " + Misc.inizialeMaiuscola(materiale.getDaDoveViene()) + ".")
+				.parlaIlMandante("Mi servono " + materiale.quanti(getQuantita()) + ". " + Articoli.inizialeMaiuscola(materiale.getDaDoveViene()) + ".")
 				.parlaIlCapo(materiale.getBattutaDelCapo())
 				.parlaIlMandante(materiale.getRispostaDelMandante() + " Ve " + materiale.getPronome() + " pago "
 						+ getRicompensa() + " monete.")
@@ -163,13 +163,13 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 	@Override
 	protected String testoAccettazione() {
 		MaterialeRichiesto materiale = getMateriale();
-		return Misc.inizialeMaiuscola(mandante(mandante.getNome())) + " pagherà " + getRicompensa() + " monete per "
+		return Articoli.inizialeMaiuscola(mandante(mandante.getNome())) + " pagherà " + getRicompensa() + " monete per "
 				+ materiale.quanti(getQuantita()) + ", che " + materiale.getDaDoveViene() + ".";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Misc.inizialeMaiuscola(mandante(mandante.getNome())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Articoli.inizialeMaiuscola(mandante(mandante.getNome())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	/**

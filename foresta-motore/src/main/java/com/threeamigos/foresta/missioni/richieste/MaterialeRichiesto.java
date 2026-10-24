@@ -1,11 +1,12 @@
 package com.threeamigos.foresta.missioni.richieste;
 
+import com.threeamigos.foresta.testi.Articoli;
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -147,8 +148,8 @@ public final class MaterialeRichiesto {
 	 */
 	public NomeOggetto getNome() {
 		return new NomeOggetto(singolare, plurale,
-				singolareFemminile ? Misc.UNA : Misc.UN, femminile ? Misc.ALCUNE : Misc.ALCUNI,
-				singolareFemminile ? Misc.LA : Misc.IL, femminile ? Misc.LE : Misc.I);
+				singolareFemminile ? Articoli.UNA : Articoli.UN, femminile ? Articoli.ALCUNE : Articoli.ALCUNI,
+				singolareFemminile ? Articoli.LA : Articoli.IL, femminile ? Articoli.LE : Articoli.I);
 	}
 
 	public String getPlurale() {
@@ -159,14 +160,14 @@ public final class MaterialeRichiesto {
 	 * Il plurale con l'articolo: "le radici di mandragola", "i corni di minotauro".
 	 */
 	public String getPluraleConArticolo() {
-		return (femminile ? Misc.LE : Misc.I) + plurale;
+		return (femminile ? Articoli.LE : Articoli.I) + plurale;
 	}
 
 	/**
 	 * Quanti, in lettere, con il plurale: "quattro radici di mandragola".
 	 */
 	public String quanti(int quantita) {
-		return (femminile ? Misc.getCardinaleF(quantita) : Misc.getCardinaleM(quantita)) + " " + plurale;
+		return (femminile ? Numeri.getCardinaleF(quantita) : Numeri.getCardinaleM(quantita)) + " " + plurale;
 	}
 
 	/**
@@ -247,7 +248,7 @@ public final class MaterialeRichiesto {
 					parti.add("nelle paludi");
 					break;
 				default:
-					parti.add(Misc.conPreposizione("in", luogo.name().toLowerCase(Locale.ROOT)));
+					parti.add(Articoli.conPreposizione("in", luogo.name().toLowerCase(Locale.ROOT)));
 					break;
 			}
 		}

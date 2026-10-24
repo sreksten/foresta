@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.strumenti.Misc;
 
 /**
  * Uno scudo del bottino: un oggetto che diventa un artefatto di tipo scudo (vedi {@link OggettoArtefatto}).
@@ -14,19 +14,19 @@ public class Scudo extends OggettoArtefatto {
 	}
 
 	public String getAIS() {
-		return Misc.UNO;
+		return Articoli.UNO;
 	}
 
 	public String getAIP() {
-		return Misc.ALCUNI;
+		return Articoli.ALCUNI;
 	}
 
 	public String getADS() {
-		return Misc.LO;
+		return Articoli.LO;
 	}
 
 	public String getADP() {
-		return Misc.GLI;
+		return Articoli.GLI;
 	}
 
 	public String getNomeSingolare() {

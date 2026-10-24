@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 
 
 /**
@@ -12,17 +12,17 @@ import com.threeamigos.foresta.strumenti.Misc;
  */
 public class Elfo extends PersonaggioBase implements Personaggio {
 
-	public String getAIS() { return Misc.UN; }
-	public String getADS() { return Misc.L_APOSTROFO; }
-	public String getAIP() { return Misc.ALCUNI; }
-	public String getADP() { return Misc.GLI; }
-	public String getDeS() { return Misc.DELL_APOSTROFO; }
-	public String getDeP() { return Misc.DEGLI; }
-	public String getDa() { return Misc.DALL_APOSTROFO; }
+	public String getAIS() { return Articoli.UN; }
+	public String getADS() { return Articoli.L_APOSTROFO; }
+	public String getAIP() { return Articoli.ALCUNI; }
+	public String getADP() { return Articoli.GLI; }
+	public String getDeS() { return Articoli.DELL_APOSTROFO; }
+	public String getDeP() { return Articoli.DEGLI; }
+	public String getDa() { return Articoli.DALL_APOSTROFO; }
 
 	public String getNomeSingolare() { return "Elfo"; }
 	public String getNomePlurale() { return "Elfi"; }
-	public String getPronome() { return Misc.EGLI; }
+	public String getPronome() { return Articoli.EGLI; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Elfo(int livello) {

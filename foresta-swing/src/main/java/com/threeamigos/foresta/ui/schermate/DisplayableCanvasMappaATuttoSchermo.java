@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.ui.sfx.CloudManager;
 
 import java.awt.*;
@@ -215,10 +215,10 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 		List<String> righe = new ArrayList<>();
 		String nome = getNomeSottoIlMouse();
 		if (nome != null) {
-			righe.add(Misc.inizialeMaiuscola(nome));
+			righe.add(Articoli.inizialeMaiuscola(nome));
 		}
 		for (String nomeMissione : getNomiMissioniSottoIlMouse()) {
-			righe.add(Misc.inizialeMaiuscola(nomeMissione));
+			righe.add(Articoli.inizialeMaiuscola(nomeMissione));
 		}
 		Cartiglio.disegnaAccantoAlMouse(graphics, righe, xMouse, yMouse, width, altezzaMappa);
 	}

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.offerte;
 
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraIncantesimiEPozioni;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
@@ -7,7 +8,6 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
@@ -66,7 +66,7 @@ public class Incantesimi implements Offerta {
 		if (quantita == 1) {
 			sb.append("un ");
 		} else {
-			sb.append(Misc.getCardinaleM(quantita)).append(' ');
+			sb.append(Numeri.getCardinaleM(quantita)).append(' ');
 		}
 		if (quantita == 1) {
 			sb.append(tipoIncantesimo.getNomeSingolare());

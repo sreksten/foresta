@@ -2,67 +2,19 @@ package com.threeamigos.foresta.strumenti;
 
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
+import com.threeamigos.foresta.testi.Numeri;
 
 /**
- * Questa classe contiene la codifica numero-stringa per ordinali e cardinali,
- * articoli, alcuni pezzi della storia (introduzione e finali) nonche' una
- * funzione che indica la direzione e la distanza tra due punti all'interno
- * della foresta.
+ * Alcuni pezzi della storia (introduzione e finali) e le funzioni che indicano la direzione e la distanza
+ * tra due punti all'interno della foresta. Gli articoli e i numeri in lettere stanno in {@code Articoli} e
+ * {@code Numeri}, nel modulo {@code foresta-testi}.
  */
 public class Misc {
-
-	public static final String IL = "il ";
-	public static final String LO = "lo ";
-	public static final String LA = "la ";
-	public static final String L_APOSTROFO = "l'";
-	public static final String I = "i ";
-	public static final String GLI = "gli ";
-	public static final String LE = "le ";
-	public static final String UN = "un ";
-	public static final String UN_PAIO_DI = "un paio di ";
-	public static final String UNO = "uno ";
-	public static final String UNA = "una ";
-	public static final String UN_APOSTROFO = "un'";
-	public static final String ALCUNI = "alcuni ";
-	public static final String ALCUNE = "alcune ";
-	public static final String ALCUNE_PAIA_DI = "alcune paia di ";
-	public static final String DEL = "del ";
-	public static final String DELLO = "dello ";
-	public static final String DELLA = "della ";
-	public static final String DELL_APOSTROFO = "dell'";
-	public static final String DEGLI = "degli ";
-	public static final String DELLE = "delle ";
-	public static final String DEI = "dei ";
-	public static final String DAL = "dal ";
-	public static final String DALLA = "dalla ";
-	public static final String DALL_APOSTROFO = "dall'";
-	public static final String DA_UN = "da un ";
-	public static final String DA_UNO = "da uno ";
-	public static final String DA_UNA = "da una ";
-	public static final String DA_UN_APOSTROFO = "da un'";
-	public static final String ELLA = "Ella";
-	public static final String EGLI = "Egli";
-	public static final String ESSA = "Essa";
-	public static final String ESSO = "Esso";
 
 	private static final String NORD = "nord";
 	private static final String EST = "est";
 	private static final String SUD = "sud";
 	private static final String OVEST = "ovest";
-
-	private static final String[] cardinali = {
-			"zero", "uno", "due", "tre", "quattro", "cinque", "sei", "sette", "otto", "nove", "dieci"
-	};
-
-	private static final String[] ordinali = {
-			null, "prim", "second", "terz", "quart", "quint", "sest", "settim", "ottav", "non", "decim",
-			"undic", "dodic", "tredic", "quattordic", "quindic", "sedic", "diciassett", "diciott", "diciannov",
-			"vent", "ventun", "ventidu", "ventitre", "ventiquattr", "venticinqu", "ventisei", "ventisett", "ventott", "ventinov",
-			"trent", "trentun", "trentadu", "trentatre", "trentaquattr", "trentacinqu", "trentasei", "trentasett", "trentott", "trentanov",
-			"quarant", "quarantun"
-	};
-
-	private static final String ESIM = "esim";
 
 	public static final String[] STORIA = {
 			"molto, molto tempo fa, quando il mondo era da poco stato creato,",
@@ -83,92 +35,6 @@ public class Misc {
 			"possa la pace oggi conquistata durare a lungo!",
 			""
 	};
-
-	/**
-	 * La preposizione "a", "di", "da" o "in" fusa con l'articolo con cui comincia il nome: "in" + "il Tempio del Sole"
-	 * fa "nel Tempio del Sole", "a" + "l'Eremo" fa "all'Eremo". Se il nome non comincia con un articolo, la
-	 * preposizione resta staccata.
-	 */
-	public static String conPreposizione(String preposizione, String nomeConArticolo) {
-		String[][] articoli = {{"il ", "l"}, {"lo ", "llo"}, {"la ", "lla"}, {"l'", "ll'"}, {"i ", "i"}, {"gli ", "gli"}, {"le ", "lle"}};
-		String radice;
-		switch (preposizione) {
-			case "a": radice = "a"; break;
-			case "di": radice = "de"; break;
-			case "da": radice = "da"; break;
-			case "in": radice = "ne"; break;
-			default: throw new IllegalArgumentException("Preposizione non articolabile: " + preposizione);
-		}
-		for (String[] articolo : articoli) {
-			if (nomeConArticolo.startsWith(articolo[0])) {
-				String fusa = radice + articolo[1];
-				String separatore = articolo[0].endsWith("'") ? "" : " ";
-				return fusa + separatore + nomeConArticolo.substring(articolo[0].length());
-			}
-		}
-		return preposizione + " " + nomeConArticolo;
-	}
-
-	/**
-	 * Il testo con la prima lettera maiuscola: "il Tempio del Sole" diventa "Il Tempio del Sole".
-	 */
-	public static String inizialeMaiuscola(String testo) {
-		return testo.isEmpty() ? testo : Character.toUpperCase(testo.charAt(0)) + testo.substring(1);
-	}
-
-	/**
-	 * Il numero in lettere fino a dieci; oltre (o se negativo) resta in cifre: "15".
-	 */
-	public static String getCardinaleM(int numero) {
-		return numero >= 0 && numero < cardinali.length ? cardinali[numero] : String.valueOf(numero);
-	}
-
-	public static String getCardinaleF(int numero) {
-		if (numero == 1)
-			return "una";
-		else
-			return getCardinaleM(numero);
-	}
-
-	public static String getOrdinaleM(int numero) {
-		return getOrdinaleM(numero, false);
-	}
-
-	/**
-	 * L'ordinale maschile in lettere ("primo", "undicesimo", "quarantunesimo"), con l'articolo davanti se richiesto.
-	 * Vale da 1 a 41: i numeri da contare nel gioco non vanno oltre (il tempo finisce al giorno 40, i gruppi sono di pochi
-	 * personaggi), quindi fuori da questo intervallo non c'è un ripiego: 0 dà "nullo" e da 42 in su lancia
-	 * {@code ArrayIndexOutOfBoundsException}. Se un giorno servono numeri più alti si allunga {@code ordinali}.
-	 */
-	public static String getOrdinaleM(int numero, boolean articolo) {
-		return getOrdinaleImpl(numero, articolo, IL, "o");
-	}
-
-	public static String getOrdinaleF(int numero) {
-		return getOrdinaleF(numero, false);
-	}
-
-	/**
-	 * Come {@link #getOrdinaleM(int, boolean)}, al femminile ("prima", "undicesima"): vale da 1 a 41.
-	 */
-	public static String getOrdinaleF(int numero, boolean articolo) {
-		return getOrdinaleImpl(numero, articolo, LA, "a");
-	}
-
-	private static String getOrdinaleImpl(int numero, boolean aggiungiArticolo, String qualeArticolo, String letteraFinale) {
-		StringBuilder sb = new StringBuilder(15);
-		if (aggiungiArticolo) {
-			if (numero == 8 || numero == 11)
-				sb.append(L_APOSTROFO);
-			else
-				sb.append(qualeArticolo);
-		}
-		sb.append(ordinali[numero]);
-		if (numero > 10)
-			sb.append(ESIM);
-		sb.append(letteraFinale);
-		return sb.toString();
-	}
 
 	/**
 	 * Riporta la direzione di un punto della foresta rispetto ad un gruppo
@@ -200,7 +66,7 @@ public class Misc {
 				if (resto == 1)
 					sb.append("un'ora");
 				else
-					sb.append(cardinali[resto]).append(" ore");
+					sb.append(Numeri.getCardinaleM(resto)).append(" ore");
 			} else {
 				if (resto < 4) {
 					if (resto > 0)
@@ -208,9 +74,9 @@ public class Misc {
 					if (giorni == 1)
 						sb.append("un giorno");
 					else
-						sb.append(cardinali[giorni]).append(" giorni");
+						sb.append(Numeri.getCardinaleM(giorni)).append(" giorni");
 				} else {
-					sb.append("quasi ").append(cardinali[giorni + 1]).append(" giorni");
+					sb.append("quasi ").append(Numeri.getCardinaleM(giorni + 1)).append(" giorni");
 				}
 			}
 			sb.append(" di cammino verso ");

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.testi;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.eventi.interni.InternoException;
@@ -10,7 +11,6 @@ import com.threeamigos.foresta.testi.GrammarBean.InvalidGrammarException;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Logger;
-import com.threeamigos.foresta.strumenti.Misc;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -269,7 +269,7 @@ public class ProduttoreDiTestiCasuale {
 	 * @param nomeBreve il nome breve dell'oggetto, con l'articolo: "lo Scudo Fiscale"
 	 */
 	public static synchronized String introduzioneDellaLeggenda(String nomeBreve) {
-		leggendari.addFixedProduction("DELL_OGGETTO", Misc.conPreposizione("di", nomeBreve));
+		leggendari.addFixedProduction("DELL_OGGETTO", Articoli.conPreposizione("di", nomeBreve));
 		leggendari.addFixedProduction("L_OGGETTO", nomeBreve);
 		return leggendari.produce("INTRODUZIONE_LEGGENDA").get(0).trim();
 	}

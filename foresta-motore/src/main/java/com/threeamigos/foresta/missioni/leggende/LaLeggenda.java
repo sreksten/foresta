@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.leggende;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
@@ -17,7 +18,6 @@ import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -178,8 +178,8 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 		if (leggendario == null) {
 			return "";
 		}
-		String tempio = getTempio() == null ? "in un tempio" : Misc.conPreposizione("in", Tempio.getNome(getTempio()));
-		return "Secondo la leggenda raccontata " + Misc.conPreposizione("da", getNarratore()) + ", " + getNomeDeiGuardiani()
+		String tempio = getTempio() == null ? "in un tempio" : Articoli.conPreposizione("in", Tempio.getNome(getTempio()));
+		return "Secondo la leggenda raccontata " + Articoli.conPreposizione("da", getNarratore()) + ", " + getNomeDeiGuardiani()
 				+ " custodiscono " + leggendario.getNomeBreve() + " " + tempio + ", segnato sulla mappa.";
 	}
 
@@ -209,7 +209,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 								() -> nelPosto() && RegistroMissioni.cercaOCostruisci(TipoLocazione.BOSCO, this).isPresent())
 						.esegui(() -> {
 							RegistroArtefatti.custodisciInUnTempioNuovo(getLeggendario().costruisci(), getTempio());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(getNarratoreConNome()) + " segna sulla mappa "
+							BusEventi.pubblica(new NotificaTestoParagrafo(Articoli.inizialeMaiuscola(getNarratoreConNome()) + " segna sulla mappa "
 									+ Tempio.getNome(getTempio()) + ", dove " + getNomeDeiGuardiani() + " custodiscono "
 									+ getLeggendario().getNomeBreve() + "."));
 							attivaMissione();

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -12,7 +13,6 @@ import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.strumenti.Logger;
-import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.Optional;
 
@@ -86,19 +86,19 @@ public class Anello extends OggettoBase implements Oggetto {
 	}
 
 	public String getAIS() {
-		return Misc.UN;
+		return Articoli.UN;
 	}
 
 	public String getAIP() {
-		return Misc.ALCUNI;
+		return Articoli.ALCUNI;
 	}
 
 	public String getADS() {
-		return Misc.L_APOSTROFO;
+		return Articoli.L_APOSTROFO;
 	}
 
 	public String getADP() {
-		return Misc.GLI;
+		return Articoli.GLI;
 	}
 
 	public String getNomeSingolare() {

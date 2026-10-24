@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -20,7 +21,6 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -171,7 +171,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 		TorneoRichiesto torneo = getTorneo();
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return "Hai vinto il torneo: torna " + Misc.conPreposizione("da", mandante(torneo.getMandante())) + " a " + getNomeCitta()
+			return "Hai vinto il torneo: torna " + Articoli.conPreposizione("da", mandante(torneo.getMandante())) + " a " + getNomeCitta()
 					+ " per la borsa del vincitore.";
 		}
 		String chi;
@@ -250,12 +250,12 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 
 	@Override
 	protected String testoAccettazione() {
-		return Misc.inizialeMaiuscola(mandanteDiCitta(getTorneo().getMandante())) + " ha iscritto il gruppo al torneo: in palio " + inPalio() + ".";
+		return Articoli.inizialeMaiuscola(mandanteDiCitta(getTorneo().getMandante())) + " ha iscritto il gruppo al torneo: in palio " + inPalio() + ".";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Misc.inizialeMaiuscola(mandante(getTorneo().getMandante())) + " consegna la borsa del vincitore: " + getRicompensa() + " monete.";
+		return Articoli.inizialeMaiuscola(mandante(getTorneo().getMandante())) + " consegna la borsa del vincitore: " + getRicompensa() + " monete.";
 	}
 
 	@Override

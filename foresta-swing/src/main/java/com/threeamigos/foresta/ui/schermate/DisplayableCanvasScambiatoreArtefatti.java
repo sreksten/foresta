@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoCommutazioneElenco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
@@ -10,7 +11,6 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto
 import com.threeamigos.foresta.interfacce.*;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.CategoriaArtefatto;
@@ -298,7 +298,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
             // In grande il nome proprio (o il nome), in piccolo la descrizione
             // TODO da riguardare con la resa grafica
             String nome = artefatto.getNomeBreve();
-            nome = Misc.inizialeMaiuscola(nome);
+            nome = Articoli.inizialeMaiuscola(nome);
             ComponenteScorrevole<VistaArtefatto>.Nodo nodo = componenteScorrevole.creaNodo(
                     nome, font, colore,
                     valore(artefatto, parteAttiva),
@@ -319,7 +319,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
                     DoomdarkColorModel.Color colorePezzo = colorePezzo(pezzo.getStato());
                     nodo.creaNodo(
                             pezzo.getTipo().getDescrizione(), font, colorePezzo,
-                            noto ? Misc.inizialeMaiuscola(pezzo.getNome()) : "???",
+                            noto ? Articoli.inizialeMaiuscola(pezzo.getNome()) : "???",
                             fontSmall, colorePezzo,
                             null, null, null,
                             null, artefatto);

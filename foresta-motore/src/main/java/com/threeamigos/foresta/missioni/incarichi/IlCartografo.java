@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 /**
@@ -47,7 +47,7 @@ public class IlCartografo extends IncaricoInCitta {
 		if (RITORNO.equals(getPassoCorrente())) {
 			return "Hai esplorato abbastanza: torna dal cartografo di " + getNomeCitta() + " a raccontargli che cosa hai visto.";
 		}
-		return "Il cartografo di " + getNomeCitta() + " vuole sapere che cosa c'è in " + Misc.getCardinaleF(getCaselle())
+		return "Il cartografo di " + getNomeCitta() + " vuole sapere che cosa c'è in " + Numeri.getCardinaleF(getCaselle())
 				+ " zone della foresta dove non sei mai stato. Finora: " + getCaselleEsplorate() + ".";
 	}
 
@@ -71,7 +71,7 @@ public class IlCartografo extends IncaricoInCitta {
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conMandante()
 				.parlaIlMandante("Siete esploratori? Io disegno mappe, ma nella foresta non ci metto piede da anni.")
-				.parlaIlMandante("Andate dove nessuno di voi è mai stato, " + Misc.getCardinaleF(getCaselle())
+				.parlaIlMandante("Andate dove nessuno di voi è mai stato, " + Numeri.getCardinaleF(getCaselle())
 						+ " zone nuove, e tornate a raccontarmele. Vi pago " + getRicompensa() + " monete.")
 				.parlaIlCapo("E se ci perdiamo?")
 				.parlaIlMandante("Allora la mappa vi servirà ancora di più.");
@@ -86,7 +86,7 @@ public class IlCartografo extends IncaricoInCitta {
 
 	@Override
 	protected String testoAccettazione() {
-		return "Il cartografo pagherà " + getRicompensa() + " monete per " + Misc.getCardinaleF(getCaselle())
+		return "Il cartografo pagherà " + getRicompensa() + " monete per " + Numeri.getCardinaleF(getCaselle())
 				+ " zone della foresta mai visitate.";
 	}
 

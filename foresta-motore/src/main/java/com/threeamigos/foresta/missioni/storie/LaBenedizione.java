@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
@@ -13,7 +14,6 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -141,7 +141,7 @@ public class LaBenedizione extends MissioneAPassi {
 		personaggio.addModificatore(benedizione.nuovoModificatore());
 		aggiungiProprieta(RICEVUTA_DA, personaggio.getNome());
 		BusEventi.pubblica(new NotificaTestoParagrafo(benedizione.getBenedetto().replace(BenedizioneRichiesta.PERSONAGGIO, personaggio.getNome())
-				+ " " + Misc.inizialeMaiuscola(benedizione.getNomeDellaBenedizione()) + " resterà con " + personaggio.getNome() + " per sempre."));
+				+ " " + Articoli.inizialeMaiuscola(benedizione.getNomeDellaBenedizione()) + " resterà con " + personaggio.getNome() + " per sempre."));
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class LaBenedizione extends MissioneAPassi {
 	private void premia() {
 		aggiungiProprieta(PREMIO_DATO, AFFERMATIVO);
 		GruppoGiocatore.getIstanza().addPozioniAumentoLivello(1);
-		BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(getBenedizione().getMandante())
+		BusEventi.pubblica(new NotificaTestoParagrafo(Articoli.inizialeMaiuscola(getBenedizione().getMandante())
 				+ " vi consegna anche una piccola ampolla luminosa: una Pozione dell'Aumento di Livello."));
 		OffertaDelSacerdote.avvisaSeIlGruppoEPieno(getBenedizione().getMandante());
 	}
@@ -174,7 +174,7 @@ public class LaBenedizione extends MissioneAPassi {
 
 	@Override
 	public String getNome() {
-		return Misc.inizialeMaiuscola(getBenedizione().getNomeDellaBenedizione());
+		return Articoli.inizialeMaiuscola(getBenedizione().getNomeDellaBenedizione());
 	}
 
 	@Override
@@ -185,7 +185,7 @@ public class LaBenedizione extends MissioneAPassi {
 			return "Il favore è fatto: " + benedizione.getMandante() + " ti aspetta nel tempio segnato sulla mappa, per "
 					+ benedizione.getNomeDellaBenedizione() + ".";
 		}
-		return Misc.inizialeMaiuscola(benedizione.getMandante()) + " ti darà " + benedizione.getNomeDellaBenedizione()
+		return Articoli.inizialeMaiuscola(benedizione.getMandante()) + " ti darà " + benedizione.getNomeDellaBenedizione()
 				+ " in cambio di un favore: " + getMissioniAffidate(FAVORE).stream().findFirst().map(Missione::getNome)
 				.orElse(benedizione.getFavore().getNome()) + ".";
 	}
@@ -220,8 +220,8 @@ public class LaBenedizione extends MissioneAPassi {
 				return cercaLocazione(MomentoControllo.POST_LOCAZIONE, TipoLocazione.TEMPIO)
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getTempio());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(benedizione.getMandante()) + " vi aspetta "
-									+ Misc.conPreposizione("in", TestiDeiLuoghi.nome(getTempio())) + ", segnato sulla mappa."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Articoli.inizialeMaiuscola(benedizione.getMandante()) + " vi aspetta "
+									+ Articoli.conPreposizione("in", TestiDeiLuoghi.nome(getTempio())) + ", segnato sulla mappa."));
 						})
 						.poi(ARRIVO);
 			case ARRIVO:
@@ -248,7 +248,7 @@ public class LaBenedizione extends MissioneAPassi {
 						.poi(() -> OffertaDelSacerdote.puoProporsi() ? COMPAGNO : Passo.FINE);
 			case COMPAGNO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> true)
-						.chiediConferma(Misc.inizialeMaiuscola(benedizione.getMandante()) + " chiede se desiderate che si unisca a voi in pianta stabile. Accettate?")
+						.chiediConferma(Articoli.inizialeMaiuscola(benedizione.getMandante()) + " chiede se desiderate che si unisca a voi in pianta stabile. Accettate?")
 						.esegui(() -> {
 							if (Passo.SI.equals(getRisposta(COMPAGNO))) {
 								OffertaDelSacerdote.accogli(benedizione.getClasse());

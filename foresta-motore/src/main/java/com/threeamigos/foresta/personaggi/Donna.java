@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
@@ -23,13 +23,13 @@ public class Donna extends PersonaggioNonCombattente {
 	@Override
 	public String getNomePlurale() { return "Donne"; }
 
-	@Override public String getAIS() { return Misc.UNA; }
-	@Override public String getADS() { return Misc.LA; }
-	@Override public String getAIP() { return Misc.ALCUNE; }
-	@Override public String getADP() { return Misc.LE; }
-	@Override public String getDeS() { return Misc.DELLA; }
-	@Override public String getDeP() { return Misc.DELLE; }
-	@Override public String getDa() { return Misc.DA_UNA; }
-	@Override public String getPronome() { return Misc.ELLA; }
+	@Override public String getAIS() { return Articoli.UNA; }
+	@Override public String getADS() { return Articoli.LA; }
+	@Override public String getAIP() { return Articoli.ALCUNE; }
+	@Override public String getADP() { return Articoli.LE; }
+	@Override public String getDeS() { return Articoli.DELLA; }
+	@Override public String getDeP() { return Articoli.DELLE; }
+	@Override public String getDa() { return Articoli.DA_UNA; }
+	@Override public String getPronome() { return Articoli.ELLA; }
 	@Override public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 }

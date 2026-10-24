@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -12,17 +12,17 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
  */
 public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 
-	public String getAIS() { return Misc.UN_APOSTROFO; }
-	public String getADS() { return Misc.L_APOSTROFO; }
-	public String getAIP() { return Misc.ALCUNE; }
-	public String getADP() { return Misc.LE; }
-	public String getDeS() { return Misc.DELL_APOSTROFO; }
-	public String getDeP() { return Misc.DELLE; }
-	public String getDa() { return Misc.DALL_APOSTROFO; }
+	public String getAIS() { return Articoli.UN_APOSTROFO; }
+	public String getADS() { return Articoli.L_APOSTROFO; }
+	public String getAIP() { return Articoli.ALCUNE; }
+	public String getADP() { return Articoli.LE; }
+	public String getDeS() { return Articoli.DELL_APOSTROFO; }
+	public String getDeP() { return Articoli.DELLE; }
+	public String getDa() { return Articoli.DALL_APOSTROFO; }
 
 	public String getNomeSingolare() { return "OmbraFiamma"; }
 	public String getNomePlurale() { return "OmbreFiamma"; }
-	public String getPronome() { return Misc.ELLA; }
+	public String getPronome() { return Articoli.ELLA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
 	public OmbraFiamma(int livello) {

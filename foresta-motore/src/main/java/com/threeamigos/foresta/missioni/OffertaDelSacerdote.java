@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.testi.Articoli;
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -8,7 +10,6 @@ import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Sacerdote;
 import com.threeamigos.foresta.personaggi.Sacerdotessa;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -40,8 +41,8 @@ public final class OffertaDelSacerdote {
 	public static void avvisaSeIlGruppoEPieno(String mandante) {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		if (!gruppo.isSacerdoteAccolto() && !puoProporsi()) {
-			BusEventi.pubblica(new NotificaTestoParagrafo("Siete già in " + Misc.getCardinaleM(Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE)
-					+ ": non penso abbiate bisogno anche dell'aiuto " + Misc.conPreposizione("di", mandante) + "."));
+			BusEventi.pubblica(new NotificaTestoParagrafo("Siete già in " + Numeri.getCardinaleM(Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE)
+					+ ": non penso abbiate bisogno anche dell'aiuto " + Articoli.conPreposizione("di", mandante) + "."));
 		}
 	}
 

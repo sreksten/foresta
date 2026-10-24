@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
@@ -12,7 +13,6 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
@@ -69,7 +69,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 
 	@Override
 	public String getDescrizione() {
-		return getBardo() + " il bardo ha bevuto troppo: riportalo sano e salvo a casa, " + Misc.conPreposizione("in", getNomeCitta())
+		return getBardo() + " il bardo ha bevuto troppo: riportalo sano e salvo a casa, " + Articoli.conPreposizione("in", getNomeCitta())
 				+ ", e proteggilo per strada.";
 	}
 
@@ -118,7 +118,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 							aggiungiProprieta(CITTA, cittaPiuVicina().name());
 							aggiungiProprieta(LIVELLO_DELL_INCARICO, String.valueOf(Statistiche.getLivello()));
 							BusEventi.pubblica(new NotificaTestoParagrafo(getBardo() + " il bardo, che non si regge in piedi, si unisce al gruppo: va riportato a casa, "
-									+ Misc.conPreposizione("in", getNomeCitta()) + ". È così ubriaco che i mostri non si curano nemmeno di lui."));
+									+ Articoli.conPreposizione("in", getNomeCitta()) + ". È così ubriaco che i mostri non si curano nemmeno di lui."));
 							attivaMissione();
 						})
 						.poi(VIAGGIO);
@@ -149,7 +149,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 		return ScenaInLocanda.conLocandiere()
 				.parlaIlLocandiere("Ah, siete voi! Proprio voi cercavo. Vedete quello là, abbracciato al liuto sotto il tavolo?")
 				.parlaIlLocandiere("È " + getBardo() + ", il bardo. Stasera ha preso una sbronza solenne e non si regge in piedi.")
-				.parlaIlLocandiere("Abita " + Misc.conPreposizione("in", cittaPiuVicina().getNomeProprio())
+				.parlaIlLocandiere("Abita " + Articoli.conPreposizione("in", cittaPiuVicina().getNomeProprio())
 						+ ", non è lontano, ma da solo non ci arriva vivo. Me lo riportereste a casa?")
 				.parlaIlCapo("Purché non canti per tutto il viaggio.")
 				.parlaIlLocandiere("Questo non ve lo posso promettere.");

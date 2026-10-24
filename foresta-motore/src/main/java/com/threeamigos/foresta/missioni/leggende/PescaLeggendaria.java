@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.missioni.leggende;
 
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -136,7 +136,7 @@ public final class PescaLeggendaria {
 			}
 			long mancano = pezzi.size() - usciti - 1;
 			String quantiMancano = mancano == 0 ? "ed è l'ultimo che manca."
-					: mancano == 1 ? "e ne manca ancora uno." : "e ne mancano ancora " + Misc.getCardinaleM((int) mancano) + ".";
+					: mancano == 1 ? "e ne manca ancora uno." : "e ne mancano ancora " + Numeri.getCardinaleM((int) mancano) + ".";
 			return Optional.of("Vi interessa " + set.getNome() + "? Allora ascoltate: questo è un altro dei suoi pezzi, " + quantiMancano);
 		});
 	}

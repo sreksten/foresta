@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.strumenti.Misc;
 
 /**
  * Alcune corone: per il gruppo valgono come le pietre preziose e si sommano ai preziosi.
@@ -15,19 +15,19 @@ public class Corona extends OggettoBase implements Oggetto {
 	}
 
 	public String getAIS() {
-		return Misc.UNA;
+		return Articoli.UNA;
 	}
 
 	public String getAIP() {
-		return Misc.ALCUNE;
+		return Articoli.ALCUNE;
 	}
 
 	public String getADS() {
-		return Misc.LA;
+		return Articoli.LA;
 	}
 
 	public String getADP() {
-		return Misc.LE;
+		return Articoli.LE;
 	}
 
 	public String getNomeSingolare() {

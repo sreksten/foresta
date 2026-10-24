@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.eventi.interni.InternoException;
@@ -182,7 +183,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		Image doomdark;
 		int giorni = vistaPartita.getGiorno();
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
-		doomdark = ImageCache.get("Avversari uccisi in " + (giorni > 1 ? (Misc.getCardinaleM(giorni) + " giorni:") : "un giorno:"), fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY);
+		doomdark = ImageCache.get("Avversari uccisi in " + (giorni > 1 ? (Numeri.getCardinaleM(giorni) + " giorni:") : "un giorno:"), fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY);
 		graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
 		locYOffset += fontMedium.getHeight();
 		for (TipoPersonaggio classePersonaggio : TipoPersonaggio.values()) {

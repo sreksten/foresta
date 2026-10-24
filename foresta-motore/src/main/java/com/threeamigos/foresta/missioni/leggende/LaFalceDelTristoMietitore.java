@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.leggende;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -21,7 +22,6 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -84,7 +84,7 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 
 	@Override
 	public String getDescrizione() {
-		return Misc.inizialeMaiuscola(getNarratore()) + " giura di aver visto la Morte in persona, con la sua falce e circondata da scheletri, "
+		return Articoli.inizialeMaiuscola(getNarratore()) + " giura di aver visto la Morte in persona, con la sua falce e circondata da scheletri, "
 				+ "nelle rovine segnate sulla mappa.";
 	}
 
@@ -171,7 +171,7 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 								() -> nelPosto() && RegistroMissioni.cercaOCostruisci(TipoLocazione.ROVINE, this).isPresent())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getCovo());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(getNarratore())
+							BusEventi.pubblica(new NotificaTestoParagrafo(Articoli.inizialeMaiuscola(getNarratore())
 									+ " segna sulla mappa le rovine dove ha visto la Morte."));
 							attivaMissione();
 						})

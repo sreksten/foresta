@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
@@ -11,7 +12,6 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.*;
 
@@ -220,7 +220,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	 */
 	private String testo(String parametro) {
 		String nomeDelNegoziante = getNomeDelNegoziante();
-		return Misc.inizialeMaiuscola(getParametro(parametro)
+		return Articoli.inizialeMaiuscola(getParametro(parametro)
 				.replace(SEGNAPOSTO_PARENTE, getParametro(PARENTE) + " " + nomeDelNegoziante)
 				.replace(SEGNAPOSTO_NOME, nomeDelNegoziante)
 				.replace(SEGNAPOSTO_ROVINA, getParametro(NOME_ROVINA))
@@ -235,12 +235,12 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	@Override
 	public String getDescrizione() {
 		if (getParametro(NOME_ROVINA) == null) {
-			return Misc.inizialeMaiuscola(mandante) + " ha un parente che vuole aprire una bottega nella Foresta.";
+			return Articoli.inizialeMaiuscola(mandante) + " ha un parente che vuole aprire una bottega nella Foresta.";
 		}
 		if (RITORNO.equals(getPassoCorrente())) {
-			return "Fatto: torna " + Misc.conPreposizione("da", mandante(mandante)) + " a " + getNomeCitta() + " a riscuotere.";
+			return "Fatto: torna " + Articoli.conPreposizione("da", mandante(mandante)) + " a " + getNomeCitta() + " a riscuotere.";
 		}
-		return Misc.inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di disinfestare " + getParametro(NOME_ROVINA)
+		return Articoli.inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di disinfestare " + getParametro(NOME_ROVINA)
 				+ ", segnate sulla mappa, per un parente che ci aprirà " + getParametro(NOME_BOTTEGA) + ".";
 	}
 
@@ -268,7 +268,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 			case DISINFESTAZIONE:
 				return combatti(this::getCovo, getNemici())
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testo(VITTORIA) + " "
-								+ Misc.inizialeMaiuscola(mandante(mandante)) + " aspetta a " + getNomeCitta() + ".")))
+								+ Articoli.inizialeMaiuscola(mandante(mandante)) + " aspetta a " + getNomeCitta() + ".")))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -293,13 +293,13 @@ public abstract class IlNegozio extends IncaricoInCitta {
 
 	@Override
 	protected String testoAccettazione() {
-		return Misc.inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per disinfestare "
+		return Articoli.inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per disinfestare "
 				+ getParametro(NOME_ROVINA) + ".";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Misc.inizialeMaiuscola(mandante(mandante)) + " paga le " + getRicompensa() + " monete promesse.";
+		return Articoli.inizialeMaiuscola(mandante(mandante)) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
-import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.Objects;
 
@@ -31,14 +31,14 @@ public final class NomeOggetto implements OggettoConArticoli {
 	 * Un nome femminile che comincia per consonante: "una radice di mandragola", "le radici di mandragola".
 	 */
 	public static NomeOggetto femminile(String singolare, String plurale) {
-		return new NomeOggetto(singolare, plurale, Misc.UNA, Misc.ALCUNE, Misc.LA, Misc.LE);
+		return new NomeOggetto(singolare, plurale, Articoli.UNA, Articoli.ALCUNE, Articoli.LA, Articoli.LE);
 	}
 
 	/**
 	 * Un nome maschile che comincia per consonante (non s impura né z): "un fungo", "i funghi".
 	 */
 	public static NomeOggetto maschile(String singolare, String plurale) {
-		return new NomeOggetto(singolare, plurale, Misc.UN, Misc.ALCUNI, Misc.IL, Misc.I);
+		return new NomeOggetto(singolare, plurale, Articoli.UN, Articoli.ALCUNI, Articoli.IL, Articoli.I);
 	}
 
 	public String getSingolare() {

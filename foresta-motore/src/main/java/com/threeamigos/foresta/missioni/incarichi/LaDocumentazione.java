@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.testi.Articoli;
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
@@ -12,7 +14,6 @@ import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta.Indizio;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
@@ -90,11 +91,11 @@ public class LaDocumentazione extends IncaricoInCitta {
 		int trovati = getRepertiTrovati();
 		StringBuilder descrizione = new StringBuilder();
 		if (RITORNO.equals(getPassoCorrente())) {
-			descrizione.append("Hai documentato tutto: torna ").append(Misc.conPreposizione("da", mandante(documentazione.getMandante())))
+			descrizione.append("Hai documentato tutto: torna ").append(Articoli.conPreposizione("da", mandante(documentazione.getMandante())))
 					.append(" a ").append(getNomeCitta()).append(" a consegnare le note.");
 		} else {
-			descrizione.append(Misc.inizialeMaiuscola(getMandanteDiCitta())).append(" ti ha chiesto di documentare ")
-					.append(Misc.getCardinaleM(reperti.size())).append(" posti: vai in quello segnato sulla mappa.");
+			descrizione.append(Articoli.inizialeMaiuscola(getMandanteDiCitta())).append(" ti ha chiesto di documentare ")
+					.append(Numeri.getCardinaleM(reperti.size())).append(" posti: vai in quello segnato sulla mappa.");
 		}
 		for (int i = 0; i < trovati; i++) {
 			descrizione.append(" ").append(i + 1).append(": ").append(reperti.get(i).getTesto());
@@ -153,13 +154,13 @@ public class LaDocumentazione extends IncaricoInCitta {
 
 	@Override
 	protected String testoAccettazione() {
-		return Misc.inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per le note di "
-				+ Misc.getCardinaleM(getDocumentazione().getReperti().size()) + " posti.";
+		return Articoli.inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per le note di "
+				+ Numeri.getCardinaleM(getDocumentazione().getReperti().size()) + " posti.";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Misc.inizialeMaiuscola(mandante(getDocumentazione().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Articoli.inizialeMaiuscola(mandante(getDocumentazione().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

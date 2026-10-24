@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
 import com.threeamigos.foresta.locazioni.*;
@@ -13,7 +14,6 @@ import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Logger;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -73,7 +73,7 @@ public class Foresta {
 			md.rimuoviLocazioneUnica(tipoLocazione);
 			if (nuovoTipoLocazione == TipoLocazione.ROVINE) {
 				// Le rovine di un castello o di una città prendono il nome da quello che c'era
-				getLocazioneMD(coordinate).setNome("le Rovine " + Misc.conPreposizione("di", tipoLocazione.getNomeProprio()));
+				getLocazioneMD(coordinate).setNome("le Rovine " + Articoli.conPreposizione("di", tipoLocazione.getNomeProprio()));
 			}
 		}
 	}

@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoOfferta;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 
 
 /**
@@ -13,17 +13,17 @@ import com.threeamigos.foresta.strumenti.Misc;
  */
 public class Hobgoblin extends PersonaggioBase implements Personaggio {
 
-	public String getAIS() { return Misc.UN; }
-	public String getADS() { return Misc.L_APOSTROFO; }
-	public String getAIP() { return Misc.ALCUNI; }
-	public String getADP() { return Misc.GLI; }
-	public String getDeS() { return Misc.DELL_APOSTROFO; }
-	public String getDeP() { return Misc.DEGLI; }
-	public String getDa() { return Misc.DA_UN; }
+	public String getAIS() { return Articoli.UN; }
+	public String getADS() { return Articoli.L_APOSTROFO; }
+	public String getAIP() { return Articoli.ALCUNI; }
+	public String getADP() { return Articoli.GLI; }
+	public String getDeS() { return Articoli.DELL_APOSTROFO; }
+	public String getDeP() { return Articoli.DEGLI; }
+	public String getDa() { return Articoli.DA_UN; }
 
 	public String getNomeSingolare() { return "Hobgoblin"; }
 	public String getNomePlurale() { return "Hobgoblin"; }
-	public String getPronome() { return Misc.ESSO; }
+	public String getPronome() { return Articoli.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Hobgoblin(int livello) {

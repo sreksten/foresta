@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 
 
 /**
@@ -11,17 +11,17 @@ import com.threeamigos.foresta.strumenti.Misc;
  */
 public class Druida extends PersonaggioBase implements Personaggio {
 
-	public String getAIS() { return Misc.UNA; }
-	public String getADS() { return Misc.LA; }
-	public String getAIP() { return Misc.ALCUNE; }
-	public String getADP() { return Misc.LE; }
-	public String getDeS() { return Misc.DELLA; }
-	public String getDeP() { return Misc.DELLE; }
-	public String getDa() { return Misc.DA_UNA; }
+	public String getAIS() { return Articoli.UNA; }
+	public String getADS() { return Articoli.LA; }
+	public String getAIP() { return Articoli.ALCUNE; }
+	public String getADP() { return Articoli.LE; }
+	public String getDeS() { return Articoli.DELLA; }
+	public String getDeP() { return Articoli.DELLE; }
+	public String getDa() { return Articoli.DA_UNA; }
 
 	public String getNomeSingolare() { return "Druida"; }
 	public String getNomePlurale() { return "Druide"; }
-	public String getPronome() { return Misc.ELLA; }
+	public String getPronome() { return Articoli.ELLA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
 	public Druida(int livello) {

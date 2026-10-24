@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
@@ -22,10 +22,10 @@ public class Armaiolo extends PersonaggioNonCombattente {
 	@Override
 	public String getNomePlurale() { return "Armaioli"; }
 
-	@Override public String getAIS() { return Misc.UN; }
-	@Override public String getADS() { return Misc.L_APOSTROFO; }
-	@Override public String getAIP() { return Misc.ALCUNI; }
-	@Override public String getADP() { return Misc.GLI; }
-	@Override public String getDeS() { return Misc.DELL_APOSTROFO; }
-	@Override public String getDeP() { return Misc.DEGLI; }
+	@Override public String getAIS() { return Articoli.UN; }
+	@Override public String getADS() { return Articoli.L_APOSTROFO; }
+	@Override public String getAIP() { return Articoli.ALCUNI; }
+	@Override public String getADP() { return Articoli.GLI; }
+	@Override public String getDeS() { return Articoli.DELL_APOSTROFO; }
+	@Override public String getDeP() { return Articoli.DEGLI; }
 }

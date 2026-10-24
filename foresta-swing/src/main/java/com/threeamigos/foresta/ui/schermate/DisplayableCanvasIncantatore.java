@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
@@ -9,7 +10,6 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaBancoDiLavoro;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.strumenti.Misc;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -49,7 +49,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
 
     private void onEventoApprovazioneIncantatura(NotificaApprovazioneIncantatura evento) {
         String nome = evento.getArtefatto().getNomeBreve();
-        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Ecco fatto! " + Misc.inizialeMaiuscola(nome) + " è pronto.", getCoordinateFumetto()));
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Ecco fatto! " + Articoli.inizialeMaiuscola(nome) + " è pronto.", getCoordinateFumetto()));
     }
 
     @Override

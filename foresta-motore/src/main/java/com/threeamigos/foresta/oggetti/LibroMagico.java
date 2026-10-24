@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.strumenti.Misc;
 
 /**
  * Un libro magico del bottino: un oggetto che diventa un artefatto di tipo libro magico (vedi {@link OggettoArtefatto}).
@@ -14,19 +14,19 @@ public class LibroMagico extends OggettoArtefatto {
 	}
 
 	public String getAIS() {
-		return Misc.UN;
+		return Articoli.UN;
 	}
 
 	public String getAIP() {
-		return Misc.ALCUNI;
+		return Articoli.ALCUNI;
 	}
 
 	public String getADS() {
-		return Misc.IL;
+		return Articoli.IL;
 	}
 
 	public String getADP() {
-		return Misc.I;
+		return Articoli.I;
 	}
 
 	public String getNomeSingolare() {

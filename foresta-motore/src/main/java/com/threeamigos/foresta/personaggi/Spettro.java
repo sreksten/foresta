@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 
 
 /**
@@ -11,17 +11,17 @@ import com.threeamigos.foresta.strumenti.Misc;
  */
 public class Spettro extends NonMortoVolante {
 
-	public String getAIS() { return Misc.UNO; }
-	public String getADS() { return Misc.LO; }
-	public String getAIP() { return Misc.ALCUNI; }
-	public String getADP() { return Misc.GLI; }
-	public String getDeS() { return Misc.DELLO; }
-	public String getDeP() { return Misc.DEGLI; }
-	public String getDa() { return Misc.DA_UNO; }
+	public String getAIS() { return Articoli.UNO; }
+	public String getADS() { return Articoli.LO; }
+	public String getAIP() { return Articoli.ALCUNI; }
+	public String getADP() { return Articoli.GLI; }
+	public String getDeS() { return Articoli.DELLO; }
+	public String getDeP() { return Articoli.DEGLI; }
+	public String getDa() { return Articoli.DA_UNO; }
 
 	public String getNomeSingolare() { return "Spettro"; }
 	public String getNomePlurale() { return "Spettri"; }
-	public String getPronome() { return Misc.ESSO; }
+	public String getPronome() { return Articoli.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Spettro(int livello) {

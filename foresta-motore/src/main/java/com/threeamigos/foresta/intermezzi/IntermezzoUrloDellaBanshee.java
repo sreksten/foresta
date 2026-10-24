@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.ProprietaDiMissione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
@@ -50,7 +50,7 @@ public class IntermezzoUrloDellaBanshee implements Intermezzo {
 		String moglie = RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome();
 		TipoLocazione arrivo = getViaggioCompletato()
 				.map(viaggio -> viaggio.ottieniProprieta(ProprietaDiMissione.CITTA_DI_ARRIVO)).map(TipoLocazione::valueOf).orElse(null);
-		String dove = arrivo == null ? "dall'altra parte della foresta" : Misc.conPreposizione("a", arrivo.getNomeProprio());
+		String dove = arrivo == null ? "dall'altra parte della foresta" : Articoli.conPreposizione("a", arrivo.getNomeProprio());
 		return ScenaInLocanda.conBardo()
 				.parlaIlBardo("Siete tornati! Mia moglie " + moglie + " mi ha scritto: è arrivata sana e salva " + dove + ", grazie a voi.")
 				.parlaIlCapo("Era il minimo, dopo avervi riportato a casa.")

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.abilita.AbilitaInnate;
@@ -28,7 +29,6 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.ContestoLancio;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Logger;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
@@ -1213,7 +1213,7 @@ public abstract class LocazioneBase implements Locazione {
 		List<String> parti = new ArrayList<>();
 		for (List<Personaggio> classe : perClasse.values()) {
 			Personaggio p = classe.get(0);
-			parti.add(classe.size() == 1 ? p.getAIS() + p.getNomeSingolare() : Misc.getCardinaleM(classe.size()) + " " + p.getNomePlurale());
+			parti.add(classe.size() == 1 ? p.getAIS() + p.getNomeSingolare() : Numeri.getCardinaleM(classe.size()) + " " + p.getNomePlurale());
 		}
 		if (parti.size() == 1) {
 			return parti.get(0);
@@ -1258,7 +1258,7 @@ public abstract class LocazioneBase implements Locazione {
 						sb.append(o.getAIS()).append(o.getNomeSingolare());
 					}
 				} else {
-					sb.append(Misc.getCardinaleM(numeroOggetti)).append(' ').append(o.getNomePlurale());
+					sb.append(Numeri.getCardinaleM(numeroOggetti)).append(' ').append(o.getNomePlurale());
 				}
 			}
 		}

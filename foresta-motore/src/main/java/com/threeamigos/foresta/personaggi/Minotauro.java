@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoOfferta;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 
 
 /**
@@ -13,19 +13,19 @@ import com.threeamigos.foresta.strumenti.Misc;
  */
 public class Minotauro extends PersonaggioBase implements Personaggio {
 
-	public String getAIS() { return Misc.UN; }
-	public String getADS() { return Misc.IL; }
-	public String getAIP() { return Misc.ALCUNI; }
-	public String getADP() { return Misc.I; }
-	public String getDeS() { return Misc.DEL; }
-	public String getDeP() { return Misc.DEI; }
-	public String getDa() { return Misc.DAL; }
+	public String getAIS() { return Articoli.UN; }
+	public String getADS() { return Articoli.IL; }
+	public String getAIP() { return Articoli.ALCUNI; }
+	public String getADP() { return Articoli.I; }
+	public String getDeS() { return Articoli.DEL; }
+	public String getDeP() { return Articoli.DEI; }
+	public String getDa() { return Articoli.DAL; }
 
 	public TipoPersonaggio getClasse() { return TipoPersonaggio.MINOTAURO; }
 
 	public String getNomeSingolare() { return "Minotauro"; }
 	public String getNomePlurale() { return "Minotauri"; }
-	public String getPronome() { return Misc.ESSO; }
+	public String getPronome() { return Articoli.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Minotauro(int livello) {

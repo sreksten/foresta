@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
@@ -11,7 +12,6 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -56,9 +56,9 @@ public class IlPellegrino extends IncaricoInCitta {
 	public String getDescrizione() {
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return getPellegrino() + " è arrivato " + Misc.conPreposizione("a", getNomeDelTempio()) + ": torna da sua sorella a " + getNomeCitta() + ".";
+			return getPellegrino() + " è arrivato " + Articoli.conPreposizione("a", getNomeDelTempio()) + ": torna da sua sorella a " + getNomeCitta() + ".";
 		}
-		return "Accompagna il pellegrino " + getPellegrino() + " fino " + Misc.conPreposizione("a", getNomeDelTempio()) + ", segnato sulla mappa.";
+		return "Accompagna il pellegrino " + getPellegrino() + " fino " + Articoli.conPreposizione("a", getNomeDelTempio()) + ", segnato sulla mappa.";
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class IlPellegrino extends IncaricoInCitta {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, TipoLocazione.TEMPIO)
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getTempio());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(getNomeDelTempio())
+							BusEventi.pubblica(new NotificaTestoParagrafo(Articoli.inizialeMaiuscola(getNomeDelTempio())
 									+ ", dove vuole andare " + getPellegrino() + ", è segnato sulla mappa."));
 						})
 						.poi(PARTENZA);
@@ -109,7 +109,7 @@ public class IlPellegrino extends IncaricoInCitta {
 								RegistroMissioni.sopprimiContenutoLocazione(getTempio());
 							}
 						})
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Arrivato " + Misc.conPreposizione("a", getNomeDelTempio()) + ", " + getPellegrino() + " vi ringrazia e si mette a pregare. Sua sorella aspetta notizie a "
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Arrivato " + Articoli.conPreposizione("a", getNomeDelTempio()) + ", " + getPellegrino() + " vi ringrazia e si mette a pregare. Sua sorella aspetta notizie a "
 								+ getNomeCitta() + ".")))
 						.poi(RITORNO);
 			default:
@@ -129,7 +129,7 @@ public class IlPellegrino extends IncaricoInCitta {
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante(getPellegrino() + " è arrivato " + Misc.conPreposizione("a", getNomeDelTempio()) + "? Che il cielo vi benedica!")
+				.parlaIlMandante(getPellegrino() + " è arrivato " + Articoli.conPreposizione("a", getNomeDelTempio()) + "? Che il cielo vi benedica!")
 				.parlaIlMandante("Ecco le " + getRicompensa() + " monete.")
 				.parlaIlCapo("Ha pregato anche per noi, speriamo.");
 	}

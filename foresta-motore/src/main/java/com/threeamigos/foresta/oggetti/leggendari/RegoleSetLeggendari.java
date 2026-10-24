@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.oggetti.leggendari;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.interfacce.VistaPezzoDelSet;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
@@ -7,7 +8,6 @@ import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
-import com.threeamigos.foresta.strumenti.Misc;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -120,7 +120,7 @@ public final class RegoleSetLeggendari {
 	 * un pezzo di un set.
 	 */
 	public static Optional<String> descrizioneSet(ArtefattoMD artefatto) {
-		return set(artefatto).map(set -> "Pezzo " + Misc.conPreposizione("di", set.getNome()) + " (bonus x" + moltiplicatore(set) + ")");
+		return set(artefatto).map(set -> "Pezzo " + Articoli.conPreposizione("di", set.getNome()) + " (bonus x" + moltiplicatore(set) + ")");
 	}
 
 	/**
@@ -182,7 +182,7 @@ public final class RegoleSetLeggendari {
 	 * perché i set sono maschili e femminili.
 	 */
 	public static String descrizioneSetCompleto(SetLeggendario set) {
-		return "Set completo: " + Misc.inizialeMaiuscola(senzaArticolo(set.getNome())) + " (bonus x" + moltiplicatore(set) + ")";
+		return "Set completo: " + Articoli.inizialeMaiuscola(senzaArticolo(set.getNome())) + " (bonus x" + moltiplicatore(set) + ")";
 	}
 
 	private static String senzaArticolo(String nome) {

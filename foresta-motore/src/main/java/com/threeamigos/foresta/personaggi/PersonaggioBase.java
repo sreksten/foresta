@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
@@ -32,7 +33,6 @@ import com.threeamigos.foresta.oggetti.SpadaNormalmenteNascosta;
 import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Logger;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.tipi.*;
 
@@ -1145,9 +1145,9 @@ public abstract class PersonaggioBase implements Personaggio {
 						}
 						if (isGruppoAvversario && GruppoAvversario.getIstanza().contaDellaStessaSpecie(this) > 1) {
 							if (getSesso() == Personaggio.Sesso.MASCHIO) {
-								sb.append(Misc.getOrdinaleM(ordinale, true));
+								sb.append(Numeri.getOrdinaleM(ordinale, true));
 							} else {
-								sb.append(Misc.getOrdinaleF(ordinale, true));
+								sb.append(Numeri.getOrdinaleF(ordinale, true));
 							}
 							sb.append(" ");
 							sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));

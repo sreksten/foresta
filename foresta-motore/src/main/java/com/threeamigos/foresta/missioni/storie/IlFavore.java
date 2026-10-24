@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.missioni.*;
@@ -9,7 +10,6 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 /**
@@ -140,7 +140,7 @@ public class IlFavore extends MissioneAPassi {
 			String nemico = modello.getADS() + modello.getNomeSingolare();
 			return favore.isConCapo() ? getCapo() + ", " + nemico : nemico;
 		}
-		String nemici = Misc.getCardinaleM(favore.getNumero()) + " " + modello.getNomePlurale();
+		String nemici = Numeri.getCardinaleM(favore.getNumero()) + " " + modello.getNomePlurale();
 		return favore.isConCapo() ? nemici + " guidati da " + getCapo() : nemici;
 	}
 
@@ -159,7 +159,7 @@ public class IlFavore extends MissioneAPassi {
 				return per + "raccogli " + ingrediente.quanti(favore.getQuantitaDaRaccogliere()) + ", che "
 						+ ingrediente.getDaDoveViene() + ". Finora: " + getContatore(INGREDIENTE) + ".";
 			case VEGLIA:
-				return per + "veglia il posto segnato sulla mappa, passandoci " + Misc.getCardinaleF(favore.getVisite())
+				return per + "veglia il posto segnato sulla mappa, passandoci " + Numeri.getCardinaleF(favore.getVisite())
 						+ " volte e lasciando passare almeno " + favore.getOre() + " ore fra una visita e l'altra. Finora: "
 						+ (VEGLIA.equals(getPassoCorrente()) ? getVisiteNelPassoCorrente() : 0) + ".";
 			default:
@@ -180,7 +180,7 @@ public class IlFavore extends MissioneAPassi {
 		aggiungiProprieta(VEGLIE, String.valueOf(visite));
 		int mancanti = favore.getVisite() - visite;
 		BusEventi.pubblica(new NotificaTestoParagrafo(testo(favore.getVeglia()) + " Bisogna tornare qui ancora "
-				+ Misc.getCardinaleF(mancanti) + (mancanti == 1 ? " volta" : " volte") + ", lasciando passare almeno "
+				+ Numeri.getCardinaleF(mancanti) + (mancanti == 1 ? " volta" : " volte") + ", lasciando passare almeno "
 				+ favore.getOre() + " ore fra una visita e l'altra."));
 	}
 

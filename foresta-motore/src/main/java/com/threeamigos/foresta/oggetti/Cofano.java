@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.testi.Articoli;
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
@@ -12,7 +14,6 @@ import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.strumenti.ContestoLancio;
 import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;
@@ -36,19 +37,19 @@ public class Cofano extends OggettoBase implements Oggetto {
 	}
 
 	public String getAIS() {
-		return Misc.UN;
+		return Articoli.UN;
 	}
 
 	public String getAIP() {
-		return Misc.ALCUNI;
+		return Articoli.ALCUNI;
 	}
 
 	public String getADS() {
-		return Misc.IL;
+		return Articoli.IL;
 	}
 
 	public String getADP() {
-		return Misc.I;
+		return Articoli.I;
 	}
 
 	public String getNomeSingolare() {
@@ -83,7 +84,7 @@ public class Cofano extends OggettoBase implements Oggetto {
 			Artefatto trovato = artefattoRaro();
 			sb.append("Aprendo il");
 			if (quantita > 1) {
-				sb.append(' ').append(Misc.getOrdinaleM(i + 1, false));
+				sb.append(' ').append(Numeri.getOrdinaleM(i + 1, false));
 			}
 			if (Dado.tira(2) == 1) {
 				sb.append(" cofano, ");

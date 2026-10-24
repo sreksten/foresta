@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LineaTemporaleMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
@@ -73,7 +74,7 @@ public class LineaTemporale {
 		} else {
 			sb.append(' ');
 		}
-		sb.append(Misc.getOrdinaleM(giorno, false)).append(" giorno.");
+		sb.append(Numeri.getOrdinaleM(giorno, false)).append(" giorno.");
 		return sb.toString();
 	}
 

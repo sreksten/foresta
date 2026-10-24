@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.*;
 
 
@@ -11,18 +11,18 @@ import com.threeamigos.foresta.tipi.*;
  */
 public class Idra extends PersonaggioBase implements Personaggio {
 
-	public String getAIS() { return Misc.UN_APOSTROFO; }
-	public String getADS() { return Misc.L_APOSTROFO; }
-	public String getAIP() { return Misc.ALCUNE; }
-	public String getADP() { return Misc.LE; }
-	public String getDeS() { return Misc.DELL_APOSTROFO; }
-	public String getDeP() { return Misc.DELLE; }
-	public String getDa() { return Misc.DA_UN_APOSTROFO; }
+	public String getAIS() { return Articoli.UN_APOSTROFO; }
+	public String getADS() { return Articoli.L_APOSTROFO; }
+	public String getAIP() { return Articoli.ALCUNE; }
+	public String getADP() { return Articoli.LE; }
+	public String getDeS() { return Articoli.DELL_APOSTROFO; }
+	public String getDeP() { return Articoli.DELLE; }
+	public String getDa() { return Articoli.DA_UN_APOSTROFO; }
 
 	public TipoPersonaggio getClasse() { return TipoPersonaggio.IDRA; }
 	public String getNomeSingolare() { return "Idra"; }
 	public String getNomePlurale() { return "Idre"; }
-	public String getPronome() { return Misc.ESSA; }
+	public String getPronome() { return Articoli.ESSA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
 	public Idra(int livello) {

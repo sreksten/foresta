@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
@@ -15,7 +16,6 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
@@ -89,7 +89,7 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 			return getBardo() + " vorrebbe che il gruppo accompagnasse sua moglie " + getMoglie() + " in un'altra città.";
 		}
 		return getBardo() + " ti ha chiesto di accompagnare sua moglie " + getMoglie() + " da " + getCittaDiPartenza().getNomeDellaCitta()
-				+ " " + Misc.conPreposizione("a", getCittaDiArrivo().getNomeProprio()) + ". Non può essere ferita: i mostri non osano toccare la moglie del bardo.";
+				+ " " + Articoli.conPreposizione("a", getCittaDiArrivo().getNomeProprio()) + ". Non può essere ferita: i mostri non osano toccare la moglie del bardo.";
 	}
 
 	@Override
@@ -143,7 +143,7 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 							Foresta.setLocazioneConosciuta(Foresta.getCoordinateLocazioneUnica(getCittaDiPartenza()));
 							Foresta.setLocazioneConosciuta(Foresta.getCoordinateLocazioneUnica(getCittaDiArrivo()));
 							BusEventi.pubblica(new NotificaTestoParagrafo(getBardo() + " vi affida sua moglie " + getMoglie() + ": va accompagnata da "
-									+ getCittaDiPartenza().getNomeDellaCitta() + " " + Misc.conPreposizione("a", getCittaDiArrivo().getNomeProprio())
+									+ getCittaDiPartenza().getNomeDellaCitta() + " " + Articoli.conPreposizione("a", getCittaDiArrivo().getNomeProprio())
 									+ ". Nessun mostro oserà toccarla."));
 							attivaMissione();
 						})
@@ -160,7 +160,7 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 								() -> RegistroPersonaggi.costruisciPersonaggio(RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO),
 										EquipaggiamentoIniziale.livelloCasualeDalMondo()), false)
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(getMoglie() + " si unisce al gruppo: va accompagnata "
-								+ Misc.conPreposizione("a", getCittaDiArrivo().getNomeProprio()) + ".")))
+								+ Articoli.conPreposizione("a", getCittaDiArrivo().getNomeProprio()) + ".")))
 						.poi(VIAGGIO);
 			case VIAGGIO:
 				return scorta(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getCoordinateLocazioneUnica(getCittaDiArrivo()), false)
@@ -192,7 +192,7 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 				.parlaIlCapo("Nefaste conseguenze?")
 				.parlaIlBardo("Mia moglie " + getMoglie() + " non mi ha rivolto la parola per una settimana, e ho speso una fortuna in Pozioni della Salute.")
 				.parlaIlBardo("Ma sono vivo, e vi sono debitore. Anzi, visto come ve la cavate, vorrei chiedervi un altro favore.")
-				.parlaIlBardo(getMoglie() + " vive " + Misc.conPreposizione("in", partenza.getNomeProprio()) + ", e deve raggiungere "
+				.parlaIlBardo(getMoglie() + " vive " + Articoli.conPreposizione("in", partenza.getNomeProprio()) + ", e deve raggiungere "
 						+ arrivo.getNomeProprio() + ". Le strade sono pericolose: la accompagnereste voi?")
 				.parlaIlCapo("Ci penseremo noi.")
 				.parlaIlBardo("Grazie. E, vi prego, non ditele che mi avete trovato di nuovo in una locanda.");
@@ -201,7 +201,7 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 	private ScenaInCitta scenaDellaMoglie() {
 		return ScenaInCitta.conMoglieDelBardo()
 				.parlaIlMandante("Siete voi! Mio marito " + getBardo() + " mi ha scritto di voi. Io sono " + getMoglie() + ".")
-				.parlaIlMandante("Devo andare " + Misc.conPreposizione("a", getCittaDiArrivo().getNomeProprio()) + ", e da sola non mi fido delle strade.")
+				.parlaIlMandante("Devo andare " + Articoli.conPreposizione("a", getCittaDiArrivo().getNomeProprio()) + ", e da sola non mi fido delle strade.")
 				.parlaIlCapo("Con noi sarete al sicuro.")
 				.parlaIlMandante("Lo so, ho una bella sensazione. Prendo il bagaglio e la ramazza, caso mai incontrassimo mio marito.");
 	}

@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.strumenti.Misc;
 
 /**
  * Una lancia del bottino: un oggetto che diventa un artefatto di tipo lancia (vedi {@link OggettoArtefatto}).
@@ -14,19 +14,19 @@ public class Lancia extends OggettoArtefatto {
 	}
 
 	public String getAIS() {
-		return Misc.UNA;
+		return Articoli.UNA;
 	}
 
 	public String getAIP() {
-		return Misc.ALCUNE;
+		return Articoli.ALCUNE;
 	}
 
 	public String getADS() {
-		return Misc.LA;
+		return Articoli.LA;
 	}
 
 	public String getADP() {
-		return Misc.LE;
+		return Articoli.LE;
 	}
 
 	public String getNomeSingolare() {

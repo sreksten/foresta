@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni.richieste;
 
-import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -46,6 +46,6 @@ public final class InfestazioneRichiesta {
 		if (numero == 1) {
 			return modello.getAIS() + modello.getNomeSingolare();
 		}
-		return Misc.getCardinaleM(numero) + " " + modello.getNomePlurale();
+		return Numeri.getCardinaleM(numero) + " " + modello.getNomePlurale();
 	}
 }

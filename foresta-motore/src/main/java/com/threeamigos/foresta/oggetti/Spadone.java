@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.strumenti.Misc;
 
 /**
  * Uno spadone del bottino: un oggetto che diventa un artefatto di tipo spadone, un'arma a due mani (vedi {@link OggettoArtefatto}).
@@ -16,19 +16,19 @@ public class Spadone extends OggettoArtefatto {
     }
 
     public String getAIS() {
-        return Misc.UNO;
+        return Articoli.UNO;
     }
 
     public String getAIP() {
-        return Misc.ALCUNI;
+        return Articoli.ALCUNI;
     }
 
     public String getADS() {
-        return Misc.LO;
+        return Articoli.LO;
     }
 
     public String getADP() {
-        return Misc.GLI;
+        return Articoli.GLI;
     }
 
     public String getNomeSingolare() {

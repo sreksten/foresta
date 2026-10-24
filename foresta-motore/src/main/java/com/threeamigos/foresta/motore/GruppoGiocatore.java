@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
@@ -25,7 +26,6 @@ import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.Logger;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
@@ -643,7 +643,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
 		} else {
 			StringBuilder sb = new StringBuilder("Il gruppo decide di accamparsi qui per riposare un po'. Dopo aver stabilito i turni di guardia, i ")
-					.append(Misc.getCardinaleM(personaggi.size())).append(" intrepidi avventurieri si godono un meritato riposo. ");
+					.append(Numeri.getCardinaleM(personaggi.size())).append(" intrepidi avventurieri si godono un meritato riposo. ");
 			if (ore == 1) {
 				sb.append("Ma un'ora sola è veramente insufficiente");
 			} else if (ore == 2) {

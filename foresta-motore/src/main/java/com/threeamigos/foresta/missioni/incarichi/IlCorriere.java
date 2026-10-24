@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
@@ -12,7 +13,6 @@ import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.strumenti.Dado;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -193,13 +193,13 @@ public class IlCorriere extends IncaricoInCitta {
 	@Override
 	public String getNome() {
 		Spedizione spedizione = getSpedizione();
-		return Misc.inizialeMaiuscola(spedizione.getOggettoConArticolo()) + " per " + getDestinatarioDiCitta();
+		return Articoli.inizialeMaiuscola(spedizione.getOggettoConArticolo()) + " per " + getDestinatarioDiCitta();
 	}
 
 	@Override
 	public String getDescrizione() {
 		Spedizione spedizione = getSpedizione();
-		String descrizione = "Porta " + spedizione.getOggettoConArticolo() + " " + Misc.conPreposizione("a", getDestinatarioDiCitta())
+		String descrizione = "Porta " + spedizione.getOggettoConArticolo() + " " + Articoli.conPreposizione("a", getDestinatarioDiCitta())
 				+ ", che ti pagherà " + getRicompensa() + " monete.";
 		if (spedizione.isUrgente()) {
 			descrizione += " Ore rimaste: " + Math.max(0, getOreRimaste()) + ".";
@@ -229,9 +229,9 @@ public class IlCorriere extends IncaricoInCitta {
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nellaCittaDelRitorno)
 						.segnala(this::coordinateDellaCittaDelRitorno)
 						.falliscoSe(this::isInRitardo, () -> "Troppo tardi: " + spedizione.getOggettoConArticolo() + " non arriverà più in tempo "
-								+ Misc.conPreposizione("a", getDestinatarioDiCitta()) + ".")
+								+ Articoli.conPreposizione("a", getDestinatarioDiCitta()) + ".")
 						.falliscoSe(() -> isDiNascosto() && haCombattutoNelPassoCorrente(), () -> "La voce del combattimento si è sparsa: "
-								+ mandanteIn(spedizione.getDestinatario(), getDestinazione()) + " non vorrà più saperne " + Misc.conPreposizione("di", spedizione.getOggettoConArticolo())
+								+ mandanteIn(spedizione.getDestinatario(), getDestinazione()) + " non vorrà più saperne " + Articoli.conPreposizione("di", spedizione.getOggettoConArticolo())
 								+ ", e " + mandante(spedizione.getMittente()) + " nemmeno di voi.")
 						.poi(RITORNO);
 			default:
@@ -247,7 +247,7 @@ public class IlCorriere extends IncaricoInCitta {
 	@Override
 	protected String testoConsegna() {
 		Spedizione spedizione = getSpedizione();
-		return Misc.inizialeMaiuscola(spedizione.getOggettoConArticolo()) + " passa " + Misc.conPreposizione("a", mandanteInSenzaVirgolaFinale(spedizione.getDestinatario(), getDestinazione())) + ".";
+		return Articoli.inizialeMaiuscola(spedizione.getOggettoConArticolo()) + " passa " + Articoli.conPreposizione("a", mandanteInSenzaVirgolaFinale(spedizione.getDestinatario(), getDestinazione())) + ".";
 	}
 
 	@Override
@@ -261,7 +261,7 @@ public class IlCorriere extends IncaricoInCitta {
 		}
 		return scenaDel(spedizione.getMittente())
 				.parlaIlMandante(spedizione.getRichiesta())
-				.parlaIlMandante("Portate " + spedizione.getQuestoOggetto() + " " + Misc.conPreposizione("a", getDestinatarioDiCitta()) + "."
+				.parlaIlMandante("Portate " + spedizione.getQuestoOggetto() + " " + Articoli.conPreposizione("a", getDestinatarioDiCitta()) + "."
 						+ quando + " Alla consegna avrete " + getRicompensa() + " monete.")
 				.parlaIlCapo(spedizione.getBattutaDelCapo())
 				.parlaIlMandante(spedizione.getRispostaDelMittente());
@@ -277,7 +277,7 @@ public class IlCorriere extends IncaricoInCitta {
 	@Override
 	protected String testoAccettazione() {
 		Spedizione spedizione = getSpedizione();
-		String testo = Misc.inizialeMaiuscola(getDestinatarioDiCitta()) + " pagherà " + getRicompensa() + " monete per "
+		String testo = Articoli.inizialeMaiuscola(getDestinatarioDiCitta()) + " pagherà " + getRicompensa() + " monete per "
 				+ spedizione.getOggettoConArticolo() + " che manda " + mandanteSenzaVirgolaFinale(spedizione.getMittente());
 		if (spedizione.isUrgente()) {
 			return testo + ", se arriva entro " + getOreConcesse() + " ore.";
@@ -287,13 +287,13 @@ public class IlCorriere extends IncaricoInCitta {
 
 	@Override
 	protected String testoRicompensa() {
-		return Misc.inizialeMaiuscola(mandanteIn(getSpedizione().getDestinatario(), getDestinazione())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Articoli.inizialeMaiuscola(mandanteIn(getSpedizione().getDestinatario(), getDestinazione())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override
 	protected String testoCittaDistrutta() {
 		return getNomeDestinazione() + " è stata distrutta: " + getSpedizione().getOggettoConArticolo() + " non arriverà più "
-				+ Misc.conPreposizione("a", mandanteInSenzaVirgolaFinale(getSpedizione().getDestinatario(), getDestinazione())) + ".";
+				+ Articoli.conPreposizione("a", mandanteInSenzaVirgolaFinale(getSpedizione().getDestinatario(), getDestinazione())) + ".";
 	}
 
 	/**

@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.strumenti.Misc;
 
 /**
  * Alcune monete d'oro: prese, si aggiungono alle monete del gruppo.
@@ -15,19 +15,19 @@ public class Moneta extends OggettoBase implements Oggetto {
 	}
 
 	public String getAIS() {
-		return Misc.UNA;
+		return Articoli.UNA;
 	}
 
 	public String getAIP() {
-		return Misc.ALCUNE;
+		return Articoli.ALCUNE;
 	}
 
 	public String getADS() {
-		return Misc.LA;
+		return Articoli.LA;
 	}
 
 	public String getADP() {
-		return Misc.LE;
+		return Articoli.LE;
 	}
 
 	public String getNomeSingolare() {
