@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
@@ -244,7 +245,7 @@ class ScenarioCorrezioniTest {
 		ModelloDati.setIstanza(new ModelloDati());
 		com.threeamigos.foresta.personaggi.Ladro ladro = new com.threeamigos.foresta.personaggi.Ladro("L", 1);
 		int prima = ladro.getPrecisione();
-		com.threeamigos.foresta.oggetti.Artefatto anello = com.threeamigos.foresta.oggetti.CostruttoreArtefatto.istanza()
+		com.threeamigos.foresta.artefatti.Artefatto anello = com.threeamigos.foresta.artefatti.CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.ANELLO)
 				.setNome("anello di prova").setDescrizione("che fa mirare meglio").setLivello(1).setDanniBase(0)
 				.setCostoAcquisto(1).setPeso(0)

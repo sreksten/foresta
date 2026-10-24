@@ -12,8 +12,8 @@
  * e {@link com.threeamigos.foresta.interfacce.GestoreTrofei} dicono dove e come si conservano salvataggi, classifica e trofei,
  * e hanno implementazioni su file.
  * <p>
- * <b>Caratteristiche di un oggetto.</b> {@link com.threeamigos.foresta.interfacce.Arma},
- * {@link com.threeamigos.foresta.interfacce.OggettoConCosto}, {@link com.threeamigos.foresta.interfacce.OggettoConPeso} e
+ * <b>Caratteristiche di un oggetto.</b> {@link com.threeamigos.foresta.artefatti.Arma},
+ * {@link com.threeamigos.foresta.artefatti.OggettoConCosto}, {@link com.threeamigos.foresta.artefatti.OggettoConPeso} e
  * {@link com.threeamigos.foresta.interfacce.OggettoConArticoli} permettono di trattare oggetti diversi nello stesso modo.
  */
 package com.threeamigos.foresta.interfacce;

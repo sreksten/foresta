@@ -4,9 +4,9 @@ import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioComme
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
-import com.threeamigos.foresta.interfacce.VistaArtefatto;
+import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaScambio;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.AfterEach;
@@ -46,7 +46,7 @@ class ScenarioArmaioloTest {
 	void compraDallArmaioloAlPrezzoTrattato() {
 		// Il Ladro imbraccia lo Scudo Fiscale, che aggiunge 4 alla sua contrattazione
 		int contrattazioneSenzaScudo = partita.gruppo().getContrattazione();
-		partita.gruppo().getCapo().addArtefatto(Leggendari.con(Leggendari.SCUDO_DELL_ESATTORE).costruisci());
+		partita.gruppo().getCapo().addArtefatto(Leggendari.con(Leggendari.SCUDO_DELL_ESATTORE).costruisci(Statistiche.getLivello()));
 		VistaScambio bottega = entraDallArmaiolo();
 		VistaArtefatto scelto = new ArrayList<>(bottega.getInventarioParteRemota()).get(0);
 		int moneteIniziali = partita.gruppo().getMonete();

@@ -1,9 +1,11 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
-import com.threeamigos.foresta.modellodati.IncantamentoMD;
+import com.threeamigos.foresta.artefatti.Arma;
+import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.artefatti.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,7 +55,7 @@ class ArmaDaTipoDannoTest {
     @Test
     void laSpadaDellaMorteDaIlNecroticoPerIlSuoIncantamento() {
         OggettoLeggendario leggendario = CatalogoLeggendari.getLeggendario("SPADA_DI_ROMY_JONA").orElseThrow(AssertionError::new);
-        Arma spada = (Arma) leggendario.costruisci();
+        Arma spada = (Arma) leggendario.costruisci(Statistiche.getLivello());
         assertTrue(spada.daTipoDanno(TipoDanno.NECROTICO));
         assertFalse(spada.daTipoDanno(TipoDanno.SACRO));
     }

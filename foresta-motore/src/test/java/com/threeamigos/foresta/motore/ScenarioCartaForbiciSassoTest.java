@@ -85,15 +85,15 @@ class ScenarioCartaForbiciSassoTest {
     @Test
     void conUnAmiciziaRiuscitaLOggettoNonPresoSparisceSubito() {
         try (PartitaDiTest partita = sfidataDaLIdra(25)) {
-            partita.gruppo().getLocazioneCorrente().collocaOggettoMissione(FabbricaOggetti.crea(TipoOggetto.MONETA));
-            assertEquals(TipoOggetto.MONETA, partita.gruppo().getTipoOggettoInLocazione());
+            partita.gruppo().getLocazioneCorrente().collocaOggettoMissione(FabbricaOggetti.crea(TipoBottino.MONETA));
+            assertEquals(TipoBottino.MONETA, partita.gruppo().getTipoBottinoInLocazione());
             int monete = partita.gruppo().getMonete();
 
             // L'amicizia riesce e l'avversario sfida: la sfida è ancora in corso, e l'oggetto è già sparito
             Dado.trucca(1, 1);
             partita.comando(Comando.AMICIZIA);
             assertEquals(LE_TRE_MOSSE, new HashSet<>(partita.comandiDisponibili()), "la sfida è in corso");
-            assertNull(partita.gruppo().getTipoOggettoInLocazione());
+            assertNull(partita.gruppo().getTipoBottinoInLocazione());
             assertEquals(monete, partita.gruppo().getMonete());
         }
     }
@@ -104,14 +104,14 @@ class ScenarioCartaForbiciSassoTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(TipoLocazione.CASTELLO_IDRA));
             partita.assertStato(Stato.IN_LOCAZIONE);
-            partita.gruppo().getLocazioneCorrente().collocaOggettoMissione(FabbricaOggetti.crea(TipoOggetto.MONETA));
-            assertEquals(TipoOggetto.MONETA, partita.gruppo().getTipoOggettoInLocazione());
+            partita.gruppo().getLocazioneCorrente().collocaOggettoMissione(FabbricaOggetti.crea(TipoBottino.MONETA));
+            assertEquals(TipoBottino.MONETA, partita.gruppo().getTipoBottinoInLocazione());
             int monete = partita.gruppo().getMonete();
 
             Dado.trucca(10);
             partita.comando(Comando.CORRUZIONE);
 
-            assertNull(partita.gruppo().getTipoOggettoInLocazione(), "con la corruzione l'oggetto non si prende e non resta lì");
+            assertNull(partita.gruppo().getTipoBottinoInLocazione(), "con la corruzione l'oggetto non si prende e non resta lì");
             assertTrue(partita.gruppo().getMonete() <= monete, "e non è stato preso");
         }
     }

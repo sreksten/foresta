@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CollezioniDiSolaLetturaTest {
 
 	private static ArtefattoMD artefatto(String nome) {
-		return ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, nome, "");
+		return ArtefattiDiTest.creaArtefatto(TipoArtefatto.SPADA, nome, "");
 	}
 
 	@Test

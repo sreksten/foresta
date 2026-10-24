@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 
 /**
  * Alcune monete d'oro: prese, si aggiungono alle monete del gruppo.
@@ -36,8 +36,8 @@ public class Moneta extends OggettoBase implements Bottino {
 		return "monete";
 	}
 
-	public TipoOggetto getClasse() {
-		return TipoOggetto.MONETA;
+	public TipoBottino getClasse() {
+		return TipoBottino.MONETA;
 	}
 
 }

@@ -9,7 +9,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -138,7 +138,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	 * personaggi, quindi uno più largo non li sposta)
 	 */
 	private static int larghezzaDelCentro() {
-		return ClassiOggettoImmagine.getImmagine(TipoOggetto.COFANO).getWidth();
+		return ClassiOggettoImmagine.getImmagine(TipoBottino.COFANO).getWidth();
 	}
 
 	/**
@@ -338,8 +338,8 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 
 		// L'oggetto si disegna dopo i personaggi e li copre: una lancia, che è lunga, non li spinge verso i bordi. Gli sprite
 		// vengono dopo, sopra tutto (DisplayableCanvas.inGioco)
-		TipoOggetto tipoOggetto = g.getTipoOggettoInLocazione();
-		if (tipoOggetto != null && tipoOggetto != TipoOggetto.ARTEFATTO) {
+		TipoBottino tipoOggetto = g.getTipoBottinoInLocazione();
+		if (tipoOggetto != null && tipoOggetto != TipoBottino.ARTEFATTO) {
 			BufferedImage d = ClassiOggettoImmagine.getImmagine(tipoOggetto);
 			graphics.drawImage(d, xOggetto(d), yOggetto(locazione, d), null);
 		}
@@ -431,8 +431,8 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	public SpriteInterface raccogliOggetto() {
 		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
 		BufferedImage locazione = ImageCache.locazioni.get(g.getTipoLocazioneCorrente());
-		TipoOggetto tipoOggetto = g.getTipoOggettoInLocazione();
-		if (tipoOggetto != null && tipoOggetto != TipoOggetto.ARTEFATTO) {
+		TipoBottino tipoOggetto = g.getTipoBottinoInLocazione();
+		if (tipoOggetto != null && tipoOggetto != TipoBottino.ARTEFATTO) {
 			BufferedImage d = ClassiOggettoImmagine.getImmagine(tipoOggetto);
 			return new SpriteATempo(d, xOggetto(d), yOggetto(locazione, d),
 					"Raccolto oggetto " + tipoOggetto);

@@ -6,20 +6,20 @@ import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.missioni.leggende.LaLeggenda;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelLocandiere;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
-import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
+import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
 
 /**
  * Le leggende: l'armaiolo in città o il locandiere in una locanda raccontano la leggenda di un oggetto leggendario di
@@ -55,7 +55,7 @@ class ScenarioLeggendeTest {
         assertTrue(tipi.containsAll(EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.SCUDO, TipoArtefatto.ELMO,
                 TipoArtefatto.NINNOLO, TipoArtefatto.PERGAMENA)), String.valueOf(tipi));
         for (OggettoLeggendario leggendario : leggendari) {
-            Artefatto artefatto = leggendario.costruisci();
+            Artefatto artefatto = leggendario.costruisci(Statistiche.getLivello());
             assertEquals(TipoRaritaArtefatto.LEGGENDARIO, artefatto.getRarita());
             assertEquals(leggendario.getTipo(), artefatto.getTipo());
             assertTrue(leggendario.getLeggenda().size() >= 2);
@@ -77,20 +77,20 @@ class ScenarioLeggendeTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(7)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             OggettoLeggendario leggendario = CatalogoLeggendari.getLeggendario(Leggendari.SPADA_DI_ROMY_JONA).get();
-            int livelloDelCatalogo = leggendario.costruisci().getLivello();
+            int livelloDelCatalogo = leggendario.costruisci(Statistiche.getLivello()).getLivello();
 
             // Il mondo è ancora indietro: il leggendario non si indebolisce
             ModelloDati.getIstanza().getStatisticheMD().setLivello(1);
-            assertEquals(livelloDelCatalogo, leggendario.costruisci().getLivello());
+            assertEquals(livelloDelCatalogo, leggendario.costruisci(Statistiche.getLivello()).getLivello());
 
             // Il mondo è più avanti: nasce al suo livello
             int livelloDelMondo = livelloDelCatalogo + 4;
             ModelloDati.getIstanza().getStatisticheMD().setLivello(livelloDelMondo);
-            assertEquals(livelloDelMondo, leggendario.costruisci().getLivello());
+            assertEquals(livelloDelMondo, leggendario.costruisci(Statistiche.getLivello()).getLivello());
 
             // Uno custodito in un tempio da prima lo si ottiene al livello di quando lo si prende
             ModelloDati.getIstanza().getStatisticheMD().setLivello(livelloDelCatalogo);
-            Artefatto nelTempio = leggendario.costruisci();
+            Artefatto nelTempio = leggendario.costruisci(Statistiche.getLivello());
             assertEquals(livelloDelCatalogo, nelTempio.getLivello());
             ModelloDati.getIstanza().getStatisticheMD().setLivello(livelloDelMondo);
             Tempio tempio = new Tempio();
@@ -100,7 +100,7 @@ class ScenarioLeggendeTest {
 
             // Gli altri artefatti non si toccano
             Artefatto comune = GeneratoreArtefatti.istanza().generaArtefatto(TipoArtefatto.ELMO, 1);
-            OggettoLeggendario.alLivelloDelMondo(comune);
+            OggettoLeggendario.alLivello(comune, Statistiche.getLivello());
             assertEquals(1, comune.getLivello());
         }
     }
@@ -157,7 +157,7 @@ class ScenarioLeggendeTest {
             assertTrue(leggenda.getDescrizione().startsWith("Secondo la leggenda raccontata dall'armaiolo, "), leggenda.getDescrizione());
 
             // Nel tempio ci sono i guardiani della leggenda: quelli della riga, o quelli del livello del gruppo
-            TipoPersonaggio guardiano = leggendario.getClasseGuardiani().orElse(TipoPersonaggio.HOBGOBLIN);
+            TipoPersonaggio guardiano = leggenda.getGuardiani().getClasse();
             List<Personaggio> guardiani = leggenda.getIncontroInLocazione(tempio).orElseThrow(AssertionError::new);
             assertEquals(leggenda.getGuardiani().getNumero(), guardiani.size());
             assertTrue(guardiani.stream().allMatch(p -> p.getClasse() == guardiano));

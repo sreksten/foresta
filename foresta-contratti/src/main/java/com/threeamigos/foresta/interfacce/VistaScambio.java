@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.interfacce;
 
+import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import java.util.Collection;
 
 /**

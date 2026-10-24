@@ -1,11 +1,17 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.CostantiArtefatti;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
+import com.threeamigos.foresta.artefatti.IncantamentoMD;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.GradoIncantamento;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
@@ -226,7 +232,7 @@ public final class Equipaggiamento {
 				case ARMA:
 					int danni = GeneratoreArtefatti.danniMediArma(livello);
 					if (tipo == TipoArtefatto.SPADONE) {
-						danni = (int) Math.round(danni * Costanti.ARTEFATTO_MOLTIPLICATORE_DUE_MANI);
+						danni = (int) Math.round(danni * CostantiArtefatti.ARTEFATTO_MOLTIPLICATORE_DUE_MANI);
 					} else if (tipo == TipoArtefatto.BASTONE_MAGICO) {
 						danni = danni / 2;
 						md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_PERCENTUALE, 5.0 * livello, "");

@@ -1,12 +1,13 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.artefatti.IncantamentoMD;
 import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
 import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
@@ -197,7 +198,7 @@ class LetturaDeiSalvataggiTest {
 		personaggio.setClasse(TipoPersonaggio.GUERRIERO);
 		personaggio.setVivo(true);
 		personaggio.setForza(12);
-		personaggio.aggiungiArtefatto(ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia"));
+		personaggio.aggiungiArtefatto(ArtefattiDiTest.creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia"));
 		String[] righe = scrivi(personaggio).split("\n");
 		// Senza tattica la sua riga è vuota: troncato proprio lì, non deve diventare una NullPointerException
 		for (int quante = 0; quante < righe.length; quante++) {

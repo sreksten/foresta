@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.function.IntPredicate;
@@ -48,12 +48,12 @@ public enum ClasseTrofeo {
 	UCCIDI_L_IDRA(() -> boss(TipoTrofeo.UCCIDI_L_IDRA, TipoPersonaggio.IDRA)),
 	UCCIDI_IL_MINOTAURO_GIGANTE(() -> boss(TipoTrofeo.UCCIDI_IL_MINOTAURO_GIGANTE, TipoPersonaggio.MINOTAURO_GIGANTE)),
 	// I tesori degli avversari: quanto si trova in una locazione incustodita non conta
-	RAPINATORE(() -> refurtiva(TipoTrofeo.RAPINATORE, TipoOggetto.MONETA)),
-	LADRO_DI_PREZIOSI(() -> refurtiva(TipoTrofeo.LADRO_DI_PREZIOSI, TipoOggetto.PIETRA_PREZIOSA)),
-	ARSENIO_LUPIN(() -> refurtiva(TipoTrofeo.ARSENIO_LUPIN, TipoOggetto.CORONA)),
+	RAPINATORE(() -> refurtiva(TipoTrofeo.RAPINATORE, TipoBottino.MONETA)),
+	LADRO_DI_PREZIOSI(() -> refurtiva(TipoTrofeo.LADRO_DI_PREZIOSI, TipoBottino.PIETRA_PREZIOSA)),
+	ARSENIO_LUPIN(() -> refurtiva(TipoTrofeo.ARSENIO_LUPIN, TipoBottino.CORONA)),
 	// I cofani contano anche se incustoditi, come nelle grotte
 	ESPERTO_SCASSINATORE(() -> new TrofeoAContatore<>(TipoTrofeo.ESPERTO_SCASSINATORE,
-			InternoOggettoRaccolto.class, evento -> evento.getClasse() == TipoOggetto.COFANO ? evento.getQuantita() : 0, 100)),
+			InternoOggettoRaccolto.class, evento -> evento.getClasse() == TipoBottino.COFANO ? evento.getQuantita() : 0, 100)),
 	// Gli artefatti in città si comprano solo da armaiolo (tutto tranne gli ingredienti magici) e venditore di pergamene
 	RIGATTIERE(() -> acquistoDallArmaiolo(TipoTrofeo.RIGATTIERE, livello -> livello <= 2)),
 	COLLEZIONISTA(() -> acquistoDallArmaiolo(TipoTrofeo.COLLEZIONISTA, livello -> livello >= 5)),
@@ -95,7 +95,7 @@ public enum ClasseTrofeo {
 		return new TrofeoAContatore<>(tipo, InternoLocazioneVisitata.class, evento -> evento.getTipo() == locazione ? 1 : 0, 100);
 	}
 
-	private static Trofeo refurtiva(TipoTrofeo tipo, TipoOggetto tipoOggetto) {
+	private static Trofeo refurtiva(TipoTrofeo tipo, TipoBottino tipoOggetto) {
 		return new TrofeoAContatore<>(tipo, InternoOggettoRaccolto.class,
 				evento -> evento.isCustodito() && evento.getClasse() == tipoOggetto ? evento.getQuantita() : 0, 100);
 	}

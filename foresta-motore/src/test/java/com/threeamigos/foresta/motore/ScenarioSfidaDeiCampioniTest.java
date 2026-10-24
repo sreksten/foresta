@@ -7,7 +7,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.storie.IlCampione;
 import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -180,7 +180,7 @@ class ScenarioSfidaDeiCampioniTest {
     void ilLeggendarioSiCostruisceAlVoloQuandoIlCatalogoEFinito() {
         OggettoLeggendario costruito = LaSfidaDeiCampioni.costruisciUnLeggendario(7);
         assertFalse(costruito.getNome().isEmpty());
-        assertEquals(7, costruito.costruisci().getLivello());
+        assertEquals(7, costruito.costruisci(Statistiche.getLivello()).getLivello());
         assertEquals(2, costruito.getLeggenda().size());
     }
 

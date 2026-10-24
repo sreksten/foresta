@@ -3,10 +3,10 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.locazioni.LocazioneBase;
 import com.threeamigos.foresta.missioni.richieste.ForgiaRichiesta;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
-import com.threeamigos.foresta.tipi.CategoriaArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
@@ -108,6 +108,6 @@ class ConfrontoConLaForgia {
             riga = ForgiaRichiesta.da(ProduttoreDiMissioniCasuale.rigaDiMissioni("FORGIA"));
         } while (riga.getTipo() != arma.get().getTipo());
         personaggio.removeArtefatto(arma.get());
-        personaggio.addArtefatto(riga.leggendario(personaggio.getLivello()).costruisci());
+        personaggio.addArtefatto(riga.leggendario(personaggio.getLivello()).costruisci(Statistiche.getLivello()));
     }
 }

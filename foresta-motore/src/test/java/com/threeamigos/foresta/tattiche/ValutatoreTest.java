@@ -329,7 +329,7 @@ class ValutatoreTest {
         // Può darsi che un incantesimo non basti nemmeno su un goblin con 1 punto (resistenze): si controlla solo che sia fra quelli adatti
         Decisione economico = conCriterio(CriterioIncantesimo.PIU_ECONOMICO_CHE_BASTA, mago, contesto);
         assertTrue(TRE.contains(economico.getIncantesimo()));
-        if (TRE.stream().allMatch(c -> CalcolatoreCombattimento.dannoAtteso(mago, goblin1, (com.threeamigos.foresta.interfacce.Arma)
+        if (TRE.stream().allMatch(c -> CalcolatoreCombattimento.dannoAtteso(mago, goblin1, (com.threeamigos.foresta.artefatti.Arma)
                 FabbricaIncantesimi.crea(c, 1)) >= goblin1.getSalute())) {
             assertEquals(TipoAzione.di(menoCaro), economico.getTipoEseguito());
         }
@@ -356,7 +356,7 @@ class ValutatoreTest {
     void soloSePiuForteDellAttaccoLoLasciaPerLeArmiQuandoRendonoDiPiu() {
         scorteDeiMiei.addIncantesimi(TipoIncantesimo.FULMINE, 1);
         ContestoTattico contesto = perIMiei(guerriero, goblin1);
-        double incantesimo = CalcolatoreCombattimento.dannoAtteso(guerriero, goblin1, (com.threeamigos.foresta.interfacce.Arma) FabbricaIncantesimi.crea(TipoIncantesimo.FULMINE, 1));
+        double incantesimo = CalcolatoreCombattimento.dannoAtteso(guerriero, goblin1, (com.threeamigos.foresta.artefatti.Arma) FabbricaIncantesimi.crea(TipoIncantesimo.FULMINE, 1));
         double mischia = CalcolatoreCombattimento.dannoAttesoDellaMischia(guerriero, goblin1);
         TatticaMD tattica = TatticaMD.di(new VoceMD(null, Collections.emptyList(), Arrays.asList(
                 AzioneMD.incantesimoDiDanno(CriterioIncantesimo.PIU_ADATTO, true), AzioneMD.di(TipoAzione.ATTACCO_FISICO))));

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 
 /**
  * Alcune corone: per il gruppo valgono come le pietre preziose e si sommano ai preziosi.
@@ -36,8 +36,8 @@ public class Corona extends OggettoBase implements Bottino {
 		return "corone";
 	}
 
-	public TipoOggetto getClasse() {
-		return TipoOggetto.CORONA;
+	public TipoBottino getClasse() {
+		return TipoBottino.CORONA;
 	}
 
 }

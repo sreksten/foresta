@@ -44,7 +44,7 @@ class EnumDelModuloTest {
     @Test
     void ogniCostanteSiRitrovaDalSuoNome() throws Exception {
         List<Class<?>> enumerazioni = enumDelModulo();
-        assertTrue(enumerazioni.size() > 40, "troppo poche enum trovate: " + enumerazioni);
+        assertTrue(enumerazioni.size() > 30, "troppo poche enum trovate: " + enumerazioni);
         assertTrue(enumerazioni.contains(TipoMissione.class));
         assertTrue(enumerazioni.contains(PersonaggioNoto.Ambito.class), "anche le enum annidate");
         assertTrue(enumerazioni.contains(TipoConfronto.class), "anche i sottopacchetti");

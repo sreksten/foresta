@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
@@ -29,10 +30,11 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
+import com.threeamigos.foresta.artefatti.SpadaNormalmenteNascosta;
 import com.threeamigos.foresta.oggetti.RaccoltaBottino;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
-import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.CostruttoreArtefatto;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.strumenti.logger.Logger;
@@ -194,6 +196,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		temporizzatore.setTemporizzabile(this);
 
 		StatoDelMotore.automaCreato(this);
+		// Gli artefatti non sanno che esiste un mondo: la spada normalmente nascosta, che segue il suo livello, lo legge da qui
+		SpadaNormalmenteNascosta.seguiIlLivello(Statistiche::getLivello);
 		ascolta(ComandoDiGioco.class, this::onEventoComandoDiGioco);
 		ascolta(ComandoInvioTesto.class, this::onEventoTestoDisponibile);
 		// Gli spostamenti di artefatti nella schermata di scambio aperta: li fa lo scambio stesso

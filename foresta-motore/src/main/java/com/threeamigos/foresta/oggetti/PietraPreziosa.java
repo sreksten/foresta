@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 
 /**
  * Alcune pietre preziose: prese, si aggiungono ai preziosi del gruppo.
@@ -36,8 +36,8 @@ public class PietraPreziosa extends OggettoBase implements Bottino {
 		return "pietre preziose";
 	}
 
-	public TipoOggetto getClasse() {
-		return TipoOggetto.PIETRA_PREZIOSA;
+	public TipoBottino getClasse() {
+		return TipoBottino.PIETRA_PREZIOSA;
 	}
 
 }

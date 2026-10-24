@@ -7,7 +7,7 @@ import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
-import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;

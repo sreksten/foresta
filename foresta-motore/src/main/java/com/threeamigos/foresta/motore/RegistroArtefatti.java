@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.ArmaFisica;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -7,13 +10,13 @@ import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.RegistroArtefattiMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
-import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.CostruttoreArtefatto;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.*;
 
@@ -26,7 +29,7 @@ import java.util.stream.Collectors;
 /**
  * Gli artefatti del mondo che non sono nell'inventario del gruppo: quelli da distribuire, quelli smarriti nelle locazioni, i magazzini dei negozi e
  * le caselle in cui il gruppo sa che c'è un artefatto smarrito. I dati stanno nel {@code RegistroArtefattiMD}; qui li si trasforma in
- * {@link com.threeamigos.foresta.oggetti.Artefatto} e li si distribuisce a caso.
+ * {@link com.threeamigos.foresta.artefatti.Artefatto} e li si distribuisce a caso.
  */
 public class RegistroArtefatti {
 

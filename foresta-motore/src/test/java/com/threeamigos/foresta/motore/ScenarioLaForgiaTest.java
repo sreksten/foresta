@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.CostantiArtefatti;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
 import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.Missione;
@@ -7,15 +9,15 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.LaForgia;
 import com.threeamigos.foresta.missioni.richieste.ForgiaRichiesta;
 import com.threeamigos.foresta.missioni.richieste.MaterialeRichiesto;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,7 +35,7 @@ class ScenarioLaForgiaTest {
             assertFalse(MaterialeRichiesto.da(ProduttoreDiMissioniCasuale.materialeRichiesto("FORGIA_METALLO")).isTrofeo());
             assertTrue(MaterialeRichiesto.da(ProduttoreDiMissioniCasuale.materialeRichiesto("FORGIA_TROFEO")).isTrofeo());
             for (int livello = 1; livello <= 12; livello++) {
-                Artefatto forgiata = arma.leggendario(livello).costruisci();
+                Artefatto forgiata = arma.leggendario(livello).costruisci(Statistiche.getLivello());
                 assertEquals(TipoRaritaArtefatto.LEGGENDARIO, forgiata.getRarita(), arma.getChiave());
                 assertEquals(arma.getTipo(), forgiata.getTipo(), arma.getChiave());
                 assertTrue(forgiata.getLivello() >= livello);
@@ -63,7 +65,7 @@ class ScenarioLaForgiaTest {
             ForgiaRichiesta arma = forgia.getArma();
             assertTrue(forgia.getNome().contains(arma.getNomeBreve()), forgia.getNome());
             assertTrue(forgia.getDescrizione().contains(arma.getNomeBreve()), forgia.getDescrizione());
-            assertFalse(RaccoltaBottino.candidati(partita.gruppo(), arma.leggendario(1).costruisci()).isEmpty(),
+            assertFalse(RaccoltaBottino.candidati(partita.gruppo(), arma.leggendario(1).costruisci(Statistiche.getLivello())).isEmpty(),
                     "l'arma scelta la può impugnare qualcuno del gruppo");
             int costo = forgia.getCosto();
             assertEquals(Costanti.FORGIA_MONETE_PER_LIVELLO * Statistiche.getLivello(), costo);
@@ -125,7 +127,7 @@ class ScenarioLaForgiaTest {
     private static int danniDiUnArmaComune(ForgiaRichiesta arma, int livello) {
         int danni = GeneratoreArtefatti.danniMediArma(livello);
         if (arma.getTipo() == TipoArtefatto.SPADONE) {
-            return (int) Math.round(danni * Costanti.ARTEFATTO_MOLTIPLICATORE_DUE_MANI);
+            return (int) Math.round(danni * CostantiArtefatti.ARTEFATTO_MOLTIPLICATORE_DUE_MANI);
         }
         return arma.getTipo() == TipoArtefatto.BASTONE_MAGICO ? danni / 2 : danni;
     }

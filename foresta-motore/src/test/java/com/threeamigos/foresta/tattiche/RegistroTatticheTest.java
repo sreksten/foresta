@@ -205,7 +205,7 @@ class RegistroTatticheTest {
         Dado.trucca(10);
         Decisione d = decidi(strega, dellaStrega());
         double incantesimo = CalcolatoreCombattimento.dannoAtteso(strega, mago1,
-                (com.threeamigos.foresta.interfacce.Arma) FabbricaIncantesimi.crea(piuPotente, strega.getLivello()));
+                (com.threeamigos.foresta.artefatti.Arma) FabbricaIncantesimi.crea(piuPotente, strega.getLivello()));
         double armi = CalcolatoreCombattimento.dannoAttesoDellaMischia(strega, mago1);
         if (incantesimo > armi) {
             assertEquals(piuPotente, d.getIncantesimo());

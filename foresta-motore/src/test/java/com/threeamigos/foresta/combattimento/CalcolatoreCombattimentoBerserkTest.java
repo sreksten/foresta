@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.combattimento;
 
-import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.modellodati.IncantamentoMD;
+import com.threeamigos.foresta.artefatti.Arma;
+import com.threeamigos.foresta.artefatti.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.Guerriero;

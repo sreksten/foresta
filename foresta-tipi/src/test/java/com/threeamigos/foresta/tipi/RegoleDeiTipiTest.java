@@ -1,5 +1,12 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.artefatti.CostantiArtefatti;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoCardinalitaArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.GradoIncantamento;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
@@ -42,15 +49,15 @@ class RegoleDeiTipiTest {
 
     @Test
     void ilGradoDiUnIncantamentoCresceConIlLivello() {
-        assertSame(GradoIncantamento.MINORE, GradoIncantamento.perLivello(Costanti.GRADO_INCANTAMENTO_MEDIO_DAL_LIVELLO - 1));
-        assertSame(GradoIncantamento.MEDIO, GradoIncantamento.perLivello(Costanti.GRADO_INCANTAMENTO_MEDIO_DAL_LIVELLO));
-        assertSame(GradoIncantamento.MEDIO, GradoIncantamento.perLivello(Costanti.GRADO_INCANTAMENTO_MAGGIORE_DAL_LIVELLO - 1));
-        assertSame(GradoIncantamento.MAGGIORE, GradoIncantamento.perLivello(Costanti.GRADO_INCANTAMENTO_MAGGIORE_DAL_LIVELLO));
+        assertSame(GradoIncantamento.MINORE, GradoIncantamento.perLivello(CostantiArtefatti.GRADO_INCANTAMENTO_MEDIO_DAL_LIVELLO - 1));
+        assertSame(GradoIncantamento.MEDIO, GradoIncantamento.perLivello(CostantiArtefatti.GRADO_INCANTAMENTO_MEDIO_DAL_LIVELLO));
+        assertSame(GradoIncantamento.MEDIO, GradoIncantamento.perLivello(CostantiArtefatti.GRADO_INCANTAMENTO_MAGGIORE_DAL_LIVELLO - 1));
+        assertSame(GradoIncantamento.MAGGIORE, GradoIncantamento.perLivello(CostantiArtefatti.GRADO_INCANTAMENTO_MAGGIORE_DAL_LIVELLO));
 
-        assertSame(GradoIncantamento.MINORE, GradoIncantamento.perIngrediente(Costanti.INGREDIENTE_GRADO_MEDIO_DAL_LIVELLO - 1));
-        assertSame(GradoIncantamento.MEDIO, GradoIncantamento.perIngrediente(Costanti.INGREDIENTE_GRADO_MEDIO_DAL_LIVELLO));
-        assertSame(GradoIncantamento.MEDIO, GradoIncantamento.perIngrediente(Costanti.INGREDIENTE_GRADO_MAGGIORE_DAL_LIVELLO - 1));
-        assertSame(GradoIncantamento.MAGGIORE, GradoIncantamento.perIngrediente(Costanti.INGREDIENTE_GRADO_MAGGIORE_DAL_LIVELLO));
+        assertSame(GradoIncantamento.MINORE, GradoIncantamento.perIngrediente(CostantiArtefatti.INGREDIENTE_GRADO_MEDIO_DAL_LIVELLO - 1));
+        assertSame(GradoIncantamento.MEDIO, GradoIncantamento.perIngrediente(CostantiArtefatti.INGREDIENTE_GRADO_MEDIO_DAL_LIVELLO));
+        assertSame(GradoIncantamento.MEDIO, GradoIncantamento.perIngrediente(CostantiArtefatti.INGREDIENTE_GRADO_MAGGIORE_DAL_LIVELLO - 1));
+        assertSame(GradoIncantamento.MAGGIORE, GradoIncantamento.perIngrediente(CostantiArtefatti.INGREDIENTE_GRADO_MAGGIORE_DAL_LIVELLO));
 
         // Un grado più alto dà di più, e i gradini contano da 1
         GradoIncantamento precedente = null;

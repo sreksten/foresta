@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -15,7 +16,7 @@ import com.threeamigos.foresta.missioni.richieste.ForgiaRichiesta;
 import com.threeamigos.foresta.missioni.richieste.MaterialeRichiesto;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.oggetti.RaccoltaBottino;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Costanti;
@@ -103,7 +104,7 @@ public class LaForgia extends IncaricoInCitta {
 		String riga = null;
 		for (int i = 0; i < TENTATIVI_PER_L_ARMA; i++) {
 			riga = ProduttoreDiMissioniCasuale.rigaDiMissioni("FORGIA");
-			Artefatto arma = ForgiaRichiesta.da(riga).leggendario(getLivelloDellIncarico()).costruisci();
+			Artefatto arma = ForgiaRichiesta.da(riga).leggendario(getLivelloDellIncarico()).costruisci(Statistiche.getLivello());
 			if (!RaccoltaBottino.candidati(GruppoGiocatore.getIstanza(), arma).isEmpty()) {
 				return riga;
 			}
@@ -213,7 +214,7 @@ public class LaForgia extends IncaricoInCitta {
 
 	@Override
 	protected Ricompensa getRicompensaFinale() {
-		return Ricompensa.nulla().conArtefatto(() -> getArma().leggendario(getLivelloDellIncarico()).costruisci());
+		return Ricompensa.nulla().conArtefatto(() -> getArma().leggendario(getLivelloDellIncarico()).costruisci(Statistiche.getLivello()));
 	}
 
 	@Override

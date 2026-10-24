@@ -11,9 +11,9 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.oggetti.Cofano;
-import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
-import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
 

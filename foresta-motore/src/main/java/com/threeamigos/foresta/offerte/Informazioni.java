@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.offerte;
 
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.RegistroArtefattiMD;
 import com.threeamigos.foresta.motore.Foresta;

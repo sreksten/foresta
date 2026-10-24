@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
@@ -157,8 +159,8 @@ class PersonaggioMDTest {
     @Test
     void artefattiModificatoriEdEffettiSiAggiungonoESiTolgono() {
         PersonaggioMD personaggio = guerriero();
-        ArtefattoMD spada = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia");
-        ArtefattoMD elmo = ArtefattoMDTest.creaArtefatto(TipoArtefatto.ELMO, "l'elmo", "che protegge");
+        ArtefattoMD spada = ArtefattiDiTest.creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia");
+        ArtefattoMD elmo = ArtefattiDiTest.creaArtefatto(TipoArtefatto.ELMO, "l'elmo", "che protegge");
         personaggio.aggiungiArtefatto(spada);
         personaggio.aggiungiArtefatto(elmo);
         List<ArtefattoMD> prima = new ArrayList<>(personaggio.getArtefatti());
@@ -199,7 +201,7 @@ class PersonaggioMDTest {
         TatticaMD tattica = TatticaMD.di(VoceMD.su(new SelettoreMD(TipoRosa.AVVERSARI, Collections.emptyList(),
                 OrdinamentoMD.di(TipoOrdinamento.MENO_SALUTE)), AzioneMD.di(TipoAzione.ATTACCO_FISICO)));
         personaggio.setTattica(tattica);
-        personaggio.aggiungiArtefatto(ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia"));
+        personaggio.aggiungiArtefatto(ArtefattiDiTest.creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia"));
         String salvato = salva(personaggio);
 
         PersonaggioMD destinazione = guerriero();

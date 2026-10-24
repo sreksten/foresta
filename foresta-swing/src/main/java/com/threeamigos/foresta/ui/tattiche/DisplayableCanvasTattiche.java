@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.tattiche;
 
+import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoImpostaTattica;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpostaPersonaggio;

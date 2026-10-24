@@ -2,7 +2,7 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 
 import java.util.Objects;
 
@@ -35,8 +35,8 @@ public class OggettoMissione extends OggettoBase implements Bottino {
 	}
 
 	@Override
-	public TipoOggetto getClasse() {
-		return TipoOggetto.OGGETTO_MISSIONE;
+	public TipoBottino getClasse() {
+		return TipoBottino.OGGETTO_MISSIONE;
 	}
 
 	@Override

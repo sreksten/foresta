@@ -7,16 +7,16 @@ import com.threeamigos.foresta.locazioni.OggettiDiProva;
 import com.threeamigos.foresta.oggetti.BottinoArtefatto;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.oggetti.FormaDelBottino;
-import com.threeamigos.foresta.oggetti.GeneratoreArtefattiTabelle;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
 import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.dado.TruccatoreDiDadi;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -59,7 +59,7 @@ class ArtefattiTrovatiTest {
 			assertEquals(1, trovati.size());
 			assertTrue(trovati.get(0).isCustodito());
 			assertEquals(TipoArtefatto.SPADA, trovati.get(0).getArtefatto().getTipo());
-			assertEquals(TipoOggetto.SPADA, partita.eventi().ultimo(InternoOggettoRaccolto.class).getClasse());
+			assertEquals(TipoBottino.SPADA, partita.eventi().ultimo(InternoOggettoRaccolto.class).getClasse());
 			assertFalse(partita.eventi().haRicevuto(NotificaArtefattoTrovato.class), "una spada per terra non si rivela");
 		}
 	}
@@ -89,7 +89,7 @@ class ArtefattiTrovatiTest {
 			partita.comando(Comando.SINGOLO_ATTACCO);
 
 			assertTrue(partita.eventi().haRicevuto(NotificaArtefattoTrovato.class), "l'artefatto già fatto si rivela");
-			assertEquals(TipoOggetto.SCUDO, partita.eventi().ultimo(InternoOggettoRaccolto.class).getClasse());
+			assertEquals(TipoBottino.SCUDO, partita.eventi().ultimo(InternoOggettoRaccolto.class).getClasse());
 			assertTrue(partita.eventi().ultimo(InternoArtefattoTrovato.class).isCustodito());
 		}
 	}

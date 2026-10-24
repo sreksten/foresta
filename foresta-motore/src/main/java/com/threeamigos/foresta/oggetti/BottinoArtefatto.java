@@ -1,8 +1,11 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -103,7 +106,7 @@ public class BottinoArtefatto implements Bottino {
 	}
 
 	@Override
-	public TipoOggetto getClasse() {
-		return forma != null ? forma.getTipoOggetto() : TipoOggetto.ARTEFATTO;
+	public TipoBottino getClasse() {
+		return forma != null ? forma.getTipoBottino() : TipoBottino.ARTEFATTO;
 	}
 }

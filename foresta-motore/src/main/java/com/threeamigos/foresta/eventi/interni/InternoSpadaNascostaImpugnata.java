@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.eventi.interni;
 
+import com.threeamigos.foresta.artefatti.SpadaNormalmenteNascosta;
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
 

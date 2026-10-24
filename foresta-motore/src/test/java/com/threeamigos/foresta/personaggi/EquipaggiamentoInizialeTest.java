@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.GestoreProgressione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -4,7 +4,7 @@ import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
-import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.modellodati.tattiche.AzioneMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;

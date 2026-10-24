@@ -17,7 +17,7 @@ import com.threeamigos.foresta.motore.OfferteAlchimista;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.motore.RegoleIncantatura;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.tipi.TipoNegozio;

@@ -5,7 +5,7 @@ import com.threeamigos.foresta.intermezzi.FabbricaIntermezzi;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
 import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
-import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
+import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;

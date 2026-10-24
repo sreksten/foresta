@@ -7,11 +7,11 @@ import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 import org.junit.jupiter.api.Test;
@@ -118,7 +118,7 @@ class TrofeiNegoziTest {
 				partita.pubblica(new InternoArtefattoTrovato(artefatto(TipoArtefatto.SPADA, 5), false));
 			}
 			// Le monete non sono artefatti
-			partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.MONETA, 2, null, true));
+			partita.pubblica(new InternoOggettoRaccolto(TipoBottino.MONETA, 2, null, true));
 			partita.pubblica(new InternoFineLocazione());
 
 			assertEquals(100, RegistroTrofei.getProgresso(TipoTrofeo.CACCIATORE_DI_TESORI), "gli artefatti incustoditi e le monete non contano");

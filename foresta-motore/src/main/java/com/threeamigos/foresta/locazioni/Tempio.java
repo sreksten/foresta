@@ -12,7 +12,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.testi.ProduttoreDiLuoghiCasuale;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.BottinoArtefatto;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;

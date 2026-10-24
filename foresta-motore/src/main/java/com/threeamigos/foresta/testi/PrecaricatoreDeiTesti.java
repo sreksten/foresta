@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.testi;
 
+import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.eventi.notifiche.NotificaUscitaDalGioco;

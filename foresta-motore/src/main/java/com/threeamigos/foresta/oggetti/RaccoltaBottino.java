@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStatistiche;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
@@ -16,7 +17,7 @@ import com.threeamigos.foresta.motore.GestoreProgressione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
+import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;

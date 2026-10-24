@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni.leggende;
 
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 
 /**
  * Una missione che mette in palio un oggetto leggendario (vedi {@link OggettoLeggendario}): le leggende (vedi

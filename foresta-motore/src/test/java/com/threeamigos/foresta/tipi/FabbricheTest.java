@@ -62,8 +62,8 @@ class FabbricheTest {
     }
 
     @Test
-    void ogniTipoOggettoGenerabileSiCostruisce() {
-        for (TipoOggetto tipo : TipoOggetto.values()) {
+    void ogniTipoBottinoGenerabileSiCostruisce() {
+        for (TipoBottino tipo : TipoBottino.values()) {
             if (tipo.isGenerabile()) {
                 assertNotNull(FabbricaOggetti.crea(tipo), tipo.name());
             }

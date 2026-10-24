@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
 import com.threeamigos.foresta.tipi.*;
@@ -23,12 +26,12 @@ class ModelloDatiSalvataggioTest {
         ModelloDati modello = new ModelloDati();
         modello.reimposta(4, 3);
         modello.getRegistroArtefattiMD().addArtefattoInLocazione(
-                ArtefattoMDTest.creaArtefatto(TipoArtefatto.ELMO, "l'elmo di Gorgor", ""), new CoordinateMD(3, 1));
+                ArtefattiDiTest.creaArtefatto(TipoArtefatto.ELMO, "l'elmo di Gorgor", ""), new CoordinateMD(3, 1));
         modello.getGruppoGiocatoreMD().setCoordinate(new CoordinateMD(1, 2));
         PersonaggioMD senzaNome = new PersonaggioMD();
         senzaNome.setClasse(TipoPersonaggio.LADRO);
         senzaNome.setVivo(true);
-        ArtefattoMD spada = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada di fuoco", "");
+        ArtefattoMD spada = ArtefattiDiTest.creaArtefatto(TipoArtefatto.SPADA, "la spada di fuoco", "");
         spada.setSlotEquipaggiamento(TipoSlotArtefatto.MANO_PRINCIPALE);
         spada.setNomeProprio("Diavolina");
         senzaNome.aggiungiArtefatto(spada);
@@ -39,7 +42,7 @@ class ModelloDatiSalvataggioTest {
         modello.getGruppoGiocatoreMD().addPersonaggioMD(senzaNome);
         modello.getGruppoGiocatoreMD().addPersonaggioMD(morto);
         modello.getGruppoGiocatoreMD().aggiungiArtefatto(
-                ArtefattoMDTest.creaArtefatto(TipoArtefatto.PERGAMENA, "la pergamena minore", "che trasmette un effetto"));
+                ArtefattiDiTest.creaArtefatto(TipoArtefatto.PERGAMENA, "la pergamena minore", "che trasmette un effetto"));
         modello.getGruppoGiocatoreMD().setIncantesimi(TipoIncantesimo.FUOCO, 4);
         modello.getLineaTemporaleMD().setEvento("Gwendolyn vede levarsi una colonna di fumo a nord");
         modello.getLineaTemporaleMD().addCittaDistrutta(TipoLocazione.CITTA_RUUNA);

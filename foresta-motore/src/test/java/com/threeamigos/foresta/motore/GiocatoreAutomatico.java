@@ -10,12 +10,12 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
-import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.*;

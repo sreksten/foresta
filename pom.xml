@@ -15,6 +15,7 @@
         <module>foresta-attributi</module>
         <module>foresta-effettidistato</module>
         <module>foresta-danni</module>
+        <module>foresta-artefatti</module>
         <module>foresta-tipi</module>
         <module>foresta-modellodati</module>
         <module>foresta-contratti</module>

@@ -3,7 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoPrelievoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoStoccaggioArtefatto;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 
 /**
  * Lo scambio di artefatti fra il gruppo e un suo personaggio, nell'inventario: non ci sono costi, e spostare vuol dire prelevare dal

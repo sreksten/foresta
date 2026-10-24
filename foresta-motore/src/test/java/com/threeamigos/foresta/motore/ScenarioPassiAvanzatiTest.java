@@ -1,12 +1,13 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.tipi.*;

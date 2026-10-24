@@ -2,9 +2,9 @@ package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
-import com.threeamigos.foresta.oggetti.SpadaNormalmenteNascosta;
-import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
+import com.threeamigos.foresta.artefatti.SpadaNormalmenteNascosta;
+import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
@@ -60,7 +60,7 @@ public class IntermezzoSpadaNascosta implements Intermezzo {
 				.parlaIlNegoziante("Permette di vedere le cose nascoste.")
 				.getPagine());
 
-		SpadaNormalmenteNascosta spada = SpadaNormalmenteNascosta.costruisci(GeneratoreArtefatti.istanza());
+		SpadaNormalmenteNascosta spada = SpadaNormalmenteNascosta.costruisci(GeneratoreArtefatti.istanza(), Statistiche.getLivello());
 		// Niente NotificaArtefattoTrovato: la sua rivelazione si vedrebbe solo nella schermata di gioco, cioè dopo il negozio.
 		// La rivelazione è quella della pagina, che vola verso il capo perché l'inventario del gruppo qui non si vede
 		gruppo.addArtefatto(spada);

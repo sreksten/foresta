@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.missioni.leggende;
 
 import com.threeamigos.foresta.testi.Numeri;
-import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
+import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -14,8 +14,8 @@ import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
-import com.threeamigos.foresta.oggetti.leggendari.SetLeggendario;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.artefatti.leggendari.SetLeggendario;
 
 /**
  * Quale leggendario racconta la prossima leggenda (vedi LaLeggenda), o mette in palio il prossimo torneo (vedi

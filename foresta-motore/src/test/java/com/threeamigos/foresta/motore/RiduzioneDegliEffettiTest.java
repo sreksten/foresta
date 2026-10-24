@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
-import com.threeamigos.foresta.modellodati.IncantamentoMD;
+import com.threeamigos.foresta.artefatti.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;

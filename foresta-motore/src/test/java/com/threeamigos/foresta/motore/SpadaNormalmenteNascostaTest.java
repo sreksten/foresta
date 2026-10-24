@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoSpadaNascostaImpugnata;
 import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
@@ -9,13 +10,13 @@ import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.SpadaNormalmenteNascosta;
-import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.SpadaNormalmenteNascosta;
+import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 import org.junit.jupiter.api.Test;
@@ -64,14 +65,14 @@ class SpadaNormalmenteNascostaTest {
 			assertEquals(2, pagine.size());
 			// La seconda pagina rivela la spada con l'effetto normale, che vola verso il capo
 			assertNull(pagine.get(0).getRivelazioneArtefatto());
-			assertEquals(TipoOggetto.SPADA_NORMALMENTE_NASCOSTA, pagine.get(1).getRivelazioneArtefatto().getAspetto());
+			assertEquals(AspettoArtefatto.SPADA_NORMALMENTE_NASCOSTA, pagine.get(1).getRivelazioneArtefatto().getAspetto());
 			assertEquals("capo", pagine.get(1).getIdDestinazioneRivelazione());
 
 			// Il benvenuto l'ha già dato lui: l'oroscopo, quella volta, non scatta
 			assertNull(RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.INGRESSO_ALCHIMISTA));
 
 			Artefatto spada = partita.gruppo().getInventario().stream()
-					.filter(artefatto -> artefatto.getAspetto() == TipoOggetto.SPADA_NORMALMENTE_NASCOSTA)
+					.filter(artefatto -> artefatto.getAspetto() == AspettoArtefatto.SPADA_NORMALMENTE_NASCOSTA)
 					.findFirst().orElseThrow(() -> new AssertionError("la spada deve finire nell'inventario del gruppo"));
 			assertEquals(TipoArtefatto.SPADA, spada.getTipo());
 			assertTrue(spada.getNomeCompleto().contains(".spada normalmente nascosta"), spada.getNomeCompleto());
@@ -89,14 +90,14 @@ class SpadaNormalmenteNascostaTest {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> {
 			});
 			Statistiche.impostaLivelloDelMondo(1);
-			SpadaNormalmenteNascosta spada = SpadaNormalmenteNascosta.costruisci(com.threeamigos.foresta.oggetti.GeneratoreArtefatti.istanza());
+			SpadaNormalmenteNascosta spada = SpadaNormalmenteNascosta.costruisci(com.threeamigos.foresta.artefatti.GeneratoreArtefatti.istanza(), Statistiche.getLivello());
 			assertEquals(1, spada.getLivello());
-			int danniAlLivello1 = ((com.threeamigos.foresta.interfacce.Arma) spada).getDanni();
+			int danniAlLivello1 = ((com.threeamigos.foresta.artefatti.Arma) spada).getDanni();
 
 			Statistiche.impostaLivelloDelMondo(6);
 			assertEquals(6, spada.getLivello());
 			assertEquals(6, Artefatto.di(spada.getModelloDati()).getLivello(), "anche ricostruita dal modello dati");
-			assertTrue(((com.threeamigos.foresta.interfacce.Arma) spada).getDanni() > danniAlLivello1);
+			assertTrue(((com.threeamigos.foresta.artefatti.Arma) spada).getDanni() > danniAlLivello1);
 		}
 	}
 
@@ -107,7 +108,7 @@ class SpadaNormalmenteNascostaTest {
 			});
 			partita.eventi().ascolta(InternoSpadaNascostaImpugnata.class);
 			partita.eventi().ascolta(InternoTrofeoAcquisito.class);
-			SpadaNormalmenteNascosta spada = SpadaNormalmenteNascosta.costruisci(com.threeamigos.foresta.oggetti.GeneratoreArtefatti.istanza());
+			SpadaNormalmenteNascosta spada = SpadaNormalmenteNascosta.costruisci(com.threeamigos.foresta.artefatti.GeneratoreArtefatti.istanza(), Statistiche.getLivello());
 			partita.gruppo().addArtefatto(spada);
 			assertTrue(partita.eventi().tutti(InternoSpadaNascostaImpugnata.class).isEmpty(), "nell'inventario non è impugnata");
 

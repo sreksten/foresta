@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioGrupp
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoCommutazioneElenco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpesaPuntoAbilita;
-import com.threeamigos.foresta.interfacce.VistaArtefatto;
+import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaMissione;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaScambio;

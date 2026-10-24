@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.interfacce.OggettoConPeso;
+import com.threeamigos.foresta.artefatti.OggettoConPeso;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 
 /**

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.interfacce;
 
+import com.threeamigos.foresta.artefatti.IncantamentoMD;
+import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import java.util.Optional;
 

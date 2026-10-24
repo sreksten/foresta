@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
@@ -9,19 +12,19 @@ import com.threeamigos.foresta.eventi.interni.InternoPersonaggioEntratoNelGruppo
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
-import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.interfacce.VistaArtefatto;
+import com.threeamigos.foresta.artefatti.Arma;
+import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.modellodati.*;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.CostruttoreArtefatto;
-import com.threeamigos.foresta.oggetti.ModificatoreDelTesto;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.CostruttoreArtefatto;
+import com.threeamigos.foresta.artefatti.ModificatoreDelTesto;
 import com.threeamigos.foresta.oggetti.Bottino;
-import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
-import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
-import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
+import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.artefatti.leggendari.RegoleSetLeggendari;
+import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
@@ -226,7 +229,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			md.setPozioniMagiaGrande(99);
 			md.setPozioniAumentoLivello(99);
 			// La Falce del Tristo Mietitore, per provare la Mietitura
-			CatalogoLeggendari.getLeggendario(CHIAVE_FALCE_DI_PROVA).ifPresent(falce -> addArtefatto(falce.costruisci()));
+			CatalogoLeggendari.getLeggendario(CHIAVE_FALCE_DI_PROVA).ifPresent(falce -> addArtefatto(falce.costruisci(Statistiche.getLivello())));
 			// Due spade di livello 1 per provare i modificatori temporanei sul bersaglio (vedi modificatori_temporanei.md)
 			addArtefatto(spadaDiProva("la Spada dell'Inciampo", "che fa inciampare chi colpisce",
 					ModificatoreDelTesto.da("FORTUNA =0 @BERSAGLIO 2TURNI")));
@@ -487,7 +490,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	}
 
 	@Override
-	public TipoOggetto getTipoOggettoInLocazione() {
+	public TipoBottino getTipoBottinoInLocazione() {
 		Bottino oggetto = locazioneCorrente == null ? null : locazioneCorrente.getOggetto();
 		return oggetto == null ? null : oggetto.getClasse();
 	}

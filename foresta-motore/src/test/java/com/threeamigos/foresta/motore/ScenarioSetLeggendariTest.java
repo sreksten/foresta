@@ -1,16 +1,18 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.StatoPezzoDelSet;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
-import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
-import com.threeamigos.foresta.oggetti.leggendari.SetLeggendario;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.artefatti.leggendari.RegoleSetLeggendari;
+import com.threeamigos.foresta.artefatti.leggendari.SetLeggendario;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
@@ -61,7 +63,7 @@ class ScenarioSetLeggendariTest {
                             .map(OggettoLeggendario::getChiave).sorted().collect(Collectors.toList()),
                     pezzi.stream().sorted().collect(Collectors.toList()));
             for (String pezzo : pezzi) {
-                ArtefattoMD md = Leggendari.con(pezzo).costruisci().getModelloDati();
+                ArtefattoMD md = Leggendari.con(pezzo).costruisci(Statistiche.getLivello()).getModelloDati();
                 assertEquals(set.getChiave(), md.getSetLeggendario());
                 assertEquals(pezzo, md.getPezzoLeggendario());
                 String descrizione = RegoleSetLeggendari.descrizioneSet(md).orElseThrow(AssertionError::new);
@@ -77,13 +79,13 @@ class ScenarioSetLeggendariTest {
         }
         // Un leggendario che non è di un set non ha niente da dire
         CatalogoLeggendari.getTuttiILeggendari().values().stream().filter(leggendario -> leggendario.getSet() == null).findFirst()
-                .ifPresent(leggendario -> assertEquals(Optional.empty(), RegoleSetLeggendari.descrizioneSet(leggendario.costruisci().getModelloDati())));
+                .ifPresent(leggendario -> assertEquals(Optional.empty(), RegoleSetLeggendari.descrizioneSet(leggendario.costruisci(Statistiche.getLivello()).getModelloDati())));
         assertTrue(CatalogoLeggendari.getPezzi("NON_ESISTE").isEmpty());
     }
 
     @Test
     void ilSetDiUnArtefattoSopravviveAlSalvataggio() throws Exception {
-        ArtefattoMD pezzo = Leggendari.con(pezziDi(unSet()).get(0)).costruisci().getModelloDati();
+        ArtefattoMD pezzo = Leggendari.con(pezziDi(unSet()).get(0)).costruisci(Statistiche.getLivello()).getModelloDati();
         ArtefattoMD riletto = salvaERileggi(pezzo);
         assertEquals(pezzo.getSetLeggendario(), riletto.getSetLeggendario());
         assertEquals(pezzo.getPezzoLeggendario(), riletto.getPezzoLeggendario());
@@ -141,14 +143,14 @@ class ScenarioSetLeggendariTest {
 
             // Tutti i pezzi tranne l'ultimo: i bonus sono quelli scritti
             for (String pezzo : tranneLUltimo) {
-                capo.addArtefatto(Leggendari.con(pezzo).costruisci());
+                capo.addArtefatto(Leggendari.con(pezzo).costruisci(Statistiche.getLivello()));
             }
             int incompleto = (int) (base + somma(modificatoriSu(tranneLUltimo, attributo), 1.0d));
             assertEquals(incompleto, valore.applyAsInt(capo));
             assertFalse(RegoleSetLeggendari.isCompleto(capo.getModelloDati().getArtefatti(), set.getChiave()));
 
             // Con l'ultimo il set è completo: i bonus si moltiplicano, i malus no
-            Artefatto ultimo = Leggendari.con(pezzi.get(pezzi.size() - 1)).costruisci();
+            Artefatto ultimo = Leggendari.con(pezzi.get(pezzi.size() - 1)).costruisci(Statistiche.getLivello());
             capo.addArtefatto(ultimo);
             assertTrue(RegoleSetLeggendari.isCompleto(capo.getModelloDati().getArtefatti(), set.getChiave()));
             assertEquals((int) (base + somma(modificatoriSu(pezzi, attributo), set.getMoltiplicatore())), valore.applyAsInt(capo),
@@ -167,7 +169,7 @@ class ScenarioSetLeggendariTest {
         TipoDanno tipoDanno = null;
         for (SetLeggendario candidato : setInOrdine()) {
             for (String pezzo : pezziDi(candidato)) {
-                Artefatto artefatto = Leggendari.con(pezzo).costruisci();
+                Artefatto artefatto = Leggendari.con(pezzo).costruisci(Statistiche.getLivello());
                 if (isPezzoDifensivo(artefatto) && !artefatto.getIncantamenti().isEmpty()) {
                     set = candidato;
                     tipoDanno = artefatto.getIncantamenti().iterator().next().getTipoDannoElementale();
@@ -186,7 +188,7 @@ class ScenarioSetLeggendariTest {
             // Gli stessi pezzi, ma senza set: l'unica differenza è il moltiplicatore
             List<Artefatto> copie = new ArrayList<>();
             for (String pezzo : pezziDi(set)) {
-                Artefatto copia = Leggendari.con(pezzo).costruisci();
+                Artefatto copia = Leggendari.con(pezzo).costruisci(Statistiche.getLivello());
                 copia.getModelloDati().setPezzoDiSetLeggendario(null, null);
                 capo.addArtefatto(copia);
                 copie.add(copia);
@@ -194,7 +196,7 @@ class ScenarioSetLeggendariTest {
             double senzaSet = CalcolatoreCombattimento.difesaContro(capo, tipoDanno);
             copie.forEach(capo::removeArtefatto);
             for (String pezzo : pezziDi(set)) {
-                capo.addArtefatto(Leggendari.con(pezzo).costruisci());
+                capo.addArtefatto(Leggendari.con(pezzo).costruisci(Statistiche.getLivello()));
             }
             assertTrue(CalcolatoreCombattimento.difesaContro(capo, tipoDanno) > senzaSet, set.getChiave() + " contro " + tipoDanno);
         }
@@ -203,8 +205,8 @@ class ScenarioSetLeggendariTest {
     @Test
     void diOgniPezzoSiSaSeLoIndossaChiIndossaQuestoSeCeLHaIlGruppoOSeVaTrovato() {
         List<String> pezzi = pezziDi(unSet());
-        ArtefattoMD primo = Leggendari.con(pezzi.get(0)).costruisci().getModelloDati();
-        ArtefattoMD secondo = Leggendari.con(pezzi.get(1)).costruisci().getModelloDati();
+        ArtefattoMD primo = Leggendari.con(pezzi.get(0)).costruisci(Statistiche.getLivello()).getModelloDati();
+        ArtefattoMD secondo = Leggendari.con(pezzi.get(1)).costruisci(Statistiche.getLivello()).getModelloDati();
         // Uno indossa il primo pezzo, un altro il secondo; gli altri non li ha nessuno
         List<Collection<ArtefattoMD>> equipaggiamenti = Arrays.asList(
                 new ArrayList<>(Collections.singletonList(primo)), new ArrayList<>(Collections.singletonList(secondo)));
@@ -228,7 +230,7 @@ class ScenarioSetLeggendariTest {
     @Test
     void unSetCompletoSiDiceConIlSuoBonus() {
         SetLeggendario set = unSet();
-        List<ArtefattoMD> tutti = pezziDi(set).stream().map(pezzo -> Leggendari.con(pezzo).costruisci().getModelloDati())
+        List<ArtefattoMD> tutti = pezziDi(set).stream().map(pezzo -> Leggendari.con(pezzo).costruisci(Statistiche.getLivello()).getModelloDati())
                 .collect(Collectors.toList());
         assertTrue(RegoleSetLeggendari.setCompleti(tutti.subList(1, tutti.size())).isEmpty());
         List<SetLeggendario> completi = RegoleSetLeggendari.setCompleti(tutti);
@@ -257,7 +259,7 @@ class ScenarioSetLeggendariTest {
 
     private static List<ModificatoreAttributoMD> modificatoriSu(List<String> pezzi, TipoAttributo attributo) {
         return pezzi.stream()
-                .flatMap(pezzo -> Leggendari.con(pezzo).costruisci().getModificatori().stream())
+                .flatMap(pezzo -> Leggendari.con(pezzo).costruisci(Statistiche.getLivello()).getModificatori().stream())
                 .filter(modificatore -> modificatore.getTipoAttributo() == attributo)
                 .collect(Collectors.toList());
     }

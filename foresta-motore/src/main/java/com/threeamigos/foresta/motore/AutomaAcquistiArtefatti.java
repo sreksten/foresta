@@ -3,7 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 
 /**
  * Lo scambio di artefatti fra il gruppo e un commerciante: ogni spostamento è un acquisto o una vendita, e i costi si mostrano.

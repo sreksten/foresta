@@ -3,7 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.missioni.incarichi.IlTorneo;
 import com.threeamigos.foresta.missioni.leggende.LaLeggenda;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.leggende.PescaLeggendaria;
 import com.threeamigos.foresta.missioni.richieste.TorneoRichiesto;
 import com.threeamigos.foresta.modellodati.CoordinateMD;

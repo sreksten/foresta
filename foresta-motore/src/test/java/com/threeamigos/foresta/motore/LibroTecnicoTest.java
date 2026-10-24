@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
 import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.intermezzi.FabbricaIntermezzi;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
@@ -7,24 +8,24 @@ import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
-import com.threeamigos.foresta.modellodati.IncantamentoMD;
+import com.threeamigos.foresta.artefatti.IncantamentoMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.oggetti.Cofano;
-import com.threeamigos.foresta.oggetti.GeneratoreArtefattiTabelle;
-import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
+import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.dado.TruccatoreDiDadi;
-import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
+import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.tipi.TipoBottino;
+import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -91,7 +92,7 @@ class LibroTecnicoTest {
 		assertEquals(0.2, incantamento.getCoefficienteScala(), 1e-9);
 		assertEquals(40, libro.getCostoAcquisto());
 		assertEquals(TipoRaritaArtefatto.LEGGENDARIO, libro.getRarita());
-		assertEquals(TipoOggetto.LIBRO_TECNICO, libro.getAspetto());
+		assertEquals(AspettoArtefatto.LIBRO_TECNICO, libro.getAspetto());
 		assertEquals(UNIX, LibroTecnico.di(libro).map(LibroTecnico::getChiave).orElse(null));
 	}
 
@@ -137,7 +138,7 @@ class LibroTecnicoTest {
 			RaccoltaBottino.raccogli(new Cofano(1), partita.gruppo(), Comando.GRUPPO);
 
 			Artefatto trovato = partita.gruppo().getInventario().stream()
-					.filter(artefatto -> artefatto.getAspetto() == TipoOggetto.LIBRO_TECNICO)
+					.filter(artefatto -> artefatto.getAspetto() == AspettoArtefatto.LIBRO_TECNICO)
 					.findFirst().orElseThrow(() -> new AssertionError("il libro deve finire nell'inventario del gruppo"));
 			assertEquals("The C Programming Language", trovato.getNome());
 			assertTrue(IntermezzoLibroTecnico.isTrovato(kr), "appena trovato, un cofano non lo dà più");

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpesaPuntoAbilita;

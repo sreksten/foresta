@@ -1,13 +1,15 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -37,9 +39,9 @@ class BottinoArtefattoTest {
         for (FormaDelBottino forma : FormaDelBottino.values()) {
             BottinoArtefatto bottino = BottinoArtefatto.nuovo(forma);
 
-            assertEquals(forma.getTipoOggetto(), bottino.getClasse(), forma.name());
+            assertEquals(forma.getTipoBottino(), bottino.getClasse(), forma.name());
             assertEquals(forma.getTipoArtefatto(), bottino.getArtefatto().orElseThrow(AssertionError::new).getTipo(), forma.name());
-            assertEquals(forma.name(), forma.getTipoOggetto().name(), "la forma ha lo stesso nome del tipo di bottino");
+            assertEquals(forma.name(), forma.getTipoBottino().name(), "la forma ha lo stesso nome del tipo di bottino");
             assertFalse(bottino.isDaRivelare(), "un artefatto per terra non si rivela");
             assertEquals(1, bottino.getQuantita());
             assertEquals(forma.getAIS(), bottino.getAIS());
@@ -57,7 +59,7 @@ class BottinoArtefattoTest {
         assertEquals(Articoli.UNA, spada.getAIS());
         assertEquals("spada", spada.getNomeSingolare());
         assertEquals("spade", spada.getNomePlurale());
-        assertEquals(TipoOggetto.SPADA, spada.getClasse());
+        assertEquals(TipoBottino.SPADA, spada.getClasse());
     }
 
     @Test
@@ -66,7 +68,7 @@ class BottinoArtefattoTest {
 
         BottinoArtefatto bottino = BottinoArtefatto.giaFatto(elmo);
 
-        assertEquals(TipoOggetto.ELMO, bottino.getClasse(), "ha lo sprite dell'elmo");
+        assertEquals(TipoBottino.ELMO, bottino.getClasse(), "ha lo sprite dell'elmo");
         assertTrue(bottino.isDaRivelare());
         assertSame(elmo, bottino.getArtefatto().orElseThrow(AssertionError::new));
     }
@@ -77,7 +79,7 @@ class BottinoArtefattoTest {
 
         BottinoArtefatto bottino = BottinoArtefatto.giaFatto(ingrediente);
 
-        assertEquals(TipoOggetto.ARTEFATTO, bottino.getClasse());
+        assertEquals(TipoBottino.ARTEFATTO, bottino.getClasse());
         assertEquals("artefatto", bottino.getNomeSingolare());
         assertEquals("artefatti", bottino.getNomePlurale());
         assertEquals(Articoli.UN, bottino.getAIS());
@@ -96,10 +98,10 @@ class BottinoArtefattoTest {
     @Test
     void laFormaSiTrovaDalTipoDiArtefattoEDalTipoDiBottino() {
         assertEquals(FormaDelBottino.SCUDO, FormaDelBottino.di(TipoArtefatto.SCUDO).orElseThrow(AssertionError::new));
-        assertEquals(FormaDelBottino.SCUDO, FormaDelBottino.di(TipoOggetto.SCUDO).orElseThrow(AssertionError::new));
+        assertEquals(FormaDelBottino.SCUDO, FormaDelBottino.di(TipoBottino.SCUDO).orElseThrow(AssertionError::new));
         assertFalse(FormaDelBottino.di(TipoArtefatto.PERGAMENA).isPresent(), "un ingrediente non ha una forma");
-        assertFalse(FormaDelBottino.di(TipoOggetto.MONETA).isPresent(), "le monete non hanno una forma");
-        assertFalse(FormaDelBottino.di(TipoOggetto.ARTEFATTO).isPresent());
+        assertFalse(FormaDelBottino.di(TipoBottino.MONETA).isPresent(), "le monete non hanno una forma");
+        assertFalse(FormaDelBottino.di(TipoBottino.ARTEFATTO).isPresent());
     }
 
     @Test
@@ -109,7 +111,7 @@ class BottinoArtefattoTest {
 
         assertTrue(RaccoltaBottino.raccogli(BottinoArtefatto.giaFatto(generatore.generaArtefatto(TipoArtefatto.SPADA, 1)), gruppo, Comando.GRUPPO));
 
-        assertEquals(puntiPrima + TipoOggetto.SPADA.getValore(), Statistiche.getPunti(), "anche quello del tempio dà i punti");
+        assertEquals(puntiPrima + TipoBottino.SPADA.getValore(), Statistiche.getPunti(), "anche quello del tempio dà i punti");
         assertTrue(Statistiche.getPuntiEsperienza() > esperienzaPrima, "un artefatto fa salire un poco di livello");
     }
 
@@ -120,7 +122,7 @@ class BottinoArtefattoTest {
 
         assertTrue(RaccoltaBottino.raccogli(BottinoArtefatto.nuovo(FormaDelBottino.SPADA), gruppo, Comando.GRUPPO));
 
-        assertEquals(puntiPrima + TipoOggetto.SPADA.getValore(), Statistiche.getPunti());
+        assertEquals(puntiPrima + TipoBottino.SPADA.getValore(), Statistiche.getPunti());
         assertTrue(Statistiche.getPuntiEsperienza() > esperienzaPrima);
     }
 
@@ -131,7 +133,7 @@ class BottinoArtefattoTest {
 
         assertTrue(RaccoltaBottino.raccogli(BottinoArtefatto.giaFatto(generatore.generaIngrediente(1)), gruppo, Comando.GRUPPO));
 
-        assertEquals(puntiPrima + TipoOggetto.ARTEFATTO.getValore(), Statistiche.getPunti());
+        assertEquals(puntiPrima + TipoBottino.ARTEFATTO.getValore(), Statistiche.getPunti());
         assertEquals(esperienzaPrima, Statistiche.getPuntiEsperienza(), "gli ingredienti non contano come artefatti");
     }
 }

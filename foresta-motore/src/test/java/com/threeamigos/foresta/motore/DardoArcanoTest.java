@@ -2,12 +2,12 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.personaggi.*;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;

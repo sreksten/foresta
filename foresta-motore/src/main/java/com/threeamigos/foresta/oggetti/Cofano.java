@@ -1,11 +1,13 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
-import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.*;
@@ -54,8 +56,8 @@ public class Cofano extends OggettoBase implements Bottino {
 		return "cofani";
 	}
 
-	public TipoOggetto getClasse() {
-		return TipoOggetto.COFANO;
+	public TipoBottino getClasse() {
+		return TipoBottino.COFANO;
 	}
 
 	/**
@@ -153,7 +155,7 @@ public class Cofano extends OggettoBase implements Bottino {
 							.orElseGet(() -> artefattoRaro(Dado.probabilita(), generatore, livello));
 				}
 				return CatalogoLeggendari.getLeggendario(voluto.substring(PREFISSO_LEGGENDARIO.length()))
-						.map(OggettoLeggendario::costruisci)
+						.map(leggendario -> leggendario.costruisci(livello))
 						.orElseGet(() -> artefattoRaro(Dado.probabilita(), generatore, livello));
 		}
 	}

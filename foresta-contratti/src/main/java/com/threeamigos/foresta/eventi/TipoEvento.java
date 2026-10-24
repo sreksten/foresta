@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.eventi;
 
+import com.threeamigos.foresta.artefatti.Artefatto;
+
 /**
  * Gli eventi che accadono nel gioco si distinguono in:
  * <ul>

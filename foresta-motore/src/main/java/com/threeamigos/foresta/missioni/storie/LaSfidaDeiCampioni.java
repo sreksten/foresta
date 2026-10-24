@@ -11,7 +11,7 @@ import com.threeamigos.foresta.missioni.leggende.PescaLeggendaria;
 import com.threeamigos.foresta.missioni.richieste.CombattimentoRichiesto;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
@@ -161,7 +161,7 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 				return attendiLeAffidate(AFFIDATI, MomentoControllo.POST_LOCAZIONE).poi(RICOMPENSA);
 			case RICOMPENSA:
 				return ricompensa(MomentoControllo.POST_LOCAZIONE,
-								Ricompensa.inMonete(getMonete()).conArtefatto(() -> getLeggendario().costruisci()),
+								Ricompensa.inMonete(getMonete()).conArtefatto(() -> getLeggendario().costruisci(Statistiche.getLivello())),
 								() -> "Il quarto campione si arrende: sei il re di carta, forbici e sasso. Ricevi " + getMonete()
 										+ " monete e " + getLeggendario().getNomeBreve() + ".")
 						.poi(Passo.FINE);

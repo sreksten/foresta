@@ -7,7 +7,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
-import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.locazioni.LocazioneBase;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;

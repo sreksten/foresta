@@ -2,8 +2,8 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaReazioneDiClassePersonaggio;
-import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.modellodati.IncantamentoMD;
+import com.threeamigos.foresta.artefatti.Arma;
+import com.threeamigos.foresta.artefatti.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;

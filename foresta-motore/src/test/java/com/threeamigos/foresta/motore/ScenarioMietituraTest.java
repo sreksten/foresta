@@ -148,7 +148,7 @@ class ScenarioMietituraTest {
 
     private static DannoRisultante colpoDellaFalce(PartitaDiTest partita, Personaggio bersaglio) {
         Personaggio capo = partita.gruppo().getCapo();
-        capo.addArtefatto(Leggendari.con(FALCE).costruisci());
+        capo.addArtefatto(Leggendari.con(FALCE).costruisci(Statistiche.getLivello()));
         return CalcolatoreCombattimento.calcolaDannoRisultante(capo, bersaglio, capo.getArmaEquipaggiata());
     }
 
@@ -192,7 +192,7 @@ class ScenarioMietituraTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(255)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             Personaggio capo = partita.gruppo().getCapo();
-            capo.addArtefatto(Leggendari.con(FALCE).costruisci());
+            capo.addArtefatto(Leggendari.con(FALCE).costruisci(Statistiche.getLivello()));
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.reimposta();
             // Di livello alto, per sopravvivere al primo colpo

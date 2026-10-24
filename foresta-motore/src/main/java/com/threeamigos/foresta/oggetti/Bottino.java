@@ -1,7 +1,9 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 
 import java.util.Optional;
 
@@ -19,9 +21,9 @@ import java.util.Optional;
 public interface Bottino extends OggettoConArticoli {
 
 	/**
-	 * La classe dell'oggetto da TipoOggetto
+	 * La classe dell'oggetto da TipoBottino
 	 */
-    TipoOggetto getClasse();
+    TipoBottino getClasse();
 
 	/**
 	 * Il nome singolare dell'oggetto

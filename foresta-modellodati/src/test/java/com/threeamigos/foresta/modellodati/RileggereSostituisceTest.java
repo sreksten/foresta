@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.serializzazione.Serializzabile;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
@@ -74,10 +74,10 @@ class RileggereSostituisceTest {
         RegistroArtefattiMD salvato = new RegistroArtefattiMD();
         salvato.segnaLocalizzazioneConosciuta(new CoordinateMD(2, 2));
         RegistroArtefattiMD destinazione = new RegistroArtefattiMD();
-        destinazione.addArtefattoInLocazione(ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada vecchia", "che arrugginisce"),
+        destinazione.addArtefattoInLocazione(ArtefattiDiTest.creaArtefatto(TipoArtefatto.SPADA, "la spada vecchia", "che arrugginisce"),
                 new CoordinateMD(9, 9));
         destinazione.aggiungiAMagazzino(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO,
-                ArtefattoMDTest.creaArtefatto(TipoArtefatto.SCUDO, "lo scudo vecchio", "che cigola"));
+                ArtefattiDiTest.creaArtefatto(TipoArtefatto.SCUDO, "lo scudo vecchio", "che cigola"));
         destinazione.segnaLocalizzazioneConosciuta(new CoordinateMD(8, 8));
 
         destinazione.leggi(scritto(salvato));

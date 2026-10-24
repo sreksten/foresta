@@ -1,15 +1,19 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
+import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Ladro;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoBottino;
+import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -139,8 +143,8 @@ class LootTest {
         assertTrue(Cofano.artefattoRaro(0.20, generatore, 3).getTipo().isAggiornamento());
         assertTrue(Cofano.artefattoRaro(0.229, generatore, 3).getTipo().isAggiornamento());
         // Poi, rarissimo, un libro tecnico (finché ce ne sono da trovare)
-        assertEquals(TipoOggetto.LIBRO_TECNICO, Cofano.artefattoRaro(0.23, generatore, 3).getAspetto());
-        assertEquals(TipoOggetto.LIBRO_TECNICO, Cofano.artefattoRaro(0.2349, generatore, 3).getAspetto());
+        assertEquals(AspettoArtefatto.LIBRO_TECNICO, Cofano.artefattoRaro(0.23, generatore, 3).getAspetto());
+        assertEquals(AspettoArtefatto.LIBRO_TECNICO, Cofano.artefattoRaro(0.2349, generatore, 3).getAspetto());
         assertNull(Cofano.artefattoRaro(0.2351, generatore, 3));
         assertNull(Cofano.artefattoRaro(0.99, generatore, 3));
     }

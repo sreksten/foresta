@@ -1,15 +1,15 @@
 package com.threeamigos.foresta.ui.sprite;
 
 import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
-import com.threeamigos.foresta.interfacce.VistaArtefatto;
-import com.threeamigos.foresta.modellodati.IncantamentoMD;
+import com.threeamigos.foresta.artefatti.VistaArtefatto;
+import com.threeamigos.foresta.artefatti.IncantamentoMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
-import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.tipi.TipoBottino;
+import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -380,35 +380,35 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 			case SIGILLO:
 				return SIGILLO;
 			case SPADA:
-				return ClassiOggettoImmagine.getImmagine(TipoOggetto.SPADA);
+				return ClassiOggettoImmagine.getImmagine(TipoBottino.SPADA);
 			case SPADONE:
-				return ClassiOggettoImmagine.getImmagine(TipoOggetto.SPADONE);
+				return ClassiOggettoImmagine.getImmagine(TipoBottino.SPADONE);
 			case FALCE:
-				return ClassiOggettoImmagine.getImmagine(TipoOggetto.FALCE);
+				return ClassiOggettoImmagine.getImmagine(TipoBottino.FALCE);
 			case MAZZA:
-				return ClassiOggettoImmagine.getImmagine(TipoOggetto.MAZZA);
+				return ClassiOggettoImmagine.getImmagine(TipoBottino.MAZZA);
 			case ASCIA:
-				return ClassiOggettoImmagine.getImmagine(TipoOggetto.ASCIA);
+				return ClassiOggettoImmagine.getImmagine(TipoBottino.ASCIA);
 			case LANCIA:
-				return ClassiOggettoImmagine.getImmagine(TipoOggetto.LANCIA);
+				return ClassiOggettoImmagine.getImmagine(TipoBottino.LANCIA);
 			case BASTONE_MAGICO:
-				return ClassiOggettoImmagine.getImmagine(TipoOggetto.BASTONE_MAGICO);
+				return ClassiOggettoImmagine.getImmagine(TipoBottino.BASTONE_MAGICO);
 			case LIBRO_MAGICO:
-				return ClassiOggettoImmagine.getImmagine(TipoOggetto.LIBRO_MAGICO);
+				return ClassiOggettoImmagine.getImmagine(TipoBottino.LIBRO_MAGICO);
 			case SCUDO:
-				return ClassiOggettoImmagine.getImmagine(TipoOggetto.SCUDO);
+				return ClassiOggettoImmagine.getImmagine(TipoBottino.SCUDO);
 			case ELMO:
-				return ClassiOggettoImmagine.getImmagine(TipoOggetto.ELMO);
+				return ClassiOggettoImmagine.getImmagine(TipoBottino.ELMO);
 			case MASCHERA:
-				return ClassiOggettoImmagine.getImmagine(TipoOggetto.MASCHERA);
+				return ClassiOggettoImmagine.getImmagine(TipoBottino.MASCHERA);
 			case VESTE:
 				return VESTE;
 			case ARMATURA:
-				return ClassiOggettoImmagine.getImmagine(TipoOggetto.ARMATURA);
+				return ClassiOggettoImmagine.getImmagine(TipoBottino.ARMATURA);
 			case SCHINIERI:
-				return ClassiOggettoImmagine.getImmagine(TipoOggetto.SCHINIERI);
+				return ClassiOggettoImmagine.getImmagine(TipoBottino.SCHINIERI);
 			case ANELLO:
-				return ClassiOggettoImmagine.getImmagine(TipoOggetto.ANELLO);
+				return ClassiOggettoImmagine.getImmagine(TipoBottino.ANELLO);
 			case TALISMANO:
 				return TALISMANO;
 			case NINNOLO:

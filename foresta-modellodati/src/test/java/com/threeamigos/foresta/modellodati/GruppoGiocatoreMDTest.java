@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
@@ -85,7 +85,7 @@ class GruppoGiocatoreMDTest {
         gruppo.setSfideVinte(1);
         gruppo.setSacerdoteAccolto(true);
         gruppo.setCoordinate(new CoordinateMD(5, 6));
-        gruppo.aggiungiArtefatto(ArtefattoMDTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla"));
+        gruppo.aggiungiArtefatto(ArtefattiDiTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla"));
         PersonaggioMD bardo = personaggio(TipoPersonaggio.BARDO_DELLE_LOCANDE, "Lino");
         gruppo.aggiungiOspite(bardo);
         gruppo.aggiungiOspiteVulnerabile(bardo.getUuid());

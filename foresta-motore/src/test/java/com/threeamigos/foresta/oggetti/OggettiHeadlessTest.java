@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -42,7 +42,7 @@ class OggettiHeadlessTest {
     }
 
     /**
-     * Gira nella JVM headless: tocca ogni TipoOggetto e ne crea un'istanza.
+     * Gira nella JVM headless: tocca ogni TipoBottino e ne crea un'istanza.
      */
     static final class Sonda {
 
@@ -52,7 +52,7 @@ class OggettiHeadlessTest {
             if (!java.awt.GraphicsEnvironment.isHeadless()) {
                 throw new IllegalStateException("la sonda deve girare headless");
             }
-            for (TipoOggetto tipo : TipoOggetto.values()) {
+            for (TipoBottino tipo : TipoBottino.values()) {
                 if (tipo.isGenerabile()) {
                     Bottino oggetto = FabbricaOggetti.crea(tipo);
                     if (oggetto == null || oggetto.getClasse() != tipo) {

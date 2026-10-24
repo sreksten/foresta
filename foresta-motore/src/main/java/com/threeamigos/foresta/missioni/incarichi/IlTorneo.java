@@ -17,8 +17,8 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
@@ -153,7 +153,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 
 	private void premia() {
 		TorneoRichiesto torneo = getTorneo();
-		Artefatto leggendario = getLeggendario().costruisci();
+		Artefatto leggendario = getLeggendario().costruisci(Statistiche.getLivello());
 		GruppoGiocatore.getIstanza().addArtefatto(leggendario);
 		BusEventi.pubblica(new NotificaArtefattoTrovato(leggendario, Statistiche.getLivello()));
 		BusEventi.pubblica(new NotificaTestoParagrafo(testo(torneo.getFinale()) + " Il giudice di gara consegna al gruppo "

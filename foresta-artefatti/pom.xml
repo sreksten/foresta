@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.threeamigos</groupId>
+        <artifactId>foresta</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>foresta-artefatti</artifactId>
+    <name>foresta-artefatti</name>
+    <description>Gli artefatti: armi, armature e ingredienti con i loro modificatori e incantamenti, il generatore e i leggendari. Solo gli oggetti, non le loro interazioni con il mondo</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>foresta-testi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>foresta-strumenti</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>foresta-serializzazione</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>foresta-attributi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>foresta-danni</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

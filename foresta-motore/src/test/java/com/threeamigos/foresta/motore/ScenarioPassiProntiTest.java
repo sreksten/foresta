@@ -43,7 +43,7 @@ class ScenarioPassiProntiTest {
                 case "CACCIA":
                     return sconfiggi(MomentoControllo.POST_LOCAZIONE, TipoPersonaggio.GOBLIN, 2).poi("RACCOLTA");
                 case "RACCOLTA":
-                    return raccogli(MomentoControllo.POST_LOCAZIONE, TipoOggetto.PIETRA_PREZIOSA, 3).poi("RITORNO");
+                    return raccogli(MomentoControllo.POST_LOCAZIONE, TipoBottino.PIETRA_PREZIOSA, 3).poi("RITORNO");
                 case "RITORNO":
                     return tornaAlPuntoDiPartenza(MomentoControllo.PRE_LOCAZIONE).poi("PREMIO");
                 default:
@@ -76,10 +76,10 @@ class ScenarioPassiProntiTest {
             missione.controllaPostLocazione();
             assertEquals("RACCOLTA", missione.getPassoCorrente());
 
-            partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.PIETRA_PREZIOSA, 2, null, false));
+            partita.pubblica(new InternoOggettoRaccolto(TipoBottino.PIETRA_PREZIOSA, 2, null, false));
             missione.controllaPostLocazione();
             assertEquals("RACCOLTA", missione.getPassoCorrente());
-            partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.PIETRA_PREZIOSA, 1, null, true));
+            partita.pubblica(new InternoOggettoRaccolto(TipoBottino.PIETRA_PREZIOSA, 1, null, true));
             missione.controllaPostLocazione();
             assertEquals("RITORNO", missione.getPassoCorrente());
 

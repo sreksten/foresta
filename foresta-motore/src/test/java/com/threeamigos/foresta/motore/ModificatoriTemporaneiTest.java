@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.CostantiArtefatti;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
@@ -8,15 +11,15 @@ import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
-import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.interfacce.ModificatoreAttivo;
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.ListinoPergamene;
-import com.threeamigos.foresta.oggetti.ModificatoreDelTesto;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.ListinoPergamene;
+import com.threeamigos.foresta.artefatti.ModificatoreDelTesto;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
 import com.threeamigos.foresta.tipi.*;
@@ -259,7 +262,7 @@ class ModificatoriTemporaneiTest {
             }
 
             @Override
-            public Collection<com.threeamigos.foresta.modellodati.IncantamentoMD> getIncantamenti() {
+            public Collection<com.threeamigos.foresta.artefatti.IncantamentoMD> getIncantamenti() {
                 return vera.getIncantamenti();
             }
 
@@ -412,9 +415,9 @@ class ModificatoriTemporaneiTest {
         double base = ListinoPergamene.prezzo(permanente);
         ModificatoreAttributoMD treTurni = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_PERCENTUALE, 10, "",
                 UnitaDurataModificatore.TURNI, 3, BersaglioModificatore.PORTATORE);
-        assertEquals(base * 3 * Costanti.PERGAMENA_COEFFICIENTE_PREZZO_PER_TURNO, ListinoPergamene.prezzo(treTurni), 1e-9);
+        assertEquals(base * 3 * CostantiArtefatti.PERGAMENA_COEFFICIENTE_PREZZO_PER_TURNO, ListinoPergamene.prezzo(treTurni), 1e-9);
         ModificatoreAttributoMD moltiTurni = treTurni.conDurata(1000);
-        assertEquals(base * Costanti.PERGAMENA_MOLTIPLICATORE_PREZZO_TEMPO_MASSIMO, ListinoPergamene.prezzo(moltiTurni), 1e-9);
+        assertEquals(base * CostantiArtefatti.PERGAMENA_MOLTIPLICATORE_PREZZO_TEMPO_MASSIMO, ListinoPergamene.prezzo(moltiTurni), 1e-9);
     }
 
     @Test
@@ -437,7 +440,7 @@ class ModificatoriTemporaneiTest {
 
     @Test
     void laSpadaDellaSfortunaDiRomyJonaSiLegge() {
-        Artefatto spada = Leggendari.con("SPADA_DELLA_SFORTUNA").costruisci();
+        Artefatto spada = Leggendari.con("SPADA_DELLA_SFORTUNA").costruisci(Statistiche.getLivello());
         Collection<ModificatoreAttributoMD> sulBersaglio = ((Arma) spada).getModificatoriSulBersaglio();
         assertEquals(1, sulBersaglio.size());
         ModificatoreAttributoMD modificatore = sulBersaglio.iterator().next();

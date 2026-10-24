@@ -6,7 +6,7 @@ import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.LuceDivina;
-import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tattiche.ContestoTattico;

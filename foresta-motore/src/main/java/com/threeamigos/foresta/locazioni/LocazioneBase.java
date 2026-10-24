@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
@@ -14,17 +15,17 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.incantesimi.*;
-import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.Offerta;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.oggetti.FabbricaOggetti;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.BottinoArtefatto;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
@@ -61,7 +62,7 @@ import java.util.stream.Collectors;
 public abstract class LocazioneBase implements Locazione {
 
 	private static final TipoPersonaggio[] NESSUN_INCONTRO = {};
-	private static final TipoOggetto[] NESSUN_OGGETTO = {};
+	private static final TipoBottino[] NESSUN_OGGETTO = {};
 
 	private final GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 	private final GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
@@ -168,7 +169,7 @@ public abstract class LocazioneBase implements Locazione {
 		return NESSUN_INCONTRO;
 	}
 
-	protected TipoOggetto[] getPossibiliOggetti() {
+	protected TipoBottino[] getPossibiliOggetti() {
 		return NESSUN_OGGETTO;
 	}
 
@@ -307,11 +308,11 @@ public abstract class LocazioneBase implements Locazione {
 			setOggetto(BottinoArtefatto.giaFatto(a));
 		} else if (!isLocazioneVisitata()) {
 			// Non ci sono artefatti, creiamo un oggetto.
-			TipoOggetto[] o = getPossibiliOggetti();
+			TipoBottino[] o = getPossibiliOggetti();
 			Logger.log(() -> "Scelta da " + o.length + " oggetti");
 			if (o.length > 0) {
 				int indice = Dado.tiraAncheAUnaFaccia(o.length) - 1;
-				TipoOggetto tipoOggetto = o[indice];
+				TipoBottino tipoOggetto = o[indice];
 				Logger.log(() -> "Classe oggetto " + tipoOggetto);
 				Bottino probabileOggetto = FabbricaOggetti.crea(tipoOggetto);
 				if (probabileOggetto.getQuantita() > 0) {
@@ -1410,7 +1411,7 @@ public abstract class LocazioneBase implements Locazione {
 			// lo lascia al suo posto.
 			RegistroArtefatti.rimuoviArtefattoInLocazione(gruppo.getCoordinate());
 			// Un leggendario custodito in un tempio è nato molto prima: lo si ottiene al livello del mondo di adesso
-			OggettoLeggendario.alLivelloDelMondo(oggettoCorrente.getArtefatto().orElseThrow(IllegalStateException::new));
+			OggettoLeggendario.alLivello(oggettoCorrente.getArtefatto().orElseThrow(IllegalStateException::new), Statistiche.getLivello());
 		}
 		oggettoCorrente = null;
 	}

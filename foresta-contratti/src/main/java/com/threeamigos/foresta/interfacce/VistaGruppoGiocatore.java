@@ -1,9 +1,11 @@
 package com.threeamigos.foresta.interfacce;
 
+import com.threeamigos.foresta.artefatti.VistaArtefatto;
+import com.threeamigos.foresta.artefatti.VistaPezzoDelSet;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 
 import java.util.Collection;
 import java.util.List;
@@ -64,6 +66,6 @@ public interface VistaGruppoGiocatore extends VistaGruppo {
 	/**
 	 * L'oggetto che si vede a terra nella locazione corrente, o null se non ce n'è
 	 */
-	TipoOggetto getTipoOggettoInLocazione();
+	TipoBottino getTipoBottinoInLocazione();
 
 }

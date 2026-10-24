@@ -1,10 +1,13 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.Arma;
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
 import com.threeamigos.foresta.tipi.*;

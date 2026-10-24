@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.testi.Testi;
 
 /**

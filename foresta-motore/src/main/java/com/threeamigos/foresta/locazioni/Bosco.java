@@ -7,7 +7,7 @@ import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
@@ -69,24 +69,24 @@ public class Bosco extends LocazioneBase {
 			TipoPersonaggio.VIVERNA
 	};
 
-	private static final TipoOggetto[] oggetti = {
-			TipoOggetto.ANELLO,
-			TipoOggetto.COFANO,
-			TipoOggetto.CORONA,
-			TipoOggetto.PIETRA_PREZIOSA,
-			TipoOggetto.MONETA,
-			TipoOggetto.SCUDO,
-			TipoOggetto.SPADA,
-			TipoOggetto.SPADONE,
-			TipoOggetto.MAZZA,
-			TipoOggetto.ASCIA,
-			TipoOggetto.LANCIA,
-			TipoOggetto.BASTONE_MAGICO,
+	private static final TipoBottino[] oggetti = {
+			TipoBottino.ANELLO,
+			TipoBottino.COFANO,
+			TipoBottino.CORONA,
+			TipoBottino.PIETRA_PREZIOSA,
+			TipoBottino.MONETA,
+			TipoBottino.SCUDO,
+			TipoBottino.SPADA,
+			TipoBottino.SPADONE,
+			TipoBottino.MAZZA,
+			TipoBottino.ASCIA,
+			TipoBottino.LANCIA,
+			TipoBottino.BASTONE_MAGICO,
 			// Il libro magico no: nel bosco se ne troverebbero troppi, viene dai cofani (l'artefatto casuale)
-			TipoOggetto.ARMATURA,
-			TipoOggetto.ELMO,
-			TipoOggetto.MASCHERA,
-			TipoOggetto.SCHINIERI
+			TipoBottino.ARMATURA,
+			TipoBottino.ELMO,
+			TipoBottino.MASCHERA,
+			TipoBottino.SCHINIERI
 	};
 
 	@Override
@@ -95,7 +95,7 @@ public class Bosco extends LocazioneBase {
 	}
 
 	@Override
-	public TipoOggetto[] getPossibiliOggetti() {
+	public TipoBottino[] getPossibiliOggetti() {
 		return oggetti;
 	}
 

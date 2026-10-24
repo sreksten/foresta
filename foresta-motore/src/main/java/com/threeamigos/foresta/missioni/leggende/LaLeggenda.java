@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.missioni.leggende;
 
 import com.threeamigos.foresta.testi.Articoli;
+import java.util.Map;
+import java.util.HashMap;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
@@ -15,10 +17,10 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.ProduttoreDiArtefattiCasuale;
+import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -51,6 +53,8 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 	public static final int ORE_FRA_DUE_LEGGENDE = 36;
 	public static final String LEGGENDARIO = "LEGGENDARIO";
 	private static final String GUARDIANI = "GUARDIANI";
+	// Per questi leggendari i custodi non dipendono dal livello del gruppo: li decide la leggenda, non l'oggetto
+	private static final Map<String, IncontroDiMissione> GUARDIANI_FISSI = guardianiFissi();
 	private static final String POSTO = "POSTO";
 	private static final String RACCONTATA_ALLE = "RACCONTATA_ALLE";
 	// La leggenda è stata raccontata con un set cominciato, ma senza un suo pezzo mancante (vedi PescaLeggendaria)
@@ -130,12 +134,18 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 		String guardiani = ottieniProprieta(GUARDIANI);
 		if (guardiani == null) {
 			OggettoLeggendario leggendario = getLeggendario();
-			return leggendario.getClasseGuardiani()
-					.map(classe -> IncontroDiMissione.di(classe, leggendario.getNumeroGuardiani()))
-					.orElseGet(() -> guardianiPerLivello(Statistiche.getLivello()));
+			IncontroDiMissione scelti = GUARDIANI_FISSI.get(leggendario.getChiave());
+			return scelti != null ? scelti : guardianiPerLivello(Statistiche.getLivello());
 		}
 		String[] parti = guardiani.split(SEPARATORE);
 		return IncontroDiMissione.di(TipoPersonaggio.valueOf(parti[0]), Integer.parseInt(parti[1]));
+	}
+
+	private static Map<String, IncontroDiMissione> guardianiFissi() {
+		Map<String, IncontroDiMissione> fissi = new HashMap<>();
+		fissi.put("SPADA_DI_ROMY_JONA", IncontroDiMissione.di(TipoPersonaggio.VIVERNA, 5));
+		fissi.put("SPADA_DEL_CAVALIERE_SVOGLIATO", IncontroDiMissione.di(TipoPersonaggio.VIVERNA, 5));
+		return fissi;
 	}
 
 	/**
@@ -208,7 +218,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 				return Passo.quando(MomentoControllo.IN_LOCAZIONE,
 								() -> nelPosto() && RegistroMissioni.cercaOCostruisci(TipoLocazione.BOSCO, this).isPresent())
 						.esegui(() -> {
-							RegistroArtefatti.custodisciInUnTempioNuovo(getLeggendario().costruisci(), getTempio());
+							RegistroArtefatti.custodisciInUnTempioNuovo(getLeggendario().costruisci(Statistiche.getLivello()), getTempio());
 							BusEventi.pubblica(new NotificaTestoParagrafo(Articoli.inizialeMaiuscola(getNarratoreConNome()) + " segna sulla mappa "
 									+ Tempio.getNome(getTempio()) + ", dove " + getNomeDeiGuardiani() + " custodiscono "
 									+ getLeggendario().getNomeBreve() + "."));

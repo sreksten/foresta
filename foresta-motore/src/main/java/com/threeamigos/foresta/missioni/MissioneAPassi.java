@@ -9,7 +9,7 @@ import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
@@ -19,7 +19,7 @@ import com.threeamigos.foresta.personaggi.Viandante;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoOggetto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;
@@ -367,7 +367,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * VAGABONDA_FINCHE + RACCOGLI + CONTA_FINCHE: si conclude quando il gruppo ha raccolto {@code quanti} oggetti di
 	 * quella classe, da quando questo è il passo corrente.
 	 */
-	protected final Passo raccogli(MomentoControllo momento, TipoOggetto tipo, int quanti) {
+	protected final Passo raccogli(MomentoControllo momento, TipoBottino tipo, int quanti) {
 		return Passo.quando(momento, () -> getConteggioNelPassoCorrente(eventoRaccolto(tipo)) >= quanti);
 	}
 
@@ -1009,7 +1009,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	/**
 	 * Il nome dell'evento "è stato raccolto un oggetto di quel tipo", da registrare con {@link #registraEvento}.
 	 */
-	public static String eventoRaccolto(TipoOggetto tipo) {
+	public static String eventoRaccolto(TipoBottino tipo) {
 		return "RACCOLTO_" + tipo.name();
 	}
 

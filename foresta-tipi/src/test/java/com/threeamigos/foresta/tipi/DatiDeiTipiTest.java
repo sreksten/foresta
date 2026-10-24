@@ -60,16 +60,15 @@ class DatiDeiTipiTest {
     }
 
     @Test
-    void gliOggettiGenerabiliSonoTuttiTranneArtefattiOggettiDiMissioneELibriTecnici() {
-        for (TipoOggetto oggetto : TipoOggetto.values()) {
-            boolean generabile = oggetto != TipoOggetto.ARTEFATTO && oggetto != TipoOggetto.OGGETTO_MISSIONE
-                    && oggetto != TipoOggetto.LIBRO_TECNICO && oggetto != TipoOggetto.SPADA_NORMALMENTE_NASCOSTA;
+    void gliOggettiGenerabiliSonoTuttiTranneArtefattiEOggettiDiMissione() {
+        for (TipoBottino oggetto : TipoBottino.values()) {
+            boolean generabile = oggetto != TipoBottino.ARTEFATTO && oggetto != TipoBottino.OGGETTO_MISSIONE;
             assertEquals(generabile, oggetto.isGenerabile(), oggetto.name());
             assertTrue(oggetto.getQuantitaMassima() >= 1, oggetto.name());
             assertTrue(oggetto.getValore() > 0, oggetto.name());
         }
-        assertEquals(150, TipoOggetto.COFANO.getValore());
-        assertEquals(2, TipoOggetto.MONETA.getQuantitaMassima());
+        assertEquals(150, TipoBottino.COFANO.getValore());
+        assertEquals(2, TipoBottino.MONETA.getQuantitaMassima());
     }
 
     @Test

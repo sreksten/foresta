@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.GradoIncantamento;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;

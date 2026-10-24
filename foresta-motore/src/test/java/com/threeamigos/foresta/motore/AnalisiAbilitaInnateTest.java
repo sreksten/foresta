@@ -23,7 +23,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tattiche.Decisione;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import org.junit.jupiter.api.Test;

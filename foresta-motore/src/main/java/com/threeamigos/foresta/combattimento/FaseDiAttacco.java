@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.combattimento;
 
-import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.artefatti.Arma;
 
 /**
  * Una fase dell'attacco di un turno: con quale arma si colpisce e con che quota del danno

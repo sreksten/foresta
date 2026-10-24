@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 
 import java.util.ArrayList;
 import java.util.Collection;

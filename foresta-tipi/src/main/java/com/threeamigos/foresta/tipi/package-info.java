@@ -14,7 +14,7 @@
  * <li>{@link com.threeamigos.foresta.danni.tipi.TipoDanno} e {@link com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato}: i danni e
  * gli stati alterati che possono causare;</li>
  * <li>{@link com.threeamigos.foresta.attributi.tipi.TipoAttributo}: gli attributi di un personaggio;</li>
- * <li>{@link com.threeamigos.foresta.tipi.TipoArtefatto}: gli artefatti e gli slot in cui si portano;</li>
+ * <li>{@link com.threeamigos.foresta.artefatti.tipi.TipoArtefatto}: gli artefatti e gli slot in cui si portano;</li>
  * <li>{@link com.threeamigos.foresta.tipi.TipoLocazione}: le caselle della mappa;</li>
  * <li>{@link com.threeamigos.foresta.tipi.Comando}: tutto ciò che il giocatore può comandare.</li>
  * </ul>

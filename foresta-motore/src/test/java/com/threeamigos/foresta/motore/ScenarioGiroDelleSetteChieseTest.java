@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoEremitiIncontrati;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoLocazioneVisitata;
@@ -9,10 +10,10 @@ import com.threeamigos.foresta.missioni.OffertaDelSacerdote;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.principali.IlGiroDelleSetteChiese;
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.*;
@@ -240,7 +241,7 @@ class ScenarioGiroDelleSetteChieseTest {
             assertEquals(0, avversari.getNumeroPersonaggi());
             assertNotNull(conArtefatto.getOggetto());
             // Un elmo: il bottino ha la forma del suo artefatto (e il suo sprite), ma si descrive e si rivela come artefatto già fatto
-            assertEquals(TipoOggetto.ELMO, conArtefatto.getOggetto().getClasse());
+            assertEquals(TipoBottino.ELMO, conArtefatto.getOggetto().getClasse());
             assertTrue(conArtefatto.getOggetto().isDaRivelare());
         }
     }

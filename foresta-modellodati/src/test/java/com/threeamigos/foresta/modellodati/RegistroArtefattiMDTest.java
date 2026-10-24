@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.artefatti.ArtefattoMD;
+import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
@@ -21,10 +23,10 @@ class RegistroArtefattiMDTest {
     void salvaERicaricaArtefattiSmarritiEInventariDelleLocazioni() throws IOException {
         // Given
         RegistroArtefattiMD registro = new RegistroArtefattiMD();
-        ArtefattoMD nelTempio = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "il pugnale di Worr", "il cui potere è nel combattimento");
+        ArtefattoMD nelTempio = ArtefattiDiTest.creaArtefatto(TipoArtefatto.SPADA, "il pugnale di Worr", "il cui potere è nel combattimento");
         nelTempio.addModificatore(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 2, "Forza");
         registro.addArtefattoInLocazione(nelTempio, new CoordinateMD(3, 4));
-        ArtefattoMD dallArmaiolo = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SCUDO, "lo scudo fiscale", "che si fa fare sconti");
+        ArtefattoMD dallArmaiolo = ArtefattiDiTest.creaArtefatto(TipoArtefatto.SCUDO, "lo scudo fiscale", "che si fa fare sconti");
         dallArmaiolo.addModificatore(TipoAttributo.PARATA, TipoModificatore.VARIAZIONE_PERCENTUALE, 10, "Parata");
         dallArmaiolo.addIncantamento("La battuta del cavolo", TipoDanno.GELO, 10, 0.5);
         registro.aggiungiAMagazzino(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO, dallArmaiolo);
@@ -48,12 +50,12 @@ class RegistroArtefattiMDTest {
         RegistroArtefattiMD registro = new RegistroArtefattiMD();
         CoordinateMD citta = new CoordinateMD(7, 1);
         registro.aggiungiAMagazzino(citta, TipoNegozio.ARMAIOLO,
-                ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada d'argento", "che luccica"));
-        ArtefattoMD pergamena = ArtefattoMDTest.creaArtefatto(TipoArtefatto.PERGAMENA, "una pergamena del fuoco", "che scotta");
+                ArtefattiDiTest.creaArtefatto(TipoArtefatto.SPADA, "la spada d'argento", "che luccica"));
+        ArtefattoMD pergamena = ArtefattiDiTest.creaArtefatto(TipoArtefatto.PERGAMENA, "una pergamena del fuoco", "che scotta");
         pergamena.addIncantamento("Fuoco minore", TipoDanno.FUOCO, 5, 0.05);
         registro.aggiungiAMagazzino(citta, TipoNegozio.VENDITORE_DI_PERGAMENE, pergamena);
         registro.aggiungiAMagazzino(citta, TipoNegozio.VENDITORE_DI_PERGAMENE,
-                ArtefattoMDTest.creaArtefatto(TipoArtefatto.PERGAMENA, "una pergamena del gelo", "che gela"));
+                ArtefattiDiTest.creaArtefatto(TipoArtefatto.PERGAMENA, "una pergamena del gelo", "che gela"));
         // When
         RegistroArtefattiMD ricaricato = salvaERileggi(registro);
         // Then
@@ -71,7 +73,7 @@ class RegistroArtefattiMDTest {
         // Given
         RegistroArtefattiMD registro = new RegistroArtefattiMD();
         CoordinateMD tempio = new CoordinateMD(3, 4);
-        registro.addArtefattoInLocazione(ArtefattoMDTest.creaArtefatto(TipoArtefatto.ELMO, "l'elmo di Gorgor", "che protegge poco"), tempio);
+        registro.addArtefattoInLocazione(ArtefattiDiTest.creaArtefatto(TipoArtefatto.ELMO, "l'elmo di Gorgor", "che protegge poco"), tempio);
         // When
         registro.rimuoviArtefattoInLocazione(tempio);
         RegistroArtefattiMD ricaricato = salvaERileggi(registro);
@@ -82,8 +84,8 @@ class RegistroArtefattiMDTest {
     @Test
     void gliArtefattiDaDistribuireSiPrendonoUnoAllaVoltaENonSiSalvano() throws IOException {
         RegistroArtefattiMD registro = new RegistroArtefattiMD();
-        ArtefattoMD primo = ArtefattoMDTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla");
-        ArtefattoMD secondo = ArtefattoMDTest.creaArtefatto(TipoArtefatto.TALISMANO, "il talismano", "che protegge");
+        ArtefattoMD primo = ArtefattiDiTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla");
+        ArtefattoMD secondo = ArtefattiDiTest.creaArtefatto(TipoArtefatto.TALISMANO, "il talismano", "che protegge");
         registro.aggiungiArtefatto(primo);
         registro.aggiungiArtefatto(secondo);
         assertEquals(2, registro.getNumeroDisponibili());
@@ -98,8 +100,8 @@ class RegistroArtefattiMDTest {
         RegistroArtefattiMD registro = new RegistroArtefattiMD();
         CoordinateMD palude = new CoordinateMD(5, 6);
         CoordinateMD grotta = new CoordinateMD(9, 2);
-        registro.addArtefattoInLocazione(ArtefattoMDTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla"), palude);
-        registro.addArtefattoInLocazione(ArtefattoMDTest.creaArtefatto(TipoArtefatto.ELMO, "l'elmo", "che protegge"), grotta);
+        registro.addArtefattoInLocazione(ArtefattiDiTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla"), palude);
+        registro.addArtefattoInLocazione(ArtefattiDiTest.creaArtefatto(TipoArtefatto.ELMO, "l'elmo", "che protegge"), grotta);
         registro.segnaLocalizzazioneConosciuta(palude);
         assertTrue(registro.isLocalizzazioneConosciuta(palude));
         assertFalse(registro.isLocalizzazioneConosciuta(grotta));
@@ -118,8 +120,8 @@ class RegistroArtefattiMDTest {
     void iMagazziniSiCreanoScrivendoliNonLeggendoli() {
         RegistroArtefattiMD registro = new RegistroArtefattiMD();
         CoordinateMD citta = new CoordinateMD(7, 1);
-        ArtefattoMD spada = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia");
-        ArtefattoMD scudo = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SCUDO, "lo scudo", "che para");
+        ArtefattoMD spada = ArtefattiDiTest.creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia");
+        ArtefattoMD scudo = ArtefattiDiTest.creaArtefatto(TipoArtefatto.SCUDO, "lo scudo", "che para");
 
         assertTrue(registro.getMagazzino(citta, TipoNegozio.ARMAIOLO).isEmpty());
         assertTrue(registro.getCoordinateMagazzini(TipoNegozio.ARMAIOLO).isEmpty(), "leggere un magazzino non lo crea");
@@ -141,10 +143,10 @@ class RegistroArtefattiMDTest {
     void reimpostareDimenticaTutto() {
         RegistroArtefattiMD registro = new RegistroArtefattiMD();
         CoordinateMD casella = new CoordinateMD(2, 2);
-        registro.aggiungiArtefatto(ArtefattoMDTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla"));
-        registro.addArtefattoInLocazione(ArtefattoMDTest.creaArtefatto(TipoArtefatto.ELMO, "l'elmo", "che protegge"), casella);
+        registro.aggiungiArtefatto(ArtefattiDiTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla"));
+        registro.addArtefattoInLocazione(ArtefattiDiTest.creaArtefatto(TipoArtefatto.ELMO, "l'elmo", "che protegge"), casella);
         registro.segnaLocalizzazioneConosciuta(casella);
-        registro.aggiungiAMagazzino(casella, TipoNegozio.ARMAIOLO, ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia"));
+        registro.aggiungiAMagazzino(casella, TipoNegozio.ARMAIOLO, ArtefattiDiTest.creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia"));
 
         registro.reimposta();
 
@@ -156,7 +158,7 @@ class RegistroArtefattiMDTest {
 
     @Test
     void unArtefattoSiPortaDietroLaSuaUbicazione() {
-        ArtefattoMD anello = ArtefattoMDTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla");
+        ArtefattoMD anello = ArtefattiDiTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla");
         CoordinateMD palude = new CoordinateMD(5, 6);
         RegistroArtefattiMD.ArtefattoESuaUbicazione informazione = new RegistroArtefattiMD.ArtefattoESuaUbicazione(anello, palude);
         assertSame(anello, informazione.getArtefattoMD());

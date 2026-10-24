@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.GeneratoreArtefattiTabelle;
-import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
+import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.ui.sprite.SpriteRivelazioneArtefatto;
 import org.junit.jupiter.api.Test;
 

@@ -18,9 +18,9 @@ import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
-import com.threeamigos.foresta.oggetti.leggendari.OggettoLeggendario;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
@@ -187,7 +187,7 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 
 	private void consegnaLaFalce() {
 		OggettoLeggendario falce = CatalogoLeggendari.getLeggendario(CHIAVE_DELLA_FALCE).orElseThrow(IllegalStateException::new);
-		Artefatto artefatto = falce.costruisci();
+		Artefatto artefatto = falce.costruisci(Statistiche.getLivello());
 		GruppoGiocatore.getIstanza().addArtefatto(artefatto);
 		BusEventi.pubblica(new NotificaTestoParagrafo(getNomeDelNecromante() + " è sconfitto: la Morte non era che un necromante. "
 				+ "Fra le ossa dei suoi scheletri resta " + falce.getNomeBreve() + ", e il gruppo la prende."));
