@@ -4,6 +4,7 @@ import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.IngredienteDelCoreDump;
 import com.threeamigos.foresta.oggetti.ListinoPergamene;
 import com.threeamigos.foresta.tipi.*;
 
@@ -20,6 +21,11 @@ import java.util.stream.Collectors;
  * agiscono solo sulle armi; il POTERE_MAGICO passa solo su bastoni e libri magici. Costo 10 monete più 5 per
  * effetto trasferito. Gli ingredienti usati vengono distrutti.
  * <p>
+ * Con il libro che riprogramma sul banco (vedi TipoArtefatto.RIPROGRAMMAZIONE, che si trova solo nei cofani) la fusione è un'altra
+ * cosa: l'artefatto perde tutti gli incantamenti e per ognuno nasce un ingrediente "del Core Dump" (vedi
+ * {@link #riprogramma}). Sul banco stanno comunque tutti gli ingredienti che si vuole: non vengono usati, e tornano nel gruppo con
+ * il libro. Costa come una fusione con tanti effetti quanti gli incantamenti.
+ * <p>
  * Un aggiornamento (vedi TipoArtefatto.AGGIORNAMENTO, che si trova solo nei cofani) non dà effetti: fa salire di un livello
  * l'artefatto, ognuno di uno, fino al livello del mondo. Il livello nuovo vale già per la fusione stessa: più posti per gli
  * effetti. Costa come ogni fusione, e da solo basta a farla.
@@ -31,6 +37,17 @@ public final class RegoleIncantatura {
 
 	public static boolean isIngrediente(Artefatto artefatto) {
 		return artefatto.getTipo().isIngrediente();
+	}
+
+	public static boolean isRiprogrammazione(Artefatto artefatto) {
+		return artefatto.getTipo().isRiprogrammazione();
+	}
+
+	/**
+	 * Se sul banco c'è il libro che riprogramma: allora la fusione è una riprogrammazione.
+	 */
+	public static boolean conRiprogrammazione(Collection<Artefatto> banco) {
+		return banco.stream().anyMatch(RegoleIncantatura::isRiprogrammazione);
 	}
 
 	/**
@@ -45,6 +62,10 @@ public final class RegoleIncantatura {
 	 */
 	public static int effettiDaTrasferire(Collection<Artefatto> banco) {
 		Optional<Artefatto> artefatto = artefattoSulBanco(banco);
+		if (conRiprogrammazione(banco)) {
+			// Si paga per ogni incantamento da riprogrammare
+			return artefatto.map(a -> a.getIncantamenti().size()).orElse(0);
+		}
 		if (!artefatto.isPresent()) {
 			return ingredienti(banco).stream().mapToInt(RegoleIncantatura::effetti).sum();
 		}
@@ -88,7 +109,7 @@ public final class RegoleIncantatura {
 	 */
 	public static Optional<String> avvisoEffettiPersi(Collection<Artefatto> banco) {
 		Optional<Artefatto> artefatto = artefattoSulBanco(banco);
-		if (!artefatto.isPresent()) {
+		if (!artefatto.isPresent() || conRiprogrammazione(banco)) {
 			return Optional.empty();
 		}
 		List<Artefatto> ingredienti = ingredienti(banco);
@@ -134,6 +155,7 @@ public final class RegoleIncantatura {
 		Optional<Artefatto> artefatto = artefattoSulBanco(banco);
 		List<Artefatto> ingredienti = ingredienti(banco);
 		int aggiornamenti = aggiornamenti(banco);
+		boolean riprogramma = conRiprogrammazione(banco) || isRiprogrammazione(nuovo);
 		if (isAggiornamento(nuovo)) {
 			aggiornamenti++;
 		} else if (isIngrediente(nuovo)) {
@@ -149,6 +171,10 @@ public final class RegoleIncantatura {
 		}
 		// Finché manca l'artefatto non si sa quanti posti ha né che cosa sia: si controlla quando arriva
 		if (artefatto.isPresent()) {
+			// Con il libro che riprogramma gli ingredienti non si usano: ce ne può stare qualunque
+			if (riprogramma) {
+				return Optional.empty();
+			}
 			if (aggiornamenti > 0 && artefatto.get().getLivello() + aggiornamenti > livelloMassimoPerAggiornamenti()) {
 				return Optional.of(TipoMotivoRifiutoIncantatura.LIVELLO_DEL_MONDO_RAGGIUNTO);
 			}
@@ -179,6 +205,12 @@ public final class RegoleIncantatura {
 		Artefatto artefatto = artefatti.get(0);
 		if (!artefatto.isIncantabile()) {
 			return Optional.of(TipoMotivoRifiutoIncantatura.NON_INCANTABILE);
+		}
+		if (conRiprogrammazione(banco)) {
+			if (artefatto.getIncantamenti().isEmpty()) {
+				return Optional.of(TipoMotivoRifiutoIncantatura.NIENTE_DA_RIPROGRAMMARE);
+			}
+			return monete < costo(banco, contrattazione) ? Optional.of(TipoMotivoRifiutoIncantatura.MONETE_INSUFFICIENTI) : Optional.empty();
 		}
 		if (ingredienti.isEmpty() && aggiornamenti(banco) == 0) {
 			return Optional.of(TipoMotivoRifiutoIncantatura.NESSUN_INGREDIENTE);
@@ -255,6 +287,27 @@ public final class RegoleIncantatura {
 	}
 
 	/**
+	 * La riprogrammazione, che va prima verificata ({@link #verifica}): toglie all'artefatto tutti gli incantamenti e per ognuno
+	 * crea un ingrediente "del Core Dump" (vedi IngredienteDelCoreDump) che lo custodisce. Il banco si svuota: l'artefatto,
+	 * il libro, gli altri ingredienti (che non servono a niente) e gli ingredienti nuovi tornano tutti a chi chiama, che li
+	 * rimette nel gruppo. Le monete le toglie chi chiama.
+	 */
+	static List<Artefatto> riprogramma(BancoDiLavoro banco) {
+		Collection<Artefatto> sulBanco = banco.getInventario();
+		Artefatto artefatto = artefattoSulBanco(sulBanco).orElseThrow(IllegalStateException::new);
+		ArtefattoMD md = artefatto.getModelloDati();
+		List<Artefatto> daRestituire = new ArrayList<>(sulBanco);
+		for (IncantamentoMD incantamento : new ArrayList<>(md.getIncantamenti())) {
+			md.removeIncantamento(incantamento);
+			daRestituire.add(IngredienteDelCoreDump.da(incantamento, artefatto.getLivello()));
+		}
+		for (Artefatto oggetto : sulBanco) {
+			banco.removeArtefatto(oggetto);
+		}
+		return daRestituire;
+	}
+
+	/**
 	 * Gli ingredienti sul banco che danno effetti: gli aggiornamenti no.
 	 */
 	private static List<Artefatto> ingredienti(Collection<Artefatto> banco) {
@@ -276,7 +329,8 @@ public final class RegoleIncantatura {
 	 * Il livello dell'artefatto sul banco dopo la fusione, con gli aggiornamenti messi; zero se manca l'artefatto.
 	 */
 	public static int livelloDopoLaFusione(Collection<Artefatto> banco) {
-		return artefattoSulBanco(banco).map(a -> a.getLivello() + aggiornamenti(banco)).orElse(0);
+		// Una riprogrammazione non fa salire di livello: gli aggiornamenti sul banco non si usano
+		return artefattoSulBanco(banco).map(a -> a.getLivello() + (conRiprogrammazione(banco) ? 0 : aggiornamenti(banco))).orElse(0);
 	}
 
 	/**
@@ -314,6 +368,14 @@ public final class RegoleIncantatura {
 	 * l'ordine sul banco: così non si scalza niente per niente.
 	 */
 	private static Piano piano(Artefatto artefatto, Collection<Artefatto> banco) {
+		if (conRiprogrammazione(banco)) {
+			// Niente entra, e tutti gli incantamenti escono: ognuno diventa un ingrediente
+			Piano riprogrammazione = new Piano();
+			for (IncantamentoMD incantamento : artefatto.getIncantamenti()) {
+				riprogrammazione.togli(new Effetto(incantamento, null, ListinoPergamene.prezzo(incantamento, artefatto.getLivello())));
+			}
+			return riprogrammazione;
+		}
 		List<Artefatto> ingredienti = ingredienti(banco);
 		int livello = artefatto.getLivello() + aggiornamenti(banco);
 		List<Effetto> candidati = new ArrayList<>();

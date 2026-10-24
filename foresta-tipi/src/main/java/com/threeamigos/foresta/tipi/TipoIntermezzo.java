@@ -25,6 +25,8 @@ public enum TipoIntermezzo {
 	INTERMEZZO_ARMAIOLO,
 	INTERMEZZO_ALCHIMISTA,
 	INTERMEZZO_VENDITORE_DI_PERGAMENE,
+	/** L'incantatore spiega che The C Programming Language riprogramma gli artefatti, e che un errore finisce in un Core Dump; prima dell'incantatore di tutti i giorni, a cui cede il posto */
+	INTERMEZZO_RIPROGRAMMAZIONE,
 	INTERMEZZO_INCANTATORE,
 	/** Uno degli intermezzi dell'accampamento */
 	INTERMEZZO_ACCAMPAMENTO,

@@ -15,6 +15,7 @@ import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.strumenti.ContestoLancio;
 import com.threeamigos.foresta.strumenti.Dado;
 import com.threeamigos.foresta.strumenti.TruccatoreDiDadi;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
@@ -97,6 +98,29 @@ class LibroTecnicoTest {
 	void unArtefattoQualsiasiNonEUnLibroTecnico() {
 		Artefatto libro = new GeneratoreArtefattiTabelle(new Random(1)).generaArtefatto(TipoArtefatto.LIBRO_MAGICO, 1);
 		assertFalse(LibroTecnico.di(libro).isPresent());
+	}
+
+	@Test
+	void ognunoRimandaAChiNeSaDiPiu() {
+		// Si alternano i libri a ogni estrazione: il personaggio di uno non deve restare nell'altro
+		LibroTecnico unix = LibroTecnico.getLibro(UNIX).orElseThrow(AssertionError::new);
+		LibroTecnico kr = LibroTecnico.getLibro(K_AND_R).orElseThrow(AssertionError::new);
+		boolean alchimista = false;
+		boolean incantatore = false;
+		for (int i = 0; i < 300; i++) {
+			String perUnix = ProduttoreDiTestiCasuale.conclusioneSulLibroTecnico(unix.getChiave());
+			String perKr = ProduttoreDiTestiCasuale.conclusioneSulLibroTecnico(kr.getChiave());
+			assertFalse(perUnix.isEmpty());
+			assertFalse(perKr.isEmpty());
+			// Il Manuale di Unix ha a che fare con l'Alchimista, il libro sul C con l'Incantatore: mai l'altro
+			assertFalse(perUnix.contains("Incantatore"), perUnix);
+			assertFalse(perKr.contains("Alchimista"), perKr);
+			assertFalse(perUnix.contains("PERSONAGGIO") || perKr.contains("PERSONAGGIO"), perUnix + " / " + perKr);
+			alchimista |= perUnix.contains("Alchimista");
+			incantatore |= perKr.contains("Incantatore");
+		}
+		assertTrue(alchimista, "il Manuale rimanda all'Alchimista");
+		assertTrue(incantatore, "il libro sul C rimanda all'Incantatore");
 	}
 
 	@Test

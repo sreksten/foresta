@@ -8,12 +8,15 @@ import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.GeneratoreArtefattiTabelle;
+import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -221,6 +224,36 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
         elfo.addArtefatto(artefatto(TipoArtefatto.LIBRO_MAGICO, 4));
         int conLibro = CalcolatoreCombattimento.calcolaDannoRisultante(elfo, difensore, aria).getDanno();
         assertTrue(conLibro > senzaLibro, "con libro " + conLibro + ", senza " + senzaLibro);
+    }
+
+    @Test
+    void ilManualeDiUnixRaddoppiaIDanniMagiciDiChiLoPortaUnLibroNormaleNo() {
+        Mago mago = new Mago("Merlino", 4);
+        double dellaClasse = mago.getMoltiplicatoreDanniMagici();
+        assertEquals(dellaClasse, CalcolatoreCombattimento.moltiplicatoreDanniMagici(mago), DELTA, "senza libro");
+        mago.addArtefatto(artefatto(TipoArtefatto.LIBRO_MAGICO, 4));
+        assertEquals(dellaClasse, CalcolatoreCombattimento.moltiplicatoreDanniMagici(mago), DELTA, "un libro normale");
+
+        Mago conManuale = new Mago("Merlino", 4);
+        Artefatto manuale = LibroTecnico.getLibro("MANUALE_UNIX_SYSTEM_V").orElseThrow(AssertionError::new)
+                .costruisci(new GeneratoreArtefattiTabelle(new Random(1)), 4);
+        conManuale.addArtefatto(manuale);
+        assertEquals(2 * dellaClasse, CalcolatoreCombattimento.moltiplicatoreDanniMagici(conManuale), DELTA, "il Manuale");
+    }
+
+    @Test
+    void conIlManualeDiUnixGliIncantesimiFannoPiuDanni() {
+        IncantesimoMalefico aria = (IncantesimoMalefico) FabbricaIncantesimi.crea(TipoIncantesimo.ARIA, 4);
+        Mago normale = new Mago("Merlino", 4);
+        normale.addModificatore(new ModificatoreAttributoMD(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
+        normale.addArtefatto(artefatto(TipoArtefatto.LIBRO_MAGICO, 4));
+        Mago conManuale = new Mago("Merlino", 4);
+        conManuale.addModificatore(new ModificatoreAttributoMD(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
+        conManuale.addArtefatto(LibroTecnico.getLibro("MANUALE_UNIX_SYSTEM_V").orElseThrow(AssertionError::new)
+                .costruisci(new GeneratoreArtefattiTabelle(new Random(1)), 4));
+        int conLibroNormale = CalcolatoreCombattimento.calcolaDannoRisultante(normale, difensore, aria).getDanno();
+        int conIlManuale = CalcolatoreCombattimento.calcolaDannoRisultante(conManuale, difensore, aria).getDanno();
+        assertTrue(conIlManuale > conLibroNormale, "con il Manuale " + conIlManuale + ", con un libro normale " + conLibroNormale);
     }
 
     @Test

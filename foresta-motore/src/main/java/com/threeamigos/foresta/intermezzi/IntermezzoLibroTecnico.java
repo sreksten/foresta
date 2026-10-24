@@ -12,8 +12,8 @@ import java.util.List;
 
 /**
  * Il capo del gruppo ha appena trovato un libro tecnico in un cofano (vedi LibroTecnico e Cofano): nella locazione in cui si
- * trova, ne legge il titolo, lo sfoglia e chiude la questione ("Deve essere una roba di quelle di cui parla spesso
- * l'Alchimista"). I testi sono in leggendari.txt.
+ * trova, ne legge il titolo, lo sfoglia e chiude la questione, rimandando a chi ne sa di più ("Deve essere una roba di quelle di
+ * cui parla spesso l'Alchimista" per il Manuale di Unix System V, l'Incantatore per The C Programming Language). I testi sono in leggendari.txt.
  * <p>
  * Scatta subito dopo: l'oggetto di una locazione (il cofano) si raccoglie quando la locazione finisce, e subito dopo, controllate
  * le missioni, è il momento degli intermezzi di {@link MomentoIntermezzo#LOCAZIONE_COMPLETATA}. L'identificativo è quello del libro, così IntermezziMD ricorda quali libri
@@ -84,6 +84,6 @@ public class IntermezzoLibroTecnico implements Intermezzo {
 				.conElemento(ElementoIntermezzo.di(LIBRO, ImmagineIntermezzo.risorsa(IMMAGINE_LIBRO), 0.55, 0.66))
 				.conBattuta(BattutaIntermezzo.di(CAPO, ProduttoreDiTestiCasuale.letturaDelLibroTecnico(libro.getTitoloDaLeggere())))
 				.conBattuta(BattutaIntermezzo.di(CAPO, battute.get(Dado.tiraAncheAUnaFaccia(battute.size()) - 1)))
-				.conBattuta(BattutaIntermezzo.di(CAPO, ProduttoreDiTestiCasuale.conclusioneSulLibroTecnico())));
+				.conBattuta(BattutaIntermezzo.di(CAPO, ProduttoreDiTestiCasuale.conclusioneSulLibroTecnico(libro.getChiave()))));
 	}
 }

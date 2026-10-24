@@ -35,10 +35,10 @@ public enum TipoNegozio {
 
 	/**
 	 * @return true se il negozio compra e vende artefatti di quel tipo: gli oggetti che fanno salire di livello un artefatto
-	 * non li tratta nessuno, perché si trovano solo nei cofani
+	 * e il libro che li riprogramma non li tratta nessuno, perché si trovano solo nei cofani
 	 */
 	public boolean tratta(TipoArtefatto tipo) {
-		if (tipo.isAggiornamento()) {
+		if (tipo.isAggiornamento() || tipo.isRiprogrammazione()) {
 			return false;
 		}
 		return (this == VENDITORE_DI_PERGAMENE) == tipo.isIngrediente();

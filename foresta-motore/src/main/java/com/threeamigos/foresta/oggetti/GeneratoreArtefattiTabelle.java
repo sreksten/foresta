@@ -49,6 +49,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		nomeEPeso(TipoArtefatto.GINGILLO, "il gingillo", 0.2);
 		nomeEPeso(TipoArtefatto.SIGILLO, "il sigillo", 0.1);
 		nomeEPeso(TipoArtefatto.AGGIORNAMENTO, "l'aggiornamento", 0.1);
+		nomeEPeso(TipoArtefatto.RIPROGRAMMAZIONE, "la riprogrammazione", 0.5);
 	}
 
 	private static final String[] COMPLEMENTI = {
@@ -88,7 +89,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 			.collect(Collectors.toList());
 
 	private static final List<TipoArtefatto> INGREDIENTI = Arrays.stream(TipoArtefatto.values())
-			.filter(t -> t.isIngrediente() && !t.isAggiornamento())
+			.filter(t -> t.isIngrediente() && !t.isAggiornamento() && !t.isRiprogrammazione())
 			.collect(Collectors.toList());
 
 	/**
@@ -148,6 +149,13 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		return DANNI_DEGLI_INGREDIENTI.getOrDefault(ingrediente, Collections.emptyList());
 	}
 
+	/**
+	 * Il peso di un tipo di artefatto.
+	 */
+	static double peso(TipoArtefatto tipo) {
+		return PESI.get(tipo);
+	}
+
 	private static void nomeEPeso(TipoArtefatto tipo, String nome, double peso) {
 		NOMI.put(tipo, nome);
 		PESI.put(tipo, peso);
@@ -157,6 +165,9 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	public Artefatto generaArtefatto(TipoArtefatto tipo, int livello) {
 		if (tipo.isAggiornamento()) {
 			return generaAggiornamento(livello);
+		}
+		if (tipo.isRiprogrammazione()) {
+			return generaRiprogrammazione(livello);
 		}
 		if (tipo.isIngrediente()) {
 			return generaIngrediente(tipo, livello);
@@ -316,6 +327,22 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 			md.setDescrizione(COMBATTIMENTO);
 		}
 		md.setDanni(danni);
+	}
+
+	/**
+	 * Un libro che riprogramma gli artefatti (vedi TipoArtefatto.RIPROGRAMMAZIONE): senza effetti, e non si compra né si vende. Il
+	 * nome e la descrizione sono di ripiego: li cambia chi lo costruisce davvero (vedi LibroTecnico).
+	 */
+	private Artefatto generaRiprogrammazione(int livello) {
+		int livelloEffettivo = Math.max(1, livello);
+		ArtefattoMD md = new ArtefattoMD();
+		md.setTipo(TipoArtefatto.RIPROGRAMMAZIONE);
+		md.setNome(NOMI.get(TipoArtefatto.RIPROGRAMMAZIONE));
+		md.setDescrizione("che riprogramma un Artefatto");
+		md.setLivello(livelloEffettivo);
+		md.setPeso(PESI.get(TipoArtefatto.RIPROGRAMMAZIONE));
+		md.setCostoAcquisto(Costanti.RIPROGRAMMAZIONE_VALORE_PER_LIVELLO * livelloEffettivo);
+		return Artefatto.di(md);
 	}
 
 	@Override

@@ -93,18 +93,20 @@ class RegoleDeiTipiTest {
     }
 
     @Test
-    void gliIngredientiSonoGliIncantamentiEDiQuestiLAggiornamentoEUnoSolo() {
+    void gliIngredientiSonoGliIncantamentiEDiQuestiLAggiornamentoELaRiprogrammazioneUnoSolo() {
         for (TipoArtefatto tipo : TipoArtefatto.values()) {
             assertEquals(tipo.getCategoria() == CategoriaArtefatto.INCANTAMENTO, tipo.isIngrediente(), tipo.name());
             assertEquals(tipo == TipoArtefatto.AGGIORNAMENTO, tipo.isAggiornamento(), tipo.name());
+            assertEquals(tipo == TipoArtefatto.RIPROGRAMMAZIONE, tipo.isRiprogrammazione(), tipo.name());
         }
+        assertTrue(TipoArtefatto.RIPROGRAMMAZIONE.isIngrediente(), "il libro che riprogramma si mette sul banco come gli altri ingredienti");
         assertTrue(TipoArtefatto.AGGIORNAMENTO.isIngrediente(), "l'aggiornamento si mette sul banco come gli altri ingredienti");
     }
 
     @Test
-    void ilVenditoreTrattaGliIngredientiLArmaioloIlRestoNessunoGliAggiornamenti() {
+    void ilVenditoreTrattaGliIngredientiLArmaioloIlRestoNessunoGliAggiornamentiELeRiprogrammazioni() {
         for (TipoArtefatto tipo : TipoArtefatto.values()) {
-            boolean ingrediente = tipo.isIngrediente() && !tipo.isAggiornamento();
+            boolean ingrediente = tipo.isIngrediente() && !tipo.isAggiornamento() && !tipo.isRiprogrammazione();
             boolean altro = !tipo.isIngrediente();
             assertEquals(ingrediente, TipoNegozio.VENDITORE_DI_PERGAMENE.tratta(tipo), tipo.name());
             assertEquals(altro, TipoNegozio.ARMAIOLO.tratta(tipo), tipo.name());

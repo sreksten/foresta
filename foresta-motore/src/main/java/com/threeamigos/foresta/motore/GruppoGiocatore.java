@@ -18,6 +18,7 @@ import com.threeamigos.foresta.oggetti.ModificatoreDelTesto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.oggetti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
+import com.threeamigos.foresta.testi.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Dado;
@@ -931,7 +932,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	/**
 	 * La fusione dall'incantatore: ricontrolla le regole (RegoleIncantatura), fa pagare, copia sull'artefatto
 	 * gli effetti delle pergamene, che spariscono, e rimette l'artefatto nell'inventario del gruppo.
-	 * Pubblica NotificaApprovazioneIncantatura o NotificaRifiutoIncantatura.
+	 * Pubblica NotificaApprovazioneIncantatura o NotificaRifiutoIncantatura. Con il libro che riprogramma sul banco
+	 * l'incantatore sbaglia sempre: l'artefatto perde gli incantamenti, che restano in ingredienti del Core Dump, e
+	 * pubblica NotificaAvvisoIncantatura con la sua esclamazione.
 	 *
 	 * @return il motivo del rifiuto, oppure vuoto se la fusione è riuscita
 	 */
@@ -942,6 +945,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			return motivo;
 		}
 		int costo = costoFusione(banco.getInventario());
+		if (RegoleIncantatura.conRiprogrammazione(banco.getInventario())) {
+			// Va sempre male: l'artefatto si spezza negli ingredienti dei suoi incantamenti, e tutto torna nel gruppo
+			List<Artefatto> restituiti = RegoleIncantatura.riprogramma(banco);
+			subMonete(costo);
+			restituiti.forEach(this::addArtefatto);
+			BusEventi.pubblica(new NotificaAvvisoIncantatura(ProduttoreDiTestiCasuale.erroreDiRiprogrammazione()));
+			return Optional.empty();
+		}
 		Artefatto incantato = RegoleIncantatura.fondi(banco, nomeProprio);
 		subMonete(costo);
 		addArtefatto(incantato);

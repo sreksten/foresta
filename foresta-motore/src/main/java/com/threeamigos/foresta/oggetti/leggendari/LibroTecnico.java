@@ -23,16 +23,21 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Un libro tecnico, letto da una riga di leggendari.txt (che ne descrive il formato): un libro magico leggendario di cui
- * nessuno racconta la leggenda. Si trova solo nei cofani, molto di rado e al più una volta per partita (vedi Cofano e
- * IntermezzoLibroTecnico, che ricorda quelli già trovati). Ha l'aspetto di {@link TipoOggetto#LIBRO_TECNICO} e i
- * modificatori e gli incantamenti di un libro magico normale del livello del mondo, raddoppiati, come il prezzo.
+ * Un libro tecnico, letto da una riga di leggendari.txt (che ne descrive il formato): un libro leggendario di cui nessuno
+ * racconta la leggenda. Si trova solo nei cofani, molto di rado e al più una volta per partita (vedi Cofano e
+ * IntermezzoLibroTecnico, che ricorda quelli già trovati). Ha l'aspetto di {@link TipoOggetto#LIBRO_TECNICO}.
+ * <p>
+ * Di solito è un libro magico (TIPO=LIBRO_MAGICO) del livello del mondo, con i modificatori e gli incantamenti raddoppiati, come il
+ * prezzo, e può raddoppiare i danni magici di chi lo porta (DANNI_MAGICI=2: il Manuale di Unix System V). Può anche essere un
+ * ingrediente che riprogramma gli artefatti (TIPO=RIPROGRAMMAZIONE: The C Programming Language, vedi
+ * TipoArtefatto.RIPROGRAMMAZIONE), senza effetti suoi.
  */
 public final class LibroTecnico {
 
 	private static final String SEPARATORE = ";";
 	private static final String UGUALE = "=";
 	private static final int MOLTIPLICATORE = 2;
+	private static final TipoArtefatto TIPO_DI_DEFAULT = TipoArtefatto.LIBRO_MAGICO;
 
 	private static Map<String, LibroTecnico> libri;
 
@@ -40,6 +45,8 @@ public final class LibroTecnico {
 	private final String nome;
 	private final String descrizione;
 	private final List<String> battute;
+	private final TipoArtefatto tipo;
+	private final int moltiplicatoreDanniMagici;
 
 	private LibroTecnico(String riga) {
 		Map<String, String> campi = new HashMap<>();
@@ -61,6 +68,8 @@ public final class LibroTecnico {
 				case "CHIAVE":
 				case "NOME":
 				case "DESCRIZIONE":
+				case "TIPO":
+				case "DANNI_MAGICI":
 					if (campi.put(chiaveCampo, valore) != null) {
 						throw new IllegalArgumentException("Campo ripetuto: " + chiaveCampo + " in " + riga);
 					}
@@ -72,6 +81,14 @@ public final class LibroTecnico {
 		chiave = obbligatorio(campi, "CHIAVE");
 		nome = obbligatorio(campi, "NOME");
 		descrizione = obbligatorio(campi, "DESCRIZIONE");
+		tipo = campi.containsKey("TIPO") ? TipoArtefatto.valueOf(campi.get("TIPO")) : TIPO_DI_DEFAULT;
+		if (tipo != TipoArtefatto.LIBRO_MAGICO && !tipo.isRiprogrammazione()) {
+			throw new IllegalArgumentException("Un libro tecnico è un libro magico o una riprogrammazione: " + riga);
+		}
+		moltiplicatoreDanniMagici = campi.containsKey("DANNI_MAGICI") ? Integer.parseInt(campi.get("DANNI_MAGICI")) : 1;
+		if (moltiplicatoreDanniMagici < 1) {
+			throw new IllegalArgumentException("DANNI_MAGICI è almeno 1: " + riga);
+		}
 		if (battuteLette.isEmpty()) {
 			throw new IllegalArgumentException("Un libro tecnico ha almeno una BATTUTA: " + riga);
 		}
@@ -151,6 +168,20 @@ public final class LibroTecnico {
 	}
 
 	/**
+	 * Il tipo di artefatto che il libro è: un libro magico, o una riprogrammazione.
+	 */
+	public TipoArtefatto getTipo() {
+		return tipo;
+	}
+
+	/**
+	 * Per quanto il libro, equipaggiato, moltiplica i danni magici di chi lo porta: 1 se non li cambia.
+	 */
+	public int getMoltiplicatoreDanniMagici() {
+		return moltiplicatoreDanniMagici;
+	}
+
+	/**
 	 * Quel che il capo può dire sfogliandolo, una battuta per elemento.
 	 */
 	public List<String> getBattute() {
@@ -166,11 +197,12 @@ public final class LibroTecnico {
 	}
 
 	/**
-	 * Un artefatto nuovo: un libro magico normale di quel livello, con il titolo e la descrizione del libro, i modificatori e
-	 * gli incantamenti raddoppiati, il prezzo raddoppiato, leggendario e con l'aspetto di un libro tecnico.
+	 * Un artefatto nuovo: del tipo del libro (un libro magico normale di quel livello, o una riprogrammazione), con il titolo e la
+	 * descrizione del libro, i modificatori e gli incantamenti raddoppiati, il prezzo raddoppiato, leggendario e con l'aspetto di un
+	 * libro tecnico.
 	 */
 	public Artefatto costruisci(GeneratoreArtefatti generatore, int livello) {
-		Artefatto artefatto = generatore.generaArtefatto(TipoArtefatto.LIBRO_MAGICO, livello);
+		Artefatto artefatto = generatore.generaArtefatto(tipo, livello);
 		ArtefattoMD md = artefatto.getModelloDati();
 		md.setNomeProprio(null);
 		md.setNome(nome);

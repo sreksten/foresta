@@ -52,7 +52,12 @@ public enum TipoArtefatto {
 
     // Un oggetto che sul banco dell'incantatore fa salire di un livello un artefatto, invece di dargli degli effetti: si trova
     // solo nei cofani, non si compra né si vende (vedi isAggiornamento, RegoleIncantatura e artefatti2.txt per i nomi).
-    AGGIORNAMENTO(CategoriaArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO);
+    AGGIORNAMENTO(CategoriaArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO),
+
+    // Un libro leggendario che sul banco dell'incantatore, invece di dare effetti, riprogramma l'artefatto: lo spezza negli
+    // ingredienti dei suoi incantamenti. Si trova solo nei cofani, non si compra né si vende (vedi isRiprogrammazione,
+    // RegoleIncantatura e LibroTecnico: è The C Programming Language).
+    RIPROGRAMMAZIONE(CategoriaArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO);
 
     private final CategoriaArtefatto categoriaArtefatto;
     private final TipoCardinalitaArtefatto cardinalita;
@@ -116,6 +121,15 @@ public enum TipoArtefatto {
      */
     public boolean isAggiornamento() {
         return this == AGGIORNAMENTO;
+    }
+
+    /**
+     * Un libro che riprogramma l'artefatto su cui lo si fonde: lo scinde nell'artefatto senza incantamenti e in un ingrediente per
+     * ogni incantamento che aveva. È anche un ingrediente (si mette sul banco dell'incantatore come gli altri), ma non lo si
+     * compra né lo si vende, e si ritrova intero dopo la fusione.
+     */
+    public boolean isRiprogrammazione() {
+        return this == RIPROGRAMMAZIONE;
     }
 
 }

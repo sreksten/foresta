@@ -313,10 +313,20 @@ public class ProduttoreDiTestiCasuale {
 	}
 
 	/**
-	 * Come il capo chiude la questione, dopo aver sfogliato un libro tecnico (vedi CONCLUSIONE_LIBRO_TECNICO in leggendari.txt).
+	 * Come il capo chiude la questione, dopo aver sfogliato un libro tecnico: ogni libro ha la sua produzione, perché rimanda a chi
+	 * può dirgliene di più (vedi CONCLUSIONE_ seguito dalla chiave del libro in leggendari.txt).
+	 *
+	 * @param chiaveLibro la chiave del libro (vedi LibroTecnico.getChiave)
 	 */
-	public static synchronized String conclusioneSulLibroTecnico() {
-		return leggendari.produce("CONCLUSIONE_LIBRO_TECNICO").get(0).trim();
+	public static synchronized String conclusioneSulLibroTecnico(String chiaveLibro) {
+		return leggendari.produce("CONCLUSIONE_" + chiaveLibro).get(0).trim();
+	}
+
+	/**
+	 * Quel che dice l'incantatore quando una riprogrammazione va male (vedi ERRORE_RIPROGRAMMAZIONE in leggendari.txt).
+	 */
+	public static synchronized String erroreDiRiprogrammazione() {
+		return leggendari.produce("ERRORE_RIPROGRAMMAZIONE").get(0).trim();
 	}
 
 	/**

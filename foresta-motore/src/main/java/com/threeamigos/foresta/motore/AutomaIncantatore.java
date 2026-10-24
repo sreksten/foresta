@@ -38,7 +38,7 @@ public class AutomaIncantatore extends AutomaScambiatoreArtefatti implements Vis
 
 	@Override
 	public int getEffettiDaTrasferire() {
-		if (!getArtefattoSulBanco().isPresent()) {
+		if (!getArtefattoSulBanco().isPresent() || RegoleIncantatura.conRiprogrammazione(banco.getInventario())) {
 			return RegoleIncantatura.effettiDaTrasferire(banco.getInventario());
 		}
 		return piano().numeroDaAggiungere();
@@ -63,7 +63,7 @@ public class AutomaIncantatore extends AutomaScambiatoreArtefatti implements Vis
 
 	@Override
 	public int getCostoFusione() {
-		if (!getArtefattoSulBanco().isPresent()) {
+		if (!getArtefattoSulBanco().isPresent() || RegoleIncantatura.conRiprogrammazione(banco.getInventario())) {
 			return gruppo.costoFusione(banco.getInventario());
 		}
 		return gruppo.costoFusione(piano().numeroDaAggiungere());

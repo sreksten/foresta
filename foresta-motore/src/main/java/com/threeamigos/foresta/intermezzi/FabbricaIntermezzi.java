@@ -14,6 +14,8 @@ public final class FabbricaIntermezzi {
 
 	private static final String SALUTO_ALCHIMISTA = "Benvenuti nella mia bottega da Alchimista! Posso vendervi incantesimi, pozioni, mappe oppure incrementare il vostro potere magico.";
 
+	private static final String SALUTO_INCANTATORE = "Benvenuti nel mio laboratorio di incantamenti. Posso migliorare le vostre armi con quel pizzico di magia in più.";
+
 	private static final Map<TipoIntermezzo, Function<TipoIntermezzo, Intermezzo>> COSTRUTTORI = new EnumMap<>(TipoIntermezzo.class);
 
 	static {
@@ -26,7 +28,8 @@ public final class FabbricaIntermezzi {
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_ALCHIMISTA, tipo -> new IntermezzoOroscopo(tipo, SALUTO_ALCHIMISTA));
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_SPADA_NASCOSTA, tipo -> new IntermezzoSpadaNascosta(tipo, SALUTO_ALCHIMISTA));
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_VENDITORE_DI_PERGAMENE, tipo -> new IntermezzoBenvenutoNegozio(tipo, NegozioInScena.VENDITORE_DI_PERGAMENE, "Benvenuti nel mio negozio di Pergamene, Amuleti, Gingilli e Ninnoli vari! Questi sono gli ingredienti di base necessari per migliorare le vostre armi."));
-		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_INCANTATORE, tipo -> new IntermezzoBenvenutoNegozio(tipo, NegozioInScena.INCANTATORE, "Benvenuti nel mio laboratorio di incantamenti. Posso migliorare le vostre armi con quel pizzico di magia in più."));
+		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_INCANTATORE, tipo -> new IntermezzoBenvenutoNegozio(tipo, NegozioInScena.INCANTATORE, SALUTO_INCANTATORE));
+		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_RIPROGRAMMAZIONE, tipo -> new IntermezzoRiprogrammazione(tipo, SALUTO_INCANTATORE));
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_ACCAMPAMENTO, tipo -> new IntermezzoAccampamento());
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_EREMITA_ROMPISCATOLE, tipo -> new IntermezzoEremitaRompiscatole());
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_LIBRO_TECNICO, tipo -> new IntermezzoLibroTecnico());

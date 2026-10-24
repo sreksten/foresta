@@ -219,6 +219,8 @@ public class Costanti {
     public static final double COFANO_PROBABILITA_LIBRO_TECNICO = 0.005;
     // Quanto vale, per livello, un oggetto che fa salire di livello un artefatto (non si compra né si vende)
     public static final int AGGIORNAMENTO_VALORE_PER_LIVELLO = 100;
+    // Come sopra per il libro che riprogramma un artefatto (non si compra né si vende)
+    public static final int RIPROGRAMMAZIONE_VALORE_PER_LIVELLO = 200;
     // Un ingrediente magico ha tanti effetti quanto il suo livello, fino a questo
     public static final int INGREDIENTE_EFFETTI_MASSIMI = 3;
     // Grado degli effetti di un ingrediente magico: minore fino al livello 2, normale (MEDIO) fino al 4, maggiore dal 5

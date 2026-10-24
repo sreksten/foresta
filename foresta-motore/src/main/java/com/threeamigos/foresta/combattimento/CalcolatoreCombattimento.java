@@ -11,6 +11,7 @@ import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.motore.ModalitaDiProva;
 import com.threeamigos.foresta.oggetti.ArmaNaturale;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.oggetti.leggendari.RegoleSetLeggendari;
 import com.threeamigos.foresta.personaggi.OmbraFiamma;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -299,7 +300,7 @@ public class CalcolatoreCombattimento {
         double danno = arma.getDanni() * livelloDiCombattimento(arma.getLivello());
         for (IncantamentoMD incantamento : arma.getIncantamenti()) {
             danno += incantamento.getDannoBonusFisso() * arma.getLivello()
-                    + attaccante.getIntelligenza() * incantamento.getCoefficienteScala() * attaccante.getMoltiplicatoreDanniMagici();
+                    + attaccante.getIntelligenza() * incantamento.getCoefficienteScala() * moltiplicatoreDanniMagici(attaccante);
         }
         return danno;
     }
@@ -440,7 +441,7 @@ public class CalcolatoreCombattimento {
         	Logger.log(String.format(Locale.ROOT, "contributoEroe (statOffensiva %d * livello attaccante %d / 5 = %f", statOffensiva, attaccante.getLivello(), contributoEroe));
         }
         // Il carattere della classe: il guerriero picchia, il mago incanta (Costanti.*_MOLTIPLICATORE_DANNI_*)
-        double moltiplicatoreClasse = dannoNonFisico ? attaccante.getMoltiplicatoreDanniMagici() : attaccante.getMoltiplicatoreDanniFisici();
+        double moltiplicatoreClasse = dannoNonFisico ? moltiplicatoreDanniMagici(attaccante) : attaccante.getMoltiplicatoreDanniFisici();
         double dannoOffensivoGrezzo = (dannoBaseArma + Math.floor(contributoEroe * rapportoEfficacia)) * fattore * moltiplicatoreClasse;
         if (Logger.isAttivo()) {
         	Logger.log("dannoOffensivoGrezzo = " + dannoOffensivoGrezzo + " (fattore " + fattore + ", moltiplicatore di classe " + moltiplicatoreClasse + ")");
@@ -636,7 +637,7 @@ public class CalcolatoreCombattimento {
                 // Il bonus del libro è danno dell'incantesimo: prende tutto il moltiplicatore magico della classe.
                 // Un elfo ne ha solo una parte
                 double dannoLibro = dannoIncantamento(attaccante, difensore, bonusLibroMagico(libro.get(), tipoDanno),
-                        libro.get().getLivello(), fattoreLibroMagico(attaccante), attaccante.getMoltiplicatoreDanniMagici());
+                        libro.get().getLivello(), fattoreLibroMagico(attaccante), moltiplicatoreDanniMagici(attaccante));
                 dannoElementaleFinale += dannoLibro;
                 Logger.log(() -> String.format(Locale.ROOT, "[LIBRO MAGICO] Danno bonus: %.2f", dannoLibro));
             }
@@ -758,7 +759,7 @@ public class CalcolatoreCombattimento {
     private static double dannoIncantamento(Personaggio attaccante, Personaggio difensore, IncantamentoMD incantamento,
                                             int livelloOggetto, double fattore, double moltiplicatoreParteFissa) {
         double dannoGrezzo = ((incantamento.getDannoBonusFisso() * livelloOggetto * moltiplicatoreParteFissa) +
-                (attaccante.getIntelligenza() * incantamento.getCoefficienteScala() * attaccante.getMoltiplicatoreDanniMagici())) * fattore;
+                (attaccante.getIntelligenza() * incantamento.getCoefficienteScala() * moltiplicatoreDanniMagici(attaccante))) * fattore;
         double mitigazione = 100.0d / (100.0d + difesaContro(difensore, incantamento.getTipoDannoElementale()));
         double danno = Math.floor(dannoGrezzo * mitigazione);
         if (incantamento.getTipoDannoElementale() == TipoDanno.FUOCO && difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
@@ -1127,6 +1128,16 @@ public class CalcolatoreCombattimento {
     static double fattoreLibroMagico(Personaggio personaggio) {
         TipoPersonaggio classe = personaggio.getClasse();
         return classe == TipoPersonaggio.ELFO || classe == TipoPersonaggio.ELFA ? Costanti.LIBRO_MAGICO_FATTORE_ELFO : 1.0d;
+    }
+
+    /**
+     * Il moltiplicatore dei danni magici di chi attacca: quello della sua classe, per quanto lo moltiplica il libro magico che
+     * porta, se lo moltiplica (il Manuale di Unix System V li raddoppia: vedi LibroTecnico).
+     */
+    static double moltiplicatoreDanniMagici(Personaggio personaggio) {
+        double moltiplicatoreLibro = libroMagico(personaggio).flatMap(LibroTecnico::di)
+                .map(LibroTecnico::getMoltiplicatoreDanniMagici).orElse(1).doubleValue();
+        return personaggio.getMoltiplicatoreDanniMagici() * moltiplicatoreLibro;
     }
 
     private static Optional<Artefatto> libroMagico(Personaggio personaggio) {

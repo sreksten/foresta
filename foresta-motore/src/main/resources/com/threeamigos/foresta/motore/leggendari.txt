@@ -341,16 +341,20 @@ L_OGGETTO
 //   CHIAVE=        l'identificativo del libro, diverso per ogni riga: non va più cambiato;
 //   NOME=          il titolo come sta sulla copertina, con l'articolo se ce l'ha;
 //   DESCRIZIONE=   la descrizione, "che ...", o il sottotitolo;
-//   BATTUTA=       quel che il capo dice sfogliandolo, almeno una: se ne sceglie una a caso.
+//   BATTUTA=       quel che il capo dice sfogliandolo, almeno una: se ne sceglie una a caso;
+//   TIPO=          facoltativo, LIBRO_MAGICO (se manca) o RIPROGRAMMAZIONE: un ingrediente senza effetti suoi che, fuso su un
+//                  artefatto dall'incantatore, lo spezza negli ingredienti dei suoi incantamenti (vedi RegoleIncantatura);
+//                  non si può equipaggiare;
+//   DANNI_MAGICI=  facoltativo, per quanto il libro magico, equipaggiato, moltiplica i danni magici di chi lo porta (1 se manca).
 // ---------------------------------------------------------------------------------------------
 
 LIBRO_TECNICO$
-    CHIAVE=MANUALE_UNIX_SYSTEM_V;NOME=il Manuale di Unix System V;DESCRIZIONE=che aiuta a far gli spregi ar CDA;\
+    CHIAVE=MANUALE_UNIX_SYSTEM_V;NOME=il Manuale di Unix System V;DESCRIZIONE=che aiuta a far gli spregi ar CDA;DANNI_MAGICI=2;\
     BATTUTA=Qui dice che tutto è un file. Anche io sono un file?;\
     BATTUTA=C'è un capitolo intero su come uccidere i processi. Senza nemmeno una spada.;\
     BATTUTA=Un incantesimo di due lettere, ls, che mostra tutto quello che si possiede. Comodo, per l'inventario.
 
-    CHIAVE=THE_C_PROGRAMMING_LANGUAGE;NOME=The C Programming Language;DESCRIZIONE=di B. Kernighan e D. Ritchie;\
+    CHIAVE=THE_C_PROGRAMMING_LANGUAGE;NOME=The C Programming Language;DESCRIZIONE=di B. Kernighan e D. Ritchie;TIPO=RIPROGRAMMAZIONE;\
     BATTUTA=Il primo incantesimo del libro fa comparire due parole, hello, world. Tutto qui?;\
     BATTUTA=Parla di puntatori. Ne ho contati sette in una pagina, e nessuno indica niente.;\
     BATTUTA=Dice che tutto comincia da main. Il nostro viaggio, invece, è cominciato da un eremita.
@@ -366,9 +370,31 @@ LETTURA_LIBRO_TECNICO
 TITOLO
     il titolo del libro
 
-// Come il capo chiude la questione, dopo averlo sfogliato
+// Come il capo chiude la questione, dopo averlo sfogliato: una produzione per libro, CONCLUSIONE_ seguito dalla sua chiave
+// (vedi ProduttoreDiTestiCasuale.conclusioneSulLibroTecnico), perché rimanda a chi può dirgliene di più. Il Manuale di Unix
+// System V ha a che fare con l'Alchimista (vedi IntermezzoSpadaNascosta), The C Programming Language con l'Incantatore.
+CONCLUSIONE_MANUALE_UNIX_SYSTEM_V
+    [PERSONAGGIO_LIBRO_TECNICO=Alchimista][CONCLUSIONE_LIBRO_TECNICO]
+
+CONCLUSIONE_THE_C_PROGRAMMING_LANGUAGE
+    [PERSONAGGIO_LIBRO_TECNICO=Incantatore][CONCLUSIONE_LIBRO_TECNICO]
+
 CONCLUSIONE_LIBRO_TECNICO
-    Deve essere una roba di quelle di cui parla spesso l'Alchimista.
-    Deve essere una roba di quelle di cui parla spesso l'Alchimista. Gliene chiederò conto, la prossima volta.
-    Non c'è nemmeno una figura. Sembra un libro di incantesimi scritto da qualcuno che odiava i maghi. Magari l'Alchimista ne sa qualcosa di più.
-    Chi lo sa, magari l'Alchimista può aiutarci a { decifrarlo | capire cosa c'è scritto }.
+    Deve essere una roba di quelle di cui parla spesso l'[*PERSONAGGIO_LIBRO_TECNICO].
+    Deve essere una roba di quelle di cui parla spesso l'[*PERSONAGGIO_LIBRO_TECNICO]. Gliene chiederò conto, la prossima volta.
+    Non c'è nemmeno una figura. Sembra un libro di incantesimi scritto da qualcuno che odiava i maghi. Magari l'[*PERSONAGGIO_LIBRO_TECNICO] ne sa qualcosa di più.
+    Chi lo sa, magari l'[*PERSONAGGIO_LIBRO_TECNICO] può aiutarci a { decifrarlo | capire cosa c'è scritto | leggerlo }.
+    Proverò a farlo vedere all'[*PERSONAGGIO_LIBRO_TECNICO] la prossima volta che ci vado.
+    Deve essere roba da maghi del computer. Non so cosa sia un computer, ma la copertina ha un'aria molto competente. Chiederò lumi all'[*PERSONAGGIO_LIBRO_TECNICO].
+    Roba da maghi del computer, credo, anche se non so cosa sia un computer. L'[*PERSONAGGIO_LIBRO_TECNICO] { forse | magari | probabilmente } lo sa.
+
+// Quel che dice l'incantatore quando una riprogrammazione va male (vedi RegoleIncantatura.riprogramma): l'artefatto si è
+// spezzato negli ingredienti dei suoi incantamenti
+ERRORE_RIPROGRAMMAZIONE
+    Ecco, ho sbagliato nuovamente!
+    Accidenti, ho sbagliato di nuovo!
+    Oh no, un altro errore di segmentazione!
+    Ops. Ho sbagliato ancora. Il nucleo è stato scaricato.
+    Ancora! Errore di segmentazione, nucleo scaricato!
+    Ci risiamo: Core Dump. Mi era sembrato più semplice, sul libro.
+    Ho sbagliato nuovamente! { Giuro | Sono sicuro } che stavolta non era colpa mia.

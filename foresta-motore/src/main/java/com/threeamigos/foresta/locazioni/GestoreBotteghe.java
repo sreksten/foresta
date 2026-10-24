@@ -158,6 +158,12 @@ final class GestoreBotteghe {
 			BusEventi.pubblica(new NotificaRifiutoIncantatura(motivo.get()));
 			return;
 		}
+		if (RegoleIncantatura.conRiprogrammazione(banco)) {
+			// L'artefatto non cambia nome: si riprogramma subito, e l'incantatore dice com'è andata
+			BusEventi.pubblica(new InternoIncantatura(incantatore.getBanco(), ""));
+			apriIncantatore(null);
+			return;
+		}
 		String nomeAttuale = RegoleIncantatura.artefattoSulBanco(banco)
 				.flatMap(Artefatto::getNomeProprio)
 				.orElse("");

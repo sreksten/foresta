@@ -32,6 +32,10 @@ public enum TipoMotivoRifiutoIncantatura {
 	 */
 	NESSUN_MIGLIORAMENTO,
 	/**
+	 * Con il libro che riprogramma sul banco, l'artefatto non ha incantamenti da spezzare: la riprogrammazione non cambierebbe niente
+	 */
+	NIENTE_DA_RIPROGRAMMARE,
+	/**
 	 * Un ingrediente non avrebbe nessun effetto sull'artefatto: ha solo potere magico,
 	 * che si fonde solo su bastoni e libri magici
 	 */
