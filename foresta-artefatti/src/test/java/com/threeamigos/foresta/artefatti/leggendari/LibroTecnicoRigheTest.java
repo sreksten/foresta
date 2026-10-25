@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.artefatti.leggendari;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
-import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.tipi.AspettoArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

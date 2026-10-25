@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
-import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoEvento;
 
 /**
  * Un messaggio che il motore di gioco invia al giocatore.

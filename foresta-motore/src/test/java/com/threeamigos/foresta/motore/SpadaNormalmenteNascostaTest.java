@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.SpadaNormalmenteNascosta;
 import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
-import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.AspettoArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoSpadaNascostaImpugnata;
 import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;

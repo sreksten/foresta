@@ -21,7 +21,7 @@ import com.threeamigos.foresta.trofei.RegistroTrofei;
 import com.threeamigos.foresta.ui.EsecutoreSwing;
 import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
-import com.threeamigos.foresta.ui.Orientamento;
+import com.threeamigos.foresta.tipi.Orientamento;
 import com.threeamigos.foresta.ui.sviluppo.FinestraDiProva;
 
 import java.util.Locale;

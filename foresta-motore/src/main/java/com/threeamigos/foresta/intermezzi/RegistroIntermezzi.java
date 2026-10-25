@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.IntermezzoDiPasso;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;

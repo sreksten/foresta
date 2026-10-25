@@ -1,21 +1,21 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
 import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.storie.IlCampione;
 import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.strumenti.dado.Dado;
@@ -291,7 +291,7 @@ class ScenarioBestiarioTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(913)) {
             iniziaDaMaga(partita);
             partita.eventi().ascolta(InternoTrofeoAcquisito.class);
-            com.threeamigos.foresta.trofei.Trofeo trofeo = com.threeamigos.foresta.trofei.ClasseTrofeo.di(TipoTrofeo.ENCICLOPEDISTA);
+            com.threeamigos.foresta.trofei.Trofeo trofeo = com.threeamigos.foresta.tipi.RegolaTrofeo.di(TipoTrofeo.ENCICLOPEDISTA);
             assertEquals(33, trofeo.getObiettivo());
             assertEquals(1, trofeo.getProgresso(), "la voce del Mago, del personaggio scelto");
 

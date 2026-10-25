@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.tipi.Verso;
+
 /**
  * Un tratto dell'animazione di un elemento: in un certo numero di secondi l'elemento
  * passa, in modo lineare, dallo stato raggiunto alla tappa precedente a quello di questa

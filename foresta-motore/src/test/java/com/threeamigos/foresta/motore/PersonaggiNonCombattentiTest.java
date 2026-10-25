@@ -2,7 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.abilita.AbilitaInnate;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;

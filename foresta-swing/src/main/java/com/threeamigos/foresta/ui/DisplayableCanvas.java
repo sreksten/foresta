@@ -1,21 +1,22 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.tipi.TipoFinestra;
 import com.threeamigos.foresta.artefatti.VistaBancoDiLavoro;
 import com.threeamigos.foresta.artefatti.VistaScambio;
-import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.interfacce.*;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.modellodati.MessaggioMD;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
+import com.threeamigos.foresta.modellodati.TatticaMD;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
-import com.threeamigos.foresta.mappa.TipoLocazione;
-import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIcone;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIconeDock;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
@@ -1075,7 +1076,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * La schermata delle tattiche, aperta dall'inventario; arriva di nuovo quando cambia il personaggio scelto o l'ordine del gruppo.
 	 */
 	public void tattiche(VistaPersonaggio personaggio, TatticaMD tattica, TatticaMD tatticaPredefinita,
-						 java.util.Set<com.threeamigos.foresta.tipi.tattiche.TipoAzione> azioniPossibili) {
+						 java.util.Set<com.threeamigos.foresta.tipi.TipoAzione> azioniPossibili) {
 		tattiche.impostaTattica(personaggio, tattica, tatticaPredefinita, azioniPossibili);
 		cambiaStato(StatoDisplayableCanvas.STATO_TATTICHE);
 		repaint();

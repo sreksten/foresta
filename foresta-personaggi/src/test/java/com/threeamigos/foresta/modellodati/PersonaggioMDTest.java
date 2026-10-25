@@ -1,20 +1,13 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.modellodati.tattiche.*;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
-import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
@@ -191,9 +184,6 @@ class PersonaggioMDTest {
         personaggio.aggiungiModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 2.0d,
                 "nota con § dentro", UnitaDurataModificatore.TURNI, 3, BersaglioModificatore.PORTATORE));
         personaggio.aggiungiEffettoDiStato(new EffettoDiStatoMD(TipoEffettoDiStato.ISPIRATO, 4, 0, 0.25d));
-        TatticaMD tattica = TatticaMD.di(VoceMD.su(new SelettoreMD(TipoRosa.AVVERSARI, Collections.emptyList(),
-                OrdinamentoMD.di(TipoOrdinamento.MENO_SALUTE)), AzioneMD.di(TipoAzione.ATTACCO_FISICO)));
-        personaggio.setTattica(tattica);
         personaggio.aggiungiArtefatto(ArtefattiDiTest.creaArtefatto(TipoArtefatto.SPADA, "la spada", "che taglia"));
         String salvato = salva(personaggio);
 
@@ -218,7 +208,6 @@ class PersonaggioMDTest {
         assertEquals(new ArrayList<>(personaggio.getModificatori()), new ArrayList<>(riletto.getModificatori()), "quelli di prima si sostituiscono");
         assertEquals(1, riletto.getEffettiDiStato().size(), "quelli di prima si sostituiscono");
         assertSame(TipoEffettoDiStato.ISPIRATO, riletto.getEffettiDiStato().iterator().next().getTipoEffettoDiStato());
-        assertEquals(tattica, riletto.getTattica());
         assertEquals("la spada", riletto.getArtefatti().iterator().next().getNome());
         assertEquals(salvato, salva(riletto));
     }
@@ -236,6 +225,5 @@ class PersonaggioMDTest {
         assertFalse(salvato.contains("una causa rimasta da prima"), salvato);
         PersonaggioMD riletto = rileggi(new PersonaggioMD(), salvato);
         assertNull(riletto.getCausaTrapasso());
-        assertNull(riletto.getTattica(), "senza tattica resta senza");
     }
 }

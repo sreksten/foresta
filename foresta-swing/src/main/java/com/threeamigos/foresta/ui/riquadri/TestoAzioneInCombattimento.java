@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui.riquadri;
 
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
+import com.threeamigos.foresta.tipi.TipoAzione;
 
 /**
  * Che cosa scrive il riquadro del combattimento sotto il personaggio che agisce: "Attacca la viverna 2", "Intona il Canto di Valore"...

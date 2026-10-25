@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.artefatti.tipi.StatoPezzoDelSet;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 
 /**
  * Un pezzo di un set leggendario e dove sta, per i testi della UI (vedi VistaGruppoGiocatore.getPezziDelSet).

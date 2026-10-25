@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.mappa;
 
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tipi.Quadrante;
+import com.threeamigos.foresta.modellodati.ForestaMD;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

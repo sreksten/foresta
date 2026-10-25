@@ -1,13 +1,13 @@
 package com.threeamigos.foresta.ui.schermate;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.intermezzi.Verso;
+import com.threeamigos.foresta.tipi.Verso;
 import com.threeamigos.foresta.tipi.AbilitaInnataDiClasse;
 import com.threeamigos.foresta.tipi.CaratteristicaDiClasse;
 import com.threeamigos.foresta.tipi.MoltiplicatoreDiClasse;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
-import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.*;
 
@@ -134,11 +134,11 @@ final class ImmagineBestiario {
 
 	/**
 	 * L'icona della voce, a 32 pixel di lato al più: l'immagine della classe ridotta, per tutte allo stesso modo (le icone disegnate a mano che
-	 * alcune classi hanno, vedi ClassePersonaggioImmagine.getIcona, per ora non si usano qui, perché le altre classi non ce l'hanno)
+	 * alcune classi hanno, vedi MappaPersonaggioImmagine.getIcona, per ora non si usano qui, perché le altre classi non ce l'hanno)
 	 */
 	private static BufferedImage iconaDellaVoce(TipoPersonaggio voce) {
 		return (BufferedImage) ImageCache.getComposta(Arrays.asList("iconaDaImmagine", voce),
-				() -> adatta(ClassePersonaggioImmagine.getImmagine(voce), LATO_ICONA, LATO_ICONA));
+				() -> adatta(MappaPersonaggioImmagine.getImmagine(voce), LATO_ICONA, LATO_ICONA));
 	}
 
 	private static Image sagomaIcona(TipoPersonaggio voce, BufferedImage icona) {
@@ -206,7 +206,7 @@ final class ImmagineBestiario {
 	}
 
 	private static BufferedImage daMostrare(TipoPersonaggio classe, Verso verso, boolean aperta) {
-		BufferedImage immagine = verso == null ? ClassePersonaggioImmagine.getImmagine(classe) : ClassePersonaggioImmagine.getImmagine(classe, verso);
+		BufferedImage immagine = verso == null ? MappaPersonaggioImmagine.getImmagine(classe) : MappaPersonaggioImmagine.getImmagine(classe, verso);
 		if (aperta) {
 			return immagine;
 		}

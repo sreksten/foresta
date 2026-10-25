@@ -1,15 +1,15 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.CostantiArtefatti;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
-import com.threeamigos.foresta.artefatti.tipi.GradoIncantamento;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.GradoIncantamento;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;

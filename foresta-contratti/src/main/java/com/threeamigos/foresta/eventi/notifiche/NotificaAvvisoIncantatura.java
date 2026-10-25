@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
-import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoEvento;
 
 /**
  * L'incantatore accetta quel che c'è sul banco ma avverte di qualcosa (es. gli incantamenti elementali che

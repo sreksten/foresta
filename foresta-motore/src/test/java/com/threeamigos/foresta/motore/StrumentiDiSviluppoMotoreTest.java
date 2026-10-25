@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 
 import com.threeamigos.foresta.mappa.Foresta;
 
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.interfacce.StrumentiDiSviluppo.DovePartono;
 import com.threeamigos.foresta.interfacce.StrumentiDiSviluppo.Scorta;
 import com.threeamigos.foresta.interfacce.StrumentiDiSviluppo.VoceMissione;
@@ -206,10 +206,10 @@ class StrumentiDiSviluppoMotoreTest {
                 .filter(m -> m.getClasse() == classe).findFirst().get();
     }
 
-    private static com.threeamigos.foresta.mappa.CoordinateMD primaCasellaDi(TipoLocazione tipo) {
+    private static com.threeamigos.foresta.modellodati.CoordinateMD primaCasellaDi(TipoLocazione tipo) {
         for (int y = 0; y < Foresta.getDimensioneY(); y++) {
             for (int x = 0; x < Foresta.getDimensioneX(); x++) {
-                com.threeamigos.foresta.mappa.CoordinateMD coordinate = new com.threeamigos.foresta.mappa.CoordinateMD(x, y);
+                com.threeamigos.foresta.modellodati.CoordinateMD coordinate = new com.threeamigos.foresta.modellodati.CoordinateMD(x, y);
                 if (Foresta.getLocazione(coordinate) == tipo) {
                     return coordinate;
                 }

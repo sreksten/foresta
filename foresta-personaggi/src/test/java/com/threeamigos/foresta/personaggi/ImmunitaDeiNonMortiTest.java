@@ -2,8 +2,8 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.DatiDiProva;
 
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;

@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;

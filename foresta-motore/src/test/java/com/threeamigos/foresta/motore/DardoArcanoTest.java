@@ -4,15 +4,15 @@ import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
 import com.threeamigos.foresta.artefatti.Artefatto;
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.abilita.DardoArcano;
-import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.personaggi.*;
+import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class DardoArcanoTest {
 
     @BeforeEach
     void preparaDifensore() {
-        ModelloDati.setIstanza(new ModelloDati());
+        StatoDelMotore.azzera();
         difensore = new Guerriero("Bersaglio", 5);
         difensore.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 1000));
     }

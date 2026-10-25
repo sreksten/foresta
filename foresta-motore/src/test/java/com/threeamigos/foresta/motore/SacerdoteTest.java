@@ -1,13 +1,13 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.abilita.FabbricaAbilita;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Sacerdote;
@@ -129,7 +129,7 @@ class SacerdoteTest {
                 nomi.add(RegistroPersonaggi.getPersonaggioDisponibile().getNomeProprio().orElse("?"));
             }
             // ...salvo quelli già sistemati nella Foresta: li cerchiamo lì
-            for (com.threeamigos.foresta.mappa.CoordinateMD coordinate : com.threeamigos.foresta.modellodati.ModelloDati.getIstanza()
+            for (com.threeamigos.foresta.modellodati.CoordinateMD coordinate : com.threeamigos.foresta.modellodati.ModelloDati.getIstanza()
                     .getRegistroPersonaggiMD().getUbicazioniPersonaggi()) {
                 nomi.add(RegistroPersonaggi.getPersonaggioInLocazione(coordinate).getNomeProprio().orElse("?"));
             }
@@ -168,7 +168,7 @@ class SacerdoteTest {
             }
             // Entrambi guardano verso sinistra, da dove arriva il gruppo (se serve, la UI specchia l'immagine)
             for (TipoPersonaggio classe : new TipoPersonaggio[]{TipoPersonaggio.SACERDOTE, TipoPersonaggio.SACERDOTESSA}) {
-                assertEquals(com.threeamigos.foresta.intermezzi.Verso.SINISTRA, com.threeamigos.foresta.intermezzi.ScenaInLocanda
+                assertEquals(com.threeamigos.foresta.tipi.Verso.SINISTRA, com.threeamigos.foresta.intermezzi.ScenaInLocanda
                         .conSacerdote(classe).getPagine().get(0).getElemento("locandiere").getStatoAl(0).getVerso());
             }
             assertThrows(IllegalArgumentException.class,

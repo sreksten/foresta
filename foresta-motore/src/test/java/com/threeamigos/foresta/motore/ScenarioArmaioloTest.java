@@ -7,7 +7,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtef
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
 import com.threeamigos.foresta.artefatti.VistaScambio;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

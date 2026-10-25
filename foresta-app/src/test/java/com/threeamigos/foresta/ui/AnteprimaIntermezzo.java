@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.tipi.Orientamento;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.intermezzi.FabbricaIntermezzi;

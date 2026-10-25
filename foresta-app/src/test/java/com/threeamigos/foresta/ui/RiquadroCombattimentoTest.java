@@ -5,7 +5,7 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
+import com.threeamigos.foresta.tipi.TipoAzione;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroCombattimento;
 import org.junit.jupiter.api.BeforeAll;

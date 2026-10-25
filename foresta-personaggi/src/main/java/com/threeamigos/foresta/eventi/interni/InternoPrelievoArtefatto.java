@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.artefatti.OggettoConPeso;
-import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoEvento;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazionePrelievoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
 import com.threeamigos.foresta.artefatti.VistaScambio;

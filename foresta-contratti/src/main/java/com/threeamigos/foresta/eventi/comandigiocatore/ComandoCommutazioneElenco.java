@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.comandigiocatore;
 
 import com.threeamigos.foresta.eventi.EventoBase;
-import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoEvento;
 
 /**
  * Il giocatore apre o chiude, con un click, l'elenco dei modificatori di un artefatto o la descrizione di una

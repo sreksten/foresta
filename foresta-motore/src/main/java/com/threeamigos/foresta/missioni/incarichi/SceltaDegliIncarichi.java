@@ -2,7 +2,7 @@ package com.threeamigos.foresta.missioni.incarichi;
 
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.strumenti.dado.Dado;

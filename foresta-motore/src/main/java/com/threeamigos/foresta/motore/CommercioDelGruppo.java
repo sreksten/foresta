@@ -6,7 +6,7 @@ import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.BancoDiLavoro;
 import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.artefatti.RegoleIncantatura;
-import com.threeamigos.foresta.artefatti.tipi.TipoMotivoRifiutoIncantatura;
+import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.interni.InternoAcquistoArtefatto;

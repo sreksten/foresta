@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.serializzazione.MappaProprieta;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;

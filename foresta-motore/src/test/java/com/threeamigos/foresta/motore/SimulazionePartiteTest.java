@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.mappa.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;

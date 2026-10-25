@@ -4,12 +4,12 @@ import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSlotPerRilettura;
 import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 

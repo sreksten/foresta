@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.tipi.TipoRipetizione;
+import com.threeamigos.foresta.tipi.Verso;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
@@ -56,7 +58,7 @@ class ElementoIntermezzoTest {
 
     @Test
     void ciclicaRicominciaDallInizio() {
-        ElementoIntermezzo elemento = elemento().poi(Tappa.inSecondi(4).verso(1, 0.5)).ripeti(Ripetizione.CICLICA);
+        ElementoIntermezzo elemento = elemento().poi(Tappa.inSecondi(4).verso(1, 0.5)).ripeti(TipoRipetizione.CICLICA);
 
         assertEquals(0.25, elemento.getStatoAl(5).getX(), DELTA);
         assertTrue(Double.isInfinite(elemento.getDurata()));
@@ -64,7 +66,7 @@ class ElementoIntermezzoTest {
 
     @Test
     void avantiEIndietroRipercorreLeTappe() {
-        ElementoIntermezzo elemento = elemento().poi(Tappa.inSecondi(4).verso(1, 0.5)).ripeti(Ripetizione.AVANTI_E_INDIETRO);
+        ElementoIntermezzo elemento = elemento().poi(Tappa.inSecondi(4).verso(1, 0.5)).ripeti(TipoRipetizione.AVANTI_E_INDIETRO);
 
         assertEquals(0.5, elemento.getStatoAl(2).getX(), DELTA);
         assertEquals(0.75, elemento.getStatoAl(5).getX(), DELTA);
@@ -89,7 +91,7 @@ class ElementoIntermezzoTest {
         // Va verso sinistra e poi torna indietro
         ElementoIntermezzo elemento = ElementoIntermezzo.personaggio("drago", TipoPersonaggio.DRAGO, 1, 0.2)
                 .poi(Tappa.inSecondi(4).verso(0, 0.2))
-                .ripeti(Ripetizione.AVANTI_E_INDIETRO)
+                .ripeti(TipoRipetizione.AVANTI_E_INDIETRO)
                 .orientaNelVersoDelMoto();
 
         assertEquals(Verso.SINISTRA, elemento.getStatoAl(0).getVerso());

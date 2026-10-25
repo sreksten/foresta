@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
-import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoEvento;
 
 /**
  * Il caricamento di un salvataggio è fallito: porta l'eccezione, perché la UI possa avvisare il giocatore.

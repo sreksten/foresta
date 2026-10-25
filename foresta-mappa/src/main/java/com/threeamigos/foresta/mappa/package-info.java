@@ -6,3 +6,4 @@
  * personaggi stanno nel motore.
  */
 package com.threeamigos.foresta.mappa;
+

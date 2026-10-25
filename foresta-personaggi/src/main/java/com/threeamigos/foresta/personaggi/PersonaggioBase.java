@@ -1,25 +1,27 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.tipi.TipoApproccio;
 import com.threeamigos.foresta.artefatti.*;
+import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.artefatti.leggendari.RegoleSetLeggendari;
-import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
+import com.threeamigos.foresta.tipi.CategoriaArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.attributi.CalcolatoreAttributiSecondari;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.modificatori.ModificatoreAttivo;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
-import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.oggetti.ArmaNaturale;
 import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
@@ -178,15 +180,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		this.corrompibile = corrompibile;
 	}
 	
-	@Override
-	public com.threeamigos.foresta.modellodati.tattiche.TatticaMD getTattica() {
-		return md.getTattica();
-	}
-
-	@Override
-	public void setTattica(com.threeamigos.foresta.modellodati.tattiche.TatticaMD tattica) {
-		md.setTattica(tattica);
-	}
 
 	public boolean isAmichevole() {
 		return amichevole;

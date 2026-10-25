@@ -1,8 +1,6 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
-import com.threeamigos.foresta.artefatti.IncantamentoMD;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoDanno;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

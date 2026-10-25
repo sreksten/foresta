@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;

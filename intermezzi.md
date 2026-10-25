@@ -102,7 +102,7 @@ public List<PaginaIntermezzo> getPagine() {
             .conElemento(ElementoIntermezzo.personaggio("drago", TipoPersonaggio.DRAGO, 1.1, 0.25)
                 .conScala(0.4).conOpacita(0.6)                      // piccolo e semitrasparente
                 .poi(Tappa.inSecondi(8).verso(-0.1, 0.15))          // attraversa il cielo
-                .ripeti(Ripetizione.AVANTI_E_INDIETRO)              // e torna indietro
+                .ripeti(TipoRipetizione.AVANTI_E_INDIETRO)              // e torna indietro
                 .orientaNelVersoDelMoto())                           // guardando dove va
             .conElemento(ElementoIntermezzo.di("fuoco",
                 ImmagineIntermezzo.animazione(Animazione.FUOCO_DA_CAMPO), 0.5, 0.76))
@@ -203,7 +203,7 @@ ElementoIntermezzo.personaggio("goblin", TipoPersonaggio.GOBLIN, -0.1, 0.7)
 - `attendi(secondi)` è una tappa in cui non cambia niente.
 - Il tempo parte da 0 all'inizio della pagina.
 
-**Ripetizione**, con `.ripeti(...)`:
+**TipoRipetizione**, con `.ripeti(...)`:
 
 | Valore | Effetto |
 | :--- | :--- |

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
-import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoEvento;
 
 /**
  * Un evento di notifica globale (un messaggio più importante degli altri) da mandare al giocatore.

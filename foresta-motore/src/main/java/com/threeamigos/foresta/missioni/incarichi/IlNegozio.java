@@ -1,14 +1,15 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
-import com.threeamigos.foresta.mappa.Quadrante;
+import com.threeamigos.foresta.tipi.AspettoDelMandante;
+import com.threeamigos.foresta.tipi.Quadrante;
 
-import com.threeamigos.foresta.mappa.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import com.threeamigos.foresta.mappa.Foresta;
 
-import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
+import com.threeamigos.foresta.tipi.TipoNegozio;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -17,8 +18,8 @@ import com.threeamigos.foresta.locazioni.Bottega;
 import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.richieste.InfestazioneRichiesta;
-import com.threeamigos.foresta.mappa.CoordinateMD;
-import com.threeamigos.foresta.mappa.LocazioneMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Articoli;

@@ -1,11 +1,12 @@
 package com.threeamigos.foresta.danni.tipi;
 
+import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumMap;
 import java.util.Map;
 
-import static com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato.*;
+import static com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**

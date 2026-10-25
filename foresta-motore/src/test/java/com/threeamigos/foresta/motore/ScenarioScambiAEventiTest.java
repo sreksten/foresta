@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoCommutazioneElenco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpesaPuntoAbilita;
@@ -11,7 +11,7 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.artefatti.VistaScambio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

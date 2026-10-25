@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 
 /**
  * Gli artefatti che servono ai test del modello dati.

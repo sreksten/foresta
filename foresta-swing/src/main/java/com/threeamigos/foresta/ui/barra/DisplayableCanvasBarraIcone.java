@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.barra;
 
+import com.threeamigos.foresta.tipi.TipoIcona;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoImpostazioneAiuto;
@@ -33,10 +34,10 @@ import java.util.List;
 public class DisplayableCanvasBarraIcone implements Finestra {
 
 	/**
-	 * La misura delle icone dopo lo zoom (vedi ClasseIcona.componi): 64 x 64 con lo zoom predefinito
+	 * La misura delle icone dopo lo zoom (vedi TipoIcona.componi): 64 x 64 con lo zoom predefinito
 	 */
-	static final int ICONA_WIDTH = ClasseIcona.getLarghezzaMassima();
-	static final int ICONA_HEIGHT = ClasseIcona.getAltezzaMassima();
+	static final int ICONA_WIDTH = TipoIcona.getLarghezzaMassima();
+	static final int ICONA_HEIGHT = TipoIcona.getAltezzaMassima();
 	/**
 	 * Quanto spazio, oltre alla loro larghezza, deve avere ogni icona della barra orizzontale per essere contata fra
 	 * quelle che ci stanno
@@ -96,14 +97,14 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 
 		if (orientamento == DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE) {
 			comandoPrecedente = Comando.SINISTRA;
-			iconaPrecedente = ClasseIcona.SINISTRA.getIcona();
+			iconaPrecedente = TipoIcona.SINISTRA.getIcona();
 			comandoSuccessivo = Comando.DESTRA;
-			iconaSuccessivo = ClasseIcona.DESTRA.getIcona();
+			iconaSuccessivo = TipoIcona.DESTRA.getIcona();
 		} else {
 			comandoPrecedente = Comando.SU;
-			iconaPrecedente = ClasseIcona.SU.getIcona();
+			iconaPrecedente = TipoIcona.SU.getIcona();
 			comandoSuccessivo = Comando.GIU;
-			iconaSuccessivo = ClasseIcona.GIU.getIcona();
+			iconaSuccessivo = TipoIcona.GIU.getIcona();
 		}
 
 		DoomdarkFont fontSmall = DoomdarkFontSmall.getInstance();
@@ -175,21 +176,21 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 	private BufferedImage getIcona(Comando comando) {
 		if (comando.isPersonaggio()) {
 			int indice = comando.ordinal() - Comando.PERSONAGGIO_1.ordinal();
-			ClasseIcona icona = getIconaPersonaggio(indice);
+			TipoIcona icona = getIconaPersonaggio(indice);
 			// Il capo si riconosce dallo sfondo rosso
 			VistaPersonaggio capo = vistaPartita.getGruppoGiocatore().getCapo();
 			boolean isCapo = capo != null && capo.getUuid().equals(vistaPartita.getGruppoGiocatore().getPersonaggio(indice).getUuid());
 			return isCapo ? icona.getIconaCapo() : icona.getIcona();
 		}
-		return ClasseIcona.ofComando(comando).getIcona();
+		return TipoIcona.ofComando(comando).getIcona();
 	}
 
-	private ClasseIcona getIconaPersonaggio(int indice) {
+	private TipoIcona getIconaPersonaggio(int indice) {
 		VistaPersonaggio personaggio = vistaPartita.getGruppoGiocatore().getPersonaggio(indice);
 		if (personaggio == null) {
 			throw new IllegalStateException("Personaggio non trovato con indice " + indice);
 		}
-		return ClasseIcona.ofClasse(personaggio.getClasse());
+		return TipoIcona.ofClasse(personaggio.getClasse());
 	}
 
 	private void ridistribuisciScelte() {
@@ -225,7 +226,7 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 
 		if (orientamento == DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE) {
 			int offset = (larghezza - totaleIcone * ICONA_WIDTH) >> 1;
-			int offsetVerticale = (altezza - ClasseIcona.getAltezzaMassima()) >> 1;
+			int offsetVerticale = (altezza - TipoIcona.getAltezzaMassima()) >> 1;
 			if (precedente) {
 				iconeVisibili.add(new IconaVisibile(new Rectangle(offset, offsetVerticale, ICONA_WIDTH, ICONA_HEIGHT), comandoPrecedente, iconaPrecedente));
 				offset += ICONA_WIDTH;

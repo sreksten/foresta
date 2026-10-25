@@ -4,7 +4,7 @@ import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.ui.AccessoMappaGeneralePerTest;

@@ -10,7 +10,7 @@ import com.threeamigos.foresta.artefatti.VistaBancoDiLavoro;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 
@@ -88,7 +88,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         // Nome dell'incantatore (e sotto il mestiere)
         y = disegnaIntestazioneCentrale(graphics, y, coloreTestata) + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
-        BufferedImage immaginePersonaggio = ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.INCANTATORE);
+        BufferedImage immaginePersonaggio = MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.INCANTATORE);
 
         // Come per l'armaiolo, il ladro fa da altezza di riferimento per non far sfarfallare l'immagine
         y += ALTEZZA_LADRO;

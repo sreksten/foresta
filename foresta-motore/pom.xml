@@ -24,6 +24,21 @@
         </dependency>
         <dependency>
             <groupId>com.threeamigos</groupId>
+            <artifactId>foresta-poteri</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>foresta-combattimento</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>foresta-tattiche</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
             <artifactId>foresta-mappa</artifactId>
             <version>${project.version}</version>
         </dependency>

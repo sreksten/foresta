@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.eventi.richieste;
 
 import com.threeamigos.foresta.eventi.RichiestaConComandi;
-import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoEvento;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
+import com.threeamigos.foresta.modellodati.TatticaMD;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
+import com.threeamigos.foresta.tipi.TipoAzione;
 
 import java.util.Collection;
 import java.util.Set;

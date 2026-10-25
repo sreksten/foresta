@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.artefatti.leggendari;
 
-import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.CategoriaArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

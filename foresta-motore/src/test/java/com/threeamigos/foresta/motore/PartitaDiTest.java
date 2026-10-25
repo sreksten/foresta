@@ -14,11 +14,11 @@ import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.SceltaDegliIncarichi;
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.mappa.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 import java.util.ArrayList;

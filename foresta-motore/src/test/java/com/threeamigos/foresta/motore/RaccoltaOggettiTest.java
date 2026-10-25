@@ -5,7 +5,7 @@ import com.threeamigos.foresta.locazioni.OggettiDiProva;
 import com.threeamigos.foresta.oggetti.Moneta;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

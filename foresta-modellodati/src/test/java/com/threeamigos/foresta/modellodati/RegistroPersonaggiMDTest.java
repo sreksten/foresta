@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.mappa.CoordinateMD;
 
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;

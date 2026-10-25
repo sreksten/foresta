@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
-import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoEvento;
 
 /**
  * Un avversario mietuto si è risvegliato come scheletro ed è passato dalla parte del gruppo.

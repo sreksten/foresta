@@ -1,18 +1,18 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.tipi.TipoApproccio;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
 import com.threeamigos.foresta.tipi.*;
 
@@ -104,14 +104,6 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 * Indica se questo personaggio sia in grado di usare la magia
 	 */
     boolean isMagico();
-
-    /**
-     * La tattica del personaggio (tattiche_di_combattimento_automatiche.md §11), o null se non ne ha una (oggi i mostri, che scelgono ancora con le
-     * tattica base della sua classe, RegistroTattiche). Si salva con il personaggio (PersonaggioMD).
-     */
-    TatticaMD getTattica();
-
-    void setTattica(TatticaMD tattica);
 
 
     /**

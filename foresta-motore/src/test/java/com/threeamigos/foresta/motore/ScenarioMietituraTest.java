@@ -2,12 +2,12 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.combattimento.AttaccoConLeArmi;
 import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;

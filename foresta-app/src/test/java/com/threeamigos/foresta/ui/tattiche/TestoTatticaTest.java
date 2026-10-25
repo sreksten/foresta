@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.ui.tattiche;
 
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.modellodati.tattiche.FiltroMD;
-import com.threeamigos.foresta.modellodati.tattiche.PredicatoMD;
-import com.threeamigos.foresta.modellodati.tattiche.VoceMD;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.modellodati.FiltroMD;
+import com.threeamigos.foresta.modellodati.PredicatoMD;
+import com.threeamigos.foresta.modellodati.VoceMD;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
-import com.threeamigos.foresta.tipi.tattiche.TipoConfronto;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
+import com.threeamigos.foresta.tipi.TipoConfronto;
+import com.threeamigos.foresta.tipi.TipoFiltro;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,22 +31,22 @@ class TestoTatticaTest {
 
     @Test
     void ogniElementoHaUnaSpiegazione() {
-        for (com.threeamigos.foresta.tipi.tattiche.TipoRosa t : com.threeamigos.foresta.tipi.tattiche.TipoRosa.values()) {
+        for (com.threeamigos.foresta.tipi.TipoRosa t : com.threeamigos.foresta.tipi.TipoRosa.values()) {
             assertFalse(TestoTattica.spiega(t).isEmpty(), t.name());
         }
         for (TipoFiltro t : TipoFiltro.values()) {
             assertFalse(TestoTattica.spiega(t).isEmpty(), t.name());
         }
-        for (com.threeamigos.foresta.tipi.tattiche.TipoPredicato t : com.threeamigos.foresta.tipi.tattiche.TipoPredicato.values()) {
+        for (com.threeamigos.foresta.tipi.TipoPredicato t : com.threeamigos.foresta.tipi.TipoPredicato.values()) {
             assertFalse(TestoTattica.spiega(t).isEmpty(), t.name());
         }
-        for (com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento t : com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.values()) {
+        for (com.threeamigos.foresta.tipi.TipoOrdinamento t : com.threeamigos.foresta.tipi.TipoOrdinamento.values()) {
             assertFalse(TestoTattica.spiega(t).isEmpty(), t.name());
         }
-        for (com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo t : com.threeamigos.foresta.tipi.tattiche.CriterioIncantesimo.values()) {
+        for (com.threeamigos.foresta.tipi.CriterioIncantesimo t : com.threeamigos.foresta.tipi.CriterioIncantesimo.values()) {
             assertFalse(TestoTattica.spiega(t).isEmpty(), t.name());
         }
-        for (com.threeamigos.foresta.tipi.tattiche.TipoAzione t : com.threeamigos.foresta.tipi.tattiche.TipoAzione.values()) {
+        for (com.threeamigos.foresta.tipi.TipoAzione t : com.threeamigos.foresta.tipi.TipoAzione.values()) {
             assertFalse(TestoTattica.spiega(t).isEmpty(), t.name());
         }
         for (TipoConfronto c : TipoConfronto.values()) {

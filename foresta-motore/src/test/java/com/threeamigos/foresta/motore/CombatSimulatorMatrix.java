@@ -5,7 +5,7 @@ import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.combattimento.FaseDiAttacco;
-import com.threeamigos.foresta.danni.tipi.CategoriaDanno;
+import com.threeamigos.foresta.tipi.CategoriaDanno;
 import com.threeamigos.foresta.abilita.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;

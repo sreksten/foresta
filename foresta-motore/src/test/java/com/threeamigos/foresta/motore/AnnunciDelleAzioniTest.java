@@ -2,14 +2,13 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.abilita.DardoArcano;
 import com.threeamigos.foresta.abilita.FabbricaAbilita;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.canti.FabbricaCanti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.personaggi.Bardo;
 import com.threeamigos.foresta.personaggi.Chierico;
 import com.threeamigos.foresta.personaggi.Druido;
@@ -20,7 +19,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoCanto;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
+import com.threeamigos.foresta.tipi.TipoAzione;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +41,7 @@ class AnnunciDelleAzioniTest {
 
     @BeforeEach
     void preparaGruppiEAscolta() {
-        ModelloDati.setIstanza(new ModelloDati());
+        StatoDelMotore.azzera();
         GruppoAvversario.azzeraIstanza();
         avversari = GruppoAvversario.getIstanza();
         compagni = new Gruppo() {

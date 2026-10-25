@@ -2,7 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.mappa.VistaMappa;
 
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import com.threeamigos.foresta.mappa.Foresta;
 
@@ -13,13 +13,13 @@ import com.threeamigos.foresta.interfacce.*;
 import com.threeamigos.foresta.locazioni.Bosco;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.MoltiplicatoriDiClasse;
 import com.threeamigos.foresta.tipi.*;
-import com.threeamigos.foresta.trofei.ClasseTrofeo;
+import com.threeamigos.foresta.tipi.RegolaTrofeo;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 import java.util.List;
@@ -116,12 +116,12 @@ public class VistaPartitaMotore implements VistaPartita {
 
 	@Override
 	public int getObiettivoTrofeo(TipoTrofeo trofeo) {
-		return ClasseTrofeo.di(trofeo).getObiettivo();
+		return RegolaTrofeo.di(trofeo).getObiettivo();
 	}
 
 	@Override
 	public int getProgressoTrofeo(TipoTrofeo trofeo) {
-		return ClasseTrofeo.di(trofeo).getProgresso();
+		return RegolaTrofeo.di(trofeo).getProgresso();
 	}
 
 	@Override

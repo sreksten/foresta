@@ -6,11 +6,11 @@ import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaIncantatore;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioFornitore;
 import com.threeamigos.foresta.intermezzi.IntermezzoLocandaPrimaVisita;
-import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
+import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

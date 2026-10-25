@@ -76,7 +76,7 @@ dietro, più tenue che nei trofei. La rotella scorre il pannello sotto il mouse 
 La scheda di una voce aperta, dall'alto:
 
 1. il nome nell'alfabeto grande e le **immagini**: per i ruoli con due forme la femmina a sinistra, rivolta a destra, e il maschio a destra, rivolto a sinistra, così
-   che si guardino (`ClassePersonaggioImmagine.getImmagine(classe, verso)`); chiusa, le silhouette (`ImageCache.sagomaScura`, `getSagomaDelPersonaggio`);
+   che si guardino (`MappaPersonaggioImmagine.getImmagine(classe, verso)`); chiusa, le silhouette (`ImageCache.sagomaScura`, `getSagomaDelPersonaggio`);
 2. la **descrizione**;
 3. le **abilità innate** (`AbilitaInnateDiClasse`, che raccoglie quelle di chi le ha: le sei di Chierico e Druido, i tre canti del Bardo, l'Alba Sacra e la Luce
    Divina del Sacerdote, il dardo arcano di Mago ed Elfo), lette dal codice di chi le definisce;

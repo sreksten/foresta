@@ -1,18 +1,18 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.artefatti.leggendari.RegoleSetLeggendari;
 import com.threeamigos.foresta.artefatti.leggendari.SetLeggendario;
-import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.StatoPezzoDelSet;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.CategoriaArtefatto;
+import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import org.junit.jupiter.api.Test;

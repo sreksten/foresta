@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.tipi;
 
-import com.threeamigos.foresta.tipi.tattiche.TipoConfronto;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

@@ -2,12 +2,12 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.combattimento.Ondata;
 import com.threeamigos.foresta.interfacce.VistaMissione;
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.MissioneMD;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.Collections;
 import java.util.List;

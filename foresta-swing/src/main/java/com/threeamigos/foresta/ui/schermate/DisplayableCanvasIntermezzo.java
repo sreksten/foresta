@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.tipi.TipoStiramento;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazioneFumetto;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
@@ -7,7 +8,7 @@ import com.threeamigos.foresta.intermezzi.*;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
-import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.immagini.VersiDeiPersonaggi;
 import com.threeamigos.foresta.ui.sprite.AnimazioneImmagine;
@@ -307,7 +308,7 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 	private BufferedImage immagine(ImmagineIntermezzo immagine, double secondi, StatoElemento stato) {
 		switch (immagine.getTipo()) {
 			case PERSONAGGIO:
-				return ClassePersonaggioImmagine.getImmagine(immagine.getClassePersonaggio());
+				return MappaPersonaggioImmagine.getImmagine(immagine.getClassePersonaggio());
 			case LOCAZIONE:
 				return ImageCache.locazioni.get(immagine.getTipoLocazione());
 			case SPRITE_SHEET:

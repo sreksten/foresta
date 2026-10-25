@@ -1,10 +1,6 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
 import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
@@ -21,7 +17,7 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.*;
 /**
  * I dati di un personaggio: la classe (mago, arpia...), il nome proprio facoltativo, se è vivo (o la causa della morte),
  * livello, esperienza e punti abilità non ancora assegnati, se è un PNG e perché sta nel gruppo, gli artefatti che
- * porta, i modificatori e gli effetti di stato in corso e la sua tattica di combattimento.
+ * porta, i modificatori e gli effetti di stato in corso.
  * <p>
  * Gli <b>attributi</b> (salute, forza, destrezza...) stanno in una mappa indicizzata da {@link TipoAttributo}, con un
  * valore minimo e uno massimo facoltativi per ciascuno: {@link #set(TipoAttributo, double)} li rispetta, quindi un
@@ -106,10 +102,6 @@ public class PersonaggioMD implements Serializzabile {
 	 * Modificatori permanenti agli attributi dei personaggi
 	 */
 	private final List<ModificatoreAttributoMD> modificatori = new ArrayList<>();
-	/**
-	 * Tattica del personaggio
-	 */
-	private TatticaMD tattica;
 	/**
 	 * Effetti di stato applicati al personaggio
 	 */
@@ -211,17 +203,6 @@ public class PersonaggioMD implements Serializzabile {
 	 */
 	public Collection<ModificatoreAttributoMD> getModificatori() {
 		return Collections.unmodifiableList(modificatori);
-	}
-
-	/**
-	 * La tattica del personaggio (tattiche_di_combattimento_automatiche.md §11), o null se non ne ha una (oggi i mostri); si salva con lui
-	 */
-	public TatticaMD getTattica() {
-		return tattica;
-	}
-
-	public void setTattica(TatticaMD tattica) {
-		this.tattica = tattica;
 	}
 
 	/**
@@ -395,7 +376,7 @@ public class PersonaggioMD implements Serializzabile {
 
 	/**
 	 * Rimette gli artefatti come erano: lo stesso contenuto e lo stesso ordine. Serve a chi ne ha tolti qualcuno per una
-	 * prova (vedi {@code RegoleEquipaggiamento.valutaCambioArma}) e deve lasciare tutto com'era, anche l'ordine in cui
+	 * prova (vedi {@code CambioDArma.valutaCambioArma}) e deve lasciare tutto com'era, anche l'ordine in cui
 	 * l'inventario li mostra.
 	 */
 	public void ripristinaArtefatti(List<ArtefattoMD> prima) {
@@ -426,7 +407,7 @@ public class PersonaggioMD implements Serializzabile {
 
 	/**
 	 * Scrive una riga con i dati del personaggio (se è vivo e, se è morto, la causa; il numero di artefatti), poi cinque righe con i valori minimi,
-	 * i valori massimi, gli attributi, i modificatori e gli effetti di stato, poi la tattica (una riga vuota se non ne ha)
+	 * i valori massimi, gli attributi, i modificatori e gli effetti di stato
 	 * e infine gli artefatti.
 	 */
 	@Override
@@ -451,13 +432,6 @@ public class PersonaggioMD implements Serializzabile {
 		stampaRiga(stream, valoriAttributi.entrySet().stream().map(e -> composto(e.getKey(), e.getValue())).collect(Collectors.toList()));
 		stampaRiga(stream, modificatori.stream().map(ModificatoreAttributoMD::comeCampo).collect(Collectors.toList()));
 		stampaRiga(stream, effettiDiStato.stream().map(EffettoDiStatoMD::comeCampo).collect(Collectors.toList()));
-
-		// La tattica: una riga vuota se non ce n'è una, altrimenti la tattica con le sue voci
-		if (tattica == null) {
-			stream.println();
-		} else {
-			tattica.salva(stream);
-		}
 
 		for (ArtefattoMD artefatto : artefatti) {
 			artefatto.salva(stream);
@@ -498,13 +472,6 @@ public class PersonaggioMD implements Serializzabile {
 		while (campi.haAltriCampi()) {
 			effettiDiStato.add(EffettoDiStatoMD.daCampo(campi));
 		}
-
-		String intestazioneTattica = stream.readLine();
-		if (intestazioneTattica == null) {
-			// Un salvataggio troncato dà sempre un'IOException, mai una NullPointerException (vedi LetturaDeiSalvataggiTest)
-			throw new IOException("Fine del salvataggio inattesa");
-		}
-		tattica = intestazioneTattica.isEmpty() ? null : TatticaMD.leggi(intestazioneTattica, stream);
 
 		artefatti.clear();
 		for (int i = 0; i < numeroArtefatti; i++) {

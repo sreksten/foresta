@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.artefatti.tipi.GradoIncantamento;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.tipi.GradoIncantamento;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoDanno;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

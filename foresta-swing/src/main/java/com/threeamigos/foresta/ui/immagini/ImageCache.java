@@ -1,16 +1,18 @@
 package com.threeamigos.foresta.ui.immagini;
 
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
+import com.threeamigos.foresta.tipi.MappaBottinoImmagine;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoPuliziaCacheDinamicaImmagini;
-import com.threeamigos.foresta.intermezzi.Verso;
-import com.threeamigos.foresta.mappa.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.Verso;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
-import com.threeamigos.foresta.ui.barra.ClasseIcona;
+import com.threeamigos.foresta.tipi.TipoIcona;
 import com.threeamigos.foresta.ui.testo.*;
 
 import java.awt.*;
@@ -122,7 +124,7 @@ public class ImageCache {
 	// la memoria da quelle non usate da più tempo, per velocizzare le operazioni di rendering.
 	private static final Map<DoomdarkFont, Map<DoomdarkColorModel.Color, Map<String, WeakReference<Image>>>> cacheDinamica =
 			new ConcurrentHashMap<>();
-	// Le immagini dei personaggi rivolte da una certa parte (vedi ClassePersonaggioImmagine.getImmagine con il verso):
+	// Le immagini dei personaggi rivolte da una certa parte (vedi MappaPersonaggioImmagine.getImmagine con il verso):
 	// solo quelle che richiedono uno specchio, costruite alla prima richiesta. Riferimenti deboli come per le scritte:
 	// se nessuno le usa più (il personaggio non è più in scena) il reaper ripulisce la mappa e la memoria si libera.
 	private static final Map<TipoPersonaggio, Map<Verso, WeakReference<BufferedImage>>> immaginiPersonaggiPerVerso =
@@ -321,12 +323,12 @@ public class ImageCache {
 	 */
 	public static void init() {
 		if (!inited) {
-			// Forzo il caricamento delle immagini dei personaggi, che stanno in ClassePersonaggioImmagine
-			ClassePersonaggioImmagine.values();
-			// ...e quelle degli oggetti, che il motore non carica (vedi ClassiOggettoImmagine)
-			ClassiOggettoImmagine.values();
-			// ...e le icone, che si caricano al primo uso (vedi ClasseIcona)
-			ClasseIcona.precarica();
+			// Forzo il caricamento delle immagini dei personaggi, che stanno in MappaPersonaggioImmagine
+			MappaPersonaggioImmagine.values();
+			// ...e quelle degli oggetti, che il motore non carica (vedi MappaBottinoImmagine)
+			MappaBottinoImmagine.values();
+			// ...e le icone, che si caricano al primo uso (vedi TipoIcona)
+			TipoIcona.precarica();
 			inited = true;
 		}
 	}
@@ -418,7 +420,7 @@ public class ImageCache {
 	 * L'immagine di un personaggio rivolta dal verso indicato, costruita con il costruttore la prima volta (o dopo che
 	 * il garbage collector ha reclamato la precedente) e poi ricordata. Chi la usa ne tiene un riferimento finché serve.
 	 */
-	static BufferedImage getImmaginePersonaggio(TipoPersonaggio tipo, Verso verso, Supplier<BufferedImage> costruttore) {
+	public static BufferedImage getImmaginePersonaggio(TipoPersonaggio tipo, Verso verso, Supplier<BufferedImage> costruttore) {
 		Map<Verso, WeakReference<BufferedImage>> perVerso = immaginiPersonaggiPerVerso
 				.computeIfAbsent(tipo, k -> new ConcurrentHashMap<>());
 		WeakReference<BufferedImage> ref = perVerso.get(verso);

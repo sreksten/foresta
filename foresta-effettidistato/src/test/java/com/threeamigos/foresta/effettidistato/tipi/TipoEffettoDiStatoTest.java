@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.effettidistato.tipi;
 
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.testi.Testi;
 import org.junit.jupiter.api.Test;
 

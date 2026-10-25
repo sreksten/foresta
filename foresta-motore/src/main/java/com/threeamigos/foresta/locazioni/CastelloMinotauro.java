@@ -9,7 +9,7 @@ import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.MinotauroGigante;
 import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 /**

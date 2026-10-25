@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
-import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoEvento;
 
 /**
  * Il gruppo del giocatore ha guadagnato dei punti esperienza (li ha già dati ai suoi personaggi): chi tiene il conto del

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.effettidistato.tipi;
 
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertSame;

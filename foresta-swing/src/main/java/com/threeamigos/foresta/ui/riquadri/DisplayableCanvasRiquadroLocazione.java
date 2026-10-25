@@ -1,18 +1,18 @@
 package com.threeamigos.foresta.ui.riquadri;
 
-import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.interfacce.VistaGruppo;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.intermezzi.Verso;
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.tipi.Verso;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.TipoBottino;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.ui.Finestra;
-import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
-import com.threeamigos.foresta.ui.immagini.ClassiOggettoImmagine;
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
+import com.threeamigos.foresta.tipi.MappaBottinoImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.sprite.SpriteEffetto;
@@ -118,7 +118,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		List<BufferedImage> immagini = new ArrayList<>();
 		for (VistaPersonaggio avversario : avversari) {
 			// Gli avversari stanno a sinistra e guardano a destra, verso il gruppo
-			immagini.add(ClassePersonaggioImmagine.getImmagine(avversario.getClasse(), Verso.DESTRA));
+			immagini.add(MappaPersonaggioImmagine.getImmagine(avversario.getClasse(), Verso.DESTRA));
 		}
 		BufferedImage locazione = ImageCache.locazioni.get(TipoLocazione.BOSCO);
 		List<Point> posizioni = disponiAvversari(topLeftX, larghezzaDisponibile, larghezzaDelCentro(), locazione.getHeight(), immagini);
@@ -138,7 +138,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	 * personaggi, quindi uno più largo non li sposta)
 	 */
 	private static int larghezzaDelCentro() {
-		return ClassiOggettoImmagine.getImmagine(TipoBottino.COFANO).getWidth();
+		return MappaBottinoImmagine.getImmagine(TipoBottino.COFANO).getWidth();
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		List<BufferedImage> immagini = new ArrayList<>();
 		for (VistaPersonaggio personaggio : personaggi) {
 			// Il gruppo guarda a sinistra, verso i mostri
-			immagini.add(ClassePersonaggioImmagine.getImmagine(personaggio.getClasse(), Verso.SINISTRA));
+			immagini.add(MappaPersonaggioImmagine.getImmagine(personaggio.getClasse(), Verso.SINISTRA));
 		}
 		BufferedImage locazione = ImageCache.locazioni.get(TipoLocazione.BOSCO);
 		List<Point> posizioni = disponiGruppo(topLeftX, larghezzaDisponibile, larghezzaDelCentro(), locazione.getHeight(), immagini);
@@ -340,7 +340,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		// vengono dopo, sopra tutto (DisplayableCanvas.inGioco)
 		TipoBottino tipoOggetto = vistaPartita.getTipoBottinoInLocazione();
 		if (tipoOggetto != null && tipoOggetto != TipoBottino.ARTEFATTO) {
-			BufferedImage d = ClassiOggettoImmagine.getImmagine(tipoOggetto);
+			BufferedImage d = MappaBottinoImmagine.getImmagine(tipoOggetto);
 			graphics.drawImage(d, xOggetto(d), yOggetto(locazione, d), null);
 		}
 	}
@@ -433,7 +433,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		BufferedImage locazione = ImageCache.locazioni.get(g.getTipoLocazioneCorrente());
 		TipoBottino tipoOggetto = vistaPartita.getTipoBottinoInLocazione();
 		if (tipoOggetto != null && tipoOggetto != TipoBottino.ARTEFATTO) {
-			BufferedImage d = ClassiOggettoImmagine.getImmagine(tipoOggetto);
+			BufferedImage d = MappaBottinoImmagine.getImmagine(tipoOggetto);
 			return new SpriteATempo(d, xOggetto(d), yOggetto(locazione, d),
 					"Raccolto oggetto " + tipoOggetto);
 		}

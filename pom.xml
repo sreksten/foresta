@@ -20,6 +20,9 @@
         <module>foresta-tipi</module>
         <module>foresta-mappa</module>
         <module>foresta-personaggi</module>
+        <module>foresta-poteri</module>
+        <module>foresta-combattimento</module>
+        <module>foresta-tattiche</module>
         <module>foresta-modellodati</module>
         <module>foresta-contratti</module>
         <module>foresta-motore</module>

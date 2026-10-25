@@ -1,11 +1,6 @@
 package com.threeamigos.foresta.tipi;
 
 import com.threeamigos.foresta.testi.Testi;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
-import com.threeamigos.foresta.tipi.tattiche.TipoFiltro;
-import com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento;
-import com.threeamigos.foresta.tipi.tattiche.TipoPredicato;
-import com.threeamigos.foresta.tipi.tattiche.TipoRosa;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,9 +24,6 @@ class TestiDelleEnumDeiPoteriETatticheTest {
 		ENUM.put(TipoIncantesimo.class, Arrays.asList("NOME", "NOME_SINGOLARE", "NOME_PLURALE", "EFFETTO"));
 		ENUM.put(TipoCanto.class, Arrays.asList("NOME", "DESCRIZIONE"));
 		ENUM.put(TipoAzione.class, Collections.singletonList("DESCRIZIONE"));
-		ENUM.put(TipoFiltro.class, Collections.singletonList("DESCRIZIONE"));
-		ENUM.put(TipoOrdinamento.class, Collections.singletonList("DESCRIZIONE"));
-		ENUM.put(TipoPredicato.class, Collections.singletonList("DESCRIZIONE"));
 		ENUM.put(TipoRosa.class, Collections.singletonList("DESCRIZIONE"));
 	}
 

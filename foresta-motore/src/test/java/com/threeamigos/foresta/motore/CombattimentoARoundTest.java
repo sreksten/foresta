@@ -5,12 +5,12 @@ import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.locazioni.Locazione;
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
@@ -65,8 +65,8 @@ class CombattimentoARoundTest {
     }
 
     private static void resistente(Personaggio p) {
-        p.addModificatore(new com.threeamigos.foresta.modificatori.ModificatoreAttributoMD(com.threeamigos.foresta.attributi.tipi.TipoAttributo.COSTITUZIONE,
-                com.threeamigos.foresta.modificatori.tipi.TipoModificatore.QUANTITA_ASSOLUTA, 1000));
+        p.addModificatore(new com.threeamigos.foresta.modellodati.ModificatoreAttributoMD(com.threeamigos.foresta.tipi.TipoAttributo.COSTITUZIONE,
+                com.threeamigos.foresta.tipi.TipoModificatore.QUANTITA_ASSOLUTA, 1000));
         p.addSalute(1_000_000);
     }
 

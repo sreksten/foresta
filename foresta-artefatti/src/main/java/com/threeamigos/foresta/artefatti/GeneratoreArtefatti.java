@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 
 /**
  * Genera artefatti e pergamene a caso, per il loot e per i negozi.

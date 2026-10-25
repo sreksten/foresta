@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni.richieste;
 
-import com.threeamigos.foresta.missioni.AspettoDelMandante;
+import com.threeamigos.foresta.tipi.AspettoDelMandante;
 import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta.Indizio;
 
 import java.util.ArrayList;

@@ -48,6 +48,7 @@ public final class StatoDelMotore {
 		RegistroArtefatti.registrati();
 		RegistroMissioni.registrati();
 		CommercioDelGruppo.registrati();
+		com.threeamigos.foresta.combattimento.MeccanicaDelloScontro.registrati();
 	}
 
 	/**

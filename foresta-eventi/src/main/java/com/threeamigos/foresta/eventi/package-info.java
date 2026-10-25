@@ -3,7 +3,7 @@
  * <p>
  * {@link com.threeamigos.foresta.eventi.BusEventi} è un publish/subscribe sincrono: chi vuole sapere cosa succede si iscrive a un
  * tipo di evento con {@code iscriviti}, chi ha qualcosa da dire lo {@code pubblica}. Ogni evento estende
- * {@link com.threeamigos.foresta.eventi.EventoBase} e ha un {@link com.threeamigos.foresta.eventi.TipoEvento}.
+ * {@link com.threeamigos.foresta.eventi.EventoBase} e ha un {@link com.threeamigos.foresta.tipi.TipoEvento}.
  * <p>
  * Gli eventi sono divisi per direzione e intento nei sottopacchetti:
  * <ul>
@@ -16,3 +16,4 @@
  * modificare lo stato del gioco se non attraverso un comando.
  */
 package com.threeamigos.foresta.eventi;
+

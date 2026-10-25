@@ -1,0 +1,131 @@
+package com.threeamigos.foresta.tipi;
+
+import com.threeamigos.foresta.trofei.TrofeoEnciclopedista;
+import com.threeamigos.foresta.trofei.TrofeoAContatore;
+import com.threeamigos.foresta.trofei.Trofeo;
+import com.threeamigos.foresta.trofei.TrofeoPerdigiorno;
+
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.eventi.interni.*;
+import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
+import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
+import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
+import com.threeamigos.foresta.tipi.*;
+
+import java.util.function.IntPredicate;
+import java.util.function.Supplier;
+
+/**
+ * I trofei esistenti, ognuno con il suo trigger.
+ */
+public enum RegolaTrofeo {
+
+	PERDIGIORNO(TrofeoPerdigiorno::new),
+	// Per ora contano tutte le missioni completate, anche le secondarie
+	CACCIATORE_DI_TAGLIE(() -> new TrofeoAContatore<>(TipoTrofeo.CACCIATORE_DI_TAGLIE,
+			InternoMissioneCompletata.class, evento -> 1, 50)),
+	// La missione La sfida dei campioni, una sola per partita (vedi LaSfidaDeiCampioni nel catalogo delle missioni)
+	RE_DI_CARTA_FORBICI_E_SASSO(() -> new TrofeoAContatore<>(TipoTrofeo.RE_DI_CARTA_FORBICI_E_SASSO,
+			InternoMissioneCompletata.class, evento -> evento.getMissione().getClasse() == MissionePredefinita.LA_SFIDA_DEI_CAMPIONI ? 1 : 0, 1)),
+	// Chi viene respinto dall'oste per mancanza di monete non mangia, e non conta
+	SBEVAZZONE(() -> new TrofeoAContatore<>(TipoTrofeo.SBEVAZZONE,
+			InternoPastoConsumatoInLocanda.class, evento -> 1, 100)),
+	// Conta i templi e le grotte visitati per la prima volta in ogni partita, non i ritorni
+	TUTTI_I_SANTI(() -> visite(TipoTrofeo.TUTTI_I_SANTI, TipoLocazione.TEMPIO)),
+	SPELEOLOGO(() -> visite(TipoTrofeo.SPELEOLOGO, TipoLocazione.GROTTA)),
+	// Si conta l'incontro, non il suo esito, come per la missione Disturbatore della Quiete Pubblica
+	VERO_ROMPISCATOLE(() -> new TrofeoAContatore<>(TipoTrofeo.VERO_ROMPISCATOLE,
+			InternoEremitiIncontrati.class, InternoEremitiIncontrati::getQuantita, 100)),
+	// Lo scheletro che la mietitura porta dalla parte del gruppo: a gruppo pieno non c'è posto e non conta
+	NECROMANTE(() -> new TrofeoAContatore<>(TipoTrofeo.NECROMANTE,
+			InternoScheletroRisvegliato.class, evento -> 1, 1)),
+	AMMAZZAGOBLIN(() -> new TrofeoAContatore<>(TipoTrofeo.AMMAZZAGOBLIN,
+			InternoAvversarioSconfitto.class, evento -> evento.getClasse() == TipoPersonaggio.GOBLIN ? 1 : 0, 100)),
+	AMICO_DI_TUTTI(() -> new TrofeoAContatore<>(TipoTrofeo.AMICO_DI_TUTTI,
+			InternoAmiciziaStretta.class, evento -> 1, 100)),
+	// Conta le corruzioni riuscite, una per volta, comunque sia composto il gruppo avversario
+	CORRUTTORE(() -> new TrofeoAContatore<>(TipoTrofeo.CORRUTTORE,
+			InternoCorruzioneRiuscita.class, evento -> 1, 100)),
+	// I boss: basta sconfiggerli una volta
+	UCCIDI_IL_DRAGO(() -> boss(TipoTrofeo.UCCIDI_IL_DRAGO, TipoPersonaggio.DRAGO)),
+	UCCIDI_LA_STREGA(() -> boss(TipoTrofeo.UCCIDI_LA_STREGA, TipoPersonaggio.STREGA)),
+	UCCIDI_IL_LICH(() -> boss(TipoTrofeo.UCCIDI_IL_LICH, TipoPersonaggio.LICH)),
+	UCCIDI_L_IDRA(() -> boss(TipoTrofeo.UCCIDI_L_IDRA, TipoPersonaggio.IDRA)),
+	UCCIDI_IL_MINOTAURO_GIGANTE(() -> boss(TipoTrofeo.UCCIDI_IL_MINOTAURO_GIGANTE, TipoPersonaggio.MINOTAURO_GIGANTE)),
+	// I tesori degli avversari: quanto si trova in una locazione incustodita non conta
+	RAPINATORE(() -> refurtiva(TipoTrofeo.RAPINATORE, TipoBottino.MONETA)),
+	LADRO_DI_PREZIOSI(() -> refurtiva(TipoTrofeo.LADRO_DI_PREZIOSI, TipoBottino.PIETRA_PREZIOSA)),
+	ARSENIO_LUPIN(() -> refurtiva(TipoTrofeo.ARSENIO_LUPIN, TipoBottino.CORONA)),
+	// I cofani contano anche se incustoditi, come nelle grotte
+	ESPERTO_SCASSINATORE(() -> new TrofeoAContatore<>(TipoTrofeo.ESPERTO_SCASSINATORE,
+			InternoOggettoRaccolto.class, evento -> evento.getClasse() == TipoBottino.COFANO ? evento.getQuantita() : 0, 100)),
+	// Gli artefatti in città si comprano solo da armaiolo (tutto tranne gli ingredienti magici) e venditore di pergamene
+	RIGATTIERE(() -> acquistoDallArmaiolo(TipoTrofeo.RIGATTIERE, livello -> livello <= 2)),
+	COLLEZIONISTA(() -> acquistoDallArmaiolo(TipoTrofeo.COLLEZIONISTA, livello -> livello >= 5)),
+	STUDIOSO(() -> new TrofeoAContatore<>(TipoTrofeo.STUDIOSO, NotificaApprovazioneAcquistoArtefatto.class,
+			evento -> artefattoComprato(evento).getTipo().isIngrediente() ? 1 : 0, 100)),
+	// Gli artefatti degli avversari: ogni artefatto ottenuto (dal bottino, da un tempio, da un cofano), se la locazione era custodita
+	CACCIATORE_DI_TESORI(() -> bottino(TipoTrofeo.CACCIATORE_DI_TESORI, livello -> true)),
+	ESPERTO_CACCIATORE_DI_TESORI(() -> bottino(TipoTrofeo.ESPERTO_CACCIATORE_DI_TESORI, livello -> livello >= 5)),
+	BOMBAROLO(() -> new TrofeoAContatore<>(TipoTrofeo.BOMBAROLO, NotificaApprovazioneAcquistoConsumabile.class,
+			evento -> consumabileComprato(evento) == TipoConsumabile.INCANTESIMO ? 1 : 0, 100)),
+	CARTOGRAFO(() -> new TrofeoAContatore<>(TipoTrofeo.CARTOGRAFO, NotificaApprovazioneAcquistoConsumabile.class,
+			evento -> consumabileComprato(evento) == TipoConsumabile.MAPPA_COMPLETA_FORESTA ? 1 : 0, 1)),
+	TRAFFICONE(() -> new TrofeoAContatore<>(TipoTrofeo.TRAFFICONE, NotificaApprovazioneIncantatura.class,
+			evento -> 1, 50)),
+	// Tutte le voci del bestiario, da una partita all'altra (vedi RegistroBestiario)
+	ENCICLOPEDISTA(TrofeoEnciclopedista::new),
+	// La spada normalmente nascosta, quando un personaggio la equipaggia (vedi IntermezzoSpadaNascosta)
+	TROVAROBE(() -> new TrofeoAContatore<>(TipoTrofeo.TROVAROBE,
+			InternoSpadaNascostaImpugnata.class, evento -> 1, 1));
+
+	private final Supplier<Trofeo> supplier;
+
+	RegolaTrofeo(Supplier<Trofeo> supplier) {
+		this.supplier = supplier;
+	}
+
+	public Trofeo getIstanza() {
+		return supplier.get();
+	}
+
+	/**
+	 * Il trofeo di quel tipo (non iscritto agli eventi: per leggerne obiettivo e progresso).
+	 */
+	public static Trofeo di(TipoTrofeo tipo) {
+		return valueOf(tipo.name()).getIstanza();
+	}
+
+	private static Trofeo visite(TipoTrofeo tipo, TipoLocazione locazione) {
+		return new TrofeoAContatore<>(tipo, InternoLocazioneVisitata.class, evento -> evento.getTipo() == locazione ? 1 : 0, 100);
+	}
+
+	private static Trofeo refurtiva(TipoTrofeo tipo, TipoBottino tipoOggetto) {
+		return new TrofeoAContatore<>(tipo, InternoOggettoRaccolto.class,
+				evento -> evento.isCustodito() && evento.getClasse() == tipoOggetto ? evento.getQuantita() : 0, 100);
+	}
+
+	private static Trofeo acquistoDallArmaiolo(TipoTrofeo tipo, IntPredicate livello) {
+		return new TrofeoAContatore<>(tipo, NotificaApprovazioneAcquistoArtefatto.class, evento -> {
+			Artefatto artefatto = artefattoComprato(evento);
+			return !artefatto.getTipo().isIngrediente() && livello.test(artefatto.getLivello()) ? 1 : 0;
+		}, 100);
+	}
+
+	private static Trofeo bottino(TipoTrofeo tipo, IntPredicate livello) {
+		return new TrofeoAContatore<>(tipo, InternoArtefattoTrovato.class,
+				evento -> evento.isCustodito() && livello.test(evento.getArtefatto().getLivello()) ? 1 : 0, 100);
+	}
+
+	private static Artefatto artefattoComprato(NotificaApprovazioneAcquistoArtefatto evento) {
+		return (Artefatto) evento.getOggettoSpostato();
+	}
+
+	private static TipoConsumabile consumabileComprato(NotificaApprovazioneAcquistoConsumabile evento) {
+		return evento.getEventoRichiestaAcquistoConsumabile().getTipoConsumabile();
+	}
+
+	private static Trofeo boss(TipoTrofeo tipo, TipoPersonaggio classe) {
+		return new TrofeoAContatore<>(tipo, InternoAvversarioSconfitto.class, evento -> evento.getClasse() == classe ? 1 : 0, 1);
+	}
+}

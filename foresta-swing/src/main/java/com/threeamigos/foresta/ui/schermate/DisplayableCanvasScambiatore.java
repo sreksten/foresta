@@ -4,7 +4,7 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
-import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.CoordinateFumetto;
 import com.threeamigos.foresta.ui.sprite.SpriteInterface;
@@ -63,7 +63,7 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     /**
      * Usiamo l'immagine del Ladro come riferimento per disegnare il personaggio centrale della finestra di scambio
      */
-    protected static final int ALTEZZA_LADRO = ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.LADRO).getHeight(null);
+    protected static final int ALTEZZA_LADRO = MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.LADRO).getHeight(null);
 
     /**
      * Lo stato della partita, in sola lettura: monete, prezzi, personaggi e inventario del gruppo
@@ -261,7 +261,7 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
      */
     public CoordinateFumetto getCoordinateFumetto() {
         // L'intestazione cambia con il nome del negoziante (più righe se è lungo), quindi le coordinate non si ricordano
-        Image ladro = ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.LADRO);
+        Image ladro = MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.LADRO);
         int larghezzaImmagine = ladro.getWidth(null);
         int altezzaImmagine = ladro.getHeight(null);
         int yIntestazione = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + altezzaIntestazioneCentrale() + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
@@ -269,7 +269,7 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
         return new CoordinateFumetto(
                 width / 2 + larghezzaImmagine + SPACING,
                 yIntestazione + altezzaImmagine / 2,
-                width / 2 + ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.ARMAIOLO).getWidth() / 3,
+                width / 2 + MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.ARMAIOLO).getWidth() / 3,
                 yIntestazione + altezzaImmagine / 3
         );
     }

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.tipi.Verso;
+
 /**
  * Come appare un elemento in un certo istante: posizione del centro dell'immagine in
  * frazioni dello schermo (0 = bordo sinistro o superiore, 1 = bordo destro o inferiore),

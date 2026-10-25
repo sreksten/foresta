@@ -1,11 +1,9 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.mappa.CoordinateMD;
 
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
-import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
+import com.threeamigos.foresta.tipi.TipoNegozio;
 
 import java.io.BufferedReader;
 import java.io.IOException;

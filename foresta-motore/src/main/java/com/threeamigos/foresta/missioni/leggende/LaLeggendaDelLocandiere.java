@@ -6,7 +6,7 @@ import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.List;
 

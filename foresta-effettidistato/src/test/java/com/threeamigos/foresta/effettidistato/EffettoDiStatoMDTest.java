@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.effettidistato;
 
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import org.junit.jupiter.api.Test;
 

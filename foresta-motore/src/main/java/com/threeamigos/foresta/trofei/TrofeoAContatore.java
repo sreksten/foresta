@@ -24,7 +24,7 @@ public class TrofeoAContatore<E> implements Trofeo {
 	 * @param valore di quanto lo fa avanzare ogni evento (anche zero, per gli eventi che non contano)
 	 * @param soglia il progresso con cui si vince
 	 */
-	TrofeoAContatore(TipoTrofeo tipo, Class<E> evento, ToIntFunction<E> valore, int soglia) {
+	public TrofeoAContatore(TipoTrofeo tipo, Class<E> evento, ToIntFunction<E> valore, int soglia) {
 		this.tipo = tipo;
 		this.evento = evento;
 		this.valore = valore;

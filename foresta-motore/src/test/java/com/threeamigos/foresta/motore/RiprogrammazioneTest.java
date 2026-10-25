@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.artefatti.RegoleIncantatura;
 
 import com.threeamigos.foresta.artefatti.CostantiArtefatti;
@@ -7,24 +8,24 @@ import com.threeamigos.foresta.artefatti.CostantiArtefatti;
 import com.threeamigos.foresta.artefatti.BancoDiLavoro;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
-import com.threeamigos.foresta.artefatti.IncantamentoMD;
+import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
-import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.AspettoArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAvvisoIncantatura;
 import com.threeamigos.foresta.intermezzi.*;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
-import com.threeamigos.foresta.artefatti.tipi.TipoMotivoRifiutoIncantatura;
+import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;

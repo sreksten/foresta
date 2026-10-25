@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.ui.tattiche;
 
-import com.threeamigos.foresta.modellodati.tattiche.*;
+import com.threeamigos.foresta.tattiche.*;
+import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.*;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;
 import java.util.List;

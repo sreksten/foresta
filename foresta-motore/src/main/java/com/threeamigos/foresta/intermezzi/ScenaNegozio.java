@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * arrivato, cominciano le battute di negoziante e capo. La usa anche {@link ScenaInCitta}, all'aperto e senza
  * primo piano.
  */
-final class ScenaNegozio {
+public final class ScenaNegozio {
 
 	private static final double X_PARTENZA_PERSONAGGI = -0.15;
 	private static final double DISTANZA_FRA_PERSONAGGI = 0.05;
@@ -41,7 +41,7 @@ final class ScenaNegozio {
 	 * entrano subito dopo il capo, prima degli altri, camminando come loro verso il negoziante, e quindi lo guardano:
 	 * la missione li congeda solo alla fine, così la scena li trova nel gruppo, con la loro classe.
 	 */
-	ScenaNegozio(String sfondo, String primoPiano, String idNegoziante, ElementoIntermezzo negoziante,
+	public ScenaNegozio(String sfondo, String primoPiano, String idNegoziante, ElementoIntermezzo negoziante,
 				 double yPersonaggi, double xArrivoCapo, double ritardoFraPartenze) {
 		this.idNegoziante = idNegoziante;
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
@@ -98,18 +98,18 @@ final class ScenaNegozio {
 				.poi(Tappa.inSecondi(SECONDI_CAMMINATA).verso(xArrivoCapo - posto * DISTANZA_FRA_PERSONAGGI, yPersonaggi));
 	}
 
-	ScenaNegozio parlaIlNegoziante(String testo) {
+	public ScenaNegozio parlaIlNegoziante(String testo) {
 		return battuta(idNegoziante, testo);
 	}
 
-	ScenaNegozio parlaIlCapo(String testo) {
+	public ScenaNegozio parlaIlCapo(String testo) {
 		return battuta(idCapo, testo);
 	}
 
 	/**
 	 * Una battuta del primo ospite.
 	 */
-	ScenaNegozio parlaLOspite(String testo) {
+	public ScenaNegozio parlaLOspite(String testo) {
 		if (!haOspiti) {
 			throw new IllegalStateException("Nessun ospite in scena");
 		}
@@ -133,7 +133,7 @@ final class ScenaNegozio {
 		return this;
 	}
 
-	List<PaginaIntermezzo> getPagine() {
+	public List<PaginaIntermezzo> getPagine() {
 		return Collections.singletonList(pagina);
 	}
 }

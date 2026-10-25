@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoFinestra;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneStatistichePersonaggio;
 import com.threeamigos.foresta.modellodati.ModelloDati;

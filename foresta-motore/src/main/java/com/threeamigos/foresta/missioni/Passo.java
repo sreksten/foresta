@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
+import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 
 import java.util.*;
 import java.util.function.BooleanSupplier;

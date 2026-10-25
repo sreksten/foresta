@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.mappa.ForestaMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
@@ -14,6 +14,7 @@ import java.io.PrintWriter;
  * Il modello dati del gioco. Comprende:
  * <ul>
  * <li>GruppoGiocatoreMD - il gruppo del giocatore con tutti i personaggi contenuti</li>
+ * <li>TatticheMD - le tattiche dei personaggi</li>
  * <li>StatisticheMD - statistiche sul gioco</li>
  * <li>LineaTemporaleMD - quel che è successo durante il gioco</li>
  * <li>ForestaMD - informazioni sulla Foresta</li>
@@ -36,6 +37,7 @@ public class ModelloDati implements Serializzabile {
 	static {
 		Foresta.setFornitoreDiDati(() -> getIstanza().getForestaMD());
 		GruppoGiocatore.setFornitoreDiDati(() -> getIstanza().getGruppoGiocatoreMD());
+		TatticheDeiPersonaggi.setFornitoreDiDati(() -> getIstanza().getTatticheMD());
 	}
 
 	/**
@@ -54,6 +56,7 @@ public class ModelloDati implements Serializzabile {
 
 	// Dati sufficienti per mostrare una situazione di salvataggio
 	private final GruppoGiocatoreMD gruppoGiocatoreMD;
+	private final TatticheMD tatticheMD;
 	// Tutto il resto dei dati di gioco
 	private final StatisticheMD statisticheMD;
 	private final LineaTemporaleMD lineaTemporaleMD;
@@ -68,6 +71,7 @@ public class ModelloDati implements Serializzabile {
 
 	public ModelloDati() {
 		gruppoGiocatoreMD = new GruppoGiocatoreMD();
+		tatticheMD = new TatticheMD();
 		statisticheMD = new StatisticheMD();
 		lineaTemporaleMD = new LineaTemporaleMD();
 		forestaMD = new ForestaMD();
@@ -80,6 +84,10 @@ public class ModelloDati implements Serializzabile {
 
 	public final GruppoGiocatoreMD getGruppoGiocatoreMD() {
 		return gruppoGiocatoreMD;
+	}
+
+	public final TatticheMD getTatticheMD() {
+		return tatticheMD;
 	}
 
 	public final StatisticheMD getStatisticheMD() {
@@ -129,6 +137,7 @@ public class ModelloDati implements Serializzabile {
 	 */
 	public void reimposta(int dimensioneX, int dimensioneY) {
 		gruppoGiocatoreMD.reimposta();
+		tatticheMD.reimposta();
 		statisticheMD.reimposta();
 		lineaTemporaleMD.reimposta();
 		forestaMD.reimposta(dimensioneX, dimensioneY);
@@ -147,6 +156,7 @@ public class ModelloDati implements Serializzabile {
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		gruppoGiocatoreMD.salva(stream);
+		tatticheMD.salva(stream);
 		statisticheMD.salva(stream);
 		lineaTemporaleMD.salva(stream);
 		forestaMD.salva(stream);
@@ -164,6 +174,7 @@ public class ModelloDati implements Serializzabile {
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		gruppoGiocatoreMD.reimposta();
+		tatticheMD.reimposta();
 		statisticheMD.reimposta();
 		lineaTemporaleMD.reimposta();
 		registroPersonaggiMD.reimposta();
@@ -173,6 +184,7 @@ public class ModelloDati implements Serializzabile {
 		intermezziMD.reimposta();
 
 		gruppoGiocatoreMD.leggi(stream);
+		tatticheMD.leggi(stream);
 		statisticheMD.leggi(stream);
 		lineaTemporaleMD.leggi(stream);
 		forestaMD.leggi(stream);

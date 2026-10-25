@@ -3,7 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.tipi.ComandiAssociati;
 
 import com.threeamigos.foresta.tipi.CostantiIncantesimi;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Silenzio;
 import com.threeamigos.foresta.personaggi.Guerriero;

@@ -2,8 +2,7 @@ package com.threeamigos.foresta.tipi;
 
 
 import com.threeamigos.foresta.artefatti.CostantiArtefatti;
-import com.threeamigos.foresta.artefatti.tipi.*;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;

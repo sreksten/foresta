@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui.schermate;
 
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpesaPuntoAbilita;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
@@ -10,11 +10,11 @@ import com.threeamigos.foresta.modificatori.ModificatoreAttivo;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.artefatti.VistaScambio;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
-import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 
@@ -116,7 +116,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         // Immagine personaggio
-        BufferedImage immaginePersonaggio = ClassePersonaggioImmagine.getImmagine(personaggio.getClasse());
+        BufferedImage immaginePersonaggio = MappaPersonaggioImmagine.getImmagine(personaggio.getClasse());
 
         // Per tenere i personaggi sullo stesso livello (se si passa da un personaggio all'altro)
         // ed evitare sfarfallamenti, scegliamo il ladro come personaggio "base" per calcolare l'altezza a cui disegnare.

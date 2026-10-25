@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.danni.tipi;
 
+import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.tipi.CategoriaDanno;
+import com.threeamigos.foresta.tipi.TipoDanno;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertSame;

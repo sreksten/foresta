@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.comandigiocatore;
 
 import com.threeamigos.foresta.eventi.EventoBase;
-import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoEvento;
 
 /**
  * Il giocatore accende o spegne i cartigli dell'aiuto con l'interruttore della barra delle icone. L'Automa lo

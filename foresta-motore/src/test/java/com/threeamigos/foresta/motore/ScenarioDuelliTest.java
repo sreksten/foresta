@@ -1,18 +1,19 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.interni.InternoPersonaggioArreso;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.richieste.CombattimentoRichiesto;
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
@@ -174,7 +175,7 @@ class ScenarioDuelliTest {
             partita.gruppo().aggiungiPersonaggio(compagno);
             compagno.getModelloDati().set(TipoAttributo.SALUTE, 1);
             // Senza pozioni né altro: con la tattica predefinita del guerriero si curerebbe, e il duello non sarebbe perso
-            compagno.setTattica(com.threeamigos.foresta.modellodati.tattiche.TatticaMD.VUOTA);
+            TatticheDeiPersonaggi.imposta(compagno, com.threeamigos.foresta.modellodati.TatticaMD.VUOTA);
             entraNelCovo(partita, sfida.getCovo());
             partita.comando(Comando.PERSONAGGIO_2);
 

@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.ui.schermate;
 
-import com.threeamigos.foresta.artefatti.IncantamentoMD;
+import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.artefatti.VistaPezzoDelSet;
-import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.StatoPezzoDelSet;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.CategoriaArtefatto;
+import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoCommutazioneElenco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
@@ -16,8 +16,8 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.artefatti.VistaScambio;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.ui.barra.Cartiglio;

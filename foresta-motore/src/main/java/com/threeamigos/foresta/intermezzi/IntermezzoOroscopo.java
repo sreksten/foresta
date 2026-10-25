@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.tipi.MomentoIntermezzo;
+import com.threeamigos.foresta.tipi.NegozioInScena;
 import com.threeamigos.foresta.testi.ProduttoreDiOroscopiCasuale;
 import com.threeamigos.foresta.testi.ProduttoreDiOroscopiCasuale.DialogoSullOroscopo;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;

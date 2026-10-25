@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
-import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
+import com.threeamigos.foresta.tipi.CategoriaArtefatto;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.locazioni.LocazioneBase;
 import com.threeamigos.foresta.missioni.richieste.ForgiaRichiesta;

@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.mappa.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.MomentoIntermezzo;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import com.threeamigos.foresta.mappa.Foresta;
 
@@ -11,11 +12,11 @@ import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.CostruttoreArtefatto;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.artefatti.SpadaNormalmenteNascosta;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
@@ -33,11 +34,11 @@ import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.mappa.LocazioneMD;
+import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
-import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.modellodati.TatticaMD;
+import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.personaggi.*;
@@ -47,6 +48,7 @@ import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
+import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 import com.threeamigos.foresta.testi.PrecaricatoreDeiTesti;
 import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
@@ -1693,7 +1695,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 		Personaggio scelto = gruppo.getPersonaggio(indicePersonaggioTattiche);
 		// Chi non ne ha una sua agisce con quella predefinita della classe: è quella che la schermata mostra
-		TatticaMD tattica = scelto.getTattica();
+		TatticaMD tattica = TatticheDeiPersonaggi.di(scelto);
 		TatticaMD predefinita = RegistroTattiche.predefinitaDelGiocabile(scelto.getClasse());
 		BusEventi.pubblica(new RichiestaAperturaTattiche(comandiPossibili, scelto, tattica != null ? tattica : predefinita,
 				predefinita, RegistroTattiche.azioniPossibili(scelto.getClasse())));
@@ -1718,7 +1720,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			return;
 		}
 		personaggioPerLeTattiche(comando.getUuidPersonaggio()).ifPresent(p -> {
-			p.setTattica(comando.getTattica());
+			TatticheDeiPersonaggi.imposta(p, comando.getTattica());
 			indicePersonaggioTattiche = gruppo.getPersonaggi().indexOf(p);
 			richiediAperturaTattiche();
 		});

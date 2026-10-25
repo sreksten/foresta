@@ -4,10 +4,10 @@ import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.CostruttoreArtefatto;
 import com.threeamigos.foresta.artefatti.ModificatoreDelTesto;
 import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.modellodati.GruppoGiocatoreMD;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**

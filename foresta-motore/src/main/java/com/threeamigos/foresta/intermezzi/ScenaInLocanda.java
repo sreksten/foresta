@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.tipi.Verso;
+import com.threeamigos.foresta.tipi.NegozioInScena;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.List;

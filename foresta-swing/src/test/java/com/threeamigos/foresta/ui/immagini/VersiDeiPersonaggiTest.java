@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui.immagini;
 
-import com.threeamigos.foresta.intermezzi.Verso;
+import com.threeamigos.foresta.tipi.Verso;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 

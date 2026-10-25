@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.mappa;
 
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui.immagini;
 
-import com.threeamigos.foresta.intermezzi.Verso;
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
+import com.threeamigos.foresta.tipi.Verso;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * Da che parte guarda, così com'è disegnata, l'immagine di ogni personaggio del gioco (vedi ClassePersonaggioImmagine):
+ * Da che parte guarda, così com'è disegnata, l'immagine di ogni personaggio del gioco (vedi MappaPersonaggioImmagine):
  * serve a specchiarla quando deve guardare dall'altra parte, per esempio il gruppo del giocatore, che in locazione
  * guarda verso i mostri (vedi DisplayableCanvasRiquadroLocazione).
  * <p>
@@ -106,7 +107,7 @@ public final class VersiDeiPersonaggi {
 
 	/**
 	 * L'immagine rovesciata orizzontalmente, pixel per pixel. Non è ancora compatibile con lo schermo: lo diventa
-	 * quando la costruisce ClassePersonaggioImmagine (vedi BufferedImageBuilder.ingrandisci).
+	 * quando la costruisce MappaPersonaggioImmagine (vedi BufferedImageBuilder.ingrandisci).
 	 */
 	public static BufferedImage specchia(BufferedImage immagine) {
 		BufferedImage specchiata = new BufferedImage(immagine.getWidth(), immagine.getHeight(), BufferedImage.TYPE_INT_ARGB);

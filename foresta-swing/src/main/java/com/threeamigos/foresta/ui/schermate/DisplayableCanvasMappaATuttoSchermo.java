@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui.schermate;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.barra.Cartiglio;

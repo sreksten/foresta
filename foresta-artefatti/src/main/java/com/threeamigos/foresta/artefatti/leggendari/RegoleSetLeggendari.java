@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.artefatti.leggendari;
 
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.VistaPezzoDelSet;
-import com.threeamigos.foresta.artefatti.tipi.StatoPezzoDelSet;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.testi.Articoli;
 
 import java.text.DecimalFormat;

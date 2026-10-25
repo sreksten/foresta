@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui.schermate;
 
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
-import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
+import com.threeamigos.foresta.tipi.TipoNegozio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

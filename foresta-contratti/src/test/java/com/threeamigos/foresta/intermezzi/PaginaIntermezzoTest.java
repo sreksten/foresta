@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.tipi.TipoRipetizione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +50,7 @@ class PaginaIntermezzoTest {
     void laDurataDelContenutoIgnoraLeAnimazioniCheSiRipetono() {
         PaginaIntermezzo pagina = paginaConDuePersonaggi()
                 .conElemento(ElementoIntermezzo.personaggio("sfondo", TipoPersonaggio.DRAGO, 0, 0)
-                        .poi(Tappa.inSecondi(100).verso(1, 0)).ripeti(Ripetizione.CICLICA))
+                        .poi(Tappa.inSecondi(100).verso(1, 0)).ripeti(TipoRipetizione.CICLICA))
                 .conElemento(ElementoIntermezzo.personaggio("entrata", TipoPersonaggio.GOBLIN, 0, 0)
                         .poi(Tappa.inSecondi(5).verso(1, 0)))
                 .conBattuta(BattutaIntermezzo.di("a", "Ciao").perSecondi(2));

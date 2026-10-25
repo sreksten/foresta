@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
-import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoEvento;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
+import com.threeamigos.foresta.tipi.TipoAzione;
 
 /**
  * Un personaggio, di uno dei due gruppi, sta per compiere la sua azione in combattimento (vedi StatoDelCombattimento): la finestra

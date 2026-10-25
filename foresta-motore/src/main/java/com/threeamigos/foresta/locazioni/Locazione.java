@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.mappa.LocazioneMD;
+import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Stato;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 /**

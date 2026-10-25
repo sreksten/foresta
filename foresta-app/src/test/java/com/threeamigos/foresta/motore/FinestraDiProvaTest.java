@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.ui.sviluppo.FinestraDiProva;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;

@@ -2,7 +2,7 @@ package com.threeamigos.foresta.missioni.richieste;
 
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.*;
 

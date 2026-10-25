@@ -1,19 +1,19 @@
 package com.threeamigos.foresta.ui.sprite;
 
-import com.threeamigos.foresta.artefatti.IncantamentoMD;
+import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
-import com.threeamigos.foresta.ui.barra.ClasseIcona;
+import com.threeamigos.foresta.tipi.TipoIcona;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
-import com.threeamigos.foresta.ui.immagini.ClassiOggettoImmagine;
+import com.threeamigos.foresta.tipi.MappaBottinoImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
@@ -55,7 +55,7 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 			new Color(255, 236, 190), new Color(255, 214, 92), new Color(255, 190, 70), new Color(255, 225, 120)
 	};
 	private static final Map<TipoDanno, Color> COLORI_ELEMENTI = new EnumMap<>(TipoDanno.class);
-	// La veste, gli ingredienti magici, il talismano e il ninnolo non si trovano nelle locazioni, quindi non sono in ClassiOggettoImmagine
+	// La veste, gli ingredienti magici, il talismano e il ninnolo non si trovano nelle locazioni, quindi non sono in MappaBottinoImmagine
 	// Per ora la veste è quella del mago, anche per il ladro e il sacerdote
 	private static final BufferedImage VESTE = BufferedImageBuilder.buildBufferedImage("oggetti/Veste.gif", LivelloDiZoom.valore());
 	private static final BufferedImage TALISMANO = BufferedImageBuilder.buildBufferedImage("oggetti/Talismano.gif", LivelloDiZoom.valore());
@@ -132,7 +132,7 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 				coloriRaggi.add(Color.WHITE);
 			}
 		}
-		this.immagine = artefatto.getAspetto() != null ? ClassiOggettoImmagine.getImmagine(artefatto.getAspetto())
+		this.immagine = artefatto.getAspetto() != null ? MappaBottinoImmagine.getImmagine(artefatto.getAspetto())
 				: immagine(artefatto.getTipo());
 		this.pannello = pannello(artefatto, Math.min(area.width - 48, 900));
 		int altezzaTotale = 2 * raggio + 12 + pannello.getHeight();
@@ -380,41 +380,41 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 			case SIGILLO:
 				return SIGILLO;
 			case SPADA:
-				return ClassiOggettoImmagine.getImmagine(TipoBottino.SPADA);
+				return MappaBottinoImmagine.getImmagine(TipoBottino.SPADA);
 			case SPADONE:
-				return ClassiOggettoImmagine.getImmagine(TipoBottino.SPADONE);
+				return MappaBottinoImmagine.getImmagine(TipoBottino.SPADONE);
 			case FALCE:
-				return ClassiOggettoImmagine.getImmagine(TipoBottino.FALCE);
+				return MappaBottinoImmagine.getImmagine(TipoBottino.FALCE);
 			case MAZZA:
-				return ClassiOggettoImmagine.getImmagine(TipoBottino.MAZZA);
+				return MappaBottinoImmagine.getImmagine(TipoBottino.MAZZA);
 			case ASCIA:
-				return ClassiOggettoImmagine.getImmagine(TipoBottino.ASCIA);
+				return MappaBottinoImmagine.getImmagine(TipoBottino.ASCIA);
 			case LANCIA:
-				return ClassiOggettoImmagine.getImmagine(TipoBottino.LANCIA);
+				return MappaBottinoImmagine.getImmagine(TipoBottino.LANCIA);
 			case BASTONE_MAGICO:
-				return ClassiOggettoImmagine.getImmagine(TipoBottino.BASTONE_MAGICO);
+				return MappaBottinoImmagine.getImmagine(TipoBottino.BASTONE_MAGICO);
 			case LIBRO_MAGICO:
-				return ClassiOggettoImmagine.getImmagine(TipoBottino.LIBRO_MAGICO);
+				return MappaBottinoImmagine.getImmagine(TipoBottino.LIBRO_MAGICO);
 			case SCUDO:
-				return ClassiOggettoImmagine.getImmagine(TipoBottino.SCUDO);
+				return MappaBottinoImmagine.getImmagine(TipoBottino.SCUDO);
 			case ELMO:
-				return ClassiOggettoImmagine.getImmagine(TipoBottino.ELMO);
+				return MappaBottinoImmagine.getImmagine(TipoBottino.ELMO);
 			case MASCHERA:
-				return ClassiOggettoImmagine.getImmagine(TipoBottino.MASCHERA);
+				return MappaBottinoImmagine.getImmagine(TipoBottino.MASCHERA);
 			case VESTE:
 				return VESTE;
 			case ARMATURA:
-				return ClassiOggettoImmagine.getImmagine(TipoBottino.ARMATURA);
+				return MappaBottinoImmagine.getImmagine(TipoBottino.ARMATURA);
 			case SCHINIERI:
-				return ClassiOggettoImmagine.getImmagine(TipoBottino.SCHINIERI);
+				return MappaBottinoImmagine.getImmagine(TipoBottino.SCHINIERI);
 			case ANELLO:
-				return ClassiOggettoImmagine.getImmagine(TipoBottino.ANELLO);
+				return MappaBottinoImmagine.getImmagine(TipoBottino.ANELLO);
 			case TALISMANO:
 				return TALISMANO;
 			case NINNOLO:
 				return NINNOLO;
 			default:
-				return tipo.isIngrediente() ? ClasseIcona.PERGAMENA.getIcona() : null;
+				return tipo.isIngrediente() ? TipoIcona.PERGAMENA.getIcona() : null;
 		}
 	}
 

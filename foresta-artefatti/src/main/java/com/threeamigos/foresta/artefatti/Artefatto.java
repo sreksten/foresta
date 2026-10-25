@@ -1,11 +1,13 @@
 package com.threeamigos.foresta.artefatti;
 
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.artefatti.leggendari.RegoleSetLeggendari;
-import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.AspettoArtefatto;
+import com.threeamigos.foresta.tipi.CategoriaArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 
 import java.util.Collection;
 import java.util.Optional;

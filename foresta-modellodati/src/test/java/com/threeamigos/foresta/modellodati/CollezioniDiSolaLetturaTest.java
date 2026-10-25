@@ -1,16 +1,12 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.mappa.CoordinateMD;
 
-import com.threeamigos.foresta.artefatti.ArtefattoMD;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
-import com.threeamigos.foresta.mappa.TipoLocazione;
-import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoNegozio;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -178,7 +174,7 @@ class CollezioniDiSolaLetturaTest {
 	void unArtefattoNonLasciaModificareModificatoriEIncantamenti() {
 		ArtefattoMD spada = artefatto("spada");
 		spada.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 1));
-		spada.addIncantamento("Fiamma", com.threeamigos.foresta.danni.tipi.TipoDanno.FUOCO, 5, 0.1);
+		spada.addIncantamento("Fiamma", com.threeamigos.foresta.tipi.TipoDanno.FUOCO, 5, 0.1);
 
 		assertThrows(UnsupportedOperationException.class, () -> spada.getModificatori().clear());
 		assertThrows(UnsupportedOperationException.class, () -> spada.getIncantamenti().clear());
@@ -213,11 +209,11 @@ class CollezioniDiSolaLetturaTest {
 	void laLineaTemporaleNonLasciaModificareLeCittaDistrutte() {
 		LineaTemporaleMD linea = new LineaTemporaleMD();
 
-		assertThrows(UnsupportedOperationException.class, () -> linea.getCittaDistrutte().add(com.threeamigos.foresta.mappa.TipoLocazione.CITTA_RUUNA));
+		assertThrows(UnsupportedOperationException.class, () -> linea.getCittaDistrutte().add(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA));
 
-		linea.addCittaDistrutta(com.threeamigos.foresta.mappa.TipoLocazione.CITTA_RUUNA);
+		linea.addCittaDistrutta(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA);
 		assertEquals(Collections.singletonList(TipoLocazione.CITTA_RUUNA), linea.getCittaDistrutte());
-		assertTrue(linea.isCittaDistrutta(com.threeamigos.foresta.mappa.TipoLocazione.CITTA_RUUNA));
+		assertTrue(linea.isCittaDistrutta(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA));
 	}
 
 	@Test

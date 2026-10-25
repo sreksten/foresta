@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.artefatti.tipi.AspettoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.tipi.AspettoArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 
 import java.util.function.IntSupplier;
 

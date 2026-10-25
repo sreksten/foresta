@@ -15,7 +15,7 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.componenti.ScorrimentoVerticale;
-import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
@@ -490,7 +490,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		int coordinataX = (width >> 1) + 100 * (id - 3);
 		int altezzaMinima = 999;
 		for (VistaPersonaggio personaggio : personaggi) {
-			BufferedImage immagine = ClassePersonaggioImmagine.getImmagine(personaggio.getClasse());
+			BufferedImage immagine = MappaPersonaggioImmagine.getImmagine(personaggio.getClasse());
 			immagini.add(0, immagine);
 			coordinateX.add(0, coordinataX);
 			coordinataX += immagine.getWidth() * 2 / 3;

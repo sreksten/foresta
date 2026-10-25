@@ -4,9 +4,9 @@ import com.threeamigos.foresta.motore.LocazioneCorrente;
 
 import com.threeamigos.foresta.motore.EsperienzaDelGruppo;
 
-import com.threeamigos.foresta.mappa.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;

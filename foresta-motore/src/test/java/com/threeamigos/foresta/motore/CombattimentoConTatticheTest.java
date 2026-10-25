@@ -1,22 +1,24 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.eventi.interni.InternoDecisioneTattica;
 import com.threeamigos.foresta.locazioni.Locazione;
-import com.threeamigos.foresta.mappa.CoordinateMD;
-import com.threeamigos.foresta.modellodati.tattiche.*;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tattiche.*;
+import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.*;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -119,7 +121,7 @@ class CombattimentoConTatticheTest {
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             Personaggio bagnato = avversari.getPersonaggi().get(1);
             bagnato.addEffettoDiStato(TipoEffettoDiStato.BAGNATO, 5, 0);
-            mago.setTattica(TatticaMD.di(VoceMD.su(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO, FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BAGNATO)),
+            TatticheDeiPersonaggi.imposta(mago, TatticaMD.di(VoceMD.su(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO, FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BAGNATO)),
                     AzioneMD.di(TipoAzione.FULMINE))));
             partita.eventi().ascolta(InternoAzioneInCombattimento.class);
             int magiaPrima = mago.getMagia();
@@ -148,7 +150,7 @@ class CombattimentoConTatticheTest {
             // "Una volta per scontro" un incantesimo, poi sempre l'attacco fisico (il ripiego)
             VoceMD unaVolta = new VoceMD(null, Collections.singletonList(PredicatoMD.conConfrontoENumero(TipoPredicato.VOCE_USATA, TipoConfronto.UGUALE, 0)),
                     Collections.singletonList(AzioneMD.incantesimoDiDanno(CriterioIncantesimo.PIU_POTENTE, false)));
-            mago.setTattica(TatticaMD.di(unaVolta));
+            TatticheDeiPersonaggi.imposta(mago, TatticaMD.di(unaVolta));
             iniziaLaMischia(locazione, partita);
             // Piano G A: tre azioni mie in sei scatti
             scatta(locazione, partita, 6);
@@ -166,7 +168,7 @@ class CombattimentoConTatticheTest {
             capo.subSalute(capo.getSalute() * 7 / 10, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
             svuotaLePergamene(partita.gruppo());
             partita.gruppo().addPozioniSalute(2);
-            capo.setTattica(TatticaMD.di(VoceMD.su(su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO,
+            TatticheDeiPersonaggi.imposta(capo, TatticaMD.di(VoceMD.su(su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO,
                     FiltroMD.conConfrontoENumero(TipoFiltro.SALUTE_PERCENTUALE, TipoConfronto.MINORE, 50)), AzioneMD.di(TipoAzione.POZIONE_SALUTE))));
             int pozioniPrima = partita.gruppo().getPozioniSalute();
             iniziaLaMischia(locazione, partita);
@@ -182,7 +184,7 @@ class CombattimentoConTatticheTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             Locazione locazione = preparaLo(partita, 3);
             Personaggio capo = partita.gruppo().getCapo();
-            assertNull(capo.getTattica());
+            assertNull(TatticheDeiPersonaggi.di(capo));
             Personaggio primo = GruppoAvversario.getIstanza().getPersonaggi().get(0);
             java.util.Map<Personaggio, Integer> saluteIniziale = new java.util.IdentityHashMap<>();
             for (Personaggio p : GruppoAvversario.getIstanza().getPersonaggi()) {
@@ -207,7 +209,7 @@ class CombattimentoConTatticheTest {
             Personaggio ostaggio = new Viandante("Ottone", 1);
             partita.gruppo().aggiungiOspite(ostaggio, true);
             Personaggio goblin = GruppoAvversario.getIstanza().getPersonaggi().get(0);
-            goblin.setTattica(TatticaMD.di(VoceMD.su(su(TipoRosa.OSPITI, TipoOrdinamento.PRIMO), AzioneMD.di(TipoAzione.ATTACCO_FISICO))));
+            TatticheDeiPersonaggi.imposta(goblin, TatticaMD.di(VoceMD.su(su(TipoRosa.OSPITI, TipoOrdinamento.PRIMO), AzioneMD.di(TipoAzione.ATTACCO_FISICO))));
             int salutePrima = salute(ostaggio);
             iniziaLaMischia(locazione, partita);
             // Il piano è G A: dopo due scatti ha agito anche il goblin
@@ -225,16 +227,16 @@ class CombattimentoConTatticheTest {
             TatticaMD tattica = TatticaMD.di(VoceMD.su(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO, FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BAGNATO)),
                     AzioneMD.di(TipoAzione.FULMINE), AzioneMD.di(TipoAzione.ATTACCO_FISICO)));
             TatticaMD dellAltro = TatticaMD.di(VoceMD.su(su(TipoRosa.SE_STESSO, TipoOrdinamento.PRIMO), AzioneMD.di(TipoAzione.POZIONE_SALUTE)));
-            partita.gruppo().getCapo().setTattica(tattica);
-            compagno.setTattica(dellAltro);
+            TatticheDeiPersonaggi.imposta(partita.gruppo().getCapo(), tattica);
+            TatticheDeiPersonaggi.imposta(compagno, dellAltro);
             assertTrue(partita.salva(Comando.NUMERO_1));
-            partita.gruppo().getCapo().setTattica(TatticaMD.VUOTA);
-            compagno.setTattica(null);
+            TatticheDeiPersonaggi.imposta(partita.gruppo().getCapo(), TatticaMD.VUOTA);
+            TatticheDeiPersonaggi.imposta(compagno, null);
             assertTrue(partita.leggi(Comando.NUMERO_1));
 
             Personaggio capo = partita.gruppo().getCapo();
-            assertEquals(tattica, capo.getTattica(), "la tattica del capo torna uguale");
-            assertEquals(dellAltro, partita.gruppo().getPersonaggio(1).getTattica(), "e quella del compagno");
+            assertEquals(tattica, TatticheDeiPersonaggi.di(capo), "la tattica del capo torna uguale");
+            assertEquals(dellAltro, TatticheDeiPersonaggi.di(partita.gruppo().getPersonaggio(1)), "e quella del compagno");
 
             // Il personaggio rilegge e agisce davvero come impostato
             Locazione locazione = preparaLo(partita, 3);
@@ -259,7 +261,7 @@ class CombattimentoConTatticheTest {
             partita.gruppo().addIncantesimi(TipoIncantesimo.FULMINE, 1);
             Personaggio bagnato = GruppoAvversario.getIstanza().getPersonaggi().get(1);
             bagnato.addEffettoDiStato(TipoEffettoDiStato.BAGNATO, 5, 0);
-            mago.setTattica(TatticaMD.di(
+            TatticheDeiPersonaggi.imposta(mago, TatticaMD.di(
                     VoceMD.su(su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO, FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.BAGNATO)),
                             AzioneMD.di(TipoAzione.FULMINE)),
                     VoceMD.su(su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), AzioneMD.di(TipoAzione.ATTACCO_FISICO))));
@@ -300,7 +302,7 @@ class CombattimentoConTatticheTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(608)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             Locazione locazione = preparaLo(partita, 1);
-            assertNull(partita.gruppo().getCapo().getTattica());
+            assertNull(TatticheDeiPersonaggi.di(partita.gruppo().getCapo()));
             partita.eventi().ascolta(InternoDecisioneTattica.class);
             iniziaLaMischia(locazione, partita);
             scatta(locazione, partita, 1);
@@ -317,7 +319,7 @@ class CombattimentoConTatticheTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             Locazione locazione = preparaLo(partita, 1);
             // Una tattica che farebbe solo un'azione impossibile: disabilitata, si usa la predefinita
-            partita.gruppo().getCapo().setTattica(TatticaMD.VUOTA.disabilitata());
+            TatticheDeiPersonaggi.imposta(partita.gruppo().getCapo(), TatticaMD.VUOTA.disabilitata());
             partita.eventi().ascolta(InternoDecisioneTattica.class);
             iniziaLaMischia(locazione, partita);
             scatta(locazione, partita, 1);
@@ -334,7 +336,7 @@ class CombattimentoConTatticheTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             Locazione locazione = preparaLo(partita, 1);
             // Una tattica vuota esplicita: senza, il personaggio userebbe quella predefinita del suo ruolo
-            partita.gruppo().getCapo().setTattica(TatticaMD.VUOTA);
+            TatticheDeiPersonaggi.imposta(partita.gruppo().getCapo(), TatticaMD.VUOTA);
             partita.eventi().ascolta(InternoDecisioneTattica.class);
             iniziaLaMischia(locazione, partita);
             scatta(locazione, partita, 1);

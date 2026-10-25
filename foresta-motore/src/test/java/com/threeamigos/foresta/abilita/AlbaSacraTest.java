@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.abilita;
 
+
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.GruppoAvversario;
+import com.threeamigos.foresta.motore.StatoDelMotore;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoAbilita;
@@ -21,7 +22,7 @@ class AlbaSacraTest {
 
     @Test
     void togliGliStatiNegativiELasciaQuelliBenefici() {
-        ModelloDati.setIstanza(new ModelloDati());
+        StatoDelMotore.azzera();
         StatoDelCombattimento.getIstanza().reimposta();
         Personaggio sacerdote = FabbricaPersonaggi.crea(TipoPersonaggio.SACERDOTE, 3);
         Personaggio guerriero = FabbricaPersonaggi.crea(TipoPersonaggio.GUERRIERO, 3);

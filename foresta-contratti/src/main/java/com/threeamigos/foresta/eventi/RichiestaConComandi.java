@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.eventi;
 
+import com.threeamigos.foresta.tipi.TipoEvento;
 import com.threeamigos.foresta.tipi.Comando;
 
 import java.util.Collection;

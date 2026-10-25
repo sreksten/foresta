@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.artefatti.leggendari;
 
 import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
-import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
+import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 
 import java.util.*;
 import java.util.stream.Collectors;

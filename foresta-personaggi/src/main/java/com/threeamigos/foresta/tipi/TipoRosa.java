@@ -1,0 +1,51 @@
+package com.threeamigos.foresta.tipi;
+
+import com.threeamigos.foresta.testi.Testi;
+
+
+/**
+ * La rosa di candidati da cui pesca il selettore di una voce di tattica, prima dei filtri (vedi tattiche_di_combattimento_automatiche.md §11.3).
+ * È solo il nome (e il lato per cui vale): chi calcola i candidati è la classe del pacchetto <code>tattiche</code> che gli corrisponde
+ * (vedi <code>tattiche.Rose</code>). Sta in <code>tipi</code> perché serve anche alla UI, per la scheda delle tattiche.
+ * <p>
+ * "Alleati" e "avversari" sono quelli dell'<b>attore</b>: per un mio personaggio gli avversari sono i mostri, per un mostro sono i miei personaggi.
+ * <p>
+ * I testi di ogni costante (DESCRIZIONE) non stanno qui ma nel file {@code tipo_rosa_<lingua>.properties}, alla voce
+ * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
+ */
+public enum TipoRosa {
+
+	/** Il solo attore */
+	SE_STESSO(true, true),
+	/** I compagni vivi e in campo, l'attore compreso */
+	ALLEATI(true, true),
+	/** I compagni caduti (non in panchina): solo per le azioni che lo dichiarano, la Resurrezione */
+	ALLEATI_CADUTI(true, true),
+	/** I vivi e in campo dell'altro gruppo */
+	AVVERSARI(true, true),
+	/** Gli ospiti vulnerabili vivi del gruppo del giocatore: da proteggere per i miei, bersagli per i mostri */
+	OSPITI(true, true),
+	/** Gli alleati e poi gli ospiti vulnerabili: solo per i miei personaggi (per le cure) */
+	ALLEATI_E_OSPITI(true, false),
+	/** Gli avversari e poi gli ospiti vulnerabili: solo per i mostri (la scelta a caso dei mostri, RegistroTattiche) */
+	AVVERSARI_E_OSPITI(false, true);
+
+	private final boolean validoPerIPersonaggiDelGiocatore;
+	private final boolean validoPerIMostri;
+
+	TipoRosa(boolean validoPerIPersonaggiDelGiocatore, boolean validoPerIMostri) {
+		this.validoPerIPersonaggiDelGiocatore = validoPerIPersonaggiDelGiocatore;
+		this.validoPerIMostri = validoPerIMostri;
+	}
+
+	public String getDescrizione() {
+		return Testi.testoOCostante(this, "DESCRIZIONE");
+	}
+
+	/**
+	 * @param attoreDelGiocatore true se chi decide è un personaggio del giocatore, false se è un mostro
+	 */
+	public boolean valePer(boolean attoreDelGiocatore) {
+		return attoreDelGiocatore ? validoPerIPersonaggiDelGiocatore : validoPerIMostri;
+	}
+}

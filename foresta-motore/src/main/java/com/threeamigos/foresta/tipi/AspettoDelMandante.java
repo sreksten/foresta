@@ -1,0 +1,46 @@
+package com.threeamigos.foresta.tipi;
+
+import com.threeamigos.foresta.intermezzi.ScenaInCitta;
+
+import java.util.function.Supplier;
+
+/**
+ * Chi compare nella scena in città quando un incarico si offre. Lo sceglie la riga della grammatica dell'incarico
+ * (campo ASPETTO): un personaggio, se il mandante ne ha uno, altrimenti QUALUNQUE (un Uomo, con l'aspetto del
+ * locandiere) o DONNA (una Donna, con quello della moglie del bardo).
+ */
+public enum AspettoDelMandante {
+
+	QUALUNQUE(ScenaInCitta::conMandante),
+	DONNA(ScenaInCitta::conMandantessa),
+	BORGOMASTRO(TipoPersonaggio.BORGOMASTRO),
+	CAPITANO(TipoPersonaggio.CAPITANO_DELLE_GUARDIE),
+	ARMAIOLO(TipoPersonaggio.ARMAIOLO),
+	ALCHIMISTA(TipoPersonaggio.ALCHIMISTA),
+	LOCANDIERE(TipoPersonaggio.LOCANDIERE),
+	VENDITORE_DI_PERGAMENE(TipoPersonaggio.VENDITORE_DI_PERGAMENE),
+	INCANTATORE(TipoPersonaggio.INCANTATORE),
+	SACERDOTE(TipoPersonaggio.SACERDOTE),
+	SACERDOTESSA(TipoPersonaggio.SACERDOTESSA),
+	MAGO(TipoPersonaggio.MAGO),
+	MAGA(TipoPersonaggio.MAGA),
+	GUERRIERO(TipoPersonaggio.GUERRIERO),
+	LADRO(TipoPersonaggio.LADRO);
+
+	private final Supplier<ScenaInCitta> scena;
+
+	AspettoDelMandante(TipoPersonaggio classe) {
+		this(() -> ScenaInCitta.con(classe));
+	}
+
+	AspettoDelMandante(Supplier<ScenaInCitta> scena) {
+		this.scena = scena;
+	}
+
+	/**
+	 * Una scena nuova con chi ha questo aspetto, per l'intermezzo dell'incarico.
+	 */
+	public ScenaInCitta nuovaScena() {
+		return scena.get();
+	}
+}

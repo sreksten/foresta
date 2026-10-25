@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.tipi;
 
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.testi.Testi;
 import java.util.Optional;
 

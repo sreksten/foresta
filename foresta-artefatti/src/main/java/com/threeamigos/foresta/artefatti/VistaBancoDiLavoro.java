@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.artefatti;
 
 
+import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import java.util.Optional;
 
 /**

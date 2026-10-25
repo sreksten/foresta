@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
-import com.threeamigos.foresta.intermezzi.Animazione;
+import com.threeamigos.foresta.tipi.Animazione;
 import com.threeamigos.foresta.ui.sprite.AnimazioneFuocoDaCampo;
 import com.threeamigos.foresta.ui.sprite.AnimazioneImmagine;
 

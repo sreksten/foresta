@@ -160,7 +160,7 @@ Le tattiche base sono dati (voci come quelle del giocatore: il motore che le ese
 
 **La tattica generale è quella di classe** (`RegistroTattiche.perClasse`), e non cambia per livello del mondo o per luogo: l'astuzia (intelligenza di classe con una rampa sul livello) e le
 condizioni dentro la lista fanno già variare il comportamento, e i boss hanno la loro intelligenza. Una **singola istanza** può però portarne una
-diversa (`Personaggio.getTattica`), per esempio in una missione un goblin più furbo degli altri con una tattica tutta sua; la tattica dell'istanza si salva con la partita (§1, §11.12).
+diversa (`TatticheDeiPersonaggi.imposta`), per esempio in una missione un goblin più furbo degli altri con una tattica tutta sua; la tattica dell'istanza si salva con la partita (§1, §11.12).
 
 **L'astuzia e le soglie.** Le soglie dei quattro livelli sono: 1 = da 0 a 11, 2 = da 12 a 19, 3 = da 20 a 30, 4 = da 31 (`SOGLIA_ASTUTO`, `SOGLIA_ESPERTO` e `SOGLIA_STRATEGA` in `TatticheBase`). Il **Folletto** (massimo 8)
 sta fra il Goblin e l'Hobgoblin e l'**Ombra Nera** (31) nel quarto livello. Il massimo sta in `*_MAX_INTELLIGENZA` di `Costanti`, che serve anche a calcolare l'INTELLIGENZA vera: cambiarlo
@@ -908,7 +908,7 @@ Il registro delle decisioni (§7.7) riporta i danni attesi confrontati ("PIU_ADA
 
 ### 11.11 Dove stanno i dati e la logica
 
-Le classi che descrivono una tattica sono **dati puri**: immutabili, fatti solo di enumerati (`tipi/tattiche`), numeri e liste. Stanno in **`…/modellodati/tattiche`**, con il suffisso `MD` come il resto del modello dati
+Le classi che descrivono una tattica sono **dati puri**: immutabili, fatti solo di enumerati (`tipi/tattiche`), numeri e liste. Stanno nel pacchetto **`…/tattiche`** (modulo `foresta-tattiche`), accanto alla logica, con il suffisso `MD` come il resto del modello dati
 (`TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`). Il motivo è che la stessa classe serve a tre cose: la **UI** le legge e le modifica (può importare `modellodati` e `tipi`, non il motore né il dominio), il **salvataggio**
 le scrive con il personaggio (`PersonaggioMD`, §11.12) e il **motore** le valuta. Il modulo `foresta-modellodati` non vede il motore, e quindi nemmeno `tattiche`: dipendono solo da `tipi` e fra loro.
 
@@ -925,7 +925,7 @@ gruppo e un bersaglio ferito (Salute) o senza la `MAGIA` piena; il cambio d'arma
 
 ### 11.12 Il salvataggio
 
-La tattica (`SalvataggioTatticheTest`, `CombattimentoConTatticheTest`) sta nel `PersonaggioMD` (`getTattica`/`setTattica`, `PersonaggioBase` ne è solo la porta) e passa dal salvataggio con il personaggio: dopo il suo record una riga vuota (nessuna tattica: i mostri) oppure la tattica. Una
+La tattica (`SalvataggioTatticheTest`, `CombattimentoConTatticheTest`) sta in `TatticheMD` (`TatticheDeiPersonaggi.di`/`imposta`, legata al personaggio dal suo `uuid`: il personaggio non sa di averne una) e passa dal salvataggio con le altre parti del modello dati: il numero di tattiche e, per ognuna, l'`uuid` e la tattica (i mostri non compaiono). Una
 tattica vuota (`TatticaMD.VUOTA`) resta una tattica vuota e non diventa "nessuna tattica": sono due cose diverse (i miei personaggi senza tattica usano la predefinita del loro ruolo, i mostri quella della classe, `RegistroTattiche.perClasse`).
 
 **Una tattica incoerente non fa fallire il caricamento.** I dati malformati (un nome sconosciuto, un numero scritto male, una voce senza azioni) fanno ancora fallire la rilettura; ma una tattica ben formata con errori di coerenza (un attacco sugli alleati, una rosa che le azioni non accettano: `TatticaMD.problemiPerQualsiasiLato`, che non sa se è di un mostro o di un mio personaggio) viene **disabilitata** (`TatticaMD.disabilitata`, il flag si salva) e conservata. Chi agisce la tratta come se non ci fosse (`LocazioneBase.tatticaDi`: la predefinita del ruolo), e la schermata delle tattiche la mostra con un avviso in rosso e gli errori, perché il giocatore li corregga e confermi. Il motore non accetta dalla schermata una tattica con errori (`ComandoImpostaTattica`).
@@ -967,7 +967,7 @@ caduto il capo. Gli avversari messi fuori combattimento dai miei li comunica a u
 Lo usano `LocazioneBase` (che gli passa i suoi gruppi e lo stato e tiene per sé il round, le opzioni di corruzione e amicizia, e le azioni manuali del giocatore, che per l'attacco e il dardo passano dalle sue stesse primitive) e `RoundASimulato`, quindi `TestScontriDiGruppo` e `TestLogoramentoInizioPartita`: **i mostri
 delle simulazioni agiscono con le stesse tattiche del gioco**, non più con una copia della logica di scelta. `ContestoTattico.per(attore, giocatore, mostri)` lo costruisce da gruppi qualunque.
 
-**Come lo usa `LocazioneBase`**: a ogni scatto del TIMER il personaggio di turno agisce con la sua tattica (`Personaggio.getTattica`, salvata con il personaggio, §11.12; `LocazioneBase.tatticaDi` sceglie quella da usare: la sua, la predefinita del ruolo per i miei che non ne hanno o hanno una disabilitata, quella della classe per i mostri). Le azioni manuali del giocatore (barra dei comandi) passano dalle primitive di `LocazioneBase`. Lo coprono `CombattimentoConTatticheTest` e `EsecutoreTatticheTest`.
+**Come lo usa `LocazioneBase`**: a ogni scatto del TIMER il personaggio di turno agisce con la sua tattica (`TatticheDeiPersonaggi.di`, salvata in `TatticheMD`, §11.12; `LocazioneBase.tatticaDi` sceglie quella da usare: la sua, la predefinita del ruolo per i miei che non ne hanno o hanno una disabilitata, quella della classe per i mostri). Le azioni manuali del giocatore (barra dei comandi) passano dalle primitive di `LocazioneBase`. Lo coprono `CombattimentoConTatticheTest` e `EsecutoreTatticheTest`.
 
 ### 11.15 La schermata del giocatore
 

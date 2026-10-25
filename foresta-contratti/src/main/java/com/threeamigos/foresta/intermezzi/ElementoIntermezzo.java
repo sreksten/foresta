@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.tipi.TipoRipetizione;
+import com.threeamigos.foresta.tipi.Verso;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.List;
  * Un'immagine in una pagina di intermezzo: un personaggio, un oggetto, un elemento di
  * sfondo animato. Parte da uno stato iniziale (posizione del centro in frazioni dello
  * schermo, scala, opacità) e può percorrere una sequenza di {@link Tappa}, ripetuta come
- * indicato da {@link Ripetizione}. Il tempo si misura in secondi dall'inizio della pagina.
+ * indicato da {@link TipoRipetizione}. Il tempo si misura in secondi dall'inizio della pagina.
  * <p>
  * L'identificativo serve alle {@link BattutaIntermezzo} per sapere chi parla: il fumetto
  * punta verso la bocca dell'elemento e lo segue se si muove.
@@ -22,7 +24,7 @@ import java.util.List;
  *     ElementoIntermezzo.di("drago", ImmagineIntermezzo.personaggio(TipoPersonaggio.DRAGO), 1.2, 0.2)
  *             .conScala(0.4).conOpacita(0.5)
  *             .poi(Tappa.inSecondi(10).verso(-0.2, 0.3))
- *             .ripeti(Ripetizione.CICLICA)
+ *             .ripeti(TipoRipetizione.CICLICA)
  * </pre>
  */
 public final class ElementoIntermezzo {
@@ -48,7 +50,7 @@ public final class ElementoIntermezzo {
 	private final ImmagineIntermezzo immagine;
 	private StatoElemento statoIniziale;
 	private final List<Tappa> tappe = new ArrayList<>();
-	private Ripetizione ripetizione = Ripetizione.UNA_VOLTA;
+	private TipoRipetizione ripetizione = TipoRipetizione.UNA_VOLTA;
 	// Se il verso segue il movimento
 	private boolean versoDelMoto;
 	private double boccaX = BOCCA_X;
@@ -140,7 +142,7 @@ public final class ElementoIntermezzo {
 	/**
 	 * Come l'elemento ripete le sue tappe una volta finite.
 	 */
-	public ElementoIntermezzo ripeti(Ripetizione ripetizione) {
+	public ElementoIntermezzo ripeti(TipoRipetizione ripetizione) {
 		this.ripetizione = ripetizione;
 		return this;
 	}
@@ -151,7 +153,7 @@ public final class ElementoIntermezzo {
 	 */
 	public double getDurata() {
 		double durataCiclo = getDurataCiclo();
-		if (ripetizione == Ripetizione.UNA_VOLTA || durataCiclo == 0) {
+		if (ripetizione == TipoRipetizione.UNA_VOLTA || durataCiclo == 0) {
 			return durataCiclo;
 		}
 		return Double.POSITIVE_INFINITY;

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * La bottega di un armaiolo nella Foresta: armi, armature e il resto dell'equipaggiamento, con un magazzino suo.

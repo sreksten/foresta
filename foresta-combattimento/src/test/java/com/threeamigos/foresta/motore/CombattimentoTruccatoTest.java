@@ -1,0 +1,54 @@
+package com.threeamigos.foresta.motore;
+
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.tipi.CategoriaDanno;
+import com.threeamigos.foresta.personaggi.Guerriero;
+import com.threeamigos.foresta.personaggi.Ladro;
+import com.threeamigos.foresta.strumenti.dado.Dado;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Esempio di dado truccato: il tiro per colpire (d100 contro una probabilità limitata tra 5 e 95) deciso dal test.
+ */
+class CombattimentoTruccatoTest {
+
+    private Ladro attaccante;
+    private Guerriero difensore;
+
+    @BeforeEach
+    void prepara() {
+        DatiDiProva.nuovaPartita();
+        attaccante = new Ladro("Attaccante", 5);
+        difensore = new Guerriero("Difensore", 5);
+    }
+
+    @AfterEach
+    void ripristina() {
+        assertEquals(0, Dado.trucchiRimasti(), "il test ha previsto più lanci di quelli fatti");
+        Dado.ripristina();
+    }
+
+    @Test
+    void unUnoColpisceSempre() {
+        Dado.trucca(1);
+        assertTrue(CalcolatoreCombattimento.colpisce(attaccante, difensore, CategoriaDanno.FISICO));
+    }
+
+    @Test
+    void unCentoNonColpisceMai() {
+        Dado.trucca(100);
+        assertFalse(CalcolatoreCombattimento.colpisce(attaccante, difensore, CategoriaDanno.FISICO));
+    }
+
+    @Test
+    void siColpisceFinoAllaProbabilitaCalcolata() {
+        int probabilita = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(attaccante, difensore, CategoriaDanno.FISICO);
+        Dado.trucca(probabilita, probabilita + 1);
+        assertTrue(CalcolatoreCombattimento.colpisce(attaccante, difensore, CategoriaDanno.FISICO));
+        assertFalse(CalcolatoreCombattimento.colpisce(attaccante, difensore, CategoriaDanno.FISICO));
+    }
+}

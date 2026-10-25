@@ -5,8 +5,8 @@ import com.threeamigos.foresta.tipi.ComandiAssociati;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.ui.barra.ClasseIcona;
-import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
+import com.threeamigos.foresta.tipi.TipoIcona;
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -29,7 +29,7 @@ class IconeDelleAbilitaTest {
 			assertNotNull(comando, tipo.name());
 			assertTrue(comandi.add(comando), "comando ripetuto: " + comando);
 			assertSame(tipo, ComandiAssociati.abilita(comando));
-			assertNotNull(ClasseIcona.ofComando(comando).getIcona(), comando.name());
+			assertNotNull(TipoIcona.ofComando(comando).getIcona(), comando.name());
 		}
 		assertEquals(TipoAbilita.values().length, comandi.size());
 	}
@@ -37,15 +37,15 @@ class IconeDelleAbilitaTest {
 	@Test
 	void leQuattroClassiHannoIcona() {
 		for (Comando comando : Arrays.asList(Comando.CHIERICO, Comando.CHIERICA, Comando.DRUIDO, Comando.DRUIDA)) {
-			assertNotNull(ClasseIcona.ofComando(comando).getIcona(), comando.name());
+			assertNotNull(TipoIcona.ofComando(comando).getIcona(), comando.name());
 		}
 	}
 
 	@Test
 	void leQuattroClassiHannoLaLoroImmagine() {
 		for (TipoPersonaggio classe : Arrays.asList(TipoPersonaggio.CHIERICO, TipoPersonaggio.CHIERICA, TipoPersonaggio.DRUIDO, TipoPersonaggio.DRUIDA)) {
-			assertNotNull(ClassePersonaggioImmagine.getImmagine(classe), classe.name());
-			assertNotNull(ClassePersonaggioImmagine.getIcona(classe), classe.name());
+			assertNotNull(MappaPersonaggioImmagine.getImmagine(classe), classe.name());
+			assertNotNull(MappaPersonaggioImmagine.getIcona(classe), classe.name());
 		}
 	}
 }

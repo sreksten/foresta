@@ -1,22 +1,21 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.incantesimi.Fulmine;
 import com.threeamigos.foresta.incantesimi.Fuoco;
 import com.threeamigos.foresta.incantesimi.Morte;
 import com.threeamigos.foresta.incantesimi.Silenzio;
-import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Scheletro;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
+import com.threeamigos.foresta.tipi.TipoAzione;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +33,7 @@ class IncantesimiTest {
 
     @BeforeEach
     void preparaCombattenti() {
-        ModelloDati.setIstanza(new ModelloDati());
+        StatoDelMotore.azzera();
         mago = new Mago("Merlino", 5);
         mago.addModificatore(new ModificatoreAttributoMD(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
         bersaglio = new Guerriero("Bersaglio", 5);

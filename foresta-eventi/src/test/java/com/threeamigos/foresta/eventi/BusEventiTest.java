@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.eventi;
 
+import com.threeamigos.foresta.tipi.TipoEvento;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

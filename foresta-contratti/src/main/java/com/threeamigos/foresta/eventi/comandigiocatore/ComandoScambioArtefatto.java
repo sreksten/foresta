@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.comandigiocatore;
 
 import com.threeamigos.foresta.eventi.EventoBase;
-import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoEvento;
 
 /**
  * Il giocatore sposta un artefatto da una parte all'altra di uno scambio aperto (doppio click nella schermata).

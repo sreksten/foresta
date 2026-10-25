@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.mappa.LocazioneMD;
+import com.threeamigos.foresta.modellodati.LocazioneMD;
 
 import com.threeamigos.foresta.mappa.Foresta;
 
@@ -8,9 +8,9 @@ import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,7 +45,7 @@ class ScenarioNomiDelleLocazioniTest {
             assertNotEquals("la città di Ruuna", locandaDiRuuna);
 
             for (CoordinateMD coordinate : new CoordinateMD[]{ruuna, strega, tempio, locanda, bosco}) {
-                Foresta.getLocazioneMD(coordinate).rimuoviProprieta(com.threeamigos.foresta.mappa.LocazioneMD.CONOSCIUTA);
+                Foresta.getLocazioneMD(coordinate).rimuoviProprieta(com.threeamigos.foresta.modellodati.LocazioneMD.CONOSCIUTA);
                 assertNull(Foresta.getNomeDaMostrare(coordinate), "non conosciuta: " + coordinate);
                 Foresta.setLocazioneConosciuta(coordinate);
             }

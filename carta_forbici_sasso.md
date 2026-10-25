@@ -21,7 +21,7 @@ la spegne, senza nemmeno tirare il dado.
 | Il riquadro | `ui/riquadri/DisplayableCanvasRiquadroSfida`, evento `eventi/interni/InternoSfidaCartaForbiciSasso` |
 | Le frasi | `testi/sfide.txt`, `ProduttoreDiSfideCasuale.fraseDiSfida` e le altre |
 | La missione | `missioni/storie/LaSfidaDeiCampioni`, `missioni/storie/IlCampione` |
-| Il trofeo | `TipoTrofeo.RE_DI_CARTA_FORBICI_E_SASSO`, `ClasseTrofeo` |
+| Il trofeo | `TipoTrofeo.RE_DI_CARTA_FORBICI_E_SASSO`, `RegolaTrofeo` |
 
 ## 2. La sfida in locazione
 

@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
-import com.threeamigos.foresta.trofei.ClasseTrofeo;
+import com.threeamigos.foresta.tipi.RegolaTrofeo;
 import com.threeamigos.foresta.trofei.Trofeo;
 import org.junit.jupiter.api.Test;
 
@@ -43,13 +43,13 @@ class ScenarioPaginaTrofeiTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(232)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             for (TipoTrofeo tipo : TipoTrofeo.values()) {
-                Trofeo trofeo = ClasseTrofeo.di(tipo);
+                Trofeo trofeo = RegolaTrofeo.di(tipo);
                 assertEquals(tipo, trofeo.getTipo());
                 assertTrue(trofeo.getObiettivo() >= 1, tipo.name());
                 assertTrue(trofeo.getProgresso() >= 0 && trofeo.getProgresso() <= trofeo.getObiettivo(), tipo.name());
             }
-            assertEquals(TipoTrofeo.values().length - 1, ClasseTrofeo.di(TipoTrofeo.PERDIGIORNO).getObiettivo());
-            assertEquals(1, ClasseTrofeo.di(TipoTrofeo.UCCIDI_IL_DRAGO).getObiettivo());
+            assertEquals(TipoTrofeo.values().length - 1, RegolaTrofeo.di(TipoTrofeo.PERDIGIORNO).getObiettivo());
+            assertEquals(1, RegolaTrofeo.di(TipoTrofeo.UCCIDI_IL_DRAGO).getObiettivo());
         }
     }
 }

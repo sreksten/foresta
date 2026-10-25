@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui.tattiche;
 
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
+import com.threeamigos.foresta.modellodati.TatticaMD;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;

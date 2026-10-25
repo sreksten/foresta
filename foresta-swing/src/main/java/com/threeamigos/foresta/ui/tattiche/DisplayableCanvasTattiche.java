@@ -1,19 +1,20 @@
 package com.threeamigos.foresta.ui.tattiche;
 
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoImpostaTattica;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpostaPersonaggio;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.modellodati.tattiche.*;
+import com.threeamigos.foresta.tattiche.*;
+import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.tattiche.*;
+import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
-import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatore;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
@@ -339,7 +340,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		graphics.drawImage(nome, (width - nome.getWidth(null)) / 2, y, null);
 		y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
-		BufferedImage immagine = ClassePersonaggioImmagine.getImmagine(personaggio.getClasse());
+		BufferedImage immagine = MappaPersonaggioImmagine.getImmagine(personaggio.getClasse());
 		y += ALTEZZA_LADRO;
 		graphics.drawImage(immagine, (width - immagine.getWidth()) / 2, y - immagine.getHeight(), null);
 		y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;

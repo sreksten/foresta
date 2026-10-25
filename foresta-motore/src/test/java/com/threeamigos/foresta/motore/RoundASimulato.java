@@ -1,13 +1,14 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.modellodati.TatticaMD;
+import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tattiche.Decisione;
 import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
+import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -195,7 +196,7 @@ final class RoundASimulato {
         ultimoAvversario = chi;
         if (!isIncapaceDiAgire(chi) && !mieiVivi().isEmpty()) {
             azioni++;
-            esecutore.agisci(chi, chi.getTattica() != null ? chi.getTattica() : RegistroTattiche.perClasse(chi.getClasse()));
+            esecutore.agisci(chi, TatticheDeiPersonaggi.di(chi) != null ? TatticheDeiPersonaggi.di(chi) : RegistroTattiche.perClasse(chi.getClasse()));
             decisore.dopoOgniAzione(this);
         }
         return esito();

@@ -13,7 +13,7 @@ Le tattiche attraversano quattro moduli (la separazione la garantisce il compila
 | Modulo | Pacchetto | Che cosa contiene |
 | :--- | :--- | :--- |
 | `foresta-tipi` | `tipi.tattiche` | Gli **enumerati**: `TipoAzione`, `TipoRosa`, `TipoFiltro`, `TipoOrdinamento`, `TipoPredicato`, `TipoConfronto`, `CriterioIncantesimo`, `PortataAzione`, `TipoParametro`, `EsitoAzione`. Solo nomi, descrizioni e regole di compatibilità; nessuna logica di gioco |
-| `foresta-modellodati` | `modellodati.tattiche` | I **dati** (suffisso `MD`): `TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`, e `FormatoTattiche` per il salvataggio. Immutabili, con la lettura e la scrittura |
+| `foresta-tattiche` | `tattiche` | I **dati** (suffisso `MD`): `TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`, e `FormatoTattiche` per il salvataggio. Immutabili, con la lettura e la scrittura |
 | `foresta-contratti` | `eventi.*` | `ComandoImpostaTattica` (UI → motore), `RichiestaAperturaTattiche` (motore → UI), `InternoDecisioneTattica` (la spiegazione di una decisione) |
 | `foresta-motore` | `tattiche` | La **logica**: `Valutatore`, `ContestoTattico`, `Decisione`, `RisultatoSelezione`, `EsecutoreTattiche`, `RegistroTattiche`, `TatticheBase` |
 | | `tattiche.rose` | `Rosa` e una classe per ogni `TipoRosa`; `Rose` le trova |
@@ -460,7 +460,7 @@ e arriva al massimo al livello 9. Un mostro "tonto" all'inizio diventa più osti
 
 ## 14. Il salvataggio
 
-`PersonaggioMD` salva la tattica dopo gli effetti di stato: **una riga vuota** se non ce n'è una (`null`), altrimenti `TatticaMD.salva`. La lettura distingue i due casi dalla prima riga
+`TatticheMD` salva una riga col numero di tattiche e, per ognuna, l'`uuid` del personaggio e `TatticaMD.salva` (chi non ha una tattica non compare). Ogni tattica si legge dalla sua prima riga
 (`TatticaMD.leggi(intestazione, stream)`).
 
 Formato (`FormatoTattiche`): una riga per elemento, campi separati da pipe, la prima parola dice di che elemento si tratta; gli elementi che ne contengono altri **dicono quanti sono**
@@ -503,7 +503,7 @@ La schermata si apre dall'inventario con `MOSTRA_TATTICHE`; i comandi possibili 
 
 - `richiediAperturaTattiche` pubblica `RichiestaAperturaTattiche` con: il personaggio scelto, la sua tattica (o la predefinita della classe se non ne ha una — è quella che la
   schermata mostra), la predefinita e le `azioniPossibili`.
-- `ComandoImpostaTattica(uuid, tattica)`: il motore **rifiuta** una tattica nulla o con `problemi(true)` non vuoti (log "Tattica rifiutata"), altrimenti `setTattica` e ripubblica la
+- `ComandoImpostaTattica(uuid, tattica)`: il motore **rifiuta** una tattica nulla o con `problemi(true)` non vuoti (log "Tattica rifiutata"), altrimenti `TatticheDeiPersonaggi.imposta` e ripubblica la
   richiesta di apertura per far riallineare la schermata.
 - I comandi arrivano solo con la schermata aperta (`personaggioPerLeTattiche` controlla lo stato): **in combattimento le tattiche non si toccano**.
 

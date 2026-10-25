@@ -14,7 +14,7 @@ import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
-import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
@@ -118,7 +118,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         y = disegnaIntestazioneCentrale(graphics, y, coloreTestata) + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         // Immagine personaggio
-        BufferedImage immaginePersonaggio = ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.ALCHIMISTA);
+        BufferedImage immaginePersonaggio = MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.ALCHIMISTA);
 
         // Per tenere i personaggi sullo stesso livello (se si passa da un personaggio all'altro)
         // ed evitare sfarfallamenti, scegliamo il ladro come personaggio "base" per calcolare l'altezza a cui disegnare.
@@ -364,7 +364,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
             case POZIONE_MAGIA_GRANDE:
                 return ImageCache.spritePozioneMagiaGrande;
             case AUMENTO_MAGIA_SINGOLO:
-                return ClassePersonaggioImmagine.getIcona(offerta.getPersonaggio().getClasse());
+                return MappaPersonaggioImmagine.getIcona(offerta.getPersonaggio().getClasse());
             case AUMENTO_MAGIA_GRUPPO:
                 return ImageCache.spriteGruppo;
             default:

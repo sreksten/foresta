@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Il motore non deve caricare immagini: gli oggetti si devono poter usare senza schermo (le immagini stanno in
- * ui.ClassiOggettoImmagine). Nella JVM dei test AWT può essere già stato inizializzato con il display da altri
+ * ui.MappaBottinoImmagine). Nella JVM dei test AWT può essere già stato inizializzato con il display da altri
  * test, quindi la prova gira in una JVM a parte avviata con java.awt.headless=true.
  */
 class OggettiHeadlessTest {

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.trofei;
 
+import com.threeamigos.foresta.tipi.RegolaTrofeo;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCaricamentoCompletato;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
@@ -50,7 +51,7 @@ public class RegistroTrofei {
 	public static void registrati() {
 		BusEventi.iscriviti(InternoCaricamentoCompletato.class, evento -> scartaIlProgressoInSospeso());
 		BusEventi.iscriviti(InternoFineLocazione.class, evento -> fineLocazione());
-		for (ClasseTrofeo classeTrofeo : ClasseTrofeo.values()) {
+		for (RegolaTrofeo classeTrofeo : RegolaTrofeo.values()) {
 			classeTrofeo.getIstanza().registrati();
 		}
 	}
@@ -100,7 +101,7 @@ public class RegistroTrofei {
 		boolean vintoQualcosa;
 		do {
 			vintoQualcosa = false;
-			for (ClasseTrofeo classeTrofeo : ClasseTrofeo.values()) {
+			for (RegolaTrofeo classeTrofeo : RegolaTrofeo.values()) {
 				Trofeo trofeo = classeTrofeo.getIstanza();
 				if (!trofeiMD.isVinto(trofeo.getTipo()) && trofeo.isMeritato()) {
 					trofeiMD.aggiungiVinto(trofeo.getTipo());

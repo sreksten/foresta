@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.ui.tattiche;
 
-import com.threeamigos.foresta.modellodati.tattiche.*;
-import com.threeamigos.foresta.tipi.tattiche.*;
+import com.threeamigos.foresta.tattiche.*;
+import com.threeamigos.foresta.modellodati.*;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

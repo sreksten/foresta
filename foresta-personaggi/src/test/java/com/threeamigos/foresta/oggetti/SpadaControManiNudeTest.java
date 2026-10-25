@@ -4,7 +4,7 @@ import com.threeamigos.foresta.motore.DatiDiProva;
 
 import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import org.junit.jupiter.api.Test;
 

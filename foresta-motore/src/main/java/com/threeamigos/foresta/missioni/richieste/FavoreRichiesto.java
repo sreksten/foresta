@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni.richieste;
 
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**

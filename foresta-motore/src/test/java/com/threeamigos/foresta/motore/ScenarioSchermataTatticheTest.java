@@ -5,14 +5,15 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpostaPersonaggio;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaTattiche;
 import com.threeamigos.foresta.modellodati.GruppoGiocatoreMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
+import com.threeamigos.foresta.modellodati.TatticaMD;
 import com.threeamigos.foresta.personaggi.Gigante;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
+import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 import com.threeamigos.foresta.tattiche.TatticheBase;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
@@ -76,25 +77,25 @@ class ScenarioSchermataTatticheTest {
 
             // Schermata chiusa: ignorato
             partita.pubblica(new ComandoImpostaTattica(capo.getUuid(), tattica));
-            assertNotEquals(tattica, capo.getTattica());
+            assertNotEquals(tattica, TatticheDeiPersonaggi.di(capo));
 
             apriLeTattiche(partita);
             partita.pubblica(new ComandoImpostaTattica("non-esiste", tattica));
             partita.pubblica(new ComandoImpostaTattica(null, tattica));
             partita.pubblica(new ComandoImpostaTattica(capo.getUuid(), null));
-            assertNotEquals(tattica, capo.getTattica());
+            assertNotEquals(tattica, TatticheDeiPersonaggi.di(capo));
 
             // Una tattica con errori (un attacco sugli alleati) il motore non l'accetta
-            TatticaMD incoerente = TatticaMD.di(com.threeamigos.foresta.modellodati.tattiche.VoceMD.su(
-                    new com.threeamigos.foresta.modellodati.tattiche.SelettoreMD(com.threeamigos.foresta.tipi.tattiche.TipoRosa.ALLEATI,
+            TatticaMD incoerente = TatticaMD.di(com.threeamigos.foresta.modellodati.VoceMD.su(
+                    new com.threeamigos.foresta.modellodati.SelettoreMD(com.threeamigos.foresta.tipi.TipoRosa.ALLEATI,
                             java.util.Collections.emptyList(),
-                            com.threeamigos.foresta.modellodati.tattiche.OrdinamentoMD.di(com.threeamigos.foresta.tipi.tattiche.TipoOrdinamento.PRIMO)),
-                    com.threeamigos.foresta.modellodati.tattiche.AzioneMD.di(com.threeamigos.foresta.tipi.tattiche.TipoAzione.ATTACCO_FISICO)));
+                            com.threeamigos.foresta.modellodati.OrdinamentoMD.di(com.threeamigos.foresta.tipi.TipoOrdinamento.PRIMO)),
+                    com.threeamigos.foresta.modellodati.AzioneMD.di(com.threeamigos.foresta.tipi.TipoAzione.ATTACCO_FISICO)));
             partita.pubblica(new ComandoImpostaTattica(capo.getUuid(), incoerente));
-            assertNotEquals(incoerente, capo.getTattica());
+            assertNotEquals(incoerente, TatticheDeiPersonaggi.di(capo));
 
             partita.pubblica(new ComandoImpostaTattica(capo.getUuid(), tattica));
-            assertEquals(tattica, capo.getTattica());
+            assertEquals(tattica, TatticheDeiPersonaggi.di(capo));
             assertEquals(tattica, partita.eventi().ultimo(RichiestaAperturaTattiche.class).getTattica());
         }
     }

@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.IncantamentoMD;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 
 /**

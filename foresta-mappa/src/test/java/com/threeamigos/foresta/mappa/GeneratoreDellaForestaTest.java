@@ -1,5 +1,10 @@
 package com.threeamigos.foresta.mappa;
 
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.Quadrante;
+import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.modellodati.ForestaMD;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiLocandeCasuale;
 import com.threeamigos.foresta.testi.ProduttoriDiTesti;

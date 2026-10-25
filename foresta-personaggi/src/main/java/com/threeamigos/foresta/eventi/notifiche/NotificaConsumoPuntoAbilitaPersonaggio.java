@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
-import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoEvento;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 
 /**

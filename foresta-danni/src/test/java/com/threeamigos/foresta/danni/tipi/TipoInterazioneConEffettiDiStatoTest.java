@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.danni.tipi;
 
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.testi.Testi;
 import org.junit.jupiter.api.Test;
 

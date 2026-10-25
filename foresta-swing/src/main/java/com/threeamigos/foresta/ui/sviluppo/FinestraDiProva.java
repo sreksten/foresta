@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui.sviluppo;
 
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.interfacce.StrumentiDiSviluppo;
 import com.threeamigos.foresta.interfacce.StrumentiDiSviluppo.DovePartono;
 import com.threeamigos.foresta.interfacce.StrumentiDiSviluppo.Scorta;

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.attributi.tipi;
 
+import com.threeamigos.foresta.tipi.CategoriaAttributo;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.testi.Testi;
 import org.junit.jupiter.api.Test;
 

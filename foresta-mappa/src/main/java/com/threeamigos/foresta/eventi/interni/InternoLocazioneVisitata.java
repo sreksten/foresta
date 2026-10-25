@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
-import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.mappa.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * Il gruppo è arrivato per la prima volta in una casella: tornarci non lo pubblica di nuovo. Chi conta le visite

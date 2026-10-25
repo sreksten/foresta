@@ -1,8 +1,10 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
-import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoFinestra;
+import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
@@ -10,8 +12,8 @@ import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzabile;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
@@ -19,7 +21,7 @@ import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.FaseDiGioco;
-import com.threeamigos.foresta.ui.barra.ClasseIcona;
+import com.threeamigos.foresta.tipi.TipoIcona;
 import com.threeamigos.foresta.ui.barra.ComandiPossibili;
 import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
@@ -180,7 +182,7 @@ public class ForestaUI implements Temporizzabile {
 				ImageCache.SPACING +
 				corniceGrande.height +
 				ImageCache.SPACING +
-				ClasseIcona.getAltezzaMassima() +
+				TipoIcona.getAltezzaMassima() +
 				ImageCache.SPACING;
 		return new Dimension(Math.min(width, screenDimension.width), Math.min(height, screenDimension.height));
 	}

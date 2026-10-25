@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.personaggi.TipoApproccio;
+import com.threeamigos.foresta.tipi.TipoApproccio;
 
-import com.threeamigos.foresta.mappa.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 
 import com.threeamigos.foresta.mappa.Foresta;
 
@@ -14,7 +14,7 @@ import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.canti.FabbricaCanti;
 import com.threeamigos.foresta.combattimento.*;
-import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
@@ -22,9 +22,9 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.incantesimi.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.mappa.LocazioneMD;
-import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
-import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.modellodati.TatticaMD;
+import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.FabbricaOfferte;
 import com.threeamigos.foresta.offerte.Offerta;
@@ -38,6 +38,7 @@ import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
+import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.testi.ProduttoreDiSfideCasuale;
 import com.threeamigos.foresta.tipi.*;
@@ -1026,7 +1027,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * base della sua classe (RegistroTattiche, che le prende da TatticheBase).
 	 */
 	private TatticaMD tatticaDi(Personaggio personaggio) {
-		TatticaMD tattica = personaggio.getTattica();
+		TatticaMD tattica = TatticheDeiPersonaggi.di(personaggio);
 		// Una tattica disabilitata (con errori, letta da un salvataggio) è come se non ci fosse, finché il giocatore non la corregge
 		if (tattica != null && !tattica.isDisabilitata()) {
 			return tattica;

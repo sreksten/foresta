@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.eventi;
 
+import com.threeamigos.foresta.tipi.TipoEvento;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.eventi.interni.InternoMessaggio;

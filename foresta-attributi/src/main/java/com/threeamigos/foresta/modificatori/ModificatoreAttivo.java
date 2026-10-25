@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.modificatori;
 
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+
 /**
  * Un modificatore che sta agendo su un personaggio, con la sua fonte (il nome dell'artefatto che lo porta o la nota
  * di un modificatore proprio, per esempio una benedizione): serve alla UI per dire da dove viene un valore.

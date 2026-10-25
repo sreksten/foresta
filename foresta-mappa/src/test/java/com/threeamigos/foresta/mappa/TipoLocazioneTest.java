@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.mappa;
 
+import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.testi.Testi;
 import org.junit.jupiter.api.Test;
 

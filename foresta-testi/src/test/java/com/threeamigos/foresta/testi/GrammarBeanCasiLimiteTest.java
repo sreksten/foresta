@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.testi;
 
+import com.threeamigos.foresta.tipi.TipoModalitaProduzioneTesti;
 import com.threeamigos.foresta.strumenti.logger.DestinazioneDiLog;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.testi.GrammarBean.InvalidGrammarException;

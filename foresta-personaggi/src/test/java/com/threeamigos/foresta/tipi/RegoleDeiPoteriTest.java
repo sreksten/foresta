@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.tipi;
 
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

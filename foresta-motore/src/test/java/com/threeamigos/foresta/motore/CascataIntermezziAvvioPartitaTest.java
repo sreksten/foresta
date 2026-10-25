@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Riproduce il bug per cui, all'avvio di una nuova partita, l'Automa avvisava la UI di tornare
  * alla schermata di gioco ({@link InternoMostraSchermataGioco}) appena finiti gli intermezzi di
- * {@link com.threeamigos.foresta.intermezzi.MomentoIntermezzo#INIZIO_GIOCO}, prima che la cascata
+ * {@link com.threeamigos.foresta.tipi.MomentoIntermezzo#INIZIO_GIOCO}, prima che la cascata
  * automatica successiva avesse costruito la prima locazione: la UI si ritrovava così a disegnare
  * una locazione che l'Automa non aveva ancora impostato (GruppoGiocatore.getLocazioneCorrente()
  * nullo), causando un NullPointerException.

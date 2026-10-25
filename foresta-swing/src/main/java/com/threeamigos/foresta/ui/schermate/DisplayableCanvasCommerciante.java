@@ -4,9 +4,9 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoVenditaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
+import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 
@@ -93,8 +93,8 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
 
         // Immagine personaggio
         BufferedImage immaginePersonaggio = negozio == TipoNegozio.VENDITORE_DI_PERGAMENE
-                ? ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.VENDITORE_DI_PERGAMENE)
-                : ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.ARMAIOLO);
+                ? MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.VENDITORE_DI_PERGAMENE)
+                : MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.ARMAIOLO);
 
         // Per tenere i personaggi sullo stesso livello (se si passa da un personaggio all'altro)
         // ed evitare sfarfallamenti, scegliamo il ladro come personaggio "base" per calcolare l'altezza a cui disegnare.

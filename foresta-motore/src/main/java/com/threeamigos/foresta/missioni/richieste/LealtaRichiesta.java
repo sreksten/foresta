@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni.richieste;
 
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 
 /**
  * Il problema personale di un compagno (vedi LaLealta), letto da una riga di LEALTA in missioni.txt, che ne descrive i

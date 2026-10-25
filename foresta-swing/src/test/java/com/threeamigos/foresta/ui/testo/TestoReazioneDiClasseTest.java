@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui.testo;
 
-import com.threeamigos.foresta.danni.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoDanno;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;

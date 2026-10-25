@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.richieste;
 
 import com.threeamigos.foresta.eventi.EventoBase;
-import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.tipi.TipoEvento;
 
 /**
  * Il giocatore richiede di poter vedere la mappa del gioco conosciuta a tutto schermo.
