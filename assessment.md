@@ -1,157 +1,238 @@
 # Assessment di Foresta
 
-Valutazione del codice al **2026-10-19** (revisione), con le misure e i difetti aggiornati al **2026-10-22**, con una revisione completa dei sorgenti modulo per modulo, dal basso (`foresta-tipi`) fino a `foresta-app`. I numeri sono misurati sul working tree di quel giorno (`wc -l`, `grep`, JaCoCo da `mvn clean test`); i giudizi sono segnati come **Giudizio**. I difetti ancora aperti sono nel §5, con un codice (B35, B41…) per richiamarli. Le cose da fare per il porting su Android e iOS sono in [`assessment_portabilita.md`](assessment_portabilita.md): qui c'è solo il riassunto.
+Valutazione del progetto al **2026-10-25**, rifatta da zero dopo la divisione in moduli. Le misure sono state prese sul working tree di quel giorno, dopo `mvn clean test`:
+- righe e file sono contati con `wc -l`;
+- la copertura viene da JaCoCo, sia modulo per modulo sia con tutti i test insieme;
+- il grafo dei moduli è ricavato dagli import.
+
+I giudizi sono segnati come **Giudizio**. I difetti ancora aperti stanno nel §5, con i codici della revisione precedente (B35, B41…), che [`todo.md`](todo.md) usa. Le cose da fare per il porting su Android e iOS sono in [`assessment_portabilita.md`](assessment_portabilita.md): qui c'è solo il riassunto.
+
+Questo assessment **non è una nuova lettura integrale dei sorgenti**, come fu la revisione del 2026-10-19. Sono rifatti da capo le misure, l'architettura e la verifica dei difetti aperti. Le ipotesi controllate e scartate allora (§5.2) sono riportate, ma non le ho ricontrollate.
 
 ## 1. Sintesi
 
-- Il gioco è **completo e giocabile** da inizio a fine (creazione del gruppo, esplorazione, combattimento a round con tattiche, negozi, incantatore, missioni, intermezzi, trofei, salvataggi, classifica).
-- La **separazione fra le parti è garantita dal compilatore**: sei moduli Maven in fila (tipi, modellodati, contratti, motore, swing, app). La UI non vede il motore, ma soltanto viste in sola lettura ed eventi.
-- La **base di test è ampia e veloce**: 1672 test verdi (16 saltati); `tipi` e `modellodati` sono coperti quasi al 100% dai loro test, il motore all'83%.
-- **L'infrastruttura è solida.** Il bus, il `Dado`, i salvataggi di partita, gli scambi di artefatti, i prezzi e le copie difensive sono stati controllati e sono a posto. Non c'è nessuna `ConcurrentModificationException` raggiungibile, e i salvataggi sono simmetrici campo per campo.
-- Il **debito tecnico** resta concentrato nelle quattro classi grandi del motore e nello stato statico (§3).
-- **Giudizio:** il progetto è in buona salute. Non ci sono difetti aperti di gravità alta o media: restano del codice morto (§5) e il debito tecnico (§3). L'orientamento verticale resta rotto (noto) ed è rimandato in fondo.
+- **Il gioco è completo e giocabile** da inizio a fine: creazione del gruppo, esplorazione, combattimento a round con tattiche, negozi, incantatore, missioni, intermezzi, trofei, salvataggi, classifica.
+- **Il progetto è diviso in 28 moduli Maven, in fila.** Ognuno vede solo quelli sotto di lui, e il compilatore lo garantisce.
+  - Le parti del gioco sono sottoprogetti con i loro tipi, i loro dati e i loro contratti per la UI: personaggi, poteri, combattimento, tattiche, mappa, mondo, bottino, economia, statistiche, intermezzi, missioni, bestiario, trofei.
+  - Il motore offre alla UI il suo contratto in `foresta-motore-api`, e la UI non vede il motore.
+- **I sottoprogetti non sanno chi custodisce i loro dati.** Li ricevono da `ModelloDati` con un fornitore (`setFornitoreDiDati`). Quando non devono sapere che una cosa esiste, la ricevono da chi sta sopra: le fonti di intermezzi, il fornitore della locazione completa.
+- **2152 test, tutti verdi** (22 saltati, simulazioni da lanciare a mano). La copertura delle righe con tutti i test è del **77%**.
+- **Giudizio:** il progetto è in buona salute, e l'architettura è molto migliorata dalla revisione precedente: il motore è passato da 57.000 a meno di 10.000 righe. Non ci sono difetti aperti di gravità alta o media. Restano:
+  - le quattro classi grandi;
+  - lo stato statico;
+  - la fragilità dei fornitori (§3);
+  - qualche residuo della divisione: `foresta-tipi`, `foresta-modellodati`, `MeccanicaDeiPoteri`;
+  - un po' di codice morto (§5).
 
 ## 2. Misure
 
-| Modulo | Codice (file / righe) | Test (file / righe) | Test eseguiti | Copertura righe (JaCoCo) |
-| :--- | ---: | ---: | ---: | ---: |
-| `foresta-tipi` | 57 / 6.600 | 12 / 1.100 | 69 | 99,9% |
-| `foresta-modellodati` | 36 / 5.600 | 28 / 4.000 | 209 | 99,6% |
-| `foresta-contratti` | 168 / 7.400 | 9 / 700 | 44 | 41%* |
-| `foresta-motore` | 368 / 57.200 | 214 / 33.600 | 1232 (16 saltati) | 83% |
-| `foresta-swing` | 96 / 22.400 | 14 / 1.900 | 59 | 27%* |
-| `foresta-app` | 3 / 850 | 30 / 2.300 | 59 | 28% |
-| **Totale** | **728 / 100.100** | **307 / 43.700** | **1672** | **67%** |
+| Modulo | Codice (file / righe) | Test (file / righe) | Test eseguiti | Copertura dei suoi test | Copertura con tutti i test |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| `foresta-strumenti` | 15 / 983 | 8 / 879 | 50 | 99% | 100% |
+| `foresta-serializzazione` | 4 / 373 | 4 / 346 | 32 | 100% | 100% |
+| `foresta-eventi` | 16 / 1.038 | 2 / 206 | 14 | 92% | 96% |
+| `foresta-testi` | 15 / 3.639 | 11 / 3.205 | 299 | 100% | 100% |
+| `foresta-comandi` | 2 / 269 | 1 / 97 | 6 | 96% | 100% |
+| `foresta-attributi` | 13 / 995 | 6 / 409 | 27 | 100% | 100% |
+| `foresta-effettidistato` | 4 / 305 | 3 / 88 | 5 | 100% | 100% |
+| `foresta-danni` | 4 / 563 | 4 / 180 | 8 | 100% | 100% |
+| `foresta-tipi` | 3 / 129 | 3 / 278 | 11 | 100% | 100% |
+| `foresta-mappa` | 15 / 2.022 | 7 / 1.101 | 61 | 81% | 97% |
+| `foresta-artefatti` | 44 / 5.120 | 19 / 2.860 | 171 | 100% | 100% |
+| `foresta-personaggi` | 132 / 19.606 | 24 / 1.933 | 102 | 55% | 79% |
+| `foresta-poteri` | 52 / 2.877 | 3 / 193 | 9 | 16% | 94% |
+| `foresta-combattimento` | 14 / 2.798 | 11 / 1.642 | 69 | 68% | 93% |
+| `foresta-tattiche` | 49 / 4.896 | 17 / 3.169 | 169 | 90% | 92% |
+| `foresta-statistiche` | 8 / 757 | 4 / 309 | 14 | 53% | 95% |
+| `foresta-intermezzi` | 39 / 3.396 | 5 / 310 | 20 | 28% | 92% |
+| `foresta-bottino` | 17 / 1.117 | 1 / 20 | 1 | 11% | 78% |
+| `foresta-mondo` | 5 / 1.025 | 3 / 313 | 15 | 32% | 94% |
+| `foresta-economia` | 41 / 2.359 | 2 / 152 | 9 | 9% | 64% |
+| `foresta-missioni` | 111 / 17.867 | 5 / 363 | 17 | 9% | 89% |
+| `foresta-bestiario` | 4 / 309 | 1 / 112 | 7 | 46% | 100% |
+| `foresta-trofei` | 12 / 690 | 3 / 206 | 9 | 38% | 100% |
+| `foresta-modellodati` | 5 / 557 | 11 / 1.075 | 49 | 98% | 100% |
+| `foresta-motore-api` | 49 / 1.631 | 1 / 32 | 1 | 17% | 91% |
+| `foresta-motore` | 60 / 9.686 | 191 / 29.727 | 843 (22 saltati) | 77% | 77% |
+| `foresta-swing` | 98 / 23.493 | 14 / 2.028 | 64 | 26% | 52% |
+| `foresta-app` | 3 / 902 | 34 / 2.617 | 70 | 28% | 28% |
+| **Totale** | **834 / 109.402** | **398 / 53.850** | **2152 (22 saltati)** | | **77%** |
 
-\* JaCoCo conta solo i test del modulo stesso: contratti è esercitato molto di più dai test del motore, e la UI dai test di `foresta-app`. Le percentuali di questi moduli sono quindi più basse del vero.
+- **"Copertura dei suoi test"** è quella del rapporto di JaCoCo del modulo: conta solo i test che stanno nel modulo.
+- **"Copertura con tutti i test"** unisce i `jacoco.exec` di tutti i moduli e misura ogni modulo con i dati di tutti. Il rapporto aggregato di JaCoCo (`report-aggregate`) non serve: vede solo le dipendenze dirette di `foresta-app`. Per questo l'ho calcolata con un piccolo programma sopra la libreria di JaCoCo.
 
-Nel motore la copertura è alta quasi ovunque (`trofei` 100%, `testi` e `intermezzi` 95%, `missioni` 95%, `combattimento` 94%, `canti` 93%, `incantesimi` 89%, `tattiche` 87%, `motore` 86%). È bassa in `offerte` (25%), `personaggi` (67%) e `locazioni` (73%); `salvataggi` sale all'80%.
+Fra le due colonne c'è molta distanza, ed è il dato più importante della tabella. Le missioni, per esempio, hanno 17 test loro e sono coperte all'89%: le esercitano gli 843 test di scenario del motore (§3, problema 6).
 
 Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 
-| Classe | Righe | Il 2026-10-19 |
-| :--- | ---: | ---: |
-| `testi/GrammarBean` | 2536 | 2533 |
-| `personaggi/PersonaggioBase` | 2388 | 2356 |
-| `motore/Automa` | 2365 | 2284 |
-| `locazioni/LocazioneBase` | 2077 | 1944 |
-| `ui/DisplayableCanvas` | 1681 | 1629 |
-| `tipi/Costanti` | 1642 | 1625 |
-| `combattimento/CalcolatoreCombattimento` | 1289 | 1283 |
-| `missioni/MissioneAPassi` | 1286 | 1274 |
-| `ui/tattiche/DisplayableCanvasTattiche` | 1195 | 1133 |
-| `tipi/TipoMissione` | 1012 | 1012 |
+| Classe | Modulo | Righe |
+| :--- | :--- | ---: |
+| `testi/GrammarBean` | testi | 2563 |
+| `motore/Automa` | motore | 2415 |
+| `locazioni/LocazioneBase` | motore | 2188 |
+| `personaggi/PersonaggioBase` | personaggi | 2054 |
+| `ui/DisplayableCanvas` | swing | 1781 |
+| `tipi/CostantiPersonaggi` | personaggi | 1559 |
+| `ui/sfx/TracciatoreLogo` | swing | 1443 |
+| `combattimento/CalcolatoreCombattimento` | combattimento | 1326 |
+| `missioni/MissioneAPassi` | missioni | 1301 |
+| `ui/tattiche/DisplayableCanvasTattiche` | swing | 1203 |
+| `tipi/TipoMissione` | missioni | 1013 |
 
 ## 3. Architettura
 
+### La catena dei moduli
+
+Dal basso in alto. Ogni livello dipende solo da quelli prima, e le dipendenze sono quelle reali, lette dagli import:
+
+| Livello | Moduli |
+| ---: | :--- |
+| 0 | `strumenti`, `serializzazione` |
+| 1 | `eventi`, `testi` |
+| 2 | `comandi`, `attributi`, `effettidistato`, `tipi` |
+| 3 | `danni`, `mappa` |
+| 4 | `artefatti` |
+| 5 | `personaggi` (con i gruppi) |
+| 6 | `poteri`, `statistiche`, `bestiario` |
+| 7 | `combattimento`, `mondo`, `intermezzi` |
+| 8 | `tattiche`, `bottino`, `economia` |
+| 9 | `missioni` |
+| 10 | `trofei`, `modellodati` |
+| 11 | `motore-api` |
+| 12 | `motore`, `swing` |
+| 13 | `app` |
+
+Nei pom ci sono quattro dipendenze dichiarate ma non usate direttamente: `modellodati` → `artefatti` e `tipi`, `motore-api` → `intermezzi` e `tattiche`. Non fanno danno, perché quei moduli arrivano comunque per transitività, ma vanno tolte (§8).
+
 ### Punti di forza
 
-- **Moduli in fila, controllati dal compilatore.** Ogni modulo vede solo quelli sopra di lui. Quello che il compilatore non vede, cioè `java.awt`, `javax.swing`, `javax.imageio` e `javax.sound` fuori da `foresta-swing`, `Locale.ROOT`, `System.exit` e il `Logger`, lo controllano i test che leggono i sorgenti (`DipendenzeDalToolkitGraficoTest`, `ConvenzioniDiPortabilitaTest`).
-- **La UI legge da viste e scrive con eventi.** `VistaPartita` e `VistaScambio` sono in sola lettura, e verso il motore vanno solo comandi con identificativi. Le collezioni del modello dati sono esposte in sola lettura, con copie nei costruttori.
-- **Un solo thread per la logica.** Il bus consegna sempre sul thread principale (sul desktop l'EDT), dove girano anche i tick del temporizzatore: fra eventi e stato non ci sono corse. L'unico thread estraneo è l'animatore di `DisplayableCanvas`.
-- **Salvataggi di partita.** `LettoreCampi` conserva i campi vuoti, i testi liberi passano da `pulisciCampo`, un file troncato dà `IOException`, e la scrittura passa da un file temporaneo. Ogni coppia `salva`/`leggi` è stata confrontata campo per campo, e sono simmetriche.
-- **Testabilità.** Ci sono `Dado` con seme e trucchi per contesto, `PartitaDiTest`, il temporizzatore manuale e i simulatori. Tutti i test girano senza UI.
-- **Contenuto a basso costo.** Missioni a passi, grammatiche e intermezzi a pagine. Uno script ha verificato che ogni riferimento `[produzione]` nelle grammatiche esiste e che tutte le immagini citate dal codice ci sono.
-- **Documentazione.** 27 documenti `.md` nella radice, con la mappa in [`foresta.md`](foresta.md); un `package-info.java` per pacchetto.
+- **Le dipendenze le controlla il compilatore.** Ogni parte del gioco è un modulo con i suoi tipi (`tipi`), i suoi dati (`modellodati`) e i suoi contratti (eventi, viste). Quello che il compilatore non vede, cioè `java.awt` e simili fuori da `foresta-swing`, `Locale.ROOT`, `System.exit` e il `Logger`, lo controllano i test che leggono i sorgenti (`DipendenzeDalToolkitGraficoTest`, `ConvenzioniDiPortabilitaTest`).
+- **Le dipendenze vanno dove devono.** Quando una parte deve sapere qualcosa di una parte che sta sopra, la riceve senza conoscerla:
+  - `FonteDiIntermezzi` per gli intermezzi delle missioni;
+  - `FabbricaIntermezzi.registra` per gli epiloghi delle missioni;
+  - `RegistroMissioni.setFornitoreLocazioneCompleta` per il motore.
+
+  Lo stesso schema vale per le cose che una parte possiede ma non sa di avere: `TatticheDeiPersonaggi`, `CantiImparati` e `Cassa` sono legati al gruppo o al personaggio dall'esterno, e la posizione del gruppo la tiene la mappa.
+- **La UI legge da viste e scrive con eventi.** `VistaPartita` raccoglie le viste dei sottoprogetti (`VistaMappa`, `VistaCassa`, `VistaGruppoGiocatore`…). Anche il contenuto del gioco, come la storia e i finali, arriva dal motore (`Racconto`): una UI Android non dovrebbe riscriverlo.
+- **Un solo thread per la logica.** Il bus consegna sul thread principale, dove girano anche i tick del temporizzatore.
+- **Salvataggi di partita.** `LettoreCampi` conserva i campi vuoti, un file troncato dà `IOException`, e la scrittura passa da un file temporaneo. Ogni parte salva i suoi dati con il suo `…MD`.
+- **Testabilità.** C'è `Dado` con seme e trucchi per contesto, e c'è `PartitaDiTest`. Tutti i test girano senza UI.
+- **Documentazione.** 29 documenti `.md` nella radice, con la mappa in [`foresta.md`](foresta.md). `CLAUDE.md` descrive i moduli e le ricette per aggiungere contenuto.
 
 ### Problemi, in ordine di priorità
 
-1. **Classi grandi.** `PersonaggioBase`, `Automa` e `LocazioneBase` sono stabili dal 2026-10-17, ma restano le zone dove la revisione ha trovato più difetti: il combattimento a round in `LocazioneBase` e gli effetti di stato in `PersonaggioBase`.
-   **Giudizio:** i tagli naturali restano quelli già indicati:
-   - per `Automa`, altri sotto-automi (creazione del gruppo, combattimento, fine partita);
-   - per `LocazioneBase`, il combattimento a round in una classe sua;
-   - per `PersonaggioBase`, attributi e modificatori, equipaggiamento ed effetti di stato separati.
-2. **Stato statico.** Lo stato della partita vive in registri e singleton. `StatoDelMotore.azzera()` chiude l'`Automa` in funzione e il vecchio `GruppoGiocatore` esce dal bus: per ripartire si crea un automa nuovo.
-   **Giudizio:** accettabile per un gioco single-player, a patto di non aggiungere registri statici.
-3. **Il motore è un modulo solo.** `motore`, `personaggi`, `locazioni`, `missioni` e `oggetti` sono un unico grafo. Il primo taglio possibile resta `foresta-missioni` ([`todo.md`](todo.md)).
-4. **Due stili di missione.** Restano missioni che estendono `MissioneBase`. Il controllo dopo la risposta a una domanda rifà i `controlla*` di tutte le missioni, e quindi richiede che quelle scritte a mano siano idempotenti (il vincolo è scritto in `gestione_missioni.md`).
+1. **Classi grandi.** `Automa`, `LocazioneBase` e `PersonaggioBase` superano le 2000 righe. Sono le zone dove la revisione precedente trovò più difetti.
+   **Giudizio:** i tagli naturali sono gli stessi di allora:
+   - in `Automa`, altri sotto-automi (creazione del gruppo, combattimento, fine partita);
+   - in `LocazioneBase`, il combattimento a round in una classe sua;
+   - in `PersonaggioBase`, attributi e modificatori, equipaggiamento ed effetti di stato separati.
+
+   Con i moduli il taglio è più facile, perché si vede subito cosa usa cosa.
+2. **I fornitori dipendono da quando si carica `ModelloDati`.** Dodici classi prendono i loro dati da un fornitore che `ModelloDati` installa nel suo blocco statico, quindi solo quando la classe viene caricata. Se qualcuno usa una di quelle parti prima, riceve un `IllegalStateException` esplicito. Nel gioco non succede, perché `StatoDelMotore` carica subito il modello dati. È però già successo in un test che girava in una JVM a parte (`OggettiHeadlessTest`).
+   **Giudizio:** meglio un'installazione esplicita, per esempio `ModelloDati.installa()` chiamata da `Main` e da `PartitaDiTest`, invece del blocco statico.
+3. **Stato statico.** Lo stato della partita vive in registri e singleton (`GruppoGiocatore`, `RegistroMissioni`, `Cassa`, `Foresta`…). `StatoDelMotore.azzera()` riparte da un modello dati nuovo e da un automa nuovo.
+   **Giudizio:** accettabile per un gioco single-player, a patto di non aggiungere registri statici. I fornitori almeno rendono esplicito dove stanno i dati.
+4. **Residui della divisione.**
+   - `foresta-tipi` contiene solo `FaseDiGioco` e le ultime `Costanti`.
+   - `foresta-modellodati` contiene, oltre a `ModelloDati`, solo le notizie (`NotizieMD`, `NotiziaMD`, `MessaggioMD`).
+   - In `foresta-motore-api` restano `ComandiAssociati`, che usa i tipi di personaggi, poteri e missioni, e le richieste di apertura di trofei e bestiario.
+   - **`MeccanicaDeiPoteri`:** combattimento e poteri sono ancora in ordine inverso. Il combattimento dipende dai poteri (anche per `TipoAzione` ed `EsitoAzione`), e i poteri arrivano al combattimento solo attraverso l'interfaccia e il `ServiceLoader`.
+5. **Personaggi e gruppi nello stesso modulo.** È una scelta voluta. `PersonaggioBase` e `GruppoGiocatore` si conoscono attraverso i singleton, in sette punti: da che parte sta un personaggio, quanti della sua specie ci sono, il gruppo pieno.
+6. **I test stanno tutti in alto.** Missioni, economia, poteri e bottino hanno pochi test loro (copertura propria dal 9 al 16%). Li esercitano i test di scenario del motore, che li coprono dal 64 al 94%.
+   **Giudizio:** finché si lancia sempre tutta la suite non è un problema. Ma un `mvn test -pl foresta-missioni` dice poco, ed è meglio scrivere i test nuovi di una parte nel suo modulo, quando non serve tutta la partita.
+7. **Pacchetti divisi fra moduli.** `tipi` sta in 19 moduli, `modellodati` in 15, `eventi.interni` in 13. È una convenzione voluta (CLAUDE.md), e con Java 8 e su Android funziona. Ma non è compatibile con i moduli di Java 9 (JPMS), se un giorno servissero.
 
 ## 4. Qualità del codice
 
-- **Gestione degli errori.** I `catch` generici stanno quasi tutti nei gestori su file e in `GrammarBean`, ed è una scelta difendibile.
-- **`TODO`/`FIXME`:** Riguardano funzioni future o rifiniture.
-- **Codice morto.** C'è un po' di codice che non si raggiunge (B35, B41, §5):
-  - quattro classi di eventi con sprite mai pubblicate (`InternoCreazioneSprite` + `AnnuncioGlobale`, `EffettoDiStato`, `FumettoATempo`, `InDissolvenza`): sono pronte e funzionanti, con il loro gestore in `DisplayableCanvas` e l'iscrizione nello sniffer, ma oggi gli sprite si creano direttamente. Si tengono come risorsa per usi futuri (chi vuole mostrare uno sprite senza conoscere il canvas pubblica l'evento) e non sono un difetto;
-  - metodi di `PersonaggioBase` mai chiamati;
-  - passi pronti di `MissioneAPassi` usati solo dai test;
-  - produzioni delle grammatiche mai usate, fra cui 12 `NOTIZIE_CITTA` che non escono mai.
-- **Test saltati.** I 22 test saltati sono simulazioni da lanciare a mano, non test rotti.
-- **Rapporti stantii.** Dopo una rinomina o per misurare serve `mvn clean test`: senza `clean`, `surefire-reports` e `jacoco.exec` tengono classi che non esistono più.
+- **Convenzioni controllate dai test**:
+  - niente toolkit grafico fuori dalla UI;
+  - `Locale.ROOT` nelle chiamate che dipendono dalla lingua;
+  - niente `System.exit` sotto `foresta-app`;
+  - il `Logger` con il fornitore del testo;
+  - le chiavi dei `.properties` delle enum.
+- **`TODO`/`FIXME`:** sono 14, tutti su funzioni future o rifiniture.
+- **Codice morto:** pochi pezzi, elencati nel §5.
+- **Test saltati:** i 22 test saltati sono simulazioni da lanciare a mano, non test rotti.
+- **Rapporti stantii.** Dopo uno spostamento serve `mvn clean`. Senza, `target/` tiene classi e risorse che non esistono più: è successo con un `tipo_artefatto_it.properties` rimasto in `foresta-tipi/target`. E la compilazione incrementale può non ricompilare i test di un modulo quando cambia un modulo sotto.
 
 ## 5. Difetti aperti
 
-Rimasti dalla revisione del 2026-10-19 e ricontrollati sul codice: tutti di gravità bassa, e tutti confermati (lo scenario si innesca). Il resto è stato corretto. I percorsi sono relativi a `…/` del modulo indicato.
+### 5.1 Ricontrollati sul codice del 2026-10-25
 
-### 5.1 foresta-motore
+Sono tutti di gravità bassa. I percorsi sono relativi a `…/` del modulo indicato.
 
-- B35a Codice morto in `PersonaggioBase`: `calcolaStanchezza`, `subCarisma`, `add<Primario>` (tranne `addCarisma`, che usa `LocazioneBase`), `getQuantitaEffettoDiStato` (la usa solo un test) e `puoPrendere(Artefatto)`.
-- B35d Passi pronti di `MissioneAPassi` che nessuna missione usa (solo i test): `evitaCombattimento`, le sequenze di passi e `getPassiConIntermezzoInAttesa`. Gli altri li usano `LaForgia` e `IlViandante`.
-- B35e Le produzioni morte di `fiabe.txt` e `locande.txt`, fra cui 12 `NOTIZIE_CITTA` che non escono mai (nessuna locanda ha l'identificativo `CITTA`).
+- **B35a (`foresta-personaggi`)** Codice morto in `PersonaggioBase`:
+  - `calcolaStanchezza`, `subCarisma`, `addForza`, `addDestrezza`, `addCostituzione`, `addIntelligenza` e `addSaggezza` non li chiama nessuno;
+  - `getQuantitaEffettoDiStato` la usa solo un test;
+  - `puoPrendere(Artefatto)` non la chiama nessuno: si usa `puoPrendere(double)`.
+- **B35d (`foresta-missioni`)** Due passi pronti di `MissioneAPassi` li usano solo i test: `evitaCombattimento` e `getPassiConIntermezzoInAttesa`.
+- **B35e (`foresta-testi`)** In `locande.txt` la produzione `NOTIZIE_CITTA` (12 notizie) non esce mai: le notizie si pescano da `NOTIZIE_<identificativo della locanda>`, e nessuna locanda ha l'identificativo `CITTA`. Le produzioni morte di `fiabe.txt` non le ho ricontrollate.
+- **B41c (`foresta-swing`)** `ui/testo/DoomdarkTextRectangle` (quello non 2x) e `img/icone/NegozioAlchimistaPrecedente.gif` non li usa nessuno.
 
-### 5.2 foresta-swing e foresta-app
+### 5.2 Ipotesi controllate e scartate nella revisione del 2026-10-19 (non ricontrollate)
 
-- B41c `DoomdarkTextRectangle` (non 2x) e `NegozioAlchimistaPrecedente.gif` mai usati.
-
-### 5.3 Ipotesi controllate e scartate
-
-- **Concorrenza delle collezioni.** Non c'è nessuna `ConcurrentModificationException` raggiungibile: si scorrono sempre copie (`getPersonaggiVivi`, `getTutteLeMissioni`), e il bus usa `CopyOnWriteArrayList`.
-- **Ricompense ed esperienza.** Niente doppie ricompense o doppi completamenti di missione. Niente esperienza duplicata (`avversariSconfitti`).
-- **Oggetti e prezzi.** Scambi, acquisti, vendite e prelievi non duplicano né perdono artefatti. Vendita al massimo al 75%, acquisto almeno all'80%.
+- **Concorrenza delle collezioni.** Non c'è nessuna `ConcurrentModificationException` raggiungibile: si scorrono sempre copie, e il bus usa `CopyOnWriteArrayList`.
+- **Ricompense ed esperienza.** Niente doppie ricompense o doppi completamenti di missione, niente esperienza duplicata.
+- **Oggetti e prezzi.** Scambi, acquisti, vendite e prelievi non duplicano né perdono artefatti. La vendita arriva al massimo al 75%, l'acquisto parte almeno dall'80%.
 - **`Dado` e trucchi.** I limiti sono coerenti, e un trucco fuori intervallo viene ignorato.
-- **Risorse.** I glifi dei font sono coerenti. Le immagini referenziate esistono tutte, e le mappature delle immagini coprono tutti i tipi di personaggio, oggetto e incantesimo.
-- **Grammatiche.** Nessun riferimento mancante; i marcatori `<mod:>` e `<danno:>` sono validi.
-- **Testi delle enum.** Nessuna chiave mancante nei `.properties`.
-- **Cache delle scritte (`ImageCache.cacheDinamica`).** Funziona, e le `WeakReference` costano poco. Misurata il 2026-10-21 con un banco di prova esterno (headless, il vero `DoomdarkTextProducer` e il vero `drawImage`): 80 scritte per fotogramma a 60 fps, di cui una parte con un numero che cambia, 15 secondi per prova, spazzatura simulata da 20 a 200 MB/s, heap di default (16 GB di RAM) e `-Xmx96m`. Ricostruire una scritta (costruzione più prima conversione al disegno) costa circa 29 µs.
-  - Senza cache si ricostruiscono tutte le scritte a ogni fotogramma: 4.800 al secondo, il 14-16% del tempo (circa 2,5 ms su 16,7).
-  - Con `WeakReference` si ricostruiscono lo 0,3-0,5% delle richieste con 20 MB/s di spazzatura, l'1% con 60 MB/s e il 2,6% con 200 MB/s (126 al secondo); con 96 MB di heap si arriva al 6,6% (318 al secondo) a 200 MB/s. In tempo sono 0,3-0,7% (1,6% nel caso peggiore). Le scritte non si perdono a una a una: dopo ogni collezione del garbage collector si rigenerano in blocco, perché l'unico riferimento forte sparisce a fine `paint`.
-  - Con `SoftReference` o con un riferimento forte si ricostruiscono sempre e solo i testi che cambiano (9 al secondo, lo 0,19%, 0,17% del tempo), in ogni condizione provata.
-  - Limiti della misura: il carico è simulato (non ho misurato quanto alloca il gioco vero) e il costo di ricostruzione vale per questo Mac; su telefono, con una CPU da 3 a 10 volte più lenta, il blocco di ricostruzioni subito dopo un GC potrebbe costare 10-20 ms in un solo fotogramma. Se servirà, il passaggio a `SoftReference` è una modifica da poche righe (il reaper resta utile), da provare sul dispositivo.
-- **Ordinali di `Numeri` (ex B13, prima in `Misc`).** `getOrdinaleM/F` vale da 1 a 41 (0 dà "nullo", da 42 in su un'eccezione), e nessun chiamante esce da lì: `DisturbatoreDellaQuietePubblica` 1–9, `Cofano` 1–5, i mostri che muoiono 1–6 (l'ordinale parte da 1 in `GruppoAvversario.aggiungiPersonaggio` e riparte a ogni ondata) e il giorno al più 40 (al 41 il gioco è già perso e il testo non si genera). Non è un difetto: l'intervallo è scritto nel javadoc, e non si stimano numeri più alti. La parte in lingua italiana di `Misc` va comunque rivista per una versione inglese (vedi `todo.md`).
-- **Combattimento.** Niente round infiniti; la fine del combattimento si intercetta sempre, anche con le ondate.
+- **Risorse, grammatiche e testi delle enum.** Le immagini referenziate esistono tutte e le grammatiche non hanno riferimenti mancanti. Per le chiavi delle enum c'è un test.
+- **Cache delle scritte** (`ImageCache.cacheDinamica`, `WeakReference`). È stata misurata: ricostruisce dallo 0,3 al 2,6% delle scritte secondo la spazzatura prodotta. Su telefono potrebbe convenire passare a `SoftReference`.
+- **Ordinali di `Numeri`.** Valgono da 1 a 41, e nessun chiamante esce da lì.
+- **Combattimento.** Niente round infiniti, e la fine del combattimento si intercetta sempre.
 
 ## 6. Portabilità (riassunto)
 
 Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
-- **Già pronto:** il motore usa solo `java.io` e `java.util`, non ha dipendenze dal toolkit grafico, ha la cartella dei file iniettabile, il ciclo di vita dell'app e l'uscita affidata alla piattaforma.
+- **Già pronto:**
+  - nessun modulo sotto `foresta-swing` usa il toolkit grafico;
+  - la cartella dei file si può iniettare;
+  - l'uscita dal gioco è affidata alla piattaforma (`NotificaUscitaDalGioco`);
+  - i contenuti (storia, finali, testi delle enum, grammatiche) stanno sotto la UI.
 - **Ancora aperto:**
-  - `Costanti` come dati;
-  - l'uscita dal processo della UI Swing (`EXIT_ON_CLOSE` in `ForestaUI`, che chiude senza passare dal motore).
-- **Il grosso resta la UI.** Va riscritta (libGDX è la scelta più naturale per restare in Java) e va ripensato l'input per il tocco.
+  - le costanti di bilanciamento sono codice (`Costanti*`), non dati;
+  - la UI Swing chiude il processo da sola con `EXIT_ON_CLOSE` (`ForestaUI`), senza passare dal motore.
+- **Il grosso resta la UI**, che va riscritta (libGDX è la scelta più naturale per restare in Java), con l'input ripensato per il tocco.
 
 ## 7. Rischi tecnici
 
 | Rischio | Fatto | Gravità |
 | :--- | :--- | :--- |
-| Copertura di `personaggi`, `locazioni`, `offerte`, `salvataggi` | 69%, 72%, 24%, 65% | Media: sono le zone dove la revisione ha trovato più difetti, e hanno meno rete di sicurezza |
-| Copia delle costanti `static final` | Una compilazione incrementale parziale può tenere valori vecchi | Bassa: basta `mvn clean` |
-| Modalità verticale | Rotta: barra icone sovrapposta, area di contenuto fissa a 640 px in una finestra larga al massimo 400 (`todo.md`, `motore_grafico.md` §12) | Bassa sul desktop; rimandata in fondo |
+| Copertura bassa della UI e di `foresta-app` | 52% e 28% con tutti i test | Media: la UI si prova poco, e una nuova piattaforma la riscriverà comunque |
+| Copertura dell'economia | 64% con tutti i test, 9% con i suoi | Media: `offerte` e i prezzi sono una zona delicata per il bilanciamento |
+| Fornitori installati da un blocco statico | `IllegalStateException` se una parte si usa prima di `ModelloDati` (§3, problema 2) | Bassa nel gioco; da sistemare prima di altre piattaforme |
+| Copia delle costanti `static final` e `target/` stantii | Una compilazione incrementale parziale può tenere valori o file vecchi | Bassa: basta `mvn clean` |
+| Modalità verticale | Rotta: barra icone sovrapposta, area di contenuto fissa a 640 px (`todo.md`, `motore_grafico.md` §12) | Bassa sul desktop; rimandata |
 
 ## 8. Prossimi passi consigliati
 
-1. **Bassi:** pulizia a lotti per modulo (codice morto, testi, javadoc).
-2. **Bilanciamento:** come da [`todo.md`](todo.md).
-3. **Tagliare le classi grandi** quando si interviene su di loro (§3).
-4. **Modalità verticale**, per ultima.
+1. **Pulizia piccola:**
+   - togliere le quattro dipendenze dichiarate e non usate (§3);
+   - togliere il codice morto del §5;
+   - installare i fornitori in modo esplicito (§3, problema 2).
+2. **Finire la divisione:**
+   - le notizie in un modulo loro, o nel motore, e `ModelloDati` da solo in `foresta-modellodati`;
+   - `FaseDiGioco` e le ultime `Costanti` dove servono;
+   - le richieste di trofei e bestiario nei loro moduli;
+   - decidere se invertire combattimento e poteri e togliere `MeccanicaDeiPoteri`.
+3. **Tagliare le classi grandi** quando si interviene su di loro (§3, problema 1). Il candidato più naturale è il combattimento a round di `LocazioneBase`.
+4. **Test nei moduli:** i test nuovi di una parte vanno nel suo modulo, quando non serve tutta la partita (§3, problema 6).
+5. **Bilanciamento**, come da [`todo.md`](todo.md); la **modalità verticale** per ultima.
 
 ## Osservazioni
 
-- **Come è stata fatta la revisione.** Lettura integrale dei sorgenti, divisi in nove parti:
-  - tipi e modellodati;
-  - contratti;
-  - motore, salvataggi ed eventi;
-  - personaggi;
-  - combattimento, locazioni, canti, incantesimi e tattiche;
-  - missioni e intermezzi;
-  - oggetti, offerte, testi e trofei;
-  - schermate, riquadri, barra, tattiche e app;
-  - sprite, testo, immagini, sfx e sviluppo.
+- **Come è stato fatto.** Rispetto alla revisione del 2026-10-19 sono rifatti da capo:
+  - le misure: righe, test, copertura modulo per modulo e con tutti i test;
+  - il grafo dei moduli, dagli import di ogni file, confrontato con i pom;
+  - le classi grandi, i pacchetti divisi e i fornitori;
+  - la verifica dei difetti che restavano aperti.
 
-  Ogni ipotesi è stata verificata leggendo i chiamanti.
-- **Misure.** Righe e file sono contati con `wc -l` su `src/main` e `src/test`. Test e copertura vengono da `mvn clean test` del 2026-10-22, tutti verdi.
+  Non è stata rifatta la lettura integrale dei sorgenti.
+- **La copertura con tutti i test** viene da un programma di poche righe sopra `org.jacoco.core`. Unisce i `jacoco.exec` di tutti i moduli e analizza le `target/classes` di ciascuno. Il programma non è nel progetto.
+- **Rispetto alla revisione precedente.** Allora i moduli erano 6, e il motore aveva 368 file e 57.200 righe. Ora sono 28, e il motore ha 60 file e 9.700 righe. I test sono passati da 1672 a 2152.
 
 ## Da fare / idee aperte
 
-- Ripetere le misure dopo ogni grande intervento, e confrontare le righe delle classi della tabella del §2.
-- Valutare un report JaCoCo aggregato (`report-aggregate` in `foresta-app`).
+- Una nuova lettura integrale dei sorgenti, modulo per modulo, quando la divisione sarà finita.
+- Mettere nel progetto la misura della copertura con tutti i test, per esempio come profilo Maven o come piccolo strumento in `risorse_e_documenti_vari/`.
 - Un test che produca tutte le alternative delle grammatiche e le disegni con i font, per prendere le produzioni malformate e i caratteri che il font non ha.
