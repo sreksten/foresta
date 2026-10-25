@@ -25,7 +25,7 @@ public class StatisticheMD implements Serializzabile {
 	private int punti = 0;
 	private int turniGiocati = 0;
 	// Identifica la partita, anche attraverso salvataggi e caricamenti: la classifica lo usa per non registrare
-	// più volte la stessa partita (vedi GestorePunteggiBase)
+	// più volte la stessa partita (vedi Classifica)
 	private String idPartita = UUID.randomUUID().toString();
 	private final Map<TipoPersonaggio, Integer> mostriUccisi = new EnumMap<>(TipoPersonaggio.class);
 

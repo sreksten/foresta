@@ -8,7 +8,7 @@ Sta in un modulo a parte, senza dipendenze, perché il formato è un'idea indipe
 
 **Dichiarate nel pom:** nessuna, solo il JDK.
 
-**Lo dichiarano:** `foresta-attributi`, `foresta-effettidistato`, `foresta-artefatti`, `foresta-mappa`, `foresta-personaggi`, `foresta-notizie`, `foresta-modellodati`.
+**Lo dichiarano:** `foresta-attributi`, `foresta-effettidistato`, `foresta-artefatti`, `foresta-mappa`, `foresta-personaggi`, `foresta-notizie`, `foresta-punteggi`, `foresta-modellodati`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 

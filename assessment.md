@@ -49,15 +49,16 @@ Questo assessment **non è una nuova lettura integrale dei sorgenti**, come fu l
 | `foresta-missioni` | 111 / 17.867 | 5 / 363 | 17 | 9% | 89% |
 | `foresta-bestiario` | 4 / 309 | 1 / 112 | 7 | 46% | 100% |
 | `foresta-trofei` | 12 / 690 | 3 / 206 | 9 | 38% | 100% |
+| `foresta-punteggi` | 4 / 221 | 1 / 72 | 4 | n.m. | n.m. |
 | `foresta-notizie` | 5 / 368 | 3 / 210 | 10 | n.m. | n.m. |
 | `foresta-modellodati` | 2 / 287 | 9 / 916 | 41 | n.m. | n.m. |
 | `foresta-motore-api` | 49 / 1.631 | 1 / 32 | 1 | 17% | 91% |
-| `foresta-motore` | 60 / 9.686 | 190 / 29.686 | 841 (22 saltati) | 77% | 77% |
+| `foresta-motore` | 60 / 9.686 | 190 / 29.686 | 839 (22 saltati) | 77% | 77% |
 | `foresta-swing` | 98 / 23.493 | 14 / 2.028 | 64 | 26% | 52% |
 | `foresta-app` | 3 / 902 | 34 / 2.617 | 70 | 28% | 28% |
-| **Totale** | **834 / 109.402** | **398 / 53.850** | **2152 (22 saltati)** | | **77%** |
+| **Totale** | **834 / 109.402** | **398 / 53.850** | **2154 (22 saltati)** | | **77%** |
 
-- **n.m.** (non misurata): `foresta-notizie` è nato dopo la misura, separato da `foresta-modellodati` e dal motore; di quei due moduli si sono ricontati classi, righe e test, ma la copertura è da rimisurare.
+- **n.m.** (non misurata): `foresta-notizie` e `foresta-punteggi` sono nati dopo la misura, separati da `foresta-modellodati`, dal motore e da `foresta-motore-api`; di quei due moduli si sono ricontati classi, righe e test, ma la copertura è da rimisurare.
 - **"Copertura dei suoi test"** è quella del rapporto di JaCoCo del modulo: conta solo i test che stanno nel modulo.
 - **"Copertura con tutti i test"** unisce i `jacoco.exec` di tutti i moduli e misura ogni modulo con i dati di tutti. Il rapporto aggregato di JaCoCo (`report-aggregate`) non serve: vede solo le dipendenze dirette di `foresta-app`. Per questo l'ho calcolata con un piccolo programma sopra la libreria di JaCoCo.
 

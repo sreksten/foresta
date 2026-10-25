@@ -10,15 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class GestorePunteggiTest {
 
     @Test
-    void ilPipeSparisceDaiNomi() {
-        assertEquals("Pippo", GestorePunteggiBase.pulisciNome("Pip|po"));
-        assertEquals("Pippo #1", GestorePunteggiBase.pulisciNome("Pippo #1"));
-        assertEquals("nessun nome", GestorePunteggiBase.pulisciNome("  "));
-        assertEquals("nessun nome", GestorePunteggiBase.pulisciNome("|"));
-        assertEquals("nessun nome", GestorePunteggiBase.pulisciNome(null));
-    }
-
-    @Test
     void unaRigaDellaClassificaSiLegge() throws IOException {
         LettoreCampi campi = new LettoreCampi("Pippo|1234");
         assertEquals("Pippo", campi.testo());
@@ -26,9 +17,11 @@ class GestorePunteggiTest {
     }
 
     /**
-     * Una classifica che parte da quella predefinita e non scrive niente su disco.
+     * Una classifica che parte da quella predefinita e conta quante volte si salva.
      */
-    private static final class ClassificaInMemoria extends GestorePunteggiBase {
+    private static final class ClassificaCheContaISalvataggi extends GestorePunteggiBase {
+        int salvataggi;
+
         @Override
         public boolean carica() {
             return false;
@@ -36,49 +29,22 @@ class GestorePunteggiTest {
 
         @Override
         public boolean salva() {
+            salvataggi++;
             return true;
         }
     }
 
-    private static String nomi(GestorePunteggiBase classifica) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < classifica.getConteggio(); i++) {
-            sb.append(classifica.getPunteggio(i).getNome()).append(':').append(classifica.getPunteggio(i).getPunteggio()).append(' ');
-        }
-        return sb.toString().trim();
-    }
-
     @Test
-    void unaPartitaNuovaEntraESpingeFuoriLUltimo() {
-        ClassificaInMemoria classifica = new ClassificaInMemoria();
-        assertTrue(classifica.isPunteggioInClassifica(5500, "partita-1"));
-        classifica.addPunteggio("Arsenio", 5500, "partita-1");
-        assertEquals("Stefano:10000 Johan:9000 Alessandra:8000 Peter Porker:7000 Judah:6000 Arsenio:5500 Jona:5000 "
-                + "Jamaikan:2000 Cosimo:1000 Oreste:500", nomi(classifica));
-        assertEquals("partita-1", classifica.getPunteggio(5).getIdPartita());
-    }
+    void siSalvaSoloQuandoUnPunteggioEntra() {
+        ClassificaCheContaISalvataggi classifica = new ClassificaCheContaISalvataggi();
+        assertEquals(1, classifica.salvataggi, "la classifica predefinita si scrive subito");
 
-    @Test
-    void laStessaPartitaEntraSoloMigliorandosiESostituisceIlSuoPunteggio() {
-        ClassificaInMemoria classifica = new ClassificaInMemoria();
         classifica.addPunteggio("Arsenio", 5500, "partita-1");
+        assertEquals(2, classifica.salvataggi);
+        assertEquals("Arsenio", classifica.getPunteggio(5).getNome());
 
-        // Ricaricata e rifinita peggio: non entra, e non si chiede il nome
-        assertFalse(classifica.isPunteggioInClassifica(3000, "partita-1"));
-        assertFalse(classifica.isPunteggioInClassifica(5500, "partita-1"));
         classifica.addPunteggio("Arsenio", 3000, "partita-1");
-        assertEquals("Arsenio:5500", classifica.getPunteggio(5).getNome() + ":" + classifica.getPunteggio(5).getPunteggio());
-
-        // Rifinita meglio: il suo punteggio sale, gli altri restano tutti
-        assertTrue(classifica.isPunteggioInClassifica(8500, "partita-1"));
-        classifica.addPunteggio("Arsenio", 8500, "partita-1");
-        assertEquals("Stefano:10000 Johan:9000 Arsenio:8500 Alessandra:8000 Peter Porker:7000 Judah:6000 Jona:5000 "
-                + "Jamaikan:2000 Cosimo:1000 Oreste:500", nomi(classifica));
-
-        // Un'altra partita con un punteggio più basso del suo entra comunque al suo posto
-        classifica.addPunteggio("Brunilde", 5200, "partita-2");
-        assertEquals("Stefano:10000 Johan:9000 Arsenio:8500 Alessandra:8000 Peter Porker:7000 Judah:6000 Brunilde:5200 "
-                + "Jona:5000 Jamaikan:2000 Cosimo:1000", nomi(classifica));
+        assertEquals(2, classifica.salvataggi, "un punteggio che non entra non riscrive niente");
     }
 
     @Test

@@ -6,7 +6,7 @@
 
 ## Dipendenze
 
-**Dichiarate nel pom:** `foresta-trofei`, `foresta-missioni`, `foresta-bottino`, `foresta-personaggi`, `foresta-notizie`, `foresta-eventi`, `foresta-modellodati`.
+**Dichiarate nel pom:** `foresta-trofei`, `foresta-missioni`, `foresta-bottino`, `foresta-personaggi`, `foresta-punteggi`, `foresta-notizie`, `foresta-eventi`, `foresta-modellodati`.
 
 **Lo dichiarano:** `foresta-motore`, `foresta-swing`.
 
@@ -24,7 +24,7 @@ Dipende dai sottoprogetti di cui la UI legge lo stato (trofei, missioni, bottino
 
 - **`ControlloreDiGioco`**: l'automa a stati visto da chi lo avvia (l'unica implementazione è `Automa`).
 - **`GestoreSalvataggi`**: dove stanno le partite salvate. Gli slot da `NUMERO_1` a `NUMERO_4` (`SLOT_MANUALI`) sono quelli che sceglie il giocatore; `SALVATAGGIO_AUTOMATICO` è lo slot a parte che l'`Automa` scrive quando l'app va in background e non compare nell'elenco; `SLOT_IN_MEMORIA` (`NUMERO_5`) è il salvataggio automatico in memoria, ultima riga dell'elenco da cui si carica, che non si scrive a mano. `TestataSalvataggio` descrive un salvataggio (il capo, il momento) per elencarlo senza leggerlo tutto.
-- **`GestorePunteggi`**: la classifica (`Punteggio`: chi l'ha fatto e quanto).
+- **`GestorePunteggi`** e `Punteggio` (chi l'ha fatto e quanto) stanno in `foresta-punteggi`, con la classifica vera; questo modulo li dichiara perché la UI e il motore li vedano.
 - **`StrumentiDiSviluppo`**: quel che la finestra di prova può fare alla partita oltre a guardarla (cambiare i personaggi del gruppo, far partire le missioni, scegliere gli oggetti dei cofani); li implementa il motore. I trucchi sui dadi passano da `strumenti.TrucchiDiSviluppo`.
 
 I gestori su file di trofei e bestiario (`GestoreTrofei`, `GestoreBestiario`) stanno nei loro moduli, e il motore li implementa.

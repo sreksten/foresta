@@ -53,7 +53,7 @@ Gli scambi di artefatti hanno automi propri: `AutomaInventario` (fra il gruppo e
 
 ### I salvataggi su file
 
-Le implementazioni su file delle interfacce del contratto: `GestoreSalvataggiSuFile` (quattro slot a mano più il salvataggio automatico, un file `<slot>.TXT` per slot, scritto su un file temporaneo che prende il posto del vecchio solo se completo), `GestorePunteggiSuFile` (la classifica dei migliori dieci, `forestaHS`), `GestoreTrofeiSuFile` e `GestoreBestiarioSuFile`. La base `GestoreSuFile` scrive nella cartella `.foresta` dell'utente, o in quella che indica la piattaforma (su Android e iOS è uno spazio privato dell'app), con `java.io.File` e non con `java.nio.file`. `SalvataggioInMemoria` è la rete di sicurezza: l'ultimo stato a fine locazione, tenuto solo in memoria, come ultima riga dell'elenco da cui si carica.
+Le implementazioni su file delle interfacce del contratto: `GestoreSalvataggiSuFile` (quattro slot a mano più il salvataggio automatico, un file `<slot>.TXT` per slot, scritto su un file temporaneo che prende il posto del vecchio solo se completo), `GestorePunteggiSuFile` (la classifica dei migliori dieci, `forestaHS`; la `Classifica` con le sue regole è in `foresta-punteggi`, qui solo quando leggerla e scriverla), `GestoreTrofeiSuFile` e `GestoreBestiarioSuFile`. La base `GestoreSuFile` scrive nella cartella `.foresta` dell'utente, o in quella che indica la piattaforma (su Android e iOS è uno spazio privato dell'app), con `java.io.File` e non con `java.nio.file`. `SalvataggioInMemoria` è la rete di sicurezza: l'ultimo stato a fine locazione, tenuto solo in memoria, come ultima riga dell'elenco da cui si carica.
 
 ### I testi e gli intermezzi del motore
 
