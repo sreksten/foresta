@@ -29,8 +29,8 @@ public final class TestoReazioneDiClasse {
 	 *                       debole
 	 */
 	public static String di(TipoDanno tipoDanno, double moltiplicatore) {
-		String prefisso = moltiplicatore == 0.0d ? "Immune a " : moltiplicatore < 1.0d ? "Resiste a " : "Debole a ";
-		return prefisso + tipoDanno.getNome();
+		String chiave = moltiplicatore == 0.0d ? "REAZIONE_IMMUNE" : moltiplicatore < 1.0d ? "REAZIONE_RESISTE" : "REAZIONE_DEBOLE";
+		return TestiDellaUI.get(chiave, tipoDanno.getNome());
 	}
 
 	/**

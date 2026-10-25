@@ -18,6 +18,7 @@ import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -436,12 +437,12 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 		if (artefatto.getDescrizione() != null) {
 			righe.add(ImageCache.get(maiuscola(artefatto.getDescrizione()), font, DoomdarkColorModel.Color.LIGHT_GRAY, larghezzaMassima));
 		}
-		StringBuilder dati = new StringBuilder("Livello ").append(artefatto.getLivello());
+		StringBuilder dati = new StringBuilder(TestiDellaUI.get("LIVELLO_ARTEFATTO", artefatto.getLivello()));
 		if (artefatto.getRarita() != TipoRaritaArtefatto.COMUNE) {
 			dati.append(", ").append(artefatto.getRarita().getNome());
 		}
 		if (artefatto.getDanni() > 0) {
-			dati.append(", danni ").append(artefatto.getDanni());
+			dati.append(", ").append(TestiDellaUI.get("DANNI_ARTEFATTO", artefatto.getDanni()));
 		}
 		righe.add(ImageCache.get(dati.toString(), font, DoomdarkColorModel.Color.WHITE, larghezzaMassima));
 		artefatto.getDescrizioneSet().ifPresent(set ->

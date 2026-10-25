@@ -21,6 +21,7 @@ import com.threeamigos.foresta.ui.sprite.SpriteInterface;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontSmall;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -506,8 +507,9 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	 * Crea lo sprite "Mancato", in grigio medio e in piccolo, sul personaggio che il colpo non ha raggiunto.
 	 */
 	public SpriteInterface aggiungiColpoMancato(VistaPersonaggio personaggio) {
-		return aggiungiTestoSulPersonaggio(personaggio, "Mancato", (x, y) ->
-				new SpriteEffetto("Mancato", DoomdarkFontSmall.getInstance(), DoomdarkColorModel.Color.MEDIUM_GRAY, x, y));
+		String testo = TestiDellaUI.get("COLPO_MANCATO");
+		return aggiungiTestoSulPersonaggio(personaggio, testo, (x, y) ->
+				new SpriteEffetto(testo, DoomdarkFontSmall.getInstance(), DoomdarkColorModel.Color.MEDIUM_GRAY, x, y));
 	}
 
 	/**

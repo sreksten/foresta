@@ -30,6 +30,7 @@ import com.threeamigos.foresta.ui.sfx.CloudManager;
 import com.threeamigos.foresta.ui.sfx.PannelloLogoIniziale;
 import com.threeamigos.foresta.ui.sfx.TracciatoreLogo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 import com.threeamigos.foresta.ui.testo.TestoReazioneDiClasse;
 
 import javax.swing.*;
@@ -338,7 +339,7 @@ public class ForestaUI implements Temporizzabile {
 	}
 
 	private void gestisciEventoErroreCaricamento(NotificaErroreCaricamento evento) {
-		displayableCanvas.notificaAnnuncioGlobale("Errore", "File caricamento corrotto");
+		displayableCanvas.notificaAnnuncioGlobale(TestiDellaUI.get("ERRORE"), TestiDellaUI.get("FILE_CORROTTO"));
 	}
 
 	private void gestisciEventoNotificaGlobale(NotificaGlobale evento) {
@@ -346,12 +347,12 @@ public class ForestaUI implements Temporizzabile {
 	}
 
 	private void gestisciEventoTrofeoAcquisito(InternoTrofeoAcquisito evento) {
-		displayableCanvas.notificaAnnuncioGlobale("Trofeo vinto", evento.getTrofeo().getNome());
+		displayableCanvas.notificaAnnuncioGlobale(TestiDellaUI.get("TROFEO_VINTO"), evento.getTrofeo().getNome());
 	}
 
 	private void gestisciEventoVoceDelBestiarioSbloccata(InternoVoceDelBestiarioSbloccata evento) {
 		// Il nome della voce, che per chi ha due forme le dice tutte e due ("Mago e Maga")
-		displayableCanvas.notificaAnnuncioGlobale("Nuova voce", evento.getVoce().getNomeDellaVoce());
+		displayableCanvas.notificaAnnuncioGlobale(TestiDellaUI.get("NUOVA_VOCE"), evento.getVoce().getNomeDellaVoce());
 	}
 
 	private void gestisciEventoPaginaIntermezzo(NotificaPaginaIntermezzo evento) {
@@ -533,18 +534,18 @@ public class ForestaUI implements Temporizzabile {
 				// Comincia una partita nuova: le nuvole della mappa si rigenerano sulla sua area conosciuta
 				CloudManager.azzera();
 				temporizzatore.termina();
-				displayableCanvas.scriviGrande("Scegli il nome del tuo personaggio o lascialo vuoto per un personaggio casuale.");
+				displayableCanvas.scriviGrande(TestiDellaUI.get("SCEGLI_NOME"));
 				prompt.setVisible(true);
 				impostaAzioni(Collections.emptyList());
 				break;
 
 			case SESSO_PERSONAGGIO:
-				displayableCanvas.scriviGrande("Scegli il sesso di " + prompt.getText());
+				displayableCanvas.scriviGrande(TestiDellaUI.get("SCEGLI_SESSO", prompt.getText()));
 				impostaAzioni(evento.getComandiPossibili());
 				break;
 
 			case CLASSE_PERSONAGGIO:
-				displayableCanvas.scriviGrande("Scegli la classe di " + prompt.getText());
+				displayableCanvas.scriviGrande(TestiDellaUI.get("SCEGLI_CLASSE", prompt.getText()));
 				impostaAzioni(evento.getComandiPossibili());
 				break;
 
