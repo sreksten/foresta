@@ -185,6 +185,10 @@ public enum TipoEvento {
      */
     NOTIFICA_REAZIONE_DI_CLASSE_PERSONAGGIO,
     /**
+     * Un attacco o un incantesimo contro un Personaggio non è andato a segno
+     */
+    NOTIFICA_COLPO_MANCATO,
+    /**
      * Mostra la finestra con i migliori 10 giocatori di tutti i tempi
      */
     NOTIFICA_MOSTRA_PUNTEGGI_MIGLIORI,

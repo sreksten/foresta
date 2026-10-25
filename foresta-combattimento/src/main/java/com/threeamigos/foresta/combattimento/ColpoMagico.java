@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.combattimento;
 
 import com.threeamigos.foresta.artefatti.Arma;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.notifiche.NotificaColpoMancato;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
@@ -34,6 +36,7 @@ public final class ColpoMagico {
 		if (!CalcolatoreCombattimento.colpisce(formulante, bersaglio, arma.getTipoDanno().getCategoriaDanno())) {
 			Logger.log("L'incantesimo non va a segno");
 			stato.registraEsitoAzione(formulante, bersaglio, azione, EsitoAzione.MANCATA);
+			BusEventi.pubblica(new NotificaColpoMancato(bersaglio));
 			return;
 		}
 		stato.registraEsitoAzione(formulante, bersaglio, azione, EsitoAzione.RIUSCITA);

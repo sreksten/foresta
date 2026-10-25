@@ -6,6 +6,7 @@ import com.threeamigos.foresta.poteri.MeccanicaDeiPoteri;
 import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.notifiche.NotificaColpoMancato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -77,6 +78,7 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 		} else {
 			// Fallito (o lanciato su chi è troppo in salute): i tentativi falliti fermano chi lo ripete contro lo stesso bersaglio
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.MORTE, EsitoAzione.MANCATA);
+			BusEventi.pubblica(new NotificaColpoMancato(bersaglio));
 			String s = formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo non ha avuto successo e si è ritorto contro " + s + "."));
 			formulante.subSalute(formulante.getSalute() / 4, bersaglio, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);

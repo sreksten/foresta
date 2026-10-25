@@ -28,7 +28,7 @@ Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli d
 - **attributi primari e secondari**: i primari sono il dato, i secondari si ricalcolano con `CalcolatoreAttributiSecondari` usando i moltiplicatori della classe; i **modificatori** (degli artefatti e a tempo) e gli **stati alterati** si sommano ai valori base;
 - **inventario ed equipaggiamento** con le regole di `RegoleEquipaggiamento` (un artefatto per testa, corpo e ciascuna mano; accessori senza limite; arma in mano secondaria solo per Ladro, Ladra ed Elfi; armi a due mani solo a mani libere; ogni classe usa solo le armi, lo scudo, il libro e l'armatura adatti a lei; il peso e la Forza per l'armatura in `puoEquipaggiare`); il perché di un rifiuto è un `TipoMotivoRifiutoEquipaggiamento`;
 - **danni, morte e resa**, con le debolezze, le resistenze e le immunità di classe ai tipi di danno (`getMoltiplicatoreDannoSubito`);
-- le notifiche degli eventi (`NotificaVariazioneStatistichePersonaggio`, `…StatoVitale…`, `…EffettoDiStato…`, `…Modificatore…`).
+- le notifiche degli eventi (`NotificaVariazioneStatistichePersonaggio`, `…StatoVitale…`, `…EffettoDiStato…`, `…Modificatore…`, `NotificaReazioneDiClassePersonaggio` per le debolezze e le resistenze, `NotificaColpoMancato` quando un attacco o un incantesimo non raggiunge il bersaglio).
 
 Una **classe concreta** aggiunge solo ciò che la distingue: i valori di partenza degli attributi presi da `CostantiPersonaggi`, i nomi e gli articoli, il repertorio di incantesimi, le immunità e le offerte che può fare. Sono tre famiglie:
 

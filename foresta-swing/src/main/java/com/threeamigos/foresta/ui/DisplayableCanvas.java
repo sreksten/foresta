@@ -1406,6 +1406,13 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	/**
+	 * Mostra con uno sprite "Mancato" il personaggio che il colpo non ha raggiunto.
+	 */
+	public void aggiungiColpoMancato(VistaPersonaggio personaggio) {
+		aggiungiSprite(riquadroLocazione.aggiungiColpoMancato(personaggio));
+	}
+
+	/**
 	 * Un testo che sale sopra il personaggio, come il nome di un'interazione
 	 */
 	public void aggiungiTestoSulPersonaggio(VistaPersonaggio personaggio, String testo, java.awt.Color colore) {

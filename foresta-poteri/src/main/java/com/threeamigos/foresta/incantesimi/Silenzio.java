@@ -7,6 +7,7 @@ import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.notifiche.NotificaColpoMancato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -99,6 +100,7 @@ public class Silenzio extends IncantesimoMaleficoImpl implements Incantesimo {
 			Logger.log("L'incantesimo non va a segno");
 			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo non va a segno su " + nomeBersaglio + "."));
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.SILENZIO, EsitoAzione.MANCATA);
+			BusEventi.pubblica(new NotificaColpoMancato(bersaglio));
 			return;
 		}
 		stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.SILENZIO, EsitoAzione.RIUSCITA);

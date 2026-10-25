@@ -67,6 +67,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoDecisioneTattica.class, this::onEventoDecisioneTattica);
         BusEventi.iscriviti(NotificaInterazionePersonaggio.class, this::onEventoInterazione);
         BusEventi.iscriviti(NotificaReazioneDiClassePersonaggio.class, this::onEventoReazioneDiClasse);
+        BusEventi.iscriviti(NotificaColpoMancato.class, this::onEventoColpoMancato);
         BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, this::onEventoInterfacciaUtentePronta);
         BusEventi.iscriviti(ComandoInvioTesto.class, this::onEventoInvioTesto);
         BusEventi.iscriviti(NotificaTestoFrase.class, this::onEventoMessaggio);
@@ -384,6 +385,11 @@ public class SnifferBusEventi {
 
     private void onEventoInizioRound(InternoInizioRound evento) {
         Logger.log(() -> headerEvento(evento) + "Round " + evento.getNumeroRound());
+    }
+
+    private void onEventoColpoMancato(NotificaColpoMancato evento) {
+        VistaPersonaggio p = evento.getPersonaggio();
+        Logger.log(() -> headerEvento(evento) + formattaStatistichePersonaggio(p));
     }
 
     private void onEventoReazioneDiClasse(NotificaReazioneDiClassePersonaggio evento) {

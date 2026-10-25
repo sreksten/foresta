@@ -3,6 +3,7 @@ package com.threeamigos.foresta.combattimento;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
+import com.threeamigos.foresta.eventi.notifiche.NotificaColpoMancato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.logger.Logger;
@@ -43,6 +44,7 @@ public final class AttaccoConLeArmi {
 				ApplicazioneDelRisultato.applica(bersaglio, risultato);
 			} else {
 				Logger.log(() -> attaccante.getNome() + " non colpisce " + bersaglio.getNome());
+				BusEventi.pubblica(new NotificaColpoMancato(bersaglio));
 			}
 		}
 	}

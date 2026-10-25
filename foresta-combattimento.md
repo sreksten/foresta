@@ -48,6 +48,7 @@ Chi lo aggiorna è il motore; le tattiche lo leggono e basta.
 - `CambioDArma`: quali armi escono dalle mani per far posto alla nuova (si sceglie guardando quanto danno fanno), se il personaggio può ancora cambiare in questo scontro e il cambio stesso sull'inventario del gruppo.
 - `Ondata`: un gruppo di avversari che arriva quando quelli di prima sono tutti sconfitti, con ciò che si scrive quando arrivano.
 - `AnnuncioDellAzione`: dice alla UI che un personaggio sta per agire (il riquadro evidenzia chi agisce e il bersaglio) e `InternoAzioneInCombattimento` è l'evento corrispondente.
+- `NotificaColpoMancato` (in `foresta-personaggi`): `AttaccoConLeArmi` e `ColpoMagico` la pubblicano quando il tiro per colpire fallisce, come fanno `Silenzio` e `Morte` nei poteri; la UI ci fa comparire sul bersaglio la scritta «Mancato».
 
 ### `MeccanicaDelloScontro`: il servizio dei poteri
 
