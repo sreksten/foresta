@@ -10,7 +10,7 @@ import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.abilita.FabbricaAbilita;
 import com.threeamigos.foresta.tipi.TipoAbilita;
-import com.threeamigos.foresta.interfacce.ModificatoreAttivo;
+import com.threeamigos.foresta.modificatori.ModificatoreAttivo;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;

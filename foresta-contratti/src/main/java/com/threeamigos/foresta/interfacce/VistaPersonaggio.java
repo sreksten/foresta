@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.interfacce;
 
+import com.threeamigos.foresta.modificatori.ModificatoreAttivo;
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;

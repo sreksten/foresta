@@ -14,7 +14,7 @@ import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
-import com.threeamigos.foresta.interfacce.ModificatoreAttivo;
+import com.threeamigos.foresta.modificatori.ModificatoreAttivo;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;

@@ -114,4 +114,10 @@ class ModificatoreAttributoMDTest {
         ModificatoreAttributoMD riletto = ModificatoreAttributoMD.daCampo(new LettoreCampi("FORZA§VARIAZIONE_FISSA§2.0§PERMANENTE§0§PORTATORE§true"));
         assertEquals(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 2.0d), riletto);
     }
+
+    @Test
+    void unModificatoreNonEUgualeAUnOggettoDiUnAltroTipo() {
+        assertNotEquals(aTempo(3), "non un modificatore");
+        assertNotEquals(aTempo(3), null);
+    }
 }
