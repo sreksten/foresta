@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
@@ -122,7 +123,7 @@ class ScenarioCorriereTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(184)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             IlCorriere corriere = prendiLIncarico(LETTERA, TipoLocazione.CITTA_RUUNA);
-            LineaTemporale.setCittaDistrutta(TipoLocazione.CITTA_RUUNA);
+            Foresta.setCittaDistrutta(TipoLocazione.CITTA_RUUNA);
             corriere.controllaPreLocazione();
             assertTrue(corriere.isFallita());
             String borgomastro = RegistroPersonaggi.getResidente(PersonaggioNoto.BORGOMASTRO, TipoLocazione.CITTA_RUUNA).getNome();
@@ -185,9 +186,9 @@ class ScenarioCorriereTest {
         }
         try (PartitaDiTest partita = PartitaDiTest.nuova(186)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
-            LineaTemporale.setCittaDistrutta(TipoLocazione.CITTA_RUUNA);
-            LineaTemporale.setCittaDistrutta(TipoLocazione.CITTA_FLEENA);
-            LineaTemporale.setCittaDistrutta(TipoLocazione.CITTA_MALGAARD);
+            Foresta.setCittaDistrutta(TipoLocazione.CITTA_RUUNA);
+            Foresta.setCittaDistrutta(TipoLocazione.CITTA_FLEENA);
+            Foresta.setCittaDistrutta(TipoLocazione.CITTA_MALGAARD);
             IlCorriere corriere = corriere();
             corriere.controllaPreLocazione();
             assertEquals("INCARICO", corriere.getPassoCorrente());

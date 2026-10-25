@@ -7,7 +7,7 @@
  * <p>
  * <b>Lo stato della partita.</b> Classi con un'istanza sola, che lavorano sopra il modello dati: il gruppo del giocatore
  * ({@link com.threeamigos.foresta.gruppi.GruppoGiocatore}) e quello avversario, la mappa ({@link com.threeamigos.foresta.motore.Foresta}), il
- * tempo ({@link com.threeamigos.foresta.motore.LineaTemporale}), le {@link com.threeamigos.foresta.motore.Statistiche}, le notizie e i
+ * tempo ({@link com.threeamigos.foresta.statistiche.LineaTemporale}), le {@link com.threeamigos.foresta.statistiche.Statistiche}, le notizie e i
  * registri di personaggi e artefatti.
  * <p>
  * <b>Le regole.</b> Equipaggiamento, incantatura, contrattazione, riposo, progressione dei livelli e la distribuzione dei punti

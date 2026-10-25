@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.mappa.Direzioni;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -10,7 +11,6 @@ import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -94,7 +94,7 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 				// Le rovine non si segnano sulla mappa: il gruppo sa solo da che parte cercarle
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, TipoLocazione.ROVINE)
 						.esegui(() -> {
-							String direzione = Misc.getDirezione(Foresta.getPosizioneDelGruppo(), getCovo());
+							String direzione = Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), getCovo());
 							aggiungiProprieta(DIREZIONE, direzione);
 							BusEventi.pubblica(new NotificaTestoParagrafo("Dicono che la banda di " + getRicercato()
 									+ " si nasconda fra delle rovine, " + direzione + "."));

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.modellodati;
 
 
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
@@ -10,7 +11,6 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,7 +45,6 @@ class ModelloDatiSalvataggioTest {
                 ArtefattiDiTest.creaArtefatto(TipoArtefatto.PERGAMENA, "la pergamena minore", "che trasmette un effetto"));
         modello.getGruppoGiocatoreMD().setIncantesimi(TipoIncantesimo.FUOCO, 4);
         modello.getLineaTemporaleMD().setEvento("Gwendolyn vede levarsi una colonna di fumo a nord");
-        modello.getLineaTemporaleMD().addCittaDistrutta(TipoLocazione.CITTA_RUUNA);
         String primo = salva(modello);
         // When
         ModelloDati riletto = new ModelloDati();
@@ -58,7 +57,6 @@ class ModelloDatiSalvataggioTest {
         assertEquals(4, riletto.getGruppoGiocatoreMD().getIncantesimi(TipoIncantesimo.FUOCO));
         assertFalse(riletto.getLineaTemporaleMD().isGiocoFinito(), "una partita finita non si salva: alla rilettura non lo è");
         assertEquals("Gwendolyn vede levarsi una colonna di fumo a nord", riletto.getLineaTemporaleMD().getEvento());
-        assertEquals(Collections.singletonList(TipoLocazione.CITTA_RUUNA), riletto.getLineaTemporaleMD().getCittaDistrutte());
     }
 
     @Test

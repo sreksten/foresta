@@ -15,8 +15,7 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
-import com.threeamigos.foresta.motore.LineaTemporale;
-import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
@@ -212,7 +211,7 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 
 	private boolean isInUnaCitta() {
 		TipoLocazione tipo = Foresta.getLocazioneDelGruppo();
-		return tipo != null && tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA && !LineaTemporale.isCittaDistrutta(tipo);
+		return tipo != null && tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA && !Foresta.isCittaDistrutta(tipo);
 	}
 
 	private boolean nelPosto() {

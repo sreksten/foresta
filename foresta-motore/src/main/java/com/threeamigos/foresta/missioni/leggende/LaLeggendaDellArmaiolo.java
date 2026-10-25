@@ -3,7 +3,6 @@ package com.threeamigos.foresta.missioni.leggende;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -25,7 +24,7 @@ public class LaLeggendaDellArmaiolo extends LaLeggenda {
 	protected boolean isPostoDelRacconto() {
 		TipoLocazione tipo = Foresta.getLocazioneDelGruppo();
 		return tipo != null && tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA
-				&& !LineaTemporale.isCittaDistrutta(tipo);
+				&& !Foresta.isCittaDistrutta(tipo);
 	}
 
 	@Override

@@ -181,6 +181,8 @@ Sulla mappa a tutto schermo il nome compare accanto al puntatore su una casella 
 
 ### Il tempo (`LineaTemporale`)
 
+`statistiche.LineaTemporale` e `statistiche.Statistiche` (punti, esperienza e livello del mondo, mostri uccisi, turni) stanno nel modulo `foresta-statistiche`, con i loro dati (`LineaTemporaleMD`, `StatisticheMD`, che prendono da `ModelloDati` col fornitore) e le loro notifiche. Le città distrutte, invece, le ricorda la mappa (`Foresta.isCittaDistrutta`, salvate in `ForestaMD`): `LineaTemporale` decide solo quando il Drago colpisce.
+
 Ora del giorno (con descrizioni testuali) e contatore di giorni; muoversi e riposare fanno avanzare il tempo. Il motore applica la pressione del Drago: a **20, 25, 30 e 35 giorni** distrugge in ordine Ruuna, Nyena, Fleena e Malgaard (al loro posto restano rovine; le missioni che dovevano concludersi lì falliscono al turno dopo; chi è lontano vede una colonna di fumo nella sua direzione, chi dormiva in quella città (`LineaTemporale.eventiDiNotte`) scampa per un pelo e lo legge subito al risveglio, chi ci cammina dentro (`eventi`) trova solo le rovine), e **oltre il giorno 40** il gioco finisce in sconfitta, subito: anche quando il giorno passa accampandosi, si va in `GIOCO_PERSO` senza tornare alla scelta della direzione, dove si potrebbe ancora salvare. Per questo "gioco finito" (`LineaTemporaleMD.giocoFinito`) non si salva: una partita finita non si salva mai. L'ultimo evento non ancora mostrato sta nel modello dati, così un salvataggio non lo perde.
 
 ### Locazioni

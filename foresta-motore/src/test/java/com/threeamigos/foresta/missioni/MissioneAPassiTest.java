@@ -4,7 +4,7 @@ import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.MissioneMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

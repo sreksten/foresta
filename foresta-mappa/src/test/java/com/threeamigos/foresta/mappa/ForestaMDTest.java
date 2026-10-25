@@ -6,6 +6,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -175,6 +176,34 @@ class ForestaMDTest {
         // Le locazioni uniche e i limiti dell'area conosciuta non si salvano: si ricavano dalle caselle
         assertEquals(new CoordinateMD(2, 1), riletta.ottieniCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
         assertArea(riletta, 1, 3, 0, 2);
+    }
+
+    @Test
+    void posizioneDelGruppoECittaDistrutteSiSalvanoESiAzzeranoConUnaMappaNuova() throws IOException {
+        ForestaMD foresta = mappa();
+        foresta.setPosizioneDelGruppo(new CoordinateMD(3, 2));
+        foresta.addCittaDistrutta(TipoLocazione.CITTA_RUUNA);
+        foresta.addCittaDistrutta(TipoLocazione.CITTA_NYENA);
+        assertTrue(foresta.isCittaDistrutta(TipoLocazione.CITTA_NYENA));
+        assertFalse(foresta.isCittaDistrutta(TipoLocazione.CITTA_FLEENA));
+        assertThrows(UnsupportedOperationException.class, () -> foresta.getCittaDistrutte().add(TipoLocazione.CITTA_FLEENA));
+
+        StringWriter scritto = new StringWriter();
+        try (PrintWriter stream = new PrintWriter(scritto)) {
+            foresta.salva(stream);
+        }
+        assertEquals("4|3|3|2|CITTA_RUUNA|CITTA_NYENA", scritto.toString().split("\n")[0].trim());
+
+        // Rileggere sostituisce quel che c'era
+        ForestaMD riletta = mappa();
+        riletta.addCittaDistrutta(TipoLocazione.CITTA_MALGAARD);
+        riletta.leggi(new BufferedReader(new StringReader(scritto.toString())));
+        assertEquals(new CoordinateMD(3, 2), riletta.getPosizioneDelGruppo());
+        assertEquals(Arrays.asList(TipoLocazione.CITTA_RUUNA, TipoLocazione.CITTA_NYENA), riletta.getCittaDistrutte());
+
+        riletta.reimposta(4, 3);
+        assertEquals(new CoordinateMD(0, 0), riletta.getPosizioneDelGruppo());
+        assertTrue(riletta.getCittaDistrutte().isEmpty());
     }
 
     @Test

@@ -4,7 +4,7 @@ import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 

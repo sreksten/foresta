@@ -9,7 +9,6 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.richieste.Spedizione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
@@ -143,7 +142,7 @@ public class IlCorriere extends IncaricoInCitta {
 		List<TipoLocazione> altre = new ArrayList<>();
 		for (TipoLocazione citta : TipoLocazione.values()) {
 			if (citta.getCategoriaLocazione() == CategoriaLocazione.CITTA && citta != qui
-					&& !LineaTemporale.isCittaDistrutta(citta) && Foresta.getCoordinateLocazioneUnica(citta) != null) {
+					&& !Foresta.isCittaDistrutta(citta) && Foresta.getCoordinateLocazioneUnica(citta) != null) {
 				altre.add(citta);
 			}
 		}
@@ -161,7 +160,7 @@ public class IlCorriere extends IncaricoInCitta {
 	@Override
 	protected boolean puoAncoraOffrirsi() {
 		long inPiedi = Arrays.stream(TipoLocazione.values())
-				.filter(citta -> citta.getCategoriaLocazione() == CategoriaLocazione.CITTA && !LineaTemporale.isCittaDistrutta(citta)
+				.filter(citta -> citta.getCategoriaLocazione() == CategoriaLocazione.CITTA && !Foresta.isCittaDistrutta(citta)
 						&& Foresta.getCoordinateLocazioneUnica(citta) != null)
 				.count();
 		return inPiedi >= 2;

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
@@ -109,7 +110,7 @@ class ScenarioMissioniELocazioniTest {
 			}
 			LineaTemporale.eventi(partita.gruppo());
 
-			assertTrue(LineaTemporale.isCittaDistrutta(TipoLocazione.CITTA_FLEENA));
+			assertTrue(Foresta.isCittaDistrutta(TipoLocazione.CITTA_FLEENA));
 			assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(fleena));
 			assertNull(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_FLEENA));
 

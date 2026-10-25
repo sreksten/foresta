@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.TipoBottino;
 import org.junit.jupiter.api.Test;
 
@@ -52,6 +53,8 @@ class OggettiHeadlessTest {
             if (!java.awt.GraphicsEnvironment.isHeadless()) {
                 throw new IllegalStateException("la sonda deve girare headless");
             }
+            // Come all'avvio del gioco: il modello dati dice alle parti (statistiche, mappa...) dove sono i loro dati
+            ModelloDati.getIstanza();
             for (TipoBottino tipo : TipoBottino.values()) {
                 if (tipo.isGenerabile()) {
                     Bottino oggetto = FabbricaOggetti.crea(tipo);

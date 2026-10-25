@@ -149,7 +149,7 @@ class ScenarioUrloDellaBansheeTest {
             viaggio.controllaPreLocazione();
             viaggio.segnaIntermezzoPassoMostrato("PRELEVAMENTO");
             viaggio.controllaInLocazione();
-            LineaTemporale.setCittaDistrutta(viaggio.getCittaDiArrivo());
+            Foresta.setCittaDistrutta(viaggio.getCittaDiArrivo());
             viaggio.controllaPreLocazione();
             assertTrue(viaggio.isFallita());
 

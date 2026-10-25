@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Direzioni;
+import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
@@ -38,7 +39,7 @@ class DistruzioneDellaCittaTest {
 
             Pernottamento.pernotta(partita.gruppo(), TipoRiposo.AL_COPERTO);
 
-            assertTrue(LineaTemporale.isCittaDistrutta(TipoLocazione.CITTA_NYENA));
+            assertTrue(Foresta.isCittaDistrutta(TipoLocazione.CITTA_NYENA));
             List<String> testi = partita.testi();
             int fuga = indiceCheContiene(testi, "Un boato scuote Nyena prima dell'alba");
             int alba = indiceCheContiene(testi, "Il sole sorge e l'avventura ricomincia.");
@@ -56,7 +57,7 @@ class DistruzioneDellaCittaTest {
 
             LineaTemporale.eventi(partita.gruppo());
 
-            assertTrue(LineaTemporale.isCittaDistrutta(TipoLocazione.CITTA_NYENA));
+            assertTrue(Foresta.isCittaDistrutta(TipoLocazione.CITTA_NYENA));
             String evento = LineaTemporale.getEvento();
             assertTrue(evento.startsWith("Dove sorgeva Nyena") && evento.contains("trova solo le rovine"), evento);
         }
@@ -79,8 +80,8 @@ class DistruzioneDellaCittaTest {
 
     @Test
     void aDistanzaZeroNonSiDiceZeroOreDiCammino() {
-        assertEquals("proprio qui.", Misc.getDirezione(3, 3, 3, 3));
-        assertTrue(Misc.getDirezione(3, 3, 3, 4).contains("un'ora"), Misc.getDirezione(3, 3, 3, 4));
+        assertEquals("proprio qui.", Direzioni.getDirezione(3, 3, 3, 3));
+        assertTrue(Direzioni.getDirezione(3, 3, 3, 4).contains("un'ora"), Direzioni.getDirezione(3, 3, 3, 4));
     }
 
     private static int indiceCheContiene(List<String> testi, String frammento) {

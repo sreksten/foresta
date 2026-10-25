@@ -1,16 +1,16 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.statistiche;
 
+import com.threeamigos.foresta.mappa.Direzioni;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LineaTemporaleMD;
-import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.testi.Numeri;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+
+import java.util.function.Supplier;
 
 /**
  * Il tempo della partita: giorno e ora, le città distrutte e l'ultimo evento da mostrare. I dati stanno nel {@code LineaTemporaleMD}.
@@ -23,8 +23,22 @@ public class LineaTemporale {
 	private LineaTemporale() {
 	}
 
+	// Da dove prendere i dati della partita in corso: la linea temporale non sa chi li custodisce
+	private static volatile Supplier<LineaTemporaleMD> fornitoreDiDati;
+
+	/**
+	 * Dice da dove prendere i dati della partita in corso (lo fa chi li custodisce: ogni volta si prendono da quelli in corso).
+	 */
+	public static void setFornitoreDiDati(Supplier<LineaTemporaleMD> fornitore) {
+		fornitoreDiDati = fornitore;
+	}
+
 	private static LineaTemporaleMD getLineaTemporaleMD() {
-		return ModelloDati.getIstanza().getLineaTemporaleMD();
+		Supplier<LineaTemporaleMD> fornitore = fornitoreDiDati;
+		if (fornitore == null) {
+			throw new IllegalStateException("Nessuno ha detto dove sono i dati di LineaTemporale (vedi setFornitoreDiDati)");
+		}
+		return fornitore.get();
 	}
 
 	public static int getOra() {
@@ -143,13 +157,13 @@ public class LineaTemporale {
 			setEvento("Sventura! " + nome + " ha invano tentato di fermare il Drago, che col tempo ha abbattuto l'ultimo baluardo della resistenza... tutto e' perduto!");
 			setGiocoFinito(true);
 		} else {
-			if (giorno >= 35 && !isCittaDistrutta(TipoLocazione.CITTA_MALGAARD)) {
+			if (giorno >= 35 && !Foresta.isCittaDistrutta(TipoLocazione.CITTA_MALGAARD)) {
 				distruggiCitta(TipoLocazione.CITTA_MALGAARD, gruppo, nome, dormiva);
-			} else if (giorno >= 30 && !isCittaDistrutta(TipoLocazione.CITTA_FLEENA)) {
+			} else if (giorno >= 30 && !Foresta.isCittaDistrutta(TipoLocazione.CITTA_FLEENA)) {
 				distruggiCitta(TipoLocazione.CITTA_FLEENA, gruppo, nome, dormiva);
-			} else if (giorno >= 25 && !isCittaDistrutta(TipoLocazione.CITTA_NYENA)) {
+			} else if (giorno >= 25 && !Foresta.isCittaDistrutta(TipoLocazione.CITTA_NYENA)) {
 				distruggiCitta(TipoLocazione.CITTA_NYENA, gruppo, nome, dormiva);
-			} else if (giorno >= 20 && !isCittaDistrutta(TipoLocazione.CITTA_RUUNA)) {
+			} else if (giorno >= 20 && !Foresta.isCittaDistrutta(TipoLocazione.CITTA_RUUNA)) {
 				distruggiCitta(TipoLocazione.CITTA_RUUNA, gruppo, nome, dormiva);
 			}
 		}
@@ -158,7 +172,7 @@ public class LineaTemporale {
 	/**
 	 * Il drago distrugge una citta': al suo posto restano delle rovine. La direzione del fumo si calcola prima, finche'
 	 * la citta' e' ancora sulla mappa. Le missioni che andavano concluse li' falliscono al turno successivo (vedi
-	 * isCittaDistrutta). Se il gruppo è proprio in quella città non vede una colonna di fumo da lontano: se ci dormiva, scampa per un pelo,
+	 * Foresta.isCittaDistrutta). Se il gruppo è proprio in quella città non vede una colonna di fumo da lontano: se ci dormiva, scampa per un pelo,
 	 * e se ci è appena arrivato trova solo le rovine.
 	 */
 	private static void distruggiCitta(TipoLocazione citta, GruppoGiocatore gruppo, String nome, boolean dormiva) {
@@ -166,7 +180,7 @@ public class LineaTemporale {
 		if (coordinate != null) {
 			String nomeCitta = citta.getNomeDellaCitta();
 			if (!coordinate.equals(Foresta.getPosizioneDelGruppo())) {
-				setEvento(nome + COLONNA + Misc.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate));
+				setEvento(nome + COLONNA + Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate));
 			} else if (dormiva) {
 				setEvento("Un boato scuote " + nomeCitta + " prima dell'alba: il Drago! " + gruppo.chiMaiuscolo()
 						+ " riesce a fuggire per un pelo tra le fiamme, e di " + nomeCitta + " non restano che rovine fumanti.");
@@ -174,7 +188,7 @@ public class LineaTemporale {
 				setEvento("Dove sorgeva " + nomeCitta + " " + gruppo.chi() + " trova solo le rovine: il Drago è passato di qui.");
 			}
 		}
-		setCittaDistrutta(citta);
+		Foresta.setCittaDistrutta(citta);
 		Foresta.distruggiLocazioneUnica(citta, TipoLocazione.ROVINE);
 	}
 
@@ -198,20 +212,6 @@ public class LineaTemporale {
 
 	public static void setGiocoFinito(boolean finito) {
 		getLineaTemporaleMD().setGiocoFinito(finito);
-	}
-
-	public static boolean isCittaDistrutta(TipoLocazione citta) {
-		if (citta.getCategoriaLocazione() != CategoriaLocazione.CITTA) {
-			throw new IllegalArgumentException();
-		}
-		return getLineaTemporaleMD().isCittaDistrutta(citta);
-	}
-
-	public static void setCittaDistrutta(TipoLocazione citta) {
-		if (citta.getCategoriaLocazione() != CategoriaLocazione.CITTA) {
-			throw new IllegalArgumentException();
-		}
-		getLineaTemporaleMD().addCittaDistrutta(citta);
 	}
 
 	public static void setDragoSconfitto(boolean dragoSconfitto) {

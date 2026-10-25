@@ -2,20 +2,15 @@ package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
-import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import static com.threeamigos.foresta.serializzazione.Serializzabile.*;
 
 /**
- * Il tempo della partita: giorno e ora correnti, le città distrutte, se il gioco è finito e l'ultimo evento
+ * Il tempo della partita: giorno e ora correnti, se il gioco è finito e l'ultimo evento
  * non ancora mostrato al giocatore (per esempio la colonna di fumo di una città in fiamme).
  *
  * @author Stefano Reksten
@@ -29,7 +24,6 @@ public class LineaTemporaleMD implements Serializzabile {
 
 	private int ora;
 	private int giorno;
-	private final List<TipoLocazione> cittaDistrutte = new ArrayList<>();
 	// Vale solo durante la partita e non si salva: quando diventa vero la partita finisce subito (vinta o persa), senza un
 	// momento in cui la si possa salvare
 	private boolean giocoFinito;
@@ -52,13 +46,6 @@ public class LineaTemporaleMD implements Serializzabile {
 		this.giorno = giorno;
 	}
 
-	/**
-	 * Le città distrutte, nell'ordine in cui lo sono state. Di sola lettura: si aggiunge con {@link #addCittaDistrutta}.
-	 */
-	public List<TipoLocazione> getCittaDistrutte() {
-		return Collections.unmodifiableList(cittaDistrutte);
-	}
-
 	public boolean isGiocoFinito() {
 		return giocoFinito;
 	}
@@ -78,46 +65,28 @@ public class LineaTemporaleMD implements Serializzabile {
 	/////////////////////////
 
 	/**
-	 * Riporta il tempo all'inizio della partita: primo giorno, prima ora del mattino, nessuna città distrutta.
+	 * Riporta il tempo all'inizio della partita: primo giorno, prima ora del mattino.
 	 */
 	public void reimposta() {
 		ora = PRIMA_ORA_DEL_MATTINO;
 		giorno = 1;
 		giocoFinito = false;
 		evento = null;
-		cittaDistrutte.clear();
 	}
 
 	/**
-	 * Registra che quella città è stata distrutta.
-	 */
-	public void addCittaDistrutta(TipoLocazione citta) {
-		cittaDistrutte.add(citta);
-	}
-
-	/**
-	 * Dice se quella città è stata distrutta.
-	 */
-	public boolean isCittaDistrutta(TipoLocazione citta) {
-		return cittaDistrutte.contains(citta);
-	}
-
-	/**
-	 * Scrive su una riga ora, giorno, l'ultimo evento (anche vuoto) e poi, se ce ne sono, le città distrutte, tutto
-	 * separato da {@link #PIPE}. Se il gioco è finito non si scrive: una partita finita non si salva.
+	 * Scrive su una riga ora, giorno e l'ultimo evento (anche vuoto), separati da {@link #PIPE}. Se il gioco è finito non si scrive: una partita finita non si salva.
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		List<Object> campi = new ArrayList<>(Arrays.asList(
+		stampaRiga(stream,
 				ora,
 				giorno,
-				facoltativo(pulisciCampo(evento))));
-		campi.addAll(cittaDistrutte);
-		stampaRiga(stream, campi);
+				facoltativo(pulisciCampo(evento)));
 	}
 
 	/**
-	 * Rilegge la riga scritta da {@link #salva(PrintWriter)}: dopo i primi tre campi, tutti gli altri sono città distrutte.
+	 * Rilegge la riga scritta da {@link #salva(PrintWriter)}.
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
@@ -126,10 +95,6 @@ public class LineaTemporaleMD implements Serializzabile {
 		giorno = st.intero();
 		giocoFinito = false;
 		evento = st.testoFacoltativo();
-		cittaDistrutte.clear();
-		while (st.haAltriCampi()) {
-			cittaDistrutte.add(st.enumerato(TipoLocazione.class));
-		}
 	}
 
 }

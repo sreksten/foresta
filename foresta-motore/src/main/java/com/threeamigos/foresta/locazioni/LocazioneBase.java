@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.statistiche.Statistiche;
+import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.tipi.TipoApproccio;
 
 import com.threeamigos.foresta.tipi.CategoriaLocazione;

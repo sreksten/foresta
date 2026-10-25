@@ -206,14 +206,14 @@ class CollezioniDiSolaLetturaTest {
 	}
 
 	@Test
-	void laLineaTemporaleNonLasciaModificareLeCittaDistrutte() {
-		LineaTemporaleMD linea = new LineaTemporaleMD();
+	void laForestaNonLasciaModificareLeCittaDistrutte() {
+		ForestaMD foresta = new ForestaMD();
 
-		assertThrows(UnsupportedOperationException.class, () -> linea.getCittaDistrutte().add(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA));
+		assertThrows(UnsupportedOperationException.class, () -> foresta.getCittaDistrutte().add(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA));
 
-		linea.addCittaDistrutta(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA);
-		assertEquals(Collections.singletonList(TipoLocazione.CITTA_RUUNA), linea.getCittaDistrutte());
-		assertTrue(linea.isCittaDistrutta(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA));
+		foresta.addCittaDistrutta(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA);
+		assertEquals(Collections.singletonList(TipoLocazione.CITTA_RUUNA), foresta.getCittaDistrutte());
+		assertTrue(foresta.isCittaDistrutta(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA));
 	}
 
 	@Test

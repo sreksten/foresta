@@ -5,6 +5,8 @@ import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 import com.threeamigos.foresta.canti.CantiImparati;
 import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
+import com.threeamigos.foresta.statistiche.LineaTemporale;
+import com.threeamigos.foresta.statistiche.Statistiche;
 
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
@@ -36,13 +38,15 @@ public class ModelloDati implements Serializzabile {
 	// L'istanza di modello dati su cui il gioco si basa (volatile: la imposta chi carica o azzera, e la leggono tutti, anche da altri thread)
 	private static volatile ModelloDati istanza = new ModelloDati();
 
-	// La mappa non conosce il modello dati: gli dice lei dove sono i suoi dati, e li prende sempre da quello in corso
+	// Le parti non conoscono il modello dati: è lui a dire loro dove sono i loro dati, e li prende sempre da quello in corso
 	static {
 		Foresta.setFornitoreDiDati(() -> getIstanza().getForestaMD());
 		GruppoGiocatore.setFornitoreDiDati(() -> getIstanza().getGruppoGiocatoreMD());
 		TatticheDeiPersonaggi.setFornitoreDiDati(() -> getIstanza().getTatticheMD());
 		CantiImparati.setFornitoreDiDati(() -> getIstanza().getCantiImparatiMD());
 		RegistroIntermezzi.setFornitoreDiDati(() -> getIstanza().getIntermezziMD());
+		Statistiche.setFornitoreDiDati(() -> getIstanza().getStatisticheMD());
+		LineaTemporale.setFornitoreDiDati(() -> getIstanza().getLineaTemporaleMD());
 	}
 
 	/**

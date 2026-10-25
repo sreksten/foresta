@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.offerte;
 
+import com.threeamigos.foresta.mappa.Direzioni;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.RegistroArtefattiMD;
@@ -8,7 +9,6 @@ import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -75,7 +75,7 @@ public class Informazioni implements Offerta {
 			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(tipoLocazione);
 			Foresta.setLocazioneConosciuta(coordinate);
 			sb.append(tipoLocazione.getNomeProprio());
-			sb.append(" si trova ").append(Misc.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate));
+			sb.append(" si trova ").append(Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate));
 		}
 	}
 
@@ -100,7 +100,7 @@ public class Informazioni implements Offerta {
 		}
 		Foresta.setLocazioneConosciuta(coordinate);
 		sb.append(tipoLocazione.getNomeProprio());
-		sb.append(" sorge ").append(Misc.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate));
+		sb.append(" sorge ").append(Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate));
 	}
 
 	private void informazioneSuArtefatti(GruppoGiocatore gruppo, StringBuilder sb) {
@@ -118,7 +118,7 @@ public class Informazioni implements Offerta {
 				sb.append(',');
 			}
 			sb.append(" si trova in un tempio ")
-			.append(Misc.getDirezione(Foresta.getPosizioneDelGruppo(), informazioni.getCoordinate()));
+			.append(Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), informazioni.getCoordinate()));
 		}
 	}
 

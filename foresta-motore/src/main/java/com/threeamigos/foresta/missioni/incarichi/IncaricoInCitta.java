@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -345,7 +346,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 */
 	protected final CoordinateMD coordinateDellaCittaDelRitorno() {
 		TipoLocazione citta = getCittaDelRitorno();
-		return citta == null || LineaTemporale.isCittaDistrutta(citta) ? null : Foresta.getCoordinateLocazioneUnica(citta);
+		return citta == null || Foresta.isCittaDistrutta(citta) ? null : Foresta.getCoordinateLocazioneUnica(citta);
 	}
 
 	/**
@@ -353,7 +354,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 */
 	private boolean isCittaDistrutta() {
 		TipoLocazione citta = getCittaDelRitorno();
-		return citta != null && LineaTemporale.isCittaDistrutta(citta);
+		return citta != null && Foresta.isCittaDistrutta(citta);
 	}
 
 	/**
@@ -403,7 +404,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	private boolean inUnaCitta() {
 		TipoLocazione tipo = Foresta.getLocazioneDelGruppo();
 		return tipo != null && tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA
-				&& !LineaTemporale.isCittaDistrutta(tipo);
+				&& !Foresta.isCittaDistrutta(tipo);
 	}
 
 	/**
@@ -421,6 +422,6 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	}
 
 	private static boolean inCitta(TipoLocazione citta) {
-		return citta != null && Foresta.isGruppoIn(citta) && !LineaTemporale.isCittaDistrutta(citta);
+		return citta != null && Foresta.isGruppoIn(citta) && !Foresta.isCittaDistrutta(citta);
 	}
 }

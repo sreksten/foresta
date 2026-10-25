@@ -12,8 +12,8 @@ import com.threeamigos.foresta.missioni.Ricompensa;
 import com.threeamigos.foresta.missioni.richieste.ViandanteRichiesto;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
-import com.threeamigos.foresta.motore.LineaTemporale;
-import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.statistiche.LineaTemporale;
+import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
@@ -174,7 +174,7 @@ public class IlViandante extends MissioneAPassi {
 		List<TipoLocazione> citta = new ArrayList<>();
 		for (TipoLocazione tipo : TipoLocazione.values()) {
 			if (tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA && Foresta.getCoordinateLocazioneUnica(tipo) != null
-					&& !LineaTemporale.isCittaDistrutta(tipo)) {
+					&& !Foresta.isCittaDistrutta(tipo)) {
 				citta.add(tipo);
 			}
 		}
@@ -197,7 +197,7 @@ public class IlViandante extends MissioneAPassi {
 
 	private boolean isCittaDistrutta() {
 		TipoLocazione citta = getCitta();
-		return citta != null && LineaTemporale.isCittaDistrutta(citta);
+		return citta != null && Foresta.isCittaDistrutta(citta);
 	}
 
 	private void accetta() {

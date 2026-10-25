@@ -3,7 +3,7 @@ package com.threeamigos.foresta.missioni.storie;
 import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.mappa.Foresta;
 
-import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
@@ -260,7 +260,7 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 	}
 
 	private static boolean isCittaDistrutta(TipoLocazione citta) {
-		return citta != null && LineaTemporale.isCittaDistrutta(citta);
+		return citta != null && Foresta.isCittaDistrutta(citta);
 	}
 
 	private static String getNomeCitta(TipoLocazione citta) {

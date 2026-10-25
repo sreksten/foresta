@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.statistiche.Statistiche;
+import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
@@ -132,7 +134,7 @@ class ScenarioIlViandanteTest {
             viandante.controllaInLocazione();
             assertEquals("ANDATA", viandante.getPassoCorrente());
 
-            ModelloDati.getIstanza().getLineaTemporaleMD().addCittaDistrutta(viandante.getCitta());
+            ModelloDati.getIstanza().getForestaMD().addCittaDistrutta(viandante.getCitta());
             viandante.controllaPreLocazione();
             assertTrue(viandante.isFallita());
         }

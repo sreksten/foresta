@@ -7,7 +7,11 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -23,8 +27,9 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
  * in memoria è da rifare).
  * <p>
  * Le caselle "visitata" e "conosciuta" sono proprietà del modello dati della casella, non campi di questa classe.
- * Tiene anche dove si trova il gruppo del giocatore: il gruppo non sa dove sta, lo sa la mappa.
- * Il salvataggio scrive le dimensioni e la posizione del gruppo, e poi una riga per casella (vedi {@link #salva(PrintWriter)}).
+ * Tiene anche dove si trova il gruppo del giocatore (il gruppo non sa dove sta, lo sa la mappa) e quali città il Drago ha distrutto.
+ * Il salvataggio scrive le dimensioni, la posizione del gruppo e le città distrutte, e poi una riga per casella (vedi
+ * {@link #salva(PrintWriter)}).
  *
  * @author Stefano Reksten
  */
@@ -73,11 +78,35 @@ public class ForestaMD implements Serializzabile {
 	// La casella su cui si trova il gruppo del giocatore
 	private CoordinateMD posizioneDelGruppo = new CoordinateMD(0, 0);
 
+	// Le città distrutte, nell'ordine in cui lo sono state
+	private final List<TipoLocazione> cittaDistrutte = new ArrayList<>();
+
 	/**
 	 * La casella su cui si trova il gruppo del giocatore.
 	 */
 	public CoordinateMD getPosizioneDelGruppo() {
 		return posizioneDelGruppo;
+	}
+
+	/**
+	 * Le città distrutte, nell'ordine in cui lo sono state. Di sola lettura: si aggiunge con {@link #addCittaDistrutta}.
+	 */
+	public List<TipoLocazione> getCittaDistrutte() {
+		return Collections.unmodifiableList(cittaDistrutte);
+	}
+
+	/**
+	 * Registra che quella città è stata distrutta.
+	 */
+	public void addCittaDistrutta(TipoLocazione citta) {
+		cittaDistrutte.add(citta);
+	}
+
+	/**
+	 * Dice se quella città è stata distrutta.
+	 */
+	public boolean isCittaDistrutta(TipoLocazione citta) {
+		return cittaDistrutte.contains(citta);
 	}
 
 	/**
@@ -220,6 +249,7 @@ public class ForestaMD implements Serializzabile {
 	 */
 	public void reimposta(int dimensioneX, int dimensioneY) {
 		posizioneDelGruppo = new CoordinateMD(0, 0);
+		cittaDistrutte.clear();
 		this.dimensioneX = dimensioneX;
 		this.dimensioneY = dimensioneY;
 		arrayLocazioni = new LocazioneMD[dimensioneX * dimensioneY];
@@ -321,16 +351,19 @@ public class ForestaMD implements Serializzabile {
 	// Routine per il salvataggio
 
 	/**
-	 * Scrive su una riga le dimensioni della mappa e la posizione del gruppo, e poi una riga per ogni casella, in ordine per riga.
+	 * Scrive su una riga le dimensioni della mappa, la posizione del gruppo e, se ce ne sono, le città distrutte, e poi una riga per
+	 * ogni casella, in ordine per riga.
 	 * Le dimensioni fanno da conteggio, quindi non serve altro.
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		stampaRiga(stream,
+		List<Object> campi = new ArrayList<>(Arrays.asList(
 				dimensioneX,
 				dimensioneY,
 				posizioneDelGruppo.getX(),
-				posizioneDelGruppo.getY());
+				posizioneDelGruppo.getY()));
+		campi.addAll(cittaDistrutte);
+		stampaRiga(stream, campi);
 		for (LocazioneMD locazioneMD : arrayLocazioni) {
 			locazioneMD.salva(stream);
 		}
@@ -350,6 +383,9 @@ public class ForestaMD implements Serializzabile {
 		}
 		reimposta(colonne, righe);
 		posizioneDelGruppo = new CoordinateMD(st.intero(), st.intero());
+		while (st.haAltriCampi()) {
+			cittaDistrutte.add(st.enumerato(TipoLocazione.class));
+		}
 		for (int indice = 0; indice < arrayLocazioni.length; indice++) {
 			LocazioneMD locazioneMD = new LocazioneMD();
 			locazioneMD.leggi(stream);

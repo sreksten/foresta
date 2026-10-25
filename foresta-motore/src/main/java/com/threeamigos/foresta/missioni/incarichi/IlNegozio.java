@@ -161,7 +161,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	@Override
 	protected boolean puoAncoraOffrirsi() {
 		TipoLocazione citta = getCittaAssegnata();
-		return citta != null && !LineaTemporale.isCittaDistrutta(citta);
+		return citta != null && !Foresta.isCittaDistrutta(citta);
 	}
 
 	@Override

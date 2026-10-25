@@ -4,7 +4,7 @@ import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.mappa.Foresta;
 
-import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
@@ -225,7 +225,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	private boolean isCittaDistrutta() {
-		return getCitta() != null && LineaTemporale.isCittaDistrutta(getCitta());
+		return getCitta() != null && Foresta.isCittaDistrutta(getCitta());
 	}
 
 	/**
@@ -236,7 +236,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 		TipoLocazione piuVicina = null;
 		int distanzaMinima = Integer.MAX_VALUE;
 		for (TipoLocazione tipo : TipoLocazione.values()) {
-			if (tipo.getCategoriaLocazione() != CategoriaLocazione.CITTA || LineaTemporale.isCittaDistrutta(tipo)) {
+			if (tipo.getCategoriaLocazione() != CategoriaLocazione.CITTA || Foresta.isCittaDistrutta(tipo)) {
 				continue;
 			}
 			CoordinateMD citta = Foresta.getCoordinateLocazioneUnica(tipo);

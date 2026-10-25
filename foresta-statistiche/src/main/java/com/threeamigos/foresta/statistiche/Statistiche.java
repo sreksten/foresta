@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.statistiche;
 
 import com.threeamigos.foresta.personaggi.GestoreProgressione;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -7,9 +7,10 @@ import com.threeamigos.foresta.eventi.interni.InternoPuntiEsperienzaAssegnati;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePunteggio;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePuntiEsperienzaPersonaggio;
-import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.StatisticheMD;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+
+import java.util.function.Supplier;
 
 /**
  * Le statistiche della partita: punti, esperienza, livello del gioco e turni giocati. I dati stanno nello {@code StatisticheMD}; qui si aggiornano,
@@ -17,8 +18,22 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
  */
 public class Statistiche {
 
+	// Da dove prendere i dati della partita in corso: chi tiene le statistiche non sa chi li custodisce
+	private static volatile Supplier<StatisticheMD> fornitoreDiDati;
+
+	/**
+	 * Dice da dove prendere i dati della partita in corso (lo fa chi li custodisce: ogni volta si prendono da quelli in corso).
+	 */
+	public static void setFornitoreDiDati(Supplier<StatisticheMD> fornitore) {
+		fornitoreDiDati = fornitore;
+	}
+
 	private static StatisticheMD getStatisticheMD() {
-		return ModelloDati.getIstanza().getStatisticheMD();
+		Supplier<StatisticheMD> fornitore = fornitoreDiDati;
+		if (fornitore == null) {
+			throw new IllegalStateException("Nessuno ha detto dove sono i dati di Statistiche (vedi setFornitoreDiDati)");
+		}
+		return fornitore.get();
 	}
 
 	private Statistiche() {

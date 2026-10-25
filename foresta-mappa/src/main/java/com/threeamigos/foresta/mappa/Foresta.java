@@ -7,6 +7,7 @@ import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiLuoghiCasuale;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.HashSet;
@@ -391,6 +392,30 @@ public class Foresta {
 	}
 
 	// La posizione del gruppo del giocatore: il gruppo non sa dove sta, lo sa la mappa
+
+	/**
+	 * Se quella città è stata distrutta (dal Drago, vedi LineaTemporale).
+	 *
+	 * @throws IllegalArgumentException se non è una città
+	 */
+	public static boolean isCittaDistrutta(TipoLocazione citta) {
+		if (citta.getCategoriaLocazione() != CategoriaLocazione.CITTA) {
+			throw new IllegalArgumentException();
+		}
+		return getForestaMD().isCittaDistrutta(citta);
+	}
+
+	/**
+	 * Registra che quella città è stata distrutta. Non cambia la sua casella: per le rovine c'è {@link #distruggiLocazioneUnica}.
+	 *
+	 * @throws IllegalArgumentException se non è una città
+	 */
+	public static void setCittaDistrutta(TipoLocazione citta) {
+		if (citta.getCategoriaLocazione() != CategoriaLocazione.CITTA) {
+			throw new IllegalArgumentException();
+		}
+		getForestaMD().addCittaDistrutta(citta);
+	}
 
 	/**
 	 * La casella su cui si trova il gruppo del giocatore.

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -70,7 +71,7 @@ public final class Pernottamento {
 		LineaTemporale.mattinoSeguente();
 		LineaTemporale.eventiDiNotte(gruppo);
 		// La locanda fuori città non può cadere: solo una città può essere distrutta
-		if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA && LineaTemporale.isCittaDistrutta(tipoLocazione)) {
+		if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA && Foresta.isCittaDistrutta(tipoLocazione)) {
 			// La città in cui si dormiva è caduta stanotte: lo si racconta subito, non alla locazione dopo
 			String evento = LineaTemporale.getEvento();
 			if (evento != null) {

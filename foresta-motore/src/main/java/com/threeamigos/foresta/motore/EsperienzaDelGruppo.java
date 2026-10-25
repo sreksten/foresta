@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.personaggi.GestoreProgressione;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 
