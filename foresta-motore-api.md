@@ -6,13 +6,13 @@
 
 ## Dipendenze
 
-**Dichiarate nel pom:** `foresta-trofei`, `foresta-missioni`, `foresta-bottino`, `foresta-intermezzi`, `foresta-personaggi`, `foresta-tattiche`, `foresta-eventi`, `foresta-modellodati`.
+**Dichiarate nel pom:** `foresta-trofei`, `foresta-missioni`, `foresta-bottino`, `foresta-personaggi`, `foresta-eventi`, `foresta-modellodati`.
 
 **Lo dichiarano:** `foresta-motore`, `foresta-swing`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 
-Dipende dai sottoprogetti di cui la UI legge lo stato (trofei, missioni, bottino, intermezzi, personaggi, tattiche) e da `foresta-modellodati`, perché `VistaPartita` espone anche cose come le ultime notizie. Per transitività vede quasi tutto il dominio, ma **lo mostra alla UI solo come viste in sola lettura e identificativi**.
+Dipende dai sottoprogetti di cui la UI legge lo stato (trofei, missioni, bottino, personaggi) e da `foresta-modellodati`, perché `VistaPartita` espone anche cose come le ultime notizie. Per transitività vede anche gli intermezzi, le tattiche e quasi tutto il resto del dominio, ma **lo mostra alla UI solo come viste in sola lettura e identificativi**.
 
 ## Funzionamento
 

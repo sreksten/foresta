@@ -29,17 +29,7 @@
         </dependency>
         <dependency>
             <groupId>com.threeamigos</groupId>
-            <artifactId>foresta-intermezzi</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.threeamigos</groupId>
             <artifactId>foresta-personaggi</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.threeamigos</groupId>
-            <artifactId>foresta-tattiche</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

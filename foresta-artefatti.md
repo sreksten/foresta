@@ -8,7 +8,7 @@ Gli **artefatti**: armi, scudi, armature, accessori e ingredienti magici, con i 
 
 **Dichiarate nel pom:** `foresta-testi`, `foresta-strumenti`, `foresta-serializzazione`, `foresta-attributi`, `foresta-danni`.
 
-**Lo dichiarano:** `foresta-personaggi`, `foresta-modellodati`.
+**Lo dichiarano:** `foresta-personaggi`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 

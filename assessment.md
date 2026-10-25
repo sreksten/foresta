@@ -101,8 +101,6 @@ Dal basso in alto. Ogni livello dipende solo da quelli prima, e le dipendenze so
 | 12 | `motore`, `swing` |
 | 13 | `app` |
 
-Nei pom ci sono quattro dipendenze dichiarate ma non usate direttamente: `modellodati` → `artefatti` e `tipi`, `motore-api` → `intermezzi` e `tattiche`. Non fanno danno, perché quei moduli arrivano comunque per transitività, ma vanno tolte (§8).
-
 ### Punti di forza
 
 - **Le dipendenze le controlla il compilatore.** Ogni parte del gioco è un modulo con i suoi tipi (`tipi`), i suoi dati (`modellodati`) e i suoi contratti (eventi, viste). Quello che il compilatore non vede, cioè `java.awt` e simili fuori da `foresta-swing`, `Locale.ROOT`, `System.exit` e il `Logger`, lo controllano i test che leggono i sorgenti (`DipendenzeDalToolkitGraficoTest`, `ConvenzioniDiPortabilitaTest`).
@@ -205,7 +203,6 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 ## 8. Prossimi passi consigliati
 
 1. **Pulizia piccola:**
-   - togliere le quattro dipendenze dichiarate e non usate (§3);
    - togliere il codice morto del §5;
    - installare i fornitori in modo esplicito (§3, problema 2).
 2. **Finire la divisione:**

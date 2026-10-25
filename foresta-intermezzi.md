@@ -8,7 +8,7 @@ Gli **intermezzi**: le brevi scene a fumetti (sfondi, personaggi che entrano e s
 
 **Dichiarate nel pom:** `foresta-statistiche`, `foresta-personaggi`, `foresta-mappa`.
 
-**Lo dichiarano:** `foresta-bottino`, `foresta-modellodati`, `foresta-motore-api`.
+**Lo dichiarano:** `foresta-bottino`, `foresta-modellodati`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 

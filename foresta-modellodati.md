@@ -6,13 +6,13 @@ Ogni parte del gioco porta i *suoi* dati (`ArtefattoMD` negli artefatti, `Forest
 
 ## Dipendenze
 
-**Dichiarate nel pom:** `foresta-missioni`, `foresta-mondo`, `foresta-intermezzi`, `foresta-personaggi`, `foresta-tattiche`, `foresta-serializzazione`, `foresta-artefatti`, `foresta-mappa`.
+**Dichiarate nel pom:** `foresta-missioni`, `foresta-mondo`, `foresta-intermezzi`, `foresta-personaggi`, `foresta-tattiche`, `foresta-serializzazione`, `foresta-mappa`.
 
 **Lo dichiarano:** `foresta-motore-api`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 
-Dichiara le parti che hanno dati nel salvataggio: missioni, mondo, intermezzi, personaggi, tattiche, artefatti, mappa e la serializzazione; l'economia (cassa e magazzini), i poteri (canti imparati) e le statistiche ci arrivano per transitività. Non conosce il motore, gli eventi né l'interfaccia.
+Dichiara le parti che hanno dati nel salvataggio: missioni, mondo, intermezzi, personaggi, tattiche, mappa e la serializzazione; gli artefatti, l'economia (cassa e magazzini), i poteri (canti imparati) e le statistiche ci arrivano per transitività. Non conosce il motore, gli eventi né l'interfaccia.
 
 ## Funzionamento
 

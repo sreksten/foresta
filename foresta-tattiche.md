@@ -10,7 +10,7 @@
 
 **Solo per i test:** `foresta-personaggi`.
 
-**Lo dichiarano:** `foresta-missioni`, `foresta-modellodati`, `foresta-motore-api`, `foresta-motore`, `foresta-swing`.
+**Lo dichiarano:** `foresta-missioni`, `foresta-modellodati`, `foresta-motore`, `foresta-swing`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 
