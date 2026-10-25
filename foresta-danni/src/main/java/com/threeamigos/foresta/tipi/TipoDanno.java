@@ -8,7 +8,7 @@ import com.threeamigos.foresta.testi.Testi;
  * e gli {@link TipoEffettoDiStato stati alterati} che può causare.
  * <p>
  * I commenti su a ciascun tipo descrivono come ci si aspetta che si comporti. Le debolezze e le resistenze delle classi
- * di personaggio ai vari tipi stanno in {@code TipoPersonaggio} e in {@code CategoriaPersonaggio} (modulo foresta-tipi).
+ * di personaggio ai vari tipi stanno in {@code TipoPersonaggio} e in {@code CategoriaPersonaggio} (modulo foresta-personaggi).
  * <p>
  * I testi di ogni costante (NOME) non stanno qui ma nel file {@code tipo_danno_<lingua>.properties}, alla voce
  * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).

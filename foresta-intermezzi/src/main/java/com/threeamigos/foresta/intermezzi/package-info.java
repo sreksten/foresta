@@ -4,8 +4,9 @@
  * Si descrivono con un piccolo linguaggio a catena: una {@link com.threeamigos.foresta.intermezzi.PaginaIntermezzo} ha uno sfondo e degli
  * {@link com.threeamigos.foresta.intermezzi.ElementoIntermezzo elementi}; ogni elemento ha un'immagine e delle
  * {@link com.threeamigos.foresta.intermezzi.Tappa tappe} (dove va, quanto è grande, quanto è visibile) e le battute dei personaggi sono
- * {@link com.threeamigos.foresta.intermezzi.BattutaIntermezzo battute} con il loro fumetto. La UI sa disegnarli; la logica che decide
- * quando scatta un intermezzo e quali pagine mostrare sta nel motore.
+ * {@link com.threeamigos.foresta.intermezzi.BattutaIntermezzo battute} con il loro fumetto. La UI sa disegnarli; quando scatta un intermezzo
+ * lo decide il {@link com.threeamigos.foresta.intermezzi.RegistroIntermezzi}, che qui conosce gli intermezzi fissi; quelli dei passi delle
+ * missioni li dà il modulo delle missioni, e il motore registra nella fabbrica gli epiloghi.
  * <p>
  * Il pacchetto è diviso fra più moduli: qui stanno i dati che la UI disegna.
  */

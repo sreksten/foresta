@@ -21,7 +21,7 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
  * Una missione può avere delle <b>missioni secondarie</b>, a loro volta con le proprie: formano un albero, che il
  * salvataggio scrive e rilegge ricorsivamente.
  * <p>
- * Le regole che fanno avanzare le missioni stanno nel motore (vedi gestione_missioni.md); qui ci sono solo i dati.
+ * Le regole che fanno avanzare le missioni stanno in questo modulo (MissioneBase, MissioneAPassi e RegistroMissioni, vedi gestione_missioni.md); qui ci sono solo i dati.
  *
  * @author Stefano Reksten
  */

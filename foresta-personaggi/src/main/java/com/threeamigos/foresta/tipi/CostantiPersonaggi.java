@@ -7,7 +7,7 @@ package com.threeamigos.foresta.tipi;
  * <p>
  * Le note testuali che spiegano ogni moltiplicatore (perché il goblin ha quel valore di critico) stanno nel file
  * {@code note_personaggi_it.properties} e si leggono con {@link NoteDeiPersonaggi}. Le costanti che non sono dei personaggi (gli altri
- * sottoprogetti ne hanno di proprie) stanno ancora in {@link Costanti}.
+ * sottoprogetti ne hanno di proprie) stanno nel modulo del loro sottoprogetto.
  *
  * @author Stefano Reksten
  */

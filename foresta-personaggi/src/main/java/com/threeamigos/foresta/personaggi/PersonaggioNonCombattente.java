@@ -9,7 +9,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * Chi nelle scene non combatte: il locandiere, l'armaiolo, l'alchimista, il venditore di pergamene, l'incantatore, la
- * moglie del bardo. Ha le sue caratteristiche (Costanti.NON_COMBATTENTE_*, un poco più basse di quelle di un bardo),
+ * moglie del bardo. Ha le sue caratteristiche (CostantiPersonaggi.NON_COMBATTENTE_*, un poco più basse di quelle di un bardo),
  * nessuna capacità propria (niente dardo arcano né alba sacra né canti), non si incontra, non si recluta e non si
  * corrompe: compare nelle scene e viaggia con il gruppo come ospite quando una missione lo deve scortare (vedi
  * Viandante). Non è un Bardo.

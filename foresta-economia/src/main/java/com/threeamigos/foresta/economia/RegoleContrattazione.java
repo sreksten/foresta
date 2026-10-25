@@ -26,7 +26,7 @@ public final class RegoleContrattazione {
 	}
 
 	/**
-	 * Lo sconto sugli acquisti, tra 0 e {@link Costanti#CONTRATTAZIONE_SCONTO_MASSIMO}.
+	 * Lo sconto sugli acquisti, tra 0 e {@link CostantiEconomia#CONTRATTAZIONE_SCONTO_MASSIMO}.
 	 */
 	public static double sconto(int contrattazione) {
 		return Math.min(CostantiEconomia.CONTRATTAZIONE_SCONTO_MASSIMO,
@@ -34,8 +34,8 @@ public final class RegoleContrattazione {
 	}
 
 	/**
-	 * La quota del costo che si ricava vendendo, tra {@link Costanti#CONTRATTAZIONE_QUOTA_VENDITA_BASE} e
-	 * {@link Costanti#CONTRATTAZIONE_QUOTA_VENDITA_MASSIMA}.
+	 * La quota del costo che si ricava vendendo, tra {@link CostantiEconomia#CONTRATTAZIONE_QUOTA_VENDITA_BASE} e
+	 * {@link CostantiEconomia#CONTRATTAZIONE_QUOTA_VENDITA_MASSIMA}.
 	 */
 	public static double quotaVendita(int contrattazione) {
 		return Math.min(CostantiEconomia.CONTRATTAZIONE_QUOTA_VENDITA_MASSIMA,

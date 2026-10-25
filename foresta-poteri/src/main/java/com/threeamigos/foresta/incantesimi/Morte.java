@@ -39,7 +39,7 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 	}
 
 	/**
-	 * Se il bersaglio è abbastanza ferito perché Morte lo uccida: ha meno di {@link Costanti#INCANTESIMO_MORTE_SOGLIA_SALUTE_PERCENTUALE}% della
+	 * Se il bersaglio è abbastanza ferito perché Morte lo uccida: ha meno di {@link CostantiIncantesimi#INCANTESIMO_MORTE_SOGLIA_SALUTE_PERCENTUALE}% della
 	 * salute massima, senza arrotondamenti (con 10 di salute massima uccide con 2, che è il 20%). È la stessa soglia della tattica che lo sceglie.
 	 */
 	public static boolean puoUccidere(Personaggio bersaglio) {

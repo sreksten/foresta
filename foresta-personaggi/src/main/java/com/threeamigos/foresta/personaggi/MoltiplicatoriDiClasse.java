@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * I moltiplicatori di una classe di personaggi (quelli che ogni classe dichiara in Costanti) con la nota che dice perché ha quel valore
+ * I moltiplicatori di una classe di personaggi (quelli che ogni classe dichiara in CostantiPersonaggi) con la nota che dice perché ha quel valore
  * (note_personaggi_it.properties). Li legge dal personaggio modello della classe: sono uguali per tutti i personaggi della classe.
  */
 public final class MoltiplicatoriDiClasse {

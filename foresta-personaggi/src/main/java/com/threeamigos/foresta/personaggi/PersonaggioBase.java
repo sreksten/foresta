@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  * abilità, modificatori e stati alterati, inventario ed equipaggiamento, danni e morte.
  * <p>
  * Una classe concreta aggiunge solo ciò che la distingue: i valori di partenza dei suoi attributi, che prende dalle costanti
- * della classe ({@code Costanti.GOBLIN_*} e simili), i nomi e gli articoli, il repertorio di incantesimi, le immunità e le
+ * della classe ({@code CostantiPersonaggi.GOBLIN_*} e simili), i nomi e gli articoli, il repertorio di incantesimi, le immunità e le
  * offerte che può fare.
  */
 public abstract class PersonaggioBase implements Personaggio {
@@ -554,8 +554,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	/**
-	 * Fuggire costa una quota della salute massima (da {@link Costanti#FUGA_DANNO_MINIMO_PERCENTUALE} a
-	 * {@link Costanti#FUGA_DANNO_MASSIMO_PERCENTUALE}%, quindi cresce con il livello, a differenza di un danno fisso), ma non uccide mai:
+	 * Fuggire costa una quota della salute massima (da {@link CostantiPersonaggi#FUGA_DANNO_MINIMO_PERCENTUALE} a
+	 * {@link CostantiPersonaggi#FUGA_DANNO_MASSIMO_PERCENTUALE}%, quindi cresce con il livello, a differenza di un danno fisso), ma non uccide mai:
 	 * chi fugge perché sta male resta in piedi con almeno un punto. Il resto del prezzo è l'ignominia, che per qualche locazione
 	 * toglie coraggio, valore e carisma.
 	 */

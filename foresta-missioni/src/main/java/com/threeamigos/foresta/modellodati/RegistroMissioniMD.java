@@ -15,7 +15,7 @@ import java.util.Map;
  * le loro sotto-missioni. Una missione completata resta qui, con la sua proprietà COMPLETA: è il motore a distinguerle
  * (RegistroMissioni.getMissioniCompletate).
  * <p>
- * Sono dati puri: le regole che le fanno avanzare stanno nel motore (vedi gestione_missioni.md).
+ * Sono dati puri: le regole che le fanno avanzare stanno in RegistroMissioni (vedi gestione_missioni.md).
  *
  * @author Stefano Reksten
  */

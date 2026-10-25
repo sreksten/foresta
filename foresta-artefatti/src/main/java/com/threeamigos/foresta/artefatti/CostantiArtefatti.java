@@ -3,7 +3,7 @@ package com.threeamigos.foresta.artefatti;
 /**
  * I valori di bilanciamento degli artefatti: come nascono (probabilità di essere incantati, di avere un nome proprio o di venire
  * dalla grammatica, danni delle armi, effetti degli ingredienti), da che livello una pergamena è di grado medio o maggiore, e quanto
- * valgono e costano le pergamene. Quelli degli altri oggetti del gioco (cofani, anelli...) restano in {@code Costanti}.
+ * valgono e costano le pergamene. Quelli degli altri oggetti del gioco (cofani, anelli...) stanno in {@code CostantiBottino}.
  *
  * @author Stefano Reksten
  */

@@ -107,6 +107,7 @@ Panoramica in `motore_grafico.md`.
 ## Convenzioni
 
 - La documentazione `.md` sta tutta nella radice (panoramica e mappa dei documenti in `foresta.md`) del progetto e descrive lo stato attuale (la storia è in git).
+- Ogni modulo ha il suo `foresta-<modulo>.md` nella radice (cosa fa e perché, dipendenze, funzionamento, osservazioni): se si cambia un modulo si aggiorna il suo documento; la sezione delle dipendenze deve restare uguale ai `pom.xml`.
 - I documenti finiscono con "Osservazioni" e, dove serve, "Da fare / idee aperte".
 - `risorse_e_documenti_vari/` è la cartella di scratch: file non usati dal gioco ed esperimenti.
 - I dati di ogni parte (le classi `…MD`) stanno nel modulo di quella parte, non in `foresta-modellodati`; `ModelloDati` li mette insieme e, se un modulo deve prendere i dati della partita in corso, glieli fa avere (come con `Foresta.setFornitoreDiDati`). Il pacchetto resta `modellodati` in qualunque modulo stiano (un pacchetto può stare in più moduli). Fatto per artefatti, attributi, effetti di stato, mappa, personaggi e tattiche; gli altri `…MD` vanno al loro modulo man mano che nasce.

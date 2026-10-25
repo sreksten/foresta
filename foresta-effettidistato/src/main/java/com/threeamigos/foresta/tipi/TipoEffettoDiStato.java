@@ -7,7 +7,7 @@ import com.threeamigos.foresta.testi.Testi;
  * <p>
  * Dagli effetti di stato nascono le reazioni con i tipi di danno: sono tutte dichiarate in {@code TipoInterazioneConEffettiDiStato} (modulo foresta-danni)
  * (precondizioni, innescanti, moltiplicatore, stati tolti e aggiunti), e il motore le applica da lì (vedi
- * interazioni_effetti_di_stato.md). Quasi tutti gli stati sono un male da togliere; i vantaggi sono due
+ * interazioni_effetti_di_stato.md). Quasi tutti gli stati sono un male da togliere; i vantaggi sono tre
  * (vedi {@link #isBenefico()}).
  * <p>
  * I testi di ogni costante (DESCRIZIONE) non stanno qui ma nel file {@code tipo_effetto_di_stato_<lingua>.properties}, alla voce

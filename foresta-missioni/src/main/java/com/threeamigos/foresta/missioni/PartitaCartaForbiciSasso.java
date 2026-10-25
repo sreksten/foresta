@@ -7,7 +7,7 @@ import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
- * Una sfida a carta, forbici e sasso: vince chi arriva per primo a {@link Costanti#VITTORIE_PER_VINCERE_LA_SFIDA}
+ * Una sfida a carta, forbici e sasso: vince chi arriva per primo a {@link CostantiMissioni#VITTORIE_PER_VINCERE_LA_SFIDA}
  * mani vinte. Ogni mano è la scelta del giocatore contro una dell'avversario, tirata con il dado della partita; un
  * pareggio non conta e si rigioca.
  */

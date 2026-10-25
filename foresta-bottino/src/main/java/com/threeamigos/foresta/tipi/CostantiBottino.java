@@ -24,9 +24,6 @@ public final class CostantiBottino {
     public static final int ANELLO_MAGICO_AGGIUNTA_CARISMA = 1;
     public static final int ANELLO_MAGICO_PUNTEGGIO = 50;
 
-    private CostantiBottino() {
-    }
-
     /**
      * Il gruppo avversario porta con sé pergamene (vedi BottinoDegliAvversari): la probabilità, per ogni avversario, di averne una...
      */
@@ -35,4 +32,7 @@ public final class CostantiBottino {
      * ...e, se è un umanoide, la probabilità di una pozione della Salute
      */
     public static final int PROBABILITA_POZIONE_SALUTE_PER_AVVERSARIO_UMANOIDE = 20;
+
+    private CostantiBottino() {
+    }
 }

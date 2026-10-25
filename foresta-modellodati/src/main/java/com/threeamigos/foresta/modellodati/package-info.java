@@ -23,7 +23,9 @@
  * {@link com.threeamigos.foresta.serializzazione.LettoreCampi}. Il formato non deve restare compatibile con le versioni
  * precedenti.
  * <p>
- * Questo modulo dipende solo dai tipi di base (<code>tipi</code>) e dalla serializzazione (<code>serializzazione</code>) e non conosce motore, eventi né interfaccia.
+ * Questo modulo non ha classi dei dati di parti (ognuna sta nel modulo della sua parte: <code>ArtefattoMD</code> negli artefatti,
+ * <code>ForestaMD</code> nella mappa, <code>PersonaggioMD</code> nei personaggi…): ha <code>ModelloDati</code>, che le mette insieme, e i dati delle notizie
+ * (<code>NotizieMD</code>, <code>NotiziaMD</code>, <code>MessaggioMD</code>). Non conosce motore né interfaccia.
  */
 package com.threeamigos.foresta.modellodati;
 

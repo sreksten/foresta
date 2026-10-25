@@ -6,12 +6,12 @@
  * le sue sorelle gestiscono gli scambi di artefatti. Vedi motore_di_gioco.md §2.
  * <p>
  * <b>Lo stato della partita.</b> Classi con un'istanza sola, che lavorano sopra il modello dati: il gruppo del giocatore
- * ({@link com.threeamigos.foresta.gruppi.GruppoGiocatore}) e quello avversario, la mappa ({@link com.threeamigos.foresta.motore.Foresta}), il
+ * ({@link com.threeamigos.foresta.gruppi.GruppoGiocatore}) e quello avversario, la mappa ({@link com.threeamigos.foresta.mappa.Foresta}), il
  * tempo ({@link com.threeamigos.foresta.statistiche.LineaTemporale}), le {@link com.threeamigos.foresta.statistiche.Statistiche}, le notizie e i
  * registri di personaggi e artefatti.
  * <p>
  * <b>Le regole.</b> Equipaggiamento, incantatura, contrattazione, riposo, progressione dei livelli e la distribuzione dei punti
- * alla creazione dei personaggi; le costanti di bilanciamento stanno in {@link com.threeamigos.foresta.tipi.Costanti}, e il caso è
+ * alla creazione dei personaggi; le costanti di bilanciamento stanno nelle classi del sottoprogetto di ciascuna parte ({@code CostantiPersonaggi}, {@code CostantiArtefatti}, {@code CostantiMotore}…), e il caso è
  * tutto in {@link com.threeamigos.foresta.strumenti.dado.Dado}, così nei test si può fissare il seme.
  * <p>
  * Le regole che riguardano un dominio preciso stanno nei loro pacchetti: {@code combattimento}, {@code personaggi}, {@code oggetti},
