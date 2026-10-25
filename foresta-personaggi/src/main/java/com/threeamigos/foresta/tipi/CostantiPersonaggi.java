@@ -83,9 +83,7 @@ public final class CostantiPersonaggi {
      */
     public static final int MASSIMO_LIVELLO = 50;
 
-    // Con cosa comincia una partita: le monete bastano a un'arma nuova per tutti dopo i primi pasti (vedi economia.md)
-    public static final int MONETE_INIZIALI = 150;
-    public static final int PREZIOSI_INIZIALI = 5;
+    // Con cosa comincia una partita (le monete e i preziosi in CostantiEconomia)
     public static final int POZIONI_SALUTE_INIZIALI = 2;
 
     public static final int RECUPERO_DA_POZIONE_SALUTE = 100;

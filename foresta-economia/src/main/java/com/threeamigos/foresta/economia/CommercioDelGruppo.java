@@ -1,5 +1,8 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.economia;
 
+import com.threeamigos.foresta.economia.OfferteAlchimista;
+import com.threeamigos.foresta.economia.OffertaConsumabile;
+import com.threeamigos.foresta.economia.RegoleContrattazione;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
@@ -85,7 +88,7 @@ public final class CommercioDelGruppo {
 	 * la vendita ha miglior successo se nel gruppo c'è un ladro
 	 */
 	public static void vendePreziosi(GruppoGiocatore gruppo) {
-		int preziosi = gruppo.getPreziosi();
+		int preziosi = Cassa.getPreziosi();
 		if (preziosi > 0) {
 			int valore = Statistiche.getLivello();
 			int quantita = preziosi * valore;
@@ -96,7 +99,7 @@ public final class CommercioDelGruppo {
 					" ha venduto i preziosi raccolti, ricavandone " +
 					(quantita == 1 ? " una moneta." : (quantita + " monete."));
 			BusEventi.pubblica(new NotificaTestoFrase(notifica));
-			gruppo.vendiPreziosiPer(quantita);
+			Cassa.vendiPreziosiPer(quantita);
 		}
 	}
 
@@ -105,7 +108,7 @@ public final class CommercioDelGruppo {
 	private static void suEventoRichiestaAcquistoArtefatto(InternoAcquistoArtefatto comandoAcquistoArtefatto) {
 		GruppoGiocatore gruppo = gruppo();
 		Artefatto artefatto = (Artefatto) comandoAcquistoArtefatto.getOggettoDaSpostare();
-		if (gruppo.compra(artefatto, prezzoAcquisto(gruppo, artefatto.getCostoAcquisto()))) {
+		if (Cassa.compra(artefatto, prezzoAcquisto(gruppo, artefatto.getCostoAcquisto()))) {
 			comandoAcquistoArtefatto.getParteRemota().removeArtefatto(artefatto);
 			BusEventi.pubblica(comandoAcquistoArtefatto.approvazione());
 		} else {
@@ -124,7 +127,7 @@ public final class CommercioDelGruppo {
 	 *
 	 * @return true se la vendita è riuscita
 	 */
-	static boolean vende(GruppoGiocatore gruppo, InternoVenditaArtefatto eventoRichiestaVendita) {
+	public static boolean vende(GruppoGiocatore gruppo, InternoVenditaArtefatto eventoRichiestaVendita) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaVendita.getOggettoDaSpostare();
 		if (!eventoRichiestaVendita.getParteRemota().tratta(artefatto)) {
 			BusEventi.pubblica(eventoRichiestaVendita.rifiuto());
@@ -132,7 +135,7 @@ public final class CommercioDelGruppo {
 		}
 		int ricavo = prezzoVendita(gruppo, artefatto.getCostoAcquisto());
 		gruppo.removeArtefatto(artefatto);
-		gruppo.addMonete(ricavo);
+		Cassa.addMonete(ricavo);
 		eventoRichiestaVendita.getParteRemota().addArtefatto(artefatto);
 		BusEventi.pubblica(eventoRichiestaVendita.approvazione());
 		return true;
@@ -154,7 +157,7 @@ public final class CommercioDelGruppo {
 	 * @return il motivo del rifiuto, oppure vuoto se la fusione è riuscita
 	 */
 	public static Optional<TipoMotivoRifiutoIncantatura> incanta(GruppoGiocatore gruppo, BancoDiLavoro banco, String nomeProprio) {
-		Optional<TipoMotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco.getInventario(), gruppo.getMonete(),
+		Optional<TipoMotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco.getInventario(), Cassa.getMonete(),
 				costoFusione(gruppo, banco.getInventario()), Statistiche.getLivello());
 		if (motivo.isPresent()) {
 			BusEventi.pubblica(new NotificaRifiutoIncantatura(motivo.get()));
@@ -164,13 +167,13 @@ public final class CommercioDelGruppo {
 		if (RegoleIncantatura.conRiprogrammazione(banco.getInventario())) {
 			// Va sempre male: l'artefatto si spezza negli ingredienti dei suoi incantamenti, e tutto torna nel gruppo
 			List<Artefatto> restituiti = RegoleIncantatura.riprogramma(banco);
-			gruppo.subMonete(costo);
+			Cassa.subMonete(costo);
 			restituiti.forEach(gruppo::addArtefatto);
 			BusEventi.pubblica(new NotificaAvvisoIncantatura(ProduttoreDiArtefattiCasuale.erroreDiRiprogrammazione()));
 			return Optional.empty();
 		}
 		Artefatto incantato = RegoleIncantatura.fondi(banco, nomeProprio);
-		gruppo.subMonete(costo);
+		Cassa.subMonete(costo);
 		gruppo.addArtefatto(incantato);
 		BusEventi.pubblica(new NotificaApprovazioneIncantatura(incantato, costo));
 		return Optional.empty();
@@ -187,7 +190,7 @@ public final class CommercioDelGruppo {
 			return;
 		}
 		int costoOggetto = prezzoAcquisto(gruppo, offerta.get().getCosto());
-		if (gruppo.getMonete() >= costoOggetto) {
+		if (Cassa.getMonete() >= costoOggetto) {
 			switch (comandoAcquistoConsumabile.getTipoConsumabile()) {
 				case POZIONE_SALUTE:
 					gruppo.addPozioniSalute(1);
@@ -226,7 +229,7 @@ public final class CommercioDelGruppo {
 				default:
 					throw new IllegalArgumentException("Tipo consumabile non valido");
 			}
-			gruppo.subMonete(costoOggetto);
+			Cassa.subMonete(costoOggetto);
 			BusEventi.pubblica(new NotificaApprovazioneAcquistoConsumabile(comandoAcquistoConsumabile, costoOggetto));
 		} else {
 			BusEventi.pubblica(new NotificaRifiutoAcquistoConsumabile(comandoAcquistoConsumabile));

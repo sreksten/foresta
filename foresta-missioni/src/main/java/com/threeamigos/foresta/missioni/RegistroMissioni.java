@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.tipi.Quadrante;
 
 
@@ -27,7 +26,6 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.*;
 import java.util.function.BooleanSupplier;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /**
@@ -59,29 +57,6 @@ public class RegistroMissioni {
 			throw new IllegalStateException("Nessuno ha detto alle missioni come sapere se la locazione è completa (vedi setFornitoreLocazioneCompleta)");
 		}
 		return fornitore.getAsBoolean();
-	}
-
-	// Chi riempie il magazzino di una bottega nuova (vedi IlNegozio): i negozi non sono delle missioni
-	private static volatile BiConsumer<CoordinateMD, TipoNegozio> rifornitoreDelleBotteghe;
-
-	/**
-	 * Dice alle missioni chi riempie il magazzino di una bottega che una missione apre (lo fa il motore, che conosce i negozi).
-	 */
-	public static void setRifornitoreDelleBotteghe(BiConsumer<CoordinateMD, TipoNegozio> rifornitore) {
-		rifornitoreDelleBotteghe = rifornitore;
-	}
-
-	/**
-	 * Riempie il magazzino della bottega di quel mestiere aperta in quella casella.
-	 *
-	 * @throws IllegalStateException se il motore non ha detto chi lo fa (vedi {@link #setRifornitoreDelleBotteghe})
-	 */
-	public static void riempiMagazzino(CoordinateMD coordinate, TipoNegozio negozio) {
-		BiConsumer<CoordinateMD, TipoNegozio> rifornitore = rifornitoreDelleBotteghe;
-		if (rifornitore == null) {
-			throw new IllegalStateException("Nessuno ha detto alle missioni chi riempie i magazzini (vedi setRifornitoreDelleBotteghe)");
-		}
-		rifornitore.accept(coordinate, negozio);
 	}
 
 	// Da dove prendere i dati della partita in corso: le missioni non sanno chi li custodisce

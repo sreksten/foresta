@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.mappa.Foresta;
 
@@ -154,7 +155,7 @@ class ScenarioSfidaDeiCampioniTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(7)) {
             LaSfidaDeiCampioni missione = avviaLaMissione(partita);
             int livello = Statistiche.getLivello();
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             int artefatti = partita.gruppo().getInventario().size();
             assertEquals(100 * livello, missione.getMonete());
             assertNotNull(missione.getLeggendario());
@@ -165,12 +166,12 @@ class ScenarioSfidaDeiCampioniTest {
                 missione.controllaPostLocazione();
                 assertFalse(missione.isCompleta(), "ne mancano ancora");
             }
-            assertEquals(monete, partita.gruppo().getMonete());
+            assertEquals(monete, Cassa.getMonete());
             campioni.get(campioni.size() - 1).completaMissione();
             missione.controllaPostLocazione();
 
             assertTrue(missione.isCompleta());
-            assertEquals(monete + 100 * livello, partita.gruppo().getMonete());
+            assertEquals(monete + 100 * livello, Cassa.getMonete());
             assertEquals(artefatti + 1, partita.gruppo().getInventario().size(), "il leggendario è nell'inventario");
 
             // Il trofeo si conquista a fine locazione

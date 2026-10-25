@@ -49,6 +49,11 @@ public interface VistaPartita {
 
 	VistaMappa getMappa();
 
+	/**
+	 * La cassa del gruppo: monete e preziosi.
+	 */
+	VistaCassa getCassa();
+
 	List<? extends VistaMissione> getMissioniAttive();
 
 	List<? extends VistaMissione> getMissioniCompletate();

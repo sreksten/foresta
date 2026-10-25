@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.Comando;
@@ -32,11 +33,11 @@ class ScenarioSpregiTest {
     @Test
     void conUnaAmiciziaFallitaSiPerdonoDa1A3Monete() {
         try (PartitaDiTest partita = davantiAll_Idra()) {
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             // Il dado a 12 dice 12 (fallisce), lo spregio è il 3 (monete), ne perde 2
             Dado.trucca(12, 3, 2);
             partita.comando(Comando.AMICIZIA);
-            assertEquals(monete - 2, partita.gruppo().getMonete());
+            assertEquals(monete - 2, Cassa.getMonete());
             assertTrue(partita.testi().stream().anyMatch(t -> t.contains("non riesce a stringere amicizia, ma in una breve colluttazione perde alcune monete")),
                     String.valueOf(partita.testi()));
         }
@@ -45,17 +46,17 @@ class ScenarioSpregiTest {
     @Test
     void ilMassimoDiMoneteEPreziosiPersiEDiTre() {
         try (PartitaDiTest partita = davantiAll_Idra()) {
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             Dado.trucca(12, 3, 3);
             partita.comando(Comando.AMICIZIA);
-            assertEquals(monete - 3, partita.gruppo().getMonete());
+            assertEquals(monete - 3, Cassa.getMonete());
         }
         try (PartitaDiTest partita = davantiAll_Idra()) {
-            partita.gruppo().addPreziosi(10);
-            int preziosi = partita.gruppo().getPreziosi();
+            Cassa.addPreziosi(10);
+            int preziosi = Cassa.getPreziosi();
             Dado.trucca(12, 4, 3);
             partita.comando(Comando.AMICIZIA);
-            assertEquals(preziosi - 3, partita.gruppo().getPreziosi());
+            assertEquals(preziosi - 3, Cassa.getPreziosi());
         }
     }
 
@@ -102,11 +103,11 @@ class ScenarioSpregiTest {
     @Test
     void laCorruzioneFallitaHaGliStessiSpregiESiDiceCheCeUnaConseguenza() {
         try (PartitaDiTest partita = davantiAll_Idra()) {
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             // Il dado a 10 dice 1 (non riesce: serve più di 3), lo spregio è il 3 (monete), ne perde 2
             Dado.trucca(1, 3, 2);
             partita.comando(Comando.CORRUZIONE);
-            assertEquals(monete - 2, partita.gruppo().getMonete());
+            assertEquals(monete - 2, Cassa.getMonete());
             assertTrue(partita.testi().stream().anyMatch(t -> t.contains("non ha avuto successo, e in una breve colluttazione perde alcune monete")),
                     String.valueOf(partita.testi()));
         }
@@ -116,10 +117,10 @@ class ScenarioSpregiTest {
     void laCorruzioneSenzaMoneteFallisceSempreEPureConLoSpregio() {
         try (PartitaDiTest partita = davantiAll_Idra()) {
             // Una moneta sola: non bastano per pagare (2 a testa), quindi non c'è nemmeno il dado; lo spregio è il 3 (monete)
-            partita.gruppo().subMonete(partita.gruppo().getMonete() - 1);
+            Cassa.subMonete(Cassa.getMonete() - 1);
             Dado.trucca(3, 2);
             partita.comando(Comando.CORRUZIONE);
-            assertEquals(0, partita.gruppo().getMonete());
+            assertEquals(0, Cassa.getMonete());
             assertTrue(partita.testi().stream().anyMatch(t -> t.contains("non ha avuto successo, e in una breve colluttazione")),
                     String.valueOf(partita.testi()));
         }

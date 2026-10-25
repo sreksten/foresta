@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiEconomia;
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.economia.CommercioDelGruppo;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
@@ -34,9 +37,9 @@ class EconomiaDelLivelloTest {
         // Senza la modalità di prova, che nelle altre partite di test dà 9999 monete
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(33)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
-            assertEquals(150, CostantiPersonaggi.MONETE_INIZIALI);
-            assertEquals(CostantiPersonaggi.MONETE_INIZIALI, partita.gruppo().getMonete());
-            assertEquals(CostantiPersonaggi.PREZIOSI_INIZIALI, partita.gruppo().getPreziosi());
+            assertEquals(150, CostantiEconomia.MONETE_INIZIALI);
+            assertEquals(CostantiEconomia.MONETE_INIZIALI, Cassa.getMonete());
+            assertEquals(CostantiEconomia.PREZIOSI_INIZIALI, Cassa.getPreziosi());
         }
     }
 
@@ -47,18 +50,18 @@ class EconomiaDelLivelloTest {
             GruppoGiocatore gruppo = partita.gruppo();
             // Nel gruppo c'è solo un guerriero: nessun ladro che venda meglio
             impostaLivello(1);
-            gruppo.subPreziosi(gruppo.getPreziosi());
-            gruppo.addPreziosi(3);
-            int monete = gruppo.getMonete();
+            Cassa.subPreziosi(Cassa.getPreziosi());
+            Cassa.addPreziosi(3);
+            int monete = Cassa.getMonete();
             CommercioDelGruppo.vendePreziosi(gruppo);
-            assertEquals(monete + 3, gruppo.getMonete(), "al primo livello vale una moneta");
-            assertEquals(0, gruppo.getPreziosi());
+            assertEquals(monete + 3, Cassa.getMonete(), "al primo livello vale una moneta");
+            assertEquals(0, Cassa.getPreziosi());
 
             impostaLivello(6);
-            gruppo.addPreziosi(3);
-            monete = gruppo.getMonete();
+            Cassa.addPreziosi(3);
+            monete = Cassa.getMonete();
             CommercioDelGruppo.vendePreziosi(gruppo);
-            assertEquals(monete + 18, gruppo.getMonete(), "al sesto livello ne vale sei");
+            assertEquals(monete + 18, Cassa.getMonete(), "al sesto livello ne vale sei");
         }
     }
 
@@ -81,12 +84,12 @@ class EconomiaDelLivelloTest {
             // Nel frattempo il livello sale, ma la cifra promessa è quella di quando l'incarico si è offerto
             impostaLivello(8);
             medaglione.aggiungiProprieta("PASSO_CORRENTE", "RITORNO");
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             medaglione.controllaPreLocazione();
             medaglione.segnaIntermezzoPassoMostrato("RITORNO");
             medaglione.controllaInLocazione();
             assertTrue(medaglione.isCompleta());
-            assertEquals(monete + 20 * 3, partita.gruppo().getMonete());
+            assertEquals(monete + 20 * 3, Cassa.getMonete());
         }
     }
 }

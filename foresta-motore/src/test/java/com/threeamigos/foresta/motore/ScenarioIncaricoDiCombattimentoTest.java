@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
@@ -114,11 +115,11 @@ class ScenarioIncaricoDiCombattimentoTest {
             assertEquals("Fatto: torna dal mugnaio a Nyena a riscuotere.", incarico.getDescrizione());
 
             Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             incarico.controllaPreLocazione();
             incarico.segnaIntermezzoPassoMostrato("RITORNO");
             incarico.controllaInLocazione();
-            assertEquals(monete + 35, partita.gruppo().getMonete());
+            assertEquals(monete + 35, Cassa.getMonete());
             assertTrue(incarico.isCompleta());
             assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof IncaricoDiCombattimento && m != incarico),
                     "c'è già un altro incarico");

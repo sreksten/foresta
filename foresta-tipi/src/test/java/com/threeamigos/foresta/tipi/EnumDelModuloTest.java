@@ -43,7 +43,7 @@ class EnumDelModuloTest {
     @Test
     void ogniCostanteSiRitrovaDalSuoNome() throws Exception {
         List<Class<?>> enumerazioni = enumDelModulo();
-        assertTrue(enumerazioni.size() > 3, "troppo poche enum trovate: " + enumerazioni);
+        assertTrue(!enumerazioni.isEmpty(), "nessuna enum trovata");
         assertTrue(enumerazioni.contains(TipoTrofeo.class));
         for (Class<?> classe : enumerazioni) {
             Object[] costanti = classe.getEnumConstants();

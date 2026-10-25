@@ -1,6 +1,6 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.economia;
 
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.CostantiEconomia;
 
 /**
  * I prezzi nelle botteghe secondo la CONTRATTAZIONE di chi tratta. Lo sconto sugli acquisti (artefatti,
@@ -22,15 +22,15 @@ public final class RegoleContrattazione {
 		if (contrattazione <= 0) {
 			return 0;
 		}
-		return (double) contrattazione / (contrattazione + Costanti.CONTRATTAZIONE_SATURAZIONE);
+		return (double) contrattazione / (contrattazione + CostantiEconomia.CONTRATTAZIONE_SATURAZIONE);
 	}
 
 	/**
 	 * Lo sconto sugli acquisti, tra 0 e {@link Costanti#CONTRATTAZIONE_SCONTO_MASSIMO}.
 	 */
 	public static double sconto(int contrattazione) {
-		return Math.min(Costanti.CONTRATTAZIONE_SCONTO_MASSIMO,
-				Costanti.CONTRATTAZIONE_COEFFICIENTE_SCONTO * bonus(contrattazione));
+		return Math.min(CostantiEconomia.CONTRATTAZIONE_SCONTO_MASSIMO,
+				CostantiEconomia.CONTRATTAZIONE_COEFFICIENTE_SCONTO * bonus(contrattazione));
 	}
 
 	/**
@@ -38,9 +38,9 @@ public final class RegoleContrattazione {
 	 * {@link Costanti#CONTRATTAZIONE_QUOTA_VENDITA_MASSIMA}.
 	 */
 	public static double quotaVendita(int contrattazione) {
-		return Math.min(Costanti.CONTRATTAZIONE_QUOTA_VENDITA_MASSIMA,
-				Costanti.CONTRATTAZIONE_QUOTA_VENDITA_BASE
-						+ Costanti.CONTRATTAZIONE_COEFFICIENTE_VENDITA * bonus(contrattazione));
+		return Math.min(CostantiEconomia.CONTRATTAZIONE_QUOTA_VENDITA_MASSIMA,
+				CostantiEconomia.CONTRATTAZIONE_QUOTA_VENDITA_BASE
+						+ CostantiEconomia.CONTRATTAZIONE_COEFFICIENTE_VENDITA * bonus(contrattazione));
 	}
 
 	/**

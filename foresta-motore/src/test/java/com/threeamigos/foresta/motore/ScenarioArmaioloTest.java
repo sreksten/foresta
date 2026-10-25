@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.economia.CommercioDelGruppo;
+import com.threeamigos.foresta.economia.RegoleContrattazione;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
@@ -47,13 +50,13 @@ class ScenarioArmaioloTest {
 		partita.gruppo().getCapo().addArtefatto(Leggendari.con(Leggendari.SCUDO_DELL_ESATTORE).costruisci(Statistiche.getLivello()));
 		VistaScambio bottega = entraDallArmaiolo();
 		VistaArtefatto scelto = new ArrayList<>(bottega.getInventarioParteRemota()).get(0);
-		int moneteIniziali = partita.gruppo().getMonete();
+		int moneteIniziali = Cassa.getMonete();
 		int prezzo = CommercioDelGruppo.prezzoAcquisto(partita.gruppo(), scelto.getCostoAcquisto());
 
 		compra(bottega, scelto);
 
 		assertTrue(partita.eventi().haRicevuto(NotificaApprovazioneAcquistoArtefatto.class));
-		assertEquals(moneteIniziali - prezzo, partita.gruppo().getMonete());
+		assertEquals(moneteIniziali - prezzo, Cassa.getMonete());
 		assertTrue(PartitaDiTest.contiene(partita.gruppo().getInventario(), scelto));
 		assertFalse(PartitaDiTest.contiene(bottega.getInventarioParteRemota(), scelto));
 		// Lo sconto è quello della sua contrattazione, scudo compreso
@@ -67,12 +70,12 @@ class ScenarioArmaioloTest {
 		VistaScambio bottega = entraDallArmaiolo();
 		VistaArtefatto scelto = new ArrayList<>(bottega.getInventarioParteRemota()).get(0);
 		compra(bottega, scelto);
-		int moneteDopoAcquisto = partita.gruppo().getMonete();
+		int moneteDopoAcquisto = Cassa.getMonete();
 
 		vendi(bottega, scelto);
 
 		assertTrue(partita.eventi().haRicevuto(NotificaApprovazioneVenditaArtefatto.class));
-		assertEquals(moneteDopoAcquisto + CommercioDelGruppo.prezzoVendita(partita.gruppo(), scelto.getCostoAcquisto()), partita.gruppo().getMonete());
+		assertEquals(moneteDopoAcquisto + CommercioDelGruppo.prezzoVendita(partita.gruppo(), scelto.getCostoAcquisto()), Cassa.getMonete());
 		assertTrue(PartitaDiTest.contiene(bottega.getInventarioParteRemota(), scelto));
 		assertTrue(CommercioDelGruppo.prezzoVendita(partita.gruppo(), scelto.getCostoAcquisto()) < CommercioDelGruppo.prezzoAcquisto(partita.gruppo(), scelto.getCostoAcquisto()));
 	}

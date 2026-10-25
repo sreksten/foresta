@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
@@ -75,11 +76,11 @@ class ScenarioCacciatoreDiTaglieTest {
             assertEquals("RITORNO", taglia.getPassoCorrente());
 
             Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             taglia.controllaPreLocazione();
             taglia.segnaIntermezzoPassoMostrato("RITORNO");
             taglia.controllaInLocazione();
-            assertEquals(monete + 30, partita.gruppo().getMonete());
+            assertEquals(monete + 30, Cassa.getMonete());
             assertTrue(taglia.isCompleta());
             assertEquals(2, RegistroMissioni.getTutteLeMissioni().stream().filter(CacciatoreDiTaglie.class::isInstance).count(),
                     "c'è già un altro ricercato");

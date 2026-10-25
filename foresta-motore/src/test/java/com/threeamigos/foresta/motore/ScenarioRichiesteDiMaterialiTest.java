@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -101,12 +102,12 @@ class ScenarioRichiesteDiMaterialiTest {
 
             RaccoltaBottino.raccogli(new OggettoMissione(armaiolo.getId(), RichiestaDiMateriali.MATERIALE, armaiolo.getMateriali().getNome(), 2), partita.gruppo(), null);
             armaiolo.controllaPostLocazione();
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             armaiolo.controllaPreLocazione();
             armaiolo.segnaIntermezzoPassoMostrato("RITORNO");
             armaiolo.controllaInLocazione();
-            assertEquals(monete + 12 * 2 + 5, partita.gruppo().getMonete());
+            assertEquals(monete + 12 * 2 + 5, Cassa.getMonete());
             List<String> testi = partita.testi();
             assertTrue(testi.contains("Le due scaglie di viverna passano all'armaiolo, " + mastro + ", che le soppesa con l'occhio del mestiere."),
                     String.valueOf(testi));
@@ -138,10 +139,10 @@ class ScenarioRichiesteDiMaterialiTest {
 
             RaccoltaBottino.raccogli(new OggettoMissione(alchimista.getId(), RichiestaDiMateriali.MATERIALE, alchimista.getMateriali().getNome(), 3), partita.gruppo(), null);
             alchimista.controllaPostLocazione();
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             alchimista.controllaPreLocazione();
             alchimista.controllaInLocazione();
-            assertEquals(monete + 6 * 3 + 5, partita.gruppo().getMonete());
+            assertEquals(monete + 6 * 3 + 5, Cassa.getMonete());
             List<String> testi = partita.testi();
             String nomeDellAlchimista = RegistroPersonaggi.getResidente(PersonaggioNoto.ALCHIMISTA, TipoLocazione.CITTA_NYENA).getNome();
             assertTrue(testi.contains("I tre fiori di aconito passano all'alchimista, " + nomeDellAlchimista + ", che li annusa soddisfatto."), String.valueOf(testi));
@@ -173,10 +174,10 @@ class ScenarioRichiesteDiMaterialiTest {
 
             RaccoltaBottino.raccogli(new OggettoMissione(locandiere.getId(), RichiestaDiMateriali.MATERIALE, locandiere.getMateriali().getNome(), 3), partita.gruppo(), null);
             locandiere.controllaPostLocazione();
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             locandiere.controllaPreLocazione();
             locandiere.controllaInLocazione();
-            assertEquals(monete + 5 * 3 + 5, partita.gruppo().getMonete());
+            assertEquals(monete + 5 * 3 + 5, Cassa.getMonete());
             assertTrue(partita.testi().contains("Le tre carpe passano al locandiere, che le porta subito in cucina."),
                     String.valueOf(partita.testi()));
         }

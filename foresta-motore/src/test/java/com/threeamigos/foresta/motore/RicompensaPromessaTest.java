@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.CacciaAiGoblin;
@@ -38,11 +39,11 @@ class RicompensaPromessaTest {
                 partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
             }
             caccia.controllaPostLocazione();
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             caccia.controllaPreLocazione();
             caccia.controllaInLocazione();
 
-            assertEquals(monete + 45, partita.gruppo().getMonete());
+            assertEquals(monete + 45, Cassa.getMonete());
             assertTrue(partita.testi().stream().anyMatch(t -> t.contains("paga le 45 monete promesse")), String.valueOf(partita.testi()));
         }
     }

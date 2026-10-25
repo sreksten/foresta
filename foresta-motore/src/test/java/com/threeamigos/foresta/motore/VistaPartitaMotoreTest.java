@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -29,7 +30,7 @@ class VistaPartitaMotoreTest {
                     () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
             // Il gruppo della partita, non uno tenuto da parte prima che cominciasse
             assertSame(GruppoGiocatore.getIstanza(), vista.getGruppoGiocatore());
-            assertEquals(partita.gruppo().getMonete(), vista.getGruppoGiocatore().getMonete());
+            assertEquals(Cassa.getMonete(), vista.getCassa().getMonete());
             CoordinateMD coordinate = vista.getMappa().getPosizioneDelGruppo();
             assertEquals(TipoLocazione.CITTA_FLEENA, vista.getMappa().getLocazione(coordinate));
             assertEquals(TipoLocazione.CITTA_FLEENA, vista.getMappa().getLocazioneDelGruppo());

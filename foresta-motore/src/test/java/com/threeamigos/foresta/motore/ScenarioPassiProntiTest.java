@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -92,9 +93,9 @@ class ScenarioPassiProntiTest {
             assertEquals("RITORNO", missione.getPassoCorrente());
             Foresta.setPosizioneDelGruppo(nyena);
             missione.controllaPreLocazione();
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             missione.controllaInLocazione();
-            assertEquals(monete + 15, partita.gruppo().getMonete());
+            assertEquals(monete + 15, Cassa.getMonete());
             assertTrue(missione.isCompleta());
             assertTrue(partita.testi().contains("Il mercante paga 15 monete."), String.valueOf(partita.testi()));
         }

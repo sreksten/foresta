@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.economia.CommercioDelGruppo;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
@@ -93,8 +95,8 @@ class RiprogrammazioneTest {
 	void laRiprogrammazioneVaSempreMaleELArtefattoSiSpezza() {
 		ModelloDati.setIstanza(new ModelloDati());
 		GruppoGiocatore gruppo = new GruppoGiocatore();
-		gruppo.subMonete(gruppo.getMonete());
-		gruppo.addMonete(100);
+		Cassa.subMonete(Cassa.getMonete());
+		Cassa.addMonete(100);
 		Artefatto spada = spadaCon(3);
 		Collection<IncantamentoMD> originali = new ArrayList<>(spada.getIncantamenti());
 		Artefatto libro = libro();
@@ -110,10 +112,10 @@ class RiprogrammazioneTest {
 
 		List<NotificaAvvisoIncantatura> avvisi = new ArrayList<>();
 		BusEventi.iscriviti(NotificaAvvisoIncantatura.class, avvisi::add);
-		int monete = gruppo.getMonete();
+		int monete = Cassa.getMonete();
 		assertEquals(Optional.empty(), CommercioDelGruppo.incanta(gruppo, banco, ""));
 
-		assertEquals(monete - costo, gruppo.getMonete());
+		assertEquals(monete - costo, Cassa.getMonete());
 		assertTrue(banco.getInventario().isEmpty(), "il banco si svuota");
 		assertFalse(avvisi.isEmpty(), "l'incantatore dice che ha sbagliato");
 		// L'artefatto è senza incantamenti, mantiene il resto; libro e ingredienti non usati tornano nel gruppo

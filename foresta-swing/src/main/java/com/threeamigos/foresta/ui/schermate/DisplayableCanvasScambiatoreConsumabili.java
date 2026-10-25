@@ -128,7 +128,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
         Image i = ImageCache.get("Monete", coloreTestata);
         graphics.drawImage(i, xMinimaZonaCentrale, y, null);
-        i = ImageCache.get(vistaPartita.getGruppoGiocatore().getMonete(), font, coloreTestata);
+        i = ImageCache.get(vistaPartita.getCassa().getMonete(), font, coloreTestata);
         graphics.drawImage(i, xMassimaZonaCentrale - i.getWidth(null), y, null);
 
         y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;

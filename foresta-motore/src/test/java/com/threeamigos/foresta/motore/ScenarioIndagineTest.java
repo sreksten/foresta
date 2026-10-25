@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
@@ -86,11 +87,11 @@ class ScenarioIndagineTest {
             assertTrue(partita.testi().contains("Le campane sono salve. Il sacerdote aspetta a Nyena."), String.valueOf(partita.testi()));
 
             Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             indagine.controllaPreLocazione();
             indagine.segnaIntermezzoPassoMostrato("RITORNO");
             indagine.controllaInLocazione();
-            assertEquals(monete + 35, partita.gruppo().getMonete());
+            assertEquals(monete + 35, Cassa.getMonete());
             assertTrue(indagine.isCompleta());
             assertEquals("Qui c'erano le campane.", indagine.getRicordoDellaLocazione());
             assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof LIndagine && m != indagine));

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -105,14 +106,14 @@ class ScenarioIlViandanteTest {
             viandante.controllaPreLocazione();
             assertEquals("RITORNO", viandante.getPassoCorrente(), "il viandante è nel bosco");
 
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             Foresta.setPosizioneDelGruppo(bosco);
             viandante.controllaPreLocazione();
             assertEquals("RITORNO", viandante.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
             viandante.segnaIntermezzoPassoMostrato("RITORNO");
             viandante.controllaInLocazione();
             assertTrue(viandante.isCompleta());
-            assertEquals(monete + viandante.getMonete(), partita.gruppo().getMonete());
+            assertEquals(monete + viandante.getMonete(), Cassa.getMonete());
             assertEquals(richiesta.getMonete() * viandante.getQuantita() * Statistiche.getLivello(), viandante.getMonete());
         }
     }

@@ -95,7 +95,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         graphics.drawImage(immaginePersonaggio, (width - immaginePersonaggio.getWidth()) / 2, y - immaginePersonaggio.getHeight(), null);
         y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
-        y = disegnaValore(graphics, "Monete", String.valueOf(vistaPartita.getGruppoGiocatore().getMonete()), y, coloreTestata);
+        y = disegnaValore(graphics, "Monete", String.valueOf(vistaPartita.getCassa().getMonete()), y, coloreTestata);
 
         boolean conIngredienti = banco.getInventarioParteRemota().stream().anyMatch(a -> a.getTipo().isIngrediente());
         if (conIngredienti) {

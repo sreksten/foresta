@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.mappa.Foresta;
 
@@ -78,12 +79,12 @@ class ScenarioOggettoSmarritoTest {
             smarrito.controllaPostLocazione();
             assertEquals("Hai trovato la fede nuziale: riportala al mugnaio di Nyena.", smarrito.getDescrizione());
 
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             smarrito.controllaPreLocazione();
             smarrito.segnaIntermezzoPassoMostrato("RITORNO");
             smarrito.controllaInLocazione();
-            assertEquals(monete + 15, partita.gruppo().getMonete());
+            assertEquals(monete + 15, Cassa.getMonete());
             List<String> testi = partita.testi();
             assertTrue(testi.contains("La fede nuziale torna al mugnaio."), String.valueOf(testi));
             assertTrue(smarrito.isCompleta());

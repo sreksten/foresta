@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -143,11 +144,11 @@ class ScenarioCombattiScortaConsegnaTest {
             mandragola.controllaPostLocazione();
             assertEquals("RITORNO", mandragola.getPassoCorrente());
 
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             mandragola.controllaPreLocazione();
             mandragola.controllaInLocazione();
             assertEquals(0, mandragola.getContatore(RichiestaDiMateriali.MATERIALE), "le radici sono passate all'alchimista");
-            assertEquals(monete + 25, partita.gruppo().getMonete());
+            assertEquals(monete + 25, Cassa.getMonete());
             assertTrue(mandragola.isCompleta());
             List<String> testi = partita.testi();
             String nomeDellAlchimista = RegistroPersonaggi.getResidente(PersonaggioNoto.ALCHIMISTA, TipoLocazione.CITTA_NYENA).getNome();

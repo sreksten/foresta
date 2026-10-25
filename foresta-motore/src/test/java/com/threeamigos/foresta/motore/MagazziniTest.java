@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.MagazziniDeiNegozi;
+import com.threeamigos.foresta.tipi.CostantiEconomia;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
@@ -12,7 +14,6 @@ import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import org.junit.jupiter.api.Test;
@@ -84,18 +85,18 @@ class MagazziniTest {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
 					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			int livelloMondo = 6;
-			int scartatiSotto = livelloMondo - Costanti.MAGAZZINO_SCARTO_SOTTO_LIVELLO;
+			int scartatiSotto = livelloMondo - CostantiEconomia.MAGAZZINO_SCARTO_SOTTO_LIVELLO;
 
 			partita.pubblica(new NotificaAumentoLivelloMondo(livelloMondo));
 
 			Collection<Artefatto> armaiolo = magazzino(TipoNegozio.ARMAIOLO).getInventario();
 			assertTrue(armaiolo.stream().allMatch(a -> a.getLivello() >= scartatiSotto), "gli artefatti troppo deboli sono scartati");
 			long nuovi = armaiolo.stream()
-					.filter(a -> a.getLivello() >= livelloMondo - Costanti.MAGAZZINO_DIVARIO_LIVELLO
-							&& a.getLivello() <= livelloMondo + Costanti.MAGAZZINO_DIVARIO_LIVELLO)
+					.filter(a -> a.getLivello() >= livelloMondo - CostantiEconomia.MAGAZZINO_DIVARIO_LIVELLO
+							&& a.getLivello() <= livelloMondo + CostantiEconomia.MAGAZZINO_DIVARIO_LIVELLO)
 					.count();
-			assertTrue(nuovi >= Costanti.MAGAZZINO_ARTEFATTI_ARMAIOLO, "arriva merce attorno al nuovo livello del mondo");
-			assertEquals(Costanti.MAGAZZINO_PERGAMENE, magazzino(TipoNegozio.VENDITORE_DI_PERGAMENE).getInventario().size(),
+			assertTrue(nuovi >= CostantiEconomia.MAGAZZINO_ARTEFATTI_ARMAIOLO, "arriva merce attorno al nuovo livello del mondo");
+			assertEquals(CostantiEconomia.MAGAZZINO_PERGAMENE, magazzino(TipoNegozio.VENDITORE_DI_PERGAMENE).getInventario().size(),
 					"il venditore rinnova le pergamene");
 		}
 	}

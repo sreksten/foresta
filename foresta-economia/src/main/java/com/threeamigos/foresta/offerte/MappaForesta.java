@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.offerte;
 
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.tipi.CostantiEconomia;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneConoscenzaMappa;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -7,7 +9,7 @@ import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
-import static com.threeamigos.foresta.tipi.Costanti.COSTO_MAPPA_DELLA_FORESTA;
+import static com.threeamigos.foresta.tipi.CostantiEconomia.COSTO_MAPPA_DELLA_FORESTA;
 
 /**
  * L'offerta della mappa completa della Foresta, a pagamento.
@@ -16,7 +18,7 @@ public class MappaForesta implements Offerta {
 
 	@Override
 	public boolean isFattibile(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		return gruppo.getMonete() >= COSTO_MAPPA_DELLA_FORESTA;
+		return Cassa.getMonete() >= COSTO_MAPPA_DELLA_FORESTA;
 	}
 
 	@Override
@@ -45,7 +47,7 @@ public class MappaForesta implements Offerta {
 
 	@Override
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		gruppo.subMonete(COSTO_MAPPA_DELLA_FORESTA);
+		Cassa.subMonete(COSTO_MAPPA_DELLA_FORESTA);
 		Foresta.ottieniMappa();
 		BusEventi.pubblica(new NotificaVariazioneConoscenzaMappa(0, 0, Foresta.getDimensioneX(), Foresta.getDimensioneY()));
 	}

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.personaggi.GestoreProgressione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -98,7 +99,7 @@ class StrumentiDiSviluppoMotoreTest {
                 strumenti.impostaScorta(scorta, -5);
                 assertEquals(0, strumenti.getScorta(scorta), scorta.name());
             }
-            assertEquals(0, partita.gruppo().getMonete());
+            assertEquals(0, Cassa.getMonete());
             strumenti.impostaIncantesimi(TipoIncantesimo.FUOCO, 9);
             assertEquals(9, partita.gruppo().getIncantesimi(TipoIncantesimo.FUOCO));
             strumenti.impostaIncantesimi(TipoIncantesimo.FUOCO, 4);

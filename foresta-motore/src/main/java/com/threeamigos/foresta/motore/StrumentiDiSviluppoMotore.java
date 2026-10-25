@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.personaggi.GestoreProgressione;
@@ -155,9 +156,9 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         switch (scorta) {
             case MONETE:
-                return gruppo.getMonete();
+                return Cassa.getMonete();
             case PREZIOSI:
-                return gruppo.getPreziosi();
+                return Cassa.getPreziosi();
             case POZIONI_SALUTE:
                 return gruppo.getPozioniSalute();
             case POZIONI_SALUTE_GRANDI:
@@ -179,10 +180,10 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
         int differenza = Math.max(0, valore) - getScorta(scorta);
         switch (scorta) {
             case MONETE:
-                gruppo.addMonete(differenza);
+                Cassa.addMonete(differenza);
                 break;
             case PREZIOSI:
-                gruppo.addPreziosi(differenza);
+                Cassa.addPreziosi(differenza);
                 break;
             case POZIONI_SALUTE:
                 gruppo.addPozioniSalute(differenza);

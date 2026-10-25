@@ -14,7 +14,7 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**
  * Il gruppo del giocatore. Oltre a quanto tiene {@link GruppoMD} (personaggi, capo, pergamene e pozioni) porta con sé
- * le monete, le pietre preziose, gli artefatti dell'inventario generale (quelli che nessun
+ * gli artefatti dell'inventario generale (quelli che nessun
  * personaggio sta usando), gli ospiti e il conto delle sfide a carta, forbici e sasso vinte.
  * <p>
  * Gli <b>ospiti</b> viaggiano con il gruppo senza farne parte; fra loro, solo quelli registrati come vulnerabili
@@ -27,8 +27,6 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
  */
 public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
-	private int monete;
-	private int preziosi;
 	// Artefatti disponibili al gruppo ma non in uso da un personaggio specifico
 	private final List<ArtefattoMD> artefatti = new ArrayList<>();
 	// Chi viaggia con il gruppo senza farne parte (vedi GruppoGiocatore.aggiungiOspite)
@@ -42,22 +40,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	// così se ne ottiene al più uno. Un rifiuto, o un gruppo già al completo, non lo alzano: l'altra missione può ancora offrirlo.
 	// Chi lo legge e lo scrive: OffertaDelSacerdote. Si azzera con una partita nuova (reimposta).
 	private boolean sacerdoteAccolto;
-
-	public int getMonete() {
-		return monete;
-	}
-
-	public void setMonete(int monete) {
-		this.monete = monete;
-	}
-
-	public int getPreziosi() {
-		return preziosi;
-	}
-
-	public void setPreziosi(int preziosi) {
-		this.preziosi = preziosi;
-	}
 
 	/**
 	 * Gli artefatti del gruppo che nessun personaggio sta usando (l'inventario generale). Di sola lettura: si cambia
@@ -135,12 +117,10 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
 	/**
 	 * Azzera il gruppo per una partita nuova: oltre a quanto azzera {@link GruppoMD#reimposta()}, reimposta
-	 * monete, pietre preziose, artefatti, ospiti e ospiti vulnerabili, e il conto delle sfide vinte.
+	 * artefatti, ospiti e ospiti vulnerabili, e il conto delle sfide vinte.
 	 */
 	public void reimposta() {
 		super.reimposta();
-		monete = 0;
-		preziosi = 0;
 		artefatti.clear();
 		ospiti.clear();
 		ospitiVulnerabili.clear();
@@ -149,7 +129,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	}
 
 	/**
-	 * Scrive il gruppo (vedi {@link GruppoMD#salva(PrintWriter)}), poi una riga con monete, preziosi, pergamene, pozioni
+	 * Scrive il gruppo (vedi {@link GruppoMD#salva(PrintWriter)}), poi una riga con pergamene, pozioni
 	 * e sfide vinte, e infine gli artefatti, gli ospiti e gli identificativi degli ospiti vulnerabili, ciascun
 	 * elenco preceduto dal suo numero di elementi.
 	 */
@@ -157,8 +137,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	public void salva(PrintWriter stream) throws IOException {
 		super.salva(stream);
 		List<Object> campi = new ArrayList<>(Arrays.asList(
-				monete,
-				preziosi,
 				incantesimi.size()));
 		for (Map.Entry<TipoIncantesimo, Integer> incantesimo : incantesimi.entrySet()) {
 			campi.add(incantesimo.getKey());
@@ -195,8 +173,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	public void leggi(BufferedReader stream) throws IOException {
 		super.leggi(stream);
 		LettoreCampi st = new LettoreCampi(stream.readLine());
-		monete = st.intero();
-		preziosi = st.intero();
 		incantesimi.clear();
 		int numeroIncantesimi = st.intero();
 		for (int i = 0; i < numeroIncantesimi; i++) {

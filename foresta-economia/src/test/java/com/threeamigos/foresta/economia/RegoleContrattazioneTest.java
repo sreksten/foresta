@@ -1,6 +1,6 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.economia;
 
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.CostantiEconomia;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,8 +24,8 @@ class RegoleContrattazioneTest {
     @Test
     void iLimitiNonSiSuperanoMai() {
         for (int contrattazione = 0; contrattazione <= 1000; contrattazione++) {
-            assertTrue(RegoleContrattazione.sconto(contrattazione) <= Costanti.CONTRATTAZIONE_SCONTO_MASSIMO);
-            assertTrue(RegoleContrattazione.quotaVendita(contrattazione) <= Costanti.CONTRATTAZIONE_QUOTA_VENDITA_MASSIMA);
+            assertTrue(RegoleContrattazione.sconto(contrattazione) <= CostantiEconomia.CONTRATTAZIONE_SCONTO_MASSIMO);
+            assertTrue(RegoleContrattazione.quotaVendita(contrattazione) <= CostantiEconomia.CONTRATTAZIONE_QUOTA_VENDITA_MASSIMA);
         }
     }
 

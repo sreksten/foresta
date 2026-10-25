@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.economia.CommercioDelGruppo;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.artefatti.RegoleIncantatura;
@@ -43,8 +45,8 @@ class IncantatoreTest {
     void nuovoGruppo() {
         ModelloDati.setIstanza(new ModelloDati());
         gruppo = new GruppoGiocatore();
-        gruppo.subMonete(gruppo.getMonete());
-        gruppo.addMonete(100);
+        Cassa.subMonete(Cassa.getMonete());
+        Cassa.addMonete(100);
     }
 
     // --- Cosa si può mettere sul banco
@@ -141,7 +143,7 @@ class IncantatoreTest {
         Optional<TipoMotivoRifiutoIncantatura> esito = CommercioDelGruppo.incanta(gruppo, incantatore.getBanco(), "lama del drago");
         // Then
         assertEquals(Optional.empty(), esito);
-        assertEquals(100 - 20, gruppo.getMonete());
+        assertEquals(100 - 20, Cassa.getMonete());
         assertTrue(incantatore.getBanco().getInventario().isEmpty());
         assertEquals(1, gruppo.getInventario().size());
         Artefatto incantata = gruppo.getInventario().iterator().next();
@@ -164,7 +166,7 @@ class IncantatoreTest {
 
     @Test
     void unaFusioneRifiutataNonToccaNulla() {
-        gruppo.subMonete(gruppo.getMonete());
+        Cassa.subMonete(Cassa.getMonete());
         BancoDiLavoro banco = new BancoDiLavoro();
         banco.addArtefatto(artefatto(TipoArtefatto.SPADA, 4));
         banco.addArtefatto(pergamena(1));
@@ -260,7 +262,7 @@ class IncantatoreTest {
         assertEquals(CostantiArtefatti.FUSIONE_COSTO_BASE, incantatore.getCostoFusione());
 
         assertEquals(Optional.empty(), CommercioDelGruppo.incanta(gruppo, incantatore.getBanco(), ""));
-        assertEquals(100 - CostantiArtefatti.FUSIONE_COSTO_BASE, gruppo.getMonete());
+        assertEquals(100 - CostantiArtefatti.FUSIONE_COSTO_BASE, Cassa.getMonete());
         assertEquals(1, gruppo.getInventario().size(), "l'aggiornamento si consuma");
         assertEquals(4, gruppo.getInventario().iterator().next().getLivello());
     }

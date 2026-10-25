@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.economia.MagazziniDeiNegozi;
+import com.threeamigos.foresta.tipi.CostantiEconomia;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.tipi.Quadrante;
@@ -151,12 +154,12 @@ class ScenarioNegoziNellaForestaTest {
                 assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(covo));
 
                 Foresta.setPosizioneDelGruppo(cittaCoordinate);
-                int monete = partita.gruppo().getMonete();
+                int monete = Cassa.getMonete();
                 negozio.controllaPreLocazione();
                 negozio.segnaIntermezzoPassoMostrato("RITORNO");
                 negozio.controllaInLocazione();
                 assertTrue(negozio.isCompleta());
-                assertTrue(partita.gruppo().getMonete() > monete);
+                assertTrue(Cassa.getMonete() > monete);
 
                 TipoLocazione attesa = EnumSet.of(TipoLocazione.ALCHIMISTA, TipoLocazione.ARMAIOLO,
                         TipoLocazione.VENDITORE_DI_PERGAMENE, TipoLocazione.INCANTATORE).stream()
@@ -171,10 +174,10 @@ class ScenarioNegoziNellaForestaTest {
                 assertTrue(md.getNome().contains(negoziante.substring(0, negoziante.indexOf(" da "))), md.getNome());
                 assertTrue(negozio.getRicordoDellaLocazione().contains(md.getNome()), negozio.getRicordoDellaLocazione());
                 if (attesa == TipoLocazione.ARMAIOLO) {
-                    assertEquals(Costanti.MAGAZZINO_ARTEFATTI_ARMAIOLO,
+                    assertEquals(CostantiEconomia.MAGAZZINO_ARTEFATTI_ARMAIOLO,
                             MagazziniDeiNegozi.getScambiatorePerNegozio(covo, TipoNegozio.ARMAIOLO).getInventario().size());
                 } else if (attesa == TipoLocazione.VENDITORE_DI_PERGAMENE) {
-                    assertEquals(Costanti.MAGAZZINO_PERGAMENE,
+                    assertEquals(CostantiEconomia.MAGAZZINO_PERGAMENE,
                             MagazziniDeiNegozi.getScambiatorePerNegozio(covo, TipoNegozio.VENDITORE_DI_PERGAMENE).getInventario().size());
                 }
             }

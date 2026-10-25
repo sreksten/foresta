@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.missioni.RegistroMissioni;
@@ -71,11 +72,11 @@ class ScenarioDocumentazioneTest {
                     documentazione.getDescrizione());
 
             Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             documentazione.controllaPreLocazione();
             documentazione.segnaIntermezzoPassoMostrato("RITORNO");
             documentazione.controllaInLocazione();
-            assertEquals(monete + 35, partita.gruppo().getMonete());
+            assertEquals(monete + 35, Cassa.getMonete());
             assertTrue(documentazione.isCompleta());
         }
     }

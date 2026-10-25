@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.tipi.CostantiMissioni;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
@@ -80,16 +81,16 @@ class ScenarioLaForgiaTest {
             assertEquals("FORGIATURA", forgia.getPassoCorrente());
 
             // Senza le monete per il lavoro la forgia non si accende
-            partita.gruppo().addMonete(-partita.gruppo().getMonete());
+            Cassa.addMonete(-Cassa.getMonete());
             int giornoEOra = LineaTemporale.getGiorno() * 24 + LineaTemporale.getOra();
             forgia.controllaInLocazione();
             assertEquals("FORGIATURA", forgia.getPassoCorrente());
             assertEquals(giornoEOra, LineaTemporale.getGiorno() * 24 + LineaTemporale.getOra(), "non è passato tempo");
 
             // Con le monete si forgia: i materiali e le monete si consumano, passano le ore di lavoro
-            partita.gruppo().addMonete(costo + 7);
+            Cassa.addMonete(costo + 7);
             forgia.controllaInLocazione();
-            assertEquals(7, partita.gruppo().getMonete(), "il lavoro è costato quanto promesso");
+            assertEquals(7, Cassa.getMonete(), "il lavoro è costato quanto promesso");
             assertEquals(0, forgia.getContatore(LaForgia.METALLO));
             assertEquals(0, forgia.getContatore(LaForgia.TROFEO));
             assertEquals(giornoEOra + CostantiMissioni.FORGIA_ORE_DI_LAVORO, LineaTemporale.getGiorno() * 24 + LineaTemporale.getOra());

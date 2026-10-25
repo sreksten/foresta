@@ -205,8 +205,6 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		super.reimposta();
 		md.reimposta();
 		ospiti.clear();
-		md.setMonete(CostantiPersonaggi.MONETE_INIZIALI);
-		md.setPreziosi(CostantiPersonaggi.PREZIOSI_INIZIALI);
 		md.setIncantesimi(TipoIncantesimo.ARIA, 3);
 		md.setIncantesimi(TipoIncantesimo.ACQUA, 3);
 		md.setIncantesimi(TipoIncantesimo.TERRA, 3);
@@ -336,61 +334,11 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		md.setSacerdoteAccolto(accolto);
 	}
 
-	public final int getMonete() {
-		return md.getMonete();
-	}
-
-	/**
-	 * Aggiunge monete al gruppo e lo annuncia alla UI.
-	 */
-	public final void addMonete(int quantita) {
-		int valorePrecedente = md.getMonete();
-		int valoreAttuale = valorePrecedente + quantita;
-		md.setMonete(valoreAttuale);
-		BusEventi.pubblica(new NotificaVariazioneDisponibilitaMonete(valorePrecedente, valoreAttuale));
-	}
-
-	/**
-	 * Toglie monete al gruppo.
-	 */
-	public final void subMonete(int quantita) {
-		addMonete(-quantita);
-	}
-
 	/**
 	 * Nelle botteghe il gruppo manda avanti chi sa trattare meglio: la CONTRATTAZIONE più alta tra i personaggi vivi.
 	 */
 	public final int getContrattazione() {
 		return getPersonaggiVivi().stream().mapToInt(Personaggio::getContrattazione).max().orElse(0);
-	}
-
-	/**
-	 * Il gruppo vende tutti i suoi preziosi per quelle monete, già calcolate da chi chiama (a che prezzo si vendano lo sa il mondo).
-	 */
-	public final void vendiPreziosiPer(int monete) {
-		addMonete(monete);
-		subPreziosi(md.getPreziosi());
-	}
-
-	public final int getPreziosi() {
-		return md.getPreziosi();
-	}
-
-	/**
-	 * Aggiunge pietre preziose al gruppo e lo annuncia alla UI.
-	 */
-	public final void addPreziosi(int quantita) {
-		int valorePrecedente = md.getPreziosi();
-		int valoreAttuale = valorePrecedente + quantita;
-		md.setPreziosi(valoreAttuale);
-		BusEventi.pubblica(new NotificaVariazioneDisponibilitaPreziosi(valorePrecedente, valoreAttuale));
-	}
-
-	/**
-	 * Toglie pietre preziose al gruppo.
-	 */
-	public final void subPreziosi(int quantita) {
-		addPreziosi(-quantita);
 	}
 
 	@Override
@@ -414,7 +362,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	/**
 	 * Il gruppo fugge: ogni personaggio vivo subisce delle ferite (vedi {@link Personaggio#fugge}) e il gruppo perde una parte delle sue
 	 * scorte, il {@value CostantiPersonaggi#FUGA_PERDITA_CONSUMABILI_PERCENTUALE}% di ognuna (arrotondato per difetto: con poche pozioni non se ne
-	 * perdono): monete, preziosi, pergamene e pozioni. Gli artefatti restano.
+	 * perdono): pergamene e pozioni. Gli artefatti restano; le monete e i preziosi li perde la cassa (vedi economia.Cassa).
 	 */
 	public final void fugge() {
 		BusEventi.pubblica(new NotificaTestoFrase(chiMaiuscolo() + ", in preda al panico, cerca la salvezza nella fuga!" +
@@ -422,8 +370,6 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 
 		Function<Integer, Integer> calcolaPerdita = m -> m * CostantiPersonaggi.FUGA_PERDITA_CONSUMABILI_PERCENTUALE / 100;
 
-		subMonete(calcolaPerdita.apply(md.getMonete()));
-		subPreziosi(calcolaPerdita.apply(md.getPreziosi()));
 		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
 			subIncantesimi(tipoIncantesimo, calcolaPerdita.apply(md.getIncantesimi(tipoIncantesimo)));
 		}
@@ -539,19 +485,5 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			equipaggia(personaggio, artefatto);
 			BusEventi.pubblica(eventoRichiestaPrelievoArtefatto.approvazione());
 		}
-	}
-
-	/**
-	 * Compra l'artefatto a quel prezzo, già calcolato da chi chiama: lo mette nell'inventario e toglie le monete, se il gruppo le ha.
-	 *
-	 * @return true se il gruppo aveva abbastanza monete
-	 */
-	public boolean compra(Artefatto artefatto, int costo) {
-		if (getMonete() < costo) {
-			return false;
-		}
-		addArtefatto(artefatto);
-		subMonete(costo);
-		return true;
 	}
 }

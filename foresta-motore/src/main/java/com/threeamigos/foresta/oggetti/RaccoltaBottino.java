@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.tipi.CostantiBottino;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.motore.LocazioneCorrente;
@@ -74,9 +75,9 @@ public final class RaccoltaBottino {
 		} else if (oggetto instanceof Cofano) {
 			apri((Cofano) oggetto, gruppo);
 		} else if (oggetto instanceof Moneta) {
-			gruppo.addMonete(oggetto.getQuantita());
+			Cassa.addMonete(oggetto.getQuantita());
 		} else if (oggetto instanceof Corona || oggetto instanceof PietraPreziosa) {
-			gruppo.addPreziosi(oggetto.getQuantita());
+			Cassa.addPreziosi(oggetto.getQuantita());
 		} else if (oggetto instanceof OggettoMissione) {
 			OggettoMissione dellaMissione = (OggettoMissione) oggetto;
 			RegistroMissioni.getMissione(dellaMissione.getIdMissione())
@@ -172,10 +173,10 @@ public final class RaccoltaBottino {
 				gruppo.addPozioniMagia(1);
 			} else if (tipo == 6) {
 				sb.append("trova alcune monete d'oro.");
-				gruppo.addMonete(Dado.tira(5, 10));
+				Cassa.addMonete(Dado.tira(5, 10));
 			} else if (tipo == 7) {
 				sb.append("trova alcune pietre preziose.");
-				gruppo.addPreziosi(Dado.tira(5, 10));
+				Cassa.addPreziosi(Dado.tira(5, 10));
 			}
 			if (i < cofano.getQuantita() - 1) {
 				sb.append(' ');

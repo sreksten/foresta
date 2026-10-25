@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
@@ -103,11 +104,11 @@ class ScenarioTorneoTest {
 
             // In città, la borsa del vincitore
             Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             torneo.controllaPreLocazione();
             torneo.segnaIntermezzoPassoMostrato("RITORNO");
             torneo.controllaInLocazione();
-            assertEquals(monete + 40, partita.gruppo().getMonete());
+            assertEquals(monete + 40, Cassa.getMonete());
             assertTrue(torneo.isCompleta());
         }
     }

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -80,9 +81,9 @@ class ScenarioTrofeiECartografoTest {
             capitano.controllaPostLocazione();
             assertEquals("RITORNO", capitano.getPassoCorrente());
 
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             tornaARiscuotere(partita, capitano);
-            assertEquals(monete + 6 * 3 + 5, partita.gruppo().getMonete());
+            assertEquals(monete + 6 * 3 + 5, Cassa.getMonete());
             assertTrue(capitano.isCompleta());
             List<String> testi = partita.testi();
             assertTrue(testi.contains("Le tre orecchie di goblin passano al capitano delle guardie, " + nomeDelCapitano + ", che le conta per bene."), String.valueOf(testi));
@@ -110,9 +111,9 @@ class ScenarioTrofeiECartografoTest {
             assertEquals("RITORNO", cartografo.getPassoCorrente());
             assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("Avete visto abbastanza foresta")), String.valueOf(partita.testi()));
 
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             tornaARiscuotere(partita, cartografo);
-            assertEquals(monete + 3 * 6 + 5, partita.gruppo().getMonete());
+            assertEquals(monete + 3 * 6 + 5, Cassa.getMonete());
             assertTrue(cartografo.isCompleta());
             assertEquals(2, RegistroMissioni.getTutteLeMissioni().stream().filter(IlCartografo.class::isInstance).count(),
                     "il cartografo avrà altre zone da disegnare");

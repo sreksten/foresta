@@ -13,7 +13,7 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Il gruppo del giocatore: personaggi e capo, pergamene e pozioni (GruppoMD), e in più monete, preziosi, posizione, sfide,
+ * Il gruppo del giocatore: personaggi e capo, pergamene e pozioni (GruppoMD), e in più sfide,
  * artefatti e ospiti, e come si salva.
  */
 class GruppoGiocatoreMDTest {
@@ -44,16 +44,12 @@ class GruppoGiocatoreMDTest {
         gruppo.setPozioniMagia(3);
         gruppo.setPozioniMagiaGrande(4);
         gruppo.setPozioniAumentoLivello(5);
-        gruppo.setMonete(100);
-        gruppo.setPreziosi(7);
         gruppo.setSfideVinte(2);
         assertEquals(1, gruppo.getPozioniSalute());
         assertEquals(2, gruppo.getPozioniSaluteGrande());
         assertEquals(3, gruppo.getPozioniMagia());
         assertEquals(4, gruppo.getPozioniMagiaGrande());
         assertEquals(5, gruppo.getPozioniAumentoLivello());
-        assertEquals(100, gruppo.getMonete());
-        assertEquals(7, gruppo.getPreziosi());
         assertEquals(2, gruppo.getSfideVinte());
     }
 
@@ -75,8 +71,6 @@ class GruppoGiocatoreMDTest {
         gruppo.setIncantesimi(TipoIncantesimo.FUOCO, 3);
         gruppo.setPozioniSalute(2);
         gruppo.setPozioniMagiaGrande(1);
-        gruppo.setMonete(250);
-        gruppo.setPreziosi(4);
         gruppo.setSfideVinte(1);
         gruppo.setSacerdoteAccolto(true);
         gruppo.aggiungiArtefatto(ArtefattiDiTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla"));
@@ -91,8 +85,6 @@ class GruppoGiocatoreMDTest {
         assertEquals(3, riletto.getIncantesimi(TipoIncantesimo.FUOCO));
         assertEquals(2, riletto.getPozioniSalute());
         assertEquals(1, riletto.getPozioniMagiaGrande());
-        assertEquals(250, riletto.getMonete());
-        assertEquals(4, riletto.getPreziosi());
         assertEquals(1, riletto.getSfideVinte());
         assertTrue(riletto.isSacerdoteAccolto());
         assertEquals("l'anello", riletto.getArtefatti().iterator().next().getNome());

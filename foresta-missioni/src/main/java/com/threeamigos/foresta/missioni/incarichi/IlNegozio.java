@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.economia.MagazziniDeiNegozi;
 import com.threeamigos.foresta.tipi.AspettoDelMandante;
 import com.threeamigos.foresta.tipi.Quadrante;
 
@@ -337,9 +338,9 @@ public abstract class IlNegozio extends IncaricoInCitta {
 		modelloDati.setNome(getParametro(NOME_BOTTEGA));
 		modelloDati.aggiungiProprieta(RegistroPersonaggi.NEGOZIANTE, RegistroPersonaggi.getNomeCompleto(RegistroPersonaggi.getResidente(negoziante, getCitta())));
 		if (bottega == TipoLocazione.ARMAIOLO) {
-			RegistroMissioni.riempiMagazzino(posto, TipoNegozio.ARMAIOLO);
+			MagazziniDeiNegozi.riempiMagazzino(posto, TipoNegozio.ARMAIOLO);
 		} else if (bottega == TipoLocazione.VENDITORE_DI_PERGAMENE) {
-			RegistroMissioni.riempiMagazzino(posto, TipoNegozio.VENDITORE_DI_PERGAMENE);
+			MagazziniDeiNegozi.riempiMagazzino(posto, TipoNegozio.VENDITORE_DI_PERGAMENE);
 		}
 		Foresta.setLocazioneConosciuta(posto);
 		BusEventi.pubblica(new NotificaTestoParagrafo(testo(APERTURA)));

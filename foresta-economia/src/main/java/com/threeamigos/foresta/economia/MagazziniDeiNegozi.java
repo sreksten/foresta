@@ -1,5 +1,6 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.economia;
 
+import com.threeamigos.foresta.tipi.CostantiEconomia;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
@@ -12,30 +13,42 @@ import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.RegistroArtefattiMD;
+import com.threeamigos.foresta.modellodati.MagazziniMD;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
  * I magazzini dei negozi delle città e delle botteghe della Foresta: come si riempiono, come si riforniscono quando il mondo sale di
- * livello, e che cosa fanno di quanto il gruppo vende loro. I dati stanno nel {@code RegistroArtefattiMD}, insieme agli artefatti sparsi
- * per la Foresta (vedi RegistroArtefatti, nel modulo del mondo); qui c'è il commercio, in attesa di un modulo suo.
+ * livello, e che cosa fanno di quanto il gruppo vende loro. I dati stanno in {@code MagazziniMD}.
  */
 public final class MagazziniDeiNegozi {
 
 	private MagazziniDeiNegozi() {
 	}
 
-	private static RegistroArtefattiMD getRegistroArtefatti() {
-		return ModelloDati.getIstanza().getRegistroArtefattiMD();
+	// Da dove prendere i dati della partita in corso: i magazzini non sanno chi li custodisce
+	private static volatile Supplier<MagazziniMD> fornitoreDiDati;
+
+	/**
+	 * Dice da dove prendere i dati della partita in corso (lo fa chi li custodisce: ogni volta si prendono da quelli in corso).
+	 */
+	public static void setFornitoreDiDati(Supplier<MagazziniMD> fornitore) {
+		fornitoreDiDati = fornitore;
+	}
+
+	private static MagazziniMD getMagazzini() {
+		Supplier<MagazziniMD> fornitore = fornitoreDiDati;
+		if (fornitore == null) {
+			throw new IllegalStateException("Nessuno ha detto dove sono i dati di MagazziniDeiNegozi (vedi setFornitoreDiDati)");
+		}
+		return fornitore.get();
 	}
 
 	public static ScambiatoreArtefatti getScambiatorePerNegozio(CoordinateMD coordinate, TipoNegozio negozio) {
@@ -47,12 +60,12 @@ public final class MagazziniDeiNegozi {
 
 			@Override
 			public void addArtefatto(Artefatto artefatto) {
-				getRegistroArtefatti().aggiungiAMagazzino(coordinate, negozio, artefatto.getModelloDati());
+				getMagazzini().aggiungiAMagazzino(coordinate, negozio, artefatto.getModelloDati());
 			}
 
 			@Override
 			public void removeArtefatto(Artefatto artefatto) {
-				getRegistroArtefatti().rimuoviDaMagazzino(coordinate, negozio, artefatto.getModelloDati());
+				getMagazzini().rimuoviDaMagazzino(coordinate, negozio, artefatto.getModelloDati());
 			}
 
 			@Override
@@ -61,7 +74,7 @@ public final class MagazziniDeiNegozi {
 			}
 
 			private Collection<ArtefattoMD> getMagazzino() {
-				return getRegistroArtefatti().getMagazzino(coordinate, negozio);
+				return getMagazzini().getMagazzino(coordinate, negozio);
 			}
 		};
 	}
@@ -102,8 +115,8 @@ public final class MagazziniDeiNegozi {
 	 * artefatti ormai troppo deboli, il venditore rinnova tutti i suoi ingredienti magici, e arriva merce nuova.
 	 */
 	static void aggiornaMagazzini(int livelloMondo, GeneratoreArtefatti generatore) {
-		int livelloMinimo = livelloMondo - Costanti.MAGAZZINO_SCARTO_SOTTO_LIVELLO;
-		RegistroArtefattiMD registro = getRegistroArtefatti();
+		int livelloMinimo = livelloMondo - CostantiEconomia.MAGAZZINO_SCARTO_SOTTO_LIVELLO;
+		MagazziniMD registro = getMagazzini();
 		for (CoordinateMD coordinate : registro.getCoordinateMagazzini(TipoNegozio.ARMAIOLO)) {
 			if (haUnNegozio(coordinate, TipoNegozio.ARMAIOLO)) {
 				registro.tieniInMagazzino(coordinate, TipoNegozio.ARMAIOLO, artefatto -> artefatto.getLivello() >= livelloMinimo);
@@ -130,11 +143,11 @@ public final class MagazziniDeiNegozi {
 	private static void rifornisci(CoordinateMD coordinate, int livelloMondo, TipoNegozio negozio, GeneratoreArtefatti generatore) {
 		ScambiatoreArtefatti scambiatore = getScambiatorePerNegozio(coordinate, negozio);
 		if (negozio == TipoNegozio.ARMAIOLO) {
-			for (int i = 0; i < Costanti.MAGAZZINO_ARTEFATTI_ARMAIOLO; i++) {
+			for (int i = 0; i < CostantiEconomia.MAGAZZINO_ARTEFATTI_ARMAIOLO; i++) {
 				scambiatore.addArtefatto(generatore.generaArtefattoCasuale(livelloInMagazzino(i, livelloMondo)));
 			}
 		} else {
-			for (int i = 0; i < Costanti.MAGAZZINO_PERGAMENE; i++) {
+			for (int i = 0; i < CostantiEconomia.MAGAZZINO_PERGAMENE; i++) {
 				scambiatore.addArtefatto(generatore.generaIngrediente(livelloInMagazzino(i, livelloMondo)));
 			}
 		}
@@ -144,8 +157,8 @@ public final class MagazziniDeiNegozi {
 	 * Livelli a rotazione fra livello del mondo - divario e livello del mondo + divario, mai sotto 1.
 	 */
 	private static int livelloInMagazzino(int indice, int livelloMondo) {
-		int minimo = Math.max(1, livelloMondo - Costanti.MAGAZZINO_DIVARIO_LIVELLO);
-		int massimo = livelloMondo + Costanti.MAGAZZINO_DIVARIO_LIVELLO;
+		int minimo = Math.max(1, livelloMondo - CostantiEconomia.MAGAZZINO_DIVARIO_LIVELLO);
+		int massimo = livelloMondo + CostantiEconomia.MAGAZZINO_DIVARIO_LIVELLO;
 		return minimo + indice % (massimo - minimo + 1);
 	}
 
@@ -183,7 +196,7 @@ public final class MagazziniDeiNegozi {
 	 */
 	private static void smaltisciVenduti() {
 		for (Vendita vendita : vendutiNellaVisita) {
-			getRegistroArtefatti().rimuoviDaMagazzino(vendita.coordinate, vendita.negozio, vendita.artefatto);
+			getMagazzini().rimuoviDaMagazzino(vendita.coordinate, vendita.negozio, vendita.artefatto);
 		}
 		vendutiNellaVisita.clear();
 	}

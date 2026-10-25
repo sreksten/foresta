@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
@@ -68,14 +69,14 @@ class ScenarioRapimentoTest {
 
             CoordinateMD nyena = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA);
             Foresta.setPosizioneDelGruppo(nyena);
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             rapimento.controllaPreLocazione();
             // Armando è ancora nel gruppo mentre la scena lo mostra, e se ne separa a missione conclusa
             assertTrue(partita.gruppo().getOspiti().contains(armando), "Armando c'è per la scena");
             assertEquals("RITORNO", rapimento.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
             rapimento.segnaIntermezzoPassoMostrato("RITORNO");
             rapimento.controllaInLocazione();
-            assertEquals(monete + 35, partita.gruppo().getMonete());
+            assertEquals(monete + 35, Cassa.getMonete());
             assertTrue(rapimento.isCompleta());
             assertTrue(partita.gruppo().getOspiti().isEmpty(), "Armando è a casa");
         }
@@ -97,7 +98,7 @@ class ScenarioRapimentoTest {
 
             // In città la scena triste, poi la missione fallisce, senza monete
             Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             rapimento.controllaPreLocazione();
             assertEquals("LUTTO", rapimento.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
             assertFalse(rapimento.isFallita(), "prima la scena");
@@ -105,7 +106,7 @@ class ScenarioRapimentoTest {
             rapimento.controllaInLocazione();
             assertTrue(rapimento.isFallita());
             assertTrue(partita.gruppo().getOspiti().isEmpty(), "Armando morto non resta fra gli ospiti");
-            assertEquals(monete, partita.gruppo().getMonete());
+            assertEquals(monete, Cassa.getMonete());
             assertTrue(partita.testi().contains("La moglie di " + rapimento.getOstaggio() + " chiude la porta senza dire una parola."));
         }
     }

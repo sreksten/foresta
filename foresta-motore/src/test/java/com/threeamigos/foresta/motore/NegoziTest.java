@@ -1,5 +1,9 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.economia.MagazziniDeiNegozi;
+import com.threeamigos.foresta.tipi.CostantiEconomia;
+import com.threeamigos.foresta.economia.CommercioDelGruppo;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
 
@@ -10,7 +14,6 @@ import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +35,7 @@ class NegoziTest {
     void nuovoMondo() {
         ModelloDati.setIstanza(new ModelloDati());
         gruppo = new GruppoGiocatore();
-        gruppo.subMonete(gruppo.getMonete());
+        Cassa.subMonete(Cassa.getMonete());
     }
 
     @Test
@@ -52,7 +55,7 @@ class NegoziTest {
 
         assertFalse(CommercioDelGruppo.vende(gruppo, new InternoVenditaArtefatto(gruppo, armaiolo, pergamena, null)));
 
-        assertEquals(0, gruppo.getMonete());
+        assertEquals(0, Cassa.getMonete());
         assertTrue(nelGruppo(pergamena));
         assertTrue(armaiolo.getInventario().isEmpty());
     }
@@ -69,7 +72,7 @@ class NegoziTest {
         assertTrue(CommercioDelGruppo.vende(gruppo, new InternoVenditaArtefatto(gruppo, venditore, pergamena, null)));
 
         // Un gruppo senza nessuno che sappia trattare vende a metà del costo (vedi RegoleContrattazione)
-        assertEquals(15, gruppo.getMonete());
+        assertEquals(15, Cassa.getMonete());
         assertTrue(nelGruppo(spada));
         assertFalse(nelGruppo(pergamena));
         assertEquals(1, venditore.getInventario().size());
@@ -81,14 +84,14 @@ class NegoziTest {
 
         Collection<Artefatto> armaiolo = MagazziniDeiNegozi.getScambiatorePerNegozio(CITTA, TipoNegozio.ARMAIOLO).getInventario();
         Collection<Artefatto> venditore = MagazziniDeiNegozi.getScambiatorePerNegozio(CITTA, TipoNegozio.VENDITORE_DI_PERGAMENE).getInventario();
-        assertEquals(Costanti.MAGAZZINO_ARTEFATTI_ARMAIOLO, armaiolo.size());
-        assertEquals(Costanti.MAGAZZINO_PERGAMENE, venditore.size());
+        assertEquals(CostantiEconomia.MAGAZZINO_ARTEFATTI_ARMAIOLO, armaiolo.size());
+        assertEquals(CostantiEconomia.MAGAZZINO_PERGAMENE, venditore.size());
         assertTrue(armaiolo.stream().allMatch(a -> TipoNegozio.ARMAIOLO.tratta(a.getTipo())));
         assertTrue(venditore.stream().allMatch(a -> a.getTipo().isIngrediente()));
         // Livelli a rotazione attorno al livello del mondo, che all'inizio e' 1: mai sotto 1
         Set<Integer> livelli = armaiolo.stream().map(a -> a.getModelloDati().getLivello()).collect(Collectors.toSet());
         Set<Integer> attesi = new HashSet<>();
-        for (int livello = 1; livello <= 1 + Costanti.MAGAZZINO_DIVARIO_LIVELLO; livello++) {
+        for (int livello = 1; livello <= 1 + CostantiEconomia.MAGAZZINO_DIVARIO_LIVELLO; livello++) {
             attesi.add(livello);
         }
         assertEquals(attesi, livelli);

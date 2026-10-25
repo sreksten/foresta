@@ -100,7 +100,7 @@ class CollezioniDiSolaLetturaTest {
 
 	@Test
 	void ilMagazzinoDiUnNegozioSiLeggeSenzaPoterloModificareESenzaCrearlo() {
-		RegistroArtefattiMD registro = new RegistroArtefattiMD();
+		MagazziniMD registro = new MagazziniMD();
 		CoordinateMD citta = new CoordinateMD(7, 1);
 
 		assertTrue(registro.getMagazzino(citta, TipoNegozio.ARMAIOLO).isEmpty());
@@ -117,7 +117,7 @@ class CollezioniDiSolaLetturaTest {
 
 	@Test
 	void ilMagazzinoSiCambiaSoloConIMetodiDelRegistro() {
-		RegistroArtefattiMD registro = new RegistroArtefattiMD();
+		MagazziniMD registro = new MagazziniMD();
 		CoordinateMD citta = new CoordinateMD(7, 1);
 		ArtefattoMD spada = artefatto("spada");
 		ArtefattoMD ascia = artefatto("ascia");

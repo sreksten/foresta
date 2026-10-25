@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.offerte;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -30,7 +31,7 @@ public class AiutoMercenario implements Offerta {
 		if (gruppo.getNumeroPersonaggi() >= CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_TOTALE) {
 			return false;
 		}
-		if (gruppo.getMonete() < costo) {
+		if (Cassa.getMonete() < costo) {
 			return false;
 		}
 		List<Personaggio> personaggiAvversari = gruppoAvversario.getPersonaggiVivi();
@@ -88,7 +89,7 @@ public class AiutoMercenario implements Offerta {
 		personaggio.setMotivoNelGruppo(TipoMotivoNelGruppo.AIUTO_MERCENARIO);
 		personaggio.setTempo(costo + 1);
 		gruppo.aggiungiPersonaggio(personaggio);
-		gruppo.subMonete(costo);
+		Cassa.subMonete(costo);
 		BusEventi.pubblica(new InternoMostraFinestraStato());
 	}
 }

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -119,11 +120,11 @@ class ScenarioRitualeTest {
             assertTrue(partita.testi().contains("Il varco è chiuso. Il sacerdote aspetta a Nyena."), String.valueOf(partita.testi()));
 
             Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             rituale.controllaPreLocazione();
             rituale.segnaIntermezzoPassoMostrato("RITORNO");
             rituale.controllaInLocazione();
-            assertEquals(monete + 40, partita.gruppo().getMonete());
+            assertEquals(monete + 40, Cassa.getMonete());
             assertTrue(rituale.isCompleta());
             assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof IlRituale && m != rituale));
         }

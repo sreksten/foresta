@@ -19,10 +19,6 @@ public interface VistaGruppoGiocatore extends VistaGruppo {
 
 	boolean isOspiteVulnerabile(VistaPersonaggio ospite);
 
-	int getMonete();
-
-	int getPreziosi();
-
 	/**
 	 * Gli artefatti nell'inventario comune del gruppo
 	 */

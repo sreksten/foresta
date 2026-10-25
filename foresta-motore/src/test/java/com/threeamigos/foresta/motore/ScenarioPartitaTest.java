@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.economia.MagazziniDeiNegozi;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.modellodati.CoordinateMD;
@@ -42,18 +44,18 @@ class ScenarioPartitaTest {
 					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.comando(Comando.ESCI_DA_CITTA);
 			partita.assertStato(Stato.SCELTA_DIREZIONE);
-			int monete = partita.gruppo().getMonete();
+			int monete = Cassa.getMonete();
 			CoordinateMD dove = Foresta.getPosizioneDelGruppo();
 
 			partita.comando(Comando.FLOPPY_SALVA).comando(Comando.NUMERO_1);
 			assertTrue(partita.salvataggi().contiene(Comando.NUMERO_1));
 
 			// Si spende e ci si sposta, poi si ricarica: tutto torna com'era al salvataggio
-			partita.gruppo().subMonete(50);
+			Cassa.subMonete(50);
 			Foresta.setPosizioneDelGruppo(new CoordinateMD(0, 0));
 			assertTrue(partita.leggi(Comando.NUMERO_1));
 
-			assertEquals(monete, partita.gruppo().getMonete());
+			assertEquals(monete, Cassa.getMonete());
 			assertEquals(dove.getX(), Foresta.getPosizioneDelGruppo().getX());
 			assertEquals(dove.getY(), Foresta.getPosizioneDelGruppo().getY());
 			assertEquals("Arsenio", partita.gruppo().getCapo().getNomeProprio().orElse(null));

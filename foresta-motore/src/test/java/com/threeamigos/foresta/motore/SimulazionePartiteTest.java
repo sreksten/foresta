@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
@@ -403,7 +404,7 @@ class SimulazionePartiteTest {
 			risultato.amicizie = giocatore.amicizie;
 			risultato.resurrezioni = giocatore.resurrezioni;
 			risultato.moneteNeiNegozi = giocatore.moneteNeiNegozi;
-			risultato.moneteFinali = partita.gruppo().getMonete();
+			risultato.moneteFinali = Cassa.getMonete();
 			risultato.moneteDaVendite = giocatore.moneteDaVendite;
 			risultato.pozioniComprate = giocatore.pozioniComprate;
 			risultato.pergameneComprate = giocatore.pergameneComprate;
@@ -479,8 +480,8 @@ class SimulazionePartiteTest {
 			for (Personaggio p : gruppo.getPersonaggi()) {
 				salutePrima.put(p, p.getSalute());
 			}
-			monetePrima = gruppo.getMonete();
-			preziosiPrima = gruppo.getPreziosi();
+			monetePrima = Cassa.getMonete();
+			preziosiPrima = Cassa.getPreziosi();
 			personaggiPrima = gruppo.getNumeroPersonaggi();
 			viviPrima = gruppo.getNumeroPersonaggiVivi();
 		}
@@ -530,9 +531,9 @@ class SimulazionePartiteTest {
 			if (!gruppo.getCapo().isVivo() && risultato.causaMorte == null) {
 				risultato.causaMorte = fuga ? "fuga" : scontro != null ? scontro.avversario.name() : "fuori dagli scontri";
 			}
-			int monete = gruppo.getMonete();
-			if (gruppo.getPreziosi() < preziosiPrima && !fuga) {
-				risultato.preziosiVenduti += preziosiPrima - gruppo.getPreziosi();
+			int monete = Cassa.getMonete();
+			if (Cassa.getPreziosi() < preziosiPrima && !fuga) {
+				risultato.preziosiVenduti += preziosiPrima - Cassa.getPreziosi();
 			}
 			if (monete < monetePrima && !fuga) {
 				risultato.moneteSpese += monetePrima - monete;

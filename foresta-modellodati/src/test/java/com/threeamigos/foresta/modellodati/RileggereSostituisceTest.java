@@ -70,15 +70,24 @@ class RileggereSostituisceTest {
         RegistroArtefattiMD destinazione = new RegistroArtefattiMD();
         destinazione.addArtefattoInLocazione(ArtefattiDiTest.creaArtefatto(TipoArtefatto.SPADA, "la spada vecchia", "che arrugginisce"),
                 new CoordinateMD(9, 9));
-        destinazione.aggiungiAMagazzino(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO,
-                ArtefattiDiTest.creaArtefatto(TipoArtefatto.SCUDO, "lo scudo vecchio", "che cigola"));
         destinazione.segnaLocalizzazioneConosciuta(new CoordinateMD(8, 8));
 
         destinazione.leggi(scritto(salvato));
 
         assertTrue(destinazione.getUbicazioniArtefattiSmarriti().isEmpty());
-        assertTrue(destinazione.getMagazzino(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO).isEmpty());
         assertEquals(1, destinazione.getLocalizzazioniConosciute().size());
         assertTrue(destinazione.isLocalizzazioneConosciuta(new CoordinateMD(2, 2)));
+    }
+
+    @Test
+    void iMagazziniRiletti() throws IOException {
+        MagazziniMD salvati = new MagazziniMD();
+        MagazziniMD destinazione = new MagazziniMD();
+        destinazione.aggiungiAMagazzino(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO,
+                ArtefattiDiTest.creaArtefatto(TipoArtefatto.SCUDO, "lo scudo vecchio", "che cigola"));
+
+        destinazione.leggi(scritto(salvati));
+
+        assertTrue(destinazione.getMagazzino(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO).isEmpty());
     }
 }

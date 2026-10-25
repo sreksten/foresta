@@ -1,5 +1,9 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.tipi.CostantiEconomia;
+import com.threeamigos.foresta.economia.CommercioDelGruppo;
+import com.threeamigos.foresta.economia.OfferteAlchimista;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
@@ -9,7 +13,6 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoConsumabi
 import com.threeamigos.foresta.interfacce.VistaOffertaConsumabile;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import org.junit.jupiter.api.Test;
@@ -62,14 +65,14 @@ class AlchimistaTest {
 	void ilPrezzoLoDecideIlMotoreEQuelloPagatoStaNellaNotifica() {
 		try (PartitaDiTest partita = nuova()) {
 			GruppoGiocatore gruppo = partita.gruppo();
-			gruppo.addMonete(1_000);
-			int monete = gruppo.getMonete();
+			Cassa.addMonete(1_000);
+			int monete = Cassa.getMonete();
 			int pozioni = gruppo.getPozioniSalute();
 
 			partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.POZIONE_SALUTE, null, null));
 
-			int prezzo = CommercioDelGruppo.prezzoAcquisto(gruppo, Costanti.COSTO_POZIONE_SALUTE);
-			assertEquals(monete - prezzo, gruppo.getMonete());
+			int prezzo = CommercioDelGruppo.prezzoAcquisto(gruppo, CostantiEconomia.COSTO_POZIONE_SALUTE);
+			assertEquals(monete - prezzo, Cassa.getMonete());
 			assertEquals(pozioni + 1, gruppo.getPozioniSalute());
 			assertEquals(prezzo, partita.eventi().ultimo(NotificaApprovazioneAcquistoConsumabile.class).getPrezzoPagato());
 		}
@@ -79,7 +82,7 @@ class AlchimistaTest {
 	void senzaMoneteLAcquistoVieneRifiutato() {
 		try (PartitaDiTest partita = nuova()) {
 			GruppoGiocatore gruppo = partita.gruppo();
-			gruppo.subMonete(gruppo.getMonete());
+			Cassa.subMonete(Cassa.getMonete());
 			int pozioni = gruppo.getPozioniMagia();
 
 			partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.POZIONE_MAGIA, null, null));
@@ -94,8 +97,8 @@ class AlchimistaTest {
 	void unComandoCheNonCorrispondeAUnOffertaSiIgnora() {
 		try (PartitaDiTest partita = nuova()) {
 			GruppoGiocatore gruppo = partita.gruppo();
-			gruppo.addMonete(1_000);
-			int monete = gruppo.getMonete();
+			Cassa.addMonete(1_000);
+			int monete = Cassa.getMonete();
 
 			// l'aumento di magia di un personaggio senza dire quale; un tipo che l'alchimista non vende
 			partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.AUMENTO_MAGIA_SINGOLO, null, null));
@@ -103,7 +106,7 @@ class AlchimistaTest {
 			// un incantesimo senza dire quale
 			partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.INCANTESIMO, null, null));
 
-			assertEquals(monete, gruppo.getMonete());
+			assertEquals(monete, Cassa.getMonete());
 			assertTrue(partita.eventi().tutti(NotificaApprovazioneAcquistoConsumabile.class).isEmpty());
 			assertTrue(partita.eventi().tutti(NotificaRifiutoAcquistoConsumabile.class).isEmpty());
 		}
@@ -113,7 +116,7 @@ class AlchimistaTest {
 	void lAumentoDiMagiaVaAlPersonaggioIndicato() {
 		try (PartitaDiTest partita = nuova()) {
 			GruppoGiocatore gruppo = partita.gruppo();
-			gruppo.addMonete(1_000);
+			Cassa.addMonete(1_000);
 			Personaggio personaggio = gruppo.getPersonaggiVivi().stream().filter(p -> !p.isPNG()).findFirst().get();
 			int magia = personaggio.getMagiaMassima();
 

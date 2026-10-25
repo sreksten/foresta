@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import com.threeamigos.foresta.eventi.interni.*;
@@ -50,7 +51,7 @@ class TrofeiTest {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
 					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
-			partita.gruppo().subMonete(partita.gruppo().getMonete());
+			Cassa.subMonete(Cassa.getMonete());
 
 			partita.comando(Comando.LOCANDA);
 

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import com.threeamigos.foresta.eventi.interni.InternoAmiciziaStretta;
@@ -89,14 +90,14 @@ class ScenarioCartaForbiciSassoTest {
         try (PartitaDiTest partita = sfidataDaLIdra(25)) {
             LocazioneCorrente.get().collocaOggettoMissione(FabbricaOggetti.crea(TipoBottino.MONETA));
             assertEquals(TipoBottino.MONETA, LocazioneCorrente.getTipoBottino());
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
 
             // L'amicizia riesce e l'avversario sfida: la sfida è ancora in corso, e l'oggetto è già sparito
             Dado.trucca(1, 1);
             partita.comando(Comando.AMICIZIA);
             assertEquals(LE_TRE_MOSSE, new HashSet<>(partita.comandiDisponibili()), "la sfida è in corso");
             assertNull(LocazioneCorrente.getTipoBottino());
-            assertEquals(monete, partita.gruppo().getMonete());
+            assertEquals(monete, Cassa.getMonete());
         }
     }
 
@@ -108,13 +109,13 @@ class ScenarioCartaForbiciSassoTest {
             partita.assertStato(Stato.IN_LOCAZIONE);
             LocazioneCorrente.get().collocaOggettoMissione(FabbricaOggetti.crea(TipoBottino.MONETA));
             assertEquals(TipoBottino.MONETA, LocazioneCorrente.getTipoBottino());
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
 
             Dado.trucca(10);
             partita.comando(Comando.CORRUZIONE);
 
             assertNull(LocazioneCorrente.getTipoBottino(), "con la corruzione l'oggetto non si prende e non resta lì");
-            assertTrue(partita.gruppo().getMonete() <= monete, "e non è stato preso");
+            assertTrue(Cassa.getMonete() <= monete, "e non è stato preso");
         }
     }
 

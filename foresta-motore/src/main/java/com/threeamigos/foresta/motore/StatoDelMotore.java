@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.MagazziniDeiNegozi;
+import com.threeamigos.foresta.economia.CommercioDelGruppo;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
@@ -52,7 +54,6 @@ public final class StatoDelMotore {
 		MagazziniDeiNegozi.registrati();
 		RegistroMissioni.registrati();
 		RegistroMissioni.setFornitoreLocazioneCompleta(() -> LocazioneCorrente.get().isCompleta());
-		RegistroMissioni.setRifornitoreDelleBotteghe(MagazziniDeiNegozi::riempiMagazzino);
 		IntermezziDelMotore.registra();
 		CommercioDelGruppo.registrati();
 		com.threeamigos.foresta.combattimento.MeccanicaDelloScontro.registrati();

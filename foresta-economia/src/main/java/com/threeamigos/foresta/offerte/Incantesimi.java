@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.offerte;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraIncantesimiEPozioni;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
@@ -27,7 +28,7 @@ public class Incantesimi implements Offerta {
 
 	@Override
 	public boolean isFattibile(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		return gruppo.getMonete() >= costo;
+		return Cassa.getMonete() >= costo;
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class Incantesimi implements Offerta {
 
 	@Override
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		gruppo.subMonete(costo);
+		Cassa.subMonete(costo);
 		gruppo.addIncantesimi(tipoIncantesimo, quantita);
 		BusEventi.pubblica(new InternoMostraFinestraIncantesimiEPozioni());
 	}

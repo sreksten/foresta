@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -162,12 +163,12 @@ class ScenarioPassiAvanzatiTest {
             assertFalse(missione.isCompleta(), "mancano le assi");
 
             RaccoltaBottino.raccogli(new OggettoMissione(missione.getId(), "ASSI", assi.getNome(), 4), partita.gruppo(), null);
-            partita.gruppo().addMonete(10 - partita.gruppo().getMonete());
+            Cassa.addMonete(10 - Cassa.getMonete());
             long oraPrima = LineaTemporale.getGiorno() * 24L + LineaTemporale.getOra();
             missione.controllaInLocazione();
             assertTrue(missione.isCompleta());
             assertEquals(1, missione.getContatore("ASSI"), "ne avanza una");
-            assertEquals(0, partita.gruppo().getMonete());
+            assertEquals(0, Cassa.getMonete());
             assertEquals(oraPrima + 5, LineaTemporale.getGiorno() * 24L + LineaTemporale.getOra());
             assertTrue(partita.testi().contains("Il ponte è riparato."));
         }
@@ -177,8 +178,8 @@ class ScenarioPassiAvanzatiTest {
     void laRicompensaPuoDareAncheEsperienzaPreziosiEUnArtefatto() {
         try (PartitaDiTest partita = partita(105)) {
             partita.eventi().ascolta(NotificaArtefattoTrovato.class);
-            int monete = partita.gruppo().getMonete();
-            int preziosi = partita.gruppo().getPreziosi();
+            int monete = Cassa.getMonete();
+            int preziosi = Cassa.getPreziosi();
             int esperienza = Statistiche.getPuntiEsperienza();
             int inventario = partita.gruppo().getInventario().size();
             MissioneDiUnPasso missione = attiva(m -> m.ricompensa(Ricompensa.inMonete(7).conPreziosi(2).conEsperienza(30)
@@ -186,8 +187,8 @@ class ScenarioPassiAvanzatiTest {
 
             missione.controllaInLocazione();
             assertTrue(missione.isCompleta());
-            assertEquals(monete + 7, partita.gruppo().getMonete());
-            assertEquals(preziosi + 2, partita.gruppo().getPreziosi());
+            assertEquals(monete + 7, Cassa.getMonete());
+            assertEquals(preziosi + 2, Cassa.getPreziosi());
             // Più quella che dà ogni missione completata
             assertTrue(Statistiche.getPuntiEsperienza() >= esperienza + 30, String.valueOf(Statistiche.getPuntiEsperienza()));
             assertEquals(inventario + 1, partita.gruppo().getInventario().size());

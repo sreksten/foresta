@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.tipi.CostantiEconomia;
+import com.threeamigos.foresta.economia.CommercioDelGruppo;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.intermezzi.Locande;
@@ -334,7 +337,7 @@ final class GiocatoreAutomatico {
 	private List<CoordinateMD> scegliMete(GruppoGiocatore gruppo) {
 		Personaggio capo = gruppo.getCapo();
 		int vivi = gruppo.getNumeroPersonaggiVivi();
-		int monete = gruppo.getMonete();
+		int monete = Cassa.getMonete();
 		int pozioni = gruppo.getPozioniSalute() + gruppo.getPozioniSaluteGrande();
 		CoordinateMD qui = Foresta.getPosizioneDelGruppo();
 		List<CoordinateMD> citta = new ArrayList<>();
@@ -363,7 +366,7 @@ final class GiocatoreAutomatico {
 		// Stanchezza: -2 all'attacco e alla difesa per punto (CalcolatoreCombattimento); in due o più ci si
 		// accampa la notte, da soli si riposa solo in locanda
 		boolean stanco = capo.getStanchezza() >= (vivi > 1 ? 9 : 5);
-		if ((ferito || stanco) && monete >= Costanti.COSTO_PASTO) {
+		if ((ferito || stanco) && monete >= CostantiEconomia.COSTO_PASTO) {
 			List<CoordinateMD> mete = new ArrayList<>(locande);
 			mete.addAll(citta);
 			if (!mete.isEmpty()) {
@@ -376,7 +379,7 @@ final class GiocatoreAutomatico {
 			return citta;
 		}
 		if (gruppo.getNumeroPersonaggi() < CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_GIOCATORE
-				&& monete >= Costanti.COSTO_PASTO * (vivi + 1) && !locandeNuove.isEmpty()) {
+				&& monete >= CostantiEconomia.COSTO_PASTO * (vivi + 1) && !locandeNuove.isEmpty()) {
 			return locandeNuove;
 		}
 		return Collections.emptyList();
@@ -492,7 +495,7 @@ final class GiocatoreAutomatico {
 			negozioAperto = Comando.NEGOZIO_ALCHIMISTA;
 			return Comando.NEGOZIO_ALCHIMISTA;
 		}
-		if (!locandaFatta && comandi.contains(Comando.LOCANDA) && gruppo.getMonete() >= Costanti.COSTO_PASTO) {
+		if (!locandaFatta && comandi.contains(Comando.LOCANDA) && Cassa.getMonete() >= CostantiEconomia.COSTO_PASTO) {
 			locandaFatta = true;
 			return Comando.LOCANDA;
 		}
@@ -504,10 +507,10 @@ final class GiocatoreAutomatico {
 		if (testo.contains("pernottare")) {
 			Personaggio capo = gruppo.getCapo();
 			int ora = LineaTemporale.getOra();
-			int costo = Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi();
+			int costo = CostantiEconomia.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi();
 			boolean serve = capo.getStanchezza() >= 2 || ora >= 18 || ora < 6
 					|| gruppo.getPersonaggiVivi().stream().anyMatch(p -> frazioneSalute(p) < 0.9);
-			return serve && gruppo.getMonete() - costo >= Costanti.COSTO_PASTO ? Comando.SI : Comando.NO;
+			return serve && Cassa.getMonete() - costo >= CostantiEconomia.COSTO_PASTO ? Comando.SI : Comando.NO;
 		}
 		if (partita.ultimiTesti().contains("ad accompagnare")) {
 			// Aiuto gratuito o mercenario: accettarli fa andare in errore il gioco (PersonaggioBase.setTempo su un
@@ -582,7 +585,7 @@ final class GiocatoreAutomatico {
 		if (carico < SOGLIA_COMBATTI && stima.compagniPersi == 0) {
 			return Decisione.COMBATTI;
 		}
-		if (comandi.contains(Comando.CORRUZIONE) && gruppo.getMonete() >= gruppo.getNumeroPersonaggi() * 2) {
+		if (comandi.contains(Comando.CORRUZIONE) && Cassa.getMonete() >= gruppo.getNumeroPersonaggi() * 2) {
 			return Decisione.CORROMPI;
 		}
 		if (comandi.contains(Comando.AMICIZIA) && probabilitaAmicizia(gruppo) >= 0.5) {
@@ -760,17 +763,17 @@ final class GiocatoreAutomatico {
 	private void acquistaDallAlchimista(GruppoGiocatore gruppo) {
 		int vivi = gruppo.getNumeroPersonaggiVivi();
 		// Le monete per mangiare e dormire alla locanda della città
-		int riserva = (Costanti.COSTO_PASTO + Costanti.COSTO_PERNOTTAMENTO) * vivi;
-		if (!mappaComprata && puoSpendere(gruppo, Costanti.COSTO_MAPPA_DELLA_FORESTA, riserva + 40)) {
-			if (compra(gruppo, TipoConsumabile.MAPPA_COMPLETA_FORESTA, null, null, Costanti.COSTO_MAPPA_DELLA_FORESTA)) {
+		int riserva = (CostantiEconomia.COSTO_PASTO + CostantiEconomia.COSTO_PERNOTTAMENTO) * vivi;
+		if (!mappaComprata && puoSpendere(gruppo, CostantiEconomia.COSTO_MAPPA_DELLA_FORESTA, riserva + 40)) {
+			if (compra(gruppo, TipoConsumabile.MAPPA_COMPLETA_FORESTA, null, null, CostantiEconomia.COSTO_MAPPA_DELLA_FORESTA)) {
 				mappaComprata = true;
 				mappeComprate++;
 			}
 		}
 		int obiettivoPozioni = 3 + 2 * vivi;
 		while (gruppo.getPozioniSalute() < obiettivoPozioni
-				&& puoSpendere(gruppo, Costanti.COSTO_POZIONE_SALUTE, riserva)
-				&& compra(gruppo, TipoConsumabile.POZIONE_SALUTE, null, null, Costanti.COSTO_POZIONE_SALUTE)) {
+				&& puoSpendere(gruppo, CostantiEconomia.COSTO_POZIONE_SALUTE, riserva)
+				&& compra(gruppo, TipoConsumabile.POZIONE_SALUTE, null, null, CostantiEconomia.COSTO_POZIONE_SALUTE)) {
 			pozioniComprate++;
 		}
 		boolean qualcunoPuoRisuscitare = gruppo.getPersonaggiVivi().stream()
@@ -797,15 +800,15 @@ final class GiocatoreAutomatico {
 				}
 				pergameneComprate++;
 			}
-			if (gruppo.getPozioniMagia() < 2 && puoSpendere(gruppo, Costanti.COSTO_POZIONE_MAGIA, riserva + 20)
-					&& compra(gruppo, TipoConsumabile.POZIONE_MAGIA, null, null, Costanti.COSTO_POZIONE_MAGIA)) {
+			if (gruppo.getPozioniMagia() < 2 && puoSpendere(gruppo, CostantiEconomia.COSTO_POZIONE_MAGIA, riserva + 20)
+					&& compra(gruppo, TipoConsumabile.POZIONE_MAGIA, null, null, CostantiEconomia.COSTO_POZIONE_MAGIA)) {
 				pozioniComprate++;
 			}
 		}
 		// Con le monete che avanzano, qualche pozione in più
 		while (gruppo.getPozioniSalute() < obiettivoPozioni + 4
-				&& puoSpendere(gruppo, Costanti.COSTO_POZIONE_SALUTE, riserva + 30)
-				&& compra(gruppo, TipoConsumabile.POZIONE_SALUTE, null, null, Costanti.COSTO_POZIONE_SALUTE)) {
+				&& puoSpendere(gruppo, CostantiEconomia.COSTO_POZIONE_SALUTE, riserva + 30)
+				&& compra(gruppo, TipoConsumabile.POZIONE_SALUTE, null, null, CostantiEconomia.COSTO_POZIONE_SALUTE)) {
 			pozioniComprate++;
 		}
 	}
@@ -822,21 +825,21 @@ final class GiocatoreAutomatico {
 		VistaScambio bottega = partita.eventi().ultimo(RichiestaAperturaInventarioCommerciante.class).getScambio();
 		for (Artefatto artefatto : new ArrayList<>(gruppo.getInventario())) {
 			if (negozio.tratta(artefatto.getTipo())) {
-				int prima = gruppo.getMonete();
+				int prima = Cassa.getMonete();
 				partita.pubblica(new ComandoScambioArtefatto(bottega.getId(), ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto.getUuid()));
-				moneteDaVendite += Math.max(0, gruppo.getMonete() - prima);
+				moneteDaVendite += Math.max(0, Cassa.getMonete() - prima);
 			}
 		}
 	}
 
 	private static boolean puoSpendere(GruppoGiocatore gruppo, int costo, int riserva) {
-		return gruppo.getMonete() - CommercioDelGruppo.prezzoAcquisto(gruppo, costo) >= riserva;
+		return Cassa.getMonete() - CommercioDelGruppo.prezzoAcquisto(gruppo, costo) >= riserva;
 	}
 
 	private boolean compra(GruppoGiocatore gruppo, TipoConsumabile tipo, TipoIncantesimo classe, Personaggio personaggio, int costo) {
-		int prima = gruppo.getMonete();
+		int prima = Cassa.getMonete();
 		partita.pubblica(new ComandoAcquistoConsumabile(tipo, classe, personaggio == null ? null : personaggio.getUuid()));
-		int spese = prima - gruppo.getMonete();
+		int spese = prima - Cassa.getMonete();
 		moneteNeiNegozi += Math.max(0, spese);
 		return spese > 0 || (spese == 0 && CommercioDelGruppo.prezzoAcquisto(gruppo, costo) == 0);
 	}

@@ -4,13 +4,15 @@
 
 Le monete del gioco vengono dalla **rivendita all'armaiolo degli artefatti trovati per terra** alla prima visita di una cella, dai **preziosi** (che valgono quanto il livello del mondo) e dalle **missioni** (che pagano per il livello). Finché si esplorano celle nuove le entrate crescono col livello e coprono negozi e fusioni, così chi vuole provare a costruire armi nuove non resta senza soldi. Ma la mappa si esaurisce verso il **livello 13**, e da lì le entrate dalle celle si fermano mentre i prezzi continuano a salire. Nemici e cofani danno pochissime monete, e i nemici non ne lasciano per scelta: scheletri, spettri e simili non hanno niente da lasciare.
 
+Il codice dell'economia sta nel modulo `foresta-economia`: la cassa del gruppo (`economia.Cassa`, monete e preziosi, con `CassaMD`), i magazzini dei negozi (`MagazziniDeiNegozi`, con `MagazziniMD`), i prezzi e la contrattazione (`RegoleContrattazione`, `OffertaConsumabile`, `OfferteAlchimista`), il commercio (`CommercioDelGruppo`), le offerte di chi si incontra (`offerte`) e le costanti (`CostantiEconomia`). Il gruppo non sa di avere una cassa.
+
 ## Entrate
 
 Gli oggetti per terra compaiono solo alla prima visita di una cella e non ricompaiono (`LocazioneBase`). I nemici sconfitti danno esperienza ma nessuna moneta. Le monete del mondo sono quindi finite: circa 1.500 dirette (la maggior parte dai preziosi, che valgono il livello di quando si vendono), più quel che rende la rivendita degli artefatti trovati e le missioni.
 
 | Fonte | Quanto | Quante volte | Totale sulla mappa (stima) |
 | --- | --- | --- | ---: |
-| Monete iniziali | 150 monete + 5 preziosi (`Costanti.MONETE_INIZIALI`, `PREZIOSI_INIZIALI`) | una volta | 155 |
+| Monete iniziali | 150 monete + 5 preziosi (`CostantiEconomia.MONETE_INIZIALI`, `PREZIOSI_INIZIALI`) | una volta | 155 |
 | Artefatti per terra, rivenduti all'armaiolo | ~60% di 5 + 5 × livello | 6 celle di bosco su 11, ~172 in tutto | ~2.500 fino al livello 10 |
 | Monete per terra | 1-2 | 1 cella di bosco su 11 | ~45 |
 | Pietre preziose e corone per terra | 1-2 preziosi, ognuno vale il livello del mondo quando si vende | 2 celle di bosco su 11 | ~1.200 contando anche quelli dei cofani, secondo il modello (circa 0,35 a cella, al livello di quando si vendono); il giocatore automatico ne trova di più, circa uno a scontro (vedi "Misure col giocatore automatico") |
@@ -23,7 +25,7 @@ Gli oggetti per terra compaiono solo alla prima visita di una cella e non ricomp
 | Pergamene portate dagli avversari (`BottinoDegliAvversari`) | per ogni avversario, il 20% di una pergamena: qualsiasi se è un umanoide, altrimenti del suo repertorio se è magico (uno spirito: Gelo); in più, per ogni umanoide, il 20% di una pozione della Salute; a scontro vinto, quelle non usate (oggi tutte: i mostri non leggono ancora pergamene né bevono pozioni) passano al giocatore, con un messaggio | a ogni scontro vinto | circa 0,2 pergamene per avversario, 5 monete l'una (15 Fulmine e Resurrezione), più 0,2 pozioni della Salute per umanoide, da usare o rivendere a metà prezzo: ~0,7 monete per avversario più la pozione |
 | Aiuto del mercenario (offerta dopo corruzione o amicizia) | 1-6 monete | di rado | trascurabile |
 
-- **Preziosi:** entrando in una città si vendono tutti da soli (`GruppoGiocatore.vendePreziosi`), ognuno per quanto vale il livello del mondo in quel momento: 1 moneta al primo livello, 6 al sesto. Con un ladro vivo nel gruppo se ne ricava in media la metà in più. Non servono ad altro.
+- **Preziosi:** entrando in una città si vendono tutti da soli (`Cassa.vendiPreziosiPer`, con il prezzo calcolato da chi entra in città), ognuno per quanto vale il livello del mondo in quel momento: 1 moneta al primo livello, 6 al sesto. Con un ladro vivo nel gruppo se ne ricava in media la metà in più. Non servono ad altro.
 - **Vendita:** l'armaiolo paga dal 50 al 75% del prezzo secondo la Contrattazione, di solito circa il 60% (`RegoleContrattazione`). Ricompra sempre a meno di quanto vende, quindi comprare e rivendere non rende mai.
 - **Non danno monete:** nemici sconfitti (per scelta), trofei, corruzione riuscita, anelli non magici.
 
@@ -169,10 +171,10 @@ Una sola arma forgiata dimezza quasi la durata di uno scontro contro i boss comu
 
 Cosa si è deciso, partendo dall'elenco di proposte fatto a suo tempo, per far arrivare più monete col livello senza toccare i prezzi dei negozi e delle locande (pasti e pernottamenti restano a 5: con più monete non sono più un problema):
 
-- **Preziosi che valgono col livello (fatto).** Un prezioso venduto vale quanto il livello del mondo, invece di 1 moneta (`GruppoGiocatore.vendePreziosi`). Le pietre preziose e le corone seguono i prezzi che salgono col livello. Un test misura il valore al livello 1 e al 6.
+- **Preziosi che valgono col livello (fatto).** Un prezioso venduto vale quanto il livello del mondo, invece di 1 moneta (`Cassa.vendiPreziosiPer`). Le pietre preziose e le corone seguono i prezzi che salgono col livello. Un test misura il valore al livello 1 e al 6.
 - **Missioni pagate col livello (fatto).** Un incarico paga la sua paga base, quella che la missione scrive, per il livello del mondo di quando si è offerto: per esempio 20 × livello per il medaglione rubato e le derrate sparite, e allo stesso modo tutti gli altri (`IncaricoInCitta.getRicompensa`; il pianista lo fa da sé). La cifra si fissa all'offerta, così quella detta nelle scene e quella pagata sono la stessa anche se il livello sale nel frattempo.
 - **Prezzi (invariati).** Il listino nuovo degli ingredienti resta con le costanti a 0,5. Si potrà ritararlo dopo aver misurato le nuove entrate.
-- **Inizio (fatto).** Più monete iniziali, 150 invece di 100 (`Costanti.MONETE_INIZIALI`); i pasti restano a 5.
+- **Inizio (fatto).** Più monete iniziali, 150 invece di 100 (`CostantiEconomia.MONETE_INIZIALI`); i pasti restano a 5.
 - **Bottino dei nemici (non fatto, per scelta).** I nemici non lasciano monete: scheletri, spettri e simili non hanno niente da lasciare, e un bottino solo per alcuni sarebbe incoerente. L'esperienza resta infinita e le monete no, ma ora c'è altro che cresce col livello.
 
 ## Ipotesi del modello

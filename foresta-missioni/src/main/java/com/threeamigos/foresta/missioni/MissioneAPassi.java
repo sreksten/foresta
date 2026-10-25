@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -318,10 +319,10 @@ public abstract class MissioneAPassi extends MissioneBase {
 			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 			BusEventi.pubblica(new NotificaTestoParagrafo(testo.get()));
 			if (ricompensa.getMonete() > 0) {
-				gruppo.addMonete(ricompensa.getMonete());
+				Cassa.addMonete(ricompensa.getMonete());
 			}
 			if (ricompensa.getPreziosi() > 0) {
-				gruppo.addPreziosi(ricompensa.getPreziosi());
+				Cassa.addPreziosi(ricompensa.getPreziosi());
 			}
 			if (ricompensa.getEsperienza() > 0) {
 				gruppo.addPuntiEsperienza(ricompensa.getEsperienza());
@@ -599,7 +600,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 						incrementaContatore(materiale.getChiave(), -materiale.getQuantita());
 					}
 					if (costruzione.getMonete() > 0) {
-						GruppoGiocatore.getIstanza().addMonete(-costruzione.getMonete());
+						Cassa.addMonete(-costruzione.getMonete());
 					}
 					if (costruzione.getOre() > 0) {
 						LineaTemporale.aggiungiOre(costruzione.getOre());
@@ -617,7 +618,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 				return false;
 			}
 		}
-		return GruppoGiocatore.getIstanza().getMonete() >= costruzione.getMonete();
+		return Cassa.getMonete() >= costruzione.getMonete();
 	}
 
 	/**

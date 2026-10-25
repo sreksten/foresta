@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.mappa.Foresta;
 
@@ -137,11 +138,11 @@ class ScenarioSorveglianzaTest {
 
     private static void riscuoti(PartitaDiTest partita, LaSorveglianza sorveglianza, int ricompensa) {
         Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
-        int monete = partita.gruppo().getMonete();
+        int monete = Cassa.getMonete();
         sorveglianza.controllaPreLocazione();
         sorveglianza.segnaIntermezzoPassoMostrato("RITORNO");
         sorveglianza.controllaInLocazione();
-        assertEquals(monete + ricompensa, partita.gruppo().getMonete());
+        assertEquals(monete + ricompensa, Cassa.getMonete());
         assertTrue(sorveglianza.isCompleta());
         assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof LaSorveglianza && m != sorveglianza),
                 "c'è già un'altra sorveglianza");

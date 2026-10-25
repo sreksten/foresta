@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
@@ -33,7 +34,7 @@ final class DotazioneDiProva {
 			return;
 		}
 		GruppoGiocatoreMD md = (GruppoGiocatoreMD) gruppo.getGruppoMD();
-		md.setMonete(9999);
+		ModelloDati.getIstanza().getCassaMD().setMonete(9999);
 		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
 			md.setIncantesimi(tipoIncantesimo, 99);
 		}

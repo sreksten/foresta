@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
@@ -20,12 +21,12 @@ class AzzeramentoDelMotoreTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(308)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             GruppoGiocatore vecchio = GruppoGiocatore.getIstanza();
-            vecchio.addMonete(1000);
+            Cassa.addMonete(1000);
             int pozioniDelVecchio = vecchio.getPozioniSalute();
 
             StatoDelMotore.azzera();
             GruppoGiocatore nuovo = GruppoGiocatore.getIstanza();
-            nuovo.addMonete(1000);
+            Cassa.addMonete(1000);
             int pozioniDelNuovo = nuovo.getPozioniSalute();
             BusEventi.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.POZIONE_SALUTE, null, null));
 

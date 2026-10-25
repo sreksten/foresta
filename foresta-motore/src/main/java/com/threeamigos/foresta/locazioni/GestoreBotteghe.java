@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.artefatti.RegoleIncantatura;
@@ -20,6 +21,9 @@ import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioForni
 import com.threeamigos.foresta.eventi.richieste.RichiestaTesto;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.economia.MagazziniDeiNegozi;
+import com.threeamigos.foresta.economia.CommercioDelGruppo;
+import com.threeamigos.foresta.economia.OfferteAlchimista;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.tipi.TipoNegozio;
@@ -155,7 +159,7 @@ final class GestoreBotteghe {
 	 */
 	private void chiediNomeArtefattoDaFondere(GruppoGiocatore g) {
 		Collection<Artefatto> banco = incantatore.getBanco().getInventario();
-		Optional<TipoMotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco, g.getMonete(), CommercioDelGruppo.costoFusione(g, banco), Statistiche.getLivello());
+		Optional<TipoMotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco, Cassa.getMonete(), CommercioDelGruppo.costoFusione(g, banco), Statistiche.getLivello());
 		if (motivo.isPresent()) {
 			BusEventi.pubblica(new NotificaRifiutoIncantatura(motivo.get()));
 			return;

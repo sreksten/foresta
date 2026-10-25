@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.interfacce.VistaCassa;
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.economia.CommercioDelGruppo;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
@@ -72,6 +75,11 @@ public class VistaPartitaMotore implements VistaPartita {
 	@Override
 	public VistaMappa getMappa() {
 		return mappa;
+	}
+
+	@Override
+	public VistaCassa getCassa() {
+		return Cassa.VISTA;
 	}
 
 	@Override

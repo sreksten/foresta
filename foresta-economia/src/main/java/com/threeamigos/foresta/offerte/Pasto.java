@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.offerte;
 
+import com.threeamigos.foresta.tipi.CostantiEconomia;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.tipi.Costanti;
 
 /**
  * L'offerta gratuita di un pasto caldo: di solito squisito, e allora rende un po' di salute a tutti i personaggi vivi; a volte non incontra i gusti del gruppo.
@@ -44,7 +44,7 @@ public class Pasto implements Offerta {
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		if (gustoso > 1) {
 			for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
-				personaggio.addSalute(Costanti.RECUPERO_SALUTE_DA_PASTO);
+				personaggio.addSalute(CostantiEconomia.RECUPERO_SALUTE_DA_PASTO);
 			}
 			BusEventi.pubblica(new InternoMostraFinestraStato());
 		}

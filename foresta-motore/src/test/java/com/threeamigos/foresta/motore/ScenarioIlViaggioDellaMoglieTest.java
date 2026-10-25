@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -135,11 +136,11 @@ class ScenarioIlViaggioDellaMoglieTest {
 
             // All'arrivo paga e si separa dal gruppo
             Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(viaggio.getCittaDiArrivo()));
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             viaggio.controllaPreLocazione();
             viaggio.controllaInLocazione();
             assertTrue(viaggio.isCompleta());
-            assertEquals(monete + 25, partita.gruppo().getMonete());
+            assertEquals(monete + 25, Cassa.getMonete());
             assertTrue(partita.gruppo().getOspiti().isEmpty(), "la moglie è arrivata");
             assertEquals(1, viaggi(), "il viaggio si fa una volta sola: completato, non ne lascia uno nuovo");
         }

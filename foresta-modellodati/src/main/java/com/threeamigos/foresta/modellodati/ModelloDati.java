@@ -5,6 +5,8 @@ import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 import com.threeamigos.foresta.canti.CantiImparati;
 import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.economia.MagazziniDeiNegozi;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
@@ -21,6 +23,7 @@ import java.io.PrintWriter;
  * Il modello dati del gioco. Comprende:
  * <ul>
  * <li>GruppoGiocatoreMD - il gruppo del giocatore con tutti i personaggi contenuti</li>
+ * <li>CassaMD - le monete e i preziosi del gruppo</li>
  * <li>TatticheMD - le tattiche dei personaggi</li>
  * <li>CantiImparatiMD - i canti che il gruppo ha imparato strada facendo</li>
  * <li>StatisticheMD - statistiche sul gioco</li>
@@ -28,6 +31,7 @@ import java.io.PrintWriter;
  * <li>ForestaMD - informazioni sulla Foresta</li>
  * <li>RegistroPersonaggiMD - i personaggi sparsi per la Foresta</li>
  * <li>RegistroArtefattiMD - gli artefatti sparsi per la Foresta</li>
+ * <li>MagazziniMD - i magazzini dei negozi</li>
  * <li>RegistroMissioniMD - le missioni del gioco</li>
  * <li>NotizieMD - ultimi messaggi mostrati al giocatore e ultime notizie per la mappa</li>
  * <li>IntermezziMD - gli intermezzi già mostrati</li>
@@ -53,6 +57,8 @@ public class ModelloDati implements Serializzabile {
 		RegistroPersonaggi.setFornitoreDiDati(() -> getIstanza().getRegistroPersonaggiMD());
 		RegistroArtefatti.setFornitoreDiDati(() -> getIstanza().getRegistroArtefattiMD());
 		RegistroMissioni.setFornitoreDiDati(() -> getIstanza().getRegistroMissioniMD());
+		MagazziniDeiNegozi.setFornitoreDiDati(() -> getIstanza().getMagazziniMD());
+		Cassa.setFornitoreDiDati(() -> getIstanza().getCassaMD());
 	}
 
 	/**
@@ -71,6 +77,7 @@ public class ModelloDati implements Serializzabile {
 
 	// Dati sufficienti per mostrare una situazione di salvataggio
 	private final GruppoGiocatoreMD gruppoGiocatoreMD;
+	private final CassaMD cassaMD;
 	private final TatticheMD tatticheMD;
 	// Tutto il resto dei dati di gioco
 	private final CantiImparatiMD cantiImparatiMD;
@@ -79,6 +86,7 @@ public class ModelloDati implements Serializzabile {
 	private final ForestaMD forestaMD;
 	private final RegistroPersonaggiMD registroPersonaggiMD;
 	private final RegistroArtefattiMD registroArtefattiMD;
+	private final MagazziniMD magazziniMD;
 	private final RegistroMissioniMD registroMissioniMD;
 	private final NotizieMD notizieMD;
 	private final IntermezziMD intermezziMD;
@@ -87,6 +95,7 @@ public class ModelloDati implements Serializzabile {
 
 	public ModelloDati() {
 		gruppoGiocatoreMD = new GruppoGiocatoreMD();
+		cassaMD = new CassaMD();
 		tatticheMD = new TatticheMD();
 		cantiImparatiMD = new CantiImparatiMD();
 		statisticheMD = new StatisticheMD();
@@ -94,6 +103,7 @@ public class ModelloDati implements Serializzabile {
 		forestaMD = new ForestaMD();
 		registroPersonaggiMD = new RegistroPersonaggiMD();
 		registroArtefattiMD = new RegistroArtefattiMD();
+		magazziniMD = new MagazziniMD();
 		registroMissioniMD = new RegistroMissioniMD();
 		notizieMD = new NotizieMD();
 		intermezziMD = new IntermezziMD();
@@ -101,6 +111,10 @@ public class ModelloDati implements Serializzabile {
 
 	public final GruppoGiocatoreMD getGruppoGiocatoreMD() {
 		return gruppoGiocatoreMD;
+	}
+
+	public final CassaMD getCassaMD() {
+		return cassaMD;
 	}
 
 	public final TatticheMD getTatticheMD() {
@@ -131,6 +145,10 @@ public class ModelloDati implements Serializzabile {
 		return registroArtefattiMD;
 	}
 
+	public MagazziniMD getMagazziniMD() {
+		return magazziniMD;
+	}
+
 	public RegistroMissioniMD getRegistroMissioniMD() {
 		return registroMissioniMD;
 	}
@@ -158,6 +176,7 @@ public class ModelloDati implements Serializzabile {
 	 */
 	public void reimposta(int dimensioneX, int dimensioneY) {
 		gruppoGiocatoreMD.reimposta();
+		cassaMD.reimposta();
 		tatticheMD.reimposta();
 		cantiImparatiMD.reimposta();
 		statisticheMD.reimposta();
@@ -165,6 +184,7 @@ public class ModelloDati implements Serializzabile {
 		forestaMD.reimposta(dimensioneX, dimensioneY);
 		registroPersonaggiMD.reimposta();
 		registroArtefattiMD.reimposta();
+		magazziniMD.reimposta();
 		registroMissioniMD.reimposta();
 		notizieMD.reimposta();
 		intermezziMD.reimposta();
@@ -178,6 +198,7 @@ public class ModelloDati implements Serializzabile {
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		gruppoGiocatoreMD.salva(stream);
+		cassaMD.salva(stream);
 		tatticheMD.salva(stream);
 		cantiImparatiMD.salva(stream);
 		statisticheMD.salva(stream);
@@ -185,6 +206,7 @@ public class ModelloDati implements Serializzabile {
 		forestaMD.salva(stream);
 		registroPersonaggiMD.salva(stream);
 		registroArtefattiMD.salva(stream);
+		magazziniMD.salva(stream);
 		registroMissioniMD.salva(stream);
 		notizieMD.salva(stream);
 		intermezziMD.salva(stream);
@@ -197,17 +219,20 @@ public class ModelloDati implements Serializzabile {
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		gruppoGiocatoreMD.reimposta();
+		cassaMD.reimposta();
 		tatticheMD.reimposta();
 		cantiImparatiMD.reimposta();
 		statisticheMD.reimposta();
 		lineaTemporaleMD.reimposta();
 		registroPersonaggiMD.reimposta();
 		registroArtefattiMD.reimposta();
+		magazziniMD.reimposta();
 		registroMissioniMD.reimposta();
 		notizieMD.reimposta();
 		intermezziMD.reimposta();
 
 		gruppoGiocatoreMD.leggi(stream);
+		cassaMD.leggi(stream);
 		tatticheMD.leggi(stream);
 		cantiImparatiMD.leggi(stream);
 		statisticheMD.leggi(stream);
@@ -215,6 +240,7 @@ public class ModelloDati implements Serializzabile {
 		forestaMD.leggi(stream);
 		registroPersonaggiMD.leggi(stream);
 		registroArtefattiMD.leggi(stream);
+		magazziniMD.leggi(stream);
 		registroMissioniMD.leggi(stream);
 		notizieMD.leggi(stream);
 		intermezziMD.leggi(stream);

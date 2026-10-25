@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.economia.MagazziniDeiNegozi;
 import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.statistiche.Statistiche;
@@ -84,6 +86,7 @@ public class CostruttoreDellaForesta {
 		GeneratoreDellaForesta.genera(DIMENSIONE_X, DIMENSIONE_Y, RegistroPersonaggi.getNumeroPersonaggiDisponibili(), new PopolatoreDelMondo());
 
 		GruppoGiocatore.getIstanza().reimposta();
+		Cassa.reimposta();
 		// Il gruppo parte da una casella libera a caso: dove sta lo sa la mappa
 		Foresta.posizionaIlGruppoSuUnaCasellaLibera();
 		DotazioneDiProva.applica(GruppoGiocatore.getIstanza());

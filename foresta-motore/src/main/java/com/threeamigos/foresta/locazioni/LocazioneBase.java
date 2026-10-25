@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.tipi.CostantiMissioni;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
@@ -810,8 +811,8 @@ public abstract class LocazioneBase implements Locazione {
 					// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
 					return annullaScelta();
 				}
-				if (gruppo.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(Costanti.FACCE_DEL_DADO_DELLA_CORRUZIONE) > Costanti.SOGLIA_DEL_DADO_DELLA_CORRUZIONE) {
-					gruppo.subMonete(gruppo.getNumeroPersonaggi() * 2);
+				if (Cassa.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(Costanti.FACCE_DEL_DADO_DELLA_CORRUZIONE) > Costanti.SOGLIA_DEL_DADO_DELLA_CORRUZIONE) {
+					Cassa.subMonete(gruppo.getNumeroPersonaggi() * 2);
 					BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() + " ha ottenuto un passaggio sicuro."));
 					BusEventi.pubblica(new InternoCorruzioneRiuscita(classiAvversariVivi()));
 					setOggetto(null);
@@ -918,6 +919,7 @@ public abstract class LocazioneBase implements Locazione {
 					setCompleta(false);
 					setOggetto(null);
 					gruppo.fugge();
+					Cassa.perdeNellaFuga();
 					BusEventi.pubblica(new InternoMostraFinestraStato());
 					if (!gruppo.getCapo().isVivo()) {
 						return Stato.GIOCO_PERSO;
@@ -1430,7 +1432,7 @@ public abstract class LocazioneBase implements Locazione {
 				Personaggio p;
 				for (int i = 0; i < numeroAvversari; i++) {
 					p = gruppoAvversario.getPersonaggio(i);
-					if (p.isCorrompibile() && gruppo.getMonete() > 0) {
+					if (p.isCorrompibile() && Cassa.getMonete() > 0) {
 						opzioneCorruzioneDisponibile = true;
 						break;
 					}
@@ -2088,14 +2090,14 @@ public abstract class LocazioneBase implements Locazione {
 			case 2:
 				return subisciUnAttaccoDellAvversario(personaggio);
 			case 3:
-				if (gruppo.getMonete() > 0) {
-					gruppo.subMonete(Math.min(Dado.tira(SPREGIO_MASSIMO), gruppo.getMonete()));
+				if (Cassa.getMonete() > 0) {
+					Cassa.subMonete(Math.min(Dado.tira(SPREGIO_MASSIMO), Cassa.getMonete()));
 					return "perde alcune monete.";
 				}
 				return null;
 			case 4:
-				if (gruppo.getPreziosi() > 0) {
-					gruppo.subPreziosi(Math.min(Dado.tira(SPREGIO_MASSIMO), gruppo.getPreziosi()));
+				if (Cassa.getPreziosi() > 0) {
+					Cassa.subPreziosi(Math.min(Dado.tira(SPREGIO_MASSIMO), Cassa.getPreziosi()));
 					return "perde alcuni preziosi.";
 				}
 				return null;

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
@@ -138,7 +139,7 @@ class ScenarioOndateTest {
     void unaBandaDiMissioneNonSiCorrompeNeSiFaAmiciziaNeSiAggira() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(291)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
-            partita.gruppo().addMonete(100);
+            Cassa.addMonete(100);
             CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
             Foresta.setPosizioneDelGruppo(bosco);
             Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);

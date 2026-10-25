@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
@@ -89,16 +90,18 @@ class FugaTest {
     void ilGruppoCheFuggePerdeUnaPercentualeDelleScorteENonGliArtefatti() {
         try (PartitaDiTest partita = partita(321)) {
             GruppoGiocatore gruppo = partita.gruppo();
-            gruppo.addMonete(100 - gruppo.getMonete());
+            Cassa.addMonete(100 - Cassa.getMonete());
             gruppo.addPozioniSalute(10 - gruppo.getPozioniSalute());
             gruppo.addPozioniMagia(3 - gruppo.getPozioniMagia());
             gruppo.addIncantesimi(com.threeamigos.foresta.tipi.TipoIncantesimo.FUOCO, 5 - gruppo.getIncantesimi(com.threeamigos.foresta.tipi.TipoIncantesimo.FUOCO));
             int artefatti = gruppo.getInventario().size();
 
+            // Come in LocazioneBase: il gruppo perde le sue scorte, la cassa monete e preziosi
             gruppo.fugge();
+            Cassa.perdeNellaFuga();
 
             int percentuale = CostantiPersonaggi.FUGA_PERDITA_CONSUMABILI_PERCENTUALE;
-            assertEquals(100 - 100 * percentuale / 100, gruppo.getMonete());
+            assertEquals(100 - 100 * percentuale / 100, Cassa.getMonete());
             assertEquals(10 - 10 * percentuale / 100, gruppo.getPozioniSalute());
             assertEquals(5 - 5 * percentuale / 100, gruppo.getIncantesimi(com.threeamigos.foresta.tipi.TipoIncantesimo.FUOCO));
             assertEquals(3, gruppo.getPozioniMagia(), "con poche pozioni, arrotondando per difetto, non se ne perde nessuna");

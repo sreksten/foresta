@@ -14,6 +14,11 @@
     <dependencies>
         <dependency>
             <groupId>com.threeamigos</groupId>
+            <artifactId>foresta-economia</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
             <artifactId>foresta-tattiche</artifactId>
             <version>${project.version}</version>
         </dependency>

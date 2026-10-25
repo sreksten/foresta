@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -71,13 +72,13 @@ class ScenarioCorriereTest {
                     corriere.getDescrizione());
 
             // Tornare a Nyena non serve: si riscuote a Ruuna
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             corriere.controllaPreLocazione();
             corriere.controllaInLocazione();
-            assertEquals(monete, partita.gruppo().getMonete());
+            assertEquals(monete, Cassa.getMonete());
 
             consegnaA(partita, corriere, ruuna);
-            assertEquals(monete + 14 + distanza / 2, partita.gruppo().getMonete());
+            assertEquals(monete + 14 + distanza / 2, Cassa.getMonete());
             List<String> testi = partita.testi();
             String borgomastro = RegistroPersonaggi.getResidente(PersonaggioNoto.BORGOMASTRO, TipoLocazione.CITTA_RUUNA).getNome();
             assertTrue(testi.contains("La lettera sigillata passa al borgomastro, " + borgomastro + "."), String.valueOf(testi));
@@ -98,10 +99,10 @@ class ScenarioCorriereTest {
 
             LineaTemporale.aggiungiOre(corriere.getOreConcesse());
             assertEquals(0, corriere.getOreRimaste());
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             consegnaA(partita, corriere, Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_RUUNA));
             assertTrue(corriere.isCompleta());
-            assertTrue(partita.gruppo().getMonete() > monete);
+            assertTrue(Cassa.getMonete() > monete);
         }
     }
 
@@ -149,10 +150,10 @@ class ScenarioCorriereTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(187)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             IlCorriere contrabbando = prendiLIncarico(IlContrabbandiere.class, VINO, TipoLocazione.CITTA_RUUNA);
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             consegnaA(partita, contrabbando, Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_RUUNA));
             assertTrue(contrabbando.isCompleta());
-            assertTrue(partita.gruppo().getMonete() > monete);
+            assertTrue(Cassa.getMonete() > monete);
             assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof IlContrabbandiere && m != contrabbando));
         }
     }

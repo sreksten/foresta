@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
@@ -62,7 +63,7 @@ class TrofeiNegoziTest {
 	@Test
 	void unAcquistoRifiutatoNonConta() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
-			partita.gruppo().subMonete(partita.gruppo().getMonete());
+			Cassa.subMonete(Cassa.getMonete());
 			Artefatto costoso = artefatto(TipoArtefatto.SPADA, 1);
 			costoso.getModelloDati().setCostoAcquisto(100);
 
@@ -77,7 +78,7 @@ class TrofeiNegoziTest {
 	void bombaroloECartografoContanoGliAcquistiDallAlchimista() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			// Il prezzo lo decide l'alchimista: servono le monete per pagarlo
-			partita.gruppo().addMonete(100_000);
+			Cassa.addMonete(100_000);
 			for (int i = 0; i < 100; i++) {
 				partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.INCANTESIMO, FabbricaIncantesimi.casuale(), null));
 			}

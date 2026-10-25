@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
@@ -97,13 +98,13 @@ class ScenarioNonSparateSulPianistaTest {
             }
 
             Foresta.setPosizioneDelGruppo(casa);
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             pianista.controllaPreLocazione();
             assertEquals("VIAGGIO", pianista.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
             assertFalse(partita.gruppo().getOspiti().isEmpty(), "il bardo c'è ancora per la scena");
             pianista.segnaIntermezzoPassoMostrato("VIAGGIO");
             pianista.controllaInLocazione();
-            assertEquals(monete + 20, partita.gruppo().getMonete());
+            assertEquals(monete + 20, Cassa.getMonete());
             assertTrue(pianista.isCompleta());
             String moglie = RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome();
             assertTrue(partita.testi().contains(moglie + ", la moglie di " + pianista.getBardo() + ", paga 20 monete e trascina il marito in casa per un orecchio."),

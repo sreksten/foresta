@@ -1,9 +1,10 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.economia;
 
+import com.threeamigos.foresta.tipi.CostantiEconomia;
+import com.threeamigos.foresta.economia.OffertaConsumabile;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaOffertaConsumabile;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
@@ -57,33 +58,33 @@ public final class OfferteAlchimista {
 					classe.getCostoAcquisto()));
 		}
 		offerte.add(semplice(TipoConsumabile.POZIONE_SALUTE, "Pozione della Salute",
-				"Fa riacquistare punti di Salute", Costanti.COSTO_POZIONE_SALUTE));
+				"Fa riacquistare punti di Salute", CostantiEconomia.COSTO_POZIONE_SALUTE));
 		offerte.add(semplice(TipoConsumabile.POZIONE_SALUTE_GRANDE, "Pozione della Salute (grande)",
-				"Fa riacquistare punti di Salute e ne aumenta il livello massimo", Costanti.COSTO_POZIONE_SALUTE_GRANDE));
+				"Fa riacquistare punti di Salute e ne aumenta il livello massimo", CostantiEconomia.COSTO_POZIONE_SALUTE_GRANDE));
 		offerte.add(semplice(TipoConsumabile.POZIONE_MAGIA, "Pozione della Magia",
-				"Fa riacquistare punti di Magia", Costanti.COSTO_POZIONE_MAGIA));
+				"Fa riacquistare punti di Magia", CostantiEconomia.COSTO_POZIONE_MAGIA));
 		offerte.add(semplice(TipoConsumabile.POZIONE_MAGIA_GRANDE, "Pozione della Magia (grande)",
-				"Fa riacquistare punti di Magia e ne aumenta il livello massimo", Costanti.COSTO_POZIONE_MAGIA_GRANDE));
+				"Fa riacquistare punti di Magia e ne aumenta il livello massimo", CostantiEconomia.COSTO_POZIONE_MAGIA_GRANDE));
 		int giocanti = 0;
 		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
 			if (!personaggio.isPNG()) {
 				giocanti++;
 				offerte.add(new OffertaConsumabile(TipoConsumabile.AUMENTO_MAGIA_SINGOLO, null, personaggio,
 						"Aumento Magia massima", "Aumenta la magia massima di " + personaggio.getNome(),
-						Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO));
+						CostantiEconomia.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO));
 			}
 		}
 		if (giocanti > 1) {
 			// Il secondo e i successivi costano il 75% del primo
-			long costo = Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO
-					+ (long) (giocanti - 1) * Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO * 75 / 100;
+			long costo = CostantiEconomia.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO
+					+ (long) (giocanti - 1) * CostantiEconomia.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO * 75 / 100;
 			offerte.add(semplice(TipoConsumabile.AUMENTO_MAGIA_GRUPPO, "Aumento Magia massima",
 					"Aumenta la magia massima di tutto il gruppo", (int) costo));
 		}
 		offerte.add(semplice(TipoConsumabile.MAPPA_PARZIALE_FORESTA, "Mappa della zona",
-				"Una mappa della zona circostante", Costanti.COSTO_MAPPA_DELLA_ZONA));
+				"Una mappa della zona circostante", CostantiEconomia.COSTO_MAPPA_DELLA_ZONA));
 		offerte.add(semplice(TipoConsumabile.MAPPA_COMPLETA_FORESTA, "Mappa della Foresta",
-				"Una mappa completa della Foresta", Costanti.COSTO_MAPPA_DELLA_FORESTA));
+				"Una mappa completa della Foresta", CostantiEconomia.COSTO_MAPPA_DELLA_FORESTA));
 		return Collections.unmodifiableList(offerte);
 	}
 

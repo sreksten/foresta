@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
@@ -72,12 +73,12 @@ class ScenarioSoccorsoTest {
             assertTrue(partita.testi().contains(nome + " scende dall'albero. Riportatelo vivo a Nyena."), String.valueOf(partita.testi()));
 
             Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             soccorso.controllaPreLocazione();
             assertTrue(partita.gruppo().getOspiti().contains(taglialegna));
             soccorso.segnaIntermezzoPassoMostrato("RITORNO");
             soccorso.controllaInLocazione();
-            assertEquals(monete + 35, partita.gruppo().getMonete());
+            assertEquals(monete + 35, Cassa.getMonete());
             assertTrue(soccorso.isCompleta());
             assertTrue(partita.gruppo().getOspiti().isEmpty());
             assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof IlSoccorso && m != soccorso));

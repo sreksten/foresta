@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.tipi.CostantiEconomia;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -183,7 +185,7 @@ public class Locanda extends LocazioneBase {
 	public Stato impostaAzioni(GruppoGiocatore gruppo, GruppoAvversario gng, Comando azione) {
 		switch (stato) {
 		case SULLA_PORTA:
-			if (gruppo.getMonete() < Costanti.COSTO_PASTO) {
+			if (Cassa.getMonete() < CostantiEconomia.COSTO_PASTO) {
 				BusEventi.pubblica(new NotificaTestoFrase("L'oste però non è disposto a fare credito..."));
 				return Stato.FINE_LOCAZIONE;
 			}
@@ -195,7 +197,7 @@ public class Locanda extends LocazioneBase {
 			return impostaAzioni(gruppo, gng, azione);
 
 		case ENTRATO:
-			if (gruppo.getMonete() < Costanti.COSTO_PASTO * gruppo.getNumeroPersonaggiVivi()) {
+			if (Cassa.getMonete() < CostantiEconomia.COSTO_PASTO * gruppo.getNumeroPersonaggiVivi()) {
 				BusEventi.pubblica(new NotificaTestoFrase("Non avendo monete sufficienti per tutto il gruppo, una sola persona consuma un pasto in gran fretta. Chi lo fa?"));
 				BusEventi.pubblica(new InternoMostraFinestraStato());
 				stato = StatoInLocanda.CHI_MANGIA;
@@ -213,10 +215,10 @@ public class Locanda extends LocazioneBase {
 				BusEventi.pubblica(new NotificaTestoParagrafo("Viene servito un pasto caldo, che fa riacquistare rapidamente le forze."));
 				int personaggiCheHannoMangiato = 0;
 				for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
-					personaggio.addSalute(Costanti.RECUPERO_SALUTE_DA_PASTO);
+					personaggio.addSalute(CostantiEconomia.RECUPERO_SALUTE_DA_PASTO);
 					personaggiCheHannoMangiato++;
 				}
-				gruppo.subMonete(Costanti.COSTO_PASTO * personaggiCheHannoMangiato);
+				Cassa.subMonete(CostantiEconomia.COSTO_PASTO * personaggiCheHannoMangiato);
 				BusEventi.pubblica(new InternoPastoConsumatoInLocanda());
 
 				if (evento == RICEVE_INFORMAZIONI) {
@@ -240,8 +242,8 @@ public class Locanda extends LocazioneBase {
 
 		case CHI_MANGIA:
 			Personaggio p = gruppo.getPersonaggio(azione.getIndicePersonaggio());
-			p.addSalute(Costanti.RECUPERO_SALUTE_DA_PASTO);
-			gruppo.subMonete(Costanti.COSTO_PASTO);
+			p.addSalute(CostantiEconomia.RECUPERO_SALUTE_DA_PASTO);
+			Cassa.subMonete(CostantiEconomia.COSTO_PASTO);
 			BusEventi.pubblica(new InternoPastoConsumatoInLocanda());
 			String nome = p.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
             String sb = nome + " si è rifocillat" + p.getLetteraFinaleAttributo() +
@@ -261,7 +263,7 @@ public class Locanda extends LocazioneBase {
 
 		case PERNOTTA:
 			if (azione == Comando.SI) {
-				gruppo.subMonete(Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi());
+				Cassa.subMonete(CostantiEconomia.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi());
 				Pernottamento.pernotta(gruppo, TipoRiposo.AL_COPERTO);
 			} else {
 				BusEventi.pubblica(new NotificaTestoFrase("L'oste chiede di lasciare la locanda al più presto."));
@@ -312,12 +314,12 @@ public class Locanda extends LocazioneBase {
 			RegistroPersonaggi.rimuoviPersonaggioInLocazione(Foresta.getPosizioneDelGruppo());
 			GruppoAvversario.getIstanza().rimuoviPersonaggio(personaggioDisponibile);
 			g.aggiungiPersonaggio(RegistroPersonaggi.preparaCompagno(personaggioDisponibile));
-			g.addMonete(Dado.tira(5, 15));
+			Cassa.addMonete(Dado.tira(5, 15));
 			g.addIncantesimi(TipoIncantesimo.ARIA, Dado.tira(0, 3));
 			g.addIncantesimi(TipoIncantesimo.ACQUA, Dado.tira(0, 3));
 			g.addIncantesimi(TipoIncantesimo.TERRA, Dado.tira(0, 3));
 			g.addIncantesimi(TipoIncantesimo.FUOCO, Dado.tira(0, 3));
-			g.addPreziosi(Dado.tira(0, 10));
+			Cassa.addPreziosi(Dado.tira(0, 10));
 			personaggioDisponibile = null;
 			BusEventi.pubblica(new InternoMostraFinestraStato());
 		} else if (personaggioDisponibile != null) {
@@ -348,7 +350,7 @@ public class Locanda extends LocazioneBase {
 
 	private Stato richiediSePernottare(GruppoGiocatore gruppo) {
 		// Pagano i vivi, come in PERNOTTA
-		if (gruppo.getMonete() < Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi()) {
+		if (Cassa.getMonete() < CostantiEconomia.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi()) {
 			BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() +
 					" non ha abbastanza monete per pagare il pernottamento e l'oste chiede di lasciare la locanda al più presto."));
 			generaNotizia();

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
@@ -104,11 +105,11 @@ class ScenarioIncarichiInCittaTest {
             caccia.controllaPostLocazione();
             assertEquals("RITORNO", caccia.getPassoCorrente());
 
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             caccia.controllaPreLocazione();
             assertEquals("RITORNO", caccia.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
             caccia.controllaInLocazione();
-            assertEquals(monete + 15, partita.gruppo().getMonete());
+            assertEquals(monete + 15, Cassa.getMonete());
             assertTrue(caccia.isCompleta());
         }
     }
@@ -153,10 +154,10 @@ class ScenarioIncarichiInCittaTest {
                 assertEquals(Optional.empty(), mandragola.getOggettoInLocazione(casella, TipoLocazione.RADURA, false));
             }
 
-            int monete = partita.gruppo().getMonete();
+            int monete = Cassa.getMonete();
             mandragola.controllaPreLocazione();
             mandragola.controllaInLocazione();
-            assertEquals(monete + 25, partita.gruppo().getMonete());
+            assertEquals(monete + 25, Cassa.getMonete());
             assertTrue(mandragola.isCompleta());
         }
     }
