@@ -21,6 +21,7 @@ import com.threeamigos.foresta.missioni.richieste.InfestazioneRichiesta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
@@ -336,11 +337,11 @@ public abstract class IlNegozio extends IncaricoInCitta {
 		Foresta.costruisciLocazione(posto, bottega);
 		LocazioneMD modelloDati = Foresta.getLocazioneMD(posto);
 		modelloDati.setNome(getParametro(NOME_BOTTEGA));
-		modelloDati.aggiungiProprieta(Bottega.NEGOZIANTE, RegistroPersonaggi.getNomeCompleto(RegistroPersonaggi.getResidente(negoziante, getCitta())));
+		modelloDati.aggiungiProprieta(RegistroPersonaggi.NEGOZIANTE, RegistroPersonaggi.getNomeCompleto(RegistroPersonaggi.getResidente(negoziante, getCitta())));
 		if (bottega == TipoLocazione.ARMAIOLO) {
-			RegistroArtefatti.riempiMagazzino(posto, TipoNegozio.ARMAIOLO);
+			MagazziniDeiNegozi.riempiMagazzino(posto, TipoNegozio.ARMAIOLO);
 		} else if (bottega == TipoLocazione.VENDITORE_DI_PERGAMENE) {
-			RegistroArtefatti.riempiMagazzino(posto, TipoNegozio.VENDITORE_DI_PERGAMENE);
+			MagazziniDeiNegozi.riempiMagazzino(posto, TipoNegozio.VENDITORE_DI_PERGAMENE);
 		}
 		Foresta.setLocazioneConosciuta(posto);
 		BusEventi.pubblica(new NotificaTestoParagrafo(testo(APERTURA)));

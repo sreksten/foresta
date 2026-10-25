@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.missioni.principali;
 
+import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.tipi.Verso;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.*;
-import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.OffertaDelSacerdote;
 import com.threeamigos.foresta.missioni.Passo;
@@ -42,6 +42,20 @@ import java.util.List;
 public class IlGiroDelleSetteChiese extends MissioneAPassi {
 
 	public static final int TEMPLI_DA_LIBERARE = 7;
+
+	/**
+	 * Segnata sulla casella quando il gruppo ripulisce il tempio durante il Giro delle Sette Chiese: da allora il tempio è una
+	 * locazione sicura, senza mostri né oggetti (vedi Tempio).
+	 */
+	public static final String TEMPIO_RIPULITO = "TEMPIO_RIPULITO";
+
+	public static boolean isRipulito(LocazioneMD modelloDati) {
+		return modelloDati.ottieniProprieta(TEMPIO_RIPULITO) != null;
+	}
+
+	public static void ripulisci(LocazioneMD modelloDati) {
+		modelloDati.aggiungiProprieta(TEMPIO_RIPULITO, LocazioneMD.AFFERMATIVO);
+	}
 	/**
 	 * Gli incantesimi che i devoti regalano a fine missione, uno per tipo.
 	 */
@@ -101,11 +115,11 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		return Foresta.getLocazioneDelGruppo() == TipoLocazione.TEMPIO
 				&& GruppoAvversario.getIstanza().getPersonaggiVivi().isEmpty()
-				&& !Tempio.isRipulito(Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()));
+				&& !isRipulito(Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()));
 	}
 
 	private void ripulisciIlTempioCorrente() {
-		Tempio.ripulisci(Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()));
+		ripulisci(Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()));
 	}
 
 	private void scegliIlSacerdote() {
@@ -131,7 +145,7 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 		for (int y = 0; y < Foresta.getDimensioneY(); y++) {
 			for (int x = 0; x < Foresta.getDimensioneX(); x++) {
 				CoordinateMD coordinate = new CoordinateMD(x, y);
-				if (Foresta.getLocazione(coordinate) == TipoLocazione.TEMPIO && Tempio.isRipulito(Foresta.getLocazioneMD(coordinate))) {
+				if (Foresta.getLocazione(coordinate) == TipoLocazione.TEMPIO && isRipulito(Foresta.getLocazioneMD(coordinate))) {
 					ripuliti++;
 				}
 			}

@@ -1,11 +1,11 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.statistiche;
 
-import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.personaggi.GestoreProgressione;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoPuntiEsperienzaAssegnati;
-import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.gruppi.DatiDiProva;
+import com.threeamigos.foresta.modellodati.StatisticheMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,8 +28,9 @@ class EsperienzaDelGruppoTest {
     @BeforeEach
     void nuovoGruppo() {
         BusEventi.azzera();
-        ModelloDati.setIstanza(new ModelloDati());
-        GruppoGiocatore.azzeraIstanza();
+        StatisticheMD statistiche = new StatisticheMD();
+        Statistiche.setFornitoreDiDati(() -> statistiche);
+        DatiDiProva.nuovaPartita();
         gruppo = GruppoGiocatore.getIstanza();
         gruppo.aggiungiPersonaggioSenzaNotificare(new Guerriero("Pippo", 1));
         BusEventi.iscriviti(InternoPuntiEsperienzaAssegnati.class, assegnati::add);

@@ -35,7 +35,7 @@ class BugCacheMappaGeneraleTest {
 		GruppoAvversario.azzeraIstanza();
 		Notizie.registrati();
 		Statistiche.registrati();
-		RegistroArtefatti.registrati();
+		MagazziniDeiNegozi.registrati();
 		RegistroMissioni.registrati();
 
 		// Partita 1: si rivela tutta la mappa e si disegna la mappa generale

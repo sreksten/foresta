@@ -137,7 +137,7 @@ final class GestoreBotteghe {
 	private void apriNegozio(GruppoGiocatore g, TipoNegozio negozio) {
 		List<Comando> comandiPossibili = new ArrayList<>();
 		comandiPossibili.add(Comando.ANNULLA);
-		ScambiatoreArtefatti magazzino = RegistroArtefatti.getScambiatorePerNegozio(Foresta.getPosizioneDelGruppo(), negozio);
+		ScambiatoreArtefatti magazzino = MagazziniDeiNegozi.getScambiatorePerNegozio(Foresta.getPosizioneDelGruppo(), negozio);
 		BusEventi.pubblica(new RichiestaAperturaInventarioCommerciante(comandiPossibili, negozio,
 				new AutomaAcquistiArtefatti(g, magazzino)));
 	}

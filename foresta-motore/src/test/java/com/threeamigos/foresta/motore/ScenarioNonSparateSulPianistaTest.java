@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;

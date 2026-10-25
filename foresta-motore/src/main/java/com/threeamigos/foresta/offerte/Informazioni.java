@@ -7,7 +7,7 @@ import com.threeamigos.foresta.modellodati.RegistroArtefattiMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
-import com.threeamigos.foresta.motore.RegistroArtefatti;
+import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;

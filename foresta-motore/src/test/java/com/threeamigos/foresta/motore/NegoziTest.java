@@ -48,7 +48,7 @@ class NegoziTest {
     void lArmaioloNonCompraPergamene() {
         Artefatto pergamena = artefatto(TipoArtefatto.PERGAMENA, 30);
         gruppo.addArtefatto(pergamena);
-        ScambiatoreArtefatti armaiolo = RegistroArtefatti.getScambiatorePerNegozio(CITTA, TipoNegozio.ARMAIOLO);
+        ScambiatoreArtefatti armaiolo = MagazziniDeiNegozi.getScambiatorePerNegozio(CITTA, TipoNegozio.ARMAIOLO);
 
         assertFalse(CommercioDelGruppo.vende(gruppo, new InternoVenditaArtefatto(gruppo, armaiolo, pergamena, null)));
 
@@ -63,7 +63,7 @@ class NegoziTest {
         Artefatto pergamena = artefatto(TipoArtefatto.PERGAMENA, 30);
         gruppo.addArtefatto(spada);
         gruppo.addArtefatto(pergamena);
-        ScambiatoreArtefatti venditore = RegistroArtefatti.getScambiatorePerNegozio(CITTA, TipoNegozio.VENDITORE_DI_PERGAMENE);
+        ScambiatoreArtefatti venditore = MagazziniDeiNegozi.getScambiatorePerNegozio(CITTA, TipoNegozio.VENDITORE_DI_PERGAMENE);
 
         assertFalse(CommercioDelGruppo.vende(gruppo, new InternoVenditaArtefatto(gruppo, venditore, spada, null)));
         assertTrue(CommercioDelGruppo.vende(gruppo, new InternoVenditaArtefatto(gruppo, venditore, pergamena, null)));
@@ -77,10 +77,10 @@ class NegoziTest {
 
     @Test
     void iMagazziniDellaCittaSiRiempionoOgnunoConLaSuaMerce() {
-        RegistroArtefatti.riempiMagazzini(CITTA, GeneratoreArtefatti.istanza());
+        MagazziniDeiNegozi.riempiMagazzini(CITTA, GeneratoreArtefatti.istanza());
 
-        Collection<Artefatto> armaiolo = RegistroArtefatti.getScambiatorePerNegozio(CITTA, TipoNegozio.ARMAIOLO).getInventario();
-        Collection<Artefatto> venditore = RegistroArtefatti.getScambiatorePerNegozio(CITTA, TipoNegozio.VENDITORE_DI_PERGAMENE).getInventario();
+        Collection<Artefatto> armaiolo = MagazziniDeiNegozi.getScambiatorePerNegozio(CITTA, TipoNegozio.ARMAIOLO).getInventario();
+        Collection<Artefatto> venditore = MagazziniDeiNegozi.getScambiatorePerNegozio(CITTA, TipoNegozio.VENDITORE_DI_PERGAMENE).getInventario();
         assertEquals(Costanti.MAGAZZINO_ARTEFATTI_ARMAIOLO, armaiolo.size());
         assertEquals(Costanti.MAGAZZINO_PERGAMENE, venditore.size());
         assertTrue(armaiolo.stream().allMatch(a -> TipoNegozio.ARMAIOLO.tratta(a.getTipo())));
@@ -93,7 +93,7 @@ class NegoziTest {
         }
         assertEquals(attesi, livelli);
         // Un'altra città ha i magazzini vuoti
-        assertTrue(RegistroArtefatti.getScambiatorePerNegozio(new CoordinateMD(1, 1), TipoNegozio.ARMAIOLO).getInventario().isEmpty());
+        assertTrue(MagazziniDeiNegozi.getScambiatorePerNegozio(new CoordinateMD(1, 1), TipoNegozio.ARMAIOLO).getInventario().isEmpty());
     }
 
     private boolean nelGruppo(Artefatto artefatto) {

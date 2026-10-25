@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -75,13 +76,13 @@ class ScenarioGiroDelleSetteChieseTest {
             GruppoAvversario.getIstanza().aggiungiPersonaggio(FabbricaPersonaggi.crea(TipoPersonaggio.VIVERNA, 1));
             giro.controllaPostLocazione();
             assertFalse(giro.isAttiva());
-            assertFalse(Tempio.isRipulito(Foresta.getLocazioneMD(templi.get(0))));
+            assertFalse(IlGiroDelleSetteChiese.isRipulito(Foresta.getLocazioneMD(templi.get(0))));
 
             // Il primo tempio ripulito: la missione parte e il sacerdote si presenta a locazione conclusa
             GruppoAvversario.getIstanza().rimuoviPersonaggi();
             giro.controllaPostLocazione();
             assertTrue(giro.isAttiva());
-            assertTrue(Tempio.isRipulito(Foresta.getLocazioneMD(templi.get(0))));
+            assertTrue(IlGiroDelleSetteChiese.isRipulito(Foresta.getLocazioneMD(templi.get(0))));
             assertTrue(giro.getDescrizione().endsWith("Ne mancano sei."), giro.getDescrizione());
             Intermezzo presentazione = RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA);
             assertNotNull(presentazione);
@@ -222,7 +223,7 @@ class ScenarioGiroDelleSetteChieseTest {
                     .filter(tempio -> RegistroArtefatti.getArtefattoInLocazione(tempio) == null).findFirst().get();
             LocazioneMD modello = Foresta.getLocazioneMD(coordinate);
             Foresta.setPosizioneDelGruppo(coordinate);
-            Tempio.ripulisci(modello);
+            IlGiroDelleSetteChiese.ripulisci(modello);
             Tempio tempio = new Tempio();
             tempio.setModelloDati(modello);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();

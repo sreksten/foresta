@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.tipi.CostantiBottino;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
@@ -9,7 +10,6 @@ import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoBottino;
 
 import java.util.ArrayList;
@@ -66,19 +66,19 @@ public class Cofano extends OggettoBase implements Bottino {
 	 * se sono già stati trovati tutti), altrimenti null (vedi Costanti).
 	 */
 	static Artefatto artefattoRaro(double tiro, GeneratoreArtefatti generatore, int livello) {
-		double soglia = Costanti.COFANO_PROBABILITA_PERGAMENA;
+		double soglia = CostantiBottino.COFANO_PROBABILITA_PERGAMENA;
 		if (tiro < soglia) {
 			return generatore.generaIngrediente(livello);
 		}
-		soglia += Costanti.COFANO_PROBABILITA_ARTEFATTO;
+		soglia += CostantiBottino.COFANO_PROBABILITA_ARTEFATTO;
 		if (tiro < soglia) {
 			return generatore.generaArtefattoCasuale(livello);
 		}
-		soglia += Costanti.COFANO_PROBABILITA_AGGIORNAMENTO;
+		soglia += CostantiBottino.COFANO_PROBABILITA_AGGIORNAMENTO;
 		if (tiro < soglia) {
 			return generatore.generaAggiornamento(livello);
 		}
-		soglia += Costanti.COFANO_PROBABILITA_LIBRO_TECNICO;
+		soglia += CostantiBottino.COFANO_PROBABILITA_LIBRO_TECNICO;
 		if (tiro < soglia) {
 			return libroTecnicoDaTrovare(generatore, livello);
 		}

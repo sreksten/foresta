@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 
 import com.threeamigos.foresta.mappa.Foresta;
 
-import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
@@ -38,9 +38,9 @@ class ScenarioNomiDelleLocazioniTest {
             assertNotNull(Foresta.getLocazioneMD(tempio).getNome(), "il tempio ha il nome da quando nasce");
             assertEquals(Foresta.nomeDelTempio(tempio), Foresta.getLocazioneMD(tempio).getNome());
             assertNotNull(Foresta.getLocazioneMD(locanda).getNome());
-            assertEquals(Locanda.getNome(Foresta.getLocazioneMD(locanda)), Foresta.getLocazioneMD(locanda).getNome());
+            assertEquals(Locande.getNome(Foresta.getLocazioneMD(locanda)), Foresta.getLocazioneMD(locanda).getNome());
             // La locanda della città ha il suo nome, che non è quello della città
-            String locandaDiRuuna = Locanda.getNome(Foresta.getLocazioneMD(ruuna));
+            String locandaDiRuuna = Locande.getNome(Foresta.getLocazioneMD(ruuna));
             assertNotNull(locandaDiRuuna);
             assertNotEquals("la città di Ruuna", locandaDiRuuna);
 
@@ -61,7 +61,7 @@ class ScenarioNomiDelleLocazioniTest {
             assertEquals(nomeDelTempio, Foresta.getNomeDaMostrare(tempio));
             assertEquals(nomeDellaLocanda, Foresta.getNomeDaMostrare(locanda));
             assertEquals("la città di Ruuna", Foresta.getNomeDaMostrare(ruuna));
-            assertEquals(locandaDiRuuna, Locanda.getNome(Foresta.getLocazioneMD(ruuna)));
+            assertEquals(locandaDiRuuna, Locande.getNome(Foresta.getLocazioneMD(ruuna)));
 
             // Un castello sconfitto diventa rovine, che prendono il nome dal castello
             Foresta.distruggiLocazioneUnica(TipoLocazione.CASTELLO_STREGA, TipoLocazione.ROVINE);

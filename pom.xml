@@ -25,6 +25,8 @@
         <module>foresta-tattiche</module>
         <module>foresta-statistiche</module>
         <module>foresta-intermezzi</module>
+        <module>foresta-bottino</module>
+        <module>foresta-mondo</module>
         <module>foresta-modellodati</module>
         <module>foresta-contratti</module>
         <module>foresta-motore</module>

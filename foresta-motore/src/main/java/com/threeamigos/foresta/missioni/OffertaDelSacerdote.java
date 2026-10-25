@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
-import com.threeamigos.foresta.motore.RegistroPersonaggi;
+import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Sacerdote;
 import com.threeamigos.foresta.personaggi.Sacerdotessa;

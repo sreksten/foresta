@@ -15,6 +15,7 @@ import com.threeamigos.foresta.missioni.Ricompensa;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;

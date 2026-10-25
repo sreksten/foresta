@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
@@ -19,10 +20,6 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
  */
 public abstract class Bottega extends LocazioneBase {
 
-	/**
-	 * Il negoziante, con la provenienza ("Mastro Ferruccio da Ruuna"), scritto sulla casella quando la bottega nasce.
-	 */
-	public static final String NEGOZIANTE = "NEGOZIANTE";
 
 	private final Comando ingresso;
 	private final GestoreBotteghe botteghe = new GestoreBotteghe();
@@ -31,12 +28,6 @@ public abstract class Bottega extends LocazioneBase {
 		this.ingresso = ingresso;
 	}
 
-	/**
-	 * Il negoziante della bottega in quella casella, con la provenienza; null se la casella non ne ha uno.
-	 */
-	public static String getNegoziante(LocazioneMD modelloDati) {
-		return modelloDati.ottieniProprieta(NEGOZIANTE);
-	}
 
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
@@ -45,7 +36,7 @@ public abstract class Bottega extends LocazioneBase {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		String negoziante = getNegoziante(getModelloDati());
+		String negoziante = RegistroPersonaggi.getNegoziante(getModelloDati());
 		BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva " + Articoli.conPreposizione("a", getNome()) + ". "
 				+ (negoziante == null ? "" : Articoli.inizialeMaiuscola(negoziante) + " vi aspetta sulla porta della sua bottega.")));
 	}

@@ -1,9 +1,10 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.tipi.CostantiBottino;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.motore.LocazioneCorrente;
 
-import com.threeamigos.foresta.motore.EsperienzaDelGruppo;
+import com.threeamigos.foresta.statistiche.EsperienzaDelGruppo;
 
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 
@@ -107,7 +108,7 @@ public final class RaccoltaBottino {
 			if (!raccogliArtefatto(gruppo, azione, anello.getArtefatto().orElseThrow(IllegalStateException::new))) {
 				return false;
 			}
-			Statistiche.addPunti(Costanti.ANELLO_MAGICO_PUNTEGGIO);
+			Statistiche.addPunti(CostantiBottino.ANELLO_MAGICO_PUNTEGGIO);
 		}
 		return true;
 	}
@@ -254,12 +255,8 @@ public final class RaccoltaBottino {
 	 */
 	public static List<Comando> candidati(GruppoGiocatore gruppo, Artefatto artefatto) {
 		List<Comando> candidati = new ArrayList<>();
-		List<Personaggio> personaggi = gruppo.getPersonaggi();
-		for (int i = 0; i < personaggi.size(); i++) {
-			Personaggio personaggio = personaggi.get(i);
-			if (personaggio.isVivo() && !personaggio.isATempo() && !personaggio.puoEquipaggiare(artefatto).isPresent()) {
-				candidati.add(Comando.ofPersonaggio(i));
-			}
+		for (int posizione : gruppo.chiPuoEquipaggiare(artefatto)) {
+			candidati.add(Comando.ofPersonaggio(posizione));
 		}
 		return candidati;
 	}

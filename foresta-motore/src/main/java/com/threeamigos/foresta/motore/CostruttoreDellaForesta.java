@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mondo.RegistroArtefatti;
+import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
@@ -104,7 +106,7 @@ public class CostruttoreDellaForesta {
 		@Override
 		public void cittaCostruita(TipoLocazione citta, CoordinateMD coordinate) {
 			RegistroPersonaggi.creaIResidentiDellaCitta(citta);
-			RegistroArtefatti.riempiMagazzini(coordinate, GeneratoreArtefatti.istanza());
+			MagazziniDeiNegozi.riempiMagazzini(coordinate, GeneratoreArtefatti.istanza());
 			Personaggio personaggioDisponibile = RegistroPersonaggi.getPersonaggioDisponibile();
 			if (personaggioDisponibile != null) {
 				RegistroPersonaggi.addPersonaggioInLocazione(personaggioDisponibile, coordinate);

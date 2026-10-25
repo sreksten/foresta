@@ -35,7 +35,19 @@ public final class Locande {
 	public static final String LOCANDA_DIALOGO_LETTO = "LOCANDA_DIALOGO_LETTO";
 	public static final String LOCANDA_RECENSIONE_LETTA = "LOCANDA_RECENSIONE_LETTA";
 
+	/**
+	 * Il nome di una locanda in città: quello della casella è il nome della città (vedi getNome).
+	 */
+	public static final String LOCANDA_NOME_IN_CITTA = "LOCANDA_NOME_IN_CITTA";
+
 	private Locande() {
+	}
+
+	/**
+	 * Il nome della locanda della casella, nel bosco o in una città.
+	 */
+	public static String getNome(LocazioneMD modelloDati) {
+		return modelloDati.getTipo() == TipoLocazione.LOCANDA ? modelloDati.getNome() : modelloDati.ottieniProprieta(LOCANDA_NOME_IN_CITTA);
 	}
 
 	/**

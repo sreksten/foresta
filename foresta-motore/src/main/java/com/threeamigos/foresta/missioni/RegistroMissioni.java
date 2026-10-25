@@ -18,7 +18,7 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.RegistroMissioniMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.Quadrante;
-import com.threeamigos.foresta.motore.RegistroArtefatti;
+import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
@@ -27,6 +27,7 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.*;
+import java.util.function.BooleanSupplier;
 
 /**
  * Le missioni della partita: quelle predefinite ({@link MissionePredefinita#isPredefinita}), in tre elenchi (in corso, completate, fallite), e le secondarie nate durante il gioco, anch'esse
@@ -35,6 +36,29 @@ import java.util.*;
  * {@code RegistroMissioniMD} e si salvano con la partita.
  */
 public class RegistroMissioni {
+
+	// Chi sa se la locazione in corso è completa (i mostri sconfitti, la sfida vinta): le missioni non conoscono le locazioni
+	private static volatile BooleanSupplier locazioneCompleta;
+
+	/**
+	 * Dice alle missioni come sapere se la locazione in corso è completa (lo fa il motore, che conosce la locazione).
+	 */
+	public static void setFornitoreLocazioneCompleta(BooleanSupplier fornitore) {
+		locazioneCompleta = fornitore;
+	}
+
+	/**
+	 * Se la locazione in corso è completa: i suoi mostri sono stati sconfitti, o la sua sfida vinta.
+	 *
+	 * @throws IllegalStateException se il motore non ha detto come saperlo (vedi {@link #setFornitoreLocazioneCompleta})
+	 */
+	public static boolean isLocazioneCompleta() {
+		BooleanSupplier fornitore = locazioneCompleta;
+		if (fornitore == null) {
+			throw new IllegalStateException("Nessuno ha detto alle missioni come sapere se la locazione è completa (vedi setFornitoreLocazioneCompleta)");
+		}
+		return fornitore.getAsBoolean();
+	}
 
 	private static RegistroMissioniMD getRegistroMissioni() {
 		return ModelloDati.getIstanza().getRegistroMissioniMD();

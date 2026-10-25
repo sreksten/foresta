@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.missioni.principali.IlGiroDelleSetteChiese;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
@@ -25,20 +26,6 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
  */
 public class Tempio extends LocazioneBase {
 
-	/**
-	 * Segnata sulla casella quando il gruppo ripulisce il tempio durante il Giro delle Sette Chiese (vedi
-	 * IlGiroDelleSetteChiese): da allora il tempio è una locazione sicura, senza mostri né oggetti.
-	 */
-	public static final String TEMPIO_RIPULITO = "TEMPIO_RIPULITO";
-
-	public static boolean isRipulito(LocazioneMD modelloDati) {
-		return modelloDati.ottieniProprieta(TEMPIO_RIPULITO) != null;
-	}
-
-	public static void ripulisci(LocazioneMD modelloDati) {
-		modelloDati.aggiungiProprieta(TEMPIO_RIPULITO, LocazioneMD.AFFERMATIVO);
-	}
-
 	@Override
 	public TipoLocazione getTipoLocazione() {
 		return TipoLocazione.TEMPIO;
@@ -56,7 +43,7 @@ public class Tempio extends LocazioneBase {
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
 		int nViverne;
         Artefatto a = getArtefatto(g);
-		if (isRipulito(getModelloDati())) {
+		if (IlGiroDelleSetteChiese.isRipulito(getModelloDati())) {
 			// Niente mostri né cofano; un artefatto, se c'è, si trova lì e il gruppo lo prende come in ogni locazione senza custodi
 			if (a != null) {
 				setOggetto(BottinoArtefatto.giaFatto(a));
@@ -81,7 +68,7 @@ public class Tempio extends LocazioneBase {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		if (isRipulito(getModelloDati()) && getOggetto() == null) {
+		if (IlGiroDelleSetteChiese.isRipulito(getModelloDati()) && getOggetto() == null) {
 			BusEventi.pubblica(new NotificaTestoFrase("Qui, " + Articoli.conPreposizione("in", getNome())
 					+ ", regna la pace. Questo era uno dei templi ripuliti durante il Giro delle Sette Chiese."));
 			return;

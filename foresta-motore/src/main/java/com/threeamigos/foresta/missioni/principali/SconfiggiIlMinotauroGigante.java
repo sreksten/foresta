@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.missioni.principali;
 
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.LocazioneCorrente;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -50,7 +49,7 @@ public class SconfiggiIlMinotauroGigante extends MissioneBase implements Mission
     @Override
     public void controllaPostLocazione() {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-        if (Foresta.getLocazioneDelGruppo() == TipoLocazione.CASTELLO_MINOTAURO && LocazioneCorrente.get().isCompleta()) {
+        if (Foresta.getLocazioneDelGruppo() == TipoLocazione.CASTELLO_MINOTAURO && RegistroMissioni.isLocazioneCompleta()) {
             completaMissione();
             BusEventi.pubblica(new NotificaTestoParagrafo("Il Minotauro è stato sconfitto!"));
         }

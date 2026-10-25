@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.motore.EsperienzaDelGruppo;
+import com.threeamigos.foresta.statistiche.EsperienzaDelGruppo;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMissioneCompletata;

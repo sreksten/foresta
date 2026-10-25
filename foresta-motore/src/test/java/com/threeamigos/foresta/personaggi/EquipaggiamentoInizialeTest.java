@@ -5,7 +5,7 @@ import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
-import com.threeamigos.foresta.motore.RegistroPersonaggi;
+import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

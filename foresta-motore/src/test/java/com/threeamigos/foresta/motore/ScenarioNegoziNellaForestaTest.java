@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.tipi.Quadrante;
 
@@ -165,16 +166,16 @@ class ScenarioNegoziNellaForestaTest {
                 assertTrue(Foresta.isLocazioneConosciuta(covo));
                 LocazioneMD md = Foresta.getLocazioneMD(covo);
                 assertNotNull(md.getNome());
-                String negoziante = Bottega.getNegoziante(md);
+                String negoziante = RegistroPersonaggi.getNegoziante(md);
                 assertTrue(negoziante.endsWith(" da " + citta.getNomeDellaCitta()), negoziante);
                 assertTrue(md.getNome().contains(negoziante.substring(0, negoziante.indexOf(" da "))), md.getNome());
                 assertTrue(negozio.getRicordoDellaLocazione().contains(md.getNome()), negozio.getRicordoDellaLocazione());
                 if (attesa == TipoLocazione.ARMAIOLO) {
                     assertEquals(Costanti.MAGAZZINO_ARTEFATTI_ARMAIOLO,
-                            RegistroArtefatti.getScambiatorePerNegozio(covo, TipoNegozio.ARMAIOLO).getInventario().size());
+                            MagazziniDeiNegozi.getScambiatorePerNegozio(covo, TipoNegozio.ARMAIOLO).getInventario().size());
                 } else if (attesa == TipoLocazione.VENDITORE_DI_PERGAMENE) {
                     assertEquals(Costanti.MAGAZZINO_PERGAMENE,
-                            RegistroArtefatti.getScambiatorePerNegozio(covo, TipoNegozio.VENDITORE_DI_PERGAMENE).getInventario().size());
+                            MagazziniDeiNegozi.getScambiatorePerNegozio(covo, TipoNegozio.VENDITORE_DI_PERGAMENE).getInventario().size());
                 }
             }
         }
@@ -196,7 +197,7 @@ class ScenarioNegoziNellaForestaTest {
             for (Object[] voce : botteghe) {
                 TipoLocazione tipo = (TipoLocazione) voce[0];
                 Foresta.costruisciLocazione(bottega, tipo);
-                Foresta.getLocazioneMD(bottega).aggiungiProprieta(Bottega.NEGOZIANTE, "Mastro Prova da Nyena");
+                Foresta.getLocazioneMD(bottega).aggiungiProprieta(RegistroPersonaggi.NEGOZIANTE, "Mastro Prova da Nyena");
                 Foresta.setPosizioneDelGruppo(bottega);
                 assertTrue(tipo.isBottega());
 
@@ -230,7 +231,7 @@ class ScenarioNegoziNellaForestaTest {
             CoordinateMD bottega = new CoordinateMD(citta.getX(), citta.getY() + lato);
             Foresta.costruisciLocazione(bottega, TipoLocazione.ARMAIOLO);
             Foresta.getLocazioneMD(bottega).setNome("la Fucina di Mastro Prova");
-            Foresta.getLocazioneMD(bottega).aggiungiProprieta(Bottega.NEGOZIANTE, "Mastro Prova da Nyena");
+            Foresta.getLocazioneMD(bottega).aggiungiProprieta(RegistroPersonaggi.NEGOZIANTE, "Mastro Prova da Nyena");
             List<Object> aperture = new ArrayList<>();
             BusEventi.iscriviti(RichiestaAperturaInventarioCommerciante.class, aperture::add);
 

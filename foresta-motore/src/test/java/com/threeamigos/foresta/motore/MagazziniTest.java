@@ -102,7 +102,7 @@ class MagazziniTest {
 
 	private static ScambiatoreArtefatti magazzino(TipoNegozio negozio) {
 		CoordinateMD nyena = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA);
-		return RegistroArtefatti.getScambiatorePerNegozio(nyena, negozio);
+		return MagazziniDeiNegozi.getScambiatorePerNegozio(nyena, negozio);
 	}
 
 	private static boolean contiene(Collection<Artefatto> artefatti, Artefatto artefatto) {

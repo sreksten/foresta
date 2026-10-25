@@ -5,7 +5,7 @@ import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.ProprietaDiMissione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.motore.RegistroPersonaggi;
+import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;

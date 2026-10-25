@@ -490,6 +490,22 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	}
 
 	/**
+	 * Le posizioni nel gruppo dei personaggi vivi che possono equipaggiare l'artefatto: slot libero, livello sufficiente, mani
+	 * libere, carico. Le pergamene non hanno mai candidati. Chi è a tempo non conta: se ne andrebbe subito portandosi via
+	 * l'artefatto.
+	 */
+	public List<Integer> chiPuoEquipaggiare(Artefatto artefatto) {
+		List<Integer> posizioni = new ArrayList<>();
+		for (int i = 0; i < personaggi.size(); i++) {
+			Personaggio personaggio = personaggi.get(i);
+			if (personaggio.isVivo() && !personaggio.isATempo() && !personaggio.puoEquipaggiare(artefatto).isPresent()) {
+				posizioni.add(i);
+			}
+		}
+		return posizioni;
+	}
+
+	/**
 	 * Il passaggio di un artefatto dall'inventario del gruppo al personaggio, senza controlli (vanno fatti prima con
 	 * {@link #controllaPrelievo}) e senza notifiche.
 	 */

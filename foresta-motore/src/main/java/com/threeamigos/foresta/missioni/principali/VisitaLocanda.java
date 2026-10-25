@@ -3,7 +3,6 @@ package com.threeamigos.foresta.missioni.principali;
 import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
@@ -62,7 +61,7 @@ public class VisitaLocanda extends MissioneBase {
 		if (coordinate == null) {
 			return "locanda perduta";
 		}
-		nome = Locanda.getNome(Foresta.getLocazioneMD(coordinate));
+		nome = Locande.getNome(Foresta.getLocazioneMD(coordinate));
 		if (nome != null) {
 			aggiungiProprieta(NOME_LOCANDA, nome);
 		}

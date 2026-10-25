@@ -1,11 +1,11 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.mondo;
 
 import com.threeamigos.foresta.artefatti.ArmaFisica;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.RegistroArtefattiMD;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,8 +16,9 @@ class RegistroArtefattiTest {
     private final CoordinateMD tempio = new CoordinateMD(3, 4);
 
     @BeforeEach
-    void nuovoModelloDati() {
-        ModelloDati.setIstanza(new ModelloDati());
+    void nuoviDati() {
+        RegistroArtefattiMD dati = new RegistroArtefattiMD();
+        RegistroArtefatti.setFornitoreDiDati(() -> dati);
     }
 
     @Test

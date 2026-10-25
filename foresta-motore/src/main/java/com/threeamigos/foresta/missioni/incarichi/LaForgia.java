@@ -11,7 +11,6 @@ import com.threeamigos.foresta.missioni.richieste.ForgiaRichiesta;
 import com.threeamigos.foresta.missioni.richieste.MaterialeRichiesto;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.statistiche.Statistiche;
-import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.Numeri;
@@ -102,7 +101,7 @@ public class LaForgia extends IncaricoInCitta {
 		for (int i = 0; i < TENTATIVI_PER_L_ARMA; i++) {
 			riga = ProduttoreDiMissioniCasuale.rigaDiMissioni("FORGIA");
 			Artefatto arma = ForgiaRichiesta.da(riga).leggendario(getLivelloDellIncarico()).costruisci(Statistiche.getLivello());
-			if (!RaccoltaBottino.candidati(GruppoGiocatore.getIstanza(), arma).isEmpty()) {
+			if (!GruppoGiocatore.getIstanza().chiPuoEquipaggiare(arma).isEmpty()) {
 				return riga;
 			}
 		}

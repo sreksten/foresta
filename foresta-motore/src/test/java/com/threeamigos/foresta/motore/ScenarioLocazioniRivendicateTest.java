@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;

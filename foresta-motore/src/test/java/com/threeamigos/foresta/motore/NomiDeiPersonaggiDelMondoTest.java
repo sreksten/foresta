@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
@@ -43,7 +44,7 @@ class NomiDeiPersonaggiDelMondoTest {
 		GruppoAvversario.azzeraIstanza();
 		Notizie.registrati();
 		Statistiche.registrati();
-		RegistroArtefatti.registrati();
+		MagazziniDeiNegozi.registrati();
 		RegistroMissioni.registrati();
 		CostruttoreDellaForesta.reimposta();
 	}

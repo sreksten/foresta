@@ -104,7 +104,7 @@ class ScenarioPartitaTest {
 			for (TipoLocazione citta : TipoLocazione.values()) {
 				if (citta.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 					for (TipoNegozio negozio : TipoNegozio.values()) {
-						RegistroArtefatti.getScambiatorePerNegozio(Foresta.getCoordinateLocazioneUnica(citta), negozio)
+						MagazziniDeiNegozi.getScambiatorePerNegozio(Foresta.getCoordinateLocazioneUnica(citta), negozio)
 								.getInventario()
 								.forEach(a -> magazzini.append(a.getModelloDati().getNome()).append('/')
 										.append(a.getCostoAcquisto()).append(';'));

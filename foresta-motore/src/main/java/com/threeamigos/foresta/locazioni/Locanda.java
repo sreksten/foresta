@@ -16,6 +16,7 @@ import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.offerte.Informazioni;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
@@ -53,10 +54,9 @@ public class Locanda extends LocazioneBase {
 	 * in locande.txt), non a essere mostrato al giocatore.
 	 * <p>
 	 * Il nome di una locanda nel bosco è il nome della casella (LocazioneMD.NOME), come per le altre locazioni con
-	 * un nome; quello di una locanda in città sta in LOCANDA_NOME_IN_CITTA, perché il nome della casella è quello
+	 * un nome; quello di una locanda in città sta in Locande.LOCANDA_NOME_IN_CITTA, perché il nome della casella è quello
 	 * della città.
 	 */
-	private static final String LOCANDA_NOME_IN_CITTA = "LOCANDA_NOME_IN_CITTA";
 	public static final String LOCANDA_NOME_LOCANDIERE = "LOCANDA_NOME_LOCANDIERE";
 	/**
 	 * Quante informazioni la locanda ha già dato: oltre Costanti.LOCANDA_MASSIMO_INFORMAZIONI non
@@ -113,7 +113,7 @@ public class Locanda extends LocazioneBase {
 		if (modelloDati.getTipo() == TipoLocazione.LOCANDA) {
 			modelloDati.setNome(datiLocanda.getNome());
 		} else {
-			modelloDati.aggiungiProprieta(LOCANDA_NOME_IN_CITTA, datiLocanda.getNome());
+			modelloDati.aggiungiProprieta(Locande.LOCANDA_NOME_IN_CITTA, datiLocanda.getNome());
 		}
 		modelloDati.aggiungiProprieta(Locande.LOCANDA_IDENTIFICATIVO, datiLocanda.getIdentificativo());
 		modelloDati.aggiungiProprieta(LOCANDA_NOME_LOCANDIERE, datiLocanda.getNomeLocandiere());
@@ -132,14 +132,7 @@ public class Locanda extends LocazioneBase {
 
 	@Override
 	public String getNome() {
-		return getNome(getModelloDati());
-	}
-
-	/**
-	 * Il nome della locanda della casella, nel bosco o in una città.
-	 */
-	public static String getNome(LocazioneMD modelloDati) {
-		return modelloDati.getTipo() == TipoLocazione.LOCANDA ? modelloDati.getNome() : modelloDati.ottieniProprieta(LOCANDA_NOME_IN_CITTA);
+		return Locande.getNome(getModelloDati());
 	}
 
 	private String getNomeLocandiere() {
@@ -157,7 +150,7 @@ public class Locanda extends LocazioneBase {
 	 */
 	private String descrizioneLocanda(GruppoGiocatore g) {
 		LocazioneMD md = getModelloDati();
-		String nome = getNome(md);
+		String nome = Locande.getNome(md);
 		if (md.ottieniProprieta(Locande.LOCANDA_DIALOGO_LETTO) == null) {
 			md.aggiungiProprieta(Locande.LOCANDA_DIALOGO_LETTO, LocazioneMD.AFFERMATIVO);
 			String dialogo = md.ottieniProprieta(Locande.LOCANDA_DIALOGO);

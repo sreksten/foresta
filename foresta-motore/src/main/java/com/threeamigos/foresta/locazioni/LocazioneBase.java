@@ -31,6 +31,7 @@ import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.offerte.FabbricaOfferte;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Bottino;

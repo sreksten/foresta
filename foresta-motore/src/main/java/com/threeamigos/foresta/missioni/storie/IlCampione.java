@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.missioni.storie;
 
-import com.threeamigos.foresta.motore.LocazioneCorrente;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -9,7 +8,7 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
-import com.threeamigos.foresta.motore.RegistroPersonaggi;
+import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -131,6 +130,6 @@ public class IlCampione extends MissioneAPassi {
 	 */
 	private boolean sfidaVinta() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		return getPosto() != null && getPosto().equals(Foresta.getPosizioneDelGruppo()) && LocazioneCorrente.get().isCompleta();
+		return getPosto() != null && getPosto().equals(Foresta.getPosizioneDelGruppo()) && RegistroMissioni.isLocazioneCompleta();
 	}
 }

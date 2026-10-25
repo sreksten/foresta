@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.mondo;
 
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
@@ -6,7 +6,6 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 
 import com.threeamigos.foresta.mappa.Foresta;
 
-import com.threeamigos.foresta.locazioni.Bottega;
 import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tipi.*;
@@ -20,6 +19,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * I personaggi del mondo che non stanno nel gruppo del giocatore: quelli da distribuire nelle locazioni, quelli già posati nelle caselle e i residenti,
@@ -31,11 +31,37 @@ public class RegistroPersonaggi {
 	private RegistroPersonaggi() {
 	}
 
-	private static RegistroPersonaggiMD getRegistroMD() {
-		return ModelloDati.getIstanza().getRegistroPersonaggiMD();
+	/**
+	 * Segnata sulla casella di una bottega: il nome del negoziante, con la provenienza (vedi locazioni.Bottega e la missione Il negozio).
+	 */
+	public static final String NEGOZIANTE = "NEGOZIANTE";
+
+	// Da dove prendere i dati della partita in corso: il registro non sa chi li custodisce
+	private static volatile Supplier<RegistroPersonaggiMD> fornitoreDiDati;
+
+	/**
+	 * Dice da dove prendere i dati della partita in corso (lo fa chi li custodisce: ogni volta si prendono da quelli in corso).
+	 */
+	public static void setFornitoreDiDati(Supplier<RegistroPersonaggiMD> fornitore) {
+		fornitoreDiDati = fornitore;
 	}
 
-	static void reimposta() {
+	private static RegistroPersonaggiMD getRegistroMD() {
+		Supplier<RegistroPersonaggiMD> fornitore = fornitoreDiDati;
+		if (fornitore == null) {
+			throw new IllegalStateException("Nessuno ha detto dove sono i dati di RegistroPersonaggi (vedi setFornitoreDiDati)");
+		}
+		return fornitore.get();
+	}
+
+	/**
+	 * Il negoziante della bottega in quella casella, con la provenienza; null se la casella non ne ha uno.
+	 */
+	public static String getNegoziante(LocazioneMD modelloDati) {
+		return modelloDati.ottieniProprieta(NEGOZIANTE);
+	}
+
+	public static void reimposta() {
 		getRegistroMD().reimposta();
 		
 		aggiungiPersonaggio(new Guerriero("Reginald", 1));
@@ -70,7 +96,7 @@ public class RegistroPersonaggi {
 	/**
 	 * Uno a caso fra quelli ancora da sistemare nella foresta, tolto dall'elenco; null se sono finiti.
 	 */
-	static Personaggio getPersonaggioDisponibile() {
+	public static Personaggio getPersonaggioDisponibile() {
 		int disponibili = getRegistroMD().getNumeroDisponibili();
 		if (disponibili == 0) {
 			return null;
@@ -78,14 +104,14 @@ public class RegistroPersonaggi {
 		return costruisciPersonaggio(getRegistroMD().rimuoviDisponibile(Dado.tiraAncheAUnaFaccia(disponibili) - 1));
 	}
 
-	static int getNumeroPersonaggiDisponibili() {
+	public static int getNumeroPersonaggiDisponibili() {
 		return getRegistroMD().getNumeroDisponibili();
 	}
 
 	/**
 	 * Uno a caso fra quelli che aspettano in una locazione, tolto dalla sua locazione; null se non ce ne sono.
 	 */
-	static Personaggio getPersonaggioCasuale() {
+	public static Personaggio getPersonaggioCasuale() {
 		List<CoordinateMD> ubicazioni = new ArrayList<>(getRegistroMD().getUbicazioniPersonaggi());
 		if (ubicazioni.isEmpty()) {
 			return null;
@@ -134,7 +160,7 @@ public class RegistroPersonaggi {
 	 * Alla creazione del mondo: il borgomastro, il capitano delle guardie e i quattro artigiani di quella città, ognuno con
 	 * il suo nome (tutti diversi fra loro e da quelli già usciti) e la provenienza.
 	 */
-	static void creaIResidentiDellaCitta(TipoLocazione citta) {
+	public static void creaIResidentiDellaCitta(TipoLocazione citta) {
 		for (PersonaggioNoto noto : PersonaggioNoto.values()) {
 			if (noto.getAmbito() == PersonaggioNoto.Ambito.PER_CITTA) {
 				getResidente(noto, citta);
@@ -145,7 +171,7 @@ public class RegistroPersonaggi {
 	/**
 	 * Alla creazione del mondo: il bardo della locanda, che viaggia di locanda in locanda ma è sempre lui, e sua moglie.
 	 */
-	static void creaIlBardoESuaMoglie() {
+	public static void creaIlBardoESuaMoglie() {
 		getResidente(PersonaggioNoto.BARDO_DELLE_LOCANDE);
 		getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO);
 	}
@@ -205,7 +231,7 @@ public class RegistroPersonaggi {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		TipoLocazione luogo = Foresta.getLocazioneDelGruppo();
 		if (luogo != null && luogo.isBottega()) {
-			return Bottega.getNegoziante(Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()));
+			return getNegoziante(Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()));
 		}
 		if (luogo == null || luogo.getNomeDellaCitta() == null) {
 			return null;

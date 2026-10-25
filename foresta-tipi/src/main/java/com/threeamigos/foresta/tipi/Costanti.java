@@ -46,17 +46,11 @@ public class Costanti {
     public static final double CONTRATTAZIONE_COEFFICIENTE_VENDITA = 0.30;
     public static final double CONTRATTAZIONE_QUOTA_VENDITA_MASSIMA = 0.75;
 
-    // Esiti rari di ogni cofano aperto: 10% una pergamena, 10% un artefatto casuale, 3% un oggetto che fa salire di livello un
-    // artefatto (vedi TipoArtefatto.AGGIORNAMENTO), 0,5% un libro tecnico non ancora trovato (vedi leggendari.txt): 23,5% in tutto
     // Magazzini dei negozi di città, riforniti alla creazione del mondo e a ogni aumento del suo livello:
     // quanti artefatti per negozio, con livelli a rotazione fra livello del mondo - MAGAZZINO_DIVARIO_LIVELLO
     // e livello del mondo + MAGAZZINO_DIVARIO_LIVELLO (mai sotto 1)
     // A ogni aumento del livello del mondo l'armaiolo scarta gli artefatti di livello inferiore al livello
     // del mondo meno questo scarto
-    public static final double COFANO_PROBABILITA_PERGAMENA = 0.10;
-    public static final double COFANO_PROBABILITA_ARTEFATTO = 0.10;
-    public static final double COFANO_PROBABILITA_AGGIORNAMENTO = 0.03;
-    public static final double COFANO_PROBABILITA_LIBRO_TECNICO = 0.005;
     public static final int MAGAZZINO_ARTEFATTI_ARMAIOLO = 6;
     public static final int MAGAZZINO_PERGAMENE = 6;
     public static final int MAGAZZINO_DIVARIO_LIVELLO = 1;
@@ -67,11 +61,7 @@ public class Costanti {
     // ...e, se è un umanoide, la probabilità di una pozione della Salute
     public static final int PROBABILITA_POZIONE_SALUTE_PER_AVVERSARIO_UMANOIDE = 20;
 
-    // Oggetti
-    public static final int ANELLO_MAGICO_AGGIUNTA_VALORE = 5;
-    public static final int ANELLO_MAGICO_AGGIUNTA_CORAGGIO = 5;
-    public static final int ANELLO_MAGICO_AGGIUNTA_CARISMA = 1;
-    public static final int ANELLO_MAGICO_PUNTEGGIO = 50;
+    // Il bottino (anelli, cofani): in CostantiBottino
 
     // Gruppo
     // Oltre ai 5 permanenti, fino a 3 slot aggiuntivi per personaggi temporanei
