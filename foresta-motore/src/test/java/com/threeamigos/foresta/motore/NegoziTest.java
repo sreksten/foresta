@@ -10,7 +10,7 @@ import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.TipoNegozio;
+import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

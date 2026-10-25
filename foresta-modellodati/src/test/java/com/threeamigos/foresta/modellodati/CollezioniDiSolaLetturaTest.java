@@ -8,7 +8,7 @@ import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoNegozio;
+import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

@@ -1159,11 +1159,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		Personaggio formulante = gruppo.getFormulante();
 		// Bardo e Cantastorie hanno i canti, che non consumano pergamene e si cantano solo contro avversari vivi
 		for (TipoCanto canto : CantoDelBardo.cantiUtili(formulante, gruppo, gruppoAvversario)) {
-			comandiPossibili.add(canto.getComando());
+			comandiPossibili.add(ComandiAssociati.di(canto));
 		}
 		// Chierico, Druido, Sacerdote, Mago ed Elfo hanno le loro abilità (compresa l'alba sacra, la luce divina e il dardo arcano), che non consumano pergamene e si usano solo contro avversari vivi
 		for (TipoAbilita abilita : AbilitaInnate.abilitaUtili(formulante, gruppo, gruppoAvversario)) {
-			comandiPossibili.add(abilita.getComando());
+			comandiPossibili.add(ComandiAssociati.di(abilita));
 		}
 		// Il Silenzio per primo, subito dopo le abilità innate: ultimo, prima di ANNULLA, si confondeva con lui
 		List<TipoIncantesimo> inOrdine = new ArrayList<>(Arrays.asList(TipoIncantesimo.values()));
@@ -1171,7 +1171,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		inOrdine.add(0, TipoIncantesimo.SILENZIO);
 		for (TipoIncantesimo tipoIncantesimo : inOrdine) {
 			if (gruppo.getIncantesimi(tipoIncantesimo) > 0 && formulante.getMagia() >= tipoIncantesimo.getCostoLancio()) {
-				comandiPossibili.add(tipoIncantesimo.getComandoDiAttivazione());
+				comandiPossibili.add(ComandiAssociati.di(tipoIncantesimo));
 			}
 		}
 		comandiPossibili.add(Comando.ANNULLA);
@@ -1183,7 +1183,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito entraInStatoAttesaIncantesimoQualsiasi() {
 		List<Comando> comandiPossibili = new ArrayList<>();
 		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
-			comandiPossibili.add(tipoIncantesimo.getComandoDiAttivazione());
+			comandiPossibili.add(ComandiAssociati.di(tipoIncantesimo));
 		}
 		comandiPossibili.add(Comando.ANNULLA);
 		BusEventi.pubblica(new RichiestaSelezioneIncantesimoDaLanciare(comandiPossibili));

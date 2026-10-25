@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
+
 import com.threeamigos.foresta.artefatti.tipi.GradoIncantamento;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.artefatti.tipi.TipoMotivoRifiutoIncantatura;

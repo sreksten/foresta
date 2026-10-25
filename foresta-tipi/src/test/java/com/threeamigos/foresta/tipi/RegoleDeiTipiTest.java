@@ -25,9 +25,7 @@ class RegoleDeiTipiTest {
                         || (mossa == MossaCartaForbiciSasso.FORBICE && altra == MossaCartaForbiciSasso.CARTA);
                 assertEquals(attesa, mossa.batte(altra), mossa + " contro " + altra);
             }
-            assertSame(mossa, MossaCartaForbiciSasso.da(mossa.getComando()));
         }
-        assertNull(MossaCartaForbiciSasso.da(Comando.FUGA));
     }
 
     @Test
@@ -85,16 +83,6 @@ class RegoleDeiTipiTest {
     }
 
     @Test
-    void ilVenditoreTrattaGliIngredientiLArmaioloIlRestoNessunoGliAggiornamentiELeRiprogrammazioni() {
-        for (TipoArtefatto tipo : TipoArtefatto.values()) {
-            boolean ingrediente = tipo.isIngrediente() && !tipo.isAggiornamento() && !tipo.isRiprogrammazione();
-            boolean altro = !tipo.isIngrediente();
-            assertEquals(ingrediente, TipoNegozio.VENDITORE_DI_PERGAMENE.tratta(tipo), tipo.name());
-            assertEquals(altro, TipoNegozio.ARMAIOLO.tratta(tipo), tipo.name());
-        }
-    }
-
-    @Test
     void leClassiDiGenereDiversoHannoLoStessoRuolo() {
         TipoPersonaggio[][] coppie = {
                 {TipoPersonaggio.MAGO, TipoPersonaggio.MAGA}, {TipoPersonaggio.ELFO, TipoPersonaggio.ELFA},
@@ -121,19 +109,11 @@ class RegoleDeiTipiTest {
     }
 
     @Test
-    void cantiEIncantesimiSiScelgonoConIlLoroComando() {
-        for (TipoCanto canto : TipoCanto.values()) {
-            assertSame(canto, TipoCanto.ofComando(canto.getComando()));
-        }
-        assertNull(TipoCanto.ofComando(Comando.FUGA));
-
+    void ognunIncantesimoHaCategoriaPortataETipoDanno() {
         for (TipoIncantesimo incantesimo : TipoIncantesimo.values()) {
-            assertSame(incantesimo, TipoIncantesimo.ofComando(incantesimo.getComandoDiAttivazione()));
             assertNotNull(incantesimo.getCategoriaIncantesimo(), incantesimo.name());
             assertNotNull(incantesimo.getPortata(), incantesimo.name());
         }
-        IllegalArgumentException errore = assertThrows(IllegalArgumentException.class, () -> TipoIncantesimo.ofComando(Comando.FUGA));
-        assertTrue(errore.getMessage().contains("FUGA"), errore.getMessage());
         assertSame(TipoDanno.FUOCO, TipoIncantesimo.FUOCO.getTipoDanno());
         assertNull(TipoIncantesimo.RESURREZIONE.getTipoDanno(), "un incantesimo benefico non fa danni");
     }

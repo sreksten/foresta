@@ -32,8 +32,8 @@ class LuceDivinaTest {
 
     @Test
     void ECaratterizzataComeIlFulmineMaSacraEAPiuBersagli() {
-        assertEquals(Comando.LUCE_DIVINA, TipoAbilita.LUCE_DIVINA.getComando());
-        assertSame(TipoAbilita.LUCE_DIVINA, TipoAbilita.ofComando(Comando.LUCE_DIVINA));
+        assertEquals(Comando.LUCE_DIVINA, ComandiAssociati.di(TipoAbilita.LUCE_DIVINA));
+        assertSame(TipoAbilita.LUCE_DIVINA, ComandiAssociati.abilita(Comando.LUCE_DIVINA));
         assertEquals(CostantiIncantesimi.INCANTESIMO_FULMINE_DANNI, CostantiAbilitaInnate.ABILITA_LUCE_DIVINA_DANNI);
         assertEquals(CostantiIncantesimi.INCANTESIMO_FULMINE_COSTO_LANCIO, TipoAbilita.LUCE_DIVINA.getCostoLancio());
         Personaggio sacerdote = FabbricaPersonaggi.crea(TipoPersonaggio.SACERDOTE, 5);

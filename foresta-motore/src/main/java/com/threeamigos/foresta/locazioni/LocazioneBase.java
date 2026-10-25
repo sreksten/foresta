@@ -658,15 +658,15 @@ public abstract class LocazioneBase implements Locazione {
 				Logger.log(() -> "LocazioneBase.QUALE_FORMULA: " + azione);
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
-				} else if (TipoCanto.ofComando(azione) != null) {
-					Stato statoDopoIlCanto = cantaUnCanto(gruppo.getFormulante(), TipoCanto.ofComando(azione), gruppo, gruppoAvversario);
+				} else if (ComandiAssociati.canto(azione) != null) {
+					Stato statoDopoIlCanto = cantaUnCanto(gruppo.getFormulante(), ComandiAssociati.canto(azione), gruppo, gruppoAvversario);
 					if (statoDopoIlCanto != null) {
 						return statoDopoIlCanto;
 					}
 					statoLocazione = StatoLocazione.IN_LOCAZIONE;
 					break;
-				} else if (TipoAbilita.ofComando(azione) != null) {
-					Stato statoDopoLAbilita = usaUnaAbilita(gruppo.getFormulante(), TipoAbilita.ofComando(azione), gruppo, gruppoAvversario);
+				} else if (ComandiAssociati.abilita(azione) != null) {
+					Stato statoDopoLAbilita = usaUnaAbilita(gruppo.getFormulante(), ComandiAssociati.abilita(azione), gruppo, gruppoAvversario);
 					if (statoDopoLAbilita != null) {
 						return statoDopoLAbilita;
 					}
@@ -676,7 +676,7 @@ public abstract class LocazioneBase implements Locazione {
 					opzioneCorruzioneDisponibile = false;
 					opzioneAmiciziaDisponibile = false;
 					Personaggio formulante = gruppo.getFormulante();
-					TipoIncantesimo tipoIncantesimo = TipoIncantesimo.ofComando(azione);
+					TipoIncantesimo tipoIncantesimo = ComandiAssociati.incantesimo(azione);
 					incantesimo = FabbricaIncantesimi.crea(tipoIncantesimo, formulante.getLivello());
 					if (formulante.getMagia() < incantesimo.getCostoLancio()) {
 
@@ -1064,7 +1064,7 @@ public abstract class LocazioneBase implements Locazione {
 		if (statoLocazione == StatoLocazione.SFIDA_CARTA_FORBICI_SASSO) {
 			// Durante la sfida non si può fare altro
 			for (MossaCartaForbiciSasso mossa : MossaCartaForbiciSasso.values()) {
-				comandiPossibili.add(mossa.getComando());
+				comandiPossibili.add(ComandiAssociati.di(mossa));
 			}
 			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibili));
 			return;
@@ -2004,7 +2004,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * conta (la sfida non si può lasciare).
 	 */
 	private Stato giocaUnaMano(Comando azione) {
-		MossaCartaForbiciSasso mossa = MossaCartaForbiciSasso.da(azione);
+		MossaCartaForbiciSasso mossa = ComandiAssociati.mossa(azione);
 		if (mossa == null) {
 			impostaComandiPossibili();
 			return Stato.IN_LOCAZIONE;

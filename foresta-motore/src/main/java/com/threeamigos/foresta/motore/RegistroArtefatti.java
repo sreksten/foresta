@@ -21,7 +21,7 @@ import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoNegozio;
+import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -197,7 +197,7 @@ class ChiericoEDruidoTest {
     @Test
     void ognunaHaIlSuoComandoELeAbilitaSonoDiUnaSolaClasse() {
         for (TipoAbilita tipo : TipoAbilita.values()) {
-            assertSame(tipo, TipoAbilita.ofComando(tipo.getComando()), tipo.name());
+            assertSame(tipo, ComandiAssociati.abilita(ComandiAssociati.di(tipo)), tipo.name());
             assertNotNull(tipo.getNome());
             assertNotNull(tipo.getDescrizione());
             assertNotNull(TipoAzione.valueOf(tipo.name()), "ha un'azione con lo stesso nome");
@@ -210,8 +210,8 @@ class ChiericoEDruidoTest {
             // Il dardo arcano è di due classi, ognuna con la sua forma maschile e femminile
             assertEquals(tipo == TipoAbilita.DARDO_ARCANO ? 4 : 2, classi, tipo.name() + ": maschile e femminile");
         }
-        assertNull(TipoAbilita.ofComando(Comando.CANTO_CURATIVO));
-        assertNull(TipoAbilita.ofComando(Comando.ANNULLA));
+        assertNull(ComandiAssociati.abilita(Comando.CANTO_CURATIVO));
+        assertNull(ComandiAssociati.abilita(Comando.ANNULLA));
         assertTrue(AbilitaInnate.conosciutaDa(TipoPersonaggio.CHIERICA, TipoAbilita.SCACCIARE_I_NON_MORTI));
         assertTrue(AbilitaInnate.conosciutaDa(TipoPersonaggio.CHIERICO, TipoAbilita.IMPOSIZIONE_DELLE_MANI));
         assertFalse(AbilitaInnate.conosciutaDa(TipoPersonaggio.CHIERICO, TipoAbilita.RADICI));

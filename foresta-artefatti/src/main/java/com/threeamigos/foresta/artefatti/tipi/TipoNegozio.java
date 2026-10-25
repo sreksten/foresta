@@ -1,6 +1,5 @@
-package com.threeamigos.foresta.tipi;
+package com.threeamigos.foresta.artefatti.tipi;
 
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -32,11 +31,16 @@ public enum TipoNegozio {
 	TipoNegozio() {
 	}
 
+	/**
+	 * Il nome del negozio, nella lingua del gioco.
+	 */
 	public String getNome() {
 		return Testi.testoOCostante(this, "NOME");
 	}
 
 	/**
+	 * Se il negozio compra e vende artefatti di quel tipo.
+	 *
 	 * @return true se il negozio compra e vende artefatti di quel tipo: gli oggetti che fanno salire di livello un artefatto
 	 * e il libro che li riprogramma non li tratta nessuno, perché si trovano solo nei cofani
 	 */

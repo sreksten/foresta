@@ -2,44 +2,21 @@ package com.threeamigos.foresta.tipi;
 
 /**
  * Le tre mosse di carta, forbici e sasso: la carta avvolge il sasso, il sasso rompe le forbici, le forbici tagliano la
- * carta. Ognuna corrisponde a un comando del giocatore ({@link Comando#CARTA}, {@link Comando#FORBICE},
- * {@link Comando#SASSO}).
+ * carta. Ognuna corrisponde a un comando del giocatore, che dà {@link ComandiAssociati}.
  *
  * @author Stefano Reksten
  */
 public enum MossaCartaForbiciSasso {
 
-	CARTA(Comando.CARTA),
-	FORBICE(Comando.FORBICE),
-	SASSO(Comando.SASSO);
+	CARTA,
+	FORBICE,
+	SASSO;
 
 	/**
 	 * Se un personaggio di una data classe può partecipare a carta, forbici e sasso. L'OmbraFiamma non partecipa.
 	 */
 	public static boolean puoGiocare(TipoPersonaggio classe) {
 		return classe != TipoPersonaggio.OMBRAFIAMMA;
-	}
-
-	/**
-	 * La mossa che il giocatore ha scelto con quel comando, o null se il comando non è una delle tre.
-	 */
-	public static MossaCartaForbiciSasso da(Comando comando) {
-		for (MossaCartaForbiciSasso mossa : values()) {
-			if (mossa.comando == comando) {
-				return mossa;
-			}
-		}
-		return null;
-	}
-
-	private final Comando comando;
-
-	MossaCartaForbiciSasso(Comando comando) {
-		this.comando = comando;
-	}
-
-	public Comando getComando() {
-		return comando;
 	}
 
 	/**

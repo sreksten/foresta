@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.ComandiAssociati;
+
 import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.Comando;
@@ -41,10 +43,10 @@ class PartitaCartaForbiciSassoTest {
 
     @Test
     void ogniMossaHaIlSuoComando() {
-        assertSame(CARTA, MossaCartaForbiciSasso.da(Comando.CARTA));
-        assertSame(FORBICE, MossaCartaForbiciSasso.da(Comando.FORBICE));
-        assertSame(SASSO, MossaCartaForbiciSasso.da(Comando.SASSO));
-        assertNull(MossaCartaForbiciSasso.da(Comando.FUGA));
+        assertSame(CARTA, ComandiAssociati.mossa(Comando.CARTA));
+        assertSame(FORBICE, ComandiAssociati.mossa(Comando.FORBICE));
+        assertSame(SASSO, ComandiAssociati.mossa(Comando.SASSO));
+        assertNull(ComandiAssociati.mossa(Comando.FUGA));
     }
 
     @Test

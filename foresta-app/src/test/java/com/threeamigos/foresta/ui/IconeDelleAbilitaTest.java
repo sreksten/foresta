@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.tipi.ComandiAssociati;
+
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -23,10 +25,10 @@ class IconeDelleAbilitaTest {
 	void ognunaHaUnComandoDiversoEUnIconaChePuoEssereLetta() {
 		Set<Comando> comandi = new HashSet<>();
 		for (TipoAbilita tipo : TipoAbilita.values()) {
-			Comando comando = tipo.getComando();
+			Comando comando = ComandiAssociati.di(tipo);
 			assertNotNull(comando, tipo.name());
 			assertTrue(comandi.add(comando), "comando ripetuto: " + comando);
-			assertSame(tipo, TipoAbilita.ofComando(comando));
+			assertSame(tipo, ComandiAssociati.abilita(comando));
 			assertNotNull(ClasseIcona.ofComando(comando).getIcona(), comando.name());
 		}
 		assertEquals(TipoAbilita.values().length, comandi.size());

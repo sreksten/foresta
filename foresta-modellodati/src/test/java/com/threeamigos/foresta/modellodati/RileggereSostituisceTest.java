@@ -2,7 +2,7 @@ package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
-import com.threeamigos.foresta.tipi.TipoNegozio;
+import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 

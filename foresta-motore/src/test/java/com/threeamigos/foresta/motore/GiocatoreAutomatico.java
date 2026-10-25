@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
+
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.artefatti.Artefatto;
@@ -1190,7 +1192,7 @@ final class GiocatoreAutomatico {
 				if (danno > azione.danno) {
 					azione.danno = danno;
 					azione.classe = classe;
-					azione.scelta = classe.getComandoDiAttivazione();
+					azione.scelta = ComandiAssociati.di(classe);
 				}
 			}
 			if (AbilitaInnate.conosciutaDa(attore.getClasse(), TipoAbilita.DARDO_ARCANO) && magia >= costoDardo(attore)) {

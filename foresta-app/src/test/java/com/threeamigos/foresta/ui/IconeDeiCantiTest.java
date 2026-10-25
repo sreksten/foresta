@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.tipi.ComandiAssociati;
+
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.ui.barra.ClasseIcona;
@@ -19,10 +21,10 @@ class IconeDeiCantiTest {
 	void ognunoHaUnComandoDiversoEUnIconaChePuoEssereLetta() {
 		Set<Comando> comandi = new HashSet<>();
 		for (TipoCanto tipo : TipoCanto.values()) {
-			Comando comando = tipo.getComando();
+			Comando comando = ComandiAssociati.di(tipo);
 			assertNotNull(comando, tipo.name());
 			assertTrue(comandi.add(comando), "comando ripetuto: " + comando);
-			assertSame(tipo, TipoCanto.ofComando(comando));
+			assertSame(tipo, ComandiAssociati.canto(comando));
 			assertNotNull(ClasseIcona.ofComando(comando).getIcona(), comando.name());
 		}
 		assertEquals(4, comandi.size());
@@ -30,8 +32,8 @@ class IconeDeiCantiTest {
 
 	@Test
 	void glAltriComandiNonSonoCanti() {
-		assertNull(TipoCanto.ofComando(Comando.DARDO_ARCANO));
-		assertNull(TipoCanto.ofComando(Comando.ALBA_SACRA));
-		assertNull(TipoCanto.ofComando(Comando.ANNULLA));
+		assertNull(ComandiAssociati.canto(Comando.DARDO_ARCANO));
+		assertNull(ComandiAssociati.canto(Comando.ALBA_SACRA));
+		assertNull(ComandiAssociati.canto(Comando.ANNULLA));
 	}
 }

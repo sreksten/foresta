@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoVenditaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.tipi.TipoNegozio;
+import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;

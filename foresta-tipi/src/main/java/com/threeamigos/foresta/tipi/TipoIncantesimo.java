@@ -7,8 +7,7 @@ import com.threeamigos.foresta.testi.Testi;
  * Gli incantesimi: un tipo di arma che il giocatore ha a disposizione per combattere gli avversari.
  * <p>Ogni incantesimo ha un nome (coincide con il nome dell'enumerato), una {@link CategoriaIncantesimo} (se è un
  * incantesimo che fa danno al gruppo avversario o apporta beneficio al gruppo del giocatore),
- * una {@link PortataIncantesimo}, un {@link TipoDanno}. Ha anche un {@link Comando} associato che serve per passare
- * la richiesta di lancio dalla UI al motore.
+ * una {@link PortataIncantesimo}, un {@link TipoDanno}.
  * <p>
  * L'identificativo viene usato per salvare e rileggere il modello dati del gruppo del giocatore assieme alle quantità
  * disponibili per quel tipo di incantesimo.
@@ -23,41 +22,25 @@ import com.threeamigos.foresta.testi.Testi;
  */
 public enum TipoIncantesimo {
 
-	ARIA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.ARIA, Comando.ARIA),
-	ACQUA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.ACQUA, Comando.ACQUA),
-	TERRA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.TERRA, Comando.TERRA),
-	FUOCO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.FUOCO, Comando.FUOCO),
-	FULMINE(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.FULMINE, Comando.FULMINE),
-	GELO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.GELO, Comando.GELO),
-	VELENO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.VELENO, Comando.VELENO),
-	MORTE(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.SINGOLO_SOLO_VIVI, TipoDanno.NECROTICO, Comando.MORTE),
-	RESURREZIONE(CategoriaIncantesimo.BENEFICO, PortataIncantesimo.SINGOLO_QUALSIASI, null, Comando.RESURREZIONE),
-	SILENZIO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.GRUPPO, TipoDanno.ARCANO, Comando.SILENZIO);
-
-	/**
-	 * L'incantesimo che il comando attiva.
-	 *
-	 * @throws IllegalArgumentException se il comando non attiva nessun incantesimo
-	 */
-	public static TipoIncantesimo ofComando(Comando comando) {
-		for (TipoIncantesimo corrente : values()) {
-			if (comando == corrente.comandoDiAttivazione) {
-				return corrente;
-			}
-		}
-		throw new IllegalArgumentException("Comando invalido per incantesimo: " + comando);
-	}
+	ARIA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.ARIA),
+	ACQUA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.ACQUA),
+	TERRA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.TERRA),
+	FUOCO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.FUOCO),
+	FULMINE(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.FULMINE),
+	GELO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.GELO),
+	VELENO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.VELENO),
+	MORTE(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.SINGOLO_SOLO_VIVI, TipoDanno.NECROTICO),
+	RESURREZIONE(CategoriaIncantesimo.BENEFICO, PortataIncantesimo.SINGOLO_QUALSIASI, null),
+	SILENZIO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.GRUPPO, TipoDanno.ARCANO);
 
 	private final CategoriaIncantesimo categoriaIncantesimo;
 	private final PortataIncantesimo portata;
 	private final TipoDanno tipoDanno;
-	private final Comando comandoDiAttivazione;
 
-	TipoIncantesimo(CategoriaIncantesimo categoriaIncantesimo, PortataIncantesimo portata, TipoDanno tipoDanno, Comando comando) {
+	TipoIncantesimo(CategoriaIncantesimo categoriaIncantesimo, PortataIncantesimo portata, TipoDanno tipoDanno) {
 		this.categoriaIncantesimo = categoriaIncantesimo;
 		this.portata = portata;
 		this.tipoDanno = tipoDanno;
-		this.comandoDiAttivazione = comando;
 	}
 
 	/**
@@ -79,13 +62,6 @@ public enum TipoIncantesimo {
 	 */
 	public TipoDanno getTipoDanno() {
 		return tipoDanno;
-	}
-
-	/**
-	 * Il comando di attivazione di questo incantesimo
-	 */
-	public Comando getComandoDiAttivazione() {
-		return comandoDiAttivazione;
 	}
 
 	/**

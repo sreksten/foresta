@@ -19,7 +19,7 @@ import com.threeamigos.foresta.eventi.richieste.RichiestaTesto;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.artefatti.tipi.TipoMotivoRifiutoIncantatura;
-import com.threeamigos.foresta.tipi.TipoNegozio;
+import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
 
 import java.util.ArrayList;
 import java.util.Collection;

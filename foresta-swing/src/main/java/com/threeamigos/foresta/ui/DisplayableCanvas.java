@@ -15,7 +15,7 @@ import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoNegozio;
+import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIcone;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIconeDock;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
