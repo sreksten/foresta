@@ -52,6 +52,7 @@ public final class StatoDelMotore {
 		MagazziniDeiNegozi.registrati();
 		RegistroMissioni.registrati();
 		RegistroMissioni.setFornitoreLocazioneCompleta(() -> LocazioneCorrente.get().isCompleta());
+		RegistroMissioni.setRifornitoreDelleBotteghe(MagazziniDeiNegozi::riempiMagazzino);
 		IntermezziDelMotore.registra();
 		CommercioDelGruppo.registrati();
 		com.threeamigos.foresta.combattimento.MeccanicaDelloScontro.registrati();

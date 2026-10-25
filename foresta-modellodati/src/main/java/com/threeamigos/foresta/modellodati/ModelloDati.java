@@ -5,6 +5,7 @@ import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 import com.threeamigos.foresta.canti.CantiImparati;
 import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
+import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
@@ -51,6 +52,7 @@ public class ModelloDati implements Serializzabile {
 		LineaTemporale.setFornitoreDiDati(() -> getIstanza().getLineaTemporaleMD());
 		RegistroPersonaggi.setFornitoreDiDati(() -> getIstanza().getRegistroPersonaggiMD());
 		RegistroArtefatti.setFornitoreDiDati(() -> getIstanza().getRegistroArtefattiMD());
+		RegistroMissioni.setFornitoreDiDati(() -> getIstanza().getRegistroMissioniMD());
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -26,7 +27,7 @@ class LocandaInformazioniTest {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
 					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			// A gruppo pieno in locanda non si incontra nessuno: si ricevono informazioni
-			while (partita.gruppo().getNumeroPersonaggiPermanenti() < Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
+			while (partita.gruppo().getNumeroPersonaggiPermanenti() < CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
 				partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno", 1));
 			}
 

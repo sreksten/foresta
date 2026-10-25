@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -82,7 +83,7 @@ public class Locanda extends LocazioneBase {
 		stato = StatoInLocanda.SULLA_PORTA;
 		// O incontra un personaggio o riceve informazioni
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.getNumeroPersonaggiPermanenti() < Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
+		if (gruppo.getNumeroPersonaggiPermanenti() < CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
 			personaggioDisponibile = RegistroPersonaggi.getPersonaggioInLocazione(Foresta.getPosizioneDelGruppo());
 		}
 		if (personaggioDisponibile != null) {

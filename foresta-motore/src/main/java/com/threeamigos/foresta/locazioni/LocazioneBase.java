@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.tipi.CostantiMissioni;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.tipi.TipoApproccio;
@@ -31,6 +32,7 @@ import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.missioni.PartitaCartaForbiciSasso;
 import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.offerte.FabbricaOfferte;
 import com.threeamigos.foresta.offerte.Offerta;
@@ -869,7 +871,7 @@ public abstract class LocazioneBase implements Locazione {
 
 					// Finché la missione La sfida dei campioni non è partita, a volte l'avversario sfida invece di offrire
 					if (!RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI) && PartitaCartaForbiciSasso.puoGiocare(gruppoAvversario.getCapo().getClasse())
-							&& Dado.tira(100) <= Costanti.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO) {
+							&& Dado.tira(100) <= CostantiMissioni.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO) {
 						return iniziaLaSfida();
 					}
 					offerta = creaOfferta(gruppoAvversario.getCapo().getOfferta(TipoApproccio.AMICIZIA));
@@ -2057,7 +2059,7 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		if (vinta) {
 			gruppo.addSfidaVinta();
-			if (gruppo.getSfideVinte() >= Costanti.SFIDE_VINTE_PER_IL_TORNEO && !RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI)) {
+			if (gruppo.getSfideVinte() >= CostantiMissioni.SFIDE_VINTE_PER_IL_TORNEO && !RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI)) {
 				BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \"" + ProduttoreDiSfideCasuale.fraseDelTorneo() + "\""));
 				RegistroMissioni.avvia(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI);
 			}

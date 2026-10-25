@@ -5,10 +5,10 @@ La sfida a carta, forbici e sasso e la missione che ne nasce, **La sfida dei cam
 ## 1. Panoramica
 
 Quando il gruppo stringe amicizia con degli avversari (`LocazioneBase`, stato `CHI_FA_AMICIZIA`), nel 33% dei casi
-(`Costanti.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO`) invece di un'offerta l'avversario sfida il capo del gruppo a carta,
-forbici e sasso. Si gioca **a tre mani vinte** (`Costanti.VITTORIE_PER_VINCERE_LA_SFIDA`), con i soli comandi `CARTA`,
+(`CostantiMissioni.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO`) invece di un'offerta l'avversario sfida il capo del gruppo a carta,
+forbici e sasso. Si gioca **a tre mani vinte** (`CostantiMissioni.VITTORIE_PER_VINCERE_LA_SFIDA`), con i soli comandi `CARTA`,
 `FORBICE` e `SASSO`; un pareggio non conta e si rigioca. Ogni sfida vinta dal giocatore si conta per tutta la partita
-(`GruppoGiocatoreMD.sfideVinte`, salvato): alla **terza** (`Costanti.SFIDE_VINTE_PER_IL_TORNEO`) l'avversario lo manda
+(`GruppoGiocatoreMD.sfideVinte`, salvato): alla **terza** (`CostantiMissioni.SFIDE_VINTE_PER_IL_TORNEO`) l'avversario lo manda
 al torneo e parte la missione `LaSfidaDeiCampioni`. **Da quel momento nessuno sfida più**: la sfida per amicizia serve
 solo da innesco, e `RegistroMissioni.isPartita(ClasseMissione.LA_SFIDA_DEI_CAMPIONI)` (la missione è una sola per partita, in corso, finita o fallita)
 la spegne, senza nemmeno tirare il dado.
@@ -16,7 +16,7 @@ la spegne, senza nemmeno tirare il dado.
 | Cosa | Dove |
 | :--- | :--- |
 | Le tre mosse, chi batte chi | `tipi/MossaCartaForbiciSasso` |
-| La partita a tre mani vinte | `motore/PartitaCartaForbiciSasso` |
+| La partita a tre mani vinte | `missioni/PartitaCartaForbiciSasso` (in `foresta-missioni`) |
 | Innesco, stato, esito | `locazioni/LocazioneBase` (`StatoLocazione.SFIDA_CARTA_FORBICI_SASSO`, `iniziaLaSfida`, `giocaUnaMano`, `concludiLaSfida`) |
 | Il riquadro | `ui/riquadri/DisplayableCanvasRiquadroSfida`, evento `eventi/interni/InternoSfidaCartaForbiciSasso` |
 | Le frasi | `testi/sfide.txt`, `ProduttoreDiSfideCasuale.fraseDiSfida` e le altre |

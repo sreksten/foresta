@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
@@ -374,7 +375,7 @@ final class GiocatoreAutomatico {
 		if (((servonoAcquisti && monete >= 25) || daVendere) && !citta.isEmpty()) {
 			return citta;
 		}
-		if (gruppo.getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE
+		if (gruppo.getNumeroPersonaggi() < CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_GIOCATORE
 				&& monete >= Costanti.COSTO_PASTO * (vivi + 1) && !locandeNuove.isEmpty()) {
 			return locandeNuove;
 		}

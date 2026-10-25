@@ -109,6 +109,7 @@ public final class CostantiPersonaggi {
     // (AiutoGratuito, AiutoMercenario, lo Scheletro da MIETITURA)
     // Il necromante, finché è vivo, evoca uno scheletro ogni volta che ne cadono due; al più tante evocazioni per scontro
     // Per quanti turni uno Scheletro nato dalla MIETITURA accompagna il gruppo
+    public static final int MAX_PERSONAGGI_GRUPPO_GIOCATORE = 5;
     public static final int MAX_PERSONAGGI_GRUPPO_TOTALE = 8;
     public static final int MIETITURA_DURATA_TURNI = 4;
 

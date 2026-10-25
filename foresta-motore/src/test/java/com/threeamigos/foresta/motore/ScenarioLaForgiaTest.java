@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiMissioni;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.artefatti.Artefatto;
@@ -17,7 +18,6 @@ import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
@@ -69,7 +69,7 @@ class ScenarioLaForgiaTest {
             assertFalse(RaccoltaBottino.candidati(partita.gruppo(), arma.leggendario(1).costruisci(Statistiche.getLivello())).isEmpty(),
                     "l'arma scelta la può impugnare qualcuno del gruppo");
             int costo = forgia.getCosto();
-            assertEquals(Costanti.FORGIA_MONETE_PER_LIVELLO * Statistiche.getLivello(), costo);
+            assertEquals(CostantiMissioni.FORGIA_MONETE_PER_LIVELLO * Statistiche.getLivello(), costo);
 
             // Il metallo, poi il trofeo
             raccogli(forgia, partita, LaForgia.METALLO, forgia.getMetallo(), forgia.getQuantitaDelMetallo());
@@ -92,7 +92,7 @@ class ScenarioLaForgiaTest {
             assertEquals(7, partita.gruppo().getMonete(), "il lavoro è costato quanto promesso");
             assertEquals(0, forgia.getContatore(LaForgia.METALLO));
             assertEquals(0, forgia.getContatore(LaForgia.TROFEO));
-            assertEquals(giornoEOra + Costanti.FORGIA_ORE_DI_LAVORO, LineaTemporale.getGiorno() * 24 + LineaTemporale.getOra());
+            assertEquals(giornoEOra + CostantiMissioni.FORGIA_ORE_DI_LAVORO, LineaTemporale.getGiorno() * 24 + LineaTemporale.getOra());
             // Le ultime parole dell'armaiolo (un passo che passa oltre al primo controllo), poi la lama si raffredda
             forgia.controllaInLocazione();
             assertEquals("RAFFREDDAMENTO", forgia.getPassoCorrente());
@@ -101,7 +101,7 @@ class ScenarioLaForgiaTest {
             // Finché non sono passate le ore, la lama resta nella forgia
             forgia.controllaPostLocazione();
             assertEquals("RAFFREDDAMENTO", forgia.getPassoCorrente());
-            LineaTemporale.aggiungiOre(Costanti.FORGIA_ORE_DI_ATTESA - 1);
+            LineaTemporale.aggiungiOre(CostantiMissioni.FORGIA_ORE_DI_ATTESA - 1);
             forgia.controllaPostLocazione();
             assertEquals("RAFFREDDAMENTO", forgia.getPassoCorrente());
             LineaTemporale.aggiungiOre(1);

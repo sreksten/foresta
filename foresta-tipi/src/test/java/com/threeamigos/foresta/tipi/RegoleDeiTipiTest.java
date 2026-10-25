@@ -11,22 +11,10 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Le piccole regole che le enum del modulo portano con sé: chi batte chi a carta, forbici e sasso, il grado di un incantamento, che
+ * Le piccole regole che le enum del modulo portano con sé: il grado di un incantamento, che
  * cosa tratta un negozio, il ruolo di una classe, quanti effetti regge un artefatto...
  */
 class RegoleDeiTipiTest {
-
-    @Test
-    void cartaBatteSassoSassoBatteForbiceForbiceBatteCarta() {
-        for (MossaCartaForbiciSasso mossa : MossaCartaForbiciSasso.values()) {
-            for (MossaCartaForbiciSasso altra : MossaCartaForbiciSasso.values()) {
-                boolean attesa = (mossa == MossaCartaForbiciSasso.CARTA && altra == MossaCartaForbiciSasso.SASSO)
-                        || (mossa == MossaCartaForbiciSasso.SASSO && altra == MossaCartaForbiciSasso.FORBICE)
-                        || (mossa == MossaCartaForbiciSasso.FORBICE && altra == MossaCartaForbiciSasso.CARTA);
-                assertEquals(attesa, mossa.batte(altra), mossa + " contro " + altra);
-            }
-        }
-    }
 
     @Test
     void ilGradoDiUnIncantamentoCresceConIlLivello() {
