@@ -15,9 +15,9 @@ import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.mappa.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;

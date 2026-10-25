@@ -16,7 +16,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 
 import java.util.Collections;
 import java.util.List;

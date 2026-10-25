@@ -13,8 +13,8 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.testi.ProduttoreDiLocandeCasuale;
 import com.threeamigos.foresta.testi.ProduttoriDiTesti;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.CategoriaLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 import java.util.*;

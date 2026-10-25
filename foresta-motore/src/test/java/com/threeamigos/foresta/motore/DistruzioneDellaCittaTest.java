@@ -6,7 +6,7 @@ import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import org.junit.jupiter.api.Test;
 

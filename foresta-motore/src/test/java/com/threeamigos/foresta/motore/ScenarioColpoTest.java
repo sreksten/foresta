@@ -10,7 +10,7 @@ import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoMissione;
 import org.junit.jupiter.api.Test;
 

@@ -11,9 +11,9 @@ import com.threeamigos.foresta.missioni.storie.IlViandante;
 import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.mappa.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

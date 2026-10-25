@@ -5,7 +5,7 @@ import com.threeamigos.foresta.artefatti.VistaPezzoDelSet;
 import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 
 import java.util.Collection;
 import java.util.List;

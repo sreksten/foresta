@@ -1,7 +1,5 @@
-package com.threeamigos.foresta.interfacce;
+package com.threeamigos.foresta.mappa;
 
-import com.threeamigos.foresta.mappa.CoordinateMD;
-import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.List;
 
@@ -10,10 +8,19 @@ import java.util.List;
  */
 public interface VistaMappa {
 
+	/**
+	 * Quante caselle ha la mappa in orizzontale.
+	 */
 	int getDimensioneX();
 
+	/**
+	 * Quante caselle ha la mappa in verticale.
+	 */
 	int getDimensioneY();
 
+	/**
+	 * Il tipo di locazione di quella casella.
+	 */
 	TipoLocazione getLocazione(CoordinateMD coordinate);
 
 	/**
@@ -21,8 +28,14 @@ public interface VistaMappa {
 	 */
 	int getVarianteBosco(CoordinateMD coordinate);
 
+	/**
+	 * Se il gruppo sa cosa c'è in quella casella.
+	 */
 	boolean isLocazioneConosciuta(CoordinateMD coordinate);
 
+	/**
+	 * Se il gruppo è già passato da quella casella.
+	 */
 	boolean isLocazioneVisitata(CoordinateMD coordinate);
 
 	/**
@@ -35,12 +48,24 @@ public interface VistaMappa {
 	 */
 	int getVersioneMappa();
 
+	/**
+	 * La colonna più a sinistra con una casella conosciuta.
+	 */
 	int getMinXConosciuta();
 
+	/**
+	 * La colonna più a destra con una casella conosciuta.
+	 */
 	int getMaxXConosciuta();
 
+	/**
+	 * La riga più in alto con una casella conosciuta.
+	 */
 	int getMinYConosciuta();
 
+	/**
+	 * La riga più in basso con una casella conosciuta.
+	 */
 	int getMaxYConosciuta();
 
 	/**

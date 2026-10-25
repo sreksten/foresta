@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 
 /**
  * La bottega di un alchimista nella Foresta: incantesimi, pozioni, mappe e aumenti di magia, come in città.

@@ -12,7 +12,7 @@ import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.artefatti.VistaScambio;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
-import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
+import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
 import com.threeamigos.foresta.ui.immagini.ClassePersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;

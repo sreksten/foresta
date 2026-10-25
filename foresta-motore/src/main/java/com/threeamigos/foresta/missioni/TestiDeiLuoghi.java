@@ -5,7 +5,7 @@ import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.mappa.LocazioneMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 
 /**
  * Come le missioni nominano i luoghi nei loro testi.

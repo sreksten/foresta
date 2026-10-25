@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tipi;
+package com.threeamigos.foresta.mappa;
 
 import com.threeamigos.foresta.testi.Testi;
 
@@ -21,34 +21,94 @@ public enum TipoLocazione {
 	/*
 	 * Locazioni standard della Foresta
 	 */
+	/**
+	 * Uno spiazzo senza alberi, dove crescono alcuni ingredienti per l'alchimista.
+	 */
 	RADURA(CategoriaLocazione.STANDARD),
+	/**
+	 * Il bosco: la maggior parte della Foresta.
+	 */
 	BOSCO(CategoriaLocazione.STANDARD),
+	/**
+	 * Una palude.
+	 */
 	PALUDE(CategoriaLocazione.STANDARD),
+	/**
+	 * Una locanda nel bosco, con il suo locandiere.
+	 */
 	LOCANDA(CategoriaLocazione.STANDARD),
+	/**
+	 * Rovine di un castello o di una città, o di una bottega non ancora riaperta.
+	 */
 	ROVINE(CategoriaLocazione.STANDARD),
+	/**
+	 * Un tempio, che a volte custodisce un artefatto.
+	 */
 	TEMPIO(CategoriaLocazione.STANDARD),
+	/**
+	 * Una grotta.
+	 */
 	GROTTA(CategoriaLocazione.STANDARD),
 	/*
 	 * Le botteghe nella Foresta: nascono dalle rovine, alla fine di una missione (vedi missioni.incarichi.IlNegozio)
 	 */
+	/**
+	 * La bottega di un alchimista nella Foresta.
+	 */
 	ALCHIMISTA(CategoriaLocazione.STANDARD),
+	/**
+	 * La bottega di un armaiolo nella Foresta.
+	 */
 	ARMAIOLO(CategoriaLocazione.STANDARD),
+	/**
+	 * La bottega di un venditore di pergamene nella Foresta.
+	 */
 	VENDITORE_DI_PERGAMENE(CategoriaLocazione.STANDARD),
+	/**
+	 * La bottega di un incantatore nella Foresta.
+	 */
 	INCANTATORE(CategoriaLocazione.STANDARD),
 	/*
 	 * Città
 	 */
+	/**
+	 * La città di Nyena.
+	 */
 	CITTA_NYENA(CategoriaLocazione.CITTA),
+	/**
+	 * La città di Malgaard.
+	 */
 	CITTA_MALGAARD(CategoriaLocazione.CITTA),
+	/**
+	 * La città di Ruuna.
+	 */
 	CITTA_RUUNA(CategoriaLocazione.CITTA),
+	/**
+	 * La città di Fleena.
+	 */
 	CITTA_FLEENA(CategoriaLocazione.CITTA),
 	/*
 	 * Castelli
 	 */
+	/**
+	 * Il castello dell'Idra.
+	 */
 	CASTELLO_IDRA(CategoriaLocazione.CASTELLO),
+	/**
+	 * Il castello del Minotauro.
+	 */
 	CASTELLO_MINOTAURO(CategoriaLocazione.CASTELLO),
+	/**
+	 * Il castello del Lich.
+	 */
 	CASTELLO_LICH(CategoriaLocazione.CASTELLO),
+	/**
+	 * Il castello della Strega.
+	 */
 	CASTELLO_STREGA(CategoriaLocazione.CASTELLO),
+	/**
+	 * Il castello del Drago.
+	 */
 	CASTELLO_DRAGO(CategoriaLocazione.CASTELLO);
 
 	private final CategoriaLocazione categoriaLocazione;
@@ -57,6 +117,9 @@ public enum TipoLocazione {
 		this.categoriaLocazione = categoriaLocazione;
 	}
 
+	/**
+	 * La categoria di questa locazione: standard, città o castello.
+	 */
 	public CategoriaLocazione getCategoriaLocazione() {
 		return categoriaLocazione;
 	}
@@ -92,6 +155,9 @@ public enum TipoLocazione {
 		return this == ALCHIMISTA || this == ARMAIOLO || this == VENDITORE_DI_PERGAMENE || this == INCANTATORE;
 	}
 
+	/**
+	 * Se ce n'è una sola nella Foresta (le città e i castelli).
+	 */
 	public final boolean isLocazioneUnica() {
 		return categoriaLocazione != CategoriaLocazione.STANDARD;
 	}

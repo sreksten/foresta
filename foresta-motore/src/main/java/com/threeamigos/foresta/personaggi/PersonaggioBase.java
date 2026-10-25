@@ -22,7 +22,7 @@ import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.oggetti.ArmaNaturale;
-import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
+import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.*;

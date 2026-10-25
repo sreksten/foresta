@@ -16,6 +16,9 @@ public class NotificaVariazioneConoscenzaMappa extends EventoBase {
     private final int aX;
     private final int aY;
 
+    /**
+     * Il gruppo ha scoperto le caselle di quella zona della mappa.
+     */
     public NotificaVariazioneConoscenzaMappa(int daX, int daY, int aX, int aY) {
         super(TipoEvento.NOTIFICA_VARIAZIONE_CONOSCENZA_MAPPA);
         this.daX = daX;
@@ -24,18 +27,30 @@ public class NotificaVariazioneConoscenzaMappa extends EventoBase {
         this.aY = aY;
     }
 
+    /**
+     * La prima colonna della zona.
+     */
     public int getDaX() {
         return daX;
     }
 
+    /**
+     * La prima riga della zona.
+     */
     public int getDaY() {
         return daY;
     }
 
+    /**
+     * L'ultima colonna della zona.
+     */
     public int getAX() {
         return aX;
     }
 
+    /**
+     * L'ultima riga della zona.
+     */
     public int getAY() {
         return aY;
     }

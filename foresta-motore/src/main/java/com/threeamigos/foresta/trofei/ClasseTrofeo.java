@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.trofei;
 
+import com.threeamigos.foresta.mappa.TipoLocazione;
+
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;

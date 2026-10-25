@@ -10,8 +10,8 @@ import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.CategoriaLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 
 import java.util.ArrayList;
 import java.util.List;

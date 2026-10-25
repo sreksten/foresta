@@ -15,7 +15,7 @@ import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzabile;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
-import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
+import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.FaseDiGioco;

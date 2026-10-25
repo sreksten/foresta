@@ -102,4 +102,28 @@ class TrucchiDiSviluppoTest {
         assertThrows(IllegalArgumentException.class, () -> trucchi.accendiNumero(ContestoLancio.TIPO_MOSTRO, 1));
         assertThrows(IllegalArgumentException.class, () -> trucchi.accendiElemento(ContestoLancio.NUMERO_MOSTRI, "x"));
     }
+
+    @Test
+    void ilNumeroEL_ElementoVolutiSiLeggono() {
+        trucchi.accendiNumero(ContestoLancio.NUMERO_MOSTRI, 4);
+        assertEquals(4, trucchi.getNumero(ContestoLancio.NUMERO_MOSTRI).getAsInt());
+        assertFalse(trucchi.getNumero(ContestoLancio.COFANO_ESITO).isPresent());
+        assertFalse(trucchi.getElemento(ContestoLancio.TIPO_MOSTRO).isPresent());
+
+        trucchi.accendiElemento(ContestoLancio.TIPO_MOSTRO, "goblin");
+        assertEquals("goblin", trucchi.getElemento(ContestoLancio.TIPO_MOSTRO).get());
+        assertTrue(trucchi.isAcceso(ContestoLancio.TIPO_MOSTRO), "acceso anche con il solo elemento");
+
+        trucchi.spegni(ContestoLancio.TIPO_MOSTRO);
+        assertFalse(trucchi.getElemento(ContestoLancio.TIPO_MOSTRO).isPresent());
+    }
+
+    @Test
+    void unTruccoFuoriDalLancioNonSiApplicaNeSopraNeSotto() {
+        trucchi.accendiNumero(ContestoLancio.NUMERO_MOSTRI, 4);
+        assertTrue(trucchi.lancio(ContestoLancio.NUMERO_MOSTRI, 1, 6).isPresent());
+        assertFalse(trucchi.lancio(ContestoLancio.NUMERO_MOSTRI, 5, 9).isPresent(), "sotto il minimo");
+        assertFalse(trucchi.lancio(ContestoLancio.NUMERO_MOSTRI, 1, 3).isPresent(), "sopra il massimo");
+        assertFalse(trucchi.lancio(ContestoLancio.COFANO_ESITO, 1, 6).isPresent(), "nessun trucco su quel contesto");
+    }
 }

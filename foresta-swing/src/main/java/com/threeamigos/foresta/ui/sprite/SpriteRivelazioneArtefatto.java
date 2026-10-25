@@ -7,7 +7,7 @@ import com.threeamigos.foresta.artefatti.tipi.TipoRaritaArtefatto;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
-import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
+import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.ui.LivelloDiZoom;

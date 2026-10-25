@@ -3,7 +3,7 @@ package com.threeamigos.foresta.missioni.incarichi;
 import com.threeamigos.foresta.missioni.AspettoDelMandante;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 
 /**
  * Un parente del venditore di pergamene apre un negozio di pergamene nelle rovine disinfestate dal gruppo (vedi IlNegozio).

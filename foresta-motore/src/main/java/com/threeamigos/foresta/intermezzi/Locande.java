@@ -4,8 +4,8 @@ import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.mappa.LocazioneMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.CategoriaLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 
 /**
  * Quanto serve agli intermezzi delle locande, nel bosco o in città, per sapere se il

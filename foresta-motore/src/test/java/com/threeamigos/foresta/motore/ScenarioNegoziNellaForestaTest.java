@@ -1,5 +1,9 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.CategoriaLocazione;
+
+import com.threeamigos.foresta.mappa.TipoLocazione;
+
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;

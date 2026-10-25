@@ -20,6 +20,9 @@ public final class TrucchiDiSviluppo implements TruccatoreDiDadi {
 
     private static final TrucchiDiSviluppo ISTANZA = new TrucchiDiSviluppo();
 
+    /**
+     * L'unica istanza dei trucchi.
+     */
     public static TrucchiDiSviluppo istanza() {
         return ISTANZA;
     }
@@ -68,11 +71,17 @@ public final class TrucchiDiSviluppo implements TruccatoreDiDadi {
         elementi.put(contesto, elemento);
     }
 
+    /**
+     * Spegne il trucco di quel contesto, numero o elemento che sia.
+     */
     public synchronized void spegni(ContestoLancio contesto) {
         numeri.remove(contesto);
         elementi.remove(contesto);
     }
 
+    /**
+     * Se quel contesto ha un trucco acceso.
+     */
     public synchronized boolean isAcceso(ContestoLancio contesto) {
         return numeri.containsKey(contesto) || elementi.containsKey(contesto);
     }

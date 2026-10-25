@@ -18,7 +18,7 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.artefatti.VistaScambio;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
-import com.threeamigos.foresta.strumenti.TestoDeiModificatori;
+import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;

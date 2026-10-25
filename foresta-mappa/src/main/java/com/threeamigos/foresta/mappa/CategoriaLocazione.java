@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tipi;
+package com.threeamigos.foresta.mappa;
 
 /**
  * La categoria di un {@link TipoLocazione}: le locazioni comuni della Foresta, le città e i castelli dei boss.

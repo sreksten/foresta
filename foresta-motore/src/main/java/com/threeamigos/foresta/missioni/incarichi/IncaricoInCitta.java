@@ -13,10 +13,10 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Ricompensa;
 import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.mappa.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 
 import java.util.HashMap;
 import java.util.Locale;

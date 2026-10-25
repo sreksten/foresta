@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.TipoLocazione;
+
 import com.threeamigos.foresta.mappa.CoordinateMD;
 
 import com.threeamigos.foresta.mappa.Foresta;

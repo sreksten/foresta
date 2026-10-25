@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.interfacce;
 
+import com.threeamigos.foresta.mappa.VistaMappa;
+
 import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.tipi.AbilitaInnataDiClasse;
 import com.threeamigos.foresta.tipi.MoltiplicatoreDiClasse;

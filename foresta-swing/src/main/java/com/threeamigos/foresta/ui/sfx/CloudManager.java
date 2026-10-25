@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui.sfx;
 
-import com.threeamigos.foresta.interfacce.VistaMappa;
+import com.threeamigos.foresta.mappa.VistaMappa;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

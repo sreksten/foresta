@@ -1,5 +1,9 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.mappa.CategoriaLocazione;
+
+import com.threeamigos.foresta.mappa.TipoLocazione;
+
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.eventi.BusEventi;

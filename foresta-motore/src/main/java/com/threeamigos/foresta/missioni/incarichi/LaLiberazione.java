@@ -13,7 +13,7 @@ import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 
 /**
  * In città qualcuno chiede di riportare a casa una persona che sta in un posto pericoloso, in mano a dei nemici: un

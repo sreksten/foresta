@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.mappa;
 
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -226,5 +226,16 @@ class ForestaTest {
         terza.reimposta(7, 7);
         corrente[0] = terza;
         assertEquals(7, Foresta.getDimensioneX());
+    }
+
+    @Test
+    void lePartiDelleNotificheEDegliEventiDellaMappaPortanoIlLoroDato() {
+        com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneConoscenzaMappa zona =
+                new com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneConoscenzaMappa(1, 2, 3, 4);
+        assertEquals(1, zona.getDaX());
+        assertEquals(2, zona.getDaY());
+        assertEquals(3, zona.getAX());
+        assertEquals(4, zona.getAY());
+        assertEquals(TipoLocazione.TEMPIO, new com.threeamigos.foresta.eventi.interni.InternoLocazioneVisitata(TipoLocazione.TEMPIO).getTipo());
     }
 }

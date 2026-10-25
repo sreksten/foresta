@@ -16,10 +16,10 @@ import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.mappa.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 
 /**
  * Non sparate sul pianista: alla terza visita a una locanda in tutto (di città o del bosco, contate insieme), se si è in

@@ -5,7 +5,7 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 import com.threeamigos.foresta.ui.schermate.DisegnatoreMappa;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasMappaATuttoSchermo;
 import org.junit.jupiter.api.AfterEach;

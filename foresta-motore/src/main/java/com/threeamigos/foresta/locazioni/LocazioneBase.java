@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.mappa.CategoriaLocazione;
+
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.abilita.AbilitaInnate;

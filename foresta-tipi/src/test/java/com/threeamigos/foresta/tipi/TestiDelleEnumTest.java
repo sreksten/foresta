@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tipi;
 
+
+
 import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
 
 import com.threeamigos.foresta.artefatti.tipi.GradoIncantamento;
@@ -29,8 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class TestiDelleEnumTest {
 
-	// Le enum che hanno i testi in un file, con le voci che ogni costante deve avere (TipoLocazione è a parte: le voci
-	// ci sono solo per le locazioni uniche)
+	// Le enum che hanno i testi in un file, con le voci che ogni costante deve avere
 	private static final Map<Class<? extends Enum<?>>, List<String>> ENUM = new LinkedHashMap<>();
 
 	static {
@@ -105,22 +106,6 @@ class TestiDelleEnumTest {
 	}
 
 	@Test
-	void iNomiDelleLocazioniUnicheSonoNelFile() {
-		for (TipoLocazione locazione : TipoLocazione.values()) {
-			if (locazione.isLocazioneUnica()) {
-				assertTrue(locazione.getNomeProprio() != null && !locazione.getNomeProprio().isEmpty(), "manca il nome di " + locazione);
-			} else {
-                assertNull(locazione.getNomeProprio(), locazione + " non è unica e non ha un nome proprio");
-			}
-			if (locazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
-				assertTrue(locazione.getNomeProprio().endsWith(locazione.getNomeDellaCitta()), locazione.getNomeProprio());
-			} else {
-                assertNull(locazione.getNomeDellaCitta());
-			}
-		}
-	}
-
-	@Test
 	void neiFileNonCiSonoVociPerCostantiOVociCheNonEsistono() throws IOException {
 		for (Map.Entry<Class<? extends Enum<?>>, List<String>> enumerazione : ENUM.entrySet()) {
 			if (enumerazione.getKey() == TipoInterazioneConEffettiDiStato.class) {
@@ -133,8 +118,6 @@ class TestiDelleEnumTest {
 		long adArea = Arrays.stream(TipoInterazioneConEffettiDiStato.values()).filter(i -> i.getDannoAdArea() != null).count();
 		verificaIlFile(TipoInterazioneConEffettiDiStato.class, new HashSet<>(Arrays.asList("DESCRIZIONE", "AREA")),
 				TipoInterazioneConEffettiDiStato.values().length + (int) adArea);
-		// Le locazioni: il nome proprio per le nove uniche, quello della città per le quattro città
-		verificaIlFile(TipoLocazione.class, new HashSet<>(Arrays.asList("NOME_PROPRIO", "NOME_DELLA_CITTA")), 9 + 4);
 	}
 
 	private static void verificaIlFile(Class<? extends Enum<?>> enumerazione, Set<String> voci, int vociAttese) throws IOException {

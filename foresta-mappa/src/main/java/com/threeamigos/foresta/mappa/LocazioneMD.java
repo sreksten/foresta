@@ -3,7 +3,7 @@ package com.threeamigos.foresta.mappa;
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.MappaProprieta;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 
 import java.io.BufferedReader;
 import java.io.IOException;

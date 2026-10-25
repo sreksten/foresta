@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.ui.sfx;
 
-import com.threeamigos.foresta.interfacce.VistaMappa;
+import com.threeamigos.foresta.mappa.VistaMappa;
 import com.threeamigos.foresta.mappa.CoordinateMD;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

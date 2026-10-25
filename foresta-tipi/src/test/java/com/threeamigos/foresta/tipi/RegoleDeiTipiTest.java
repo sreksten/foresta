@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tipi;
 
+
 import com.threeamigos.foresta.artefatti.CostantiArtefatti;
 import com.threeamigos.foresta.artefatti.tipi.*;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
@@ -116,14 +117,5 @@ class RegoleDeiTipiTest {
         }
         assertSame(TipoDanno.FUOCO, TipoIncantesimo.FUOCO.getTipoDanno());
         assertNull(TipoIncantesimo.RESURREZIONE.getTipoDanno(), "un incantesimo benefico non fa danni");
-    }
-
-    @Test
-    void leBottegheDellaForestaSonoQuattro() {
-        Set<TipoLocazione> botteghe = EnumSet.of(TipoLocazione.ALCHIMISTA, TipoLocazione.ARMAIOLO,
-                TipoLocazione.VENDITORE_DI_PERGAMENE, TipoLocazione.INCANTATORE);
-        for (TipoLocazione locazione : TipoLocazione.values()) {
-            assertEquals(botteghe.contains(locazione), locazione.isBottega(), locazione.name());
-        }
     }
 }

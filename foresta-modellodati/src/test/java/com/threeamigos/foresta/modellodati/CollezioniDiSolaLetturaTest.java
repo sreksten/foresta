@@ -9,7 +9,7 @@ import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.mappa.TipoLocazione;
 import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
 import org.junit.jupiter.api.Test;
 
@@ -213,11 +213,11 @@ class CollezioniDiSolaLetturaTest {
 	void laLineaTemporaleNonLasciaModificareLeCittaDistrutte() {
 		LineaTemporaleMD linea = new LineaTemporaleMD();
 
-		assertThrows(UnsupportedOperationException.class, () -> linea.getCittaDistrutte().add(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA));
+		assertThrows(UnsupportedOperationException.class, () -> linea.getCittaDistrutte().add(com.threeamigos.foresta.mappa.TipoLocazione.CITTA_RUUNA));
 
-		linea.addCittaDistrutta(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA);
+		linea.addCittaDistrutta(com.threeamigos.foresta.mappa.TipoLocazione.CITTA_RUUNA);
 		assertEquals(Collections.singletonList(TipoLocazione.CITTA_RUUNA), linea.getCittaDistrutte());
-		assertTrue(linea.isCittaDistrutta(com.threeamigos.foresta.tipi.TipoLocazione.CITTA_RUUNA));
+		assertTrue(linea.isCittaDistrutta(com.threeamigos.foresta.mappa.TipoLocazione.CITTA_RUUNA));
 	}
 
 	@Test
