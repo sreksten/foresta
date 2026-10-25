@@ -5,7 +5,7 @@ La sfida a carta, forbici e sasso e la missione che ne nasce, **La sfida dei cam
 ## 1. Panoramica
 
 Quando il gruppo stringe amicizia con degli avversari (`LocazioneBase`, stato `CHI_FA_AMICIZIA`), nel 33% dei casi
-(`CostantiMissioni.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO`) invece di un'offerta l'avversario sfida il capo del gruppo a carta,
+(`CostantiMissioni.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO`) prima dell'offerta l'avversario sfida il capo del gruppo a carta,
 forbici e sasso. Si gioca **a tre mani vinte** (`CostantiMissioni.VITTORIE_PER_VINCERE_LA_SFIDA`), con i soli comandi `CARTA`,
 `FORBICE` e `SASSO`; un pareggio non conta e si rigioca. Ogni sfida vinta dal giocatore si conta per tutta la partita
 (`GruppoGiocatoreMD.sfideVinte`, salvato): alla **terza** (`CostantiMissioni.SFIDE_VINTE_PER_IL_TORNEO`) l'avversario lo manda
@@ -38,8 +38,9 @@ locazione, come `CHI_DUELLA`. Sfondo e avversari sono quelli della locazione; l'
 - **Una mano.** `PartitaCartaForbiciSasso.gioca` tira la mossa dell'avversario con `Dado.tira(3)` (il dado della partita:
   1 carta, 2 forbici, 3 sasso) e pubblica `InternoSfidaCartaForbiciSasso.mano(...)`.
 - **La fine** (`concludiLaSfida`): l'avversario commenta ("Poffarre! Non avevo mai incontrato un giocatore forte come te!" se
-  vince il giocatore, "Heh! Sono sempre il più forte a questo gioco." se perde) e la locazione **finisce**, vinta o persa,
-  come dopo un'offerta accettata: `setCompleta(true)`, `haStrettoAmicizia` vero, l'oggetto non si prende. L'oggetto non preso sparisce **subito**, appena l'amicizia riesce (`setOggetto(null)` in `CHI_FA_AMICIZIA`, come già per la corruzione), quindi non resta disegnato in una locazione che si svuota; vale per ogni amicizia, non solo per la sfida. Se è la terza
+  vince il giocatore, "Heh! Sono sempre il più forte a questo gioco." se perde) e, vinta o persa, l'avversario fa la sua **offerta di amicizia**
+  (`offriLAmicizia`, la stessa di un'amicizia senza sfida: gratuita, da accettare o rifiutare, o nessuna); la locazione finisce con quella
+  (`setCompleta(true)`). `haStrettoAmicizia` è vero e l'oggetto non si prende. Nella sfida di un campione non c'è nessuna offerta: la locazione finisce subito, completa solo se il giocatore ha vinto. L'oggetto non preso sparisce **subito**, appena l'amicizia riesce (`setOggetto(null)` in `CHI_FA_AMICIZIA`, come già per la corruzione), quindi non resta disegnato in una locazione che si svuota; vale per ogni amicizia, non solo per la sfida. Se è la terza
   vittoria, l'avversario aggiunge la frase del torneo e `RegistroMissioni.avvia(LA_SFIDA_DEI_CAMPIONI)` fa partire la missione (la prepara `LaSfidaDeiCampioni.avviaDaSola()`).
 - **Il salvataggio.** Lo stato della sfida non si salva: si gioca fino a tre mani vinte e solo dopo si può salvare (durante
   la sfida non ci sono i comandi per farlo). Si salva solo il conto delle sfide vinte.

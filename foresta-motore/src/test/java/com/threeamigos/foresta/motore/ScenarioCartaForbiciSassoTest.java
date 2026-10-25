@@ -3,6 +3,8 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.eventi.interni.InternoAmiciziaStretta;
 import com.threeamigos.foresta.eventi.interni.InternoSfidaCartaForbiciSasso;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
@@ -117,6 +119,46 @@ class ScenarioCartaForbiciSassoTest {
             assertNull(LocazioneCorrente.getTipoBottino(), "con la corruzione l'oggetto non si prende e non resta lì");
             assertTrue(Cassa.getMonete() <= monete, "e non è stato preso");
         }
+    }
+
+    @Test
+    void finitaLaSfidaVintaOPersaArrivaComunqueLOffertaDiAmicizia() {
+        // L'offerta dell'avversario si sceglie a caso: fra più partite almeno una chiede se accettare, vinta o persa che sia
+        boolean dopoUnaVittoria = false;
+        boolean dopoUnaSconfitta = false;
+        for (long seme = 1; seme <= 40 && !(dopoUnaVittoria && dopoUnaSconfitta); seme++) {
+            for (boolean vince : new boolean[]{true, false}) {
+                try (PartitaDiTest partita = sfidataDaLIdra(seme)) {
+                    // L'Idra non ha niente da offrire: al suo posto un eremita, che sì
+                    GruppoAvversario avversari = GruppoAvversario.getIstanza();
+                    avversari.reimposta();
+                    avversari.aggiungiPersonaggio(FabbricaPersonaggi.crea(TipoPersonaggio.EREMITA, 1));
+                    Dado.trucca(1, 1);
+                    partita.comando(Comando.AMICIZIA);
+                    if (!new HashSet<>(partita.comandiDisponibili()).equals(LE_TRE_MOSSE)) {
+                        continue;
+                    }
+                    // Il giocatore gioca sempre carta, l'avversario sempre sasso (vince lui) o sempre carta... forbici (perde lui)
+                    Dado.trucca(vince ? 3 : 2, vince ? 3 : 2, vince ? 3 : 2);
+                    partita.comando(Comando.CARTA);
+                    partita.comando(Comando.CARTA);
+                    partita.comando(Comando.CARTA);
+                    assertEquals(vince ? 1 : 0, partita.gruppo().getSfideVinte());
+                    if (partita.comandiDisponibili().contains(Comando.SI)) {
+                        partita.assertStato(Stato.IN_LOCAZIONE);
+                        if (vince) {
+                            dopoUnaVittoria = true;
+                        } else {
+                            dopoUnaSconfitta = true;
+                        }
+                        partita.comando(Comando.NO);
+                        assertNotEquals(Stato.IN_LOCAZIONE, partita.stato(), "rifiutata l'offerta la locazione è finita");
+                    }
+                }
+            }
+        }
+        assertTrue(dopoUnaVittoria, "dopo una sfida vinta l'avversario fa la sua offerta");
+        assertTrue(dopoUnaSconfitta, "e anche dopo una persa");
     }
 
     @Test

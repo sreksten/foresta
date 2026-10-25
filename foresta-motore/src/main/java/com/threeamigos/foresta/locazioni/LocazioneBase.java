@@ -875,22 +875,7 @@ public abstract class LocazioneBase implements Locazione {
 							&& Dado.tira(100) <= CostantiMissioni.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO) {
 						return iniziaLaSfida();
 					}
-					offerta = creaOfferta(gruppoAvversario.getCapo().getOfferta(TipoApproccio.AMICIZIA));
-					if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
-						BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
-						if (offerta.isGratuita(gruppo, gruppoAvversario)) {
-							offerta.accetta(gruppo, gruppoAvversario);
-						} else {
-							BusEventi.pubblica(new NotificaTestoFrase("Accetta?"));
-							BusEventi.pubblica(new RichiestaSelezioneSiNo());
-							statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
-							return Stato.IN_LOCAZIONE;
-						}
-					} else {
-						Logger.log("Mancano i prerequisiti per l'offerta");
-					}
-					setCompleta(true);
-					return Stato.FINE_LOCAZIONE;
+					return offriLAmicizia();
 				} else {
 					String descrizione = subisciUnoSpregio(personaggio);
 
@@ -2002,6 +1987,30 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
+	 * L'amicizia è stretta (con le buone o dopo una sfida): l'avversario fa la sua offerta, se ne ha una e se il gruppo ne
+	 * soddisfa i prerequisiti. Gratuita, la si accetta subito e la locazione finisce; altrimenti si chiede se accettare
+	 * (stato ACCETTA_OFFERTA, che chiude la locazione); senza offerta la locazione finisce.
+	 */
+	private Stato offriLAmicizia() {
+		offerta = creaOfferta(gruppoAvversario.getCapo().getOfferta(TipoApproccio.AMICIZIA));
+		if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
+			BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
+			if (offerta.isGratuita(gruppo, gruppoAvversario)) {
+				offerta.accetta(gruppo, gruppoAvversario);
+			} else {
+				BusEventi.pubblica(new NotificaTestoFrase("Accetta?"));
+				BusEventi.pubblica(new RichiestaSelezioneSiNo());
+				statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
+				return Stato.IN_LOCAZIONE;
+			}
+		} else {
+			Logger.log("Mancano i prerequisiti per l'offerta");
+		}
+		setCompleta(true);
+		return Stato.FINE_LOCAZIONE;
+	}
+
+	/**
 	 * L'avversario sfida il capo del gruppo a carta, forbici e sasso (vedi carta_forbici_sasso.md): una sfida a tre mani
 	 * vinte, con i soli comandi carta, forbici e sasso.
 	 */
@@ -2037,8 +2046,9 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
-	 * Finita la sfida l'avversario commenta, e la locazione finisce. Se il gruppo ha vinto la terza sfida della partita
-	 * l'avversario lo manda al torneo e parte La sfida dei campioni. Nella sfida di un campione, invece, la locazione è
+	 * Finita la sfida l'avversario commenta e, vinta o persa, fa la sua offerta di amicizia come dopo un'amicizia stretta
+	 * senza sfida (vedi {@link #offriLAmicizia}); la locazione finisce con quella. Se il gruppo ha vinto la terza sfida della partita
+	 * l'avversario lo manda al torneo e parte La sfida dei campioni. Nella sfida di un campione, invece, non c'è nessuna offerta: la locazione è
 	 * completa solo se il giocatore ha vinto: se ha perso resta com'era, e si può tornare a riprovare. In ogni caso è
 	 * come aver stretto amicizia: l'oggetto non si prende.
 	 */
@@ -2066,8 +2076,7 @@ public abstract class LocazioneBase implements Locazione {
 				RegistroMissioni.avvia(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI);
 			}
 		}
-		setCompleta(true);
-		return Stato.FINE_LOCAZIONE;
+		return offriLAmicizia();
 	}
 
 	/**
