@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tipi;
+package com.threeamigos.foresta.artefatti.tipi;
 
 import com.threeamigos.foresta.testi.Testi;
 
@@ -59,6 +59,9 @@ public enum TipoMotivoRifiutoIncantatura {
 	TipoMotivoRifiutoIncantatura() {
 	}
 
+	/**
+	 * La frase che spiega il rifiuto, nella lingua del gioco.
+	 */
 	public String getFrase() {
 		return Testi.testoOCostante(this, "FRASE");
 	}

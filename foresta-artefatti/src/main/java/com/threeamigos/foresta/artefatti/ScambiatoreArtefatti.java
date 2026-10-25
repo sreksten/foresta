@@ -1,6 +1,4 @@
-package com.threeamigos.foresta.motore;
-
-import com.threeamigos.foresta.artefatti.Artefatto;
+package com.threeamigos.foresta.artefatti;
 
 import java.util.Collection;
 
@@ -10,13 +8,24 @@ import java.util.Collection;
  */
 public interface ScambiatoreArtefatti {
 
+    /**
+     * Gli artefatti che questa parte ha in questo momento.
+     */
     Collection<Artefatto> getInventario();
 
+    /**
+     * Mette l'artefatto fra quelli di questa parte.
+     */
     void addArtefatto(Artefatto artefatto);
 
+    /**
+     * Toglie l'artefatto da quelli di questa parte.
+     */
     void removeArtefatto(Artefatto artefatto);
 
     /**
+     * Se questa parte accetta l'artefatto in uno scambio.
+     *
      * @return true se questa parte accetta l'artefatto: un negozio, per esempio, tratta solo certi tipi
      */
     default boolean tratta(Artefatto artefatto) {

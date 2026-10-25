@@ -1,13 +1,11 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.artefatti.*;
 import com.threeamigos.foresta.artefatti.tipi.CategoriaArtefatto;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
-import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
+import com.threeamigos.foresta.artefatti.tipi.TipoMotivoRifiutoIncantatura;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,10 +34,16 @@ public final class RegoleIncantatura {
 	private RegoleIncantatura() {
 	}
 
+	/**
+	 * Se è un ingrediente da fondere (pergamena, gemma, monile, gingillo, sigillo, aggiornamento), e non l'artefatto da incantare.
+	 */
 	public static boolean isIngrediente(Artefatto artefatto) {
 		return artefatto.getTipo().isIngrediente();
 	}
 
+	/**
+	 * Se è il libro che riprogramma (vedi TipoArtefatto.RIPROGRAMMAZIONE).
+	 */
 	public static boolean isRiprogrammazione(Artefatto artefatto) {
 		return artefatto.getTipo().isRiprogrammazione();
 	}
@@ -83,11 +87,11 @@ public final class RegoleIncantatura {
 	}
 
 	/**
-	 * Costo della fusione di quel numero di effetti, scontato secondo la CONTRATTAZIONE di chi tratta.
+	 * Costo base della fusione di quel numero di effetti: 10 monete più 5 per ogni effetto. Lo sconto della contrattazione di chi tratta
+	 * non è una regola dell'incantesimo: lo applica chi chiama.
 	 */
-	public static int costo(int effettiDaTrasferire, int contrattazione) {
-		return RegoleContrattazione.prezzoAcquisto(
-				Costanti.FUSIONE_COSTO_BASE + Costanti.FUSIONE_COSTO_PER_EFFETTO * effettiDaTrasferire, contrattazione);
+	public static int costo(int effettiDaTrasferire) {
+		return CostantiArtefatti.FUSIONE_COSTO_BASE + CostantiArtefatti.FUSIONE_COSTO_PER_EFFETTO * effettiDaTrasferire;
 	}
 
 	/**
@@ -104,11 +108,11 @@ public final class RegoleIncantatura {
 	}
 
 	/**
-	 * Se la fusione farà perdere qualche effetto degli ingredienti sul banco o scalzarne qualcuno dell'artefatto, e
-	 * perché: l'incantatore lo dice, ma la fusione si può fare. Vuoto se passa tutto senza scalzare niente (o se
-	 * manca l'artefatto).
+	 * Che cosa farà perdere la fusione, se qualcosa: effetti degli ingredienti sul banco che non passano, o dell'artefatto che
+	 * un effetto migliore scalza (vedi {@link AvvisoDiFusione}). L'incantatore lo dice, ma la fusione si può fare. Vuoto se passa tutto
+	 * senza scalzare niente (o se manca l'artefatto, o se si riprogramma).
 	 */
-	public static Optional<String> avvisoEffettiPersi(Collection<Artefatto> banco) {
+	public static Optional<AvvisoDiFusione> avvisoEffettiPersi(Collection<Artefatto> banco) {
 		Optional<Artefatto> artefatto = artefattoSulBanco(banco);
 		if (!artefatto.isPresent() || conRiprogrammazione(banco)) {
 			return Optional.empty();
@@ -120,39 +124,32 @@ public final class RegoleIncantatura {
 		int passano = piano.daAggiungere.size();
 		int scalzati = piano.daTogliere.size();
 		if (passano == 0 && sensati > 0 && aggiornamenti(banco) == 0) {
-			return Optional.of("Nessun effetto è migliore di quelli dell'artefatto: la fusione non cambierebbe niente.");
+			return Optional.of(AvvisoDiFusione.nessunMiglioramento());
 		}
 		if (passano == totale && scalzati == 0) {
 			return Optional.empty();
 		}
-		List<String> frasi = new ArrayList<>();
+		AvvisoDiFusione.Perdita perdita = null;
 		if (sensati > passano) {
-			frasi.add(passano == 1
-					? "L'artefatto tiene i migliori effetti: passerà un solo effetto, gli altri andranno persi."
-					: "L'artefatto tiene i migliori effetti: passeranno " + passano + " effetti, gli altri andranno persi.");
+			perdita = AvvisoDiFusione.Perdita.LIMITE_DI_EFFETTI;
 		} else if (totale > passano) {
 			if (!isArma(artefatto.get()) && haModificatoriSulBersaglio(ingredienti)) {
-				frasi.add("I modificatori sul bersaglio si fondono solo sulle armi: passeranno solo gli altri effetti.");
+				perdita = AvvisoDiFusione.Perdita.MODIFICATORI_SUL_BERSAGLIO_SOLO_SULLE_ARMI;
 			} else {
-				frasi.add(isLibro(artefatto.get())
-						? "Sul libro gli incantamenti elementali non hanno effetto: passeranno solo gli altri effetti."
-						: "Il potere magico si fonde solo su bastoni e libri magici: passeranno solo gli altri effetti.");
+				perdita = isLibro(artefatto.get())
+						? AvvisoDiFusione.Perdita.INCANTAMENTI_ELEMENTALI_NON_SUL_LIBRO
+						: AvvisoDiFusione.Perdita.POTERE_MAGICO_SOLO_SU_BASTONI_E_LIBRI;
 			}
 		}
-		if (scalzati > 0) {
-			frasi.add(scalzati == 1
-					? "Un effetto dell'artefatto sarà scalzato da uno migliore."
-					: scalzati + " effetti dell'artefatto saranno scalzati da altri migliori.");
-		}
-		return Optional.of(String.join(" ", frasi));
+		return Optional.of(AvvisoDiFusione.di(perdita, passano, scalzati));
 	}
 
 	/**
 	 * Se si può aggiungere l'oggetto al banco: un solo artefatto, incantabile, con almeno un posto libero, e
 	 * nessun ingrediente che sull'artefatto non avrebbe effetto, e senza far salire l'artefatto oltre il livello del mondo con gli
-	 * aggiornamenti. Vuoto se si può.
+	 * aggiornamenti: oltre il livello massimo non si va. Vuoto se si può.
 	 */
-	public static Optional<TipoMotivoRifiutoIncantatura> puoMettereSulBanco(Collection<Artefatto> banco, Artefatto nuovo) {
+	public static Optional<TipoMotivoRifiutoIncantatura> puoMettereSulBanco(Collection<Artefatto> banco, Artefatto nuovo, int livelloMassimo) {
 		Optional<Artefatto> artefatto = artefattoSulBanco(banco);
 		List<Artefatto> ingredienti = ingredienti(banco);
 		int aggiornamenti = aggiornamenti(banco);
@@ -176,7 +173,7 @@ public final class RegoleIncantatura {
 			if (riprogramma) {
 				return Optional.empty();
 			}
-			if (aggiornamenti > 0 && artefatto.get().getLivello() + aggiornamenti > livelloMassimoPerAggiornamenti()) {
+			if (aggiornamenti > 0 && artefatto.get().getLivello() + aggiornamenti > livelloMassimo) {
 				return Optional.of(TipoMotivoRifiutoIncantatura.LIVELLO_DEL_MONDO_RAGGIUNTO);
 			}
 			return problemi(artefatto.get(), ingredienti);
@@ -185,16 +182,11 @@ public final class RegoleIncantatura {
 	}
 
 	/**
-	 * Se si può fare la fusione con quel che c'è sul banco e le monete del gruppo. Vuoto se si può.
+	 * Se si può fare la fusione con quel che c'è sul banco, le monete del gruppo e il costo che il gruppo deve pagare (quello di
+	 * {@link #costo(Collection)}, scontato come vuole chi chiama). Gli aggiornamenti non portano l'artefatto oltre il livello massimo.
+	 * Vuoto se si può.
 	 */
-	public static Optional<TipoMotivoRifiutoIncantatura> verifica(Collection<Artefatto> banco, int monete) {
-		return verifica(banco, monete, 0);
-	}
-
-	/**
-	 * Come {@link #verifica(Collection, int)}, con il costo scontato secondo la CONTRATTAZIONE di chi tratta.
-	 */
-	public static Optional<TipoMotivoRifiutoIncantatura> verifica(Collection<Artefatto> banco, int monete, int contrattazione) {
+	public static Optional<TipoMotivoRifiutoIncantatura> verifica(Collection<Artefatto> banco, int monete, int costoDaPagare, int livelloMassimo) {
 		List<Artefatto> artefatti = banco.stream().filter(a -> !isIngrediente(a)).collect(Collectors.toList());
 		List<Artefatto> ingredienti = ingredienti(banco);
 		if (artefatti.isEmpty()) {
@@ -211,12 +203,12 @@ public final class RegoleIncantatura {
 			if (artefatto.getIncantamenti().isEmpty()) {
 				return Optional.of(TipoMotivoRifiutoIncantatura.NIENTE_DA_RIPROGRAMMARE);
 			}
-			return monete < costo(banco, contrattazione) ? Optional.of(TipoMotivoRifiutoIncantatura.MONETE_INSUFFICIENTI) : Optional.empty();
+			return monete < costoDaPagare ? Optional.of(TipoMotivoRifiutoIncantatura.MONETE_INSUFFICIENTI) : Optional.empty();
 		}
 		if (ingredienti.isEmpty() && aggiornamenti(banco) == 0) {
 			return Optional.of(TipoMotivoRifiutoIncantatura.NESSUN_INGREDIENTE);
 		}
-		if (aggiornamenti(banco) > 0 && artefatto.getLivello() + aggiornamenti(banco) > livelloMassimoPerAggiornamenti()) {
+		if (aggiornamenti(banco) > 0 && artefatto.getLivello() + aggiornamenti(banco) > livelloMassimo) {
 			return Optional.of(TipoMotivoRifiutoIncantatura.LIVELLO_DEL_MONDO_RAGGIUNTO);
 		}
 		Optional<TipoMotivoRifiutoIncantatura> problema = problemi(artefatto, ingredienti);
@@ -226,24 +218,17 @@ public final class RegoleIncantatura {
 		if (piano(artefatto, banco).daAggiungere.isEmpty() && aggiornamenti(banco) == 0) {
 			return Optional.of(TipoMotivoRifiutoIncantatura.NESSUN_MIGLIORAMENTO);
 		}
-		if (monete < costo(banco, contrattazione)) {
+		if (monete < costoDaPagare) {
 			return Optional.of(TipoMotivoRifiutoIncantatura.MONETE_INSUFFICIENTI);
 		}
 		return Optional.empty();
 	}
 
 	/**
-	 * Costo della fusione: 10 monete più 5 per ogni effetto degli ingredienti sul banco che passa sull'artefatto.
+	 * Costo base della fusione: 10 monete più 5 per ogni effetto degli ingredienti sul banco che passa sull'artefatto.
 	 */
 	public static int costo(Collection<Artefatto> banco) {
-		return Costanti.FUSIONE_COSTO_BASE + Costanti.FUSIONE_COSTO_PER_EFFETTO * effettiDaTrasferire(banco);
-	}
-
-	/**
-	 * Il costo della fusione scontato secondo la CONTRATTAZIONE di chi tratta (vedi RegoleContrattazione).
-	 */
-	public static int costo(Collection<Artefatto> banco, int contrattazione) {
-		return RegoleContrattazione.prezzoAcquisto(costo(banco), contrattazione);
+		return costo(effettiDaTrasferire(banco));
 	}
 
 	/**
@@ -258,7 +243,7 @@ public final class RegoleIncantatura {
 	 * ingredienti che entrano (togliendo quelli che scalzano), gli dà il nome proprio (normalizzato; vuoto vuol dire nessun nome) e svuota il
 	 * banco. Gli ingredienti spariscono. Restituisce l'artefatto incantato; le monete le toglie chi chiama.
 	 */
-	static Artefatto fondi(BancoDiLavoro banco, String nomeProprio) {
+	public static Artefatto fondi(BancoDiLavoro banco, String nomeProprio) {
 		Collection<Artefatto> sulBanco = banco.getInventario();
 		Artefatto artefatto = artefattoSulBanco(sulBanco).orElseThrow(IllegalStateException::new);
 		ArtefattoMD md = artefatto.getModelloDati();
@@ -293,7 +278,7 @@ public final class RegoleIncantatura {
 	 * il libro, gli altri ingredienti (che non servono a niente) e gli ingredienti nuovi tornano tutti a chi chiama, che li
 	 * rimette nel gruppo. Le monete le toglie chi chiama.
 	 */
-	static List<Artefatto> riprogramma(BancoDiLavoro banco) {
+	public static List<Artefatto> riprogramma(BancoDiLavoro banco) {
 		Collection<Artefatto> sulBanco = banco.getInventario();
 		Artefatto artefatto = artefattoSulBanco(sulBanco).orElseThrow(IllegalStateException::new);
 		ArtefattoMD md = artefatto.getModelloDati();
@@ -315,6 +300,9 @@ public final class RegoleIncantatura {
 		return banco.stream().filter(a -> isIngrediente(a) && !isAggiornamento(a)).collect(Collectors.toList());
 	}
 
+	/**
+	 * Se è un aggiornamento (vedi TipoArtefatto.AGGIORNAMENTO): fa salire di un livello l'artefatto.
+	 */
 	public static boolean isAggiornamento(Artefatto artefatto) {
 		return artefatto.getTipo().isAggiornamento();
 	}
@@ -340,13 +328,6 @@ public final class RegoleIncantatura {
 	public static int effettiMassimiDopoLaFusione(Collection<Artefatto> banco) {
 		return artefattoSulBanco(banco).filter(Artefatto::isIncantabile)
 				.map(a -> a.getRarita().getEffettiMassimi(livelloDopoLaFusione(banco))).orElse(0);
-	}
-
-	/**
-	 * Fin dove si può far salire un artefatto con gli aggiornamenti: il livello del mondo.
-	 */
-	private static int livelloMassimoPerAggiornamenti() {
-		return Statistiche.getLivello();
 	}
 
 	/**
@@ -483,6 +464,12 @@ public final class RegoleIncantatura {
 
 		private final List<Effetto> daAggiungere = new ArrayList<>();
 		private final List<Effetto> daTogliere = new ArrayList<>();
+
+		/**
+		 * Un piano senza effetti: li aggiunge chi lo costruisce.
+		 */
+		private Piano() {
+		}
 		// Gli effetti stessi (gli oggetti dei modelli dati, per identità: due +5 Forza uguali sono due effetti)
 		private final Set<Object> inEntrata = Collections.newSetFromMap(new IdentityHashMap<>());
 		private final Set<Object> inUscita = Collections.newSetFromMap(new IdentityHashMap<>());
@@ -511,10 +498,16 @@ public final class RegoleIncantatura {
 			return inUscita.contains(effetto);
 		}
 
+		/**
+		 * Quanti effetti degli ingredienti entrano sull'artefatto.
+		 */
 		public int numeroDaAggiungere() {
 			return daAggiungere.size();
 		}
 
+		/**
+		 * Quanti effetti dell'artefatto escono perché ne entrano di migliori.
+		 */
 		public int numeroDaTogliere() {
 			return daTogliere.size();
 		}

@@ -5,7 +5,7 @@ import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
 import com.threeamigos.foresta.interfacce.VistaScambio;
-import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
+import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
 
 /**
  * Il giocatore chiede di poter comprare un Artefatto da un commerciante e metterlo nell'inventario generale.

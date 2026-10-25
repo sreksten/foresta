@@ -4,6 +4,7 @@ import com.threeamigos.foresta.artefatti.*;
 import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.artefatti.leggendari.RegoleSetLeggendari;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
@@ -410,14 +411,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	 * Il costo della fusione di quel che c'è sul banco, scontato secondo la contrattazione del gruppo.
 	 */
 	public final int costoFusione(Collection<Artefatto> banco) {
-		return RegoleIncantatura.costo(banco, getContrattazione());
+		return prezzoAcquisto(RegoleIncantatura.costo(banco));
 	}
 
 	/**
 	 * Il costo di una fusione che trasferisce quel numero di effetti, scontato secondo la contrattazione del gruppo.
 	 */
 	public final int costoFusione(int effettiDaTrasferire) {
-		return RegoleIncantatura.costo(effettiDaTrasferire, getContrattazione());
+		return prezzoAcquisto(RegoleIncantatura.costo(effettiDaTrasferire));
 	}
 
 	public final int getPreziosi() {
@@ -885,7 +886,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	 * @return il motivo del rifiuto, oppure vuoto se la fusione è riuscita
 	 */
 	public Optional<TipoMotivoRifiutoIncantatura> incanta(BancoDiLavoro banco, String nomeProprio) {
-		Optional<TipoMotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco.getInventario(), getMonete(), getContrattazione());
+		Optional<TipoMotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco.getInventario(), getMonete(), costoFusione(banco.getInventario()), Statistiche.getLivello());
 		if (motivo.isPresent()) {
 			BusEventi.pubblica(new NotificaRifiutoIncantatura(motivo.get()));
 			return motivo;

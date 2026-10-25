@@ -1,6 +1,4 @@
-package com.threeamigos.foresta.motore;
-
-import com.threeamigos.foresta.artefatti.Artefatto;
+package com.threeamigos.foresta.artefatti;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +11,12 @@ import java.util.List;
 public class BancoDiLavoro implements ScambiatoreArtefatti {
 
 	private final List<Artefatto> artefatti = new ArrayList<>();
+
+	/**
+	 * Un banco vuoto.
+	 */
+	public BancoDiLavoro() {
+	}
 
 	@Override
 	public Collection<Artefatto> getInventario() {

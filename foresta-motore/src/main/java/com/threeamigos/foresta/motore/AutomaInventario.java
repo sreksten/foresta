@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
+
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoPrelievoArtefatto;

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
+
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.interfacce.VistaScambio;

@@ -4,7 +4,7 @@ import com.threeamigos.foresta.artefatti.OggettoConPeso;
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneStoccaggioArtefatto;
 import com.threeamigos.foresta.interfacce.VistaScambio;
-import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
+import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
 
 /**
  * Il giocatore chiede di poter spostare un Artefatto da un Personaggio verso l'inventario del gruppo.

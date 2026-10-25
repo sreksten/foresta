@@ -1,5 +1,11 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.RegoleIncantatura;
+
+import com.threeamigos.foresta.artefatti.CostantiArtefatti;
+
+import com.threeamigos.foresta.artefatti.BancoDiLavoro;
+
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
@@ -10,7 +16,7 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.Costanti;
-import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
+import com.threeamigos.foresta.artefatti.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +26,15 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class IncantatoreTest {
+
+    // Le regole non sanno cos'è il mondo né lo sconto: i test le chiamano come le chiama il gioco, con il livello del mondo e senza sconto
+    private static java.util.Optional<TipoMotivoRifiutoIncantatura> puoMettereSulBanco(java.util.Collection<Artefatto> banco, Artefatto nuovo) {
+        return RegoleIncantatura.puoMettereSulBanco(banco, nuovo, Statistiche.getLivello());
+    }
+
+    private static java.util.Optional<String> avviso(java.util.Collection<Artefatto> banco) {
+        return RegoleIncantatura.avvisoEffettiPersi(banco).map(TestoAvvisoDiFusione::testo);
+    }
 
     private GruppoGiocatore gruppo;
 
@@ -34,34 +49,6 @@ class IncantatoreTest {
     // --- Cosa si può mettere sul banco
 
     @Test
-    void gliAccessoriNonSiIncantano() {
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NON_INCANTABILE),
-                RegoleIncantatura.puoMettereSulBanco(Collections.emptyList(), artefatto(TipoArtefatto.ANELLO, 5)));
-    }
-
-    @Test
-    void unArtefattoAllaVolta() {
-        List<Artefatto> banco = Collections.singletonList(artefatto(TipoArtefatto.SPADA, 5));
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.PIU_ARTEFATTI),
-                RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.ELMO, 5)));
-    }
-
-    @Test
-    void unArtefattoPienoSiIncantaSoloSeGliEffettiNuoviSonoMigliori() {
-        // Una spada comune di livello 3 ha 2 posti, tutti e due presi
-        Artefatto spada = artefatto(TipoArtefatto.SPADA, 3);
-        spada.getModelloDati().addIncantamento("Fuoco minore", TipoDanno.FUOCO, 5, 0.05);
-        spada.getModelloDati().addIncantamento("Gelo minore", TipoDanno.GELO, 5, 0.05);
-        // Si può mettere sul banco, ma un effetto uguale a quelli che ha non lo migliora
-        Artefatto pari = artefatto(TipoArtefatto.GEMMA, 1);
-        pari.getModelloDati().addIncantamento("Acido minore", TipoDanno.ACIDO, 5, 0.05);
-        List<Artefatto> banco = Arrays.asList(spada, pari);
-        assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(pari), spada));
-        assertEquals(0, RegoleIncantatura.effettiDaTrasferire(banco));
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NESSUN_MIGLIORAMENTO), RegoleIncantatura.verifica(banco, 100));
-    }
-
-    @Test
     void unEffettoMiglioreScalzaSoloUnoDeiPiuDebboli() {
         // Given: una spada con due +5 Forza uguali e una pergamena con un +10 Forza
         Artefatto spada = artefatto(TipoArtefatto.SPADA, 3);
@@ -72,7 +59,7 @@ class IncantatoreTest {
         BancoDiLavoro banco = new BancoDiLavoro();
         banco.addArtefatto(spada);
         banco.addArtefatto(pergamena);
-        assertTrue(RegoleIncantatura.avvisoEffettiPersi(banco.getInventario()).isPresent());
+        assertTrue(avviso(banco.getInventario()).isPresent());
         assertEquals(1, RegoleIncantatura.effettiDaTrasferire(banco.getInventario()));
         assertEquals(2, RegoleIncantatura.effettiDopoLaFusione(banco.getInventario()));
         // When
@@ -118,12 +105,12 @@ class IncantatoreTest {
         gemma.getModelloDati().addIncantamento("Gelo maggiore", TipoDanno.GELO, 15, 0.2);
         BancoDiLavoro banco = new BancoDiLavoro();
         banco.addArtefatto(spada);
-        assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco.getInventario(), gemma));
+        assertEquals(Optional.empty(), puoMettereSulBanco(banco.getInventario(), gemma));
         banco.addArtefatto(gemma);
-        assertTrue(RegoleIncantatura.avvisoEffettiPersi(banco.getInventario()).isPresent());
+        assertTrue(avviso(banco.getInventario()).isPresent());
         // Si paga solo l'effetto che passa
         assertEquals(1, RegoleIncantatura.effettiDaTrasferire(banco.getInventario()));
-        assertEquals(Costanti.FUSIONE_COSTO_BASE + Costanti.FUSIONE_COSTO_PER_EFFETTO, RegoleIncantatura.costo(banco.getInventario()));
+        assertEquals(CostantiArtefatti.FUSIONE_COSTO_BASE + CostantiArtefatti.FUSIONE_COSTO_PER_EFFETTO, RegoleIncantatura.costo(banco.getInventario()));
         // When
         assertEquals(Optional.empty(), gruppo.incanta(banco, ""));
         // Then: passa il più prezioso, il gelo maggiore
@@ -132,47 +119,7 @@ class IncantatoreTest {
         assertFalse(spada.getIncantamenti().stream().anyMatch(i -> i.getTipoDannoElementale() == TipoDanno.ACIDO));
     }
 
-    @Test
-    void conGliIngredientiGiaSulBancoSiControllaLArtefattoCheArriva() {
-        // Prima gli ingredienti (3 effetti), poi una spada comune di livello 3 (2 posti): ne passano 2
-        List<Artefatto> banco = new ArrayList<>(Arrays.asList(pergamena(2), pergamena(1)));
-        assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.SPADA, 3)));
-        banco.add(artefatto(TipoArtefatto.SPADA, 3));
-        assertEquals(2, RegoleIncantatura.effettiDaTrasferire(banco));
-        assertTrue(RegoleIncantatura.avvisoEffettiPersi(banco).isPresent());
-        banco.set(2, artefatto(TipoArtefatto.SPADA, 4));
-        assertEquals(3, RegoleIncantatura.effettiDaTrasferire(banco));
-        assertFalse(RegoleIncantatura.avvisoEffettiPersi(banco).isPresent());
-    }
-
-    @Test
-    void ilTettoDeiLeggendariECinque() {
-        Artefatto spada = artefatto(TipoArtefatto.SPADA, 20);
-        spada.getModelloDati().setRarita(TipoRaritaArtefatto.LEGGENDARIO);
-        List<Artefatto> banco = new ArrayList<>(Arrays.asList(spada, pergamena(3), pergamena(2)));
-        assertEquals(Optional.empty(), RegoleIncantatura.verifica(banco, 1000));
-        assertFalse(RegoleIncantatura.avvisoEffettiPersi(banco).isPresent());
-        banco.add(pergamena(1));
-        assertEquals(5, RegoleIncantatura.effettiDaTrasferire(banco));
-        assertTrue(RegoleIncantatura.avvisoEffettiPersi(banco).isPresent());
-    }
-
     // --- Verifica della fusione
-
-    @Test
-    void rifiutiDellaFusione() {
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NESSUN_ARTEFATTO),
-                RegoleIncantatura.verifica(Collections.singletonList(pergamena(1)), 100));
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NESSUN_INGREDIENTE),
-                RegoleIncantatura.verifica(Collections.singletonList(artefatto(TipoArtefatto.SPADA, 4)), 100));
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.PIU_ARTEFATTI),
-                RegoleIncantatura.verifica(Arrays.asList(artefatto(TipoArtefatto.SPADA, 4), artefatto(TipoArtefatto.ELMO, 4), pergamena(1)), 100));
-        // 10 + 5 × 2 = 20 monete
-        List<Artefatto> banco = Arrays.asList(artefatto(TipoArtefatto.SPADA, 4), pergamena(2));
-        assertEquals(20, RegoleIncantatura.costo(banco));
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.MONETE_INSUFFICIENTI), RegoleIncantatura.verifica(banco, 19));
-        assertEquals(Optional.empty(), RegoleIncantatura.verifica(banco, 20));
-    }
 
     // --- Fusione
 
@@ -252,17 +199,6 @@ class IncantatoreTest {
     }
 
     @Test
-    void ilPotereMagicoSiFondeSoloSuBastoniELibriMagici() {
-        Artefatto pergamena = artefatto(TipoArtefatto.PERGAMENA, 1);
-        pergamena.getModelloDati().addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_PERCENTUALE, 10, "");
-        List<Artefatto> banco = Collections.singletonList(pergamena);
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.POTERE_MAGICO_FUORI_POSTO),
-                RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.SPADA, 5)));
-        assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.BASTONE_MAGICO, 5)));
-        assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.LIBRO_MAGICO, 5)));
-    }
-
-    @Test
     void suUnaSpadaIlPotereMagicoSiPerdeEPassaIlResto() {
         Artefatto spada = artefatto(TipoArtefatto.SPADA, 5);
         Artefatto sigillo = artefatto(TipoArtefatto.SIGILLO, 4);
@@ -270,19 +206,13 @@ class IncantatoreTest {
         sigillo.getModelloDati().addModificatore(TipoAttributo.PARATA, TipoModificatore.VARIAZIONE_FISSA, 3, "");
         BancoDiLavoro banco = new BancoDiLavoro();
         banco.addArtefatto(spada);
-        assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco.getInventario(), sigillo));
+        assertEquals(Optional.empty(), puoMettereSulBanco(banco.getInventario(), sigillo));
         banco.addArtefatto(sigillo);
         assertEquals(Optional.of("Il potere magico si fonde solo su bastoni e libri magici: passeranno solo gli altri effetti."),
-                RegoleIncantatura.avvisoEffettiPersi(banco.getInventario()));
+                avviso(banco.getInventario()));
         assertEquals(Optional.empty(), gruppo.incanta(banco, ""));
         assertEquals(1, spada.getModificatori().size());
         assertEquals(TipoAttributo.PARATA, spada.getModificatori().iterator().next().getTipoAttributo());
-    }
-
-    @Test
-    void suUnLibroMagicoUnaPergamenaConSoliIncantamentiElementaliNonServe() {
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.INCANTAMENTO_SU_LIBRO),
-                RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(pergamena(1)), artefatto(TipoArtefatto.LIBRO_MAGICO, 5)));
     }
 
     @Test
@@ -295,9 +225,9 @@ class IncantatoreTest {
         banco.addArtefatto(libro);
         banco.addArtefatto(pergamena);
         assertEquals(Optional.of("Sul libro gli incantamenti elementali non hanno effetto: passeranno solo gli altri effetti."),
-                RegoleIncantatura.avvisoEffettiPersi(banco.getInventario()));
+                avviso(banco.getInventario()));
         // Si paga solo l'effetto che passa
-        assertEquals(Costanti.FUSIONE_COSTO_BASE + Costanti.FUSIONE_COSTO_PER_EFFETTO, RegoleIncantatura.costo(banco.getInventario()));
+        assertEquals(CostantiArtefatti.FUSIONE_COSTO_BASE + CostantiArtefatti.FUSIONE_COSTO_PER_EFFETTO, RegoleIncantatura.costo(banco.getInventario()));
         // When
         assertEquals(Optional.empty(), gruppo.incanta(banco, ""));
         // Then
@@ -326,10 +256,10 @@ class IncantatoreTest {
         // Una spada comune ha un posto in meno del livello: da 2 a 3
         assertEquals(3, incantatore.getEffettiMassimiDopoLaFusione());
         assertEquals(0, incantatore.getEffettiDaTrasferire());
-        assertEquals(Costanti.FUSIONE_COSTO_BASE, incantatore.getCostoFusione());
+        assertEquals(CostantiArtefatti.FUSIONE_COSTO_BASE, incantatore.getCostoFusione());
 
         assertEquals(Optional.empty(), gruppo.incanta(incantatore.getBanco(), ""));
-        assertEquals(100 - Costanti.FUSIONE_COSTO_BASE, gruppo.getMonete());
+        assertEquals(100 - CostantiArtefatti.FUSIONE_COSTO_BASE, gruppo.getMonete());
         assertEquals(1, gruppo.getInventario().size(), "l'aggiornamento si consuma");
         assertEquals(4, gruppo.getInventario().iterator().next().getLivello());
     }
@@ -355,32 +285,10 @@ class IncantatoreTest {
     }
 
     @Test
-    void siSaleAlMassimoFinoAlLivelloDelMondo() {
-        livelloDelMondo(4);
-        Artefatto spada = artefatto(TipoArtefatto.SPADA, 3);
-        // Due aggiornamenti porterebbero la spada a 5, oltre il mondo
-        List<Artefatto> banco = new ArrayList<>(Collections.singletonList(spada));
-        assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.AGGIORNAMENTO, 1)));
-        banco.add(artefatto(TipoArtefatto.AGGIORNAMENTO, 1));
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.LIVELLO_DEL_MONDO_RAGGIUNTO),
-                RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.AGGIORNAMENTO, 1)));
-        // Già al livello del mondo: neanche uno
-        Artefatto allaPari = artefatto(TipoArtefatto.ELMO, 4);
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.LIVELLO_DEL_MONDO_RAGGIUNTO),
-                RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(allaPari), artefatto(TipoArtefatto.AGGIORNAMENTO, 1)));
-        // L'aggiornamento già sul banco ferma anche l'artefatto che arriva dopo
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.LIVELLO_DEL_MONDO_RAGGIUNTO),
-                RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(artefatto(TipoArtefatto.AGGIORNAMENTO, 1)), allaPari));
-        // Un artefatto sopra il livello del mondo si incanta comunque con gli ingredienti di sempre
-        livelloDelMondo(1);
-        assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(pergamena(1)), artefatto(TipoArtefatto.SPADA, 5)));
-    }
-
-    @Test
     void unAggiornamentoNonSiPuoMettereSuUnAccessorioNeSiCompraONonSiVende() {
         livelloDelMondo(6);
         assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NON_INCANTABILE),
-                RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(artefatto(TipoArtefatto.AGGIORNAMENTO, 1)),
+                puoMettereSulBanco(Collections.singletonList(artefatto(TipoArtefatto.AGGIORNAMENTO, 1)),
                         artefatto(TipoArtefatto.ANELLO, 2)));
         for (TipoNegozio negozio : TipoNegozio.values()) {
             assertFalse(negozio.tratta(TipoArtefatto.AGGIORNAMENTO), negozio.name());

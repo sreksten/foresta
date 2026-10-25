@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
+import com.threeamigos.foresta.artefatti.tipi.TipoMotivoRifiutoIncantatura;
 
 /**
  * L'incantatore rifiuta qualcosa sul banco di lavoro, o la fusione: il motivo dice perché.

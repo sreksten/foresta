@@ -9,6 +9,18 @@ package com.threeamigos.foresta.artefatti;
  */
 public final class CostantiArtefatti {
 
+    // ---- La fusione dall'incantatore (vedi RegoleIncantatura)
+
+    /**
+     * Costo base della fusione, in monete, prima dello sconto della contrattazione.
+     */
+    public static final int FUSIONE_COSTO_BASE = 10;
+
+    /**
+     * Costo in più, in monete, per ogni effetto che passa sull'artefatto.
+     */
+    public static final int FUSIONE_COSTO_PER_EFFETTO = 5;
+
     // ---- Come nasce un artefatto (vedi GeneratoreArtefattiTabelle)
 
     /**

@@ -3,7 +3,7 @@ package com.threeamigos.foresta.eventi.interni;
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.interfacce.VistaScambio;
-import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
+import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
 
 /**
  * Classe base per le richieste di spostamento di un Artefatto da una sorgente verso una destinazione.

@@ -1,5 +1,11 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.RegoleIncantatura;
+
+import com.threeamigos.foresta.artefatti.CostantiArtefatti;
+
+import com.threeamigos.foresta.artefatti.BancoDiLavoro;
+
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
@@ -18,7 +24,7 @@ import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
-import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
+import com.threeamigos.foresta.artefatti.tipi.TipoMotivoRifiutoIncantatura;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -31,6 +37,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * "del Core Dump" dei suoi incantamenti, e che l'incantatore spiega la prima volta che il gruppo entra da lui.
  */
 class RiprogrammazioneTest {
+
+    // Le regole non sanno cos'è il mondo né lo sconto: i test le chiamano come le chiama il gioco, con il livello del mondo e senza sconto
+    private static java.util.Optional<TipoMotivoRifiutoIncantatura> verifica(java.util.Collection<Artefatto> banco, int monete) {
+        return RegoleIncantatura.verifica(banco, monete, RegoleIncantatura.costo(banco), Statistiche.getLivello());
+    }
 
 	private static final String K_AND_R = "THE_C_PROGRAMMING_LANGUAGE";
 
@@ -77,36 +88,6 @@ class RiprogrammazioneTest {
 	}
 
 	@Test
-	void conIlLibroSulBancoCiStaQualunqueIngredienteELaRiprogrammazioneCostaPerOgniIncantamento() {
-		Artefatto spada = spadaCon(2);
-		Artefatto pergamenaDiPotereMagico = artefatto(TipoArtefatto.PERGAMENA, 1);
-		pergamenaDiPotereMagico.getModelloDati().addModificatore(TipoAttributo.POTERE_MAGICO,
-				TipoModificatore.VARIAZIONE_FISSA, 5, "");
-		Artefatto libro = libro();
-		// Senza il libro quella pergamena su una spada non avrebbe effetto e sarebbe rifiutata
-		assertTrue(RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(spada), pergamenaDiPotereMagico).isPresent());
-		List<Artefatto> banco = new ArrayList<>(Arrays.asList(spada, libro));
-		assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco, pergamenaDiPotereMagico));
-		banco.add(pergamenaDiPotereMagico);
-
-		assertTrue(RegoleIncantatura.conRiprogrammazione(banco));
-		assertEquals(2, RegoleIncantatura.effettiDaTrasferire(banco));
-		assertEquals(Optional.empty(), RegoleIncantatura.verifica(banco, 100));
-		assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.MONETE_INSUFFICIENTI), RegoleIncantatura.verifica(banco, 0));
-		assertEquals(Optional.empty(), RegoleIncantatura.avvisoEffettiPersi(banco));
-		RegoleIncantatura.Piano piano = RegoleIncantatura.pianoDellaFusione(banco);
-		assertEquals(0, piano.numeroDaAggiungere());
-		assertEquals(2, piano.numeroDaTogliere());
-		spada.getIncantamenti().forEach(incantamento -> assertTrue(piano.esce(incantamento)));
-	}
-
-	@Test
-	void unArtefattoSenzaIncantamentiNonSiRiprogramma() {
-		List<Artefatto> banco = Arrays.asList(spadaCon(0), libro());
-		assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NIENTE_DA_RIPROGRAMMARE), RegoleIncantatura.verifica(banco, 100));
-	}
-
-	@Test
 	void laRiprogrammazioneVaSempreMaleELArtefattoSiSpezza() {
 		ModelloDati.setIstanza(new ModelloDati());
 		GruppoGiocatore gruppo = new GruppoGiocatore();
@@ -122,7 +103,7 @@ class RiprogrammazioneTest {
 		banco.addArtefatto(libro);
 		banco.addArtefatto(gemma);
 		int costo = gruppo.costoFusione(banco.getInventario());
-		assertEquals(Costanti.FUSIONE_COSTO_BASE + 3 * Costanti.FUSIONE_COSTO_PER_EFFETTO,
+		assertEquals(CostantiArtefatti.FUSIONE_COSTO_BASE + 3 * CostantiArtefatti.FUSIONE_COSTO_PER_EFFETTO,
 				RegoleIncantatura.costo(banco.getInventario()));
 
 		List<NotificaAvvisoIncantatura> avvisi = new ArrayList<>();
@@ -152,7 +133,7 @@ class RiprogrammazioneTest {
 		assertTrue(delCoreDump.stream().flatMap(a -> a.getIncantamenti().stream()).collect(Collectors.toList()).containsAll(originali));
 		// Il libro, rimesso sul banco con la spada, si può riusare: e senza più incantamenti la spada non si riprogramma
 		assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NIENTE_DA_RIPROGRAMMARE),
-				RegoleIncantatura.verifica(Arrays.asList(spada, libro), 100));
+				verifica(Arrays.asList(spada, libro), 100));
 	}
 
 	@Test

@@ -249,4 +249,9 @@ class OggettiDiBaseTest {
             assertTrue(ingrediente.getLivello() >= 1);
         }
     }
+
+    @Test
+    void unaSpadaNonEUnAttaccoMagico() {
+        assertFalse(((Arma) Artefatto.di(md(TipoArtefatto.SPADA))).isMagica());
+    }
 }

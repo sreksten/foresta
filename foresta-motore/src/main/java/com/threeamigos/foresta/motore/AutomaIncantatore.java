@@ -1,11 +1,15 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.artefatti.RegoleIncantatura;
+
+import com.threeamigos.foresta.artefatti.BancoDiLavoro;
+
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAvvisoIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
 import com.threeamigos.foresta.interfacce.VistaBancoDiLavoro;
-import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
+import com.threeamigos.foresta.artefatti.tipi.TipoMotivoRifiutoIncantatura;
 
 import java.util.*;
 
@@ -130,13 +134,13 @@ public class AutomaIncantatore extends AutomaScambiatoreArtefatti implements Vis
 
 	@Override
 	public void richiediSpostamentoSuParteRemota(Artefatto artefatto) {
-		Optional<TipoMotivoRifiutoIncantatura> motivo = RegoleIncantatura.puoMettereSulBanco(banco.getInventario(), artefatto);
+		Optional<TipoMotivoRifiutoIncantatura> motivo = RegoleIncantatura.puoMettereSulBanco(banco.getInventario(), artefatto, Statistiche.getLivello());
 		if (motivo.isPresent()) {
 			BusEventi.pubblica(new NotificaRifiutoIncantatura(motivo.get()));
 		} else {
 			spostaSuParteRemota(artefatto);
 			RegoleIncantatura.avvisoEffettiPersi(banco.getInventario())
-					.ifPresent(avviso -> BusEventi.pubblica(new NotificaAvvisoIncantatura(avviso)));
+					.ifPresent(avviso -> BusEventi.pubblica(new NotificaAvvisoIncantatura(TestoAvvisoDiFusione.testo(avviso))));
 		}
 	}
 

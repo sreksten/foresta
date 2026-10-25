@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.motore.BancoDiLavoro;
+import com.threeamigos.foresta.artefatti.BancoDiLavoro;
 
 /**
  * Il giocatore conferma la fusione di quel che sta sul banco di lavoro, con il nome proprio scelto

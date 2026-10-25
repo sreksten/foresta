@@ -35,6 +35,11 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ModificatoriTemporaneiTest {
 
+    // Le regole non conoscono il testo degli avvisi
+    private static java.util.Optional<String> avviso(java.util.Collection<Artefatto> banco) {
+        return RegoleIncantatura.avvisoEffettiPersi(banco).map(TestoAvvisoDiFusione::testo);
+    }
+
     private Guerriero guerriero;
 
     @BeforeEach
@@ -289,11 +294,11 @@ class ModificatoriTemporaneiTest {
 
         java.util.List<Artefatto> suUnaSpada = java.util.Arrays.asList(artefatto(TipoArtefatto.SPADA), pergamena);
         assertEquals(2, RegoleIncantatura.effettiDaTrasferire(suUnaSpada));
-        assertFalse(RegoleIncantatura.avvisoEffettiPersi(suUnaSpada).isPresent());
+        assertFalse(avviso(suUnaSpada).isPresent());
 
         java.util.List<Artefatto> suUnElmo = java.util.Arrays.asList(artefatto(TipoArtefatto.ELMO), pergamena);
         assertEquals(1, RegoleIncantatura.effettiDaTrasferire(suUnElmo), "passa solo la forza");
-        assertTrue(RegoleIncantatura.avvisoEffettiPersi(suUnElmo).get().contains("sul bersaglio"));
+        assertTrue(avviso(suUnElmo).get().contains("sul bersaglio"));
     }
 
     // --- Alba Sacra e fuga

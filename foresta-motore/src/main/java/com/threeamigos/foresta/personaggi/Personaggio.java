@@ -12,7 +12,7 @@ import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
-import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
+import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.Collection;

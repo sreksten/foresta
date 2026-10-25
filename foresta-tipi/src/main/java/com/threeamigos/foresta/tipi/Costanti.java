@@ -98,10 +98,6 @@ public class Costanti {
     // moltiplicatore di recupero magico della classe (a inizio partita circa 12 al Mago, 9 al Bardo, 3 al Guerriero)
     public static final double RIGENERAZIONE_MAGIA_QUOTA_MAGIA_MASSIMA = 0.05;
 
-    // Fusione dall'incantatore: 10 monete più 5 per ogni effetto trasferito
-    public static final int FUSIONE_COSTO_BASE = 10;
-    public static final int FUSIONE_COSTO_PER_EFFETTO = 5;
-
     // Contrattazione (vedi RegoleContrattazione): lo sconto sugli acquisti e il ricavo delle vendite crescono con
     // bonus = contrattazione / (contrattazione + saturazione), fino a un limite che nessun modificatore supera.
     // Con la vendita al massimo al 75% e l'acquisto almeno all'80% non si guadagna comprando e rivendendo.

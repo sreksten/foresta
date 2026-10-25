@@ -5,7 +5,7 @@ import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazionePrelievoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
 import com.threeamigos.foresta.interfacce.VistaScambio;
-import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
+import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
 
 /**
  * Il giocatore chiede di poter spostare un Artefatto dall'inventario generale a un Personaggio.
