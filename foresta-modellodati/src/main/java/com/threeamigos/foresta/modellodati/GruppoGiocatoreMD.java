@@ -3,6 +3,7 @@ package com.threeamigos.foresta.modellodati;
 import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
+import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.io.BufferedReader;
@@ -15,7 +16,7 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 /**
  * Il gruppo del giocatore. Oltre a quanto tiene {@link GruppoMD} (personaggi, capo, pergamene e pozioni) porta con sé
  * le monete, le pietre preziose, la posizione sulla mappa, gli artefatti dell'inventario generale (quelli che nessun
- * personaggio sta usando), gli ospiti e il conto delle sfide a carta, forbici e sasso vinte.
+ * personaggio sta usando), gli ospiti, il conto delle sfide a carta, forbici e sasso vinte e i canti imparati strada facendo.
  * <p>
  * Gli <b>ospiti</b> viaggiano con il gruppo senza farne parte; fra loro, solo quelli registrati come vulnerabili
  * possono essere attaccati dagli avversari.
@@ -44,6 +45,9 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	// così se ne ottiene al più uno. Un rifiuto, o un gruppo già al completo, non lo alzano: l'altra missione può ancora offrirlo.
 	// Chi lo legge e lo scrive: OffertaDelSacerdote. Si azzera con una partita nuova (reimposta).
 	private boolean sacerdoteAccolto;
+	// Quel che il gruppo ha imparato strada facendo e non sapeva all'inizio (per ora i canti: l'Urlo della Banshee, vedi
+	// IntermezzoUrloDellaBanshee). Si salva con il gruppo e si azzera con una partita nuova.
+	private final Set<TipoCanto> cantiAppresi = EnumSet.noneOf(TipoCanto.class);
 
 	public int getMonete() {
 		return monete;
@@ -94,6 +98,20 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	 */
 	public Set<String> getOspitiVulnerabili() {
 		return Collections.unmodifiableSet(ospitiVulnerabili);
+	}
+
+	/**
+	 * I canti che il gruppo ha imparato strada facendo. Di sola lettura: si cambia con {@link #addCantoAppreso}.
+	 */
+	public Set<TipoCanto> getCantiAppresi() {
+		return Collections.unmodifiableSet(cantiAppresi);
+	}
+
+	/**
+	 * Il gruppo ha imparato quel canto.
+	 */
+	public void addCantoAppreso(TipoCanto canto) {
+		cantiAppresi.add(canto);
 	}
 
 	/**
@@ -159,6 +177,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		ospitiVulnerabili.clear();
 		sfideVinte = 0;
 		sacerdoteAccolto = false;
+		cantiAppresi.clear();
 	}
 
 	/**
@@ -200,6 +219,10 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		stream.println(ospitiVulnerabili.size());
 		for (String uuid : ospitiVulnerabili) {
 			stream.println(uuid);
+		}
+		stream.println(cantiAppresi.size());
+		for (TipoCanto canto : cantiAppresi) {
+			stream.println(canto.name());
 		}
 	}
 
@@ -244,6 +267,11 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		int numeroVulnerabili = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroVulnerabili; i++) {
 			ospitiVulnerabili.add(LettoreCampi.leggiTesto(stream));
+		}
+		cantiAppresi.clear();
+		int numeroCanti = LettoreCampi.leggiIntero(stream);
+		for (int i = 0; i < numeroCanti; i++) {
+			cantiAppresi.add(TipoCanto.valueOf(LettoreCampi.leggiTesto(stream)));
 		}
 	}
 

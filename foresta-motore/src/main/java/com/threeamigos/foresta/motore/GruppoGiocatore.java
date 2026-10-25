@@ -357,6 +357,20 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	/**
 	 * Se un sacerdote offerto da una missione è già entrato nel gruppo (vedi OffertaDelSacerdote).
 	 */
+	/**
+	 * Se il gruppo ha imparato quel canto strada facendo (l'Urlo della Banshee non lo sa nessuno all'inizio).
+	 */
+	public final boolean haImparato(TipoCanto canto) {
+		return md.getCantiAppresi().contains(canto);
+	}
+
+	/**
+	 * Il gruppo impara quel canto: da ora in poi chi sa cantare lo può cantare.
+	 */
+	public final void impara(TipoCanto canto) {
+		md.addCantoAppreso(canto);
+	}
+
 	public final boolean isSacerdoteAccolto() {
 		return md.isSacerdoteAccolto();
 	}

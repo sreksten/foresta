@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.abilita;
 
-import com.threeamigos.foresta.canti.CantoCurativo;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -81,7 +80,7 @@ public final class AbilitaInnate {
 	}
 
 	/**
-	 * Il personaggio vivo più ferito del gruppo che non ha già la rigenerazione, se qualcuno è ferito (vedi {@link CantoCurativo#piuFerito})
+	 * Il personaggio vivo più ferito del gruppo che non ha già la rigenerazione, se qualcuno è ferito (vedi {@link Gruppo#piuFerito})
 	 */
 	public static Optional<Personaggio> daRigenerare(Gruppo gruppo) {
 		Personaggio scelto = null;
@@ -122,7 +121,7 @@ public final class AbilitaInnate {
 			case SCACCIARE_I_NON_MORTI:
 				return gruppoAvversario.getPersonaggiVivi().stream().anyMatch(AbilitaInnate::isDaScacciare);
 			case IMPOSIZIONE_DELLE_MANI:
-				return CantoCurativo.piuFerito(gruppo).isPresent();
+				return gruppo.piuFerito().isPresent();
 			case RIGENERAZIONE:
 				return daRigenerare(gruppo).isPresent();
 			default:

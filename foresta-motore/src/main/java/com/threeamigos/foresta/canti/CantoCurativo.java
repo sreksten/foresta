@@ -38,29 +38,9 @@ public class CantoCurativo implements Canto {
 				* (1.0d + saggezza / CostantiCanti.CANTO_CURATIVO_DIVISORE_SAGGEZZA));
 	}
 
-	/**
-	 * Il personaggio vivo con la quota di salute più bassa, se qualcuno è ferito (a parità, il primo del gruppo). Chi non
-	 * si può curare (un non morto nel gruppo) non conta
-	 */
-	public static Optional<Personaggio> piuFerito(Gruppo gruppo) {
-		Personaggio piuFerito = null;
-		double quotaMinima = 1.0d;
-		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
-			if (!personaggio.isCurabile()) {
-				continue;
-			}
-			double quota = (double) personaggio.getSalute() / personaggio.getSaluteMassima();
-			if (quota < quotaMinima) {
-				quotaMinima = quota;
-				piuFerito = personaggio;
-			}
-		}
-		return Optional.ofNullable(piuFerito);
-	}
-
 	@Override
 	public boolean canta(Personaggio cantore, Gruppo gruppo, Gruppo gruppoAvversario) {
-		return cantaSu(cantore, piuFerito(gruppo).orElse(null), gruppo, gruppoAvversario);
+		return cantaSu(cantore, gruppo.piuFerito().orElse(null), gruppo, gruppoAvversario);
 	}
 
 	/**

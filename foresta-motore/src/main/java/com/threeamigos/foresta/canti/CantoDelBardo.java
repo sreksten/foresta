@@ -1,11 +1,10 @@
 package com.threeamigos.foresta.canti;
 
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 import com.threeamigos.foresta.motore.Gruppo;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoCanto;
-import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
@@ -30,10 +29,10 @@ public final class CantoDelBardo {
 
 	/**
 	 * Se il gruppo ha imparato l'Urlo della Banshee: dal giorno in cui il bardo della locanda glielo insegna, con
-	 * l'intermezzo che segue il viaggio della moglie (vedi IntermezzoUrloDellaBanshee).
+	 * l'intermezzo che segue il viaggio della moglie (vedi IntermezzoUrloDellaBanshee), il gruppo lo ricorda.
 	 */
 	public static boolean isUrloDellaBansheeAppreso() {
-		return RegistroIntermezzi.isScattato(TipoIntermezzo.INTERMEZZO_URLO_DELLA_BANSHEE);
+		return GruppoGiocatore.getIstanza().haImparato(TipoCanto.URLO_DELLA_BANSHEE);
 	}
 
 	/**
@@ -67,7 +66,7 @@ public final class CantoDelBardo {
 			return canti;
 		}
 		for (TipoCanto tipo : cantiPossibili(personaggio)) {
-			if (tipo != TipoCanto.CURATIVO || CantoCurativo.piuFerito(gruppo).isPresent()) {
+			if (tipo != TipoCanto.CURATIVO || gruppo.piuFerito().isPresent()) {
 				canti.add(tipo);
 			}
 		}

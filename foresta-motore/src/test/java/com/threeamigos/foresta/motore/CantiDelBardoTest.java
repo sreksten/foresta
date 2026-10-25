@@ -4,8 +4,6 @@ import com.threeamigos.foresta.tipi.CostantiCanti;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.canti.*;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.intermezzi.IntermezzoUrloDellaBanshee;
-import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
@@ -32,6 +30,7 @@ class CantiDelBardoTest {
     @BeforeEach
     void preparaGruppi() {
         ModelloDati.setIstanza(new ModelloDati());
+        GruppoGiocatore.azzeraIstanza();
         GruppoAvversario.azzeraIstanza();
         avversari = GruppoAvversario.getIstanza();
         compagni = new Gruppo() {
@@ -144,7 +143,7 @@ class CantiDelBardoTest {
         int magia = bardo.getMagia();
         CantoCurativo canto = (CantoCurativo) FabbricaCanti.crea(TipoCanto.CURATIVO, bardo);
 
-        assertSame(grave, CantoCurativo.piuFerito(compagni).get());
+        assertSame(grave, compagni.piuFerito().get());
         assertTrue(canto.canta(bardo, compagni, avversari));
 
         assertEquals(Math.min(grave.getSaluteMassima(), saluteGrave + canto.getCura()), grave.getSalute());
@@ -172,7 +171,7 @@ class CantiDelBardoTest {
         compagni.aggiungiPersonaggio(bardo);
         bardo.addSalute(10000);
         int magia = bardo.getMagia();
-        assertFalse(CantoCurativo.piuFerito(compagni).isPresent());
+        assertFalse(compagni.piuFerito().isPresent());
         assertFalse(FabbricaCanti.crea(TipoCanto.CURATIVO, bardo).canta(bardo, compagni, avversari));
         assertEquals(magia, bardo.getMagia());
     }
@@ -188,7 +187,7 @@ class CantiDelBardoTest {
         bardoDellaLocanda.addMagia(1000);
         assertTrue(CantoDelBardo.puoCantare(bardoDellaLocanda, TipoCanto.URLO_DELLA_BANSHEE), "lui lo sa a prescindere");
 
-        RegistroIntermezzi.segnaScattato(new IntermezzoUrloDellaBanshee());
+        GruppoGiocatore.getIstanza().impara(TipoCanto.URLO_DELLA_BANSHEE);
 
         assertTrue(CantoDelBardo.isUrloDellaBansheeAppreso());
         assertTrue(CantoDelBardo.puoCantare(bardo(), TipoCanto.URLO_DELLA_BANSHEE));

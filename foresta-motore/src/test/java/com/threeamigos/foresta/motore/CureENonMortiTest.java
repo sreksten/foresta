@@ -68,7 +68,7 @@ class CureENonMortiTest {
         ferisci(scheletroAlleato);
         guerriero.getModelloDati().set(TipoAttributo.SALUTE, guerriero.getSaluteMassima() - 1);
 
-        assertEquals(guerriero, CantoCurativo.piuFerito(GruppoGiocatore.getIstanza()).orElse(null));
+        assertEquals(guerriero, GruppoGiocatore.getIstanza().piuFerito().orElse(null));
     }
 
     @Test
@@ -76,7 +76,7 @@ class CureENonMortiTest {
         ferisci(scheletroAlleato);
         guerriero.getModelloDati().set(TipoAttributo.SALUTE, guerriero.getSaluteMassima());
 
-        assertFalse(CantoCurativo.piuFerito(GruppoGiocatore.getIstanza()).isPresent());
+        assertFalse(GruppoGiocatore.getIstanza().piuFerito().isPresent());
     }
 
     @Test

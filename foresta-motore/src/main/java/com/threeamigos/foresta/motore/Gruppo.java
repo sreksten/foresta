@@ -13,6 +13,7 @@ import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -333,6 +334,26 @@ public abstract class Gruppo implements VistaGruppo {
 	 */
 	public final List<Personaggio> getPersonaggiVivi() {
 		return personaggi.stream().filter(p -> !p.isFuoriCombattimento()).collect(Collectors.toList());
+	}
+
+	/**
+	 * Il personaggio vivo con la quota di salute più bassa, se qualcuno è ferito (a parità, il primo del gruppo). Chi non
+	 * si può curare (un non morto nel gruppo) non conta
+	 */
+	public final Optional<Personaggio> piuFerito() {
+		Personaggio piuFerito = null;
+		double quotaMinima = 1.0d;
+		for (Personaggio personaggio : getPersonaggiVivi()) {
+			if (!personaggio.isCurabile()) {
+				continue;
+			}
+			double quota = (double) personaggio.getSalute() / personaggio.getSaluteMassima();
+			if (quota < quotaMinima) {
+				quotaMinima = quota;
+				piuFerito = personaggio;
+			}
+		}
+		return Optional.ofNullable(piuFerito);
 	}
 
 	/**

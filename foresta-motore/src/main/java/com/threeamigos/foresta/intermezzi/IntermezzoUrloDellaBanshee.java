@@ -3,10 +3,12 @@ package com.threeamigos.foresta.intermezzi;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.ProprietaDiMissione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
+import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -17,8 +19,8 @@ import java.util.Optional;
  * Il bardo della locanda ringrazia il gruppo per aver accompagnato sua moglie (la missione IlViaggioDellaMoglie) e gli insegna
  * l'Urlo della Banshee. Scatta una volta sola, la prima volta che il gruppo entra in una locanda nel bosco dopo aver
  * <b>completato con successo</b> il viaggio della moglie; non è un intermezzo di ripiego. Da quel momento il Bardo e la
- * Cantastorie del gruppo conoscono il canto (vedi CantoDelBardo.isUrloDellaBansheeAppreso: lo dice l'essere scattato di
- * questo intermezzo).
+ * Cantastorie del gruppo conoscono il canto: è il gruppo a ricordarlo (vedi GruppoGiocatore.impara e
+ * CantoDelBardo.isUrloDellaBansheeAppreso).
  * <p>
  * Solo nel bosco: in città la missione si conclude nell'altra città, e passando subito dalla locanda il gruppo troverebbe
  * l'Urlo insieme al viaggio.
@@ -45,8 +47,13 @@ public class IntermezzoUrloDellaBanshee implements Intermezzo {
 				.findFirst();
 	}
 
+	/**
+	 * Le pagine; il gruppo impara il canto qui, perché l'automa le chiede una volta sola, subito dopo aver segnato questo intermezzo
+	 * come scattato.
+	 */
 	@Override
 	public List<PaginaIntermezzo> getPagine() {
+		GruppoGiocatore.getIstanza().impara(TipoCanto.URLO_DELLA_BANSHEE);
 		String moglie = RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome();
 		TipoLocazione arrivo = getViaggioCompletato()
 				.map(viaggio -> viaggio.ottieniProprieta(ProprietaDiMissione.CITTA_DI_ARRIVO)).map(TipoLocazione::valueOf).orElse(null);

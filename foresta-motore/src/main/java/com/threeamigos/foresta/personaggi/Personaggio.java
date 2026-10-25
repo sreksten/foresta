@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.effettidistato.EffettoDiStatoMD;
@@ -9,14 +10,15 @@ import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
-import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Un personaggio: le letture stanno in VistaPersonaggio, che è quel che ne vede la UI.
@@ -107,16 +109,16 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
      * La tattica del personaggio (tattiche_di_combattimento_automatiche.md §11), o null se non ne ha una (oggi i mostri, che scelgono ancora con le
      * tattica base della sua classe, RegistroTattiche). Si salva con il personaggio (PersonaggioMD).
      */
-    com.threeamigos.foresta.modellodati.tattiche.TatticaMD getTattica();
+    TatticaMD getTattica();
 
-    void setTattica(com.threeamigos.foresta.modellodati.tattiche.TatticaMD tattica);
+    void setTattica(TatticaMD tattica);
 
 
     /**
      * Gli incantesimi malefici che il personaggio sa lanciare per natura quando attacca (vedi PersonaggioBase): non servono
      * pergamene, li paga con la MAGIA. Vale per chi è magico (isMagico).
      */
-    java.util.Set<TipoIncantesimo> getRepertorioIncantesimi();
+    Set<TipoIncantesimo> getRepertorioIncantesimi();
 
 	/**
 	 * Indica se questo personaggio sia un personaggio non giocante ossia
@@ -655,67 +657,47 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 
 	double getSaluteBase();
 
-
 	double getMagiaBase();
 
 	double getLivellamentoMagia();
 
 	double getMoltiplicatoreCarico();
 
-
 	double getMoltiplicatoreCritico();
-
 
 	double getMoltiplicatorePrecisione();
 
-
 	double getMoltiplicatoreVelocita();
-
 
 	double getMoltiplicatoreFurtivita();
 
-
 	double getMoltiplicatoreParata();
-
 
 	double getMoltiplicatoreResistenzaMagica();
 
-
 	double getMoltiplicatorePercezione();
-
 
 	double getMoltiplicatoreSoggezione();
 
-
 	double getMoltiplicatoreFuria();
-
 
 	double getMoltiplicatoreCoraggio();
 
-
 	double getMoltiplicatoreValore();
-
 
 	double getMoltiplicatoreContrattazione();
 
-
 	double getMoltiplicatoreNumeroBersagli();
-
 
 	double getMoltiplicatoreStanchezza();
 
-
 	double getMoltiplicatoreDanniMagici();
-
 
 	double getMoltiplicatoreDanniFisici();
 
-
 	double getMoltiplicatoreRecuperoMagico();
 
-
 	double getMoltiplicatoreRecuperoFisico();
-
 
 	double getMaxStatistica(TipoAttributo tipoAttributo);
 

@@ -3,7 +3,6 @@ package com.threeamigos.foresta.abilita;
 import com.threeamigos.foresta.tipi.tattiche.TipoAzione;
 import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
 import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
-import com.threeamigos.foresta.canti.CantoCurativo;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;
@@ -41,7 +40,7 @@ public class ImposizioneDelleMani implements Abilita {
 
 	@Override
 	public boolean usa(Personaggio utilizzatore, Gruppo gruppo, Gruppo gruppoAvversario) {
-		return usaSu(utilizzatore, CantoCurativo.piuFerito(gruppo).orElse(null), gruppo, gruppoAvversario);
+		return usaSu(utilizzatore, gruppo.piuFerito().orElse(null), gruppo, gruppoAvversario);
 	}
 
 	/**

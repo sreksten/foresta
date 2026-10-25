@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
@@ -131,5 +132,28 @@ class GruppoGiocatoreMDTest {
         gruppo.togliOspiteVulnerabile(bardo.getUuid());
         assertTrue(gruppo.getOspitiMD().isEmpty());
         assertTrue(gruppo.getOspitiVulnerabili().isEmpty());
+    }
+
+    @Test
+    void iCantiImparatiSiSalvanoESiAzzeranoConUnaPartitaNuova() throws IOException {
+        GruppoGiocatoreMD gruppo = new GruppoGiocatoreMD();
+        gruppo.setCoordinate(new CoordinateMD(1, 1));
+        assertTrue(gruppo.getCantiAppresi().isEmpty());
+        gruppo.addCantoAppreso(TipoCanto.URLO_DELLA_BANSHEE);
+
+        GruppoGiocatoreMD riletto = salvaERileggi(gruppo);
+        assertEquals(Collections.singleton(TipoCanto.URLO_DELLA_BANSHEE), riletto.getCantiAppresi());
+        // Rileggere sostituisce quel che il gruppo aveva
+        riletto.addCantoAppreso(TipoCanto.CURATIVO);
+        StringWriter scritto = new StringWriter();
+        try (PrintWriter stream = new PrintWriter(scritto)) {
+            gruppo.salva(stream);
+        }
+        riletto.leggi(new BufferedReader(new StringReader(scritto.toString())));
+        assertEquals(Collections.singleton(TipoCanto.URLO_DELLA_BANSHEE), riletto.getCantiAppresi());
+
+        gruppo.reimposta();
+        assertTrue(gruppo.getCantiAppresi().isEmpty());
+        assertThrows(UnsupportedOperationException.class, () -> gruppo.getCantiAppresi().add(TipoCanto.CURATIVO));
     }
 }
