@@ -13,13 +13,13 @@ Le caratteristiche principali, in una riga ciascuna:
 | **Mappa e tempo** | griglia generata a ogni partita; ogni mossa fa passare le ore |
 | **Locazioni** | boschi, grotte, paludi, radure, rovine, templi, città, locande, castelli: ognuna ha incontri e comandi suoi |
 | **Combattimento** | a round, tutto il gruppo agisce a turno, ogni personaggio segue una *tattica* |
-| **Personaggi** | sei classi giocabili, molti mostri, non combattenti (negozianti), progressione con esperienza e punti abilità |
+| **Personaggi** | otto classi giocabili (ognuna al maschile e al femminile), molti mostri, non combattenti (negozianti), progressione con esperienza e punti abilità |
 | **Oggetti** | artefatti generati a caso, incantamenti, set leggendari, ingredienti, pozioni, incantesimi |
 | **Economia** | negozi in città, offerte nelle locande |
 | **Missioni** | cinque principali e una grande famiglia di incarichi «a passi» |
 | **Intermezzi** | scene a pagine con sfondi, animazioni e fumetti |
 | **Testi generati** | nomi, fiabe, notizie e testi delle missioni escono da grammatiche |
-| **Persistenza** | cinque slot di salvataggio, classifica, trofei che valgono fra una partita e l'altra |
+| **Persistenza** | quattro slot di salvataggio a mano più il salvataggio automatico in memoria, classifica, trofei che valgono fra una partita e l'altra |
 
 ## 2. Le due metà e i moduli
 
@@ -141,7 +141,7 @@ Le **missioni** si agganciano a questo ciclo in tre momenti (prima, dentro, dopo
 
 ## 6. Personaggi, gruppi, progressione
 
-- **Personaggio**: un contratto ricco (identità, attributi, risorse, effetti di stato, equipaggiamento) realizzato da `PersonaggioBase`; ogni `TipoPersonaggio` ha la sua classe. Ci sono le **classi giocabili** (Guerriero, Ladro, Bardo, Elfo, Mago, Sacerdote, anche in versione femminile), i **mostri**, i **non combattenti** (locandiere, armaiolo, alchimista, venditore di pergamene, incantatore) e personaggi speciali (il Viandante che una missione fa scortare).
+- **Personaggio**: un contratto ricco (identità, attributi, risorse, effetti di stato, equipaggiamento) realizzato da `PersonaggioBase`; ogni `TipoPersonaggio` ha la sua classe. Ci sono le **classi giocabili** (Guerriero, Ladro, Bardo, Elfo, Mago, Sacerdote, Chierico e Druido, ognuna anche in versione femminile: la Bardo è la Cantastorie), i **mostri**, i **non combattenti** (locandiere, armaiolo, alchimista, venditore di pergamene, incantatore) e personaggi speciali (il Viandante che una missione fa scortare).
 - **Attributi**: sette primari (Forza, Destrezza, Costituzione, Intelligenza, Saggezza, Carisma, Fortuna), molti secondari che ne derivano (Precisione, Parata, Velocità, Critico, Coraggio...) e risorse dinamiche (salute, magia, stanchezza, esperienza).
 - **Modificatori e effetti di stato**: i modificatori cambiano un attributo (in valore, in percentuale o «porta a»), per sempre o a tempo; i 18 effetti di stato (stordito, bruciato, congelato, berserk...) interagiscono con i tipi di danno.
 - **Gruppi**: `GruppoGiocatore` (fino a 5 permanenti, più i temporanei e gli ospiti scortati) e `GruppoAvversario`. I compagni da reclutare nascono con il mondo e stanno in città e locande.
@@ -230,7 +230,7 @@ La separazione fra **dati** e **logica** è una scelta di fondo:
      salva / leggi  →  file di testo, una riga per record, campi separati da |
 ```
 
-Le classi `…MD` sono semplici dati serializzabili; le facciate nel motore contengono le regole e operano su di esse. `ModelloDati` è il contenitore radice (un singleton sostituibile nei test). Un salvataggio è un file `<slot>.TXT` in `~/.foresta/`, con una testata leggibile per elencare gli slot senza leggerli. Dopo la lettura, `RiletturaPartita.ricostruisci()` ricalcola tutto lo stato derivato (attributi secondari, gruppo, locazione corrente, elenchi delle missioni). La classifica è un file a parte, come i trofei. Non c'è compatibilità con i salvataggi vecchi.
+Le classi `…MD` sono semplici dati serializzabili; le facciate nel motore contengono le regole e operano su di esse. `ModelloDati` è il contenitore radice (un singleton sostituibile nei test). Un salvataggio è un file `<slot>.TXT` in `~/.foresta/`, con una testata leggibile per elencare gli slot senza leggerli. Dopo la lettura, `RiletturaPartita.ricostruisci()` ricalcola tutto lo stato derivato (attributi secondari, gruppo, locazione corrente, elenchi delle missioni). Gli slot a mano sono quattro; il quinto posto dell'elenco da cui si carica è il salvataggio automatico, che l'`Automa` tiene in memoria e aggiorna a ogni fine di locazione (non si scrive a mano e sparisce con l'app). Quando l'app va in background l'`Automa` scrive anche un salvataggio automatico su file, che non compare nell'elenco. La classifica è un file a parte, come i trofei. Non c'è compatibilità con i salvataggi vecchi.
 
 ## 12. L'interfaccia grafica
 
@@ -281,10 +281,8 @@ I riquadri e le schermate **non sono componenti Swing**: sono disegnatori a cui 
 
 ## Osservazioni
 
-- Questa guida descrive lo stato al 2026-10-13: sei moduli Maven, 1226 test, tutti verdi (16 saltati).
-- Il motore è ancora un modulo unico, con pacchetti che si richiamano a vicenda; il possibile taglio del modulo delle missioni è descritto in `todo.md`.
+- Questa guida descrive lo stato al 2026-10-25: 27 moduli Maven, 2145 test, tutti verdi (22 saltati).
 
 ## Da fare / idee aperte
 
 - Aggiungere un diagramma delle classi della gerarchia dei personaggi e uno degli eventi di combattimento, se serve per la didattica.
-- Dopo l'eventuale spezzamento del motore, aggiornare i diagrammi dei moduli del §2.

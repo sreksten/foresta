@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * I salvataggi su file: cinque slot, un file di testo ciascuno nella cartella {@code .foresta}, sempre in UTF-8. La prima riga è l'intestazione (slot, capo
+ * I salvataggi su file: quattro slot a mano più quello automatico (scritto quando l'app va in background), un file di testo ciascuno nella cartella {@code .foresta}, sempre in UTF-8. La prima riga è l'intestazione (slot, capo
  * e momento della partita), il resto è il {@code ModelloDati}. Si scrive prima su un file temporaneo, che sostituisce il salvataggio solo se è stato scritto per intero.
  */
 public class GestoreSalvataggiSuFile extends GestoreSuFile implements GestoreSalvataggi {
