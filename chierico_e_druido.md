@@ -8,7 +8,7 @@ come le altre classi a inizio partita e compaiono fra i compagni reclutabili in 
 | | Chierico / Chierica | Druido / Druida |
 | :--- | :--- | :--- |
 | Idea | Il sacerdote che combatte in prima linea, fra il Sacerdote e il Guerriero | L'incantatore della natura |
-| Partenza dei valori | Copia del Guerriero (`Chierico`, `Chierica`), con valori propri in `Costanti` (`CHIERICO_*`, `CHIERICA_*`) | Copia del Bardo (`Druido`, `Druida`), con valori propri (`DRUIDO_*`, `DRUIDA_*`) |
+| Partenza dei valori | Copia del Guerriero (`Chierico`, `Chierica`), con valori propri in `CostantiPersonaggi` (`CHIERICO_*`, `CHIERICA_*`) | Copia del Bardo (`Druido`, `Druida`), con valori propri (`DRUIDO_*`, `DRUIDA_*`) |
 | Armi | Mazza, spada, scudo, armatura; né bastone né libro; niente doppia arma | Bastone magico, lancia, libro magico; né scudo né armatura (di metallo); niente doppia arma. **Non esistono archi nel gioco**, quindi non li usa |
 | Dotazione iniziale | Mazza e scudo | Bastone magico e veste |
 | Resistenze (`TipoPersonaggio`) | `NECROTICO` e `MALEDIZIONE` ×0,75 | `ACQUA`, `TERRA`, `VELENO` ×0,75; `FUOCO` ×1,25, `TAGLIENTE` ×1,1 |
@@ -40,7 +40,7 @@ cofani, negozi o repertorio dei mostri.
 | Pelle di corteccia | Druido | A tutto il gruppo, per 4 turni, `10 × √livello` punti (17 a livello 3, 22 a livello 5, 28 a livello 8) di `PARATA` e di `RESISTENZA_MAGICA`, punti fissi e non una percentuale (vedi §4), con due modificatori temporanei (vedi [`modificatori_temporanei.md`](modificatori_temporanei.md)) che l'Alba sacra non toglie; non si raddoppia, si rinfresca | 5 |
 | Rigenerazione | Druido | `RIGENERAZIONE` (nuovo effetto di stato benefico) a un alleato per 4 turni: a ogni turno guarisce di (5 + 5% della salute massima) × (1 + `SAGGEZZA`/50), quantità che sta nell'intensità dell'effetto (`PersonaggioBase.applicaDanniDaEffettiDiStato`) | 4 |
 
-I valori stanno in `Costanti` (`ABILITA_*`).
+I valori stanno in `CostantiAbilitaInnate` (`ABILITA_*`).
 
 ## 3. Chi si sceglie
 

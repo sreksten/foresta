@@ -8,7 +8,7 @@ import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.Idra;
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.CostantiMotore;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
@@ -25,7 +25,7 @@ public class CastelloIdra extends LocazioneUnica {
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
 		gng.aggiungiPersonaggio(new Idra(Statistiche.getLivello()));
-		setOggetto(new Cofano(Costanti.COFANI_IN_CASTELLO_IDRA));
+		setOggetto(new Cofano(CostantiMotore.COFANI_IN_CASTELLO_IDRA));
 	}
 
 

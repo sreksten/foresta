@@ -7,7 +7,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.CostantiBottino;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.ArrayList;
@@ -18,10 +18,10 @@ import java.util.List;
  * Le pergamene e le pozioni che il gruppo avversario porta con sé e che, se non le usa, diventano bottino.
  * <ul>
  * <li>Quando il gruppo si popola (all'inizio della locazione, o quando arriva un'ondata), per <b>ogni avversario</b> c'è una probabilità
- * (Costanti.PROBABILITA_PERGAMENA_PER_AVVERSARIO, il 20%) di aggiungere una pergamena: se è un <b>umanoide</b> un incantesimo qualsiasi;
+ * (CostantiBottino.PROBABILITA_PERGAMENA_PER_AVVERSARIO, il 20%) di aggiungere una pergamena: se è un <b>umanoide</b> un incantesimo qualsiasi;
  * altrimenti, se è <b>magico</b> (sa lanciare incantesimi per natura), una di uno dei suoi incantesimi (il suo repertorio: uno spirito
  * una di Gelo).</li>
- * <li>Per ogni avversario <b>umanoide</b> c'è anche la stessa probabilità (Costanti.PROBABILITA_POZIONE_SALUTE_PER_AVVERSARIO_UMANOIDE)
+ * <li>Per ogni avversario <b>umanoide</b> c'è anche la stessa probabilità (CostantiBottino.PROBABILITA_POZIONE_SALUTE_PER_AVVERSARIO_UMANOIDE)
  * di una pozione della Salute.</li>
  * <li>Vinto lo scontro, tutto ciò che resta delle scorte degli avversari passa al giocatore e lo si dice con un messaggio.</li>
  * </ul>
@@ -37,13 +37,13 @@ public final class BottinoDegliAvversari {
 	public static void fornisciLeScorte(GruppoAvversario gruppo, Collection<Personaggio> avversari) {
 		for (Personaggio avversario : avversari) {
 			boolean umanoide = avversario.getClasse().isDellaCategoria(CategoriaPersonaggio.UMANOIDE);
-			if (Dado.tira(100) <= Costanti.PROBABILITA_PERGAMENA_PER_AVVERSARIO) {
+			if (Dado.tira(100) <= CostantiBottino.PROBABILITA_PERGAMENA_PER_AVVERSARIO) {
 				TipoIncantesimo pergamena = scegliLaPergamena(avversario, umanoide);
 				if (pergamena != null) {
 					gruppo.addIncantesimi(pergamena, 1);
 				}
 			}
-			if (umanoide && Dado.tira(100) <= Costanti.PROBABILITA_POZIONE_SALUTE_PER_AVVERSARIO_UMANOIDE) {
+			if (umanoide && Dado.tira(100) <= CostantiBottino.PROBABILITA_POZIONE_SALUTE_PER_AVVERSARIO_UMANOIDE) {
 				gruppo.addPozioniSalute(1);
 			}
 		}

@@ -163,7 +163,7 @@ condizioni dentro la lista fanno già variare il comportamento, e i boss hanno l
 diversa (`TatticheDeiPersonaggi.imposta`), per esempio in una missione un goblin più furbo degli altri con una tattica tutta sua; la tattica dell'istanza si salva con la partita (§1, §11.12).
 
 **L'astuzia e le soglie.** Le soglie dei quattro livelli sono: 1 = da 0 a 11, 2 = da 12 a 19, 3 = da 20 a 30, 4 = da 31 (`SOGLIA_ASTUTO`, `SOGLIA_ESPERTO` e `SOGLIA_STRATEGA` in `TatticheBase`). Il **Folletto** (massimo 8)
-sta fra il Goblin e l'Hobgoblin e l'**Ombra Nera** (31) nel quarto livello. Il massimo sta in `*_MAX_INTELLIGENZA` di `Costanti`, che serve anche a calcolare l'INTELLIGENZA vera: cambiarlo
+sta fra il Goblin e l'Hobgoblin e l'**Ombra Nera** (31) nel quarto livello. Il massimo sta in `*_MAX_INTELLIGENZA` di `CostantiPersonaggi`, che serve anche a calcolare l'INTELLIGENZA vera: cambiarlo
 cambia anche i lanciatori di incantesimi.
 
 L'**astuzia** (`Astuzia.di`) parte dal **massimo di classe** ed è ridotta da una **rampa sul livello** (quello del personaggio, che nei mostri è del mondo):
@@ -278,7 +278,7 @@ ce n'è una che posso usare; azione: cambia arma, scegliendo una che dà SACRO".
 - **Ogni arma si valuta una volta sola.** Chi ha provato un'arma e ha visto che non può impugnarla se lo ricorda, per non rifare le
   prove a ogni turno e a ogni voce. La valutazione dipende da chi la fa (classe, livello, forza, carico) e da quello che ha in mano: se uno di questi cambia
   (un'arma nuova nell'inventario, un cambio d'arma, un livello, un effetto che cambia il carico) le valutazioni vanno rifatte o scartate. Il dato sta nello stato del combattimento (§3.3): `registraArmaValutata` / `getValutazioneArma`, usati da `GruppoGiocatore.puoCambiareArma`; un cambio d'arma del personaggio scarta le sue valutazioni, e si azzerano a ogni locazione.
-- **Un massimo di cambi per combattimento, per personaggio**: `Costanti.MAX_CAMBI_ARMA_PER_COMBATTIMENTO` (2), per fermare i continui
+- **Un massimo di cambi per combattimento, per personaggio**: `CostantiPersonaggi.MAX_CAMBI_ARMA_PER_COMBATTIMENTO` (2), per fermare i continui
   cambi anche quando le condizioni lo permettono. Si conta nello stato del combattimento (`registraCambioArma`, `getCambiDArma`) e ricade fra le condizioni della voce
   ("non ho ancora cambiato arma").
 - **Come si esegue** (`GruppoGiocatore.cambiaArma`): non passa dagli eventi `InternoStoccaggioArtefatto` / `InternoPrelievoArtefatto`, che sono richieste della
@@ -802,7 +802,7 @@ salute piena, la Resurrezione vuole un caduto, un'azione con costo vuole la `MAG
   Un'immunità scoperta scarta subito l'azione, senza altri tentativi.
 
 **Quando il tiro fallisce per caso** (un Silenzio mancato) non c'è nessuna scoperta, ma non si riprova all'infinito: lo `StatoDelCombattimento` ricorda i **tentativi falliti** per (attore, bersaglio, azione), perché il tiro dipende da chi
-lancia; dopo **2** fallimenti (`Costanti`, per cominciare) l'azione non è più applicabile a quel bersaglio per quell'attore e la sequenza passa alla successiva. Il conto riparte a ogni locazione, come il resto dello stato. Un'azione
+lancia; dopo **2** fallimenti (`CostantiTattiche.MAX_TENTATIVI_FALLITI_PER_AZIONE`, per cominciare) l'azione non è più applicabile a quel bersaglio per quell'attore e la sequenza passa alla successiva. Il conto riparte a ogni locazione, come il resto dello stato. Un'azione
 riuscita azzera il conto.
 
 Lo registrano `StatoDelCombattimento.registraEsitoAzione(attore, bersaglio, azione, esito)` (colpito, mancato, immune o resistito; `EsitoAzione`) e le due letture, `getTentativiFalliti` e `isImmunitaScoperta`, che `Requisiti` e `SceltaIncantesimo` consultano. Gli esiti degli incantesimi e del dardo li registrano `IncantesimoMaleficoImpl.colpisci` e `scagliaIlDardo`; l'attacco fisico non ne registra (non si abbandona mai). Manca l'esito delle azioni con effetti che non si applicano (§8).

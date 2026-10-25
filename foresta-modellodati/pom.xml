@@ -52,11 +52,6 @@
             <artifactId>foresta-mappa</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.threeamigos</groupId>
-            <artifactId>foresta-tipi</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
 </project>

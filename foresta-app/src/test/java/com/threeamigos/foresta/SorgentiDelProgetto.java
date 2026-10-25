@@ -27,11 +27,11 @@ public final class SorgentiDelProgetto {
 	 */
 	public static Path radice() {
 		Path corrente = Paths.get("").toAbsolutePath();
-		while (corrente != null && !Files.isDirectory(corrente.resolve("foresta-tipi"))) {
+		while (corrente != null && !Files.isDirectory(corrente.resolve("foresta-strumenti"))) {
 			corrente = corrente.getParent();
 		}
 		if (corrente == null) {
-			throw new IllegalStateException("Non trovo la cartella del progetto (quella con foresta-tipi)");
+			throw new IllegalStateException("Non trovo la cartella del progetto (quella con foresta-strumenti)");
 		}
 		return corrente;
 	}

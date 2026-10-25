@@ -41,17 +41,29 @@ Il progetto è diviso in due parti che **non si conoscono**: il **motore** (le r
 I moduli Maven si impilano, e ognuno conosce solo quelli sopra di lui, quindi è il compilatore a garantire la separazione:
 
 ```
- foresta-tipi          enum e costanti di base (TipoLocazione, TipoPersonaggio, ...)
+ foresta-strumenti, -serializzazione      dadi, log, timer; salvataggi a righe
       ▲
- foresta-modellodati   le classi ...MD: solo dati, con lettura e scrittura dei salvataggi
+ foresta-eventi, -testi, -comandi         il bus, i testi per lingua, i comandi del giocatore
       ▲
- foresta-motore-api     interfacce (Vista*), bus e classi degli eventi, utilità neutre
+ foresta-attributi, -effettidistato,      un modulo per argomento: ognuno porta le sue enum (tipi),
+ -danni, -artefatti, -mappa, -personaggi, i suoi dati (modellodati) e i contratti per la UI
+ -poteri, -combattimento, -tattiche,
+ -statistiche, -intermezzi, -bottino,
+ -mondo, -economia, -missioni,
+ -bestiario, -trofei
+      ▲
+ foresta-modellodati   ModelloDati: mette insieme i dati di tutte le parti per salvarli e rileggerli
+      ▲
+ foresta-motore-api     interfacce (Vista*), eventi del ciclo di vita, FaseDiGioco
       ▲                          ▲
  foresta-motore         foresta-swing
- (tutto il dominio)     (ui, immagini)
+ (macchina a stati,     (ui, immagini)
+  locazioni, salvataggi)
       ▲                          ▲
       └────────  foresta-app  ───┘     Main, SnifferBusEventi, test che usano entrambi
 ```
+
+La catena esatta, modulo per modulo, è nella tabella di [`foresta.md`](foresta.md#moduli).
 
 Il motore e la UI dipendono entrambi da `foresta-motore-api` e mai l'uno dall'altro: è lì che stanno le «lingue comuni» (eventi e viste). Solo `foresta-app` li mette insieme. Un test (`DipendenzeDalToolkitGraficoTest`) controlla che nessuno fuori da `foresta-swing` usi `java.awt` o Swing.
 

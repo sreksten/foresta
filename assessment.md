@@ -21,7 +21,7 @@ Questo assessment **non è una nuova lettura integrale dei sorgenti**, come fu l
   - le quattro classi grandi;
   - lo stato statico;
   - la fragilità dei fornitori (§3);
-  - qualche residuo della divisione: `foresta-tipi`, `foresta-modellodati`, `MeccanicaDeiPoteri`;
+  - qualche residuo della divisione: `foresta-modellodati`, `MeccanicaDeiPoteri`;
   - un po' di codice morto (§5).
 
 ## 2. Misure
@@ -36,7 +36,6 @@ Questo assessment **non è una nuova lettura integrale dei sorgenti**, come fu l
 | `foresta-attributi` | 13 / 995 | 6 / 409 | 27 | 100% | 100% |
 | `foresta-effettidistato` | 4 / 305 | 3 / 88 | 5 | 100% | 100% |
 | `foresta-danni` | 4 / 563 | 4 / 180 | 8 | 100% | 100% |
-| `foresta-tipi` | 3 / 129 | 3 / 278 | 11 | 100% | 100% |
 | `foresta-mappa` | 15 / 2.022 | 7 / 1.101 | 61 | 81% | 97% |
 | `foresta-artefatti` | 44 / 5.120 | 19 / 2.860 | 171 | 100% | 100% |
 | `foresta-personaggi` | 132 / 19.606 | 24 / 1.933 | 102 | 55% | 79% |
@@ -133,9 +132,8 @@ Nei pom ci sono quattro dipendenze dichiarate ma non usate direttamente: `modell
 3. **Stato statico.** Lo stato della partita vive in registri e singleton (`GruppoGiocatore`, `RegistroMissioni`, `Cassa`, `Foresta`…). `StatoDelMotore.azzera()` riparte da un modello dati nuovo e da un automa nuovo.
    **Giudizio:** accettabile per un gioco single-player, a patto di non aggiungere registri statici. I fornitori almeno rendono esplicito dove stanno i dati.
 4. **Residui della divisione.**
-   - `foresta-tipi` contiene solo `FaseDiGioco` e le ultime `Costanti`.
    - `foresta-modellodati` contiene, oltre a `ModelloDati`, solo le notizie (`NotizieMD`, `NotiziaMD`, `MessaggioMD`).
-   - In `foresta-motore-api` restano `ComandiAssociati`, che usa i tipi di personaggi, poteri e missioni, e le richieste di apertura di trofei e bestiario.
+   - In `foresta-motore-api` restano `FaseDiGioco`, `ComandiAssociati`, che usa i tipi di personaggi, poteri e missioni, e le richieste di apertura di trofei e bestiario.
    - **`MeccanicaDeiPoteri`:** combattimento e poteri sono ancora in ordine inverso. Il combattimento dipende dai poteri (anche per `TipoAzione` ed `EsitoAzione`), e i poteri arrivano al combattimento solo attraverso l'interfaccia e il `ServiceLoader`.
 5. **Personaggi e gruppi nello stesso modulo.** È una scelta voluta. `PersonaggioBase` e `GruppoGiocatore` si conoscono attraverso i singleton, in sette punti: da che parte sta un personaggio, quanti della sua specie ci sono, il gruppo pieno.
 6. **I test stanno tutti in alto.** Missioni, economia, poteri e bottino hanno pochi test loro (copertura propria dal 9 al 16%). Li esercitano i test di scenario del motore, che li coprono dal 64 al 94%.
@@ -153,7 +151,7 @@ Nei pom ci sono quattro dipendenze dichiarate ma non usate direttamente: `modell
 - **`TODO`/`FIXME`:** sono 14, tutti su funzioni future o rifiniture.
 - **Codice morto:** pochi pezzi, elencati nel §5.
 - **Test saltati:** i 22 test saltati sono simulazioni da lanciare a mano, non test rotti.
-- **Rapporti stantii.** Dopo uno spostamento serve `mvn clean`. Senza, `target/` tiene classi e risorse che non esistono più: è successo con un `tipo_artefatto_it.properties` rimasto in `foresta-tipi/target`. E la compilazione incrementale può non ricompilare i test di un modulo quando cambia un modulo sotto.
+- **Rapporti stantii.** Dopo uno spostamento serve `mvn clean`. Senza, `target/` tiene classi e risorse che non esistono più. E la compilazione incrementale può non ricompilare i test di un modulo quando cambia un modulo sotto.
 
 ## 5. Difetti aperti
 
@@ -212,7 +210,6 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
    - installare i fornitori in modo esplicito (§3, problema 2).
 2. **Finire la divisione:**
    - le notizie in un modulo loro, o nel motore, e `ModelloDati` da solo in `foresta-modellodati`;
-   - `FaseDiGioco` e le ultime `Costanti` dove servono;
    - le richieste di trofei e bestiario nei loro moduli;
    - decidere se invertire combattimento e poteri e togliere `MeccanicaDeiPoteri`.
 3. **Tagliare le classi grandi** quando si interviene su di loro (§3, problema 1). Il candidato più naturale è il combattimento a round di `LocazioneBase`.

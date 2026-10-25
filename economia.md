@@ -46,7 +46,7 @@ Gli acquisti nei negozi hanno uno sconto dovuto alla Contrattazione, di solito l
 | Artefatto dell'armaiolo | 5 + 5 × livello, spadone × 1,5 | più il listino degli effetti se incantato |
 | Ingrediente magico | 2-180 secondo tipo e livello | listino nuovo, vedi la tabella sotto |
 | Fusione | 10 + 5 per effetto trasferito | incantatore |
-| Corruzione | 2 × posti del gruppo | riesce il 70% delle volte (`Costanti.FACCE_DEL_DADO_DELLA_CORRUZIONE` e `SOGLIA_DEL_DADO_DELLA_CORRUZIONE`); se fallisce non si pagano le monete, ma c'è uno spregio (vedi sotto) |
+| Corruzione | 2 × posti del gruppo | riesce il 70% delle volte (`CostantiMotore.FACCE_DEL_DADO_DELLA_CORRUZIONE` e `SOGLIA_DEL_DADO_DELLA_CORRUZIONE`); se fallisce non si pagano le monete, ma c'è uno spregio (vedi sotto) |
 | Incantesimi offerti | quantità × prezzo / 2 | offerta dopo corruzione o amicizia |
 
 Perdite:

@@ -57,7 +57,7 @@ Due proprietà da tenere presenti, perché spiegano molte scelte:
 - **Chi esegue non decide.** `EsecutoreTattiche` fa quello che la `Decisione` dice, sul modello dati di sempre. È condiviso fra la locazione (`LocazioneBase`) e le
   simulazioni, così i mostri e i personaggi del giocatore fanno le stesse cose in tutti e due.
 
-## 3. Gli enumerati (`foresta-tipi`)
+## 3. Gli enumerati (`foresta-tattiche`, pacchetto `tipi`; `TipoAzione` ed `EsitoAzione` in `foresta-poteri`)
 
 Il vocabolario delle tattiche è fatto di enumerati, e ogni voce nel file di salvataggio usa il **nome** dell'enumerato.
 

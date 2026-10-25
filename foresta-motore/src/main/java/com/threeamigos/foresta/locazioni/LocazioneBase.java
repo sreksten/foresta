@@ -248,7 +248,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * e oggetti associati.
 	 */
 	/**
-	 * I mostri che non si incontrano durante l'inizio morbido (Costanti.INIZIO_MORBIDO_FINO_AL_LIVELLO): a livello 1
+	 * I mostri che non si incontrano durante l'inizio morbido (CostantiMotore.INIZIO_MORBIDO_FINO_AL_LIVELLO): a livello 1
 	 * sono più forti di un protagonista solo con la dotazione di base
 	 */
 	public static final Set<TipoPersonaggio> MOSTRI_ESCLUSI_A_INIZIO_PARTITA = Collections.unmodifiableSet(EnumSet.of(
@@ -260,7 +260,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * morbido senza quelli di MOSTRI_ESCLUSI_A_INIZIO_PARTITA (se ne resta almeno uno)
 	 */
 	public static TipoPersonaggio[] incontriPossibili(TipoPersonaggio[] mostri, int livelloCapo) {
-		if (livelloCapo > Costanti.INIZIO_MORBIDO_FINO_AL_LIVELLO) {
+		if (livelloCapo > CostantiMotore.INIZIO_MORBIDO_FINO_AL_LIVELLO) {
 			return mostri;
 		}
 		TipoPersonaggio[] ammessi = Arrays.stream(mostri).filter(m -> !MOSTRI_ESCLUSI_A_INIZIO_PARTITA.contains(m))
@@ -275,7 +275,7 @@ public abstract class LocazioneBase implements Locazione {
 	 */
 	public static int numeroMassimoDiMostri(int livelloCapo, int personaggiDelGruppo) {
 		int inPiu;
-		if (livelloCapo <= Costanti.INIZIO_MORBIDO_FINO_AL_LIVELLO) {
+		if (livelloCapo <= CostantiMotore.INIZIO_MORBIDO_FINO_AL_LIVELLO) {
 			inPiu = 0;
 		} else if (livelloCapo <= 5) {
 			inPiu = 1;
@@ -811,7 +811,7 @@ public abstract class LocazioneBase implements Locazione {
 					// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
 					return annullaScelta();
 				}
-				if (Cassa.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(Costanti.FACCE_DEL_DADO_DELLA_CORRUZIONE) > Costanti.SOGLIA_DEL_DADO_DELLA_CORRUZIONE) {
+				if (Cassa.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(CostantiMotore.FACCE_DEL_DADO_DELLA_CORRUZIONE) > CostantiMotore.SOGLIA_DEL_DADO_DELLA_CORRUZIONE) {
 					Cassa.subMonete(gruppo.getNumeroPersonaggi() * 2);
 					BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() + " ha ottenuto un passaggio sicuro."));
 					BusEventi.pubblica(new InternoCorruzioneRiuscita(classiAvversariVivi()));
@@ -1527,8 +1527,8 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
-	 * Un necromante vivo evoca uno scheletro ogni volta che ne cadono due (Costanti.NECROMANTE_SCHELETRI_PER_EVOCAZIONE), finché è vivo e
-	 * al più Costanti.NECROMANTE_EVOCAZIONI_MASSIME volte per scontro: qui si conta e si segna che serve un'evocazione, che si fa subito dopo
+	 * Un necromante vivo evoca uno scheletro ogni volta che ne cadono due (CostantiMotore.NECROMANTE_SCHELETRI_PER_EVOCAZIONE), finché è vivo e
+	 * al più CostantiMotore.NECROMANTE_EVOCAZIONI_MASSIME volte per scontro: qui si conta e si segna che serve un'evocazione, che si fa subito dopo
 	 * l'azione (vedi evocaGliScheletri).
 	 */
 	private void contaLoScheletroCaduto(Personaggio vittima) {
@@ -1536,8 +1536,8 @@ public abstract class LocazioneBase implements Locazione {
 			return;
 		}
 		scheletriCaduti++;
-		if (scheletriCaduti >= Costanti.NECROMANTE_SCHELETRI_PER_EVOCAZIONE) {
-			scheletriCaduti -= Costanti.NECROMANTE_SCHELETRI_PER_EVOCAZIONE;
+		if (scheletriCaduti >= CostantiMotore.NECROMANTE_SCHELETRI_PER_EVOCAZIONE) {
+			scheletriCaduti -= CostantiMotore.NECROMANTE_SCHELETRI_PER_EVOCAZIONE;
 			evocazioniDaFare++;
 		}
 	}
@@ -1557,7 +1557,7 @@ public abstract class LocazioneBase implements Locazione {
 		while (evocazioniDaFare > 0) {
 			evocazioniDaFare--;
 			Optional<Personaggio> necromante = getNecromanteVivo();
-			if (!necromante.isPresent() || evocazioniFatte >= Costanti.NECROMANTE_EVOCAZIONI_MASSIME) {
+			if (!necromante.isPresent() || evocazioniFatte >= CostantiMotore.NECROMANTE_EVOCAZIONI_MASSIME) {
 				continue;
 			}
 			evocazioniFatte++;

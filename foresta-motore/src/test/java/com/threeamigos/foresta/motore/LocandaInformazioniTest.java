@@ -8,7 +8,7 @@ import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.CostantiMotore;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Una locanda dà al massimo Costanti.LOCANDA_MASSIMO_INFORMAZIONI informazioni in tutta la partita:
+ * Una locanda dà al massimo CostantiMotore.LOCANDA_MASSIMO_INFORMAZIONI informazioni in tutta la partita:
  * andando avanti e indietro non si scopre tutta la Foresta.
  */
 class LocandaInformazioniTest {
@@ -31,7 +31,7 @@ class LocandaInformazioniTest {
 				partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno", 1));
 			}
 
-			for (int visita = 0; visita < Costanti.LOCANDA_MASSIMO_INFORMAZIONI + 2; visita++) {
+			for (int visita = 0; visita < CostantiMotore.LOCANDA_MASSIMO_INFORMAZIONI + 2; visita++) {
 				partita.comando(Comando.LOCANDA);
 				partita.comando(Comando.PERGAMENA);
 				// Niente pernottamento: si torna in piazza
@@ -39,7 +39,7 @@ class LocandaInformazioniTest {
 				partita.assertComandoDisponibile(Comando.LOCANDA);
 			}
 
-			assertEquals(Costanti.LOCANDA_MASSIMO_INFORMAZIONI, informazioniRicevute(partita));
+			assertEquals(CostantiMotore.LOCANDA_MASSIMO_INFORMAZIONI, informazioniRicevute(partita));
 			assertEquals(2, partita.eventi().tutti(NotificaTestoParagrafo.class).stream()
 							.filter(n -> n.getMessaggio().equals("Nessuno ha più nulla di nuovo da raccontare."))
 							.count(),
@@ -49,7 +49,7 @@ class LocandaInformazioniTest {
 			partita.salva(Comando.NUMERO_3);
 			assertTrue(partita.leggi(Comando.NUMERO_3));
 			CoordinateMD nyena = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA);
-			assertEquals(String.valueOf(Costanti.LOCANDA_MASSIMO_INFORMAZIONI),
+			assertEquals(String.valueOf(CostantiMotore.LOCANDA_MASSIMO_INFORMAZIONI),
 					Foresta.getLocazioneMD(nyena).ottieniProprieta(Locanda.LOCANDA_INFORMAZIONI_DATE));
 		}
 	}

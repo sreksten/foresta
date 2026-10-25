@@ -62,7 +62,7 @@ public class Locanda extends LocazioneBase {
 	 */
 	public static final String LOCANDA_NOME_LOCANDIERE = "LOCANDA_NOME_LOCANDIERE";
 	/**
-	 * Quante informazioni la locanda ha già dato: oltre Costanti.LOCANDA_MASSIMO_INFORMAZIONI non
+	 * Quante informazioni la locanda ha già dato: oltre CostantiMotore.LOCANDA_MASSIMO_INFORMAZIONI non
 	 * ne dà più, altrimenti andando avanti e indietro si scoprirebbe tutta la Foresta.
 	 */
 	public static final String LOCANDA_INFORMAZIONI_DATE = "LOCANDA_INFORMAZIONI_DATE";
@@ -222,7 +222,7 @@ public class Locanda extends LocazioneBase {
 				BusEventi.pubblica(new InternoPastoConsumatoInLocanda());
 
 				if (evento == RICEVE_INFORMAZIONI) {
-					if (getInformazioniDate() < Costanti.LOCANDA_MASSIMO_INFORMAZIONI) {
+					if (getInformazioniDate() < CostantiMotore.LOCANDA_MASSIMO_INFORMAZIONI) {
 						Informazioni info = new Informazioni();
 						BusEventi.pubblica(new NotificaTestoParagrafo(info.getDescrizione(gruppo, gng)));
 						getModelloDati().aggiungiProprieta(LOCANDA_INFORMAZIONI_DATE, String.valueOf(getInformazioniDate() + 1));
