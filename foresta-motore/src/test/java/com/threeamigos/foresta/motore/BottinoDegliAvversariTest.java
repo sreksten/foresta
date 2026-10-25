@@ -37,6 +37,7 @@ class BottinoDegliAvversariTest {
 
     @BeforeEach
     void prepara() {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         BusEventi.impostaConsegna(Runnable::run);
         GruppoGiocatore.azzeraIstanza();

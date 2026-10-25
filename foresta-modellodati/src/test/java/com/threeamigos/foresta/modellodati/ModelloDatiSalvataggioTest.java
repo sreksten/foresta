@@ -101,6 +101,7 @@ class ModelloDatiSalvataggioTest {
 
     @Test
     void laMappaPrendeIDatiDalModelloDatiInCorso() {
+        ModelloDati.installa();
         ModelloDati uno = new ModelloDati();
         uno.reimposta(6, 6);
         ModelloDati.setIstanza(uno);

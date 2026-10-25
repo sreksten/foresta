@@ -31,6 +31,7 @@ class MappaNomeSottoIlMouseTest {
     @BeforeEach
     void preparaMappa() {
         modelloDatiPrecedente = ModelloDati.getIstanza();
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         ModelloDati.getIstanza().getForestaMD().reimposta(20, 20);
         // Come alla creazione del mondo, dove non c'è altro c'è bosco

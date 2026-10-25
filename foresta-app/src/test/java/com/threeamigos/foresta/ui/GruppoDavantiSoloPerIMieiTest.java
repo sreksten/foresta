@@ -29,6 +29,7 @@ class GruppoDavantiSoloPerIMieiTest {
 	void creaCanvas() {
 		BusEventi.azzera();
 		BusEventi.impostaConsegna(Runnable::run);
+		ModelloDati.installa();
 		ModelloDati.setIstanza(new ModelloDati());
 		GruppoGiocatore.azzeraIstanza();
 		canvas = new DisplayableCanvas(1024, 768, DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, 72, false,

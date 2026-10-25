@@ -37,6 +37,7 @@ class CureENonMortiTest {
 
     @BeforeEach
     void prepara() {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         GruppoGiocatore.azzeraIstanza();
         guerriero = FabbricaPersonaggi.crea(TipoPersonaggio.GUERRIERO, 1);

@@ -32,6 +32,7 @@ class RaccoltaDiUnArtefattoTest {
 
 	@BeforeEach
 	void prepara() {
+		ModelloDati.installa();
 		ModelloDati.setIstanza(new ModelloDati());
 		BusEventi.azzera();
 		BusEventi.impostaConsegna(Runnable::run);

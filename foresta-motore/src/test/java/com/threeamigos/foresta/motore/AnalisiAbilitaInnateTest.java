@@ -116,6 +116,7 @@ class AnalisiAbilitaInnateTest {
                     Map<TipoPersonaggio, double[]> magia = new LinkedHashMap<>();
                     Map<TipoPersonaggio, Map<TipoAzione, double[]>> lanci = new LinkedHashMap<>();
                     for (int i = 0; i < iterazioni; i++) {
+                        ModelloDati.installa();
                         ModelloDati.setIstanza(new ModelloDati());
                         List<Personaggio> pgs = new ArrayList<>();
                         for (TipoPersonaggio classe : gruppo) {
@@ -623,6 +624,7 @@ class AnalisiAbilitaInnateTest {
     }
 
     private Esito scontro(List<TipoPersonaggio> classi, TipoPersonaggio classeAvversari, int quantita, int livello) {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         List<Personaggio> gruppo = new ArrayList<>();
         for (TipoPersonaggio classe : classi) {

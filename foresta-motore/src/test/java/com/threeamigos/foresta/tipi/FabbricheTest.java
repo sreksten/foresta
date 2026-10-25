@@ -25,6 +25,7 @@ class FabbricheTest {
     void prepara() {
         BusEventi.azzera();
         BusEventi.impostaConsegna(Runnable::run);
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
     }
 

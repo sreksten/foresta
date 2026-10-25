@@ -34,6 +34,7 @@ class MoltiplicatoreAttesoTest {
 
     @BeforeEach
     void prepara() {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
     }
 

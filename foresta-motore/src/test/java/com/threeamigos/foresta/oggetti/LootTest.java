@@ -30,6 +30,7 @@ class LootTest {
 
     @BeforeEach
     void nuovoGruppo() {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         gruppo = new GruppoGiocatore();
         primo = new Guerriero("Pippo", 1);

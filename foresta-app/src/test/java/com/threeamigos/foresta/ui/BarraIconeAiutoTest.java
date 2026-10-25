@@ -34,6 +34,7 @@ class BarraIconeAiutoTest {
     @BeforeEach
     void prepara() {
         modelloDatiPrecedente = ModelloDati.getIstanza();
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         BusEventi.azzera();
         BusEventi.impostaConsegna(Runnable::run);

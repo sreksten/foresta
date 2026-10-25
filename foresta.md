@@ -94,7 +94,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 
 `Main.main()`:
 
-1. installa il thread principale (`ThreadPrincipale` con l'`EsecutoreSwing`: tutta la logica gira sull'EDT);
+1. dice alle parti del gioco dove sono i loro dati (`ModelloDati.installa()`) e installa il thread principale (`ThreadPrincipale` con l'`EsecutoreSwing`: tutta la logica gira sull'EDT);
 2. registra sul bus `SnifferBusEventi` (log di ogni evento), si iscrive a `NotificaUscitaDalGioco` (è l'unico punto che chiama `System.exit`) e fa registrare con `StatoDelMotore.registraComponenti()` i componenti che ascoltano tutta la partita: `Notizie`, `Statistiche`, `RegistroTrofei`, `RegistroArtefatti`, `RegistroMissioni`;
 3. legge gli argomenti: `ORIZZONTALE`/`VERTICALE`, `TUTTOSCHERMO`, `SALTALOGO`, `BARRACLASSICA` (barra icone fissa invece del Dock), `MODALITA_DI_PROVA`;
 4. installa i gestori su file di classifica, salvataggi e trofei (i trofei si leggono qui, una volta sola);

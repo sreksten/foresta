@@ -47,6 +47,7 @@ class ModificatoriTemporaneiTest {
 
     @BeforeEach
     void preparaGuerriero() {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         guerriero = new Guerriero("Arsenio", 5);
     }

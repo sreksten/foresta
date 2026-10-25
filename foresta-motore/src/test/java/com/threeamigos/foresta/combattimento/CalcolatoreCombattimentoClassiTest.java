@@ -36,6 +36,7 @@ class CalcolatoreCombattimentoClassiTest {
 
     @BeforeEach
     void preparaDifensore() {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         difensore = new Guerriero("Bersaglio", 5);
         difensore.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 1000));

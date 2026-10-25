@@ -53,8 +53,8 @@ class OggettiHeadlessTest {
             if (!java.awt.GraphicsEnvironment.isHeadless()) {
                 throw new IllegalStateException("la sonda deve girare headless");
             }
-            // Come all'avvio del gioco: il modello dati dice alle parti (statistiche, mappa...) dove sono i loro dati
-            ModelloDati.getIstanza();
+            // Come all'avvio del gioco (Main): il modello dati dice alle parti (statistiche, mappa...) dove sono i loro dati
+            ModelloDati.installa();
             for (TipoBottino tipo : TipoBottino.values()) {
                 if (tipo.isGenerabile()) {
                     Bottino oggetto = FabbricaOggetti.crea(tipo);

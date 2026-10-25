@@ -22,6 +22,7 @@ class EquipaggiamentoInizialeTest {
 
     @BeforeEach
     void mondoNuovo() {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
     }
 

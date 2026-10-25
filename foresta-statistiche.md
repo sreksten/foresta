@@ -48,5 +48,5 @@ Il tempo ha una **scadenza**. Il dato è `LineaTemporaleMD` (giorno e ora corren
 ## Osservazioni
 
 - Per alzare il limite dei 40 giorni vanno riviste insieme le soglie delle città, la soglia della sconfitta e `Numeri.getOrdinaleM/F`, come spiegato in `todo.md`. Il TODO nel codice nota che le città potrebbero essere distrutte a caso invece che in ordine fisso.
-- Come `Foresta`, `Statistiche` e `LineaTemporale` sono statici con dati iniettati: chi li usa nei test installa il fornitore (lo fa `ModelloDati` quando si carica).
+- Come `Foresta`, `Statistiche` e `LineaTemporale` sono statici con dati iniettati: chi li usa nei test installa il fornitore (lo fa `ModelloDati.installa()`).
 - Il quadro del tempo e delle statistiche è in [`motore_di_gioco.md`](motore_di_gioco.md) §6.

@@ -28,6 +28,7 @@ class ConcordanzaDelleNotizieTest {
     @AfterEach
     void gruppoPulito() {
         BusEventi.azzera();
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         GruppoGiocatore.azzeraIstanza();
     }

@@ -40,6 +40,7 @@ class NomiDeiPersonaggiDelMondoTest {
 		BusEventi.azzera();
 		Dado.ripristina();
 		Dado.impostaSeme(7);
+		ModelloDati.installa();
 		ModelloDati.setIstanza(new ModelloDati());
 		GruppoGiocatore.azzeraIstanza();
 		GruppoAvversario.azzeraIstanza();

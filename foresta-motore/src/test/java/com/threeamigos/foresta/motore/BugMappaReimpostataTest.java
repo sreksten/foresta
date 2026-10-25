@@ -26,6 +26,7 @@ class BugMappaReimpostataTest {
 		BusEventi.azzera();
 		Dado.ripristina();
 		Dado.impostaSeme(1);
+		ModelloDati.installa();
 		ModelloDati.setIstanza(new ModelloDati());
 		GruppoGiocatore.azzeraIstanza();
 		GruppoAvversario.azzeraIstanza();

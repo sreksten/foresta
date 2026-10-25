@@ -33,6 +33,7 @@ class NegoziTest {
 
     @BeforeEach
     void nuovoMondo() {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         gruppo = new GruppoGiocatore();
         Cassa.subMonete(Cassa.getMonete());

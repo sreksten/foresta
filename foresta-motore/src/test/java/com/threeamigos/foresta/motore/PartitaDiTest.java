@@ -17,6 +17,7 @@ import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.SceltaDegliIncarichi;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
@@ -75,6 +76,7 @@ final class PartitaDiTest implements AutoCloseable {
 		BusEventi.impostaConsegna(Runnable::run);
 		Dado.ripristina();
 		Dado.impostaSeme(seme);
+		ModelloDati.installa();
 		StatoDelMotore.azzera();
 		// I trofei passano da una partita all'altra: ogni test riparte senza nessun trofeo vinto
 		RegistroTrofei.impostaGestoreTrofei(trofei);

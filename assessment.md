@@ -20,7 +20,6 @@ Questo assessment **non è una nuova lettura integrale dei sorgenti**, come fu l
 - **Giudizio:** il progetto è in buona salute, e l'architettura è molto migliorata dalla revisione precedente: il motore è passato da 57.000 a meno di 10.000 righe. Non ci sono difetti aperti di gravità alta o media. Restano:
   - le quattro classi grandi;
   - lo stato statico;
-  - la fragilità dei fornitori (§3);
   - qualche residuo della divisione: `foresta-modellodati`, `MeccanicaDeiPoteri`;
   - un po' di codice morto (§5).
 
@@ -60,7 +59,7 @@ Questo assessment **non è una nuova lettura integrale dei sorgenti**, come fu l
 - **"Copertura dei suoi test"** è quella del rapporto di JaCoCo del modulo: conta solo i test che stanno nel modulo.
 - **"Copertura con tutti i test"** unisce i `jacoco.exec` di tutti i moduli e misura ogni modulo con i dati di tutti. Il rapporto aggregato di JaCoCo (`report-aggregate`) non serve: vede solo le dipendenze dirette di `foresta-app`. Per questo l'ho calcolata con un piccolo programma sopra la libreria di JaCoCo.
 
-Fra le due colonne c'è molta distanza, ed è il dato più importante della tabella. Le missioni, per esempio, hanno 17 test loro e sono coperte all'89%: le esercitano gli 843 test di scenario del motore (§3, problema 6).
+Fra le due colonne c'è molta distanza, ed è il dato più importante della tabella. Le missioni, per esempio, hanno 17 test loro e sono coperte all'89%: le esercitano gli 843 test di scenario del motore (§3, problema 5).
 
 Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 
@@ -125,18 +124,16 @@ Dal basso in alto. Ogni livello dipende solo da quelli prima, e le dipendenze so
    - in `PersonaggioBase`, attributi e modificatori, equipaggiamento ed effetti di stato separati.
 
    Con i moduli il taglio è più facile, perché si vede subito cosa usa cosa.
-2. **I fornitori dipendono da quando si carica `ModelloDati`.** Dodici classi prendono i loro dati da un fornitore che `ModelloDati` installa nel suo blocco statico, quindi solo quando la classe viene caricata. Se qualcuno usa una di quelle parti prima, riceve un `IllegalStateException` esplicito. Nel gioco non succede, perché `StatoDelMotore` carica subito il modello dati. È però già successo in un test che girava in una JVM a parte (`OggettiHeadlessTest`).
-   **Giudizio:** meglio un'installazione esplicita, per esempio `ModelloDati.installa()` chiamata da `Main` e da `PartitaDiTest`, invece del blocco statico.
-3. **Stato statico.** Lo stato della partita vive in registri e singleton (`GruppoGiocatore`, `RegistroMissioni`, `Cassa`, `Foresta`…). `StatoDelMotore.azzera()` riparte da un modello dati nuovo e da un automa nuovo.
-   **Giudizio:** accettabile per un gioco single-player, a patto di non aggiungere registri statici. I fornitori almeno rendono esplicito dove stanno i dati.
-4. **Residui della divisione.**
+2. **Stato statico.** Lo stato della partita vive in registri e singleton (`GruppoGiocatore`, `RegistroMissioni`, `Cassa`, `Foresta`…). `StatoDelMotore.azzera()` riparte da un modello dati nuovo e da un automa nuovo.
+   **Giudizio:** accettabile per un gioco single-player, a patto di non aggiungere registri statici. I fornitori almeno rendono esplicito dove stanno i dati, e `ModelloDati.installa()` li mette al loro posto all'avvio (`Main`, `PartitaDiTest`).
+3. **Residui della divisione.**
    - `foresta-modellodati` contiene, oltre a `ModelloDati`, solo le notizie (`NotizieMD`, `NotiziaMD`, `MessaggioMD`).
    - In `foresta-motore-api` restano `FaseDiGioco`, `ComandiAssociati`, che usa i tipi di personaggi, poteri e missioni, e le richieste di apertura di trofei e bestiario.
    - **`MeccanicaDeiPoteri`:** combattimento e poteri sono ancora in ordine inverso. Il combattimento dipende dai poteri (anche per `TipoAzione` ed `EsitoAzione`), e i poteri arrivano al combattimento solo attraverso l'interfaccia e il `ServiceLoader`.
-5. **Personaggi e gruppi nello stesso modulo.** È una scelta voluta. `PersonaggioBase` e `GruppoGiocatore` si conoscono attraverso i singleton, in sette punti: da che parte sta un personaggio, quanti della sua specie ci sono, il gruppo pieno.
-6. **I test stanno tutti in alto.** Missioni, economia, poteri e bottino hanno pochi test loro (copertura propria dal 9 al 16%). Li esercitano i test di scenario del motore, che li coprono dal 64 al 94%.
+4. **Personaggi e gruppi nello stesso modulo.** È una scelta voluta. `PersonaggioBase` e `GruppoGiocatore` si conoscono attraverso i singleton, in sette punti: da che parte sta un personaggio, quanti della sua specie ci sono, il gruppo pieno.
+5. **I test stanno tutti in alto.** Missioni, economia, poteri e bottino hanno pochi test loro (copertura propria dal 9 al 16%). Li esercitano i test di scenario del motore, che li coprono dal 64 al 94%.
    **Giudizio:** finché si lancia sempre tutta la suite non è un problema. Ma un `mvn test -pl foresta-missioni` dice poco, ed è meglio scrivere i test nuovi di una parte nel suo modulo, quando non serve tutta la partita.
-7. **Pacchetti divisi fra moduli.** `tipi` sta in 19 moduli, `modellodati` in 15, `eventi.interni` in 13. È una convenzione voluta (CLAUDE.md), e con Java 8 e su Android funziona. Ma non è compatibile con i moduli di Java 9 (JPMS), se un giorno servissero.
+6. **Pacchetti divisi fra moduli.** `tipi` sta in 19 moduli, `modellodati` in 15, `eventi.interni` in 13. È una convenzione voluta (CLAUDE.md), e con Java 8 e su Android funziona. Ma non è compatibile con i moduli di Java 9 (JPMS), se un giorno servissero.
 
 ## 4. Qualità del codice
 
@@ -196,15 +193,13 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 | :--- | :--- | :--- |
 | Copertura bassa della UI e di `foresta-app` | 52% e 28% con tutti i test | Media: la UI si prova poco, e una nuova piattaforma la riscriverà comunque |
 | Copertura dell'economia | 64% con tutti i test, 9% con i suoi | Media: `offerte` e i prezzi sono una zona delicata per il bilanciamento |
-| Fornitori installati da un blocco statico | `IllegalStateException` se una parte si usa prima di `ModelloDati` (§3, problema 2) | Bassa nel gioco; da sistemare prima di altre piattaforme |
 | Copia delle costanti `static final` e `target/` stantii | Una compilazione incrementale parziale può tenere valori o file vecchi | Bassa: basta `mvn clean` |
 | Modalità verticale | Rotta: barra icone sovrapposta, area di contenuto fissa a 640 px (`todo.md`, `motore_grafico.md` §12) | Bassa sul desktop; rimandata |
 
 ## 8. Prossimi passi consigliati
 
 1. **Pulizia piccola:**
-   - togliere il codice morto del §5;
-   - installare i fornitori in modo esplicito (§3, problema 2).
+   - togliere il codice morto del §5.
 2. **Finire la divisione:**
    - le notizie in un modulo loro, o nel motore, e `ModelloDati` da solo in `foresta-modellodati`;
    - le richieste di trofei e bestiario nei loro moduli;

@@ -22,7 +22,7 @@ Dipende da `foresta-motore` e da `foresta-swing`, e per i test anche dal `test-j
 
 Mette insieme le parti nell'ordine giusto:
 
-1. installa il thread principale (`ThreadPrincipale` con l'`EsecutoreSwing`: tutta la logica gira sull'Event Dispatch Thread di Swing);
+1. dice alle parti del gioco dove sono i loro dati (`ModelloDati.installa()`) e installa il thread principale (`ThreadPrincipale` con l'`EsecutoreSwing`: tutta la logica gira sull'Event Dispatch Thread di Swing);
 2. crea lo `SnifferBusEventi`;
 3. si iscrive a `NotificaUscitaDalGioco`: sul desktop si esce con `System.exit(codice)` (il motore **non chiude mai il processo**, lo chiede con questo evento e lo decide `Main`), loggando il motivo se è un errore;
 4. registra i componenti del motore (`StatoDelMotore.registraComponenti()`) e legge gli argomenti;

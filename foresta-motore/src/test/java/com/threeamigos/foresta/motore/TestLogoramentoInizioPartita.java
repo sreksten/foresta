@@ -423,6 +423,7 @@ public class TestLogoramentoInizioPartita {
     }
 
     private static Personaggio nuovoProtagonista(TipoPersonaggio classe) {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         Personaggio pg = conNome(classe);
         EquipaggiamentoIniziale.equipaggia(pg, Statistiche.getLivello());

@@ -93,6 +93,7 @@ class RiprogrammazioneTest {
 
 	@Test
 	void laRiprogrammazioneVaSempreMaleELArtefattoSiSpezza() {
+		ModelloDati.installa();
 		ModelloDati.setIstanza(new ModelloDati());
 		GruppoGiocatore gruppo = new GruppoGiocatore();
 		Cassa.subMonete(Cassa.getMonete());

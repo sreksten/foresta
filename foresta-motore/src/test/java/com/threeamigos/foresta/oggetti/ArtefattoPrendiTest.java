@@ -20,6 +20,7 @@ class ArtefattoPrendiTest {
 
     @BeforeEach
     void nuovoGruppo() {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         gruppo = new GruppoGiocatore();
         guerriero = new Guerriero("Pippo", 1);

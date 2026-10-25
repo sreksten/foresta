@@ -47,6 +47,7 @@ class ScenarioCorrezioniTest {
 
 	@Test
 	void gliAttacchiFisiciFuoriDallaMischiaFannoDanno() {
+		ModelloDati.installa();
 		ModelloDati.setIstanza(new ModelloDati());
 		Dado.impostaSeme(21);
 		Troll troll = new Troll(5);
@@ -172,6 +173,7 @@ class ScenarioCorrezioniTest {
 
 	@Test
 	void resurrezioneEMorteConsumanoMagia() {
+		ModelloDati.installa();
 		ModelloDati.setIstanza(new ModelloDati());
 		Mago mago = new Mago("Merlino", 5);
 		mago.addMagia(mago.getMagiaMassima());
@@ -233,6 +235,7 @@ class ScenarioCorrezioniTest {
 
 	@Test
 	void ogniPersonaggioHaAlmenoUnBersaglio() {
+		ModelloDati.installa();
 		ModelloDati.setIstanza(new ModelloDati());
 		for (com.threeamigos.foresta.tipi.TipoPersonaggio classe : com.threeamigos.foresta.tipi.TipoPersonaggio.values()) {
 			assertTrue(FabbricaPersonaggi.crea(classe, 1).getBersagli() >= 1, classe.name());
@@ -241,6 +244,7 @@ class ScenarioCorrezioniTest {
 
 	@Test
 	void magoEMagaTiranoLeStatisticheComeGliAltriEroi() {
+		ModelloDati.installa();
 		ModelloDati.setIstanza(new ModelloDati());
 		Dado.impostaSeme(3);
 		double mago = 0, guerriero = 0;
@@ -254,6 +258,7 @@ class ScenarioCorrezioniTest {
 
 	@Test
 	void equipaggiareUnArtefattoAggiornaISecondari() {
+		ModelloDati.installa();
 		ModelloDati.setIstanza(new ModelloDati());
 		com.threeamigos.foresta.personaggi.Ladro ladro = new com.threeamigos.foresta.personaggi.Ladro("L", 1);
 		int prima = ladro.getPrecisione();
@@ -272,6 +277,7 @@ class ScenarioCorrezioniTest {
 
 	@Test
 	void spendereIPuntiAbilitaAggiornaISecondari() {
+		ModelloDati.installa();
 		ModelloDati.setIstanza(new ModelloDati());
 		com.threeamigos.foresta.personaggi.Ladro ladro = new com.threeamigos.foresta.personaggi.Ladro("L", 1);
 		int prima = ladro.getPrecisione();

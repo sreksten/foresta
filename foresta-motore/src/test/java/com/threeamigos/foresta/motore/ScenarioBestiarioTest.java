@@ -240,6 +240,7 @@ class ScenarioBestiarioTest {
             colpisci(partita.gruppo().getCapo(), scheletro, TipoDanno.TAGLIENTE);
 
             // Una nuova partita azzera il modello dati, non il bestiario
+            ModelloDati.installa();
             ModelloDati.setIstanza(new ModelloDati());
             assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.TROLL));
 

@@ -47,6 +47,7 @@ class AnalisiBossTest {
             }
         }));
         try {
+            ModelloDati.installa();
             ModelloDati.setIstanza(new ModelloDati());
             for (TipoPersonaggio classeBoss : BOSS) {
                 stampaBoss(out, classeBoss);

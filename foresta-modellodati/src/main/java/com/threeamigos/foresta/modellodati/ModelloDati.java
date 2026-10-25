@@ -45,8 +45,12 @@ public class ModelloDati implements Serializzabile {
 	// L'istanza di modello dati su cui il gioco si basa (volatile: la imposta chi carica o azzera, e la leggono tutti, anche da altri thread)
 	private static volatile ModelloDati istanza = new ModelloDati();
 
-	// Le parti non conoscono il modello dati: è lui a dire loro dove sono i loro dati, e li prende sempre da quello in corso
-	static {
+	/**
+	 * Dice a ogni parte del gioco dove sono i suoi dati: da qui in poi li prende sempre dal modello dati in corso. Le parti non
+	 * conoscono il modello dati, quindi finché nessuno lo chiama chi le usa riceve un IllegalStateException. Va chiamato una volta,
+	 * all'avvio (da {@code Main}, dai test di una partita da {@code PartitaDiTest}); richiamarlo non fa danni.
+	 */
+	public static void installa() {
 		Foresta.setFornitoreDiDati(() -> getIstanza().getForestaMD());
 		GruppoGiocatore.setFornitoreDiDati(() -> getIstanza().getGruppoGiocatoreMD());
 		TatticheDeiPersonaggi.setFornitoreDiDati(() -> getIstanza().getTatticheMD());

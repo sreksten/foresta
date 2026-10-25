@@ -42,6 +42,7 @@ class ChiericoEDruidoTest {
 
     @BeforeEach
     void preparaGruppi() {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         GruppoAvversario.azzeraIstanza();
         avversari = GruppoAvversario.getIstanza();

@@ -32,6 +32,7 @@ class PersonaggiNonCombattentiTest {
 
     @BeforeEach
     void preparaModello() {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
     }
 

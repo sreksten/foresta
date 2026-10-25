@@ -39,11 +39,11 @@ più il flag dell'aiuto della barra delle icone. `salva(PrintWriter)` scrive le 
 
 I **trofei** e il **bestiario** non sono qui: non appartengono a una partita ma passano dall'una all'altra, quindi hanno il loro modello e il loro file.
 
-### Il blocco statico: dire alle parti dove stanno i loro dati
+### `installa()`: dire alle parti dove stanno i loro dati
 
-Le parti statiche (`Foresta`, `GruppoGiocatore`, `Statistiche`, `LineaTemporale`, `RegistroPersonaggi`, `RegistroArtefatti`, `RegistroMissioni`, `MagazziniDeiNegozi`, `Cassa`, `RegistroIntermezzi`, `TatticheDeiPersonaggi`, `CantiImparati`) **non conoscono il modello dati**: è lui a installare in ciascuna un fornitore (`setFornitoreDiDati(() -> getIstanza().getXxxMD())`) nel suo blocco statico. Il fornitore va chiamato a ogni uso, perché `ModelloDati.setIstanza(...)` sostituisce l'istanza quando si carica un salvataggio, e i fornitori puntano sempre a quella in corso.
+Le parti statiche (`Foresta`, `GruppoGiocatore`, `Statistiche`, `LineaTemporale`, `RegistroPersonaggi`, `RegistroArtefatti`, `RegistroMissioni`, `MagazziniDeiNegozi`, `Cassa`, `RegistroIntermezzi`, `TatticheDeiPersonaggi`, `CantiImparati`) **non conoscono il modello dati**: è `ModelloDati.installa()` a installare in ciascuna un fornitore (`setFornitoreDiDati(() -> getIstanza().getXxxMD())`). Il fornitore va chiamato a ogni uso, perché `ModelloDati.setIstanza(...)` sostituisce l'istanza quando si carica un salvataggio, e i fornitori puntano sempre a quella in corso.
 
-La conseguenza è che il blocco statico gira **quando la classe `ModelloDati` viene caricata**: chi usa una di quelle parti prima di aver toccato `ModelloDati` riceve un `IllegalStateException` esplicito («Nessuno ha detto alla mappa dove sono i suoi dati…»). Nel gioco non succede, perché `StatoDelMotore` carica subito il modello dati; è già successo in un test che girava in una JVM a parte.
+L'installazione è **esplicita**: la chiama `Main` come prima cosa, e `PartitaDiTest` a ogni partita di prova; un test che usa una di quelle parti senza passare da lì la chiama lui. Chi usa una parte prima dell'installazione riceve un `IllegalStateException` esplicito («Nessuno ha detto alla mappa dove sono i suoi dati…»). Richiamarla non fa danni.
 
 ### Le notizie
 
@@ -51,6 +51,6 @@ La conseguenza è che il blocco statico gira **quando la classe `ModelloDati` vi
 
 ## Osservazioni
 
-- Nel piano delle dipendenze è il modulo che deve ridursi: ogni nuova parte con dati propri aggiunge qui una riga in `ModelloDati`; le notizie sono l'ultimo dato rimasto qui senza un modulo loro. Per `assessment.md` conviene sostituire il blocco statico con un'installazione esplicita (`ModelloDati.installa()`, chiamata da `Main` e dai test).
+- Nel piano delle dipendenze è il modulo che deve ridursi: ogni nuova parte con dati propri aggiunge qui una riga in `ModelloDati`; le notizie sono l'ultimo dato rimasto qui senza un modulo loro.
 - Le collezioni che i dati mostrano sono di sola lettura (viste dell'elenco vero); per cambiarle si passa dai metodi che lo dicono (`aggiungi…`, `togli…`, `riordina…`).
 - Il quadro dei salvataggi è in [`motore_di_gioco.md`](motore_di_gioco.md) §5.

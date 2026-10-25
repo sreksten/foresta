@@ -33,6 +33,7 @@ class BottinoArtefattoTest {
         // Il livello del mondo sale ascoltando i punti esperienza del gruppo: le statistiche devono essere iscritte
         BusEventi.azzera();
         Statistiche.registrati();
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         gruppo = new GruppoGiocatore();
         gruppo.aggiungiPersonaggioSenzaNotificare(new Guerriero("Pippo", 1));

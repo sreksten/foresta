@@ -71,6 +71,7 @@ class TrofeiTest {
 			assertEquals(1, RegistroTrofei.getProgresso(TipoTrofeo.SBEVAZZONE));
 
 			// Una nuova partita azzera il modello dati, non il progresso verso i trofei
+			ModelloDati.installa();
 			ModelloDati.setIstanza(new ModelloDati());
 			assertEquals(1, RegistroTrofei.getProgresso(TipoTrofeo.SBEVAZZONE));
 
@@ -121,6 +122,7 @@ class TrofeiTest {
 			partita.comando(Comando.ESCI_DA_CITTA);
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.SBEVAZZONE));
 
+			ModelloDati.installa();
 			ModelloDati.setIstanza(new ModelloDati());
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.SBEVAZZONE));
 

@@ -15,6 +15,7 @@ import com.threeamigos.foresta.salvataggi.GestoreSalvataggiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreTrofeiSuFile;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.strumenti.temporizzatore.TemporizzatoreJ2SE;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.strumenti.temporizzatore.ThreadPrincipale;
 import com.threeamigos.foresta.strumenti.TrucchiDiSviluppo;
 import com.threeamigos.foresta.strumenti.logger.Logger;
@@ -85,6 +86,9 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws Exception {
+
+		// Le parti del gioco ricevono i loro dati dal modello dati: prima di usarne una va detto loro dove sono
+		ModelloDati.installa();
 
 		// Tutta la logica di gioco gira sull'Event Dispatch Thread di Swing
 		ThreadPrincipale.imposta(new EsecutoreSwing());

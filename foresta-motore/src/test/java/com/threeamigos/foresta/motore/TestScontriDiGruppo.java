@@ -154,6 +154,7 @@ public class TestScontriDiGruppo {
 
     Esito scontro(List<TipoPersonaggio> classi, TipoPersonaggio classeAvversari, int quantita, int livello,
                   int pergamene, int pozioni) {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         List<Personaggio> gruppo = new ArrayList<>();
         for (TipoPersonaggio classe : classi) {

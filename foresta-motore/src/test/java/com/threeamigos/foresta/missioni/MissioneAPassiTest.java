@@ -21,6 +21,7 @@ class MissioneAPassiTest {
 
     @BeforeEach
     void nuovaPartita() {
+        ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
     }
 
