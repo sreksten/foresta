@@ -1,10 +1,12 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaAperturaFinestraCombattimento;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.IlColpo;
 import com.threeamigos.foresta.missioni.richieste.ColpoRichiesto;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Comando;

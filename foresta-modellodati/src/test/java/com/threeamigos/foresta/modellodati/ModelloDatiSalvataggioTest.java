@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.mappa.CoordinateMD;
+
 import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
@@ -101,5 +103,17 @@ class ModelloDatiSalvataggioTest {
         }
         writer.flush();
         return scritto.toString();
+    }
+
+    @Test
+    void laMappaPrendeIDatiDalModelloDatiInCorso() {
+        ModelloDati uno = new ModelloDati();
+        uno.reimposta(6, 6);
+        ModelloDati.setIstanza(uno);
+        assertEquals(6, com.threeamigos.foresta.mappa.Foresta.getDimensioneX());
+        ModelloDati due = new ModelloDati();
+        due.reimposta(9, 9);
+        ModelloDati.setIstanza(due);
+        assertEquals(9, com.threeamigos.foresta.mappa.Foresta.getDimensioneX(), "il modello dati cambiato si vede subito");
     }
 }

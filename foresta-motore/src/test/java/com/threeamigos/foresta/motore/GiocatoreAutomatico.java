@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
 
 import com.threeamigos.foresta.abilita.AbilitaInnate;
@@ -20,7 +22,7 @@ import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.artefatti.VistaScambio;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Locazione;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
 

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.CoordinateMD;
+
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.abilita.FabbricaAbilita;
 import com.threeamigos.foresta.tipi.TipoAbilita;
@@ -127,7 +129,7 @@ class SacerdoteTest {
                 nomi.add(RegistroPersonaggi.getPersonaggioDisponibile().getNomeProprio().orElse("?"));
             }
             // ...salvo quelli già sistemati nella Foresta: li cerchiamo lì
-            for (com.threeamigos.foresta.modellodati.CoordinateMD coordinate : com.threeamigos.foresta.modellodati.ModelloDati.getIstanza()
+            for (com.threeamigos.foresta.mappa.CoordinateMD coordinate : com.threeamigos.foresta.modellodati.ModelloDati.getIstanza()
                     .getRegistroPersonaggiMD().getUbicazioniPersonaggi()) {
                 nomi.add(RegistroPersonaggi.getPersonaggioInLocazione(coordinate).getNomeProprio().orElse("?"));
             }

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.mappa.CoordinateMD;
+
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
 import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;

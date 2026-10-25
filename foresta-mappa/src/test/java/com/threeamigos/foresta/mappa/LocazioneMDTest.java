@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.modellodati;
+package com.threeamigos.foresta.mappa;
 
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;

@@ -7,7 +7,7 @@ import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.richieste.CombattimentoRichiesto;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;

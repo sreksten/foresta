@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.abilita.AbilitaInnateDiClasse;
 import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
@@ -7,7 +9,7 @@ import com.threeamigos.foresta.interfacce.*;
 import com.threeamigos.foresta.locazioni.Bosco;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
@@ -177,7 +179,7 @@ public class VistaPartitaMotore implements VistaPartita {
 
 		@Override
 		public List<CoordinateMD> getCoordinateDaSegnalare() {
-			return Foresta.getCoordinateDaSegnalare();
+			return CostruttoreDellaForesta.getCoordinateDaSegnalare();
 		}
 
 		@Override
@@ -212,7 +214,7 @@ public class VistaPartitaMotore implements VistaPartita {
 
 		@Override
 		public List<String> getNomiMissioniDaMostrare(CoordinateMD coordinate) {
-			return Foresta.getNomiMissioniDaMostrare(coordinate);
+			return CostruttoreDellaForesta.getNomiMissioniDaMostrare(coordinate);
 		}
 	}
 }

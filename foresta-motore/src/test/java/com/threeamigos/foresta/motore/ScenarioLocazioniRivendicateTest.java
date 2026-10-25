@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
@@ -7,8 +9,8 @@ import com.threeamigos.foresta.missioni.principali.SconfiggiIlLich;
 import com.threeamigos.foresta.missioni.principali.SconfiggiIlMinotauroGigante;
 import com.threeamigos.foresta.missioni.principali.SconfiggiLIdra;
 import com.threeamigos.foresta.missioni.principali.SconfiggiLaStrega;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.mappa.LocazioneMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -206,7 +208,7 @@ class ScenarioLocazioniRivendicateTest {
     private static CoordinateMD sconfiggi(PartitaDiTest partita, TipoLocazione castello, Missione missione) {
         CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(castello);
         Foresta.getLocazioneMD(coordinate).aggiungiProprieta(LocazioneMD.COMPLETA, LocazioneMD.AFFERMATIVO);
-        Foresta.costruisciIstanza(coordinate).azzeraLocazione(partita.gruppo());
+        CostruttoreDellaForesta.costruisciIstanza(coordinate).azzeraLocazione(partita.gruppo());
         missione.completaMissione();
         return coordinate;
     }

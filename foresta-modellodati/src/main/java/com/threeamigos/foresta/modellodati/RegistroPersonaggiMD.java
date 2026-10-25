@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.mappa.CoordinateMD;
+
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
 

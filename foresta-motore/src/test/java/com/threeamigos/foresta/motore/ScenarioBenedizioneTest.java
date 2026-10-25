@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.locazioni.Locanda;
@@ -12,7 +14,7 @@ import com.threeamigos.foresta.missioni.richieste.BenedizioneRichiesta;
 import com.threeamigos.foresta.missioni.richieste.FavoreRichiesto;
 import com.threeamigos.foresta.missioni.storie.IlFavore;
 import com.threeamigos.foresta.missioni.storie.LaBenedizione;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -157,7 +159,7 @@ class ScenarioBenedizioneTest {
 
             // Come in Automa.entraInStatoPreparazioneLocazione
             partita.gruppo().setCoordinate(palude);
-            Locazione locazione = Foresta.costruisciIstanza(palude);
+            Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(palude);
             partita.gruppo().setLocazioneCorrente(locazione);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.reimposta();

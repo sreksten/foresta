@@ -3,7 +3,7 @@ package com.threeamigos.foresta.missioni.leggende;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInLocanda;
 import com.threeamigos.foresta.locazioni.Locanda;
-import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;

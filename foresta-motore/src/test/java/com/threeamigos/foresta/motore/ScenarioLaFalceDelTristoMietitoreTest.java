@@ -1,11 +1,13 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.leggende.LaFalceDelTristoMietitore;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -50,7 +52,7 @@ class ScenarioLaFalceDelTristoMietitoreTest {
             CoordinateMD rovine = missione.getCovo();
             assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(rovine));
             assertTrue(Foresta.isLocazioneConosciuta(rovine), "le rovine sono sulla mappa");
-            assertTrue(Foresta.getCoordinateDaSegnalare().contains(rovine), pagine);
+            assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(rovine), pagine);
         }
     }
 

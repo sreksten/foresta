@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.modellodati;
+package com.threeamigos.foresta.mappa;
 
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
@@ -201,6 +201,7 @@ class ForestaMDTest {
     void dimensioniNonValideNelSalvataggioSonoUnErrore() {
         assertThrows(IOException.class, () -> new ForestaMD().leggi(new BufferedReader(new StringReader("0|3\n"))));
         assertThrows(IOException.class, () -> new ForestaMD().leggi(new BufferedReader(new StringReader("-4|3\n"))));
+        assertThrows(IOException.class, () -> new ForestaMD().leggi(new BufferedReader(new StringReader("3|0\n"))));
     }
 
     private static void assertArea(ForestaMD foresta, int minX, int maxX, int minY, int maxY) {

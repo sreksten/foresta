@@ -1,11 +1,13 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.tipi.CostantiCanti;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
 import com.threeamigos.foresta.locazioni.Locazione;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.personaggi.Goblin;
@@ -33,7 +35,7 @@ class ScenarioCantiDelBardoTest {
         partita.iniziaCon("Orfeo", Comando.MASCHIO, Comando.BARDO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
         partita.gruppo().setCoordinate(bosco);
-        locazione = Foresta.costruisciIstanza(bosco);
+        locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
         partita.gruppo().setLocazioneCorrente(locazione);
         avversari = GruppoAvversario.getIstanza();
         avversari.reimposta();

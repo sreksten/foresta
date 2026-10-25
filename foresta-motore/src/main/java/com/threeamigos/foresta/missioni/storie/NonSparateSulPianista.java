@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -10,7 +12,7 @@ import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.testi.Articoli;

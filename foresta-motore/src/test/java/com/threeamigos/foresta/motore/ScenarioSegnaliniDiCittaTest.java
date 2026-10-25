@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
@@ -7,7 +9,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.CacciaAiGoblin;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
@@ -66,16 +68,16 @@ class ScenarioSegnaliniDiCittaTest {
             NonSparateSulPianista pianista = conIlBardoInViaggio(partita);
             CoordinateMD casa = Foresta.getCoordinateLocazioneUnica(pianista.getCitta());
 
-            assertTrue(Foresta.getCoordinateDaSegnalare().contains(casa), "la città di casa lampeggia");
-            assertEquals(java.util.Collections.singletonList(pianista.getNome()), Foresta.getNomiMissioniDaMostrare(casa));
+            assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(casa), "la città di casa lampeggia");
+            assertEquals(java.util.Collections.singletonList(pianista.getNome()), CostruttoreDellaForesta.getNomiMissioniDaMostrare(casa));
             assertNull(RegistroMissioni.getLocazioneOccupata(pianista), "non si rivendica: il contenuto della città resta suo");
 
             // Arrivati, il passo si conclude e il segnalino sparisce
             partita.gruppo().setCoordinate(casa);
             pianista.controllaPreLocazione();
             assertEquals("ARRIVO", pianista.getPassoCorrente());
-            assertFalse(Foresta.getCoordinateDaSegnalare().contains(casa));
-            assertTrue(Foresta.getNomiMissioniDaMostrare(casa).isEmpty());
+            assertFalse(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(casa));
+            assertTrue(CostruttoreDellaForesta.getNomiMissioniDaMostrare(casa).isEmpty());
         }
     }
 
@@ -90,8 +92,8 @@ class ScenarioSegnaliniDiCittaTest {
             assertTrue(partita.salva(Comando.NUMERO_1));
             assertTrue(partita.leggi(Comando.NUMERO_1));
 
-            assertTrue(Foresta.getCoordinateDaSegnalare().contains(casa));
-            assertEquals(java.util.Collections.singletonList(nome), Foresta.getNomiMissioniDaMostrare(casa));
+            assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(casa));
+            assertEquals(java.util.Collections.singletonList(nome), CostruttoreDellaForesta.getNomiMissioniDaMostrare(casa));
         }
     }
 
@@ -105,15 +107,15 @@ class ScenarioSegnaliniDiCittaTest {
             altra.attivaMissione();
             RegistroMissioni.segnalaLocazione(altra, casa);
 
-            assertEquals(1, Foresta.getCoordinateDaSegnalare().stream().filter(casa::equals).count(), "una casella sola");
-            List<String> nomi = Foresta.getNomiMissioniDaMostrare(casa);
+            assertEquals(1, CostruttoreDellaForesta.getCoordinateDaSegnalare().stream().filter(casa::equals).count(), "una casella sola");
+            List<String> nomi = CostruttoreDellaForesta.getNomiMissioniDaMostrare(casa);
             assertEquals(2, nomi.size(), String.valueOf(nomi));
             assertTrue(nomi.contains(pianista.getNome()) && nomi.contains(altra.getNome()));
 
             // Una delle due finisce: l'altra continua a segnare la città
             RegistroMissioni.togliSegnalino(altra);
-            assertTrue(Foresta.getCoordinateDaSegnalare().contains(casa));
-            assertEquals(java.util.Collections.singletonList(pianista.getNome()), Foresta.getNomiMissioniDaMostrare(casa));
+            assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(casa));
+            assertEquals(java.util.Collections.singletonList(pianista.getNome()), CostruttoreDellaForesta.getNomiMissioniDaMostrare(casa));
         }
     }
 
@@ -133,8 +135,8 @@ class ScenarioSegnaliniDiCittaTest {
             medaglione.aggiungiProprieta("PASSO_CORRENTE", "RITORNO");
             partita.gruppo().setCoordinate(RegistroMissioni.getLocazioneOccupata(medaglione));
             medaglione.controllaPreLocazione();
-            assertTrue(Foresta.getCoordinateDaSegnalare().contains(fleena), "la città del mandante lampeggia");
-            assertTrue(Foresta.getNomiMissioniDaMostrare(fleena).contains(medaglione.getNome()));
+            assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(fleena), "la città del mandante lampeggia");
+            assertTrue(CostruttoreDellaForesta.getNomiMissioniDaMostrare(fleena).contains(medaglione.getNome()));
 
             // Tornati: ringraziamento, ricompensa, e il segnalino sparisce
             partita.gruppo().setCoordinate(fleena);
@@ -142,7 +144,7 @@ class ScenarioSegnaliniDiCittaTest {
             medaglione.segnaIntermezzoPassoMostrato("RITORNO");
             medaglione.controllaInLocazione();
             assertTrue(medaglione.isCompleta());
-            assertFalse(Foresta.getNomiMissioniDaMostrare(fleena).contains(medaglione.getNome()));
+            assertFalse(CostruttoreDellaForesta.getNomiMissioniDaMostrare(fleena).contains(medaglione.getNome()));
         }
     }
 }

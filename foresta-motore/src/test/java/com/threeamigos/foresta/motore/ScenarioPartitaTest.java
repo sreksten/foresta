@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.Foresta;
+
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;

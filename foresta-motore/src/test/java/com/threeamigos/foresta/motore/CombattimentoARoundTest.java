@@ -1,9 +1,11 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.locazioni.Locazione;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -43,7 +45,7 @@ class CombattimentoARoundTest {
     private static Locazione preparaLo(PartitaDiTest partita, int miei, int avversari) {
         CoordinateMD bosco = unaCasellaDiBosco();
         partita.gruppo().setCoordinate(bosco);
-        Locazione locazione = Foresta.costruisciIstanza(bosco);
+        Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
         partita.gruppo().setLocazioneCorrente(locazione);
         GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
         gruppoAvversario.reimposta();

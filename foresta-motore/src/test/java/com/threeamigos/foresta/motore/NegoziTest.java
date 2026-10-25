@@ -7,7 +7,7 @@ import com.threeamigos.foresta.artefatti.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;

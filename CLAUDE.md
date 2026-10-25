@@ -15,7 +15,8 @@ Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo 
 | `foresta-danni` | `danni.tipi`: `TipoDanno`, `CategoriaDanno`, `TipoInterazioneConEffettiDiStato`: solo i danni e le loro interazioni con gli effetti di stato | testi, effettidistato |
 | `foresta-artefatti` | `artefatti`, `artefatti.tipi`, `artefatti.leggendari`: `Artefatto`, `ArtefattoMD`, il generatore, i leggendari e i loro set, le pergamene, `TipoNegozio` (cosa tratta ogni negozio), `CostantiArtefatti` (i valori di bilanciamento degli artefatti); il livello di nascita lo riceve come parametro, non sa che esiste un mondo | testi, strumenti, serializzazione, attributi, danni |
 | `foresta-tipi` | `tipi`: enum e costanti di base (anche `Costanti`, i valori di bilanciamento) | testi, attributi, danni, effettidistato |
-| `foresta-modellodati` | `modellodati`: le classi `…MD`, solo dati (con la lettura e la scrittura dei salvataggi) | tipi, artefatti, serializzazione |
+| `foresta-modellodati` | `modellodati`: `ModelloDati`, che mette insieme i dati di tutte le parti per salvarli e rileggerli, e per ora le classi `…MD` che non hanno ancora un modulo loro (le altre stanno col loro modulo: `ArtefattoMD` in artefatti, `ForestaMD` in mappa) | tipi, artefatti, mappa, serializzazione |
+| `foresta-mappa` | `mappa`: `Foresta`, la mappa della Foresta (una griglia di caselle con tipo, nome e proprietà, quali il gruppo conosce o ha visitato, la casella libera, le locazioni uniche), con i suoi dati (`ForestaMD`, `LocazioneMD`, `CoordinateMD`); non sa chi costruisce il mondo né chi lo abita, e prende i suoi dati da chi glieli dà (`Foresta.setFornitoreDiDati`, che installa `ModelloDati`) | tipi, testi, serializzazione, strumenti |
 | `foresta-contratti` | `interfacce`, `tipi.Comando` (tutto ciò che il giocatore può comandare) con `tipi.ComandiAssociati` (il comando di ogni incantesimo, canto, abilità e mossa) e il file dei testi `comandi_it`, `eventi` (le classi degli eventi: la base del bus è in `foresta-eventi`), le utilità di `strumenti` (quelle che non stanno in `foresta-strumenti`) e i dati di `intermezzi` che servono alla UI | modellodati, eventi |
 | `foresta-motore` | il resto: `motore`, `combattimento`, `personaggi`, `oggetti`, `locazioni`, `missioni`, `incantesimi`, `canti`, `abilita`, `offerte`, `tattiche`, `trofei`, `testi`, `salvataggi`, la logica degli intermezzi, gli eventi interni che portano il dominio, le grammatiche `.txt` | contratti |
 | `foresta-swing` | `ui` (e gli eventi con sprite), le immagini | contratti |
@@ -24,6 +25,16 @@ Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo 
 Un pacchetto può stare in più moduli (`testi`, `strumenti`, `intermezzi`, `eventi.interni`): quel che conta è il modulo, non il pacchetto.
 Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbreviato `…/` sotto), `src/main/resources/com/threeamigos/foresta` e `src/test/java`. Tutti i file sono UTF-8.
 
+## Dove stiamo andando
+
+Il progetto si divide in sottoprogetti da cui dipendono il motore e la UI; è anche un esempio didattico di come si spezzano le parti di un gioco con le dipendenze in vista. Tre regole:
+
+- i **tipi** a cui un sottoprogetto si rifà stanno nel sottoprogetto (`foresta-tipi` si svuota man mano);
+- i **modelli dati** (`…MD`) di un sottoprogetto stanno nel sottoprogetto (`foresta-modellodati` resta con `ModelloDati`, che li mette insieme per salvarli);
+- i **contratti** che il sottoprogetto offre alla UI (viste, notifiche, eventi) stanno nel sottoprogetto: la UI dipende dai sottoprogetti, non da un modulo contratti unico.
+
+La catena: `strumenti` danno funzioni ai `testi`; i testi agli `attributi`, agli `artefatti` e alla Foresta (`mappa`); nella Foresta un gruppo di personaggi, che usano gli artefatti e i poteri (incantesimi, canti, abilità innate), gira provocando intermezzi e svolgendo missioni (che dipendono quindi da gruppo e personaggi); il tutto è guidato dal motore e mostrato dalla UI attraverso i contratti dei sottoprogetti. Fatto finora: strumenti, eventi, testi, serializzazione, attributi, effetti di stato, danni, artefatti, mappa; da fare: personaggi, gruppi e poteri, intermezzi, missioni e quel che resta in `tipi`, `modellodati` e `contratti`.
+
 ## Dove trovare le cose
 
 | Argomento | Codice | Documento |
@@ -31,7 +42,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | Avvio, macchina a stati, ciclo di una locazione, ciclo di vita dell'app (background, ripresa) | `Main`, `…/motore/Automa` (implementa `…/interfacce/ControlloreDiGioco`), `…/motore/Stato`, `…/motore/StatoDelMotore` | `motore_di_gioco.md` §2–3 |
 | Bus eventi | `…/eventi` (`notifiche`, `richieste`, `interni`, `comandigiocatore`) | `motore_di_gioco.md` §4 |
 | Salvataggi e modello dati | `…/modellodati`, `…/interfacce/GestoreSalvataggi`, `…/salvataggi/GestoreSalvataggiSuFile`, `…/motore/RiletturaPartita` | `motore_di_gioco.md` §5 |
-| Mappa, tempo, locazioni | `…/motore/Foresta`, `LineaTemporale`, `…/locazioni` | `motore_di_gioco.md` §6 |
+| Mappa, tempo, locazioni | `…/mappa/Foresta` (in `foresta-mappa`), `…/motore/CostruttoreDellaForesta` (costruisce il mondo sulla mappa), `LineaTemporale`, `…/locazioni` | `motore_di_gioco.md` §6 |
 | Combattimento | `…/combattimento/CalcolatoreCombattimento`, `Ondata`, `StatoDelCombattimento`, `ApplicazioneDelRisultato` (cosa succede a chi è colpito), `AttaccoConLeArmi`, `…/effettidistato/EffettoDiStatoMD`, `…/danni/tipi/*` | `motore_di_gioco.md` §7, `interazioni_effetti_di_stato.md` |
 | Debolezze, resistenze e immunità di classe ai tipi di danno | `…/tipi/CategoriaPersonaggio`, `TipoPersonaggio` (tabelle), `…/personaggi/PersonaggioBase` (`getMoltiplicatoreDannoSubito`), `…/combattimento/CalcolatoreCombattimento`, `…/ui/TestoReazioneDiClasse` | `debolezze_e_resistenze.md` |
 | Modificatori di attributo a tempo, armi che li mettono sul bersaglio | `…/modificatori/ModificatoreAttributoMD` (in `foresta-attributi`), `…/artefatti/ModificatoreDelTesto`, `PersonaggioBase`, `CalcolatoreCombattimento` | `modificatori_temporanei.md` |
@@ -86,6 +97,7 @@ Panoramica in `motore_grafico.md`.
 - La documentazione `.md` sta tutta nella radice (panoramica e mappa dei documenti in `foresta.md`) del progetto e descrive lo stato attuale (la storia è in git).
 - I documenti finiscono con "Osservazioni" e, dove serve, "Da fare / idee aperte".
 - `risorse_e_documenti_vari/` è la cartella di scratch: file non usati dal gioco ed esperimenti.
+- I dati di ogni parte (le classi `…MD`) stanno nel modulo di quella parte, non in `foresta-modellodati`; `ModelloDati` li mette insieme e, se un modulo deve prendere i dati della partita in corso, glieli fa avere (come con `Foresta.setFornitoreDiDati`). Fatto per artefatti e mappa; gli altri `…MD` vanno al loro modulo man mano che nasce.
 - I salvataggi non devono restare compatibili con le versioni precedenti.
 - Il motore e i moduli sotto di lui non chiudono mai il processo (`System.exit`): per uscire pubblicano `NotificaUscitaDalGioco`, e `Main` (o la piattaforma) decide come. Lo controlla `ConvenzioniDiPortabilitaTest`.
 - Un testo costruito per il log (concatenazione, `String.format`) si passa a `Logger.log` come fornitore, `Logger.log(() -> "Colpo a " + nome)`, così non si costruisce se il registro è spento; se una variabile cambia dopo la dichiarazione, si usa `if (Logger.isAttivo()) { ... }`. Lo controlla `ConvenzioniDiPortabilitaTest`.

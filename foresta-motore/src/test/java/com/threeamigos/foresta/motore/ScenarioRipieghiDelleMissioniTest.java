@@ -1,11 +1,13 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.IlNegozioDellArmaiolo;
 import com.threeamigos.foresta.missioni.incarichi.LOggettoSmarrito;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
@@ -28,7 +30,7 @@ class ScenarioRipieghiDelleMissioniTest {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {
                 TipoLocazione tipo = Foresta.getLocazione(x, y);
                 if (tipo == TipoLocazione.ROVINE || tipo == TipoLocazione.BOSCO || tipo == TipoLocazione.PALUDE) {
-                    Foresta.costruisciLocazione(new CoordinateMD(x, y), TipoLocazione.RADURA);
+                    CostruttoreDellaForesta.costruisciLocazione(new CoordinateMD(x, y), TipoLocazione.RADURA);
                 }
             }
         }
@@ -82,7 +84,7 @@ class ScenarioRipieghiDelleMissioniTest {
                 }
             }
             assertNotNull(lontano);
-            Foresta.costruisciLocazione(lontano, TipoLocazione.BOSCO);
+            CostruttoreDellaForesta.costruisciLocazione(lontano, TipoLocazione.BOSCO);
             armaiolo.controllaPreLocazione();
             assertEquals("ACCETTAZIONE", armaiolo.getPassoCorrente());
             assertEquals(lontano, armaiolo.getCovo());

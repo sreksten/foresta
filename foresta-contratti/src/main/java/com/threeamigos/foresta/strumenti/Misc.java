@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.strumenti;
 
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.testi.Numeri;
 
 /**

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.IntermezzoUrloDellaBanshee;
@@ -9,8 +11,8 @@ import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.storie.IlViaggioDellaMoglie;
 import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.mappa.LocazioneMD;
 import com.threeamigos.foresta.personaggi.Bardo;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoCanto;

@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.modellodati;
+package com.threeamigos.foresta.mappa;
 
 /**
  * Una posizione sulla mappa della Foresta: <code>x</code> è la colonna e <code>y</code> la riga di una casella.
@@ -13,15 +13,24 @@ public class CoordinateMD {
 	private final int x;
 	private final int y;
 
+	/**
+	 * Le coordinate di una casella della mappa.
+	 */
 	public CoordinateMD(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
+	/**
+	 * La colonna.
+	 */
 	public int getX() {
 		return x;
 	}
 
+	/**
+	 * La riga.
+	 */
 	public int getY() {
 		return y;
 	}

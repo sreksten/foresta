@@ -8,7 +8,7 @@ import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Ricompensa;
 import com.threeamigos.foresta.missioni.richieste.ViandanteRichiesto;
-import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.Statistiche;

@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.modellodati;
+package com.threeamigos.foresta.mappa;
 
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
@@ -28,6 +28,13 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
  * @author Stefano Reksten
  */
 public class ForestaMD implements Serializzabile {
+
+	/**
+	 * Una mappa vuota: le dimensioni si danno con {@link #reimposta(int, int)}.
+	 */
+	public ForestaMD() {
+	}
+
 
 	// Cambia ogni volta che cambia visivamente la mappa (conosciuta/visitata),
 	// così chi disegna la mappa generale (la UI) sa quando la sua cache è da ricostruire.
@@ -62,30 +69,51 @@ public class ForestaMD implements Serializzabile {
 
 	private int versioneMappa;
 
+	/**
+	 * Quante caselle ha la mappa in orizzontale.
+	 */
 	public int getDimensioneX() {
 		return dimensioneX;
 	}
 
+	/**
+	 * Quante caselle ha la mappa in verticale.
+	 */
 	public int getDimensioneY() {
 		return dimensioneY;
 	}
 
+	/**
+	 * La colonna più a sinistra con una casella conosciuta.
+	 */
 	public int getMinXConosciuta() {
 		return minXConosciuta;
 	}
 
+	/**
+	 * La colonna più a destra con una casella conosciuta.
+	 */
 	public int getMaxXConosciuta() {
 		return maxXConosciuta;
 	}
 
+	/**
+	 * La riga più in alto con una casella conosciuta.
+	 */
 	public int getMinYConosciuta() {
 		return minYConosciuta;
 	}
 
+	/**
+	 * La riga più in basso con una casella conosciuta.
+	 */
 	public int getMaxYConosciuta() {
 		return maxYConosciuta;
 	}
 
+	/**
+	 * Cambia a ogni modifica di quel che il gruppo conosce della mappa, così chi la disegna sa quando rifarlo.
+	 */
 	public int getVersioneMappa() {
 		return versioneMappa;
 	}
@@ -204,6 +232,9 @@ public class ForestaMD implements Serializzabile {
 		versioneMappa = ULTIMA_VERSIONE_MAPPA.incrementAndGet();
 	}
 
+	/**
+	 * Se il gruppo è già passato da quella casella.
+	 */
 	public final boolean isLocazioneVisitata(CoordinateMD coordinate) {
 		return ottieniLocazioneMD(coordinate).ottieniProprieta(LocazioneMD.VISITATA) != null;
 	}
@@ -216,6 +247,9 @@ public class ForestaMD implements Serializzabile {
 		impostaLocazioneConosciuta(coordinate.getX(), coordinate.getY());
 	}
 
+	/**
+	 * Se il gruppo sa cosa c'è in quella casella.
+	 */
 	public final boolean isLocazioneConosciuta(CoordinateMD coordinate) {
 		return ottieniLocazioneMD(coordinate).ottieniProprieta(LocazioneMD.CONOSCIUTA) != null;
 	}

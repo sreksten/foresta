@@ -1,11 +1,13 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.CacciatoreDiTaglie;
 import com.threeamigos.foresta.missioni.incarichi.IlRapimento;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -46,7 +48,7 @@ class ScenarioCacciatoreDiTaglieTest {
             CoordinateMD covo = taglia.getCovo();
             assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(covo));
             assertFalse(Foresta.isLocazioneConosciuta(covo));
-            assertFalse(Foresta.getCoordinateDaSegnalare().contains(covo));
+            assertFalse(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(covo));
             assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("Dicono che la banda di " + ricercato)
                     && t.contains("di cammino verso")), String.valueOf(partita.testi()));
             assertTrue(taglia.getDescrizione().contains("da Nyena"), taglia.getDescrizione());

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -12,7 +14,7 @@ import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.SceltaDegliIncarichi;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
@@ -258,7 +260,7 @@ final class PartitaDiTest implements AutoCloseable {
 			throw new IllegalArgumentException(locazioneUnica + " non è nella Foresta");
 		}
 		gruppo().setCoordinate(coordinate);
-		Foresta.aggiornaMappaCircostante(gruppo());
+		CostruttoreDellaForesta.aggiornaMappaCircostante(gruppo());
 	}
 
 	/**

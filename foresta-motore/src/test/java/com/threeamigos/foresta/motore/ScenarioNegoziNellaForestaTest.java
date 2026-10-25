@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
 
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -12,8 +14,8 @@ import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.*;
 import com.threeamigos.foresta.missioni.richieste.InfestazioneRichiesta;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.mappa.LocazioneMD;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
@@ -177,7 +179,7 @@ class ScenarioNegoziNellaForestaTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             CoordinateMD posto = coordinateDi(TipoLocazione.CITTA_NYENA);
             int lato = latoLibero(posto);
-            Foresta.costruisciLocazione(new CoordinateMD(posto.getX(), posto.getY() + lato), TipoLocazione.ROVINE);
+            CostruttoreDellaForesta.costruisciLocazione(new CoordinateMD(posto.getX(), posto.getY() + lato), TipoLocazione.ROVINE);
             CoordinateMD bottega = new CoordinateMD(posto.getX(), posto.getY() + lato);
             Object[][] botteghe = {
                     {TipoLocazione.ARMAIOLO, Comando.NEGOZIO_ARMAIOLO, RichiestaAperturaInventarioCommerciante.class},
@@ -186,14 +188,14 @@ class ScenarioNegoziNellaForestaTest {
                     {TipoLocazione.INCANTATORE, Comando.NEGOZIO_INCANTATORE, RichiestaAperturaIncantatore.class}};
             for (Object[] voce : botteghe) {
                 TipoLocazione tipo = (TipoLocazione) voce[0];
-                Foresta.costruisciLocazione(bottega, tipo);
+                CostruttoreDellaForesta.costruisciLocazione(bottega, tipo);
                 Foresta.getLocazioneMD(bottega).aggiungiProprieta(Bottega.NEGOZIANTE, "Mastro Prova da Nyena");
                 partita.gruppo().setCoordinate(bottega);
                 assertTrue(tipo.isBottega());
 
                 List<Object> aperture = new ArrayList<>();
                 BusEventi.iscriviti((Class<Object>) voce[2], aperture::add);
-                Locazione locazione = Foresta.costruisciIstanza(bottega);
+                Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bottega);
                 assertEquals(tipo, locazione.getTipoLocazione());
                 locazione.crea(partita.gruppo(), GruppoAvversario.getIstanza());
                 assertTrue(locazione.isCompleta());
@@ -219,7 +221,7 @@ class ScenarioNegoziNellaForestaTest {
             int lato = latoLibero(citta);
             Comando versoLaCitta = lato > 0 ? Comando.NORD : Comando.SUD;
             CoordinateMD bottega = new CoordinateMD(citta.getX(), citta.getY() + lato);
-            Foresta.costruisciLocazione(bottega, TipoLocazione.ARMAIOLO);
+            CostruttoreDellaForesta.costruisciLocazione(bottega, TipoLocazione.ARMAIOLO);
             Foresta.getLocazioneMD(bottega).setNome("la Fucina di Mastro Prova");
             Foresta.getLocazioneMD(bottega).aggiungiProprieta(Bottega.NEGOZIANTE, "Mastro Prova da Nyena");
             List<Object> aperture = new ArrayList<>();

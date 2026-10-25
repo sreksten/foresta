@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.combattimento.Ondata;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
 import com.threeamigos.foresta.eventi.interni.InternoAssegnaCoordinateAPersonaggi;
@@ -8,7 +10,7 @@ import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -50,7 +52,7 @@ class ScenarioOndateTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
             partita.gruppo().setCoordinate(bosco);
-            Locazione locazione = Foresta.costruisciIstanza(bosco);
+            Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
             partita.gruppo().setLocazioneCorrente(locazione);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.reimposta();
@@ -138,7 +140,7 @@ class ScenarioOndateTest {
             partita.gruppo().addMonete(100);
             CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
             partita.gruppo().setCoordinate(bosco);
-            Locazione locazione = Foresta.costruisciIstanza(bosco);
+            Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
             partita.gruppo().setLocazioneCorrente(locazione);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.reimposta();

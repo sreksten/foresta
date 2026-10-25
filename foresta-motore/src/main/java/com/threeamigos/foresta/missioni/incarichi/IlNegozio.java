@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.artefatti.tipi.TipoNegozio;
 
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -9,8 +11,8 @@ import com.threeamigos.foresta.locazioni.Bottega;
 import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.richieste.InfestazioneRichiesta;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.mappa.LocazioneMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Articoli;
@@ -324,7 +326,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	 */
 	private void apriLaBottega() {
 		CoordinateMD posto = getCovo();
-		Foresta.costruisciLocazione(posto, bottega);
+		CostruttoreDellaForesta.costruisciLocazione(posto, bottega);
 		LocazioneMD modelloDati = Foresta.getLocazioneMD(posto);
 		modelloDati.setNome(getParametro(NOME_BOTTEGA));
 		modelloDati.aggiungiProprieta(Bottega.NEGOZIANTE, RegistroPersonaggi.getNomeCompleto(RegistroPersonaggi.getResidente(negoziante, getCitta())));

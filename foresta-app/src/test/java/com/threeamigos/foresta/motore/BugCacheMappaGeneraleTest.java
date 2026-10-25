@@ -1,8 +1,10 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.ui.AccessoMappaGeneralePerTest;
@@ -34,7 +36,7 @@ class BugCacheMappaGeneraleTest {
 		RegistroMissioni.registrati();
 
 		// Partita 1: si rivela tutta la mappa e si disegna la mappa generale
-		Foresta.reimposta();
+		CostruttoreDellaForesta.reimposta();
 		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
 			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
 				Foresta.setLocazioneConosciuta(new CoordinateMD(x, y));
@@ -43,7 +45,7 @@ class BugCacheMappaGeneraleTest {
 		AccessoMappaGeneralePerTest.mappaGenerale();
 
 		// Partita 2, come dopo aver perso e ricominciato: alcune caselle (non tutte, qualunque sia il seme) non sono ancora rivelate
-		Foresta.reimposta();
+		CostruttoreDellaForesta.reimposta();
 		BufferedImage mappaPartita2 = AccessoMappaGeneralePerTest.mappaGenerale();
 		boolean esisteUnaCasellaSconosciuta = false;
 		for (int x = 0; x < Foresta.getDimensioneX(); x++) {

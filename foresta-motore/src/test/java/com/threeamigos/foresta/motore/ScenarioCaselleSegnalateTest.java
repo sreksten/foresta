@@ -1,11 +1,13 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.incarichi.LaTagliaSullaBanda;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -39,13 +41,13 @@ class ScenarioCaselleSegnalateTest {
             CoordinateMD covo = RegistroMissioni.getLocazioneOccupata(medaglione);
             assertNotNull(covo);
             assertEquals(TipoLocazione.GROTTA, Foresta.getLocazione(covo), "una grotta come le altre");
-            assertTrue(Foresta.getCoordinateDaSegnalare().contains(covo));
+            assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(covo));
 
             // I castelli no, anche se conosciuti
             RegistroMissioni.getMissionePrincipale().getMissioniSecondarie().forEach(Missione::controllaPreLocazione);
             CoordinateMD castello = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CASTELLO_STREGA);
             Foresta.setLocazioneConosciuta(castello);
-            assertFalse(Foresta.getCoordinateDaSegnalare().contains(castello));
+            assertFalse(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(castello));
         }
     }
 
@@ -61,7 +63,7 @@ class ScenarioCaselleSegnalateTest {
             taglia.segnaIntermezzoPassoMostrato("INCARICO");
             taglia.controllaInLocazione();
             CoordinateMD covo = taglia.getCovo();
-            assertTrue(Foresta.getCoordinateDaSegnalare().contains(covo));
+            assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(covo));
 
             partita.gruppo().setCoordinate(covo);
             for (int i = 0; i < LaTagliaSullaBanda.HOBGOBLIN; i++) {
@@ -69,7 +71,7 @@ class ScenarioCaselleSegnalateTest {
             }
             taglia.controllaPostLocazione();
             taglia.completaMissione();
-            assertFalse(Foresta.getCoordinateDaSegnalare().contains(covo), "a missione finita non lampeggia più");
+            assertFalse(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(covo), "a missione finita non lampeggia più");
         }
     }
 }

@@ -1,12 +1,14 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.richieste.ViandanteRichiesto;
 import com.threeamigos.foresta.missioni.storie.IlViandante;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
@@ -55,7 +57,7 @@ class ScenarioIlViandanteTest {
 
             // Né in una città né in una radura, nemmeno dal giorno giusto
             CoordinateMD bosco = cellaSenzaLocazioniUniche(0);
-            Foresta.costruisciLocazione(bosco, TipoLocazione.BOSCO);
+            CostruttoreDellaForesta.costruisciLocazione(bosco, TipoLocazione.BOSCO);
             LineaTemporale.aggiungiOre(24 * (giorno - 2));
             partita.gruppo().setCoordinate(bosco);
             viandante.controllaPreLocazione();
@@ -63,7 +65,7 @@ class ScenarioIlViandanteTest {
             LineaTemporale.aggiungiOre(24);
             assertEquals(giorno, LineaTemporale.getGiorno());
             CoordinateMD radura = cellaSenzaLocazioniUniche(1);
-            Foresta.costruisciLocazione(radura, TipoLocazione.RADURA);
+            CostruttoreDellaForesta.costruisciLocazione(radura, TipoLocazione.RADURA);
             partita.gruppo().setCoordinate(radura);
             viandante.controllaPreLocazione();
             assertEquals("INCONTRO", viandante.getPassoCorrente(), "non in una radura");
@@ -122,7 +124,7 @@ class ScenarioIlViandanteTest {
             IlViandante viandante = trova(IlViandante.class);
             viandante.controllaPreLocazione();
             CoordinateMD bosco = cellaSenzaLocazioniUniche(0);
-            Foresta.costruisciLocazione(bosco, TipoLocazione.BOSCO);
+            CostruttoreDellaForesta.costruisciLocazione(bosco, TipoLocazione.BOSCO);
             LineaTemporale.aggiungiOre(24 * (viandante.getGiornoDellIncontro() - 1));
             partita.gruppo().setCoordinate(bosco);
             viandante.controllaPreLocazione();

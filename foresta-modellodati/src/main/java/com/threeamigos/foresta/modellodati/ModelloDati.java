@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.mappa.Foresta;
+import com.threeamigos.foresta.mappa.ForestaMD;
+
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
 import java.io.BufferedReader;
@@ -27,6 +30,11 @@ public class ModelloDati implements Serializzabile {
 
 	// L'istanza di modello dati su cui il gioco si basa (volatile: la imposta chi carica o azzera, e la leggono tutti, anche da altri thread)
 	private static volatile ModelloDati istanza = new ModelloDati();
+
+	// La mappa non conosce il modello dati: gli dice lei dove sono i suoi dati, e li prende sempre da quello in corso
+	static {
+		Foresta.setFornitoreDiDati(() -> getIstanza().getForestaMD());
+	}
 
 	/**
 	 * L'istanza del modello dati su cui si basa la partita in corso.

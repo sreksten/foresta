@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.modellodati;
+package com.threeamigos.foresta.mappa;
 
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.MappaProprieta;
@@ -21,7 +21,7 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
  * suolo anche dopo un salvataggio.
  * <p>
  * Lo stato durevole vive fra le proprietà, con la convenzione già usata da
- * {@link MissioneMD}: la presenza della chiave vale per vero.
+ * {@code MissioneMD}: la presenza della chiave vale per vero.
  */
 public class LocazioneMD implements Serializzabile {
 
@@ -59,9 +59,15 @@ public class LocazioneMD implements Serializzabile {
 	private TipoLocazione tipo;
 	private final Map<String, String> proprieta = new HashMap<>();
 
+	/**
+	 * Una locazione senza tipo.
+	 */
 	public LocazioneMD() {
 	}
 
+	/**
+	 * Una locazione di quel tipo.
+	 */
 	public LocazioneMD(TipoLocazione tipo) {
 		this.tipo = tipo;
 	}
@@ -73,10 +79,16 @@ public class LocazioneMD implements Serializzabile {
 		return uuid;
 	}
 
+	/**
+	 * Il tipo della locazione.
+	 */
 	public TipoLocazione getTipo() {
 		return tipo;
 	}
 
+	/**
+	 * Cambia il tipo della locazione.
+	 */
 	public void setTipo(TipoLocazione tipo) {
 		this.tipo = tipo;
 	}
@@ -90,6 +102,8 @@ public class LocazioneMD implements Serializzabile {
 	}
 
 	/**
+	 * Il valore di una proprietà della casella.
+	 *
 	 * @return il valore della proprietà, o null se la casella non ce l'ha
 	 */
 	public String ottieniProprieta(String nome) {

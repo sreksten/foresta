@@ -1,5 +1,9 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.CoordinateMD;
+
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.artefatti.*;
 import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.artefatti.leggendari.RegoleSetLeggendari;
@@ -210,7 +214,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		md.setPozioniMagiaGrande(0);
 		md.setPozioniAumentoLivello(0);
 		md.setCoordinate(Foresta.getCoordinateLibere());
-		Foresta.aggiornaMappaCircostante(this);
+		CostruttoreDellaForesta.aggiornaMappaCircostante(this);
 
 		if (ModalitaDiProva.isAttiva()) {
 			md.setMonete(9999);
@@ -458,7 +462,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 
 	public final void setCoordinate(CoordinateMD coordinate) {
 		md.setCoordinate(coordinate);
-		Foresta.aggiornaMappaCircostante(this);
+		CostruttoreDellaForesta.aggiornaMappaCircostante(this);
 	}
 
 	public final int getX() {

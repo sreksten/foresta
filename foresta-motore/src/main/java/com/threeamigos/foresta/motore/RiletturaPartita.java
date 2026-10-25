@@ -27,7 +27,7 @@ public final class RiletturaPartita {
 		}
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		gruppo.setModelloDati(ModelloDati.getIstanza().getGruppoGiocatoreMD());
-		gruppo.setLocazioneCorrente(Foresta.costruisciIstanza(gruppo.getCoordinate()));
+		gruppo.setLocazioneCorrente(CostruttoreDellaForesta.costruisciIstanza(gruppo.getCoordinate()));
 		RegistroMissioni.aggiornaDopoRilettura();
 		IntermezzoLibroTecnico.reimposta();
 	}

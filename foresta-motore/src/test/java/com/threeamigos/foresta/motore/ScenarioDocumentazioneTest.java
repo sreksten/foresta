@@ -1,9 +1,11 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.LaDocumentazione;
 import com.threeamigos.foresta.missioni.richieste.DocumentazioneRichiesta;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -90,7 +92,7 @@ class ScenarioDocumentazioneTest {
             documentazione.controllaInLocazione();
 
             CoordinateMD rovine = documentazione.getPosto();
-            assertTrue(Foresta.getCoordinateDaSegnalare().contains(rovine));
+            assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(rovine));
             assertEquals(Collections.singletonList(documentazione.getNome()), RegistroMissioni.getNomiMissioniDaSegnalare(rovine));
 
             partita.gruppo().setCoordinate(rovine);
@@ -98,8 +100,8 @@ class ScenarioDocumentazioneTest {
             CoordinateMD tempio = documentazione.getPosto();
             assertNotEquals(rovine, tempio);
 
-            assertTrue(Foresta.getCoordinateDaSegnalare().contains(tempio), "ora lampeggia il tempio");
-            assertFalse(Foresta.getCoordinateDaSegnalare().contains(rovine), "le rovine, già documentate, non più");
+            assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(tempio), "ora lampeggia il tempio");
+            assertFalse(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(rovine), "le rovine, già documentate, non più");
             assertEquals(Collections.emptyList(), RegistroMissioni.getNomiMissioniDaSegnalare(rovine),
                     "e nessuna missione le elenca più sul cartiglio");
             assertEquals(Collections.singletonList(documentazione.getNome()), RegistroMissioni.getNomiMissioniDaSegnalare(tempio));

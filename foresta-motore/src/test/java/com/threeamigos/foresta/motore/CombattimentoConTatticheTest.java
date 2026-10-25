@@ -1,11 +1,13 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.eventi.interni.InternoDecisioneTattica;
 import com.threeamigos.foresta.locazioni.Locazione;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.modellodati.tattiche.*;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -50,7 +52,7 @@ class CombattimentoConTatticheTest {
     private static Locazione preparaLo(PartitaDiTest partita, int goblin) {
         CoordinateMD bosco = unaCasellaDiBosco();
         partita.gruppo().setCoordinate(bosco);
-        Locazione locazione = Foresta.costruisciIstanza(bosco);
+        Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
         partita.gruppo().setLocazioneCorrente(locazione);
         GruppoAvversario avversari = GruppoAvversario.getIstanza();
         avversari.reimposta();

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.combattimento.Ondata;
@@ -9,7 +11,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.NomeOggetto;

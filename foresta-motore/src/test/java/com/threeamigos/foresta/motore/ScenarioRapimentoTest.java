@@ -1,10 +1,12 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.IlRapimento;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -51,7 +53,7 @@ class ScenarioRapimentoTest {
             CoordinateMD covo = rapimento.getCovo();
             assertEquals(TipoLocazione.GROTTA, Foresta.getLocazione(covo));
             assertTrue(Foresta.isLocazioneConosciuta(covo));
-            assertTrue(Foresta.getCoordinateDaSegnalare().contains(covo));
+            assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(covo));
             List<Personaggio> banda = RegistroMissioni.getIncontroMissione(covo).orElseThrow(AssertionError::new);
             // I rapitori sono dei goblin, con un hobgoblin a capo che viene dopo la banda
             assertEquals(IlRapimento.RAPITORI + 1, banda.size());

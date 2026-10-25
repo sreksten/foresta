@@ -4,15 +4,13 @@ import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
 import com.threeamigos.foresta.locazioni.*;
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.ForestaMD;
-import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
+import com.threeamigos.foresta.mappa.LocazioneMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.logger.Logger;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiLocandeCasuale;
 import com.threeamigos.foresta.testi.ProduttoriDiTesti;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
@@ -20,75 +18,25 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 /**
- * La mappa della Foresta di questa partita: una griglia di 20 per 20 caselle, ciascuna con la sua locazione. I dati stanno nel
- * {@code ForestaMD}; qui ci sono le operazioni del gioco: costruire le locazioni (anche le città e i castelli, che sono uniche), trasformarle
- * (il drago distrugge una città e al suo posto restano delle rovine), cercare una casella libera e farne l'istanza per la visita.
+ * Chi costruisce il mondo sulla mappa della Foresta (vedi {@link Foresta}): le città e i castelli (che sono unici), le locande, i templi con
+ * i loro artefatti, le grotte, le paludi e il bosco, con i personaggi e i registri che ci vivono; e chi dà l'istanza di una casella per la
+ * visita. Fa anche da ponte fra la mappa e le missioni, gli artefatti e il gruppo (le caselle da segnalare, la mappa intorno al gruppo).
  */
-
-public class Foresta {
+public class CostruttoreDellaForesta {
 
 	private static final int DIMENSIONE_X = 20;
 	private static final int DIMENSIONE_Y = 20;
 
-	private Foresta() {
+	private CostruttoreDellaForesta() {
 	}
 
-	private static ForestaMD getForestaMD() {
-		return ModelloDati.getIstanza().getForestaMD();
-	}
-	
-	public static int getDimensioneX() {
-		return getForestaMD().getDimensioneX();
-	}
-	
-	public static int getDimensioneY() {
-		return getForestaMD().getDimensioneY();
-	}
-	
 	/**
 	 * Fa della casella in cui si trova il gruppo una locazione di quel tipo.
 	 */
 	public static void impostaLocazioneCorrente(TipoLocazione tipoLocazione) {
-		getForestaMD().impostaLocazione(GruppoGiocatore.getIstanza().getCoordinate(), tipoLocazione);
-	}
-
-	public static CoordinateMD getCoordinateLocazioneUnica(TipoLocazione tipoLocazione) {
-		if (!tipoLocazione.isLocazioneUnica()) {
-			throw new IllegalArgumentException();
-		}
-		return getForestaMD().ottieniCoordinateLocazioneUnica(tipoLocazione);
-	}
-	
-	/**
-	 * Trasforma la locazione unica in un'altra (di solito delle rovine, che prendono il nome da quel che c'era) e non la considera più unica.
-	 * Non fa niente se quella locazione non è stata costruita.
-	 */
-	public static void distruggiLocazioneUnica(TipoLocazione tipoLocazione, TipoLocazione nuovoTipoLocazione) {
-		CoordinateMD coordinate = getCoordinateLocazioneUnica(tipoLocazione);
-		if (coordinate != null) {
-			ForestaMD md = getForestaMD();
-			md.impostaLocazione(coordinate, nuovoTipoLocazione);
-			md.rimuoviLocazioneUnica(tipoLocazione);
-			if (nuovoTipoLocazione == TipoLocazione.ROVINE) {
-				// Le rovine di un castello o di una città prendono il nome da quello che c'era
-				getLocazioneMD(coordinate).setNome("le Rovine " + Articoli.conPreposizione("di", tipoLocazione.getNomeProprio()));
-			}
-		}
-	}
-
-	public static TipoLocazione getLocazione(CoordinateMD coordinate) {
-		return getForestaMD().ottieniTipoLocazione(coordinate);
-	}
-	
-	public static TipoLocazione getLocazione(int x, int y) {
-		return getForestaMD().ottieniTipoLocazione(x, y);
-	}
-
-	public static LocazioneMD getLocazioneMD(CoordinateMD coordinate) {
-		return getForestaMD().ottieniLocazioneMD(coordinate);
+		Foresta.impostaLocazione(GruppoGiocatore.getIstanza().getCoordinate(), tipoLocazione);
 	}
 
 	/**
@@ -97,22 +45,12 @@ public class Foresta {
 	 * L'istanza vive quanto la visita e poi si butta.
 	 */
 	public static Locazione costruisciIstanza(CoordinateMD coordinate) {
-		LocazioneMD locazioneMD = getForestaMD().ottieniLocazioneMD(coordinate);
+		LocazioneMD locazioneMD = Foresta.getLocazioneMD(coordinate);
 		Locazione locazione = FabbricaLocazioni.crea(locazioneMD.getTipo());
 		locazione.setModelloDati(locazioneMD);
 		return locazione;
 	}
 	
-	/**
-	 * Costruisce la locazione unica in una casella libera a caso.
-	 *
-	 * @param conosciutaSuMappa se la casella è già conosciuta dal giocatore
-	 * @return le coordinate della casella scelta
-	 */
-	public static CoordinateMD costruisciLocazioneUnica(TipoLocazione tipoLocazioneUnica, boolean conosciutaSuMappa) {
-		return costruisciLocazioneUnica(tipoLocazioneUnica, getCoordinateLibere(), conosciutaSuMappa);
-	}
-
 	/**
 	 * Fa diventare la casella una locazione ordinaria di quella classe (per esempio un tempio, al posto di un bosco
 	 * rivendicato da una missione), come non ancora visitata.
@@ -123,25 +61,7 @@ public class Foresta {
 		}
 		Logger.log(() -> "Costruzione di " + tipoLocazione + " in " + coordinate);
 		setLocazione(coordinate, tipoLocazione);
-		setLocazioneVisitata(coordinate, false);
-	}
-
-	/**
-	 * Costruisce la locazione unica in quelle coordinate, scelte da chi chiama (per esempio da
-	 * RegistroMissioni.cerca, per una missione che si procura la propria locazione).
-	 */
-	public static CoordinateMD costruisciLocazioneUnica(TipoLocazione tipoLocazioneUnica, CoordinateMD coordinate, boolean conosciutaSuMappa) {
-		if (!tipoLocazioneUnica.isLocazioneUnica()) {
-			throw new IllegalArgumentException("Utilizzare costruisciLocazione per creare " + tipoLocazioneUnica.name());
-		}
-		Logger.log(() -> "Costruzione di " + tipoLocazioneUnica + " in " + coordinate);
-		setLocazione(coordinate, tipoLocazioneUnica);
-		getLocazioneMD(coordinate).setNome(tipoLocazioneUnica.getNomeProprio());
-		getForestaMD().aggiungiLocazioneUnica(tipoLocazioneUnica, coordinate);
-		if (conosciutaSuMappa) {
-			setLocazioneConosciuta(coordinate);
-		}
-		return coordinate;
+		Foresta.setLocazioneVisitata(coordinate, false);
 	}
 
 	/**
@@ -163,7 +83,7 @@ public class Foresta {
 		ModelloDati.getIstanza().getIntermezziMD().reimposta();
 		ModelloDati.getIstanza().getNotizieMD().reimposta();
 
-		getForestaMD().reimposta(DIMENSIONE_X, DIMENSIONE_Y);
+		Foresta.azzera(DIMENSIONE_X, DIMENSIONE_Y);
 
 		int numeroCitta = 0;
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
@@ -171,7 +91,7 @@ public class Foresta {
 				numeroCitta++;
 			}
 		}
-		int numeroLocandeMax = Math.max(RegistroPersonaggi.getNumeroPersonaggiDisponibili(), (getDimensioneX() + getDimensioneY()) >> 2);
+		int numeroLocandeMax = Math.max(RegistroPersonaggi.getNumeroPersonaggiDisponibili(), (Foresta.getDimensioneX() + Foresta.getDimensioneY()) >> 2);
 		List<ProduttoreDiLocandeCasuale.DatiLocanda> poolDatiLocanda = ProduttoreDiLocandeCasuale.getDatiLocanda(numeroCitta + numeroLocandeMax);
 
 		costruisciCittaEPosizionaPersonaggi(poolDatiLocanda);
@@ -182,7 +102,7 @@ public class Foresta {
 		costruisciLocandeEPosizionaPersonaggi(poolDatiLocanda);
 		costruisciTempliEPosizionaArtefatti();
 		
-		int media = (getDimensioneX() + getDimensioneY()) / 2;
+		int media = (Foresta.getDimensioneX() + Foresta.getDimensioneY()) / 2;
 
 		costruisci(TipoLocazione.GROTTA, media >> 1);
 		costruisci(TipoLocazione.PALUDE, media);
@@ -192,12 +112,12 @@ public class Foresta {
 
 		// Il resto della Foresta è bosco. Va posato prima di sistemare il gruppo,
 		// che appena arriva si guarda intorno e ha bisogno di caselle su cui farlo.
-		for (int x = 0; x < getDimensioneX(); x++) {
-			for (int y = 0; y < getDimensioneY(); y++) {
+		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
+			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
 				CoordinateMD coordinate = new CoordinateMD(x, y);
-				if (getLocazione(coordinate) == null) {
+				if (Foresta.getLocazione(coordinate) == null) {
 					setLocazione(coordinate, TipoLocazione.BOSCO);
-					Bosco.impostaVarianteMappaACaso(getLocazioneMD(coordinate));
+					Bosco.impostaVarianteMappaACaso(Foresta.getLocazioneMD(coordinate));
 				}
 			}
 		}
@@ -207,49 +127,13 @@ public class Foresta {
 	}
 
 	private static void setLocazione(CoordinateMD coordinate, TipoLocazione tipoLocazione) {
-		getForestaMD().impostaLocazione(coordinate, tipoLocazione);
+		Foresta.impostaLocazione(coordinate, tipoLocazione);
 		// Templi e rovine hanno il loro nome da quando nascono
 		if (tipoLocazione == TipoLocazione.TEMPIO) {
-			Tempio.getNome(getLocazioneMD(coordinate));
+			Tempio.getNome(Foresta.getLocazioneMD(coordinate));
 		} else if (tipoLocazione == TipoLocazione.ROVINE) {
-			Rovine.getNome(getLocazioneMD(coordinate));
+			Rovine.getNome(Foresta.getLocazioneMD(coordinate));
 		}
-	}
-
-	// Quante volte provare a pescare un nome che nessun'altra casella dello stesso tipo ha già
-	private static final int TENTATIVI_NOME_NUOVO = 20;
-
-	/**
-	 * Un nome dal generatore, possibilmente diverso da quello di tutte le caselle di quella classe (per esempio di
-	 * tutti gli altri templi): se dopo qualche tentativo non ci si riesce, va bene anche un doppione.
-	 */
-	public static String nomeNuovo(TipoLocazione tipo, Supplier<String> generatore) {
-		Set<String> giaDati = new HashSet<>();
-		for (int x = 0; x < getDimensioneX(); x++) {
-			for (int y = 0; y < getDimensioneY(); y++) {
-				LocazioneMD md = getLocazioneMD(new CoordinateMD(x, y));
-				if (md != null && md.getTipo() == tipo && md.getNome() != null) {
-					giaDati.add(md.getNome());
-				}
-			}
-		}
-		String nome = generatore.get();
-		for (int i = 1; i < TENTATIVI_NOME_NUOVO && giaDati.contains(nome); i++) {
-			nome = generatore.get();
-		}
-		return nome;
-	}
-
-	/**
-	 * Il nome della casella da mostrare sulla mappa, se il gruppo la conosce e ha un nome (città, castelli, locande,
-	 * templi...); altrimenti null.
-	 */
-	public static String getNomeDaMostrare(CoordinateMD coordinate) {
-		if (coordinate.getX() < 0 || coordinate.getX() >= getDimensioneX() || coordinate.getY() < 0 || coordinate.getY() >= getDimensioneY()
-				|| !isLocazioneConosciuta(coordinate)) {
-			return null;
-		}
-		return getLocazioneMD(coordinate).getNome();
 	}
 
 	/**
@@ -257,8 +141,7 @@ public class Foresta {
 	 * se il gruppo la conosce; altrimenti nessuno.
 	 */
 	public static List<String> getNomiMissioniDaMostrare(CoordinateMD coordinate) {
-		if (coordinate.getX() < 0 || coordinate.getX() >= getDimensioneX() || coordinate.getY() < 0 || coordinate.getY() >= getDimensioneY()
-				|| !isLocazioneConosciuta(coordinate)) {
+		if (!Foresta.isDentroLaMappa(coordinate) || !Foresta.isLocazioneConosciuta(coordinate)) {
 			return Collections.emptyList();
 		}
 		return RegistroMissioni.getNomiMissioniDaSegnalare(coordinate);
@@ -272,9 +155,9 @@ public class Foresta {
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
 			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 				CoordinateMD coordinate = quadranti.isEmpty()
-						? costruisciLocazioneUnica(tipoLocazione, false)
-						: costruisciLocazioneUnica(tipoLocazione, getCoordinateLibere(quadranti.remove(0)), false);
-				Locanda.impostaDatiLocanda(getLocazioneMD(coordinate), poolDatiLocanda.remove(0));
+						? Foresta.costruisciLocazioneUnica(tipoLocazione, false)
+						: Foresta.costruisciLocazioneUnica(tipoLocazione, getCoordinateLibere(quadranti.remove(0)), false);
+				Locanda.impostaDatiLocanda(Foresta.getLocazioneMD(coordinate), poolDatiLocanda.remove(0));
 				RegistroPersonaggi.creaIResidentiDellaCitta(tipoLocazione);
 				RegistroArtefatti.riempiMagazzini(coordinate, GeneratoreArtefatti.istanza());
 				Personaggio personaggioDisponibile = RegistroPersonaggi.getPersonaggioDisponibile();
@@ -295,7 +178,7 @@ public class Foresta {
 			costruisci(TipoLocazione.LOCANDA, personaggioDisponibile, poolDatiLocanda.remove(0));
 			locandeCostruite++;
 		}
-		int media = (getDimensioneX() + getDimensioneY()) >> 2;
+		int media = (Foresta.getDimensioneX() + Foresta.getDimensioneY()) >> 2;
 		for (int i = locandeCostruite; i < media; i++) {
 			costruisci(TipoLocazione.LOCANDA, poolDatiLocanda.remove(0));
 		}
@@ -311,7 +194,7 @@ public class Foresta {
 			costruisci(TipoLocazione.TEMPIO, artefattoDisponibile);
 			templiConArtefatto++;
 		}
-		int media = (getDimensioneX() + getDimensioneY()) >> 2;
+		int media = (Foresta.getDimensioneX() + Foresta.getDimensioneY()) >> 2;
 		int templiSenzaArtefatto = Math.max(templiConArtefatto, media - templiConArtefatto);
 		costruisci(TipoLocazione.TEMPIO, templiSenzaArtefatto);
 	}
@@ -320,9 +203,9 @@ public class Foresta {
 		if (tipoLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + tipoLocazione.name());
 		}
-		CoordinateMD coordinate = getCoordinateLibere();
+		CoordinateMD coordinate = Foresta.getCoordinateLibere();
 		setLocazione(coordinate, tipoLocazione);
-		Locanda.impostaDatiLocanda(getLocazioneMD(coordinate), datiLocanda);
+		Locanda.impostaDatiLocanda(Foresta.getLocazioneMD(coordinate), datiLocanda);
 		RegistroPersonaggi.addPersonaggioInLocazione(personaggio, coordinate);
 	}
 
@@ -330,16 +213,16 @@ public class Foresta {
 		if (tipoLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + tipoLocazione.name());
 		}
-		CoordinateMD coordinate = getCoordinateLibere();
+		CoordinateMD coordinate = Foresta.getCoordinateLibere();
 		setLocazione(coordinate, tipoLocazione);
-		Locanda.impostaDatiLocanda(getLocazioneMD(coordinate), datiLocanda);
+		Locanda.impostaDatiLocanda(Foresta.getLocazioneMD(coordinate), datiLocanda);
 	}
 	
 	private static void costruisci(TipoLocazione tipoLocazione, Artefatto artefatto) {
 		if (tipoLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + tipoLocazione.name());
 		}
-		CoordinateMD coordinate = getCoordinateLibere();
+		CoordinateMD coordinate = Foresta.getCoordinateLibere();
 		setLocazione(coordinate, tipoLocazione);
 		RegistroArtefatti.addArtefattoInLocazione(artefatto, coordinate);
 	}
@@ -350,66 +233,19 @@ public class Foresta {
 		}
 		Logger.log(() -> "Costruzione di " + quantita + " classiLocazione " + tipoLocazione);
 		for (int i = 0; i < quantita; i++) {
-			setLocazione(getCoordinateLibere(), tipoLocazione);
+			setLocazione(Foresta.getCoordinateLibere(), tipoLocazione);
 		}
 	}
 	
-	static CoordinateMD getCoordinateLibere() {
-		TipoLocazione tipoLocazione;
-		CoordinateMD coordinate;
-		do {
-			coordinate = new CoordinateMD(Dado.tira(getDimensioneX()) - 1, Dado.tira(getDimensioneY()) - 1);
-			tipoLocazione = getLocazione(coordinate);
-		} while (!isLibera(tipoLocazione));
-		return coordinate;
-	}
-
 	/**
-	 * Come {@link #getCoordinateLibere()}, ma dentro il quadrante.
+	 * Come {@link Foresta#getCoordinateLibere()}, ma dentro il quadrante.
 	 */
 	static CoordinateMD getCoordinateLibere(Quadrante quadrante) {
 		CoordinateMD coordinate;
 		do {
 			coordinate = quadrante.getCoordinateACaso();
-		} while (!isLibera(getLocazione(coordinate)));
+		} while (!Foresta.isLibera(Foresta.getLocazione(coordinate)));
 		return coordinate;
-	}
-
-	/**
-	 * Una casella su cui si può costruire: vuota, o un bosco. Non una radura: sono poche apposta, e una locanda o il
-	 * covo di una missione costruiti sopra le cancellerebbero.
-	 */
-	private static boolean isLibera(TipoLocazione tipoLocazione) {
-		return tipoLocazione == null || tipoLocazione == TipoLocazione.BOSCO;
-	}
-
-	/**
-	 * Abbiamo appena visitato questa locazione
-	 */
-	static void setLocazioneVisitata(CoordinateMD coordinate) {
-		getForestaMD().impostaLocazioneVisitata(coordinate);
-	}
-
-	public static void setLocazioneVisitata(CoordinateMD coordinate, boolean visitata) {
-		getForestaMD().impostaLocazioneVisitata(coordinate, visitata);
-	}
-
-	/**
-	 * Siamo già passati da questa locazione?
-	 */
-	public static boolean isLocazioneVisitata(CoordinateMD coordinate) {
-		return getForestaMD().isLocazioneVisitata(coordinate);
-	}
-
-	/**
-	 * Sappiamo cosa ci sia in questa locazione
-	 */
-	public static void setLocazioneConosciuta(CoordinateMD coordinate) {
-		getForestaMD().impostaLocazioneConosciuta(coordinate);
-	}
-
-	public static boolean isLocazioneConosciuta(CoordinateMD coordinate) {
-		return getForestaMD().isLocazioneConosciuta(coordinate);
 	}
 
 	/**
@@ -420,32 +256,6 @@ public class Foresta {
 		Set<CoordinateMD> coordinateDaSegnalare = new LinkedHashSet<>(RegistroArtefatti.getLocalizzazioniConosciute());
 		coordinateDaSegnalare.addAll(RegistroMissioni.getLocazioniDaSegnalare());
 		return new ArrayList<>(coordinateDaSegnalare);
-	}
-
-	public static int getVersioneMappa() {
-		return getForestaMD().getVersioneMappa();
-	}
-
-	/**
-	 * Un personaggio compra la mappa della foresta da un PNG
-	 */
-	public static void ottieniMappa() {
-		getForestaMD().ottieniMappa();
-	}
-
-	/**
-	 * Un PNG mostra a un personaggio un pezzetto della mappa della foresta
-	 */
-	public static void ottieniMappaZona(int daX, int daY, int aX, int aY) {
-		for (int x = daX; x <= aX; x++) {
-			if (x >= 0 && x < Foresta.getDimensioneX()) {
-				for (int y = daY; y <= aY; y++) {
-					if (y >= 0 && y < Foresta.getDimensioneY()) {
-						setLocazioneConosciuta(new CoordinateMD(x, y));
-					}
-				}
-			}
-		}
 	}
 
 	/**
@@ -474,22 +284,6 @@ public class Foresta {
 			daY = Foresta.getDimensioneY() - 7;
 			aY = Foresta.getDimensioneY() - 1;
 		}
-		ottieniMappaZona(daX, daY, aX, aY);
-	}
-	
-	public static int getMinXConosciuta() {
-		return getForestaMD().getMinXConosciuta();
-	}
-	
-	public static int getMaxXConosciuta() {
-		return getForestaMD().getMaxXConosciuta();
-	}
-	
-	public static int getMinYConosciuta() {
-		return getForestaMD().getMinYConosciuta();
-	}
-	
-	public static int getMaxYConosciuta() {
-		return getForestaMD().getMaxYConosciuta();
+		Foresta.ottieniMappaZona(daX, daY, aX, aY);
 	}
 }

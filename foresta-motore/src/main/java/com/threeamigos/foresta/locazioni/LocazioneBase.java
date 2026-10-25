@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.abilita.FabbricaAbilita;
 import com.threeamigos.foresta.artefatti.Arma;
@@ -16,7 +18,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.incantesimi.*;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.mappa.LocazioneMD;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.modificatori.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.motore.*;

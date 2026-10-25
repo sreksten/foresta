@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.CostruttoreArtefatto;
@@ -27,7 +29,7 @@ import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.mappa.LocazioneMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.tattiche.TatticaMD;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
@@ -579,7 +581,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito gestisciTestoInStatoPreGameAttesaNomePersonaggio(String testoDisponibile) {
-		Foresta.reimposta();
+		CostruttoreDellaForesta.reimposta();
 		// Il salvataggio automatico è di una partita che non è più questa: una ripresa non deve riportarla
 		gestoreSalvataggi.elimina(Comando.SALVATAGGIO_AUTOMATICO);
 		salvataggioInMemoria.elimina();
@@ -855,7 +857,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gruppo.congedaChiNonRisorge();
 		gruppo.getPersonaggiVivi().forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
 		gruppo.getOspiti().stream().filter(Personaggio::isVivo).forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
-		locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
+		locazioneCorrente = CostruttoreDellaForesta.costruisciIstanza(gruppo.getCoordinate());
 		gruppo.setLocazioneCorrente(locazioneCorrente);
 		locazioneCorrente.crea(gruppo, gruppoAvversario);
 		if (RegistroMissioni.isDaSopprimere(gruppo.getCoordinate())) {
@@ -1022,7 +1024,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito entraInStatoAccampamento() {
 		// Dalla casella, non da locazioneCorrente: dopo un caricamento questa e' null, e dopo un castello
 		// completato e' ancora il castello mentre sulla casella ci sono le rovine
-		Pernottamento.pernotta(gruppo, Foresta.costruisciIstanza(gruppo.getCoordinate()).getTipoRiposo());
+		Pernottamento.pernotta(gruppo, CostruttoreDellaForesta.costruisciIstanza(gruppo.getCoordinate()).getTipoRiposo());
 		// Superato l'ultimo giorno la partita è persa subito: tornando ad ATTESA_DIREZIONE la si potrebbe ancora
 		// salvare, e la sconfitta si vedrebbe solo al passo seguente
 		if (LineaTemporale.isGiocoFinito()) {

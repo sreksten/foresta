@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
@@ -13,7 +15,7 @@ import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.RegistroArtefattiMD;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
@@ -240,7 +242,7 @@ public class RegistroArtefatti {
 	 * i suoi guardiani.
 	 */
 	public static void custodisciInUnTempioNuovo(Artefatto artefatto, CoordinateMD coordinate) {
-		Foresta.costruisciLocazione(coordinate, TipoLocazione.TEMPIO);
+		CostruttoreDellaForesta.costruisciLocazione(coordinate, TipoLocazione.TEMPIO);
 		addArtefattoInLocazione(artefatto, coordinate);
 		segnaLocalizzazioneConosciuta(coordinate);
 		Foresta.setLocazioneConosciuta(coordinate);

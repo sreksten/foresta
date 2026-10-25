@@ -5,7 +5,7 @@ import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneConoscenzaMappa;
 import com.threeamigos.foresta.interfacce.VistaMappa;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.immagini.ImageCache;

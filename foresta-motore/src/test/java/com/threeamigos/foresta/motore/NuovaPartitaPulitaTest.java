@@ -23,7 +23,7 @@ class NuovaPartitaPulitaTest {
             modello.getNotizieMD().aggiungiMessaggio(new MessaggioMD("Un messaggio vecchio", false));
             assertTrue(modello.getIntermezziMD().isScattato("INTRODUZIONE_DI_UNA_PARTITA_VECCHIA"));
 
-            Foresta.reimposta();
+            CostruttoreDellaForesta.reimposta();
 
             assertFalse(ModelloDati.getIstanza().getIntermezziMD().isScattato("INTRODUZIONE_DI_UNA_PARTITA_VECCHIA"));
             assertTrue(ModelloDati.getIstanza().getNotizieMD().getUltimiMessaggi().isEmpty());

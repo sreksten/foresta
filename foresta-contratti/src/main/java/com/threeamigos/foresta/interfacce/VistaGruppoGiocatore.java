@@ -2,7 +2,7 @@ package com.threeamigos.foresta.interfacce;
 
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.artefatti.VistaPezzoDelSet;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoLocazione;

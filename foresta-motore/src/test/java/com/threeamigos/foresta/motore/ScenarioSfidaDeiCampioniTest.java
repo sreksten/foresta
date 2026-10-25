@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
@@ -7,7 +9,7 @@ import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.storie.IlCampione;
 import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -62,7 +64,7 @@ class ScenarioSfidaDeiCampioniTest {
             for (Missione m : missione.getCampioni()) {
                 CoordinateMD posto = ((IlCampione) m).getPosto();
                 assertNotNull(posto);
-                assertTrue(Foresta.getCoordinateDaSegnalare().contains(posto), "il segnalino c'è subito");
+                assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(posto), "il segnalino c'è subito");
             }
         }
     }
@@ -79,7 +81,7 @@ class ScenarioSfidaDeiCampioniTest {
                 assertNotNull(campione.getPosto(), campione.getNome());
                 assertEquals(campione.getLuogo(), Foresta.getLocazione(campione.getPosto()));
                 assertTrue(Foresta.isLocazioneConosciuta(campione.getPosto()));
-                assertTrue(Foresta.getCoordinateDaSegnalare().contains(campione.getPosto()), "lampeggia sulla mappa");
+                assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(campione.getPosto()), "lampeggia sulla mappa");
                 assertTrue(LaSfidaDeiCampioni.classiAmichevoli().contains(campione.getClasseDelCampione()));
                 assertFalse(campione.getCampione().isEmpty());
                 tipi.add(campione.getLuogo());
@@ -115,7 +117,7 @@ class ScenarioSfidaDeiCampioniTest {
 
             partita.assertStato(Stato.SCELTA_DIREZIONE);
             assertTrue(campione.isCompleta(), "il campione è battuto");
-            assertFalse(Foresta.getCoordinateDaSegnalare().contains(campione.getPosto()), "il suo posto non lampeggia più");
+            assertFalse(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(campione.getPosto()), "il suo posto non lampeggia più");
             assertTrue(missione.getDescrizione().contains("1 battuti su 4"), missione.getDescrizione());
             assertFalse(missione.isCompleta());
             // La sfida dei campioni non conta come amicizia per la partita: nessuna sfida vinta in più per il torneo
@@ -141,7 +143,7 @@ class ScenarioSfidaDeiCampioniTest {
             assertFalse(campione.isCompleta());
             assertFalse(campione.isFallita());
             assertEquals(campione.getPosto(), com.threeamigos.foresta.missioni.RegistroMissioni.getLocazioneOccupata(campione));
-            assertTrue(Foresta.getCoordinateDaSegnalare().contains(campione.getPosto()), "il posto resta segnato: si può riprovare");
+            assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(campione.getPosto()), "il posto resta segnato: si può riprovare");
             assertFalse(Foresta.isLocazioneVisitata(campione.getPosto()), "la locazione resta non visitata");
         }
     }
@@ -221,7 +223,7 @@ class ScenarioSfidaDeiCampioniTest {
             int y = posto.getY() - direzioni[i][1];
             if (x >= 0 && y >= 0 && x < Foresta.getDimensioneX() && y < Foresta.getDimensioneY()) {
                 partita.gruppo().setCoordinate(new CoordinateMD(x, y));
-                Foresta.aggiornaMappaCircostante(partita.gruppo());
+                CostruttoreDellaForesta.aggiornaMappaCircostante(partita.gruppo());
                 partita.comando(comandi[i]);
                 if (partita.comandiDisponibili().contains(Comando.NUMERO_1)) {
                     partita.comando(Comando.NUMERO_1);

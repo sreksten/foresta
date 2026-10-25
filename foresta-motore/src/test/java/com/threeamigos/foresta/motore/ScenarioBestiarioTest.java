@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
 import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
@@ -11,7 +13,7 @@ import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.storie.IlCampione;
 import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.strumenti.dado.Dado;
@@ -146,7 +148,7 @@ class ScenarioBestiarioTest {
             int y = posto.getY() - direzioni[i][1];
             if (x >= 0 && y >= 0 && x < Foresta.getDimensioneX() && y < Foresta.getDimensioneY()) {
                 partita.gruppo().setCoordinate(new CoordinateMD(x, y));
-                Foresta.aggiornaMappaCircostante(partita.gruppo());
+                CostruttoreDellaForesta.aggiornaMappaCircostante(partita.gruppo());
                 partita.comando(comandi[i]);
                 if (partita.comandiDisponibili().contains(Comando.NUMERO_1)) {
                     partita.comando(Comando.NUMERO_1);

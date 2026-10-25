@@ -21,7 +21,7 @@ public final class PartitaDiAnteprima {
 	 */
 	public static Personaggio prepara(TipoPersonaggio classeProtagonista, String nomeProtagonista,
 			TipoPersonaggio... classiCompagni) {
-		Foresta.reimposta();
+		CostruttoreDellaForesta.reimposta();
 		Personaggio protagonista = FabbricaPersonaggi.crea(classeProtagonista, 1);
 		protagonista.getModelloDati().setNome(nomeProtagonista);
 		GruppoGiocatore.getIstanza().aggiungiPersonaggioSenzaNotificare(protagonista);

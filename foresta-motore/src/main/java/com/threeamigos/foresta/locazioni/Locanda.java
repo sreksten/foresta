@@ -7,7 +7,7 @@ import com.threeamigos.foresta.eventi.interni.InternoPastoConsumatoInLocanda;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
-import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.mappa.LocazioneMD;
 import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.Informazioni;

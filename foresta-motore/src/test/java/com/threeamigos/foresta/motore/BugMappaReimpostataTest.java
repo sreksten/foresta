@@ -1,8 +1,10 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import org.junit.jupiter.api.Test;
@@ -11,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Riproduzione mirata del bug in todo.md: la conoscenza della mappa non dovrebbe
- * sopravvivere a un Foresta.reimposta() fra una partita e la successiva.
+ * sopravvivere a un CostruttoreDellaForesta.reimposta() fra una partita e la successiva.
  */
 class BugMappaReimpostataTest {
 
@@ -29,7 +31,7 @@ class BugMappaReimpostataTest {
 		RegistroMissioni.registrati();
 
 		// Partita 1: si rivela tutta la mappa
-		Foresta.reimposta();
+		CostruttoreDellaForesta.reimposta();
 		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
 			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
 				Foresta.setLocazioneConosciuta(new CoordinateMD(x, y));
@@ -39,7 +41,7 @@ class BugMappaReimpostataTest {
 
 		// Partita 2, come dopo aver perso e ricominciato (stesso processo, stesse istanze statiche): all'inizio ci sono
 		// caselle già conosciute (le locazioni uniche, la zona di partenza) ma non tutte, qualunque sia il seme
-		Foresta.reimposta();
+		CostruttoreDellaForesta.reimposta();
 		boolean esisteUnaCasellaSconosciuta = false;
 		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
 			for (int y = 0; y < Foresta.getDimensioneY(); y++) {

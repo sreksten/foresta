@@ -1,10 +1,12 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.RegistroPersonaggiMD;
 import com.threeamigos.foresta.modellodati.ResidenteMD;
@@ -40,7 +42,7 @@ class NomiDeiPersonaggiDelMondoTest {
 		Statistiche.registrati();
 		RegistroArtefatti.registrati();
 		RegistroMissioni.registrati();
-		Foresta.reimposta();
+		CostruttoreDellaForesta.reimposta();
 	}
 
 	private static List<TipoLocazione> citta() {
@@ -136,7 +138,7 @@ class NomiDeiPersonaggiDelMondoTest {
 	void nessunNomeSiRipeteConMoltiSemi() {
 		for (int seme = 1; seme <= 40; seme++) {
 			Dado.impostaSeme(seme);
-			Foresta.reimposta();
+			CostruttoreDellaForesta.reimposta();
 			Set<String> nomi = new HashSet<>();
 			int quanti = 0;
 			for (TipoLocazione citta : citta()) {
@@ -232,7 +234,7 @@ class NomiDeiPersonaggiDelMondoTest {
 		ModelloDati riletto = new ModelloDati();
 		riletto.leggi(new BufferedReader(new StringReader(scritto.toString())));
 		// Una partita nuova pesca altri nomi: se la rilettura funziona, quelli salvati tornano uguali
-		Foresta.reimposta();
+		CostruttoreDellaForesta.reimposta();
 		assertNotEquals(prima, nomiCompletiDeiResidenti(), "la partita nuova dovrebbe avere altri nomi");
 		ModelloDati.setIstanza(riletto);
 
@@ -260,7 +262,7 @@ class NomiDeiPersonaggiDelMondoTest {
 	@Test
 	void unaNuovaPartitaDimenticaIResidenti() {
 		RegistroPersonaggi.registraCampione("Uberto l'Invitto", TipoPersonaggio.GUERRIERO);
-		Foresta.reimposta();
+		CostruttoreDellaForesta.reimposta();
 		assertTrue(RegistroPersonaggi.getCampioni().isEmpty());
 	}
 }
