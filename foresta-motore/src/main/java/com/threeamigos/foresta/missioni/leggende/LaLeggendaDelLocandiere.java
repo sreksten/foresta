@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.leggende;
 
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInLocanda;
 import com.threeamigos.foresta.locazioni.Locanda;
@@ -29,7 +30,7 @@ public class LaLeggendaDelLocandiere extends LaLeggenda {
 		if (Foresta.getLocazioneDelGruppo() != TipoLocazione.LOCANDA) {
 			return false;
 		}
-		String visite = Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()).ottieniProprieta(Locanda.LOCANDA_VISITE);
+		String visite = Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()).ottieniProprieta(Locande.LOCANDA_VISITE);
 		return visite != null && Integer.parseInt(visite) >= VISITE_PRECEDENTI;
 	}
 

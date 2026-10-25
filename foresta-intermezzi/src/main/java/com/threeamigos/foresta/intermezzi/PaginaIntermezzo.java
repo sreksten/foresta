@@ -25,6 +25,12 @@ import java.util.*;
  */
 public class PaginaIntermezzo {
 
+	/**
+	 * Quanto dura la rivelazione di un artefatto trovato, uscita compresa (vedi {@link #conRivelazioneDiArtefatto} e
+	 * SpriteRivelazioneArtefatto, che la usa anche fuori dagli intermezzi).
+	 */
+	public static final float SECONDI_RIVELAZIONE_ARTEFATTO = 5.0f;
+
 	/** Pausa fra una battuta e la successiva quando non se ne indica l'inizio. */
 	static final double PAUSA_FRA_BATTUTE = 0.3;
 
@@ -128,7 +134,7 @@ public class PaginaIntermezzo {
 
 	/**
 	 * All'inizio della pagina rivela un artefatto con l'effetto di quando se ne trova uno (cerchio, raggi e pannello con le sue
-	 * proprietà, per {@link Costanti#SECONDI_RIVELAZIONE_ARTEFATTO} secondi), che poi vola verso quell'elemento: in un intermezzo
+	 * proprietà, per {@link #SECONDI_RIVELAZIONE_ARTEFATTO} secondi), che poi vola verso quell'elemento: in un intermezzo
 	 * l'inventario del gruppo non si vede, e di solito la destinazione è il capo. Le battute che devono seguire la rivelazione
 	 * vanno fatte partire dopo (vedi {@link BattutaIntermezzo#daSecondo}).
 	 *

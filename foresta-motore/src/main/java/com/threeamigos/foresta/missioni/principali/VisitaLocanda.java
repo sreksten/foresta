@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.principali;
 
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.Locanda;
@@ -100,7 +101,7 @@ public class VisitaLocanda extends MissioneBase {
 		// La casella della città si ricorda della bevuta, quindi non serve né
 		// trovarsi lì né sapere quale istanza l'ha ospitata.
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(tipoCitta);
-		if (coordinate != null && Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locanda.LOCANDA_VISITATA) != null) {
+		if (coordinate != null && Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locande.LOCANDA_VISITATA) != null) {
 			completaMissione();
 			BusEventi.pubblica(new NotificaTestoParagrafo("Una tappa in meno: " + getNome() + " è cosa fatta."));
 		}

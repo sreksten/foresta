@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
@@ -188,12 +189,12 @@ class ScenarioLeggendeTest {
             Foresta.setPosizioneDelGruppo(locanda);
             LaLeggenda locandiere = trova(LaLeggendaDelLocandiere.class);
             // Alla prima e alla seconda visita no
-            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "1");
+            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
             LineaTemporale.aggiungiOre(LaLeggenda.ORE_FRA_DUE_LEGGENDE);
             locandiere.controllaPreLocazione();
             assertNull(locandiere.getLeggendario());
             // Alla terza sì, ma non prima di trentasei ore dall'altra leggenda
-            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "2");
+            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "2");
             armaiolo.aggiungiProprieta("RACCONTATA_ALLE", String.valueOf(LineaTemporale.getGiorno() * 24L + LineaTemporale.getOra() - 1));
             locandiere.controllaPreLocazione();
             assertNull(locandiere.getLeggendario());

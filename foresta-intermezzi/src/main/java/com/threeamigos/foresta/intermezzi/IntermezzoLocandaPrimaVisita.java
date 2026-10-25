@@ -1,9 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
-import com.threeamigos.foresta.locazioni.Locanda;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -76,16 +73,7 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 			return false;
 		}
 		LocazioneMD locazioneMD = Locande.getLocazioneMDLocandaCorrente();
-		return locazioneMD != null && locazioneMD.ottieniProprieta(Locanda.LOCANDA_VISITATA) == null && !staPerAffidareIlBardo();
-	}
-
-	/**
-	 * Se in questa locanda, mai visitata, il locandiere sta per chiedere di riportare a casa il bardo (NonSparateSulPianista):
-	 * la sua scena fa da benvenuto, e il bardo non può essere anche seduto nell'angolo a raccontare la fiaba.
-	 */
-	private static boolean staPerAffidareIlBardo() {
-		return RegistroMissioni.getTutteLeMissioni().stream()
-				.anyMatch(m -> m instanceof NonSparateSulPianista && ((NonSparateSulPianista) m).staPerAffidareIlBardo());
+		return locazioneMD != null && locazioneMD.ottieniProprieta(Locande.LOCANDA_VISITATA) == null && !RegistroIntermezzi.isBloccato(TipoIntermezzo.INTERMEZZO_LOCANDA_PRIMA_VISITA);
 	}
 
 	/**
@@ -131,7 +119,7 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 	@Override
 	public List<PaginaIntermezzo> getPagine() {
 		LocazioneMD locazioneMD = Locande.getLocazioneMDLocandaCorrente();
-		String dialogo = locazioneMD.ottieniProprieta(Locanda.LOCANDA_DIALOGO);
+		String dialogo = locazioneMD.ottieniProprieta(Locande.LOCANDA_DIALOGO);
 
 		List<Personaggio> personaggiVivi = GruppoGiocatore.getIstanza().getPersonaggiVivi();
 		boolean bardoInScena = !ilBardoViaggiaColGruppo();
@@ -195,8 +183,8 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 
 		// Evita che Locanda.descrivi(), chiamato subito dopo con la locanda ormai
 		// costruita, ripeta il dialogo o anticipi la recensione appena mostrati qui
-		locazioneMD.aggiungiProprieta(Locanda.LOCANDA_DIALOGO_LETTO, LocazioneMD.AFFERMATIVO);
-		locazioneMD.aggiungiProprieta(Locanda.LOCANDA_RECENSIONE_LETTA, LocazioneMD.AFFERMATIVO);
+		locazioneMD.aggiungiProprieta(Locande.LOCANDA_DIALOGO_LETTO, LocazioneMD.AFFERMATIVO);
+		locazioneMD.aggiungiProprieta(Locande.LOCANDA_RECENSIONE_LETTA, LocazioneMD.AFFERMATIVO);
 
 		List<PaginaIntermezzo> pagineIntermezzo = new ArrayList<>();
 		pagineIntermezzo.add(pagina);

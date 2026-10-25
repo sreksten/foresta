@@ -116,11 +116,8 @@ public class Costanti {
 
     // Notizie e messaggi ricordati: vedi NotizieMD.MASSIMO_MESSAGGI_RICORDATI e MASSIMO_NOTIZIE_RICORDATE
 
-    // Intermezzi (vedi intermezzi.Intermezzo): secondi dopo cui una pagina avanza da sola;
-    // con 0 avanza solo al click sulla pergamena
-    // Quanto dura la rivelazione di un artefatto trovato, uscita compresa (vedi SpriteRivelazioneArtefatto e PaginaIntermezzo.conRivelazioneDiArtefatto)
-    public static final int SECONDI_PER_PAGINA_INTERMEZZO = 8;
-    public static final float SECONDI_RIVELAZIONE_ARTEFATTO = 5.0f;
+    // Intermezzi: i secondi per pagina in intermezzi.Intermezzo.SECONDI_PER_PAGINA, la rivelazione di un artefatto in
+    // PaginaIntermezzo.SECONDI_RIVELAZIONE_ARTEFATTO
 
     // Statistiche dei vari tipi di personaggio
 

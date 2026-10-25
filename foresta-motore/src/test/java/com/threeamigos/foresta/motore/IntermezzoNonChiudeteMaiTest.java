@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
@@ -75,13 +76,13 @@ class IntermezzoNonChiudeteMaiTest {
 	void inLocandaSoloDallaTerzaVisitaEDopoLeUndiciDiSera() {
 		try (PartitaDiTest partita = inCitta()) {
 			LocazioneMD nyena = locandaDiNyena();
-			nyena.aggiungiProprieta(Locanda.LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
+			nyena.aggiungiProprieta(Locande.LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
 
 			portaAllOra(23);
-			nyena.aggiungiProprieta(Locanda.LOCANDA_VISITE, "1");
+			nyena.aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
 			assertFalse(scatterebbeLaScenettaInLocanda(), "alla seconda visita ancora no");
 
-			nyena.aggiungiProprieta(Locanda.LOCANDA_VISITE, "2");
+			nyena.aggiungiProprieta(Locande.LOCANDA_VISITE, "2");
 			portaAllOra(22);
 			assertFalse(scatterebbeLaScenettaInLocanda(), "alle 22 la locanda e' ancora aperta");
 
@@ -89,7 +90,7 @@ class IntermezzoNonChiudeteMaiTest {
 			partita.comando(Comando.LOCANDA);
 			assertEquals(1, conta(partita, DOMANDA_AL_LOCANDIERE));
 			assertEquals(1, conta(partita, RISPOSTA));
-			assertEquals("3", nyena.ottieniProprieta(Locanda.LOCANDA_VISITE), "superata la porta, la visita e' contata");
+			assertEquals("3", nyena.ottieniProprieta(Locande.LOCANDA_VISITE), "superata la porta, la visita e' contata");
 		}
 	}
 
@@ -99,14 +100,14 @@ class IntermezzoNonChiudeteMaiTest {
 			// In due: alla terza visita alla locanda scatta ancora la visita successiva, mai vista
 			partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno", 1));
 			LocazioneMD nyena = locandaDiNyena();
-			nyena.aggiungiProprieta(Locanda.LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
-			nyena.aggiungiProprieta(Locanda.LOCANDA_VISITE, "2");
+			nyena.aggiungiProprieta(Locande.LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
+			nyena.aggiungiProprieta(Locande.LOCANDA_VISITE, "2");
 			portaAllOra(23);
 
 			partita.comando(Comando.LOCANDA);
 
 			assertTrue(isScattato(TipoIntermezzo.INTERMEZZO_LOCANDA_VISITA_SUCCESSIVA.name() + "_"
-					+ nyena.ottieniProprieta(Locanda.LOCANDA_IDENTIFICATIVO)));
+					+ nyena.ottieniProprieta(Locande.LOCANDA_IDENTIFICATIVO)));
 			assertEquals(0, conta(partita, DOMANDA_AL_LOCANDIERE), "la visita successiva non si somma alla scenetta");
 			assertFalse(isScattato(TipoIntermezzo.INTERMEZZO_NOTTE_LOCANDA.name()), "resta per la prossima volta");
 		}

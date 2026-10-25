@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 
@@ -53,7 +54,7 @@ class ScenarioNonSparateSulPianistaTest {
      */
     private static void entraNellaLocanda(PartitaDiTest partita, NonSparateSulPianista pianista, CoordinateMD locanda, int visitePrecedenti) {
         Foresta.setPosizioneDelGruppo(locanda);
-        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, String.valueOf(visitePrecedenti));
+        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, String.valueOf(visitePrecedenti));
         pianista.controllaPreLocazione();
         if ("ACCETTAZIONE".equals(pianista.getPassoCorrente())) {
             pianista.segnaIntermezzoPassoMostrato("INCARICO");
@@ -143,8 +144,8 @@ class ScenarioNonSparateSulPianistaTest {
             CoordinateMD altra = unAltraLocandaNelBosco(locanda);
             Foresta.setPosizioneDelGruppo(altra);
             LocazioneMD sede = Foresta.getLocazioneMD(altra);
-            assertNull(sede.ottieniProprieta(Locanda.LOCANDA_VISITATA));
-            sede.aggiungiProprieta(Locanda.LOCANDA_DIALOGO, "Benvenuti! Qui si beve bene.");
+            assertNull(sede.ottieniProprieta(Locande.LOCANDA_VISITATA));
+            sede.aggiungiProprieta(Locande.LOCANDA_DIALOGO, "Benvenuti! Qui si beve bene.");
             IntermezzoLocandaPrimaVisita scena = new IntermezzoLocandaPrimaVisita();
             assertTrue(scena.deveScattare(MomentoIntermezzo.INIZIO_LOCAZIONE));
             PaginaIntermezzo pagina = scena.getPagine().get(0);
@@ -182,8 +183,8 @@ class ScenarioNonSparateSulPianistaTest {
             CoordinateMD prima = unaLocandaNelBosco();
             CoordinateMD nuova = unAltraLocandaNelBosco(prima);
             CoordinateMD citta = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_FLEENA);
-            Foresta.getLocazioneMD(prima).aggiungiProprieta(Locanda.LOCANDA_VISITE, "1");
-            Foresta.getLocazioneMD(citta).aggiungiProprieta(Locanda.LOCANDA_VISITE, "1");
+            Foresta.getLocazioneMD(prima).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
+            Foresta.getLocazioneMD(citta).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
 
             // In città la missione non parte, per quante visite ci siano
             Foresta.setPosizioneDelGruppo(citta);
@@ -193,7 +194,7 @@ class ScenarioNonSparateSulPianistaTest {
 
             // In una locanda del bosco mai vista, è la terza visita in tutto: il locandiere sostituisce il benvenuto
             Foresta.setPosizioneDelGruppo(nuova);
-            assertNull(Foresta.getLocazioneMD(nuova).ottieniProprieta(Locanda.LOCANDA_VISITATA));
+            assertNull(Foresta.getLocazioneMD(nuova).ottieniProprieta(Locande.LOCANDA_VISITATA));
             assertTrue(new IntermezzoLocandaPrimaVisita().deveScattare(MomentoIntermezzo.INIZIO_LOCAZIONE));
             pianista.controllaPreLocazione();
             assertTrue(pianista.staPerAffidareIlBardo());
@@ -209,8 +210,8 @@ class ScenarioNonSparateSulPianistaTest {
             NonSparateSulPianista pianista = pianista();
             CoordinateMD nuova = unaLocandaNelBosco();
             Foresta.setPosizioneDelGruppo(nuova);
-            Foresta.getLocazioneMD(nuova).aggiungiProprieta(Locanda.LOCANDA_VISITE, "2");
-            assertNull(Foresta.getLocazioneMD(nuova).ottieniProprieta(Locanda.LOCANDA_VISITATA));
+            Foresta.getLocazioneMD(nuova).aggiungiProprieta(Locande.LOCANDA_VISITE, "2");
+            assertNull(Foresta.getLocazioneMD(nuova).ottieniProprieta(Locande.LOCANDA_VISITATA));
             pianista.controllaPreLocazione();
 
             // Come fa Automa agli intermezzi di inizio locazione: prima la scena del locandiere, e poi, se qualcosa scatta ancora, il resto
@@ -235,7 +236,7 @@ class ScenarioNonSparateSulPianistaTest {
             CoordinateMD citta = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_FLEENA);
             Foresta.setPosizioneDelGruppo(citta);
             LocazioneMD sede = Foresta.getLocazioneMD(citta);
-            sede.aggiungiProprieta(Locanda.LOCANDA_DIALOGO, "Benvenuti! Qui si beve bene.");
+            sede.aggiungiProprieta(Locande.LOCANDA_DIALOGO, "Benvenuti! Qui si beve bene.");
             IntermezzoLocandaPrimaVisita scena = new IntermezzoLocandaPrimaVisita();
             assertTrue(scena.deveScattare(MomentoIntermezzo.INGRESSO_LOCANDA_IN_CITTA));
             PaginaIntermezzo pagina = scena.getPagine().get(0);

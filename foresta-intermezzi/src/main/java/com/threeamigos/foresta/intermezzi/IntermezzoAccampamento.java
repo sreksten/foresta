@@ -1,12 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
-import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.modellodati.IntermezziMD;
-import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
@@ -20,7 +14,7 @@ import java.util.List;
  * {@value #MASSIMO_OCCORRENZE} volte nella partita: {@link #getId()} include quindi la sua
  * occorrenza (vedi {@link #prossimaOccorrenza()}), cosa possibile perché
  * {@link FabbricaIntermezzi#crea} crea una nuova istanza a ogni controllo e
- * {@link IntermezziMD} è un semplice insieme di stringhe senza vincoli di formato.
+ * {@link com.threeamigos.foresta.modellodati.IntermezziMD} è un semplice insieme di stringhe senza vincoli di formato.
  * <p>
  * Ogni occorrenza ha la sua scena, con la sua luna e le sue battute: la storia di quello trasformato in scarafaggio
  * sotto una luna normale, la luna che è una stazione da battaglia, e la luna strana di cui non farsi prendere dal panico.
@@ -68,7 +62,7 @@ public class IntermezzoAccampamento implements Intermezzo {
 	@Override
 	public boolean deveScattare(MomentoIntermezzo momento) {
 		return momento == MomentoIntermezzo.ACCAMPAMENTO && occorrenza <= MASSIMO_OCCORRENZE
-				&& !RegistroIntermezzi.isScattatoNelMomento() && !unaMissioneHaUnIntermezzoInArrivo();
+				&& !RegistroIntermezzi.isScattatoNelMomento() && !RegistroIntermezzi.haUnaFonteUnIntermezzoInArrivo(MomentoIntermezzo.ACCAMPAMENTO);
 	}
 
 	private static String idPer(int occorrenza) {
@@ -77,27 +71,16 @@ public class IntermezzoAccampamento implements Intermezzo {
 
 	/**
 	 * La prossima occorrenza (1-based) non ancora mostrata nella partita, trovata scorrendo
-	 * {@link IntermezziMD#isScattato} finché non se ne trova una libera: se tutte fino a
+	 * {@link com.threeamigos.foresta.modellodati.IntermezziMD#isScattato} finché non se ne trova una libera: se tutte fino a
 	 * {@value #MASSIMO_OCCORRENZE} sono già state mostrate, restituisce un numero oltre il
 	 * massimo.
 	 */
 	private static int prossimaOccorrenza() {
-		IntermezziMD intermezziMD = ModelloDati.getIstanza().getIntermezziMD();
 		int occorrenza = 1;
-		while (occorrenza <= MASSIMO_OCCORRENZE && intermezziMD.isScattato(idPer(occorrenza))) {
+		while (occorrenza <= MASSIMO_OCCORRENZE && RegistroIntermezzi.isScattato(idPer(occorrenza))) {
 			occorrenza++;
 		}
 		return occorrenza;
-	}
-
-	private static boolean unaMissioneHaUnIntermezzoInArrivo() {
-		for (Missione missione : RegistroMissioni.getTutteLeMissioni()) {
-			if (missione instanceof MissioneAPassi
-					&& ((MissioneAPassi) missione).haUnIntermezzoInArrivo(MomentoControllo.ACCAMPAMENTO, MomentoIntermezzo.ACCAMPAMENTO)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override

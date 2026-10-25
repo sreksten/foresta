@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.canti.CantoDelBardo;
@@ -53,7 +54,7 @@ class ScenarioUrloDellaBansheeTest {
     private static TipoLocazione riportaACasaIlBardo(PartitaDiTest partita, CoordinateMD locanda) {
         NonSparateSulPianista pianista = pianista();
         Foresta.setPosizioneDelGruppo(locanda);
-        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "2");
+        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "2");
         pianista.controllaPreLocazione();
         pianista.segnaIntermezzoPassoMostrato("INCARICO");
         pianista.controllaInLocazione();
@@ -70,7 +71,7 @@ class ScenarioUrloDellaBansheeTest {
     private static void accompagnaLaMoglie(PartitaDiTest partita, CoordinateMD locanda) {
         IlViaggioDellaMoglie viaggio = viaggio();
         Foresta.setPosizioneDelGruppo(locanda);
-        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "1");
+        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
         viaggio.controllaPreLocazione();
         viaggio.segnaIntermezzoPassoMostrato("INCARICO");
         viaggio.controllaInLocazione();
@@ -97,7 +98,7 @@ class ScenarioUrloDellaBansheeTest {
             CoordinateMD locanda = unaLocandaNelBosco();
             assertFalse(CantoDelBardo.isUrloDellaBansheeAppreso());
             // La locanda è già stata visitata: alla prima visita scatta il benvenuto, che ha la precedenza
-            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
+            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
 
             // Prima del viaggio non scatta, nemmeno dopo aver riportato a casa il bardo
             Intermezzo prima = prossimoIntermezzoNellaLocanda(partita, locanda);
@@ -136,11 +137,11 @@ class ScenarioUrloDellaBansheeTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(161)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             CoordinateMD locanda = unaLocandaNelBosco();
-            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
+            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
             riportaACasaIlBardo(partita, locanda);
             IlViaggioDellaMoglie viaggio = viaggio();
             Foresta.setPosizioneDelGruppo(locanda);
-            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "1");
+            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
             viaggio.controllaPreLocazione();
             viaggio.segnaIntermezzoPassoMostrato("INCARICO");
             viaggio.controllaInLocazione();

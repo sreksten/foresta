@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.intermezzi.Intermezzo;
@@ -61,7 +62,7 @@ class ScenarioIlViaggioDellaMoglieTest {
     private static TipoLocazione riportaACasaIlBardo(PartitaDiTest partita, CoordinateMD locanda) {
         NonSparateSulPianista pianista = pianista();
         Foresta.setPosizioneDelGruppo(locanda);
-        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "2");
+        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "2");
         pianista.controllaPreLocazione();
         pianista.segnaIntermezzoPassoMostrato("INCARICO");
         pianista.controllaInLocazione();
@@ -77,7 +78,7 @@ class ScenarioIlViaggioDellaMoglieTest {
 
     private static void rientraNellaLocanda(PartitaDiTest partita, CoordinateMD locanda, int visitePrecedenti) {
         Foresta.setPosizioneDelGruppo(locanda);
-        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, String.valueOf(visitePrecedenti));
+        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, String.valueOf(visitePrecedenti));
         viaggio().controllaPreLocazione();
     }
 
@@ -177,7 +178,7 @@ class ScenarioIlViaggioDellaMoglieTest {
             IlViaggioDellaMoglie viaggio = viaggio();
 
             LocazioneMD sede = Foresta.getLocazioneMD(locanda);
-            sede.aggiungiProprieta(Locanda.LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
+            sede.aggiungiProprieta(Locande.LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
             rientraNellaLocanda(partita, locanda, 1);
             assertEquals("INCARICO", viaggio.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
 

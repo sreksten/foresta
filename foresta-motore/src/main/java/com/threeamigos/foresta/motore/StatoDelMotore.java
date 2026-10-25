@@ -7,6 +7,7 @@ import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
+import com.threeamigos.foresta.intermezzi.IntermezziDelMotore;
 
 /**
  * Il punto solo da cui si prepara e si azzera lo stato statico del motore, che vive per tutto il processo: il modello
@@ -40,7 +41,7 @@ public final class StatoDelMotore {
 
 	/**
 	 * Fa iscrivere al bus i componenti che tengono il conto di ciò che succede in gioco: gli ultimi messaggi e notizie,
-	 * le statistiche, i trofei, il bestiario, gli artefatti e le missioni. Dopo un {@code BusEventi.azzera()} va richiamato.
+	 * le statistiche, i trofei, il bestiario, gli artefatti, le missioni e gli intermezzi che il loro modulo non conosce. Dopo un {@code BusEventi.azzera()} va richiamato.
 	 */
 	public static void registraComponenti() {
 		Notizie.registrati();
@@ -49,6 +50,7 @@ public final class StatoDelMotore {
 		RegistroBestiario.registrati();
 		RegistroArtefatti.registrati();
 		RegistroMissioni.registrati();
+		IntermezziDelMotore.registra();
 		CommercioDelGruppo.registrati();
 		com.threeamigos.foresta.combattimento.MeccanicaDelloScontro.registrati();
 	}

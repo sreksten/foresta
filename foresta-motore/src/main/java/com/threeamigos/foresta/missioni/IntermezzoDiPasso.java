@@ -42,7 +42,11 @@ public final class IntermezzoDiPasso implements Intermezzo {
 	/**
 	 * Ricorda nella missione che l'intermezzo è stato mostrato.
 	 */
-	public void segnaMostrato() {
+	/**
+	 * Si ricorda nella sua missione, non fra gli intermezzi scattati.
+	 */
+	@Override
+	public void segnaScattato() {
 		missione.segnaIntermezzoPassoMostrato(idPasso);
 	}
 

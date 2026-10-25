@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
-import com.threeamigos.foresta.tipi.Costanti;
 
 import java.util.List;
 
@@ -18,6 +17,11 @@ import java.util.List;
  * con {@link PaginaIntermezzo#perSecondi(double)}.
  */
 public interface Intermezzo {
+
+	/**
+	 * Dopo quanti secondi, al minimo, una pagina avanza da sola, se l'intermezzo non dice altro (vedi {@link #getSecondiPerPagina()}).
+	 */
+	int SECONDI_PER_PAGINA = 8;
 
 	/**
 	 * L'identificativo con cui il registro ricorda che l'intermezzo è già scattato.
@@ -55,6 +59,14 @@ public interface Intermezzo {
 	 * Dopo quanti secondi, al minimo, una pagina avanza da sola; 0 perché avanzi solo al click.
 	 */
 	default int getSecondiPerPagina() {
-		return Costanti.SECONDI_PER_PAGINA_INTERMEZZO;
+		return SECONDI_PER_PAGINA;
+	}
+
+	/**
+	 * Ricorda che l'intermezzo è scattato. Di solito lo ricorda il registro (vedi {@link RegistroIntermezzi#ricorda});
+	 * un intermezzo che ha una memoria sua (quelli dei passi delle missioni, che si ricordano nella missione) lo ridefinisce.
+	 */
+	default void segnaScattato() {
+		RegistroIntermezzi.ricorda(this);
 	}
 }

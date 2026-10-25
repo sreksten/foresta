@@ -1,23 +1,21 @@
 package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
-import com.threeamigos.foresta.missioni.IntermezzoDiPasso;
-import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.IntermezziMD;
-import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Supplier;
 
 /**
  * Facciata su {@link IntermezziMD}: sceglie il prossimo intermezzo da mostrare e
  * ricorda quelli già scattati. Gli intermezzi fissi sono quelli elencati in
- * {@link TipoIntermezzo}; in più ci sono quelli dei passi conclusi delle missioni a
- * passi ({@link IntermezzoDiPasso}), che si ricordano nella missione stessa.
+ * {@link TipoIntermezzo}; in più ci sono quelli delle fonti che il registro non conosce ({@link FonteDiIntermezzi}: i passi
+ * conclusi delle missioni a passi, che si ricordano nella missione stessa).
  */
 public class RegistroIntermezzi {
 
@@ -27,6 +25,10 @@ public class RegistroIntermezzi {
 	// Gli intermezzi ripetibili già mostrati nel momento in corso: non si segnano come scattati, ma in uno stesso momento
 	// (un ingresso) scattano una volta sola, altrimenti finito l'uno ricomincerebbe subito
 	private static final Set<String> ripetibiliDelMomento = new HashSet<>();
+	// Chi, oltre agli intermezzi fissi, ha intermezzi da mostrare (le missioni): il registro non sa chi sono
+	private static final List<FonteDiIntermezzi> FONTI = new CopyOnWriteArrayList<>();
+	// Da dove prendere i dati della partita in corso: gli intermezzi non sanno chi li custodisce
+	private static volatile Supplier<IntermezziMD> fornitoreDiDati;
 
 	private RegistroIntermezzi() {
 	}
@@ -49,8 +51,20 @@ public class RegistroIntermezzi {
 		return scattatoNelMomento;
 	}
 
+	/**
+	 * Dice da dove prendere gli intermezzi già scattati nella partita in corso (lo fa chi custodisce i dati: ogni volta si prendono da
+	 * quelli in corso).
+	 */
+	public static void setFornitoreDiDati(Supplier<IntermezziMD> fornitore) {
+		fornitoreDiDati = fornitore;
+	}
+
 	private static IntermezziMD getIntermezziMD() {
-		return ModelloDati.getIstanza().getIntermezziMD();
+		Supplier<IntermezziMD> fornitore = fornitoreDiDati;
+		if (fornitore == null) {
+			throw new IllegalStateException("Nessuno ha detto agli intermezzi dove sono i loro dati (vedi setFornitoreDiDati)");
+		}
+		return fornitore.get();
 	}
 
 	/**
@@ -62,7 +76,7 @@ public class RegistroIntermezzi {
 	public static Intermezzo getProssimoIntermezzo(MomentoIntermezzo momento) {
 		Intermezzo intermezzo = getProssimoIntermezzo(momento, false);
 		if (intermezzo == null) {
-			intermezzo = getProssimoIntermezzoDiPasso(momento);
+			intermezzo = getProssimoIntermezzoDelleFonti(momento);
 		}
 		if (intermezzo == null && !scattatoNelMomento) {
 			intermezzo = getProssimoIntermezzo(momento, true);
@@ -85,20 +99,40 @@ public class RegistroIntermezzi {
 	}
 
 	/**
-	 * L'intermezzo del primo passo concluso, in qualunque missione (anche già completata: il suo
-	 * ultimo passo può avere un intermezzo), che aspetta di essere mostrato in quel momento.
+	 * Il primo intermezzo che una delle fonti (le missioni) vuole mostrare in quel momento.
 	 */
-	private static Intermezzo getProssimoIntermezzoDiPasso(MomentoIntermezzo momento) {
-		for (Missione missione : RegistroMissioni.getTutteLeMissioni()) {
-			if (missione instanceof MissioneAPassi) {
-				MissioneAPassi missioneAPassi = (MissioneAPassi) missione;
-				String idPasso = missioneAPassi.getPassoConIntermezzoInAttesa(momento);
-				if (idPasso != null) {
-					return new IntermezzoDiPasso(missioneAPassi, idPasso);
-				}
+	private static Intermezzo getProssimoIntermezzoDelleFonti(MomentoIntermezzo momento) {
+		for (FonteDiIntermezzi fonte : FONTI) {
+			Intermezzo intermezzo = fonte.getProssimo(momento);
+			if (intermezzo != null) {
+				return intermezzo;
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Aggiunge una fonte di intermezzi che il registro non conosce (le missioni, vedi {@link FonteDiIntermezzi}); la stessa fonte
+	 * non si aggiunge due volte.
+	 */
+	public static void aggiungiFonte(FonteDiIntermezzi fonte) {
+		if (!FONTI.contains(fonte)) {
+			FONTI.add(fonte);
+		}
+	}
+
+	/**
+	 * Se una delle fonti ha un intermezzo che arriverà in quel momento (vedi {@link FonteDiIntermezzi#haUnIntermezzoInArrivo}).
+	 */
+	public static boolean haUnaFonteUnIntermezzoInArrivo(MomentoIntermezzo momento) {
+		return FONTI.stream().anyMatch(fonte -> fonte.haUnIntermezzoInArrivo(momento));
+	}
+
+	/**
+	 * Se una delle fonti tiene per sé la scena dell'intermezzo fisso di quel tipo (vedi {@link FonteDiIntermezzi#blocca}).
+	 */
+	public static boolean isBloccato(TipoIntermezzo tipo) {
+		return FONTI.stream().anyMatch(fonte -> fonte.blocca(tipo));
 	}
 
 	/**
@@ -116,16 +150,21 @@ public class RegistroIntermezzi {
 	}
 
 	/**
-	 * Ricorda che l'intermezzo è scattato: quelli dei passi nella loro missione, gli altri in IntermezziMD.
+	 * L'intermezzo è scattato: lo ricorda (vedi {@link Intermezzo#segnaScattato()}), e nel momento in corso qualcosa è scattato.
 	 */
 	public static void segnaScattato(Intermezzo intermezzo) {
-		if (intermezzo instanceof IntermezzoDiPasso) {
-			((IntermezzoDiPasso) intermezzo).segnaMostrato();
-		} else if (intermezzo.isRipetibile()) {
+		intermezzo.segnaScattato();
+		scattatoNelMomento = true;
+	}
+
+	/**
+	 * Ricorda un intermezzo scattato: un ripetibile solo per il momento in corso, gli altri in IntermezziMD.
+	 */
+	public static void ricorda(Intermezzo intermezzo) {
+		if (intermezzo.isRipetibile()) {
 			ripetibiliDelMomento.add(intermezzo.getId());
 		} else {
 			getIntermezziMD().aggiungiScattato(intermezzo.getId());
 		}
-		scattatoNelMomento = true;
 	}
 }

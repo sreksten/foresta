@@ -2,7 +2,6 @@ package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.tipi.Verso;
-import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -61,7 +60,7 @@ public class IntermezzoLocandaVisitaSuccessiva implements Intermezzo {
 			return false;
 		}
 		LocazioneMD locazioneMD = Locande.getLocazioneMDLocandaCorrente();
-		if (locazioneMD == null || locazioneMD.ottieniProprieta(Locanda.LOCANDA_VISITATA) == null) {
+		if (locazioneMD == null || locazioneMD.ottieniProprieta(Locande.LOCANDA_VISITATA) == null) {
 			return false;
 		}
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
@@ -71,7 +70,7 @@ public class IntermezzoLocandaVisitaSuccessiva implements Intermezzo {
 	@Override
 	public List<PaginaIntermezzo> getPagine() {
 		LocazioneMD locazioneMD = Locande.getLocazioneMDLocandaCorrente();
-		String recensione = locazioneMD.ottieniProprieta(Locanda.LOCANDA_RECENSIONE);
+		String recensione = locazioneMD.ottieniProprieta(Locande.LOCANDA_RECENSIONE);
 
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		List<Personaggio> personaggiVivi = gruppo.getPersonaggiVivi();

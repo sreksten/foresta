@@ -5,6 +5,12 @@
 
 Un intermezzo è una sequenza di **pagine** mostrate a tutto schermo quando si verificano certe condizioni di gioco. Ogni pagina può avere uno sfondo, delle immagini (anche animate e in movimento), un testo in alto e dei dialoghi a fumetti. Un intermezzo scatta **una sola volta per partita**; lo stato "già visto" viene salvato con la partita.
 
+Gli intermezzi stanno nel modulo `foresta-intermezzi` (il meccanismo, gli strumenti di scena, i dati delle pagine che la UI disegna, `TipoIntermezzo`, `MomentoIntermezzo` e `IntermezziMD`), che **non sa che esistono le missioni né il motore**: un intermezzo può scattare senza nessuna missione (l'intermezzo iniziale, le locande, i negozi). Chi sta sopra gli fa avere quel che serve:
+
+- **le fonti** (`FonteDiIntermezzi`, registrate con `RegistroIntermezzi.aggiungiFonte`): oggi solo le missioni (`missioni/IntermezziDelleMissioni`), con gli intermezzi dei loro passi (`IntermezzoDiPasso`, che si ricorda nella sua missione ridefinendo `Intermezzo.segnaScattato`). Una fonte dice anche se ha un intermezzo in arrivo in un momento (`RegistroIntermezzi.haUnaFonteUnIntermezzoInArrivo`, lo usa `IntermezzoAccampamento` per farsi da parte) e se tiene per sé la scena di un intermezzo fisso (`RegistroIntermezzi.isBloccato`: `NonSparateSulPianista`, con `MissioneAPassi.bloccaIntermezzo`, blocca `IntermezzoLocandaPrimaVisita` nella locanda in cui affida il bardo);
+- **gli intermezzi fissi che hanno bisogno di chi sta sopra**: li registra `intermezzi/IntermezziDelMotore` (in `foresta-motore`) con `FabbricaIntermezzi.registra`: gli epiloghi delle missioni (`IntermezzoEremitaRompiscatole`, `IntermezzoUrloDellaBanshee`), quelli che guardano l'ora o il livello del mondo (`IntermezzoNonChiudeteMai`, `IntermezzoSpadaNascosta`);
+- **i dati**: `IntermezziMD` lo dà `ModelloDati` con `RegistroIntermezzi.setFornitoreDiDati`.
+
 Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
 
 - **`INIZIO_GIOCO`**: una volta sola, all'inizio di una partita nuova, subito dopo la creazione del personaggio e **prima** dei controlli delle missioni. È il posto degli intermezzi d'apertura: le notifiche delle missioni non si sovrappongono all'intermezzo. Caricando un salvataggio non scatta.
@@ -39,7 +45,7 @@ Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
    }
    ```
 
-2. **Registrala** con una costante in `tipi/TipoIntermezzo.java` e una riga in `intermezzi/FabbricaIntermezzi.java`:
+2. **Registrala** con una costante in `tipi/TipoIntermezzo.java` e una riga in `intermezzi/FabbricaIntermezzi.java` (se la classe sta in `foresta-intermezzi`; se ha bisogno delle missioni o del motore sta in `foresta-motore` e la riga va in `IntermezziDelMotore`, con `FabbricaIntermezzi.registra`):
 
    ```java
    // TipoIntermezzo
@@ -250,7 +256,7 @@ Il click sulla pergamena salta al **fumetto successivo** della pagina, se ce n'�
 | Situazione | Quando avanza da sola |
 | :--- | :--- |
 | La pagina ha `perSecondi(s)` | Dopo `s` secondi, qualunque sia l'intermezzo |
-| L'intermezzo ha `getSecondiPerPagina()` > 0 (default: `Costanti.SECONDI_PER_PAGINA_INTERMEZZO` = 8) | Dopo quei secondi, ma **non prima** che dialoghi e animazioni non ripetute siano finiti |
+| L'intermezzo ha `getSecondiPerPagina()` > 0 (default: `Intermezzo.SECONDI_PER_PAGINA` = 8) | Dopo quei secondi, ma **non prima** che dialoghi e animazioni non ripetute siano finiti |
 | L'intermezzo ridefinisce `getSecondiPerPagina()` restituendo 0 | Mai: solo al click |
 
 Le animazioni ripetute (`CICLICA`, `AVANTI_E_INDIETRO`) non allungano la pagina. L'anteprima mostra nel titolo della finestra quando avanzerà la pagina corrente.

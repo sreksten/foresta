@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.motore.Statistiche;
@@ -189,7 +191,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 				CoordinateMD coordinate = new CoordinateMD(x, y);
 				TipoLocazione tipo = Foresta.getLocazione(coordinate);
 				if (tipo == TipoLocazione.LOCANDA || tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
-					String visiteQui = Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locanda.LOCANDA_VISITE);
+					String visiteQui = Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locande.LOCANDA_VISITE);
 					visite += visiteQui == null ? 0 : Integer.parseInt(visiteQui);
 				}
 			}
@@ -203,6 +205,15 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	 * ingresso gli cede il posto (vedi IntermezzoLocandaPrimaVisita), e non scatta nemmeno dopo la sua, con il bardo
 	 * seduto nell'angolo.
 	 */
+	/**
+	 * Nella locanda in cui il locandiere sta per chiedere di riportare a casa il bardo, la sua scena fa da benvenuto: il bardo non
+	 * può essere anche seduto nell'angolo a raccontare la fiaba (vedi IntermezzoLocandaPrimaVisita).
+	 */
+	@Override
+	public boolean bloccaIntermezzo(TipoIntermezzo tipo) {
+		return tipo == TipoIntermezzo.INTERMEZZO_LOCANDA_PRIMA_VISITA && staPerAffidareIlBardo();
+	}
+
 	public boolean staPerAffidareIlBardo() {
 		return INCARICO.equals(getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE))
 				|| (ACCETTAZIONE.equals(getPassoCorrente()) && nellaLocanda());

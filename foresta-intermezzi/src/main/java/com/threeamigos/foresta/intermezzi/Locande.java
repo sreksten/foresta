@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
-import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
@@ -13,6 +12,28 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
  * gruppo sta davvero entrando in una locanda e quale.
  */
 public final class Locande {
+
+	/**
+	 * Segnata sulla casella quando il gruppo supera la porta: chi viene respinto
+	 * dall'oste per mancanza di monete non è entrato, e non ha visitato la locanda.
+	 */
+	public static final String LOCANDA_VISITATA = "LOCANDA_VISITATA";
+	/**
+	 * Quante volte il gruppo ha superato la porta della locanda.
+	 */
+	public static final String LOCANDA_VISITE = "LOCANDA_VISITE";
+	/**
+	 * Identificativo, recensione e dialogo della locanda, pescati quando la locanda viene costruita (vedi Locanda).
+	 */
+	public static final String LOCANDA_IDENTIFICATIVO = "LOCANDA_IDENTIFICATIVO";
+	public static final String LOCANDA_RECENSIONE = "LOCANDA_RECENSIONE";
+	public static final String LOCANDA_DIALOGO = "LOCANDA_DIALOGO";
+	/**
+	 * Segnate quando il dialogo/la recensione sono già stati mostrati, per non ripeterli
+	 * alle visite successive.
+	 */
+	public static final String LOCANDA_DIALOGO_LETTO = "LOCANDA_DIALOGO_LETTO";
+	public static final String LOCANDA_RECENSIONE_LETTA = "LOCANDA_RECENSIONE_LETTA";
 
 	private Locande() {
 	}
@@ -49,7 +70,7 @@ public final class Locande {
 
 	static String getIdentificativoLocandaCorrente() {
 		LocazioneMD locazioneMD = getLocazioneMDLocandaCorrente();
-		return locazioneMD == null ? null : locazioneMD.ottieniProprieta(Locanda.LOCANDA_IDENTIFICATIVO);
+		return locazioneMD == null ? null : locazioneMD.ottieniProprieta(LOCANDA_IDENTIFICATIVO);
 	}
 
 	/**
@@ -57,7 +78,7 @@ public final class Locande {
 	 */
 	static int getVisiteLocandaCorrente() {
 		LocazioneMD locazioneMD = getLocazioneMDLocandaCorrente();
-		String visite = locazioneMD == null ? null : locazioneMD.ottieniProprieta(Locanda.LOCANDA_VISITE);
+		String visite = locazioneMD == null ? null : locazioneMD.ottieniProprieta(LOCANDA_VISITE);
 		return visite == null ? 0 : Integer.parseInt(visite);
 	}
 }

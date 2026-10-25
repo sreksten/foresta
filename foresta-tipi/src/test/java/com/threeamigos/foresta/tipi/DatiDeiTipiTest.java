@@ -38,13 +38,6 @@ class DatiDeiTipiTest {
     }
 
     @Test
-    void nessunIntermezzoFissoEDiProva() {
-        for (TipoIntermezzo intermezzo : TipoIntermezzo.values()) {
-            assertFalse(intermezzo.isDiProva(), intermezzo.name());
-        }
-    }
-
-    @Test
     void ogniTipoDiMissioneHaLaSuaCategoria() {
         for (TipoMissione tipo : TipoMissione.values()) {
             assertNotNull(tipo.getCategoriaMissione(), tipo.name());

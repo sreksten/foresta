@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
@@ -112,7 +113,7 @@ public class LaBenedizione extends MissioneAPassi {
 		if (Foresta.getLocazioneDelGruppo() != TipoLocazione.LOCANDA) {
 			return false;
 		}
-		String visite = Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()).ottieniProprieta(Locanda.LOCANDA_VISITE);
+		String visite = Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()).ottieniProprieta(Locande.LOCANDA_VISITE);
 		return visite != null && Integer.parseInt(visite) >= VISITE_PRECEDENTI;
 	}
 

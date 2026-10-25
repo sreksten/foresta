@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.motore.Statistiche;
@@ -218,7 +219,7 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 		if (Foresta.getLocazioneDelGruppo() != TipoLocazione.LOCANDA) {
 			return false;
 		}
-		String visite = Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()).ottieniProprieta(Locanda.LOCANDA_VISITE);
+		String visite = Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()).ottieniProprieta(Locande.LOCANDA_VISITE);
 		return visite != null && Integer.parseInt(visite) >= VISITE_PRECEDENTI;
 	}
 

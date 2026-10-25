@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.sprite;
 
+import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
@@ -8,7 +9,6 @@ import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.tipi.TipoIcona;
@@ -38,7 +38,7 @@ import java.util.function.LongSupplier;
  */
 public class SpriteRivelazioneArtefatto implements SpriteInterface {
 
-	private static final float DURATA = Costanti.SECONDI_RIVELAZIONE_ARTEFATTO;
+	private static final float DURATA = PaginaIntermezzo.SECONDI_RIVELAZIONE_ARTEFATTO;
 	// Con altre rivelazioni in coda (un cofano nei castelli ne vale cinque) si accorcia la sosta
 	private static final float DURATA_CON_CODA = 2.2f;
 	private static final float ANTICIPAZIONE = 0.25f;

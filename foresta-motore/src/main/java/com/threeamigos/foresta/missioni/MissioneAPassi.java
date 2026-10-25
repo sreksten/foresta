@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.motore.Statistiche;
@@ -1186,6 +1187,14 @@ public abstract class MissioneAPassi extends MissioneBase {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Se la missione tiene per sé la scena dell'intermezzo fisso di quel tipo, che quindi non scatta (vedi
+	 * FonteDiIntermezzi.blocca). Di solito no.
+	 */
+	public boolean bloccaIntermezzo(TipoIntermezzo tipo) {
+		return false;
 	}
 
 	/**

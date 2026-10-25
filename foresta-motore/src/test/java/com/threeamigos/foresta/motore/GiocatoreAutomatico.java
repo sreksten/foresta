@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
@@ -350,7 +351,7 @@ final class GiocatoreAutomatico {
 					locande.add(c);
 				}
 				if ((tipo == TipoLocazione.LOCANDA || tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA)
-						&& Foresta.getLocazioneMD(c).ottieniProprieta(Locanda.LOCANDA_VISITATA) == null) {
+						&& Foresta.getLocazioneMD(c).ottieniProprieta(Locande.LOCANDA_VISITATA) == null) {
 					locandeNuove.add(c);
 				}
 			}

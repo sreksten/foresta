@@ -7,7 +7,6 @@ import com.threeamigos.foresta.artefatti.SpadaNormalmenteNascosta;
 import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ public class IntermezzoSpadaNascosta implements Intermezzo {
 		String idNegoziante = alchimista.getIdNegoziante();
 		pagine.add(alchimista.paginaConCapo(CAPO, gruppo.getCapo().getClasse())
 				.conRivelazioneDiArtefatto(spada, Statistiche.getLivello(), CAPO)
-				.conBattuta(BattutaIntermezzo.di(CAPO, "Ma... è comparsa una spada dal nulla!").daSecondo(Costanti.SECONDI_RIVELAZIONE_ARTEFATTO + PAUSA_DOPO_LA_RIVELAZIONE))
+				.conBattuta(BattutaIntermezzo.di(CAPO, "Ma... è comparsa una spada dal nulla!").daSecondo(PaginaIntermezzo.SECONDI_RIVELAZIONE_ARTEFATTO + PAUSA_DOPO_LA_RIVELAZIONE))
 				.conBattuta(BattutaIntermezzo.di(idNegoziante, "Ecco la .spada normalmente nascosta! Era nel vostro inventario da sempre, ma nessuno poteva vederla."))
 				.conBattuta(BattutaIntermezzo.di(CAPO, "E ora possiamo usarla?"))
 				.conBattuta(BattutaIntermezzo.di(idNegoziante, "Certamente. Ma veniamo a noi. " + saluto)));

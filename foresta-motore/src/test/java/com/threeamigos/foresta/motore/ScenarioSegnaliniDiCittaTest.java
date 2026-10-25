@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.locazioni.Locanda;
@@ -53,7 +54,7 @@ class ScenarioSegnaliniDiCittaTest {
         NonSparateSulPianista pianista = trova(NonSparateSulPianista.class);
         CoordinateMD locanda = unaLocanda();
         Foresta.setPosizioneDelGruppo(locanda);
-        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "2");
+        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "2");
         pianista.controllaPreLocazione();
         pianista.segnaIntermezzoPassoMostrato("INCARICO");
         pianista.controllaInLocazione();

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
@@ -321,7 +322,7 @@ class ScenarioBenedizioneTest {
     private static LaBenedizione incontra(PartitaDiTest partita, String riga) {
         partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         CoordinateMD locanda = unaLocanda();
-        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "2");
+        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "2");
         Foresta.setPosizioneDelGruppo(locanda);
         LaBenedizione benedizione = RegistroMissioni.getTutteLeMissioni().stream().filter(LaBenedizione.class::isInstance)
                 .map(LaBenedizione.class::cast).findFirst().orElseThrow(AssertionError::new);

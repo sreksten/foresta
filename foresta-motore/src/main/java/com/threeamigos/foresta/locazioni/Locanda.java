@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -44,17 +45,7 @@ public class Locanda extends LocazioneBase {
 	private static final int RICEVE_INFORMAZIONI = 1;
 
 	/**
-	 * Segnata sulla casella quando il gruppo supera la porta: chi viene respinto
-	 * dall'oste per mancanza di monete non è entrato, e non ha visitato la locanda.
-	 */
-	public static final String LOCANDA_VISITATA = "LOCANDA_VISITATA";
-	/**
-	 * Quante volte il gruppo ha superato la porta della locanda.
-	 */
-	public static final String LOCANDA_VISITE = "LOCANDA_VISITE";
-
-	/**
-	 * Nome, identificativo, recensione e dialogo pescati dal pool di
+	 * Nome, identificativo (Locande.LOCANDA_IDENTIFICATIVO), recensione e dialogo (Locande.LOCANDA_RECENSIONE e Locande.LOCANDA_DIALOGO) pescati dal pool di
 	 * ProduttoreDiLocandeCasuale.DatiLocanda quando la locanda (o la città che la ospita)
 	 * viene costruita. L'identificativo è quello assegnato nella grammatica (es.
 	 * CINGHIALE_VEGANO) e resta lo stesso indipendentemente dal nome pubblicato: serve
@@ -66,22 +57,12 @@ public class Locanda extends LocazioneBase {
 	 * della città.
 	 */
 	private static final String LOCANDA_NOME_IN_CITTA = "LOCANDA_NOME_IN_CITTA";
-	public static final String LOCANDA_IDENTIFICATIVO = "LOCANDA_IDENTIFICATIVO";
 	public static final String LOCANDA_NOME_LOCANDIERE = "LOCANDA_NOME_LOCANDIERE";
-	public static final String LOCANDA_RECENSIONE = "LOCANDA_RECENSIONE";
-	public static final String LOCANDA_DIALOGO = "LOCANDA_DIALOGO";
-
-	/**
-	 * Segnate quando il dialogo/la recensione sono già stati mostrati, per non ripeterli
-	 * alle visite successive.
-	 */
-	public static final String LOCANDA_DIALOGO_LETTO = "LOCANDA_DIALOGO_LETTO";
 	/**
 	 * Quante informazioni la locanda ha già dato: oltre Costanti.LOCANDA_MASSIMO_INFORMAZIONI non
 	 * ne dà più, altrimenti andando avanti e indietro si scoprirebbe tutta la Foresta.
 	 */
 	public static final String LOCANDA_INFORMAZIONI_DATE = "LOCANDA_INFORMAZIONI_DATE";
-	public static final String LOCANDA_RECENSIONE_LETTA = "LOCANDA_RECENSIONE_LETTA";
 
 	private StatoInLocanda stato;
 	private final int evento;
@@ -134,10 +115,10 @@ public class Locanda extends LocazioneBase {
 		} else {
 			modelloDati.aggiungiProprieta(LOCANDA_NOME_IN_CITTA, datiLocanda.getNome());
 		}
-		modelloDati.aggiungiProprieta(LOCANDA_IDENTIFICATIVO, datiLocanda.getIdentificativo());
+		modelloDati.aggiungiProprieta(Locande.LOCANDA_IDENTIFICATIVO, datiLocanda.getIdentificativo());
 		modelloDati.aggiungiProprieta(LOCANDA_NOME_LOCANDIERE, datiLocanda.getNomeLocandiere());
-		modelloDati.aggiungiProprieta(LOCANDA_RECENSIONE, datiLocanda.getRecensione());
-		modelloDati.aggiungiProprieta(LOCANDA_DIALOGO, datiLocanda.getDialogo());
+		modelloDati.aggiungiProprieta(Locande.LOCANDA_RECENSIONE, datiLocanda.getRecensione());
+		modelloDati.aggiungiProprieta(Locande.LOCANDA_DIALOGO, datiLocanda.getDialogo());
 	}
 
 	/**
@@ -146,7 +127,7 @@ public class Locanda extends LocazioneBase {
 	 * locazione, per collegarla alle sue notizie proprie.
 	 */
 	public String getIdentificativo() {
-		return getModelloDati().ottieniProprieta(LOCANDA_IDENTIFICATIVO);
+		return getModelloDati().ottieniProprieta(Locande.LOCANDA_IDENTIFICATIVO);
 	}
 
 	@Override
@@ -177,16 +158,16 @@ public class Locanda extends LocazioneBase {
 	private String descrizioneLocanda(GruppoGiocatore g) {
 		LocazioneMD md = getModelloDati();
 		String nome = getNome(md);
-		if (md.ottieniProprieta(LOCANDA_DIALOGO_LETTO) == null) {
-			md.aggiungiProprieta(LOCANDA_DIALOGO_LETTO, LocazioneMD.AFFERMATIVO);
-			String dialogo = md.ottieniProprieta(LOCANDA_DIALOGO);
+		if (md.ottieniProprieta(Locande.LOCANDA_DIALOGO_LETTO) == null) {
+			md.aggiungiProprieta(Locande.LOCANDA_DIALOGO_LETTO, LocazioneMD.AFFERMATIVO);
+			String dialogo = md.ottieniProprieta(Locande.LOCANDA_DIALOGO);
 			if (dialogo != null && !dialogo.isEmpty()) {
 				return '“' + dialogo + '"';
 			}
 		}
-		if (md.ottieniProprieta(LOCANDA_RECENSIONE_LETTA) == null) {
-			md.aggiungiProprieta(LOCANDA_RECENSIONE_LETTA, LocazioneMD.AFFERMATIVO);
-			String recensione = md.ottieniProprieta(LOCANDA_RECENSIONE);
+		if (md.ottieniProprieta(Locande.LOCANDA_RECENSIONE_LETTA) == null) {
+			md.aggiungiProprieta(Locande.LOCANDA_RECENSIONE_LETTA, LocazioneMD.AFFERMATIVO);
+			String recensione = md.ottieniProprieta(Locande.LOCANDA_RECENSIONE);
 			if (recensione != null && !recensione.isEmpty()) {
 				return g.chiMaiuscolo() + " è a “" + nome + "\". A quanto si dice, " + recensione + ".";
 			}
@@ -213,9 +194,9 @@ public class Locanda extends LocazioneBase {
 				return Stato.FINE_LOCAZIONE;
 			}
 			stato = StatoInLocanda.ENTRATO;
-			getModelloDati().aggiungiProprieta(LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
-			String visite = getModelloDati().ottieniProprieta(LOCANDA_VISITE);
-			getModelloDati().aggiungiProprieta(LOCANDA_VISITE, String.valueOf(visite == null ? 1 : Integer.parseInt(visite) + 1));
+			getModelloDati().aggiungiProprieta(Locande.LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
+			String visite = getModelloDati().ottieniProprieta(Locande.LOCANDA_VISITE);
+			getModelloDati().aggiungiProprieta(Locande.LOCANDA_VISITE, String.valueOf(visite == null ? 1 : Integer.parseInt(visite) + 1));
 			// Niente più fiaba da leggere, e quindi niente comando per andare avanti: si passa subito al pasto
 			return impostaAzioni(gruppo, gng, azione);
 
