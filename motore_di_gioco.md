@@ -31,7 +31,7 @@ Documenti di dettaglio su singoli sottosistemi:
 | `incantesimi` | Le dieci formule e il loro catalogo |
 | `trofei` | Gli obiettivi che valgono da una partita all'altra |
 | `interfacce` | `ControlloreDiGioco`, i gestori di salvataggi, classifica e trofei, le viste in sola lettura per la UI (`VistaPartita`, `VistaGruppoGiocatore`, `VistaGruppo`, `VistaMappa`, `VistaPersonaggio`, `VistaArtefatto`, `VistaMissione`, `VistaPezzoDelSet`), `Arma`, `FornitoreMissione` e le interfacce di oggetto |
-| `strumenti` | Salvataggi, classifica e trofei su file, temporizzatore (`Temporizzatore`, `Temporizzabile`), `Logger` (scrive sulla `DestinazioneDiLog` installata, di norma `DestinazioneConsoleEFile`; `log(Supplier<String>)` costruisce il testo solo se la destinazione scrive, e `DestinazioneDiLog.NESSUNA` la spegne), `Misc`, `ModalitaDiProva`, `CostruttoreArtefatto` |
+| `strumenti` | Salvataggi, classifica e trofei su file, temporizzatore (`Temporizzatore`, `Temporizzabile`), `Logger` (scrive sulla `DestinazioneDiLog` installata, di norma `DestinazioneConsoleEFile`; `log(Supplier<String>)` costruisce il testo solo se la destinazione scrive, e `DestinazioneDiLog.NESSUNA` la spegne), `ModalitaDiProva`, `CostruttoreArtefatto` |
 
 Il motore parla alla UI solo tramite il bus eventi (§4), e la UI non vede il dominio ma solo viste: come è fatta la separazione è descritta qui sotto.
 

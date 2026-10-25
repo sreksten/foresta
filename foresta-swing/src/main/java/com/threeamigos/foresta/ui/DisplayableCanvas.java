@@ -12,7 +12,6 @@ import com.threeamigos.foresta.interfacce.*;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.modellodati.MessaggioMD;
 import com.threeamigos.foresta.modellodati.TatticaMD;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -1180,7 +1179,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			cambiaStato(StatoDisplayableCanvas.STATO_PERSO);
 			riquadroIntroOutro.resettaSequenza();
 		} else {
-			riquadroIntroOutro.incrementaSequenza(Misc.PERSO.length);
+			riquadroIntroOutro.incrementaSequenza(vistaPartita.getFinaleDellaSconfitta().size());
 		}
 		repaint();
 	}
@@ -1193,7 +1192,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			cambiaStato(StatoDisplayableCanvas.STATO_VINTO);
 			riquadroIntroOutro.resettaSequenza();
 		} else {
-			riquadroIntroOutro.incrementaSequenza(Misc.VINTO.length);
+			riquadroIntroOutro.incrementaSequenza(vistaPartita.getFinaleDellaVittoria().size());
 		}
 		repaint();
 	}

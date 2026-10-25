@@ -12,6 +12,7 @@
         <module>foresta-strumenti</module>
         <module>foresta-eventi</module>
         <module>foresta-testi</module>
+        <module>foresta-comandi</module>
         <module>foresta-serializzazione</module>
         <module>foresta-attributi</module>
         <module>foresta-effettidistato</module>

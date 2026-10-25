@@ -33,7 +33,6 @@ public enum Comando {
 	MAGO,
 	SACERDOTESSA,
 	SACERDOTE,
-	// Solo in modalità di prova, finché la loro grafica non è completa
 	CHIERICA,
 	CHIERICO,
 	DRUIDA,

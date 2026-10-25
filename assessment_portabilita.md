@@ -12,7 +12,7 @@ Il gioco è scritto in italiano. Sono già in un file per lingua, letti da `Test
 
 - `FUGA_IGNOMINIA_NOTA` in `Costanti`: finisce nel salvataggio come nota di un modificatore, quindi spostarla vuol dire anche decidere come si confronta e come si salva;
 - le enum fuori da `foresta-tipi` con testi da mostrare: `NegozioInScena` (singolare e plurale), e le frasi di `Mandante` (mescolate a identificativi: vanno separate) e, nello strumento di sviluppo, `DovePartono` e `ContestoLancio`; `Testi.testo(costante, voce)` funziona per qualunque enum, con il file accanto all'enum nel suo modulo;
-- `Articoli` e `Numeri` (in `foresta-testi`): articoli, preposizioni, cardinali e ordinali in lettere; `Misc` (in `foresta-contratti`): le direzioni e i testi di storia, sconfitta e vittoria (vedi `todo.md`);
+- `Articoli` e `Numeri` (in `foresta-testi`): articoli, preposizioni, cardinali e ordinali in lettere; `Direzioni` (in `foresta-mappa`): le direzioni; `Racconto` (nel motore, che li dà alla UI con `VistaPartita`): i testi di storia, sconfitta e vittoria (vedi `todo.md`);
 - il resto dei testi del motore e delle schermate (messaggi, fumetti, intermezzi, grammatiche `.txt`).
 
 Prima di spostarli va deciso se il gioco avrà una versione inglese (per gli store). Se non l'avrà, i testi possono restare dove sono.

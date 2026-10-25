@@ -16,7 +16,7 @@
  * <li>{@link com.threeamigos.foresta.tipi.TipoAttributo}: gli attributi di un personaggio;</li>
  * <li>{@code TipoArtefatto} (in {@code foresta-artefatti}): gli artefatti e gli slot in cui si portano;</li>
  * <li>{@link com.threeamigos.foresta.tipi.TipoLocazione}: le caselle della mappa;</li>
- * <li>{@code Comando}: tutto ciò che il giocatore può comandare (sta in {@code foresta-contratti}, nello stesso package).</li>
+ * <li>{@code Comando}: tutto ciò che il giocatore può comandare (sta in {@code foresta-comandi}, nello stesso package).</li>
  * </ul>
  */
 package com.threeamigos.foresta.tipi;

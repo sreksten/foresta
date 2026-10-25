@@ -78,6 +78,21 @@ public class VistaPartitaMotore implements VistaPartita {
 	}
 
 	@Override
+	public List<String> getStoria() {
+		return Racconto.getStoria();
+	}
+
+	@Override
+	public List<String> getFinaleDellaSconfitta() {
+		return Racconto.getFinaleDellaSconfitta();
+	}
+
+	@Override
+	public List<String> getFinaleDellaVittoria() {
+		return Racconto.getFinaleDellaVittoria();
+	}
+
+	@Override
 	public VistaCassa getCassa() {
 		return Cassa.VISTA;
 	}

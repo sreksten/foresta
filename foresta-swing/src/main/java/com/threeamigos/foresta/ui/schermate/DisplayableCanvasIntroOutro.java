@@ -7,7 +7,6 @@ import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.strumenti.Punteggio;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.testi.Numeri;
@@ -281,7 +280,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	 */
 	public void perso(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
-		messaggio = Misc.PERSO[sequenza];
+		messaggio = vistaPartita.getFinaleDellaSconfitta().get(sequenza);
 		scrivi(graphics, true);
 	}
 
@@ -291,7 +290,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	public void vinto(Graphics2D graphics) {
 		Image d = ImageCache.trionfo;
 		graphics.drawImage(d, (width - d.getWidth(null)) / 2, (height - d.getHeight(null)) / 2, null);
-		messaggio = Misc.VINTO[sequenza];
+		messaggio = vistaPartita.getFinaleDellaVittoria().get(sequenza);
 		scrivi(graphics,false);
 	}
 
@@ -411,13 +410,13 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	}
 
 	/**
-	 * Tutta la storia in un'immagine, come un unico testo che va a capo dove serve (i paragrafi di Misc.STORIA erano le
+	 * Tutta la storia in un'immagine, come un unico testo che va a capo dove serve (i paragrafi di VistaPartita.getStoria, che erano le
 	 * pagine dell'intro di una volta), con un alone nero attorno alle lettere. Non cambia mai: si fa una volta sola.
 	 */
 	private BufferedImage immagineStoria() {
 		if (immagineStoria == null) {
 			immagineStoria = TestoGrande.conAlone(
-					TestoGrande.immagine(String.join(" ", Misc.STORIA), width - 2 * RAGGIO_ALONE, true, INTERLINEA_STORIA), RAGGIO_ALONE);
+					TestoGrande.immagine(String.join(" ", vistaPartita.getStoria()), width - 2 * RAGGIO_ALONE, true, INTERLINEA_STORIA), RAGGIO_ALONE);
 		}
 		return immagineStoria;
 	}

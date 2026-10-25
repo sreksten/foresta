@@ -15,7 +15,7 @@ Le tattiche attraversano più moduli (la separazione la garantisce il compilator
 | `foresta-poteri` | `tipi` | Le azioni: `TipoAzione` (che cosa si può fare in uno scontro, poteri compresi) ed `EsitoAzione` |
 | `foresta-tattiche` | `tipi` | Gli altri **enumerati**: `TipoRosa`, `PortataAzione` (su che cosa agisce ogni azione e da quali rose pesca: `PortataAzione.di(azione)`), `TipoFiltro`, `TipoOrdinamento`, `TipoPredicato`, `TipoConfronto`, `CriterioIncantesimo`, `TipoParametro`, e `CostantiTattiche`. Solo nomi, descrizioni e regole di compatibilità; nessuna logica di gioco |
 | `foresta-tattiche` | `tattiche` | I **dati** (suffisso `MD`): `TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`, e `FormatoTattiche` per il salvataggio. Immutabili, con la lettura e la scrittura |
-| `foresta-contratti` | `eventi.*` | `ComandoImpostaTattica` (UI → motore), `RichiestaAperturaTattiche` (motore → UI), `InternoDecisioneTattica` (la spiegazione di una decisione) |
+| `foresta-tattiche` | `eventi.*` | `ComandoImpostaTattica` (UI → motore), `RichiestaAperturaTattiche` (motore → UI), `InternoDecisioneTattica` (la spiegazione di una decisione) |
 | `foresta-motore` | `tattiche` | La **logica**: `Valutatore`, `ContestoTattico`, `Decisione`, `RisultatoSelezione`, `EsecutoreTattiche`, `RegistroTattiche`, `TatticheBase` |
 | | `tattiche.rose` | `Rosa` e una classe per ogni `TipoRosa`; `Rose` le trova |
 | | `tattiche.valutazione` | `Selettori`, `Filtri`, `Ordinamenti`, `Predicati`, `Requisiti`, `SceltaIncantesimo`, `Astuzia` |

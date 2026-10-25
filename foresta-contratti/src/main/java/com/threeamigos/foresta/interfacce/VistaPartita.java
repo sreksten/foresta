@@ -50,6 +50,21 @@ public interface VistaPartita {
 	VistaMappa getMappa();
 
 	/**
+	 * L'introduzione della storia, un paragrafo per elemento: la racconta il motore, non la UI.
+	 */
+	List<String> getStoria();
+
+	/**
+	 * Il finale della partita persa, una pagina per elemento.
+	 */
+	List<String> getFinaleDellaSconfitta();
+
+	/**
+	 * Il finale della partita vinta, una pagina per elemento.
+	 */
+	List<String> getFinaleDellaVittoria();
+
+	/**
 	 * La cassa del gruppo: monete e preziosi.
 	 */
 	VistaCassa getCassa();
