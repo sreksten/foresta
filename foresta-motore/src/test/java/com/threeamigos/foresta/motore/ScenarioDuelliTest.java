@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
@@ -219,10 +221,10 @@ class ScenarioDuelliTest {
 
     private static void entraNelCovo(PartitaDiTest partita, CoordinateMD covo) {
         partita.comando(Comando.ESCI_DA_CITTA);
-        partita.gruppo().setCoordinate(new CoordinateMD(covo.getX(), covo.getY() + 1));
+        Foresta.setPosizioneDelGruppo(new CoordinateMD(covo.getX(), covo.getY() + 1));
         partita.assertStato(Stato.SCELTA_DIREZIONE);
         partita.comando(Comando.NORD).comando(Comando.NUMERO_1);
-        assertEquals(covo, partita.gruppo().getCoordinate());
+        assertEquals(covo, Foresta.getPosizioneDelGruppo());
     }
 
     /**

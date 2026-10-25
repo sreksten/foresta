@@ -10,7 +10,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tipi.CategoriaIncantesimo;
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.CostantiTattiche;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoAzione;
@@ -86,7 +86,7 @@ public final class SceltaIncantesimo {
 			if (Requisiti.puoLanciare(attore, classe, contesto)
 					&& !bersaglio.isImmuneAIncantesimo(classe) && !bersaglio.isImmuneATipoDanno(classe.getTipoDanno())
 					&& !contesto.getStato().isImmunitaScoperta(bersaglio, azione)
-					&& contesto.getStato().getTentativiFalliti(attore, bersaglio, azione) < Costanti.MAX_TENTATIVI_FALLITI_PER_AZIONE) {
+					&& contesto.getStato().getTentativiFalliti(attore, bersaglio, azione) < CostantiTattiche.MAX_TENTATIVI_FALLITI_PER_AZIONE) {
 				lanciabili.add(classe);
 			}
 		}

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.tipi.TipoAttributo;
@@ -90,7 +91,7 @@ class ScenarioBenedizioneTest {
             CoordinateMD radura = favore.getPosto();
             assertEquals(TipoLocazione.RADURA, Foresta.getLocazione(radura));
             assertTrue(Foresta.isLocazioneConosciuta(radura));
-            partita.gruppo().setCoordinate(radura);
+            Foresta.setPosizioneDelGruppo(radura);
             partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.OMBRA_NERA));
             partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.OMBRA_NERA));
             favore.controllaPostLocazione();
@@ -108,7 +109,7 @@ class ScenarioBenedizioneTest {
             partita.gruppo().aggiungiPersonaggio(compagno);
             int saluteMassima = compagno.getSaluteMassima();
             int pozioni = partita.gruppo().getPozioniAumentoLivello();
-            partita.gruppo().setCoordinate(tempio);
+            Foresta.setPosizioneDelGruppo(tempio);
             benedizione.controllaPreLocazione();
             Passo scelta = benedizione.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE);
             assertNotNull(scelta);
@@ -158,7 +159,7 @@ class ScenarioBenedizioneTest {
             assertEquals(TipoLocazione.PALUDE, Foresta.getLocazione(palude));
 
             // Come in Automa.entraInStatoPreparazioneLocazione
-            partita.gruppo().setCoordinate(palude);
+            Foresta.setPosizioneDelGruppo(palude);
             Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(palude);
             LocazioneCorrente.set(locazione);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
@@ -197,7 +198,7 @@ class ScenarioBenedizioneTest {
             favore.controllaInLocazione();
             CoordinateMD bosco = favore.getPosto();
             assertEquals(TipoLocazione.BOSCO, Foresta.getLocazione(bosco));
-            partita.gruppo().setCoordinate(bosco);
+            Foresta.setPosizioneDelGruppo(bosco);
             favore.controllaPreLocazione();
             assertTrue(partita.testi().contains("Tutto tace. Bisogna tornare qui ancora una volta, lasciando passare almeno 16 ore "
                     + "fra una visita e l'altra."), String.valueOf(partita.testi()));
@@ -269,7 +270,7 @@ class ScenarioBenedizioneTest {
         IlFavore favore = (IlFavore) benedizione.getMissioniAffidate(LaBenedizione.FAVORE).get(0);
         favore.controllaInLocazione();
         CoordinateMD radura = favore.getPosto();
-        partita.gruppo().setCoordinate(radura);
+        Foresta.setPosizioneDelGruppo(radura);
         partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.OMBRA_NERA));
         partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.OMBRA_NERA));
         favore.controllaPostLocazione();
@@ -284,7 +285,7 @@ class ScenarioBenedizioneTest {
             ospite.setTempo(3);
             partita.gruppo().aggiungiPersonaggio(ospite);
         }
-        partita.gruppo().setCoordinate(benedizione.getTempio());
+        Foresta.setPosizioneDelGruppo(benedizione.getTempio());
         partita.gruppo().setSacerdoteAccolto(sacerdoteGiaAccolto);
         benedizione.controllaPreLocazione();
         benedizione.rispondi("1");
@@ -321,7 +322,7 @@ class ScenarioBenedizioneTest {
         partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         CoordinateMD locanda = unaLocanda();
         Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "2");
-        partita.gruppo().setCoordinate(locanda);
+        Foresta.setPosizioneDelGruppo(locanda);
         LaBenedizione benedizione = RegistroMissioni.getTutteLeMissioni().stream().filter(LaBenedizione.class::isInstance)
                 .map(LaBenedizione.class::cast).findFirst().orElseThrow(AssertionError::new);
         benedizione.aggiungiProprieta("PARAMETRO_" + LaBenedizione.BENEDIZIONE, riga);

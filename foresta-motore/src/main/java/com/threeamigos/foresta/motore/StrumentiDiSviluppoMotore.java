@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+import com.threeamigos.foresta.personaggi.GestoreProgressione;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -279,7 +282,7 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
     }
 
     private static boolean siTrovaIn(DovePartono dove) {
-        TipoLocazione tipo = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
+        TipoLocazione tipo = Foresta.getLocazioneDelGruppo();
         if (tipo == null) {
             return false;
         }

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.modellodati.CoordinateMD;
@@ -164,8 +165,8 @@ public class LineaTemporale {
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(citta);
 		if (coordinate != null) {
 			String nomeCitta = citta.getNomeDellaCitta();
-			if (!coordinate.equals(gruppo.getCoordinate())) {
-				setEvento(nome + COLONNA + Misc.getDirezione(gruppo, coordinate));
+			if (!coordinate.equals(Foresta.getPosizioneDelGruppo())) {
+				setEvento(nome + COLONNA + Misc.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate));
 			} else if (dormiva) {
 				setEvento("Un boato scuote " + nomeCitta + " prima dell'alba: il Drago! " + gruppo.chiMaiuscolo()
 						+ " riesce a fuggire per un pelo tra le fiamme, e di " + nomeCitta + " non restano che rovine fumanti.");

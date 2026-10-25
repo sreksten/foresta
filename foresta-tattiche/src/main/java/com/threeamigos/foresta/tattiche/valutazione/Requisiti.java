@@ -8,10 +8,10 @@ import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.modellodati.AzioneMD;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.CostantiTattiche;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
@@ -24,7 +24,7 @@ import com.threeamigos.foresta.tipi.TipoAzione;
  * niente e non tira i dadi.
  * <p>
  * Le immunità e resistenze di classe si conoscono subito; quelle date da un artefatto si conoscono solo se sono state scoperte (StatoDelCombattimento).
- * Dopo {@link Costanti#MAX_TENTATIVI_FALLITI_PER_AZIONE} fallimenti per caso un'azione non si prova più su quel bersaglio.
+ * Dopo {@link CostantiTattiche#MAX_TENTATIVI_FALLITI_PER_AZIONE} fallimenti per caso un'azione non si prova più su quel bersaglio.
  */
 public final class Requisiti {
 
@@ -47,7 +47,7 @@ public final class Requisiti {
 	public static String motivoDelNo(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
 		TipoAzione tipo = azione.getTipo();
 		StatoDelCombattimento stato = contesto.getStato();
-		PortataAzione portata = tipo.getPortata();
+		PortataAzione portata = PortataAzione.di(tipo);
 		// Prima i requisiti comuni a tutte le azioni su un singolo bersaglio, poi (nello switch) quelli propri di ciascuna azione. Il primo che
 		// fallisce dà il motivo: un'azione che può essere scartata per più ragioni mostra sempre la stessa, quella che si controlla per prima
 		if (bersaglio != null && (portata == PortataAzione.AVVERSARIO || portata == PortataAzione.ALLEATO)) {
@@ -57,8 +57,8 @@ public final class Requisiti {
 			// La memoria dello scontro: un'immunità scoperta (da chiunque, è conoscenza pubblica) o troppi fallimenti per caso. L'attacco fisico non si
 			// abbandona mai: è il ripiego, e "non fallisce mai" (§5)
 			if (tipo != TipoAzione.ATTACCO_FISICO
-					&& stato.getTentativiFalliti(attore, bersaglio, tipo) >= Costanti.MAX_TENTATIVI_FALLITI_PER_AZIONE) {
-				return tipo + " è già fallita " + Costanti.MAX_TENTATIVI_FALLITI_PER_AZIONE + " volte contro " + bersaglio.getNome();
+					&& stato.getTentativiFalliti(attore, bersaglio, tipo) >= CostantiTattiche.MAX_TENTATIVI_FALLITI_PER_AZIONE) {
+				return tipo + " è già fallita " + CostantiTattiche.MAX_TENTATIVI_FALLITI_PER_AZIONE + " volte contro " + bersaglio.getNome();
 			}
 		}
 		// Chi le cure non guariscono (un non morto nel gruppo del giocatore) non è un bersaglio possibile, mai

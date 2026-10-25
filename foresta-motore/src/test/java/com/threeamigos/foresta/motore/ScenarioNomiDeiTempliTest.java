@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.locazioni.Tempio;
@@ -65,7 +66,7 @@ class ScenarioNomiDeiTempliTest {
 
             // Entrando, il tempio si presenta col suo nome
             CoordinateMD primo = templi.get(0);
-            partita.gruppo().setCoordinate(primo);
+            Foresta.setPosizioneDelGruppo(primo);
             CostruttoreDellaForesta.costruisciIstanza(primo).descrivi(partita.gruppo(), GruppoAvversario.getIstanza());
             String atteso = "Qui, " + Articoli.conPreposizione("in", nomi.get(0)) + ", ";
             assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith(atteso)), atteso + " in " + partita.testi());

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.tipi.CostantiCanti;
@@ -34,7 +35,7 @@ class ScenarioCantiDelBardoTest {
     private void inUnBoscoConUnBardo(PartitaDiTest partita, int goblin) {
         partita.iniziaCon("Orfeo", Comando.MASCHIO, Comando.BARDO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
-        partita.gruppo().setCoordinate(bosco);
+        Foresta.setPosizioneDelGruppo(bosco);
         locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
         LocazioneCorrente.set(locazione);
         avversari = GruppoAvversario.getIstanza();
@@ -154,7 +155,7 @@ class ScenarioCantiDelBardoTest {
                 partita.gruppo().getCapo().addMagia(1000);
                 partita.gruppo().getCapo().addSalute(10000);
                 partita.comando(Comando.ESCI_DA_CITTA);
-                partita.gruppo().setCoordinate(new CoordinateMD(bosco.getX(), bosco.getY() + 1));
+                Foresta.setPosizioneDelGruppo(new CoordinateMD(bosco.getX(), bosco.getY() + 1));
                 partita.comando(Comando.NORD).comando(Comando.NUMERO_1);
                 if (partita.stato() != Stato.IN_LOCAZIONE || GruppoAvversario.getIstanza().getNumeroPersonaggiVivi() == 0) {
                     continue;

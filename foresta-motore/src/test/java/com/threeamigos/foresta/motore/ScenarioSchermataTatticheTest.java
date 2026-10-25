@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoImpostaTattica;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpostaPersonaggio;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaTattiche;

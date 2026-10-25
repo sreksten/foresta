@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -70,7 +71,7 @@ class ScenarioGiroDelleSetteChieseTest {
             assertFalse(giro.isAttiva());
 
             // Fuggire o non aver sconfitto i custodi non basta
-            partita.gruppo().setCoordinate(templi.get(0));
+            Foresta.setPosizioneDelGruppo(templi.get(0));
             GruppoAvversario.getIstanza().aggiungiPersonaggio(FabbricaPersonaggi.crea(TipoPersonaggio.VIVERNA, 1));
             giro.controllaPostLocazione();
             assertFalse(giro.isAttiva());
@@ -95,14 +96,14 @@ class ScenarioGiroDelleSetteChieseTest {
 
             int elementali = elementali(partita);
             for (int i = 1; i < 6; i++) {
-                partita.gruppo().setCoordinate(templi.get(i));
+                Foresta.setPosizioneDelGruppo(templi.get(i));
                 giro.controllaPostLocazione();
                 assertFalse(giro.isCompleta());
             }
             assertTrue(giro.getDescrizione().endsWith("Ne manca uno."), giro.getDescrizione());
             assertNull(RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA));
 
-            partita.gruppo().setCoordinate(templi.get(6));
+            Foresta.setPosizioneDelGruppo(templi.get(6));
             giro.controllaPostLocazione();
             assertFalse(giro.isCompleta(), "prima l'offerta del sacerdote");
             assertEquals(elementali + com.threeamigos.foresta.missioni.principali.IlGiroDelleSetteChiese.INCANTESIMI_IN_DONO.length, elementali(partita));
@@ -124,7 +125,7 @@ class ScenarioGiroDelleSetteChieseTest {
         }
         List<CoordinateMD> templi = templi();
         for (int i = 0; i < 7; i++) {
-            partita.gruppo().setCoordinate(templi.get(i));
+            Foresta.setPosizioneDelGruppo(templi.get(i));
             giro.controllaPostLocazione();
         }
         return giro;
@@ -188,7 +189,7 @@ class ScenarioGiroDelleSetteChieseTest {
             IlGiroDelleSetteChiese giro = giro();
             List<CoordinateMD> templi = templi();
             for (int i = 0; i < 7; i++) {
-                partita.gruppo().setCoordinate(templi.get(i));
+                Foresta.setPosizioneDelGruppo(templi.get(i));
                 giro.controllaPostLocazione();
             }
 
@@ -220,7 +221,7 @@ class ScenarioGiroDelleSetteChieseTest {
             CoordinateMD coordinate = templi().stream()
                     .filter(tempio -> RegistroArtefatti.getArtefattoInLocazione(tempio) == null).findFirst().get();
             LocazioneMD modello = Foresta.getLocazioneMD(coordinate);
-            partita.gruppo().setCoordinate(coordinate);
+            Foresta.setPosizioneDelGruppo(coordinate);
             Tempio.ripulisci(modello);
             Tempio tempio = new Tempio();
             tempio.setModelloDati(modello);

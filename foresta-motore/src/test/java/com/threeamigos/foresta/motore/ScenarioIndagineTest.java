@@ -76,7 +76,7 @@ class ScenarioIndagineTest {
             assertTrue(Foresta.isLocazioneConosciuta(nascondiglio));
             assertEquals(3, RegistroMissioni.getIncontroMissione(nascondiglio).orElseThrow(AssertionError::new).size());
 
-            partita.gruppo().setCoordinate(nascondiglio);
+            Foresta.setPosizioneDelGruppo(nascondiglio);
             for (int i = 0; i < 3; i++) {
                 partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GARGOYLE));
             }
@@ -85,7 +85,7 @@ class ScenarioIndagineTest {
             assertTrue(partita.gruppo().getOspiti().isEmpty(), "senza un colpevole catturato non c'è nessuno da mostrare");
             assertTrue(partita.testi().contains("Le campane sono salve. Il sacerdote aspetta a Nyena."), String.valueOf(partita.testi()));
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             indagine.controllaPreLocazione();
             indagine.segnaIntermezzoPassoMostrato("RITORNO");
@@ -105,7 +105,7 @@ class ScenarioIndagineTest {
             raccogliGliIndizi(partita, indagine);
             indagine.rispondi("2");
             indagine.controllaInLocazione();
-            partita.gruppo().setCoordinate(indagine.getPosto());
+            Foresta.setPosizioneDelGruppo(indagine.getPosto());
             for (int i = 0; i < 2; i++) {
                 partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.LADRO));
             }
@@ -115,7 +115,7 @@ class ScenarioIndagineTest {
             assertEquals("Ugo", partita.gruppo().getOspiti().get(0).getNome());
             assertFalse(partita.gruppo().isOspiteVulnerabile(partita.gruppo().getOspiti().get(0)));
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             indagine.controllaPreLocazione();
             assertFalse(partita.gruppo().getOspiti().isEmpty(), "c'è per la scena");
             indagine.segnaIntermezzoPassoMostrato("RITORNO");
@@ -171,7 +171,7 @@ class ScenarioIndagineTest {
         indagine.controllaInLocazione();
         assertEquals("INDIZIO_1", indagine.getPassoCorrente());
 
-        partita.gruppo().setCoordinate(locanda);
+        Foresta.setPosizioneDelGruppo(locanda);
         indagine.controllaInLocazione();
         assertEquals("INDIZIO_2", indagine.getPassoCorrente());
         assertTrue(partita.testi().contains("Volavano verso le rovine."), String.valueOf(partita.testi()));
@@ -179,7 +179,7 @@ class ScenarioIndagineTest {
         CoordinateMD tempio = indagine.getPosto();
         assertEquals(TipoLocazione.TEMPIO, Foresta.getLocazione(tempio));
 
-        partita.gruppo().setCoordinate(tempio);
+        Foresta.setPosizioneDelGruppo(tempio);
         indagine.controllaInLocazione();
         assertEquals(LIndagine.ACCUSA, indagine.getPassoCorrente());
         assertTrue(partita.testi().contains("Ali di pietra."), String.valueOf(partita.testi()));

@@ -1,5 +1,9 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.canti.CantiImparati;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.tipi.CostantiCanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.canti.*;
@@ -187,7 +191,7 @@ class CantiDelBardoTest {
         bardoDellaLocanda.addMagia(1000);
         assertTrue(CantoDelBardo.puoCantare(bardoDellaLocanda, TipoCanto.URLO_DELLA_BANSHEE), "lui lo sa a prescindere");
 
-        GruppoGiocatore.getIstanza().impara(TipoCanto.URLO_DELLA_BANSHEE);
+        CantiImparati.impara(TipoCanto.URLO_DELLA_BANSHEE);
 
         assertTrue(CantoDelBardo.isUrloDellaBansheeAppreso());
         assertTrue(CantoDelBardo.puoCantare(bardo(), TipoCanto.URLO_DELLA_BANSHEE));

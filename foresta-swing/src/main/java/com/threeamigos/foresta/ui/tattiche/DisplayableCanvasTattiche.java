@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.tattiche;
 
+import com.threeamigos.foresta.tipi.PortataAzione;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -872,7 +873,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		if (voce.azioni.isEmpty()) {
 			return true;
 		}
-		switch (voce.azioni.get(0).getTipo().getPortata()) {
+		switch (PortataAzione.di(voce.azioni.get(0).getTipo())) {
 			case GRUPPO_ALLEATI:
 			case GRUPPO_AVVERSARI:
 			case ARMA:

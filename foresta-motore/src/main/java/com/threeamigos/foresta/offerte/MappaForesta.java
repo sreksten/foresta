@@ -3,8 +3,8 @@ package com.threeamigos.foresta.offerte;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneConoscenzaMappa;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import static com.threeamigos.foresta.tipi.Costanti.COSTO_MAPPA_DELLA_FORESTA;

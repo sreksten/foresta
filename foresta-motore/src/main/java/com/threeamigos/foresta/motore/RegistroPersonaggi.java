@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 
 import com.threeamigos.foresta.mappa.Foresta;
@@ -201,9 +202,9 @@ public class RegistroPersonaggi {
 	 */
 	public static String getNomeDelPersonaggioDiCitta(TipoPersonaggio mestiere) {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		TipoLocazione luogo = gruppo.getTipoLocazioneCorrente();
+		TipoLocazione luogo = Foresta.getLocazioneDelGruppo();
 		if (luogo != null && luogo.isBottega()) {
-			return Bottega.getNegoziante(Foresta.getLocazioneMD(gruppo.getCoordinate()));
+			return Bottega.getNegoziante(Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()));
 		}
 		if (luogo == null || luogo.getNomeDellaCitta() == null) {
 			return null;

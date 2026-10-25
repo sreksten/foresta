@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import com.threeamigos.foresta.mappa.Foresta;
@@ -55,11 +56,11 @@ class ScenarioCombattiScortaConsegnaTest {
             assertEquals(taglia.getCapobanda(), GruppoAvversario.getIstanza().getCapo().getNome());
 
             // Gli hobgoblin sconfitti altrove non contano
-            partita.gruppo().setCoordinate(new CoordinateMD(covo.getX(), covo.getY() + 1));
+            Foresta.setPosizioneDelGruppo(new CoordinateMD(covo.getX(), covo.getY() + 1));
             for (int i = 0; i < 3; i++) {
                 partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.HOBGOBLIN));
             }
-            partita.gruppo().setCoordinate(covo);
+            Foresta.setPosizioneDelGruppo(covo);
             taglia.controllaPostLocazione();
             assertEquals("CACCIA", taglia.getPassoCorrente(), "quelli sconfitti fuori dal covo non contano");
 
@@ -90,7 +91,7 @@ class ScenarioCombattiScortaConsegnaTest {
             assertTrue(partita.gruppo().getOspiti().contains(anselmo));
             assertFalse(partita.gruppo().getPersonaggi().contains(anselmo), "un ospite non combatte");
 
-            partita.gruppo().setCoordinate(tempio);
+            Foresta.setPosizioneDelGruppo(tempio);
             pellegrino.controllaPreLocazione();
             assertEquals("RITORNO", pellegrino.getPassoCorrente());
             assertTrue(partita.gruppo().getOspiti().isEmpty(), "Anselmo resta al tempio");
@@ -169,10 +170,10 @@ class ScenarioCombattiScortaConsegnaTest {
      * Mette il gruppo nella casella a sud e lo fa entrare andando a nord.
      */
     private static void entraDaSud(PartitaDiTest partita, CoordinateMD destinazione) {
-        partita.gruppo().setCoordinate(new CoordinateMD(destinazione.getX(), destinazione.getY() + 1));
+        Foresta.setPosizioneDelGruppo(new CoordinateMD(destinazione.getX(), destinazione.getY() + 1));
         partita.assertStato(Stato.SCELTA_DIREZIONE);
         partita.comando(Comando.NORD).comando(Comando.NUMERO_1);
-        assertEquals(destinazione, partita.gruppo().getCoordinate());
+        assertEquals(destinazione, Foresta.getPosizioneDelGruppo());
     }
 
     /**

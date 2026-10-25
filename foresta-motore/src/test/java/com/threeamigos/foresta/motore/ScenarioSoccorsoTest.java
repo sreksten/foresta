@@ -71,7 +71,7 @@ class ScenarioSoccorsoTest {
             assertTrue(partita.gruppo().isOspiteVulnerabile(taglialegna));
             assertTrue(partita.testi().contains(nome + " scende dall'albero. Riportatelo vivo a Nyena."), String.valueOf(partita.testi()));
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             soccorso.controllaPreLocazione();
             assertTrue(partita.gruppo().getOspiti().contains(taglialegna));
@@ -94,7 +94,7 @@ class ScenarioSoccorsoTest {
             assertEquals(soccorso.getNomeDellaPersona() + " è morto: devi dare la notizia alla moglie del taglialegna, a Nyena.",
                     soccorso.getDescrizione());
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             soccorso.controllaPreLocazione();
             assertEquals("LUTTO", soccorso.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
             soccorso.segnaIntermezzoPassoMostrato("LUTTO");
@@ -117,7 +117,7 @@ class ScenarioSoccorsoTest {
     }
 
     private static Personaggio salva(PartitaDiTest partita, IlSoccorso soccorso) {
-        partita.gruppo().setCoordinate(soccorso.getCovo());
+        Foresta.setPosizioneDelGruppo(soccorso.getCovo());
         for (int i = 0; i < 3; i++) {
             partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.ARPIA));
         }

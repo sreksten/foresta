@@ -39,6 +39,8 @@ class CloudManagerTest {
             @Override public int getMaxYConosciuta() { return 3; }
             @Override public String getNomeDaMostrare(CoordinateMD coordinate) { return null; }
             @Override public List<String> getNomiMissioniDaMostrare(CoordinateMD coordinate) { return Collections.emptyList(); }
+            @Override public CoordinateMD getPosizioneDelGruppo() { return new CoordinateMD(0, 3); }
+            @Override public TipoLocazione getLocazioneDelGruppo() { return TipoLocazione.BOSCO; }
         };
     }
 

@@ -3,7 +3,6 @@ package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
-import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.io.BufferedReader;
@@ -15,8 +14,8 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 
 /**
  * Il gruppo del giocatore. Oltre a quanto tiene {@link GruppoMD} (personaggi, capo, pergamene e pozioni) porta con sé
- * le monete, le pietre preziose, la posizione sulla mappa, gli artefatti dell'inventario generale (quelli che nessun
- * personaggio sta usando), gli ospiti, il conto delle sfide a carta, forbici e sasso vinte e i canti imparati strada facendo.
+ * le monete, le pietre preziose, gli artefatti dell'inventario generale (quelli che nessun
+ * personaggio sta usando), gli ospiti e il conto delle sfide a carta, forbici e sasso vinte.
  * <p>
  * Gli <b>ospiti</b> viaggiano con il gruppo senza farne parte; fra loro, solo quelli registrati come vulnerabili
  * possono essere attaccati dagli avversari.
@@ -30,8 +29,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
 	private int monete;
 	private int preziosi;
-	// Coordinate all'interno della Foresta
-	private CoordinateMD coordinate;
 	// Artefatti disponibili al gruppo ma non in uso da un personaggio specifico
 	private final List<ArtefattoMD> artefatti = new ArrayList<>();
 	// Chi viaggia con il gruppo senza farne parte (vedi GruppoGiocatore.aggiungiOspite)
@@ -45,9 +42,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	// così se ne ottiene al più uno. Un rifiuto, o un gruppo già al completo, non lo alzano: l'altra missione può ancora offrirlo.
 	// Chi lo legge e lo scrive: OffertaDelSacerdote. Si azzera con una partita nuova (reimposta).
 	private boolean sacerdoteAccolto;
-	// Quel che il gruppo ha imparato strada facendo e non sapeva all'inizio (per ora i canti: l'Urlo della Banshee, vedi
-	// IntermezzoUrloDellaBanshee). Si salva con il gruppo e si azzera con una partita nuova.
-	private final Set<TipoCanto> cantiAppresi = EnumSet.noneOf(TipoCanto.class);
 
 	public int getMonete() {
 		return monete;
@@ -63,17 +57,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
 	public void setPreziosi(int preziosi) {
 		this.preziosi = preziosi;
-	}
-
-	/**
-	 * La posizione del gruppo sulla mappa della Foresta.
-	 */
-	public CoordinateMD getCoordinate() {
-		return coordinate;
-	}
-
-	public void setCoordinate(CoordinateMD coordinate) {
-		this.coordinate = coordinate;
 	}
 
 	/**
@@ -98,20 +81,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	 */
 	public Set<String> getOspitiVulnerabili() {
 		return Collections.unmodifiableSet(ospitiVulnerabili);
-	}
-
-	/**
-	 * I canti che il gruppo ha imparato strada facendo. Di sola lettura: si cambia con {@link #addCantoAppreso}.
-	 */
-	public Set<TipoCanto> getCantiAppresi() {
-		return Collections.unmodifiableSet(cantiAppresi);
-	}
-
-	/**
-	 * Il gruppo ha imparato quel canto.
-	 */
-	public void addCantoAppreso(TipoCanto canto) {
-		cantiAppresi.add(canto);
 	}
 
 	/**
@@ -177,12 +146,11 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		ospitiVulnerabili.clear();
 		sfideVinte = 0;
 		sacerdoteAccolto = false;
-		cantiAppresi.clear();
 	}
 
 	/**
-	 * Scrive il gruppo (vedi {@link GruppoMD#salva(PrintWriter)}), poi una riga con monete, preziosi, pergamene, pozioni,
-	 * posizione e sfide vinte, e infine gli artefatti, gli ospiti e gli identificativi degli ospiti vulnerabili, ciascun
+	 * Scrive il gruppo (vedi {@link GruppoMD#salva(PrintWriter)}), poi una riga con monete, preziosi, pergamene, pozioni
+	 * e sfide vinte, e infine gli artefatti, gli ospiti e gli identificativi degli ospiti vulnerabili, ciascun
 	 * elenco preceduto dal suo numero di elementi.
 	 */
 	@Override
@@ -202,8 +170,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 				pozioniMagia,
 				pozioniMagiaGrande,
 				pozioniAumentoLivello,
-				coordinate.getX(),
-				coordinate.getY(),
 				sfideVinte,
 				sacerdoteAccolto,
 				artefatti.size()));
@@ -219,10 +185,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		stream.println(ospitiVulnerabili.size());
 		for (String uuid : ospitiVulnerabili) {
 			stream.println(uuid);
-		}
-		stream.println(cantiAppresi.size());
-		for (TipoCanto canto : cantiAppresi) {
-			stream.println(canto.name());
 		}
 	}
 
@@ -245,7 +207,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		pozioniMagia = st.intero();
 		pozioniMagiaGrande = st.intero();
 		pozioniAumentoLivello = st.intero();
-		coordinate = new CoordinateMD(st.intero(), st.intero());
 		sfideVinte = st.intero();
 		sacerdoteAccolto = st.booleano();
 		int numeroArtefatti = st.intero();
@@ -267,11 +228,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		int numeroVulnerabili = LettoreCampi.leggiIntero(stream);
 		for (int i = 0; i < numeroVulnerabili; i++) {
 			ospitiVulnerabili.add(LettoreCampi.leggiTesto(stream));
-		}
-		cantiAppresi.clear();
-		int numeroCanti = LettoreCampi.leggiIntero(stream);
-		for (int i = 0; i < numeroCanti; i++) {
-			cantiAppresi.add(TipoCanto.valueOf(LettoreCampi.leggiTesto(stream)));
 		}
 	}
 

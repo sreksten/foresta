@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
@@ -81,7 +82,7 @@ class ScenarioRitualeTest {
             assertTrue(rituale.getDescrizione().endsWith("Finora: 0."), rituale.getDescrizione());
 
             // Senza ingredienti, nel posto non si chiede niente
-            partita.gruppo().setCoordinate(rovine);
+            Foresta.setPosizioneDelGruppo(rovine);
             rituale.controllaPreLocazione();
             assertNull(rituale.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE));
 
@@ -96,12 +97,12 @@ class ScenarioRitualeTest {
             rituale.controllaPreLocazione();
             assertEquals("RINVIO", rituale.getPassoCorrente());
             assertFalse(RegistroMissioni.getIncontroMissione(rovine).isPresent());
-            partita.gruppo().setCoordinate(new CoordinateMD(rovine.getX() == 0 ? 1 : rovine.getX() - 1, rovine.getY()));
+            Foresta.setPosizioneDelGruppo(new CoordinateMD(rovine.getX() == 0 ? 1 : rovine.getX() - 1, rovine.getY()));
             rituale.controllaPreLocazione();
             assertEquals(IlRituale.RITO, rituale.getPassoCorrente());
             assertNull(rituale.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE), "lontano dal posto non si chiede");
 
-            partita.gruppo().setCoordinate(rovine);
+            Foresta.setPosizioneDelGruppo(rovine);
             rituale.controllaPreLocazione();
             assertNotNull(rituale.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE));
             rituale.rispondi(Passo.SI);
@@ -116,7 +117,7 @@ class ScenarioRitualeTest {
             assertEquals("RITORNO", rituale.getPassoCorrente());
             assertTrue(partita.testi().contains("Il varco è chiuso. Il sacerdote aspetta a Nyena."), String.valueOf(partita.testi()));
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             rituale.controllaPreLocazione();
             rituale.segnaIntermezzoPassoMostrato("RITORNO");
@@ -133,7 +134,7 @@ class ScenarioRitualeTest {
             IlRituale rituale = prendiLIncarico(partita, PASTORE);
             assertEquals(TipoLocazione.TEMPIO, Foresta.getLocazione(rituale.getPosto()));
             raccogliGliIngredienti(partita, rituale);
-            partita.gruppo().setCoordinate(rituale.getPosto());
+            Foresta.setPosizioneDelGruppo(rituale.getPosto());
             rituale.controllaPreLocazione();
             Passo domanda = rituale.getDomandaDaPorre(Passo.MomentoControllo.PRE_LOCAZIONE);
             assertEquals(Arrays.asList("La formula", "Il fumo", "Il sale", "Non ancora"), domanda.getOpzioni());
@@ -147,7 +148,7 @@ class ScenarioRitualeTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(213)) {
             IlRituale rituale = prendiLIncarico(partita, PASTORE);
             raccogliGliIngredienti(partita, rituale);
-            partita.gruppo().setCoordinate(rituale.getPosto());
+            Foresta.setPosizioneDelGruppo(rituale.getPosto());
             rituale.controllaPreLocazione();
             rituale.rispondi("2");
             rituale.controllaPreLocazione();
@@ -161,7 +162,7 @@ class ScenarioRitualeTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(214)) {
             IlRituale rituale = prendiLIncarico(partita, PASTORE);
             raccogliGliIngredienti(partita, rituale);
-            partita.gruppo().setCoordinate(rituale.getPosto());
+            Foresta.setPosizioneDelGruppo(rituale.getPosto());
             rituale.controllaPreLocazione();
             rituale.rispondi("3");
             rituale.controllaPreLocazione();
@@ -221,14 +222,14 @@ class ScenarioRitualeTest {
             CoordinateMD rovine = rituale.getPosto();
 
             partita.comando(Comando.ESCI_DA_CITTA);
-            partita.gruppo().setCoordinate(new CoordinateMD(rovine.getX(), rovine.getY() + 1));
+            Foresta.setPosizioneDelGruppo(new CoordinateMD(rovine.getX(), rovine.getY() + 1));
             partita.assertStato(Stato.SCELTA_DIREZIONE);
             partita.comando(Comando.NORD).comando(Comando.NUMERO_1);
             partita.assertStato(Stato.ATTESA_RISPOSTA_MISSIONE);
             assertEquals(Arrays.asList(Comando.SI, Comando.NO), new java.util.ArrayList<>(partita.comandiDisponibili()));
 
             partita.comando(Comando.SI);
-            assertEquals(rovine, partita.gruppo().getCoordinate());
+            assertEquals(rovine, Foresta.getPosizioneDelGruppo());
             assertEquals("GUARDIANO", rituale.getPassoCorrente());
             assertEquals(2, GruppoAvversario.getIstanza().getNumeroPersonaggi());
             assertEquals(TipoPersonaggio.SPETTRO, GruppoAvversario.getIstanza().getCapo().getClasse());

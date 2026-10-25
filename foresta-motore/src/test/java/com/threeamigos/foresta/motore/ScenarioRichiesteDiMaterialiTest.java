@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.tipi.Mandante;
@@ -100,7 +101,7 @@ class ScenarioRichiesteDiMaterialiTest {
             RaccoltaBottino.raccogli(new OggettoMissione(armaiolo.getId(), RichiestaDiMateriali.MATERIALE, armaiolo.getMateriali().getNome(), 2), partita.gruppo(), null);
             armaiolo.controllaPostLocazione();
             int monete = partita.gruppo().getMonete();
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             armaiolo.controllaPreLocazione();
             armaiolo.segnaIntermezzoPassoMostrato("RITORNO");
             armaiolo.controllaInLocazione();

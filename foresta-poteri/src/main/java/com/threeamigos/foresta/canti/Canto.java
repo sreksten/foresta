@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.canti;
 
 import com.threeamigos.foresta.interfacce.OggettoConCostoDiLancio;
-import com.threeamigos.foresta.motore.Gruppo;
+import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;

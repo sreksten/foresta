@@ -11,7 +11,6 @@ import com.threeamigos.foresta.missioni.richieste.DocumentazioneRichiesta;
 import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta.Indizio;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
@@ -67,7 +66,7 @@ public class LaDocumentazione extends IncaricoInCitta {
 	}
 
 	private boolean nelPosto() {
-		return getPosto() != null && getPosto().equals(GruppoGiocatore.getIstanza().getCoordinate());
+		return getPosto() != null && getPosto().equals(Foresta.getPosizioneDelGruppo());
 	}
 
 	private String getMandanteDiCitta() {

@@ -5,7 +5,7 @@ import com.threeamigos.foresta.tipi.NegozioInScena;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.artefatti.SpadaNormalmenteNascosta;
 import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;

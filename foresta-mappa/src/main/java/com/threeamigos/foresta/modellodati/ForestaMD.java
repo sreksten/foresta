@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -24,7 +23,8 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
  * in memoria è da rifare).
  * <p>
  * Le caselle "visitata" e "conosciuta" sono proprietà del modello dati della casella, non campi di questa classe.
- * Il salvataggio scrive le dimensioni e poi una riga per casella (vedi {@link #salva(PrintWriter)}).
+ * Tiene anche dove si trova il gruppo del giocatore: il gruppo non sa dove sta, lo sa la mappa.
+ * Il salvataggio scrive le dimensioni e la posizione del gruppo, e poi una riga per casella (vedi {@link #salva(PrintWriter)}).
  *
  * @author Stefano Reksten
  */
@@ -69,6 +69,23 @@ public class ForestaMD implements Serializzabile {
 	private Map<TipoLocazione, CoordinateMD> locazioniUniche = new EnumMap<>(TipoLocazione.class);
 
 	private int versioneMappa;
+
+	// La casella su cui si trova il gruppo del giocatore
+	private CoordinateMD posizioneDelGruppo = new CoordinateMD(0, 0);
+
+	/**
+	 * La casella su cui si trova il gruppo del giocatore.
+	 */
+	public CoordinateMD getPosizioneDelGruppo() {
+		return posizioneDelGruppo;
+	}
+
+	/**
+	 * Mette il gruppo del giocatore su quella casella.
+	 */
+	public void setPosizioneDelGruppo(CoordinateMD posizioneDelGruppo) {
+		this.posizioneDelGruppo = posizioneDelGruppo;
+	}
 
 	/**
 	 * Quante caselle ha la mappa in orizzontale.
@@ -202,6 +219,7 @@ public class ForestaMD implements Serializzabile {
 	 * @param dimensioneY il numero di righe
 	 */
 	public void reimposta(int dimensioneX, int dimensioneY) {
+		posizioneDelGruppo = new CoordinateMD(0, 0);
 		this.dimensioneX = dimensioneX;
 		this.dimensioneY = dimensioneY;
 		arrayLocazioni = new LocazioneMD[dimensioneX * dimensioneY];
@@ -303,14 +321,16 @@ public class ForestaMD implements Serializzabile {
 	// Routine per il salvataggio
 
 	/**
-	 * Scrive su una riga le dimensioni della mappa e poi una riga per ogni casella, in ordine per riga. Le dimensioni
-	 * fanno da conteggio, quindi non serve altro.
+	 * Scrive su una riga le dimensioni della mappa e la posizione del gruppo, e poi una riga per ogni casella, in ordine per riga.
+	 * Le dimensioni fanno da conteggio, quindi non serve altro.
 	 */
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stampaRiga(stream,
 				dimensioneX,
-				dimensioneY);
+				dimensioneY,
+				posizioneDelGruppo.getX(),
+				posizioneDelGruppo.getY());
 		for (LocazioneMD locazioneMD : arrayLocazioni) {
 			locazioneMD.salva(stream);
 		}
@@ -329,6 +349,7 @@ public class ForestaMD implements Serializzabile {
 			throw new IOException("Dimensioni della mappa non valide: " + colonne + "x" + righe);
 		}
 		reimposta(colonne, righe);
+		posizioneDelGruppo = new CoordinateMD(st.intero(), st.intero());
 		for (int indice = 0; indice < arrayLocazioni.length; indice++) {
 			LocazioneMD locazioneMD = new LocazioneMD();
 			locazioneMD.leggi(stream);

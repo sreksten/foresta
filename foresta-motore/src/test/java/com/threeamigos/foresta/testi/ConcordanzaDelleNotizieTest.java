@@ -2,7 +2,7 @@ package com.threeamigos.foresta.testi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Bardo;
 import com.threeamigos.foresta.personaggi.Guerriera;
 import com.threeamigos.foresta.personaggi.Guerriero;

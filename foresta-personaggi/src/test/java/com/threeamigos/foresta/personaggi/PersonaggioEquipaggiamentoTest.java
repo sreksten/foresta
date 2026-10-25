@@ -2,7 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
-import com.threeamigos.foresta.motore.DatiDiProva;
+import com.threeamigos.foresta.gruppi.DatiDiProva;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
@@ -11,10 +11,7 @@ import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
-import com.threeamigos.foresta.oggetti.ArmaNaturale;
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoEquipaggiamento;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -107,7 +107,7 @@ class ScenarioLocazioniRivendicateTest {
             assertEquals("ARRIVATI", missione.getPassoCorrente());
             CoordinateMD tempio = RegistroMissioni.getLocazioneOccupata(missione);
             assertEquals(TipoLocazione.TEMPIO, Foresta.getLocazione(tempio));
-            assertNotEquals(partita.gruppo().getCoordinate(), tempio);
+            assertNotEquals(Foresta.getPosizioneDelGruppo(), tempio);
         }
     }
 
@@ -123,7 +123,7 @@ class ScenarioLocazioniRivendicateTest {
 
             // Un solo bosco visitato, e niente paludi visitate: il tempio nuovo sorge lì
             CoordinateMD visitato = coordinate(TipoLocazione.BOSCO).stream()
-                    .filter(c -> !c.equals(partita.gruppo().getCoordinate()) && RegistroArtefatti.getArtefattoInLocazione(c) == null)
+                    .filter(c -> !c.equals(Foresta.getPosizioneDelGruppo()) && RegistroArtefatti.getArtefattoInLocazione(c) == null)
                     .findFirst().orElseThrow(AssertionError::new);
             for (TipoLocazione tipo : new TipoLocazione[]{TipoLocazione.BOSCO, TipoLocazione.PALUDE}) {
                 coordinate(tipo).forEach(c -> Foresta.setLocazioneVisitata(c, false));
@@ -149,7 +149,7 @@ class ScenarioLocazioniRivendicateTest {
             for (CoordinateMD tempio : templi) {
                 RegistroMissioni.occupaLocazione(tempio, prima);
             }
-            partita.gruppo().setCoordinate(ultimo);
+            Foresta.setPosizioneDelGruppo(ultimo);
             assertEquals(Optional.empty(), RegistroMissioni.cerca(TipoLocazione.TEMPIO, seconda),
                     "i templi sono tutti della prima missione, in corso, o del gruppo");
 
@@ -255,13 +255,13 @@ class ScenarioLocazioniRivendicateTest {
             CoordinateMD rovine = sconfiggi(partita, TipoLocazione.CASTELLO_STREGA, missione(SconfiggiLaStrega.class));
             // Il gruppo esce dalla città da una casella accanto alle rovine e ci entra con un passo
             boolean daSud = rovine.getY() + 1 < Foresta.getDimensioneY();
-            partita.gruppo().setCoordinate(new CoordinateMD(rovine.getX(), rovine.getY() + (daSud ? 1 : -1)));
+            Foresta.setPosizioneDelGruppo(new CoordinateMD(rovine.getX(), rovine.getY() + (daSud ? 1 : -1)));
             partita.comando(Comando.ESCI_DA_CITTA);
             partita.assertStato(Stato.SCELTA_DIREZIONE);
             partita.eventi().ascolta(NotificaTestoFrase.class);
             partita.comando(daSud ? Comando.NORD : Comando.SUD).comando(Comando.NUMERO_1);
 
-            assertEquals(rovine, partita.gruppo().getCoordinate());
+            assertEquals(rovine, Foresta.getPosizioneDelGruppo());
             assertTrue(partita.testi().contains("Qui sorgeva il castello della Strega."), String.valueOf(partita.testi()));
         }
     }

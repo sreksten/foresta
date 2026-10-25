@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -295,9 +297,9 @@ final class GiocatoreAutomatico {
 	 * Sceglie la meta e fa il primo spostamento del percorso più sicuro per arrivarci.
 	 */
 	private Comando spostati(GruppoGiocatore gruppo, Collection<Comando> comandi) {
-		int x = gruppo.getX();
-		int y = gruppo.getY();
-		int[] maxQui = {gruppo.getMaxPassiNord(), gruppo.getMaxPassiEst(), gruppo.getMaxPassiSud(), gruppo.getMaxPassiOvest()};
+		int x = Foresta.getPosizioneDelGruppo().getX();
+		int y = Foresta.getPosizioneDelGruppo().getY();
+		int[] maxQui = {Foresta.getMaxPassiNord(), Foresta.getMaxPassiEst(), Foresta.getMaxPassiSud(), Foresta.getMaxPassiOvest()};
 		List<CoordinateMD> mete = scegliMete(gruppo);
 		Mossa mossa = null;
 		if (!mete.isEmpty()) {
@@ -331,7 +333,7 @@ final class GiocatoreAutomatico {
 		int vivi = gruppo.getNumeroPersonaggiVivi();
 		int monete = gruppo.getMonete();
 		int pozioni = gruppo.getPozioniSalute() + gruppo.getPozioniSaluteGrande();
-		CoordinateMD qui = gruppo.getCoordinate();
+		CoordinateMD qui = Foresta.getPosizioneDelGruppo();
 		List<CoordinateMD> citta = new ArrayList<>();
 		List<CoordinateMD> locande = new ArrayList<>();
 		List<CoordinateMD> locandeNuove = new ArrayList<>();

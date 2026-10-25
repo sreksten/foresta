@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.canti.CantiImparati;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.ProprietaDiMissione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -54,7 +54,7 @@ public class IntermezzoUrloDellaBanshee implements Intermezzo {
 	 */
 	@Override
 	public List<PaginaIntermezzo> getPagine() {
-		GruppoGiocatore.getIstanza().impara(TipoCanto.URLO_DELLA_BANSHEE);
+		CantiImparati.impara(TipoCanto.URLO_DELLA_BANSHEE);
 		String moglie = RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome();
 		TipoLocazione arrivo = getViaggioCompletato()
 				.map(viaggio -> viaggio.ottieniProprieta(ProprietaDiMissione.CITTA_DI_ARRIVO)).map(TipoLocazione::valueOf).orElse(null);

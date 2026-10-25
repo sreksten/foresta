@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.personaggi.GestoreProgressione;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
 import com.threeamigos.foresta.mappa.Foresta;
@@ -20,7 +21,6 @@ import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
@@ -92,7 +92,7 @@ class ScenarioCorrezioniTest {
 					() -> prima.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			prima.comando(Comando.ESCI_DA_CITTA);
 			// Ci si accampa nel bosco, non in citta': il gruppo va su una casella di bosco prima del salvataggio
-			prima.gruppo().setCoordinate(unaCasellaDiBosco());
+			Foresta.setPosizioneDelGruppo(unaCasellaDiBosco());
 			// Ci si accampa solo di notte e con qualcuno da mettere di guardia
 			prima.gruppo().aggiungiPersonaggio(new Guerriero("Sentinella", 1));
 			while (LineaTemporale.getOra() <= 20) {
@@ -116,7 +116,7 @@ class ScenarioCorrezioniTest {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO,
 					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.comando(Comando.ESCI_DA_CITTA);
-			partita.gruppo().setCoordinate(unaCasellaDiBosco());
+			Foresta.setPosizioneDelGruppo(unaCasellaDiBosco());
 			partita.gruppo().aggiungiPersonaggio(new Guerriero("Sentinella", 1));
 			while (LineaTemporale.getOra() <= 20) {
 				LineaTemporale.aggiungiOre(1);
@@ -136,7 +136,7 @@ class ScenarioCorrezioniTest {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO,
 					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.comando(Comando.ESCI_DA_CITTA);
-			partita.gruppo().setCoordinate(unaCasellaDiBosco());
+			Foresta.setPosizioneDelGruppo(unaCasellaDiBosco());
 			while (LineaTemporale.getOra() <= 20) {
 				LineaTemporale.aggiungiOre(1);
 			}

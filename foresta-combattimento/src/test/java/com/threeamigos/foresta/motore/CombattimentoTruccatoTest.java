@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.DatiDiProva;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.tipi.CategoriaDanno;
 import com.threeamigos.foresta.personaggi.Guerriero;

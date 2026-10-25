@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -97,7 +97,7 @@ public final class SceltaDegliIncarichi {
 	}
 
 	private static String visitaCorrente() {
-		CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
+		CoordinateMD qui = Foresta.getPosizioneDelGruppo();
 		return (LineaTemporale.getGiorno() * 24L + LineaTemporale.getOra()) + "@" + (qui == null ? "" : qui.getX() + "," + qui.getY());
 	}
 

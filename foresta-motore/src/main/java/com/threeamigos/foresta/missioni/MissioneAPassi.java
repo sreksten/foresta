@@ -12,6 +12,8 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
@@ -240,7 +242,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 */
 	@Override
 	public void attivaMissione() {
-		CoordinateMD coordinate = GruppoGiocatore.getIstanza().getCoordinate();
+		CoordinateMD coordinate = Foresta.getPosizioneDelGruppo();
 		// Senza una casella (fuori da una partita) non c'è un punto di partenza da ricordare
 		if (ottieniProprieta(PUNTO_DI_PARTENZA) == null && coordinate != null) {
 			aggiungiProprieta(PUNTO_DI_PARTENZA, coordinate.getX() + SEPARATORE + coordinate.getY());
@@ -258,14 +260,14 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * VAI: si conclude quando il gruppo è in quella casella.
 	 */
 	protected final Passo vai(MomentoControllo momento, CoordinateMD destinazione) {
-		return Passo.quando(momento, () -> destinazione.equals(GruppoGiocatore.getIstanza().getCoordinate()));
+		return Passo.quando(momento, () -> destinazione.equals(Foresta.getPosizioneDelGruppo()));
 	}
 
 	/**
 	 * VAI: si conclude quando il gruppo è in quella locazione unica (una città, un castello…).
 	 */
 	protected final Passo vai(MomentoControllo momento, TipoLocazione locazioneUnica) {
-		return Passo.quando(momento, () -> GruppoGiocatore.getIstanza().isInLocazioneUnica(locazioneUnica))
+		return Passo.quando(momento, () -> Foresta.isGruppoIn(locazioneUnica))
 				.segnala(() -> Foresta.getCoordinateLocazioneUnica(locazioneUnica));
 	}
 
@@ -275,7 +277,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	protected final Passo tornaAlPuntoDiPartenza(MomentoControllo momento) {
 		return Passo.quando(momento, () -> {
 			CoordinateMD partenza = getPuntoDiPartenza();
-			return partenza != null && partenza.equals(GruppoGiocatore.getIstanza().getCoordinate());
+			return partenza != null && partenza.equals(Foresta.getPosizioneDelGruppo());
 		});
 	}
 
@@ -517,7 +519,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	protected final Passo sorveglia(Supplier<CoordinateMD> dove, int volte, int oreFraLeVisite) {
 		return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> getVisiteNelPassoCorrente() >= volte)
 				.aOgniControllo(() -> {
-					if (dove.get() == null || !dove.get().equals(GruppoGiocatore.getIstanza().getCoordinate())) {
+					if (dove.get() == null || !dove.get().equals(Foresta.getPosizioneDelGruppo())) {
 						return;
 					}
 					String passo = validaId(getPassoCorrente());
@@ -537,7 +539,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	protected final Passo esplora(int caselleNuove) {
 		return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> getCaselleEsplorate() >= caselleNuove)
 				.aOgniControllo(() -> {
-					CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
+					CoordinateMD qui = Foresta.getPosizioneDelGruppo();
 					if (qui == null || Foresta.isLocazioneVisitata(qui)) {
 						return;
 					}
@@ -573,7 +575,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * {@code poi} o in un'altra guardia.
 	 */
 	protected final Passo evitaCombattimento(MomentoControllo momento, Supplier<CoordinateMD> dove, Supplier<String> testoSeScoperti) {
-		return Passo.quando(momento, () -> dove.get() != null && dove.get().equals(GruppoGiocatore.getIstanza().getCoordinate()))
+		return Passo.quando(momento, () -> dove.get() != null && dove.get().equals(Foresta.getPosizioneDelGruppo()))
 				.falliscoSe(this::haCombattutoNelPassoCorrente, testoSeScoperti);
 	}
 
@@ -733,7 +735,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 */
 	protected final Passo combatti(Supplier<CoordinateMD> dove, IncontroDiMissione incontro) {
 		return Passo.quando(MomentoControllo.POST_LOCAZIONE,
-						() -> dove.get() != null && dove.get().equals(GruppoGiocatore.getIstanza().getCoordinate())
+						() -> dove.get() != null && dove.get().equals(Foresta.getPosizioneDelGruppo())
 								&& incontro.getSconfittiRichiesti().entrySet().stream().allMatch(richiesti ->
 										getConteggioNelPassoCorrente(eventoSconfittoIn(richiesti.getKey(), dove.get())) >= richiesti.getValue()))
 				.affronta(dove, incontro);
@@ -746,7 +748,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 */
 	protected final Passo combattiIlCapo(Supplier<CoordinateMD> dove, IncontroDiMissione incontro) {
 		return Passo.quando(MomentoControllo.POST_LOCAZIONE,
-						() -> dove.get() != null && dove.get().equals(GruppoGiocatore.getIstanza().getCoordinate())
+						() -> dove.get() != null && dove.get().equals(Foresta.getPosizioneDelGruppo())
 								&& getConteggioNelPassoCorrente(eventoSconfittoIn(incontro.getClasseDelCapo(), dove.get())) >= 1)
 				.affronta(dove, incontro);
 	}
@@ -825,7 +827,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 */
 	protected final Passo scorta(MomentoControllo momento, Supplier<CoordinateMD> destinazione, boolean congeda) {
 		Passo passo = Passo.quando(momento, () -> destinazione.get() != null
-						&& destinazione.get().equals(GruppoGiocatore.getIstanza().getCoordinate())
+						&& destinazione.get().equals(Foresta.getPosizioneDelGruppo())
 						&& getScortato().filter(Personaggio::isVivo).isPresent())
 				.segnala(destinazione);
 		return congeda ? passo.esegui(this::congedaScortato) : passo;
@@ -866,7 +868,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 */
 	protected final Passo scortaFinoAllaMeta(MomentoControllo momento, Supplier<CoordinateMD> destinazione, boolean congeda) {
 		return Passo.quando(momento, () -> getScortato().map(scortato -> !scortato.isVivo()).orElse(false)
-						|| destinazione.get() != null && destinazione.get().equals(GruppoGiocatore.getIstanza().getCoordinate())
+						|| destinazione.get() != null && destinazione.get().equals(Foresta.getPosizioneDelGruppo())
 						&& getScortato().filter(Personaggio::isVivo).isPresent())
 				.esegui(() -> {
 					if (getScortato().map(scortato -> !scortato.isVivo()).orElse(false)) {

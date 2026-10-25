@@ -1,8 +1,7 @@
 package com.threeamigos.foresta.canti;
 
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.Gruppo;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -32,7 +31,7 @@ public final class CantoDelBardo {
 	 * l'intermezzo che segue il viaggio della moglie (vedi IntermezzoUrloDellaBanshee), il gruppo lo ricorda.
 	 */
 	public static boolean isUrloDellaBansheeAppreso() {
-		return GruppoGiocatore.getIstanza().haImparato(TipoCanto.URLO_DELLA_BANSHEE);
+		return CantiImparati.haImparato(TipoCanto.URLO_DELLA_BANSHEE);
 	}
 
 	/**

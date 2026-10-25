@@ -9,19 +9,9 @@
 
     <artifactId>foresta-personaggi</artifactId>
     <name>foresta-personaggi</name>
-    <description>I personaggi, i gruppi di personaggi e il combattimento fra gruppi: chi sono, che cosa possiedono e come si scontrano, con i loro tipi, i loro dati e i loro contratti per la UI; niente su dove vivono o su chi li comanda</description>
+    <description>I personaggi e i gruppi di personaggi: chi sono e che cosa possiedono, con i loro tipi, i loro dati e i loro contratti per la UI; niente su dove vivono, su come si scontrano o su chi li comanda</description>
 
     <dependencies>
-        <dependency>
-            <groupId>com.threeamigos</groupId>
-            <artifactId>foresta-tipi</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.threeamigos</groupId>
-            <artifactId>foresta-mappa</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.threeamigos</groupId>
             <artifactId>foresta-artefatti</artifactId>

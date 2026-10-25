@@ -37,7 +37,7 @@ class ScenarioRapimentoTest {
 
     private static Personaggio liberaArmando(PartitaDiTest partita, IlRapimento rapimento) {
         CoordinateMD covo = rapimento.getCovo();
-        partita.gruppo().setCoordinate(covo);
+        Foresta.setPosizioneDelGruppo(covo);
         for (int i = 0; i < IlRapimento.RAPITORI; i++) {
             partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
         }
@@ -67,7 +67,7 @@ class ScenarioRapimentoTest {
             assertFalse(partita.gruppo().getPersonaggi().contains(armando));
 
             CoordinateMD nyena = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA);
-            partita.gruppo().setCoordinate(nyena);
+            Foresta.setPosizioneDelGruppo(nyena);
             int monete = partita.gruppo().getMonete();
             rapimento.controllaPreLocazione();
             // Armando è ancora nel gruppo mentre la scena lo mostra, e se ne separa a missione conclusa
@@ -96,7 +96,7 @@ class ScenarioRapimentoTest {
             assertTrue(rapimento.getDescrizione().contains("dare la notizia"), rapimento.getDescrizione());
 
             // In città la scena triste, poi la missione fallisce, senza monete
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             rapimento.controllaPreLocazione();
             assertEquals("LUTTO", rapimento.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));

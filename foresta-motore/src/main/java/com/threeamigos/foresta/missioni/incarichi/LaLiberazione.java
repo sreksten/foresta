@@ -11,7 +11,6 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -111,7 +110,7 @@ public abstract class LaLiberazione extends IncaricoInCitta {
 				return combatti(this::getCovo, getNemiciDelCovo()).poi(LIBERATO);
 			case LIBERATO:
 				return prendiInScorta(MomentoControllo.POST_LOCAZIONE,
-								() -> getCovo().equals(GruppoGiocatore.getIstanza().getCoordinate()), getPersona(), true)
+								() -> getCovo().equals(Foresta.getPosizioneDelGruppo()), getPersona(), true)
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testoLiberato())))
 						.poi(VIAGGIO);
 			case VIAGGIO:

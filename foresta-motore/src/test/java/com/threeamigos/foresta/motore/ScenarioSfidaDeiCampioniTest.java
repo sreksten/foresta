@@ -222,8 +222,8 @@ class ScenarioSfidaDeiCampioniTest {
             int x = posto.getX() - direzioni[i][0];
             int y = posto.getY() - direzioni[i][1];
             if (x >= 0 && y >= 0 && x < Foresta.getDimensioneX() && y < Foresta.getDimensioneY()) {
-                partita.gruppo().setCoordinate(new CoordinateMD(x, y));
-                Foresta.ottieniMappaIntorno(partita.gruppo().getX(), partita.gruppo().getY());
+                Foresta.setPosizioneDelGruppo(new CoordinateMD(x, y));
+                Foresta.ottieniMappaIntorno(Foresta.getPosizioneDelGruppo().getX(), Foresta.getPosizioneDelGruppo().getY());
                 partita.comando(comandi[i]);
                 if (partita.comandiDisponibili().contains(Comando.NUMERO_1)) {
                     partita.comando(Comando.NUMERO_1);

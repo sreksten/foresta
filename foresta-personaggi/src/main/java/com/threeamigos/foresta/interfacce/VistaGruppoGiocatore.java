@@ -2,10 +2,7 @@ package com.threeamigos.foresta.interfacce;
 
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.artefatti.VistaPezzoDelSet;
-import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
-import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.Collection;
 import java.util.List;
@@ -48,9 +45,5 @@ public interface VistaGruppoGiocatore extends VistaGruppo {
 	int getPozioniMagiaGrande();
 
 	int getPozioniAumentoLivello();
-
-	CoordinateMD getCoordinate();
-
-	TipoLocazione getTipoLocazioneCorrente();
 
 }

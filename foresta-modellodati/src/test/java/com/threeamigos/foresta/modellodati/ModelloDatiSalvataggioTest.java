@@ -28,7 +28,6 @@ class ModelloDatiSalvataggioTest {
         modello.reimposta(4, 3);
         modello.getRegistroArtefattiMD().addArtefattoInLocazione(
                 ArtefattiDiTest.creaArtefatto(TipoArtefatto.ELMO, "l'elmo di Gorgor", ""), new CoordinateMD(3, 1));
-        modello.getGruppoGiocatoreMD().setCoordinate(new CoordinateMD(1, 2));
         PersonaggioMD senzaNome = new PersonaggioMD();
         senzaNome.setClasse(TipoPersonaggio.LADRO);
         senzaNome.setVivo(true);
@@ -67,7 +66,6 @@ class ModelloDatiSalvataggioTest {
         // Given
         ModelloDati modello = new ModelloDati();
         modello.reimposta(4, 3);
-        modello.getGruppoGiocatoreMD().setCoordinate(new CoordinateMD(1, 2));
         for (int x = 0; x < 4; x++) {
             for (int y = 0; y < 3; y++) {
                 modello.getForestaMD().impostaLocazione(new CoordinateMD(x, y), TipoLocazione.BOSCO);

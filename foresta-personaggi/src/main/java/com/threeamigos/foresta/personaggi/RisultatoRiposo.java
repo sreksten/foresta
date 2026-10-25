@@ -1,0 +1,45 @@
+package com.threeamigos.foresta.personaggi;
+
+import com.threeamigos.foresta.tipi.TipoRiposo;
+
+/**
+ * Quanto ha recuperato un personaggio che ha riposato: salute e magia ripristinate e stanchezza tolta, con la durata e il tipo di riposo.
+ *
+ * @author Stefano Reksten
+ */
+public class RisultatoRiposo {
+
+    private final int tempoRiposo;
+    private final TipoRiposo tipoRiposo;
+    private final int ripristinoSalute;
+    private final int ripristinoMagia;
+    private final int abbassamentoStanchezza;
+
+    public RisultatoRiposo(int tempoRiposo, TipoRiposo tipoRiposo, int ripristinoSalute, int ripristinoMagia, int abbassamentoStanchezza) {
+        this.tempoRiposo = tempoRiposo;
+        this.tipoRiposo = tipoRiposo;
+        this.ripristinoSalute = ripristinoSalute;
+        this.ripristinoMagia = ripristinoMagia;
+        this.abbassamentoStanchezza = abbassamentoStanchezza;
+    }
+
+    public int getTempoRiposo() {
+        return tempoRiposo;
+    }
+
+    public TipoRiposo getTipoRiposo() {
+        return tipoRiposo;
+    }
+
+    public int getRipristinoSalute() {
+        return ripristinoSalute;
+    }
+
+    public int getRipristinoMagia() {
+        return ripristinoMagia;
+    }
+
+    public int getAbbassamentoStanchezza() {
+        return abbassamentoStanchezza;
+    }
+}

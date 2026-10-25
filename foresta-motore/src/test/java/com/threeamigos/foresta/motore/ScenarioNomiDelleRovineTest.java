@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.locazioni.Rovine;
@@ -63,7 +64,7 @@ class ScenarioNomiDelleRovineTest {
             }
 
             CoordinateMD prima = rovine.get(0);
-            partita.gruppo().setCoordinate(prima);
+            Foresta.setPosizioneDelGruppo(prima);
             CostruttoreDellaForesta.costruisciIstanza(prima).descrivi(partita.gruppo(), GruppoAvversario.getIstanza());
             String atteso = "Qui, " + Articoli.conPreposizione("in", nomi.get(0)) + ", ";
             assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith(atteso)), atteso + " in " + partita.testi());

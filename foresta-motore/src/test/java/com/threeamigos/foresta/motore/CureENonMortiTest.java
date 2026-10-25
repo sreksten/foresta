@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.canti.CantoCurativo;
 import com.threeamigos.foresta.modellodati.ModelloDati;

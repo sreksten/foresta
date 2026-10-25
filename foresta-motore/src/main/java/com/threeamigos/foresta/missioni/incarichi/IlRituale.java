@@ -9,7 +9,6 @@ import com.threeamigos.foresta.missioni.richieste.MaterialeRichiesto;
 import com.threeamigos.foresta.missioni.richieste.RitualeRichiesto;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -103,7 +102,7 @@ public class IlRituale extends IncaricoInCitta {
 	}
 
 	private boolean nelPosto() {
-		return getPosto() != null && getPosto().equals(GruppoGiocatore.getIstanza().getCoordinate());
+		return getPosto() != null && getPosto().equals(Foresta.getPosizioneDelGruppo());
 	}
 
 	/**

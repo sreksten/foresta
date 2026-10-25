@@ -71,7 +71,7 @@ class ScenarioSorveglianzaTest {
             assertTrue(Foresta.isLocazioneConosciuta(posto));
 
             // Prima visita: conta, e nella grotta non c'è ancora il troll
-            partita.gruppo().setCoordinate(posto);
+            Foresta.setPosizioneDelGruppo(posto);
             sorveglianza.controllaPreLocazione();
             assertEquals("SORVEGLIA", sorveglianza.getPassoCorrente());
             assertTrue(partita.testi().contains("Qualcuno russa. Bisogna tornare qui ancora una volta, lasciando passare almeno "
@@ -111,7 +111,7 @@ class ScenarioSorveglianzaTest {
             CoordinateMD posto = sorveglianza.getPosto();
             assertEquals(TipoLocazione.BOSCO, Foresta.getLocazione(posto));
 
-            partita.gruppo().setCoordinate(posto);
+            Foresta.setPosizioneDelGruppo(posto);
             sorveglianza.controllaPreLocazione();
             LineaTemporale.aggiungiOre(24);
             sorveglianza.controllaPreLocazione();
@@ -135,7 +135,7 @@ class ScenarioSorveglianzaTest {
     }
 
     private static void riscuoti(PartitaDiTest partita, LaSorveglianza sorveglianza, int ricompensa) {
-        partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+        Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
         int monete = partita.gruppo().getMonete();
         sorveglianza.controllaPreLocazione();
         sorveglianza.segnaIntermezzoPassoMostrato("RITORNO");

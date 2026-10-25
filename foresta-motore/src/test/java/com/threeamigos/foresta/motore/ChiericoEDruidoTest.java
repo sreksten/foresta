@@ -1,5 +1,9 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.strumenti.ModalitaDiProva;
+import com.threeamigos.foresta.personaggi.RegoleEquipaggiamento;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.abilita.*;
 import com.threeamigos.foresta.tipi.TipoArtefatto;

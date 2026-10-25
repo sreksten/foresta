@@ -78,7 +78,7 @@ class ScenarioOggettoSmarritoTest {
             assertEquals("Hai trovato la fede nuziale: riportala al mugnaio di Nyena.", smarrito.getDescrizione());
 
             int monete = partita.gruppo().getMonete();
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             smarrito.controllaPreLocazione();
             smarrito.segnaIntermezzoPassoMostrato("RITORNO");
             smarrito.controllaInLocazione();

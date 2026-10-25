@@ -13,6 +13,7 @@ import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.testi.Articoli;
@@ -108,7 +109,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 							getBardo();
 							// Il locandiere dice dove abita il bardo: da qui la città è nota, non prima (la condizione si controlla a ogni ingresso)
 							Foresta.setLocazioneConosciuta(Foresta.getCoordinateLocazioneUnica(cittaPiuVicina()));
-							CoordinateMD locanda = gruppo.getCoordinate();
+							CoordinateMD locanda = Foresta.getPosizioneDelGruppo();
 							aggiungiProprieta(LOCANDA, locanda.getX() + "," + locanda.getY());
 						})
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaDelLocandiere().getPagine())
@@ -172,7 +173,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 
 	private boolean isTerzaVisitaAUnaLocanda() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.getTipoLocazioneCorrente() != TipoLocazione.LOCANDA) {
+		if (Foresta.getLocazioneDelGruppo() != TipoLocazione.LOCANDA) {
 			return false;
 		}
 		return visiteATutteLeLocande() >= VISITE_PRECEDENTI;
@@ -208,7 +209,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	private boolean nellaLocanda() {
-		CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
+		CoordinateMD qui = Foresta.getPosizioneDelGruppo();
 		return (qui.getX() + "," + qui.getY()).equals(ottieniProprieta(LOCANDA));
 	}
 
@@ -220,7 +221,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	 * La città ancora in piedi più vicina al gruppo, o null se non ce n'è più nessuna. Non fa conoscere la città al giocatore.
 	 */
 	private TipoLocazione cittaPiuVicina() {
-		CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
+		CoordinateMD qui = Foresta.getPosizioneDelGruppo();
 		TipoLocazione piuVicina = null;
 		int distanzaMinima = Integer.MAX_VALUE;
 		for (TipoLocazione tipo : TipoLocazione.values()) {

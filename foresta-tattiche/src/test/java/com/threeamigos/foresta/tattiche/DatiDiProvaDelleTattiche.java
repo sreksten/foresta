@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.tattiche;
 
 import com.threeamigos.foresta.modellodati.TatticheMD;
-import com.threeamigos.foresta.motore.DatiDiProva;
+import com.threeamigos.foresta.gruppi.DatiDiProva;
 
 /**
  * I dati per le prove di questo modulo: il modello dati della partita sta in un modulo che dipende dalle tattiche, quindi le prove

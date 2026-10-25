@@ -15,6 +15,7 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.ProprietaDiMissione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.strumenti.dado.Dado;
@@ -134,7 +135,7 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 							aggiungiProprieta(CITTA_DI_PARTENZA, partenza.name());
 							List<TipoLocazione> altre = altreCitta();
 							aggiungiProprieta(CITTA_DI_ARRIVO, altre.get(Dado.tiraAncheAUnaFaccia(altre.size()) - 1).name());
-							CoordinateMD locanda = gruppo.getCoordinate();
+							CoordinateMD locanda = Foresta.getPosizioneDelGruppo();
 							aggiungiProprieta(LOCANDA, locanda.getX() + "," + locanda.getY());
 						})
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaDelBardo().getPagine())
@@ -152,14 +153,14 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 						})
 						.poi(PRELEVAMENTO);
 			case PRELEVAMENTO:
-				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> gruppo.getTipoLocazioneCorrente() == getCittaDiPartenza())
+				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getLocazioneDelGruppo() == getCittaDiPartenza())
 						.segnala(() -> Foresta.getCoordinateLocazioneUnica(getCittaDiPartenza()))
 						.falliscoSe(() -> isCittaDistrutta(getCittaDiPartenza()), () -> getNomeCitta(getCittaDiPartenza()) + " è stata distrutta: "
 								+ getMoglie() + " non ha più una casa da cui partire.")
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaDellaMoglie().getPagine())
 						.poi(PARTENZA);
 			case PARTENZA:
-				return prendiInScorta(MomentoControllo.IN_LOCAZIONE, () -> gruppo.getTipoLocazioneCorrente() == getCittaDiPartenza(),
+				return prendiInScorta(MomentoControllo.IN_LOCAZIONE, () -> Foresta.getLocazioneDelGruppo() == getCittaDiPartenza(),
 								() -> RegistroPersonaggi.costruisciPersonaggio(RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO),
 										EquipaggiamentoIniziale.livelloCasuale(Statistiche.getLivello())), false)
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(getMoglie() + " si unisce al gruppo: va accompagnata "
@@ -214,15 +215,15 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 	 */
 	private boolean isRitornoInUnaLocanda() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.getTipoLocazioneCorrente() != TipoLocazione.LOCANDA) {
+		if (Foresta.getLocazioneDelGruppo() != TipoLocazione.LOCANDA) {
 			return false;
 		}
-		String visite = Foresta.getLocazioneMD(gruppo.getCoordinate()).ottieniProprieta(Locanda.LOCANDA_VISITE);
+		String visite = Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()).ottieniProprieta(Locanda.LOCANDA_VISITE);
 		return visite != null && Integer.parseInt(visite) >= VISITE_PRECEDENTI;
 	}
 
 	private boolean nellaLocanda() {
-		CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
+		CoordinateMD qui = Foresta.getPosizioneDelGruppo();
 		return (qui.getX() + "," + qui.getY()).equals(ottieniProprieta(LOCANDA));
 	}
 

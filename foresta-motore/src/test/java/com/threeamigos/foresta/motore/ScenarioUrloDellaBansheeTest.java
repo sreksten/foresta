@@ -52,13 +52,13 @@ class ScenarioUrloDellaBansheeTest {
     /** Il gruppo riporta a casa il bardo. */
     private static TipoLocazione riportaACasaIlBardo(PartitaDiTest partita, CoordinateMD locanda) {
         NonSparateSulPianista pianista = pianista();
-        partita.gruppo().setCoordinate(locanda);
+        Foresta.setPosizioneDelGruppo(locanda);
         Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "2");
         pianista.controllaPreLocazione();
         pianista.segnaIntermezzoPassoMostrato("INCARICO");
         pianista.controllaInLocazione();
         TipoLocazione casa = pianista.getCitta();
-        partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(casa));
+        Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(casa));
         pianista.controllaPreLocazione();
         pianista.segnaIntermezzoPassoMostrato("VIAGGIO");
         pianista.controllaInLocazione();
@@ -69,23 +69,23 @@ class ScenarioUrloDellaBansheeTest {
     /** Il gruppo accompagna la moglie fino all'altra città, a fine viaggio. */
     private static void accompagnaLaMoglie(PartitaDiTest partita, CoordinateMD locanda) {
         IlViaggioDellaMoglie viaggio = viaggio();
-        partita.gruppo().setCoordinate(locanda);
+        Foresta.setPosizioneDelGruppo(locanda);
         Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "1");
         viaggio.controllaPreLocazione();
         viaggio.segnaIntermezzoPassoMostrato("INCARICO");
         viaggio.controllaInLocazione();
-        partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(viaggio.getCittaDiPartenza()));
+        Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(viaggio.getCittaDiPartenza()));
         viaggio.controllaPreLocazione();
         viaggio.segnaIntermezzoPassoMostrato("PRELEVAMENTO");
         viaggio.controllaInLocazione();
-        partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(viaggio.getCittaDiArrivo()));
+        Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(viaggio.getCittaDiArrivo()));
         viaggio.controllaPreLocazione();
         viaggio.controllaInLocazione();
         assertTrue(viaggio.isCompleta());
     }
 
     private static Intermezzo prossimoIntermezzoNellaLocanda(PartitaDiTest partita, CoordinateMD locanda) {
-        partita.gruppo().setCoordinate(locanda);
+        Foresta.setPosizioneDelGruppo(locanda);
         RegistroIntermezzi.nuovoMomento();
         return RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE);
     }
@@ -109,7 +109,7 @@ class ScenarioUrloDellaBansheeTest {
             accompagnaLaMoglie(partita, locanda);
 
             // In città no: scatta solo in una locanda nel bosco
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             RegistroIntermezzi.nuovoMomento();
             assertFalse(RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE) instanceof IntermezzoUrloDellaBanshee);
 
@@ -139,12 +139,12 @@ class ScenarioUrloDellaBansheeTest {
             Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
             riportaACasaIlBardo(partita, locanda);
             IlViaggioDellaMoglie viaggio = viaggio();
-            partita.gruppo().setCoordinate(locanda);
+            Foresta.setPosizioneDelGruppo(locanda);
             Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "1");
             viaggio.controllaPreLocazione();
             viaggio.segnaIntermezzoPassoMostrato("INCARICO");
             viaggio.controllaInLocazione();
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(viaggio.getCittaDiPartenza()));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(viaggio.getCittaDiPartenza()));
             viaggio.controllaPreLocazione();
             viaggio.segnaIntermezzoPassoMostrato("PRELEVAMENTO");
             viaggio.controllaInLocazione();

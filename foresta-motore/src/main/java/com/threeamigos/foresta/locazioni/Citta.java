@@ -5,8 +5,8 @@ import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponi
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStatistiche;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.CommercioDelGruppo;
 import com.threeamigos.foresta.motore.Stato;
 import com.threeamigos.foresta.testi.Articoli;

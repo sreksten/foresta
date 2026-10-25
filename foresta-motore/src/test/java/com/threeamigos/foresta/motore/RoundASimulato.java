@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.modellodati.TatticaMD;
@@ -77,10 +78,9 @@ final class RoundASimulato {
     RoundASimulato(List<Personaggio> miei, List<Personaggio> avversari) {
         this.miei = miei;
         this.avversari = avversari;
-        gruppoDeiMiei.personaggi.addAll(miei);
-        gruppoDeiMiei.capo = miei.get(0);
-        gruppoDegliAvversari.personaggi.addAll(avversari);
-        gruppoDegliAvversari.capo = avversari.isEmpty() ? null : avversari.get(0);
+        // Il primo che entra è il capo
+        miei.forEach(gruppoDeiMiei::aggiungiPersonaggio);
+        avversari.forEach(gruppoDegliAvversari::aggiungiPersonaggio);
         // Uno scontro nuovo: la memoria dello scontro (tentativi falliti, immunità scoperte, voci usate) riparte da zero
         StatoDelCombattimento.getIstanza().reimposta();
         esecutore = new EsecutoreTattiche(gruppoDeiMiei, gruppoDegliAvversari, StatoDelCombattimento.getIstanza(), (uccisore, vittima) -> {

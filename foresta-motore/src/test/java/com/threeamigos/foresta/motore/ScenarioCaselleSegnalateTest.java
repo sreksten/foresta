@@ -65,7 +65,7 @@ class ScenarioCaselleSegnalateTest {
             CoordinateMD covo = taglia.getCovo();
             assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(covo));
 
-            partita.gruppo().setCoordinate(covo);
+            Foresta.setPosizioneDelGruppo(covo);
             for (int i = 0; i < LaTagliaSullaBanda.HOBGOBLIN; i++) {
                 partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.HOBGOBLIN));
             }

@@ -17,7 +17,6 @@ import com.threeamigos.foresta.modellodati.MissioneMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.RegistroMissioniMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.Quadrante;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.oggetti.Bottino;
@@ -113,13 +112,13 @@ public class RegistroMissioni {
 			registraEvento(MissioneAPassi.EVENTO_COMBATTIMENTO, 1);
 			registraCombattimentoQui();
 			// Anche con la casella in cui è successo: per i combattimenti di una missione in una locazione precisa
-			CoordinateMD coordinate = GruppoGiocatore.getIstanza().getCoordinate();
+			CoordinateMD coordinate = Foresta.getPosizioneDelGruppo();
 			if (coordinate != null) {
 				registraEvento(MissioneAPassi.eventoSconfittoIn(evento.getClasse(), coordinate), 1);
 			}
 		});
 		BusEventi.iscriviti(InternoPassaggioInosservato.class, evento -> {
-			CoordinateMD coordinate = GruppoGiocatore.getIstanza().getCoordinate();
+			CoordinateMD coordinate = Foresta.getPosizioneDelGruppo();
 			if (coordinate != null) {
 				registraEvento(MissioneAPassi.eventoInosservatoIn(coordinate), 1);
 			}
@@ -132,7 +131,7 @@ public class RegistroMissioni {
 	 * Un combattimento, con la casella in cui c'è stato: per le missioni che vietano di combattere in un posto preciso.
 	 */
 	private static void registraCombattimentoQui() {
-		CoordinateMD coordinate = GruppoGiocatore.getIstanza().getCoordinate();
+		CoordinateMD coordinate = Foresta.getPosizioneDelGruppo();
 		if (coordinate != null) {
 			registraEvento(MissioneAPassi.eventoCombattimentoIn(coordinate), 1);
 		}
@@ -434,7 +433,7 @@ public class RegistroMissioni {
 	 * Come {@link #cerca(TipoLocazione, Missione)}, ma solo dentro il quadrante (su tutta la mappa se è null).
 	 */
 	public static Optional<CoordinateMD> cerca(TipoLocazione richiesta, Missione missione, Quadrante quadrante) {
-		CoordinateMD gruppo = GruppoGiocatore.getIstanza().getCoordinate();
+		CoordinateMD gruppo = Foresta.getPosizioneDelGruppo();
 		for (CoordinateMD coordinate : aQuadratiConcentrici(quadrante)) {
 			if (!coordinate.equals(gruppo) && Foresta.getLocazione(coordinate) == richiesta && isDisponibile(coordinate, missione)
 					&& RegistroArtefatti.getArtefattoInLocazione(coordinate) == null) {
@@ -453,7 +452,7 @@ public class RegistroMissioni {
 	 * quella classe o, per costruirla, un bosco o una palude disponibile (vedi {@link #cercaOCostruisci}).
 	 */
 	public static boolean esisteUnPostoPer(TipoLocazione richiesta, Missione missione) {
-		CoordinateMD gruppo = GruppoGiocatore.getIstanza().getCoordinate();
+		CoordinateMD gruppo = Foresta.getPosizioneDelGruppo();
 		for (CoordinateMD coordinate : aQuadratiConcentrici(null)) {
 			TipoLocazione tipo = Foresta.getLocazione(coordinate);
 			if (!coordinate.equals(gruppo)
@@ -518,7 +517,7 @@ public class RegistroMissioni {
 	}
 
 	private static Optional<CoordinateMD> cercaDaSostituire(Missione missione, Quadrante quadrante, boolean soloVisitate) {
-		CoordinateMD gruppo = GruppoGiocatore.getIstanza().getCoordinate();
+		CoordinateMD gruppo = Foresta.getPosizioneDelGruppo();
 		for (CoordinateMD coordinate : aQuadratiConcentrici(quadrante)) {
 			TipoLocazione tipo = Foresta.getLocazione(coordinate);
 			if (!coordinate.equals(gruppo)

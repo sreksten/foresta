@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.tipi.Verso;
 import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
@@ -79,7 +80,7 @@ public class IntermezzoLibroTecnico implements Intermezzo {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		List<String> battute = libro.getBattute();
 		return Collections.singletonList(new PaginaIntermezzo("Un libro in fondo al cofano.")
-				.conSfondo(ImmagineIntermezzo.locazione(gruppo.getTipoLocazioneCorrente()))
+				.conSfondo(ImmagineIntermezzo.locazione(Foresta.getLocazioneDelGruppo()))
 				.conElemento(ElementoIntermezzo.personaggio(CAPO, gruppo.getCapo().getClasse(), 0.45, 0.61)
 						.conBocca(0.5, -0.15)
 						.guarda(Verso.DESTRA))

@@ -52,7 +52,7 @@ class ScenarioNonSparateSulPianistaTest {
      * Il gruppo entra nella locanda, che ha già visitato tante volte; la missione si controlla come all'ingresso.
      */
     private static void entraNellaLocanda(PartitaDiTest partita, NonSparateSulPianista pianista, CoordinateMD locanda, int visitePrecedenti) {
-        partita.gruppo().setCoordinate(locanda);
+        Foresta.setPosizioneDelGruppo(locanda);
         Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, String.valueOf(visitePrecedenti));
         pianista.controllaPreLocazione();
         if ("ACCETTAZIONE".equals(pianista.getPassoCorrente())) {
@@ -94,7 +94,7 @@ class ScenarioNonSparateSulPianistaTest {
                 }
             }
 
-            partita.gruppo().setCoordinate(casa);
+            Foresta.setPosizioneDelGruppo(casa);
             int monete = partita.gruppo().getMonete();
             pianista.controllaPreLocazione();
             assertEquals("VIAGGIO", pianista.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
@@ -141,7 +141,7 @@ class ScenarioNonSparateSulPianistaTest {
             // In un'altra locanda, mai vista, il bardo non può essere seduto in un angolo: entra con il gruppo, subito dopo
             // il capo come ogni ospite, e parla solo il locandiere
             CoordinateMD altra = unAltraLocandaNelBosco(locanda);
-            partita.gruppo().setCoordinate(altra);
+            Foresta.setPosizioneDelGruppo(altra);
             LocazioneMD sede = Foresta.getLocazioneMD(altra);
             assertNull(sede.ottieniProprieta(Locanda.LOCANDA_VISITATA));
             sede.aggiungiProprieta(Locanda.LOCANDA_DIALOGO, "Benvenuti! Qui si beve bene.");
@@ -160,12 +160,12 @@ class ScenarioNonSparateSulPianistaTest {
                     .map(b -> b.getBattuta().getTesto()).collect(Collectors.toList()), "solo il benvenuto, niente reazione alla fiaba");
 
             // Riportato a casa il bardo, la scena torna
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(pianista.getCitta()));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(pianista.getCitta()));
             pianista.controllaPreLocazione();
             pianista.segnaIntermezzoPassoMostrato("VIAGGIO");
             pianista.controllaInLocazione();
             assertTrue(pianista.isCompleta());
-            partita.gruppo().setCoordinate(altra);
+            Foresta.setPosizioneDelGruppo(altra);
             PaginaIntermezzo conBardo = new IntermezzoLocandaPrimaVisita().getPagine().get(0);
             assertNotNull(conBardo.getElemento("bardo"));
             assertNull(conBardo.getElemento("bardoOspite"));
@@ -186,13 +186,13 @@ class ScenarioNonSparateSulPianistaTest {
             Foresta.getLocazioneMD(citta).aggiungiProprieta(Locanda.LOCANDA_VISITE, "1");
 
             // In città la missione non parte, per quante visite ci siano
-            partita.gruppo().setCoordinate(citta);
+            Foresta.setPosizioneDelGruppo(citta);
             pianista.controllaPreLocazione();
             assertFalse(pianista.isAttiva());
             assertNull(pianista.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
 
             // In una locanda del bosco mai vista, è la terza visita in tutto: il locandiere sostituisce il benvenuto
-            partita.gruppo().setCoordinate(nuova);
+            Foresta.setPosizioneDelGruppo(nuova);
             assertNull(Foresta.getLocazioneMD(nuova).ottieniProprieta(Locanda.LOCANDA_VISITATA));
             assertTrue(new IntermezzoLocandaPrimaVisita().deveScattare(MomentoIntermezzo.INIZIO_LOCAZIONE));
             pianista.controllaPreLocazione();
@@ -208,7 +208,7 @@ class ScenarioNonSparateSulPianistaTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             NonSparateSulPianista pianista = pianista();
             CoordinateMD nuova = unaLocandaNelBosco();
-            partita.gruppo().setCoordinate(nuova);
+            Foresta.setPosizioneDelGruppo(nuova);
             Foresta.getLocazioneMD(nuova).aggiungiProprieta(Locanda.LOCANDA_VISITE, "2");
             assertNull(Foresta.getLocazioneMD(nuova).ottieniProprieta(Locanda.LOCANDA_VISITATA));
             pianista.controllaPreLocazione();
@@ -233,7 +233,7 @@ class ScenarioNonSparateSulPianistaTest {
             assertTrue(pianista.getScortato().isPresent());
 
             CoordinateMD citta = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_FLEENA);
-            partita.gruppo().setCoordinate(citta);
+            Foresta.setPosizioneDelGruppo(citta);
             LocazioneMD sede = Foresta.getLocazioneMD(citta);
             sede.aggiungiProprieta(Locanda.LOCANDA_DIALOGO, "Benvenuti! Qui si beve bene.");
             IntermezzoLocandaPrimaVisita scena = new IntermezzoLocandaPrimaVisita();

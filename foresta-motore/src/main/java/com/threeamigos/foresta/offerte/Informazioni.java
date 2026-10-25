@@ -4,8 +4,8 @@ import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.RegistroArtefattiMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.Misc;
@@ -37,7 +37,7 @@ public class Informazioni implements Offerta {
 		StringBuilder sb = new StringBuilder("Scambiando quattro chiacchiere, ")
 				.append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))
 				.append(" viene a sapere che ");
-		TipoLocazione tipoLocazione = gruppo.getTipoLocazioneCorrente();
+		TipoLocazione tipoLocazione = Foresta.getLocazioneDelGruppo();
 		int tipo;
 		if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 			// Qualsiasi informazione ma non quelle sulle citta' visto che gia' ci siamo
@@ -75,7 +75,7 @@ public class Informazioni implements Offerta {
 			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(tipoLocazione);
 			Foresta.setLocazioneConosciuta(coordinate);
 			sb.append(tipoLocazione.getNomeProprio());
-			sb.append(" si trova ").append(Misc.getDirezione(gruppo, coordinate));
+			sb.append(" si trova ").append(Misc.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate));
 		}
 	}
 
@@ -100,7 +100,7 @@ public class Informazioni implements Offerta {
 		}
 		Foresta.setLocazioneConosciuta(coordinate);
 		sb.append(tipoLocazione.getNomeProprio());
-		sb.append(" sorge ").append(Misc.getDirezione(gruppo, coordinate));
+		sb.append(" sorge ").append(Misc.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate));
 	}
 
 	private void informazioneSuArtefatti(GruppoGiocatore gruppo, StringBuilder sb) {
@@ -118,7 +118,7 @@ public class Informazioni implements Offerta {
 				sb.append(',');
 			}
 			sb.append(" si trova in un tempio ")
-			.append(Misc.getDirezione(gruppo, informazioni.getCoordinate()));
+			.append(Misc.getDirezione(Foresta.getPosizioneDelGruppo(), informazioni.getCoordinate()));
 		}
 	}
 

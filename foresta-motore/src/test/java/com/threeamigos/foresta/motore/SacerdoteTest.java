@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 
 import com.threeamigos.foresta.personaggi.Guerriero;

@@ -67,7 +67,7 @@ class SalvataggioAutomaticoInMemoriaTest {
     void dopoUnaSconfittaSiRiprendeDallUltimaFineDiLocazione() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(312)) {
             inCitta(partita).comando(Comando.ESCI_DA_CITTA);
-            CoordinateMD doveEra = partita.gruppo().getCoordinate();
+            CoordinateMD doveEra = Foresta.getPosizioneDelGruppo();
             finoAllIntroDopoLaSconfitta(partita);
             assertTrue(partita.salvataggioInMemoria().isPresente(), "dopo la sconfitta resta");
             assertTrue(partita.comandiDisponibili().contains(Comando.FLOPPY_CARICA), "e fa comparire il caricamento");
@@ -82,7 +82,7 @@ class SalvataggioAutomaticoInMemoriaTest {
             partita.comando(Comando.NUMERO_5);
 
             assertTrue(partita.stato() == Stato.ATTESA_DIREZIONE || partita.stato() == Stato.SCELTA_DIREZIONE, "" + partita.stato());
-            assertEquals(doveEra, partita.gruppo().getCoordinate());
+            assertEquals(doveEra, Foresta.getPosizioneDelGruppo());
             assertEquals(1, partita.gruppo().getNumeroPersonaggi(), "il gruppo com'era a fine locazione, senza il compagno arrivato dopo");
             assertEquals(TipoPersonaggio.GUERRIERO, partita.gruppo().getCapo().getClasse());
             assertTrue(partita.salvataggioInMemoria().isPresente(), "caricarlo non lo toglie");
@@ -122,7 +122,7 @@ class SalvataggioAutomaticoInMemoriaTest {
      */
     private static void finoAllIntroDopoLaSconfitta(PartitaDiTest partita) {
         partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno", 1));
-        partita.gruppo().setCoordinate(unaCasellaDiBosco());
+        Foresta.setPosizioneDelGruppo(unaCasellaDiBosco());
         while (LineaTemporale.getOra() <= 20) {
             LineaTemporale.aggiungiOre(1);
         }

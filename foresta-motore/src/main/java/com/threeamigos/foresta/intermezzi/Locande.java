@@ -4,7 +4,7 @@ import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -25,7 +25,7 @@ public final class Locande {
 	 * entrati in città, prima ancora di aver scelto "Locanda".
 	 */
 	public static boolean momentoCoerenteConLocazioneCorrente(MomentoIntermezzo momento) {
-		TipoLocazione tipo = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
+		TipoLocazione tipo = Foresta.getLocazioneDelGruppo();
 		if (momento == MomentoIntermezzo.INIZIO_LOCAZIONE) {
 			return tipo == TipoLocazione.LOCANDA;
 		}
@@ -40,11 +40,11 @@ public final class Locande {
 	 */
 	static LocazioneMD getLocazioneMDLocandaCorrente() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		TipoLocazione tipo = gruppo.getTipoLocazioneCorrente();
+		TipoLocazione tipo = Foresta.getLocazioneDelGruppo();
 		if (tipo != TipoLocazione.LOCANDA && tipo.getCategoriaLocazione() != CategoriaLocazione.CITTA) {
 			return null;
 		}
-		return Foresta.getLocazioneMD(gruppo.getCoordinate());
+		return Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo());
 	}
 
 	static String getIdentificativoLocandaCorrente() {

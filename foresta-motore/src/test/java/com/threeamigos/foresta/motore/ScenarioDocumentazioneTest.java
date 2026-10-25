@@ -56,21 +56,21 @@ class ScenarioDocumentazioneTest {
             CoordinateMD rovine = documentazione.getPosto();
             assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(rovine));
             assertTrue(Foresta.isLocazioneConosciuta(rovine));
-            partita.gruppo().setCoordinate(rovine);
+            Foresta.setPosizioneDelGruppo(rovine);
             documentazione.controllaInLocazione();
             assertTrue(partita.testi().contains("Una corona."), String.valueOf(partita.testi()));
             assertTrue(documentazione.getDescrizione().endsWith(" 1: Una corona."), documentazione.getDescrizione());
 
             CoordinateMD tempio = documentazione.getPosto();
             assertEquals(TipoLocazione.TEMPIO, Foresta.getLocazione(tempio));
-            partita.gruppo().setCoordinate(tempio);
+            Foresta.setPosizioneDelGruppo(tempio);
             documentazione.controllaInLocazione();
             assertEquals("RITORNO", documentazione.getPassoCorrente());
             assertTrue(partita.testi().contains("Una regina. Le note sono complete: lo storico aspetta a Nyena."), String.valueOf(partita.testi()));
             assertEquals("Hai documentato tutto: torna dallo storico a Nyena a consegnare le note. 1: Una corona. 2: Una regina.",
                     documentazione.getDescrizione());
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             documentazione.controllaPreLocazione();
             documentazione.segnaIntermezzoPassoMostrato("RITORNO");
@@ -95,7 +95,7 @@ class ScenarioDocumentazioneTest {
             assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(rovine));
             assertEquals(Collections.singletonList(documentazione.getNome()), RegistroMissioni.getNomiMissioniDaSegnalare(rovine));
 
-            partita.gruppo().setCoordinate(rovine);
+            Foresta.setPosizioneDelGruppo(rovine);
             documentazione.controllaInLocazione();
             CoordinateMD tempio = documentazione.getPosto();
             assertNotEquals(rovine, tempio);
@@ -120,7 +120,7 @@ class ScenarioDocumentazioneTest {
             documentazione.controllaInLocazione();
 
             CoordinateMD rovine = documentazione.getPosto();
-            partita.gruppo().setCoordinate(rovine);
+            Foresta.setPosizioneDelGruppo(rovine);
             documentazione.controllaInLocazione();
             CoordinateMD tempio = documentazione.getPosto();
             assertNotEquals(rovine, tempio);

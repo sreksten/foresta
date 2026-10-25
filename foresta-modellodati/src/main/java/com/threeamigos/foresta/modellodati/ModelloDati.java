@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
+import com.threeamigos.foresta.canti.CantiImparati;
 
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
@@ -15,6 +16,7 @@ import java.io.PrintWriter;
  * <ul>
  * <li>GruppoGiocatoreMD - il gruppo del giocatore con tutti i personaggi contenuti</li>
  * <li>TatticheMD - le tattiche dei personaggi</li>
+ * <li>CantiImparatiMD - i canti che il gruppo ha imparato strada facendo</li>
  * <li>StatisticheMD - statistiche sul gioco</li>
  * <li>LineaTemporaleMD - quel che è successo durante il gioco</li>
  * <li>ForestaMD - informazioni sulla Foresta</li>
@@ -38,6 +40,7 @@ public class ModelloDati implements Serializzabile {
 		Foresta.setFornitoreDiDati(() -> getIstanza().getForestaMD());
 		GruppoGiocatore.setFornitoreDiDati(() -> getIstanza().getGruppoGiocatoreMD());
 		TatticheDeiPersonaggi.setFornitoreDiDati(() -> getIstanza().getTatticheMD());
+		CantiImparati.setFornitoreDiDati(() -> getIstanza().getCantiImparatiMD());
 	}
 
 	/**
@@ -58,6 +61,7 @@ public class ModelloDati implements Serializzabile {
 	private final GruppoGiocatoreMD gruppoGiocatoreMD;
 	private final TatticheMD tatticheMD;
 	// Tutto il resto dei dati di gioco
+	private final CantiImparatiMD cantiImparatiMD;
 	private final StatisticheMD statisticheMD;
 	private final LineaTemporaleMD lineaTemporaleMD;
 	private final ForestaMD forestaMD;
@@ -72,6 +76,7 @@ public class ModelloDati implements Serializzabile {
 	public ModelloDati() {
 		gruppoGiocatoreMD = new GruppoGiocatoreMD();
 		tatticheMD = new TatticheMD();
+		cantiImparatiMD = new CantiImparatiMD();
 		statisticheMD = new StatisticheMD();
 		lineaTemporaleMD = new LineaTemporaleMD();
 		forestaMD = new ForestaMD();
@@ -88,6 +93,10 @@ public class ModelloDati implements Serializzabile {
 
 	public final TatticheMD getTatticheMD() {
 		return tatticheMD;
+	}
+
+	public final CantiImparatiMD getCantiImparatiMD() {
+		return cantiImparatiMD;
 	}
 
 	public final StatisticheMD getStatisticheMD() {
@@ -138,6 +147,7 @@ public class ModelloDati implements Serializzabile {
 	public void reimposta(int dimensioneX, int dimensioneY) {
 		gruppoGiocatoreMD.reimposta();
 		tatticheMD.reimposta();
+		cantiImparatiMD.reimposta();
 		statisticheMD.reimposta();
 		lineaTemporaleMD.reimposta();
 		forestaMD.reimposta(dimensioneX, dimensioneY);
@@ -157,6 +167,7 @@ public class ModelloDati implements Serializzabile {
 	public void salva(PrintWriter stream) throws IOException {
 		gruppoGiocatoreMD.salva(stream);
 		tatticheMD.salva(stream);
+		cantiImparatiMD.salva(stream);
 		statisticheMD.salva(stream);
 		lineaTemporaleMD.salva(stream);
 		forestaMD.salva(stream);
@@ -175,6 +186,7 @@ public class ModelloDati implements Serializzabile {
 	public void leggi(BufferedReader stream) throws IOException {
 		gruppoGiocatoreMD.reimposta();
 		tatticheMD.reimposta();
+		cantiImparatiMD.reimposta();
 		statisticheMD.reimposta();
 		lineaTemporaleMD.reimposta();
 		registroPersonaggiMD.reimposta();
@@ -185,6 +197,7 @@ public class ModelloDati implements Serializzabile {
 
 		gruppoGiocatoreMD.leggi(stream);
 		tatticheMD.leggi(stream);
+		cantiImparatiMD.leggi(stream);
 		statisticheMD.leggi(stream);
 		lineaTemporaleMD.leggi(stream);
 		forestaMD.leggi(stream);

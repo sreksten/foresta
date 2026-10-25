@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.artefatti.RegoleIncantatura;
 
 import com.threeamigos.foresta.artefatti.BancoDiLavoro;

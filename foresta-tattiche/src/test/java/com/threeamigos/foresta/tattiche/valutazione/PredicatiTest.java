@@ -10,7 +10,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.CostantiTattiche;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoConfronto;
 import com.threeamigos.foresta.tipi.TipoFiltro;
@@ -110,7 +110,7 @@ class PredicatiTest {
     @Test
     void l_AstuziaEILMassimoDiClassePerLaRampaSulLivello() {
         double massimo = guerriero.getMaxStatistica(com.threeamigos.foresta.tipi.TipoAttributo.INTELLIGENZA);
-        assertEquals(massimo * Costanti.ASTUZIA_PARTENZA, Astuzia.di(guerriero), 1e-9, "al livello 1 il 40%");
+        assertEquals(massimo * CostantiTattiche.ASTUZIA_PARTENZA, Astuzia.di(guerriero), 1e-9, "al livello 1 il 40%");
         Personaggio stregaAlta = FabbricaPersonaggi.crea(TipoPersonaggio.STREGA, 9);
         assertEquals(stregaAlta.getMaxStatistica(com.threeamigos.foresta.tipi.TipoAttributo.INTELLIGENZA), Astuzia.di(stregaAlta), 1e-9, "al livello 9 il pieno");
         Personaggio stregaBassa = FabbricaPersonaggi.crea(TipoPersonaggio.STREGA, 1);

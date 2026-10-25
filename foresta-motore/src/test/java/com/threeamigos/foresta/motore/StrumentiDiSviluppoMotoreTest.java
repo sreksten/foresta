@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.personaggi.GestoreProgressione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import com.threeamigos.foresta.modellodati.CoordinateMD;
@@ -179,7 +180,7 @@ class StrumentiDiSviluppoMotoreTest {
 
             // Al primo giorno, in un bosco, senza aspettare il giorno dell'incontro
             assertEquals(1, LineaTemporale.getGiorno());
-            partita.gruppo().setCoordinate(primaCasellaDi(TipoLocazione.BOSCO));
+            Foresta.setPosizioneDelGruppo(primaCasellaDi(TipoLocazione.BOSCO));
             viandante.controllaPreLocazione();
             assertEquals("ACCETTAZIONE", viandante.getPassoCorrente());
             viandante.segnaIntermezzoPassoMostrato("INCONTRO");
@@ -195,7 +196,7 @@ class StrumentiDiSviluppoMotoreTest {
             MissioneAPassi viandante = missione(MissionePredefinita.IL_VIANDANTE);
             partita.rimandaLeMissioniCheSiOffrono();
             strumenti.forzaPartenza(MissionePredefinita.IL_VIANDANTE);
-            partita.gruppo().setCoordinate(primaCasellaDi(TipoLocazione.RADURA));
+            Foresta.setPosizioneDelGruppo(primaCasellaDi(TipoLocazione.RADURA));
             viandante.controllaPreLocazione();
             assertEquals("INCONTRO", viandante.getPassoCorrente());
         }

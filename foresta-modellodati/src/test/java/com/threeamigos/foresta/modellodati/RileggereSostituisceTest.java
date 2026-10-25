@@ -36,7 +36,6 @@ class RileggereSostituisceTest {
     @Test
     void ilGruppoRiletto() throws IOException {
         GruppoGiocatoreMD salvato = new GruppoGiocatoreMD();
-        salvato.setCoordinate(new CoordinateMD(0, 0));
         salvato.addPersonaggioMD(personaggio(TipoPersonaggio.GUERRIERO, "Arsenio"));
         GruppoGiocatoreMD destinazione = new GruppoGiocatoreMD();
         destinazione.addPersonaggioMD(personaggio(TipoPersonaggio.MAGO, "Merlino"));

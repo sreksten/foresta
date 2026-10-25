@@ -11,7 +11,7 @@ import java.util.Locale;
 
 /**
  * I testi italiani della schermata delle tattiche: le etichette dei menu e la frase che spiega una riga della tattica (il riquadro
- * destro), costruiti solo dai dati <code>*MD</code> e dagli enumerati di <code>tipi/tattiche</code>, mai dal motore.
+ * destro), costruiti solo dai dati <code>*MD</code> e dagli enumerati di <code>tipi</code>, mai dal motore.
  */
 final class TestoTattica {
 

@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.combattimento;
 
-import com.threeamigos.foresta.motore.Gruppo;
+import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.List;

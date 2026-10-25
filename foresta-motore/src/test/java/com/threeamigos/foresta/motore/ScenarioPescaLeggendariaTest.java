@@ -107,7 +107,7 @@ class ScenarioPescaLeggendariaTest {
             }
 
             // A una visita tranquilla in città l'armaiolo racconta per forza un pezzo mancante di quel set
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             leggenda.controllaPreLocazione();
             OggettoLeggendario raccontato = leggenda.getLeggendario();
             assertNotNull(raccontato, "l'armaiolo racconta la leggenda");

@@ -3,8 +3,8 @@ package com.threeamigos.foresta.abilita;
 
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.Gruppo;
-import com.threeamigos.foresta.motore.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.Gruppo;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.motore.StatoDelMotore;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;

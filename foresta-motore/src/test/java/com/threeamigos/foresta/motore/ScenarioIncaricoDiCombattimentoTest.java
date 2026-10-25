@@ -103,7 +103,7 @@ class ScenarioIncaricoDiCombattimentoTest {
             assertEquals(TipoPersonaggio.TROLL, troll.get(0).getClasse());
             assertEquals(capo, troll.get(0).getNome());
 
-            partita.gruppo().setCoordinate(covo);
+            Foresta.setPosizioneDelGruppo(covo);
             partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.TROLL));
             incarico.controllaPostLocazione();
             assertEquals("CACCIA", incarico.getPassoCorrente());
@@ -113,7 +113,7 @@ class ScenarioIncaricoDiCombattimentoTest {
             assertTrue(partita.testi().contains(capo + " non sfascerà più niente. Il mugnaio aspetta a Nyena."), String.valueOf(partita.testi()));
             assertEquals("Fatto: torna dal mugnaio a Nyena a riscuotere.", incarico.getDescrizione());
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             incarico.controllaPreLocazione();
             incarico.segnaIntermezzoPassoMostrato("RITORNO");

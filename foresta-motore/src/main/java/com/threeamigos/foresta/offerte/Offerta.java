@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.offerte;
 
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 
 /**
  * Un'offerta che il gruppo può ricevere facendo amicizia, corrompendo o in una locanda: un aiuto, delle pergamene, delle informazioni, una

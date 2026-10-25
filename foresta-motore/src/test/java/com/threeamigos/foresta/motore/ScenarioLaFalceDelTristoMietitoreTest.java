@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.tipi.TipoArtefatto;
@@ -75,10 +76,10 @@ class ScenarioLaFalceDelTristoMietitoreTest {
             // Il gruppo regge: lo scontro non si decide sui dadi
             partita.gruppo().getCapo().getModelloDati().set(TipoAttributo.SALUTE, 1_000_000);
             partita.comando(Comando.ESCI_DA_CITTA);
-            partita.gruppo().setCoordinate(new CoordinateMD(rovine.getX(), rovine.getY() + 1));
+            Foresta.setPosizioneDelGruppo(new CoordinateMD(rovine.getX(), rovine.getY() + 1));
             partita.assertStato(Stato.SCELTA_DIREZIONE);
             partita.comando(Comando.NORD).comando(Comando.NUMERO_1);
-            assertEquals(rovine, partita.gruppo().getCoordinate());
+            assertEquals(rovine, Foresta.getPosizioneDelGruppo());
             List<Personaggio> avversari = GruppoAvversario.getIstanza().getPersonaggi();
             assertEquals(5, avversari.size());
             assertTrue(partita.testi().stream().anyMatch(t -> t.contains("quattro Scheletri e un Necromante")), String.valueOf(partita.testi()));

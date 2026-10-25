@@ -63,7 +63,7 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 		int dimensioneMappaX = vistaPartita.getMappa().getDimensioneX() * LARGHEZZA_ICONA;
 		int dimensioneMappaY = vistaPartita.getMappa().getDimensioneY() * ALTEZZA_ICONA;
 		// Il giocatore rappresentato sulla mappa si trova in posizione:
-		CoordinateMD coordinateGruppo = vistaPartita.getGruppoGiocatore().getCoordinate();
+		CoordinateMD coordinateGruppo = vistaPartita.getMappa().getPosizioneDelGruppo();
 		int posizioneXGiocatoreSuMappa = coordinateGruppo.getX() * LARGHEZZA_ICONA +
 				LARGHEZZA_ICONA / 2;
 		int posizioneYGiocatoreSuMappa = coordinateGruppo.getY() * ALTEZZA_ICONA +
@@ -103,7 +103,7 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 	 * vuota nell'immagine della mappa.
 	 */
 	private void disegnaSegnalino(Graphics2D graphics) {
-		CoordinateMD coordinateGruppo = vistaPartita.getGruppoGiocatore().getCoordinate();
+		CoordinateMD coordinateGruppo = vistaPartita.getMappa().getPosizioneDelGruppo();
 		graphics.drawImage(ImageCache.segnalino,
 				mappaXOffset + coordinateGruppo.getX() * LARGHEZZA_ICONA,
 				mappaYOffset + coordinateGruppo.getY() * ALTEZZA_ICONA, null);

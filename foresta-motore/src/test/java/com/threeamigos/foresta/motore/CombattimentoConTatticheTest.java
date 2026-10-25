@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 import com.threeamigos.foresta.mappa.Foresta;
 
@@ -53,7 +55,7 @@ class CombattimentoConTatticheTest {
 
     private static Locazione preparaLo(PartitaDiTest partita, int goblin) {
         CoordinateMD bosco = unaCasellaDiBosco();
-        partita.gruppo().setCoordinate(bosco);
+        Foresta.setPosizioneDelGruppo(bosco);
         Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
         LocazioneCorrente.set(locazione);
         GruppoAvversario avversari = GruppoAvversario.getIstanza();

@@ -52,7 +52,7 @@ class ScenarioSegnaliniDiCittaTest {
     private static NonSparateSulPianista conIlBardoInViaggio(PartitaDiTest partita) {
         NonSparateSulPianista pianista = trova(NonSparateSulPianista.class);
         CoordinateMD locanda = unaLocanda();
-        partita.gruppo().setCoordinate(locanda);
+        Foresta.setPosizioneDelGruppo(locanda);
         Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "2");
         pianista.controllaPreLocazione();
         pianista.segnaIntermezzoPassoMostrato("INCARICO");
@@ -73,7 +73,7 @@ class ScenarioSegnaliniDiCittaTest {
             assertNull(RegistroMissioni.getLocazioneOccupata(pianista), "non si rivendica: il contenuto della città resta suo");
 
             // Arrivati, il passo si conclude e il segnalino sparisce
-            partita.gruppo().setCoordinate(casa);
+            Foresta.setPosizioneDelGruppo(casa);
             pianista.controllaPreLocazione();
             assertEquals("ARRIVO", pianista.getPassoCorrente());
             assertFalse(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(casa));
@@ -133,13 +133,13 @@ class ScenarioSegnaliniDiCittaTest {
 
             // Sconfitti i ladri si torna in città, ma il gruppo è altrove: Fleena lampeggia
             medaglione.aggiungiProprieta("PASSO_CORRENTE", "RITORNO");
-            partita.gruppo().setCoordinate(RegistroMissioni.getLocazioneOccupata(medaglione));
+            Foresta.setPosizioneDelGruppo(RegistroMissioni.getLocazioneOccupata(medaglione));
             medaglione.controllaPreLocazione();
             assertTrue(CostruttoreDellaForesta.getCoordinateDaSegnalare().contains(fleena), "la città del mandante lampeggia");
             assertTrue(CostruttoreDellaForesta.getNomiMissioniDaMostrare(fleena).contains(medaglione.getNome()));
 
             // Tornati: ringraziamento, ricompensa, e il segnalino sparisce
-            partita.gruppo().setCoordinate(fleena);
+            Foresta.setPosizioneDelGruppo(fleena);
             medaglione.controllaPreLocazione();
             medaglione.segnaIntermezzoPassoMostrato("RITORNO");
             medaglione.controllaInLocazione();

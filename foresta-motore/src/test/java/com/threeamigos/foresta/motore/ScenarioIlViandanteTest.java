@@ -59,22 +59,22 @@ class ScenarioIlViandanteTest {
             CoordinateMD bosco = cellaSenzaLocazioniUniche(0);
             Foresta.costruisciLocazione(bosco, TipoLocazione.BOSCO);
             LineaTemporale.aggiungiOre(24 * (giorno - 2));
-            partita.gruppo().setCoordinate(bosco);
+            Foresta.setPosizioneDelGruppo(bosco);
             viandante.controllaPreLocazione();
             assertEquals("INCONTRO", viandante.getPassoCorrente(), "il giorno prima non c'è ancora");
             LineaTemporale.aggiungiOre(24);
             assertEquals(giorno, LineaTemporale.getGiorno());
             CoordinateMD radura = cellaSenzaLocazioniUniche(1);
             Foresta.costruisciLocazione(radura, TipoLocazione.RADURA);
-            partita.gruppo().setCoordinate(radura);
+            Foresta.setPosizioneDelGruppo(radura);
             viandante.controllaPreLocazione();
             assertEquals("INCONTRO", viandante.getPassoCorrente(), "non in una radura");
-            partita.gruppo().setCoordinate(coordinateDi(citta));
+            Foresta.setPosizioneDelGruppo(coordinateDi(citta));
             viandante.controllaPreLocazione();
             assertEquals("INCONTRO", viandante.getPassoCorrente(), "non in una città");
 
             // Nel bosco, dal giorno fissato, il viandante si fa incontrare
-            partita.gruppo().setCoordinate(bosco);
+            Foresta.setPosizioneDelGruppo(bosco);
             viandante.controllaPreLocazione();
             assertEquals("ACCETTAZIONE", viandante.getPassoCorrente());
             assertEquals("INCONTRO", viandante.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
@@ -89,7 +89,7 @@ class ScenarioIlViandanteTest {
             partita.pubblica(new InternoAvversarioSconfitto(richiesta.getNemico()));
             viandante.controllaPostLocazione();
             assertEquals("ANDATA", viandante.getPassoCorrente(), "prima si va in città");
-            partita.gruppo().setCoordinate(coordinateDi(citta));
+            Foresta.setPosizioneDelGruppo(coordinateDi(citta));
             viandante.controllaPreLocazione();
             assertEquals("CACCIA", viandante.getPassoCorrente());
 
@@ -104,7 +104,7 @@ class ScenarioIlViandanteTest {
             assertEquals("RITORNO", viandante.getPassoCorrente(), "il viandante è nel bosco");
 
             int monete = partita.gruppo().getMonete();
-            partita.gruppo().setCoordinate(bosco);
+            Foresta.setPosizioneDelGruppo(bosco);
             viandante.controllaPreLocazione();
             assertEquals("RITORNO", viandante.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
             viandante.segnaIntermezzoPassoMostrato("RITORNO");
@@ -126,7 +126,7 @@ class ScenarioIlViandanteTest {
             CoordinateMD bosco = cellaSenzaLocazioniUniche(0);
             Foresta.costruisciLocazione(bosco, TipoLocazione.BOSCO);
             LineaTemporale.aggiungiOre(24 * (viandante.getGiornoDellIncontro() - 1));
-            partita.gruppo().setCoordinate(bosco);
+            Foresta.setPosizioneDelGruppo(bosco);
             viandante.controllaPreLocazione();
             viandante.segnaIntermezzoPassoMostrato("INCONTRO");
             viandante.controllaInLocazione();

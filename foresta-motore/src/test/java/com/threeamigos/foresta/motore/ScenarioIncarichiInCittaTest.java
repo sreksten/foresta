@@ -68,7 +68,7 @@ class ScenarioIncarichiInCittaTest {
                     () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
             CacciaAiGoblin caccia = trova(CacciaAiGoblin.class);
             assertFalse(caccia.isAttiva(), "alla prima visita non è ancora partito");
-            CoordinateMD fleena = partita.gruppo().getCoordinate();
+            CoordinateMD fleena = Foresta.getPosizioneDelGruppo();
             // Rientrando può offrirsi solo la caccia: leggende, negozi e gli altri incarichi aspettano (qualunque sia l'ordine
             // in cui il registro li controlla)
             partita.rimandaLeMissioniCheSiOffrono();
@@ -76,10 +76,10 @@ class ScenarioIncarichiInCittaTest {
 
             // Si esce dalla città e ci si rientra da sud, come farebbe il giocatore
             partita.comando(Comando.ESCI_DA_CITTA);
-            partita.gruppo().setCoordinate(new CoordinateMD(fleena.getX(), fleena.getY() + 1));
+            Foresta.setPosizioneDelGruppo(new CoordinateMD(fleena.getX(), fleena.getY() + 1));
             partita.assertStato(Stato.SCELTA_DIREZIONE);
             partita.comando(Comando.NORD).comando(Comando.NUMERO_1);
-            assertEquals(fleena, partita.gruppo().getCoordinate());
+            assertEquals(fleena, Foresta.getPosizioneDelGruppo());
 
             assertTrue(caccia.isAttiva(), "alla seconda visita parte l'incarico");
             assertEquals("CACCIA", caccia.getPassoCorrente());
@@ -239,10 +239,10 @@ class ScenarioIncarichiInCittaTest {
 
             // Il gruppo va a sud di un bosco mai visitato ed entra andando a nord
             CoordinateMD bosco = unBoscoMaiVisitatoConUnaCasellaASud();
-            partita.gruppo().setCoordinate(new CoordinateMD(bosco.getX(), bosco.getY() + 1));
+            Foresta.setPosizioneDelGruppo(new CoordinateMD(bosco.getX(), bosco.getY() + 1));
             partita.assertStato(Stato.SCELTA_DIREZIONE);
             partita.comando(Comando.NORD).comando(Comando.NUMERO_1);
-            assertEquals(bosco, partita.gruppo().getCoordinate());
+            assertEquals(bosco, Foresta.getPosizioneDelGruppo());
 
             // I funghi sono ancora lì, se qualcuno li custodisce; se sono incustoditi il gruppo li ha già presi
             Bottino oggetto = LocazioneCorrente.get().getOggetto();

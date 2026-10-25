@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -63,7 +64,7 @@ class CicloDiVitaTest {
 		CoordinateMD doveEra;
 		try (PartitaDiTest prima = PartitaDiTest.nuovaConSalvataggi(143, salvataggi)) {
 			iniziaInCitta(prima).comando(Comando.ESCI_DA_CITTA);
-			doveEra = prima.gruppo().getCoordinate();
+			doveEra = Foresta.getPosizioneDelGruppo();
 			prima.inBackground();
 		}
 
@@ -73,7 +74,7 @@ class CicloDiVitaTest {
 
 			assertTrue(dopo.riprendiPartitaInterrotta());
 
-			assertEquals(doveEra, dopo.gruppo().getCoordinate());
+			assertEquals(doveEra, Foresta.getPosizioneDelGruppo());
 			assertEquals(1, dopo.gruppo().getNumeroPersonaggi());
 			assertTrue(dopo.stato() == Stato.ATTESA_DIREZIONE || dopo.stato() == Stato.SCELTA_DIREZIONE, "" + dopo.stato());
 		}

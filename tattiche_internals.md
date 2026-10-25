@@ -8,11 +8,12 @@ Tutti i riferimenti di classe sono abbreviati: `…/` è `src/main/java/com/thre
 
 ## 1. Dove sta il codice
 
-Le tattiche attraversano quattro moduli (la separazione la garantisce il compilatore, vedi `CLAUDE.md`):
+Le tattiche attraversano più moduli (la separazione la garantisce il compilatore, vedi `CLAUDE.md`):
 
 | Modulo | Pacchetto | Che cosa contiene |
 | :--- | :--- | :--- |
-| `foresta-tipi` | `tipi.tattiche` | Gli **enumerati**: `TipoAzione`, `TipoRosa`, `TipoFiltro`, `TipoOrdinamento`, `TipoPredicato`, `TipoConfronto`, `CriterioIncantesimo`, `PortataAzione`, `TipoParametro`, `EsitoAzione`. Solo nomi, descrizioni e regole di compatibilità; nessuna logica di gioco |
+| `foresta-poteri` | `tipi` | Le azioni: `TipoAzione` (che cosa si può fare in uno scontro, poteri compresi) ed `EsitoAzione` |
+| `foresta-tattiche` | `tipi` | Gli altri **enumerati**: `TipoRosa`, `PortataAzione` (su che cosa agisce ogni azione e da quali rose pesca: `PortataAzione.di(azione)`), `TipoFiltro`, `TipoOrdinamento`, `TipoPredicato`, `TipoConfronto`, `CriterioIncantesimo`, `TipoParametro`, e `CostantiTattiche`. Solo nomi, descrizioni e regole di compatibilità; nessuna logica di gioco |
 | `foresta-tattiche` | `tattiche` | I **dati** (suffisso `MD`): `TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`, e `FormatoTattiche` per il salvataggio. Immutabili, con la lettura e la scrittura |
 | `foresta-contratti` | `eventi.*` | `ComandoImpostaTattica` (UI → motore), `RichiestaAperturaTattiche` (motore → UI), `InternoDecisioneTattica` (la spiegazione di una decisione) |
 | `foresta-motore` | `tattiche` | La **logica**: `Valutatore`, `ContestoTattico`, `Decisione`, `RisultatoSelezione`, `EsecutoreTattiche`, `RegistroTattiche`, `TatticheBase` |

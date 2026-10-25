@@ -163,7 +163,7 @@ class ScenarioLeggendeTest {
             assertTrue(guardiani.stream().allMatch(p -> p.getClasse() == guardiano));
 
             // Raccolto il leggendario, a fine locazione la missione è completa, e ne resta una nuova
-            partita.gruppo().setCoordinate(tempio);
+            Foresta.setPosizioneDelGruppo(tempio);
             leggenda.controllaPostLocazione();
             assertFalse(leggenda.isCompleta(), "il leggendario è ancora nel tempio");
             RegistroArtefatti.rimuoviArtefattoInLocazione(tempio);
@@ -185,7 +185,7 @@ class ScenarioLeggendeTest {
             assertTrue(armaiolo.isAttiva());
 
             CoordinateMD locanda = unaLocanda();
-            partita.gruppo().setCoordinate(locanda);
+            Foresta.setPosizioneDelGruppo(locanda);
             LaLeggenda locandiere = trova(LaLeggendaDelLocandiere.class);
             // Alla prima e alla seconda visita no
             Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "1");

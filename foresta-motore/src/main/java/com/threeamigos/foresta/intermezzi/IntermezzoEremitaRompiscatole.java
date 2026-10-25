@@ -1,9 +1,10 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.tipi.Verso;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -35,7 +36,7 @@ public class IntermezzoEremitaRompiscatole implements Intermezzo {
 
 	@Override
 	public List<PaginaIntermezzo> getPagine() {
-		TipoLocazione sfondo = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
+		TipoLocazione sfondo = Foresta.getLocazioneDelGruppo();
 		return Collections.singletonList(new PaginaIntermezzo("Dieci eremiti angustiati.")
 				.conSfondo(ImmagineIntermezzo.locazione(sfondo))
 				.conElemento(ElementoIntermezzo.personaggio(EREMITA, TipoPersonaggio.EREMITA, 1.1, 0.61)

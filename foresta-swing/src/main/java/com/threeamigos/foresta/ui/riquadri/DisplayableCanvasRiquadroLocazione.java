@@ -309,9 +309,8 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	 * @param bersaglio il suo bersaglio, se c'è: anche a lui
 	 */
 	public void disegnaLocazione(Graphics2D graphics, VistaPersonaggio agente, VistaPersonaggio bersaglio) {
-		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
 		VistaGruppo gng = vistaPartita.getGruppoAvversario();
-		TipoLocazione tipoLocazione = g.getTipoLocazioneCorrente();
+		TipoLocazione tipoLocazione = vistaPartita.getMappa().getLocazioneDelGruppo();
 		BufferedImage locazione = ImageCache.locazioni.get(tipoLocazione);
 		// Lo sfondo sta al centro dello spazio a disposizione
 		graphics.drawImage(locazione, topLeftX + ((larghezzaDisponibile - locazione.getWidth()) >> 1), topLeftY, null);
@@ -429,8 +428,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	 * Crea lo sprite che mostra il gruppo che raccoglie un oggetto.
 	 */
 	public SpriteInterface raccogliOggetto() {
-		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
-		BufferedImage locazione = ImageCache.locazioni.get(g.getTipoLocazioneCorrente());
+		BufferedImage locazione = ImageCache.locazioni.get(vistaPartita.getMappa().getLocazioneDelGruppo());
 		TipoBottino tipoOggetto = vistaPartita.getTipoBottinoInLocazione();
 		if (tipoOggetto != null && tipoOggetto != TipoBottino.ARTEFATTO) {
 			BufferedImage d = MappaBottinoImmagine.getImmagine(tipoOggetto);

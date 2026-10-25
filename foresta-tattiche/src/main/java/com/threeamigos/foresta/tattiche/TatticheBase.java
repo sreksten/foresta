@@ -13,7 +13,6 @@ import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.tattiche.*;
 import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.*;
 

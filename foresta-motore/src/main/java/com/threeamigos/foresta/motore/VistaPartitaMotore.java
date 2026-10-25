@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.mappa.VistaMappa;
 
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -165,6 +167,16 @@ public class VistaPartitaMotore implements VistaPartita {
 	}
 
 	private static final class Mappa implements VistaMappa {
+
+		@Override
+		public CoordinateMD getPosizioneDelGruppo() {
+			return Foresta.getPosizioneDelGruppo();
+		}
+
+		@Override
+		public TipoLocazione getLocazioneDelGruppo() {
+			return Foresta.getLocazioneDelGruppo();
+		}
 
 		@Override
 		public int getDimensioneX() {

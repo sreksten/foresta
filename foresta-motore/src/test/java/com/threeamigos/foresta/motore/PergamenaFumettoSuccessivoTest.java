@@ -31,7 +31,7 @@ class PergamenaFumettoSuccessivoTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(261)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             partita.comando(Comando.ESCI_DA_CITTA);
-            partita.gruppo().setCoordinate(unaCasellaDiBosco());
+            Foresta.setPosizioneDelGruppo(unaCasellaDiBosco());
             Guerriero sentinella = new Guerriero("Sentinella", 1);
             // Già "leale" (vedi LaLealta): altrimenti la sua confidenza ruberebbe la scena al primo
             // accampamento invece dell'intermezzo normale (vedi IntermezzoAccampamento)

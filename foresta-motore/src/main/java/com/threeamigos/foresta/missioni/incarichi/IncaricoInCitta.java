@@ -12,6 +12,7 @@ import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Ricompensa;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -305,7 +306,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::isIncaricoDaOffrire)
 						.esegui(() -> {
 							SceltaDegliIncarichi.affidato(this);
-							aggiungiProprieta(CITTA, gruppo.getTipoLocazioneCorrente().name());
+							aggiungiProprieta(CITTA, Foresta.getLocazioneDelGruppo().name());
 							aggiungiProprieta(LIVELLO_DELL_INCARICO, String.valueOf(Statistiche.getLivello()));
 							allIncarico();
 						})
@@ -400,7 +401,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	}
 
 	private boolean inUnaCitta() {
-		TipoLocazione tipo = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
+		TipoLocazione tipo = Foresta.getLocazioneDelGruppo();
 		return tipo != null && tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA
 				&& !LineaTemporale.isCittaDistrutta(tipo);
 	}
@@ -420,6 +421,6 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	}
 
 	private static boolean inCitta(TipoLocazione citta) {
-		return citta != null && GruppoGiocatore.getIstanza().isInLocazioneUnica(citta) && !LineaTemporale.isCittaDistrutta(citta);
+		return citta != null && Foresta.isGruppoIn(citta) && !LineaTemporale.isCittaDistrutta(citta);
 	}
 }

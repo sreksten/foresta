@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaAperturaFinestraCombattimento;
@@ -84,12 +85,12 @@ class ScenarioColpoTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(273)) {
             IlColpo colpo = prendiIlColpo(partita);
             // Combattere altrove, per strada, non conta
-            partita.gruppo().setCoordinate(new CoordinateMD(colpo.getPosto().getX(), colpo.getPosto().getY() + 1));
+            Foresta.setPosizioneDelGruppo(new CoordinateMD(colpo.getPosto().getX(), colpo.getPosto().getY() + 1));
             partita.pubblica(new InternoRichiestaAperturaFinestraCombattimento(partita.gruppo().getCapo(), partita.gruppo().getCapo()));
             colpo.controllaPostLocazione();
             assertFalse(colpo.isFallita());
 
-            partita.gruppo().setCoordinate(colpo.getPosto());
+            Foresta.setPosizioneDelGruppo(colpo.getPosto());
             partita.pubblica(new InternoRichiestaAperturaFinestraCombattimento(partita.gruppo().getCapo(), partita.gruppo().getCapo()));
             colpo.controllaPostLocazione();
             assertTrue(colpo.isFallita());
@@ -122,10 +123,10 @@ class ScenarioColpoTest {
 
     private static void entra(PartitaDiTest partita, CoordinateMD posto) {
         partita.comando(Comando.ESCI_DA_CITTA);
-        partita.gruppo().setCoordinate(new CoordinateMD(posto.getX(), posto.getY() + 1));
+        Foresta.setPosizioneDelGruppo(new CoordinateMD(posto.getX(), posto.getY() + 1));
         partita.assertStato(Stato.SCELTA_DIREZIONE);
         partita.comando(Comando.NORD).comando(Comando.NUMERO_1);
-        assertEquals(posto, partita.gruppo().getCoordinate());
+        assertEquals(posto, Foresta.getPosizioneDelGruppo());
         partita.assertStato(Stato.IN_LOCAZIONE);
     }
 

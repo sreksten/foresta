@@ -123,7 +123,7 @@ public final class VoceMD {
 	 * Su che cosa agiscono le azioni (sono tutte della stessa portata)
 	 */
 	public PortataAzione getPortata() {
-		return azioni.get(0).getTipo().getPortata();
+		return PortataAzione.di(azioni.get(0).getTipo());
 	}
 
 	/**
@@ -141,7 +141,7 @@ public final class VoceMD {
 		List<String> problemi = new ArrayList<>();
 		PortataAzione portata = getPortata();
 		for (AzioneMD azione : azioni) {
-			if (azione.getTipo().getPortata() != portata) {
+			if (PortataAzione.di(azione.getTipo()) != portata) {
 				problemi.add("le azioni di una voce devono avere la stessa portata: " + azione.getTipo() + " non è " + portata);
 			}
 		}
@@ -150,7 +150,7 @@ public final class VoceMD {
 			problemi.add("la rosa " + effettivo.getTipoRosa() + " non vale per " + (attoreDelGiocatore ? "i personaggi del giocatore" : "i mostri"));
 		}
 		for (AzioneMD azione : azioni) {
-			if (!azione.getTipo().roseAmmesse(attoreDelGiocatore).contains(effettivo.getTipoRosa())) {
+			if (!PortataAzione.roseAmmesse(azione.getTipo(), attoreDelGiocatore).contains(effettivo.getTipoRosa())) {
 				problemi.add(azione.getTipo() + " non accetta la rosa " + effettivo.getTipoRosa());
 			}
 		}

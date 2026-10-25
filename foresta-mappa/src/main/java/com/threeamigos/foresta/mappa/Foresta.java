@@ -17,7 +17,7 @@ import java.util.function.Supplier;
  * La mappa della Foresta di questa partita: una griglia di caselle, ciascuna con il suo tipo di locazione, il suo nome e le sue proprietà.
  * I dati stanno nel {@code ForestaMD}; qui ci sono le operazioni sulla mappa: leggere e cambiare una casella, sapere quali il gruppo ha
  * visitato o conosce, trovare una casella libera, trasformare le locazioni uniche (il drago distrugge una città e al suo posto restano delle
- * rovine). Chi costruisce il mondo, e chi lo abita, sta altrove.
+ * rovine), sapere dove si trova il gruppo del giocatore e spostarlo. Chi costruisce il mondo, e chi lo abita, sta altrove.
  */
 public class Foresta {
 
@@ -388,6 +388,143 @@ public class Foresta {
 			aY = getDimensioneY() - 1;
 		}
 		ottieniMappaZona(daX, daY, aX, aY);
+	}
+
+	// La posizione del gruppo del giocatore: il gruppo non sa dove sta, lo sa la mappa
+
+	/**
+	 * La casella su cui si trova il gruppo del giocatore.
+	 */
+	public static CoordinateMD getPosizioneDelGruppo() {
+		return getForestaMD().getPosizioneDelGruppo();
+	}
+
+	/**
+	 * Mette il gruppo del giocatore su quella casella, e il gruppo conosce la zona intorno.
+	 */
+	public static void setPosizioneDelGruppo(CoordinateMD coordinate) {
+		getForestaMD().setPosizioneDelGruppo(coordinate);
+		ottieniMappaIntorno(coordinate.getX(), coordinate.getY());
+	}
+
+	/**
+	 * Mette il gruppo del giocatore su una casella libera a caso, come all'inizio di una partita.
+	 */
+	public static void posizionaIlGruppoSuUnaCasellaLibera() {
+		setPosizioneDelGruppo(getCoordinateLibere());
+	}
+
+	/**
+	 * Il tipo di locazione su cui si trova il gruppo del giocatore.
+	 */
+	public static TipoLocazione getLocazioneDelGruppo() {
+		return getLocazione(getPosizioneDelGruppo());
+	}
+
+	/**
+	 * Se il gruppo del giocatore si trova in quella locazione.
+	 */
+	public static boolean isGruppoIn(TipoLocazione tipoLocazione) {
+		return getLocazioneDelGruppo() == tipoLocazione;
+	}
+
+	/**
+	 * Segna come visitata la casella su cui si trova il gruppo del giocatore.
+	 */
+	public static void setLocazioneDelGruppoVisitata() {
+		setLocazioneVisitata(getPosizioneDelGruppo());
+	}
+
+	/**
+	 * Quanti passi può fare il gruppo verso nord in un solo spostamento: si ferma al bordo della mappa, o sulla prima casella che non è
+	 * un bosco o una radura.
+	 */
+	public static int getMaxPassiNord() {
+		return getMaxPassi(0, -1);
+	}
+
+	/**
+	 * Quanti passi può fare il gruppo verso est (vedi {@link #getMaxPassiNord()}).
+	 */
+	public static int getMaxPassiEst() {
+		return getMaxPassi(1, 0);
+	}
+
+	/**
+	 * Quanti passi può fare il gruppo verso sud (vedi {@link #getMaxPassiNord()}).
+	 */
+	public static int getMaxPassiSud() {
+		return getMaxPassi(0, 1);
+	}
+
+	/**
+	 * Quanti passi può fare il gruppo verso ovest (vedi {@link #getMaxPassiNord()}).
+	 */
+	public static int getMaxPassiOvest() {
+		return getMaxPassi(-1, 0);
+	}
+
+	private static int getMaxPassi(int dx, int dy) {
+		CoordinateMD posizione = getPosizioneDelGruppo();
+		int x = posizione.getX();
+		int y = posizione.getY();
+		if (passiAlBordo(x, y, dx, dy) == 0) {
+			return 0;
+		}
+		for (int i = 1; i <= MAX_MOVIMENTO; i++) {
+			if (passiAlBordo(x, y, dx, dy) == i) {
+				return i;
+			}
+			TipoLocazione locazione = getLocazione(x + dx * i, y + dy * i);
+			if (locazione != TipoLocazione.BOSCO && locazione != TipoLocazione.RADURA) {
+				return i;
+			}
+		}
+		return MAX_MOVIMENTO;
+	}
+
+	// Quanti passi mancano al bordo della mappa in quella direzione
+	private static int passiAlBordo(int x, int y, int dx, int dy) {
+		if (dx > 0) {
+			return getDimensioneX() - 1 - x;
+		}
+		if (dx < 0) {
+			return x;
+		}
+		return dy > 0 ? getDimensioneY() - 1 - y : y;
+	}
+
+	/**
+	 * Sposta il gruppo verso nord di quei passi, fermandosi dove non può andare oltre (vedi {@link #getMaxPassiNord()}).
+	 */
+	public static void muoveNord(int passi) {
+		muove(0, -Math.min(passi, getMaxPassiNord()));
+	}
+
+	/**
+	 * Sposta il gruppo verso est di quei passi (vedi {@link #muoveNord(int)}).
+	 */
+	public static void muoveEst(int passi) {
+		muove(Math.min(passi, getMaxPassiEst()), 0);
+	}
+
+	/**
+	 * Sposta il gruppo verso sud di quei passi (vedi {@link #muoveNord(int)}).
+	 */
+	public static void muoveSud(int passi) {
+		muove(0, Math.min(passi, getMaxPassiSud()));
+	}
+
+	/**
+	 * Sposta il gruppo verso ovest di quei passi (vedi {@link #muoveNord(int)}).
+	 */
+	public static void muoveOvest(int passi) {
+		muove(-Math.min(passi, getMaxPassiOvest()), 0);
+	}
+
+	private static void muove(int dx, int dy) {
+		CoordinateMD posizione = getPosizioneDelGruppo();
+		setPosizioneDelGruppo(new CoordinateMD(posizione.getX() + dx, posizione.getY() + dy));
 	}
 
 	/**

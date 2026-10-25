@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
@@ -16,7 +17,6 @@ import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Collection;
@@ -215,8 +215,8 @@ public final class CommercioDelGruppo {
 					gruppo.addIncantesimi(comandoAcquistoConsumabile.getClasseIncantesimo(), 1);
 					break;
 				case MAPPA_PARZIALE_FORESTA:
-					int x = gruppo.getCoordinate().getX();
-					int y = gruppo.getCoordinate().getY();
+					int x = Foresta.getPosizioneDelGruppo().getX();
+					int y = Foresta.getPosizioneDelGruppo().getY();
 					Foresta.ottieniMappaZona(x - 7, y - 7, x + 7, y + 7);
 					break;
 				case MAPPA_COMPLETA_FORESTA:

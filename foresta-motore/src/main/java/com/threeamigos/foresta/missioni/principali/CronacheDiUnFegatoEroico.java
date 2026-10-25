@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.missioni.principali;
 
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneBase;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -39,7 +39,7 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 
 	@Override
 	public void controllaPreLocazione() {
-		if (!isAttiva() && GruppoGiocatore.getIstanza().getTipoLocazioneCorrente().getCategoriaLocazione() == CategoriaLocazione.CITTA) {
+		if (!isAttiva() && Foresta.getLocazioneDelGruppo().getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 			BusEventi.pubblica(new NotificaTestoParagrafo(getDescrizione() + ": " + getNome() + " si scrive un boccale per volta."));
 			attivaMissione();
 		}

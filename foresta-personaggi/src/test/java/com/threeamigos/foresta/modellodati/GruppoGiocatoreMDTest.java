@@ -2,7 +2,6 @@ package com.threeamigos.foresta.modellodati;
 
 
 import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
@@ -48,7 +47,6 @@ class GruppoGiocatoreMDTest {
         gruppo.setMonete(100);
         gruppo.setPreziosi(7);
         gruppo.setSfideVinte(2);
-        gruppo.setCoordinate(new CoordinateMD(3, 9));
         assertEquals(1, gruppo.getPozioniSalute());
         assertEquals(2, gruppo.getPozioniSaluteGrande());
         assertEquals(3, gruppo.getPozioniMagia());
@@ -57,7 +55,6 @@ class GruppoGiocatoreMDTest {
         assertEquals(100, gruppo.getMonete());
         assertEquals(7, gruppo.getPreziosi());
         assertEquals(2, gruppo.getSfideVinte());
-        assertEquals(new CoordinateMD(3, 9), gruppo.getCoordinate());
     }
 
     @Test
@@ -82,7 +79,6 @@ class GruppoGiocatoreMDTest {
         gruppo.setPreziosi(4);
         gruppo.setSfideVinte(1);
         gruppo.setSacerdoteAccolto(true);
-        gruppo.setCoordinate(new CoordinateMD(5, 6));
         gruppo.aggiungiArtefatto(ArtefattiDiTest.creaArtefatto(TipoArtefatto.ANELLO, "l'anello", "che brilla"));
         PersonaggioMD bardo = personaggio(TipoPersonaggio.BARDO_DELLE_LOCANDE, "Lino");
         gruppo.aggiungiOspite(bardo);
@@ -99,7 +95,6 @@ class GruppoGiocatoreMDTest {
         assertEquals(4, riletto.getPreziosi());
         assertEquals(1, riletto.getSfideVinte());
         assertTrue(riletto.isSacerdoteAccolto());
-        assertEquals(new CoordinateMD(5, 6), riletto.getCoordinate());
         assertEquals("l'anello", riletto.getArtefatti().iterator().next().getNome());
         assertEquals("Lino", riletto.getOspitiMD().get(0).getNome());
         assertEquals(Collections.singleton(bardo.getUuid()), riletto.getOspitiVulnerabili());
@@ -109,7 +104,6 @@ class GruppoGiocatoreMDTest {
     void unFileTroncatoNegliOspitiVulnerabiliEUnErrore() throws IOException {
         GruppoGiocatoreMD gruppo = new GruppoGiocatoreMD();
         gruppo.addPersonaggioMD(personaggio(TipoPersonaggio.GUERRIERO, "Arsenio"));
-        gruppo.setCoordinate(new CoordinateMD(5, 6));
         PersonaggioMD bardo = personaggio(TipoPersonaggio.BARDO_DELLE_LOCANDE, "Lino");
         gruppo.aggiungiOspite(bardo);
         gruppo.aggiungiOspiteVulnerabile(bardo.getUuid());
@@ -133,28 +127,5 @@ class GruppoGiocatoreMDTest {
         gruppo.togliOspiteVulnerabile(bardo.getUuid());
         assertTrue(gruppo.getOspitiMD().isEmpty());
         assertTrue(gruppo.getOspitiVulnerabili().isEmpty());
-    }
-
-    @Test
-    void iCantiImparatiSiSalvanoESiAzzeranoConUnaPartitaNuova() throws IOException {
-        GruppoGiocatoreMD gruppo = new GruppoGiocatoreMD();
-        gruppo.setCoordinate(new CoordinateMD(1, 1));
-        assertTrue(gruppo.getCantiAppresi().isEmpty());
-        gruppo.addCantoAppreso(TipoCanto.URLO_DELLA_BANSHEE);
-
-        GruppoGiocatoreMD riletto = salvaERileggi(gruppo);
-        assertEquals(Collections.singleton(TipoCanto.URLO_DELLA_BANSHEE), riletto.getCantiAppresi());
-        // Rileggere sostituisce quel che il gruppo aveva
-        riletto.addCantoAppreso(TipoCanto.CURATIVO);
-        StringWriter scritto = new StringWriter();
-        try (PrintWriter stream = new PrintWriter(scritto)) {
-            gruppo.salva(stream);
-        }
-        riletto.leggi(new BufferedReader(new StringReader(scritto.toString())));
-        assertEquals(Collections.singleton(TipoCanto.URLO_DELLA_BANSHEE), riletto.getCantiAppresi());
-
-        gruppo.reimposta();
-        assertTrue(gruppo.getCantiAppresi().isEmpty());
-        assertThrows(UnsupportedOperationException.class, () -> gruppo.getCantiAppresi().add(TipoCanto.CURATIVO));
     }
 }

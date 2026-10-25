@@ -453,7 +453,7 @@ public class RegistroArtefatti {
 		Artefatto artefatto = (Artefatto) evento.getOggettoSpostato();
 		TipoNegozio negozio = TipoNegozio.VENDITORE_DI_PERGAMENE.tratta(artefatto.getTipo())
 				? TipoNegozio.VENDITORE_DI_PERGAMENE : TipoNegozio.ARMAIOLO;
-		vendutiNellaVisita.add(new Vendita(GruppoGiocatore.getIstanza().getCoordinate(), negozio, artefatto.getModelloDati()));
+		vendutiNellaVisita.add(new Vendita(Foresta.getPosizioneDelGruppo(), negozio, artefatto.getModelloDati()));
 	}
 
 	/**

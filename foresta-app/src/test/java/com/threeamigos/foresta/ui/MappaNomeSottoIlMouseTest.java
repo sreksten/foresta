@@ -3,7 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.ui.schermate.DisegnatoreMappa;
@@ -40,7 +40,7 @@ class MappaNomeSottoIlMouseTest {
             }
         }
         GruppoGiocatore.getIstanza().setModelloDati(ModelloDati.getIstanza().getGruppoGiocatoreMD());
-        ModelloDati.getIstanza().getGruppoGiocatoreMD().setCoordinate(new CoordinateMD(0, 0));
+        ModelloDati.getIstanza().getForestaMD().setPosizioneDelGruppo(new CoordinateMD(0, 0));
         mappa = new DisplayableCanvasMappaATuttoSchermo(LATO_SCHERMO, LATO_SCHERMO, new VistaPartitaMotore());
         mappa.centraSuGiocatore();
         scostamentoX = (LATO_SCHERMO - Foresta.getDimensioneX() * DisegnatoreMappa.LARGHEZZA_ICONA) / 2;

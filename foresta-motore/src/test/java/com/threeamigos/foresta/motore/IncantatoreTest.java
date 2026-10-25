@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.artefatti.RegoleIncantatura;
 
 import com.threeamigos.foresta.artefatti.CostantiArtefatti;
@@ -15,7 +16,6 @@ import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import org.junit.jupiter.api.BeforeEach;

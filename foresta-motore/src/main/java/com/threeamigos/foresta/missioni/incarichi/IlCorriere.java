@@ -9,7 +9,6 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.richieste.Spedizione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Articoli;
@@ -140,7 +139,7 @@ public class IlCorriere extends IncaricoInCitta {
 	 * Le città, diverse da quella in cui si trova il gruppo, che ci sono ancora.
 	 */
 	private static List<TipoLocazione> altreCitta() {
-		TipoLocazione qui = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
+		TipoLocazione qui = Foresta.getLocazioneDelGruppo();
 		List<TipoLocazione> altre = new ArrayList<>();
 		for (TipoLocazione citta : TipoLocazione.values()) {
 			if (citta.getCategoriaLocazione() == CategoriaLocazione.CITTA && citta != qui

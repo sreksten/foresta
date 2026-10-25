@@ -167,7 +167,7 @@ sta fra il Goblin e l'Hobgoblin e l'**Ombra Nera** (31) nel quarto livello. Il m
 cambia anche i lanciatori di incantesimi.
 
 L'**astuzia** (`Astuzia.di`) parte dal **massimo di classe** ed è ridotta da una **rampa sul livello** (quello del personaggio, che nei mostri è del mondo):
-`astuzia = massimo × min(1, ASTUZIA_PARTENZA + ASTUZIA_PER_LIVELLO × (livello − 1))`, con `Costanti.ASTUZIA_PARTENZA` = 0,4 e `ASTUZIA_PER_LIVELLO` = 0,075: il 40% del massimo al livello 1, pieno al livello 9. Un'Ombra Nera
+`astuzia = massimo × min(1, ASTUZIA_PARTENZA + ASTUZIA_PER_LIVELLO × (livello − 1))`, con `CostantiTattiche.ASTUZIA_PARTENZA` = 0,4 e `ASTUZIA_PER_LIVELLO` = 0,075: il 40% del massimo al livello 1, pieno al livello 9. Un'Ombra Nera
 è così tonta all'inizio e diventa più ostica col salire del mondo, e i boss al livello 1 sono un po' meno furbi (Strega e Lich al terzo livello). Il massimo di classe non è un tetto dell'INTELLIGENZA vera: è un valore base che la
 distribuzione dei punti di `LanciatoreDeiDadi` (un budget che cresce col livello, ripartito in parte a caso) sostituisce, quindi l'attuale può essere molto sotto (Mago: 55 contro 18 a livello 1) o sopra (Goblin: 4 contro 6–11): per questo
 non si parte dall'INTELLIGENZA attuale, che fra i livelli 1 e 9 cresce troppo poco perché l'astuzia si muova.
@@ -498,7 +498,7 @@ un ordinamento o una condizione delle voci lo dicono §11.5, §11.6 e §11.8.
 | Quante pergamene di un incantesimo restano | (specifico) | **sì**: `getIncantesimi(classe)` |
 | **Nell'inventario del gruppo c'è un'arma** che dà un tipo di danno (SACRO contro i non morti), con un certo modificatore, o più forte della mia | DA:O (*weapon set*) | **sì**: l'inventario del gruppo si legge (`getArtefatti()`), `Arma.daTipoDanno(tipo)` dice se un'arma dà quel danno e `puoEquipaggiare` se il personaggio la può impugnare; li mette insieme `GruppoGiocatore.armiPerCambio` (§5), che il requisito di `CAMBIA_ARMA` usa |
 | Con una probabilità del n% | BG (*RandomNum*) | **sì**: `Dado`; condizione `PROBABILITA` |
-| Tipo di locazione, ora del giorno | BG | **sì**: `getTipoLocazioneCorrente()`, `LineaTemporale`; utile solo per tattiche speciali |
+| Tipo di locazione, ora del giorno | BG | **sì**: `Foresta.getLocazioneDelGruppo()`, `LineaTemporale`; utile solo per tattiche speciali |
 | Variabili e contatori definiti dall'utente | BG (*script*) | **no**: va oltre lo scopo |
 ### 7.4 Modelli già pronti
 
@@ -653,7 +653,7 @@ Le altre cose da fare sono in §8.
 
 ## 11. Il modello dati delle tattiche
 
-Qui sta il **modello** (come sono fatte una tattica, una voce, un bersaglio) e come lo usano il motore e la schermata. Le classi stanno nel pacchetto `…/tattiche` (i tipi, che servono anche alla UI, in `…/tipi/tattiche`).
+Qui sta il **modello** (come sono fatte una tattica, una voce, un bersaglio) e come lo usano il motore e la schermata. Le classi stanno nel pacchetto `…/tattiche` (i tipi, che servono anche alla UI, in `…/tipi`: `TipoAzione` in `foresta-poteri`, gli altri in `foresta-tattiche`).
 
 ### 11.1 Principi
 
@@ -699,7 +699,7 @@ Il **selettore** può mancare (`null`): vale allora quello di base della portata
 
 ### 11.3 La rosa dei candidati
 
-La rosa è l'insieme da cui il selettore pesca, prima dei filtri. Il suo nome è un enumerato (`tipi/tattiche/TipoRosa`, che serve anche alla UI), e chi calcola i candidati è la classe
+La rosa è l'insieme da cui il selettore pesca, prima dei filtri. Il suo nome è un enumerato (`tipi/TipoRosa` in `foresta-tattiche`, che serve anche alla UI), e chi calcola i candidati è la classe
 corrispondente (`tattiche/rose/Rosa`, una per valore: `RosaAlleati`, `RosaOspiti`..., si trovano con `Rose.di(tipo)`); il metodo restituisce una **`List<Personaggio>`** (non uno `Stream`: il registro delle decisioni, §7.7, deve
 poter dire quanti candidati c'erano e quanti ne sono rimasti dopo ogni filtro; le liste sono piccole).
 
@@ -908,7 +908,7 @@ Il registro delle decisioni (§7.7) riporta i danni attesi confrontati ("PIU_ADA
 
 ### 11.11 Dove stanno i dati e la logica
 
-Le classi che descrivono una tattica sono **dati puri**: immutabili, fatti solo di enumerati (`tipi/tattiche`), numeri e liste. Stanno nel pacchetto **`…/tattiche`** (modulo `foresta-tattiche`), accanto alla logica, con il suffisso `MD` come il resto del modello dati
+Le classi che descrivono una tattica sono **dati puri**: immutabili, fatti solo di enumerati (`tipi`), numeri e liste. Stanno nel pacchetto **`…/tattiche`** (modulo `foresta-tattiche`), accanto alla logica, con il suffisso `MD` come il resto del modello dati
 (`TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`). Il motivo è che la stessa classe serve a tre cose: la **UI** le legge e le modifica (può importare `modellodati` e `tipi`, non il motore né il dominio), il **salvataggio**
 le scrive con il personaggio (`PersonaggioMD`, §11.12) e il **motore** le valuta. Il modulo `foresta-modellodati` non vede il motore, e quindi nemmeno `tattiche`: dipendono solo da `tipi` e fra loro.
 

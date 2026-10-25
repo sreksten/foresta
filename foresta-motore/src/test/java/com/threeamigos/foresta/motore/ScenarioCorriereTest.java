@@ -109,7 +109,7 @@ class ScenarioCorriereTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             IlCorriere corriere = prendiLIncarico(ANTIDOTO, TipoLocazione.CITTA_RUUNA);
             LineaTemporale.aggiungiOre(corriere.getOreConcesse() + 1);
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_RUUNA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_RUUNA));
             corriere.controllaPreLocazione();
             assertTrue(corriere.isFallita());
             assertTrue(partita.testi().contains("Troppo tardi: la fiala di antidoto non arriverà più in tempo al fabbro di Ruuna."),
@@ -227,7 +227,7 @@ class ScenarioCorriereTest {
     }
 
     private static void consegnaA(PartitaDiTest partita, IlCorriere corriere, CoordinateMD citta) {
-        partita.gruppo().setCoordinate(citta);
+        Foresta.setPosizioneDelGruppo(citta);
         corriere.controllaPreLocazione();
         corriere.segnaIntermezzoPassoMostrato("RITORNO");
         corriere.controllaInLocazione();

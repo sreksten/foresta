@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -11,6 +12,8 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.modellodati.NotiziaMD;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.Informazioni;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -99,7 +102,7 @@ public class Locanda extends LocazioneBase {
 		// O incontra un personaggio o riceve informazioni
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		if (gruppo.getNumeroPersonaggiPermanenti() < Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
-			personaggioDisponibile = RegistroPersonaggi.getPersonaggioInLocazione(gruppo.getCoordinate());
+			personaggioDisponibile = RegistroPersonaggi.getPersonaggioInLocazione(Foresta.getPosizioneDelGruppo());
 		}
 		if (personaggioDisponibile != null) {
 			evento = INCONTRA_PERSONAGGIO;
@@ -307,7 +310,7 @@ public class Locanda extends LocazioneBase {
 		}
 
 		Personaggio capo = g.getCapo();
-		personaggioDisponibile = RegistroPersonaggi.getPersonaggioInLocazione(g.getCoordinate());
+		personaggioDisponibile = RegistroPersonaggi.getPersonaggioInLocazione(Foresta.getPosizioneDelGruppo());
 		if (personaggioDisponibile != null) {
             String sb = "“Ehi, " + capo.getNome() + "!\", urla una voce. " +
                     Character.toUpperCase(capo.getPronome().charAt(0)) + capo.getPronome().substring(1) +
@@ -331,7 +334,7 @@ public class Locanda extends LocazioneBase {
 	 */
 	public void accetta(GruppoGiocatore g, boolean accetta) {
 		if (accetta) {
-			RegistroPersonaggi.rimuoviPersonaggioInLocazione(g.getCoordinate());
+			RegistroPersonaggi.rimuoviPersonaggioInLocazione(Foresta.getPosizioneDelGruppo());
 			GruppoAvversario.getIstanza().rimuoviPersonaggio(personaggioDisponibile);
 			g.aggiungiPersonaggio(RegistroPersonaggi.preparaCompagno(personaggioDisponibile));
 			g.addMonete(Dado.tira(5, 15));

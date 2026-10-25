@@ -60,14 +60,14 @@ class ScenarioIlViaggioDellaMoglieTest {
      */
     private static TipoLocazione riportaACasaIlBardo(PartitaDiTest partita, CoordinateMD locanda) {
         NonSparateSulPianista pianista = pianista();
-        partita.gruppo().setCoordinate(locanda);
+        Foresta.setPosizioneDelGruppo(locanda);
         Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "2");
         pianista.controllaPreLocazione();
         pianista.segnaIntermezzoPassoMostrato("INCARICO");
         pianista.controllaInLocazione();
         assertEquals("VIAGGIO", pianista.getPassoCorrente());
         TipoLocazione casa = pianista.getCitta();
-        partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(casa));
+        Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(casa));
         pianista.controllaPreLocazione();
         pianista.segnaIntermezzoPassoMostrato("VIAGGIO");
         pianista.controllaInLocazione();
@@ -76,7 +76,7 @@ class ScenarioIlViaggioDellaMoglieTest {
     }
 
     private static void rientraNellaLocanda(PartitaDiTest partita, CoordinateMD locanda, int visitePrecedenti) {
-        partita.gruppo().setCoordinate(locanda);
+        Foresta.setPosizioneDelGruppo(locanda);
         Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, String.valueOf(visitePrecedenti));
         viaggio().controllaPreLocazione();
     }
@@ -116,7 +116,7 @@ class ScenarioIlViaggioDellaMoglieTest {
             assertTrue(viaggio.getDescrizione().contains(moglie), viaggio.getDescrizione());
 
             // Nella città di partenza la moglie si unisce al gruppo, e non si può ferire
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(partenza));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(partenza));
             viaggio.controllaPreLocazione();
             assertEquals("PRELEVAMENTO", viaggio.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
             assertFalse(new IntermezzoDiPasso(viaggio, "PRELEVAMENTO").getPagine().isEmpty(), "la scena della moglie si costruisce");
@@ -132,7 +132,7 @@ class ScenarioIlViaggioDellaMoglieTest {
             }
 
             // All'arrivo paga e si separa dal gruppo
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(viaggio.getCittaDiArrivo()));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(viaggio.getCittaDiArrivo()));
             int monete = partita.gruppo().getMonete();
             viaggio.controllaPreLocazione();
             viaggio.controllaInLocazione();
@@ -153,7 +153,7 @@ class ScenarioIlViaggioDellaMoglieTest {
             rientraNellaLocanda(partita, locanda, 1);
             viaggio.segnaIntermezzoPassoMostrato("INCARICO");
             viaggio.controllaInLocazione();
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(viaggio.getCittaDiPartenza()));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(viaggio.getCittaDiPartenza()));
             viaggio.controllaPreLocazione();
             viaggio.segnaIntermezzoPassoMostrato("PRELEVAMENTO");
             viaggio.controllaInLocazione();

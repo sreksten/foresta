@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.combattimento.Ondata;
@@ -51,7 +52,7 @@ class ScenarioOndateTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(291)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
-            partita.gruppo().setCoordinate(bosco);
+            Foresta.setPosizioneDelGruppo(bosco);
             Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
             LocazioneCorrente.set(locazione);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
@@ -113,7 +114,7 @@ class ScenarioOndateTest {
             assertEquals("Gruk", ondate.get(1).getAvversari().get(0).getNome());
 
             // Battuti i goblin e l'hobgoblin, ma non Gruk (il gruppo è fuggito): la battaglia non è vinta
-            partita.gruppo().setCoordinate(radura);
+            Foresta.setPosizioneDelGruppo(radura);
             sconfitti(partita, TipoPersonaggio.GOBLIN, TipoPersonaggio.GOBLIN, TipoPersonaggio.HOBGOBLIN);
             battaglia.controllaPostLocazione();
             assertEquals("CACCIA", battaglia.getPassoCorrente());
@@ -139,7 +140,7 @@ class ScenarioOndateTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             partita.gruppo().addMonete(100);
             CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
-            partita.gruppo().setCoordinate(bosco);
+            Foresta.setPosizioneDelGruppo(bosco);
             Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
             LocazioneCorrente.set(locazione);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();

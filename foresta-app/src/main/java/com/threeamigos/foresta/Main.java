@@ -8,6 +8,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaUscitaDalGioco;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.salvataggi.GestoreBestiarioSuFile;
 import com.threeamigos.foresta.salvataggi.GestorePunteggiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreSalvataggiSuFile;

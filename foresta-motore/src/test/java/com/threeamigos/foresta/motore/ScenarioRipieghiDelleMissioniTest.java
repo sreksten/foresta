@@ -67,7 +67,7 @@ class ScenarioRipieghiDelleMissioniTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(462)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             IlNegozioDellArmaiolo armaiolo = trova(IlNegozioDellArmaiolo.class);
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(armaiolo.getCittaAssegnata()));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(armaiolo.getCittaAssegnata()));
             sgombraLaMappa();
 
             armaiolo.controllaPreLocazione();

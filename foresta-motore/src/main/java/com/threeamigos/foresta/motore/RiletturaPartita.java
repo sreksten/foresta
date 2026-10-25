@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.ModelloDati;
@@ -27,7 +29,7 @@ public final class RiletturaPartita {
 		}
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		gruppo.setModelloDati(ModelloDati.getIstanza().getGruppoGiocatoreMD());
-		LocazioneCorrente.set(CostruttoreDellaForesta.costruisciIstanza(gruppo.getCoordinate()));
+		LocazioneCorrente.set(CostruttoreDellaForesta.costruisciIstanza(Foresta.getPosizioneDelGruppo()));
 		RegistroMissioni.aggiornaDopoRilettura();
 		IntermezzoLibroTecnico.reimposta();
 	}

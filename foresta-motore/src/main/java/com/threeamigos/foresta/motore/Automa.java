@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.strumenti.ModalitaDiProva;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 
@@ -863,10 +866,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gruppo.congedaChiNonRisorge();
 		gruppo.getPersonaggiVivi().forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
 		gruppo.getOspiti().stream().filter(Personaggio::isVivo).forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
-		locazioneCorrente = CostruttoreDellaForesta.costruisciIstanza(gruppo.getCoordinate());
+		locazioneCorrente = CostruttoreDellaForesta.costruisciIstanza(Foresta.getPosizioneDelGruppo());
 		LocazioneCorrente.set(locazioneCorrente);
 		locazioneCorrente.crea(gruppo, gruppoAvversario);
-		if (RegistroMissioni.isDaSopprimere(gruppo.getCoordinate())) {
+		if (RegistroMissioni.isDaSopprimere(Foresta.getPosizioneDelGruppo())) {
 			// Una missione è appena arrivata qui e considera il posto sicuro (un tempio, un posto di un rito...):
 			// niente avversari né oggetti a caso
 			gruppoAvversario.rimuoviPersonaggi();
@@ -874,20 +877,20 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		} else {
 			// Qui e non in crea, che molte locazioni ridefiniscono: gli avversari che una missione vuole qui, al posto di
 			// quelli della locazione...
-			RegistroMissioni.getIncontroMissione(gruppo.getCoordinate()).ifPresent(avversari -> {
+			RegistroMissioni.getIncontroMissione(Foresta.getPosizioneDelGruppo()).ifPresent(avversari -> {
 				gruppoAvversario.rimuoviPersonaggi();
 				avversari.forEach(gruppoAvversario::aggiungiPersonaggio);
 				// ...con le ondate che arrivano dopo, se la missione ne vuole (vedi LocazioneBase.impostaAzioni)
-				locazioneCorrente.setOndateSuccessive(RegistroMissioni.getOndateSuccessiveMissione(gruppo.getCoordinate()));
+				locazioneCorrente.setOndateSuccessive(RegistroMissioni.getOndateSuccessiveMissione(Foresta.getPosizioneDelGruppo()));
 			});
-			if (gruppoAvversario.isSfidaACartaForbiciSasso() || RegistroMissioni.isLocazioneSenzaOggetti(gruppo.getCoordinate())) {
+			if (gruppoAvversario.isSfidaACartaForbiciSasso() || RegistroMissioni.isLocazioneSenzaOggetti(Foresta.getPosizioneDelGruppo())) {
 				// Un campione de La sfida dei campioni: lì si gioca e basta, niente oggetti, né suoi né di altre missioni. Lo stesso
 				// dove una missione dà già il suo premio (la falce del Tristo Mietitore)
 				locazioneCorrente.rimuoviOggetto();
 			} else {
 				// ...e l'oggetto che una missione vuole qui, che può dipendere dagli avversari (i trofei di una caccia)
-				RegistroMissioni.getOggettoMissione(gruppo.getCoordinate(), gruppo.getTipoLocazioneCorrente(),
-								Foresta.isLocazioneVisitata(gruppo.getCoordinate()))
+				RegistroMissioni.getOggettoMissione(Foresta.getPosizioneDelGruppo(), Foresta.getLocazioneDelGruppo(),
+								Foresta.isLocazioneVisitata(Foresta.getPosizioneDelGruppo()))
 						.ifPresent(locazioneCorrente::collocaOggettoMissione);
 			}
 		}
@@ -900,7 +903,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		BusEventi.pubblica(new NotificaTestoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));
 		locazioneCorrente.descrivi(gruppo, gruppoAvversario);
 		// Dove una missione finita aveva la sua locazione, per esempio fra le rovine di un castello sconfitto
-		RegistroMissioni.getRicordo(gruppo.getCoordinate())
+		RegistroMissioni.getRicordo(Foresta.getPosizioneDelGruppo())
 				.ifPresent(ricordo -> BusEventi.pubblica(new NotificaTestoFrase(ricordo)));
 		return controllaMissioniEDomande(MomentoControllo.IN_LOCAZIONE, this::proseguiPreparazioneLocazione);
 	}
@@ -1030,7 +1033,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito entraInStatoAccampamento() {
 		// Dalla casella, non da locazioneCorrente: dopo un caricamento questa e' null, e dopo un castello
 		// completato e' ancora il castello mentre sulla casella ci sono le rovine
-		Pernottamento.pernotta(gruppo, CostruttoreDellaForesta.costruisciIstanza(gruppo.getCoordinate()).getTipoRiposo());
+		Pernottamento.pernotta(gruppo, CostruttoreDellaForesta.costruisciIstanza(Foresta.getPosizioneDelGruppo()).getTipoRiposo());
 		// Superato l'ultimo giorno la partita è persa subito: tornando ad ATTESA_DIREZIONE la si potrebbe ancora
 		// salvare, e la sconfitta si vedrebbe solo al passo seguente
 		if (LineaTemporale.isGiocoFinito()) {
@@ -1382,19 +1385,19 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				return Esito.CONTINUA_CON_INGRESSO;
 			case NORD:
 				direzione = Comando.NORD;
-				comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiNord());
+				comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(Foresta.getMaxPassiNord());
 				break;
 			case EST:
 				direzione = Comando.EST;
-				comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiEst());
+				comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(Foresta.getMaxPassiEst());
 				break;
 			case SUD:
 				direzione = Comando.SUD;
-				comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiSud());
+				comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(Foresta.getMaxPassiSud());
 				break;
 			case OVEST:
 				direzione = Comando.OVEST;
-				comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiOvest());
+				comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(Foresta.getMaxPassiOvest());
 				break;
 			case FLOPPY_SALVA:
 				stato = Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE;
@@ -1429,16 +1432,16 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		int passi = comando.ordinal() - Comando.NUMERO_1.ordinal() + 1;
 		switch (direzione) {
 			case NORD:
-				gruppo.muoveNord(passi);
+				Foresta.muoveNord(passi);
 				break;
 			case EST:
-				gruppo.muoveEst(passi);
+				Foresta.muoveEst(passi);
 				break;
 			case SUD:
-				gruppo.muoveSud(passi);
+				Foresta.muoveSud(passi);
 				break;
 			case OVEST:
-				gruppo.muoveOvest(passi);
+				Foresta.muoveOvest(passi);
 				break;
 			default:
 				throw new IllegalArgumentException();
@@ -2279,7 +2282,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (gruppo.getNumeroPersonaggiVivi() <= 1 || (LineaTemporale.getOra() <= 20 && LineaTemporale.getOra() >= 6)) {
 			return false;
 		}
-		TipoLocazione tipoLocazione = gruppo.getTipoLocazioneCorrente();
+		TipoLocazione tipoLocazione = Foresta.getLocazioneDelGruppo();
 		// Nei castelli non si riposa (getTipoRiposo lancia un'eccezione): ci si resta dopo una fuga
 		return tipoLocazione.getCategoriaLocazione() != CategoriaLocazione.CITTA &&
 				tipoLocazione.getCategoriaLocazione() != CategoriaLocazione.CASTELLO &&
@@ -2293,16 +2296,16 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 */
 	private Collection<Comando> getComandiPossibiliInStatoAttesaDirezione() {
 		List<Comando> comandiPossibili = new ArrayList<>();
-		if (gruppo.getMaxPassiNord() > 0) {
+		if (Foresta.getMaxPassiNord() > 0) {
 			comandiPossibili.add(Comando.NORD);
 		}
-		if (gruppo.getMaxPassiEst() > 0) {
+		if (Foresta.getMaxPassiEst() > 0) {
 			comandiPossibili.add(Comando.EST);
 		}
-		if (gruppo.getMaxPassiSud() > 0) {
+		if (Foresta.getMaxPassiSud() > 0) {
 			comandiPossibili.add(Comando.SUD);
 		}
-		if (gruppo.getMaxPassiOvest() > 0) {
+		if (Foresta.getMaxPassiOvest() > 0) {
 			comandiPossibili.add(Comando.OVEST);
 		}
 		comandiPossibili.add(Comando.MAPPA);

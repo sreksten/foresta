@@ -25,6 +25,9 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.modellodati.TatticaMD;
 import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.gruppi.Gruppo;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.FabbricaOfferte;
 import com.threeamigos.foresta.offerte.Offerta;
@@ -334,14 +337,14 @@ public abstract class LocazioneBase implements Locazione {
 	}
 	
 	protected boolean isLocazioneVisitata() {
-		return Foresta.isLocazioneVisitata(gruppo.getCoordinate());
+		return Foresta.isLocazioneVisitata(Foresta.getPosizioneDelGruppo());
 	}
 
 	/**
 	 * Restituisce il primo artefatto presente in questa locazione
 	 */
 	protected Artefatto getArtefatto(GruppoGiocatore g) {
-		return RegistroArtefatti.getArtefattoInLocazione(g.getCoordinate());
+		return RegistroArtefatti.getArtefattoInLocazione(Foresta.getPosizioneDelGruppo());
 	}
 
 	/**
@@ -1162,7 +1165,7 @@ public abstract class LocazioneBase implements Locazione {
 		// che ha sconfitto il giocatore nella partita precedente.
 		gruppoAvversario.rimuoviPersonaggi();
 		if (isCompleta()) {
-			g.setLocazioneCorrenteVisitata();
+			Foresta.setLocazioneDelGruppoVisitata();
 		}
 		for (Personaggio p : g.getPersonaggi()) {
 			if (p.hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
@@ -1377,7 +1380,7 @@ public abstract class LocazioneBase implements Locazione {
 			// una volta raccolto va tolto, altrimenti a ogni nuova visita si ripresenta e se
 			// ne ottengono infinite copie. Corruzione e fuga usano setOggetto(null), che invece
 			// lo lascia al suo posto.
-			RegistroArtefatti.rimuoviArtefattoInLocazione(gruppo.getCoordinate());
+			RegistroArtefatti.rimuoviArtefattoInLocazione(Foresta.getPosizioneDelGruppo());
 			// Un leggendario custodito in un tempio è nato molto prima: lo si ottiene al livello del mondo di adesso
 			OggettoLeggendario.alLivello(oggettoCorrente.getArtefatto().orElseThrow(IllegalStateException::new), Statistiche.getLivello());
 		}
@@ -1941,7 +1944,7 @@ public abstract class LocazioneBase implements Locazione {
 	 */
 	private boolean isPassaggioPossibile() {
 		return !passaggioEscluso && statoLocazione == StatoLocazione.IN_LOCAZIONE
-				&& gruppo.getTipoLocazioneCorrente().getCategoriaLocazione() == CategoriaLocazione.STANDARD
+				&& Foresta.getLocazioneDelGruppo().getCategoriaLocazione() == CategoriaLocazione.STANDARD
 				&& !gruppoAvversario.getPersonaggiVivi().isEmpty() && !gruppoAvversario.isDaAffrontare() && !gruppoAvversario.isDuello()
 				&& !hasOndateSuccessive();
 	}

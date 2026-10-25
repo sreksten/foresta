@@ -2,7 +2,7 @@ package com.threeamigos.foresta.tattiche.valutazione;
 
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.Costanti;
+import com.threeamigos.foresta.tipi.CostantiTattiche;
 
 /**
  * L'astuzia di un personaggio per le tattiche (tattiche_di_combattimento_automatiche.md §4, formula B): l'intelligenza massima della sua classe per
@@ -19,7 +19,7 @@ public final class Astuzia {
 	 */
 	public static double di(Personaggio personaggio) {
 		double massimo = personaggio.getMaxStatistica(TipoAttributo.INTELLIGENZA);
-		double rampa = Math.min(1.0d, Costanti.ASTUZIA_PARTENZA + Costanti.ASTUZIA_PER_LIVELLO * (personaggio.getLivello() - 1));
+		double rampa = Math.min(1.0d, CostantiTattiche.ASTUZIA_PARTENZA + CostantiTattiche.ASTUZIA_PER_LIVELLO * (personaggio.getLivello() - 1));
 		return massimo * rampa;
 	}
 }

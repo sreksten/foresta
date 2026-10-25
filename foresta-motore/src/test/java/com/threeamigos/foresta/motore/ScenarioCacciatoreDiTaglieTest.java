@@ -62,9 +62,9 @@ class ScenarioCacciatoreDiTaglieTest {
             assertEquals(ricercato, capo.getNome());
 
             // Un hobgoblin abbattuto altrove non conta; i goblin nemmeno; il capo sì
-            partita.gruppo().setCoordinate(new CoordinateMD(covo.getX() == 0 ? 1 : covo.getX() - 1, covo.getY()));
+            Foresta.setPosizioneDelGruppo(new CoordinateMD(covo.getX() == 0 ? 1 : covo.getX() - 1, covo.getY()));
             partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.HOBGOBLIN));
-            partita.gruppo().setCoordinate(covo);
+            Foresta.setPosizioneDelGruppo(covo);
             for (int i = 0; i < CacciatoreDiTaglie.GOBLIN; i++) {
                 partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
             }
@@ -74,7 +74,7 @@ class ScenarioCacciatoreDiTaglieTest {
             taglia.controllaPostLocazione();
             assertEquals("RITORNO", taglia.getPassoCorrente());
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             taglia.controllaPreLocazione();
             taglia.segnaIntermezzoPassoMostrato("RITORNO");

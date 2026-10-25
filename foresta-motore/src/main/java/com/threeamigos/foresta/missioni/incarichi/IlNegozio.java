@@ -166,7 +166,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 
 	@Override
 	protected boolean isPossibileQui() {
-		return getCittaAssegnata() == GruppoGiocatore.getIstanza().getTipoLocazioneCorrente()
+		return getCittaAssegnata() == Foresta.getLocazioneDelGruppo()
 				&& (getCovo() != null || RegistroMissioni.esisteUnPostoPer(TipoLocazione.ROVINE, this));
 	}
 

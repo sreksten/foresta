@@ -12,8 +12,8 @@ import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -99,13 +99,13 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 	 */
 	private boolean isTempioAppenaRipulito() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		return gruppo.getTipoLocazioneCorrente() == TipoLocazione.TEMPIO
+		return Foresta.getLocazioneDelGruppo() == TipoLocazione.TEMPIO
 				&& GruppoAvversario.getIstanza().getPersonaggiVivi().isEmpty()
-				&& !Tempio.isRipulito(Foresta.getLocazioneMD(gruppo.getCoordinate()));
+				&& !Tempio.isRipulito(Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()));
 	}
 
 	private void ripulisciIlTempioCorrente() {
-		Tempio.ripulisci(Foresta.getLocazioneMD(GruppoGiocatore.getIstanza().getCoordinate()));
+		Tempio.ripulisci(Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()));
 	}
 
 	private void scegliIlSacerdote() {

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.missioni.MissioneAPassi;
@@ -130,16 +131,16 @@ class ScenarioTrofeiEdEsplorazioneTest {
             Foresta.setLocazioneVisitata(visitata, true);
             Foresta.setLocazioneVisitata(seconda, false);
 
-            partita.gruppo().setCoordinate(prima);
+            Foresta.setPosizioneDelGruppo(prima);
             esplorazione.controllaPreLocazione();
             esplorazione.controllaPreLocazione();
             assertEquals(1, esplorazione.getCaselleEsplorate(), "la stessa casella conta una volta");
 
-            partita.gruppo().setCoordinate(visitata);
+            Foresta.setPosizioneDelGruppo(visitata);
             esplorazione.controllaPreLocazione();
             assertEquals(1, esplorazione.getCaselleEsplorate(), "una casella già visitata non conta");
 
-            partita.gruppo().setCoordinate(seconda);
+            Foresta.setPosizioneDelGruppo(seconda);
             esplorazione.controllaPreLocazione();
             assertTrue(esplorazione.isCompleta());
         }

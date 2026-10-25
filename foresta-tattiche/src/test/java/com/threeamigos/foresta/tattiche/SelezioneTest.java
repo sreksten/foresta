@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.tipi.PortataAzione;
 import com.threeamigos.foresta.combattimento.DannoRisultante;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.tipi.TipoDanno;
@@ -402,8 +403,8 @@ class SelezioneTest {
         }
         for (TipoAzione azione : TipoAzione.values()) {
             for (boolean delGiocatore : new boolean[]{true, false}) {
-                assertFalse(azione.roseAmmesse(delGiocatore).isEmpty(), azione.name());
-                for (TipoRosa rosa : azione.roseAmmesse(delGiocatore)) {
+                assertFalse(PortataAzione.roseAmmesse(azione, delGiocatore).isEmpty(), azione.name());
+                for (TipoRosa rosa : PortataAzione.roseAmmesse(azione, delGiocatore)) {
                     assertTrue(rosa.valePer(delGiocatore), azione + " ammette la rosa " + rosa + " che non vale per questo lato");
                 }
             }

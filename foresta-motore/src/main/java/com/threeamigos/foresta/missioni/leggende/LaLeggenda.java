@@ -15,7 +15,6 @@ import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
@@ -225,7 +224,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 						.poi(RECUPERO);
 			case RECUPERO:
 				return Passo.quando(MomentoControllo.POST_LOCAZIONE,
-								() -> getTempio().equals(GruppoGiocatore.getIstanza().getCoordinate())
+								() -> getTempio().equals(Foresta.getPosizioneDelGruppo())
 										&& RegistroArtefatti.getArtefattoInLocazione(getTempio()) == null)
 						.affronta(this::getTempio, getGuardiani())
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("La leggenda era vera: "
@@ -251,7 +250,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 		}
 		IncontroDiMissione guardiani = getGuardiani();
 		aggiungiProprieta(GUARDIANI, guardiani.getClasse().name() + SEPARATORE + guardiani.getNumero());
-		CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
+		CoordinateMD qui = Foresta.getPosizioneDelGruppo();
 		aggiungiProprieta(POSTO, qui.getX() + SEPARATORE + qui.getY());
 		aggiungiProprieta(RACCONTATA_ALLE, String.valueOf(oreDiGioco()));
 	}
@@ -278,7 +277,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 	}
 
 	private boolean nelPosto() {
-		CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
+		CoordinateMD qui = Foresta.getPosizioneDelGruppo();
 		return qui != null && (qui.getX() + SEPARATORE + qui.getY()).equals(ottieniProprieta(POSTO));
 	}
 

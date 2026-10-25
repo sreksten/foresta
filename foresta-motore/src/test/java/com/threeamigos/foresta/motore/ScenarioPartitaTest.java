@@ -43,19 +43,19 @@ class ScenarioPartitaTest {
 			partita.comando(Comando.ESCI_DA_CITTA);
 			partita.assertStato(Stato.SCELTA_DIREZIONE);
 			int monete = partita.gruppo().getMonete();
-			CoordinateMD dove = partita.gruppo().getCoordinate();
+			CoordinateMD dove = Foresta.getPosizioneDelGruppo();
 
 			partita.comando(Comando.FLOPPY_SALVA).comando(Comando.NUMERO_1);
 			assertTrue(partita.salvataggi().contiene(Comando.NUMERO_1));
 
 			// Si spende e ci si sposta, poi si ricarica: tutto torna com'era al salvataggio
 			partita.gruppo().subMonete(50);
-			partita.gruppo().setCoordinate(new CoordinateMD(0, 0));
+			Foresta.setPosizioneDelGruppo(new CoordinateMD(0, 0));
 			assertTrue(partita.leggi(Comando.NUMERO_1));
 
 			assertEquals(monete, partita.gruppo().getMonete());
-			assertEquals(dove.getX(), partita.gruppo().getX());
-			assertEquals(dove.getY(), partita.gruppo().getY());
+			assertEquals(dove.getX(), Foresta.getPosizioneDelGruppo().getX());
+			assertEquals(dove.getY(), Foresta.getPosizioneDelGruppo().getY());
 			assertEquals("Arsenio", partita.gruppo().getCapo().getNomeProprio().orElse(null));
 		}
 	}
@@ -131,7 +131,7 @@ class ScenarioPartitaTest {
 				}
 				scrittore.println();
 			}
-			scrittore.print(partita.gruppo().getX() + "/" + partita.gruppo().getY());
+			scrittore.print(Foresta.getPosizioneDelGruppo().getX() + "/" + Foresta.getPosizioneDelGruppo().getY());
 			scrittore.flush();
 			return mappa.toString();
 		}

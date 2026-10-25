@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
@@ -106,7 +107,7 @@ class ScenarioPassiAvanzatiTest {
     @Test
     void laSorveglianzaContaSoloLeVisiteAbbastanzaDistanti() {
         try (PartitaDiTest partita = partita(102)) {
-            CoordinateMD faro = partita.gruppo().getCoordinate();
+            CoordinateMD faro = Foresta.getPosizioneDelGruppo();
             MissioneDiUnPasso missione = attiva(m -> m.sorveglia(faro, 2, 12));
 
             missione.controllaPreLocazione();
@@ -116,12 +117,12 @@ class ScenarioPassiAvanzatiTest {
             assertEquals(1, missione.getVisiteNelPassoCorrente(), "troppo presto per una seconda visita");
 
             // Altrove non conta
-            partita.gruppo().setCoordinate(new CoordinateMD(faro.getX() == 0 ? 1 : faro.getX() - 1, faro.getY()));
+            Foresta.setPosizioneDelGruppo(new CoordinateMD(faro.getX() == 0 ? 1 : faro.getX() - 1, faro.getY()));
             LineaTemporale.aggiungiOre(1);
             missione.controllaPreLocazione();
             assertEquals(1, missione.getVisiteNelPassoCorrente());
 
-            partita.gruppo().setCoordinate(faro);
+            Foresta.setPosizioneDelGruppo(faro);
             missione.controllaPreLocazione();
             assertTrue(missione.isCompleta());
         }
@@ -130,7 +131,7 @@ class ScenarioPassiAvanzatiTest {
     @Test
     void chiEvitaIlCombattimentoArrivaChiCombatteFallisce() {
         try (PartitaDiTest partita = partita(103)) {
-            CoordinateMD qui = partita.gruppo().getCoordinate();
+            CoordinateMD qui = Foresta.getPosizioneDelGruppo();
             CoordinateMD altrove = new CoordinateMD(qui.getX() == 0 ? 1 : qui.getX() - 1, qui.getY());
 
             MissioneDiUnPasso furtiva = attiva(m -> m.evita(qui));

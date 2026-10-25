@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.tipi.Quadrante;
 
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
@@ -103,7 +104,7 @@ class ScenarioNegoziNellaForestaTest {
             IlNegozio armaiolo = trova(IlNegozioDellArmaiolo.class);
             for (TipoLocazione citta : TipoLocazione.values()) {
                 if (citta.getCategoriaLocazione() == CategoriaLocazione.CITTA && citta != armaiolo.getCittaAssegnata()) {
-                    partita.gruppo().setCoordinate(coordinateDi(citta));
+                    Foresta.setPosizioneDelGruppo(coordinateDi(citta));
                     armaiolo.controllaPreLocazione();
                     assertEquals("INCARICO", armaiolo.getPassoCorrente(), citta.name());
                 }
@@ -119,7 +120,7 @@ class ScenarioNegoziNellaForestaTest {
                 IlNegozio negozio = negozi().get(indice);
                 TipoLocazione citta = negozio.getCittaAssegnata();
                 CoordinateMD cittaCoordinate = coordinateDi(citta);
-                partita.gruppo().setCoordinate(cittaCoordinate);
+                Foresta.setPosizioneDelGruppo(cittaCoordinate);
 
                 negozio.controllaPreLocazione();
                 assertEquals("ACCETTAZIONE", negozio.getPassoCorrente(), negozio.getNome());
@@ -137,7 +138,7 @@ class ScenarioNegoziNellaForestaTest {
 
                 // Le rovine sono dei mostri, finché il gruppo non li sconfigge
                 assertTrue(RegistroMissioni.getIncontroMissione(covo).isPresent());
-                partita.gruppo().setCoordinate(covo);
+                Foresta.setPosizioneDelGruppo(covo);
                 TipoPersonaggio classe = negozio.getNemici().getSconfittiRichiesti().keySet().iterator().next();
                 int numero = negozio.getNemici().getSconfittiRichiesti().get(classe);
                 for (int i = 0; i < numero; i++) {
@@ -148,7 +149,7 @@ class ScenarioNegoziNellaForestaTest {
                 // Ancora rovine: la bottega nasce solo quando si è riscosso
                 assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(covo));
 
-                partita.gruppo().setCoordinate(cittaCoordinate);
+                Foresta.setPosizioneDelGruppo(cittaCoordinate);
                 int monete = partita.gruppo().getMonete();
                 negozio.controllaPreLocazione();
                 negozio.segnaIntermezzoPassoMostrato("RITORNO");
@@ -196,7 +197,7 @@ class ScenarioNegoziNellaForestaTest {
                 TipoLocazione tipo = (TipoLocazione) voce[0];
                 Foresta.costruisciLocazione(bottega, tipo);
                 Foresta.getLocazioneMD(bottega).aggiungiProprieta(Bottega.NEGOZIANTE, "Mastro Prova da Nyena");
-                partita.gruppo().setCoordinate(bottega);
+                Foresta.setPosizioneDelGruppo(bottega);
                 assertTrue(tipo.isBottega());
 
                 List<Object> aperture = new ArrayList<>();
@@ -222,7 +223,7 @@ class ScenarioNegoziNellaForestaTest {
     void arrivandoNellaBottegaSiEntraSenzaComandiEAnnullaFaRipartire() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(91)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
-            CoordinateMD citta = partita.gruppo().getCoordinate();
+            CoordinateMD citta = Foresta.getPosizioneDelGruppo();
             // La bottega sta sotto la città o, se lì non c'è posto, sopra; si parte da due caselle di distanza e si fa un passo verso la città
             int lato = latoLibero(citta);
             Comando versoLaCitta = lato > 0 ? Comando.NORD : Comando.SUD;
@@ -234,10 +235,10 @@ class ScenarioNegoziNellaForestaTest {
             BusEventi.iscriviti(RichiestaAperturaInventarioCommerciante.class, aperture::add);
 
             partita.comando(Comando.ESCI_DA_CITTA);
-            partita.gruppo().setCoordinate(new CoordinateMD(citta.getX(), citta.getY() + 2 * lato));
+            Foresta.setPosizioneDelGruppo(new CoordinateMD(citta.getX(), citta.getY() + 2 * lato));
             partita.assertStato(Stato.SCELTA_DIREZIONE);
             partita.comando(versoLaCitta).comando(Comando.NUMERO_1);
-            assertEquals(bottega, partita.gruppo().getCoordinate());
+            assertEquals(bottega, Foresta.getPosizioneDelGruppo());
             // Il primo ingresso mostra l'intermezzo del negozio: lo si lascia andare avanti
             for (int i = 0; i < 100 && aperture.isEmpty(); i++) {
                 partita.scatta();

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
@@ -10,7 +11,7 @@ import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.richieste.LealtaRichiesta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
@@ -131,7 +132,7 @@ public class LaLealta extends MissioneAPassi {
 	}
 
 	private List<PaginaIntermezzo> getPagineDelRingraziamento() {
-		return ScenaFraCompagni.in(GruppoGiocatore.getIstanza().getTipoLocazioneCorrente(),
+		return ScenaFraCompagni.in(Foresta.getLocazioneDelGruppo(),
 						getNomeDelCompagno() + " ha qualcosa da dire.", inScena())
 				.parlaIlPrimo(testo(getLealta().getRingraziamento()))
 				.getPagine();

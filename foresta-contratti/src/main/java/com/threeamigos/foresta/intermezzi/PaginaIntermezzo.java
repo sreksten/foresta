@@ -3,7 +3,6 @@ package com.threeamigos.foresta.intermezzi;
 import com.threeamigos.foresta.tipi.TipoStiramento;
 import com.threeamigos.foresta.tipi.Verso;
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
-import com.threeamigos.foresta.tipi.Costanti;
 
 import java.util.*;
 

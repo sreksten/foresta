@@ -62,27 +62,9 @@ public class Costanti {
     public static final int MAGAZZINO_DIVARIO_LIVELLO = 1;
     public static final int MAGAZZINO_SCARTO_SOTTO_LIVELLO = 2;
 
-    // Pozioni
-    // Le pozioni di salute con cui il gruppo parte
-    /**
-     * L'astuzia di un personaggio per le tattiche (tattiche_di_combattimento_automatiche.md §4): l'intelligenza massima della sua classe per
-     * una rampa sul livello, che parte da questa frazione al livello 1 e arriva al pieno al livello 9
-     */
-    /**
-     * Quanto sale la frazione dell'astuzia a ogni livello
-     */
-    public static final double ASTUZIA_PARTENZA = 0.4d;
-    public static final double ASTUZIA_PER_LIVELLO = 0.075d;
-
-    // Il gruppo avversario porta con sé pergamene (vedi BottinoDegliAvversari): la probabilità, per ogni avversario, di averne una
-    // Quante volte, al massimo, un personaggio cambia arma in un combattimento (vedi tattiche_di_combattimento_automatiche.md §5)
-    /**
-     * Dopo quanti tentativi falliti per caso (un Silenzio mancato) una tattica smette di provare la stessa azione su quel bersaglio
-     * (tattiche_di_combattimento_automatiche.md §11.7)
-     */
-    // ...e, se è un umanoide, la probabilità di una pozione della Salute
+    // Il gruppo avversario porta con sé pergamene (vedi BottinoDegliAvversari): la probabilità, per ogni avversario, di averne una...
     public static final int PROBABILITA_PERGAMENA_PER_AVVERSARIO = 20;
-    public static final int MAX_TENTATIVI_FALLITI_PER_AZIONE = 2;
+    // ...e, se è un umanoide, la probabilità di una pozione della Salute
     public static final int PROBABILITA_POZIONE_SALUTE_PER_AVVERSARIO_UMANOIDE = 20;
 
     // Oggetti

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.principali.DisturbatoreDellaQuietePubblica;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;

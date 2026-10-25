@@ -66,7 +66,7 @@ class DistruzioneDellaCittaTest {
     void chiELontanoVedeUnaColonnaDiFumo() {
         try (PartitaDiTest partita = inNyena(317)) {
             CoordinateMD nyena = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA);
-            partita.gruppo().setCoordinate(new CoordinateMD(nyena.getX() == 0 ? 3 : nyena.getX() - 3, nyena.getY()));
+            Foresta.setPosizioneDelGruppo(new CoordinateMD(nyena.getX() == 0 ? 3 : nyena.getX() - 3, nyena.getY()));
             alGiorno(25);
 
             LineaTemporale.eventi(partita.gruppo());

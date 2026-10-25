@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.strumenti.ModalitaDiProva;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
@@ -259,8 +261,7 @@ final class PartitaDiTest implements AutoCloseable {
 		if (coordinate == null) {
 			throw new IllegalArgumentException(locazioneUnica + " non è nella Foresta");
 		}
-		gruppo().setCoordinate(coordinate);
-		Foresta.ottieniMappaIntorno(gruppo().getX(), gruppo().getY());
+		Foresta.setPosizioneDelGruppo(coordinate);
 	}
 
 	/**

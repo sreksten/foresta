@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.tipi.Mandante;
@@ -46,7 +47,7 @@ class ScenarioTrofeiECartografoTest {
     }
 
     private static void tornaARiscuotere(PartitaDiTest partita, IncaricoInCitta incarico) {
-        partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+        Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
         incarico.controllaPreLocazione();
         incarico.segnaIntermezzoPassoMostrato("RITORNO");
         incarico.controllaInLocazione();
@@ -99,7 +100,7 @@ class ScenarioTrofeiECartografoTest {
                 for (int y = 0; y < Foresta.getDimensioneY() && esplorate < 6; y++) {
                     CoordinateMD casella = new CoordinateMD(x, y);
                     if (!Foresta.isLocazioneVisitata(casella)) {
-                        partita.gruppo().setCoordinate(casella);
+                        Foresta.setPosizioneDelGruppo(casella);
                         cartografo.controllaPreLocazione();
                         esplorate++;
                     }

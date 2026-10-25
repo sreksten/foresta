@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.personaggi.GestoreProgressione;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
+
 /**
  * Quanta esperienza dà al gruppo un fatto del gioco, in percentuale dei punti che separano il livello del mondo dal successivo (vedi
  * {@link GestoreProgressione}).

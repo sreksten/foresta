@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
@@ -61,7 +62,7 @@ class ScenarioPassiProntiTest {
                     () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             CacciaAiGoblin missione = new CacciaAiGoblin();
             RegistroMissioni.getMissionePrincipale().aggiungiMissione(missione);
-            CoordinateMD nyena = partita.gruppo().getCoordinate();
+            CoordinateMD nyena = Foresta.getPosizioneDelGruppo();
 
             // Un goblin sconfitto prima di accettare l'incarico non conta
             partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
@@ -86,10 +87,10 @@ class ScenarioPassiProntiTest {
             assertEquals("RITORNO", missione.getPassoCorrente());
 
             // Altrove non si riscuote; tornati a Nyena, sì
-            partita.gruppo().setCoordinate(new CoordinateMD(nyena.getX() == 0 ? 1 : nyena.getX() - 1, nyena.getY()));
+            Foresta.setPosizioneDelGruppo(new CoordinateMD(nyena.getX() == 0 ? 1 : nyena.getX() - 1, nyena.getY()));
             missione.controllaPreLocazione();
             assertEquals("RITORNO", missione.getPassoCorrente());
-            partita.gruppo().setCoordinate(nyena);
+            Foresta.setPosizioneDelGruppo(nyena);
             missione.controllaPreLocazione();
             int monete = partita.gruppo().getMonete();
             missione.controllaInLocazione();

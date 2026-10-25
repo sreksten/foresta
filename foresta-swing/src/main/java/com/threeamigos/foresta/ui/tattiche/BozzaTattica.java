@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.tattiche;
 
+import com.threeamigos.foresta.tipi.PortataAzione;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tattiche.*;
@@ -242,7 +243,7 @@ final class BozzaTattica {
 			}
 		}
 		for (AzioneMD azione : voce.azioni) {
-			ammesse.retainAll(azione.getTipo().roseAmmesse(true));
+			ammesse.retainAll(PortataAzione.roseAmmesse(azione.getTipo(), true));
 		}
 		return new ArrayList<>(ammesse);
 	}
@@ -268,10 +269,10 @@ final class BozzaTattica {
 			}
 			if (voce.azioni.isEmpty()) {
 				// Senza azioni conta la rosa, se è già stata scelta
-				if (voce.rosa == null || tipo.roseAmmesse(true).contains(voce.rosa)) {
+				if (voce.rosa == null || PortataAzione.roseAmmesse(tipo, true).contains(voce.rosa)) {
 					ammesse.add(tipo);
 				}
-			} else if (voce.azioni.get(0).getTipo().getPortata() == tipo.getPortata()) {
+			} else if (PortataAzione.di(voce.azioni.get(0).getTipo()) == PortataAzione.di(tipo)) {
 				ammesse.add(tipo);
 			}
 		}

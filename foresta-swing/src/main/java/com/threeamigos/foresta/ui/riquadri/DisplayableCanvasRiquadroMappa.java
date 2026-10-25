@@ -54,7 +54,7 @@ public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements 
 	public void disegnaMappa(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceMappa, topLeftX, topLeftY, null);
 		VistaMappa mappa = vistaPartita.getMappa();
-		CoordinateMD coordinateGruppo = vistaPartita.getGruppoGiocatore().getCoordinate();
+		CoordinateMD coordinateGruppo = vistaPartita.getMappa().getPosizioneDelGruppo();
 		int gruppoX = coordinateGruppo.getX();
 		int gruppoY = coordinateGruppo.getY();
 		int daX = gruppoX - 3;

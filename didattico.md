@@ -259,9 +259,9 @@ I riquadri e le schermate **non sono componenti Swing**: sono disegnatori a cui 
 | :--- | :--- |
 | come parte il gioco | `Main`, `Automa`, `Stato` |
 | come si parlano UI e motore | `eventi/*`, `interfacce/Vista*` |
-| il mondo | `motore/Foresta`, `LineaTemporale`, `locazioni/*` |
+| il mondo | `mappa/Foresta`, `LineaTemporale`, `locazioni/*` |
 | il combattimento | `combattimento/CalcolatoreCombattimento`, `tattiche/*` |
-| i personaggi | `personaggi/*`, `motore/Gruppo*`, `GestoreProgressione` |
+| i personaggi | `personaggi/*`, `gruppi/Gruppo*`, `GestoreProgressione` |
 | gli oggetti | `oggetti/*`, `oggetti/leggendari/*`, `offerte/*` |
 | le missioni | `missioni/*`, `RegistroMissioni` |
 | i salvataggi | `modellodati/*`, `salvataggi/*`, `motore/RiletturaPartita` |

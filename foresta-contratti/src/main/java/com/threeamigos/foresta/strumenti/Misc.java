@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.strumenti;
 
-import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.testi.Numeri;
 
@@ -37,11 +36,10 @@ public class Misc {
 	};
 
 	/**
-	 * Riporta la direzione di un punto della foresta rispetto ad un gruppo
+	 * Riporta la direzione di un punto della foresta rispetto a un altro, di solito la posizione del gruppo
 	 * (per le informazioni su città, castelli, artefatti, o per gli eventi)
 	 */
-	public static String getDirezione(VistaGruppoGiocatore g, CoordinateMD coordinate) {
-		CoordinateMD da = g.getCoordinate();
+	public static String getDirezione(CoordinateMD da, CoordinateMD coordinate) {
 		return getDirezione(da.getX(), da.getY(), coordinate.getX(), coordinate.getY());
 	}
 

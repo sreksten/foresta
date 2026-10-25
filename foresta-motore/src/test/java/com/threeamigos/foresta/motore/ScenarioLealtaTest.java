@@ -91,7 +91,7 @@ class ScenarioLealtaTest {
             favore.controllaInLocazione();
             CoordinateMD radura = favore.getPosto();
             assertEquals(TipoLocazione.RADURA, Foresta.getLocazione(radura));
-            partita.gruppo().setCoordinate(radura);
+            Foresta.setPosizioneDelGruppo(radura);
             partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
             partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
             favore.controllaPostLocazione();
@@ -169,7 +169,7 @@ class ScenarioLealtaTest {
             partita.comando(Comando.ACCAMPAMENTO);
             IlFavore favore = (IlFavore) lealta.getMissioniAffidate(LaLealta.FAVORE).get(0);
             favore.controllaInLocazione();
-            partita.gruppo().setCoordinate(favore.getPosto());
+            Foresta.setPosizioneDelGruppo(favore.getPosto());
             partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
             partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
             favore.controllaPostLocazione();
@@ -214,7 +214,7 @@ class ScenarioLealtaTest {
     private static LaLealta preparaLAccampamento(PartitaDiTest partita, Personaggio compagno) {
         partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         partita.comando(Comando.ESCI_DA_CITTA);
-        partita.gruppo().setCoordinate(unaCasellaDiBosco());
+        Foresta.setPosizioneDelGruppo(unaCasellaDiBosco());
         // Ci si accampa solo con qualcuno da mettere di guardia: senza compagni la lealtà si controlla a mano
         if (compagno != null) {
             partita.gruppo().aggiungiPersonaggio(compagno);

@@ -37,7 +37,7 @@ public class DisegnatoreMappa {
     public BufferedImage ottieniMappaGenerale() {
         int versioneCorrente = vistaPartita.getMappa().getVersioneMappa();
         if (mappaGenerale == null || versioneCorrente != versioneMappaGenerata) {
-            mappaGenerale = costruisciMappaGenerale(vistaPartita.getMappa(), vistaPartita.getGruppoGiocatore().getCoordinate());
+            mappaGenerale = costruisciMappaGenerale(vistaPartita.getMappa(), vistaPartita.getMappa().getPosizioneDelGruppo());
             versioneMappaGenerata = versioneCorrente;
         }
         return mappaGenerale;

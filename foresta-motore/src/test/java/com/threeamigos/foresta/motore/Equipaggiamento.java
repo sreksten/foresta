@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.personaggi.RegoleEquipaggiamento;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.artefatti.CostantiArtefatti;

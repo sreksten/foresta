@@ -11,7 +11,7 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.richieste.BenedizioneRichiesta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
@@ -109,20 +109,20 @@ public class LaBenedizione extends MissioneAPassi {
 
 	private static boolean inUnaLocandaGiaVisitata() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.getTipoLocazioneCorrente() != TipoLocazione.LOCANDA) {
+		if (Foresta.getLocazioneDelGruppo() != TipoLocazione.LOCANDA) {
 			return false;
 		}
-		String visite = Foresta.getLocazioneMD(gruppo.getCoordinate()).ottieniProprieta(Locanda.LOCANDA_VISITE);
+		String visite = Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()).ottieniProprieta(Locanda.LOCANDA_VISITE);
 		return visite != null && Integer.parseInt(visite) >= VISITE_PRECEDENTI;
 	}
 
 	private boolean nellaLocanda() {
-		CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
+		CoordinateMD qui = Foresta.getPosizioneDelGruppo();
 		return qui != null && (qui.getX() + "_" + qui.getY()).equals(ottieniProprieta(LOCANDA));
 	}
 
 	private boolean nelTempio() {
-		return getTempio() != null && getTempio().equals(GruppoGiocatore.getIstanza().getCoordinate());
+		return getTempio() != null && getTempio().equals(Foresta.getPosizioneDelGruppo());
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class LaBenedizione extends MissioneAPassi {
 			case INCONTRO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> isDisponibile() && inUnaLocandaGiaVisitata() && isVisitaTranquilla())
 						.esegui(() -> {
-							CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
+							CoordinateMD qui = Foresta.getPosizioneDelGruppo();
 							aggiungiProprieta(LOCANDA, qui.getX() + "_" + qui.getY());
 							getBenedizione();
 						})

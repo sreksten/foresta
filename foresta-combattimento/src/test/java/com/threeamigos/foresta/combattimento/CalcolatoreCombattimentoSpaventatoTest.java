@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.combattimento;
 
-import com.threeamigos.foresta.motore.DatiDiProva;
+import com.threeamigos.foresta.gruppi.DatiDiProva;
 
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.CategoriaDanno;

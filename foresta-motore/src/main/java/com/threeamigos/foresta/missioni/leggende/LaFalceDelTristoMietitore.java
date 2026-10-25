@@ -14,7 +14,7 @@ import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.Dado;
@@ -158,7 +158,7 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 						.esegui(() -> {
 							getAspetto();
 							getNomeDelNecromante();
-							CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
+							CoordinateMD qui = Foresta.getPosizioneDelGruppo();
 							aggiungiProprieta(POSTO, qui.getX() + SEPARATORE + qui.getY());
 						})
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, this::getPagineDelRacconto)
@@ -211,12 +211,12 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 	}
 
 	private boolean isInUnaCitta() {
-		TipoLocazione tipo = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
+		TipoLocazione tipo = Foresta.getLocazioneDelGruppo();
 		return tipo != null && tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA && !LineaTemporale.isCittaDistrutta(tipo);
 	}
 
 	private boolean nelPosto() {
-		CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
+		CoordinateMD qui = Foresta.getPosizioneDelGruppo();
 		return qui != null && (qui.getX() + SEPARATORE + qui.getY()).equals(ottieniProprieta(POSTO));
 	}
 }

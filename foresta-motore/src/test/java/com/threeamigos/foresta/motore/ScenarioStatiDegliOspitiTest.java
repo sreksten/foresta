@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
@@ -28,7 +29,7 @@ class ScenarioStatiDegliOspitiTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(298)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
-            partita.gruppo().setCoordinate(bosco);
+            Foresta.setPosizioneDelGruppo(bosco);
             Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
             LocazioneCorrente.set(locazione);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();

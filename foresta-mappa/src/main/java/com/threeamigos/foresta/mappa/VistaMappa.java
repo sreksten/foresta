@@ -81,4 +81,14 @@ public interface VistaMappa {
 	 */
 	List<String> getNomiMissioniDaMostrare(CoordinateMD coordinate);
 
+	/**
+	 * La casella su cui si trova il gruppo del giocatore.
+	 */
+	CoordinateMD getPosizioneDelGruppo();
+
+	/**
+	 * Il tipo di locazione su cui si trova il gruppo del giocatore.
+	 */
+	TipoLocazione getLocazioneDelGruppo();
+
 }

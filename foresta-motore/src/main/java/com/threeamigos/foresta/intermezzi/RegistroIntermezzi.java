@@ -7,7 +7,7 @@ import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.IntermezziMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.ModalitaDiProva;
+import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
 import java.util.HashSet;

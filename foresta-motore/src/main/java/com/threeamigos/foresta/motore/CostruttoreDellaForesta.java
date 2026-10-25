@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
@@ -39,7 +41,7 @@ public class CostruttoreDellaForesta {
 	 * Fa della casella in cui si trova il gruppo una locazione di quel tipo.
 	 */
 	public static void impostaLocazioneCorrente(TipoLocazione tipoLocazione) {
-		Foresta.impostaLocazione(GruppoGiocatore.getIstanza().getCoordinate(), tipoLocazione);
+		Foresta.impostaLocazione(Foresta.getPosizioneDelGruppo(), tipoLocazione);
 	}
 
 	/**
@@ -78,6 +80,8 @@ public class CostruttoreDellaForesta {
 		GeneratoreDellaForesta.genera(DIMENSIONE_X, DIMENSIONE_Y, RegistroPersonaggi.getNumeroPersonaggiDisponibili(), new PopolatoreDelMondo());
 
 		GruppoGiocatore.getIstanza().reimposta();
+		// Il gruppo parte da una casella libera a caso: dove sta lo sa la mappa
+		Foresta.posizionaIlGruppoSuUnaCasellaLibera();
 		DotazioneDiProva.applica(GruppoGiocatore.getIstanza());
 		GruppoAvversario.getIstanza().reimposta();
 	}

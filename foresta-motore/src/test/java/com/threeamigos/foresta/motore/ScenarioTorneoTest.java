@@ -65,7 +65,7 @@ class ScenarioTorneoTest {
             CoordinateMD lizza = torneo.getLizza();
             assertEquals(TipoLocazione.RADURA, Foresta.getLocazione(lizza));
             assertTrue(Foresta.isLocazioneConosciuta(lizza));
-            partita.gruppo().setCoordinate(lizza);
+            Foresta.setPosizioneDelGruppo(lizza);
 
             // Il primo turno: un guerriero, uno contro uno e fino alla resa
             Personaggio guerriero = unoSolo(lizza);
@@ -102,7 +102,7 @@ class ScenarioTorneoTest {
             assertEquals("Qui Bradamante perse il torneo.", torneo.getRicordoDellaLocazione());
 
             // In città, la borsa del vincitore
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             torneo.controllaPreLocazione();
             torneo.segnaIntermezzoPassoMostrato("RITORNO");

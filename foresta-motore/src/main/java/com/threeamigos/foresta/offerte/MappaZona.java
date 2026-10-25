@@ -3,8 +3,8 @@ package com.threeamigos.foresta.offerte;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneConoscenzaMappa;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 
@@ -44,8 +44,8 @@ public class MappaZona implements Offerta {
 
 	@Override
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		int x = gruppo.getX();
-		int y = gruppo.getY();
+		int x = Foresta.getPosizioneDelGruppo().getX();
+		int y = Foresta.getPosizioneDelGruppo().getY();
 		int dm1x = Foresta.getDimensioneX() - 1;
 		Logger.log(() -> "MappaZona::accetta(), x=" + x + ",y=" + y);
 		int fx = x - 7;

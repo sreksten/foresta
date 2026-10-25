@@ -4,6 +4,8 @@ import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.personaggi.Drago;
 import com.threeamigos.foresta.tipi.TipoLocazione;

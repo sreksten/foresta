@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
@@ -44,7 +45,7 @@ class CombattimentoARoundTest {
     /** Una locazione con i miei {@code miei} personaggi e {@code avversari} goblin, tutti molto resistenti perché lo scontro non finisca */
     private static Locazione preparaLo(PartitaDiTest partita, int miei, int avversari) {
         CoordinateMD bosco = unaCasellaDiBosco();
-        partita.gruppo().setCoordinate(bosco);
+        Foresta.setPosizioneDelGruppo(bosco);
         Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
         LocazioneCorrente.set(locazione);
         GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();

@@ -6,7 +6,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMissioneCompletata;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
 import com.threeamigos.foresta.modellodati.MissioneMD;
-import com.threeamigos.foresta.motore.GestoreProgressione;
+import com.threeamigos.foresta.personaggi.GestoreProgressione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 import java.util.ArrayList;

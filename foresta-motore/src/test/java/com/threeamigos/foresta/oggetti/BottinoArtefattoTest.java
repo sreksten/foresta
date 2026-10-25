@@ -5,7 +5,7 @@ import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.testi.Articoli;

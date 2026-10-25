@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.LaTagliaSullaBanda;
@@ -36,7 +37,7 @@ class SconfittiFraLeVisiteTest {
 
             // Prima visita: la banda è di tre, se ne sconfiggono due e si fugge
             RegistroMissioni.getIncontroMissione(covo);
-            partita.gruppo().setCoordinate(covo);
+            Foresta.setPosizioneDelGruppo(covo);
             sconfitti(partita, 2);
             taglia.controllaPostLocazione();
             assertEquals("CACCIA", taglia.getPassoCorrente());

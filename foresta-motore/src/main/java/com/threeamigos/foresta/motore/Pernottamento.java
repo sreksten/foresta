@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Foresta;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -25,7 +27,7 @@ public final class Pernottamento {
 	 */
 	public static void pernotta(GruppoGiocatore gruppo, TipoRiposo tipoRiposo) {
 		Logger.log("Inizio pernottamento");
-		TipoLocazione tipoLocazione = gruppo.getTipoLocazioneCorrente();
+		TipoLocazione tipoLocazione = Foresta.getLocazioneDelGruppo();
 		int ore = LineaTemporale.oreFinoAlMattino();
 		boolean alCoperto = tipoLocazione == TipoLocazione.LOCANDA
 				|| tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA;

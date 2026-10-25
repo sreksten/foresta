@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.artefatti.RegoleIncantatura;
 
 import com.threeamigos.foresta.artefatti.BancoDiLavoro;
@@ -16,6 +17,7 @@ import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaIncantatore;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioFornitore;
 import com.threeamigos.foresta.eventi.richieste.RichiestaTesto;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
@@ -134,7 +136,7 @@ final class GestoreBotteghe {
 	private void apriNegozio(GruppoGiocatore g, TipoNegozio negozio) {
 		List<Comando> comandiPossibili = new ArrayList<>();
 		comandiPossibili.add(Comando.ANNULLA);
-		ScambiatoreArtefatti magazzino = RegistroArtefatti.getScambiatorePerNegozio(g.getCoordinate(), negozio);
+		ScambiatoreArtefatti magazzino = RegistroArtefatti.getScambiatorePerNegozio(Foresta.getPosizioneDelGruppo(), negozio);
 		BusEventi.pubblica(new RichiestaAperturaInventarioCommerciante(comandiPossibili, negozio,
 				new AutomaAcquistiArtefatti(g, magazzino)));
 	}

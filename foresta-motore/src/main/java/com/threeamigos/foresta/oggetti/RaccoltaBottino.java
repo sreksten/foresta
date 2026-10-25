@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.motore.LocazioneCorrente;
 
 import com.threeamigos.foresta.motore.EsperienzaDelGruppo;
@@ -22,9 +23,9 @@ import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.motore.GestoreProgressione;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
+import com.threeamigos.foresta.personaggi.GestoreProgressione;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
+import com.threeamigos.foresta.personaggi.RegoleEquipaggiamento;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
@@ -113,7 +114,7 @@ public final class RaccoltaBottino {
 
 	// Il gruppo apre il cofano: per ogni cofano trovato un esito a caso (vedi Cofano)
 	private static void apri(Cofano cofano, GruppoGiocatore gruppo) {
-		TipoLocazione tipoLocazione = gruppo.getTipoLocazioneCorrente();
+		TipoLocazione tipoLocazione = Foresta.getLocazioneDelGruppo();
 		int min;
 		int max;
 		int tipo;

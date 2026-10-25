@@ -53,8 +53,8 @@ class NotteAlCopertoTest {
     @Test
     void laNotteInUnaLocandaFuoriCittaNonFaCrollareIlGioco() {
         try (PartitaDiTest partita = partita(305)) {
-            partita.gruppo().setCoordinate(unaLocanda());
-            assertEquals(TipoLocazione.LOCANDA, partita.gruppo().getTipoLocazioneCorrente());
+            Foresta.setPosizioneDelGruppo(unaLocanda());
+            assertEquals(TipoLocazione.LOCANDA, Foresta.getLocazioneDelGruppo());
             int giorno = LineaTemporale.getGiorno();
 
             Pernottamento.pernotta(partita.gruppo(), TipoRiposo.AL_COPERTO);
