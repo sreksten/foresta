@@ -448,7 +448,7 @@ class SimulazionePartiteTest {
 
 		void primaDelPasso(Stato stato) {
 			GruppoGiocatore gruppo = partita.gruppo();
-			Locazione corrente = gruppo.getLocazioneCorrente();
+			Locazione corrente = LocazioneCorrente.get();
 			if (corrente != locazione) {
 				chiudiScontro();
 				locazione = corrente;
@@ -509,7 +509,7 @@ class SimulazionePartiteTest {
 					&& giocatore.locazioneDellaStima == locazione) {
 				scontro.stima = giocatore.stimaIniziale;
 			}
-			if (scontro != null && locazione == partita.gruppo().getLocazioneCorrente()) {
+			if (scontro != null && locazione == LocazioneCorrente.get()) {
 				scontro.round = Math.max(scontro.round, StatoDelCombattimento.getIstanza().getRound());
 			}
 			int viviDopo = gruppo.getNumeroPersonaggiVivi();

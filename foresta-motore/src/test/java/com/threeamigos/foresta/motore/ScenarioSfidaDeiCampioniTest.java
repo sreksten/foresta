@@ -106,7 +106,7 @@ class ScenarioSfidaDeiCampioniTest {
 
             partita.assertStato(Stato.IN_LOCAZIONE);
             assertEquals(LE_TRE_MOSSE, new HashSet<>(partita.comandiDisponibili()));
-            assertNull(partita.gruppo().getLocazioneCorrente().getOggetto(), "dal campione non ci sono oggetti");
+            assertNull(LocazioneCorrente.get().getOggetto(), "dal campione non ci sono oggetti");
             assertTrue(partita.testi().stream().anyMatch(t -> t.contains("dice: \"")), String.valueOf(partita.testi()));
 
             // Tre mani vinte: la carta batte il sasso (il dado dice 3)
@@ -223,7 +223,7 @@ class ScenarioSfidaDeiCampioniTest {
             int y = posto.getY() - direzioni[i][1];
             if (x >= 0 && y >= 0 && x < Foresta.getDimensioneX() && y < Foresta.getDimensioneY()) {
                 partita.gruppo().setCoordinate(new CoordinateMD(x, y));
-                CostruttoreDellaForesta.aggiornaMappaCircostante(partita.gruppo());
+                Foresta.ottieniMappaIntorno(partita.gruppo().getX(), partita.gruppo().getY());
                 partita.comando(comandi[i]);
                 if (partita.comandiDisponibili().contains(Comando.NUMERO_1)) {
                     partita.comando(Comando.NUMERO_1);

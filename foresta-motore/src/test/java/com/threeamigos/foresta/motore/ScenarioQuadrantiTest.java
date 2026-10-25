@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Quadrante;
+
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.missioni.Missione;

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.motore.EsperienzaDelGruppo;
+
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMissioneCompletata;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
@@ -119,9 +121,9 @@ public abstract class MissioneBase implements Missione {
 		BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "MISSIONE COMPLETATA", getNome()));
 		BusEventi.pubblica(new InternoMissioneCompletata(this));
 		if (isPrimaria()) {
-			GestoreProgressione.completaMissionePrincipale();
+			EsperienzaDelGruppo.completaMissionePrincipale();
 		} else {
-			GestoreProgressione.completaMissioneSecondaria();
+			EsperienzaDelGruppo.completaMissioneSecondaria();
 		}
 		md.setDescrizioneVisibile(false);
 	}

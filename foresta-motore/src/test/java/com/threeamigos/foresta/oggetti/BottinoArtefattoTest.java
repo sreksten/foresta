@@ -4,6 +4,7 @@ import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
 import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.personaggi.Guerriero;
@@ -29,6 +30,9 @@ class BottinoArtefattoTest {
 
     @BeforeEach
     void nuovoGruppo() {
+        // Il livello del mondo sale ascoltando i punti esperienza del gruppo: le statistiche devono essere iscritte
+        BusEventi.azzera();
+        Statistiche.registrati();
         ModelloDati.setIstanza(new ModelloDati());
         gruppo = new GruppoGiocatore();
         gruppo.aggiungiPersonaggioSenzaNotificare(new Guerriero("Pippo", 1));

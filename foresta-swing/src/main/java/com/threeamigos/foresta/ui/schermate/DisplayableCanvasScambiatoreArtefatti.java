@@ -74,7 +74,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
         }
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie per il vostro acquisto!", getCoordinateFumetto()));
 
-        int costo = vistaPartita.getGruppoGiocatore().prezzoAcquisto(
+        int costo = vistaPartita.prezzoAcquisto(
                 notificaApprovazioneAcquistoArtefatto.getOggettoSpostato().getCostoAcquisto());
         aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, -costo, font,
                 xMassimaZonaCentrale, yRigaMonete(), "Monete spese"));
@@ -86,7 +86,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
         }
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo(fraseDopoLaVendita(), getCoordinateFumetto()));
 
-        int costo = vistaPartita.getGruppoGiocatore().prezzoVendita(
+        int costo = vistaPartita.prezzoVendita(
                 notificaApprovazioneVenditaArtefatto.getOggettoSpostato().getCostoAcquisto());
         aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, costo, font,
                 xMassimaZonaCentrale, yRigaMonete(), "Monete acquisite"));
@@ -198,11 +198,10 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
      * attiva è quanto si ricava vendendo, sulla remota quanto si paga comprando.
      */
     private IntUnaryOperator prezzo(boolean parteAttiva) {
-        VistaGruppoGiocatore gruppo = vistaPartita.getGruppoGiocatore();
         if (parteAttiva) {
-            return scambio.mostraCostoSuParteAttiva() ? gruppo::prezzoVendita : null;
+            return scambio.mostraCostoSuParteAttiva() ? vistaPartita::prezzoVendita : null;
         }
-        return scambio.mostraCostoSuParteRemota() ? gruppo::prezzoAcquisto : null;
+        return scambio.mostraCostoSuParteRemota() ? vistaPartita::prezzoAcquisto : null;
     }
 
     /**

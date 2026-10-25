@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni.leggende;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
 import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -184,7 +186,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 		if (leggendario == null) {
 			return "";
 		}
-		String tempio = getTempio() == null ? "in un tempio" : Articoli.conPreposizione("in", Tempio.getNome(getTempio()));
+		String tempio = getTempio() == null ? "in un tempio" : Articoli.conPreposizione("in", Foresta.nomeDelTempio(getTempio()));
 		return "Secondo la leggenda raccontata " + Articoli.conPreposizione("da", getNarratore()) + ", " + getNomeDeiGuardiani()
 				+ " custodiscono " + leggendario.getNomeBreve() + " " + tempio + ", segnato sulla mappa.";
 	}
@@ -216,7 +218,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 						.esegui(() -> {
 							RegistroArtefatti.custodisciInUnTempioNuovo(getLeggendario().costruisci(Statistiche.getLivello()), getTempio());
 							BusEventi.pubblica(new NotificaTestoParagrafo(Articoli.inizialeMaiuscola(getNarratoreConNome()) + " segna sulla mappa "
-									+ Tempio.getNome(getTempio()) + ", dove " + getNomeDeiGuardiani() + " custodiscono "
+									+ Foresta.nomeDelTempio(getTempio()) + ", dove " + getNomeDeiGuardiani() + " custodiscono "
 									+ getLeggendario().getNomeBreve() + "."));
 							attivaMissione();
 						})

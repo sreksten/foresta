@@ -102,14 +102,14 @@ class RiprogrammazioneTest {
 		banco.addArtefatto(spada);
 		banco.addArtefatto(libro);
 		banco.addArtefatto(gemma);
-		int costo = gruppo.costoFusione(banco.getInventario());
+		int costo = CommercioDelGruppo.costoFusione(gruppo, banco.getInventario());
 		assertEquals(CostantiArtefatti.FUSIONE_COSTO_BASE + 3 * CostantiArtefatti.FUSIONE_COSTO_PER_EFFETTO,
 				RegoleIncantatura.costo(banco.getInventario()));
 
 		List<NotificaAvvisoIncantatura> avvisi = new ArrayList<>();
 		BusEventi.iscriviti(NotificaAvvisoIncantatura.class, avvisi::add);
 		int monete = gruppo.getMonete();
-		assertEquals(Optional.empty(), gruppo.incanta(banco, ""));
+		assertEquals(Optional.empty(), CommercioDelGruppo.incanta(gruppo, banco, ""));
 
 		assertEquals(monete - costo, gruppo.getMonete());
 		assertTrue(banco.getInventario().isEmpty(), "il banco si svuota");

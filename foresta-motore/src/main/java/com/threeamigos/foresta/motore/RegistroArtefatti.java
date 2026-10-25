@@ -242,7 +242,7 @@ public class RegistroArtefatti {
 	 * i suoi guardiani.
 	 */
 	public static void custodisciInUnTempioNuovo(Artefatto artefatto, CoordinateMD coordinate) {
-		CostruttoreDellaForesta.costruisciLocazione(coordinate, TipoLocazione.TEMPIO);
+		Foresta.costruisciLocazione(coordinate, TipoLocazione.TEMPIO);
 		addArtefattoInLocazione(artefatto, coordinate);
 		segnaLocalizzazioneConosciuta(coordinate);
 		Foresta.setLocazioneConosciuta(coordinate);

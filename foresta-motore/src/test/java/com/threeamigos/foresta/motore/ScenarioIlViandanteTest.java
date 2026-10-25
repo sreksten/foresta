@@ -57,7 +57,7 @@ class ScenarioIlViandanteTest {
 
             // Né in una città né in una radura, nemmeno dal giorno giusto
             CoordinateMD bosco = cellaSenzaLocazioniUniche(0);
-            CostruttoreDellaForesta.costruisciLocazione(bosco, TipoLocazione.BOSCO);
+            Foresta.costruisciLocazione(bosco, TipoLocazione.BOSCO);
             LineaTemporale.aggiungiOre(24 * (giorno - 2));
             partita.gruppo().setCoordinate(bosco);
             viandante.controllaPreLocazione();
@@ -65,7 +65,7 @@ class ScenarioIlViandanteTest {
             LineaTemporale.aggiungiOre(24);
             assertEquals(giorno, LineaTemporale.getGiorno());
             CoordinateMD radura = cellaSenzaLocazioniUniche(1);
-            CostruttoreDellaForesta.costruisciLocazione(radura, TipoLocazione.RADURA);
+            Foresta.costruisciLocazione(radura, TipoLocazione.RADURA);
             partita.gruppo().setCoordinate(radura);
             viandante.controllaPreLocazione();
             assertEquals("INCONTRO", viandante.getPassoCorrente(), "non in una radura");
@@ -124,7 +124,7 @@ class ScenarioIlViandanteTest {
             IlViandante viandante = trova(IlViandante.class);
             viandante.controllaPreLocazione();
             CoordinateMD bosco = cellaSenzaLocazioniUniche(0);
-            CostruttoreDellaForesta.costruisciLocazione(bosco, TipoLocazione.BOSCO);
+            Foresta.costruisciLocazione(bosco, TipoLocazione.BOSCO);
             LineaTemporale.aggiungiOre(24 * (viandante.getGiornoDellIncontro() - 1));
             partita.gruppo().setCoordinate(bosco);
             viandante.controllaPreLocazione();

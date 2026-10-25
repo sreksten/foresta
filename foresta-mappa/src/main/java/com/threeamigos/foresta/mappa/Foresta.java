@@ -3,6 +3,7 @@ package com.threeamigos.foresta.mappa;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.testi.Articoli;
+import com.threeamigos.foresta.testi.ProduttoreDiLuoghiCasuale;
 import com.threeamigos.foresta.mappa.TipoLocazione;
 
 import java.util.HashSet;
@@ -16,6 +17,22 @@ import java.util.function.Supplier;
  * rovine). Chi costruisce il mondo, e chi lo abita, sta altrove.
  */
 public class Foresta {
+
+	/**
+	 * Quante caselle al massimo si fanno in un solo spostamento.
+	 */
+	public static final int MAX_MOVIMENTO = 5;
+
+	/**
+	 * Quante immagini alternative ha il bosco sulla mappa.
+	 */
+	public static final int NUMERO_VARIANTI_BOSCO = 4;
+
+	/**
+	 * La proprietà della casella che dice quale delle {@link #NUMERO_VARIANTI_BOSCO} immagini rappresenta quel bosco sulla mappa (1-based),
+	 * scelta una volta per tutte alla costruzione, così la mappa resta coerente da una visualizzazione all'altra e dopo un salvataggio.
+	 */
+	public static final String VARIANTE_BOSCO = "VARIANTE_MAPPA";
 
 	// Quante volte provare a pescare un nome che nessun'altra casella dello stesso tipo ha già
 	private static final int TENTATIVI_NOME_NUOVO = 20;
@@ -61,6 +78,76 @@ public class Foresta {
 	 */
 	public static int getDimensioneY() {
 		return getForestaMD().getDimensioneY();
+	}
+
+	/**
+	 * Sceglie a caso quale delle immagini alternative rappresenta questo bosco sulla mappa e lo scrive nel modello dati della casella.
+	 */
+	public static void impostaVarianteDelBoscoACaso(LocazioneMD modelloDati) {
+		modelloDati.aggiungiProprieta(VARIANTE_BOSCO, String.valueOf(Dado.tira(NUMERO_VARIANTI_BOSCO)));
+	}
+
+	/**
+	 * L'indice (1-based) della variante scelta per questo bosco, o 1 se manca (bosco creato prima che questa proprietà esistesse).
+	 */
+	public static int getVarianteDelBosco(LocazioneMD modelloDati) {
+		String valore = modelloDati.ottieniProprieta(VARIANTE_BOSCO);
+		return valore == null ? 1 : Integer.parseInt(valore);
+	}
+
+	/**
+	 * Il nome del tempio in quelle coordinate (vedi {@link #nomeDelTempio(LocazioneMD)}).
+	 */
+	public static String nomeDelTempio(CoordinateMD coordinate) {
+		return nomeDelTempio(getLocazioneMD(coordinate));
+	}
+
+	/**
+	 * Il nome del tempio, con l'articolo. La prima volta che serve si pesca dalla grammatica (templi.txt), possibilmente
+	 * diverso da quello degli altri templi, e si salva con la casella: da lì in poi è sempre quello, anche dopo un caricamento.
+	 */
+	public static String nomeDelTempio(LocazioneMD modelloDati) {
+		if (modelloDati.getNome() == null) {
+			modelloDati.setNome(nomeNuovo(TipoLocazione.TEMPIO, ProduttoreDiLuoghiCasuale::nomeTempio));
+		}
+		return modelloDati.getNome();
+	}
+
+	/**
+	 * Il nome delle rovine, con l'articolo. Le rovine di un castello o di una città lo ricevono quando nascono (vedi
+	 * {@link #distruggiLocazioneUnica}); le altre, la prima volta che serve, lo pescano dalla grammatica (rovine.txt), possibilmente
+	 * diverso da quello delle altre rovine, e lo salvano con la casella.
+	 */
+	public static String nomeDelleRovine(LocazioneMD modelloDati) {
+		if (modelloDati.getNome() == null) {
+			modelloDati.setNome(nomeNuovo(TipoLocazione.ROVINE, ProduttoreDiLuoghiCasuale::nomeRovine));
+		}
+		return modelloDati.getNome();
+	}
+
+	/**
+	 * Fa della casella una locazione di quel tipo; templi e rovine hanno il loro nome da quando nascono.
+	 */
+	static void setLocazione(CoordinateMD coordinate, TipoLocazione tipoLocazione) {
+		getForestaMD().impostaLocazione(coordinate, tipoLocazione);
+		if (tipoLocazione == TipoLocazione.TEMPIO) {
+			nomeDelTempio(getLocazioneMD(coordinate));
+		} else if (tipoLocazione == TipoLocazione.ROVINE) {
+			nomeDelleRovine(getLocazioneMD(coordinate));
+		}
+	}
+
+	/**
+	 * Fa diventare la casella una locazione ordinaria di quella classe (per esempio un tempio, al posto di un bosco
+	 * rivendicato da una missione), come non ancora visitata.
+	 */
+	public static void costruisciLocazione(CoordinateMD coordinate, TipoLocazione tipoLocazione) {
+		if (tipoLocazione.isLocazioneUnica()) {
+			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + tipoLocazione.name());
+		}
+		Logger.log(() -> "Costruzione di " + tipoLocazione + " in " + coordinate);
+		setLocazione(coordinate, tipoLocazione);
+		setLocazioneVisitata(coordinate, false);
 	}
 
 	/**
@@ -270,6 +357,34 @@ public class Foresta {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Fa conoscere la zona intorno a quella casella, tre caselle per lato (sette per sette), spostata se serve per restare dentro
+	 * la mappa: si chiama ogni volta che un gruppo si sposta.
+	 */
+	public static void ottieniMappaIntorno(int x, int y) {
+		int daX = x - 3;
+		int aX = x + 3;
+		int daY = y - 3;
+		int aY = y + 3;
+		if (daX < 0) {
+			daX = 0;
+			aX = 6;
+		}
+		if (aX >= getDimensioneX()) {
+			daX = getDimensioneX() - 7;
+			aX = getDimensioneX() - 1;
+		}
+		if (daY < 0) {
+			daY = 0;
+			aY = 6;
+		}
+		if (aY >= getDimensioneY()) {
+			daY = getDimensioneY() - 7;
+			aY = getDimensioneY() - 1;
+		}
+		ottieniMappaZona(daX, daY, aX, aY);
 	}
 
 	/**

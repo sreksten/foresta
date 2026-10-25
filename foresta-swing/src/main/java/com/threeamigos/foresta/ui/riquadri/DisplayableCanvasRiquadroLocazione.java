@@ -338,7 +338,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 
 		// L'oggetto si disegna dopo i personaggi e li copre: una lancia, che è lunga, non li spinge verso i bordi. Gli sprite
 		// vengono dopo, sopra tutto (DisplayableCanvas.inGioco)
-		TipoBottino tipoOggetto = g.getTipoBottinoInLocazione();
+		TipoBottino tipoOggetto = vistaPartita.getTipoBottinoInLocazione();
 		if (tipoOggetto != null && tipoOggetto != TipoBottino.ARTEFATTO) {
 			BufferedImage d = ClassiOggettoImmagine.getImmagine(tipoOggetto);
 			graphics.drawImage(d, xOggetto(d), yOggetto(locazione, d), null);
@@ -431,7 +431,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	public SpriteInterface raccogliOggetto() {
 		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
 		BufferedImage locazione = ImageCache.locazioni.get(g.getTipoLocazioneCorrente());
-		TipoBottino tipoOggetto = g.getTipoBottinoInLocazione();
+		TipoBottino tipoOggetto = vistaPartita.getTipoBottinoInLocazione();
 		if (tipoOggetto != null && tipoOggetto != TipoBottino.ARTEFATTO) {
 			BufferedImage d = ClassiOggettoImmagine.getImmagine(tipoOggetto);
 			return new SpriteATempo(d, xOggetto(d), yOggetto(locazione, d),

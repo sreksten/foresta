@@ -31,7 +31,7 @@ class CascataIntermezziAvvioPartitaTest {
 			// Per ogni ritorno al gioco si annota se la locazione esisteva già in quel momento
 			List<Boolean> locazioneImpostataAlRitorno = new ArrayList<>();
 			BusEventi.iscriviti(InternoMostraSchermataGioco.class,
-					e -> locazioneImpostataAlRitorno.add(partita.gruppo().getLocazioneCorrente() != null));
+					e -> locazioneImpostataAlRitorno.add(LocazioneCorrente.get() != null));
 
 			// La UI diventa occupata esattamente quando l'Automa sta per entrare in
 			// Stato.INIZIO_LOCAZIONE, cioe' subito dopo l'ultimo intermezzo di INIZIO_GIOCO
@@ -44,7 +44,7 @@ class CascataIntermezziAvvioPartitaTest {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> {
 			});
 			partita.assertStato(Stato.INTERMEZZO);
-			assertNull(partita.gruppo().getLocazioneCorrente(),
+			assertNull(LocazioneCorrente.get(),
 					"precondizione: la prima locazione non e' ancora stata costruita");
 
 			// Si fanno avanzare tutte le pagine di tutti gli intermezzi di INIZIO_GIOCO: l'ultimo

@@ -207,7 +207,7 @@ class ScenarioCorrezioniTest {
 			int prima = capo.getEsperienza();
 			int attesi = GestoreProgressione.getXpRichiestiPerProssimoLivello(Statistiche.getLivello()) * 20 / 100;
 			assertTrue(attesi > 0);
-			GestoreProgressione.completaMissioneSecondaria();
+			EsperienzaDelGruppo.completaMissioneSecondaria();
 			assertEquals(prima + attesi, capo.getEsperienza());
 		}
 	}

@@ -282,7 +282,7 @@ final class GiocatoreAutomatico {
 		if (passi != null && comandi.contains(passi)) {
 			return passi;
 		}
-		for (int i = Comando.MAX_MOVIMENTO - 1; i >= 0; i--) {
+		for (int i = Foresta.MAX_MOVIMENTO - 1; i >= 0; i--) {
 			Comando numero = Comando.values()[Comando.NUMERO_1.ordinal() + i];
 			if (comandi.contains(numero)) {
 				return numero;
@@ -825,7 +825,7 @@ final class GiocatoreAutomatico {
 	}
 
 	private static boolean puoSpendere(GruppoGiocatore gruppo, int costo, int riserva) {
-		return gruppo.getMonete() - gruppo.prezzoAcquisto(costo) >= riserva;
+		return gruppo.getMonete() - CommercioDelGruppo.prezzoAcquisto(gruppo, costo) >= riserva;
 	}
 
 	private boolean compra(GruppoGiocatore gruppo, TipoConsumabile tipo, TipoIncantesimo classe, Personaggio personaggio, int costo) {
@@ -833,7 +833,7 @@ final class GiocatoreAutomatico {
 		partita.pubblica(new ComandoAcquistoConsumabile(tipo, classe, personaggio == null ? null : personaggio.getUuid()));
 		int spese = prima - gruppo.getMonete();
 		moneteNeiNegozi += Math.max(0, spese);
-		return spese > 0 || (spese == 0 && gruppo.prezzoAcquisto(costo) == 0);
+		return spese > 0 || (spese == 0 && CommercioDelGruppo.prezzoAcquisto(gruppo, costo) == 0);
 	}
 
 	static int pergameneDiDanno(GruppoGiocatore gruppo) {
@@ -851,7 +851,7 @@ final class GiocatoreAutomatico {
 	// Utilità
 
 	private void aggiornaLocazione(GruppoGiocatore gruppo) {
-		Locazione corrente = gruppo.getLocazioneCorrente();
+		Locazione corrente = LocazioneCorrente.get();
 		if (corrente != locazione) {
 			locazione = corrente;
 			valutatore = new Valutatore(gruppo);
@@ -1482,7 +1482,7 @@ final class GiocatoreAutomatico {
 			if ((d == 0 && y == 0) || (d == 1 && x == dimX - 1) || (d == 2 && y == dimY - 1) || (d == 3 && x == 0)) {
 				return 0;
 			}
-			for (int i = 1; i <= Comando.MAX_MOVIMENTO; i++) {
+			for (int i = 1; i <= Foresta.MAX_MOVIMENTO; i++) {
 				int nx = x + DX[d] * i;
 				int ny = y + DY[d] * i;
 				if ((d == 0 && ny == 0) || (d == 1 && nx == dimX - 1) || (d == 2 && ny == dimY - 1) || (d == 3 && nx == 0)) {
@@ -1493,7 +1493,7 @@ final class GiocatoreAutomatico {
 					return i;
 				}
 			}
-			return Comando.MAX_MOVIMENTO;
+			return Foresta.MAX_MOVIMENTO;
 		}
 
 		/**

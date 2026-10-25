@@ -50,26 +50,7 @@ public class Tempio extends LocazioneBase {
 	 */
 	@Override
 	public String getNome() {
-		return getNome(getModelloDati());
-	}
-
-	/**
-	 * Il nome del tempio in quelle coordinate (vedi {@link #getNome(LocazioneMD)}).
-	 */
-	public static String getNome(CoordinateMD coordinate) {
-		return getNome(Foresta.getLocazioneMD(coordinate));
-	}
-
-	/**
-	 * Il nome del tempio, con l'articolo. La prima volta che serve si pesca dalla grammatica (templi.txt), possibilmente
-	 * diverso da quello degli altri templi, e si salva con la casella: da lì in poi è sempre quello, anche dopo un
-	 * caricamento.
-	 */
-	public static String getNome(LocazioneMD modelloDati) {
-		if (modelloDati.getNome() == null) {
-			modelloDati.setNome(Foresta.nomeNuovo(TipoLocazione.TEMPIO, ProduttoreDiLuoghiCasuale::nomeTempio));
-		}
-		return modelloDati.getNome();
+		return Foresta.nomeDelTempio(getModelloDati());
 	}
 
 	@Override

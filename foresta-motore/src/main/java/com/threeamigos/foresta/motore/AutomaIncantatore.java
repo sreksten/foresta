@@ -64,9 +64,9 @@ public class AutomaIncantatore extends AutomaScambiatoreArtefatti implements Vis
 	@Override
 	public int getCostoFusione() {
 		if (!getArtefattoSulBanco().isPresent() || RegoleIncantatura.conRiprogrammazione(banco.getInventario())) {
-			return gruppo.costoFusione(banco.getInventario());
+			return CommercioDelGruppo.costoFusione(gruppo, banco.getInventario());
 		}
-		return gruppo.costoFusione(piano().numeroDaAggiungere());
+		return CommercioDelGruppo.costoFusione(gruppo, piano().numeroDaAggiungere());
 	}
 
 	@Override

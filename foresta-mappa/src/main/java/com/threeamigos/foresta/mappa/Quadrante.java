@@ -1,8 +1,5 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.mappa;
 
-import com.threeamigos.foresta.mappa.Foresta;
-
-import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 
 import java.util.ArrayList;
@@ -15,9 +12,21 @@ import java.util.List;
  */
 public enum Quadrante {
 
+	/**
+	 * Il quadrante in alto a sinistra.
+	 */
 	NORD_OVEST(false, false),
+	/**
+	 * Il quadrante in alto a destra.
+	 */
 	NORD_EST(true, false),
+	/**
+	 * Il quadrante in basso a sinistra.
+	 */
 	SUD_OVEST(false, true),
+	/**
+	 * Il quadrante in basso a destra.
+	 */
 	SUD_EST(true, true);
 
 	private final boolean est;
@@ -28,6 +37,9 @@ public enum Quadrante {
 		this.sud = sud;
 	}
 
+	/**
+	 * La prima colonna del quadrante.
+	 */
 	public int getMinX() {
 		return est ? Foresta.getDimensioneX() / 2 : 0;
 	}
@@ -39,6 +51,9 @@ public enum Quadrante {
 		return est ? Foresta.getDimensioneX() : Foresta.getDimensioneX() / 2;
 	}
 
+	/**
+	 * La prima riga del quadrante.
+	 */
 	public int getMinY() {
 		return sud ? Foresta.getDimensioneY() / 2 : 0;
 	}

@@ -63,7 +63,7 @@ class IncantatoreTest {
         assertEquals(1, RegoleIncantatura.effettiDaTrasferire(banco.getInventario()));
         assertEquals(2, RegoleIncantatura.effettiDopoLaFusione(banco.getInventario()));
         // When
-        assertEquals(Optional.empty(), gruppo.incanta(banco, ""));
+        assertEquals(Optional.empty(), CommercioDelGruppo.incanta(gruppo, banco, ""));
         // Then: il tetto resta 2, e un solo +5 è stato sostituito
         assertEquals(2, spada.getModificatori().size());
         assertEquals(1, spada.getModificatori().stream().filter(m -> m.getQuantita() == 10).count());
@@ -112,7 +112,7 @@ class IncantatoreTest {
         assertEquals(1, RegoleIncantatura.effettiDaTrasferire(banco.getInventario()));
         assertEquals(CostantiArtefatti.FUSIONE_COSTO_BASE + CostantiArtefatti.FUSIONE_COSTO_PER_EFFETTO, RegoleIncantatura.costo(banco.getInventario()));
         // When
-        assertEquals(Optional.empty(), gruppo.incanta(banco, ""));
+        assertEquals(Optional.empty(), CommercioDelGruppo.incanta(gruppo, banco, ""));
         // Then: passa il più prezioso, il gelo maggiore
         assertEquals(2, spada.getIncantamenti().size());
         assertTrue(spada.getIncantamenti().stream().anyMatch(i -> i.getTipoDannoElementale() == TipoDanno.GELO));
@@ -137,7 +137,7 @@ class IncantatoreTest {
         incantatore.richiediSpostamentoSuParteRemota(pergamena);
         assertTrue(gruppo.getInventario().isEmpty());
         // When
-        Optional<TipoMotivoRifiutoIncantatura> esito = gruppo.incanta(incantatore.getBanco(), "lama del drago");
+        Optional<TipoMotivoRifiutoIncantatura> esito = CommercioDelGruppo.incanta(gruppo, incantatore.getBanco(), "lama del drago");
         // Then
         assertEquals(Optional.empty(), esito);
         assertEquals(100 - 20, gruppo.getMonete());
@@ -157,7 +157,7 @@ class IncantatoreTest {
         BancoDiLavoro banco = new BancoDiLavoro();
         banco.addArtefatto(spada);
         banco.addArtefatto(pergamena(1));
-        assertEquals(Optional.empty(), gruppo.incanta(banco, ""));
+        assertEquals(Optional.empty(), CommercioDelGruppo.incanta(gruppo, banco, ""));
         assertNull(gruppo.getInventario().iterator().next().getModelloDati().getNomeProprio());
     }
 
@@ -167,7 +167,7 @@ class IncantatoreTest {
         BancoDiLavoro banco = new BancoDiLavoro();
         banco.addArtefatto(artefatto(TipoArtefatto.SPADA, 4));
         banco.addArtefatto(pergamena(1));
-        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.MONETE_INSUFFICIENTI), gruppo.incanta(banco, "Diavolina"));
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.MONETE_INSUFFICIENTI), CommercioDelGruppo.incanta(gruppo, banco, "Diavolina"));
         assertEquals(2, banco.getInventario().size());
         assertTrue(gruppo.getInventario().isEmpty());
     }
@@ -210,7 +210,7 @@ class IncantatoreTest {
         banco.addArtefatto(sigillo);
         assertEquals(Optional.of("Il potere magico si fonde solo su bastoni e libri magici: passeranno solo gli altri effetti."),
                 avviso(banco.getInventario()));
-        assertEquals(Optional.empty(), gruppo.incanta(banco, ""));
+        assertEquals(Optional.empty(), CommercioDelGruppo.incanta(gruppo, banco, ""));
         assertEquals(1, spada.getModificatori().size());
         assertEquals(TipoAttributo.PARATA, spada.getModificatori().iterator().next().getTipoAttributo());
     }
@@ -229,7 +229,7 @@ class IncantatoreTest {
         // Si paga solo l'effetto che passa
         assertEquals(CostantiArtefatti.FUSIONE_COSTO_BASE + CostantiArtefatti.FUSIONE_COSTO_PER_EFFETTO, RegoleIncantatura.costo(banco.getInventario()));
         // When
-        assertEquals(Optional.empty(), gruppo.incanta(banco, ""));
+        assertEquals(Optional.empty(), CommercioDelGruppo.incanta(gruppo, banco, ""));
         // Then
         assertTrue(libro.getIncantamenti().isEmpty());
         assertTrue(libro.getModificatori().stream().anyMatch(m -> m.getTipoAttributo() == TipoAttributo.POTERE_MAGICO));
@@ -258,7 +258,7 @@ class IncantatoreTest {
         assertEquals(0, incantatore.getEffettiDaTrasferire());
         assertEquals(CostantiArtefatti.FUSIONE_COSTO_BASE, incantatore.getCostoFusione());
 
-        assertEquals(Optional.empty(), gruppo.incanta(incantatore.getBanco(), ""));
+        assertEquals(Optional.empty(), CommercioDelGruppo.incanta(gruppo, incantatore.getBanco(), ""));
         assertEquals(100 - CostantiArtefatti.FUSIONE_COSTO_BASE, gruppo.getMonete());
         assertEquals(1, gruppo.getInventario().size(), "l'aggiornamento si consuma");
         assertEquals(4, gruppo.getInventario().iterator().next().getLivello());
@@ -279,7 +279,7 @@ class IncantatoreTest {
         assertEquals(1, RegoleIncantatura.effettiDopoLaFusione(banco.getInventario()), "senza l'aggiornamento non c'è posto");
         banco.addArtefatto(aggiornamento);
         assertEquals(2, RegoleIncantatura.effettiDopoLaFusione(banco.getInventario()));
-        assertEquals(Optional.empty(), gruppo.incanta(banco, ""));
+        assertEquals(Optional.empty(), CommercioDelGruppo.incanta(gruppo, banco, ""));
         assertEquals(3, spada.getLivello());
         assertEquals(2, spada.getModificatori().size());
     }

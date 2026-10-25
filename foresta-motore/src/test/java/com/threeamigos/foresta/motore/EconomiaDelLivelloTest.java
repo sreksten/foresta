@@ -48,14 +48,14 @@ class EconomiaDelLivelloTest {
             gruppo.subPreziosi(gruppo.getPreziosi());
             gruppo.addPreziosi(3);
             int monete = gruppo.getMonete();
-            gruppo.vendePreziosi(Statistiche.getLivello());
+            CommercioDelGruppo.vendePreziosi(gruppo);
             assertEquals(monete + 3, gruppo.getMonete(), "al primo livello vale una moneta");
             assertEquals(0, gruppo.getPreziosi());
 
             impostaLivello(6);
             gruppo.addPreziosi(3);
             monete = gruppo.getMonete();
-            gruppo.vendePreziosi(Statistiche.getLivello());
+            CommercioDelGruppo.vendePreziosi(gruppo);
             assertEquals(monete + 18, gruppo.getMonete(), "al sesto livello ne vale sei");
         }
     }

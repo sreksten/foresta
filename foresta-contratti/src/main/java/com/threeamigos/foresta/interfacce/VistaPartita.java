@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.interfacce;
 
+import com.threeamigos.foresta.tipi.TipoBottino;
+
 import com.threeamigos.foresta.mappa.VistaMappa;
 
 import com.threeamigos.foresta.modellodati.NotiziaMD;
@@ -21,6 +23,21 @@ import java.util.Set;
 public interface VistaPartita {
 
 	VistaGruppoGiocatore getGruppoGiocatore();
+
+	/**
+	 * Quanto paga il gruppo per un oggetto che costa {@code costo}, con lo sconto della contrattazione.
+	 */
+	int prezzoAcquisto(int costo);
+
+	/**
+	 * Quanto incassa il gruppo vendendo un oggetto che costa {@code costo}.
+	 */
+	int prezzoVendita(int costo);
+
+	/**
+	 * L'oggetto che si vede a terra nella locazione in cui si trova il gruppo, o null se non ce n'è.
+	 */
+	TipoBottino getTipoBottinoInLocazione();
 
 	VistaGruppo getGruppoAvversario();
 

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.mappa.Quadrante;
+
 import com.threeamigos.foresta.motore.CostruttoreDellaForesta;
 
 import com.threeamigos.foresta.combattimento.Ondata;
@@ -16,7 +18,7 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.RegistroMissioniMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Quadrante;
+import com.threeamigos.foresta.mappa.Quadrante;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -509,7 +511,7 @@ public class RegistroMissioni {
 			sostituita = cercaDaSostituire(missione, quadrante, false);
 		}
 		sostituita.ifPresent(coordinate -> {
-			CostruttoreDellaForesta.costruisciLocazione(coordinate, richiesta);
+			Foresta.costruisciLocazione(coordinate, richiesta);
 			occupaLocazione(coordinate, missione);
 		});
 		return sostituita;

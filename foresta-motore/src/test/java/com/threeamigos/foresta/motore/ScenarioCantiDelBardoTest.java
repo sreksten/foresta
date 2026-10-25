@@ -36,7 +36,7 @@ class ScenarioCantiDelBardoTest {
         CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
         partita.gruppo().setCoordinate(bosco);
         locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
-        partita.gruppo().setLocazioneCorrente(locazione);
+        LocazioneCorrente.set(locazione);
         avversari = GruppoAvversario.getIstanza();
         avversari.reimposta();
         for (int i = 0; i < goblin; i++) {

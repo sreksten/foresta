@@ -46,7 +46,7 @@ class CombattimentoARoundTest {
         CoordinateMD bosco = unaCasellaDiBosco();
         partita.gruppo().setCoordinate(bosco);
         Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
-        partita.gruppo().setLocazioneCorrente(locazione);
+        LocazioneCorrente.set(locazione);
         GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
         gruppoAvversario.reimposta();
         for (int i = 1; i < miei; i++) {

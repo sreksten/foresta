@@ -53,7 +53,7 @@ class ScenarioOndateTest {
             CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
             partita.gruppo().setCoordinate(bosco);
             Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
-            partita.gruppo().setLocazioneCorrente(locazione);
+            LocazioneCorrente.set(locazione);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.reimposta();
             IncontroDiMissione incontro = IncontroDiMissione.di(TipoPersonaggio.GOBLIN, 1)
@@ -141,7 +141,7 @@ class ScenarioOndateTest {
             CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
             partita.gruppo().setCoordinate(bosco);
             Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
-            partita.gruppo().setLocazioneCorrente(locazione);
+            LocazioneCorrente.set(locazione);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.reimposta();
 

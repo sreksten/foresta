@@ -571,7 +571,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				gestoreSalvataggi.elimina(Comando.SALVATAGGIO_AUTOMATICO);
 			}
 			RiletturaPartita.ricostruisci();
-			gruppo.getLocazioneCorrente().azzeraLocazione(gruppo);
+			LocazioneCorrente.get().azzeraLocazione(gruppo);
 			stato = Stato.ATTESA_DIREZIONE;
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
 			// Copia: la lista viva continua a ricevere i messaggi pubblicati da qui in poi
@@ -862,7 +862,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gruppo.getPersonaggiVivi().forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
 		gruppo.getOspiti().stream().filter(Personaggio::isVivo).forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
 		locazioneCorrente = CostruttoreDellaForesta.costruisciIstanza(gruppo.getCoordinate());
-		gruppo.setLocazioneCorrente(locazioneCorrente);
+		LocazioneCorrente.set(locazioneCorrente);
 		locazioneCorrente.crea(gruppo, gruppoAvversario);
 		if (RegistroMissioni.isDaSopprimere(gruppo.getCoordinate())) {
 			// Una missione è appena arrivata qui e considera il posto sicuro (un tempio, un posto di un rito...):

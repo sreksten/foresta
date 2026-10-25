@@ -25,7 +25,7 @@ class RaccoltaOggettiTest {
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			partita.eventi().ascolta(InternoOggettoRaccolto.class);
 			Moneta moneta = new Moneta();
-			OggettiDiProva.impostaOggetto(partita.gruppo().getLocazioneCorrente(), moneta);
+			OggettiDiProva.impostaOggetto(LocazioneCorrente.get(), moneta);
 
 			partita.comando(Comando.ESCI_DA_CITTA);
 
@@ -44,7 +44,7 @@ class RaccoltaOggettiTest {
 					() -> partita.spostaGruppoIn(TipoLocazione.CASTELLO_IDRA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			partita.eventi().ascolta(InternoOggettoRaccolto.class);
-			OggettiDiProva.impostaOggetto(partita.gruppo().getLocazioneCorrente(), new Moneta());
+			OggettiDiProva.impostaOggetto(LocazioneCorrente.get(), new Moneta());
 			for (Personaggio avversario : GruppoAvversario.getIstanza().getPersonaggiVivi()) {
 				avversario.subSalute(avversario.getSalute(), partita.gruppo().getCapo(), Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
 			}

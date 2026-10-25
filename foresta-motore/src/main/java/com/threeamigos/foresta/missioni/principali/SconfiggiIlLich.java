@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni.principali;
 
+import com.threeamigos.foresta.motore.LocazioneCorrente;
+
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.missioni.Missione;
@@ -47,7 +49,7 @@ public class SconfiggiIlLich extends MissioneBase implements Missione {
     @Override
     public void controllaPostLocazione() {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-        if (gruppo.getTipoLocazioneCorrente() == TipoLocazione.CASTELLO_LICH && gruppo.getLocazioneCorrente().isCompleta()) {
+        if (gruppo.getTipoLocazioneCorrente() == TipoLocazione.CASTELLO_LICH && LocazioneCorrente.get().isCompleta()) {
             completaMissione();
             BusEventi.pubblica(new NotificaTestoParagrafo("Il Lich è stato sconfitto!"));
         }

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.mappa.Quadrante;
+
 import com.threeamigos.foresta.mappa.CategoriaLocazione;
 
 import com.threeamigos.foresta.mappa.TipoLocazione;
@@ -330,7 +332,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	 */
 	private void apriLaBottega() {
 		CoordinateMD posto = getCovo();
-		CostruttoreDellaForesta.costruisciLocazione(posto, bottega);
+		Foresta.costruisciLocazione(posto, bottega);
 		LocazioneMD modelloDati = Foresta.getLocazioneMD(posto);
 		modelloDati.setNome(getParametro(NOME_BOTTEGA));
 		modelloDati.aggiungiProprieta(Bottega.NEGOZIANTE, RegistroPersonaggi.getNomeCompleto(RegistroPersonaggi.getResidente(negoziante, getCitta())));

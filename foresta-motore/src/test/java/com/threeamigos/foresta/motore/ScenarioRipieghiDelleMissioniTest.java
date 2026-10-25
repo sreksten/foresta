@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Quadrante;
+
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
@@ -30,7 +32,7 @@ class ScenarioRipieghiDelleMissioniTest {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {
                 TipoLocazione tipo = Foresta.getLocazione(x, y);
                 if (tipo == TipoLocazione.ROVINE || tipo == TipoLocazione.BOSCO || tipo == TipoLocazione.PALUDE) {
-                    CostruttoreDellaForesta.costruisciLocazione(new CoordinateMD(x, y), TipoLocazione.RADURA);
+                    Foresta.costruisciLocazione(new CoordinateMD(x, y), TipoLocazione.RADURA);
                 }
             }
         }
@@ -84,7 +86,7 @@ class ScenarioRipieghiDelleMissioniTest {
                 }
             }
             assertNotNull(lontano);
-            CostruttoreDellaForesta.costruisciLocazione(lontano, TipoLocazione.BOSCO);
+            Foresta.costruisciLocazione(lontano, TipoLocazione.BOSCO);
             armaiolo.controllaPreLocazione();
             assertEquals("ACCETTAZIONE", armaiolo.getPassoCorrente());
             assertEquals(lontano, armaiolo.getCovo());

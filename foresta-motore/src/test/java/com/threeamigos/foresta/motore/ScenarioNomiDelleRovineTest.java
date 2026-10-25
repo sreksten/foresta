@@ -59,7 +59,7 @@ class ScenarioNomiDelleRovineTest {
             partita.salva(Comando.NUMERO_2);
             assertTrue(partita.leggi(Comando.NUMERO_2));
             for (int i = 0; i < rovine.size(); i++) {
-                assertEquals(nomi.get(i), Rovine.getNome(Foresta.getLocazioneMD(rovine.get(i))), "dopo il caricamento");
+                assertEquals(nomi.get(i), Foresta.nomeDelleRovine(Foresta.getLocazioneMD(rovine.get(i))), "dopo il caricamento");
             }
 
             CoordinateMD prima = rovine.get(0);

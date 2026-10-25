@@ -2,6 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
+import com.threeamigos.foresta.eventi.interni.InternoPuntiEsperienzaAssegnati;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePunteggio;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePuntiEsperienzaPersonaggio;
@@ -27,6 +28,7 @@ public class Statistiche {
 	 */
 	public static void registrati() {
 		BusEventi.iscriviti(InternoAvversarioSconfitto.class, evento -> addMostroUcciso(evento.getClasse()));
+		BusEventi.iscriviti(InternoPuntiEsperienzaAssegnati.class, evento -> addPuntiEsperienza(evento.getPunti()));
 	}
 
 	/**

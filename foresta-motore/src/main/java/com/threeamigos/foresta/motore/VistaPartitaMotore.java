@@ -35,6 +35,21 @@ public class VistaPartitaMotore implements VistaPartita {
 	private final VistaMappa mappa = new Mappa();
 
 	@Override
+	public int prezzoAcquisto(int costo) {
+		return CommercioDelGruppo.prezzoAcquisto(GruppoGiocatore.getIstanza(), costo);
+	}
+
+	@Override
+	public int prezzoVendita(int costo) {
+		return CommercioDelGruppo.prezzoVendita(GruppoGiocatore.getIstanza(), costo);
+	}
+
+	@Override
+	public TipoBottino getTipoBottinoInLocazione() {
+		return LocazioneCorrente.getTipoBottino();
+	}
+
+	@Override
 	public VistaGruppoGiocatore getGruppoGiocatore() {
 		return GruppoGiocatore.getIstanza();
 	}
@@ -168,7 +183,7 @@ public class VistaPartitaMotore implements VistaPartita {
 
 		@Override
 		public int getVarianteBosco(CoordinateMD coordinate) {
-			return Bosco.getVarianteMappa(Foresta.getLocazioneMD(coordinate));
+			return Foresta.getVarianteDelBosco(Foresta.getLocazioneMD(coordinate));
 		}
 
 		@Override

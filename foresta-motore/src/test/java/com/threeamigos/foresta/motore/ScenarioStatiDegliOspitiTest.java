@@ -30,7 +30,7 @@ class ScenarioStatiDegliOspitiTest {
             CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
             partita.gruppo().setCoordinate(bosco);
             Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
-            partita.gruppo().setLocazioneCorrente(locazione);
+            LocazioneCorrente.set(locazione);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.reimposta();
             avversari.aggiungiPersonaggio(FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 3));

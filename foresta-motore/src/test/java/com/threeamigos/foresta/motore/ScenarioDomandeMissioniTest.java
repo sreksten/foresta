@@ -71,14 +71,14 @@ class ScenarioDomandeMissioniTest {
             // Nella locazione nuova, dopo che è stata costruita e descritta, la missione chiede
             partita.assertStato(Stato.ATTESA_RISPOSTA_MISSIONE);
             assertEquals(Arrays.asList(Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3), new ArrayList<>(partita.comandiDisponibili()));
-            Locazione locazione = partita.gruppo().getLocazioneCorrente();
+            Locazione locazione = LocazioneCorrente.get();
 
             partita.comando(Comando.NUMERO_2);
             assertNotEquals(Stato.ATTESA_RISPOSTA_MISSIONE, partita.stato());
             assertEquals("2", missione.getRisposta("BIVIO"));
             assertEquals(Collections.singletonList("STRADA_2"), missione.eseguiti);
             assertTrue(missione.isCompleta());
-            assertSame(locazione, partita.gruppo().getLocazioneCorrente(), "la locazione non si costruisce di nuovo");
+            assertSame(locazione, LocazioneCorrente.get(), "la locazione non si costruisce di nuovo");
         }
     }
 }

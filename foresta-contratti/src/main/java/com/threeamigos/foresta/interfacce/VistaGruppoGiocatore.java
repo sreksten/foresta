@@ -27,16 +27,6 @@ public interface VistaGruppoGiocatore extends VistaGruppo {
 	int getPreziosi();
 
 	/**
-	 * Quanto paga il gruppo per un oggetto che costa {@code costo}, con lo sconto della contrattazione
-	 */
-	int prezzoAcquisto(int costo);
-
-	/**
-	 * Quanto incassa il gruppo vendendo un oggetto che costa {@code costo}
-	 */
-	int prezzoVendita(int costo);
-
-	/**
 	 * Gli artefatti nell'inventario comune del gruppo
 	 */
 	Collection<? extends VistaArtefatto> getInventario();
@@ -62,10 +52,5 @@ public interface VistaGruppoGiocatore extends VistaGruppo {
 	CoordinateMD getCoordinate();
 
 	TipoLocazione getTipoLocazioneCorrente();
-
-	/**
-	 * L'oggetto che si vede a terra nella locazione corrente, o null se non ce n'è
-	 */
-	TipoBottino getTipoBottinoInLocazione();
 
 }

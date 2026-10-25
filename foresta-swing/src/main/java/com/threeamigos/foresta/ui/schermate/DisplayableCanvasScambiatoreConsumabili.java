@@ -264,7 +264,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
             String nome = consumabile.nome;
             ComponenteScorrevole<Consumabile>.Nodo nodo = componenteScorrevole.creaNodo(
                     nome, font, colore,
-                    String.valueOf(mostraCosto ? vistaPartita.getGruppoGiocatore().prezzoAcquisto(consumabile.costo) : consumabile.quantita), fontSmall,
+                    String.valueOf(mostraCosto ? vistaPartita.prezzoAcquisto(consumabile.costo) : consumabile.quantita), fontSmall,
                     mostraCosto ? DoomdarkColorModel.Color.YELLOW : DoomdarkColorModel.Color.LIGHT_GRAY,
                     consumabile.descrizione, fontSmall, colore,
                     consumabile.icona, consumabile);

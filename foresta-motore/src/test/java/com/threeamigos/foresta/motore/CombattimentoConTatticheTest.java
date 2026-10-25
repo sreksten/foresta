@@ -53,7 +53,7 @@ class CombattimentoConTatticheTest {
         CoordinateMD bosco = unaCasellaDiBosco();
         partita.gruppo().setCoordinate(bosco);
         Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
-        partita.gruppo().setLocazioneCorrente(locazione);
+        LocazioneCorrente.set(locazione);
         GruppoAvversario avversari = GruppoAvversario.getIstanza();
         avversari.reimposta();
         for (int i = 0; i < goblin; i++) {

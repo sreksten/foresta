@@ -17,39 +17,9 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
  */
 public class Bosco extends LocazioneBase {
 
-	/**
-	 * Quante immagini alternative rappresentano il bosco sulla mappa (Foresta.gif,
-	 * Foresta2.gif, ...): vedi ImageCache.getImmagineMappaBosco.
-	 */
-	public static final int NUMERO_VARIANTI_MAPPA = 4;
-
-	/**
-	 * Quale delle {@link #NUMERO_VARIANTI_MAPPA} immagini rappresenta questo bosco sulla
-	 * mappa (1-based), scelta una volta per tutte alla costruzione della casella (vedi
-	 * Foresta.reimposta) così la mappa resta coerente da una visualizzazione all'altra e
-	 * dopo un salvataggio.
-	 */
-	public static final String VARIANTE_MAPPA = "VARIANTE_MAPPA";
-
 	@Override
 	public TipoLocazione getTipoLocazione() {
 		return TipoLocazione.BOSCO;
-	}
-
-	/**
-	 * Sceglie a caso quale delle immagini alternative rappresenta questo bosco sulla mappa e lo scrive nel modello dati della casella.
-	 */
-	public static void impostaVarianteMappaACaso(LocazioneMD modelloDati) {
-		modelloDati.aggiungiProprieta(VARIANTE_MAPPA, String.valueOf(Dado.tira(NUMERO_VARIANTI_MAPPA)));
-	}
-
-	/**
-	 * L'indice (1-based) della variante scelta per questo bosco, o 1 se manca (bosco
-	 * creato prima che questa proprietà esistesse, es. in un salvataggio precedente).
-	 */
-	public static int getVarianteMappa(LocazioneMD modelloDati) {
-		String valore = modelloDati.ottieniProprieta(VARIANTE_MAPPA);
-		return valore == null ? 1 : Integer.parseInt(valore);
 	}
 
 	private static final TipoPersonaggio[] mostri = {

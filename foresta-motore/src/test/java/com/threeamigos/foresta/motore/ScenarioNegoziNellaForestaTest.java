@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.mappa.Quadrante;
+
 import com.threeamigos.foresta.mappa.CategoriaLocazione;
 
 import com.threeamigos.foresta.mappa.TipoLocazione;
@@ -183,7 +185,7 @@ class ScenarioNegoziNellaForestaTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             CoordinateMD posto = coordinateDi(TipoLocazione.CITTA_NYENA);
             int lato = latoLibero(posto);
-            CostruttoreDellaForesta.costruisciLocazione(new CoordinateMD(posto.getX(), posto.getY() + lato), TipoLocazione.ROVINE);
+            Foresta.costruisciLocazione(new CoordinateMD(posto.getX(), posto.getY() + lato), TipoLocazione.ROVINE);
             CoordinateMD bottega = new CoordinateMD(posto.getX(), posto.getY() + lato);
             Object[][] botteghe = {
                     {TipoLocazione.ARMAIOLO, Comando.NEGOZIO_ARMAIOLO, RichiestaAperturaInventarioCommerciante.class},
@@ -192,7 +194,7 @@ class ScenarioNegoziNellaForestaTest {
                     {TipoLocazione.INCANTATORE, Comando.NEGOZIO_INCANTATORE, RichiestaAperturaIncantatore.class}};
             for (Object[] voce : botteghe) {
                 TipoLocazione tipo = (TipoLocazione) voce[0];
-                CostruttoreDellaForesta.costruisciLocazione(bottega, tipo);
+                Foresta.costruisciLocazione(bottega, tipo);
                 Foresta.getLocazioneMD(bottega).aggiungiProprieta(Bottega.NEGOZIANTE, "Mastro Prova da Nyena");
                 partita.gruppo().setCoordinate(bottega);
                 assertTrue(tipo.isBottega());
@@ -225,7 +227,7 @@ class ScenarioNegoziNellaForestaTest {
             int lato = latoLibero(citta);
             Comando versoLaCitta = lato > 0 ? Comando.NORD : Comando.SUD;
             CoordinateMD bottega = new CoordinateMD(citta.getX(), citta.getY() + lato);
-            CostruttoreDellaForesta.costruisciLocazione(bottega, TipoLocazione.ARMAIOLO);
+            Foresta.costruisciLocazione(bottega, TipoLocazione.ARMAIOLO);
             Foresta.getLocazioneMD(bottega).setNome("la Fucina di Mastro Prova");
             Foresta.getLocazioneMD(bottega).aggiungiProprieta(Bottega.NEGOZIANTE, "Mastro Prova da Nyena");
             List<Object> aperture = new ArrayList<>();

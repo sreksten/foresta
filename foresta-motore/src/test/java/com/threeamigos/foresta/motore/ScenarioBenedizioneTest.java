@@ -160,7 +160,7 @@ class ScenarioBenedizioneTest {
             // Come in Automa.entraInStatoPreparazioneLocazione
             partita.gruppo().setCoordinate(palude);
             Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(palude);
-            partita.gruppo().setLocazioneCorrente(locazione);
+            LocazioneCorrente.set(locazione);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.reimposta();
             locazione.crea(partita.gruppo(), avversari);

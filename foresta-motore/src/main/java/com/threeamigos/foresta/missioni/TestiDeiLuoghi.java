@@ -57,9 +57,9 @@ public final class TestiDeiLuoghi {
 		LocazioneMD md = Foresta.getLocazioneMD(posto);
 		switch (md.getTipo()) {
 			case TEMPIO:
-				return Tempio.getNome(md);
+				return Foresta.nomeDelTempio(md);
 			case ROVINE:
-				return Rovine.getNome(md);
+				return Foresta.nomeDelleRovine(md);
 			case GROTTA:
 				return "la grotta";
 			case BOSCO:

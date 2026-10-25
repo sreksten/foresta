@@ -65,7 +65,7 @@ class AlchimistaTest {
 
 			partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.POZIONE_SALUTE, null, null));
 
-			int prezzo = gruppo.prezzoAcquisto(Costanti.COSTO_POZIONE_SALUTE);
+			int prezzo = CommercioDelGruppo.prezzoAcquisto(gruppo, Costanti.COSTO_POZIONE_SALUTE);
 			assertEquals(monete - prezzo, gruppo.getMonete());
 			assertEquals(pozioni + 1, gruppo.getPozioniSalute());
 			assertEquals(prezzo, partita.eventi().ultimo(NotificaApprovazioneAcquistoConsumabile.class).getPrezzoPagato());

@@ -245,7 +245,7 @@ class ScenarioIncarichiInCittaTest {
             assertEquals(bosco, partita.gruppo().getCoordinate());
 
             // I funghi sono ancora lì, se qualcuno li custodisce; se sono incustoditi il gruppo li ha già presi
-            Bottino oggetto = partita.gruppo().getLocazioneCorrente().getOggetto();
+            Bottino oggetto = LocazioneCorrente.get().getOggetto();
             assertTrue(oggetto instanceof OggettoMissione || funghi.getContatore("FUNGHI") > 0, String.valueOf(oggetto));
             assertTrue(partita.testi().stream().anyMatch(t -> t.contains("fungo porcino") || t.contains("funghi porcini")),
                     String.valueOf(partita.testi()));

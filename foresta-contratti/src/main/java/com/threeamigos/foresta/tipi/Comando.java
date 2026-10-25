@@ -177,8 +177,6 @@ public enum Comando {
 
 	private static final String FILE_DESCRIZIONI = "comandi";
 
-	public static final int MAX_MOVIMENTO = 5;
-
 	/**
 	 * Il comando che ha quella posizione nell'elenco.
 	 *

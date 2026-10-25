@@ -49,7 +49,7 @@ class NegoziTest {
         gruppo.addArtefatto(pergamena);
         ScambiatoreArtefatti armaiolo = RegistroArtefatti.getScambiatorePerNegozio(CITTA, TipoNegozio.ARMAIOLO);
 
-        assertFalse(gruppo.vende(new InternoVenditaArtefatto(gruppo, armaiolo, pergamena, null)));
+        assertFalse(CommercioDelGruppo.vende(gruppo, new InternoVenditaArtefatto(gruppo, armaiolo, pergamena, null)));
 
         assertEquals(0, gruppo.getMonete());
         assertTrue(nelGruppo(pergamena));
@@ -64,8 +64,8 @@ class NegoziTest {
         gruppo.addArtefatto(pergamena);
         ScambiatoreArtefatti venditore = RegistroArtefatti.getScambiatorePerNegozio(CITTA, TipoNegozio.VENDITORE_DI_PERGAMENE);
 
-        assertFalse(gruppo.vende(new InternoVenditaArtefatto(gruppo, venditore, spada, null)));
-        assertTrue(gruppo.vende(new InternoVenditaArtefatto(gruppo, venditore, pergamena, null)));
+        assertFalse(CommercioDelGruppo.vende(gruppo, new InternoVenditaArtefatto(gruppo, venditore, spada, null)));
+        assertTrue(CommercioDelGruppo.vende(gruppo, new InternoVenditaArtefatto(gruppo, venditore, pergamena, null)));
 
         // Un gruppo senza nessuno che sappia trattare vende a metà del costo (vedi RegoleContrattazione)
         assertEquals(15, gruppo.getMonete());

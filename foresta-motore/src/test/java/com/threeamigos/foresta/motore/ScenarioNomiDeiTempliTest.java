@@ -51,8 +51,8 @@ class ScenarioNomiDeiTempliTest {
             assertTrue(templi.size() > 1);
             List<String> nomi = new ArrayList<>();
             for (CoordinateMD tempio : templi) {
-                String nome = Tempio.getNome(tempio);
-                assertEquals(nome, Tempio.getNome(tempio), "il nome non cambia");
+                String nome = Foresta.nomeDelTempio(tempio);
+                assertEquals(nome, Foresta.nomeDelTempio(tempio), "il nome non cambia");
                 nomi.add(nome);
             }
             assertEquals(nomi.size(), new HashSet<>(nomi).size(), "nomi tutti diversi: " + nomi);

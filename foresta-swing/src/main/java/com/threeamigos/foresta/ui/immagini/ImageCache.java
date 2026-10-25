@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui.immagini;
 
+import com.threeamigos.foresta.mappa.Foresta;
+
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoPuliziaCacheDinamicaImmagini;
 import com.threeamigos.foresta.intermezzi.Verso;
@@ -85,7 +87,7 @@ public class ImageCache {
 	public static Map<TipoLocazione, BufferedImage> locazioni;
 	public static Map<TipoLocazione, BufferedImage> mappa;
 	// Le immagini alternative del bosco sulla mappa (indice 0 = Foresta.gif), vedi
-	// Bosco.VARIANTE_MAPPA e getImmagineMappaBosco: devono essere Bosco.NUMERO_VARIANTI_MAPPA (lo controlla un test)
+	// Foresta.VARIANTE_BOSCO e getImmagineMappaBosco: devono essere Foresta.NUMERO_VARIANTI_BOSCO (lo controlla un test)
 	static final String[] RISORSE_VARIANTI_BOSCO = {
 			"mappa/Foresta.gif", "mappa/Foresta2.gif", "mappa/Foresta3.gif", "mappa/Foresta4.gif"
 	};

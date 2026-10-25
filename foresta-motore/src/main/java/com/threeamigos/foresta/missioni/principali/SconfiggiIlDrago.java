@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni.principali;
 
+import com.threeamigos.foresta.motore.LocazioneCorrente;
+
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaGlobale;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -72,7 +74,7 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 			}
 		} else {
 			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-			if (gruppo.getTipoLocazioneCorrente() == TipoLocazione.CASTELLO_DRAGO && gruppo.getLocazioneCorrente().isCompleta()) {
+			if (gruppo.getTipoLocazioneCorrente() == TipoLocazione.CASTELLO_DRAGO && LocazioneCorrente.get().isCompleta()) {
 				completaMissione();
 				BusEventi.pubblica(new NotificaGlobale("Vittoria", "Il drago e' morto"));
 				LineaTemporale.setGiocoFinito(true);

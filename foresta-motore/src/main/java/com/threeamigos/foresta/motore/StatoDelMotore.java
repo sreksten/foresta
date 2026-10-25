@@ -47,6 +47,7 @@ public final class StatoDelMotore {
 		RegistroBestiario.registrati();
 		RegistroArtefatti.registrati();
 		RegistroMissioni.registrati();
+		CommercioDelGruppo.registrati();
 	}
 
 	/**
@@ -64,6 +65,7 @@ public final class StatoDelMotore {
 		}
 		ModelloDati.setIstanza(new ModelloDati());
 		GruppoGiocatore.azzeraIstanza();
+		LocazioneCorrente.azzera();
 		GruppoAvversario.azzeraIstanza();
 		StatoDelCombattimento.azzeraIstanza();
 	}

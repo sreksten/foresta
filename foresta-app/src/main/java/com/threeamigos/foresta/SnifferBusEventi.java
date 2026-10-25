@@ -92,6 +92,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoFineLocazione.class, this::onEventoFineLocazione);
         BusEventi.iscriviti(InternoPastoConsumatoInLocanda.class, this::onEventoPastoConsumatoInLocanda);
         BusEventi.iscriviti(InternoLocazioneVisitata.class, this::onEventoLocazioneVisitata);
+        BusEventi.iscriviti(InternoPuntiEsperienzaAssegnati.class, this::onEventoPuntiEsperienzaAssegnati);
         BusEventi.iscriviti(InternoEremitiIncontrati.class, this::onEventoEremitiIncontrati);
         BusEventi.iscriviti(InternoSpadaNascostaImpugnata.class, this::onEventoSpadaNascostaImpugnata);
         BusEventi.iscriviti(InternoAmiciziaStretta.class, this::onEventoAmiciziaStretta);
@@ -483,6 +484,10 @@ public class SnifferBusEventi {
 
     private void onEventoLocazioneVisitata(InternoLocazioneVisitata evento) {
         Logger.log(() -> headerEvento(evento) + "Prima visita: " + evento.getTipo());
+    }
+
+    private void onEventoPuntiEsperienzaAssegnati(InternoPuntiEsperienzaAssegnati evento) {
+        Logger.log(() -> headerEvento(evento) + "Punti esperienza: " + evento.getPunti());
     }
 
     private void onEventoEremitiIncontrati(InternoEremitiIncontrati evento) {

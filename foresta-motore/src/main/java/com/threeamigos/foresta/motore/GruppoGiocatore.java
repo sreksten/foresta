@@ -7,28 +7,18 @@ import com.threeamigos.foresta.mappa.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.artefatti.*;
-import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.artefatti.leggendari.RegoleSetLeggendari;
-import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
-import com.threeamigos.foresta.artefatti.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.artefatti.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.modellodati.*;
-import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
-import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.strumenti.logger.Logger;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
@@ -40,9 +30,6 @@ import java.util.stream.Collectors;
  */
 
 public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, VistaGruppoGiocatore {
-
-	// Il leggendario che la modalità di prova mette nell'inventario del gruppo (vedi leggendari.txt)
-	private static final String CHIAVE_FALCE_DI_PROVA = "FALCE_DEL_TRISTO_MIETITORE";
 
 	/**
 	 * Il gruppo del giocatore ricostruito da un modello dati, per esempio dopo aver caricato un salvataggio.
@@ -88,10 +75,6 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		super();
 		iscrizioni.add(BusEventi.iscriviti(InternoStoccaggioArtefatto.class, this::suEventoRichiestaStoccaggioArtefatto));
 		iscrizioni.add(BusEventi.iscriviti(InternoPrelievoArtefatto.class, this::suEventoRichiestaPrelievoArtefatto));
-		iscrizioni.add(BusEventi.iscriviti(InternoAcquistoArtefatto.class, this::suEventoRichiestaAcquistoArtefatto));
-		iscrizioni.add(BusEventi.iscriviti(InternoVenditaArtefatto.class, this::suEventoRichiestaVenditaArtefatto));
-		iscrizioni.add(BusEventi.iscriviti(InternoIncantatura.class, this::suEventoIncantatura));
-		iscrizioni.add(BusEventi.iscriviti(ComandoAcquistoConsumabile.class, this::suEventoRichiestaAcquistoConsumabile));
 	}
 
 	/**
@@ -194,7 +177,6 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	private final List<Personaggio> ospiti = new ArrayList<>();
 	// Come togliere dal bus gli eventi che il gruppo ascolta (vedi azzeraIstanza)
 	private final List<Runnable> iscrizioni = new ArrayList<>();
-	private Locazione locazioneCorrente;
 
 	// Serve per passare chi formula un incantesimo all'automa dalla locazione base.
 	// Certo si potrebbe usare un evento sul bus ... che però per ora non è usato.
@@ -216,40 +198,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		md.setPozioniMagiaGrande(0);
 		md.setPozioniAumentoLivello(0);
 		md.setCoordinate(Foresta.getCoordinateLibere());
-		CostruttoreDellaForesta.aggiornaMappaCircostante(this);
-
-		if (ModalitaDiProva.isAttiva()) {
-			md.setMonete(9999);
-			for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
-				md.setIncantesimi(tipoIncantesimo, 99);
-			}
-			md.setPozioniSalute(99);
-			md.setPozioniSaluteGrande(99);
-			md.setPozioniMagia(99);
-			md.setPozioniMagiaGrande(99);
-			md.setPozioniAumentoLivello(99);
-			// La Falce del Tristo Mietitore, per provare la Mietitura
-			CatalogoLeggendari.getLeggendario(CHIAVE_FALCE_DI_PROVA).ifPresent(falce -> addArtefatto(falce.costruisci(Statistiche.getLivello())));
-			// Due spade di livello 1 per provare i modificatori temporanei sul bersaglio (vedi modificatori_temporanei.md)
-			addArtefatto(spadaDiProva("la Spada dell'Inciampo", "che fa inciampare chi colpisce",
-					ModificatoreDelTesto.da("FORTUNA =0 @BERSAGLIO 2TURNI")));
-			addArtefatto(spadaDiProva("la Spada della Debolezza", "che toglie forza a chi colpisce",
-					ModificatoreDelTesto.da("FORZA -2 @BERSAGLIO 3TURNI")));
-			Foresta.ottieniMappa();
-		}
-	}
-
-	private static Artefatto spadaDiProva(String nome, String descrizione, ModificatoreAttributoMD modificatore) {
-		return CostruttoreArtefatto.istanza()
-				.setTipo(TipoArtefatto.SPADA)
-				.setNome(nome)
-				.setDescrizione(descrizione)
-				.setLivello(1)
-				.setDanniBase(10)
-				.setCostoAcquisto(30)
-				.setPeso(2)
-				.setModificatore(modificatore)
-				.costruisci();
+		Foresta.ottieniMappaIntorno(getX(), getY());
 	}
 
 	@Override
@@ -414,31 +363,11 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	}
 
 	/**
-	 * Quanto paga il gruppo un oggetto di quel costo (vedi RegoleContrattazione).
+	 * Il gruppo vende tutti i suoi preziosi per quelle monete, già calcolate da chi chiama (a che prezzo si vendano lo sa il mondo).
 	 */
-	public final int prezzoAcquisto(int costo) {
-		return RegoleContrattazione.prezzoAcquisto(costo, getContrattazione());
-	}
-
-	/**
-	 * Quanto ricava il gruppo vendendo un oggetto di quel costo (vedi RegoleContrattazione).
-	 */
-	public final int prezzoVendita(int costo) {
-		return RegoleContrattazione.prezzoVendita(costo, getContrattazione());
-	}
-
-	/**
-	 * Il costo della fusione di quel che c'è sul banco, scontato secondo la contrattazione del gruppo.
-	 */
-	public final int costoFusione(Collection<Artefatto> banco) {
-		return prezzoAcquisto(RegoleIncantatura.costo(banco));
-	}
-
-	/**
-	 * Il costo di una fusione che trasferisce quel numero di effetti, scontato secondo la contrattazione del gruppo.
-	 */
-	public final int costoFusione(int effettiDaTrasferire) {
-		return prezzoAcquisto(RegoleIncantatura.costo(effettiDaTrasferire));
+	public final void vendiPreziosiPer(int monete) {
+		addMonete(monete);
+		subPreziosi(md.getPreziosi());
 	}
 
 	public final int getPreziosi() {
@@ -464,7 +393,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 
 	public final void setCoordinate(CoordinateMD coordinate) {
 		md.setCoordinate(coordinate);
-		CostruttoreDellaForesta.aggiornaMappaCircostante(this);
+		Foresta.ottieniMappaIntorno(getX(), getY());
 	}
 
 	public final int getX() {
@@ -490,10 +419,6 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return Foresta.getLocazione(md.getCoordinate());
 	}
 
-	public Locazione getLocazioneCorrente() {
-		return locazioneCorrente;
-	}
-
 	@Override
 	public List<RegoleSetLeggendari.Pezzo> getPezziDelSet(VistaArtefatto artefatto) {
 		List<Collection<ArtefattoMD>> equipaggiamenti = personaggi.stream()
@@ -501,16 +426,6 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 				.collect(Collectors.toList());
 		List<ArtefattoMD> inventario = getInventario().stream().map(Artefatto::getModelloDati).collect(Collectors.toList());
 		return RegoleSetLeggendari.pezzi(Artefatto.da(artefatto).getModelloDati(), equipaggiamenti, inventario);
-	}
-
-	@Override
-	public TipoBottino getTipoBottinoInLocazione() {
-		Bottino oggetto = locazioneCorrente == null ? null : locazioneCorrente.getOggetto();
-		return oggetto == null ? null : oggetto.getClasse();
-	}
-
-	public void setLocazioneCorrente(Locazione locazioneCorrente) {
-		this.locazioneCorrente = locazioneCorrente;
 	}
 
 	public final void setLocazioneCorrenteVisitata() {
@@ -522,7 +437,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			return 0;
 		}
 		TipoLocazione locazioneCorrente;
-		for (int i = 1; i <= Comando.MAX_MOVIMENTO; i++) {
+		for (int i = 1; i <= Foresta.MAX_MOVIMENTO; i++) {
 			if (getY() - i == 0) {
 				return i;
 			}
@@ -531,7 +446,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 				return i;
 			}
 		}
-		return Comando.MAX_MOVIMENTO;
+		return Foresta.MAX_MOVIMENTO;
 	}
 
 	/**
@@ -549,7 +464,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		if (getX() == Foresta.getDimensioneX() - 1)
 			return 0;
 		TipoLocazione locazioneCorrente;
-		for (int i = 1; i <= Comando.MAX_MOVIMENTO; i++) {
+		for (int i = 1; i <= Foresta.MAX_MOVIMENTO; i++) {
 			if (getX() + i == Foresta.getDimensioneX() - 1) {
 				return i;
 			}
@@ -558,7 +473,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 				return i;
 			}
 		}
-		return Comando.MAX_MOVIMENTO;
+		return Foresta.MAX_MOVIMENTO;
 	}
 
 	/**
@@ -577,7 +492,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			return 0;
 		}
 		TipoLocazione locazioneCorrente;
-		for (int i = 1; i <= Comando.MAX_MOVIMENTO; i++) {
+		for (int i = 1; i <= Foresta.MAX_MOVIMENTO; i++) {
 			if (getY() + i == Foresta.getDimensioneY() - 1) {
 				return i;
 			}
@@ -586,7 +501,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 				return i;
 			}
 		}
-		return Comando.MAX_MOVIMENTO;
+		return Foresta.MAX_MOVIMENTO;
 	}
 
 	/**
@@ -605,7 +520,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			return 0;
 		}
 		TipoLocazione locazioneCorrente;
-		for (int i = 1; i <= Comando.MAX_MOVIMENTO; i++) {
+		for (int i = 1; i <= Foresta.MAX_MOVIMENTO; i++) {
 			if (getX() - i == 0) {
 				return i;
 			}
@@ -614,7 +529,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 				return i;
 			}
 		}
-		return Comando.MAX_MOVIMENTO;
+		return Foresta.MAX_MOVIMENTO;
 	}
 
 	/**
@@ -635,26 +550,6 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		getPersonaggiVivi().forEach(p -> p.riposa(ore, tipoRiposo));
 		// Anche gli ospiti che si possono ferire recuperano
 		getOspitiVulnerabiliVivi().forEach(p -> p.riposa(ore, tipoRiposo));
-	}
-
-	/**
-	 * Un prezioso vale quanto il livello del mondo, così le pietre e le corone seguono i prezzi che salgono col livello;
-	 * la vendita ha miglior successo se nel gruppo c'è un ladro
-	 */
-	public final void vendePreziosi(int livelloDelMondo) {
-		if (md.getPreziosi() > 0) {
-			int valore = livelloDelMondo;
-			int quantita = md.getPreziosi() * valore;
-			if (getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == TipoPersonaggio.LADRA || p.getClasse() == TipoPersonaggio.LADRO)) {
-				quantita += Dado.tiraAncheAUnaFaccia(md.getPreziosi()) * valore;
-			}
-            String notifica = chiMaiuscolo() +
-                    " ha venduto i preziosi raccolti, ricavandone " +
-                    (quantita == 1 ? " una moneta." : (quantita + " monete."));
-			BusEventi.pubblica(new NotificaTestoFrase(notifica));
-			addMonete(quantita);
-			subPreziosi(md.getPreziosi());
-		}
 	}
 
 	/**
@@ -687,10 +582,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	}
 
 	/**
-	 * Dà quei punti esperienza a tutti i personaggi vivi e alle statistiche del gioco.
+	 * Dà quei punti esperienza a tutti i personaggi vivi, e lo dice a chi tiene il conto del livello del mondo (le statistiche).
 	 */
 	public void addPuntiEsperienza(int puntiEsperienza) {
-		Statistiche.addPuntiEsperienza(puntiEsperienza);
+		BusEventi.pubblica(new InternoPuntiEsperienzaAssegnati(puntiEsperienza));
 		for (Personaggio personaggio : getPersonaggiVivi()) {
 			personaggio.addPuntiEsperienza(puntiEsperienza);
 		}
@@ -843,16 +738,6 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		}
 	}
 
-	private void suEventoRichiestaAcquistoArtefatto(InternoAcquistoArtefatto comandoAcquistoArtefatto) {
-		Artefatto artefatto = (Artefatto) comandoAcquistoArtefatto.getOggettoDaSpostare();
-		if (compra(artefatto, prezzoAcquisto(artefatto.getCostoAcquisto()))) {
-			comandoAcquistoArtefatto.getParteRemota().removeArtefatto(artefatto);
-			BusEventi.pubblica(comandoAcquistoArtefatto.approvazione());
-		} else {
-			BusEventi.pubblica(comandoAcquistoArtefatto.rifiuto());
-		}
-	}
-
 	/**
 	 * Compra l'artefatto a quel prezzo, già calcolato da chi chiama: lo mette nell'inventario e toglie le monete, se il gruppo le ha.
 	 *
@@ -866,119 +751,4 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		subMonete(costo);
 		return true;
 	}
-
-	private void suEventoRichiestaVenditaArtefatto(InternoVenditaArtefatto eventoRichiestaVendita) {
-		vende(eventoRichiestaVendita);
-	}
-
-	/**
-	 * Vende un artefatto del gruppo al commerciante, che lo compra solo se tratta quel genere di oggetti:
-	 * l'armaiolo niente pergamene, il venditore di pergamene solo quelle.
-	 * Pubblica NotificaApprovazioneVenditaArtefatto o NotificaRifiutoVenditaArtefatto.
-	 *
-	 * @return true se la vendita è riuscita
-	 */
-	boolean vende(InternoVenditaArtefatto eventoRichiestaVendita) {
-		Artefatto artefatto = (Artefatto) eventoRichiestaVendita.getOggettoDaSpostare();
-		if (!eventoRichiestaVendita.getParteRemota().tratta(artefatto)) {
-			BusEventi.pubblica(eventoRichiestaVendita.rifiuto());
-			return false;
-		}
-		int ricavo = prezzoVendita(artefatto.getCostoAcquisto());
-		removeArtefatto(artefatto);
-		addMonete(ricavo);
-		eventoRichiestaVendita.getParteRemota().addArtefatto(artefatto);
-		BusEventi.pubblica(eventoRichiestaVendita.approvazione());
-		return true;
-	}
-
-	private void suEventoIncantatura(InternoIncantatura comandoIncantatura) {
-		incanta(comandoIncantatura.getBanco(), comandoIncantatura.getNomeProprio());
-	}
-
-	/**
-	 * La fusione dall'incantatore: ricontrolla le regole (RegoleIncantatura), fa pagare, copia sull'artefatto
-	 * gli effetti delle pergamene, che spariscono, e rimette l'artefatto nell'inventario del gruppo.
-	 * Pubblica NotificaApprovazioneIncantatura o NotificaRifiutoIncantatura. Con il libro che riprogramma sul banco
-	 * l'incantatore sbaglia sempre: l'artefatto perde gli incantamenti, che restano in ingredienti del Core Dump, e
-	 * pubblica NotificaAvvisoIncantatura con la sua esclamazione.
-	 *
-	 * @return il motivo del rifiuto, oppure vuoto se la fusione è riuscita
-	 */
-	public Optional<TipoMotivoRifiutoIncantatura> incanta(BancoDiLavoro banco, String nomeProprio) {
-		Optional<TipoMotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco.getInventario(), getMonete(), costoFusione(banco.getInventario()), Statistiche.getLivello());
-		if (motivo.isPresent()) {
-			BusEventi.pubblica(new NotificaRifiutoIncantatura(motivo.get()));
-			return motivo;
-		}
-		int costo = costoFusione(banco.getInventario());
-		if (RegoleIncantatura.conRiprogrammazione(banco.getInventario())) {
-			// Va sempre male: l'artefatto si spezza negli ingredienti dei suoi incantamenti, e tutto torna nel gruppo
-			List<Artefatto> restituiti = RegoleIncantatura.riprogramma(banco);
-			subMonete(costo);
-			restituiti.forEach(this::addArtefatto);
-			BusEventi.pubblica(new NotificaAvvisoIncantatura(ProduttoreDiArtefattiCasuale.erroreDiRiprogrammazione()));
-			return Optional.empty();
-		}
-		Artefatto incantato = RegoleIncantatura.fondi(banco, nomeProprio);
-		subMonete(costo);
-		addArtefatto(incantato);
-		BusEventi.pubblica(new NotificaApprovazioneIncantatura(incantato, costo));
-		return Optional.empty();
-	}
-
-	private void suEventoRichiestaAcquistoConsumabile(ComandoAcquistoConsumabile comandoAcquistoConsumabile) {
-		// Il prezzo lo decide l'offerta dell'alchimista; se il comando non ne corrisponde a nessuna, si ignora
-		Optional<OffertaConsumabile> offerta = OfferteAlchimista.trova(this, comandoAcquistoConsumabile.getTipoConsumabile(),
-				comandoAcquistoConsumabile.getClasseIncantesimo(), comandoAcquistoConsumabile.getUuidPersonaggio());
-		if (!offerta.isPresent()) {
-			return;
-		}
-		int costoOggetto = prezzoAcquisto(offerta.get().getCosto());
-		if (getMonete() >= costoOggetto) {
-			switch (comandoAcquistoConsumabile.getTipoConsumabile()) {
-				case POZIONE_SALUTE:
-					addPozioniSalute(1);
-					break;
-				case POZIONE_SALUTE_GRANDE:
-					addPozioniSaluteGrande(1);
-					break;
-				case POZIONE_MAGIA:
-					addPozioniMagia(1);
-					break;
-				case POZIONE_MAGIA_GRANDE:
-					addPozioniMagiaGrande(1);
-					break;
-				case AUMENTO_MAGIA_SINGOLO:
-					personaggi.stream().filter(p -> p.getUuid().equals(comandoAcquistoConsumabile.getUuidPersonaggio())).findFirst()
-							.ifPresent(p -> p.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "ALCHIMISTA"));
-					break;
-				case AUMENTO_MAGIA_GRUPPO:
-					for (Personaggio personaggio : getPersonaggiVivi()) {
-						if (!personaggio.isPNG()) {
-							personaggio.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "ALCHIMISTA");
-						}
-					}
-					break;
-				case INCANTESIMO:
-					addIncantesimi(comandoAcquistoConsumabile.getClasseIncantesimo(), 1);
-					break;
-				case MAPPA_PARZIALE_FORESTA:
-					int x = getCoordinate().getX();
-					int y = getCoordinate().getY();
-					Foresta.ottieniMappaZona(x - 7, y - 7, x + 7, y + 7);
-					break;
-				case MAPPA_COMPLETA_FORESTA:
-					Foresta.ottieniMappa();
-					break;
-				default:
-					throw new IllegalArgumentException("Tipo consumabile non valido");
-			}
-			subMonete(costoOggetto);
-			BusEventi.pubblica(new NotificaApprovazioneAcquistoConsumabile(comandoAcquistoConsumabile, costoOggetto));
-		} else {
-			BusEventi.pubblica(new NotificaRifiutoAcquistoConsumabile(comandoAcquistoConsumabile));
-		}
-	}
-
 }

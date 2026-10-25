@@ -1,5 +1,9 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.motore.LocazioneCorrente;
+
+import com.threeamigos.foresta.motore.EsperienzaDelGruppo;
+
 import com.threeamigos.foresta.mappa.CategoriaLocazione;
 
 import com.threeamigos.foresta.mappa.TipoLocazione;
@@ -204,9 +208,9 @@ public final class RaccoltaBottino {
 		if (artefatto.getTipo().isIngrediente()) {
 			return;
 		}
-		Locazione locazione = gruppo.getLocazioneCorrente();
+		Locazione locazione = LocazioneCorrente.get();
 		BusEventi.pubblica(new InternoArtefattoTrovato(artefatto, locazione != null && locazione.isCustodita()));
-		GestoreProgressione.acquisisciArtefattoMinore();
+		EsperienzaDelGruppo.acquisisciArtefattoMinore();
 	}
 
 	// Chi prende l'artefatto: vedi raccogliArtefatto

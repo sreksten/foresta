@@ -473,6 +473,10 @@ public enum TipoEvento {
      */
     INTERNO_LOCAZIONE_VISITATA,
     /**
+     * Il gruppo ha guadagnato dei punti esperienza
+     */
+    INTERNO_PUNTI_ESPERIENZA_ASSEGNATI,
+    /**
      * Il gruppo ha davanti degli eremiti
      */
     INTERNO_EREMITI_INCONTRATI,

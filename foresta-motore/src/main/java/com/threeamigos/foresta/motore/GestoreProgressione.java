@@ -4,7 +4,8 @@ import com.threeamigos.foresta.tipi.Costanti;
 
 /**
  * La curva dell'esperienza: quanti punti servono per raggiungere un livello. Cresce con il quadrato del livello meno uno, per una
- * costante di bilanciamento: toccandola si rallenta o si velocizza il gioco.
+ * costante di bilanciamento: toccandola si rallenta o si velocizza il gioco. Sono solo calcoli: quanta esperienza dà un fatto del gioco lo dice
+ * {@link EsperienzaDelGruppo}.
  *
  * @author Stefano Reksten
  */
@@ -67,31 +68,5 @@ public class GestoreProgressione {
 
         // Mettiamo un tetto massimo per evitare che i livelli scalino all'infinito
         return Math.min(livelloCalcolato, Costanti.MASSIMO_LIVELLO);
-    }
-
-    /**
-     * Un artefatto dà il 5% dei punti necessari per arrivare al livello successivo
-     */
-    public static void acquisisciArtefattoMinore() {
-        aggiungiPercentuale(5);
-    }
-
-    /**
-     * Una missione secondaria dà il 20% dei punti necessari per arrivare al livello successivo
-     */
-    public static void completaMissioneSecondaria() {
-        aggiungiPercentuale(20);
-    }
-
-    /**
-     * Una missione principale dà il 50% dei punti necessari per arrivare al livello successivo
-     */
-    public static void completaMissionePrincipale() {
-        aggiungiPercentuale(50);
-    }
-
-    private static void aggiungiPercentuale(int percentuale) {
-        // La percentuale e' degli XP che separano il livello attuale dal successivo (non del livello)
-        GruppoGiocatore.getIstanza().addPuntiEsperienza(getXpRichiestiPerProssimoLivello(Statistiche.getLivello()) * percentuale / 100);
     }
 }

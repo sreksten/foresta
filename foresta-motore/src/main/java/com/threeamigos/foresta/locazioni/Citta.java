@@ -7,7 +7,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.mappa.LocazioneMD;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.motore.CommercioDelGruppo;
 import com.threeamigos.foresta.motore.Stato;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.Comando;
@@ -55,7 +55,7 @@ public abstract class Citta extends LocazioneUnica {
         BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva " + Articoli.conPreposizione("a", getNome()) +
                 ". Qui è possibile cercare una locanda, il negozio di un alchimista, fare un salto dall'armaiolo o dal venditore di pergamene, o far incantare un artefatto prima di andare via."));
 		if (g.getPreziosi() > 0) {
-			g.vendePreziosi(Statistiche.getLivello());
+			CommercioDelGruppo.vendePreziosi(g);
 			BusEventi.pubblica(new InternoMostraFinestraStatistiche());
 		}
 	}

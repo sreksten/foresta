@@ -36,7 +36,7 @@ class ScenarioNomiDelleLocazioniTest {
             assertEquals("la città di Ruuna", Foresta.getLocazioneMD(ruuna).getNome());
             assertEquals("il Maniero del Malefizio", Foresta.getLocazioneMD(strega).getNome());
             assertNotNull(Foresta.getLocazioneMD(tempio).getNome(), "il tempio ha il nome da quando nasce");
-            assertEquals(Tempio.getNome(tempio), Foresta.getLocazioneMD(tempio).getNome());
+            assertEquals(Foresta.nomeDelTempio(tempio), Foresta.getLocazioneMD(tempio).getNome());
             assertNotNull(Foresta.getLocazioneMD(locanda).getNome());
             assertEquals(Locanda.getNome(Foresta.getLocazioneMD(locanda)), Foresta.getLocazioneMD(locanda).getNome());
             // La locanda della città ha il suo nome, che non è quello della città

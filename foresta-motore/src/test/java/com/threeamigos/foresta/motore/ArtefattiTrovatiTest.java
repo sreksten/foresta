@@ -50,7 +50,7 @@ class ArtefattiTrovatiTest {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(25)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CASTELLO_IDRA));
 			partita.eventi().ascolta(InternoArtefattoTrovato.class, InternoOggettoRaccolto.class, NotificaArtefattoTrovato.class);
-			OggettiDiProva.impostaOggetto(partita.gruppo().getLocazioneCorrente(), BottinoArtefatto.nuovo(FormaDelBottino.SPADA));
+			OggettiDiProva.impostaOggetto(LocazioneCorrente.get(), BottinoArtefatto.nuovo(FormaDelBottino.SPADA));
 			sconfiggiGliAvversari();
 
 			partita.comando(Comando.SINGOLO_ATTACCO);
@@ -69,7 +69,7 @@ class ArtefattiTrovatiTest {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.eventi().ascolta(InternoArtefattoTrovato.class);
-			OggettiDiProva.impostaOggetto(partita.gruppo().getLocazioneCorrente(), BottinoArtefatto.nuovo(FormaDelBottino.SPADA));
+			OggettiDiProva.impostaOggetto(LocazioneCorrente.get(), BottinoArtefatto.nuovo(FormaDelBottino.SPADA));
 
 			partita.comando(Comando.ESCI_DA_CITTA);
 
@@ -82,7 +82,7 @@ class ArtefattiTrovatiTest {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(25)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CASTELLO_IDRA));
 			partita.eventi().ascolta(InternoArtefattoTrovato.class, InternoOggettoRaccolto.class, NotificaArtefattoTrovato.class);
-			OggettiDiProva.impostaOggetto(partita.gruppo().getLocazioneCorrente(), BottinoArtefatto.giaFatto(
+			OggettiDiProva.impostaOggetto(LocazioneCorrente.get(), BottinoArtefatto.giaFatto(
 					new GeneratoreArtefattiTabelle(new Random(1)).generaArtefatto(TipoArtefatto.SCUDO, 3)));
 			sconfiggiGliAvversari();
 

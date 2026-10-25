@@ -29,19 +29,7 @@ public class Rovine extends LocazioneBase {
 	 */
 	@Override
 	public String getNome() {
-		return getNome(getModelloDati());
-	}
-
-	/**
-	 * Il nome delle rovine, con l'articolo. Le rovine di un castello o di una città lo ricevono quando nascono (vedi
-	 * Foresta.distruggiLocazioneUnica); le altre, la prima volta che serve, lo pescano dalla grammatica (rovine.txt),
-	 * possibilmente diverso da quello delle altre rovine, e lo salvano con la casella.
-	 */
-	public static String getNome(LocazioneMD modelloDati) {
-		if (modelloDati.getNome() == null) {
-			modelloDati.setNome(Foresta.nomeNuovo(TipoLocazione.ROVINE, ProduttoreDiLuoghiCasuale::nomeRovine));
-		}
-		return modelloDati.getNome();
+		return Foresta.nomeDelleRovine(getModelloDati());
 	}
 
 	private static final TipoPersonaggio[] mostri = {

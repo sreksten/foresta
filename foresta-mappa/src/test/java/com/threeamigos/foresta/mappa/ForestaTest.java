@@ -238,4 +238,74 @@ class ForestaTest {
         assertEquals(4, zona.getAY());
         assertEquals(TipoLocazione.TEMPIO, new com.threeamigos.foresta.eventi.interni.InternoLocazioneVisitata(TipoLocazione.TEMPIO).getTipo());
     }
+
+    @Test
+    void laZonaIntornoAlGruppoSiVedeSettePerSetteECeSiSpostaAiBordi() {
+        riempiDiBosco();
+        // Al centro (la mappa è 10 per 8): le tre caselle per lato
+        Foresta.ottieniMappaIntorno(5, 4);
+        assertEquals(2, Foresta.getMinXConosciuta());
+        assertEquals(8, Foresta.getMaxXConosciuta());
+        assertEquals(1, Foresta.getMinYConosciuta());
+        assertEquals(7, Foresta.getMaxYConosciuta());
+
+        // Negli angoli la zona resta di sette per sette ma dentro la mappa
+        riempiDiBosco();
+        Foresta.azzera(10, 8);
+        riempiDiBosco();
+        Foresta.ottieniMappaIntorno(0, 0);
+        assertTrue(Foresta.isLocazioneConosciuta(new CoordinateMD(6, 6)));
+        assertFalse(Foresta.isLocazioneConosciuta(new CoordinateMD(7, 0)));
+        assertFalse(Foresta.isLocazioneConosciuta(new CoordinateMD(0, 7)));
+
+        Foresta.azzera(10, 8);
+        riempiDiBosco();
+        Foresta.ottieniMappaIntorno(9, 7);
+        assertTrue(Foresta.isLocazioneConosciuta(new CoordinateMD(3, 1)));
+        assertFalse(Foresta.isLocazioneConosciuta(new CoordinateMD(2, 1)));
+        assertFalse(Foresta.isLocazioneConosciuta(new CoordinateMD(3, 0)));
+    }
+
+    @Test
+    void unoSpostamentoFaAlMassimoCinqueCaselle() {
+        assertEquals(5, Foresta.MAX_MOVIMENTO);
+    }
+
+    @Test
+    void ilNomeDelTempioSiPescaUnaVoltaESiRicorda() {
+        Foresta.impostaLocazione(QUI, TipoLocazione.TEMPIO);
+        String nome = Foresta.nomeDelTempio(QUI);
+        assertNotNull(nome);
+        assertEquals(nome, Foresta.nomeDelTempio(Foresta.getLocazioneMD(QUI)), "il nome non cambia");
+    }
+
+    @Test
+    void ilNomeDelleRovineSiPescaUnaVoltaESiRicorda() {
+        Foresta.impostaLocazione(QUI, TipoLocazione.ROVINE);
+        String nome = Foresta.nomeDelleRovine(Foresta.getLocazioneMD(QUI));
+        assertNotNull(nome);
+        assertEquals(nome, Foresta.nomeDelleRovine(Foresta.getLocazioneMD(QUI)));
+    }
+
+    @Test
+    void laVarianteDelBoscoSiScriveESiLegge() {
+        LocazioneMD md = new LocazioneMD(TipoLocazione.BOSCO);
+        assertEquals(1, Foresta.getVarianteDelBosco(md), "senza variante vale la prima");
+        Foresta.impostaVarianteDelBoscoACaso(md);
+        int variante = Foresta.getVarianteDelBosco(md);
+        assertTrue(variante >= 1 && variante <= Foresta.NUMERO_VARIANTI_BOSCO);
+    }
+
+    @Test
+    void costruireUnaLocazioneOrdinariaLaFaNonVisitataEDaIlNomeAiTempli() {
+        Foresta.impostaLocazione(QUI, TipoLocazione.BOSCO);
+        Foresta.setLocazioneVisitata(QUI, true);
+
+        Foresta.costruisciLocazione(QUI, TipoLocazione.TEMPIO);
+
+        assertEquals(TipoLocazione.TEMPIO, Foresta.getLocazione(QUI));
+        assertFalse(Foresta.isLocazioneVisitata(QUI));
+        assertNotNull(Foresta.getLocazioneMD(QUI).getNome(), "il tempio ha il suo nome da quando nasce");
+        assertThrows(IllegalArgumentException.class, () -> Foresta.costruisciLocazione(QUI, TipoLocazione.CITTA_NYENA));
+    }
 }

@@ -47,7 +47,7 @@ class ScenarioArmaioloTest {
 		VistaScambio bottega = entraDallArmaiolo();
 		VistaArtefatto scelto = new ArrayList<>(bottega.getInventarioParteRemota()).get(0);
 		int moneteIniziali = partita.gruppo().getMonete();
-		int prezzo = partita.gruppo().prezzoAcquisto(scelto.getCostoAcquisto());
+		int prezzo = CommercioDelGruppo.prezzoAcquisto(partita.gruppo(), scelto.getCostoAcquisto());
 
 		compra(bottega, scelto);
 
@@ -71,9 +71,9 @@ class ScenarioArmaioloTest {
 		vendi(bottega, scelto);
 
 		assertTrue(partita.eventi().haRicevuto(NotificaApprovazioneVenditaArtefatto.class));
-		assertEquals(moneteDopoAcquisto + partita.gruppo().prezzoVendita(scelto.getCostoAcquisto()), partita.gruppo().getMonete());
+		assertEquals(moneteDopoAcquisto + CommercioDelGruppo.prezzoVendita(partita.gruppo(), scelto.getCostoAcquisto()), partita.gruppo().getMonete());
 		assertTrue(PartitaDiTest.contiene(bottega.getInventarioParteRemota(), scelto));
-		assertTrue(partita.gruppo().prezzoVendita(scelto.getCostoAcquisto()) < partita.gruppo().prezzoAcquisto(scelto.getCostoAcquisto()));
+		assertTrue(CommercioDelGruppo.prezzoVendita(partita.gruppo(), scelto.getCostoAcquisto()) < CommercioDelGruppo.prezzoAcquisto(partita.gruppo(), scelto.getCostoAcquisto()));
 	}
 
 	@Test

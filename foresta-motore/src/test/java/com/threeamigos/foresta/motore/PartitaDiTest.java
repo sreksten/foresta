@@ -260,7 +260,7 @@ final class PartitaDiTest implements AutoCloseable {
 			throw new IllegalArgumentException(locazioneUnica + " non è nella Foresta");
 		}
 		gruppo().setCoordinate(coordinate);
-		CostruttoreDellaForesta.aggiornaMappaCircostante(gruppo());
+		Foresta.ottieniMappaIntorno(gruppo().getX(), gruppo().getY());
 	}
 
 	/**

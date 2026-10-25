@@ -28,7 +28,7 @@ class ScenarioFineLocazioneTest {
             CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
             partita.gruppo().setCoordinate(bosco);
             Locazione locazione = CostruttoreDellaForesta.costruisciIstanza(bosco);
-            partita.gruppo().setLocazioneCorrente(locazione);
+            LocazioneCorrente.set(locazione);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.reimposta();
             Personaggio goblin = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1);
