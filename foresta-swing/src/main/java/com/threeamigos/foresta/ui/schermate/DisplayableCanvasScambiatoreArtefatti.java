@@ -15,7 +15,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtef
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.interfacce.VistaScambio;
+import com.threeamigos.foresta.artefatti.VistaScambio;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.strumenti.TestoDeiModificatori;

@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.artefatti.OggettoConCosto;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.interfacce.VistaScambio;
+import com.threeamigos.foresta.artefatti.VistaScambio;
 
 /**
  * Il GruppoGiocatore (che "fa da banchiere" controllando le disponibilità economiche del GruppoGiocatore e il costo

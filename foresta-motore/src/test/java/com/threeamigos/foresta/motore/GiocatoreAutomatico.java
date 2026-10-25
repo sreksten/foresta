@@ -15,7 +15,7 @@ import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioComme
 import com.threeamigos.foresta.abilita.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
-import com.threeamigos.foresta.interfacce.VistaScambio;
+import com.threeamigos.foresta.artefatti.VistaScambio;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;

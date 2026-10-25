@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.richieste;
 
 import com.threeamigos.foresta.eventi.RichiestaConComandi;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.interfacce.VistaScambio;
+import com.threeamigos.foresta.artefatti.VistaScambio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 

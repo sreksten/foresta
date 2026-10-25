@@ -6,7 +6,7 @@ import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAvvisoIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
-import com.threeamigos.foresta.interfacce.VistaBancoDiLavoro;
+import com.threeamigos.foresta.artefatti.VistaBancoDiLavoro;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;

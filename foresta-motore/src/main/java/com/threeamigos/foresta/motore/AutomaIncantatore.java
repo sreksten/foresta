@@ -8,7 +8,7 @@ import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAvvisoIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
-import com.threeamigos.foresta.interfacce.VistaBancoDiLavoro;
+import com.threeamigos.foresta.artefatti.VistaBancoDiLavoro;
 import com.threeamigos.foresta.artefatti.tipi.TipoMotivoRifiutoIncantatura;
 
 import java.util.*;

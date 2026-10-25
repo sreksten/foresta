@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.artefatti.VistaBancoDiLavoro;
+import com.threeamigos.foresta.artefatti.VistaScambio;
 import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.eventi.BusEventi;

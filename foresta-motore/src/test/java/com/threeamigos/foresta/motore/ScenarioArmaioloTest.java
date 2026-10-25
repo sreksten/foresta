@@ -5,7 +5,7 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
-import com.threeamigos.foresta.interfacce.VistaScambio;
+import com.threeamigos.foresta.artefatti.VistaScambio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.AfterEach;

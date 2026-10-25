@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.richieste;
 
 import com.threeamigos.foresta.eventi.RichiestaConComandi;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.interfacce.VistaBancoDiLavoro;
+import com.threeamigos.foresta.artefatti.VistaBancoDiLavoro;
 import com.threeamigos.foresta.tipi.Comando;
 
 import java.util.Collection;

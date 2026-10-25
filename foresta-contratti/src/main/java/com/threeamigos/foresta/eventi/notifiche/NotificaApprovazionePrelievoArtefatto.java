@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.artefatti.OggettoConPeso;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.interfacce.VistaScambio;
+import com.threeamigos.foresta.artefatti.VistaScambio;
 
 /**
  * Il GruppoGiocatore (che controlla il peso dell'Artefatto e la disponibilità di carico di un Personaggio)

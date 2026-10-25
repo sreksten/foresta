@@ -4,7 +4,7 @@
  * <p>
  * <b>Viste in sola lettura.</b> {@link com.threeamigos.foresta.interfacce.VistaPartita} è il punto da cui la UI legge lo stato della
  * partita; le altre viste ({@code VistaPersonaggio}, {@code VistaGruppo}, {@code VistaMappa}, {@code VistaMissione},
- * {@code VistaScambio}...) ne mostrano le parti. Hanno solo metodi che leggono: per cambiare qualcosa la UI manda un evento
+ * {@code VistaScambio}, che sta con gli artefatti...) ne mostrano le parti. Hanno solo metodi che leggono: per cambiare qualcosa la UI manda un evento
  * al motore.
  * <p>
  * <b>Servizi.</b> {@link com.threeamigos.foresta.interfacce.ControlloreDiGioco} è il motore visto da chi lo avvia;

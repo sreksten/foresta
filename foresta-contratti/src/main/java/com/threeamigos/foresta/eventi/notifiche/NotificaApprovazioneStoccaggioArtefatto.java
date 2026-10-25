@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.artefatti.OggettoConPeso;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.interfacce.VistaScambio;
+import com.threeamigos.foresta.artefatti.VistaScambio;
 
 /**
  * Il GruppoGiocatore approva lo spostamento di un Artefatto da un Personaggio verso l'inventario generale.

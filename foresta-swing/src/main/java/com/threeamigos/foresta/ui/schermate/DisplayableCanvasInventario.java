@@ -9,7 +9,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto
 import com.threeamigos.foresta.interfacce.ModificatoreAttivo;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.interfacce.VistaScambio;
+import com.threeamigos.foresta.artefatti.VistaScambio;
 import com.threeamigos.foresta.modificatori.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.tipi.TipoModificatore;
 import com.threeamigos.foresta.strumenti.TestoDeiModificatori;

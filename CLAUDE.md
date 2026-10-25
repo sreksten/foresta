@@ -61,7 +61,7 @@ Il canvas principale è `DisplayableCanvas` (enum interno `StatoDisplayableCanva
 Lo stato della partita la UI lo legge da `…/interfacce/VistaPartita` (sola lettura, implementata da `…/motore/VistaPartitaMotore`), mai dai singleton del motore; verso il motore manda solo eventi.
 Panoramica in `motore_grafico.md`.
 
-- Inventario del personaggio e del gruppo: `DisplayableCanvasInventario`; logica in `…/motore/AutomaInventario`, che la UI vede come `…/interfacce/VistaScambio` e comanda con `ComandoScambioArtefatto`; apertura con `…/eventi/richieste/RichiestaAperturaInventarioGruppo`.
+- Inventario del personaggio e del gruppo: `DisplayableCanvasInventario`; logica in `…/motore/AutomaInventario`, che la UI vede come `…/artefatti/VistaScambio` (in `foresta-artefatti`, con `VistaBancoDiLavoro`) e comanda con `ComandoScambioArtefatto`; apertura con `…/eventi/richieste/RichiestaAperturaInventarioGruppo`.
 - Armaiolo e venditore di pergamene: `DisplayableCanvasCommerciante`; alchimista: `DisplayableCanvasScambiatoreConsumabili`. In tutte e tre e nell'incantatore la colonna centrale porta il nome del negoziante (`disegnaIntestazioneCentrale` in `DisplayableCanvasScambiatore`), spezzato su più righe, con il mestiere in piccolo sotto.
 - Inventario, commerciante e incantatore estendono `DisplayableCanvasScambiatoreArtefatti` (astratta, due liste di oggetti affiancate), che estende `DisplayableCanvasScambiatore`: un comportamento comune alle tre schermate va lì.
 - Incantatore: `DisplayableCanvasIncantatore` (+ `…/motore/AutomaIncantatore`; `BancoDiLavoro` e `ScambiatoreArtefatti` stanno in `foresta-artefatti`).

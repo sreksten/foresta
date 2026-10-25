@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.artefatti.OggettoConCosto;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.interfacce.VistaScambio;
+import com.threeamigos.foresta.artefatti.VistaScambio;
 
 /**
  * Il GruppoGiocatore rifiuta la vendita di un Artefatto a un commerciante che non tratta quel genere di

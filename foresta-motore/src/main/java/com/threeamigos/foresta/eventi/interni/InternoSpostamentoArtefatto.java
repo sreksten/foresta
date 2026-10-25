@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.interfacce.VistaScambio;
+import com.threeamigos.foresta.artefatti.VistaScambio;
 import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
 
 /**
