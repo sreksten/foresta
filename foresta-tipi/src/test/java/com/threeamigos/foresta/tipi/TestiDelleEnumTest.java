@@ -33,7 +33,6 @@ class TestiDelleEnumTest {
 		ENUM.put(TipoMotivoRifiutoIncantatura.class, Collections.singletonList("FRASE"));
 		ENUM.put(TipoNegozio.class, Collections.singletonList("NOME"));
 		ENUM.put(TipoRaritaArtefatto.class, Collections.singletonList("NOME"));
-		ENUM.put(TipoTrofeo.class, Arrays.asList("NOME", "DESCRIZIONE"));
 		ENUM.put(GradoIncantamento.class, Collections.singletonList("NOME"));
 	}
 

@@ -60,7 +60,7 @@ Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo 
 | :--- | :--- | :--- |
 | `foresta-tipi` | `tipi`: enum e costanti di base (anche `Costanti`, i valori di bilanciamento), `Testi` e i file `.properties` dei testi delle enum | nessuno |
 | `foresta-modellodati` | `modellodati`: le classi `…MD`, solo dati (con la lettura e la scrittura dei salvataggi) | tipi |
-| `foresta-contratti` | `interfacce`, `eventi` (bus e classi degli eventi), le utilità di `strumenti` e i dati di `intermezzi` che servono alla UI | modellodati |
+| `foresta-motore-api` | `interfacce`, `eventi` (bus e classi degli eventi), le utilità di `strumenti` e i dati di `intermezzi` che servono alla UI | modellodati |
 | `foresta-motore` | il resto: `motore`, `combattimento`, `personaggi`, `oggetti`, `locazioni`, `missioni`, `incantesimi`, `canti`, `offerte`, `tattiche`, `trofei`, `testi`, `salvataggi`, la logica degli intermezzi, gli eventi interni che portano il dominio, le grammatiche `.txt` | contratti |
 | `foresta-swing` | `ui` (e gli eventi con sprite), le immagini | contratti |
 | `foresta-app` | `Main`, `SnifferBusEventi` e i test che usano motore e UI insieme | motore, swing |

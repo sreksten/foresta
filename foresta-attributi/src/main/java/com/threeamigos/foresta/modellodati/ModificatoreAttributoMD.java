@@ -22,7 +22,7 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.facoltativo
  * Su un artefatto la durata è quella con cui il modificatore sarà applicato; su un personaggio è il tempo che resta.
  * <p>
  * Qui ci sono solo i dati: i testi con cui lo si racconta al giocatore ("Coraggio -20% per 3 turni") li scrive
- * {@code TestoDeiModificatori}, in foresta-contratti.
+ * {@code TestoDeiModificatori}, in questo stesso modulo.
  *
  * @author Stefano Reksten
  */

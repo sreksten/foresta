@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class EnumDelModuloTest {
 
     private static List<Class<?>> enumDelModulo() throws IOException, URISyntaxException, ClassNotFoundException {
-        Path radice = Paths.get(TipoTrofeo.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        Path radice = Paths.get(FaseDiGioco.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         List<String> nomi;
         try (Stream<Path> file = Files.walk(radice)) {
             nomi = file.map(p -> radice.relativize(p).toString())
@@ -44,7 +44,7 @@ class EnumDelModuloTest {
     void ogniCostanteSiRitrovaDalSuoNome() throws Exception {
         List<Class<?>> enumerazioni = enumDelModulo();
         assertTrue(!enumerazioni.isEmpty(), "nessuna enum trovata");
-        assertTrue(enumerazioni.contains(TipoTrofeo.class));
+        assertTrue(enumerazioni.contains(FaseDiGioco.class));
         for (Class<?> classe : enumerazioni) {
             Object[] costanti = classe.getEnumConstants();
             assertTrue(costanti.length > 0, classe + " non ha costanti");

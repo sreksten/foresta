@@ -45,7 +45,7 @@ I moduli Maven si impilano, e ognuno conosce solo quelli sopra di lui, quindi è
       ▲
  foresta-modellodati   le classi ...MD: solo dati, con lettura e scrittura dei salvataggi
       ▲
- foresta-contratti     interfacce (Vista*), bus e classi degli eventi, utilità neutre
+ foresta-motore-api     interfacce (Vista*), bus e classi degli eventi, utilità neutre
       ▲                          ▲
  foresta-motore         foresta-swing
  (tutto il dominio)     (ui, immagini)
@@ -53,7 +53,7 @@ I moduli Maven si impilano, e ognuno conosce solo quelli sopra di lui, quindi è
       └────────  foresta-app  ───┘     Main, SnifferBusEventi, test che usano entrambi
 ```
 
-Il motore e la UI dipendono entrambi da `foresta-contratti` e mai l'uno dall'altro: è lì che stanno le «lingue comuni» (eventi e viste). Solo `foresta-app` li mette insieme. Un test (`DipendenzeDalToolkitGraficoTest`) controlla che nessuno fuori da `foresta-swing` usi `java.awt` o Swing.
+Il motore e la UI dipendono entrambi da `foresta-motore-api` e mai l'uno dall'altro: è lì che stanno le «lingue comuni» (eventi e viste). Solo `foresta-app` li mette insieme. Un test (`DipendenzeDalToolkitGraficoTest`) controlla che nessuno fuori da `foresta-swing` usi `java.awt` o Swing.
 
 ## 3. Il bus eventi: come le parti si parlano
 

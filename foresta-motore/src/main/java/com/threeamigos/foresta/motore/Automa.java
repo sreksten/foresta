@@ -582,6 +582,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			LocazioneCorrente.get().azzeraLocazione(gruppo);
 			stato = Stato.ATTESA_DIREZIONE;
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
+			// Quel che la partita di prima aveva guadagnato per i trofei e non aveva consolidato non vale per questa
+			RegistroTrofei.scartaIlProgressoInSospeso();
 			// Copia: la lista viva continua a ricevere i messaggi pubblicati da qui in poi
 			BusEventi.pubblica(new InternoCaricamentoCompletato(new ArrayList<>(Notizie.getUltimiMessaggi())));
 			return Esito.CONTINUA_CON_INGRESSO;

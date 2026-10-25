@@ -1,6 +1,6 @@
 # Portabilità verso Android e iOS: cosa manca
 
-Stato al 2026-10-17. Riguarda `foresta-tipi`, `foresta-modellodati`, `foresta-contratti` e le parti di `foresta-motore` che toccano disco, thread, tempo e testi; `foresta-swing` è stata guardata solo dove il motore la incontra.
+Stato al 2026-10-17. Riguarda `foresta-tipi`, `foresta-modellodati`, `foresta-motore-api` e le parti di `foresta-motore` che toccano disco, thread, tempo e testi; `foresta-swing` è stata guardata solo dove il motore la incontra.
 
 Qui c'è soltanto quello che resta da fare. Quello che è già stato sistemato non è elencato: la motivazione di ogni cambiamento sta nel javadoc o in un commento del codice che lo riguarda, e la storia in git. I punti di aggancio per una piattaforma (ciclo di vita dell'app, uscita dal gioco, cartella dei file, destinazione del log, lingua dei testi) sono descritti nei javadoc di `ControlloreDiGioco`, `NotificaUscitaDalGioco`, `GestoreSuFile`, `DestinazioneDiLog` e `Testi`, e in [`motore_di_gioco.md`](motore_di_gioco.md) (§5, "Ciclo di vita dell'app").
 

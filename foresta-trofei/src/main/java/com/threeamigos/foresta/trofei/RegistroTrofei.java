@@ -2,7 +2,6 @@ package com.threeamigos.foresta.trofei;
 
 import com.threeamigos.foresta.tipi.RegolaTrofeo;
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.interni.InternoCaricamentoCompletato;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
 import com.threeamigos.foresta.interfacce.GestoreTrofei;
@@ -45,11 +44,10 @@ public class RegistroTrofei {
 	}
 
 	/**
-	 * Si iscrive all'inizio e alla fine delle locazioni, e iscrive ogni trofeo agli eventi
-	 * che lo fanno avanzare.
+	 * Si iscrive alla fine delle locazioni, e iscrive ogni trofeo agli eventi che lo fanno avanzare. Quando si carica una partita
+	 * il progresso in sospeso lo scarta chi la carica (vedi {@link #scartaIlProgressoInSospeso}).
 	 */
 	public static void registrati() {
-		BusEventi.iscriviti(InternoCaricamentoCompletato.class, evento -> scartaIlProgressoInSospeso());
 		BusEventi.iscriviti(InternoFineLocazione.class, evento -> fineLocazione());
 		for (RegolaTrofeo classeTrofeo : RegolaTrofeo.values()) {
 			classeTrofeo.getIstanza().registrati();

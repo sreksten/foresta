@@ -7,11 +7,16 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>foresta-contratti</artifactId>
-    <name>foresta-contratti</name>
-    <description>I contratti fra motore e interfaccia: interfacce, bus e classi degli eventi, utilita condivise e dati degli intermezzi</description>
+    <artifactId>foresta-motore-api</artifactId>
+    <name>foresta-motore-api</name>
+    <description>Il contratto del motore con la UI: la vista della partita, il controllore, i servizi della piattaforma e gli eventi del ciclo di vita e dei dialoghi della macchina a stati</description>
 
     <dependencies>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>foresta-trofei</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.threeamigos</groupId>
             <artifactId>foresta-missioni</artifactId>
