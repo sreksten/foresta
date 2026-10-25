@@ -3,6 +3,8 @@ package com.threeamigos.foresta.eventi;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -84,5 +86,15 @@ class EventiDiBaseTest {
         InternoMessaggio messaggio = new InternoMessaggio("da registrare");
         assertEquals("da registrare", messaggio.getMessaggioInterno());
         assertEquals(TipoEvento.INTERNO_MESSAGGIO, messaggio.getTipoEvento());
+    }
+
+    @Test
+    void leNotificheDiTestoPortanoIlMessaggioEIlLoroTipo() {
+        NotificaTestoFrase frase = new NotificaTestoFrase("continua");
+        assertEquals("continua", frase.getMessaggio());
+        assertEquals(TipoEvento.NOTIFICA_TESTO_FRASE, frase.getTipoEvento());
+        NotificaTestoParagrafo paragrafo = new NotificaTestoParagrafo("ricomincia");
+        assertEquals("ricomincia", paragrafo.getMessaggio());
+        assertEquals(TipoEvento.NOTIFICA_TESTO_PARAGRAFO, paragrafo.getTipoEvento());
     }
 }

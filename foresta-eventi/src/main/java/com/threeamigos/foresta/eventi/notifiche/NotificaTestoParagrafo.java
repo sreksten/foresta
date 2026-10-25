@@ -14,6 +14,8 @@ public class NotificaTestoParagrafo extends EventoBase {
     private final String messaggio;
 
     /**
+     * Un messaggio per il giocatore.
+     *
      * @param messaggio il messaggio da inviare al giocatore
      */
     public NotificaTestoParagrafo(String messaggio) {
@@ -22,6 +24,8 @@ public class NotificaTestoParagrafo extends EventoBase {
     }
 
     /**
+     * Il messaggio da mostrare.
+     *
      * @return il messaggio da inviare al giocatore
      */
     public String getMessaggio() {
