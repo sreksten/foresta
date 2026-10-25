@@ -1022,7 +1022,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito entraInStatoAccampamento() {
 		// Dalla casella, non da locazioneCorrente: dopo un caricamento questa e' null, e dopo un castello
 		// completato e' ancora il castello mentre sulla casella ci sono le rovine
-		gruppo.pernotta(Foresta.costruisciIstanza(gruppo.getCoordinate()).getTipoRiposo());
+		Pernottamento.pernotta(gruppo, Foresta.costruisciIstanza(gruppo.getCoordinate()).getTipoRiposo());
 		// Superato l'ultimo giorno la partita è persa subito: tornando ad ATTESA_DIREZIONE la si potrebbe ancora
 		// salvare, e la sconfitta si vedrebbe solo al passo seguente
 		if (LineaTemporale.isGiocoFinito()) {

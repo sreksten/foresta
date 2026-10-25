@@ -27,7 +27,7 @@ class NotteAlCopertoTest {
             LineaTemporale.aggiungiOre(12 - LineaTemporale.getOra());
             assertEquals(12, LineaTemporale.getOra());
 
-            partita.gruppo().pernotta(TipoRiposo.AL_COPERTO);
+            Pernottamento.pernotta(partita.gruppo(), TipoRiposo.AL_COPERTO);
 
             assertEquals(8, LineaTemporale.getOra());
             assertEquals(giorno + 1, LineaTemporale.getGiorno());
@@ -41,7 +41,7 @@ class NotteAlCopertoTest {
             assertEquals(40, LineaTemporale.getGiorno());
             assertFalse(LineaTemporale.isGiocoFinito());
 
-            partita.gruppo().pernotta(TipoRiposo.AL_COPERTO);
+            Pernottamento.pernotta(partita.gruppo(), TipoRiposo.AL_COPERTO);
 
             assertEquals(41, LineaTemporale.getGiorno());
             assertTrue(LineaTemporale.isGiocoFinito());
@@ -55,7 +55,7 @@ class NotteAlCopertoTest {
             assertEquals(TipoLocazione.LOCANDA, partita.gruppo().getTipoLocazioneCorrente());
             int giorno = LineaTemporale.getGiorno();
 
-            partita.gruppo().pernotta(TipoRiposo.AL_COPERTO);
+            Pernottamento.pernotta(partita.gruppo(), TipoRiposo.AL_COPERTO);
 
             assertEquals(giorno + 1, LineaTemporale.getGiorno());
         }

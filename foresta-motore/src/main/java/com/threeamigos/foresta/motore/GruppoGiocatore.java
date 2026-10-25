@@ -608,81 +608,21 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	}
 
 	/**
-	 * Fa riposare un'ora tutti i personaggi vivi e gli ospiti che si possono ferire.
+	 * Fa riposare per quelle ore tutti i personaggi vivi e gli ospiti che si possono ferire.
 	 */
-	public final void riposa(TipoRiposo tipoRiposo) {
-		getPersonaggiVivi().forEach(p -> p.riposa(1, tipoRiposo));
-		// Anche gli ospiti che si possono ferire recuperano
-		getOspitiVulnerabiliVivi().forEach(p -> p.riposa(1, tipoRiposo));
-		BusEventi.pubblica(new InternoMostraFinestraStato());
-	}
-
-	/**
-	 * Fa passare la notte al gruppo, fino al mattino, con il tipo di riposo indicato: l'orologio arriva alle otto del mattino, e gli eventi
-	 * che dipendono dal giorno (il drago e le città) hanno la loro occasione di accadere, in una locanda come all'accampamento.
-	 */
-	public final void pernotta(TipoRiposo tipoRiposo) {
-		Logger.log("Inizio pernottamento");
-		TipoLocazione tipoLocazione = getTipoLocazioneCorrente();
-		int ore = LineaTemporale.oreFinoAlMattino();
-		boolean alCoperto = tipoLocazione == TipoLocazione.LOCANDA
-				|| tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA;
-		Logger.log(() -> "Pernottamento al coperto? " + alCoperto);
-		if (alCoperto) {
-			StringBuilder sb = new StringBuilder("La stanchezza accumulata ed il tepore delle coperte fanno addormentare subito ");
-			if (getNumeroPersonaggiVivi() > 1) {
-				sb.append("tutto il gruppo");
-			} else {
-				sb.append(capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
-			}
-			sb.append(". La notte alla locanda trascorre placida e tranquilla.");
-			BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
-		} else {
-			StringBuilder sb = new StringBuilder("Il gruppo decide di accamparsi qui per riposare un po'. Dopo aver stabilito i turni di guardia, i ")
-					.append(Numeri.getCardinaleM(personaggi.size())).append(" intrepidi avventurieri si godono un meritato riposo. ");
-			if (ore == 1) {
-				sb.append("Ma un'ora sola è veramente insufficiente");
-			} else if (ore == 2) {
-				sb.append("Ma due ore sono insufficienti");
-			} else if (ore == 3) {
-				sb.append("Ma tre ore sono troppo poche");
-			} else if (ore == 4) {
-				sb.append("Ma quattro ore sono un po' poche");
-			} else if (ore == 5) {
-				sb.append("Cinque ore sono appena sufficienti");
-			} else {
-				if (getNumeroPersonaggiVivi() > 1) {
-					sb.append("Il gruppo");
-				} else {
-					sb.append(capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
-				}
-				sb.append(" ha riposato abbastanza");
-			}
-			sb.append(" per rimettersi in forze.");
-			BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
-		}
+	public final void riposa(int ore, TipoRiposo tipoRiposo) {
 		getPersonaggiVivi().forEach(p -> p.riposa(ore, tipoRiposo));
+		// Anche gli ospiti che si possono ferire recuperano
 		getOspitiVulnerabiliVivi().forEach(p -> p.riposa(ore, tipoRiposo));
-		LineaTemporale.mattinoSeguente();
-		LineaTemporale.eventiDiNotte(this);
-		// La locanda fuori città non può cadere: solo una città può essere distrutta
-		if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA && LineaTemporale.isCittaDistrutta(tipoLocazione)) {
-			// La città in cui si dormiva è caduta stanotte: lo si racconta subito, non alla locazione dopo
-			String evento = LineaTemporale.getEvento();
-			if (evento != null) {
-				BusEventi.pubblica(new NotificaTestoParagrafo(evento));
-			}
-		}
-		BusEventi.pubblica(new NotificaTestoFrase("Il sole sorge e l'avventura ricomincia."));
 	}
 
 	/**
 	 * Un prezioso vale quanto il livello del mondo, così le pietre e le corone seguono i prezzi che salgono col livello;
 	 * la vendita ha miglior successo se nel gruppo c'è un ladro
 	 */
-	public final void vendePreziosi() {
+	public final void vendePreziosi(int livelloDelMondo) {
 		if (md.getPreziosi() > 0) {
-			int valore = Statistiche.getLivello();
+			int valore = livelloDelMondo;
 			int quantita = md.getPreziosi() * valore;
 			if (getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == TipoPersonaggio.LADRA || p.getClasse() == TipoPersonaggio.LADRO)) {
 				quantita += Dado.tiraAncheAUnaFaccia(md.getPreziosi()) * valore;
@@ -693,7 +633,6 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			BusEventi.pubblica(new NotificaTestoFrase(notifica));
 			addMonete(quantita);
 			subPreziosi(md.getPreziosi());
-			BusEventi.pubblica(new InternoMostraFinestraStatistiche());
 		}
 	}
 
@@ -720,8 +659,6 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		subPozioniAumentoLivello(calcolaPerdita.apply(md.getPozioniAumentoLivello()));
 
 		getPersonaggiVivi().forEach(Personaggio::fugge);
-
-		BusEventi.pubblica(new InternoMostraFinestraStato());
 	}
 
 	public boolean isInLocazioneUnica(TipoLocazione tipoLocazioneUnica) {
@@ -887,15 +824,26 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 
 	private void suEventoRichiestaAcquistoArtefatto(InternoAcquistoArtefatto comandoAcquistoArtefatto) {
 		Artefatto artefatto = (Artefatto) comandoAcquistoArtefatto.getOggettoDaSpostare();
-		int costoOggetto = prezzoAcquisto(artefatto.getCostoAcquisto());
-		if (getMonete() >= costoOggetto) {
-			addArtefatto(artefatto);
-			subMonete(costoOggetto);
+		if (compra(artefatto, prezzoAcquisto(artefatto.getCostoAcquisto()))) {
 			comandoAcquistoArtefatto.getParteRemota().removeArtefatto(artefatto);
 			BusEventi.pubblica(comandoAcquistoArtefatto.approvazione());
 		} else {
 			BusEventi.pubblica(comandoAcquistoArtefatto.rifiuto());
 		}
+	}
+
+	/**
+	 * Compra l'artefatto a quel prezzo, già calcolato da chi chiama: lo mette nell'inventario e toglie le monete, se il gruppo le ha.
+	 *
+	 * @return true se il gruppo aveva abbastanza monete
+	 */
+	public boolean compra(Artefatto artefatto, int costo) {
+		if (getMonete() < costo) {
+			return false;
+		}
+		addArtefatto(artefatto);
+		subMonete(costo);
+		return true;
 	}
 
 	private void suEventoRichiestaVenditaArtefatto(InternoVenditaArtefatto eventoRichiestaVendita) {

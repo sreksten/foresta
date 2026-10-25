@@ -108,7 +108,7 @@ class ScenarioOspitiVulnerabiliTest {
 
             ottone.subSalute(ottone.getSalute() / 2, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
             int salute = ottone.getSalute();
-            partita.gruppo().riposa(TipoRiposo.ALL_APERTO_CON_FUOCO);
+            partita.gruppo().riposa(1, TipoRiposo.ALL_APERTO_CON_FUOCO);
             assertTrue(ottone.getSalute() > salute, "riposando l'ostaggio recupera");
         }
     }

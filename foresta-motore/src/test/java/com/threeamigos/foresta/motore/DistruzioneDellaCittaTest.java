@@ -34,7 +34,7 @@ class DistruzioneDellaCittaTest {
             alGiorno(24);
             LineaTemporale.aggiungiOre(12 - LineaTemporale.getOra());
 
-            partita.gruppo().pernotta(TipoRiposo.AL_COPERTO);
+            Pernottamento.pernotta(partita.gruppo(), TipoRiposo.AL_COPERTO);
 
             assertTrue(LineaTemporale.isCittaDistrutta(TipoLocazione.CITTA_NYENA));
             List<String> testi = partita.testi();

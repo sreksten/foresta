@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -54,7 +55,8 @@ public class Palude extends LocazioneBase {
 			return Stato.FINE_LOCAZIONE;
 		}
 		BusEventi.pubblica(new NotificaTestoFrase("Approfittando della quiete del posto, " + g.chi() + " riposerà un poco."));
-		g.riposa(getTipoRiposo());
+		g.riposa(1, getTipoRiposo());
+		BusEventi.pubblica(new InternoMostraFinestraStato());
 		setCompleta(true);
 		return Stato.FINE_LOCAZIONE;
 	}

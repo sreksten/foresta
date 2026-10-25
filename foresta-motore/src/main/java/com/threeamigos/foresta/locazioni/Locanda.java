@@ -282,7 +282,7 @@ public class Locanda extends LocazioneBase {
 		case PERNOTTA:
 			if (azione == Comando.SI) {
 				gruppo.subMonete(Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi());
-				gruppo.pernotta(TipoRiposo.AL_COPERTO);
+				Pernottamento.pernotta(gruppo, TipoRiposo.AL_COPERTO);
 			} else {
 				BusEventi.pubblica(new NotificaTestoFrase("L'oste chiede di lasciare la locanda al più presto."));
 			}

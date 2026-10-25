@@ -903,6 +903,7 @@ public abstract class LocazioneBase implements Locazione {
 					setCompleta(false);
 					setOggetto(null);
 					gruppo.fugge();
+					BusEventi.pubblica(new InternoMostraFinestraStato());
 					if (!gruppo.getCapo().isVivo()) {
 						return Stato.GIOCO_PERSO;
 					} else {
@@ -1401,7 +1402,8 @@ public abstract class LocazioneBase implements Locazione {
 				BusEventi.pubblica(new NotificaTestoFrase("Essendo il tesoro incustodito, " +
 						gruppo.chi() + " se ne impossessa."));
 			}
-			gruppo.riposa(getTipoRiposo());
+			gruppo.riposa(1, getTipoRiposo());
+			BusEventi.pubblica(new InternoMostraFinestraStato());
 			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
 		} else {
