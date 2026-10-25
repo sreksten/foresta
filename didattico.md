@@ -281,7 +281,7 @@ I riquadri e le schermate **non sono componenti Swing**: sono disegnatori a cui 
 
 ## Osservazioni
 
-- Questa guida descrive lo stato al 2026-10-25: 27 moduli Maven, 2145 test, tutti verdi (22 saltati).
+- Questa guida descrive lo stato al 2026-10-25: 28 moduli Maven, 2145 test, tutti verdi (22 saltati).
 
 ## Da fare / idee aperte
 

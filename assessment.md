@@ -49,13 +49,15 @@ Questo assessment **non è una nuova lettura integrale dei sorgenti**, come fu l
 | `foresta-missioni` | 111 / 17.867 | 5 / 363 | 17 | 9% | 89% |
 | `foresta-bestiario` | 4 / 309 | 1 / 112 | 7 | 46% | 100% |
 | `foresta-trofei` | 12 / 690 | 3 / 206 | 9 | 38% | 100% |
-| `foresta-modellodati` | 5 / 557 | 11 / 1.075 | 49 | 98% | 100% |
+| `foresta-notizie` | 5 / 368 | 3 / 210 | 10 | n.m. | n.m. |
+| `foresta-modellodati` | 2 / 287 | 9 / 916 | 41 | n.m. | n.m. |
 | `foresta-motore-api` | 49 / 1.631 | 1 / 32 | 1 | 17% | 91% |
-| `foresta-motore` | 60 / 9.686 | 191 / 29.727 | 843 (22 saltati) | 77% | 77% |
+| `foresta-motore` | 60 / 9.686 | 190 / 29.686 | 841 (22 saltati) | 77% | 77% |
 | `foresta-swing` | 98 / 23.493 | 14 / 2.028 | 64 | 26% | 52% |
 | `foresta-app` | 3 / 902 | 34 / 2.617 | 70 | 28% | 28% |
 | **Totale** | **834 / 109.402** | **398 / 53.850** | **2152 (22 saltati)** | | **77%** |
 
+- **n.m.** (non misurata): `foresta-notizie` è nato dopo la misura, separato da `foresta-modellodati` e dal motore; di quei due moduli si sono ricontati classi, righe e test, ma la copertura è da rimisurare.
 - **"Copertura dei suoi test"** è quella del rapporto di JaCoCo del modulo: conta solo i test che stanno nel modulo.
 - **"Copertura con tutti i test"** unisce i `jacoco.exec` di tutti i moduli e misura ogni modulo con i dati di tutti. Il rapporto aggregato di JaCoCo (`report-aggregate`) non serve: vede solo le dipendenze dirette di `foresta-app`. Per questo l'ho calcolata con un piccolo programma sopra la libreria di JaCoCo.
 
@@ -127,7 +129,7 @@ Dal basso in alto. Ogni livello dipende solo da quelli prima, e le dipendenze so
 2. **Stato statico.** Lo stato della partita vive in registri e singleton (`GruppoGiocatore`, `RegistroMissioni`, `Cassa`, `Foresta`…). `StatoDelMotore.azzera()` riparte da un modello dati nuovo e da un automa nuovo.
    **Giudizio:** accettabile per un gioco single-player, a patto di non aggiungere registri statici. I fornitori almeno rendono esplicito dove stanno i dati, e `ModelloDati.installa()` li mette al loro posto all'avvio (`Main`, `PartitaDiTest`).
 3. **Residui della divisione.**
-   - `foresta-modellodati` contiene, oltre a `ModelloDati`, solo le notizie (`NotizieMD`, `NotiziaMD`, `MessaggioMD`).
+   - `foresta-modellodati` contiene solo `ModelloDati`.
    - In `foresta-motore-api` restano `FaseDiGioco`, `ComandiAssociati`, che usa i tipi di personaggi, poteri e missioni, e le richieste di apertura di trofei e bestiario.
    - **`MeccanicaDeiPoteri`:** combattimento e poteri sono ancora in ordine inverso. Il combattimento dipende dai poteri (anche per `TipoAzione` ed `EsitoAzione`), e i poteri arrivano al combattimento solo attraverso l'interfaccia e il `ServiceLoader`.
 4. **Personaggi e gruppi nello stesso modulo.** È una scelta voluta. `PersonaggioBase` e `GruppoGiocatore` si conoscono attraverso i singleton, in sette punti: da che parte sta un personaggio, quanti della sua specie ci sono, il gruppo pieno.
@@ -201,7 +203,6 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 1. **Pulizia piccola:**
    - togliere il codice morto del §5.
 2. **Finire la divisione:**
-   - le notizie in un modulo loro, o nel motore, e `ModelloDati` da solo in `foresta-modellodati`;
    - le richieste di trofei e bestiario nei loro moduli;
    - decidere se invertire combattimento e poteri e togliere `MeccanicaDeiPoteri`.
 3. **Tagliare le classi grandi** quando si interviene su di loro (§3, problema 1). Il candidato più naturale è il combattimento a round di `LocazioneBase`.

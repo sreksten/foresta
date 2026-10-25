@@ -19,7 +19,7 @@ Documenti di dettaglio su singoli sottosistemi:
 | Pacchetto | Contenuto |
 | :--- | :--- |
 | `motore` | `Automa` (la macchina a stati), `Stato`, i gruppi, `Foresta`, `LineaTemporale`, i calcolatori (combattimento, riposo, progressione), i registri, le regole di equipaggiamento e di negoziazione, `ProduttoreDiArtefattiCasuale`, `NotizieDelleLocande` e `PrecaricatoreDeiTesti`; `Dado` sta in `foresta-strumenti`, e `GrammarBean` con gli altri produttori di testi (`ProduttoreDi…Casuale`, `ProduttoriDiTesti`) in `foresta-testi` |
-| `modellodati` | I bean di dati (tutti con il suffisso `MD`: anche `NotiziaMD` e `ModificatoreAttributoMD`) e `ModelloDati`, il contenitore radice, (gli strumenti con cui si salvano, `Serializzabile`, `LettoreCampi` e `MappaProprieta`, stanno nel pacchetto `serializzazione` del modulo `foresta-serializzazione`); dipende da `tipi` e `serializzazione` |
+| `modellodati` | I bean di dati (tutti con il suffisso `MD`: anche `NotiziaMD`, in `foresta-notizie`, e `ModificatoreAttributoMD`) e `ModelloDati`, il contenitore radice, (gli strumenti con cui si salvano, `Serializzabile`, `LettoreCampi` e `MappaProprieta`, stanno nel pacchetto `serializzazione` del modulo `foresta-serializzazione`); dipende da `tipi` e `serializzazione` |
 | `tipi` | Il vocabolario condiviso da motore, modello dati e UI, che non dipende da nessun altro pacchetto: gli enum di dominio (attributi, tipi di danno, effetti di stato, slot e rarità degli artefatti, tipi di riposo, di negozio, di trofeo) |
 | `eventi` | Il bus (`BusEventi`) e le quattro famiglie di eventi: `comandigiocatore`, `notifiche`, `richieste`, `interni` |
 | `personaggi` | `Personaggio` (contratto), `PersonaggioBase`, le classi giocabili e i mostri, `FabbricaPersonaggi` (che costruisce un personaggio da un `tipi.TipoPersonaggio`), `EquipaggiamentoIniziale` |
@@ -137,11 +137,11 @@ Classi base: `EventoBase` (identificatore e `TipoEvento`), `EventoSuPersonaggio`
 
 Le operazioni economiche usano un pattern **richiesta/verdetto**: il comando della UI non sposta nulla, il motore verifica e pubblica un'approvazione o un rifiuto con il motivo (fondi insufficienti, peso, slot, regole di equipaggiamento), e solo dopo l'approvazione l'oggetto si sposta.
 
-Un caso a parte: `motore.Notizie` ascolta le notifiche di testo (`NotificaTestoFrase` e `NotificaTestoParagrafo`) per tenere in `NotizieMD` lo storico di quel che il giocatore ha visto, che si salva con la partita e ripopola il pannello di testo dopo un caricamento. È voluto: i punti che le pubblicano sono centinaia, e lo storico è proprio ciò che è passato di lì. Le notizie delle locande invece le riceve da chi le produce, con `Notizie.aggiungiNotizia`: nessun altro le ascolterebbe (§11).
+Un caso a parte: `notizie.Notizie` (in `foresta-notizie`) ascolta le notifiche di testo (`NotificaTestoFrase` e `NotificaTestoParagrafo`) per tenere in `NotizieMD` lo storico di quel che il giocatore ha visto, che si salva con la partita e ripopola il pannello di testo dopo un caricamento. È voluto: i punti che le pubblicano sono centinaia, e lo storico è proprio ciò che è passato di lì. Le notizie delle locande invece le riceve da chi le produce, con `Notizie.aggiungiNotizia`: nessun altro le ascolterebbe (§11).
 
 ## 5. Modello dati e persistenza
 
-Le classi in `modellodati` (suffisso `MD`) sono bean serializzabili senza logica di gioco; le classi in `motore` (`CostruttoreDellaForesta`, `Gruppo*`, `Registro*`, `LineaTemporale`, `Statistiche`, `Notizie`...) sono facciate statiche che operano su di esse. `ModelloDati` è il contenitore radice, un **singleton statico** sostituibile (`setIstanza`):
+Le classi in `modellodati` (suffisso `MD`) sono bean serializzabili senza logica di gioco; le classi in `motore` (`CostruttoreDellaForesta`, `Gruppo*`, `Registro*`, `LineaTemporale`, `Statistiche`...; `Notizie` sta in `foresta-notizie`) sono facciate statiche che operano su di esse. `ModelloDati` è il contenitore radice, un **singleton statico** sostituibile (`setIstanza`):
 
 `GruppoGiocatoreMD`, `StatisticheMD`, `LineaTemporaleMD`, `ForestaMD`, `RegistroPersonaggiMD`, `RegistroArtefattiMD`, `RegistroMissioniMD`, `NotizieMD`, `IntermezziMD`.
 

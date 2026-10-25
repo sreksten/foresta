@@ -1,18 +1,18 @@
 # foresta-modellodati
 
-Il **contenitore radice dei dati di una partita**: `ModelloDati`, che mette insieme i dati di tutte le parti per salvarli e rileggerli, e i dati delle notizie (`NotizieMD`, `NotiziaMD`, `MessaggioMD`: gli ultimi messaggi mostrati nel pannello di testo e le notizie per la mappa) che non hanno ancora un modulo loro.
+Il **contenitore radice dei dati di una partita**: `ModelloDati`, che mette insieme i dati di tutte le parti per salvarli e rileggerli, e nient'altro: ogni dato ha il suo modulo.
 
 Ogni parte del gioco porta i *suoi* dati (`ArtefattoMD` negli artefatti, `ForestaMD` nella mappa, `PersonaggioMD` nei personaggi, `RegistroMissioniMD` nelle missioni…); questo modulo non ha nessuno di quei dati: li conosce tutti perché è l'unico che deve **scriverli uno dopo l'altro** in un file e **rileggerli**. È anche l'unico che sa dire alle parti dove stanno i loro dati.
 
 ## Dipendenze
 
-**Dichiarate nel pom:** `foresta-missioni`, `foresta-mondo`, `foresta-intermezzi`, `foresta-personaggi`, `foresta-tattiche`, `foresta-serializzazione`, `foresta-mappa`.
+**Dichiarate nel pom:** `foresta-missioni`, `foresta-mondo`, `foresta-intermezzi`, `foresta-personaggi`, `foresta-tattiche`, `foresta-serializzazione`, `foresta-notizie`, `foresta-mappa`.
 
 **Lo dichiarano:** `foresta-motore-api`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 
-Dichiara le parti che hanno dati nel salvataggio: missioni, mondo, intermezzi, personaggi, tattiche, mappa e la serializzazione; gli artefatti, l'economia (cassa e magazzini), i poteri (canti imparati) e le statistiche ci arrivano per transitività. Non conosce il motore, gli eventi né l'interfaccia.
+Dichiara le parti che hanno dati nel salvataggio: missioni, mondo, intermezzi, personaggi, tattiche, mappa, le notizie e la serializzazione; gli artefatti, l'economia (cassa e magazzini), i poteri (canti imparati) e le statistiche ci arrivano per transitività. Non conosce il motore, gli eventi né l'interfaccia.
 
 ## Funzionamento
 
@@ -33,7 +33,7 @@ Un'istanza è **una partita intera**: contiene i dati di
 | i magazzini dei negozi | `MagazziniMD` | economia |
 | le missioni | `RegistroMissioniMD` | missioni |
 | gli intermezzi già mostrati | `IntermezziMD` | intermezzi |
-| le ultime notizie e i messaggi | `NotizieMD` | questo modulo |
+| le ultime notizie e i messaggi | `NotizieMD` | notizie |
 
 più il flag dell'aiuto della barra delle icone. `salva(PrintWriter)` scrive le parti **una dopo l'altra, nell'ordine in cui le rilegge** `leggi(BufferedReader)`, che prima le azzera; `reimposta(dimensioneX, dimensioneY)` le azzera tutte per una partita nuova con una mappa di quelle dimensioni. I salvataggi non devono restare compatibili con le versioni precedenti, quindi cambiare l'ordine o il formato di una parte è lecito.
 
@@ -45,12 +45,8 @@ Le parti statiche (`Foresta`, `GruppoGiocatore`, `Statistiche`, `LineaTemporale`
 
 L'installazione è **esplicita**: la chiama `Main` come prima cosa, e `PartitaDiTest` a ogni partita di prova; un test che usa una di quelle parti senza passare da lì la chiama lui. Chi usa una parte prima dell'installazione riceve un `IllegalStateException` esplicito («Nessuno ha detto alla mappa dove sono i suoi dati…»). Richiamarla non fa danni.
 
-### Le notizie
-
-`NotizieMD` tiene gli ultimi messaggi del pannello di testo (per ripopolarlo dopo un ricaricamento, con la stessa impaginazione: `MessaggioMD` ricorda se un messaggio era l'inizio di un paragrafo o la continuazione di una frase) e le ultime notizie per la schermata della mappa (`NotiziaMD`). La logica che le aggiunge e scarta le più vecchie (`Notizie`) sta nel motore; qui solo i dati.
-
 ## Osservazioni
 
-- Nel piano delle dipendenze è il modulo che deve ridursi: ogni nuova parte con dati propri aggiunge qui una riga in `ModelloDati`; le notizie sono l'ultimo dato rimasto qui senza un modulo loro.
+- Nel piano delle dipendenze è il modulo che deve ridursi: ogni nuova parte con dati propri aggiunge qui una riga in `ModelloDati`. Oggi qui non c'è più nessun dato: resta solo `ModelloDati`.
 - Le collezioni che i dati mostrano sono di sola lettura (viste dell'elenco vero); per cambiarle si passa dai metodi che lo dicono (`aggiungi…`, `togli…`, `riordina…`).
 - Il quadro dei salvataggi è in [`motore_di_gioco.md`](motore_di_gioco.md) §5.

@@ -6,6 +6,7 @@ import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 import com.threeamigos.foresta.canti.CantiImparati;
 import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.notizie.Notizie;
 import com.threeamigos.foresta.economia.MagazziniDeiNegozi;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.mondo.RegistroArtefatti;
@@ -63,6 +64,7 @@ public class ModelloDati implements Serializzabile {
 		RegistroMissioni.setFornitoreDiDati(() -> getIstanza().getRegistroMissioniMD());
 		MagazziniDeiNegozi.setFornitoreDiDati(() -> getIstanza().getMagazziniMD());
 		Cassa.setFornitoreDiDati(() -> getIstanza().getCassaMD());
+		Notizie.setFornitoreDiDati(() -> getIstanza().getNotizieMD());
 	}
 
 	/**

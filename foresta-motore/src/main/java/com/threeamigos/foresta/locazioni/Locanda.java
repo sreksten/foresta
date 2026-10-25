@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.notizie.Notizie;
 import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.tipi.CostantiEconomia;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;

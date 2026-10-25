@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.notizie.Notizie;
 import com.threeamigos.foresta.economia.MagazziniDeiNegozi;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;

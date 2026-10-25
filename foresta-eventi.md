@@ -8,7 +8,7 @@ Esiste come modulo a parte perché *ogni* altro modulo che ha qualcosa da dire a
 
 **Dichiarate nel pom:** `foresta-strumenti`.
 
-**Lo dichiarano:** `foresta-comandi`, `foresta-mappa`, `foresta-personaggi`, `foresta-motore-api`.
+**Lo dichiarano:** `foresta-comandi`, `foresta-mappa`, `foresta-personaggi`, `foresta-notizie`, `foresta-motore-api`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 
