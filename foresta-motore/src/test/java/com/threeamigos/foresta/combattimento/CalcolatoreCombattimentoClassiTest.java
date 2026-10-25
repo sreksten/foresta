@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.combattimento;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.artefatti.IncantamentoMD;
 import com.threeamigos.foresta.attributi.tipi.TipoAttributo;
@@ -45,7 +47,7 @@ class CalcolatoreCombattimentoClassiTest {
         Arma spada = arma(TipoDanno.TAGLIENTE, Collections.emptyList());
         double ladro = danno(new Ladro("Riferimento", 5), spada);
         double guerriero = danno(new Guerriero("Pippo", 5), spada);
-        assertEquals(ladro * Costanti.GUERRIERO_MOLTIPLICATORE_DANNI_FISICI / Costanti.LADRO_MOLTIPLICATORE_DANNI_FISICI, guerriero, 1.0);
+        assertEquals(ladro * CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_DANNI_FISICI / CostantiPersonaggi.LADRO_MOLTIPLICATORE_DANNI_FISICI, guerriero, 1.0);
     }
 
     @Test
@@ -53,7 +55,7 @@ class CalcolatoreCombattimentoClassiTest {
         Arma bastone = arma(TipoDanno.CONTUNDENTE, Collections.emptyList());
         double ladro = danno(new Ladro("Riferimento", 5), bastone);
         double mago = danno(new Mago("Merlino", 5), bastone);
-        assertEquals(ladro * Costanti.MAGO_MOLTIPLICATORE_DANNI_FISICI / Costanti.LADRO_MOLTIPLICATORE_DANNI_FISICI, mago, 1.0);
+        assertEquals(ladro * CostantiPersonaggi.MAGO_MOLTIPLICATORE_DANNI_FISICI / CostantiPersonaggi.LADRO_MOLTIPLICATORE_DANNI_FISICI, mago, 1.0);
     }
 
     @Test
@@ -62,8 +64,8 @@ class CalcolatoreCombattimentoClassiTest {
         double ladro = danno(new Ladro("Riferimento", 5), aria);
         double mago = danno(new Mago("Merlino", 5), aria);
         double guerriero = danno(new Guerriero("Pippo", 5), aria);
-        assertEquals(ladro * Costanti.MAGO_MOLTIPLICATORE_DANNI_MAGICI, mago, 1.0);
-        assertEquals(ladro * Costanti.GUERRIERO_MOLTIPLICATORE_DANNI_MAGICI, guerriero, 1.0);
+        assertEquals(ladro * CostantiPersonaggi.MAGO_MOLTIPLICATORE_DANNI_MAGICI, mago, 1.0);
+        assertEquals(ladro * CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_DANNI_MAGICI, guerriero, 1.0);
     }
 
     @Test
@@ -78,7 +80,7 @@ class CalcolatoreCombattimentoClassiTest {
         IncantamentoMD soloPercentuale = new IncantamentoMD("Fuoco", TipoDanno.FUOCO, 0, 1.0);
         double ladro = dannoIncantamento(new Ladro("Riferimento", 5), soloPercentuale);
         double mago = dannoIncantamento(new Mago("Merlino", 5), soloPercentuale);
-        assertEquals(ladro * Costanti.MAGO_MOLTIPLICATORE_DANNI_MAGICI, mago, 1.0);
+        assertEquals(ladro * CostantiPersonaggi.MAGO_MOLTIPLICATORE_DANNI_MAGICI, mago, 1.0);
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
@@ -41,14 +43,14 @@ class FugaTest {
             Personaggio mago = personaggioInForze(partita, TipoPersonaggio.MAGO);
             int massima = mago.getSaluteMassima();
 
-            Dado.trucca(Costanti.FUGA_DANNO_MINIMO_PERCENTUALE);
+            Dado.trucca(CostantiPersonaggi.FUGA_DANNO_MINIMO_PERCENTUALE);
             mago.fugge();
-            assertEquals(massima - massima * Costanti.FUGA_DANNO_MINIMO_PERCENTUALE / 100, mago.getSalute(), "con il tiro più basso");
+            assertEquals(massima - massima * CostantiPersonaggi.FUGA_DANNO_MINIMO_PERCENTUALE / 100, mago.getSalute(), "con il tiro più basso");
 
             Personaggio altro = personaggioInForze(partita, TipoPersonaggio.MAGO);
-            Dado.trucca(Costanti.FUGA_DANNO_MASSIMO_PERCENTUALE);
+            Dado.trucca(CostantiPersonaggi.FUGA_DANNO_MASSIMO_PERCENTUALE);
             altro.fugge();
-            assertEquals(massima - massima * Costanti.FUGA_DANNO_MASSIMO_PERCENTUALE / 100, altro.getSalute(), "con il tiro più alto");
+            assertEquals(massima - massima * CostantiPersonaggi.FUGA_DANNO_MASSIMO_PERCENTUALE / 100, altro.getSalute(), "con il tiro più alto");
             assertTrue(altro.isVivo());
         }
     }
@@ -59,12 +61,12 @@ class FugaTest {
             for (int salute : new int[]{1, 2, 10}) {
                 Personaggio ferito = personaggioInForze(partita, TipoPersonaggio.MAGO);
                 ferito.subSalute(ferito.getSalute() - salute, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
-                Dado.trucca(Costanti.FUGA_DANNO_MASSIMO_PERCENTUALE);
+                Dado.trucca(CostantiPersonaggi.FUGA_DANNO_MASSIMO_PERCENTUALE);
 
                 ferito.fugge();
 
                 assertTrue(ferito.isVivo(), "chi fugge con " + salute + " punti non muore");
-                int danno = Math.max(1, ferito.getSaluteMassima() * Costanti.FUGA_DANNO_MASSIMO_PERCENTUALE / 100);
+                int danno = Math.max(1, ferito.getSaluteMassima() * CostantiPersonaggi.FUGA_DANNO_MASSIMO_PERCENTUALE / 100);
                 assertEquals(Math.max(1, salute - danno), ferito.getSalute(), "ne perde fino al tiro, ma gliene resta almeno uno");
             }
         }
@@ -77,8 +79,8 @@ class FugaTest {
                 Personaggio mago = personaggioInForze(partita, TipoPersonaggio.MAGO);
                 mago.fugge();
                 assertTrue(mago.isVivo());
-                assertTrue(mago.getSalute() >= mago.getSaluteMassima() * (100 - Costanti.FUGA_DANNO_MASSIMO_PERCENTUALE) / 100 - 1,
-                        "perde al massimo il " + Costanti.FUGA_DANNO_MASSIMO_PERCENTUALE + "%: " + mago.getSalute());
+                assertTrue(mago.getSalute() >= mago.getSaluteMassima() * (100 - CostantiPersonaggi.FUGA_DANNO_MASSIMO_PERCENTUALE) / 100 - 1,
+                        "perde al massimo il " + CostantiPersonaggi.FUGA_DANNO_MASSIMO_PERCENTUALE + "%: " + mago.getSalute());
             }
         }
     }
@@ -95,7 +97,7 @@ class FugaTest {
 
             gruppo.fugge();
 
-            int percentuale = Costanti.FUGA_PERDITA_CONSUMABILI_PERCENTUALE;
+            int percentuale = CostantiPersonaggi.FUGA_PERDITA_CONSUMABILI_PERCENTUALE;
             assertEquals(100 - 100 * percentuale / 100, gruppo.getMonete());
             assertEquals(10 - 10 * percentuale / 100, gruppo.getPozioniSalute());
             assertEquals(5 - 5 * percentuale / 100, gruppo.getIncantesimi(com.threeamigos.foresta.tipi.TipoIncantesimo.FUOCO));

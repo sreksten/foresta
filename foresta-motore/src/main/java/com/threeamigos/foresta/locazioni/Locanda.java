@@ -261,7 +261,7 @@ public class Locanda extends LocazioneBase {
 			}
 
 		case CHI_MANGIA:
-			Personaggio p = gruppo.getPersonaggio(azione);
+			Personaggio p = gruppo.getPersonaggio(azione.getIndicePersonaggio());
 			p.addSalute(Costanti.RECUPERO_SALUTE_DA_PASTO);
 			gruppo.subMonete(Costanti.COSTO_PASTO);
 			BusEventi.pubblica(new InternoPastoConsumatoInLocanda());

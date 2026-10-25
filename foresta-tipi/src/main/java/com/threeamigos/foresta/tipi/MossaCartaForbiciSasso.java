@@ -13,13 +13,6 @@ public enum MossaCartaForbiciSasso {
 	SASSO;
 
 	/**
-	 * Se un personaggio di una data classe può partecipare a carta, forbici e sasso. L'OmbraFiamma non partecipa.
-	 */
-	public static boolean puoGiocare(TipoPersonaggio classe) {
-		return classe != TipoPersonaggio.OMBRAFIAMMA;
-	}
-
-	/**
 	 * Se questa mossa batte l'altra: una mossa non batte mai se stessa.
 	 */
 	public boolean batte(MossaCartaForbiciSasso altra) {

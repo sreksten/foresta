@@ -19,6 +19,7 @@
         <module>foresta-artefatti</module>
         <module>foresta-tipi</module>
         <module>foresta-mappa</module>
+        <module>foresta-personaggi</module>
         <module>foresta-modellodati</module>
         <module>foresta-contratti</module>
         <module>foresta-motore</module>

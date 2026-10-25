@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
@@ -44,7 +46,7 @@ public class Resurrezione implements Incantesimo {
                     ", per cui la sua salute è stata completamente reintegrata.";
 			BusEventi.pubblica(new NotificaTestoFrase(notifica));
 			personaggioBersaglio.addSalute(personaggioBersaglio.getSaluteMassima());
-			personaggioBersaglio.subStanchezza(Costanti.MAX_STANCHEZZA);
+			personaggioBersaglio.subStanchezza(CostantiPersonaggi.MAX_STANCHEZZA);
 		} else {
             String notifica = nome + " è risort" + personaggioBersaglio.getLetteraFinaleAttributo() +
                     " dalle proprie ceneri.";

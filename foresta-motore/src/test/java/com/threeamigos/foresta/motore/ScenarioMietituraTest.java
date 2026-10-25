@@ -128,14 +128,14 @@ class ScenarioMietituraTest {
     void agruppoPienoIlMinionMuoreSenzaScheletro() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(252)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
-            while (partita.gruppo().getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE) {
+            while (partita.gruppo().getNumeroPersonaggi() < CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_TOTALE) {
                 partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno" + partita.gruppo().getNumeroPersonaggi(), 1));
             }
             Personaggio goblin = minionQuasiMorto(partita);
             ApplicazioneDelRisultato.applica(goblin, mietitura(partita.gruppo().getCapo(), goblin));
 
             assertFalse(goblin.isVivo());
-            assertEquals(Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE, partita.gruppo().getNumeroPersonaggi());
+            assertEquals(CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_TOTALE, partita.gruppo().getNumeroPersonaggi());
             partita.pubblica(new InternoFineLocazione());
             assertFalse(RegistroTrofei.isVinto(TipoTrofeo.NECROMANTE), "senza scheletro non c'è nessun aiuto dall'aldilà");
         }

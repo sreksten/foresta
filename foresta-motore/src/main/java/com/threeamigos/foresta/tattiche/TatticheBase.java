@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+
 import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.modellodati.tattiche.*;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
@@ -60,32 +62,32 @@ public final class TatticheBase {
 	private static final Set<TipoPersonaggio> VENDICATIVI = EnumSet.of(TipoPersonaggio.TROLL, TipoPersonaggio.MINOTAURO, TipoPersonaggio.GOBLIN);
 
 	static {
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.ARPIA, Costanti.ARPIA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.CENTAURO, Costanti.CENTAURO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.CHIMERA, Costanti.CHIMERA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.CHIMERA_DRAGO, Costanti.CHIMERADRAGO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.DRAGO, Costanti.DRAGO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.EREMITA, Costanti.EREMITA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.FANTASMA, Costanti.FANTASMA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.FOLLETTO, Costanti.FOLLETTO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.GARGOYLE, Costanti.GARGOYLE_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.GIGANTE, Costanti.GIGANTE_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.GOBLIN, Costanti.GOBLIN_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.HOBGOBLIN, Costanti.HOBGOBLIN_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.IDRA, Costanti.IDRA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.LICH, Costanti.LICH_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.MINOTAURO, Costanti.MINOTAURO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.MINOTAURO_GIGANTE, Costanti.MINOTAUROGIGANTE_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.NECROMANTE, Costanti.NECROMANTE_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.OMBRA_NERA, Costanti.OMBRANERA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.OMBRAFIAMMA, Costanti.OMBRAFIAMMA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.SCHELETRO, Costanti.SCHELETRO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.SPETTRO, Costanti.SPETTRO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.SPIRITO, Costanti.SPIRITO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.STREGA, Costanti.STREGA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.TITANO, Costanti.TITANO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.TROLL, Costanti.TROLL_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.VIVERNA, Costanti.VIVERNA_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.ARPIA, CostantiPersonaggi.ARPIA_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.CENTAURO, CostantiPersonaggi.CENTAURO_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.CHIMERA, CostantiPersonaggi.CHIMERA_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.CHIMERA_DRAGO, CostantiPersonaggi.CHIMERADRAGO_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.DRAGO, CostantiPersonaggi.DRAGO_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.EREMITA, CostantiPersonaggi.EREMITA_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.FANTASMA, CostantiPersonaggi.FANTASMA_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.FOLLETTO, CostantiPersonaggi.FOLLETTO_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.GARGOYLE, CostantiPersonaggi.GARGOYLE_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.GIGANTE, CostantiPersonaggi.GIGANTE_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.GOBLIN, CostantiPersonaggi.GOBLIN_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.HOBGOBLIN, CostantiPersonaggi.HOBGOBLIN_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.IDRA, CostantiPersonaggi.IDRA_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.LICH, CostantiPersonaggi.LICH_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.MINOTAURO, CostantiPersonaggi.MINOTAURO_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.MINOTAURO_GIGANTE, CostantiPersonaggi.MINOTAUROGIGANTE_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.NECROMANTE, CostantiPersonaggi.NECROMANTE_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.OMBRA_NERA, CostantiPersonaggi.OMBRANERA_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.OMBRAFIAMMA, CostantiPersonaggi.OMBRAFIAMMA_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.SCHELETRO, CostantiPersonaggi.SCHELETRO_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.SPETTRO, CostantiPersonaggi.SPETTRO_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.SPIRITO, CostantiPersonaggi.SPIRITO_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.STREGA, CostantiPersonaggi.STREGA_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.TITANO, CostantiPersonaggi.TITANO_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.TROLL, CostantiPersonaggi.TROLL_MAX_INTELLIGENZA);
+		ASTUZIA_MASSIMA.put(TipoPersonaggio.VIVERNA, CostantiPersonaggi.VIVERNA_MAX_INTELLIGENZA);
 	}
 
 	// TODO: i mostri non hanno azioni proprie: oggi le tattiche usano solo l'attacco e gli incantesimi del repertorio. Mancano le abilità caratteristiche, che

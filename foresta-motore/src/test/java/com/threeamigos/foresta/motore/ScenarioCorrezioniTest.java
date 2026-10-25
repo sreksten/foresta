@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.combattimento.AttaccoConLeArmi;
@@ -282,12 +284,12 @@ class ScenarioCorrezioniTest {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
 					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			// Pieno vuol dire anche gli slot dei personaggi temporanei, quelli che un aiuto occuperebbe
-			while (partita.gruppo().getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE) {
+			while (partita.gruppo().getNumeroPersonaggi() < CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_TOTALE) {
 				partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno", 1));
 			}
 			com.threeamigos.foresta.personaggi.Centauro centauro = new com.threeamigos.foresta.personaggi.Centauro(1);
 			for (int i = 0; i < 100; i++) {
-				com.threeamigos.foresta.offerte.Offerta offerta = com.threeamigos.foresta.offerte.FabbricaOfferte.crea(centauro.getOfferta(Comando.CORRUZIONE));
+				com.threeamigos.foresta.offerte.Offerta offerta = com.threeamigos.foresta.offerte.FabbricaOfferte.crea(centauro.getOfferta(TipoApproccio.CORRUZIONE));
 				assertTrue(!(offerta instanceof com.threeamigos.foresta.offerte.AiutoGratuito)
 						&& !(offerta instanceof com.threeamigos.foresta.offerte.AiutoMercenario), "offerto aiuto a gruppo pieno");
 			}

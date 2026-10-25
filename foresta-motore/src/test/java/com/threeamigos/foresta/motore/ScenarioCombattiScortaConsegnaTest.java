@@ -102,12 +102,12 @@ class ScenarioCombattiScortaConsegnaTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(74)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
-            while (partita.gruppo().getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE) {
+            while (partita.gruppo().getNumeroPersonaggi() < CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_TOTALE) {
                 partita.gruppo().aggiungiPersonaggioSenzaNotificare(new com.threeamigos.foresta.personaggi.Guerriero("Compagno", 1));
             }
             IlPellegrino pellegrino = prendiIncaricoAllaSecondaVisita(IlPellegrino.class);
             assertTrue(pellegrino.getScortato().isPresent());
-            assertEquals(Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE, partita.gruppo().getNumeroPersonaggi());
+            assertEquals(CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_TOTALE, partita.gruppo().getNumeroPersonaggi());
         }
     }
 

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.personaggi.TipoApproccio;
+
 import com.threeamigos.foresta.mappa.CategoriaLocazione;
 
 import com.threeamigos.foresta.mappa.Foresta;
@@ -605,9 +607,9 @@ public abstract class LocazioneBase implements Locazione {
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
 				}
-				gruppo.consumaPozioneSalute(azione);
+				gruppo.consumaPozioneSalute(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
-				return dopoUnaPozione(gruppo.getPersonaggio(azione));
+				return dopoUnaPozione(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 
 			case CHI_BEVE_POZIONE_SALUTE_GRANDE:
 				Logger.log("LocazioneBase.CHI_BEVE_POZIONE_SALUTE_GRANDE");
@@ -615,9 +617,9 @@ public abstract class LocazioneBase implements Locazione {
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
 				}
-				gruppo.consumaPozioneSaluteGrande(azione);
+				gruppo.consumaPozioneSaluteGrande(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
-				return dopoUnaPozione(gruppo.getPersonaggio(azione));
+				return dopoUnaPozione(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 
 			case CHI_BEVE_POZIONE_MAGIA:
 				Logger.log("LocazioneBase.CHI_BEVE_POZIONE_MAGIA");
@@ -625,9 +627,9 @@ public abstract class LocazioneBase implements Locazione {
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
 				}
-				gruppo.consumaPozioneMagia(azione);
+				gruppo.consumaPozioneMagia(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
-				return dopoUnaPozione(gruppo.getPersonaggio(azione));
+				return dopoUnaPozione(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 
 			case CHI_BEVE_POZIONE_MAGIA_GRANDE:
 				Logger.log("LocazioneBase.CHI_BEVE_POZIONE_MAGIA_GRANDE");
@@ -635,9 +637,9 @@ public abstract class LocazioneBase implements Locazione {
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
 				}
-				gruppo.consumaPozioneMagiaGrande(azione);
+				gruppo.consumaPozioneMagiaGrande(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
-				return dopoUnaPozione(gruppo.getPersonaggio(azione));
+				return dopoUnaPozione(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 
 			case CHI_BEVE_POZIONE_AUMENTO_LIVELLO:
 				Logger.log("LocazioneBase.CHI_BEVE_POZIONE_AUMENTO_LIVELLO");
@@ -645,16 +647,16 @@ public abstract class LocazioneBase implements Locazione {
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
 				}
-				gruppo.consumaPozioneAumentoLivello(azione);
+				gruppo.consumaPozioneAumentoLivello(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
-				return dopoUnaPozione(gruppo.getPersonaggio(azione));
+				return dopoUnaPozione(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 
 			case CHI_FORMULA:
 				Logger.log("LocazioneBase.CHI_FORMULA");
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
 				}
-				gruppo.setFormulante(gruppo.getPersonaggio(azione));
+				gruppo.setFormulante(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 				statoLocazione = StatoLocazione.QUALE_FORMULA;
 				return Stato.SCELTA_INCANTESIMO_DA_LANCIARE;
 
@@ -778,7 +780,7 @@ public abstract class LocazioneBase implements Locazione {
 					// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
 					return annullaScelta();
 				}
-				Personaggio personaggioBersaglio = gruppoBersaglio.getPersonaggio(azione);
+				Personaggio personaggioBersaglio = gruppoBersaglio.getPersonaggio(azione.getIndicePersonaggio());
 				Personaggio formulanteScelto = gruppo.getFormulante();
 				annunciaAzione(formulanteScelto, personaggioBersaglio);
 				incantesimo.formula(formulanteScelto, personaggioBersaglio, null);
@@ -805,7 +807,7 @@ public abstract class LocazioneBase implements Locazione {
 					BusEventi.pubblica(new InternoCorruzioneRiuscita(classiAvversariVivi()));
 					setOggetto(null);
 
-					offerta = creaOfferta(gruppoAvversario.getCapo().getOfferta(Comando.CORRUZIONE));
+					offerta = creaOfferta(gruppoAvversario.getCapo().getOfferta(TipoApproccio.CORRUZIONE));
 					if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
 						BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
 						if (offerta.isGratuita(gruppo, gruppoAvversario)) {
@@ -822,7 +824,7 @@ public abstract class LocazioneBase implements Locazione {
 					setCompleta(true);
 					return Stato.FINE_LOCAZIONE;
 				} else {
-					Personaggio p = gruppo.getPersonaggio(azione);
+					Personaggio p = gruppo.getPersonaggio(azione.getIndicePersonaggio());
 					// Se fallisce, per qualunque motivo (anche se mancano le monete per pagare), c'è sempre uno spregio
 					String descrizione = subisciUnoSpregio(p);
 					String tentativo = "Il tentativo di corruzione " + p.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA)
@@ -846,8 +848,8 @@ public abstract class LocazioneBase implements Locazione {
 					// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
 					return annullaScelta();
 				}
-				Personaggio personaggio = gruppo.getPersonaggio(azione);
-				int tiroDelDado = Dado.tira(Costanti.FACCE_DEL_DADO_DELL_AMICIZIA);
+				Personaggio personaggio = gruppo.getPersonaggio(azione.getIndicePersonaggio());
+				int tiroDelDado = Dado.tira(CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA);
 				Logger.log(() -> "Carisma personaggio: " + personaggio.getCarisma() + "; tiro del dado: " + tiroDelDado);
 				if (personaggio.getCarisma() > tiroDelDado) {
 					personaggio.addCarisma(1);
@@ -859,11 +861,11 @@ public abstract class LocazioneBase implements Locazione {
 							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " riesce a stringere amicizia."));
 
 					// Finché la missione La sfida dei campioni non è partita, a volte l'avversario sfida invece di offrire
-					if (!RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI) && MossaCartaForbiciSasso.puoGiocare(gruppoAvversario.getCapo().getClasse())
+					if (!RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI) && PartitaCartaForbiciSasso.puoGiocare(gruppoAvversario.getCapo().getClasse())
 							&& Dado.tira(100) <= Costanti.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO) {
 						return iniziaLaSfida();
 					}
-					offerta = creaOfferta(gruppoAvversario.getCapo().getOfferta(Comando.AMICIZIA));
+					offerta = creaOfferta(gruppoAvversario.getCapo().getOfferta(TipoApproccio.AMICIZIA));
 					if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
 						BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
 						if (offerta.isGratuita(gruppo, gruppoAvversario)) {
@@ -1729,7 +1731,7 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		if (azione.isPersonaggio()) {
 			// Il giocatore sceglie chi agisce per primo fra i suoi: poi la rotazione prosegue
-			combattente = gruppo.getPersonaggio(azione);
+			combattente = gruppo.getPersonaggio(azione.getIndicePersonaggio());
 			statoDelCombattimento.faAgirePerPrimo(gruppo, combattente);
 			impostaComandiPossibili();
 			return Stato.IN_COMBATTIMENTO;
@@ -1916,7 +1918,7 @@ public abstract class LocazioneBase implements Locazione {
 	 */
 	private Stato gestisciChiEsegueSingoloAttacco(Comando azione) {
 		Logger.log("LocazioneBase.CHI_ESEGUE_SINGOLO_ATTACCO");
-		combattente = gruppo.getPersonaggio(azione);
+		combattente = gruppo.getPersonaggio(azione.getIndicePersonaggio());
 		String nome = combattente.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 		BusEventi.pubblica(new NotificaTestoFrase(nome + " lancia un attacco."));
 		opzioneAmiciziaDisponibile = false;
@@ -2135,7 +2137,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * Chi accetta la sfida a duello resta in campo, gli altri vanno in panchina.
 	 */
 	private void gestisciChiDuella(Comando azione) {
-		Personaggio duellante = gruppo.getPersonaggio(azione);
+		Personaggio duellante = gruppo.getPersonaggio(azione.getIndicePersonaggio());
 		boolean altri = false;
 		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
 			if (personaggio != duellante) {
@@ -2161,7 +2163,7 @@ public abstract class LocazioneBase implements Locazione {
 
 	private void gestisciChiCombatte(Comando azione) {
 		Logger.log("LocazioneBase.CHI_COMBATTE");
-		combattente = gruppo.getPersonaggio(azione);
+		combattente = gruppo.getPersonaggio(azione.getIndicePersonaggio());
 		String nome = combattente.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 		BusEventi.pubblica(new NotificaTestoFrase(nome + " inizia il combattimento."));
 		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(combattente, gruppoAvversario.getPersonaggioVivo()));

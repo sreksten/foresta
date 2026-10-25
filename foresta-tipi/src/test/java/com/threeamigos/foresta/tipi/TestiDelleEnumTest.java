@@ -13,7 +13,6 @@ import com.threeamigos.foresta.danni.tipi.TipoDanno;
 import com.threeamigos.foresta.danni.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.testi.Testi;
-import com.threeamigos.foresta.tipi.tattiche.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,8 +34,6 @@ class TestiDelleEnumTest {
 	private static final Map<Class<? extends Enum<?>>, List<String>> ENUM = new LinkedHashMap<>();
 
 	static {
-		ENUM.put(CategoriaPersonaggio.class, Collections.singletonList("NOME"));
-		ENUM.put(TipoIncantesimo.class, Arrays.asList("NOME", "NOME_SINGOLARE", "NOME_PLURALE", "EFFETTO"));
 		ENUM.put(TipoArtefatto.class, Arrays.asList("DESCRIZIONE", "UTILIZZO"));
 		ENUM.put(TipoAttributo.class, Arrays.asList("NOME", "DESCRIZIONE"));
 		ENUM.put(TipoDanno.class, Collections.singletonList("NOME"));
@@ -46,13 +43,7 @@ class TestiDelleEnumTest {
 		ENUM.put(TipoNegozio.class, Collections.singletonList("NOME"));
 		ENUM.put(TipoRaritaArtefatto.class, Collections.singletonList("NOME"));
 		ENUM.put(TipoTrofeo.class, Arrays.asList("NOME", "DESCRIZIONE"));
-		ENUM.put(TipoCanto.class, Arrays.asList("NOME", "DESCRIZIONE"));
 		ENUM.put(GradoIncantamento.class, Collections.singletonList("NOME"));
-		ENUM.put(TipoAzione.class, Collections.singletonList("DESCRIZIONE"));
-		ENUM.put(TipoFiltro.class, Collections.singletonList("DESCRIZIONE"));
-		ENUM.put(TipoOrdinamento.class, Collections.singletonList("DESCRIZIONE"));
-		ENUM.put(TipoPredicato.class, Collections.singletonList("DESCRIZIONE"));
-		ENUM.put(TipoRosa.class, Collections.singletonList("DESCRIZIONE"));
 	}
 
 	@AfterEach
@@ -144,7 +135,6 @@ class TestiDelleEnumTest {
 	void ilNomeDelFileDeiTestiDelleEnumDelGiocoEQuelloAtteso() {
 		assertEquals("tipo_attributo", Testi.nomeDelFile(TipoAttributo.class));
 		assertEquals("tipo_interazione_con_effetti_di_stato", Testi.nomeDelFile(TipoInterazioneConEffettiDiStato.class));
-		assertEquals("tipo_rosa", Testi.nomeDelFile(TipoRosa.class));
 	}
 
 	@Test
@@ -155,6 +145,5 @@ class TestiDelleEnumTest {
 
 		assertEquals(italiano, TipoAttributo.FORZA.getNome());
 		assertEquals("Forza", TipoAttributo.FORZA.getNome());
-		assertEquals(TipoRosa.ALLEATI.getDescrizione(), Testi.testo(TipoRosa.ALLEATI, "DESCRIZIONE").get());
 	}
 }

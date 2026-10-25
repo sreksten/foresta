@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.motore.PartitaCartaForbiciSasso;
+
 import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaRefreshUI;
@@ -197,7 +199,7 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 	public static List<TipoPersonaggio> classiAmichevoli() {
 		List<TipoPersonaggio> classi = new ArrayList<>();
 		for (TipoPersonaggio classe : TipoPersonaggio.values()) {
-			if (FabbricaPersonaggi.modello(classe).isAmichevole() && MossaCartaForbiciSasso.puoGiocare(classe)) {
+			if (FabbricaPersonaggi.modello(classe).isAmichevole() && PartitaCartaForbiciSasso.puoGiocare(classe)) {
 				classi.add(classe);
 			}
 		}

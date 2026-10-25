@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.combattimento;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+
 import com.threeamigos.foresta.artefatti.*;
 import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.artefatti.tipi.TipoArtefatto;
@@ -58,7 +60,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
         difensore.addArtefatto(pezzoIncantato(TipoArtefatto.ELMO, 2, TipoDanno.FUOCO, 5, 0.10));
         difensore.addArtefatto(pezzoIncantato(TipoArtefatto.SCUDO, 1, TipoDanno.FUOCO, 5, 0.10));
         // (30 + resistenza magica dello scudo + 5 × 2 + 5 × 1) × (1 + 0,05 + 0,05)
-        double base = 30 + Costanti.SCUDO_RESISTENZA_MAGICA_PER_LIVELLO;
+        double base = 30 + CostantiPersonaggi.SCUDO_RESISTENZA_MAGICA_PER_LIVELLO;
         assertEquals((base + 15) * 1.1, CalcolatoreCombattimento.difesaContro(difensore, TipoDanno.FUOCO), DELTA);
     }
 
@@ -108,7 +110,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
         List<FaseDiAttacco> fasi = CalcolatoreCombattimento.fasiDiAttacco(ladro);
         assertEquals(2, fasi.size());
         assertEquals(1.0, fasi.get(0).getFattore(), DELTA);
-        assertEquals(Costanti.DOPPIA_ARMA_FATTORE_SECONDA_ARMA, fasi.get(1).getFattore(), DELTA);
+        assertEquals(CostantiPersonaggi.DOPPIA_ARMA_FATTORE_SECONDA_ARMA, fasi.get(1).getFattore(), DELTA);
     }
 
     @Test
@@ -124,9 +126,9 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
         Arma spada = arma(TipoDanno.TAGLIENTE);
         int pieno = CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, spada, 1.0).getDanno();
         int ridotto = CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, spada,
-                Costanti.DOPPIA_ARMA_FATTORE_SECONDA_ARMA).getDanno();
+                CostantiPersonaggi.DOPPIA_ARMA_FATTORE_SECONDA_ARMA).getDanno();
         // Il danno mitigato si arrotonda per difetto: al più un punto di scarto
-        assertEquals(pieno * Costanti.DOPPIA_ARMA_FATTORE_SECONDA_ARMA, ridotto, 1.0);
+        assertEquals(pieno * CostantiPersonaggi.DOPPIA_ARMA_FATTORE_SECONDA_ARMA, ridotto, 1.0);
     }
 
     // --- Parata
@@ -135,7 +137,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     void loScudoDaUnaParataMinimaPiuUnaPerLivello() {
         Guerriero guerriero = conParata(new Guerriero("Pippo", 5), 20);
         guerriero.addArtefatto(artefatto(TipoArtefatto.SCUDO, 4));
-        assertEquals(20 + Costanti.SCUDO_PARATA_MINIMA + 4 * Costanti.SCUDO_PARATA_PER_LIVELLO, guerriero.getParata());
+        assertEquals(20 + CostantiPersonaggi.SCUDO_PARATA_MINIMA + 4 * CostantiPersonaggi.SCUDO_PARATA_PER_LIVELLO, guerriero.getParata());
     }
 
     @Test
@@ -143,15 +145,15 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
         Guerriero guerriero = conParata(new Guerriero("Pippo", 5), 20);
         guerriero.addArtefatto(artefatto(TipoArtefatto.ELMO, 1));
         guerriero.addArtefatto(artefatto(TipoArtefatto.ARMATURA, 3));
-        assertEquals(20 + Costanti.ELMO_PARATA_MINIMA + Costanti.ELMO_PARATA_PER_LIVELLO
-                + Costanti.ARMATURA_PARATA_MINIMA + 3 * Costanti.ARMATURA_PARATA_PER_LIVELLO, guerriero.getParata());
+        assertEquals(20 + CostantiPersonaggi.ELMO_PARATA_MINIMA + CostantiPersonaggi.ELMO_PARATA_PER_LIVELLO
+                + CostantiPersonaggi.ARMATURA_PARATA_MINIMA + 3 * CostantiPersonaggi.ARMATURA_PARATA_PER_LIVELLO, guerriero.getParata());
     }
 
     @Test
     void ancheGliSchinieriDannoUnaParataMinima() {
         Guerriero guerriero = conParata(new Guerriero("Pippo", 5), 20);
         guerriero.addArtefatto(artefatto(TipoArtefatto.SCHINIERI, 4));
-        assertEquals(20 + Costanti.SCHINIERI_PARATA_MINIMA + 4 * Costanti.SCHINIERI_PARATA_PER_LIVELLO, guerriero.getParata());
+        assertEquals(20 + CostantiPersonaggi.SCHINIERI_PARATA_MINIMA + 4 * CostantiPersonaggi.SCHINIERI_PARATA_PER_LIVELLO, guerriero.getParata());
     }
 
     @Test
@@ -159,20 +161,20 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
         Mago mago = conParata(conResistenzaMagica(new Mago("Merlino", 5), 20), 20);
         mago.addArtefatto(artefatto(TipoArtefatto.VESTE, 3));
         assertEquals(20, mago.getParata());
-        assertEquals(20 + Costanti.ARMATURA_PARATA_MINIMA + 3 * Costanti.ARMATURA_PARATA_PER_LIVELLO, mago.getResistenzaMagica());
+        assertEquals(20 + CostantiPersonaggi.ARMATURA_PARATA_MINIMA + 3 * CostantiPersonaggi.ARMATURA_PARATA_PER_LIVELLO, mago.getResistenzaMagica());
     }
 
     @Test
     void loScudoDaResistenzaMagicaDiPiuSeERaro() {
         Guerriero comune = conResistenzaMagica(new Guerriero("Pippo", 5), 20);
         comune.addArtefatto(artefatto(TipoArtefatto.SCUDO, 4));
-        assertEquals(20 + 4 * Costanti.SCUDO_RESISTENZA_MAGICA_PER_LIVELLO, comune.getResistenzaMagica());
+        assertEquals(20 + 4 * CostantiPersonaggi.SCUDO_RESISTENZA_MAGICA_PER_LIVELLO, comune.getResistenzaMagica());
 
         Guerriero raro = conResistenzaMagica(new Guerriero("Pippo", 5), 20);
         Artefatto scudoRaro = artefatto(TipoArtefatto.SCUDO, 4);
         scudoRaro.getModelloDati().setRarita(TipoRaritaArtefatto.RARO);
         raro.addArtefatto(scudoRaro);
-        assertEquals(20 + 4 * Costanti.SCUDO_RARO_RESISTENZA_MAGICA_PER_LIVELLO, raro.getResistenzaMagica());
+        assertEquals(20 + 4 * CostantiPersonaggi.SCUDO_RARO_RESISTENZA_MAGICA_PER_LIVELLO, raro.getResistenzaMagica());
     }
 
     @Test
@@ -215,8 +217,8 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
 
     @Test
     void allElfoIlLibroMagicoDaMetaBonusMaAiutaComunque() {
-        assertEquals(Costanti.LIBRO_MAGICO_FATTORE_ELFO, CalcolatoreCombattimento.fattoreLibroMagico(new Elfo("Legolas", 4)), DELTA);
-        assertEquals(Costanti.LIBRO_MAGICO_FATTORE_ELFO, CalcolatoreCombattimento.fattoreLibroMagico(new Elfa("Arwen", 4)), DELTA);
+        assertEquals(CostantiPersonaggi.LIBRO_MAGICO_FATTORE_ELFO, CalcolatoreCombattimento.fattoreLibroMagico(new Elfo("Legolas", 4)), DELTA);
+        assertEquals(CostantiPersonaggi.LIBRO_MAGICO_FATTORE_ELFO, CalcolatoreCombattimento.fattoreLibroMagico(new Elfa("Arwen", 4)), DELTA);
         assertEquals(1.0d, CalcolatoreCombattimento.fattoreLibroMagico(new Mago("Merlino", 4)), DELTA);
 
         Elfo elfo = new Elfo("Legolas", 4);

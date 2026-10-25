@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.BancoDiLavoro;
 import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
@@ -200,12 +202,12 @@ public final class CommercioDelGruppo {
 					break;
 				case AUMENTO_MAGIA_SINGOLO:
 					gruppo.getPersonaggi().stream().filter(p -> p.getUuid().equals(comandoAcquistoConsumabile.getUuidPersonaggio())).findFirst()
-							.ifPresent(p -> p.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "ALCHIMISTA"));
+							.ifPresent(p -> p.addMagiaMassima(CostantiPersonaggi.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "ALCHIMISTA"));
 					break;
 				case AUMENTO_MAGIA_GRUPPO:
 					for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
 						if (!personaggio.isPNG()) {
-							personaggio.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "ALCHIMISTA");
+							personaggio.addMagiaMassima(CostantiPersonaggi.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "ALCHIMISTA");
 						}
 					}
 					break;

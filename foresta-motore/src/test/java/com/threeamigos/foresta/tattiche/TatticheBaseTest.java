@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.effettidistato.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.modellodati.ModelloDati;
@@ -118,9 +120,9 @@ class TatticheBaseTest {
 
     @Test
     void leFasceDiAstuziaSeguonoLeSoglieELeRitoccateIntelligenze() {
-        assertTrue(Costanti.FOLLETTO_MAX_INTELLIGENZA > Costanti.GOBLIN_MAX_INTELLIGENZA, "il Folletto sta sopra il Goblin");
-        assertTrue(Costanti.FOLLETTO_MAX_INTELLIGENZA < Costanti.HOBGOBLIN_MAX_INTELLIGENZA, "e sotto l'Hobgoblin");
-        assertTrue(Costanti.OMBRANERA_MAX_INTELLIGENZA >= 31, "l'Ombra Nera entra nel quarto livello");
+        assertTrue(CostantiPersonaggi.FOLLETTO_MAX_INTELLIGENZA > CostantiPersonaggi.GOBLIN_MAX_INTELLIGENZA, "il Folletto sta sopra il Goblin");
+        assertTrue(CostantiPersonaggi.FOLLETTO_MAX_INTELLIGENZA < CostantiPersonaggi.HOBGOBLIN_MAX_INTELLIGENZA, "e sotto l'Hobgoblin");
+        assertTrue(CostantiPersonaggi.OMBRANERA_MAX_INTELLIGENZA >= 31, "l'Ombra Nera entra nel quarto livello");
         // Un goblin non ha le fasce alte: due voci. Un drago le ha tutte.
         assertEquals(2, TatticheBase.deiMostri(TipoPersonaggio.GOBLIN).getVoci().size());
         assertTrue(TatticheBase.deiMostri(TipoPersonaggio.DRAGO).getVoci().size() > TatticheBase.deiMostri(TipoPersonaggio.HOBGOBLIN).getVoci().size());

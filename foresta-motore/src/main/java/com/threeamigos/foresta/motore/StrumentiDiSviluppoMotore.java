@@ -101,7 +101,7 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
     @Override
     public void impostaLivello(String uuidPersonaggio, int livello) {
         PersonaggioMD md = personaggio(uuidPersonaggio).getModelloDati();
-        int nuovo = Math.max(1, Math.min(livello, Costanti.MASSIMO_LIVELLO));
+        int nuovo = Math.max(1, Math.min(livello, CostantiPersonaggi.MASSIMO_LIVELLO));
         md.setLivello(nuovo);
         md.setEsperienza(GestoreProgressione.getXpNecessariPerLivello(nuovo));
         aggiornaLaUI();
@@ -231,7 +231,7 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
 
     @Override
     public void impostaLivelloDelMondo(int livello) {
-        Statistiche.impostaLivelloDelMondo(Math.max(1, Math.min(livello, Costanti.MASSIMO_LIVELLO)));
+        Statistiche.impostaLivelloDelMondo(Math.max(1, Math.min(livello, CostantiPersonaggi.MASSIMO_LIVELLO)));
         aggiornaLaUI();
     }
 

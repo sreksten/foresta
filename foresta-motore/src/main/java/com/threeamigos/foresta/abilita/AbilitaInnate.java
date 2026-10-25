@@ -67,7 +67,7 @@ public final class AbilitaInnate {
 	public static boolean puoUsare(Personaggio personaggio, TipoAbilita tipo) {
 		return personaggio.isVivo() && conosciutaDa(personaggio.getClasse(), tipo)
 				&& !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)
-				&& personaggio.getMagia() >= tipo.getCostoLancio(personaggio.getClasse());
+				&& personaggio.getMagia() >= CostoDelleAbilita.di(tipo, personaggio.getClasse());
 	}
 
 	/**

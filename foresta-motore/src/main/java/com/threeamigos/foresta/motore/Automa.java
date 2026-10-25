@@ -1449,7 +1449,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciComandoInStatoAttesaPozioneSalute(Comando comando) {
 		if (comando != null && comando != Comando.ANNULLA) {
-			gruppo.consumaPozioneSalute(comando);
+			gruppo.consumaPozioneSalute(gruppo.getPersonaggio(comando.getIndicePersonaggio()));
 		}
 		stato = Stato.ATTESA_DIREZIONE;
 		return Esito.CONTINUA_CON_INGRESSO;
@@ -1457,7 +1457,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciComandoInStatoAttesaPozioneSaluteGrande(Comando comando) {
 		if (comando != null && comando != Comando.ANNULLA) {
-			gruppo.consumaPozioneSaluteGrande(comando);
+			gruppo.consumaPozioneSaluteGrande(gruppo.getPersonaggio(comando.getIndicePersonaggio()));
 		}
 		stato = Stato.ATTESA_DIREZIONE;
 		return Esito.CONTINUA_CON_INGRESSO;
@@ -1465,7 +1465,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciComandoInStatoAttesaPozioneMagia(Comando comando) {
 		if (comando != null && comando != Comando.ANNULLA) {
-			gruppo.consumaPozioneMagia(comando);
+			gruppo.consumaPozioneMagia(gruppo.getPersonaggio(comando.getIndicePersonaggio()));
 		}
 		stato = Stato.ATTESA_DIREZIONE;
 		return Esito.CONTINUA_CON_INGRESSO;
@@ -1473,7 +1473,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciComandoInStatoAttesaPozioneMagiaGrande(Comando comando) {
 		if (comando != null && comando != Comando.ANNULLA) {
-			gruppo.consumaPozioneMagiaGrande(comando);
+			gruppo.consumaPozioneMagiaGrande(gruppo.getPersonaggio(comando.getIndicePersonaggio()));
 		}
 		stato = Stato.ATTESA_DIREZIONE;
 		return Esito.CONTINUA_CON_INGRESSO;
@@ -1481,7 +1481,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciComandoInStatoAttesaPozioneAumentoLivello(Comando comando) {
 		if (comando != null && comando != Comando.ANNULLA) {
-			gruppo.consumaPozioneAumentoLivello(comando);
+			gruppo.consumaPozioneAumentoLivello(gruppo.getPersonaggio(comando.getIndicePersonaggio()));
 		}
 		stato = Stato.ATTESA_DIREZIONE;
 		return Esito.CONTINUA_CON_INGRESSO;
@@ -1513,7 +1513,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			stato = Stato.ATTESA_DIREZIONE;
 			return Esito.CONTINUA_CON_INGRESSO;
 		}
-		formulanteResurrezione = gruppo.getPersonaggio(comando);
+		formulanteResurrezione = gruppo.getPersonaggio(comando.getIndicePersonaggio());
 		stato = Stato.SCELTA_BERSAGLIO_RESURREZIONE;
 		return Esito.CONTINUA_CON_INGRESSO;
 	}
@@ -1538,7 +1538,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciComandoInStatoEsecuzioneResurrezione(Comando comando) {
 		if (comando != Comando.ANNULLA) {
-			eseguiResurrezione(formulanteResurrezione, gruppo.getPersonaggio(comando));
+			eseguiResurrezione(formulanteResurrezione, gruppo.getPersonaggio(comando.getIndicePersonaggio()));
 		}
 		formulanteResurrezione = null;
 		stato = Stato.ATTESA_DIREZIONE;

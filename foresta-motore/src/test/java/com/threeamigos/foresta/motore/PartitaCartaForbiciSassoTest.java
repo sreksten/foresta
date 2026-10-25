@@ -35,8 +35,8 @@ class PartitaCartaForbiciSassoTest {
 
     @Test
     void l_ombrafiammaESegretaENonPartecipa() {
-        assertFalse(MossaCartaForbiciSasso.puoGiocare(TipoPersonaggio.OMBRAFIAMMA));
-        assertTrue(MossaCartaForbiciSasso.puoGiocare(TipoPersonaggio.GUERRIERO));
+        assertFalse(PartitaCartaForbiciSasso.puoGiocare(TipoPersonaggio.OMBRAFIAMMA));
+        assertTrue(PartitaCartaForbiciSasso.puoGiocare(TipoPersonaggio.GUERRIERO));
         assertFalse(LaSfidaDeiCampioni.classiAmichevoli().contains(TipoPersonaggio.OMBRAFIAMMA));
         assertFalse(LaSfidaDeiCampioni.classiAmichevoli().isEmpty());
     }
@@ -97,5 +97,12 @@ class PartitaCartaForbiciSassoTest {
             partita.gioca(CARTA);
         }
         assertThrows(IllegalStateException.class, () -> partita.gioca(CARTA));
+    }
+
+    @Test
+    void soloLOmbrafiammaNonGiocaACartaForbiciESasso() {
+        for (TipoPersonaggio classe : TipoPersonaggio.values()) {
+            assertEquals(classe != TipoPersonaggio.OMBRAFIAMMA, PartitaCartaForbiciSasso.puoGiocare(classe), classe.name());
+        }
     }
 }

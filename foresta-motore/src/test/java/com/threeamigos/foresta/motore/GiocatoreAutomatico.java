@@ -251,7 +251,7 @@ final class GiocatoreAutomatico {
 		GruppoGiocatore gruppo = partita.gruppo();
 		boolean grande = comandi.contains(Comando.POZIONE_SALUTE_GRANDE) && gruppo.getPozioniSaluteGrande() > 0;
 		boolean piccola = comandi.contains(Comando.POZIONE_SALUTE) && gruppo.getPozioniSalute() > 0;
-		if (grande && (mancante >= Costanti.RECUPERO_DA_POZIONE_SALUTE_GRANDE || !piccola)) {
+		if (grande && (mancante >= CostantiPersonaggi.RECUPERO_DA_POZIONE_SALUTE_GRANDE || !piccola)) {
 			return Comando.POZIONE_SALUTE_GRANDE;
 		}
 		return piccola ? Comando.POZIONE_SALUTE : null;
@@ -635,7 +635,7 @@ final class GiocatoreAutomatico {
 
 	private static double probabilitaAmicizia(GruppoGiocatore gruppo) {
 		// Riesce se il carisma supera un tiro del dado dell'amicizia (LocazioneBase, CHI_FA_AMICIZIA)
-		int facce = Costanti.FACCE_DEL_DADO_DELL_AMICIZIA;
+		int facce = CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA;
 		return Math.min(facce, Math.max(0, piuCarismatico(gruppo).getCarisma() - 1)) / (double) facce;
 	}
 
@@ -1169,7 +1169,7 @@ final class GiocatoreAutomatico {
 			// Le pozioni si contano solo per il capo, che le beve per primo
 			if (capo) {
 				int pozioni = Math.min(POZIONI_NELLA_STIMA, gruppo.getPozioniSalute() + gruppo.getPozioniSaluteGrande());
-				salute += pozioni * Math.min(Costanti.RECUPERO_DA_POZIONE_SALUTE, p.getSaluteMassima() * 0.66d);
+				salute += pozioni * Math.min(CostantiPersonaggi.RECUPERO_DA_POZIONE_SALUTE, p.getSaluteMassima() * 0.66d);
 			}
 			return salute;
 		}

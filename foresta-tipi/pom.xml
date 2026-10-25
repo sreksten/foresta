@@ -22,16 +22,19 @@
             <groupId>com.threeamigos</groupId>
             <artifactId>foresta-danni</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.threeamigos</groupId>
             <artifactId>foresta-effettidistato</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.threeamigos</groupId>
             <artifactId>foresta-attributi</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.threeamigos</groupId>

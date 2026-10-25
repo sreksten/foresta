@@ -227,6 +227,13 @@ public enum Comando {
 	}
 
 	/**
+	 * La posizione nel gruppo del personaggio indicato da questo comando, contando da 0 (PERSONAGGIO_1 è 0).
+	 */
+	public int getIndicePersonaggio() {
+		return ordinal() - PERSONAGGIO_1.ordinal();
+	}
+
+	/**
 	 * Se il comando indica uno dei personaggi del gruppo (PERSONAGGIO_1 ... PERSONAGGIO_8).
 	 */
 	public boolean isPersonaggio() {

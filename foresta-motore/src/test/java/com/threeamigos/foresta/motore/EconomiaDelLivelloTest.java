@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
@@ -32,9 +34,9 @@ class EconomiaDelLivelloTest {
         // Senza la modalità di prova, che nelle altre partite di test dà 9999 monete
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(33)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
-            assertEquals(150, Costanti.MONETE_INIZIALI);
-            assertEquals(Costanti.MONETE_INIZIALI, partita.gruppo().getMonete());
-            assertEquals(Costanti.PREZIOSI_INIZIALI, partita.gruppo().getPreziosi());
+            assertEquals(150, CostantiPersonaggi.MONETE_INIZIALI);
+            assertEquals(CostantiPersonaggi.MONETE_INIZIALI, partita.gruppo().getMonete());
+            assertEquals(CostantiPersonaggi.PREZIOSI_INIZIALI, partita.gruppo().getPreziosi());
         }
     }
 

@@ -2,6 +2,7 @@ package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.mappa.ForestaMD;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
@@ -34,6 +35,7 @@ public class ModelloDati implements Serializzabile {
 	// La mappa non conosce il modello dati: gli dice lei dove sono i suoi dati, e li prende sempre da quello in corso
 	static {
 		Foresta.setFornitoreDiDati(() -> getIstanza().getForestaMD());
+		GruppoGiocatore.setFornitoreDiDati(() -> getIstanza().getGruppoGiocatoreMD());
 	}
 
 	/**

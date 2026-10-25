@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.offerte;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.motore.GruppoAvversario;
@@ -26,7 +28,7 @@ public class AiutoMercenario implements Offerta {
 	@Override
 	public boolean isFattibile(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		// A gruppo pieno nessuno si puo' unire (vedi anche PersonaggioBase.getOfferta)
-		if (gruppo.getNumeroPersonaggi() >= Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE) {
+		if (gruppo.getNumeroPersonaggi() >= CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_TOTALE) {
 			return false;
 		}
 		if (gruppo.getMonete() < costo) {

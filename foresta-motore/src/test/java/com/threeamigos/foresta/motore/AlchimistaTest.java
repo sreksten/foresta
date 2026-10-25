@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoConsumabile;
@@ -116,7 +118,7 @@ class AlchimistaTest {
 
 			partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.AUMENTO_MAGIA_SINGOLO, null, personaggio.getUuid()));
 
-			assertEquals(magia + Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, personaggio.getMagiaMassima());
+			assertEquals(magia + CostantiPersonaggi.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, personaggio.getMagiaMassima());
 		}
 	}
 }

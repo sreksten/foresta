@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.Costanti;
@@ -32,10 +34,10 @@ class PozioneAumentoLivelloTest {
 
 	@Test
 	void alLivelloMassimoNonFaNulla() {
-		assertEquals(0, GestoreProgressione.getXpPerAumentoDiLivello(Costanti.MASSIMO_LIVELLO, 0));
-		int aggiunta = GestoreProgressione.getXpPerAumentoDiLivello(Costanti.MASSIMO_LIVELLO - 1, 0);
-		assertEquals(Costanti.MASSIMO_LIVELLO,
-				GestoreProgressione.calcolaLivelloDaXp(aggiunta + GestoreProgressione.getXpNecessariPerLivello(Costanti.MASSIMO_LIVELLO - 1)));
+		assertEquals(0, GestoreProgressione.getXpPerAumentoDiLivello(CostantiPersonaggi.MASSIMO_LIVELLO, 0));
+		int aggiunta = GestoreProgressione.getXpPerAumentoDiLivello(CostantiPersonaggi.MASSIMO_LIVELLO - 1, 0);
+		assertEquals(CostantiPersonaggi.MASSIMO_LIVELLO,
+				GestoreProgressione.calcolaLivelloDaXp(aggiunta + GestoreProgressione.getXpNecessariPerLivello(CostantiPersonaggi.MASSIMO_LIVELLO - 1)));
 	}
 
 	@Test

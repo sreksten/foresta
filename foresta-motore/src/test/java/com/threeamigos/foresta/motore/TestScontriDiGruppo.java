@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
@@ -204,7 +206,7 @@ public class TestScontriDiGruppo {
         }
         if (scorta[1] > 0 && chi.getSalute() * 100 < chi.getSaluteMassima() * 30) {
             scorta[1]--;
-            chi.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE);
+            chi.addSalute(CostantiPersonaggi.RECUPERO_DA_POZIONE_SALUTE);
             return;
         }
         double conMischia = atteseMischia(chi, bersaglio);

@@ -4,6 +4,7 @@ import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.Costanti;
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * Una sfida a carta, forbici e sasso: vince chi arriva per primo a {@link Costanti#VITTORIE_PER_VINCERE_LA_SFIDA}
@@ -11,6 +12,13 @@ import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
  * pareggio non conta e si rigioca.
  */
 public class PartitaCartaForbiciSasso {
+
+	/**
+	 * Se un personaggio di una data classe può partecipare a carta, forbici e sasso. L'OmbraFiamma non partecipa.
+	 */
+	public static boolean puoGiocare(TipoPersonaggio classe) {
+		return classe != TipoPersonaggio.OMBRAFIAMMA;
+	}
 
 	/**
 	 * L'esito di una mano: quello che si è giocato e come è andata.

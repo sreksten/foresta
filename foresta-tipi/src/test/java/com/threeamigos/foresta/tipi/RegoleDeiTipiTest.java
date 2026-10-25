@@ -30,13 +30,6 @@ class RegoleDeiTipiTest {
     }
 
     @Test
-    void soloLOmbrafiammaNonGiocaACartaForbiciESasso() {
-        for (TipoPersonaggio classe : TipoPersonaggio.values()) {
-            assertEquals(classe != TipoPersonaggio.OMBRAFIAMMA, MossaCartaForbiciSasso.puoGiocare(classe), classe.name());
-        }
-    }
-
-    @Test
     void ilGradoDiUnIncantamentoCresceConIlLivello() {
         assertSame(GradoIncantamento.MINORE, GradoIncantamento.perLivello(CostantiArtefatti.GRADO_INCANTAMENTO_MEDIO_DAL_LIVELLO - 1));
         assertSame(GradoIncantamento.MEDIO, GradoIncantamento.perLivello(CostantiArtefatti.GRADO_INCANTAMENTO_MEDIO_DAL_LIVELLO));
@@ -83,20 +76,6 @@ class RegoleDeiTipiTest {
         assertTrue(TipoArtefatto.AGGIORNAMENTO.isIngrediente(), "l'aggiornamento si mette sul banco come gli altri ingredienti");
     }
 
-    @Test
-    void leClassiDiGenereDiversoHannoLoStessoRuolo() {
-        TipoPersonaggio[][] coppie = {
-                {TipoPersonaggio.MAGO, TipoPersonaggio.MAGA}, {TipoPersonaggio.ELFO, TipoPersonaggio.ELFA},
-                {TipoPersonaggio.LADRO, TipoPersonaggio.LADRA}, {TipoPersonaggio.GUERRIERO, TipoPersonaggio.GUERRIERA},
-                {TipoPersonaggio.BARDO, TipoPersonaggio.CANTASTORIE}, {TipoPersonaggio.SACERDOTE, TipoPersonaggio.SACERDOTESSA}};
-        for (TipoPersonaggio[] coppia : coppie) {
-            assertSame(coppia[0], coppia[0].getRuolo());
-            assertSame(coppia[0], coppia[1].getRuolo());
-            assertTrue(coppia[1].stessoRuoloDi(coppia[0]));
-        }
-        assertSame(TipoPersonaggio.GOBLIN, TipoPersonaggio.GOBLIN.getRuolo(), "le altre classi hanno il loro ruolo");
-        assertFalse(TipoPersonaggio.MAGO.stessoRuoloDi(TipoPersonaggio.ELFA));
-    }
 
     @Test
     void gliEffettiDiUnArtefattoSalgonoColLivelloFinoAlTettoDellaRarita() {
@@ -107,15 +86,5 @@ class RegoleDeiTipiTest {
         assertEquals(4, TipoRaritaArtefatto.RARO.getEffettiMassimi(20));
         assertEquals(3, TipoRaritaArtefatto.LEGGENDARIO.getEffettiMassimi(2));
         assertEquals(5, TipoRaritaArtefatto.LEGGENDARIO.getEffettiMassimi(20));
-    }
-
-    @Test
-    void ognunIncantesimoHaCategoriaPortataETipoDanno() {
-        for (TipoIncantesimo incantesimo : TipoIncantesimo.values()) {
-            assertNotNull(incantesimo.getCategoriaIncantesimo(), incantesimo.name());
-            assertNotNull(incantesimo.getPortata(), incantesimo.name());
-        }
-        assertSame(TipoDanno.FUOCO, TipoIncantesimo.FUOCO.getTipoDanno());
-        assertNull(TipoIncantesimo.RESURREZIONE.getTipoDanno(), "un incantesimo benefico non fa danni");
     }
 }

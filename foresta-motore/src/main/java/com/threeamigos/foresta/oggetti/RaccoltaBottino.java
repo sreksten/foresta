@@ -238,7 +238,7 @@ public final class RaccoltaBottino {
 			riponiNelGruppo(gruppo, artefatto);
 			return true;
 		}
-		Personaggio p = gruppo.getPersonaggio(comando);
+		Personaggio p = gruppo.getPersonaggio(comando.getIndicePersonaggio());
 		if (consegna(gruppo, p, artefatto)) {
 			BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA)
 					+ ' ' + artefatto.getTipo().getUtilizzo() + ' ' + artefatto.getNomeCompleto() + '.'));
