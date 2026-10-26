@@ -90,10 +90,9 @@ public enum PortataAzione {
 			case RADICI:
 			case SCIAME:
 				return GRUPPO_AVVERSARI;
-			case CAMBIA_ARMA:
-				return ARMA;
+			// L'ultima azione rimasta è il cambio d'arma (CAMBIA_ARMA): non ha un bersaglio, ha un'arma
 			default:
-				throw new IllegalStateException("Portata non prevista per " + azione);
+				return ARMA;
 		}
 	}
 

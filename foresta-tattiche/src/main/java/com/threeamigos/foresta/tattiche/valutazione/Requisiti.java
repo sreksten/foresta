@@ -178,9 +178,6 @@ public final class Requisiti {
 	 */
 	private static String incantesimoSingolo(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
 		TipoIncantesimo classe = azione.getTipo().getClasseIncantesimo();
-		if (classe == null) {
-			return "azione sconosciuta " + azione.getTipo();
-		}
 		if (!puoLanciare(attore, classe, contesto)) {
 			return "manca la pergamena o la MAGIA per " + classe + ", o è silenziato";
 		}

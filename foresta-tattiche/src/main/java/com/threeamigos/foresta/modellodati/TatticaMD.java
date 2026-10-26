@@ -111,21 +111,17 @@ public final class TatticaMD {
 	 * Come {@link #leggi(BufferedReader)}, con la prima riga (l'intestazione) già letta da chi doveva sapere se la tattica c'è
 	 */
 	public static TatticaMD leggi(String intestazione, BufferedReader stream) throws IOException {
-		try {
-			LettoreCampi campi = FormatoTattiche.controlla(new LettoreCampi(intestazione), "TATTICA");
-			int numeroVoci = campi.intero();
-			boolean disabilitata = campi.intero() != 0;
-			List<VoceMD> voci = new ArrayList<>();
-			for (int i = 0; i < numeroVoci; i++) {
-				voci.add(VoceMD.leggi(stream));
-			}
-			TatticaMD letta = new TatticaMD(voci, disabilitata);
-			// Una tattica incoerente non fa fallire il caricamento della partita: si disabilita, e il giocatore la corregge nella schermata delle tattiche
-			return letta.problemiPerQualsiasiLato().isEmpty() ? letta : letta.disabilitata();
-		} catch (IllegalArgumentException e) {
-			// Un nome di enumerato sconosciuto o un numero scritto male
-			throw new IOException("Salvataggio delle tattiche incoerente: " + e.getMessage(), e);
+		// Un nome di enumerato sconosciuto o un numero scritto male fanno già lanciare una IOException a chi legge i campi
+		LettoreCampi campi = FormatoTattiche.controlla(new LettoreCampi(intestazione), "TATTICA");
+		int numeroVoci = campi.intero();
+		boolean disabilitata = campi.intero() != 0;
+		List<VoceMD> voci = new ArrayList<>();
+		for (int i = 0; i < numeroVoci; i++) {
+			voci.add(VoceMD.leggi(stream));
 		}
+		TatticaMD letta = new TatticaMD(voci, disabilitata);
+		// Una tattica incoerente non fa fallire il caricamento della partita: si disabilita, e il giocatore la corregge nella schermata delle tattiche
+		return letta.problemiPerQualsiasiLato().isEmpty() ? letta : letta.disabilitata();
 	}
 
 	/**

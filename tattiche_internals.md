@@ -554,7 +554,7 @@ Quando si aggiunge un valore a un enumerato bisogna toccare più punti; dove un 
 
 **Una nuova azione (`TipoAzione`)**
 1. `TipoAzione`: il valore, con descrizione, portata e classe di incantesimo (se c'è). Se ha una portata nuova, anche `PortataAzione`, con le sue rose.
-2. `Requisiti.motivoDelNo`: il `case` con i suoi requisiti (altrimenti finisce in `incantesimoSingolo`, che per un'azione senza classe risponde "azione sconosciuta").
+2. `Requisiti.motivoDelNo`: il `case` con i suoi requisiti (altrimenti finisce in `incantesimoSingolo`, che presuppone un'azione con la sua classe di incantesimo).
 3. `EsecutoreTattiche.esegui`: il `case` che la esegue (altrimenti finisce in `lanciaUnIncantesimoDiDanno`). Se è un'azione a criterio, anche `Valutatore.decisioneSu`.
 4. `RegistroTattiche.azioniPossibili`: se non è per tutte le classi.
 5. `TestoTattica.spiega(TipoAzione)` e `TestoAzioneInCombattimento` (il testo sotto il personaggio nel riquadro del combattimento).
