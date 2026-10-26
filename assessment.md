@@ -16,7 +16,7 @@ Questo assessment **non è una nuova lettura integrale dei sorgenti**, come fu l
   - Le parti del gioco sono sottoprogetti con i loro tipi, i loro dati e i loro contratti per la UI: personaggi, poteri, combattimento, tattiche, mappa, mondo, bottino, economia, statistiche, intermezzi, missioni, bestiario, trofei.
   - Il motore offre alla UI il suo contratto in `foresta-motore-api`, e la UI non vede il motore.
 - **I sottoprogetti non sanno chi custodisce i loro dati.** Li ricevono da `ModelloDati` con un fornitore (`setFornitoreDiDati`). Quando non devono sapere che una cosa esiste, la ricevono da chi sta sopra: le fonti di intermezzi, il fornitore della locazione completa.
-- **2208 test, tutti verdi** (22 saltati, simulazioni da lanciare a mano). La copertura delle righe con tutti i test è del **77%**.
+- **2218 test, tutti verdi** (22 saltati, simulazioni da lanciare a mano). La copertura delle righe con tutti i test è del **77%**.
 - **Giudizio:** il progetto è in buona salute, e l'architettura è molto migliorata dalla revisione precedente: il motore è passato da 57.000 a meno di 10.000 righe. Non ci sono difetti aperti di gravità alta o media. Restano:
   - le quattro classi grandi;
   - lo stato statico;
@@ -49,14 +49,14 @@ Questo assessment **non è una nuova lettura integrale dei sorgenti**, come fu l
 | `foresta-missioni` | 111 / 17.867 | 5 / 363 | 17 | 9% | 89% |
 | `foresta-bestiario` | 4 / 309 | 3 / 363 | 20 | 100% | 100% |
 | `foresta-trofei` | 12 / 690 | 5 / 654 | 30 | 100% | 100% |
-| `foresta-punteggi` | 4 / 221 | 1 / 72 | 4 | 95% | 98% |
-| `foresta-notizie` | 5 / 368 | 3 / 210 | 10 | 90% | 99% |
-| `foresta-modellodati` | 2 / 287 | 9 / 916 | 41 | 96% | 100% |
+| `foresta-punteggi` | 4 / 221 | 1 / 98 | 7 | 100% | 100% |
+| `foresta-notizie` | 5 / 368 | 4 / 278 | 15 | 100% | 100% |
+| `foresta-modellodati` | 2 / 287 | 10 / 1.012 | 43 | 100% | 100% |
 | `foresta-motore-api` | 48 / 1.596 | 2 / 94 | 2 | 29% | 92% |
 | `foresta-motore` | 60 / 9.572 | 190 / 29.735 | 840 (22 saltati) | 77% | 77% |
 | `foresta-swing` | 99 / 23.545 | 14 / 2.028 | 64 | 26% | 52% |
 | `foresta-app` | 3 / 912 | 34 / 2.622 | 70 | 28% | 28% |
-| **Totale** | **838 / 109.546** | **408 / 54.952** | **2208 (22 saltati)** | | **77%** |
+| **Totale** | **838 / 109.546** | **410 / 55.142** | **2218 (22 saltati)** | | **77%** |
 
 - **"Copertura dei suoi test"** è quella del rapporto di JaCoCo del modulo: conta solo i test che stanno nel modulo.
 - **"Copertura con tutti i test"** unisce i `jacoco.exec` di tutti i moduli e misura ogni modulo con i dati di tutti. Il rapporto aggregato di JaCoCo (`report-aggregate`) non serve: vede solo le dipendenze dirette di `foresta-app`. Per questo l'ho calcolata con un piccolo programma sopra la libreria di JaCoCo.
@@ -215,7 +215,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
   Non è stata rifatta la lettura integrale dei sorgenti.
 - **La copertura con tutti i test** viene da un programma di poche righe sopra `org.jacoco.core`. Unisce i `jacoco.exec` di tutti i moduli e analizza le `target/classes` di ciascuno. Il programma non è nel progetto.
-- **Rispetto alla revisione precedente.** Allora i moduli erano 6, e il motore aveva 368 file e 57.200 righe. Ora sono 29, e il motore ha 60 file e 9.600 righe. I test sono passati da 1672 a 2208.
+- **Rispetto alla revisione precedente.** Allora i moduli erano 6, e il motore aveva 368 file e 57.200 righe. Ora sono 29, e il motore ha 60 file e 9.600 righe. I test sono passati da 1672 a 2218.
 
 ## Da fare / idee aperte
 

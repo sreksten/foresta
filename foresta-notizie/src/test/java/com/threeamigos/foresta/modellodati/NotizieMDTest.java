@@ -85,4 +85,16 @@ class NotizieMDTest {
         assertEquals("N" + (NotizieMD.MASSIMO_NOTIZIE_RICORDATE + 3), notizie.getUltimeNotizie().get(0).getId());
         assertEquals("N4", notizie.getUltimeNotizie().get(NotizieMD.MASSIMO_NOTIZIE_RICORDATE - 1).getId());
     }
+
+    @Test
+    void reimpostareDimenticaMessaggiENotizie() {
+        NotizieMD notizie = new NotizieMD();
+        notizie.aggiungiMessaggio(new MessaggioMD("Una frase.", false));
+        notizie.aggiungiNotizia(new NotiziaMD("N1", "Titolo - Corpo"));
+
+        notizie.reimposta();
+
+        assertTrue(notizie.getUltimiMessaggi().isEmpty());
+        assertTrue(notizie.getUltimeNotizie().isEmpty());
+    }
 }

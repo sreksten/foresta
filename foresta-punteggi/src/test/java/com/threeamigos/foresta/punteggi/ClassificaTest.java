@@ -69,4 +69,30 @@ class ClassificaTest {
         assertEquals("Stefano:10000 Johan:9000 Arsenio:8500 Alessandra:8000 Peter Porker:7000 Judah:6000 Brunilde:5200 "
                 + "Jona:5000 Jamaikan:2000 Cosimo:1000", nomi(classifica));
     }
+
+    @Test
+    void unPunteggioPuoEntrareInCimaALaClassifica() {
+        Classifica classifica = predefinita();
+        assertTrue(classifica.inserisci("Arsenio", 20000, "partita-1"));
+        assertEquals("Arsenio:20000 Stefano:10000 Johan:9000 Alessandra:8000 Peter Porker:7000 Judah:6000 Jona:5000 "
+                + "Jamaikan:2000 Cosimo:1000 Oreste:500", nomi(classifica));
+    }
+
+    @Test
+    void unaPartitaSenzaIdentificativoEntraComeUnaNuova() {
+        Classifica classifica = predefinita();
+        assertTrue(classifica.isPunteggioInClassifica(5500, null));
+        assertTrue(classifica.inserisci("Arsenio", 5500, null));
+        assertTrue(classifica.inserisci("Arsenio", 5500, null), "senza partita non c'è un punteggio precedente da migliorare");
+        assertNull(classifica.getPunteggio(5).getIdPartita());
+    }
+
+    @Test
+    void unPunteggioSiMetteInUnaPosizioneRipulendoIlNome() {
+        Classifica classifica = predefinita();
+        classifica.setPunteggio(3, "Pip|po", 1234, "partita-9");
+        assertEquals("Pippo", classifica.getPunteggio(3).getNome());
+        assertEquals(1234, classifica.getPunteggio(3).getPunteggio());
+        assertEquals("partita-9", classifica.getPunteggio(3).getIdPartita());
+    }
 }
