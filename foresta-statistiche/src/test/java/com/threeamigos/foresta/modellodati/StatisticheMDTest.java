@@ -79,4 +79,18 @@ class StatisticheMDTest {
         assertEquals(3, statistiche.getMostriUccisi(TipoPersonaggio.GOBLIN));
         assertEquals(1, statistiche.getMostriUccisi(TipoPersonaggio.TROLL));
     }
+
+    @Test
+    void iMostriLettiConZeroUccisiNonSiRiscrivono() throws Exception {
+        StatisticheMD statistiche = new StatisticheMD();
+        statistiche.leggi(new BufferedReader(new StringReader("1|0|0|0|id\nARPIA|0|GOBLIN|3\n")));
+
+        StringWriter scrittura = new StringWriter();
+        try (PrintWriter writer = new PrintWriter(scrittura)) {
+            statistiche.salva(writer);
+        }
+
+        assertEquals(true, scrittura.toString().contains("GOBLIN|3"));
+        assertEquals(false, scrittura.toString().contains("ARPIA"));
+    }
 }
