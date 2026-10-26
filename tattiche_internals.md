@@ -12,7 +12,7 @@ Le tattiche attraversano più moduli (la separazione la garantisce il compilator
 
 | Modulo | Pacchetto | Che cosa contiene |
 | :--- | :--- | :--- |
-| `foresta-poteri` | `tipi` | Le azioni: `TipoAzione` (che cosa si può fare in uno scontro, poteri compresi) ed `EsitoAzione` |
+| `foresta-combattimento` | `tipi` | Le azioni: `TipoAzione` (che cosa si può fare in uno scontro, poteri compresi) ed `EsitoAzione` |
 | `foresta-tattiche` | `tipi` | Gli altri **enumerati**: `TipoRosa`, `PortataAzione` (su che cosa agisce ogni azione e da quali rose pesca: `PortataAzione.di(azione)`), `TipoFiltro`, `TipoOrdinamento`, `TipoPredicato`, `TipoConfronto`, `CriterioIncantesimo`, `TipoParametro`, e `CostantiTattiche`. Solo nomi, descrizioni e regole di compatibilità; nessuna logica di gioco |
 | `foresta-tattiche` | `tattiche` | I **dati** (suffisso `MD`): `TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`, e `FormatoTattiche` per il salvataggio. Immutabili, con la lettura e la scrittura |
 | `foresta-tattiche` | `eventi.*` | `ComandoImpostaTattica` (UI → motore), `RichiestaAperturaTattiche` (motore → UI), `InternoDecisioneTattica` (la spiegazione di una decisione) |
@@ -57,7 +57,7 @@ Due proprietà da tenere presenti, perché spiegano molte scelte:
 - **Chi esegue non decide.** `EsecutoreTattiche` fa quello che la `Decisione` dice, sul modello dati di sempre. È condiviso fra la locazione (`LocazioneBase`) e le
   simulazioni, così i mostri e i personaggi del giocatore fanno le stesse cose in tutti e due.
 
-## 3. Gli enumerati (`foresta-tattiche`, pacchetto `tipi`; `TipoAzione` ed `EsitoAzione` in `foresta-poteri`)
+## 3. Gli enumerati (`foresta-tattiche`, pacchetto `tipi`; `TipoAzione` ed `EsitoAzione` in `foresta-combattimento`)
 
 Il vocabolario delle tattiche è fatto di enumerati, e ogni voce nel file di salvataggio usa il **nome** dell'enumerato.
 

@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.abilita;
 
-import com.threeamigos.foresta.poteri.Meccanica;
-import com.threeamigos.foresta.poteri.MeccanicaDeiPoteri;
+import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
 
 import com.threeamigos.foresta.tipi.TipoAzione;
 import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
@@ -60,7 +59,7 @@ public class Rigenerazione implements Abilita {
 			return false;
 		}
 		Personaggio bersaglio = ferito.get();
-		Meccanica.get().annuncia(utilizzatore, bersaglio, TipoAzione.RIGENERAZIONE);
+		AnnuncioDellAzione.azione(utilizzatore, bersaglio, TipoAzione.RIGENERAZIONE);
 		utilizzatore.subMagia(getCostoLancio());
 		BusEventi.pubblica(new NotificaTestoFrase(nome + " fa rigenerare "
 				+ bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + "."));

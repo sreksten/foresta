@@ -8,7 +8,7 @@ Sta in mezzo alla catena per una scelta di direzione: **i poteri e il combattime
 
 **Dichiarate nel pom:** `foresta-artefatti`, `foresta-eventi`, `foresta-danni`, `foresta-effettidistato`, `foresta-attributi`, `foresta-testi`, `foresta-strumenti`, `foresta-serializzazione`.
 
-**Lo dichiarano:** `foresta-poteri`, `foresta-statistiche`, `foresta-intermezzi`, `foresta-bestiario`, `foresta-modellodati`, `foresta-motore-api`, `foresta-motore`.
+**Lo dichiarano:** `foresta-combattimento`, `foresta-poteri`, `foresta-statistiche`, `foresta-intermezzi`, `foresta-bestiario`, `foresta-modellodati`, `foresta-motore-api`, `foresta-motore`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
-import com.threeamigos.foresta.poteri.Meccanica;
-import com.threeamigos.foresta.poteri.MeccanicaDeiPoteri;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.tipi.TipoDanno;
@@ -64,13 +64,13 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 			return;
 		}
 		String nomeBersaglio = bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-		MeccanicaDeiPoteri stato = Meccanica.get();
+		StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
 		if (bersaglio.isImmuneAIncantesimo(getClasse())) {
 			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo non ha effetto su " + nomeBersaglio + "."));
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.MORTE, EsitoAzione.IMMUNE);
 			return;
 		}
-		if (puoUccidere(bersaglio) && Meccanica.get().colpisce(formulante, bersaglio, getTipoDanno().getCategoriaDanno())) {
+		if (puoUccidere(bersaglio) && CalcolatoreCombattimento.colpisce(formulante, bersaglio, getTipoDanno().getCategoriaDanno())) {
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.MORTE, EsitoAzione.RIUSCITA);
 			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo ha ucciso " + nomeBersaglio + "."));
 			// Tutta la salute rimasta: la morte passa da subSalute come per ogni altro colpo (causa, immortali)

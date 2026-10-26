@@ -99,20 +99,6 @@ public enum TipoAzione {
 		return PER_INCANTESIMO.get(classe);
 	}
 
-	/**
-	 * L'azione che usa quell'abilità innata: ha lo stesso nome.
-	 */
-	public static TipoAzione di(TipoAbilita tipo) {
-		return valueOf(tipo.name());
-	}
-
-	/**
-	 * L'azione che intona quel canto: ha il suo nome preceduto da CANTO_, tranne l'Urlo della Banshee.
-	 */
-	public static TipoAzione di(TipoCanto tipo) {
-		return tipo == TipoCanto.URLO_DELLA_BANSHEE ? URLO_DELLA_BANSHEE : valueOf("CANTO_" + tipo.name());
-	}
-
 	public String getDescrizione() {
 		return Testi.testoOCostante(this, "DESCRIZIONE");
 	}

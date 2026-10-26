@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.incantesimi;
 
-import com.threeamigos.foresta.poteri.Meccanica;
-import com.threeamigos.foresta.poteri.MeccanicaDeiPoteri;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.ColpoMagico;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
@@ -64,7 +65,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 			boolean ripartito = getClasse().getPortata() == PortataIncantesimo.MULTIPLO;
 			for (int posizione = 0; posizione < bersagli.size(); posizione++) {
 				if (ripartito) {
-					colpisci(formulante, bersagli.get(posizione), Meccanica.get().quotaDelDannoPerPosizione(posizione));
+					colpisci(formulante, bersagli.get(posizione), CalcolatoreCombattimento.quotaDelDannoPerPosizione(posizione));
 				} else {
 					colpisci(formulante, bersagli.get(posizione));
 				}
@@ -73,7 +74,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 			throw new IllegalArgumentException("Non so come formulare questo incantesimo!");
 		}
 		formulante.subMagia(getCostoLancio());
-		Meccanica.get().registraIncantesimoLanciato(formulante);
+		StatoDelCombattimento.getIstanza().registraIncantesimoLanciato(formulante);
 	}
 
 	/**
@@ -103,6 +104,6 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 	 * CalcolatoreCombattimento.quotaDelDannoPerPosizione): gli stati alterati dipendono dal colpo, non dalla quota.
 	 */
 	protected void colpisci(Personaggio formulante, Personaggio personaggioBersaglio, double quotaDelDanno) {
-		Meccanica.get().colpisciConMagia(formulante, personaggioBersaglio, this, TipoAzione.di(getClasse()), getClasse(), quotaDelDanno);
+		ColpoMagico.colpisci(formulante, personaggioBersaglio, this, TipoAzione.di(getClasse()), getClasse(), quotaDelDanno);
 	}
 }

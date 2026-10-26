@@ -20,8 +20,8 @@
         <module>foresta-artefatti</module>
         <module>foresta-mappa</module>
         <module>foresta-personaggi</module>
-        <module>foresta-poteri</module>
         <module>foresta-combattimento</module>
+        <module>foresta-poteri</module>
         <module>foresta-tattiche</module>
         <module>foresta-statistiche</module>
         <module>foresta-intermezzi</module>

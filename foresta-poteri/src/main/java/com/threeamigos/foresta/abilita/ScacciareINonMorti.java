@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.abilita;
 
-import com.threeamigos.foresta.poteri.Meccanica;
-import com.threeamigos.foresta.poteri.MeccanicaDeiPoteri;
+import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
 import com.threeamigos.foresta.tipi.TipoAzione;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
@@ -59,14 +59,14 @@ public class ScacciareINonMorti implements Abilita {
 		Collections.shuffle(nonMorti, Dado.sorgente());
 		List<Personaggio> bersagli = nonMorti.subList(0, Math.min(numeroBersagli, nonMorti.size()));
 
-		Meccanica.get().annuncia(utilizzatore, bersagli.size() == 1 ? bersagli.get(0) : null, TipoAzione.SCACCIARE_I_NON_MORTI);
+		AnnuncioDellAzione.azione(utilizzatore, bersagli.size() == 1 ? bersagli.get(0) : null, TipoAzione.SCACCIARE_I_NON_MORTI);
 		utilizzatore.subMagia(getCostoLancio());
 		BusEventi.pubblica(new NotificaTestoFrase(utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " leva il simbolo sacro contro i non morti."));
 		for (Personaggio avversario : bersagli) {
 			if (Dado.tira(100) <= probabilitaDiCedere(utilizzatore, avversario)) {
 				avversario.addEffettoDiStato(TipoEffettoDiStato.SPAVENTATO,
-						Meccanica.get().calcolaDurataStato(avversario, TipoEffettoDiStato.SPAVENTATO), 0);
+						CalcolatoreCombattimento.calcolaDurataStato(avversario, TipoEffettoDiStato.SPAVENTATO), 0);
 			} else {
 				BusEventi.pubblica(new NotificaTestoFrase(avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 						Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " resiste."));

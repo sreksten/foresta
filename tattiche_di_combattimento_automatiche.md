@@ -653,7 +653,7 @@ Le altre cose da fare sono in §8.
 
 ## 11. Il modello dati delle tattiche
 
-Qui sta il **modello** (come sono fatte una tattica, una voce, un bersaglio) e come lo usano il motore e la schermata. Le classi stanno nel pacchetto `…/tattiche` (i tipi, che servono anche alla UI, in `…/tipi`: `TipoAzione` in `foresta-poteri`, gli altri in `foresta-tattiche`).
+Qui sta il **modello** (come sono fatte una tattica, una voce, un bersaglio) e come lo usano il motore e la schermata. Le classi stanno nel pacchetto `…/tattiche` (i tipi, che servono anche alla UI, in `…/tipi`: `TipoAzione` in `foresta-combattimento`, gli altri in `foresta-tattiche`).
 
 ### 11.1 Principi
 

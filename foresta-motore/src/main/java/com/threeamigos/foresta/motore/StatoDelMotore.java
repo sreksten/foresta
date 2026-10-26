@@ -57,7 +57,6 @@ public final class StatoDelMotore {
 		RegistroMissioni.setFornitoreLocazioneCompleta(() -> LocazioneCorrente.get().isCompleta());
 		IntermezziDelMotore.registra();
 		CommercioDelGruppo.registrati();
-		com.threeamigos.foresta.combattimento.MeccanicaDelloScontro.registrati();
 	}
 
 	/**

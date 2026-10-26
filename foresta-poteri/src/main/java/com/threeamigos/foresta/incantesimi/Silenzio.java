@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
-import com.threeamigos.foresta.poteri.Meccanica;
-import com.threeamigos.foresta.poteri.MeccanicaDeiPoteri;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
@@ -89,14 +89,14 @@ public class Silenzio extends IncantesimoMaleficoImpl implements Incantesimo {
 	@Override
 	protected void colpisci(Personaggio formulante, Personaggio bersaglio) {
 		String nomeBersaglio = bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-		MeccanicaDeiPoteri stato = Meccanica.get();
+		StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
 		if (bersaglio.isImmuneAIncantesimo(getClasse()) || bersaglio.isImmuneAEffetto(TipoEffettoDiStato.SILENZIATO)) {
 			Logger.log("Bersaglio immune all'incantesimo");
 			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo non ha effetto su " + nomeBersaglio + "."));
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.SILENZIO, EsitoAzione.IMMUNE);
 			return;
 		}
-		if (!Meccanica.get().colpisce(formulante, bersaglio, getTipoDanno().getCategoriaDanno())) {
+		if (!CalcolatoreCombattimento.colpisce(formulante, bersaglio, getTipoDanno().getCategoriaDanno())) {
 			Logger.log("L'incantesimo non va a segno");
 			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo non va a segno su " + nomeBersaglio + "."));
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.SILENZIO, EsitoAzione.MANCATA);
@@ -105,6 +105,6 @@ public class Silenzio extends IncantesimoMaleficoImpl implements Incantesimo {
 		}
 		stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.SILENZIO, EsitoAzione.RIUSCITA);
 		bersaglio.addEffettoDiStato(TipoEffettoDiStato.SILENZIATO,
-				Meccanica.get().calcolaDurataStato(bersaglio, TipoEffettoDiStato.SILENZIATO), 0);
+				CalcolatoreCombattimento.calcolaDurataStato(bersaglio, TipoEffettoDiStato.SILENZIATO), 0);
 	}
 }

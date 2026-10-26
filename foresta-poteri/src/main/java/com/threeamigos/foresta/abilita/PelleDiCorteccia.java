@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.abilita;
 
-import com.threeamigos.foresta.poteri.Meccanica;
-import com.threeamigos.foresta.poteri.MeccanicaDeiPoteri;
+import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
 
 import com.threeamigos.foresta.tipi.TipoAzione;
 import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
@@ -56,7 +55,7 @@ public class PelleDiCorteccia implements Abilita {
 
 	@Override
 	public boolean usa(Personaggio utilizzatore, Gruppo gruppo, Gruppo gruppoAvversario) {
-		Meccanica.get().annuncia(utilizzatore, null, TipoAzione.PELLE_DI_CORTECCIA);
+		AnnuncioDellAzione.azione(utilizzatore, null, TipoAzione.PELLE_DI_CORTECCIA);
 		utilizzatore.subMagia(getCostoLancio());
 		BusEventi.pubblica(new NotificaTestoFrase(utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ricopre il gruppo di una pelle di corteccia."));

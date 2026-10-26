@@ -13,7 +13,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * I testi delle costanti di enum dei poteri (abilità innate, canti e azioni), letti da un file per enum
+ * I testi delle costanti di enum dei poteri (abilità innate e canti), letti da un file per enum
  * ({@code tipo_incantesimo_it.properties}...): ogni costante ha tutte le sue voci, e nei file non ci sono voci per costanti che non esistono.
  */
 class TestiDelleEnumDeiPoteriTest {
@@ -23,7 +23,6 @@ class TestiDelleEnumDeiPoteriTest {
 	static {
 		ENUM.put(TipoAbilita.class, Arrays.asList("NOME", "DESCRIZIONE"));
 		ENUM.put(TipoCanto.class, Arrays.asList("NOME", "DESCRIZIONE"));
-		ENUM.put(TipoAzione.class, Collections.singletonList("DESCRIZIONE"));
 	}
 
 	@AfterEach

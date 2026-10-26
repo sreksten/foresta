@@ -69,12 +69,12 @@ class TipiDelleTatticheTest {
         }
         assertNull(TipoAzione.di((TipoIncantesimo) null), "senza incantesimo non c'è un'azione che lo lancia");
         for (TipoAbilita abilita : TipoAbilita.values()) {
-            assertEquals(abilita.name(), TipoAzione.di(abilita).name());
+            assertEquals(abilita.name(), abilita.getTipoAzione().name());
         }
-        assertEquals(TipoAzione.CANTO_CURATIVO, TipoAzione.di(TipoCanto.CURATIVO));
-        assertEquals(TipoAzione.CANTO_IPNOTICO, TipoAzione.di(TipoCanto.IPNOTICO));
-        assertEquals(TipoAzione.CANTO_DI_VALORE, TipoAzione.di(TipoCanto.DI_VALORE));
-        assertEquals(TipoAzione.URLO_DELLA_BANSHEE, TipoAzione.di(TipoCanto.URLO_DELLA_BANSHEE));
+        assertEquals(TipoAzione.CANTO_CURATIVO, TipoCanto.CURATIVO.getTipoAzione());
+        assertEquals(TipoAzione.CANTO_IPNOTICO, TipoCanto.IPNOTICO.getTipoAzione());
+        assertEquals(TipoAzione.CANTO_DI_VALORE, TipoCanto.DI_VALORE.getTipoAzione());
+        assertEquals(TipoAzione.URLO_DELLA_BANSHEE, TipoCanto.URLO_DELLA_BANSHEE.getTipoAzione());
         assertSame(TipoDanno.ARCANO, TipoAzione.DARDO_ARCANO.getTipoDanno(), "il dardo arcano non è un incantesimo ma fa danno arcano");
         assertNull(TipoAzione.ATTACCO_FISICO.getTipoDanno(), "dipende dall'arma");
         assertNull(TipoAzione.CANTO_CURATIVO.getTipoDanno());

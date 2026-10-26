@@ -1,20 +1,20 @@
 # foresta-combattimento
 
-**Come si scontrano** i personaggi: se un colpo va a segno, quanto danno fa, quali stati alterati provoca e che cosa succede a chi lo riceve; le stime con cui le tattiche scelgono; la memoria di uno scontro (di chi è il turno, chi ha fatto cosa); il cambio d'arma; le ondate di avversari; e la **meccanica** con cui i poteri (incantesimi, canti, abilità) si esercitano.
+**Come si scontrano** i personaggi: se un colpo va a segno, quanto danno fa, quali stati alterati provoca e che cosa succede a chi lo riceve; le stime con cui le tattiche scelgono; la memoria di uno scontro (di chi è il turno, chi ha fatto cosa); il cambio d'arma; le ondate di avversari; e le azioni di uno scontro (`TipoAzione`, `EsitoAzione`). I poteri (incantesimi, canti, abilità) si esercitano chiamando questo modulo.
 
 È un modulo a sé perché le regole del colpo non sono né del personaggio (che sa *chi è*) né del motore (che orchestra il flusso della partita): sono calcoli puri che servono a tre parti — il gioco vero, le tattiche che prevedono l'esito, le abilità che colpiscono — e che si possono provare senza avviare un gioco. Per questo fuori dal personaggio stanno anche `ApplicazioneDelRisultato` e `AttaccoConLeArmi`: conoscono il calcolo e i gruppi.
 
 ## Dipendenze
 
-**Dichiarate nel pom:** `foresta-poteri`.
+**Dichiarate nel pom:** `foresta-personaggi`.
 
 **Solo per i test:** `foresta-personaggi`.
 
-**Lo dichiarano:** `foresta-tattiche`, `foresta-motore`.
+**Lo dichiarano:** `foresta-poteri`, `foresta-tattiche`, `foresta-motore`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 
-Dipende da `foresta-poteri`, e da lì vede i personaggi, gli artefatti, i danni e gli attributi per transitività. La dipendenza va **in questo verso** (il combattimento conosce i poteri) per via di `TipoAzione` ed `EsitoAzione`, che stanno in `foresta-poteri`; i poteri a loro volta arrivano al combattimento solo attraverso l'interfaccia `MeccanicaDeiPoteri`, che questo modulo implementa e dichiara come servizio.
+Dipende da `foresta-personaggi`, e da lì vede gli artefatti, i danni e gli attributi per transitività. **Non conosce i poteri**: sono i poteri a dipendere da lui e a chiamarlo per colpire, per far durare uno stato e per registrare gli esiti. Per questo qui stanno anche `TipoAzione` ed `EsitoAzione`, che la memoria dello scontro (`StatoDelCombattimento`) usa e che le tattiche leggono.
 
 ## Funzionamento
 
@@ -50,9 +50,9 @@ Chi lo aggiorna è il motore; le tattiche lo leggono e basta.
 - `AnnuncioDellAzione`: dice alla UI che un personaggio sta per agire (il riquadro evidenzia chi agisce e il bersaglio) e `InternoAzioneInCombattimento` è l'evento corrispondente.
 - `NotificaColpoMancato` (in `foresta-personaggi`): `AttaccoConLeArmi` e `ColpoMagico` la pubblicano quando il tiro per colpire fallisce, come fanno `Silenzio` e `Morte` nei poteri; la UI ci fa comparire sul bersaglio la scritta «Mancato».
 
-### `MeccanicaDelloScontro`: il servizio dei poteri
+### Le azioni: `TipoAzione` ed `EsitoAzione`
 
-Risponde alle richieste di `MeccanicaDeiPoteri` (colpire, durata degli stati, ripartizione del danno, colpo magico, annuncio, registrazione degli esiti) con il calcolatore e lo stato dello scontro. È dichiarato in `META-INF/services/com.threeamigos.foresta.poteri.MeccanicaDeiPoteri`, così `Meccanica.get()` la trova da sola.
+`TipoAzione` elenca le azioni che una voce di tattica può compiere: l'attacco fisico, ciascun incantesimo, la luce divina e il dardo arcano, i canti, le abilità del chierico e del druido, le pozioni, il cambio d'arma… I testi (la descrizione) sono in `tipo_azione_it.properties`. `di(TipoIncantesimo)` e `getClasseIncantesimo()` fanno da ponte fra l'azione e l'incantesimo. L'azione di un'abilità o di un canto la dicono `TipoAbilita` e `TipoCanto` (`getTipoAzione()`, nei poteri). `EsitoAzione` è com'è andata (`RIUSCITA`, `MANCATA`, `IMMUNE`): `StatoDelCombattimento` la ricorda e le tattiche la usano per non ripetere un'azione che fallisce.
 
 ## Osservazioni
 

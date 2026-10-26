@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.incantesimi;
 
-import com.threeamigos.foresta.poteri.Meccanica;
-import com.threeamigos.foresta.poteri.MeccanicaDeiPoteri;
+import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
@@ -56,7 +55,7 @@ public class Resurrezione implements Incantesimo {
 		}
 		// Come gli altri incantesimi (IncantesimoMaleficoImpl.formula), il lancio costa MAGIA
 		formulante.subMagia(getCostoLancio());
-		Meccanica.get().registraIncantesimoLanciato(formulante);
-		Meccanica.get().registraAlleato(formulante, personaggioBersaglio);
+		StatoDelCombattimento.getIstanza().registraIncantesimoLanciato(formulante);
+		StatoDelCombattimento.getIstanza().registraAlleato(formulante, personaggioBersaglio);
 	}
 }

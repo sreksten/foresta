@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.abilita;
 
-import com.threeamigos.foresta.poteri.Meccanica;
-import com.threeamigos.foresta.poteri.MeccanicaDeiPoteri;
+import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.ColpoMagico;
 
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
@@ -48,7 +49,7 @@ public abstract class AbilitaDiDanno implements Abilita, Arma {
 	 * quella di questa abilità.
 	 */
 	protected TipoAzione getTipoAzione() {
-		return getTipoIncantesimo() != null ? TipoAzione.di(getTipoIncantesimo()) : TipoAzione.di(getTipo());
+		return getTipoIncantesimo() != null ? TipoAzione.di(getTipoIncantesimo()) : getTipo().getTipoAzione();
 	}
 
 	/**
@@ -110,12 +111,12 @@ public abstract class AbilitaDiDanno implements Abilita, Arma {
 		if (bersagli.size() > massimo) {
 			bersagli = bersagli.subList(0, massimo);
 		}
-		Meccanica.get().annuncia(utilizzatore, bersagli.size() == 1 ? bersagli.get(0) : null, TipoAzione.di(getTipo()));
+		AnnuncioDellAzione.azione(utilizzatore, bersagli.size() == 1 ? bersagli.get(0) : null, getTipo().getTipoAzione());
 		BusEventi.pubblica(new NotificaTestoFrase(utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " " + getAnnuncio(bersagli)));
 		// Il danno si ripartisce per posizione, come per gli incantesimi a più bersagli
 		for (int posizione = 0; posizione < bersagli.size(); posizione++) {
-			colpisci(utilizzatore, bersagli.get(posizione), Meccanica.get().quotaDelDannoPerPosizione(posizione));
+			colpisci(utilizzatore, bersagli.get(posizione), CalcolatoreCombattimento.quotaDelDannoPerPosizione(posizione));
 		}
 		dopoIColpi(utilizzatore);
 		utilizzatore.subMagia(getCostoLancio());
@@ -126,7 +127,7 @@ public abstract class AbilitaDiDanno implements Abilita, Arma {
 	 * Un colpo su un bersaglio: il bersaglio subisce quella quota del danno (vedi CalcolatoreCombattimento.quotaDelDannoPerPosizione).
 	 */
 	protected void colpisci(Personaggio utilizzatore, Personaggio bersaglio, double quotaDelDanno) {
-		Meccanica.get().colpisciConMagia(utilizzatore, bersaglio, this, getTipoAzione(), getTipoIncantesimo(), quotaDelDanno);
+		ColpoMagico.colpisci(utilizzatore, bersaglio, this, getTipoAzione(), getTipoIncantesimo(), quotaDelDanno);
 	}
 
 	/**

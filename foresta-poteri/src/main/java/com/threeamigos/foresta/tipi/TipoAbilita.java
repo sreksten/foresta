@@ -35,6 +35,13 @@ public enum TipoAbilita {
 		return Testi.testoOCostante(this, "NOME");
 	}
 
+	/**
+	 * L'azione che usa questa abilità innata: ha lo stesso nome.
+	 */
+	public TipoAzione getTipoAzione() {
+		return TipoAzione.valueOf(name());
+	}
+
 	public String getDescrizione() {
 		return Testi.testoOCostante(this, "DESCRIZIONE");
 	}

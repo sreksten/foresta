@@ -12,7 +12,7 @@ Questo assessment **non è una nuova lettura integrale dei sorgenti**, come fu l
 ## 1. Sintesi
 
 - **Il gioco è completo e giocabile** da inizio a fine: creazione del gruppo, esplorazione, combattimento a round con tattiche, negozi, incantatore, missioni, intermezzi, trofei, salvataggi, classifica.
-- **Il progetto è diviso in 28 moduli Maven, in fila.** Ognuno vede solo quelli sotto di lui, e il compilatore lo garantisce.
+- **Il progetto è diviso in 29 moduli Maven, in fila.** Ognuno vede solo quelli sotto di lui, e il compilatore lo garantisce.
   - Le parti del gioco sono sottoprogetti con i loro tipi, i loro dati e i loro contratti per la UI: personaggi, poteri, combattimento, tattiche, mappa, mondo, bottino, economia, statistiche, intermezzi, missioni, bestiario, trofei.
   - Il motore offre alla UI il suo contratto in `foresta-motore-api`, e la UI non vede il motore.
 - **I sottoprogetti non sanno chi custodisce i loro dati.** Li ricevono da `ModelloDati` con un fornitore (`setFornitoreDiDati`). Quando non devono sapere che una cosa esiste, la ricevono da chi sta sopra: le fonti di intermezzi, il fornitore della locazione completa.
@@ -20,7 +20,7 @@ Questo assessment **non è una nuova lettura integrale dei sorgenti**, come fu l
 - **Giudizio:** il progetto è in buona salute, e l'architettura è molto migliorata dalla revisione precedente: il motore è passato da 57.000 a meno di 10.000 righe. Non ci sono difetti aperti di gravità alta o media. Restano:
   - le quattro classi grandi;
   - lo stato statico;
-  - qualche residuo della divisione: `foresta-modellodati`, `MeccanicaDeiPoteri`;
+  - qualche residuo della divisione;
   - un po' di codice morto (§5).
 
 ## 2. Misure
@@ -87,17 +87,17 @@ Dal basso in alto. Ogni livello dipende solo da quelli prima, e le dipendenze so
 
 | Livello | Moduli |
 | ---: | :--- |
-| 0 | `strumenti`, `serializzazione` |
-| 1 | `eventi`, `testi` |
-| 2 | `comandi`, `attributi`, `effettidistato`, `tipi` |
-| 3 | `danni`, `mappa` |
+| 0 | `serializzazione`, `strumenti` |
+| 1 | `eventi`, `punteggi`, `testi` |
+| 2 | `attributi`, `comandi`, `effettidistato`, `mappa`, `notizie` |
+| 3 | `danni` |
 | 4 | `artefatti` |
 | 5 | `personaggi` (con i gruppi) |
-| 6 | `poteri`, `statistiche`, `bestiario` |
-| 7 | `combattimento`, `mondo`, `intermezzi` |
-| 8 | `tattiche`, `bottino`, `economia` |
+| 6 | `bestiario`, `combattimento`, `statistiche` |
+| 7 | `intermezzi`, `mondo`, `poteri` |
+| 8 | `bottino`, `economia`, `tattiche` |
 | 9 | `missioni` |
-| 10 | `trofei`, `modellodati` |
+| 10 | `modellodati`, `trofei` |
 | 11 | `motore-api` |
 | 12 | `motore`, `swing` |
 | 13 | `app` |
@@ -131,9 +131,8 @@ Dal basso in alto. Ogni livello dipende solo da quelli prima, e le dipendenze so
 3. **Residui della divisione.**
    - `foresta-modellodati` contiene solo `ModelloDati`.
    - In `foresta-motore-api` restano `FaseDiGioco`, `ComandiAssociati`, che usa i tipi di personaggi, poteri e missioni.
-   - **`MeccanicaDeiPoteri`:** combattimento e poteri sono ancora in ordine inverso. Il combattimento dipende dai poteri (anche per `TipoAzione` ed `EsitoAzione`), e i poteri arrivano al combattimento solo attraverso l'interfaccia e il `ServiceLoader`.
 4. **Personaggi e gruppi nello stesso modulo.** È una scelta voluta. `PersonaggioBase` e `GruppoGiocatore` si conoscono attraverso i singleton, in sette punti: da che parte sta un personaggio, quanti della sua specie ci sono, il gruppo pieno.
-5. **I test stanno tutti in alto.** Missioni, economia, poteri e bottino hanno pochi test loro (copertura propria dal 9 al 16%). Li esercitano i test di scenario del motore, che li coprono dal 64 al 94%.
+5. **I test stanno tutti in alto.** Missioni, economia, poteri e bottino hanno pochi test loro (copertura propria dal 9 al 16%). Li esercitano i test di scenario del motore, che li coprono dal 68 al 94%.
    **Giudizio:** finché si lancia sempre tutta la suite non è un problema. Ma un `mvn test -pl foresta-missioni` dice poco, ed è meglio scrivere i test nuovi di una parte nel suo modulo, quando non serve tutta la partita.
 6. **Pacchetti divisi fra moduli.** `tipi` sta in 19 moduli, `modellodati` in 15, `eventi.interni` in 13. È una convenzione voluta (CLAUDE.md), e con Java 8 e su Android funziona. Ma non è compatibile con i moduli di Java 9 (JPMS), se un giorno servissero.
 
@@ -202,11 +201,9 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
 
 1. **Pulizia piccola:**
    - togliere il codice morto del §5.
-2. **Finire la divisione:**
-   - decidere se invertire combattimento e poteri e togliere `MeccanicaDeiPoteri`.
-3. **Tagliare le classi grandi** quando si interviene su di loro (§3, problema 1). Il candidato più naturale è il combattimento a round di `LocazioneBase`.
-4. **Test nei moduli:** i test nuovi di una parte vanno nel suo modulo, quando non serve tutta la partita (§3, problema 6).
-5. **Bilanciamento**, come da [`todo.md`](todo.md); la **modalità verticale** per ultima.
+2. **Tagliare le classi grandi** quando si interviene su di loro (§3, problema 1). Il candidato più naturale è il combattimento a round di `LocazioneBase`.
+3. **Test nei moduli:** i test nuovi di una parte vanno nel suo modulo, quando non serve tutta la partita (§3, problema 5).
+4. **Bilanciamento**, come da [`todo.md`](todo.md); la **modalità verticale** per ultima.
 
 ## Osservazioni
 

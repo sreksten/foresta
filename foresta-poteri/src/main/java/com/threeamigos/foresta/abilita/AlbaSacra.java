@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.abilita;
 
-import com.threeamigos.foresta.poteri.Meccanica;
-import com.threeamigos.foresta.poteri.MeccanicaDeiPoteri;
+import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
@@ -33,7 +32,7 @@ public class AlbaSacra implements Abilita {
 	 */
 	@Override
 	public boolean usa(Personaggio utilizzatore, Gruppo gruppo, Gruppo gruppoAvversario) {
-		Meccanica.get().annuncia(utilizzatore, null, TipoAzione.ALBA_SACRA);
+		AnnuncioDellAzione.azione(utilizzatore, null, TipoAzione.ALBA_SACRA);
 		BusEventi.pubblica(new NotificaTestoFrase(utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " invoca l'Alba Sacra."));
 		for (Personaggio personaggio : gruppo.getPersonaggi()) {

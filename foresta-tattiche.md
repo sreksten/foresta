@@ -6,7 +6,7 @@
 
 ## Dipendenze
 
-**Dichiarate nel pom:** `foresta-combattimento`.
+**Dichiarate nel pom:** `foresta-combattimento`, `foresta-poteri`.
 
 **Solo per i test:** `foresta-personaggi`.
 
@@ -26,7 +26,7 @@ Tutto è **immutabile** e fatto solo di enumerati, numeri e liste (nel pacchetto
 - **`VoceMD`**: un **selettore** (chi), delle **condizioni** in AND (quando) e una sequenza di **azioni** (che cosa: la prima applicabile al bersaglio vince). Si può disattivare senza toglierla; ha un nome dato dal giocatore.
 - **`SelettoreMD`**: una **rosa** di candidati (`TipoRosa`), i **filtri** che li restringono (`FiltroMD`, in AND) e un **ordinamento** (`OrdinamentoMD`) che sceglie uno fra i rimasti.
 - **`PredicatoMD`**: una condizione sulla situazione e non su un personaggio (`TipoPredicato`: quanti, round, astuzia, intelligenza, probabilità, voce usata, round dall'ultimo uso), con parametro e negazione.
-- **`AzioneMD`**: il tipo (`TipoAzione`, che sta in `foresta-poteri`) e i parametri di quelle che li hanno (il criterio di scelta dell'incantesimo, se rinunciare quando l'attacco con le armi rende di più, il tipo di danno dell'arma voluta).
+- **`AzioneMD`**: il tipo (`TipoAzione`, che sta in `foresta-combattimento`) e i parametri di quelle che li hanno (il criterio di scelta dell'incantesimo, se rinunciare quando l'attacco con le armi rende di più, il tipo di danno dell'arma voluta).
 - **`TatticheMD`** tiene le tattiche di tutta la partita, ognuna con l'`uuid` del personaggio; `FormatoTattiche` descrive il formato di salvataggio a righe (`TATTICA`, `VOCE`, `SELETTORE`, `FILTRO`, `PREDICATO`, `AZIONE`). La rilettura usa le stesse fabbriche che controllano gli elementi, quindi un salvataggio incoerente è rifiutato.
 
 Le enum (nel pacchetto `tipi`): `TipoRosa` (se stesso, alleati, alleati caduti, avversari, ospiti e le combinazioni), `TipoFiltro` (salute, magia, livello, classe, categoria, stato, magico, debole o immune a…, il capo, l'ultimo scelto, chi mi ha attaccato per ultimo, l'arma che dà…), `TipoOrdinamento` (primo, a caso, meno/più salute, livello, più debole o resistente a, ultimo attaccante…), `TipoPredicato`, `TipoConfronto` (minore, uguale, maggiore), `TipoParametro`, `CriterioIncantesimo` (a caso, più potente, più adatto, più adatto esperto) e `PortataAzione` (su che cosa agisce un'azione, e quindi da quali rose il suo selettore può pescare).

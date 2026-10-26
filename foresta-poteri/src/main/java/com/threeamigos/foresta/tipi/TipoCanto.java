@@ -30,6 +30,13 @@ public enum TipoCanto {
 		return Testi.testoOCostante(this, "NOME");
 	}
 
+	/**
+	 * L'azione che intona questo canto: ha il suo nome preceduto da CANTO_, tranne l'Urlo della Banshee.
+	 */
+	public TipoAzione getTipoAzione() {
+		return this == URLO_DELLA_BANSHEE ? TipoAzione.URLO_DELLA_BANSHEE : TipoAzione.valueOf("CANTO_" + name());
+	}
+
 	public String getDescrizione() {
 		return Testi.testoOCostante(this, "DESCRIZIONE");
 	}
