@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.ui.tattiche;
+package com.threeamigos.foresta.tattiche.modifica;
 
 import com.threeamigos.foresta.tattiche.*;
 import com.threeamigos.foresta.modellodati.*;

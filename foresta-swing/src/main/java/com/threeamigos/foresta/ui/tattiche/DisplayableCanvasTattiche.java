@@ -9,6 +9,8 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpostaPersonaggio;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.tattiche.*;
+import com.threeamigos.foresta.tattiche.modifica.BozzaTattica;
+import com.threeamigos.foresta.tattiche.modifica.TestoTattica;
 import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.tipi.CategoriaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;

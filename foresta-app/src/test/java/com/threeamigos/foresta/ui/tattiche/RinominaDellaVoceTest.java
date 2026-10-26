@@ -4,6 +4,7 @@ import com.threeamigos.foresta.modellodati.TatticaMD;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
+import com.threeamigos.foresta.tattiche.modifica.BozzaTattica;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

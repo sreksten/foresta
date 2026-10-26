@@ -971,7 +971,7 @@ delle simulazioni agiscono con le stesse tattiche del gioco**, non più con una 
 
 ### 11.15 La schermata del giocatore
 
-(`ui/tattiche/DisplayableCanvasTattiche`, `BozzaTattica`, `CasellaADiscesa`, `TestoTattica`; `DisplayableCanvasTatticheTest`, `BozzaTatticaTest`, `ScenarioSchermataTatticheTest`). Si apre dall'inventario con l'icona `MOSTRA_TATTICHE` (stato `Stato.TATTICHE`, come la pagina dei trofei) e si lascia con `ANNULLA`. I comandi della barra sono i personaggi permanenti del gruppo, anche i caduti
+(`ui/tattiche/DisplayableCanvasTattiche` e `CasellaADiscesa`, in `foresta-swing`; `tattiche/modifica/BozzaTattica` e `TestoTattica`, in `foresta-tattiche`; `DisplayableCanvasTatticheTest`, `BozzaTatticaTest`, `ScenarioSchermataTatticheTest`). Si apre dall'inventario con l'icona `MOSTRA_TATTICHE` (stato `Stato.TATTICHE`, come la pagina dei trofei) e si lascia con `ANNULLA`. I comandi della barra sono i personaggi permanenti del gruppo, anche i caduti
 (non gli ospiti e chi è a tempo); il capo ha lo sfondo rosso. Due colonne con la cornice dell'inventario e il personaggio al centro:
 
 - **A sinistra la tattica**, un `ComponenteScorrevole` ricostruito a ogni disegno. Ogni voce ha una riga di intestazione (numero, **nome**; a destra su, giù, togli) e sotto il corpo: la riga della rosa e dell'ordinamento, i suoi **filtri** (`con`), le **condizioni** (`se`, con i filtri di `QUANTI` più indentati) e le **azioni** (`fai`); in coda a ogni gruppo una riga "(aggiungi...)" con un

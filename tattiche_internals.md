@@ -20,7 +20,8 @@ Le tattiche attraversano più moduli (la separazione la garantisce il compilator
 | | `tattiche.rose` | `Rosa` e una classe per ogni `TipoRosa`; `Rose` le trova |
 | | `tattiche.valutazione` | `Selettori`, `Filtri`, `Ordinamenti`, `Predicati`, `Requisiti`, `SceltaIncantesimo`, `Astuzia` |
 | | `combattimento` | `StatoDelCombattimento` (la memoria dello scontro) e `CalcolatoreCombattimento` (i danni attesi) |
-| `foresta-swing` | `ui.tattiche` | `DisplayableCanvasTattiche` (la schermata), `BozzaTattica` (la tattica in modifica), `TestoTattica` (i testi), `CasellaADiscesa` (i menu) |
+| | `tattiche.modifica` | `BozzaTattica` (la tattica in modifica), `TestoTattica` (i testi, da `testo_tattica_it.properties`) |
+| `foresta-swing` | `ui.tattiche` | `DisplayableCanvasTattiche` (la schermata), `CasellaADiscesa` (i menu) |
 
 La regola che ne discende: **i dati non sanno niente del motore** (`VoceMD` non può chiedere se un'azione si può fare) e **la UI non vede il motore** (lavora sui dati
 `*MD` e sugli enumerati, e parla per eventi). Chi valuta è sempre una classe di `foresta-motore`.
@@ -508,9 +509,9 @@ La schermata si apre dall'inventario con `MOSTRA_TATTICHE`; i comandi possibili 
   richiesta di apertura per far riallineare la schermata.
 - I comandi arrivano solo con la schermata aperta (`personaggioPerLeTattiche` controlla lo stato): **in combattimento le tattiche non si toccano**.
 
-## 16. La schermata del giocatore (`foresta-swing`, `ui.tattiche`)
+## 16. La schermata del giocatore (`foresta-swing`, `ui.tattiche`; la bozza e i testi in `foresta-tattiche`, `tattiche.modifica`)
 
-Tre classi, con una divisione netta:
+Tre classi, con una divisione netta (le prime due non toccano il toolkit grafico e stanno nel modulo delle tattiche, così ogni front-end le usa; i testi sono in `testo_tattica_it.properties`):
 
 | Classe | Ruolo |
 | :--- | :--- |
@@ -588,7 +589,8 @@ chi decide, `BozzaTattica.ordinamentiAmmessi`.
 | `tattiche/RegistroTatticheTest`, `TatticheBaseTest`, `BersaglioDeiMostriTest` | la replica di oggi, le tattiche base, il bersaglio dei mostri |
 | `tattiche/SalvataggioTatticheTest`, `TatticaDisabilitataTest` | il formato e la disabilitazione |
 | `motore/ContestoTatticoTest`, `ScenarioSchermataTatticheTest` | il contesto e il flusso della schermata col motore |
-| `ui/tattiche/BozzaTatticaTest`, `DisplayableCanvasTatticheTest`, `TestoTatticaTest` (nei moduli UI e app) | la bozza, la schermata, i testi |
+| `tattiche/modifica/BozzaTatticaTest`, `TestoTatticaTest`, `TestiDiTestoTatticaTest` | la bozza, i testi, e che ogni valore spiegato abbia il suo testo |
+| `ui/tattiche/DisplayableCanvasTatticheTest` (modulo UI) | la schermata |
 
 Per riprodurre un caso, `PartitaDiTest` e gli altri helper dei test del motore costruiscono i gruppi; il dado si trucca con `TruccatoreDiDadi` (vedi `strumenti_di_prova.md`).
 
