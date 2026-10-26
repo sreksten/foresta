@@ -80,7 +80,7 @@ public class BestiarioMD implements Serializzabile {
 	public void salva(PrintWriter stream) throws IOException {
 		for (TipoPersonaggio ruolo : TipoPersonaggio.values()) {
 			Set<String> chiavi = scoperte.get(ruolo);
-			boolean conCaratteristiche = chiavi != null && !chiavi.isEmpty();
+			boolean conCaratteristiche = chiavi != null;
 			if (sbloccate.contains(ruolo) || conCaratteristiche) {
 				stampaRiga(stream,
 						ruolo,

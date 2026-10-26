@@ -85,6 +85,7 @@ class ComandoTest {
 				Comando.PERSONAGGIO_5, Comando.PERSONAGGIO_6, Comando.PERSONAGGIO_7, Comando.PERSONAGGIO_8};
 		for (int i = 0; i < personaggi.length; i++) {
 			assertSame(personaggi[i], Comando.ofPersonaggio(i));
+			assertEquals(i, personaggi[i].getIndicePersonaggio(), personaggi[i].name());
 		}
 		assertThrows(IllegalArgumentException.class, () -> Comando.ofPersonaggio(-1));
 		assertThrows(IllegalArgumentException.class, () -> Comando.ofPersonaggio(8));

@@ -311,4 +311,96 @@ class ForestaTest {
         assertNotNull(Foresta.getLocazioneMD(QUI).getNome(), "il tempio ha il suo nome da quando nasce");
         assertThrows(IllegalArgumentException.class, () -> Foresta.costruisciLocazione(QUI, TipoLocazione.CITTA_NYENA));
     }
+
+    @Test
+    void unaCittaDistruttaSiRicordaEServonoSoloLeCitta() {
+        assertFalse(Foresta.isCittaDistrutta(TipoLocazione.CITTA_NYENA));
+        Foresta.setCittaDistrutta(TipoLocazione.CITTA_NYENA);
+        assertTrue(Foresta.isCittaDistrutta(TipoLocazione.CITTA_NYENA));
+        assertFalse(Foresta.isCittaDistrutta(TipoLocazione.CITTA_MALGAARD));
+
+        assertThrows(IllegalArgumentException.class, () -> Foresta.isCittaDistrutta(TipoLocazione.TEMPIO));
+        assertThrows(IllegalArgumentException.class, () -> Foresta.setCittaDistrutta(TipoLocazione.TEMPIO));
+    }
+
+    @Test
+    void ilGruppoStaSuUnaCasellaEIlGruppoConoscelaZonaIntorno() {
+        Foresta.impostaLocazione(QUI, TipoLocazione.TEMPIO);
+        riempiDiBosco();
+        Foresta.impostaLocazione(QUI, TipoLocazione.TEMPIO);
+
+        Foresta.setPosizioneDelGruppo(QUI);
+
+        assertEquals(QUI.getX(), Foresta.getPosizioneDelGruppo().getX());
+        assertEquals(QUI.getY(), Foresta.getPosizioneDelGruppo().getY());
+        assertEquals(TipoLocazione.TEMPIO, Foresta.getLocazioneDelGruppo());
+        assertTrue(Foresta.isGruppoIn(TipoLocazione.TEMPIO));
+        assertFalse(Foresta.isGruppoIn(TipoLocazione.BOSCO));
+        assertTrue(Foresta.isLocazioneConosciuta(new CoordinateMD(QUI.getX() + 1, QUI.getY())));
+
+        assertFalse(Foresta.isLocazioneVisitata(QUI));
+        Foresta.setLocazioneDelGruppoVisitata();
+        assertTrue(Foresta.isLocazioneVisitata(QUI));
+    }
+
+    @Test
+    void ilGruppoPuoComparireSuUnaCasellaLibera() {
+        riempiDiBosco();
+        Foresta.posizionaIlGruppoSuUnaCasellaLibera();
+        assertTrue(Foresta.isDentroLaMappa(Foresta.getPosizioneDelGruppo()));
+        assertEquals(TipoLocazione.BOSCO, Foresta.getLocazioneDelGruppo());
+    }
+
+    @Test
+    void iPassiPossibiliSiFermanoAlBordoDellaMappa() {
+        riempiDiBosco();
+        Foresta.setPosizioneDelGruppo(new CoordinateMD(5, 4));
+        assertEquals(4, Foresta.getMaxPassiNord());
+        assertEquals(4, Foresta.getMaxPassiEst());
+        assertEquals(3, Foresta.getMaxPassiSud());
+        assertEquals(5, Foresta.getMaxPassiOvest());
+
+        Foresta.setPosizioneDelGruppo(new CoordinateMD(0, 0));
+        assertEquals(0, Foresta.getMaxPassiNord());
+        assertEquals(0, Foresta.getMaxPassiOvest());
+        assertEquals(5, Foresta.getMaxPassiSud());
+        assertEquals(5, Foresta.getMaxPassiEst());
+    }
+
+    @Test
+    void ilGruppoSiFermaSullaPrimaCasellaCheNonEUnBoscoOUnaRadura() {
+        riempiDiBosco();
+        Foresta.impostaLocazione(new CoordinateMD(5, 2), TipoLocazione.TEMPIO);
+        Foresta.impostaLocazione(new CoordinateMD(7, 4), TipoLocazione.RADURA);
+        Foresta.impostaLocazione(new CoordinateMD(5, 6), TipoLocazione.GROTTA);
+        Foresta.impostaLocazione(new CoordinateMD(4, 4), TipoLocazione.PALUDE);
+        Foresta.setPosizioneDelGruppo(new CoordinateMD(5, 4));
+
+        assertEquals(2, Foresta.getMaxPassiNord(), "il tempio è la seconda casella: ci si ferma lì");
+        assertEquals(4, Foresta.getMaxPassiEst(), "la radura non ferma");
+        assertEquals(2, Foresta.getMaxPassiSud());
+        assertEquals(1, Foresta.getMaxPassiOvest());
+    }
+
+    @Test
+    void ilGruppoSiSpostaDiQuantiPassiPuoFare() {
+        riempiDiBosco();
+        Foresta.setPosizioneDelGruppo(new CoordinateMD(5, 4));
+
+        Foresta.muoveNord(2);
+        assertEquals(5, Foresta.getPosizioneDelGruppo().getX());
+        assertEquals(2, Foresta.getPosizioneDelGruppo().getY());
+        Foresta.muoveEst(3);
+        assertEquals(8, Foresta.getPosizioneDelGruppo().getX());
+        Foresta.muoveSud(4);
+        assertEquals(6, Foresta.getPosizioneDelGruppo().getY());
+        Foresta.muoveOvest(2);
+        assertEquals(6, Foresta.getPosizioneDelGruppo().getX());
+
+        // Oltre il bordo non si va: ci si ferma dove si può
+        Foresta.muoveOvest(5);
+        assertEquals(1, Foresta.getPosizioneDelGruppo().getX());
+        Foresta.muoveOvest(5);
+        assertEquals(0, Foresta.getPosizioneDelGruppo().getX());
+    }
 }
