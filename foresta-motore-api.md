@@ -27,7 +27,7 @@ Dipende dai sottoprogetti di cui la UI legge lo stato (trofei, missioni, bottino
 - **`GestorePunteggi`** e `Punteggio` (chi l'ha fatto e quanto) stanno in `foresta-punteggi`, con la classifica vera; questo modulo li dichiara perché la UI e il motore li vedano.
 - **`StrumentiDiSviluppo`**: quel che la finestra di prova può fare alla partita oltre a guardarla (cambiare i personaggi del gruppo, far partire le missioni, scegliere gli oggetti dei cofani); li implementa il motore. I trucchi sui dadi passano da `strumenti.TrucchiDiSviluppo`.
 
-I gestori su file di trofei e bestiario (`GestoreTrofei`, `GestoreBestiario`) stanno nei loro moduli, e il motore li implementa.
+I gestori su file di trofei e bestiario (`GestoreTrofei`, `GestoreBestiario`) stanno nei loro moduli, e il motore li implementa; ci stanno anche le richieste di aprirne le pagine (`RichiestaAperturaTrofei`, `RichiestaAperturaBestiario`).
 
 ### Gli eventi
 
@@ -50,6 +50,5 @@ Il comando con cui la UI sceglie un incantesimo, un canto, un'abilità o una mos
 
 ## Osservazioni
 
-- Il contratto di trofei e bestiario aspetta ancora i loro moduli per la parte delle richieste di apertura (`RichiestaAperturaTrofei`, `RichiestaAperturaBestiario` stanno qui).
 - Il modulo esiste per lasciare al compilatore il compito di impedire alla UI di usare il motore: `DipendenzeDalToolkitGraficoTest` controlla l'altra direzione (nessuno fuori da `foresta-swing` usa `java.awt` o Swing).
 - Il quadro generale delle due metà è in [`motore_di_gioco.md`](motore_di_gioco.md) §1 e in [`didattico.md`](didattico.md).

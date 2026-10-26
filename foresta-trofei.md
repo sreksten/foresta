@@ -6,7 +6,7 @@ Come il bestiario, i trofei **non appartengono a una partita**: non fanno parte 
 
 ## Dipendenze
 
-**Dichiarate nel pom:** `foresta-missioni`, `foresta-bestiario`.
+**Dichiarate nel pom:** `foresta-comandi`, `foresta-missioni`, `foresta-bestiario`.
 
 **Solo per i test:** `foresta-personaggi`.
 
@@ -14,7 +14,7 @@ Come il bestiario, i trofei **non appartengono a una partita**: non fanno parte 
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 
-Dipende da `foresta-missioni` (e per transitività da quasi tutto il dominio: economia, bottino, intermezzi, personaggi, mappa…) perché le regole nominano gli eventi `Interno…` e `Notifica…` che gli altri moduli pubblicano, e da `foresta-bestiario` per il trofeo dell'enciclopedista.
+Dipende da `foresta-missioni` (e per transitività da quasi tutto il dominio: economia, bottino, intermezzi, personaggi, mappa…) perché le regole nominano gli eventi `Interno…` e `Notifica…` che gli altri moduli pubblicano, da `foresta-bestiario` per il trofeo dell'enciclopedista e da `foresta-comandi` perché la richiesta di aprire la pagina (`RichiestaAperturaTrofei`) è una `RichiestaConComandi`.
 
 ## Funzionamento
 
@@ -35,6 +35,10 @@ Dipende da `foresta-missioni` (e per transitività da quasi tutto il dominio: ec
 È la facciata su `TrofeiMD`: ricorda i trofei vinti e il progresso verso gli altri (`isVinto`, `getProgresso`, `incrementaProgresso`), si iscrive agli eventi (`registrati()`), controlla i trigger e pubblica `InternoTrofeoAcquisito` (la UI lo annuncia con una notifica globale). Il modello si legge una volta all'avvio (`impostaGestoreTrofei`).
 
 Il progresso guadagnato in una locazione resta **in sospeso** e conta solo se il gruppo ne esce vivo: a fine locazione diventa progresso, si controllano i trofei e si salva. Se il gruppo muore la fine della locazione non arriva e il sospeso si scarta (`scartaIlProgressoInSospeso`) quando la partita finisce, ne comincia una nuova o se ne carica una — lo fa l'`Automa`; **non** quando si prepara una locazione, perché le missioni completate prima (a inizio locazione, o all'accampamento) hanno già contato.
+
+### La richiesta di aprire la pagina
+
+`RichiestaAperturaTrofei` (pacchetto `eventi.richieste`) è l'evento con cui l'`Automa` chiede alla UI di mostrare la pagina dei trofei quando il giocatore la apre dall'inventario; porta il solo comando `ANNULLA`.
 
 ## Osservazioni
 

@@ -6,7 +6,7 @@ Esiste a sé perché, a differenza di quasi tutto il resto, **non appartiene a u
 
 ## Dipendenze
 
-**Dichiarate nel pom:** `foresta-personaggi`.
+**Dichiarate nel pom:** `foresta-comandi`, `foresta-personaggi`.
 
 **Solo per i test:** `foresta-personaggi`.
 
@@ -14,7 +14,7 @@ Esiste a sé perché, a differenza di quasi tutto il resto, **non appartiene a u
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 
-Dipende solo da `foresta-personaggi`: le voci sono ruoli di `TipoPersonaggio`, e le caratteristiche sono quelle di `CaratteristicaDiClasse`, che escono dalle tabelle delle classi. I testi e la scheda li disegna la UI.
+Dipende da `foresta-personaggi`: le voci sono ruoli di `TipoPersonaggio`, e le caratteristiche sono quelle di `CaratteristicaDiClasse`, che escono dalle tabelle delle classi; e da `foresta-comandi` perché la richiesta di aprire la pagina (`RichiestaAperturaBestiario`) è una `RichiestaConComandi`. I testi e la scheda li disegna la UI.
 
 ## Funzionamento
 
@@ -33,6 +33,8 @@ In due modi: si sconfigge un avversario di quella classe (anche facendoci amiciz
 - **`RegistroBestiario`** è la facciata su `BestiarioMD`: `isSbloccata(classe)`, `getNumeroVociSbloccate`, `getNumeroVoci`, `getCaratteristicheScoperte(classe)`. Il modello si legge una volta all'avvio (`impostaGestoreBestiario`).
 - **`BestiarioMD`** tiene le voci sbloccate e le caratteristiche scoperte per voce.
 - **`GestoreBestiario`** (interfaccia: `carica`, `salva`) dice dove sta il bestiario: nel gioco `Main` passa l'implementazione su file (`GestoreBestiarioSuFile`, nel motore), i test un gestore in memoria.
+
+- **`RichiestaAperturaBestiario`** (pacchetto `eventi.richieste`): l'`Automa` la pubblica quando il giocatore chiede di vedere il bestiario dall'inventario, con il solo comando `ANNULLA`; la UI apre la pagina.
 
 La scheda con silhouette, nome, immagini, descrizione, abilità innate, forze e debolezze e moltiplicatori di classe la disegna la UI (`DisplayableCanvasBestiario`).
 
