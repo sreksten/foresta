@@ -34,8 +34,9 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 		super(nome, TipoPersonaggio.OMBRAFIAMMA, livello);
 	}
 
-	// L'ombrafiamma è un personaggio segreto con un carisma che fa riuscire sempre l'amicizia: una faccia in più del dado
-	// dell'amicizia (vedi CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA)
+	// L'ombrafiamma è un personaggio segreto con un carisma altissimo: una faccia in più del dado dell'amicizia (vedi
+	// CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA). Nel tiro però il carisma ha un tetto pari alle facce, quindi
+	// l'amicizia può comunque fallire con un 12
 	@Override
 	public int getCarisma() {
 		return CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA + 1;

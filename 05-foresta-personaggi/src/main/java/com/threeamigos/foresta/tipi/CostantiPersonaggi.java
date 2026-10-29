@@ -17,8 +17,8 @@ public final class CostantiPersonaggi {
     }
 
     // Amicizia e corruzione
-    // Il tentativo di amicizia riesce se il carisma di chi lo fa è maggiore del tiro di un dado con queste facce: con un
-    // carisma di una faccia in più il tentativo riesce sempre
+    // Il tentativo di amicizia riesce se il carisma di chi lo fa è maggiore del tiro di un dado con queste facce; nel tiro
+    // il carisma nel tiro conta al massimo quanto le facce, così con un tiro di 12 il tentativo fallisce sempre
     // Il tentativo di corruzione, se il gruppo ha le monete per pagare, riesce se il tiro di un dado con queste facce supera
     // la soglia: 7 volte su 10 con questi valori
     public static final int FACCE_DEL_DADO_DELL_AMICIZIA = 12;

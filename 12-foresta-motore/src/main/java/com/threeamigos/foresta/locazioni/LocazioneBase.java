@@ -860,8 +860,9 @@ public abstract class LocazioneBase implements Locazione {
 				}
 				Personaggio personaggio = gruppo.getPersonaggio(azione.getIndicePersonaggio());
 				int tiroDelDado = Dado.tira(CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA);
-				Logger.log(() -> "Carisma personaggio: " + personaggio.getCarisma() + "; tiro del dado: " + tiroDelDado);
-				if (personaggio.getCarisma() > tiroDelDado) {
+				int carismaNelTiro = Math.min(personaggio.getCarisma(), CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA);
+				Logger.log(() -> "Carisma personaggio: " + personaggio.getCarisma() + " (nel tiro " + carismaNelTiro + "); tiro del dado: " + tiroDelDado);
+				if (carismaNelTiro > tiroDelDado) {
 					personaggio.addCarisma(1);
 					haStrettoAmicizia = true;
 					// Come con la corruzione: con l'amicizia l'oggetto non si prende, e sparisce subito
