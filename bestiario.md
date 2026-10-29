@@ -92,7 +92,7 @@ La scheda di una voce aperta, dall'alto:
 - `BestiarioMD` (`modellodati`, sul modello di `TrofeiMD`, fuori da `ModelloDati` e mai reimpostato): le voci sbloccate (per ruolo) e, per ruolo, le chiavi delle
   caratteristiche scoperte. Nel file `bestiario` di `~/.foresta/` una riga per voce che ha qualcosa da dire: `RUOLO|sbloccata|chiave§chiave`. Una riga di una
   classe che non esiste più si salta; un file rovinato si mette da parte (`bestiario.rovinato`).
-- `GestoreBestiario` (`foresta-motore-api`), `GestoreBestiarioSuFile` (`salvataggi`, passato a `RegistroBestiario.impostaGestoreBestiario` da `Main`); nei test
+- `GestoreBestiario` (`11-foresta-motore-api`), `GestoreBestiarioSuFile` (`salvataggi`, passato a `RegistroBestiario.impostaGestoreBestiario` da `Main`); nei test
   `GestoreBestiarioInMemoria`, collegato a `PartitaDiTest` (ogni test riparte con il bestiario vuoto).
 - Il trofeo **Enciclopedista** (`TipoTrofeo.ENCICLOPEDISTA`, `TrofeoEnciclopedista`) si vince con tutte le 33 voci sbloccate. Il progresso non è quello del registro dei
   trofei (che si perde se il gruppo muore nella locazione) ma quanto sa il bestiario; si controlla a fine locazione, come gli altri. Il Perdigiorno, che chiede tutti gli

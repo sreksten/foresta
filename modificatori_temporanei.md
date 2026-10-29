@@ -7,7 +7,7 @@ I `ModificatoreAttributoMD` possono durare un tempo e un'arma può metterli sul 
 - Un modificatore può **durare un tempo**: poi se ne va da solo, come un effetto di stato.
 - Il tempo si misura in **turni di combattimento** oppure in **locazioni**.
 - Un modificatore ha un **bersaglio**: chi lo porta o chi viene colpito. Quelli sul bersaglio hanno senso solo sulle **armi**.
-- `ALBA_SACRA` toglie anche i modificatori temporanei, così i malus a tempo si curano. Il canto di valore del Bardo non è un modificatore ma un effetto di stato (`ISPIRATO`, vedi `bardo.md`).
+- `ALBA_SACRA` toglie anche i modificatori temporanei, così i malus a tempo si curano. Il canto di valore del Bardo non è un modificatore ma un effetto di stato (`ISPIRATO`, vedi `personaggi_giocabili.md`).
 - Il `FIXME` della fuga (`PersonaggioBase.fugge`) diventa un malus a tempo di coraggio, valore e carisma.
 
 ## 2. Com'è oggi

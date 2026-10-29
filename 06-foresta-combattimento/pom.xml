@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.threeamigos</groupId>
+        <artifactId>foresta</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>06-foresta-combattimento</artifactId>
+    <name>06-foresta-combattimento</name>
+    <description>La meccanica dello scontro: il calcolo dei colpi e dei danni, lo stato dello scontro e il cambio d'arma</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>05-foresta-personaggi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>05-foresta-personaggi</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

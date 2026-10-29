@@ -12,19 +12,19 @@ Le tattiche attraversano più moduli (la separazione la garantisce il compilator
 
 | Modulo | Pacchetto | Che cosa contiene |
 | :--- | :--- | :--- |
-| `foresta-combattimento` | `tipi` | Le azioni: `TipoAzione` (che cosa si può fare in uno scontro, poteri compresi) ed `EsitoAzione` |
-| `foresta-tattiche` | `tipi` | Gli altri **enumerati**: `TipoRosa`, `PortataAzione` (su che cosa agisce ogni azione e da quali rose pesca: `PortataAzione.di(azione)`), `TipoFiltro`, `TipoOrdinamento`, `TipoPredicato`, `TipoConfronto`, `CriterioIncantesimo`, `TipoParametro`, e `CostantiTattiche`. Solo nomi, descrizioni e regole di compatibilità; nessuna logica di gioco |
-| `foresta-tattiche` | `tattiche` | I **dati** (suffisso `MD`): `TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`, e `FormatoTattiche` per il salvataggio. Immutabili, con la lettura e la scrittura |
-| `foresta-tattiche` | `eventi.*` | `ComandoImpostaTattica` (UI → motore), `RichiestaAperturaTattiche` (motore → UI), `InternoDecisioneTattica` (la spiegazione di una decisione) |
-| `foresta-motore` | `tattiche` | La **logica**: `Valutatore`, `ContestoTattico`, `Decisione`, `RisultatoSelezione`, `EsecutoreTattiche`, `RegistroTattiche`, `TatticheBase` |
+| `06-foresta-combattimento` | `tipi` | Le azioni: `TipoAzione` (che cosa si può fare in uno scontro, poteri compresi) ed `EsitoAzione` |
+| `08-foresta-tattiche` | `tipi` | Gli altri **enumerati**: `TipoRosa`, `PortataAzione` (su che cosa agisce ogni azione e da quali rose pesca: `PortataAzione.di(azione)`), `TipoFiltro`, `TipoOrdinamento`, `TipoPredicato`, `TipoConfronto`, `CriterioIncantesimo`, `TipoParametro`, e `CostantiTattiche`. Solo nomi, descrizioni e regole di compatibilità; nessuna logica di gioco |
+| `08-foresta-tattiche` | `tattiche` | I **dati** (suffisso `MD`): `TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`, e `FormatoTattiche` per il salvataggio. Immutabili, con la lettura e la scrittura |
+| `08-foresta-tattiche` | `eventi.*` | `ComandoImpostaTattica` (UI → motore), `RichiestaAperturaTattiche` (motore → UI), `InternoDecisioneTattica` (la spiegazione di una decisione) |
+| `12-foresta-motore` | `tattiche` | La **logica**: `Valutatore`, `ContestoTattico`, `Decisione`, `RisultatoSelezione`, `EsecutoreTattiche`, `RegistroTattiche`, `TatticheBase` |
 | | `tattiche.rose` | `Rosa` e una classe per ogni `TipoRosa`; `Rose` le trova |
 | | `tattiche.valutazione` | `Selettori`, `Filtri`, `Ordinamenti`, `Predicati`, `Requisiti`, `SceltaIncantesimo`, `Astuzia` |
 | | `combattimento` | `StatoDelCombattimento` (la memoria dello scontro) e `CalcolatoreCombattimento` (i danni attesi) |
 | | `tattiche.modifica` | `BozzaTattica` (la tattica in modifica), `TestoTattica` (i testi, da `testo_tattica_it.properties`) |
-| `foresta-swing` | `ui.tattiche` | `DisplayableCanvasTattiche` (la schermata), `CasellaADiscesa` (i menu) |
+| `12-foresta-swing` | `ui.tattiche` | `DisplayableCanvasTattiche` (la schermata), `CasellaADiscesa` (i menu) |
 
 La regola che ne discende: **i dati non sanno niente del motore** (`VoceMD` non può chiedere se un'azione si può fare) e **la UI non vede il motore** (lavora sui dati
-`*MD` e sugli enumerati, e parla per eventi). Chi valuta è sempre una classe di `foresta-motore`.
+`*MD` e sugli enumerati, e parla per eventi). Chi valuta è sempre una classe di `12-foresta-motore`.
 
 ## 2. Il quadro d'insieme
 
@@ -58,7 +58,7 @@ Due proprietà da tenere presenti, perché spiegano molte scelte:
 - **Chi esegue non decide.** `EsecutoreTattiche` fa quello che la `Decisione` dice, sul modello dati di sempre. È condiviso fra la locazione (`LocazioneBase`) e le
   simulazioni, così i mostri e i personaggi del giocatore fanno le stesse cose in tutti e due.
 
-## 3. Gli enumerati (`foresta-tattiche`, pacchetto `tipi`; `TipoAzione` ed `EsitoAzione` in `foresta-combattimento`)
+## 3. Gli enumerati (`08-foresta-tattiche`, pacchetto `tipi`; `TipoAzione` ed `EsitoAzione` in `06-foresta-combattimento`)
 
 Il vocabolario delle tattiche è fatto di enumerati, e ogni voce nel file di salvataggio usa il **nome** dell'enumerato.
 
@@ -107,7 +107,7 @@ sia quello giusto, la lettura del salvataggio sa quale campo guardare, la UI sa 
 
 `TipoConfronto` ha tre valori (`MINORE`, `UGUALE`, `MAGGIORE`); "almeno" e "al massimo" si ottengono con la **negazione** (`NON MINORE`, `NON MAGGIORE`).
 
-## 4. I dati (`foresta-modellodati`)
+## 4. I dati (`10-foresta-modellodati`)
 
 ```
 TatticaMD ── lista di ──► VoceMD ──┬── SelettoreMD ──┬── TipoRosa
@@ -509,7 +509,7 @@ La schermata si apre dall'inventario con `MOSTRA_TATTICHE`; i comandi possibili 
   richiesta di apertura per far riallineare la schermata.
 - I comandi arrivano solo con la schermata aperta (`personaggioPerLeTattiche` controlla lo stato): **in combattimento le tattiche non si toccano**.
 
-## 16. La schermata del giocatore (`foresta-swing`, `ui.tattiche`; la bozza e i testi in `foresta-tattiche`, `tattiche.modifica`)
+## 16. La schermata del giocatore (`12-foresta-swing`, `ui.tattiche`; la bozza e i testi in `08-foresta-tattiche`, `tattiche.modifica`)
 
 Tre classi, con una divisione netta (le prime due non toccano il toolkit grafico e stanno nel modulo delle tattiche, così ogni front-end le usa; i testi sono in `testo_tattica_it.properties`):
 

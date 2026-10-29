@@ -5,10 +5,10 @@
 
 Un intermezzo è una sequenza di **pagine** mostrate a tutto schermo quando si verificano certe condizioni di gioco. Ogni pagina può avere uno sfondo, delle immagini (anche animate e in movimento), un testo in alto e dei dialoghi a fumetti. Un intermezzo scatta **una sola volta per partita**; lo stato "già visto" viene salvato con la partita.
 
-Gli intermezzi stanno nel modulo `foresta-intermezzi` (il meccanismo, gli strumenti di scena, i dati delle pagine che la UI disegna, `TipoIntermezzo`, `MomentoIntermezzo` e `IntermezziMD`), che **non sa che esistono le missioni né il motore**: un intermezzo può scattare senza nessuna missione (l'intermezzo iniziale, le locande, i negozi). Chi sta sopra gli fa avere quel che serve:
+Gli intermezzi stanno nel modulo `07-foresta-intermezzi` (il meccanismo, gli strumenti di scena, i dati delle pagine che la UI disegna, `TipoIntermezzo`, `MomentoIntermezzo` e `IntermezziMD`), che **non sa che esistono le missioni né il motore**: un intermezzo può scattare senza nessuna missione (l'intermezzo iniziale, le locande, i negozi). Chi sta sopra gli fa avere quel che serve:
 
-- **le fonti** (`FonteDiIntermezzi`, registrate con `RegistroIntermezzi.aggiungiFonte`): oggi solo le missioni (`missioni/IntermezziDelleMissioni`, in `foresta-missioni`), con gli intermezzi dei loro passi (`IntermezzoDiPasso`, che si ricorda nella sua missione ridefinendo `Intermezzo.segnaScattato`). Una fonte dice anche se ha un intermezzo in arrivo in un momento (`RegistroIntermezzi.haUnaFonteUnIntermezzoInArrivo`, lo usa `IntermezzoAccampamento` per farsi da parte) e se tiene per sé la scena di un intermezzo fisso (`RegistroIntermezzi.isBloccato`: `NonSparateSulPianista`, con `MissioneAPassi.bloccaIntermezzo`, blocca `IntermezzoLocandaPrimaVisita` nella locanda in cui affida il bardo);
-- **gli intermezzi fissi che hanno bisogno delle missioni**: li registra `intermezzi/IntermezziDelMotore` (in `foresta-motore`) con `FabbricaIntermezzi.registra`: gli epiloghi delle missioni (`IntermezzoEremitaRompiscatole`, `IntermezzoUrloDellaBanshee`, che stanno in `foresta-missioni`). Quelli che guardano l'ora o il livello del mondo (`IntermezzoNonChiudeteMai`, `IntermezzoSpadaNascosta`) stanno nel modulo, che vede `foresta-statistiche`;
+- **le fonti** (`FonteDiIntermezzi`, registrate con `RegistroIntermezzi.aggiungiFonte`): oggi solo le missioni (`missioni/IntermezziDelleMissioni`, in `09-foresta-missioni`), con gli intermezzi dei loro passi (`IntermezzoDiPasso`, che si ricorda nella sua missione ridefinendo `Intermezzo.segnaScattato`). Una fonte dice anche se ha un intermezzo in arrivo in un momento (`RegistroIntermezzi.haUnaFonteUnIntermezzoInArrivo`, lo usa `IntermezzoAccampamento` per farsi da parte) e se tiene per sé la scena di un intermezzo fisso (`RegistroIntermezzi.isBloccato`: `NonSparateSulPianista`, con `MissioneAPassi.bloccaIntermezzo`, blocca `IntermezzoLocandaPrimaVisita` nella locanda in cui affida il bardo);
+- **gli intermezzi fissi che hanno bisogno delle missioni**: li registra `intermezzi/IntermezziDelMotore` (in `12-foresta-motore`) con `FabbricaIntermezzi.registra`: gli epiloghi delle missioni (`IntermezzoEremitaRompiscatole`, `IntermezzoUrloDellaBanshee`, che stanno in `09-foresta-missioni`). Quelli che guardano l'ora o il livello del mondo (`IntermezzoNonChiudeteMai`, `IntermezzoSpadaNascosta`) stanno nel modulo, che vede `06-foresta-statistiche`;
 - **i dati**: `IntermezziMD` lo dà `ModelloDati` con `RegistroIntermezzi.setFornitoreDiDati`.
 
 Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
@@ -45,7 +45,7 @@ Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
    }
    ```
 
-2. **Registrala** con una costante in `tipi/TipoIntermezzo.java` e una riga in `intermezzi/FabbricaIntermezzi.java` (se la classe sta in `foresta-intermezzi`; se ha bisogno delle missioni sta in `foresta-motore` e la riga va in `IntermezziDelMotore`, con `FabbricaIntermezzi.registra`):
+2. **Registrala** con una costante in `tipi/TipoIntermezzo.java` e una riga in `intermezzi/FabbricaIntermezzi.java` (se la classe sta in `07-foresta-intermezzi`; se ha bisogno delle missioni sta in `12-foresta-motore` e la riga va in `IntermezziDelMotore`, con `FabbricaIntermezzi.registra`):
 
    ```java
    // TipoIntermezzo
@@ -167,7 +167,7 @@ Un'immagine si indica con `ImmagineIntermezzo`:
 | :--- | :--- | :--- |
 | Personaggio | `ImmagineIntermezzo.personaggio(TipoPersonaggio.X)` oppure la scorciatoia `ElementoIntermezzo.personaggio(id, classe, x, y)` | Le stesse immagini delle locazioni |
 | Illustrazione di una locazione | `ImmagineIntermezzo.locazione(TipoLocazione.X)` | Adatta come sfondo |
-| Risorsa qualsiasi | `ImmagineIntermezzo.risorsa("intermezzi/Tramonto.png")` | Percorso relativo a `foresta-swing/src/main/resources/com/threeamigos/foresta/img/`; quelle in `locazioni/`, `personaggi/` e `oggetti/` sono a metà risoluzione e si ingrandiscono con lo zoom |
+| Risorsa qualsiasi | `ImmagineIntermezzo.risorsa("intermezzi/Tramonto.png")` | Percorso relativo a `12-foresta-swing/src/main/resources/com/threeamigos/foresta/img/`; quelle in `locazioni/`, `personaggi/` e `oggetti/` sono a metà risoluzione e si ingrandiscono con lo zoom |
 | Sprite sheet | `ImmagineIntermezzo.spriteSheet("intermezzi/Pipistrello.png", colonne, righe, fotogrammiAlSecondo)` | Vedi sotto |
 | Animazione via codice | `ImmagineIntermezzo.animazione(Animazione.X)` | Vedi §8 |
 

@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.threeamigos</groupId>
+        <artifactId>foresta</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>02-foresta-attributi</artifactId>
+    <name>02-foresta-attributi</name>
+    <description>Gli attributi e i modificatori che li cambiano: solo quello, niente personaggi né oggetti</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>01-foresta-testi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>00-foresta-serializzazione</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

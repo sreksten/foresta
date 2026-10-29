@@ -7,37 +7,37 @@
     <description>La Foresta by Gundam of 3AM: pom padre dei moduli (vedi foresta.md per la loro mappa)</description>
     <packaging>pom</packaging>
 
-    <!-- Dall'alto verso il basso nell'ordine di dipendenza: ogni modulo conosce solo quelli sopra di lui -->
+    <!-- In ordine di livello (il numero davanti al nome): ogni modulo conosce solo quelli di livello più basso -->
     <modules>
-        <module>foresta-strumenti</module>
-        <module>foresta-eventi</module>
-        <module>foresta-testi</module>
-        <module>foresta-comandi</module>
-        <module>foresta-serializzazione</module>
-        <module>foresta-attributi</module>
-        <module>foresta-effettidistato</module>
-        <module>foresta-danni</module>
-        <module>foresta-artefatti</module>
-        <module>foresta-mappa</module>
-        <module>foresta-personaggi</module>
-        <module>foresta-combattimento</module>
-        <module>foresta-poteri</module>
-        <module>foresta-tattiche</module>
-        <module>foresta-statistiche</module>
-        <module>foresta-intermezzi</module>
-        <module>foresta-bottino</module>
-        <module>foresta-mondo</module>
-        <module>foresta-economia</module>
-        <module>foresta-missioni</module>
-        <module>foresta-bestiario</module>
-        <module>foresta-trofei</module>
-        <module>foresta-notizie</module>
-        <module>foresta-punteggi</module>
-        <module>foresta-modellodati</module>
-        <module>foresta-motore-api</module>
-        <module>foresta-motore</module>
-        <module>foresta-swing</module>
-        <module>foresta-app</module>
+        <module>00-foresta-serializzazione</module>
+        <module>00-foresta-strumenti</module>
+        <module>01-foresta-eventi</module>
+        <module>01-foresta-punteggi</module>
+        <module>01-foresta-testi</module>
+        <module>02-foresta-attributi</module>
+        <module>02-foresta-comandi</module>
+        <module>02-foresta-effettidistato</module>
+        <module>02-foresta-mappa</module>
+        <module>02-foresta-notizie</module>
+        <module>03-foresta-danni</module>
+        <module>04-foresta-artefatti</module>
+        <module>05-foresta-personaggi</module>
+        <module>06-foresta-bestiario</module>
+        <module>06-foresta-combattimento</module>
+        <module>06-foresta-statistiche</module>
+        <module>07-foresta-intermezzi</module>
+        <module>07-foresta-mondo</module>
+        <module>07-foresta-poteri</module>
+        <module>08-foresta-bottino</module>
+        <module>08-foresta-economia</module>
+        <module>08-foresta-tattiche</module>
+        <module>09-foresta-missioni</module>
+        <module>10-foresta-modellodati</module>
+        <module>10-foresta-trofei</module>
+        <module>11-foresta-motore-api</module>
+        <module>12-foresta-motore</module>
+        <module>12-foresta-swing</module>
+        <module>13-foresta-app-swing</module>
     </modules>
 
     <properties>

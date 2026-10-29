@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.threeamigos</groupId>
+        <artifactId>foresta</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>01-foresta-punteggi</artifactId>
+    <name>01-foresta-punteggi</name>
+    <description>La classifica dei migliori punteggi di tutte le partite</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>00-foresta-serializzazione</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

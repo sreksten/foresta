@@ -16,7 +16,7 @@ la spegne, senza nemmeno tirare il dado.
 | Cosa | Dove |
 | :--- | :--- |
 | Le tre mosse, chi batte chi | `tipi/MossaCartaForbiciSasso` |
-| La partita a tre mani vinte | `missioni/PartitaCartaForbiciSasso` (in `foresta-missioni`) |
+| La partita a tre mani vinte | `missioni/PartitaCartaForbiciSasso` (in `09-foresta-missioni`) |
 | Innesco, stato, esito | `locazioni/LocazioneBase` (`StatoLocazione.SFIDA_CARTA_FORBICI_SASSO`, `iniziaLaSfida`, `giocaUnaMano`, `concludiLaSfida`) |
 | Il riquadro | `ui/riquadri/DisplayableCanvasRiquadroSfida`, evento `eventi/interni/InternoSfidaCartaForbiciSasso` |
 | Le frasi | `testi/sfide.txt`, `ProduttoreDiSfideCasuale.fraseDiSfida` e le altre |

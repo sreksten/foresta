@@ -4,7 +4,7 @@
 
 Le monete del gioco vengono dalla **rivendita all'armaiolo degli artefatti trovati per terra** alla prima visita di una cella, dai **preziosi** (che valgono quanto il livello del mondo) e dalle **missioni** (che pagano per il livello). Finché si esplorano celle nuove le entrate crescono col livello e coprono negozi e fusioni, così chi vuole provare a costruire armi nuove non resta senza soldi. Ma la mappa si esaurisce verso il **livello 13**, e da lì le entrate dalle celle si fermano mentre i prezzi continuano a salire. Nemici e cofani danno pochissime monete, e i nemici non ne lasciano per scelta: scheletri, spettri e simili non hanno niente da lasciare.
 
-Il codice dell'economia sta nel modulo `foresta-economia`: la cassa del gruppo (`economia.Cassa`, monete e preziosi, con `CassaMD`), i magazzini dei negozi (`MagazziniDeiNegozi`, con `MagazziniMD`), i prezzi e la contrattazione (`RegoleContrattazione`, `OffertaConsumabile`, `OfferteAlchimista`), il commercio (`CommercioDelGruppo`), le offerte di chi si incontra (`offerte`) e le costanti (`CostantiEconomia`). Il gruppo non sa di avere una cassa.
+Il codice dell'economia sta nel modulo `08-foresta-economia`: la cassa del gruppo (`economia.Cassa`, monete e preziosi, con `CassaMD`), i magazzini dei negozi (`MagazziniDeiNegozi`, con `MagazziniMD`), i prezzi e la contrattazione (`RegoleContrattazione`, `OffertaConsumabile`, `OfferteAlchimista`), il commercio (`CommercioDelGruppo`), le offerte di chi si incontra (`offerte`) e le costanti (`CostantiEconomia`). Il gruppo non sa di avere una cassa.
 
 ## Entrate
 

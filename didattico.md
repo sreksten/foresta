@@ -26,7 +26,7 @@ Le caratteristiche principali, in una riga ciascuna:
 Il progetto è diviso in due parti che **non si conoscono**: il **motore** (le regole) e l'**interfaccia grafica** (Swing). Si parlano solo tramite eventi su un bus e tramite viste in sola lettura. Il motore gira anche senza la UI: i test giocano partite intere così.
 
 ```
-            INTERFACCIA (foresta-swing)                      MOTORE (foresta-motore)
+            INTERFACCIA (12-foresta-swing)                      MOTORE (12-foresta-motore)
    ┌───────────────────────────────────┐            ┌───────────────────────────────────┐
    │ ForestaUI, DisplayableCanvas      │  comandi   │ Automa: macchina a stati          │
    │ riquadri, schermate, barra icone  │ ─────────▶ │ locazioni, combattimento,         │
@@ -38,34 +38,82 @@ Il progetto è diviso in due parti che **non si conoscono**: il **motore** (le r
                      └────────── VistaPartita, VistaScambio ───────┘
 ```
 
-I moduli Maven si impilano, e ognuno conosce solo quelli sopra di lui, quindi è il compilatore a garantire la separazione:
+I moduli Maven si impilano in **14 livelli** (dal 00 al 13). Il livello di un modulo è 0 se non dipende da nessuno, altrimenti 1 più il livello più alto fra le sue dipendenze dirette: ogni modulo conosce solo moduli di livello più basso, e quindi è il compilatore a garantire la separazione. Moduli dello stesso livello non si conoscono fra loro. Il numero è anche il prefisso del documento del modulo (`NN-foresta-<modulo>.md`): aprendoli in ordine si legge il gioco dalle fondamenta fino alla cima.
 
 ```
- foresta-strumenti, -serializzazione      dadi, log, timer; salvataggi a righe
-      ▲
- foresta-eventi, -testi, -comandi         il bus, i testi per lingua, i comandi del giocatore
-      ▲
- foresta-attributi, -effettidistato,      un modulo per argomento: ognuno porta le sue enum (tipi),
- -danni, -artefatti, -mappa, -personaggi, i suoi dati (modellodati) e i contratti per la UI
- -poteri, -combattimento, -tattiche,
- -statistiche, -intermezzi, -bottino,
- -mondo, -economia, -missioni,
- -bestiario, -trofei
-      ▲
- foresta-modellodati   ModelloDati: mette insieme i dati di tutte le parti per salvarli e rileggerli
-      ▲
- foresta-motore-api     interfacce (Vista*), eventi del ciclo di vita, FaseDiGioco
-      ▲                          ▲
- foresta-motore         foresta-swing
- (macchina a stati,     (ui, immagini)
-  locazioni, salvataggi)
-      ▲                          ▲
-      └────────  foresta-app  ───┘     Main, SnifferBusEventi, test che usano entrambi
+ 13  ┌──────────────────────────────────────────────────────────────────────┐
+     │ app-swing      Main, SnifferBusEventi, i test che usano motore e UI  │
+     └───────────────────────┬──────────────────────┬───────────────────────┘
+ 12  ┌───────────────────────┴───────┐   ┌──────────┴───────────────────────┐
+     │ motore                        │   │ swing                            │
+     │ macchina a stati, locazioni,  │   │ ui, immagini: disegna la         │
+     │ salvataggi su file            │   │ partita, non vede il motore      │
+     └───────────────────────┬───────┘   └──────────┬───────────────────────┘
+ 11  ┌───────────────────────┴──────────────────────┴───────────────────────┐
+     │ motore-api     VistaPartita, ControlloreDiGioco, FaseDiGioco         │
+     └──────────────────────────────────┬───────────────────────────────────┘
+ 10  ┌──────────────────────────────────┴───────────────────────────────────┐
+     │ modellodati    ModelloDati: i dati di tutte le parti, per salvarli   │
+     │ trofei         i trofei che valgono fra una partita e l'altra        │
+     └──────────────────────────────────┬───────────────────────────────────┘
+  9  ┌──────────────────────────────────┴───────────────────────────────────┐
+     │ missioni       principali, incarichi, leggende, storie               │
+     └──────────────────────────────────┬───────────────────────────────────┘
+  8  ┌──────────────────────────────────┴───────────────────────────────────┐
+     │ bottino        quel che si trova e si raccoglie                      │
+     │ economia       cassa, negozi, contrattazione, offerte                │
+     │ tattiche       come un personaggio sceglie che cosa fare             │
+     └──────────────────────────────────┬───────────────────────────────────┘
+  7  ┌──────────────────────────────────┴───────────────────────────────────┐
+     │ intermezzi     le scene a fumetti                                    │
+     │ mondo          chi e che cosa c'è nella Foresta                      │
+     │ poteri         incantesimi, canti del Bardo, abilità innate          │
+     └──────────────────────────────────┬───────────────────────────────────┘
+  6  ┌──────────────────────────────────┴───────────────────────────────────┐
+     │ bestiario      le voci sbloccate fra una partita e l'altra           │
+     │ combattimento  come ci si scontra                                    │
+     │ statistiche    punti, esperienza, tempo e calendario del Drago       │
+     └──────────────────────────────────┬───────────────────────────────────┘
+  5  ┌──────────────────────────────────┴───────────────────────────────────┐
+     │ personaggi     classi, gruppi, progressione                          │
+     └──────────────────────────────────┬───────────────────────────────────┘
+  4  ┌──────────────────────────────────┴───────────────────────────────────┐
+     │ artefatti      oggetti generati, incantamenti, leggendari            │
+     └──────────────────────────────────┬───────────────────────────────────┘
+  3  ┌──────────────────────────────────┴───────────────────────────────────┐
+     │ danni          tipi di danno e interazioni con gli effetti di stato  │
+     └──────────────────────────────────┬───────────────────────────────────┘
+  2  ┌──────────────────────────────────┴───────────────────────────────────┐
+     │ attributi      effettidistato    mappa    notizie    comandi         │
+     └──────────────────────────────────┬───────────────────────────────────┘
+  1  ┌──────────────────────────────────┴───────────────────────────────────┐
+     │ eventi (il bus)        testi (per lingua)        punteggi            │
+     └──────────────────────────────────┬───────────────────────────────────┘
+  0  ┌──────────────────────────────────┴───────────────────────────────────┐
+     │ strumenti (dadi, log, timer)     serializzazione (salvataggi a righe)│
+     └──────────────────────────────────────────────────────────────────────┘
 ```
 
-La catena esatta, modulo per modulo, è nella tabella di [`foresta.md`](foresta.md#moduli).
+I collegamenti nel disegno sono indicativi: il livello dice «dipende al più da quelli sotto», non da quale. Le dipendenze esatte, modulo per modulo, sono nella tabella di [`foresta.md`](foresta.md#moduli) e in ogni documento di modulo:
 
-Il motore e la UI dipendono entrambi da `foresta-motore-api` e mai l'uno dall'altro: è lì che stanno le «lingue comuni» (eventi e viste). Solo `foresta-app` li mette insieme. Un test (`DipendenzeDalToolkitGraficoTest`) controlla che nessuno fuori da `foresta-swing` usi `java.awt` o Swing.
+| Livello | Moduli | Documenti |
+| :--- | :--- | :--- |
+| 00 | strumenti, serializzazione | [`00-foresta-strumenti.md`](00-foresta-strumenti.md), [`00-foresta-serializzazione.md`](00-foresta-serializzazione.md) |
+| 01 | eventi, testi, punteggi | [`01-foresta-eventi.md`](01-foresta-eventi.md), [`01-foresta-testi.md`](01-foresta-testi.md), [`01-foresta-punteggi.md`](01-foresta-punteggi.md) |
+| 02 | attributi, effettidistato, mappa, notizie, comandi | [`02-foresta-attributi.md`](02-foresta-attributi.md), [`02-foresta-effettidistato.md`](02-foresta-effettidistato.md), [`02-foresta-mappa.md`](02-foresta-mappa.md), [`02-foresta-notizie.md`](02-foresta-notizie.md), [`02-foresta-comandi.md`](02-foresta-comandi.md) |
+| 03 | danni | [`03-foresta-danni.md`](03-foresta-danni.md) |
+| 04 | artefatti | [`04-foresta-artefatti.md`](04-foresta-artefatti.md) |
+| 05 | personaggi | [`05-foresta-personaggi.md`](05-foresta-personaggi.md) |
+| 06 | bestiario, combattimento, statistiche | [`06-foresta-bestiario.md`](06-foresta-bestiario.md), [`06-foresta-combattimento.md`](06-foresta-combattimento.md), [`06-foresta-statistiche.md`](06-foresta-statistiche.md) |
+| 07 | intermezzi, mondo, poteri | [`07-foresta-intermezzi.md`](07-foresta-intermezzi.md), [`07-foresta-mondo.md`](07-foresta-mondo.md), [`07-foresta-poteri.md`](07-foresta-poteri.md) |
+| 08 | bottino, economia, tattiche | [`08-foresta-bottino.md`](08-foresta-bottino.md), [`08-foresta-economia.md`](08-foresta-economia.md), [`08-foresta-tattiche.md`](08-foresta-tattiche.md) |
+| 09 | missioni | [`09-foresta-missioni.md`](09-foresta-missioni.md) |
+| 10 | modellodati, trofei | [`10-foresta-modellodati.md`](10-foresta-modellodati.md), [`10-foresta-trofei.md`](10-foresta-trofei.md) |
+| 11 | motore-api | [`11-foresta-motore-api.md`](11-foresta-motore-api.md) |
+| 12 | motore, swing | [`12-foresta-motore.md`](12-foresta-motore.md), [`12-foresta-swing.md`](12-foresta-swing.md) |
+| 13 | app-swing | [`13-foresta-app-swing.md`](13-foresta-app-swing.md) |
+
+Il motore e la UI dipendono entrambi da `11-foresta-motore-api` e mai l'uno dall'altro: è lì che stanno le «lingue comuni» (eventi e viste). Solo `13-foresta-app-swing` li mette insieme. Un test (`DipendenzeDalToolkitGraficoTest`) controlla che nessuno fuori da `12-foresta-swing` usi `java.awt` o Swing.
 
 ## 3. Il bus eventi: come le parti si parlano
 

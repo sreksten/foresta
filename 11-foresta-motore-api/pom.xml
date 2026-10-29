@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.threeamigos</groupId>
+        <artifactId>foresta</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>11-foresta-motore-api</artifactId>
+    <name>11-foresta-motore-api</name>
+    <description>Il contratto del motore con la UI: la vista della partita, il controllore, i servizi della piattaforma e gli eventi del ciclo di vita e dei dialoghi della macchina a stati</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>10-foresta-trofei</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>09-foresta-missioni</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>08-foresta-bottino</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>05-foresta-personaggi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>01-foresta-punteggi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>02-foresta-notizie</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>01-foresta-eventi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>10-foresta-modellodati</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

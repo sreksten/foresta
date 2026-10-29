@@ -653,7 +653,7 @@ Le altre cose da fare sono in §8.
 
 ## 11. Il modello dati delle tattiche
 
-Qui sta il **modello** (come sono fatte una tattica, una voce, un bersaglio) e come lo usano il motore e la schermata. Le classi stanno nel pacchetto `…/tattiche` (i tipi, che servono anche alla UI, in `…/tipi`: `TipoAzione` in `foresta-combattimento`, gli altri in `foresta-tattiche`).
+Qui sta il **modello** (come sono fatte una tattica, una voce, un bersaglio) e come lo usano il motore e la schermata. Le classi stanno nel pacchetto `…/tattiche` (i tipi, che servono anche alla UI, in `…/tipi`: `TipoAzione` in `06-foresta-combattimento`, gli altri in `08-foresta-tattiche`).
 
 ### 11.1 Principi
 
@@ -699,7 +699,7 @@ Il **selettore** può mancare (`null`): vale allora quello di base della portata
 
 ### 11.3 La rosa dei candidati
 
-La rosa è l'insieme da cui il selettore pesca, prima dei filtri. Il suo nome è un enumerato (`tipi/TipoRosa` in `foresta-tattiche`, che serve anche alla UI), e chi calcola i candidati è la classe
+La rosa è l'insieme da cui il selettore pesca, prima dei filtri. Il suo nome è un enumerato (`tipi/TipoRosa` in `08-foresta-tattiche`, che serve anche alla UI), e chi calcola i candidati è la classe
 corrispondente (`tattiche/rose/Rosa`, una per valore: `RosaAlleati`, `RosaOspiti`..., si trovano con `Rose.di(tipo)`); il metodo restituisce una **`List<Personaggio>`** (non uno `Stream`: il registro delle decisioni, §7.7, deve
 poter dire quanti candidati c'erano e quanti ne sono rimasti dopo ogni filtro; le liste sono piccole).
 
@@ -874,7 +874,7 @@ Escluse (§5): fuga, corruzione, amicizia, passare inosservati. **Non c'è un'az
 - **`INCANTESIMO_DI_DANNO`** sceglie fra i sette incantesimi elementali che il personaggio può lanciare adesso; **non comprende `MORTE`** (può ritorcersi contro chi la lancia), `SILENZIO` e i benefici, che restano azioni esplicite.
   Il criterio è un parametro dell'azione. `INCANTESIMO_DEL_REPERTORIO` riproduce invece la scelta dei mostri di un tempo (§11.13).
 - **Pozioni:** quattro azioni (Salute e Magia, normale e grande: ognuna beve solo la sua); la scelta fra normale e grande la scrive la voce, con l'ordine delle azioni (§11.16).
-- **Incantesimi a più bersagli** (`MULTIPLO`, fino a `NUMERO_BERSAGLI`): il selettore sceglie il **bersaglio principale** e gli altri sono i successivi vivi dell'elenco degli avversari. Il danno si ripartisce per posizione (principale intero, poi 75%, 50%, 25%: `CalcolatoreCombattimento.quotaDelDannoPerPosizione`) e la valutazione somma i danni attesi con le stesse quote.
+- **Incantesimi a più bersagli** (`MULTIPLO`, fino a `NUMERO_BERSAGLI`): il selettore sceglie il **bersaglio principale** e gli altri sono i successivi vivi dell'elenco degli avversari. Il danno si ripartisce per posizione (principale intero, poi 50%, 25%, 12,5%, 6,25%, che è il minimo: `CalcolatoreCombattimento.quotaDelDannoPerPosizione`) e la valutazione somma i danni attesi con le stesse quote.
 - **Un test** controlla che ogni valore di `TipoIncantesimo` abbia il suo `TipoAzione` (un nuovo incantesimo senza azione fa fallire il test).
 
 **Il bersaglio scelto, per tutte le azioni.** L'`EsecutoreTattiche` (§11.14) esegue ogni azione sul bersaglio scelto dal valutatore (per i `MULTIPLO` il principale). Le azioni manuali del giocatore (barra dei comandi) continuano a scegliere da sole: l'attacco colpisce il primo avversario vivo (`AttaccoConLeArmi.esegui`),
@@ -908,12 +908,12 @@ Il registro delle decisioni (§7.7) riporta i danni attesi confrontati ("PIU_ADA
 
 ### 11.11 Dove stanno i dati e la logica
 
-Le classi che descrivono una tattica sono **dati puri**: immutabili, fatti solo di enumerati (`tipi`), numeri e liste. Stanno nel pacchetto **`…/tattiche`** (modulo `foresta-tattiche`), accanto alla logica, con il suffisso `MD` come il resto del modello dati
+Le classi che descrivono una tattica sono **dati puri**: immutabili, fatti solo di enumerati (`tipi`), numeri e liste. Stanno nel pacchetto **`…/tattiche`** (modulo `08-foresta-tattiche`), accanto alla logica, con il suffisso `MD` come il resto del modello dati
 (`TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`). Il motivo è che la stessa classe serve a tre cose: la **UI** le legge e le modifica (può importare `modellodati` e `tipi`, non il motore né il dominio), il **salvataggio**
-le scrive con il personaggio (`PersonaggioMD`, §11.12) e il **motore** le valuta. Il modulo `foresta-modellodati` non vede il motore, e quindi nemmeno `tattiche`: dipendono solo da `tipi` e fra loro.
+le scrive con il personaggio (`PersonaggioMD`, §11.12) e il **motore** le valuta. Il modulo `10-foresta-modellodati` non vede il motore, e quindi nemmeno `tattiche`: dipendono solo da `tipi` e fra loro.
 
 La **logica** sta in `…/tattiche`: le rose (`Rosa`, `Rose`), `Filtri`, `Ordinamenti`, `Predicati`, `Selettori` (applica un `SelettoreMD`), `Requisiti`, `SceltaIncantesimo`, `Astuzia`, `Valutatore`, il `ContestoTattico` e i risultati (`RisultatoSelezione`, `Decisione`). Non la
-può importare la UI: sta in `foresta-motore`, che non vede `foresta-swing`.
+può importare la UI: sta in `12-foresta-motore`, che non vede `12-foresta-swing`.
 
 Il valutatore e il contesto: `Valutatore.decidi` (la prima voce eseguibile; ripiego sull'attacco fisico al primo avversario) restituisce una `Decisione` (azione, bersaglio, perché). Il `Selettore` accetta un'`Ammissione`: restano nella rosa solo i candidati su cui un'azione della voce si può fare, e i filtri che dipendono dall'azione la valutano per quella che si farebbe su ciascuno.
 `Requisiti` dice quando si può fare ciascuna azione, con il motivo del no; `Astuzia` calcola l'astuzia (§4); `SceltaIncantesimo` e `CriterioIncantesimo` scelgono l'incantesimo (§11.10), con `CalcolatoreCombattimento.dannoAtteso` e `dannoAttesoDellaMischia` (senza dadi).
@@ -971,7 +971,7 @@ delle simulazioni agiscono con le stesse tattiche del gioco**, non più con una 
 
 ### 11.15 La schermata del giocatore
 
-(`ui/tattiche/DisplayableCanvasTattiche` e `CasellaADiscesa`, in `foresta-swing`; `tattiche/modifica/BozzaTattica` e `TestoTattica`, in `foresta-tattiche`; `DisplayableCanvasTatticheTest`, `BozzaTatticaTest`, `ScenarioSchermataTatticheTest`). Si apre dall'inventario con l'icona `MOSTRA_TATTICHE` (stato `Stato.TATTICHE`, come la pagina dei trofei) e si lascia con `ANNULLA`. I comandi della barra sono i personaggi permanenti del gruppo, anche i caduti
+(`ui/tattiche/DisplayableCanvasTattiche` e `CasellaADiscesa`, in `12-foresta-swing`; `tattiche/modifica/BozzaTattica` e `TestoTattica`, in `08-foresta-tattiche`; `DisplayableCanvasTatticheTest`, `BozzaTatticaTest`, `ScenarioSchermataTatticheTest`). Si apre dall'inventario con l'icona `MOSTRA_TATTICHE` (stato `Stato.TATTICHE`, come la pagina dei trofei) e si lascia con `ANNULLA`. I comandi della barra sono i personaggi permanenti del gruppo, anche i caduti
 (non gli ospiti e chi è a tempo); il capo ha lo sfondo rosso. Due colonne con la cornice dell'inventario e il personaggio al centro:
 
 - **A sinistra la tattica**, un `ComponenteScorrevole` ricostruito a ogni disegno. Ogni voce ha una riga di intestazione (numero, **nome**; a destra su, giù, togli) e sotto il corpo: la riga della rosa e dell'ordinamento, i suoi **filtri** (`con`), le **condizioni** (`se`, con i filtri di `QUANTI` più indentati) e le **azioni** (`fai`); in coda a ogni gruppo una riga "(aggiungi...)" con un
