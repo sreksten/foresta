@@ -5,7 +5,6 @@ import com.threeamigos.foresta.eventi.interni.InternoPersonaggioArreso;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneStatistichePersonaggio;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneStatoVitalePersonaggio;
-import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
@@ -136,15 +135,7 @@ final class SaluteEMorte {
 				if (notificaMorte == Personaggio.NotificaMorte.SI && !p.getMotivoNelGruppo().isLasciaSeMuore()) {
 					sb = new StringBuilder();
 					if (md().getNome() == null) {
-						boolean isGruppoAvversario;
-						Gruppo gruppo;
-						if (p.appartieneAlGruppoDelGiocatore()) {
-							isGruppoAvversario = false;
-							gruppo = GruppoGiocatore.getIstanza();
-						} else {
-							isGruppoAvversario = true;
-							gruppo = GruppoAvversario.getIstanza();
-						}
+						boolean isGruppoAvversario = !p.appartieneAlGruppoDelGiocatore();
 						if (isGruppoAvversario && GruppoAvversario.getIstanza().contaDellaStessaSpecie(p) > 1) {
 							if (p.getSesso() == Personaggio.Sesso.MASCHIO) {
 								sb.append(Numeri.getOrdinaleM(p.getOrdinale(), true));

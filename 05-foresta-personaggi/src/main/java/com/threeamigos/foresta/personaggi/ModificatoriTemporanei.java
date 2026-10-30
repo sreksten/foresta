@@ -139,23 +139,15 @@ final class ModificatoriTemporanei {
 		}
 		String nome = p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		String effetto = TestoDeiModificatori.effetto(modificatore);
-		switch (tipo) {
-			case AGGIUNTA:
-				BusEventi.pubblica(new NotificaTestoFrase(nome + ": " + effetto + " " + TestoDeiModificatori.durata(modificatore) + "."));
-				break;
-			case MODIFICA:
-				if (nuovaDurata > durataPrecedente) {
-					BusEventi.pubblica(new NotificaTestoFrase(nome + ": " + effetto + " " + TestoDeiModificatori.durata(modificatore) + "."));
-				}
-				break;
-			case RIMOZIONE:
-				// "Per il guerriero" ma "Per Aldo": l'iniziale minuscola è solo dell'articolo, un nome proprio resta com'è
-				BusEventi.pubblica(new NotificaTestoFrase("Per "
-						+ p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
-						+ " non vale più: " + effetto + "."));
-				break;
-			default:
-				break;
+		// L'aggiunta si racconta; scendere di un turno (MODIFICA con la durata che cala) no, ma rinfrescare una durata più corta sì
+		if (tipo == NotificaVariazioneModificatorePersonaggio.TipoVariazione.AGGIUNTA
+				|| tipo == NotificaVariazioneModificatorePersonaggio.TipoVariazione.MODIFICA && nuovaDurata > durataPrecedente) {
+			BusEventi.pubblica(new NotificaTestoFrase(nome + ": " + effetto + " " + TestoDeiModificatori.durata(modificatore) + "."));
+		} else if (tipo == NotificaVariazioneModificatorePersonaggio.TipoVariazione.RIMOZIONE) {
+			// "Per il guerriero" ma "Per Aldo": l'iniziale minuscola è solo dell'articolo, un nome proprio resta com'è
+			BusEventi.pubblica(new NotificaTestoFrase("Per "
+					+ p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
+					+ " non vale più: " + effetto + "."));
 		}
 	}
 

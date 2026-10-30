@@ -99,6 +99,8 @@ public class LanciatoreDeiDadi {
             case UOMO:
             case BORGOMASTRO:
             case DONNA:
+            // Chi non ha un profilo suo (un nuovo non combattente) ha quello dei bardi: carisma e un po' di tutto
+            default:
             return BARDO;
             case CENTAURO: return CENTAURO;
             case CHIMERA: return CHIMERA;
@@ -140,8 +142,6 @@ public class LanciatoreDeiDadi {
             case TITANO: return TITANO;
             case TROLL: return TROLL;
             case VIVERNA: return VIVERNA;
-            default:
-                throw new IllegalArgumentException("Tipo di personaggio non valido");
         }
     }
 
@@ -241,33 +241,18 @@ public class LanciatoreDeiDadi {
 
         // 3. Ridistribuzione del pool casuale (Gestito interamente a numeri INTERI)
         java.util.Random random = Dado.sorgente();
+        int[] aggiunte = new int[7];
         while (poolMutazione > 0) {
-            int statisticaCasuale = random.nextInt(7);
-            switch (statisticaCasuale) {
-                case 0:
-                    forzaInt++;
-                    break;
-                case 1:
-                    destrezzaInt++;
-                    break;
-                case 2:
-                    costituzioneInt++;
-                    break;
-                case 3:
-                    intelligenzaInt++;
-                    break;
-                case 4:
-                    saggezzaInt++;
-                    break;
-                case 5:
-                    carismaInt++;
-                    break;
-                case 6:
-                    fortunaInt++;
-                    break;
-            }
+            aggiunte[random.nextInt(7)]++;
             poolMutazione--;
         }
+        forzaInt += aggiunte[0];
+        destrezzaInt += aggiunte[1];
+        costituzioneInt += aggiunte[2];
+        intelligenzaInt += aggiunte[3];
+        saggezzaInt += aggiunte[4];
+        carismaInt += aggiunte[5];
+        fortunaInt += aggiunte[6];
 
         // 4. Controllo finale del resto per blindare il budget totale complessivo
         int budgetTotaleAtteso = puntiDaDistribuire + 35; // 35 punti sono il minimo biologico (5 * 7)

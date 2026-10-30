@@ -193,7 +193,8 @@ public final class RegoleEquipaggiamento {
 			}
 			return EsitoControlloRichiestaEquipaggiamento.slot(personaggio, TipoSlotArtefatto.MANO_SECONDARIA);
 
-		} else if (slotDelTipo == TipoSlotArtefatto.MANO_SECONDARIA) {
+		} else {
+			// MANO_SECONDARIA: gli altri slot sono già stati gestiti sopra
 			Optional<ArtefattoMD> occupanteADueMani = occupato(equipaggiati, TipoSlotArtefatto.ENTRAMBE_LE_MANI);
 			if (occupanteADueMani.isPresent()) {
 				return EsitoControlloRichiestaEquipaggiamento.rifiuto(personaggio, TipoMotivoRifiutoEquipaggiamento.ARMA_A_DUE_MANI_IMPUGNATA);
@@ -205,8 +206,6 @@ public final class RegoleEquipaggiamento {
 				return EsitoControlloRichiestaEquipaggiamento.slot(personaggio, TipoSlotArtefatto.MANO_SECONDARIA);
 			}
 
-		} else {
-			throw new IllegalArgumentException("Slot non gestito: " + slotDelTipo);
 		}
 	}
 

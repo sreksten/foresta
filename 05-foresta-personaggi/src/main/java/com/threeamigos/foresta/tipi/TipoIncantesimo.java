@@ -21,25 +21,39 @@ import com.threeamigos.foresta.testi.Testi;
  */
 public enum TipoIncantesimo {
 
-	ARIA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.ARIA),
-	ACQUA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.ACQUA),
-	TERRA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.TERRA),
-	FUOCO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.FUOCO),
-	FULMINE(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.FULMINE),
-	GELO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.GELO),
-	VELENO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.VELENO),
-	MORTE(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.SINGOLO_SOLO_VIVI, TipoDanno.NECROTICO),
-	RESURREZIONE(CategoriaIncantesimo.BENEFICO, PortataIncantesimo.SINGOLO_QUALSIASI, null),
-	SILENZIO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.GRUPPO, TipoDanno.ARCANO);
+	ARIA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.ARIA,
+			CostantiIncantesimi.INCANTESIMO_ARIA_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_ARIA_COSTO_ACQUISTO),
+	ACQUA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.ACQUA,
+			CostantiIncantesimi.INCANTESIMO_ACQUA_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_ACQUA_COSTO_ACQUISTO),
+	TERRA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.TERRA,
+			CostantiIncantesimi.INCANTESIMO_TERRA_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_TERRA_COSTO_ACQUISTO),
+	FUOCO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.FUOCO,
+			CostantiIncantesimi.INCANTESIMO_FUOCO_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_FUOCO_COSTO_ACQUISTO),
+	FULMINE(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.FULMINE,
+			CostantiIncantesimi.INCANTESIMO_FULMINE_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_FULMINE_COSTO_ACQUISTO),
+	GELO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.GELO,
+			CostantiIncantesimi.INCANTESIMO_GELO_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_GELO_COSTO_ACQUISTO),
+	VELENO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.MULTIPLO, TipoDanno.VELENO,
+			CostantiIncantesimi.INCANTESIMO_VELENO_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_VELENO_COSTO_ACQUISTO),
+	MORTE(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.SINGOLO_SOLO_VIVI, TipoDanno.NECROTICO,
+			CostantiIncantesimi.INCANTESIMO_MORTE_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_MORTE_COSTO_ACQUISTO),
+	RESURREZIONE(CategoriaIncantesimo.BENEFICO, PortataIncantesimo.SINGOLO_QUALSIASI, null,
+			CostantiIncantesimi.INCANTESIMO_RESURREZIONE_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_RESURREZIONE_COSTO_ACQUISTO),
+	SILENZIO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.GRUPPO, TipoDanno.ARCANO,
+			CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_ACQUISTO);
 
 	private final CategoriaIncantesimo categoriaIncantesimo;
 	private final PortataIncantesimo portata;
 	private final TipoDanno tipoDanno;
+	private final int costoLancio;
+	private final int costoAcquisto;
 
-	TipoIncantesimo(CategoriaIncantesimo categoriaIncantesimo, PortataIncantesimo portata, TipoDanno tipoDanno) {
+	TipoIncantesimo(CategoriaIncantesimo categoriaIncantesimo, PortataIncantesimo portata, TipoDanno tipoDanno, int costoLancio, int costoAcquisto) {
 		this.categoriaIncantesimo = categoriaIncantesimo;
 		this.portata = portata;
 		this.tipoDanno = tipoDanno;
+		this.costoLancio = costoLancio;
+		this.costoAcquisto = costoAcquisto;
 	}
 
 	/**
@@ -95,59 +109,13 @@ public enum TipoIncantesimo {
 	 * I punti di MAGIA che costa lanciarlo.
 	 */
 	public int getCostoLancio() {
-		switch (this) {
-			case ARIA:
-				return CostantiIncantesimi.INCANTESIMO_ARIA_COSTO_LANCIO;
-			case ACQUA:
-				return CostantiIncantesimi.INCANTESIMO_ACQUA_COSTO_LANCIO;
-			case TERRA:
-				return CostantiIncantesimi.INCANTESIMO_TERRA_COSTO_LANCIO;
-			case FUOCO:
-				return CostantiIncantesimi.INCANTESIMO_FUOCO_COSTO_LANCIO;
-			case FULMINE:
-				return CostantiIncantesimi.INCANTESIMO_FULMINE_COSTO_LANCIO;
-			case GELO:
-				return CostantiIncantesimi.INCANTESIMO_GELO_COSTO_LANCIO;
-			case VELENO:
-				return CostantiIncantesimi.INCANTESIMO_VELENO_COSTO_LANCIO;
-			case MORTE:
-				return CostantiIncantesimi.INCANTESIMO_MORTE_COSTO_LANCIO;
-			case RESURREZIONE:
-				return CostantiIncantesimi.INCANTESIMO_RESURREZIONE_COSTO_LANCIO;
-			case SILENZIO:
-				return CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_LANCIO;
-			default:
-				throw new IllegalStateException("Costo non previsto per " + this);
-		}
+		return costoLancio;
 	}
 
 	/**
 	 * Le monete che costa una pergamena.
 	 */
 	public int getCostoAcquisto() {
-		switch (this) {
-			case ARIA:
-				return CostantiIncantesimi.INCANTESIMO_ARIA_COSTO_ACQUISTO;
-			case ACQUA:
-				return CostantiIncantesimi.INCANTESIMO_ACQUA_COSTO_ACQUISTO;
-			case TERRA:
-				return CostantiIncantesimi.INCANTESIMO_TERRA_COSTO_ACQUISTO;
-			case FUOCO:
-				return CostantiIncantesimi.INCANTESIMO_FUOCO_COSTO_ACQUISTO;
-			case FULMINE:
-				return CostantiIncantesimi.INCANTESIMO_FULMINE_COSTO_ACQUISTO;
-			case GELO:
-				return CostantiIncantesimi.INCANTESIMO_GELO_COSTO_ACQUISTO;
-			case VELENO:
-				return CostantiIncantesimi.INCANTESIMO_VELENO_COSTO_ACQUISTO;
-			case MORTE:
-				return CostantiIncantesimi.INCANTESIMO_MORTE_COSTO_ACQUISTO;
-			case RESURREZIONE:
-				return CostantiIncantesimi.INCANTESIMO_RESURREZIONE_COSTO_ACQUISTO;
-			case SILENZIO:
-				return CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_ACQUISTO;
-			default:
-				throw new IllegalStateException("Costo non previsto per " + this);
-		}
+		return costoAcquisto;
 	}
 }

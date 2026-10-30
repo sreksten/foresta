@@ -107,7 +107,7 @@ final class NomeEDescrizione {
 				includiArticoloIndeterminativoSingolare = true;
 			} else if (opzione == Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) {
 				includiPreposizioneArticolata = true;
-			} else if (opzione == Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) {
+			} else {
 				inizialeMaiuscola = true;
 			}
 		}

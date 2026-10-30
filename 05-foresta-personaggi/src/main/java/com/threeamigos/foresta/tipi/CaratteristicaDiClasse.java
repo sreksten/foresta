@@ -124,11 +124,8 @@ public final class CaratteristicaDiClasse {
 	 * Un moltiplicatore a parole, senza gli zeri inutili ("1,50" è "1,5") e con la virgola come in italiano
 	 */
 	static String numeroInTesto(double numero) {
-		String testo = String.format(Locale.ROOT, "%.2f", numero);
-		if (testo.indexOf('.') >= 0) {
-			testo = testo.replaceAll("0+$", "").replaceAll("[.]$", "");
-		}
-		return testo.replace('.', ',');
+		// Il formato ha sempre il punto decimale: gli zeri in fondo e il punto rimasto da solo si tolgono
+		return String.format(Locale.ROOT, "%.2f", numero).replaceAll("0+$", "").replaceAll("[.]$", "").replace('.', ',');
 	}
 
 	private static String testo(String chiave, String valore, String moltiplicatore) {
