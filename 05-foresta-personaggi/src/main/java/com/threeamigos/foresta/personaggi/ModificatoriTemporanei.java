@@ -161,7 +161,7 @@ final class ModificatoriTemporanei {
 
 	public double getVariazioneDaTemporanei(TipoAttributo tipoAttributo) {
 		double base = p.baseDelModificabile(tipoAttributo);
-		return PersonaggioBase.quantitaModificata(md(), base, tipoAttributo, true) - PersonaggioBase.quantitaModificata(md(), base, tipoAttributo, false);
+		return AttributiSecondari.quantitaModificata(md(), base, tipoAttributo, true) - AttributiSecondari.quantitaModificata(md(), base, tipoAttributo, false);
 	}
 
 	public Optional<ModificatoreAttivo> getFissaggio(TipoAttributo tipoAttributo) {

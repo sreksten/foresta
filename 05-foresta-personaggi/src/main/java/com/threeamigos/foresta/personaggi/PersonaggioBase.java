@@ -30,6 +30,8 @@ import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.*;
 
+import static com.threeamigos.foresta.personaggi.AttributiSecondari.*;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -918,20 +920,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)calcolaCaricoMassimo(md, this);
 	}
 
-	/**
-	 * Calcola il carico massimo basandosi UNICAMENTE sulle statistiche primarie
-	 * e sul moltiplicatore della classe, mantenendo i rendimenti decrescenti.
-	 */
-	private static double calcolaCaricoMassimo(PersonaggioMD md, Personaggio moltiplicatori) {
-		return getQuantitaModificata(md, potenzialeDiCarico(md, moltiplicatori), TipoAttributo.CARICO_MASSIMO);
-	}
 
-	/**
-	 * Il carico massimo prima dei modificatori di CARICO_MASSIMO.
-	 */
-	private static double potenzialeDiCarico(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.potenzialeDiCarico(get(md, TipoAttributo.FORZA), get(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreCarico());
-	}
 
 	// SALUTE
 
@@ -1438,7 +1427,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * parata, resistenza magica, percezione, soggezione, furia, coraggio, valore, contrattazione, numero bersagli
 	 */
 	protected void ricalcolaAttributiSecondari() {
-		ricalcolaAttributiSecondariCore(md, this, this);
+		AttributiSecondari.ricalcola(md, this, this);
 	}
 
 	/**
@@ -1448,105 +1437,42 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * in fase di caricamento, quando non esiste ancora un Personaggio vivo a cui riferirli.
 	 */
 	public static void ricalcolaAttributiSecondari(PersonaggioMD md, Personaggio moltiplicatori) {
-		ricalcolaAttributiSecondariCore(md, moltiplicatori, null);
+		AttributiSecondari.ricalcola(md, moltiplicatori, null);
 	}
 
-	private static void ricalcolaAttributiSecondariCore(PersonaggioMD md, Personaggio moltiplicatori, Personaggio sorgenteEvento) {
-		// Il carico massimo è un massimo, non un valore: si legge e si scrive con getMassimo/setMassimo
-		Optional<Double> valorePrecedente = md.getMassimo(TipoAttributo.CARICO_MASSIMO);
-		double valoreAttuale = calcolaCaricoMassimo(md, moltiplicatori);
-		md.setMassimo(TipoAttributo.CARICO_MASSIMO, valoreAttuale);
-		if (sorgenteEvento != null && valorePrecedente.isPresent() && valorePrecedente.get() != valoreAttuale) {
-			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(sorgenteEvento, TipoAttributo.CARICO_MASSIMO, valorePrecedente.get(), valoreAttuale));
-		}
-		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.CRITICO, calcolaCritico(md, moltiplicatori));
-		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.PRECISIONE, calcolaPrecisione(md, moltiplicatori));
-		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.VELOCITA, calcolaVelocita(md, moltiplicatori));
-		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.FURTIVITA, calcolaFurtivita(md, moltiplicatori));
-		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.PARATA, calcolaParata(md, moltiplicatori));
-		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.RESISTENZA_MAGICA, calcolaResistenzaMagica(md, moltiplicatori));
-		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.PERCEZIONE, calcolaPercezione(md, moltiplicatori));
-		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.SOGGEZIONE, calcolaSoggezione(md, moltiplicatori));
-		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.FURIA, calcolaFuria(md, moltiplicatori));
-		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.CORAGGIO, calcolaCoraggio(md, moltiplicatori));
-		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.VALORE, calcolaValore(md, moltiplicatori));
-		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.CONTRATTAZIONE, calcolaContrattazione(md, moltiplicatori));
-		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.NUMERO_BERSAGLI, calcolaNumeroBersagli(md, moltiplicatori));
-	}
 
-	private static void ricalcolaAttributoSecondario(PersonaggioMD md, Personaggio sorgenteEvento, TipoAttributo tipoAttributo, double valoreRicalcolato) {
-		Optional<Double> valorePrecedente = md.getOptional(tipoAttributo);
-		md.set(tipoAttributo, valoreRicalcolato);
-		if (sorgenteEvento != null && valorePrecedente.isPresent() && valorePrecedente.get() != valoreRicalcolato) {
-			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(sorgenteEvento, tipoAttributo, valorePrecedente.get(), valoreRicalcolato));
-		}
-	}
 
 	public abstract double getMoltiplicatoreCarico();
 
 	public abstract double getMoltiplicatoreCritico();
 
-	/**
-	 * Calcola il critico (0-100) basandosi UNICAMENTE sulle statistiche primarie
-	 * e sul moltiplicatore della classe, mantenendo i rendimenti decrescenti.
-	 */
-	private static int calcolaCritico(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.critico(get(md, TipoAttributo.DESTREZZA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreCritico());
-	}
 
 	public abstract double getMoltiplicatorePrecisione();
 
-	private static int calcolaPrecisione(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.precisione(get(md, TipoAttributo.DESTREZZA), get(md, TipoAttributo.INTELLIGENZA), moltiplicatori.getMoltiplicatorePrecisione());
-	}
 
 	public abstract double getMoltiplicatoreVelocita();
 
-	private static int calcolaVelocita(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.velocita(get(md, TipoAttributo.DESTREZZA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreVelocita());
-	}
 
 	public abstract double getMoltiplicatoreFurtivita();
 
-	private static int calcolaFurtivita(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.furtivita(get(md, TipoAttributo.DESTREZZA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreFurtivita());
-	}
 
 	public abstract double getMoltiplicatoreParata();
 
-	private static int calcolaParata(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.parata(get(md, TipoAttributo.FORZA), get(md, TipoAttributo.DESTREZZA), moltiplicatori.getMoltiplicatoreParata());
-	}
 
 	public abstract double getMoltiplicatoreResistenzaMagica();
 
-	private static int calcolaResistenzaMagica(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.resistenzaMagica(get(md, TipoAttributo.SAGGEZZA), get(md, TipoAttributo.INTELLIGENZA), moltiplicatori.getMoltiplicatoreResistenzaMagica());
-	}
 
 	public abstract double getMoltiplicatorePercezione();
 
-	private static int calcolaPercezione(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.percezione(get(md, TipoAttributo.SAGGEZZA), get(md, TipoAttributo.DESTREZZA), moltiplicatori.getMoltiplicatorePercezione());
-	}
 
 	public abstract double getMoltiplicatoreSoggezione();
 
-	private static int calcolaSoggezione(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.soggezione(get(md, TipoAttributo.CARISMA), get(md, TipoAttributo.FORZA), moltiplicatori.getMoltiplicatoreSoggezione());
-	}
 
 	public abstract double getMoltiplicatoreFuria();
 
-	private static int calcolaFuria(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.furia(get(md, TipoAttributo.FORZA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreFuria());
-	}
 
 	public abstract double getMoltiplicatoreCoraggio();
 
-	private static int calcolaCoraggio(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.coraggio(get(md, TipoAttributo.CARISMA), get(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreCoraggio());
-	}
 
 	/**
 	 * Solo chi può entrare nel gruppo (eroi e i pochi mostri che si uniscono per amicizia o per denaro) tratta con i
@@ -1558,93 +1484,12 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 
-	private static int calcolaContrattazione(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.contrattazione(get(md, TipoAttributo.CARISMA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreContrattazione());
-	}
 
 	public abstract double getMoltiplicatoreValore();
 
-	private static int calcolaValore(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.valore(get(md, TipoAttributo.SAGGEZZA), get(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreValore());
-	}
 
 	public abstract double getMoltiplicatoreNumeroBersagli();
 
-	private static int calcolaNumeroBersagli(PersonaggioMD md, Personaggio moltiplicatori) {
-		// Recuperiamo la classe per capire qual è la forza trainante del personaggio
-		TipoPersonaggio classe = moltiplicatori.getClasse();
-
-		int statPrincipale;
-		int statSecondaria;
-
-		// BIVIO DI BILANCIAMENTO IN BASE ALL'ARCHETIPO DI CLASSE
-		switch (classe) {
-			case MAGO:
-			case MAGA:
-			case SACERDOTE:
-			case SACERDOTESSA:
-			case DRUIDO:
-			case DRUIDA:
-			case LICH:
-			case STREGA:
-			case NECROMANTE:
-				// I maghi concatenano minacce con la mente: Intelligenza (70%) + Saggezza (30%)
-				statPrincipale = get(md, TipoAttributo.INTELLIGENZA);
-				statSecondaria = get(md, TipoAttributo.SAGGEZZA);
-				break;
-
-			case BARDO:
-			case CANTASTORIE:
-			case VIANDANTE:
-			case BARDO_DELLE_LOCANDE:
-			case LOCANDIERE:
-			case ALCHIMISTA:
-			case VENDITORE_DI_PERGAMENE:
-			case INCANTATORE:
-			case MOGLIE_DEL_BARDO:
-			case UOMO:
-			case BORGOMASTRO:
-			case DONNA:
-				// I bardi ammaliano o spaventano folle intere: Carisma (70%) + Intelligenza (30%)
-				statPrincipale = get(md, TipoAttributo.CARISMA);
-				statSecondaria = get(md, TipoAttributo.INTELLIGENZA);
-				break;
-
-			case LADRO:
-			case LADRA:
-			case ELFO:
-			case ELFA:
-				// Classi agili (e il Ladro che mena a due mani): Destrezza (70%) + Fortuna/Forza (30%)
-				statPrincipale = get(md, TipoAttributo.DESTREZZA);
-				statSecondaria = get(md, TipoAttributo.FORZA);
-				break;
-
-			case GUERRIERO:
-			case GUERRIERA:
-			case CHIERICO:
-			case CHIERICA:
-			case CAPITANO_DELLE_GUARDIE:
-			case MINOTAURO:
-			case MINOTAURO_GIGANTE:
-			case GIGANTE:
-			case TITANO:
-			case DRAGO:
-			case ARMAIOLO:
-				// I bruti e i tank fisici: Forza (70%) + Costituzione (30%)
-				statPrincipale = get(md, TipoAttributo.FORZA);
-				statSecondaria = get(md, TipoAttributo.COSTITUZIONE);
-				break;
-
-			default:
-				// Fail-safe per mostri generici ed eremiti (Forza ed equilibrio mentale)
-				statPrincipale = get(md, TipoAttributo.FORZA);
-				statSecondaria = get(md, TipoAttributo.INTELLIGENZA);
-				break;
-		}
-
-		// La formula (70% la forza trainante, 30% quella di appoggio, minimo 1 bersaglio) sta nel calcolatore degli attributi
-		return CalcolatoreAttributiSecondari.numeroBersagli(statPrincipale, statSecondaria, moltiplicatori.getMoltiplicatoreNumeroBersagli());
-	}
 
 
 	public abstract double getMoltiplicatoreStanchezza();
@@ -1685,66 +1530,8 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	// -- funzioni per calcolo modificatori
 
-	/**
-	 * Riporta l'attributo del personaggio modificato sia dai modificatori locali che quelli degli artefatti. Il valore di
-	 * base, che nel modello dati è un double, qui si usa troncato a intero: è così che il gioco lo ha sempre calcolato, e
-	 * per questo il modello dati non ha più un getter per ogni attributo.
-	 */
-	private static int get(PersonaggioMD md, TipoAttributo tipoAttributo) {
-		return (int) getQuantitaModificata(md, (int) md.get(tipoAttributo), tipoAttributo);
-	}
 
-	private static double getQuantitaModificata(PersonaggioMD md, double quantitaOriginale, TipoAttributo tipoAttributo) {
-		return quantitaModificata(md, quantitaOriginale, tipoAttributo, true);
-	}
 
-	static double quantitaModificata(PersonaggioMD md, double quantitaOriginale, TipoAttributo tipoAttributo,
-											 boolean conTemporanei) {
-		List<ModificatoreAttributoMD> modificatoriLocali = new ArrayList<>();
-
-		md.getModificatori()
-				.stream()
-				.filter(m -> m.getTipoAttributo() == tipoAttributo)
-				.filter(m -> conTemporanei || !m.isTemporaneo())
-				.forEach(modificatoriLocali::add);
-
-		// I bonus dei pezzi di un set leggendario completo sono moltiplicati (vedi RegoleSetLeggendari)
-		for (ArtefattoMD artefatto : md.getArtefatti()) {
-			double moltiplicatore = RegoleSetLeggendari.moltiplicatore(md.getArtefatti(), artefatto);
-			artefatto.getModificatori().stream()
-					.filter(m -> m.getTipoAttributo() == tipoAttributo)
-					.filter(m -> m.getBersaglio() == BersaglioModificatore.PORTATORE)
-					.map(m -> RegoleSetLeggendari.applica(m, moltiplicatore))
-					.forEach(modificatoriLocali::add);
-		}
-
-		OptionalDouble modificatoreAssoluto = modificatoriLocali
-				.stream()
-				.filter(m -> m.getTipoModificatoreAttributo() == TipoModificatore.QUANTITA_ASSOLUTA)
-				.mapToDouble(ModificatoreAttributoMD::getQuantita).min();
-
-		if (modificatoreAssoluto.isPresent())
-			return modificatoreAssoluto.getAsDouble();
-
-		double quantitaFisse = modificatoriLocali.stream()
-				.filter(m -> m.getTipoModificatoreAttributo() == TipoModificatore.VARIAZIONE_FISSA)
-				.mapToDouble(ModificatoreAttributoMD::getQuantita).sum();
-
-		quantitaOriginale += quantitaFisse;
-
-		double quantitaPercentuali = modificatoriLocali.stream()
-				.filter(m -> m.getTipoModificatoreAttributo() == TipoModificatore.VARIAZIONE_PERCENTUALE)
-				.mapToDouble(ModificatoreAttributoMD::getQuantita).sum();
-
-		// Il canto di valore: ISPIRATO dà al coraggio e alla precisione una percentuale in più, che si somma alle altre
-		if (conTemporanei && (tipoAttributo == TipoAttributo.CORAGGIO || tipoAttributo == TipoAttributo.PRECISIONE)) {
-			quantitaPercentuali += md.getEffettiDiStato().stream()
-					.filter(e -> e.getTipoEffettoDiStato() == TipoEffettoDiStato.ISPIRATO)
-					.mapToDouble(EffettoDiStatoMD::getIntensita).sum();
-		}
-
-		return quantitaOriginale * (1 + quantitaPercentuali / 100);
-	}
 
 	// EFFETTI DI STATO
 
