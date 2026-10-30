@@ -121,6 +121,11 @@ public enum MissionePredefinita {
 	IL_COLPO(true),
 	// Un incarico in città, ma solo se resta un leggendario da mettere in palio, e fra un torneo e l'altro passano 72 ore
 	IL_TORNEO(true),
+	// Una catena di posti in cui ognuno dà l'informazione per il successivo (si cerca una persona o un leggendario); una su tre è una farsa.
+	// Un incarico in città, ultimo in ordine: nelle partite di prova si offre solo quando nessun altro è pronto
+	MISSIONE_A_TAPPE(true),
+	// Una delle chiavi di una MISSIONE_A_TAPPE a chiavi, che la affida quando il gruppo ne scopre i custodi.
+	CHIAVE_DEL_CUSTODE,
 
 	// Usate dai test, che inventano le loro missioni: non hanno una classe nel gioco
 	MISSIONE_DI_PROVA,

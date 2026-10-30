@@ -64,6 +64,8 @@ public final class FabbricaMissioni {
 		COSTRUTTORI.put(MissionePredefinita.IL_NEGOZIO_DELL_INCANTATORE, IlNegozioDellIncantatore::new);
 		COSTRUTTORI.put(MissionePredefinita.LA_DOCUMENTAZIONE, LaDocumentazione::new);
 		COSTRUTTORI.put(MissionePredefinita.IL_COLPO, IlColpo::new);
+		COSTRUTTORI.put(MissionePredefinita.MISSIONE_A_TAPPE, MissioneATappe::new);
+		COSTRUTTORI.put(MissionePredefinita.CHIAVE_DEL_CUSTODE, ChiaveDelCustode::new);
 		COSTRUTTORI.put(MissionePredefinita.IL_RITUALE, IlRituale::new);
 		COSTRUTTORI.put(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI, LaSfidaDeiCampioni::new);
 		COSTRUTTORI.put(MissionePredefinita.IL_CAMPIONE, IlCampione::new);

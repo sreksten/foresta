@@ -2,12 +2,17 @@ package com.threeamigos.foresta.testi;
 
 /**
  * I testi a caso delle missioni e dei personaggi del mondo: gli incarichi, i materiali richiesti, le spedizioni, gli oggetti
- * smarriti e i nomi di persona di {@code nomi.txt} (ostaggi, pellegrini, capibanda, sacerdoti, personaggi noti). Vedi missioni.txt, nomi.md
- * e passi_missioni.md.
+ * smarriti e i nomi di persona di {@code nomi.txt} (ostaggi, pellegrini, capibanda, sacerdoti, personaggi noti), più le righe delle missioni
+ * a tappe di {@code tappe.txt}. Vedi missioni.txt, tappe.txt, nomi.md, passi_missioni.md e missione_a_tappe.md.
  */
 public final class ProduttoreDiMissioniCasuale {
 
 	private static final GrammaticaPigra MISSIONI = GrammaticaPigra.deiTesti("missioni.txt", true);
+	// Le missioni a tappe stanno a parte: non usano nomi di persona (i capi li dà la missione) e hanno produzioni a esaurimento che si
+	// ripristinano dopo ogni riga, cosa che non si può fare con la grammatica dei nomi condivisi. Niente preposizioni articolate da
+	// sistemare: i nomi dei posti, che nascono con la mappa, li scrive la missione con i segnaposto
+	private static final GrammaticaPigra TAPPE = GrammaticaPigra.deiTesti("tappe.txt", false);
+	private static final Object SERRATURA_DELLE_TAPPE = new Object();
 
 	private ProduttoreDiMissioniCasuale() {
 	}
@@ -19,6 +24,24 @@ public final class ProduttoreDiMissioniCasuale {
 	 */
 	public static void precarica() {
 		MISSIONI.get();
+		TAPPE.get();
+	}
+
+	/**
+	 * Una riga di missione a tappe (vedi tappe.txt e TappeRichieste): una farsa o una missione seria (una persona o un leggendario da
+	 * cercare, le tre chiavi, la scelta fra due piste). Quale chiedere lo decide chi chiama, perché la grammatica non può garantire
+	 * una proporzione (vedi GrammarBean.md, §5.2). Le righe sono tutte diverse: le produzioni a esaurimento si ripristinano a ogni
+	 * riga.
+	 */
+	public static String rigaDiTappe(boolean farsa) {
+		synchronized (SERRATURA_DELLE_TAPPE) {
+			GrammarBean grammatica = TAPPE.get();
+			try {
+				return String.join(" ", grammatica.produce(farsa ? "TAPPA_MISSIONE_FARSA" : "TAPPA_MISSIONE")).replace('\t', ' ').trim();
+			} finally {
+				grammatica.reset();
+			}
+		}
 	}
 
 	/**

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * La pagina di un intermezzo in cui il gruppo parla fra sé, fuori dalle città: intorno al fuoco di un accampamento
  * ({@link #allAccampamento}), o in una locazione ({@link #in}). Il primo personaggio è a sinistra e guarda verso
- * destra, il secondo è a destra e guarda verso sinistra, e parlano loro due; un eventuale terzo e quarto personaggio
+ * destra, il secondo è a destra e guarda verso sinistra, e parlano loro due (con un personaggio solo parla lui, e non c'è il secondo); un eventuale terzo e quarto personaggio
  * stanno più in alto, fra il primo/secondo e il centro, e un eventuale quinto ancora più in alto, al centro.
  */
 public final class ScenaFraCompagni {
@@ -49,8 +49,8 @@ public final class ScenaFraCompagni {
 	private String luna;
 
 	private ScenaFraCompagni(String testo, TipoLocazione sfondo, boolean conFuoco, List<Personaggio> personaggi) {
-		if (personaggi.size() < 2) {
-			throw new IllegalArgumentException("Per parlare fra sé servono almeno due personaggi");
+		if (personaggi.isEmpty()) {
+			throw new IllegalArgumentException("Serve almeno un personaggio");
 		}
 		this.testo = testo;
 		this.sfondo = sfondo;
@@ -93,6 +93,9 @@ public final class ScenaFraCompagni {
 	 * Una battuta del secondo personaggio.
 	 */
 	public ScenaFraCompagni parlaIlSecondo(String battuta) {
+		if (personaggi.size() < 2) {
+			throw new IllegalStateException("Il secondo personaggio non c'è: il gruppo ne ha uno solo");
+		}
 		battute.add(BattutaIntermezzo.di(SECONDO, battuta));
 		return this;
 	}
@@ -120,7 +123,9 @@ public final class ScenaFraCompagni {
 		if (personaggi.size() > 2) {
 			pagina.conElemento(versoDestra("personaggio2", personaggi.get(2), X_TERZO, Y_TERZO));
 		}
-		pagina.conElemento(versoSinistra(SECONDO, personaggi.get(1), X_SECONDO, Y_SECONDO).conBocca(0.5, -0.15));
+		if (personaggi.size() > 1) {
+			pagina.conElemento(versoSinistra(SECONDO, personaggi.get(1), X_SECONDO, Y_SECONDO).conBocca(0.5, -0.15));
+		}
 		pagina.conElemento(versoDestra(PRIMO, personaggi.get(0), X_PRIMO, Y_PRIMO).conBocca(0.5, -0.15));
 		if (conFuoco) {
 			pagina.conElemento(ElementoIntermezzo.di("fuoco", ImmagineIntermezzo.animazione(Animazione.FUOCO_DA_CAMPO), X_FUOCO, Y_FUOCO));

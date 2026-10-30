@@ -137,6 +137,15 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 		return IncontroDiMissione.di(TipoPersonaggio.valueOf(parti[0]), Integer.parseInt(parti[1]));
 	}
 
+	/**
+	 * Chi custodisce quel leggendario per un gruppo di quel livello: quelli che la leggenda fissa per quell'oggetto, altrimenti quelli
+	 * adatti al livello. Per le missioni che mettono un leggendario in palio senza essere una leggenda (vedi MissioneATappe).
+	 */
+	public static IncontroDiMissione guardianiDi(String chiaveDelLeggendario, int livello) {
+		IncontroDiMissione fissi = GUARDIANI_FISSI.get(chiaveDelLeggendario);
+		return fissi != null ? fissi : guardianiPerLivello(livello);
+	}
+
 	private static Map<String, IncontroDiMissione> guardianiFissi() {
 		Map<String, IncontroDiMissione> fissi = new HashMap<>();
 		fissi.put("SPADA_DI_ROMY_JONA", IncontroDiMissione.di(TipoPersonaggio.VIVERNA, 5));

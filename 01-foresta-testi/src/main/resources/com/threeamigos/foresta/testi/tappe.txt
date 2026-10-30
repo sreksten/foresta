@@ -1,0 +1,744 @@
+// ---------------------------------------------------------------------------------------------
+// Le missioni a tappe (vedi missione_a_tappe.md e TappeRichieste, che legge la riga).
+//
+// Due radici: TAPPA_MISSIONE dà una missione seria (persona, oggetto leggendario, chiavi, due piste) e
+// TAPPA_MISSIONE_FARSA una farsa. Quale chiedere lo decide il gioco (circa una su tre è una farsa: vedi
+// CostantiMissioni), perché i pesi [^N] di GrammarBean non sono proporzionali: ogni ramo riceve un aumento in
+// base alla ricchezza dei sottoalberi (GrammarBean.md §5.2), e così le proporzioni fra le ricette serie sono solo
+// indicative. Le produzioni a esaurimento (NOME_CHIAVE$, CUSTODE_DATI$) si ripristinano dopo ogni riga.
+//
+// Ogni produzione TAPPA_MISSIONE dà una riga di campi CHIAVE=valore separati da ";", come missioni.txt.
+// Una missione è una catena di TAPPE: ogni tappa è un posto di una certa CLASSE (CITTA, LOCANDA, ROVINE,
+// TEMPIO, GROTTA, BOSCO, PALUDE, RADURA); la tappa finisce quando il gruppo ci arriva e riceve un'informazione che
+// dice dove andare dopo. Campi:
+//   TAPPA_n=CLASSE [NEMICO NUMERO]:informazione   dove si va, chi (facoltativo) lo custodisce e che cosa si
+//                                  scopre arrivandoci
+//   SCENA_n=narrazione/battuta del capo/battuta di un compagno   l'intermezzo dell'arrivo (compagno facoltativo)
+//   ARRIVO=CLASSE [NEMICO NUMERO]:testo   l'ultimo posto: dove sta ciò che si cerca (con chi lo custodisce)
+//   OGGETTO=LEGGENDARIO           ciò che si cerca è un leggendario (lo pesca la missione); senza, è una persona
+//   CHIAVI=n (ricetta delle chiavi: n ricerche in qualunque ordine): CUSTODE_n=CLASSE NEMICO NUMERO CAPO:testo e
+//                                  OGGETTO_CHIAVE_n=nome. Se NEMICO è SCAMBIO il custode non combatte: cede la chiave in
+//                                  cambio di un oggetto (il CAPO è il nome di una produzione di nomi, come in missioni.txt), e
+//                                  SCAMBIO_n=CLASSE NEMICO NUMERO:oggetto/testo dice dove sta
+//                                  (in un posto di quella classe, con quella guardia), da portargli
+//   BIVIO (ricetta delle due piste): dopo la tappa 1 il gruppo sceglie fra due posti: PISTA_A=CLASSE [NEMICO NUMERO]:testo,
+//                                  PISTA_B=..., GIUSTA=A|B (quella che prosegue verso l'ARRIVO) e SCENA_A, SCENA_B. Nella
+//                                  falsa pista il testo è un vicolo cieco che rimanda all'altra (%A_ALTRA%): non si fallisce
+//   BATTUTA_2, RISPOSTA_2 (farse): un secondo scambio nella scena del mandante; l'ultima RISPOSTA finisce con
+//                                  "Cominciate %DA_PROSSIMO%". Le farse hanno 0 o 1 tappa: al massimo due posti
+// Segnaposto risolti dalla missione mentre si gioca (la grammatica non conosce i nomi dei posti): %PROSSIMO% il nome
+// del posto della tappa dopo, con l'articolo ("le Vestigia dell'Antico Impero", "Malgaard"); le sue forme con la
+// preposizione, che la missione scrive giuste: %A_PROSSIMO% (alle Vestigia, a Malgaard), %DI_PROSSIMO%,
+// %DA_PROSSIMO%; %MONETE% la paga vera (la base del campo MONETE per il livello del mondo di quando la missione si offre); per il bivio %PISTA_A% e %PISTA_B% (i nomi dei due posti), %A_PISTA_A% e %A_PISTA_B%, e %A_ALTRA% (l'altro
+// posto, nel vicolo cieco); %OGGETTO% il leggendario, con l'articolo ("il Bastone dell'Arcimago Smemorato") e %DI_OGGETTO% ("dell'Arcimago…"); %CAPO% il capo di quel custode;
+// %POSTO_n% i posti dei custodi. I testi non dipendono da genere e numero di %OGGETTO% (può essere "gli Schinieri"): niente
+// pronomi (lo, la, li) né participi riferiti a lui, e si usa %DI_OGGETTO% dove serve "di".
+// Nei testi non si usano ";", "/" e [ ] { } | " fuori dalla sintassi; "verso" e "per" non si fondono con l'articolo e si
+// possono scrivere davanti a %PROSSIMO%, le altre preposizioni vanno nelle forme dei segnaposto.
+// ---------------------------------------------------------------------------------------------
+
+TAPPA_MISSIONE
+	[ARCO]
+
+TAPPA_MISSIONE_FARSA
+	[ARCO_FARSA]
+
+ARCO
+	[^4] [ARCO_PERSONA]
+	[^4] [ARCO_OGGETTO]
+	[^2] [ARCO_CHIAVI]
+	[^4] [ARCO_BIVIO]
+
+// I posti: la classe, con a volte una guardia (nemico e quanti). La guardia dà una locazione da combattere prima di
+// ricevere l'informazione; senza, il posto è tranquillo.
+LUOGO_ROVINE
+	[^5] ROVINE
+	[^1] ROVINE SCHELETRO 3
+	[^1] ROVINE SPETTRO 2
+	[^1] ROVINE LADRO 2
+
+LUOGO_TEMPIO
+	[^6] TEMPIO
+	[^1] TEMPIO GARGOYLE 2
+	[^1] TEMPIO SPETTRO 2
+
+LUOGO_GROTTA
+	[^5] GROTTA
+	[^1] GROTTA GOBLIN 3
+	[^1] GROTTA HOBGOBLIN 2
+	[^1] GROTTA LADRO 3
+
+LUOGO_BOSCO
+	[^5] BOSCO
+	[^1] BOSCO LADRO 3
+	[^1] BOSCO FOLLETTO 3
+	[^1] BOSCO GOBLIN 3
+
+LUOGO_PALUDE
+	[^5] PALUDE
+	[^1] PALUDE TROLL 1
+	[^1] PALUDE FOLLETTO 3
+
+LUOGO_RADURA
+	[^6] RADURA
+	[^1] RADURA FOLLETTO 2
+	[^1] RADURA LADRO 2
+
+// =============================================================================================
+// RICETTA 1: si cerca una persona. Si va di posto in posto seguendone le tracce: nessun nemico, a meno di una guardia.
+// =============================================================================================
+
+ARCO_PERSONA
+	[PERSONA_E_MANDANTE]CHIAVE=TRACCE_DI_[#PM];TIPO=RINTRACCIAMENTO;ASPETTO=[#MASPETTO];MANDANTE=[#MD];MONETE=[MONETE_PERSONA];\
+	TITOLO=Sulle tracce di [#PM];\
+	RICHIESTA=[#PF] [#PA] da [DA_QUANTO], e nessuno sa dove si trovi. [#MOTIVO];\
+	BATTUTA=[BATTUTA_DEL_CAPO];\
+	RISPOSTA=[#PRIMA_PISTA] Cominciate %DA_PROSSIMO%: vi segno il posto sulla mappa.;\
+	[PERCORSO_PERSONA];\
+	RINGRAZIAMENTO=[#RINGRAZIA];\
+	RICORDO=[#RICORDO_PERSONA]
+
+PERSONA_E_MANDANTE
+	[MASPETTO=LOCANDIERE][MD=il locandiere][PM=Gualtiero][PF=Il mio cantastorie, Gualtiero,][PA=è sparito][PS=seduto][PT=steso][PC=cercato][PG=prigioniero][PO=il liuto]\
+	[MOTIVO=Un cantastorie non va via senza finire la canzone, e lui ha lasciato l'ultima strofa a metà.]\
+	[PRIMA_PISTA=Prima di andarsene ha cantato in giro e parlato con mezza foresta.]\
+	[RINGRAZIA=Eccolo, vivo e con la voce di sempre. Ha già cominciato a chiedere un anticipo.]\
+	[RICORDO_PERSONA=Qui il cantastorie Gualtiero si fermò a pensare a una canzone nuova.]
+	[MASPETTO=SACERDOTESSA][MD=la sacerdotessa][PM=Ortensia][PF=La mia guaritrice, Ortensia,][PA=è partita][PS=seduta][PT=stesa][PC=cercata][PG=prigioniera][PO=la sacca delle erbe]\
+	[MOTIVO=Una guaritrice non lascia i malati senza dirlo a nessuno, e invece lei non ha detto niente.]\
+	[PRIMA_PISTA=Ortensia comprava le erbe da un mercante, e a qualcuno avrà pur detto dove andava.]\
+	[RINGRAZIA=Ortensia è tornata, stanca e piena di erbe nuove. I malati ringraziano, e io pure.]\
+	[RICORDO_PERSONA=Qui la guaritrice Ortensia cercava un'erba che non esisteva.]
+	[MASPETTO=CAPITANO][MD=il capitano delle guardie][PM=Anselmo][PF=Il cartografo della città, Anselmo,][PA=è scomparso][PS=seduto][PT=steso][PC=cercato][PG=prigioniero][PO=il compasso]\
+	[MOTIVO=Ha con sé le mappe dei sentieri sicuri, e senza di quelle non mando nessuno nel bosco.]\
+	[PRIMA_PISTA=L'ultima volta lo hanno visto prendere appunti, e chi prende appunti lascia sempre una traccia.]\
+	[RINGRAZIA=Le mappe sono salve, e il cartografo anche. Mi ha già corretto due sentieri.]\
+	[RICORDO_PERSONA=Qui il cartografo Anselmo disegnò una mappa che non fece vedere a nessuno.]
+	[MASPETTO=DONNA][MD=una donna][PM=Berta][PF=Mia figlia Berta][PA=se n'è andata][PS=seduta][PT=stesa][PC=cercata][PG=prigioniera][PO=il fazzoletto ricamato]\
+	[MOTIVO=Avevamo litigato per una sciocchezza, e adesso la sciocchezza mi sembra enorme.]\
+	[PRIMA_PISTA=Ha un carattere difficile ma una zia che la capisce: qualcuno saprà dove l'ha vista.]\
+	[RINGRAZIA=Berta è tornata. Abbiamo pianto tutte e due, e poi litigato per un'altra sciocchezza.]\
+	[RICORDO_PERSONA=Qui Berta si fermò a piangere e poi a ridere di sé.]
+	[MASPETTO=QUALUNQUE][MD=un uomo][PM=Teodoro][PF=Mio fratello Teodoro][PA=è partito][PS=seduto][PT=steso][PC=cercato][PG=prigioniero][PO=il cappello]\
+	[MOTIVO=Ha la testa fra le nuvole e le tasche vuote, e non so dove possa essere finito.]\
+	[PRIMA_PISTA=Parlava sempre di un amico lontano: qualcuno saprà dirvi di chi.]\
+	[RINGRAZIA=Teodoro è a casa. Dice che non si era perso, che stava solo cercando la strada più lunga.]\
+	[RICORDO_PERSONA=Qui Teodoro cercò la strada più lunga per tornare a casa.]
+	[MASPETTO=ALCHIMISTA][MD=l'alchimista][PM=Cleofe][PF=La mia apprendista, Cleofe,][PA=è sparita][PS=seduta][PT=stesa][PC=cercata][PG=prigioniera][PO=il mortaio]\
+	[MOTIVO=Mi ha lasciato un calderone che bolle da tre giorni e un biglietto con scritto solo: torno presto.]\
+	[PRIMA_PISTA=Cleofe cercava un ingrediente che nessuno vende: per forza è andata a cercarlo da qualche parte.]\
+	[RINGRAZIA=Cleofe è tornata con l'ingrediente. Il calderone ha fatto un'esplosione piccola e molto contenta.]\
+	[RICORDO_PERSONA=Qui l'apprendista Cleofe cercò un ingrediente che non si può comprare.]
+	[MASPETTO=GUERRIERO][MD=il maestro d'armi][PM=Ruggero][PF=Il mio vecchio maestro, Ruggero,][PA=è partito][PS=seduto][PT=steso][PC=cercato][PG=prigioniero][PO=il bastone da passeggio]\
+	[MOTIVO=Dice di essere troppo vecchio per le armi, e invece sono sicuro che sia andato a metterle alla prova.]\
+	[PRIMA_PISTA=Un maestro d'armi non scompare senza motivo: avrà lasciato un segno per i suoi allievi.]\
+	[RINGRAZIA=Ruggero è tornato. Dice che non ha combattuto, ma ha l'occhio nero di chi non ha perso.]\
+	[RICORDO_PERSONA=Qui il vecchio maestro Ruggero rimise alla prova le sue articolazioni.]
+	[MASPETTO=VENDITORE_DI_PERGAMENE][MD=il venditore di pergamene][PM=Elpidio][PF=Il mio scrivano, Elpidio,][PA=è sparito][PS=seduto][PT=steso][PC=cercato][PG=prigioniero][PO=il calamaio]\
+	[MOTIVO=Aveva appena finito di copiare un testo molto prezioso, e dal tavolo mancano il testo e lui.]\
+	[PRIMA_PISTA=Un copista lascia macchie di inchiostro ovunque passi: qualcuno le avrà notate.]\
+	[RINGRAZIA=Elpidio è tornato, e con lui il testo. Ha una macchia d'inchiostro anche sul naso.]\
+	[RICORDO_PERSONA=Qui lo scrivano Elpidio copiò un testo che non voleva farsi leggere.]
+
+BATTUTA_DEL_CAPO
+	Da dove cominciamo?
+	Qualcuno avrà pur visto qualcosa. Da dove si parte?
+	Va bene. Dove l'hanno visto l'ultima volta?
+	Aiuteremo volentieri. Ma ci serve un punto di partenza.
+
+DA_QUANTO
+	due giorni | tre giorni | quattro giorni | cinque giorni | sei giorni | una settimana
+
+MONETE_PERSONA
+	40 | 45 | 50
+
+// I percorsi: la sequenza dei posti. Ogni tappa porta una informazione che dice dove andare dopo.
+PERCORSO_PERSONA
+	[^3] TAPPA_1=CITTA:[CLUE_PERSONA_CITTA];SCENA_1=[SCENA_CITTA];\
+	TAPPA_2=LOCANDA:[CLUE_PERSONA_LOCANDA];SCENA_2=[SCENA_LOCANDA];\
+	ARRIVO=[ARRIVO_PERSONA]
+	[^3] TAPPA_1=CITTA:[CLUE_PERSONA_CITTA];SCENA_1=[SCENA_CITTA];\
+	TAPPA_2=LOCANDA:[CLUE_PERSONA_LOCANDA];SCENA_2=[SCENA_LOCANDA];\
+	TAPPA_3=[LUOGO_ROVINE]:[CLUE_PERSONA_ROVINE];SCENA_3=[SCENA_ROVINE];\
+	ARRIVO=[ARRIVO_PERSONA]
+	[^2] TAPPA_1=LOCANDA:[CLUE_PERSONA_LOCANDA];SCENA_1=[SCENA_LOCANDA];\
+	TAPPA_2=[LUOGO_TEMPIO]:[CLUE_PERSONA_TEMPIO];SCENA_2=[SCENA_TEMPIO];\
+	TAPPA_3=[LUOGO_ROVINE]:[CLUE_PERSONA_ROVINE];SCENA_3=[SCENA_ROVINE];\
+	ARRIVO=[ARRIVO_PERSONA]
+	[^2] TAPPA_1=CITTA:[CLUE_PERSONA_CITTA];SCENA_1=[SCENA_CITTA];\
+	TAPPA_2=[LUOGO_BOSCO]:[CLUE_PERSONA_BOSCO];SCENA_2=[SCENA_BOSCO];\
+	TAPPA_3=[LUOGO_RADURA]:[CLUE_PERSONA_RADURA];SCENA_3=[SCENA_RADURA];\
+	ARRIVO=[ARRIVO_PERSONA]
+	[^2] TAPPA_1=LOCANDA:[CLUE_PERSONA_LOCANDA];SCENA_1=[SCENA_LOCANDA];\
+	TAPPA_2=[LUOGO_PALUDE]:[CLUE_PERSONA_PALUDE];SCENA_2=[SCENA_PALUDE];\
+	TAPPA_3=[LUOGO_GROTTA]:[CLUE_PERSONA_GROTTA];SCENA_3=[SCENA_GROTTA];\
+	ARRIVO=[ARRIVO_PERSONA]
+	[^1] TAPPA_1=CITTA:[CLUE_PERSONA_CITTA];SCENA_1=[SCENA_CITTA];\
+	TAPPA_2=LOCANDA:[CLUE_PERSONA_LOCANDA];SCENA_2=[SCENA_LOCANDA];\
+	TAPPA_3=[LUOGO_TEMPIO]:[CLUE_PERSONA_TEMPIO];SCENA_3=[SCENA_TEMPIO];\
+	TAPPA_4=[LUOGO_ROVINE]:[CLUE_PERSONA_ROVINE];SCENA_4=[SCENA_ROVINE];\
+	ARRIVO=[ARRIVO_PERSONA]
+
+CLUE_PERSONA_CITTA
+	Un {oste|mercante|bottegaio} ricorda bene [#PM]: se ne parlava a lungo, e di una locanda nel bosco dove avrebbe passato la notte. Il posto è %PROSSIMO%.
+	Una guardia che conosceva [#PM] dice di aver visto qualcuno uscire dalle mura all'alba con il suo passo, diretto verso %PROSSIMO%.
+	Fra le carte di [#PM] resta un biglietto con il nome %DI_PROSSIMO%, sottolineato due volte. Poi, a matita: non dirlo a nessuno.
+	In una bottega c'è ancora [#PO] di [#PM], lasciato in pegno: chi lo ha preso in custodia ricorda che [#PM] diceva di voler andare %A_PROSSIMO%.
+
+CLUE_PERSONA_LOCANDA
+	Il locandiere ricorda bene [#PM]: ha pagato la camera con una moneta insolita e ha chiesto la strada per %PROSSIMO%.
+	Una cameriera racconta che [#PM] ha passato la notte a scrivere, e al mattino ha lasciato sul tavolo un foglio con il nome %DI_PROSSIMO%.
+	Un avventore giura di aver sentito [#PM] parlare nel sonno: ripeteva il nome %DI_PROSSIMO%, sempre lo stesso.
+	Nella stanza che [#PM] aveva preso c'è ancora [#PO], dimenticato. Il locandiere dice che [#PM] ha chiesto come si arriva %A_PROSSIMO%.
+
+CLUE_PERSONA_ROVINE
+	Nella polvere ci sono impronte fresche che portano fuori dal rudere, e accanto un fazzoletto con le iniziali di [#PM]. Le tracce vanno verso %PROSSIMO%.
+	Su un muro è incisa una freccia, e sotto una parola sola: %PROSSIMO%. La grafia è quella di [#PM], la stessa del biglietto.
+	Il fuoco è spento da poco: [#PM] ha lasciato qui un mazzetto di erbe legato con un nastro. Le impronte puntano verso %PROSSIMO%.
+	Sotto un arco crollato c'è [#PO] di [#PM], appoggiato con cura. Qualcuno ha disegnato nella cenere una mappa rozza: la strada porta %A_PROSSIMO%.
+
+CLUE_PERSONA_TEMPIO
+	Il custode del tempio ricorda [#PM] in preghiera per tutta una notte. All'alba ha chiesto la strada per %PROSSIMO%, e ha lasciato il tempio.
+	Sull'altare c'è un'offerta lasciata da [#PM] e un foglietto piegato in quattro: dice soltanto %PROSSIMO%.
+	Un sacerdote giura che [#PM] ha chiesto una benedizione per un viaggio breve, e l'ha ottenuta. Poi ha preso la via %DI_PROSSIMO%.
+	Il registro dei visitatori del tempio porta la firma di [#PM], con accanto una parola sola: %PROSSIMO%.
+
+CLUE_PERSONA_GROTTA
+	Sul fondo della grotta c'è un piccolo giaciglio ancora tiepido, e una scritta sul muro: [#PM] ha dormito qui. Un carbone indica la direzione %DI_PROSSIMO%.
+	Un pipistrello sveglio cerca di dire qualcosa, ma a farsi capire è il segno lasciato nel fango: tracce che portano verso %PROSSIMO%.
+	Fra le rocce c'è un biglietto trattenuto da un sasso. Dice che [#PM] sta bene e che sta andando %A_PROSSIMO%.
+
+CLUE_PERSONA_BOSCO
+	Su un tronco è incisa una freccia fresca, e sotto i rami ci sono impronte che [#PM] riconoscerebbe. Portano verso %PROSSIMO%.
+	Un taglialegna ricorda di aver incontrato [#PM] sul sentiero: chiedeva la strada per %PROSSIMO%, e sembrava aver fretta.
+	Una pigna dipinta di rosso indica la via: è un segnale che [#PM] usava da ragazzo. Segue verso %PROSSIMO%.
+
+CLUE_PERSONA_PALUDE
+	Un pescatore di rane ricorda [#PM] sull'argine, a fissare l'acqua. Poi se ne è andato verso %PROSSIMO%, a passo svelto.
+	Fra i giunchi c'è [#PO] di [#PM], inzuppato. Le impronte nel fango portano verso %PROSSIMO%.
+	Sul palo di un guado qualcuno ha legato un nastro. Un contadino dice che è un messaggio per chi cerca [#PM]: la strada va %A_PROSSIMO%.
+
+CLUE_PERSONA_RADURA
+	Il prato è schiacciato dove qualcuno si è sdraiato a guardare il cielo. [#PM] ha lasciato un sasso con una freccia: la direzione è %PROSSIMO%.
+	Un pastore ricorda [#PM] che mangiava pane e formaggio e chiedeva la strada per %PROSSIMO%. Ha lasciato anche la crosta, per gli uccelli.
+	Sul tronco di una quercia isolata ci sono scritte tante iniziali. Quelle di [#PM] sono le più recenti, e accanto una freccia: %PROSSIMO%.
+
+// L'ultimo posto: la persona è libera, o prigioniera di qualcuno che va sconfitto
+ARRIVO_PERSONA
+	[^3] [ARRIVO_LIBERA]
+	[^2] [ARRIVO_PRIGIONIERA]
+
+ARRIVO_LIBERA
+	ROVINE:[#PM] è qui, [#PS] fra le pietre, con un quaderno in grembo. Dice che non ha smarrito la strada: aveva solo bisogno di pensare.
+	ROVINE:[#PM] sta frugando fra le macerie con la lanterna. Quando vi vede, non fa una piega: dice che stava aspettando qualcuno con un'idea migliore della sua.
+	TEMPIO:[#PM] è qui, in silenzio davanti all'altare. Quando vi vede, sorride come chi sapeva di essere [#PC].
+	GROTTA:[#PM] è qui, accanto a un piccolo fuoco. Dice che in città faceva troppo rumore, e che qui finalmente sente i pensieri.
+	RADURA:[#PM] è qui, [#PT] sull'erba, e guarda le nuvole. Dice che le sta contando, e che ha perso il conto da un pezzo.
+	BOSCO:[#PM] è qui, vicino a un ruscello, con [#PO] accanto. Dice di aver camminato fin qui senza accorgersene, e di non avere nessuna intenzione di tornare di corsa.
+
+ARRIVO_PRIGIONIERA
+	GROTTA GOBLIN 4:[#PM] è qui, [#PG] in un angolo, e i goblin di guardia non sembrano disposti a mollare. Prima di parlare, sarà necessario convincerli.
+	ROVINE LADRO 3:[#PM] è qui, [#PG] da una banda di ladri che si è accampata fra le rovine. Se vuole tornare a casa, qualcuno dovrà prima mandarli via.
+	BOSCO LADRO 3:[#PM] è qui, [#PG] in un accampamento di briganti. Si vede da come ride che vorrebbe sembrare a suo agio.
+	PALUDE TROLL 1:[#PM] è qui, [#PG] in una capanna sul bordo dell'acqua, e il troll che la custodisce sbuffa come se avesse trovato un animale domestico.
+
+// Le scene d'arrivo: narrazione, battuta del capo, battuta di un compagno (facoltativa)
+SCENA_CITTA
+	Fra i vicoli della città il gruppo chiede in giro, e qualcuno si ricorda./Qualcuno qui deve aver visto qualcosa./Chiediamo anche in bottega.
+	Il gruppo si ferma in piazza a osservare il viavai: da qualche parte c'è un indizio./Guardiamo bene, nessuno è invisibile del tutto./Io sento le chiacchiere.
+	Il mercato è affollato, e fra le voci c'è quella che cercavate: un vecchio venditore ha una storia da raccontare./Quanto vuoi per la storia?/Una moneta, e un po' di rispetto.
+
+SCENA_LOCANDA
+	Il caminetto crepita e un cane dorme sotto un tavolo. Il gruppo prende posto e aspetta che qualcuno si faccia avanti./Il bello delle locande è che nessuno sta zitto per molto./Io tengo d'occhio la porta.
+	La sala della locanda è piena di fumo e di voci. Il gruppo si siede e tende l'orecchio./Una locanda sa sempre tutto./Offro il primo giro, se serve.
+	Il locandiere strofina un bicchiere e guarda il gruppo con la faccia di chi ha una storia da vendere./Quanto costa, la storia?/Poco, di solito.
+
+SCENA_ROVINE
+	Il gruppo si muove fra i muri crollati. Il vento fa dei rumori che sembrano parole./Guardate per terra, qualcuno è passato./Dietro quella colonna c'è qualcosa.
+	Fra le pietre cresce l'erba, e sotto l'erba ci sono segni che qualcuno ha rimosso in fretta./Qui hanno cercato qualcosa, e non l'hanno trovata./O l'hanno trovata, e hanno cancellato le tracce.
+	Il sole filtra da un arco crollato e illumina un muro pieno di graffiti. Il gruppo si ferma a guardare./Qualcuno ha scritto di recente./Troviamo il senso, e troviamo la strada.
+
+SCENA_TEMPIO
+	Nel silenzio del tempio ogni passo suona come una domanda. Il gruppo si guarda intorno con rispetto./Cerchiamo con garbo./Non tocchiamo niente senza chiedere.
+	La luce dalle vetrate cade sull'altare in macchie colorate. Il gruppo si ferma, e per un momento nessuno parla./Qui c'è qualcosa che vuole essere trovato./Oppure che vuole essere lasciato in pace.
+	Una candela è ancora accesa su un lato dell'altare. Il gruppo si avvicina in punta di piedi./Qualcuno è passato da poco./E ha lasciato qualcosa.
+
+SCENA_GROTTA
+	L'aria della grotta sa di pietra bagnata. Il gruppo accende una torcia e procede piano./Attenti dove mettete i piedi./Io sento un rumore di acqua, e forse qualcosa di più.
+	Le pareti della grotta rimandano ogni parola con un'eco beffarda. Il gruppo abbassa la voce./Chi viene qui lo fa per un motivo./O perché ha smarrito la strada.
+	Una galleria stretta porta a una sala più larga, dove qualcuno ha acceso un fuoco e poi l'ha spento./Cenere ancora calda./Siamo vicini.
+
+SCENA_BOSCO
+	I rami sopra il sentiero formano una galleria verde, e il gruppo avanza guardando i tronchi./Cerchiamo segni sulle cortecce./Qualcuno è passato di qui, l'erba è piegata.
+	Un picchio batte in lontananza, e fra un colpo e l'altro il bosco sembra trattenere il fiato./Fermiamoci a guardare bene./Io non mi fido di un bosco così quieto.
+	Il sentiero si divide in due e il gruppo si ferma a studiare il terreno./Impronte, e fresche./Da quella parte.
+
+SCENA_PALUDE
+	La nebbia sale dall'acqua e ogni passo affonda nel fango. Il gruppo cammina in fila, tenendo gli occhi sul terreno./Non fatevi ingannare dalle luci./Io preferisco l'asciutto.
+	Fra i giunchi ronzano nugoli di insetti, e un airone guarda il gruppo con aria di sufficienza./Ci osserva./Vediamo che cosa nasconde.
+	Una passerella di assi marce attraversa un tratto di acqua stagnante. Il gruppo si dispone a passare uno alla volta./Pesi leggeri, per favore./Io ho già un piede bagnato.
+
+SCENA_RADURA
+	La radura è un cerchio d'erba alta, e il vento la fa ondeggiare come un mare verde. Il gruppo si ferma al centro./Si sta bene qui./Per questo vale la pena di guardare con più cura.
+	Un ruscello attraversa la radura e canta fra i sassi. Il gruppo si ferma ad ascoltare./Qualcuno ha riempito la borraccia qui./Ed è passato da poco.
+	L'erba è schiacciata in un cerchio, come dove qualcuno si è sdraiato a guardare il cielo./Un posto perfetto per pensare./Un posto perfetto per lasciare un messaggio.
+
+// =============================================================================================
+// RICETTA 2: si cerca un oggetto leggendario. Il racconto non dice dove riposa: le tracce portano di posto in posto.
+// =============================================================================================
+
+ARCO_OGGETTO
+	[NARRATORE]CHIAVE=[#NCH];TIPO=CACCIA_AL_TESORO;ASPETTO=[#NASPETTO];MANDANTE=[#ND];MONETE=[MONETE_OGGETTO];\
+	TITOLO=[#OGG_TITOLO];OGGETTO=LEGGENDARIO;\
+	RICHIESTA=[#NRACCONTO];\
+	BATTUTA=[BATTUTA_OGGETTO];\
+	RISPOSTA=[#NPRIMA_PISTA] Cominciate %DA_PROSSIMO%: vi segno il posto sulla mappa.;\
+	[PERCORSO_OGGETTO];\
+	RINGRAZIAMENTO=[#NRINGRAZIA];\
+	RICORDO=Qui si perse la traccia di un oggetto che molti cercarono.
+
+NARRATORE
+	[NCH=LEGGENDA_DEL_BARDO][NASPETTO=LOCANDIERE][ND=il locandiere][OGG_TITOLO=Le tracce di un'arma antica][NRACCONTO=Mio nonno diceva che %DI_OGGETTO% si cantava in tutta la foresta, e che la storia non andò mai davvero perduta: qualcuno ne fece perdere le tracce.]\
+	[NPRIMA_PISTA=Le ultime tracce si persero in un posto di cui quasi nessuno ricorda il nome.][NRINGRAZIA=Allora era vero. Mio nonno aveva ragione, e io non lo ammetterò mai davanti a lui.]
+	[NCH=LA_VOCE_DELL_EREMITA][NASPETTO=SACERDOTE][ND=il sacerdote][OGG_TITOLO=Le tracce di un oggetto sacro][NRACCONTO=I libri parlano %DI_OGGETTO%, che i monaci nascosero quando la guerra arrivò. Dicono che lasciarono indizi, per chi ne fosse degno.]\
+	[NPRIMA_PISTA=I monaci passarono da un posto e vi lasciarono il primo indizio.][NRINGRAZIA=I monaci avevano ragione a lasciare gli indizi: chi li ha trovati ne era degno.]
+	[NCH=IL_VECCHIO_ARMAIOLO][NASPETTO=ARMAIOLO][ND=l'armaiolo][OGG_TITOLO=Le tracce dell'opera di un maestro][NRACCONTO=Il maestro che forgiò %OGGETTO% non ne fece mai commercio: ne fece perdere le tracce, e lasciò per i suoi allievi degli indizi per ritrovare quel che aveva forgiato.]\
+	[NPRIMA_PISTA=Il primo indizio è in un posto dove il maestro andava a pensare.][NRINGRAZIA=Il maestro sarebbe fiero, e io ancora di più. L'opera è nelle mani giuste.]
+	[NCH=LA_MAPPA_STRAPPATA][NASPETTO=MAGA][ND=la maga][OGG_TITOLO=La mappa strappata][NRACCONTO=Ho trovato in un vecchio libro un pezzo di mappa che parla %DI_OGGETTO%. L'altra metà è andata perduta, ma i luoghi sono scritti sul bordo, uno dopo l'altro.]\
+	[NPRIMA_PISTA=Il primo nome sul bordo della mappa è un posto che conosco appena.][NRINGRAZIA=Il pezzo di mappa è completo, e con lui l'oggetto. Per un attimo ho sentito il libro che ringraziava.]
+	[NCH=IL_DIARIO_DEL_SOLDATO][NASPETTO=GUERRIERO][ND=il vecchio soldato][OGG_TITOLO=Il diario del soldato][NRACCONTO=Mio padre, un soldato, scrisse in un diario che aveva visto con i suoi occhi %OGGETTO%. Non scrisse dove, ma scrisse da dove era partito, e con chi aveva parlato.]\
+	[NPRIMA_PISTA=Il diario nomina il primo posto dove ci si fermò a chiedere.][NRINGRAZIA=Mio padre non mentiva. Mi sono sentito un po' in colpa per averlo creduto matto.]
+	[NCH=LA_FILASTROCCA_DEL_PASTORE][NASPETTO=QUALUNQUE][ND=un pastore][OGG_TITOLO=La filastrocca del pastore][NRACCONTO=Da bambino cantavo una filastrocca che parlava %DI_OGGETTO%, e nessuno capiva che era una mappa. Ora che l'ho capita, sono troppo vecchio per seguirla.]\
+	[NPRIMA_PISTA=La filastrocca comincia con un posto che si può ancora trovare.][NRINGRAZIA=La filastrocca era vera, e la canto ancora più forte di prima.]
+
+BATTUTA_OGGETTO
+	E dove si persero le tracce?
+	Da dove cominciamo a cercare?
+	Se è nascosto, qualcuno deve averlo visto. Da dove si parte?
+
+MONETE_OGGETTO
+	50 | 60 | 70
+
+PERCORSO_OGGETTO
+	[^3] TAPPA_1=[LUOGO_ROVINE]:[CLUE_OGGETTO_ROVINE];SCENA_1=[SCENA_ROVINE];\
+	TAPPA_2=[LUOGO_TEMPIO]:[CLUE_OGGETTO_TEMPIO];SCENA_2=[SCENA_TEMPIO];\
+	ARRIVO=[ARRIVO_OGGETTO]
+	[^3] TAPPA_1=CITTA:[CLUE_OGGETTO_CITTA];SCENA_1=[SCENA_CITTA];\
+	TAPPA_2=[LUOGO_ROVINE]:[CLUE_OGGETTO_ROVINE];SCENA_2=[SCENA_ROVINE];\
+	TAPPA_3=[LUOGO_TEMPIO]:[CLUE_OGGETTO_TEMPIO];SCENA_3=[SCENA_TEMPIO];\
+	ARRIVO=[ARRIVO_OGGETTO]
+	[^2] TAPPA_1=LOCANDA:[CLUE_OGGETTO_LOCANDA];SCENA_1=[SCENA_LOCANDA];\
+	TAPPA_2=[LUOGO_ROVINE]:[CLUE_OGGETTO_ROVINE];SCENA_2=[SCENA_ROVINE];\
+	ARRIVO=[ARRIVO_OGGETTO]
+	[^2] TAPPA_1=CITTA:[CLUE_OGGETTO_CITTA];SCENA_1=[SCENA_CITTA];\
+	TAPPA_2=[LUOGO_GROTTA]:[CLUE_OGGETTO_GROTTA];SCENA_2=[SCENA_GROTTA];\
+	TAPPA_3=[LUOGO_PALUDE]:[CLUE_OGGETTO_PALUDE];SCENA_3=[SCENA_PALUDE];\
+	ARRIVO=[ARRIVO_OGGETTO]
+	[^2] TAPPA_1=LOCANDA:[CLUE_OGGETTO_LOCANDA];SCENA_1=[SCENA_LOCANDA];\
+	TAPPA_2=[LUOGO_BOSCO]:[CLUE_OGGETTO_BOSCO];SCENA_2=[SCENA_BOSCO];\
+	TAPPA_3=[LUOGO_RADURA]:[CLUE_OGGETTO_RADURA];SCENA_3=[SCENA_RADURA];\
+	TAPPA_4=[LUOGO_TEMPIO]:[CLUE_OGGETTO_TEMPIO];SCENA_4=[SCENA_TEMPIO];\
+	ARRIVO=[ARRIVO_OGGETTO]
+
+CLUE_OGGETTO_CITTA
+	Nell'archivio della città un vecchio registro cita %OGGETTO%: chi ne ebbe notizia per ultimo prese la strada verso %PROSSIMO%.
+	Un erudito, pagato con una birra, ricorda che la leggenda finiva così: le tracce si perdevano %A_PROSSIMO%.
+	Un libraio ha ancora una copia della leggenda %DI_OGGETTO%. L'ultima pagina è strappata, ma sul bordo si legge ancora un nome: %PROSSIMO%.
+
+CLUE_OGGETTO_LOCANDA
+	Il locandiere conosce la canzone %DI_OGGETTO% e canta l'ultima strofa, che parla %DI_PROSSIMO%.
+	Un vecchio avventore dice di aver sentito da piccolo la storia %DI_OGGETTO%: finiva dalle parti %DI_PROSSIMO%.
+	Sulla parete della locanda c'è un vecchio stemma che mostra %OGGETTO% e, sotto, una scritta scolorita: %PROSSIMO%.
+
+CLUE_OGGETTO_ROVINE
+	Un'iscrizione sbiadita su una pietra racconta di chi portò %OGGETTO% da questa parte, e della strada che prese dopo: %PROSSIMO%.
+	Fra le macerie c'è un fodero vuoto, inciso con lo stesso simbolo %DI_OGGETTO%. Sotto, una freccia: %PROSSIMO%.
+	Un bassorilievo mostra un uomo che nasconde qualcosa, e dietro di lui un posto che il gruppo riconosce: %PROSSIMO%.
+	Il pavimento ha un mosaico quasi cancellato: rappresenta %OGGETTO% e una strada che porta %A_PROSSIMO%.
+
+CLUE_OGGETTO_TEMPIO
+	Il custode, sorpreso, ammette che il tempio ricorda %OGGETTO%: la custodia passò poi %A_PROSSIMO%.
+	Sull'altare, una nicchia vuota ha la forma %DI_OGGETTO%. Il custode, sospirando, indica %PROSSIMO%.
+	In sacrestia un vecchio libro mastro registra l'uscita %DI_OGGETTO%: destinazione, %PROSSIMO%.
+
+CLUE_OGGETTO_GROTTA
+	Nel fondo della grotta c'è un'incisione che mostra %OGGETTO% e un sentiero: il sentiero va verso %PROSSIMO%.
+	Un cumulo di sassi forma una freccia, e accanto c'è il simbolo %DI_OGGETTO%. Indica %PROSSIMO%.
+	Un eremita che vive qui da anni racconta di aver visto passare chi cercava %OGGETTO%. Prima di andarsene, quello ha chiesto la strada per %PROSSIMO%.
+
+CLUE_OGGETTO_BOSCO
+	Un vecchio albero porta intagliato il simbolo %DI_OGGETTO%. Sotto le radici, un biglietto: il prossimo passo è %PROSSIMO%.
+	Un cacciatore ricorda un uomo che cercava %OGGETTO% e che si fermò a bere alla fonte, prima di partire verso %PROSSIMO%.
+	Un sentiero quasi cancellato porta a una pietra con il simbolo %DI_OGGETTO%. Sul retro, tre parole: vai %A_PROSSIMO%.
+
+CLUE_OGGETTO_PALUDE
+	Un palo storto ha legato in cima un nastro dello stesso colore dello stemma %DI_OGGETTO%. Il vento lo fa puntare verso %PROSSIMO%.
+	Un vecchio pescatore dice che i suoi nonni parlavano %DI_OGGETTO%: dicevano che le sue tracce portavano %A_PROSSIMO%, lontano dagli occhi di tutti.
+	Fra i giunchi c'è una lapide mezza affondata con il nome %DI_OGGETTO%. Sotto, scritto a fatica: %PROSSIMO%.
+
+CLUE_OGGETTO_RADURA
+	Al centro della radura c'è un cerchio di sassi. Dentro, una piccola incisione %DI_OGGETTO% e una freccia verso %PROSSIMO%.
+	Un pastore racconta che sua nonna cantava una nenia %DI_OGGETTO%. L'ultimo verso diceva: vai %A_PROSSIMO%.
+	Un vecchio menhir porta un segno consumato: il simbolo %DI_OGGETTO%, e sotto la strada verso %PROSSIMO%.
+
+ARRIVO_OGGETTO
+	[^2] ROVINE:La stanza in fondo è chiusa da una lastra, e dietro la lastra trovate quel che cercavate: %OGGETTO%. I custodi non vi hanno atteso con piacere.
+	[^2] TEMPIO:Dietro l'altare si apre una scala, e in fondo alla scala trovate quel che cercavate: %OGGETTO%. Ci sono anche i custodi.
+	[^2] GROTTA:In una grotta asciutta, su un piedistallo di roccia, trovate quel che cercavate: %OGGETTO%. I custodi non sembrano contenti di vedervi.
+	[^1] PALUDE:Su un'isola di terra solida in mezzo alla palude trovate quel che cercavate: %OGGETTO%. I custodi non vi hanno atteso con piacere.
+	[^1] BOSCO:Nel cuore del bosco, fra radici giganti, trovate quel che cercavate: %OGGETTO%. I custodi non si sono ancora accorti di voi.
+
+// =============================================================================================
+// RICETTA 3: per trovare l'oggetto servono prima tre chiavi, che hanno tre custodi sparsi per la foresta. Un'ispezione
+// in un posto li rivela. Le tre ricerche si fanno in qualunque ordine (missioni affidate).
+// =============================================================================================
+
+ARCO_CHIAVI
+	[NARRATORE_CHIAVI]CHIAVE=[#KCH];TIPO=CACCIA_AL_TESORO;ASPETTO=[#KASPETTO];MANDANTE=[#KD];MONETE=[MONETE_OGGETTO];\
+	TITOLO=[#KTITOLO];OGGETTO=LEGGENDARIO;\
+	RICHIESTA=[#KRACCONTO];\
+	BATTUTA=E dove sono le chiavi?;\
+	RISPOSTA=[#KPRIMA_PISTA] Cominciate %DA_PROSSIMO%: vi segno il posto sulla mappa.;\
+	[PRIMA_TAPPA_CHIAVI];\
+	CHIAVI=3;OGGETTO_CHIAVE_1=[NOME_CHIAVE];OGGETTO_CHIAVE_2=[NOME_CHIAVE];OGGETTO_CHIAVE_3=[NOME_CHIAVE];\
+	CUSTODE_1=[CUSTODE_DATI];CUSTODE_2=[CUSTODE_DATI];[CUSTODE_ULTIMO]\
+	ARRIVO=[ARRIVO_OGGETTO];\
+	RINGRAZIAMENTO=[#KRINGRAZIA];\
+	RICORDO=Qui un gruppo di avventurieri riunì tre chiavi e aprì quel che nessuno apriva da secoli.
+
+NARRATORE_CHIAVI
+	[KCH=LE_TRE_CHIAVI_DELLA_VOLTA][KASPETTO=MAGO][KD=il mago][KTITOLO=Le tre chiavi di una volta antica][KRACCONTO=Una volta antica custodisce %OGGETTO%, ma si apre solo con tre chiavi, e le tre chiavi non stanno insieme da quando morì chi le forgiò.]\
+	[KPRIMA_PISTA=Nel posto dove visse il fabbro delle chiavi c'è un registro che dice a chi andarono.][KRINGRAZIA=Le tre chiavi di nuovo insieme, dopo tanto tempo! Non lo avrei mai creduto possibile.]
+	[KCH=I_TRE_SIGILLI][KASPETTO=SACERDOTESSA][KD=la sacerdotessa][KTITOLO=I tre sigilli del forziere][KRACCONTO=Un forziere sacro custodisce %OGGETTO%. Si apre con tre sigilli, che i monaci affidarono a tre persone diverse, per non fidarsi troppo di una sola.]\
+	[KPRIMA_PISTA=Nel loro vecchio rifugio c'è il libro dove annotarono a chi andarono i sigilli.][KRINGRAZIA=I tre sigilli riuniti, il forziere aperto. I monaci non si sarebbero mai fidati di voi, e invece.]
+	[KCH=LA_PORTA_DELLA_TORRE][KASPETTO=ARMAIOLO][KD=l'armaiolo][KTITOLO=La porta della torre][KRACCONTO=Mio nonno forgiò la serratura di una torre che custodisce %OGGETTO%. Ci vogliono tre chiavi, e le diede a tre uomini che non si sopportavano.]\
+	[KPRIMA_PISTA=Nel suo vecchio laboratorio c'è il libro dei clienti, con i nomi dei tre.][KRINGRAZIA=Le tre chiavi sono insieme, e la serratura di mio nonno regge ancora. Gli avrebbe fatto molto piacere.]
+	[KCH=IL_LIBRO_SIGILLATO][KASPETTO=MAGA][KD=la maga][KTITOLO=Il libro sigillato][KRACCONTO=Un libro sigillato nasconde il luogo dove si trova quel che tutti cercano: %OGGETTO%. Si apre con tre sigilli, e ognuno è custodito da qualcuno che non vuole cederlo.]\
+	[KPRIMA_PISTA=Sulla copertina c'è un indirizzo a cui il libro fu spedito per l'ultima volta.][KRINGRAZIA=Il libro si è aperto, e il resto lo abbiamo visto insieme. Non lo dimenticherò.]
+
+PRIMA_TAPPA_CHIAVI
+	[^2] TAPPA_1=[LUOGO_ROVINE]:[CLUE_CHIAVI_ROVINE];SCENA_1=[SCENA_ROVINE]
+	[^2] TAPPA_1=[LUOGO_TEMPIO]:[CLUE_CHIAVI_TEMPIO];SCENA_1=[SCENA_TEMPIO]
+	[^1] TAPPA_1=CITTA:[CLUE_CHIAVI_CITTA];SCENA_1=[SCENA_CITTA]
+	[^1] TAPPA_1=LOCANDA:[CLUE_CHIAVI_LOCANDA];SCENA_1=[SCENA_LOCANDA]
+
+CLUE_CHIAVI_ROVINE
+	Su una lapide sono incisi tre nomi e tre luoghi. Un nome è stato raschiato, ma i luoghi si leggono ancora: %POSTO_1%, %POSTO_2% e %POSTO_3%.
+	Un libro mastro, mezzo bruciato, elenca i tre che ebbero le chiavi: i tre posti sono %POSTO_1%, %POSTO_2% e %POSTO_3%.
+
+CLUE_CHIAVI_TEMPIO
+	Il custode del tempio ha un registro dei lasciti. Tre pagine parlano di tre chiavi, e di tre luoghi: %POSTO_1%, %POSTO_2% e %POSTO_3%.
+	Sotto l'altare c'è un cassetto con tre biglietti. Ognuno riporta un luogo: %POSTO_1%, %POSTO_2% e %POSTO_3%.
+
+CLUE_CHIAVI_CITTA
+	Un notaio ha in archivio l'atto che divise le chiavi. Elenca tre custodi, e i loro luoghi: %POSTO_1%, %POSTO_2% e %POSTO_3%.
+	Un vecchio cartografo ricorda una mappa con tre croci: %POSTO_1%, %POSTO_2% e %POSTO_3%.
+
+CLUE_CHIAVI_LOCANDA
+	Il locandiere ha sentito mille volte la storia delle tre chiavi, e sa dove si dice che siano: %POSTO_1%, %POSTO_2% e %POSTO_3%.
+	Sul retro di un vecchio menù, qualcuno ha scritto tre luoghi: %POSTO_1%, %POSTO_2% e %POSTO_3%. Accanto, la parola chiavi.
+
+// L'ultimo custode, a volte, non vuole combattere: cede la chiave in cambio di un oggetto, che sta in un posto con una guardia.
+// Ce n'è al più uno per riga, così le ricerche restano tre e il lavoro in più è una sola consegna.
+CUSTODE_ULTIMO
+	[^2] CUSTODE_3=[CUSTODE_DATI];
+	[^1] [CUSTODE_SCAMBIO]
+
+CUSTODE_SCAMBIO
+	CUSTODE_3=RADURA SCAMBIO 0 NOME_CAMPIONE:Il cavaliere %CAPO% cederebbe volentieri la chiave, ma pretende in cambio un medaglione di sua madre, che ha perso in un posto pericoloso.;SCAMBIO_3=ROVINE SCHELETRO 3:il medaglione/Il medaglione è finito fra le ossa di una cripta, custodito da scheletri che non lo mollano.;
+	CUSTODE_3=BOSCO SCAMBIO 0 NOME_PELLEGRINO:Un taglialegna di nome %CAPO% ha la chiave appesa alla cintura, e la darebbe a chi gli riportasse la sua vecchia accetta.;SCAMBIO_3=GROTTA GOBLIN 3:l'accetta/L'accetta è in una grotta, dove dei goblin se la contendono a colpi di mestolo.;
+	CUSTODE_3=ROVINE SCAMBIO 0 NOME_PELLEGRINO:Un erudito di nome %CAPO% custodisce la chiave, e la scambierebbe volentieri con il suo libro dei sonetti, perso in fondo a una palude.;SCAMBIO_3=PALUDE TROLL 1:il libro dei sonetti/Il libro è stato ritrovato da un troll, che lo tiene per sfogliarne le figure.;
+	CUSTODE_3=GROTTA SCAMBIO 0 NOME_PELLEGRINO:Un eremita di nome %CAPO% dà la chiave in cambio di una bottiglia di vino d'annata, che dice di aver nascosto in un posto ormai pieno di banditi.;SCAMBIO_3=BOSCO LADRO 2:la bottiglia/La bottiglia è nel covo di una piccola banda, che la custodisce con più cura di quanta ne metta in tutto il resto.;
+
+NOME_CHIAVE$
+	la chiave di ferro nero | il sigillo d'osso | la chiave di ottone verde | il sigillo di cera dura | la chiave a tre denti | il sigillo del gallo | la chiave d'argento sporco | il sigillo di vetro
+
+CUSTODE_DATI$
+	BOSCO LADRO 3 SI:Una banda di briganti ha fatto del bosco il proprio rifugio, e il capo %CAPO% porta al collo la chiave.
+	GROTTA GOBLIN 4 SI:Un capobanda goblin, %CAPO%, usa come ninnolo la chiave, e non la dà a nessuno.
+	PALUDE TROLL 1 SI:Un troll di nome %CAPO% dorme sopra la chiave, e se ne accorge solo quando glielo chiedono.
+	ROVINE SCHELETRO 4 NO:Fra le ossa di una cripta c'è la chiave, custodita da scheletri che non dormono mai.
+	RADURA GUERRIERO 1 SI:Un cavaliere di nome %CAPO% giurò di custodire la chiave e di non cederla se non a chi lo vince in duello.
+	ROVINE MAGO 1 SI:Un mago di nome %CAPO% ha incantato la chiave perché non sia presa da nessuno che non sappia meritarla.
+	BOSCO FOLLETTO 3 NO:Dei folletti si sono presi la chiave per giocarci, e la fanno rimbalzare fra le fronde.
+	GROTTA HOBGOBLIN 3 SI:Un hobgoblin di nome %CAPO% tiene la chiave in una scatola, e dorme su quella scatola.
+
+// =============================================================================================
+// RICETTA 4: scelta fra due piste. Dopo la prima tappa si hanno due voci che non si accordano, e due posti dove andare:
+// uno solo è quello buono. Entrambi sono segnati sulla mappa; chi sbaglia trova un vicolo cieco (a volte con una
+// guardia) che gli dice di andare all'altro: si perde una tappa, ma non si fallisce. Le due piste hanno classi diverse.
+// =============================================================================================
+
+ARCO_BIVIO
+	[^3] [BIVIO_PERSONA]
+	[^2] [BIVIO_OGGETTO]
+
+BIVIO_PERSONA
+	[PERSONA_E_MANDANTE]CHIAVE=DUE_PISTE_PER_[#PM];TIPO=RINTRACCIAMENTO;ASPETTO=[#MASPETTO];MANDANTE=[#MD];MONETE=[MONETE_PERSONA];\
+	TITOLO=Due piste per [#PM];\
+	RICHIESTA=[#PF] [#PA] da [DA_QUANTO]. [#MOTIVO] E le voci che girano non si accordano: ognuno dice una cosa diversa.;\
+	BATTUTA=[BATTUTA_BIVIO];\
+	RISPOSTA=[#PRIMA_PISTA] Cominciate %DA_PROSSIMO%: vi segno il posto sulla mappa.;\
+	[PRIMA_TAPPA_BIVIO_PERSONA][COPPIA_PISTE_PERSONA]\
+	ARRIVO=[ARRIVO_PERSONA];\
+	RINGRAZIAMENTO=[#RINGRAZIA];\
+	RICORDO=[#RICORDO_PERSONA]
+
+BIVIO_OGGETTO
+	[NARRATORE]CHIAVE=[#NCH]_E_DUE_PISTE;TIPO=CACCIA_AL_TESORO;ASPETTO=[#NASPETTO];MANDANTE=[#ND];MONETE=[MONETE_OGGETTO];\
+	TITOLO=[#OGG_TITOLO];OGGETTO=LEGGENDARIO;\
+	RICHIESTA=[#NRACCONTO] Ma le fonti si contraddicono, e non so a chi credere.;\
+	BATTUTA=[BATTUTA_OGGETTO];\
+	RISPOSTA=[#NPRIMA_PISTA] Cominciate %DA_PROSSIMO%: vi segno il posto sulla mappa.;\
+	[PRIMA_TAPPA_BIVIO_OGGETTO][COPPIA_PISTE_OGGETTO]\
+	ARRIVO=[ARRIVO_OGGETTO];\
+	RINGRAZIAMENTO=[#NRINGRAZIA];\
+	RICORDO=Qui si perse la traccia di un oggetto che molti cercarono.
+
+BATTUTA_BIVIO
+	Due voci diverse? Da dove cominciamo?
+	Qualcuno mente, o si sbaglia. Proviamo a capirlo.
+	Cominciamo da chi sa di più, e poi decidiamo.
+
+PRIMA_TAPPA_BIVIO_PERSONA
+	[^3] TAPPA_1=CITTA:[CLUE_BIVIO_PERSONA_CITTA];SCENA_1=[SCENA_CITTA];
+	[^2] TAPPA_1=LOCANDA:[CLUE_BIVIO_PERSONA_LOCANDA];SCENA_1=[SCENA_LOCANDA];
+
+PRIMA_TAPPA_BIVIO_OGGETTO
+	[^3] TAPPA_1=CITTA:[CLUE_BIVIO_OGGETTO_CITTA];SCENA_1=[SCENA_CITTA];
+	[^2] TAPPA_1=LOCANDA:[CLUE_BIVIO_OGGETTO_LOCANDA];SCENA_1=[SCENA_LOCANDA];
+
+// La tappa 1 dà due voci: una porta al posto giusto, l'altra al vicolo cieco. Il testo non dice quale delle due sia quella buona.
+CLUE_BIVIO_PERSONA_CITTA
+	Due testimoni, due versioni. Un oste giura che [#PM] è andato %A_PISTA_A%, un mercante che ha preso la strada %DI_PISTA_B%. Uno dei due si sbaglia, o mente.
+	Una guardia dice di aver visto [#PM] diretto %A_PISTA_A%. Un bottegaio è pronto a giurare sul suo grembiule che [#PM] sia andato %A_PISTA_B%.
+	In una bottega hanno lasciato un biglietto con due nomi, %PISTA_A% e %PISTA_B%, e una nota di [#PM]: uno è vero, l'altro no.
+
+CLUE_BIVIO_PERSONA_LOCANDA
+	Il locandiere ricorda che [#PM] chiedeva la strada per %PISTA_A%. Ma una cameriera giura di aver sentito [#PM] parlare %DI_PISTA_B%.
+	Un avventore ubriaco giura che [#PM] è andato %A_PISTA_A%. Un altro, meno ubriaco, che ha preso la via %DI_PISTA_B%.
+	Sul tavolo della stanza che [#PM] aveva preso ci sono due fogli: uno con scritto %PISTA_A%, l'altro con scritto %PISTA_B%.
+
+CLUE_BIVIO_OGGETTO_CITTA
+	Due studiosi, due teorie. Il primo giura che le tracce %DI_OGGETTO% portano %A_PISTA_A%, il secondo che portano %A_PISTA_B%. Si detestano da vent'anni.
+	In archivio ci sono due registri che si contraddicono: uno parla %DI_PISTA_A%, l'altro %DI_PISTA_B%. Almeno uno dei due è stato scritto da un bugiardo.
+	Un vecchio erudito dice che la leggenda %DI_OGGETTO% ha due finali: in uno si va %A_PISTA_A%, nell'altro %A_PISTA_B%. Nessuno ricorda quale sia il vero.
+
+CLUE_BIVIO_OGGETTO_LOCANDA
+	Il locandiere canta la canzone %DI_OGGETTO% con due finali: uno parla %DI_PISTA_A%, l'altro %DI_PISTA_B%. Ammette di non ricordare quale gli abbiano insegnato.
+	Due vecchi seduti accanto al fuoco litigano su dove portino le tracce %DI_OGGETTO%: uno dice %A_PISTA_A%, l'altro %A_PISTA_B%.
+	Sul menù c'è un indovinello mezzo cancellato che parla %DI_OGGETTO%. Dice che il posto giusto è %PISTA_A% oppure %PISTA_B%, ma non quale.
+
+COPPIA_PISTE_PERSONA
+	[^1] PISTA_A=[LUOGO_ROVINE]:[CLUE_PERSONA_ROVINE];SCENA_A=[SCENA_ROVINE];PISTA_B=[LUOGO_BOSCO]:[FALSA_PISTA_BOSCO];SCENA_B=[SCENA_BOSCO];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_BOSCO]:[FALSA_PISTA_BOSCO];SCENA_A=[SCENA_BOSCO];PISTA_B=[LUOGO_ROVINE]:[CLUE_PERSONA_ROVINE];SCENA_B=[SCENA_ROVINE];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_BOSCO]:[CLUE_PERSONA_BOSCO];SCENA_A=[SCENA_BOSCO];PISTA_B=[LUOGO_ROVINE]:[FALSA_PISTA_ROVINE];SCENA_B=[SCENA_ROVINE];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_ROVINE]:[FALSA_PISTA_ROVINE];SCENA_A=[SCENA_ROVINE];PISTA_B=[LUOGO_BOSCO]:[CLUE_PERSONA_BOSCO];SCENA_B=[SCENA_BOSCO];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_TEMPIO]:[CLUE_PERSONA_TEMPIO];SCENA_A=[SCENA_TEMPIO];PISTA_B=[LUOGO_PALUDE]:[FALSA_PISTA_PALUDE];SCENA_B=[SCENA_PALUDE];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_PALUDE]:[FALSA_PISTA_PALUDE];SCENA_A=[SCENA_PALUDE];PISTA_B=[LUOGO_TEMPIO]:[CLUE_PERSONA_TEMPIO];SCENA_B=[SCENA_TEMPIO];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_PALUDE]:[CLUE_PERSONA_PALUDE];SCENA_A=[SCENA_PALUDE];PISTA_B=[LUOGO_TEMPIO]:[FALSA_PISTA_TEMPIO];SCENA_B=[SCENA_TEMPIO];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_TEMPIO]:[FALSA_PISTA_TEMPIO];SCENA_A=[SCENA_TEMPIO];PISTA_B=[LUOGO_PALUDE]:[CLUE_PERSONA_PALUDE];SCENA_B=[SCENA_PALUDE];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_GROTTA]:[CLUE_PERSONA_GROTTA];SCENA_A=[SCENA_GROTTA];PISTA_B=[LUOGO_RADURA]:[FALSA_PISTA_RADURA];SCENA_B=[SCENA_RADURA];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_RADURA]:[FALSA_PISTA_RADURA];SCENA_A=[SCENA_RADURA];PISTA_B=[LUOGO_GROTTA]:[CLUE_PERSONA_GROTTA];SCENA_B=[SCENA_GROTTA];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_RADURA]:[CLUE_PERSONA_RADURA];SCENA_A=[SCENA_RADURA];PISTA_B=[LUOGO_GROTTA]:[FALSA_PISTA_GROTTA];SCENA_B=[SCENA_GROTTA];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_GROTTA]:[FALSA_PISTA_GROTTA];SCENA_A=[SCENA_GROTTA];PISTA_B=[LUOGO_RADURA]:[CLUE_PERSONA_RADURA];SCENA_B=[SCENA_RADURA];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_BOSCO]:[CLUE_PERSONA_BOSCO];SCENA_A=[SCENA_BOSCO];PISTA_B=[LUOGO_GROTTA]:[FALSA_PISTA_GROTTA];SCENA_B=[SCENA_GROTTA];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_GROTTA]:[FALSA_PISTA_GROTTA];SCENA_A=[SCENA_GROTTA];PISTA_B=[LUOGO_BOSCO]:[CLUE_PERSONA_BOSCO];SCENA_B=[SCENA_BOSCO];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_GROTTA]:[CLUE_PERSONA_GROTTA];SCENA_A=[SCENA_GROTTA];PISTA_B=[LUOGO_BOSCO]:[FALSA_PISTA_BOSCO];SCENA_B=[SCENA_BOSCO];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_BOSCO]:[FALSA_PISTA_BOSCO];SCENA_A=[SCENA_BOSCO];PISTA_B=[LUOGO_GROTTA]:[CLUE_PERSONA_GROTTA];SCENA_B=[SCENA_GROTTA];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_ROVINE]:[CLUE_PERSONA_ROVINE];SCENA_A=[SCENA_ROVINE];PISTA_B=[LUOGO_PALUDE]:[FALSA_PISTA_PALUDE];SCENA_B=[SCENA_PALUDE];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_PALUDE]:[FALSA_PISTA_PALUDE];SCENA_A=[SCENA_PALUDE];PISTA_B=[LUOGO_ROVINE]:[CLUE_PERSONA_ROVINE];SCENA_B=[SCENA_ROVINE];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_PALUDE]:[CLUE_PERSONA_PALUDE];SCENA_A=[SCENA_PALUDE];PISTA_B=[LUOGO_ROVINE]:[FALSA_PISTA_ROVINE];SCENA_B=[SCENA_ROVINE];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_ROVINE]:[FALSA_PISTA_ROVINE];SCENA_A=[SCENA_ROVINE];PISTA_B=[LUOGO_PALUDE]:[CLUE_PERSONA_PALUDE];SCENA_B=[SCENA_PALUDE];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_TEMPIO]:[CLUE_PERSONA_TEMPIO];SCENA_A=[SCENA_TEMPIO];PISTA_B=[LUOGO_RADURA]:[FALSA_PISTA_RADURA];SCENA_B=[SCENA_RADURA];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_RADURA]:[FALSA_PISTA_RADURA];SCENA_A=[SCENA_RADURA];PISTA_B=[LUOGO_TEMPIO]:[CLUE_PERSONA_TEMPIO];SCENA_B=[SCENA_TEMPIO];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_RADURA]:[CLUE_PERSONA_RADURA];SCENA_A=[SCENA_RADURA];PISTA_B=[LUOGO_TEMPIO]:[FALSA_PISTA_TEMPIO];SCENA_B=[SCENA_TEMPIO];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_TEMPIO]:[FALSA_PISTA_TEMPIO];SCENA_A=[SCENA_TEMPIO];PISTA_B=[LUOGO_RADURA]:[CLUE_PERSONA_RADURA];SCENA_B=[SCENA_RADURA];GIUSTA=B;
+
+COPPIA_PISTE_OGGETTO
+	[^1] PISTA_A=[LUOGO_ROVINE]:[CLUE_OGGETTO_ROVINE];SCENA_A=[SCENA_ROVINE];PISTA_B=[LUOGO_BOSCO]:[FALSA_PISTA_BOSCO];SCENA_B=[SCENA_BOSCO];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_BOSCO]:[FALSA_PISTA_BOSCO];SCENA_A=[SCENA_BOSCO];PISTA_B=[LUOGO_ROVINE]:[CLUE_OGGETTO_ROVINE];SCENA_B=[SCENA_ROVINE];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_BOSCO]:[CLUE_OGGETTO_BOSCO];SCENA_A=[SCENA_BOSCO];PISTA_B=[LUOGO_ROVINE]:[FALSA_PISTA_ROVINE];SCENA_B=[SCENA_ROVINE];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_ROVINE]:[FALSA_PISTA_ROVINE];SCENA_A=[SCENA_ROVINE];PISTA_B=[LUOGO_BOSCO]:[CLUE_OGGETTO_BOSCO];SCENA_B=[SCENA_BOSCO];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_TEMPIO]:[CLUE_OGGETTO_TEMPIO];SCENA_A=[SCENA_TEMPIO];PISTA_B=[LUOGO_PALUDE]:[FALSA_PISTA_PALUDE];SCENA_B=[SCENA_PALUDE];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_PALUDE]:[FALSA_PISTA_PALUDE];SCENA_A=[SCENA_PALUDE];PISTA_B=[LUOGO_TEMPIO]:[CLUE_OGGETTO_TEMPIO];SCENA_B=[SCENA_TEMPIO];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_PALUDE]:[CLUE_OGGETTO_PALUDE];SCENA_A=[SCENA_PALUDE];PISTA_B=[LUOGO_TEMPIO]:[FALSA_PISTA_TEMPIO];SCENA_B=[SCENA_TEMPIO];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_TEMPIO]:[FALSA_PISTA_TEMPIO];SCENA_A=[SCENA_TEMPIO];PISTA_B=[LUOGO_PALUDE]:[CLUE_OGGETTO_PALUDE];SCENA_B=[SCENA_PALUDE];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_GROTTA]:[CLUE_OGGETTO_GROTTA];SCENA_A=[SCENA_GROTTA];PISTA_B=[LUOGO_RADURA]:[FALSA_PISTA_RADURA];SCENA_B=[SCENA_RADURA];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_RADURA]:[FALSA_PISTA_RADURA];SCENA_A=[SCENA_RADURA];PISTA_B=[LUOGO_GROTTA]:[CLUE_OGGETTO_GROTTA];SCENA_B=[SCENA_GROTTA];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_RADURA]:[CLUE_OGGETTO_RADURA];SCENA_A=[SCENA_RADURA];PISTA_B=[LUOGO_GROTTA]:[FALSA_PISTA_GROTTA];SCENA_B=[SCENA_GROTTA];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_GROTTA]:[FALSA_PISTA_GROTTA];SCENA_A=[SCENA_GROTTA];PISTA_B=[LUOGO_RADURA]:[CLUE_OGGETTO_RADURA];SCENA_B=[SCENA_RADURA];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_BOSCO]:[CLUE_OGGETTO_BOSCO];SCENA_A=[SCENA_BOSCO];PISTA_B=[LUOGO_GROTTA]:[FALSA_PISTA_GROTTA];SCENA_B=[SCENA_GROTTA];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_GROTTA]:[FALSA_PISTA_GROTTA];SCENA_A=[SCENA_GROTTA];PISTA_B=[LUOGO_BOSCO]:[CLUE_OGGETTO_BOSCO];SCENA_B=[SCENA_BOSCO];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_GROTTA]:[CLUE_OGGETTO_GROTTA];SCENA_A=[SCENA_GROTTA];PISTA_B=[LUOGO_BOSCO]:[FALSA_PISTA_BOSCO];SCENA_B=[SCENA_BOSCO];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_BOSCO]:[FALSA_PISTA_BOSCO];SCENA_A=[SCENA_BOSCO];PISTA_B=[LUOGO_GROTTA]:[CLUE_OGGETTO_GROTTA];SCENA_B=[SCENA_GROTTA];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_ROVINE]:[CLUE_OGGETTO_ROVINE];SCENA_A=[SCENA_ROVINE];PISTA_B=[LUOGO_PALUDE]:[FALSA_PISTA_PALUDE];SCENA_B=[SCENA_PALUDE];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_PALUDE]:[FALSA_PISTA_PALUDE];SCENA_A=[SCENA_PALUDE];PISTA_B=[LUOGO_ROVINE]:[CLUE_OGGETTO_ROVINE];SCENA_B=[SCENA_ROVINE];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_PALUDE]:[CLUE_OGGETTO_PALUDE];SCENA_A=[SCENA_PALUDE];PISTA_B=[LUOGO_ROVINE]:[FALSA_PISTA_ROVINE];SCENA_B=[SCENA_ROVINE];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_ROVINE]:[FALSA_PISTA_ROVINE];SCENA_A=[SCENA_ROVINE];PISTA_B=[LUOGO_PALUDE]:[CLUE_OGGETTO_PALUDE];SCENA_B=[SCENA_PALUDE];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_TEMPIO]:[CLUE_OGGETTO_TEMPIO];SCENA_A=[SCENA_TEMPIO];PISTA_B=[LUOGO_RADURA]:[FALSA_PISTA_RADURA];SCENA_B=[SCENA_RADURA];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_RADURA]:[FALSA_PISTA_RADURA];SCENA_A=[SCENA_RADURA];PISTA_B=[LUOGO_TEMPIO]:[CLUE_OGGETTO_TEMPIO];SCENA_B=[SCENA_TEMPIO];GIUSTA=B;
+	[^1] PISTA_A=[LUOGO_RADURA]:[CLUE_OGGETTO_RADURA];SCENA_A=[SCENA_RADURA];PISTA_B=[LUOGO_TEMPIO]:[FALSA_PISTA_TEMPIO];SCENA_B=[SCENA_TEMPIO];GIUSTA=A;
+	[^1] PISTA_A=[LUOGO_TEMPIO]:[FALSA_PISTA_TEMPIO];SCENA_A=[SCENA_TEMPIO];PISTA_B=[LUOGO_RADURA]:[CLUE_OGGETTO_RADURA];SCENA_B=[SCENA_RADURA];GIUSTA=B;
+
+FALSA_PISTA_ROVINE
+	Fra queste macerie non c'è niente di quel che cercate: le impronte sono vecchie e le scritte parlano d'altro. Chi indicava questo posto si sbagliava. Un graffito scherza: «sbagliato, andate %A_ALTRA%».
+	Il posto è stato frugato da cima a fondo, e da molto tempo. Non resta traccia di ciò che cercate, ma sul muro qualcuno ha scritto con il carbone: «era %A_ALTRA%».
+	Sotto un arco crollato c'è solo un nido di rondini. Sul bordo di una pietra, una mano ironica ha inciso: «qui no, andate %A_ALTRA%».
+
+FALSA_PISTA_TEMPIO
+	Il custode, sorpreso, ammette di non aver visto passare nessuno. Aggiunge che chi indicava questo posto ha confuso le idee: la strada giusta porta %A_ALTRA%.
+	Nel registro dei visitatori non c'è il nome che cercate. Un sacerdote, con la pazienza di chi ne ha viste tante, vi dice di provare %A_ALTRA%.
+	Sull'altare c'è un'offerta fresca, ma non è di chi cercate. Una suora sorride e vi suggerisce, con tatto, di tentare %A_ALTRA%.
+
+FALSA_PISTA_GROTTA
+	La grotta è vuota. Non c'è giaciglio, non c'è fuoco, non c'è traccia di nessuno. Un pipistrello vi guarda con aria di compatimento: la strada giusta porta %A_ALTRA%.
+	Una galleria cieca finisce in una parete di roccia, e sulla parete qualcuno ha disegnato una freccia che indica indietro: bisogna andare %A_ALTRA%.
+	Nel fondo della grotta c'è solo un mucchio di sassi, e una scritta ironica fra i sassi: «bravi, avete seguito la pista sbagliata. Provate %A_ALTRA%».
+
+FALSA_PISTA_BOSCO
+	Il sentiero si perde in un groviglio di rovi, e qualcuno ha legato a un ramo uno straccio con scritto: «sbagliato». Un cacciatore, di passaggio, vi consiglia di provare %A_ALTRA%.
+	Gli alberi sono fitti e il bosco è silenzioso. Un boscaiolo conferma che in questo posto non passa nessuno da settimane: chi cercate è andato %A_ALTRA%.
+	Sul tronco di una quercia ci sono due frecce intagliate, una cancellata a colpi di coltello. Quella rimasta porta %A_ALTRA%.
+
+FALSA_PISTA_PALUDE
+	La nebbia è fitta, il fango sale fino al ginocchio, e di quel che cercate non c'è traccia. Un pescatore di rane vi dice che chi ha dato questa indicazione era ubriaco: la via giusta porta %A_ALTRA%.
+	Fra i giunchi c'è un palo con un nastro legato a metà: il resto lo ha portato via il vento. Sul palo, a matita: «non è qui, è %A_ALTRA%».
+	L'isolotto che vi avevano indicato è un tronco galleggiante. Una rana, che sembra saperla lunga, gracida in una direzione precisa, quella che porta %A_ALTRA%.
+
+FALSA_PISTA_RADURA
+	La radura è vuota, l'erba è intatta, e nessuno vi ha lasciato niente. Un pastore, con la calma di chi non ha fretta, vi manda %A_ALTRA%.
+	Al centro della radura c'è un cerchio di sassi con dentro un biglietto: «avete sbagliato strada. Andate %A_ALTRA%».
+	Un ruscello attraversa la radura, e sulla riva c'è la sagoma di qualcuno che si è sdraiato a guardare il cielo, ma da giorni. Chi cercate è andato %A_ALTRA%.
+
+// =============================================================================================
+// RICETTA 5: le farse. Una richiesta senza senso, fatta con la massima serietà, e poi si va comunque a cercare il tizio:
+// al massimo due posti (una tappa e l'arrivo, o solo l'arrivo). Si paga poco. I tizi sono tutti uomini (i testi dicono "gli"
+// e "lo"); niente nomi veri: epiteti.
+// =============================================================================================
+
+ARCO_FARSA
+	[^3] [FARSA_SGARBO]
+	[^2] [FARSA_RECUPERO]
+
+// Sgarbi, quasi tutti sognati, che spesso riguardano cose che nel mondo di gioco non esistono (e che nessuno sa spiegare)
+FARSA_SGARBO
+	[TIZIO][MANDANTE_FARSA][SGARBO_E_COSA][MON=[MONETE_FARSA]]CHIAVE=SGARBO_DI_[#TZ];TIPO=VENDETTA;ASPETTO=[#FASPETTO];MANDANTE=[#FMD];MONETE=[#MON];\
+	TITOLO=[#STITOLO];\
+	RICHIESTA=Dovete andare a punire [#TIZIO], che mi ha fatto uno sgarbo. Vi darò %MONETE% monete.;\
+	BATTUTA=Che cosa vi ha fatto?;\
+	RISPOSTA=[#SGARBO];\
+	BATTUTA_2=[#DOMANDA_COSA];\
+	RISPOSTA_2=[#RISPOSTA_COSA] Comunque trovatelo: cominciate %DA_PROSSIMO%.;\
+	[PERCORSO_FARSA];\
+	RINGRAZIAMENTO=[#FRING];\
+	RICORDO=Qui [#TIZIO] fu punito per uno sgarbo che forse non aveva fatto.
+
+TIZIO
+	[TIZIO=Gervasio il Puntiglioso][TZ=Gervasio]
+	[TIZIO=Ubaldo Settevolte][TZ=Ubaldo]
+	[TIZIO=Filiberto Mezzacalzetta][TZ=Filiberto]
+	[TIZIO=Baldassarre il Distratto][TZ=Baldassarre]
+	[TIZIO=Pancrazio Quasipronto][TZ=Pancrazio]
+	[TIZIO=Egidio Pocosale][TZ=Egidio]
+	[TIZIO=Tobia Ventosecco][TZ=Tobia]
+	[TIZIO=Ermete Duespicci][TZ=Ermete]
+
+MANDANTE_FARSA
+	[FASPETTO=LOCANDIERE][FMD=il locandiere]
+	[FASPETTO=QUALUNQUE][FMD=un mugnaio]
+	[FASPETTO=DONNA][FMD=una bottegaia]
+	[FASPETTO=ARMAIOLO][FMD=l'armaiolo]
+	[FASPETTO=CAPITANO][FMD=il capitano delle guardie]
+	[FASPETTO=SACERDOTE][FMD=il sacerdote]
+
+MONETE_FARSA
+	15 | 20 | 25 | 30
+
+SGARBO_E_COSA
+	[STITOLO=Una questione di portiera][SGARBO=In sogno ho visto che mi ha rigato la portiera della macchina.][DOMANDA_COSA=Che cos'è una macchina?]\
+	[RISPOSTA_COSA=Non lo so, una cosa che ho sognato. Aveva quattro ruote e nessun cavallo, e io ci tenevo molto.]\
+	[FRING=La portiera è a posto, in sogno e fuori. Ecco le monete, e non chiedetemi che cos'è una macchina.]
+	[STITOLO=Il telefonino indiscreto][SGARBO=In sogno mi ha letto i messaggi sul telefonino.][DOMANDA_COSA=Che cos'è un telefonino?]\
+	[RISPOSTA_COSA=Una tavoletta che parla, l'ho sognata, e lui la usava peggio di me.]\
+	[FRING=Ora ho il sogno in pace, e nessuno legge più i miei messaggi. Non avevo nemmeno capito dove li scrivevo.]
+	[STITOLO=I punti della tessera][SGARBO=In sogno mi ha fregato i punti della tessera fedeltà.][DOMANDA_COSA=Che cos'è una tessera fedeltà?]\
+	[RISPOSTA_COSA=Un cartoncino con dei bollini. Nel sogno ne servivano trenta per un prosciutto, e io ne avevo ventinove.]\
+	[FRING=Ventinove più uno, il prosciutto è mio. Anche se, ripensandoci, non so dove si compri.]
+	[STITOLO=Il wifi scomparso][SGARBO=In sogno mi ha rubato il wifi.][DOMANDA_COSA=Che cos'è il wifi?]\
+	[RISPOSTA_COSA=Un'aria che porta le notizie, l'ho sognata e lui se la beveva tutta.]\
+	[FRING=Le notizie sono tornate. Ne ho sentita una sulle galline, ed era meravigliosa.]
+	[STITOLO=Il posto auto][SGARBO=In sogno ha parcheggiato nel mio posto.][DOMANDA_COSA=Che cos'è un parcheggio?]\
+	[RISPOSTA_COSA=Un posto dove si lasciano le macchine. Che cos'è una macchina? Non lo so, l'ho sognata.]\
+	[FRING=Il posto è libero, e domani non lo occuperà nessuno. In sogno l'ho già prenotato.]
+	[STITOLO=La password debole][SGARBO=In sogno ha indovinato la mia password.][DOMANDA_COSA=Che cos'è una password?]\
+	[RISPOSTA_COSA=Una parola segreta che apre le porte. La mia era password. Lui ci ha messo cinque secondi.]\
+	[FRING=Ora ho scelto una parola nuova. Non ve la dico, ma comincia per p.]
+	[STITOLO=L'ascensore bloccato][SGARBO=In sogno mi ha pestato un piede nell'ascensore.][DOMANDA_COSA=Che cos'è un ascensore?]\
+	[RISPOSTA_COSA=Una stanza che sale. Nel sogno non saliva mai, e lui continuava a premere.]\
+	[FRING=Il piede sta meglio, e lui non preme più niente. Vi ringrazio, anche per le stanze che salgono.]
+	[STITOLO=Il saluto sospetto][SGARBO=Ieri mi ha salutato con troppa convinzione.][DOMANDA_COSA=Questo non è uno sgarbo.]\
+	[RISPOSTA_COSA=Lo è, se aveste visto come l'ha fatto. Ha anche sorriso.]\
+	[FRING=Dite che non ha più sorriso? Allora è tutto a posto. Ecco le monete.]
+	[STITOLO=Lo sguardo storto][SGARBO=Mi ha guardato storto per tre volte di fila.][DOMANDA_COSA=Forse aveva un tic.]\
+	[RISPOSTA_COSA=Un tic con malizia, secondo me. Tre volte, e sempre dalla stessa parte.]\
+	[FRING=Ora guarda diritto, mi hanno detto. Se è per paura o per rispetto, non mi interessa.]
+	[STITOLO=Il nome del gallo][SGARBO=In sogno mi ha chiamato con il nome del mio gallo.][DOMANDA_COSA=Avete un gallo?]\
+	[RISPOSTA_COSA=Non più, e proprio per questo mi ha dato fastidio.]\
+	[FRING=Il gallo non c'è più, ma il suo nome ora è al sicuro. Grazie, e scusate la commozione.]
+
+// Recuperi: il tizio ha preso qualcosa che non si può prendere
+FARSA_RECUPERO
+	[TIZIO][MANDANTE_FARSA][RECUPERO_E_COSA][MON=[MONETE_FARSA]]CHIAVE=RECUPERO_DA_[#TZ];TIPO=RECUPERO;ASPETTO=[#FASPETTO];MANDANTE=[#FMD];MONETE=[#MON];\
+	TITOLO=[#STITOLO];\
+	RICHIESTA=[#TIZIO] mi ha preso [#COSA]. Dovete andare a riprendere quel che mi ha tolto, e vi darò %MONETE% monete.;\
+	BATTUTA=[#DOMANDA_COSA];\
+	RISPOSTA=[#RISPOSTA_COSA];\
+	BATTUTA_2=Come lo troviamo?;\
+	RISPOSTA_2=[RISPOSTA_COME_SI_TROVA] Cominciate %DA_PROSSIMO%.;\
+	[PERCORSO_FARSA];\
+	RINGRAZIAMENTO=[#FRING];\
+	RICORDO=Qui [#TIZIO] restituì ciò che non avrebbe dovuto prendere.
+
+RECUPERO_E_COSA
+	[STITOLO=Il giorno di sole][COSA=il mio giorno di sole][DOMANDA_COSA=Un giorno di sole non si prende.][RISPOSTA_COSA=Lui ha detto che lo avevano finito, e che ne serviva uno in prestito.]\
+	[FRING=Il sole è tornato, e con lui il mio buonumore. Ora tocca a lui trovarsi un temporale.]
+	[STITOLO=La pazienza][COSA=la mia pazienza][DOMANDA_COSA=Non si può prendere la pazienza.][RISPOSTA_COSA=Lui ci è riuscito, e ora non ne ho più nemmeno per lui.]\
+	[FRING=Mi è tornata tutta, anche se un po' scarica. Ora ne tengo da parte per la prossima volta.]
+	[STITOLO=L'ultima fetta][COSA=l'ultima fetta di torta][DOMANDA_COSA=Posso capire la gola.][RISPOSTA_COSA=Non è gola, è un principio. Ne aveva già mangiate tre, e io non ne avevo avuta nessuna.]\
+	[FRING=La fetta non c'è più, ma almeno gli è passata la fame. E io ho l'orgoglio di nuovo a posto.]
+	[STITOLO=Il nome dell'infanzia][COSA=il nome della mia infanzia][DOMANDA_COSA=E come lo chiamavano?][RISPOSTA_COSA=Non ve lo dico. Ma ora lo usa lui, e con una certa disinvoltura.]\
+	[FRING=Il nome è di nuovo mio. Se qualcuno ci prova ancora, sapete dove trovarmi.]
+	[STITOLO=L'idea di ieri][COSA=un'idea che avevo avuto ieri][DOMANDA_COSA=Un'idea non si ruba.][RISPOSTA_COSA=Era una buona idea, e l'ho sentita uscire dal suo orecchio. Lui sostiene di averla avuta prima.]\
+	[FRING=L'idea è tornata, e ora è mia davvero. Quale fosse non me lo ricordo, ma la sento.]
+
+RISPOSTA_COME_SI_TROVA
+	L'ultima volta lo hanno visto da quelle parti, con aria di chi ha qualcosa da nascondere.
+	Non è difficile da riconoscere: è quello che si guarda alle spalle anche quando non c'è nessuno.
+	Si fa vedere dappertutto e dice a tutti di non averlo visto. Qualcuno saprà.
+
+// I percorsi delle farse: zero o una tappa, poi il tizio
+PERCORSO_FARSA
+	[^3] ARRIVO=[ARRIVO_FARSA]
+	[^2] TAPPA_1=CITTA:[CLUE_FARSA_CITTA];SCENA_1=[SCENA_CITTA];ARRIVO=[ARRIVO_FARSA]
+	[^2] TAPPA_1=LOCANDA:[CLUE_FARSA_LOCANDA];SCENA_1=[SCENA_LOCANDA];ARRIVO=[ARRIVO_FARSA]
+
+CLUE_FARSA_CITTA
+	Un oste ricorda bene [#TIZIO]: lasciò una mancia sproporzionata e un'aria da colpevole. Disse di andare %A_PROSSIMO%, ma lo disse due volte.
+	Una guardia, che conosce [#TIZIO] da una vita, giura che oggi si è comportato in modo sospetto. Quando le si chiede come, risponde: normale. Ma lo si vede dagli occhi. Il posto è %PROSSIMO%.
+	Un bottegaio dice che [#TIZIO] ha comprato una cosa qualunque, con grande convinzione, e se n'è andato verso %PROSSIMO%.
+
+CLUE_FARSA_LOCANDA
+	Il locandiere ricorda [#TIZIO]: ha chiesto dell'acqua tiepida, e ha lasciato detto che sarebbe andato %A_PROSSIMO%, in un tono che non ammette repliche.
+	Un avventore giura di aver sentito [#TIZIO] dire a un tavolo vuoto: «presto sapranno». Poi ha pagato e se ne è andato verso %PROSSIMO%.
+	Sul retro del conto c'è un disegno di [#TIZIO] con la scritta «sono innocente». Sotto, un'indicazione: %PROSSIMO%.
+
+ARRIVO_FARSA
+	[^2] ROVINE:[#TIZIO] è qui, con una pergamena in mano. Quando gli spiegate il motivo, strabuzza gli occhi: «Io? Ma io non ho fatto niente». Poi, dopo un attimo: «Va bene, chiedo scusa. A chi, però?»
+	[^2] RADURA:[#TIZIO] è qui, steso sull'erba, e non si alza neanche quando lo informate che dovete punirlo. «Fate pure, ma con calma».
+	[^2] BOSCO:[#TIZIO] è qui, e sta riparando una staccionata che non ha nessuna intenzione di finire. Quando vi vede alza gli occhi al cielo: «Va bene, chi è stavolta?»
+	[^1] GROTTA:[#TIZIO] è qui, accanto a un fuoco piccolissimo. Quando gli spiegate il motivo, ride: «Questa è bella. Non so cosa sia una macchina, ma mi piacerebbe averla fatta».
+	[^1] ROVINE LADRO 2:[#TIZIO] è qui con due che si presentano come i suoi avvocati. Hanno spade e pochi scrupoli: non vogliono sentire ragioni.
+	[^1] GROTTA GOBLIN 3:[#TIZIO] è qui con tre goblin che dicono di essere i suoi parenti, e che ne difendono l'onore con molto rumore e poco garbo.
+	[^1] PALUDE FOLLETTO 3:[#TIZIO] è qui con tre folletti che lo chiamano capo e ridono a ogni sua parola. Quando provate a parlare, lo coprono con le risate.
+	[^1] BOSCO LADRO 2:[#TIZIO] è qui con due briganti che giurano di essere dei semplici turisti, e non vogliono che si indaghi.

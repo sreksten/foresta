@@ -54,7 +54,7 @@ Ogni produttore legge le sue grammatiche e offre testi pronti:
 | `ProduttoreDiOroscopiCasuale` | `oroscopo.txt` | gli oroscopi dell'alchimista e il dialogo che ne nasce |
 | `ProduttoreDiLuoghiCasuale` | `rovine.txt`, `templi.txt` | i nomi dei luoghi della foresta |
 | `ProduttoreDiSfideCasuale` | `sfide.txt` | le frasi della sfida a carta, forbici e sasso |
-| `ProduttoreDiMissioniCasuale` | `missioni.txt`, `nomi.txt` | i testi delle missioni e i personaggi del mondo (vedi [`nomi.md`](nomi.md)) |
+| `ProduttoreDiMissioniCasuale` | `missioni.txt`, `nomi.txt`, `tappe.txt` | i testi delle missioni e i personaggi del mondo (vedi [`nomi.md`](nomi.md)); `rigaDiTappe(farsa)` dà una riga di missione a tappe (vedi [`missione_a_tappe.md`](missione_a_tappe.md)) da `tappe.txt`, che è a parte perché le sue produzioni a esaurimento si ripristinano a ogni riga |
 | `ProduttoreDiLocandeCasuale` | `locande.txt` (e i nomi di `nomi.txt`) | i dati a caso delle locande del mondo: nome, locandiere, dialoghi |
 
 `ProduttoriDiTesti` ne governa il ciclo di vita: `precarica()` li carica tutti subito (per scoprire all'avvio una grammatica sbagliata) e `resetProduzioni()` azzera le liste esauribili, cioè i nomi già estratti, quando comincia una partita nuova. I produttori degli artefatti stanno invece in `04-foresta-artefatti`, con le loro grammatiche.

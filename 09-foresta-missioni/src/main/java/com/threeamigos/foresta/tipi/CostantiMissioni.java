@@ -7,6 +7,11 @@ package com.threeamigos.foresta.tipi;
  */
 public final class CostantiMissioni {
 
+    /**
+     * Quante delle missioni a tappe (vedi MissioneATappe e tappe.txt) sono delle farse: circa una su tre
+     */
+    public static final int PERCENTUALE_PROBABILITA_FARSA_NELLE_TAPPE = 33;
+
     // Carta, forbici e sasso (vedi carta_forbici_sasso.md)
     // La probabilità, in percentuale, che chi stringe amicizia venga sfidato invece di ricevere un'offerta, finché la
     // missione La sfida dei campioni non è partita

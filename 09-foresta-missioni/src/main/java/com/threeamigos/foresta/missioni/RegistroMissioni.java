@@ -470,10 +470,23 @@ public class RegistroMissioni {
 	 * Come {@link #cerca(TipoLocazione, Missione)}, ma solo dentro il quadrante (su tutta la mappa se è null).
 	 */
 	public static Optional<CoordinateMD> cerca(TipoLocazione richiesta, Missione missione, Quadrante quadrante) {
+		return cerca(richiesta, missione, quadrante, null, Collections.emptySet());
+	}
+
+	/**
+	 * Come {@link #cerca(TipoLocazione, Missione)}, ma a quadrati concentrici attorno a quella casella, dalla più vicina, e senza le caselle
+	 * escluse: per una catena di tappe, in cui il posto dopo sta vicino a quello prima e non è mai uno già usato.
+	 */
+	public static Optional<CoordinateMD> cercaVicino(TipoLocazione richiesta, Missione missione, CoordinateMD vicinoA, Set<CoordinateMD> escluse) {
+		return cerca(richiesta, missione, null, vicinoA, escluse);
+	}
+
+	private static Optional<CoordinateMD> cerca(TipoLocazione richiesta, Missione missione, Quadrante quadrante, CoordinateMD centro,
+												Set<CoordinateMD> escluse) {
 		CoordinateMD gruppo = Foresta.getPosizioneDelGruppo();
-		for (CoordinateMD coordinate : aQuadratiConcentrici(quadrante)) {
-			if (!coordinate.equals(gruppo) && Foresta.getLocazione(coordinate) == richiesta && isDisponibile(coordinate, missione)
-					&& RegistroArtefatti.getArtefattoInLocazione(coordinate) == null) {
+		for (CoordinateMD coordinate : aQuadratiConcentrici(quadrante, centro)) {
+			if (!coordinate.equals(gruppo) && !escluse.contains(coordinate) && Foresta.getLocazione(coordinate) == richiesta
+					&& isDisponibile(coordinate, missione) && RegistroArtefatti.getArtefattoInLocazione(coordinate) == null) {
 				occupaLocazione(coordinate, missione);
 				if (richiesta == TipoLocazione.TEMPIO) {
 					Foresta.setLocazioneVisitata(coordinate, false);
@@ -506,9 +519,16 @@ public class RegistroMissioni {
 	 * Le caselle della mappa, o del quadrante se non è null, a quadrati concentrici attorno a una casella a caso.
 	 */
 	private static List<CoordinateMD> aQuadratiConcentrici(Quadrante quadrante) {
+		return aQuadratiConcentrici(quadrante, null);
+	}
+
+	/**
+	 * Come sopra, ma attorno a quella casella se non è null (e allora il quadrante non conta).
+	 */
+	private static List<CoordinateMD> aQuadratiConcentrici(Quadrante quadrante, CoordinateMD centroDato) {
 		int dimensioneX = Foresta.getDimensioneX();
 		int dimensioneY = Foresta.getDimensioneY();
-		CoordinateMD centro = quadrante != null ? quadrante.getCoordinateACaso()
+		CoordinateMD centro = centroDato != null ? centroDato : quadrante != null ? quadrante.getCoordinateACaso()
 				: new CoordinateMD(Dado.tira(dimensioneX) - 1, Dado.tira(dimensioneY) - 1);
 		int raggioMassimo = Math.max(dimensioneX, dimensioneY);
 		List<CoordinateMD> caselle = new ArrayList<>();
@@ -538,13 +558,27 @@ public class RegistroMissioni {
 	 * null).
 	 */
 	public static Optional<CoordinateMD> cercaOCostruisci(TipoLocazione richiesta, Missione missione, Quadrante quadrante) {
-		Optional<CoordinateMD> trovata = cerca(richiesta, missione, quadrante);
+		return cercaOCostruisci(richiesta, missione, quadrante, null, Collections.emptySet());
+	}
+
+	/**
+	 * Come {@link #cercaVicino}, ma se non c'è una locazione disponibile di quella classe se ne costruisce una al posto del bosco o della
+	 * palude disponibile più vicino (vedi {@link #cercaOCostruisci(TipoLocazione, Missione)}).
+	 */
+	public static Optional<CoordinateMD> cercaOCostruisciVicino(TipoLocazione richiesta, Missione missione, CoordinateMD vicinoA,
+																Set<CoordinateMD> escluse) {
+		return cercaOCostruisci(richiesta, missione, null, vicinoA, escluse);
+	}
+
+	private static Optional<CoordinateMD> cercaOCostruisci(TipoLocazione richiesta, Missione missione, Quadrante quadrante, CoordinateMD centro,
+														   Set<CoordinateMD> escluse) {
+		Optional<CoordinateMD> trovata = cerca(richiesta, missione, quadrante, centro, escluse);
 		if (trovata.isPresent()) {
 			return trovata;
 		}
-		Optional<CoordinateMD> sostituita = cercaDaSostituire(missione, quadrante, true);
+		Optional<CoordinateMD> sostituita = cercaDaSostituire(missione, quadrante, true, centro, escluse);
 		if (!sostituita.isPresent()) {
-			sostituita = cercaDaSostituire(missione, quadrante, false);
+			sostituita = cercaDaSostituire(missione, quadrante, false, centro, escluse);
 		}
 		sostituita.ifPresent(coordinate -> {
 			Foresta.costruisciLocazione(coordinate, richiesta);
@@ -553,11 +587,12 @@ public class RegistroMissioni {
 		return sostituita;
 	}
 
-	private static Optional<CoordinateMD> cercaDaSostituire(Missione missione, Quadrante quadrante, boolean soloVisitate) {
+	private static Optional<CoordinateMD> cercaDaSostituire(Missione missione, Quadrante quadrante, boolean soloVisitate, CoordinateMD centro,
+															Set<CoordinateMD> escluse) {
 		CoordinateMD gruppo = Foresta.getPosizioneDelGruppo();
-		for (CoordinateMD coordinate : aQuadratiConcentrici(quadrante)) {
+		for (CoordinateMD coordinate : aQuadratiConcentrici(quadrante, centro)) {
 			TipoLocazione tipo = Foresta.getLocazione(coordinate);
-			if (!coordinate.equals(gruppo)
+			if (!coordinate.equals(gruppo) && !escluse.contains(coordinate)
 					&& (tipo == TipoLocazione.BOSCO || tipo == TipoLocazione.PALUDE)
 					&& (!soloVisitate || Foresta.isLocazioneVisitata(coordinate))
 					&& isDisponibile(coordinate, missione)

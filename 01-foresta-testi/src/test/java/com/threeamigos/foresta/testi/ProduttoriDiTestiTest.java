@@ -6,7 +6,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -191,5 +193,38 @@ class ProduttoriDiTestiTest {
 				() -> ProduttoreDiLocandeCasuale.getDatiLocanda(1, piuRighe));
 
 		assertTrue(e.getMessage().contains("più di una riga") && e.getMessage().contains("LOCANDA"), e.getMessage());
+	}
+
+	@Test
+	void leRigheDelleTappeSonoTutteDiverseEIlGiroNonSiEsaurisce() {
+		// Le chiavi e i custodi sono a esaurimento: senza il ripristino a ogni riga, poche righe a chiavi svuoterebbero la grammatica
+		Set<String> righe = new HashSet<>();
+		for (int i = 0; i < 1500; i++) {
+			String riga = ProduttoreDiMissioniCasuale.rigaDiTappe(i % 3 == 0);
+			assertNonVuoto(riga, "riga " + i);
+			assertFalse(riga.contains("["), riga);
+			assertFalse(riga.contains("\t"), riga);
+			assertTrue(riga.contains("CHIAVE="), riga);
+			assertTrue(riga.contains("ARRIVO="), riga);
+			righe.add(riga);
+		}
+		// Le farse hanno meno varianti delle storie serie: qualche riga può ripetersi, ma la grande maggioranza no
+		assertTrue(righe.size() >= 1400, "righe diverse: " + righe.size());
+	}
+
+	@Test
+	void unaFarsaHaAlPiuDuePostiEUnSecondoScambio() {
+		for (int i = 0; i < 300; i++) {
+			String riga = ProduttoreDiMissioniCasuale.rigaDiTappe(true);
+			assertTrue(riga.contains("BATTUTA_2="), riga);
+			assertFalse(riga.contains("TAPPA_2="), riga);
+		}
+	}
+
+	@Test
+	void unaMissioneSeriaNonEUnaFarsa() {
+		for (int i = 0; i < 300; i++) {
+			assertFalse(ProduttoreDiMissioniCasuale.rigaDiTappe(false).contains("BATTUTA_2="));
+		}
 	}
 }

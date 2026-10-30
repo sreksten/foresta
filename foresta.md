@@ -119,6 +119,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | [`motore_grafico.md`](motore_grafico.md) | Finestra, canvas e riquadri, barra icone, ciclo di rendering, sprite, font bitmap, schermate, effetti |
 | [`gestione_missioni.md`](gestione_missioni.md) | Infrastruttura delle missioni: registro, momenti di controllo, `Passo` e `MissioneAPassi`, claim delle locazioni |
 | [`passi_missioni.md`](passi_missioni.md) | Catalogo dei passi e delle missioni concrete, mappatura dei tipi di missione |
+| [`missione_a_tappe.md`](missione_a_tappe.md) | Progetto delle missioni a tappe (catena di posti con informazioni, caccia al tesoro): piano di azione e grammatica di prova |
 | [`intermezzi.md`](intermezzi.md) | Come scrivere, animare e provare un intermezzo |
 | [`carta_forbici_sasso.md`](carta_forbici_sasso.md) | La sfida a carta, forbici e sasso (chi stringe amicizia), la missione La sfida dei campioni e il suo trofeo |
 | [`strumenti_di_prova.md`](strumenti_di_prova.md) | La finestra di prova (personaggi, missioni da forzare) e i trucchi sui dadi per contesto, solo in modalità di prova |
