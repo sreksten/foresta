@@ -65,3 +65,11 @@ Le implementazioni su file delle interfacce del contratto: `GestoreSalvataggiSuF
 - Lo stato è in gran parte statico (gruppi, registri, mappa): è lecito per un gioco a giocatore singolo, a patto di non aggiungere altri registri statici.
 - Il motore e i moduli sotto non chiudono mai il processo e non usano `java.awt`/Swing: lo controllano `ConvenzioniDiPortabilitaTest` e `DipendenzeDalToolkitGraficoTest`.
 - Il quadro completo è in [`motore_di_gioco.md`](motore_di_gioco.md) (§2–3 la macchina a stati e il ciclo di una locazione, §5 salvataggi, §6 mondo).
+
+## Da fare / idee aperte
+
+Le trova `GiocoACasoTest`, che preme comandi a caso fra quelli che il gioco offre (e per ora li tiene fuori dai controlli, vedi `GiocoACasoTest.isNoto`):
+
+- Un incantesimo malefico (`Morte`, `IncantesimoMaleficoImpl`) scelto quando non c'è nessun avversario vivo pubblica un `InternoException` (`LocazioneBase.impostaAzioniImpl`).
+- Una pozione o un'azione in combattimento quando nessun personaggio può agire (`chiPuoAgire()` vuoto) fa uscire un `IndexOutOfBoundsException` (`LocazioneBase.gestisciCombattimento`).
+- Una scena di negozio in cui il capo non ha un elemento che parli per lui (`ScenaNegozio.parlaIlCapo`, `BattutaIntermezzo.di`: «Manca chi dice la battuta»).

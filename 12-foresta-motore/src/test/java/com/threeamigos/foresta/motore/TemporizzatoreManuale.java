@@ -53,6 +53,13 @@ final class TemporizzatoreManuale implements Temporizzatore {
 		return attivo;
 	}
 
+	/**
+	 * Se un impulso adesso è ammesso: l'automa ha avviato il temporizzatore e l'app non è in background.
+	 */
+	boolean puoScattare() {
+		return attivo && !sospeso;
+	}
+
 	int getPeriodo() {
 		return periodo;
 	}
