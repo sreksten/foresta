@@ -50,6 +50,24 @@ public class SpriteEffetto extends SpriteBase {
 		return testo;
 	}
 
+	/**
+	 * Centra lo sprite su quel punto, spostandolo quanto serve perché, alla sua scala finale, non esca dai limiti.
+	 */
+	public void centraEntro(float xCentro, float limiteSinistro, float limiteDestro) {
+		impostaX(centroEntro(xCentro, immagine.getWidth() * SCALA_FINALE, limiteSinistro, limiteDestro));
+	}
+
+	/**
+	 * Il centro di uno sprite largo così, il più vicino possibile a quel punto, che lo tiene dentro i limiti; se non ci sta, il centro dei limiti.
+	 */
+	public static float centroEntro(float xCentro, float larghezza, float limiteSinistro, float limiteDestro) {
+		float meta = larghezza / 2.0f;
+		if (limiteDestro - limiteSinistro < larghezza) {
+			return (limiteSinistro + limiteDestro) / 2.0f;
+		}
+		return Math.max(limiteSinistro + meta, Math.min(limiteDestro - meta, xCentro));
+	}
+
 	@Override
 	protected BufferedImage buildImage() {
 		return testoRenderizzato;

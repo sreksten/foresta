@@ -68,6 +68,12 @@ public final class Pernottamento {
 			BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
 		}
 		gruppo.riposa(ore, tipoRiposo);
+		// Dormendo passa il tempo: prima il riposo, poi gli effetti di stato e le ricariche scorrono un turno per ogni ora di sonno, pesata dal tipo di riposo
+		// e arrotondata per eccesso (un'ora all'aperto senza fuoco conta comunque uno)
+		int turni = (int) Math.ceil(ore * tipoRiposo.getMoltiplicatore());
+		for (int turno = 0; turno < turni && gruppo.getCapo().isVivo(); turno++) {
+			gruppo.trascorriUnTurno();
+		}
 		LineaTemporale.mattinoSeguente();
 		LineaTemporale.eventiDiNotte(gruppo);
 		// La locanda fuori città non può cadere: solo una città può essere distrutta

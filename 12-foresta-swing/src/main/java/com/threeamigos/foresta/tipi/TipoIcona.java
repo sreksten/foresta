@@ -3,10 +3,13 @@ package com.threeamigos.foresta.tipi;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
+import com.threeamigos.foresta.ui.immagini.SfondoARiempimento;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Le icone della barra dei comandi: ognuna lega un comando (e, per i personaggi, una classe) a un'immagine e a uno sfondo, nell'ordine in cui compaiono nelle varie fasi di gioco: caricare una partita, scegliere
@@ -168,6 +171,9 @@ public enum TipoIcona {
 	// Caricata al primo uso, o da precarica(): cosi' la dimensione della finestra si calcola senza caricarle tutte
 	private volatile BufferedImage icona;
 	private volatile BufferedImage iconaCapo;
+	// Le icone in ricarica, per turni rimasti e durata (vedi getIconaInRicarica): poche, e si compongono la prima volta che servono, o da precarica()
+	private final Map<Long, BufferedImage> iconeInRicarica = new ConcurrentHashMap<>();
+	private static volatile BufferedImage corniceInRicarica;
 	private static int altezzaMassima = -1;
 
 	TipoIcona(Comando comando, String nomeRisorsa, Sfondo sfondo) {
@@ -249,11 +255,55 @@ public enum TipoIcona {
 	}
 
 	/**
-	 * Carica subito tutte le icone (durante il logo iniziale, in background).
+	 * L'icona di un comando in ricarica: lo sfondo, che si riempie dal basso con un colore che va dal rosso scuro al verde scuro man mano che passano i
+	 * turni, e sopra il disegno. Non si può cliccare. Per una ricarica di {@code durata} turni, con {@code turniRimasti} ancora da aspettare, lo sfondo è
+	 * pieno per (durata - turniRimasti + 1)/(durata + 1): subito dopo l'uso è un po' riempito, e a zero turni torna l'icona normale (vedi {@link #getIcona()}).
+	 */
+	public BufferedImage getIconaInRicarica(int turniRimasti, int durata) {
+		if (turniRimasti <= 0 || durata <= 0) {
+			return getIcona();
+		}
+		int rimasti = Math.min(turniRimasti, durata);
+		return iconeInRicarica.computeIfAbsent((long) durata << 32 | rimasti, chiave -> {
+			BufferedImage sfondo = SfondoARiempimento.crea(getCorniceInRicarica(), durata - rimasti + 1, durata);
+			BufferedImage composta = componi(sfondo, BufferedImageBuilder.buildBufferedImage(nomeRisorsa));
+			return BufferedImageBuilder.ingrandisci(composta, LivelloDiZoom.valore());
+		});
+	}
+
+	private static BufferedImage getCorniceInRicarica() {
+		BufferedImage caricata = corniceInRicarica;
+		if (caricata == null) {
+			synchronized (TipoIcona.class) {
+				caricata = corniceInRicarica;
+				if (caricata == null) {
+					caricata = BufferedImageBuilder.buildBufferedImage("icone/Sfondo-icona-trasparente.gif");
+					corniceInRicarica = caricata;
+				}
+			}
+		}
+		return caricata;
+	}
+
+	/**
+	 * Carica subito tutte le icone (durante il logo iniziale, in background), comprese quelle in ricarica di abilità e canti.
 	 */
 	public static void precarica() {
 		for (TipoIcona corrente : values()) {
 			corrente.getIcona();
+		}
+		for (TipoAbilita abilita : TipoAbilita.values()) {
+			precaricaInRicarica(ComandiAssociati.di(abilita), abilita.getRicarica());
+		}
+		for (TipoCanto canto : TipoCanto.values()) {
+			precaricaInRicarica(ComandiAssociati.di(canto), canto.getRicarica());
+		}
+	}
+
+	private static void precaricaInRicarica(Comando comando, int durata) {
+		TipoIcona icona = ofComando(comando);
+		for (int rimasti = 1; rimasti <= durata; rimasti++) {
+			icona.getIconaInRicarica(rimasti, durata);
 		}
 	}
 

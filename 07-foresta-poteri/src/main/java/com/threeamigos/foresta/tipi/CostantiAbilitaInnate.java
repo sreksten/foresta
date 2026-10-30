@@ -13,9 +13,20 @@ public final class CostantiAbilitaInnate {
     public static final int ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO = 4;
 
     /**
+     * La ricarica di ogni abilità: i turni (round completi di combattimento, o passi fra una locazione e l'altra) che devono passare prima di
+     * poterla riusare. Un'abilità che dà uno stato o un buff per un certo numero di turni si ricarica in uno di più, perché chi lo subisce non
+     * resti senza respiro e chi lo dà non lo rinnovi di continuo; con zero non c'è ricarica.
+     * Scacciare i non morti: SPAVENTATO dura al più 3 turni (vedi CalcolatoreCombattimento.calcolaDurataStato)
+     */
+    public static final int ABILITA_SCACCIARE_I_NON_MORTI_RICARICA = 4;
+
+    /**
      * Scacciare i non morti: ognuno cede con la SOGGEZIONE del chierico contro il suo CORAGGIO, e prende SPAVENTATO
      */
     public static final int ABILITA_IMPOSIZIONE_DELLE_MANI_COSTO_LANCIO = 5;
+
+    /** Cura istantanea e discretamente potente */
+    public static final int ABILITA_IMPOSIZIONE_DELLE_MANI_RICARICA = 4;
 
     /**
      * L'imposizione delle mani cura ABILITA_IMPOSIZIONE_DELLE_MANI_BASE × √livello, aumentato della SAGGEZZA divisa per
@@ -30,9 +41,15 @@ public final class CostantiAbilitaInnate {
      */
     public static final int ABILITA_RADICI_COSTO_LANCIO = 3;
 
+    /** Le radici immobilizzano o accecano per al più 3 turni: i mostri devono poter muoversi di nuovo prima di un altro colpo */
+    public static final int ABILITA_RADICI_RICARICA = 4;
+
     public static final int ABILITA_RADICI_DANNI = 40;
 
     public static final int ABILITA_SCIAME_COSTO_LANCIO = 3;
+
+    /** Lo sciame avvelena per 4 turni */
+    public static final int ABILITA_SCIAME_RICARICA = 5;
 
     public static final int ABILITA_SCIAME_DANNI = 40;
 
@@ -50,6 +67,9 @@ public final class CostantiAbilitaInnate {
 
     public static final int ABILITA_PELLE_DI_CORTECCIA_DURATA = 4;
 
+    /** Uno in più della durata, per non poterla rinnovare di continuo */
+    public static final int ABILITA_PELLE_DI_CORTECCIA_RICARICA = ABILITA_PELLE_DI_CORTECCIA_DURATA + 1;
+
     /**
      * La rigenerazione dà RIGENERAZIONE a un personaggio per ABILITA_RIGENERAZIONE_DURATA turni: a ogni turno guarisce di
      * ABILITA_RIGENERAZIONE_BASE più questa quota della sua salute massima, aumentata dalla SAGGEZZA del druido
@@ -57,6 +77,9 @@ public final class CostantiAbilitaInnate {
     public static final int ABILITA_RIGENERAZIONE_COSTO_LANCIO = 4;
 
     public static final int ABILITA_RIGENERAZIONE_DURATA = 4;
+
+    /** Uno in più della durata, per non poterla rinnovare di continuo */
+    public static final int ABILITA_RIGENERAZIONE_RICARICA = ABILITA_RIGENERAZIONE_DURATA + 1;
 
     public static final int ABILITA_RIGENERAZIONE_BASE = 5;
 
@@ -69,12 +92,23 @@ public final class CostantiAbilitaInnate {
      */
     public static final int ABILITA_ALBA_SACRA_COSTO_LANCIO = 5;
 
+    public static final int ABILITA_ALBA_SACRA_RICARICA = 4;
+
     /**
      * La luce divina del Sacerdote: danno sacro su più avversari (il doppio ai non morti), e investe anche i non morti del proprio gruppo.
      */
-    public static final int ABILITA_LUCE_DIVINA_COSTO_LANCIO = 10;
+
+    /** Il danno sacro acceca per al più 3 turni */
+    public static final int ABILITA_LUCE_DIVINA_RICARICA = 4;
 
     public static final int ABILITA_LUCE_DIVINA_DANNI = 35;
+
+    /**
+     * Il costo del Fulmine in proporzione ai danni: il Fulmine costa 10 per 100 di danno, la luce divina ne fa 35 e costa quanto basta per lo stesso rapporto,
+     * arrotondato per eccesso (3,5 → 4)
+     */
+    public static final int ABILITA_LUCE_DIVINA_COSTO_LANCIO = (int) Math.ceil(
+            (double) CostantiIncantesimi.INCANTESIMO_FULMINE_COSTO_LANCIO * ABILITA_LUCE_DIVINA_DANNI / CostantiIncantesimi.INCANTESIMO_FULMINE_DANNI);
 
     /**
      * Il dardo arcano, l'incantesimo innato di Mago ed Elfo: su un solo bersaglio, per poca MAGIA e senza consumare
@@ -91,9 +125,11 @@ public final class CostantiAbilitaInnate {
      */
     public static final int DARDO_ARCANO_DANNI_ELFO_PER_LIVELLO = 4;
 
-    public static final int DARDO_ARCANO_COSTO_LANCIO_MAGO = 2;
+    public static final int DARDO_ARCANO_COSTO_LANCIO_MAGO = 4;
 
-    public static final int DARDO_ARCANO_COSTO_LANCIO_ELFO = 4;
+    public static final int DARDO_ARCANO_COSTO_LANCIO_ELFO = 6;
+
+    public static final int DARDO_ARCANO_RICARICA = 2;
 
     private CostantiAbilitaInnate() {
     }

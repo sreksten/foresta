@@ -32,10 +32,13 @@ class LuceDivinaTest {
     private static final String FRASE_SULLO_SCHELETRO = "La luce divina investe anche lo Scheletro.";
 
     @Test
-    void ECaratterizzataComeIlFulmineNelCostoMaSacraEAPiuBersagli() {
+    void ECostaInProporzioneAiDanniDelFulmineMaESacraEAPiuBersagli() {
         assertEquals(Comando.LUCE_DIVINA, ComandiAssociati.di(TipoAbilita.LUCE_DIVINA));
         assertSame(TipoAbilita.LUCE_DIVINA, ComandiAssociati.abilita(Comando.LUCE_DIVINA));
-        assertEquals(CostantiIncantesimi.INCANTESIMO_FULMINE_COSTO_LANCIO, TipoAbilita.LUCE_DIVINA.getCostoLancio());
+        // Il Fulmine costa 10 per 100 di danno: la luce divina, che ne fa 35, costa lo stesso rapporto arrotondato per eccesso
+        assertEquals((int) Math.ceil((double) CostantiIncantesimi.INCANTESIMO_FULMINE_COSTO_LANCIO * CostantiAbilitaInnate.ABILITA_LUCE_DIVINA_DANNI
+                / CostantiIncantesimi.INCANTESIMO_FULMINE_DANNI), TipoAbilita.LUCE_DIVINA.getCostoLancio());
+        assertEquals(4, TipoAbilita.LUCE_DIVINA.getCostoLancio());
         Personaggio sacerdote = FabbricaPersonaggi.crea(TipoPersonaggio.SACERDOTE, 5);
         assertEquals(TipoDanno.SACRO, ((com.threeamigos.foresta.abilita.AbilitaDiDanno) FabbricaAbilita.crea(TipoAbilita.LUCE_DIVINA, sacerdote)).getTipoDanno());
     }

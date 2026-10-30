@@ -498,7 +498,8 @@ public class ForestaUI implements Temporizzabile {
 	}
 
 	private void gestisciEventoSelezioneIncantesimoDaLanciare(RichiestaSelezioneIncantesimoDaLanciare evento) {
-		impostaAzioni(evento.getPossibilita());
+		ComandiPossibili.set(evento.getPossibilita(), evento.getComandiVisibili(), evento.getInRicarica());
+		displayableCanvas.impostaAzioniIcone();
 		displayableCanvas.primoPiano(TipoFinestra.INCANTESIMI_E_POZIONI);
 	}
 

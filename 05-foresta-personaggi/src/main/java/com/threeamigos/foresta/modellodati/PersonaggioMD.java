@@ -17,7 +17,7 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.*;
 /**
  * I dati di un personaggio: la classe (mago, arpia...), il nome proprio facoltativo, se è vivo (o la causa della morte),
  * livello, esperienza e punti abilità non ancora assegnati, se è un PNG e perché sta nel gruppo, gli artefatti che
- * porta, i modificatori e gli effetti di stato in corso.
+ * porta, i modificatori e gli effetti di stato in corso e le abilità innate e i canti in ricarica.
  * <p>
  * Gli <b>attributi</b> (salute, forza, destrezza...) stanno in una mappa indicizzata da {@link TipoAttributo}, con un
  * valore minimo e uno massimo facoltativi per ciascuno: {@link #set(TipoAttributo, double)} li rispetta, quindi un
@@ -106,6 +106,11 @@ public class PersonaggioMD implements Serializzabile {
 	 * Effetti di stato applicati al personaggio
 	 */
 	private final List<EffettoDiStatoMD> effettiDiStato = new ArrayList<>();
+	/**
+	 * I turni che mancano a riavere un'abilità innata o un canto appena usato, per nome: sono testo e non il tipo perché i tipi di abilità e di
+	 * canti stanno in un modulo più alto. Chi è fuori dalla mappa è pronto; l'ordine alfabetico tiene stabile il salvataggio.
+	 */
+	private final Map<String, Integer> ricariche = new TreeMap<>();
 	/**
 	 * Artefatti posseduti dal personaggio
 	 */
@@ -211,6 +216,31 @@ public class PersonaggioMD implements Serializzabile {
 	 */
 	public Collection<EffettoDiStatoMD> getEffettiDiStato() {
 		return Collections.unmodifiableList(effettiDiStato);
+	}
+
+	/**
+	 * I turni di ricarica che mancano a ogni abilità o canto in ricarica (per nome), di sola lettura.
+	 */
+	public Map<String, Integer> getRicariche() {
+		return Collections.unmodifiableMap(ricariche);
+	}
+
+	/**
+	 * I turni che mancano a riavere l'abilità o il canto; zero se è pronto.
+	 */
+	public int getRicarica(String nome) {
+		return ricariche.getOrDefault(nome, 0);
+	}
+
+	/**
+	 * Imposta i turni che mancano a riavere l'abilità o il canto; con zero (o meno) è pronto.
+	 */
+	public void setRicarica(String nome, int turni) {
+		if (turni > 0) {
+			ricariche.put(nome, turni);
+		} else {
+			ricariche.remove(nome);
+		}
 	}
 
 	/**
@@ -406,8 +436,8 @@ public class PersonaggioMD implements Serializzabile {
 	}
 
 	/**
-	 * Scrive una riga con i dati del personaggio (se è vivo e, se è morto, la causa; il numero di artefatti), poi cinque righe con i valori minimi,
-	 * i valori massimi, gli attributi, i modificatori e gli effetti di stato
+	 * Scrive una riga con i dati del personaggio (se è vivo e, se è morto, la causa; il numero di artefatti), poi sei righe con i valori minimi,
+	 * i valori massimi, gli attributi, i modificatori, gli effetti di stato e le ricariche (un campo composto nome e turni per ognuna)
 	 * e infine gli artefatti.
 	 */
 	@Override
@@ -432,6 +462,7 @@ public class PersonaggioMD implements Serializzabile {
 		stampaRiga(stream, valoriAttributi.entrySet().stream().map(e -> composto(e.getKey(), e.getValue())).collect(Collectors.toList()));
 		stampaRiga(stream, modificatori.stream().map(ModificatoreAttributoMD::comeCampo).collect(Collectors.toList()));
 		stampaRiga(stream, effettiDiStato.stream().map(EffettoDiStatoMD::comeCampo).collect(Collectors.toList()));
+		stampaRiga(stream, ricariche.entrySet().stream().map(e -> composto(e.getKey(), e.getValue())).collect(Collectors.toList()));
 
 		for (ArtefattoMD artefatto : artefatti) {
 			artefatto.salva(stream);
@@ -471,6 +502,12 @@ public class PersonaggioMD implements Serializzabile {
 		effettiDiStato.clear();
 		while (campi.haAltriCampi()) {
 			effettiDiStato.add(EffettoDiStatoMD.daCampo(campi));
+		}
+		campi = new LettoreCampi(stream.readLine());
+		ricariche.clear();
+		while (campi.haAltriCampi()) {
+			LettoreCampi sottocampi = campi.sottocampi(2, 2);
+			setRicarica(sottocampi.testo(), sottocampi.intero());
 		}
 
 		artefatti.clear();

@@ -96,6 +96,14 @@ public class SpriteATempo extends SpriteBase {
 		return descrizione;
 	}
 
+	/**
+	 * Centra lo sprite (icona e testo insieme) su quel punto, spostandolo quanto serve perché non esca dai limiti.
+	 */
+	public void centraEntro(float xCentro, float limiteSinistro, float limiteDestro) {
+		float larghezza = immagine.getWidth();
+		impostaX(SpriteEffetto.centroEntro(xCentro, larghezza, limiteSinistro, limiteDestro) - larghezza / 2.0f);
+	}
+
 	private static String testoVariazione(int variazione) {
 		StringBuilder sb = new StringBuilder();
 		if (variazione >= 0) {

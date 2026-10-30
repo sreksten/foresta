@@ -1040,6 +1040,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// Dalla casella, non da locazioneCorrente: dopo un caricamento questa e' null, e dopo un castello
 		// completato e' ancora il castello mentre sulla casella ci sono le rovine
 		Pernottamento.pernotta(gruppo, CostruttoreDellaForesta.costruisciIstanza(Foresta.getPosizioneDelGruppo()).getTipoRiposo());
+		// Chi si dissangua nel sonno: se è il capo la partita è persa
+		if (!gruppo.getCapo().isVivo()) {
+			stato = Stato.GIOCO_PERSO;
+			return Esito.CONTINUA_CON_INGRESSO;
+		}
 		// Superato l'ultimo giorno la partita è persa subito: tornando ad ATTESA_DIREZIONE la si potrebbe ancora
 		// salvare, e la sconfitta si vedrebbe solo al passo seguente
 		if (LineaTemporale.isGiocoFinito()) {
@@ -1173,14 +1178,33 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito entraInStatoSceltaIncantesimoDaLanciare() {
 		List<Comando> comandiPossibili = new ArrayList<>();
+		// I comandi da mostrare: i possibili e, al loro posto, le abilità e i canti in ricarica, che la UI mostra spenti con i turni che mancano
+		List<Comando> comandiVisibili = new ArrayList<>();
+		Map<Comando, RicaricaDelComando> inRicarica = new LinkedHashMap<>();
 		Personaggio formulante = gruppo.getFormulante();
 		// Bardo e Cantastorie hanno i canti, che non consumano pergamene e si cantano solo contro avversari vivi
-		for (TipoCanto canto : CantoDelBardo.cantiUtili(formulante, gruppo, gruppoAvversario)) {
-			comandiPossibili.add(ComandiAssociati.di(canto));
+		List<TipoCanto> cantiUtili = CantoDelBardo.cantiUtili(formulante, gruppo, gruppoAvversario);
+		List<TipoCanto> cantiInRicarica = CantoDelBardo.cantiInRicarica(formulante, gruppo, gruppoAvversario);
+		for (TipoCanto canto : TipoCanto.values()) {
+			if (cantiUtili.contains(canto)) {
+				comandiPossibili.add(ComandiAssociati.di(canto));
+				comandiVisibili.add(ComandiAssociati.di(canto));
+			} else if (cantiInRicarica.contains(canto)) {
+				comandiVisibili.add(ComandiAssociati.di(canto));
+				inRicarica.put(ComandiAssociati.di(canto), new RicaricaDelComando(formulante.getRicarica(canto.name()), canto.getRicarica()));
+			}
 		}
 		// Chierico, Druido, Sacerdote, Mago ed Elfo hanno le loro abilità (compresa l'alba sacra, la luce divina e il dardo arcano), che non consumano pergamene e si usano solo contro avversari vivi
-		for (TipoAbilita abilita : AbilitaInnate.abilitaUtili(formulante, gruppo, gruppoAvversario)) {
-			comandiPossibili.add(ComandiAssociati.di(abilita));
+		List<TipoAbilita> abilitaUtili = AbilitaInnate.abilitaUtili(formulante, gruppo, gruppoAvversario);
+		List<TipoAbilita> abilitaInRicarica = AbilitaInnate.abilitaInRicarica(formulante, gruppo, gruppoAvversario);
+		for (TipoAbilita abilita : TipoAbilita.values()) {
+			if (abilitaUtili.contains(abilita)) {
+				comandiPossibili.add(ComandiAssociati.di(abilita));
+				comandiVisibili.add(ComandiAssociati.di(abilita));
+			} else if (abilitaInRicarica.contains(abilita)) {
+				comandiVisibili.add(ComandiAssociati.di(abilita));
+				inRicarica.put(ComandiAssociati.di(abilita), new RicaricaDelComando(formulante.getRicarica(abilita.name()), abilita.getRicarica()));
+			}
 		}
 		// Il Silenzio per primo, subito dopo le abilità innate: ultimo, prima di ANNULLA, si confondeva con lui
 		List<TipoIncantesimo> inOrdine = new ArrayList<>(Arrays.asList(TipoIncantesimo.values()));
@@ -1189,10 +1213,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		for (TipoIncantesimo tipoIncantesimo : inOrdine) {
 			if (gruppo.getIncantesimi(tipoIncantesimo) > 0 && formulante.getMagia() >= tipoIncantesimo.getCostoLancio()) {
 				comandiPossibili.add(ComandiAssociati.di(tipoIncantesimo));
+				comandiVisibili.add(ComandiAssociati.di(tipoIncantesimo));
 			}
 		}
 		comandiPossibili.add(Comando.ANNULLA);
-		BusEventi.pubblica(new RichiestaSelezioneIncantesimoDaLanciare(comandiPossibili));
+		comandiVisibili.add(Comando.ANNULLA);
+		BusEventi.pubblica(new RichiestaSelezioneIncantesimoDaLanciare(comandiPossibili, comandiVisibili, inRicarica));
 		stato = Stato.INCANTESIMO_SCELTO;
 		return Esito.FERMATI;
 	}
@@ -1321,6 +1347,14 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// Anche i modificatori a tempo degli ospiti vulnerabili scadono
 		for (Personaggio ospite : gruppo.getOspitiBersaglio()) {
 			ospite.riduciModificatori(UnitaDurataModificatore.LOCAZIONI);
+		}
+
+		// Camminando passa il tempo, dopo il recupero di salute e magia: gli effetti di stato fanno i loro danni e scadono un poco, e le abilità
+		// in ricarica si avvicinano a poter essere riusate. Chi ne muore lascia il gruppo; se è il capo la partita è persa
+		gruppo.trascorriUnTurno();
+		if (!gruppo.getCapo().isVivo()) {
+			stato = Stato.GIOCO_PERSO;
+			return Esito.CONTINUA_CON_INGRESSO;
 		}
 
 		Statistiche.incrementaTurniGiocati();

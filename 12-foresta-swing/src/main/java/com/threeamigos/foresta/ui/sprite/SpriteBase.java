@@ -132,6 +132,14 @@ public abstract class SpriteBase implements SpriteInterface {
 	}
 
 	/**
+	 * Sposta orizzontalmente lo sprite, fermo in x, in modo che il suo punto di ancoraggio sia quello: per metterlo a posto dopo averlo creato.
+	 */
+	protected final void impostaX(float x) {
+		this.xIniziale = x;
+		this.xFinale = x;
+	}
+
+	/**
 	 * Azzera il tempo trascorso, per far ripartire da capo dissolvenze/interpolazioni
 	 * (es. un nuovo impulso dello stesso fumetto). Va usato al posto di assegnare
 	 * direttamente {@link #secondiTrascorsi}, perché deve anche invalidare l'ultimo

@@ -150,21 +150,23 @@ Le abilità costano `MAGIA`, non consumano pergamene, occupano il turno e compai
 | Chierico | Scacciare i non morti, Imposizione delle mani | 64 | 16 / 12 | fino a 3 non morti; alleato più ferito | l'imposizione sul più ferito sotto il 50% di salute (anche gli ospiti); scacciare i non morti sul primo avversario; poi la mazza sul più ferito |
 | Druido | Radici, Sciame, Pelle di corteccia, Rigenerazione | 88 | 29 / 29 / 17 / 22 | fino a 4 avversari; fino a 4 avversari; tutto il gruppo; un alleato | la rigenerazione sul più ferito sotto il 70%, la pelle di corteccia subito dopo, radici e sciame sul primo avversario; poi un incantesimo o il bastone sul più ferito |
 
-| Classe | Abilità | Costo (magia) | Effetto |
-| :--- | :--- | ---: | :--- |
-| Mago, Elfo | Dardo arcano | 2 (Mago), 4 (Elfo) | Danno `ARCANO` a **un solo** bersaglio: base 20 (Mago) o 15 più 4 per ogni livello oltre il primo (Elfo: 31 al livello 5, 39 al livello 7), poi livello, intelligenza, potere magico e bonus del libro |
-| Sacerdote | Alba sacra | 5 | Toglie al gruppo gli effetti di stato negativi e i modificatori temporanei (compreso `ISPIRATO`) |
-| Sacerdote | Luce divina | 10 | Danno `SACRO` (base 35) a più avversari, il doppio ai non morti; investe anche i non morti del proprio gruppo (lo Scheletro della Mietitura), che le cure non guariscono. Il Gargoyle di pietra non la sente |
-| Chierico | Scacciare i non morti | 4 | `SPAVENTATO` a fino a `NUMERO_BERSAGLI` non morti, con la soggezione contro il coraggio; non serve contro chi è già spaventato o immune (Scheletro e Lich lo sono) |
-| Chierico | Imposizione delle mani | 5 | Cura il più ferito di 20 × √livello, aumentata dalla saggezza (÷50) |
-| Druido | Radici | 3 | Danno di `TERRA` (base 40) a più avversari; `IMMOBILIZZATO` o `ACCECATO` |
-| Druido | Sciame | 3 | Danno di `VELENO` (base 40) a più avversari; `AVVELENATO` |
-| Druido | Pelle di corteccia | 5 | A tutto il gruppo, per 4 turni, 10 × √livello punti fissi di parata e di resistenza magica (modificatori temporanei, che l'alba sacra non toglie) |
-| Druido | Rigenerazione | 4 | `RIGENERAZIONE` a un alleato per 4 turni: a ogni turno guarisce (5 + 5% della salute massima) × (1 + saggezza/50) |
-| Bardo | Canto curativo | 4 | Cura il più ferito di 30 × √livello, aumentata dalla saggezza (÷50) |
-| Bardo | Canto ipnotico | 3 | `SPAVENTATO` o `CONFUSO` (a caso) a fino a `NUMERO_BERSAGLI` avversari, con la soggezione del bardo contro il coraggio |
-| Bardo | Canto di valore | 5 | `ISPIRATO` a tutto il gruppo per 4 turni: coraggio e precisione +20% + 2,5% per livello del bardo, tetto 50% (non si somma: il secondo rinfresca) |
-| Bardo | Urlo della Banshee | 6 | Il canto ipnotico potenziato (soggezione ×1,5) che dà sia `SPAVENTATO` sia `CONFUSO` con un solo tiro. **Non noto all'inizio**: lo insegna il bardo della locanda dopo `IlViaggioDellaMoglie` (intermezzo `IntermezzoUrloDellaBanshee`, `CantiImparati`), e vale per tutto il gruppo |
+| Classe | Abilità | Costo (magia) | Ricarica (turni) | Effetto |
+| :--- | :--- | ---: | ---: | :--- |
+| Mago, Elfo | Dardo arcano | 4 (Mago), 6 (Elfo) | 2 | Danno `ARCANO` a **un solo** bersaglio: base 20 (Mago) o 15 più 4 per ogni livello oltre il primo (Elfo: 31 al livello 5, 39 al livello 7), poi livello, intelligenza, potere magico e bonus del libro |
+| Sacerdote | Alba sacra | 5 | 4 | Toglie al gruppo gli effetti di stato negativi e i modificatori temporanei (compreso `ISPIRATO`) |
+| Sacerdote | Luce divina | 4 | 4 | Danno `SACRO` (base 35) a più avversari, il doppio ai non morti; investe anche i non morti del proprio gruppo (lo Scheletro della Mietitura), che le cure non guariscono. Il Gargoyle di pietra non la sente |
+| Chierico | Scacciare i non morti | 4 | 4 | `SPAVENTATO` a fino a `NUMERO_BERSAGLI` non morti, con la soggezione contro il coraggio; non serve contro chi è già spaventato o immune (Scheletro e Lich lo sono) |
+| Chierico | Imposizione delle mani | 5 | 4 | Cura il più ferito di 20 × √livello, aumentata dalla saggezza (÷50) |
+| Druido | Radici | 3 | 4 | Danno di `TERRA` (base 40) a più avversari; `IMMOBILIZZATO` o `ACCECATO` |
+| Druido | Sciame | 3 | 5 | Danno di `VELENO` (base 40) a più avversari; `AVVELENATO` |
+| Druido | Pelle di corteccia | 5 | 5 | A tutto il gruppo, per 4 turni, 10 × √livello punti fissi di parata e di resistenza magica (modificatori temporanei, che l'alba sacra non toglie) |
+| Druido | Rigenerazione | 4 | 5 | `RIGENERAZIONE` a un alleato per 4 turni: a ogni turno guarisce (5 + 5% della salute massima) × (1 + saggezza/50) |
+| Bardo | Canto curativo | 6 | 4 | Cura il più ferito di 30 × √livello, aumentata dalla saggezza (÷50) |
+| Bardo | Canto ipnotico | 3 | 4 | `SPAVENTATO` o `CONFUSO` (a caso) a fino a `NUMERO_BERSAGLI` avversari, con la soggezione del bardo contro il coraggio |
+| Bardo | Canto di valore | 5 | 5 | `ISPIRATO` a tutto il gruppo per 4 turni: coraggio e precisione +20% + 2,5% per livello del bardo, tetto 50% (non si somma: il secondo rinfresca) |
+| Bardo | Urlo della Banshee | 6 | 5 | Il canto ipnotico potenziato (soggezione ×1,5) che dà sia `SPAVENTATO` sia `CONFUSO` con un solo tiro. **Non noto all'inizio**: lo insegna il bardo della locanda dopo `IlViaggioDellaMoglie` (intermezzo `IntermezzoUrloDellaBanshee`, `CantiImparati`), e vale per tutto il gruppo |
+
+**La ricarica.** Dopo l'uso, ogni abilità innata e ogni canto va in ricarica: non si può riusare finché non è passato il numero di turni della tabella (`TipoAbilita.getRicarica`, `TipoCanto.getRicarica`; costanti `…_RICARICA` in `CostantiAbilitaInnate` e `CostantiCanti`). Un turno è un round completo di combattimento, un passo fra una locazione e l'altra o un'ora di sonno (pesata dal tipo di riposo, arrotondata per eccesso): lo stesso orologio degli effetti di stato (§ "Il tempo che passa" in [`motore_di_gioco.md`](motore_di_gioco.md)). Le ricariche non si azzerano a fine scontro e si salvano con il personaggio. La regola: chi dà uno stato o un buff per N turni si ricarica in N + 1 (Pelle di corteccia, Rigenerazione e Canto di valore dipendono dalle loro durate, 4 + 1), e chi può causare uno stato di 3 turni (spavento, immobilizzazione, cecità, confusione) si ricarica in 4, così il bersaglio ha almeno un turno di respiro; il Canto curativo cura più dell'Imposizione delle mani e quindi costa di più, con la stessa ricarica. In UI le abilità in ricarica compaiono, non cliccabili, fra le scelte dell'incantesimo: lo sfondo dell'icona si riempie dal basso, dal rosso scuro al verde scuro passando per il giallo scuro, di (turni passati)/(ricarica + 1) (vedi `SfondoARiempimento` e `TipoIcona.getIconaInRicarica`).
 
 Il canto ipnotico e quello di valore si usano solo in combattimento con almeno un avversario vivo, il curativo solo se qualcuno è ferito; il bardo della locanda è un bardo a tutti gli effetti. Il Druido non canta. I danni delle abilità a più bersagli si ripartiscono per posizione (`CalcolatoreCombattimento.quotaDelDannoPerPosizione`): il primo bersaglio subisce tutto, ogni successivo la metà del precedente (100%, 50%, 25%, 12,5%, 6,25%), con il minimo del 6,25% (`CostantiIncantesimi.INCANTESIMO_MULTIPLO_*`).
 

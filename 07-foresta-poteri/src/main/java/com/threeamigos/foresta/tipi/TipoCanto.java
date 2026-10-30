@@ -58,4 +58,22 @@ public enum TipoCanto {
 				throw new IllegalStateException("Costo non previsto per " + this);
 		}
 	}
+
+	/**
+	 * I turni che devono passare, dopo averlo cantato, prima di poterlo cantare di nuovo.
+	 */
+	public int getRicarica() {
+		switch (this) {
+			case CURATIVO:
+				return CostantiCanti.CANTO_CURATIVO_RICARICA;
+			case IPNOTICO:
+				return CostantiCanti.CANTO_IPNOTICO_RICARICA;
+			case DI_VALORE:
+				return CostantiCanti.CANTO_DI_VALORE_RICARICA;
+			case URLO_DELLA_BANSHEE:
+				return CostantiCanti.CANTO_URLO_DELLA_BANSHEE_RICARICA;
+			default:
+				throw new IllegalStateException("Ricarica non prevista per " + this);
+		}
+	}
 }

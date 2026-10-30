@@ -969,6 +969,7 @@ public abstract class LocazioneBase implements Locazione {
 			turnoGestitoDalRound = true;
 			return null;
 		}
+		CantoDelBardo.avviaRicarica(cantore, tipo);
 		statoDelCombattimento.registraIncantesimoLanciato(cantore);
 		if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
 			setCompleta(true);
@@ -994,6 +995,7 @@ public abstract class LocazioneBase implements Locazione {
 			turnoGestitoDalRound = true;
 			return null;
 		}
+		AbilitaInnate.avviaRicarica(utilizzatore, tipo);
 		statoDelCombattimento.registraIncantesimoLanciato(utilizzatore);
 		// Chi è caduto per l'abilità conta subito come sconfitto
 		for (Personaggio avversario : gruppoAvversario.getPersonaggi()) {
@@ -1571,26 +1573,13 @@ public abstract class LocazioneBase implements Locazione {
 
 	private Stato trascorriTurnoEffettiDiStato() {
 		registraMorteDegliAvversari();
-		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
-			personaggio.applicaDanniDaEffettiDiStato();
-			personaggio.riduciEffettiDiStato();
-			personaggio.riduciModificatori(UnitaDurataModificatore.TURNI);
-		}
-		// Anche gli ospiti vulnerabili, che possono essere colpiti e avere degli stati, non sono fra i personaggi del gruppo
-		for (Personaggio ospite : gruppo.getOspitiBersaglio()) {
-			ospite.applicaDanniDaEffettiDiStato();
-			ospite.riduciEffettiDiStato();
-			ospite.riduciModificatori(UnitaDurataModificatore.TURNI);
-		}
-		gruppo.congedaChiNonRisorge();
+		gruppo.trascorriUnTurno();
 		if (!gruppo.getCapo().isVivo()) {
 			return Stato.GIOCO_PERSO;
 		}
 
 		for (Personaggio personaggio : gruppoAvversario.getPersonaggiVivi()) {
-			personaggio.applicaDanniDaEffettiDiStato();
-			personaggio.riduciEffettiDiStato();
-			personaggio.riduciModificatori(UnitaDurataModificatore.TURNI);
+			personaggio.trascorriUnTurno();
 			registraMorteAvversario(personaggio);
 		}
 		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {

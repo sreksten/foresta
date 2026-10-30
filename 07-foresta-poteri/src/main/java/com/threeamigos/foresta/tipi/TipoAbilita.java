@@ -73,4 +73,32 @@ public enum TipoAbilita {
 				throw new IllegalStateException("Costo non previsto per " + this);
 		}
 	}
+
+	/**
+	 * I turni che devono passare, dopo averla usata, prima di poterla riusare.
+	 */
+	public int getRicarica() {
+		switch (this) {
+			case SCACCIARE_I_NON_MORTI:
+				return CostantiAbilitaInnate.ABILITA_SCACCIARE_I_NON_MORTI_RICARICA;
+			case IMPOSIZIONE_DELLE_MANI:
+				return CostantiAbilitaInnate.ABILITA_IMPOSIZIONE_DELLE_MANI_RICARICA;
+			case RADICI:
+				return CostantiAbilitaInnate.ABILITA_RADICI_RICARICA;
+			case SCIAME:
+				return CostantiAbilitaInnate.ABILITA_SCIAME_RICARICA;
+			case PELLE_DI_CORTECCIA:
+				return CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_RICARICA;
+			case RIGENERAZIONE:
+				return CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_RICARICA;
+			case ALBA_SACRA:
+				return CostantiAbilitaInnate.ABILITA_ALBA_SACRA_RICARICA;
+			case LUCE_DIVINA:
+				return CostantiAbilitaInnate.ABILITA_LUCE_DIVINA_RICARICA;
+			case DARDO_ARCANO:
+				return CostantiAbilitaInnate.DARDO_ARCANO_RICARICA;
+			default:
+				throw new IllegalStateException("Ricarica non prevista per " + this);
+		}
+	}
 }

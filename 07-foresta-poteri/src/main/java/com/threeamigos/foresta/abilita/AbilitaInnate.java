@@ -62,12 +62,44 @@ public final class AbilitaInnate {
 	}
 
 	/**
-	 * @return true se il personaggio è vivo, conosce quell'abilità, non è {@code SILENZIATO} e ha la MAGIA per usarla
+	 * @return true se il personaggio è vivo, conosce quell'abilità, non è {@code SILENZIATO}, ha la MAGIA per usarla e non è in ricarica
 	 */
 	public static boolean puoUsare(Personaggio personaggio, TipoAbilita tipo) {
 		return personaggio.isVivo() && conosciutaDa(personaggio.getClasse(), tipo)
 				&& !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)
-				&& personaggio.getMagia() >= CostoDelleAbilita.di(tipo, personaggio.getClasse());
+				&& personaggio.getMagia() >= CostoDelleAbilita.di(tipo, personaggio.getClasse())
+				&& !isInRicarica(personaggio, tipo);
+	}
+
+	/**
+	 * Se il personaggio ha usato da poco quell'abilità e deve aspettare ancora qualche turno per riusarla.
+	 */
+	public static boolean isInRicarica(Personaggio personaggio, TipoAbilita tipo) {
+		return personaggio.getRicarica(tipo.name()) > 0;
+	}
+
+	/**
+	 * Mette l'abilità in ricarica per i turni del suo tipo: la chiama chi l'ha appena fatta partire.
+	 */
+	public static void avviaRicarica(Personaggio personaggio, TipoAbilita tipo) {
+		personaggio.setRicarica(tipo.name(), tipo.getRicarica());
+	}
+
+	/**
+	 * Le abilità del personaggio vivo che conosce ma che, essendo in ricarica, non può ancora usare, e che servirebbero adesso (vedi {@link #serve}): la UI
+	 * le mostra spente, con i turni che mancano.
+	 */
+	public static List<TipoAbilita> abilitaInRicarica(Personaggio personaggio, Gruppo gruppo, Gruppo gruppoAvversario) {
+		List<TipoAbilita> abilita = new ArrayList<>();
+		if (!personaggio.isVivo()) {
+			return abilita;
+		}
+		for (TipoAbilita tipo : TipoAbilita.values()) {
+			if (conosciutaDa(personaggio.getClasse(), tipo) && isInRicarica(personaggio, tipo) && serve(tipo, gruppo, gruppoAvversario)) {
+				abilita.add(tipo);
+			}
+		}
+		return abilita;
 	}
 
 	/**

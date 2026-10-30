@@ -105,6 +105,8 @@ class EsecutoreTatticheTest {
         EsecutoreTattiche conIDruidi = new EsecutoreTattiche(druidi, nemici, StatoDelCombattimento.getIstanza(),
                 (uccisore, vittima) -> uccisioni.add(uccisore.getNome() + ">" + vittima.getNome()));
         for (int i = 0; i < 50 && goblin.isVivo(); i++) {
+            // Dopo ogni uso le radici vanno in ricarica: qui si ripetono finché il colpo non va a segno
+            druido.setRicarica(TipoAbilita.RADICI.name(), 0);
             Decisione d = conIDruidi.agisci(druido, radici);
             assertNotNull(d);
             assertEquals(TipoAzione.RADICI, d.getTipoEseguito());

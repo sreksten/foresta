@@ -47,6 +47,36 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 - **Punteggio dei cofani.** Oggi un cofano vale sempre 150 punti per ogni cofano trovato (`TipoBottino.COFANO`), qualunque cosa contenga, e quello che c'è dentro (monete, pietre, pozioni, pergamene, artefatti) non dà punti suoi. L'idea è che conti il valore degli oggetti contenuti. Prima va definita una tabella: quanti punti per una moneta, una pietra, una pozione, una pergamena, un artefatto (oggi `MONETA` vale 50 per un mucchietto di 1–2, mentre nel cofano le monete sono 5–10 una per una). Per ora resta 150 a cofano. Il punto in cui calcolarlo è `RaccoltaBottino.apri`.
 - Fumetto che attende la chiusura.
 - **Tabella delle debolezze e resistenze (provvisoria).** Le voci per classe e categoria in `TipoPersonaggio` e `CategoriaPersonaggio` sono un primo giro dalla tradizione fantasy (vedi [`debolezze_e_resistenze.md`](debolezze_e_resistenze.md)): vanno provate in partita, ritoccate e completate per le classi che non hanno ancora voci (Arpia, Centauro, Minotauro, Gigante, Titano, Goblin, Hobgoblin).
+- **Rivedere abilità, canti e incantesimi: costi, danni, durate e ricariche.** Con la ricarica (vedi [`personaggi_giocabili.md`](personaggi_giocabili.md), § "La ricarica") e i nuovi costi di dardo arcano, canto curativo e luce divina i valori non sono ancora misurati: `AnalisiAbilitaInnateTest`, `AnalisiDanniAbilitaInnateTest` e le simulazioni (`SimulazionePartiteTest`, `TestScontriDiGruppo`) vanno rifatte, e a monte va riguardato il rapporto fra danno, costo e ricarica. Il "danno" è la base, poi moltiplicata per √livello, intelligenza, potere magico e bonus del libro; la "durata" è dell'effetto proprio dell'abilità (fra parentesi, lo stato che può causare); le pergamene si consumano e non hanno ricarica. Lo stato al 2026-10-30:
+
+  | Abilità o incantesimo | Danno | Costo | Durata | Ricarica |
+  | :--- | ---: | ---: | :--- | ---: |
+  | Scacciare i non morti | 0 | 4 | istantaneo (`SPAVENTATO` 3 turni) | 4 |
+  | Imposizione delle mani | 0 (cura 20 × √livello) | 5 | istantaneo | 4 |
+  | Radici | 40 | 3 | istantaneo (`IMMOBILIZZATO` o `ACCECATO` 3 turni) | 4 |
+  | Sciame | 40 | 3 | istantaneo (`AVVELENATO` 4 turni) | 5 |
+  | Pelle di corteccia | 0 | 5 | 4 turni | 5 |
+  | Rigenerazione | 0 | 4 | 4 turni | 5 |
+  | Alba sacra | 0 | 5 | istantaneo | 4 |
+  | Luce divina | 35 | 4 | istantaneo (`ACCECATO` 3 turni) | 4 |
+  | Dardo arcano (Mago) | 20 | 4 | istantaneo (`SILENZIATO` 3 turni) | 2 |
+  | Dardo arcano (Elfo) | 15 + 4 per livello oltre il primo | 6 | istantaneo | 2 |
+  | Canto curativo | 0 (cura 30 × √livello) | 6 | istantaneo | 4 |
+  | Canto ipnotico | 0 | 3 | istantaneo (`SPAVENTATO` o `CONFUSO` 3 turni) | 4 |
+  | Canto di valore | 0 | 5 | 4 turni | 5 |
+  | Urlo della Banshee | 0 | 6 | istantaneo (`SPAVENTATO` e `CONFUSO` 3 turni) | 5 |
+  | Aria (pergamena) | 35 | 1 | istantaneo | – |
+  | Acqua | 45 | 1 | istantaneo | – |
+  | Terra | 50 | 2 | istantaneo | – |
+  | Fuoco | 50 | 3 | istantaneo | – |
+  | Fulmine | 100 | 10 | istantaneo | – |
+  | Gelo | 50 | 2 | istantaneo | – |
+  | Veleno | 50 | 2 | istantaneo | – |
+  | Morte | 0 (uccide chi ha meno del 25% di salute) | 5 | istantaneo | – |
+  | Resurrezione | 0 | 15 | istantaneo | – |
+  | Silenzio | 0 | 5 | `SILENZIATO` 3 turni | – |
+
+  Da riguardare in particolare: il dardo arcano (20 di base per 4 di magia, contro i 35 per 1 dell'Aria: il suo vantaggio è non consumare pergamene, e con ricarica 2 si usa a turni alterni); Radici e Sciame (3 per 40, contro i 2 per 50 di Terra e Veleno); il canto curativo contro l'imposizione delle mani (cura più, costa di più, ma per punto di magia resta più efficiente); e il recupero di salute e magia a fine locazione (circa un quarto della salute e un settimo della magia a ogni passo, vedi `RIGENERAZIONE_*` in `CostantiPersonaggi`), che con la ricarica potrebbe non essere più il problema.
 - **Incantesimi che mancano per i tipi di danno non fisici (da fare fra i primi).** Ogni `TipoDanno` non fisico dovrebbe avere almeno un incantesimo che lo infligge. Oggi (`TipoIncantesimo`, più il Dardo arcano e i canti) la situazione è questa:
 
   | Tipo di danno | Incantesimo oggi | Manca? | Effetto di stato nativo (`TipoDanno.getEffetti`) |

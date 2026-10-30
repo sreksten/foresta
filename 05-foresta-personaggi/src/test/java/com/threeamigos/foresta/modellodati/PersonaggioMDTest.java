@@ -226,4 +226,38 @@ class PersonaggioMDTest {
         PersonaggioMD riletto = rileggi(new PersonaggioMD(), salvato);
         assertNull(riletto.getCausaTrapasso());
     }
+
+    @Test
+    void leRicaricheSiSalvanoESiRileggono() throws IOException {
+        PersonaggioMD personaggio = guerriero();
+        personaggio.setRicarica("RADICI", 3);
+        personaggio.setRicarica("CURATIVO", 2);
+        assertEquals(3, personaggio.getRicarica("RADICI"));
+        assertEquals(0, personaggio.getRicarica("SCIAME"), "chi non è in ricarica è pronto");
+
+        PersonaggioMD riletto = rileggi(new PersonaggioMD(), salva(personaggio));
+
+        assertEquals(personaggio.getRicariche(), riletto.getRicariche());
+        assertEquals(2, riletto.getRicarica("CURATIVO"));
+    }
+
+    @Test
+    void unaRicaricaAZeroNonSiConservaENonSiSalva() throws IOException {
+        PersonaggioMD personaggio = guerriero();
+        personaggio.setRicarica("RADICI", 1);
+        personaggio.setRicarica("RADICI", 0);
+        assertTrue(personaggio.getRicariche().isEmpty());
+        assertTrue(rileggi(new PersonaggioMD(), salva(personaggio)).getRicariche().isEmpty());
+    }
+
+    @Test
+    void rileggereSostituisceLeRicariche() throws IOException {
+        PersonaggioMD pronto = guerriero();
+        PersonaggioMD inRicarica = guerriero();
+        inRicarica.setRicarica("RADICI", 4);
+
+        rileggi(inRicarica, salva(pronto));
+
+        assertTrue(inRicarica.getRicariche().isEmpty());
+    }
 }

@@ -382,8 +382,8 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	}
 
 	/**
-	 * Lo sprite a tempo di una variazione sopra il personaggio, a destra della sua immagine (e a sinistra del testo);
-	 * se ce n'è già uno vicino ancora attivo parte più in basso, così non si sovrappongono. Nessuno sprite per chi
+	 * Lo sprite a tempo di una variazione sopra il personaggio, centrato sulla sua immagine (spostato solo se uscirebbe dal
+	 * riquadro); se ce n'è già uno vicino ancora attivo parte più in basso, così non si sovrappongono. Nessuno sprite per chi
 	 * non è in locazione, o se non è cambiato niente.
 	 */
 	private SpriteInterface spriteATempo(VistaPersonaggio personaggio, BufferedImage icona, int variazione, String descrizione) {
@@ -397,10 +397,11 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		for (SpriteATempoAttivo attivo : spriteATempoAttivi) {
 			occupati.add(attivo.posizione);
 		}
-		int x = coordinate.getX() + immagine.getWidth();
-		int y = primoPostoLibero(occupati, x, coordinate.getY(), icona.getHeight() * QUARTI_DI_ICONA_FRA_SPRITE_A_TEMPO / 4);
-		SpriteInterface sprite = new SpriteATempo(icona, variazione, DoomdarkFontMedium.getInstance(), x, y, descrizione);
-		spriteATempoAttivi.add(new SpriteATempoAttivo(new Point(x, y), sprite));
+		int xCentro = coordinate.getX() + immagine.getWidth() / 2;
+		int y = primoPostoLibero(occupati, xCentro, coordinate.getY(), icona.getHeight() * QUARTI_DI_ICONA_FRA_SPRITE_A_TEMPO / 4);
+		SpriteATempo sprite = new SpriteATempo(icona, variazione, DoomdarkFontMedium.getInstance(), xCentro, y, true, descrizione);
+		sprite.centraEntro(xCentro, topLeftX, topLeftX + larghezzaDisponibile);
+		spriteATempoAttivi.add(new SpriteATempoAttivo(new Point(xCentro, y), sprite));
 		return sprite;
 	}
 
@@ -452,11 +453,10 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	}
 
 	/**
-	 * Dove ancorare gli effetti sopra un personaggio: a destra di un avversario, che sta a sinistra della locazione, e
-	 * a sinistra di un personaggio del gruppo, che sta a destra: così non escono dal riquadro.
+	 * Mette lo sprite di testo al centro del personaggio, spostandolo solo se, ingrandito, uscirebbe dal riquadro.
 	 */
-	private int xEffetto(VistaPersonaggio personaggio, CoordinateMD coordinate, BufferedImage immagine) {
-		return personaggio.isPNG() ? coordinate.getX() + immagine.getWidth() : coordinate.getX();
+	private void centraSulPersonaggio(SpriteEffetto sprite, CoordinateMD coordinate, BufferedImage immagine) {
+		sprite.centraEntro(coordinate.getX() + immagine.getWidth() / 2.0f, topLeftX, topLeftX + larghezzaDisponibile);
 	}
 
 	/**
@@ -480,10 +480,10 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		}
 
 		BufferedImage image = mappaImmagini.get(personaggio);
-		int x = xEffetto(personaggio, coordinate, image);
 		int yIniziale = coordinate.getY() + image.getHeight() / 3 - SOLLEVAMENTO_ANCORA;
 		SpriteEffetto sprite = new SpriteEffetto(descrizione, DoomdarkFontMedium.getInstance(),
-				colore, x, yIniziale + calcolaOffsetVerticale(yIniziale));
+				colore, coordinate.getX(), yIniziale + calcolaOffsetVerticale(yIniziale));
+		centraSulPersonaggio(sprite, coordinate, image);
 		effettiAttivi.add(new EffettoAttivo(yIniziale, sprite));
 		return sprite;
 	}
@@ -529,9 +529,9 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 			return null;
 		}
 		BufferedImage image = mappaImmagini.get(personaggio);
-		int x = xEffetto(personaggio, coordinate, image);
 		int yIniziale = coordinate.getY() + image.getHeight() * 2 / 3 - SOLLEVAMENTO_ANCORA;
-		SpriteEffetto sprite = costruttore.apply(x, yIniziale + calcolaOffsetVerticale(yIniziale));
+		SpriteEffetto sprite = costruttore.apply(coordinate.getX(), yIniziale + calcolaOffsetVerticale(yIniziale));
+		centraSulPersonaggio(sprite, coordinate, image);
 		effettiAttivi.add(new EffettoAttivo(yIniziale, sprite));
 		return sprite;
 	}

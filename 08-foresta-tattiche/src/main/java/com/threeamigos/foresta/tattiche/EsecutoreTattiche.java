@@ -1,8 +1,10 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.abilita.FabbricaAbilita;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.canti.FabbricaCanti;
 import com.threeamigos.foresta.combattimento.*;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -254,6 +256,7 @@ public final class EsecutoreTattiche {
 	 */
 	private void canta(Personaggio cantore, TipoCanto tipo, Personaggio bersaglio, Gruppo gruppoDelCantore, Gruppo gruppoNemico) {
 		if (FabbricaCanti.crea(tipo, cantore).cantaSu(cantore, bersaglio, gruppoDelCantore, gruppoNemico)) {
+			CantoDelBardo.avviaRicarica(cantore, tipo);
 			stato.registraIncantesimoLanciato(cantore);
 		}
 	}
@@ -263,6 +266,7 @@ public final class EsecutoreTattiche {
 	 */
 	private void usaUnAbilita(Personaggio utilizzatore, TipoAbilita tipo, Personaggio bersaglio, Gruppo gruppoDelloUtilizzatore, Gruppo gruppoNemico) {
 		if (FabbricaAbilita.crea(tipo, utilizzatore).usaSu(utilizzatore, bersaglio, gruppoDelloUtilizzatore, gruppoNemico)) {
+			AbilitaInnate.avviaRicarica(utilizzatore, tipo);
 			stato.registraIncantesimoLanciato(utilizzatore);
 			// Le radici, lo sciame e lo scacciare i non morti colpiscono più avversari: chi è caduto conta come sconfitto (vedi Uccisioni)
 			for (Personaggio nemico : gruppoNemico.getPersonaggi()) {

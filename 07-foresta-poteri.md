@@ -38,9 +38,13 @@ Le pergamene sono **scorte del gruppo** (il conteggio sta in `Gruppo`), non ogge
 
 `Canto` (costa magia, non consuma pergamene, e per questo non è un incantesimo) ha `canta(cantore, gruppo, gruppoAvversario)` e `cantaSu(…)` per i canti con un bersaglio scelto da chi canta, per esempio da una tattica. `CantoDelBardo` decide chi può cantare e quando; `FabbricaCanti` costruisce il canto di ogni `TipoCanto`: **curativo** (cura il personaggio più ferito, il cantore compreso), **ipnotico** (scuote il morale degli avversari), **di valore** (ispira il gruppo: lo stato `ISPIRATO`) e l'**Urlo della Banshee** (l'ipnotico potenziato, che il bardo della locanda insegna al gruppo). `CantiImparati` (con `CantiImparatiMD`, che `ModelloDati` salva) dice quali canti il gruppo ha imparato strada facendo: il gruppo non sa di averli imparati, lo sanno i canti; i dati li prende da chi li custodisce (`setFornitoreDiDati`). I valori sono in `CostantiCanti`; il quadro è in [`personaggi_giocabili.md`](personaggi_giocabili.md).
 
+### La ricarica
+
+Ogni abilità innata e ogni canto, dopo l'uso, va in **ricarica**: i turni che devono passare prima di poterli riusare li dà `TipoAbilita.getRicarica()` e `TipoCanto.getRicarica()` (costanti `…_RICARICA` in `CostantiAbilitaInnate` e `CostantiCanti`, basate sulle durate: un buff di N turni si ricarica in N + 1). Lo stato sta nel personaggio (`PersonaggioMD.getRicariche`, una mappa nome → turni rimasti, salvata in una riga a parte: i tipi di abilità stanno in questo modulo, sopra `05-foresta-personaggi`, quindi la chiave è il `name()` del tipo). Chi usa l'abilità la mette in ricarica con `AbilitaInnate.avviaRicarica` e `CantoDelBardo.avviaRicarica` (lo fanno `LocazioneBase` e `EsecutoreTattiche` dopo un uso riuscito); `AbilitaInnate.puoUsare` e `CantoDelBardo.puoCantare` rifiutano chi è in ricarica, quindi anche le tattiche; `abilitaInRicarica` e `cantiInRicarica` danno alla UI quelle da mostrare spente (vedi `RichiestaSelezioneIncantesimoDaLanciare`, con `RicaricaDelComando`).
+
 ### Le abilità innate
 
-`Abilita` (stessa idea dei canti) con `usa`/`usaSu`. `AbilitaInnate` decide chi ha quali abilità, dal `TipoPersonaggio` e non dalla classe Java; `FabbricaAbilita` costruisce quella di ogni `TipoAbilita`; `CostoDelleAbilita` dà il costo per classe (il dardo arcano costa meno al Mago che all'Elfo). Quelle che fanno danno estendono `AbilitaDiDanno`, che è essa stessa l'attacco magico.
+`Abilita` (stessa idea dei canti) con `usa`/`usaSu`. `AbilitaInnate` decide chi ha quali abilità, dal `TipoPersonaggio` e non dalla classe Java; `FabbricaAbilita` costruisce quella di ogni `TipoAbilita`; `CostoDelleAbilita` dà il costo per classe (il dardo arcano costa 4 al Mago e 6 all'Elfo). Quelle che fanno danno estendono `AbilitaDiDanno`, che è essa stessa l'attacco magico.
 
 | Classe | Abilità |
 | :--- | :--- |

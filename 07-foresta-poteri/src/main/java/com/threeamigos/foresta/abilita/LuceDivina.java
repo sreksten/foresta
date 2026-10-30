@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * L'abilità innata di Sacerdote e Sacerdotessa: una luce sacra che brucia i non morti (il SACRO fa il doppio dei danni a chi è di categoria
- * NON_MORTO), con il costo di lancio del Fulmine ma danni propri (ABILITA_LUCE_DIVINA_DANNI), su più avversari. Chi la conosce lo dice {@link AbilitaInnate}.
+ * NON_MORTO), con danni propri (ABILITA_LUCE_DIVINA_DANNI) e un costo di lancio in proporzione ai danni del Fulmine (ABILITA_LUCE_DIVINA_COSTO_LANCIO), su più avversari. Chi la conosce lo dice {@link AbilitaInnate}.
  * <p>
  * Non fa distinzioni: chi la invoca ne investe anche un non morto del proprio gruppo (lo Scheletro della Mietitura), che le cure non guariscono
  * (vedi Personaggio.isCurabile) ma la luce sì. Il Gargoyle di pietra non la sente, come ogni danno che non sia fisico.

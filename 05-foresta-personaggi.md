@@ -56,7 +56,7 @@ I mostri attaccano con `ArmaNaturale` (artigli, morsi, soffi… al posto dell'ar
 
 ### I dati e i contratti
 
-- **Dati**: `PersonaggioMD` (identificativo, classe, nome, vivo/morto, livello, esperienza, punti abilità, causa del trapasso, motivo nel gruppo, valori minimi, massimi e attuali degli attributi, modificatori, stati alterati, artefatti), `GruppoMD` (scorte e personaggi) e `GruppoGiocatoreMD`.
+- **Dati**: `PersonaggioMD` (identificativo, classe, nome, vivo/morto, livello, esperienza, punti abilità, causa del trapasso, motivo nel gruppo, valori minimi, massimi e attuali degli attributi, modificatori, stati alterati, le ricariche delle abilità innate e dei canti, per nome, artefatti), `GruppoMD` (scorte e personaggi) e `GruppoGiocatoreMD`.
 - **Viste per la UI**: `VistaPersonaggio`, `VistaGruppo`, `VistaGruppoGiocatore`.
 - **Eventi**: le notifiche sul personaggio e sul gruppo (livello, ferite, reazione di classe a un danno, approvazione o rifiuto degli spostamenti di artefatti, variazione delle scorte di pozioni e incantesimi) e gli interni che portano il dominio (creazione di un personaggio, un avversario sconfitto, un personaggio entrato nel gruppo, punti esperienza assegnati, caratteristica osservata, scheletro risvegliato, sfida vinta…).
 

@@ -16,6 +16,7 @@ import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -621,6 +622,36 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 * Riduce la durata di un effetto di stato
 	 */
 	void riduciEffettiDiStato();
+
+	/**
+	 * I turni che mancano a riavere un'abilità innata o un canto appena usato (per nome, il {@code name()} del suo tipo); zero se è pronto.
+	 */
+	int getRicarica(String nome);
+
+	/**
+	 * Le abilità innate e i canti ancora in ricarica, per nome, con i turni che mancano.
+	 */
+	Map<String, Integer> getRicariche();
+
+	/**
+	 * Mette in ricarica un'abilità innata o un canto appena usato: per quanti turni non si può riusare (con zero è subito pronto).
+	 */
+	void setRicarica(String nome, int turni);
+
+	/**
+	 * Fa passare un turno al personaggio: gli effetti di stato fanno i loro danni e scadono un poco, i modificatori a turni e le ricariche calano di uno.
+	 */
+	default void trascorriUnTurno() {
+		applicaDanniDaEffettiDiStato();
+		riduciEffettiDiStato();
+		riduciModificatori(UnitaDurataModificatore.TURNI);
+		riduciRicariche();
+	}
+
+	/**
+	 * Fa passare un turno per tutte le abilità e i canti in ricarica: quelli a zero tornano pronti.
+	 */
+	void riduciRicariche();
 
 	/**
 	 * Restituisce il valore di un effetto di stato

@@ -292,6 +292,21 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		}
 	}
 
+	/**
+	 * Fa passare un turno ai personaggi vivi e agli ospiti vulnerabili (vedi {@link Personaggio#trascorriUnTurno()}) e congeda chi non è
+	 * sopravvissuto: lo si chiama a ogni round di combattimento, a ogni passo fra una locazione e l'altra e a ogni ora di sonno.
+	 */
+	public final void trascorriUnTurno() {
+		for (Personaggio personaggio : getPersonaggiVivi()) {
+			personaggio.trascorriUnTurno();
+		}
+		// Anche gli ospiti vulnerabili, che possono essere colpiti e avere degli stati, non sono fra i personaggi del gruppo
+		for (Personaggio ospite : getOspitiBersaglio()) {
+			ospite.trascorriUnTurno();
+		}
+		congedaChiNonRisorge();
+	}
+
 	@Override
 	public final void rimuoviPersonaggio(Personaggio p) {
 		super.rimuoviPersonaggio(p);

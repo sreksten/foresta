@@ -183,7 +183,8 @@ public class DisplayableCanvasBarraIconeDock extends DisplayableCanvasBarraIcone
 				int x = offsetX + r.x;
 				int y = offsetY + r.y;
 				icone.drawImage(iconeVisibili.get(i).icona, x, y, r.width, r.height, null);
-				if (r.contains(mouseX, mouseY)) {
+				// Un comando in ricarica non si può dare: sotto il cursore non si evidenzia
+				if (r.contains(mouseX, mouseY) && ComandiPossibili.getRicarica(iconeVisibili.get(i).comando) == null) {
 					icone.setColor(mousePremuto ? Color.white : Color.lightGray);
 					icone.drawRect(x, y, r.width - 1, r.height - 1);
 				}

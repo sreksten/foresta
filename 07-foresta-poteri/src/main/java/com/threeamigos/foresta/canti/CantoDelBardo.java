@@ -46,12 +46,45 @@ public final class CantoDelBardo {
 	}
 
 	/**
-	 * @return true se il personaggio è vivo, sa cantare quel canto, non è {@code SILENZIATO} e ha la MAGIA per cantarlo
+	 * @return true se il personaggio è vivo, sa cantare quel canto, non è {@code SILENZIATO}, ha la MAGIA per cantarlo e non è in ricarica
 	 */
 	public static boolean puoCantare(Personaggio personaggio, TipoCanto tipo) {
 		return personaggio.isVivo() && conosciutoDa(personaggio.getClasse(), tipo)
 				&& !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)
-				&& personaggio.getMagia() >= tipo.getCostoLancio();
+				&& personaggio.getMagia() >= tipo.getCostoLancio()
+				&& !isInRicarica(personaggio, tipo);
+	}
+
+	/**
+	 * Se il personaggio ha cantato da poco quel canto e deve aspettare ancora qualche turno per cantarlo di nuovo.
+	 */
+	public static boolean isInRicarica(Personaggio personaggio, TipoCanto tipo) {
+		return personaggio.getRicarica(tipo.name()) > 0;
+	}
+
+	/**
+	 * Mette il canto in ricarica per i turni del suo tipo: la chiama chi l'ha appena fatto partire.
+	 */
+	public static void avviaRicarica(Personaggio personaggio, TipoCanto tipo) {
+		personaggio.setRicarica(tipo.name(), tipo.getRicarica());
+	}
+
+	/**
+	 * I canti del personaggio vivo che conosce ma che, essendo in ricarica, non può ancora cantare, e che servirebbero adesso (vedi
+	 * {@link #cantiUtili}): la UI li mostra spenti, con i turni che mancano.
+	 */
+	public static List<TipoCanto> cantiInRicarica(Personaggio personaggio, Gruppo gruppo, Gruppo gruppoAvversario) {
+		List<TipoCanto> canti = new ArrayList<>();
+		if (!personaggio.isVivo() || gruppoAvversario.getPersonaggiVivi().isEmpty()) {
+			return canti;
+		}
+		for (TipoCanto tipo : TipoCanto.values()) {
+			if (conosciutoDa(personaggio.getClasse(), tipo) && isInRicarica(personaggio, tipo)
+					&& (tipo != TipoCanto.CURATIVO || gruppo.piuFerito().isPresent())) {
+				canti.add(tipo);
+			}
+		}
+		return canti;
 	}
 
 	/**

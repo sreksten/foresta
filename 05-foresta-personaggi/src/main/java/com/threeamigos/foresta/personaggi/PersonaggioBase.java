@@ -1943,6 +1943,28 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getRicarica(String nome) {
+		return md.getRicarica(nome);
+	}
+
+	@Override
+	public Map<String, Integer> getRicariche() {
+		return md.getRicariche();
+	}
+
+	@Override
+	public void setRicarica(String nome, int turni) {
+		md.setRicarica(nome, turni);
+	}
+
+	@Override
+	public void riduciRicariche() {
+		for (Map.Entry<String, Integer> ricarica : new ArrayList<>(md.getRicariche().entrySet())) {
+			md.setRicarica(ricarica.getKey(), ricarica.getValue() - 1);
+		}
+	}
+
+	@Override
 	public void riduciEffettiDiStato() {
 		List<EffettoDiStatoMD> effettiDiStatoDaRimuovere = new ArrayList<>();
 		for (EffettoDiStatoMD effettoDiStato : getEffettiDiStato()) {

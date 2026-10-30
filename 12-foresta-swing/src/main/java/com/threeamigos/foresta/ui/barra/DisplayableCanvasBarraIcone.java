@@ -4,6 +4,7 @@ import com.threeamigos.foresta.tipi.TipoIcona;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoImpostazioneAiuto;
+import com.threeamigos.foresta.eventi.richieste.RicaricaDelComando;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
@@ -13,6 +14,7 @@ import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontSmall;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -122,7 +124,7 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 	 * Dispone le icone dei comandi possibili e, in ogni schermata che ha dei comandi, aggiunge l'interruttore dell'aiuto.
 	 */
 	public void impostaAzioni() {
-		List<Comando> possibiliAzioni = new ArrayList<>(ComandiPossibili.getComandi());
+		List<Comando> possibiliAzioni = new ArrayList<>(ComandiPossibili.getComandiVisibili());
 		// L'interruttore dell'aiuto, in ogni schermata che ha dei comandi
 		if (!possibiliAzioni.isEmpty()) {
 			possibiliAzioni.add(comandoAiuto());
@@ -181,6 +183,10 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 			VistaPersonaggio capo = vistaPartita.getGruppoGiocatore().getCapo();
 			boolean isCapo = capo != null && capo.getUuid().equals(vistaPartita.getGruppoGiocatore().getPersonaggio(indice).getUuid());
 			return isCapo ? icona.getIconaCapo() : icona.getIcona();
+		}
+		RicaricaDelComando ricarica = ComandiPossibili.getRicarica(comando);
+		if (ricarica != null) {
+			return TipoIcona.ofComando(comando).getIconaInRicarica(ricarica.getTurniRimasti(), ricarica.getDurata());
 		}
 		return TipoIcona.ofComando(comando).getIcona();
 	}
@@ -281,7 +287,10 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 			int x = offsetX + r.x;
 			int y = offsetY + r.y;
 			graphics.drawImage(iconaVisibile.icona, x, y, null);
-			disegnaBordo(graphics, r, x, y);
+			// Un comando in ricarica non si può dare: sotto il cursore non si evidenzia
+			if (ComandiPossibili.getRicarica(iconaVisibile.comando) == null) {
+				disegnaBordo(graphics, r, x, y);
+			}
 		}
 		copyright(graphics);
 	}
@@ -338,6 +347,11 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 			if (personaggio != null && personaggio.getNomeProprio().isPresent()) {
 				return personaggio.getNomeProprio().get();
 			}
+		}
+		RicaricaDelComando ricarica = ComandiPossibili.getRicarica(comando);
+		if (ricarica != null) {
+			return comando.getDescrizione() + " " + (ricarica.getTurniRimasti() == 1
+					? TestiDellaUI.get("RICARICA_MANCA_UN_TURNO") : TestiDellaUI.get("RICARICA_MANCANO_TURNI", ricarica.getTurniRimasti()));
 		}
 		return comando.getDescrizione();
 	}
@@ -432,6 +446,10 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 	 * il comando al gioco.
 	 */
 	public void esegui(Comando azione) {
+		if (ComandiPossibili.getRicarica(azione) != null) {
+			// In ricarica: l'icona si vede, ma non si può dare il comando
+			return;
+		}
 		if (isInterruttoreAiuto(azione)) {
 			commutaAiuto(azione);
 		} else if (azione == Comando.SU || azione == Comando.SINISTRA) {
