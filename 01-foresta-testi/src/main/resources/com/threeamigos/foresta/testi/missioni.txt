@@ -1765,7 +1765,7 @@ LEALTA
     RISPOSTA=Tornare due volte, a qualche ora di distanza, e tenere vivo il fuoco. Bastano pazienza e un po' di legna.;\
     FAVORE=Il fuoco del villaggio;LUOGO=BOSCO;VISITE=2;ORE=10;\
     VEGLIA=Il fuoco crepita fra gli alberi. %PERSONAGGIO% aggiunge un ramo e lo guarda bruciare, in silenzio.;\
-    VITTORIA=Il fuoco ha ardito fino all'alba: per questa volta, il villaggio è ricordato.;\
+    VITTORIA=Il fuoco ha arso fino all'alba: per questa volta, il villaggio è ricordato.;\
     RINGRAZIAMENTO=Non pensavo di rivederlo ardere così. Grazie per aver tenuto vivo il fuoco, e con lui un ricordo.;\
     LEALTA=FORTUNA VARIAZIONE_FISSA 2;\
     LEALE=Un calore gentile accompagna %PERSONAGGIO%, e la sorte sembra tenere compagnia.

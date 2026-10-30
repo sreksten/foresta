@@ -5,13 +5,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.BersaglioModificatore;
-import com.threeamigos.foresta.tipi.CostantiIncantesimi;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoIncantesimo;
-import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.List;
 
@@ -25,7 +19,7 @@ public class NegaMagia extends IncantesimoMaleficoImpl implements IncantesimoGlo
 	/**
 	 * La nota del modificatore: lo distingue dagli altri
 	 */
-	public static final String NOTA = "Nega magia";
+	public static final String NOTA = "Negazione della Magia";
 
 	public NegaMagia(int livello) {
 		super(livello);

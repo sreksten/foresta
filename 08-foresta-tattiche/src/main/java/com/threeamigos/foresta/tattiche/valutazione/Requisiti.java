@@ -1,25 +1,17 @@
 package com.threeamigos.foresta.tattiche.valutazione;
 
 import com.threeamigos.foresta.abilita.AbilitaInnate;
-import com.threeamigos.foresta.combattimento.CambioDArma;
 import com.threeamigos.foresta.abilita.PelleDiCorteccia;
 import com.threeamigos.foresta.canti.CantoDelBardo;
+import com.threeamigos.foresta.combattimento.CambioDArma;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.modellodati.AzioneMD;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
-import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tattiche.ContestoTattico;
-import com.threeamigos.foresta.tipi.CostantiTattiche;
-import com.threeamigos.foresta.tipi.TipoAbilita;
-import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoGlobale;
-import com.threeamigos.foresta.tipi.PortataIncantesimo;
-import com.threeamigos.foresta.tipi.TipoIncantesimo;
-import com.threeamigos.foresta.tipi.PortataAzione;
-import com.threeamigos.foresta.tipi.TipoAzione;
+import com.threeamigos.foresta.modellodati.AzioneMD;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tattiche.ContestoTattico;
+import com.threeamigos.foresta.tipi.*;
 
 /**
  * Quando un'azione si può fare (tattiche_di_combattimento_automatiche.md §11.9): i requisiti che l'azione porta, e che il giocatore non scrive. Per

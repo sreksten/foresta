@@ -1,13 +1,9 @@
 package com.threeamigos.foresta.missioni.richieste;
 
-import com.threeamigos.foresta.tipi.CostantiMissioni;
 import com.threeamigos.foresta.artefatti.CostantiArtefatti;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
-import com.threeamigos.foresta.tipi.CategoriaArtefatto;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.Locale;
 
@@ -56,7 +52,7 @@ public final class ForgiaRichiesta {
 		elemento = campi.enumerato("ELEMENTO", TipoDanno.class);
 		attributo = campi.enumerato("ATTRIBUTO", TipoAttributo.class);
 		if (tipo == TipoArtefatto.BASTONE_MAGICO && attributo != TipoAttributo.POTERE_MAGICO) {
-			throw new IllegalArgumentException("Un bastone magico fa crescere il POTERE_MAGICO: " + riga);
+			throw new IllegalArgumentException("Un bastone magico fa crescere il potere magico: " + riga);
 		}
 		nome = campi.obbligatorio("NOME");
 		nomeBreve = campi.obbligatorio("BREVE");
