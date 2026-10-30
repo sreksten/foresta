@@ -55,8 +55,9 @@ import java.util.stream.Collectors;
 public abstract class PersonaggioBase implements Personaggio {
 
 	protected PersonaggioMD md = new PersonaggioMD();
-	private final ModificatoriTemporanei modificatori = new ModificatoriTemporanei(this);
+	final ModificatoriTemporanei modificatori = new ModificatoriTemporanei(this);
 	private final EffettiDiStato effettiDiStato = new EffettiDiStato(this);
+	private final SaluteEMorte saluteEMorte = new SaluteEMorte(this);
 
 	/**
 	 * Posizione all'interno del gruppo
@@ -352,25 +353,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		this.sfidanteACartaForbiciSasso = sfidante;
 	}
 
-	/**
-	 * Se questo personaggio, invece di morire, si arrende: combatte lui fino alla resa, o è del gruppo e combatte
-	 * contro chi combatte fino alla resa.
-	 */
-	private boolean siArrende() {
-		return finoAllaResa || GruppoGiocatore.getIstanza().contiene(this) && GruppoAvversario.getIstanza().isFinoAllaResa();
-	}
 
-	/**
-	 * Si arrende: resta con un punto ferita, va in panchina e lo dice.
-	 */
-	private void arrenditi() {
-		md.set(TipoAttributo.SALUTE, 1);
-		inPanchina = true;
-		String nome = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		BusEventi.pubblica(new NotificaTestoFrase(nome + (appartieneAlGruppoDelGiocatore()
-				? " ammette la sconfitta e si fa da parte." : " abbassa le armi e si arrende.")));
-		BusEventi.pubblica(new InternoPersonaggioArreso(this));
-	}
 
 	/**
 	 * Se sta dalla parte del giocatore: nel suo gruppo o fra i suoi ospiti (un ospite vulnerabile non è nella lista dei personaggi, ma non è
@@ -382,38 +365,11 @@ public abstract class PersonaggioBase implements Personaggio {
 		return giocatore.contiene(this) || giocatore.getOspiti().contains(this);
 	}
 
-	public void muore(String causaTrapasso) {
-		if (isImmortale()) {
-			return;
-		}
-		md.setVivo(false);
-		md.setCausaTrapasso(causaTrapasso);
-		// Con la morte finiscono anche gli effetti di stato: non devono tornare, e magari riuccidere, con la resurrezione. Senza notifiche:
-		// un morto non ha niente da mostrare (la UI disegnerebbe lo sprite grigio della rimozione)
-		new ArrayList<>(md.getEffettiDiStato()).forEach(md::togliEffettoDiStato);
-		// Lo stesso per i modificatori a tempo (anche i negativi): restano solo quelli permanenti, come le benedizioni e l'equipaggiamento
-		List<ModificatoreAttributoMD> aTempo = md.getModificatori().stream().filter(ModificatoreAttributoMD::isTemporaneo).collect(Collectors.toList());
-		if (!aTempo.isEmpty()) {
-			modificatori.modificaModificatori(() -> aTempo.forEach(md::togliModificatore));
-		}
-		BusEventi.pubblica(new NotificaVariazioneStatoVitalePersonaggio(this, false));
-	}
 
 	public String getCausaTrapasso() {
 		return md.getCausaTrapasso();
 	}
 
-	public void resuscita() {
-		int salutePrecedente = (int) md.get(TipoAttributo.SALUTE);
-		int stanchezzaPrecedente = (int) md.get(TipoAttributo.STANCHEZZA);
-		int salute = (int)(calcolaSaluteMassima() / 10.0d);
-		md.set(TipoAttributo.SALUTE, salute);
-		md.set(TipoAttributo.STANCHEZZA, 9);
-		md.setVivo(true);
-		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, salutePrecedente, salute));
-		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.STANCHEZZA, stanchezzaPrecedente, 9));
-		BusEventi.pubblica(new NotificaVariazioneStatoVitalePersonaggio(this, true));
-	}
 
 	/**
 	 * Quanti bersagli colpisce un incantesimo MULTIPLO: il NUMERO_BERSAGLI calcolato dalle caratteristiche (con il
@@ -769,7 +725,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * Funzione che limita il valore di un attributo al suo massimo (valore base più modifica da artefatti). Non restituisce mai meno di 0
 	 * per un'aggiunta: se il valore è già sopra il massimo (per esempio è scaduto un bonus), non lo si abbassa aggiungendo.
 	 */
-	private int limitaEntroMassimi(int valoreAttuale, int valoreMassimo, int quantitaDaAggiungere) {
+	int limitaEntroMassimi(int valoreAttuale, int valoreMassimo, int quantitaDaAggiungere) {
 		if (valoreMassimo == PersonaggioMD.SENZA_LIMITE) {
 			return quantitaDaAggiungere;
 		}
@@ -925,112 +881,41 @@ public abstract class PersonaggioBase implements Personaggio {
 	// SALUTE
 
 	@Override
+	public void muore(String causaTrapasso) {
+		saluteEMorte.muore(causaTrapasso);
+	}
+
+	@Override
+	public void resuscita() {
+		saluteEMorte.resuscita();
+	}
+
+	@Override
+	public void addSalute(int quantita) {
+		saluteEMorte.addSalute(quantita);
+	}
+
+	@Override
+	public void subSalute(int quantita, Personaggio avversario, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
+		saluteEMorte.subSalute(quantita, avversario, notificaFerite, notificaMorte);
+	}
+
+	@Override
+	public void addMagia(int quantita) {
+		saluteEMorte.addMagia(quantita);
+	}
+
+	@Override
+	public void subMagia(int quantita) {
+		saluteEMorte.subMagia(quantita);
+	}
+
+	@Override
 	public int getSalute() {
 		return (int) md.get(TipoAttributo.SALUTE);
 	}
 
-	/**
-	 * La quantità che si può aggiungere è limitata dal valore massimo di base accresciuto da bonus da artefatti
-	 */
-	public void addSalute(int quantita) {
-		int salutePrecedente = (int)md.get(TipoAttributo.SALUTE);
-		quantita = limitaEntroMassimi(salutePrecedente, getSaluteMassima(), quantita);
-		int saluteCorrente = salutePrecedente + quantita;
-		md.set(TipoAttributo.SALUTE, saluteCorrente);
-		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, salutePrecedente, saluteCorrente));
-	}
 
-	public void subSalute(int quantita, Personaggio avversario, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
-		// Un morto non subisce altri danni: la sua morte non va annunciata due volte (doppio danno periodico, collasso, doppia resa)
-		if (!isVivo()) {
-			return;
-		}
-		if (quantita <= 0) {
-			if (notificaFerite == Personaggio.NotificaFerite.SI) {
-				String sb = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-						" non ha riportato danni dall'attacco " + avversario.getNome(OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) + '.';
-				BusEventi.pubblica(new NotificaTestoFrase(sb));
-			}
-			return;
-		}
-
-		double saluteOriginale = md.get(TipoAttributo.SALUTE);
-		double salute = saluteOriginale - quantita;
-		if (salute <= 0 && !isImmortale() && siArrende()) {
-			arrenditi();
-			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, saluteOriginale, 1));
-			return;
-		}
-		if (salute <= 0) {
-			salute = 0;
-			if (!isImmortale()) {
-				// Prima la salute, poi la morte: chi ascolta la notifica di morte trova già 0
-				md.setSalute(0);
-				md.setVivo(false);
-				StringBuilder sb;
-				// Chi lascia il gruppo appena muore (lo Scheletro della Mietitura) non ha ferite da raccontare: se ne occupa il gruppo
-				if (notificaMorte == Personaggio.NotificaMorte.SI && !getMotivoNelGruppo().isLasciaSeMuore()) {
-					sb = new StringBuilder();
-					if (md.getNome() == null) {
-						boolean isGruppoAvversario;
-						Gruppo gruppo;
-						if (appartieneAlGruppoDelGiocatore()) {
-							isGruppoAvversario = false;
-							gruppo = GruppoGiocatore.getIstanza();
-						} else {
-							isGruppoAvversario = true;
-							gruppo = GruppoAvversario.getIstanza();
-						}
-						if (isGruppoAvversario && GruppoAvversario.getIstanza().contaDellaStessaSpecie(this) > 1) {
-							if (getSesso() == Personaggio.Sesso.MASCHIO) {
-								sb.append(Numeri.getOrdinaleM(ordinale, true));
-							} else {
-								sb.append(Numeri.getOrdinaleF(ordinale, true));
-							}
-							sb.append(" ");
-							sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-						} else {
-							String ads = getADS();
-							sb.append(Character.toUpperCase(ads.charAt(0)));
-							sb.append(ads.substring(1));
-						}
-						sb.append(getNomeSingolare());
-					} else {
-						sb.append(md.getNome());
-					}
-					sb.append(" è mort");
-					sb.append(getLetteraFinaleAttributo());
-					sb.append(" per le ferite riportate.");
-					BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
-				}
-				if (avversario != null) {
-					md.setCausaTrapasso("Uccis" + getLetteraFinaleAttributo() + " " + avversario.getDa() + avversario.getNomeSingolare() + ".");
-				} else {
-					// Senza un attaccante il danno viene dagli effetti di stato (veleno, sanguinamento...)
-					md.setCausaTrapasso("Mort" + getLetteraFinaleAttributo() + " per i danni nel tempo.");
-				}
-				muore(md.getCausaTrapasso());
-			}
-		} else {
-			if (notificaFerite == Personaggio.NotificaFerite.SI) {
-				String nome = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA);
-				String notifica = nome + " ha ancora " + (int)salute + " punt" + (salute == 1 ? 'o' : 'i') +
-						" ferita su " + (int)calcolaSaluteMassima() + '.';
-				BusEventi.pubblica(new NotificaTestoFrase(notifica));
-			}
-		}
-		md.setSalute(salute);
-		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, saluteOriginale, salute));
-
-		if ((md.getClasse() == TipoPersonaggio.GUERRIERO || md.getClasse() == TipoPersonaggio.GUERRIERA
-				|| md.getClasse() == TipoPersonaggio.CAPITANO_DELLE_GUARDIE) &&
-				getFuria() > 0 && !hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
-			double sogliaBerserk = calcolaSaluteMassima() / 3.0d;
-			if (salute > 0 && salute <= sogliaBerserk) {
-				addEffettoDiStato(TipoEffettoDiStato.BERSERK, 1, 0);
-			}
-		}
-	}
 
 	// SALUTE MASSIMA
 
@@ -1065,26 +950,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int) md.get(TipoAttributo.MAGIA);
 	}
 
-	/**
-	 * La quantità che si può aggiungere è limitata dal valore massimo di base accresciuto da bonus da artefatti
-	 */
-	public void addMagia(int quantita) {
-        int quantitaPrecedente = (int) md.get(TipoAttributo.MAGIA);
-		quantita = limitaEntroMassimi(quantitaPrecedente, getMagiaMassima(), quantita);
-		int quantitaAttuale = quantitaPrecedente + quantita;
-		md.setMagia(quantitaAttuale);
-		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.MAGIA, quantitaPrecedente, quantitaAttuale));
-	}
 
-	public void subMagia(int quantita) {
-		int quantitaPrecedente = (int) md.get(TipoAttributo.MAGIA);
-		if (quantita > quantitaPrecedente) {
-			throw new IllegalStateException("Tentativo di utilizzo di più magia rispetto a quella disponibile");
-		}
-		int quantitaAttuale = quantitaPrecedente - quantita;
-		md.setMagia(quantitaAttuale);
-		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.MAGIA, quantitaPrecedente, quantitaAttuale));
-	}
 
 	@Override
 	public int getMagiaMassima() {
