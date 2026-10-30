@@ -53,6 +53,7 @@ import java.util.stream.Collectors;
 public abstract class PersonaggioBase implements Personaggio {
 
 	protected PersonaggioMD md = new PersonaggioMD();
+	private final ModificatoriTemporanei modificatori = new ModificatoriTemporanei(this);
 
 	/**
 	 * Posizione all'interno del gruppo
@@ -390,7 +391,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		// Lo stesso per i modificatori a tempo (anche i negativi): restano solo quelli permanenti, come le benedizioni e l'equipaggiamento
 		List<ModificatoreAttributoMD> aTempo = md.getModificatori().stream().filter(ModificatoreAttributoMD::isTemporaneo).collect(Collectors.toList());
 		if (!aTempo.isEmpty()) {
-			modificaModificatori(() -> aTempo.forEach(md::togliModificatore));
+			modificatori.modificaModificatori(() -> aTempo.forEach(md::togliModificatore));
 		}
 		BusEventi.pubblica(new NotificaVariazioneStatoVitalePersonaggio(this, false));
 	}
@@ -1375,143 +1376,40 @@ public abstract class PersonaggioBase implements Personaggio {
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.STANCHEZZA, quantitaPrecedente, quantitaAttuale));
 	}
 
+	@Override
 	public void addModificatore(ModificatoreAttributoMD modificatore) {
-		if (modificatore.getBersaglio() != BersaglioModificatore.PORTATORE) {
-			throw new IllegalArgumentException("Un modificatore sul bersaglio va messo sul bersaglio con suPortatore()");
-		}
-		if (modificatore.isTemporaneo()) {
-			Optional<ModificatoreAttributoMD> uguale = md.getModificatori().stream()
-					.filter(m -> m.stessoEffetto(modificatore)).findFirst();
-			if (uguale.isPresent()) {
-				// Lo stesso modificatore non si somma: rinfresca la durata, se quella nuova è più lunga
-				ModificatoreAttributoMD presente = uguale.get();
-				if (modificatore.getDurata() > presente.getDurata()) {
-					sostituisciModificatore(presente, modificatore);
-					pubblicaVariazioneModificatore(NotificaVariazioneModificatorePersonaggio.TipoVariazione.MODIFICA,
-							modificatore, presente.getDurata(), modificatore.getDurata());
-				}
-				return;
-			}
-		}
-		modificaModificatori(() -> md.aggiungiModificatore(modificatore));
-		pubblicaVariazioneModificatore(NotificaVariazioneModificatorePersonaggio.TipoVariazione.AGGIUNTA,
-				modificatore, 0, modificatore.getDurata());
+		modificatori.addModificatore(modificatore);
 	}
 
 	@Override
 	public Collection<ModificatoreAttributoMD> getModificatoriTemporanei() {
-		return md.getModificatori().stream().filter(ModificatoreAttributoMD::isTemporaneo).collect(Collectors.toList());
+		return modificatori.getModificatoriTemporanei();
 	}
 
 	@Override
 	public void riduciModificatori(UnitaDurataModificatore unitaDurata) {
-		for (ModificatoreAttributoMD modificatore : new ArrayList<>(md.getModificatori())) {
-			if (modificatore.getUnitaDurata() != unitaDurata) {
-				continue;
-			}
-			int durataPrecedente = modificatore.getDurata();
-			if (durataPrecedente > 1) {
-				ModificatoreAttributoMD ridotto = modificatore.conDurata(durataPrecedente - 1);
-				sostituisciModificatore(modificatore, ridotto);
-				pubblicaVariazioneModificatore(NotificaVariazioneModificatorePersonaggio.TipoVariazione.MODIFICA,
-						ridotto, durataPrecedente, durataPrecedente - 1);
-			} else {
-				rimuoviModificatore(modificatore);
-			}
-		}
+		modificatori.riduciModificatori(unitaDurata);
 	}
 
 	@Override
 	public void rimuoviIModificatoriTemporaneiRimovibili() {
-		for (ModificatoreAttributoMD modificatore : getModificatoriTemporanei()) {
-			if (modificatore.isRimovibile()) {
-				rimuoviModificatore(modificatore);
-			}
-		}
-	}
-
-	private void rimuoviModificatore(ModificatoreAttributoMD modificatore) {
-		modificaModificatori(() -> md.togliModificatore(modificatore));
-		pubblicaVariazioneModificatore(NotificaVariazioneModificatorePersonaggio.TipoVariazione.RIMOZIONE,
-				modificatore, modificatore.getDurata(), 0);
-	}
-
-	private void sostituisciModificatore(ModificatoreAttributoMD vecchio, ModificatoreAttributoMD nuovo) {
-		modificaModificatori(() -> {
-			md.togliModificatore(vecchio);
-			md.aggiungiModificatore(nuovo);
-		});
-	}
-
-	/**
-	 * Cambia i modificatori e ricalcola quello che ne dipende: salute e magia massime (con le loro notifiche, e la
-	 * salute e la magia attuali non restano sopra i nuovi massimi) e gli attributi secondari.
-	 */
-	private void modificaModificatori(Runnable modifica) {
-		int saluteMassimaPrecedente = getSaluteMassima();
-		int magiaMassimaPrecedente = getMagiaMassima();
-
-		modifica.run();
-
-		int saluteMassimaRicalcolata = getSaluteMassima();
-		if (saluteMassimaPrecedente != saluteMassimaRicalcolata) {
-			if ((int) md.get(TipoAttributo.SALUTE) > saluteMassimaRicalcolata) {
-				md.setSalute(saluteMassimaRicalcolata);
-			}
-			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE_MASSIMA, saluteMassimaPrecedente, saluteMassimaRicalcolata));
-		}
-
-		int magiaMassimaRicalcolata = getMagiaMassima();
-		if (magiaMassimaPrecedente != magiaMassimaRicalcolata) {
-			if ((int) md.get(TipoAttributo.MAGIA) > magiaMassimaRicalcolata) {
-				md.setMagia(magiaMassimaRicalcolata);
-			}
-			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.MAGIA_MASSIMA, magiaMassimaPrecedente, magiaMassimaRicalcolata));
-		}
-
-		ricalcolaAttributiSecondari();
-	}
-
-	private void pubblicaVariazioneModificatore(NotificaVariazioneModificatorePersonaggio.TipoVariazione tipo,
-												ModificatoreAttributoMD modificatore, int durataPrecedente, int nuovaDurata) {
-		BusEventi.pubblica(new NotificaVariazioneModificatorePersonaggio(this, tipo, modificatore, durataPrecedente, nuovaDurata));
-		// Solo i modificatori a tempo si raccontano nel testo: i permanenti (benedizioni, lealtà) hanno già il loro
-		// messaggio, e il semplice scorrere del tempo (MODIFICA con la durata che scende) non va scritto ogni turno
-		if (!modificatore.isTemporaneo()) {
-			return;
-		}
-		String nome = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		String effetto = TestoDeiModificatori.effetto(modificatore);
-		switch (tipo) {
-			case AGGIUNTA:
-				BusEventi.pubblica(new NotificaTestoFrase(nome + ": " + effetto + " " + TestoDeiModificatori.durata(modificatore) + "."));
-				break;
-			case MODIFICA:
-				if (nuovaDurata > durataPrecedente) {
-					BusEventi.pubblica(new NotificaTestoFrase(nome + ": " + effetto + " " + TestoDeiModificatori.durata(modificatore) + "."));
-				}
-				break;
-			case RIMOZIONE:
-				// "Per il guerriero" ma "Per Aldo": l'iniziale minuscola è solo dell'articolo, un nome proprio resta com'è
-				BusEventi.pubblica(new NotificaTestoFrase("Per "
-						+ getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
-						+ " non vale più: " + effetto + "."));
-				break;
-			default:
-				break;
-		}
+		modificatori.rimuoviIModificatoriTemporaneiRimovibili();
 	}
 
 	@Override
 	public double getVariazioneDaTemporanei(TipoAttributo tipoAttributo) {
-		double base = baseDelModificabile(tipoAttributo);
-		return quantitaModificata(md, base, tipoAttributo, true) - quantitaModificata(md, base, tipoAttributo, false);
+		return modificatori.getVariazioneDaTemporanei(tipoAttributo);
+	}
+
+	@Override
+	public Optional<ModificatoreAttivo> getFissaggio(TipoAttributo tipoAttributo) {
+		return modificatori.getFissaggio(tipoAttributo);
 	}
 
 	/**
 	 * Il valore a cui si applicano i modificatori di un attributo (lo stesso dei suoi getter)
 	 */
-	private double baseDelModificabile(TipoAttributo tipoAttributo) {
+	double baseDelModificabile(TipoAttributo tipoAttributo) {
 		switch (tipoAttributo) {
 			case POTERE_MAGICO:
 				return 100.0d;
@@ -1530,27 +1428,6 @@ public abstract class PersonaggioBase implements Personaggio {
 			default:
 				return md.getOptional(tipoAttributo).orElse(0.0d);
 		}
-	}
-
-	@Override
-	public Optional<ModificatoreAttivo> getFissaggio(TipoAttributo tipoAttributo) {
-		ModificatoreAttivo fissaggio = null;
-		for (ModificatoreAttributoMD m : md.getModificatori()) {
-			if (m.getTipoAttributo() == tipoAttributo && m.getTipoModificatoreAttributo() == TipoModificatore.QUANTITA_ASSOLUTA
-					&& (fissaggio == null || m.getQuantita() < fissaggio.getModificatore().getQuantita())) {
-				fissaggio = new ModificatoreAttivo(m, m.getNote());
-			}
-		}
-		for (ArtefattoMD artefatto : md.getArtefatti()) {
-			for (ModificatoreAttributoMD m : artefatto.getModificatori()) {
-				if (m.getBersaglio() == BersaglioModificatore.PORTATORE && m.getTipoAttributo() == tipoAttributo
-						&& m.getTipoModificatoreAttributo() == TipoModificatore.QUANTITA_ASSOLUTA
-						&& (fissaggio == null || m.getQuantita() < fissaggio.getModificatore().getQuantita())) {
-					fissaggio = new ModificatoreAttivo(m, artefatto.getNome());
-				}
-			}
-		}
-		return Optional.ofNullable(fissaggio);
 	}
 
 	// Funzioni di calcolo per gli attributi derivati
@@ -1820,7 +1697,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return quantitaModificata(md, quantitaOriginale, tipoAttributo, true);
 	}
 
-	private static double quantitaModificata(PersonaggioMD md, double quantitaOriginale, TipoAttributo tipoAttributo,
+	static double quantitaModificata(PersonaggioMD md, double quantitaOriginale, TipoAttributo tipoAttributo,
 											 boolean conTemporanei) {
 		List<ModificatoreAttributoMD> modificatoriLocali = new ArrayList<>();
 
