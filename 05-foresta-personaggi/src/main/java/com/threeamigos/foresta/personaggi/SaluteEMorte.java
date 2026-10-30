@@ -9,11 +9,17 @@ import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.TipoRiposo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -209,5 +215,70 @@ final class SaluteEMorte {
 		int quantitaAttuale = quantitaPrecedente - quantita;
 		md().setMagia(quantitaAttuale);
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(p, TipoAttributo.MAGIA, quantitaPrecedente, quantitaAttuale));
+	}
+
+	/**
+	 * La salute che il personaggio recupera a fine locazione (vedi Automa, stato FINE_LOCAZIONE_2). I modificatori di
+	 * RIGENERAZIONE_SALUTE (del personaggio, degli artefatti e dei set leggendari) valgono su tutta la base.
+	 */
+	int getRigenerazioneSalute() {
+		// Se la creatura è un non-morto o uno spettro, il moltiplicatore è 0.0, quindi guarisce 0
+		if (p.getMoltiplicatoreRecuperoFisico() == 0.0) {
+			return 0;
+		}
+		// 1. Base di partenza mista
+		double baseGrezza = AttributiSecondari.getQuantitaModificata(md(),
+				5.0d + p.getSaluteMassima() * CostantiPersonaggi.RIGENERAZIONE_SALUTE_QUOTA_SALUTE_MASSIMA, TipoAttributo.RIGENERAZIONE_SALUTE);
+		// 2. Impatto dell'attributo Costituzione con Diminishing Returns
+		double bonusCostituzione = 1.0 + (Math.sqrt(p.get(TipoAttributo.COSTITUZIONE)) / 10.0);
+		// 3. Calcolo finale combinato con il moltiplicatore di archetipo
+		double saluteFinale = (baseGrezza * bonusCostituzione) * p.getMoltiplicatoreRecuperoFisico();
+		// Arrotondamento a un decimale per la UI
+		return (int)Math.ceil(saluteFinale);
+	}
+
+	/**
+	 * La magia che il personaggio recupera a fine locazione (vedi Automa, stato FINE_LOCAZIONE_2). I modificatori di
+	 * RIGENERAZIONE_MAGIA (del personaggio, degli artefatti e dei set leggendari) valgono su tutta la base.
+	 */
+	int getRigenerazioneMagia() {
+		// 1. Calcolo del recupero potenziale: una parte fissa e una sulla capienza massima
+		double recuperoGrezzo = AttributiSecondari.getQuantitaModificata(md(),
+				5.0d + p.getMagiaMassima() * CostantiPersonaggi.RIGENERAZIONE_MAGIA_QUOTA_MAGIA_MASSIMA, TipoAttributo.RIGENERAZIONE_MAGIA);
+		// 2. Applicazione del moltiplicatore di classe/razza
+		double manaRigenerato = recuperoGrezzo * p.getMoltiplicatoreRecuperoMagico();
+		// Arrotondamento a un decimale per l'interfaccia utente (UI)
+		return (int)Math.ceil(manaRigenerato);
+	}
+
+	void riposa(int ore, TipoRiposo tipoRiposo) {
+		RisultatoRiposo risultatoRiposo = CalcolatoreRiposo.calcolaRiposo(p, ore, tipoRiposo);
+		addSalute(risultatoRiposo.getRipristinoSalute());
+		addMagia(risultatoRiposo.getRipristinoMagia());
+		p.subStanchezza(risultatoRiposo.getAbbassamentoStanchezza());
+	}
+
+	/**
+	 * Fuggire costa una quota della salute massima (da {@link CostantiPersonaggi#FUGA_DANNO_MINIMO_PERCENTUALE} a
+	 * {@link CostantiPersonaggi#FUGA_DANNO_MASSIMO_PERCENTUALE}%, quindi cresce con il livello, a differenza di un danno fisso), ma non uccide mai:
+	 * chi fugge perché sta male resta in piedi con almeno un punto. Il resto del prezzo è l'ignominia, che per qualche locazione
+	 * toglie coraggio, valore e carisma.
+	 */
+	void fugge() {
+		int danno = Math.max(1, p.getSaluteMassima() * Dado.tira(CostantiPersonaggi.FUGA_DANNO_MINIMO_PERCENTUALE, CostantiPersonaggi.FUGA_DANNO_MASSIMO_PERCENTUALE) / 100);
+		danno = Math.min(danno, Math.max(0, p.getSalute() - 1));
+		if (danno > 0) {
+			subSalute(danno, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
+		}
+		if (!p.isVivo()) {
+			return;
+		}
+		// L'ignominia della fuga: coraggio, valore e carisma calano per qualche locazione. La fuga finisce in
+		// FINE_LOCAZIONE, che fa già scalare di uno le locazioni: per sentirle tutte la durata ne ha una in più
+		for (TipoAttributo attributo : new TipoAttributo[] {TipoAttributo.CORAGGIO, TipoAttributo.VALORE, TipoAttributo.CARISMA}) {
+			p.addModificatore(new ModificatoreAttributoMD(attributo, TipoModificatore.VARIAZIONE_PERCENTUALE,
+					-CostantiPersonaggi.FUGA_IGNOMINIA_PERCENTUALE, CostantiPersonaggi.FUGA_IGNOMINIA_NOTA, UnitaDurataModificatore.LOCAZIONI,
+					CostantiPersonaggi.FUGA_IGNOMINIA_LOCAZIONI + 1, BersaglioModificatore.PORTATORE, false));
+		}
 	}
 }

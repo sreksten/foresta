@@ -21,18 +21,19 @@ Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli d
 
 ### Il personaggio
 
-`Personaggio` è l'interfaccia che tutti rispettano; estende `VistaPersonaggio` (le letture, che è quel che ne vede la UI), `OggettoConArticoli` (i nomi con l'articolo giusto, per costruire le frasi) e `ScambiatoreArtefatti`. `PersonaggioBase` (circa 1300 righe) la implementa sopra un `PersonaggioMD` e tiene insieme le regole comuni, ma il grosso del lavoro lo fanno sei collaboratori dello stesso pacchetto, visibili solo lì: la base ne inoltra i metodi di `Personaggio` con una riga ciascuno, e ognuno rilegge il `PersonaggioMD` a ogni uso, perché `setModelloDati` può sostituirlo.
+`Personaggio` è l'interfaccia che tutti rispettano; estende `VistaPersonaggio` (le letture, che è quel che ne vede la UI), `OggettoConArticoli` (i nomi con l'articolo giusto, per costruire le frasi) e `ScambiatoreArtefatti`. `PersonaggioBase` (circa 1150 righe) la implementa sopra un `PersonaggioMD` e tiene insieme le regole comuni, ma il grosso del lavoro lo fanno sette collaboratori dello stesso pacchetto, visibili solo lì: la base ne inoltra i metodi di `Personaggio` con una riga ciascuno, e ognuno rilegge il `PersonaggioMD` a ogni uso, perché `setModelloDati` può sostituirlo.
 
 | Collaboratore | Che cosa fa |
 | :--- | :--- |
 | `AttributiSecondari` | funzioni statiche (servono anche al caricamento, quando il personaggio non esiste ancora): il ricalcolo degli attributi secondari con le notifiche delle variazioni, i `calcola*` che leggono i primari e scelgono il moltiplicatore di classe, il carico massimo, il numero di bersagli, e `valoreDi`, il valore di un attributo con tutti i modificatori. Le formule stanno in `CalcolatoreAttributiSecondari` (`02-foresta-attributi`) |
 | `ModificatoriTemporanei` | i modificatori di attributo: aggiunta (lo stesso non si somma, rinfresca la durata), riduzione a turni e a ore, rimozione, `getVariazioneDaTemporanei`, `getFissaggio`; quando cambiano ricalcola salute e magia massime e i secondari |
 | `EffettiDiStato` | gli stati alterati (rinforzo, danni nel tempo, rigenerazione, decadimento, rimozione) e le **ricariche** delle abilità e dei canti |
-| `SaluteEMorte` | `addSalute`, `subSalute` (la resa, il berserk e il racconto della morte), `muore`, `resuscita`, `addMagia`, `subMagia` |
+| `SaluteEMorte` | `addSalute`, `subSalute` (la resa, il berserk e il racconto della morte), `muore`, `resuscita`, `addMagia`, `subMagia`, e il recupero e il prezzo della fatica: `riposa`, la rigenerazione di salute e magia a fine locazione, `fugge` |
+| `NomeEDescrizione` | il nome (proprio, o della specie con l'articolo, la preposizione e il numero che distingue dagli altri dello stesso gruppo) e la descrizione della scheda |
 | `Progressione` | i punti esperienza, il salto di livello, il livello di chi si unisce al gruppo e la spesa dei punti abilità |
 | `CaricoEInventario` | carico e carico massimo, cosa si può prendere o equipaggiare (`RegoleEquipaggiamento`), i set leggendari completi, `addArtefatto` e `removeArtefatto` |
 
-Restano alla base ciò che le classi concrete ridefiniscono (i massimi `calcolaSaluteMassima` e `calcolaMagiaMassima`, i `getMoltiplicatore*`, le offerte e le immunità per istanza), l'identità (nome, ordinale, flag di scontro) e la parata e la resistenza magica con l'equipaggiamento. Gli **attributi primari e secondari** si leggono con `get(TipoAttributo)` (`VistaPersonaggio`) e si cambiano con `add(TipoAttributo, quantita)` (`Personaggio`), senza un metodo per ogni attributo; `OmbraFiamma` ridefinisce `get` per dare al carisma il massimo possibile. Le regole:
+Restano alla base ciò che le classi concrete ridefiniscono (i massimi `calcolaSaluteMassima` e `calcolaMagiaMassima`, i `getMoltiplicatore*`, le offerte e le immunità per istanza), l'identità (ordinale, flag di scontro) e la parata e la resistenza magica con l'equipaggiamento. Gli **attributi primari e secondari** si leggono con `get(TipoAttributo)` (`VistaPersonaggio`) e si cambiano con `add(TipoAttributo, quantita)` (`Personaggio`), senza un metodo per ogni attributo; `OmbraFiamma` ridefinisce `get` per dare al carisma il massimo possibile. Le regole:
 
 - **salute e magia**, con i loro massimi che crescono con il livello, e la **stanchezza**;
 - **esperienza e livelli** (`GestoreProgressione` dà la curva: i punti per un livello crescono con il quadrato del livello meno uno) e **punti abilità**, che si spendono sugli attributi primari (`ComandoSpesaPuntoAbilita`);
@@ -73,6 +74,6 @@ I mostri attaccano con `ArmaNaturale` (artigli, morsi, soffi… al posto dell'ar
 
 ## Osservazioni
 
-- `PersonaggioBase` (circa 1300 righe, da 2000 prima di estrarne i sei collaboratori) e `CostantiPersonaggi` sono i punti più grandi del progetto: aggiungere una classe vuol dire una classe concreta, un `TipoPersonaggio`, le sue costanti e un file di note, oltre all'eventuale `Comando` e alla UI.
+- `PersonaggioBase` (circa 1150 righe, da 2000 prima di estrarne i sette collaboratori) e `CostantiPersonaggi` sono i punti più grandi del progetto: aggiungere una classe vuol dire una classe concreta, un `TipoPersonaggio`, le sue costanti e un file di note, oltre all'eventuale `Comando` e alla UI.
 - `GruppoGiocatore` e `GruppoAvversario` sono singleton statici, e il personaggio ne conosce l'esistenza in pochi punti (da che parte sta, quanti della sua specie ci sono): una dipendenza voluta fra personaggi e gruppi nello stesso modulo.
 - Il quadro d'insieme è in [`motore_di_gioco.md`](motore_di_gioco.md) §8; le debolezze di classe in [`debolezze_e_resistenze.md`](debolezze_e_resistenze.md); i moltiplicatori in `modificatori_temporanei.md` e `personaggi_giocabili.md` per le classi con abilità proprie.

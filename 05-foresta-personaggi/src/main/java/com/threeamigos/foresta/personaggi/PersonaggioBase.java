@@ -58,6 +58,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	final ModificatoriTemporanei modificatori = new ModificatoriTemporanei(this);
 	private final EffettiDiStato effettiDiStato = new EffettiDiStato(this);
 	private final SaluteEMorte saluteEMorte = new SaluteEMorte(this);
+	private final NomeEDescrizione nomeEDescrizione = new NomeEDescrizione(this);
 	private final Progressione progressione = new Progressione(this);
 	private final CaricoEInventario caricoEInventario = new CaricoEInventario(this);
 
@@ -401,143 +402,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		return danni * getPotereMagico() / 100.0d;
 	}
 
-	/**
-	 * La salute che il personaggio recupera a fine locazione (vedi Automa, stato FINE_LOCAZIONE_2). I modificatori di
-	 * RIGENERAZIONE_SALUTE (del personaggio, degli artefatti e dei set leggendari) valgono su tutta la base.
-	 */
-	public int getRigenerazioneSalute() {
-		// Se la creatura è un non-morto o uno spettro, il moltiplicatore è 0.0, quindi guarisce 0
-		if (getMoltiplicatoreRecuperoFisico() == 0.0) {
-			return 0;
-		}
-		// 1. Base di partenza mista
-		double baseGrezza = getQuantitaModificata(md,
-				5.0d + getSaluteMassima() * CostantiPersonaggi.RIGENERAZIONE_SALUTE_QUOTA_SALUTE_MASSIMA, TipoAttributo.RIGENERAZIONE_SALUTE);
-		// 2. Impatto dell'attributo Costituzione con Diminishing Returns
-		double bonusCostituzione = 1.0 + (Math.sqrt(get(TipoAttributo.COSTITUZIONE)) / 10.0);
-		// 3. Calcolo finale combinato con il moltiplicatore di archetipo
-		double saluteFinale = (baseGrezza * bonusCostituzione) * getMoltiplicatoreRecuperoFisico();
-		// Arrotondamento a un decimale per la UI
-		return (int)Math.ceil(saluteFinale);
-	}
 
-	/**
-	 * Calcola il mana rigenerato durante un turno di riposo.
-	 */
-	/**
-	 * La magia che il personaggio recupera a fine locazione (vedi Automa, stato FINE_LOCAZIONE_2). I modificatori di
-	 * RIGENERAZIONE_MAGIA (del personaggio, degli artefatti e dei set leggendari) valgono su tutta la base.
-	 */
-	public int getRigenerazioneMagia() {
-		// 1. Calcolo del recupero potenziale: una parte fissa e una sulla capienza massima
-		double recuperoGrezzo = getQuantitaModificata(md,
-				5.0d + getMagiaMassima() * CostantiPersonaggi.RIGENERAZIONE_MAGIA_QUOTA_MAGIA_MASSIMA, TipoAttributo.RIGENERAZIONE_MAGIA);
-		// 2. Applicazione del moltiplicatore di classe/razza
-		double manaRigenerato = recuperoGrezzo * getMoltiplicatoreRecuperoMagico();
-		// Arrotondamento a un decimale per l'interfaccia utente (UI)
-		return (int)Math.ceil(manaRigenerato);
-	}
 
-	//FIXME questo sparirà quando facciamo la schermata statistiche/inventario
-	public String getDescrizione() {
-		StringBuilder sb = new StringBuilder();
-		if (md.getNome() != null) {
-			sb.append(md.getNome());
-		} else {
-			String s = getADS();
-			sb.append(Character.toUpperCase(s.charAt(0)));
-			sb.append(s.substring(1));
-			sb.append(getNomeSingolare());
-		}
-		sb.append(' ');
-		int salute = getSalute();
-		if (salute < 20) {
-			sb.append("è molto debole");
-		} else if (salute < 40) {
-			sb.append("è debole");
-		} else if (salute < 80) {
-			sb.append("non è molto in salute");
-		} else if (salute < 100) {
-			sb.append("è in salute");
-		} else if (salute < 200) {
-			sb.append("è assolutamente in salute");
-		} else if (salute < 400) {
-			sb.append("è davvero in salute");
-		} else {
-			sb.append("è san").append(getLetteraFinaleAttributo()).append(" come un pesce");
-		}
-		sb.append(", ");
-		int coraggio = get(TipoAttributo.CORAGGIO);
-		if (coraggio < 30) {
-			sb.append("non ha molto coraggio");
-		} else if (coraggio < 60) {
-			sb.append("ha coraggio");
-		} else {
-			sb.append("ha coraggio da vendere");
-		}
-		sb.append(", nei combattimenti ");
-		int valore = get(TipoAttributo.VALORE);
-		if (valore < 30) {
-			sb.append("non e' che se la cavi egregiamente");
-		} else if (valore < 60) {
-			sb.append("se la cava bene");
-		} else {
-			sb.append("puo' arrecare gravi danni");
-		}
-		sb.append(" e ");
-		int carisma = (int) md.get(TipoAttributo.CARISMA);
-		if (carisma < 3) {
-			sb.append("non ha molto carisma");
-		} else if (carisma < 6) {
-			sb.append("ha abbastanza carisma");
-		} else {
-			sb.append("ha molto carisma");
-		}
-		sb.append('.');
-		Collection<ArtefattoMD> artefatti = md.getArtefatti();
-		if (!artefatti.isEmpty()) {
-			sb.append(' ');
-			sb.append(getPronome());
-			sb.append(' ');
-			sb.append(artefatti.stream()
-					.map(a -> a.getTipo().getUtilizzo() + ' ' + a.getNomeCompleto())
-					.collect(Collectors.joining(", ")));
-			sb.append('.');
-		}
-		return sb.toString();
-	}
 
-	@Override
-	public void riposa(int ore, TipoRiposo tipoRiposo) {
-		RisultatoRiposo risultatoRiposo = CalcolatoreRiposo.calcolaRiposo(this, ore, tipoRiposo);
-		addSalute(risultatoRiposo.getRipristinoSalute());
-		addMagia(risultatoRiposo.getRipristinoMagia());
-		subStanchezza(risultatoRiposo.getAbbassamentoStanchezza());
-	}
-
-	/**
-	 * Fuggire costa una quota della salute massima (da {@link CostantiPersonaggi#FUGA_DANNO_MINIMO_PERCENTUALE} a
-	 * {@link CostantiPersonaggi#FUGA_DANNO_MASSIMO_PERCENTUALE}%, quindi cresce con il livello, a differenza di un danno fisso), ma non uccide mai:
-	 * chi fugge perché sta male resta in piedi con almeno un punto. Il resto del prezzo è l'ignominia, che per qualche locazione
-	 * toglie coraggio, valore e carisma.
-	 */
-	public void fugge() {
-		int danno = Math.max(1, getSaluteMassima() * Dado.tira(CostantiPersonaggi.FUGA_DANNO_MINIMO_PERCENTUALE, CostantiPersonaggi.FUGA_DANNO_MASSIMO_PERCENTUALE) / 100);
-		danno = Math.min(danno, Math.max(0, getSalute() - 1));
-		if (danno > 0) {
-			subSalute(danno, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
-		}
-		if (!isVivo()) {
-			return;
-		}
-		// L'ignominia della fuga: coraggio, valore e carisma calano per qualche locazione. La fuga finisce in
-		// FINE_LOCAZIONE, che fa già scalare di uno le locazioni: per sentirle tutte la durata ne ha una in più
-		for (TipoAttributo attributo : new TipoAttributo[] {TipoAttributo.CORAGGIO, TipoAttributo.VALORE, TipoAttributo.CARISMA}) {
-			addModificatore(new ModificatoreAttributoMD(attributo, TipoModificatore.VARIAZIONE_PERCENTUALE,
-					-CostantiPersonaggi.FUGA_IGNOMINIA_PERCENTUALE, CostantiPersonaggi.FUGA_IGNOMINIA_NOTA, UnitaDurataModificatore.LOCAZIONI,
-					CostantiPersonaggi.FUGA_IGNOMINIA_LOCAZIONI + 1, BersaglioModificatore.PORTATORE, false));
-		}
-	}
 
 	/**
 	 * L'arma impugnata nella mano principale (o a due mani); senza, l'arma naturale.
@@ -636,65 +503,23 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	// NOME
 
+	//FIXME questo sparirà quando facciamo la schermata statistiche/inventario
+	@Override
+	public String getDescrizione() {
+		return nomeEDescrizione.getDescrizione();
+	}
+
+	@Override
+	public String getNome(Personaggio.OpzioniGetNome... opzioni) {
+		return nomeEDescrizione.getNome(opzioni);
+	}
+
 	@Override
 	public Optional<String> getNomeProprio() {
 		return Optional.ofNullable(md.getNome());
 	}
 
-	@Override
-	public String getNome(Personaggio.OpzioniGetNome... opzioni) {
-		boolean includiArticoloDeterminativoSingolare = false;
-		boolean includiArticoloIndeterminativoSingolare = false;
-		boolean includiPreposizioneArticolata = false;
-		boolean inizialeMaiuscola = false;
-		for (Personaggio.OpzioniGetNome opzione : opzioni) {
-			if (opzione == Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) {
-				includiArticoloDeterminativoSingolare = true;
-			} else if (opzione == Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_INDETERMINATIVO_SINGOLARE) {
-				includiArticoloIndeterminativoSingolare = true;
-			} else if (opzione == Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) {
-				includiPreposizioneArticolata = true;
-			} else if (opzione == Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) {
-				inizialeMaiuscola = true;
-			}
-		}
-		String nome = md.getNome();
-		if (nome != null) {
-			return includiPreposizioneArticolata ? "di " + nome : nome;
-		} else if (!isPNG()) {
-			throw new IllegalStateException("Personaggio giocante senza nome!");
-		}
-		StringBuilder sb = new StringBuilder();
-		if (includiArticoloDeterminativoSingolare) {
-			sb.append(getADS());
-		} else if (includiArticoloIndeterminativoSingolare) {
-			sb.append(getAIS());
-		} else if (includiPreposizioneArticolata) {
-			sb.append(getDeS());
-		}
-		sb.append(getNomeSingolare());
-		sb.append(suffissoOrdinale());
-		if (inizialeMaiuscola) {
-			sb.replace(0, 1, sb.substring(0, 1).toUpperCase(Locale.ROOT));
-		}
-		return sb.toString();
-	}
 
-	/**
-	 * Il numero che distingue un avversario dagli altri della stessa specie nel suo gruppo ("Viverna 2"): la sua posizione nel gruppo
-	 * (vedi GruppoAvversario.aggiungiPersonaggio; conta per specie), e solo se ce n'è più d'uno con lo stesso nome; altrimenti niente. Non cambia quando
-	 * qualcuno cade, così un mostro si riconosce per tutto lo scontro.
-	 */
-	private String suffissoOrdinale() {
-		if (ordinale <= 0) {
-			return "";
-		}
-		GruppoAvversario avversari = GruppoAvversario.getIstanza();
-		if (!avversari.contiene(this)) {
-			return "";
-		}
-		return avversari.contaDellaStessaSpecie(this) > 1 ? " " + ordinale : "";
-	}
 
 	@Override
 	public String getLetteraFinaleAttributo() {
@@ -852,6 +677,26 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	// SALUTE
+
+	@Override
+	public int getRigenerazioneSalute() {
+		return saluteEMorte.getRigenerazioneSalute();
+	}
+
+	@Override
+	public int getRigenerazioneMagia() {
+		return saluteEMorte.getRigenerazioneMagia();
+	}
+
+	@Override
+	public void riposa(int ore, TipoRiposo tipoRiposo) {
+		saluteEMorte.riposa(ore, tipoRiposo);
+	}
+
+	@Override
+	public void fugge() {
+		saluteEMorte.fugge();
+	}
 
 	@Override
 	public void muore(String causaTrapasso) {
