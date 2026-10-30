@@ -290,7 +290,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
 - [x] **Fase 7 (combattimento).**
   - `CalcolatoreCombattimento.difesaContro(difensore, tipo)`: la difesa contro un tipo di danno, con le resistenze di elmo, scudo e armatura (percentuale dimezzata). La usano la mitigazione del danno base e quella di ogni incantamento dell'arma, che prima usava sempre la `RESISTENZA_MAGICA`.
   - Doppia arma: `CalcolatoreCombattimento.fasiDiAttacco` dà l'arma principale e, per chi ne ha una, la secondaria al 40% (`FaseDiAttacco`). `calcolaDannoRisultante` ha un nuovo parametro `fattore`, che scala danno base e incantamenti. In `LocazioneBase` il turno di mischia fa tutte le fasi, per il giocatore e per l'avversario.
-  - `PersonaggioBase.getParata()`: la `PARATA` intrinseca di scudo, elmo e armatura (vedi sotto), e −25% ("guardia aperta") con due armi o un'arma a due mani. Vale sia per la probabilità di essere colpiti sia per la mitigazione. `getResistenzaMagica()`: +1 per livello dello scudo, +2 se è raro.
+  - `PersonaggioBase.get(PARATA)`: la `PARATA` intrinseca di scudo, elmo e armatura (vedi sotto), e −25% ("guardia aperta") con due armi o un'arma a due mani. Vale sia per la probabilità di essere colpiti sia per la mitigazione. `get(RESISTENZA_MAGICA)`: +1 per livello dello scudo, +2 se è raro.
   - Libro magico: `bonusLibroMagico`, sommato al danno degli `IncantesimoMalefico`.
   - Valori in `CostantiPersonaggi` (sezione "Combattimento").
   - Test: `CalcolatoreCombattimentoEquipaggiamentoTest` (15). Tutta la suite è verde (324 test).

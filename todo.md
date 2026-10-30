@@ -28,7 +28,7 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ### Gravità bassa: codice e testi non usati
 
-- B35a. Codice morto in `PersonaggioBase` (`05-foresta-personaggi`): `calcolaStanchezza`, `subCarisma`, `addForza`, `addDestrezza`, `addCostituzione`, `addIntelligenza`, `addSaggezza` (`addCarisma` lo usa l'amicizia in `LocazioneBase`), `getQuantitaEffettoDiStato` (solo un test) e `puoPrendere(Artefatto)`.
+- B35a. Codice morto in `PersonaggioBase` (`05-foresta-personaggi`): `calcolaStanchezza`, `getQuantitaEffettoDiStato` (solo un test) e `puoPrendere(Artefatto)`.
 - B35d. Passi pronti di `MissioneAPassi` (`09-foresta-missioni`) che nessuna missione usa, solo i test: `evitaCombattimento`, le sequenze di passi (`impostaSequenzaPassi`, `leggiSequenzaPassi`, `prossimoNellaSequenza`) e `getPassiConIntermezzoInAttesa`. `costruisci`, `attendiOre`, `dialogo` e `contaFinche` li usa `LaForgia`; `generaParametri`, `vai` e `tornaAlPuntoDiPartenza` li usa `IlViandante`. Idee per usare gli altri: una consegna riservata (`evitaCombattimento`), un incarico a più tappe in locazioni scelte a caso (sequenze di passi e `vai`).
 - B35e. Le produzioni morte, in `01-foresta-testi` (nessuna è citata da altre produzioni né dal codice; controllato il 2026-10-22): `fiabe.txt` (ISTANTE_PRECISO_OOP, GIORNO_DELLA_SETTIMANA, OTTENUTO, RACCONTO_BREVE: quest'ultima compare solo in un commento) e `locande.txt` (GESTORE_NOTE e NOTIZIE_CITTA, con le 12 notizie CG1–CG12 che non escono mai). Da togliere, oppure da collegare a un punto del gioco.
 
