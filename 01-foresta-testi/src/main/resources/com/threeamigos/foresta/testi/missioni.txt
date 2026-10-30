@@ -1605,6 +1605,200 @@ LEALTA
     RINGRAZIAMENTO=Stanotte dormirò. Davvero, questa volta.;\
     LEALTA=PERCEZIONE VARIAZIONE_FISSA 2;\
     LEALE=Gli occhi di %PERSONAGGIO% non temono più il buio, e ci vedono meglio.
+    CHIAVE=LA_FATTORIA_BRUCIATA;\
+    CONFIDENZA=Avevo una fattoria in fondo alla palude. Un troll l'ha ridotta in cenere, e non ha nemmeno bussato.;\
+    BATTUTA=Dov'è adesso?;\
+    RISPOSTA=Dorme ancora sulle mie macerie. Voglio che si svegli, e che la sveglia gli piaccia poco.;\
+    FAVORE=La fattoria bruciata;LUOGO=PALUDE;NEMICO=TROLL;NUMERO=1;CAPO=SI;\
+    VITTORIA=%CAPO% non dormirà più sulle macerie di nessuno.;\
+    RINGRAZIAMENTO=Ora posso ricostruire. Una stalla, per cominciare: ho idee molto precise sulle stalle.;\
+    LEALTA=CORAGGIO VARIAZIONE_FISSA 1;\
+    LEALE=%PERSONAGGIO% guarda la palude senza abbassare lo sguardo, e il coraggio non vacilla più.
+    CHIAVE=IL_DUELLO_D_ONORE;\
+    CONFIDENZA=In una locanda un guerriero mi ha accusato davanti a tutti di aver avuto paura in battaglia. Non era vero, ma ormai lo credono in molti.;\
+    BATTUTA=E cosa vuoi fare?;\
+    RISPOSTA=Chiedergli di ripeterlo, ma con una spada in mano. In una radura, senza pubblico: l'onore non ha bisogno di spettatori.;\
+    FAVORE=Il duello d'onore;LUOGO=RADURA;NEMICO=GUERRIERO;NUMERO=1;CAPO=NOME_CAMPIONE;\
+    VITTORIA=%CAPO% abbassa la spada e ammette il torto: la parola codardo non verrà più pronunciata.;\
+    RINGRAZIAMENTO=L'onore è a posto. Il resto della mia reputazione la sistemo da solo, con calma.;\
+    LEALTA=VALORE VARIAZIONE_FISSA 1;\
+    LEALE=%PERSONAGGIO% cammina a testa alta, e il valore si vede in ogni passo.
+    CHIAVE=IL_FRATELLO_DEI_BRIGANTI;\
+    CONFIDENZA=Mio fratello ha lasciato casa con una banda di briganti. Voglio riportarlo a casa, ma con quelli in mezzo non ce la faccio senza aiuto.;\
+    BATTUTA=Dove si nascondono?;\
+    RISPOSTA=In un bosco a due giorni da qui. Lui è quello che sta sempre in fondo e fa finta di sapere cosa sta facendo.;\
+    FAVORE=Il fratello dei briganti;LUOGO=BOSCO;NEMICO=LADRO;NUMERO=3;CAPO=NOME_BRIGANTE;\
+    VITTORIA=La banda di %CAPO% si disperde, e un fratello perplesso viene riportato verso casa.;\
+    RINGRAZIAMENTO=Mi guarda ancora male, ma almeno mi guarda da vicino. È un inizio.;\
+    LEALTA=CARISMA VARIAZIONE_FISSA 2;\
+    LEALE=%PERSONAGGIO% parla con una nuova dolcezza, e chi ascolta si ferma volentieri.
+    CHIAVE=LA_POZIONE_SBAGLIATA;\
+    CONFIDENZA=Una maga mi ha venduto una pozione che doveva darmi coraggio. Mi ha fatto solo starnutire per tre giorni.;\
+    BATTUTA=Hai chiesto il rimborso?;\
+    RISPOSTA=Mi ha risposto con un incantesimo. Piccolo, ma ancora lo sento ogni volta che piove.;\
+    FAVORE=La pozione sbagliata;LUOGO=ROVINE;NEMICO=MAGA;NUMERO=1;\
+    VITTORIA=La maga restituisce il rimborso, con un inchino e un fiocco di scintille.;\
+    RINGRAZIAMENTO=Rimborsato, e con gli interessi. Ho la testa più sveglia che mai.;\
+    LEALTA=INTELLIGENZA VARIAZIONE_FISSA 2;\
+    LEALE=Qualcosa nella mente di %PERSONAGGIO% si fa chiaro, e le idee tornano in fila.
+    CHIAVE=IL_PONTE_DEL_PEDAGGIO;\
+    CONFIDENZA=Un troll chiede il pedaggio su un ponte che non è suo. Il ponte porta al villaggio dove vive la mia famiglia.;\
+    BATTUTA=Quanto vuole?;\
+    RISPOSTA=Tutto quello che si ha in tasca, più un'altra cosa che non capisco bene. Preferisco non scoprirlo.;\
+    FAVORE=Il ponte del pedaggio;LUOGO=BOSCO;NEMICO=TROLL;NUMERO=2;\
+    VITTORIA=I due troll lasciano il ponte, e per la prima volta qualcuno lo attraversa gratis.;\
+    RINGRAZIAMENTO=Il ponte è libero. Il villaggio vi deve un banchetto, e io mi occuperò di ricordarglielo.;\
+    LEALTA=PARATA VARIAZIONE_PERCENTUALE 10;\
+    LEALE=%PERSONAGGIO% si sente al sicuro anche dove i colpi arrivano fitti.
+    CHIAVE=I_GOBLIN_DEL_MERCATO;\
+    CONFIDENZA=Una banda di goblin svuota ogni mercoledì il carretto del mio vicino. Sono mesi. Il mercoledì ormai lo temo.;\
+    BATTUTA=Hanno un capo?;\
+    RISPOSTA=Credo di sì. È quello che grida più forte, ma io li ho visti solo di schiena e di corsa.;\
+    FAVORE=I goblin del mercato;LUOGO=BOSCO;NEMICO=GOBLIN;NUMERO=5;CAPO=SI;\
+    VITTORIA=%CAPO% e i suoi goblin non svuoteranno più nessun carretto di mercoledì.;\
+    RINGRAZIAMENTO=Il mio vicino vi manda una torta. Io, più modestamente, vi mando la mia riconoscenza.;\
+    LEALTA=FURTIVITA VARIAZIONE_FISSA 1;\
+    LEALE=%PERSONAGGIO% si muove con una nuova leggerezza, quasi senza far rumore.
+    CHIAVE=LO_SPIRITO_DEL_POZZO;\
+    CONFIDENZA=Nel pozzo del mio villaggio abita qualcuno che non risponde mai. Da anni lo ascolto, e non ho mai capito se è arrabbiato.;\
+    BATTUTA=Vuoi che gli parliamo?;\
+    RISPOSTA=Il pozzo ormai è fra delle rovine, e lui si è fatto più inquieto. Vorrei che trovasse pace.;\
+    FAVORE=Lo spirito del pozzo;LUOGO=ROVINE;NEMICO=SPIRITO;NUMERO=1;\
+    VITTORIA=Lo spirito del pozzo si dissolve in una brezza fresca, e l'acqua sembra più pulita.;\
+    RINGRAZIAMENTO=Chissà se ora ci risponde. In ogni caso, almeno non ci guarderà più così.;\
+    LEALTA=SOGGEZIONE VARIAZIONE_FISSA 1;\
+    LEALE=Quando %PERSONAGGIO% parla, anche i più duri ascoltano in silenzio.
+    CHIAVE=IL_MINOTAURO_DEL_LABIRINTO;\
+    CONFIDENZA=Ho scommesso che avrei attraversato un labirinto in una notte. Nessuno mi aveva detto che dentro c'era un minotauro.;\
+    BATTUTA=Hai perso la scommessa?;\
+    RISPOSTA=Ho perso un po' di dignità e una scarpa. La scommessa è ancora valida, ma devo sistemare prima il minotauro.;\
+    FAVORE=Il minotauro del labirinto;LUOGO=GROTTA;NEMICO=MINOTAURO;NUMERO=1;\
+    VITTORIA=Il minotauro cade, e il labirinto sembra improvvisamente molto più piccolo.;\
+    RINGRAZIAMENTO=La scommessa è vinta. Ho anche ritrovato la scarpa, ma non so dove sia l'altra.;\
+    LEALTA=PRECISIONE VARIAZIONE_FISSA 1;\
+    LEALE=%PERSONAGGIO% prende la mira con occhio sicuro, e i colpi vanno a segno.
+    CHIAVE=LE_ARPIE_DEL_CAMPANILE;\
+    CONFIDENZA=Le arpie hanno fatto il nido sul campanile del mio paese. Le campane suonano stonate da quando ci sono loro.;\
+    BATTUTA=E il parroco cosa dice?;\
+    RISPOSTA=Dice che sono una prova. Io dico che sono tre, e che servono dei volontari con meno pazienza.;\
+    FAVORE=Le arpie del campanile;LUOGO=ROVINE;NEMICO=ARPIA;NUMERO=3;\
+    VITTORIA=Le arpie lasciano il campanile, e per un momento il paese resta in ascolto del silenzio.;\
+    RINGRAZIAMENTO=Le campane suoneranno di nuovo giuste. Domenica una la suono per voi.;\
+    LEALTA=VELOCITA VARIAZIONE_FISSA 1;\
+    LEALE=%PERSONAGGIO% ha un'andatura più svelta, come se il vento spingesse a ogni passo.
+    CHIAVE=IL_CAPOBANDA_DEL_GUADO;\
+    CONFIDENZA=Un hobgoblin controlla un guado che usavo ogni giorno. Ora per tornare a casa faccio un giro di mezza giornata.;\
+    BATTUTA=E vuoi tornare al vecchio guado?;\
+    RISPOSTA=Voglio tornare a casa prima di cena. Se per farlo l'hobgoblin deve spostarsi, pazienza per lui.;\
+    FAVORE=Il guado dell'hobgoblin;LUOGO=PALUDE;NEMICO=HOBGOBLIN;NUMERO=3;CAPO=SI;\
+    VITTORIA=%CAPO% e la sua banda abbandonano il guado, e il giro di mezza giornata torna ad essere un ricordo.;\
+    RINGRAZIAMENTO=Stasera ceno a casa. Non lo faccio da settimane, e la cena brucerà di sicuro, ma sarà mia.;\
+    LEALTA=SALUTE VARIAZIONE_PERCENTUALE 10;\
+    LEALE=%PERSONAGGIO% respira più a fondo, e la fatica pesa meno.
+    CHIAVE=LE_ERBE_PER_IL_NONNO;\
+    CONFIDENZA=Il mio nonno ha la tosse da tre inverni. L'erba che lo guarisce cresce solo in un bosco, e ormai è quasi finita.;\
+    BATTUTA=Quante ce ne servono?;\
+    RISPOSTA=Quattro mazzetti, freschi. L'erba amara è difficile da trovare, ma ha un odore che non si dimentica.;\
+    FAVORE=Le erbe per il nonno;GENERE=F;INGREDIENTE=erba amara;INGREDIENTI=erbe amare;DOVE=LUOGHI BOSCO;QUANTITA=4;\
+    VITTORIA=Quattro mazzetti di erba amara, freschi e profumati: la tosse del nonno ha i giorni contati.;\
+    RINGRAZIAMENTO=Gli preparo subito un infuso. Lui dirà che è troppo amaro, e sarà la prova che funziona.;\
+    LEALTA=RIGENERAZIONE_SALUTE VARIAZIONE_PERCENTUALE 10;\
+    LEALE=Le ferite di %PERSONAGGIO% si rimarginano un poco più in fretta di prima.
+    CHIAVE=LE_PIETRE_DEL_FORNO;\
+    CONFIDENZA=Voglio costruire un forno, e le pietre migliori sono quelle levigate dall'acqua. Ne servono tante, e io ne ho trovate due.;\
+    BATTUTA=Quante te ne servono?;\
+    RISPOSTA=Cinque belle lisce, di quelle che si trovano in una palude. Dicono che il pane viene meglio, ma io lo faccio per l'orgoglio.;\
+    FAVORE=Le pietre del forno;GENERE=F;INGREDIENTE=pietra levigata;INGREDIENTI=pietre levigate;DOVE=LUOGHI PALUDE;QUANTITA=5;\
+    VITTORIA=Cinque pietre levigate, lisce come uova: un forno che farà invidia a tutto il paese.;\
+    RINGRAZIAMENTO=Il primo pane lo porto a voi. Se è crudo, dite che era per il pepe.;\
+    LEALTA=CARICO_MASSIMO VARIAZIONE_PERCENTUALE 10;\
+    LEALE=%PERSONAGGIO% solleva lo zaino con una nuova facilità, e il peso sembra diminuito.
+    CHIAVE=LE_PENNE_PER_LE_FRECCE;\
+    CONFIDENZA=Le frecce con le penne d'arpia volano dritte come una promessa. Le mie, con le penne di gallina, volano dove vogliono.;\
+    BATTUTA=Quante penne ti servono?;\
+    RISPOSTA=Quattro buone, da ali che sappiano ancora il fatto loro. Ovviamente l'arpia non te le regala.;\
+    FAVORE=Le penne per le frecce;GENERE=F;INGREDIENTE=penna d'arpia;INGREDIENTI=penne d'arpia;DOVE=NEMICI ARPIA;QUANTITA=4;\
+    VITTORIA=Quattro penne d'arpia, robuste e lucide: le frecce andranno dove devono.;\
+    RINGRAZIAMENTO=Le frecce nuove volano benissimo. Dritte anche contro il vento, e perfino contro chi mi prende in giro.;\
+    LEALTA=CRITICO VARIAZIONE_FISSA 1;\
+    LEALE=%PERSONAGGIO% trova più spesso il punto giusto per colpire.
+    CHIAVE=IL_MIELE_DEL_BOSCO;\
+    CONFIDENZA=Dicono che il miele selvatico faccia bene al cuore. Il mio è un po' stanco da quando ho smesso di cantare in pubblico.;\
+    BATTUTA=Dove si trova?;\
+    RISPOSTA=Nei boschi e nelle radure, dove le api costruiscono i favi lontano dagli occhi. Ne bastano tre.;\
+    FAVORE=Il miele del bosco;GENERE=M;INGREDIENTE=favo di miele selvatico;INGREDIENTI=favi di miele selvatico;DOVE=LUOGHI BOSCO RADURA;QUANTITA=3;\
+    VITTORIA=Tre favi di miele selvatico, dorati e pesanti, ancora tiepidi di sole.;\
+    RINGRAZIAMENTO=Lo assaggio stasera. Se mi ritorna la voce, vi canto qualcosa. Una cosa breve.;\
+    LEALTA=CONTRATTAZIONE VARIAZIONE_FISSA 1;\
+    LEALE=%PERSONAGGIO% ha una parola dolce per ogni affare, e i mercanti se ne accorgono.
+    CHIAVE=IL_CRISTALLO_PER_IL_MEDAGLIONE;\
+    CONFIDENZA=Ho un medaglione vuoto che era di una persona a cui voglio bene. Vorrei metterci un cristallo, ma uno vero, di quelli che brillano al buio.;\
+    BATTUTA=Dove si trova un cristallo così?;\
+    RISPOSTA=In una grotta qui vicino, dove la roccia è piena di vene chiare. Ne servono tre, e li riconosco al primo sguardo.;\
+    FAVORE=Il cristallo per il medaglione;GENERE=M;INGREDIENTE=cristallo di rocca;INGREDIENTI=cristalli di rocca;DOVE=LUOGHI GROTTA;QUANTITA=3;\
+    VITTORIA=Tre cristalli di rocca, limpidi come acqua gelata: il medaglione non sarà più vuoto.;\
+    RINGRAZIAMENTO=Il medaglione brilla come non faceva da anni. Vi ringrazio più di quanto sappia dire.;\
+    LEALTA=RESISTENZA_MAGICA VARIAZIONE_PERCENTUALE 10;\
+    LEALE=Un tenue bagliore avvolge %PERSONAGGIO%, e la magia sembra scivolare via.
+    CHIAVE=I_FUNGHI_DELLA_ZUPPA;\
+    CONFIDENZA=Mia zia faceva una zuppa di funghi che toglieva ogni pensiero. Non ho mai trovato i funghi giusti, e lei non ha mai detto dove li coglieva.;\
+    BATTUTA=Dove possono essere?;\
+    RISPOSTA=Dove l'aria è umida e nessuno cammina volentieri: nelle paludi o nelle grotte. Quattro funghi notturni, di quelli che quasi si illuminano.;\
+    FAVORE=I funghi della zuppa;GENERE=M;INGREDIENTE=fungo notturno;INGREDIENTI=funghi notturni;DOVE=LUOGHI PALUDE GROTTA;QUANTITA=4;\
+    VITTORIA=Quattro funghi notturni, pallidi e profumati: la zuppa della zia ha la sua occasione.;\
+    RINGRAZIAMENTO=La zuppa è venuta quasi come la sua. Ci mancava solo un pizzico di rimprovero.;\
+    LEALTA=DESTREZZA VARIAZIONE_FISSA 2;\
+    LEALE=Le mani di %PERSONAGGIO% si fanno più agili, e ogni gesto è più preciso.
+    CHIAVE=LA_VEGLIA_DEL_VECCHIO_AMICO;\
+    CONFIDENZA=Un vecchio amico è sepolto fra le rovine di una cappella. Gli avevo promesso di vegliarlo, e non l'ho mai fatto.;\
+    BATTUTA=Possiamo vegliarlo insieme.;\
+    RISPOSTA=Tre sere, una ogni tanto. Gli racconteremo le novità, e lui farà finta di non sapere già tutto.;\
+    FAVORE=La veglia del vecchio amico;LUOGO=ROVINE;VISITE=3;ORE=14;\
+    VEGLIA=Fra le rovine c'è un'aria quieta. %PERSONAGGIO% siede accanto alla lapide e racconta, a bassa voce, le ultime novità.;\
+    VITTORIA=La terza veglia è finita: il vecchio amico saprà che non è stato dimenticato.;\
+    RINGRAZIAMENTO=Ora la promessa è mantenuta. Lui, ci scommetto, ha riso almeno una volta.;\
+    LEALTA=PERCEZIONE VARIAZIONE_FISSA 2;\
+    LEALE=%PERSONAGGIO% ascolta il mondo con più attenzione, e niente sfugge ai suoi sensi.
+    CHIAVE=IL_FUOCO_DEL_VILLAGGIO;\
+    CONFIDENZA=Ogni anno accendo un fuoco nel bosco per il mio villaggio, che non esiste più. Quest'anno non ho la forza di farlo senza aiuto.;\
+    BATTUTA=Che bisogna fare?;\
+    RISPOSTA=Tornare due volte, a qualche ora di distanza, e tenere vivo il fuoco. Bastano pazienza e un po' di legna.;\
+    FAVORE=Il fuoco del villaggio;LUOGO=BOSCO;VISITE=2;ORE=10;\
+    VEGLIA=Il fuoco crepita fra gli alberi. %PERSONAGGIO% aggiunge un ramo e lo guarda bruciare, in silenzio.;\
+    VITTORIA=Il fuoco ha ardito fino all'alba: per questa volta, il villaggio è ricordato.;\
+    RINGRAZIAMENTO=Non pensavo di rivederlo ardere così. Grazie per aver tenuto vivo il fuoco, e con lui un ricordo.;\
+    LEALTA=FORTUNA VARIAZIONE_FISSA 2;\
+    LEALE=Un calore gentile accompagna %PERSONAGGIO%, e la sorte sembra tenere compagnia.
+    CHIAVE=LA_LANTERNA_NELLA_GROTTA;\
+    CONFIDENZA=Una volta ho smarrito la strada in una grotta per una notte intera. Una lanterna lontana mi ha indicato l'uscita, e ancora non so chi l'avesse accesa.;\
+    BATTUTA=Vuoi accenderne una anche tu?;\
+    RISPOSTA=Sì. Per il prossimo che si perde. Due volte, a distanza di qualche ora, e che resti accesa.;\
+    FAVORE=La lanterna nella grotta;LUOGO=GROTTA;VISITE=2;ORE=12;\
+    VEGLIA=La lanterna dondola appena nel buio. %PERSONAGGIO% la regola con cura, perché faccia più luce possibile.;\
+    VITTORIA=La lanterna brilla sull'ingresso della grotta: chiunque si perda saprà da che parte è l'uscita.;\
+    RINGRAZIAMENTO=Spero che qualcuno la veda. Se non succede, avrà comunque scaldato la grotta.;\
+    LEALTA=SALUTE VARIAZIONE_PERCENTUALE 10;\
+    LEALE=Una luce interiore si accende in %PERSONAGGIO%, che affronta il buio con più sicurezza.
+    CHIAVE=LA_NOTTE_DELLE_LUCCIOLE;\
+    CONFIDENZA=Quando avevo pochi anni, nella radura vicino a casa le lucciole danzavano ogni estate. Ora non si vedono più, e mi manca.;\
+    BATTUTA=Cosa le farebbe tornare?;\
+    RISPOSTA=Qualcuno che sieda nella radura e le aspetti, due sere, con pazienza. Dicono che le lucciole tornino dove c'è compagnia.;\
+    FAVORE=La notte delle lucciole;LUOGO=RADURA;VISITE=2;ORE=18;\
+    VEGLIA=La radura è buia e silenziosa. %PERSONAGGIO% aspetta con pazienza, e per un attimo una luce tremola nell'erba.;\
+    VITTORIA=Le lucciole sono tornate nella radura, e danzano come se non se ne fossero mai andate.;\
+    RINGRAZIAMENTO=Le ho riviste. Ho riso e ho pianto un po', ma in modo piacevole.;\
+    LEALTA=CARISMA VARIAZIONE_FISSA 2;\
+    LEALE=%PERSONAGGIO% sorride con una luce nuova, e chi guarda sorride di rimando.
+    CHIAVE=IL_PATTO_CON_LA_PALUDE;\
+    CONFIDENZA=Anni fa ho promesso alla palude, a bassa voce, che sarei tornato per ringraziarla di avermi lasciato passare. Non ho mai mantenuto la promessa.;\
+    BATTUTA=Ringraziare una palude?;\
+    RISPOSTA=Le paludi sono permalose. Due visite, con una sosta lunga in mezzo, e un po' di silenzio. Non chiede altro.;\
+    FAVORE=Il patto con la palude;LUOGO=PALUDE;VISITE=2;ORE=20;\
+    VEGLIA=La nebbia sale dall'acqua. %PERSONAGGIO% resta immobile, e la palude sembra quasi ricambiare il saluto.;\
+    VITTORIA=La seconda visita è finita: la palude è ringraziata, e la nebbia si apre come un sipario.;\
+    RINGRAZIAMENTO=Ora siamo pari. Dentro di me la palude fa meno paura, e per prima cosa lascio il mantello ad asciugare.;\
+    LEALTA=COSTITUZIONE VARIAZIONE_FISSA 2;\
+    LEALE=%PERSONAGGIO% sembra più resistente al freddo e all'umido, e a tutto ciò che viene dopo.
 
 // ---------------------------------------------------------------------------------------------
 // Tornei (vedi IlTorneo e TorneoRichiesto)

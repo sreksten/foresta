@@ -48,12 +48,13 @@ class ScenarioLealtaTest {
     @Test
     void ogniLealtaSiLegge() {
         Set<String> chiavi = new HashSet<>();
-        for (int i = 0; i < 200; i++) {
+        // Con 27 problemi e tante estrazioni escono tutti, e ognuno si legge: righe sbagliate (campi, enumerati, modificatori) vengono fuori qui
+        for (int i = 0; i < 1500; i++) {
             LealtaRichiesta lealta = LealtaRichiesta.da(ProduttoreDiMissioniCasuale.rigaDiMissioni(LaLealta.LEALTA));
             assertEquals(LealtaRichiesta.NOTA, lealta.nuovoModificatore().getNote());
             chiavi.add(lealta.getChiave());
         }
-        assertTrue(chiavi.size() >= 6, String.valueOf(chiavi));
+        assertTrue(chiavi.size() >= 27, chiavi.size() + ": " + chiavi);
         assertEquals(FavoreRichiesto.Tipo.COMBATTIMENTO, LealtaRichiesta.da(GOBLIN).getFavore().getTipo());
         assertThrows(IllegalArgumentException.class, () -> LealtaRichiesta.da(GOBLIN.replace("LEALTA=FORZA VARIAZIONE_FISSA 2;", "")));
         assertThrows(IllegalArgumentException.class, () -> LealtaRichiesta.da(GOBLIN + ";VISITE=2;ORE=3;VEGLIA=x"));
