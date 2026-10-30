@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.abilita;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
 
 import com.threeamigos.foresta.tipi.TipoAzione;
@@ -23,7 +24,7 @@ public class Rigenerazione implements Abilita {
 	private final int saggezza;
 
 	public Rigenerazione(Personaggio utilizzatore) {
-		this.saggezza = utilizzatore.getSaggezza();
+		this.saggezza = utilizzatore.get(TipoAttributo.SAGGEZZA);
 	}
 
 	@Override

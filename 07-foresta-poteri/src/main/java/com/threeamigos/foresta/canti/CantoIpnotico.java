@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.canti;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
@@ -47,8 +48,8 @@ public class CantoIpnotico implements Canto {
 	 * UrloDellaBanshee).
 	 */
 	public static double probabilitaDiCedere(Personaggio cantore, Personaggio avversario, double moltiplicatoreSoggezione) {
-		double soggezione = Math.max(0, cantore.getSoggezione()) * moltiplicatoreSoggezione;
-		double coraggio = Math.max(0, avversario.getCoraggio());
+		double soggezione = Math.max(0, cantore.get(TipoAttributo.SOGGEZIONE)) * moltiplicatoreSoggezione;
+		double coraggio = Math.max(0, avversario.get(TipoAttributo.CORAGGIO));
 		if (soggezione + coraggio <= 0) {
 			return 0.0d;
 		}

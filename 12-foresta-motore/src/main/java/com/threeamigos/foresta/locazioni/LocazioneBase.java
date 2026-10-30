@@ -860,10 +860,10 @@ public abstract class LocazioneBase implements Locazione {
 				}
 				Personaggio personaggio = gruppo.getPersonaggio(azione.getIndicePersonaggio());
 				int tiroDelDado = Dado.tira(CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA);
-				int carismaNelTiro = Math.min(personaggio.getCarisma(), CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA);
-				Logger.log(() -> "Carisma personaggio: " + personaggio.getCarisma() + " (nel tiro " + carismaNelTiro + "); tiro del dado: " + tiroDelDado);
+				int carismaNelTiro = Math.min(personaggio.get(TipoAttributo.CARISMA), CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA);
+				Logger.log(() -> "Carisma personaggio: " + personaggio.get(TipoAttributo.CARISMA) + " (nel tiro " + carismaNelTiro + "); tiro del dado: " + tiroDelDado);
 				if (carismaNelTiro > tiroDelDado) {
-					personaggio.addCarisma(1);
+					personaggio.add(TipoAttributo.CARISMA, 1);
 					haStrettoAmicizia = true;
 					// Come con la corruzione: con l'amicizia l'oggetto non si prende, e sparisce subito
 					setOggetto(null);
@@ -1941,9 +1941,9 @@ public abstract class LocazioneBase implements Locazione {
 		List<Personaggio> vivi = gruppo.getPersonaggiVivi();
 		OptionalInt ladro = vivi.stream()
 				.filter(p -> p.getClasse() == TipoPersonaggio.LADRO || p.getClasse() == TipoPersonaggio.LADRA)
-				.mapToInt(Personaggio::getFurtivita).max();
-		int furtivita = ladro.isPresent() ? ladro.getAsInt() : vivi.stream().mapToInt(Personaggio::getFurtivita).min().orElse(0);
-		int percezione = avversari.getPersonaggiVivi().stream().mapToInt(Personaggio::getPercezione).max().orElse(0);
+				.mapToInt(p -> p.get(TipoAttributo.FURTIVITA)).max();
+		int furtivita = ladro.isPresent() ? ladro.getAsInt() : vivi.stream().mapToInt(p -> p.get(TipoAttributo.FURTIVITA)).min().orElse(0);
+		int percezione = avversari.getPersonaggiVivi().stream().mapToInt(p -> p.get(TipoAttributo.PERCEZIONE)).max().orElse(0);
 		int probabilita = PASSAGGIO_BASE + PASSAGGIO_PER_PUNTO * (furtivita - percezione)
 				- PASSAGGIO_PER_COMPAGNO * Math.max(0, vivi.size() - 1);
 		if (ora < ORA_DELL_ALBA || ora > ORA_DEL_TRAMONTO) {

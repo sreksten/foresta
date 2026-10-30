@@ -314,7 +314,7 @@ public class TestLogoramentoInizioPartita {
                 Personaggio guerriero = FabbricaPersonaggi.crea(TipoPersonaggio.GUERRIERO, livello);
                 Equipaggiamento.tipiciPer(TipoPersonaggio.GUERRIERO).get(0).equipaggia(guerriero);
                 out.printf("== livello %d: Guerriero CAVALIERE salute %d, forza %d, parata %d, res. magica %d%n", livello,
-                        guerriero.getSaluteMassima(), guerriero.getForza(), guerriero.getParata(), guerriero.getResistenzaMagica());
+                        guerriero.getSaluteMassima(), guerriero.get(TipoAttributo.FORZA), guerriero.get(TipoAttributo.PARATA), guerriero.get(TipoAttributo.RESISTENZA_MAGICA));
                 for (TipoPersonaggio classe : boss) {
                     Personaggio b = FabbricaPersonaggi.crea(classe, livello);
                     StringBuilder armi = new StringBuilder();
@@ -326,7 +326,7 @@ public class TestLogoramentoInizioPartita {
                             classe, 1, livello, livello, 500);
                     out.printf("%-17s salute %4d for %3d int %3d par %3d resM %3d bersagli %d armi [%s] | colpisce %4.1f%% danno %5.1f "
                                     + "| subisce: colpito %4.1f%% danno %5.1f | vince %5.1f%% in %4.1f turni%n",
-                            classe, b.getSaluteMassima(), b.getForza(), b.getIntelligenza(), b.getParata(), b.getResistenzaMagica(),
+                            classe, b.getSaluteMassima(), b.get(TipoAttributo.FORZA), b.get(TipoAttributo.INTELLIGENZA), b.get(TipoAttributo.PARATA), b.get(TipoAttributo.RESISTENZA_MAGICA),
                             b.getBersagli(), armi.toString().trim(), r.tassoColpireMostro, r.dannoMedioMostro,
                             r.tassoColpirePg, r.dannoMedioPg, r.winRatePg, r.mediaTurni);
                 }
@@ -347,10 +347,10 @@ public class TestLogoramentoInizioPartita {
                 Equipaggiamento.tipiciPer(TipoPersonaggio.GUERRIERO).get(0).equipaggia(g);
                 Personaggio l = FabbricaPersonaggi.crea(TipoPersonaggio.LICH, livello);
                 out.printf("L%-2d GUERRIERO prec %d des %d vel %d par %d resM %d sag %d int %d salute %d | LICH prec %d des %d vel %d par %d resM %d sag %d int %d salute %d tipo %s%n",
-                        livello, g.getPrecisione(), g.getDestrezza(), g.getVelocita(), g.getParata(), g.getResistenzaMagica(),
-                        g.getSaggezza(), g.getIntelligenza(), g.getSaluteMassima(),
-                        l.getPrecisione(), l.getDestrezza(), l.getVelocita(), l.getParata(), l.getResistenzaMagica(),
-                        l.getSaggezza(), l.getIntelligenza(), l.getSaluteMassima(), l.getArmaEquipaggiata().getTipoDanno().getCategoriaDanno());
+                        livello, g.get(TipoAttributo.PRECISIONE), g.get(TipoAttributo.DESTREZZA), g.get(TipoAttributo.VELOCITA), g.get(TipoAttributo.PARATA), g.get(TipoAttributo.RESISTENZA_MAGICA),
+                        g.get(TipoAttributo.SAGGEZZA), g.get(TipoAttributo.INTELLIGENZA), g.getSaluteMassima(),
+                        l.get(TipoAttributo.PRECISIONE), l.get(TipoAttributo.DESTREZZA), l.get(TipoAttributo.VELOCITA), l.get(TipoAttributo.PARATA), l.get(TipoAttributo.RESISTENZA_MAGICA),
+                        l.get(TipoAttributo.SAGGEZZA), l.get(TipoAttributo.INTELLIGENZA), l.getSaluteMassima(), l.getArmaEquipaggiata().getTipoDanno().getCategoriaDanno());
             }
         } finally {
             System.setOut(out);
@@ -364,13 +364,13 @@ public class TestLogoramentoInizioPartita {
         System.setOut(NULL_STREAM);
         try {
             Personaggio g = nuovoProtagonista(TipoPersonaggio.GUERRIERO);
-            out.printf("Guerriero: salute %d, res. magica %d, saggezza %d%n", g.getSaluteMassima(), g.getResistenzaMagica(), g.getSaggezza());
+            out.printf("Guerriero: salute %d, res. magica %d, saggezza %d%n", g.getSaluteMassima(), g.get(TipoAttributo.RESISTENZA_MAGICA), g.get(TipoAttributo.SAGGEZZA));
             for (TipoPersonaggio classe : MOSTRI_DEL_BOSCO) {
                 Personaggio m = FabbricaPersonaggi.crea(classe, 1);
                 if (!m.isMagico()) {
                     continue;
                 }
-                StringBuilder sb = new StringBuilder(String.format("%-13s magia %3d int %2d:", classe, m.getMagia(), m.getIntelligenza()));
+                StringBuilder sb = new StringBuilder(String.format("%-13s magia %3d int %2d:", classe, m.getMagia(), m.get(TipoAttributo.INTELLIGENZA)));
                 for (TipoIncantesimo ci : TipoIncantesimo.values()) {
                     if (ci.getCategoriaIncantesimo() != CategoriaIncantesimo.MALEFICO || ci.getCostoLancio() > m.getMagia()) {
                         continue;

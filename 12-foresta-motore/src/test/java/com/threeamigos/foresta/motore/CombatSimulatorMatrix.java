@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
@@ -158,7 +159,7 @@ public class CombatSimulatorMatrix {
                 stalli++;
             }
             turniTotali += turni;
-            stanchezzaTotaleFinale += pg.getStanchezza();
+            stanchezzaTotaleFinale += pg.get(TipoAttributo.STANCHEZZA);
         }
 
         return new RisultatoMatrice(

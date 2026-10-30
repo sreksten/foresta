@@ -353,7 +353,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	 * Nelle botteghe il gruppo manda avanti chi sa trattare meglio: la CONTRATTAZIONE più alta tra i personaggi vivi.
 	 */
 	public final int getContrattazione() {
-		return getPersonaggiVivi().stream().mapToInt(Personaggio::getContrattazione).max().orElse(0);
+		return getPersonaggiVivi().stream().mapToInt(p -> p.get(TipoAttributo.CONTRATTAZIONE)).max().orElse(0);
 	}
 
 	@Override

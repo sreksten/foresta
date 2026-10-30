@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.tipi.TipoDanno;
@@ -123,7 +124,7 @@ public class ArmaNaturale implements Arma {
     public int getDanni() {
         // Estraiamo la statistica corretta (Forza o Intelligenza) per calcolare il bonus
         int statRiferimento = tipoAttacco.scalaSuForza ?
-                proprietario.getForza() : proprietario.getIntelligenza();
+                proprietario.get(TipoAttributo.FORZA) : proprietario.get(TipoAttributo.INTELLIGENZA);
 
         // Applichiamo i Diminishing Returns tramite radice quadrata sulla statistica.
         // Evita che i mostri con 100 di Forza facciano istantaneamente kill in un colpo.

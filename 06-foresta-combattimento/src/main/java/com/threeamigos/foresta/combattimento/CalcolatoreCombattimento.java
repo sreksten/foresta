@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.combattimento;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
 import com.threeamigos.foresta.tipi.CostantiIncantesimi;
@@ -78,63 +79,63 @@ public class CalcolatoreCombattimento {
         if (tipoDanno == CategoriaDanno.FISICO) {
             // --- CALCOLO ASSE FISICO ---
             // Attaccante usa la coordinazione occhio-mano (Precisione + Destrezza)
-            attaccoTotale = attaccante.getPrecisione() + attaccante.getDestrezza();
+            attaccoTotale = attaccante.get(TipoAttributo.PRECISIONE) + attaccante.get(TipoAttributo.DESTREZZA);
             if (Logger.isAttivo()) {
             	Logger.log(String.format(Locale.ROOT, "[FISICO] Attacco totale (PRECISIONE %d + DESTREZZA %d): %f",
-	                    attaccante.getPrecisione(), attaccante.getDestrezza(), attaccoTotale));
+	                    attaccante.get(TipoAttributo.PRECISIONE), attaccante.get(TipoAttributo.DESTREZZA), attaccoTotale));
             }
 
             // Il difensore contrasta fisicamente (Velocità + Destrezza) modificata dalla PARATA
-            difesaTotale = difensore.getVelocita() + difensore.getDestrezza() + (difensore.getParata() * 0.5d);
+            difesaTotale = difensore.get(TipoAttributo.VELOCITA) + difensore.get(TipoAttributo.DESTREZZA) + (difensore.get(TipoAttributo.PARATA) * 0.5d);
             if (Logger.isAttivo()) {
             	Logger.log(String.format(Locale.ROOT, "[FISICO] Difesa totale (VELOCITA %d + DESTREZZA %d + 50%% PARATA %d): %f",
-	                    difensore.getVelocita(), difensore.getDestrezza(), difensore.getParata(), difesaTotale));
+	                    difensore.get(TipoAttributo.VELOCITA), difensore.get(TipoAttributo.DESTREZZA), difensore.get(TipoAttributo.PARATA), difesaTotale));
             }
 
         } else {
             // --- CALCOLO ASSE MAGICO/ELEMENTALE ---
             // Chi lancia magie si affida al controllo mentale e alla potenza magica (Intelligenza + Precisione)
-            attaccoTotale = attaccante.getPrecisione() + attaccante.getIntelligenza();
+            attaccoTotale = attaccante.get(TipoAttributo.PRECISIONE) + attaccante.get(TipoAttributo.INTELLIGENZA);
             if (Logger.isAttivo()) {
             	Logger.log(String.format(Locale.ROOT, "[MAGICO] Attacco totale (PRECISIONE %d + INTELLIGENZA %d): %f",
-	                    attaccante.getPrecisione(), attaccante.getIntelligenza(), attaccoTotale));
+	                    attaccante.get(TipoAttributo.PRECISIONE), attaccante.get(TipoAttributo.INTELLIGENZA), attaccoTotale));
             }
 
             // Chi subisce magie si affida al filtro difensivo mistico e alla stabilità mentale (Resistenza Magica + Saggezza)
-            difesaTotale = difensore.getResistenzaMagica() + difensore.getSaggezza();
+            difesaTotale = difensore.get(TipoAttributo.RESISTENZA_MAGICA) + difensore.get(TipoAttributo.SAGGEZZA);
             if (Logger.isAttivo()) {
             	Logger.log(String.format(Locale.ROOT, "[MAGICO] Difesa totale (RESISTENZA_MAGICA %d + SAGGEZZA %d): %f",
-	                    difensore.getResistenzaMagica(), difensore.getSaggezza(), difesaTotale));
+	                    difensore.get(TipoAttributo.RESISTENZA_MAGICA), difensore.get(TipoAttributo.SAGGEZZA), difesaTotale));
             }
         }
 
         // 3. CONTROLLO EFFETTI DI STATO SULL'ATTACCANTE (CONFUSO / ACCECATO / STANCHEZZA)
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)) {
-            attaccoTotale = attaccoTotale * (8.0d + Math.min(2, attaccante.getSaggezza() / 20.0d)) / 10.0d;
+            attaccoTotale = attaccoTotale * (8.0d + Math.min(2, attaccante.get(TipoAttributo.SAGGEZZA) / 20.0d)) / 10.0d;
             if (Logger.isAttivo()) {
-            	Logger.log(String.format(Locale.ROOT, "Attacco dopo effetto CONFUSO (mitigato da SAGGEZZA %d): %f", attaccante.getSaggezza(), attaccoTotale));
+            	Logger.log(String.format(Locale.ROOT, "Attacco dopo effetto CONFUSO (mitigato da SAGGEZZA %d): %f", attaccante.get(TipoAttributo.SAGGEZZA), attaccoTotale));
             }
         }
 
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.ACCECATO)) {
             if (tipoDanno == CategoriaDanno.FISICO) {
                 // La cecità devasta la mira fisica
-                double penalitaAccecato = (attaccoTotale / 2.0d) * (1.0d - Math.min(1.0d, attaccante.getPercezione() / 100.0d));
+                double penalitaAccecato = (attaccoTotale / 2.0d) * (1.0d - Math.min(1.0d, attaccante.get(TipoAttributo.PERCEZIONE) / 100.0d));
                 attaccoTotale -= penalitaAccecato;
             } else {
                 // Per le magie, la cecità influisce meno perché il mago si guida con la Percezione dei flussi magici
-                double penalitaAccecatoMagico = (attaccoTotale / 4.0d) * (1.0d - Math.min(1.0d, attaccante.getPercezione() / 100.0d));
+                double penalitaAccecatoMagico = (attaccoTotale / 4.0d) * (1.0d - Math.min(1.0d, attaccante.get(TipoAttributo.PERCEZIONE) / 100.0d));
                 attaccoTotale -= penalitaAccecatoMagico;
             }
             if (Logger.isAttivo()) {
-            	Logger.log(String.format(Locale.ROOT, "Attacco dopo effetto ACCECATO (mitigato da PERCEZIONE %d): %f", attaccante.getPercezione(), attaccoTotale));
+            	Logger.log(String.format(Locale.ROOT, "Attacco dopo effetto ACCECATO (mitigato da PERCEZIONE %d): %f", attaccante.get(TipoAttributo.PERCEZIONE), attaccoTotale));
             }
         }
 
         // Penalità di STANCHEZZA sull'attaccante
-        attaccoTotale -= attaccante.getStanchezza() * 2.0d;
+        attaccoTotale -= attaccante.get(TipoAttributo.STANCHEZZA) * 2.0d;
         if (Logger.isAttivo()) {
-        	Logger.log(String.format(Locale.ROOT, "Attacco totale dopo stanchezza (STANCHEZZA %d): %f", attaccante.getStanchezza(), attaccoTotale));
+        	Logger.log(String.format(Locale.ROOT, "Attacco totale dopo stanchezza (STANCHEZZA %d): %f", attaccante.get(TipoAttributo.STANCHEZZA), attaccoTotale));
         }
 
 
@@ -155,18 +156,18 @@ public class CalcolatoreCombattimento {
             // Penalità base del 20%: SAGGEZZA e CORAGGIO (portato ×10 sulla scala dei primari, come per la
             // durata) ne recuperano al massimo metà, così chi è spaventato si difende sempre peggio
             // (moltiplicatore fra 0.8 e 0.9, mai sopra).
-            double mitigazioneSpavento = (Math.min(1.0d, difensore.getSaggezza() / 40.0d)
-                    + Math.min(1.0d, difensore.getCoraggio() * 10.0d / 40.0d)) / 2.0d;
+            double mitigazioneSpavento = (Math.min(1.0d, difensore.get(TipoAttributo.SAGGEZZA) / 40.0d)
+                    + Math.min(1.0d, difensore.get(TipoAttributo.CORAGGIO) * 10.0d / 40.0d)) / 2.0d;
             difesaTotale = difesaTotale * (0.8d + 0.1d * mitigazioneSpavento);
             if (Logger.isAttivo()) {
-            	Logger.log(String.format(Locale.ROOT, "Difesa totale dopo effetto SPAVENTATO (mitigato da SAGGEZZA %d e CORAGGIO %d): %f", difensore.getSaggezza(), difensore.getCoraggio(), difesaTotale));
+            	Logger.log(String.format(Locale.ROOT, "Difesa totale dopo effetto SPAVENTATO (mitigato da SAGGEZZA %d e CORAGGIO %d): %f", difensore.get(TipoAttributo.SAGGEZZA), difensore.get(TipoAttributo.CORAGGIO), difesaTotale));
             }
         }
 
         // Penalità di STANCHEZZA sul difensore (La fatica logora sia i riflessi fisici che la concentrazione magica)
-        difesaTotale -= difensore.getStanchezza() * 2.0d;
+        difesaTotale -= difensore.get(TipoAttributo.STANCHEZZA) * 2.0d;
         if (Logger.isAttivo()) {
-        	Logger.log(String.format(Locale.ROOT, "Difesa totale dopo stanchezza (STANCHEZZA %d): %f", difensore.getStanchezza(), difesaTotale));
+        	Logger.log(String.format(Locale.ROOT, "Difesa totale dopo stanchezza (STANCHEZZA %d): %f", difensore.get(TipoAttributo.STANCHEZZA), difesaTotale));
         }
 
         // 5. CALCOLO DELLA PROBABILITÀ FINALE DI COLPIRE
@@ -321,7 +322,7 @@ public class CalcolatoreCombattimento {
         double danno = arma.getDanni() * livelloDiCombattimento(arma.getLivello());
         for (IncantamentoMD incantamento : arma.getIncantamenti()) {
             danno += incantamento.getDannoBonusFisso() * arma.getLivello()
-                    + attaccante.getIntelligenza() * incantamento.getCoefficienteScala() * moltiplicatoreDanniMagici(attaccante);
+                    + attaccante.get(TipoAttributo.INTELLIGENZA) * incantamento.getCoefficienteScala() * moltiplicatoreDanniMagici(attaccante);
         }
         return danno;
     }
@@ -401,19 +402,19 @@ public class CalcolatoreCombattimento {
         boolean dannoNonFisico = tipoDanno.getCategoriaDanno() == CategoriaDanno.ELEMENTALE || tipoDanno.getCategoriaDanno() == CategoriaDanno.MAGICO;
         Logger.log(() -> "tipoDanno = " + tipoDanno + ", dannoNonFisico = " + dannoNonFisico);
         if (dannoNonFisico) {
-            statOffensiva = attaccante.getIntelligenza();
+            statOffensiva = attaccante.get(TipoAttributo.INTELLIGENZA);
             if (Logger.isAttivo()) {
             	Logger.log("statOffensiva (INTELLIGENZA) = " + statOffensiva);
             }
             // La SAGGEZZA potenzia i danni SACRO
             if (tipoDanno == TipoDanno.SACRO) {
-                statOffensiva += attaccante.getSaggezza() / 2;
+                statOffensiva += attaccante.get(TipoAttributo.SAGGEZZA) / 2;
                 if (Logger.isAttivo()) {
-                	Logger.log(String.format(Locale.ROOT, "statOffensiva modificata da SACRO (%d) = %d", attaccante.getSaggezza(), statOffensiva));
+                	Logger.log(String.format(Locale.ROOT, "statOffensiva modificata da SACRO (%d) = %d", attaccante.get(TipoAttributo.SAGGEZZA), statOffensiva));
                 }
             }
         } else {
-            statOffensiva = attaccante.getForza();
+            statOffensiva = attaccante.get(TipoAttributo.FORZA);
             if (Logger.isAttivo()) {
             	Logger.log("statOffensiva (FORZA) = " + statOffensiva);
             }
@@ -676,8 +677,8 @@ public class CalcolatoreCombattimento {
         // Formula di base: 5% fisso + 1% per ogni punto statistica CRITICO dell'attaccante,
         // contrastata dalla FORTUNA del difensore.
 
-        int intuitoCritico = attaccante.getCritico();
-        int contromisuraCritico = difensore.getFortuna();
+        int intuitoCritico = attaccante.get(TipoAttributo.CRITICO);
+        int contromisuraCritico = difensore.get(TipoAttributo.FORTUNA);
 
         double probabilitaCritico = Math.max(0.0d, 5.0d + intuitoCritico - contromisuraCritico);
         Logger.log(() -> String.format(Locale.ROOT, "probabilitaCritico: %f = MAX(0, 5 + CRITICO attaccante %d - FORTUNA difensore %d)", probabilitaCritico, intuitoCritico, contromisuraCritico));
@@ -698,7 +699,7 @@ public class CalcolatoreCombattimento {
 
             // --- TRAGUARDO 1: Stato dell'arma Principale (es. TAGLIENTE ➔ SANGUINAMENTO) ---
             if (!immuneATipoDannoBase && tipoDanno.hasEffettiDiStato()) {
-                double probStatoFisico = percentualeControForza(dannoMitigato, difensore) + (attaccante.getFuria() * 2.0d);
+                double probStatoFisico = percentualeControForza(dannoMitigato, difensore) + (attaccante.get(TipoAttributo.FURIA) * 2.0d);
                 if (Dado.tira(100) <= probStatoFisico * fattoreEffetti(difensore, tipoDanno)) {
                     TipoEffettoDiStato effettoFisico = effettoDiStatoCasuale(tipoDanno);
                     if (effettoFisico != null) {
@@ -728,7 +729,7 @@ public class CalcolatoreCombattimento {
                         // colpisce, cioè la sua INTELLIGENZA pesata dal POTERE_MAGICO (100 = nessun bastone o libro).
                         // La riserva di MAGIA non conta: un guerriero senza mana con INTELLIGENZA 10 aggiunge 10 punti,
                         // un mago con INTELLIGENZA 20 e un bastone +20% ne aggiunge 24.
-                        double contributoMagico = attaccante.getIntelligenza() * attaccante.getPotereMagico() / 100.0d;
+                        double contributoMagico = attaccante.get(TipoAttributo.INTELLIGENZA) * attaccante.getPotereMagico() / 100.0d;
                         double probStatoMagico = percentualeControForza(dannoQuestoIncantamentoProc, difensore) + contributoMagico;
                         if (Dado.tira(100) <= probStatoMagico * fattoreEffetti(difensore, elemento)) {
                             TipoEffettoDiStato effettoMagico = effettoDiStatoCasuale(elemento);
@@ -748,7 +749,7 @@ public class CalcolatoreCombattimento {
             // di chi colpisce pesata dal POTERE_MAGICO
             if (!immuneATipoDannoBase) {
                 for (ModificatoreAttributoMD modificatore : arma.getModificatoriSulBersaglio()) {
-                    double contributoMagico = attaccante.getIntelligenza() * attaccante.getPotereMagico() / 100.0d;
+                    double contributoMagico = attaccante.get(TipoAttributo.INTELLIGENZA) * attaccante.getPotereMagico() / 100.0d;
                     double probModificatore = percentualeControForza(dannoTotaleCombinato, difensore) + contributoMagico;
                     if (Dado.tira(100) <= probModificatore * fattoreEffetti(difensore, tipoDanno)) {
                         dannoRisultante.addModificatoreDaAggiungere(modificatore.suPortatore());
@@ -785,7 +786,7 @@ public class CalcolatoreCombattimento {
     private static double dannoIncantamento(Personaggio attaccante, Personaggio difensore, IncantamentoMD incantamento,
                                             int livelloOggetto, double fattore, double moltiplicatoreParteFissa) {
         double dannoGrezzo = ((incantamento.getDannoBonusFisso() * livelloOggetto * moltiplicatoreParteFissa) +
-                (attaccante.getIntelligenza() * incantamento.getCoefficienteScala() * moltiplicatoreDanniMagici(attaccante))) * fattore;
+                (attaccante.get(TipoAttributo.INTELLIGENZA) * incantamento.getCoefficienteScala() * moltiplicatoreDanniMagici(attaccante))) * fattore;
         double mitigazione = 100.0d / (100.0d + difesaContro(difensore, incantamento.getTipoDannoElementale()));
         double danno = Math.floor(dannoGrezzo * mitigazione);
         if (incantamento.getTipoDannoElementale() == TipoDanno.FUOCO && difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
@@ -799,7 +800,7 @@ public class CalcolatoreCombattimento {
      * senza FORZA non regge niente, quindi vale 100 (e non una divisione per zero).
      */
     private static double percentualeControForza(double danno, Personaggio difensore) {
-        return difensore.getForza() > 0 ? (danno * 100.0d) / difensore.getForza() : 100.0d;
+        return difensore.get(TipoAttributo.FORZA) > 0 ? (danno * 100.0d) / difensore.get(TipoAttributo.FORZA) : 100.0d;
     }
 
     /**
@@ -1120,7 +1121,7 @@ public class CalcolatoreCombattimento {
      */
     public static double difesaBaseContro(Personaggio difensore, TipoDanno tipoDanno) {
         boolean fisico = tipoDanno.getCategoriaDanno() == CategoriaDanno.FISICO;
-        return fisico ? difensore.getCostituzione() + difensore.getParata() : difensore.getResistenzaMagica();
+        return fisico ? difensore.get(TipoAttributo.COSTITUZIONE) + difensore.get(TipoAttributo.PARATA) : difensore.get(TipoAttributo.RESISTENZA_MAGICA);
     }
 
     /**
@@ -1207,32 +1208,32 @@ public class CalcolatoreCombattimento {
             case STORDITO:
                 // --- CATEGORIA: TRAUMA FISICO (Base 2 turni, contrasta COSTITUZIONE) ---
                 durataBase = 2;
-                riduzione = (int) Math.floor(Math.sqrt(difensore.getCostituzione()) / 3.0d);
+                riduzione = (int) Math.floor(Math.sqrt(difensore.get(TipoAttributo.COSTITUZIONE)) / 3.0d);
                 break;
 
             case CONGELATO:
                 // --- CATEGORIA: BLOCCO MISTICO (Base 3 turni, contrasta SAGGEZZA) ---
                 durataBase = 3;
-                riduzione = (int) Math.floor(Math.sqrt(difensore.getSaggezza()) / 3.0d);
+                riduzione = (int) Math.floor(Math.sqrt(difensore.get(TipoAttributo.SAGGEZZA)) / 3.0d);
                 break;
 
             case RALLENTATO:
                 // --- CATEGORIA: INTRALCIO MOTORIO (Base 3 turni, contrasta DESTREZZA) ---
                 durataBase = 3;
-                riduzione = (int) Math.floor(Math.sqrt(difensore.getDestrezza()) / 3.0d);
+                riduzione = (int) Math.floor(Math.sqrt(difensore.get(TipoAttributo.DESTREZZA)) / 3.0d);
                 break;
 
             case IMMOBILIZZATO:
                 // --- CATEGORIA: MORSA FISICA/TERRESTRE (Base 3 turni, contrasta FORZA) ---
                 durataBase = 3;
-                riduzione = (int) Math.floor(Math.sqrt(difensore.getForza()) / 3.0d);
+                riduzione = (int) Math.floor(Math.sqrt(difensore.get(TipoAttributo.FORZA)) / 3.0d);
                 break;
 
             case SPAVENTATO:
                 // --- CATEGORIA: ATTACCO AL MORALE (Base 3 turni, contrasta CORAGGIO secondario) ---
                 durataBase = 3;
                 // Moltiplichiamo il moltiplicatore di Coraggio * 10 per portarlo sulla stessa scala degli attributi primari
-                riduzione = (int) Math.floor(Math.sqrt(difensore.getCoraggio() * 10.0d) / 3.0d);
+                riduzione = (int) Math.floor(Math.sqrt(difensore.get(TipoAttributo.CORAGGIO) * 10.0d) / 3.0d);
                 break;
 
             case SANGUINAMENTO:
@@ -1240,13 +1241,13 @@ public class CalcolatoreCombattimento {
             case INFETTATO:
                 // --- CATEGORIA: TOSSINE E DEGENERAZIONI ORGANICHE (Base 4 turni, contrasta COSTITUZIONE) ---
                 durataBase = 4;
-                riduzione = (int) Math.floor(Math.sqrt(difensore.getCostituzione()) / 3.0d);
+                riduzione = (int) Math.floor(Math.sqrt(difensore.get(TipoAttributo.COSTITUZIONE)) / 3.0d);
                 break;
 
             case BRUCIATO:
                 // --- CATEGORIA: INCENDIO ELEMENTALE (Base 4 turni, contrasta SAGGEZZA/Controllo Energetico) ---
                 durataBase = 4;
-                riduzione = (int) Math.floor(Math.sqrt(difensore.getSaggezza()) / 3.0d);
+                riduzione = (int) Math.floor(Math.sqrt(difensore.get(TipoAttributo.SAGGEZZA)) / 3.0d);
                 break;
 
             case CONFUSO:
@@ -1258,7 +1259,7 @@ public class CalcolatoreCombattimento {
             default:
                 // --- CATEGORIA: DEBILITAZIONI MENTALI E SENSORIALI BASE (Base 3 turni, contrasta SAGGEZZA) ---
                 durataBase = 3;
-                riduzione = (int) Math.floor(Math.sqrt(difensore.getSaggezza()) / 3.0d);
+                riduzione = (int) Math.floor(Math.sqrt(difensore.get(TipoAttributo.SAGGEZZA)) / 3.0d);
                 break;
         }
 
@@ -1284,8 +1285,8 @@ public class CalcolatoreCombattimento {
         switch (stato) {
             case SANGUINAMENTO:
                 // Danno fisico: scala su FORZA dell'attaccante e ignora metà COSTITUZIONE
-                dannoGrezzo = (attaccante.getForza() * livelloAttaccante) / 10.0d;
-                difesaFiltro = difensore.getCostituzione() / 4.0d;
+                dannoGrezzo = (attaccante.get(TipoAttributo.FORZA) * livelloAttaccante) / 10.0d;
+                difesaFiltro = difensore.get(TipoAttributo.COSTITUZIONE) / 4.0d;
                 if (Logger.isAttivo()) {
                 	Logger.log(String.format(Locale.ROOT, "[DoT] Elaborazione SANGUINAMENTO su %s. Attacco: %.2f, Difesa Filtro: %.2f",
 	                        difensore.getNome(), dannoGrezzo, difesaFiltro));
@@ -1294,8 +1295,8 @@ public class CalcolatoreCombattimento {
 
             case BRUCIATO:
                 // Danno elementale: scala su INTELLIGENZA dell'attaccante, contrasta RESISTENZA MAGICA
-                dannoGrezzo = (attaccante.getIntelligenza() * livelloAttaccante) / 10.0d;
-                difesaFiltro = difensore.getResistenzaMagica() / 2.0d;
+                dannoGrezzo = (attaccante.get(TipoAttributo.INTELLIGENZA) * livelloAttaccante) / 10.0d;
+                difesaFiltro = difensore.get(TipoAttributo.RESISTENZA_MAGICA) / 2.0d;
                 if (Logger.isAttivo()) {
                 	Logger.log(String.format(Locale.ROOT, "[DoT] Elaborazione BRUCIATO su %s. Attacco: %.2f, Difesa Filtro: %.2f",
 	                        difensore.getNome(), dannoGrezzo, difesaFiltro));
@@ -1304,15 +1305,15 @@ public class CalcolatoreCombattimento {
 
             case AVVELENATO:
                 // Danno elementale: scala su INTELLIGENZA dell'attaccante, contrasta COSTITUZIONE
-                dannoGrezzo = (attaccante.getIntelligenza() * livelloAttaccante) / 10.0d;
-                difesaFiltro = difensore.getCostituzione() / 2.0d;
+                dannoGrezzo = (attaccante.get(TipoAttributo.INTELLIGENZA) * livelloAttaccante) / 10.0d;
+                difesaFiltro = difensore.get(TipoAttributo.COSTITUZIONE) / 2.0d;
                 Logger.log(() -> String.format(Locale.ROOT, "[DoT] Elaborazione AVVELENATO su %s.", difensore.getNome()));
                 break;
 
             case INFETTATO:
                 // Danno necrotico: scala su INTELLIGENZA, contrasta RESISTENZA MAGICA
-                dannoGrezzo = (attaccante.getIntelligenza() * livelloAttaccante) / 12.0d; // Leggermente più lento ma blocca le cure
-                difesaFiltro = difensore.getResistenzaMagica() / 2.0d;
+                dannoGrezzo = (attaccante.get(TipoAttributo.INTELLIGENZA) * livelloAttaccante) / 12.0d; // Leggermente più lento ma blocca le cure
+                difesaFiltro = difensore.get(TipoAttributo.RESISTENZA_MAGICA) / 2.0d;
                 Logger.log(() -> String.format(Locale.ROOT, "[DoT] Elaborazione INFETTATO su %s.", difensore.getNome()));
                 break;
 

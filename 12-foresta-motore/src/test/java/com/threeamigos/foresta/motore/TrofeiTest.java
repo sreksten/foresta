@@ -215,7 +215,7 @@ class TrofeiTest {
 					() -> partita.spostaGruppoIn(TipoLocazione.CASTELLO_IDRA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			partita.eventi().ascolta(InternoAmiciziaStretta.class);
-			assertTrue(partita.gruppo().getCapo().getCarisma() > 1, "precondizione: il capo ha carisma");
+			assertTrue(partita.gruppo().getCapo().get(TipoAttributo.CARISMA) > 1, "precondizione: il capo ha carisma");
 
 			// Qui interessa l'esito, non l'offerta del comando: il dado decide che l'amicizia riesce, e un altro che
 			// l'avversario sfida a carta, forbici e sasso: la sfida si gioca (e si vince) fino in fondo, perché la

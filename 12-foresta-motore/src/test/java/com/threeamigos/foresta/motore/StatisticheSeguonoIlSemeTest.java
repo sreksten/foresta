@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -25,7 +26,7 @@ class StatisticheSeguonoIlSemeTest {
     private static int[] statistiche(long seme, TipoPersonaggio classe) {
         Dado.impostaSeme(seme);
         Personaggio p = FabbricaPersonaggi.crea(classe, 5);
-        return new int[] {p.getForza(), p.getDestrezza(), p.getCostituzione(), p.getIntelligenza(), p.getSaggezza(), p.getCarisma(), p.getFortuna()};
+        return new int[] {p.get(TipoAttributo.FORZA), p.get(TipoAttributo.DESTREZZA), p.get(TipoAttributo.COSTITUZIONE), p.get(TipoAttributo.INTELLIGENZA), p.get(TipoAttributo.SAGGEZZA), p.get(TipoAttributo.CARISMA), p.get(TipoAttributo.FORTUNA)};
     }
 
     @Test

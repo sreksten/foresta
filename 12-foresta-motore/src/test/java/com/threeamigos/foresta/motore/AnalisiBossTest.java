@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.tipi.CategoriaDanno;
 import com.threeamigos.foresta.incantesimi.Fuoco;
@@ -65,9 +66,9 @@ class AnalisiBossTest {
             Personaggio boss = FabbricaPersonaggi.crea(classeBoss, livello);
             out.printf("Liv %2d: salute %d, difesa fisica %.0f (VEL %d + DES %d + PAR/2 %d), difesa magica %d (RM %d + SAG %d)%s%n",
                     livello, boss.getSaluteMassima(),
-                    boss.getVelocita() + boss.getDestrezza() + boss.getParata() * 0.5d,
-                    boss.getVelocita(), boss.getDestrezza(), boss.getParata() / 2,
-                    boss.getResistenzaMagica() + boss.getSaggezza(), boss.getResistenzaMagica(), boss.getSaggezza(),
+                    boss.get(TipoAttributo.VELOCITA) + boss.get(TipoAttributo.DESTREZZA) + boss.get(TipoAttributo.PARATA) * 0.5d,
+                    boss.get(TipoAttributo.VELOCITA), boss.get(TipoAttributo.DESTREZZA), boss.get(TipoAttributo.PARATA) / 2,
+                    boss.get(TipoAttributo.RESISTENZA_MAGICA) + boss.get(TipoAttributo.SAGGEZZA), boss.get(TipoAttributo.RESISTENZA_MAGICA), boss.get(TipoAttributo.SAGGEZZA),
                     boss.isImmuneAIncantesimo(TipoIncantesimo.FUOCO) ? ", immune al Fuoco" : "");
             out.printf("   %-9s %-22s %7s %8s %6s %7s | %7s %8s %6s %7s | %s%n",
                     "Classe", "Dotazione", "Att.fis", "Colpisce", "Danno", "Turni",
@@ -88,8 +89,8 @@ class AnalisiBossTest {
             Personaggio pg = FabbricaPersonaggi.crea(classePg, livello);
             equipaggiamento.equipaggia(pg);
             Personaggio boss = FabbricaPersonaggi.crea(classeBoss, livello);
-            attaccoFisico += pg.getPrecisione() + pg.getDestrezza();
-            attaccoMagico += pg.getPrecisione() + pg.getIntelligenza();
+            attaccoFisico += pg.get(TipoAttributo.PRECISIONE) + pg.get(TipoAttributo.DESTREZZA);
+            attaccoMagico += pg.get(TipoAttributo.PRECISIONE) + pg.get(TipoAttributo.INTELLIGENZA);
             colpisceFisico += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(pg, boss, CategoriaDanno.FISICO);
             colpisceMagico += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(pg, boss, CategoriaDanno.MAGICO);
             dannoArma += CalcolatoreCombattimento.calcolaDannoRisultante(pg, boss, pg.getArmaEquipaggiata()).getDanno();

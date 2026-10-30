@@ -112,47 +112,34 @@ public interface VistaPersonaggio {
 
 	int getRigenerazioneMagia();
 
-	int getStanchezza();
 
 	int getCaricoMassimo();
 
-	int getForza();
+	/**
+	 * Il valore di un attributo primario o secondario del personaggio (forza, destrezza, costituzione, intelligenza, saggezza, carisma, fortuna, critico,
+	 * precisione, velocità, furtività, parata, resistenza magica, percezione, soggezione, furia, coraggio, valore, contrattazione, stanchezza): quello di
+	 * base più i modificatori degli artefatti e quelli temporanei.
+	 */
+	int get(TipoAttributo tipoAttributo);
 
-	int getDestrezza();
 
-	int getCostituzione();
 
-	int getIntelligenza();
 
-	int getSaggezza();
 
-	int getCarisma();
 
-	int getFortuna();
 
-	int getCritico();
 
-	int getPrecisione();
 
-	int getVelocita();
 
-	int getFurtivita();
 
-	int getParata();
 
-	int getResistenzaMagica();
 
-	int getPercezione();
 
-	int getSoggezione();
 
-	int getFuria();
 
-	int getCoraggio();
 
-	int getValore();
 
-	int getContrattazione();
+
 
 	double getPotereMagico();
 

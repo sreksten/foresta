@@ -25,7 +25,6 @@ import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.*;
-import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,18 +38,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class ScenarioSetLeggendariTest {
 
     /**
-     * Gli attributi primari, che nessun altro attributo cambia, con il modo di leggerli.
+     * Gli attributi primari, che nessun altro attributo cambia.
      */
-    private static final Map<TipoAttributo, ToIntFunction<Personaggio>> PRIMARI = new EnumMap<>(TipoAttributo.class);
-
-    static {
-        PRIMARI.put(TipoAttributo.FORZA, Personaggio::getForza);
-        PRIMARI.put(TipoAttributo.DESTREZZA, Personaggio::getDestrezza);
-        PRIMARI.put(TipoAttributo.COSTITUZIONE, Personaggio::getCostituzione);
-        PRIMARI.put(TipoAttributo.INTELLIGENZA, Personaggio::getIntelligenza);
-        PRIMARI.put(TipoAttributo.SAGGEZZA, Personaggio::getSaggezza);
-        PRIMARI.put(TipoAttributo.CARISMA, Personaggio::getCarisma);
-    }
+    private static final List<TipoAttributo> PRIMARI = Arrays.asList(TipoAttributo.FORZA, TipoAttributo.DESTREZZA, TipoAttributo.COSTITUZIONE,
+            TipoAttributo.INTELLIGENZA, TipoAttributo.SAGGEZZA, TipoAttributo.CARISMA);
 
     @Test
     void ogniSetHaIPezziCheLoNominanoESiDescriveConIDatiDellaGrammatica() {
@@ -119,7 +110,7 @@ class ScenarioSetLeggendariTest {
         SetLeggendario set = null;
         TipoAttributo attributo = null;
         for (SetLeggendario candidato : setInOrdine()) {
-            for (TipoAttributo primario : PRIMARI.keySet()) {
+            for (TipoAttributo primario : PRIMARI) {
                 List<ModificatoreAttributoMD> modificatori = modificatoriSu(pezziDi(candidato), primario);
                 if (!modificatori.isEmpty() && modificatori.stream().allMatch(m -> m.getTipoModificatoreAttributo() == TipoModificatore.VARIAZIONE_FISSA)
                         && modificatori.stream().anyMatch(m -> m.getQuantita() > 0)) {
@@ -133,33 +124,32 @@ class ScenarioSetLeggendariTest {
             }
         }
         assertNotNull(set, "serve un set con un bonus fisso su un attributo primario");
-        ToIntFunction<Personaggio> valore = PRIMARI.get(attributo);
         List<String> pezzi = pezziDi(set);
         List<String> tranneLUltimo = pezzi.subList(0, pezzi.size() - 1);
 
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(201)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             Personaggio capo = senzaArtefatti(partita.gruppo().getCapo());
-            int base = valore.applyAsInt(capo);
+            int base = capo.get(attributo);
 
             // Tutti i pezzi tranne l'ultimo: i bonus sono quelli scritti
             for (String pezzo : tranneLUltimo) {
                 capo.addArtefatto(Leggendari.con(pezzo).costruisci(Statistiche.getLivello()));
             }
             int incompleto = (int) (base + somma(modificatoriSu(tranneLUltimo, attributo), 1.0d));
-            assertEquals(incompleto, valore.applyAsInt(capo));
+            assertEquals(incompleto, capo.get(attributo));
             assertFalse(RegoleSetLeggendari.isCompleto(capo.getModelloDati().getArtefatti(), set.getChiave()));
 
             // Con l'ultimo il set è completo: i bonus si moltiplicano, i malus no
             Artefatto ultimo = Leggendari.con(pezzi.get(pezzi.size() - 1)).costruisci(Statistiche.getLivello());
             capo.addArtefatto(ultimo);
             assertTrue(RegoleSetLeggendari.isCompleto(capo.getModelloDati().getArtefatti(), set.getChiave()));
-            assertEquals((int) (base + somma(modificatoriSu(pezzi, attributo), set.getMoltiplicatore())), valore.applyAsInt(capo),
+            assertEquals((int) (base + somma(modificatoriSu(pezzi, attributo), set.getMoltiplicatore())), capo.get(attributo),
                     attributo + " con il set " + set.getChiave());
 
             // Tolto l'ultimo, si torna a prima
             capo.removeArtefatto(ultimo);
-            assertEquals(incompleto, valore.applyAsInt(capo));
+            assertEquals(incompleto, capo.get(attributo));
         }
     }
 

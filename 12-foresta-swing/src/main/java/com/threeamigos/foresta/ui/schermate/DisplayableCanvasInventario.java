@@ -182,13 +182,13 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
 
         creaNodoModificatoriTemporanei(componenteScorrevole, p);
 
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.FORZA, p.getForza(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.DESTREZZA, p.getDestrezza(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.COSTITUZIONE, p.getCostituzione(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.INTELLIGENZA, p.getIntelligenza(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.SAGGEZZA, p.getSaggezza(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.CARISMA, p.getCarisma(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.FORTUNA, p.getFortuna(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.FORZA, p.get(TipoAttributo.FORZA), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.DESTREZZA, p.get(TipoAttributo.DESTREZZA), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.COSTITUZIONE, p.get(TipoAttributo.COSTITUZIONE), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.INTELLIGENZA, p.get(TipoAttributo.INTELLIGENZA), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.SAGGEZZA, p.get(TipoAttributo.SAGGEZZA), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.CARISMA, p.get(TipoAttributo.CARISMA), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.FORTUNA, p.get(TipoAttributo.FORTUNA), evidenziato);
 
         colore = DoomdarkColorModel.Color.MEDIUM_GRAY;
 
@@ -197,18 +197,18 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         creaNodo(componenteScorrevole, p, colore, TipoAttributo.RIGENERAZIONE_SALUTE, p.getRigenerazioneSalute(), evidenziato);
         creaNodo(componenteScorrevole, p, colore, TipoAttributo.RIGENERAZIONE_MAGIA, p.getRigenerazioneMagia(), evidenziato);
         creaNodo(componenteScorrevole, p, colore, TipoAttributo.CARICO_MASSIMO, p.getCaricoMassimo(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.CRITICO, p.getCritico(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.PRECISIONE, p.getPrecisione(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.VELOCITA, p.getVelocita(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.FURTIVITA, p.getFurtivita(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.PARATA, p.getParata(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.RESISTENZA_MAGICA, p.getResistenzaMagica(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.PERCEZIONE, p.getPercezione(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.SOGGEZIONE, p.getSoggezione(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.FURIA, p.getFuria(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.CORAGGIO, p.getCoraggio(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.VALORE, p.getValore(), evidenziato);
-        creaNodo(componenteScorrevole, p, colore, TipoAttributo.CONTRATTAZIONE, p.getContrattazione(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.CRITICO, p.get(TipoAttributo.CRITICO), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.PRECISIONE, p.get(TipoAttributo.PRECISIONE), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.VELOCITA, p.get(TipoAttributo.VELOCITA), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.FURTIVITA, p.get(TipoAttributo.FURTIVITA), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.PARATA, p.get(TipoAttributo.PARATA), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.RESISTENZA_MAGICA, p.get(TipoAttributo.RESISTENZA_MAGICA), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.PERCEZIONE, p.get(TipoAttributo.PERCEZIONE), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.SOGGEZIONE, p.get(TipoAttributo.SOGGEZIONE), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.FURIA, p.get(TipoAttributo.FURIA), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.CORAGGIO, p.get(TipoAttributo.CORAGGIO), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.VALORE, p.get(TipoAttributo.VALORE), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.CONTRATTAZIONE, p.get(TipoAttributo.CONTRATTAZIONE), evidenziato);
 
         return componenteScorrevole;
     }

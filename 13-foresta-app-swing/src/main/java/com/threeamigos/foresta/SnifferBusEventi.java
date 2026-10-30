@@ -1,5 +1,6 @@
 package com.threeamigos.foresta;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.OggettoConCosto;
 import com.threeamigos.foresta.artefatti.OggettoConPeso;
@@ -734,7 +735,7 @@ public class SnifferBusEventi {
     private String formattaStatistichePersonaggio(VistaPersonaggio p) {
         return String.format(Locale.ROOT, "UUID: %s,Nome: %17s, Livello: %2d, Salute: %3d/%3d; Magia: %3d/%3d; Forza: %3d; Destrezza: %3d; Costituzione: %3d; Intelligenza: %3d; Saggezza: %3d; Carisma: %3d; Fortuna: %3d",
                 p.getUuid(), p.getNomeSingolare(), p.getLivello(), p.getSalute(), p.getSaluteMassima(), p.getMagia(), p.getMagiaMassima(),
-                p.getForza(), p.getDestrezza(), p.getCostituzione(), p.getIntelligenza(), p.getSaggezza(), p.getCarisma(), p.getFortuna());
+                p.get(TipoAttributo.FORZA), p.get(TipoAttributo.DESTREZZA), p.get(TipoAttributo.COSTITUZIONE), p.get(TipoAttributo.INTELLIGENZA), p.get(TipoAttributo.SAGGEZZA), p.get(TipoAttributo.CARISMA), p.get(TipoAttributo.FORTUNA));
     }
 
     private String formattaModificatoreAttributo(ModificatoreAttributoMD modificatore) {

@@ -365,7 +365,7 @@ final class GiocatoreAutomatico {
 				|| gruppo.getPersonaggiVivi().stream().anyMatch(p -> frazioneSalute(p) < 0.3);
 		// Stanchezza: -2 all'attacco e alla difesa per punto (CalcolatoreCombattimento); in due o più ci si
 		// accampa la notte, da soli si riposa solo in locanda
-		boolean stanco = capo.getStanchezza() >= (vivi > 1 ? 9 : 5);
+		boolean stanco = capo.get(TipoAttributo.STANCHEZZA) >= (vivi > 1 ? 9 : 5);
 		if ((ferito || stanco) && monete >= CostantiEconomia.COSTO_PASTO) {
 			List<CoordinateMD> mete = new ArrayList<>(locande);
 			mete.addAll(citta);
@@ -508,7 +508,7 @@ final class GiocatoreAutomatico {
 			Personaggio capo = gruppo.getCapo();
 			int ora = LineaTemporale.getOra();
 			int costo = CostantiEconomia.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi();
-			boolean serve = capo.getStanchezza() >= 2 || ora >= 18 || ora < 6
+			boolean serve = capo.get(TipoAttributo.STANCHEZZA) >= 2 || ora >= 18 || ora < 6
 					|| gruppo.getPersonaggiVivi().stream().anyMatch(p -> frazioneSalute(p) < 0.9);
 			return serve && Cassa.getMonete() - costo >= CostantiEconomia.COSTO_PASTO ? Comando.SI : Comando.NO;
 		}
@@ -644,13 +644,13 @@ final class GiocatoreAutomatico {
 	private static double probabilitaAmicizia(GruppoGiocatore gruppo) {
 		// Riesce se il carisma supera un tiro del dado dell'amicizia (LocazioneBase, CHI_FA_AMICIZIA)
 		int facce = CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA;
-		return Math.min(facce, Math.max(0, piuCarismatico(gruppo).getCarisma() - 1)) / (double) facce;
+		return Math.min(facce, Math.max(0, piuCarismatico(gruppo).get(TipoAttributo.CARISMA) - 1)) / (double) facce;
 	}
 
 	private static Personaggio piuCarismatico(GruppoGiocatore gruppo) {
 		Personaggio migliore = gruppo.getCapo();
 		for (Personaggio p : gruppo.getPersonaggiVivi()) {
-			if (p.getCarisma() > migliore.getCarisma()) {
+			if (p.get(TipoAttributo.CARISMA) > migliore.get(TipoAttributo.CARISMA)) {
 				migliore = p;
 			}
 		}
@@ -1379,7 +1379,7 @@ final class GiocatoreAutomatico {
 				}
 			}
 			double magico;
-			if (attaccante.getIntelligenza() < 5) {
+			if (attaccante.get(TipoAttributo.INTELLIGENZA) < 5) {
 				double somma = 0;
 				for (TipoIncantesimo classe : possibili) {
 					somma += atteso(attaccante, difensore, (Arma) FabbricaIncantesimi.crea(classe, attaccante.getLivello()), 1.0d, classe.name());
@@ -1387,7 +1387,7 @@ final class GiocatoreAutomatico {
 				magico = somma / possibili.size();
 			} else {
 				magico = atteso(attaccante, difensore, (Arma) FabbricaIncantesimi.crea(scelto, attaccante.getLivello()), 1.0d, scelto.name());
-				if (attaccante.getIntelligenza() >= 7) {
+				if (attaccante.get(TipoAttributo.INTELLIGENZA) >= 7) {
 					magico = Math.max(magico, fisico);
 				}
 			}

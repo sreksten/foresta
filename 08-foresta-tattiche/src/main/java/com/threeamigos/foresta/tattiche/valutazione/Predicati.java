@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tattiche.valutazione;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.modellodati.OrdinamentoMD;
 import com.threeamigos.foresta.modellodati.PredicatoMD;
@@ -35,7 +36,7 @@ public final class Predicati {
 		VERIFICHE.put(TipoPredicato.ASTUZIA, (p, ctx) -> p.getTipoConfronto().vale(Astuzia.di(ctx.getAttore()), p.getNumero()));
 		// ASTUZIA e INTELLIGENZA sono due cose diverse: l'astuzia è calcolata sul massimo di classe e sul livello (Astuzia), l'INTELLIGENZA è l'attributo
 		// attuale del personaggio, quello su cui si basavano le soglie dei mostri prima delle tattiche
-		VERIFICHE.put(TipoPredicato.INTELLIGENZA, (p, ctx) -> p.getTipoConfronto().vale(ctx.getAttore().getIntelligenza(), p.getNumero()));
+		VERIFICHE.put(TipoPredicato.INTELLIGENZA, (p, ctx) -> p.getTipoConfronto().vale(ctx.getAttore().get(TipoAttributo.INTELLIGENZA), p.getNumero()));
 		// L'unico predicato che tira il dado: un tiro da 1 a 100, vero se non supera la percentuale. Si ritira a ogni valutazione, anche della stessa voce
 		VERIFICHE.put(TipoPredicato.PROBABILITA, (p, ctx) -> Dado.tira(100) <= p.getNumero());
 		VERIFICHE.put(TipoPredicato.VOCE_USATA, (p, ctx) -> p.getTipoConfronto().vale(

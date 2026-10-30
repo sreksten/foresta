@@ -29,7 +29,7 @@ class PersonaggioBaseTest {
         DatiDiProva.nuovaPartita();
         Guerriero guerriero = new Guerriero("Arsenio", 5);
         guerriero.getModelloDati().setPuntiAbilitaDisponibili(1);
-        int forza = guerriero.getForza();
+        int forza = guerriero.get(TipoAttributo.FORZA);
         // When: sugli attributi ricavati da altro non si spende niente (e non si rompe niente)
         guerriero.spendiPuntoAbilita(TipoAttributo.RIGENERAZIONE_SALUTE);
         guerriero.spendiPuntoAbilita(TipoAttributo.POTERE_MAGICO);
@@ -38,6 +38,6 @@ class PersonaggioBaseTest {
         assertEquals(1, guerriero.getPuntiAbilitaDisponibili());
         guerriero.spendiPuntoAbilita(TipoAttributo.FORZA);
         assertEquals(0, guerriero.getPuntiAbilitaDisponibili());
-        assertEquals(forza + 1, guerriero.getForza());
+        assertEquals(forza + 1, guerriero.get(TipoAttributo.FORZA));
     }
 }

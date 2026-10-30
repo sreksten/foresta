@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
@@ -26,7 +27,7 @@ class ScenarioSpregiTest {
         partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                 () -> partita.spostaGruppoIn(TipoLocazione.CASTELLO_IDRA));
         partita.assertStato(Stato.IN_LOCAZIONE);
-        assertTrue(partita.gruppo().getCapo().getCarisma() < 12, "precondizione: il tiro più alto del dado fa fallire");
+        assertTrue(partita.gruppo().getCapo().get(TipoAttributo.CARISMA) < 12, "precondizione: il tiro più alto del dado fa fallire");
         return partita;
     }
 

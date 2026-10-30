@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.abilita;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 
@@ -37,8 +38,8 @@ public class ScacciareINonMorti implements Abilita {
 	 * La probabilità, su 100, che il non morto ceda: la quota della SOGGEZIONE di chi scaccia sul totale con il CORAGGIO del non morto
 	 */
 	public static double probabilitaDiCedere(Personaggio utilizzatore, Personaggio avversario) {
-		double soggezione = Math.max(0, utilizzatore.getSoggezione());
-		double coraggio = Math.max(0, avversario.getCoraggio());
+		double soggezione = Math.max(0, utilizzatore.get(TipoAttributo.SOGGEZIONE));
+		double coraggio = Math.max(0, avversario.get(TipoAttributo.CORAGGIO));
 		if (soggezione + coraggio <= 0) {
 			return 0.0d;
 		}

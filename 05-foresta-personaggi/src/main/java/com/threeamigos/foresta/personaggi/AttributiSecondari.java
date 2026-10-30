@@ -67,51 +67,51 @@ final class AttributiSecondari {
 	 * e sul moltiplicatore della classe, mantenendo i rendimenti decrescenti.
 	 */
 	static int calcolaCritico(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.critico(get(md, TipoAttributo.DESTREZZA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreCritico());
+		return CalcolatoreAttributiSecondari.critico(valoreDi(md, TipoAttributo.DESTREZZA), valoreDi(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreCritico());
 	}
 
 	static int calcolaPrecisione(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.precisione(get(md, TipoAttributo.DESTREZZA), get(md, TipoAttributo.INTELLIGENZA), moltiplicatori.getMoltiplicatorePrecisione());
+		return CalcolatoreAttributiSecondari.precisione(valoreDi(md, TipoAttributo.DESTREZZA), valoreDi(md, TipoAttributo.INTELLIGENZA), moltiplicatori.getMoltiplicatorePrecisione());
 	}
 
 	static int calcolaVelocita(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.velocita(get(md, TipoAttributo.DESTREZZA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreVelocita());
+		return CalcolatoreAttributiSecondari.velocita(valoreDi(md, TipoAttributo.DESTREZZA), valoreDi(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreVelocita());
 	}
 
 	static int calcolaFurtivita(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.furtivita(get(md, TipoAttributo.DESTREZZA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreFurtivita());
+		return CalcolatoreAttributiSecondari.furtivita(valoreDi(md, TipoAttributo.DESTREZZA), valoreDi(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreFurtivita());
 	}
 
 	static int calcolaParata(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.parata(get(md, TipoAttributo.FORZA), get(md, TipoAttributo.DESTREZZA), moltiplicatori.getMoltiplicatoreParata());
+		return CalcolatoreAttributiSecondari.parata(valoreDi(md, TipoAttributo.FORZA), valoreDi(md, TipoAttributo.DESTREZZA), moltiplicatori.getMoltiplicatoreParata());
 	}
 
 	static int calcolaResistenzaMagica(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.resistenzaMagica(get(md, TipoAttributo.SAGGEZZA), get(md, TipoAttributo.INTELLIGENZA), moltiplicatori.getMoltiplicatoreResistenzaMagica());
+		return CalcolatoreAttributiSecondari.resistenzaMagica(valoreDi(md, TipoAttributo.SAGGEZZA), valoreDi(md, TipoAttributo.INTELLIGENZA), moltiplicatori.getMoltiplicatoreResistenzaMagica());
 	}
 
 	static int calcolaPercezione(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.percezione(get(md, TipoAttributo.SAGGEZZA), get(md, TipoAttributo.DESTREZZA), moltiplicatori.getMoltiplicatorePercezione());
+		return CalcolatoreAttributiSecondari.percezione(valoreDi(md, TipoAttributo.SAGGEZZA), valoreDi(md, TipoAttributo.DESTREZZA), moltiplicatori.getMoltiplicatorePercezione());
 	}
 
 	static int calcolaSoggezione(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.soggezione(get(md, TipoAttributo.CARISMA), get(md, TipoAttributo.FORZA), moltiplicatori.getMoltiplicatoreSoggezione());
+		return CalcolatoreAttributiSecondari.soggezione(valoreDi(md, TipoAttributo.CARISMA), valoreDi(md, TipoAttributo.FORZA), moltiplicatori.getMoltiplicatoreSoggezione());
 	}
 
 	static int calcolaFuria(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.furia(get(md, TipoAttributo.FORZA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreFuria());
+		return CalcolatoreAttributiSecondari.furia(valoreDi(md, TipoAttributo.FORZA), valoreDi(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreFuria());
 	}
 
 	static int calcolaCoraggio(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.coraggio(get(md, TipoAttributo.CARISMA), get(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreCoraggio());
+		return CalcolatoreAttributiSecondari.coraggio(valoreDi(md, TipoAttributo.CARISMA), valoreDi(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreCoraggio());
 	}
 
 	static int calcolaContrattazione(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.contrattazione(get(md, TipoAttributo.CARISMA), get(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreContrattazione());
+		return CalcolatoreAttributiSecondari.contrattazione(valoreDi(md, TipoAttributo.CARISMA), valoreDi(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreContrattazione());
 	}
 
 	static int calcolaValore(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.valore(get(md, TipoAttributo.SAGGEZZA), get(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreValore());
+		return CalcolatoreAttributiSecondari.valore(valoreDi(md, TipoAttributo.SAGGEZZA), valoreDi(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreValore());
 	}
 
 	static int calcolaNumeroBersagli(PersonaggioMD md, Personaggio moltiplicatori) {
@@ -133,8 +133,8 @@ final class AttributiSecondari {
 			case STREGA:
 			case NECROMANTE:
 				// I maghi concatenano minacce con la mente: Intelligenza (70%) + Saggezza (30%)
-				statPrincipale = get(md, TipoAttributo.INTELLIGENZA);
-				statSecondaria = get(md, TipoAttributo.SAGGEZZA);
+				statPrincipale = valoreDi(md, TipoAttributo.INTELLIGENZA);
+				statSecondaria = valoreDi(md, TipoAttributo.SAGGEZZA);
 				break;
 
 			case BARDO:
@@ -150,8 +150,8 @@ final class AttributiSecondari {
 			case BORGOMASTRO:
 			case DONNA:
 				// I bardi ammaliano o spaventano folle intere: Carisma (70%) + Intelligenza (30%)
-				statPrincipale = get(md, TipoAttributo.CARISMA);
-				statSecondaria = get(md, TipoAttributo.INTELLIGENZA);
+				statPrincipale = valoreDi(md, TipoAttributo.CARISMA);
+				statSecondaria = valoreDi(md, TipoAttributo.INTELLIGENZA);
 				break;
 
 			case LADRO:
@@ -159,8 +159,8 @@ final class AttributiSecondari {
 			case ELFO:
 			case ELFA:
 				// Classi agili (e il Ladro che mena a due mani): Destrezza (70%) + Fortuna/Forza (30%)
-				statPrincipale = get(md, TipoAttributo.DESTREZZA);
-				statSecondaria = get(md, TipoAttributo.FORZA);
+				statPrincipale = valoreDi(md, TipoAttributo.DESTREZZA);
+				statSecondaria = valoreDi(md, TipoAttributo.FORZA);
 				break;
 
 			case GUERRIERO:
@@ -175,14 +175,14 @@ final class AttributiSecondari {
 			case DRAGO:
 			case ARMAIOLO:
 				// I bruti e i tank fisici: Forza (70%) + Costituzione (30%)
-				statPrincipale = get(md, TipoAttributo.FORZA);
-				statSecondaria = get(md, TipoAttributo.COSTITUZIONE);
+				statPrincipale = valoreDi(md, TipoAttributo.FORZA);
+				statSecondaria = valoreDi(md, TipoAttributo.COSTITUZIONE);
 				break;
 
 			default:
 				// Fail-safe per mostri generici ed eremiti (Forza ed equilibrio mentale)
-				statPrincipale = get(md, TipoAttributo.FORZA);
-				statSecondaria = get(md, TipoAttributo.INTELLIGENZA);
+				statPrincipale = valoreDi(md, TipoAttributo.FORZA);
+				statSecondaria = valoreDi(md, TipoAttributo.INTELLIGENZA);
 				break;
 		}
 
@@ -202,7 +202,7 @@ final class AttributiSecondari {
 	 * Il carico massimo prima dei modificatori di CARICO_MASSIMO.
 	 */
 	static double potenzialeDiCarico(PersonaggioMD md, Personaggio moltiplicatori) {
-		return CalcolatoreAttributiSecondari.potenzialeDiCarico(get(md, TipoAttributo.FORZA), get(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreCarico());
+		return CalcolatoreAttributiSecondari.potenzialeDiCarico(valoreDi(md, TipoAttributo.FORZA), valoreDi(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreCarico());
 	}
 
 	/**
@@ -210,7 +210,7 @@ final class AttributiSecondari {
 	 * base, che nel modello dati è un double, qui si usa troncato a intero: è così che il gioco lo ha sempre calcolato, e
 	 * per questo il modello dati non ha più un getter per ogni attributo.
 	 */
-	static int get(PersonaggioMD md, TipoAttributo tipoAttributo) {
+	static int valoreDi(PersonaggioMD md, TipoAttributo tipoAttributo) {
 		return (int) getQuantitaModificata(md, (int) md.get(tipoAttributo), tipoAttributo);
 	}
 

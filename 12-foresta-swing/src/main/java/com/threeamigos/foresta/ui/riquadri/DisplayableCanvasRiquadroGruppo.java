@@ -174,19 +174,19 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 
 				locYOffset += fontMedium.getHeight();
 				graphics.drawImage(ImageCache.get("Cr:", fontMedium, color), leftXOffsetLabelCoraggio, locYOffset, null);
-				doomdark = ImageCache.get(p.getCoraggio(), fontMedium, colorePerAttributo(p, TipoAttributo.CORAGGIO, color));
+				doomdark = ImageCache.get(p.get(TipoAttributo.CORAGGIO), fontMedium, colorePerAttributo(p, TipoAttributo.CORAGGIO, color));
 				graphics.drawImage(doomdark, rightXOffsetCoraggio - doomdark.getWidth(null), locYOffset, null);
 
 				graphics.drawImage(ImageCache.get("Vl:", fontMedium, color), leftXOffsetLabelValore, locYOffset, null);
-				doomdark = ImageCache.get(p.getValore(), fontMedium, colorePerAttributo(p, TipoAttributo.VALORE, color));
+				doomdark = ImageCache.get(p.get(TipoAttributo.VALORE), fontMedium, colorePerAttributo(p, TipoAttributo.VALORE, color));
 				graphics.drawImage(doomdark, rightXOffsetValore - doomdark.getWidth(null), locYOffset, null);
 
 				graphics.drawImage(ImageCache.get("St:", fontMedium, color), leftXOffsetLabelStanchezza, locYOffset, null);
-				doomdark = ImageCache.get(p.getStanchezza(), fontMedium, color);
+				doomdark = ImageCache.get(p.get(TipoAttributo.STANCHEZZA), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetStanchezza - doomdark.getWidth(null), locYOffset, null);
 
 				graphics.drawImage(ImageCache.get("Ca:", fontMedium, color), leftXOffsetLabelCarisma, locYOffset, null);
-				doomdark = ImageCache.get(p.getCarisma(), fontMedium, colorePerAttributo(p, TipoAttributo.CARISMA, color));
+				doomdark = ImageCache.get(p.get(TipoAttributo.CARISMA), fontMedium, colorePerAttributo(p, TipoAttributo.CARISMA, color));
 				graphics.drawImage(doomdark, rightXOffsetCarisma - doomdark.getWidth(null), locYOffset, null);
 
 				locYOffset += fontMedium.getHeight();

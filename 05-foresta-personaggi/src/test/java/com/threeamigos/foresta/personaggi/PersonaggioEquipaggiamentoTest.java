@@ -97,7 +97,7 @@ class PersonaggioEquipaggiamentoTest {
         assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Maga("Morgana", 1), artefatto(TipoArtefatto.ARMATURA, 1));
         Mago forzuto = new Mago("Merlino", 1);
         forzuto.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 20));
-        assertTrue(forzuto.getForza() >= CostantiPersonaggi.ARMATURA_FORZA_MINIMA, "la prova ha senso solo se la forza basterebbe");
+        assertTrue(forzuto.get(TipoAttributo.FORZA) >= CostantiPersonaggi.ARMATURA_FORZA_MINIMA, "la prova ha senso solo se la forza basterebbe");
         assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, forzuto, artefatto(TipoArtefatto.ARMATURA, 1));
     }
 
@@ -107,7 +107,7 @@ class PersonaggioEquipaggiamentoTest {
         assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Sacerdotessa("Pippa", 1), artefatto(TipoArtefatto.ARMATURA, 1));
         Sacerdote forzuto = new Sacerdote("Pippo", 1);
         forzuto.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 20));
-        assertTrue(forzuto.getForza() >= CostantiPersonaggi.ARMATURA_FORZA_MINIMA, "la prova ha senso solo se la forza basterebbe");
+        assertTrue(forzuto.get(TipoAttributo.FORZA) >= CostantiPersonaggi.ARMATURA_FORZA_MINIMA, "la prova ha senso solo se la forza basterebbe");
         assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, forzuto, artefatto(TipoArtefatto.ARMATURA, 1));
         // Il suo equipaggiamento di classe non cambia
         assertEquals(Optional.empty(), new Sacerdote("Pippo", 1).puoEquipaggiare(artefatto(TipoArtefatto.MAZZA, 1)));
@@ -121,7 +121,7 @@ class PersonaggioEquipaggiamentoTest {
         // Nemmeno se fosse forte quanto basta: non e' questione di forza, la sua classe non la usa
         Ladro forzuto = new Ladro("Pippo", 1);
         forzuto.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 10));
-        assertTrue(forzuto.getForza() >= CostantiPersonaggi.ARMATURA_FORZA_MINIMA, "la prova ha senso solo se la forza basterebbe");
+        assertTrue(forzuto.get(TipoAttributo.FORZA) >= CostantiPersonaggi.ARMATURA_FORZA_MINIMA, "la prova ha senso solo se la forza basterebbe");
         assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, forzuto, artefatto(TipoArtefatto.ARMATURA, 1));
         // L'elmo, la veste e gli accessori li porta, come tutti
         assertEquals(Optional.empty(), new Ladro("Pippo", 1).puoEquipaggiare(artefatto(TipoArtefatto.ELMO, 1)));

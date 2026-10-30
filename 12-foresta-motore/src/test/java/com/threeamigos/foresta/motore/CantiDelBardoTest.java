@@ -366,7 +366,7 @@ class CantiDelBardoTest {
         compagni.aggiungiPersonaggio(guerriero);
         double coraggio = guerriero.getModelloDati().get(TipoAttributo.CORAGGIO);
         double precisione = guerriero.getModelloDati().get(TipoAttributo.PRECISIONE);
-        int forza = guerriero.getForza();
+        int forza = guerriero.get(TipoAttributo.FORZA);
         assertEquals(0.0, guerriero.getVariazioneDaTemporanei(TipoAttributo.CORAGGIO));
 
         Bardo bardo = new Bardo("Orfeo", 4);
@@ -376,7 +376,7 @@ class CantiDelBardoTest {
         assertEquals(coraggio * 0.30, guerriero.getVariazioneDaTemporanei(TipoAttributo.CORAGGIO), 1e-9);
         assertEquals(precisione * 0.30, guerriero.getVariazioneDaTemporanei(TipoAttributo.PRECISIONE), 1e-9);
         assertEquals(0.0, guerriero.getVariazioneDaTemporanei(TipoAttributo.FORZA));
-        assertEquals(forza, guerriero.getForza());
+        assertEquals(forza, guerriero.get(TipoAttributo.FORZA));
     }
 
     @Test

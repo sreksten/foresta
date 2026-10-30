@@ -58,6 +58,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	final ModificatoriTemporanei modificatori = new ModificatoriTemporanei(this);
 	private final EffettiDiStato effettiDiStato = new EffettiDiStato(this);
 	private final SaluteEMorte saluteEMorte = new SaluteEMorte(this);
+	private final Progressione progressione = new Progressione(this);
+	private final CaricoEInventario caricoEInventario = new CaricoEInventario(this);
 
 	/**
 	 * Posizione all'interno del gruppo
@@ -412,7 +414,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		double baseGrezza = getQuantitaModificata(md,
 				5.0d + getSaluteMassima() * CostantiPersonaggi.RIGENERAZIONE_SALUTE_QUOTA_SALUTE_MASSIMA, TipoAttributo.RIGENERAZIONE_SALUTE);
 		// 2. Impatto dell'attributo Costituzione con Diminishing Returns
-		double bonusCostituzione = 1.0 + (Math.sqrt(getCostituzione()) / 10.0);
+		double bonusCostituzione = 1.0 + (Math.sqrt(get(TipoAttributo.COSTITUZIONE)) / 10.0);
 		// 3. Calcolo finale combinato con il moltiplicatore di archetipo
 		double saluteFinale = (baseGrezza * bonusCostituzione) * getMoltiplicatoreRecuperoFisico();
 		// Arrotondamento a un decimale per la UI
@@ -465,7 +467,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			sb.append("è san").append(getLetteraFinaleAttributo()).append(" come un pesce");
 		}
 		sb.append(", ");
-		int coraggio = getCoraggio();
+		int coraggio = get(TipoAttributo.CORAGGIO);
 		if (coraggio < 30) {
 			sb.append("non ha molto coraggio");
 		} else if (coraggio < 60) {
@@ -474,7 +476,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			sb.append("ha coraggio da vendere");
 		}
 		sb.append(", nei combattimenti ");
-		int valore = getValore();
+		int valore = get(TipoAttributo.VALORE);
 		if (valore < 30) {
 			sb.append("non e' che se la cavi egregiamente");
 		} else if (valore < 60) {
@@ -757,112 +759,21 @@ public abstract class PersonaggioBase implements Personaggio {
 		return GestoreProgressione.getXpPerProssimoLivello(md.getLivello());
 	}
 
-	public void addPuntiEsperienza(int esperienza) {
-		if (isPNG()) {
-			return;
-		}
 
-		int quantitaPrecedente = md.getEsperienza();
-		int nuovaQuantita = quantitaPrecedente + esperienza;
-		md.setEsperienza(nuovaQuantita);
-		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.PUNTI_ESPERIENZA,
-				quantitaPrecedente, nuovaQuantita));
-
-		// Verifichiamo se i nuovi XP accumulati determinano un salto di livello
-		int livelloAttuale = md.getLivello();
-		int nuovoLivello = GestoreProgressione.calcolaLivelloDaXp(md.getEsperienza());
-
-		if (nuovoLivello > livelloAttuale) {
-			int differenza = nuovoLivello - livelloAttuale;
-			md.setLivello(nuovoLivello);
-			BusEventi.pubblica(new NotificaAumentoLivelloPersonaggio(this, livelloAttuale, nuovoLivello));
-			int puntiAbilitaDisponibili = md.getPuntiAbilitaDisponibili();
-			int nuoviPuntiAbilitaDisponibili = puntiAbilitaDisponibili + differenza;
-			md.setPuntiAbilitaDisponibili(nuoviPuntiAbilitaDisponibili);
-			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.PUNTI_ABILITA, puntiAbilitaDisponibili, nuoviPuntiAbilitaDisponibili));
-		}
-		// QUI PUOI AGGANCIARE IL CODICE PRECEDENTE:
-		// 1. Ricalcola il nuovo budget di punti primari (con la tolleranza del 5%)
-		// 2. Aggiorna le statistiche nel modello md.setForza(...), ecc.
-		// 3. Ricalcola i valori derivati come Carico, Critico, Velocità.
-	}
-
-	@Override
-	public void impostaLivelloDopoReclutamento(int livello) {
-		int livelloAttuale = md.getLivello();
-		int nuovoLivello = Math.min(livello, CostantiPersonaggi.MASSIMO_LIVELLO);
-		if (nuovoLivello <= livelloAttuale) {
-			return;
-		}
-		double saluteMassimaPrima = calcolaSaluteMassima();
-		double magiaMassimaPrima = getMagiaMassima();
-		double frazioneSalute = saluteMassimaPrima > 0 ? md.get(TipoAttributo.SALUTE) / saluteMassimaPrima : 1.0d;
-		double frazioneMagia = magiaMassimaPrima > 0 ? md.get(TipoAttributo.MAGIA) / magiaMassimaPrima : 1.0d;
-		md.setLivello(nuovoLivello);
-		md.setEsperienza(Math.max(md.getEsperienza(), GestoreProgressione.getXpNecessariPerLivello(nuovoLivello)));
-		md.setPuntiAbilitaDisponibili(md.getPuntiAbilitaDisponibili() + nuovoLivello - livelloAttuale);
-		// Salute e magia crescono con il livello: chi arriva ne ha la stessa frazione che aveva (di solito tutta), non i punti del livello 1
-		md.set(TipoAttributo.SALUTE, (int) (calcolaSaluteMassima() * frazioneSalute));
-		md.set(TipoAttributo.MAGIA, (int) (getMagiaMassima() * frazioneMagia));
-	}
 
 	@Override
 	public int getPuntiAbilitaDisponibili() {
 		return md.getPuntiAbilitaDisponibili();
 	}
 
-	@Override
-	public void spendiPuntoAbilita(TipoAttributo tipoAttributo) {
-		if (!tipoAttributo.isPrimario() || md.getPuntiAbilitaDisponibili() <= 0) {
-			return;
-		}
-		add(tipoAttributo, 1);
-		int puntiAbilitaDisponibili = md.getPuntiAbilitaDisponibili();
-		int nuoviPuntiAbilitaDisponibili = puntiAbilitaDisponibili - 1;
-		md.setPuntiAbilitaDisponibili(nuoviPuntiAbilitaDisponibili);
-		// I secondari (precisione, critico, velocita'...) si ricavano dai primari
-		ricalcolaAttributiSecondari();
-		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.PUNTI_ABILITA,
-				puntiAbilitaDisponibili, nuoviPuntiAbilitaDisponibili));
-		BusEventi.pubblica(new NotificaConsumoPuntoAbilitaPersonaggio(this, tipoAttributo));
-	}
 
 	// CARICO
 
-	@Override
-	public double getCarico() {
-		return md.getArtefatti().stream().mapToDouble(ArtefattoMD::getPeso).sum();
-	}
 
-	@Override
-	public boolean puoPrendere(Artefatto artefatto) {
-		return puoPrendere(artefatto.getPeso());
-	}
 
-	@Override
-	public Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> puoEquipaggiare(Artefatto artefatto) {
-		RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento esitoControlloRichiestaEquipaggiamento = RegoleEquipaggiamento.valuta(this, artefatto.getModelloDati());
-		if (esitoControlloRichiestaEquipaggiamento.getMotivo() != null) {
-			return Optional.of(esitoControlloRichiestaEquipaggiamento);
-		}
-		return Optional.empty();
-	}
 
-	@Override
-	public boolean isEquipaggiabile(VistaArtefatto artefatto) {
-		return !puoEquipaggiare(Artefatto.da(artefatto)).isPresent();
-	}
 
-	@Override
-	public List<String> getDescrizioniSetCompleti() {
-		return RegoleSetLeggendari.setCompleti(md.getArtefatti()).stream()
-				.map(RegoleSetLeggendari::descrizioneSetCompleto)
-				.collect(Collectors.toList());
-	}
 
-	public boolean puoPrendere(double quantita) {
-		return quantita <= calcolaCaricoMassimo(md, this) - getCarico();
-	}
 
 	@Override
 	public boolean puoFormulare(TipoIncantesimo tipoIncantesimo) {
@@ -871,12 +782,74 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	// CARICO MASSIMO
 
+
+
+
+	// ESPERIENZA E PUNTI ABILITA'
+
 	@Override
-	public int getCaricoMassimo() {
-		return (int)calcolaCaricoMassimo(md, this);
+	public void addPuntiEsperienza(int esperienza) {
+		progressione.addPuntiEsperienza(esperienza);
 	}
 
+	@Override
+	public void impostaLivelloDopoReclutamento(int livello) {
+		progressione.impostaLivelloDopoReclutamento(livello);
+	}
 
+	@Override
+	public void spendiPuntoAbilita(TipoAttributo tipoAttributo) {
+		progressione.spendiPuntoAbilita(tipoAttributo);
+	}
+
+	// CARICO E INVENTARIO
+
+	@Override
+	public double getCarico() {
+		return caricoEInventario.getCarico();
+	}
+
+	@Override
+	public boolean puoPrendere(Artefatto artefatto) {
+		return caricoEInventario.puoPrendere(artefatto);
+	}
+
+	@Override
+	public Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> puoEquipaggiare(Artefatto artefatto) {
+		return caricoEInventario.puoEquipaggiare(artefatto);
+	}
+
+	@Override
+	public boolean isEquipaggiabile(VistaArtefatto artefatto) {
+		return caricoEInventario.isEquipaggiabile(artefatto);
+	}
+
+	@Override
+	public List<String> getDescrizioniSetCompleti() {
+		return caricoEInventario.getDescrizioniSetCompleti();
+	}
+
+	public boolean puoPrendere(double quantita) {
+		return caricoEInventario.puoPrendere(quantita);
+	}
+
+	@Override
+	public int getCaricoMassimo() {
+		return caricoEInventario.getCaricoMassimo();
+	}
+
+	@Override
+	public List<Artefatto> getInventario() {
+		return caricoEInventario.getInventario();
+	}
+
+	public void addArtefatto(Artefatto a) {
+		caricoEInventario.addArtefatto(a);
+	}
+
+	public void removeArtefatto(Artefatto a) {
+		caricoEInventario.removeArtefatto(a);
+	}
 
 	// SALUTE
 
@@ -975,127 +948,30 @@ public abstract class PersonaggioBase implements Personaggio {
 		return magiaMassima;
 	}
 
-	// Funzione per aggiornamento attributi primari. Questo può succedere per esempio quando un personaggio aumenta di livello
+	// ATTRIBUTI PRIMARI E SECONDARI
 
-	private void add(TipoAttributo tipoAttributo, int quantita) {
+	/**
+	 * Il valore di un attributo primario o secondario con i modificatori. La parata e la resistenza magica aggiungono anche quello che dà
+	 * l'equipaggiamento di suo (vedi {@link #parataConEquipaggiamento} e {@link #resistenzaMagicaConEquipaggiamento}).
+	 */
+	@Override
+	public int get(TipoAttributo tipoAttributo) {
+		switch (tipoAttributo) {
+			case PARATA:
+				return parataConEquipaggiamento();
+			case RESISTENZA_MAGICA:
+				return resistenzaMagicaConEquipaggiamento();
+			default:
+				return valoreDi(md, tipoAttributo);
+		}
+	}
+
+	@Override
+	public void add(TipoAttributo tipoAttributo, int quantita) {
 		double valorePrecedente = md.get(tipoAttributo);
 		double valoreAttuale = valorePrecedente + quantita;
 		md.set(tipoAttributo, valoreAttuale);
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, tipoAttributo, valorePrecedente, valoreAttuale));
-	}
-
-	// FORZA
-
-	@Override
-	public int getForza() {
-		return get(md, TipoAttributo.FORZA);
-	}
-
-	public void addForza(int quantita) {
-		add(TipoAttributo.FORZA, quantita);
-	}
-
-	// DESTREZZA
-
-	@Override
-	public int getDestrezza() {
-		return get(md, TipoAttributo.DESTREZZA);
-	}
-
-	public void addDestrezza(int quantita) {
-		add(TipoAttributo.DESTREZZA, quantita);
-	}
-
-	// COSTITUZIONE
-
-	@Override
-	public int getCostituzione() {
-		return get(md, TipoAttributo.COSTITUZIONE);
-	}
-
-	public void addCostituzione(int quantita) {
-		add(TipoAttributo.COSTITUZIONE, quantita);
-	}
-
-	// INTELLIGENZA
-
-	@Override
-	public int getIntelligenza() {
-		return get(md, TipoAttributo.INTELLIGENZA);
-	}
-
-	public void addIntelligenza(int quantita) {
-		add(TipoAttributo.INTELLIGENZA, quantita);
-	}
-
-	// SAGGEZZA
-
-	@Override
-	public int getSaggezza() {
-		return get(md, TipoAttributo.SAGGEZZA);
-	}
-
-	public void addSaggezza(int quantita) {
-		add(TipoAttributo.SAGGEZZA, quantita);
-	}
-
-	// CARISMA
-
-	@Override
-	public int getCarisma() {
-		return get(md, TipoAttributo.CARISMA);
-	}
-
-	public void addCarisma(int quantita) {
-		add(TipoAttributo.CARISMA, quantita);
-	}
-
-	public void subCarisma(int quantita) {
-		if (quantita > (int) md.get(TipoAttributo.CARISMA)) {
-			quantita = (int) md.get(TipoAttributo.CARISMA);
-		}
-		if (quantita > 0) {
-			add(TipoAttributo.CARISMA, -quantita);
-		}
-	}
-
-	// FORTUNA
-
-	@Override
-	public int getFortuna() {
-		return get(md, TipoAttributo.FORTUNA);
-	}
-
-	public void addFortuna(int quantita) {
-		add(TipoAttributo.FORTUNA, quantita);
-	}
-
-	// CRITICO
-
-	@Override
-	public int getCritico() {
-		return get(md, TipoAttributo.CRITICO);
-	}
-
-	// PRECISIONE
-
-	@Override
-	public int getPrecisione() {
-		return get(md, TipoAttributo.PRECISIONE);
-	}
-
-	// VELOCITA
-
-	@Override
-	public int getVelocita() {
-		return get(md, TipoAttributo.VELOCITA);
-	}
-
-	// FURTIVITA
-
-	@Override
-	public int getFurtivita() {
-		return get(md, TipoAttributo.FURTIVITA);
 	}
 
 	// PARATA
@@ -1105,9 +981,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * per ogni loro livello, mentre chi impugna due armi o un'arma a due mani ha la guardia aperta e ne perde
 	 * un quarto.
 	 */
-	@Override
-	public int getParata() {
-		double parata = get(md, TipoAttributo.PARATA);
+	private int parataConEquipaggiamento() {
+		double parata = valoreDi(md, TipoAttributo.PARATA);
 		for (ArtefattoMD artefatto : md.getArtefatti()) {
 			parata += parataIntrinseca(artefatto);
 		}
@@ -1119,7 +994,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	/**
 	 * La PARATA che un pezzo difensivo dà di suo, oltre ai modificatori scritti sull'artefatto.
-	 * La veste non para: dà lo stesso minimo in RESISTENZA_MAGICA (vedi getResistenzaMagica).
+	 * La veste non para: dà lo stesso minimo in RESISTENZA_MAGICA (vedi resistenzaMagicaConEquipaggiamento).
 	 */
 	private static int parataIntrinseca(ArtefattoMD artefatto) {
 		int livello = artefatto.getLivello();
@@ -1152,9 +1027,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * La RESISTENZA_MAGICA con l'equipaggiamento: lo scudo ne aggiunge per ogni suo livello, di più se è raro;
 	 * la veste, l'armatura di chi usa la magia, ne dà quanto un'armatura dà di PARATA.
 	 */
-	@Override
-	public int getResistenzaMagica() {
-		int resistenza = get(md, TipoAttributo.RESISTENZA_MAGICA);
+	private int resistenzaMagicaConEquipaggiamento() {
+		int resistenza = valoreDi(md, TipoAttributo.RESISTENZA_MAGICA);
 		for (ArtefattoMD artefatto : md.getArtefatti()) {
 			if (artefatto.getTipo() == TipoArtefatto.SCUDO) {
 				int perLivello = artefatto.getRarita() == TipoRaritaArtefatto.COMUNE
@@ -1166,55 +1040,6 @@ public abstract class PersonaggioBase implements Personaggio {
 			}
 		}
 		return resistenza;
-	}
-
-	// PERCEZIONE
-
-	@Override
-	public int getPercezione() {
-		return get(md, TipoAttributo.PERCEZIONE);
-	}
-
-	// SOGGEZIONE
-
-	@Override
-	public int getSoggezione() {
-		return get(md, TipoAttributo.SOGGEZIONE);
-	}
-
-	// FURIA
-
-	@Override
-	public int getFuria() {
-		return get(md, TipoAttributo.FURIA);
-	}
-
-	// CORAGGIO
-
-	@Override
-	public int getCoraggio() {
-		return get(md, TipoAttributo.CORAGGIO);
-	}
-
-	// VALORE
-
-	@Override
-	public int getValore() {
-		return get(md, TipoAttributo.VALORE);
-	}
-
-	// CONTRATTAZIONE
-
-	@Override
-	public int getContrattazione() {
-		return get(md, TipoAttributo.CONTRATTAZIONE);
-	}
-
-	// STANCHEZZA
-
-	@Override
-	public int getStanchezza() {
-		return get(md, TipoAttributo.STANCHEZZA);
 	}
 
 	public void addStanchezza(int quantita) {
@@ -1371,8 +1196,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double COEFFICIENTE_FORZA = 0.20;
 
 		// Calcolo del valore grezzo con Diminishing Returns
-		double numeroGrezzo = (COEFFICIENTE_COSTITUZIONE * Math.sqrt(getCostituzione())) +
-				(COEFFICIENTE_FORZA * Math.sqrt(getForza()));
+		double numeroGrezzo = (COEFFICIENTE_COSTITUZIONE * Math.sqrt(get(TipoAttributo.COSTITUZIONE))) +
+				(COEFFICIENTE_FORZA * Math.sqrt(get(TipoAttributo.FORZA)));
 
 		//FIXME
 		/*
@@ -1471,52 +1296,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	// Scambiatore Artefatti
 
-	@Override
-	public List<Artefatto> getInventario() {
-		return md.getArtefatti().stream().map(Artefatto::di).collect(Collectors.toList());
-	}
 
-	/**
-	 * Aggiunge l'artefatto all'equipaggiamento e ne imposta lo slot occupato. I controlli
-	 * ({@link #puoEquipaggiare}) spettano a chi chiama: se l'artefatto non passerebbe le regole,
-	 * occupa lo slot del suo tipo.
-	 */
-	public void addArtefatto(Artefatto a) {
-		ArtefattoMD artefattoMD = a.getModelloDati();
-		TipoSlotArtefatto slot = RegoleEquipaggiamento.valuta(this, artefattoMD).getSlot();
-		artefattoMD.setSlotEquipaggiamento(slot != null ? slot : artefattoMD.getTipo().getSlotArtefatto());
-		md.aggiungiArtefatto(artefattoMD);
-		if (a instanceof SpadaNormalmenteNascosta) {
-			BusEventi.pubblica(new InternoSpadaNascostaImpugnata());
-		}
-		// I modificatori dell'artefatto sui primari cambiano anche i secondari che ne derivano
-		ricalcolaAttributiSecondari();
-		limitaAiMassimi();
-	}
 
-	public void removeArtefatto(Artefatto a) {
-		md.togliArtefatto(a.getModelloDati());
-		a.getModelloDati().setSlotEquipaggiamento(null);
-		ricalcolaAttributiSecondari();
-		limitaAiMassimi();
-	}
 
-	/**
-	 * Togliendo un artefatto che dava SALUTE o MAGIA massima, i valori attuali possono superare i nuovi massimi: si
-	 * riportano subito entro il limite (voluto: chi toglie l'artefatto ne perde il vantaggio).
-	 */
-	private void limitaAiMassimi() {
-		int salute = (int) md.get(TipoAttributo.SALUTE);
-		int saluteMassima = getSaluteMassima();
-		if (salute > saluteMassima) {
-			md.setSalute(saluteMassima);
-			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, salute, saluteMassima));
-		}
-		int magia = (int) md.get(TipoAttributo.MAGIA);
-		int magiaMassima = getMagiaMassima();
-		if (magia > magiaMassima) {
-			md.setMagia(magiaMassima);
-			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.MAGIA, magia, magiaMassima));
-		}
-	}
 }

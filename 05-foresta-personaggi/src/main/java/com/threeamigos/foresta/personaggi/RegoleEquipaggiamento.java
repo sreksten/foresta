@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
 import com.threeamigos.foresta.artefatti.Arma;
@@ -127,7 +128,7 @@ public final class RegoleEquipaggiamento {
 			return EsitoControlloRichiestaEquipaggiamento.rifiuto(personaggio, TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE);
 		}
 
-		if (artefatto.getTipo() == TipoArtefatto.ARMATURA && personaggio.getForza() < CostantiPersonaggi.ARMATURA_FORZA_MINIMA) {
+		if (artefatto.getTipo() == TipoArtefatto.ARMATURA && personaggio.get(TipoAttributo.FORZA) < CostantiPersonaggi.ARMATURA_FORZA_MINIMA) {
 			return EsitoControlloRichiestaEquipaggiamento.rifiuto(personaggio, TipoMotivoRifiutoEquipaggiamento.FORZA_INSUFFICIENTE, artefatto);
 		}
 

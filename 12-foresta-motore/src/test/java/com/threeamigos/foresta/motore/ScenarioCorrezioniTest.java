@@ -261,7 +261,7 @@ class ScenarioCorrezioniTest {
 		ModelloDati.installa();
 		ModelloDati.setIstanza(new ModelloDati());
 		com.threeamigos.foresta.personaggi.Ladro ladro = new com.threeamigos.foresta.personaggi.Ladro("L", 1);
-		int prima = ladro.getPrecisione();
+		int prima = ladro.get(TipoAttributo.PRECISIONE);
 		com.threeamigos.foresta.artefatti.Artefatto anello = com.threeamigos.foresta.artefatti.CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.ANELLO)
 				.setNome("anello di prova").setDescrizione("che fa mirare meglio").setLivello(1).setDanniBase(0)
@@ -270,9 +270,9 @@ class ScenarioCorrezioniTest {
 						TipoModificatore.VARIAZIONE_FISSA, 200)
 				.costruisci();
 		ladro.addArtefatto(anello);
-		assertTrue(ladro.getPrecisione() > prima, "precisione " + prima + " -> " + ladro.getPrecisione());
+		assertTrue(ladro.get(TipoAttributo.PRECISIONE) > prima, "precisione " + prima + " -> " + ladro.get(TipoAttributo.PRECISIONE));
 		ladro.removeArtefatto(anello);
-		assertEquals(prima, ladro.getPrecisione());
+		assertEquals(prima, ladro.get(TipoAttributo.PRECISIONE));
 	}
 
 	@Test
@@ -280,12 +280,12 @@ class ScenarioCorrezioniTest {
 		ModelloDati.installa();
 		ModelloDati.setIstanza(new ModelloDati());
 		com.threeamigos.foresta.personaggi.Ladro ladro = new com.threeamigos.foresta.personaggi.Ladro("L", 1);
-		int prima = ladro.getPrecisione();
+		int prima = ladro.get(TipoAttributo.PRECISIONE);
 		ladro.getModelloDati().setPuntiAbilitaDisponibili(200);
 		for (int i = 0; i < 200; i++) {
 			ladro.spendiPuntoAbilita(TipoAttributo.DESTREZZA);
 		}
-		assertTrue(ladro.getPrecisione() > prima, "precisione " + prima + " -> " + ladro.getPrecisione());
+		assertTrue(ladro.get(TipoAttributo.PRECISIONE) > prima, "precisione " + prima + " -> " + ladro.get(TipoAttributo.PRECISIONE));
 	}
 
 	@Test
@@ -307,8 +307,8 @@ class ScenarioCorrezioniTest {
 	}
 
 	private static int sommaPrimari(Personaggio p) {
-		return p.getForza() + p.getDestrezza() + p.getCostituzione() + p.getIntelligenza() + p.getSaggezza()
-				+ p.getCarisma() + p.getFortuna();
+		return p.get(TipoAttributo.FORZA) + p.get(TipoAttributo.DESTREZZA) + p.get(TipoAttributo.COSTITUZIONE) + p.get(TipoAttributo.INTELLIGENZA) + p.get(TipoAttributo.SAGGEZZA)
+				+ p.get(TipoAttributo.CARISMA) + p.get(TipoAttributo.FORTUNA);
 	}
 
 	private static CoordinateMD unaCasellaDiBosco() {

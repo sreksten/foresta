@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.locazioni.LocazioneBase;
 import com.threeamigos.foresta.modellodati.ModelloDati;
@@ -74,6 +75,10 @@ class AnalisiDeiPersonaggiGiocabiliTest {
             this.nome = nome;
             this.valore = valore;
         }
+
+        Colonna(String nome, TipoAttributo attributo) {
+            this(nome, p -> p.get(attributo));
+        }
     }
 
     private static final List<Colonna> RISORSE = Arrays.asList(
@@ -83,16 +88,16 @@ class AnalisiDeiPersonaggiGiocabiliTest {
             new Colonna("pot.mag", Personaggio::getPotereMagico));
 
     private static final List<Colonna> ATTRIBUTI = Arrays.asList(
-            new Colonna("FOR", Personaggio::getForza), new Colonna("DES", Personaggio::getDestrezza),
-            new Colonna("COS", Personaggio::getCostituzione), new Colonna("INT", Personaggio::getIntelligenza),
-            new Colonna("SAG", Personaggio::getSaggezza), new Colonna("CAR", Personaggio::getCarisma),
-            new Colonna("FORT", Personaggio::getFortuna), new Colonna("CRIT", Personaggio::getCritico),
-            new Colonna("PREC", Personaggio::getPrecisione), new Colonna("VEL", Personaggio::getVelocita),
-            new Colonna("FURT", Personaggio::getFurtivita), new Colonna("PAR", Personaggio::getParata),
-            new Colonna("RES.M", Personaggio::getResistenzaMagica), new Colonna("PERC", Personaggio::getPercezione),
-            new Colonna("SOGG", Personaggio::getSoggezione), new Colonna("FURIA", Personaggio::getFuria),
-            new Colonna("CORAG", Personaggio::getCoraggio), new Colonna("VAL", Personaggio::getValore),
-            new Colonna("CONTR", Personaggio::getContrattazione));
+            new Colonna("FOR", TipoAttributo.FORZA), new Colonna("DES", TipoAttributo.DESTREZZA),
+            new Colonna("COS", TipoAttributo.COSTITUZIONE), new Colonna("INT", TipoAttributo.INTELLIGENZA),
+            new Colonna("SAG", TipoAttributo.SAGGEZZA), new Colonna("CAR", TipoAttributo.CARISMA),
+            new Colonna("FORT", TipoAttributo.FORTUNA), new Colonna("CRIT", TipoAttributo.CRITICO),
+            new Colonna("PREC", TipoAttributo.PRECISIONE), new Colonna("VEL", TipoAttributo.VELOCITA),
+            new Colonna("FURT", TipoAttributo.FURTIVITA), new Colonna("PAR", TipoAttributo.PARATA),
+            new Colonna("RES.M", TipoAttributo.RESISTENZA_MAGICA), new Colonna("PERC", TipoAttributo.PERCEZIONE),
+            new Colonna("SOGG", TipoAttributo.SOGGEZIONE), new Colonna("FURIA", TipoAttributo.FURIA),
+            new Colonna("CORAG", TipoAttributo.CORAGGIO), new Colonna("VAL", TipoAttributo.VALORE),
+            new Colonna("CONTR", TipoAttributo.CONTRATTAZIONE));
 
     @Test
     @EnabledIfSystemProperty(named = "analisi", matches = "true")

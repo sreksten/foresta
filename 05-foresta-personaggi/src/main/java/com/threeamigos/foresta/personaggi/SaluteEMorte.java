@@ -182,7 +182,7 @@ final class SaluteEMorte {
 
 		if ((md().getClasse() == TipoPersonaggio.GUERRIERO || md().getClasse() == TipoPersonaggio.GUERRIERA
 				|| md().getClasse() == TipoPersonaggio.CAPITANO_DELLE_GUARDIE) &&
-				p.getFuria() > 0 && !p.hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
+				p.get(TipoAttributo.FURIA) > 0 && !p.hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
 			double sogliaBerserk = p.calcolaSaluteMassima() / 3.0d;
 			if (salute > 0 && salute <= sogliaBerserk) {
 				p.addEffettoDiStato(TipoEffettoDiStato.BERSERK, 1, 0);

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.canti;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
 
 import com.threeamigos.foresta.tipi.TipoAzione;
@@ -23,7 +24,7 @@ public class CantoCurativo implements Canto {
 
 	public CantoCurativo(Personaggio cantore) {
 		this.livello = cantore.getLivello();
-		this.saggezza = cantore.getSaggezza();
+		this.saggezza = cantore.get(TipoAttributo.SAGGEZZA);
 	}
 
 	@Override

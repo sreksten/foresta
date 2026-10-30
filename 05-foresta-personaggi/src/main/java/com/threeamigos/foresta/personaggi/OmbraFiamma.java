@@ -38,8 +38,8 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	// CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA). Nel tiro però il carisma ha un tetto pari alle facce, quindi
 	// l'amicizia può comunque fallire con un 12
 	@Override
-	public int getCarisma() {
-		return CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA + 1;
+	public int get(TipoAttributo tipoAttributo) {
+		return tipoAttributo == TipoAttributo.CARISMA ? CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA + 1 : super.get(tipoAttributo);
 	}
 
 	@Override

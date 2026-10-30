@@ -126,17 +126,17 @@ class ModificatoriTemporaneiTest {
 
     @Test
     void unModificatoreATempoPortaLAttributoAZeroEPoiScade() {
-        assertTrue(guerriero.getFortuna() > 0);
+        assertTrue(guerriero.get(TipoAttributo.FORTUNA) > 0);
         guerriero.addModificatore(fortunaAZero(UnitaDurataModificatore.TURNI, 2));
-        assertEquals(0, guerriero.getFortuna());
+        assertEquals(0, guerriero.get(TipoAttributo.FORTUNA));
         assertEquals(1, guerriero.getModificatoriTemporanei().size());
 
         guerriero.riduciModificatori(UnitaDurataModificatore.TURNI);
-        assertEquals(0, guerriero.getFortuna());
+        assertEquals(0, guerriero.get(TipoAttributo.FORTUNA));
         assertEquals(1, guerriero.getModificatoriTemporanei().iterator().next().getDurata());
 
         guerriero.riduciModificatori(UnitaDurataModificatore.TURNI);
-        assertTrue(guerriero.getFortuna() > 0);
+        assertTrue(guerriero.get(TipoAttributo.FORTUNA) > 0);
         assertTrue(guerriero.getModificatoriTemporanei().isEmpty());
     }
 
@@ -156,12 +156,12 @@ class ModificatoriTemporaneiTest {
 
     @Test
     void unModificatoreUgualeNonSiSommaMaRinfrescaLaDurata() {
-        int fortuna = guerriero.getFortuna();
+        int fortuna = guerriero.get(TipoAttributo.FORTUNA);
         ModificatoreAttributoMD meno = new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.VARIAZIONE_FISSA, -1, "",
                 UnitaDurataModificatore.TURNI, 2, BersaglioModificatore.PORTATORE);
         guerriero.addModificatore(meno);
         guerriero.addModificatore(meno.conDurata(5));
-        assertEquals(fortuna - 1, guerriero.getFortuna(), "non si somma");
+        assertEquals(fortuna - 1, guerriero.get(TipoAttributo.FORTUNA), "non si somma");
         assertEquals(1, guerriero.getModificatoriTemporanei().size());
         assertEquals(5, guerriero.getModificatoriTemporanei().iterator().next().getDurata());
         // Uno più corto non accorcia quello che c'è
@@ -172,10 +172,10 @@ class ModificatoriTemporaneiTest {
     @Test
     void ilModificatorePermanenteNonScade() {
         guerriero.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 3));
-        int forza = guerriero.getForza();
+        int forza = guerriero.get(TipoAttributo.FORZA);
         guerriero.riduciModificatori(UnitaDurataModificatore.TURNI);
         guerriero.riduciModificatori(UnitaDurataModificatore.LOCAZIONI);
-        assertEquals(forza, guerriero.getForza());
+        assertEquals(forza, guerriero.get(TipoAttributo.FORZA));
     }
 
     @Test
@@ -197,9 +197,9 @@ class ModificatoriTemporaneiTest {
 
     @Test
     void iModificatoriSulBersaglioDiUnaSpadaNonContanoPerChiLaPorta() {
-        int fortuna = guerriero.getFortuna();
+        int fortuna = guerriero.get(TipoAttributo.FORTUNA);
         guerriero.addArtefatto(spadaDellaSfortuna());
-        assertEquals(fortuna, guerriero.getFortuna());
+        assertEquals(fortuna, guerriero.get(TipoAttributo.FORTUNA));
     }
 
     // --- Armi
@@ -209,7 +209,7 @@ class ModificatoriTemporaneiTest {
         Guerriero bersaglio = new Guerriero("Bersaglio", 5);
         // Con poca forza il tiro per applicare il modificatore riesce sempre
         bersaglio.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.QUANTITA_ASSOLUTA, 1));
-        assertTrue(bersaglio.getFortuna() > 0);
+        assertTrue(bersaglio.get(TipoAttributo.FORTUNA) > 0);
         Artefatto spada = spadaDellaSfortuna();
         guerriero.addArtefatto(spada);
         Arma arma = (Arma) spada;
@@ -218,12 +218,12 @@ class ModificatoriTemporaneiTest {
         assertEquals(1, risultato.getModificatoriDaAggiungere().size());
         ApplicazioneDelRisultato.applica(bersaglio, risultato);
 
-        assertEquals(0, bersaglio.getFortuna());
+        assertEquals(0, bersaglio.get(TipoAttributo.FORTUNA));
         ModificatoreAttributoMD sulBersaglio = bersaglio.getModificatoriTemporanei().iterator().next();
         assertEquals(BersaglioModificatore.PORTATORE, sulBersaglio.getBersaglio());
         assertEquals(5, sulBersaglio.getDurata());
         assertEquals(UnitaDurataModificatore.TURNI, sulBersaglio.getUnitaDurata());
-        assertTrue(guerriero.getFortuna() > 0, "chi colpisce non ne risente");
+        assertTrue(guerriero.get(TipoAttributo.FORTUNA) > 0, "chi colpisce non ne risente");
 
         // Un secondo colpo rinfresca, non somma
         for (int turno = 0; turno < 3; turno++) {
@@ -237,7 +237,7 @@ class ModificatoriTemporaneiTest {
         for (int turno = 0; turno < 5; turno++) {
             bersaglio.riduciModificatori(UnitaDurataModificatore.TURNI);
         }
-        assertTrue(bersaglio.getFortuna() > 0);
+        assertTrue(bersaglio.get(TipoAttributo.FORTUNA) > 0);
     }
 
     @Test
@@ -313,27 +313,27 @@ class ModificatoriTemporaneiTest {
         guerriero.addModificatore(new ModificatoreAttributoMD(TipoAttributo.CORAGGIO, TipoModificatore.VARIAZIONE_PERCENTUALE, 20, "",
                 UnitaDurataModificatore.LOCAZIONI, 2, BersaglioModificatore.PORTATORE));
         guerriero.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 3, "benedizione"));
-        int forza = guerriero.getForza();
+        int forza = guerriero.get(TipoAttributo.FORZA);
 
         guerriero.rimuoviIModificatoriTemporaneiRimovibili();
 
         assertTrue(guerriero.getModificatoriTemporanei().isEmpty());
-        assertTrue(guerriero.getFortuna() > 0);
-        assertEquals(forza, guerriero.getForza());
+        assertTrue(guerriero.get(TipoAttributo.FORTUNA) > 0);
+        assertEquals(forza, guerriero.get(TipoAttributo.FORZA));
         assertEquals(3, guerriero.getModelloDati().getModificatori().stream()
                 .filter(m -> m.getTipoAttributo() == TipoAttributo.FORZA).mapToInt(m -> (int) m.getQuantita()).sum());
     }
 
     @Test
     void laFugaMetteUnMalusSuCoraggioValoreECarismaPerTreLocazioniDopoLaFuga() {
-        int coraggio = guerriero.getCoraggio();
+        int coraggio = guerriero.get(TipoAttributo.CORAGGIO);
         // Non deve morire per le ferite della fuga
         guerriero.addModificatore(new ModificatoreAttributoMD(TipoAttributo.SALUTE, TipoModificatore.VARIAZIONE_FISSA, 10000));
         guerriero.addSalute(10000);
         guerriero.fugge();
 
         assertEquals(3, guerriero.getModificatoriTemporanei().size());
-        assertTrue(guerriero.getCoraggio() < coraggio);
+        assertTrue(guerriero.get(TipoAttributo.CORAGGIO) < coraggio);
         // La fuga finisce in FINE_LOCAZIONE_2, che fa scalare di una locazione: ne restano tre
         guerriero.riduciModificatori(UnitaDurataModificatore.LOCAZIONI);
         for (int locazione = 0; locazione < 2; locazione++) {
@@ -342,7 +342,7 @@ class ModificatoriTemporaneiTest {
         }
         guerriero.riduciModificatori(UnitaDurataModificatore.LOCAZIONI);
         assertTrue(guerriero.getModificatoriTemporanei().isEmpty());
-        assertEquals(coraggio, guerriero.getCoraggio());
+        assertEquals(coraggio, guerriero.get(TipoAttributo.CORAGGIO));
     }
 
     // --- Vista per la UI
@@ -381,7 +381,7 @@ class ModificatoriTemporaneiTest {
         Optional<ModificatoreAttivo> fissaggio = guerriero.getFissaggio(TipoAttributo.PERCEZIONE);
         assertTrue(fissaggio.isPresent());
         assertEquals("l'anello fissatore", fissaggio.get().getFonte());
-        assertEquals(7, guerriero.getPercezione());
+        assertEquals(7, guerriero.get(TipoAttributo.PERCEZIONE));
     }
 
     // --- Sintassi

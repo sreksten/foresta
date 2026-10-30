@@ -51,26 +51,26 @@ public class TestGenerazionePersonaggi {
                 for (int i = 0; i < NUMERO_ISTANZE; i++) {
                     Personaggio p = FabbricaPersonaggi.crea(classe, 1);
                     assertNotNull(p);
-                    sommaForza += p.getForza();
-                    sommaDestrezza += p.getDestrezza();
-                    sommaCostituzione += p.getCostituzione();
-                    sommaIntelligenza += p.getIntelligenza();
-                    sommaSaggezza += p.getSaggezza();
-                    sommaCarisma += p.getCarisma();
-                    sommaFortuna += p.getFortuna();
-                    sommaCritico += p.getCritico();
+                    sommaForza += p.get(TipoAttributo.FORZA);
+                    sommaDestrezza += p.get(TipoAttributo.DESTREZZA);
+                    sommaCostituzione += p.get(TipoAttributo.COSTITUZIONE);
+                    sommaIntelligenza += p.get(TipoAttributo.INTELLIGENZA);
+                    sommaSaggezza += p.get(TipoAttributo.SAGGEZZA);
+                    sommaCarisma += p.get(TipoAttributo.CARISMA);
+                    sommaFortuna += p.get(TipoAttributo.FORTUNA);
+                    sommaCritico += p.get(TipoAttributo.CRITICO);
                     sommaCarico += p.getCaricoMassimo();
-                    sommaPrecisione += p.getPrecisione();
-                    sommaVelocita += p.getVelocita();
-                    sommaFurtivita += p.getFurtivita();
-                    sommaParata += p.getParata();
-                    sommaResistenzaMagica += p.getResistenzaMagica();
-                    sommaPercezione += p.getPercezione();
-                    sommaSoggezione += p.getSoggezione();
-                    sommaFuria += p.getFuria();
-                    sommaCoraggio += p.getCoraggio();
-                    sommaValore += p.getValore();
-                    sommaContrattazione += p.getContrattazione();
+                    sommaPrecisione += p.get(TipoAttributo.PRECISIONE);
+                    sommaVelocita += p.get(TipoAttributo.VELOCITA);
+                    sommaFurtivita += p.get(TipoAttributo.FURTIVITA);
+                    sommaParata += p.get(TipoAttributo.PARATA);
+                    sommaResistenzaMagica += p.get(TipoAttributo.RESISTENZA_MAGICA);
+                    sommaPercezione += p.get(TipoAttributo.PERCEZIONE);
+                    sommaSoggezione += p.get(TipoAttributo.SOGGEZIONE);
+                    sommaFuria += p.get(TipoAttributo.FURIA);
+                    sommaCoraggio += p.get(TipoAttributo.CORAGGIO);
+                    sommaValore += p.get(TipoAttributo.VALORE);
+                    sommaContrattazione += p.get(TipoAttributo.CONTRATTAZIONE);
                 }
 
                 double mediaForza = sommaForza / (double) NUMERO_ISTANZE;

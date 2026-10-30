@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.abilita;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.combattimento.AnnuncioDellAzione;
 
 import com.threeamigos.foresta.tipi.TipoAzione;
@@ -23,7 +24,7 @@ public class ImposizioneDelleMani implements Abilita {
 
 	public ImposizioneDelleMani(Personaggio utilizzatore) {
 		this.livello = utilizzatore.getLivello();
-		this.saggezza = utilizzatore.getSaggezza();
+		this.saggezza = utilizzatore.get(TipoAttributo.SAGGEZZA);
 	}
 
 	@Override

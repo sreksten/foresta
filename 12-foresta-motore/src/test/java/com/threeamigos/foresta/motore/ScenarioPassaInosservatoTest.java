@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.locazioni.LocazioneBase;
@@ -35,21 +36,21 @@ class ScenarioPassaInosservatoTest {
             avversari.aggiungiPersonaggio(troll);
             Personaggio arsenio = gruppo.getCapo();
 
-            int attesa = 40 + 10 * (arsenio.getFurtivita() - troll.getPercezione());
+            int attesa = 40 + 10 * (arsenio.get(TipoAttributo.FURTIVITA) - troll.get(TipoAttributo.PERCEZIONE));
             assertEquals(Math.max(5, Math.min(75, attesa)), LocazioneBase.probabilitaDiPassareInosservati(gruppo, avversari, GIORNO));
             assertEquals(Math.max(5, Math.min(75, attesa + 15)), LocazioneBase.probabilitaDiPassareInosservati(gruppo, avversari, NOTTE));
 
             // In due si fa più rumore, e conta il più maldestro
             Guerriero compagno = new Guerriero("Compagno", 1);
             gruppo.aggiungiPersonaggio(compagno);
-            int peggiore = Math.min(arsenio.getFurtivita(), compagno.getFurtivita());
-            assertEquals(Math.max(5, Math.min(75, 40 + 10 * (peggiore - troll.getPercezione()) - 10)),
+            int peggiore = Math.min(arsenio.get(TipoAttributo.FURTIVITA), compagno.get(TipoAttributo.FURTIVITA));
+            assertEquals(Math.max(5, Math.min(75, 40 + 10 * (peggiore - troll.get(TipoAttributo.PERCEZIONE)) - 10)),
                     LocazioneBase.probabilitaDiPassareInosservati(gruppo, avversari, GIORNO));
 
             // Con un ladro, conta lui
             Ladro ladro = new Ladro("Grimaldello", 1);
             gruppo.aggiungiPersonaggio(ladro);
-            assertEquals(Math.max(5, Math.min(75, 40 + 10 * (ladro.getFurtivita() - troll.getPercezione()) - 20)),
+            assertEquals(Math.max(5, Math.min(75, 40 + 10 * (ladro.get(TipoAttributo.FURTIVITA) - troll.get(TipoAttributo.PERCEZIONE)) - 20)),
                     LocazioneBase.probabilitaDiPassareInosservati(gruppo, avversari, GIORNO));
 
             // Contro chi vede tutto, quasi impossibile; mai più del massimo

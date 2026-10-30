@@ -139,7 +139,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     void loScudoDaUnaParataMinimaPiuUnaPerLivello() {
         Guerriero guerriero = conParata(new Guerriero("Pippo", 5), 20);
         guerriero.addArtefatto(artefatto(TipoArtefatto.SCUDO, 4));
-        assertEquals(20 + CostantiPersonaggi.SCUDO_PARATA_MINIMA + 4 * CostantiPersonaggi.SCUDO_PARATA_PER_LIVELLO, guerriero.getParata());
+        assertEquals(20 + CostantiPersonaggi.SCUDO_PARATA_MINIMA + 4 * CostantiPersonaggi.SCUDO_PARATA_PER_LIVELLO, guerriero.get(TipoAttributo.PARATA));
     }
 
     @Test
@@ -148,51 +148,51 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
         guerriero.addArtefatto(artefatto(TipoArtefatto.ELMO, 1));
         guerriero.addArtefatto(artefatto(TipoArtefatto.ARMATURA, 3));
         assertEquals(20 + CostantiPersonaggi.ELMO_PARATA_MINIMA + CostantiPersonaggi.ELMO_PARATA_PER_LIVELLO
-                + CostantiPersonaggi.ARMATURA_PARATA_MINIMA + 3 * CostantiPersonaggi.ARMATURA_PARATA_PER_LIVELLO, guerriero.getParata());
+                + CostantiPersonaggi.ARMATURA_PARATA_MINIMA + 3 * CostantiPersonaggi.ARMATURA_PARATA_PER_LIVELLO, guerriero.get(TipoAttributo.PARATA));
     }
 
     @Test
     void ancheGliSchinieriDannoUnaParataMinima() {
         Guerriero guerriero = conParata(new Guerriero("Pippo", 5), 20);
         guerriero.addArtefatto(artefatto(TipoArtefatto.SCHINIERI, 4));
-        assertEquals(20 + CostantiPersonaggi.SCHINIERI_PARATA_MINIMA + 4 * CostantiPersonaggi.SCHINIERI_PARATA_PER_LIVELLO, guerriero.getParata());
+        assertEquals(20 + CostantiPersonaggi.SCHINIERI_PARATA_MINIMA + 4 * CostantiPersonaggi.SCHINIERI_PARATA_PER_LIVELLO, guerriero.get(TipoAttributo.PARATA));
     }
 
     @Test
     void laVesteDaResistenzaMagicaInveceDiParata() {
         Mago mago = conParata(conResistenzaMagica(new Mago("Merlino", 5), 20), 20);
         mago.addArtefatto(artefatto(TipoArtefatto.VESTE, 3));
-        assertEquals(20, mago.getParata());
-        assertEquals(20 + CostantiPersonaggi.ARMATURA_PARATA_MINIMA + 3 * CostantiPersonaggi.ARMATURA_PARATA_PER_LIVELLO, mago.getResistenzaMagica());
+        assertEquals(20, mago.get(TipoAttributo.PARATA));
+        assertEquals(20 + CostantiPersonaggi.ARMATURA_PARATA_MINIMA + 3 * CostantiPersonaggi.ARMATURA_PARATA_PER_LIVELLO, mago.get(TipoAttributo.RESISTENZA_MAGICA));
     }
 
     @Test
     void loScudoDaResistenzaMagicaDiPiuSeERaro() {
         Guerriero comune = conResistenzaMagica(new Guerriero("Pippo", 5), 20);
         comune.addArtefatto(artefatto(TipoArtefatto.SCUDO, 4));
-        assertEquals(20 + 4 * CostantiPersonaggi.SCUDO_RESISTENZA_MAGICA_PER_LIVELLO, comune.getResistenzaMagica());
+        assertEquals(20 + 4 * CostantiPersonaggi.SCUDO_RESISTENZA_MAGICA_PER_LIVELLO, comune.get(TipoAttributo.RESISTENZA_MAGICA));
 
         Guerriero raro = conResistenzaMagica(new Guerriero("Pippo", 5), 20);
         Artefatto scudoRaro = artefatto(TipoArtefatto.SCUDO, 4);
         scudoRaro.getModelloDati().setRarita(TipoRaritaArtefatto.RARO);
         raro.addArtefatto(scudoRaro);
-        assertEquals(20 + 4 * CostantiPersonaggi.SCUDO_RARO_RESISTENZA_MAGICA_PER_LIVELLO, raro.getResistenzaMagica());
+        assertEquals(20 + 4 * CostantiPersonaggi.SCUDO_RARO_RESISTENZA_MAGICA_PER_LIVELLO, raro.get(TipoAttributo.RESISTENZA_MAGICA));
     }
 
     @Test
     void conDueArmiLaGuardiaEAperta() {
         Ladro ladro = conParata(new Ladro("Pippo", 3), 20);
         ladro.addArtefatto(arma(TipoArtefatto.SPADA, 3));
-        assertEquals(20, ladro.getParata());
+        assertEquals(20, ladro.get(TipoAttributo.PARATA));
         ladro.addArtefatto(arma(TipoArtefatto.MAZZA, 3));
-        assertEquals(15, ladro.getParata());
+        assertEquals(15, ladro.get(TipoAttributo.PARATA));
     }
 
     @Test
     void conUnArmaADueManiLaGuardiaEAperta() {
         Guerriero guerriero = conParata(new Guerriero("Pippo", 3), 20);
         guerriero.addArtefatto(arma(TipoArtefatto.SPADONE, 3));
-        assertEquals(15, guerriero.getParata());
+        assertEquals(15, guerriero.get(TipoAttributo.PARATA));
     }
 
     // --- Libro magico

@@ -50,10 +50,10 @@ class ScenarioScambiAEventiTest {
 
             // Un punto abilità sulla forza
             personaggio.getModelloDati().setPuntiAbilitaDisponibili(1);
-            int forza = personaggio.getForza();
+            int forza = personaggio.get(TipoAttributo.FORZA);
             partita.pubblica(new ComandoSpesaPuntoAbilita(personaggio.getUuid(), TipoAttributo.FORZA));
             assertEquals(0, personaggio.getPuntiAbilitaDisponibili());
-            assertTrue(personaggio.getForza() > forza, "forza " + personaggio.getForza());
+            assertTrue(personaggio.get(TipoAttributo.FORZA) > forza, "forza " + personaggio.get(TipoAttributo.FORZA));
         }
     }
 
@@ -103,11 +103,11 @@ class ScenarioScambiAEventiTest {
             assertTrue(artefatto.isFigliVisibili());
 
             personaggio.getModelloDati().setPuntiAbilitaDisponibili(1);
-            int forza = personaggio.getForza();
+            int forza = personaggio.get(TipoAttributo.FORZA);
             partita.pubblica(new ComandoSpesaPuntoAbilita("non-esiste", TipoAttributo.FORZA));
             partita.pubblica(new ComandoSpesaPuntoAbilita(null, TipoAttributo.FORZA));
             assertEquals(1, personaggio.getPuntiAbilitaDisponibili());
-            assertEquals(forza, personaggio.getForza());
+            assertEquals(forza, personaggio.get(TipoAttributo.FORZA));
         }
     }
 

@@ -456,7 +456,7 @@ class ChiericoEDruidoTest {
         compagni.aggiungiPersonaggio(druido);
         compagni.aggiungiPersonaggio(guerriero);
         avversari.aggiungiPersonaggio(new Goblin(5));
-        int parata = guerriero.getParata();
+        int parata = guerriero.get(TipoAttributo.PARATA);
         int magia = druido.getMagia();
 
         assertTrue(FabbricaAbilita.crea(TipoAbilita.PELLE_DI_CORTECCIA, druido).usa(druido, compagni, avversari));
@@ -464,7 +464,7 @@ class ChiericoEDruidoTest {
         assertEquals(magia - CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO, druido.getMagia());
         PelleDiCorteccia pelle = new PelleDiCorteccia(druido);
         assertEquals(Math.round(10.0d * Math.sqrt(druido.getLivello())), pelle.getPuntiParata());
-        assertEquals(parata + pelle.getPuntiParata(), guerriero.getParata(), "punti fissi, non una percentuale della parata del guerriero");
+        assertEquals(parata + pelle.getPuntiParata(), guerriero.get(TipoAttributo.PARATA), "punti fissi, non una percentuale della parata del guerriero");
         for (Personaggio personaggio : compagni.getPersonaggi()) {
             assertEquals(2, personaggio.getModificatoriTemporanei().size());
             for (ModificatoreAttributoMD modificatore : personaggio.getModificatoriTemporanei()) {
@@ -483,7 +483,7 @@ class ChiericoEDruidoTest {
             guerriero.riduciModificatori(UnitaDurataModificatore.TURNI);
         }
         assertTrue(guerriero.getModificatoriTemporanei().isEmpty());
-        assertEquals(parata, guerriero.getParata());
+        assertEquals(parata, guerriero.get(TipoAttributo.PARATA));
     }
 
     private static GruppoAvversario azzeraAvversari() {

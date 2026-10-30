@@ -269,9 +269,9 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
     void subStanchezza(int quantita);
 	/**
-	 * Aumenta il carisma di un personaggio
+	 * Aumenta (o, con una quantità negativa, diminuisce) un attributo primario del personaggio, e avvisa chi ascolta.
 	 */
-    void addCarisma(int quantita);
+    void add(TipoAttributo tipoAttributo, int quantita);
 	/**
 	 * Quanti avversari può impegnare un personaggio in combattimento
 	 * (combatte con uno ma impedisce agli altri di formulare incantesimi, oppure cerca di colpire con un
@@ -477,112 +477,6 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 * @param tipoIncantesimo il tipo di incantesimo che si vorrebbe lanciare
 	 */
 	boolean puoFormulare(TipoIncantesimo tipoIncantesimo);
-
-	/**
-	 * La forza di un personaggio, somma della forza base e dei modificatori di forza degli artefatti.
-	 */
-    int getForza();
-
-	/**
-	 * La destrezza di un personaggio, somma della destrezza base e dei modificatori di destrezza degli artefatti.
-	 */
-    int getDestrezza();
-
-	/**
-	 * La costituzione di un personaggio, somma della costituzione base e dei modificatori di costituzione degli
-	 * artefatti.
-	 */
-    int getCostituzione();
-
-	/**
-	 * L'intelligenza di un personaggio, somma della intelligenza base e dei modificatori di intelligenza degli
-	 * artefatti.
-	 */
-    int getIntelligenza();
-
-	/**
-	 * La saggezza di un personaggio, somma della saggezza base e dei modificatori di saggezza degli
-	 * artefatti.
-	 */
-    int getSaggezza();
-
-	/**
-	 * Il carisma di un personaggio, somma del carisma base e dei modificatori di carisma degli artefatti.
-	 */
-    int getCarisma();
-
-	/**
-	 * La fortuna di un personaggio, somma della fortuna base e dei modificatori di fortuna degli artefatti.
-	 */
-    int getFortuna();
-
-	/**
-	 * Il critico di un personaggio, somma del critico base e dei modificatori di critico degli artefatti.
-	 */
-    int getCritico();
-
-	/**
-	 * La precisione di un personaggio, somma della precisione base e dei modificatori di precisione degli artefatti.
-	 */
-    int getPrecisione();
-
-	/**
-	 * La velocità di un personaggio, somma della velocità base e dei modificatori di velocità degli artefatti.
-	 */
-    int getVelocita();
-
-	/**
-	 * La furtività di un personaggio, somma della furtività base e dei modificatori di furtività degli artefatti.
-	 */
-    int getFurtivita();
-
-	/**
-	 * La parata di un personaggio, somma della parata base e dei modificatori di parata degli artefatti.
-	 */
-    int getParata();
-
-	/**
-	 * La resistenza magica di un personaggio, somma della resistenza magica base e dei modificatori di resistenza
-	 * magica degli artefatti.
-	 */
-    int getResistenzaMagica();
-
-	/**
-	 * La percezione di un personaggio, somma della percezione base e dei modificatori di percezione degli artefatti.
-	 */
-    int getPercezione();
-
-	/**
-	 * La soggezione che un personaggio esercita, somma della soggezione base e dei modificatori di soggezione degli
-	 * artefatti.
-	 */
-    int getSoggezione();
-
-	/**
-	 * La furia di un personaggio, somma della furia base e dei modificatori di furia degli artefatti.
-	 */
-    int getFuria();
-
-	/**
-	 * Il coraggio di un personaggio, somma del coraggio base e dei modificatori di coraggio degli artefatti.
-	 */
-    int getCoraggio();
-
-	/**
-	 * Il valore di un personaggio, somma del valore base e dei modificatori di valore degli artefatti.
-	 */
-    int getValore();
-
-	/**
-	 * La contrattazione di un personaggio, somma della contrattazione base e dei modificatori di contrattazione
-	 * degli artefatti.
-	 */
-    int getContrattazione();
-
-	/**
-	 * La stanchezza di un personaggio, somma della stanchezza base e dei modificatori di stanchezza degli artefatti.
-	 */
-    int getStanchezza();
 
 	/**
 	 * Punti esperienza derivanti dalla sconfitta

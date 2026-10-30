@@ -40,7 +40,7 @@ class PiccoliDifettiDiPersonaggioBaseTest {
 
             p.subStanchezza(9);
 
-            assertEquals(0, p.getStanchezza());
+            assertEquals(0, p.get(TipoAttributo.STANCHEZZA));
             List<NotificaVariazioneStatistichePersonaggio> notifiche = partita.eventi().tutti(NotificaVariazioneStatistichePersonaggio.class);
             assertEquals(1, notifiche.size());
             assertEquals(0.0, notifiche.get(0).getNuovoValore());
