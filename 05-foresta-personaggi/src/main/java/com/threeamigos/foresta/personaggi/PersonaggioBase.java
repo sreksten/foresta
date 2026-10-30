@@ -54,6 +54,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	protected PersonaggioMD md = new PersonaggioMD();
 	private final ModificatoriTemporanei modificatori = new ModificatoriTemporanei(this);
+	private final EffettiDiStato effettiDiStato = new EffettiDiStato(this);
 
 	/**
 	 * Posizione all'interno del gruppo
@@ -1748,156 +1749,71 @@ public abstract class PersonaggioBase implements Personaggio {
 	// EFFETTI DI STATO
 
 	public Collection<EffettoDiStatoMD> getEffettiDiStato() {
-		return md.getEffettiDiStato();
+		return effettiDiStato.getEffettiDiStato();
 	}
 
 	public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo) {
-		addEffettoDiStato(tipoEffettoDiStato, durata, danniNelTempo, 0.0d);
+		effettiDiStato.addEffettoDiStato(tipoEffettoDiStato, durata, danniNelTempo);
 	}
 
 	@Override
 	public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo, double intensita) {
-		if (!isVivo()) {
-			return;
-		}
-		if (isImmuneAEffetto(tipoEffettoDiStato)) {
-			// Il bestiario si ricorda dell'immunità, se è della classe (non quella di un solo personaggio)
-			BusEventi.pubblica(new InternoCaratteristicaOsservata(getClasse(), CaratteristicaDiClasse.Genere.EFFETTO, tipoEffettoDiStato));
-			BusEventi.pubblica(new InternoMessaggio(
-					getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-							" è immune a " + tipoEffettoDiStato.getDescrizione() + "."));
-			return;
-		}
-		if (durata <= 0) {
-			throw new IllegalArgumentException("Valore effetto di stato non valido");
-		}
-		Collection<EffettoDiStatoMD> effettiDiStato = md.getEffettiDiStato();
-		Optional<EffettoDiStatoMD> equivalenteOpt = effettiDiStato
-				.stream().
-				filter(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato)
-				.findFirst();
-		if (equivalenteOpt.isPresent()) {
-			EffettoDiStatoMD equivalente = equivalenteOpt.get();
-			boolean duraDiPiu = equivalente.getDurata() < durata;
-			boolean aumentaDanni = equivalente.getDanniNelTempo() < danniNelTempo;
-			boolean aumentaIntensita = equivalente.getIntensita() < intensita;
-			if (duraDiPiu || aumentaDanni || aumentaIntensita) {
-				if (duraDiPiu) {
-					equivalente.setDurata(durata);
-				}
-				if (aumentaDanni) {
-					equivalente.setDanniNelTempo(danniNelTempo);
-				}
-				if (aumentaIntensita) {
-					equivalente.setIntensita(intensita);
-				}
-				BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
-						NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.RINFORZO, tipoEffettoDiStato,
-						equivalente.getDurata(), equivalente.getDanniNelTempo()));
-			}
-		} else {
-			md.aggiungiEffettoDiStato(new EffettoDiStatoMD(tipoEffettoDiStato, durata, danniNelTempo, intensita));
-			BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
-					NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.AGGIUNTA, tipoEffettoDiStato,
-					-1, durata));
-		}
+		effettiDiStato.addEffettoDiStato(tipoEffettoDiStato, durata, danniNelTempo, intensita);
 	}
 
 	@Override
 	public void applicaDanniDaEffettiDiStato() {
-		// Copia perché subSalute() può a sua volta aggiungere un nuovo effetto di stato
-		// (es. BERSERK) alla stessa collezione che stiamo scorrendo.
-		for (EffettoDiStatoMD effettoDiStato : new ArrayList<>(getEffettiDiStato())) {
-			if (effettoDiStato.getDanniNelTempo() > 0) {
-				subSalute(effettoDiStato.getDanniNelTempo(), null,
-						Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
-			}
-			// La rigenerazione del Druido: la quantità che guarisce a ogni turno sta nell'intensità dell'effetto
-			if (effettoDiStato.getTipoEffettoDiStato() == TipoEffettoDiStato.RIGENERAZIONE && isVivo() && isCurabile()) {
-				addSalute((int) effettoDiStato.getIntensita());
-			}
-		}
+		effettiDiStato.applicaDanniDaEffettiDiStato();
 	}
 
 	@Override
 	public int getRicarica(String nome) {
-		return md.getRicarica(nome);
+		return effettiDiStato.getRicarica(nome);
 	}
 
 	@Override
 	public Map<String, Integer> getRicariche() {
-		return md.getRicariche();
+		return effettiDiStato.getRicariche();
 	}
 
 	@Override
 	public void setRicarica(String nome, int turni) {
-		md.setRicarica(nome, turni);
+		effettiDiStato.setRicarica(nome, turni);
 	}
 
 	@Override
 	public void riduciRicariche() {
-		for (Map.Entry<String, Integer> ricarica : new ArrayList<>(md.getRicariche().entrySet())) {
-			md.setRicarica(ricarica.getKey(), ricarica.getValue() - 1);
-		}
+		effettiDiStato.riduciRicariche();
 	}
 
 	@Override
 	public void riduciEffettiDiStato() {
-		List<EffettoDiStatoMD> effettiDiStatoDaRimuovere = new ArrayList<>();
-		for (EffettoDiStatoMD effettoDiStato : getEffettiDiStato()) {
-			int valorePrecedente = effettoDiStato.getDurata();
-			int valoreAttuale = valorePrecedente - 1;
-			if (valoreAttuale > 0) {
-				effettoDiStato.setDurata(valoreAttuale);
-				BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
-						NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.DECADIMENTO,
-						effettoDiStato.getTipoEffettoDiStato(),
-						valorePrecedente, valoreAttuale));
-			} else {
-				effettiDiStatoDaRimuovere.add(effettoDiStato);
-			}
-		}
-		effettiDiStatoDaRimuovere.forEach(e -> {
-			md.togliEffettoDiStato(e);
-			BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
-					NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.RIMOZIONE,
-					e.getTipoEffettoDiStato(), 1, 0));
-		});
+		effettiDiStato.riduciEffettiDiStato();
 	}
 
 	@Override
 	public void rimuoviTuttiGliEffettiDiStato() {
-		rimuoviEffettoDiStato(null);
+		effettiDiStato.rimuoviTuttiGliEffettiDiStato();
 	}
 
 	@Override
 	public void rimuoviGliEffettiDiStatoNegativi() {
-		getEffettiDiStato().stream().map(EffettoDiStatoMD::getTipoEffettoDiStato).filter(t -> !t.isBenefico()).distinct()
-				.collect(Collectors.toList()).forEach(this::rimuoviEffettoDiStato);
+		effettiDiStato.rimuoviGliEffettiDiStatoNegativi();
 	}
 
 	@Override
 	public void rimuoviEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
-		List<EffettoDiStatoMD> effettiDiStatoDaRimuovere = getEffettiDiStato()
-				.stream()
-				.filter(e -> tipoEffettoDiStato == null || e.getTipoEffettoDiStato() == tipoEffettoDiStato)
-				.collect(Collectors.toList());
-		effettiDiStatoDaRimuovere.forEach(effettoDiStato -> {
-			md.togliEffettoDiStato(effettoDiStato);
-			BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
-					NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.RIMOZIONE, effettoDiStato.getTipoEffettoDiStato(),
-					effettoDiStato.getDurata(), 0));
-		});
+		effettiDiStato.rimuoviEffettoDiStato(tipoEffettoDiStato);
 	}
 
 	@Override
 	public boolean hasEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
-		return md.getEffettiDiStato().stream().anyMatch(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato);
+		return effettiDiStato.hasEffettoDiStato(tipoEffettoDiStato);
 	}
 
 	@Override
 	public int getQuantitaEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
-		return md.getEffettiDiStato().stream().filter(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato).mapToInt(EffettoDiStatoMD::getDurata).sum();
+		return effettiDiStato.getQuantitaEffettoDiStato(tipoEffettoDiStato);
 	}
 
 	// Scambiatore Artefatti
