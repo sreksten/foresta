@@ -394,6 +394,10 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		if (RITORNO.equals(passo)) {
 			return "Fatto: torna " + Articoli.conPreposizione("da", mandante(richiesta.getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
 		}
+		// Una missione finita si legge ancora fra le completate
+		if (Passo.FINE.equals(passo)) {
+			return mandanteEChiesto(richiesta) + " Missione compiuta.";
+		}
 		int tappe = richiesta.getTappe().size();
 		int corrente;
 		if (ARRIVO.equals(passo)) {
