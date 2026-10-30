@@ -125,7 +125,9 @@ import java.util.List;
  *    quella forma, al punto del contorno piu' vicino. Se non viene indicato
  *    nessun corridore esplicito ({@link Costruttore#corridore}), viene creato automaticamente un corridore a
  *    giro completo per OGNI forma rilevata (contorni esterni e buchi
- *    inclusi).
+ *    inclusi). Con {@link Costruttore#ambiVersi} i corridori automatici sono invece due per forma, uno
+ *    orario e uno antiorario, che partono dallo stesso punto e si incontrano a meta' del contorno: ognuno
+ *    fa mezzo giro, e quando si toccano il giro della forma e' completo.
  *
  * 6) SINCRONIZZAZIONE DI PIU' CORRIDORI (quando ce n'e' piu' di uno)
  *    -----------------------------------------------------------------------
@@ -402,6 +404,7 @@ public final class TracciatoreLogo {
         private final List<SpecificaCorridore> corridoriEspliciti = new ArrayList<>();
         private List<Verso> versi = Collections.emptyList();
         private List<Integer> ritardi = Collections.emptyList();
+        private boolean ambiVersi;
         private int durataGiroMs = DURATA_GIRO_MS_PREDEFINITA;
         private boolean velocitaAllineata;
         private boolean rivelaConTorcia = true;
@@ -471,6 +474,17 @@ public final class TracciatoreLogo {
          */
         public Costruttore versi(List<Verso> versi) {
             this.versi = new ArrayList<>(versi);
+            return this;
+        }
+
+        /**
+         * Vero perche' i corridori automatici siano due per ogni forma, uno orario e uno antiorario, che partono dallo stesso punto e
+         * si incontrano a meta' del contorno (ognuno fa mezzo giro, e quando si toccano il giro e' completo); predefinito falso.
+         * Il ritardo della forma vale per entrambi; il verso dato da {@link #verso} o {@link #versi} non conta. Non vale se ci sono
+         * corridori espliciti.
+         */
+        public Costruttore ambiVersi(boolean ambiVersi) {
+            this.ambiVersi = ambiVersi;
             return this;
         }
 
@@ -644,8 +658,17 @@ public final class TracciatoreLogo {
                 Verso versoDiRiserva = versi.isEmpty() ? Verso.ORARIO : versi.get(0);
                 for (int i = 0; i < forme.size(); i++) {
                     int ritardo = i < ritardi.size() ? Math.max(0, ritardi.get(i)) : 0;
-                    Verso direzione = i < versi.size() ? versi.get(i) : versoDiRiserva;
-                    specifiche.add(new SpecificaCorridore(forme.get(i).percorsoNaturale.get(0), null, direzione, ritardo));
+                    List<Point2D.Double> contorno = forme.get(i).percorsoNaturale;
+                    if (ambiVersi) {
+                        // due corridori dallo stesso punto, uno per verso, che si fermano al punto opposto del contorno
+                        // (a meta' dei punti ricampionati, equidistanti): fanno lo stesso numero di passi e si toccano
+                        Point2D.Double incontro = contorno.get(contorno.size() / 2);
+                        specifiche.add(new SpecificaCorridore(contorno.get(0), incontro, Verso.ORARIO, ritardo));
+                        specifiche.add(new SpecificaCorridore(contorno.get(0), incontro, Verso.ANTIORARIO, ritardo));
+                    } else {
+                        Verso direzione = i < versi.size() ? versi.get(i) : versoDiRiserva;
+                        specifiche.add(new SpecificaCorridore(contorno.get(0), null, direzione, ritardo));
+                    }
                 }
             }
 

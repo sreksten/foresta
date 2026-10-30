@@ -32,6 +32,8 @@ public final class PannelloLogoIniziale extends JComponent {
 				.immagineDaMostrare(logo)
 				// Il raggio della torcia: 33 pixel, il 66% dei 50 di prima
 				.raggioTorcia(33)
+				// Il giro completo dura 6 secondi (il predefinito è 4)
+				.durataGiroMs(6000)
 				.coloreSfondo(null)
 				.sfumaScie(true)
 				.fotogrammiPausa(PAUSA_MS / TracciatoreLogo.INTERVALLO_FOTOGRAMMA_MS)

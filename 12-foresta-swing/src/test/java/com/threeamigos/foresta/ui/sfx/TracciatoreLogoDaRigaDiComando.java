@@ -60,6 +60,7 @@ import java.util.Map;
  *   --trails=keep|fade    scie e teste dei corridori: restano per tutto il ciclo (keep,
  *                         predefinito) oppure svaniscono mentre il logo compare, lasciandolo
  *                         da solo (fade)
+ *   --both                due corridori per forma, uno orario e uno antiorario, che si incontrano a meta' (senza --start)
  *   --hold=N              durata della pausa col logo acceso; come --delay, un numero puro
  *                         e' in fotogrammi, con suffisso "s" in secondi (predefinito 45 fotogrammi)
  *   --fadeout=N           dopo la pausa il logo svanisce in N fotogrammi (predefinito 0: resta acceso)
@@ -176,7 +177,7 @@ public final class TracciatoreLogoDaRigaDiComando {
         List<Integer> ritardi = leggiRitardi(opzioni.get("delay"));
         List<Verso> versi = leggiVersi(opzioni.get("dir"));
         if (partenze.isEmpty()) {
-            costruttore.ritardi(ritardi).versi(versi);
+            costruttore.ritardi(ritardi).versi(versi).ambiVersi(opzioni.containsKey("both"));
         } else {
             // se non è stato specificato nessun --dir, o è stato dato un solo valore,
             // quel valore (o il verso orario predefinito) fa da "riserva" per i corridori in eccesso

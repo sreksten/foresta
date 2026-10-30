@@ -7,6 +7,10 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,6 +28,61 @@ class TracciatoreLogoTest {
         TracciatoreLogo effetto = TracciatoreLogo.costruttore(logo3AM).costruisci();
         assertTrue(effetto.getDiagnostica().get(0).startsWith("4 forma/e rilevate (3 contorni esterni, 1 buchi interni)"),
                 effetto.getDiagnostica().get(0));
+    }
+
+    @Test
+    void conAmbiVersiCeUnCorridoreOrarioEUnoAntiorarioPerOgniForma() {
+        TracciatoreLogo effetto = TracciatoreLogo.costruttore(logo3AM).ambiVersi(true).costruisci();
+        List<String> corridori = effetto.getDiagnostica().stream().filter(d -> d.startsWith("Corridore:")).collect(Collectors.toList());
+        assertEquals(8, corridori.size(), corridori.toString());
+        assertEquals(4, corridori.stream().filter(d -> d.contains("verso orario")).count());
+        assertEquals(4, corridori.stream().filter(d -> d.contains("verso antiorario")).count());
+        // la coppia parte dallo stesso punto e ognuno fa lo stesso numero di passi, cosi' si toccano a meta' del contorno
+        for (int i = 0; i < corridori.size(); i += 2) {
+            assertEquals(punti(corridori.get(i)), punti(corridori.get(i + 1)), corridori.get(i) + " / " + corridori.get(i + 1));
+            assertEquals(partenza(corridori.get(i)), partenza(corridori.get(i + 1)));
+        }
+    }
+
+    @Test
+    void conAmbiVersiIlTracciamentoDuraMezzoGiro() {
+        int normale = fotogrammiDiTracciamento(TracciatoreLogo.costruttore(logo3AM).costruisci());
+        int ambi = fotogrammiDiTracciamento(TracciatoreLogo.costruttore(logo3AM).ambiVersi(true).costruisci());
+        // Ognuno dei due fa mezza forma: in circa la meta' del tempo il giro e' completo (poi la dissolvenza, come sempre)
+        assertTrue(ambi < normale * 0.6, ambi + " contro " + normale);
+        assertTrue(ambi > normale * 0.4, ambi + " contro " + normale);
+    }
+
+    @Test
+    void conAmbiVersiTuttoIlCicloFinisce() {
+        TracciatoreLogo ambi = TracciatoreLogo.costruttore(logo3AM).ambiVersi(true).costruisci();
+        int fotogrammi = 0;
+        while (!ambi.isFinito() && fotogrammi < 3 * ambi.stimaFotogrammiCiclo()) {
+            ambi.avanza();
+            fotogrammi++;
+        }
+        assertTrue(ambi.isFinito());
+    }
+
+    private static int fotogrammiDiTracciamento(TracciatoreLogo effetto) {
+        int fotogrammi = 0;
+        while ("TRACCIAMENTO".equals(effetto.getNomeFase()) && fotogrammi < 10 * effetto.stimaFotogrammiCiclo()) {
+            effetto.avanza();
+            fotogrammi++;
+        }
+        return fotogrammi;
+    }
+
+    private static int punti(String corridore) {
+        Matcher m = Pattern.compile("(\\d+) punti").matcher(corridore);
+        assertTrue(m.find(), corridore);
+        return Integer.parseInt(m.group(1));
+    }
+
+    private static String partenza(String corridore) {
+        Matcher m = Pattern.compile("partenza agganciata a (\\([^)]*\\))").matcher(corridore);
+        assertTrue(m.find(), corridore);
+        return m.group(1);
     }
 
     @Test
