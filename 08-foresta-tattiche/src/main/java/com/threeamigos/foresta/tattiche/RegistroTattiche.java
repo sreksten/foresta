@@ -25,7 +25,7 @@ import java.util.*;
  * Sacerdotessa; altrimenti l'Elfo o l'Elfa; altrimenti il Bardo o la Cantastorie; altrimenti uno a caso fra tutti i personaggi vivi e gli ospiti vulnerabili.
  * Sono cinque selettori.</li>
  * <li><b>Se e quale incantesimo</b>, per ognuno di quei bersagli: non lancia se non è magico (cioè se non lo è, è
- * silenziato o ha 0 MAGIA); poi una volta su tre rinuncia (<code>PROBABILITA 67</code>); poi, secondo l'<b>INTELLIGENZA</b>: sotto 5 un incantesimo del repertorio
+ * silenziato o ha 0 Magia); poi una volta su tre rinuncia (<code>PROBABILITA 67</code>); poi, secondo l'<b>INTELLIGENZA</b>: sotto 5 un incantesimo del repertorio
  * a caso, da 5 a 6 il più potente (il danno base più alto), da 7 il più potente solo se rende più dell'attacco con le armi (qui con i danni attesi, senza dadi);
  * se non ne ha uno che può pagare, o se l'incantesimo non conviene, attacca con le armi.</li>
  * </ul>
@@ -123,7 +123,7 @@ public final class RegistroTattiche {
 		}
 		bersagli.add(new SelettoreMD(TipoRosa.AVVERSARI_E_OSPITI, Collections.emptyList(), OrdinamentoMD.di(TipoOrdinamento.A_CASO)));
 
-		// Non lancia se non è magico (non lo è, è silenziato o ha 0 MAGIA), e una volta su tre rinuncia
+		// Non lancia se non è magico (non lo è, è silenziato o ha 0 Magia), e una volta su tre rinuncia
 		PredicatoMD magico = PredicatoMD.quanti(TipoRosa.SE_STESSO, Collections.singletonList(FiltroMD.senzaParametro(TipoFiltro.MAGICO)), TipoConfronto.MAGGIORE, 0);
 		PredicatoMD sotto5 = PredicatoMD.conConfrontoENumero(TipoPredicato.INTELLIGENZA, TipoConfronto.MINORE, 5);
 		PredicatoMD sotto7 = PredicatoMD.conConfrontoENumero(TipoPredicato.INTELLIGENZA, TipoConfronto.MINORE, 7);

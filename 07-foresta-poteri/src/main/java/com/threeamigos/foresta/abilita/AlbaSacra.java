@@ -11,7 +11,7 @@ import com.threeamigos.foresta.tipi.TipoAzione;
 
 /**
  * L'alba sacra: l'abilità innata di Sacerdote e Sacerdotessa che toglie al gruppo gli stati alterati negativi e i modificatori temporanei
- * (lasciando l'ispirazione e il berserk). Costa MAGIA e non consuma pergamene. Si può invocare anche fuori dagli scontri, se qualcuno ha
+ * (lasciando l'ispirazione e il berserk). Costa Magia e non consuma pergamene. Si può invocare anche fuori dagli scontri, se qualcuno ha
  * uno stato da togliere (vedi {@link AbilitaInnate#serve}).
  *
  * @author Stefano Reksten

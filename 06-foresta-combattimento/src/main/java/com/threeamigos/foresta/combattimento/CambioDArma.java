@@ -73,7 +73,7 @@ public final class CambioDArma {
 	 * Il controllo preventivo del cambio d'arma: la nuova arma si potrebbe impugnare una volta usciti gli oggetti che le fanno posto? Guarda
 	 * la situazione "senza l'arma che esce" (carico, mani libere), che {@link #valuta} da sola non vede perché guarda l'equipaggiamento
 	 * com'è adesso. Non cambia niente: gli artefatti che escono si tolgono solo per un attimo dall'elenco del personaggio e si rimettono
-	 * dov'erano, senza ricalcoli né notifiche (a differenza di removeArtefatto, che riduce salute e MAGIA se l'arma ne dava il massimo).
+	 * dov'erano, senza ricalcoli né notifiche (a differenza di removeArtefatto, che riduce salute e Magia se l'arma ne dava il massimo).
 	 *
 	 * @param nuova un'arma da mano principale o a due mani
 	 * @return lo slot che occuperebbe, o il motivo per cui il cambio non si può fare

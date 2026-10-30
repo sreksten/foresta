@@ -132,7 +132,7 @@ class CombattimentoConTatticheTest {
             scatta(locazione, partita, 1);
 
             assertEquals(2, partita.gruppo().getIncantesimi(TipoIncantesimo.FULMINE), "la pergamena si consuma");
-            assertTrue(mago.getMagia() < magiaPrima, "il lancio costa MAGIA");
+            assertTrue(mago.getMagia() < magiaPrima, "il lancio costa Magia");
             InternoAzioneInCombattimento annuncio = partita.eventi().tutti(InternoAzioneInCombattimento.class).get(0);
             assertSame(mago, annuncio.getPersonaggio());
             assertSame(bagnato, annuncio.getBersaglio(), "il bersaglio è il bagnato, anche se è il secondo");

@@ -118,7 +118,7 @@ public enum TipoIncantesimo {
 	}
 
 	/**
-	 * I punti di MAGIA che costa lanciarlo.
+	 * I punti di Magia che costa lanciarlo.
 	 */
 	public int getCostoLancio() {
 		return costoLancio;

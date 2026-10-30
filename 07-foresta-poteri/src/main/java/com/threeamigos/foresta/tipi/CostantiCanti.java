@@ -8,7 +8,7 @@ package com.threeamigos.foresta.tipi;
 public final class CostantiCanti {
 
     /**
-     * I canti innati del Bardo e della Cantastorie (vedi personaggi_giocabili.md): costano MAGIA, non consumano pergamene
+     * I canti innati del Bardo e della Cantastorie (vedi personaggi_giocabili.md): costano Magia, non consumano pergamene
      */
     public static final int CANTO_CURATIVO_COSTO_LANCIO = 6;
 

@@ -131,7 +131,7 @@ public abstract class AbilitaDiDanno implements Abilita, Arma {
 	}
 
 	/**
-	 * Quel che l'abilità fa in più dopo aver colpito i bersagli, prima di pagare la MAGIA. Per default niente.
+	 * Quel che l'abilità fa in più dopo aver colpito i bersagli, prima di pagare la Magia. Per default niente.
 	 */
 	protected void dopoIColpi(Personaggio utilizzatore) {
 	}

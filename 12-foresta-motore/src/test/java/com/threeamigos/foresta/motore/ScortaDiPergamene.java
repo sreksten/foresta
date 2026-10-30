@@ -5,7 +5,7 @@ import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * Le pergamene di incantesimi che il PG porta in uno scontro del simulatore (vedi piano_montecarlo_matrix.md, §13).
- * Nel gioco chiunque può lanciare un incantesimo consumando la sua pergamena, se ha abbastanza MAGIA: il danno
+ * Nel gioco chiunque può lanciare un incantesimo consumando la sua pergamena, se ha abbastanza Magia: il danno
  * lo fanno poi l'INTELLIGENZA e il moltiplicatore di danno magico della classe.
  */
 public final class ScortaDiPergamene {

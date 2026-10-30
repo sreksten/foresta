@@ -50,7 +50,7 @@ public enum TipoCanto {
 	}
 
 	/**
-	 * I punti di MAGIA che costa cantarlo.
+	 * I punti di Magia che costa cantarlo.
 	 */
 	public int getCostoLancio() {
 		return costoLancio;

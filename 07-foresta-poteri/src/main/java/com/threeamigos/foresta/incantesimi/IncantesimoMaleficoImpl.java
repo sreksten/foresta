@@ -79,7 +79,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 
 	/**
 	 * L'effetto di un incantesimo GLOBALE: nessun bersaglio scelto, agisce su tutta la locazione. Chi lo è ridefinisce questo metodo; il costo in
-	 * MAGIA lo toglie {@link #formula}.
+	 * Magia lo toglie {@link #formula}.
 	 *
 	 * @param gruppoAvversario il gruppo avversario di chi formula (chi lo lancia non lo sceglie: è la locazione); può essere null
 	 */

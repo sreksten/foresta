@@ -216,8 +216,8 @@ public final class Equipaggiamento {
 
 		/**
 		 * I valori medi di GeneratoreArtefattiTabelle: armi con danno GeneratoreArtefatti.danniMediArma (lo spadone +50%,
-		 * il bastone metà e +5% di MAGIA per livello), pezzi difensivi con +5% di PARATA per livello
-		 * (la veste di RESISTENZA_MAGICA), libro con +5% di MAGIA per livello.
+		 * il bastone metà e +5% di Magia per livello), pezzi difensivi con +5% di PARATA per livello
+		 * (la veste di RESISTENZA_MAGICA), libro con +5% di Magia per livello.
 		 */
 		Artefatto costruisci(int livello) {
 			ArtefattoMD md = new ArtefattoMD();

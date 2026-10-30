@@ -147,7 +147,7 @@ class EsecutoreTatticheTest {
             BusEventi.impostaConsegna(null);
         }
         assertEquals(0, miei.getIncantesimi(TipoIncantesimo.FULMINE), "la pergamena si consuma");
-        assertTrue(mago.getMagia() < magia, "e costa MAGIA");
+        assertTrue(mago.getMagia() < magia, "e costa Magia");
         assertEquals(1, decisioni.size());
         assertSame(mago, decisioni.get(0).getPersonaggio());
         assertEquals(1, StatoDelCombattimento.getIstanza().getUsiDellaVoce(mago, "0"));

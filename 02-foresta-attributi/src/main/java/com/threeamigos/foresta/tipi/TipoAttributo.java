@@ -100,7 +100,7 @@ public enum TipoAttributo {
      * La potenza degli incantesimi lanciati, data da bastoni e libri magici: una percentuale che parte da 100
      * (vedi Personaggio.getPotereMagico) e moltiplica i danni degli incantesimi; pesa anche sulla probabilità
      * che un'arma incantata applichi il suo effetto di stato (vedi CalcolatoreCombattimento). Non ha niente a
-     * che vedere con la riserva di MAGIA.
+     * che vedere con la riserva di Magia.
      */
     POTERE_MAGICO(CategoriaAttributo.SECONDARIO),
 

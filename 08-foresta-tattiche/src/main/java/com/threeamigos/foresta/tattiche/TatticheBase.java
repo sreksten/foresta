@@ -373,7 +373,7 @@ public final class TatticheBase {
 	}
 
 	/**
-	 * Le pozioni della Magia, per chi è a secco: come per la Salute, la grande quando la MAGIA è quasi finita
+	 * Le pozioni della Magia, per chi è a secco: come per la Salute, la grande quando la Magia è quasi finita
 	 */
 	private static List<VoceMD> pozioniDiMagia(int sottoQuanto) {
 		AzioneMD normale = AzioneMD.di(TipoAzione.POZIONE_MAGIA);

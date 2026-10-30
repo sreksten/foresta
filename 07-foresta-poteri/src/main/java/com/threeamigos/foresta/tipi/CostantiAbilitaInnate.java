@@ -8,7 +8,7 @@ package com.threeamigos.foresta.tipi;
 public final class CostantiAbilitaInnate {
 
     /**
-     * Le abilità innate di Chierico, Druido, Sacerdote, Mago ed Elfo (vedi TipoAbilita): costano MAGIA, non consumano pergamene
+     * Le abilità innate di Chierico, Druido, Sacerdote, Mago ed Elfo (vedi TipoAbilita): costano Magia, non consumano pergamene
      */
     public static final int ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO = 4;
 
@@ -37,7 +37,7 @@ public final class CostantiAbilitaInnate {
     public static final double ABILITA_IMPOSIZIONE_DELLE_MANI_DIVISORE_SAGGEZZA = 50.0;
 
     /**
-     * Radici e Sciame: danni di Terra e di Veleno su più avversari, un poco meno di una pergamena e per un poco più di MAGIA
+     * Radici e Sciame: danni di Terra e di Veleno su più avversari, un poco meno di una pergamena e per un poco più di Magia
      */
     public static final int ABILITA_RADICI_COSTO_LANCIO = 3;
 
@@ -111,7 +111,7 @@ public final class CostantiAbilitaInnate {
             (double) CostantiIncantesimi.INCANTESIMO_FULMINE_COSTO_LANCIO * ABILITA_LUCE_DIVINA_DANNI / CostantiIncantesimi.INCANTESIMO_FULMINE_DANNI);
 
     /**
-     * Il dardo arcano, l'incantesimo innato di Mago ed Elfo: su un solo bersaglio, per poca MAGIA e senza consumare
+     * Il dardo arcano, l'incantesimo innato di Mago ed Elfo: su un solo bersaglio, per poca Magia e senza consumare
      * pergamene. Al Mago rende di più (una pergamena di fuoco fa 50) e costa meno che all'Elfo, che è
      * un po' meno bravo con la magia e in cambio sa combattere
      */

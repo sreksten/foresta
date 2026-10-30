@@ -397,7 +397,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	/**
-	 * Applica ai danni di un incantesimo il POTERE_MAGICO (non la MAGIA, che è solo la riserva)
+	 * Applica ai danni di un incantesimo il POTERE_MAGICO (non la Magia, che è solo la riserva)
  	 */
 	@Override
 	public double getModificaDanniMagia(double danni) {
@@ -763,7 +763,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		addModificatore(modificatore);
 	}
 
-	// MAGIA
+	// Magia
 
 	@Override
 	public int getMagia() {

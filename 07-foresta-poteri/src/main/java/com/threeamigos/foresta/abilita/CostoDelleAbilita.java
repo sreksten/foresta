@@ -14,7 +14,7 @@ public final class CostoDelleAbilita {
 	}
 
 	/**
-	 * I punti di MAGIA che costa usare quell'abilità a quella classe.
+	 * I punti di Magia che costa usare quell'abilità a quella classe.
 	 */
 	public static int di(TipoAbilita tipo, TipoPersonaggio classe) {
 		if (tipo == TipoAbilita.DARDO_ARCANO && classe != TipoPersonaggio.MAGO && classe != TipoPersonaggio.MAGA) {

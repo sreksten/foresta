@@ -6,7 +6,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 
 /**
- * Una capacità innata di una classe (Chierico, Druido, Sacerdote, Mago, Elfo): costa MAGIA, non consuma pergamene. Non è fra le
+ * Una capacità innata di una classe (Chierico, Druido, Sacerdote, Mago, Elfo): costa Magia, non consuma pergamene. Non è fra le
  * {@link com.threeamigos.foresta.tipi.TipoIncantesimo} perché non è una pergamena: non si compra, non si trova e non si conta nell'inventario del
  * gruppo. Chi può usarla e quando si decide in {@link AbilitaInnate}.
  */
@@ -15,7 +15,7 @@ public interface Abilita extends OggettoConCostoDiLancio {
 	TipoAbilita getTipo();
 
 	/**
-	 * La MAGIA che costa: la dice il suo tipo.
+	 * La Magia che costa: la dice il suo tipo.
 	 */
 	@Override
 	default int getCostoLancio() {
@@ -23,12 +23,12 @@ public interface Abilita extends OggettoConCostoDiLancio {
 	}
 
 	/**
-	 * Usa l'abilità: fa l'effetto e scala la MAGIA a chi la usa. Il turno e la risposta avversaria li gestisce chi la chiama.
+	 * Usa l'abilità: fa l'effetto e scala la Magia a chi la usa. Il turno e la risposta avversaria li gestisce chi la chiama.
 	 *
 	 * @param utilizzatore il Chierico o il Druido
 	 * @param gruppo il gruppo di chi la usa
 	 * @param gruppoAvversario gli avversari
-	 * @return true se l'abilità ha avuto luogo (e ha quindi consumato MAGIA), false se non c'era nessuno su cui usarla
+	 * @return true se l'abilità ha avuto luogo (e ha quindi consumato Magia), false se non c'era nessuno su cui usarla
 	 */
 	boolean usa(Personaggio utilizzatore, Gruppo gruppo, Gruppo gruppoAvversario);
 

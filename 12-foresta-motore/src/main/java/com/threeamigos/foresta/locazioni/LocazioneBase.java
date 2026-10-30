@@ -744,7 +744,7 @@ public abstract class LocazioneBase implements Locazione {
 
 					// Altrimenti l'incantesimo agisce sul gruppo avversario (tutto o fino al numero di bersagli del
 					// formulante, secondo la portata), su un solo avversario (Morte) o su tutta la locazione: il lancio,
-					// costo in MAGIA compreso, lo fa l'incantesimo. Gli avversari che uccide contano nelle statistiche e
+					// costo in Magia compreso, lo fa l'incantesimo. Gli avversari che uccide contano nelle statistiche e
 					// danno esperienza.
 					List<Personaggio> avversariVivi = gruppoAvversario.getPersonaggiVivi();
 					if (suUnSoloBersaglio) {
@@ -956,7 +956,7 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
-	 * Un canto del Bardo o della Cantastorie: costa MAGIA, non consuma pergamene, occupa il turno e l'avversario
+	 * Un canto del Bardo o della Cantastorie: costa Magia, non consuma pergamene, occupa il turno e l'avversario
 	 * risponde (vedi {@link CantoDelBardo}).
 	 *
 	 * @return lo stato in cui passare se lo scontro finisce (avversari tutti morti o gioco perso), altrimenti null
@@ -981,7 +981,7 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
-	 * Un'abilità innata (di Chierico, Druido, Sacerdote, Mago o Elfo): costa MAGIA, non consuma pergamene, occupa il turno e l'avversario risponde (vedi
+	 * Un'abilità innata (di Chierico, Druido, Sacerdote, Mago o Elfo): costa Magia, non consuma pergamene, occupa il turno e l'avversario risponde (vedi
 	 * {@link AbilitaInnate}).
 	 *
 	 * @return lo stato in cui passare se lo scontro finisce (avversari tutti morti o gioco perso), altrimenti null
@@ -1092,7 +1092,7 @@ public abstract class LocazioneBase implements Locazione {
 			comandiPossibili.add(Comando.INTERRUZIONE_COMBATTIMENTO);
 		}
 		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo,
-		// oppure se un Sacerdote ha la MAGIA per l'alba sacra, o se qualcuno può usare un'abilità innata (Chierico, Druido, Sacerdote, Mago, Elfo; compresa l'alba sacra, se serve) o un canto
+		// oppure se un Sacerdote ha la Magia per l'alba sacra, o se qualcuno può usare un'abilità innata (Chierico, Druido, Sacerdote, Mago, Elfo; compresa l'alba sacra, se serve) o un canto
 		boolean incantesimoPossibile = chiAgisce.stream()
 				.anyMatch(p -> !CantoDelBardo.cantiUtili(p, gruppo, gruppoAvversario).isEmpty()
 						|| !AbilitaInnate.abilitaUtili(p, gruppo, gruppoAvversario).isEmpty());

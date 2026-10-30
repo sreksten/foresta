@@ -113,7 +113,7 @@ class AnalisiDanniAbilitaInnateTest {
     }
 
     private void tabellaDellaMagia(PrintStream out) {
-        out.printf("%n== MAGIA MASSIMA MEDIA (e recupero per turno di rigenerazione) di chi usa le abilità, e quanti lanci reggono a magia piena%n");
+        out.printf("%n== Magia massima media (e recupero per turno di rigenerazione) di chi usa le abilità, e quanti lanci reggono a magia piena%n");
         out.printf("%-10s |", "classe");
         for (int livello : LIVELLI) {
             out.printf(" liv %d: magia (recupero) |", livello);

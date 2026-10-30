@@ -77,27 +77,27 @@ public final class Requisiti {
 			case INCANTESIMO_DEL_REPERTORIO:
 				return SceltaIncantesimo.scegli(azione, attore, bersaglio, contesto) == null
 						? "nessun incantesimo adatto da lanciare contro " + nome(bersaglio) : null;
-			// Il dardo arcano non consuma pergamene: costa solo MAGIA, e lo possono lanciare solo le classi che lo conoscono
+			// Il dardo arcano non consuma pergamene: costa solo Magia, e lo possono lanciare solo le classi che lo conoscono
 			case DARDO_ARCANO:
 				if (!AbilitaInnate.puoUsare(attore, TipoAbilita.DARDO_ARCANO)) {
-					return "il dardo arcano non si può lanciare (classe, MAGIA o silenzio)";
+					return "il dardo arcano non si può lanciare (classe, Magia o silenzio)";
 				}
 				return contro(azione, attore, bersaglio, TipoDanno.ARCANO, contesto);
-			// La luce divina del Sacerdote: come il dardo, costa solo MAGIA
+			// La luce divina del Sacerdote: come il dardo, costa solo Magia
 			case LUCE_DIVINA:
 				if (!AbilitaInnate.puoUsare(attore, TipoAbilita.LUCE_DIVINA)) {
-					return "la luce divina non si può invocare (classe, MAGIA o silenzio)";
+					return "la luce divina non si può invocare (classe, Magia o silenzio)";
 				}
 				return contro(azione, attore, bersaglio, TipoDanno.SACRO, contesto);
 			case RESURREZIONE:
 				if (!puoLanciare(attore, TipoIncantesimo.RESURREZIONE, contesto)) {
-					return "manca la pergamena o la MAGIA per la Resurrezione";
+					return "manca la pergamena o la Magia per la Resurrezione";
 				}
 				return bersaglio == null || bersaglio.isVivo() || bersaglio.isInPanchina() ? "nessun caduto da risuscitare" : null;
 			// Un'azione su tutto il gruppo non ha un bersaglio: i requisiti guardano che nel gruppo ci sia qualcuno su cui valga la pena usarla
 			case ALBA_SACRA:
 				if (!AbilitaInnate.puoUsare(attore, TipoAbilita.ALBA_SACRA)) {
-					return "l'Alba sacra non si può invocare (classe, MAGIA o silenzio)";
+					return "l'Alba sacra non si può invocare (classe, Magia o silenzio)";
 				}
 				return esiste(contesto.getAlleati(), p -> haUnoStatoNegativo(p)) ? null : "nessun alleato ha uno stato da togliere";
 			case CANTO_CURATIVO:
@@ -115,7 +115,7 @@ public final class Requisiti {
 				}
 				return esiste(contesto.getAlleati(), p -> !p.isFuoriCombattimento() && !p.hasEffettoDiStato(TipoEffettoDiStato.ISPIRATO))
 						? null : "tutti sono già ispirati";
-			// Le abilità innate di chierico e druido costano MAGIA e non consumano pergamene
+			// Le abilità innate di chierico e druido costano Magia e non consumano pergamene
 			case SCACCIARE_I_NON_MORTI:
 				if (!AbilitaInnate.puoUsare(attore, TipoAbilita.SCACCIARE_I_NON_MORTI)) {
 					return "scacciare i non morti non si può usare";
@@ -153,7 +153,7 @@ public final class Requisiti {
 				if (contesto.getPozioniMagia() <= 0) {
 					return "il gruppo non ha pozioni della Magia";
 				}
-				return bersaglio != null && bersaglio.isVivo() && bersaglio.getMagia() < bersaglio.getMagiaMassima() ? null : "il bersaglio ha la MAGIA piena";
+				return bersaglio != null && bersaglio.isVivo() && bersaglio.getMagia() < bersaglio.getMagiaMassima() ? null : "il bersaglio ha la Magia piena";
 			case POZIONE_SALUTE_GRANDE:
 				if (contesto.getPozioniSaluteGrandi() <= 0) {
 					return "il gruppo non ha pozioni della Salute grandi";
@@ -163,7 +163,7 @@ public final class Requisiti {
 				if (contesto.getPozioniMagiaGrandi() <= 0) {
 					return "il gruppo non ha pozioni della Magia grandi";
 				}
-				return bersaglio != null && bersaglio.isVivo() && bersaglio.getMagia() < bersaglio.getMagiaMassima() ? null : "il bersaglio ha la MAGIA piena";
+				return bersaglio != null && bersaglio.isVivo() && bersaglio.getMagia() < bersaglio.getMagiaMassima() ? null : "il bersaglio ha la Magia piena";
 			// Il cambio d'arma ha bisogno dell'inventario, che hanno solo i personaggi del giocatore: per un mostro il requisito fallisce sempre
 			case CAMBIA_ARMA:
 				if (!(contesto.getGruppoDegliAlleati() instanceof GruppoGiocatore)) {
@@ -185,7 +185,7 @@ public final class Requisiti {
 			return incantesimoGlobale(classe, attore, contesto);
 		}
 		if (!puoLanciare(attore, classe, contesto)) {
-			return "manca la pergamena o la MAGIA per " + classe + ", o è silenziato";
+			return "manca la pergamena o la Magia per " + classe + ", o è silenziato";
 		}
 		if (bersaglio == null || bersaglio.isFuoriCombattimento()) {
 			return "nessun bersaglio";
@@ -213,7 +213,7 @@ public final class Requisiti {
 	 */
 	private static String incantesimoGlobale(TipoIncantesimo classe, Personaggio attore, ContestoTattico contesto) {
 		if (!puoLanciare(attore, classe, contesto)) {
-			return "manca la pergamena o la MAGIA per " + classe + ", o è silenziato";
+			return "manca la pergamena o la Magia per " + classe + ", o è silenziato";
 		}
 		IncantesimoGlobale incantesimo = (IncantesimoGlobale) FabbricaIncantesimi.crea(classe, attore.getLivello());
 		return incantesimo.serve(contesto.getAlleati(), contesto.getAvversari()) ? null : "non cambierebbe niente: " + classe;
@@ -245,7 +245,7 @@ public final class Requisiti {
 	}
 
 	/**
-	 * Se l'attore può lanciare quell'incantesimo adesso: non è silenziato e ha la MAGIA, e ha una pergamena nel gruppo oppure è un mostro che lo
+	 * Se l'attore può lanciare quell'incantesimo adesso: non è silenziato e ha la Magia, e ha una pergamena nel gruppo oppure è un mostro che lo
 	 * ha nel suo repertorio
 	 */
 	static boolean puoLanciare(Personaggio attore, TipoIncantesimo classe, ContestoTattico contesto) {

@@ -324,8 +324,8 @@ class RequisitiTest {
         miei.addPozioniMagiaGrande(1);
         assertNo(no(TipoAzione.POZIONE_SALUTE, guerriero, guerriero), "non è ferito");
         assertNo(no(TipoAzione.POZIONE_SALUTE_GRANDE, guerriero, guerriero), "non è ferito");
-        assertNo(no(TipoAzione.POZIONE_MAGIA, guerriero, mago), "MAGIA piena");
-        assertNo(no(TipoAzione.POZIONE_MAGIA_GRANDE, guerriero, mago), "MAGIA piena");
+        assertNo(no(TipoAzione.POZIONE_MAGIA, guerriero, mago), "Magia piena");
+        assertNo(no(TipoAzione.POZIONE_MAGIA_GRANDE, guerriero, mago), "Magia piena");
 
         feriscilo(guerriero);
         mago.subMagia(mago.getMagia() / 2);

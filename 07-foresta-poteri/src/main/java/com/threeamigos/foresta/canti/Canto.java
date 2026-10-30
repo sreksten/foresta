@@ -7,7 +7,7 @@ import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
- * Una capacità innata del Bardo e della Cantastorie: costa MAGIA, non consuma pergamene. Non è fra le
+ * Una capacità innata del Bardo e della Cantastorie: costa Magia, non consuma pergamene. Non è fra le
  * {@link TipoIncantesimo} perché non è una pergamena: non si compra, non si trova e non
  * si conta nell'inventario del gruppo. Chi può cantare e quando si decide in {@link CantoDelBardo}.
  */
@@ -16,7 +16,7 @@ public interface Canto extends OggettoConCostoDiLancio {
 	TipoCanto getTipo();
 
 	/**
-	 * La MAGIA che costa: la dice il suo tipo.
+	 * La Magia che costa: la dice il suo tipo.
 	 */
 	@Override
 	default int getCostoLancio() {
@@ -24,12 +24,12 @@ public interface Canto extends OggettoConCostoDiLancio {
 	}
 
 	/**
-	 * Canta: fa l'effetto e scala la MAGIA al cantore. Il turno e la risposta avversaria li gestisce chi lo chiama.
+	 * Canta: fa l'effetto e scala la Magia al cantore. Il turno e la risposta avversaria li gestisce chi lo chiama.
 	 *
 	 * @param cantore il Bardo o la Cantastorie
 	 * @param gruppo il gruppo del cantore
 	 * @param gruppoAvversario gli avversari
-	 * @return true se il canto ha avuto luogo (e ha quindi consumato MAGIA), false se non c'era nessuno su cui farlo
+	 * @return true se il canto ha avuto luogo (e ha quindi consumato Magia), false se non c'era nessuno su cui farlo
 	 */
 	boolean canta(Personaggio cantore, Gruppo gruppo, Gruppo gruppoAvversario);
 

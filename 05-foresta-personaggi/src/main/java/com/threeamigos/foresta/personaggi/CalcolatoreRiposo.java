@@ -41,7 +41,7 @@ public class CalcolatoreRiposo {
                     personaggio.getMoltiplicatoreRecuperoFisico());
         }
 
-        // --- CALCOLO RECUPERO MAGIA ---
+        // --- CALCOLO RECUPERO Magia ---
         double manaGrezzo = BASE_RECUPERO_MANA + (personaggio.getMagiaMassima() * PERCENTUALE_MANA_MAX);
         manaRigenerato = (int) Math.ceil(manaGrezzo * moltiplicatoreGlobale *
                 personaggio.getMoltiplicatoreRecuperoMagico());

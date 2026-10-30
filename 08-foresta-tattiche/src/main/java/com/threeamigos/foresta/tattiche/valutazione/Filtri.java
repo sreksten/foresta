@@ -106,8 +106,8 @@ public final class Filtri {
 
 	/**
 	 * Chi sa fare magie adesso (§7.5, F3): per una classe con un'abilità innata (Dardo arcano, Alba sacra, canti, abilità di chierico e druido) conta quella, se non è
-	 * silenziato e ha la MAGIA per almeno una; per un mostro di una classe magica, se non è silenziato e ha MAGIA; per gli altri, se non è
-	 * silenziato, ha MAGIA e ha già lanciato un incantesimo in questo combattimento.
+	 * silenziato e ha la Magia per almeno una; per un mostro di una classe magica, se non è silenziato e ha Magia; per gli altri, se non è
+	 * silenziato, ha Magia e ha già lanciato un incantesimo in questo combattimento.
 	 */
 	private static boolean isMagico(Personaggio candidato, ContestoTattico contesto) {
 		if (candidato.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)) {

@@ -225,7 +225,7 @@ public final class EsecutoreTattiche {
 
 	/**
 	 * Un incantesimo di danno, la Morte o il Silenzio contro il bersaglio scelto; con più bersagli (MULTIPLO) il principale e i successivi vivi (per un mostro solo
-	 * il principale). Il lancio, costo in MAGIA compreso, lo fa l'incantesimo; la pergamena si consuma se il gruppo ne ha una (altrimenti è il repertorio di un mostro).
+	 * il principale). Il lancio, costo in Magia compreso, lo fa l'incantesimo; la pergamena si consuma se il gruppo ne ha una (altrimenti è il repertorio di un mostro).
 	 */
 	private void lanciaUnIncantesimoDiDanno(Personaggio attore, Decisione decisione, Gruppo gruppoDellAttore) {
 		TipoIncantesimo classe = decisione.getIncantesimo();
@@ -247,7 +247,7 @@ public final class EsecutoreTattiche {
 
 	/**
 	 * Un incantesimo GLOBALE: nessun bersaglio, agisce su tutta la locazione (un benefico sul gruppo di chi lo lancia, un malefico su quello nemico).
-	 * Chi cade per colpa sua conta come sconfitto. Il lancio, costo in MAGIA compreso, lo fa l'incantesimo.
+	 * Chi cade per colpa sua conta come sconfitto. Il lancio, costo in Magia compreso, lo fa l'incantesimo.
 	 */
 	private void lanciaUnIncantesimoGlobale(Personaggio attore, TipoIncantesimo classe, Gruppo gruppoDellAttore, Gruppo gruppoNemico) {
 		annuncia(attore, null);
@@ -272,7 +272,7 @@ public final class EsecutoreTattiche {
 	}
 
 	/**
-	 * <code>cantaSu</code> dice se il canto ha avuto luogo (e ha consumato MAGIA) o se non c'era nessuno su cui farlo: solo nel primo caso conta come
+	 * <code>cantaSu</code> dice se il canto ha avuto luogo (e ha consumato Magia) o se non c'era nessuno su cui farlo: solo nel primo caso conta come
 	 * incantesimo lanciato (per il filtro MAGICO) e si annuncia. Nel secondo non si annuncia niente e per la tattica il turno è comunque speso.
 	 */
 	private void canta(Personaggio cantore, TipoCanto tipo, Personaggio bersaglio, Gruppo gruppoDelCantore, Gruppo gruppoNemico) {

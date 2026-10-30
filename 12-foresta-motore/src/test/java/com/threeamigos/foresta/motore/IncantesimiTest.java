@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Il POTERE_MAGICO (bastoni, libri) aumenta i danni degli incantesimi, la riserva di MAGIA no; Morte uccide solo
+ * Il POTERE_MAGICO (bastoni, libri) aumenta i danni degli incantesimi, la riserva di Magia no; Morte uccide solo
  * chi è sotto un quarto della salute massima, altrimenti si ritorce contro chi la lancia. Il critico è
  * neutralizzato come in CalcolatoreCombattimentoBerserkTest, così il danno è deterministico.
  */

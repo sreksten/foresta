@@ -3,7 +3,7 @@ package com.threeamigos.foresta.tipi;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
- * Le abilità innate del Chierico, del Druido, del Sacerdote, del Mago e dell'Elfo (e delle loro forme femminili), simili ai canti del Bardo: costano MAGIA, non
+ * Le abilità innate del Chierico, del Druido, del Sacerdote, del Mago e dell'Elfo (e delle loro forme femminili), simili ai canti del Bardo: costano Magia, non
  * consumano pergamene, non si comprano né si trovano.
  * <p>
  * Il comando con cui la UI ne chiede l'uso al motore lo dà {@link ComandiAssociati}.
@@ -55,7 +55,7 @@ public enum TipoAbilita {
 	}
 
 	/**
-	 * I punti di MAGIA che costa usarla, per chi la usa con il costo base (quello del Mago per il dardo arcano).
+	 * I punti di Magia che costa usarla, per chi la usa con il costo base (quello del Mago per il dardo arcano).
 	 */
 	public int getCostoLancio() {
 		return costoLancio;

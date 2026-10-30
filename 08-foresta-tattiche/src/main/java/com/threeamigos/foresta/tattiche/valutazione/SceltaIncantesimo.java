@@ -281,7 +281,7 @@ public final class SceltaIncantesimo {
 
 	/**
 	 * Fra quelli il cui danno atteso (con la conoscenza dell'equipaggiamento) basta a uccidere il bersaglio principale, il meno caro: il prezzo della
-	 * pergamena per i miei, il costo di lancio in MAGIA per i mostri. Se nessuno basta, il più adatto esperto.
+	 * pergamena per i miei, il costo di lancio in Magia per i mostri. Se nessuno basta, il più adatto esperto.
 	 */
 	private static TipoIncantesimo piuEconomicoCheBasta(Personaggio attore, Personaggio bersaglio, ContestoTattico contesto,
 														List<TipoIncantesimo> lanciabili) {

@@ -28,7 +28,7 @@ import java.util.Optional;
  * passa dalle fasi di {@link CalcolatoreCombattimento#fasiDiAttacco}, come nel gioco, quindi conta anche
  * la seconda arma. Senza equipaggiamento il PG combatte con l'arma naturale, come nella prima versione.
  * <p>
- * Il PG può avere anche una {@link ScortaDiPergamene}: finché ne ha una e abbastanza MAGIA, a ogni turno lancia
+ * Il PG può avere anche una {@link ScortaDiPergamene}: finché ne ha una e abbastanza Magia, a ogni turno lancia
  * l'incantesimo invece di attaccare con le armi. Mago ed Elfo, senza pergamene, lanciano il dardo arcano se promette
  * più danno delle armi (probabilità di colpire per danno, come fanno i mostri quando scelgono fra magia e armi).
  * I mostri combattono solo con le armi.

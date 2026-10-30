@@ -16,7 +16,7 @@ public enum TipoFiltro {
 	SALUTE(TipoParametro.CONFRONTO_E_NUMERO),
 	/** La salute attuale sulla massima, in percentuale */
 	SALUTE_PERCENTUALE(TipoParametro.CONFRONTO_E_NUMERO),
-	/** La MAGIA attuale in punti */
+	/** La Magia attuale in punti */
 	MAGIA(TipoParametro.CONFRONTO_E_NUMERO),
 	/** Il livello */
 	LIVELLO(TipoParametro.CONFRONTO_E_NUMERO),

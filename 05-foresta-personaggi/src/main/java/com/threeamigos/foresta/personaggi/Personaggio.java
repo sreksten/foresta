@@ -108,7 +108,7 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 
     /**
      * Gli incantesimi malefici che il personaggio sa lanciare per natura quando attacca (vedi PersonaggioBase): non servono
-     * pergamene, li paga con la MAGIA. Vale per chi è magico (isMagico).
+     * pergamene, li paga con la Magia. Vale per chi è magico (isMagico).
      */
     Set<TipoIncantesimo> getRepertorioIncantesimi();
 
@@ -253,7 +253,7 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
     void subMagia(int quantita);
 	/**
 	 * Il POTERE_MAGICO come percentuale: 100 senza modificatori, di più con bastoni e libri magici
-	 * (es. un bastone +20% lo porta a 120). Non dipende dalla riserva di MAGIA.
+	 * (es. un bastone +20% lo porta a 120). Non dipende dalla riserva di Magia.
 	 */
     double getPotereMagico();
 	/**

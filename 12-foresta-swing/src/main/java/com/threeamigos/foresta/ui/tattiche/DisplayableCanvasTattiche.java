@@ -858,7 +858,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 			aggiungiAzione(righe, voce, a, i);
 		}
 		Riga nuovaAzione = new Riga(1, i);
-		nuovaAzione.pezzi.add(testo("fai").spiega("Azione", "Le azioni sono ciò che il personaggio fa. Si prova la prima che si può fare sul bersaglio (serve la MAGIA, la pergamena, la pozione...); se nessuna si può fare, si passa alla voce dopo."));
+		nuovaAzione.pezzi.add(testo("fai").spiega("Azione", "Le azioni sono ciò che il personaggio fa. Si prova la prima che si può fare sul bersaglio (serve la Magia, la pergamena, la pozione...); se nessuna si può fare, si passa alla voce dopo."));
 		nuovaAzione.pezzi.add(menu("(aggiungi un'azione)", sceltePer(BozzaTattica.azioniAmmesse(voce, azioniPossibili), t -> t.getDescrizione()), null,
 				tipo -> bozza.aggiungiAzione(voce, tipo), "Un'azione: la prima che si può eseguire vince"));
 		righe.add(nuovaAzione);
@@ -1060,7 +1060,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	private void aggiungiAzione(List<Riga> righe, BozzaTattica.Voce voce, int a, int indiceVoce) {
 		AzioneMD azione = voce.azioni.get(a);
 		Riga riga = new Riga(1, indiceVoce);
-		riga.pezzi.add(testo("fai").spiega("Azione", "Le azioni sono ciò che il personaggio fa. Si prova la prima che si può fare sul bersaglio (serve la MAGIA, la pergamena, la pozione...); se nessuna si può fare, si passa alla voce dopo."));
+		riga.pezzi.add(testo("fai").spiega("Azione", "Le azioni sono ciò che il personaggio fa. Si prova la prima che si può fare sul bersaglio (serve la Magia, la pergamena, la pozione...); se nessuna si può fare, si passa alla voce dopo."));
 		riga.pezzi.add(menu(azione.getTipo().getDescrizione(), sceltePer(BozzaTattica.azioniAmmesse(voce, azioniPossibili), t -> t.getDescrizione()),
 				azione.getTipo(), tipo -> bozza.sostituisciAzione(voce, a, tipo), "L'azione"));
 		if (azione.getCriterio() != null) {

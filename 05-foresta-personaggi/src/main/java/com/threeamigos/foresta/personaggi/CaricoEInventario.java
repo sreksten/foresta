@@ -97,7 +97,7 @@ final class CaricoEInventario {
 	}
 
 	/**
-	 * Togliendo un artefatto che dava SALUTE o MAGIA massima, i valori attuali possono superare i nuovi massimi: si
+	 * Togliendo un artefatto che dava SALUTE o Magia massima, i valori attuali possono superare i nuovi massimi: si
 	 * riportano subito entro il limite (voluto: chi toglie l'artefatto ne perde il vantaggio).
 	 */
 	void limitaAiMassimi() {

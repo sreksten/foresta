@@ -359,7 +359,7 @@ public final class BozzaTattica {
 	}
 
 	/**
-	 * Il numero di partenza di un filtro numerico, nell'ordine di grandezza della sua misura (50 punti o percento di salute, 10 di MAGIA, livello 5)
+	 * Il numero di partenza di un filtro numerico, nell'ordine di grandezza della sua misura (50 punti o percento di salute, 10 di Magia, livello 5)
 	 */
 	private static int numeroPredefinito(TipoFiltro tipo) {
 		switch (tipo) {

@@ -680,7 +680,7 @@ public class CalcolatoreCombattimento {
                         // Probabilità (su 100) che l'incantamento applichi il suo effetto di stato: una parte dipende da
                         // quanto è forte il colpo di QUESTO elemento rispetto alla FORZA del difensore, l'altra da chi
                         // colpisce, cioè la sua INTELLIGENZA pesata dal POTERE_MAGICO (100 = nessun bastone o libro).
-                        // La riserva di MAGIA non conta: un guerriero senza mana con INTELLIGENZA 10 aggiunge 10 punti,
+                        // La riserva di Magia non conta: un guerriero senza mana con INTELLIGENZA 10 aggiunge 10 punti,
                         // un mago con INTELLIGENZA 20 e un bastone +20% ne aggiunge 24.
                         double contributoMagico = attaccante.get(TipoAttributo.INTELLIGENZA) * attaccante.getPotereMagico() / 100.0d;
                         double probStatoMagico = percentualeControForza(dannoQuestoIncantamentoProc, difensore) + contributoMagico;
