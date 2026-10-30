@@ -40,8 +40,7 @@ public final class OfferteAlchimista {
 			if (tipo == TipoConsumabile.INCANTESIMO && offerta.getClasseIncantesimo() != classe) {
 				continue;
 			}
-			if (tipo == TipoConsumabile.AUMENTO_MAGIA_SINGOLO
-					&& (offerta.getPersonaggio() == null || !offerta.getPersonaggio().getUuid().equals(uuidPersonaggio))) {
+			if (tipo == TipoConsumabile.AUMENTO_MAGIA_SINGOLO && !offerta.getPersonaggio().getUuid().equals(uuidPersonaggio)) {
 				continue;
 			}
 			return Optional.of(offerta);

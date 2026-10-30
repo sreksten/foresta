@@ -22,17 +22,15 @@ public final class AttaccoConLeArmi {
 	 */
 	public static void esegui(Personaggio attaccante, Personaggio bersaglio) {
 		BusEventi.pubblica(new InternoAzioneInCombattimento(attaccante, bersaglio));
-		esegui(attaccante, bersaglio, true);
+		annunciaEAttacca(attaccante, bersaglio);
 	}
 
-	private static void esegui(Personaggio attaccante, Personaggio bersaglio, boolean annunciaAttacco) {
+	private static void annunciaEAttacca(Personaggio attaccante, Personaggio bersaglio) {
 		Logger.log(() -> attaccante.getNome() + " attacca " + bersaglio.getNome());
-		if (annunciaAttacco) {
-			// Gli avversari della stessa specie si distinguono per il numero ("La viverna 2"), quindi sempre l'articolo determinativo
-			String messaggio = attaccante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-					" attacca " + bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.';
-			BusEventi.pubblica(new NotificaTestoFrase(messaggio));
-		}
+		// Gli avversari della stessa specie si distinguono per il numero ("La viverna 2"), quindi sempre l'articolo determinativo
+		String messaggio = attaccante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+				" attacca " + bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.';
+		BusEventi.pubblica(new NotificaTestoFrase(messaggio));
 		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(attaccante, bersaglio)) {
 			if (bersaglio.isFuoriCombattimento()) {
 				return;

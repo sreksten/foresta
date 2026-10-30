@@ -143,7 +143,7 @@ public final class Valutatore {
 			tipo = TipoAzione.di(classe);
 			spiegazione.add("voce " + (indice + 1) + ": " + azione + " sceglie " + classe + " (" + SceltaIncantesimo.descrivi(azione, attore, bersaglio, contesto) + ")");
 		} else {
-			spiegazione.add("voce " + (indice + 1) + ": " + azione + " su " + (bersaglio == null ? "nessuno" : bersaglio.getNome()));
+			spiegazione.add("voce " + (indice + 1) + ": " + azione + " su " + bersaglio.getNome());
 		}
 		// Il cambio d'arma ha come "bersaglio" l'attore stesso (rosa SE_STESSO), ma la decisione non lo porta: non c'è nessuno da colpire
 		Personaggio colpito = tipo == TipoAzione.CAMBIA_ARMA ? null : bersaglio;

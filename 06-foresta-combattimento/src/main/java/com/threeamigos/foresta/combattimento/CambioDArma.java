@@ -168,8 +168,8 @@ public final class CambioDArma {
 	public static List<Artefatto> armiPerCambio(GruppoGiocatore gruppo, Personaggio personaggio, TipoDanno tipoDanno) {
 		List<Artefatto> trovate = new ArrayList<>();
 		for (Artefatto artefatto : gruppo.getInventario()) {
-			TipoSlotArtefatto slot = artefatto.getTipo().getSlotArtefatto();
-			if (!(artefatto instanceof Arma) || (slot != TipoSlotArtefatto.MANO_PRINCIPALE && slot != TipoSlotArtefatto.ENTRAMBE_LE_MANI)) {
+			// Tutte le armi stanno nella mano principale o in entrambe (lo dice TipoArtefatto): qui basta che sia un'arma
+			if (!(artefatto instanceof Arma)) {
 				continue;
 			}
 			if (((Arma) artefatto).daTipoDanno(tipoDanno) && puoCambiareArma(gruppo, personaggio, artefatto)) {

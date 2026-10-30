@@ -29,7 +29,7 @@ public class Cofano extends OggettoBase implements Bottino {
 	}
 	
 	public Cofano(int q) {
-		quantita = q;
+		super(q);
 	}
 
 	public String getAIS() {

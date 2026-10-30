@@ -209,7 +209,7 @@ public final class Requisiti {
 		if (bersaglio == null || bersaglio.isFuoriCombattimento()) {
 			return "nessun bersaglio";
 		}
-		if (tipoDanno != null && bersaglio.isImmuneATipoDanno(tipoDanno)) {
+		if (bersaglio.isImmuneATipoDanno(tipoDanno)) {
 			return nome(bersaglio) + " è immune a " + tipoDanno;
 		}
 		if (azione.isSoloSePiuForteDellAttacco() && azione.getTipo() == TipoAzione.DARDO_ARCANO

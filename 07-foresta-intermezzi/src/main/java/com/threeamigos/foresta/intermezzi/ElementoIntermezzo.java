@@ -196,7 +196,8 @@ public final class ElementoIntermezzo {
 				tempo = Math.min(secondi, durataCiclo);
 		}
 		StatoElemento partenza = statoIniziale;
-		for (Tappa tappa : tappe) {
+		// Tutte le tappe tranne l'ultima: se il tempo è dentro una di loro si è a metà strada; l'ultima chiude sempre il giro
+		for (Tappa tappa : tappe.subList(0, tappe.size() - 1)) {
 			StatoElemento arrivo = tappa.arrivoDa(partenza);
 			if (tempo <= tappa.getSecondi()) {
 				double frazione = tappa.getSecondi() == 0 ? 1 : tempo / tappa.getSecondi();
@@ -205,7 +206,11 @@ public final class ElementoIntermezzo {
 			tempo -= tappa.getSecondi();
 			partenza = arrivo;
 		}
-		return partenza;
+		Tappa ultima = tappe.get(tappe.size() - 1);
+		StatoElemento arrivo = ultima.arrivoDa(partenza);
+		// Qui si arriva solo con del tempo ancora da percorrere, quindi l'ultima tappa dura: non si divide per zero
+		double frazione = Math.min(1, tempo / ultima.getSecondi());
+		return orienta(partenza.interpola(arrivo, frazione), partenza, arrivo, alRitorno);
 	}
 
 	/**

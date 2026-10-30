@@ -223,11 +223,10 @@ public final class CommercioDelGruppo {
 					int y = Foresta.getPosizioneDelGruppo().getY();
 					Foresta.ottieniMappaZona(x - 7, y - 7, x + 7, y + 7);
 					break;
-				case MAPPA_COMPLETA_FORESTA:
+				default:
+					// MAPPA_COMPLETA_FORESTA: l'alchimista non offre altro (vedi OfferteAlchimista.trova)
 					Foresta.ottieniMappa();
 					break;
-				default:
-					throw new IllegalArgumentException("Tipo consumabile non valido");
 			}
 			Cassa.subMonete(costoOggetto);
 			BusEventi.pubblica(new NotificaApprovazioneAcquistoConsumabile(comandoAcquistoConsumabile, costoOggetto));

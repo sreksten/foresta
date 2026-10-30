@@ -17,14 +17,22 @@ import com.threeamigos.foresta.testi.Testi;
  */
 public enum TipoCanto {
 
-	CURATIVO,
-	IPNOTICO,
-	DI_VALORE,
+	CURATIVO(CostantiCanti.CANTO_CURATIVO_COSTO_LANCIO, CostantiCanti.CANTO_CURATIVO_RICARICA),
+	IPNOTICO(CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO, CostantiCanti.CANTO_IPNOTICO_RICARICA),
+	DI_VALORE(CostantiCanti.CANTO_DI_VALORE_COSTO_LANCIO, CostantiCanti.CANTO_DI_VALORE_RICARICA),
 	// Questo non è subito disponibile. Lo insegna il Bardo della locanda una volta che è stato portato a casa
 	// (missione NonSparateSulPianista completata) e che sua moglie è stata scortata (missione IlViaggioDellaMoglie
 	// completata). Quando si torna in una locanda, il Bardo insegna il canto.
 	// (vedi CantoDelBardo.isUrloDellaBansheeAppreso)
-	URLO_DELLA_BANSHEE;
+	URLO_DELLA_BANSHEE(CostantiCanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO, CostantiCanti.CANTO_URLO_DELLA_BANSHEE_RICARICA);
+
+	private final int costoLancio;
+	private final int ricarica;
+
+	TipoCanto(int costoLancio, int ricarica) {
+		this.costoLancio = costoLancio;
+		this.ricarica = ricarica;
+	}
 
 	public String getNome() {
 		return Testi.testoOCostante(this, "NOME");
@@ -45,35 +53,13 @@ public enum TipoCanto {
 	 * I punti di MAGIA che costa cantarlo.
 	 */
 	public int getCostoLancio() {
-		switch (this) {
-			case CURATIVO:
-				return CostantiCanti.CANTO_CURATIVO_COSTO_LANCIO;
-			case IPNOTICO:
-				return CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO;
-			case DI_VALORE:
-				return CostantiCanti.CANTO_DI_VALORE_COSTO_LANCIO;
-			case URLO_DELLA_BANSHEE:
-				return CostantiCanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO;
-			default:
-				throw new IllegalStateException("Costo non previsto per " + this);
-		}
+		return costoLancio;
 	}
 
 	/**
-	 * I turni che devono passare, dopo averlo cantato, prima di poterlo cantare di nuovo.
+	 * Quanti turni passano prima di poterlo cantare di nuovo.
 	 */
 	public int getRicarica() {
-		switch (this) {
-			case CURATIVO:
-				return CostantiCanti.CANTO_CURATIVO_RICARICA;
-			case IPNOTICO:
-				return CostantiCanti.CANTO_IPNOTICO_RICARICA;
-			case DI_VALORE:
-				return CostantiCanti.CANTO_DI_VALORE_RICARICA;
-			case URLO_DELLA_BANSHEE:
-				return CostantiCanti.CANTO_URLO_DELLA_BANSHEE_RICARICA;
-			default:
-				throw new IllegalStateException("Ricarica non prevista per " + this);
-		}
+		return ricarica;
 	}
 }

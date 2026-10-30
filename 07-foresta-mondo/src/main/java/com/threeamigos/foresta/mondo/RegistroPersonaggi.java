@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.mondo;
 
 import com.threeamigos.foresta.statistiche.Statistiche;
-import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 
 import com.threeamigos.foresta.mappa.Foresta;
@@ -202,9 +201,7 @@ public class RegistroPersonaggi {
 		String chiave = noto.chiave(dettaglio);
 		ResidenteMD residente = getRegistroMD().getResidente(chiave);
 		if (residente == null) {
-			if (noto.getProduzioneNomi() == null) {
-				throw new IllegalStateException(noto + " non ha un nome da nomi.txt: lo decide chi lo crea");
-			}
+			// Chi non ha una produzione di nomi (il locandiere, i campioni) non arriva fin qui: i due getResidente lo rifiutano
 			residente = new ResidenteMD(ProduttoreDiMissioniCasuale.nomeDiPersonaggioNoto(noto.getProduzioneNomi()),
 					noto.isConProvenienza() ? provenienza : null, noto.getTipo());
 			getRegistroMD().aggiungiResidente(chiave, residente);
@@ -228,12 +225,14 @@ public class RegistroPersonaggi {
 	 * PersonaggioNoto ha quel mestiere.
 	 */
 	public static String getNomeDelPersonaggioDiCitta(TipoPersonaggio mestiere) {
-		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		TipoLocazione luogo = Foresta.getLocazioneDelGruppo();
-		if (luogo != null && luogo.isBottega()) {
+		if (luogo == null) {
+			return null;
+		}
+		if (luogo.isBottega()) {
 			return getNegoziante(Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()));
 		}
-		if (luogo == null || luogo.getNomeDellaCitta() == null) {
+		if (luogo.getNomeDellaCitta() == null) {
 			return null;
 		}
 		for (PersonaggioNoto noto : PersonaggioNoto.values()) {

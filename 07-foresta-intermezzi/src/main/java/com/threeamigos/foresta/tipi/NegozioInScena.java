@@ -95,9 +95,7 @@ public enum NegozioInScena {
 				.conElemento(ElementoIntermezzo.personaggio(idCapo, classeCapo, xArrivoCapo, yNegoziante)
 						.conBocca(0.5, -0.15)
 						.guarda(Verso.DESTRA));
-		if (primoPiano != null) {
-			pagina.conElemento(ElementoIntermezzo.di("foreground", ImmagineIntermezzo.risorsa(primoPiano), 0.5, 0.5));
-		}
+		pagina.conElemento(ElementoIntermezzo.di("foreground", ImmagineIntermezzo.risorsa(primoPiano), 0.5, 0.5));
 		return pagina;
 	}
 

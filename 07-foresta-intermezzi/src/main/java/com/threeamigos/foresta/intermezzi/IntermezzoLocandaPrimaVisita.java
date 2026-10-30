@@ -73,7 +73,8 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 			return false;
 		}
 		LocazioneMD locazioneMD = Locande.getLocazioneMDLocandaCorrente();
-		return locazioneMD != null && locazioneMD.ottieniProprieta(Locande.LOCANDA_VISITATA) == null && !RegistroIntermezzi.isBloccato(TipoIntermezzo.INTERMEZZO_LOCANDA_PRIMA_VISITA);
+		// Il momento è coerente con la locazione: una locanda o una città, che hanno sempre i loro dati
+		return locazioneMD.ottieniProprieta(Locande.LOCANDA_VISITATA) == null && !RegistroIntermezzi.isBloccato(TipoIntermezzo.INTERMEZZO_LOCANDA_PRIMA_VISITA);
 	}
 
 	/**

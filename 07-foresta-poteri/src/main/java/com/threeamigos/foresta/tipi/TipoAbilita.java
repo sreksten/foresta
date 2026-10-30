@@ -18,18 +18,26 @@ import com.threeamigos.foresta.testi.Testi;
 public enum TipoAbilita {
 
 	// Del chierico
-	SCACCIARE_I_NON_MORTI,
-	IMPOSIZIONE_DELLE_MANI,
+	SCACCIARE_I_NON_MORTI(CostantiAbilitaInnate.ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_SCACCIARE_I_NON_MORTI_RICARICA),
+	IMPOSIZIONE_DELLE_MANI(CostantiAbilitaInnate.ABILITA_IMPOSIZIONE_DELLE_MANI_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_IMPOSIZIONE_DELLE_MANI_RICARICA),
 	// Del druido
-	RADICI,
-	SCIAME,
-	PELLE_DI_CORTECCIA,
-	RIGENERAZIONE,
+	RADICI(CostantiAbilitaInnate.ABILITA_RADICI_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_RADICI_RICARICA),
+	SCIAME(CostantiAbilitaInnate.ABILITA_SCIAME_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_SCIAME_RICARICA),
+	PELLE_DI_CORTECCIA(CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_RICARICA),
+	RIGENERAZIONE(CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_RICARICA),
 	// Del sacerdote
-	ALBA_SACRA,
-	LUCE_DIVINA,
+	ALBA_SACRA(CostantiAbilitaInnate.ABILITA_ALBA_SACRA_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_ALBA_SACRA_RICARICA),
+	LUCE_DIVINA(CostantiAbilitaInnate.ABILITA_LUCE_DIVINA_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_LUCE_DIVINA_RICARICA),
 	// Del mago e dell'elfo
-	DARDO_ARCANO;
+	DARDO_ARCANO(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO, CostantiAbilitaInnate.DARDO_ARCANO_RICARICA);
+
+	private final int costoLancio;
+	private final int ricarica;
+
+	TipoAbilita(int costoLancio, int ricarica) {
+		this.costoLancio = costoLancio;
+		this.ricarica = ricarica;
+	}
 
 	public String getNome() {
 		return Testi.testoOCostante(this, "NOME");
@@ -50,55 +58,13 @@ public enum TipoAbilita {
 	 * I punti di MAGIA che costa usarla, per chi la usa con il costo base (quello del Mago per il dardo arcano).
 	 */
 	public int getCostoLancio() {
-		switch (this) {
-			case SCACCIARE_I_NON_MORTI:
-				return CostantiAbilitaInnate.ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO;
-			case IMPOSIZIONE_DELLE_MANI:
-				return CostantiAbilitaInnate.ABILITA_IMPOSIZIONE_DELLE_MANI_COSTO_LANCIO;
-			case RADICI:
-				return CostantiAbilitaInnate.ABILITA_RADICI_COSTO_LANCIO;
-			case SCIAME:
-				return CostantiAbilitaInnate.ABILITA_SCIAME_COSTO_LANCIO;
-			case PELLE_DI_CORTECCIA:
-				return CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO;
-			case RIGENERAZIONE:
-				return CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_COSTO_LANCIO;
-			case ALBA_SACRA:
-				return CostantiAbilitaInnate.ABILITA_ALBA_SACRA_COSTO_LANCIO;
-			case LUCE_DIVINA:
-				return CostantiAbilitaInnate.ABILITA_LUCE_DIVINA_COSTO_LANCIO;
-			case DARDO_ARCANO:
-				return CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO;
-			default:
-				throw new IllegalStateException("Costo non previsto per " + this);
-		}
+		return costoLancio;
 	}
 
 	/**
-	 * I turni che devono passare, dopo averla usata, prima di poterla riusare.
+	 * Quanti turni passano prima di poterla usare di nuovo.
 	 */
 	public int getRicarica() {
-		switch (this) {
-			case SCACCIARE_I_NON_MORTI:
-				return CostantiAbilitaInnate.ABILITA_SCACCIARE_I_NON_MORTI_RICARICA;
-			case IMPOSIZIONE_DELLE_MANI:
-				return CostantiAbilitaInnate.ABILITA_IMPOSIZIONE_DELLE_MANI_RICARICA;
-			case RADICI:
-				return CostantiAbilitaInnate.ABILITA_RADICI_RICARICA;
-			case SCIAME:
-				return CostantiAbilitaInnate.ABILITA_SCIAME_RICARICA;
-			case PELLE_DI_CORTECCIA:
-				return CostantiAbilitaInnate.ABILITA_PELLE_DI_CORTECCIA_RICARICA;
-			case RIGENERAZIONE:
-				return CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_RICARICA;
-			case ALBA_SACRA:
-				return CostantiAbilitaInnate.ABILITA_ALBA_SACRA_RICARICA;
-			case LUCE_DIVINA:
-				return CostantiAbilitaInnate.ABILITA_LUCE_DIVINA_RICARICA;
-			case DARDO_ARCANO:
-				return CostantiAbilitaInnate.DARDO_ARCANO_RICARICA;
-			default:
-				throw new IllegalStateException("Ricarica non prevista per " + this);
-		}
+		return ricarica;
 	}
 }

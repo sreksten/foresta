@@ -242,7 +242,8 @@ public class CalcolatoreCombattimento {
                 fattoreEffetti(vicino, tipoDanno));
         double difesa = difesaContro(vicino, tipoDanno);
         risultato.setFattoreEquipaggiamento((100.0d + difesaBaseContro(vicino, tipoDanno)) / (100.0d + difesa));
-        if (tipoDanno.getCategoriaDanno() != CategoriaDanno.FISICO && vicino.hasEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA)) {
+        // Le reazioni ad area sono tutte elementali (vedi TipoInterazioneConEffettiDiStato.getDannoAdArea): la mente fratturata conta sempre
+        if (vicino.hasEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA)) {
             difesa = difesa * 0.8d;
         }
         difesa = difesa * fattoreDifesaDaStati(vicino, tipoDanno, interazioni);
@@ -291,14 +292,10 @@ public class CalcolatoreCombattimento {
     }
 
     /**
-     * Uno degli effetti di stato che quel tipo di danno può provocare, a caso; null se non ne provoca
+     * Uno degli effetti di stato che quel tipo di danno può provocare, a caso: va chiamata solo per un tipo che ne ha (vedi TipoDanno.hasEffettiDiStato)
      */
     private static TipoEffettoDiStato effettoDiStatoCasuale(TipoDanno tipoDanno) {
         TipoEffettoDiStato[] effetti = tipoDanno.getEffetti();
-        if (effetti.length == 0) {
-            Logger.log(() -> "effettoDiStatoCasuale(" + tipoDanno + "): nessun effetto collaterale");
-            return null;
-        }
         TipoEffettoDiStato tipoEffetto = effetti[Dado.tiraAncheAUnaFaccia(effetti.length) - 1];
         Logger.log(() -> "effettoDiStatoCasuale(" + tipoDanno + "): effetto casuale: " + tipoEffetto);
         return tipoEffetto;
@@ -514,90 +511,48 @@ public class CalcolatoreCombattimento {
                 // qui sotto restano solo gli effetti che non sono stati
                 applicaGliStatiDellInterazione(interazione, attaccante, difensore, dannoRisultante);
                 dannoRisultante.addInterazione(interazione);
-                switch (interazione) {
-                    // Investono anche i vicini del difensore, con metà del danno grezzo di questo colpo (PersonaggioBase lo
-                    // distribuisce, calcolaDannoAdArea lo calcola per ciascuno)
-                    case ELETTROCUZIONE:
-                    case ESPLOSIONE_DI_GAS:
-                    case RIGETTO:
-                        dannoRisultante.addDannoAdArea(new DannoRisultante.DannoAdArea(interazione,
-                                dannoOffensivoGrezzo * CostantiPersonaggi.DANNO_AD_AREA_QUOTA));
-                        break;
-
-                    // Cambiano solo il danno (l'ha già fatto moltiplicatoreDelleInterazioni) o gli stati (qui sopra)
-                    case ALIMENTAZIONE_FIAMMA:
-                    case REAZIONE_TOSSICA:
-                    case CONGELAMENTO:
-                    case VAPORIZZAZIONE:
-                    case ESTINZIONE:
-                    case SCIOGLIMENTO_TERMICO:
-                    case VAMPATA_TOSSICA:
-                    case COAGULAZIONE_FORZATA:
-                    case DISGELO_VIOLENTO:
-                    case SUPERCONDUZIONE:
-                    case TOSSICITA_SETTICA:
-                    case SCHIACCIAMENTO:
-                    case INCIAMPO:
-                    case INCENDIO_LIBERATORIO:
-                    case IMPATTO_RIGIDO:
-                    case SOVRACCARICO_MENTALE:
-                    case SHOCK_DI_REALTA:
-                    case FOLLIA_COSMICA:
-                    case DISPERSIONE:
-                    case FANGO:
-                    case DISORIENTAMENTO:
-                    case ISOLAMENTO_SENSORIALE:
-                        if (Logger.isAttivo()) {
-                            Logger.log("Interazione " + interazione + " con " + tipoDanno + " su " + difensore.getNome());
-                        }
-                        break;
-
-                    case DILUIZIONE_EMATICA:
-                        Logger.log("tipo danno ACQUA: Diluizione Ematica, riduce il danno periodico da sanguinamento");
-                        dannoRisultante.setDiluizioneEmaticaAttiva(true);
-                        break;
-
-                    case MIETITURA:
-                        // Il danno raddoppia (l'ha già fatto moltiplicatoreDelleInterazioni); il minion quasi morto si
-                        // risveglia scheletro (PersonaggioBase.applicaRisultatoCombattimento)
-                        dannoRisultante.setMietituraAttiva(true);
-                        break;
-
-                    case COLLASSO_ENTROPICO:
-                        Logger.log("tipo danno VUOTO: Collasso Entropico, brucia il 25% dei MP massimi come danno aggiuntivo");
-                        dannoRisultante.setCollassoEntropicoAttivo(true);
-                        break;
-
-                    case PURIFICAZIONE:
-                        // La cura ad area (50% del danno applicato) va calcolata più avanti, quando il danno finale è noto
-                        purificazioneAttiva = true;
-                        break;
-
-                    case SIFONE_VITALE:
-                        // Sifone Vitale: il 30% del danno grezzo (pre-mitigazione) va all'attaccante come MP, l'eccedenza oltre
-                        // il massimo di MP va in HP
-                        dannoRisultante.setSifoneVitale((int) Math.round(dannoOffensivoGrezzo * 0.3d));
-                        break;
-
-                    case COLPO_DI_GRAZIA:
-                        Logger.log("tipo danno TAGLIENTE o PERFORANTE, critico automatico");
-                        criticoAutomatico = true;
-                        dannoRisultante.setColpoDiGrazia(true);
-                        break;
-
-                    case FRANTUMAZIONE_DEL_GHIACCIO:
-                        // Il ghiaccio va in pezzi: critico automatico, che non si somma a un critico vero
-                        Logger.log("tipo danno CONTUNDENTE su un CONGELATO, critico automatico");
-                        criticoAutomatico = true;
-                        break;
-
-                    case RISONANZA_SIGILLATA:
-                        Logger.log("tipo danno ARCANO: Risonanza Sigillata, +30% danno Puro che ignora le difese");
-                        dannoPuroBonus = dannoPuroBonus + dannoOffensivoGrezzo * 0.3d;
-                        break;
-
-                    default:
-                        throw new IllegalStateException("Interazione non gestita: " + interazione);
+                // Gli altri effetti di una reazione: il danno ad area (vedi sotto), il danno che cambia (l'ha già fatto
+                // moltiplicatoreDelleInterazioni) e gli stati (qui sopra) non vogliono altro
+                Logger.log(() -> "Interazione " + interazione + " con " + tipoDanno + " su " + difensore.getNome());
+                // Investono anche i vicini del difensore, con metà del danno grezzo di questo colpo (PersonaggioBase lo
+                // distribuisce, calcolaDannoAdArea lo calcola per ciascuno)
+                if (interazione.getDannoAdArea() != null) {
+                    dannoRisultante.addDannoAdArea(new DannoRisultante.DannoAdArea(interazione,
+                            dannoOffensivoGrezzo * CostantiPersonaggi.DANNO_AD_AREA_QUOTA));
+                }
+                if (interazione == TipoInterazioneConEffettiDiStato.DILUIZIONE_EMATICA) {
+                    // Riduce il danno periodico da sanguinamento
+                    dannoRisultante.setDiluizioneEmaticaAttiva(true);
+                }
+                if (interazione == TipoInterazioneConEffettiDiStato.MIETITURA) {
+                    // Il danno raddoppia (l'ha già fatto moltiplicatoreDelleInterazioni); il minion quasi morto si
+                    // risveglia scheletro (PersonaggioBase.applicaRisultatoCombattimento)
+                    dannoRisultante.setMietituraAttiva(true);
+                }
+                if (interazione == TipoInterazioneConEffettiDiStato.COLLASSO_ENTROPICO) {
+                    // Brucia il 25% dei MP massimi come danno aggiuntivo
+                    dannoRisultante.setCollassoEntropicoAttivo(true);
+                }
+                if (interazione == TipoInterazioneConEffettiDiStato.PURIFICAZIONE) {
+                    // La cura ad area (50% del danno applicato) va calcolata più avanti, quando il danno finale è noto
+                    purificazioneAttiva = true;
+                }
+                if (interazione == TipoInterazioneConEffettiDiStato.SIFONE_VITALE) {
+                    // Il 30% del danno grezzo (pre-mitigazione) va all'attaccante come MP, l'eccedenza oltre il massimo di MP va in HP
+                    dannoRisultante.setSifoneVitale((int) Math.round(dannoOffensivoGrezzo * 0.3d));
+                }
+                if (interazione == TipoInterazioneConEffettiDiStato.COLPO_DI_GRAZIA) {
+                    // Tagliente o perforante: critico automatico
+                    criticoAutomatico = true;
+                    dannoRisultante.setColpoDiGrazia(true);
+                }
+                if (interazione == TipoInterazioneConEffettiDiStato.FRANTUMAZIONE_DEL_GHIACCIO) {
+                    // Il ghiaccio va in pezzi: critico automatico, che non si somma a un critico vero
+                    criticoAutomatico = true;
+                }
+                if (interazione == TipoInterazioneConEffettiDiStato.RISONANZA_SIGILLATA) {
+                    // Arcano: +30% di danno Puro, che ignora le difese
+                    dannoPuroBonus = dannoPuroBonus + dannoOffensivoGrezzo * 0.3d;
                 }
             }
         }
@@ -702,11 +657,9 @@ public class CalcolatoreCombattimento {
                 double probStatoFisico = percentualeControForza(dannoMitigato, difensore) + (attaccante.get(TipoAttributo.FURIA) * 2.0d);
                 if (Dado.tira(100) <= probStatoFisico * fattoreEffetti(difensore, tipoDanno)) {
                     TipoEffettoDiStato effettoFisico = effettoDiStatoCasuale(tipoDanno);
-                    if (effettoFisico != null) {
-                        dannoRisultante.addEffettoDiStato(effettoFisico, calcolaDurataStato(difensore, effettoFisico),
-                                calcolaDannoPeriodico(attaccante, difensore, effettoFisico));
-                        Logger.log(() -> "Arma applica stato fisico: " + effettoFisico);
-                    }
+                    dannoRisultante.addEffettoDiStato(effettoFisico, calcolaDurataStato(difensore, effettoFisico),
+                            calcolaDannoPeriodico(attaccante, difensore, effettoFisico));
+                    Logger.log(() -> "Arma applica stato fisico: " + effettoFisico);
                 }
             }
 
@@ -733,11 +686,9 @@ public class CalcolatoreCombattimento {
                         double probStatoMagico = percentualeControForza(dannoQuestoIncantamentoProc, difensore) + contributoMagico;
                         if (Dado.tira(100) <= probStatoMagico * fattoreEffetti(difensore, elemento)) {
                             TipoEffettoDiStato effettoMagico = effettoDiStatoCasuale(elemento);
-                            if (effettoMagico != null) {
-                                dannoRisultante.addEffettoDiStato(effettoMagico, calcolaDurataStato(difensore, effettoMagico),
-                                        calcolaDannoPeriodico(attaccante, difensore, effettoMagico));
-                                Logger.log(() -> "L'incantamento applica stato magico: " + effettoMagico.name());
-                            }
+                            dannoRisultante.addEffettoDiStato(effettoMagico, calcolaDurataStato(difensore, effettoMagico),
+                                    calcolaDannoPeriodico(attaccante, difensore, effettoMagico));
+                            Logger.log(() -> "L'incantamento applica stato magico: " + effettoMagico.name());
                         }
                     }
                 }

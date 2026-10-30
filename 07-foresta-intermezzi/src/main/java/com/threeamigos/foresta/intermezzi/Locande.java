@@ -72,7 +72,6 @@ public final class Locande {
 	 * Il modello dati della locanda in cui si trova il gruppo (nel bosco o in città), oppure null.
 	 */
 	static LocazioneMD getLocazioneMDLocandaCorrente() {
-		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		TipoLocazione tipo = Foresta.getLocazioneDelGruppo();
 		if (tipo != TipoLocazione.LOCANDA && tipo.getCategoriaLocazione() != CategoriaLocazione.CITTA) {
 			return null;

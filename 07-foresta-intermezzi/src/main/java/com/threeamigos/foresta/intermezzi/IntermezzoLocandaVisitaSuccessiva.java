@@ -60,7 +60,7 @@ public class IntermezzoLocandaVisitaSuccessiva implements Intermezzo {
 			return false;
 		}
 		LocazioneMD locazioneMD = Locande.getLocazioneMDLocandaCorrente();
-		if (locazioneMD == null || locazioneMD.ottieniProprieta(Locande.LOCANDA_VISITATA) == null) {
+		if (locazioneMD.ottieniProprieta(Locande.LOCANDA_VISITATA) == null) {
 			return false;
 		}
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();

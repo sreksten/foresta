@@ -244,13 +244,7 @@ public class StatoDelCombattimento {
 	 * Quanti personaggi di un gruppo sono in grado di agire (vivi e non in panchina)
 	 */
 	private static int quantiAgiscono(Gruppo gruppo) {
-		int quanti = 0;
-		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
-			if (!personaggio.isFuoriCombattimento()) {
-				quanti++;
-			}
-		}
-		return quanti;
+		return gruppo.getPersonaggiVivi().size();
 	}
 
 	/**
@@ -304,7 +298,7 @@ public class StatoDelCombattimento {
 		assicuraLaLista();
 		for (int k = 0; k < lista.size(); k++) {
 			Personaggio candidato = lista.get((cursore + k) % lista.size());
-			if (latoDi(candidato) == Lato.AVVERSARI && !candidato.isFuoriCombattimento() && combatte(candidato)) {
+			if (latoDi(candidato) == Lato.AVVERSARI && !candidato.isFuoriCombattimento()) {
 				return candidato;
 			}
 		}
