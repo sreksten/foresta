@@ -168,17 +168,26 @@ public class IlViandante extends MissioneAPassi {
 	}
 
 	/**
-	 * Una città a caso fra quelle ancora in piedi.
+	 * Una città a caso fra quelle ancora in piedi; se il Drago le ha distrutte tutte, una qualunque (la missione si chiude da sola, vedi
+	 * isCittaDistrutta).
 	 */
 	private static TipoLocazione sceglieUnaCitta() {
+		List<TipoLocazione> citta = cittaDellaForesta(true);
+		if (citta.isEmpty()) {
+			citta = cittaDellaForesta(false);
+		}
+		return citta.get(Dado.tiraAncheAUnaFaccia(citta.size()) - 1);
+	}
+
+	private static List<TipoLocazione> cittaDellaForesta(boolean soloInPiedi) {
 		List<TipoLocazione> citta = new ArrayList<>();
 		for (TipoLocazione tipo : TipoLocazione.values()) {
 			if (tipo.getCategoriaLocazione() == CategoriaLocazione.CITTA && Foresta.getCoordinateLocazioneUnica(tipo) != null
-					&& !Foresta.isCittaDistrutta(tipo)) {
+					&& !(soloInPiedi && Foresta.isCittaDistrutta(tipo))) {
 				citta.add(tipo);
 			}
 		}
-		return citta.get(Dado.tiraAncheAUnaFaccia(citta.size()) - 1);
+		return citta;
 	}
 
 	/**

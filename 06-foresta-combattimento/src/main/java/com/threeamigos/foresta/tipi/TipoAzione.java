@@ -26,6 +26,12 @@ public enum TipoAzione {
 	VELENO(TipoIncantesimo.VELENO),
 	MORTE(TipoIncantesimo.MORTE),
 	SILENZIO(TipoIncantesimo.SILENZIO),
+	NEBBIA(TipoIncantesimo.NEBBIA),
+	NEGA_MAGIA(TipoIncantesimo.NEGA_MAGIA),
+	GRIDO_DI_BATTAGLIA(TipoIncantesimo.GRIDO_DI_BATTAGLIA),
+	TERREMOTO(TipoIncantesimo.TERREMOTO),
+	TEMPESTA(TipoIncantesimo.TEMPESTA),
+	TERRORE(TipoIncantesimo.TERRORE),
 	/** L'abilità del Sacerdote: danno sacro a più avversari, il doppio ai non morti (vedi TipoAbilita) */
 	LUCE_DIVINA,
 	/** Uno dei sette incantesimi elementali, scelto con un criterio (non la Morte, non il Silenzio) */

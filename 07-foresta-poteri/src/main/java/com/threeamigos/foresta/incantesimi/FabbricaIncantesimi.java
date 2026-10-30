@@ -25,6 +25,12 @@ public final class FabbricaIncantesimi {
 		COSTRUTTORI.put(TipoIncantesimo.MORTE, Morte::new);
 		COSTRUTTORI.put(TipoIncantesimo.RESURREZIONE, Resurrezione::new);
 		COSTRUTTORI.put(TipoIncantesimo.SILENZIO, Silenzio::new);
+		COSTRUTTORI.put(TipoIncantesimo.NEBBIA, Nebbia::new);
+		COSTRUTTORI.put(TipoIncantesimo.NEGA_MAGIA, NegaMagia::new);
+		COSTRUTTORI.put(TipoIncantesimo.GRIDO_DI_BATTAGLIA, GridoDiBattaglia::new);
+		COSTRUTTORI.put(TipoIncantesimo.TERREMOTO, Terremoto::new);
+		COSTRUTTORI.put(TipoIncantesimo.TEMPESTA, Tempesta::new);
+		COSTRUTTORI.put(TipoIncantesimo.TERRORE, Terrore::new);
 	}
 
 	private FabbricaIncantesimi() {

@@ -290,6 +290,12 @@ public class ImageCache {
 		spriteIncantesimi[TipoIncantesimo.MORTE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Morte.gif");
 		spriteIncantesimi[TipoIncantesimo.RESURREZIONE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Resurrezione.gif");
 		spriteIncantesimi[TipoIncantesimo.SILENZIO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Silenzio.gif");
+		spriteIncantesimi[TipoIncantesimo.NEBBIA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Nebbia.gif");
+		spriteIncantesimi[TipoIncantesimo.NEGA_MAGIA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/NegaMagia.gif");
+		spriteIncantesimi[TipoIncantesimo.GRIDO_DI_BATTAGLIA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/GridoDiBattaglia.gif");
+		spriteIncantesimi[TipoIncantesimo.TERREMOTO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Terremoto.gif");
+		spriteIncantesimi[TipoIncantesimo.TEMPESTA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Tempesta.gif");
+		spriteIncantesimi[TipoIncantesimo.TERRORE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Terrore.gif");
 
 		spriteAmicizia = BufferedImageBuilder.buildBufferedImage("icone/Amicizia.gif");
 		spriteCombattimento = BufferedImageBuilder.buildBufferedImage("icone/Combattimento.gif");

@@ -75,6 +75,10 @@ public enum PortataAzione {
 			case ALBA_SACRA:
 			case CANTO_DI_VALORE:
 			case PELLE_DI_CORTECCIA:
+			case GRIDO_DI_BATTAGLIA:
+			case TERREMOTO:
+			case TEMPESTA:
+			case TERRORE:
 				return GRUPPO_ALLEATI;
 			case CANTO_CURATIVO:
 			case IMPOSIZIONE_DELLE_MANI:
@@ -89,6 +93,8 @@ public enum PortataAzione {
 			case SCACCIARE_I_NON_MORTI:
 			case RADICI:
 			case SCIAME:
+			case NEBBIA:
+			case NEGA_MAGIA:
 				return GRUPPO_AVVERSARI;
 			// L'ultima azione rimasta è il cambio d'arma (CAMBIA_ARMA): non ha un bersaglio, ha un'arma
 			default:

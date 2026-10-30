@@ -164,6 +164,12 @@ class AbilitaInnateTest {
         Personaggio caduto = avversario(TipoPersonaggio.SPETTRO);
         caduto.muore("prova");
         assertFalse(AbilitaInnate.isDaScacciare(caduto));
+        assertFalse(AbilitaInnate.isDaScacciare(new com.threeamigos.foresta.personaggi.Spettro(3) {
+            @Override
+            public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
+                return true;
+            }
+        }));
         assertFalse(AbilitaInnate.isDaScacciare(new Goblin(3) {
             @Override
             public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {

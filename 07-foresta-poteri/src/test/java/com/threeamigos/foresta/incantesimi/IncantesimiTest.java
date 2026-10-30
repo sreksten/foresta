@@ -152,6 +152,33 @@ class IncantesimiTest {
     }
 
     @Test
+    void unIncantesimoGlobaleSiAnnunciaSenzaBersagli() {
+        Personaggio mago = mago();
+        mago.addMagia(100000);
+        int magiaPrima = mago.getMagia();
+        IncantesimoMaleficoImpl incantesimo = new IncantesimoMaleficoImpl(3) {
+            @Override
+            public TipoIncantesimo getClasse() {
+                return TipoIncantesimo.values()[0];
+            }
+
+            @Override
+            public TipoDanno getTipoDanno() {
+                return TipoDanno.ARCANO;
+            }
+
+            @Override
+            public int getDanni() {
+                return 1;
+            }
+        };
+        // Nessun incantesimo del gioco è globale: si prova con la formula globale della classe base
+        incantesimo.formulaGlobale(mago, null);
+        assertTrue(frasi.get(frasi.size() - 1).contains(" formula un "), frasi.toString());
+        assertEquals(magiaPrima, mago.getMagia());
+    }
+
+    @Test
     void unIncantesimoMultiploSiLimitaAiBersagliCheChiLoLanciaPuoColpire() {
         Personaggio debole = new Guerriero("Pippo", 1);
         debole.addModificatore(new com.threeamigos.foresta.modellodati.ModificatoreAttributoMD(com.threeamigos.foresta.tipi.TipoAttributo.NUMERO_BERSAGLI,

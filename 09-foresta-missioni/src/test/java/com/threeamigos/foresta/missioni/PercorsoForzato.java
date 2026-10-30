@@ -62,7 +62,9 @@ final class PercorsoForzato {
                     }
                     Passo p = m.costruisciPasso(id);
                     p.isConcluso();
-                    p.isFallito();
+                    if (p.isFallito()) {
+                        p.getTestoFallimento();
+                    }
                     p.eseguiAzioniAOgniControllo();
                     p.getLuogoDaSegnalare();
                     p.getOggettiDaSeminare();

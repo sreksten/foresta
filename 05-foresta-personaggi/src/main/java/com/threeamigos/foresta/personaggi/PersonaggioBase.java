@@ -201,12 +201,14 @@ public abstract class PersonaggioBase implements Personaggio {
 	/**
 	 * Gli incantesimi malefici che il personaggio sa lanciare quando attacca (vedi RegistroTattiche e Requisiti): i boss
 	 * tutti, Morte compresa; gli altri tutti tranne Morte. Le classi di mostri con un carattere preciso lo
-	 * restringono (l'Arpia l'Aria, i non morti il Gelo...).
+	 * restringono (l'Arpia l'Aria, i non morti il Gelo...). Gli incantesimi GLOBALI (che agiscono su tutta la locazione, compreso il gruppo di chi
+	 * li lancia) non ci sono: i mostri non sanno ancora lanciarli.
 	 */
 	public Set<TipoIncantesimo> getRepertorioIncantesimi() {
 		Set<TipoIncantesimo> repertorio = EnumSet.noneOf(TipoIncantesimo.class);
 		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
 			if (tipoIncantesimo.getCategoriaIncantesimo() == CategoriaIncantesimo.MALEFICO
+					&& tipoIncantesimo.getPortata() != PortataIncantesimo.GLOBALE
 					&& (tipoIncantesimo != TipoIncantesimo.MORTE || isParteConValoriMassimi())) {
 				repertorio.add(tipoIncantesimo);
 			}

@@ -71,8 +71,6 @@ Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
    java -cp target/test-classes:target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo INCONTRO_CON_L_EREMITA
    ```
 
-Un intermezzo ancora in lavorazione si può dichiarare di prova, `INCONTRO_CON_L_EREMITA(true)`: scatta solo in modalità di prova (`ModalitaDiProva`).
-
 ### Scrivere l'innesco
 
 `deveScattare` viene chiamato a ogni momento di innesco (all'inizio della partita e a ogni inizio locazione) finché l'intermezzo non è scattato. Può leggere tutto lo stato di gioco. Alcuni esempi:

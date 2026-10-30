@@ -131,7 +131,7 @@ Sono i punti che si ripetono ogni volta; l'esempio da copiare è indicato. Aggio
 
 ## Build e test
 
-`mvn test` dalla radice esegue i test di tutti i moduli (JUnit 5, in `src/test/java` di ciascuno); al 2026-10-30 sono 2726, tutti verdi (26 saltati, fra cui le analisi manuali di `AnalisiAbilitaInnateTest`).
+`mvn test` dalla radice esegue i test di tutti i moduli (JUnit 5, in `src/test/java` di ciascuno); al 2026-10-30 sono 3063, tutti verdi (26 saltati, fra cui le analisi manuali di `AnalisiAbilitaInnateTest`).
 I test stanno nel modulo più basso che vede tutto quello che usano; i test di motore e UI insieme sono in `13-foresta-app-swing`, che usa gli helper dei test del motore (`PartitaDiTest` e simili) tramite il suo `test-jar`.
 Le dipendenze fra moduli le controlla il compilatore. Il compilatore non vede invece che nessuno fuori da `12-foresta-swing` usi `java.awt`, `javax.swing`, `javax.imageio` o `javax.sound` (fanno parte del JDK): lo controlla `ui/DipendenzeDalToolkitGraficoTest` in `13-foresta-app-swing`, che legge i sorgenti (con `SorgentiDelProgetto`). Allo stesso modo `ConvenzioniDiPortabilitaTest` vieta le chiamate che dipendono dalla lingua del dispositivo senza `Locale` (`String.format`, `toLowerCase()`, `toUpperCase()`, `SimpleDateFormat`): si passa sempre `Locale.ROOT`. Il thread principale si raggiunge da `strumenti/temporizzatore/ThreadPrincipale` (Swing lo installa con `ui/EsecutoreSwing` in `Main`).
 `mvn package` scrive nella radice il jar eseguibile con le dipendenze, `foresta-0.0.1-SNAPSHOT-jar-with-dependencies.jar`.

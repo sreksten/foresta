@@ -217,7 +217,8 @@ class RequisitiTest {
             Personaggio candidato = FabbricaPersonaggi.crea(classe, 1);
             for (TipoIncantesimo tipo : TipoIncantesimo.values()) {
                 if (tipo.getTipoDanno() != null && candidato.isImmuneATipoDanno(tipo.getTipoDanno()) && !candidato.isImmuneAIncantesimo(tipo)
-                        && AzioneMD.di(TipoAzione.di(tipo)) != null && tipo != TipoIncantesimo.RESURREZIONE) {
+                        && AzioneMD.di(TipoAzione.di(tipo)) != null && tipo != TipoIncantesimo.RESURREZIONE
+                        && tipo.getPortata() != com.threeamigos.foresta.tipi.PortataIncantesimo.GLOBALE) {
                     bersaglio = candidato;
                     incantesimo = tipo;
                     break;

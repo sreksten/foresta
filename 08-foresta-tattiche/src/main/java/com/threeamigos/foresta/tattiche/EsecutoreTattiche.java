@@ -18,6 +18,7 @@ import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tattiche.valutazione.SceltaIncantesimo;
+import com.threeamigos.foresta.tipi.CategoriaIncantesimo;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoCanto;
@@ -180,7 +181,11 @@ public final class EsecutoreTattiche {
 			// Tutto il resto sono incantesimi di una classe precisa: ARIA, ACQUA, ..., MORTE, SILENZIO. INCANTESIMO_DI_DANNO e
 			// INCANTESIMO_DEL_REPERTORIO non arrivano qui: il Valutatore li ha già trasformati in quello scelto (Decisione.getTipoEseguito)
 			default:
-				lanciaUnIncantesimoDiDanno(attore, decisione, gruppoDellAttore);
+				if (decisione.getIncantesimo().getPortata() == PortataIncantesimo.GLOBALE) {
+					lanciaUnIncantesimoGlobale(attore, decisione.getIncantesimo(), gruppoDellAttore, gruppoNemico);
+				} else {
+					lanciaUnIncantesimoDiDanno(attore, decisione, gruppoDellAttore);
+				}
 				break;
 		}
 	}
@@ -236,6 +241,22 @@ public final class EsecutoreTattiche {
 		}
 		for (Personaggio colpito : colpiti) {
 			uccisioni.registra(attore, colpito);
+		}
+		consumaLaPergamena(gruppoDellAttore, classe);
+	}
+
+	/**
+	 * Un incantesimo GLOBALE: nessun bersaglio, agisce su tutta la locazione (un benefico sul gruppo di chi lo lancia, un malefico su quello nemico).
+	 * Chi cade per colpa sua conta come sconfitto. Il lancio, costo in MAGIA compreso, lo fa l'incantesimo.
+	 */
+	private void lanciaUnIncantesimoGlobale(Personaggio attore, TipoIncantesimo classe, Gruppo gruppoDellAttore, Gruppo gruppoNemico) {
+		annuncia(attore, null);
+		boolean benefico = classe.getCategoriaIncantesimo() == CategoriaIncantesimo.BENEFICO;
+		FabbricaIncantesimi.crea(classe, attore.getLivello()).formula(attore, null, benefico ? gruppoDellAttore : gruppoNemico);
+		for (Personaggio nemico : gruppoNemico.getPersonaggi()) {
+			if (nemico.isFuoriCombattimento()) {
+				uccisioni.registra(attore, nemico);
+			}
 		}
 		consumaLaPergamena(gruppoDellAttore, classe);
 	}

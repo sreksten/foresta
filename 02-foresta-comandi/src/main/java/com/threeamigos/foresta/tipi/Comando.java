@@ -78,6 +78,12 @@ public enum Comando {
 
 	// Incantesimi disponibili a chiunque abbia una pergamena
 	SILENZIO,
+	NEBBIA,
+	NEGA_MAGIA,
+	GRIDO_DI_BATTAGLIA,
+	TERREMOTO,
+	TEMPESTA,
+	TERRORE,
 	ARIA,
 	ACQUA,
 	TERRA,

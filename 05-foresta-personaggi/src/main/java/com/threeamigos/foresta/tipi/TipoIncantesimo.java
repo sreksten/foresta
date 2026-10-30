@@ -40,7 +40,19 @@ public enum TipoIncantesimo {
 	RESURREZIONE(CategoriaIncantesimo.BENEFICO, PortataIncantesimo.SINGOLO_QUALSIASI, null,
 			CostantiIncantesimi.INCANTESIMO_RESURREZIONE_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_RESURREZIONE_COSTO_ACQUISTO),
 	SILENZIO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.GRUPPO, TipoDanno.ARCANO,
-			CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_ACQUISTO);
+			CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_ACQUISTO),
+	NEBBIA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.GLOBALE, TipoDanno.ACQUA,
+			CostantiIncantesimi.INCANTESIMO_NEBBIA_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_NEBBIA_COSTO_ACQUISTO),
+	NEGA_MAGIA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.GLOBALE, TipoDanno.ARCANO,
+			CostantiIncantesimi.INCANTESIMO_NEGA_MAGIA_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_NEGA_MAGIA_COSTO_ACQUISTO),
+	GRIDO_DI_BATTAGLIA(CategoriaIncantesimo.BENEFICO, PortataIncantesimo.GLOBALE, null,
+			CostantiIncantesimi.INCANTESIMO_GRIDO_DI_BATTAGLIA_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_GRIDO_DI_BATTAGLIA_COSTO_ACQUISTO),
+	TERREMOTO(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.GLOBALE, TipoDanno.TERRA,
+			CostantiIncantesimi.INCANTESIMO_TERREMOTO_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_TERREMOTO_COSTO_ACQUISTO),
+	TEMPESTA(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.GLOBALE, TipoDanno.FULMINE,
+			CostantiIncantesimi.INCANTESIMO_TEMPESTA_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_TEMPESTA_COSTO_ACQUISTO),
+	TERRORE(CategoriaIncantesimo.MALEFICO, PortataIncantesimo.GLOBALE, TipoDanno.PSICHICO,
+			CostantiIncantesimi.INCANTESIMO_TERRORE_COSTO_LANCIO, CostantiIncantesimi.INCANTESIMO_TERRORE_COSTO_ACQUISTO);
 
 	private final CategoriaIncantesimo categoriaIncantesimo;
 	private final PortataIncantesimo portata;

@@ -384,6 +384,10 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		return isRichiestaPescata() ? getRichiesta().getTitolo() : "Una missione a tappe";
 	}
 
+	private String testoDelRitorno(TappeRichieste richiesta) {
+		return "Fatto: torna " + Articoli.conPreposizione("da", mandante(richiesta.getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
+	}
+
 	@Override
 	public String getDescrizione() {
 		if (!isRichiestaPescata() || !isAttiva()) {
@@ -392,7 +396,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		TappeRichieste richiesta = getRichiesta();
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return "Fatto: torna " + Articoli.conPreposizione("da", mandante(richiesta.getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
+			return testoDelRitorno(richiesta);
 		}
 		// Una missione finita si legge ancora fra le completate
 		if (Passo.FINE.equals(passo)) {
@@ -408,8 +412,11 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 			long prese = getMissioniAffidate(CHIAVI).stream().filter(Missione::isCompleta).count();
 			return mandanteEChiesto(richiesta) + " Le chiavi da prendere sono " + TappeRichieste.CUSTODI + " (ne hai " + prese
 					+ "), nei posti segnati sulla mappa, in qualunque ordine.";
-		} else {
+		} else if (passo.startsWith(TAPPA)) {
 			corrente = Integer.parseInt(passo.substring(TAPPA.length()));
+		} else {
+			// CONSEGNA e RICOMPENSA: le tappe sono finite, resta da riscuotere in città
+			return testoDelRitorno(richiesta);
 		}
 		StringBuilder descrizione = new StringBuilder(mandanteEChiesto(richiesta));
 		for (int tappa = 1; tappa < corrente && tappa <= richiesta.getTappe().size(); tappa++) {

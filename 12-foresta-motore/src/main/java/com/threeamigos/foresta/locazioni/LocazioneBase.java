@@ -752,7 +752,9 @@ public abstract class LocazioneBase implements Locazione {
 						// mostri: per ora il primo ancora vivo, come per l'inizio del combattimento
 						incantesimo.formula(formulante, gruppoAvversario.getPersonaggioVivo(), null);
 					} else {
-						incantesimo.formula(formulante, null, gruppoAvversario);
+						// Un incantesimo benefico a più destinatari (il Grido di battaglia) agisce sul gruppo di chi lo lancia
+						boolean benefico = tipoIncantesimo.getCategoriaIncantesimo() == CategoriaIncantesimo.BENEFICO;
+						incantesimo.formula(formulante, null, benefico ? gruppo : gruppoAvversario);
 					}
 					for (Personaggio avversario : avversariVivi) {
 						registraUccisione(formulante, avversario);

@@ -3,6 +3,7 @@ package com.threeamigos.foresta.modellodati;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.tipi.CriterioIncantesimo;
+import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.TipoAzione;
 
 import java.io.BufferedReader;
@@ -55,7 +56,8 @@ public final class AzioneMD {
 
 	private static boolean faDanno(TipoAzione tipo) {
 		return tipo == TipoAzione.DARDO_ARCANO
-				|| (tipo.getClasseIncantesimo() != null && tipo.getTipoDanno() != null && tipo != TipoAzione.SILENZIO && tipo != TipoAzione.MORTE);
+				|| (tipo.getClasseIncantesimo() != null && tipo.getTipoDanno() != null && tipo != TipoAzione.SILENZIO && tipo != TipoAzione.MORTE
+				&& tipo.getClasseIncantesimo().getPortata() != PortataIncantesimo.GLOBALE);
 	}
 
 	private final TipoAzione tipo;

@@ -14,6 +14,9 @@ import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tipi.CostantiTattiche;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoCanto;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
+import com.threeamigos.foresta.incantesimi.IncantesimoGlobale;
+import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.PortataAzione;
 import com.threeamigos.foresta.tipi.TipoAzione;
@@ -178,6 +181,9 @@ public final class Requisiti {
 	 */
 	private static String incantesimoSingolo(AzioneMD azione, Personaggio attore, Personaggio bersaglio, ContestoTattico contesto) {
 		TipoIncantesimo classe = azione.getTipo().getClasseIncantesimo();
+		if (classe.getPortata() == PortataIncantesimo.GLOBALE) {
+			return incantesimoGlobale(classe, attore, contesto);
+		}
 		if (!puoLanciare(attore, classe, contesto)) {
 			return "manca la pergamena o la MAGIA per " + classe + ", o è silenziato";
 		}
@@ -200,6 +206,17 @@ public final class Requisiti {
 			return "l'attacco con le armi rende di più";
 		}
 		return null;
+	}
+
+	/**
+	 * Gli incantesimi GLOBALI non hanno un bersaglio: servono se nel campo c'è qualcuno su cui facciano qualcosa
+	 */
+	private static String incantesimoGlobale(TipoIncantesimo classe, Personaggio attore, ContestoTattico contesto) {
+		if (!puoLanciare(attore, classe, contesto)) {
+			return "manca la pergamena o la MAGIA per " + classe + ", o è silenziato";
+		}
+		IncantesimoGlobale incantesimo = (IncantesimoGlobale) FabbricaIncantesimi.crea(classe, attore.getLivello());
+		return incantesimo.serve(contesto.getAlleati(), contesto.getAvversari()) ? null : "non cambierebbe niente: " + classe;
 	}
 
 	/**

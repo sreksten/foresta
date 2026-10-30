@@ -208,4 +208,51 @@ class TappeRichiesteTest {
         assertTrue(tipiDiMissione.containsAll(EnumSet.of(TipoMissione.RINTRACCIAMENTO, TipoMissione.CACCIA_AL_TESORO, TipoMissione.VENDETTA,
                 TipoMissione.RECUPERO)), tipiDiMissione.toString());
     }
+
+    @Test
+    void leRigheConTuttiIPostiDelleTappeSiLeggono() {
+        StringBuilder tappe = new StringBuilder();
+        for (int n = 2; n <= TappeRichieste.TAPPE_MASSIME; n++) {
+            tappe.append("TAPPA_").append(n).append("=CITTA:Una voce: %A_PROSSIMO%.;SCENA_").append(n).append("=Si cammina./Si chiede.;");
+        }
+        TappeRichieste r = TappeRichieste.da(PERSONA.replace("ARRIVO=", tappe + "ARRIVO="));
+        assertEquals(TappeRichieste.TAPPE_MASSIME, r.getTappe().size());
+        assertEquals("PROVA", r.getChiave());
+    }
+
+    @Test
+    void leChiaviEDuePisteNonVannoInsieme() {
+        String chiavi = "CHIAVI=3;OGGETTO_CHIAVE_1=a;OGGETTO_CHIAVE_2=b;OGGETTO_CHIAVE_3=c;CUSTODE_1=BOSCO LADRO 3 SI:x;CUSTODE_2=ROVINE SCHELETRO 4 NO:y;"
+                + "CUSTODE_3=RADURA LADRO 1 NO:z;";
+        assertRifiutata(BIVIO.replace("ARRIVO=", chiavi + "ARRIVO="));
+    }
+
+    @Test
+    void unaFarsaNonHaLeggendarioPisteNeChiavi() {
+        String secondoScambio = "BATTUTA_2=Che cos'è?;RISPOSTA_2=Non so.;";
+        assertRifiutata(PERSONA.replace("ARRIVO=", secondoScambio + "OGGETTO=LEGGENDARIO;ARRIVO="));
+        assertRifiutata(BIVIO.replace("ARRIVO=", secondoScambio + "ARRIVO="));
+        assertRifiutata(CHIAVI.replace("ARRIVO=", secondoScambio + "ARRIVO="));
+        assertRifiutata(PERSONA.replace("ARRIVO=", secondoScambio + "ARRIVO="));
+        assertRifiutata(PERSONA.replace("ARRIVO=", "BATTUTA_2=Che cos'è?;ARRIVO="));
+    }
+
+    @Test
+    void loScambioDeiCustodiSiControlla() {
+        String scambio = "SCAMBIO_3=ROVINE SCHELETRO 3:";
+        assertRifiutata(CHIAVI.replace("il medaglione/Il medaglione è fra le ossa di una cripta.", "/Il medaglione è fra le ossa."));
+        assertRifiutata(CHIAVI.replace("il medaglione/Il medaglione è fra le ossa di una cripta.", "il medaglione/ /"));
+        assertRifiutata(CHIAVI.replace("il medaglione/Il medaglione è fra le ossa di una cripta.", "il medaglione"));
+        assertRifiutata(CHIAVI.replace(scambio, "SCAMBIO_1=ROVINE SCHELETRO 3:il medaglione/Testo.;" + scambio));
+        assertRifiutata(CHIAVI.replace("ARRIVO=TEMPIO:", "ARRIVO=TEMPIO:").replace("CUSTODE_3=RADURA SCAMBIO 0 NOME_CAMPIONE:", "CUSTODE_3=RADURA SCAMBIO 0 NOME_CAMPIONE"));
+    }
+
+    @Test
+    void ognunoDeiCampiDelPostoVuoliSiControlla() {
+        assertRifiutata(PERSONA.replace("TAPPA_1=CITTA:", "TAPPA_1=CITTA"));
+        assertRifiutata(PERSONA.replace("TAPPA_1=CITTA:Qualcuno lo ha visto: è andato %A_PROSSIMO%.", "TAPPA_1=CITTA: "));
+        assertRifiutata(PERSONA.replace("TAPPA_1=CITTA:", "TAPPA_1=LOCANDA LADRO 2:"));
+        assertRifiutata(PERSONA.replace("TAPPA_1=CITTA:", "TAPPA_1=BOSCO LADRO 2 3 4:"));
+        assertRifiutata(PERSONA.replace("Il gruppo chiede in giro./Qualcuno sa./Io sento le chiacchiere.", "Uno/Due/Tre/Quattro"));
+    }
 }

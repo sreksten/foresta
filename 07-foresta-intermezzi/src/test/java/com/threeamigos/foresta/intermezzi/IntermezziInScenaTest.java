@@ -457,15 +457,4 @@ class IntermezziInScenaTest {
         assertFalse(RegistroIntermezzi.isBloccato(TipoIntermezzo.INTERMEZZO_ARMAIOLO));
         assertFalse(RegistroIntermezzi.haUnaFonteUnIntermezzoInArrivo(MomentoIntermezzo.INGRESSO_ARMAIOLO));
     }
-
-    @Test
-    void gliIntermezziDiProvaSiSaltanoFuoriDallaModalitaDiProva() {
-        // Nessun tipo è oggi di prova: il registro li guarda comunque tutti
-        for (TipoIntermezzo tipo : TipoIntermezzo.values()) {
-            assertFalse(tipo.isDiProva());
-        }
-        ModalitaDiProva.setAttiva(true);
-        assertNotNull(RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.INIZIO_GIOCO));
-        assertEquals(Collections.emptyList(), new ArrayList<>());
-    }
 }

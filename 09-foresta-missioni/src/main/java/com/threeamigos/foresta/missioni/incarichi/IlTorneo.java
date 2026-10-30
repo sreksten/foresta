@@ -168,6 +168,9 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 
 	@Override
 	public String getDescrizione() {
+		if (getLeggendario() == null) {
+			return "Prima o poi, in città, si bandirà un torneo con un leggendario in palio.";
+		}
 		TorneoRichiesto torneo = getTorneo();
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {

@@ -45,6 +45,8 @@ class GruppoGiocatoreTest {
     @BeforeEach
     void prepara() {
         BusEventi.impostaConsegna(Runnable::run);
+        // Altri test creano gruppi con new e li lasciano iscritti: gestirebbero anch'essi gli eventi
+        BusEventi.azzera();
         DatiDiProva.nuovaPartita();
         iscrizioni.add(BusEventi.iscriviti(NotificaTestoFrase.class, e -> frasi.add(e.getMessaggio())));
         iscrizioni.add(BusEventi.iscriviti(InternoPuntiEsperienzaAssegnati.class, eventi::add));

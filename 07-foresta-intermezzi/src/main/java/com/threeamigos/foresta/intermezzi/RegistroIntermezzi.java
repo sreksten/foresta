@@ -2,7 +2,6 @@ package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.modellodati.IntermezziMD;
-import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
 import java.util.HashSet;
@@ -86,9 +85,6 @@ public class RegistroIntermezzi {
 
 	private static Intermezzo getProssimoIntermezzo(MomentoIntermezzo momento, boolean diRipiego) {
 		for (TipoIntermezzo tipoIntermezzo : TipoIntermezzo.values()) {
-			if (tipoIntermezzo.isDiProva() && !ModalitaDiProva.isAttiva()) {
-				continue;
-			}
 			Intermezzo intermezzo = FabbricaIntermezzi.crea(tipoIntermezzo);
 			if (intermezzo.isDiRipiego() == diRipiego && !getIntermezziMD().isScattato(intermezzo.getId())
 					&& !ripetibiliDelMomento.contains(intermezzo.getId()) && intermezzo.deveScattare(momento)) {

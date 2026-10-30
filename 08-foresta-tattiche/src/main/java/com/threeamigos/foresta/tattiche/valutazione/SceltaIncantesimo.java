@@ -40,7 +40,8 @@ public final class SceltaIncantesimo {
 	private static List<TipoIncantesimo> repertorio() {
 		List<TipoIncantesimo> malefici = new ArrayList<>();
 		for (TipoIncantesimo classe : TipoIncantesimo.values()) {
-			if (classe.getCategoriaIncantesimo() == CategoriaIncantesimo.MALEFICO) {
+			// Gli incantesimi GLOBALI non hanno un bersaglio da scegliere: le tattiche li chiamano per nome
+			if (classe.getCategoriaIncantesimo() == CategoriaIncantesimo.MALEFICO && classe.getPortata() != PortataIncantesimo.GLOBALE) {
 				malefici.add(classe);
 			}
 		}

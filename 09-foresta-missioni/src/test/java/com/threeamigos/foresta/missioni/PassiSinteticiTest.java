@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PassiSinteticiTest {
 
     /** Una missione senza una storia sua: i passi li mette chi la prova. */
-    static final class Sintetica extends MissioneAPassi {
+    static class Sintetica extends MissioneAPassi {
         final Map<String, java.util.function.Function<Sintetica, Passo>> passi = new HashMap<>();
         String iniziale = "A";
         boolean ripetibile;
@@ -223,6 +223,10 @@ class PassiSinteticiTest {
 
         Supplier<String> _prossimoNellaSequenza() {
             return prossimoNellaSequenza();
+        }
+
+        boolean _visitaTranquilla() {
+            return isVisitaTranquilla();
         }
 
         boolean _inLuogoForzato() {

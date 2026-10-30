@@ -111,6 +111,12 @@ public enum TipoIcona {
 	ALBA_SACRA(Comando.ALBA_SACRA, "icone/AlbaSacra.gif", Sfondo.VERDE),
 	LUCE_DIVINA(Comando.LUCE_DIVINA, "icone/LuceDivina.gif", Sfondo.VERDE),
 	SILENZIO(Comando.SILENZIO, "icone/Silenzio.gif", Sfondo.VERDE),
+	NEBBIA(Comando.NEBBIA, "icone/Nebbia.gif", Sfondo.VERDE),
+	NEGA_MAGIA(Comando.NEGA_MAGIA, "icone/NegaMagia.gif", Sfondo.VERDE),
+	GRIDO_DI_BATTAGLIA(Comando.GRIDO_DI_BATTAGLIA, "icone/GridoDiBattaglia.gif", Sfondo.VERDE),
+	TERREMOTO(Comando.TERREMOTO, "icone/Terremoto.gif", Sfondo.VERDE),
+	TEMPESTA(Comando.TEMPESTA, "icone/Tempesta.gif", Sfondo.VERDE),
+	TERRORE(Comando.TERRORE, "icone/Terrore.gif", Sfondo.VERDE),
 
 	/* Direzione verso la quale muoversi a fine locazione */
 	NORD(Comando.NORD, "icone/Nord.gif", Sfondo.VERDE),

@@ -41,19 +41,5 @@ public enum TipoIntermezzo {
 	INTERMEZZO_NOTTE_ALCHIMISTA,
 	INTERMEZZO_NOTTE_VENDITORE_DI_PERGAMENE,
 	INTERMEZZO_NOTTE_INCANTATORE,
-	INTERMEZZO_NOTTE_LOCANDA;
-
-	private final boolean diProva;
-
-	TipoIntermezzo() {
-		this(false);
-	}
-
-	TipoIntermezzo(boolean diProva) {
-		this.diProva = diProva;
-	}
-
-	public boolean isDiProva() {
-		return diProva;
-	}
+	INTERMEZZO_NOTTE_LOCANDA
 }
