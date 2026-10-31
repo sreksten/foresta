@@ -1,18 +1,8 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.economia.Cassa;
-import com.threeamigos.foresta.tipi.CostantiBottino;
-import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.motore.LocazioneCorrente;
-
-import com.threeamigos.foresta.statistiche.EsperienzaDelGruppo;
-
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-
-import com.threeamigos.foresta.tipi.TipoLocazione;
-
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoArtefattoTrovato;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStatistiche;
@@ -20,16 +10,18 @@ import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
 import com.threeamigos.foresta.locazioni.Locazione;
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
-import com.threeamigos.foresta.personaggi.GestoreProgressione;
-import com.threeamigos.foresta.gruppi.GruppoGiocatore;
-import com.threeamigos.foresta.personaggi.RegoleEquipaggiamento;
-import com.threeamigos.foresta.statistiche.Statistiche;
+import com.threeamigos.foresta.motore.LocazioneCorrente;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.personaggi.RegoleEquipaggiamento;
+import com.threeamigos.foresta.statistiche.EsperienzaDelGruppo;
+import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Numeri;
@@ -91,7 +83,7 @@ public final class RaccoltaBottino {
 	}
 
 	// Un anello magico porta un artefatto, che si annuncia la prima volta (un anello rifiutato e ripreso non si annuncia due volte)
-	// e dà qualche punto in più; uno non magico si conta come ogni altro oggetto.
+	// e dà qualche punto in più; uno non magico non ha effetto, ma si vende come una gemma: vale un prezioso per anello.
 	private static boolean raccogliAnello(Anello anello, GruppoGiocatore gruppo, Comando azione) {
 		if (anello.isMagico()) {
 			if (!anello.isMagiaAnnunciata()) {
@@ -110,6 +102,9 @@ public final class RaccoltaBottino {
 				return false;
 			}
 			Statistiche.addPunti(CostantiBottino.ANELLO_MAGICO_PUNTEGGIO);
+		} else {
+			BusEventi.pubblica(new NotificaTestoFrase("Questo anello non è magico, ma si può vendere come una gemma."));
+			Cassa.addPreziosi(anello.getQuantita());
 		}
 		return true;
 	}
@@ -299,8 +294,6 @@ public final class RaccoltaBottino {
 			return true;
 		}
 		gruppo.addArtefatto(artefatto);
-		// TODO oggi i personaggi del gruppo non si vedono a video: quando ci saranno, il
-		// rifiuto andrà mostrato anche lì (es. un fumetto sul personaggio).
 		BusEventi.pubblica(new NotificaTestoParagrafo(comeSoggetto(artefatto)
 				+ " resta nell'inventario del gruppo: "
 				+ personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)

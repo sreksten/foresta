@@ -25,7 +25,7 @@ Dichiara solo `07-foresta-intermezzi`, ma da lì vede per transitività le stati
 ### Gli oggetti
 
 - `Moneta`, `PietraPreziosa`, `Corona`: monete d'oro, pietre, corone, con quantità e valore.
-- `Anello`: una volta su sei è magico, di uno di tre tipi, e allora porta un artefatto con i suoi effetti; altrimenti non ha effetto.
+- `Anello`: una volta su sei è magico, di uno di tre tipi, e allora porta un artefatto con i suoi effetti; altrimenti non ha effetto, ma preso vale come una gemma: un prezioso (`RaccoltaBottino`).
 - `Cofano`: il gruppo che lo apre trova qualcosa a caso fra una pergamena, tre pergamene, una pozione (salute, salute grande, magia o panacea), monete o pietre preziose. Con una piccola probabilità c'è anche un ingrediente magico o un artefatto, e molto di rado un libro tecnico. Cosa dà e con che probabilità sta in `Cofano.artefattoRaro` e `CostantiBottino.COFANO_PROBABILITA_*`; `Cofano.opzioniOggettoSpeciale` fa vedere e forzare gli oggetti speciali nella finestra di prova (`COFANO_ESITO` e `COFANO_OGGETTO` di `ContestoLancio`).
 - `NomeOggetto`: il nome di un oggetto che non ha una classe sua, come gli oggetti delle missioni, con singolare, plurale e articoli, così le descrizioni delle locazioni lo flettono come gli altri.
 

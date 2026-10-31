@@ -16,7 +16,7 @@ import java.util.Optional;
 
 /**
  * Un anello: una volta su sei è magico, di uno di tre tipi, e allora porta con sé un artefatto con i suoi effetti; altrimenti non ha
- * effetto.
+ * effetto, e preso vale come una gemma (un prezioso per ogni anello).
  */
 public class Anello extends OggettoBase implements Bottino {
 
@@ -36,7 +36,7 @@ public class Anello extends OggettoBase implements Bottino {
 			Logger.log(() -> "Anello magico di tipo " + tipo);
 			artefatto = creaAnelloMagico(tipo);
 		} else {
-			// Gli anelli non magici restano senza effetto. TODO più avanti si potranno vendere come gemme
+			// Gli anelli non magici non hanno effetto: chi li prende li ha come una gemma (vedi RaccoltaBottino)
 			anelloMagico = false;
 			tipo = -1;
 			artefatto = null;

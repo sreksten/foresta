@@ -27,7 +27,7 @@ Gli oggetti per terra compaiono solo alla prima visita di una cella e non ricomp
 
 - **Preziosi:** entrando in una città si vendono tutti da soli (`Cassa.vendiPreziosiPer`, con il prezzo calcolato da chi entra in città), ognuno per quanto vale il livello del mondo in quel momento: 1 moneta al primo livello, 6 al sesto. Con un ladro vivo nel gruppo se ne ricava in media la metà in più. Non servono ad altro.
 - **Vendita:** l'armaiolo paga dal 50 al 75% del prezzo secondo la Contrattazione, di solito circa il 60% (`RegoleContrattazione`). Ricompra sempre a meno di quanto vende, quindi comprare e rivendere non rende mai.
-- **Non danno monete:** nemici sconfitti (per scelta), trofei, corruzione riuscita, anelli non magici.
+- **Non danno monete:** nemici sconfitti (per scelta), trofei, corruzione riuscita. Gli anelli non magici (cinque su sei) danno un prezioso a testa, come una gemma.
 
 ## Uscite
 
