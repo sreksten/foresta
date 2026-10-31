@@ -4,7 +4,6 @@ import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.modellodati.TatticaMD;
-import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tattiche.Decisione;
 import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
@@ -203,21 +202,18 @@ final class RoundASimulato {
     }
 
     /**
-     * A fine round: i danni e la durata degli effetti di stato, la durata dei modificatori a turni (LocazioneBase.trascorriTurnoEffettiDiStato)
+     * A fine round: i danni e la durata degli effetti di stato, la durata dei modificatori a turni e le ricariche di abilità e canti, come nel gioco
+     * (Personaggio.trascorriUnTurno, che chiama LocazioneBase a fine turno). Senza le ricariche ogni abilità si userebbe una volta sola per scontro.
      */
     private Esito trascorriTurnoEffettiDiStato() {
         for (Personaggio p : mieiVivi()) {
-            p.applicaDanniDaEffettiDiStato();
-            p.riduciEffettiDiStato();
-            p.riduciModificatori(UnitaDurataModificatore.TURNI);
+            p.trascorriUnTurno();
         }
         if (!miei.get(0).isVivo()) {
             return Esito.SCONFITTA;
         }
         for (Personaggio p : avversariVivi()) {
-            p.applicaDanniDaEffettiDiStato();
-            p.riduciEffettiDiStato();
-            p.riduciModificatori(UnitaDurataModificatore.TURNI);
+            p.trascorriUnTurno();
         }
         return esito();
     }

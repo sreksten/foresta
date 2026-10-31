@@ -352,7 +352,8 @@ class AnalisiDeiPersonaggiGiocabiliTest {
                 Equipaggiamento.di("CAVALIERE_INCANTATO", incantato(spada), scudo, elmo, armatura).equipaggia(pg);
                 break;
             case LADRO:
-                Equipaggiamento.di("DUE_SPADE_INCANTATE", incantato(spada), incantato(spada), elmo, veste).equipaggia(pg);
+                // Il ladro non porta l'elmo (vedi RegoleEquipaggiamento.puoUsare)
+                Equipaggiamento.di("DUE_SPADE_INCANTATE_SENZA_ELMO", incantato(spada), incantato(spada), veste).equipaggia(pg);
                 break;
             case ELFO:
                 (elfoConLibro ? Equipaggiamento.di("SPADA_INCANTATA_E_LIBRO", incantato(spada), libro, elmo, veste)
