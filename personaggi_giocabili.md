@@ -79,7 +79,7 @@ Chi spicca: il Mago per i **danni magici ×2** (e i bersagli ×1,3, il recupero 
 
 ## 3. Quanto valgono ai vari livelli
 
-Misure con `AnalisiDeiPersonaggiGiocabiliTest#schede` (media di 100 personaggi per classe, equipaggiati come nel gioco: Guerriero spada, scudo, elmo e armatura; Ladro due spade e veste; Elfo due spade e veste; Bardo spada, scudo e veste; Mago, Sacerdote e Druido bastone, libro e veste; Chierico mazza, scudo, elmo e armatura; i pezzi sono al livello del personaggio con i valori medi del generatore, senza parte casuale).
+Misure con `AnalisiDeiPersonaggiGiocabiliTest#schede` (media di 100 personaggi per classe, equipaggiati come nel gioco: Guerriero spada, scudo, elmo e armatura; Ladro due spade e veste (l'elmo non lo porta, come il Mago e il Sacerdote); Elfo due spade, elmo e veste; Bardo spada, scudo e veste; Mago, Sacerdote e Druido bastone, libro e veste; Chierico mazza, scudo, elmo e armatura; i pezzi sono al livello del personaggio con i valori medi del generatore, senza parte casuale).
 
 **Salute massima / magia massima per livello.**
 
@@ -111,27 +111,27 @@ Misure con `AnalisiDeiPersonaggiGiocabiliTest#schede` (media di 100 personaggi p
 
 | Classe | FOR | DES | COS | INT | SAG | CAR | FORT | CRIT |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Guerriero | 23,5 | 13,4 | 18,4 | 9,4 | 10,4 | 11,4 | 7,4 | 9,0 |
-| Ladro | 16,3 | 18,4 | 10,3 | 10,3 | 10,3 | 10,3 | 18,2 | 17,3 |
-| Mago | 7,3 | 10,3 | 10,2 | 27,3 | 18,3 | 13,3 | 7,3 | 6,0 |
-| Elfo | 16,1 | 18,2 | 10,2 | 13,2 | 13,1 | 13,2 | 10,1 | 13,0 |
-| Bardo | 16,1 | 13,1 | 10,2 | 13,1 | 13,1 | 18,1 | 10,2 | 10,1 |
-| Sacerdote | 7,2 | 10,4 | 13,2 | 15,2 | 27,4 | 13,3 | 7,3 | 8,1 |
-| Chierico | 15,1 | 9,2 | 17,2 | 10,1 | 23,1 | 12,2 | 7,1 | 8,0 |
-| Druido | 7,5 | 13,4 | 11,4 | 15,4 | 25,7 | 10,4 | 10,4 | 9,3 |
+| Guerriero | 23,4 | 13,4 | 18,6 | 9,4 | 10,3 | 11,4 | 7,5 | 9,0 |
+| Ladro | 16,3 | 18,4 | 10,2 | 10,2 | 10,3 | 10,2 | 18,4 | 17,4 |
+| Mago | 7,2 | 10,3 | 10,3 | 27,3 | 18,3 | 13,3 | 7,3 | 6,1 |
+| Elfo | 16,1 | 18,2 | 10,1 | 13,1 | 13,1 | 13,2 | 10,2 | 13,0 |
+| Bardo | 16,2 | 13,1 | 10,1 | 13,2 | 13,1 | 18,2 | 10,2 | 10,1 |
+| Sacerdote | 7,3 | 10,2 | 13,3 | 15,3 | 27,4 | 13,2 | 7,3 | 8,0 |
+| Chierico | 15,1 | 9,1 | 17,1 | 10,2 | 23,1 | 12,2 | 7,2 | 8,0 |
+| Druido | 7,5 | 13,3 | 11,5 | 15,4 | 25,4 | 10,6 | 10,4 | 9,3 |
 
 | Classe | PREC | VEL | FURT | PAR | RES.M | PERC | SOGG | FURIA | CORAG | VAL | CONTR |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | Guerriero | 3,1 | 3,0 | 3,0 | 51,0 | 10,0 | 3,0 | 3,0 | 6,0 | 4,0 | 5,0 | 2,0 |
-| Ladro | 5,0 | 5,3 | 6,0 | 10,0 | 15,0 | 4,0 | 3,0 | 4,0 | 3,0 | 3,0 | 4,0 |
+| Ladro | 5,0 | 5,3 | 6,0 | 3,0 | 15,0 | 4,0 | 3,0 | 4,0 | 3,0 | 3,0 | 4,0 |
 | Mago | 3,0 | 2,0 | 2,0 | 1,0 | 15,5 | 4,0 | 3,0 | 2,0 | 3,0 | 3,1 | 3,0 |
 | Elfo | 5,0 | 4,2 | 5,0 | 10,0 | 16,0 | 5,0 | 4,0 | 4,0 | 3,0 | 4,0 | 3,0 |
-| Bardo | 3,0 | 3,1 | 3,0 | 34,0 | 21,2 | 3,3 | 5,0 | 4,0 | 4,0 | 3,0 | 4,0 |
+| Bardo | 3,0 | 3,1 | 3,0 | 34,0 | 21,2 | 3,2 | 5,0 | 4,0 | 4,0 | 3,0 | 4,0 |
 | Sacerdote | 3,0 | 3,0 | 2,0 | 2,0 | 18,0 | 5,0 | 3,0 | 2,0 | 4,0 | 5,0 | 3,0 |
-| Chierico | 3,0 | 2,0 | 2,0 | 10,0 | 6,0 | 4,0 | 3,2 | 3,0 | 4,0 | 5,0 | 3,0 |
-| Druido | 4,0 | 3,3 | 3,0 | 2,0 | 16,0 | 6,0 | 3,0 | 2,1 | 3,0 | 4,0 | 3,0 |
+| Chierico | 3,0 | 2,0 | 2,0 | 8,7 | 5,8 | 4,0 | 3,2 | 3,0 | 4,0 | 5,0 | 3,0 |
+| Druido | 4,0 | 3,3 | 3,1 | 2,0 | 16,0 | 6,0 | 3,0 | 2,1 | 3,0 | 4,0 | 3,0 |
 
-Cose che saltano all'occhio: la **parata** del Guerriero (51) e del Bardo (34 con scudo e armatura) contro il 10 di Chierico, Ladro ed Elfo e l'1–2 degli incantatori; la salute del Guerriero (396 al livello 7) quasi doppia di quella del Mago (211); il **potere magico 170** di chi porta bastone e libro (Mago, Sacerdote, Druido), mentre Elfo e Bardo restano a 100 perché non portano il bastone e l'Elfo ha metà del bonus del libro.
+Cose che saltano all'occhio: la **parata** del Guerriero (51) e del Bardo (34 con scudo e armatura) contro il 10 di Chierico ed Elfo, il 3 del Ladro (senza elmo) e l'1–2 degli incantatori; la salute del Guerriero (396 al livello 7) quasi doppia di quella del Mago (211); il **potere magico 170** di chi porta bastone e libro (Mago, Sacerdote, Druido), mentre Elfo e Bardo restano a 100 perché non portano il bastone e l'Elfo ha metà del bonus del libro.
 
 ## 4. Abilità innate
 
@@ -225,7 +225,7 @@ Che cosa dicono:
 
 ## 5. Scontri simulati
 
-**Tabelle rifatte il 2026-10-31**, dopo aver corretto `RoundASimulato` (le ricariche di abilità e canti ora calano a fine round, come nel gioco: prima ogni abilità si usava una volta sola per scontro) e dopo aver tolto l'elmo a Ladro, Mago e Sacerdote. I commenti e le conclusioni (§5.4, §6, §7) sono ancora quelli delle misure precedenti e vanno riletti con questi numeri; così anche le tabelle di §3 (schede) e di §4.1 (danni delle abilità), non rifatte.
+**Tabelle rifatte il 2026-10-31**, dopo aver corretto `RoundASimulato` (le ricariche di abilità e canti ora calano a fine round, come nel gioco: prima ogni abilità si usava una volta sola per scontro) e dopo aver tolto l'elmo a Ladro, Mago e Sacerdote. Riletti con i numeri nuovi anche i commenti (§5.2-5.4, §6, §7) e la tabella degli attributi di §3 (la parata del Ladro scende a 3). I danni di §4.1 non dipendono dalle ricariche e non sono cambiati: il Martello sacro e l'attacco alle spalle non ci sono ancora (l'analisi dei danni non li conosce).
 
 Misure con `AnalisiDeiPersonaggiGiocabiliTest#scontri` (100 scontri per cella, `-Diterazioni=<n>` per cambiarli): i miei agiscono con la **tattica predefinita** della loro classe (`RegistroTattiche.predefinitaDelGiocabile`) nel round a coppie di `RoundASimulato`, contro i mostri con le loro tattiche base, **senza pozioni né pergamene**, a salute e magia piene, equipaggiati come in §3, tutti allo stesso livello. Ogni cella è **vittorie % / salute residua dei miei % / round medi delle vittorie**; "0" vuol dire nessuna vittoria. Goblin e Scheletro da soli sono tre alla volta (secondo `LocazioneBase.numeroMassimoDiMostri`, al massimo 3), gli altri uno; nel gruppo di quattro anche Troll, Viverna e Scheletro sono tre.
 
@@ -274,7 +274,7 @@ Poco realistico (un gruppo ha più personaggi), ma isola quanto vale la classe d
 
 ### 5.2 Come quarto del gruppo Guerriero, Ladro e Mago
 
-Il gruppo di tre che fa da riferimento ("(nessuno)") ha già un fisico, uno scassinatore e un incantatore: aggiungere una classe mostra che cosa porta in più. Contro gli avversari facili tutte le classi fanno il 100% (non si distingue nulla), quindi sono stati scelti avversari che mettono alla prova: branchi di tre Troll o Viverne, la Strega, i boss.
+Il gruppo di tre che fa da riferimento ("(nessuno)") ha già un fisico, uno scassinatore e un incantatore: aggiungere una classe mostra che cosa porta in più. Contro gli avversari facili tutte le classi fanno il 100% (non si distingue nulla), quindi sono stati scelti avversari che mettono alla prova: branchi di tre Troll o Viverne, la Strega, i boss. Con le ricariche che calano come nel gioco (vedi la nota in testa a §5) il gruppo di riferimento regge quasi tutto, e l'unica cella che distingue davvero le classi è il Drago: al livello 7 il gruppo da solo vince il 36% delle volte, con un quarto il 62% (Elfo), 76% (Mago), 80% (Guerriero), 96% (Bardo, Sacerdote e Chierico), 98% (Ladro) e 100% (Druido); al livello 3 il Lich, che il gruppo da solo vince il 76% delle volte, con quasi ogni quarto va al 100%.
 
 **Livello 3.**
 
@@ -353,14 +353,14 @@ Stesse simulazioni con `-Dequip=incantato`: tutte le armi hanno un incantamento 
 
 Che cosa dicono:
 
-- **Un solo incantamento cambia tutto per le classi fisiche.** Il gruppo di riferimento (Guerriero, Ladro e Mago) vince il 93% contro il Drago e il 99% contro il Lich, dove con le armi comuni faceva il 3% e il 7%: nel gruppo di quattro non c'è più nulla che distingua le classi (quasi tutto 100%). Il divario di §6 contro i boss dipende quindi in buona parte dall'equipaggiamento medio delle simulazioni e non dalle classi.
-- **Da soli, Ladro ed Elfo salgono molto**: contro la Strega dallo 0% al 74% (Ladro) e al 98% (Elfo), contro il Lich dallo 0% al 59% e al 94%. Il Guerriero no: 6% contro la Strega, 17% contro l'Idra, 1% contro il Lich. Ipotesi, non verificata: il danno dell'incantamento passa per il moltiplicatore dei danni magici della classe (Guerriero 0,5, Ladro 1,0, Elfo 1,4).
-- **L'Elfo con il libro peggiora**: perdendo la seconda spada fa meno contro la Strega (69% contro 98%) e il Lich (43% contro 94%) e con più round contro i mostri normali. Fa meglio solo contro l'Idra (88% contro 53%), che è immune a terra, acqua e aria ma non all'arcano del dardo. Al livello 7 le due spade valgono più del libro (che ha metà del bonus).
-- **Il Chierico resta il più debole da solo** anche con la mazza incantata: scheletri 11%, Strega 5%, Idra 9%, Lich 2%. Il Bardo, con la spada incantata, migliora molto (Idra 95%, Troll e Viverna 100% in 5–6 round).
+- **Un solo incantamento cambia tutto per le classi fisiche.** Il gruppo di riferimento (Guerriero, Ladro e Mago) vince il 95% contro il Drago, dove con le armi comuni faceva il 36% (al livello 7), e con un quarto qualunque il 100%: nel gruppo di quattro non c'è più nulla che distingua le classi (tutto 100%). Il divario di §6 contro i boss dipende quindi in buona parte dall'equipaggiamento medio delle simulazioni e non dalle classi.
+- **Da soli, Ladro ed Elfo salgono molto**: contro la Strega dallo 0% al 64% (Ladro) e al 95% (Elfo), contro il Lich dallo 0% al 61% e al 90%. Il Guerriero poco: 13% contro la Strega, 27% contro l'Idra, 4% contro il Lich. Ipotesi, non verificata: il danno dell'incantamento passa per il moltiplicatore dei danni magici della classe (Guerriero 0,5, Ladro 1,0, Elfo 1,4).
+- **L'Elfo con il libro peggiora**: perdendo la seconda spada fa meno contro la Strega (61% contro 95%) e il Lich (43% contro 90%) e con più round contro i mostri normali. Contro l'Idra è alla pari (61% contro 58%). Al livello 7 le due spade valgono più del libro (che ha metà del bonus).
+- **Il Chierico con la mazza incantata e il Martello sacro** tiene contro i mostri normali (Goblin 91%, Scheletro 93%, Troll 95%, Viverna 89%), ma contro i boss magici resta debole: Strega 3%, Idra 16%, Lich 0%. Il Bardo, con la spada incantata, migliora (Troll e Viverna 100% in 5 round, Scheletro 98%, Idra 53%, Strega 28%).
 
 ### 5.4 Che cosa fanno davvero le tattiche
 
-`AnalisiDeiPersonaggiGiocabiliTest#azioni` conta le azioni per scontro di ogni classe da sola al livello 7: contro una viverna Guerriero e Ladro fanno solo attacchi fisici (3,7–4,1 a scontro); l'Elfo 2,2 dardi arcani (e quasi nessun attacco: con il dardo che cresce con il livello la sua tattica lo preferisce alle armi); il Mago un solo dardo arcano (1,06: uccide quasi subito); il Druido 2 volte radici e una pelle di corteccia; il Chierico 11,4 attacchi e 3,3 imposizioni delle mani; il Bardo 6,3 attacchi, 2,8 canti di valore e 1,2 curativi; il **Sacerdote 20,2 attacchi fisici e nessuna luce divina**, perché la sua tattica predefinita la usa solo contro i non morti (`TatticheBase.sacerdote`: voce "Luce divina sui non morti"). Da solo contro tre goblin al livello 7 il Sacerdote non vince mai (0%), mentre contro tre scheletri vince sempre.
+`AnalisiDeiPersonaggiGiocabiliTest#azioni` conta le azioni per scontro di ogni classe da sola al livello 7: contro una viverna Guerriero e Ladro fanno solo attacchi fisici (4,3 e 3,8 a scontro; il Ladro da solo non può colpire alle spalle, che chiede almeno tre personaggi nel gruppo); l'Elfo 2,0 dardi arcani e 1,2 attacchi (il dardo ha ricarica 2: lo rilancia appena può); il Mago un solo dardo arcano (1,06: uccide quasi subito); il Druido 2 volte radici, 1,1 sciame, 2 pelle di corteccia e 2,1 attacchi; il Chierico 3,3 martelli sacri, 3,3 attacchi e 0,6 imposizioni delle mani; il Bardo 6,1 attacchi, 2,1 canti di valore e 0,8 curativi; il **Sacerdote 19,0 attacchi fisici e nessuna luce divina**, perché la sua tattica predefinita la usa solo contro i non morti (`TatticheBase.sacerdote`: voce "Luce divina sui non morti"). Da solo contro tre goblin al livello 7 il Sacerdote non vince mai (0%), mentre contro tre scheletri vince sempre (100%).
 
 ## 6. Lettura d'insieme
 
@@ -368,28 +368,28 @@ Quel che emerge dalle misure (le spiegazioni marcate come ipotesi non sono verif
 
 | Classe | Punti di forza | Punti deboli | Perché sceglierla |
 | :--- | :--- | :--- | :--- |
-| Mago | Il danno più alto in assoluto (dardo 404 al livello 7, 6 bersagli, 143 di magia, recupero magico ×1,5); da solo vince quasi tutto (al livello 7 Troll 100%, Viverna 99%, Idra 97%) | Salute più bassa (211), parata 1; da solo vince due volte su tre contro la Strega (67%) e un quarto delle volte contro il Lich (26%) | Chi vuole chiudere gli scontri in fretta; come quarto del gruppo di riferimento lo porta dal 48% al 100% contro la Strega e dal 7% al 100% contro il Lich (ma lo fanno anche Elfo, Bardo, Sacerdote, Chierico e Druido) |
-| Druido | Il miglior quarto del gruppo contro il Drago (63%, 86% e 99% ai livelli 3, 5 e 7; al livello 7 gli altri vanno dal 6% al 61%), da solo batte Troll e Viverna; abilità di gruppo (pelle di corteccia, rigenerazione) e danni di terra e veleno | Le immunità di Idra, Strega e Lich a terra e veleno lo lasciano senza danno (da solo 0% contro l'Idra); fuoco ×1,25 | Chi vuole un incantatore che regge il gruppo, non solo lo scontro singolo |
-| Guerriero | Salute 396 e parata 51 al livello 7: da solo vince contro Goblin, Scheletro e Troll (100%) e Viverna (91%); aiuta il gruppo contro Strega (91% invece di 48%) e Lich (36% invece di 7%) | Danni magici ×0,5: non fa niente contro la Strega e il Lich da solo (0%) e poco contro l'Idra (11%) | Chi vuole il frontale senza pensieri; è la scelta più semplice |
-| Ladro | Critico e furtività; da solo vince contro Troll e Viverna; come quarto è la classe senza magia che più aiuta contro il Lich (56%, contro il 36% del Guerriero) | Da solo contro gli scheletri 41%, contro Idra e Strega 1% e 0% | Chi vuole colpire forte con poca salute (264) e punta sui critici |
-| Elfo | Resistenza magica e percezione ×1,4, critico e precisione; due armi; il dardo cresce con il livello (148 al livello 7, 43% di una viverna) e da solo contro l'Idra vince il 68% | Come quarto del gruppo contro il Drago fa il 48%, come il Mago; da solo con la Strega e il Lich non vince quasi mai | Chi vuole versatilità: spade e dardo, con una resistenza magica che gli altri non hanno |
-| Bardo | Supporto: curativo, valore, ipnotico; contrattazione ×1,2; ha la soggezione migliore | Da solo è lento (10–34 round) e perde con gli scheletri (7%); non porta bastone né libro | Chi gioca il gruppo e non il singolo; come quarto contro il Drago fa il 55% |
-| Sacerdote | Magia 98, potere magico 170, alba sacra e luce divina; come quarto contro il Drago 61% e sempre 100% su Strega e Lich | Con la tattica predefinita usa la luce solo sui non morti e il resto del tempo attacca con la mazza (forza 7): da solo 0% contro i goblin | Chi vuole il contrasto ai non morti e un supporto che toglie gli stati |
-| Chierico | Salute 343, parata 10 con scudo e armatura; cura (imposizione) e scaccia i non morti | Da solo cala contro gli scheletri (13%, e scacciare i non morti non serve contro lo Scheletro che è immune) e contro l'Idra (12%); come quarto contro il Drago 49% | Chi vuole il guaritore robusto in prima linea |
+| Mago | Il danno più alto in assoluto (dardo 404 al livello 7, 6 bersagli, 143 di magia, recupero magico ×1,5); da solo vince quasi tutto (al livello 7 Troll 98%, Viverna 100%, Idra 79%) | Salute più bassa (211), parata 1; da solo vince il 38% delle volte contro la Strega, il 43% contro gli scheletri e mai contro il Lich | Chi vuole chiudere gli scontri in fretta; come quarto del gruppo di riferimento lo porta al livello 3 dall'1% al 100% contro il Lich (ma lo fanno anche Elfo, Bardo, Sacerdote, Chierico e Druido) |
+| Druido | Il miglior quarto del gruppo contro il Drago (89%, 99% e 100% ai livelli 3, 5 e 7; al livello 7 gli altri vanno dal 62% al 98%), da solo batte Goblin, Scheletro, Troll e Viverna (100%); abilità di gruppo (pelle di corteccia, rigenerazione) e danni di terra e veleno | Le immunità di Idra, Strega e Lich a terra e veleno lo lasciano senza danno (da solo 0% contro l'Idra, 23% contro la Strega e 3% contro il Lich); fuoco ×1,25 | Chi vuole un incantatore che regge il gruppo, non solo lo scontro singolo |
+| Guerriero | Salute 396 e parata 51 al livello 7: da solo vince contro Goblin, Scheletro e Troll (100%) e Viverna (83%); come quarto porta il gruppo di riferimento dal 36% all'80% contro il Drago | Danni magici ×0,5: non fa niente contro la Strega e il Lich da solo (0%) e poco contro l'Idra (4%) | Chi vuole il frontale senza pensieri; è la scelta più semplice |
+| Ladro | Critico e furtività; da solo vince contro Troll e Viverna; come quarto è la classe che più aiuta contro il Drago dopo il Druido (98% contro il 36% del gruppo da solo e l'80% del Guerriero); l'attacco alle spalle (ricarica 3) lo usa quando il gruppo è di almeno tre | Senza l'elmo ha parata 3: da solo contro gli scheletri 18%, contro Idra, Strega e Lich 3%, 0% e 0% | Chi vuole colpire forte con poca salute (264) e punta sui critici |
+| Elfo | Resistenza magica e percezione ×1,4, critico e precisione; due armi; il dardo cresce con il livello (148 al livello 7, 43% di una viverna) e da solo contro l'Idra vince il 37% | Come quarto del gruppo contro il Drago fa il 62%, meno del Mago (76%); da solo con la Strega e il Lich non vince mai | Chi vuole versatilità: spade e dardo, con una resistenza magica che gli altri non hanno |
+| Bardo | Supporto: curativo, valore, ipnotico; contrattazione ×1,2; ha la soggezione migliore | Da solo è lento (9–31 round) e vince solo il 53% contro gli scheletri; non porta bastone né libro | Chi gioca il gruppo e non il singolo; come quarto contro il Drago fa il 96% |
+| Sacerdote | Magia 98, potere magico 170, alba sacra e luce divina; come quarto contro il Drago 96% | Con la tattica predefinita usa la luce solo sui non morti e il resto del tempo attacca con la mazza (forza 7): da solo 0% contro i goblin | Chi vuole il contrasto ai non morti e un supporto che toglie gli stati |
+| Chierico | Salute 343, parata 10 con scudo e armatura; cura (imposizione), scaccia i non morti e il Martello sacro (3 di magia, ricarica 2, il doppio sui non morti) | Da solo contro i boss magici non vince quasi mai (Idra 14%, Strega e Lich 1% e 0%); come quarto contro il Drago 96% | Chi vuole il guaritore robusto in prima linea |
 
 ## 7. Squilibri e idee
 
 Sono idee da discutere, non modifiche fatte:
 
-1. **Il Mago domina.** Il danno magico è la moltiplicazione di molte cose (×2 di classe, potere magico ×1,7 con bastone e libro, bersagli ×1,3, bonus fisso del libro) e la base dell'abilità pesa poco: il Mago ha il danno più alto e il recupero di magia migliore, e i suoi limiti sono la salute e la parata. Leve: il moltiplicatore di classe `MAGO_MOLTIPLICATORE_DANNI_MAGICI`, il potere magico di bastone e libro, o il bonus del libro.
-2. **Il dardo dell'Elfo** era inutile alle alte dotazioni (base 15 fissa, nessun bastone, libro a metà: la tattica non lo lanciava mai) e ora cresce di 4 di base a ogni livello oltre il primo (`DARDO_ARCANO_DANNI_ELFO_PER_LIVELLO`): da solo l'Elfo al livello 7 contro lo Scheletro passa dal 27% al 96% e contro l'Idra dal 6% al 68%. Resta da vedere se il costo (4 contro 2 del Mago) è quello giusto e se il libro, che l'Elfo può già portare, lo aiuti abbastanza.
+1. **Il Mago ha il danno più alto, ma non domina più.** Il danno magico è la moltiplicazione di molte cose (×2 di classe, potere magico ×1,7 con bastone e libro, bersagli ×1,3, bonus fisso del libro) e la base dell'abilità pesa poco: il Mago ha il danno più alto e il recupero di magia migliore, e i suoi limiti sono la salute, la parata e la ricarica del dardo (2 turni). Con le ricariche corrette nelle simulazioni (vedi la nota in testa a §5) da solo vince il 92% contro i Goblin, il 43% contro gli scheletri e il 38% contro la Strega, e come quarto contro il Drago (76%) fa meno di Ladro (98%), Druido (100%), Bardo, Sacerdote e Chierico (96%). Leve, se serviranno: il moltiplicatore di classe `MAGO_MOLTIPLICATORE_DANNI_MAGICI`, il potere magico di bastone e libro, o il bonus del libro.
+2. **Il dardo dell'Elfo** era inutile alle alte dotazioni (base 15 fissa, nessun bastone, libro a metà: la tattica non lo lanciava mai) e ora cresce di 4 di base a ogni livello oltre il primo (`DARDO_ARCANO_DANNI_ELFO_PER_LIVELLO`): da solo l'Elfo al livello 7 contro lo Scheletro passa dal 27% al 94% e contro l'Idra dal 6% al 37% (misure con le ricariche corrette). Resta da vedere se il costo (4 contro 2 del Mago) è quello giusto e se il libro, che l'Elfo può già portare, lo aiuti abbastanza.
 3. **Il Sacerdote da solo non fa danno** perché la tattica predefinita limita la luce divina ai non morti: è una scelta di `TatticheBase.sacerdote`, non del personaggio, ma nei test dà risultati che non rispecchiano chi la usa a mano (a mano il giocatore la lancia contro chiunque: nel log di una partita vera, con la luce a base 100, un lancio uccideva una viverna in un colpo).
 4. **Il Druido è l'incantatore più forte contro i boss** ma ha tre nemici che ne annullano l'attacco (Idra, Strega, Lich, immuni a terra e veleno): se si vuole che sia meno universale, basta lasciare queste immunità; se si vuole più equilibrio, le sue abilità di gruppo (pelle, rigenerazione) sono la leva.
-5. **Il Bardo e il Chierico sono lenti da soli** (10–34 round) ma nel gruppo reggono: la loro utilità si vede solo con il gruppo, per questo servirebbero analisi con gruppi di quattro o cinque diversi, non solo con quel gruppo di riferimento.
-6. **Gli scheletri non sono equivalenti per tutti**: da soli (livello 7) li battono il 99% di Sacerdote, il 100% di Druido e Guerriero, l'89% del Mago e il 96% dell'Elfo (dopo la modifica al suo dardo; prima il 27%), ma solo il 41% del Ladro, il 13% del Chierico e il 7% del Bardo. Ipotesi, non verificata: le loro resistenze ai danni fisici o le armi usate.
+5. **Il Bardo è lento da solo** (9–31 round) ma nel gruppo regge (come quarto contro il Drago 96%); il Chierico, con il Martello sacro, è molto meno lento (6–15 round). La loro utilità si vede soprattutto con il gruppo, per questo servirebbero analisi con gruppi di quattro o cinque diversi, non solo con quel gruppo di riferimento.
+6. **Gli scheletri non sono equivalenti per tutti**: da soli (livello 7) li battono il 100% di Sacerdote, Druido e Guerriero, il 94% dell'Elfo (dopo la modifica al suo dardo; prima il 27%) e il 90% del Chierico, ma solo il 53% del Bardo, il 43% del Mago e il 18% del Ladro (che senza l'elmo ha parata 3). Ipotesi, non verificata: le loro resistenze ai danni fisici o le armi usate.
 7. **Strega e Lich** sono ora molto più resistenti (salute base 190 e 300; al livello 7 circa 502 e 793 punti) e di fatto si battono solo con la magia (o con un guaritore): il Guerriero e il Ladro da soli non li battono mai. Va bene finché i gruppi hanno un incantatore; per un gruppo senza è un muro.
 
-8. **Le armi incantate pesano più delle classi.** Con un incantamento di fulmine su ogni arma (§5.3) i divari contro i boss di Guerriero, Ladro e Chierico quasi spariscono nel gruppo, e da soli salgono Ladro, Elfo e Bardo. Prima di dare abilità nuove a Guerriero e Ladro conviene misurare con l'equipaggiamento reale che un giocatore trova, non con quello medio senza incantamenti; il Martello sacro del Chierico (in `todo.md`) resta motivato dai risultati da soli, perché neanche con la mazza incantata batte scheletri e boss magici.
+8. **Le armi incantate pesano più delle classi.** Con un incantamento di fulmine su ogni arma (§5.3) i divari contro i boss di Guerriero, Ladro e Chierico quasi spariscono nel gruppo, e da soli salgono Ladro, Elfo e Bardo. Prima di dare abilità nuove a Guerriero e Ladro conviene misurare con l'equipaggiamento reale che un giocatore trova, non con quello medio senza incantamenti; il Martello sacro del Chierico (aggiunto il 2026-10-31) lo porta a battere i mostri normali e gli scheletri da solo (90% e oltre), ma non i boss magici (Strega 1%, Idra 14%, Lich 0%), che restano per gli incantatori.
 
 ## 8. Come si rifanno le misure
 
@@ -403,7 +403,7 @@ mvn test -pl 12-foresta-motore -am -Dtest="AnalisiDeiPersonaggiGiocabiliTest#azi
 mvn test -pl 12-foresta-motore -am -Dtest="AnalisiDanniAbilitaInnateTest" -Danalisi=true -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
-`AnalisiAbilitaInnateTest` (analisi, catene, contributo, sensibilità, pelle) misura invece quanto pesano singole abilità di Chierico e Druido in gruppi diversi. `RoundASimulato` porta il numero di round al passo di quello del gioco, quindi le condizioni sul round delle tattiche scattano come nella partita vera.
+`AnalisiAbilitaInnateTest` (analisi, catene, contributo, sensibilità, pelle) misura invece quanto pesano singole abilità di Chierico e Druido in gruppi diversi. `RoundASimulato` porta il numero di round al passo di quello del gioco, quindi le condizioni sul round delle tattiche scattano come nella partita vera, e a fine round fa calare le ricariche di abilità e canti come il gioco (`Personaggio.trascorriUnTurno`).
 
 Misure precedenti di Chierico e Druido (con `AnalisiAbilitaInnateTest`, 200–300 scontri per cella, gruppo di tre con Guerriero e Ladro, **prima** di alcuni cambi di valori e di una correzione del round simulato, quindi indicative): la magia non è il limite (si lanciano 0,2–2 abilità a scontro e i personaggi iniziano gli scontri con l'80–95% della magia); l'imposizione delle mani è l'unica abilità che pesa molto, contro nemici fisici e ai livelli 3–5 (contro l'Idra al livello 3 il gruppo vince il 67,5% con l'abilità e il 20% senza); radici, sciame e rigenerazione sono forti ma situazionali; la pelle di corteccia in percentuale era inutile e in punti fissi (10 × √livello) serve contro avversari pericolosi (le streghe: 68% contro 58% al livello 5, 89% contro 78% al livello 8) e negli scontri facili costa solo un round.
 
@@ -417,7 +417,7 @@ Misure precedenti di Chierico e Druido (con `AnalisiAbilitaInnateTest`, 200–30
 
 ## Da fare / idee aperte
 
-- Decidere le leve di §7, a partire dal Mago (moltiplicatore di classe o potere magico di bastone e libro); il dardo dell'Elfo è stato rivisto (§7, punto 2) e va riverificato con il libro.
+- Decidere le leve di §7: con le ricariche corrette il Mago non domina più; restano il Sacerdote (da solo non vince nemmeno contro i Goblin: la tattica predefinita usa la luce divina solo sui non morti) e il Ladro senza elmo (parata 3, scheletri 18%); il dardo dell'Elfo è stato rivisto (§7, punto 2) e va riverificato con il libro.
 - Rifare le misure con gruppi di quattro o cinque diversi, con pozioni e pergamene e, per il Sacerdote, anche con una tattica che usi la luce divina contro chiunque.
 - Provare le abilità in partite intere (`SimulazionePartiteTest`) e non solo in scontri singoli.
 - Insegnare al `GiocatoreAutomatico` dei test a cantare (non conosce i canti).
