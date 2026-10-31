@@ -7,7 +7,7 @@ import java.util.Deque;
 /**
  * Lo sfondo di un'icona in ricarica: la cornice con l'interno vuoto, che si riempie dal basso verso l'alto in proporzione ai turni passati, con un colore
  * che va dal rosso scuro al verde scuro passando per il giallo scuro (come la barra della salute: così a metà non viene fuori un marrone); la parte
- * non ancora riempita è grigio scuro. Sopra ci va il disegno dell'icona (vedi TipoIcona.componi).
+ * non ancora riempita è nera (il grigio si distingueva poco dal riempimento). Sopra ci va il disegno dell'icona (vedi TipoIcona.componi).
  * <p>
  * L'interno è la zona trasparente della cornice raggiungibile dal suo centro: gli angoli fuori dal bordo restano trasparenti.
  */
@@ -17,7 +17,7 @@ public final class SfondoARiempimento {
 	// Il giallo è scuro quanto il rosso (stesso rosso, verde alla pari): da lì il rosso cala e il verde scende al suo valore
 	private static final int GIALLO_SCURO = 0x8C8C00;
 	private static final int VERDE_SCURO = 0x005200;
-	private static final int GRIGIO_SCURO = 0x525252;
+	private static final int NERO = 0x000000;
 
 	private SfondoARiempimento() {
 	}
@@ -55,7 +55,7 @@ public final class SfondoARiempimento {
 					sfondo.setRGB(x, y, cornice.getRGB(x, y));
 				} else {
 					boolean riempito = ultimaRiga - y < righeRiempite;
-					sfondo.setRGB(x, y, 0xFF000000 | (riempito ? coloreRiempimento : GRIGIO_SCURO));
+					sfondo.setRGB(x, y, 0xFF000000 | (riempito ? coloreRiempimento : NERO));
 				}
 			}
 		}

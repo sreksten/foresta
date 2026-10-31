@@ -54,19 +54,19 @@ class SfondoARiempimentoTest {
 
     @Test
     void conTreTurniDiRicaricaSiRiempieUnQuartoMetaETreQuarti() {
-        // Le righe interne sono 8: un quarto sono 2, metà 4, tre quarti 6; il resto è grigio scuro
+        // Le righe interne sono 8: un quarto sono 2, metà 4, tre quarti 6; il resto è nero
         for (int passati = 1; passati <= 3; passati++) {
             BufferedImage sfondo = SfondoARiempimento.crea(cornice(), passati, 3);
-            int grigie = righeRiempite(sfondo, 0x525252);
-            assertEquals(8 - 2 * passati, grigie, "grigio dopo " + passati + " turni");
+            int nere = righeRiempite(sfondo, 0x000000);
+            assertEquals(8 - 2 * passati, nere, "nero dopo " + passati + " turni");
         }
     }
 
     @Test
     void ilRiempimentoSaleDalBasso() {
         BufferedImage sfondo = SfondoARiempimento.crea(cornice(), 2, 3);
-        assertEquals(0x525252, sfondo.getRGB(5, 2) & 0xFFFFFF, "in alto è ancora grigio");
-        assertNotEquals(0x525252, sfondo.getRGB(5, 9) & 0xFFFFFF, "in basso è riempito");
+        assertEquals(0x000000, sfondo.getRGB(5, 2) & 0xFFFFFF, "in alto è ancora nero");
+        assertNotEquals(0x000000, sfondo.getRGB(5, 9) & 0xFFFFFF, "in basso è riempito");
     }
 
     @Test
