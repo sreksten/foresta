@@ -173,7 +173,7 @@ Il canto ipnotico e quello di valore si usano solo in combattimento con almeno u
 
 ### 4.1 Quanto fanno le abilità che colpiscono
 
-Misure con `AnalisiDanniAbilitaInnateTest` (media di 200 prove per cella, critico neutralizzato, bersagli allo stesso livello di chi attacca; il danno è quello di un colpo andato a segno sul primo bersaglio, e fra parentesi la percentuale della salute massima media del bersaglio). **Con bastone e libro veri** per Mago, Sacerdote e Druido (l'Elfo e il Bardo senza: non li portano).
+Misure con `AnalisiDanniAbilitaInnateTest` (media di 200 prove per cella, critico neutralizzato, tranne per l'attacco alle spalle del Ladro, che è un critico garantito: è il colpo con le armi di chi lo usa, con due spade e veste senza elmo, e si calcola con tutte le sue armi; bersagli allo stesso livello di chi attacca; il danno è quello di un colpo andato a segno sul primo bersaglio, e fra parentesi la percentuale della salute massima media del bersaglio). **Con bastone e libro veri** per Mago, Sacerdote e Druido (l'Elfo e il Bardo senza: non li portano).
 
 **Livello 7.**
 
@@ -184,6 +184,8 @@ Misure con `AnalisiDanniAbilitaInnateTest` (media di 200 prove per cella, critic
 | Sciame (Druido) | 0 (0%) | 219 (35%) | 320 (20%) | 0 (0%) | 0 (0%) | 338 (56%) |
 | Dardo arcano (Mago) | 404 (118%) | 403 (64%) | 388 (24%) | 400 (84%) | 392 (49%) | 411 (68%) |
 | Dardo arcano (Elfo) | 148 (43%) | 148 (23%) | 142 (9%) | 146 (31%) | 143 (18%) | 151 (25%) |
+| Martello sacro (Chierico) | 87 (25%) | 87 (14%) | 84 (5%) | 86 (18%) | 169 (21%) | 89 (15%) |
+| Attacco alle spalle (Ladro) | 167 (49%) | 163 (26%) | 137 (9%) | 131 (28%) | 153 (19%) | 134 (22%) |
 
 **Livello 3.**
 
@@ -194,6 +196,8 @@ Misure con `AnalisiDanniAbilitaInnateTest` (media di 200 prove per cella, critic
 | Sciame (Druido) | 0 (0%) | 76 (18%) | 128 (12%) | 0 (0%) | 0 (0%) | 134 (34%) |
 | Dardo arcano (Mago) | 142 (63%) | 142 (34%) | 138 (13%) | 141 (45%) | 138 (27%) | 145 (36%) |
 | Dardo arcano (Elfo) | 58 (26%) | 58 (14%) | 56 (5%) | 58 (18%) | 56 (11%) | 59 (15%) |
+| Martello sacro (Chierico) | 55 (25%) | 55 (13%) | 53 (5%) | 54 (17%) | 107 (21%) | 56 (14%) |
+| Attacco alle spalle (Ladro) | 90 (40%) | 89 (21%) | 75 (7%) | 71 (23%) | 82 (16%) | 73 (18%) |
 
 **Danno sulla viverna per livello** (con bastone e libro veri).
 
@@ -204,6 +208,8 @@ Misure con `AnalisiDanniAbilitaInnateTest` (media di 200 prove per cella, critic
 | Sciame (Druido) | 0 (0%) | 0 (0%) | 0 (0%) | 0 (0%) |
 | Dardo arcano (Mago) | 62 (48%) | 142 (63%) | 290 (100%) | 404 (118%) |
 | Dardo arcano (Elfo) | 22 (17%) | 58 (26%) | 100 (35%) | 148 (43%) |
+| Martello sacro (Chierico) | 32 (25%) | 55 (25%) | 72 (25%) | 87 (25%) |
+| Attacco alle spalle (Ladro) | 46 (35%) | 90 (40%) | 127 (44%) | 167 (49%) |
 
 **Gli stessi, senza nessun equipaggiamento, al livello 7** (per misurare quanto pesano bastone e libro).
 
@@ -214,6 +220,8 @@ Misure con `AnalisiDanniAbilitaInnateTest` (media di 200 prove per cella, critic
 | Sciame (Druido) | 0 (0%) | 65 (10%) | 126 (8%) | 0 (0%) | 0 (0%) | 134 (22%) |
 | Dardo arcano (Mago) | 130 (38%) | 130 (20%) | 125 (8%) | 128 (27%) | 126 (16%) | 132 (22%) |
 | Dardo arcano (Elfo) | 148 (43%) | 148 (23%) | 142 (9%) | 146 (31%) | 143 (18%) | 151 (25%) |
+| Martello sacro (Chierico) | 87 (25%) | 87 (14%) | 84 (5%) | 86 (18%) | 169 (21%) | 89 (15%) |
+| Attacco alle spalle (Ladro) | 58 (17%) | 58 (9%) | 48 (3%) | 46 (10%) | 54 (7%) | 46 (8%) |
 
 Che cosa dicono:
 
@@ -221,11 +229,13 @@ Che cosa dicono:
 - **Il dardo del Mago è l'abilità che colpisce più forte**, su un solo bersaglio: 118% di una viverna, 84% dell'Idra, 64% della chimera-drago. La luce divina del Sacerdote (base 35) è al 109% sulla viverna e al 78% sull'Idra, ma su più bersagli; radici e sciame del Druido arrivano al 64% della viverna e al 56% del Minotauro gigante.
 - **Il dardo dell'Elfo cresce con il livello** (base 15 + 4 per livello oltre il primo): 22, 58, 100 e 148 ai livelli 1, 3, 5 e 7, cioè 17%, 26%, 35% e 43% di una viverna, contro il 404 del Mago. Non ha bastone né libro (nell'analisi non lo porta; il libro lo può usare con metà del bonus), quindi senza equipaggiamento il suo dardo supera quello del Mago dal livello 4, ma un Mago ha sempre bastone e libro.
 - **Immunità:** lo sciame fa 0 a viverna, Idra e Lich (veleno e non morti), le radici fanno 0 all'Idra (immune alla terra); la luce divina fa il doppio al Lich (non morto), ma con il Lich a 793 punti non lo uccide più in un colpo (76%). La Strega è immune a Acqua, Aria, Fuoco e Terra: radici e molti incantesimi non la toccano.
+- **Il martello sacro del Chierico** (base 30, 3 di magia, ricarica 2) fa 87 alla viverna al livello 7 (25% della sua salute), due terzi del dardo del Mago senza equipaggiamento (130) e un quarto della luce divina con bastone e libro (374), ma su un solo bersaglio e senza bisogno di libro: il Chierico non ha il bastone. Contro il Lich, non morto, vale il doppio (169, 21%).
+- **L'attacco alle spalle del Ladro** (senza magia, ricarica 3) non è un colpo magico: con due spade e la veste, senza elmo, è un critico garantito che al livello 7 fa 167 alla viverna (49%), 131 all'Idra (28%), 153 al Lich (19%) e 137 al Drago (9%). È più del martello sacro, ma richiede un gruppo di almeno tre e, per via della ricarica, si usa un turno su tre; a mani nude farebbe 58. Da solo il Ladro non lo usa mai.
 - **Il Drago** (salute base triplicata a 600, circa 1587 al livello 7) richiede da 4 a 8 colpi, a seconda dell'abilità.
 
 ## 5. Scontri simulati
 
-**Tabelle rifatte il 2026-10-31**, dopo aver corretto `RoundASimulato` (le ricariche di abilità e canti ora calano a fine round, come nel gioco: prima ogni abilità si usava una volta sola per scontro) e dopo aver tolto l'elmo a Ladro, Mago e Sacerdote. Riletti con i numeri nuovi anche i commenti (§5.2-5.4, §6, §7) e la tabella degli attributi di §3 (la parata del Ladro scende a 3). I danni di §4.1 non dipendono dalle ricariche e non sono cambiati: il Martello sacro e l'attacco alle spalle non ci sono ancora (l'analisi dei danni non li conosce).
+**Tabelle rifatte il 2026-10-31**, dopo aver corretto `RoundASimulato` (le ricariche di abilità e canti ora calano a fine round, come nel gioco: prima ogni abilità si usava una volta sola per scontro) e dopo aver tolto l'elmo a Ladro, Mago e Sacerdote. Riletti con i numeri nuovi anche i commenti (§5.2-5.4, §6, §7) e la tabella degli attributi di §3 (la parata del Ladro scende a 3). Anche §4.1 comprende ora il Martello sacro e l'attacco alle spalle (l'analisi dei danni li conosce); gli altri valori di §4.1 non dipendono dalle ricariche e non sono cambiati.
 
 Misure con `AnalisiDeiPersonaggiGiocabiliTest#scontri` (100 scontri per cella, `-Diterazioni=<n>` per cambiarli): i miei agiscono con la **tattica predefinita** della loro classe (`RegistroTattiche.predefinitaDelGiocabile`) nel round a coppie di `RoundASimulato`, contro i mostri con le loro tattiche base, **senza pozioni né pergamene**, a salute e magia piene, equipaggiati come in §3, tutti allo stesso livello. Ogni cella è **vittorie % / salute residua dei miei % / round medi delle vittorie**; "0" vuol dire nessuna vittoria. Goblin e Scheletro da soli sono tre alla volta (secondo `LocazioneBase.numeroMassimoDiMostri`, al massimo 3), gli altri uno; nel gruppo di quattro anche Troll, Viverna e Scheletro sono tre.
 

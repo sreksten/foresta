@@ -2,10 +2,12 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.abilita.DardoArcano;
 import com.threeamigos.foresta.abilita.LuceDivina;
+import com.threeamigos.foresta.abilita.MartelloSacro;
 import com.threeamigos.foresta.abilita.Radici;
 import com.threeamigos.foresta.abilita.Sciame;
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.combattimento.FaseDiAttacco;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
@@ -26,7 +28,8 @@ import java.util.function.Function;
 
 /**
  * Analisi manuale (si esegue con {@code -Danalisi=true}) dei danni delle abilità innate che colpiscono: la luce divina del Sacerdote, le
- * radici e lo sciame del Druido, il dardo arcano di Mago ed Elfo. Per ogni livello (1, 3, 5, 7) e per ogni bersaglio (viverna,
+ * radici e lo sciame del Druido, il dardo arcano di Mago ed Elfo, il martello sacro del Chierico e l'attacco alle spalle del Ladro (che è un
+ * colpo con le armi, sempre un critico: qui si misura con il critico garantito, quindi il doppio di un colpo normale, e non costa Magia). Per ogni livello (1, 3, 5, 7) e per ogni bersaglio (viverna,
  * chimera-drago e i boss, tutti allo stesso livello di chi attacca) dice il danno medio di un colpo andato a segno sul primo bersaglio
  * (quello che subisce tutto il danno), in assoluto e in percentuale della salute massima media del bersaglio. Il colpo critico è
  * neutralizzato e i personaggi, che hanno attributi a caso, si ripetono {@link #PROVE} volte per farne la media.
@@ -57,11 +60,18 @@ class AnalisiDanniAbilitaInnateTest {
         final String nome;
         final TipoPersonaggio classe;
         final Function<Personaggio, Arma> costruttore;
+        // Un colpo con le armi di chi la usa (l'attacco alle spalle), non un attacco magico: niente costruttore e niente costo di Magia
+        final boolean conLeArmi;
 
         Candidata(String nome, TipoPersonaggio classe, Function<Personaggio, Arma> costruttore) {
+            this(nome, classe, costruttore, false);
+        }
+
+        Candidata(String nome, TipoPersonaggio classe, Function<Personaggio, Arma> costruttore, boolean conLeArmi) {
             this.nome = nome;
             this.classe = classe;
             this.costruttore = costruttore;
+            this.conLeArmi = conLeArmi;
         }
     }
 
@@ -71,6 +81,8 @@ class AnalisiDanniAbilitaInnateTest {
             new Candidata("Sciame (Druido)", TipoPersonaggio.DRUIDO, Sciame::new),
             new Candidata("Dardo arcano (Mago)", TipoPersonaggio.MAGO, DardoArcano::new),
             new Candidata("Dardo arcano (Elfo)", TipoPersonaggio.ELFO, DardoArcano::new),
+            new Candidata("Martello sacro (Chierico)", TipoPersonaggio.CHIERICO, MartelloSacro::new),
+            new Candidata("Attacco alle spalle (Ladro)", TipoPersonaggio.LADRO, null, true),
             new Candidata("Fulmine pergamena (Mago)", TipoPersonaggio.MAGO, pg -> new com.threeamigos.foresta.incantesimi.Fulmine(pg.getLivello())),
             new Candidata("Fulmine pergamena (Sacerd.)", TipoPersonaggio.SACERDOTE, pg -> new com.threeamigos.foresta.incantesimi.Fulmine(pg.getLivello())));
 
@@ -110,6 +122,9 @@ class AnalisiDanniAbilitaInnateTest {
                 CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO);
         out.printf("%-26s | %6d | %6d%n", "Dardo arcano (Elfo)", CostantiAbilitaInnate.DARDO_ARCANO_DANNI_ELFO,
                 CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO);
+        out.printf("%-26s | %6d | %6d%n", "Martello sacro (Chierico)", CostantiAbilitaInnate.ABILITA_MARTELLO_SACRO_DANNI,
+                CostantiAbilitaInnate.ABILITA_MARTELLO_SACRO_COSTO_LANCIO);
+        out.printf("%-26s | %6s | %6d%n", "Attacco alle spalle (Ladro)", "armi x2", CostantiAbilitaInnate.ABILITA_ATTACCO_ALLE_SPALLE_COSTO_LANCIO);
     }
 
     private void tabellaDellaMagia(PrintStream out) {
@@ -143,6 +158,10 @@ class AnalisiDanniAbilitaInnateTest {
             StringBuilder lanci = new StringBuilder();
             for (Candidata c : CANDIDATE) {
                 if (c.classe == candidata.classe && !c.nome.contains("pergamena")) {
+                    if (c.conLeArmi) {
+                        lanci.append(String.format(java.util.Locale.ROOT, " %s: senza costo di Magia", c.nome.replaceAll(" \\(.*", "")));
+                        continue;
+                    }
                     Personaggio pg = FabbricaPersonaggi.crea(c.classe, 7);
                     lanci.append(String.format(java.util.Locale.ROOT, " %s: %d", c.nome.replaceAll(" \\(.*", ""),
                             (int) (magiaA7 / ((com.threeamigos.foresta.abilita.Abilita) c.costruttore.apply(pg)).getCostoLancio())));
@@ -199,6 +218,23 @@ class AnalisiDanniAbilitaInnateTest {
         }
     }
 
+    /**
+     * Il bastone e il libro per chi li porta (Mago, Sacerdote, Druido); il Ladro porta due spade e la veste, senza elmo (vedi
+     * RegoleEquipaggiamento.puoUsare). Il Chierico e l'Elfo non hanno niente: le loro abilità non dipendono dall'equipaggiamento.
+     */
+    private static void equipaggia(Personaggio pg, TipoPersonaggio classe) {
+        switch (classe) {
+            case LADRO:
+                Equipaggiamento.DUE_SPADE_E_VESTE_SENZA_ELMO.equipaggia(pg);
+                break;
+            case ELFO:
+            case CHIERICO:
+                break;
+            default:
+                Equipaggiamento.BASTONE_LIBRO_E_VESTE.equipaggia(pg);
+        }
+    }
+
     private void tabellaDelLivello(PrintStream out, int livello, boolean equipaggiati) {
         out.printf("%n== %s, LIVELLO %d: danno medio di un colpo a segno sul primo bersaglio, e in %% della sua salute massima media "
                 + "(libro magico = +%d%%, media su %d prove)%n", equipaggiati ? "CON BASTONE E LIBRO VERI (Mago, Sacerdote, Druido)" : "SENZA EQUIPAGGIAMENTO", livello, Math.round((LIBRO_MAGICO - 1.0d) * 100), PROVE);
@@ -216,12 +252,21 @@ class AnalisiDanniAbilitaInnateTest {
                     ModelloDati.installa();
                     ModelloDati.setIstanza(new ModelloDati());
                     Personaggio attaccante = FabbricaPersonaggi.crea(candidata.classe, livello);
-                    if (equipaggiati && candidata.classe != TipoPersonaggio.ELFO) {
-                        Equipaggiamento.BASTONE_LIBRO_E_VESTE.equipaggia(attaccante);
+                    if (equipaggiati) {
+                        equipaggia(attaccante, candidata.classe);
                     }
                     attaccante.addModificatore(new ModificatoreAttributoMD(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
                     Personaggio bersaglio = FabbricaPersonaggi.crea(BERSAGLI.get(b), livello);
                     bersaglio.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 1000));
+                    if (candidata.conLeArmi) {
+                        // Ogni arma del turno (la seconda spada al 40%) con il critico garantito: il colpo è sempre a segno
+                        for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(attaccante, bersaglio)) {
+                            danni[b] += CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, bersaglio, fase.getArma(), fase.getFattore(), true)
+                                    .getDanno();
+                        }
+                        salute[b] += bersaglio.getSaluteMassima();
+                        continue;
+                    }
                     Arma abilita = candidata.costruttore.apply(attaccante);
                     danni[b] += CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, bersaglio, abilita).getDanno();
                     salute[b] += bersaglio.getSaluteMassima();
@@ -239,7 +284,11 @@ class AnalisiDanniAbilitaInnateTest {
                     double mediaSalute = salute[b] / PROVE;
                     out.printf(" %6.0f (%5.0f%%)  |", media, 100.0d * media / mediaSalute);
                 }
-                out.printf(" %4.0f, %5.1f%n", costo, danni[0] / PROVE * fattore / costo);
+                if (costo == 0) {
+                    out.printf(" %4.0f, senza costo%n", costo);
+                } else {
+                    out.printf(" %4.0f, %5.1f%n", costo, danni[0] / PROVE * fattore / costo);
+                }
             }
         }
     }
