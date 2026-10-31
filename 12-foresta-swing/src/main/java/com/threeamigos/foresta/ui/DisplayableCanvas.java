@@ -145,7 +145,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		if (orientamento == ORIENTAMENTO_ORIZZONTALE) {
 			return new Dimension(width, height - dimensioneBarraIcone);
 		}
-		return new Dimension(640, height);
+		return new Dimension(width - dimensioneBarraIcone, height);
 	}
 
 	/**
@@ -1468,6 +1468,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		// AWT segnala entrata e uscita solo per il canvas nel suo complesso: per averle
 		// per singolo riquadro va ricordato su quale si trovava il cursore.
 		private Finestra finestraSottoIlCursore;
+		// La finestra su cui si è premuto il tasto sinistro, se si fa trascinare (vedi Finestra.catturaIlTrascinamento):
+		// finché il tasto resta premuto trascinamento e rilascio vanno a lei, anche fuori dal suo rettangolo
+		private Finestra finestraCheCatturaIlTrascinamento;
 
 		// mouseClicked scatta una volta per ogni click: su un doppio click arrivano quindi
 		// sia un evento con clickCount 1 sia uno con clickCount 2. Il primo va quindi rimandato,
@@ -1647,6 +1650,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			int y = risultatoRicerca.yRelativoAFinestra;
 
 			if (SwingUtilities.isLeftMouseButton(e)) {
+				finestraCheCatturaIlTrascinamento = finestra.catturaIlTrascinamento() ? finestra : null;
 				finestra.processaPressione(x, y, Finestra.Tasto.SINISTRO);
 			} else if (SwingUtilities.isRightMouseButton(e)) {
 				finestra.processaPressione(x, y, Finestra.Tasto.DESTRO);
@@ -1658,6 +1662,16 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
+			if (finestraCheCatturaIlTrascinamento != null && SwingUtilities.isLeftMouseButton(e)) {
+				Finestra finestra = finestraCheCatturaIlTrascinamento;
+				finestraCheCatturaIlTrascinamento = null;
+				Rectangle rettangolo = mappaCoordinateElementiGrafici.get(finestra);
+				finestra.processaRilascio(e.getX() - rettangolo.x, e.getY() - rettangolo.y, Finestra.Tasto.SINISTRO);
+				// Durante il trascinamento nessuno ha seguito il cursore: adesso si stabilisce dove sta
+				aggiornaFinestraSottoIlCursore(trovaFinestra(e), e.getX(), e.getY());
+				repaint();
+				return;
+			}
 			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
 			if (risultatoRicerca == null) {
 				return;
@@ -1692,6 +1706,12 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
+			if (finestraCheCatturaIlTrascinamento != null) {
+				Rectangle rettangolo = mappaCoordinateElementiGrafici.get(finestraCheCatturaIlTrascinamento);
+				finestraCheCatturaIlTrascinamento.processaTrascinamento(e.getX() - rettangolo.x, e.getY() - rettangolo.y);
+				repaint();
+				return;
+			}
 			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
 			// Anche trascinando si può passare da un riquadro all'altro: chi viene lasciato riceve processaUscita
 			aggiornaFinestraSottoIlCursore(risultatoRicerca, e.getX(), e.getY());

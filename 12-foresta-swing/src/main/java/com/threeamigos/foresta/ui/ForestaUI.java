@@ -157,14 +157,14 @@ public class ForestaUI implements Temporizzabile {
 	 * Le dimensioni della finestra di gioco: lo schermo intero, oppure quelle date dalle
 	 * cornici dei riquadri, senza superare lo schermo. Le legge dalle intestazioni dei file
 	 * (DimensioniRisorsa), senza caricare le immagini: la finestra si apre subito, col logo iniziale.
+	 * <p>
+	 * In orizzontale la barra delle icone sta in fondo, in verticale a destra: l'area di contenuto è la stessa, quindi
+	 * la finestra verticale è più larga della barra e più bassa di lei (vedi DisplayableCanvas.calcolaAreaDiContenuto).
 	 */
 	static Dimension calcolaDimensioniFinestra(Orientamento orientamento, boolean tuttoSchermo) {
 		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
 		if (tuttoSchermo) {
 			return new Dimension(screenDimension.width, screenDimension.height);
-		}
-		if (orientamento != Orientamento.ORIZZONTALE) {
-			return new Dimension(Math.min(screenDimension.width, 400), Math.min(screenDimension.height, 640));
 		}
 		Dimension corniceMappa = DimensioniRisorsa.di(ImageCache.RISORSA_CORNICE_MAPPA, LivelloDiZoom.valore());
 		Dimension bosco = DimensioniRisorsa.di(ImageCache.RISORSA_BOSCO, LivelloDiZoom.valore());
@@ -186,6 +186,10 @@ public class ForestaUI implements Temporizzabile {
 				ImageCache.SPACING +
 				TipoIcona.getAltezzaMassima() +
 				ImageCache.SPACING;
+		if (orientamento != Orientamento.ORIZZONTALE) {
+			width += SPESSORE_BARRA_ICONE;
+			height -= SPESSORE_BARRA_ICONE;
+		}
 		return new Dimension(Math.min(width, screenDimension.width), Math.min(height, screenDimension.height));
 	}
 

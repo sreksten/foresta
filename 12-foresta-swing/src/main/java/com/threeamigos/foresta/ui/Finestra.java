@@ -60,6 +60,16 @@ public interface Finestra {
         return false;
     }
 
+    /**
+     * Se, una volta premuto il tasto sinistro su questa finestra, il trascinamento e il rilascio vanno a lei anche
+     * quando il cursore (o il dito) esce dal suo rettangolo, finché il tasto non viene rilasciato. Le coordinate
+     * arrivano allora relative alla finestra ma possono essere negative o oltre i suoi bordi. Serve a chi si fa
+     * trascinare (la barra delle icone): senza, uscendo dalla fascia il gesto andrebbe perso.
+     */
+    default boolean catturaIlTrascinamento() {
+        return false;
+    }
+
     default void processaEntrata(int x, int y) {
 //        System.out.println(getNome() + ": processaEntrata(" + x + ", " + y + ")");
     }

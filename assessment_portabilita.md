@@ -86,9 +86,43 @@ Una UI mobile userà `NotificaUscitaDalGioco` per l'errore fatale e il ciclo di 
 ### Cosa non si sistema con la sola riscrittura
 
 - **Input**: oggi mouse, passaggio del cursore, doppio click e rotella. Sul tocco servono gesti (tocca, tieni premuto, trascina). I cartigli con la descrizione dei comandi vivono del passaggio del cursore, che non c'è: serve un altro gesto.
-- **Layout**: tutte le coordinate sono in pixel assoluti, per una finestra orizzontale (la disposizione verticale c'è, ma solo in parte). Su un telefono, e su iPad, serve un layout nuovo: è lavoro di progetto della schermata, non di codice.
+- **Layout**: tutte le coordinate sono in pixel assoluti, per una finestra orizzontale (la modalità `VERTICALE` è la stessa disposizione con la barra delle icone sul lato destro, non un layout verticale vero). Su un telefono, e su iPad, serve un layout nuovo: è lavoro di progetto della schermata, non di codice.
 - **Modello di disegno**: il codice disegna in modo immediato su `Graphics2D`. In libGDX si disegna con uno `SpriteBatch` (e forme e gradienti con `ShapeRenderer` o texture precalcolate).
 - **Effetti per pixel** (`ConvolveOp`, `RescaleOp`, `SrcIn`, `setRGB`): su GPU diventano shader o operazioni su `Pixmap` all'avvio.
+
+### Dimensioni della finestra e dispositivi
+
+**Oggi** (`ForestaUI.calcolaDimensioniFinestra`, orizzontale, zoom 2,0, finestra non ridimensionabile): la finestra è la somma delle cornici dei riquadri, senza superare lo schermo.
+
+| Elemento | Originale | Zoom 2,0 |
+| :--- | :---: | :---: |
+| `CorniceMappa` | 124×124 | 248×248 |
+| `Foresta` (bosco) | 195×160 | 390×320 |
+| `CorniceGrande` | 184×144 | 368×288 |
+| `CorniceIncantesimi` | 184×72 | 368×144 |
+| Sfondo delle icone | 32×32 | 64×64 |
+
+Larghezza 4+248+4+390+4+368+4 = **1022**, altezza 4+288+4+144+4+288+4+64+4 = **804** (rapporto 1,27). In modalità `VERTICALE` la barra delle icone sta sul lato destro e l'area di contenuto è la stessa dell'orizzontale: `calcolaDimensioniFinestra` dà una finestra più larga e più bassa di `SPESSORE_BARRA_ICONE` (72), e `calcolaAreaDiContenuto` sottrae la barra alla larghezza. La barra scorre in pixel fra due frecce fisse, anche col trascinamento e l'inerzia (vedi `motore_grafico.md` §3).
+
+**Ipotesi di layout per i dispositivi** (non ancora nel codice): si riduce il testo a una striscia sotto il bosco (o quasi lo si toglie) e la mappa diventa un tile come gruppo, missioni e incantesimi. Colonna del bosco (390×320 più la striscia di testo) e due colonne di tile larghe 368 (gruppo e missioni da 288; mappa da 288 e incantesimi da 144), barra icone a tutta larghezza. Larghezza 4+390+4+368+4+368+4 = **1142**, altezza 4+288+4+288+4+64+4 = **656**, rapporto 1,74.
+
+Le misure dei dispositivi sono in punti logici, in orizzontale, approssimate (da verificare sui modelli precisi). La scala è quella con cui il gioco entra intero mantenendo le proporzioni.
+
+| Dispositivo | Schermo (pt) | Gioco | Rapporto schermo | Rapporto gioco | Scala | Gioco scalato (pt) | Icona da 64 → |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| Android piccolo | 800×360 | 1142×656 | 2,22 | 1,74 | 0,55 | 627×360 | 35 pt |
+| iPhone SE (3ª gen.) | 667×375 | 1142×656 | 1,78 | 1,74 | 0,57 | 653×375 | 37 pt |
+| iPhone 15 | 852×393 | 1142×656 | 2,17 | 1,74 | 0,60 | 684×393 | 38 pt |
+| Android tipico | 915×412 | 1142×656 | 2,22 | 1,74 | 0,63 | 717×412 | 40 pt |
+| iPhone 16 Pro Max | 956×440 | 1142×656 | 2,17 | 1,74 | 0,67 | 766×440 | 43 pt |
+| iPad 10,2" | 1080×810 | 1142×656 | 1,33 | 1,74 | 0,95 | 1080×621 | 61 pt |
+| iPad mini | 1133×744 | 1142×656 | 1,52 | 1,74 | 0,99 | 1133×651 | 63 pt |
+| iPad Air/Pro 11" | 1180×820 | 1142×656 | 1,44 | 1,74 | 1,03 | 1180×678 | 66 pt |
+| iPad Pro 13" | 1376×1032 | 1142×656 | 1,33 | 1,74 | 1,21 | 1376×790 | 77 pt |
+
+- **iPad**: il gioco entra a scala circa 1,0, con una fascia nera sopra e sotto.
+- **Telefoni**: il vincolo è l'altezza (656 px su 360–440 pt). Sui rapporti attorno a 2,2 restano bande nere ai lati; la scala va da 0,55 a 0,67.
+- **Bersagli del tocco**: le icone scendono a 35–43 pt, sotto i 44 pt raccomandati da Apple. Si recupera ingrandendo la sola barra icone, o abbassando i tile (per tenere la scala sopra 0,7 serve un'altezza di circa 560 px: tile del gruppo più basso, mappa a 248).
 
 ## Inventario di `Graphics2D`
 
@@ -190,7 +224,7 @@ Fatto: `BozzaTattica` e `TestoTattica` (che non toccavano il toolkit grafico) so
 - Estendere `DipendenzeDalToolkitGraficoTest` quando nascerà il modulo libGDX, e decidere come far convivere Maven e Gradle (moduli Android e iOS).
 - Se si fa lo strato: introdurlo prima dentro Swing, senza cambiare comportamento (il gioco resta funzionante a ogni passo), poi aggiungere il backend libGDX partendo da un riquadro e da una schermata.
 - Un **prototipo libGDX** (un'immagine e la schermata iniziale, su desktop, emulatore Android e simulatore iOS) per misurare le prestazioni: composizione fuori schermo (`createGraphics` in 25 file), atlanti, memoria di `ImageCache` con lo zoom 2,0, thread di precaricamento su Android.
-- **Disegnare il layout** per lo schermo verticale e per il tocco (gesti, sostituto dell'hover, tastiera per `Prompt`).
+- **Disegnare il layout** per il telefono (tile al posto del riquadro mappa, testo ridotto: vedi `porting_libGDX.md` §9) e per il tocco (gesti, sostituto dell'hover, tastiera per `Prompt`). La barra icone ha già il trascinamento con inerzia e la modalità con la colonna a destra.
 - Scrivere il punto d'ingresso della piattaforma (vedi sopra) e adattare gli `Esecutore`/`Temporizzatore`/cartella dei file.
 - Decidere se togliere dal codice il profilo temporaneo di `DisplayableCanvas` e, per iOS, controllare lo stato attuale di MobiVM.
 - Il costo dei `InternoMessaggio` costruiti a ogni passo della macchina a stati è in [`todo.md`](todo.md).

@@ -3,14 +3,16 @@ package com.threeamigos.foresta.ui.barra;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.ui.DisplayableCanvas;
 
-import java.awt.*;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * La barra delle icone come il Dock di macOS: l'icona sotto il cursore si ingrandisce, le vicine un po' meno man
  * mano che si allontanano, e la fila si allarga spingendo di lato le altre. Scelte, pagine e frecce sono quelle di
- * DisplayableCanvasBarraIcone; cambiano solo il disegno e il modo di trovare l'icona sotto il cursore.
+ * DisplayableCanvasBarraIcone, compreso lo scorrimento in pixel, il trascinamento e l'inerzia; cambia solo la
+ * geometria delle icone, ingrandite attorno al cursore. Se le icone scorrono, le frecce ai capi restano della loro
+ * misura e l'effetto vale per le icone della fascia di mezzo, ritagliate ai suoi bordi.
  * <p>
  * Le icone ingrandite escono sopra la barra: la loro geometria si ricalcola a ogni movimento del mouse, e la barra
  * reclama come suoi anche i punti fuori dal suo rettangolo che cadono su un'icona (vedi contiene), così si possono
@@ -87,7 +89,7 @@ public class DisplayableCanvasBarraIconeDock extends DisplayableCanvasBarraIcone
 
 	@Override
 	public boolean inTransizione() {
-		return System.nanoTime() - istanteCambio < DURATA_TRANSIZIONE_NANOS;
+		return System.nanoTime() - istanteCambio < DURATA_TRANSIZIONE_NANOS || super.inTransizione();
 	}
 
 	@Override
@@ -109,6 +111,16 @@ public class DisplayableCanvasBarraIconeDock extends DisplayableCanvasBarraIcone
 	}
 
 	@Override
+	public void processaTrascinamento(int x, int y) {
+		// Trascinando si può uscire dalla barra senza che lo sappia: l'effetto segue il puntatore finché il tasto è premuto
+		if (!cursoreDentro) {
+			cambia(true);
+		}
+		ultimoMouseX = x;
+		super.processaTrascinamento(x, y);
+	}
+
+	@Override
 	public void processaUscita(int x, int y) {
 		if (cursoreDentro) {
 			cambia(false);
@@ -121,37 +133,73 @@ public class DisplayableCanvasBarraIconeDock extends DisplayableCanvasBarraIcone
 	 * (quelle della barra classica), non su quelle ingrandite, altrimenti ogni movimento cambierebbe le distanze che
 	 * lo determinano. La fila allargata si distribuisce attorno al cursore in proporzione a dove cade nella fila di
 	 * base, così l'icona sotto il cursore gli resta sotto; le icone poggiano sul fondo e crescono verso l'alto.
+	 * Gli intervalli fra le icone di base (zero, tranne la prima della fascia che scorre, che può stare sotto la freccia)
+	 * si conservano. Se le icone scorrono, le frecce ai capi non si ingrandiscono e la fila non si tiene dentro la
+	 * barra: sporge ai lati e la ritaglia il disegno.
 	 */
 	private void ricalcola() {
 		rettangoli.clear();
-		if (iconeVisibili.isEmpty()) {
+		int quante = iconeVisibili.size();
+		if (quante == 0) {
 			return;
 		}
-		// Uscendo, finché l'effetto si sgonfia, conta l'ultima posizione del cursore
+		// Cursore e intensità di sempre; uscendo, finché l'effetto si sgonfia, conta l'ultima posizione del cursore
 		int cursoreX = cursoreDentro ? mouseX : ultimoMouseX;
 		double intensita = intensita();
 		boolean attivo = cursoreX >= 0 && intensita > 0.0d;
-		double[] scale = new double[iconeVisibili.size()];
+		boolean conFrecce = isScorrevole();
+		// Le icone che si ingrandiscono: tutte, o quelle fra le due frecce
+		int da = conFrecce ? 1 : 0;
+		int fine = conFrecce ? quante - 1 : quante;
+		if (fine <= da) {
+			for (IconaVisibile icona : iconeVisibili) {
+				rettangoli.add(new Rectangle(icona.rettangolo));
+			}
+			return;
+		}
+		double[] scale = new double[quante];
 		double larghezzaTotale = 0.0d;
-		for (int i = 0; i < scale.length; i++) {
+		for (int i = da; i < fine; i++) {
 			Rectangle base = iconeVisibili.get(i).rettangolo;
 			scale[i] = attivo ? 1.0d + (scala(Math.abs(cursoreX - (base.x + base.width / 2.0d))) - 1.0d) * intensita : 1.0d;
-			larghezzaTotale += base.width * scale[i];
+			larghezzaTotale += base.width * scale[i] + (i > da ? intervalloDiBase(i) : 0.0d);
 		}
-		Rectangle primo = iconeVisibili.get(0).rettangolo;
-		Rectangle ultimo = iconeVisibili.get(iconeVisibili.size() - 1).rettangolo;
+		Rectangle primo = iconeVisibili.get(da).rettangolo;
+		Rectangle ultimo = iconeVisibili.get(fine - 1).rettangolo;
 		double inizioBase = primo.x;
 		double larghezzaBase = ultimo.x + ultimo.width - inizioBase;
 		double quota = attivo ? Math.max(0.0d, Math.min(1.0d, (cursoreX - inizioBase) / larghezzaBase)) : 0.5d;
 		double x = inizioBase - (larghezzaTotale - larghezzaBase) * quota;
-		x = Math.max(0.0d, Math.min(larghezza - larghezzaTotale, x));
-		for (int i = 0; i < scale.length; i++) {
+		if (!conFrecce) {
+			x = Math.max(0.0d, Math.min(larghezza - larghezzaTotale, x));
+		}
+		for (int i = 0; i < quante; i++) {
 			Rectangle base = iconeVisibili.get(i).rettangolo;
+			if (i < da || i >= fine) {
+				rettangoli.add(new Rectangle(base));
+				continue;
+			}
+			if (i > da) {
+				x += intervalloDiBase(i);
+			}
 			int w = (int) Math.round(base.width * scale[i]);
 			int h = (int) Math.round(base.height * scale[i]);
 			rettangoli.add(new Rectangle((int) Math.round(x), base.y + base.height - h, w, h));
 			x += base.width * scale[i];
 		}
+	}
+
+	/**
+	 * Lo spazio, nella fila di base, fra l'icona con questo indice e la precedente
+	 */
+	private double intervalloDiBase(int indice) {
+		Rectangle precedente = iconeVisibili.get(indice - 1).rettangolo;
+		return iconeVisibili.get(indice).rettangolo.x - (precedente.x + precedente.width);
+	}
+
+	@Override
+	void preparaGeometria() {
+		ricalcola();
 	}
 
 	@Override
@@ -165,47 +213,11 @@ public class DisplayableCanvasBarraIconeDock extends DisplayableCanvasBarraIcone
 			return true;
 		}
 		ricalcola();
-		return rettangoli.stream().anyMatch(r -> r.contains(x, y));
-	}
-
-	@Override
-	public void disegna(Graphics2D graphics) {
-		graphics.setColor(Color.black);
-		graphics.fillRect(offsetX, offsetY, larghezza, altezza);
-		ricalcola();
-		// Una copia del contesto: su un Graphics2D nuovo l'hint di interpolazione vale null e non si potrebbe ripristinare
-		Graphics2D icone = (Graphics2D) graphics.create();
-		try {
-			// Pixel netti: niente sfocatura sulle icone ingrandite
-			icone.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-			for (int i = 0; i < rettangoli.size(); i++) {
-				Rectangle r = rettangoli.get(i);
-				int x = offsetX + r.x;
-				int y = offsetY + r.y;
-				icone.drawImage(iconeVisibili.get(i).icona, x, y, r.width, r.height, null);
-				// Un comando in ricarica non si può dare: sotto il cursore non si evidenzia
-				if (r.contains(mouseX, mouseY) && ComandiPossibili.getRicarica(iconeVisibili.get(i).comando) == null) {
-					icone.setColor(mousePremuto ? Color.white : Color.lightGray);
-					icone.drawRect(x, y, r.width - 1, r.height - 1);
-				}
-			}
-		} finally {
-			icone.dispose();
-		}
-		copyright(graphics);
-	}
-
-	@Override
-	public void processaClick(int x, int y, Tasto tasto) {
-		if (tasto != Tasto.SINISTRO) {
-			return;
-		}
-		ricalcola();
 		for (int i = 0; i < rettangoli.size(); i++) {
-			if (rettangoli.get(i).contains(x, y)) {
-				esegui(iconeVisibili.get(i).comando);
-				return;
+			if (rettangoli.get(i).contains(x, y) && (isFreccia(i) || nellaFascia(x, y))) {
+				return true;
 			}
 		}
+		return false;
 	}
 }
