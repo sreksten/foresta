@@ -23,6 +23,7 @@ public final class FabbricaAbilita {
 	static {
 		COSTRUTTORI.put(TipoAbilita.SCACCIARE_I_NON_MORTI, ScacciareINonMorti::new);
 		COSTRUTTORI.put(TipoAbilita.IMPOSIZIONE_DELLE_MANI, ImposizioneDelleMani::new);
+		COSTRUTTORI.put(TipoAbilita.MARTELLO_SACRO, MartelloSacro::new);
 		COSTRUTTORI.put(TipoAbilita.RADICI, Radici::new);
 		COSTRUTTORI.put(TipoAbilita.SCIAME, Sciame::new);
 		COSTRUTTORI.put(TipoAbilita.PELLE_DI_CORTECCIA, PelleDiCorteccia::new);
@@ -30,6 +31,7 @@ public final class FabbricaAbilita {
 		COSTRUTTORI.put(TipoAbilita.ALBA_SACRA, AlbaSacra::new);
 		COSTRUTTORI.put(TipoAbilita.LUCE_DIVINA, LuceDivina::new);
 		COSTRUTTORI.put(TipoAbilita.DARDO_ARCANO, DardoArcano::new);
+		COSTRUTTORI.put(TipoAbilita.ATTACCO_ALLE_SPALLE, AttaccoAlleSpalle::new);
 	}
 
 	public static Abilita crea(TipoAbilita tipo, Personaggio utilizzatore) {

@@ -19,9 +19,10 @@ class AbilitaInnateDiClasseTest {
 	}
 
 	@Test
-	void ilChiericoHaLeSueDueAbilitaEIlDruidoLeSue() {
-		assertEquals(2, nomi(TipoPersonaggio.CHIERICO).size(), nomi(TipoPersonaggio.CHIERICO).toString());
+	void ilChiericoHaLeSueTreAbilitaEIlDruidoLeSue() {
+		assertEquals(3, nomi(TipoPersonaggio.CHIERICO).size(), nomi(TipoPersonaggio.CHIERICO).toString());
 		assertTrue(nomi(TipoPersonaggio.CHIERICA).contains("Imposizione delle mani"));
+		assertTrue(nomi(TipoPersonaggio.CHIERICA).contains("Martello sacro"));
 		assertEquals(4, nomi(TipoPersonaggio.DRUIDO).size(), nomi(TipoPersonaggio.DRUIDO).toString());
 		assertTrue(nomi(TipoPersonaggio.DRUIDA).contains("Pelle di corteccia"));
 	}
@@ -42,9 +43,14 @@ class AbilitaInnateDiClasseTest {
 	}
 
 	@Test
+	void ilLadroHaLAttaccoAlleSpalle() {
+		assertEquals(1, nomi(TipoPersonaggio.LADRO).size());
+		assertEquals("Attacco alle spalle", nomi(TipoPersonaggio.LADRA).get(0));
+	}
+
+	@Test
 	void chiNonHaCapacitaInnateNonNeHaNeppureNelBestiario() {
 		assertTrue(nomi(TipoPersonaggio.GUERRIERO).isEmpty());
-		assertTrue(nomi(TipoPersonaggio.LADRO).isEmpty());
 		assertTrue(nomi(TipoPersonaggio.GOBLIN).isEmpty());
 	}
 

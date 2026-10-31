@@ -69,6 +69,8 @@ public enum PortataAzione {
 			case INCANTESIMO_DI_DANNO:
 			case INCANTESIMO_DEL_REPERTORIO:
 			case DARDO_ARCANO:
+			case ATTACCO_ALLE_SPALLE:
+			case MARTELLO_SACRO:
 				return AVVERSARIO;
 			case RESURREZIONE:
 				return ALLEATO_CADUTO;
@@ -87,6 +89,7 @@ public enum PortataAzione {
 			case POZIONE_MAGIA:
 			case POZIONE_SALUTE_GRANDE:
 			case POZIONE_MAGIA_GRANDE:
+			case POZIONE_PANACEA:
 				return ALLEATO;
 			case CANTO_IPNOTICO:
 			case URLO_DELLA_BANSHEE:

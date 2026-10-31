@@ -304,6 +304,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.ATTESA_POZIONE_SALUTE_GRANDE, this::gestisciComandoInStatoAttesaPozioneSaluteGrande);
 		gestoriComando.put(Stato.ATTESA_POZIONE_MAGIA, this::gestisciComandoInStatoAttesaPozioneMagia);
 		gestoriComando.put(Stato.ATTESA_POZIONE_MAGIA_GRANDE, this::gestisciComandoInStatoAttesaPozioneMagiaGrande);
+		gestoriComando.put(Stato.ATTESA_POZIONE_PANACEA, this::gestisciComandoInStatoAttesaPozionePanacea);
 		gestoriComando.put(Stato.ATTESA_POZIONE_AUMENTO_LIVELLO, this::gestisciComandoInStatoAttesaPozioneAumentoLivello);
 		gestoriComando.put(Stato.SCELTA_FORMULANTE_RESURREZIONE, this::gestisciComandoInStatoSceltaFormulanteResurrezione);
 		gestoriComando.put(Stato.SCELTA_BERSAGLIO_RESURREZIONE, this::gestisciComandoInStatoSceltaBersaglioResurrezione);
@@ -1416,6 +1417,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				statoPrecedente = Stato.ATTESA_POZIONE_MAGIA_GRANDE;
 				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 				return Esito.CONTINUA_CON_INGRESSO;
+			case POZIONE_PANACEA:
+				statoPrecedente = Stato.ATTESA_POZIONE_PANACEA;
+				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+				return Esito.CONTINUA_CON_INGRESSO;
 			case POZIONE_AUMENTO_LIVELLO:
 				statoPrecedente = Stato.ATTESA_POZIONE_AUMENTO_LIVELLO;
 				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
@@ -1519,6 +1524,14 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito gestisciComandoInStatoAttesaPozioneMagiaGrande(Comando comando) {
 		if (comando != null && comando != Comando.ANNULLA) {
 			gruppo.consumaPozioneMagiaGrande(gruppo.getPersonaggio(comando.getIndicePersonaggio()));
+		}
+		stato = Stato.ATTESA_DIREZIONE;
+		return Esito.CONTINUA_CON_INGRESSO;
+	}
+
+	private Esito gestisciComandoInStatoAttesaPozionePanacea(Comando comando) {
+		if (comando != null && comando != Comando.ANNULLA) {
+			gruppo.consumaPozionePanacea(gruppo.getPersonaggio(comando.getIndicePersonaggio()));
 		}
 		stato = Stato.ATTESA_DIREZIONE;
 		return Esito.CONTINUA_CON_INGRESSO;
@@ -2363,6 +2376,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 		if (gruppo.getPozioniMagiaGrande() > 0) {
 			comandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
+		}
+		if (gruppo.getPozioniPanacea() > 0) {
+			comandiPossibili.add(Comando.POZIONE_PANACEA);
 		}
 		if (gruppo.isPozioneAumentoLivelloUtilizzabile()) {
 			comandiPossibili.add(Comando.POZIONE_AUMENTO_LIVELLO);

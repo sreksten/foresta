@@ -461,11 +461,6 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
     int getCaricoMassimo();
 
 	/**
-	 * Se il personaggio può aggiungere l'artefatto al proprio carico senza superare il carico massimo.
-	 */
-    boolean puoPrendere(Artefatto artefatto);
-
-	/**
 	 * Se il personaggio può prendere l'artefatto nel suo equipaggiamento: vuoto se può, altrimenti il motivo
 	 * del rifiuto (troppo carico, slot occupato, pergamena, livello troppo alto, seconda arma non consentita,
 	 * mani occupate o arma a due mani impugnata).

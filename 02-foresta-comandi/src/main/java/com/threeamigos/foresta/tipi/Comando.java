@@ -96,6 +96,8 @@ public enum Comando {
 	// Questi ultimi sono anche abilità innate dei Sacerdoti. In effetti dovrebbero essere abilità innate.
 	ALBA_SACRA,
 	LUCE_DIVINA,
+	ATTACCO_ALLE_SPALLE,
+	MARTELLO_SACRO,
 
 	// Direzione verso la quale muoversi
 	NORD,
@@ -110,6 +112,7 @@ public enum Comando {
 	POZIONE_SALUTE_GRANDE,
 	POZIONE_MAGIA,
 	POZIONE_MAGIA_GRANDE,
+	POZIONE_PANACEA,
 	POZIONE_AUMENTO_LIVELLO,
 	MAPPA,
 	INVENTARIO,

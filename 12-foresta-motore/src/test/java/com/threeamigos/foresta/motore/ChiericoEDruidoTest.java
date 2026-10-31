@@ -230,13 +230,14 @@ class ChiericoEDruidoTest {
     @Test
     void servonoLaMagiaEUnaVoceLibera() {
         Chierico chierico = chierico();
-        assertEquals(Arrays.asList(TipoAbilita.SCACCIARE_I_NON_MORTI, TipoAbilita.IMPOSIZIONE_DELLE_MANI), AbilitaInnate.abilitaPossibili(chierico));
+        assertEquals(Arrays.asList(TipoAbilita.SCACCIARE_I_NON_MORTI, TipoAbilita.IMPOSIZIONE_DELLE_MANI, TipoAbilita.MARTELLO_SACRO), AbilitaInnate.abilitaPossibili(chierico));
         Druido druido = druido();
         assertEquals(Arrays.asList(TipoAbilita.RADICI, TipoAbilita.SCIAME, TipoAbilita.PELLE_DI_CORTECCIA, TipoAbilita.RIGENERAZIONE),
                 AbilitaInnate.abilitaPossibili(druido));
         // Il mago non ha le abilità del chierico e del druido, ma ha il dardo arcano
         assertEquals(Arrays.asList(TipoAbilita.DARDO_ARCANO), AbilitaInnate.abilitaPossibili(new Mago("Merlino", 5)));
-        assertTrue(AbilitaInnate.abilitaPossibili(new Ladro("Pippo", 5)).isEmpty());
+        // Il ladro ha solo l'attacco alle spalle, che non costa Magia
+        assertEquals(Arrays.asList(TipoAbilita.ATTACCO_ALLE_SPALLE), AbilitaInnate.abilitaPossibili(new Ladro("Pippo", 5)));
 
         // Con poca magia si fa solo quello che costa poco
         druido.subMagia(druido.getMagia() - CostantiAbilitaInnate.ABILITA_RADICI_COSTO_LANCIO);
@@ -496,13 +497,13 @@ class ChiericoEDruidoTest {
         Chierico chierico = chierico();
         compagni.aggiungiPersonaggio(chierico);
         avversari.aggiungiPersonaggio(new Goblin(5));
-        // Nessun ferito e nessun non morto: non c'è niente da fare
-        assertEquals(Collections.emptyList(), AbilitaInnate.abilitaUtili(chierico, compagni, avversari));
+        // Nessun ferito e nessun non morto: resta solo il martello sacro, che serve contro chiunque
+        assertEquals(Collections.singletonList(TipoAbilita.MARTELLO_SACRO), AbilitaInnate.abilitaUtili(chierico, compagni, avversari));
         chierico.subSalute(chierico.getSaluteMassima() / 2, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
-        assertEquals(Collections.singletonList(TipoAbilita.IMPOSIZIONE_DELLE_MANI), AbilitaInnate.abilitaUtili(chierico, compagni, avversari));
+        assertEquals(Arrays.asList(TipoAbilita.IMPOSIZIONE_DELLE_MANI, TipoAbilita.MARTELLO_SACRO), AbilitaInnate.abilitaUtili(chierico, compagni, avversari));
         avversari.aggiungiPersonaggio(new Spettro(5));
         List<TipoAbilita> utili = AbilitaInnate.abilitaUtili(chierico, compagni, avversari);
-        assertEquals(Arrays.asList(TipoAbilita.SCACCIARE_I_NON_MORTI, TipoAbilita.IMPOSIZIONE_DELLE_MANI), utili);
+        assertEquals(Arrays.asList(TipoAbilita.SCACCIARE_I_NON_MORTI, TipoAbilita.IMPOSIZIONE_DELLE_MANI, TipoAbilita.MARTELLO_SACRO), utili);
     }
 
     // --- La scelta iniziale: chierico e druido come le altre classi, con o senza modalità di prova

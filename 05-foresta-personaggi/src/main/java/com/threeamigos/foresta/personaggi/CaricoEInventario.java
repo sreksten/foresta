@@ -37,10 +37,6 @@ final class CaricoEInventario {
 		return md().getArtefatti().stream().mapToDouble(ArtefattoMD::getPeso).sum();
 	}
 
-	boolean puoPrendere(Artefatto artefatto) {
-		return puoPrendere(artefatto.getPeso());
-	}
-
 	Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> puoEquipaggiare(Artefatto artefatto) {
 		RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento esitoControlloRichiestaEquipaggiamento = RegoleEquipaggiamento.valuta(p, artefatto.getModelloDati());
 		if (esitoControlloRichiestaEquipaggiamento.getMotivo() != null) {

@@ -131,6 +131,26 @@ public final class CostantiAbilitaInnate {
 
     public static final int DARDO_ARCANO_RICARICA = 2;
 
+    /**
+     * Il martello sacro del Chierico: un colpo di danno SACRO su un solo avversario (il doppio contro i non morti, per la regola di categoria del SACRO).
+     */
+    public static final int ABILITA_MARTELLO_SACRO_COSTO_LANCIO = 3;
+
+    public static final int ABILITA_MARTELLO_SACRO_RICARICA = 2;
+
+    public static final int ABILITA_MARTELLO_SACRO_DANNI = 30;
+
+    /**
+     * L'attacco alle spalle del Ladro: un colpo con le armi che va sempre a segno ed è sempre un critico, mentre due compagni distraggono gli avversari. Non costa
+     * Magia (il Ladro ne ha poca) e si può rifare solo dopo qualche turno; servono almeno tre personaggi nel gruppo.
+     */
+    public static final int ABILITA_ATTACCO_ALLE_SPALLE_COSTO_LANCIO = 0;
+
+    public static final int ABILITA_ATTACCO_ALLE_SPALLE_RICARICA = 3;
+
+    /** Quanti personaggi vivi servono nel gruppo: tre (due distraggono gli avversari e il Ladro colpisce alle spalle) */
+    public static final int ABILITA_ATTACCO_ALLE_SPALLE_PERSONAGGI_MINIMI = 3;
+
     private CostantiAbilitaInnate() {
     }
 }

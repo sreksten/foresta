@@ -216,6 +216,42 @@ public abstract class Gruppo implements VistaGruppo {
 				" ha bevuto una pozione che recupera e fa aumentare la magia massima!"));
 	}
 
+	public final int getPozioniPanacea() {
+		return getGruppoMD().getPozioniPanacea();
+	}
+
+	/**
+	 * Aggiunge panacee alle scorte; il gruppo del giocatore lo annuncia alla UI.
+	 */
+	public final void addPozioniPanacea(int quantita) {
+		int valorePrecedente = getGruppoMD().getPozioniPanacea();
+		int valoreAttuale = valorePrecedente + quantita;
+		getGruppoMD().setPozioniPanacea(valoreAttuale);
+		if (isGruppoGiocatore()) {
+			BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniPanacea(valorePrecedente, valoreAttuale));
+		}
+	}
+
+	/**
+	 * Toglie panacee dalle scorte.
+	 */
+	public final void subPozioniPanacea(int quantita) {
+		addPozioniPanacea(-quantita);
+	}
+
+	/**
+	 * Fa bere a quel personaggio una panacea: ne toglie una dalle scorte e gli toglie tutti gli effetti di stato
+	 * negativi (quelli benefici restano).
+	 */
+	public final void consumaPozionePanacea(Personaggio personaggio) {
+		subPozioniPanacea(1);
+		personaggio.rimuoviGliEffettiDiStatoNegativi();
+		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
+				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+				" ha bevuto una panacea che toglie gli effetti di stato negativi."));
+	}
+
 	public final int getPozioniAumentoLivello() {
 		return getGruppoMD().getPozioniAumentoLivello();
 	}

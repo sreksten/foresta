@@ -382,6 +382,15 @@ public class CalcolatoreCombattimento {
      *                principale, meno per la seconda arma
      */
     public static DannoRisultante calcolaDannoRisultante(Personaggio attaccante, Personaggio difensore, Arma arma, double fattore) {
+        return calcolaDannoRisultante(attaccante, difensore, arma, fattore, false);
+    }
+
+    /**
+     * Come {@link #calcolaDannoRisultante(Personaggio, Personaggio, Arma, double)}, ma il colpo può essere un critico sicuro (l'attacco alle spalle del Ladro).
+     *
+     * @param criticoGarantito se il colpo è sempre un critico, senza il tiro del dado
+     */
+    public static DannoRisultante calcolaDannoRisultante(Personaggio attaccante, Personaggio difensore, Arma arma, double fattore, boolean criticoGarantito) {
 
         DannoRisultante dannoRisultante = new DannoRisultante(attaccante, difensore);
         TipoDanno tipoDanno = arma.getTipoDanno();
@@ -640,7 +649,7 @@ public class CalcolatoreCombattimento {
 
         double tiroDadoCritico = Dado.tira(100);
         Logger.log(() -> "tiroDadoCritico: " + tiroDadoCritico);
-        if (tiroDadoCritico <= probabilitaCritico || criticoAutomatico) {
+        if (tiroDadoCritico <= probabilitaCritico || criticoAutomatico || criticoGarantito) {
             // Il colpo critico raddoppia il danno finale calcolato
             dannoTotaleCombinato = dannoTotaleCombinato * 2.0d;
             if (Logger.isAttivo()) {

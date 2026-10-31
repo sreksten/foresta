@@ -212,6 +212,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		md.setPozioniSaluteGrande(0);
 		md.setPozioniMagia(0);
 		md.setPozioniMagiaGrande(0);
+		md.setPozioniPanacea(0);
 		md.setPozioniAumentoLivello(0);
 	}
 
@@ -392,6 +393,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		subPozioniSaluteGrande(calcolaPerdita.apply(md.getPozioniSaluteGrande()));
 		subPozioniMagia(calcolaPerdita.apply(md.getPozioniMagia()));
 		subPozioniMagiaGrande(calcolaPerdita.apply(md.getPozioniMagiaGrande()));
+		subPozioniPanacea(calcolaPerdita.apply(md.getPozioniPanacea()));
 		subPozioniAumentoLivello(calcolaPerdita.apply(md.getPozioniAumentoLivello()));
 
 		getPersonaggiVivi().forEach(Personaggio::fugge);

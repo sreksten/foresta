@@ -142,12 +142,12 @@ Le abilità costano `MAGIA`, non consumano pergamene, occupano il turno e compai
 | Classe | Abilità innate | Magia al liv. 7 | Lanci a magia piena | Bersagli | Quando le usa la tattica predefinita |
 | :--- | :--- | ---: | :--- | :--- | :--- |
 | Guerriero | nessuna (lo stato `BERSERK` fa crescere il danno fisico con la salute persa, fino a +50%, e dipende dalla furia ×1,5) | 34 | – | – | – |
-| Ladro | nessuna | 44 | – | – | – |
+| Ladro | Attacco alle spalle (senza Magia, ricarica 3, solo con almeno tre personaggi vivi nel gruppo) | 44 | – | uno | sul più forte, quando c'è e il gruppo è abbastanza grande; altrimenti come prima (finisce i feriti, poi il più ferito) |
 | Mago | Dardo arcano | 143 | 71 | uno | sui feriti sotto il 40% (colpo più economico che basta) e sul più forte quando non ha una pergamena adatta; il Silenzio sui maghi avversari ha la precedenza |
 | Elfo | Dardo arcano (cresce con il livello) | 98 | 24 | uno | sui maghi avversari e sul più ferito, ma solo se rende più dell'attacco con le armi |
 | Bardo | Canto curativo, canto ipnotico, canto di valore, Urlo della Banshee (dopo `IlViaggioDellaMoglie`) | 84 | 21 / 28 / 16 / 14 | alleato più ferito; fino a 4 avversari; tutto il gruppo; fino a 4 avversari | il curativo sotto il 60% di salute, il valore se c'è chi non è ispirato, ipnotico e urlo contro più avversari |
 | Sacerdote | Alba sacra, Luce divina | 98 | 19 / 9 | tutto il gruppo; fino a 4 avversari (e i non morti alleati) | l'alba con almeno due alleati con uno stato negativo, dopo il terzo round; la luce solo sui non morti |
-| Chierico | Scacciare i non morti, Imposizione delle mani | 64 | 16 / 12 | fino a 3 non morti; alleato più ferito | l'imposizione sul più ferito sotto il 50% di salute (anche gli ospiti); scacciare i non morti sul primo avversario; poi la mazza sul più ferito |
+| Chierico | Scacciare i non morti, Imposizione delle mani, Martello sacro (3 di magia, ricarica 2) | 64 | 16 / 12 / 21 | fino a 3 non morti; alleato più ferito; un avversario | l'imposizione sul più ferito sotto il 50% di salute (anche gli ospiti); scacciare i non morti sul primo avversario; il martello sacro sul più forte; poi la mazza sul più ferito |
 | Druido | Radici, Sciame, Pelle di corteccia, Rigenerazione | 88 | 29 / 29 / 17 / 22 | fino a 4 avversari; fino a 4 avversari; tutto il gruppo; un alleato | la rigenerazione sul più ferito sotto il 70%, la pelle di corteccia subito dopo, radici e sciame sul primo avversario; poi un incantesimo o il bastone sul più ferito |
 
 | Classe | Abilità | Costo (magia) | Ricarica (turni) | Effetto |
@@ -155,6 +155,7 @@ Le abilità costano `MAGIA`, non consumano pergamene, occupano il turno e compai
 | Mago, Elfo | Dardo arcano | 4 (Mago), 6 (Elfo) | 2 | Danno `ARCANO` a **un solo** bersaglio: base 20 (Mago) o 15 più 4 per ogni livello oltre il primo (Elfo: 31 al livello 5, 39 al livello 7), poi livello, intelligenza, potere magico e bonus del libro |
 | Sacerdote | Alba sacra | 5 | 4 | Toglie al gruppo gli effetti di stato negativi e i modificatori temporanei (compreso `ISPIRATO`) |
 | Sacerdote | Luce divina | 4 | 4 | Danno `SACRO` (base 35) a più avversari, il doppio ai non morti; investe anche i non morti del proprio gruppo (lo Scheletro della Mietitura), che le cure non guariscono. Il Gargoyle di pietra non la sente |
+| Chierico | Martello sacro | 3 | 2 | `SACRO` su un avversario (danno base 30), il doppio sui non morti; accecamento possibile (effetto nativo del SACRO) |
 | Chierico | Scacciare i non morti | 4 | 4 | `SPAVENTATO` a fino a `NUMERO_BERSAGLI` non morti, con la soggezione contro il coraggio; non serve contro chi è già spaventato o immune (Scheletro e Lich lo sono) |
 | Chierico | Imposizione delle mani | 5 | 4 | Cura il più ferito di 20 × √livello, aumentata dalla saggezza (÷50) |
 | Druido | Radici | 3 | 4 | Danno di `TERRA` (base 40) a più avversari; `IMMOBILIZZATO` o `ACCECATO` |

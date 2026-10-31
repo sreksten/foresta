@@ -24,6 +24,10 @@ final class TestoAzioneInCombattimento {
 				return bersaglio == null ? "Lancia un incantesimo" : "Lancia un incantesimo contro" + su;
 			case DARDO_ARCANO:
 				return bersaglio == null ? "Lancia il Dardo Arcano" : "Lancia il Dardo Arcano contro" + su;
+			case MARTELLO_SACRO:
+				return bersaglio == null ? "Abbatte il Martello sacro" : "Abbatte il Martello sacro su" + su;
+			case ATTACCO_ALLE_SPALLE:
+				return bersaglio == null ? "Attacca alle spalle" : "Attacca alle spalle" + su;
 			case RESURREZIONE:
 				return bersaglio == null ? "Lancia la Resurrezione" : "Resuscita" + su;
 			case ALBA_SACRA:
@@ -54,6 +58,7 @@ final class TestoAzioneInCombattimento {
 			case POZIONE_SALUTE_GRANDE:
 			case POZIONE_MAGIA:
 			case POZIONE_MAGIA_GRANDE:
+			case POZIONE_PANACEA:
 				return (bersaglio == null || bersaglio == attore ? "Beve una " : "Dà a" + su + " una ") + azione.getDescrizione();
 			case CAMBIA_ARMA:
 				return "Cambia arma";

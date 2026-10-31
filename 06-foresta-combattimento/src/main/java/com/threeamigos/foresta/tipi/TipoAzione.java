@@ -43,6 +43,10 @@ public enum TipoAzione {
 	INCANTESIMO_DEL_REPERTORIO,
 	/** L'attacco magico di base, con danno arcano */
 	DARDO_ARCANO,
+	/** L'abilità del Ladro: un colpo con le armi che va sempre a segno ed è sempre un critico (vedi TipoAbilita) */
+	ATTACCO_ALLE_SPALLE,
+	/** L'abilità del Chierico: un colpo di danno sacro su un avversario, il doppio contro i non morti (vedi TipoAbilita) */
+	MARTELLO_SACRO,
 	RESURREZIONE(TipoIncantesimo.RESURREZIONE),
 	/** L'abilità del Sacerdote che toglie al gruppo gli stati negativi (vedi TipoAbilita) */
 	ALBA_SACRA,
@@ -74,6 +78,8 @@ public enum TipoAzione {
 	POZIONE_SALUTE_GRANDE,
 	/** Dà a un alleato una pozione della magia grande */
 	POZIONE_MAGIA_GRANDE,
+	/** Dà a un alleato una panacea, che gli toglie gli effetti di stato negativi */
+	POZIONE_PANACEA,
 	/** Cambia l'arma impugnata con quella del tipo di danno indicato dall'azione */
 	CAMBIA_ARMA;
 

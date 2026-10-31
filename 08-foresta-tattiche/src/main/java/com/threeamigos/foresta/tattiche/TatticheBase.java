@@ -419,6 +419,8 @@ public final class TatticheBase {
 	private static TatticaMD ladro() {
 		return tattica(
 				pozioniDiSalute(30, false),
+				voce("Attacco alle spalle sul più forte", su(TipoRosa.AVVERSARI, TipoOrdinamento.LIVELLO_PIU_ALTO), condizioni(null),
+						AzioneMD.di(TipoAzione.ATTACCO_ALLE_SPALLE), attacco()),
 				voce("Finisce i feriti", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE, sotto(50)), condizioni(null), attacco()),
 				voce("Attacca il più ferito", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), attacco()));
 	}
@@ -493,6 +495,7 @@ public final class TatticheBase {
 						AzioneMD.di(TipoAzione.IMPOSIZIONE_DELLE_MANI)),
 				voce("Scacciare i non morti", su(TipoRosa.AVVERSARI, TipoOrdinamento.PRIMO), condizioni(null), AzioneMD.di(TipoAzione.SCACCIARE_I_NON_MORTI)),
 				pozioniDiMagia(15),
+				voce("Martello sacro sul più forte", su(TipoRosa.AVVERSARI, TipoOrdinamento.LIVELLO_PIU_ALTO), condizioni(null), AzioneMD.di(TipoAzione.MARTELLO_SACRO), attacco()),
 				voce("Colpisce il più ferito", su(TipoRosa.AVVERSARI, TipoOrdinamento.MENO_SALUTE), condizioni(null), attacco()));
 	}
 

@@ -269,6 +269,10 @@ public enum TipoEvento {
      */
     NOTIFICA_VARIAZIONE_DISPONIBILITA_POZIONI_SALUTE_GRANDI,
     /**
+     * Variazione della quantità di panacee disponibili
+     */
+    NOTIFICA_VARIAZIONE_DISPONIBILITA_POZIONI_PANACEA,
+    /**
      * Variazione della quantità di pozioni magia disponibili
      */
     NOTIFICA_VARIAZIONE_DISPONIBILITA_POZIONI_MAGIA,

@@ -166,7 +166,6 @@ class ProgressioneEInventarioTest {
         p.addArtefatto(spada);
         assertEquals(vuoto + spada.getPeso(), p.getCarico(), 1e-9);
         assertTrue(p.getCaricoMassimo() > 0);
-        assertTrue(p.puoPrendere(spada()));
         assertTrue(p.puoPrendere(1.0d));
         assertFalse(p.puoPrendere(1000000.0d));
         assertEquals(1, p.getInventario().size());

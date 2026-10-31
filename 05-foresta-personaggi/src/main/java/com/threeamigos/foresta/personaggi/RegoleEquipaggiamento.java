@@ -21,13 +21,13 @@ import java.util.*;
  * Regole a slot per l'equipaggiamento di un personaggio (vedi artefatti_e_incantamenti.md, §2 "Equipaggiamento"):
  * al massimo un artefatto per testa, corpo e ciascuna mano, accessori senza limite, pergamene mai,
  * arma in mano secondaria solo per Ladro/Ladra ed Elfo/Elfa, armi a due mani solo con entrambe le mani libere.
- * Ogni classe giocabile usa solo le armi, lo scudo, il libro e l'armatura adatti a lei ({@link #puoUsare}): il Ladro, il Mago e il Sacerdote, per esempio, non portano armature.
+ * Ogni classe giocabile usa solo le armi, lo scudo, il libro e l'armatura adatti a lei ({@link #puoUsare}): il Ladro, il Mago e il Sacerdote, per esempio, non portano armature, e il Mago e il Sacerdote nemmeno l'elmo.
  * Peso e FORZA per l'armatura non sono controllati qui, ma in {@link PersonaggioBase#puoEquipaggiare}.
  */
 public final class RegoleEquipaggiamento {
 
 	// Armi, scudo, libro e armatura che ogni classe giocabile usa (vedi artefatti_e_incantamenti.md, §2,
-	// "Equipaggiamento secondo la classe"). Elmo, vesti e accessori li portano tutti. L'armatura la portano tutti
+	// "Equipaggiamento secondo la classe"). Vesti e accessori li portano tutti, e l'elmo tutti tranne il Mago e il Sacerdote. L'armatura la portano tutti
 	// tranne il Ladro, che non la usa mai (agisce con la destrezza), il Mago (la magia non si fa in armatura) e il
 	// Sacerdote (un sacerdote in armatura è il Chierico); chi
 	// può portarla chiede una FORZA minima.
@@ -230,10 +230,13 @@ public final class RegoleEquipaggiamento {
 	}
 
 	/**
-	 * @return true se la classe sa usare quel tipo di artefatto. La tabella vale per armi, scudo e libro:
-	 * tutto il resto lo possono portare tutti.
+	 * @return true se la classe sa usare quel tipo di artefatto. La tabella vale per armi, scudo, libro e armatura; l'elmo lo portano tutti tranne
+	 * il Mago e il Sacerdote (le forme femminili comprese); il resto lo possono portare tutti.
 	 */
 	public static boolean puoUsare(TipoPersonaggio classe, TipoArtefatto tipo) {
+		if (tipo == TipoArtefatto.ELMO) {
+			return !isSenzaElmo(classe);
+		}
 		boolean daTabella = tipo.getCategoria() == CategoriaArtefatto.ARMA || tipo == TipoArtefatto.SCUDO
 				|| tipo == TipoArtefatto.LIBRO_MAGICO || tipo == TipoArtefatto.ARMATURA;
 		if (!daTabella) {
@@ -241,6 +244,14 @@ public final class RegoleEquipaggiamento {
 		}
 		Set<TipoArtefatto> ammessi = ammessi(classe);
 		return ammessi == null || ammessi.contains(tipo);
+	}
+
+	/**
+	 * Il Mago e il Sacerdote non portano l'elmo: non sta bene in testa a chi vive di magia e di preghiera.
+	 */
+	private static boolean isSenzaElmo(TipoPersonaggio classe) {
+		return classe == TipoPersonaggio.MAGO || classe == TipoPersonaggio.MAGA
+				|| classe == TipoPersonaggio.SACERDOTE || classe == TipoPersonaggio.SACERDOTESSA;
 	}
 
 	private static Set<TipoArtefatto> ammessi(TipoPersonaggio classe) {

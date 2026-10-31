@@ -485,7 +485,7 @@ public class FinestraDiProva {
                 case COFANO_ESITO:
                     return new Object[]{"0 - niente", "1 - pergamena con un incantesimo", "2 - pergamena con tre incantesimi",
                             "3 - pozione della salute", "4 - pozione della salute grande", "5 - pozione della magia",
-                            "6 - monete", "7 - pietre preziose"};
+                            "6 - panacea", "7 - monete", "8 - pietre preziose"};
                 case COFANO_OGGETTO:
                     return strumenti.getOggettiSpeciali().toArray();
                 default:

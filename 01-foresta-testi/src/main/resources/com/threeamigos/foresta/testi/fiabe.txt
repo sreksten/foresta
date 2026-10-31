@@ -206,38 +206,6 @@ ISTANTE_PRECISO
     mentre maneggiava una nota delle tasse non pagata
     in un momento di assoluta disperazione economica
 
-ISTANTE_PRECISO_OOP
-    durante una videochiamata di lavoro
-    durante una noiosa riunione di lavoro
-    durante le vacanze estive
-    durante le vacanze natalizie
-    a Pasqua
-    mentre il traffico rendeva tutti nervosi
-    mentre aspettava l'autobus
-    durante la fila alla cassa del supermercato
-    nell'intervallo di una partita di calcio
-    mentre scorreva distrattamente il telefono
-    durante un ingorgo sull'autostrada
-    nell'attesa di un treno in ritardo
-    mentre guardava la partita in televisione
-    nell'attesa dei risultati di un esame
-    mentre aspettava la pizza a domicilio
-    mentre cercava parcheggio in centro
-    poco prima di un colloquio di lavoro
-    nell'attesa del risultato di una partita
-    mentre controllava la posta elettronica
-    durante una riunione di condominio
-    nell'attesa di un aggiornamento software
-    in attesa dell'ascensore
-    mentre guardava le notizie della sera
-    durante un allenamento in palestra
-    poco prima dell'inizio dei saldi
-    mentre aspettava il risultato di un tampone
-    durante una fila alla posta
-    mentre pagava le bollette online
-    durante una serata di zapping tra i canali
-    durante un giorno di smart working
-
 TEMPO_PROEMIO_SURREALISTA
     quando i mulini erano bianchi
     quando le nuvole erano fatte di zucchero filato

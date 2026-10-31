@@ -20,14 +20,30 @@ public final class AbilitaInnate {
 	}
 
 	/**
-	 * @return true se la classe ha almeno un'abilità innata (Chierico, Druido, Sacerdote, Mago, Elfo e le loro forme femminili)
+	 * @return true se la classe ha almeno un'abilità innata (Chierico, Druido, Sacerdote, Mago, Elfo, Ladro e le loro forme femminili)
 	 */
 	public static boolean conosciutaDa(TipoPersonaggio classe) {
-		return isDelChierico(classe) || isDelDruido(classe) || isDelSacerdote(classe) || isDelDardo(classe);
+		return isDelChierico(classe) || isDelDruido(classe) || isDelSacerdote(classe) || isDelDardo(classe) || isDelLadro(classe);
 	}
 
 	private static boolean isDelSacerdote(TipoPersonaggio classe) {
 		return classe == TipoPersonaggio.SACERDOTE || classe == TipoPersonaggio.SACERDOTESSA;
+	}
+
+	/**
+	 * @return true se la classe ha almeno un'abilità innata che costa Magia (tutte tranne l'attacco alle spalle del ladro): chi la usa fa magie
+	 */
+	public static boolean conosciutaDaPerMagia(TipoPersonaggio classe) {
+		for (TipoAbilita tipo : TipoAbilita.values()) {
+			if (tipo.getCostoLancio() > 0 && conosciutaDa(classe, tipo)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean isDelLadro(TipoPersonaggio classe) {
+		return classe == TipoPersonaggio.LADRO || classe == TipoPersonaggio.LADRA;
 	}
 
 	private static boolean isDelDardo(TipoPersonaggio classe) {
@@ -43,19 +59,22 @@ public final class AbilitaInnate {
 	}
 
 	/**
-	 * Se la classe conosce quell'abilità: Scacciare i non morti e Imposizione delle mani sono del chierico, l'alba sacra e la luce divina sono del sacerdote, il dardo arcano è di Mago ed
-	 * Elfo, le altre del druido.
+	 * Se la classe conosce quell'abilità: Scacciare i non morti, Imposizione delle mani e Martello sacro sono del chierico, l'alba sacra e la luce divina sono del sacerdote, il dardo arcano è di Mago ed
+	 * Elfo, l'attacco alle spalle è del ladro, le altre del druido.
 	 */
 	public static boolean conosciutaDa(TipoPersonaggio classe, TipoAbilita tipo) {
 		switch (tipo) {
 			case SCACCIARE_I_NON_MORTI:
 			case IMPOSIZIONE_DELLE_MANI:
+			case MARTELLO_SACRO:
 				return isDelChierico(classe);
 			case ALBA_SACRA:
 			case LUCE_DIVINA:
 				return isDelSacerdote(classe);
 			case DARDO_ARCANO:
 				return isDelDardo(classe);
+			case ATTACCO_ALLE_SPALLE:
+				return isDelLadro(classe);
 			default:
 				return isDelDruido(classe);
 		}
@@ -156,6 +175,8 @@ public final class AbilitaInnate {
 				return gruppo.piuFerito().isPresent();
 			case RIGENERAZIONE:
 				return daRigenerare(gruppo).isPresent();
+			case ATTACCO_ALLE_SPALLE:
+				return AttaccoAlleSpalle.isGruppoAbbastanzaGrande(gruppo);
 			default:
 				return true;
 		}

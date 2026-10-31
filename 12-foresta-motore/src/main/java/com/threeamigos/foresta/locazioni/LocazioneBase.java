@@ -169,6 +169,7 @@ public abstract class LocazioneBase implements Locazione {
 		CHI_BEVE_POZIONE_SALUTE_GRANDE,
 		CHI_BEVE_POZIONE_MAGIA,
 		CHI_BEVE_POZIONE_MAGIA_GRANDE,
+		CHI_BEVE_POZIONE_PANACEA,
 		CHI_BEVE_POZIONE_AUMENTO_LIVELLO,
 		CHI_FORMULA,
 		QUALE_FORMULA,
@@ -438,6 +439,7 @@ public abstract class LocazioneBase implements Locazione {
 			case CHI_BEVE_POZIONE_SALUTE_GRANDE:
 			case CHI_BEVE_POZIONE_MAGIA:
 			case CHI_BEVE_POZIONE_MAGIA_GRANDE:
+			case CHI_BEVE_POZIONE_PANACEA:
 			case CHI_BEVE_POZIONE_AUMENTO_LIVELLO:
 				return true;
 			default:
@@ -459,6 +461,7 @@ public abstract class LocazioneBase implements Locazione {
 			case POZIONE_SALUTE_GRANDE:
 			case POZIONE_MAGIA:
 			case POZIONE_MAGIA_GRANDE:
+			case POZIONE_PANACEA:
 			case POZIONE_AUMENTO_LIVELLO:
 				return true;
 			default:
@@ -518,6 +521,7 @@ public abstract class LocazioneBase implements Locazione {
 			case CHI_BEVE_POZIONE_SALUTE_GRANDE:
 			case CHI_BEVE_POZIONE_MAGIA:
 			case CHI_BEVE_POZIONE_MAGIA_GRANDE:
+			case CHI_BEVE_POZIONE_PANACEA:
 			case CHI_BEVE_POZIONE_AUMENTO_LIVELLO:
 			case QUALE_FORMULA:
 			case SU_CHI_FORMULA:
@@ -648,6 +652,16 @@ public abstract class LocazioneBase implements Locazione {
 					return annullaScelta();
 				}
 				gruppo.consumaPozioneMagiaGrande(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
+				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
+				return dopoUnaPozione(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
+
+			case CHI_BEVE_POZIONE_PANACEA:
+				Logger.log("LocazioneBase.CHI_BEVE_POZIONE_PANACEA");
+				statoLocazione = StatoLocazione.IN_LOCAZIONE;
+				if (azione == Comando.ANNULLA) {
+					return annullaScelta();
+				}
+				gruppo.consumaPozionePanacea(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
 				return dopoUnaPozione(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 
@@ -1128,6 +1142,9 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		if (qualcunoPuoAgire && gruppo.getPozioniMagiaGrande() > 0) {
 			comandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
+		}
+		if (qualcunoPuoAgire && gruppo.getPozioniPanacea() > 0) {
+			comandiPossibili.add(Comando.POZIONE_PANACEA);
 		}
 		if (qualcunoPuoAgire && gruppo.isPozioneAumentoLivelloUtilizzabile()) {
 			comandiPossibili.add(Comando.POZIONE_AUMENTO_LIVELLO);
@@ -1788,6 +1805,18 @@ public abstract class LocazioneBase implements Locazione {
 				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}
+		if (azione == Comando.POZIONE_PANACEA) {
+			if (chiPuoAgire().size() > 1) {
+				// Bere interrompe la mischia (come l'incantesimo): la sua finestra si chiude
+				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
+				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_PANACEA;
+				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+			} else {
+				Personaggio unico = chiPuoAgire().get(0);
+				gruppo.consumaPozionePanacea(unico);
+				return dopoUnaPozioneNellaMischia(unico);
+			}
+		}
 		if (azione == Comando.POZIONE_AUMENTO_LIVELLO) {
 			if (chiPuoAgire().size() > 1) {
 				// Bere interrompe la mischia (come l'incantesimo): la sua finestra si chiude
@@ -1868,6 +1897,10 @@ public abstract class LocazioneBase implements Locazione {
 
 				case POZIONE_MAGIA_GRANDE:
 					statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA_GRANDE;
+					return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+
+				case POZIONE_PANACEA:
+					statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_PANACEA;
 					return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
 				case POZIONE_AUMENTO_LIVELLO:

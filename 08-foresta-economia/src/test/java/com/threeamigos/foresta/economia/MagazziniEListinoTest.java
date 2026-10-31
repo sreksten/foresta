@@ -179,7 +179,7 @@ class MagazziniEListinoTest {
     void ilListinoHaGliIncantesimiLePozioniELeMappe() {
         aggiungi(new Guerriero("Arsenio", 3));
         List<? extends VistaOffertaConsumabile> elenco = OfferteAlchimista.elenco(gruppo);
-        assertEquals(TipoIncantesimo.values().length + 4 + 1 + 2, elenco.size());
+        assertEquals(TipoIncantesimo.values().length + 5 + 1 + 2, elenco.size());
         for (VistaOffertaConsumabile offerta : elenco) {
             assertNotNull(offerta.getNome());
             assertNotNull(offerta.getDescrizione());

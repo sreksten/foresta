@@ -637,11 +637,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public boolean puoPrendere(Artefatto artefatto) {
-		return caricoEInventario.puoPrendere(artefatto);
-	}
-
-	@Override
 	public Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> puoEquipaggiare(Artefatto artefatto) {
 		return caricoEInventario.puoEquipaggiare(artefatto);
 	}
@@ -1032,39 +1027,6 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public abstract double getMoltiplicatoreStanchezza();
 
-	public double calcolaStanchezza() {
-		// Per calcolare quanta stanchezza accumula un personaggio alla fine di un turno di combattimento, dobbiamo
-		// guardare alla sua capacità di tollerare lo sforzo:
-		// COSTITUZIONE (Peso Maggiore - 80%): La tempra biologica e la riserva di salute. Più è alta, più il corpo
-		// recupera rapidamente e resiste alla fatica.
-		// FORZA (Peso Minore - 20%): La potenza muscolare. Un corpo forte fa meno fatica a compiere movimenti
-		// atletici pesanti.
-		final double COEFFICIENTE_COSTITUZIONE = 0.80;
-		final double COEFFICIENTE_FORZA = 0.20;
-
-		// Calcolo del valore grezzo con Diminishing Returns
-		double numeroGrezzo = (COEFFICIENTE_COSTITUZIONE * Math.sqrt(get(TipoAttributo.COSTITUZIONE))) +
-				(COEFFICIENTE_FORZA * Math.sqrt(get(TipoAttributo.FORZA)));
-
-		//FIXME
-		/*
-		1) Turno di Combattimento Fisico Base: 5.0
-		Rappresenta lo standard. Un fendente di spada, una parata reattiva o uno scatto di posizionamento. È lo sforzo muscolare regolare a cui un guerriero è addestrato.
-		2) Lancio di un Incantesimo Base (Utility / Trucchetto): 3.0
-		Piccole magie che richiedono pochissima concentrazione (es. accendere una luce, un piccolo dardo magico, una cura minore). Stanca meno di un turno di legnate fisiche.
-		3) Lancio di un Incantesimo Complesso (Medio / Avanzato): 8.0 - 10.0
-		Palle di fuoco, evocazioni o barriere mistiche. Canalizzare queste forze richiede di trattenere il fiato, sforzare la mente e subire il contraccolpo arcano.
-		 Stanca circa il doppio rispetto a un attacco fisico.
-		4) Lancio di una Magia Suprema (Ultimate / Cataclisma): 15.0 - 20.0
-		Tempeste di fulmini o incantesimi che alterano il tempo. Questo sforzo svuota quasi completamente le riserve fisiche del lanciatore, rischiando di portarlo in Sfinimento in due o tre turni se non gestito.
-		 */
-		double costoAzione = 1;
-
-		// Applicazione del moltiplicatore di archetipo
-		double valoreFinale = costoAzione / numeroGrezzo * getMoltiplicatoreStanchezza();
-
-		return (int)Math.max(1, Math.floor(valoreFinale));
-	}
 
 	// -- funzioni per calcolo modificatori
 

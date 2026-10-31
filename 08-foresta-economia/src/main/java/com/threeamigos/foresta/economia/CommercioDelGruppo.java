@@ -204,6 +204,9 @@ public final class CommercioDelGruppo {
 				case POZIONE_MAGIA_GRANDE:
 					gruppo.addPozioniMagiaGrande(1);
 					break;
+				case POZIONE_PANACEA:
+					gruppo.addPozioniPanacea(1);
+					break;
 				case AUMENTO_MAGIA_SINGOLO:
 					gruppo.getPersonaggi().stream().filter(p -> p.getUuid().equals(comandoAcquistoConsumabile.getUuidPersonaggio())).findFirst()
 							.ifPresent(p -> p.addMagiaMassima(CostantiPersonaggi.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "ALCHIMISTA"));

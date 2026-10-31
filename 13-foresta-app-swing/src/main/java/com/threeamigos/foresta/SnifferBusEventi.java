@@ -140,6 +140,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniMagia.class, this::onEventoVariazionePozioniMagia);
         BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniMagiaGrandi.class, this::onEventoVariazionePozioniMagiaGrandi);
         BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniAumentoLivello.class, this::onEventoVariazionePozioniAumentoLivello);
+        BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniPanacea.class, this::onEventoVariazionePozioniPanacea);
         BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniSalute.class, this::onEventoVariazionePozioniSalute);
         BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniSaluteGrandi.class, this::onEventoVariazionePozioniSaluteGrandi);
         BusEventi.iscriviti(NotificaVariazionePunteggio.class, this::onEventoVariazionePunti);
@@ -693,6 +694,11 @@ public class SnifferBusEventi {
     }
 
     public void onEventoVariazionePozioniAumentoLivello(NotificaVariazioneDisponibilitaPozioniAumentoLivello evento) {
+        Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Variazione: %d -> %d",
+                evento.getValorePrecedente(), evento.getNuovoValore()));
+    }
+
+    public void onEventoVariazionePozioniPanacea(NotificaVariazioneDisponibilitaPozioniPanacea evento) {
         Logger.log(() -> headerEvento(evento) + String.format(Locale.ROOT, "Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }

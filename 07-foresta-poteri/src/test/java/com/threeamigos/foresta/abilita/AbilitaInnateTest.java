@@ -13,6 +13,7 @@ import com.threeamigos.foresta.personaggi.Elfo;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Goblin;
 import com.threeamigos.foresta.personaggi.Guerriero;
+import com.threeamigos.foresta.personaggi.Ladro;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Sacerdote;
@@ -115,7 +116,9 @@ class AbilitaInnateTest {
         assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO, CostoDelleAbilita.di(TipoAbilita.DARDO_ARCANO, TipoPersonaggio.ELFO));
         assertEquals(TipoAbilita.RADICI.getCostoLancio(), CostoDelleAbilita.di(TipoAbilita.RADICI, TipoPersonaggio.DRUIDO));
         for (TipoAbilita tipo : TipoAbilita.values()) {
-            assertTrue(tipo.getCostoLancio() > 0 && tipo.getRicarica() > 0, tipo.name());
+            assertTrue(tipo.getCostoLancio() >= 0 && tipo.getRicarica() > 0, tipo.name());
+            // Solo l'attacco alle spalle del ladro non costa Magia
+            assertEquals(tipo == TipoAbilita.ATTACCO_ALLE_SPALLE, tipo.getCostoLancio() == 0, tipo.name());
             assertNotNull(tipo.getTipoAzione());
         }
     }
@@ -327,6 +330,33 @@ Personaggio scheletroAlleato = nelGruppo(FabbricaPersonaggi.crea(TipoPersonaggio
             assertEquals(tipo, abilita.getTipo());
             assertTrue(abilita.usa(druido, gruppo, avversari));
         }
+    }
+
+    @Test
+    void l_attaccoAlleSpalleEDelLadroEServeUnGruppoDiAlmenoTre() {
+        assertTrue(AbilitaInnate.conosciutaDa(TipoPersonaggio.LADRO, TipoAbilita.ATTACCO_ALLE_SPALLE));
+        assertTrue(AbilitaInnate.conosciutaDa(TipoPersonaggio.LADRA, TipoAbilita.ATTACCO_ALLE_SPALLE));
+        assertFalse(AbilitaInnate.conosciutaDa(TipoPersonaggio.GUERRIERO, TipoAbilita.ATTACCO_ALLE_SPALLE));
+        assertEquals(3, TipoAbilita.ATTACCO_ALLE_SPALLE.getRicarica());
+        Personaggio ladro = nelGruppo(new Ladro("Raven", 8));
+        Personaggio g1 = avversario(TipoPersonaggio.TITANO);
+        Abilita attacco = FabbricaAbilita.crea(TipoAbilita.ATTACCO_ALLE_SPALLE, ladro);
+        int saluteIniziale = g1.getSalute();
+        // Con meno di tre personaggi non serve e non si può fare
+        nelGruppo(new Guerriero("Arsenio", 8));
+        assertFalse(AbilitaInnate.serve(TipoAbilita.ATTACCO_ALLE_SPALLE, gruppo, avversari));
+        assertFalse(attacco.usa(ladro, gruppo, avversari));
+        assertEquals(saluteIniziale, g1.getSalute());
+        nelGruppo(new Mago("Merlino", 8));
+        assertTrue(AbilitaInnate.serve(TipoAbilita.ATTACCO_ALLE_SPALLE, gruppo, avversari));
+        assertTrue(AbilitaInnate.abilitaUtili(ladro, gruppo, avversari).contains(TipoAbilita.ATTACCO_ALLE_SPALLE));
+        int magia = ladro.getMagia();
+        assertTrue(attacco.usa(ladro, gruppo, avversari));
+        assertEquals(magia, ladro.getMagia(), "non costa Magia");
+        assertTrue(g1.getSalute() < saluteIniziale, "il colpo va sempre a segno");
+        // Dopo l'uso la ricarica la avvia chi la chiama
+        AbilitaInnate.avviaRicarica(ladro, TipoAbilita.ATTACCO_ALLE_SPALLE);
+        assertFalse(AbilitaInnate.puoUsare(ladro, TipoAbilita.ATTACCO_ALLE_SPALLE));
     }
 
     @Test

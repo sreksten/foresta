@@ -167,6 +167,8 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
                 return gruppo.getPozioniMagia();
             case POZIONI_MAGIA_GRANDI:
                 return gruppo.getPozioniMagiaGrande();
+            case POZIONI_PANACEA:
+                return gruppo.getPozioniPanacea();
             case POZIONI_AUMENTO_LIVELLO:
                 return gruppo.getPozioniAumentoLivello();
             default:
@@ -196,6 +198,9 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
                 break;
             case POZIONI_MAGIA_GRANDI:
                 gruppo.addPozioniMagiaGrande(differenza);
+                break;
+            case POZIONI_PANACEA:
+                gruppo.addPozioniPanacea(differenza);
                 break;
             case POZIONI_AUMENTO_LIVELLO:
                 gruppo.addPozioniAumentoLivello(differenza);

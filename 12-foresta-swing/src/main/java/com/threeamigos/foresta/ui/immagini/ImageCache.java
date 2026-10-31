@@ -105,6 +105,7 @@ public class ImageCache {
 	public static BufferedImage spritePozioneSaluteGrande;
 	public static BufferedImage spritePozioneMagia;
 	public static BufferedImage spritePozioneMagiaGrande;
+	public static BufferedImage spritePozionePanacea;
 	public static BufferedImage spritePozioneAumentoLivello;
 	public static BufferedImage spriteMappa;
 	public static BufferedImage spriteMoneta;
@@ -304,6 +305,7 @@ public class ImageCache {
 		spritePozioneSaluteGrande = BufferedImageBuilder.buildBufferedImage("icone/PozioneSaluteGrande.gif");
 		spritePozioneMagia = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagia.gif");
 		spritePozioneMagiaGrande = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagiaGrande.gif");
+		spritePozionePanacea = BufferedImageBuilder.buildBufferedImage("icone/PozionePanacea.gif");
 		spritePozioneAumentoLivello = BufferedImageBuilder.buildBufferedImage("icone/AumentoLivello.gif");
 		spriteMappa = BufferedImageBuilder.buildBufferedImage("icone/Mappa.gif");
 		spriteMoneta = BufferedImageBuilder.buildBufferedImage("icone/Moneta.gif");

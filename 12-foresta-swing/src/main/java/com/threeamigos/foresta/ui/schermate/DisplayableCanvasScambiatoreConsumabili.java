@@ -319,6 +319,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         aggiungiSePosseduto(elencoGruppo, TipoConsumabile.POZIONE_SALUTE_GRANDE, null, gruppoGiocatore.getPozioniSaluteGrande());
         aggiungiSePosseduto(elencoGruppo, TipoConsumabile.POZIONE_MAGIA, null, gruppoGiocatore.getPozioniMagia());
         aggiungiSePosseduto(elencoGruppo, TipoConsumabile.POZIONE_MAGIA_GRANDE, null, gruppoGiocatore.getPozioniMagiaGrande());
+        aggiungiSePosseduto(elencoGruppo, TipoConsumabile.POZIONE_PANACEA, null, gruppoGiocatore.getPozioniPanacea());
         return elencoGruppo;
     }
 
@@ -363,6 +364,8 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
                 return ImageCache.spritePozioneMagia;
             case POZIONE_MAGIA_GRANDE:
                 return ImageCache.spritePozioneMagiaGrande;
+            case POZIONE_PANACEA:
+                return ImageCache.spritePozionePanacea;
             case AUMENTO_MAGIA_SINGOLO:
                 return MappaPersonaggioImmagine.getIcona(offerta.getPersonaggio().getClasse());
             case AUMENTO_MAGIA_GRUPPO:

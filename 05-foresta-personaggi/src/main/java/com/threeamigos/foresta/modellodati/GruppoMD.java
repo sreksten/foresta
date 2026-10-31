@@ -28,6 +28,7 @@ public class GruppoMD implements Serializzabile {
 	protected int pozioniSaluteGrande;
 	protected int pozioniMagia;
 	protected int pozioniMagiaGrande;
+	protected int pozioniPanacea;
 	protected int pozioniAumentoLivello;
 	// La posizione del capo fra i personaggi: il capo è il primo che è entrato nel gruppo, e non cambia se lo si sposta
 	protected int indiceCapo;
@@ -61,6 +62,14 @@ public class GruppoMD implements Serializzabile {
 
 	public void setPozioniSalute(int pozioniSalute) {
 		this.pozioniSalute = pozioniSalute;
+	}
+
+	public int getPozioniPanacea() {
+		return pozioniPanacea;
+	}
+
+	public void setPozioniPanacea(int pozioniPanacea) {
+		this.pozioniPanacea = pozioniPanacea;
 	}
 
 	public int getPozioniSaluteGrande() {
@@ -145,6 +154,7 @@ public class GruppoMD implements Serializzabile {
 		pozioniSaluteGrande = 0;
 		pozioniMagia = 0;
 		pozioniMagiaGrande = 0;
+		pozioniPanacea = 0;
 		pozioniAumentoLivello = 0;
 	}
 

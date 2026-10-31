@@ -16,8 +16,8 @@ Gli oggetti per terra compaiono solo alla prima visita di una cella e non ricomp
 | Artefatti per terra, rivenduti all'armaiolo | ~60% di 5 + 5 × livello | 6 celle di bosco su 11, ~172 in tutto | ~2.500 fino al livello 10 |
 | Monete per terra | 1-2 | 1 cella di bosco su 11 | ~45 |
 | Pietre preziose e corone per terra | 1-2 preziosi, ognuno vale il livello del mondo quando si vende | 2 celle di bosco su 11 | ~1.200 contando anche quelli dei cofani, secondo il modello (circa 0,35 a cella, al livello di quando si vendono); il giocatore automatico ne trova di più, circa uno a scontro (vedi "Misure col giocatore automatico") |
-| Cofano fuori dai castelli | 5-10 monete o 5-10 preziosi, 1/8 ciascuno | bosco 1/11, rovine sempre, grotte 1-2 | ~0,84 monete + 0,84 preziosi a cofano |
-| Cofano nei castelli | 5-10 monete, 1/6 | 5 per castello, 4 castelli | ~22 |
+| Cofano fuori dai castelli | 5-10 monete o 5-10 preziosi, 1/9 ciascuno | bosco 1/11, rovine sempre, grotte 1-2 | ~0,75 monete + 0,75 preziosi a cofano |
+| Cofano nei castelli | 5-10 monete, 1/7 | 5 per castello, 4 castelli | ~21 |
 | Artefatto o pergamena da un cofano | un artefatto casuale (10%) o un ingrediente magico (10%) a cofano, al livello del mondo | ogni cofano aperto | da rivendere o usare: 1 cofano su 5 |
 | Compagno reclutato in locanda | 5-15 monete + 0-10 preziosi | fino a 4 volte | ~40 + ~20 preziosi |
 | Missioni (gli incarichi in città, il pianista, il viaggio della moglie) | la paga base della missione per il livello del mondo di quando si offre (per esempio 20 al primo livello e 200 al decimo per il medaglione rubato) | gli incarichi si ripetono | cresce col livello |
@@ -40,6 +40,7 @@ Gli acquisti nei negozi hanno uno sconto dovuto alla Contrattazione, di solito l
 | Informazioni in locanda | gratis | al massimo 3 per locanda |
 | Pozione della salute / grande | 5 / 15 | alchimista |
 | Pozione della magia / grande | 10 / 30 | alchimista |
+| Panacea (toglie gli effetti di stato negativi) | 5 | alchimista |
 | Aumento della magia massima | 10 per uno; 10 + 7,5 × (n − 1) per il gruppo | alchimista |
 | Pergamena d'incantesimo (Silenzio compreso) | 5; Fulmine e Resurrezione 15 | alchimista |
 | Mappa di una zona / di tutta la foresta | 10 / 20 | alchimista; la mappa intera anche come offerta |

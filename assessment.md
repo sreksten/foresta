@@ -151,17 +151,15 @@ Dal basso in alto. Ogni livello dipende solo da quelli prima, e le dipendenze so
 
 ## 5. Difetti aperti
 
-### 5.1 Ricontrollati sul codice del 2026-10-25
+### 5.1 Ricontrollati sul codice del 2026-10-25 (B35a aggiornato il 2026-10-31, gli altri ancora aperti)
 
 Sono tutti di gravità bassa. I percorsi sono relativi a `…/` del modulo indicato.
 
-- **B35a (`05-foresta-personaggi`)** Codice morto in `PersonaggioBase`:
-  - `calcolaStanchezza`, `subCarisma`, `addForza`, `addDestrezza`, `addCostituzione`, `addIntelligenza` e `addSaggezza` non li chiama nessuno;
-  - `getQuantitaEffettoDiStato` la usa solo un test;
-  - `puoPrendere(Artefatto)` non la chiama nessuno: si usa `puoPrendere(double)`.
+- **B35a (`05-foresta-personaggi`)** Codice morto in `PersonaggioBase` (`calcolaStanchezza`, `puoPrendere(Artefatto)`, `subCarisma` e le `addForza`… `addSaggezza` sono già state tolte):
+  - `getQuantitaEffettoDiStato` la usano solo i test.
 - **B35d (`09-foresta-missioni`)** Due passi pronti di `MissioneAPassi` li usano solo i test: `evitaCombattimento` e `getPassiConIntermezzoInAttesa`.
 - **B35e (`01-foresta-testi`)** In `locande.txt` la produzione `NOTIZIE_CITTA` (12 notizie) non esce mai: le notizie si pescano da `NOTIZIE_<identificativo della locanda>`, e nessuna locanda ha l'identificativo `CITTA`. Le produzioni morte di `fiabe.txt` non le ho ricontrollate.
-- **B41c (`12-foresta-swing`)** `ui/testo/DoomdarkTextRectangle` (quello non 2x) e `img/icone/NegozioAlchimistaPrecedente.gif` non li usa nessuno.
+- **B41c (`12-foresta-swing`)** `ui/testo/DoomdarkTextRectangle` (quello non 2x) non lo usa nessuno (`img/icone/NegozioAlchimistaPrecedente.gif` è diventata `PozionePanacea.gif`).
 
 ### 5.2 Ipotesi controllate e scartate nella revisione del 2026-10-19 (non ricontrollate)
 

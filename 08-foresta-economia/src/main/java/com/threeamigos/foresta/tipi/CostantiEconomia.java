@@ -36,6 +36,7 @@ public final class CostantiEconomia {
     public static final int COSTO_POZIONE_SALUTE_GRANDE = 15;
     public static final int COSTO_POZIONE_MAGIA = 10;
     public static final int COSTO_POZIONE_MAGIA_GRANDE = 30;
+    public static final int COSTO_POZIONE_PANACEA = 5;
     public static final int COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO = 10;
 
     // In locanda: il pasto (e quanto fa recuperare) e il pernottamento

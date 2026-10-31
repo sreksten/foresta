@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.tattiche;
 
+import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+import com.threeamigos.foresta.tipi.TipoAbilita;
 
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
@@ -181,6 +183,36 @@ class TatticheBaseTest {
     }
 
     // ---- i personaggi giocabili ----
+
+    @Test
+    void ilLadroColpisceAlleSpalleSoloConDueCompagniEFuoriDallaRicarica() {
+        Personaggio ladro = crea(TipoPersonaggio.LADRO, 5);
+        Personaggio guerriero = crea(TipoPersonaggio.GUERRIERO, 5);
+        Personaggio mago = crea(TipoPersonaggio.MAGO, 5);
+        Personaggio debole = crea(TipoPersonaggio.GOBLIN, 1);
+        Personaggio forte = crea(TipoPersonaggio.TROLL, 9);
+        TatticaMD tattica = TatticheBase.deiGiocabili(TipoPersonaggio.LADRO);
+
+        // Lui e altri due: l'attacco alle spalle, sul più forte
+        Decisione decisione = Valutatore.decidi(tattica, perIMiei(ladro, Arrays.asList(ladro, guerriero, mago), debole, forte));
+        assertEquals(TipoAzione.ATTACCO_ALLE_SPALLE, decisione.getTipoEseguito(), decisione.getSpiegazione().toString());
+        assertSame(forte, decisione.getBersaglio());
+
+        // Lui e un solo compagno: non basta chi distrae, colpisce con le armi
+        Decisione inDue = Valutatore.decidi(tattica, perIMiei(ladro, Arrays.asList(ladro, guerriero), debole, forte));
+        assertNotEquals(TipoAzione.ATTACCO_ALLE_SPALLE, inDue.getTipoEseguito());
+
+        // Un compagno caduto non conta: con lui sono di nuovo in due
+        mago.muore("prova");
+        Decisione conUnCaduto = Valutatore.decidi(tattica, perIMiei(ladro, Arrays.asList(ladro, guerriero, mago), debole, forte));
+        assertNotEquals(TipoAzione.ATTACCO_ALLE_SPALLE, conUnCaduto.getTipoEseguito());
+
+        // In ricarica non si può rifare
+        Personaggio altroMago = crea(TipoPersonaggio.MAGO, 5);
+        AbilitaInnate.avviaRicarica(ladro, TipoAbilita.ATTACCO_ALLE_SPALLE);
+        Decisione inRicarica = Valutatore.decidi(tattica, perIMiei(ladro, Arrays.asList(ladro, guerriero, altroMago), debole, forte));
+        assertNotEquals(TipoAzione.ATTACCO_ALLE_SPALLE, inRicarica.getTipoEseguito());
+    }
 
     @Test
     void ilGuerrieroSiCuraSoloSeStaMaleEAvendoUnaPozione() {

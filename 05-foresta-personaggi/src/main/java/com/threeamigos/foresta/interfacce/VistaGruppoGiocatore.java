@@ -36,6 +36,8 @@ public interface VistaGruppoGiocatore extends VistaGruppo {
 
 	int getPozioniSaluteGrande();
 
+	int getPozioniPanacea();
+
 	int getPozioniMagia();
 
 	int getPozioniMagiaGrande();

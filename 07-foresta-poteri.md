@@ -1,6 +1,6 @@
 # 07-foresta-poteri
 
-I **poteri** dei personaggi: gli **incantesimi** (le pergamene che il gruppo compra e i mostri lanciano), i **canti** del Bardo e della Cantastorie, le **abilità innate** del Chierico, del Druido, del Sacerdote, del Mago e dell'Elfo. Contiene anche il canto che il gruppo impara strada facendo. Le azioni di uno scontro (`TipoAzione`, `EsitoAzione`) sono nel combattimento.
+I **poteri** dei personaggi: gli **incantesimi** (le pergamene che il gruppo compra e i mostri lanciano), i **canti** del Bardo e della Cantastorie, le **abilità innate** del Chierico, del Druido, del Sacerdote, del Mago, dell'Elfo e del Ladro. Contiene anche il canto che il gruppo impara strada facendo. Le azioni di uno scontro (`TipoAzione`, `EsitoAzione`) sono nel combattimento.
 
 Sta separato dai personaggi per la direzione delle dipendenze: un personaggio dice *chi è e che cosa ha*; *che cosa sa fare con la magia* lo dice questo modulo, e quindi dipende da lui. Sta anche dopo il combattimento: un potere ha bisogno di colpire, di far durare uno stato e di raccontarsi, e lo fa chiamando direttamente il combattimento (che non sa che esistano i poteri).
 
@@ -49,10 +49,11 @@ Ogni abilità innata e ogni canto, dopo l'uso, va in **ricarica**: i turni che d
 
 | Classe | Abilità |
 | :--- | :--- |
-| Chierico/Chierica | scacciare i non morti, imposizione delle mani (cura il più ferito) |
+| Chierico/Chierica | scacciare i non morti, imposizione delle mani (cura il più ferito), martello sacro (`MartelloSacro`: danno `SACRO` su un solo avversario, il doppio contro i non morti per la regola di categoria; costo 3, danno 30, ricarica 2) |
 | Druido/Druida | radici, sciame, pelle di corteccia (difesa di tutto il gruppo), rigenerazione (`RIGENERAZIONE`) |
 | Sacerdote/Sacerdotessa | alba sacra (toglie gli stati negativi), luce divina |
 | Mago/Maga, Elfo/Elfa | dardo arcano |
+| Ladro/Ladra | attacco alle spalle (`AttaccoAlleSpalle`: un colpo con le armi che va sempre a segno ed è sempre un critico, senza costo di Magia, con ricarica 3; servono almeno tre personaggi vivi nel gruppo (due distraggono, il Ladro colpisce), `ABILITA_ATTACCO_ALLE_SPALLE_PERSONAGGI_MINIMI`; non estende `AbilitaDiDanno` perché è un attacco con le armi, `AttaccoConLeArmi.alleSpalle`) |
 
 I valori sono in `CostantiAbilitaInnate`; `AbilitaInnateDiClasse` raccoglie nome e descrizione di ogni capacità di una classe per il bestiario. Il quadro è in [`personaggi_giocabili.md`](personaggi_giocabili.md).
 

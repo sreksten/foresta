@@ -3,7 +3,7 @@ package com.threeamigos.foresta.tipi;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
- * Le abilità innate del Chierico, del Druido, del Sacerdote, del Mago e dell'Elfo (e delle loro forme femminili), simili ai canti del Bardo: costano Magia, non
+ * Le abilità innate del Chierico, del Druido, del Sacerdote, del Mago, dell'Elfo e del Ladro (e delle loro forme femminili), simili ai canti del Bardo: costano Magia (tranne l'attacco alle spalle), non
  * consumano pergamene, non si comprano né si trovano.
  * <p>
  * Il comando con cui la UI ne chiede l'uso al motore lo dà {@link ComandiAssociati}.
@@ -20,6 +20,7 @@ public enum TipoAbilita {
 	// Del chierico
 	SCACCIARE_I_NON_MORTI(CostantiAbilitaInnate.ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_SCACCIARE_I_NON_MORTI_RICARICA),
 	IMPOSIZIONE_DELLE_MANI(CostantiAbilitaInnate.ABILITA_IMPOSIZIONE_DELLE_MANI_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_IMPOSIZIONE_DELLE_MANI_RICARICA),
+	MARTELLO_SACRO(CostantiAbilitaInnate.ABILITA_MARTELLO_SACRO_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_MARTELLO_SACRO_RICARICA),
 	// Del druido
 	RADICI(CostantiAbilitaInnate.ABILITA_RADICI_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_RADICI_RICARICA),
 	SCIAME(CostantiAbilitaInnate.ABILITA_SCIAME_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_SCIAME_RICARICA),
@@ -29,7 +30,9 @@ public enum TipoAbilita {
 	ALBA_SACRA(CostantiAbilitaInnate.ABILITA_ALBA_SACRA_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_ALBA_SACRA_RICARICA),
 	LUCE_DIVINA(CostantiAbilitaInnate.ABILITA_LUCE_DIVINA_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_LUCE_DIVINA_RICARICA),
 	// Del mago e dell'elfo
-	DARDO_ARCANO(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO, CostantiAbilitaInnate.DARDO_ARCANO_RICARICA);
+	DARDO_ARCANO(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO, CostantiAbilitaInnate.DARDO_ARCANO_RICARICA),
+	// Del ladro
+	ATTACCO_ALLE_SPALLE(CostantiAbilitaInnate.ABILITA_ATTACCO_ALLE_SPALLE_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_ATTACCO_ALLE_SPALLE_RICARICA);
 
 	private final int costoLancio;
 	private final int ricarica;

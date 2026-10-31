@@ -147,6 +147,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 				pozioniSaluteGrande,
 				pozioniMagia,
 				pozioniMagiaGrande,
+				pozioniPanacea,
 				pozioniAumentoLivello,
 				sfideVinte,
 				sacerdoteAccolto,
@@ -182,6 +183,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		pozioniSaluteGrande = st.intero();
 		pozioniMagia = st.intero();
 		pozioniMagiaGrande = st.intero();
+		pozioniPanacea = st.intero();
 		pozioniAumentoLivello = st.intero();
 		sfideVinte = st.intero();
 		sacerdoteAccolto = st.booleano();

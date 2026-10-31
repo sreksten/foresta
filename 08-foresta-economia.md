@@ -42,7 +42,7 @@ I magazzini dei negozi delle città e delle botteghe della Foresta (armaiolo e v
 
 ### Costanti ed eventi
 
-`CostantiEconomia` ha i valori di bilanciamento: monete e preziosi iniziali, la contrattazione, il numero di oggetti dei magazzini, i prezzi delle pozioni (salute 5, salute grande 15, magia 10, magia grande 30), il pasto e il pernottamento (5), le mappe (10 e 20). Gli eventi: comandi, richieste e notifiche per l'acquisto, la vendita e la fusione (approvazione, rifiuto, avviso dell'incantatore), `RichiestaAperturaInventarioCommerciante`, `…Fornitore`, `RichiestaAperturaIncantatore` e `InternoPastoConsumatoInLocanda`.
+`CostantiEconomia` ha i valori di bilanciamento: monete e preziosi iniziali, la contrattazione, il numero di oggetti dei magazzini, i prezzi delle pozioni (salute 5, salute grande 15, magia 10, magia grande 30, panacea 5), il pasto e il pernottamento (5), le mappe (10 e 20). Gli eventi: comandi, richieste e notifiche per l'acquisto, la vendita e la fusione (approvazione, rifiuto, avviso dell'incantatore), `RichiestaAperturaInventarioCommerciante`, `…Fornitore`, `RichiestaAperturaIncantatore` e `InternoPastoConsumatoInLocanda`.
 
 ## Osservazioni
 

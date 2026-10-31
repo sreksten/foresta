@@ -64,6 +64,8 @@ public final class OfferteAlchimista {
 				"Fa riacquistare punti di Magia", CostantiEconomia.COSTO_POZIONE_MAGIA));
 		offerte.add(semplice(TipoConsumabile.POZIONE_MAGIA_GRANDE, "Pozione della Magia (grande)",
 				"Fa riacquistare punti di Magia e ne aumenta il livello massimo", CostantiEconomia.COSTO_POZIONE_MAGIA_GRANDE));
+		offerte.add(semplice(TipoConsumabile.POZIONE_PANACEA, "Panacea",
+				"Rimuove tutti gli effetti di stato negativi", CostantiEconomia.COSTO_POZIONE_PANACEA));
 		int giocanti = 0;
 		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
 			if (!personaggio.isPNG()) {

@@ -212,6 +212,7 @@ una scelta del giocatore (§3) e passare inosservati non è possibile dopo una v
 | **Canto di valore** | idem | `MAGIA` (5) | tutto il gruppo (`ISPIRATO`) | a inizio scontro |
 | **Pozione della Salute** (normale, grande) | tutti | almeno una del tipo nel gruppo; il bersaglio è ferito | un personaggio del gruppo (chi beve) | sono due azioni (`POZIONE_SALUTE`, `POZIONE_SALUTE_GRANDE`) |
 | **Pozione della Magia** (normale, grande) | tutti | almeno una del tipo nel gruppo; il bersaglio non ha la `MAGIA` piena | un personaggio del gruppo | sono due azioni (`POZIONE_MAGIA`, `POZIONE_MAGIA_GRANDE`) |
+| **Panacea** | tutti | almeno una nel gruppo; il bersaglio ha almeno uno stato negativo | un personaggio del gruppo | `POZIONE_PANACEA`; toglie tutti gli stati negativi. Per ora non è in nessuna tattica automatica: la si usa solo componendo una tattica a mano |
 | **Cambiare arma** | chi può usare quell'arma (`puoEquipaggiare`) | un'arma nell'inventario del gruppo, che il personaggio possa impugnare e che non sia quella che ha già; il controllo preventivo del cambio riesce; non si è già al massimo di cambi | l'arma stessa (non un avversario) | **è l'azione del turno**: il personaggio cambia arma e basta; l'attacco c'è dal turno dopo (vedi sotto, "Cambiare arma") |
 
 
@@ -852,7 +853,7 @@ Ogni valore dichiara la sua **portata** (§11.2), le **rose che accetta** e i su
 | Canti | `CANTO_CURATIVO` | un alleato | `SE_STESSO`, `ALLEATI`, `OSPITI`, `ALLEATI_E_OSPITI` |
 | | `CANTO_IPNOTICO`, `URLO_DELLA_BANSHEE` | tutti gli avversari (fino a `NUMERO_BERSAGLI`) | test di esistenza |
 | | `CANTO_DI_VALORE` | tutto il gruppo | test di esistenza |
-| Pozioni | `POZIONE_SALUTE`, `POZIONE_SALUTE_GRANDE`, `POZIONE_MAGIA`, `POZIONE_MAGIA_GRANDE` | un alleato (di solito sé) | come `CANTO_CURATIVO` |
+| Pozioni | `POZIONE_SALUTE`, `POZIONE_SALUTE_GRANDE`, `POZIONE_MAGIA`, `POZIONE_MAGIA_GRANDE`, `POZIONE_PANACEA` | un alleato (di solito sé) | come `CANTO_CURATIVO` |
 | Equipaggiamento | `CAMBIA_ARMA` (parametro: tipo di danno voluto) | un'arma | `SE_STESSO` (chi cambia arma) |
 
 Escluse (§5): fuga, corruzione, amicizia, passare inosservati. **Non c'è un'azione "passa il turno"**: se nessuna azione di una lista è applicabile, il personaggio fa un attacco fisico (§1, il ripiego).

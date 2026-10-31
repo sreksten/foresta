@@ -108,6 +108,12 @@ public final class EsecutoreTattiche {
 			case DARDO_ARCANO:
 				usaUnAbilita(attore, TipoAbilita.DARDO_ARCANO, bersaglio, gruppoDellAttore, gruppoNemico);
 				break;
+			case MARTELLO_SACRO:
+				usaUnAbilita(attore, TipoAbilita.MARTELLO_SACRO, bersaglio, gruppoDellAttore, gruppoNemico);
+				break;
+			case ATTACCO_ALLE_SPALLE:
+				usaUnAbilita(attore, TipoAbilita.ATTACCO_ALLE_SPALLE, bersaglio, gruppoDellAttore, gruppoNemico);
+				break;
 			case LUCE_DIVINA:
 				usaUnAbilita(attore, TipoAbilita.LUCE_DIVINA, bersaglio, gruppoDellAttore, gruppoNemico);
 				break;
@@ -158,6 +164,11 @@ public final class EsecutoreTattiche {
 			case POZIONE_SALUTE:
 				annuncia(attore, null);
 				gruppoDellAttore.consumaPozioneSalute(bersaglio);
+				stato.registraAlleato(attore, bersaglio);
+				break;
+			case POZIONE_PANACEA:
+				annuncia(attore, null);
+				gruppoDellAttore.consumaPozionePanacea(bersaglio);
 				stato.registraAlleato(attore, bersaglio);
 				break;
 			case POZIONE_SALUTE_GRANDE:

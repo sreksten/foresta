@@ -130,6 +130,7 @@ public interface StrumentiDiSviluppo {
         POZIONI_SALUTE_GRANDI("Pozioni della salute grandi"),
         POZIONI_MAGIA("Pozioni della magia"),
         POZIONI_MAGIA_GRANDI("Pozioni della magia grandi"),
+        POZIONI_PANACEA("Panacee"),
         POZIONI_AUMENTO_LIVELLO("Pozioni di aumento di livello");
 
         private final String descrizione;

@@ -25,6 +25,21 @@ public final class AttaccoConLeArmi {
 		annunciaEAttacca(attaccante, bersaglio);
 	}
 
+	/**
+	 * L'attacco alle spalle: come {@link #esegui}, ma il bersaglio è distratto e non si difende, quindi ogni colpo va a segno ed è un critico sicuro. L'annuncio
+	 * lo fa chi lo usa.
+	 */
+	public static void alleSpalle(Personaggio attaccante, Personaggio bersaglio) {
+		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(attaccante, bersaglio)) {
+			if (bersaglio.isFuoriCombattimento()) {
+				return;
+			}
+			DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, bersaglio, fase.getArma(), fase.getFattore(), true);
+			Logger.log(() -> attaccante.getNome() + " colpisce alle spalle " + bersaglio.getNome() + " assegnando " + risultato.getDanno() + " danni");
+			ApplicazioneDelRisultato.applica(bersaglio, risultato);
+		}
+	}
+
 	private static void annunciaEAttacca(Personaggio attaccante, Personaggio bersaglio) {
 		Logger.log(() -> attaccante.getNome() + " attacca " + bersaglio.getNome());
 		// Gli avversari della stessa specie si distinguono per il numero ("La viverna 2"), quindi sempre l'articolo determinativo

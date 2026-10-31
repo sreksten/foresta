@@ -42,6 +42,7 @@ final class DotazioneDiProva {
 		md.setPozioniSaluteGrande(99);
 		md.setPozioniMagia(99);
 		md.setPozioniMagiaGrande(99);
+		md.setPozioniPanacea(99);
 		md.setPozioniAumentoLivello(99);
 		// La Falce del Tristo Mietitore, per provare la Mietitura
 		CatalogoLeggendari.getLeggendario(CHIAVE_FALCE_DI_PROVA).ifPresent(falce -> gruppo.addArtefatto(falce.costruisci(Statistiche.getLivello())));

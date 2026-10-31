@@ -122,10 +122,10 @@ public final class RaccoltaBottino {
 		int tipo;
 		if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CASTELLO) {
 			min = 1;
-			max = 6;
+			max = 7;
 		} else {
 			min = 0;
-			max = 7;
+			max = 8;
 		}
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < cofano.getQuantita(); i++) {
@@ -172,9 +172,12 @@ public final class RaccoltaBottino {
 				sb.append("trova una pozione della magia.");
 				gruppo.addPozioniMagia(1);
 			} else if (tipo == 6) {
+				sb.append("trova una panacea.");
+				gruppo.addPozioniPanacea(1);
+			} else if (tipo == 7) {
 				sb.append("trova alcune monete d'oro.");
 				Cassa.addMonete(Dado.tira(5, 10));
-			} else if (tipo == 7) {
+			} else if (tipo == 8) {
 				sb.append("trova alcune pietre preziose.");
 				Cassa.addPreziosi(Dado.tira(5, 10));
 			}

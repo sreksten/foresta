@@ -54,7 +54,7 @@ I mostri attaccano con `ArmaNaturale` (artigli, morsi, soffi… al posto dell'ar
 
 ### I gruppi
 
-- **`Gruppo`** (astratto) è un insieme di personaggi con il loro capo e le **scorte** di pergamene (per `TipoIncantesimo`) e di pozioni (salute, salute grande, magia, magia grande, aumento di livello). Le variazioni delle scorte del giocatore si annunciano alla UI con le notifiche; quelle degli avversari no.
+- **`Gruppo`** (astratto) è un insieme di personaggi con il loro capo e le **scorte** di pergamene (per `TipoIncantesimo`) e di pozioni (salute, salute grande, magia, magia grande, panacea, aumento di livello). Le variazioni delle scorte del giocatore si annunciano alla UI con le notifiche; quelle degli avversari no.
 - **`GruppoGiocatore`** è un singleton (`getIstanza`) che prende i suoi dati da chi glieli dà (`setFornitoreDiDati`, installato da `ModelloDati`; il fornitore va chiamato a ogni nuovo gruppo perché cambia quando si carica un salvataggio). Gestisce i personaggi (fino a 5 permanenti, più i temporanei), gli **ospiti**, le sfide vinte, il riposo, la fuga, l'esperienza, l'inventario condiviso e gli scambi di artefatti con i personaggi (`controllaPrelievo`, `equipaggia`, `stocca`, `chiPuoEquipaggiare`). `TipoMotivoNelGruppo` dice perché un personaggio è nel gruppo: permanente, aiuto gratuito, aiuto a pagamento, o risvegliato dalla Mietitura.
 - **`GruppoAvversario`** è il gruppo dei mostri della locazione: un'istanza sola, che si svuota a ogni locazione.
 

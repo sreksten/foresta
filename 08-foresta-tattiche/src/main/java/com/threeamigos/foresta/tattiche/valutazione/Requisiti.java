@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.tattiche.valutazione;
 
 import com.threeamigos.foresta.abilita.AbilitaInnate;
+import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
 import com.threeamigos.foresta.abilita.PelleDiCorteccia;
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.combattimento.CambioDArma;
@@ -75,6 +76,21 @@ public final class Requisiti {
 					return "il dardo arcano non si può lanciare (classe, Magia o silenzio)";
 				}
 				return contro(azione, attore, bersaglio, TipoDanno.ARCANO, contesto);
+			// Il martello sacro del Chierico: costa Magia e ha una ricarica, il danno è sacro
+			case MARTELLO_SACRO:
+				if (!AbilitaInnate.puoUsare(attore, TipoAbilita.MARTELLO_SACRO)) {
+					return "il martello sacro non si può usare (classe, Magia, ricarica o silenzio)";
+				}
+				return contro(azione, attore, bersaglio, TipoDanno.SACRO, contesto);
+			// L'attacco alle spalle del Ladro non costa Magia: servono la classe, la ricarica e almeno tre personaggi vivi nel gruppo (due distraggono)
+			case ATTACCO_ALLE_SPALLE:
+				if (!AbilitaInnate.puoUsare(attore, TipoAbilita.ATTACCO_ALLE_SPALLE)) {
+					return "l'attacco alle spalle non si può fare (classe, ricarica o silenzio)";
+				}
+				if (contesto.getAlleati().stream().filter(Personaggio::isVivo).count() < CostantiAbilitaInnate.ABILITA_ATTACCO_ALLE_SPALLE_PERSONAGGI_MINIMI) {
+					return "per colpire alle spalle servono almeno tre personaggi nel gruppo";
+				}
+				return bersaglio == null || bersaglio.isFuoriCombattimento() ? "nessun bersaglio" : null;
 			// La luce divina del Sacerdote: come il dardo, costa solo Magia
 			case LUCE_DIVINA:
 				if (!AbilitaInnate.puoUsare(attore, TipoAbilita.LUCE_DIVINA)) {
@@ -141,6 +157,11 @@ public final class Requisiti {
 					return "il gruppo non ha pozioni della Salute";
 				}
 				return bersaglio != null && bersaglio.isVivo() && bersaglio.getSalute() < bersaglio.getSaluteMassima() ? null : "il bersaglio non è ferito";
+			case POZIONE_PANACEA:
+				if (contesto.getPozioniPanacea() <= 0) {
+					return "il gruppo non ha panacee";
+				}
+				return bersaglio != null && haUnoStatoNegativo(bersaglio) ? null : "il bersaglio non ha stati negativi da togliere";
 			case POZIONE_MAGIA:
 				if (contesto.getPozioniMagia() <= 0) {
 					return "il gruppo non ha pozioni della Magia";

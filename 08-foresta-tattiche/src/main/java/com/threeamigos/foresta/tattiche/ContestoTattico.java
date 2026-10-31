@@ -154,6 +154,11 @@ public final class ContestoTattico {
 		return gruppoDegliAlleati == null ? 0 : gruppoDegliAlleati.getPozioniSaluteGrande();
 	}
 
+	/** Le panacee, che tolgono gli effetti di stato negativi */
+	public int getPozioniPanacea() {
+		return gruppoDegliAlleati == null ? 0 : gruppoDegliAlleati.getPozioniPanacea();
+	}
+
 	/** Le pozioni della Magia normali (le grandi sono un'altra azione) */
 	public int getPozioniMagia() {
 		return gruppoDegliAlleati == null ? 0 : gruppoDegliAlleati.getPozioniMagia();

@@ -1,6 +1,6 @@
 # Missioni a tappe (`MissioneATappe`)
 
-**Stato: in realizzazione.** Fatti: la grammatica `tappe.txt` (`01-foresta-testi`), il produttore `ProduttoreDiMissioniCasuale.rigaDiTappe(farsa)` e il lettore `TappeRichieste` con i suoi test (`09-foresta-missioni`); la missione `MissioneATappe` (persone, leggendari, farse, **scelta fra due piste** e **chiavi** con la figlia `ChiaveDelCustode`) con i test di scenario in `12-foresta-motore`; la chiave non è un oggetto dell'inventario (conta averla presa) e un vicolo cieco con guardia va sconfitto prima di poter provare l'altra pista. Mancano il resto delle fasi (§7): contenuti, immagini, documentazione degli altri file. Questo documento è il piano di azione per un nuovo tipo di missione, più lungo di quelli di oggi: una **catena di tappe**, in cui ogni tappa è un posto da raggiungere e che, una volta raggiunto, dà un'informazione su dove andare dopo, fino a trovare una persona, un oggetto leggendario o i custodi di alcune chiavi. Quando sarà fatto, il documento si riscrive per descrivere il codice (vedi la convenzione in `CLAUDE.md`).
+**Stato: realizzata, restano i contenuti e la documentazione (Fase 3).** Fatti: la grammatica `tappe.txt` (`01-foresta-testi`), il produttore `ProduttoreDiMissioniCasuale.rigaDiTappe(farsa)` e il lettore `TappeRichieste` con i suoi test (`09-foresta-missioni`); la missione `MissioneATappe` (persone, leggendari, farse, **scelta fra due piste** e **chiavi** con la figlia `ChiaveDelCustode`) con i test di scenario in `12-foresta-motore`; la chiave non è un oggetto dell'inventario (conta averla presa) e un vicolo cieco con guardia va sconfitto prima di poter provare l'altra pista. Restano la Fase 3 (§7): più ricette (oggi cinque), le immagini dell'oggetto trovato, scene più varie e la documentazione degli altri file. Questo documento è il piano di azione per un nuovo tipo di missione, più lungo di quelli di oggi: una **catena di tappe**, in cui ogni tappa è un posto da raggiungere e che, una volta raggiunto, dà un'informazione su dove andare dopo, fino a trovare una persona, un oggetto leggendario o i custodi di alcune chiavi. Quando sarà fatto, il documento si riscrive per descrivere il codice (vedi la convenzione in `CLAUDE.md`).
 
 L'infrastruttura di partenza è in [`gestione_missioni.md`](gestione_missioni.md) (registro, momenti di controllo, `Passo`, `MissioneAPassi`, claim) e [`passi_missioni.md`](passi_missioni.md) (catalogo dei passi e delle missioni); gli intermezzi sono in [`intermezzi.md`](intermezzi.md); la sintassi delle grammatiche in [`GrammarBean.md`](GrammarBean.md).
 
@@ -127,15 +127,15 @@ Le scene scattano a `INIZIO_LOCAZIONE` (prima di un eventuale combattimento) o a
 
 **Fase 1 — La base (media).**
 - [x] `09-foresta-missioni`: `TappeRichieste` (lettura della riga, con `CampiDiGrammatica` e i campi numerati) e `tipi.ClasseDiPosto`, con 10 test (righe a mano, righe sbagliate, 2000 righe generate).
-- [ ] `09-foresta-missioni`: `MissioneATappe`, voce in `MissionePredefinita` e `FabbricaMissioni`.
+- [x] `09-foresta-missioni`: `MissioneATappe`, voce in `MissionePredefinita` e `FabbricaMissioni`.
 - [x] `01-foresta-testi`: `tappe.txt` (cinque ricette: persona, leggendario, chiavi, due piste, farse; 2000 righe generate tutte valide e diverse) e `ProduttoreDiMissioniCasuale.rigaDiTappe(farsa)`, con tre test.
-- [ ] `07-foresta-intermezzi`: la scena per 1-5 personaggi.
-- [ ] `RegistroMissioni.cerca…` ancorabile a una casella.
-- [ ] Test: lettura di 500 righe generate (come `ogniLealtaSiLegge`) e scenario completo della ricetta persona, con salvataggio e ricarica a metà.
+- [x] `07-foresta-intermezzi`: la scena per 1-5 personaggi (`ScenaFraCompagni` accetta anche un solo personaggio).
+- [x] `RegistroMissioni.cerca…` ancorabile a una casella (`cercaVicino`).
+- [x] Test: lettura di 500 righe generate (come `ogniLealtaSiLegge`) e scenario completo della ricetta persona, con salvataggio e ricarica a metà.
 
 **Fase 2 — Le chiavi (media).**
-- [ ] La figlia del custode (classe nuova, registrata) e l'ordine libero delle tre ricerche.
-- [ ] Test di scenario con le tre figlie e il salvataggio a metà.
+- [x] La figlia del custode (`ChiaveDelCustode`) e l'ordine libero delle tre ricerche.
+- [x] Test di scenario con le tre figlie e il salvataggio a metà (`TappeABivioEChiaviGiocateTest`, `ChiaveDelCustodeTest`).
 
 **Fase 3 — Contenuti e rifiniture (piccola/media).**
 - [ ] 15-20 ricette; immagini per l'oggetto trovato; scene più varie.
