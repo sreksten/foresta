@@ -367,7 +367,7 @@ INCARICO_DI_COMBATTIMENTO
     RICHIESTA=Fra delle rovine i morti si sono messi a camminare. Tutti insieme, in fila, come a una processione. Qualcuno li comanda, e non è il parroco.;\
     BATTUTA=E chi li comanda?;RISPOSTA=Lo scoprirete quando avrete sistemato quelli in prima fila.;\
     ONDATA_2=SPETTRO 2;ARRIVO_2=Gli scheletri crollano in un mucchio d'ossa, ma dai muri escono due spettri, gelidi come la cantina del parroco.;\
-    ONDATA_3=NECROMANTE 1 NOME_NECROMANTE;ARRIVO_3=Dall'ombra esce un necromante, %CAPO_3%, che batte piano le mani: “Complimenti. Ma adesso tocca a me.”;\
+    ONDATA_3=NECROMANTE 1 NOME_NECROMANTE;ARRIVO_3=Dall'ombra esce un necromante, %CAPO_3%, che batte piano le mani: "“Complimenti. Ma adesso tocca a me.\"";\
     VITTORIA=%CAPO_3% è sconfitto, e i morti tornano a dormire. Questa volta per sempre, si spera.;\
     RINGRAZIAMENTO=I morti riposano, e il parroco è tornato a dormire anche lui. Era ora.;\
     RICORDO=Fra queste rovine il necromante %CAPO_3% fece camminare i morti, per una notte.
@@ -1324,7 +1324,7 @@ RITUALE
     NEMICO=SCHELETRO;NUMERO=2;MONETE=35;TITOLO=Il testamento del nonno;\
     RICHIESTA=Mio nonno è morto senza dire dove ha nascosto il testamento. Dicono che con il fumo dei funghi lunari si possa svegliare un morto, per il tempo di una domanda.;\
     BATTUTA=E se si sveglia di cattivo umore?;RISPOSTA=Era di cattivo umore anche da vivo. Non noteremo la differenza.;\
-    RITO=Il fumo dei funghi lunari sale fra le rovine. Il nonno si sveglia, borbotta “sotto il materasso”, e con lui si svegliano anche due scheletri delle tombe vicine.;\
+    RITO=Il fumo dei funghi lunari sale fra le rovine. Il nonno si sveglia, borbotta "“sotto il materasso\"", e con lui si svegliano anche due scheletri delle tombe vicine.;\
     VITTORIA=Gli scheletri tornano a dormire. Il nonno, invece, si era già riaddormentato da solo.;\
     RINGRAZIAMENTO=Sotto il materasso! Ci dormivo sopra da un anno.;\
     RICORDO=Fra queste rovine un vecchio mercante fu svegliato per il tempo di una domanda.
@@ -1382,7 +1382,7 @@ RITUALE
     MONETE=35;TITOLO=Udienza con la dea;\
     RICHIESTA=Una volta l'anno qualcuno deve parlare con la dea del raccolto, per chiederle un buon anno. Di solito lo faccio io, ma l'anno scorso abbiamo litigato.;\
     BATTUTA=Litigato con una dea?;RISPOSTA=Sulle zucchine. Lei dice che sono un ortaggio nobile. Io no.;\
-    RITO=Una luce dorata riempie il tempio, e una voce gentile promette un buon raccolto. Poi, più piano, aggiunge: “E dite a quella là che le zucchine sono nobili.”;\
+    RITO=Una luce dorata riempie il tempio, e una voce gentile promette un buon raccolto. Poi, più piano, aggiunge: "“E dite a quella là che le zucchine sono nobili.\"";\
     RINGRAZIAMENTO=Un buon raccolto! E va bene, va bene: le zucchine sono nobili. Ma non ditelo in giro.;\
     RICORDO=In questo tempio una dea promise un buon raccolto, e difese l'onore delle zucchine.
     CHIAVE=TRANCE_DI_FRATELLO_ANSELMO;TIPO=TRANCE;ASPETTO=SACERDOTE;MANDANTE=il priore;LUOGO=RADURA;\

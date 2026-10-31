@@ -439,7 +439,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 	}
 
 	private String mandanteEChiesto(TappeRichieste richiesta) {
-		return Articoli.inizialeMaiuscola(mandanteDiCitta(richiesta.getMandante())) + " ti ha affidato una missione: «" + richiesta.getTitolo() + "».";
+		return Articoli.inizialeMaiuscola(mandanteDiCitta(richiesta.getMandante())) + " ti ha affidato una missione: “" + richiesta.getTitolo() + "\".";
 	}
 
 	@Override

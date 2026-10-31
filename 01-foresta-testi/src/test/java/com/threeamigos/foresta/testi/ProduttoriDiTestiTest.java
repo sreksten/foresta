@@ -204,6 +204,9 @@ class ProduttoriDiTestiTest {
 			assertNonVuoto(riga, "riga " + i);
 			assertFalse(riga.contains("["), riga);
 			assertFalse(riga.contains("\t"), riga);
+			// Le virgolette del dialogo si aprono con “ e si chiudono con " (il font non ha né « né » né ”): nella grammatica sono scritte \", e nel testo non resta la barra
+			assertFalse(riga.contains("\\"), riga);
+			assertFalse(riga.matches(".*[«»”].*"), riga);
 			assertTrue(riga.contains("CHIAVE="), riga);
 			assertTrue(riga.contains("ARRIVO="), riga);
 			righe.add(riga);

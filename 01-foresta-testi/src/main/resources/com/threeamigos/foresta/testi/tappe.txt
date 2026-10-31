@@ -582,9 +582,9 @@ COPPIA_PISTE_OGGETTO
 	[^1] PISTA_A=[LUOGO_TEMPIO]:[FALSA_PISTA_TEMPIO];SCENA_A=[SCENA_TEMPIO];PISTA_B=[LUOGO_RADURA]:[CLUE_OGGETTO_RADURA];SCENA_B=[SCENA_RADURA];GIUSTA=B;
 
 FALSA_PISTA_ROVINE
-	Fra queste macerie non c'è niente di quel che cercate: le impronte sono vecchie e le scritte parlano d'altro. Chi indicava questo posto si sbagliava. Un graffito scherza: «sbagliato, andate %A_ALTRA%».
-	Il posto è stato frugato da cima a fondo, e da molto tempo. Non resta traccia di ciò che cercate, ma sul muro qualcuno ha scritto con il carbone: «era %A_ALTRA%».
-	Sotto un arco crollato c'è solo un nido di rondini. Sul bordo di una pietra, una mano ironica ha inciso: «qui no, andate %A_ALTRA%».
+	Fra queste macerie non c'è niente di quel che cercate: le impronte sono vecchie e le scritte parlano d'altro. Chi indicava questo posto si sbagliava. Un graffito scherza: "“sbagliato, andate %A_ALTRA%\"".
+	Il posto è stato frugato da cima a fondo, e da molto tempo. Non resta traccia di ciò che cercate, ma sul muro qualcuno ha scritto con il carbone: "“era %A_ALTRA%\"".
+	Sotto un arco crollato c'è solo un nido di rondini. Sul bordo di una pietra, una mano ironica ha inciso: "“qui no, andate %A_ALTRA%\"".
 
 FALSA_PISTA_TEMPIO
 	Il custode, sorpreso, ammette di non aver visto passare nessuno. Aggiunge che chi indicava questo posto ha confuso le idee: la strada giusta porta %A_ALTRA%.
@@ -594,21 +594,21 @@ FALSA_PISTA_TEMPIO
 FALSA_PISTA_GROTTA
 	La grotta è vuota. Non c'è giaciglio, non c'è fuoco, non c'è traccia di nessuno. Un pipistrello vi guarda con aria di compatimento: la strada giusta porta %A_ALTRA%.
 	Una galleria cieca finisce in una parete di roccia, e sulla parete qualcuno ha disegnato una freccia che indica indietro: bisogna andare %A_ALTRA%.
-	Nel fondo della grotta c'è solo un mucchio di sassi, e una scritta ironica fra i sassi: «bravi, avete seguito la pista sbagliata. Provate %A_ALTRA%».
+	Nel fondo della grotta c'è solo un mucchio di sassi, e una scritta ironica fra i sassi: "“bravi, avete seguito la pista sbagliata. Provate %A_ALTRA%\"".
 
 FALSA_PISTA_BOSCO
-	Il sentiero si perde in un groviglio di rovi, e qualcuno ha legato a un ramo uno straccio con scritto: «sbagliato». Un cacciatore, di passaggio, vi consiglia di provare %A_ALTRA%.
+	Il sentiero si perde in un groviglio di rovi, e qualcuno ha legato a un ramo uno straccio con scritto: "“sbagliato\"". Un cacciatore, di passaggio, vi consiglia di provare %A_ALTRA%.
 	Gli alberi sono fitti e il bosco è silenzioso. Un boscaiolo conferma che in questo posto non passa nessuno da settimane: chi cercate è andato %A_ALTRA%.
 	Sul tronco di una quercia ci sono due frecce intagliate, una cancellata a colpi di coltello. Quella rimasta porta %A_ALTRA%.
 
 FALSA_PISTA_PALUDE
 	La nebbia è fitta, il fango sale fino al ginocchio, e di quel che cercate non c'è traccia. Un pescatore di rane vi dice che chi ha dato questa indicazione era ubriaco: la via giusta porta %A_ALTRA%.
-	Fra i giunchi c'è un palo con un nastro legato a metà: il resto lo ha portato via il vento. Sul palo, a matita: «non è qui, è %A_ALTRA%».
+	Fra i giunchi c'è un palo con un nastro legato a metà: il resto lo ha portato via il vento. Sul palo, a matita: "“non è qui, è %A_ALTRA%\"".
 	L'isolotto che vi avevano indicato è un tronco galleggiante. Una rana, che sembra saperla lunga, gracida in una direzione precisa, quella che porta %A_ALTRA%.
 
 FALSA_PISTA_RADURA
 	La radura è vuota, l'erba è intatta, e nessuno vi ha lasciato niente. Un pastore, con la calma di chi non ha fretta, vi manda %A_ALTRA%.
-	Al centro della radura c'è un cerchio di sassi con dentro un biglietto: «avete sbagliato strada. Andate %A_ALTRA%».
+	Al centro della radura c'è un cerchio di sassi con dentro un biglietto: "“avete sbagliato strada. Andate %A_ALTRA%\"".
 	Un ruscello attraversa la radura, e sulla riva c'è la sagoma di qualcuno che si è sdraiato a guardare il cielo, ma da giorni. Chi cercate è andato %A_ALTRA%.
 
 // =============================================================================================
@@ -730,14 +730,14 @@ CLUE_FARSA_CITTA
 
 CLUE_FARSA_LOCANDA
 	Il locandiere ricorda [#TIZIO]: ha chiesto dell'acqua tiepida, e ha lasciato detto che sarebbe andato %A_PROSSIMO%, in un tono che non ammette repliche.
-	Un avventore giura di aver sentito [#TIZIO] dire a un tavolo vuoto: «presto sapranno». Poi ha pagato e se ne è andato verso %PROSSIMO%.
-	Sul retro del conto c'è un disegno di [#TIZIO] con la scritta «sono innocente». Sotto, un'indicazione: %PROSSIMO%.
+	Un avventore giura di aver sentito [#TIZIO] dire a un tavolo vuoto: "“presto sapranno\"". Poi ha pagato e se ne è andato verso %PROSSIMO%.
+	Sul retro del conto c'è un disegno di [#TIZIO] con la scritta "“sono innocente\"". Sotto, un'indicazione: %PROSSIMO%.
 
 ARRIVO_FARSA
-	[^2] ROVINE:[#TIZIO] è qui, con una pergamena in mano. Quando gli spiegate il motivo, strabuzza gli occhi: «Io? Ma io non ho fatto niente». Poi, dopo un attimo: «Va bene, chiedo scusa. A chi, però?»
-	[^2] RADURA:[#TIZIO] è qui, steso sull'erba, e non si alza neanche quando lo informate che dovete punirlo. «Fate pure, ma con calma».
-	[^2] BOSCO:[#TIZIO] è qui, e sta riparando una staccionata che non ha nessuna intenzione di finire. Quando vi vede alza gli occhi al cielo: «Va bene, chi è stavolta?»
-	[^1] GROTTA:[#TIZIO] è qui, accanto a un fuoco piccolissimo. Quando gli spiegate il motivo, ride: «Questa è bella. Non so cosa sia una macchina, ma mi piacerebbe averla fatta».
+	[^2] ROVINE:[#TIZIO] è qui, con una pergamena in mano. Quando gli spiegate il motivo, strabuzza gli occhi: "“Io? Ma io non ho fatto niente\"". Poi, dopo un attimo: "“Va bene, chiedo scusa. A chi, però?\""
+	[^2] RADURA:[#TIZIO] è qui, steso sull'erba, e non si alza neanche quando lo informate che dovete punirlo. "“Fate pure, ma con calma\"".
+	[^2] BOSCO:[#TIZIO] è qui, e sta riparando una staccionata che non ha nessuna intenzione di finire. Quando vi vede alza gli occhi al cielo: "“Va bene, chi è stavolta?\""
+	[^1] GROTTA:[#TIZIO] è qui, accanto a un fuoco piccolissimo. Quando gli spiegate il motivo, ride: "“Questa è bella. Non so cosa sia una macchina, ma mi piacerebbe averla fatta\"".
 	[^1] ROVINE LADRO 2:[#TIZIO] è qui con due che si presentano come i suoi avvocati. Hanno spade e pochi scrupoli: non vogliono sentire ragioni.
 	[^1] GROTTA GOBLIN 3:[#TIZIO] è qui con tre goblin che dicono di essere i suoi parenti, e che ne difendono l'onore con molto rumore e poco garbo.
 	[^1] PALUDE FOLLETTO 3:[#TIZIO] è qui con tre folletti che lo chiamano capo e ridono a ogni sua parola. Quando provate a parlare, lo coprono con le risate.
