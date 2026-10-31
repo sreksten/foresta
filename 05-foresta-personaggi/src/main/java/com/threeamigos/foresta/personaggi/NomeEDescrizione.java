@@ -26,7 +26,6 @@ final class NomeEDescrizione {
 		return p.getModelloDati();
 	}
 
-	//FIXME questo sparirà quando facciamo la schermata statistiche/inventario
 	String getDescrizione() {
 		StringBuilder sb = new StringBuilder();
 		if (md().getNome() != null) {

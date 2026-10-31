@@ -1,11 +1,8 @@
 package com.threeamigos.foresta.ui.schermate;
 
-import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.artefatti.VistaPezzoDelSet;
-import com.threeamigos.foresta.tipi.CategoriaArtefatto;
-import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.artefatti.VistaScambio;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoCommutazioneElenco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
@@ -13,13 +10,15 @@ import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
-import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.artefatti.VistaScambio;
+import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
-import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
 import com.threeamigos.foresta.testi.Articoli;
+import com.threeamigos.foresta.tipi.BersaglioModificatore;
+import com.threeamigos.foresta.tipi.CategoriaArtefatto;
+import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
@@ -299,7 +298,6 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
                     : DoomdarkColorModel.Color.DARK_GRAY;
 
             // In grande il nome proprio (o il nome), in piccolo la descrizione
-            // TODO da riguardare con la resa grafica
             String nome = artefatto.getNomeBreve();
             nome = Articoli.inizialeMaiuscola(nome);
             ComponenteScorrevole<VistaArtefatto>.Nodo nodo = componenteScorrevole.creaNodo(

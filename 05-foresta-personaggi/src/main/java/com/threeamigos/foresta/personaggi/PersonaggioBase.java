@@ -1,40 +1,24 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.tipi.TipoApproccio;
-import com.threeamigos.foresta.artefatti.*;
-import com.threeamigos.foresta.modellodati.*;
-import com.threeamigos.foresta.artefatti.leggendari.RegoleSetLeggendari;
-import com.threeamigos.foresta.tipi.CategoriaArtefatto;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
-import com.threeamigos.foresta.attributi.CalcolatoreAttributiSecondari;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.artefatti.Arma;
+import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.interni.*;
-import com.threeamigos.foresta.eventi.notifiche.*;
-import com.threeamigos.foresta.modificatori.ModificatoreAttivo;
-import com.threeamigos.foresta.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
-import com.threeamigos.foresta.tipi.BersaglioModificatore;
-import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
-import com.threeamigos.foresta.gruppi.Gruppo;
+import com.threeamigos.foresta.eventi.interni.InternoCreazionePersonaggio;
+import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneStatistichePersonaggio;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
-import com.threeamigos.foresta.gruppi.GruppoAvversario;
-import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.modificatori.ModificatoreAttivo;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.*;
-
-import static com.threeamigos.foresta.personaggi.AttributiSecondari.*;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+
+import static com.threeamigos.foresta.personaggi.AttributiSecondari.*;
 
 /*
  * I personaggi originali della Foresta su ZX Spectrum:
@@ -505,7 +489,6 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	// NOME
 
-	//FIXME questo sparirà quando facciamo la schermata statistiche/inventario
 	@Override
 	public String getDescrizione() {
 		return nomeEDescrizione.getDescrizione();

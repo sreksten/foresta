@@ -1,15 +1,5 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.economia.Cassa;
-import com.threeamigos.foresta.tipi.CostantiMissioni;
-import com.threeamigos.foresta.statistiche.Statistiche;
-import com.threeamigos.foresta.statistiche.LineaTemporale;
-import com.threeamigos.foresta.tipi.TipoApproccio;
-
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-
-import com.threeamigos.foresta.mappa.Foresta;
-
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.abilita.FabbricaAbilita;
 import com.threeamigos.foresta.artefatti.Arma;
@@ -18,23 +8,25 @@ import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.canti.FabbricaCanti;
 import com.threeamigos.foresta.combattimento.*;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
-import com.threeamigos.foresta.incantesimi.*;
+import com.threeamigos.foresta.gruppi.Gruppo;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
+import com.threeamigos.foresta.incantesimi.Incantesimo;
+import com.threeamigos.foresta.mappa.Foresta;
+import com.threeamigos.foresta.missioni.PartitaCartaForbiciSasso;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.modellodati.TatticaMD;
-import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
-import com.threeamigos.foresta.gruppi.Gruppo;
-import com.threeamigos.foresta.gruppi.GruppoGiocatore;
-import com.threeamigos.foresta.gruppi.GruppoAvversario;
-import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.missioni.PartitaCartaForbiciSasso;
 import com.threeamigos.foresta.mondo.RegistroArtefatti;
+import com.threeamigos.foresta.motore.BottinoDegliAvversari;
+import com.threeamigos.foresta.motore.Stato;
 import com.threeamigos.foresta.offerte.FabbricaOfferte;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Bottino;
@@ -42,6 +34,8 @@ import com.threeamigos.foresta.oggetti.BottinoArtefatto;
 import com.threeamigos.foresta.oggetti.FabbricaOggetti;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.statistiche.LineaTemporale;
+import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.logger.Logger;
@@ -300,8 +294,7 @@ public abstract class LocazioneBase implements Locazione {
 			// scattare immediatamente le missioni secondarie che scattano a fine locazione.
 			boolean possibilitaIncontro = Statistiche.getTurniGiocati() == 0 || Dado.tira(100) <= 90;
 			if (possibilitaIncontro) {
-				// FIXME occorrerebbe gestire la cosa un po' più elegantemente...
-				// PEr non far apparire subito un Eremita che fa scattare la missione secondaria a inizio locazione
+				// Per non far apparire subito un Eremita che fa scattare la missione secondaria a inizio locazione
 				List<TipoPersonaggio> ammessi = new ArrayList<>(Arrays.asList(m));
 				if (Statistiche.getTurniGiocati() == 0 && ammessi.size() > 1) {
 					ammessi.remove(TipoPersonaggio.EREMITA);
