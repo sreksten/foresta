@@ -100,7 +100,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
   - `ENTRAMBE_LE_MANI` (nuovo valore di `TipoSlotArtefatto`), per le **armi a due mani**: occupa sia la mano principale sia la secondaria.
     - Chi impugna un'arma a due mani non può equipaggiare scudo, libro magico o seconda arma finché non la ripone nell'inventario del gruppo. Viceversa, non può prendere un'arma a due mani se ha qualcosa in una delle due mani.
     - Il rifiuto si avverte con un fumetto.
-- **Equipaggiamento secondo la classe.** Armi, scudo, libro e armatura seguono una tabella per classe (`RegoleEquipaggiamento.puoUsare`); le versioni femminili seguono le maschili, le classi fuori tabella (i mostri, l'Ombrafiamma) non hanno limiti. Veste e accessori li portano tutti, e l'elmo tutti tranne il Mago/Maga e il Sacerdote/Sacerdotessa (`NON_ADATTO_ALLA_CLASSE`). L'armatura la portano tutti tranne il Ladro/Ladra, il Mago/Maga e il Sacerdote/Sacerdotessa.
+- **Equipaggiamento secondo la classe.** Armi, scudo, libro e armatura seguono una tabella per classe (`RegoleEquipaggiamento.puoUsare`); le versioni femminili seguono le maschili, le classi fuori tabella (i mostri, l'Ombrafiamma) non hanno limiti. Veste e accessori li portano tutti, e l'elmo tutti tranne il Ladro/Ladra, il Mago/Maga e il Sacerdote/Sacerdotessa (`NON_ADATTO_ALLA_CLASSE`). L'armatura la portano tutti tranne il Ladro/Ladra, il Mago/Maga e il Sacerdote/Sacerdotessa.
 
   | Classe | Armi, scudo e libro |
   | :--- | :--- |

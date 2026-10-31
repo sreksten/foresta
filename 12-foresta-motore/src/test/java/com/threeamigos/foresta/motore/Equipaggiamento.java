@@ -83,6 +83,9 @@ public final class Equipaggiamento {
 	public static final Equipaggiamento DUE_SPADE_E_VESTE = di("DUE_SPADE_E_VESTE",
 			Pezzo.di(TipoArtefatto.SPADA), Pezzo.di(TipoArtefatto.SPADA),
 			Pezzo.di(TipoArtefatto.ELMO), Pezzo.di(TipoArtefatto.VESTE));
+	// Il ladro non porta l'elmo (vedi RegoleEquipaggiamento.puoUsare), come il mago
+	public static final Equipaggiamento DUE_SPADE_E_VESTE_SENZA_ELMO = di("DUE_SPADE_E_VESTE_SENZA_ELMO",
+			Pezzo.di(TipoArtefatto.SPADA), Pezzo.di(TipoArtefatto.SPADA), Pezzo.di(TipoArtefatto.VESTE));
 	public static final Equipaggiamento LANCIA_E_VESTE = di("LANCIA_E_VESTE",
 			Pezzo.di(TipoArtefatto.LANCIA), Pezzo.di(TipoArtefatto.ELMO), Pezzo.di(TipoArtefatto.VESTE));
 	public static final Equipaggiamento SPADA_SCUDO_E_VESTE = di("SPADA_SCUDO_E_VESTE",
@@ -102,7 +105,7 @@ public final class Equipaggiamento {
 				return Arrays.asList(CAVALIERE, SPADONE_E_ARMATURA);
 			case LADRO:
 			case LADRA:
-				return Collections.singletonList(DUE_SPADE_E_VESTE);
+				return Collections.singletonList(DUE_SPADE_E_VESTE_SENZA_ELMO);
 			case ELFO:
 			case ELFA:
 				return Arrays.asList(DUE_SPADE_E_VESTE, LANCIA_E_VESTE);

@@ -123,8 +123,9 @@ class PersonaggioEquipaggiamentoTest {
         forzuto.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 10));
         assertTrue(forzuto.get(TipoAttributo.FORZA) >= CostantiPersonaggi.ARMATURA_FORZA_MINIMA, "la prova ha senso solo se la forza basterebbe");
         assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, forzuto, artefatto(TipoArtefatto.ARMATURA, 1));
-        // L'elmo, la veste e gli accessori li porta, come tutti
-        assertEquals(Optional.empty(), new Ladro("Pippo", 1).puoEquipaggiare(artefatto(TipoArtefatto.ELMO, 1)));
+        // Nemmeno l'elmo, come il mago e il sacerdote; la veste e gli accessori li porta, come tutti
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Ladro("Pippo", 1), artefatto(TipoArtefatto.ELMO, 1));
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Ladra("Pippa", 1), artefatto(TipoArtefatto.ELMO, 1));
         assertEquals(Optional.empty(), new Ladro("Pippo", 1).puoEquipaggiare(artefatto(TipoArtefatto.VESTE, 1)));
     }
 
