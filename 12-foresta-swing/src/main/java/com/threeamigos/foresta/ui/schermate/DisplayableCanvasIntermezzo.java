@@ -15,9 +15,8 @@ import com.threeamigos.foresta.ui.sprite.AnimazioneImmagine;
 import com.threeamigos.foresta.ui.sprite.SpriteFumetto;
 import com.threeamigos.foresta.ui.sprite.SpriteRivelazioneArtefatto;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -294,7 +293,7 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 			int larghezzaNuvola = battuta.hasLarghezza() ? (int) Math.round(battuta.getLarghezza() * width) : width / 3;
 			try {
 				nuvola = SpriteFumetto.costruisciNuvola(battuta.getTesto(), larghezzaNuvola,
-						ImageBasedDoomdarkFont.medio(), DoomdarkColorModel.Color.BLACK);
+						DoomdarkFont.medio(), DoomdarkColorModel.Color.BLACK);
 			} catch (DoomdarkFont.UnsupportedCharacterException e) {
 				BusEventi.pubblica(new InternoErrore("Battuta non disegnabile: \"" + battuta.getTesto() + "\" - " + e.getMessage()));
 			}

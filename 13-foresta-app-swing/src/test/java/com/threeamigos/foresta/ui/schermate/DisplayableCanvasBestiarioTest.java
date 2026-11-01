@@ -14,8 +14,7 @@ import com.threeamigos.foresta.tipi.MoltiplicatoreDiClasse;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontSmall;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -156,7 +155,7 @@ class DisplayableCanvasBestiarioTest {
 		testi.add("???");
 		testi.add("12/32");
 
-		for (DoomdarkFont font : new DoomdarkFont[]{DoomdarkFontMedium.getInstance(), DoomdarkFontSmall.getInstance()}) {
+		for (DoomdarkFont font : new DoomdarkFont[]{DoomdarkFont.medio(), DoomdarkFont.piccolo()}) {
 			for (String testo : testi) {
 				for (char c : testo.toCharArray()) {
 					assertTrue(font.supportaIlCarattere(c) || c == ' ',

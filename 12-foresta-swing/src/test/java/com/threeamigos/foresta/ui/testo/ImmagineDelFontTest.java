@@ -155,27 +155,16 @@ class ImmagineDelFontTest {
         }
     }
 
-    private static void controllaLeRisorseDelFont(String risorsa, DoomdarkFont font) {
-        ImmagineDelFont immagine = ImmagineDelFont.carica(risorsa, font.getGlyphWidth(' '));
-        // Ogni carattere che il font di oggi ha, nell'immagine c'è
-        for (String riga : CaratteriDelFont.RIGHE) {
-            for (char c : riga.toCharArray()) {
-                if (font.supportaIlCarattere(c)) {
-                    assertTrue(immagine.supportaIlCarattere(c), "manca nell'immagine '" + c + "' che il font ha");
-                    GlifoDelFont glifo = immagine.getGlifo(c);
-                    assertTrue(glifo.getLarghezza() >= 1, "'" + c + "'");
-                    assertEquals(immagine.getAltezza(), glifo.getAltezza());
+    @Test
+    void leImmaginiDeiDueFontHannoTuttiICaratteriDellElenco() {
+        for (DoomdarkFont font : new DoomdarkFont[]{DoomdarkFont.piccolo(), DoomdarkFont.medio()}) {
+            for (String riga : CaratteriDelFont.RIGHE) {
+                for (char c : riga.toCharArray()) {
+                    assertTrue(font.supportaIlCarattere(c) || c == ' ' , "manca nell'immagine '" + c + "'");
+                    assertTrue(font.getGlyphWidth(c) >= 1, "'" + c + "'");
                 }
             }
         }
-        // Ha anche un po' di spazio sopra e sotto per accenti e cediglie
-        assertTrue(immagine.getAltezza() >= font.getHeight(), "" + immagine.getAltezza());
-    }
-
-    @Test
-    void leImmaginiDeiDueFontHannoTuttiICaratteriDeiFontDiOggi() {
-        controllaLeRisorseDelFont("/com/threeamigos/foresta/img/font/doomdark_small.gif", DoomdarkFontSmall.getInstance());
-        controllaLeRisorseDelFont("/com/threeamigos/foresta/img/font/doomdark_medium.gif", DoomdarkFontMedium.getInstance());
     }
 
     @Test

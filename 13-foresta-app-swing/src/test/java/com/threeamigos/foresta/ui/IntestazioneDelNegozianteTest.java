@@ -118,8 +118,8 @@ class IntestazioneDelNegozianteTest {
         }
         testi.add("Mastro Armaiolo Alchimista Incantatore Venditore di pergamene da Nyena Malgaard Ruuna Fleena");
         assertTrue(testi.size() > 200, "dovrebbe aver letto le liste di nomi: " + testi.size());
-        DoomdarkFont medio = DoomdarkFontMedium.getInstance();
-        DoomdarkFont piccolo = DoomdarkFontSmall.getInstance();
+        DoomdarkFont medio = DoomdarkFont.medio();
+        DoomdarkFont piccolo = DoomdarkFont.piccolo();
         for (String testo : testi) {
             for (char c : testo.toCharArray()) {
                 final char carattere = c;

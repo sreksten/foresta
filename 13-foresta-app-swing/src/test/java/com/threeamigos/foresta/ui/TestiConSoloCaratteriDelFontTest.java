@@ -1,8 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.SorgentiDelProgetto;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontSmall;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -37,7 +36,7 @@ class TestiConSoloCaratteriDelFontTest {
                     continue;
                 }
                 for (char c : riga.toCharArray()) {
-                    if (c > 127 && !(DoomdarkFontMedium.getInstance().supportaIlCarattere(c) && DoomdarkFontSmall.getInstance().supportaIlCarattere(c))) {
+                    if (c > 127 && !(DoomdarkFont.medio().supportaIlCarattere(c) && DoomdarkFont.piccolo().supportaIlCarattere(c))) {
                         fuori.add(file.getFileName() + ":" + (i + 1) + " «" + c + "» [" + (int) c + "]");
                     }
                 }

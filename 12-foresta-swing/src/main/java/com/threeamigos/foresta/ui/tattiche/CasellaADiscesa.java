@@ -3,9 +3,8 @@ package com.threeamigos.foresta.ui.tattiche;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 
 import java.awt.*;
 import java.util.List;
@@ -54,7 +53,7 @@ final class CasellaADiscesa<T> {
 	private final List<Scelta<T>> scelte;
 	private final T corrente;
 	private final Consumer<T> alloScegliere;
-	private final DoomdarkFont font = ImageBasedDoomdarkFont.medio();
+	private final DoomdarkFont font = DoomdarkFont.medio();
 	private final int x;
 	private final int y;
 	private final int larghezza;

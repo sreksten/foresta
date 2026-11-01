@@ -16,9 +16,8 @@ import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.tipi.MappaBottinoImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.awt.*;
@@ -426,7 +425,7 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 	 * modificatori, verdi i bonus e rossi i malus. Tutto con il font medio, che si legge meglio del piccolo.
 	 */
 	private BufferedImage pannello(VistaArtefatto artefatto, int larghezzaMassima) {
-		DoomdarkFont font = ImageBasedDoomdarkFont.medio();
+		DoomdarkFont font = DoomdarkFont.medio();
 		List<Image> righe = new ArrayList<>();
 		Optional<String> nomeProprio = artefatto.getNomeProprio();
 		if (nomeProprio.isPresent()) {

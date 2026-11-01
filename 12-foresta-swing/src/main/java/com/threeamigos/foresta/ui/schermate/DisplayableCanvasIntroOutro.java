@@ -17,9 +17,8 @@ import com.threeamigos.foresta.ui.componenti.ScorrimentoVerticale;
 import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.TestoGrande;
 
 import java.awt.*;
@@ -184,7 +183,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		DoomdarkColorModel.Color color = DoomdarkColorModel.Color.MEDIUM_GRAY;
 		Image doomdark;
 		int giorni = vistaPartita.getGiorno();
-		DoomdarkFont fontMedium = ImageBasedDoomdarkFont.medio();
+		DoomdarkFont fontMedium = DoomdarkFont.medio();
 		doomdark = ImageCache.get("Avversari uccisi in " + (giorni > 1 ? (Numeri.getCardinaleM(giorni) + " giorni:") : "un giorno:"), fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY);
 		graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
 		locYOffset += fontMedium.getHeight();

@@ -96,7 +96,7 @@ Panoramica in `motore_grafico.md`.
 - Mappa a tutto schermo e notiziario: `DisplayableCanvasMappaATuttoSchermo`, `DisegnatoreMappa`, `Notiziario`.
 - Riquadri della schermata di gioco: `DisplayableCanvasRiquadro{Locazione,Gruppo,Combattimento,Mappa,Missioni,Testo,Statistiche,IncantesimiEPozioni}`.
 - Barra icone: `DisplayableCanvasBarraIconeDock` (default) e `DisplayableCanvasBarraIcone` (con argomento `BARRACLASSICA`).
-- Testo: font bitmap `DoomdarkFont*`, `DoomdarkTextRectangle*`. Prompt di input: `Prompt`.
+- Testo: font bitmap `DoomdarkFont`, `DoomdarkTextRectangle*`. Prompt di input: `Prompt`.
 
 ## Come si lavora (regole di collaborazione)
 

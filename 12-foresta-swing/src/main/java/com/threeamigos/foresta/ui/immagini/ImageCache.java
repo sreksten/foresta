@@ -136,7 +136,7 @@ public class ImageCache {
 		thread.setDaemon(true);
 		return thread;
 	});
-	private static final DoomdarkFont fontMedium = ImageBasedDoomdarkFont.medio();
+	private static final DoomdarkFont fontMedium = DoomdarkFont.medio();
 	// Separa, nella chiave della cache, la larghezza massima dal testo: un carattere che nei testi non c'è
 	private static final String SEPARATORE_LARGHEZZA = "\u0000";
 
@@ -386,7 +386,7 @@ public class ImageCache {
 
 	/**
 	 * Metodo di utilità che costruisce e memorizza immagini utilizzate spessissimo (Ad esempio, nomi e statistiche)
-	 * usando il font DoomdarkFontMedium
+	 * usando il font medio
 	 */
 	public static Image get(int valore, DoomdarkColorModel.Color colore) {
 		return get(Integer.toString(valore), fontMedium, colore);
@@ -394,7 +394,7 @@ public class ImageCache {
 
 	/**
 	 * Metodo di utilità che costruisce e memorizza immagini utilizzate spessissimo (Ad esempio, nomi e statistiche)
-	 * usando il font DoomdarkFontMedium
+	 * usando il font medio
 	 */
 	public static Image get(String testo, DoomdarkColorModel.Color colore) {
 		return get(testo, fontMedium, colore);
@@ -411,7 +411,7 @@ public class ImageCache {
 	 * Metodo di utilità che costruisce e memorizza immagini utilizzate spessissimo (Ad esempio, nomi e statistiche)
 	 */
 	public static Image get(String testo, DoomdarkFont font, DoomdarkColorModel.Color colore) {
-		return get(font, colore, testo, () -> ImageBasedDoomdarkTextProducer.getImage(testo, font, colore));
+		return get(font, colore, testo, () -> DoomdarkTextProducer.getImage(testo, font, colore));
 	}
 
 	/**
@@ -421,7 +421,7 @@ public class ImageCache {
 	public static Image get(String testo, DoomdarkFont font, DoomdarkColorModel.Color colore, int larghezzaMassima) {
 		// Lo stesso testo a capo a larghezze diverse è un'altra immagine: la larghezza entra nella chiave
 		return get(font, colore, larghezzaMassima + SEPARATORE_LARGHEZZA + testo,
-				() -> ImageBasedDoomdarkTextProducer.getImage(testo, font, colore, larghezzaMassima));
+				() -> DoomdarkTextProducer.getImage(testo, font, colore, larghezzaMassima));
 	}
 
 	/**
@@ -469,7 +469,7 @@ public class ImageCache {
 	 */
 	public static Image getTestoACapo(String testo, DoomdarkFont font, DoomdarkColorModel.Color colore, int larghezza, int interlinea) {
 		return getComposta(Arrays.asList("testoACapo", font, colore, testo, larghezza, interlinea), () -> {
-			List<String> righe = FontTool.split(ImageBasedDoomdarkFont.di(font), testo, larghezza);
+			List<String> righe = FontTool.split(font, testo, larghezza);
 			BufferedImage canvas = BufferedImageBuilder.creaCompatibile(larghezza, (font.getHeight() + interlinea) * righe.size(), Transparency.TRANSLUCENT);
 			Graphics2D g2d = canvas.createGraphics();
 			int y = 0;

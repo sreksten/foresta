@@ -24,8 +24,8 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 	// Pixel di scorrimento per ogni scatto della rotella
 	private static final int PASSO_SCORRIMENTO = 2;
 
-	private static final DoomdarkFont fontNome = ImageBasedDoomdarkFont.medio();
-	private static final DoomdarkFont fontDescrizione = ImageBasedDoomdarkFont.piccolo();
+	private static final DoomdarkFont fontNome = DoomdarkFont.medio();
+	private static final DoomdarkFont fontDescrizione = DoomdarkFont.piccolo();
 
 	private final int topLeftX;
 	private int topLeftY;

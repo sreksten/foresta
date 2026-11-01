@@ -2,7 +2,7 @@ package com.threeamigos.foresta.ui.riquadri;
 
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
-import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkTextRectangle2x;
+import com.threeamigos.foresta.ui.testo.DoomdarkTextRectangle2x;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -19,7 +19,7 @@ public class DisplayableCanvasRiquadroTesto implements Finestra {
 	private final int topLeftY;
 	private final int width;
 	private final int height;
-	private final ImageBasedDoomdarkTextRectangle2x doomdarkTextRectangle;
+	private final DoomdarkTextRectangle2x doomdarkTextRectangle;
 	// L'immagine finita del riquadro (ombra del drago + testo sfumato), rifatta solo
 	// quando cambia la versione del testo
 	private BufferedImage immagineTesto;
@@ -30,7 +30,7 @@ public class DisplayableCanvasRiquadroTesto implements Finestra {
 		this.topLeftY = topLeftY;
 		this.width = width;
 		this.height = height;
-		doomdarkTextRectangle = new ImageBasedDoomdarkTextRectangle2x(width, height);
+		doomdarkTextRectangle = new DoomdarkTextRectangle2x(width, height);
 	}
 
 	/**

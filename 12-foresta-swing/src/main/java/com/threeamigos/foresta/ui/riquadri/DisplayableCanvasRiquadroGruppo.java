@@ -13,9 +13,8 @@ import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -33,7 +32,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 	private final int topLeftX;
 	private int topLeftY;
 	private final int innerWidth;
-	private final DoomdarkFont fontMedium = ImageBasedDoomdarkFont.medio();
+	private final DoomdarkFont fontMedium = DoomdarkFont.medio();
 	private final int leftXOffsetLabelSalute;
 	private final int rightXOffsetSalute;
 	private final int leftXOffsetSeparatoreSalute;

@@ -5,9 +5,8 @@ import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -17,7 +16,7 @@ import java.util.List;
 /**
  * Ticker delle notizie in fondo alla mappa a tutto schermo: mostra le
  * {@link VistaPartita#getUltimeNotizie()} come un'unica striscia composita
- * (titolo in giallo + corpo in bianco con {@link DoomdarkFontMedium},
+ * (titolo in giallo + corpo in bianco con {@link DoomdarkFont#medio()},
  * separate da un "-" con margini di {@value #LARGHEZZA_MARGINE_SEPARATORE_NOTIZIE}px,
  * incluso dopo l'ultima per un loop continuo), disegnata più volte affiancata (tiling) così che una
  * notizia comincia a comparire da destra mentre la precedente sta ancora
@@ -33,7 +32,7 @@ class Notiziario {
 	private static final int LARGHEZZA_ZONA_FADE = 60;
 	private static final int LARGHEZZA_MARGINE_SEPARATORE_NOTIZIE = 16;
 	private static final Color COLORE_SFONDO = new Color(20, 40, 120);
-	private static final DoomdarkFont FONT = ImageBasedDoomdarkFont.medio();
+	private static final DoomdarkFont FONT = DoomdarkFont.medio();
 	private static final String SEPARATORE_TITOLO = " - ";
 
 	private final int larghezza;

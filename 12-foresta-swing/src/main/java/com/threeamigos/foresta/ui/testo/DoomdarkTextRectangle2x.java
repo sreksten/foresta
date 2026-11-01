@@ -2,37 +2,43 @@ package com.threeamigos.foresta.ui.testo;
 
 import com.threeamigos.foresta.modellodati.NotizieMD;
 import com.threeamigos.foresta.strumenti.logger.Logger;
-import com.threeamigos.foresta.ui.testo.DoomdarkFont.UnsupportedCharacterException;
 
+import java.awt.image.ColorModel;
 import java.awt.image.MemoryImageSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Rettangolo di testo scorrevole. Le righe già spezzate alla larghezza del rettangolo
- * vengono conservate in uno storico, e il raster viene ridisegnato a partire da quello:
- * è ciò che permette di tornare indietro con la rotella invece di limitarsi a far
- * scorrere via il testo vecchio. Lo storico condivide il limite con quanto ricordato
- * da {@code motore.Notizie} (vedi {@link NotizieMD#MASSIMO_MESSAGGI_RICORDATI}),
- * così che dopo un ricaricamento il pannello possa essere ripopolato per intero.
+ * Un rettangolo con i glifi del font a immagine ({@link DoomdarkFont}):
+ * rettangolo di testo scorrevole in cui le righe già spezzate alla larghezza del rettangolo vengono conservate in uno
+ * storico, e il raster viene ridisegnato a partire da quello: è ciò che permette di tornare indietro con la rotella
+ * invece di limitarsi a far scorrere via il testo vecchio. Lo storico condivide il limite con quanto ricordato da
+ * {@code motore.Notizie} (vedi {@link NotizieMD#MASSIMO_MESSAGGI_RICORDATI}), così che dopo un ricaricamento il pannello
+ * possa essere ripopolato per intero.
+ * <p>
+ * Una riga di testo è alta quanto l'immagine del font, con le righe in più per accenti e cediglie, e fra una riga e
+ * l'altra c'è un pixel solo, perché le righe in più le separano già. Il raster è bianco, con l'alfa del livello del
+ * glifo: i bordi sfumano sullo sfondo.
  */
 public class DoomdarkTextRectangle2x {
 
-	// Pixel aggiuntivi fra la base di una riga e l'inizio della successiva
-	private static final int INTERLINEA = 4;
+	// Pixel aggiuntivi fra il fondo di una riga e l'inizio della successiva
+	private static final int INTERLINEA = 1;
+	private static final int BIANCO = 0xFFFFFFFF;
+	private static final int TRASPARENTE = 0x00000000;
 
 	// Le righe già spezzate alla larghezza del rettangolo, dalla più vecchia alla più recente
 	private final List<String> righe = new ArrayList<>();
-	// buffer per l'immagine temporanea che tiene il testo prima del rendering
+	// Il raster prima della consegna, in ARGB
 	private final int[] textData;
 
 	private final int width;
 	private final int height;
-	private final int fontHeight = DoomdarkFontMedium.getInstance().getHeight();
-	private final int charPadding = DoomdarkFontMedium.getInstance().getPadding();
-	private final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
-	// Distanza fra le basi di due righe consecutive
+	private final DoomdarkFont font = DoomdarkFont.medio();
+	private final int fontHeight = font.getHeight();
+	private final int charPadding = font.getPadding();
+	// Distanza fra le cime di due righe consecutive
 	private final int passoRiga = fontHeight + INTERLINEA;
 	private final int righeVisibili;
 
@@ -46,7 +52,7 @@ public class DoomdarkTextRectangle2x {
 	public DoomdarkTextRectangle2x(int width, int height) {
 		this.width = width;
 		this.height = height;
-		// La riga più in basso poggia a height - fontHeight, le altre a salire di passoRiga
+		// La riga più in basso sta a height - fontHeight, le altre a salire di passoRiga
 		righeVisibili = height < fontHeight ? 0 : (height - fontHeight) / passoRiga + 1;
 		textData = new int[width * height];
 		imbottisci();
@@ -68,33 +74,27 @@ public class DoomdarkTextRectangle2x {
 		}
 	}
 
-	// renderizza una stringa alla quota indicata
+	// scrive una stringa alla quota indicata
 	private void render(String resource, int quota) {
-		int textDataIndex = width * quota + charPadding; // punta alla prima cella in alto a sx della riga di testo
-		int rowDataIndex = 1; // scorre lungo la riga per scoprire quando siamo usciti
+		int colonna = charPadding;
 		for (int charIndex = 0; charIndex < resource.length(); charIndex++) {
-			byte[] charData;
-			try {
-				charData = fontMedium.getGlyphData(resource.charAt(charIndex));
-			} catch (UnsupportedCharacterException e) {
-				Logger.log(e);
+			char carattere = resource.charAt(charIndex);
+			if (!font.supportaIlCarattere(carattere)) {
+				Logger.log(() -> "Carattere non supportato dal font: " + carattere + " [" + (int) carattere + "]");
 				continue;
 			}
-			int charWidth = charData[0];
-			int dataWidth = DoomdarkFontMedium.getInstance().getDataWidthInBytes();
-			for (int bits = 0; bits < charWidth; bits++) {
+			int larghezzaDelGlifo = font.getGlyphWidth(carattere);
+			for (int x = 0; x < larghezzaDelGlifo; x++) {
 				// Questo controllo lo metto all'inizio così se la larghezza del canvas è zero non dà errore e torna
-				if (rowDataIndex >= width - charPadding) {
+				if (colonna >= width - charPadding) {
 					return;
 				}
-				for (int row = 0; row < fontHeight; row++) {
-					textData[textDataIndex + width * row] = (charData[row * dataWidth + 1 + (bits >> 3)] >> (7 - (bits & 0b111))) & 1;
+				for (int riga = 0; riga < fontHeight; riga++) {
+					textData[(quota + riga) * width + colonna] = DoomdarkTextProducer.pixel(BIANCO, font.getLivello(carattere, x, riga));
 				}
-				textDataIndex++;
-				rowDataIndex++;
+				colonna++;
 			}
-			textDataIndex++;
-			rowDataIndex++;
+			colonna += font.getSpacing();
 		}
 	}
 
@@ -103,7 +103,7 @@ public class DoomdarkTextRectangle2x {
 	 * la più recente in basso, le precedenti a salire.
 	 */
 	private void ridisegna() {
-		Arrays.fill(textData, 0);
+		Arrays.fill(textData, TRASPARENTE);
 		// Indice della riga che va in fondo al rettangolo
 		int indiceUltimaRiga = righe.size() - 1 - offsetRighe;
 		for (int i = 0; i < righeVisibili; i++) {
@@ -123,7 +123,7 @@ public class DoomdarkTextRectangle2x {
 		// Gestisce i \n letterali come vere newline
 		String[] lines = s.split("\\\\n");
 		for (String line : lines) {
-			righe.addAll(FontTool.split(fontMedium, line, width));
+			righe.addAll(FontTool.split(font, line, width));
 		}
 		while (righe.size() > NotizieMD.MASSIMO_MESSAGGI_RICORDATI) {
 			righe.remove(0);
@@ -188,10 +188,17 @@ public class DoomdarkTextRectangle2x {
 		return versione;
 	}
 
+	/**
+	 * Quante righe di testo stanno nel rettangolo
+	 */
+	public int getRigheVisibili() {
+		return righeVisibili;
+	}
+
 	public synchronized MemoryImageSource getImageSource() {
 		if (daRidisegnare) {
 			ridisegna();
 		}
-		return new MemoryImageSource(width, height, DoomdarkColorModel.getColorModel(DoomdarkColorModel.Color.WHITE), textData, 0, width);
+		return new MemoryImageSource(width, height, ColorModel.getRGBdefault(), textData, 0, width);
 	}
 }

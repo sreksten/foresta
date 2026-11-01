@@ -10,10 +10,9 @@ import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorAlternante;
-import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -48,7 +47,7 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 
 	private final List<Riga> righe = new ArrayList<>();
 	private final int altezzaVisibile;
-	private final int altezzaRiga = ImageBasedDoomdarkFont.medio().getHeight();
+	private final int altezzaRiga = DoomdarkFont.medio().getHeight();
 	private final int topLeftX;
 	private int topLeftY;
 	private final int iconaX;
@@ -127,7 +126,7 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		graphics.setClip(areaLista);
 
 		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
-		DoomdarkFont fontMedium = ImageBasedDoomdarkFont.medio();
+		DoomdarkFont fontMedium = DoomdarkFont.medio();
 		DoomdarkColorAlternante color = new DoomdarkColorAlternante();
 		// Si alternano i colori su tutte le righe, anche quelle fuori vista, perché scorrendo non cambino
 		for (int i = 0; i < righe.size(); i++) {
@@ -197,7 +196,7 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		SpriteATempo sprite = new SpriteATempo(righe.get(indiceRiga).icona, variazione, ImageBasedDoomdarkFont.medio(),
+		SpriteATempo sprite = new SpriteATempo(righe.get(indiceRiga).icona, variazione, DoomdarkFont.medio(),
 				totaleX, yDellaRiga(indiceRiga), descrizione);
 		sprite.setRitaglio(areaLista);
 		return sprite;

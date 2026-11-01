@@ -19,9 +19,7 @@ import com.threeamigos.foresta.ui.sprite.SpriteEffetto;
 import com.threeamigos.foresta.ui.sprite.SpriteInDissolvenza;
 import com.threeamigos.foresta.ui.sprite.SpriteInterface;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontSmall;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.awt.*;
@@ -400,7 +398,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		}
 		int xCentro = coordinate.getX() + immagine.getWidth() / 2;
 		int y = primoPostoLibero(occupati, xCentro, coordinate.getY(), icona.getHeight() * QUARTI_DI_ICONA_FRA_SPRITE_A_TEMPO / 4);
-		SpriteATempo sprite = new SpriteATempo(icona, variazione, ImageBasedDoomdarkFont.medio(), xCentro, y, true, descrizione);
+		SpriteATempo sprite = new SpriteATempo(icona, variazione, DoomdarkFont.medio(), xCentro, y, true, descrizione);
 		sprite.centraEntro(xCentro, topLeftX, topLeftX + larghezzaDisponibile);
 		spriteATempoAttivi.add(new SpriteATempoAttivo(new Point(xCentro, y), sprite));
 		return sprite;
@@ -482,7 +480,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 
 		BufferedImage image = mappaImmagini.get(personaggio);
 		int yIniziale = coordinate.getY() + image.getHeight() / 3 - SOLLEVAMENTO_ANCORA;
-		SpriteEffetto sprite = new SpriteEffetto(descrizione, ImageBasedDoomdarkFont.medio(),
+		SpriteEffetto sprite = new SpriteEffetto(descrizione, DoomdarkFont.medio(),
 				colore, coordinate.getX(), yIniziale + calcolaOffsetVerticale(yIniziale));
 		centraSulPersonaggio(sprite, coordinate, image);
 		effettiAttivi.add(new EffettoAttivo(yIniziale, sprite));
@@ -501,7 +499,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	 */
 	public SpriteInterface aggiungiTestoSulPersonaggio(VistaPersonaggio personaggio, String testo, DoomdarkColorModel.Color colore) {
 		return aggiungiTestoSulPersonaggio(personaggio, testo, (x, y) ->
-				new SpriteEffetto(testo, ImageBasedDoomdarkFont.medio(), colore, x, y));
+				new SpriteEffetto(testo, DoomdarkFont.medio(), colore, x, y));
 	}
 
 	/**
@@ -510,7 +508,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 	public SpriteInterface aggiungiColpoMancato(VistaPersonaggio personaggio) {
 		String testo = TestiDellaUI.get("COLPO_MANCATO");
 		return aggiungiTestoSulPersonaggio(personaggio, testo, (x, y) ->
-				new SpriteEffetto(testo, ImageBasedDoomdarkFont.piccolo(), DoomdarkColorModel.Color.MEDIUM_GRAY, x, y));
+				new SpriteEffetto(testo, DoomdarkFont.piccolo(), DoomdarkColorModel.Color.MEDIUM_GRAY, x, y));
 	}
 
 	/**
@@ -520,7 +518,7 @@ public class DisplayableCanvasRiquadroLocazione implements Finestra {
 		BufferedImage pattern = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 		pattern.setRGB(0, 0, colore.getRGB());
 		return aggiungiTestoSulPersonaggio(personaggio, testo, (x, y) ->
-				new SpriteEffetto(testo, ImageBasedDoomdarkFont.medio(), pattern, x, y));
+				new SpriteEffetto(testo, DoomdarkFont.medio(), pattern, x, y));
 	}
 
 	private SpriteInterface aggiungiTestoSulPersonaggio(VistaPersonaggio personaggio, String testo,

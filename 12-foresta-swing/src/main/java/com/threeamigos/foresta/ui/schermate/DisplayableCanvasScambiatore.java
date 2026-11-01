@@ -82,7 +82,7 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     /**
      * Il font usato per disegnare il testo nella finestra di scambio
      */
-    public final DoomdarkFont font = ImageBasedDoomdarkFont.medio();
+    public final DoomdarkFont font = DoomdarkFont.medio();
     /**
      * L'altezza del font usato per disegnare il testo nella finestra di scambio
      */
@@ -90,7 +90,7 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     /**
      * Il font piccolo usato per disegnare le descrizioni dei nodi nell'albero degli oggetti
      */
-    public final DoomdarkFont fontSmall = ImageBasedDoomdarkFont.piccolo();
+    public final DoomdarkFont fontSmall = DoomdarkFont.piccolo();
 
     /**
      * Coordinata X iniziale della parte sinistra

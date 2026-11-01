@@ -11,7 +11,7 @@ import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 
 import java.awt.*;
@@ -24,7 +24,7 @@ public class DisplayableCanvasRiquadroStatistiche implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE = 6;
 
-	private final DoomdarkFont fontMedium = ImageBasedDoomdarkFont.medio();
+	private final DoomdarkFont fontMedium = DoomdarkFont.medio();
 	private final DoomdarkColorModel.Color coloreTestata = DoomdarkColorModel.Color.LIGHT_GRAY;
 
 	private final int topLeftX;

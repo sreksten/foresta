@@ -21,9 +21,8 @@ import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatore;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.FontTool;
 
 import java.awt.*;
@@ -158,7 +157,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		void set(List<FiltroMD> nuova);
 	}
 
-	private final DoomdarkFont fontRiga = ImageBasedDoomdarkFont.medio();
+	private final DoomdarkFont fontRiga = DoomdarkFont.medio();
 	private final int altezzaRiga;
 
 	private VistaPersonaggio personaggio;
