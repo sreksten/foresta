@@ -6,8 +6,9 @@ import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * Il cartografo: in città un cartografo vuole sapere che cosa c'è nella foresta, e paga il gruppo perché esplori un
@@ -47,7 +48,7 @@ public class IlCartografo extends IncaricoInCitta {
 		if (RITORNO.equals(getPassoCorrente())) {
 			return "Hai esplorato abbastanza: torna dal cartografo di " + getNomeCitta() + " a raccontargli che cosa hai visto.";
 		}
-		return "Il cartografo di " + getNomeCitta() + " vuole sapere che cosa c'è in " + Numeri.getCardinaleF(getCaselle())
+		return "Il cartografo di " + getNomeCitta() + " vuole sapere che cosa c'è in " + Lingue.corrente().cardinale(getCaselle(), Genere.FEMMINILE)
 				+ " zone della foresta dove non sei mai stato. Finora: " + getCaselleEsplorate() + ".";
 	}
 
@@ -71,7 +72,7 @@ public class IlCartografo extends IncaricoInCitta {
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conMandante()
 				.parlaIlMandante("Siete esploratori? Io disegno mappe, ma nella foresta non ci metto piede da anni.")
-				.parlaIlMandante("Andate dove nessuno di voi è mai stato, " + Numeri.getCardinaleF(getCaselle())
+				.parlaIlMandante("Andate dove nessuno di voi è mai stato, " + Lingue.corrente().cardinale(getCaselle(), Genere.FEMMINILE)
 						+ " zone nuove, e tornate a raccontarmele. Vi pago " + getRicompensa() + " monete.")
 				.parlaIlCapo("E se ci perdiamo?")
 				.parlaIlMandante("Allora la mappa vi servirà ancora di più.");
@@ -86,7 +87,7 @@ public class IlCartografo extends IncaricoInCitta {
 
 	@Override
 	protected String testoAccettazione() {
-		return "Il cartografo pagherà " + getRicompensa() + " monete per " + Numeri.getCardinaleF(getCaselle())
+		return "Il cartografo pagherà " + getRicompensa() + " monete per " + Lingue.corrente().cardinale(getCaselle(), Genere.FEMMINILE)
 				+ " zone della foresta mai visitate.";
 	}
 

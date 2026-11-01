@@ -8,10 +8,11 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.logger.Logger;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * La notte del gruppo: il racconto, l'orologio e gli eventi che dipendono dal giorno. Il riposo vero e proprio lo fa il gruppo
@@ -45,7 +46,7 @@ public final class Pernottamento {
 			BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
 		} else {
 			StringBuilder sb = new StringBuilder("Il gruppo decide di accamparsi qui per riposare un po'. Dopo aver stabilito i turni di guardia, i ")
-					.append(Numeri.getCardinaleM(gruppo.getNumeroPersonaggi())).append(" intrepidi avventurieri si godono un meritato riposo. ");
+					.append(Lingue.corrente().cardinale(gruppo.getNumeroPersonaggi(), Genere.MASCHILE)).append(" intrepidi avventurieri si godono un meritato riposo. ");
 			if (ore == 1) {
 				sb.append("Ma un'ora sola è veramente insufficiente");
 			} else if (ore == 2) {

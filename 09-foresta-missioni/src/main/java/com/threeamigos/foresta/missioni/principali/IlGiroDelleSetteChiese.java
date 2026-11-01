@@ -15,7 +15,6 @@ import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -23,6 +22,8 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * Sette templi liberati dai mostri che li infestano. La missione parte quando il gruppo ripulisce il primo tempio: a
@@ -82,7 +83,7 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 
 	@Override
 	public String getDescrizione() {
-		String cardinale = Numeri.getCardinaleM(TEMPLI_DA_LIBERARE);
+		String cardinale = Lingue.corrente().cardinale(TEMPLI_DA_LIBERARE, Genere.MASCHILE);
 		if (isCompleta()) {
 			return "Sette templi liberati dai mostri: i devoti sono tornati in pellegrinaggio.";
 		}
@@ -95,7 +96,7 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 		if (mancanti == 1) {
 			return descrizione + " Ne manca uno.";
 		}
-		return descrizione + " Ne mancano " + Numeri.getCardinaleM(mancanti) + ".";
+		return descrizione + " Ne mancano " + Lingue.corrente().cardinale(mancanti, Genere.MASCHILE) + ".";
 	}
 
 	/**
@@ -135,8 +136,8 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 		ripulisciIlTempioCorrente();
 		int ripuliti = contaTempliRipuliti();
 		if (ripuliti < TEMPLI_DA_LIBERARE) {
-			BusEventi.pubblica(new NotificaTestoParagrafo("Il tempio è libero dai mostri: sono " + Numeri.getCardinaleM(ripuliti)
-					+ " su " + Numeri.getCardinaleM(TEMPLI_DA_LIBERARE) + "."));
+			BusEventi.pubblica(new NotificaTestoParagrafo("Il tempio è libero dai mostri: sono " + Lingue.corrente().cardinale(ripuliti, Genere.MASCHILE)
+					+ " su " + Lingue.corrente().cardinale(TEMPLI_DA_LIBERARE, Genere.MASCHILE) + "."));
 		}
 	}
 

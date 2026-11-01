@@ -7,11 +7,12 @@ import com.threeamigos.foresta.artefatti.leggendari.SetLeggendario;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.Numeri;
 
 import java.util.*;
 import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * Quale leggendario racconta la prossima leggenda (vedi LaLeggenda), o mette in palio il prossimo torneo (vedi
@@ -132,7 +133,7 @@ public final class PescaLeggendaria {
 			}
 			long mancano = pezzi.size() - usciti - 1;
 			String quantiMancano = mancano == 0 ? "ed è l'ultimo che manca."
-					: mancano == 1 ? "e ne manca ancora uno." : "e ne mancano ancora " + Numeri.getCardinaleM((int) mancano) + ".";
+					: mancano == 1 ? "e ne manca ancora uno." : "e ne mancano ancora " + Lingue.corrente().cardinale((int) mancano, Genere.MASCHILE) + ".";
 			return Optional.of("Vi interessa " + set.getNome() + "? Allora ascoltate: questo è un altro dei suoi pezzi, " + quantiMancano);
 		});
 	}

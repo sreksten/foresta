@@ -2,7 +2,6 @@ package com.threeamigos.foresta.ui.schermate;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.ui.componenti.JoystickVirtuale;
@@ -13,6 +12,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.testi.Lingue;
 
 /**
  * La mappa della foresta a tutto schermo: si trascina con il mouse, mostra il nome della casella sotto il cursore e, in alto, il notiziario.
@@ -271,10 +271,10 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 		List<String> righe = new ArrayList<>();
 		String nome = getNomeSottoIlMouse();
 		if (nome != null) {
-			righe.add(Articoli.inizialeMaiuscola(nome));
+			righe.add(Lingue.corrente().inizialeMaiuscola(nome));
 		}
 		for (String nomeMissione : getNomiMissioniSottoIlMouse()) {
-			righe.add(Articoli.inizialeMaiuscola(nomeMissione));
+			righe.add(Lingue.corrente().inizialeMaiuscola(nomeMissione));
 		}
 		Cartiglio.disegnaAccantoAlMouse(graphics, righe, xMouse, yMouse, width, altezzaMappa);
 	}

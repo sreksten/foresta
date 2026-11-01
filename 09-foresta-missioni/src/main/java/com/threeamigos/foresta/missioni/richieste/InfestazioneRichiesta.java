@@ -2,8 +2,9 @@ package com.threeamigos.foresta.missioni.richieste;
 
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * Chi infesta le rovine di una bottega nella Foresta (vedi IlNegozio), letto da una riga di NEGOZIO_NEMICI in missioni.txt:
@@ -46,6 +47,6 @@ public final class InfestazioneRichiesta {
 		if (numero == 1) {
 			return modello.getAIS() + modello.getNomeSingolare();
 		}
-		return Numeri.getCardinaleM(numero) + " " + modello.getNomePlurale();
+		return Lingue.corrente().cardinale(numero, Genere.MASCHILE) + " " + modello.getNomePlurale();
 	}
 }

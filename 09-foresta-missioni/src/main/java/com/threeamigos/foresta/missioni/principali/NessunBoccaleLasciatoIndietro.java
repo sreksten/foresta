@@ -6,9 +6,10 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * Dieci locande sparse nella Foresta, quelle cittadine non contano. Tornare due volte
@@ -19,7 +20,7 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 
 	private static final int LOCANDE_DA_VISITARE = 10;
 
-	private static final String DESCRIZIONE_BASE = "Visita " + Numeri.getCardinaleM(LOCANDE_DA_VISITARE) + " locande nel mezzo della Foresta";
+	private static final String DESCRIZIONE_BASE = "Visita " + Lingue.corrente().cardinale(LOCANDE_DA_VISITARE, Genere.MASCHILE) + " locande nel mezzo della Foresta";
 	// Quante tappe sono già state annunciate: le caselle sanno quali locande
 	// sono state visitate, questo serve solo a non ripetere l'annuncio
 	private static final String LOCANDE_CENSITE = "LOCANDE_CENSITE";
@@ -45,7 +46,7 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 		if (mancanti == LOCANDE_DA_VISITARE) {
 			return DESCRIZIONE_BASE + ".";
 		} else {
-			return DESCRIZIONE_BASE + ". Ne mancano " + Numeri.getCardinaleM(mancanti) + '.';
+			return DESCRIZIONE_BASE + ". Ne mancano " + Lingue.corrente().cardinale(mancanti, Genere.MASCHILE) + '.';
 		}
 	}
 
@@ -82,7 +83,7 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 			BusEventi.pubblica(new NotificaTestoParagrafo("Dieci locande, dieci osti, un solo fegato. Nessun boccale" +
 					" è stato lasciato indietro, e la Foresta ha un nuovo esperto di birre a cui nessuno ha chiesto un parere."));
 		} else {
-			BusEventi.pubblica(new NotificaTestoParagrafo("Locanda numero " + Numeri.getCardinaleM(visitate) + " debitamente censita."));
+			BusEventi.pubblica(new NotificaTestoParagrafo("Locanda numero " + Lingue.corrente().cardinale(visitate, Genere.MASCHILE) + " debitamente censita."));
 		}
 	}
 

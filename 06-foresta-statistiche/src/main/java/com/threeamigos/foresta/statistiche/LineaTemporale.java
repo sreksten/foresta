@@ -7,10 +7,11 @@ import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LineaTemporaleMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.function.Supplier;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * Il tempo della partita: giorno e ora, le città distrutte e l'ultimo evento da mostrare. I dati stanno nel {@code LineaTemporaleMD}.
@@ -91,7 +92,7 @@ public class LineaTemporale {
 		} else {
 			sb.append(' ');
 		}
-		sb.append(Numeri.getOrdinaleM(giorno, false)).append(" giorno.");
+		sb.append(Lingue.corrente().ordinale(giorno, Genere.MASCHILE, false)).append(" giorno.");
 		return sb.toString();
 	}
 

@@ -17,7 +17,6 @@ import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -26,6 +25,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Arrays;
 import java.util.List;
+import com.threeamigos.foresta.testi.Lingue;
 
 /**
  * La falce del Tristo Mietitore. In una città qualsiasi (a una visita tranquilla) un personaggio a caso, spaventatissimo, giura di aver
@@ -80,7 +80,7 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 
 	@Override
 	public String getDescrizione() {
-		return Articoli.inizialeMaiuscola(getNarratore()) + " giura di aver visto la Morte in persona, con la sua falce e circondata da scheletri, "
+		return Lingue.corrente().inizialeMaiuscola(getNarratore()) + " giura di aver visto la Morte in persona, con la sua falce e circondata da scheletri, "
 				+ "nelle rovine segnate sulla mappa.";
 	}
 
@@ -167,7 +167,7 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 								() -> nelPosto() && RegistroMissioni.cercaOCostruisci(TipoLocazione.ROVINE, this).isPresent())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getCovo());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Articoli.inizialeMaiuscola(getNarratore())
+							BusEventi.pubblica(new NotificaTestoParagrafo(Lingue.corrente().inizialeMaiuscola(getNarratore())
 									+ " segna sulla mappa le rovine dove ha visto la Morte."));
 							attivaMissione();
 						})

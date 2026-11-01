@@ -11,10 +11,11 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * In città qualcuno vuole sconfitto qualcosa che si nasconde nella foresta: una bestia rara, una banda in un covo, una
@@ -112,7 +113,7 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 			String nemico = modello.getADS() + modello.getNomeSingolare();
 			return incarico.isConCapo() ? getCapo() + ", " + nemico : nemico;
 		}
-		String nemici = Numeri.getCardinaleM(getNumero()) + " " + modello.getNomePlurale();
+		String nemici = Lingue.corrente().cardinale(getNumero(), Genere.MASCHILE) + " " + modello.getNomePlurale();
 		return incarico.isConCapo() ? nemici + " guidati da " + getCapo() : nemici;
 	}
 
@@ -142,9 +143,9 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 	@Override
 	public String getDescrizione() {
 		if (RITORNO.equals(getPassoCorrente())) {
-			return "Fatto: torna " + Articoli.conPreposizione("da", mandante(getIncarico().getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
+			return "Fatto: torna " + Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getIncarico().getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
 		}
-		return Articoli.inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di sconfiggere " + getNomeDeiNemici()
+		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di sconfiggere " + getNomeDeiNemici()
 				+ (getNumero() == 1 ? ", che si trova" : ", che si trovano") + " nel posto segnato sulla mappa.";
 	}
 
@@ -173,7 +174,7 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 			case CACCIA:
 				return combatti(this::getCovo, getNemici())
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testo(incarico.getVittoria()) + " "
-								+ Articoli.inizialeMaiuscola(mandante(incarico.getMandante())) + " aspetta a " + getNomeCitta() + ".")))
+								+ Lingue.corrente().inizialeMaiuscola(mandante(incarico.getMandante())) + " aspetta a " + getNomeCitta() + ".")))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -200,13 +201,13 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 
 	@Override
 	protected String testoAccettazione() {
-		return Articoli.inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per sconfiggere "
+		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per sconfiggere "
 				+ getNomeDeiNemici() + ".";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Articoli.inizialeMaiuscola(mandante(getIncarico().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Lingue.corrente().inizialeMaiuscola(mandante(getIncarico().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

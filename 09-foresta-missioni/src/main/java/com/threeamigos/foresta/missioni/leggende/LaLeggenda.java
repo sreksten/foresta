@@ -18,13 +18,14 @@ import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 
 /**
  * Qualcuno (l'armaiolo in città, il locandiere in una locanda: vedi le sottoclassi) racconta la leggenda di un
@@ -193,8 +194,8 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 		if (leggendario == null) {
 			return "";
 		}
-		String tempio = getTempio() == null ? "in un tempio" : Articoli.conPreposizione("in", Foresta.nomeDelTempio(getTempio()));
-		return "Secondo la leggenda raccontata " + Articoli.conPreposizione("da", getNarratore()) + ", " + getNomeDeiGuardiani()
+		String tempio = getTempio() == null ? "in un tempio" : Lingue.corrente().conPreposizione(Preposizione.IN, Foresta.nomeDelTempio(getTempio()));
+		return "Secondo la leggenda raccontata " + Lingue.corrente().conPreposizione(Preposizione.DA, getNarratore()) + ", " + getNomeDeiGuardiani()
 				+ " custodiscono " + leggendario.getNomeBreve() + " " + tempio + ", segnato sulla mappa.";
 	}
 
@@ -224,7 +225,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 								() -> nelPosto() && RegistroMissioni.cercaOCostruisci(TipoLocazione.BOSCO, this).isPresent())
 						.esegui(() -> {
 							RegistroArtefatti.custodisciInUnTempioNuovo(getLeggendario().costruisci(Statistiche.getLivello()), getTempio());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Articoli.inizialeMaiuscola(getNarratoreConNome()) + " segna sulla mappa "
+							BusEventi.pubblica(new NotificaTestoParagrafo(Lingue.corrente().inizialeMaiuscola(getNarratoreConNome()) + " segna sulla mappa "
 									+ Foresta.nomeDelTempio(getTempio()) + ", dove " + getNomeDeiGuardiani() + " custodiscono "
 									+ getLeggendario().getNomeBreve() + "."));
 							attivaMissione();

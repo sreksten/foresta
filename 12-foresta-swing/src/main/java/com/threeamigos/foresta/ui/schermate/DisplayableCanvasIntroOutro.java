@@ -9,7 +9,6 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.strumenti.Punteggio;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Finestra;
@@ -28,6 +27,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * La finestra delle schermate senza partita in corso: l'introduzione (storia che scorre, loghi, classifica, trofei), i messaggi su sfondo con l'ombra del drago,
@@ -185,7 +186,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		Image doomdark;
 		int giorni = vistaPartita.getGiorno();
 		DoomdarkFont fontMedium = DoomdarkFont.medio();
-		doomdark = ImageCache.get(giorni > 1 ? TestiDellaUI.get("MOSTRI_UCCISI_IN_GIORNI", Numeri.getCardinaleM(giorni)) : TestiDellaUI.get("MOSTRI_UCCISI_IN_UN_GIORNO"), fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY);
+		doomdark = ImageCache.get(giorni > 1 ? TestiDellaUI.get("MOSTRI_UCCISI_IN_GIORNI", Lingue.corrente().cardinale(giorni, Genere.MASCHILE)) : TestiDellaUI.get("MOSTRI_UCCISI_IN_UN_GIORNO"), fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY);
 		graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
 		locYOffset += fontMedium.getHeight();
 		for (TipoPersonaggio classePersonaggio : TipoPersonaggio.values()) {

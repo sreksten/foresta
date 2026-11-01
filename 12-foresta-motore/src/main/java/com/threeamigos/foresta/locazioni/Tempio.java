@@ -14,11 +14,12 @@ import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiLuoghiCasuale;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 
 /**
  * Un tempio, con il suo nome (il Santuario della Luna): lo custodiscono delle viverne, e custodiscono un cofano oppure, se il registro ne ha uno da
@@ -69,11 +70,11 @@ public class Tempio extends LocazioneBase {
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
 		if (IlGiroDelleSetteChiese.isRipulito(getModelloDati()) && getOggetto() == null) {
-			BusEventi.pubblica(new NotificaTestoFrase("Qui, " + Articoli.conPreposizione("in", getNome())
+			BusEventi.pubblica(new NotificaTestoFrase("Qui, " + Lingue.corrente().conPreposizione(Preposizione.IN, getNome())
 					+ ", regna la pace. Questo era uno dei templi ripuliti durante il Giro delle Sette Chiese."));
 			return;
 		}
-		BusEventi.pubblica(new NotificaTestoFrase("Qui, " + Articoli.conPreposizione("in", getNome()) + ", " + descrizioneMostriEOggetti(g, gng)));
+		BusEventi.pubblica(new NotificaTestoFrase("Qui, " + Lingue.corrente().conPreposizione(Preposizione.IN, getNome()) + ", " + descrizioneMostriEOggetti(g, gng)));
 	}
 
 	public TipoRiposo getTipoRiposo() {

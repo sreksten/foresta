@@ -9,7 +9,6 @@ import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -19,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 
 /**
  * I personaggi del mondo che non stanno nel gruppo del giocatore: quelli da distribuire nelle locazioni, quelli già posati nelle caselle e i residenti,
@@ -216,7 +217,7 @@ public class RegistroPersonaggi {
 		if (residente.getProvenienza() == null) {
 			return residente.getNome();
 		}
-		return residente.getNome() + " " + Articoli.conPreposizione("da", residente.getProvenienza());
+		return residente.getNome() + " " + Lingue.corrente().conPreposizione(Preposizione.DA, residente.getProvenienza());
 	}
 
 	/**

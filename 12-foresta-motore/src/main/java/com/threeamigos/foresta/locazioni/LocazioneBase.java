@@ -42,12 +42,13 @@ import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tattiche.EsecutoreTattiche;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.testi.ProduttoreDiSfideCasuale;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * La locazione è un automa a stati finiti. Un gruppo mentre si sposta per
@@ -1193,7 +1194,7 @@ public abstract class LocazioneBase implements Locazione {
 		List<String> parti = new ArrayList<>();
 		for (List<Personaggio> classe : perClasse.values()) {
 			Personaggio p = classe.get(0);
-			parti.add(classe.size() == 1 ? p.getAIS() + p.getNomeSingolare() : Numeri.getCardinaleM(classe.size()) + " " + p.getNomePlurale());
+			parti.add(classe.size() == 1 ? p.getAIS() + p.getNomeSingolare() : Lingue.corrente().cardinale(classe.size(), Genere.MASCHILE) + " " + p.getNomePlurale());
 		}
 		if (parti.size() == 1) {
 			return parti.get(0);
@@ -1237,7 +1238,7 @@ public abstract class LocazioneBase implements Locazione {
 						sb.append(o.getAIS()).append(o.getNomeSingolare());
 					}
 				} else {
-					sb.append(Numeri.getCardinaleM(numeroOggetti)).append(' ').append(o.getNomePlurale());
+					sb.append(Lingue.corrente().cardinale(numeroOggetti, Genere.MASCHILE)).append(' ').append(o.getNomePlurale());
 				}
 			}
 		}

@@ -9,10 +9,11 @@ import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Sacerdote;
 import com.threeamigos.foresta.personaggi.Sacerdotessa;
-import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * Il sacerdote o la sacerdotessa che ha commissionato una missione (la benedizione, il giro delle sette chiese) si offre a
@@ -41,8 +42,8 @@ public final class OffertaDelSacerdote {
 	public static void avvisaSeIlGruppoEPieno(String mandante) {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		if (!gruppo.isSacerdoteAccolto() && !puoProporsi()) {
-			BusEventi.pubblica(new NotificaTestoParagrafo("Siete già in " + Numeri.getCardinaleM(CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_GIOCATORE)
-					+ ": non penso abbiate bisogno anche dell'aiuto " + Articoli.conPreposizione("di", mandante) + "."));
+			BusEventi.pubblica(new NotificaTestoParagrafo("Siete già in " + Lingue.corrente().cardinale(CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_GIOCATORE, Genere.MASCHILE)
+					+ ": non penso abbiate bisogno anche dell'aiuto " + Lingue.corrente().conPreposizione(Preposizione.DI, mandante) + "."));
 		}
 	}
 

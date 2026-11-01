@@ -24,13 +24,14 @@ import com.threeamigos.foresta.statistiche.EsperienzaDelGruppo;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * Cosa succede quando il gruppo prende il bottino che ha trovato in una locazione: le monete e le pietre vanno nella cassa del
@@ -129,7 +130,7 @@ public final class RaccoltaBottino {
 			Artefatto trovato = Cofano.artefattoRaro();
 			sb.append("Aprendo il");
 			if (cofano.getQuantita() > 1) {
-				sb.append(' ').append(Numeri.getOrdinaleM(i + 1, false));
+				sb.append(' ').append(Lingue.corrente().ordinale(i + 1, Genere.MASCHILE, false));
 			}
 			if (Dado.tira(2) == 1) {
 				sb.append(" cofano, ");

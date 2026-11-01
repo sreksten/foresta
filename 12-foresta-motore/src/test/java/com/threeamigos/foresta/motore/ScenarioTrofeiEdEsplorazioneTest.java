@@ -12,6 +12,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
+import com.threeamigos.foresta.testi.Genere;
 import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.tipi.Comando;
@@ -32,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ScenarioTrofeiEdEsplorazioneTest {
 
     static final OggettiDaRaccogliere ORECCHIE = OggettiDaRaccogliere
-            .di("ORECCHIE", new NomeOggetto("orecchio di goblin", "orecchie di goblin", "un ", "alcune ", "il ", "le "), 3)
+            .di("ORECCHIE", new NomeOggetto("orecchio di goblin", "orecchie di goblin", Genere.MASCHILE, Genere.FEMMINILE), 3)
             .daiNemici(TipoPersonaggio.GOBLIN)
             .alPiuPerLocazione(5);
 

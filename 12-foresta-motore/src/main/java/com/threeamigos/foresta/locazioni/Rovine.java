@@ -6,12 +6,13 @@ import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiLuoghiCasuale;
 import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 
 /**
  * Le rovine, con il loro nome (le Vestigia dell'Antico Impero, le Rovine di un castello distrutto): vi si incontrano chimere, non morti, gargoyle e
@@ -62,7 +63,7 @@ public class Rovine extends LocazioneBase {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		BusEventi.pubblica(new NotificaTestoFrase("Qui, " + Articoli.conPreposizione("in", getNome()) + ", " + descrizioneMostriEOggetti(g, gng)));
+		BusEventi.pubblica(new NotificaTestoFrase("Qui, " + Lingue.corrente().conPreposizione(Preposizione.IN, getNome()) + ", " + descrizioneMostriEOggetti(g, gng)));
 	}
 
 	public TipoRiposo getTipoRiposo() {

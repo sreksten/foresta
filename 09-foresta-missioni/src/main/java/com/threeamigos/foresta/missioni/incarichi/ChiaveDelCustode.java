@@ -9,9 +9,9 @@ import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.testi.Lingue;
 
 /**
  * Una delle chiavi di una {@link MissioneATappe} a chiavi, che la madre affida quando il gruppo ne scopre i custodi (le tre ricerche si
@@ -121,7 +121,7 @@ public class ChiaveDelCustode extends MissioneAPassi {
 
 	@Override
 	public String getNome() {
-		return Articoli.inizialeMaiuscola(getParametro(CHIAVE));
+		return Lingue.corrente().inizialeMaiuscola(getParametro(CHIAVE));
 	}
 
 	@Override

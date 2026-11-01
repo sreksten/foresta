@@ -4,12 +4,13 @@ import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * Un materiale che un mandante chiede (vedi RichiestaDiMateriali), letto da una riga di missioni.txt: genere
@@ -143,9 +144,8 @@ public final class MaterialeRichiesto {
 	 * goblin".
 	 */
 	public NomeOggetto getNome() {
-		return new NomeOggetto(singolare, plurale,
-				singolareFemminile ? Articoli.UNA : Articoli.UN, femminile ? Articoli.ALCUNE : Articoli.ALCUNI,
-				singolareFemminile ? Articoli.LA : Articoli.IL, femminile ? Articoli.LE : Articoli.I);
+		return new NomeOggetto(singolare, plurale, singolareFemminile ? Genere.FEMMINILE : Genere.MASCHILE,
+				femminile ? Genere.FEMMINILE : Genere.MASCHILE);
 	}
 
 	public String getPlurale() {
@@ -156,14 +156,14 @@ public final class MaterialeRichiesto {
 	 * Il plurale con l'articolo: "le radici di mandragola", "i corni di minotauro".
 	 */
 	public String getPluraleConArticolo() {
-		return (femminile ? Articoli.LE : Articoli.I) + plurale;
+		return getNome().getADP() + plurale;
 	}
 
 	/**
 	 * Quanti, in lettere, con il plurale: "quattro radici di mandragola".
 	 */
 	public String quanti(int quantita) {
-		return (femminile ? Numeri.getCardinaleF(quantita) : Numeri.getCardinaleM(quantita)) + " " + plurale;
+		return (femminile ? Lingue.corrente().cardinale(quantita, Genere.FEMMINILE) : Lingue.corrente().cardinale(quantita, Genere.MASCHILE)) + " " + plurale;
 	}
 
 	/**
@@ -244,7 +244,7 @@ public final class MaterialeRichiesto {
 					parti.add("nelle paludi");
 					break;
 				default:
-					parti.add(Articoli.conPreposizione("in", luogo.name().toLowerCase(Locale.ROOT)));
+					parti.add(Lingue.corrente().conPreposizione(Preposizione.IN, luogo.name().toLowerCase(Locale.ROOT)));
 					break;
 			}
 		}

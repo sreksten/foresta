@@ -8,8 +8,9 @@ import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * L'offerta di alcune pergamene di un incantesimo scelto a caso, a metà del prezzo abituale per ciascuna. Occorrono le monete per pagarle.
@@ -67,7 +68,7 @@ public class Incantesimi implements Offerta {
 		if (quantita == 1) {
 			sb.append("un ");
 		} else {
-			sb.append(Numeri.getCardinaleM(quantita)).append(' ');
+			sb.append(Lingue.corrente().cardinale(quantita, Genere.MASCHILE)).append(' ');
 		}
 		if (quantita == 1) {
 			sb.append(tipoIncantesimo.getNomeSingolare());

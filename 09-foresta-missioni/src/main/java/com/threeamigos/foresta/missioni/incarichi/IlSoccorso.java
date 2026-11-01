@@ -6,11 +6,12 @@ import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
 import com.threeamigos.foresta.missioni.richieste.SoccorsoRichiesto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * In città qualcuno chiede di riportare a casa una persona rimasta nella foresta, ferita o prigioniera, in mezzo a
@@ -77,7 +78,7 @@ public class IlSoccorso extends LaLiberazione {
 			String nemico = modello.getADS() + modello.getNomeSingolare();
 			return soccorso.isConCapo() ? getCapo() + ", " + nemico : nemico;
 		}
-		String nemici = Numeri.getCardinaleM(soccorso.getNumero()) + " " + modello.getNomePlurale();
+		String nemici = Lingue.corrente().cardinale(soccorso.getNumero(), Genere.MASCHILE) + " " + modello.getNomePlurale();
 		return soccorso.isConCapo() ? nemici + " guidati da " + getCapo() : nemici;
 	}
 
@@ -122,9 +123,9 @@ public class IlSoccorso extends LaLiberazione {
 			return nome + " è a casa: " + mandante(mandante) + " ti aspetta a " + getNomeCitta() + ".";
 		}
 		if (LUTTO.equals(passo) || FALLIMENTO.equals(passo)) {
-			return nome + " è morto: devi dare la notizia " + Articoli.conPreposizione("a", mandanteSenzaVirgolaFinale(mandante)) + ", a " + getNomeCitta() + ".";
+			return nome + " è morto: devi dare la notizia " + Lingue.corrente().conPreposizione(Preposizione.A, mandanteSenzaVirgolaFinale(mandante)) + ", a " + getNomeCitta() + ".";
 		}
-		return Articoli.inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di salvare " + getNomeEPersona()
+		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di salvare " + getNomeEPersona()
 				+ ", dal posto segnato sulla mappa, dove " + (getSoccorso().getNumero() == 1 ? "lo minaccia " : "lo minacciano ")
 				+ getNomeDeiNemici() + ".";
 	}
@@ -146,13 +147,13 @@ public class IlSoccorso extends LaLiberazione {
 
 	@Override
 	protected String testoMorto() {
-		return getNomeDellaPersona() + " non ce l'ha fatta. Bisogna dirlo " + Articoli.conPreposizione("a", mandanteSenzaVirgolaFinale(getSoccorso().getMandante()))
+		return getNomeDellaPersona() + " non ce l'ha fatta. Bisogna dirlo " + Lingue.corrente().conPreposizione(Preposizione.A, mandanteSenzaVirgolaFinale(getSoccorso().getMandante()))
 				+ ", a " + getNomeCitta() + ".";
 	}
 
 	@Override
 	protected String testoPortaChiusa() {
-		return Articoli.inizialeMaiuscola(mandante(getSoccorso().getMandante())) + " chiude la porta senza dire una parola.";
+		return Lingue.corrente().inizialeMaiuscola(mandante(getSoccorso().getMandante())) + " chiude la porta senza dire una parola.";
 	}
 
 	@Override
@@ -183,13 +184,13 @@ public class IlSoccorso extends LaLiberazione {
 
 	@Override
 	protected String testoAccettazione() {
-		return Articoli.inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per riavere "
+		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per riavere "
 				+ getNomeDellaPersona() + " a casa vivo.";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Articoli.inizialeMaiuscola(mandante(getSoccorso().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Lingue.corrente().inizialeMaiuscola(mandante(getSoccorso().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

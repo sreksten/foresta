@@ -9,7 +9,6 @@ import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoBottino;
 
 import java.util.ArrayList;
@@ -30,30 +29,6 @@ public class Cofano extends OggettoBase implements Bottino {
 	
 	public Cofano(int q) {
 		super(q);
-	}
-
-	public String getAIS() {
-		return Articoli.UN;
-	}
-
-	public String getAIP() {
-		return Articoli.ALCUNI;
-	}
-
-	public String getADS() {
-		return Articoli.IL;
-	}
-
-	public String getADP() {
-		return Articoli.I;
-	}
-
-	public String getNomeSingolare() {
-		return "cofano";
-	}
-
-	public String getNomePlurale() {
-		return "cofani";
 	}
 
 	public TipoBottino getClasse() {

@@ -20,10 +20,11 @@ import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 
 /**
  * In città qualcuno bandisce un torneo (vedi {@link TorneoRichiesto}, da missioni.txt), con in palio un oggetto
@@ -174,7 +175,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 		TorneoRichiesto torneo = getTorneo();
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return "Hai vinto il torneo: torna " + Articoli.conPreposizione("da", mandante(torneo.getMandante())) + " a " + getNomeCitta()
+			return "Hai vinto il torneo: torna " + Lingue.corrente().conPreposizione(Preposizione.DA, mandante(torneo.getMandante())) + " a " + getNomeCitta()
 					+ " per la borsa del vincitore.";
 		}
 		String chi;
@@ -253,12 +254,12 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 
 	@Override
 	protected String testoAccettazione() {
-		return Articoli.inizialeMaiuscola(mandanteDiCitta(getTorneo().getMandante())) + " ha iscritto il gruppo al torneo: in palio " + inPalio() + ".";
+		return Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(getTorneo().getMandante())) + " ha iscritto il gruppo al torneo: in palio " + inPalio() + ".";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Articoli.inizialeMaiuscola(mandante(getTorneo().getMandante())) + " consegna la borsa del vincitore: " + getRicompensa() + " monete.";
+		return Lingue.corrente().inizialeMaiuscola(mandante(getTorneo().getMandante())) + " consegna la borsa del vincitore: " + getRicompensa() + " monete.";
 	}
 
 	@Override

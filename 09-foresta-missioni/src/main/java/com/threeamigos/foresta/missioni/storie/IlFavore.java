@@ -9,8 +9,9 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * Il favore che un sacerdote chiede in cambio della sua benedizione (vedi LaBenedizione), o che un compagno chiede
@@ -140,7 +141,7 @@ public class IlFavore extends MissioneAPassi {
 			String nemico = modello.getADS() + modello.getNomeSingolare();
 			return favore.isConCapo() ? getCapo() + ", " + nemico : nemico;
 		}
-		String nemici = Numeri.getCardinaleM(favore.getNumero()) + " " + modello.getNomePlurale();
+		String nemici = Lingue.corrente().cardinale(favore.getNumero(), Genere.MASCHILE) + " " + modello.getNomePlurale();
 		return favore.isConCapo() ? nemici + " guidati da " + getCapo() : nemici;
 	}
 
@@ -159,7 +160,7 @@ public class IlFavore extends MissioneAPassi {
 				return per + "raccogli " + ingrediente.quanti(favore.getQuantitaDaRaccogliere()) + ", che "
 						+ ingrediente.getDaDoveViene() + ". Finora: " + getContatore(INGREDIENTE) + ".";
 			case VEGLIA:
-				return per + "veglia il posto segnato sulla mappa, passandoci " + Numeri.getCardinaleF(favore.getVisite())
+				return per + "veglia il posto segnato sulla mappa, passandoci " + Lingue.corrente().cardinale(favore.getVisite(), Genere.FEMMINILE)
 						+ " volte e lasciando passare almeno " + favore.getOre() + " ore fra una visita e l'altra. Finora: "
 						+ (VEGLIA.equals(getPassoCorrente()) ? getVisiteNelPassoCorrente() : 0) + ".";
 			default:
@@ -180,7 +181,7 @@ public class IlFavore extends MissioneAPassi {
 		aggiungiProprieta(VEGLIE, String.valueOf(visite));
 		int mancanti = favore.getVisite() - visite;
 		BusEventi.pubblica(new NotificaTestoParagrafo(testo(favore.getVeglia()) + " Bisogna tornare qui ancora "
-				+ Numeri.getCardinaleF(mancanti) + (mancanti == 1 ? " volta" : " volte") + ", lasciando passare almeno "
+				+ Lingue.corrente().cardinale(mancanti, Genere.FEMMINILE) + (mancanti == 1 ? " volta" : " volte") + ", lasciando passare almeno "
 				+ favore.getOre() + " ore fra una visita e l'altra."));
 	}
 

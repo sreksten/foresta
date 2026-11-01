@@ -14,7 +14,6 @@ import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -23,6 +22,8 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * La vita e la magia di un personaggio che cambiano durante il gioco: le ferite (con la resa, il berserk e il racconto della morte), la morte e
@@ -138,9 +139,9 @@ final class SaluteEMorte {
 						boolean isGruppoAvversario = !p.appartieneAlGruppoDelGiocatore();
 						if (isGruppoAvversario && GruppoAvversario.getIstanza().contaDellaStessaSpecie(p) > 1) {
 							if (p.getSesso() == Personaggio.Sesso.MASCHIO) {
-								sb.append(Numeri.getOrdinaleM(p.getOrdinale(), true));
+								sb.append(Lingue.corrente().ordinale(p.getOrdinale(), Genere.MASCHILE, true));
 							} else {
-								sb.append(Numeri.getOrdinaleF(p.getOrdinale(), true));
+								sb.append(Lingue.corrente().ordinale(p.getOrdinale(), Genere.FEMMINILE, true));
 							}
 							sb.append(" ");
 							sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));

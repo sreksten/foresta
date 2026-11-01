@@ -9,7 +9,8 @@ import java.util.Optional;
  * <p>
  * I dati di una costante di enum stanno nei suoi file dei testi, nella lingua scelta (vedi {@link #di(Enum)}): voci
  * {@code NOME_SINGOLARE}, {@code NOME_PLURALE}, {@code GENERE} ("M", "F", "N"), {@code SUONO} (solo se fa eccezione alla
- * regola della lingua) e {@code PRONOME} e {@code AGENTE_DETERMINATO} ("true" per i nomi unici o noti). Così un nome nuovo, o una lingua nuova, non chiede codice.
+ * regola della lingua) e {@code PRONOME}, {@code AGENTE_DETERMINATO} ("true" per i nomi unici o noti) e, per i nomi che hanno articoli tutti loro,
+ * {@code ADS}, {@code ADP}, {@code AIS}, {@code AIP}. Così un nome nuovo, o una lingua nuova, non chiede codice.
  */
 public final class Nome {
 
@@ -19,6 +20,7 @@ public final class Nome {
 	private final Suono suono;
 	private final String pronome;
 	private final boolean agenteDeterminato;
+	private final String[] articoli;
 
 	/**
 	 * @param suono   null se lo decide la lingua dalla lettera iniziale
@@ -33,6 +35,16 @@ public final class Nome {
 	 *                          l'indeterminativo ("da un goblin"): è il caso dei nomi unici o noti
 	 */
 	public Nome(String singolare, String plurale, Genere genere, Suono suono, String pronome, boolean agenteDeterminato) {
+		this(singolare, plurale, genere, suono, pronome, agenteDeterminato, null);
+	}
+
+	/**
+	 * @param articoli gli articoli che fanno eccezione alla regola della lingua, nell'ordine determinativo singolare,
+	 *                 determinativo plurale, indeterminativo singolare, indeterminativo plurale (null o un elemento null
+	 *                 se vale la regola): per i nomi che si usano solo al plurale, come «gli schinieri», «un paio di schinieri»
+	 */
+	public Nome(String singolare, String plurale, Genere genere, Suono suono, String pronome, boolean agenteDeterminato, String[] articoli) {
+		this.articoli = articoli == null ? new String[4] : articoli.clone();
 		this.agenteDeterminato = agenteDeterminato;
 		this.singolare = Objects.requireNonNull(singolare);
 		this.plurale = plurale == null ? singolare : plurale;
@@ -59,7 +71,9 @@ public final class Nome {
 				Genere.dallaSigla(Testi.testo(costante, "GENERE").orElse(null)),
 				Suono.dalNome(Testi.testo(costante, "SUONO").orElse(null)),
 				Testi.testo(costante, "PRONOME").orElse(null),
-				Testi.testo(costante, "AGENTE_DETERMINATO").map(v -> v.trim().equalsIgnoreCase("true")).orElse(false));
+				Testi.testo(costante, "AGENTE_DETERMINATO").map(v -> v.trim().equalsIgnoreCase("true")).orElse(false),
+				new String[] {Testi.testo(costante, "ADS").orElse(null), Testi.testo(costante, "ADP").orElse(null),
+						Testi.testo(costante, "AIS").orElse(null), Testi.testo(costante, "AIP").orElse(null)});
 	}
 
 	public String getSingolare() {
@@ -90,6 +104,14 @@ public final class Nome {
 	 */
 	public Optional<String> getPronome() {
 		return Optional.ofNullable(pronome);
+	}
+
+	/**
+	 * L'articolo che il nome dichiara per sé, se fa eccezione alla regola della lingua (voci {@code ADS}, {@code ADP},
+	 * {@code AIS}, {@code AIP}), col suo separatore finale.
+	 */
+	public Optional<String> getArticolo(boolean determinativo, boolean plurale) {
+		return Optional.ofNullable(articoli[(determinativo ? 0 : 2) + (plurale ? 1 : 0)]);
 	}
 
 	public boolean isAgenteDeterminato() {

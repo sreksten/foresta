@@ -69,7 +69,7 @@ class ScenarioRichiesteDiMaterialiTest {
         // Singolare maschile, plurale femminile
         MaterialeRichiesto orecchio = MaterialeRichiesto.da("M/F;orecchio di goblin;orecchie di goblin;NEMICI GOBLIN;3-4;6;a;b");
         assertEquals("un ", orecchio.getNome().getAIS());
-        assertEquals("il ", orecchio.getNome().getADS());
+        assertEquals("l'", orecchio.getNome().getADS());
         assertEquals("le orecchie di goblin", orecchio.getPluraleConArticolo());
         assertEquals("tre orecchie di goblin", orecchio.quanti(3));
         assertEquals("le", orecchio.getPronome());

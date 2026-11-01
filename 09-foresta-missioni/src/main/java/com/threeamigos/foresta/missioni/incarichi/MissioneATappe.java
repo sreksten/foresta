@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.IntPredicate;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 
 /**
  * Una missione a tappe (vedi missione_a_tappe.md e TappeRichieste, da tappe.txt): in una città qualcuno chiede di ritrovare una persona o un
@@ -385,7 +387,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 	}
 
 	private String testoDelRitorno(TappeRichieste richiesta) {
-		return "Fatto: torna " + Articoli.conPreposizione("da", mandante(richiesta.getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
+		return "Fatto: torna " + Lingue.corrente().conPreposizione(Preposizione.DA, mandante(richiesta.getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
 	}
 
 	@Override
@@ -439,7 +441,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 	}
 
 	private String mandanteEChiesto(TappeRichieste richiesta) {
-		return Articoli.inizialeMaiuscola(mandanteDiCitta(richiesta.getMandante())) + " ti ha affidato una missione: “" + richiesta.getTitolo() + "\".";
+		return Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(richiesta.getMandante())) + " ti ha affidato una missione: “" + richiesta.getTitolo() + "\".";
 	}
 
 	@Override
@@ -496,12 +498,12 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 
 	@Override
 	protected String testoAccettazione() {
-		return Articoli.inizialeMaiuscola(mandanteDiCitta(getRichiesta().getMandante())) + " pagherà " + getRicompensa() + " monete.";
+		return Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(getRichiesta().getMandante())) + " pagherà " + getRicompensa() + " monete.";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Articoli.inizialeMaiuscola(mandante(getRichiesta().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Lingue.corrente().inizialeMaiuscola(mandante(getRichiesta().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	// --- I passi

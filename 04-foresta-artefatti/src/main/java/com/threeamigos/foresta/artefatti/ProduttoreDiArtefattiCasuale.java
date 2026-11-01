@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.artefatti;
 
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.CaricatoreDiGrammatiche;
 import com.threeamigos.foresta.testi.GrammaticaNonValidaException;
 import com.threeamigos.foresta.testi.GrammaticaPigra;
@@ -9,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 
 /**
  * I testi a caso degli artefatti: le righe di {@code leggendari.txt} (gli oggetti leggendari, i loro set e i libri tecnici, che
@@ -70,7 +71,7 @@ public final class ProduttoreDiArtefattiCasuale {
 	 * @param nomeBreve il nome breve dell'oggetto, con l'articolo: "lo Scudo Fiscale"
 	 */
 	public static synchronized String introduzioneDellaLeggenda(String nomeBreve) {
-		LEGGENDARI.get().addFixedProduction("DELL_OGGETTO", Articoli.conPreposizione("di", nomeBreve));
+		LEGGENDARI.get().addFixedProduction("DELL_OGGETTO", Lingue.corrente().conPreposizione(Preposizione.DI, nomeBreve));
 		LEGGENDARI.get().addFixedProduction("L_OGGETTO", nomeBreve);
 		return LEGGENDARI.get().produce("INTRODUZIONE_LEGGENDA").get(0).trim();
 	}

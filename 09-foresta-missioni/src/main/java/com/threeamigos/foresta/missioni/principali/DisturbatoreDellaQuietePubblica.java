@@ -5,13 +5,14 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * Dieci eremiti disturbati nel loro ritiro. Il conteggio avviene all'incontro, quando
@@ -23,7 +24,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 
 	private static final int EREMITI_DA_INCONTRARE = 10;
 
-	private static final String DESCRIZIONE_BASE = "Angustia " + Numeri.getCardinaleM(EREMITI_DA_INCONTRARE) + " Eremiti";
+	private static final String DESCRIZIONE_BASE = "Angustia " + Lingue.corrente().cardinale(EREMITI_DA_INCONTRARE, Genere.MASCHILE) + " Eremiti";
 	// Gli identificativi degli eremiti già contati, separati da virgole
 	private static final String EREMITI_CONTATI = "EREMITI_CONTATI";
 
@@ -48,7 +49,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 		if (mancanti == 10) {
 			return DESCRIZIONE_BASE + ".";
 		}
-		return DESCRIZIONE_BASE + ". Ne mancano " + Numeri.getCardinaleM(mancanti) + ".";
+		return DESCRIZIONE_BASE + ". Ne mancano " + Lingue.corrente().cardinale(mancanti, Genere.MASCHILE) + ".";
 	}
 
 	@Override
@@ -88,7 +89,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 					"molto più tranquilla prima. " +
 					"Il titolo di Disturbatore della Quiete Pubblica è meritato."));
 		} else {
-			BusEventi.pubblica(new NotificaTestoParagrafo("La quiete del " + Numeri.getOrdinaleM(incontrati) +
+			BusEventi.pubblica(new NotificaTestoParagrafo("La quiete del " + Lingue.corrente().ordinale(incontrati, Genere.MASCHILE, false) +
 					" Eremita è stata ufficialmente turbata."));
 		}
 	}

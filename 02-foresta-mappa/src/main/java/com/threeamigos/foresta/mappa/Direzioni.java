@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.mappa;
 
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.testi.Numeri;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * La direzione e la distanza fra due punti della foresta, a parole ("a poco più di un giorno di cammino verso nordest."): per
@@ -48,7 +49,7 @@ public final class Direzioni {
 				if (resto == 1)
 					sb.append("un'ora");
 				else
-					sb.append(Numeri.getCardinaleM(resto)).append(" ore");
+					sb.append(Lingue.corrente().cardinale(resto, Genere.MASCHILE)).append(" ore");
 			} else {
 				if (resto < 4) {
 					if (resto > 0)
@@ -56,9 +57,9 @@ public final class Direzioni {
 					if (giorni == 1)
 						sb.append("un giorno");
 					else
-						sb.append(Numeri.getCardinaleM(giorni)).append(" giorni");
+						sb.append(Lingue.corrente().cardinale(giorni, Genere.MASCHILE)).append(" giorni");
 				} else {
-					sb.append("quasi ").append(Numeri.getCardinaleM(giorni + 1)).append(" giorni");
+					sb.append("quasi ").append(Lingue.corrente().cardinale(giorni + 1, Genere.MASCHILE)).append(" giorni");
 				}
 			}
 			sb.append(" di cammino verso ");

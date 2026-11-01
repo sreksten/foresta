@@ -9,7 +9,6 @@ import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.logger.Logger;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoBottino;
 
 import java.util.Optional;
@@ -109,30 +108,6 @@ public class Anello extends OggettoBase implements Bottino {
 	@Override
 	public Optional<Artefatto> getArtefatto() {
 		return Optional.ofNullable(artefatto);
-	}
-
-	public String getAIS() {
-		return Articoli.UN;
-	}
-
-	public String getAIP() {
-		return Articoli.ALCUNI;
-	}
-
-	public String getADS() {
-		return Articoli.L_APOSTROFO;
-	}
-
-	public String getADP() {
-		return Articoli.GLI;
-	}
-
-	public String getNomeSingolare() {
-		return "anello";
-	}
-
-	public String getNomePlurale() {
-		return "anelli";
 	}
 
 	public TipoBottino getClasse() {

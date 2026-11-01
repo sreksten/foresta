@@ -7,9 +7,10 @@ import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Stato;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 
 /**
  * La bottega di un alchimista, di un armaiolo, di un venditore di pergamene o di un incantatore nel mezzo della Foresta:
@@ -37,8 +38,8 @@ public abstract class Bottega extends LocazioneBase {
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
 		String negoziante = RegistroPersonaggi.getNegoziante(getModelloDati());
-		BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva " + Articoli.conPreposizione("a", getNome()) + ". "
-				+ (negoziante == null ? "" : Articoli.inizialeMaiuscola(negoziante) + " vi aspetta sulla porta della sua bottega.")));
+		BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva " + Lingue.corrente().conPreposizione(Preposizione.A, getNome()) + ". "
+				+ (negoziante == null ? "" : Lingue.corrente().inizialeMaiuscola(negoziante) + " vi aspetta sulla porta della sua bottega.")));
 	}
 
 	@Override

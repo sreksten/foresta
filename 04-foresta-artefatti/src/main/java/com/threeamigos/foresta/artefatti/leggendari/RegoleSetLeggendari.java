@@ -7,12 +7,13 @@ import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.testi.Articoli;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.*;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 
 /**
  * I set leggendari (vedi CatalogoLeggendari): un personaggio che ne indossa tutti i pezzi ha i bonus di ognuno
@@ -112,7 +113,7 @@ public final class RegoleSetLeggendari {
 	 * un pezzo di un set.
 	 */
 	public static Optional<String> descrizioneSet(ArtefattoMD artefatto) {
-		return set(artefatto).map(set -> "Pezzo " + Articoli.conPreposizione("di", set.getNome()) + " (bonus x" + moltiplicatore(set) + ")");
+		return set(artefatto).map(set -> "Pezzo " + Lingue.corrente().conPreposizione(Preposizione.DI, set.getNome()) + " (bonus x" + moltiplicatore(set) + ")");
 	}
 
 	/**
@@ -174,7 +175,7 @@ public final class RegoleSetLeggendari {
 	 * perché i set sono maschili e femminili.
 	 */
 	public static String descrizioneSetCompleto(SetLeggendario set) {
-		return "Set completo: " + Articoli.inizialeMaiuscola(senzaArticolo(set.getNome())) + " (bonus x" + moltiplicatore(set) + ")";
+		return "Set completo: " + Lingue.corrente().inizialeMaiuscola(senzaArticolo(set.getNome())) + " (bonus x" + moltiplicatore(set) + ")";
 	}
 
 	private static String senzaArticolo(String nome) {

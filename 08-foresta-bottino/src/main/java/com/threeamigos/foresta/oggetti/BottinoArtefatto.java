@@ -3,7 +3,8 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.statistiche.Statistiche;
-import com.threeamigos.foresta.testi.Articoli;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Nome;
 import com.threeamigos.foresta.tipi.TipoBottino;
 
 import java.util.Objects;
@@ -76,32 +77,37 @@ public class BottinoArtefatto implements Bottino {
 
 	@Override
 	public String getNomePlurale() {
-		return forma != null ? forma.getNomePlurale() : "artefatti";
+		return nome().getPlurale();
 	}
 
 	@Override
 	public String getNomeSingolare() {
-		return forma != null ? forma.getNomeSingolare() : "artefatto";
+		return nome().getSingolare();
 	}
 
 	@Override
 	public String getAIS() {
-		return forma != null ? forma.getAIS() : Articoli.UN;
+		return Lingue.corrente().articoloIndeterminativo(nome(), false);
 	}
 
 	@Override
 	public String getAIP() {
-		return forma != null ? forma.getAIP() : Articoli.ALCUNI;
+		return Lingue.corrente().articoloIndeterminativo(nome(), true);
 	}
 
 	@Override
 	public String getADS() {
-		return forma != null ? forma.getADS() : Articoli.L_APOSTROFO;
+		return Lingue.corrente().articoloDeterminativo(nome(), false);
 	}
 
 	@Override
 	public String getADP() {
-		return forma != null ? forma.getADP() : Articoli.GLI;
+		return Lingue.corrente().articoloDeterminativo(nome(), true);
+	}
+
+	// La forma dell'artefatto (spada, scudo...) o, senza, "artefatto": nomi e articoli dai testi di TipoBottino
+	private Nome nome() {
+		return Nome.di(getClasse());
 	}
 
 	@Override

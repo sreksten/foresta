@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.missioni.richieste;
 
 import com.threeamigos.foresta.oggetti.NomeOggetto;
-import com.threeamigos.foresta.testi.Articoli;
 
 import java.util.Objects;
 
@@ -91,7 +90,7 @@ public final class Spedizione {
 	 * L'oggetto con l'articolo: "la fiala di antidoto".
 	 */
 	public String getOggettoConArticolo() {
-		return (femminile ? Articoli.LA : Articoli.IL) + oggetto;
+		return getNome().getADS() + oggetto;
 	}
 
 	/**

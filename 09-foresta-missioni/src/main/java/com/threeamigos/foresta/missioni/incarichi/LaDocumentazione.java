@@ -11,12 +11,13 @@ import com.threeamigos.foresta.missioni.richieste.DocumentazioneRichiesta;
 import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta.Indizio;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * In città uno studioso chiede di documentare qualcosa nella foresta: copiare le iscrizioni di più rovine, descrivere
@@ -90,11 +91,11 @@ public class LaDocumentazione extends IncaricoInCitta {
 		int trovati = getRepertiTrovati();
 		StringBuilder descrizione = new StringBuilder();
 		if (RITORNO.equals(getPassoCorrente())) {
-			descrizione.append("Hai documentato tutto: torna ").append(Articoli.conPreposizione("da", mandante(documentazione.getMandante())))
+			descrizione.append("Hai documentato tutto: torna ").append(Lingue.corrente().conPreposizione(Preposizione.DA, mandante(documentazione.getMandante())))
 					.append(" a ").append(getNomeCitta()).append(" a consegnare le note.");
 		} else {
-			descrizione.append(Articoli.inizialeMaiuscola(getMandanteDiCitta())).append(" ti ha chiesto di documentare ")
-					.append(Numeri.getCardinaleM(reperti.size())).append(" posti: vai in quello segnato sulla mappa.");
+			descrizione.append(Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta())).append(" ti ha chiesto di documentare ")
+					.append(Lingue.corrente().cardinale(reperti.size(), Genere.MASCHILE)).append(" posti: vai in quello segnato sulla mappa.");
 		}
 		for (int i = 0; i < trovati; i++) {
 			descrizione.append(" ").append(i + 1).append(": ").append(reperti.get(i).getTesto());
@@ -153,13 +154,13 @@ public class LaDocumentazione extends IncaricoInCitta {
 
 	@Override
 	protected String testoAccettazione() {
-		return Articoli.inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per le note di "
-				+ Numeri.getCardinaleM(getDocumentazione().getReperti().size()) + " posti.";
+		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per le note di "
+				+ Lingue.corrente().cardinale(getDocumentazione().getReperti().size(), Genere.MASCHILE) + " posti.";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Articoli.inizialeMaiuscola(mandante(getDocumentazione().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Lingue.corrente().inizialeMaiuscola(mandante(getDocumentazione().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

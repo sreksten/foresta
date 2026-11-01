@@ -13,10 +13,11 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * In città qualcuno chiede un colpo: rubare qualcosa, guastare le provviste di qualcuno, appiccare un fuoco, entrare
@@ -85,7 +86,7 @@ public class IlColpo extends IncaricoInCitta {
 			String guardia = modello.getADS() + modello.getNomeSingolare();
 			return colpo.isConCapo() ? getCapo() + ", " + guardia : guardia;
 		}
-		String guardie = Numeri.getCardinaleM(colpo.getNumero()) + " " + modello.getNomePlurale();
+		String guardie = Lingue.corrente().cardinale(colpo.getNumero(), Genere.MASCHILE) + " " + modello.getNomePlurale();
 		return colpo.isConCapo() ? guardie + " guidati da " + getCapo() : guardie;
 	}
 
@@ -107,9 +108,9 @@ public class IlColpo extends IncaricoInCitta {
 	@Override
 	public String getDescrizione() {
 		if (RITORNO.equals(getPassoCorrente())) {
-			return "Il colpo è riuscito: torna " + Articoli.conPreposizione("da", mandante(getColpo().getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
+			return "Il colpo è riuscito: torna " + Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getColpo().getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
 		}
-		return Articoli.inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto un colpo nel posto segnato sulla mappa, sorvegliato da "
+		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto un colpo nel posto segnato sulla mappa, sorvegliato da "
 				+ getNomeDelleGuardie() + ": passa inosservato. Se combatti lì, il colpo fallisce.";
 	}
 
@@ -140,7 +141,7 @@ public class IlColpo extends IncaricoInCitta {
 						.affronta(this::getPosto, getGuardie())
 						.falliscoSe(this::haCombattutoNelPosto, () -> testo(colpo.getScoperti()))
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testo(colpo.getColpo()) + " "
-								+ Articoli.inizialeMaiuscola(mandante(colpo.getMandante())) + " aspetta a " + getNomeCitta() + ".")))
+								+ Lingue.corrente().inizialeMaiuscola(mandante(colpo.getMandante())) + " aspetta a " + getNomeCitta() + ".")))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -168,13 +169,13 @@ public class IlColpo extends IncaricoInCitta {
 
 	@Override
 	protected String testoAccettazione() {
-		return Articoli.inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per un colpo "
+		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per un colpo "
 				+ TestiDeiLuoghi.dentro(getColpo().getLuogo()) + ".";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Articoli.inizialeMaiuscola(mandante(getColpo().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Lingue.corrente().inizialeMaiuscola(mandante(getColpo().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

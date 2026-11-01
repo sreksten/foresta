@@ -8,6 +8,9 @@ import java.util.Locale;
  */
 public final class Lingue {
 
+	private static final RegoleDellaLingua ITALIANO = new RegoleConEccezioni(LinguaItaliana.ISTANZA);
+	private static final RegoleDellaLingua INGLESE = new RegoleConEccezioni(LinguaInglese.ISTANZA);
+
 	private Lingue() {
 	}
 
@@ -27,9 +30,6 @@ public final class Lingue {
 		if (separatore > 0) {
 			lingua = lingua.substring(0, separatore);
 		}
-		if ("en".equals(lingua)) {
-			return LinguaInglese.ISTANZA;
-		}
-		return LinguaItaliana.ISTANZA;
+		return "en".equals(lingua) ? INGLESE : ITALIANO;
 	}
 }

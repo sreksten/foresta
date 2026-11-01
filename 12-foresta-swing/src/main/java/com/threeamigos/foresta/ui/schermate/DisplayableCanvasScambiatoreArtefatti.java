@@ -14,7 +14,6 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.CategoriaArtefatto;
 import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
@@ -34,6 +33,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.IntUnaryOperator;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
+import com.threeamigos.foresta.testi.Lingue;
 
 /**
  * Base delle schermate che scambiano artefatti fra due liste affiancate (inventario, commercianti, incantatore): disegna le due liste e traduce click e
@@ -300,7 +300,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
 
             // In grande il nome proprio (o il nome), in piccolo la descrizione
             String nome = artefatto.getNomeBreve();
-            nome = Articoli.inizialeMaiuscola(nome);
+            nome = Lingue.corrente().inizialeMaiuscola(nome);
             ComponenteScorrevole<VistaArtefatto>.Nodo nodo = componenteScorrevole.creaNodo(
                     nome, font, colore,
                     valore(artefatto, parteAttiva),
@@ -321,7 +321,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
                     DoomdarkColorModel.Color colorePezzo = colorePezzo(pezzo.getStato());
                     nodo.creaNodo(
                             pezzo.getTipo().getDescrizione(), font, colorePezzo,
-                            noto ? Articoli.inizialeMaiuscola(pezzo.getNome()) : "???",
+                            noto ? Lingue.corrente().inizialeMaiuscola(pezzo.getNome()) : "???",
                             fontSmall, colorePezzo,
                             null, null, null,
                             null, artefatto);

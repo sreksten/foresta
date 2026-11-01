@@ -11,10 +11,11 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * In città qualcuno vuole che si tenga d'occhio un posto nella foresta: vegliare una tomba, scoprire chi passa da un
@@ -104,7 +105,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 	 */
 	private String getVisiteMancanti() {
 		int mancanti = getSorveglianza().getVisite() - getVisiteNelPassoCorrente();
-		return "ancora " + Numeri.getCardinaleF(mancanti) + (mancanti == 1 ? " volta" : " volte");
+		return "ancora " + Lingue.corrente().cardinale(mancanti, Genere.FEMMINILE) + (mancanti == 1 ? " volta" : " volte");
 	}
 
 	private String getIntervallo() {
@@ -126,7 +127,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 	}
 
 	private String getAttesa() {
-		return Articoli.inizialeMaiuscola(mandante(getSorveglianza().getMandante())) + " aspetta a " + getNomeCitta() + ".";
+		return Lingue.corrente().inizialeMaiuscola(mandante(getSorveglianza().getMandante())) + " aspetta a " + getNomeCitta() + ".";
 	}
 
 	@Override
@@ -145,18 +146,18 @@ public class LaSorveglianza extends IncaricoInCitta {
 	public String getDescrizione() {
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return "Fatto: torna " + Articoli.conPreposizione("da", mandante(getSorveglianza().getMandante())) + " a " + getNomeCitta()
+			return "Fatto: torna " + Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getSorveglianza().getMandante())) + " a " + getNomeCitta()
 					+ " a riscuotere.";
 		}
 		if (AGGUATO.equals(passo)) {
 			return "Sconfiggi " + getNomeDeiNemici() + " nel posto segnato sulla mappa, poi torna "
-					+ Articoli.conPreposizione("da", mandante(getSorveglianza().getMandante())) + " a " + getNomeCitta() + ".";
+					+ Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getSorveglianza().getMandante())) + " a " + getNomeCitta() + ".";
 		}
-		String descrizione = Articoli.inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di sorvegliare il posto segnato sulla mappa";
+		String descrizione = Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di sorvegliare il posto segnato sulla mappa";
 		if (SORVEGLIA.equals(passo) && getVisiteNelPassoCorrente() > 0) {
 			return descrizione + ": passaci " + getVisiteMancanti() + ", " + getIntervallo() + ".";
 		}
-		return descrizione + ", passandoci " + Numeri.getCardinaleF(getSorveglianza().getVisite()) + " volte e " + getIntervallo() + ".";
+		return descrizione + ", passandoci " + Lingue.corrente().cardinale(getSorveglianza().getVisite(), Genere.FEMMINILE) + " volte e " + getIntervallo() + ".";
 	}
 
 	/**
@@ -169,7 +170,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 			String nemico = modello.getADS() + modello.getNomeSingolare();
 			return sorveglianza.isConCapo() ? getCapo() + ", " + nemico : nemico;
 		}
-		String nemici = Numeri.getCardinaleM(sorveglianza.getNumero()) + " " + modello.getNomePlurale();
+		String nemici = Lingue.corrente().cardinale(sorveglianza.getNumero(), Genere.MASCHILE) + " " + modello.getNomePlurale();
 		return sorveglianza.isConCapo() ? nemici + " guidati da " + getCapo() : nemici;
 	}
 
@@ -215,7 +216,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 		return sorveglianza.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(sorveglianza.getRichiesta()))
 				.parlaIlMandante("Il posto è " + TestiDeiLuoghi.dentro(sorveglianza.getLuogo()) + " qui vicino: ve lo segno sulla mappa. "
-						+ "Passateci " + Numeri.getCardinaleF(sorveglianza.getVisite()) + " volte, " + getIntervallo() + ". "
+						+ "Passateci " + Lingue.corrente().cardinale(sorveglianza.getVisite(), Genere.FEMMINILE) + " volte, " + getIntervallo() + ". "
 						+ getRicompensa() + " monete a lavoro fatto.")
 				.parlaIlCapo(testo(sorveglianza.getBattutaDelCapo()))
 				.parlaIlMandante(testo(sorveglianza.getRisposta()));
@@ -230,13 +231,13 @@ public class LaSorveglianza extends IncaricoInCitta {
 
 	@Override
 	protected String testoAccettazione() {
-		return Articoli.inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per sorvegliare "
+		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per sorvegliare "
 				+ TestiDeiLuoghi.indefinito(getSorveglianza().getLuogo()) + ".";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Articoli.inizialeMaiuscola(mandante(getSorveglianza().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Lingue.corrente().inizialeMaiuscola(mandante(getSorveglianza().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

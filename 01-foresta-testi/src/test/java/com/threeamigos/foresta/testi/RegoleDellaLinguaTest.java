@@ -73,6 +73,18 @@ class RegoleDellaLinguaTest {
 	}
 
 	@Test
+	void unNomeConArticoliSuoiLiUsaAlPostoDellaRegola() {
+		Nome schinieri = new Nome("schinieri", "schinieri", Genere.MASCHILE, null, null, false,
+				new String[] {"gli ", "gli ", "un paio di ", "alcune paia di "});
+		assertEquals("gli ", IT.articoloDeterminativo(schinieri, false));
+		assertEquals("un paio di ", IT.articoloIndeterminativo(schinieri, false));
+		assertEquals("alcune paia di ", IT.articoloIndeterminativo(schinieri, true));
+		assertEquals("degli ", IT.preposizioneArticolata(Preposizione.DI, schinieri, false));
+		// Senza eccezioni vale la regola
+		assertEquals("il ", IT.articoloDeterminativo(m("Goblin"), false));
+	}
+
+	@Test
 	void italiano_preposizioni_articolate() {
 		assertEquals("del ", IT.preposizioneArticolata(Preposizione.DI, m("Goblin"), false));
 		assertEquals("dello ", IT.preposizioneArticolata(Preposizione.DI, m("Scheletro"), false));

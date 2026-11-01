@@ -8,7 +8,6 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaAvvisoIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
 import com.threeamigos.foresta.artefatti.VistaBancoDiLavoro;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
@@ -18,6 +17,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Optional;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
+import com.threeamigos.foresta.testi.Lingue;
 
 /**
  * La bottega dell'incantatore: a sinistra l'inventario del gruppo, a destra il banco di lavoro.
@@ -50,7 +50,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
 
     private void onEventoApprovazioneIncantatura(NotificaApprovazioneIncantatura evento) {
         String nome = evento.getArtefatto().getNomeBreve();
-        BusEventi.pubblica(new InternoNotificaViaFumettoATempo(TestiDellaUI.get("INCANTATORE_FATTO", Articoli.inizialeMaiuscola(nome)), getCoordinateFumetto()));
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo(TestiDellaUI.get("INCANTATORE_FATTO", Lingue.corrente().inizialeMaiuscola(nome)), getCoordinateFumetto()));
     }
 
     @Override

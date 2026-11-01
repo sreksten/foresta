@@ -13,8 +13,6 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.Articoli;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -23,6 +21,9 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * In città qualcuno ha perso qualcosa nella foresta, vicino a un posto che si ricorda (un tempio, delle rovine, una
@@ -150,7 +151,7 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 	@Override
 	public String getNome() {
 		OggettoSmarrito smarrito = getSmarrito();
-		return Articoli.inizialeMaiuscola(smarrito.getOggettoConArticolo()) + " " + Articoli.conPreposizione("di", smarrito.getProprietario());
+		return Lingue.corrente().inizialeMaiuscola(smarrito.getOggettoConArticolo()) + " " + Lingue.corrente().conPreposizione(Preposizione.DI, smarrito.getProprietario());
 	}
 
 	@Override
@@ -158,9 +159,9 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 		OggettoSmarrito smarrito = getSmarrito();
 		if (RITORNO.equals(getPassoCorrente())) {
 			return "Hai trovato " + smarrito.getOggettoConArticolo() + ": riporta" + smarrito.getPronome() + " "
-					+ Articoli.conPreposizione("a", getProprietarioDiCitta()) + ".";
+					+ Lingue.corrente().conPreposizione(Preposizione.A, getProprietarioDiCitta()) + ".";
 		}
-		return "Cerca " + smarrito.getOggettoConArticolo() + " che " + getProprietarioDiCitta() + " ha perso vicino " + Articoli.conPreposizione("a", getNomeDelPosto()) + ", che trovi sulla mappa: è al più a " + Numeri.getCardinaleM(RAGGIO)
+		return "Cerca " + smarrito.getOggettoConArticolo() + " che " + getProprietarioDiCitta() + " ha perso vicino " + Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelPosto()) + ", che trovi sulla mappa: è al più a " + Lingue.corrente().cardinale(RAGGIO, Genere.MASCHILE)
 				+ " passi da lì.";
 	}
 
@@ -189,7 +190,7 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 			case RICERCA:
 				return raccogli(MomentoControllo.POST_LOCAZIONE, getOggettoDaCercare())
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Ecco " + smarrito.getOggettoConArticolo() + " "
-								+ Articoli.conPreposizione("di", smarrito.getProprietario()) + "! " + Articoli.inizialeMaiuscola(smarrito.getProprietario())
+								+ Lingue.corrente().conPreposizione(Preposizione.DI, smarrito.getProprietario()) + "! " + Lingue.corrente().inizialeMaiuscola(smarrito.getProprietario())
 								+ " " + smarrito.getPronome() + " aspetta a " + getNomeCitta() + ".")))
 						.poi(RITORNO);
 			default:
@@ -212,7 +213,7 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 	@Override
 	protected String testoConsegna() {
 		OggettoSmarrito smarrito = getSmarrito();
-		return Articoli.inizialeMaiuscola(smarrito.getOggettoConArticolo()) + " torna " + Articoli.conPreposizione("a", smarrito.getProprietario()) + ".";
+		return Lingue.corrente().inizialeMaiuscola(smarrito.getOggettoConArticolo()) + " torna " + Lingue.corrente().conPreposizione(Preposizione.A, smarrito.getProprietario()) + ".";
 	}
 
 	@Override
@@ -220,8 +221,8 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 		OggettoSmarrito smarrito = getSmarrito();
 		return ScenaInCitta.conMandante()
 				.parlaIlMandante(smarrito.getRacconto())
-				.parlaIlMandante("L'ho " + smarrito.getPerso() + " vicino " + Articoli.conPreposizione("a", getNomeDelPosto())
-						+ ". Vi segno il posto sulla mappa: dev'essere lì intorno, a non più di " + Numeri.getCardinaleM(RAGGIO) + " passi. Riportatemel"
+				.parlaIlMandante("L'ho " + smarrito.getPerso() + " vicino " + Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelPosto())
+						+ ". Vi segno il posto sulla mappa: dev'essere lì intorno, a non più di " + Lingue.corrente().cardinale(RAGGIO, Genere.MASCHILE) + " passi. Riportatemel"
 						+ (smarrito.isFemminile() ? "a" : "o") + " e avrete " + getRicompensa() + " monete.")
 				.parlaIlCapo(smarrito.getBattutaDelCapo())
 				.parlaIlMandante(smarrito.getRisposta());
@@ -237,13 +238,13 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 	@Override
 	protected String testoAccettazione() {
 		OggettoSmarrito smarrito = getSmarrito();
-		return Articoli.inizialeMaiuscola(getProprietarioDiCitta()) + " pagherà " + getRicompensa() + " monete per "
-				+ smarrito.getOggettoConArticolo() + " che ha perso vicino " + Articoli.conPreposizione("a", getNomeDelPosto()) + ".";
+		return Lingue.corrente().inizialeMaiuscola(getProprietarioDiCitta()) + " pagherà " + getRicompensa() + " monete per "
+				+ smarrito.getOggettoConArticolo() + " che ha perso vicino " + Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelPosto()) + ".";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Articoli.inizialeMaiuscola(getSmarrito().getProprietario()) + " paga le " + getRicompensa() + " monete promesse.";
+		return Lingue.corrente().inizialeMaiuscola(getSmarrito().getProprietario()) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

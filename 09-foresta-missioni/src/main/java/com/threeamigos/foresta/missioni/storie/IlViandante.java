@@ -15,7 +15,6 @@ import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.Numeri;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -24,6 +23,8 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;
 import java.util.function.Supplier;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Genere;
 
 /**
  * Dopo due o tre giorni di cammino, entrando in un bosco, il gruppo incontra per caso un viandante che chiede un favore: andare
@@ -133,7 +134,7 @@ public class IlViandante extends MissioneAPassi {
 		if (richiesta == null || !isAttiva()) {
 			return "Prima o poi, nei boschi, si incontra qualcuno che ha bisogno di aiuto.";
 		}
-		String mostri = Numeri.getCardinaleM(getQuantita()) + " " + richiesta.getPlurale();
+		String mostri = Lingue.corrente().cardinale(getQuantita(), Genere.MASCHILE) + " " + richiesta.getPlurale();
 		switch (getPassoCorrente()) {
 			case CACCIA:
 				return "Sei a " + nomeDellaCitta() + ": sconfiggi " + mostri + ", dovunque. Finora: "
@@ -213,7 +214,7 @@ public class IlViandante extends MissioneAPassi {
 		aggiungiProprieta(LIVELLO_DELL_INCONTRO, String.valueOf(Statistiche.getLivello()));
 		ViandanteRichiesto richiesta = getRichiesta();
 		BusEventi.pubblica(new NotificaTestoParagrafo("Il viandante vi chiede di andare a " + nomeDellaCitta() + ", di sconfiggere "
-				+ Numeri.getCardinaleM(getQuantita()) + " " + richiesta.getPlurale() + " e di tornare da lui. Vi pagherà "
+				+ Lingue.corrente().cardinale(getQuantita(), Genere.MASCHILE) + " " + richiesta.getPlurale() + " e di tornare da lui. Vi pagherà "
 				+ getMonete() + " monete."));
 		attivaMissione();
 	}

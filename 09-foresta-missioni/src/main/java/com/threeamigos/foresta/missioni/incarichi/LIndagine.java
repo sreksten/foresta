@@ -16,11 +16,12 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.personaggi.Viandante;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 
 /**
  * In città qualcuno chiede di scoprire chi ha fatto qualcosa: chi ha rubato le campane, chi passa le notizie al nemico,
@@ -130,7 +131,7 @@ public class LIndagine extends IncaricoInCitta {
 	}
 
 	private String getAttesa() {
-		return Articoli.inizialeMaiuscola(mandante(getIndagine().getMandante())) + " aspetta a " + getNomeCitta() + ".";
+		return Lingue.corrente().inizialeMaiuscola(mandante(getIndagine().getMandante())) + " aspetta a " + getNomeCitta() + ".";
 	}
 
 	private boolean nelPosto() {
@@ -154,17 +155,17 @@ public class LIndagine extends IncaricoInCitta {
 		IndagineRichiesta indagine = getIndagine();
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return "Fatto: torna " + Articoli.conPreposizione("da", mandante(indagine.getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
+			return "Fatto: torna " + Lingue.corrente().conPreposizione(Preposizione.DA, mandante(indagine.getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
 		}
 		if (NASCONDIGLIO.equals(passo) || CATTURA.equals(passo)) {
 			return "Hai scoperto il colpevole: sconfiggilo nel suo nascondiglio, segnato sulla mappa, poi torna "
-					+ Articoli.conPreposizione("da", mandante(indagine.getMandante())) + " a " + getNomeCitta() + ".";
+					+ Lingue.corrente().conPreposizione(Preposizione.DA, mandante(indagine.getMandante())) + " a " + getNomeCitta() + ".";
 		}
 		StringBuilder descrizione = new StringBuilder();
 		int trovati = getIndiziTrovati();
 		int indizi = indagine.getIndizi().size();
 		if (trovati < indizi) {
-			descrizione.append(Articoli.inizialeMaiuscola(getMandanteDiCitta())).append(" ti ha chiesto di indagare: cerca ")
+			descrizione.append(Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta())).append(" ti ha chiesto di indagare: cerca ")
 					.append(trovati == 0 ? "il primo indizio" : "l'indizio successivo").append(" nel posto segnato sulla mappa.");
 		} else {
 			descrizione.append("Hai trovato tutti gli indizi. ").append(testo(indagine.getDomanda()));
@@ -262,12 +263,12 @@ public class LIndagine extends IncaricoInCitta {
 
 	@Override
 	protected String testoAccettazione() {
-		return Articoli.inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per scoprire il colpevole.";
+		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per scoprire il colpevole.";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Articoli.inizialeMaiuscola(mandante(getIndagine().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Lingue.corrente().inizialeMaiuscola(mandante(getIndagine().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
 	}
 
 	@Override

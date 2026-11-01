@@ -6,7 +6,6 @@ import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.ProprietaDiMissione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoCanto;
@@ -15,6 +14,8 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.List;
 import java.util.Optional;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 
 /**
  * Il bardo della locanda ringrazia il gruppo per aver accompagnato sua moglie (la missione IlViaggioDellaMoglie) e gli insegna
@@ -58,7 +59,7 @@ public class IntermezzoUrloDellaBanshee implements Intermezzo {
 		String moglie = RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome();
 		TipoLocazione arrivo = getViaggioCompletato()
 				.map(viaggio -> viaggio.ottieniProprieta(ProprietaDiMissione.CITTA_DI_ARRIVO)).map(TipoLocazione::valueOf).orElse(null);
-		String dove = arrivo == null ? "dall'altra parte della foresta" : Articoli.conPreposizione("a", arrivo.getNomeProprio());
+		String dove = arrivo == null ? "dall'altra parte della foresta" : Lingue.corrente().conPreposizione(Preposizione.A, arrivo.getNomeProprio());
 		return ScenaInLocanda.conBardo()
 				.parlaIlBardo("Siete tornati! Mia moglie " + moglie + " mi ha scritto: è arrivata sana e salva " + dove + ", grazie a voi.")
 				.parlaIlCapo("Era il minimo, dopo avervi riportato a casa.")
