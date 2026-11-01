@@ -149,6 +149,15 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	/**
+	 * Abilita sulla mappa a tutto schermo il joystick virtuale (vedi {@link DisplayableCanvasMappaATuttoSchermo#abilitaJoystickVirtuale()}).
+	 */
+	public void setJoystickVirtuale(boolean abilitato) {
+		if (abilitato) {
+			mappaATuttoSchermo.abilitaJoystickVirtuale();
+		}
+	}
+
+	/**
 	 * @param barraDock vero per la barra delle icone che si ingrandisce sotto il cursore (DisplayableCanvasBarraIconeDock),
 	 *                  solo in orientamento orizzontale; altrimenti la barra classica
 	 * @param vistaPartita lo stato della partita da mostrare, in sola lettura: lo ricevono tutti i riquadri
@@ -1002,6 +1011,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	public void mappa() {
 		cambiaStato(StatoDisplayableCanvas.STATO_MAPPA);
 		mappaATuttoSchermo.centraSuGiocatore();
+		mappaATuttoSchermo.dimenticaLaMano();
 		repaint();
 	}
 

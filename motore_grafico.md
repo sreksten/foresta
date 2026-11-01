@@ -6,7 +6,7 @@ Descrizione dello stato attuale della parte grafica: i pacchetti `ui` e `ui.sfx`
 
 Tutto il rendering è **Java2D/Swing/AWT**, senza librerie grafiche esterne. Il testo non usa mai i font di AWT: passa dal sistema di font bitmap `Doomdark` (§7), con l'unica eccezione del campo di input (§11).
 
-`Main` avvia motore e UI ciascuno con il proprio `Temporizzatore`. Gli argomenti che riguardano la UI sono `ORIZZONTALE` (default) o `VERTICALE`, `TUTTOSCHERMO`, `SALTALOGO` (niente logo iniziale: si attende solo il caricamento) e `BARRACLASSICA` (barra icone fissa invece della barra "Dock", §3).
+`Main` avvia motore e UI ciascuno con il proprio `Temporizzatore`. Gli argomenti che riguardano la UI sono `ORIZZONTALE` (default) o `VERTICALE`, `TUTTOSCHERMO`, `SALTALOGO` (niente logo iniziale: si attende solo il caricamento), `JOYSTICK_VIRTUALE` (disco a schermo che muove una mano-puntatore sulla mappa a tutto schermo, per i dispositivi senza mouse) e `BARRACLASSICA` (barra icone fissa invece della barra "Dock", §3).
 
 `ForestaUI` è la classe radice. Il costruttore pianifica `creaEMostraInterfacciaUtente()` sull'Event Dispatch Thread e si iscrive subito, prima che la finestra esista, a una quarantina di tipi di evento del bus: ogni handler traduce l'evento in una chiamata sul `DisplayableCanvas` (§5).
 

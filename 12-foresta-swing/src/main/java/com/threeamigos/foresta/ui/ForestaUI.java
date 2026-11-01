@@ -64,6 +64,7 @@ public class ForestaUI implements Temporizzabile {
 	private volatile boolean interfacciaCompleta;
 	private boolean logoInizialeConcluso;
 	private final boolean barraDock;
+	private final boolean joystickVirtuale;
 	private final GestorePunteggi gestorePunteggi;
 	private final VistaPartita vistaPartita;
 	private FaseDiGioco faseDiGioco;
@@ -73,12 +74,15 @@ public class ForestaUI implements Temporizzabile {
 	 *                          aspetta solo il caricamento delle risorse e si passa subito all'INTRO
 	 * @param barraDock vero per la barra delle icone che si ingrandisce sotto il cursore, come il Dock di macOS
 	 *                  (vedi DisplayableCanvasBarraIconeDock; solo in orientamento orizzontale)
+	 * @param joystickVirtuale vero per il joystick a schermo sulla mappa (vedi JoystickVirtuale), anche dove c'è il mouse
 	 * @param gestorePunteggi la classifica da mostrare nell'intro (la stessa che riceve l'Automa)
 	 * @param vistaPartita lo stato della partita da mostrare, in sola lettura
 	 */
 	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo, boolean saltaLogoIniziale, boolean barraDock,
+					 boolean joystickVirtuale,
 					 GestorePunteggi gestorePunteggi, VistaPartita vistaPartita, Temporizzatore temporizzatore) {
 		this.barraDock = barraDock;
+		this.joystickVirtuale = joystickVirtuale;
 		this.gestorePunteggi = gestorePunteggi;
 		this.vistaPartita = vistaPartita;
 		this.orientamento = orientamento;
@@ -251,6 +255,7 @@ public class ForestaUI implements Temporizzabile {
 		Logger.log(() -> "Orientamento: " + orientamento);
 		displayableCanvas = new DisplayableCanvas(larghezza, altezza, orientamentoCanvas(orientamento), SPESSORE_BARRA_ICONE, barraDock,
 				gestorePunteggi, vistaPartita);
+		displayableCanvas.setJoystickVirtuale(joystickVirtuale);
 		displayableCanvas.setRichiestaTesto(prompt::mostra, prompt::annulla);
 		interfacciaCompleta = true;
 	}

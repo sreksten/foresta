@@ -5,6 +5,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
+import com.threeamigos.foresta.ui.componenti.JoystickVirtuale;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sfx.CloudManager;
 
@@ -15,6 +16,9 @@ import java.util.List;
 
 /**
  * La mappa della foresta a tutto schermo: si trascina con il mouse, mostra il nome della casella sotto il cursore e, in alto, il notiziario.
+ * Con il joystick virtuale (vedi {@link #abilitaJoystickVirtuale()}) c'è anche un disco in basso a destra che, premuto, fa
+ * comparire una mano al centro della mappa: la mano si muove finché il disco è premuto, con la velocità e la direzione date
+ * dalla posizione del puntatore rispetto al disco, e fa da puntatore (mostra il nome di ciò che ha sotto); al rilascio sparisce.
  */
 public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Finestra {
 
@@ -39,12 +43,33 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 	private int xMouse;
 	private int yMouse;
 
+	// Il joystick virtuale, per chi non ha un mouse; null se non è abilitato
+	private JoystickVirtuale joystick;
+	// Dove sta la punta della mano, in pixel dello schermo, e quando si è disegnato l'ultima volta (0: non ancora)
+	private double xMano;
+	private double yMano;
+	private long ultimoFotogrammaDellaMano;
+	// Se la mano è già stata mossa durante questa visita della mappa: la volta dopo riparte da dove si era fermata
+	private boolean manoMemorizzata;
+	// Il tempo fra due fotogrammi non conta oltre questo, perché una pausa non faccia saltare la mano
+	private static final long PASSO_MASSIMO_NANOS = 100_000_000L;
+	// La punta del dito nell'immagine della mano
+	private static final int PUNTA_DELLA_MANO_X = 14;
+	private static final int PUNTA_DELLA_MANO_Y = 3;
+
 
 	public DisplayableCanvasMappaATuttoSchermo(int width, int height, VistaPartita vistaPartita) {
 		super(vistaPartita);
 		this.width = width;
 		this.height = height;
 		this.notiziario = new Notiziario(width - LARGHEZZA_SFERA_MAGICA_COPERTA, ALTEZZA_ICONA, vistaPartita);
+	}
+
+	/**
+	 * Abilita il joystick virtuale: un disco in basso a destra che, premuto, muove una mano-puntatore al centro della mappa.
+	 */
+	public void abilitaJoystickVirtuale() {
+		joystick = new JoystickVirtuale(width, height);
 	}
 
 	// La fascia del notiziario occupa spazio solo quando ci sono effettivamente
@@ -177,7 +202,38 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 		if (altezzaMappa < height) {
 			notiziario.disegna(graphics, LARGHEZZA_SFERA_MAGICA_COPERTA, altezzaMappa);
 		}
+		disegnaJoystickEMano(graphics, altezzaMappa);
 		disegnaNomeSottoIlMouse(graphics, altezzaMappa);
+	}
+
+	/**
+	 * Il disco del joystick e, finché è premuto, la mano: che nel frattempo si è mossa per il tempo passato dall'ultimo
+	 * fotogramma. La mano fa da cursore, quindi la sua punta è dove si legge il nome sotto il mouse; resta dentro la mappa.
+	 */
+	private void disegnaJoystickEMano(Graphics2D graphics, int altezzaMappa) {
+		if (joystick == null) {
+			return;
+		}
+		if (joystick.isAttivo()) {
+			long ora = System.nanoTime();
+			if (ultimoFotogrammaDellaMano != 0) {
+				double secondi = Math.min(ora - ultimoFotogrammaDellaMano, PASSO_MASSIMO_NANOS) / 1e9;
+				xMano += joystick.getVelocitaX() * secondi;
+				yMano += joystick.getVelocitaY() * secondi;
+			}
+			// La mano non esce dalla mappa: né dall'immagine, se è più piccola dello schermo, né dalla parte visibile, se è più grande
+			int dimensioneMappaX = vistaPartita.getMappa().getDimensioneX() * LARGHEZZA_ICONA;
+			int dimensioneMappaY = vistaPartita.getMappa().getDimensioneY() * ALTEZZA_ICONA;
+			xMano = Math.max(Math.max(0, mappaXOffset), Math.min(Math.min(width, mappaXOffset + dimensioneMappaX) - 1, xMano));
+			yMano = Math.max(Math.max(0, mappaYOffset), Math.min(Math.min(altezzaMappa, mappaYOffset + dimensioneMappaY) - 1, yMano));
+			ultimoFotogrammaDellaMano = ora;
+			xMouse = (int) xMano;
+			yMouse = (int) yMano;
+		}
+		joystick.disegna(graphics);
+		if (joystick.isAttivo()) {
+			graphics.drawImage(ImageCache.manoPuntatore, xMouse - PUNTA_DELLA_MANO_X, yMouse - PUNTA_DELLA_MANO_Y, null);
+		}
 	}
 
 	private boolean mouseSuCasellaValida() {
@@ -226,6 +282,9 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 
 	@Override
 	public void processaMovimento(int x, int y) {
+		if (joystickAttivo()) {
+			return;
+		}
 		mouseSopra = true;
 		xMouse = x;
 		yMouse = y;
@@ -233,6 +292,19 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 
 	@Override
 	public void processaPressione(int x, int y, Finestra.Tasto tasto) {
+		if (joystick != null && tasto == Tasto.SINISTRO && joystick.attiva(x, y)) {
+			// La mano parte da dove si era fermata, o al primo uso dal centro della mappa
+			if (!manoMemorizzata) {
+				xMano = width / 2.0;
+				yMano = altezzaMappa() / 2.0;
+				manoMemorizzata = true;
+			}
+			xMouse = (int) xMano;
+			yMouse = (int) yMano;
+			ultimoFotogrammaDellaMano = 0;
+			mouseSopra = true;
+			return;
+		}
 		if (tasto == Tasto.SINISTRO && y < altezzaMappa()) {
 			stoTrascinando = true;
 			ultimaXMouse = x;
@@ -243,12 +315,20 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 	@Override
 	public void processaRilascio(int x, int y, Finestra.Tasto tasto) {
 		if (tasto == Tasto.SINISTRO) {
+			if (joystickAttivo()) {
+				// La mano scompare, e con lei il nome che mostrava
+				joystick.rilascia();
+				mouseSopra = false;
+			}
 			stoTrascinando = false;
 		}
 	}
 
 	@Override
 	public void processaUscita(int x, int y) {
+		if (joystickAttivo()) {
+			return; // il rilascio arriva comunque (vedi catturaIlTrascinamento)
+		}
 		// Uscendo dal riquadro (sulla barra icone o fuori dal canvas) il rilascio del tasto potrebbe
 		// arrivare a un'altra finestra o andare perso: si chiude il trascinamento come se fosse avvenuto qui
 		stoTrascinando = false;
@@ -257,6 +337,10 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 
 	@Override
 	public void processaTrascinamento(int x, int y) {
+		if (joystickAttivo()) {
+			joystick.sposta(x, y);
+			return;
+		}
 		if (stoTrascinando && y >= altezzaMappa()) {
 			// Sceso sul notiziario: si esce dalla zona della mappa, come per processaUscita
 			stoTrascinando = false;
@@ -300,6 +384,25 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 				mappaYOffset = Math.max(altezzaMappa - dimensioneMappaY, Math.min(0, mappaYOffset));
 			}
 		}
+	}
+
+	/**
+	 * Si entra nella schermata della mappa: la mano, la prossima volta, parte dal centro.
+	 */
+	public void dimenticaLaMano() {
+		manoMemorizzata = false;
+	}
+
+	private boolean joystickAttivo() {
+		return joystick != null && joystick.isAttivo();
+	}
+
+	/**
+	 * Con il joystick il gesto, fuori dal disco, resta suo finché il tasto non è rilasciato.
+	 */
+	@Override
+	public boolean catturaIlTrascinamento() {
+		return joystick != null;
 	}
 
 	@Override

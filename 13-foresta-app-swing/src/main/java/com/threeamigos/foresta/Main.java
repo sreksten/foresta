@@ -34,7 +34,7 @@ import java.util.Locale;
  * la finestra e li lascia dialogare solo tramite eventi.
  * <p>
  * Argomenti riconosciuti (senza distinzione fra maiuscole e minuscole): {@code ORIZZONTALE}, {@code VERTICALE},
- * {@code TUTTOSCHERMO}, {@code SALTALOGO}, {@code BARRACLASSICA}, {@code ZOOM=<numero>}, {@code MODALITA_DI_PROVA}.
+ * {@code TUTTOSCHERMO}, {@code SALTALOGO}, {@code BARRACLASSICA}, {@code JOYSTICK_VIRTUALE}, {@code ZOOM=<numero>}, {@code MODALITA_DI_PROVA}.
  */
 public class Main {
 
@@ -45,6 +45,8 @@ public class Main {
 	// La barra delle icone che si ingrandisce sotto il cursore, come il Dock di macOS (solo in orizzontale);
 	// con l'argomento BARRACLASSICA si torna alla barra fissa
 	private static boolean barraDock = true;
+	// Il joystick a schermo sulla mappa a tutto schermo, per i dispositivi senza mouse (qui, per provarlo)
+	private static boolean joystickVirtuale = false;
 
 	/**
 	 * Imposta le opzioni di avvio dagli argomenti; quelli sconosciuti, e uno {@code ZOOM=} che non è un numero positivo,
@@ -62,6 +64,8 @@ public class Main {
                 saltaLogo = true;
             } else if (arg.equalsIgnoreCase("BARRACLASSICA")) {
                 barraDock = false;
+            } else if (arg.equalsIgnoreCase("JOYSTICK_VIRTUALE")) {
+                joystickVirtuale = true;
             } else if (arg.toUpperCase(Locale.ROOT).startsWith("ZOOM=")) {
                 try {
                     LivelloDiZoom.imposta(Double.parseDouble(arg.substring("ZOOM=".length())));
@@ -126,7 +130,7 @@ public class Main {
 
 		VistaPartitaMotore vistaPartita = new VistaPartitaMotore();
 		Temporizzatore temporizzatoreUI = new TemporizzatoreJ2SE(Main::segnalaImpulsoFallito);
-		new ForestaUI(orientamento, tuttoSchermo, saltaLogo, barraDock, gestorePunteggi, vistaPartita,
+		new ForestaUI(orientamento, tuttoSchermo, saltaLogo, barraDock, joystickVirtuale, gestorePunteggi, vistaPartita,
 				temporizzatoreUI);
 
 		if (ModalitaDiProva.isAttiva()) {

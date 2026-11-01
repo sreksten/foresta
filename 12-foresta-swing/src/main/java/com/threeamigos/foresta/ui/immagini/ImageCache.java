@@ -95,6 +95,10 @@ public class ImageCache {
 	 */
 	private static Map<Character, BufferedImage> alfabetoGrande;
 
+	/**
+	 * La mano che fa da puntatore col joystick virtuale, alla sua dimensione (senza zoom)
+	 */
+	public static BufferedImage manoPuntatore;
 	public static BufferedImage[] spriteIncantesimi;
 	public static BufferedImage spriteAmicizia;
 	public static BufferedImage spriteCombattimento;
@@ -269,6 +273,7 @@ public class ImageCache {
 		// Lo stesso disegno della pozione: un solo caricamento, due nomi per due usi (la pozione e il livello guadagnato)
 		spriteAumentoLivello = spritePozioneAumentoLivello;
 		spriteGruppo = BufferedImageBuilder.buildBufferedImage("icone/Gruppo.gif");
+		manoPuntatore = BufferedImageBuilder.buildBufferedImage("icone/ManoPuntatore.gif");
 
 		missioneBirra = BufferedImageBuilder.buildBufferedImage("icone/Missione-birra-grande.gif", zoom);
 		missioneGallo = BufferedImageBuilder.buildBufferedImage("icone/Missione-gallo.gif");

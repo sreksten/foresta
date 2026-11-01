@@ -31,7 +31,7 @@ Mette insieme le parti nell'ordine giusto:
 7. si iscrive a `InternoInterfacciaUtentePronta` **prima** di creare la UI (altrimenti l'evento, pubblicato sul thread principale, andrebbe perso lasciando il gioco sulla finestra nera) e fa partire l'automa quando arriva;
 8. in modalità di prova installa i trucchi sui dadi, crea `VistaPartitaMotore` e `ForestaUI`, e apre la `FinestraDiProva`.
 
-Argomenti riconosciuti, senza distinguere maiuscole e minuscole: `ORIZZONTALE`, `VERTICALE`, `TUTTOSCHERMO`, `SALTALOGO`, `BARRACLASSICA`, `ZOOM=<numero>`, `MODALITA_DI_PROVA`; quelli sconosciuti sono ignorati con una riga nel log.
+Argomenti riconosciuti, senza distinguere maiuscole e minuscole: `ORIZZONTALE`, `VERTICALE`, `TUTTOSCHERMO`, `SALTALOGO`, `BARRACLASSICA`, `JOYSTICK_VIRTUALE` (il joystick a schermo sulla mappa, anche dove c'è il mouse), `ZOOM=<numero>`, `MODALITA_DI_PROVA`; quelli sconosciuti sono ignorati con una riga nel log.
 
 ### `SnifferBusEventi`
 
