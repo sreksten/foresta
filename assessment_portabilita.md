@@ -113,9 +113,8 @@ Ogni passo compila e ha i test verdi; la dimensione è S (qualche ora), M (una s
    - [ ] da rifinire: i pezzi che le missioni compongono con preposizioni e articoli italiani (`mandanteSenzaVirgolaFinale`, `getNomeDeiNemici`, `TestiDeiLuoghi`: ora le locuzioni «una grotta» / «la grotta» sono chiavi, ma le preposizioni «a», «da» davanti al nome di città passano ancora da `conPreposizione`); le note dei modificatori («la lealtà» di `LealtaRichiesta`, che è anche un'etichetta salvata); i formati dei leggendari costruiti a stringa (`ForgiaRichiesta.s1`, `LaSfidaDeiCampioni.s1`: la chiave porta tutto il record, la traduzione ne cambia i soli valori); i parametri delle missioni che vengono dalle grammatiche (`missioni.txt`, passo 10).
 10. **Grammatiche** (L, più per la scrittura che per il codice)
     - [x] caricamento per lingua con ripiego sull'italiano (`CaricatoreDiGrammatiche.perLaLingua`: `nome_en_GB`, `nome_en`, poi il nome italiano), e `_pp` per lingua; le cache (`GrammaticaPigra`, `GeneratoreArtefattiTabelle`, `CatalogoLeggendari`) si azzerano al cambio di lingua (`Testi.alCambioDiLingua`);
-    - [x] scritte in inglese, con test (`ProduttoriDiTestiInIngleseTest`, `GrammaticheDegliArtefattiInIngleseTest`): `sfide_en`, `templi_en`, `rovine_en`, `oroscopo_en`, `artefatti2_en`, `ingredienti_en` e i due `_pp_en`; da ricontrollare da Stefano;
-    - [ ] ancora da scrivere (in inglese ripiegano sull'italiano): `fiabe`, `locande`, `missioni`, `tappe`, `leggendari` (righe a campi lette dal codice), `nomi`.
-    - [ ] in ordine di visibilità: `nomi`, `artefatti2` e `leggendari` (i nomi degli oggetti), `locande`, `missioni`, `tappe`, `fiabe`, `oroscopo`, e i piccoli `templi`, `rovine`, `sfide`.
+    - [x] scritte in inglese, con test (`ProduttoriDiTestiInIngleseTest`, `GrammaticheDegliArtefattiInIngleseTest`, `TappeInIngleseTest`, `RigheDelleRichiesteInIngleseTest`, `LeggendariInIngleseTest`): in `01-foresta-testi` `sfide_en`, `templi_en`, `rovine_en`, `oroscopo_en`, `locande_en`, `fiabe_en`, `tappe_en`, `missioni_en`, `nomi_en` e `preposizioni_articolate_pp_en`; in `04-foresta-artefatti` `artefatti2_en` (con `NOME_AGGIORNAMENTO`), `ingredienti_en`, `leggendari_en` e `artefatti2_pp_en`. Stesse produzioni, stessi campi e stesse chiavi delle italiane (le righe di `missioni`, `tappe` e `leggendari` le legge il codice); i testi sono adattati, non tradotti alla lettera (giochi di parole, proverbi, nomi). Americano (`_en`); `_en_GB` ripiega su `_en`;
+    - [x] in inglese le frasi che il codice compone con le preposizioni (`%A_PROSSIMO%` = "to the X", `%DI_PROSSIMO%` = "of X", `%DA_PROSSIMO%` = "from X", `DELL_OGGETTO` = "of the X") sono scritte di conseguenza; i testi delle persone cercate portano i pronomi in variabili (`PP`, `PPU`, `PQ`, `PX`);
 11. **Salvataggio e lingua** (S)
     - [ ] la lingua nella testata, ripristinata al caricamento, scelta alla nuova partita; test.
 12. **Passata finale** (M)
@@ -183,6 +182,17 @@ Inglese britannico (guardare solo se le differenze sono quelle volute):
 **Rischi.** L'articolo inglese "a/an" dipende dal suono ("a unicorn", "an hour"): serve una regola con un elenco di eccezioni nel file dei testi. Il passo 3 tocca più di cento file: è meglio farlo a moduli, con l'italiano invariato a ogni commit. Le grammatiche scherzose in italiano ("Il Cinghiale Vegano", i nani che protestano) non si traducono parola per parola: si adattano.
 
 Se non si farà la versione inglese, restano utili comunque il passo 1 e il test del contatore.
+
+Grammatiche inglesi (passo 10, 2026-11-01), da rileggere per tono e giochi di parole; spuntare `[x]` quando riviste:
+
+- [ ] `nomi_en.txt` (01-foresta-testi): nomi, cognomi, attributi, titoli e note dei locandieri; i giochi di parole sui cognomi sono inventati
+- [ ] `locande_en.txt` (01-foresta-testi): 35 locande (nome, dialogo, recensione) e le loro notizie; le reazioni del locandiere
+- [ ] `fiabe_en.txt` (01-foresta-testi): le fiabe; «un/an» evitato con «a certain» e con nomi di antagonisti tutti da consonante
+- [ ] `tappe_en.txt` (01-foresta-testi): missioni a tappe (persona, oggetto, chiavi, bivio, farse); i pronomi della persona cercata stanno in `PP`/`PPU`/`PQ`/`PX`
+- [ ] `missioni_en.txt` (01-foresta-testi): richieste di materiali, forgia, viandanti, spedizioni, contrabbando, oggetti smarriti, incarichi, sorveglianze, soccorsi, indagini, riti, benedizioni, lealtà, tornei, documentazioni, colpi, botteghe; i titoli nobiliari buffi cominciano tutti per consonante
+- [ ] `sfide_en.txt`, `templi_en.txt`, `rovine_en.txt`, `oroscopo_en.txt` (01-foresta-testi)
+- [ ] `artefatti2_en.txt`, `ingredienti_en.txt` (04-foresta-artefatti): nomi, soprannomi e descrizioni degli artefatti e degli ingredienti
+- [ ] `leggendari_en.txt` (04-foresta-artefatti): leggendari, set, libri tecnici, battute (i nomi propri RomyJona, Fumagallo→Mumblewick, Brontolone→Grumbler sono adattamenti)
 
 ### Costanti di bilanciamento come dati
 

@@ -872,3 +872,20 @@ DESCRIZIONE_MALEDIZIONE_PROTEZIONE
 
 DESCRIZIONE_MALEDIZIONE_PROTEZIONE_PLURALE
     that turn curses aside | that laugh at hexes
+
+// NOME_AGGIORNAMENTO: i nomi degli oggetti che fanno salire di un livello un artefatto (vedi artefatti2.txt): oggetto con articolo e quello che promette, in stile burocratico-informatico.
+NOME_AGGIORNAMENTO
+    the Scroll of the Latest Fashion
+    the Trinket of the Latest Update
+    the Trinket of the Latest Version
+    the Scroll of the Illegal Extension
+    the Trinket of the Zoning Variance
+    the Gadget of the Definitive Patch
+    the Scroll of the Release Notes
+    the Trinket of the Necessary Restart
+    the Gadget of the Mandatory Update
+    the Scroll of the Seniority Bonus
+    the Trinket of the Grade Jump
+    the Scroll of the Extended Warranty
+    the Gadget of the Final Definitive Version For Real
+    the Trinket of the Passed Inspection

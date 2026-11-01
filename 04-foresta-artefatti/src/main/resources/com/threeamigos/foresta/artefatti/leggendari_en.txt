@@ -1,0 +1,343 @@
+// Versione inglese di leggendari.txt: stesse produzioni, stesse CHIAVI e stessi campi tecnici (TIPO, LIVELLO, COSTO, PESO, DANNI, MOD,
+// il tipo di danno dell'INCANTAMENTO); si traducono NOME, BREVE, DESCRIZIONE, il nome dell'incantamento e le LEGGENDA. Il formato dei
+// campi è descritto in leggendari.txt.
+//
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean), § (salvataggi) e ";" (separa i campi).
+
+OGGETTO_LEGGENDARIO
+    [SPADA_LEGGENDARIA]
+    [SPADONE_LEGGENDARIO]
+    [MAZZA_LEGGENDARIA]
+    [ASCIA_LEGGENDARIA]
+    [LANCIA_LEGGENDARIA]
+    [BASTONE_MAGICO_LEGGENDARIO]
+    [LIBRO_MAGICO_LEGGENDARIO]
+    [SCUDO_LEGGENDARIO]
+    [ELMO_LEGGENDARIO]
+    [MASCHERA_LEGGENDARIA]
+    [ARMATURA_LEGGENDARIA]
+    [VESTE_LEGGENDARIA]
+    [SCHINIERI_LEGGENDARI]
+    [ANELLO_LEGGENDARIO]
+    [TALISMANO_LEGGENDARIO]
+    [NINNOLO_LEGGENDARIO]
+    [PERGAMENA_LEGGENDARIA]
+    [GEMMA_LEGGENDARIA]
+    [MONILE_LEGGENDARIO]
+    [GINGILLO_LEGGENDARIO]
+    [SIGILLO_LEGGENDARIO]
+
+SPADA_LEGGENDARIA$
+    TIPO=SPADA;NOME=the Winged Sword of Death with Side Reinforcement;CHIAVE=SPADA_DI_ROMY_JONA;BREVE=the Sword of Death;SET=ROMY_JONA;\
+    DESCRIZIONE=that massacres pigs;LIVELLO=5;DANNI=16;COSTO=60;PESO=2;\
+    MOD=FORZA +100%;MOD=CORAGGIO +20%;MOD=VALORE +2;INCANTAMENTO=NECROTICO 12 0.15 Spell of RomyJona;\
+    LEGGENDA=Have you ever heard of the Winged Sword of Death with Side Reinforcement?;\
+    LEGGENDA=It was forged by a smith who wanted to put an end to the giant pigs of Malgaard, and he succeeded all too well.;\
+    LEGGENDA=They say every slash whispers the name of the one about to fall, and that RomyJona in person enchanted it.
+
+    TIPO=SPADA;NOME=the Monday Morning Sword;CHIAVE=SPADA_DEL_CAVALIERE_SVOGLIATO;BREVE=the Monday Morning Sword;SET=CAVALIERI_SVOGLIATI;\
+    DESCRIZIONE=that takes away the enemies' every desire to fight;LIVELLO=5;DANNI=18;COSTO=60;PESO=2;\
+    MOD=SOGGEZIONE +4;MOD=FURIA +3;INCANTAMENTO=PSICHICO 12 0.15 Contagious Yawn;\
+    LEGGENDA=Do you know the Monday Morning Sword? Whoever looks at it yawns.;\
+    LEGGENDA=It was forged by a smith woken at dawn by the neighbor's rooster, and he put all his resentment into it.;\
+    LEGGENDA=Whoever is struck by it loses all desire to fight, and often to get up. The rooster, they say, was the first.
+
+    TIPO=SPADA;NOME=the Sword of Misfortune of RomyJona;CHIAVE=SPADA_DELLA_SFORTUNA;BREVE=the Sword of Misfortune;\
+    DESCRIZIONE=that brings bad luck to whoever it strikes;LIVELLO=5;DANNI=14;COSTO=60;PESO=2;\
+    MOD=FORTUNA =0 @BERSAGLIO 5TURNI;\
+    LEGGENDA=Have you ever heard of the Sword of Misfortune of RomyJona? They say it brings bad luck.;\
+    LEGGENDA=Whoever is struck trips over their shoelaces, always finds the wrong side of the roof and loses every bet.;\
+    LEGGENDA=To whoever wields it, instead, nothing ever happens. That is why nobody wanted to explain the matter to RomyJona.
+
+SPADONE_LEGGENDARIO$
+    TIPO=SPADONE;NOME=the Greatsword of the Absent-Minded Giant;CHIAVE=SPADONE_DEL_GIGANTE;BREVE=the Greatsword of the Absent-Minded Giant;\
+    DESCRIZIONE=that for a giant was a toothpick;LIVELLO=5;DANNI=26;COSTO=60;PESO=6;\
+    MOD=FORZA +50%;MOD=CRITICO +3;INCANTAMENTO=TERRA 14 0.15 Giant's Step;\
+    LEGGENDA=The giant Grumbler used this greatsword as a toothpick.;\
+    LEGGENDA=One day he lost it among the trees and didn't even notice.;\
+    LEGGENDA=For a man it is a greatsword that splits mountains. For a giant, a splinter.
+
+// ---------------------------------------------------------------------------------------------
+// I leggendari di bottino: stessa riga degli altri, ma nessuna leggenda li racconta e non si pescano (vedi leggendari.txt).
+// ---------------------------------------------------------------------------------------------
+
+LEGGENDARIO_DI_BOTTINO$
+    TIPO=FALCE;NOME=the Scythe of the Grim Reaper;CHIAVE=FALCE_DEL_TRISTO_MIETITORE;BREVE=the Scythe of the Grim Reaper;\
+    DESCRIZIONE=that reaps even those not yet ripe;LIVELLO=5;DANNI=20;COSTO=60;PESO=4;\
+    MOD=CORAGGIO +10%;MOD=SOGGEZIONE +3;\
+    INCANTAMENTO=MALEDIZIONE 12 0.15 Shadow on the Harvest;INCANTAMENTO=NECROTICO 12 0.15 Soul Harvest;\
+    LEGGENDA=The Grim Reaper has never taken a day off, and his scythe has never needed a pass of the whetstone.;\
+    LEGGENDA=Whoever is brushed by it feels a shadow upon them, and whoever is already in shadow has no time to be surprised.;\
+    LEGGENDA=They say the fallen rise at its passing, for a few days, to lend a hand with the harvest.
+
+MAZZA_LEGGENDARIA$
+    TIPO=MAZZA;NOME=the Mace of the Furious Innkeeper;CHIAVE=MAZZA_DELL_OSTE;BREVE=the Mace of the Furious Innkeeper;SET=RECUPERO_CREDITI;\
+    DESCRIZIONE=that reminds everyone to pay the bill;LIVELLO=5;DANNI=17;COSTO=60;PESO=3;\
+    MOD=SOGGEZIONE +3;MOD=CONTRATTAZIONE +2;INCANTAMENTO=SONICO 12 0.15 Last Round;\
+    LEGGENDA=Have you ever heard of the Mace of the Furious Innkeeper?;\
+    LEGGENDA=An innkeeper kept it under the counter for those who didn't pay. In thirty years nobody left without paying.;\
+    LEGGENDA=When it strikes, you hear the toll of a bell. It's closing time.
+
+ASCIA_LEGGENDARIA$
+    TIPO=ASCIA;NOME=the Axe of the Sleepless Woodcutter;CHIAVE=ASCIA_DEL_TAGLIALEGNA;BREVE=the Axe of the Sleepless Woodcutter;\
+    DESCRIZIONE=that never tires;LIVELLO=5;DANNI=17;COSTO=60;PESO=3;\
+    MOD=VELOCITA +20%;MOD=RIGENERAZIONE_SALUTE +2;INCANTAMENTO=ARIA 12 0.15 Wind Among the Branches;\
+    LEGGENDA=A woodcutter swore to fell the whole forest in a single night.;\
+    LEGGENDA=He didn't manage, but he came very close: look how many clearings there are.;\
+    LEGGENDA=His axe never tires, and neither does whoever wields it.
+
+LANCIA_LEGGENDARIA$
+    TIPO=LANCIA;NOME=the Lance of the Rigged Tournament;CHIAVE=LANCIA_DEL_MANICHINO;BREVE=the Lance of the Rigged Tournament;\
+    DESCRIZIONE=that always strikes where it should;LIVELLO=5;DANNI=17;COSTO=60;PESO=3;\
+    MOD=PRECISIONE +4;MOD=FORTUNA +3;INCANTAMENTO=FULMINE 12 0.15 Lucky Strike;\
+    LEGGENDA=This lance won twelve tournaments in a row, always with the same knight.;\
+    LEGGENDA=At the thirteenth it was discovered that the knight was a mannequin. The lance did everything by itself.;\
+    LEGGENDA=The judges disqualified it, but nobody had the courage to go and take it back.
+
+BASTONE_MAGICO_LEGGENDARIO$
+    TIPO=BASTONE_MAGICO;NOME=the Staff of the Forgetful Archmage;CHIAVE=BASTONE_DELL_ARCIMAGO;BREVE=the Staff of the Forgetful Archmage;\
+    DESCRIZIONE=that remembers the spells for you;LIVELLO=5;DANNI=8;COSTO=60;PESO=2;\
+    MOD=POTERE_MAGICO +60%;MOD=RIGENERAZIONE_MAGIA +3;MOD=INTELLIGENZA +3;INCANTAMENTO=ARCANO 12 0.15 Forgotten Formula;\
+    LEGGENDA=The archmage Mumblewick knew all the spells in the world. The problem was remembering them.;\
+    LEGGENDA=So he locked them all in his staff, and then forgot where he had put the staff.;\
+    LEGGENDA=Whoever finds it, they say, remembers things they never learned.
+
+LIBRO_MAGICO_LEGGENDARIO$
+    TIPO=LIBRO_MAGICO;NOME=the Book of Forbidden Recipes;CHIAVE=LIBRO_DEL_CUOCO;BREVE=the Book of Forbidden Recipes;\
+    DESCRIZIONE=that cooks spells;LIVELLO=5;COSTO=60;PESO=2;\
+    MOD=POTERE_MAGICO +40%;MOD=SAGGEZZA +3;MOD=RIGENERAZIONE_MAGIA +2;\
+    LEGGENDA=A court cook wrote his recipes in a book, and then discovered they worked as spells too.;\
+    LEGGENDA=The king ate the mushroom soup and stayed a toad for a week.;\
+    LEGGENDA=The cook fled into the forest with the book. The king, still a bit green, is still looking for him.
+
+SCUDO_LEGGENDARIO$
+    TIPO=SCUDO;NOME=the Fiscal Shield;CHIAVE=SCUDO_DELL_ESATTORE;BREVE=the Fiscal Shield;SET=RECUPERO_CREDITI;\
+    DESCRIZIONE=that gets discounts on purchases;LIVELLO=5;COSTO=60;PESO=3;\
+    MOD=COSTITUZIONE +10%;MOD=RESISTENZA_MAGICA +3;MOD=CONTRATTAZIONE +4;INCANTAMENTO=GELO 12 0.15 The Cabbage Joke;\
+    LEGGENDA=Do you know the story of the Fiscal Shield? Don't laugh, it's a serious matter.;\
+    LEGGENDA=It was carried by a tax collector whom no merchant ever managed to cheat: whoever looked at it lowered their prices on their own.;\
+    LEGGENDA=It shields from frost and from spells, but above all from steep bills.;\
+    LEGGENDA=When the collector died, the merchants hid it in the forest, hoping nobody would ever find it again.
+
+    TIPO=SCUDO;NOME=the Shield of the Infinite Lid;CHIAVE=SCUDO_DELLA_CUOCA;BREVE=the Shield of the Infinite Lid;\
+    DESCRIZIONE=that lets nothing through;LIVELLO=5;COSTO=60;PESO=4;\
+    MOD=PARATA +40%;MOD=COSTITUZIONE +3;INCANTAMENTO=FUOCO 12 0.15 Eternal Boil;\
+    LEGGENDA=A cook used it as the lid for the biggest pot in the realm.;\
+    LEGGENDA=She cooked soup in it for a whole army, and the army never managed to open it.;\
+    LEGGENDA=Since then nothing passes through it: neither arrows, nor flames, nor the smell of cabbage.
+
+ELMO_LEGGENDARIO$
+    TIPO=ELMO;NOME=the Unshakeable Noggin of RomyJona;CHIAVE=ELMO_DI_ROMY_JONA;BREVE=the Unshakeable Noggin of RomyJona;SET=ROMY_JONA;\
+    DESCRIZIONE=that no blow can make change its mind;LIVELLO=5;COSTO=60;PESO=2;\
+    MOD=COSTITUZIONE +4;MOD=CORAGGIO +20%;MOD=PARATA +20%;\
+    LEGGENDA=RomyJona had a hard head. So hard that a helmet, at some point, seemed almost superfluous to him.;\
+    LEGGENDA=He had one forged anyway, out of kindness to the enemies' swords, which broke against his head.;\
+    LEGGENDA=Whoever wears it never changes their mind. Neither under blows, nor in the face of evidence.
+
+    TIPO=ELMO;NOME=the Helm of Lateral Thinking;CHIAVE=ELMO_DELL_INVENTORE;BREVE=the Helm of Lateral Thinking;\
+    DESCRIZIONE=that always gives you an idea, not always a good one;LIVELLO=5;COSTO=60;PESO=2;\
+    MOD=INTELLIGENZA +4;MOD=PERCEZIONE +4;MOD=PARATA +20%;\
+    LEGGENDA=Whoever wears the Helm of Lateral Thinking always has an idea. Not always a good one, but always an idea.;\
+    LEGGENDA=The last one who wore it invented the square wheel, the horizontal ladder and the hat for feet.;\
+    LEGGENDA=Then he hid it, because the ideas were starting to give him a headache.
+
+MASCHERA_LEGGENDARIA$
+    TIPO=MASCHERA;NOME=the War Mask of RomyJona;CHIAVE=MASCHERA_DI_ROMY_JONA;BREVE=the War Mask of RomyJona;SET=ROMY_JONA;\
+    DESCRIZIONE=that makes enemies flee before even fighting;LIVELLO=5;COSTO=60;PESO=1;\
+    MOD=SOGGEZIONE +5;MOD=FURIA +3;INCANTAMENTO=NECROTICO 10 0.15 RomyJona's Glare;\
+    LEGGENDA=When RomyJona went to war he put on this mask, and the enemies surrendered before seeing him arrive.;\
+    LEGGENDA=Once even his squire surrendered. It took three days to convince him he was on his side.;\
+    LEGGENDA=They say that under the mask RomyJona smiled. Nobody ever stayed long enough to check.
+
+    TIPO=MASCHERA;NOME=the Rebel's Sunglasses;CHIAVE=MASCHERA_DEL_RIBELLE;BREVE=the Rebel's Sunglasses;SET=GIOVENTU_RIBELLE;\
+    DESCRIZIONE=that are worn even at night;LIVELLO=5;COSTO=60;PESO=0.1;\
+    MOD=CARISMA +4;MOD=SOGGEZIONE +3;MOD=PERCEZIONE -1;\
+    LEGGENDA=A young knight refused the family helmet and showed up at the tournament with a pair of dark glasses.;\
+    LEGGENDA=He didn't win a single duel, because he couldn't see anything. But all the ladies of the realm fell in love with him.;\
+    LEGGENDA=He wore them even at night, and indeed tripped quite a lot.
+
+    TIPO=MASCHERA;NOME=the Mask of the Perpetual Carnival;CHIAVE=MASCHERA_DEL_MERCANTE;BREVE=the Mask of the Perpetual Carnival;\
+    DESCRIZIONE=behind which nobody recognizes you;LIVELLO=5;COSTO=60;PESO=0.5;\
+    MOD=FURTIVITA +5;MOD=CARISMA +3;MOD=PARATA +15%;\
+    LEGGENDA=A merchant put it on at a carnival party, and could never take it off again.;\
+    LEGGENDA=Nobody recognized him anymore: not the creditors, not the mother-in-law, not the guards who had been looking for him for years.;\
+    LEGGENDA=He lived happily for forty years. The day he took it off, all the bills arrived at once.
+
+ARMATURA_LEGGENDARIA$
+    TIPO=ARMATURA;NOME=the Armor of the Lazy Knight;CHIAVE=ARMATURA_DEL_CAVALIERE_SVOGLIATO;BREVE=the Armor of the Lazy Knight;SET=CAVALIERI_SVOGLIATI;\
+    DESCRIZIONE=that parries blows by itself;LIVELLO=5;COSTO=60;PESO=8;\
+    MOD=PARATA +45%;MOD=RIGENERAZIONE_SALUTE +3;MOD=COSTITUZIONE +20%;\
+    LEGGENDA=Sir Slouch never fought a battle, and yet was never wounded.;\
+    LEGGENDA=His armor parried the blows by itself, while he slept inside.;\
+    LEGGENDA=When he finally woke up he was old, rich, and still all in one piece.
+
+VESTE_LEGGENDARIA$
+    TIPO=VESTE;NOME=the Rebel's Leather Jacket;CHIAVE=VESTE_DEL_RIBELLE;BREVE=the Rebel's Leather Jacket;SET=GIOVENTU_RIBELLE;\
+    DESCRIZIONE=with studs and the collar turned up;LIVELLO=5;COSTO=60;PESO=2;\
+    MOD=CARISMA +3;MOD=RESISTENZA_MAGICA +4;MOD=VELOCITA +15%;\
+    LEGGENDA=The rebel knight had a jacket sewn from the hide of his first dragon. That is, of a very large lizard.;\
+    LEGGENDA=He wore it with the collar turned up and the sleeves rolled, and the village elders shook their heads.;\
+    LEGGENDA=Spells slide off it, like reproaches.
+
+    TIPO=VESTE;NOME=the Robe of the Ironed Witch;CHIAVE=VESTE_DELLA_STREGA;BREVE=the Robe of the Ironed Witch;\
+    DESCRIZIONE=that spells are afraid of;LIVELLO=5;COSTO=60;PESO=1;\
+    MOD=RESISTENZA_MAGICA +6;MOD=POTERE_MAGICO +30%;MOD=FURTIVITA +3;INCANTAMENTO=MALEDIZIONE 12 0.15 Perfect Crease;\
+    LEGGENDA=A witch spent a hundred years ironing this robe, without ever managing to remove a single crease.;\
+    LEGGENDA=In the end she cursed it, and the crease left in fright.;\
+    LEGGENDA=Whoever wears it is no longer afraid of spells: it is the spells that are afraid of them.
+
+SCHINIERI_LEGGENDARI$
+    TIPO=SCHINIERI;NOME=the Studded Boots of RomyJona;CHIAVE=SCHINIERI_DI_ROMY_JONA;BREVE=the Studded Boots of RomyJona;SET=ROMY_JONA;\
+    DESCRIZIONE=that leave their mark wherever they pass;LIVELLO=5;COSTO=60;PESO=3;\
+    MOD=FORZA +20%;MOD=PARATA +25%;MOD=VALORE +2;\
+    LEGGENDA=RomyJona never knocked on doors: he opened them with a kick, with these boots.;\
+    LEGGENDA=The smiths of the realm asked to be paid in advance when they saw him coming.;\
+    LEGGENDA=Where they have passed, they say, the grass has never grown back. But only out of fear.
+
+    TIPO=SCHINIERI;NOME=the Greaves of the Cowardly Runner;CHIAVE=SCHINIERI_DEL_CAVALIERE_SVOGLIATO;BREVE=the Greaves of the Cowardly Runner;SET=CAVALIERI_SVOGLIATI;\
+    DESCRIZIONE=that set off on their own;LIVELLO=5;COSTO=60;PESO=3;\
+    MOD=VELOCITA +30%;MOD=PARATA +25%;MOD=FURTIVITA +3;\
+    LEGGENDA=The knight Runaway never won a duel, but never lost one either.;\
+    LEGGENDA=As soon as he saw a sword, his legs set off by themselves.;\
+    LEGGENDA=They say he's still running somewhere, and that at some point his greaves left him behind.
+
+ANELLO_LEGGENDARIO$
+    TIPO=ANELLO;NOME=the Ring of the Eternal Engagement;CHIAVE=ANELLO_DELLA_PRINCIPESSA;BREVE=the Ring of the Eternal Engagement;\
+    DESCRIZIONE=that makes anyone say yes, once;LIVELLO=5;COSTO=60;PESO=0.1;\
+    MOD=CARISMA +5;MOD=FORTUNA +3;MOD=COSTITUZIONE +2;\
+    LEGGENDA=A prince gave it to a princess, who said yes. Then she said yes to the second, the third and the fourth.;\
+    LEGGENDA=The ring makes anyone say yes, but only once per person.;\
+    LEGGENDA=After twelve marriages the princess threw it into a well. The well, they say, got married too.
+
+TALISMANO_LEGGENDARIO$
+    TIPO=TALISMANO;NOME=the Talisman of the Worried Grandmother;CHIAVE=TALISMANO_DELLA_NONNA;BREVE=the Talisman of the Worried Grandmother;\
+    DESCRIZIONE=that tells you to bundle up;LIVELLO=5;COSTO=60;PESO=0.2;\
+    MOD=COSTITUZIONE +4;MOD=RIGENERAZIONE_SALUTE +3;MOD=FORTUNA +3;\
+    LEGGENDA=A grandmother sewed this talisman into her grandson's jacket, before he left for war.;\
+    LEGGENDA=The grandson came back without a scratch, and with three extra scarves.;\
+    LEGGENDA=Whoever carries it hears a voice that says: bundle up, it's cold.
+
+NINNOLO_LEGGENDARIO$
+    TIPO=NINNOLO;NOME=the Trinket That Nobody Knows What It Is;CHIAVE=NINNOLO_DEI_SAGGI;BREVE=the Trinket That Nobody Knows What It Is;\
+    DESCRIZIONE=that surely serves some purpose;LIVELLO=5;COSTO=60;PESO=0.2;\
+    MOD=FORTUNA +5;MOD=PERCEZIONE +3;MOD=SOGGEZIONE +3;\
+    LEGGENDA=Nobody knows what this trinket is for. The sages have been arguing about it for centuries.;\
+    LEGGENDA=One said it was a whistle, another an earring, a third a key. They were all right, on alternate days.;\
+    LEGGENDA=It certainly brings luck. To whoever finds it, not to whoever loses it.
+
+PERGAMENA_LEGGENDARIA$
+    TIPO=PERGAMENA;NOME=the Scroll of the Infernal Contract;CHIAVE=PERGAMENA_DEL_DEMONE;BREVE=the Scroll of the Infernal Contract;\
+    DESCRIZIONE=with the clauses written in small print;LIVELLO=5;COSTO=60;PESO=0.1;\
+    MOD=POTERE_MAGICO +5;INCANTAMENTO=FUOCO 14 0.2 Small Print Clause;\
+    LEGGENDA=A demon wrote this scroll to buy the soul of a notary. The notary read the small print.;\
+    LEGGENDA=In the end it was the demon who gave up his soul, his powers and even his tail.;\
+    LEGGENDA=Whoever fuses it with a weapon finds in it everything the demon lost.
+
+GEMMA_LEGGENDARIA$
+    TIPO=GEMMA;NOME=the Gem of the Eternal Sunset;CHIAVE=GEMMA_DEL_PITTORE;BREVE=the Gem of the Eternal Sunset;\
+    DESCRIZIONE=that won't let the sun set;LIVELLO=5;COSTO=60;PESO=0.1;\
+    MOD=PRECISIONE +3;INCANTAMENTO=SACRO 14 0.2 Last Light;\
+    LEGGENDA=A painter spent his life looking for the perfect color of the sunset.;\
+    LEGGENDA=He found it, locked it in a gem, and ever since the sun in that valley no longer dares to set.;\
+    LEGGENDA=The valley is sick of it. They ask that someone take it away.
+
+MONILE_LEGGENDARIO$
+    TIPO=MONILE;NOME=the Necklace of the Vain Queen;CHIAVE=MONILE_DELLA_REGINA;BREVE=the Necklace of the Vain Queen;\
+    DESCRIZIONE=that makes you irresistible;LIVELLO=5;COSTO=60;PESO=0.1;\
+    MOD=CARISMA +4;INCANTAMENTO=PSICHICO 12 0.15 Mirror of My Desires;\
+    LEGGENDA=Queen Narcissa looked in the mirror two hundred times a day.;\
+    LEGGENDA=The mirror, exasperated, turned itself into a necklace so as not to have to look at her anymore.;\
+    LEGGENDA=Whoever wears it becomes irresistible. Especially to themselves.
+
+GINGILLO_LEGGENDARIO$
+    TIPO=GINGILLO;NOME=the Gadget of the Melancholy Jester;CHIAVE=GINGILLO_DEL_GIULLARE;BREVE=the Gadget of the Melancholy Jester;\
+    DESCRIZIONE=that laughs in your place;LIVELLO=5;COSTO=60;PESO=0.1;\
+    MOD=FORTUNA +3;INCANTAMENTO=SONICO 12 0.15 Punchline;\
+    LEGGENDA=A jester could no longer make the king laugh.;\
+    LEGGENDA=So he locked all his jokes in a rattle, and the rattle laughed in his place.;\
+    LEGGENDA=The king laughed so much that the doctor had to be called. The jester, to be safe, ran away.
+
+SIGILLO_LEGGENDARIO$
+    TIPO=SIGILLO;NOME=the Seal of the Relentless Notary;CHIAVE=SIGILLO_DEL_NOTAIO;BREVE=the Seal of the Relentless Notary;\
+    DESCRIZIONE=that makes every document true;LIVELLO=5;COSTO=60;PESO=0.1;\
+    MOD=CONTRATTAZIONE +5;INCANTAMENTO=ARCANO 12 0.15 Stamp and Signature;\
+    LEGGENDA=Every document bearing this seal becomes true. Even the wrong ones.;\
+    LEGGENDA=The notary Quibble used it to buy a castle with a bean.;\
+    LEGGENDA=The castle is still there. The bean, they say, has become a baron.
+
+// ---------------------------------------------------------------------------------------------
+// I set: un personaggio che indossa tutti i pezzi di un set ha i bonus di ognuno moltiplicati (vedi leggendari.txt).
+// ---------------------------------------------------------------------------------------------
+
+SET_LEGGENDARIO$
+    CHIAVE=ROMY_JONA;NOME=the Gear of RomyJona;MOLTIPLICATORE=1.5
+    CHIAVE=GIOVENTU_RIBELLE;NOME=the Rebel Youth;MOLTIPLICATORE=1.3
+    CHIAVE=CAVALIERI_SVOGLIATI;NOME=the Order of the Listless Knights;MOLTIPLICATORE=1.4
+    CHIAVE=RECUPERO_CREDITI;NOME=the Debt Collection;MOLTIPLICATORE=1.3
+
+// ---------------------------------------------------------------------------------------------
+// L'introduzione della leggenda: la prima battuta del narratore, che dice di quale oggetto si parla. DELL_OGGETTO e L_OGGETTO li fissa il
+// codice prima di produrre, con il nome breve dell'oggetto: "of the Fiscal Shield" e "the Fiscal Shield".
+// ---------------------------------------------------------------------------------------------
+
+INTRODUZIONE_LEGGENDA
+    Have you ever heard [*DELL_OGGETTO]?
+    Do you know the story [*DELL_OGGETTO]?
+    Has anyone ever told you the legend [*DELL_OGGETTO]?
+    Do you know the legend [*DELL_OGGETTO]?
+    Never heard of [*L_OGGETTO]?
+    Sit down, and I'll tell you the story [*DELL_OGGETTO].
+    Listen carefully: I'm telling you [*DELL_OGGETTO].
+
+DELL_OGGETTO
+    of the legendary object
+
+L_OGGETTO
+    the legendary object
+
+// ---------------------------------------------------------------------------------------------
+// I libri tecnici (vedi LibroTecnico e IntermezzoLibroTecnico): campi descritti in leggendari.txt (CHIAVE, TIPO, DANNI_MAGICI restano tecnici)
+// ---------------------------------------------------------------------------------------------
+
+LIBRO_TECNICO$
+    CHIAVE=MANUALE_UNIX_SYSTEM_V;NOME=the Unix System V Manual;DESCRIZIONE=that explains everything, except how to exit the editor;DANNI_MAGICI=2;\
+    BATTUTA=It says here that everything is a file. Am I a file too?;\
+    BATTUTA=There's a whole chapter on how to kill processes. Without even a sword.;\
+    BATTUTA=A two-letter spell, ls, that shows everything you own. Handy, for the inventory.
+
+    CHIAVE=THE_C_PROGRAMMING_LANGUAGE;NOME=The C Programming Language;DESCRIZIONE=by B. Kernighan and D. Ritchie;TIPO=RIPROGRAMMAZIONE;\
+    BATTUTA=The book's first spell makes two words appear, hello, world. Is that all?;\
+    BATTUTA=It talks about pointers. I counted seven on one page, and none of them points to anything.;\
+    BATTUTA=It says everything starts from main. Our journey, instead, started with a hermit.
+
+LETTURA_LIBRO_TECNICO
+    What's this? A book... It says [*TITOLO].
+    A book! Let's see... [*TITOLO].
+    The cover says [*TITOLO]. Never heard of it.
+
+TITOLO
+    the title of the book
+
+CONCLUSIONE_MANUALE_UNIX_SYSTEM_V
+    [PERSONAGGIO_LIBRO_TECNICO=Alchemist][CONCLUSIONE_LIBRO_TECNICO]
+
+CONCLUSIONE_THE_C_PROGRAMMING_LANGUAGE
+    [PERSONAGGIO_LIBRO_TECNICO=Enchanter][CONCLUSIONE_LIBRO_TECNICO]
+
+CONCLUSIONE_LIBRO_TECNICO
+    It must be one of those things the [*PERSONAGGIO_LIBRO_TECNICO] often talks about.
+    It must be one of those things the [*PERSONAGGIO_LIBRO_TECNICO] often talks about. I'll ask about it next time.
+    There isn't even a picture. It looks like a spellbook written by someone who hated wizards. Maybe the [*PERSONAGGIO_LIBRO_TECNICO] knows something more.
+    Who knows, maybe the [*PERSONAGGIO_LIBRO_TECNICO] can help us { decipher it | understand what it says | read it }.
+    I'll try showing it to the [*PERSONAGGIO_LIBRO_TECNICO] next time I go there.
+    It must be computer wizard stuff. I don't know what a computer is, but the cover looks very competent. I'll ask the [*PERSONAGGIO_LIBRO_TECNICO] for enlightenment.
+    Computer wizard stuff, I think, though I don't know what a computer is. The [*PERSONAGGIO_LIBRO_TECNICO] { perhaps | maybe | probably } knows.
+
+ERRORE_RIPROGRAMMAZIONE
+    There, I got it wrong again!
+    Dash it, I got it wrong again!
+    Oh no, another segmentation fault!
+    Oops. Wrong again. Core dumped.
+    Again! Segmentation fault, core dumped!
+    Here we go: Core Dump. It had looked simpler in the book.
+    I got it wrong again! { I swear | I'm sure } this time it wasn't my fault.
