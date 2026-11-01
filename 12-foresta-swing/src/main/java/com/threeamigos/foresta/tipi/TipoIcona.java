@@ -20,6 +20,11 @@ public enum TipoIcona {
 	/* Inizio gioco */
 	FLOPPY_CARICA(Comando.FLOPPY_CARICA, "icone/Floppy.gif", Sfondo.VERDE),
 
+	/* Scelta della lingua, se la piattaforma la offre: le bandiere sono segnaposto da rifare */
+	LINGUA_ITALIANO(Comando.LINGUA_ITALIANO, "icone/LinguaItaliano.gif", Sfondo.VERDE),
+	LINGUA_INGLESE_USA(Comando.LINGUA_INGLESE_USA, "icone/LinguaIngleseUsa.gif", Sfondo.VERDE),
+	LINGUA_INGLESE_GB(Comando.LINGUA_INGLESE_GB, "icone/LinguaIngleseGb.gif", Sfondo.VERDE),
+
 	/* Scelta sesso del personaggio a inizio gioco */
 	MASCHIO(Comando.MASCHIO, "icone/Maschio.gif", Sfondo.VERDE),
 	FEMMINA(Comando.FEMMINA,"icone/Femmina.gif", Sfondo.VERDE),

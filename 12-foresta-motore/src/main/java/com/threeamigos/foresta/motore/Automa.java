@@ -133,6 +133,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private final Executor esecutorePrecaricamento;
 	// Il logo iniziale lascia il posto all'INTRO quando la UI e il motore hanno finito entrambi
+	// Se una partita nuova comincia chiedendo la lingua (vedi offriLaSceltaDellaLingua)
+	private boolean sceltaDellaLingua;
 	private boolean logoInizialeMostrato;
 	private boolean motorePrecaricato;
 	private final GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
@@ -289,6 +291,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.INTRO, this::gestisciComandoInStatoIntro);
 		gestoriComando.put(Stato.INTERMEZZO, this::gestisciComandoInStatoIntermezzo);
 		gestoriComando.put(Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE, this::gestisciComandoInStatoPreGameSelezionaSalvataggioDaLeggere);
+		gestoriComando.put(Stato.PRE_GAME_ATTESA_LINGUA, this::gestisciComandoInStatoPreGameAttesaLingua);
 		gestoriComando.put(Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO, this::gestisciComandoInStatoPreGameAttesaSessoPersonaggio);
 		gestoriComando.put(Stato.PRE_GAME_ATTESA_CLASSE_PERSONAGGIO, this::gestisciComandoInStatoPreGameAttesaClassePersonaggio);
 		gestoriComando.put(Stato.IN_LOCAZIONE, this::gestisciComandoInStatoInLocazione);
@@ -553,12 +556,47 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 	}
 
+	/**
+	 * Offre, all'inizio di una partita nuova, la scelta della lingua (italiano, inglese americano o britannico). Di base non c'è: la
+	 * partita si gioca nella lingua in uso, e chi avvia il gioco con una lingua precisa (l'argomento {@code LINGUA=} del desktop) non vuole la scelta.
+	 */
+	public void offriLaSceltaDellaLingua() {
+		sceltaDellaLingua = true;
+	}
+
+	private Esito chiediIlNomeDelPersonaggio() {
+		stato = Stato.PRE_GAME_ATTESA_NOME_PERSONAGGIO;
+		BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.NOME_PERSONAGGIO));
+		return Esito.FERMATI;
+	}
+
+	private Esito gestisciComandoInStatoPreGameAttesaLingua(Comando comando) {
+		switch (comando) {
+			case LINGUA_ITALIANO:
+				Testi.impostaLingua("it");
+				break;
+			case LINGUA_INGLESE_USA:
+				Testi.impostaLingua("en");
+				break;
+			case LINGUA_INGLESE_GB:
+				Testi.impostaLingua("en-GB");
+				break;
+			default:
+				comandoNonValido(comando);
+				return Esito.FERMATI;
+		}
+		return chiediIlNomeDelPersonaggio();
+	}
+
 	private Esito gestisciComandoInStatoIntro(Comando comando) {
 		switch (comando) {
 			case PERGAMENA:
-				stato = Stato.PRE_GAME_ATTESA_NOME_PERSONAGGIO;
-				BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.NOME_PERSONAGGIO));
-				return Esito.FERMATI;
+				if (sceltaDellaLingua) {
+					stato = Stato.PRE_GAME_ATTESA_LINGUA;
+					BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.LINGUA, Comando.LINGUA_ITALIANO, Comando.LINGUA_INGLESE_USA, Comando.LINGUA_INGLESE_GB));
+					return Esito.FERMATI;
+				}
+				return chiediIlNomeDelPersonaggio();
 			case FLOPPY_CARICA:
 				stato = Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE;
 				BusEventi.pubblica(new RichiestaSelezioneSlotPerRilettura(getSalvataggiDaCaricare()));

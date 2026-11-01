@@ -224,6 +224,14 @@ final class PartitaDiTest implements AutoCloseable {
 		return this;
 	}
 
+	/**
+	 * La piattaforma offre la scelta della lingua all'inizio di una partita nuova (di base no: i test cominciano dal nome).
+	 */
+	PartitaDiTest conSceltaDellaLingua() {
+		automa.offriLaSceltaDellaLingua();
+		return this;
+	}
+
 	PartitaDiTest avanzaOrologio(double secondi) {
 		orologioNanosecondi += (long) (secondi * 1_000_000_000L);
 		return this;

@@ -19,6 +19,11 @@ public enum Comando {
 	MASCHIO,
 	FEMMINA,
 
+	// All'inizio di una partita nuova, per scegliere la lingua in cui si gioca (se la piattaforma lo offre)
+	LINGUA_ITALIANO,
+	LINGUA_INGLESE_USA,
+	LINGUA_INGLESE_GB,
+
 	// All'inizio del gioco, per scegliere il tipo del proprio personaggio.
 	// E si, classi e razze sono mischiate ma ce ne faremo una ragione.
 	GUERRIERA,

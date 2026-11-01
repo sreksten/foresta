@@ -43,6 +43,8 @@ public class Main {
 	private static boolean tuttoSchermo = false;
 	// Per le partite di prova: niente logo iniziale, si va dritti all'INTRO
 	private static boolean saltaLogo = false;
+	// Con LINGUA=<codice> sulla riga di comando la lingua è decisa e una partita nuova non la chiede
+	private static boolean linguaDaArgomento = false;
 	// La barra delle icone che si ingrandisce sotto il cursore, come il Dock di macOS (solo in orizzontale);
 	// con l'argomento BARRACLASSICA si torna alla barra fissa
 	private static boolean barraDock = true;
@@ -69,6 +71,7 @@ public class Main {
                 joystickVirtuale = true;
             } else if (arg.toUpperCase(Locale.ROOT).startsWith("LINGUA=")) {
                 Testi.impostaLingua(arg.substring("LINGUA=".length()));
+                linguaDaArgomento = true;
             } else if (arg.toUpperCase(Locale.ROOT).startsWith("ZOOM=")) {
                 try {
                     LivelloDiZoom.imposta(Double.parseDouble(arg.substring("ZOOM=".length())));
@@ -120,7 +123,11 @@ public class Main {
 		RegistroBestiario.impostaGestoreBestiario(new GestoreBestiarioSuFile());
 
 		Temporizzatore temporizzatoreAutoma = new TemporizzatoreJ2SE(Main::segnalaImpulsoFallito);
-		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatoreAutoma, new GestoreSalvataggiSuFile(), gestorePunteggi);
+		Automa automa = new Automa(temporizzatoreAutoma, new GestoreSalvataggiSuFile(), gestorePunteggi);
+		if (!linguaDaArgomento) {
+			automa.offriLaSceltaDellaLingua();
+		}
+		ControlloreDiGioco controlloreDiGioco = automa;
 
 		// Ci si iscrive prima di creare la UI: ForestaUI pubblica InternoInterfacciaUtentePronta sul thread principale,
 		// e un evento senza iscritti andrebbe perso lasciando il gioco sulla finestra nera

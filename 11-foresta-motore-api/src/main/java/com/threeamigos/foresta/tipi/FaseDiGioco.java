@@ -17,6 +17,10 @@ public enum FaseDiGioco {
 	 */
 	INTRO,
 	/**
+	 * Si attende la lingua della partita (solo se la piattaforma offre la scelta): una partita nuova comincia da qui.
+	 */
+	LINGUA,
+	/**
 	 * Si attende il nome del personaggio (vuoto per uno casuale).
 	 */
 	NOME_PERSONAGGIO,

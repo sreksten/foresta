@@ -540,6 +540,14 @@ public class ForestaUI implements Temporizzabile {
 				impostaAzioni(evento.getComandiPossibili());
 				break;
 
+			case LINGUA:
+				// Comincia una partita nuova: prima di tutto si sceglie la lingua (la scritta è nelle lingue offerte)
+				CloudManager.azzera();
+				temporizzatore.termina();
+				displayableCanvas.scriviGrande(TestiDellaUI.get("SCEGLI_LINGUA"));
+				impostaAzioni(evento.getComandiPossibili());
+				break;
+
 			case NOME_PERSONAGGIO:
 				// Comincia una partita nuova: le nuvole della mappa si rigenerano sulla sua area conosciuta
 				CloudManager.azzera();
