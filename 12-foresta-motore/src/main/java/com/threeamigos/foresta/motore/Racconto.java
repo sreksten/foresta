@@ -1,36 +1,22 @@
 package com.threeamigos.foresta.motore;
 
-import java.util.Arrays;
+import com.threeamigos.foresta.testi.Testi;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * I pezzi della storia che non dipendono dalla partita: l'introduzione e i finali. Sono contenuto del gioco, non della UI: la UI li
- * riceve dal motore attraverso VistaPartita, così ogni piattaforma racconta la stessa storia.
+ * riceve dal motore attraverso VistaPartita, così ogni piattaforma racconta la stessa storia. I testi stanno in
+ * {@code storia_<lingua>.properties}, nella lingua scelta con {@link Testi#impostaLingua(String)}.
  *
  * @author Stefano Reksten
  */
 public final class Racconto {
 
-	private static final String[] STORIA = {
-			"molto, molto tempo fa, quando il mondo era da poco stato creato,",
-			"un gruppo di eroi venne riunito per liberarlo dalla minaccia dei draghi.",
-			"questi, invece di comportarsi da bravi ragazzi, presto cominciarono a degenerare",
-			"andando per locande a sbevazzare e a cercare compagne di sbornie e avventure",
-			"finché un giorno il più scoppiato di tutti sbagliò strada e si ritrovò in un postaccio conosciuto come"
-	};
-
-	private static final String[] PERSO = {
-			"con la morte del cacciatore, il drago ha finalmente via libera... la foresta è perduta!",
-	};
-
-	private static final String[] VINTO = {
-			"congratulazioni!",
-			"la foresta è stata liberata",
-			"i tuoi amici sono venuti per offrirti doni come loro salvatore",
-			"possa la pace oggi conquistata durare a lungo!",
-			""
-	};
+	private static final String FILE = "storia";
 
 	private Racconto() {
 	}
@@ -39,20 +25,32 @@ public final class Racconto {
 	 * L'introduzione, un paragrafo per elemento.
 	 */
 	public static List<String> getStoria() {
-		return Collections.unmodifiableList(Arrays.asList(STORIA));
+		return pagine("INTRODUZIONE");
 	}
 
 	/**
 	 * Il finale della partita persa, una pagina per elemento.
 	 */
 	public static List<String> getFinaleDellaSconfitta() {
-		return Collections.unmodifiableList(Arrays.asList(PERSO));
+		return pagine("FINALE_SCONFITTA");
 	}
 
 	/**
 	 * Il finale della partita vinta, una pagina per elemento.
 	 */
 	public static List<String> getFinaleDellaVittoria() {
-		return Collections.unmodifiableList(Arrays.asList(VINTO));
+		return pagine("FINALE_VITTORIA");
+	}
+
+	// Le voci PREFISSO.1, PREFISSO.2... finché ce ne sono
+	private static List<String> pagine(String prefisso) {
+		List<String> pagine = new ArrayList<>();
+		for (int i = 1;; i++) {
+			Optional<String> pagina = Testi.get(FILE, prefisso + "." + i);
+			if (!pagina.isPresent()) {
+				return Collections.unmodifiableList(pagine);
+			}
+			pagine.add(pagina.get());
+		}
 	}
 }

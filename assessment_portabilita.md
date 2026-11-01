@@ -62,11 +62,14 @@ Durante il lavoro la lingua mista è accettata: ciò che manca in inglese ripieg
 
 Ogni passo compila e ha i test verdi; la dimensione è S (qualche ora), M (una sessione), L (più sessioni).
 
-0. **Decisioni** (prima di toccare codice)
-   - [ ] inglese americano o britannico ("armor"/"armour", "gray"/"grey")? Propongo americano;
+0. **Decisioni** (prese il 2026-11-01)
+   - [x] **lingue**: inglese sia americano (`en-US`) sia britannico (`en-GB`); poi, in prospettiva, francese, tedesco e spagnolo (e i glifi coprono praticamente tutte le lingue europee). Quindi niente di "inglese" nel codice: tutto passa dall'interfaccia delle regole della lingua (strato B), e ogni scelta di disegno si controlla pensando a una lingua con generi, casi e plurali diversi dall'italiano e dall'inglese (il tedesco ha tre generi, il francese l'elisione, lo spagnolo gli articoli davanti ad "a" tonica);
+   - [x] **varianti regionali**: la lingua è un codice con regione facoltativa (`en-GB`); i testi si cercano dal più specifico al più generico (`en-GB` → `en` → `it`), così `en-GB` contiene solo ciò che differisce da `en` ("armour", "colour", "grey"). Chiave del file: `<nome>_en.properties`, `<nome>_en_GB.properties`;
+   - [x] **cosa si traduce**: solo ciò che arriva sulla UI (narrazione, nomi, descrizioni, dialoghi, etichette). I messaggi interni (eccezioni, log, `FinestraDiProva`, strumenti di sviluppo) restano in italiano e non si contano nel contatore;
    - [ ] chi traduce: io propongo una bozza per ogni file e tu rivedi, oppure l'inverso;
    - [ ] conferma del disegno a tre strati e della lingua legata alla partita.
 1. **Infrastruttura** (S/M)
+   - [ ] `Testi` cerca per catena di lingue (`en-GB` → `en` → `it`) e non solo per lingua e italiano; oggi `impostaLingua` mette tutto in minuscolo e conosce un solo livello;
    - [ ] argomento `LINGUA=<codice>` in `Main` (e `Locale.getDefault()` come predefinito sul telefono); la lingua è un campo di `ForestaUI`, non uno statico mutabile qua e là;
    - [ ] `Testi.formatta(file, chiave, valori…)`: sostituzione di `{0}`, `{1}` senza `MessageFormat` (che dipende dal `Locale`), usata anche da `TestiDellaUI` e `TestoTattica`, che oggi la rifanno a mano;
    - [ ] estensione di JUnit che blocca la lingua su "it" (e la ripristina) per i test che aspettano frasi italiane;
@@ -91,7 +94,8 @@ Ogni passo compila e ha i test verdi; la dimensione è S (qualche ora), M (una s
 7. **UI Swing** (M)
    - [ ] `DisplayableCanvasTattiche`, `TestoAzioneInCombattimento` e le altre schermate; `FinestraDiProva` resta italiana (strumento di sviluppo).
 8. **Intermezzi e racconto** (M)
-   - [ ] le battute in `intermezzi_it.properties`, il `Racconto` (storia, sconfitta, vittoria) in un suo file.
+   - [x] il `Racconto` (storia, sconfitta, vittoria) è in `storia_it.properties` (12-foresta-motore, chiavi `INTRODUZIONE.n`, `FINALE_SCONFITTA.n`, `FINALE_VITTORIA.n`), letto con `Testi.get`; `RaccontoTest`;
+   - [ ] le battute in `intermezzi_it.properties`.
 9. **Missioni** (L, di gran lunga il passo più grosso: 808 stringhe)
    - [ ] una missione per volta (nome, descrizioni di ogni passo, dialoghi), con chiavi `MISSIONE.PASSO`; ogni missione, finita, abbassa il contatore.
 10. **Grammatiche** (L, più per la scrittura che per il codice)

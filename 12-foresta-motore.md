@@ -49,7 +49,7 @@ Gli scambi di artefatti hanno automi propri: `AutomaInventario` (fra il gruppo e
 
 ### Verso la UI
 
-`VistaPartitaMotore` è l'implementazione di `VistaPartita`: non tiene stato, a ogni chiamata delega ai gruppi correnti e alle classi statiche, così vale anche dopo una partita nuova o riletta. `StrumentiDiSviluppoMotore` implementa gli strumenti della finestra di prova; `DotazioneDiProva` dà al gruppo in modalità di prova scorte abbondanti, la Falce del Tristo Mietitore, due spade che mettono un modificatore sul bersaglio e la mappa scoperta. `Notizie` è la facciata su `NotizieMD`: gli ultimi messaggi li prende dal bus, le notizie da chi le produce. `Racconto` ha l'introduzione e i finali, che il motore dà alla UI così ogni piattaforma racconta la stessa storia. `TestoAvvisoDiFusione` scrive gli avvisi dell'incantatore.
+`VistaPartitaMotore` è l'implementazione di `VistaPartita`: non tiene stato, a ogni chiamata delega ai gruppi correnti e alle classi statiche, così vale anche dopo una partita nuova o riletta. `StrumentiDiSviluppoMotore` implementa gli strumenti della finestra di prova; `DotazioneDiProva` dà al gruppo in modalità di prova scorte abbondanti, la Falce del Tristo Mietitore, due spade che mettono un modificatore sul bersaglio e la mappa scoperta. `Notizie` è la facciata su `NotizieMD`: gli ultimi messaggi li prende dal bus, le notizie da chi le produce. `Racconto` ha l'introduzione e i finali (i testi stanno in `storia_<lingua>.properties`), che il motore dà alla UI così ogni piattaforma racconta la stessa storia. `TestoAvvisoDiFusione` scrive gli avvisi dell'incantatore.
 
 ### I salvataggi su file
 
