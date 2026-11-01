@@ -13,6 +13,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * La notte del gruppo: il racconto, l'orologio e gli eventi che dipendono dal giorno. Il riposo vero e proprio lo fa il gruppo
@@ -36,37 +37,15 @@ public final class Pernottamento {
 		Logger.log(() -> "Pernottamento al coperto? " + alCoperto);
 		Personaggio capo = gruppo.getCapo();
 		if (alCoperto) {
-			StringBuilder sb = new StringBuilder("La stanchezza accumulata ed il tepore delle coperte fanno addormentare subito ");
-			if (gruppo.getNumeroPersonaggiVivi() > 1) {
-				sb.append("tutto il gruppo");
-			} else {
-				sb.append(capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
-			}
-			sb.append(". La notte alla locanda trascorre placida e tranquilla.");
-			BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Pernottamento.alCoperto",
+					gruppo.getNumeroPersonaggiVivi() > 1 ? Testi.formatta("gruppo", "TUTTO") : capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))));
 		} else {
-			StringBuilder sb = new StringBuilder("Il gruppo decide di accamparsi qui per riposare un po'. Dopo aver stabilito i turni di guardia, i ")
-					.append(Lingue.corrente().cardinale(gruppo.getNumeroPersonaggi(), Genere.MASCHILE)).append(" intrepidi avventurieri si godono un meritato riposo. ");
-			if (ore == 1) {
-				sb.append("Ma un'ora sola è veramente insufficiente");
-			} else if (ore == 2) {
-				sb.append("Ma due ore sono insufficienti");
-			} else if (ore == 3) {
-				sb.append("Ma tre ore sono troppo poche");
-			} else if (ore == 4) {
-				sb.append("Ma quattro ore sono un po' poche");
-			} else if (ore == 5) {
-				sb.append("Cinque ore sono appena sufficienti");
-			} else {
-				if (gruppo.getNumeroPersonaggiVivi() > 1) {
-					sb.append("Il gruppo");
-				} else {
-					sb.append(capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
-				}
-				sb.append(" ha riposato abbastanza");
-			}
-			sb.append(" per rimettersi in forze.");
-			BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
+			// Prima l'accampamento, poi un giudizio sulle ore di riposo (1-5 ore ne hanno uno loro, oltre bastano)
+			String giudizio = ore >= 1 && ore <= 5 ? Testi.formatta("messaggi_motore", "Pernottamento.ore." + ore)
+					: Testi.formatta("messaggi_motore", "Pernottamento.abbastanza", gruppo.getNumeroPersonaggiVivi() > 1 ? Lingue.corrente().inizialeMaiuscola(Testi.formatta("gruppo", "CHI"))
+							: capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Pernottamento.accampamento",
+					Lingue.corrente().cardinale(gruppo.getNumeroPersonaggi(), Genere.MASCHILE), giudizio)));
 		}
 		gruppo.riposa(ore, tipoRiposo);
 		// Dormendo passa il tempo: prima il riposo, poi gli effetti di stato e le ricariche scorrono un turno per ogni ora di sonno, pesata dal tipo di riposo
@@ -85,6 +64,6 @@ public final class Pernottamento {
 				BusEventi.pubblica(new NotificaTestoParagrafo(evento));
 			}
 		}
-		BusEventi.pubblica(new NotificaTestoFrase("Il sole sorge e l'avventura ricomincia."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Pernottamento.1")));
 	}
 }

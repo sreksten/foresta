@@ -30,6 +30,8 @@ import com.threeamigos.foresta.tipi.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * La locanda, nel bosco o in città: il gruppo vi entra se ha le monete per pagare, e può mangiare, pernottare, ascoltare le notizie e le voci
@@ -166,10 +168,10 @@ public class Locanda extends LocazioneBase {
 			md.aggiungiProprieta(Locande.LOCANDA_RECENSIONE_LETTA, LocazioneMD.AFFERMATIVO);
 			String recensione = md.ottieniProprieta(Locande.LOCANDA_RECENSIONE);
 			if (recensione != null && !recensione.isEmpty()) {
-				return g.chiMaiuscolo() + " è a “" + nome + "\". A quanto si dice, " + recensione + ".";
+				return Testi.formatta("messaggi_motore", "Locanda.recensione", g.chiMaiuscolo(), nome, recensione);
 			}
 		}
-		return g.chiMaiuscolo() + " è alla locanda “" + nome + '"';
+		return Testi.formatta("messaggi_motore", "Locanda.laLocanda", g.chiMaiuscolo(), nome);
 	}
 
 	/**
@@ -187,7 +189,7 @@ public class Locanda extends LocazioneBase {
 		switch (stato) {
 		case SULLA_PORTA:
 			if (Cassa.getMonete() < CostantiEconomia.COSTO_PASTO) {
-				BusEventi.pubblica(new NotificaTestoFrase("L'oste però non è disposto a fare credito..."));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Locanda.1")));
 				return Stato.FINE_LOCAZIONE;
 			}
 			stato = StatoInLocanda.ENTRATO;
@@ -199,7 +201,7 @@ public class Locanda extends LocazioneBase {
 
 		case ENTRATO:
 			if (Cassa.getMonete() < CostantiEconomia.COSTO_PASTO * gruppo.getNumeroPersonaggiVivi()) {
-				BusEventi.pubblica(new NotificaTestoFrase("Non avendo monete sufficienti per tutto il gruppo, una sola persona consuma un pasto in gran fretta. Chi lo fa?"));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Locanda.2")));
 				BusEventi.pubblica(new InternoMostraFinestraStato());
 				stato = StatoInLocanda.CHI_MANGIA;
 				Personaggio p;
@@ -213,7 +215,7 @@ public class Locanda extends LocazioneBase {
 				BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibiliChiMangia));
 				return Stato.IN_LOCAZIONE;
 			} else {
-				BusEventi.pubblica(new NotificaTestoParagrafo("Viene servito un pasto caldo, che fa riacquistare rapidamente le forze."));
+				BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "Locanda.3")));
 				int personaggiCheHannoMangiato = 0;
 				for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
 					personaggio.addSalute(CostantiEconomia.RECUPERO_SALUTE_DA_PASTO);
@@ -228,7 +230,7 @@ public class Locanda extends LocazioneBase {
 						BusEventi.pubblica(new NotificaTestoParagrafo(info.getDescrizione(gruppo, gng)));
 						getModelloDati().aggiungiProprieta(LOCANDA_INFORMAZIONI_DATE, String.valueOf(getInformazioniDate() + 1));
 					} else {
-						BusEventi.pubblica(new NotificaTestoParagrafo("Nessuno ha più nulla di nuovo da raccontare."));
+						BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "Locanda.4")));
 					}
 				}
 
@@ -247,8 +249,7 @@ public class Locanda extends LocazioneBase {
 			Cassa.subMonete(CostantiEconomia.COSTO_PASTO);
 			BusEventi.pubblica(new InternoPastoConsumatoInLocanda());
 			String nome = p.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-            String sb = nome + " si è rifocillat" + p.getLetteraFinaleAttributo() +
-                    " in gran fretta, ed il gruppo lascia la locanda dietro pressione dell'oste.";
+            String sb = Testi.formatta("messaggi_motore", p.getSesso() == Personaggio.Sesso.MASCHIO ? "Locanda.rifocillato.M" : "Locanda.rifocillato.F", nome);
 			BusEventi.pubblica(new NotificaTestoFrase(sb));
 			generaNotizia();
 			return Stato.FINE_LOCAZIONE;
@@ -267,7 +268,7 @@ public class Locanda extends LocazioneBase {
 				Cassa.subMonete(CostantiEconomia.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi());
 				Pernottamento.pernotta(gruppo, TipoRiposo.AL_COPERTO);
 			} else {
-				BusEventi.pubblica(new NotificaTestoFrase("L'oste chiede di lasciare la locanda al più presto."));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Locanda.5")));
 			}
 			generaNotizia();
 			return Stato.FINE_LOCAZIONE;
@@ -290,15 +291,12 @@ public class Locanda extends LocazioneBase {
 		Personaggio capo = g.getCapo();
 		personaggioDisponibile = RegistroPersonaggi.getPersonaggioInLocazione(Foresta.getPosizioneDelGruppo());
 		if (personaggioDisponibile != null) {
-            String sb = "“Ehi, " + capo.getNome() + "!\", urla una voce. " +
-                    Character.toUpperCase(capo.getPronome().charAt(0)) + capo.getPronome().substring(1) +
-					// Senza nome proprio: "vede un guerriero, sua vecchia amicizia"
-					" si volta e vede " + personaggioDisponibile.getNomeProprio().map(nome -> nome + ", ").orElse("") +
-                    personaggioDisponibile.getAIS() + personaggioDisponibile.getNomeSingolare() +
-                    ", sua vecchia amicizia. " + personaggioDisponibile.getDescrizione() +
-                    ' ' + capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-                    (personaggioDisponibile.getSesso() == Personaggio.Sesso.MASCHIO ? " lo" : " la") +
-                    " vuole con se?";
+            // Senza nome proprio: "vede un guerriero, sua vecchia amicizia"
+            String sb = Testi.formatta("messaggi_motore", personaggioDisponibile.getSesso() == Personaggio.Sesso.MASCHIO ? "Locanda.vecchiaAmicizia.M" : "Locanda.vecchiaAmicizia.F",
+                    capo.getNome(), Lingue.corrente().inizialeMaiuscola(capo.getPronome()),
+                    personaggioDisponibile.getNomeProprio().map(nome -> nome + ", ").orElse(""),
+                    personaggioDisponibile.getAIS() + personaggioDisponibile.getNomeSingolare(), personaggioDisponibile.getDescrizione(),
+                    capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
 			BusEventi.pubblica(new NotificaTestoParagrafo(sb));
 			BusEventi.pubblica(new InternoMostraFinestraStato());
 			return true;
@@ -324,9 +322,7 @@ public class Locanda extends LocazioneBase {
 			personaggioDisponibile = null;
 			BusEventi.pubblica(new InternoMostraFinestraStato());
 		} else if (personaggioDisponibile != null) {
-            String notifica = "“Pazienza. Sarà per un'altra volta.\" dice " +
-                    personaggioDisponibile.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
-                    ", allontanandosi.";
+            String notifica = Testi.formatta("messaggi_motore", "Locanda.pazienza", personaggioDisponibile.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 			BusEventi.pubblica(new NotificaTestoFrase(notifica));
 		}
 	}
@@ -352,12 +348,11 @@ public class Locanda extends LocazioneBase {
 	private Stato richiediSePernottare(GruppoGiocatore gruppo) {
 		// Pagano i vivi, come in PERNOTTA
 		if (Cassa.getMonete() < CostantiEconomia.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi()) {
-			BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() +
-					" non ha abbastanza monete per pagare il pernottamento e l'oste chiede di lasciare la locanda al più presto."));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Locanda.6", gruppo.chiMaiuscolo())));
 			generaNotizia();
 			return Stato.FINE_LOCAZIONE;
 		} else {
-			BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() + " desidera pernottare alla locanda?"));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Locanda.7", gruppo.chiMaiuscolo())));
 			BusEventi.pubblica(new InternoMostraFinestraStato());
 			stato = StatoInLocanda.PERNOTTA;
 			BusEventi.pubblica(new RichiestaSelezioneSiNo());

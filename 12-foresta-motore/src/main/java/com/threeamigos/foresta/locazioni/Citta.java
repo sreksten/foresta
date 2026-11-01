@@ -14,6 +14,7 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Una città: il gruppo vi arriva, vende le pietre preziose e può andare in piazza, alla locanda, dall'alchimista, dall'armaiolo, dal venditore
@@ -54,8 +55,7 @@ public abstract class Citta extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-        BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva " + Lingue.corrente().conPreposizione(Preposizione.A, getNome()) +
-                ". Qui è possibile cercare una locanda, il negozio di un alchimista, fare un salto dall'armaiolo o dal venditore di pergamene, o far incantare un artefatto prima di andare via."));
+        BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "Citta.1", g.chiMaiuscolo(), Lingue.corrente().conPreposizione(Preposizione.A, getNome()))));
 		if (Cassa.getPreziosi() > 0) {
 			CommercioDelGruppo.vendePreziosi(g);
 			BusEventi.pubblica(new InternoMostraFinestraStatistiche());

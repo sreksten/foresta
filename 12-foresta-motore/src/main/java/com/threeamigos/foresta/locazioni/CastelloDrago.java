@@ -12,6 +12,7 @@ import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.personaggi.Drago;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il Castello della Morte Alata, dove abita il Drago, per lo scontro finale: se il gruppo lo vince, il drago è sconfitto e il castello
@@ -32,7 +33,7 @@ public class CastelloDrago extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		BusEventi.pubblica(new NotificaTestoParagrafo(g.chi() + " entra al Castello della Morte Alata, per lo scontro finale. Con uno sbatter d'ali simile al rombo di tuono, la Grande Minaccia si erge ora davanti al gruppo: il Drago è qui!"));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "CastelloDrago.1", g.chi())));
 	}
 
 	@Override

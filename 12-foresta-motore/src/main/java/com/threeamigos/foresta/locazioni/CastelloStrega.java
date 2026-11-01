@@ -11,6 +11,7 @@ import com.threeamigos.foresta.personaggi.Strega;
 import com.threeamigos.foresta.tipi.CostantiMotore;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il Maniero del Malefizio, dove abita la Strega, con dei cofani: se il gruppo lo vince il castello diventa rovine. Non ci si può riposare.
@@ -31,7 +32,7 @@ public class CastelloStrega extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " entra nel Maniero del Malefizio. Ecco arrivare, annunciata da un vento di tempesta, la più pericolosa alleata del Drago: la Signora della Magia Nera, la Strega!"));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "CastelloStrega.1", g.chiMaiuscolo())));
 	}
 	
 	@Override

@@ -7,6 +7,7 @@ import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.logger.Logger;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'offerta gratuita della mappa della zona intorno al gruppo, un quadrato di 15 caselle per lato (meno vicino ai bordi della Foresta).
@@ -25,21 +26,12 @@ public class MappaZona implements Offerta {
 
 	@Override
 	public String getDescrizione(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		Personaggio capoAvversario = gruppoAvversario.getCapo();
-		Personaggio.Sesso sesso = capoAvversario.getSesso();
-		StringBuilder sb = new StringBuilder();
-		if (gruppoAvversario.getNumeroPersonaggiVivi() > 1) {
-			if (sesso == Personaggio.Sesso.MASCHIO) {
-				sb.append("Uno");
-			} else {
-				sb.append("Una");
-			}
-			sb.append(" di loro");
-		} else {
-			sb.append("Durante la conversazione ").append(capoAvversario.getADS()).append(capoAvversario.getNomeSingolare());
-		}
-		sb.append(" fa vedere a ").append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)).append(" una mappa della zona.");
-		return sb.toString();
+		Personaggio capo = gruppoAvversario.getCapo();
+		String sesso = capo.getSesso() == Personaggio.Sesso.MASCHIO ? "M" : "F";
+		boolean inPiu = gruppoAvversario.getNumeroPersonaggiVivi() > 1;
+		String a = gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
+		return inPiu ? Testi.formatta("offerte", "MAPPA_ZONA.GRUPPO." + sesso, a)
+				: Testi.formatta("offerte", "MAPPA_ZONA.SINGOLO." + sesso, capo.getADS() + capo.getNomeSingolare(), a);
 	}
 
 	@Override

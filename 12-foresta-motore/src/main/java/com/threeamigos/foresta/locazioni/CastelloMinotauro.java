@@ -11,6 +11,7 @@ import com.threeamigos.foresta.personaggi.MinotauroGigante;
 import com.threeamigos.foresta.tipi.CostantiMotore;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * La Torre della Paura, dove abita il Minotauro Gigante, con dei cofani: se il gruppo lo vince il castello diventa rovine. Non ci si può riposare.
@@ -31,7 +32,7 @@ public class CastelloMinotauro extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva alla Torre della Paura. Il Minotauro Gigante, che qui dimora, appare brandendo una spada rossa di sangue!"));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "CastelloMinotauro.1", g.chiMaiuscolo())));
 	}
 	
 	@Override

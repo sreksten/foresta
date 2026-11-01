@@ -66,6 +66,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il motore di gioco: una macchina a stati finiti reattiva, senza ciclo di gioco. Avanza solo in risposta a due stimoli: i comandi del
@@ -367,7 +368,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		temporizzatore.sospendi();
 		if (isInUnPuntoSicuro()) {
 			if (!gestoreSalvataggi.salva(Comando.SALVATAGGIO_AUTOMATICO)) {
-				BusEventi.pubblica(new InternoMessaggio("Salvataggio automatico non riuscito"));
+				BusEventi.pubblica(new InternoMessaggio(Testi.formatta("messaggi_motore", "Automa.salvataggioAutomaticoFallito")));
 			}
 		}
 	}
@@ -1368,7 +1369,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito entraInStatoAttesaDirezione() {
 		stato = Stato.SCELTA_DIREZIONE;
-		BusEventi.pubblica(new NotificaTestoParagrafo(gruppo.chiMaiuscolo() + " se ne va. In quale direzione si incammina?"));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "Automa.seNeVa", gruppo.chiMaiuscolo())));
 		BusEventi.pubblica(new RichiestaSelezioneDirezione(getComandiPossibiliInStatoAttesaDirezione()));
 		return Esito.FERMATI;
 	}
@@ -1606,9 +1607,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito entraInStatoMappa() {
 		Logger.log("Stato MAPPA, azione null");
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.SI));
-		BusEventi.pubblica(new NotificaTestoParagrafo(gruppo.getCapo().getNome(
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "Automa.consultaLaMappa", gruppo.getCapo().getNome(
 				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " consulta la sua mappa della Foresta."));
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		BusEventi.pubblica(new RichiestaVisualizzazioneMappa());
 		return Esito.FERMATI;
 	}
@@ -1808,7 +1809,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		} else if (comando != null) {
 			if (comando != Comando.ANNULLA && !gestoreSalvataggi.salva(comando)) {
 				// Senza un salvataggio valido non si propone di uscire: si torna al gioco
-				BusEventi.pubblica(new NotificaTestoParagrafo("Il salvataggio non è riuscito."));
+				BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "Automa.salvataggioFallito")));
 				BusEventi.pubblica(new InternoMostraSchermataGioco());
 				stato = Stato.ATTESA_DIREZIONE;
 				return Esito.CONTINUA_CON_INGRESSO;
@@ -1912,7 +1913,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 		if (comando == Comando.PERGAMENA) {
 			stato = Stato.ATTESA_NOME_PUNTEGGI;
-			BusEventi.pubblica(new RichiestaTesto("congratulazioni! inserisci il tuo nome"));
+			BusEventi.pubblica(new RichiestaTesto(Testi.formatta("messaggi_motore", "Automa.inserisciIlNome")));
 			// Si aspetta solo il nome: nessuna icona
 			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili());
 			return Esito.FERMATI;

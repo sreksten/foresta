@@ -12,6 +12,7 @@ import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'offerta di un avversario che si unisce al gruppo per un periodo limitato, in cambio di monete. Non si può se il gruppo è al completo o non ha le monete.
@@ -49,38 +50,14 @@ public class AiutoMercenario implements Offerta {
 
 	@Override
 	public String getDescrizione(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		Personaggio capoAvversario = gruppoAvversario.getCapo();
-		Personaggio.Sesso sesso = capoAvversario.getSesso();
-		StringBuilder sb = new StringBuilder();
-		if (gruppoAvversario.getNumeroPersonaggiVivi() > 1) {
-			if (sesso == Personaggio.Sesso.MASCHIO) {
-				sb.append("Uno");
-			} else {
-				sb.append("Una");
-			}
-			sb.append(" di loro per ");
-			if (costo == 1) {
-				sb.append("una moneta");
-			} else {
-				sb.append(costo).append(" monete");
-			}
-		} else {
-			sb.append("Per ");
-			if (costo == 1) {
-				sb.append("una moneta ");
-			} else {
-				sb.append(costo).append(" monete ");
-			}
-			sb.append(capoAvversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
-		}
-		sb.append(" è dispost").append(capoAvversario.getLetteraFinaleAttributo()).append(" ad accompagnare ");
-		if (gruppo.getNumeroPersonaggiVivi() > 1) {
-			sb.append("il gruppo");
-		} else {
-			sb.append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
-		}
-		sb.append(" per un po'.");
-		return sb.toString();
+		Personaggio capo = gruppoAvversario.getCapo();
+		String sesso = capo.getSesso() == Personaggio.Sesso.MASCHIO ? "M" : "F";
+		boolean inPiu = gruppoAvversario.getNumeroPersonaggiVivi() > 1;
+		String chi = gruppo.getNumeroPersonaggiVivi() > 1 ? Testi.formatta("gruppo", "CHI") : gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
+		String prezzo = costo == 1 ? Testi.formatta("offerte", "MONETE_UNA") : Testi.formatta("offerte", "MONETE_N", costo);
+		return inPiu ? Testi.formatta("offerte", "AIUTO_MERCENARIO.GRUPPO." + sesso, prezzo, chi)
+				: Testi.formatta("offerte", "AIUTO_MERCENARIO.SINGOLO." + sesso, prezzo,
+						capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE), chi);
 	}
 
 	@Override

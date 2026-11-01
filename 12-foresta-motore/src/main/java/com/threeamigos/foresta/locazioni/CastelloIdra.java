@@ -11,6 +11,7 @@ import com.threeamigos.foresta.personaggi.Idra;
 import com.threeamigos.foresta.tipi.CostantiMotore;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * La Rocca del Sangue, dove abita l'Idra, con dei cofani: se il gruppo la vince il castello diventa rovine. Non ci si può riposare.
@@ -31,7 +32,7 @@ public class CastelloIdra extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva alla Rocca del Sangue. L'Idra a tre teste si para davanti sibilando minacciosa!"));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "CastelloIdra.1", g.chiMaiuscolo())));
 	}
 	
 	@Override

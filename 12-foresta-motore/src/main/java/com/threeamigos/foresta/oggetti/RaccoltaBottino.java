@@ -32,6 +32,7 @@ import java.util.Locale;
 import java.util.Optional;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Cosa succede quando il gruppo prende il bottino che ha trovato in una locazione: le monete e le pietre vanno nella cassa del
@@ -88,15 +89,7 @@ public final class RaccoltaBottino {
 	private static boolean raccogliAnello(Anello anello, GruppoGiocatore gruppo, Comando azione) {
 		if (anello.isMagico()) {
 			if (!anello.isMagiaAnnunciata()) {
-				StringBuilder sb = new StringBuilder("Questo è un anello magico, che fa aumentare ");
-				if (anello.getTipoDiMagia() == 1)
-					sb.append("il valore in combattimento");
-				else if (anello.getTipoDiMagia() == 2)
-					sb.append("il coraggio");
-				else
-					sb.append("il carisma");
-				sb.append("!");
-				BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "RaccoltaBottino.anelloMagico." + anello.getTipoDiMagia())));
 				anello.segnaMagiaAnnunciata();
 			}
 			if (!raccogliArtefatto(gruppo, azione, anello.getArtefatto().orElseThrow(IllegalStateException::new))) {
@@ -104,7 +97,7 @@ public final class RaccoltaBottino {
 			}
 			Statistiche.addPunti(CostantiBottino.ANELLO_MAGICO_PUNTEGGIO);
 		} else {
-			BusEventi.pubblica(new NotificaTestoFrase("Questo anello non è magico, ma si può vendere come una gemma."));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "RaccoltaBottino.1")));
 			Cassa.addPreziosi(anello.getQuantita());
 		}
 		return true;
@@ -128,15 +121,10 @@ public final class RaccoltaBottino {
 			tipo = Dado.tira(ContestoLancio.COFANO_ESITO, min, max);
 			// Di rado, al posto dell'esito solito, una pergamena o un artefatto casuale, che vanno nel gruppo
 			Artefatto trovato = Cofano.artefattoRaro();
-			sb.append("Aprendo il");
-			if (cofano.getQuantita() > 1) {
-				sb.append(' ').append(Lingue.corrente().ordinale(i + 1, Genere.MASCHILE, false));
-			}
-			if (Dado.tira(2) == 1) {
-				sb.append(" cofano, ");
-			} else {
-				sb.append(" forziere, ");
-			}
+			// "Aprendo il cofano, " o "Aprendo il secondo forziere, ": con più cofani si dice quale
+			boolean cofanoOForziere = Dado.tira(2) == 1;
+			sb.append(Testi.formatta("messaggi_motore", (cofano.getQuantita() > 1 ? "RaccoltaBottino.apre.n." : "RaccoltaBottino.apre.") + (cofanoOForziere ? "cofano" : "forziere"),
+					Lingue.corrente().ordinale(i + 1, Genere.MASCHILE, false)));
 			if (i == 0) {
 				sb.append(gruppo.chi()).append(' ');
 			}
@@ -145,36 +133,34 @@ public final class RaccoltaBottino {
 				registraArtefattoOttenuto(gruppo, trovato);
 				BusEventi.pubblica(new NotificaArtefattoTrovato(trovato, Statistiche.getLivello()));
 				LibroTecnico.di(trovato).ifPresent(IntermezzoLibroTecnico::trovato);
-				sb.append("trova ").append(trovato.getNomeCompleto()).append(": finisce nell'inventario del gruppo.");
+				sb.append(Testi.formatta("messaggi_motore", "RaccoltaBottino.trovaArtefatto", trovato.getNomeCompleto()));
 			} else if (tipo == 0) {
-				sb.append("non trova nulla.");
+				sb.append(Testi.formatta("messaggi_motore", "RaccoltaBottino.nulla"));
 			} else if (tipo == 1) {
-				sb.append("trova una pergamena con un ");
 				TipoIncantesimo tipoIncantesimo = FabbricaIncantesimi.casuale();
-				sb.append(tipoIncantesimo.getNomeSingolare()).append('.');
+				sb.append(Testi.formatta("messaggi_motore", "RaccoltaBottino.pergamenaUno", tipoIncantesimo.getNomeSingolare()));
 				gruppo.addIncantesimi(tipoIncantesimo, 1);
 			} else if (tipo == 2) {
-				sb.append("trova una pergamena con tre ");
 				TipoIncantesimo tipoIncantesimo = FabbricaIncantesimi.casuale();
-				sb.append(tipoIncantesimo.getNomePlurale()).append('.');
+				sb.append(Testi.formatta("messaggi_motore", "RaccoltaBottino.pergamenaTre", tipoIncantesimo.getNomePlurale()));
 				gruppo.addIncantesimi(tipoIncantesimo, 3);
 			} else if (tipo == 3) {
-				sb.append("trova una pozione della salute.");
+				sb.append(Testi.formatta("messaggi_motore", "RaccoltaBottino.pozioneSalute"));
 				gruppo.addPozioniSalute(1);
 			} else if (tipo == 4) {
-				sb.append("trova una pozione della salute grande.");
+				sb.append(Testi.formatta("messaggi_motore", "RaccoltaBottino.pozioneSaluteGrande"));
 				gruppo.addPozioniSaluteGrande(1);
 			} else if (tipo == 5) {
-				sb.append("trova una pozione della magia.");
+				sb.append(Testi.formatta("messaggi_motore", "RaccoltaBottino.pozioneMagia"));
 				gruppo.addPozioniMagia(1);
 			} else if (tipo == 6) {
-				sb.append("trova una panacea.");
+				sb.append(Testi.formatta("messaggi_motore", "RaccoltaBottino.panacea"));
 				gruppo.addPozioniPanacea(1);
 			} else if (tipo == 7) {
-				sb.append("trova alcune monete d'oro.");
+				sb.append(Testi.formatta("messaggi_motore", "RaccoltaBottino.monete"));
 				Cassa.addMonete(Dado.tira(5, 10));
 			} else if (tipo == 8) {
-				sb.append("trova alcune pietre preziose.");
+				sb.append(Testi.formatta("messaggi_motore", "RaccoltaBottino.preziosi"));
 				Cassa.addPreziosi(Dado.tira(5, 10));
 			}
 			if (i < cofano.getQuantita() - 1) {
@@ -222,16 +208,14 @@ public final class RaccoltaBottino {
 			if (candidati.isEmpty()) {
 				gruppo.addArtefatto(artefatto);
 				if (troppoPesante(gruppo, artefatto)) {
-					BusEventi.pubblica(new NotificaTestoParagrafo(comeSoggetto(artefatto)
-							+ " è troppo pesante da portare, quindi viene messo nell'inventario del gruppo."));
+					BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "RaccoltaBottino.2", comeSoggetto(artefatto))));
 				} else {
-					BusEventi.pubblica(new NotificaTestoFrase(comeSoggetto(artefatto)
-							+ " viene messo nell'inventario del gruppo: nessuno può utilizzarlo in questo momento."));
+					BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "RaccoltaBottino.3", comeSoggetto(artefatto))));
 				}
 				return true;
 			}
 			if (candidati.size() > 1) {
-				BusEventi.pubblica(new NotificaTestoFrase("Chi prende " + artefatto.getNomeCompleto() + "?"));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "RaccoltaBottino.chiPrende", artefatto.getNomeCompleto())));
 				return false;
 			}
 			comando = candidati.get(0);
@@ -280,8 +264,7 @@ public final class RaccoltaBottino {
 	 */
 	private static void riponiNelGruppo(GruppoGiocatore gruppo, Artefatto artefatto) {
 		gruppo.addArtefatto(artefatto);
-		BusEventi.pubblica(new NotificaTestoFrase(comeSoggetto(artefatto)
-				+ " viene messo nell'inventario del gruppo."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "RaccoltaBottino.4", comeSoggetto(artefatto))));
 	}
 
 	/**
@@ -295,10 +278,7 @@ public final class RaccoltaBottino {
 			return true;
 		}
 		gruppo.addArtefatto(artefatto);
-		BusEventi.pubblica(new NotificaTestoParagrafo(comeSoggetto(artefatto)
-				+ " resta nell'inventario del gruppo: "
-				+ personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
-				+ ' ' + motivoRifiuto.get() + '.'));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "RaccoltaBottino.5", comeSoggetto(artefatto), personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE), motivoRifiuto.get())));
 		return false;
 	}
 

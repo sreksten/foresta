@@ -10,6 +10,7 @@ import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il bosco: la locazione più comune della Foresta. Vi si incontrano molte specie di mostri e vi si trovano anelli, cofani, monete, pietre preziose e
@@ -71,7 +72,7 @@ public class Bosco extends LocazioneBase {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		BusEventi.pubblica(new NotificaTestoFrase("Qui, nella foresta, " + descrizioneMostriEOggetti(g, gng)));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Bosco.1", descrizioneMostriEOggetti(g, gng))));
 	}
 
 	public TipoRiposo getTipoRiposo() {

@@ -9,6 +9,8 @@ import com.threeamigos.foresta.tipi.TipoConsumabile;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.*;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il listino dell'alchimista: nomi, descrizioni e costi di ciò che vende al gruppo. Lo costruisce il motore, che
@@ -51,27 +53,22 @@ public final class OfferteAlchimista {
 	private static List<OffertaConsumabile> costruisci(GruppoGiocatore gruppo) {
 		List<OffertaConsumabile> offerte = new ArrayList<>();
 		for (TipoIncantesimo classe : TipoIncantesimo.values()) {
-			String nome = classe.getNomeSingolare();
 			offerte.add(new OffertaConsumabile(TipoConsumabile.INCANTESIMO, classe, null,
-					nome.substring(0, 1).toUpperCase(Locale.ROOT) + nome.substring(1), classe.getEffetto(),
+					Lingue.corrente().inizialeMaiuscola(classe.getNomeSingolare()), classe.getEffetto(),
 					classe.getCostoAcquisto()));
 		}
-		offerte.add(semplice(TipoConsumabile.POZIONE_SALUTE, "Pozione della Salute",
-				"Fa riacquistare punti di Salute", CostantiEconomia.COSTO_POZIONE_SALUTE));
-		offerte.add(semplice(TipoConsumabile.POZIONE_SALUTE_GRANDE, "Pozione della Salute (grande)",
-				"Fa riacquistare punti di Salute e ne aumenta il livello massimo", CostantiEconomia.COSTO_POZIONE_SALUTE_GRANDE));
-		offerte.add(semplice(TipoConsumabile.POZIONE_MAGIA, "Pozione della Magia",
-				"Fa riacquistare punti di Magia", CostantiEconomia.COSTO_POZIONE_MAGIA));
-		offerte.add(semplice(TipoConsumabile.POZIONE_MAGIA_GRANDE, "Pozione della Magia (grande)",
-				"Fa riacquistare punti di Magia e ne aumenta il livello massimo", CostantiEconomia.COSTO_POZIONE_MAGIA_GRANDE));
-		offerte.add(semplice(TipoConsumabile.POZIONE_PANACEA, "Panacea",
-				"Rimuove tutti gli effetti di stato negativi", CostantiEconomia.COSTO_POZIONE_PANACEA));
+		offerte.add(semplice(TipoConsumabile.POZIONE_SALUTE, CostantiEconomia.COSTO_POZIONE_SALUTE));
+		offerte.add(semplice(TipoConsumabile.POZIONE_SALUTE_GRANDE, CostantiEconomia.COSTO_POZIONE_SALUTE_GRANDE));
+		offerte.add(semplice(TipoConsumabile.POZIONE_MAGIA, CostantiEconomia.COSTO_POZIONE_MAGIA));
+		offerte.add(semplice(TipoConsumabile.POZIONE_MAGIA_GRANDE, CostantiEconomia.COSTO_POZIONE_MAGIA_GRANDE));
+		offerte.add(semplice(TipoConsumabile.POZIONE_PANACEA, CostantiEconomia.COSTO_POZIONE_PANACEA));
 		int giocanti = 0;
 		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
 			if (!personaggio.isPNG()) {
 				giocanti++;
 				offerte.add(new OffertaConsumabile(TipoConsumabile.AUMENTO_MAGIA_SINGOLO, null, personaggio,
-						"Aumento Magia massima", "Aumenta la magia massima di " + personaggio.getNome(),
+						Testi.testoOCostante(TipoConsumabile.AUMENTO_MAGIA_SINGOLO, "NOME"),
+						Testi.sostituisci(Testi.testoOCostante(TipoConsumabile.AUMENTO_MAGIA_SINGOLO, "DESCRIZIONE"), personaggio.getNome()),
 						CostantiEconomia.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO));
 			}
 		}
@@ -79,17 +76,15 @@ public final class OfferteAlchimista {
 			// Il secondo e i successivi costano il 75% del primo
 			long costo = CostantiEconomia.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO
 					+ (long) (giocanti - 1) * CostantiEconomia.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO * 75 / 100;
-			offerte.add(semplice(TipoConsumabile.AUMENTO_MAGIA_GRUPPO, "Aumento Magia massima",
-					"Aumenta la magia massima di tutto il gruppo", (int) costo));
+			offerte.add(semplice(TipoConsumabile.AUMENTO_MAGIA_GRUPPO, (int) costo));
 		}
-		offerte.add(semplice(TipoConsumabile.MAPPA_PARZIALE_FORESTA, "Mappa della zona",
-				"Una mappa della zona circostante", CostantiEconomia.COSTO_MAPPA_DELLA_ZONA));
-		offerte.add(semplice(TipoConsumabile.MAPPA_COMPLETA_FORESTA, "Mappa della Foresta",
-				"Una mappa completa della Foresta", CostantiEconomia.COSTO_MAPPA_DELLA_FORESTA));
+		offerte.add(semplice(TipoConsumabile.MAPPA_PARZIALE_FORESTA, CostantiEconomia.COSTO_MAPPA_DELLA_ZONA));
+		offerte.add(semplice(TipoConsumabile.MAPPA_COMPLETA_FORESTA, CostantiEconomia.COSTO_MAPPA_DELLA_FORESTA));
 		return Collections.unmodifiableList(offerte);
 	}
 
-	private static OffertaConsumabile semplice(TipoConsumabile tipo, String nome, String descrizione, int costo) {
-		return new OffertaConsumabile(tipo, null, null, nome, descrizione, costo);
+	// Nome e descrizione vengono dai testi di TipoConsumabile (tipo_consumabile_<lingua>.properties)
+	private static OffertaConsumabile semplice(TipoConsumabile tipo, int costo) {
+		return new OffertaConsumabile(tipo, null, null, Testi.testoOCostante(tipo, "NOME"), Testi.testoOCostante(tipo, "DESCRIZIONE"), costo);
 	}
 }

@@ -49,6 +49,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * La locazione è un automa a stati finiti. Un gruppo mentre si sposta per
@@ -411,7 +412,7 @@ public abstract class LocazioneBase implements Locazione {
 	private Stato avviaLaMischiaForzata() {
 		if (!mischiaForzata) {
 			mischiaForzata = true;
-			BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() + " non è in grado di agire."));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.1", gruppo.chiMaiuscolo())));
 		}
 		statoLocazione = StatoLocazione.IN_COMBATTIMENTO;
 		impostaComandiPossibili();
@@ -543,8 +544,8 @@ public abstract class LocazioneBase implements Locazione {
 	private Stato perdiIlDuello() {
 		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 		Personaggio vincitore = gruppoAvversario.getPersonaggioVivo();
-		BusEventi.pubblica(new NotificaTestoParagrafo(vincitore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha vinto, e vi lascia andare. Vi aspetta qui per la rivincita, quando sarete in forze."));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "LocazioneBase.2", vincitore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		combattente = null;
 		statoLocazione = StatoLocazione.IN_LOCAZIONE;
 		setCompleta(false);
@@ -705,8 +706,7 @@ public abstract class LocazioneBase implements Locazione {
 					if (formulante.getMagia() < incantesimo.getCostoLancio()) {
 
 						// Non si dovrebbe più riuscire a entrare in questo ramo perché la scelta degli incantesimi è già stata filtrata
-						String sb = "Il livello di magia " + formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
-								" non permette di formulare questo incantesimo.";
+						String sb = Testi.formatta("messaggi_motore", "LocazioneBase.livelloDiMagia", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA));
 						BusEventi.pubblica(new NotificaTestoFrase(sb));
 
 						{
@@ -823,7 +823,7 @@ public abstract class LocazioneBase implements Locazione {
 				}
 				if (Cassa.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(CostantiMotore.FACCE_DEL_DADO_DELLA_CORRUZIONE) > CostantiMotore.SOGLIA_DEL_DADO_DELLA_CORRUZIONE) {
 					Cassa.subMonete(gruppo.getNumeroPersonaggi() * 2);
-					BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() + " ha ottenuto un passaggio sicuro."));
+					BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.3", gruppo.chiMaiuscolo())));
 					BusEventi.pubblica(new InternoCorruzioneRiuscita(classiAvversariVivi()));
 					setOggetto(null);
 
@@ -847,10 +847,9 @@ public abstract class LocazioneBase implements Locazione {
 					Personaggio p = gruppo.getPersonaggio(azione.getIndicePersonaggio());
 					// Se fallisce, per qualunque motivo (anche se mancano le monete per pagare), c'è sempre uno spregio
 					String descrizione = subisciUnoSpregio(p);
-					String tentativo = "Il tentativo di corruzione " + p.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA)
-							+ " non ha avuto successo";
+					String tentativo = Testi.formatta("messaggi_motore", "LocazioneBase.corruzioneFallita", p.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA));
 					if (descrizione != null) {
-						BusEventi.pubblica(new NotificaTestoFrase(tentativo + ", e in una breve colluttazione " + descrizione));
+						BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.4", tentativo, descrizione)));
 						// Non sapendo cosa andiamo a perdere rinfreschiamo tutto
 						BusEventi.pubblica(new InternoRichiestaRefreshUI());
 					} else {
@@ -878,8 +877,8 @@ public abstract class LocazioneBase implements Locazione {
 					// Come con la corruzione: con l'amicizia l'oggetto non si prende, e sparisce subito
 					setOggetto(null);
 					BusEventi.pubblica(new InternoAmiciziaStretta(classiAvversariVivi()));
-					BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " riesce a stringere amicizia."));
+					BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.5", personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 
 					// Finché la missione La sfida dei campioni non è partita, a volte l'avversario sfida invece di offrire
 					if (!RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI) && PartitaCartaForbiciSasso.puoGiocare(gruppoAvversario.getCapo().getClasse())
@@ -892,11 +891,11 @@ public abstract class LocazioneBase implements Locazione {
 
 					String s = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 					if (descrizione != null) {
-						BusEventi.pubblica(new NotificaTestoFrase("Non solo " + s + " non riesce a stringere amicizia, ma in una breve colluttazione " + descrizione));
+						BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.6", s, descrizione)));
 						// Non sapendo cosa andiamo a perdere rinfreschiamo tutto
 						BusEventi.pubblica(new InternoRichiestaRefreshUI());
 					} else {
-						BusEventi.pubblica(new NotificaTestoFrase(s + " non riesce a stringere amicizia."));
+						BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.7", s)));
 					}
 					opzioneAmiciziaDisponibile = false;
 					statoLocazione = StatoLocazione.IN_LOCAZIONE;
@@ -1196,10 +1195,7 @@ public abstract class LocazioneBase implements Locazione {
 			Personaggio p = classe.get(0);
 			parti.add(classe.size() == 1 ? p.getAIS() + p.getNomeSingolare() : Lingue.corrente().cardinale(classe.size(), Genere.MASCHILE) + " " + p.getNomePlurale());
 		}
-		if (parti.size() == 1) {
-			return parti.get(0);
-		}
-		return String.join(", ", parti.subList(0, parti.size() - 1)) + " e " + parti.get(parti.size() - 1);
+		return Lingue.corrente().elenco(parti);
 	}
 
 	/**
@@ -1209,41 +1205,29 @@ public abstract class LocazioneBase implements Locazione {
 		int numeroAvversari = gruppoAvversario.getNumeroPersonaggi();
 		Bottino o = getOggetto();
 		int numeroOggetti = (o == null ? 0 : o.getQuantita());
-		StringBuilder sb = new StringBuilder(gruppoGiocatore.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
+		String chi = gruppoGiocatore.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 		if (numeroAvversari == 0 && numeroOggetti == 0) {
-			sb.append(" non trova nulla");
-		} else {
-			sb.append(" vede ");
-			if (numeroAvversari > 0) {
-				sb.append(descrizioneDegliAvversari(gruppoAvversario));
-				if (numeroOggetti > 0) {
-					switch (Dado.tira(3)) {
-						case 1:
-							sb.append(numeroAvversari == 1 ? " che protegge " : " che proteggono ");
-							break;
-						case 2:
-							sb.append(numeroAvversari == 1 ? " che custodisce " : " che custodiscono ");
-							break;
-						default:
-							sb.append(numeroAvversari == 1 ? " che sorveglia " : " che sorvegliano ");
-							break;
-					}
-				}
-			}
-			if (numeroOggetti > 0) {
-				if (numeroOggetti == 1) {
-					if (o.isDaRivelare()) {
-						sb.append(o.getArtefatto().orElseThrow(IllegalStateException::new).getNomeCompleto());
-					} else {
-						sb.append(o.getAIS()).append(o.getNomeSingolare());
-					}
-				} else {
-					sb.append(Lingue.corrente().cardinale(numeroOggetti, Genere.MASCHILE)).append(' ').append(o.getNomePlurale());
-				}
+			return Testi.formatta("messaggi_motore", "LocazioneBase.nonTrovaNulla", chi);
+		}
+		String oggetti = "";
+		if (numeroOggetti > 0) {
+			if (numeroOggetti == 1) {
+				oggetti = o.isDaRivelare() ? o.getArtefatto().orElseThrow(IllegalStateException::new).getNomeCompleto()
+						: o.getAIS() + o.getNomeSingolare();
+			} else {
+				oggetti = Lingue.corrente().cardinale(numeroOggetti, Genere.MASCHILE) + ' ' + o.getNomePlurale();
 			}
 		}
-		sb.append('.');
-		return sb.toString();
+		if (numeroAvversari == 0) {
+			return Testi.formatta("messaggi_motore", "LocazioneBase.vede", chi, oggetti);
+		}
+		String avversari = descrizioneDegliAvversari(gruppoAvversario);
+		if (numeroOggetti == 0) {
+			return Testi.formatta("messaggi_motore", "LocazioneBase.vede", chi, avversari);
+		}
+		// Chi li protegge, custodisce o sorveglia: il verbo si accorda col numero degli avversari (in italiano)
+		return Testi.formatta("messaggi_motore", "LocazioneBase.vedeConLaGuardia." + Dado.tira(3) + (numeroAvversari == 1 ? ".S" : ".P"),
+				chi, avversari, oggetti);
 	}
 
 	// Il combattimento procede per round (vedi StatoDelCombattimento): un piano di coppie, il mio personaggio e poi un avversario, e
@@ -1417,8 +1401,7 @@ public abstract class LocazioneBase implements Locazione {
 		custodita = numeroAvversari > 0;
 		if (numeroAvversari == 0) {
 			if (oggettoCorrente != null) {
-				BusEventi.pubblica(new NotificaTestoFrase("Essendo il tesoro incustodito, " +
-						gruppo.chi() + " se ne impossessa."));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.8", gruppo.chi())));
 			}
 			gruppo.riposa(1, getTipoRiposo());
 			BusEventi.pubblica(new InternoMostraFinestraStato());
@@ -1457,8 +1440,8 @@ public abstract class LocazioneBase implements Locazione {
 				// Una sfida a duello: prima si sceglie chi la accetta, o la si rifiuta
 				opzioneAmiciziaDisponibile = false;
 				opzioneCorruzioneDisponibile = false;
-				BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + (gruppo.getNumeroPersonaggiVivi() > 1
-						? " sfida a duello uno di voi: chi accetta la sfida?" : " vi sfida a duello.")));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore",
+						gruppo.getNumeroPersonaggiVivi() > 1 ? "LocazioneBase.sfidaUnoDiVoi" : "LocazioneBase.sfidaVoi", nomeDelloSfidante())));
 				statoLocazione = StatoLocazione.CHI_DUELLA;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			}
@@ -1519,10 +1502,10 @@ public abstract class LocazioneBase implements Locazione {
 		if (scheletri.isEmpty()) {
 			return;
 		}
-		BusEventi.pubblica(new NotificaTestoParagrafo(vittima.getNome() + " è caduto: " + (scheletri.size() == 1
-				? "lo scheletro che teneva in piedi crolla in un mucchio d'ossa." : "gli scheletri che teneva in piedi crollano in un mucchio d'ossa.")));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore",
+				scheletri.size() == 1 ? "LocazioneBase.necromanteCadutoUnoScheletro" : "LocazioneBase.necromanteCadutoScheletri", vittima.getNome())));
 		for (Personaggio scheletro : scheletri) {
-			scheletro.muore("è crollato in un mucchio d'ossa");
+			scheletro.muore(Testi.formatta("messaggi_motore", "LocazioneBase.scheletroCrollato"));
 			registraMorteAvversario(scheletro);
 		}
 	}
@@ -1566,7 +1549,7 @@ public abstract class LocazioneBase implements Locazione {
 			scheletro.setDaAffrontare(true);
 			gruppoAvversario.aggiungiPersonaggio(scheletro);
 			BusEventi.pubblica(new InternoAssegnaCoordinateAPersonaggi());
-			BusEventi.pubblica(new NotificaTestoParagrafo(necromante.get().getNome() + " evoca un altro scheletro, che esce dalla terra e si unisce alla battaglia."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "LocazioneBase.9", necromante.get().getNome())));
 		}
 	}
 
@@ -1916,12 +1899,11 @@ public abstract class LocazioneBase implements Locazione {
 
 	private void chiediConfermaPerLaFuga() {
 		if (gruppo.getNumeroPersonaggiVivi() > 1) {
-			BusEventi.pubblica(new NotificaTestoFrase("Il gruppo è sicuro di voler fuggire?"));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.10")));
 		} else {
 			Personaggio capo = gruppo.getCapo();
-			String sb = capo.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + " è sicur" +
-					capo.getLetteraFinaleAttributo() +
-					" di voler fuggire?";
+			String sb = Testi.formatta("messaggi_motore", capo.getSesso() == Personaggio.Sesso.MASCHIO ? "LocazioneBase.sicuroDiFuggire.M" : "LocazioneBase.sicuroDiFuggire.F",
+					capo.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 			BusEventi.pubblica(new NotificaTestoFrase(sb));
 		}
 	}
@@ -1935,7 +1917,7 @@ public abstract class LocazioneBase implements Locazione {
 		Logger.log("LocazioneBase.CHI_ESEGUE_SINGOLO_ATTACCO");
 		combattente = gruppo.getPersonaggio(azione.getIndicePersonaggio());
 		String nome = combattente.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-		BusEventi.pubblica(new NotificaTestoFrase(nome + " lancia un attacco."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.11", nome)));
 		opzioneAmiciziaDisponibile = false;
 		opzioneCorruzioneDisponibile = false;
 		Stato esito = eseguiSingoloAttacco().orElse(Stato.IN_LOCAZIONE);
@@ -1990,13 +1972,13 @@ public abstract class LocazioneBase implements Locazione {
 		int probabilita = probabilitaDiPassareInosservati(gruppo, gruppoAvversario, LineaTemporale.getOra());
 		LineaTemporale.aggiungiOre(1);
 		if (Dado.tira(100) <= probabilita) {
-			BusEventi.pubblica(new NotificaTestoParagrafo(gruppo.chiMaiuscolo() + " passa in silenzio, senza farsi notare, e si allontana."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "LocazioneBase.12", gruppo.chiMaiuscolo())));
 			BusEventi.pubblica(new InternoPassaggioInosservato());
 			setCompleta(false);
 			setOggetto(null);
 			return Stato.FINE_LOCAZIONE;
 		}
-		BusEventi.pubblica(new NotificaTestoParagrafo("Un rametto si spezza: gli avversari vi hanno visti, e attaccano per primi!"));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "LocazioneBase.13")));
 		gliAvversariAttaccanoPerPrimi();
 		if (!gruppo.getCapo().isVivo()) {
 			return Stato.GIOCO_PERSO;
@@ -2039,7 +2021,7 @@ public abstract class LocazioneBase implements Locazione {
 		opzioneAmiciziaDisponibile = false;
 		opzioneCorruzioneDisponibile = false;
 		BusEventi.pubblica(InternoSfidaCartaForbiciSasso.apre());
-		BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \"" + ProduttoreDiSfideCasuale.fraseDiSfida() + "\""));
+		BusEventi.pubblica(new NotificaTestoFrase(dice(ProduttoreDiSfideCasuale.fraseDiSfida())));
 		impostaComandiPossibili();
 		return Stato.IN_LOCAZIONE;
 	}
@@ -2081,8 +2063,7 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		statoLocazione = StatoLocazione.IN_LOCAZIONE;
 		haStrettoAmicizia = true;
-		BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \""
-				+ (vinta ? ProduttoreDiSfideCasuale.fraseSeIlGiocatoreVince() : ProduttoreDiSfideCasuale.fraseSeIlGiocatorePerde()) + "\""));
+		BusEventi.pubblica(new NotificaTestoFrase(dice(vinta ? ProduttoreDiSfideCasuale.fraseSeIlGiocatoreVince() : ProduttoreDiSfideCasuale.fraseSeIlGiocatorePerde())));
 		if (diUnCampione) {
 			setCompleta(vinta);
 			setOggetto(null);
@@ -2091,7 +2072,7 @@ public abstract class LocazioneBase implements Locazione {
 		if (vinta) {
 			gruppo.addSfidaVinta();
 			if (gruppo.getSfideVinte() >= CostantiMissioni.SFIDE_VINTE_PER_IL_TORNEO && !RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI)) {
-				BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \"" + ProduttoreDiSfideCasuale.fraseDelTorneo() + "\""));
+				BusEventi.pubblica(new NotificaTestoFrase(dice(ProduttoreDiSfideCasuale.fraseDelTorneo())));
 				RegistroMissioni.avvia(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI);
 			}
 		}
@@ -2112,7 +2093,7 @@ public abstract class LocazioneBase implements Locazione {
 				TipoIncantesimo quale = FabbricaIncantesimi.casuale();
 				if (gruppo.getIncantesimi(quale) > 0) {
 					gruppo.subIncantesimi(quale, 1);
-					return "perde un " + quale.getNomeSingolare() + '.';
+					return Testi.formatta("messaggi_motore", "LocazioneBase.perdeIncantesimo", quale.getNomeSingolare());
 				}
 				return null;
 			case 2:
@@ -2120,13 +2101,13 @@ public abstract class LocazioneBase implements Locazione {
 			case 3:
 				if (Cassa.getMonete() > 0) {
 					Cassa.subMonete(Math.min(Dado.tira(SPREGIO_MASSIMO), Cassa.getMonete()));
-					return "perde alcune monete.";
+					return Testi.formatta("messaggi_motore", "LocazioneBase.perdeMonete");
 				}
 				return null;
 			case 4:
 				if (Cassa.getPreziosi() > 0) {
 					Cassa.subPreziosi(Math.min(Dado.tira(SPREGIO_MASSIMO), Cassa.getPreziosi()));
-					return "perde alcuni preziosi.";
+					return Testi.formatta("messaggi_motore", "LocazioneBase.perdePreziosi");
 				}
 				return null;
 			default:
@@ -2162,9 +2143,14 @@ public abstract class LocazioneBase implements Locazione {
 			return null;
 		}
 		if (danno * 100 > salute * SPREGIO_FERITE_GRAVI_PERCENTUALE) {
-			return "riceve gravi ferite.";
+			return Testi.formatta("messaggi_motore", "LocazioneBase.ferite.gravi");
 		}
-		return danno * 100 < salute * SPREGIO_FERITE_LIEVI_PERCENTUALE ? "riceve alcune lievi ferite." : "riceve alcune ferite.";
+		return Testi.formatta("messaggi_motore", danno * 100 < salute * SPREGIO_FERITE_LIEVI_PERCENTUALE ? "LocazioneBase.ferite.lievi" : "LocazioneBase.ferite.alcune");
+	}
+
+	// Lo sfidante dice una frase (dalla grammatica delle sfide)
+	private String dice(String frase) {
+		return Testi.formatta("messaggi_motore", "LocazioneBase.dice", nomeDelloSfidante(), frase);
 	}
 
 	private String nomeDelloSfidante() {
@@ -2184,8 +2170,8 @@ public abstract class LocazioneBase implements Locazione {
 				altri = true;
 			}
 		}
-		BusEventi.pubblica(new NotificaTestoFrase(duellante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " accetta la sfida" + (altri ? ": gli altri si fanno da parte." : ".")));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", altri ? "LocazioneBase.accettaLaSfidaAltri" : "LocazioneBase.accettaLaSfida",
+				duellante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		statoLocazione = StatoLocazione.IN_LOCAZIONE;
 	}
 
@@ -2193,7 +2179,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * La sfida rifiutata: il gruppo se ne va senza combattere, e lo sfidante resta lì ad aspettarlo.
 	 */
 	private Stato rifiutaIlDuello() {
-		BusEventi.pubblica(new NotificaTestoFrase("Rifiutate la sfida. " + nomeDelloSfidante() + " vi aspetta qui, se cambiate idea."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.15", nomeDelloSfidante())));
 		statoLocazione = StatoLocazione.IN_LOCAZIONE;
 		setCompleta(false);
 		setOggetto(null);
@@ -2204,7 +2190,7 @@ public abstract class LocazioneBase implements Locazione {
 		Logger.log("LocazioneBase.CHI_COMBATTE");
 		combattente = gruppo.getPersonaggio(azione.getIndicePersonaggio());
 		String nome = combattente.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-		BusEventi.pubblica(new NotificaTestoFrase(nome + " inizia il combattimento."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.16", nome)));
 		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(combattente, gruppoAvversario.getPersonaggioVivo()));
 		annunciaAzione(combattente, gruppoAvversario.getPersonaggioVivo());
 		// Il personaggio scelto agisce per primo, poi si alternano tutti

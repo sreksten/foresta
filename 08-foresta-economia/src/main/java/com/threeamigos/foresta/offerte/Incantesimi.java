@@ -11,6 +11,7 @@ import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'offerta di alcune pergamene di un incantesimo scelto a caso, a metà del prezzo abituale per ciascuna. Occorrono le monete per pagarle.
@@ -39,44 +40,14 @@ public class Incantesimi implements Offerta {
 
 	@Override
 	public String getDescrizione(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		Personaggio capoAvversario = gruppoAvversario.getCapo();
-		int numero = gruppoAvversario.getPersonaggiVivi().size();
-		Personaggio.Sesso sesso = capoAvversario.getSesso();
-		StringBuilder sb = new StringBuilder();
-		if (numero > 1) {
-			if (sesso == Personaggio.Sesso.MASCHIO) {
-				sb.append("Uno");
-			} else {
-				sb.append("Una");
-			}
-			sb.append(" di loro per ");
-			if (costo == 1) {
-				sb.append("una moneta");
-			} else {
-				sb.append(costo).append(" monete");
-			}
-		} else {
-			sb.append("Per ");
-			if (costo == 1) {
-				sb.append("una moneta ");
-			} else {
-				sb.append(costo).append(" monete ");
-			}
-			sb.append(capoAvversario.getADS()).append(capoAvversario.getNomeSingolare());
-		}
-		sb.append(" è dispost").append(capoAvversario.getLetteraFinaleAttributo()).append(" a vendere ");
-		if (quantita == 1) {
-			sb.append("un ");
-		} else {
-			sb.append(Lingue.corrente().cardinale(quantita, Genere.MASCHILE)).append(' ');
-		}
-		if (quantita == 1) {
-			sb.append(tipoIncantesimo.getNomeSingolare());
-		} else {
-			sb.append(tipoIncantesimo.getNomePlurale());
-		}
-		sb.append('.');
-		return sb.toString();
+		Personaggio capo = gruppoAvversario.getCapo();
+		String sesso = capo.getSesso() == Personaggio.Sesso.MASCHIO ? "M" : "F";
+		boolean inPiu = gruppoAvversario.getNumeroPersonaggiVivi() > 1;
+		String prezzo = costo == 1 ? Testi.formatta("offerte", "MONETE_UNA") : Testi.formatta("offerte", "MONETE_N", costo);
+		String venduto = quantita == 1 ? Testi.formatta("offerte", "INCANTESIMI.UNO", tipoIncantesimo.getNomeSingolare())
+				: Testi.formatta("offerte", "INCANTESIMI.N", Lingue.corrente().cardinale(quantita, Genere.MASCHILE), tipoIncantesimo.getNomePlurale());
+		return inPiu ? Testi.formatta("offerte", "INCANTESIMI.GRUPPO." + sesso, prezzo, venduto)
+				: Testi.formatta("offerte", "INCANTESIMI.SINGOLO." + sesso, prezzo, capo.getADS() + capo.getNomeSingolare(), venduto);
 	}
 
 	@Override

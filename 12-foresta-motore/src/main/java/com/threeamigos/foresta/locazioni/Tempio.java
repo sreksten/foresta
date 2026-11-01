@@ -20,6 +20,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Un tempio, con il suo nome (il Santuario della Luna): lo custodiscono delle viverne, e custodiscono un cofano oppure, se il registro ne ha uno da
@@ -70,11 +71,10 @@ public class Tempio extends LocazioneBase {
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
 		if (IlGiroDelleSetteChiese.isRipulito(getModelloDati()) && getOggetto() == null) {
-			BusEventi.pubblica(new NotificaTestoFrase("Qui, " + Lingue.corrente().conPreposizione(Preposizione.IN, getNome())
-					+ ", regna la pace. Questo era uno dei templi ripuliti durante il Giro delle Sette Chiese."));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Tempio.1", Lingue.corrente().conPreposizione(Preposizione.IN, getNome()))));
 			return;
 		}
-		BusEventi.pubblica(new NotificaTestoFrase("Qui, " + Lingue.corrente().conPreposizione(Preposizione.IN, getNome()) + ", " + descrizioneMostriEOggetti(g, gng)));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Tempio.2", Lingue.corrente().conPreposizione(Preposizione.IN, getNome()), descrizioneMostriEOggetti(g, gng))));
 	}
 
 	public TipoRiposo getTipoRiposo() {

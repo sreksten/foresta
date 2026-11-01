@@ -10,6 +10,7 @@ import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import static com.threeamigos.foresta.tipi.CostantiEconomia.COSTO_MAPPA_DELLA_FORESTA;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'offerta della mappa completa della Foresta, a pagamento.
@@ -28,21 +29,12 @@ public class MappaForesta implements Offerta {
 
 	@Override
 	public String getDescrizione(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		Personaggio capoAvversario = gruppoAvversario.getCapo();
-		Personaggio.Sesso sesso = capoAvversario.getSesso();
-		StringBuilder sb = new StringBuilder();
-		if (gruppoAvversario.getNumeroPersonaggiVivi() > 1) {
-			if (sesso == Personaggio.Sesso.MASCHIO) {
-				sb.append("Uno");
-			} else {
-				sb.append("Una");
-			}
-			sb.append(" di loro per " + COSTO_MAPPA_DELLA_FORESTA + " monete");
-		} else {
-			sb.append("Per " + COSTO_MAPPA_DELLA_FORESTA + " monete ").append(capoAvversario.getADS()).append(capoAvversario.getNomeSingolare());
-		}
-		sb.append(" è dispost").append(capoAvversario.getLetteraFinaleAttributo()).append(" a vendere una mappa della foresta.");
-		return sb.toString();
+		Personaggio capo = gruppoAvversario.getCapo();
+		String sesso = capo.getSesso() == Personaggio.Sesso.MASCHIO ? "M" : "F";
+		boolean inPiu = gruppoAvversario.getNumeroPersonaggiVivi() > 1;
+		String prezzo = Testi.formatta("offerte", "MONETE_N", COSTO_MAPPA_DELLA_FORESTA);
+		return inPiu ? Testi.formatta("offerte", "MAPPA_FORESTA.GRUPPO." + sesso, prezzo)
+				: Testi.formatta("offerte", "MAPPA_FORESTA.SINGOLO." + sesso, prezzo, capo.getADS() + capo.getNomeSingolare());
 	}
 
 	@Override

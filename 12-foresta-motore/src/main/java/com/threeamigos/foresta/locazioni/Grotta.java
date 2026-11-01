@@ -11,6 +11,7 @@ import com.threeamigos.foresta.personaggi.Viverna;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Una grotta: una volta su due vi abita una viverna o un eremita, e la prima volta che la si visita vi si trova un cofano.
@@ -40,7 +41,7 @@ public class Grotta extends LocazioneBase {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		BusEventi.pubblica(new NotificaTestoFrase("Qui, in una buia ed umida grotta, " + descrizioneMostriEOggetti(g, gng)));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Grotta.1", descrizioneMostriEOggetti(g, gng))));
 	}
 
 	public TipoRiposo getTipoRiposo() {

@@ -13,6 +13,7 @@ import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Le pergamene e le pozioni che il gruppo avversario porta con sé e che, se non le usa, diventano bottino.
@@ -85,8 +86,7 @@ public final class BottinoDegliAvversari {
 		raccogliPozioni(avversari.getPozioniMagiaGrande(), "pozione grande della Magia", "pozioni grandi della Magia", trovati,
 				q -> { avversari.subPozioniMagiaGrande(q); giocatore.addPozioniMagiaGrande(q); });
 		if (!trovati.isEmpty()) {
-			BusEventi.pubblica(new NotificaTestoParagrafo("Fra i resti degli avversari si trovano: "
-					+ String.join(", ", trovati) + "."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "BottinoDegliAvversari.1", String.join(", ", trovati))));
 		}
 	}
 

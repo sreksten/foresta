@@ -11,6 +11,7 @@ import com.threeamigos.foresta.personaggi.Lich;
 import com.threeamigos.foresta.tipi.CostantiMotore;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il Castello dell'Ombra, dove abita il Lich, con dei cofani: se il gruppo lo vince il castello diventa rovine. Non ci si può riposare.
@@ -31,7 +32,7 @@ public class CastelloLich extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " giunge al Castello dell'Ombra. Da una nuvola di fumo nero ecco apparire il più spaventoso tra i non morti: il Lich!"));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "CastelloLich.1", g.chiMaiuscolo())));
 	}
 	
 	@Override

@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Le quattro botteghe in cui il gruppo entra con un comando (alchimista, armaiolo, venditore di pergamene, incantatore):
@@ -91,7 +92,7 @@ final class GestoreBotteghe {
 			case NEGOZIO_INCANTATORE:
 				stato = StatoInBottega.DA_INCANTATORE;
 				incantatore = new AutomaIncantatore(g, new BancoDiLavoro());
-				apriIncantatore("Mettete sul banco un artefatto e gli ingredienti magici da fondere.");
+				apriIncantatore(Testi.formatta("messaggi_motore", "GestoreBotteghe.mettereSulBanco"));
 				break;
 			default:
 				throw new IllegalArgumentException(ingresso + " non è l'ingresso di una bottega");
@@ -176,7 +177,6 @@ final class GestoreBotteghe {
 		stato = StatoInBottega.NOME_ARTEFATTO_DA_FONDERE;
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili());
 		// Il messaggio si scrive in grande: niente accenti né parentesi
-		BusEventi.pubblica(new RichiestaTesto("Come si chiamera' l'artefatto? La fusione costa "
-				+ CommercioDelGruppo.costoFusione(g, banco) + " monete.", nomeAttuale));
+		BusEventi.pubblica(new RichiestaTesto(Testi.formatta("messaggi_motore", "GestoreBotteghe.comeSiChiamera", CommercioDelGruppo.costoFusione(g, banco)), nomeAttuale));
 	}
 }

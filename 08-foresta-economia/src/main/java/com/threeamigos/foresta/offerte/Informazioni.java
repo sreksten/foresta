@@ -15,6 +15,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 // Ubicazione artefatto/citta'/castello
 /**
@@ -34,9 +35,8 @@ public class Informazioni implements Offerta {
 
 	@Override
 	public String getDescrizione(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		StringBuilder sb = new StringBuilder("Scambiando quattro chiacchiere, ")
-				.append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))
-				.append(" viene a sapere che ");
+		StringBuilder sb = new StringBuilder(Testi.formatta("offerte", "INFORMAZIONI.INTRO",
+				gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)));
 		TipoLocazione tipoLocazione = Foresta.getLocazioneDelGruppo();
 		int tipo;
 		if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
@@ -68,14 +68,14 @@ public class Informazioni implements Offerta {
 			}
 		}
 		if (citta.isEmpty()) {
-			sb.append("tutte le città sono state distrutte dal Drago.");
+			sb.append(Testi.formatta("offerte", "INFORMAZIONI.CITTA_DISTRUTTE"));
 		} else {
 			int indice = Dado.tiraAncheAUnaFaccia(citta.size()) - 1;
 			TipoLocazione tipoLocazione = citta.get(indice);
 			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(tipoLocazione);
 			Foresta.setLocazioneConosciuta(coordinate);
-			sb.append(tipoLocazione.getNomeProprio());
-			sb.append(" si trova ").append(Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate));
+			sb.append(Testi.formatta("offerte", "INFORMAZIONI.CITTA", tipoLocazione.getNomeProprio(),
+					Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate)));
 		}
 	}
 
@@ -91,7 +91,7 @@ public class Informazioni implements Offerta {
 				}
 			}
 			if (castelli.isEmpty()) {
-				sb.append("tutti i castelli sono stati distrutti dal Drago.");
+				sb.append(Testi.formatta("offerte", "INFORMAZIONI.CASTELLI_DISTRUTTI"));
 				return;
 			}
 			int indice = Dado.tiraAncheAUnaFaccia(castelli.size()) - 1;
@@ -99,26 +99,22 @@ public class Informazioni implements Offerta {
 			coordinate = Foresta.getCoordinateLocazioneUnica(tipoLocazione);
 		}
 		Foresta.setLocazioneConosciuta(coordinate);
-		sb.append(tipoLocazione.getNomeProprio());
-		sb.append(" sorge ").append(Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate));
+		sb.append(Testi.formatta("offerte", "INFORMAZIONI.CASTELLO", tipoLocazione.getNomeProprio(),
+				Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate)));
 	}
 
 	private void informazioneSuArtefatti(GruppoGiocatore gruppo, StringBuilder sb) {
 		RegistroArtefattiMD.ArtefattoESuaUbicazione informazioni = RegistroArtefatti.getArtefattoCasuale();
 		if (informazioni == null) {
-			sb.append("tutti gli artefatti sono stati recuperati da intrepidi eroi.");
+			sb.append(Testi.formatta("offerte", "INFORMAZIONI.ARTEFATTI_RECUPERATI"));
 		} else {
 			ArtefattoMD artefatto = informazioni.getArtefattoMD();
 			Foresta.setLocazioneConosciuta(informazioni.getCoordinate());
 			RegistroArtefatti.segnaLocalizzazioneConosciuta(informazioni.getCoordinate());
 			String nomeCompleto = artefatto.getNomeCompleto();
-			sb.append(nomeCompleto);
 			// Con il nome proprio o la descrizione il nome completo è un inciso ("Diavolina, la spada di fuoco, che brucia"): la virgola lo chiude
-			if (nomeCompleto.indexOf(',') >= 0) {
-				sb.append(',');
-			}
-			sb.append(" si trova in un tempio ")
-			.append(Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), informazioni.getCoordinate()));
+			sb.append(Testi.formatta("offerte", nomeCompleto.indexOf(',') >= 0 ? "INFORMAZIONI.ARTEFATTO_INCISO" : "INFORMAZIONI.ARTEFATTO", nomeCompleto,
+					Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), informazioni.getCoordinate())));
 		}
 	}
 

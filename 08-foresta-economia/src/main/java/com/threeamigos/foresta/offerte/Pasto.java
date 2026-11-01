@@ -7,6 +7,7 @@ import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'offerta gratuita di un pasto caldo: di solito squisito, e allora rende un po' di salute a tutti i personaggi vivi; a volte non incontra i gusti del gruppo.
@@ -28,16 +29,11 @@ public class Pasto implements Offerta {
 	@Override
 	public String getDescrizione(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		if (gustoso > 1) {
-			return "Viene offerto un pasto caldo che risulta essere squisito.";
-		} else {
-			StringBuilder sb = new StringBuilder("Viene offerto un pasto caldo che però non incontra i gusti ");
-			if (gruppo.getNumeroPersonaggiVivi() == 1) {
-				sb.append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA)).append('.');
-			} else {
-				sb.append("del gruppo.");
-			}
-			return sb.toString();
+			return Testi.formatta("offerte", "PASTO.SQUISITO");
 		}
+		return gruppo.getNumeroPersonaggiVivi() == 1
+				? Testi.formatta("offerte", "PASTO.NON_PIACE_A", gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA))
+				: Testi.formatta("offerte", "PASTO.NON_PIACE_AL_GRUPPO");
 	}
 
 	@Override

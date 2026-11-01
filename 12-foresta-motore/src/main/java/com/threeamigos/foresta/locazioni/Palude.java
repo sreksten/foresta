@@ -10,6 +10,7 @@ import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Una palude malsana: da sola è vuota, e avversari o oggetti ce li mette solo una missione. Altrimenti il gruppo, sette volte su dieci, decide di non fermarsi;
@@ -38,10 +39,10 @@ public class Palude extends LocazioneBase {
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
 		if (isOccupataDaUnaMissione(gng)) {
-			BusEventi.pubblica(new NotificaTestoFrase("Qui, nel mezzo di una malsana e pericolosa palude, " + descrizioneMostriEOggetti(g, gng)));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Palude.1", descrizioneMostriEOggetti(g, gng))));
 			return;
 		}
-		BusEventi.pubblica(new NotificaTestoFrase("Qui, nel mezzo di una malsana e pericolosa palude, " + g.chi() + " non trova nulla."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Palude.2", g.chi())));
 	}
 
 	@Override
@@ -50,11 +51,11 @@ public class Palude extends LocazioneBase {
 			return super.impostaAzioni(g, gng, azione);
 		}
 		if (isLocazioneVisitata() || Dado.tira(10) > 3) {
-			BusEventi.pubblica(new NotificaTestoFrase("Il posto però non promette nulla di buono e " + g.chi() + " decide di non restare."));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Palude.3", g.chi())));
 			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
 		}
-		BusEventi.pubblica(new NotificaTestoFrase("Approfittando della quiete del posto, " + g.chi() + " riposerà un poco."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Palude.4", g.chi())));
 		g.riposa(1, getTipoRiposo());
 		BusEventi.pubblica(new InternoMostraFinestraStato());
 		setCompleta(true);

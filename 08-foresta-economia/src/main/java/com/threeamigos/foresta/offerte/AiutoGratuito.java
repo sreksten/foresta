@@ -11,6 +11,7 @@ import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'offerta di un avversario che si unisce al gruppo per un periodo limitato, senza chiedere niente. Non si può se il gruppo è già al completo.
@@ -46,27 +47,13 @@ public class AiutoGratuito implements Offerta {
 
 	@Override
 	public String getDescrizione(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		Personaggio capoAvversario = gruppoAvversario.getCapo();
-		Personaggio.Sesso sesso = capoAvversario.getSesso();
-		StringBuilder sb = new StringBuilder();
-		if (gruppoAvversario.getNumeroPersonaggiVivi() > 1) {
-			if (sesso == Personaggio.Sesso.MASCHIO) {
-				sb.append("Uno");
-			} else {
-				sb.append("Una");
-			}
-			sb.append(" di loro ");
-		} else {
-			sb.append(capoAvversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
-		}
-		sb.append(" è dispost").append(capoAvversario.getLetteraFinaleAttributo()).append(" ad accompagnare ");
-		if (gruppo.getNumeroPersonaggiVivi() > 1) {
-			sb.append("il gruppo");
-		} else {
-			sb.append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
-		}
-		sb.append(" per un po'.");
-		return sb.toString();
+		Personaggio capo = gruppoAvversario.getCapo();
+		String sesso = capo.getSesso() == Personaggio.Sesso.MASCHIO ? "M" : "F";
+		boolean inPiu = gruppoAvversario.getNumeroPersonaggiVivi() > 1;
+		String chi = gruppo.getNumeroPersonaggiVivi() > 1 ? Testi.formatta("gruppo", "CHI") : gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
+		return inPiu ? Testi.formatta("offerte", "AIUTO_GRATUITO.GRUPPO." + sesso, chi)
+				: Testi.formatta("offerte", "AIUTO_GRATUITO.SINGOLO." + sesso,
+						capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA), chi);
 	}
 
 	@Override

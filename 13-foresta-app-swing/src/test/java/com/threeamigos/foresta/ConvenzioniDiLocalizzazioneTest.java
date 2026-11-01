@@ -88,6 +88,44 @@ class ConvenzioniDiLocalizzazioneTest {
 		assertTrue(mancanti.isEmpty(), String.join("\n", mancanti));
 	}
 
+	// Testi.formatta("file", "CHIAVE"...) con file e chiave scritti per esteso
+	private static final Pattern USO_DI_FORMATTA = Pattern.compile("Testi\\.formatta\\(\\s*\"(\\w+)\"\\s*,\\s*\"([\\w.]+)\"");
+
+	@Test
+	void ogniChiaveUsataNelCodiceEsisteInItalianoEInInglese() throws IOException {
+		Map<String, Properties> italiano = new java.util.HashMap<>();
+		Map<String, Properties> inglese = new java.util.HashMap<>();
+		for (Path file : filePropertiesDelleRisorse()) {
+			String nome = file.getFileName().toString();
+			if (nome.endsWith("_it.properties")) {
+				italiano.computeIfAbsent(nome.replace("_it.properties", ""), k -> new Properties()).putAll(leggi(file));
+			} else if (nome.endsWith("_en.properties")) {
+				inglese.computeIfAbsent(nome.replace("_en.properties", ""), k -> new Properties()).putAll(leggi(file));
+			}
+		}
+		List<String> problemi = new ArrayList<>();
+		for (Path file : SorgentiDelProgetto.sorgenti(false)) {
+			if (!file.toString().contains("/src/main/")) {
+				continue;
+			}
+			Matcher m = USO_DI_FORMATTA.matcher(new String(Files.readAllBytes(file), StandardCharsets.UTF_8));
+			while (m.find()) {
+				if (m.group(2).endsWith(".")) {
+					continue; // la chiave si completa nel codice (".M" o ".F", un numero...)
+				}
+				Properties it = italiano.get(m.group(1));
+				Properties en = inglese.get(m.group(1));
+				String posto = file.getFileName() + ": " + m.group(1) + "/" + m.group(2);
+				if (it == null || !it.containsKey(m.group(2))) {
+					problemi.add(posto + " manca in italiano");
+				} else if (en == null || !en.containsKey(m.group(2))) {
+					problemi.add(posto + " manca in inglese");
+				}
+			}
+		}
+		assertTrue(problemi.isEmpty(), String.join("\n", problemi));
+	}
+
 	@Test
 	void leStringheItalianeNelCodiceNonAumentano() throws IOException {
 		Properties baseline = new Properties();
@@ -133,7 +171,9 @@ class ConvenzioniDiLocalizzazioneTest {
 	private static final String[] PERCORSI_INTERNI = {"/ui/sviluppo/", "StrumentiDiSviluppo", "DotazioneDiProva", "TrucchiDiSviluppo",
 			"/testi/LinguaItaliana.java", "/testi/Articoli.java", "/testi/Numeri.java",
 			// La spiegazione di una decisione della tattica è una traccia per chi sviluppa, come il log
-			"/tattiche/valutazione/Requisiti.java", "/tattiche/Valutatore.java"};
+			"/tattiche/valutazione/Requisiti.java", "/tattiche/Valutatore.java",
+			// Messaggi di salvataggio per chi sviluppa; la dotazione di prova e le sue stringhe sono dello strumento di prova
+			"/salvataggi/GestoreSalvataggiSuFile.java", "/motore/StrumentiDiSviluppoMotore.java", "/motore/DotazioneDiProva.java"};
 
 	static boolean italiana(String testo) {
 		if (LETTERA_ACCENTATA.matcher(testo.toLowerCase(java.util.Locale.ROOT)).find()) {

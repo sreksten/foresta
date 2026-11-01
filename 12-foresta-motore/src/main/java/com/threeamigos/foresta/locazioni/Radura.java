@@ -8,6 +8,7 @@ import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Una radura: vi si incontrano gli stessi mostri del bosco, ma non vi si trova niente. Si può riposare all'aperto con il fuoco.
@@ -50,7 +51,7 @@ public class Radura extends LocazioneBase {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		BusEventi.pubblica(new NotificaTestoFrase("Qui, in una radura, " + descrizioneMostriEOggetti(g, gng)));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "Radura.1", descrizioneMostriEOggetti(g, gng))));
 	}
 
 	public TipoRiposo getTipoRiposo() {
