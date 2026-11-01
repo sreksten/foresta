@@ -77,24 +77,25 @@ public final class BottinoDegliAvversari {
 				trovati.add(quantita + " " + (quantita == 1 ? classe.getNomeSingolare() : classe.getNomePlurale()));
 			}
 		}
-		raccogliPozioni(avversari.getPozioniSalute(), "pozione della Salute", "pozioni della Salute", trovati,
+		raccogliPozioni(avversari.getPozioniSalute(), "SALUTE", trovati,
 				q -> { avversari.subPozioniSalute(q); giocatore.addPozioniSalute(q); });
-		raccogliPozioni(avversari.getPozioniSaluteGrande(), "pozione grande della Salute", "pozioni grandi della Salute", trovati,
+		raccogliPozioni(avversari.getPozioniSaluteGrande(), "SALUTE_GRANDE", trovati,
 				q -> { avversari.subPozioniSaluteGrande(q); giocatore.addPozioniSaluteGrande(q); });
-		raccogliPozioni(avversari.getPozioniMagia(), "pozione della Magia", "pozioni della Magia", trovati,
+		raccogliPozioni(avversari.getPozioniMagia(), "MAGIA", trovati,
 				q -> { avversari.subPozioniMagia(q); giocatore.addPozioniMagia(q); });
-		raccogliPozioni(avversari.getPozioniMagiaGrande(), "pozione grande della Magia", "pozioni grandi della Magia", trovati,
+		raccogliPozioni(avversari.getPozioniMagiaGrande(), "MAGIA_GRANDE", trovati,
 				q -> { avversari.subPozioniMagiaGrande(q); giocatore.addPozioniMagiaGrande(q); });
 		if (!trovati.isEmpty()) {
 			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "BottinoDegliAvversari.1", String.join(", ", trovati))));
 		}
 	}
 
-	private static void raccogliPozioni(int quantita, String singolare, String plurale, List<String> trovati,
+	// Il nome della pozione, al singolare e al plurale, sta in messaggi_motore_<lingua> (BottinoDegliAvversari.pozione.<tipo>.1 e .N)
+	private static void raccogliPozioni(int quantita, String tipo, List<String> trovati,
 										java.util.function.IntConsumer sposta) {
 		if (quantita > 0) {
 			sposta.accept(quantita);
-			trovati.add(quantita + " " + (quantita == 1 ? singolare : plurale));
+			trovati.add(quantita + " " + Testi.get("messaggi_motore", "BottinoDegliAvversari.pozione." + tipo + (quantita == 1 ? ".1" : ".N")).orElse(tipo));
 		}
 	}
 }

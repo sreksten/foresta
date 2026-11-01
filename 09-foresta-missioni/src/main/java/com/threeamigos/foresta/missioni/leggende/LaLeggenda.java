@@ -225,9 +225,9 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 								() -> nelPosto() && RegistroMissioni.cercaOCostruisci(TipoLocazione.BOSCO, this).isPresent())
 						.esegui(() -> {
 							RegistroArtefatti.custodisciInUnTempioNuovo(getLeggendario().costruisci(Statistiche.getLivello()), getTempio());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Lingue.corrente().inizialeMaiuscola(getNarratoreConNome()) + " segna sulla mappa "
-									+ Foresta.nomeDelTempio(getTempio()) + ", dove " + getNomeDeiGuardiani() + " custodiscono "
-									+ getLeggendario().getNomeBreve() + "."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaLeggenda.segna",
+									Lingue.corrente().inizialeMaiuscola(getNarratoreConNome()), Foresta.nomeDelTempio(getTempio()), getNomeDeiGuardiani(),
+									getLeggendario().getNomeBreve())));
 							attivaMissione();
 						})
 						.poi(RECUPERO);

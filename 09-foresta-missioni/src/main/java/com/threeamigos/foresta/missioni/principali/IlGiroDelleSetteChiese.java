@@ -92,8 +92,8 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 			return Testi.formatta("missioni", "IlGiroDelleSetteChiese.t3");
 		}
 		int mancanti = TEMPLI_DA_LIBERARE - contaTempliRipuliti();
-		String descrizione = "Aiuta " + (getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "la sacerdotessa" : "il sacerdote") + " a liberare " + cardinale
-				+ " templi dai mostri che li infestano.";
+		String descrizione = Testi.formatta("missioni", "IlGiroDelleSetteChiese.descrizione",
+				Testi.formatta("missioni", getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "IlGiroDelleSetteChiese.laSacerdotessa" : "IlGiroDelleSetteChiese.ilSacerdote"), cardinale);
 		if (mancanti == 1) {
 			return Testi.formatta("missioni", "IlGiroDelleSetteChiese.t4", descrizione);
 		}
@@ -200,7 +200,7 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 		boolean donna = getSacerdote() == TipoPersonaggio.SACERDOTESSA;
 		return Collections.singletonList(scenaNelTempio(Testi.formatta("missioni", "IlGiroDelleSetteChiese.s4"))
 				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.1")).daSecondo(2))
-				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.2", (donna ? "una sacerdotessa" : "un sacerdote"))))
+				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.2", Testi.formatta("missioni", donna ? "IlGiroDelleSetteChiese.unaSacerdotessa" : "IlGiroDelleSetteChiese.unSacerdote"))))
 				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.3")))
 				.conBattuta(BattutaIntermezzo.di(ID_EROE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.4")))
 				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.5"))));

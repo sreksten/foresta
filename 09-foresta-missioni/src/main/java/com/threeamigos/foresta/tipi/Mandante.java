@@ -13,20 +13,13 @@ import com.threeamigos.foresta.testi.Testi;
  */
 public enum Mandante {
 
-	ALCHIMISTA("RICHIESTA_ALCHIMISTA", "l'alchimista", ScenaInCitta::conAlchimista,
-			Testi.formatta("missioni", "Mandante.s1"),
-			Testi.formatta("missioni", "Mandante.s2")),
-	ARMAIOLO("RICHIESTA_ARMAIOLO", "l'armaiolo", ScenaInCitta::conArmaiolo,
-			Testi.formatta("missioni", "Mandante.s3"),
-			Testi.formatta("missioni", "Mandante.s4")),
-	CAPITANO("RICHIESTA_CAPITANO", Testi.formatta("missioni", "Mandante.s5"), ScenaInCitta::conCapitano,
-			Testi.formatta("missioni", "Mandante.s6"),
-			Testi.formatta("missioni", "Mandante.s7")),
-	LOCANDIERE("RICHIESTA_LOCANDIERE", "il locandiere", ScenaInCitta::conLocandiere,
-			Testi.formatta("missioni", "Mandante.s8"),
-			Testi.formatta("missioni", "Mandante.s9"));
+	ALCHIMISTA("RICHIESTA_ALCHIMISTA", "Mandante.nome.ALCHIMISTA", ScenaInCitta::conAlchimista, "Mandante.s1", "Mandante.s2"),
+	ARMAIOLO("RICHIESTA_ARMAIOLO", "Mandante.nome.ARMAIOLO", ScenaInCitta::conArmaiolo, "Mandante.s3", "Mandante.s4"),
+	CAPITANO("RICHIESTA_CAPITANO", "Mandante.s5", ScenaInCitta::conCapitano, "Mandante.s6", "Mandante.s7"),
+	LOCANDIERE("RICHIESTA_LOCANDIERE", "Mandante.nome.LOCANDIERE", ScenaInCitta::conLocandiere, "Mandante.s8", "Mandante.s9");
 
 	private final String produzione;
+	// Le chiavi dei testi in missioni_<lingua>.properties: si leggono quando servono, nella lingua in uso
 	private final String nome;
 	private final Supplier<ScenaInCitta> scena;
 	private final String apertura;
@@ -51,7 +44,7 @@ public enum Mandante {
 	 * Il mandante, con l'articolo: "l'alchimista".
 	 */
 	public String getNome() {
-		return nome;
+		return Testi.formatta("missioni", nome);
 	}
 
 	/**
@@ -66,13 +59,13 @@ public enum Mandante {
 	 * ("Sono il capitano delle guardie, Rodolfo, e ho bisogno di prove").
 	 */
 	public String getApertura(String nomeProprio) {
-		return String.format(Locale.ROOT, apertura, nomeProprio == null ? "," : ", " + nomeProprio + ",");
+		return String.format(Locale.ROOT, Testi.formatta("missioni", apertura), nomeProprio == null ? "," : ", " + nomeProprio + ",");
 	}
 
 	/**
 	 * Che cosa fa dei materiali che riceve, con il pronome: "che le annusa soddisfatto".
 	 */
 	public String allaConsegna(String pronome) {
-		return String.format(Locale.ROOT, allaConsegna, pronome);
+		return String.format(Locale.ROOT, Testi.formatta("missioni", allaConsegna), pronome);
 	}
 }

@@ -106,7 +106,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 	 */
 	private String getVisiteMancanti() {
 		int mancanti = getSorveglianza().getVisite() - getVisiteNelPassoCorrente();
-		return "ancora " + Lingue.corrente().cardinale(mancanti, Genere.FEMMINILE) + (mancanti == 1 ? " volta" : " volte");
+		return mancanti == 1 ? Testi.formatta("missioni", "LaSorveglianza.mancanti.1") : Testi.formatta("missioni", "LaSorveglianza.mancanti.N", Lingue.corrente().cardinale(mancanti, Genere.FEMMINILE));
 	}
 
 	private String getIntervallo() {
@@ -153,7 +153,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 		}
 		String descrizione =Testi.formatta("missioni", "LaSorveglianza.s2", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()));
 		if (SORVEGLIA.equals(passo) && getVisiteNelPassoCorrente() > 0) {
-			return descrizione + ": passaci " + getVisiteMancanti() + ", " + getIntervallo() + ".";
+			return Testi.formatta("missioni", "LaSorveglianza.passaci", descrizione, getVisiteMancanti(), getIntervallo());
 		}
 		return Testi.formatta("missioni", "LaSorveglianza.t5", descrizione, Lingue.corrente().cardinale(getSorveglianza().getVisite(), Genere.FEMMINILE), getIntervallo());
 	}

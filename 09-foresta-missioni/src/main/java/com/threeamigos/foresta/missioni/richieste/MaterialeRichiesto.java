@@ -171,14 +171,14 @@ public final class MaterialeRichiesto {
 	 * Il pronome per il plurale: "le" o "li".
 	 */
 	public String getPronome() {
-		return femminile ? "le" : "li";
+		return Testi.formatta("missioni", "Genere.pronomePlurale." + (femminile ? "F" : "M"));
 	}
 
 	/**
 	 * "tutte" o "tutti".
 	 */
 	public String getTutti() {
-		return femminile ? "tutte" : "tutti";
+		return Testi.formatta("missioni", "Genere.tutti." + (femminile ? "F" : "M"));
 	}
 
 	/**
@@ -192,7 +192,7 @@ public final class MaterialeRichiesto {
 	 * "Le mie" o "I miei".
 	 */
 	public String getPossessivo() {
-		return femminile ? "Le mie" : "I miei";
+		return Testi.formatta("missioni", "Genere.possessivoPlurale." + (femminile ? "F" : "M"));
 	}
 
 	public int getQuantitaMinima() {
@@ -230,19 +230,19 @@ public final class MaterialeRichiesto {
 		for (TipoLocazione luogo : luoghi) {
 			switch (luogo) {
 				case RADURA:
-					parti.add("nelle radure");
+					parti.add(Testi.formatta("missioni", "Luogo.in.RADURA"));
 					break;
 				case BOSCO:
-					parti.add("nei boschi");
+					parti.add(Testi.formatta("missioni", "Luogo.in.BOSCO"));
 					break;
 				case GROTTA:
-					parti.add("nelle grotte");
+					parti.add(Testi.formatta("missioni", "Luogo.in.GROTTA"));
 					break;
 				case ROVINE:
-					parti.add("fra le rovine");
+					parti.add(Testi.formatta("missioni", "Luogo.in.ROVINE"));
 					break;
 				case PALUDE:
-					parti.add("nelle paludi");
+					parti.add(Testi.formatta("missioni", "Luogo.in.PALUDE"));
 					break;
 				default:
 					parti.add(Lingue.corrente().conPreposizione(Preposizione.IN, luogo.name().toLowerCase(Locale.ROOT)));

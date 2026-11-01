@@ -330,8 +330,8 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 	}
 
 	private static String conPreposizione(String preposizione, String nome) {
-		// Le città e i nomi propri senza articolo (cominciano con la maiuscola) non si fondono con la preposizione
-		return Character.isUpperCase(nome.charAt(0)) ? preposizione + " " + nome : Articoli.conPreposizione(preposizione, nome);
+		// Le città e i nomi propri senza articolo (cominciano con la maiuscola) non si fondono con la preposizione: lo sa la lingua
+		return Lingue.corrente().conPreposizione(Preposizione.valueOf(preposizione.toUpperCase(java.util.Locale.ROOT)), nome);
 	}
 
 	/**

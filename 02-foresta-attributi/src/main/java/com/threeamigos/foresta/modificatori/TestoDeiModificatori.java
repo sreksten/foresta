@@ -17,6 +17,14 @@ import java.util.Locale;
 public final class TestoDeiModificatori {
 
 	/**
+	 * La nota di un modificatore ("Pelle di corteccia", "la lealtà") nella lingua in uso. La nota salvata è sempre quella italiana, che serve a
+	 * riconoscere il modificatore: qui la si traduce per mostrarla (vedi note_modificatori_&lt;lingua&gt;.properties); una nota senza traduzione resta com'è.
+	 */
+	public static String nota(String nota) {
+		return Testi.get("note_modificatori", nota.replace(" ", "_")).orElse(nota);
+	}
+
+	/**
 	 * L'effetto, per esempio "Fortuna porta a 0" o "Coraggio -20%".
 	 */
 	public static String effetto(ModificatoreAttributoMD modificatore) {

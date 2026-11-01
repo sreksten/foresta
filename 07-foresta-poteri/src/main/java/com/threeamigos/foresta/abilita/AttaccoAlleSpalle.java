@@ -9,6 +9,8 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 
+import com.threeamigos.foresta.testi.Testi;
+
 import java.util.List;
 
 /**
@@ -52,9 +54,9 @@ public class AttaccoAlleSpalle implements Abilita {
 		}
 		Personaggio bersaglio = scelto != null && scelto.isVivo() && avversari.contains(scelto) ? scelto : avversari.get(0);
 		AnnuncioDellAzione.azione(utilizzatore, bersaglio, getTipo().getTipoAzione());
-		BusEventi.pubblica(new NotificaTestoFrase(utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " colpisce alle spalle "
-				+ bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + ", distratto dai compagni."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "AttaccoAlleSpalle.annuncio",
+				utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA),
+				bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))));
 		AttaccoConLeArmi.alleSpalle(utilizzatore, bersaglio);
 		utilizzatore.subMagia(getCostoLancio());
 		return true;

@@ -122,9 +122,9 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 		}
 		MaterialeRichiesto materiale = getMateriale();
 		return raccogli(MomentoControllo.POST_LOCAZIONE, getMateriali())
-				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Lingue.corrente().inizialeMaiuscola(materiale.getPluraleConArticolo())
-						+ " ci sono " + materiale.getTutti() + ": " + mandanteDiCitta(mandante.getNome()) + " "
-						+ materiale.getPronome() + " aspetta.")))
+				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "RichiestaDiMateriali.pronti",
+						Lingue.corrente().inizialeMaiuscola(materiale.getPluraleConArticolo()), materiale.getTutti(), mandanteDiCitta(mandante.getNome()),
+						materiale.getPronome()))))
 				.poi(RITORNO);
 	}
 
@@ -136,8 +136,8 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 	@Override
 	protected String testoConsegna() {
 		MaterialeRichiesto materiale = getMateriale();
-		return Lingue.corrente().inizialeMaiuscola(materiale.getNome().getADP() + materiale.quanti(getQuantita()))
-				+ " passano " + Lingue.corrente().conPreposizione(Preposizione.A, mandanteSenzaVirgolaFinale(mandante.getNome())) + ", " + mandante.allaConsegna(materiale.getPronome()) + ".";
+		return Testi.formatta("missioni", "RichiestaDiMateriali.consegna", Lingue.corrente().inizialeMaiuscola(materiale.getNome().getADP() + materiale.quanti(getQuantita())),
+				Lingue.corrente().conPreposizione(Preposizione.A, mandanteSenzaVirgolaFinale(mandante.getNome())), mandante.allaConsegna(materiale.getPronome()));
 	}
 
 	@Override

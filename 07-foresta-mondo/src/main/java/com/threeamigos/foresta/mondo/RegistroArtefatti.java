@@ -11,6 +11,7 @@ import com.threeamigos.foresta.modellodati.RegistroArtefattiMD;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.Testi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,18 +47,29 @@ public class RegistroArtefatti {
 	private RegistroArtefatti() {
 	}
 
-	private static final String COMBATTIMENTO = "il cui potere è nel combattimento";
-	private static final String PROTEZIONE = "che protegge dagli attacchi avversari";
-	private static final String PERSUASIONE = "il cui potere è nella persuasione";
-	private static final String MAGIA = "che aumenta il potere magico";
+	// I nomi e le descrizioni stanno in registro_artefatti_<lingua>.properties
+	private static final String FILE_DEI_TESTI = "registro_artefatti";
+
+	private static String nome(int numero) {
+		return Testi.get(FILE_DEI_TESTI, "NOME." + numero).orElse("");
+	}
+
+	private static String descrizione(String chiave) {
+		return Testi.get(FILE_DEI_TESTI, "DESCRIZIONE." + chiave).orElse("");
+	}
+
+	private static final String COMBATTIMENTO = "COMBATTIMENTO";
+	private static final String PROTEZIONE = "PROTEZIONE";
+	private static final String PERSUASIONE = "PERSUASIONE";
+	private static final String MAGIA = "MAGIA";
 
 	public static void reimposta() {
 		getRegistroArtefatti().reimposta();
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.SPADA)
-				.setNome("il pugnale di Worr")
-				.setDescrizione(COMBATTIMENTO)
+				.setNome(nome(1))
+				.setDescrizione(descrizione(COMBATTIMENTO))
 				.setLivello(2)
 				.setDanniBase(8)
 				.setCostoAcquisto(15)
@@ -69,8 +81,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.ASCIA)
-				.setNome("l'Ascia di Thrann")
-				.setDescrizione(COMBATTIMENTO)
+				.setNome(nome(2))
+				.setDescrizione(descrizione(COMBATTIMENTO))
 				.setLivello(3)
 				.setDanniBase(12)
 				.setCostoAcquisto(15)
@@ -82,8 +94,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.SPADA)
-				.setNome("la Daga di Yltrim")
-				.setDescrizione(COMBATTIMENTO)
+				.setNome(nome(3))
+				.setDescrizione(descrizione(COMBATTIMENTO))
 				.setLivello(4)
 				.setDanniBase(10)
 				.setCostoAcquisto(20)
@@ -95,8 +107,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.SPADA)
-				.setNome("la Spada di Kartham")
-				.setDescrizione(COMBATTIMENTO)
+				.setNome(nome(4))
+				.setDescrizione(descrizione(COMBATTIMENTO))
 				.setLivello(5)
 				.setDanniBase(12)
 				.setCostoAcquisto(25)
@@ -108,8 +120,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.VESTE)
-				.setNome("il Manto di Grakk")
-				.setDescrizione(PROTEZIONE)
+				.setNome(nome(5))
+				.setDescrizione(descrizione(PROTEZIONE))
 				.setLivello(1)
 				.setCostoAcquisto(20)
 				.setPeso(1)
@@ -120,8 +132,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.ELMO)
-				.setNome("l'Elmo di Mithrr")
-				.setDescrizione(PROTEZIONE)
+				.setNome(nome(6))
+				.setDescrizione(descrizione(PROTEZIONE))
 				.setLivello(2)
 				.setCostoAcquisto(10)
 				.setPeso(1)
@@ -131,8 +143,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.SCUDO)
-				.setNome("lo Scudo di Kalar")
-				.setDescrizione(PROTEZIONE)
+				.setNome(nome(7))
+				.setDescrizione(descrizione(PROTEZIONE))
 				.setLivello(3)
 				.setCostoAcquisto(15)
 				.setPeso(2)
@@ -142,8 +154,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.ARMATURA)
-				.setNome("la Corazza di Yar")
-				.setDescrizione(PROTEZIONE)
+				.setNome(nome(8))
+				.setDescrizione(descrizione(PROTEZIONE))
 				.setLivello(4)
 				.setCostoAcquisto(20)
 				.setPeso(3)
@@ -152,8 +164,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.TALISMANO)
-				.setNome("il Talismano di Beltram")
-				.setDescrizione(PERSUASIONE)
+				.setNome(nome(9))
+				.setDescrizione(descrizione(PERSUASIONE))
 				.setLivello(2)
 				.setCostoAcquisto(10)
 				.setPeso(1)
@@ -162,8 +174,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.TALISMANO)
-				.setNome("il Sigillo di Yshtalar")
-				.setDescrizione(PERSUASIONE)
+				.setNome(nome(10))
+				.setDescrizione(descrizione(PERSUASIONE))
 				.setLivello(3)
 				.setCostoAcquisto(15)
 				.setPeso(1)
@@ -172,8 +184,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.TALISMANO)
-				.setNome("la Serpe di Yalar")
-				.setDescrizione(PERSUASIONE)
+				.setNome(nome(11))
+				.setDescrizione(descrizione(PERSUASIONE))
 				.setLivello(4)
 				.setCostoAcquisto(20)
 				.setPeso(1)
@@ -182,8 +194,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.TALISMANO)
-				.setNome("il Flagello di Mutr")
-				.setDescrizione(PERSUASIONE)
+				.setNome(nome(12))
+				.setDescrizione(descrizione(PERSUASIONE))
 				.setLivello(1)
 				.setCostoAcquisto(25)
 				.setPeso(1)
@@ -192,8 +204,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.BASTONE_MAGICO)
-				.setNome("la Bacchetta di Yuw")
-				.setDescrizione(MAGIA)
+				.setNome(nome(13))
+				.setDescrizione(descrizione(MAGIA))
 				.setLivello(1)
 				.setCostoAcquisto(10)
 				.setPeso(1)
@@ -202,8 +214,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.BASTONE_MAGICO)
-				.setNome("la Verga di Pannk")
-				.setDescrizione(MAGIA)
+				.setNome(nome(14))
+				.setDescrizione(descrizione(MAGIA))
 				.setLivello(2)
 				.setCostoAcquisto(15)
 				.setPeso(2)
@@ -213,8 +225,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.LIBRO_MAGICO)
-				.setNome("il Libro di Menk")
-				.setDescrizione(MAGIA)
+				.setNome(nome(15))
+				.setDescrizione(descrizione(MAGIA))
 				.setLivello(3)
 				.setCostoAcquisto(20)
 				.setPeso(1)
@@ -224,8 +236,8 @@ public class RegistroArtefatti {
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.BASTONE_MAGICO)
-				.setNome("il Bastone di Plarr")
-				.setDescrizione(MAGIA)
+				.setNome(nome(16))
+				.setDescrizione(descrizione(MAGIA))
 				.setLivello(4)
 				.setCostoAcquisto(25)
 				.setPeso(1)

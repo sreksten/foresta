@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.richieste;
 
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 
 import java.util.Objects;
@@ -97,14 +98,14 @@ public final class Spedizione {
 	 * L'oggetto con il dimostrativo: "questa fiala di antidoto".
 	 */
 	public String getQuestoOggetto() {
-		return (femminile ? "questa " : "questo ") + oggetto;
+		return Testi.formatta("missioni", "Genere.questo." + (femminile ? "F" : "M")) + oggetto;
 	}
 
 	/**
 	 * Il pronome per l'oggetto: "la" o "lo".
 	 */
 	public String getPronome() {
-		return femminile ? "la" : "lo";
+		return Testi.formatta("missioni", "Genere.pronomeSingolare." + (femminile ? "F" : "M"));
 	}
 
 	/**

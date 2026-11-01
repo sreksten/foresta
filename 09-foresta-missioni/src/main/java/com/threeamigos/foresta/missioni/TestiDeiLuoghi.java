@@ -42,7 +42,7 @@ public final class TestiDeiLuoghi {
 	 * Dentro un luogo di quella classe: "in una grotta", "fra delle rovine".
 	 */
 	public static String dentro(TipoLocazione tipo) {
-		return (tipo == TipoLocazione.ROVINE ? "fra " : "in ") + indefinito(tipo);
+		return Testi.formatta("missioni", tipo == TipoLocazione.ROVINE ? "TestiDeiLuoghi.dentroRovine" : "TestiDeiLuoghi.dentro") + indefinito(tipo);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public final class TestiDeiLuoghi {
 			case RADURA:
 				return Testi.formatta("missioni", "TestiDeiLuoghi.t13");
 			default:
-				return md.getNome() != null ? md.getNome() : "la locanda";
+				return md.getNome() != null ? md.getNome() : Testi.formatta("missioni", "TestiDeiLuoghi.laLocanda");
 		}
 	}
 }

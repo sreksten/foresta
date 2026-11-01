@@ -168,8 +168,8 @@ public class LaForgia extends IncaricoInCitta {
 		switch (id) {
 			case RACCOLTA_METALLO:
 				return raccogli(MomentoControllo.POST_LOCAZIONE, metalli)
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Lingue.corrente().inizialeMaiuscola(metallo.getPluraleConArticolo())
-								+ " ci sono " + metallo.getTutti() + ": ora serve " + trofeo.quanti(getQuantitaDelTrofeo()) + ".")))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaForgia.pronti",
+								Lingue.corrente().inizialeMaiuscola(metallo.getPluraleConArticolo()), metallo.getTutti(), trofeo.quanti(getQuantitaDelTrofeo())))))
 						.poi(RACCOLTA_TROFEO);
 			case RACCOLTA_TROFEO:
 				return raccogli(MomentoControllo.POST_LOCAZIONE, trofei)

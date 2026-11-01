@@ -192,16 +192,17 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 * I mandanti che nel mondo hanno un nome proprio (vedi RegistroPersonaggi e tipi.PersonaggioNoto), come li scrivono le righe
 	 * delle missioni. Il locandiere non c'è: il suo nome sta nella locanda.
 	 */
-	private static final Map<String, PersonaggioNoto> MANDANTI_CON_NOME = new HashMap<>();
-
-	static {
-		MANDANTI_CON_NOME.put(Testi.formatta("missioni", "IncaricoInCitta.s1"), PersonaggioNoto.CAPITANO);
-		MANDANTI_CON_NOME.put("l'alchimista", PersonaggioNoto.ALCHIMISTA);
-		MANDANTI_CON_NOME.put("l'armaiolo", PersonaggioNoto.ARMAIOLO);
-		MANDANTI_CON_NOME.put(Testi.formatta("missioni", "IncaricoInCitta.s2"), PersonaggioNoto.VENDITORE_DI_PERGAMENE);
-		MANDANTI_CON_NOME.put("l'incantatore", PersonaggioNoto.INCANTATORE);
-		MANDANTI_CON_NOME.put(Testi.formatta("missioni", "IncaricoInCitta.s3"), PersonaggioNoto.BORGOMASTRO);
-		MANDANTI_CON_NOME.put("la levatrice", PersonaggioNoto.LEVATRICE);
+	private static Map<String, PersonaggioNoto> mandantiConNome() {
+		// I nomi dei mandanti sono quelli delle righe di missioni_<lingua>.txt: si ricostruisce se la lingua cambia
+		Map<String, PersonaggioNoto> mandanti = new HashMap<>();
+		mandanti.put(Testi.formatta("missioni", "IncaricoInCitta.s1"), PersonaggioNoto.CAPITANO);
+		mandanti.put(Testi.formatta("missioni", "IncaricoInCitta.s5"), PersonaggioNoto.ALCHIMISTA);
+		mandanti.put(Testi.formatta("missioni", "IncaricoInCitta.s6"), PersonaggioNoto.ARMAIOLO);
+		mandanti.put(Testi.formatta("missioni", "IncaricoInCitta.s2"), PersonaggioNoto.VENDITORE_DI_PERGAMENE);
+		mandanti.put(Testi.formatta("missioni", "IncaricoInCitta.s7"), PersonaggioNoto.INCANTATORE);
+		mandanti.put(Testi.formatta("missioni", "IncaricoInCitta.s3"), PersonaggioNoto.BORGOMASTRO);
+		mandanti.put(Testi.formatta("missioni", "IncaricoInCitta.s8"), PersonaggioNoto.LEVATRICE);
+		return mandanti;
 	}
 
 	/**
@@ -231,14 +232,14 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 * Il mandante e la città dell'incarico: "il fabbro di Ruuna", "l'armaiolo di Ruuna, Mastro Ferruccio,".
 	 */
 	protected final String mandanteDiCitta(String mandante) {
-		return conNome(mandante, mandante + " di " + getNomeCitta(), getCitta(), true);
+		return conNome(mandante, Testi.formatta("missioni", "IncaricoInCitta.diCitta", mandante, getNomeCitta()), getCitta(), true);
 	}
 
 	/**
 	 * Come {@link #mandanteDiCitta}, ma senza la virgola finale: per quando il mandante è seguito da un segno di punteggiatura.
 	 */
 	protected final String mandanteDiCittaSenzaVirgolaFinale(String mandante) {
-		return conNome(mandante, mandante + " di " + getNomeCitta(), getCitta(), false);
+		return conNome(mandante, Testi.formatta("missioni", "IncaricoInCitta.diCitta", mandante, getNomeCitta()), getCitta(), false);
 	}
 
 	/**
@@ -267,7 +268,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 * Il nome proprio del mandante in quella città, o null se non ne ha uno nel registro (o la città non c'è).
 	 */
 	private static String nomeDelMandante(String mandante, TipoLocazione citta) {
-		PersonaggioNoto noto = MANDANTI_CON_NOME.get(mandante);
+		PersonaggioNoto noto = mandantiConNome().get(mandante);
 		if (noto == null) {
 			return null;
 		}

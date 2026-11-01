@@ -49,7 +49,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	private static final String LEGGENDARIO = "LEGGENDARIO";
 	private static final String LIZZA = "LIZZA";
 	private static final String[] TURNI = {"PRIMO_TURNO", "SECONDO_TURNO"};
-	private static final String[] NOMI_DEI_TURNI = {"primo turno", "secondo turno"};
+	// I nomi dei turni (e della finale) stanno in missioni_<lingua>.properties: IlTorneo.turno.1, .2 e .finale
 	private static final String FINALE = "FINALE";
 
 	public IlTorneo() {
@@ -150,7 +150,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	private String inPalio() {
 		String breve = getLeggendario().getNomeBreve();
 		boolean plurale = breve.startsWith("gli ") || breve.startsWith("i ") || breve.startsWith("le ");
-		return (plurale ? "ci sono " : Testi.formatta("missioni", "IlTorneo.s1")) + breve;
+		return Testi.formatta("missioni", plurale ? "IlTorneo.inPalioPlurale" : "IlTorneo.s1") + breve;
 	}
 
 	private void premia() {
@@ -180,11 +180,11 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 		String turno;
 		if (FINALE.equals(passo)) {
 			chi = ilCampione();
-			turno = "la finale";
+			turno = Testi.formatta("missioni", "IlTorneo.turno.finale");
 		} else {
 			int indice = TURNI[1].equals(passo) ? 1 : 0;
 			chi = unSfidante(torneo.getSfidanti().get(indice));
-			turno = "il " + NOMI_DEI_TURNI[indice];
+			turno = Testi.formatta("missioni", "IlTorneo.turno." + (indice + 1));
 		}
 		return Testi.formatta("missioni", "IlTorneo.t3", getNome(), turno, chi, inPalio());
 	}

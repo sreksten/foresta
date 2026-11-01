@@ -166,7 +166,7 @@ public class LIndagine extends IncaricoInCitta {
 		int indizi = indagine.getIndizi().size();
 		if (trovati < indizi) {
 			descrizione.append(Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta())).append(Testi.formatta("missioni", "LIndagine.s1"))
-					.append(trovati == 0 ? Testi.formatta("missioni", "LIndagine.s2") : "l'indizio successivo").append(Testi.formatta("missioni", "LIndagine.s3"));
+					.append(trovati == 0 ? Testi.formatta("missioni", "LIndagine.s2") : Testi.formatta("missioni", "LIndagine.successivo")).append(Testi.formatta("missioni", "LIndagine.s3"));
 		} else {
 			descrizione.append(Testi.formatta("missioni", "LIndagine.s4")).append(testo(indagine.getDomanda()));
 		}
@@ -197,7 +197,7 @@ public class LIndagine extends IncaricoInCitta {
 			return cercaLocazione(MomentoControllo.IN_LOCAZIONE, indizio.getLuogo())
 					.esegui(() -> {
 						Foresta.setLocazioneConosciuta(getPosto());
-						BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LIndagine.s5", (numero == 1 ? "Il primo indizio va cercato " : "Il prossimo indizio va cercato "), TestiDeiLuoghi.dentro(indizio.getLuogo()))));
+						BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LIndagine.s5", Testi.formatta("missioni", numero == 1 ? "LIndagine.primoDaCercare" : "LIndagine.prossimoDaCercare"), TestiDeiLuoghi.dentro(indizio.getLuogo()))));
 					})
 					.poi(INDIZIO + numero);
 		}

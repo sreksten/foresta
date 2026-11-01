@@ -61,7 +61,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 			if (getClasse().getPortata() == PortataIncantesimo.MULTIPLO && bersagli.size() > formulante.getBersagli()) {
 				bersagli = bersagli.subList(0, formulante.getBersagli());
 			}
-			annuncia(formulante, bersagli.size() > 1 ? "il gruppo" :
+			annuncia(formulante, bersagli.size() > 1 ? Testi.get("messaggi_poteri", "IncantesimoMaleficoImpl.ilGruppo").orElse("") :
 					bersagli.get(0).getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 			boolean ripartito = getClasse().getPortata() == PortataIncantesimo.MULTIPLO;
 			for (int posizione = 0; posizione < bersagli.size(); posizione++) {

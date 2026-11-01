@@ -11,6 +11,9 @@ import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tipi.TipoBottino;
 
+import com.threeamigos.foresta.testi.Testi;
+
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -42,28 +45,30 @@ public class Anello extends OggettoBase implements Bottino {
 		}
 	}
 
+	// I nomi e le descrizioni stanno in anelli_<lingua>.properties
+	private static final String FILE_DEI_TESTI = "anelli";
+
+	private static String nomeACaso(int tipo) {
+		List<String> nomi = Testi.serie(FILE_DEI_TESTI, "ANELLO." + tipo + ".NOME");
+		return nomi.get(Dado.tiraAncheAUnaFaccia(nomi.size()) - 1);
+	}
+
 	private static Artefatto creaAnelloMagico(int tipo) {
 		String nome;
 		ModificatoreAttributoMD modificatore;
 		String descrizione;
 		if (tipo == 1) {
-			String[] appartenenzePossibili = new String[]{ "della Valchiria", "del Grifone", "del Paladino", "del Centurione", "della Manticora", "del Minotauro", "della Viverna" };
-			int indiceAppartenenza = Dado.tiraAncheAUnaFaccia(appartenenzePossibili.length) - 1;
-			nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
+			nome = nomeACaso(1);
 			modificatore = new ModificatoreAttributoMD(TipoAttributo.VALORE, TipoModificatore.VARIAZIONE_FISSA, CostantiBottino.ANELLO_MAGICO_AGGIUNTA_VALORE);
-			descrizione = "che aumenta il Valore";
+			descrizione = Testi.get(FILE_DEI_TESTI, "ANELLO.1.DESCRIZIONE").orElse("");
 		} else if (tipo == 2) {
-			String[] appartenenzePossibili = new String[]{ "del Berserker", "della Fenice", "del Pegaso", "della Salamandra", "del Gladiatore", "dell'Ippogrifo", "dell'Esploratore" };
-			int indiceAppartenenza = Dado.tiraAncheAUnaFaccia(appartenenzePossibili.length) - 1;
-			nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
+			nome = nomeACaso(2);
 			modificatore = new ModificatoreAttributoMD(TipoAttributo.CORAGGIO, TipoModificatore.VARIAZIONE_PERCENTUALE, CostantiBottino.ANELLO_MAGICO_AGGIUNTA_CORAGGIO);
-			descrizione = "che aumenta il Coraggio";
+			descrizione = Testi.get(FILE_DEI_TESTI, "ANELLO.2.DESCRIZIONE").orElse("");
 		} else {
-			String[] appartenenzePossibili = new String[]{ "della Sirena", "della Sfinge", "dell'Arcangelo", "della Gorgone", "del Dullahan", "della Lamia", "del Basilisco" };
-			int indiceAppartenenza = Dado.tiraAncheAUnaFaccia(appartenenzePossibili.length) - 1;
-			nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
+			nome = nomeACaso(3);
 			modificatore = new ModificatoreAttributoMD(TipoAttributo.CARISMA, TipoModificatore.VARIAZIONE_PERCENTUALE, CostantiBottino.ANELLO_MAGICO_AGGIUNTA_CARISMA);
-			descrizione = "che aumenta il Carisma";
+			descrizione = Testi.get(FILE_DEI_TESTI, "ANELLO.3.DESCRIZIONE").orElse("");
 		}
 		return CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.ANELLO)

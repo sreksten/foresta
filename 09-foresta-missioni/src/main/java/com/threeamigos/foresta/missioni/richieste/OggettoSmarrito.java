@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.richieste;
 
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
@@ -104,14 +105,14 @@ public final class OggettoSmarrito {
 	 * Il pronome per l'oggetto: "la" o "lo".
 	 */
 	public String getPronome() {
-		return femminile ? "la" : "lo";
+		return Testi.formatta("missioni", "Genere.pronomeSingolare." + (femminile ? "F" : "M"));
 	}
 
 	/**
 	 * "persa" o "perso".
 	 */
 	public String getPerso() {
-		return femminile ? "persa" : "perso";
+		return Testi.formatta("missioni", "Genere.perso." + (femminile ? "F" : "M"));
 	}
 
 	/**

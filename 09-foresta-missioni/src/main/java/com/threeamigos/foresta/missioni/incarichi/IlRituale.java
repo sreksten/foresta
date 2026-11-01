@@ -53,7 +53,10 @@ public class IlRituale extends IncaricoInCitta {
 	private static final String RINVIO = "RINVIO";
 	private static final String GUARDIANO = "GUARDIANO";
 	private static final String ERRORE = "ERRORE";
-	private static final String NON_ANCORA = "Non ancora";
+	// L'opzione "non ancora" di un rito con più metodi, nella lingua in uso
+	private static String nonAncora() {
+		return Testi.formatta("missioni", "IlRituale.nonAncora");
+	}
 
 	public IlRituale() {
 		super(MissionePredefinita.IL_RITUALE);
@@ -127,7 +130,7 @@ public class IlRituale extends IncaricoInCitta {
 	 */
 	private List<String> getOpzioni() {
 		List<String> opzioni = new ArrayList<>(getRituale().getMetodi());
-		opzioni.add(NON_ANCORA);
+		opzioni.add(nonAncora());
 		return opzioni;
 	}
 

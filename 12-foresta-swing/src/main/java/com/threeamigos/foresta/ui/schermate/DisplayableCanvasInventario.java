@@ -234,8 +234,8 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
                     ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
             nodo.creaNodo(
                     TestoDeiModificatori.effetto(modificatore), font, coloreModificatore,
-                    TestoDeiModificatori.durata(modificatore).replaceFirst("^per ", ""), font, coloreModificatore,
-                    modificatore.getNote().isEmpty() ? null : modificatore.getNote(), fontSmall, coloreModificatore,
+                    TestoDeiModificatori.durata(modificatore).replaceFirst("^(per|for) ", ""), font, coloreModificatore,
+                    modificatore.getNote().isEmpty() ? null : TestoDeiModificatori.nota(modificatore.getNote()), fontSmall, coloreModificatore,
                     null, MODIFICATORI_TEMPORANEI);
         }
     }
