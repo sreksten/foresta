@@ -1,0 +1,273 @@
+// I nomi di persona delle grammatiche inglesi (locande_en, fiabe_en, missioni_en). Stesse produzioni di nomi.txt, che resta
+// la base italiana: le grammatiche inglesi lo includono con #include / #include_static al posto di quello.
+// Qui stanno le liste (NOME_MASCHILE e COGNOME sono le liste comuni di nomi maschili e cognomi); le produzioni che le combinano
+// (NOME_CASUALE, NOME_CAMPIONE...) restano nelle grammatiche.
+//
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+
+NOME_MASCHILE$
+    Alaric | Aldric | Alphonse | Ambrose | Anselm | Archibald | Armand | Arnold | Aubrey | Aurelian
+    Baldric | Baldwin | Barnabas | Barnaby | Bartholomew | Benedict | Bertram | Boniface | Casimir | Cedric
+    Clement | Clovis | Crispin | Cuthbert | Dagobert | Dunstan | Eadric | Edmund | Egbert | Emeric
+    Erasmus | Eustace | Ezekiel | Fabian | Fergus | Filbert | Florian | Fulk | Gaspar | Gervase
+    Giles | Godfrey | Gilbert | Hamelin | Hereward | Hilary | Horace | Hubert | Ignatius | Ingram
+    Jasper | Lambert | Lancelot | Lazarus | Leofric | Lucian | Ludovic | Melchior | Merrick | Nestor
+    Octavian | Osric | Oswald | Otto | Percival | Peregrine | Prosper | Radulf | Randolph | Reginald
+    Roderick | Rollo | Rupert | Septimus | Silas | Sylvester | Tancred | Thaddeus | Theodoric | Theophilus
+    Thibault | Tobias | Torquil | Tristan | Ulric | Ulysses | Valentine | Vespasian | Wilfred | Wulfric
+    Wystan | Zachary | Zephyrin | Adelmar | Burchard | Dorian | Evander | Fitzwilliam | Gideon | Humphrey
+
+NOME_FEMMINILE$
+    Ada | Agatha | Amabel | Aurelia | Beatrix | Bertha | Bridget | Brunhild | Clementine | Clotilde
+    Demetria | Electra | Ermintrude | Eulalia | Eustacia | Fausta | Philippa | Gertrude | Genevieve | Gisela
+    Griselda | Guinevere | Hildegard | Irene | Isolde | Lavinia | Lydia | Mafalda | Matilda | Millicent
+    Honoria | Hortensia | Petunia | Prudence | Rowena | Sabina | Serafina | Sigrid | Theodolinda | Tullia
+    Vincentia | Winifred | Zelda | Zita | Noticeboard | Padlock | Sardine | Slipper | Chewilda | Pinchilda
+    Ruffilda | Grunta | Gristle | Dumplina | Scrapilda | Ladlena | Tankarda | Flapdoodle | Mudwina | Hobnailia
+
+NOME_SACERDOTE$
+    Friar Dazed | Friar Soaked | Friar Chest | Friar Flung | Friar Tuckin
+
+NOME_SACERDOTESSA$
+    Sister Clemency | Sister Chaste | Sister Mercy | Sister Smiley | Sister Regal | Sister Tita | Sister Tattle
+    Sister Vigil | Sister Prayer
+
+// ---------------------------------------------------------------------------------------------
+// Cognomi, in ordine alfabetico: la somma dei cognomi dei locandieri e dei protagonisti delle fiabe
+// ---------------------------------------------------------------------------------------------
+
+COGNOME$
+    Barnowl | Bellyfull | Blowhard | Boggins | Broccoli | Brothsipper | Cataract | Charlatan | Cheesewheel | Clodpole
+    Crumbleton | Dumpling | Fiddlefoot | Flapjack | Flimsey | Fumblethumb | Gabbleton | Goosecap | Gruelsworth | Hodgepodge
+    Hogwash | Jugglegut | Knucklebone | Ladleton | Lardbucket | Mopsey | Muddlecombe | Noodlefoot | Nutcracker | Oddfellow
+    Padfoot | Pancake | Pannier | Patchwork | Pickleton | Pigeonpie | Pinchpenny | Potluck | Puddingstone | Quibble
+    Ragamuffin | Rattlebone | Ropewalker | Rumpelsby | Scattergood | Scrimshaw | Shambles | Slapdash | Slipshod | Smallbeer
+    Smudge | Spoonbill | Stumblebum | Tatterdemalion | Thimblewit | Tipplewick | Trencherman | Twiddle | Wobblethorpe | Wonkyshaw
+
+// ---------------------------------------------------------------------------------------------
+// Dalle locande (locande_en.txt)
+// ---------------------------------------------------------------------------------------------
+
+ATTRIBUTO_POSITIVO$
+    the Affable | the Astute | the Brilliant | the Considerate | the Cordial | the Courteous | the Dignified | the Distinguished | the Elegant | the Gallant
+    the Gracious | the Generous | the Gentle | the Jovial | the Impeccable | the Irreproachable | the Loyal | the Liberal | the Far-Sighted | the Magnanimous
+    the Eloquent | the Munificent | the Honest | the Hospitable | the Patient | the Attentive | the Clean | the Refined | the Respectable | the Obliging
+    the Diligent | the Solicitous | the Smiling | the Splendid | the Exquisite
+
+ATTRIBUTO_NEGATIVO$
+    the Miser | the Grumpy | the Boastful | the Grumbler | the Liar | the Rogue | the Choleric | the Incompetent | the Absent | the Filthy
+    the Shady | the Rude | the Dim | the Oily | the Bungler | the Gossip | the Lazy | the Stinky | the Brawler | the Boor
+    the Slovenly | the Coarse | the Ramshackle | the Surly | the Suspicious | the Skinflint | the Grubby | the Tightfisted | the Penny-Pincher | the Scruffy
+    the Swindler | the Drunkard | the Churl | the Foul | the Mucky
+
+TITOLO$
+    Abbot | Archduke | Archbishop | Bailiff | Baron | Baronet | Chancellor | Castellan | Knight | Chamberlain
+    Commander | Consul | Count | Warden | Duke | Governor | Grand Duke | Rector Magnificus | Marquis | Marshal
+    Margrave | Paladin | Prelate | Prince | Prior | Regent | Squire | Seneschal | Sire | Superintendent
+    Treasurer | Bishop | Vicar | Viceroy | Viscount
+
+DEGLI_LOCANDE$
+    of the Short Sleeves (Skimps on the fabric of the uniforms)
+    of the Tatters (Always dressed in the finest rags)
+    of the Dandy (Mirrors everywhere, terrible service)
+    of the Watered Broth (Famous for diluting the broth with water)
+    of the Nonsense (Runs tiny but chaotic taverns)
+    of the Charlatans (Promises magic beers, sells flat cider)
+    of the Ragged (The king of the penniless innkeepers)
+    of the Slipper (Never gets up from the chair behind the counter)
+    of the Delicatessen (Specializes in rock-hard platters)
+    of the Light Fingers (Takes secret bets on dice)
+    of the Barn Owls (Has a collection of dusty stuffed owls)
+    of the Nutcracker (Cracks walnuts open with his head)
+    of the Half-Pints (A grumpy innkeeper who hates short customers)
+    of the Stumble (Always falls while carrying the iron trays)
+    of the Holy Crash (In his inn a tankard breaks every minute)
+    of the Oddities (Serves the stew inside old boots)
+    of the Marshes (His beer visibly tastes of mud)
+    of the Muddle (Regularly gets the change wrong)
+    of the Simpletons (Trusts everyone, especially those who don't pay)
+    of the Planks (His tables are older than the realm)
+    of the Ticket Booth (Charges even for entering the privy)
+    of the Cold Stoves (His stew is always yesterday's)
+    of the Tap (Pours more foam than beer)
+    of the Watering Hole (Waters down everything, even the water)
+    of the Lice (Straw beds with guests included)
+    of the Yawns (Falls asleep while taking orders)
+    of the Broken Tankard (Serves every drink in a different cracked vessel)
+    of the Stool (Has only one chair and keeps it for himself)
+    of the Flooded Cellar (His wine is always a little wet)
+    of the Three Glasses (Has only three and washes them once a year)
+    of the Sticky Counter (Whoever rests an elbow on it keeps it for life)
+    of the Embers (Has burned every roast since opening day)
+    of the Wrong Sums (Always rounds up, always in his own favor)
+    of the Leaky Ladle (The soup reaches the table half empty)
+    of the Short Candles (Saves on lighting, especially in the evening)
+
+// ---------------------------------------------------------------------------------------------
+// Per il borgomastro: casate e luoghi altisonanti, senza note (la parte dopo il nome: "Astolfo of the Lords of the Moon")
+// ---------------------------------------------------------------------------------------------
+
+DEGLI_ALTISONANTE$
+    of the High March
+    of Highmount
+    of the Highlands
+    of the Ancient Kings
+    of the Grey Eagles
+    of the Northern Lights
+    of the Crimson House
+    of Falconcastle
+    of the Wandering Knight
+    of the Knights of the Sun
+    of the Hundred Banners
+    of the Starry Sky
+    of the Snowy Peaks
+    of the Counts of Shadowvale
+    of the Iron Crown
+    of the Broken Crowns
+    of the Keepers of the Lighthouse
+    of the Twelve Bridges
+    of the Dukes of Blackrock
+    of the Peregrine Falcon
+    of the Grand Council
+    of the Great Lakes
+    of the Grand Dukes of Sunvale
+    of the Silver Spires
+    of the Rampant Lion
+    of the Marquises of Brownland
+    of the Nine Swords
+    of the Order of the Griffin
+    of the Princes of Highwood
+    of the Golden Rose
+    of the Lords of the Moon
+    of the Royal Line
+    of the White Tower
+    of the Twenty Castles
+    of the Blue Banners
+
+// ---------------------------------------------------------------------------------------------
+// I nomi dei personaggi non combattenti del mondo (vedi tipi.PersonaggioNoto e motore.RegistroPersonaggi)
+// ---------------------------------------------------------------------------------------------
+
+NOME_MASTRO
+    Master [NOME_MASCHILE]
+
+NOME_CAPITANO
+    [NOME_MASCHILE]
+
+NOME_ALTISONANTE
+    [NOME_MASCHILE] [DEGLI_ALTISONANTE]
+
+NOME_MOGLIE
+    [NOME_FEMMINILE]
+
+// Chi compare al volo (la levatrice...): un gruppo di nomi che si ripete, non one-shot
+NOME_COMPARSA
+    Agnes | Berenice | Cecily | Dorothea | Florence | Jasmine | Hilary | Ludovica | Marcia | Nerina | Olympia
+    Palmyra | Quirina | Rosalind | Hope | Thecla | Ursula | Violet | Zenobia | Edith | Maud | Philomena
+
+// ---------------------------------------------------------------------------------------------
+// Dalle fiabe (fiabe_en.txt)
+// ---------------------------------------------------------------------------------------------
+
+COGNOME_STOPPIONI
+    Stubble | Stumble | Scorpion | Sandal
+
+SOPRANNOME_PROTAGONISTA
+	the paper-ripper | the grim | the shady | the Porky Prince | the Master Maker | the fence
+	the straw-beater | the teacher of doormattery | the professor of thievery | the foul | the one-eyed | the lame
+	the pig-mincer | the mule-slayer | the cat-quartering | the chicken thief | the duck-botherer | the sparrow-scarer
+	the rascal | the leg-tripper | the champion of ugliness | the Lord of Wind | the Lord of Evil
+	the self-proclaimed Galactic Emperor | the stinker | Bruiser of Norwich
+	the [TITOLO_NOBILIARE] { of the Dirty Feet | of Small Change | of the Hangover | of Nowhere }
+
+TITOLO_NOBILIARE
+    Knight | Baron | Count | Viscount | Duke | Marquis | King
+
+// ---------------------------------------------------------------------------------------------
+// Dalle missioni (missioni_en.txt): ostaggi, bardi, pellegrini, campioni, briganti, maghi, goblin
+// ---------------------------------------------------------------------------------------------
+
+NOME_DI_CAMPIONE
+    Baldwin
+    Sir Galahad
+    Ferragus
+    Hubert
+    Reynold
+    Conrad
+    Bruno
+    Alard
+
+EPITETO_DI_CAMPIONE
+    the Proud
+    the Unbeaten
+    the Terrible
+    Iron Arm
+    the Shield-Breaker
+    the Fair
+    the Tall
+
+NOME_DI_CAMPIONESSA
+    Bradamante
+    Marfisa
+    Ermengarde
+    Matilda
+    Clorinda
+    Gualdrada
+    Isolde
+    Brunhild
+
+EPITETO_DI_CAMPIONESSA
+    the Proud
+    the Unbeaten
+    the Terrible
+    Iron Arm
+    the Shield-Breaker
+    the Fair
+    the Tall
+
+NOME_DI_BRIGANTE
+    Bastian
+    Cecco
+    Tony
+    Rocky
+    Gaspar
+    Ned
+    Blaise
+    Manny
+
+SOPRANNOME_DI_BRIGANTE
+    the Scarred
+    Half-Moon
+    Knife
+    the Red
+    the One-Armed
+    Purse-Cutter
+    Fleet-Foot
+
+NOME_GOBLIN
+    Snarf
+    Grinnock
+    Lumpkin
+    Slobber
+    Nibbler
+    Scraper
+    Drool
+    Nailgnaw
+    Mold
+    Mangey
+    Woodworm
+    Sniffle
+    Bigtusk
+    Belcher
+    Corner
+    Stinkrot
+
+SOPRANNOME_GOBLIN
+    the One-Eyed
+    the Toothless
+    Three-Finger
+    the Smelly
+    Half-Ear
+    the Chicken Thief
+    the Terrible, or almost
+    Soft-Belly

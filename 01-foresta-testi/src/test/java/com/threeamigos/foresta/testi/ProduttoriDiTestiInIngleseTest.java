@@ -63,4 +63,25 @@ class ProduttoriDiTestiInIngleseTest {
 			}
 		}
 	}
+	@Test
+	void locande() {
+		ProduttoriDiTesti.resetProduzioni();
+		java.util.List<ProduttoreDiLocandeCasuale.DatiLocanda> locande = ProduttoreDiLocandeCasuale.getDatiLocanda(35);
+		assertEquals(35, locande.size());
+		for (ProduttoreDiLocandeCasuale.DatiLocanda l : locande) {
+			for (String t : new String[] {l.getNome(), l.getNomeLocandiere(), l.getDialogo(), l.getRecensione()}) {
+				assertFalse(t.trim().isEmpty(), l.getIdentificativo());
+				assertFalse(t.matches("(?s).*[\\[\\]{}|<>@].*"), l.getIdentificativo() + ": " + t);
+				assertFalse(t.contains("  "), t);
+			}
+			assertTrue(l.getDialogo().contains(l.getNomeLocandiere()), l.getIdentificativo());
+			for (int i = 0; i < 40; i++) {
+				String n = ProduttoreDiLocandeCasuale.notiziaGrezza(l.getIdentificativo());
+				assertTrue(n.matches("(?s)[A-Z0-9]+-.+"), n);
+				assertFalse(n.matches("(?s).*[\\[\\]{}|<>@].*"), n);
+			}
+		}
+		controlla("reazione", ProduttoreDiLocandeCasuale::reazioneLocandiere);
+		ProduttoriDiTesti.resetProduzioni();
+	}
 }
