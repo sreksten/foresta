@@ -1,7 +1,9 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.salvataggi.GestoreSalvataggiSuFile;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
@@ -52,6 +54,29 @@ class GestoreSalvataggiSuFileTest {
 			gestore.elimina(Comando.SALVATAGGIO_AUTOMATICO);
 			assertFalse(new File(cartella, "SALVATAGGIO_AUTOMATICO.TXT").exists());
 			gestore.elimina(Comando.SALVATAGGIO_AUTOMATICO);
+		}
+	}
+
+	@Test
+	void unaPartitaInInglesePortaLaLinguaNellaTestataENelModelloDati() {
+		Testi.impostaLingua("en-GB");
+		try (PartitaDiTest partita = PartitaDiTest.nuova(133)) {
+			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+			assertEquals("en-GB", ModelloDati.getIstanza().getLingua(), "la partita nuova nasce nella lingua in uso");
+			GestoreSalvataggiSuFile gestore = new GestoreSalvataggiSuFile(cartella);
+			assertTrue(gestore.salva(Comando.NUMERO_1));
+
+			TestataSalvataggio testata = gestore.getSalvataggiDisponibili().get(0);
+			assertEquals("en-GB", testata.getLingua());
+			assertTrue(testata.getDescrizione().contains("day") && testata.getDescrizione().contains("hour"), testata.getDescrizione());
+
+			Testi.impostaLingua(null);
+			assertTrue(gestore.leggi(Comando.NUMERO_1));
+			assertEquals("en-GB", ModelloDati.getIstanza().getLingua(), "il salvataggio riporta la lingua della partita");
+			RiletturaPartita.ricostruisci();
+			assertEquals("en-GB", Testi.getLingua(), "caricando, la partita torna nella sua lingua");
+		} finally {
+			Testi.impostaLingua(null);
 		}
 	}
 }

@@ -12,6 +12,7 @@ import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.Comando;
 
 import java.io.*;
@@ -97,14 +98,11 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements GestoreSal
 			scriviSostituendo(fileSalvataggio, writer -> {
 				// Intestazione
 				GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-				String sb = id +
-						"|" +
-						gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-						" - giorno " +
-						LineaTemporale.getGiorno() +
-						", ora " +
-						LineaTemporale.getOra();
-				writer.println(sb);
+				// id|descrizione|lingua della partita (la descrizione è già nella lingua della partita, che è quella in uso)
+				String descrizione = Testi.formatta("messaggi_motore", "SALVATAGGIO.DESCRIZIONE",
+						gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA),
+						LineaTemporale.getGiorno(), LineaTemporale.getOra());
+				writer.println(id + "|" + descrizione + "|" + ModelloDati.getIstanza().getLingua());
 
 				ModelloDati.getIstanza().salva(writer);
 			});
@@ -135,9 +133,10 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements GestoreSal
 		LettoreCampi st = new LettoreCampi(line);
 		String id = st.testo();
 		String descrizione = st.testo();
+		String lingua = st.testo();
 		GruppoGiocatoreMD md = new GruppoGiocatoreMD();
 		md.leggi(reader);
 		GruppoGiocatore gruppoGiocatore = GruppoGiocatore.of(md);
-		return new TestataSalvataggio(Comando.valueOf(id), descrizione, gruppoGiocatore);
+		return new TestataSalvataggio(Comando.valueOf(id), descrizione, gruppoGiocatore, lingua);
 	}
 }

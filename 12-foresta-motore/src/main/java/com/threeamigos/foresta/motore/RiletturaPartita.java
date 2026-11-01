@@ -8,6 +8,7 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Dopo che un GestoreSalvataggi ha letto una partita e installato il nuovo ModelloDati (via ModelloDati.setIstanza),
@@ -24,6 +25,8 @@ public final class RiletturaPartita {
 	 * Dopo aver caricato un salvataggio ricostruisce ciò che non si salva: gli attributi secondari dei personaggi e i dati del gruppo del giocatore e degli avversari.
 	 */
 	public static void ricostruisci() {
+		// La partita torna nella lingua in cui è nata: prima di tutto, perché ciò che si ricostruisce da qui in poi si racconta in quella
+		Testi.impostaLingua(ModelloDati.getIstanza().getLingua());
 		for (PersonaggioMD personaggioMD : ModelloDati.getIstanza().getGruppoGiocatoreMD().getPersonaggiMD()) {
 			PersonaggioBase.ricalcolaAttributiSecondari(personaggioMD, FabbricaPersonaggi.modello(personaggioMD.getClasse()));
 		}

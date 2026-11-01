@@ -25,6 +25,7 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.testi.ProduttoreDiLocandeCasuale;
 import com.threeamigos.foresta.testi.ProduttoriDiTesti;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 
 import java.util.*;
@@ -66,6 +67,8 @@ public class CostruttoreDellaForesta {
 	 * Reimposta completamente il mondo
 	 */
 	static void reimposta() {
+		// La partita nuova nasce nella lingua in uso e la porta con sé nei salvataggi
+		ModelloDati.getIstanza().setLingua(Testi.getLingua());
 		// Reset produzioni one-shot (nomi locande, fiabe, oroscopi) per la nuova partita
 		ProduttoriDiTesti.resetProduzioni();
 

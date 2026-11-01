@@ -13,6 +13,7 @@ import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.statistiche.Statistiche;
+import com.threeamigos.foresta.testi.Testi;
 
 import com.threeamigos.foresta.serializzazione.LettoreCampi;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
@@ -37,7 +38,8 @@ import java.io.PrintWriter;
  * <li>NotizieMD - ultimi messaggi mostrati al giocatore e ultime notizie per la mappa</li>
  * <li>IntermezziMD - gli intermezzi già mostrati</li>
  * </ul>
- * e se l'aiuto della barra delle icone è acceso (vedi DisplayableCanvasBarraIcone).
+ * la lingua della partita (che nasce nella lingua scelta e non cambia più: i testi già generati e salvati sono in quella lingua) e se
+ * l'aiuto della barra delle icone è acceso (vedi DisplayableCanvasBarraIcone).
  *
  * @author Stefano Reksten
  */
@@ -98,6 +100,8 @@ public class ModelloDati implements Serializzabile {
 	private final IntermezziMD intermezziMD;
 	// I cartigli con la descrizione dei comandi sopra la barra delle icone: accesi in una partita nuova
 	private boolean aiutoAbilitato = true;
+	// La lingua in cui è la partita: quella in uso quando è nata
+	private String lingua = Testi.getLingua();
 
 	public ModelloDati() {
 		gruppoGiocatoreMD = new GruppoGiocatoreMD();
@@ -167,6 +171,17 @@ public class ModelloDati implements Serializzabile {
 		return intermezziMD;
 	}
 
+	/**
+	 * Il codice della lingua della partita ("it", "en", "en-GB"): la partita nasce nella lingua in uso e un salvataggio la riporta.
+	 */
+	public String getLingua() {
+		return lingua;
+	}
+
+	public void setLingua(String lingua) {
+		this.lingua = lingua;
+	}
+
 	public boolean isAiutoAbilitato() {
 		return aiutoAbilitato;
 	}
@@ -195,6 +210,7 @@ public class ModelloDati implements Serializzabile {
 		notizieMD.reimposta();
 		intermezziMD.reimposta();
 		aiutoAbilitato = true;
+		lingua = Testi.getLingua();
 	}
 
 	/**
@@ -217,6 +233,7 @@ public class ModelloDati implements Serializzabile {
 		notizieMD.salva(stream);
 		intermezziMD.salva(stream);
 		stream.println(aiutoAbilitato);
+		stream.println(lingua);
 	}
 
 	/**
@@ -251,6 +268,8 @@ public class ModelloDati implements Serializzabile {
 		notizieMD.leggi(stream);
 		intermezziMD.leggi(stream);
 		aiutoAbilitato = LettoreCampi.leggiBooleano(stream);
+		String letta = stream.readLine();
+		lingua = letta == null || letta.trim().isEmpty() ? Testi.getLingua() : letta.trim();
 	}
 
 }

@@ -14,11 +14,24 @@ public class TestataSalvataggio {
     private final Comando id;
     private final String descrizione;
     private final VistaGruppoGiocatore gruppoGiocatore;
+    private final String lingua;
 
     public TestataSalvataggio(Comando id, String descrizione, VistaGruppoGiocatore gruppoGiocatore) {
+        this(id, descrizione, gruppoGiocatore, "");
+    }
+
+    public TestataSalvataggio(Comando id, String descrizione, VistaGruppoGiocatore gruppoGiocatore, String lingua) {
         this.id = id;
         this.descrizione = descrizione;
         this.gruppoGiocatore = gruppoGiocatore;
+        this.lingua = lingua;
+    }
+
+    /**
+     * Il codice della lingua in cui è la partita salvata ("it", "en", "en-GB"), o vuoto se la testata non lo dice.
+     */
+    public String getLingua() {
+        return lingua;
     }
 
     public Comando getId() {
