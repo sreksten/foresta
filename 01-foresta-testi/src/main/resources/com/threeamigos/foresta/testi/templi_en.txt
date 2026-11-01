@@ -1,0 +1,109 @@
+// The names of the temples of the Forest (English version of templi.txt; same productions): a building, with its
+// article, and to whom or what it is dedicated. "the Sanctuary of the Moon", "the Hermitage of the Weekend".
+//
+// Characters not to use in the texts: [ ] { } | " (GrammarBean syntax).
+
+NOME_TEMPIO
+    [EDIFICIO] [DEDICA]
+
+// The real temple comes up more often than the others
+EDIFICIO
+    [^6] the Temple
+    [^3] the Sanctuary
+    [^2] the Chapel
+    [^2] the Abbey
+    [^2] the Monastery
+    [^2] the Hermitage
+    the Shrine
+    the Pagoda
+    the Tabernacle
+    the Oratory
+    the Sacrarium
+    the Basilica
+    the Ziggurat
+    the Priory
+    the Parish Church
+    the Convent
+    the Retreat
+    the Fane
+
+DEDICA
+    [^4] [ELEMENTI]
+    [^4] [CIELO]
+    [^3] [TEMPO]
+    [^3] [VIRTU]
+    [^2] [ANIMALI]
+    [^2] [SCHERZI]
+
+ELEMENTI
+    of Fire
+    of Air
+    of Water
+    of Earth
+    of Lightning
+    of Frost
+    of the Eternal Flame
+    of the Seven Springs
+    of the Living Stone
+    of the East Wind
+    of the Mist
+    of the Ember that Never Dies
+
+CIELO
+    of the Sun
+    of the Moon
+    of the Stars
+    of the Dawn
+    of the Sunset
+    of the Pole Star
+    of the New Moon
+    of the Eclipse
+    of the Comet
+    of the Solstice
+    of the Rainbow
+    of the Two Moons
+
+TEMPO
+    of the Weekend
+    of Monday Morning
+    of Lunchtime
+    of the Afternoon Nap
+    of Payday
+    of the August Holidays
+    of New Year's Eve
+    of the Long Weekend
+    of the Siesta
+    of Noon
+
+VIRTU
+    of Patience
+    of Hope
+    of Silence
+    of Wisdom
+    of Mercy
+    of Courage
+    of Inner Peace
+    of the Eternal Vigil
+    of Good Digestion
+    of Easy Forgiveness
+
+ANIMALI
+    of the Griffin
+    of the Phoenix
+    of the Sleeping Dragon
+    of the Owl
+    of the White Wolf
+    of the Silver Stag
+    of the Sacred Snail
+    of the Cat Who Ignores You
+
+SCHERZI
+    of the Lost Keys
+    of the Found Sock
+    of the Forgotten Umbrella
+    of the Free Parking Spot
+    of the Free Wi-Fi
+    of the Queue at the Post Office
+    of the Vanished Remote Control
+    of the Paid Bills
+    of the Monday Diet

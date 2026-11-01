@@ -1,0 +1,31 @@
+// The lines of the rock, paper, scissors challenge (English version of sfide.txt; same productions).
+//
+// Characters not to use in the texts: [ ] { } | " (GrammarBean syntax).
+
+SFIDA
+    I challenge you to rock, paper, scissors!
+    Hey, you! A game of rock, paper, scissors? I challenge you!
+    Before we can be friends, you have to beat me at rock, paper, scissors!
+    Rock, paper, scissors! I challenge you, and I won't take no for an answer!
+
+GIOCATORE_VINCE
+    Well, I never! I have never met a player as good as you!
+    Well, I never! You are the first one to beat me at this game!
+    Incredible! No one had ever beaten me like that!
+
+GIOCATORE_PERDE
+    Heh! I am still the best at this game.
+    Heh! You still have a lot to learn, stranger.
+    Ha ha! I am always the champion!
+
+TORNEO
+    You should really take part in the tournament that is about to be held.
+    You absolutely must take part in the tournament that is about to begin!
+    There is a tournament about to begin: the champions are waiting for you.
+
+NOME_LEGGENDARIO_DEI_CAMPIONI
+    the Trophy of the First Rock
+    the Crown of Eternal Paper
+    the Scissors of the Undefeated Champion
+    the Medallion of the Four Champions
+    the Prize of the Lost Tournament

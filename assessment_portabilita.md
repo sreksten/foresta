@@ -112,7 +112,9 @@ Ogni passo compila e ha i test verdi; la dimensione è S (qualche ora), M (una s
    - [x] il contatore di `09-foresta-missioni` scende da 447 a 5;
    - [ ] da rifinire: i pezzi che le missioni compongono con preposizioni e articoli italiani (`mandanteSenzaVirgolaFinale`, `getNomeDeiNemici`, `TestiDeiLuoghi`: ora le locuzioni «una grotta» / «la grotta» sono chiavi, ma le preposizioni «a», «da» davanti al nome di città passano ancora da `conPreposizione`); le note dei modificatori («la lealtà» di `LealtaRichiesta`, che è anche un'etichetta salvata); i formati dei leggendari costruiti a stringa (`ForgiaRichiesta.s1`, `LaSfidaDeiCampioni.s1`: la chiave porta tutto il record, la traduzione ne cambia i soli valori); i parametri delle missioni che vengono dalle grammatiche (`missioni.txt`, passo 10).
 10. **Grammatiche** (L, più per la scrittura che per il codice)
-    - [ ] caricamento per lingua con ripiego sull'italiano, e `_pp` per lingua;
+    - [x] caricamento per lingua con ripiego sull'italiano (`CaricatoreDiGrammatiche.perLaLingua`: `nome_en_GB`, `nome_en`, poi il nome italiano), e `_pp` per lingua; le cache (`GrammaticaPigra`, `GeneratoreArtefattiTabelle`, `CatalogoLeggendari`) si azzerano al cambio di lingua (`Testi.alCambioDiLingua`);
+    - [x] scritte in inglese, con test (`ProduttoriDiTestiInIngleseTest`, `GrammaticheDegliArtefattiInIngleseTest`): `sfide_en`, `templi_en`, `rovine_en`, `oroscopo_en`, `artefatti2_en`, `ingredienti_en` e i due `_pp_en`; da ricontrollare da Stefano;
+    - [ ] ancora da scrivere (in inglese ripiegano sull'italiano): `fiabe`, `locande`, `missioni`, `tappe`, `leggendari` (righe a campi lette dal codice), `nomi`.
     - [ ] in ordine di visibilità: `nomi`, `artefatti2` e `leggendari` (i nomi degli oggetti), `locande`, `missioni`, `tappe`, `fiabe`, `oroscopo`, e i piccoli `templi`, `rovine`, `sfide`.
 11. **Salvataggio e lingua** (S)
     - [ ] la lingua nella testata, ripristinata al caricamento, scelta alla nuova partita; test.

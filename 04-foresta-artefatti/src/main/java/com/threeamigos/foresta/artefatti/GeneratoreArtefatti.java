@@ -15,7 +15,7 @@ public interface GeneratoreArtefatti {
 	 * Il generatore del gioco, con le sue tabelle e la sua grammatica.
 	 */
 	static GeneratoreArtefatti istanza() {
-		return GeneratoreArtefattiTabelle.ISTANZA;
+		return GeneratoreArtefattiTabelle.istanza();
 	}
 
 	/**

@@ -1,0 +1,311 @@
+// The horoscope the alchemist reads to the party entering the shop, with the leader's question and the alchemist's answer
+// (English version of oroscopo.txt; same productions). In English nouns have no gender: the forms are MS (singular) and MP
+// (plural); FS and FP exist only so that the questions of every form are defined.
+//
+// Every thing that may confuse the leader when mentioned is marked [TEMA=FORM:name]: FORM is MS or MP and picks the questions
+// DOMANDA_<FORM>; the name (with its article) is what the leader asks about, [#TEMA] in the questions and answers.
+DIALOGO_SULL_OROSCOPO
+	[OROSCOPO]/[#TEMA?]
+OROSCOPO
+	[SEGNO]: [PREVISIONE]
+SEGNO
+	Sign of the pillow crease on the face
+	Sign of the open hand on the face
+	Sign of keys scratched along your new car
+	[TEMA=MS:the sysadmin]Sign of the sysadmin
+	[TEMA=MS:the programmer]Sign of the programmer
+	Sign of a break-in at your front door
+	Bad sign
+	Sign that you should have stayed home
+	Virgo - if any are left -
+	[TEMA=MS:the keyboard]Sign of the coffee on the keyboard
+	Sign of the technician who never shows up
+	[TEMA=MS:the printer]Sign of the jammed printer
+	[TEMA=MS:the ticket]Sign of the ticket that never gets closed
+	Sign of the meeting that could have been an email
+	Sign of the boss on holiday, unfortunately for a short time
+	Monday morning rising
+	[TEMA=MS:the badge]Sign of the badge forgotten at home
+PREVISIONE
+	[PIANETA] [RELAZIONE] [AZIONE]. [CHIOSA]
+PIANETA
+	[TEMA=MS:Mars]Mars
+	[TEMA=MS:Mercury]Mercury
+	[TEMA=MS:Jupiter]Jupiter
+	[TEMA=MS:Venus]Venus
+	[TEMA=MS:Saturn]Saturn
+	[TEMA=MS:Uranus]Uranus
+	[TEMA=MS:Neptune]Neptune
+	[TEMA=MS:Pluto]Pluto
+	the Moon | the Sun
+	[TEMA=MS:Halley's comet]Halley's comet
+	[TEMA=MS:the satellite]the weather forecast satellite
+QUALCOSA
+	[QUALCOSA_SINGOLARE] | [QUALCOSA_PLURALE]
+QUALCOSA_SINGOLARE
+	[TEMA=MS:the Linux kernel]the new Linux kernel
+	[TEMA=MS:the server]your company's main server
+	[TEMA=MS:the boot disk]the boot disk
+	[TEMA=MS:the mail server]the mail server
+	the internal documentation
+	[TEMA=MS:the national team]the national team's match
+	[TEMA=MS:the solar storm]the latest solar storm
+	[TEMA=MS:the best-seller]your favorite author's latest best-seller
+	[TEMA=MS:the firewall]the corporate firewall
+	[TEMA=MS:the coffee machine]the coffee machine
+	[TEMA=MS:the fax]the purchasing office's fax machine
+	[TEMA=MS:the backup]last night's backup
+	[TEMA=MS:the router]the router upstairs
+	the colleague who replies to all
+	[TEMA=MS:the network printer]the network printer
+	the vacation schedule | the company canteen | the employee parking lot
+QUALCOSA_PLURALE
+	[TEMA=MP:the legacy programs]the legacy programs
+	[TEMA=MP:the data transmission protocols]the data transmission protocols
+	the public services | the new hires
+	[TEMA=MP:the radio waves]the radio waves
+	[TEMA=MP:the executive meetings]the latest executive meetings
+	[TEMA=MP:the cameras]the surveillance cameras
+	the cleaning staff
+	the ornamental plants scattered around the premises
+	[TEMA=MP:the sales people]the sales people
+	[TEMA=MP:the updates]the overnight updates
+	[TEMA=MP:the outside consultants]the outside consultants
+	[TEMA=MP:the network cables]the network cables under the carpet
+	[TEMA=MP:the passwords]the expired passwords
+	[TEMA=MP:the vending machines]the vending machines
+	[TEMA=MP:the spreadsheets]the shared spreadsheets
+	[TEMA=MP:the emails]the emails in blind copy
+	[TEMA=MP:the slides]the meeting slides
+	[TEMA=MP:the servers]the servers in the machine room
+RELAZIONE
+	in conjunction with [QUALCOSA]
+	in trine with [QUALCOSA]
+	squared to [QUALCOSA]
+	opposite to [QUALCOSA]
+	on the cusp with [QUALCOSA]
+	in the [CARDINALE] house
+	allied with [QUALCOSA]
+	in a criminal conspiracy with [QUALCOSA_SINGOLARE] and [QUALCOSA_PLURALE]
+	in opposition to [QUALCOSA]
+	retrograde with respect to [QUALCOSA]
+	in permanent meeting with [QUALCOSA]
+	in a version conflict with [QUALCOSA]
+
+CARDINALE
+	first | second | third | fourth | fifth | sixth | seventh | eighth | ninth | tenth | umpteenth | last
+GIORNO_SETTIMANALE
+	Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday
+AZIONE
+	will cause [DANNO] | will bring about [DANNO] | will result in [DANNO]
+	will make you impatient [INSOFFERENZA] | will make you feel unwell at least until [GIORNO_SETTIMANALE]
+	will give you trouble related to [QUALCOSA] until [GIORNO_SETTIMANALE]
+	suggests that you [SUGGERIMENTO]
+	will make sure that [QUALCOSA_SINGOLARE] gives you trouble from [GIORNO_SETTIMANALE] for [PERIODO_DI_TEMPO]
+	will make sure that [QUALCOSA_PLURALE] give you trouble for [PERIODO_DI_TEMPO] starting from [GIORNO_SETTIMANALE]
+DANNO
+	[TEMA=MS:the hard disk]a loss of data on your hard disk
+	[TEMA=MP:the crackers]an intrusion by unknown crackers
+	[TEMA=MS:the database cluster]a low-level format of the database cluster
+	[TEMA=MP:the malware]an invasion of viruses and malware
+	[TEMA=MS:the software]a revocation of the licenses for your software
+	a lawsuit for patent infringement
+	yet another change to the project specifications
+	an attempt to document the company workflows
+	a power drop that in turn [AZIONE]
+	a political split within the majority
+	a parliamentary inquiry
+	irreparable damage
+	a sudden illness
+	a splitting headache
+	a pay cut
+	a staff cut
+	a transfer to [LOCALITA_SPREGEVOLE]
+	an update that cannot be undone
+	[TEMA=MS:the blue screen]a blue screen at the worst possible time
+	an extraordinary meeting on Friday at six in the evening
+	a password forgotten right now
+	the mysterious disappearance of your stapler
+	a loss of packets, data and patience
+	an unexpected reboot halfway through your work
+	[TEMA=MS:the audit]a surprise audit
+INSOFFERENZA
+	to your colleague's toothache
+	to sugary drinks
+	[TEMA=MS:the network]to the traffic on the network
+	to Christmas lights
+	to the morning of [GIORNO_SETTIMANALE]
+	to group projects
+	to water sports
+	to felines
+	to night moths
+	[TEMA=MP:the hi-tech gadgets]to hi-tech gadgets
+	[TEMA=MP:the mobile phones]to mobile phones
+	to bellyaches
+	[TEMA=MS:the website]to your company's website
+	[TEMA=MP:the videoconferences]to videoconferences with the microphone on
+	[TEMA=MP:the updates]to mandatory updates
+	to colleagues who say "it works on my machine"
+	to emails that start with "as per our agreement"
+	to the noise of the laptop fan
+SUGGERIMENTO
+	document the code you have developed
+	give up on that trip you were longing for, changing destination: [LOCALITA_SPREGEVOLE]
+	go and visit your relatives while there is still time
+	make a backup copy of all your data
+	get your passport and luggage ready for a quick getaway
+	spend more time with your partner
+	organize a card tournament
+	spend an evening in company
+	blow your nose
+	do the spring cleaning
+	dust off your Santa Claus costume
+	cook whatever you have in the fridge
+	go fishing for trout
+	[TEMA=MS:the chat]waste a little time in a chat room
+	[TEMA=MS:PacMan]play PacMan
+	find a new profession
+	split hairs
+	look for a needle in a haystack
+	get everything off your chest
+	take a digestive
+	turn it off and on again, and not just the computer
+	change your password, and this time write it down somewhere
+	not reply to all
+	read the manual, at least the index
+	close all the open tickets before they reopen by themselves
+	avoid saving only on the desktop
+	pretend to be on holiday until [GIORNO_SETTIMANALE]
+LOCALITA_SPREGEVOLE
+	the county jail
+	the town dump
+	the emergency room
+	the cemetery
+	the complaints office
+	[TEMA=MS:the machine room]the machine room without air conditioning
+	the branch office at the end of the valley
+	the archive in the basement
+CHIOSA
+	For those born in the first ten days [ATTENZIONE].
+	For those born in the second ten days [ATTENZIONE].
+	For those born in the third ten days [ATTENZIONE].
+	Caution is never too much.
+	A bird in the hand is worth two in the bush.
+	A penny saved is a penny earned.
+	Better to live one day as a lion than a hundred years as a sheep.
+	He who makes himself a sheep gets eaten by the wolf.
+	Slow and steady wins the race.
+	Give up in advance on whatever you had planned.
+	Caution advises: [SUGGERIMENTO].
+	What goes around comes around.
+	[TEMA=MS:the plug]If it does not work, unplug it and plug it back in.
+	[TEMA=MS:the backup]Always make a backup, even of the horoscope.
+	Monday, unfortunately, always comes back.
+	He who finds a helpful colleague finds a treasure.
+ATTENZIONE
+	pay close attention to your lucky star, which will try to fall on your head: given its mass, it could hurt quite a lot
+	beware of [PERSONA] who [SPREGIO]
+	watch out for banana peels
+	be careful not to run down the stairs with sharp objects
+	keep an eye on the traffic lights
+	avoid city traffic
+	avoid highway queues
+	avoid tipsy brutes
+	watch out for the bodyguards
+	watch the pen
+	do not believe in horoscopes
+	avoid stopped escalators
+	[TEMA=MS:the keyboard]keep liquids away from the keyboard
+	[TEMA=MP:the attachments]do not open attachments you were not expecting
+	distrust anyone who asks you "got a minute?"
+SPREGIO
+	[SPREGIO_CHIOSA]
+	thanks to a security breach [SPREGIO_CHIOSA]
+	with the complicity of [PERSONA] [SPREGIO_CHIOSA]
+	[SPREGIO_CHIOSA_1] and [SPREGIO_CHIOSA_2]
+SPREGIO_CHIOSA
+	[SPREGIO_CHIOSA_1] | [SPREGIO_CHIOSA_2]
+SPREGIO_CHIOSA_1
+	will try to stab you in the back
+	will accidentally delete your data
+	will completely clog the outgoing network traffic
+	will delete several documents
+	will cancel an important project
+	will forget to tell you about the meeting
+	will leave you in copy on all the emails
+SPREGIO_CHIOSA_2
+	will spit in the plate you must eat from
+	will try to put you in a bad light with [PERSONA]
+	[TEMA=MS:the database]will write random data into the company database
+	will speak ill of you to [PERSONA]
+// One-shot: in the same horoscope a person does not appear twice
+PERSONA$
+	a coworker | your boss | your partner | your next-door neighbor
+	your accountant | the neighborhood cop | the mailman
+	the milkman | your trusted newsagent | the man in the street | the model of your dreams
+	a well-known journalist | a well-known playwright | a police patrol
+	a gang of hooligans | the neighborhood bully | the lifeguard
+	the maintenance technician | the colleague at the next desk | the new intern
+	[TEMA=MS:the HR manager]the HR manager
+	[TEMA=MS:the outside consultant]the outside consultant
+	the director's secretary
+PERIODO_DI_TEMPO
+	an hour | a day | a week | a month | a quarter | a semester | a year
+DOMANDA_MS
+	Pardon my ignorance, but what is [#TEMA]? A sort of dragon?
+	We have never seen [#TEMA] in the Forest. Does it bite?
+	Wait: do you fight [#TEMA] with a sword or with magic?
+	^[#TEMA]? Never heard of it. Can you eat it?
+	And where can [#TEMA] be found? Is it far from here?
+	I did not understand a word. Is [#TEMA] a spell?
+	Excuse me, but is [#TEMA] a friend or a foe?
+	Did I hear right? ^[#TEMA]? And is that dangerous?
+	How much is [#TEMA]? Can it be found at the market?
+	Our mage has never mentioned [#TEMA]. Are you sure it exists?
+DOMANDA_FS
+	Pardon my ignorance, but what is [#TEMA]? A sort of witch?
+	We have never seen [#TEMA] in the Forest. Does it bite?
+	Wait: do you fight [#TEMA] with a sword or with magic?
+	^[#TEMA]? Never heard of it. Can you eat it?
+	Is [#TEMA] a curse?
+DOMANDA_MP
+	Pardon my ignorance, but what are [#TEMA]? A sort of dragons?
+	We have never seen [#TEMA] in the Forest. Do they bite?
+	Wait: do you fight [#TEMA] with a sword or with magic?
+	^[#TEMA]? Never heard of them. Can you eat them?
+	Should I fear [#TEMA]? How many are there? Are they armed?
+	And where can [#TEMA] be found? Are they far from here?
+	I did not understand a word. Are [#TEMA] a guild? A gang of bandits?
+	Excuse me, but are [#TEMA] friends or foes?
+	How much are [#TEMA]? Can they be found at the market?
+	Our mage has never mentioned [#TEMA]. Are you sure they exist?
+DOMANDA_FP
+	Pardon my ignorance, but what are [#TEMA]? A sort of witches?
+	We have never seen [#TEMA] in the Forest. Do they bite?
+	Are [#TEMA] fairies? Witches?
+DOMANDA_GENERICA
+	Do you really read the stars, or do you make them up?
+	I did not understand a word. Is it a good thing or a bad thing?
+	Excuse me, but what language do your stars speak?
+	And is this a good day to go goblin hunting, or not?
+RISPOSTA_SULL_OROSCOPO
+    [INIZIO_RISPOSTA] [CHIOSA_RISPOSTA]
+INIZIO_RISPOSTA
+	Technical terms of the astrological art: the stars speak in riddles, and I translate.
+	Let us say it is easier to understand after { the third potion | the third mug of Sglord }.
+	The stars are not explained, they are interpreted. And I interpret them for a fee.
+	It is a long story, and time is money. Yours, preferably.
+	You will understand in due time. Or never, which may be even better.
+	Stuff from faraway lands, very rare around here. { Fortunately. | }
+	My grandfather knew it. Sadly he died before telling me. { But I live well anyway. | }
+	Forget it: even the stars say silly things now and then.
+	It is sysadmin stuff. No, do not ask me what a sysadmin is.
+	Ah, what questions! Better to move on.
+	The less you know about [#TEMA? | these things], the better you sleep.
+	If I explained it to you, I would have to turn you into { toads | salamanders | snails }. Better not.
+CHIOSA_RISPOSTA
+	But let us talk about you.
+    But let us talk business.
+    But let us get down to it.
+    But let us get to the reason for your visit.
+    Anyway, look at the nice potions I have today.

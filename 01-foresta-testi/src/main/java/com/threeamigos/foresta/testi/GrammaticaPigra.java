@@ -10,7 +10,8 @@ import java.util.function.Supplier;
 public final class GrammaticaPigra {
 
 	private final Supplier<GrammarBean> caricamento;
-	private volatile GrammarBean grammatica;
+	// Una per lingua: se la lingua cambia se ne carica un'altra, e al ritorno si ritrova la prima
+	private final java.util.concurrent.ConcurrentMap<String, GrammarBean> perLingua = new java.util.concurrent.ConcurrentHashMap<>();
 
 	/**
 	 * @param caricamento come si carica la grammatica; può sollevare una {@link GrammaticaNonValidaException}
@@ -32,14 +33,17 @@ public final class GrammaticaPigra {
 	 * @throws GrammaticaNonValidaException se non si può caricare
 	 */
 	public GrammarBean get() {
-		GrammarBean corrente = grammatica;
+		GrammarBean corrente = perLingua.get(Testi.getLingua());
 		return corrente != null ? corrente : carica();
 	}
 
 	// Se due thread arrivano insieme, il secondo trova già la grammatica del primo
 	synchronized GrammarBean carica() {
+		String lingua = Testi.getLingua();
+		GrammarBean grammatica = perLingua.get(lingua);
 		if (grammatica == null) {
 			grammatica = caricamento.get();
+			perLingua.put(lingua, grammatica);
 		}
 		return grammatica;
 	}

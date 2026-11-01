@@ -25,6 +25,11 @@ public final class CatalogoLeggendari {
 	private static Map<String, SetLeggendario> set;
 	private static Map<String, Set<String>> pezzi;
 
+	static {
+		// I leggendari sono quelli della grammatica della lingua in uso
+		com.threeamigos.foresta.testi.Testi.alCambioDiLingua(CatalogoLeggendari::reimposta);
+	}
+
 	private CatalogoLeggendari() {
 	}
 

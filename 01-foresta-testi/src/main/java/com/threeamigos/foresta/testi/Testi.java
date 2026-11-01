@@ -39,6 +39,8 @@ public final class Testi {
 	 */
 	public static final String LINGUA_PREDEFINITA = "it";
 
+	private static final List<Runnable> ASCOLTATORI = new java.util.concurrent.CopyOnWriteArrayList<>();
+
 	// La lingua scelta dalla piattaforma, come "en-GB"; volatile perché si legge da più thread
 	private static volatile String lingua = LINGUA_PREDEFINITA;
 	// I suffissi dei file da cercare, dal più specifico al più generico ("en_GB", "en", "it"); si ricalcola con la lingua
@@ -56,6 +58,38 @@ public final class Testi {
 	 * vale lo stesso); con null o vuoto torna l'italiano.
 	 */
 	public static void impostaLingua(String codice) {
+		String precedente = lingua;
+		impostaLinguaImpl(codice);
+		if (!lingua.equals(precedente)) {
+			for (Runnable ascoltatore : ASCOLTATORI) {
+				ascoltatore.run();
+			}
+		}
+	}
+
+	/**
+	 * Chiede di essere avvisato quando la lingua cambia, per buttare via quel che si è costruito nella lingua di prima (una
+	 * grammatica caricata, un catalogo).
+	 */
+	public static void alCambioDiLingua(Runnable ascoltatore) {
+		ASCOLTATORI.add(ascoltatore);
+	}
+
+	/**
+	 * I suffissi dei file della lingua in uso, dal più specifico al più generico e senza l'italiano, che è il file senza
+	 * suffisso di chi non ne ha uno ({@code fiabe.txt}): per en-GB sono {@code en_GB} e {@code en}, per l'italiano nessuno.
+	 */
+	public static List<String> suffissiDellaLingua() {
+		List<String> suffissi = new ArrayList<>();
+		for (String suffisso : catena) {
+			if (!LINGUA_PREDEFINITA.equals(suffisso)) {
+				suffissi.add(suffisso);
+			}
+		}
+		return suffissi;
+	}
+
+	private static void impostaLinguaImpl(String codice) {
 		String pulito = codice == null ? "" : codice.trim().replace('_', '-');
 		if (pulito.isEmpty()) {
 			lingua = LINGUA_PREDEFINITA;

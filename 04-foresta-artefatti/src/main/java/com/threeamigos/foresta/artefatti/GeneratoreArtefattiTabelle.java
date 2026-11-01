@@ -25,8 +25,24 @@ import java.util.stream.Collectors;
  */
 public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 
-	static final GeneratoreArtefatti ISTANZA = new GeneratoreArtefattiTabelle(Dado.sorgente(), GrammaticaArtefatti.caricaOppureNull(),
-			GrammaticaArtefatti.caricaIngredientiOppureNull());
+	// Il generatore del gioco ha le grammatiche della lingua in uso: se la lingua cambia se ne costruisce un altro
+	private static GeneratoreArtefatti istanzaDelGioco;
+
+	static {
+		Testi.alCambioDiLingua(() -> {
+			synchronized (GeneratoreArtefattiTabelle.class) {
+				istanzaDelGioco = null;
+			}
+		});
+	}
+
+	static synchronized GeneratoreArtefatti istanza() {
+		if (istanzaDelGioco == null) {
+			istanzaDelGioco = new GeneratoreArtefattiTabelle(Dado.sorgente(), GrammaticaArtefatti.caricaOppureNull(),
+					GrammaticaArtefatti.caricaIngredientiOppureNull());
+		}
+		return istanzaDelGioco;
+	}
 
 	private static final String FILE_DEI_TESTI = "generatore_artefatti";
 	private static final String FILE_DEI_NOMI = "nomi_artefatti";

@@ -1,0 +1,874 @@
+// Names and effects of the randomly generated artifacts (English version of artefatti2.txt; same roots, same markers).
+//
+// In English nouns have no gender and the article is always "the": no @ marker and no genders in the sections. Each part of a name
+// carries ONE effect (a <mod:...> or <danno:...> marker): the number of parts is the number of effects. The roots are
+// <TYPE>_<n>, n from 0 to 3, for SPADA (sword), ARMATURA (armor), MASCHERA (mask), VESTE (robe), ELMO (helmet),
+// SCUDO (shield) and SCHINIERI (greaves).
+//
+// Parts: PREFISSO_FISICO and PREFISSO_MENTALE (adjectives before the noun), COMPLEMENTO ("of the Bear"), DETTAGLIO
+// ("with Reinforced Frame"), AGGETTIVO_ELEMENTALE (an elemental adjective with its damage effect) and COMPLEMENTO_ELEMENTALE.
+//
+// Characters not to use in the texts: [ ] { } | " (GrammarBean syntax) and < > @ (markers).
+
+SPADA_0
+    the [COSMETICO_SPADA] sword
+
+SPADA_1
+    the [PREFISSO_FISICO] sword
+    the [PREFISSO_MENTALE] sword
+    the sword [COMPLEMENTO]
+    the [AGGETTIVO_ELEMENTALE_ARMA] sword
+    the sword [COMPLEMENTO_ELEMENTALE_ARMA]
+
+SPADA_2
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] sword
+    the [PREFISSO_FISICO] sword [COMPLEMENTO]
+    the [PREFISSO_MENTALE] sword [COMPLEMENTO]
+    the sword [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [AGGETTIVO_ELEMENTALE_ARMA] sword
+    the [AGGETTIVO_ELEMENTALE_ARMA] sword [COMPLEMENTO]
+    the [PREFISSO_MENTALE] sword [COMPLEMENTO_ELEMENTALE_ARMA]
+
+SPADA_3
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] sword [COMPLEMENTO]
+    the [PREFISSO_FISICO] sword [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_MENTALE] sword [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [AGGETTIVO_ELEMENTALE_ARMA] sword [COMPLEMENTO]
+    the [AGGETTIVO_ELEMENTALE_ARMA] sword [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] sword [COMPLEMENTO_ELEMENTALE_ARMA]
+
+COSMETICO_SPADA
+    [COSMETICO_GENERICO] | [COSMETICO_METALLO]
+
+ARMATURA_0
+    the [COSMETICO_ARMATURA] armor
+
+ARMATURA_1
+    the [PREFISSO_FISICO] armor
+    the [PREFISSO_MENTALE] armor
+    the armor [COMPLEMENTO]
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] armor
+    the armor [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+ARMATURA_2
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] armor
+    the [PREFISSO_FISICO] armor [COMPLEMENTO]
+    the [PREFISSO_MENTALE] armor [COMPLEMENTO]
+    the armor [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [AGGETTIVO_ELEMENTALE_PROTEZIONE] armor
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] armor [COMPLEMENTO]
+    the [PREFISSO_MENTALE] armor [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+ARMATURA_3
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] armor [COMPLEMENTO]
+    the [PREFISSO_FISICO] armor [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_MENTALE] armor [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [AGGETTIVO_ELEMENTALE_PROTEZIONE] armor [COMPLEMENTO]
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] armor [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] armor [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+COSMETICO_ARMATURA
+    [COSMETICO_GENERICO] | [COSMETICO_METALLO]
+
+MASCHERA_0
+    the [COSMETICO_MASCHERA] mask
+
+MASCHERA_1
+    the [PREFISSO_FISICO] mask
+    the [PREFISSO_MENTALE] mask
+    the mask [COMPLEMENTO]
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] mask
+    the mask [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+MASCHERA_2
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] mask
+    the [PREFISSO_FISICO] mask [COMPLEMENTO]
+    the [PREFISSO_MENTALE] mask [COMPLEMENTO]
+    the mask [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [AGGETTIVO_ELEMENTALE_PROTEZIONE] mask
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] mask [COMPLEMENTO]
+    the [PREFISSO_MENTALE] mask [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+MASCHERA_3
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] mask [COMPLEMENTO]
+    the [PREFISSO_FISICO] mask [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_MENTALE] mask [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [AGGETTIVO_ELEMENTALE_PROTEZIONE] mask [COMPLEMENTO]
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] mask [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] mask [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+COSMETICO_MASCHERA
+    [COSMETICO_GENERICO]
+
+VESTE_0
+    the [COSMETICO_VESTE] robe
+
+VESTE_1
+    the [PREFISSO_FISICO] robe
+    the [PREFISSO_MENTALE] robe
+    the robe [COMPLEMENTO]
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] robe
+    the robe [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+VESTE_2
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] robe
+    the [PREFISSO_FISICO] robe [COMPLEMENTO]
+    the [PREFISSO_MENTALE] robe [COMPLEMENTO]
+    the robe [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [AGGETTIVO_ELEMENTALE_PROTEZIONE] robe
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] robe [COMPLEMENTO]
+    the [PREFISSO_MENTALE] robe [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+VESTE_3
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] robe [COMPLEMENTO]
+    the [PREFISSO_FISICO] robe [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_MENTALE] robe [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [AGGETTIVO_ELEMENTALE_PROTEZIONE] robe [COMPLEMENTO]
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] robe [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] robe [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+COSMETICO_VESTE
+    [COSMETICO_GENERICO] | [COSMETICO_STOFFA]
+
+ELMO_0
+    the [COSMETICO_ELMO] helmet
+
+ELMO_1
+    the [PREFISSO_FISICO] helmet
+    the [PREFISSO_MENTALE] helmet
+    the helmet [COMPLEMENTO]
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] helmet
+    the helmet [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+ELMO_2
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] helmet
+    the [PREFISSO_FISICO] helmet [COMPLEMENTO]
+    the [PREFISSO_MENTALE] helmet [COMPLEMENTO]
+    the helmet [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [AGGETTIVO_ELEMENTALE_PROTEZIONE] helmet
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] helmet [COMPLEMENTO]
+    the [PREFISSO_MENTALE] helmet [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+ELMO_3
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] helmet [COMPLEMENTO]
+    the [PREFISSO_FISICO] helmet [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_MENTALE] helmet [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [AGGETTIVO_ELEMENTALE_PROTEZIONE] helmet [COMPLEMENTO]
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] helmet [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] helmet [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+COSMETICO_ELMO
+    [COSMETICO_GENERICO] | [COSMETICO_METALLO]
+
+SCUDO_0
+    the [COSMETICO_SCUDO] shield
+
+SCUDO_1
+    the [PREFISSO_FISICO] shield
+    the [PREFISSO_MENTALE] shield
+    the shield [COMPLEMENTO]
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] shield
+    the shield [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+SCUDO_2
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] shield
+    the [PREFISSO_FISICO] shield [COMPLEMENTO]
+    the [PREFISSO_MENTALE] shield [COMPLEMENTO]
+    the shield [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [AGGETTIVO_ELEMENTALE_PROTEZIONE] shield
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] shield [COMPLEMENTO]
+    the [PREFISSO_MENTALE] shield [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+SCUDO_3
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] shield [COMPLEMENTO]
+    the [PREFISSO_FISICO] shield [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_MENTALE] shield [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [AGGETTIVO_ELEMENTALE_PROTEZIONE] shield [COMPLEMENTO]
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE] shield [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] shield [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+COSMETICO_SCUDO
+    [COSMETICO_GENERICO] | [COSMETICO_METALLO]
+
+SCHINIERI_0
+    the [COSMETICO_SCHINIERI] greaves
+
+SCHINIERI_1
+    the [PREFISSO_FISICO] greaves
+    the [PREFISSO_MENTALE] greaves
+    the greaves [COMPLEMENTO]
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE_PLURALE] greaves
+    the greaves [COMPLEMENTO_ELEMENTALE_PLURALE]
+
+SCHINIERI_2
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] greaves
+    the [PREFISSO_FISICO] greaves [COMPLEMENTO]
+    the [PREFISSO_MENTALE] greaves [COMPLEMENTO]
+    the greaves [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [AGGETTIVO_ELEMENTALE_PROTEZIONE_PLURALE] greaves
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE_PLURALE] greaves [COMPLEMENTO]
+    the [PREFISSO_MENTALE] greaves [COMPLEMENTO_ELEMENTALE_PLURALE]
+
+SCHINIERI_3
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] greaves [COMPLEMENTO]
+    the [PREFISSO_FISICO] greaves [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_MENTALE] greaves [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [AGGETTIVO_ELEMENTALE_PROTEZIONE_PLURALE] greaves [COMPLEMENTO]
+    the [AGGETTIVO_ELEMENTALE_PROTEZIONE_PLURALE] greaves [COMPLEMENTO] [DETTAGLIO]
+    the [PREFISSO_FISICO] [PREFISSO_MENTALE] greaves [COMPLEMENTO_ELEMENTALE_PLURALE]
+
+COSMETICO_SCHINIERI
+    [COSMETICO_GENERICO] | [COSMETICO_METALLO]
+
+COSMETICO_GENERICO
+    standard-issue | grandfather's | collector's | kitchen | display | bargain | homemade | market-bought | souvenir | training | still-tagged | ceremonial | once-used | borrowed | so-so | pawnshop | spare
+
+COSMETICO_METALLO
+    rusty | corroded | tin | soft-iron
+
+COSMETICO_STOFFA
+    faded | mended | moth-eaten | rough-wool | badly ironed | gravy-stained
+
+PREFISSO_FISICO
+    { mighty | titanic | colossal | unstoppable | mammoth }<mod:FORZA+2>
+    { sturdy | vigorous | brutish | burly | rugged | stout }<mod:FORZA+1>
+    { puny | meager | feeble | modest }<mod:FORZA-1>
+    { nimble | swift-handed | lithe | graceful }<mod:DESTREZZA+2>
+    { agile | light | slender | supple | quick }<mod:DESTREZZA+1>
+    { clumsy | stiff | heavy-handed | awkward }<mod:DESTREZZA-1>
+    { eternal | monumental | unyielding | ancient | immortal }<mod:COSTITUZIONE+2>
+    { solid | steady | hardy | dependable | calm }<mod:COSTITUZIONE+1>
+    { fragile | frail | sickly | unstable }<mod:COSTITUZIONE-1>
+    { ferocious | devastating | brutal }<mod:CRITICO+2>
+    { savage | crushing | punishing }<mod:CRITICO+1>
+    { dull | worn | harmless | blunted }<mod:CRITICO-1>
+    { unerring | flawless }<mod:PRECISIONE+2>
+    { sloppy | hasty | careless }<mod:PRECISIONE-1>
+    { rapid | lightning | fleet }<mod:VELOCITA+2>
+    { brisk | spry | tireless }<mod:VELOCITA+1>
+    { sluggish | tardy }<mod:VELOCITA-1>
+    { silent | hidden | secret }<mod:FURTIVITA+2>
+    { discreet | catlike | soft-footed }<mod:FURTIVITA+1>
+    { clattering | gaudy | loud }<mod:FURTIVITA-1>
+    { impregnable | unbreachable }<mod:PARATA+2>
+    { watchful | cautious | guarded | robust }<mod:PARATA+1>
+    { vulnerable | exposed }<mod:PARATA-1>
+    { raging | furious }<mod:FURIA+2>
+    { wrathful | hot-tempered | vengeful }<mod:FURIA+1>
+    { peaceful | placid }<mod:FURIA-1>
+
+PREFISSO_MENTALE
+    { brilliant | genius | acute }<mod:INTELLIGENZA+2>
+    { learned | clever | wise-looking | shrewd }<mod:INTELLIGENZA+1>
+    { foolish | dim | crude }<mod:INTELLIGENZA-1>
+    { enlightened | righteous | serene }<mod:SAGGEZZA+2>
+    { prudent | patient | stoic }<mod:SAGGEZZA+1>
+    { reckless | confused | vain }<mod:SAGGEZZA-1>
+    { magnificent | regal | splendid }<mod:CARISMA+2>
+    { charming | pleasant | likable }<mod:CARISMA+1>
+    { gloomy | surly | gruff }<mod:CARISMA-1>
+    { timid | mute | anonymous }<mod:CARISMA-2>
+    { blessed | untouchable }<mod:FORTUNA+2>
+    { lucky | timely | fateful | fortunate }<mod:FORTUNA+1>
+    { sinister | ill-starred }<mod:FORTUNA-1>
+    { deaf-to-magic | spell-proof }<mod:RESISTENZA_MAGICA+2>
+    { thick-skinned | warded }<mod:RESISTENZA_MAGICA+1>
+    { sensitive | permeable }<mod:RESISTENZA_MAGICA-1>
+    { eagle-eyed | lynx-eyed }<mod:PERCEZIONE+2>
+    { meticulous | observant }<mod:PERCEZIONE+1>
+    { foggy | dim-sighted }<mod:PERCEZIONE-1>
+    { terrible | dreadful | terrifying }<mod:SOGGEZIONE+2>
+    { ominous | menacing | legendary | imperial }<mod:SOGGEZIONE+1>
+    meek<mod:SOGGEZIONE-1>
+    boring<mod:SOGGEZIONE-2>
+    { lionhearted | fearless | bold }<mod:CORAGGIO+2>
+    { avenging | stalwart }<mod:CORAGGIO+1>
+    { hesitant | timorous }<mod:CORAGGIO-1>
+    { virtuous | heroic | honorable }<mod:VALORE+2>
+    { shining | benevolent }<mod:VALORE+1>
+    { indifferent | listless }<mod:VALORE-1>
+
+COMPLEMENTO
+    { of the Raging Boar | of the Clay Golem | of the Charging Rhinoceros | of the Blind Berserker | of the Bulldozer }<mod:FORZA+2>
+    { of Victory | of the Champion | of the Titan | of the Bull | of the Minotaur | of the Bear | of the Honey Badger | of the Bouncer | of the Quarry Worker | of the Dockhand }<mod:FORZA+1>
+    { of the Weakling | of the Novice | of the Twig | of the Feather | of the Desk Jockey | of the Mozzarella }<mod:FORZA-1>
+    { of the Lizard | of the Cheetah | of the Juggler | of the Dragonfly | of the Eel }<mod:DESTREZZA+2>
+    { of the Cricket | of the Mosquito | of the Falcon | of the Archer | of the Lynx | of the Watchmaker | of the Soap Bubble | of the Butterfly }<mod:DESTREZZA+1>
+    { of the Stumble | of the Golem | of the Anchor | of the Boulder | of the Waxed Floor | of the Frozen Fish }<mod:DESTREZZA-1>
+    { of the Mountain | of the Bastion | of the Fortress | of the Oak | of the Bearing Wall | of the Tank }<mod:COSTITUZIONE+2>
+    { of the Porter | of the Mule | of the Donkey | of the Draft Horse | of the Guardian | of the Armored Snail | of the Tortoise | of the Anvil }<mod:COSTITUZIONE+1>
+    { of the Invalid | of the Reed in the Wind | of the Autumn Leaf | of the Pale Intern | of the Fever }<mod:COSTITUZIONE-1>
+    { of the Archmage | of the Sage | of the Philosopher | of the Scholar | of the Genius | of the Computer }<mod:INTELLIGENZA+2>
+    { of the Scribe | of the Seer | of the Astrologer | of the Poet | of the Bookworm | of the Engineer | of the Cartographer | of the Nerd }<mod:INTELLIGENZA+1>
+    { of the Apprentice | of the Fool | of the Ignoramus | of the Dunce | of the Absent-Minded | of the Brain on Strike }<mod:INTELLIGENZA-1>
+    { of the Mentor | of the Enlightened One | of the Holy Hermit | of the Patriarch | of the Guru }<mod:SAGGEZZA+2>
+    { of the Temple Guardian | of the Owl | of the Wise Monk | of the Shaman | of the Patient Monk | of the Ascetic | of the Stoic }<mod:SAGGEZZA+1>
+    { of the Fool | of the Daydreamer | of the Hothead | of the Gullible }<mod:SAGGEZZA-1>
+    { of the Orator | of the Queen | of the Crowd Pleaser | of the Charismatic Leader }<mod:CARISMA+2>
+    { of the Minstrel | of the Courtier | of the Friendly Neighbor | of the Salesman }<mod:CARISMA+1>
+    { of the Grump | of the Hermit | of the Tax Collector | of the Sour Face }<mod:CARISMA-1>
+    { of the Four-Leaf Clover | of the Lottery Winner | of the Golden Horseshoe }<mod:FORTUNA+2>
+    { of the Lucky Coin | of the Rabbit | of the Gambler | of the Lucky Charm }<mod:FORTUNA+1>
+    { of the Black Cat | of the Broken Mirror | of the Unlucky Friday }<mod:FORTUNA-1>
+    { of the Devastating Blow | of the Butcher | of the Reaper | of the Cleaver }<mod:CRITICO+2>
+    { of the Razor | of the Executioner | of the Guillotine | of the Weak Spot | of the Sledgehammer }<mod:CRITICO+1>
+    { of the Blunted | of the Toy | of the Butter Knife | of the Spoon }<mod:CRITICO-1>
+    { of the Eagle | of the Laser | of the Bullseye | of the Pinpoint }<mod:PRECISIONE+2>
+    { of the Hunter | of the Appraiser | of the Fencer | of the Chess Player | of the Draftsman }<mod:PRECISIONE+1>
+    { of the Sloppy | of the Hasty | of the Squint | of the Crooked Aim }<mod:PRECISIONE-1>
+    { of the Light | of the Whirlwind | of the Sprinter | of the Jet }<mod:VELOCITA+2>
+    { of the Swallow | of the Hare | of the Wind | of the Arrow | of the Spark | of the Double Espresso | of the Energy Drink }<mod:VELOCITA+1>
+    { of the Sloth | of the Ballast | of the Afternoon Nap | of the Yawn }<mod:VELOCITA-1>
+    { of the Snail | of the Traffic Jam | of the Bureaucracy | of the Slow Download }<mod:VELOCITA-2>
+    { of the Shadow | of the Thief | of the Fox | of the Owl | of the Spy | of the Chameleon | of the Ninja }<mod:FURTIVITA+2>
+    { of the Cat | of the Ferret | of the Infiltrator | of the Scout | of the Bat | of the Eavesdropper }<mod:FURTIVITA+1>
+    { of the Noisemaker | of the Elephant | of the Bell | of the Siren | of the Megaphone | of the Horn }<mod:FURTIVITA-1>
+    { of the Iron Golem | of the Impassable Wall | of the Eternal Guardian | of the Impregnable Fortress | of the Nightclub Bouncer }<mod:PARATA+2>
+    { of the Guard | of the Calm Paladin | of the Protector | of the Traffic Warden | of the Airbag | of the Palisade | of the Tortoise Shell | of the Safe }<mod:PARATA+1>
+    { of the Open Door | of the Cardboard Defense | of the Rear-View Mirror | of the Goodbye Wave }<mod:PARATA-1>
+    { of the Mage Slayer | of the Null Zone }<mod:RESISTENZA_MAGICA+2>
+    { of the Warding Rune | of the Iron Will }<mod:RESISTENZA_MAGICA+1>
+    { of the Eagle Eye | of the Watchtower }<mod:PERCEZIONE+2>
+    { of the Detective | of the Magnifying Glass }<mod:PERCEZIONE+1>
+    { of Doom | of the Nightmare | of the Dread Lord }<mod:SOGGEZIONE+2>
+    { of the Shadow Emperor | of the Black Banner | of the Thunder }<mod:SOGGEZIONE+1>
+    { of the Berserker | of the Wrath | of the Storm }<mod:FURIA+2>
+    { of the Hothead | of the Angry Customer }<mod:FURIA+1>
+    { of the Lion | of the Hero | of the Brave }<mod:CORAGGIO+2>
+    { of the Avenger | of the Volunteer }<mod:CORAGGIO+1>
+    { of the Paladin | of the Hero of Legend }<mod:VALORE+2>
+    { of the Honest Soldier | of the Good Samaritan }<mod:VALORE+1>
+
+DETTAGLIO
+    { with Reinforced Frame | with Steel Core | with Extra Padding }<mod:PARATA+1>
+    { with Loose Bolts | with Flimsy Structure }<mod:PARATA-1>
+    { with Fashionable Design | with Glossy Finish | with Gift Wrapping }<mod:CARISMA+1>
+    { with Embarrassing Design | with Rough Finish | with Glue Drips }<mod:CARISMA-1>
+    { with Mentor's Advice | with Pocket Guide | with Moral Principles }<mod:SAGGEZZA+1>
+    { with Panic Attacks | with Bad Intentions | with Total Distraction }<mod:SAGGEZZA-1>
+    { with Instruction Manual | with Quick-Start Guide | with Technical Notes }<mod:INTELLIGENZA+1>
+    { with Missing Logic | with System Bugs | with Corrupted Data }<mod:INTELLIGENZA-1>
+    { with Counterweight | with Dense Metal }<mod:FORZA+1>
+    { with Wobbly Handle | with Plastic Grip }<mod:FORZA-1>
+
+AGGETTIVO_ELEMENTALE_ARMA
+    [AGGETTIVO_ARIA][EFFETTO_ARIA]
+    [AGGETTIVO_ACQUA][EFFETTO_ACQUA]
+    [AGGETTIVO_TERRA][EFFETTO_TERRA]
+    [AGGETTIVO_FUOCO][EFFETTO_FUOCO]
+    [AGGETTIVO_FULMINE][EFFETTO_FULMINE]
+    [AGGETTIVO_GELO][EFFETTO_GELO]
+    [AGGETTIVO_ACIDO][EFFETTO_ACIDO]
+    [AGGETTIVO_SONICO][EFFETTO_SONICO]
+    [AGGETTIVO_VELENO][EFFETTO_VELENO]
+    [AGGETTIVO_NECROTICO][EFFETTO_NECROTICO]
+    [AGGETTIVO_SACRO][EFFETTO_SACRO]
+    [AGGETTIVO_PSICHICO][EFFETTO_PSICHICO]
+    [AGGETTIVO_ARCANO][EFFETTO_ARCANO]
+    [AGGETTIVO_VUOTO][EFFETTO_VUOTO]
+    [AGGETTIVO_MALEDIZIONE][EFFETTO_MALEDIZIONE]
+
+AGGETTIVO_ELEMENTALE_PROTEZIONE
+    [AGGETTIVO_ARIA][EFFETTO_ARIA_PROTEZIONE]
+    [AGGETTIVO_ACQUA][EFFETTO_ACQUA_PROTEZIONE]
+    [AGGETTIVO_TERRA][EFFETTO_TERRA_PROTEZIONE]
+    [AGGETTIVO_FUOCO][EFFETTO_FUOCO_PROTEZIONE]
+    [AGGETTIVO_FULMINE][EFFETTO_FULMINE_PROTEZIONE]
+    [AGGETTIVO_GELO][EFFETTO_GELO_PROTEZIONE]
+    [AGGETTIVO_ACIDO][EFFETTO_ACIDO_PROTEZIONE]
+    [AGGETTIVO_SONICO][EFFETTO_SONICO_PROTEZIONE]
+    [AGGETTIVO_VELENO][EFFETTO_VELENO_PROTEZIONE]
+    [AGGETTIVO_NECROTICO][EFFETTO_NECROTICO_PROTEZIONE]
+    [AGGETTIVO_SACRO][EFFETTO_SACRO_PROTEZIONE]
+    [AGGETTIVO_PSICHICO][EFFETTO_PSICHICO_PROTEZIONE]
+    [AGGETTIVO_ARCANO][EFFETTO_ARCANO_PROTEZIONE]
+    [AGGETTIVO_VUOTO][EFFETTO_VUOTO_PROTEZIONE]
+    [AGGETTIVO_MALEDIZIONE][EFFETTO_MALEDIZIONE_PROTEZIONE]
+
+AGGETTIVO_ELEMENTALE_PROTEZIONE_PLURALE
+    [AGGETTIVO_ARIA][EFFETTO_ARIA_PROTEZIONE_PLURALE]
+    [AGGETTIVO_ACQUA][EFFETTO_ACQUA_PROTEZIONE_PLURALE]
+    [AGGETTIVO_TERRA][EFFETTO_TERRA_PROTEZIONE_PLURALE]
+    [AGGETTIVO_FUOCO][EFFETTO_FUOCO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_FULMINE][EFFETTO_FULMINE_PROTEZIONE_PLURALE]
+    [AGGETTIVO_GELO][EFFETTO_GELO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_ACIDO][EFFETTO_ACIDO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_SONICO][EFFETTO_SONICO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_VELENO][EFFETTO_VELENO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_NECROTICO][EFFETTO_NECROTICO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_SACRO][EFFETTO_SACRO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_PSICHICO][EFFETTO_PSICHICO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_ARCANO][EFFETTO_ARCANO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_VUOTO][EFFETTO_VUOTO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_MALEDIZIONE][EFFETTO_MALEDIZIONE_PROTEZIONE_PLURALE]
+
+COMPLEMENTO_ELEMENTALE_ARMA
+    [COMPLEMENTO_ARIA][EFFETTO_ARIA]
+    [COMPLEMENTO_ACQUA][EFFETTO_ACQUA]
+    [COMPLEMENTO_TERRA][EFFETTO_TERRA]
+    [COMPLEMENTO_FUOCO][EFFETTO_FUOCO]
+    [COMPLEMENTO_FULMINE][EFFETTO_FULMINE]
+    [COMPLEMENTO_GELO][EFFETTO_GELO]
+    [COMPLEMENTO_ACIDO][EFFETTO_ACIDO]
+    [COMPLEMENTO_SONICO][EFFETTO_SONICO]
+    [COMPLEMENTO_VELENO][EFFETTO_VELENO]
+    [COMPLEMENTO_NECROTICO][EFFETTO_NECROTICO]
+    [COMPLEMENTO_SACRO][EFFETTO_SACRO]
+    [COMPLEMENTO_PSICHICO][EFFETTO_PSICHICO]
+    [COMPLEMENTO_ARCANO][EFFETTO_ARCANO]
+    [COMPLEMENTO_VUOTO][EFFETTO_VUOTO]
+    [COMPLEMENTO_MALEDIZIONE][EFFETTO_MALEDIZIONE]
+
+COMPLEMENTO_ELEMENTALE_PROTEZIONE
+    [COMPLEMENTO_ARIA][EFFETTO_ARIA_PROTEZIONE]
+    [COMPLEMENTO_ACQUA][EFFETTO_ACQUA_PROTEZIONE]
+    [COMPLEMENTO_TERRA][EFFETTO_TERRA_PROTEZIONE]
+    [COMPLEMENTO_FUOCO][EFFETTO_FUOCO_PROTEZIONE]
+    [COMPLEMENTO_FULMINE][EFFETTO_FULMINE_PROTEZIONE]
+    [COMPLEMENTO_GELO][EFFETTO_GELO_PROTEZIONE]
+    [COMPLEMENTO_ACIDO][EFFETTO_ACIDO_PROTEZIONE]
+    [COMPLEMENTO_SONICO][EFFETTO_SONICO_PROTEZIONE]
+    [COMPLEMENTO_VELENO][EFFETTO_VELENO_PROTEZIONE]
+    [COMPLEMENTO_NECROTICO][EFFETTO_NECROTICO_PROTEZIONE]
+    [COMPLEMENTO_SACRO][EFFETTO_SACRO_PROTEZIONE]
+    [COMPLEMENTO_PSICHICO][EFFETTO_PSICHICO_PROTEZIONE]
+    [COMPLEMENTO_ARCANO][EFFETTO_ARCANO_PROTEZIONE]
+    [COMPLEMENTO_VUOTO][EFFETTO_VUOTO_PROTEZIONE]
+    [COMPLEMENTO_MALEDIZIONE][EFFETTO_MALEDIZIONE_PROTEZIONE]
+
+COMPLEMENTO_ELEMENTALE_PLURALE
+    [COMPLEMENTO_ARIA][EFFETTO_ARIA_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_ACQUA][EFFETTO_ACQUA_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_TERRA][EFFETTO_TERRA_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_FUOCO][EFFETTO_FUOCO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_FULMINE][EFFETTO_FULMINE_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_GELO][EFFETTO_GELO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_ACIDO][EFFETTO_ACIDO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_SONICO][EFFETTO_SONICO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_VELENO][EFFETTO_VELENO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_NECROTICO][EFFETTO_NECROTICO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_SACRO][EFFETTO_SACRO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_PSICHICO][EFFETTO_PSICHICO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_ARCANO][EFFETTO_ARCANO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_VUOTO][EFFETTO_VUOTO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_MALEDIZIONE][EFFETTO_MALEDIZIONE_PROTEZIONE_PLURALE]
+
+// ARIA
+AGGETTIVO_ARIA
+    whistling | gusty | windy | stormy | breezy
+
+COMPLEMENTO_ARIA
+    of the Tornado | of the Typhoon | of the Breeze | of the Cyclone | of the Zephyr
+
+EFFETTO_ARIA
+    <danno:ARIA><descrizione:[DESCRIZIONE_ARIA]>{ <soprannome:[SOPRANNOME_ARIA]> | [^2.5] }
+
+EFFETTO_ARIA_PROTEZIONE
+    <danno:ARIA><descrizione:[DESCRIZIONE_ARIA_PROTEZIONE]>{ <soprannome:[SOPRANNOME_ARIA]> | [^2.5] }
+
+EFFETTO_ARIA_PROTEZIONE_PLURALE
+    <danno:ARIA><descrizione:[DESCRIZIONE_ARIA_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_ARIA]> | [^2.5] }
+
+SOPRANNOME_ARIA
+    Hairdryer | Whirligig | Gale | Kite | Windmill
+
+DESCRIZIONE_ARIA
+    that lifts enemies like dry leaves | that whistles with every strike
+
+DESCRIZIONE_ARIA_PROTEZIONE
+    that stops gusts of wind | that never gets blown about
+
+DESCRIZIONE_ARIA_PROTEZIONE_PLURALE
+    that stop gusts of wind | that never get blown about
+
+// ACQUA
+AGGETTIVO_ACQUA
+    watery | rainy | soggy | dripping | tidal | flowing
+
+COMPLEMENTO_ACQUA
+    of the Flood | of the Wave | of the Tide | of the River | of the Monsoon
+
+EFFETTO_ACQUA
+    <danno:ACQUA><descrizione:[DESCRIZIONE_ACQUA]>{ <soprannome:[SOPRANNOME_ACQUA]> | [^2.5] }
+
+EFFETTO_ACQUA_PROTEZIONE
+    <danno:ACQUA><descrizione:[DESCRIZIONE_ACQUA_PROTEZIONE]>{ <soprannome:[SOPRANNOME_ACQUA]> | [^2.5] }
+
+EFFETTO_ACQUA_PROTEZIONE_PLURALE
+    <danno:ACQUA><descrizione:[DESCRIZIONE_ACQUA_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_ACQUA]> | [^2.5] }
+
+SOPRANNOME_ACQUA
+    Sprinkler | Puddle | Downpour | Drizzle | Faucet
+
+DESCRIZIONE_ACQUA
+    that soaks the enemies to the bone | that squelches at every step
+
+DESCRIZIONE_ACQUA_PROTEZIONE
+    that sheds rain and spray | that keeps its wearer dry
+
+DESCRIZIONE_ACQUA_PROTEZIONE_PLURALE
+    that shed rain and spray | that keep their wearer dry
+
+// TERRA
+AGGETTIVO_TERRA
+    rocky | earthen | muddy | gritty | sandy | stony
+
+COMPLEMENTO_TERRA
+    of the Mountain | of the Avalanche | of the Landslide | of the Quake | of the Dune
+
+EFFETTO_TERRA
+    <danno:TERRA><descrizione:[DESCRIZIONE_TERRA]>{ <soprannome:[SOPRANNOME_TERRA]> | [^2.5] }
+
+EFFETTO_TERRA_PROTEZIONE
+    <danno:TERRA><descrizione:[DESCRIZIONE_TERRA_PROTEZIONE]>{ <soprannome:[SOPRANNOME_TERRA]> | [^2.5] }
+
+EFFETTO_TERRA_PROTEZIONE_PLURALE
+    <danno:TERRA><descrizione:[DESCRIZIONE_TERRA_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_TERRA]> | [^2.5] }
+
+SOPRANNOME_TERRA
+    Pebble | Boulder | Gravel | Landslide | Mudpie
+
+DESCRIZIONE_TERRA
+    that crushes with the weight of a boulder | that rattles like a quarry
+
+DESCRIZIONE_TERRA_PROTEZIONE
+    that withstands landslides | that shrugs off the mud
+
+DESCRIZIONE_TERRA_PROTEZIONE_PLURALE
+    that withstand landslides | that shrug off the mud
+
+// FUOCO
+AGGETTIVO_FUOCO
+    flaming | burning | volcanic | blazing | scorching | infernal
+
+COMPLEMENTO_FUOCO
+    of the Volcano | of the Dragon | of the Inferno | of the Bonfire | of the Phoenix | of the Barbecue
+
+EFFETTO_FUOCO
+    <danno:FUOCO><descrizione:[DESCRIZIONE_FUOCO]>{ <soprannome:[SOPRANNOME_FUOCO]> | [^2.5] }
+
+EFFETTO_FUOCO_PROTEZIONE
+    <danno:FUOCO><descrizione:[DESCRIZIONE_FUOCO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_FUOCO]> | [^2.5] }
+
+EFFETTO_FUOCO_PROTEZIONE_PLURALE
+    <danno:FUOCO><descrizione:[DESCRIZIONE_FUOCO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_FUOCO]> | [^2.5] }
+
+SOPRANNOME_FUOCO
+    Cinder | Matchstick | Barbecue | Lighter | Ember | Salamander
+
+DESCRIZIONE_FUOCO
+    that burns the enemies | that smells of grilled meat | that scorches even the sheath
+
+DESCRIZIONE_FUOCO_PROTEZIONE
+    that repels flames | that does not fear dragon breath
+
+DESCRIZIONE_FUOCO_PROTEZIONE_PLURALE
+    that repel flames | that do not fear dragon breath
+
+// FULMINE
+AGGETTIVO_FULMINE
+    crackling | thundering | electric | shocking | stormy
+
+COMPLEMENTO_FULMINE
+    of the Thunderbolt | of the Storm | of the Lightning Rod | of the Power Plant | of the Tempest
+
+EFFETTO_FULMINE
+    <danno:FULMINE><descrizione:[DESCRIZIONE_FULMINE]>{ <soprannome:[SOPRANNOME_FULMINE]> | [^2.5] }
+
+EFFETTO_FULMINE_PROTEZIONE
+    <danno:FULMINE><descrizione:[DESCRIZIONE_FULMINE_PROTEZIONE]>{ <soprannome:[SOPRANNOME_FULMINE]> | [^2.5] }
+
+EFFETTO_FULMINE_PROTEZIONE_PLURALE
+    <danno:FULMINE><descrizione:[DESCRIZIONE_FULMINE_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_FULMINE]> | [^2.5] }
+
+SOPRANNOME_FULMINE
+    Spark | Static | Thunderclap | Sparky | Zap
+
+DESCRIZIONE_FULMINE
+    that strikes like a bolt from the blue | that makes hair stand on end
+
+DESCRIZIONE_FULMINE_PROTEZIONE
+    that turns lightning aside | that grounds the storm
+
+DESCRIZIONE_FULMINE_PROTEZIONE_PLURALE
+    that turn lightning aside | that ground the storm
+
+// GELO
+AGGETTIVO_GELO
+    frosty | icy | frozen | chilling | glacial | wintry
+
+COMPLEMENTO_GELO
+    of the Glacier | of the Blizzard | of the Iceberg | of the North Wind | of the Frozen Lake
+
+EFFETTO_GELO
+    <danno:GELO><descrizione:[DESCRIZIONE_GELO]>{ <soprannome:[SOPRANNOME_GELO]> | [^2.5] }
+
+EFFETTO_GELO_PROTEZIONE
+    <danno:GELO><descrizione:[DESCRIZIONE_GELO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_GELO]> | [^2.5] }
+
+EFFETTO_GELO_PROTEZIONE_PLURALE
+    <danno:GELO><descrizione:[DESCRIZIONE_GELO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_GELO]> | [^2.5] }
+
+SOPRANNOME_GELO
+    Icicle | Snowflake | Popsicle | Frostbite | Freezer
+
+DESCRIZIONE_GELO
+    that freezes the blood | that leaves frost on everything it touches
+
+DESCRIZIONE_GELO_PROTEZIONE
+    that shrugs off the cold | that keeps out the frost
+
+DESCRIZIONE_GELO_PROTEZIONE_PLURALE
+    that shrug off the cold | that keep out the frost
+
+// ACIDO
+AGGETTIVO_ACIDO
+    corrosive | acidic | caustic | etching | bubbling
+
+COMPLEMENTO_ACIDO
+    of the Acid Pool | of the Slime | of the Rust | of the Sour Lemon
+
+EFFETTO_ACIDO
+    <danno:ACIDO><descrizione:[DESCRIZIONE_ACIDO]>{ <soprannome:[SOPRANNOME_ACIDO]> | [^2.5] }
+
+EFFETTO_ACIDO_PROTEZIONE
+    <danno:ACIDO><descrizione:[DESCRIZIONE_ACIDO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_ACIDO]> | [^2.5] }
+
+EFFETTO_ACIDO_PROTEZIONE_PLURALE
+    <danno:ACIDO><descrizione:[DESCRIZIONE_ACIDO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_ACIDO]> | [^2.5] }
+
+SOPRANNOME_ACIDO
+    Lemon Juice | Vinegar | Etcher | Bubbler
+
+DESCRIZIONE_ACIDO
+    that eats through armor | that leaves smoking holes
+
+DESCRIZIONE_ACIDO_PROTEZIONE
+    that resists corrosion | that laughs at acid
+
+DESCRIZIONE_ACIDO_PROTEZIONE_PLURALE
+    that resist corrosion | that laugh at acid
+
+// SONICO
+AGGETTIVO_SONICO
+    thundering | booming | resonant | piercing | deafening
+
+COMPLEMENTO_SONICO
+    of the Echo | of the Gong | of the Siren | of the Thunderclap | of the Bell
+
+EFFETTO_SONICO
+    <danno:SONICO><descrizione:[DESCRIZIONE_SONICO]>{ <soprannome:[SOPRANNOME_SONICO]> | [^2.5] }
+
+EFFETTO_SONICO_PROTEZIONE
+    <danno:SONICO><descrizione:[DESCRIZIONE_SONICO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_SONICO]> | [^2.5] }
+
+EFFETTO_SONICO_PROTEZIONE_PLURALE
+    <danno:SONICO><descrizione:[DESCRIZIONE_SONICO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_SONICO]> | [^2.5] }
+
+SOPRANNOME_SONICO
+    Echo | Gong | Whistle | Trumpet | Megaphone
+
+DESCRIZIONE_SONICO
+    that rings like a bell | that deafens the enemies
+
+DESCRIZIONE_SONICO_PROTEZIONE
+    that muffles every noise | that keeps out the din
+
+DESCRIZIONE_SONICO_PROTEZIONE_PLURALE
+    that muffle every noise | that keep out the din
+
+// VELENO
+AGGETTIVO_VELENO
+    venomous | poisonous | toxic | viperous | noxious
+
+COMPLEMENTO_VELENO
+    of the Viper | of the Scorpion | of the Swamp | of the Toadstool | of the Spider
+
+EFFETTO_VELENO
+    <danno:VELENO><descrizione:[DESCRIZIONE_VELENO]>{ <soprannome:[SOPRANNOME_VELENO]> | [^2.5] }
+
+EFFETTO_VELENO_PROTEZIONE
+    <danno:VELENO><descrizione:[DESCRIZIONE_VELENO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_VELENO]> | [^2.5] }
+
+EFFETTO_VELENO_PROTEZIONE_PLURALE
+    <danno:VELENO><descrizione:[DESCRIZIONE_VELENO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_VELENO]> | [^2.5] }
+
+SOPRANNOME_VELENO
+    Viper | Antidote | Toadstool | Cobra | Nightshade
+
+DESCRIZIONE_VELENO
+    that poisons whoever it touches | that drips a green liquid
+
+DESCRIZIONE_VELENO_PROTEZIONE
+    that blocks poison | that does not fear venom
+
+DESCRIZIONE_VELENO_PROTEZIONE_PLURALE
+    that block poison | that do not fear venom
+
+// NECROTICO
+AGGETTIVO_NECROTICO
+    deathly | necrotic | grave-cold | rotting | spectral
+
+COMPLEMENTO_NECROTICO
+    of the Tomb | of the Crypt | of the Lich | of the Reaper | of the Graveyard
+
+EFFETTO_NECROTICO
+    <danno:NECROTICO><descrizione:[DESCRIZIONE_NECROTICO]>{ <soprannome:[SOPRANNOME_NECROTICO]> | [^2.5] }
+
+EFFETTO_NECROTICO_PROTEZIONE
+    <danno:NECROTICO><descrizione:[DESCRIZIONE_NECROTICO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_NECROTICO]> | [^2.5] }
+
+EFFETTO_NECROTICO_PROTEZIONE_PLURALE
+    <danno:NECROTICO><descrizione:[DESCRIZIONE_NECROTICO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_NECROTICO]> | [^2.5] }
+
+SOPRANNOME_NECROTICO
+    Gravedigger | Bonedust | Skull | Crypt Keeper
+
+DESCRIZIONE_NECROTICO
+    that withers the living | that smells of old graves
+
+DESCRIZIONE_NECROTICO_PROTEZIONE
+    that wards off the touch of death | that resists decay
+
+DESCRIZIONE_NECROTICO_PROTEZIONE_PLURALE
+    that ward off the touch of death | that resist decay
+
+// SACRO
+AGGETTIVO_SACRO
+    holy | blessed | radiant | sacred | divine
+
+COMPLEMENTO_SACRO
+    of the Saint | of the Dawn | of the Temple | of the Choir | of the Pilgrim
+
+EFFETTO_SACRO
+    <danno:SACRO><descrizione:[DESCRIZIONE_SACRO]>{ <soprannome:[SOPRANNOME_SACRO]> | [^2.5] }
+
+EFFETTO_SACRO_PROTEZIONE
+    <danno:SACRO><descrizione:[DESCRIZIONE_SACRO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_SACRO]> | [^2.5] }
+
+EFFETTO_SACRO_PROTEZIONE_PLURALE
+    <danno:SACRO><descrizione:[DESCRIZIONE_SACRO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_SACRO]> | [^2.5] }
+
+SOPRANNOME_SACRO
+    Halo | Candle | Chorister | Blessing
+
+DESCRIZIONE_SACRO
+    that shines with holy light | that sings hymns in battle
+
+DESCRIZIONE_SACRO_PROTEZIONE
+    that repels unholy powers | that glows with a faint halo
+
+DESCRIZIONE_SACRO_PROTEZIONE_PLURALE
+    that repel unholy powers | that glow with a faint halo
+
+// PSICHICO
+AGGETTIVO_PSICHICO
+    mind-bending | psychic | hypnotic | dreamy | unsettling
+
+COMPLEMENTO_PSICHICO
+    of the Dream | of the Mind | of the Hypnotist | of the Nightmare
+
+EFFETTO_PSICHICO
+    <danno:PSICHICO><descrizione:[DESCRIZIONE_PSICHICO]>{ <soprannome:[SOPRANNOME_PSICHICO]> | [^2.5] }
+
+EFFETTO_PSICHICO_PROTEZIONE
+    <danno:PSICHICO><descrizione:[DESCRIZIONE_PSICHICO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_PSICHICO]> | [^2.5] }
+
+EFFETTO_PSICHICO_PROTEZIONE_PLURALE
+    <danno:PSICHICO><descrizione:[DESCRIZIONE_PSICHICO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_PSICHICO]> | [^2.5] }
+
+SOPRANNOME_PSICHICO
+    Daydream | Migraine | Pendulum | Lullaby
+
+DESCRIZIONE_PSICHICO
+    that rattles the enemy mind | that whispers in the head
+
+DESCRIZIONE_PSICHICO_PROTEZIONE
+    that shields the mind | that does not fear mind games
+
+DESCRIZIONE_PSICHICO_PROTEZIONE_PLURALE
+    that shield the mind | that do not fear mind games
+
+// ARCANO
+AGGETTIVO_ARCANO
+    arcane | runic | enchanted | mystic | glowing
+
+COMPLEMENTO_ARCANO
+    of the Archmage | of the Rune | of the Grimoire | of the Pentagram | of the Apprentice
+
+EFFETTO_ARCANO
+    <danno:ARCANO><descrizione:[DESCRIZIONE_ARCANO]>{ <soprannome:[SOPRANNOME_ARCANO]> | [^2.5] }
+
+EFFETTO_ARCANO_PROTEZIONE
+    <danno:ARCANO><descrizione:[DESCRIZIONE_ARCANO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_ARCANO]> | [^2.5] }
+
+EFFETTO_ARCANO_PROTEZIONE_PLURALE
+    <danno:ARCANO><descrizione:[DESCRIZIONE_ARCANO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_ARCANO]> | [^2.5] }
+
+SOPRANNOME_ARCANO
+    Rune | Sparkler | Wizard | Hocus
+
+DESCRIZIONE_ARCANO
+    that hums with raw magic | that scribbles runes in the air
+
+DESCRIZIONE_ARCANO_PROTEZIONE
+    that bends magical energy | that is woven with warding runes
+
+DESCRIZIONE_ARCANO_PROTEZIONE_PLURALE
+    that bend magical energy | that are woven with warding runes
+
+// VUOTO
+AGGETTIVO_VUOTO
+    void | hollow | empty | abyssal | lightless
+
+COMPLEMENTO_VUOTO
+    of the Abyss | of the Void | of the Black Hole | of the Nothing
+
+EFFETTO_VUOTO
+    <danno:VUOTO><descrizione:[DESCRIZIONE_VUOTO]>{ <soprannome:[SOPRANNOME_VUOTO]> | [^2.5] }
+
+EFFETTO_VUOTO_PROTEZIONE
+    <danno:VUOTO><descrizione:[DESCRIZIONE_VUOTO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_VUOTO]> | [^2.5] }
+
+EFFETTO_VUOTO_PROTEZIONE_PLURALE
+    <danno:VUOTO><descrizione:[DESCRIZIONE_VUOTO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_VUOTO]> | [^2.5] }
+
+SOPRANNOME_VUOTO
+    Nothing | Gap | Hollow | Eclipse
+
+DESCRIZIONE_VUOTO
+    that swallows light and hope | that leaves nothing behind
+
+DESCRIZIONE_VUOTO_PROTEZIONE
+    that swallows hostile magic | that fears no emptiness
+
+DESCRIZIONE_VUOTO_PROTEZIONE_PLURALE
+    that swallow hostile magic | that fear no emptiness
+
+// MALEDIZIONE
+AGGETTIVO_MALEDIZIONE
+    cursed | hexed | ill-omened | jinxed | doomed
+
+COMPLEMENTO_MALEDIZIONE
+    of the Curse | of the Witch | of the Evil Eye | of the Jinx
+
+EFFETTO_MALEDIZIONE
+    <danno:MALEDIZIONE><descrizione:[DESCRIZIONE_MALEDIZIONE]>{ <soprannome:[SOPRANNOME_MALEDIZIONE]> | [^2.5] }
+
+EFFETTO_MALEDIZIONE_PROTEZIONE
+    <danno:MALEDIZIONE><descrizione:[DESCRIZIONE_MALEDIZIONE_PROTEZIONE]>{ <soprannome:[SOPRANNOME_MALEDIZIONE]> | [^2.5] }
+
+EFFETTO_MALEDIZIONE_PROTEZIONE_PLURALE
+    <danno:MALEDIZIONE><descrizione:[DESCRIZIONE_MALEDIZIONE_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_MALEDIZIONE]> | [^2.5] }
+
+SOPRANNOME_MALEDIZIONE
+    Jinx | Hex | Omen | Black Cat
+
+DESCRIZIONE_MALEDIZIONE
+    that carries a grim curse | that brings bad luck to the foe
+
+DESCRIZIONE_MALEDIZIONE_PROTEZIONE
+    that turns curses aside | that laughs at hexes
+
+DESCRIZIONE_MALEDIZIONE_PROTEZIONE_PLURALE
+    that turn curses aside | that laugh at hexes

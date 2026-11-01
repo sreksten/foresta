@@ -31,10 +31,26 @@ public final class CaricatoreDiGrammatiche {
 	 */
 	public static GrammarBean carica(Class<?> ancora, String risorsa, String postProduzione) {
 		try {
-			return GrammarBean.fromResource(ancora, risorsa, postProduzione);
+			return GrammarBean.fromResource(ancora, perLaLingua(ancora, risorsa), postProduzione == null ? null : perLaLingua(ancora, postProduzione));
 		} catch (InvalidGrammarException | IOException e) {
 			throw new GrammaticaNonValidaException(risorsa, e);
 		}
+	}
+
+	/**
+	 * La risorsa nella lingua in uso: {@code fiabe.txt} diventa {@code fiabe_en_GB.txt} o {@code fiabe_en.txt} se esiste per quella
+	 * lingua (in quest'ordine), altrimenti resta {@code fiabe.txt}, la versione italiana. Così una lingua che non ha tutte le
+	 * grammatiche usa quelle che ha e per le altre ripiega sull'italiano.
+	 */
+	public static String perLaLingua(Class<?> ancora, String risorsa) {
+		int punto = risorsa.lastIndexOf('.');
+		for (String suffisso : Testi.suffissiDellaLingua()) {
+			String candidata = risorsa.substring(0, punto) + '_' + suffisso + risorsa.substring(punto);
+			if (ancora.getResource(candidata) != null) {
+				return candidata;
+			}
+		}
+		return risorsa;
 	}
 
 	/**

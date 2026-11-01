@@ -1,0 +1,80 @@
+// The names of the ruins of the Forest (English version of rovine.txt; same productions): what is left, with its
+// article, and whose or what it was. "the Remains of the Ancient Empire", "the Abandoned Mill of the Absent-Minded Surveyor".
+//
+// Characters not to use in the texts: [ ] { } | " (GrammarBean syntax).
+
+NOME_ROVINE
+    [RESTI] [ORIGINE]
+
+// The real ruins come up more often than collapsed buildings
+RESTI
+    [^5] [GENERICI]
+    [^4] [CROLLATI]
+    [^2] [RURALI]
+
+GENERICI
+    the Ruins
+    the Remains
+    the Rubble
+    the Vestiges
+    the Wreckage
+    the Debris
+
+CROLLATI
+    the Fallen Tower
+    the Crumbling Fort
+    the Breached Walls
+    the Broken Arch
+    the Interrupted Bridge
+    the Dry Well
+    the Truncated Columns
+    the Gutted Villa
+    the Collapsed Bastion
+    the Staircase to Nowhere
+
+RURALI
+    the Abandoned Mill
+    the Old Farm
+    the Caved-In Barn
+    the Burned Inn
+    the Roofless Stable
+    the Empty Granary
+
+ORIGINE
+    [^4] [ANTICHI]
+    [^4] [STORIE]
+    [^3] [COMICHE]
+
+ANTICHI
+    of the Nameless King
+    of the Giants
+    of the Ancient Empire
+    of the First Mage
+    of the Forgotten Order
+    of the Pale Queen
+    of the People of the Mists
+    of the Seven Princes
+    of the Lost Dynasty
+    of the Lord of the Towers
+
+STORIE
+    of the Evicted Baron
+    of the Knight Who Lost the Bet
+    of the Mage Who Cast the Wrong Spell
+    of the Siege of the Hundred Days
+    of the Sleepwalking Countess
+    of the Dragon Who Was Passing By
+    of the Giant with a Cold
+    of the Count's Last Party
+    of the Merchant Who Would Not Pay the Masons
+
+COMICHE
+    of the Building Amnesty
+    of the Latest Renovation
+    of the Absent-Minded Surveyor
+    of the Unpaid Mortgage
+    of the Condominium Dispute
+    of the Never-Finished Works
+    of the Wrong Estimate
+    of the Illegal Extension
+    of the Homeowners' Meeting That Ended Badly

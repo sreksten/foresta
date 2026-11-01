@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.threeamigos.foresta.testi.CaricatoreDiGrammatiche;
 
 /**
  * Nomi ed effetti degli artefatti presi da una grammatica (artefatti2.txt, che ne descrive il formato, o
@@ -72,8 +73,8 @@ final class GrammaticaArtefatti {
 	}
 
 	static GrammaticaArtefatti caricaOppureNull(String file) {
-		try (InputStream grammatica = GrammaticaArtefatti.class.getResourceAsStream(file);
-			 InputStream postProduzione = GrammaticaArtefatti.class.getResourceAsStream(POST_PRODUZIONE)) {
+		try (InputStream grammatica = GrammaticaArtefatti.class.getResourceAsStream(CaricatoreDiGrammatiche.perLaLingua(GrammaticaArtefatti.class, file));
+			 InputStream postProduzione = GrammaticaArtefatti.class.getResourceAsStream(CaricatoreDiGrammatiche.perLaLingua(GrammaticaArtefatti.class, POST_PRODUZIONE))) {
 			return new GrammaticaArtefatti(new GrammarBean(grammatica, postProduzione));
 		} catch (InvalidGrammarException | IOException | RuntimeException e) {
 			Logger.log(e);
