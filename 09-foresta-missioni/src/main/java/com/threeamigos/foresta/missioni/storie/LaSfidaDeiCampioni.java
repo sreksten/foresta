@@ -27,6 +27,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il torneo di carta, forbici e sasso (vedi carta_forbici_sasso.md): alla terza sfida vinta dal gruppo (vedi
@@ -95,11 +96,7 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 		String nome = ProduttoreDiSfideCasuale.nomeLeggendarioDeiCampioni();
 		String breve = nome;
 		String chiave = "CAMPIONI_" + Math.abs(nome.hashCode()) + "_" + livello;
-		String riga = "TIPO=ANELLO;NOME=" + nome + ";CHIAVE=" + chiave + ";BREVE=" + breve + ";"
-				+ "DESCRIZIONE=che appartiene a chi ha battuto tutti i campioni;LIVELLO=" + livello + ";COSTO=" + (livello * 100)
-				+ ";PESO=1;MOD=FORZA +" + (livello * 10) + "%;MOD=CORAGGIO +" + (livello * 5) + "%;MOD=VALORE +" + livello + ";"
-				+ "LEGGENDA=Avete mai sentito parlare di " + nome + "?;"
-				+ "LEGGENDA=Lo vince solo chi batte, uno dopo l'altro, i quattro campioni di carta, forbici e sasso.";
+		String riga = Testi.formatta("missioni", "LaSfidaDeiCampioni.s1", nome, chiave, breve, livello, (livello * 100), (livello * 10), (livello * 5), livello, nome);
 		return OggettoLeggendario.da(riga);
 	}
 
@@ -133,16 +130,15 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 
 	@Override
 	public String getNome() {
-		return "La sfida dei campioni";
+		return Testi.formatta("missioni", "LaSfidaDeiCampioni.t1");
 	}
 
 	@Override
 	public String getDescrizione() {
 		List<Missione> campioni = getCampioni();
 		long battuti = campioni.stream().filter(Missione::isCompleta).count();
-		return "Batti a carta, forbici e sasso, a tre mani vinte, i quattro campioni della Foresta, nei posti segnati sulla mappa: "
-				+ battuti + " battuti su " + CAMPIONI + ". In palio " + getMonete() + " monete e "
-				+ (getLeggendario() != null ? getLeggendario().getNomeBreve() : "un oggetto leggendario") + ".";
+		return Testi.formatta("missioni", "LaSfidaDeiCampioni.descrizione", battuti, CAMPIONI, getMonete(),
+				getLeggendario() != null ? getLeggendario().getNomeBreve() : Testi.formatta("missioni", "LaSfidaDeiCampioni.unLeggendario"));
 	}
 
 	@Override
@@ -155,17 +151,14 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 		switch (id) {
 			case AFFIDATI:
 				return affida(AFFIDATI, MomentoControllo.POST_LOCAZIONE, () -> true, this::creaICampioni)
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Ora che ti sei fatto un nome a carta, forbici e sasso, i "
-								+ "quattro campioni della Foresta ti aspettano: i loro posti sono segnati sulla mappa. In palio "
-								+ getMonete() + " monete e " + getLeggendario().getNomeBreve() + ".")))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaSfidaDeiCampioni.s2", getMonete(), getLeggendario().getNomeBreve()))))
 						.poi(ATTESA);
 			case ATTESA:
 				return attendiLeAffidate(AFFIDATI, MomentoControllo.POST_LOCAZIONE).poi(RICOMPENSA);
 			case RICOMPENSA:
 				return ricompensa(MomentoControllo.POST_LOCAZIONE,
 								Ricompensa.inMonete(getMonete()).conArtefatto(() -> getLeggendario().costruisci(Statistiche.getLivello())),
-								() -> "Il quarto campione si arrende: sei il re di carta, forbici e sasso. Ricevi " + getMonete()
-										+ " monete e " + getLeggendario().getNomeBreve() + ".")
+								() -> Testi.formatta("missioni", "LaSfidaDeiCampioni.s3", getMonete(), getLeggendario().getNomeBreve()))
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);

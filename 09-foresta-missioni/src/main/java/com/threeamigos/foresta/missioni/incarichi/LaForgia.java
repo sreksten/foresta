@@ -18,6 +18,7 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'armaiolo di una città vuole forgiare un'arma molto migliore delle altre, e chiede al gruppo il necessario: un metallo da
@@ -133,29 +134,23 @@ public class LaForgia extends IncaricoInCitta {
 	public String getDescrizione() {
 		ForgiaRichiesta arma = armaSeScelta();
 		if (arma == null) {
-			return Lingue.corrente().inizialeMaiuscola(MANDANTE.getNome()) + " forgia armi eccezionali, per chi gli porta il necessario.";
+			return Testi.formatta("missioni", "LaForgia.t1", Lingue.corrente().inizialeMaiuscola(MANDANTE.getNome()));
 		}
 		String armaiolo = Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(MANDANTE.getNome()));
 		MaterialeRichiesto metallo = getMetallo();
 		MaterialeRichiesto trofeo = getTrofeo();
 		switch (getPassoCorrente()) {
 			case RACCOLTA_TROFEO:
-				return armaiolo + " forgerà " + arma.getNomeBreve() + ". Per il metallo ci siamo: adesso gli servono "
-						+ trofeo.quanti(getQuantitaDelTrofeo()) + ", che " + trofeo.getDaDoveViene() + ". Finora: "
-						+ getContatore(TROFEO) + ".";
+				return Testi.formatta("missioni", "LaForgia.t2", armaiolo, arma.getNomeBreve(), trofeo.quanti(getQuantitaDelTrofeo()), trofeo.getDaDoveViene(), getContatore(TROFEO));
 			case FORGIATURA:
-				return "Hai tutto il necessario: porta " + metallo.getPluraleConArticolo() + " e " + trofeo.getPluraleConArticolo()
-						+ " " + Lingue.corrente().conPreposizione(Preposizione.A, mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome())) + ", con "
-						+ getCosto() + " monete per il lavoro.";
+				return Testi.formatta("missioni", "LaForgia.t3", metallo.getPluraleConArticolo(), trofeo.getPluraleConArticolo(), Lingue.corrente().conPreposizione(Preposizione.A, mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome())), getCosto());
 			case SALUTO:
 			case RAFFREDDAMENTO:
-				return arma.getNomeBreve() + " è nella forgia: la lama deve raffreddarsi. Tornate "
-						+ Lingue.corrente().conPreposizione(Preposizione.DA, mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome())) + " fra qualche ora.";
+				return Testi.formatta("missioni", "LaForgia.t4", arma.getNomeBreve(), Lingue.corrente().conPreposizione(Preposizione.DA, mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome())));
 			case RITORNO:
-				return arma.getNomeBreve() + " è pronta: ritirala " + Lingue.corrente().conPreposizione(Preposizione.DA, mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome())) + ".";
+				return Testi.formatta("missioni", "LaForgia.t5", arma.getNomeBreve(), Lingue.corrente().conPreposizione(Preposizione.DA, mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome())));
 			default:
-				return armaiolo + " forgerà " + arma.getNomeBreve() + ". Gli servono " + metallo.quanti(getQuantitaDelMetallo())
-						+ ", che " + metallo.getDaDoveViene() + ". Finora: " + getContatore(METALLO) + ".";
+				return Testi.formatta("missioni", "LaForgia.t6", armaiolo, arma.getNomeBreve(), metallo.quanti(getQuantitaDelMetallo()), metallo.getDaDoveViene(), getContatore(METALLO));
 		}
 	}
 
@@ -178,8 +173,7 @@ public class LaForgia extends IncaricoInCitta {
 						.poi(RACCOLTA_TROFEO);
 			case RACCOLTA_TROFEO:
 				return raccogli(MomentoControllo.POST_LOCAZIONE, trofei)
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Hai tutto il necessario: "
-								+ mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome()) + " può accendere la forgia.")))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaForgia.s1", mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome())))))
 						.poi(FORGIATURA);
 			case FORGIATURA:
 				return costruisci(MomentoControllo.IN_LOCAZIONE, this::nellaCitta,
@@ -191,7 +185,7 @@ public class LaForgia extends IncaricoInCitta {
 			case RAFFREDDAMENTO:
 				return attendiOre(MomentoControllo.POST_LOCAZIONE, CostantiMissioni.FORGIA_ORE_DI_ATTESA)
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(
-								"La lama dovrebbe essersi raffreddata: " + mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome()) + " vi aspetta.")))
+								Testi.formatta("missioni", "LaForgia.s2", mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome())))))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -199,13 +193,11 @@ public class LaForgia extends IncaricoInCitta {
 	}
 
 	private String testoForgiatura() {
-		return Lingue.corrente().inizialeMaiuscola(mandanteSenzaVirgolaFinale(MANDANTE.getNome())) + " accende la forgia e per "
-				+ Lingue.corrente().cardinale(CostantiMissioni.FORGIA_ORE_DI_LAVORO, Genere.MASCHILE) + " ore batte il ferro. Il lavoro è costato " + getCosto() + " monete.";
+		return Testi.formatta("missioni", "LaForgia.t7", Lingue.corrente().inizialeMaiuscola(mandanteSenzaVirgolaFinale(MANDANTE.getNome())), Lingue.corrente().cardinale(CostantiMissioni.FORGIA_ORE_DI_LAVORO, Genere.MASCHILE), getCosto());
 	}
 
 	private String testoSaluto() {
-		return Lingue.corrente().inizialeMaiuscola(mandanteSenzaVirgolaFinale(MANDANTE.getNome())) + " vi congeda: \"Tornate fra mezza giornata. "
-				+ Lingue.corrente().inizialeMaiuscola(getArma().getNomeBreve()) + " deve raffreddarsi, e a forzarla si rovina.\"";
+		return Testi.formatta("missioni", "LaForgia.t8", Lingue.corrente().inizialeMaiuscola(mandanteSenzaVirgolaFinale(MANDANTE.getNome())), Lingue.corrente().inizialeMaiuscola(getArma().getNomeBreve()));
 	}
 
 	@Override
@@ -221,31 +213,27 @@ public class LaForgia extends IncaricoInCitta {
 		return MANDANTE.nuovaScena()
 				.parlaIlMandante(MANDANTE.getApertura(nomeDelMandante(MANDANTE.getNome())))
 				.parlaIlMandante(arma.getRichiesta())
-				.parlaIlMandante("Mi servono " + metallo.quanti(getQuantitaDelMetallo()) + ", " + metallo.getDaDoveViene() + ", e poi "
-						+ trofeo.quanti(getQuantitaDelTrofeo()) + ", " + trofeo.getDaDoveViene() + ". Per il lavoro, "
-						+ getCosto() + " monete: il fuoco non è gratis.")
+				.parlaIlMandante(Testi.formatta("missioni", "LaForgia.1", metallo.quanti(getQuantitaDelMetallo()), metallo.getDaDoveViene(), trofeo.quanti(getQuantitaDelTrofeo()), trofeo.getDaDoveViene(), getCosto()))
 				.parlaIlCapo(arma.getBattutaDelCapo())
 				.parlaIlMandante(arma.getRispostaDelMandante())
-				.parlaIlCapo("Affare fatto.");
+				.parlaIlCapo(Testi.formatta("missioni", "LaForgia.2"));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return MANDANTE.nuovaScena()
 				.parlaIlMandante(getArma().getConsegna())
-				.parlaIlCapo("Valeva l'attesa.");
+				.parlaIlCapo(Testi.formatta("missioni", "LaForgia.3"));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Lingue.corrente().inizialeMaiuscola(mandante(MANDANTE.getNome())) + " forgerà " + getArma().getNomeBreve() + ": gli servono "
-				+ getMetallo().quanti(getQuantitaDelMetallo()) + " e " + getTrofeo().quanti(getQuantitaDelTrofeo())
-				+ ", più " + getCosto() + " monete per il lavoro.";
+		return Testi.formatta("missioni", "LaForgia.t9", Lingue.corrente().inizialeMaiuscola(mandante(MANDANTE.getNome())), getArma().getNomeBreve(), getMetallo().quanti(getQuantitaDelMetallo()), getTrofeo().quanti(getQuantitaDelTrofeo()), getCosto());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Lingue.corrente().inizialeMaiuscola(mandante(MANDANTE.getNome())) + " vi consegna " + getArma().getNomeBreve() + ".";
+		return Testi.formatta("missioni", "LaForgia.t10", Lingue.corrente().inizialeMaiuscola(mandante(MANDANTE.getNome())), getArma().getNomeBreve());
 	}
 
 	/**

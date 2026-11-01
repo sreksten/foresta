@@ -6,6 +6,7 @@ import com.threeamigos.foresta.tipi.TipoMissione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Un rito (vedi IlRituale), letto da una riga di RITUALE in missioni.txt, che ne descrive i campi: chi lo chiede, dove
@@ -88,8 +89,7 @@ public final class RitualeRichiesto {
 			metodo = campi.intero("METODO");
 			if (metodi.size() < METODI_MINIMI || metodi.size() > METODI_MASSIMI || metodi.contains("")
 					|| metodo < 1 || metodo > metodi.size() || errore == null) {
-				throw new IllegalArgumentException("Da " + METODI_MINIMI + " a " + METODI_MASSIMI
-						+ " metodi, il numero di quello giusto e il testo dell'errore: " + riga);
+				throw new IllegalArgumentException(Testi.formatta("missioni", "RitualeRichiesto.s1", METODI_MINIMI, METODI_MASSIMI, riga));
 			}
 		} else {
 			metodo = 0;

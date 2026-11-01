@@ -32,6 +32,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Una missione fatta di {@link Passo}, come un piccolo automa (vedi gestione_missioni.md, §3): i passi hanno un
@@ -203,8 +204,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 				return;
 			}
 			if (passiDiFila >= PASSI_DI_FILA_MASSIMI) {
-				throw new IllegalStateException("La missione " + getId() + " ha concluso " + PASSI_DI_FILA_MASSIMI
-						+ " passi di fila nello stesso controllo: c'è un ciclo fra i passi? Ultimo passo: " + id);
+				throw new IllegalStateException(Testi.formatta("missioni", "MissioneAPassi.s1", getId(), PASSI_DI_FILA_MASSIMI, id));
 			}
 			passo.eseguiAzione();
 			if (passo.haIntermezzo()) {
@@ -491,8 +491,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 			aggiungiProprieta(RIPIEGO + oggetti.getChiave(), coordinate.getX() + SEPARATORE + coordinate.getY());
 			Foresta.setLocazioneConosciuta(coordinate);
 			NomeOggetto nome = oggetti.getNome();
-			BusEventi.pubblica(new NotificaTestoParagrafo("Un viandante vi segna sulla mappa un posto dove trovare "
-					+ nome.getADP() + nome.getPlurale() + " che vi mancano."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneAPassi.s2", nome.getADP(), nome.getPlurale())));
 		});
 	}
 

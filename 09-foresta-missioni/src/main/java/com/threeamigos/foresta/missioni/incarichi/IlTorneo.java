@@ -25,6 +25,7 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città qualcuno bandisce un torneo (vedi {@link TorneoRichiesto}, da missioni.txt), con in palio un oggetto
@@ -149,7 +150,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	private String inPalio() {
 		String breve = getLeggendario().getNomeBreve();
 		boolean plurale = breve.startsWith("gli ") || breve.startsWith("i ") || breve.startsWith("le ");
-		return (plurale ? "ci sono " : "c'è ") + breve;
+		return (plurale ? "ci sono " : Testi.formatta("missioni", "IlTorneo.s1")) + breve;
 	}
 
 	private void premia() {
@@ -157,9 +158,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 		Artefatto leggendario = getLeggendario().costruisci(Statistiche.getLivello());
 		GruppoGiocatore.getIstanza().addArtefatto(leggendario);
 		BusEventi.pubblica(new NotificaArtefattoTrovato(leggendario, Statistiche.getLivello()));
-		BusEventi.pubblica(new NotificaTestoParagrafo(testo(torneo.getFinale()) + " Il giudice di gara consegna al gruppo "
-				+ getLeggendario().getNomeBreve() + ": finisce nell'inventario del gruppo. La borsa di " + getRicompensa()
-				+ " monete aspetta a " + getNomeCitta() + "."));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlTorneo.s2", testo(torneo.getFinale()), getLeggendario().getNomeBreve(), getRicompensa(), getNomeCitta())));
 	}
 
 	@Override
@@ -170,13 +169,12 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	@Override
 	public String getDescrizione() {
 		if (getLeggendario() == null) {
-			return "Prima o poi, in città, si bandirà un torneo con un leggendario in palio.";
+			return Testi.formatta("missioni", "IlTorneo.t1");
 		}
 		TorneoRichiesto torneo = getTorneo();
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return "Hai vinto il torneo: torna " + Lingue.corrente().conPreposizione(Preposizione.DA, mandante(torneo.getMandante())) + " a " + getNomeCitta()
-					+ " per la borsa del vincitore.";
+			return Testi.formatta("missioni", "IlTorneo.t2", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(torneo.getMandante())), getNomeCitta());
 		}
 		String chi;
 		String turno;
@@ -188,8 +186,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 			chi = unSfidante(torneo.getSfidanti().get(indice));
 			turno = "il " + NOMI_DEI_TURNI[indice];
 		}
-		return getNome() + ", " + turno + ": affronta " + chi + " nella lizza segnata sulla mappa, uno contro uno e fino alla resa. In palio "
-				+ inPalio() + ".";
+		return Testi.formatta("missioni", "IlTorneo.t3", getNome(), turno, chi, inPalio());
 	}
 
 	@Override
@@ -210,8 +207,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, torneo.getLuogo())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getLizza());
-							BusEventi.pubblica(new NotificaTestoParagrafo("La lizza del torneo è segnata sulla mappa: si combatte un turno a "
-									+ "ogni visita, uno contro uno e fino alla resa."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlTorneo.s3")));
 						})
 						.poi(TURNI[0]);
 			case FINALE:
@@ -225,7 +221,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 						String prossimo = turno + 1 < TURNI.length ? TURNI[turno + 1] : FINALE;
 						return combatti(this::getLizza, getSfidante(turno))
 								.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testo(vinto)
-										+ (FINALE.equals(prossimo) ? " Alla prossima visita alla lizza, la finale." : " Alla prossima visita alla lizza, il turno successivo."))))
+										+ (FINALE.equals(prossimo) ? Testi.formatta("missioni", "IlTorneo.s4") : Testi.formatta("missioni", "IlTorneo.s5")))))
 								.poi(prossimo);
 					}
 				}
@@ -238,9 +234,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 		TorneoRichiesto torneo = getTorneo();
 		return torneo.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(torneo.getRichiesta()))
-				.parlaIlMandante("Si combatte " + TestiDeiLuoghi.dentro(torneo.getLuogo()) + " qui vicino, uno contro uno e fino alla resa: "
-						+ "due turni, e in finale " + ilCampione() + ". In palio " + inPalio() + ", e una borsa di "
-						+ getRicompensa() + " monete.")
+				.parlaIlMandante(Testi.formatta("missioni", "IlTorneo.1", TestiDeiLuoghi.dentro(torneo.getLuogo()), ilCampione(), inPalio(), getRicompensa()))
 				.parlaIlCapo(testo(torneo.getBattutaDelCapo()))
 				.parlaIlMandante(testo(torneo.getRisposta()));
 	}
@@ -249,17 +243,17 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	protected ScenaInCitta scenaRingraziamento() {
 		return getTorneo().getAspetto().nuovaScena()
 				.parlaIlMandante(testo(getTorneo().getRingraziamento()))
-				.parlaIlMandante("Ecco la borsa del vincitore: " + getRicompensa() + " monete.");
+				.parlaIlMandante(Testi.formatta("missioni", "IlTorneo.2", getRicompensa()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(getTorneo().getMandante())) + " ha iscritto il gruppo al torneo: in palio " + inPalio() + ".";
+		return Testi.formatta("missioni", "IlTorneo.t4", Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(getTorneo().getMandante())), inPalio());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Lingue.corrente().inizialeMaiuscola(mandante(getTorneo().getMandante())) + " consegna la borsa del vincitore: " + getRicompensa() + " monete.";
+		return Testi.formatta("missioni", "IlTorneo.t5", Lingue.corrente().inizialeMaiuscola(mandante(getTorneo().getMandante())), getRicompensa());
 	}
 
 	@Override

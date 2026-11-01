@@ -10,6 +10,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Sconfiggere il Minotauro Gigante, alleato del Drago, nella Torre della Paura. È una figlia di {@link SconfiggiIlDrago}.
@@ -24,12 +25,12 @@ public class SconfiggiIlMinotauroGigante extends MissioneBase implements Mission
 
     @Override
     public String getNome() {
-        return "Sconfiggi il Minotauro Gigante";
+        return Testi.formatta("missioni", "SconfiggiIlMinotauroGigante.t1");
     }
 
     @Override
     public String getDescrizione() {
-        return "Il Minotauro Gigante, alleato del Drago, infesta un castello e terrorizza gli abitanti.";
+        return Testi.formatta("missioni", "SconfiggiIlMinotauroGigante.t2");
     }
 
     @Override
@@ -51,7 +52,7 @@ public class SconfiggiIlMinotauroGigante extends MissioneBase implements Mission
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         if (Foresta.getLocazioneDelGruppo() == TipoLocazione.CASTELLO_MINOTAURO && RegistroMissioni.isLocazioneCompleta()) {
             completaMissione();
-            BusEventi.pubblica(new NotificaTestoParagrafo("Il Minotauro è stato sconfitto!"));
+            BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "SconfiggiIlMinotauroGigante.s1")));
         }
     }
 
@@ -62,6 +63,6 @@ public class SconfiggiIlMinotauroGigante extends MissioneBase implements Mission
 
     @Override
     public String getRicordoDellaLocazione() {
-        return "Qui sorgeva il castello del Minotauro Gigante.";
+        return Testi.formatta("missioni", "SconfiggiIlMinotauroGigante.t3");
     }
 }

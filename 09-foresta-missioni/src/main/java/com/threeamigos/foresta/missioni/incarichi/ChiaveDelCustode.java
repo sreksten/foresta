@@ -12,6 +12,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Una delle chiavi di una {@link MissioneATappe} a chiavi, che la madre affida quando il gruppo ne scopre i custodi (le tre ricerche si
@@ -126,11 +127,11 @@ public class ChiaveDelCustode extends MissioneAPassi {
 
 	@Override
 	public String getDescrizione() {
-		StringBuilder descrizione = new StringBuilder(getParametro(TESTO)).append(" Il posto è ").append(getParametro(NOME_DEL_POSTO))
-				.append(", segnato sulla mappa.");
+		StringBuilder descrizione = new StringBuilder(getParametro(TESTO)).append(Testi.formatta("missioni", "ChiaveDelCustode.s1")).append(getParametro(NOME_DEL_POSTO))
+				.append(Testi.formatta("missioni", "ChiaveDelCustode.s2"));
 		if (isInScambio() && !CUSTODE.equals(getPassoCorrente()) && !CHIEDE.equals(getPassoCorrente())) {
-			descrizione.append(" ").append(getParametro(TESTO_DELL_OGGETTO)).append(" Il posto è ").append(getParametro(NOME_DEL_POSTO_DELL_OGGETTO))
-					.append(", segnato sulla mappa.");
+			descrizione.append(" ").append(getParametro(TESTO_DELL_OGGETTO)).append(Testi.formatta("missioni", "ChiaveDelCustode.s3")).append(getParametro(NOME_DEL_POSTO_DELL_OGGETTO))
+					.append(Testi.formatta("missioni", "ChiaveDelCustode.s4"));
 		}
 		return descrizione.toString();
 	}
@@ -150,7 +151,7 @@ public class ChiaveDelCustode extends MissioneAPassi {
 		switch (id) {
 			case CUSTODE:
 				return combatti(this::getPosto, incontroDelCustode())
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Il custode è vinto: " + getParametro(CHIAVE) + " è vostra.")))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "ChiaveDelCustode.s5", getParametro(CHIAVE)))))
 						.poi(Passo.FINE);
 			case CHIEDE:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::isNelPostoDelCustode)
@@ -161,8 +162,7 @@ public class ChiaveDelCustode extends MissioneAPassi {
 						})
 						.esegui(() -> {
 							BusEventi.pubblica(new NotificaTestoParagrafo(getParametro(TESTO)));
-							BusEventi.pubblica(new NotificaTestoParagrafo(getParametro(TESTO_DELL_OGGETTO) + " Il posto è "
-									+ getParametro(NOME_DEL_POSTO_DELL_OGGETTO) + ": è segnato sulla mappa."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "ChiaveDelCustode.s6", getParametro(TESTO_DELL_OGGETTO), getParametro(NOME_DEL_POSTO_DELL_OGGETTO))));
 							Foresta.setLocazioneConosciuta(getPostoDellOggetto());
 						})
 						.poi(OGGETTO);
@@ -170,7 +170,7 @@ public class ChiaveDelCustode extends MissioneAPassi {
 				return combatti(this::getPostoDellOggetto, IncontroDiMissione.di(TipoPersonaggio.valueOf(getParametro(NEMICO_DELL_OGGETTO)),
 						Integer.parseInt(getParametro(NUMERO_DELL_OGGETTO))))
 						.esegui(() -> {
-							BusEventi.pubblica(new NotificaTestoParagrafo("Avete recuperato " + getParametro(OGGETTO) + ": ora tocca riportarlo."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "ChiaveDelCustode.s7", getParametro(OGGETTO))));
 							Foresta.setLocazioneConosciuta(getPosto());
 						})
 						.poi(CONSEGNA);
@@ -181,8 +181,7 @@ public class ChiaveDelCustode extends MissioneAPassi {
 								RegistroMissioni.sopprimiContenutoLocazione(getPosto());
 							}
 						})
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("In cambio di " + getParametro(OGGETTO) + " il custode vi dà "
-								+ getParametro(CHIAVE) + ".")))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "ChiaveDelCustode.s8", getParametro(OGGETTO), getParametro(CHIAVE)))))
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);

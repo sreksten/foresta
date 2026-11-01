@@ -10,6 +10,7 @@ import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Sotto-missione di {@link CronacheDiUnFegatoEroico}: si conclude quando il gruppo
@@ -44,7 +45,7 @@ public class VisitaLocanda extends MissioneBase {
 
 	@Override
 	public String getDescrizione() {
-		return "Fatti servire almeno un boccale alla '" + getNomeLocanda() + "'.";
+		return Testi.formatta("missioni", "VisitaLocanda.t1", getNomeLocanda());
 	}
 
 	/**
@@ -59,7 +60,7 @@ public class VisitaLocanda extends MissioneBase {
 		}
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(getTipoCitta());
 		if (coordinate == null) {
-			return "locanda perduta";
+			return Testi.formatta("missioni", "VisitaLocanda.t2");
 		}
 		nome = Locande.getNome(Foresta.getLocazioneMD(coordinate));
 		if (nome != null) {
@@ -80,7 +81,7 @@ public class VisitaLocanda extends MissioneBase {
 			RegistroMissioni.segnalaLocazione(this, Foresta.getCoordinateLocazioneUnica(getTipoCitta()));
 		} else if (!isCompleta() && getTipoCitta() != null && Foresta.isCittaDistrutta(getTipoCitta())) {
 			// Distrutta la citta', la sua locanda non c'e' piu'
-			BusEventi.pubblica(new NotificaTestoParagrafo("La '" + getNomeLocanda() + "' è andata distrutta con la sua città: una tappa che non si potrà più fare."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "VisitaLocanda.s1", getNomeLocanda())));
 			fallisciMissione();
 		}
 	}
@@ -101,7 +102,7 @@ public class VisitaLocanda extends MissioneBase {
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(tipoCitta);
 		if (coordinate != null && Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locande.LOCANDA_VISITATA) != null) {
 			completaMissione();
-			BusEventi.pubblica(new NotificaTestoParagrafo("Una tappa in meno: " + getNome() + " è cosa fatta."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "VisitaLocanda.s2", getNome())));
 		}
 	}
 

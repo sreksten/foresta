@@ -13,6 +13,7 @@ import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * La missione principale: sconfiggere il Drago. Il suo castello è nascosto da un incantesimo finché non sono stati sconfitti tutti i suoi alleati: le missioni
@@ -32,19 +33,19 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 
 	@Override
 	public String getNome() {
-		return "Sconfiggi il Drago";
+		return Testi.formatta("missioni", "SconfiggiIlDrago.t1");
 	}
 
 	@Override
 	public String getDescrizione() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("La Foresta è minacciata da un temibile Drago. ");
+		sb.append(Testi.formatta("missioni", "SconfiggiIlDrago.s1"));
 		if (isDragoNonApparso()) {
-			sb.append("Il Castello dove si trova è nascosto da un incantesimo. ");
+			sb.append(Testi.formatta("missioni", "SconfiggiIlDrago.s2"));
 			sb.append(GruppoGiocatore.getIstanza().getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
-			sb.append(" deve sconfiggere tutti i suoi alleati per poterlo affrontare!");			
+			sb.append(Testi.formatta("missioni", "SconfiggiIlDrago.s3"));			
 		} else {
-			sb.append("Occorre entrare nel suo Castello ed affrontarlo!");
+			sb.append(Testi.formatta("missioni", "SconfiggiIlDrago.s4"));
 		}
 		return sb.toString();
 	}
@@ -68,15 +69,14 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 			// Come gli altri castelli, anche quello del Drago sorge su un bosco rivendicato dalla missione; se non ce
 			// n'è nessuno libero si riprova alla fine della prossima locazione
 			if (RegistroMissioni.rivendicaPerLocazioneUnica(TipoLocazione.CASTELLO_DRAGO, TipoLocazione.BOSCO, this) != null) {
-				BusEventi.pubblica(new NotificaTestoParagrafo("L'incantesimo che nascondeva il castello del Drago " +
-						"è svanito! La missione è quasi giunta al termine!"));
+				BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "SconfiggiIlDrago.s5")));
 				setDragoApparso();
 			}
 		} else {
 			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 			if (Foresta.getLocazioneDelGruppo() == TipoLocazione.CASTELLO_DRAGO && RegistroMissioni.isLocazioneCompleta()) {
 				completaMissione();
-				BusEventi.pubblica(new NotificaGlobale("Vittoria", "Il drago e' morto"));
+				BusEventi.pubblica(new NotificaGlobale("Vittoria", Testi.formatta("missioni", "SconfiggiIlDrago.s6")));
 				LineaTemporale.setGiocoFinito(true);
 			}
 		}
@@ -107,6 +107,6 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return "Qui sorgeva il castello del Drago.";
+		return Testi.formatta("missioni", "SconfiggiIlDrago.t2");
 	}
 }

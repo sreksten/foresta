@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città qualcuno affida al gruppo una cosa da portare a qualcuno in un'altra città: una lettera, un pegno d'amore,
@@ -192,14 +193,13 @@ public class IlCorriere extends IncaricoInCitta {
 	@Override
 	public String getNome() {
 		Spedizione spedizione = getSpedizione();
-		return Lingue.corrente().inizialeMaiuscola(spedizione.getOggettoConArticolo()) + " per " + getDestinatarioDiCitta();
+		return Testi.formatta("missioni", "IlCorriere.t1", Lingue.corrente().inizialeMaiuscola(spedizione.getOggettoConArticolo()), getDestinatarioDiCitta());
 	}
 
 	@Override
 	public String getDescrizione() {
 		Spedizione spedizione = getSpedizione();
-		String descrizione = "Porta " + spedizione.getOggettoConArticolo() + " " + Lingue.corrente().conPreposizione(Preposizione.A, getDestinatarioDiCitta())
-				+ ", che ti pagherà " + getRicompensa() + " monete.";
+		String descrizione = Testi.formatta("missioni", "IlCorriere.s1", spedizione.getOggettoConArticolo(), Lingue.corrente().conPreposizione(Preposizione.A, getDestinatarioDiCitta()), getRicompensa());
 		if (spedizione.isUrgente()) {
 			descrizione += " Ore rimaste: " + Math.max(0, getOreRimaste()) + ".";
 		}
@@ -221,17 +221,14 @@ public class IlCorriere extends IncaricoInCitta {
 							incrementaContatore(OGGETTO, 1);
 							aggiungiProprieta(PARTITI_ALLE, String.valueOf(oreDiGioco()));
 							Foresta.setLocazioneConosciuta(Foresta.getCoordinateLocazioneUnica(getDestinazione()));
-							BusEventi.pubblica(new NotificaTestoParagrafo(getNomeDestinazione() + " è segnata sulla mappa."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlCorriere.s2", getNomeDestinazione())));
 						})
 						.poi(VIAGGIO);
 			case VIAGGIO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nellaCittaDelRitorno)
 						.segnala(this::coordinateDellaCittaDelRitorno)
-						.falliscoSe(this::isInRitardo, () -> "Troppo tardi: " + spedizione.getOggettoConArticolo() + " non arriverà più in tempo "
-								+ Lingue.corrente().conPreposizione(Preposizione.A, getDestinatarioDiCitta()) + ".")
-						.falliscoSe(() -> isDiNascosto() && haCombattutoNelPassoCorrente(), () -> "La voce del combattimento si è sparsa: "
-								+ mandanteIn(spedizione.getDestinatario(), getDestinazione()) + " non vorrà più saperne " + Lingue.corrente().conPreposizione(Preposizione.DI, spedizione.getOggettoConArticolo())
-								+ ", e " + mandante(spedizione.getMittente()) + " nemmeno di voi.")
+						.falliscoSe(this::isInRitardo, () -> Testi.formatta("missioni", "IlCorriere.s3", spedizione.getOggettoConArticolo(), Lingue.corrente().conPreposizione(Preposizione.A, getDestinatarioDiCitta())))
+						.falliscoSe(() -> isDiNascosto() && haCombattutoNelPassoCorrente(), () -> Testi.formatta("missioni", "IlCorriere.s4", mandanteIn(spedizione.getDestinatario(), getDestinazione()), Lingue.corrente().conPreposizione(Preposizione.DI, spedizione.getOggettoConArticolo()), mandante(spedizione.getMittente())))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -253,15 +250,14 @@ public class IlCorriere extends IncaricoInCitta {
 	protected ScenaInCitta scenaIncarico() {
 		Spedizione spedizione = getSpedizione();
 		String quando = spedizione.isUrgente()
-				? " E in fretta: avete " + getOreConcesse() + " ore, non di più."
-				: " Non c'è fretta, ma non " + spedizione.getPronome() + " perdete per strada.";
+				? Testi.formatta("missioni", "IlCorriere.s5", getOreConcesse())
+				: Testi.formatta("missioni", "IlCorriere.s6", spedizione.getPronome());
 		if (isDiNascosto()) {
-			quando += " E che nessuno vi noti: niente combattimenti per strada, o la voce arriva alle guardie.";
+			quando += Testi.formatta("missioni", "IlCorriere.s7");
 		}
 		return scenaDel(spedizione.getMittente())
 				.parlaIlMandante(spedizione.getRichiesta())
-				.parlaIlMandante("Portate " + spedizione.getQuestoOggetto() + " " + Lingue.corrente().conPreposizione(Preposizione.A, getDestinatarioDiCitta()) + "."
-						+ quando + " Alla consegna avrete " + getRicompensa() + " monete.")
+				.parlaIlMandante(Testi.formatta("missioni", "IlCorriere.1", spedizione.getQuestoOggetto(), Lingue.corrente().conPreposizione(Preposizione.A, getDestinatarioDiCitta()), quando, getRicompensa()))
 				.parlaIlCapo(spedizione.getBattutaDelCapo())
 				.parlaIlMandante(spedizione.getRispostaDelMittente());
 	}
@@ -270,29 +266,27 @@ public class IlCorriere extends IncaricoInCitta {
 	protected ScenaInCitta scenaRingraziamento() {
 		return scenaDel(getSpedizione().getDestinatario())
 				.parlaIlMandante(getSpedizione().getRingraziamento())
-				.parlaIlMandante("Ecco le " + getRicompensa() + " monete, ve le siete guadagnate.");
+				.parlaIlMandante(Testi.formatta("missioni", "IlCorriere.2", getRicompensa()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
 		Spedizione spedizione = getSpedizione();
-		String testo = Lingue.corrente().inizialeMaiuscola(getDestinatarioDiCitta()) + " pagherà " + getRicompensa() + " monete per "
-				+ spedizione.getOggettoConArticolo() + " che manda " + mandanteSenzaVirgolaFinale(spedizione.getMittente());
+		String testo =Testi.formatta("missioni", "IlCorriere.s8", Lingue.corrente().inizialeMaiuscola(getDestinatarioDiCitta()), getRicompensa(), spedizione.getOggettoConArticolo(), mandanteSenzaVirgolaFinale(spedizione.getMittente()));
 		if (spedizione.isUrgente()) {
-			return testo + ", se arriva entro " + getOreConcesse() + " ore.";
+			return Testi.formatta("missioni", "IlCorriere.t2", testo, getOreConcesse());
 		}
 		return testo + ".";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Lingue.corrente().inizialeMaiuscola(mandanteIn(getSpedizione().getDestinatario(), getDestinazione())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Testi.formatta("missioni", "IlCorriere.t3", Lingue.corrente().inizialeMaiuscola(mandanteIn(getSpedizione().getDestinatario(), getDestinazione())), getRicompensa());
 	}
 
 	@Override
 	protected String testoCittaDistrutta() {
-		return getNomeDestinazione() + " è stata distrutta: " + getSpedizione().getOggettoConArticolo() + " non arriverà più "
-				+ Lingue.corrente().conPreposizione(Preposizione.A, mandanteInSenzaVirgolaFinale(getSpedizione().getDestinatario(), getDestinazione())) + ".";
+		return Testi.formatta("missioni", "IlCorriere.t4", getNomeDestinazione(), getSpedizione().getOggettoConArticolo(), Lingue.corrente().conPreposizione(Preposizione.A, mandanteInSenzaVirgolaFinale(getSpedizione().getDestinatario(), getDestinazione())));
 	}
 
 	/**

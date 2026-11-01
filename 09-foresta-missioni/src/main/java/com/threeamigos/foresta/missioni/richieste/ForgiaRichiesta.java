@@ -6,6 +6,7 @@ import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.Locale;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'arma che l'armaiolo forgia (vedi LaForgia), letta da una riga di FORGIA in missioni.txt, che ne descrive i campi:
@@ -150,14 +151,7 @@ public final class ForgiaRichiesta {
 		int fisso = INCANTAMENTO_FISSO_BASE + INCANTAMENTO_FISSO_PER_LIVELLO * livello;
 		double coefficiente = INCANTAMENTO_COEFFICIENTE_BASE + INCANTAMENTO_COEFFICIENTE_PER_LIVELLO * livello;
 		String nomeDellIncantamento = "Tempra di " + elemento.getNome().toLowerCase(Locale.ROOT);
-		String rigaDellOggetto = "TIPO=" + tipo.name() + ";NOME=" + nome + ";CHIAVE=" + chiaveDellOggetto + ";BREVE=" + nomeBreve
-				+ ";DESCRIZIONE=" + descrizione + ";LIVELLO=" + livello + ";DANNI=" + getDanni(livello)
-				+ ";COSTO=" + (COSTO_PER_LIVELLO * livello) + ";PESO=" + peso
-				+ ";MOD=" + attributo.name() + " +" + percentuale + "%;MOD=CRITICO +" + critico
-				+ ";INCANTAMENTO=" + elemento.name() + " " + fisso + " " + String.format(Locale.ROOT, "%.2f", coefficiente)
-				+ " " + nomeDellIncantamento
-				+ ";LEGGENDA=Avete mai sentito parlare di " + nome + "?;"
-				+ "LEGGENDA=L'ha forgiata un armaiolo con quello che i suoi clienti gli hanno portato, e un pizzico di cattivo carattere.";
+		String rigaDellOggetto = Testi.formatta("missioni", "ForgiaRichiesta.s1", tipo.name(), nome, chiaveDellOggetto, nomeBreve, descrizione, livello, getDanni(livello), (COSTO_PER_LIVELLO * livello), peso, attributo.name(), percentuale, critico, elemento.name(), fisso, String.format(Locale.ROOT, "%.2f", coefficiente), nomeDellIncantamento, nome);
 		return OggettoLeggendario.da(rigaDellOggetto);
 	}
 }

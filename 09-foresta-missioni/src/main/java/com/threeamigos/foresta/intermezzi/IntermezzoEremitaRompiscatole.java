@@ -12,6 +12,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'ultimo eremita disturbato dice al gruppo quello che pensa. Scatta una volta sola, a fine locazione, quando la
@@ -37,7 +38,7 @@ public class IntermezzoEremitaRompiscatole implements Intermezzo {
 	@Override
 	public List<PaginaIntermezzo> getPagine() {
 		TipoLocazione sfondo = Foresta.getLocazioneDelGruppo();
-		return Collections.singletonList(new PaginaIntermezzo("Dieci eremiti angustiati.")
+		return Collections.singletonList(new PaginaIntermezzo(Testi.formatta("missioni", "IntermezzoEremitaRompiscatole.1"))
 				.conSfondo(ImmagineIntermezzo.locazione(sfondo))
 				.conElemento(ElementoIntermezzo.personaggio(EREMITA, TipoPersonaggio.EREMITA, 1.1, 0.61)
 						.conBocca(0.5, -0.15)
@@ -46,7 +47,7 @@ public class IntermezzoEremitaRompiscatole implements Intermezzo {
 				.conElemento(ElementoIntermezzo.personaggio(EROE, GruppoGiocatore.getIstanza().getCapo().getClasse(), 0.38, 0.61)
 						.conBocca(0.5, -0.15)
 						.guarda(Verso.DESTRA))
-				.conBattuta(BattutaIntermezzo.di(EREMITA, "Questa foresta era un luogo tranquillo prima che voi maledetti rompiscatole arrivaste!")
+				.conBattuta(BattutaIntermezzo.di(EREMITA, Testi.formatta("missioni", "IntermezzoEremitaRompiscatole.2"))
 						.daSecondo(2)));
 	}
 }

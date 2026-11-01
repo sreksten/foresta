@@ -13,6 +13,7 @@ import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Un mandante in città (l'alchimista, l'armaiolo, il capitano delle guardie, il locandiere: vedi {@link Mandante})
@@ -104,11 +105,9 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 	public String getDescrizione() {
 		MaterialeRichiesto materiale = getMateriale();
 		if (RITORNO.equals(getPassoCorrente())) {
-			return "Hai " + materiale.getTutti() + " " + materiale.getPluraleConArticolo() + ": porta" + materiale.getPronome()
-					+ " " + Lingue.corrente().conPreposizione(Preposizione.A, mandanteDiCittaSenzaVirgolaFinale(mandante.getNome())) + ".";
+			return Testi.formatta("missioni", "RichiestaDiMateriali.t1", materiale.getTutti(), materiale.getPluraleConArticolo(), materiale.getPronome(), Lingue.corrente().conPreposizione(Preposizione.A, mandanteDiCittaSenzaVirgolaFinale(mandante.getNome())));
 		}
-		return Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(mandante.getNome())) + " ti ha chiesto " + materiale.quanti(getQuantita())
-				+ ", che " + materiale.getDaDoveViene() + ". Finora: " + getContatore(MATERIALE) + ".";
+		return Testi.formatta("missioni", "RichiestaDiMateriali.t2", Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(mandante.getNome())), materiale.quanti(getQuantita()), materiale.getDaDoveViene(), getContatore(MATERIALE));
 	}
 
 	@Override
@@ -146,31 +145,29 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 		MaterialeRichiesto materiale = getMateriale();
 		return mandante.nuovaScena()
 				.parlaIlMandante(mandante.getApertura(nomeDelMandante(mandante.getNome())))
-				.parlaIlMandante("Mi servono " + materiale.quanti(getQuantita()) + ". " + Lingue.corrente().inizialeMaiuscola(materiale.getDaDoveViene()) + ".")
+				.parlaIlMandante(Testi.formatta("missioni", "RichiestaDiMateriali.1", materiale.quanti(getQuantita()), Lingue.corrente().inizialeMaiuscola(materiale.getDaDoveViene())))
 				.parlaIlCapo(materiale.getBattutaDelCapo())
-				.parlaIlMandante(materiale.getRispostaDelMandante() + " Ve " + materiale.getPronome() + " pago "
-						+ getRicompensa() + " monete.")
-				.parlaIlCapo("Affare fatto.");
+				.parlaIlMandante(Testi.formatta("missioni", "RichiestaDiMateriali.2", materiale.getRispostaDelMandante(), materiale.getPronome(), getRicompensa()))
+				.parlaIlCapo(Testi.formatta("missioni", "RichiestaDiMateriali.3"));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		MaterialeRichiesto materiale = getMateriale();
 		return mandante.nuovaScena()
-				.parlaIlMandante(materiale.getPossessivo() + " " + materiale.getPlurale() + "! E sono pure di prima scelta.")
-				.parlaIlCapo("La prossima volta, nella foresta, ci venite voi.");
+				.parlaIlMandante(Testi.formatta("missioni", "RichiestaDiMateriali.4", materiale.getPossessivo(), materiale.getPlurale()))
+				.parlaIlCapo(Testi.formatta("missioni", "RichiestaDiMateriali.5"));
 	}
 
 	@Override
 	protected String testoAccettazione() {
 		MaterialeRichiesto materiale = getMateriale();
-		return Lingue.corrente().inizialeMaiuscola(mandante(mandante.getNome())) + " pagherà " + getRicompensa() + " monete per "
-				+ materiale.quanti(getQuantita()) + ", che " + materiale.getDaDoveViene() + ".";
+		return Testi.formatta("missioni", "RichiestaDiMateriali.t3", Lingue.corrente().inizialeMaiuscola(mandante(mandante.getNome())), getRicompensa(), materiale.quanti(getQuantita()), materiale.getDaDoveViene());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Lingue.corrente().inizialeMaiuscola(mandante(mandante.getNome())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Testi.formatta("missioni", "RichiestaDiMateriali.t4", Lingue.corrente().inizialeMaiuscola(mandante(mandante.getNome())), getRicompensa());
 	}
 
 	/**

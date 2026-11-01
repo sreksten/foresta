@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Sette templi liberati dai mostri che li infestano. La missione parte quando il gruppo ripulisce il primo tempio: a
@@ -78,23 +79,23 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 
 	@Override
 	public String getNome() {
-		return "Il Giro delle Sette Chiese";
+		return Testi.formatta("missioni", "IlGiroDelleSetteChiese.t1");
 	}
 
 	@Override
 	public String getDescrizione() {
 		String cardinale = Lingue.corrente().cardinale(TEMPLI_DA_LIBERARE, Genere.MASCHILE);
 		if (isCompleta()) {
-			return "Sette templi liberati dai mostri: i devoti sono tornati in pellegrinaggio.";
+			return Testi.formatta("missioni", "IlGiroDelleSetteChiese.t2");
 		}
 		if (!isAttiva()) {
-			return "Qualcuno, lassù, apprezzerebbe che un tempio infestato tornasse a essere un luogo di preghiera.";
+			return Testi.formatta("missioni", "IlGiroDelleSetteChiese.t3");
 		}
 		int mancanti = TEMPLI_DA_LIBERARE - contaTempliRipuliti();
 		String descrizione = "Aiuta " + (getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "la sacerdotessa" : "il sacerdote") + " a liberare " + cardinale
 				+ " templi dai mostri che li infestano.";
 		if (mancanti == 1) {
-			return descrizione + " Ne manca uno.";
+			return Testi.formatta("missioni", "IlGiroDelleSetteChiese.t4", descrizione);
 		}
 		return descrizione + " Ne mancano " + Lingue.corrente().cardinale(mancanti, Genere.MASCHILE) + ".";
 	}
@@ -136,8 +137,7 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 		ripulisciIlTempioCorrente();
 		int ripuliti = contaTempliRipuliti();
 		if (ripuliti < TEMPLI_DA_LIBERARE) {
-			BusEventi.pubblica(new NotificaTestoParagrafo("Il tempio è libero dai mostri: sono " + Lingue.corrente().cardinale(ripuliti, Genere.MASCHILE)
-					+ " su " + Lingue.corrente().cardinale(TEMPLI_DA_LIBERARE, Genere.MASCHILE) + "."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlGiroDelleSetteChiese.s1", Lingue.corrente().cardinale(ripuliti, Genere.MASCHILE), Lingue.corrente().cardinale(TEMPLI_DA_LIBERARE, Genere.MASCHILE))));
 		}
 	}
 
@@ -162,8 +162,8 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 		for (TipoIncantesimo incantesimo : INCANTESIMI_IN_DONO) {
 			gruppo.addIncantesimi(incantesimo, 1);
 		}
-		BusEventi.pubblica(new NotificaTestoParagrafo("In dono dai devoti, per aiutarvi durante il vostro viaggio: " + elencoDeiDoni() + "."));
-		OffertaDelSacerdote.avvisaSeIlGruppoEPieno(getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "la sacerdotessa" : "il sacerdote");
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlGiroDelleSetteChiese.s2", elencoDeiDoni())));
+		OffertaDelSacerdote.avvisaSeIlGruppoEPieno(getSacerdote() == TipoPersonaggio.SACERDOTESSA ? Testi.formatta("missioni", "IlGiroDelleSetteChiese.s3") : "il sacerdote");
 	}
 
 	/**
@@ -198,25 +198,19 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 
 	private List<PaginaIntermezzo> getPagineDellaPresentazione() {
 		boolean donna = getSacerdote() == TipoPersonaggio.SACERDOTESSA;
-		return Collections.singletonList(scenaNelTempio("Il tempio e' libero dai mostri.")
-				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, "Siate benedetti, viandanti! Questi muri erano infestati dai mostri, "
-						+ "e nessun devoto osava più venire a pregare.").daSecondo(2))
-				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, "Sono " + (donna ? "una sacerdotessa" : "un sacerdote")
-						+ " e mi prendo cura di questi luoghi sacri."))
-				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, "Altri sei templi della Foresta soffrono dello stesso male. "
-						+ "Volete aiutarmi a liberarli?"))
-				.conBattuta(BattutaIntermezzo.di(ID_EROE, "Va bene, ci penseremo noi."))
-				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, "Che la Luce vi accompagni. Ogni tempio che libererete "
-						+ "tornerà a essere un rifugio sicuro.")));
+		return Collections.singletonList(scenaNelTempio(Testi.formatta("missioni", "IlGiroDelleSetteChiese.s4"))
+				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.1")).daSecondo(2))
+				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.2", (donna ? "una sacerdotessa" : "un sacerdote"))))
+				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.3")))
+				.conBattuta(BattutaIntermezzo.di(ID_EROE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.4")))
+				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.5"))));
 	}
 
 	private List<PaginaIntermezzo> getPagineDelRingraziamento() {
 		return Collections.singletonList(scenaNelTempio("Sette templi liberi.")
-				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, "Sette templi liberi! Grazie a voi i devoti potranno tornare "
-						+ "in pellegrinaggio.").daSecondo(2))
-				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, "Accettate questi doni a nome loro, per aiutarvi durante il vostro viaggio: "
-						+ elencoDeiDoni() + "."))
-				.conBattuta(BattutaIntermezzo.di(ID_EROE, "Siamo onorati. Che la Luce vi accompagni.")));
+				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.6")).daSecondo(2))
+				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.7", elencoDeiDoni())))
+				.conBattuta(BattutaIntermezzo.di(ID_EROE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.8"))));
 	}
 
 	@Override
@@ -245,8 +239,7 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 				// A fine locazione, subito dopo il settimo tempio (e prima della scena del ringraziamento, che si mostra dopo i controlli), non alla
 				// partenza per la locazione dopo
 				return Passo.quando(MomentoControllo.POST_LOCAZIONE, () -> true)
-						.chiediConferma("Liberato anche l'ultimo tempio, " + (getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "la sacerdotessa" : "il sacerdote")
-								+ " chiede se desiderate che si unisca a voi in pianta stabile. Accettate?")
+						.chiediConferma(Testi.formatta("missioni", getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "IlGiroDelleSetteChiese.unisciti.F" : "IlGiroDelleSetteChiese.unisciti.M"))
 						.esegui(() -> {
 							if (Passo.SI.equals(getRisposta(COMPAGNO))) {
 								OffertaDelSacerdote.accogli(getSacerdote());

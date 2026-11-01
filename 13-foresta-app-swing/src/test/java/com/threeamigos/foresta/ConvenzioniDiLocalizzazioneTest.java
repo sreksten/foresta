@@ -29,7 +29,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * La localizzazione dei testi (vedi {@code assessment_portabilita.md}, «Testi italiani nel codice»).
  * <ul>
  * <li>I file {@code .properties} di una lingua non hanno chiavi che l'italiano non ha, e portano gli stessi segnaposto
- * ({@code {0}}, {@code {1}}...): un segnaposto perso o inventato in una traduzione rompe la frase.</li>
+ * ({@code {0}}, {@code {1}}...): un segnaposto inventato in una traduzione rompe la frase. Può invece mancarne uno, perché l'italiano
+ * ne usa per gli accordi di genere ("Riportatemel{3}") che un'altra lingua non ha.</li>
  * <li>Le stringhe italiane che arrivano sulla UI e sono ancora nel codice non possono aumentare: il numero per modulo
  * sta in {@code localizzazione_baseline.properties}. Chi sposta testi nei file lo abbassa.</li>
  * </ul>
@@ -56,8 +57,8 @@ class ConvenzioniDiLocalizzazioneTest {
 			for (String chiave : altra.stringPropertyNames()) {
 				if (!it.containsKey(chiave)) {
 					problemi.add(file.getFileName() + ": la chiave " + chiave + " non esiste in italiano");
-				} else if (!segnaposto(it.getProperty(chiave)).equals(segnaposto(altra.getProperty(chiave)))) {
-					problemi.add(file.getFileName() + ": segnaposto diversi in " + chiave);
+				} else if (!segnaposto(it.getProperty(chiave)).containsAll(segnaposto(altra.getProperty(chiave)))) {
+					problemi.add(file.getFileName() + ": segnaposto inventati in " + chiave);
 				}
 			}
 		}

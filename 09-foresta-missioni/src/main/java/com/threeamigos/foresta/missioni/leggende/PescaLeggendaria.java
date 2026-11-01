@@ -13,6 +13,7 @@ import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Quale leggendario racconta la prossima leggenda (vedi LaLeggenda), o mette in palio il prossimo torneo (vedi
@@ -132,9 +133,9 @@ public final class PescaLeggendaria {
 				return Optional.empty();
 			}
 			long mancano = pezzi.size() - usciti - 1;
-			String quantiMancano = mancano == 0 ? "ed è l'ultimo che manca."
-					: mancano == 1 ? "e ne manca ancora uno." : "e ne mancano ancora " + Lingue.corrente().cardinale((int) mancano, Genere.MASCHILE) + ".";
-			return Optional.of("Vi interessa " + set.getNome() + "? Allora ascoltate: questo è un altro dei suoi pezzi, " + quantiMancano);
+			String quantiMancano = mancano == 0 ? Testi.formatta("missioni", "PescaLeggendaria.s1")
+					: mancano == 1 ? Testi.formatta("missioni", "PescaLeggendaria.s2") : Testi.formatta("missioni", "PescaLeggendaria.s3", Lingue.corrente().cardinale((int) mancano, Genere.MASCHILE));
+			return Optional.of(Testi.formatta("missioni", "PescaLeggendaria.s4", set.getNome(), quantiMancano));
 		});
 	}
 

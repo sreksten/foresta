@@ -10,6 +10,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Sconfiggere l'Idra, alleata del Drago, nella Rocca del Sangue. È una figlia di {@link SconfiggiIlDrago}.
@@ -24,12 +25,12 @@ public class SconfiggiLIdra extends MissioneBase implements Missione {
 
     @Override
     public String getNome() {
-        return "Sconfiggi l'Idra";
+        return Testi.formatta("missioni", "SconfiggiLIdra.t1");
     }
 
     @Override
     public String getDescrizione() {
-        return "Una gigantesca Idra, alleata del Drago, infesta un castello e le lande adiacenti.";
+        return Testi.formatta("missioni", "SconfiggiLIdra.t2");
     }
 
     @Override
@@ -51,7 +52,7 @@ public class SconfiggiLIdra extends MissioneBase implements Missione {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         if (Foresta.getLocazioneDelGruppo() == TipoLocazione.CASTELLO_IDRA && RegistroMissioni.isLocazioneCompleta()) {
             completaMissione();
-            BusEventi.pubblica(new NotificaTestoParagrafo("L'Idra è stata sconfitta!"));
+            BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "SconfiggiLIdra.s1")));
         }
     }
 
@@ -62,6 +63,6 @@ public class SconfiggiLIdra extends MissioneBase implements Missione {
 
     @Override
     public String getRicordoDellaLocazione() {
-        return "Qui sorgeva il castello dell'Idra.";
+        return Testi.formatta("missioni", "SconfiggiLIdra.t3");
     }
 }

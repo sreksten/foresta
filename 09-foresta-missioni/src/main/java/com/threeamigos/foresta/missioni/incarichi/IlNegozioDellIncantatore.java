@@ -4,6 +4,7 @@ import com.threeamigos.foresta.tipi.AspettoDelMandante;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Un parente dell'incantatore apre un laboratorio di incantamenti nelle rovine disinfestate dal gruppo (vedi IlNegozio).
@@ -11,7 +12,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 public class IlNegozioDellIncantatore extends IlNegozio {
 
 	public IlNegozioDellIncantatore() {
-		super(MissionePredefinita.IL_NEGOZIO_DELL_INCANTATORE, "Il negozio dell'incantatore", TipoLocazione.INCANTATORE, PersonaggioNoto.INCANTATORE_DELLA_FORESTA, AspettoDelMandante.INCANTATORE,
+		super(MissionePredefinita.IL_NEGOZIO_DELL_INCANTATORE, Testi.formatta("missioni", "IlNegozioDellIncantatore.s1"), TipoLocazione.INCANTATORE, PersonaggioNoto.INCANTATORE_DELLA_FORESTA, AspettoDelMandante.INCANTATORE,
 				"l'incantatore");
 	}
 }

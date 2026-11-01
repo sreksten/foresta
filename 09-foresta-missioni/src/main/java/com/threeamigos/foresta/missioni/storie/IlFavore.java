@@ -12,6 +12,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il favore che un sacerdote chiede in cambio della sua benedizione (vedi LaBenedizione), o che un compagno chiede
@@ -157,14 +158,12 @@ public class IlFavore extends MissioneAPassi {
 		switch (favore.getTipo()) {
 			case RACCOLTA:
 				MaterialeRichiesto ingrediente = favore.getIngrediente();
-				return per + "raccogli " + ingrediente.quanti(favore.getQuantitaDaRaccogliere()) + ", che "
-						+ ingrediente.getDaDoveViene() + ". Finora: " + getContatore(INGREDIENTE) + ".";
+				return Testi.formatta("missioni", "IlFavore.t1", per, ingrediente.quanti(favore.getQuantitaDaRaccogliere()), ingrediente.getDaDoveViene(), getContatore(INGREDIENTE));
 			case VEGLIA:
-				return per + "veglia il posto segnato sulla mappa, passandoci " + Lingue.corrente().cardinale(favore.getVisite(), Genere.FEMMINILE)
-						+ " volte e lasciando passare almeno " + favore.getOre() + " ore fra una visita e l'altra. Finora: "
-						+ (VEGLIA.equals(getPassoCorrente()) ? getVisiteNelPassoCorrente() : 0) + ".";
+				return Testi.formatta("missioni", "IlFavore.veglia", per, Lingue.corrente().cardinale(favore.getVisite(), Genere.FEMMINILE), favore.getOre(),
+						VEGLIA.equals(getPassoCorrente()) ? getVisiteNelPassoCorrente() : 0);
 			default:
-				return per + "sconfiggi " + getNomeDeiNemici() + " nel posto segnato sulla mappa.";
+				return Testi.formatta("missioni", "IlFavore.t2", per, getNomeDeiNemici());
 		}
 	}
 
@@ -180,9 +179,7 @@ public class IlFavore extends MissioneAPassi {
 		}
 		aggiungiProprieta(VEGLIE, String.valueOf(visite));
 		int mancanti = favore.getVisite() - visite;
-		BusEventi.pubblica(new NotificaTestoParagrafo(testo(favore.getVeglia()) + " Bisogna tornare qui ancora "
-				+ Lingue.corrente().cardinale(mancanti, Genere.FEMMINILE) + (mancanti == 1 ? " volta" : " volte") + ", lasciando passare almeno "
-				+ favore.getOre() + " ore fra una visita e l'altra."));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlFavore.s1", testo(favore.getVeglia()), Lingue.corrente().cardinale(mancanti, Genere.FEMMINILE), (mancanti == 1 ? " volta" : " volte"), favore.getOre())));
 	}
 
 	@Override
@@ -198,7 +195,7 @@ public class IlFavore extends MissioneAPassi {
 				return cercaLocazione(getMomentoRichiesta(), favore.getLuogo())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getPosto());
-							BusEventi.pubblica(new NotificaTestoParagrafo("Il posto del favore è segnato sulla mappa."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlFavore.s2")));
 						})
 						.poi(favore.getTipo() == FavoreRichiesto.Tipo.VEGLIA ? VEGLIA : CACCIA);
 			case CACCIA:

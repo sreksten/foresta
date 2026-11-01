@@ -14,6 +14,7 @@ import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città c'è una taglia sul capo di una banda di hobgoblin che si nasconde in un bosco: la missione rivendica il
@@ -54,20 +55,20 @@ public class LaTagliaSullaBanda extends IncaricoInCitta {
 
 	@Override
 	public String getNome() {
-		return "La taglia su " + getCapobanda();
+		return Testi.formatta("missioni", "LaTagliaSullaBanda.t1", getCapobanda());
 	}
 
 	@Override
 	public String getDescrizione() {
 		if (RITORNO.equals(getPassoCorrente())) {
-			return getCapobanda() + " non darà più fastidio: torna a " + getNomeCitta() + " a riscuotere la taglia.";
+			return Testi.formatta("missioni", "LaTagliaSullaBanda.t2", getCapobanda(), getNomeCitta());
 		}
-		return "A " + getNomeCitta() + " c'è una taglia su " + getCapobanda() + ", il capo di una banda di hobgoblin che si nasconde in un bosco segnato sulla mappa.";
+		return Testi.formatta("missioni", "LaTagliaSullaBanda.t3", getNomeCitta(), getCapobanda());
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return "In questo bosco si nascondeva la banda di " + getCapobanda() + ".";
+		return Testi.formatta("missioni", "LaTagliaSullaBanda.t4", getCapobanda());
 	}
 
 	/**
@@ -89,13 +90,12 @@ public class LaTagliaSullaBanda extends IncaricoInCitta {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, TipoLocazione.BOSCO)
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getCovo());
-							BusEventi.pubblica(new NotificaTestoParagrafo("Il bosco dove si nasconde la banda di " + getCapobanda() + " è segnato sulla mappa."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaTagliaSullaBanda.s1", getCapobanda())));
 						})
 						.poi(CACCIA);
 			case CACCIA:
 				return combatti(this::getCovo, getBanda())
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(getCapobanda() + " e la sua banda non daranno più fastidio a nessuno: la taglia aspetta a "
-								+ getNomeCitta() + ".")))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaTagliaSullaBanda.s2", getCapobanda(), getNomeCitta()))))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -105,27 +105,27 @@ public class LaTagliaSullaBanda extends IncaricoInCitta {
 	@Override
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conCapitano()
-				.parlaIlMandante("Avete visto l'avviso? C'è una taglia su " + getCapobanda() + ", il capo degli hobgoblin.")
-				.parlaIlMandante("Lui e la sua banda si nascondono in un bosco qui vicino. " + getRicompensa() + " monete a chi li sistema.")
-				.parlaIlCapo("Dicci dov'è il bosco.");
+				.parlaIlMandante(Testi.formatta("missioni", "LaTagliaSullaBanda.1", getCapobanda()))
+				.parlaIlMandante(Testi.formatta("missioni", "LaTagliaSullaBanda.2", getRicompensa()))
+				.parlaIlCapo(Testi.formatta("missioni", "LaTagliaSullaBanda.3"));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conCapitano()
-				.parlaIlMandante(getCapobanda() + " è andato? Finalmente si torna a dormire tranquilli.")
-				.parlaIlMandante("Ecco la taglia, ve la siete guadagnata.")
-				.parlaIlCapo("Era un tipo simpatico, in fondo. No, non è vero.");
+				.parlaIlMandante(Testi.formatta("missioni", "LaTagliaSullaBanda.4", getCapobanda()))
+				.parlaIlMandante(Testi.formatta("missioni", "LaTagliaSullaBanda.5"))
+				.parlaIlCapo(Testi.formatta("missioni", "LaTagliaSullaBanda.6"));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return "La taglia su " + getCapobanda() + " vale " + getRicompensa() + " monete.";
+		return Testi.formatta("missioni", "LaTagliaSullaBanda.t5", getCapobanda(), getRicompensa());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return "La taglia di " + getRicompensa() + " monete è vostra.";
+		return Testi.formatta("missioni", "LaTagliaSullaBanda.t6", getRicompensa());
 	}
 
 	@Override

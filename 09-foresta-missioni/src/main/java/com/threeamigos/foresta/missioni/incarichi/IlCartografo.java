@@ -9,6 +9,7 @@ import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il cartografo: in città un cartografo vuole sapere che cosa c'è nella foresta, e paga il gruppo perché esplori un
@@ -40,16 +41,15 @@ public class IlCartografo extends IncaricoInCitta {
 
 	@Override
 	public String getNome() {
-		return "Il cartografo";
+		return Testi.formatta("missioni", "IlCartografo.t1");
 	}
 
 	@Override
 	public String getDescrizione() {
 		if (RITORNO.equals(getPassoCorrente())) {
-			return "Hai esplorato abbastanza: torna dal cartografo di " + getNomeCitta() + " a raccontargli che cosa hai visto.";
+			return Testi.formatta("missioni", "IlCartografo.t2", getNomeCitta());
 		}
-		return "Il cartografo di " + getNomeCitta() + " vuole sapere che cosa c'è in " + Lingue.corrente().cardinale(getCaselle(), Genere.FEMMINILE)
-				+ " zone della foresta dove non sei mai stato. Finora: " + getCaselleEsplorate() + ".";
+		return Testi.formatta("missioni", "IlCartografo.t3", getNomeCitta(), Lingue.corrente().cardinale(getCaselle(), Genere.FEMMINILE), getCaselleEsplorate());
 	}
 
 	@Override
@@ -63,37 +63,34 @@ public class IlCartografo extends IncaricoInCitta {
 			throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
 		}
 		return esplora(getCaselle())
-				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Avete visto abbastanza foresta da riempire una mappa: il cartografo di "
-						+ getNomeCitta() + " vi aspetta.")))
+				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlCartografo.s1", getNomeCitta()))))
 				.poi(RITORNO);
 	}
 
 	@Override
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante("Siete esploratori? Io disegno mappe, ma nella foresta non ci metto piede da anni.")
-				.parlaIlMandante("Andate dove nessuno di voi è mai stato, " + Lingue.corrente().cardinale(getCaselle(), Genere.FEMMINILE)
-						+ " zone nuove, e tornate a raccontarmele. Vi pago " + getRicompensa() + " monete.")
-				.parlaIlCapo("E se ci perdiamo?")
-				.parlaIlMandante("Allora la mappa vi servirà ancora di più.");
+				.parlaIlMandante(Testi.formatta("missioni", "IlCartografo.1"))
+				.parlaIlMandante(Testi.formatta("missioni", "IlCartografo.2", Lingue.corrente().cardinale(getCaselle(), Genere.FEMMINILE), getRicompensa()))
+				.parlaIlCapo(Testi.formatta("missioni", "IlCartografo.3"))
+				.parlaIlMandante(Testi.formatta("missioni", "IlCartografo.4"));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante("Raccontate, raccontate! Una palude qui, delle rovine là...")
-				.parlaIlCapo("E un sacco di mostri dappertutto. Quelli segnateli bene.");
+				.parlaIlMandante(Testi.formatta("missioni", "IlCartografo.5"))
+				.parlaIlCapo(Testi.formatta("missioni", "IlCartografo.6"));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return "Il cartografo pagherà " + getRicompensa() + " monete per " + Lingue.corrente().cardinale(getCaselle(), Genere.FEMMINILE)
-				+ " zone della foresta mai visitate.";
+		return Testi.formatta("missioni", "IlCartografo.t4", getRicompensa(), Lingue.corrente().cardinale(getCaselle(), Genere.FEMMINILE));
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return "Il cartografo ricopia tutto sulla sua mappa e paga le " + getRicompensa() + " monete promesse.";
+		return Testi.formatta("missioni", "IlCartografo.t5", getRicompensa());
 	}
 
 	/**

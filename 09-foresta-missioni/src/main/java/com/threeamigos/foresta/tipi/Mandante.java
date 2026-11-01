@@ -4,6 +4,7 @@ import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 
 import java.util.Locale;
 import java.util.function.Supplier;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Chi chiede dei materiali in città (vedi RichiestaDiMateriali): l'alchimista, l'armaiolo, il capitano delle guardie, il
@@ -13,17 +14,17 @@ import java.util.function.Supplier;
 public enum Mandante {
 
 	ALCHIMISTA("RICHIESTA_ALCHIMISTA", "l'alchimista", ScenaInCitta::conAlchimista,
-			"Buongiorno, viaggiatori. Non è che andate in giro per la foresta?",
-			"che %s annusa soddisfatto"),
+			Testi.formatta("missioni", "Mandante.s1"),
+			Testi.formatta("missioni", "Mandante.s2")),
 	ARMAIOLO("RICHIESTA_ARMAIOLO", "l'armaiolo", ScenaInCitta::conArmaiolo,
-			"Ehi, voi! Mi serve del materiale per la forgia, e voi avete l'aria di chi non ha paura di sporcarsi.",
-			"che %s soppesa con l'occhio del mestiere"),
-	CAPITANO("RICHIESTA_CAPITANO", "il capitano delle guardie", ScenaInCitta::conCapitano,
-			"Voi avete l'aria di chi sa usare una spada. Sono il capitano delle guardie%s e ho bisogno di prove.",
-			"che %s conta per bene"),
+			Testi.formatta("missioni", "Mandante.s3"),
+			Testi.formatta("missioni", "Mandante.s4")),
+	CAPITANO("RICHIESTA_CAPITANO", Testi.formatta("missioni", "Mandante.s5"), ScenaInCitta::conCapitano,
+			Testi.formatta("missioni", "Mandante.s6"),
+			Testi.formatta("missioni", "Mandante.s7")),
 	LOCANDIERE("RICHIESTA_LOCANDIERE", "il locandiere", ScenaInCitta::conLocandiere,
-			"Viaggiatori! Le mie zuppe di palude sono famose in tutta la foresta, ma la palude non me la porta più nessuno.",
-			"che %s porta subito in cucina");
+			Testi.formatta("missioni", "Mandante.s8"),
+			Testi.formatta("missioni", "Mandante.s9"));
 
 	private final String produzione;
 	private final String nome;

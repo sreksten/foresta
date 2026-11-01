@@ -14,6 +14,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Uno dei quattro campioni locali di carta, forbici e sasso (vedi {@link LaSfidaDeiCampioni}, che li affida): un
@@ -82,18 +83,17 @@ public class IlCampione extends MissioneAPassi {
 
 	@Override
 	public String getNome() {
-		return "Il campione " + getCampione();
+		return Testi.formatta("missioni", "IlCampione.t1", getCampione());
 	}
 
 	@Override
 	public String getDescrizione() {
-		return "Sfida " + ilCampione() + ", a carta, forbici e sasso, a tre mani vinte: lo trovi " + TestiDeiLuoghi.dentro(getLuogo())
-				+ ", nel posto segnato sulla mappa. Se perdi puoi tornare a riprovare.";
+		return Testi.formatta("missioni", "IlCampione.t2", ilCampione(), TestiDeiLuoghi.dentro(getLuogo()));
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return isFallita() ? null : "Qui " + getCampione() + " ha sfidato il gruppo a carta, forbici e sasso.";
+		return isFallita() ? null : Testi.formatta("missioni", "IlCampione.s1", getCampione());
 	}
 
 	@Override
@@ -108,8 +108,7 @@ public class IlCampione extends MissioneAPassi {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, getLuogo())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getPosto());
-							BusEventi.pubblica(new NotificaTestoParagrafo(ilCampione() + ", aspetta " + TestiDeiLuoghi.dentro(getLuogo())
-									+ ": il posto è segnato sulla mappa."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlCampione.s2", ilCampione(), TestiDeiLuoghi.dentro(getLuogo()))));
 						})
 						.poi(SFIDA);
 			case SFIDA:
@@ -117,7 +116,7 @@ public class IlCampione extends MissioneAPassi {
 						.affronta(this::getPosto, getIncontro())
 						.esegui(() -> {
 							RegistroPersonaggi.segnaCampioneSconfitto(getCampione());
-							BusEventi.pubblica(new NotificaTestoParagrafo(getCampione() + " è battuto."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlCampione.s3", getCampione())));
 						})
 						.poi(Passo.FINE);
 			default:

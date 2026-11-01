@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il negoziante di una città (l'armaiolo, l'alchimista, il venditore di pergamene, l'incantatore: vedi le sottoclassi)
@@ -247,18 +248,17 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	@Override
 	public String getDescrizione() {
 		if (getParametro(NOME_ROVINA) == null) {
-			return Lingue.corrente().inizialeMaiuscola(mandante) + " ha un parente che vuole aprire una bottega nella Foresta.";
+			return Testi.formatta("missioni", "IlNegozio.t1", Lingue.corrente().inizialeMaiuscola(mandante));
 		}
 		if (RITORNO.equals(getPassoCorrente())) {
-			return "Fatto: torna " + Lingue.corrente().conPreposizione(Preposizione.DA, mandante(mandante)) + " a " + getNomeCitta() + " a riscuotere.";
+			return Testi.formatta("missioni", "IlNegozio.t2", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(mandante)), getNomeCitta());
 		}
-		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di disinfestare " + getParametro(NOME_ROVINA)
-				+ ", segnate sulla mappa, per un parente che ci aprirà " + getParametro(NOME_BOTTEGA) + ".";
+		return Testi.formatta("missioni", "IlNegozio.t3", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getParametro(NOME_ROVINA), getParametro(NOME_BOTTEGA));
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return "Qui, dove c'erano delle rovine, " + getNomeDelNegoziante() + " ha aperto " + getParametro(NOME_BOTTEGA) + ".";
+		return Testi.formatta("missioni", "IlNegozio.t4", getNomeDelNegoziante(), getParametro(NOME_BOTTEGA));
 	}
 
 	@Override
@@ -273,8 +273,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 				return Passo.quando(MomentoControllo.IN_LOCAZIONE, this::nellaCitta)
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getCovo());
-							BusEventi.pubblica(new NotificaTestoParagrafo("Il posto da disinfestare è segnato sulla mappa: "
-									+ getParametro(NOME_ROVINA) + "."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlNegozio.s1", getParametro(NOME_ROVINA))));
 						})
 						.poi(DISINFESTAZIONE);
 			case DISINFESTAZIONE:
@@ -293,25 +292,24 @@ public abstract class IlNegozio extends IncaricoInCitta {
 				.parlaIlMandante(testo(CAUSA))
 				.parlaIlMandante(testo(EREDITA) + " " + testo(APPELLO))
 				.parlaIlCapo(testo(BATTUTA))
-				.parlaIlMandante(testo(RISPOSTA) + " Vi segno le rovine sulla mappa. " + getRicompensa() + " monete a lavoro fatto.");
+				.parlaIlMandante(Testi.formatta("missioni", "IlNegozio.1", testo(RISPOSTA), getRicompensa()));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return aspetto.nuovaScena()
 				.parlaIlMandante(testo(RINGRAZIAMENTO))
-				.parlaIlMandante("Ecco le " + getRicompensa() + " monete promesse.");
+				.parlaIlMandante(Testi.formatta("missioni", "IlNegozio.2", getRicompensa()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per disinfestare "
-				+ getParametro(NOME_ROVINA) + ".";
+		return Testi.formatta("missioni", "IlNegozio.t5", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getRicompensa(), getParametro(NOME_ROVINA));
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Lingue.corrente().inizialeMaiuscola(mandante(mandante)) + " paga le " + getRicompensa() + " monete promesse.";
+		return Testi.formatta("missioni", "IlNegozio.t6", Lingue.corrente().inizialeMaiuscola(mandante(mandante)), getRicompensa());
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città una donna chiede di accompagnare suo fratello, un pellegrino, fino a un tempio nella foresta: la
@@ -48,21 +49,21 @@ public class IlPellegrino extends IncaricoInCitta {
 
 	@Override
 	public String getNome() {
-		return "Il pellegrino";
+		return Testi.formatta("missioni", "IlPellegrino.t1");
 	}
 
 	@Override
 	public String getDescrizione() {
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return getPellegrino() + " è arrivato " + Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelTempio()) + ": torna da sua sorella a " + getNomeCitta() + ".";
+			return Testi.formatta("missioni", "IlPellegrino.t2", getPellegrino(), Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelTempio()), getNomeCitta());
 		}
-		return "Accompagna il pellegrino " + getPellegrino() + " fino " + Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelTempio()) + ", segnato sulla mappa.";
+		return Testi.formatta("missioni", "IlPellegrino.t3", getPellegrino(), Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelTempio()));
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return "In questo tempio venne a pregare il pellegrino " + getPellegrino() + ".";
+		return Testi.formatta("missioni", "IlPellegrino.t4", getPellegrino());
 	}
 
 	/**
@@ -95,8 +96,7 @@ public class IlPellegrino extends IncaricoInCitta {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, TipoLocazione.TEMPIO)
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getTempio());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Lingue.corrente().inizialeMaiuscola(getNomeDelTempio())
-									+ ", dove vuole andare " + getPellegrino() + ", è segnato sulla mappa."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlPellegrino.s1", Lingue.corrente().inizialeMaiuscola(getNomeDelTempio()), getPellegrino())));
 						})
 						.poi(PARTENZA);
 			case PARTENZA:
@@ -108,8 +108,7 @@ public class IlPellegrino extends IncaricoInCitta {
 								RegistroMissioni.sopprimiContenutoLocazione(getTempio());
 							}
 						})
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Arrivato " + Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelTempio()) + ", " + getPellegrino() + " vi ringrazia e si mette a pregare. Sua sorella aspetta notizie a "
-								+ getNomeCitta() + ".")))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlPellegrino.s2", Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelTempio()), getPellegrino(), getNomeCitta()))))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -119,28 +118,28 @@ public class IlPellegrino extends IncaricoInCitta {
 	@Override
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante("Scusate, andate verso la foresta? Mio fratello " + getPellegrino() + " vuole andare in pellegrinaggio a un tempio.")
-				.parlaIlMandante("Da solo non ci arriva vivo. Accompagnatelo, e al ritorno vi darò " + getRicompensa() + " monete.")
-				.parlaIlCapo("Sa almeno tenere in mano una spada?")
-				.parlaIlMandante("Sa pregare. Molto.");
+				.parlaIlMandante(Testi.formatta("missioni", "IlPellegrino.1", getPellegrino()))
+				.parlaIlMandante(Testi.formatta("missioni", "IlPellegrino.2", getRicompensa()))
+				.parlaIlCapo(Testi.formatta("missioni", "IlPellegrino.3"))
+				.parlaIlMandante(Testi.formatta("missioni", "IlPellegrino.4"));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante(getPellegrino() + " è arrivato " + Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelTempio()) + "? Che il cielo vi benedica!")
-				.parlaIlMandante("Ecco le " + getRicompensa() + " monete.")
-				.parlaIlCapo("Ha pregato anche per noi, speriamo.");
+				.parlaIlMandante(Testi.formatta("missioni", "IlPellegrino.5", getPellegrino(), Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelTempio())))
+				.parlaIlMandante(Testi.formatta("missioni", "IlPellegrino.6", getRicompensa()))
+				.parlaIlCapo(Testi.formatta("missioni", "IlPellegrino.7"));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return getPellegrino() + " viaggerà con il gruppo fino al tempio. Ricompensa al ritorno: " + getRicompensa() + " monete.";
+		return Testi.formatta("missioni", "IlPellegrino.t5", getPellegrino(), getRicompensa());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return "La sorella di " + getPellegrino() + " paga le " + getRicompensa() + " monete promesse.";
+		return Testi.formatta("missioni", "IlPellegrino.t6", getPellegrino(), getRicompensa());
 	}
 
 	@Override

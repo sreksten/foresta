@@ -7,6 +7,7 @@ import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città un mercante chiede di liberare le strade dai goblin che assaltano le carovane: sconfitti
@@ -24,16 +25,15 @@ public class CacciaAiGoblin extends IncaricoInCitta {
 
 	@Override
 	public String getNome() {
-		return "Caccia ai goblin";
+		return Testi.formatta("missioni", "CacciaAiGoblin.t1");
 	}
 
 	@Override
 	public String getDescrizione() {
 		if (RITORNO.equals(getPassoCorrente())) {
-			return "Le strade sono libere: torna dal mercante di " + getNomeCitta() + " a riscuotere.";
+			return Testi.formatta("missioni", "CacciaAiGoblin.t2", getNomeCitta());
 		}
-		return "Un mercante di " + getNomeCitta() + " ti ha chiesto di sconfiggere " + GOBLIN_DA_SCONFIGGERE
-				+ " goblin. Finora: " + getConteggioNelPassoCorrente(eventoSconfitto(TipoPersonaggio.GOBLIN)) + ".";
+		return Testi.formatta("missioni", "CacciaAiGoblin.t3", getNomeCitta(), GOBLIN_DA_SCONFIGGERE, getConteggioNelPassoCorrente(eventoSconfitto(TipoPersonaggio.GOBLIN)));
 	}
 
 	@Override
@@ -47,35 +47,33 @@ public class CacciaAiGoblin extends IncaricoInCitta {
 			throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
 		}
 		return sconfiggi(MomentoControllo.POST_LOCAZIONE, TipoPersonaggio.GOBLIN, GOBLIN_DA_SCONFIGGERE)
-				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Di goblin, per un po', non se ne vedranno: è ora di tornare dal mercante di "
-						+ getNomeCitta() + ".")))
+				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "CacciaAiGoblin.s1", getNomeCitta()))))
 				.poi(RITORNO);
 	}
 
 	@Override
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante("Ehi, voi! Avete l'aria di gente che sa menare le mani.")
-				.parlaIlMandante("I goblin assaltano le mie carovane appena escono dalla città. Ne sconfiggete "
-						+ GOBLIN_DA_SCONFIGGERE + " e vi do " + getRicompensa() + " monete.")
-				.parlaIlCapo("Goblin? Affare fatto.");
+				.parlaIlMandante(Testi.formatta("missioni", "CacciaAiGoblin.1"))
+				.parlaIlMandante(Testi.formatta("missioni", "CacciaAiGoblin.2", GOBLIN_DA_SCONFIGGERE, getRicompensa()))
+				.parlaIlCapo(Testi.formatta("missioni", "CacciaAiGoblin.3"));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante("Le carovane passano di nuovo! Siete stati di parola.")
-				.parlaIlCapo("E adesso tocca a te.");
+				.parlaIlMandante(Testi.formatta("missioni", "CacciaAiGoblin.4"))
+				.parlaIlCapo(Testi.formatta("missioni", "CacciaAiGoblin.5"));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return "Il mercante pagherà " + getRicompensa() + " monete per " + GOBLIN_DA_SCONFIGGERE + " goblin sconfitti.";
+		return Testi.formatta("missioni", "CacciaAiGoblin.t4", getRicompensa(), GOBLIN_DA_SCONFIGGERE);
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return "Il mercante paga le " + getRicompensa() + " monete promesse.";
+		return Testi.formatta("missioni", "CacciaAiGoblin.t5", getRicompensa());
 	}
 
 	@Override

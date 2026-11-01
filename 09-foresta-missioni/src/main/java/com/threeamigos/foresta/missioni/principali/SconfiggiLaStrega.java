@@ -10,6 +10,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Sconfiggere la Strega, alleata del Drago, nel Maniero del Malefizio. È una figlia di {@link SconfiggiIlDrago}.
@@ -24,13 +25,12 @@ public class SconfiggiLaStrega extends MissioneBase implements Missione {
 
     @Override
     public String getNome() {
-        return "Sconfiggi la Strega";
+        return Testi.formatta("missioni", "SconfiggiLaStrega.t1");
     }
 
     @Override
     public String getDescrizione() {
-        return "La Strega, Signora delle Arti Oscure ed alleata del Drago, ha preso possesso di un castello e" +
-                " sta facendo avvizzire il territorio circostante.";
+        return Testi.formatta("missioni", "SconfiggiLaStrega.t2");
     }
 
     @Override
@@ -52,7 +52,7 @@ public class SconfiggiLaStrega extends MissioneBase implements Missione {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         if (Foresta.getLocazioneDelGruppo() == TipoLocazione.CASTELLO_STREGA && RegistroMissioni.isLocazioneCompleta()) {
             completaMissione();
-            BusEventi.pubblica(new NotificaTestoParagrafo("La Strega è stata sconfitta!"));
+            BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "SconfiggiLaStrega.s1")));
         }
     }
 
@@ -63,6 +63,6 @@ public class SconfiggiLaStrega extends MissioneBase implements Missione {
 
     @Override
     public String getRicordoDellaLocazione() {
-        return "Qui sorgeva il castello della Strega.";
+        return Testi.formatta("missioni", "SconfiggiLaStrega.t3");
     }
 }

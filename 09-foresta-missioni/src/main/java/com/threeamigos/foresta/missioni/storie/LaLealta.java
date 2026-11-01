@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il problema personale di un compagno (vedi {@link LealtaRichiesta}, da missioni.txt): una sera, intorno al fuoco
@@ -124,7 +125,7 @@ public class LaLealta extends MissioneAPassi {
 
 	private List<PaginaIntermezzo> getPagineDellaConfidenza() {
 		LealtaRichiesta lealta = getLealta();
-		return ScenaFraCompagni.allAccampamento(getNomeDelCompagno() + " guarda il fuoco a lungo, poi si decide a parlare.", inScena())
+		return ScenaFraCompagni.allAccampamento(Testi.formatta("missioni", "LaLealta.1", getNomeDelCompagno()), inScena())
 				.parlaIlPrimo(testo(lealta.getConfidenza()))
 				.parlaIlSecondo(testo(lealta.getBattutaDelCapo()))
 				.parlaIlPrimo(testo(lealta.getRisposta()))
@@ -133,7 +134,7 @@ public class LaLealta extends MissioneAPassi {
 
 	private List<PaginaIntermezzo> getPagineDelRingraziamento() {
 		return ScenaFraCompagni.in(Foresta.getLocazioneDelGruppo(),
-						getNomeDelCompagno() + " ha qualcosa da dire.", inScena())
+						Testi.formatta("missioni", "LaLealta.2", getNomeDelCompagno()), inScena())
 				.parlaIlPrimo(testo(getLealta().getRingraziamento()))
 				.getPagine();
 	}
@@ -163,22 +164,22 @@ public class LaLealta extends MissioneAPassi {
 	}
 
 	private String testoSeIlCompagnoEPerso() {
-		return getNomeDelCompagno() + " non è più con il gruppo: il favore non serve più.";
+		return Testi.formatta("missioni", "LaLealta.t1", getNomeDelCompagno());
 	}
 
 	@Override
 	public String getNome() {
 		String compagno = getNomeDelCompagno();
-		return compagno == null ? "La lealtà" : "La lealtà di " + compagno;
+		return compagno == null ? Testi.formatta("missioni", "LaLealta.s1") : Testi.formatta("missioni", "LaLealta.s2", compagno);
 	}
 
 	@Override
 	public String getDescrizione() {
 		if (getNomeDelCompagno() == null) {
-			return "Prima o poi, intorno al fuoco, qualcuno del gruppo avrà qualcosa da chiedere.";
+			return Testi.formatta("missioni", "LaLealta.t2");
 		}
-		return getNomeDelCompagno() + " ti ha chiesto un favore: " + getMissioniAffidate(FAVORE).stream().findFirst()
-				.map(Missione::getNome).orElse(getLealta().getFavore().getNome()) + ".";
+		return Testi.formatta("missioni", "LaLealta.t3", getNomeDelCompagno(), getMissioniAffidate(FAVORE).stream().findFirst()
+				.map(Missione::getNome).orElse(getLealta().getFavore().getNome()));
 	}
 
 	@Override

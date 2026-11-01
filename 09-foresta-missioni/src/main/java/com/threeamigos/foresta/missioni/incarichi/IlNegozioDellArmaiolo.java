@@ -4,6 +4,7 @@ import com.threeamigos.foresta.tipi.AspettoDelMandante;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Un parente dell'armaiolo apre una bottega da armaiolo nelle rovine disinfestate dal gruppo (vedi IlNegozio).
@@ -11,7 +12,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 public class IlNegozioDellArmaiolo extends IlNegozio {
 
 	public IlNegozioDellArmaiolo() {
-		super(MissionePredefinita.IL_NEGOZIO_DELL_ARMAIOLO, "Il negozio dell'armaiolo", TipoLocazione.ARMAIOLO, PersonaggioNoto.ARMAIOLO_DELLA_FORESTA, AspettoDelMandante.ARMAIOLO,
+		super(MissionePredefinita.IL_NEGOZIO_DELL_ARMAIOLO, Testi.formatta("missioni", "IlNegozioDellArmaiolo.s1"), TipoLocazione.ARMAIOLO, PersonaggioNoto.ARMAIOLO_DELLA_FORESTA, AspettoDelMandante.ARMAIOLO,
 				"l'armaiolo");
 	}
 }

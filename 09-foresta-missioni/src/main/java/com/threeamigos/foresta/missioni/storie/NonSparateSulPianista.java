@@ -23,6 +23,7 @@ import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Non sparate sul pianista: alla terza visita a una locanda in tutto (di città o del bosco, contate insieme), se si è in
@@ -63,7 +64,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 
 	@Override
 	public String getNome() {
-		return "Non sparate sul pianista";
+		return Testi.formatta("missioni", "NonSparateSulPianista.t1");
 	}
 
 	/**
@@ -75,8 +76,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 
 	@Override
 	public String getDescrizione() {
-		return getBardo() + " il bardo ha bevuto troppo: riportalo sano e salvo a casa, " + Lingue.corrente().conPreposizione(Preposizione.IN, getNomeCitta())
-				+ ", e proteggilo per strada.";
+		return Testi.formatta("missioni", "NonSparateSulPianista.t2", getBardo(), Lingue.corrente().conPreposizione(Preposizione.IN, getNomeCitta()));
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	private String getNomeCitta() {
-		return getCitta() == null ? "la sua città" : getCitta().getNomeProprio();
+		return getCitta() == null ? Testi.formatta("missioni", "NonSparateSulPianista.s1") : getCitta().getNomeProprio();
 	}
 
 	@Override
@@ -123,20 +123,18 @@ public class NonSparateSulPianista extends MissioneAPassi {
 						.esegui(() -> {
 							aggiungiProprieta(CITTA, cittaPiuVicina().name());
 							aggiungiProprieta(LIVELLO_DELL_INCARICO, String.valueOf(Statistiche.getLivello()));
-							BusEventi.pubblica(new NotificaTestoParagrafo(getBardo() + " il bardo, che non si regge in piedi, si unisce al gruppo: va riportato a casa, "
-									+ Lingue.corrente().conPreposizione(Preposizione.IN, getNomeCitta()) + ". È così ubriaco che i mostri non si curano nemmeno di lui."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "NonSparateSulPianista.s2", getBardo(), Lingue.corrente().conPreposizione(Preposizione.IN, getNomeCitta()))));
 							attivaMissione();
 						})
 						.poi(VIAGGIO);
 			case VIAGGIO:
 				return scorta(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getCoordinateLocazioneUnica(getCitta()), false)
-						.falliscoSe(this::isCittaDistrutta, () -> getNomeCitta() + " è stata distrutta: " + getBardo() + " non ha più una casa a cui tornare.")
+						.falliscoSe(this::isCittaDistrutta, () ->Testi.formatta("missioni", "NonSparateSulPianista.s3", getNomeCitta(), getBardo()))
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaDellaMoglie().getPagine())
 						.poi(ARRIVO);
 			case ARRIVO:
 				return ricompensa(MomentoControllo.IN_LOCAZIONE, getRicompensa(),
-								() -> RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome() + ", la moglie di " + getBardo() + ", paga "
-										+ getRicompensa() + " monete e trascina il marito in casa per un orecchio.")
+								() ->Testi.formatta("missioni", "NonSparateSulPianista.s4", RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome(), getBardo(), getRicompensa()))
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -153,24 +151,23 @@ public class NonSparateSulPianista extends MissioneAPassi {
 
 	private ScenaInLocanda scenaDelLocandiere() {
 		return ScenaInLocanda.conLocandiere()
-				.parlaIlLocandiere("Ah, siete voi! Proprio voi cercavo. Vedete quello là, abbracciato al liuto sotto il tavolo?")
-				.parlaIlLocandiere("È " + getBardo() + ", il bardo. Stasera ha preso una sbronza solenne e non si regge in piedi.")
-				.parlaIlLocandiere("Abita " + Lingue.corrente().conPreposizione(Preposizione.IN, cittaPiuVicina().getNomeProprio())
-						+ ", non è lontano, ma da solo non ci arriva vivo. Me lo riportereste a casa?")
-				.parlaIlCapo("Purché non canti per tutto il viaggio.")
-				.parlaIlLocandiere("Questo non ve lo posso promettere.");
+				.parlaIlLocandiere(Testi.formatta("missioni", "NonSparateSulPianista.1"))
+				.parlaIlLocandiere(Testi.formatta("missioni", "NonSparateSulPianista.2", getBardo()))
+				.parlaIlLocandiere(Testi.formatta("missioni", "NonSparateSulPianista.3", Lingue.corrente().conPreposizione(Preposizione.IN, cittaPiuVicina().getNomeProprio())))
+				.parlaIlCapo(Testi.formatta("missioni", "NonSparateSulPianista.4"))
+				.parlaIlLocandiere(Testi.formatta("missioni", "NonSparateSulPianista.5"));
 	}
 
 	private ScenaInCitta scenaDellaMoglie() {
 		// Il bardo (il BardoLocanda, con il nome che ha in tutto il mondo) è ancora nel gruppo, si congeda a fine missione:
 		// la scena lo mette dopo il capo, rivolto verso la moglie
 		return ScenaInCitta.conMoglieDelBardo()
-				.parlaIlMandante(getBardo() + "! Di nuovo in queste condizioni!")
-				.parlaIlCapo("Lo abbiamo trovato in una locanda, abbracciato al suo liuto.")
-				.parlaIlMandante("Grazie, viandanti. A lui ci penso io.")
-				.parlaIlMandante(getBardo() + ", non ti basteranno tre Pozioni della Salute grandi quando avrò finito con te!")
-				.parlaLOspite("Qualcuno ha un boccale di Sglord?")
-				.parlaIlCapo("(Non vorrei essere nei suoi panni.)");
+				.parlaIlMandante(Testi.formatta("missioni", "NonSparateSulPianista.6", getBardo()))
+				.parlaIlCapo(Testi.formatta("missioni", "NonSparateSulPianista.7"))
+				.parlaIlMandante(Testi.formatta("missioni", "NonSparateSulPianista.8"))
+				.parlaIlMandante(Testi.formatta("missioni", "NonSparateSulPianista.9", getBardo()))
+				.parlaLOspite(Testi.formatta("missioni", "NonSparateSulPianista.10"))
+				.parlaIlCapo(Testi.formatta("missioni", "NonSparateSulPianista.11"));
 	}
 
 	private boolean isTerzaVisitaAUnaLocanda() {

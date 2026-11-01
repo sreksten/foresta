@@ -26,6 +26,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import java.util.Arrays;
 import java.util.List;
 import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * La falce del Tristo Mietitore. In una città qualsiasi (a una visita tranquilla) un personaggio a caso, spaventatissimo, giura di aver
@@ -75,18 +76,17 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 
 	@Override
 	public String getNome() {
-		return "La falce del Tristo Mietitore";
+		return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t1");
 	}
 
 	@Override
 	public String getDescrizione() {
-		return Lingue.corrente().inizialeMaiuscola(getNarratore()) + " giura di aver visto la Morte in persona, con la sua falce e circondata da scheletri, "
-				+ "nelle rovine segnate sulla mappa.";
+		return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t2", Lingue.corrente().inizialeMaiuscola(getNarratore()));
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return "Qui il necromante " + getNomeDelNecromante() + " si finse la Morte, con la sua falce e i suoi scheletri.";
+		return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t3", getNomeDelNecromante());
 	}
 
 	/**
@@ -113,19 +113,19 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 	private String getNarratore() {
 		switch (getAspetto()) {
 			case DONNA:
-				return "una donna";
+				return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t4");
 			case ARMAIOLO:
 				return "l'armaiolo";
 			case ALCHIMISTA:
 				return "l'alchimista";
 			case LOCANDIERE:
-				return "il locandiere";
+				return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t5");
 			case VENDITORE_DI_PERGAMENE:
-				return "il venditore di pergamene";
+				return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t6");
 			case INCANTATORE:
-				return "l'incantatore";
+				return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t7");
 			default:
-				return "un uomo";
+				return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t8");
 		}
 	}
 
@@ -167,8 +167,7 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 								() -> nelPosto() && RegistroMissioni.cercaOCostruisci(TipoLocazione.ROVINE, this).isPresent())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getCovo());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Lingue.corrente().inizialeMaiuscola(getNarratore())
-									+ " segna sulla mappa le rovine dove ha visto la Morte."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaFalceDelTristoMietitore.s1", Lingue.corrente().inizialeMaiuscola(getNarratore()))));
 							attivaMissione();
 						})
 						.poi(SCONTRO);
@@ -185,8 +184,7 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 		OggettoLeggendario falce = CatalogoLeggendari.getLeggendario(CHIAVE_DELLA_FALCE).orElseThrow(IllegalStateException::new);
 		Artefatto artefatto = falce.costruisci(Statistiche.getLivello());
 		GruppoGiocatore.getIstanza().addArtefatto(artefatto);
-		BusEventi.pubblica(new NotificaTestoParagrafo(getNomeDelNecromante() + " è sconfitto: la Morte non era che un necromante. "
-				+ "Fra le ossa dei suoi scheletri resta " + falce.getNomeBreve() + ", e il gruppo la prende."));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaFalceDelTristoMietitore.s2", getNomeDelNecromante(), falce.getNomeBreve())));
 		BusEventi.pubblica(new NotificaArtefattoTrovato(artefatto, Statistiche.getLivello()));
 	}
 
@@ -196,16 +194,16 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 	private List<PaginaIntermezzo> getPagineDelRacconto() {
 		OggettoLeggendario falce = CatalogoLeggendari.getLeggendario(CHIAVE_DELLA_FALCE).orElseThrow(IllegalStateException::new);
 		ScenaInCitta scena = getAspetto().nuovaScena()
-				.parlaIlMandante("Aiuto! Sono ancora tutto un tremito... Ho visto la Morte! La Morte in persona, nella foresta, da lontano!")
-				.parlaIlCapo("La Morte? Calmatevi. Che cosa avete visto, esattamente?")
-				.parlaIlMandante("Impugnava la sua falce, ed era circondata da scheletri. Una fila di scheletri, come una guardia d'onore.");
+				.parlaIlMandante(Testi.formatta("missioni", "LaFalceDelTristoMietitore.1"))
+				.parlaIlCapo(Testi.formatta("missioni", "LaFalceDelTristoMietitore.2"))
+				.parlaIlMandante(Testi.formatta("missioni", "LaFalceDelTristoMietitore.3"));
 		for (String battuta : falce.getLeggenda()) {
 			scena.parlaIlMandante(battuta);
 		}
 		return scena
-				.parlaIlCapo("E dove l'avete vista?")
-				.parlaIlMandante("Nelle rovine, qui vicino. Ve le segno sulla mappa... ma io non ci tornerei, al vostro posto.")
-				.parlaIlCapo("Andiamo a vedere.")
+				.parlaIlCapo(Testi.formatta("missioni", "LaFalceDelTristoMietitore.4"))
+				.parlaIlMandante(Testi.formatta("missioni", "LaFalceDelTristoMietitore.5"))
+				.parlaIlCapo(Testi.formatta("missioni", "LaFalceDelTristoMietitore.6"))
 				.getPagine();
 	}
 

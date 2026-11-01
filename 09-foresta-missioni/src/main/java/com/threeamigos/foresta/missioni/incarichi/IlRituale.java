@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città qualcuno chiede di celebrare un rito in un posto della foresta: sigillare un varco, benedire una fonte,
@@ -118,7 +119,7 @@ public class IlRituale extends IncaricoInCitta {
 	}
 
 	private String getAttesa() {
-		return Lingue.corrente().inizialeMaiuscola(mandante(getRituale().getMandante())) + " aspetta a " + getNomeCitta() + ".";
+		return Testi.formatta("missioni", "IlRituale.t1", Lingue.corrente().inizialeMaiuscola(mandante(getRituale().getMandante())), getNomeCitta());
 	}
 
 	/**
@@ -159,18 +160,15 @@ public class IlRituale extends IncaricoInCitta {
 		MaterialeRichiesto ingrediente = rituale.getIngrediente();
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return "Fatto: torna " + Lingue.corrente().conPreposizione(Preposizione.DA, mandante(rituale.getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
+			return Testi.formatta("missioni", "IlRituale.t2", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(rituale.getMandante())), getNomeCitta());
 		}
 		if (GUARDIANO.equals(passo)) {
-			return "Il rito è cominciato: sconfiggi chi è venuto a disturbarlo, nel posto segnato sulla mappa.";
+			return Testi.formatta("missioni", "IlRituale.t3");
 		}
 		if (RITO.equals(passo) || RINVIO.equals(passo)) {
-			return "Hai " + ingrediente.getTutti() + " " + ingrediente.getPluraleConArticolo()
-					+ ": vai nel posto segnato sulla mappa per celebrare il rito.";
+			return Testi.formatta("missioni", "IlRituale.t4", ingrediente.getTutti(), ingrediente.getPluraleConArticolo());
 		}
-		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di celebrare un rito nel posto segnato sulla mappa. "
-				+ "Prima servono " + ingrediente.quanti(rituale.getQuantita()) + ", che " + ingrediente.getDaDoveViene()
-				+ ". Finora: " + getContatore(INGREDIENTE) + ".";
+		return Testi.formatta("missioni", "IlRituale.t5", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), ingrediente.quanti(rituale.getQuantita()), ingrediente.getDaDoveViene(), getContatore(INGREDIENTE));
 	}
 
 	@Override
@@ -195,13 +193,12 @@ public class IlRituale extends IncaricoInCitta {
 							CoordinateMD occupata = RegistroMissioni.getLocazioneOccupata(this);
 							aggiungiProprieta(POSTO, occupata.getX() + "," + occupata.getY());
 							Foresta.setLocazioneConosciuta(getPosto());
-							BusEventi.pubblica(new NotificaTestoParagrafo("Il posto del rito è segnato sulla mappa."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlRituale.s1")));
 						})
 						.poi(RACCOLTA);
 			case RACCOLTA:
 				return raccogli(MomentoControllo.POST_LOCAZIONE, getIngredienti())
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Lingue.corrente().inizialeMaiuscola(ingrediente.getPluraleConArticolo())
-								+ " ci sono " + ingrediente.getTutti() + ": adesso il rito si può celebrare, nel posto segnato sulla mappa.")))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlRituale.s2", Lingue.corrente().inizialeMaiuscola(ingrediente.getPluraleConArticolo()), ingrediente.getTutti()))))
 						.poi(RITO);
 			case RITO:
 				// Non la soppressione se ci sono nemici: altrimenti, risolvendosi il rito e incatenandosi al passo
@@ -217,7 +214,7 @@ public class IlRituale extends IncaricoInCitta {
 				return rito
 						.esegui(() -> {
 							if (isRinviato()) {
-								BusEventi.pubblica(new NotificaTestoParagrafo("Il rito può aspettare: si farà un'altra volta, tornando qui."));
+								BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlRituale.s3")));
 							} else if (isRiuscito()) {
 								BusEventi.pubblica(new NotificaTestoParagrafo(testo(rituale.getRito())
 										+ (rituale.isConNemici() ? "" : " " + getAttesa())));
@@ -250,9 +247,7 @@ public class IlRituale extends IncaricoInCitta {
 		MaterialeRichiesto ingrediente = rituale.getIngrediente();
 		return rituale.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(rituale.getRichiesta()))
-				.parlaIlMandante("Il rito si celebra " + TestiDeiLuoghi.dentro(rituale.getLuogo()) + " qui vicino: ve lo segno sulla mappa. "
-						+ "Servono " + ingrediente.quanti(rituale.getQuantita()) + ", che " + ingrediente.getDaDoveViene() + ". "
-						+ getRicompensa() + " monete a rito compiuto.")
+				.parlaIlMandante(Testi.formatta("missioni", "IlRituale.1", TestiDeiLuoghi.dentro(rituale.getLuogo()), ingrediente.quanti(rituale.getQuantita()), ingrediente.getDaDoveViene(), getRicompensa()))
 				.parlaIlCapo(testo(rituale.getBattutaDelCapo()))
 				.parlaIlMandante(testo(rituale.getRisposta()));
 	}
@@ -261,18 +256,17 @@ public class IlRituale extends IncaricoInCitta {
 	protected ScenaInCitta scenaRingraziamento() {
 		return getRituale().getAspetto().nuovaScena()
 				.parlaIlMandante(testo(getRituale().getRingraziamento()))
-				.parlaIlMandante("Ecco le " + getRicompensa() + " monete promesse.");
+				.parlaIlMandante(Testi.formatta("missioni", "IlRituale.2", getRicompensa()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per un rito "
-				+ TestiDeiLuoghi.dentro(getRituale().getLuogo()) + ".";
+		return Testi.formatta("missioni", "IlRituale.t6", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getRicompensa(), TestiDeiLuoghi.dentro(getRituale().getLuogo()));
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Lingue.corrente().inizialeMaiuscola(mandante(getRituale().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Testi.formatta("missioni", "IlRituale.t7", Lingue.corrente().inizialeMaiuscola(mandante(getRituale().getMandante())), getRicompensa());
 	}
 
 	@Override

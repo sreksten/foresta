@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Qualcuno (l'armaiolo in città, il locandiere in una locanda: vedi le sottoclassi) racconta la leggenda di un
@@ -194,9 +195,8 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 		if (leggendario == null) {
 			return "";
 		}
-		String tempio = getTempio() == null ? "in un tempio" : Lingue.corrente().conPreposizione(Preposizione.IN, Foresta.nomeDelTempio(getTempio()));
-		return "Secondo la leggenda raccontata " + Lingue.corrente().conPreposizione(Preposizione.DA, getNarratore()) + ", " + getNomeDeiGuardiani()
-				+ " custodiscono " + leggendario.getNomeBreve() + " " + tempio + ", segnato sulla mappa.";
+		String tempio = getTempio() == null ? Testi.formatta("missioni", "LaLeggenda.s1") : Lingue.corrente().conPreposizione(Preposizione.IN, Foresta.nomeDelTempio(getTempio()));
+		return Testi.formatta("missioni", "LaLeggenda.t1", Lingue.corrente().conPreposizione(Preposizione.DA, getNarratore()), getNomeDeiGuardiani(), leggendario.getNomeBreve(), tempio);
 	}
 
 	@Override
@@ -236,8 +236,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 								() -> getTempio().equals(Foresta.getPosizioneDelGruppo())
 										&& RegistroArtefatti.getArtefattoInLocazione(getTempio()) == null)
 						.affronta(this::getTempio, getGuardiani())
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("La leggenda era vera: "
-								+ getLeggendario().getNomeBreve() + " è nelle vostre mani.")))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaLeggenda.s2", getLeggendario().getNomeBreve()))))
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -277,11 +276,10 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 		String breve = leggendario.getNomeBreve();
 		boolean plurale = breve.startsWith("gli ") || breve.startsWith("i ") || breve.startsWith("le ");
 		return racconto
-				.narra("Oggi " + (plurale ? "riposano" : "riposa") + " in un tempio nella foresta. Ma attenti: a fare la guardia ci sono "
-						+ getNomeDeiGuardiani() + ".")
-				.parlaIlCapo("Con " + breve + " il Drago avrebbe di che preoccuparsi.")
-				.narra("Allora andate. Vi segno il tempio sulla mappa.")
-				.parlaIlCapo("Partiamo subito.")
+				.narra(Testi.formatta("missioni", "LaLeggenda.s3", (plurale ? "riposano" : "riposa"), getNomeDeiGuardiani()))
+				.parlaIlCapo(Testi.formatta("missioni", "LaLeggenda.1", breve))
+				.narra(Testi.formatta("missioni", "LaLeggenda.s4"))
+				.parlaIlCapo(Testi.formatta("missioni", "LaLeggenda.2"))
 				.getPagine();
 	}
 

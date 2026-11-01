@@ -12,6 +12,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città qualcuno chiede di riportare a casa una persona rimasta nella foresta, ferita o prigioniera, in mezzo a
@@ -117,17 +118,16 @@ public class IlSoccorso extends LaLiberazione {
 		String nome = getNomeDellaPersona();
 		String mandante = getSoccorso().getMandante();
 		if (VIAGGIO.equals(passo)) {
-			return nome + " è salvo ma debole: riportalo vivo a " + getNomeCitta() + ", e proteggilo per strada.";
+			return Testi.formatta("missioni", "IlSoccorso.t1", nome, getNomeCitta());
 		}
 		if (RITORNO.equals(passo)) {
-			return nome + " è a casa: " + mandante(mandante) + " ti aspetta a " + getNomeCitta() + ".";
+			return Testi.formatta("missioni", "IlSoccorso.t2", nome, mandante(mandante), getNomeCitta());
 		}
 		if (LUTTO.equals(passo) || FALLIMENTO.equals(passo)) {
-			return nome + " è morto: devi dare la notizia " + Lingue.corrente().conPreposizione(Preposizione.A, mandanteSenzaVirgolaFinale(mandante)) + ", a " + getNomeCitta() + ".";
+			return Testi.formatta("missioni", "IlSoccorso.t3", nome, Lingue.corrente().conPreposizione(Preposizione.A, mandanteSenzaVirgolaFinale(mandante)), getNomeCitta());
 		}
-		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di salvare " + getNomeEPersona()
-				+ ", dal posto segnato sulla mappa, dove " + (getSoccorso().getNumero() == 1 ? "lo minaccia " : "lo minacciano ")
-				+ getNomeDeiNemici() + ".";
+		return Testi.formatta("missioni", getSoccorso().getNumero() == 1 ? "IlSoccorso.descrizioneUno" : "IlSoccorso.descrizioneMolti",
+				Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getNomeEPersona(), getNomeDeiNemici());
 	}
 
 	@Override
@@ -137,23 +137,22 @@ public class IlSoccorso extends LaLiberazione {
 
 	@Override
 	protected String testoCovoSegnato() {
-		return "Il posto dove si trova " + getNomeDellaPersona() + " è segnato sulla mappa.";
+		return Testi.formatta("missioni", "IlSoccorso.t4", getNomeDellaPersona());
 	}
 
 	@Override
 	protected String testoLiberato() {
-		return testo(getSoccorso().getSoccorso()) + " Riportatelo vivo a " + getNomeCitta() + ".";
+		return Testi.formatta("missioni", "IlSoccorso.t5", testo(getSoccorso().getSoccorso()), getNomeCitta());
 	}
 
 	@Override
 	protected String testoMorto() {
-		return getNomeDellaPersona() + " non ce l'ha fatta. Bisogna dirlo " + Lingue.corrente().conPreposizione(Preposizione.A, mandanteSenzaVirgolaFinale(getSoccorso().getMandante()))
-				+ ", a " + getNomeCitta() + ".";
+		return Testi.formatta("missioni", "IlSoccorso.t6", getNomeDellaPersona(), Lingue.corrente().conPreposizione(Preposizione.A, mandanteSenzaVirgolaFinale(getSoccorso().getMandante())), getNomeCitta());
 	}
 
 	@Override
 	protected String testoPortaChiusa() {
-		return Lingue.corrente().inizialeMaiuscola(mandante(getSoccorso().getMandante())) + " chiude la porta senza dire una parola.";
+		return Testi.formatta("missioni", "IlSoccorso.t7", Lingue.corrente().inizialeMaiuscola(mandante(getSoccorso().getMandante())));
 	}
 
 	@Override
@@ -161,8 +160,7 @@ public class IlSoccorso extends LaLiberazione {
 		SoccorsoRichiesto soccorso = getSoccorso();
 		return soccorso.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(soccorso.getRichiesta()))
-				.parlaIlMandante("È " + TestiDeiLuoghi.dentro(soccorso.getLuogo()) + " qui vicino: ve lo segno sulla mappa. "
-						+ "Riportatelo vivo e avrete " + getRicompensa() + " monete.")
+				.parlaIlMandante(Testi.formatta("missioni", "IlSoccorso.1", TestiDeiLuoghi.dentro(soccorso.getLuogo()), getRicompensa()))
 				.parlaIlCapo(testo(soccorso.getBattutaDelCapo()))
 				.parlaIlMandante(testo(soccorso.getRisposta()));
 	}
@@ -171,26 +169,25 @@ public class IlSoccorso extends LaLiberazione {
 	protected ScenaInCitta scenaRingraziamento() {
 		return getSoccorso().getAspetto().nuovaScena()
 				.parlaIlMandante(testo(getSoccorso().getRingraziamento()))
-				.parlaIlMandante("Ecco le " + getRicompensa() + " monete promesse.");
+				.parlaIlMandante(Testi.formatta("missioni", "IlSoccorso.2", getRicompensa()));
 	}
 
 	@Override
 	protected ScenaInCitta scenaDelLutto() {
 		return getSoccorso().getAspetto().nuovaScena()
-				.parlaIlMandante("Siete tornati! Ma... dov'è " + getNomeDellaPersona() + "?")
-				.parlaIlCapo("Mi dispiace. Lo avevamo salvato, ma per strada ci hanno attaccati.")
+				.parlaIlMandante(Testi.formatta("missioni", "IlSoccorso.3", getNomeDellaPersona()))
+				.parlaIlCapo(Testi.formatta("missioni", "IlSoccorso.4"))
 				.parlaIlMandante(testo(getSoccorso().getLutto()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per riavere "
-				+ getNomeDellaPersona() + " a casa vivo.";
+		return Testi.formatta("missioni", "IlSoccorso.t8", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getRicompensa(), getNomeDellaPersona());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Lingue.corrente().inizialeMaiuscola(mandante(getSoccorso().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Testi.formatta("missioni", "IlSoccorso.t9", Lingue.corrente().inizialeMaiuscola(mandante(getSoccorso().getMandante())), getRicompensa());
 	}
 
 	@Override

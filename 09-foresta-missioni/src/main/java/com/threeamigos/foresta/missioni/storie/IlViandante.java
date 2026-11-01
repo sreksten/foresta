@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Dopo due o tre giorni di cammino, entrando in un bosco, il gruppo incontra per caso un viandante che chiede un favore: andare
@@ -125,25 +126,23 @@ public class IlViandante extends MissioneAPassi {
 
 	@Override
 	public String getNome() {
-		return "Il viandante nel bosco";
+		return Testi.formatta("missioni", "IlViandante.t1");
 	}
 
 	@Override
 	public String getDescrizione() {
 		ViandanteRichiesto richiesta = getRichiesta();
 		if (richiesta == null || !isAttiva()) {
-			return "Prima o poi, nei boschi, si incontra qualcuno che ha bisogno di aiuto.";
+			return Testi.formatta("missioni", "IlViandante.t2");
 		}
 		String mostri = Lingue.corrente().cardinale(getQuantita(), Genere.MASCHILE) + " " + richiesta.getPlurale();
 		switch (getPassoCorrente()) {
 			case CACCIA:
-				return "Sei a " + nomeDellaCitta() + ": sconfiggi " + mostri + ", dovunque. Finora: "
-						+ getConteggioNelPassoCorrente(eventoSconfitto(richiesta.getNemico())) + ".";
+				return Testi.formatta("missioni", "IlViandante.t3", nomeDellaCitta(), mostri, getConteggioNelPassoCorrente(eventoSconfitto(richiesta.getNemico())));
 			case RITORNO:
-				return "I mostri sono sconfitti: torna dal viandante, nel bosco dove l'hai incontrato.";
+				return Testi.formatta("missioni", "IlViandante.t4");
 			default:
-				return "Un viandante incontrato nel bosco ti ha chiesto di andare a " + nomeDellaCitta() + ", di sconfiggere "
-						+ mostri + " e di tornare da lui, dove l'hai incontrato.";
+				return Testi.formatta("missioni", "IlViandante.t5", nomeDellaCitta(), mostri);
 		}
 	}
 
@@ -213,9 +212,7 @@ public class IlViandante extends MissioneAPassi {
 	private void accetta() {
 		aggiungiProprieta(LIVELLO_DELL_INCONTRO, String.valueOf(Statistiche.getLivello()));
 		ViandanteRichiesto richiesta = getRichiesta();
-		BusEventi.pubblica(new NotificaTestoParagrafo("Il viandante vi chiede di andare a " + nomeDellaCitta() + ", di sconfiggere "
-				+ Lingue.corrente().cardinale(getQuantita(), Genere.MASCHILE) + " " + richiesta.getPlurale() + " e di tornare da lui. Vi pagherà "
-				+ getMonete() + " monete."));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlViandante.s1", nomeDellaCitta(), Lingue.corrente().cardinale(getQuantita(), Genere.MASCHILE), richiesta.getPlurale(), getMonete())));
 		attivaMissione();
 	}
 
@@ -237,16 +234,16 @@ public class IlViandante extends MissioneAPassi {
 
 	private List<PaginaIntermezzo> getPagineDellIncontro() {
 		ViandanteRichiesto richiesta = getRichiesta();
-		return Collections.singletonList(scenaNelBosco("Un viandante nel bosco.")
+		return Collections.singletonList(scenaNelBosco(Testi.formatta("missioni", "IlViandante.s2"))
 				.conBattuta(BattutaIntermezzo.di(ID_VIANDANTE, richiesta.getRichiesta(nomeDellaCitta())).daSecondo(2))
 				.conBattuta(BattutaIntermezzo.di(ID_EROE, richiesta.getBattutaDelCapo()))
 				.conBattuta(BattutaIntermezzo.di(ID_VIANDANTE, richiesta.getRisposta())));
 	}
 
 	private List<PaginaIntermezzo> getPagineDelRitorno() {
-		return Collections.singletonList(scenaNelBosco("Il viandante aspettava.")
+		return Collections.singletonList(scenaNelBosco(Testi.formatta("missioni", "IlViandante.s3"))
 				.conBattuta(BattutaIntermezzo.di(ID_VIANDANTE, getRichiesta().getRitorno()).daSecondo(2))
-				.conBattuta(BattutaIntermezzo.di(ID_EROE, "Tutto a posto. Buona strada.")));
+				.conBattuta(BattutaIntermezzo.di(ID_EROE, Testi.formatta("missioni", "IlViandante.1"))));
 	}
 
 	@Override
@@ -267,12 +264,12 @@ public class IlViandante extends MissioneAPassi {
 				return Passo.quando(MomentoControllo.IN_LOCAZIONE, () -> true).esegui(this::accetta).poi(ANDATA);
 			case ANDATA:
 				return vai(MomentoControllo.PRE_LOCAZIONE, getCitta())
-						.falliscoSe(this::isCittaDistrutta, () -> nomeDellaCitta() + " è stata distrutta: il viandante non rivedrà mai più nessuno di laggiù.")
+						.falliscoSe(this::isCittaDistrutta, () ->Testi.formatta("missioni", "IlViandante.s4", nomeDellaCitta()))
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(getRichiesta().getArrivo(nomeDellaCitta()))))
 						.poi(CACCIA);
 			case CACCIA:
 				return sconfiggi(MomentoControllo.POST_LOCAZIONE, getRichiesta().getNemico(), getQuantita())
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Fatto: ora il viandante aspetta, nel bosco dove vi ha fermato.")))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlViandante.s5"))))
 						.poi(RITORNO);
 			case RITORNO:
 				return tornaAlPuntoDiPartenza(MomentoControllo.PRE_LOCAZIONE)
@@ -281,7 +278,7 @@ public class IlViandante extends MissioneAPassi {
 						.poi(RICOMPENSA);
 			case RICOMPENSA:
 				return ricompensa(MomentoControllo.IN_LOCAZIONE, Ricompensa.inMonete(getMonete()),
-						() -> "Il viandante vi paga le " + getMonete() + " monete promesse.")
+						() -> Testi.formatta("missioni", "IlViandante.s6", getMonete()))
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);

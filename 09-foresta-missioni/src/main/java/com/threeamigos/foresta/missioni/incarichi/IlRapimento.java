@@ -6,6 +6,7 @@ import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città una donna chiede di liberare suo marito, rapito da una banda di goblin che lo tiene in una grotta (vedi
@@ -55,28 +56,27 @@ public class IlRapimento extends LaLiberazione {
 
 	@Override
 	public String getNome() {
-		return "Il rapimento di " + getOstaggio();
+		return Testi.formatta("missioni", "IlRapimento.t1", getOstaggio());
 	}
 
 	@Override
 	public String getDescrizione() {
 		String passo = getPassoCorrente();
 		if (VIAGGIO.equals(passo)) {
-			return getOstaggio() + " è libero ma debole: riportalo vivo a " + getNomeCitta() + ", e proteggilo per strada.";
+			return Testi.formatta("missioni", "IlRapimento.t2", getOstaggio(), getNomeCitta());
 		}
 		if (RITORNO.equals(passo)) {
-			return getOstaggio() + " è a casa: sua moglie ti aspetta a " + getNomeCitta() + ".";
+			return Testi.formatta("missioni", "IlRapimento.t3", getOstaggio(), getNomeCitta());
 		}
 		if (LUTTO.equals(passo) || FALLIMENTO.equals(passo)) {
-			return getOstaggio() + " è morto: devi dare la notizia a sua moglie, a " + getNomeCitta() + ".";
+			return Testi.formatta("missioni", "IlRapimento.t4", getOstaggio(), getNomeCitta());
 		}
-		return "La banda di goblin di " + getCapobanda() + " tiene prigioniero " + getOstaggio()
-				+ " in una grotta segnata sulla mappa. Liberalo e riportalo a " + getNomeCitta() + ".";
+		return Testi.formatta("missioni", "IlRapimento.t5", getCapobanda(), getOstaggio(), getNomeCitta());
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return "In questa grotta i goblin di " + getCapobanda() + " tenevano prigioniero " + getOstaggio() + ".";
+		return Testi.formatta("missioni", "IlRapimento.t6", getCapobanda(), getOstaggio());
 	}
 
 	@Override
@@ -96,59 +96,57 @@ public class IlRapimento extends LaLiberazione {
 
 	@Override
 	protected String testoCovoSegnato() {
-		return "La grotta dove i goblin tengono prigioniero " + getOstaggio() + " è segnata sulla mappa.";
+		return Testi.formatta("missioni", "IlRapimento.t7", getOstaggio());
 	}
 
 	@Override
 	protected String testoLiberato() {
-		return getOstaggio() + " è libero, ma è debole e non sa difendersi: riportatelo vivo a " + getNomeCitta() + ".";
+		return Testi.formatta("missioni", "IlRapimento.t8", getOstaggio(), getNomeCitta());
 	}
 
 	@Override
 	protected String testoMorto() {
-		return getOstaggio() + " non ce l'ha fatta: i suoi rapitori avevano degli amici. Bisogna dirlo a sua moglie, a "
-				+ getNomeCitta() + ".";
+		return Testi.formatta("missioni", "IlRapimento.t9", getOstaggio(), getNomeCitta());
 	}
 
 	@Override
 	protected String testoPortaChiusa() {
-		return "La moglie di " + getOstaggio() + " chiude la porta senza dire una parola.";
+		return Testi.formatta("missioni", "IlRapimento.t10", getOstaggio());
 	}
 
 	@Override
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante("Vi prego, aiutatemi! Una banda di goblin ha rapito mio marito " + getOstaggio() + ".")
-				.parlaIlMandante("Lo tengono in una grotta qui vicino, e il loro capo, " + getCapobanda()
-						+ ", chiede un riscatto che non posso pagare.")
-				.parlaIlCapo("Il riscatto glielo portiamo noi, a modo nostro.")
-				.parlaIlMandante("Riportatemelo vivo e avrete " + getRicompensa() + " monete.");
+				.parlaIlMandante(Testi.formatta("missioni", "IlRapimento.1", getOstaggio()))
+				.parlaIlMandante(Testi.formatta("missioni", "IlRapimento.2", getCapobanda()))
+				.parlaIlCapo(Testi.formatta("missioni", "IlRapimento.3"))
+				.parlaIlMandante(Testi.formatta("missioni", "IlRapimento.4", getRicompensa()));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante(getOstaggio() + "! Sei tornato!")
-				.parlaIlMandante("Non so come ringraziarvi. Ecco le " + getRicompensa() + " monete.")
-				.parlaIlCapo("Tenetelo d'occhio, la prossima volta.");
+				.parlaIlMandante(Testi.formatta("missioni", "IlRapimento.5", getOstaggio()))
+				.parlaIlMandante(Testi.formatta("missioni", "IlRapimento.6", getRicompensa()))
+				.parlaIlCapo(Testi.formatta("missioni", "IlRapimento.7"));
 	}
 
 	@Override
 	protected ScenaInCitta scenaDelLutto() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante("Siete tornati! Ma... dov'è " + getOstaggio() + "?")
-				.parlaIlCapo("Mi dispiace. Lo avevamo liberato, ma per strada ci hanno attaccati.")
-				.parlaIlMandante("No... Non voglio sentire altro. Andate via.");
+				.parlaIlMandante(Testi.formatta("missioni", "IlRapimento.8", getOstaggio()))
+				.parlaIlCapo(Testi.formatta("missioni", "IlRapimento.9"))
+				.parlaIlMandante(Testi.formatta("missioni", "IlRapimento.10"));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return "La moglie di " + getOstaggio() + " pagherà " + getRicompensa() + " monete per riaverlo a casa vivo.";
+		return Testi.formatta("missioni", "IlRapimento.t11", getOstaggio(), getRicompensa());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return "La moglie di " + getOstaggio() + " paga le " + getRicompensa() + " monete promesse.";
+		return Testi.formatta("missioni", "IlRapimento.t12", getOstaggio(), getRicompensa());
 	}
 
 	@Override

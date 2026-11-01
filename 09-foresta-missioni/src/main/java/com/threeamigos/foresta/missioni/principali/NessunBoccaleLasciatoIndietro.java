@@ -10,6 +10,7 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Dieci locande sparse nella Foresta, quelle cittadine non contano. Tornare due volte
@@ -20,7 +21,9 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 
 	private static final int LOCANDE_DA_VISITARE = 10;
 
-	private static final String DESCRIZIONE_BASE = "Visita " + Lingue.corrente().cardinale(LOCANDE_DA_VISITARE, Genere.MASCHILE) + " locande nel mezzo della Foresta";
+	private static String descrizioneBase() {
+		return Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.descrizioneBase", Lingue.corrente().cardinale(LOCANDE_DA_VISITARE, Genere.MASCHILE));
+	}
 	// Quante tappe sono già state annunciate: le caselle sanno quali locande
 	// sono state visitate, questo serve solo a non ripetere l'annuncio
 	private static final String LOCANDE_CENSITE = "LOCANDE_CENSITE";
@@ -31,22 +34,22 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 
 	@Override
 	public String getNome() {
-		return "Nessun boccale lasciato indietro";
+		return Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.t1");
 	}
 
 	@Override
 	public String getDescrizione() {
 		if (isCompleta()) {
-			return DESCRIZIONE_BASE + ". Tutte e dieci, e nessun ricordo particolarmente nitido.";
+			return Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.t2", descrizioneBase());
 		}
 		int mancanti = LOCANDE_DA_VISITARE - contaLocandeVisitate();
 		if (mancanti == 1) {
-			return DESCRIZIONE_BASE + ". Ne manca una, e il fegato lo sa.";
+			return Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.t3", descrizioneBase());
 		}
 		if (mancanti == LOCANDE_DA_VISITARE) {
-			return DESCRIZIONE_BASE + ".";
+			return descrizioneBase() + ".";
 		} else {
-			return DESCRIZIONE_BASE + ". Ne mancano " + Lingue.corrente().cardinale(mancanti, Genere.MASCHILE) + '.';
+			return Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.t4", descrizioneBase(), Lingue.corrente().cardinale(mancanti, Genere.MASCHILE), '.');
 		}
 	}
 
@@ -63,9 +66,7 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 	public void controllaPostLocazione() {
 		// Il giocatore inizia sempre nel bosco, non può essere in una locanda alla fine del primo turno
 		if (!isCompleta() && !isAttiva()) {
-			BusEventi.pubblica(new NotificaTestoParagrafo("Da qualche parte fra le paludi e i castelli " +
-					"ci sono osti che non hanno ancora conosciuto la tua sete. " +
-					DESCRIZIONE_BASE + ", e non lasciarne indietro nemmeno una."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.s1", descrizioneBase())));
 			attivaMissione();
 			return;
 		}
@@ -80,8 +81,7 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 		aggiungiProprieta(LOCANDE_CENSITE, String.valueOf(visitate));
 		if (visitate >= LOCANDE_DA_VISITARE) {
 			completaMissione();
-			BusEventi.pubblica(new NotificaTestoParagrafo("Dieci locande, dieci osti, un solo fegato. Nessun boccale" +
-					" è stato lasciato indietro, e la Foresta ha un nuovo esperto di birre a cui nessuno ha chiesto un parere."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.s2")));
 		} else {
 			BusEventi.pubblica(new NotificaTestoParagrafo("Locanda numero " + Lingue.corrente().cardinale(visitate, Genere.MASCHILE) + " debitamente censita."));
 		}

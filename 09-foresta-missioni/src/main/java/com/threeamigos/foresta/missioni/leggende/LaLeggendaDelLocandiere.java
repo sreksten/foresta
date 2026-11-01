@@ -9,6 +9,7 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il locandiere di una locanda racconta la leggenda di un oggetto leggendario (vedi LaLeggenda), ma solo dalla
@@ -35,7 +36,7 @@ public class LaLeggendaDelLocandiere extends LaLeggenda {
 
 	@Override
 	protected String getNarratore() {
-		return "il locandiere";
+		return Testi.formatta("missioni", "LaLeggendaDelLocandiere.t1");
 	}
 
 	@Override

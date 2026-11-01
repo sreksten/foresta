@@ -4,6 +4,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Come le missioni nominano i luoghi nei loro testi.
@@ -19,21 +20,21 @@ public final class TestiDeiLuoghi {
 	public static String indefinito(TipoLocazione tipo) {
 		switch (tipo) {
 			case GROTTA:
-				return "una grotta";
+				return Testi.formatta("missioni", "TestiDeiLuoghi.t1");
 			case ROVINE:
-				return "delle rovine";
+				return Testi.formatta("missioni", "TestiDeiLuoghi.t2");
 			case BOSCO:
-				return "un bosco";
+				return Testi.formatta("missioni", "TestiDeiLuoghi.t3");
 			case PALUDE:
-				return "una palude";
+				return Testi.formatta("missioni", "TestiDeiLuoghi.t4");
 			case RADURA:
-				return "una radura";
+				return Testi.formatta("missioni", "TestiDeiLuoghi.t5");
 			case TEMPIO:
-				return "un tempio";
+				return Testi.formatta("missioni", "TestiDeiLuoghi.t6");
 			case LOCANDA:
-				return "una locanda";
+				return Testi.formatta("missioni", "TestiDeiLuoghi.t7");
 			default:
-				return "un posto";
+				return Testi.formatta("missioni", "TestiDeiLuoghi.t8");
 		}
 	}
 
@@ -50,7 +51,7 @@ public final class TestiDeiLuoghi {
 	 */
 	public static String nome(CoordinateMD posto) {
 		if (posto == null) {
-			return "il posto";
+			return Testi.formatta("missioni", "TestiDeiLuoghi.t9");
 		}
 		LocazioneMD md = Foresta.getLocazioneMD(posto);
 		switch (md.getTipo()) {
@@ -59,13 +60,13 @@ public final class TestiDeiLuoghi {
 			case ROVINE:
 				return Foresta.nomeDelleRovine(md);
 			case GROTTA:
-				return "la grotta";
+				return Testi.formatta("missioni", "TestiDeiLuoghi.t10");
 			case BOSCO:
-				return "il bosco";
+				return Testi.formatta("missioni", "TestiDeiLuoghi.t11");
 			case PALUDE:
-				return "la palude";
+				return Testi.formatta("missioni", "TestiDeiLuoghi.t12");
 			case RADURA:
-				return "la radura";
+				return Testi.formatta("missioni", "TestiDeiLuoghi.t13");
 			default:
 				return md.getNome() != null ? md.getNome() : "la locanda";
 		}

@@ -10,6 +10,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Sconfiggere il Lich, alleato del Drago, che infesta il Castello dell'Ombra e risveglia i morti. È una figlia di {@link SconfiggiIlDrago}.
@@ -24,12 +25,12 @@ public class SconfiggiIlLich extends MissioneBase implements Missione {
 
     @Override
     public String getNome() {
-        return "Sconfiggi il Lich";
+        return Testi.formatta("missioni", "SconfiggiIlLich.t1");
     }
 
     @Override
     public String getDescrizione() {
-        return "Il Lich, alleato per convenienza del Drago, infesta un castello e sta risvegliando i morti.";
+        return Testi.formatta("missioni", "SconfiggiIlLich.t2");
     }
 
     @Override
@@ -51,7 +52,7 @@ public class SconfiggiIlLich extends MissioneBase implements Missione {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         if (Foresta.getLocazioneDelGruppo() == TipoLocazione.CASTELLO_LICH && RegistroMissioni.isLocazioneCompleta()) {
             completaMissione();
-            BusEventi.pubblica(new NotificaTestoParagrafo("Il Lich è stato sconfitto!"));
+            BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "SconfiggiIlLich.s1")));
         }
     }
 
@@ -62,6 +63,6 @@ public class SconfiggiIlLich extends MissioneBase implements Missione {
 
     @Override
     public String getRicordoDellaLocazione() {
-        return "Qui sorgeva il castello del Lich.";
+        return Testi.formatta("missioni", "SconfiggiIlLich.t3");
     }
 }

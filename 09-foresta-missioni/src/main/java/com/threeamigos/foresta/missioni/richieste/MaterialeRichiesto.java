@@ -11,6 +11,7 @@ import java.util.*;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Un materiale che un mandante chiede (vedi RichiestaDiMateriali), letto da una riga di missioni.txt: genere
@@ -184,7 +185,7 @@ public final class MaterialeRichiesto {
 	 * "una per una" o "uno per uno".
 	 */
 	public String getUnoPerUno() {
-		return femminile ? "una per una" : "uno per uno";
+		return femminile ? Testi.formatta("missioni", "MaterialeRichiesto.s1") : Testi.formatta("missioni", "MaterialeRichiesto.s2");
 	}
 
 	/**
@@ -224,7 +225,7 @@ public final class MaterialeRichiesto {
 				Personaggio modello = FabbricaPersonaggi.modello(nemico);
 				parti.add(modello.getADP() + modello.getNomePlurale());
 			}
-			return "si prendono sconfiggendo " + elenco(parti);
+			return Testi.formatta("missioni", "MaterialeRichiesto.t1", elenco(parti));
 		}
 		for (TipoLocazione luogo : luoghi) {
 			switch (luogo) {
@@ -248,7 +249,7 @@ public final class MaterialeRichiesto {
 					break;
 			}
 		}
-		return "si trovano " + elenco(parti);
+		return Testi.formatta("missioni", "MaterialeRichiesto.t2", elenco(parti));
 	}
 
 	private static String elenco(List<String> parti) {

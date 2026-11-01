@@ -16,6 +16,7 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città qualcuno vuole che si tenga d'occhio un posto nella foresta: vegliare una tomba, scoprire chi passa da un
@@ -109,7 +110,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 	}
 
 	private String getIntervallo() {
-		return "lasciando passare almeno " + getSorveglianza().getOre() + " ore fra una visita e l'altra";
+		return Testi.formatta("missioni", "LaSorveglianza.t1", getSorveglianza().getOre());
 	}
 
 	/**
@@ -122,12 +123,11 @@ public class LaSorveglianza extends IncaricoInCitta {
 			return;
 		}
 		aggiungiProprieta(VEGLIE, String.valueOf(visite));
-		BusEventi.pubblica(new NotificaTestoParagrafo(testo(getSorveglianza().getVeglia()) + " Bisogna tornare qui "
-				+ getVisiteMancanti() + ", " + getIntervallo() + "."));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaSorveglianza.s1", testo(getSorveglianza().getVeglia()), getVisiteMancanti(), getIntervallo())));
 	}
 
 	private String getAttesa() {
-		return Lingue.corrente().inizialeMaiuscola(mandante(getSorveglianza().getMandante())) + " aspetta a " + getNomeCitta() + ".";
+		return Testi.formatta("missioni", "LaSorveglianza.t2", Lingue.corrente().inizialeMaiuscola(mandante(getSorveglianza().getMandante())), getNomeCitta());
 	}
 
 	@Override
@@ -146,18 +146,16 @@ public class LaSorveglianza extends IncaricoInCitta {
 	public String getDescrizione() {
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return "Fatto: torna " + Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getSorveglianza().getMandante())) + " a " + getNomeCitta()
-					+ " a riscuotere.";
+			return Testi.formatta("missioni", "LaSorveglianza.t3", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getSorveglianza().getMandante())), getNomeCitta());
 		}
 		if (AGGUATO.equals(passo)) {
-			return "Sconfiggi " + getNomeDeiNemici() + " nel posto segnato sulla mappa, poi torna "
-					+ Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getSorveglianza().getMandante())) + " a " + getNomeCitta() + ".";
+			return Testi.formatta("missioni", "LaSorveglianza.t4", getNomeDeiNemici(), Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getSorveglianza().getMandante())), getNomeCitta());
 		}
-		String descrizione = Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di sorvegliare il posto segnato sulla mappa";
+		String descrizione =Testi.formatta("missioni", "LaSorveglianza.s2", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()));
 		if (SORVEGLIA.equals(passo) && getVisiteNelPassoCorrente() > 0) {
 			return descrizione + ": passaci " + getVisiteMancanti() + ", " + getIntervallo() + ".";
 		}
-		return descrizione + ", passandoci " + Lingue.corrente().cardinale(getSorveglianza().getVisite(), Genere.FEMMINILE) + " volte e " + getIntervallo() + ".";
+		return Testi.formatta("missioni", "LaSorveglianza.t5", descrizione, Lingue.corrente().cardinale(getSorveglianza().getVisite(), Genere.FEMMINILE), getIntervallo());
 	}
 
 	/**
@@ -192,7 +190,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, sorveglianza.getLuogo())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getPosto());
-							BusEventi.pubblica(new NotificaTestoParagrafo("Il posto da sorvegliare è segnato sulla mappa."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaSorveglianza.s3")));
 						})
 						.poi(SORVEGLIA);
 			case SORVEGLIA:
@@ -215,9 +213,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 		SorveglianzaRichiesta sorveglianza = getSorveglianza();
 		return sorveglianza.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(sorveglianza.getRichiesta()))
-				.parlaIlMandante("Il posto è " + TestiDeiLuoghi.dentro(sorveglianza.getLuogo()) + " qui vicino: ve lo segno sulla mappa. "
-						+ "Passateci " + Lingue.corrente().cardinale(sorveglianza.getVisite(), Genere.FEMMINILE) + " volte, " + getIntervallo() + ". "
-						+ getRicompensa() + " monete a lavoro fatto.")
+				.parlaIlMandante(Testi.formatta("missioni", "LaSorveglianza.1", TestiDeiLuoghi.dentro(sorveglianza.getLuogo()), Lingue.corrente().cardinale(sorveglianza.getVisite(), Genere.FEMMINILE), getIntervallo(), getRicompensa()))
 				.parlaIlCapo(testo(sorveglianza.getBattutaDelCapo()))
 				.parlaIlMandante(testo(sorveglianza.getRisposta()));
 	}
@@ -226,18 +222,17 @@ public class LaSorveglianza extends IncaricoInCitta {
 	protected ScenaInCitta scenaRingraziamento() {
 		return getSorveglianza().getAspetto().nuovaScena()
 				.parlaIlMandante(testo(getSorveglianza().getRingraziamento()))
-				.parlaIlMandante("Ecco le " + getRicompensa() + " monete promesse.");
+				.parlaIlMandante(Testi.formatta("missioni", "LaSorveglianza.2", getRicompensa()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per sorvegliare "
-				+ TestiDeiLuoghi.indefinito(getSorveglianza().getLuogo()) + ".";
+		return Testi.formatta("missioni", "LaSorveglianza.t6", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getRicompensa(), TestiDeiLuoghi.indefinito(getSorveglianza().getLuogo()));
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Lingue.corrente().inizialeMaiuscola(mandante(getSorveglianza().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Testi.formatta("missioni", "LaSorveglianza.t7", Lingue.corrente().inizialeMaiuscola(mandante(getSorveglianza().getMandante())), getRicompensa());
 	}
 
 	@Override

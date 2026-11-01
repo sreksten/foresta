@@ -23,6 +23,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Un incarico preso in una città: un mandante chiede un servizio, il gruppo lo fa e torna in quella città a
@@ -169,7 +170,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 * Il testo che si legge se la città in cui si riscuote viene distrutta, e l'incarico fallisce.
 	 */
 	protected String testoCittaDistrutta() {
-		return nomeDellaCitta(getCittaDelRitorno()) + " è stata distrutta: nessuno potrà più pagare per l'incarico.";
+		return Testi.formatta("missioni", "IncaricoInCitta.t1", nomeDellaCitta(getCittaDelRitorno()));
 	}
 
 	/**
@@ -194,12 +195,12 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	private static final Map<String, PersonaggioNoto> MANDANTI_CON_NOME = new HashMap<>();
 
 	static {
-		MANDANTI_CON_NOME.put("il capitano delle guardie", PersonaggioNoto.CAPITANO);
+		MANDANTI_CON_NOME.put(Testi.formatta("missioni", "IncaricoInCitta.s1"), PersonaggioNoto.CAPITANO);
 		MANDANTI_CON_NOME.put("l'alchimista", PersonaggioNoto.ALCHIMISTA);
 		MANDANTI_CON_NOME.put("l'armaiolo", PersonaggioNoto.ARMAIOLO);
-		MANDANTI_CON_NOME.put("il venditore di pergamene", PersonaggioNoto.VENDITORE_DI_PERGAMENE);
+		MANDANTI_CON_NOME.put(Testi.formatta("missioni", "IncaricoInCitta.s2"), PersonaggioNoto.VENDITORE_DI_PERGAMENE);
 		MANDANTI_CON_NOME.put("l'incantatore", PersonaggioNoto.INCANTATORE);
-		MANDANTI_CON_NOME.put("il borgomastro", PersonaggioNoto.BORGOMASTRO);
+		MANDANTI_CON_NOME.put(Testi.formatta("missioni", "IncaricoInCitta.s3"), PersonaggioNoto.BORGOMASTRO);
 		MANDANTI_CON_NOME.put("la levatrice", PersonaggioNoto.LEVATRICE);
 	}
 
@@ -216,7 +217,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 * La scena in città con chi parla a nome del mandante: il borgomastro, che ha un'immagine sua, oppure un Uomo qualunque.
 	 */
 	protected static ScenaInCitta scenaDel(String mandante) {
-		return "il borgomastro".equals(mandante) ? ScenaInCitta.conBorgomastro() : ScenaInCitta.conMandante();
+		return Testi.formatta("missioni", "IncaricoInCitta.s4").equals(mandante) ? ScenaInCitta.conBorgomastro() : ScenaInCitta.conMandante();
 	}
 
 	/**

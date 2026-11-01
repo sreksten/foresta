@@ -15,6 +15,7 @@ import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il cacciatore di taglie: in città c'è un manifesto con una taglia sul capo di una banda di goblin, un hobgoblin. La
@@ -70,16 +71,16 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 	@Override
 	public String getDescrizione() {
 		if (RITORNO.equals(getPassoCorrente())) {
-			return getRicercato() + " è stato abbattuto: torna a " + getNomeCitta() + " a riscuotere la taglia.";
+			return Testi.formatta("missioni", "CacciatoreDiTaglie.t1", getRicercato(), getNomeCitta());
 		}
 		String direzione = ottieniProprieta(DIREZIONE);
-		return "C'è una taglia su " + getRicercato() + ", l'hobgoblin a capo di una banda di goblin. Si nasconde fra delle rovine"
-				+ (direzione == null ? "" : ", " + direzione + " da " + getNomeCitta()) + ".";
+		return direzione == null ? Testi.formatta("missioni", "CacciatoreDiTaglie.descrizione", getRicercato())
+				: Testi.formatta("missioni", "CacciatoreDiTaglie.descrizioneConDirezione", getRicercato(), direzione, getNomeCitta());
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return "Fra queste rovine si nascondeva la banda di " + getRicercato() + ".";
+		return Testi.formatta("missioni", "CacciatoreDiTaglie.t2", getRicercato());
 	}
 
 	@Override
@@ -96,14 +97,12 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 						.esegui(() -> {
 							String direzione = Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), getCovo());
 							aggiungiProprieta(DIREZIONE, direzione);
-							BusEventi.pubblica(new NotificaTestoParagrafo("Dicono che la banda di " + getRicercato()
-									+ " si nasconda fra delle rovine, " + direzione + "."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "CacciatoreDiTaglie.s1", getRicercato(), direzione)));
 						})
 						.poi(CACCIA);
 			case CACCIA:
 				return combattiIlCapo(this::getCovo, getBanda())
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(getRicercato()
-								+ " è stato abbattuto: la taglia aspetta a " + getNomeCitta() + ".")))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "CacciatoreDiTaglie.s2", getRicercato(), getNomeCitta()))))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -113,28 +112,28 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 	@Override
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conCapitano()
-				.parlaIlMandante("Cercate lavoro? Leggete qui: ricercato, vivo o morto, " + getRicercato() + ".")
-				.parlaIlMandante("È un hobgoblin, il capo di una banda di goblin che assalta chiunque passi. Si nasconde fra certe rovine.")
-				.parlaIlCapo("Dove, esattamente?")
-				.parlaIlMandante("Se lo sapessi lo avrei già preso io. Portatemi la prova che è morto e avrete " + getRicompensa() + " monete.");
+				.parlaIlMandante(Testi.formatta("missioni", "CacciatoreDiTaglie.1", getRicercato()))
+				.parlaIlMandante(Testi.formatta("missioni", "CacciatoreDiTaglie.2"))
+				.parlaIlCapo(Testi.formatta("missioni", "CacciatoreDiTaglie.3"))
+				.parlaIlMandante(Testi.formatta("missioni", "CacciatoreDiTaglie.4", getRicompensa()));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conCapitano()
-				.parlaIlMandante(getRicercato() + " non darà più fastidio a nessuno? Ottimo lavoro.")
-				.parlaIlMandante("Ecco la taglia.")
-				.parlaIlCapo("Se ne avete altre, sapete dove trovarci.");
+				.parlaIlMandante(Testi.formatta("missioni", "CacciatoreDiTaglie.5", getRicercato()))
+				.parlaIlMandante(Testi.formatta("missioni", "CacciatoreDiTaglie.6"))
+				.parlaIlCapo(Testi.formatta("missioni", "CacciatoreDiTaglie.7"));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return "La taglia su " + getRicercato() + " vale " + getRicompensa() + " monete.";
+		return Testi.formatta("missioni", "CacciatoreDiTaglie.t3", getRicercato(), getRicompensa());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return "La taglia di " + getRicompensa() + " monete su " + getRicercato() + " è vostra.";
+		return Testi.formatta("missioni", "CacciatoreDiTaglie.t4", getRicompensa(), getRicercato());
 	}
 
 	@Override

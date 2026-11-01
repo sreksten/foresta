@@ -18,6 +18,7 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città qualcuno chiede un colpo: rubare qualcosa, guastare le provviste di qualcuno, appiccare un fuoco, entrare
@@ -108,10 +109,9 @@ public class IlColpo extends IncaricoInCitta {
 	@Override
 	public String getDescrizione() {
 		if (RITORNO.equals(getPassoCorrente())) {
-			return "Il colpo è riuscito: torna " + Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getColpo().getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
+			return Testi.formatta("missioni", "IlColpo.t1", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getColpo().getMandante())), getNomeCitta());
 		}
-		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto un colpo nel posto segnato sulla mappa, sorvegliato da "
-				+ getNomeDelleGuardie() + ": passa inosservato. Se combatti lì, il colpo fallisce.";
+		return Testi.formatta("missioni", "IlColpo.t2", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getNomeDelleGuardie());
 	}
 
 	@Override
@@ -132,7 +132,7 @@ public class IlColpo extends IncaricoInCitta {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, colpo.getLuogo())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getPosto());
-							BusEventi.pubblica(new NotificaTestoParagrafo("Il posto del colpo è segnato sulla mappa."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlColpo.s1")));
 						})
 						.poi(COLPO);
 			case COLPO:
@@ -153,9 +153,7 @@ public class IlColpo extends IncaricoInCitta {
 		ColpoRichiesto colpo = getColpo();
 		return colpo.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(colpo.getRichiesta()))
-				.parlaIlMandante("Il posto è " + TestiDeiLuoghi.dentro(colpo.getLuogo()) + " qui vicino, e lo sorvegliano "
-						+ getNomeDelleGuardie() + ": ve lo segno sulla mappa. Non fatevi vedere, e non combattete: se vi scoprono, "
-						+ "è tutto perduto. " + getRicompensa() + " monete a colpo fatto.")
+				.parlaIlMandante(Testi.formatta("missioni", "IlColpo.1", TestiDeiLuoghi.dentro(colpo.getLuogo()), getNomeDelleGuardie(), getRicompensa()))
 				.parlaIlCapo(testo(colpo.getBattutaDelCapo()))
 				.parlaIlMandante(testo(colpo.getRisposta()));
 	}
@@ -164,18 +162,17 @@ public class IlColpo extends IncaricoInCitta {
 	protected ScenaInCitta scenaRingraziamento() {
 		return getColpo().getAspetto().nuovaScena()
 				.parlaIlMandante(testo(getColpo().getRingraziamento()))
-				.parlaIlMandante("Ecco le " + getRicompensa() + " monete promesse. E non ci siamo mai visti.");
+				.parlaIlMandante(Testi.formatta("missioni", "IlColpo.2", getRicompensa()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per un colpo "
-				+ TestiDeiLuoghi.dentro(getColpo().getLuogo()) + ".";
+		return Testi.formatta("missioni", "IlColpo.t3", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getRicompensa(), TestiDeiLuoghi.dentro(getColpo().getLuogo()));
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Lingue.corrente().inizialeMaiuscola(mandante(getColpo().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Testi.formatta("missioni", "IlColpo.t4", Lingue.corrente().inizialeMaiuscola(mandante(getColpo().getMandante())), getRicompensa());
 	}
 
 	@Override

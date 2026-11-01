@@ -13,6 +13,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Dieci eremiti disturbati nel loro ritiro. Il conteggio avviene all'incontro, quando
@@ -34,22 +35,22 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 
 	@Override
 	public String getNome() {
-		return "Disturbatore della Quiete Pubblica";
+		return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t1");
 	}
 
 	@Override
 	public String getDescrizione() {
 		if (isCompleta()) {
-			return DESCRIZIONE_BASE + ". Dieci ritiri spirituali interrotti sul nascere.";
+			return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t2", DESCRIZIONE_BASE);
 		}
 		int mancanti = EREMITI_DA_INCONTRARE - getEremitiIncontrati();
 		if (mancanti == 1) {
-			return DESCRIZIONE_BASE + ". Ne manca uno, e si sta già preoccupando.";
+			return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t3", DESCRIZIONE_BASE);
 		}
 		if (mancanti == 10) {
 			return DESCRIZIONE_BASE + ".";
 		}
-		return DESCRIZIONE_BASE + ". Ne mancano " + Lingue.corrente().cardinale(mancanti, Genere.MASCHILE) + ".";
+		return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t4", DESCRIZIONE_BASE, Lingue.corrente().cardinale(mancanti, Genere.MASCHILE));
 	}
 
 	@Override
@@ -75,8 +76,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 			return;
 		}
 		if (!isAttiva()) {
-			BusEventi.pubblica(new NotificaTestoParagrafo("Nella Foresta vivono uomini che hanno scelto " +
-					"la solitudine dopo lunga riflessione. " + DESCRIZIONE_BASE + ", e fai in modo che se ne ricordino."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.s1", DESCRIZIONE_BASE)));
 			attivaMissione();
 		}
 		// Si conta l'incontro, non il suo esito: qui la locazione è appena stata
@@ -85,12 +85,9 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 		aggiungiProprieta(EREMITI_CONTATI, String.join(",", contati));
 		if (incontrati >= EREMITI_DA_INCONTRARE) {
 			completaMissione();
-			BusEventi.pubblica(new NotificaTestoParagrafo("Dieci Eremiti su dieci confermano che la Foresta era " +
-					"molto più tranquilla prima. " +
-					"Il titolo di Disturbatore della Quiete Pubblica è meritato."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.s2")));
 		} else {
-			BusEventi.pubblica(new NotificaTestoParagrafo("La quiete del " + Lingue.corrente().ordinale(incontrati, Genere.MASCHILE, false) +
-					" Eremita è stata ufficialmente turbata."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.s3", Lingue.corrente().ordinale(incontrati, Genere.MASCHILE, false))));
 		}
 	}
 

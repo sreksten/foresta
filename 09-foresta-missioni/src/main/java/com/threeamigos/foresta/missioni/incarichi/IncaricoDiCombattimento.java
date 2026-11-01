@@ -16,6 +16,7 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città qualcuno vuole sconfitto qualcosa che si nasconde nella foresta: una bestia rara, una banda in un covo, una
@@ -143,10 +144,10 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 	@Override
 	public String getDescrizione() {
 		if (RITORNO.equals(getPassoCorrente())) {
-			return "Fatto: torna " + Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getIncarico().getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
+			return Testi.formatta("missioni", "IncaricoDiCombattimento.t1", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getIncarico().getMandante())), getNomeCitta());
 		}
-		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " ti ha chiesto di sconfiggere " + getNomeDeiNemici()
-				+ (getNumero() == 1 ? ", che si trova" : ", che si trovano") + " nel posto segnato sulla mappa.";
+		return Testi.formatta("missioni", getNumero() == 1 ? "IncaricoDiCombattimento.descrizioneUno" : "IncaricoDiCombattimento.descrizioneMolti",
+				Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getNomeDeiNemici());
 	}
 
 	@Override
@@ -167,8 +168,7 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, incarico.getLuogo())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getCovo());
-							BusEventi.pubblica(new NotificaTestoParagrafo("Il posto dove "
-										+ (getNumero() == 1 ? "si trova" : "si trovano") + " è segnato sulla mappa."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", getNumero() == 1 ? "IncaricoDiCombattimento.posto.uno" : "IncaricoDiCombattimento.posto.molti")));
 						})
 						.poi(CACCIA);
 			case CACCIA:
@@ -186,8 +186,7 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 		CombattimentoRichiesto incarico = getIncarico();
 		return incarico.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(incarico.getRichiesta()))
-				.parlaIlMandante((getNumero() == 1 ? "Sta " : "Stanno ") + TestiDeiLuoghi.dentro(incarico.getLuogo()) + " qui vicino: ve lo segno sulla mappa. "
-						+ getRicompensa() + " monete a lavoro fatto.")
+				.parlaIlMandante(Testi.formatta("missioni", "IncaricoDiCombattimento.1", (getNumero() == 1 ? "Sta " : "Stanno "), TestiDeiLuoghi.dentro(incarico.getLuogo()), getRicompensa()))
 				.parlaIlCapo(testo(incarico.getBattutaDelCapo()))
 				.parlaIlMandante(testo(incarico.getRisposta()));
 	}
@@ -196,18 +195,17 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 	protected ScenaInCitta scenaRingraziamento() {
 		return getIncarico().getAspetto().nuovaScena()
 				.parlaIlMandante(testo(getIncarico().getRingraziamento()))
-				.parlaIlMandante("Ecco le " + getRicompensa() + " monete promesse.");
+				.parlaIlMandante(Testi.formatta("missioni", "IncaricoDiCombattimento.2", getRicompensa()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per sconfiggere "
-				+ getNomeDeiNemici() + ".";
+		return Testi.formatta("missioni", "IncaricoDiCombattimento.t2", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getRicompensa(), getNomeDeiNemici());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Lingue.corrente().inizialeMaiuscola(mandante(getIncarico().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Testi.formatta("missioni", "IncaricoDiCombattimento.t3", Lingue.corrente().inizialeMaiuscola(mandante(getIncarico().getMandante())), getRicompensa());
 	}
 
 	@Override

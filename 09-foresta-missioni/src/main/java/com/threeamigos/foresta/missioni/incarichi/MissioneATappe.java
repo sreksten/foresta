@@ -42,6 +42,7 @@ import java.util.Set;
 import java.util.function.IntPredicate;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Una missione a tappe (vedi missione_a_tappe.md e TappeRichieste, da tappe.txt): in una città qualcuno chiede di ritrovare una persona o un
@@ -312,19 +313,19 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 				return nomeDellaCitta(cittaDelPosto(indice));
 			case LOCANDA:
 				String nomeDellaLocanda = Foresta.getLocazioneMD(coordinate).getNome();
-				return nomeDellaLocanda == null ? "la locanda segnata sulla mappa" : "la locanda " + nomeDellaLocanda;
+				return nomeDellaLocanda == null ? Testi.formatta("missioni", "MissioneATappe.s1") : "la locanda " + nomeDellaLocanda;
 			case ROVINE:
 				return Foresta.nomeDelleRovine(Foresta.getLocazioneMD(coordinate));
 			case TEMPIO:
 				return Foresta.nomeDelTempio(coordinate);
 			case GROTTA:
-				return "la grotta segnata sulla mappa";
+				return Testi.formatta("missioni", "MissioneATappe.t1");
 			case BOSCO:
-				return "il bosco segnato sulla mappa";
+				return Testi.formatta("missioni", "MissioneATappe.t2");
 			case PALUDE:
-				return "la palude segnata sulla mappa";
+				return Testi.formatta("missioni", "MissioneATappe.t3");
 			default:
-				return "la radura segnata sulla mappa";
+				return Testi.formatta("missioni", "MissioneATappe.t4");
 		}
 	}
 
@@ -383,17 +384,17 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 
 	@Override
 	public String getNome() {
-		return isRichiestaPescata() ? getRichiesta().getTitolo() : "Una missione a tappe";
+		return isRichiestaPescata() ? getRichiesta().getTitolo() : Testi.formatta("missioni", "MissioneATappe.s2");
 	}
 
 	private String testoDelRitorno(TappeRichieste richiesta) {
-		return "Fatto: torna " + Lingue.corrente().conPreposizione(Preposizione.DA, mandante(richiesta.getMandante())) + " a " + getNomeCitta() + " a riscuotere.";
+		return Testi.formatta("missioni", "MissioneATappe.t5", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(richiesta.getMandante())), getNomeCitta());
 	}
 
 	@Override
 	public String getDescrizione() {
 		if (!isRichiestaPescata() || !isAttiva()) {
-			return "Prima o poi qualcuno, in una città, chiederà di ritrovare una persona o un oggetto, di posto in posto.";
+			return Testi.formatta("missioni", "MissioneATappe.t6");
 		}
 		TappeRichieste richiesta = getRichiesta();
 		String passo = getPassoCorrente();
@@ -402,7 +403,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		}
 		// Una missione finita si legge ancora fra le completate
 		if (Passo.FINE.equals(passo)) {
-			return mandanteEChiesto(richiesta) + " Missione compiuta.";
+			return Testi.formatta("missioni", "MissioneATappe.t7", mandanteEChiesto(richiesta));
 		}
 		int tappe = richiesta.getTappe().size();
 		int corrente;
@@ -412,8 +413,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 			corrente = tappe + 1;
 		} else if (CHIAVI.equals(passo) || ATTESA_DELLE_CHIAVI.equals(passo)) {
 			long prese = getMissioniAffidate(CHIAVI).stream().filter(Missione::isCompleta).count();
-			return mandanteEChiesto(richiesta) + " Le chiavi da prendere sono " + TappeRichieste.CUSTODI + " (ne hai " + prese
-					+ "), nei posti segnati sulla mappa, in qualunque ordine.";
+			return Testi.formatta("missioni", "MissioneATappe.t8", mandanteEChiesto(richiesta), TappeRichieste.CUSTODI, prese);
 		} else if (passo.startsWith(TAPPA)) {
 			corrente = Integer.parseInt(passo.substring(TAPPA.length()));
 		} else {
@@ -427,21 +427,21 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		}
 		if (richiesta.getBivio().isPresent() && corrente == tappe + 1 && coordinateDelPosto(tappe + 2) != null) {
 			int giusto = indiceDellaPistaGiusta();
-			descrizione.append(" Le piste sono due: ");
+			descrizione.append(Testi.formatta("missioni", "MissioneATappe.s3"));
 			if (isPistaFalsaVista()) {
 				descrizione.append(nomeDelPosto(giusto));
 			} else {
 				descrizione.append(nomeDelPosto(tappe + 1)).append(" e ").append(nomeDelPosto(tappe + 2));
 			}
-			descrizione.append(", segnate sulla mappa.");
+			descrizione.append(Testi.formatta("missioni", "MissioneATappe.s4"));
 		} else if (coordinateDelPosto(corrente) != null) {
-			descrizione.append(" Il prossimo posto è ").append(nomeDelPosto(corrente)).append(", segnato sulla mappa.");
+			descrizione.append(Testi.formatta("missioni", "MissioneATappe.s5")).append(nomeDelPosto(corrente)).append(Testi.formatta("missioni", "MissioneATappe.s6"));
 		}
 		return descrizione.toString();
 	}
 
 	private String mandanteEChiesto(TappeRichieste richiesta) {
-		return Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(richiesta.getMandante())) + " ti ha affidato una missione: “" + richiesta.getTitolo() + "\".";
+		return Testi.formatta("missioni", "MissioneATappe.t9", Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(richiesta.getMandante())), richiesta.getTitolo());
 	}
 
 	@Override
@@ -493,17 +493,17 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		TappeRichieste richiesta = getRichiesta();
 		return richiesta.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(richiesta.getRingraziamento(), 0))
-				.parlaIlMandante("Ecco le " + getRicompensa() + " monete promesse.");
+				.parlaIlMandante(Testi.formatta("missioni", "MissioneATappe.1", getRicompensa()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(getRichiesta().getMandante())) + " pagherà " + getRicompensa() + " monete.";
+		return Testi.formatta("missioni", "MissioneATappe.t10", Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(getRichiesta().getMandante())), getRicompensa());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Lingue.corrente().inizialeMaiuscola(mandante(getRichiesta().getMandante())) + " paga le " + getRicompensa() + " monete promesse.";
+		return Testi.formatta("missioni", "MissioneATappe.t11", Lingue.corrente().inizialeMaiuscola(mandante(getRichiesta().getMandante())), getRicompensa());
 	}
 
 	// --- I passi
@@ -563,12 +563,11 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 	 */
 	private void apriLUltimoPosto() {
 		if (!sonoRiusciteLeAffidate(CHIAVI) || !rivendicaIlPosto(numeroDiPosti())) {
-			BusEventi.pubblica(new NotificaTestoParagrafo("Senza le chiavi non c'è modo di andare avanti."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneATappe.s7")));
 			fallisciMissione();
 			return;
 		}
-		BusEventi.pubblica(new NotificaTestoParagrafo("Con tutte le chiavi in mano si può aprire l'ultimo posto: " + nomeDelPosto(numeroDiPosti())
-				+ ", segnato sulla mappa."));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneATappe.s8", nomeDelPosto(numeroDiPosti()))));
 	}
 
 	private boolean isPistaFalsaVista() {
@@ -617,7 +616,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		}
 		int arrivo = numeroDiPosti();
 		if (!rivendicaIlPosto(arrivo)) {
-			BusEventi.pubblica(new NotificaTestoParagrafo("La pista si interrompe qui: non c'è più nessun posto dove cercare."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneATappe.s9")));
 			fallisciMissione();
 			return;
 		}
@@ -655,7 +654,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		}
 		if (classe.isCitta()) {
 			passo = passo.falliscoSe(() -> Foresta.isCittaDistrutta(cittaDelPosto(indice)),
-					() -> nomeDellaCitta(cittaDelPosto(indice)) + " è stata distrutta: la pista si perde.");
+					() ->Testi.formatta("missioni", "MissioneATappe.s10", nomeDellaCitta(cittaDelPosto(indice))));
 		}
 		if (!ultimo && indice == getRichiesta().getTappe().size() && (getRichiesta().getBivio().isPresent() || getRichiesta().hasChiavi())) {
 			return passo.poi(getRichiesta().hasChiavi() ? CHIAVI : BIVIO);
@@ -692,7 +691,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 			// I posti dei custodi, e quello dell'oggetto che uno di loro vuole
 			for (int posto = prossimo; posto < numeroDiPosti(); posto++) {
 				if (!rivendicaIlPosto(posto)) {
-					BusEventi.pubblica(new NotificaTestoParagrafo("La pista si interrompe qui: non c'è più nessun posto dove cercare."));
+					BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneATappe.s11")));
 					fallisciMissione();
 					return;
 				}
@@ -702,7 +701,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		}
 		if (getRichiesta().getBivio().isPresent() && indice == richiesta.getTappe().size()) {
 			if (!rivendicaIlPosto(prossimo) || !rivendicaIlPosto(prossimo + 1)) {
-				BusEventi.pubblica(new NotificaTestoParagrafo("La pista si interrompe qui: non c'è più nessun posto dove cercare."));
+				BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneATappe.s12")));
 				fallisciMissione();
 				return;
 			}
@@ -710,7 +709,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 			return;
 		}
 		if (!rivendicaIlPosto(prossimo)) {
-			BusEventi.pubblica(new NotificaTestoParagrafo("La pista si interrompe qui: non c'è più nessun posto dove cercare."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneATappe.s13")));
 			fallisciMissione();
 			return;
 		}
@@ -721,7 +720,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		OggettoLeggendario leggendario = getLeggendario();
 		Artefatto artefatto = leggendario.costruisci(Statistiche.getLivello());
 		GruppoGiocatore.getIstanza().addArtefatto(artefatto);
-		BusEventi.pubblica(new NotificaTestoParagrafo("I custodi sono sconfitti: " + leggendario.getNomeBreve() + " è nelle vostre mani."));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneATappe.s14", leggendario.getNomeBreve())));
 		BusEventi.pubblica(new NotificaArtefattoTrovato(artefatto, Statistiche.getLivello()));
 	}
 

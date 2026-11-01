@@ -7,6 +7,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Un torneo (vedi IlTorneo), letto da una riga di TORNEO in missioni.txt, che ne descrive i campi: chi lo bandisce,
@@ -56,8 +57,7 @@ public final class TorneoRichiesto {
 			sfidanti.add(TipoPersonaggio.valueOf(sfidante));
 		}
 		if (sfidanti.size() != SFIDANTI_PRIMA_DELLA_FINALE) {
-			throw new IllegalArgumentException("Gli sfidanti prima della finale sono " + SFIDANTI_PRIMA_DELLA_FINALE
-					+ ", separati da uno spazio (GUERRIERO ELFA): " + riga);
+			throw new IllegalArgumentException(Testi.formatta("missioni", "TorneoRichiesto.s1", SFIDANTI_PRIMA_DELLA_FINALE, riga));
 		}
 		campione = campi.enumerato("CAMPIONE", TipoPersonaggio.class);
 		nomeDelCampione = CapoDellaRiga.da(campi.facoltativo("NOME"));

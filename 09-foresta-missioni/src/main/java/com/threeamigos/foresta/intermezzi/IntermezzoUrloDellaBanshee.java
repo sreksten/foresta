@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il bardo della locanda ringrazia il gruppo per aver accompagnato sua moglie (la missione IlViaggioDellaMoglie) e gli insegna
@@ -59,14 +60,14 @@ public class IntermezzoUrloDellaBanshee implements Intermezzo {
 		String moglie = RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome();
 		TipoLocazione arrivo = getViaggioCompletato()
 				.map(viaggio -> viaggio.ottieniProprieta(ProprietaDiMissione.CITTA_DI_ARRIVO)).map(TipoLocazione::valueOf).orElse(null);
-		String dove = arrivo == null ? "dall'altra parte della foresta" : Lingue.corrente().conPreposizione(Preposizione.A, arrivo.getNomeProprio());
+		String dove = arrivo == null ? Testi.formatta("missioni", "IntermezzoUrloDellaBanshee.s1") : Lingue.corrente().conPreposizione(Preposizione.A, arrivo.getNomeProprio());
 		return ScenaInLocanda.conBardo()
-				.parlaIlBardo("Siete tornati! Mia moglie " + moglie + " mi ha scritto: è arrivata sana e salva " + dove + ", grazie a voi.")
-				.parlaIlCapo("Era il minimo, dopo avervi riportato a casa.")
-				.parlaIlBardo("Vi devo più di un grazie. Vi insegno il mio canto più segreto, che non ho mai insegnato a nessuno.")
-				.parlaIlBardo("Si chiama l'Urlo della Banshee: un canto da far gelare il sangue. Chi lo ascolta si spaventa e perde la testa.")
-				.parlaIlCapo("Ci sarà utile.")
-				.parlaIlBardo("Chi di voi sa cantare lo imparerà in un attimo. Usatelo bene, e non fatelo sentire a mia moglie.")
+				.parlaIlBardo(Testi.formatta("missioni", "IntermezzoUrloDellaBanshee.1", moglie, dove))
+				.parlaIlCapo(Testi.formatta("missioni", "IntermezzoUrloDellaBanshee.2"))
+				.parlaIlBardo(Testi.formatta("missioni", "IntermezzoUrloDellaBanshee.3"))
+				.parlaIlBardo(Testi.formatta("missioni", "IntermezzoUrloDellaBanshee.4"))
+				.parlaIlCapo(Testi.formatta("missioni", "IntermezzoUrloDellaBanshee.5"))
+				.parlaIlBardo(Testi.formatta("missioni", "IntermezzoUrloDellaBanshee.6"))
 				.getPagine();
 	}
 }

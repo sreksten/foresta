@@ -8,6 +8,7 @@ import com.threeamigos.foresta.missioni.MissioneBase;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Un boccale in ogni locanda cittadina. Una tappa per città, e la missione si chiude
@@ -29,18 +30,18 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 
 	@Override
 	public String getNome() {
-		return "Cronache di un Fegato Eroico";
+		return Testi.formatta("missioni", "CronacheDiUnFegatoEroico.t1");
 	}
 
 	@Override
 	public String getDescrizione() {
-		return "Visita tutte le locande cittadine";
+		return Testi.formatta("missioni", "CronacheDiUnFegatoEroico.t2");
 	}
 
 	@Override
 	public void controllaPreLocazione() {
 		if (!isAttiva() && Foresta.getLocazioneDelGruppo().getCategoriaLocazione() == CategoriaLocazione.CITTA) {
-			BusEventi.pubblica(new NotificaTestoParagrafo(getDescrizione() + ": " + getNome() + " si scrive un boccale per volta."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "CronacheDiUnFegatoEroico.s1", getDescrizione(), getNome())));
 			attivaMissione();
 		}
 	}
@@ -60,7 +61,7 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 		if (!isAttiva() || isCompleta() || isFallita() || getMissioniSecondarie().stream().noneMatch(Missione::isFallita)) {
 			return false;
 		}
-		BusEventi.pubblica(new NotificaTestoParagrafo("Una delle locande cittadine non esiste più: le Cronache di un Fegato Eroico resteranno incompiute."));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "CronacheDiUnFegatoEroico.s2")));
 		fallisciMissione();
 		return true;
 	}
@@ -77,7 +78,7 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 		// l'ultima bevuta chiude anche la missione, nello stesso giro
 		if (getMissioniSecondarie().stream().allMatch(Missione::isCompleta)) {
 			completaMissione();
-			BusEventi.pubblica(new NotificaTestoParagrafo("Tutte le locande cittadine della Foresta sono state visitate. Le Cronache di un Fegato Eroico sono complete: un'impresa che nessun bardo oserà mai cantare."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "CronacheDiUnFegatoEroico.s3")));
 		}
 	}
 }
