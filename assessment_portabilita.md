@@ -84,14 +84,18 @@ Ogni passo compila e ha i test verdi; la dimensione è S (qualche ora), M (una s
    - [x] `RegoleDellaLingua` (articoli, preposizioni articolate, `daAgente`, cardinali e ordinali, elenchi, suono iniziale), `LinguaItaliana` (usa `Articoli` e `Numeri`), `LinguaInglese`, `Lingue.corrente()`; `Nome` (singolare, plurale, genere, suono, pronome, agente determinato), `Genere`, `Suono`, `Preposizione`; test `RegoleDellaLinguaTest`;
    - [x] genere, plurale, pronome, suono e agente determinato dei personaggi nei file `tipo_personaggio_<lingua>` (voci `NOME_SINGOLARE`, `NOME_PLURALE`, `GENERE`, `PRONOME`, `SUONO`, `AGENTE_DETERMINATO`);
    - [x] il bottino: `tipo_bottino_<lingua>` (nome, plurale, genere, articoli propri come «un paio di schinieri»); `OggettoBase`, `FormaDelBottino`, `BottinoArtefatto` e `NomeOggetto` (che ora prende il genere, anche diverso fra singolare e plurale) li leggono dalle regole;
-   - [ ] lo stesso per i tipi di artefatto e di locazione (i nomi proprî dei luoghi con articolo);
+   - [x] i tipi di artefatto: `nomi_artefatti_<lingua>` (nome comune, genere, articolo proprio degli schinieri); `Nome.di(file, costante)` per le enum con un loro schema di voci;
+   - [ ] i tipi di locazione (i nomi proprî dei luoghi con articolo: `tipo_locazione` ha già `NOME_PROPRIO`, manca il genere per gli articoli);
    - [x] le 52 classi dei personaggi perdono gli articoli scritti a mano (506 metodi tolti): li dà `PersonaggioBase` con le regole della lingua. Una sola differenza in italiano: «il Uomo» (errore) ora è «l'Uomo»;
    - [x] `NomeEDescrizione` (descrizione della scheda) legge `descrizione_personaggio_<lingua>`; la preposizione «di» davanti al nome proprio passa dalle regole;
    - [x] `Articoli.` e `Numeri.` nei moduli (tranne i test e `01-foresta-testi`): le funzioni (`inizialeMaiuscola`, `conPreposizione`, cardinali, ordinali: 187 punti) passano a `Lingue.corrente()`; le costanti (`Articoli.IL` ecc.) non si usano più fuori da `LinguaItaliana` e dai test. Restano da tradurre i testi che le circondano (passi 4-6, 8, 9). Correzioni di italiano che ne sono venute: «l'Uomo» (era «il Uomo»), «l'orecchio di goblin» (era «il orecchio»), «gli articoli» davanti a vocale nei materiali delle missioni.
-4. **Enum e costanti con testo** (S)
+4. **Enum e costanti con testo** (S) — fatti `Direzioni` (`direzioni_<lingua>`, con i punti cardinali composti) e le ore del giorno e gli eventi del drago di `LineaTemporale` (`linea_temporale_<lingua>`; corretto «Soo le tre» in «Sono le tre»); `Gruppo.chi()` («il gruppo» / «the party», `gruppo_<lingua>`). Restano:
    - [ ] `FUGA_IGNOMINIA_NOTA` (è nel salvataggio: decidere se confrontarla per chiave), `NegozioInScena`, `Mandante` (frasi mescolate a identificativi: da separare), `DovePartono`, `ContestoLancio`, `Direzioni`, le ore a parole di `LineaTemporale`.
 5. **Nomi e descrizioni montati** (M)
-   - [ ] `NomeEDescrizione` (descrizione del personaggio), `GeneratoreArtefattiTabelle`, `Anello`, `TatticheBase`, `Requisiti`, `RegistroArtefatti`.
+   - [x] `NomeEDescrizione` (descrizione del personaggio);
+   - [x] `GeneratoreArtefattiTabelle`: nomi («la spada di ferro» / «the iron sword»: il modello `NOME_CON_COMPLEMENTO` dice dove va il complemento), nomi propri, descrizioni e grado nel nome (`conGrado`: «la gemma minore del Drago» / «the minor gem of the Dragon») in `generatore_artefatti_<lingua>`;
+   - [x] `Anello` (nomi dal bottino); `TatticheBase` (nomi delle voci, `tattiche_base_<lingua>`); i problemi di una voce (`VoceMD.problemi`, in `testo_tattica`). `Requisiti` e `Valutatore` sono la traccia della decisione per chi sviluppa (come il log) e non si traducono: esclusi dal contatore;
+   - [ ] `RegistroArtefatti` e i nomi che vengono dalle grammatiche degli artefatti (`artefatti2.txt`, passo 10).
 6. **Messaggi del motore** (L)
    - [ ] `LocazioneBase`, `Automa`, `Locanda`, `Pernottamento`, `RaccoltaBottino`, poteri, economia, statistiche; la narrazione continua a passare dal bus come stringa, già nella lingua giusta (non si cambia il bus).
 7. **UI Swing** (M)
@@ -142,6 +146,7 @@ Bozze scritte da Claude il 2026-11-01 (passo 2); spuntare `[x]` quando rivisto. 
 - [ ] `tipo_trofeo_en.properties` (10-foresta-trofei): nomi adattati, non tradotti (Perdigiorno→Idler, Ammazzagoblin→Goblin slayer, Trafficone→Tinkerer, Trovarobe→Scavenger, Sbevazzone→Tippler, Vero Rompiscatole→Real Pain in the Neck, Più grosso è, più rumore fa→The Bigger They Are, the Louder They Fall…)
 - [ ] `storia_en.properties` (12-foresta-motore): la frase finale dell'introduzione («…a dreadful dive known as») prosegue col nome del gioco
 - [ ] `descrizione_personaggio_en.properties` (05-foresta-personaggi): la frase della scheda; `tipo_personaggio_en` ha ora anche `NOME_SINGOLARE`/`NOME_PLURALE`/`PRONOME` (nomi in-game, pronomi He/She/It); `tipo_bottino_en`/`_en_GB` (08-foresta-bottino): nomi e articoli degli oggetti trovati («suit of armor», «a pair of greaves»)
+- [ ] `generatore_artefatti_en`/`_en_GB`, `nomi_artefatti_en`/`_en_GB`, `tattiche_base_en`/`_en_GB`, `direzioni_en`, `linea_temporale_en`, `gruppo_en`; le aggiunte a `testo_tattica_en` (problemi di una voce)
 - [ ] `ui_en.properties` (12-foresta-swing): ora circa 225 chiavi (passo 7: tattiche, negozi, inventario, annunci, azioni del combattimento); `ui_en_GB` ha solo due voci. Le frasi con il bersaglio del riquadro del combattimento (`AZIONE_*_SU`) hanno il nome già articolato in italiano finché non arriva il passo 3
 
 Inglese britannico (guardare solo se le differenze sono quelle volute):

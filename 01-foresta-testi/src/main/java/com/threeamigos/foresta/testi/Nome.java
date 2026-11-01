@@ -76,6 +76,23 @@ public final class Nome {
 						Testi.testo(costante, "AIS").orElse(null), Testi.testo(costante, "AIP").orElse(null)});
 	}
 
+	/**
+	 * Come {@link #di(Enum)}, ma con le voci in un file a parte ({@code <file>_<lingua>.properties}, chiavi
+	 * {@code COSTANTE.VOCE}): per le enum i cui file dei testi hanno già un loro schema.
+	 */
+	public static Nome di(String file, Enum<?> costante) {
+		String prefisso = costante.name() + ".";
+		String singolare = Testi.get(file, prefisso + "NOME_SINGOLARE").orElse(costante.name());
+		return new Nome(singolare,
+				Testi.get(file, prefisso + "NOME_PLURALE").orElse(singolare),
+				Genere.dallaSigla(Testi.get(file, prefisso + "GENERE").orElse(null)),
+				Suono.dalNome(Testi.get(file, prefisso + "SUONO").orElse(null)),
+				Testi.get(file, prefisso + "PRONOME").orElse(null),
+				Testi.get(file, prefisso + "AGENTE_DETERMINATO").map(v -> v.trim().equalsIgnoreCase("true")).orElse(false),
+				new String[] {Testi.get(file, prefisso + "ADS").orElse(null), Testi.get(file, prefisso + "ADP").orElse(null),
+						Testi.get(file, prefisso + "AIS").orElse(null), Testi.get(file, prefisso + "AIP").orElse(null)});
+	}
+
 	public String getSingolare() {
 		return singolare;
 	}

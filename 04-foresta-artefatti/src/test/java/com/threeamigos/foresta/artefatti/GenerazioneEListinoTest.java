@@ -9,6 +9,7 @@ import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.testi.Testi;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
@@ -71,6 +72,21 @@ class GenerazioneEListinoTest {
         assertEquals("la gemma del Drago", GeneratoreArtefattiTabelle.conGrado("la gemma del Drago", TipoArtefatto.GEMMA, GradoIncantamento.MEDIO));
         assertEquals("la gemma minore del Drago", GeneratoreArtefattiTabelle.conGrado("la gemma del Drago", TipoArtefatto.GEMMA, GradoIncantamento.MINORE));
         assertEquals("la pietra del Drago maggiore", GeneratoreArtefattiTabelle.conGrado("la pietra del Drago", TipoArtefatto.GEMMA, GradoIncantamento.MAGGIORE));
+    }
+
+    @Test
+    void inInglese_ilGradoStaPrimaDelNomeComuneEIlComplementoPrimaDelNome() {
+        Testi.impostaLingua("en");
+        try {
+            assertEquals("the minor gem of the Dragon", GeneratoreArtefattiTabelle.conGrado("the gem of the Dragon", TipoArtefatto.GEMMA, GradoIncantamento.MINORE));
+            assertEquals("the Dragon gem minor", GeneratoreArtefattiTabelle.conGrado("the Dragon gem", TipoArtefatto.GEMMA, GradoIncantamento.MINORE));
+            assertEquals("the greaves", GeneratoreArtefattiTabelle.nomeComune(TipoArtefatto.SCHINIERI));
+            assertEquals("an axe", "an " + com.threeamigos.foresta.testi.Nome.di("nomi_artefatti", TipoArtefatto.ASCIA).getSingolare());
+            String nome = new GeneratoreArtefattiTabelle(new Random(5)).generaArtefatto(TipoArtefatto.SPADA, 1).getModelloDati().getNome();
+            assertTrue(nome.matches("the (iron|steel|silver|bronze|bone|wanderer's|guard's|hunter's|hermit's|mercenary's) sword"), nome);
+        } finally {
+            Testi.impostaLingua(null);
+        }
     }
 
     @Test

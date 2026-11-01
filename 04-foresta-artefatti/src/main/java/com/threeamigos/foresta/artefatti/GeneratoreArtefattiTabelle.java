@@ -9,6 +9,9 @@ import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Nome;
+import com.threeamigos.foresta.testi.Testi;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,59 +28,43 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	static final GeneratoreArtefatti ISTANZA = new GeneratoreArtefattiTabelle(Dado.sorgente(), GrammaticaArtefatti.caricaOppureNull(),
 			GrammaticaArtefatti.caricaIngredientiOppureNull());
 
-	private static final Map<TipoArtefatto, String> NOMI = new EnumMap<>(TipoArtefatto.class);
+	private static final String FILE_DEI_TESTI = "generatore_artefatti";
+	private static final String FILE_DEI_NOMI = "nomi_artefatti";
 	private static final Map<TipoArtefatto, Double> PESI = new EnumMap<>(TipoArtefatto.class);
 
 	static {
-		nomeEPeso(TipoArtefatto.SPADA, "la spada", 1);
-		nomeEPeso(TipoArtefatto.SPADONE, "lo spadone", 3);
-		nomeEPeso(TipoArtefatto.FALCE, "la falce", 3);
-		nomeEPeso(TipoArtefatto.MAZZA, "la mazza", 2);
-		nomeEPeso(TipoArtefatto.ASCIA, "l'ascia", 2);
-		nomeEPeso(TipoArtefatto.LANCIA, "la lancia", 2);
-		nomeEPeso(TipoArtefatto.BASTONE_MAGICO, "il bastone", 1);
-		nomeEPeso(TipoArtefatto.LIBRO_MAGICO, "il libro", 1);
-		nomeEPeso(TipoArtefatto.SCUDO, "lo scudo", 2);
-		nomeEPeso(TipoArtefatto.ELMO, "l'elmo", 1);
-		nomeEPeso(TipoArtefatto.ARMATURA, "l'armatura", 3);
-		nomeEPeso(TipoArtefatto.SCHINIERI, "gli schinieri", 2);
-		nomeEPeso(TipoArtefatto.VESTE, "la veste", 1);
-		nomeEPeso(TipoArtefatto.MASCHERA, "la maschera", 0.5);
-		nomeEPeso(TipoArtefatto.ANELLO, "l'anello", 0.1);
-		nomeEPeso(TipoArtefatto.TALISMANO, "il talismano", 0.5);
-		nomeEPeso(TipoArtefatto.NINNOLO, "il ninnolo", 0.2);
-		nomeEPeso(TipoArtefatto.PERGAMENA, "la pergamena", 0.1);
-		nomeEPeso(TipoArtefatto.GEMMA, "la gemma", 0.1);
-		nomeEPeso(TipoArtefatto.MONILE, "il monile", 0.2);
-		nomeEPeso(TipoArtefatto.GINGILLO, "il gingillo", 0.2);
-		nomeEPeso(TipoArtefatto.SIGILLO, "il sigillo", 0.1);
-		nomeEPeso(TipoArtefatto.AGGIORNAMENTO, "l'aggiornamento", 0.1);
-		nomeEPeso(TipoArtefatto.RIPROGRAMMAZIONE, "la riprogrammazione", 0.5);
+		peso(TipoArtefatto.SPADA, 1);
+		peso(TipoArtefatto.SPADONE, 3);
+		peso(TipoArtefatto.FALCE, 3);
+		peso(TipoArtefatto.MAZZA, 2);
+		peso(TipoArtefatto.ASCIA, 2);
+		peso(TipoArtefatto.LANCIA, 2);
+		peso(TipoArtefatto.BASTONE_MAGICO, 1);
+		peso(TipoArtefatto.LIBRO_MAGICO, 1);
+		peso(TipoArtefatto.SCUDO, 2);
+		peso(TipoArtefatto.ELMO, 1);
+		peso(TipoArtefatto.ARMATURA, 3);
+		peso(TipoArtefatto.SCHINIERI, 2);
+		peso(TipoArtefatto.VESTE, 1);
+		peso(TipoArtefatto.MASCHERA, 0.5);
+		peso(TipoArtefatto.ANELLO, 0.1);
+		peso(TipoArtefatto.TALISMANO, 0.5);
+		peso(TipoArtefatto.NINNOLO, 0.2);
+		peso(TipoArtefatto.PERGAMENA, 0.1);
+		peso(TipoArtefatto.GEMMA, 0.1);
+		peso(TipoArtefatto.MONILE, 0.2);
+		peso(TipoArtefatto.GINGILLO, 0.2);
+		peso(TipoArtefatto.SIGILLO, 0.1);
+		peso(TipoArtefatto.AGGIORNAMENTO, 0.1);
+		peso(TipoArtefatto.RIPROGRAMMAZIONE, 0.5);
 	}
 
-	private static final String[] COMPLEMENTI = {
-			"di ferro", "d'acciaio", "d'argento", "di bronzo", "d'osso",
-			"del viandante", "della guardia", "del cacciatore", "dell'eremita", "del mercenario"
-	};
-
-	private static final String[] NOMI_PROPRI = {
-			"Diavolina", "Morsofreddo", "Ultimaparola", "Spaccaossa", "Lucente", "Brontolona", "Sussurro", "Vedova Nera"
-	};
-
-	private static final String COMBATTIMENTO = "il cui potere è nel combattimento";
-	private static final String PROTEZIONE = "che protegge dagli attacchi avversari";
-	private static final String PROTEZIONE_PAIO = "che proteggono dagli attacchi avversari";
-	private static final String MAGIA = "che aumenta il potere magico";
-
 	/**
-	 * Accessori: l'attributo che migliorano e la descrizione che lo dice
+	 * Gli attributi che un accessorio può migliorare, con la descrizione che lo dice (voce {@code DESCRIZIONE.ACCESSORIO.<ATTRIBUTO>}
+	 * dei testi del generatore)
 	 */
-	private static final Object[][] ACCESSORI = {
-			{ TipoAttributo.CARISMA, "che aumenta il Carisma" },
-			{ TipoAttributo.CORAGGIO, "che aumenta il Coraggio" },
-			{ TipoAttributo.VALORE, "che aumenta il Valore" },
-			{ TipoAttributo.FORTUNA, "che porta Fortuna" },
-			{ TipoAttributo.PERCEZIONE, "che acuisce i sensi" }
+	private static final TipoAttributo[] ACCESSORI = {
+			TipoAttributo.CARISMA, TipoAttributo.CORAGGIO, TipoAttributo.VALORE, TipoAttributo.FORTUNA, TipoAttributo.PERCEZIONE
 	};
 
 	/**
@@ -159,9 +146,29 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		return PESI.get(tipo);
 	}
 
-	private static void nomeEPeso(TipoArtefatto tipo, String nome, double peso) {
-		NOMI.put(tipo, nome);
+	private static void peso(TipoArtefatto tipo, double peso) {
 		PESI.put(tipo, peso);
+	}
+
+	// I testi del generatore stanno in generatore_artefatti_<lingua>.properties
+	private static String testo(String chiave, Object... valori) {
+		return Testi.formatta(FILE_DEI_TESTI, chiave, valori);
+	}
+
+	/**
+	 * Il nome comune del tipo con l'articolo determinativo, nella lingua in uso: "la spada", "l'ascia", "gli schinieri".
+	 */
+	static String nomeComune(TipoArtefatto tipo) {
+		Nome nome = Nome.di(FILE_DEI_NOMI, tipo);
+		return Lingue.corrente().articoloDeterminativo(nome, false) + nome.getSingolare();
+	}
+
+	// Il nome comune, con l'articolo e un complemento: "la spada di ferro", "the iron sword"
+	private String nomeConComplemento(TipoArtefatto tipo) {
+		Nome nome = Nome.di(FILE_DEI_NOMI, tipo);
+		List<String> complementi = Testi.serie(FILE_DEI_TESTI, "COMPLEMENTO");
+		return testo("NOME_CON_COMPLEMENTO", Lingue.corrente().articoloDeterminativo(nome, false), nome.getSingolare(),
+				complementi.get(random.nextInt(complementi.size())));
 	}
 
 	@Override
@@ -178,7 +185,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		int livelloEffettivo = Math.max(1, livello);
 		ArtefattoMD md = new ArtefattoMD();
 		md.setTipo(tipo);
-		md.setNome(NOMI.get(tipo) + ' ' + scegli(COMPLEMENTI));
+		md.setNome(nomeConComplemento(tipo));
 		md.setLivello(livelloEffettivo);
 		md.setPeso(PESI.get(tipo));
 		md.setCostoAcquisto(5 + 5 * livelloEffettivo);
@@ -186,7 +193,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 			return generaDaGrammatica(md, livelloEffettivo);
 		}
 		if (random.nextDouble() < CostantiArtefatti.ARTEFATTO_PROBABILITA_NOME_PROPRIO) {
-			md.setNomeProprio(scegli(NOMI_PROPRI));
+			md.setNomeProprio(scegli(Testi.serie(FILE_DEI_TESTI, "NOME_PROPRIO")));
 		}
 		// La rarità conta solo per il numero di effetti, quindi solo per gli artefatti incantabili
 		if (Artefatto.di(md).isIncantabile() && random.nextDouble() < CostantiArtefatti.ARTEFATTO_PROBABILITA_RARO) {
@@ -203,13 +210,13 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 				completaProtezione(md, livelloEffettivo);
 				break;
 			case POTENZIAMENTO_POTERE_MAGICO:
-				md.setDescrizione(MAGIA);
+				md.setDescrizione(testo("DESCRIZIONE.MAGIA"));
 				md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_PERCENTUALE, 5.0 * livelloEffettivo, "");
 				break;
 			default:
-				Object[] accessorio = ACCESSORI[random.nextInt(ACCESSORI.length)];
-				md.setDescrizione((String) accessorio[1]);
-				md.addModificatore((TipoAttributo) accessorio[0], TipoModificatore.VARIAZIONE_FISSA, livelloEffettivo, "");
+				TipoAttributo accessorio = ACCESSORI[random.nextInt(ACCESSORI.length)];
+				md.setDescrizione(testo("DESCRIZIONE.ACCESSORIO." + accessorio.name()));
+				md.addModificatore(accessorio, TipoModificatore.VARIAZIONE_FISSA, livelloEffettivo, "");
 				break;
 		}
 		Artefatto artefatto = Artefatto.di(md);
@@ -255,7 +262,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		if (random.nextDouble() < CostantiArtefatti.ARTEFATTO_PROBABILITA_RARO) {
 			md.setRarita(TipoRaritaArtefatto.RARO);
 		}
-		md.setNome(NOMI.get(tipo));
+		md.setNome(nomeComune(tipo));
 		if (tipo.getCategoria() == CategoriaArtefatto.ARMA) {
 			completaArma(md, livello);
 		} else {
@@ -296,7 +303,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	 * Scudo, elmo, maschera, armatura e schinieri: +5% di PARATA per livello, la veste invece di RESISTENZA_MAGICA.
 	 */
 	private void completaProtezione(ArtefattoMD md, int livello) {
-		md.setDescrizione(md.getTipo().getCardinalita() == TipoCardinalitaArtefatto.PAIO ? PROTEZIONE_PAIO : PROTEZIONE);
+		md.setDescrizione(testo(md.getTipo().getCardinalita() == TipoCardinalitaArtefatto.PAIO ? "DESCRIZIONE.PROTEZIONE_PAIO" : "DESCRIZIONE.PROTEZIONE"));
 		md.addModificatore(md.getTipo() == TipoArtefatto.VESTE ? TipoAttributo.RESISTENZA_MAGICA : TipoAttributo.PARATA,
 				TipoModificatore.VARIAZIONE_PERCENTUALE, 5.0 * livello, "");
 	}
@@ -313,10 +320,10 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		}
 		if (md.getTipo() == TipoArtefatto.BASTONE_MAGICO) {
 			danni = danni / 2;
-			md.setDescrizione(MAGIA);
+			md.setDescrizione(testo("DESCRIZIONE.MAGIA"));
 			md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_PERCENTUALE, 5.0 * livello, "");
 		} else {
-			md.setDescrizione(COMBATTIMENTO);
+			md.setDescrizione(testo("DESCRIZIONE.COMBATTIMENTO"));
 		}
 		md.setDanni(danni);
 	}
@@ -329,8 +336,8 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		int livelloEffettivo = Math.max(1, livello);
 		ArtefattoMD md = new ArtefattoMD();
 		md.setTipo(TipoArtefatto.RIPROGRAMMAZIONE);
-		md.setNome(NOMI.get(TipoArtefatto.RIPROGRAMMAZIONE));
-		md.setDescrizione("che riprogramma un Artefatto");
+		md.setNome(nomeComune(TipoArtefatto.RIPROGRAMMAZIONE));
+		md.setDescrizione(testo("DESCRIZIONE.RIPROGRAMMAZIONE"));
 		md.setLivello(livelloEffettivo);
 		md.setPeso(PESI.get(TipoArtefatto.RIPROGRAMMAZIONE));
 		md.setCostoAcquisto(CostantiArtefatti.RIPROGRAMMAZIONE_VALORE_PER_LIVELLO * livelloEffettivo);
@@ -348,7 +355,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		ArtefattoMD md = new ArtefattoMD();
 		md.setTipo(TipoArtefatto.AGGIORNAMENTO);
 		md.setNome(ProduttoreDiArtefattiCasuale.nomeAggiornamento());
-		md.setDescrizione("che fa aumentare di un livello un Artefatto");
+		md.setDescrizione(testo("DESCRIZIONE.AGGIORNAMENTO"));
 		md.setLivello(livelloEffettivo);
 		md.setPeso(PESI.get(TipoArtefatto.AGGIORNAMENTO));
 		// Non si compra né si vende: il costo dice solo quanto vale, per i punteggi e per l'inventario
@@ -388,7 +395,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 				md.addIncantamento(generaIncantamento(grado, tipoDanno));
 			}
 		} else {
-			nome = NOMI.get(tipo);
+			nome = nomeComune(tipo);
 			List<TipoAttributo> attributi = new ArrayList<>(attributiDi(tipo));
 			List<TipoDanno> danni = new ArrayList<>(danniDi(tipo));
 			Collections.shuffle(attributi, random);
@@ -403,7 +410,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		}
 		md.setNome(conGrado(nome, tipo, grado));
 		int effetti = md.getModificatori().size() + md.getIncantamenti().size();
-		md.setDescrizione(effetti == 1 ? "che trasmette un effetto" : "che trasmette " + effetti + " effetti");
+		md.setDescrizione(effetti == 1 ? testo("DESCRIZIONE.INGREDIENTE_UNO") : testo("DESCRIZIONE.INGREDIENTE_N", effetti));
 		md.setCostoAcquisto(ListinoPergamene.prezzo(md));
 		return Artefatto.di(md);
 	}
@@ -417,11 +424,13 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		if (grado == GradoIncantamento.MEDIO) {
 			return nome;
 		}
-		String nomeComune = NOMI.get(tipo);
+		Nome nomeDelTipo = Nome.di(FILE_DEI_NOMI, tipo);
+		String articolo = Lingue.corrente().articoloDeterminativo(nomeDelTipo, false);
+		String nomeComune = articolo + nomeDelTipo.getSingolare();
 		if (!nome.startsWith(nomeComune)) {
-			return nome + ' ' + grado.getNome();
+			return testo("NOME_CON_GRADO_IN_FONDO", nome, grado.getNome());
 		}
-		return nomeComune + ' ' + grado.getNome() + nome.substring(nomeComune.length());
+		return testo("NOME_CON_GRADO", articolo, nomeDelTipo.getSingolare(), grado.getNome(), nome.substring(nomeComune.length()));
 	}
 
 	private IncantamentoMD generaIncantamento(GradoIncantamento grado) {
@@ -452,7 +461,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		}
 	}
 
-	private String scegli(String[] valori) {
-		return valori[random.nextInt(valori.length)];
+	private String scegli(List<String> valori) {
+		return valori.get(random.nextInt(valori.size()));
 	}
 }

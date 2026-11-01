@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.testi.Testi;
+import com.threeamigos.foresta.testi.Lingue;
 
 /**
  * Un insieme di personaggi, con il suo capo e le sue scorte di pergamene e pozioni. Le due specializzazioni sono {@link GruppoGiocatore} e
@@ -465,14 +467,14 @@ public abstract class Gruppo implements VistaGruppo {
 	 * Chi parla, per le frasi dei testi: "il gruppo" se sono più di uno, altrimenti il capo con l'articolo.
 	 */
 	public String chi() {
-		return personaggi.size() > 1 ? "il gruppo" : capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
+		return personaggi.size() > 1 ? Testi.formatta("gruppo", "CHI") : capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 	}
 
 	/**
 	 * Come {@link #chi()}, con l'iniziale maiuscola.
 	 */
 	public String chiMaiuscolo() {
-		return personaggi.size() > 1 ? "Il gruppo" : capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+		return personaggi.size() > 1 ? Lingue.corrente().inizialeMaiuscola(Testi.formatta("gruppo", "CHI")) : capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 	}
 	
 	@Override

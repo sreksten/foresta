@@ -3,6 +3,7 @@ package com.threeamigos.foresta.mappa;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * La direzione e la distanza fra due punti della foresta, a parole ("a poco più di un giorno di cammino verso nordest."): per
@@ -12,10 +13,7 @@ import com.threeamigos.foresta.testi.Genere;
  */
 public final class Direzioni {
 
-	private static final String NORD = "nord";
-	private static final String EST = "est";
-	private static final String SUD = "sud";
-	private static final String OVEST = "ovest";
+	private static final String FILE_DEI_TESTI = "direzioni";
 
 	private Direzioni() {
 	}
@@ -31,68 +29,44 @@ public final class Direzioni {
 	public static String getDirezione(int daX, int daY, int aX, int aY) {
 		int dx = (daX > aX ? daX - aX : aX - daX);
 		int dy = (daY > aY ? daY - aY : aY - daY);
-		StringBuilder sb = new StringBuilder();
 		int distanza = dx + dy;
 		if (distanza == 0) {
 			// Nello stesso punto non c'è una direzione: "a zero ore di cammino verso ovest" non vuol dire niente
-			return "proprio qui.";
+			return testo("PROPRIO_QUI");
 		}
+		// Il punto cardinale: nord o sud, est od ovest, o tutti e due (nordest) se nessuno dei due assi domina
+		String nordSud = null;
+		String estOvest = null;
+		if (daY != aY) {
+			if (dy >= (dx + 1) / 2) {
+				nordSud = daY < aY ? "SUD" : "NORD";
+			}
+			if (dx >= (dy + 1) / 2) {
+				estOvest = aX > daX ? "EST" : "OVEST";
+			}
+		} else {
+			estOvest = aX > daX ? "EST" : "OVEST";
+		}
+		String punto = testo("PUNTO." + (nordSud != null ? nordSud : "") + (nordSud != null && estOvest != null ? "_" : "") + (estOvest != null ? estOvest : ""));
 		if (distanza > 36) {
-			if (distanza > 50)
-				sb.append("molto ");
-			sb.append("lontano in direzione ");
-		} else {
-			int giorni = distanza / 6;
-			int resto = distanza % 6;
-			sb.append("a ");
-			if (giorni == 0) {
-				if (resto == 1)
-					sb.append("un'ora");
-				else
-					sb.append(Lingue.corrente().cardinale(resto, Genere.MASCHILE)).append(" ore");
-			} else {
-				if (resto < 4) {
-					if (resto > 0)
-						sb.append("poco piu' di ");
-					if (giorni == 1)
-						sb.append("un giorno");
-					else
-						sb.append(Lingue.corrente().cardinale(giorni, Genere.MASCHILE)).append(" giorni");
-				} else {
-					sb.append("quasi ").append(Lingue.corrente().cardinale(giorni + 1, Genere.MASCHILE)).append(" giorni");
-				}
-			}
-			sb.append(" di cammino verso ");
+			return testo(distanza > 50 ? "MOLTO_LONTANO" : "LONTANO", punto);
 		}
-		if (daY < aY) {
-			if (dy >= (dx + 1) / 2) {
-				sb.append(SUD);
-			}
-			if (dx >= (dy + 1) / 2) {
-				if (aX > daX) {
-					sb.append(EST);
-				} else {
-					sb.append(OVEST);
-				}
-			}
-		} else if (daY > aY) {
-			if (dy >= (dx + 1) / 2) {
-				sb.append(NORD);
-			}
-			if (dx >= (dy + 1) / 2) {
-				if (aX > daX) {
-					sb.append(EST);
-				} else {
-					sb.append(OVEST);
-				}
-			}
+		int giorni = distanza / 6;
+		int resto = distanza % 6;
+		String quanto;
+		if (giorni == 0) {
+			quanto = resto == 1 ? testo("UN_ORA") : testo("ORE", Lingue.corrente().cardinale(resto, Genere.MASCHILE));
+		} else if (resto < 4) {
+			String giorniInLettere = giorni == 1 ? testo("UN_GIORNO") : testo("GIORNI", Lingue.corrente().cardinale(giorni, Genere.MASCHILE));
+			quanto = resto > 0 ? testo("POCO_PIU_DI", giorniInLettere) : giorniInLettere;
 		} else {
-			if (aX > daX)
-				sb.append(EST);
-			else
-				sb.append(OVEST);
+			quanto = testo("QUASI", testo("GIORNI", Lingue.corrente().cardinale(giorni + 1, Genere.MASCHILE)));
 		}
-		sb.append('.');
-		return sb.toString();
+		return testo("DI_CAMMINO", quanto, punto);
+	}
+
+	// Le frasi stanno in direzioni_<lingua>.properties
+	private static String testo(String chiave, Object... valori) {
+		return Testi.formatta(FILE_DEI_TESTI, chiave, valori);
 	}
 }

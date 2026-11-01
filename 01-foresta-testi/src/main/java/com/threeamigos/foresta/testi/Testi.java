@@ -101,6 +101,21 @@ public final class Testi {
 	}
 
 	/**
+	 * Le voci numerate di un file, {@code PREFISSO.1}, {@code PREFISSO.2}... finché ce ne sono (una voce vuota è una voce):
+	 * un elenco di parole o di pagine. Si legge nella lingua scelta, voce per voce, con il ripiego di sempre.
+	 */
+	public static java.util.List<String> serie(String file, String prefisso) {
+		java.util.List<String> voci = new ArrayList<>();
+		for (int i = 1;; i++) {
+			Optional<String> voce = get(file, prefisso + "." + i);
+			if (!voce.isPresent()) {
+				return voci;
+			}
+			voci.add(voce.get());
+		}
+	}
+
+	/**
 	 * Come {@link #get(String, String)}, con i valori al posto di {@code {0}}, {@code {1}}... Non usa {@code MessageFormat},
 	 * che dipende dal {@code Locale} del dispositivo e chiede di raddoppiare gli apostrofi (in italiano e in francese sono
 	 * ovunque). Se la chiave manca, la chiave stessa, così l'errore si nota subito.

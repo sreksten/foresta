@@ -12,6 +12,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import java.util.function.Supplier;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il tempo della partita: giorno e ora, le città distrutte e l'ultimo evento da mostrare. I dati stanno nel {@code LineaTemporaleMD}.
@@ -20,6 +21,9 @@ import com.threeamigos.foresta.testi.Genere;
  * nulla da difendere e il gioco è perduto.
  */
 public class LineaTemporale {
+
+	// Le frasi stanno in linea_temporale_<lingua>.properties
+	private static final String FILE_DEI_TESTI = "linea_temporale";
 	
 	private LineaTemporale() {
 	}
@@ -57,43 +61,12 @@ public class LineaTemporale {
 		getLineaTemporaleMD().reimposta();
 	}
 
-	private static final String[] ore = {
-			"E' la mezzanotte",
-			"E' l'una del mattino",
-			"Sono le due del mattino",
-			"Soo le tre del mattino",
-			"E' il canto del gallo",
-			"Sorge l'aurora",
-			"E' l'alba",
-			"Sono le sette del mattino",
-			"Sono le otto del mattino",
-			"Sono le nove del mattino",
-			"E' la mezza mattinata",
-			"E' la tarda mattina",
-			"E' mezzogiorno",
-			"E' il tocco",
-			"Sono le due",
-			"E' il primo pomeriggio",
-			"E' il pomeriggio",
-			"E' il tardo pomeriggio",
-			"E' il tramonto",
-			"E' l'imbrunire",
-			"E' la sera",
-			"E' la tarda sera",
-			"E' la notte",
-			"Sono le undici di notte"
-	};
-
 	public static String getDescrizioneOraDelGiorno() {
-		StringBuilder sb = new StringBuilder(ore[getOra()]).append(" del");
 		int giorno = getGiorno();
-		if (giorno == 8 || giorno == 11) {
-			sb.append("l'");
-		} else {
-			sb.append(' ');
-		}
-		sb.append(Lingue.corrente().ordinale(giorno, Genere.MASCHILE, false)).append(" giorno.");
-		return sb.toString();
+		// L'ordinale con l'articolo elisio ("dell'ottavo", "dell'undicesimo") ha una frase sua
+		boolean elisione = Lingue.corrente().ordinale(giorno, Genere.MASCHILE, true).startsWith("l'");
+		return Testi.formatta(FILE_DEI_TESTI, elisione ? "FRASE_ELISA" : "FRASE", Testi.get(FILE_DEI_TESTI, "ORA." + getOra()).orElse(""),
+				Lingue.corrente().ordinale(giorno, Genere.MASCHILE, false));
 	}
 
 	/**
@@ -132,7 +105,6 @@ public class LineaTemporale {
 		md.setGiorno(md.getGiorno() + ora / 24);
 	}
 
-	private static final String COLONNA = " vede levarsi una colonna di fumo ";
 
 	//TODO le città potrebbero essere distrutte a caso
 	/**
@@ -155,7 +127,7 @@ public class LineaTemporale {
 		int giorno = getGiorno();
 		String nome = gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		if (giorno > 40) {
-			setEvento("Sventura! " + nome + " ha invano tentato di fermare il Drago, che col tempo ha abbattuto l'ultimo baluardo della resistenza... tutto e' perduto!");
+			setEvento(Testi.formatta(FILE_DEI_TESTI, "EVENTO_FINE", nome));
 			setGiocoFinito(true);
 		} else {
 			if (giorno >= 35 && !Foresta.isCittaDistrutta(TipoLocazione.CITTA_MALGAARD)) {
@@ -181,12 +153,11 @@ public class LineaTemporale {
 		if (coordinate != null) {
 			String nomeCitta = citta.getNomeDellaCitta();
 			if (!coordinate.equals(Foresta.getPosizioneDelGruppo())) {
-				setEvento(nome + COLONNA + Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate));
+				setEvento(Testi.formatta(FILE_DEI_TESTI, "EVENTO_FUMO", nome, Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), coordinate)));
 			} else if (dormiva) {
-				setEvento("Un boato scuote " + nomeCitta + " prima dell'alba: il Drago! " + gruppo.chiMaiuscolo()
-						+ " riesce a fuggire per un pelo tra le fiamme, e di " + nomeCitta + " non restano che rovine fumanti.");
+				setEvento(Testi.formatta(FILE_DEI_TESTI, "EVENTO_SCAMPATO", nomeCitta, gruppo.chiMaiuscolo()));
 			} else {
-				setEvento("Dove sorgeva " + nomeCitta + " " + gruppo.chi() + " trova solo le rovine: il Drago è passato di qui.");
+				setEvento(Testi.formatta(FILE_DEI_TESTI, "EVENTO_ROVINE", nomeCitta, gruppo.chi()));
 			}
 		}
 		Foresta.setCittaDistrutta(citta);

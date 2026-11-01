@@ -131,7 +131,9 @@ class ConvenzioniDiLocalizzazioneTest {
 	private static final Pattern RIGA_INTERNA = Pattern.compile("Logger\\.log|new \\w*Exception\\(|assert|@SuppressWarnings|@Deprecated");
 	// Le regole dell'italiano sono italiano per natura; quel che è di un'altra lingua sta nella sua classe
 	private static final String[] PERCORSI_INTERNI = {"/ui/sviluppo/", "StrumentiDiSviluppo", "DotazioneDiProva", "TrucchiDiSviluppo",
-			"/testi/LinguaItaliana.java", "/testi/Articoli.java", "/testi/Numeri.java"};
+			"/testi/LinguaItaliana.java", "/testi/Articoli.java", "/testi/Numeri.java",
+			// La spiegazione di una decisione della tattica è una traccia per chi sviluppa, come il log
+			"/tattiche/valutazione/Requisiti.java", "/tattiche/Valutatore.java"};
 
 	static boolean italiana(String testo) {
 		if (LETTERA_ACCENTATA.matcher(testo.toLowerCase(java.util.Locale.ROOT)).find()) {

@@ -15,6 +15,7 @@ import java.util.Objects;
 
 import static com.threeamigos.foresta.serializzazione.Serializzabile.facoltativo;
 import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Una voce di tattica: il selettore (chi), le condizioni (quando, in AND) e una sequenza di azioni (che cosa:
@@ -142,16 +143,17 @@ public final class VoceMD {
 		PortataAzione portata = getPortata();
 		for (AzioneMD azione : azioni) {
 			if (PortataAzione.di(azione.getTipo()) != portata) {
-				problemi.add("le azioni di una voce devono avere la stessa portata: " + azione.getTipo() + " non è " + portata);
+				problemi.add(Testi.formatta("testo_tattica", "problema.PORTATE_DIVERSE", azione.getTipo().getDescrizione(), portata));
 			}
 		}
 		SelettoreMD effettivo = selettoreEffettivo();
 		if (!effettivo.getTipoRosa().valePer(attoreDelGiocatore)) {
-			problemi.add("la rosa " + effettivo.getTipoRosa() + " non vale per " + (attoreDelGiocatore ? "i personaggi del giocatore" : "i mostri"));
+			problemi.add(Testi.formatta("testo_tattica", "problema.ROSA_NON_VALE", effettivo.getTipoRosa().getDescrizione(),
+					Testi.formatta("testo_tattica", attoreDelGiocatore ? "problema.CHI_PERSONAGGI" : "problema.CHI_MOSTRI")));
 		}
 		for (AzioneMD azione : azioni) {
 			if (!PortataAzione.roseAmmesse(azione.getTipo(), attoreDelGiocatore).contains(effettivo.getTipoRosa())) {
-				problemi.add(azione.getTipo() + " non accetta la rosa " + effettivo.getTipoRosa());
+				problemi.add(Testi.formatta("testo_tattica", "problema.ROSA_NON_ACCETTATA", azione.getTipo().getDescrizione(), effettivo.getTipoRosa().getDescrizione()));
 			}
 		}
 		return problemi;
