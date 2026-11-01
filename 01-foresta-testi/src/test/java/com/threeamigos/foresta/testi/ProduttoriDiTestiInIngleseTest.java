@@ -46,6 +46,16 @@ class ProduttoriDiTestiInIngleseTest {
 	}
 
 	@Test
+	void fiabe() {
+		for (int i = 0; i < 200; i++) {
+			String fiaba = String.join(" ", ProduttoreDiFiabeCasuale.fiaba());
+			assertFalse(fiaba.trim().isEmpty());
+			assertFalse(fiaba.matches("(?s).*[\\[\\]{}|<>@].*"), fiaba);
+			assertFalse(fiaba.contains("  ") || fiaba.contains(" ,") || fiaba.contains(" ."), fiaba);
+		}
+	}
+
+	@Test
 	void luoghi() {
 		controlla("tempio", ProduttoreDiLuoghiCasuale::nomeTempio);
 		controlla("rovine", ProduttoreDiLuoghiCasuale::nomeRovine);
