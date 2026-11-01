@@ -106,7 +106,7 @@ Ogni passo compila e ha i test verdi; la dimensione è S (qualche ora), M (una s
    - [ ] restano in `12-foresta-swing` e dipendono dal passo 3: `Numeri.getCardinaleM` nella schermata finale («Avversari uccisi in N giorni»), `Articoli.inizialeMaiuscola` nel fumetto dell'incantatore, `TestoDeiModificatori.durata` (il `replaceFirst("^per ", "ancora ")` del DisplayableCanvasInventario è un trucco italiano), `AIUTO_ROTELLA` in `Cartiglio` (letto una volta sola all'avvio della classe: va bene finché la lingua si sceglie prima di creare la UI).
 8. **Intermezzi e racconto** (M)
    - [x] il `Racconto` (storia, sconfitta, vittoria) è in `storia_it.properties` (12-foresta-motore, chiavi `INTRODUZIONE.n`, `FINALE_SCONFITTA.n`, `FINALE_VITTORIA.n`), letto con `Testi.get`; `RaccontoTest`;
-   - [ ] le battute in `intermezzi_it.properties`.
+   - [x] le battute e le didascalie degli intermezzi del modulo `07-foresta-intermezzi` (introduttivo, fine prima locazione, accampamento con le sue tre scene, notti dei negozi, riprogrammazione, spada nascosta, libro tecnico, saluti dei negozianti) sono in `intermezzi_<lingua>` (chiavi `Classe.n`, `ACCAMPAMENTO.scena.battuta`, `.M`/`.F` per il capo); `NegozioInScena` non porta più il plurale del negoziante, lo prende dal nome della classe. Le battute degli intermezzi delle missioni seguono con le missioni (passo 9); le battute da grammatica (oroscopo, locande) col passo 10.
 9. **Missioni** (L, di gran lunga il passo più grosso: 808 stringhe)
    - [ ] una missione per volta (nome, descrizioni di ogni passo, dialoghi), con chiavi `MISSIONE.PASSO`; ogni missione, finita, abbassa il contatore.
 10. **Grammatiche** (L, più per la scrittura che per il codice)
@@ -152,6 +152,7 @@ Bozze scritte da Claude il 2026-11-01 (passo 2); spuntare `[x]` quando rivisto. 
 - [ ] `generatore_artefatti_en`/`_en_GB`, `nomi_artefatti_en`/`_en_GB`, `tattiche_base_en`/`_en_GB`, `direzioni_en`, `linea_temporale_en`, `gruppo_en`; le aggiunte a `testo_tattica_en` (problemi di una voce)
 - [ ] `messaggi_personaggi_en`, `messaggi_combattimento_en`, `messaggi_poteri_en`, `testo_modificatori_en`: la narrazione. Nelle frasi in cui l'italiano distingue maschio e femmina (`.M`/`.F`) l'inglese ha due righe uguali, salvo «his»/«her» nella resurrezione
 - [ ] `offerte_en`/`_en_GB`, `tipo_consumabile_en`, `messaggi_motore_en`/`_en_GB`: la narrazione delle locazioni e le offerte; in `messaggi_motore_en` le frasi di `Locanda.vecchiaAmicizia` e di resa/fuga hanno ancora qualche «him/her/it» da uniformare
+- [ ] `intermezzi_en`/`_en_GB` (07-foresta-intermezzi): le battute; i riferimenti informatici (Unix `ls -a`, Core Dump, «The C Programming Language») sono lasciati com'erano, quelli a Kafka/Apuleio e alla stazione da battaglia adattati (golden ass, «That's no moon»)
 - [ ] `ui_en.properties` (12-foresta-swing): ora circa 225 chiavi (passo 7: tattiche, negozi, inventario, annunci, azioni del combattimento); `ui_en_GB` ha solo due voci. Le frasi con il bersaglio del riquadro del combattimento (`AZIONE_*_SU`) hanno il nome già articolato in italiano finché non arriva il passo 3
 
 Inglese britannico (guardare solo se le differenze sono quelle volute):

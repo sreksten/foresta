@@ -12,6 +12,7 @@ import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il capo del gruppo ha appena trovato un libro tecnico in un cofano (vedi LibroTecnico e Cofano): nella locazione in cui si
@@ -79,7 +80,7 @@ public class IntermezzoLibroTecnico implements Intermezzo {
 		daLeggere.remove(libro);
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		List<String> battute = libro.getBattute();
-		return Collections.singletonList(new PaginaIntermezzo("Un libro in fondo al cofano.")
+		return Collections.singletonList(new PaginaIntermezzo(Testi.formatta("intermezzi", "IntermezzoLibroTecnico.1"))
 				.conSfondo(ImmagineIntermezzo.locazione(Foresta.getLocazioneDelGruppo()))
 				.conElemento(ElementoIntermezzo.personaggio(CAPO, gruppo.getCapo().getClasse(), 0.45, 0.61)
 						.conBocca(0.5, -0.15)

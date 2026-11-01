@@ -11,6 +11,7 @@ import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * La prima volta che il gruppo entra dall'alchimista dopo aver trovato in un cofano il Manuale di Unix System V (vedi
@@ -55,10 +56,10 @@ public class IntermezzoSpadaNascosta implements Intermezzo {
 		NegozioInScena alchimista = NegozioInScena.ALCHIMISTA;
 
 		List<PaginaIntermezzo> pagine = new ArrayList<>(alchimista.entraIlGruppo()
-				.parlaIlCapo("Abbiamo letto il Manuale di Unix System V. Parla di un incantesimo di due lettere, ls. Potete spiegarcelo?")
-				.parlaIlNegoziante("Ls? Elenca ciò che si trova in un luogo. Ma provate ad usare le sue opzioni: \"ls -a\".")
-				.parlaIlCapo("E che cosa fa, \"ls -a\"?")
-				.parlaIlNegoziante("Permette di vedere le cose nascoste.")
+				.parlaIlCapo(Testi.formatta("intermezzi", "IntermezzoSpadaNascosta.1"))
+				.parlaIlNegoziante(Testi.formatta("intermezzi", "IntermezzoSpadaNascosta.2"))
+				.parlaIlCapo(Testi.formatta("intermezzi", "IntermezzoSpadaNascosta.3"))
+				.parlaIlNegoziante(Testi.formatta("intermezzi", "IntermezzoSpadaNascosta.4"))
 				.getPagine());
 
 		SpadaNormalmenteNascosta spada = SpadaNormalmenteNascosta.costruisci(GeneratoreArtefatti.istanza(), Statistiche.getLivello());
@@ -69,10 +70,10 @@ public class IntermezzoSpadaNascosta implements Intermezzo {
 		String idNegoziante = alchimista.getIdNegoziante();
 		pagine.add(alchimista.paginaConCapo(CAPO, gruppo.getCapo().getClasse())
 				.conRivelazioneDiArtefatto(spada, Statistiche.getLivello(), CAPO)
-				.conBattuta(BattutaIntermezzo.di(CAPO, "Ma... è comparsa una spada dal nulla!").daSecondo(PaginaIntermezzo.SECONDI_RIVELAZIONE_ARTEFATTO + PAUSA_DOPO_LA_RIVELAZIONE))
-				.conBattuta(BattutaIntermezzo.di(idNegoziante, "Ecco la .spada normalmente nascosta! Era nel vostro inventario da sempre, ma nessuno poteva vederla."))
-				.conBattuta(BattutaIntermezzo.di(CAPO, "E ora possiamo usarla?"))
-				.conBattuta(BattutaIntermezzo.di(idNegoziante, "Certamente. Ma veniamo a noi. " + saluto)));
+				.conBattuta(BattutaIntermezzo.di(CAPO, Testi.formatta("intermezzi", "IntermezzoSpadaNascosta.5")).daSecondo(PaginaIntermezzo.SECONDI_RIVELAZIONE_ARTEFATTO + PAUSA_DOPO_LA_RIVELAZIONE))
+				.conBattuta(BattutaIntermezzo.di(idNegoziante, Testi.formatta("intermezzi", "IntermezzoSpadaNascosta.6")))
+				.conBattuta(BattutaIntermezzo.di(CAPO, Testi.formatta("intermezzi", "IntermezzoSpadaNascosta.7")))
+				.conBattuta(BattutaIntermezzo.di(idNegoziante, Testi.formatta("intermezzi", "IntermezzoSpadaNascosta.8", saluto))));
 		return pagine;
 	}
 }

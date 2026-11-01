@@ -5,6 +5,7 @@ import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Intermezzo che scatta quando il gruppo si accampa: stesso sfondo e fuoco di
@@ -33,18 +34,9 @@ public class IntermezzoAccampamento implements Intermezzo {
 	 * Le scene, una per occorrenza: l'immagine della luna e le battute, alternate fra il primo e il secondo
 	 * personaggio.
 	 */
-	private static final String[][] SCENE = {
-			{"fondinon2x2/Luna.gif",
-					"Una volta ho sentito di uno che si è svegliato trasformato in uno scarafaggio. O forse era un asino d'oro.",
-					"Tu presti troppa attenzione a quelle assurde storie nelle locande."},
-			{"fondinon2x2/Mimas.gif", // Una luna di Saturno
-					"Hai visto che luna stasera?",
-					"Quella non è una luna... è una stazione da battaglia!",
-					"Tu passi troppo tempo ad ascoltare le storie nelle locande."},
-			{"fondinon2x2/LunaHHGTTG.gif",
-					"Che luna strana stasera...",
-					"Non fatevi prendere dal panico."}
-	};
+	private static final String[] LUNE = {"fondinon2x2/Luna.gif", "fondinon2x2/Mimas.gif" /* Una luna di Saturno */, "fondinon2x2/LunaHHGTTG.gif"};
+	// Quante battute ha ogni scena (nei testi: ACCAMPAMENTO.<scena>.<battuta>)
+	private static final int[] BATTUTE = {2, 3, 2};
 
 	/**
 	 * Calcolata una sola volta alla creazione dell'istanza, perché {@link #getPagine()} viene
@@ -85,14 +77,15 @@ public class IntermezzoAccampamento implements Intermezzo {
 
 	@Override
 	public List<PaginaIntermezzo> getPagine() {
-		String[] scena = SCENE[(occorrenza - 1) % SCENE.length];
-		ScenaFraCompagni pagina = ScenaFraCompagni.allAccampamento("Il gruppo si accampa per la notte.",
-				GruppoGiocatore.getIstanza().getPersonaggiVivi()).conLuna(scena[0]);
-		for (int i = 1; i < scena.length; i++) {
+		int indice = (occorrenza - 1) % LUNE.length;
+		ScenaFraCompagni pagina = ScenaFraCompagni.allAccampamento(Testi.formatta("intermezzi", "IntermezzoAccampamento.1"),
+				GruppoGiocatore.getIstanza().getPersonaggiVivi()).conLuna(LUNE[indice]);
+		for (int i = 1; i <= BATTUTE[indice]; i++) {
+			String battuta = Testi.formatta("intermezzi", "ACCAMPAMENTO." + (indice + 1) + "." + i);
 			if (i % 2 == 1) {
-				pagina.parlaIlPrimo(scena[i]);
+				pagina.parlaIlPrimo(battuta);
 			} else {
-				pagina.parlaIlSecondo(scena[i]);
+				pagina.parlaIlSecondo(battuta);
 			}
 		}
 		return pagina.getPagine();

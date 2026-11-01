@@ -8,6 +8,7 @@ import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * La prima volta che il gruppo entra dall'incantatore dopo aver trovato in un cofano The C Programming Language (vedi
@@ -49,12 +50,12 @@ public class IntermezzoRiprogrammazione implements Intermezzo {
 	public List<PaginaIntermezzo> getPagine() {
 		RegistroIntermezzi.segnaScattato(FabbricaIntermezzi.crea(TipoIntermezzo.INTERMEZZO_INCANTATORE));
 		return NegozioInScena.INCANTATORE.entraIlGruppo()
-				.parlaIlCapo("Abbiamo trovato un libro, The C Programming Language. Deve essere roba da maghi del computer, anche se non so cosa sia un computer.")
-				.parlaIlNegoziante("Maghi del computer, sì. Non chiedetemi cosa sia nemmeno a me, ma quel libro lo conosco.")
-				.parlaIlNegoziante("Contiene incantesimi per riprogrammare gli artefatti. Sono incantesimi molto arcani, e bisogna fare molta attenzione.")
-				.parlaIlCapo("Che cosa può succedere?")
-				.parlaIlNegoziante("Un errore nell'esecuzione, e l'artefatto si disfa nelle sue componenti. Si chiama Core Dump.")
-				.parlaIlCapo("Capito. Staremo attenti.")
+				.parlaIlCapo(Testi.formatta("intermezzi", "IntermezzoRiprogrammazione.1"))
+				.parlaIlNegoziante(Testi.formatta("intermezzi", "IntermezzoRiprogrammazione.2"))
+				.parlaIlNegoziante(Testi.formatta("intermezzi", "IntermezzoRiprogrammazione.3"))
+				.parlaIlCapo(Testi.formatta("intermezzi", "IntermezzoRiprogrammazione.4"))
+				.parlaIlNegoziante(Testi.formatta("intermezzi", "IntermezzoRiprogrammazione.5"))
+				.parlaIlCapo(Testi.formatta("intermezzi", "IntermezzoRiprogrammazione.6"))
 				.parlaIlNegoziante(saluto)
 				.getPagine();
 	}

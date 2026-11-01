@@ -11,6 +11,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Intermezzo di prova: scatta all'arrivo nella prima locazione della partita. Le prime
@@ -39,10 +40,10 @@ public class IntermezzoIntroduttivo implements Intermezzo {
 		// Il protagonista al centro, a due terzi dell'altezza, sotto il testo.
 		TipoPersonaggio classeEroe = capo.getClasse();
 		List<PaginaIntermezzo> pagineIntermezzo = new ArrayList<>();
-		pagineIntermezzo.add(new PaginaIntermezzo("La Foresta e' silenziosa, e " + eroe + " si inoltra fra gli alberi.")
+		pagineIntermezzo.add(new PaginaIntermezzo(Testi.formatta("intermezzi", "IntermezzoIntroduttivo.1", eroe))
 				.perSecondi(3)
 				.conElemento(personaggioVersoSinistra(classeEroe, 0.5, 2.0 / 3)));
-		pagineIntermezzo.add(new PaginaIntermezzo("Lontano, oltre le chiome, si alza un filo di fumo nero. Il Drago non dorme.")
+		pagineIntermezzo.add(new PaginaIntermezzo(Testi.formatta("intermezzi", "IntermezzoIntroduttivo.2"))
 				.perSecondi(3)
 				.conElemento(personaggioVersoSinistra(classeEroe, 0.5, 2.0 / 3)));
 		PaginaIntermezzo finale = new PaginaIntermezzo()
@@ -59,12 +60,11 @@ public class IntermezzoIntroduttivo implements Intermezzo {
 								.conBocca(0.5, -0.15)
 								.guarda(Verso.SINISTRA)
 								.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
-						.conBattuta(BattutaIntermezzo.di("eremita", "Chi va là?").daSecondo(2))
-						.conBattuta(BattutaIntermezzo.di("eroe", "Mi chiamo " + eroe + ". Sto cercando il Drago."));
-		finale.conBattuta(BattutaIntermezzo.di("eremita", "Il suo castello è nascosto da un incantesimo." +
-				" Non riuscirai a trovarlo, a meno che tu prima non sconfigga i suoi alleati.").perSecondi(4));
+						.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoIntroduttivo.3")).daSecondo(2))
+						.conBattuta(BattutaIntermezzo.di("eroe", Testi.formatta("intermezzi", "IntermezzoIntroduttivo.4", eroe)));
+		finale.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoIntroduttivo.5")).perSecondi(4));
 		if (GruppoGiocatore.getIstanza().getCapo().getClasse() == TipoPersonaggio.OMBRAFIAMMA) {
-			finale.conBattuta(BattutaIntermezzo.di("eremita", "E comunque... Non vorrei essere nei suoi panni."));
+			finale.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoIntroduttivo.6")));
 		}
 		pagineIntermezzo.add(finale);
 		return pagineIntermezzo;

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.testi.Nome;
+import java.util.Locale;
 import com.threeamigos.foresta.intermezzi.ScenaNegozio;
 import com.threeamigos.foresta.intermezzi.ImmagineIntermezzo;
 import com.threeamigos.foresta.intermezzi.ElementoIntermezzo;
@@ -13,26 +15,25 @@ import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
  */
 public enum NegozioInScena {
 
-	ARMAIOLO(MomentoIntermezzo.INGRESSO_ARMAIOLO, "armaiolo", "armaioli",
+	ARMAIOLO(MomentoIntermezzo.INGRESSO_ARMAIOLO, "armaiolo",
 			"fondinon2x2/InternoArmaiolo.gif", "fondinon2x2/ForegroundArmaiolo.gif", TipoPersonaggio.ARMAIOLO,
 			0.65, 0.6, 0.55, 0.8, 20),
-	ALCHIMISTA(MomentoIntermezzo.INGRESSO_ALCHIMISTA, "alchimista", "alchimisti",
+	ALCHIMISTA(MomentoIntermezzo.INGRESSO_ALCHIMISTA, "alchimista",
 			"fondinon2x2/InternoAlchimista.gif", "fondinon2x2/ForegroundAlchimista.gif", TipoPersonaggio.ALCHIMISTA,
 			0.60, 0.55, 0.51, 0.8, 20),
-	VENDITORE_DI_PERGAMENE(MomentoIntermezzo.INGRESSO_VENDITORE_DI_PERGAMENE, "venditore", "venditori di pergamene",
+	VENDITORE_DI_PERGAMENE(MomentoIntermezzo.INGRESSO_VENDITORE_DI_PERGAMENE, "venditore",
 			"fondinon2x2/InternoVenditoreDiPergamene.gif", "fondinon2x2/ForegroundVenditoreDiPergamene.gif", TipoPersonaggio.VENDITORE_DI_PERGAMENE,
 			0.65, 0.6, 0.55, 0.8, 20),
-	INCANTATORE(MomentoIntermezzo.INGRESSO_INCANTATORE, "incantatore", "incantatori",
+	INCANTATORE(MomentoIntermezzo.INGRESSO_INCANTATORE, "incantatore",
 			"fondinon2x2/InternoIncantatore.gif", "fondinon2x2/ForegroundIncantatore.gif", TipoPersonaggio.INCANTATORE,
 			0.65, 0.6, 0.55, 0.8, 20),
 	// Nel bosco o in città: il momento d'ingresso dipende da dove si trova la locanda (vedi isIngresso)
-	LOCANDA(null, "locandiere", "locandieri",
+	LOCANDA(null, "locandiere",
 			"fondinon2x2/InternoLocanda.gif", "fondinon2x2/ForegroundLocanda.gif", TipoPersonaggio.LOCANDIERE,
 			0.65, 0.6, 0.5, 0.6, 23);
 
 	private final MomentoIntermezzo ingresso;
 	private final String idNegoziante;
-	private final String negozianti;
 	private final String sfondo;
 	private final String primoPiano;
 	private final TipoPersonaggio negoziante;
@@ -42,12 +43,11 @@ public enum NegozioInScena {
 	private final double ritardoFraPartenze;
 	private final int oraDiChiusura;
 
-	NegozioInScena(MomentoIntermezzo ingresso, String idNegoziante, String negozianti,
+	NegozioInScena(MomentoIntermezzo ingresso, String idNegoziante,
 				   String sfondo, String primoPiano, TipoPersonaggio negoziante,
 				   double xNegoziante, double yNegoziante, double xArrivoCapo, double ritardoFraPartenze, int oraDiChiusura) {
 		this.ingresso = ingresso;
 		this.idNegoziante = idNegoziante;
-		this.negozianti = negozianti;
 		this.sfondo = sfondo;
 		this.primoPiano = primoPiano;
 		this.negoziante = negoziante;
@@ -72,7 +72,7 @@ public enum NegozioInScena {
 	 * Il plurale del negoziante, per chiedergli se quelli come lui non chiudono mai.
 	 */
 	public String getNegozianti() {
-		return negozianti;
+		return Nome.di(negoziante).getPlurale().toLowerCase(Locale.ROOT);
 	}
 
 	/**
