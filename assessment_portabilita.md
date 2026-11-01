@@ -10,14 +10,101 @@ Qui c'è soltanto quello che resta da fare. Quello che è già stato sistemato n
 
 ### Testi italiani nel codice
 
-Il gioco è scritto in italiano. Sono già in un file per lingua, letti da `Testi` (con ripiego sull'italiano): le note dei moltiplicatori di classe, le descrizioni dei comandi, i motivi di rifiuto dell'equipaggiamento e i nomi e le descrizioni delle enum dei vari moduli. Restano nel codice:
+Il gioco è scritto in italiano e ora si vuole una **versione inglese** (prima per provare, poi per gli store). Questa sezione è l'analisi di cosa serve e l'elenco dei passi, da smarcare uno per volta (`[ ]` da fare, `[x]` fatto).
 
-- `FUGA_IGNOMINIA_NOTA` in `CostantiPersonaggi`: finisce nel salvataggio come nota di un modificatore, quindi spostarla vuol dire anche decidere come si confronta e come si salva;
-- le enum senza ancora un file di testi, ma con testi da mostrare: `NegozioInScena` (singolare e plurale), e le frasi di `Mandante` (mescolate a identificativi: vanno separate) e, nello strumento di sviluppo, `DovePartono` e `ContestoLancio`; `Testi.testo(costante, voce)` funziona per qualunque enum, con il file accanto all'enum nel suo modulo;
-- `Articoli` e `Numeri` (in `01-foresta-testi`): articoli, preposizioni, cardinali e ordinali in lettere; `Direzioni` (in `02-foresta-mappa`): le direzioni; `Racconto` (nel motore, che li dà alla UI con `VistaPartita`): i testi di storia, sconfitta e vittoria (vedi `todo.md`);
-- il resto dei testi del motore e delle schermate (messaggi, fumetti, intermezzi, grammatiche `.txt`).
+#### Com'è oggi
 
-Prima di spostarli va deciso se il gioco avrà una versione inglese (per gli store). Se non l'avrà, i testi possono restare dove sono.
+- **Già localizzabile.** `Testi` (in `01-foresta-testi`) legge file `<nome>_<lingua>.properties` in UTF-8 con ripiego sull'italiano. Sono già così 29 file `_it.properties` (circa 2.000 righe): i nomi e le descrizioni delle enum dei vari moduli (`Testi.testo(costante, voce)`), le descrizioni dei comandi, le note dei moltiplicatori di classe, i motivi di rifiuto dell'equipaggiamento, le parole della tattica (`testo_tattica`) e una parte delle scritte della UI (`ui_it`, 25 righe, lette da `TestiDellaUI`).
+- **La lingua non si sceglie da nessuna parte.** `Testi.impostaLingua` lo chiamano solo i test: `Main` non ha un argomento e la piattaforma mobile dovrà passare la lingua del dispositivo.
+- **Il motore dei testi casuali è neutro, i dati no.** `GrammarBean` non conosce l'italiano (non usa `Articoli`, `Numeri` né `Locale`); sono italiane le sue grammatiche `.txt` (596 KB) e il file delle sostituzioni finali `preposizioni_articolate_pp.txt` ("a il" → "al").
+- **Il resto è italiano nel codice.** Scansione dei sorgenti `src/main` (stringhe con almeno due parole italiane o con lettere accentate; esclusi commenti e log), al 2026-11-01: **1.844 stringhe in 311 file**. È una stima per difetto (le frasi spezzate in più pezzi e le parole sole non si contano).
+
+| Modulo | Stringhe | Dove, e di che tipo |
+| :--- | ---: | :--- |
+| `09-foresta-missioni` | 808 | nomi, descrizioni e dialoghi di ogni missione e passo (`LaForgia` 32, `TappeRichieste` 30, `MissioneATappe` 30, `IlRapimento` 29, …) |
+| `12-foresta-motore` | 209 | messaggi di narrazione: `LocazioneBase` 38, `Automa` 36, `Locanda` 19, `RaccoltaBottino` 18, `Pernottamento` 14 |
+| `12-foresta-swing` | 207 | `DisplayableCanvasTattiche` 69, `TestoAzioneInCombattimento` 24, `FinestraDiProva` 17 (strumento di sviluppo) |
+| `08-foresta-tattiche` | 129 | `Requisiti` 57 (motivi per cui una tattica non vale), `TatticheBase` 34 (nomi delle tattiche) |
+| `05-foresta-personaggi` | 101 | `NomeEDescrizione` 17 e gli articoli/nomi nelle classi dei personaggi |
+| `04-foresta-artefatti` | 71 | `GeneratoreArtefattiTabelle` 38 (nomi con articolo: "la spada", "lo spadone") |
+| `07-foresta-intermezzi` | 59 | battute dei fumetti (`parlaIlCapo`, `BattutaIntermezzo.di`, 72 chiamate in 35 file) |
+| `07-foresta-poteri`, `08-foresta-economia`, `06-foresta-statistiche` | 49, 48, 33 | messaggi di incantesimi e canti, offerte, `LineaTemporale` (le ore a parole, 32) |
+| altri moduli | circa 130 | `Anello`, `RegistroArtefatti`, `Racconto`, eccezioni di `00-foresta-serializzazione` |
+
+Una parte di queste stringhe sono messaggi per lo sviluppatore (eccezioni, "Stato non gestito", `FinestraDiProva`): è una scelta tenerli in italiano, come i log.
+
+**Risorse.** Le grammatiche `.txt` pesano 596 KB: `missioni.txt` 224, `artefatti2.txt` 123, `locande.txt` 69, `tappe.txt` 61, `fiabe.txt` 43, `leggendari.txt` 29, `oroscopo.txt` 16, `nomi.txt` 13 (quasi neutro), `ingredienti.txt` 9, poi `templi`, `rovine` e `sfide`. Sono la maggior parte del testo del gioco, e in italiano scherzoso: tradurle vuol dire riscriverle.
+
+**Quanto la grammatica italiana è sparsa nel codice.** `Articoli.` si usa in 97 file (582 punti), `Numeri.` in 25, `inizialeMaiuscola` in 26; gli accessori di genere e articolo del personaggio (`getADS`, `getAIS`, `getDeS`, `getPronome`, `getNomeSingolare`, `getNomePlurale`…) in 112 file (446 punti), e **52 classi di personaggi** li hanno scritti a mano (`Goblin`: `getADS() { return Articoli.IL; }`, `getNomeSingolare() { return "Goblin"; }`). La narrazione passa dal bus come stringhe già pronte (`NotificaTestoFrase` e `NotificaTestoParagrafo`: 258 punti in 93 file).
+
+#### Dove la sola traduzione non basta
+
+1. **Frasi montate a pezzi.** `"Il livello di magia " + x + " non permette di formulare questo incantesimo."`, `LaForgia`, `Pernottamento`: l'ordine delle parole è quello italiano, e una traduzione dei pezzi sciolti non dà inglese corretto. Serve una chiave per frase, con i valori al posto di `{0}`, `{1}`.
+2. **Grammatica che dipende dal nome.** Articolo ("il/lo/l'/la/i/gli/le", "un/uno/una/un'"), preposizione articolata ("del/dello/dell'/della…"), plurale, pronome e accordo ("sano/sana come un pesce"). In inglese le regole sono altre ("the", "a/an" secondo il suono, "of the"), e vanno dette per lingua, non per messaggio.
+3. **Numeri e ordinali, elenchi, maiuscole** ("A, B e C" contro "A, B, and C"; "Viverna 2").
+4. **Testo che finisce nel salvataggio.** `MessaggioMD`, `NotiziaMD`, `ArtefattoMD` (nome, nome proprio, descrizione, generati dalle grammatiche), parametri delle missioni: una partita salvata in italiano resta italiana. Non si traduce a caldo.
+5. **Il nome di una missione è testo montato** (`LaForgia.getNome()`: "Armaiolo e la forgia"), non una costante.
+6. **Test.** 288 file di test aspettano frasi italiane: devono girare con la lingua bloccata sull'italiano.
+
+#### Come organizzarlo: tre strati, e solo uno ha classi per lingua
+
+Non tutto va in file di testo, ma neppure serve una classe per ogni messaggio. Il codice dice **che cosa** succede (soglie, scelte, valori), i file dicono **come si scrive**, e una sola classe per lingua dice **come si coniuga la grammatica**.
+
+- **Strato A, contenuto: `.properties`.** Tutto quello che è una frase o un'etichetta, una chiave per frase, con i valori in `{0}`. Per le varianti di genere o di numero ci sono chiavi con suffisso (`SALUTE_MASSIMA.M`, `SALUTE_MASSIMA.F`; `ORE.UNA`, `ORE.ALTRE`): il codice sceglie la chiave, non il testo. È anche il caso della descrizione del personaggio: la logica a soglie (`salute < 20`…) resta in Java e sceglie un livello (`MOLTO_DEBOLE`, `DEBOLE`…), le parole stanno nel file, e l'ordine della frase intera è un modello che ogni lingua scrive come vuole. Niente classe per lingua.
+- **Strato B, grammatica: un'interfaccia `RegoleDellaLingua` in `01-foresta-testi`**, con `LinguaItaliana` e `LinguaInglese` scelte da `Testi.getLingua()`. Fa solo: articolo determinativo e indeterminativo (singolare e plurale) di un nome, preposizione articolata (in inglese "of the"), plurale, cardinali e ordinali, elenco ("A, B e C"), maiuscola iniziale. `Articoli` e `Numeri` diventano la parte italiana. Perché un nome si possa articolare, deve portare i suoi dati (genere, plurale, se comincia con suono di vocale o di "s" impura): vengono dal file dei testi, accanto al nome (`GOBLIN.NOME`, `GOBLIN.GENERE`, `GOBLIN.PLURALE`), e **spariscono dalle 52 classi dei personaggi**.
+- **Strato C, testi casuali: una grammatica per lingua** (`missioni_it.txt`, `missioni_en.txt`…), scelta da `CaricatoreDiGrammatiche` con ripiego sull'italiano, e il suo file di sostituzioni finali (in inglese serve "a" → "an"). `GrammarBean` non cambia.
+
+Una partita appartiene alla lingua in cui è cominciata: **la lingua si salva nella testata del salvataggio** (`TestataSalvataggio`) e al caricamento si ripristina; la lingua si sceglie a una nuova partita, non a metà. I salvataggi non devono restare compatibili, quindi si può aggiungere il campo senza migrazioni.
+
+Durante il lavoro la lingua mista è accettata: ciò che manca in inglese ripiega sull'italiano (`Testi` lo fa già), e si vede subito dove manca. Per non perdere il conto, un test conta le stringhe italiane ancora nel codice e **non può mai salire**.
+
+#### Passi
+
+Ogni passo compila e ha i test verdi; la dimensione è S (qualche ora), M (una sessione), L (più sessioni).
+
+0. **Decisioni** (prima di toccare codice)
+   - [ ] inglese americano o britannico ("armor"/"armour", "gray"/"grey")? Propongo americano;
+   - [ ] chi traduce: io propongo una bozza per ogni file e tu rivedi, oppure l'inverso;
+   - [ ] conferma del disegno a tre strati e della lingua legata alla partita.
+1. **Infrastruttura** (S/M)
+   - [ ] argomento `LINGUA=<codice>` in `Main` (e `Locale.getDefault()` come predefinito sul telefono); la lingua è un campo di `ForestaUI`, non uno statico mutabile qua e là;
+   - [ ] `Testi.formatta(file, chiave, valori…)`: sostituzione di `{0}`, `{1}` senza `MessageFormat` (che dipende dal `Locale`), usata anche da `TestiDellaUI` e `TestoTattica`, che oggi la rifanno a mano;
+   - [ ] estensione di JUnit che blocca la lingua su "it" (e la ripristina) per i test che aspettano frasi italiane;
+   - [ ] test di completezza: ogni chiave di ogni `_it.properties` ha la sua in `_en` e gli stessi segnaposto; ogni grammatica si carica e produce un testo;
+   - [ ] `TestiConSoloCaratteriDelFontTest` esteso ai file in inglese;
+   - [ ] **test del contatore** `ConvenzioniDiLocalizzazioneTest` (come `ConvenzioniDiPortabilitaTest`): conta le stringhe italiane nel codice con la scansione di cui sopra e confronta con un numero scritto in un file; chi ne toglie, abbassa il numero.
+2. **Tradurre ciò che è già in file** (M) — il primo risultato visibile
+   - [ ] i 29 `_it.properties` hanno il loro `_en`;
+   - [ ] la UI già in `ui_it` e `testo_tattica`;
+   - [ ] a fine passo il gioco è in inglese nei nomi, nelle descrizioni, nei comandi e nelle scritte della UI, e in italiano nel resto.
+3. **Regole della lingua** (L) — il passo che cambia la forma del codice, da concordare prima
+   - [ ] `RegoleDellaLingua`, `LinguaItaliana` (stesso comportamento di oggi, verificato dai test esistenti di `Articoli` e `Numeri`), `LinguaInglese`;
+   - [ ] genere, plurale e suono iniziale dei nomi nei file (`tipo_personaggio`, tipi di artefatto, tipi di locazione…);
+   - [ ] le 52 classi dei personaggi perdono gli articoli scritti a mano;
+   - [ ] `Articoli.` e `Numeri.` nei 97 e 25 file passano alle regole (a gruppi di moduli, dal basso: artefatti, personaggi, poteri, …).
+4. **Enum e costanti con testo** (S)
+   - [ ] `FUGA_IGNOMINIA_NOTA` (è nel salvataggio: decidere se confrontarla per chiave), `NegozioInScena`, `Mandante` (frasi mescolate a identificativi: da separare), `DovePartono`, `ContestoLancio`, `Direzioni`, le ore a parole di `LineaTemporale`.
+5. **Nomi e descrizioni montati** (M)
+   - [ ] `NomeEDescrizione` (descrizione del personaggio), `GeneratoreArtefattiTabelle`, `Anello`, `TatticheBase`, `Requisiti`, `RegistroArtefatti`.
+6. **Messaggi del motore** (L)
+   - [ ] `LocazioneBase`, `Automa`, `Locanda`, `Pernottamento`, `RaccoltaBottino`, poteri, economia, statistiche; la narrazione continua a passare dal bus come stringa, già nella lingua giusta (non si cambia il bus).
+7. **UI Swing** (M)
+   - [ ] `DisplayableCanvasTattiche`, `TestoAzioneInCombattimento` e le altre schermate; `FinestraDiProva` resta italiana (strumento di sviluppo).
+8. **Intermezzi e racconto** (M)
+   - [ ] le battute in `intermezzi_it.properties`, il `Racconto` (storia, sconfitta, vittoria) in un suo file.
+9. **Missioni** (L, di gran lunga il passo più grosso: 808 stringhe)
+   - [ ] una missione per volta (nome, descrizioni di ogni passo, dialoghi), con chiavi `MISSIONE.PASSO`; ogni missione, finita, abbassa il contatore.
+10. **Grammatiche** (L, più per la scrittura che per il codice)
+    - [ ] caricamento per lingua con ripiego sull'italiano, e `_pp` per lingua;
+    - [ ] in ordine di visibilità: `nomi`, `artefatti2` e `leggendari` (i nomi degli oggetti), `locande`, `missioni`, `tappe`, `fiabe`, `oroscopo`, e i piccoli `templi`, `rovine`, `sfide`.
+11. **Salvataggio e lingua** (S)
+    - [ ] la lingua nella testata, ripristinata al caricamento, scelta alla nuova partita; test.
+12. **Passata finale** (M)
+    - [ ] partita completa in inglese, controllo degli spazi (le righe inglesi sono più corte, ma i nomi delle classi no), ortografia, e togliere il ripiego sull'italiano dal test di completezza.
+
+**Rischi.** L'articolo inglese "a/an" dipende dal suono ("a unicorn", "an hour"): serve una regola con un elenco di eccezioni nel file dei testi. Il passo 3 tocca più di cento file: è meglio farlo a moduli, con l'italiano invariato a ogni commit. Le grammatiche scherzose in italiano ("Il Cinghiale Vegano", i nani che protestano) non si traducono parola per parola: si adattano.
+
+Se non si farà la versione inglese, restano utili comunque il passo 1 e il test del contatore.
 
 ### Costanti di bilanciamento come dati
 
@@ -226,5 +313,6 @@ Fatto: `BozzaTattica` e `TestoTattica` (che non toccavano il toolkit grafico) so
 - Un **prototipo libGDX** (un'immagine e la schermata iniziale, su desktop, emulatore Android e simulatore iOS) per misurare le prestazioni: composizione fuori schermo (`createGraphics` in 25 file), atlanti, memoria di `ImageCache` con lo zoom 2,0, thread di precaricamento su Android.
 - **Disegnare il layout** per il telefono (tile al posto del riquadro mappa, testo ridotto: vedi `porting_libGDX.md` §9) e per il tocco (gesti, sostituto dell'hover, tastiera per `Prompt`). La barra icone ha già il trascinamento con inerzia e la modalità con la colonna a destra.
 - Scrivere il punto d'ingresso della piattaforma (vedi sopra) e adattare gli `Esecutore`/`Temporizzatore`/cartella dei file.
+- **Versione inglese**: i passi sono in «Testi italiani nel codice»; il primo è l'infrastruttura (argomento `LINGUA=`, `Testi.formatta`, test di completezza e contatore delle stringhe italiane).
 - Decidere se togliere dal codice il profilo temporaneo di `DisplayableCanvas` e, per iOS, controllare lo stato attuale di MobiVM.
 - Il costo dei `InternoMessaggio` costruiti a ogni passo della macchina a stati è in [`todo.md`](todo.md).
