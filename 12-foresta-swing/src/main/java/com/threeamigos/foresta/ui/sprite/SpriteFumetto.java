@@ -83,7 +83,7 @@ public class SpriteFumetto extends SpriteBase {
         // Costruzione del rettangolo
         final int larghezzaInterna = larghezza - 2 * DIMENSIONE_SMUSSAMENTO_BORDO;
         List<String> parti = FontTool.split(font, testo, larghezzaInterna);
-        final int interlinea = 4;
+        final int interlinea = 1;
 
         List<Image> testiDisegnati = new ArrayList<>();
         int maxLarghezzaEffettiva = 0;

@@ -21,6 +21,7 @@ import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatore;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 import com.threeamigos.foresta.ui.testo.FontTool;
@@ -157,7 +158,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		void set(List<FiltroMD> nuova);
 	}
 
-	private final DoomdarkFont fontRiga = DoomdarkFontMedium.getInstance();
+	private final DoomdarkFont fontRiga = ImageBasedDoomdarkFont.medio();
 	private final int altezzaRiga;
 
 	private VistaPersonaggio personaggio;
@@ -549,7 +550,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	}
 
 	private ComponenteScorrevole<Riga> costruisciElenco(List<Riga> righe, Hover hover) {
-		ComponenteScorrevole<Riga> elenco = new ComponenteScorrevole<>(LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 0, 2);
+		ComponenteScorrevole<Riga> elenco = new ComponenteScorrevole<>(LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 0, 1);
 		for (Riga riga : righe) {
 			elenco.creaNodo(null, null, null, null, null, null, immagineDella(riga, hover), riga);
 		}

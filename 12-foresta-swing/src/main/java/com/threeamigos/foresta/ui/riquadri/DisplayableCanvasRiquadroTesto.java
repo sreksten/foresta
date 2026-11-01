@@ -2,7 +2,7 @@ package com.threeamigos.foresta.ui.riquadri;
 
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
-import com.threeamigos.foresta.ui.testo.DoomdarkTextRectangle2x;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkTextRectangle2x;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -19,7 +19,7 @@ public class DisplayableCanvasRiquadroTesto implements Finestra {
 	private final int topLeftY;
 	private final int width;
 	private final int height;
-	private final DoomdarkTextRectangle2x doomdarkTextRectangle;
+	private final ImageBasedDoomdarkTextRectangle2x doomdarkTextRectangle;
 	// L'immagine finita del riquadro (ombra del drago + testo sfumato), rifatta solo
 	// quando cambia la versione del testo
 	private BufferedImage immagineTesto;
@@ -30,7 +30,7 @@ public class DisplayableCanvasRiquadroTesto implements Finestra {
 		this.topLeftY = topLeftY;
 		this.width = width;
 		this.height = height;
-		doomdarkTextRectangle = new DoomdarkTextRectangle2x(width, height);
+		doomdarkTextRectangle = new ImageBasedDoomdarkTextRectangle2x(width, height);
 	}
 
 	/**
@@ -110,8 +110,10 @@ public class DisplayableCanvasRiquadroTesto implements Finestra {
 			int mask = (y << 16) + (y << 8) + y;
 			for (int x = 0; x < imageWidth; x++) {
 				int argb = copy.getRGB(x, y);
-				if ((argb & 0x00FFFFFF) != 0) {
-					copy.setRGB(x, y, 0xFF000000 | (copy.getRGB(x, y) & mask));
+				int alfa = argb >>> 24;
+				if (alfa != 0 && (argb & 0x00FFFFFF) != 0) {
+					// La sfumatura dall'alto scurisce il colore e lascia l'alfa del glifo, così i bordi restano sfumati
+					copy.setRGB(x, y, (alfa << 24) | (argb & mask));
 				} else {
 					copy.setRGB(x, y, 0x00000000);
 				}

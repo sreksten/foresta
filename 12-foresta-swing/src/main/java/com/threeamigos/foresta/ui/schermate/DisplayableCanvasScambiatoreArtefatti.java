@@ -267,7 +267,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
                                                                                     VistaArtefatto evidenziato, boolean parteAttiva) {
 
         ComponenteScorrevole<VistaArtefatto> componenteScorrevole = new ComponenteScorrevole<>(
-                LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 10, 2);
+                LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 10, 1);
 
         Collection<VistaArtefatto> artefattiDaDisegnare = ordinaArtefattiDaDisegnare(artefatti);
 

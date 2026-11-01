@@ -4,6 +4,7 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 import com.threeamigos.foresta.ui.testo.TestoGrande;
@@ -39,7 +40,7 @@ final class ImmagineTrofei {
 	 * L'immagine dei trofei così come sono adesso, larga quanto chiesto; con il titolo "trofei" in cima, se serve.
 	 */
 	static BufferedImage costruisci(VistaPartita vistaPartita, int larghezza, boolean conTitolo) {
-		DoomdarkFont font = DoomdarkFontMedium.getInstance();
+		DoomdarkFont font = ImageBasedDoomdarkFont.medio();
 		int spazioFraTrofei = font.getHeight();
 		List<Image[]> trofei = new ArrayList<>();
 		int altezza = 0;

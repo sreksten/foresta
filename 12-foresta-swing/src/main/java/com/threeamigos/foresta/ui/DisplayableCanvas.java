@@ -24,6 +24,7 @@ import com.threeamigos.foresta.ui.schermate.*;
 import com.threeamigos.foresta.ui.sprite.*;
 import com.threeamigos.foresta.ui.tattiche.DisplayableCanvasTattiche;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 
 import javax.swing.*;
@@ -84,7 +85,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final int quotaPila;
 	private final int passoPila;
 	// Quanto sfuma in basso un riquadro prima che cominci il successivo
-	private final int altezzaDissolvenzaPila = DoomdarkFontMedium.getInstance().getHeight();
+	private final int altezzaDissolvenzaPila = ImageBasedDoomdarkFont.medio().getHeight();
 	
 	private final transient DisplayableCanvasIntroOutro riquadroIntroOutro;
 	private final transient DisplayableCanvasRiquadroMappa riquadroMappa;
@@ -1346,7 +1347,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			fumettoAttivo = null;
 			codaFumetti.clear();
 		}
-		codaFumetti.add(new SpriteFumetto(testo, larghezzaSchermo / 5, x, y, DoomdarkFontMedium.getInstance(), DoomdarkColorModel.Color.BLACK, pointToX, pointToY));
+		codaFumetti.add(new SpriteFumetto(testo, larghezzaSchermo / 5, x, y, ImageBasedDoomdarkFont.medio(), DoomdarkColorModel.Color.BLACK, pointToX, pointToY));
 	}
 
 	private void abortisciFumetto() {

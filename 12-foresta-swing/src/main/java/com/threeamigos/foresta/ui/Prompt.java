@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoInvioTesto;
 import com.threeamigos.foresta.serializzazione.Serializzabile;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontSmall;
 
 import javax.swing.*;
@@ -37,7 +38,7 @@ public class Prompt extends JPanel implements ActionListener {
 	private final JTextField tf;
 
 	// I due font del gioco hanno gli stessi caratteri
-	private static final DoomdarkFont FONT_DEI_TESTI = DoomdarkFontSmall.getInstance();
+	private static final DoomdarkFont FONT_DEI_TESTI = ImageBasedDoomdarkFont.piccolo();
 
 	// Chi ha chiesto il testo per sé (la UI, senza passare dal motore): se c'è, l'invio lo riceve lui invece del bus
 	private Consumer<String> alInvio;

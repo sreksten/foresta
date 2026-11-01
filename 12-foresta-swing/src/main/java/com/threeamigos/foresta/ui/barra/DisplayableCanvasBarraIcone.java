@@ -12,6 +12,7 @@ import com.threeamigos.foresta.ui.DisplayableCanvas;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontSmall;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
@@ -192,7 +193,7 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 			iconaSuccessivo = TipoIcona.GIU.getIcona();
 		}
 
-		DoomdarkFont fontSmall = DoomdarkFontSmall.getInstance();
+		DoomdarkFont fontSmall = ImageBasedDoomdarkFont.piccolo();
 		DoomdarkColorModel.Color color = DoomdarkColorModel.Color.VERY_DARK_GRAY;
 		copyrightImages[0] = ImageCache.get("La Foresta", fontSmall, color);
 		copyrightImages[1] = ImageCache.get("copyright 1984-2026", fontSmall, color);

@@ -36,7 +36,7 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     /**
      * Fra una riga e l'altra del nome del negoziante, e fra il nome e il mestiere scritto in piccolo sotto
      */
-    public static final int INTERLINEA_DEL_NOME = 2;
+    public static final int INTERLINEA_DEL_NOME = 1;
     public static final int SPAZIO_FRA_NOME_E_MESTIERE = 4;
 
     /**
@@ -82,7 +82,7 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     /**
      * Il font usato per disegnare il testo nella finestra di scambio
      */
-    public final DoomdarkFont font = DoomdarkFontMedium.getInstance();
+    public final DoomdarkFont font = ImageBasedDoomdarkFont.medio();
     /**
      * L'altezza del font usato per disegnare il testo nella finestra di scambio
      */
@@ -90,7 +90,7 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     /**
      * Il font piccolo usato per disegnare le descrizioni dei nodi nell'albero degli oggetti
      */
-    public final DoomdarkFont fontSmall = DoomdarkFontSmall.getInstance();
+    public final DoomdarkFont fontSmall = ImageBasedDoomdarkFont.piccolo();
 
     /**
      * Coordinata X iniziale della parte sinistra

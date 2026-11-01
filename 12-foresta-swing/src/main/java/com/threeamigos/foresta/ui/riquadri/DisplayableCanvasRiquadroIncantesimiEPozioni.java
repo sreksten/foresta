@@ -10,6 +10,7 @@ import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorAlternante;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
@@ -47,7 +48,7 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 
 	private final List<Riga> righe = new ArrayList<>();
 	private final int altezzaVisibile;
-	private final int altezzaRiga = DoomdarkFontMedium.getInstance().getHeight();
+	private final int altezzaRiga = ImageBasedDoomdarkFont.medio().getHeight();
 	private final int topLeftX;
 	private int topLeftY;
 	private final int iconaX;
@@ -126,7 +127,7 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		graphics.setClip(areaLista);
 
 		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
-		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
+		DoomdarkFont fontMedium = ImageBasedDoomdarkFont.medio();
 		DoomdarkColorAlternante color = new DoomdarkColorAlternante();
 		// Si alternano i colori su tutte le righe, anche quelle fuori vista, perché scorrendo non cambino
 		for (int i = 0; i < righe.size(); i++) {
@@ -148,10 +149,12 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 
 	private void disegnaRiga(Graphics2D graphics, DoomdarkFont fontMedium, int y, Riga riga, int quantita, DoomdarkColorModel.Color color) {
 		BufferedImage icona = riga.icona;
-		graphics.drawImage(icona, iconaX, y - (icona.getHeight() - fontMedium.getHeight()) / 2, null);
-		graphics.drawImage(ImageCache.get(riga.descrizione, fontMedium, color), nomeX, y, null);
+		// L'icona sta centrata sul corpo del testo; il testo sale delle righe in più per gli accenti
+		graphics.drawImage(icona, iconaX, y - (icona.getHeight() - fontMedium.getAltezzaDelCorpo()) / 2, null);
+		int yTesto = y - fontMedium.getRigheInCima();
+		graphics.drawImage(ImageCache.get(riga.descrizione, fontMedium, color), nomeX, yTesto, null);
 		Image numero = ImageCache.get(quantita, fontMedium, color);
-		graphics.drawImage(numero, totaleX - numero.getWidth(null), y, null);
+		graphics.drawImage(numero, totaleX - numero.getWidth(null), yTesto, null);
 	}
 
 	/**
@@ -194,7 +197,7 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		SpriteATempo sprite = new SpriteATempo(righe.get(indiceRiga).icona, variazione, DoomdarkFontMedium.getInstance(),
+		SpriteATempo sprite = new SpriteATempo(righe.get(indiceRiga).icona, variazione, ImageBasedDoomdarkFont.medio(),
 				totaleX, yDellaRiga(indiceRiga), descrizione);
 		sprite.setRitaglio(areaLista);
 		return sprite;

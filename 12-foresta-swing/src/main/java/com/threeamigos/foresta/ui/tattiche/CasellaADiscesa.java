@@ -3,6 +3,7 @@ package com.threeamigos.foresta.ui.tattiche;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 
@@ -42,7 +43,7 @@ final class CasellaADiscesa<T> {
 	}
 
 	private static final int MARGINE = 4;
-	private static final int INTERLINEA = 2;
+	private static final int INTERLINEA = 1;
 	/** Di quanti pixel scorre un click su una freccia */
 	private static final int PASSO_FRECCIA = 40;
 	/** Di quanti pixel scorre uno scatto della rotella */
@@ -53,7 +54,7 @@ final class CasellaADiscesa<T> {
 	private final List<Scelta<T>> scelte;
 	private final T corrente;
 	private final Consumer<T> alloScegliere;
-	private final DoomdarkFont font = DoomdarkFontMedium.getInstance();
+	private final DoomdarkFont font = ImageBasedDoomdarkFont.medio();
 	private final int x;
 	private final int y;
 	private final int larghezza;

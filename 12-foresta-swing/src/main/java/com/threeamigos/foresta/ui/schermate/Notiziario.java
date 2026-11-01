@@ -5,6 +5,7 @@ import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 
@@ -32,7 +33,7 @@ class Notiziario {
 	private static final int LARGHEZZA_ZONA_FADE = 60;
 	private static final int LARGHEZZA_MARGINE_SEPARATORE_NOTIZIE = 16;
 	private static final Color COLORE_SFONDO = new Color(20, 40, 120);
-	private static final DoomdarkFont FONT = DoomdarkFontMedium.getInstance();
+	private static final DoomdarkFont FONT = ImageBasedDoomdarkFont.medio();
 	private static final String SEPARATORE_TITOLO = " - ";
 
 	private final int larghezza;

@@ -13,6 +13,7 @@ import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 
@@ -32,7 +33,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 	private final int topLeftX;
 	private int topLeftY;
 	private final int innerWidth;
-	private final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
+	private final DoomdarkFont fontMedium = ImageBasedDoomdarkFont.medio();
 	private final int leftXOffsetLabelSalute;
 	private final int rightXOffsetSalute;
 	private final int leftXOffsetSeparatoreSalute;
@@ -254,7 +255,8 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 	 * fuori dalla lista
 	 */
 	private int yDelBlocco(int indice) {
-		return areaLista.y + indice * altezzaBlocco - offsetY;
+		// Il corpo del testo parte dove partiva: le righe in più per gli accenti salgono sopra
+		return areaLista.y + indice * altezzaBlocco - offsetY - fontMedium.getRigheInCima();
 	}
 
 	private boolean bloccoVisibile(int indice) {

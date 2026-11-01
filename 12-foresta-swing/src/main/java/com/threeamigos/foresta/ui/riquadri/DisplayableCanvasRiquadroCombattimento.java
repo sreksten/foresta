@@ -7,6 +7,7 @@ import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 import com.threeamigos.foresta.ui.testo.FontTool;
@@ -51,7 +52,7 @@ public class DisplayableCanvasRiquadroCombattimento implements Finestra {
 	private VistaPersonaggio avversario;
 	private VistaPersonaggio chiHaDecisoLAzione;
 	private String testoAzione;
-	private final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
+	private final DoomdarkFont fontMedium = ImageBasedDoomdarkFont.medio();
 
 	private final VistaPartita vistaPartita;
 

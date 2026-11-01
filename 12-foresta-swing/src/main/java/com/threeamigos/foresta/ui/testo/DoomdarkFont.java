@@ -5,7 +5,25 @@ package com.threeamigos.foresta.ui.testo;
  */
 public interface DoomdarkFont {
 
+	/**
+	 * L'altezza di una riga di testo scritto con questo font, comprese le righe in più per accenti e cediglie se ci sono
+	 */
 	int getHeight();
+
+	/**
+	 * Quante righe stanno sopra il corpo del font, per gli accenti: chi posiziona un testo in un punto fisso (un titolo
+	 * su una cornice) le toglie dalla quota, perché il corpo del testo stia dov'era. I font di bit non ne hanno.
+	 */
+	default int getRigheInCima() {
+		return 0;
+	}
+
+	/**
+	 * Le righe del corpo del font, senza quelle in più per accenti e cediglie
+	 */
+	default int getAltezzaDelCorpo() {
+		return getHeight();
+	}
 
 	int getSpacing();
 

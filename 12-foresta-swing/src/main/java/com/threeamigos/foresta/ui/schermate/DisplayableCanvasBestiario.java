@@ -6,6 +6,7 @@ import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.componenti.ScorrimentoVerticale;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 import com.threeamigos.foresta.ui.testo.TestoGrande;
 
@@ -89,7 +90,7 @@ public class DisplayableCanvasBestiario implements Finestra {
 		String titolo = TestoGrande.normalizza("bestiario");
 		TestoGrande.disegnaRiga(graphics, titolo, (width - TestoGrande.larghezza(titolo)) >> 1, QUOTA_TITOLO);
 		long sbloccate = voci.stream().filter(vistaPartita::isVoceDelBestiarioSbloccata).count();
-		Image quante = ImageCache.get(sbloccate + "/" + voci.size(), DoomdarkFontMedium.getInstance(), DoomdarkColorModel.Color.MEDIUM_GRAY);
+		Image quante = ImageCache.get(sbloccate + "/" + voci.size(), ImageBasedDoomdarkFont.medio(), DoomdarkColorModel.Color.MEDIUM_GRAY);
 		graphics.drawImage(quante, width - MARGINE - quante.getWidth(null), QUOTA_TITOLO + 6, null);
 		graphics.setColor(COLORE_SEPARATORE);
 		int xSeparatore = areaElenco.x + areaElenco.width + SPAZIO_FRA_I_PANNELLI / 2;

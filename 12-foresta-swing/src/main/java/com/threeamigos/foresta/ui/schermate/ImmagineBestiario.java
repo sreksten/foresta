@@ -36,8 +36,8 @@ final class ImmagineBestiario {
 	private static final Color COLORE_SELEZIONE = new Color(255, 255, 255, 45);
 	private static final String CHIUSA = "???";
 
-	private static final DoomdarkFont MEDIO = DoomdarkFontMedium.getInstance();
-	private static final DoomdarkFont PICCOLO = DoomdarkFontSmall.getInstance();
+	private static final DoomdarkFont MEDIO = ImageBasedDoomdarkFont.medio();
+	private static final DoomdarkFont PICCOLO = ImageBasedDoomdarkFont.piccolo();
 
 	// Lo svolazzo che separa i mostri dai personaggi giocanti nell'elenco. È fra i file non a blocchi 2x2 (fondinon2x2): si legge senza zoom
 	private static final String RISORSA_SEPARATORE = "fondinon2x2/Separatore.gif";

@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui.riquadri;
 
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 
 import java.awt.*;
 
@@ -21,7 +22,8 @@ final class IntestazioneRiquadro {
 		Image ombra = ImageCache.get(testo, DoomdarkColorModel.Color.BLACK);
 		Image immagine = ImageCache.get(testo, DoomdarkColorModel.Color.LIGHT_GRAY);
 		int x = xCornice + larghezzaCornice / 2 - immagine.getWidth(null) / 2;
-		int y = yCornice + ImageCache.SPACING;
+		// Il corpo del testo sta dove stava: le righe in più per gli accenti salgono sopra
+		int y = yCornice + ImageCache.SPACING - ImageBasedDoomdarkFont.medio().getRigheInCima();
 		graphics.drawImage(ombra, x + 2, y + 2, null);
 		graphics.drawImage(immagine, x, y, null);
 	}

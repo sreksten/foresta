@@ -174,7 +174,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     private ComponenteScorrevole<Object> costruisciComponenteScorrevoleAttributi(VistaPersonaggio p, TipoAttributo evidenziato) {
 
         ComponenteScorrevole<Object> componenteScorrevole = new ComponenteScorrevole<>(
-                width - 2 * corniceInventarioWidth - 4 * SPACING, 10, 2);
+                width - 2 * corniceInventarioWidth - 4 * SPACING, 10, 1);
 
         DoomdarkColorModel.Color colore;
 

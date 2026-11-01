@@ -11,7 +11,8 @@ import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
+import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -23,7 +24,7 @@ public class DisplayableCanvasRiquadroStatistiche implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE = 6;
 
-	private final DoomdarkFontMedium fontMedium = DoomdarkFontMedium.getInstance();
+	private final DoomdarkFont fontMedium = ImageBasedDoomdarkFont.medio();
 	private final DoomdarkColorModel.Color coloreTestata = DoomdarkColorModel.Color.LIGHT_GRAY;
 
 	private final int topLeftX;
@@ -40,9 +41,11 @@ public class DisplayableCanvasRiquadroStatistiche implements Finestra {
 		this.vistaPartita = vistaPartita;
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
-		moneteY = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE + 4;
-		preziosiY = moneteY + fontMedium.getHeight() + 1;
-		puntiY = preziosiY + fontMedium.getHeight() + 1;
+		// Tre righe fisse (etichette senza accenti e numeri) nella cornice piccola: il corpo del testo sta dov'era
+		// e il passo è quello del corpo, le righe in più per gli accenti restano libere sopra e sotto
+		moneteY = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE + 4 - fontMedium.getRigheInCima();
+		preziosiY = moneteY + fontMedium.getAltezzaDelCorpo() + 1;
+		puntiY = preziosiY + fontMedium.getAltezzaDelCorpo() + 1;
 		scrittaX = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE + 4;
 		totaleX = topLeftX + ImageCache.cornicePiccola.getWidth() - DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE - 4;
 

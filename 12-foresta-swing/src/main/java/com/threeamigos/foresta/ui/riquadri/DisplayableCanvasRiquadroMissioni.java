@@ -24,8 +24,8 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 	// Pixel di scorrimento per ogni scatto della rotella
 	private static final int PASSO_SCORRIMENTO = 2;
 
-	private static final DoomdarkFont fontNome = DoomdarkFontMedium.getInstance();
-	private static final DoomdarkFont fontDescrizione = DoomdarkFontSmall.getInstance();
+	private static final DoomdarkFont fontNome = ImageBasedDoomdarkFont.medio();
+	private static final DoomdarkFont fontDescrizione = ImageBasedDoomdarkFont.piccolo();
 
 	private final int topLeftX;
 	private int topLeftY;
@@ -75,7 +75,7 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 	 * dei nodi non vive qui ma nel modello dati delle missioni.
 	 */
 	private ComponenteScorrevole<VistaMissione> costruisciComponenteScorrevole() {
-		ComponenteScorrevole<VistaMissione> componenteScorrevole = new ComponenteScorrevole<>(innerWidth, 10, 2);
+		ComponenteScorrevole<VistaMissione> componenteScorrevole = new ComponenteScorrevole<>(innerWidth, 10, 1);
 		DoomdarkColorAlternante coloreAlternante = new DoomdarkColorAlternante();
 		for (VistaMissione missione : vistaPartita.getMissioniAttive()) {
 			DoomdarkColorModel.Color colore = coloreAlternante.getColor();

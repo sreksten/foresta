@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui.barra;
 
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.ImageBasedDoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFontMedium;
 
 import java.awt.*;
@@ -38,7 +39,7 @@ public final class Cartiglio {
 	 * Il testo da mettere su un cartiglio: marrone, nel font medio, con l'iniziale come è stata scritta
 	 */
 	static Image testo(String testo) {
-		return ImageCache.get(testo, DoomdarkFontMedium.getInstance(), DoomdarkColorModel.Color.BROWN);
+		return ImageCache.get(testo, ImageBasedDoomdarkFont.medio(), DoomdarkColorModel.Color.BROWN);
 	}
 
 	/**

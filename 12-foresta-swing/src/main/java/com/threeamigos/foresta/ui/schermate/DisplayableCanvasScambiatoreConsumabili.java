@@ -239,7 +239,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
                                                                                     Consumabile evidenziato, boolean mostraCosto) {
 
         ComponenteScorrevole<Consumabile> componenteScorrevole = new ComponenteScorrevole<>(
-                LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 10, 2);
+                LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 10, 1);
 
         TipoConsumabile tipoPrecedente = null;
 
