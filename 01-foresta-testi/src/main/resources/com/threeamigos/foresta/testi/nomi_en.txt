@@ -24,6 +24,7 @@ NOME_FEMMINILE$
     Honoria | Hortensia | Petunia | Prudence | Rowena | Sabina | Serafina | Sigrid | Theodolinda | Tullia
     Vincentia | Winifred | Zelda | Zita | Noticeboard | Padlock | Sardine | Slipper | Chewilda | Pinchilda
     Ruffilda | Grunta | Gristle | Dumplina | Scrapilda | Ladlena | Tankarda | Flapdoodle | Mudwina | Hobnailia
+    Josephine | Lally | Windilda | Pawlina | Ballasta | Chiselda | Nibbilda
 
 NOME_SACERDOTE$
     Friar Dazed | Friar Soaked | Friar Chest | Friar Flung | Friar Tuckin

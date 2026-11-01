@@ -26,6 +26,8 @@ SEGNO
 	Sign of the boss on holiday, unfortunately for a short time
 	Monday morning rising
 	[TEMA=MS:the badge]Sign of the badge forgotten at home
+	Sign of the slap in the face
+	Sign of keys scratched along the car door
 PREVISIONE
 	[PIANETA] [RELAZIONE] [AZIONE]. [CHIOSA]
 PIANETA
@@ -59,6 +61,20 @@ QUALCOSA_SINGOLARE
 	the colleague who replies to all
 	[TEMA=MS:the network printer]the network printer
 	the vacation schedule | the company canteen | the employee parking lot
+	[TEMA=MP:the sysadmins]the sysadmins' holiday period
+	[TEMA=MS:the CD-ROM drive]the CD-ROM drive
+	[TEMA=MS:the domain server]the domain server
+	[TEMA=MS:the IT bureaucracy]the IT bureaucratization of your company
+	the political and economic management of your company
+	[TEMA=MS:the security infrastructure]the security infrastructure
+	[TEMA=MS:the video surveillance]the video surveillance service
+	[TEMA=MS:the persistence layer]the persistence layer of your applications
+	[TEMA=MS:the network layer]the network layer
+	a nuns' outing | a school trip | the state bureaucracy
+	[TEMA=MS:the uninterruptible power supply]the uninterruptible power supply
+	[TEMA=MS:the intranet]the company intranet
+	[TEMA=MS:the management software]the new management software
+	[TEMA=MS:the operating system]the automatic update of the operating system
 QUALCOSA_PLURALE
 	[TEMA=MP:the legacy programs]the legacy programs
 	[TEMA=MP:the data transmission protocols]the data transmission protocols
@@ -78,6 +94,12 @@ QUALCOSA_PLURALE
 	[TEMA=MP:the emails]the emails in blind copy
 	[TEMA=MP:the slides]the meeting slides
 	[TEMA=MP:the servers]the servers in the machine room
+	[TEMA=MP:the fire safety systems]the fire safety systems
+	[TEMA=MP:the data flows]the data flows
+	[TEMA=MP:the new graduates]the recently hired graduates
+	the clerks | the police
+	[TEMA=MP:the marketing people]the marketing colleagues
+	[TEMA=MP:the toner cartridges]the toner cartridges
 RELAZIONE
 	in conjunction with [QUALCOSA]
 	in trine with [QUALCOSA]
@@ -148,6 +170,9 @@ INSOFFERENZA
 	to colleagues who say "it works on my machine"
 	to emails that start with "as per our agreement"
 	to the noise of the laptop fan
+	to the in-between seasons, even though they no longer exist
+	to miniskirts
+	[TEMA=MS:the ADSL line]to the ADSL line
 SUGGERIMENTO
 	document the code you have developed
 	give up on that trip you were longing for, changing destination: [LOCALITA_SPREGEVOLE]
@@ -176,6 +201,9 @@ SUGGERIMENTO
 	close all the open tickets before they reopen by themselves
 	avoid saving only on the desktop
 	pretend to be on holiday until [GIORNO_SETTIMANALE]
+	go back to playing online
+	document all the company workflows
+	[TEMA=MS:the multiuser dungeon]waste a little time in a multiuser dungeon
 LOCALITA_SPREGEVOLE
 	the county jail
 	the town dump
@@ -185,6 +213,10 @@ LOCALITA_SPREGEVOLE
 	[TEMA=MS:the machine room]the machine room without air conditioning
 	the branch office at the end of the valley
 	the archive in the basement
+	Abu Ghraib
+	Guantanamo
+	Alcatraz
+	a religious school in Afghanistan
 CHIOSA
 	For those born in the first ten days [ATTENZIONE].
 	For those born in the second ten days [ATTENZIONE].
@@ -202,6 +234,8 @@ CHIOSA
 	[TEMA=MS:the backup]Always make a backup, even of the horoscope.
 	Monday, unfortunately, always comes back.
 	He who finds a helpful colleague finds a treasure.
+	Papa Smurf advises you to [SUGGERIMENTO].
+	Every file left unsaved is lost, every file saved is recovered.
 ATTENZIONE
 	pay close attention to your lucky star, which will try to fall on your head: given its mass, it could hurt quite a lot
 	beware of [PERSONA] who [SPREGIO]
@@ -218,6 +252,7 @@ ATTENZIONE
 	[TEMA=MS:the keyboard]keep liquids away from the keyboard
 	[TEMA=MP:the attachments]do not open attachments you were not expecting
 	distrust anyone who asks you "got a minute?"
+	[TEMA=MS:the copyright law]respect the copyright law
 SPREGIO
 	[SPREGIO_CHIOSA]
 	thanks to a security breach [SPREGIO_CHIOSA]
@@ -268,6 +303,11 @@ DOMANDA_FS
 	Wait: do you fight [#TEMA] with a sword or with magic?
 	^[#TEMA]? Never heard of it. Can you eat it?
 	Is [#TEMA] a curse?
+	And where can [#TEMA] be found? Is it far from here?
+	Excuse me, but is [#TEMA] a friend or a foe?
+	Did I hear right? ^[#TEMA]? And is that dangerous?
+	How much is [#TEMA]? Can it be found at the market?
+	Our mage has never mentioned [#TEMA]. Are you sure it exists?
 DOMANDA_MP
 	Pardon my ignorance, but what are [#TEMA]? A sort of dragons?
 	We have never seen [#TEMA] in the Forest. Do they bite?
@@ -283,6 +323,13 @@ DOMANDA_FP
 	Pardon my ignorance, but what are [#TEMA]? A sort of witches?
 	We have never seen [#TEMA] in the Forest. Do they bite?
 	Are [#TEMA] fairies? Witches?
+	Wait: do you fight [#TEMA] with a sword or with magic?
+	^[#TEMA]? Never heard of them. Can you eat them?
+	Should I fear [#TEMA]? How many are there? Are they armed?
+	And where can [#TEMA] be found? Are they far from here?
+	Excuse me, but are [#TEMA] friends or foes?
+	How much are [#TEMA]? Can they be found at the market?
+	Our mage has never mentioned [#TEMA]. Are you sure they exist?
 DOMANDA_GENERICA
 	Do you really read the stars, or do you make them up?
 	I did not understand a word. Is it a good thing or a bad thing?
@@ -309,3 +356,4 @@ CHIOSA_RISPOSTA
     But let us get down to it.
     But let us get to the reason for your visit.
     Anyway, look at the nice potions I have today.
+	But enough of that, back to the two of us.

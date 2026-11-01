@@ -194,7 +194,7 @@ Grammatiche inglesi (passo 10, 2026-11-01), da rileggere per tono e giochi di pa
 - [ ] `tappe_en.txt` (01-foresta-testi): missioni a tappe (persona, oggetto, chiavi, bivio, farse); i pronomi della persona cercata stanno in `PP`/`PPU`/`PQ`/`PX`
 - [ ] `missioni_en.txt` (01-foresta-testi): richieste di materiali, forgia, viandanti, spedizioni, contrabbando, oggetti smarriti, incarichi, sorveglianze, soccorsi, indagini, riti, benedizioni, lealtà, tornei, documentazioni, colpi, botteghe; i titoli nobiliari buffi cominciano tutti per consonante
 - [ ] `sfide_en.txt`, `templi_en.txt`, `rovine_en.txt`, `oroscopo_en.txt` (01-foresta-testi)
-- [ ] `artefatti2_en.txt`, `ingredienti_en.txt` (04-foresta-artefatti): nomi, soprannomi e descrizioni degli artefatti e degli ingredienti
+- [x] `artefatti2_en.txt`, `ingredienti_en.txt` (04-foresta-artefatti): nomi, soprannomi e descrizioni degli artefatti e degli ingredienti
 - [ ] `leggendari_en.txt` (04-foresta-artefatti): leggendari, set, libri tecnici, battute (i nomi propri RomyJona, Fumagallo→Mumblewick, Brontolone→Grumbler sono adattamenti)
 
 ### Costanti di bilanciamento come dati

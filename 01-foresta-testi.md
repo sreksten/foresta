@@ -66,6 +66,7 @@ Ogni produttore legge le sue grammatiche e offre testi pronti:
 
 ## Osservazioni
 
+- Ogni grammatica ha la sua versione inglese accanto (`nome_en.txt`, o `nome_en_GB.txt` per le sole differenze britanniche): `CaricatoreDiGrammatiche.perLaLingua` cerca il file più specifico e, se manca, torna a quello italiano. `ConfrontoGrammaticheTest` confronta ogni coppia (stesse produzioni, almeno quasi altrettante alternative per produzione, con una tolleranza del 3%): una traduzione «ridotta» fa fallire la suite. Averne di più non è un difetto.
 - `Articoli` e i file `.txt` sono ancora scritti in italiano: portare il gioco in un'altra lingua vuol dire anche ripensare queste regole (vedi `assessment_portabilita.md`).
 - `GrammarBean` è una classe molto grande (più di 2500 righe) e dalla sintassi ricca: ogni nuova funzione della grammatica va documentata nel manuale `GrammarBean.md`.
 - I produttori tengono stato statico (cosa è già stato estratto): `resetProduzioni()` va chiamato a ogni partita nuova.

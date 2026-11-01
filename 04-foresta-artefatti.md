@@ -67,6 +67,7 @@ La `SpadaNormalmenteNascosta` è un caso a parte: un'arma a caso che il gruppo o
 
 ## Osservazioni
 
+- `artefatti2_en.txt`, `ingredienti_en.txt` e `leggendari_en.txt` sono le versioni inglesi delle grammatiche. In inglese non c'è il genere: `artefatti2_en` ha una sezione sola dove l'italiano ne ha tre (`_FEMMINILE_SINGOLARE`, `_MASCHILE_SINGOLARE`, `_MASCHILE_PLURALE`), con gli aggettivi davanti al nome. `ConfrontoGrammaticheArtefattiTest` le confronta con le italiane (al femminile singolare), produzione per produzione. `CatalogoLeggendari`, `LibroTecnico` e `GeneratoreArtefattiTabelle` si azzerano al cambio di lingua.
 - Il dettaglio delle regole (fusione, gradi, prezzi, set) e il piano di lavoro sono in [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md).
 - Aggiungere un nuovo tipo di artefatto tocca più moduli (`TipoArtefatto` e il suo file dei testi qui, `TipoBottino` e `FabbricaOggetti` nel bottino, le regole di equipaggiamento nei personaggi, le immagini nella UI): la ricetta è in `CLAUDE.md`.
 - `GeneratoreArtefattiTabelle` usa la grammatica per i nomi con una certa probabilità (`ARTEFATTO_PROBABILITA_DA_GRAMMATICA`) e le tabelle interne per il resto; il javadoc dell'interfaccia dice ancora che la grammatica «arriverà poi».

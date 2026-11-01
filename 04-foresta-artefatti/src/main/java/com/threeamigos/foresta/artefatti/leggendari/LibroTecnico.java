@@ -28,6 +28,11 @@ public final class LibroTecnico {
 
 	private static Map<String, LibroTecnico> libri;
 
+	static {
+		// I libri sono quelli della grammatica della lingua in uso
+		com.threeamigos.foresta.testi.Testi.alCambioDiLingua(LibroTecnico::reimposta);
+	}
+
 	private final String chiave;
 	private final String nome;
 	private final String descrizione;

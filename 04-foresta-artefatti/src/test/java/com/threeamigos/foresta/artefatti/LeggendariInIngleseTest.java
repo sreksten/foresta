@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.artefatti;
 
 import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
+import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
 import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.artefatti.leggendari.SetLeggendario;
 import com.threeamigos.foresta.testi.Testi;
@@ -84,5 +85,15 @@ class LeggendariInIngleseTest {
             assertFalse(ProduttoreDiArtefattiCasuale.erroreDiRiprogrammazione().isEmpty());
             assertTrue(ProduttoreDiArtefattiCasuale.nomeAggiornamento().startsWith("the "), "aggiornamento");
         }
+    }
+
+    @Test
+    void ILibriTecniciSeguonoLaLingua() {
+        Testi.impostaLingua(null);
+        // I libri si leggono una volta sola: al cambio di lingua devono essere letti di nuovo dalla grammatica inglese
+        assertTrue(LibroTecnico.getLibro("THE_C_PROGRAMMING_LANGUAGE").get().getBattute().get(0).startsWith("Il primo"));
+        Testi.impostaLingua("en");
+        assertTrue(LibroTecnico.getLibro("THE_C_PROGRAMMING_LANGUAGE").get().getBattute().get(0).startsWith("The book's"),
+                LibroTecnico.getLibro("THE_C_PROGRAMMING_LANGUAGE").get().getBattute().get(0));
     }
 }
