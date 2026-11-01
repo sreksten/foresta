@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * La finestra delle schermate senza partita in corso: l'introduzione (storia che scorre, loghi, classifica, trofei), i messaggi su sfondo con l'ombra del drago,
@@ -184,7 +185,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		Image doomdark;
 		int giorni = vistaPartita.getGiorno();
 		DoomdarkFont fontMedium = DoomdarkFont.medio();
-		doomdark = ImageCache.get("Avversari uccisi in " + (giorni > 1 ? (Numeri.getCardinaleM(giorni) + " giorni:") : "un giorno:"), fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY);
+		doomdark = ImageCache.get(giorni > 1 ? TestiDellaUI.get("MOSTRI_UCCISI_IN_GIORNI", Numeri.getCardinaleM(giorni)) : TestiDellaUI.get("MOSTRI_UCCISI_IN_UN_GIORNO"), fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY);
 		graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
 		locYOffset += fontMedium.getHeight();
 		for (TipoPersonaggio classePersonaggio : TipoPersonaggio.values()) {
@@ -250,7 +251,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	 */
 	public void selezioneSlotDaSalvare(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
-		disegnaStringaCentrataConACapoAutomatico(graphics, "seleziona lo slot per il salvataggio", 50);
+		disegnaStringaCentrataConACapoAutomatico(graphics, TestiDellaUI.get("SELEZIONA_SLOT_SALVATAGGIO"), 50);
 		// Si salva solo negli slot del giocatore: la quinta riga è il salvataggio automatico in memoria, che compare solo fra quelli da caricare
 		List<Comando> comandi = new ArrayList<>(GestoreSalvataggi.SLOT_MANUALI);
 		for (TestataSalvataggio testata : salvataggiDisponibili) {
@@ -263,7 +264,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		}
 		for (Comando slotDisponibile : comandi) {
 			int numero = numeroDaComando(slotDisponibile);
-			disegnaStringaCentrataConACapoAutomatico(graphics, numero + " - slot disponibile", getCoordinataY(numero));
+			disegnaStringaCentrataConACapoAutomatico(graphics, TestiDellaUI.get("SLOT_DISPONIBILE", numero), getCoordinataY(numero));
 		}
 	}
 
@@ -272,7 +273,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	 */
 	public void confermaUscita(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
-		disegnaStringaCentrataConACapoAutomatico(graphics, "uscire dal gioco?", 100);
+		disegnaStringaCentrataConACapoAutomatico(graphics, TestiDellaUI.get("USCIRE_DAL_GIOCO"), 100);
 	}
 
 	/**
@@ -428,7 +429,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	private BufferedImage immagineSelezionaSlotDaCaricare() {
 		if (immagineSelezionaSlotDaCaricare == null) {
 			immagineSelezionaSlotDaCaricare = TestoGrande.conAlone(
-					TestoGrande.immagine("seleziona lo slot da caricare", width - 2 * RAGGIO_ALONE, true), RAGGIO_ALONE);
+					TestoGrande.immagine(TestiDellaUI.get("SELEZIONA_SLOT_CARICAMENTO"), width - 2 * RAGGIO_ALONE, true), RAGGIO_ALONE);
 		}
 		return immagineSelezionaSlotDaCaricare;
 	}

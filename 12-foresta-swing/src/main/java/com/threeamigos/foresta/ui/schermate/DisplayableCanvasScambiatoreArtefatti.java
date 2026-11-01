@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.IntUnaryOperator;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * Base delle schermate che scambiano artefatti fra due liste affiancate (inventario, commercianti, incantatore): disegna le due liste e traduce click e
@@ -71,7 +72,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
         if (!riguardaQuestaSchermata(notificaApprovazioneAcquistoArtefatto.getScambio())) {
             return;
         }
-        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie per il vostro acquisto!", getCoordinateFumetto()));
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo(TestiDellaUI.get("ARTEFATTI_GRAZIE_ACQUISTO"), getCoordinateFumetto()));
 
         int costo = vistaPartita.prezzoAcquisto(
                 notificaApprovazioneAcquistoArtefatto.getOggettoSpostato().getCostoAcquisto());
@@ -95,14 +96,14 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
         if (!riguardaQuestaSchermata(notificaRifiutoAcquistoArtefatto.getScambio())) {
             return;
         }
-        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Non hai abbastanza denaro per comprare questo oggetto.", getCoordinateFumetto()));
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo(TestiDellaUI.get("ARTEFATTI_NON_ABBASTANZA_DENARO"), getCoordinateFumetto()));
     }
 
     /**
      * Che cosa dice chi ha appena comprato qualcosa dal gruppo.
      */
     String fraseDopoLaVendita() {
-        return "Grazie di aver fatto affari con noi!";
+        return TestiDellaUI.get("ARTEFATTI_GRAZIE_AFFARI");
     }
 
     /**
@@ -183,7 +184,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
         }
         VistaArtefatto artefatto = trovaArtefatto(elenco, boxX, offset, mouseX, mouseY, parteAttiva);
         if (artefatto != null) {
-            righe.add(Cartiglio.aiutoClick(artefatto.isFigliVisibili(), "elenco modificatori"));
+            righe.add(Cartiglio.aiutoClick(artefatto.isFigliVisibili(), TestiDellaUI.get("COSA_ELENCO_MODIFICATORI")));
             righe.add(doppioClick);
         }
         if (costruisciComponenteScorrevoleArtefatti(elenco, null, parteAttiva).isScorrevole(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO)) {
@@ -328,7 +329,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
             });
             if (!artefatto.getModificatori().isEmpty()) {
                 nodo.creaNodo(
-                        "Modificatori:", font, coloreSeparatori,
+                        TestiDellaUI.get("MODIFICATORI_ELENCO"), font, coloreSeparatori,
                         null, null, null,
                         null, null, null,
                         null, artefatto);
@@ -344,7 +345,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
                             valore = segno(valoreIntero) + valoreIntero + "%";
                             break;
                         case QUANTITA_ASSOLUTA:
-                            valore = "Porta a " + valoreIntero;
+                            valore = TestiDellaUI.get("MODIFICATORE_PORTA_A", valoreIntero);
                             break;
                         default:
                             valore = "";
@@ -353,7 +354,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
                     // Il valore resta corto; chi lo colpisce e per quanto va sotto, nella descrizione
                     StringBuilder dettaglio = new StringBuilder();
                     if (modificatore.getBersaglio() == BersaglioModificatore.BERSAGLIO) {
-                        dettaglio.append("sul bersaglio");
+                        dettaglio.append(TestiDellaUI.get("MODIFICATORE_SUL_BERSAGLIO"));
                     }
                     if (modificatore.isTemporaneo()) {
                         dettaglio.append(dettaglio.length() > 0 ? " " : "").append(TestoDeiModificatori.durata(modificatore));
@@ -368,7 +369,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
             }
             if (!artefatto.getIncantamenti().isEmpty()) {
                 nodo.creaNodo(
-                        "Incantamenti:", font, coloreSeparatori,
+                        TestiDellaUI.get("INCANTAMENTI_ELENCO"), font, coloreSeparatori,
                         null, null, null,
                         null, null, null,
                         null, artefatto);

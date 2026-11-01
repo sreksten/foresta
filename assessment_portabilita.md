@@ -66,7 +66,7 @@ Ogni passo compila e ha i test verdi; la dimensione è S (qualche ora), M (una s
    - [x] **lingue**: inglese sia americano (`en-US`) sia britannico (`en-GB`); poi, in prospettiva, francese, tedesco e spagnolo (e i glifi coprono praticamente tutte le lingue europee). Quindi niente di "inglese" nel codice: tutto passa dall'interfaccia delle regole della lingua (strato B), e ogni scelta di disegno si controlla pensando a una lingua con generi, casi e plurali diversi dall'italiano e dall'inglese (il tedesco ha tre generi, il francese l'elisione, lo spagnolo gli articoli davanti ad "a" tonica);
    - [x] **varianti regionali**: la lingua è un codice con regione facoltativa (`en-GB`); i testi si cercano dal più specifico al più generico (`en-GB` → `en` → `it`), così `en-GB` contiene solo ciò che differisce da `en` ("armour", "colour", "grey"). Chiave del file: `<nome>_en.properties`, `<nome>_en_GB.properties`;
    - [x] **cosa si traduce**: solo ciò che arriva sulla UI (narrazione, nomi, descrizioni, dialoghi, etichette). I messaggi interni (eccezioni, log, `FinestraDiProva`, strumenti di sviluppo) restano in italiano e non si contano nel contatore;
-   - [ ] chi traduce: io propongo una bozza per ogni file e tu rivedi, oppure l'inverso;
+   - [x] chi traduce: Claude scrive la bozza di ogni file, Stefano rivede (elenco in «File da ricontrollare»);
    - [ ] conferma del disegno a tre strati e della lingua legata alla partita.
 1. **Infrastruttura** (S/M)
    - [x] `Testi` cerca per catena di lingue (`en-GB` → `en` → `it`; file `_en_GB`, `_en`, `_it`); `impostaLingua` accetta `en-GB`, `en_gb`, `EN`; test in `TestiTest`;
@@ -77,9 +77,9 @@ Ogni passo compila e ha i test verdi; la dimensione è S (qualche ora), M (una s
    - [x] `TestiConSoloCaratteriDelFontTest` legge già ogni `.properties` e `.txt` di ogni modulo, quindi copre da solo i file in qualunque lingua;
    - [x] **test del contatore** (stesso `ConvenzioniDiLocalizzazioneTest`): conta per modulo le stringhe italiane in `src/main` (almeno due parole italiane comuni o una lettera accentata; esclusi commenti, `Logger.log`, eccezioni, `assert` e gli strumenti di sviluppo) e le confronta con `localizzazione_baseline.properties` (13-foresta-app-swing, test). Misura più severa di quella della prima analisi: **circa 900 stringhe** (`09-foresta-missioni` 447, `12-foresta-motore` 104, `12-foresta-swing` 85, `08-foresta-tattiche` 72, `05-foresta-personaggi` 35, `07-foresta-intermezzi` 33, `07-foresta-poteri` 28, …); chi ne sposta nei file abbassa il numero.
 2. **Tradurre ciò che è già in file** (M) — il primo risultato visibile
-   - [ ] i 29 `_it.properties` hanno il loro `_en`;
-   - [ ] la UI già in `ui_it` e `testo_tattica`;
-   - [ ] a fine passo il gioco è in inglese nei nomi, nelle descrizioni, nei comandi e nelle scritte della UI, e in italiano nel resto.
+   - [x] i 29 `_it.properties` hanno il loro `_en` (bozza, da rivedere) e 15 hanno anche un `_en_GB` con le sole differenze britanniche; il test `l_inglese_americano_ha_tutte_le_chiavi_dell_italiano` controlla che non manchi nessuna chiave;
+   - [x] la UI già in `ui_it` e `testo_tattica`;
+   - [ ] (da provare avviando con `LINGUA=en`: i file sono scritti e i test passano, ma il gioco non è stato aperto in inglese) a fine passo il gioco è in inglese nei nomi, nelle descrizioni, nei comandi e nelle scritte della UI, e in italiano nel resto.
 3. **Regole della lingua** (L) — il passo che cambia la forma del codice, da concordare prima
    - [ ] `RegoleDellaLingua`, `LinguaItaliana` (stesso comportamento di oggi, verificato dai test esistenti di `Articoli` e `Numeri`), `LinguaInglese`;
    - [ ] genere, plurale e suono iniziale dei nomi nei file (`tipo_personaggio`, tipi di artefatto, tipi di locazione…);
@@ -92,7 +92,8 @@ Ogni passo compila e ha i test verdi; la dimensione è S (qualche ora), M (una s
 6. **Messaggi del motore** (L)
    - [ ] `LocazioneBase`, `Automa`, `Locanda`, `Pernottamento`, `RaccoltaBottino`, poteri, economia, statistiche; la narrazione continua a passare dal bus come stringa, già nella lingua giusta (non si cambia il bus).
 7. **UI Swing** (M)
-   - [ ] `DisplayableCanvasTattiche`, `TestoAzioneInCombattimento` e le altre schermate; `FinestraDiProva` resta italiana (strumento di sviluppo).
+   - [x] `DisplayableCanvasTattiche` (82 chiavi `TATTICHE_*`), `TestoAzioneInCombattimento` (frasi con e senza bersaglio, chiavi `AZIONE_*` e `_SU`), i negozi, l'incantatore, l'inventario, l'introduzione, il bestiario, i titoli dei riquadri e gli annunci: circa 200 chiavi nuove in `ui_it`/`ui_en`/`ui_en_GB`; il contatore di `12-foresta-swing` scende da 85 a 15 (restano: stringhe che dipendono ancora dalle regole della lingua, vedi sotto). `FinestraDiProva` resta italiana (strumento di sviluppo);
+   - [ ] restano in `12-foresta-swing` e dipendono dal passo 3: `Numeri.getCardinaleM` nella schermata finale («Avversari uccisi in N giorni»), `Articoli.inizialeMaiuscola` nel fumetto dell'incantatore, `TestoDeiModificatori.durata` (il `replaceFirst("^per ", "ancora ")` del DisplayableCanvasInventario è un trucco italiano), `AIUTO_ROTELLA` in `Cartiglio` (letto una volta sola all'avvio della classe: va bene finché la lingua si sceglie prima di creare la UI).
 8. **Intermezzi e racconto** (M)
    - [x] il `Racconto` (storia, sconfitta, vittoria) è in `storia_it.properties` (12-foresta-motore, chiavi `INTRODUZIONE.n`, `FINALE_SCONFITTA.n`, `FINALE_VITTORIA.n`), letto con `Testi.get`; `RaccontoTest`;
    - [ ] le battute in `intermezzi_it.properties`.
@@ -108,12 +109,56 @@ Ogni passo compila e ha i test verdi; la dimensione è S (qualche ora), M (una s
 
 #### File da ricontrollare
 
-Fatti in autonomia il 2026-11-01 (passo 1 e storia); nessun testo è stato tradotto.
-- `01-foresta-testi/.../testi/Testi.java`: la catena di lingue (`catena`, `impostaLingua`), `formatta` e `sostituisci`; con `TestiTest` e i file di prova `testi_di_prova_zz*.properties`. Da guardare: `impostaLingua("zz_gb")` dà `zz-GB` e i file si chiamano `_zz_GB`.
-- `13-foresta-app-swing/.../ConvenzioniDiLocalizzazioneTest.java` e `localizzazione_baseline.properties`: il riconoscitore di stringhe italiane è euristico (elenco di parole comuni in `PAROLE`); se conta troppo o troppo poco si ritocca lì.
-- `13-foresta-app-swing/.../Main.java`: argomento `LINGUA=`.
-- `12-foresta-swing/.../TestiDellaUI.java` e `08-foresta-tattiche/.../TestoTattica.java`: ora delegano a `Testi.formatta` (comportamento invariato).
-- `12-foresta-motore/.../Racconto.java` e `storia_it.properties` (già committati): la storia.
+Bozze scritte da Claude il 2026-11-01 (passo 2); spuntare `[x]` quando rivisto. Ogni `_en` sta accanto al suo `_it`. L'inglese britannico (`_en_GB`) è ricavato per regole (`armor`→`armour`, `artifact`→`artefact`, `-ize`→`-ise`, `valor`→`valour`, `zip code`→`postcode`, `savior`→`saviour`…) e ha solo le righe che cambiano.
+
+- [ ] `tipo_attributo_en.properties` (02-foresta-attributi): Soggezione→Awe, Contrattazione→Haggling, Furtività→Stealth
+- [ ] `comandi_en.properties` (02-foresta-comandi): descrizioni alla terza persona; le voci GUERRIERA/GUERRIERO… sono uguali
+- [ ] `tipo_effetto_di_stato_en.properties` (02-foresta-effettidistato)
+- [ ] `tipo_locazione_en.properties` (02-foresta-mappa): «the city of Nyena»: articolo minuscolo come in italiano
+- [ ] `tipo_danno_en.properties` (03-foresta-danni): Contundente→Blunt, Tagliente→Slashing
+- [ ] `tipo_interazione_con_effetti_di_stato_en.properties` (03-foresta-danni): nomi tecnici adattati (Vampata Tossica→Toxic Flare, Colpo di Grazia→Coup de Grace…)
+- [ ] `grado_incantamento_en.properties` (04-foresta-artefatti)
+- [ ] `tipo_artefatto_en.properties` (04-foresta-artefatti): UTILIZZO è il verbo di «X wields/wears/carries Y», alla terza persona singolare
+- [ ] `tipo_motivo_rifiuto_incantatura_en.properties` (04-foresta-artefatti)
+- [ ] `tipo_negozio_en.properties` (04-foresta-artefatti)
+- [ ] `tipo_rarita_artefatto_en.properties` (04-foresta-artefatti)
+- [ ] `caratteristica_di_classe_en.properties` (05-foresta-personaggi)
+- [ ] `note_personaggi_en.properties` (05-foresta-personaggi): 795 note (577 testi diversi), il file lungo; il genere ("he"/"she"/"they") segue quello dell'originale e va uniformato col passo 3
+- [ ] `rifiuti_equipaggiamento_en.properties` (05-foresta-personaggi)
+- [ ] `categoria_personaggio_en.properties` (05-foresta-personaggi)
+- [ ] `tipo_incantesimo_en.properties` (05-foresta-personaggi): NOME_SINGOLARE/NOME_PLURALE senza articolo ("Air spell"): gli articoli arrivano con il passo 3
+- [ ] `tipo_personaggio_en.properties` (05-foresta-personaggi): i nomi delle classi non hanno genere (Guerriera/Guerriero→Warrior, Elfa/Elfo→Elf, Maga/Mago→Mage, Chierica/Chierico→Cleric, Druida/Druido→Druid, Ladra/Ladro→Thief); da decidere se la scelta della classe deve distinguere i sessi
+- [ ] `tipo_azione_en.properties` (06-foresta-combattimento)
+- [ ] `tipo_abilita_en.properties` (07-foresta-poteri)
+- [ ] `tipo_canto_en.properties` (07-foresta-poteri)
+- [ ] `testo_tattica_en.properties` (08-foresta-tattiche): il linguaggio delle tattiche; `azione.ARMA_DI` è «{0} ({1} damage)»
+- [ ] `tipo_filtro_en.properties` (08-foresta-tattiche)
+- [ ] `tipo_ordinamento_en.properties` (08-foresta-tattiche)
+- [ ] `tipo_predicato_en.properties` (08-foresta-tattiche)
+- [ ] `tipo_rosa_en.properties` (08-foresta-tattiche)
+- [ ] `tipo_trofeo_en.properties` (10-foresta-trofei): nomi adattati, non tradotti (Perdigiorno→Idler, Ammazzagoblin→Goblin slayer, Trafficone→Tinkerer, Trovarobe→Scavenger, Sbevazzone→Tippler, Vero Rompiscatole→Real Pain in the Neck, Più grosso è, più rumore fa→The Bigger They Are, the Louder They Fall…)
+- [ ] `storia_en.properties` (12-foresta-motore): la frase finale dell'introduzione («…a dreadful dive known as») prosegue col nome del gioco
+- [ ] `ui_en.properties` (12-foresta-swing): ora circa 225 chiavi (passo 7: tattiche, negozi, inventario, annunci, azioni del combattimento); `ui_en_GB` ha solo due voci. Le frasi con il bersaglio del riquadro del combattimento (`AZIONE_*_SU`) hanno il nome già articolato in italiano finché non arriva il passo 3
+
+Inglese britannico (guardare solo se le differenze sono quelle volute):
+
+- [ ] `tipo_attributo_en_GB.properties` (02-foresta-attributi)
+- [ ] `comandi_en_GB.properties` (02-foresta-comandi)
+- [ ] `tipo_effetto_di_stato_en_GB.properties` (02-foresta-effettidistato)
+- [ ] `tipo_interazione_con_effetti_di_stato_en_GB.properties` (03-foresta-danni)
+- [ ] `tipo_artefatto_en_GB.properties` (04-foresta-artefatti)
+- [ ] `tipo_motivo_rifiuto_incantatura_en_GB.properties` (04-foresta-artefatti)
+- [ ] `tipo_negozio_en_GB.properties` (04-foresta-artefatti)
+- [ ] `note_personaggi_en_GB.properties` (05-foresta-personaggi)
+- [ ] `tipo_incantesimo_en_GB.properties` (05-foresta-personaggi)
+- [ ] `tipo_personaggio_en_GB.properties` (05-foresta-personaggi)
+- [ ] `tipo_azione_en_GB.properties` (06-foresta-combattimento)
+- [ ] `tipo_canto_en_GB.properties` (07-foresta-poteri)
+- [ ] `testo_tattica_en_GB.properties` (08-foresta-tattiche)
+- [ ] `tipo_trofeo_en_GB.properties` (10-foresta-trofei)
+- [ ] `storia_en_GB.properties` (12-foresta-motore)
+
+**Per il passo 1 e la storia (già committati):** `Testi.java` (catena di lingue, `formatta`, `sostituisci`; con `TestiTest`), `ConvenzioniDiLocalizzazioneTest` e `localizzazione_baseline.properties` (il riconoscitore di stringhe italiane è euristico: elenco di parole in `PAROLE`), `Main` (argomento `LINGUA=`), `TestiDellaUI` e `TestoTattica` (ora delegano a `Testi.formatta`), `Racconto` e `storia_it.properties`.
 
 **Rischi.** L'articolo inglese "a/an" dipende dal suono ("a unicorn", "an hour"): serve una regola con un elenco di eccezioni nel file dei testi. Il passo 3 tocca più di cento file: è meglio farlo a moduli, con l'italiano invariato a ogni commit. Le grammatiche scherzose in italiano ("Il Cinghiale Vegano", i nani che protestano) non si traducono parola per parola: si adattano.
 

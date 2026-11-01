@@ -3,6 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 
 import java.util.function.Consumer;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * Dice al giocatore che c'è stato un errore interno, invece di lasciarlo solo nel log: una transizione andata a metà può lasciare il
@@ -26,7 +27,7 @@ final class SegnalatoreDegliErrori {
 			return;
 		}
 		ultimoMostrato = descrizione;
-		mostra.accept("Errore interno: " + descrizione + ". Il gioco prosegue, ma qualcosa potrebbe non andare come previsto: se si blocca, salva se puoi e riavvia.");
+		mostra.accept(TestiDellaUI.get("ERRORE_INTERNO", descrizione));
 	}
 
 	private static String descrizione(InternoException evento) {
@@ -35,6 +36,6 @@ final class SegnalatoreDegliErrori {
 			return messaggio;
 		}
 		Exception eccezione = evento.getException();
-		return eccezione == null ? "errore sconosciuto" : eccezione.getClass().getSimpleName();
+		return eccezione == null ? TestiDellaUI.get("ERRORE_SCONOSCIUTO") : eccezione.getClass().getSimpleName();
 	}
 }

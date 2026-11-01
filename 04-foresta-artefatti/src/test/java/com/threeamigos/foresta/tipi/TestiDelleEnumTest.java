@@ -136,4 +136,14 @@ class TestiDelleEnumTest {
 		assertEquals(italiano, TipoAttributo.FORZA.getNome());
 		assertEquals("Forza", TipoAttributo.FORZA.getNome());
 	}
+
+	@Test
+	void inglese_americano_e_britannico() {
+		Testi.impostaLingua("en");
+		assertEquals("Armor", Testi.testo(TipoArtefatto.ARMATURA, "DESCRIZIONE").get());
+		Testi.impostaLingua("en-GB");
+		assertEquals("Armour", Testi.testo(TipoArtefatto.ARMATURA, "DESCRIZIONE").get());
+		// Quel che il britannico non cambia lo prende dall'americano
+		assertEquals("Sword", Testi.testo(TipoArtefatto.SPADA, "DESCRIZIONE").get());
+	}
 }

@@ -17,6 +17,7 @@ import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Optional;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * La bottega dell'incantatore: a sinistra l'inventario del gruppo, a destra il banco di lavoro.
@@ -49,22 +50,22 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
 
     private void onEventoApprovazioneIncantatura(NotificaApprovazioneIncantatura evento) {
         String nome = evento.getArtefatto().getNomeBreve();
-        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Ecco fatto! " + Articoli.inizialeMaiuscola(nome) + " è pronto.", getCoordinateFumetto()));
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo(TestiDellaUI.get("INCANTATORE_FATTO", Articoli.inizialeMaiuscola(nome)), getCoordinateFumetto()));
     }
 
     @Override
     protected String aiutoDoppioClickSinistra() {
-        return "Doppio click: metti sul banco di lavoro";
+        return TestiDellaUI.get("AIUTO_DOPPIO_CLICK_SUL_BANCO");
     }
 
     @Override
     protected String aiutoDoppioClickDestra() {
-        return "Doppio click: rimuovi dal banco di lavoro";
+        return TestiDellaUI.get("AIUTO_DOPPIO_CLICK_DAL_BANCO");
     }
 
     @Override
     public void disegnaIntestazioniInventario(Graphics2D graphics) {
-        disegnaIntestazioniInventarioImpl(graphics, "Inventario gruppo", "Banco di lavoro");
+        disegnaIntestazioniInventarioImpl(graphics, TestiDellaUI.get("INVENTARIO_GRUPPO"), TestiDellaUI.get("BANCO_DI_LAVORO"));
     }
 
     @Override
@@ -74,7 +75,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
 
     @Override
     public String getEtichettaMestiere() {
-        return "Incantatore";
+        return TestiDellaUI.get("MESTIERE_INCANTATORE");
     }
 
     /**
@@ -95,18 +96,18 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         graphics.drawImage(immaginePersonaggio, (width - immaginePersonaggio.getWidth()) / 2, y - immaginePersonaggio.getHeight(), null);
         y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
-        y = disegnaValore(graphics, "Monete", String.valueOf(vistaPartita.getCassa().getMonete()), y, coloreTestata);
+        y = disegnaValore(graphics, TestiDellaUI.get("MONETE"), String.valueOf(vistaPartita.getCassa().getMonete()), y, coloreTestata);
 
         boolean conIngredienti = banco.getInventarioParteRemota().stream().anyMatch(a -> a.getTipo().isIngrediente());
         if (conIngredienti) {
-            y = disegnaValore(graphics, "Costo fusione", String.valueOf(banco.getCostoFusione()), y, coloreTestata);
+            y = disegnaValore(graphics, TestiDellaUI.get("COSTO_FUSIONE"), String.valueOf(banco.getCostoFusione()), y, coloreTestata);
         }
         Optional<? extends VistaArtefatto> artefatto = banco.getArtefattoSulBanco();
         if (artefatto.isPresent()) {
             if (banco.getLivelloDopoLaFusione() != artefatto.get().getLivello()) {
-                y = disegnaValore(graphics, "Nuovo livello", String.valueOf(banco.getLivelloDopoLaFusione()), y, coloreTestata);
+                y = disegnaValore(graphics, TestiDellaUI.get("NUOVO_LIVELLO"), String.valueOf(banco.getLivelloDopoLaFusione()), y, coloreTestata);
             }
-            y = disegnaValore(graphics, "Effetti", banco.getEffettiDopoLaFusione() + "/" + banco.getEffettiMassimiDopoLaFusione(), y, coloreTestata);
+            y = disegnaValore(graphics, TestiDellaUI.get("EFFETTI"), banco.getEffettiDopoLaFusione() + "/" + banco.getEffettiMassimiDopoLaFusione(), y, coloreTestata);
         }
 
         BufferedImage separatore = ImageCache.separatore;

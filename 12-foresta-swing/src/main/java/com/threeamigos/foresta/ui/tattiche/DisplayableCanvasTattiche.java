@@ -31,6 +31,7 @@ import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * La schermata delle tattiche di combattimento, che si apre dall'inventario (comando MOSTRA_TATTICHE): a sinistra la tattica del personaggio
@@ -332,7 +333,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 
 	@Override
 	public void disegnaIntestazioniInventario(Graphics2D graphics) {
-		disegnaIntestazioniInventarioImpl(graphics, "Tattica", "Spiegazione");
+		disegnaIntestazioniInventarioImpl(graphics, TestiDellaUI.get("TATTICHE_TATTICA"), TestiDellaUI.get("TATTICHE_SPIEGAZIONE"));
 	}
 
 	@Override
@@ -351,10 +352,10 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		boolean capo = vistaPartita.getGruppoGiocatore().getCapo() != null
 				&& vistaPartita.getGruppoGiocatore().getCapo().getUuid().equals(personaggio.getUuid());
 		if (capo) {
-			y = disegnaCentrato(graphics, "Capo del gruppo", DoomdarkColorModel.Color.RED, y);
+			y = disegnaCentrato(graphics, TestiDellaUI.get("TATTICHE_CAPO"), DoomdarkColorModel.Color.RED, y);
 		}
 		if (!personaggio.isVivo()) {
-			y = disegnaCentrato(graphics, "Caduto: la sua tattica vale quando torna in vita", DoomdarkColorModel.Color.MEDIUM_GRAY, y);
+			y = disegnaCentrato(graphics, TestiDellaUI.get("TATTICHE_CADUTO"), DoomdarkColorModel.Color.MEDIUM_GRAY, y);
 		}
 		y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI / 2;
 
@@ -374,12 +375,12 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 			puoSpostareADestra = false;
 			areaSposta[0] = null;
 			areaSposta[1] = null;
-			Image aTempo = ImageCache.get("Con il gruppo a tempo", DoomdarkColorModel.Color.MEDIUM_GRAY);
+			Image aTempo = ImageCache.get(TestiDellaUI.get("TATTICHE_GRUPPO_A_TEMPO"), DoomdarkColorModel.Color.MEDIUM_GRAY);
 			graphics.drawImage(aTempo, centro - aTempo.getWidth(null) / 2, y + (lato - aTempo.getHeight(null)) / 2, null);
 		} else {
 			puoSpostareASinistra = posto > 0;
 			puoSpostareADestra = posto < permanenti.size() - 1;
-			Image postoTesto = ImageCache.get("Posto " + (posto + 1) + " di " + permanenti.size(), DoomdarkColorModel.Color.MEDIUM_GRAY);
+			Image postoTesto = ImageCache.get(TestiDellaUI.get("TATTICHE_POSTO", posto + 1, permanenti.size()), DoomdarkColorModel.Color.MEDIUM_GRAY);
 			int mezzoTesto = postoTesto.getWidth(null) / 2;
 			areaSposta[0] = new Rectangle(centro - mezzoTesto - 2 * SPACING - lato, y, lato, lato);
 			areaSposta[1] = new Rectangle(centro + mezzoTesto + 2 * SPACING, y, lato, lato);
@@ -399,17 +400,17 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 			disegnaIcona(graphics, ICONA_SI, areaSi, aPosto);
 			disegnaIcona(graphics, ICONA_NO, areaNo, true);
 			y += lSi + SPACING;
-			y = disegnaCentrato(graphics, aPosto ? "Sì per applicare, No per tornare a prima" : "Non ancora completa: vedi a destra",
+			y = disegnaCentrato(graphics, aPosto ? TestiDellaUI.get("TATTICHE_CONFERMA") : TestiDellaUI.get("TATTICHE_INCOMPLETA"),
 					aPosto ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED, y);
 		} else {
 			areaSi = null;
 			areaNo = null;
 		}
 		y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI / 2;
-		Image predefinitaTesto = ImageCache.get("Predefinita", DoomdarkColorModel.Color.LIGHT_GRAY);
+		Image predefinitaTesto = ImageCache.get(TestiDellaUI.get("TATTICHE_PREDEFINITA"), DoomdarkColorModel.Color.LIGHT_GRAY);
 		areaPredefinita = new Rectangle((width - predefinitaTesto.getWidth(null)) / 2, y, predefinitaTesto.getWidth(null),
 				predefinitaTesto.getHeight(null));
-		graphics.drawImage(ImageCache.get("Predefinita", areaPredefinita.contains(mouseX, mouseY) && menu == null
+		graphics.drawImage(ImageCache.get(TestiDellaUI.get("TATTICHE_PREDEFINITA"), areaPredefinita.contains(mouseX, mouseY) && menu == null
 				? DoomdarkColorModel.Color.WHITE : DoomdarkColorModel.Color.LIGHT_GRAY), areaPredefinita.x, areaPredefinita.y, null);
 	}
 
@@ -447,10 +448,9 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		List<DoomdarkColorModel.Color> colori = new ArrayList<>();
 		List<String> problemi = bozza.problemi();
 		if (applicata.isDisabilitata()) {
-			testi.add("Tattica disattivata");
+			testi.add(TestiDellaUI.get("TATTICHE_DISATTIVATA"));
 			colori.add(DoomdarkColorModel.Color.RED);
-			testi.add("Ha degli errori (di solito perché il gioco è cambiato dopo che l'hai scritta): finché non li correggi il personaggio usa quella predefinita. "
-					+ "Correggi le voci e conferma con Sì.");
+			testi.add(TestiDellaUI.get("TATTICHE_ERRORI"));
 			colori.add(DoomdarkColorModel.Color.LIGHT_GRAY);
 		}
 		// Prima l'elemento sotto il mouse (la rosa, il filtro, l'azione...), poi la voce a cui appartiene
@@ -462,10 +462,10 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		}
 		if (indiceVoce >= 0 && indiceVoce < bozza.getVoci().size()) {
 			BozzaTattica.Voce voce = bozza.getVoci().get(indiceVoce);
-			testi.add("Voce " + (indiceVoce + 1));
+			testi.add(TestiDellaUI.get("TATTICHE_VOCE_N", indiceVoce + 1));
 			colori.add(DoomdarkColorModel.Color.YELLOW);
 			if (voce.azioni.isEmpty()) {
-				testi.add("Senza azioni: aggiungine una.");
+				testi.add(TestiDellaUI.get("TATTICHE_SENZA_AZIONI"));
 				colori.add(DoomdarkColorModel.Color.RED);
 			} else {
 				for (String riga : TestoTattica.spiegazione(bozza.toVoceMD(voce))) {
@@ -474,15 +474,15 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 				}
 			}
 		} else {
-			testi.add("Le voci si valutano dall'alto: la prima che si può eseguire vince.");
+			testi.add(TestiDellaUI.get("TATTICHE_REGOLA_1"));
 			colori.add(DoomdarkColorModel.Color.LIGHT_GRAY);
-			testi.add("Se nessuna si può eseguire, il personaggio attacca con le armi il primo avversario.");
+			testi.add(TestiDellaUI.get("TATTICHE_REGOLA_2"));
 			colori.add(DoomdarkColorModel.Color.LIGHT_GRAY);
-			testi.add("Passa il mouse su una voce per leggere come ragiona.");
+			testi.add(TestiDellaUI.get("TATTICHE_REGOLA_3"));
 			colori.add(DoomdarkColorModel.Color.MEDIUM_GRAY);
 		}
 		if (!problemi.isEmpty()) {
-			testi.add("Da sistemare:");
+			testi.add(TestiDellaUI.get("TATTICHE_DA_SISTEMARE"));
 			colori.add(DoomdarkColorModel.Color.RED);
 			for (String problema : problemi) {
 				testi.add("- " + problema);
@@ -692,11 +692,11 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	 */
 	private void aggiungiNumero(Riga riga, int valore, int passo, int minimo, int massimo, IntConsumer alCambio) {
 		riga.pezzi.add(new Token(" - ", null, DoomdarkColorModel.Color.LIGHT_GRAY, a -> alCambio.accept(Math.max(minimo, valore - passo)),
-				"Diminuisce di " + passo, false, valore > minimo));
+				TestiDellaUI.get("TATTICHE_DIMINUISCE_DI", passo), false, valore > minimo));
 		riga.pezzi.add(testoColorato(String.valueOf(valore), DoomdarkColorModel.Color.YELLOW)
-				.spiega("Numero", "Il valore con cui si confronta. Con - e + sale e scende di " + passo + "."));
+				.spiega(TestiDellaUI.get("TATTICHE_NUMERO"), TestiDellaUI.get("TATTICHE_NUMERO_SPIEGAZIONE", passo)));
 		riga.pezzi.add(new Token(" + ", null, DoomdarkColorModel.Color.LIGHT_GRAY, a -> alCambio.accept(Math.min(massimo, valore + passo)),
-				"Aumenta di " + passo, false, valore < massimo));
+				TestiDellaUI.get("TATTICHE_AUMENTA_DI", passo), false, valore < massimo));
 	}
 
 	private static <T extends Enum<T>> List<CasellaADiscesa.Scelta<T>> sceltePer(List<T> valori, java.util.function.Function<T, String> etichetta) {
@@ -755,14 +755,14 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		}
 		// Il tasto per una voce nuova, e sotto l'attacco di riserva che c'è sempre
 		Riga nuova = new Riga(0, -1);
-		nuova.pezzi.add(new Token(null, ICONA_AGGIUNGI, null, a -> bozza.aggiungiVoce(), "Aggiunge una voce in fondo", false, true));
-		nuova.pezzi.add(scelta("Nuova voce", a -> bozza.aggiungiVoce(), "Aggiunge una voce in fondo"));
+		nuova.pezzi.add(new Token(null, ICONA_AGGIUNGI, null, a -> bozza.aggiungiVoce(), TestiDellaUI.get("TATTICHE_AGGIUNGE_VOCE"), false, true));
+		nuova.pezzi.add(scelta(TestiDellaUI.get("NUOVA_VOCE"), a -> bozza.aggiungiVoce(), TestiDellaUI.get("TATTICHE_AGGIUNGE_VOCE")));
 		righe.add(nuova);
 		Riga riserva = new Riga(0, -1);
 		// Parola per parola, perché vada a capo: un pezzo solo più largo della riga verrebbe tagliato
-		for (String parola : ((voci.size() + 1) + ". Attacco fisico sul primo avversario").split(" ")) {
+		for (String parola : TestiDellaUI.get("TATTICHE_RISERVA_RIGA", voci.size() + 1).split(" ")) {
 			riserva.pezzi.add(testoColorato(parola, DoomdarkColorModel.Color.DARK_GRAY)
-					.spiega("Attacco di riserva", "Attacca con le armi il primo avversario disponibile. Scatta se nessun'altra azione precedente può essere intrapresa."));
+					.spiega(TestiDellaUI.get("TATTICHE_RISERVA"), TestiDellaUI.get("TATTICHE_RISERVA_SPIEGAZIONE")));
 		}
 		righe.add(riserva);
 		for (Riga riga : righe) {
@@ -780,14 +780,14 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		// La riga della voce: numero (attiva o no), rosa, ordinamento; a destra su, giù, togli
 		Riga riga = new Riga(0, i);
 		riga.pezzi.add(new Token((i + 1) + ".", null, coloreVoce, a -> voce.attiva = !voce.attiva,
-				voce.attiva ? "Click: disattiva la voce (viene saltata)" : "Click: riattiva la voce", false, true)
-				.spiega("Voce " + (i + 1), "Le voci si valutano dall'alto in basso: la prima che si può eseguire vince. Il numero è verde se la voce è attiva, rosso se è disattivata e viene saltata: click per cambiare."));
+				voce.attiva ? TestiDellaUI.get("TATTICHE_CLICK_DISATTIVA") : TestiDellaUI.get("TATTICHE_CLICK_RIATTIVA"), false, true)
+				.spiega(TestiDellaUI.get("TATTICHE_VOCE_N", i + 1), TestiDellaUI.get("TATTICHE_NUMERO_VOCE_SPIEGAZIONE")));
 		riga.pezzi.add(new Token(nomeDellaVoce(voce, i), null, DoomdarkColorModel.Color.WHITE, a -> clickSulNome(voce, i),
-				voce.chiusa ? "Click: apre la tattica. Doppio click: la rinomina" : "Click: ripiega la tattica. Doppio click: la rinomina", false, true)
-				.spiega("Nome della tattica", "Click sul nome per ripiegare la tattica e risparmiare posto, o aprirla di nuovo. Doppio click per cambiarne il nome."));
-		riga.pezzi.add(icona(ICONA_ELIMINA, () -> bozza.rimuoviVoce(i), "Toglie la voce", true));
-		riga.pezzi.add(icona(ICONA_GIU, () -> bozza.spostaVoce(i, 1), "Sposta la voce in basso", i < voci.size() - 1));
-		riga.pezzi.add(icona(ICONA_SU, () -> bozza.spostaVoce(i, -1), "Sposta la voce in alto", i > 0));
+				TestiDellaUI.get(voce.chiusa ? "TATTICHE_CLICK_APRI" : "TATTICHE_CLICK_RIPIEGA"), false, true)
+				.spiega(TestiDellaUI.get("TATTICHE_NOME"), TestiDellaUI.get("TATTICHE_NOME_SPIEGAZIONE")));
+		riga.pezzi.add(icona(ICONA_ELIMINA, () -> bozza.rimuoviVoce(i), TestiDellaUI.get("TATTICHE_TOGLIE_VOCE"), true));
+		riga.pezzi.add(icona(ICONA_GIU, () -> bozza.spostaVoce(i, 1), TestiDellaUI.get("TATTICHE_VOCE_GIU"), i < voci.size() - 1));
+		riga.pezzi.add(icona(ICONA_SU, () -> bozza.spostaVoce(i, -1), TestiDellaUI.get("TATTICHE_VOCE_SU"), i > 0));
 		righe.add(riga);
 		if (voce.chiusa) {
 			return;
@@ -795,31 +795,31 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 
 		// Il corpo, sotto il nome: su chi agisce la voce e come sceglie
 		riga = new Riga(1, i);
-		riga.pezzi.add(testo("su").spiega("Su chi", "La rosa dei candidati e come se ne sceglie uno: prima la rosa, poi i filtri la restringono, infine l'ordinamento ne sceglie uno."));
+		riga.pezzi.add(testo(TestiDellaUI.get("TATTICHE_PAROLA_SU")).spiega(TestiDellaUI.get("TATTICHE_SU_CHI"), TestiDellaUI.get("TATTICHE_SU_CHI_SPIEGAZIONE")));
 		List<TipoRosa> rose = BozzaTattica.roseAmmesse(voce);
 		if (voce.rosa == null || rose.size() != 1) {
-			riga.pezzi.add(menu(voce.rosa == null ? "(scegli su chi)" : voce.rosa.getDescrizione(), sceltePer(rose, TipoRosa::getDescrizione), voce.rosa,
+			riga.pezzi.add(menu(voce.rosa == null ? TestiDellaUI.get("TATTICHE_SCEGLI_SU_CHI") : voce.rosa.getDescrizione(), sceltePer(rose, TipoRosa::getDescrizione), voce.rosa,
 					rosa -> {
 						voce.rosa = rosa;
 						voce.filtri.clear();
 						if (voce.ordinamento == null || !BozzaTattica.ordinamentiAmmessi(rosa).contains(voce.ordinamento.getTipoOrdinamento())) {
 							voce.ordinamento = BozzaTattica.ordinamentoPredefinito(TipoOrdinamento.PRIMO);
 						}
-					}, "Su chi agisce la voce"));
+					}, TestiDellaUI.get("TATTICHE_SU_CHI_AGISCE")));
 		} else {
 			// Una sola scelta possibile: non è un menu, ma dice perché
 			riga.pezzi.add(new Token(voce.rosa.getDescrizione(), null, DoomdarkColorModel.Color.LIGHT_GRAY, null,
-					"Le azioni della voce agiscono solo su: " + voce.rosa.getDescrizione().toLowerCase(Locale.ROOT) + ". Per cambiare, cambia le azioni.", false, true));
+					TestiDellaUI.get("TATTICHE_SOLO_SU", voce.rosa.getDescrizione().toLowerCase(Locale.ROOT)), false, true));
 		}
 		if (haOrdinamento(voce)) {
 			riga.pezzi.add(testo(":"));
 			riga.pezzi.add(menu(TestoTattica.ordinamento(voce.ordinamento), sceltePer(BozzaTattica.ordinamentiAmmessi(voce.rosa),
 					t -> t.getDescrizione()), voce.ordinamento.getTipoOrdinamento(),
-					tipo -> voce.ordinamento = BozzaTattica.ordinamentoPredefinito(tipo), "Come sceglie fra i candidati"));
+					tipo -> voce.ordinamento = BozzaTattica.ordinamentoPredefinito(tipo), TestiDellaUI.get("TATTICHE_COME_SCEGLIE")));
 			if (voce.ordinamento.getTipoDanno() != null) {
 				riga.pezzi.add(menu(voce.ordinamento.getTipoDanno().getNome(), sceltePerInOrdineAlfabetico(Arrays.asList(TipoDanno.values()), TipoDanno::getNome),
 						voce.ordinamento.getTipoDanno(), danno -> voce.ordinamento = OrdinamentoMD.di(voce.ordinamento.getTipoOrdinamento(), danno),
-						"Il tipo di danno"));
+						TestiDellaUI.get("TATTICHE_TIPO_DANNO")));
 			}
 		}
 		righe.add(riga);
@@ -848,9 +848,9 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 			aggiungiCondizione(righe, voce, c, i);
 		}
 		Riga nuovaCondizione = new Riga(1, i);
-		nuovaCondizione.pezzi.add(testo("se").spiega("Condizione", "Le condizioni decidono se la voce vale in questo momento: devono essere tutte vere. Non riguardano un personaggio ma lo scontro (il round, le probabilità, quanti candidati ci sono)."));
-		nuovaCondizione.pezzi.add(menu("(aggiungi una condizione)", sceltePer(BozzaTattica.predicatiAmmessi(), t -> t.getDescrizione()), null,
-				tipo -> voce.condizioni.add(BozzaTattica.predicatoPredefinito(tipo)), "Una condizione che deve valere per eseguire la voce"));
+		nuovaCondizione.pezzi.add(testo(TestiDellaUI.get("TATTICHE_PAROLA_SE")).spiega(TestiDellaUI.get("TATTICHE_CONDIZIONE"), TestiDellaUI.get("TATTICHE_CONDIZIONI_SPIEGAZIONE")));
+		nuovaCondizione.pezzi.add(menu(TestiDellaUI.get("TATTICHE_AGGIUNGI_CONDIZIONE"), sceltePer(BozzaTattica.predicatiAmmessi(), t -> t.getDescrizione()), null,
+				tipo -> voce.condizioni.add(BozzaTattica.predicatoPredefinito(tipo)), TestiDellaUI.get("TATTICHE_CONDIZIONE_AIUTO")));
 		righe.add(nuovaCondizione);
 
 		// Le azioni
@@ -858,9 +858,9 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 			aggiungiAzione(righe, voce, a, i);
 		}
 		Riga nuovaAzione = new Riga(1, i);
-		nuovaAzione.pezzi.add(testo("fai").spiega("Azione", "Le azioni sono ciò che il personaggio fa. Si prova la prima che si può fare sul bersaglio (serve la Magia, la pergamena, la pozione...); se nessuna si può fare, si passa alla voce dopo."));
-		nuovaAzione.pezzi.add(menu("(aggiungi un'azione)", sceltePer(BozzaTattica.azioniAmmesse(voce, azioniPossibili), t -> t.getDescrizione()), null,
-				tipo -> bozza.aggiungiAzione(voce, tipo), "Un'azione: la prima che si può eseguire vince"));
+		nuovaAzione.pezzi.add(testo(TestiDellaUI.get("TATTICHE_PAROLA_FAI")).spiega(TestiDellaUI.get("TATTICHE_AZIONE"), TestiDellaUI.get("TATTICHE_AZIONI_SPIEGAZIONE")));
+		nuovaAzione.pezzi.add(menu(TestiDellaUI.get("TATTICHE_AGGIUNGI_AZIONE"), sceltePer(BozzaTattica.azioniAmmesse(voce, azioniPossibili), t -> t.getDescrizione()), null,
+				tipo -> bozza.aggiungiAzione(voce, tipo), TestiDellaUI.get("TATTICHE_AZIONE_AIUTO")));
 		righe.add(nuovaAzione);
 	}
 
@@ -894,35 +894,34 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 				// Un menu come gli altri: "con" tiene i candidati per cui il filtro è vero, "senza" quelli per cui è falso. Si riconosce dal colore dalle
 				// parole fisse: chiaro se si può scegliere, grigio scuro se no (i filtri numerici)
 				List<CasellaADiscesa.Scelta<Boolean>> modi = Arrays.asList(
-						new CasellaADiscesa.Scelta<>(parola, false, "Tiene i candidati per cui il filtro è vero."),
-						new CasellaADiscesa.Scelta<>("senza", true, "Tiene i candidati per cui il filtro è falso."));
-				riga.pezzi.add(menu(filtro.isNegato() ? "senza" : parola, modi, filtro.isNegato(),
-						senza -> sostituisci(lista, indice, senza == filtro.isNegato() ? filtro : filtro.negato()), "Con o senza il filtro"));
+						new CasellaADiscesa.Scelta<>(parola, false, TestiDellaUI.get("TATTICHE_CON_AIUTO")),
+						new CasellaADiscesa.Scelta<>(TestiDellaUI.get("TATTICHE_SENZA"), true, TestiDellaUI.get("TATTICHE_SENZA_AIUTO")));
+				riga.pezzi.add(menu(filtro.isNegato() ? TestiDellaUI.get("TATTICHE_SENZA") : parola, modi, filtro.isNegato(),
+						senza -> sostituisci(lista, indice, senza == filtro.isNegato() ? filtro : filtro.negato()), TestiDellaUI.get("TATTICHE_CON_O_SENZA")));
 			} else {
-				riga.pezzi.add(testo(parola).spiega("Filtro", "I filtri restringono i candidati della rosa: restano solo quelli per cui sono tutti veri. "
-						+ "Passa il mouse su un filtro per capire che cosa controlla."));
+				riga.pezzi.add(testo(parola).spiega(TestiDellaUI.get("TATTICHE_FILTRO"), TestiDellaUI.get("TATTICHE_FILTRI_SPIEGAZIONE")));
 			}
 			riga.pezzi.add(menu(filtro.getTipoFiltro().getDescrizione(), sceltePer(BozzaTattica.filtriAmmessi(lista.rosa()), t -> t.getDescrizione()),
 					filtro.getTipoFiltro(), tipo -> {
 						FiltroMD nuovo = BozzaTattica.filtroPredefinito(tipo);
 						// Il "senza" resta solo dove ha senso (non nei filtri numerici)
 						sostituisci(lista, indice, filtro.isNegato() && BozzaTattica.isNegabile(tipo) ? nuovo.negato() : nuovo);
-					}, "Il tipo di filtro"));
+					}, TestiDellaUI.get("TATTICHE_TIPO_FILTRO")));
 			aggiungiParametriFiltro(riga, lista, indice, filtro);
 			riga.pezzi.add(icona(ICONA_ELIMINA, () -> {
 				List<FiltroMD> nuova = new ArrayList<>(lista.get());
 				nuova.remove(indice);
 				lista.set(nuova);
-			}, "Toglie il filtro", true));
+			}, TestiDellaUI.get("TATTICHE_TOGLIE_FILTRO"), true));
 			righe.add(riga);
 		}
 		Riga nuovo = new Riga(profondita, indiceVoce);
-		nuovo.pezzi.add(testo(parola).spiega("Filtro", "I filtri restringono i candidati della rosa: restano solo quelli per cui sono tutti veri. Passa il mouse su un filtro per capire che cosa controlla."));
-		nuovo.pezzi.add(menu("(aggiungi un filtro)", sceltePer(BozzaTattica.filtriAmmessi(lista.rosa()), t -> t.getDescrizione()), null, tipo -> {
+		nuovo.pezzi.add(testo(parola).spiega(TestiDellaUI.get("TATTICHE_FILTRO"), TestiDellaUI.get("TATTICHE_FILTRI_SPIEGAZIONE")));
+		nuovo.pezzi.add(menu(TestiDellaUI.get("TATTICHE_AGGIUNGI_FILTRO"), sceltePer(BozzaTattica.filtriAmmessi(lista.rosa()), t -> t.getDescrizione()), null, tipo -> {
 			List<FiltroMD> nuova = new ArrayList<>(lista.get());
 			nuova.add(BozzaTattica.filtroPredefinito(tipo));
 			lista.set(nuova);
-		}, "Restringe i candidati"));
+		}, TestiDellaUI.get("TATTICHE_RESTRINGE")));
 		righe.add(nuovo);
 	}
 
@@ -937,7 +936,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		if (parametro == TipoParametro.CONFRONTO_E_NUMERO || parametro == TipoParametro.CONFRONTO) {
 			riga.pezzi.add(menu(TestoTattica.relazione(filtro.getConfronto(), filtro.isNegato()), relazioni(filtro.getConfronto(), filtro.isNegato()),
 					new Relazione(filtro.getConfronto(), filtro.isNegato()),
-					r -> sostituisci(lista, indice, BozzaTattica.conRelazione(filtro, r.tipoConfronto, r.negato)), "Il confronto"));
+					r -> sostituisci(lista, indice, BozzaTattica.conRelazione(filtro, r.tipoConfronto, r.negato)), TestiDellaUI.get("TATTICHE_CONFRONTO")));
 			if (parametro == TipoParametro.CONFRONTO_E_NUMERO) {
 				aggiungiNumero(riga, filtro.getNumero(), BozzaTattica.passo(filtro.getTipoFiltro()), 0, BozzaTattica.massimo(filtro.getTipoFiltro()),
 						n -> sostituisci(lista, indice, BozzaTattica.conNumero(filtro, n)));
@@ -945,18 +944,18 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		} else if (parametro == TipoParametro.STATO) {
 			riga.pezzi.add(menu(filtro.getTipoEffettoDiStato().getDescrizione(), sceltePerInOrdineAlfabetico(Arrays.asList(TipoEffettoDiStato.values()),
 					TipoEffettoDiStato::getDescrizione), filtro.getTipoEffettoDiStato(),
-					s -> sostituisci(lista, indice, BozzaTattica.conParametro(filtro, s)), "Lo stato"));
+					s -> sostituisci(lista, indice, BozzaTattica.conParametro(filtro, s)), TestiDellaUI.get("TATTICHE_STATO")));
 		} else if (parametro == TipoParametro.CLASSE) {
 			riga.pezzi.add(menu(etichettaClasse(filtro.getTipoPersonaggio()), sceltePerInOrdineAlfabetico(Arrays.asList(TipoPersonaggio.values()),
 					DisplayableCanvasTattiche::etichettaClasse), filtro.getTipoPersonaggio(),
-					c -> sostituisci(lista, indice, BozzaTattica.conParametro(filtro, c)), "La classe (il ruolo: Mago e Maga sono lo stesso)"));
+					c -> sostituisci(lista, indice, BozzaTattica.conParametro(filtro, c)), TestiDellaUI.get("TATTICHE_CLASSE")));
 		} else if (parametro == TipoParametro.CATEGORIA) {
 			riga.pezzi.add(menu(filtro.getCategoriaPersonaggio().getNome(), sceltePerInOrdineAlfabetico(Arrays.asList(CategoriaPersonaggio.values()),
 					CategoriaPersonaggio::getNome), filtro.getCategoriaPersonaggio(),
-					c -> sostituisci(lista, indice, BozzaTattica.conParametro(filtro, c)), "La categoria di creatura"));
+					c -> sostituisci(lista, indice, BozzaTattica.conParametro(filtro, c)), TestiDellaUI.get("TATTICHE_CATEGORIA")));
 		} else if (parametro == TipoParametro.TIPO_DANNO) {
 			riga.pezzi.add(menu(filtro.getTipoDanno().getNome(), sceltePerInOrdineAlfabetico(Arrays.asList(TipoDanno.values()), TipoDanno::getNome),
-					filtro.getTipoDanno(), d -> sostituisci(lista, indice, BozzaTattica.conParametro(filtro, d)), "Il tipo di danno"));
+					filtro.getTipoDanno(), d -> sostituisci(lista, indice, BozzaTattica.conParametro(filtro, d)), TestiDellaUI.get("TATTICHE_TIPO_DANNO")));
 		}
 	}
 
@@ -1002,26 +1001,26 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	private void aggiungiCondizione(List<Riga> righe, BozzaTattica.Voce voce, int c, int indiceVoce) {
 		PredicatoMD predicato = voce.condizioni.get(c);
 		Riga riga = new Riga(1, indiceVoce);
-		riga.pezzi.add(testo("se").spiega("Condizione", "Le condizioni decidono se la voce vale in questo momento: devono essere tutte vere. Non riguardano un personaggio ma lo scontro (il round, le probabilità, quanti candidati ci sono)."));
+		riga.pezzi.add(testo(TestiDellaUI.get("TATTICHE_PAROLA_SE")).spiega(TestiDellaUI.get("TATTICHE_CONDIZIONE"), TestiDellaUI.get("TATTICHE_CONDIZIONI_SPIEGAZIONE")));
 		riga.pezzi.add(menu(predicato.getTipoPredicato().getDescrizione(), sceltePer(BozzaTattica.predicatiAmmessi(), t -> t.getDescrizione()),
 				predicato.getTipoPredicato(), tipo -> {
 					voce.condizioni.set(c, BozzaTattica.predicatoPredefinito(tipo));
-				}, "Il tipo di condizione"));
+				}, TestiDellaUI.get("TATTICHE_TIPO_CONDIZIONE")));
 		if (predicato.getTipoPredicato() == TipoPredicato.QUANTI) {
 			riga.pezzi.add(menu(predicato.getTipoRosa().getDescrizione(), sceltePer(rosePerQuanti(predicato.getTipoRosa()), TipoRosa::getDescrizione), predicato.getTipoRosa(),
-					r -> voce.condizioni.set(c, BozzaTattica.conRosa(predicato, r)), "Da quali candidati si conta"));
+					r -> voce.condizioni.set(c, BozzaTattica.conRosa(predicato, r)), TestiDellaUI.get("TATTICHE_DA_QUALI_SI_CONTA")));
 		}
 		if (predicato.getTipoPredicato() != TipoPredicato.PROBABILITA) {
 			riga.pezzi.add(menu(TestoTattica.relazione(predicato.getTipoConfronto(), predicato.isNegato()),
 					relazioni(predicato.getTipoConfronto(), predicato.isNegato()), new Relazione(predicato.getTipoConfronto(), predicato.isNegato()),
-					r -> voce.condizioni.set(c, BozzaTattica.conRelazione(predicato, r.tipoConfronto, r.negato)), "Il confronto"));
+					r -> voce.condizioni.set(c, BozzaTattica.conRelazione(predicato, r.tipoConfronto, r.negato)), TestiDellaUI.get("TATTICHE_CONFRONTO")));
 		}
 		aggiungiNumero(riga, predicato.getNumero(), BozzaTattica.passo(predicato.getTipoPredicato()), 0, BozzaTattica.massimo(predicato.getTipoPredicato()),
 				n -> voce.condizioni.set(c, BozzaTattica.conNumero(predicato, n)));
 		if (predicato.getTipoPredicato() == TipoPredicato.PROBABILITA) {
 			riga.pezzi.add(testo("%"));
 		}
-		riga.pezzi.add(icona(ICONA_ELIMINA, () -> voce.condizioni.remove(c), "Toglie la condizione", true));
+		riga.pezzi.add(icona(ICONA_ELIMINA, () -> voce.condizioni.remove(c), TestiDellaUI.get("TATTICHE_TOGLIE_CONDIZIONE"), true));
 		righe.add(riga);
 		if (predicato.getTipoPredicato() == TipoPredicato.QUANTI) {
 			aggiungiFiltri(righe, new ListaFiltri() {
@@ -1060,27 +1059,27 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	private void aggiungiAzione(List<Riga> righe, BozzaTattica.Voce voce, int a, int indiceVoce) {
 		AzioneMD azione = voce.azioni.get(a);
 		Riga riga = new Riga(1, indiceVoce);
-		riga.pezzi.add(testo("fai").spiega("Azione", "Le azioni sono ciò che il personaggio fa. Si prova la prima che si può fare sul bersaglio (serve la Magia, la pergamena, la pozione...); se nessuna si può fare, si passa alla voce dopo."));
+		riga.pezzi.add(testo(TestiDellaUI.get("TATTICHE_PAROLA_FAI")).spiega(TestiDellaUI.get("TATTICHE_AZIONE"), TestiDellaUI.get("TATTICHE_AZIONI_SPIEGAZIONE")));
 		riga.pezzi.add(menu(azione.getTipo().getDescrizione(), sceltePer(BozzaTattica.azioniAmmesse(voce, azioniPossibili), t -> t.getDescrizione()),
-				azione.getTipo(), tipo -> bozza.sostituisciAzione(voce, a, tipo), "L'azione"));
+				azione.getTipo(), tipo -> bozza.sostituisciAzione(voce, a, tipo), TestiDellaUI.get("TATTICHE_L_AZIONE")));
 		if (azione.getCriterio() != null) {
 			riga.pezzi.add(menu(TestoTattica.criterio(azione.getCriterio()), sceltePer(Arrays.asList(CriterioIncantesimo.values()),
 					TestoTattica::criterio), azione.getCriterio(),
-					c -> voce.azioni.set(a, BozzaTattica.conCriterio(azione, c)), "Come sceglie quale incantesimo lanciare"));
+					c -> voce.azioni.set(a, BozzaTattica.conCriterio(azione, c)), TestiDellaUI.get("TATTICHE_QUALE_INCANTESIMO")));
 		}
 		if (azione.getArmaDi() != null) {
-			riga.pezzi.add(testo("di").spiega("Arma", "Il tipo di danno dell'arma da impugnare."));
+			riga.pezzi.add(testo(TestiDellaUI.get("TATTICHE_PAROLA_DI")).spiega(TestiDellaUI.get("TATTICHE_ARMA"), TestiDellaUI.get("TATTICHE_ARMA_SPIEGAZIONE")));
 			riga.pezzi.add(menu(azione.getArmaDi().getNome(), sceltePerInOrdineAlfabetico(Arrays.asList(TipoDanno.values()), TipoDanno::getNome), azione.getArmaDi(),
-					d -> voce.azioni.set(a, AzioneMD.cambiaArma(d)), "Il tipo di danno dell'arma da impugnare"));
+					d -> voce.azioni.set(a, AzioneMD.cambiaArma(d)), TestiDellaUI.get("TATTICHE_ARMA_AIUTO")));
 		}
 		if (BozzaTattica.haSoloSePiuForte(azione)) {
-			riga.pezzi.add(new Token(azione.isSoloSePiuForteDellAttacco() ? "solo se più forte" : "(sempre)", null,
+			riga.pezzi.add(new Token(TestiDellaUI.get(azione.isSoloSePiuForteDellAttacco() ? "TATTICHE_SOLO_SE_PIU_FORTE" : "TATTICHE_SEMPRE"), null,
 					azione.isSoloSePiuForteDellAttacco() ? DoomdarkColorModel.Color.YELLOW : DoomdarkColorModel.Color.DARK_GRAY,
 					x -> voce.azioni.set(a, BozzaTattica.commutaSoloSePiuForte(azione)),
-					"Click: lo fa solo se fa più danno dell'attacco con le armi", false, true)
-					.spiega("Solo se più forte", "Se acceso, l'azione si fa solo quando rende più dell'attacco con le armi sullo stesso bersaglio; altrimenti si passa all'azione dopo."));
+					TestiDellaUI.get("TATTICHE_SOLO_SE_PIU_FORTE_CLICK"), false, true)
+					.spiega(TestiDellaUI.get("TATTICHE_SOLO_SE_PIU_FORTE_TITOLO"), TestiDellaUI.get("TATTICHE_SOLO_SE_PIU_FORTE_SPIEGAZIONE")));
 		}
-		riga.pezzi.add(icona(ICONA_ELIMINA, () -> voce.azioni.remove(a), "Toglie l'azione", true));
+		riga.pezzi.add(icona(ICONA_ELIMINA, () -> voce.azioni.remove(a), TestiDellaUI.get("TATTICHE_TOGLIE_AZIONE"), true));
 		righe.add(riga);
 	}
 

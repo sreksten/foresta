@@ -19,6 +19,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.ToIntFunction;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * Gli incantesimi e le pozioni del gruppo: una lista scrollabile con la rotella del mouse, una voce per riga, con il
@@ -71,12 +72,12 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 			maxIconWidth = Math.max(maxIconWidth, icona.getWidth());
 			righe.add(new Riga(icona, tipoIncantesimo.getNome(), g -> g.getIncantesimi(tipoIncantesimo)));
 		}
-		righe.add(new Riga(ImageCache.spritePozioneSalute, "Salute", VistaGruppoGiocatore::getPozioniSalute));
-		righe.add(new Riga(ImageCache.spritePozioneSaluteGrande, "Salute grande", VistaGruppoGiocatore::getPozioniSaluteGrande));
-		righe.add(new Riga(ImageCache.spritePozioneMagia, "Magia", VistaGruppoGiocatore::getPozioniMagia));
-		righe.add(new Riga(ImageCache.spritePozioneMagiaGrande, "Magia grande", VistaGruppoGiocatore::getPozioniMagiaGrande));
-		righe.add(new Riga(ImageCache.spritePozionePanacea, "Panacea", VistaGruppoGiocatore::getPozioniPanacea));
-		righe.add(new Riga(ImageCache.spritePozioneAumentoLivello, "Aumento livello", VistaGruppoGiocatore::getPozioniAumentoLivello));
+		righe.add(new Riga(ImageCache.spritePozioneSalute, TestiDellaUI.get("POZIONE_SALUTE"), VistaGruppoGiocatore::getPozioniSalute));
+		righe.add(new Riga(ImageCache.spritePozioneSaluteGrande, TestiDellaUI.get("POZIONE_SALUTE_GRANDE"), VistaGruppoGiocatore::getPozioniSaluteGrande));
+		righe.add(new Riga(ImageCache.spritePozioneMagia, TestiDellaUI.get("POZIONE_MAGIA"), VistaGruppoGiocatore::getPozioniMagia));
+		righe.add(new Riga(ImageCache.spritePozioneMagiaGrande, TestiDellaUI.get("POZIONE_MAGIA_GRANDE"), VistaGruppoGiocatore::getPozioniMagiaGrande));
+		righe.add(new Riga(ImageCache.spritePozionePanacea, TestiDellaUI.get("POZIONE_PANACEA"), VistaGruppoGiocatore::getPozioniPanacea));
+		righe.add(new Riga(ImageCache.spritePozioneAumentoLivello, TestiDellaUI.get("POZIONE_AUMENTO_LIVELLO"), VistaGruppoGiocatore::getPozioniAumentoLivello));
 		for (int i = TipoIncantesimo.values().length; i < righe.size(); i++) {
 			maxIconWidth = Math.max(maxIconWidth, righe.get(i).icona.getWidth());
 		}
@@ -120,7 +121,7 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	 */
 	public void disegnaIncantesimi(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
-		IntestazioneRiquadro.disegna(graphics, "Incantesimi e pozioni", topLeftX, topLeftY, ImageCache.corniceGrande.getWidth());
+		IntestazioneRiquadro.disegna(graphics, TestiDellaUI.get("RIQUADRO_INCANTESIMI_E_POZIONI"), topLeftX, topLeftY, ImageCache.corniceGrande.getWidth());
 
 		Shape clipOriginale = graphics.getClip();
 		graphics.setClip(areaLista);

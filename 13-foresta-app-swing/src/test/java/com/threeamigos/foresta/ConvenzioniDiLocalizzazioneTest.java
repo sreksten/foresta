@@ -65,6 +65,28 @@ class ConvenzioniDiLocalizzazioneTest {
 	}
 
 	@Test
+	void l_inglese_americano_ha_tutte_le_chiavi_dell_italiano() throws IOException {
+		List<String> mancanti = new ArrayList<>();
+		for (Path file : filePropertiesDelleRisorse()) {
+			String nome = file.getFileName().toString();
+			if (!nome.endsWith("_it.properties")) {
+				continue;
+			}
+			Path inglese = file.resolveSibling(nome.replace("_it.properties", "_en.properties"));
+			if (!Files.exists(inglese)) {
+				mancanti.add(nome + ": manca il file _en");
+				continue;
+			}
+			Set<String> chiavi = new TreeSet<>(leggi(file).stringPropertyNames());
+			chiavi.removeAll(leggi(inglese).stringPropertyNames());
+			if (!chiavi.isEmpty()) {
+				mancanti.add(inglese.getFileName() + ": mancano " + chiavi);
+			}
+		}
+		assertTrue(mancanti.isEmpty(), String.join("\n", mancanti));
+	}
+
+	@Test
 	void leStringheItalianeNelCodiceNonAumentano() throws IOException {
 		Properties baseline = new Properties();
 		try (InputStream in = getClass().getResourceAsStream("localizzazione_baseline.properties")) {

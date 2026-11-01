@@ -16,6 +16,7 @@ import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * Il riquadro con le statistiche del gruppo: monete, preziosi e punti esperienza.
@@ -65,17 +66,17 @@ public class DisplayableCanvasRiquadroStatistiche implements Finestra {
 		VistaGruppoGiocatore gruppoGiocatore = vistaPartita.getGruppoGiocatore();
 		graphics.drawImage(ImageCache.cornicePiccola, topLeftX, topLeftY, null);
 		
-		Image image = ImageCache.get("Monete", fontMedium, coloreTestata);
+		Image image = ImageCache.get(TestiDellaUI.get("MONETE"), fontMedium, coloreTestata);
 		graphics.drawImage(image, scrittaX, moneteY, null);
 		image = ImageCache.get(vistaPartita.getCassa().getMonete(), fontMedium, coloreTestata);
 		graphics.drawImage(image, totaleX - image.getWidth(null), moneteY, null);
 		
-		image = ImageCache.get("Preziosi", fontMedium, coloreTestata);
+		image = ImageCache.get(TestiDellaUI.get("PREZIOSI"), fontMedium, coloreTestata);
 		graphics.drawImage(image, scrittaX, preziosiY, null);
 		image = ImageCache.get(vistaPartita.getCassa().getPreziosi(), fontMedium, coloreTestata);
 		graphics.drawImage(image, totaleX - image.getWidth(null), preziosiY, null);
 
-		image = ImageCache.get("Punti", fontMedium, coloreTestata);
+		image = ImageCache.get(TestiDellaUI.get("PUNTI"), fontMedium, coloreTestata);
 		graphics.drawImage(image, scrittaX, puntiY, null);
 		int puntiEsperienza = vistaPartita.getPuntiEsperienza();
 		int puntiPerProssimoLivello = vistaPartita.getPuntiEsperienzaPerProssimoLivello();

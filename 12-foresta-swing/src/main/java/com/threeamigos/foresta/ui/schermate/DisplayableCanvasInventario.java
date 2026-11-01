@@ -22,6 +22,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * La schermata dell'inventario: a sinistra gli artefatti del personaggio scelto, a destra quelli del gruppo, in mezzo la colonna del personaggio con
@@ -88,17 +89,17 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
 
     @Override
     protected String aiutoDoppioClickSinistra() {
-        return "Doppio click: sposta nell'inventario del gruppo";
+        return TestiDellaUI.get("AIUTO_DOPPIO_CLICK_SPOSTA_NEL_GRUPPO");
     }
 
     @Override
     protected String aiutoDoppioClickDestra() {
-        return "Doppio click: equipaggia";
+        return TestiDellaUI.get("AIUTO_DOPPIO_CLICK_EQUIPAGGIA");
     }
 
     @Override
     public void disegnaIntestazioniInventario(Graphics2D graphics) {
-        disegnaIntestazioniInventarioImpl(graphics, "Inventario personaggio", "Inventario gruppo");
+        disegnaIntestazioniInventarioImpl(graphics, TestiDellaUI.get("INVENTARIO_PERSONAGGIO"), TestiDellaUI.get("INVENTARIO_GRUPPO"));
     }
 
     /**
@@ -140,9 +141,9 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         y += fontHeight + SPACING;
         if (!personaggio.isAlLivelloMassimo()) {
             int perProssimoLivello = personaggio.getEsperienzaPerProssimoLivello();
-            disegnaTestoEValore("Su", String.valueOf(perProssimoLivello), graphics, y, coloreTestata);
+            disegnaTestoEValore(TestiDellaUI.get("PROSSIMO_LIVELLO"), String.valueOf(perProssimoLivello), graphics, y, coloreTestata);
         } else {
-            disegnaTestoEValore("Livello massimo", "", graphics, y, coloreTestata);
+            disegnaTestoEValore(TestiDellaUI.get("LIVELLO_MASSIMO"), "", graphics, y, coloreTestata);
         }
         y += fontHeight + SPACING;
         // In arancione se ci sono punti da spendere, perché si notino
@@ -222,7 +223,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
             return;
         }
         ComponenteScorrevole<Object>.Nodo nodo = componenteScorrevole.creaNodo(
-                "Modificatori temporanei", font, DoomdarkColorModel.Color.LIGHT_GRAY,
+                TestiDellaUI.get("MODIFICATORI_TEMPORANEI"), font, DoomdarkColorModel.Color.LIGHT_GRAY,
                 String.valueOf(temporanei.size()), font, DoomdarkColorModel.Color.LIGHT_GRAY,
                 null, null, null,
                 null, MODIFICATORI_TEMPORANEI);
@@ -266,10 +267,10 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         DoomdarkColorModel.Color coloreCausa = coloreEffettivo == DoomdarkColorModel.Color.WHITE ? DoomdarkColorModel.Color.WHITE : DoomdarkColorModel.Color.YELLOW;
         fissaggio.ifPresent(f -> {
             ModificatoreAttributoMD modificatore = f.getModificatore();
-            String da = f.getFonte().isEmpty() ? "" : "da " + f.getFonte();
+            String da = f.getFonte().isEmpty() ? "" : TestiDellaUI.get("FONTE_DA", f.getFonte());
             String durata = modificatore.isTemporaneo() ? " (" + TestoDeiModificatori.durata(modificatore).replaceFirst("^per ", "ancora ") + ")" : "";
             nodo.creaNodo(
-                    "Fissato a " + (int) modificatore.getQuantita(), fontSmall, coloreCausa,
+                    TestiDellaUI.get("FISSATO_A", (int) modificatore.getQuantita()), fontSmall, coloreCausa,
                     null, null, null,
                     (da + durata).trim().isEmpty() ? null : (da + durata).trim(), fontSmall, coloreCausa,
                     null, tipoAttributo);
@@ -353,10 +354,10 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         TipoAttributo attributo = (TipoAttributo) riferimento;
         long variazione = Math.round(personaggio.getVariazioneDaTemporanei(attributo));
         if (variazione != 0) {
-            righe.add("Temporaneamente " + (variazione > 0 ? "+" : "") + variazione);
+            righe.add(TestiDellaUI.get("TEMPORANEAMENTE", (variazione > 0 ? "+" : "") + variazione));
         }
         if (attributo.isPrimario() && personaggio.getPuntiAbilitaDisponibili() > 0) {
-            righe.add("Doppio click: aumenta questa abilità");
+            righe.add(TestiDellaUI.get("AIUTO_DOPPIO_CLICK_AUMENTA_ABILITA"));
         }
         return righe;
     }

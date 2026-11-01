@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * Le due immagini del bestiario (vedi DisplayableCanvasBestiario): l'elenco delle voci, a sinistra, e la scheda della voce scelta, a destra.
@@ -243,7 +244,7 @@ final class ImmagineBestiario {
 		if (abilita.isEmpty()) {
 			return;
 		}
-		pezzi.add(titolo("Abilità innate"));
+		pezzi.add(titolo(TestiDellaUI.get("BESTIARIO_ABILITA_INNATE")));
 		for (AbilitaInnataDiClasse a : abilita.values()) {
 			pezzi.add(new Pezzo(ImageCache.get(a.getNome(), MEDIO, DoomdarkColorModel.Color.WHITE, larghezza), 0, 6));
 			pezzi.add(new Pezzo(ImageCache.get(a.getDescrizione(), PICCOLO, DoomdarkColorModel.Color.MEDIUM_GRAY, larghezza), 0, 0));
@@ -252,9 +253,9 @@ final class ImmagineBestiario {
 
 	private static void aggiungiLeCaratteristiche(VistaPartita vista, TipoPersonaggio voce, int larghezza, List<Pezzo> pezzi) {
 		List<CaratteristicaDiClasse> caratteristiche = voce.getCaratteristiche();
-		pezzi.add(titolo("Forze e debolezze"));
+		pezzi.add(titolo(TestiDellaUI.get("BESTIARIO_FORZE_E_DEBOLEZZE")));
 		if (caratteristiche.isEmpty()) {
-			pezzi.add(new Pezzo(ImageCache.get("Niente di particolare.", MEDIO, DoomdarkColorModel.Color.MEDIUM_GRAY, larghezza), 0, 6));
+			pezzi.add(new Pezzo(ImageCache.get(TestiDellaUI.get("BESTIARIO_NIENTE_DI_PARTICOLARE"), MEDIO, DoomdarkColorModel.Color.MEDIUM_GRAY, larghezza), 0, 6));
 			return;
 		}
 		Set<String> scoperte = vista.getCaratteristicheScoperte(voce);
@@ -270,7 +271,7 @@ final class ImmagineBestiario {
 			pezzi.add(new Pezzo(ImageCache.get(caratteristica.getDescrizione(), MEDIO, colore, larghezza), 0, 6));
 		}
 		if (nonScoperte > 0) {
-			String testo = nonScoperte == 1 ? "1 ancora da scoprire" : nonScoperte + " ancora da scoprire";
+			String testo = TestiDellaUI.get(nonScoperte == 1 ? "BESTIARIO_UNA_DA_SCOPRIRE" : "BESTIARIO_ANCORA_DA_SCOPRIRE", nonScoperte);
 			pezzi.add(new Pezzo(ImageCache.get(testo, MEDIO, DoomdarkColorModel.Color.DARK_GRAY, larghezza), 0, 6));
 		}
 	}
@@ -304,7 +305,7 @@ final class ImmagineBestiario {
 				continue;
 			}
 			if (!titoloAggiunto) {
-				pezzi.add(titolo("Carattere"));
+				pezzi.add(titolo(TestiDellaUI.get("BESTIARIO_CARATTERE")));
 				titoloAggiunto = true;
 			}
 			aggiungiUnMoltiplicatore(formeConValore, valori, larghezza, pezzi);

@@ -12,6 +12,7 @@ import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * La bottega di un commerciante di artefatti (armaiolo o venditore di pergamene): a sinistra l'inventario
@@ -31,8 +32,8 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
 
     private void gestisciEventoRifiutoVenditaArtefatto(NotificaRifiutoVenditaArtefatto notificaRifiutoVenditaArtefatto) {
         String frase = negozio == TipoNegozio.VENDITORE_DI_PERGAMENE
-                ? "Mi dispiace, io tratto solo pergamene, gemme, monili, gingilli e sigilli."
-                : "Mi dispiace, la roba magica la vende il venditore di pergamene.";
+                ? TestiDellaUI.get("COMMERCIANTE_RIFIUTO_PERGAMENE")
+                : TestiDellaUI.get("COMMERCIANTE_RIFIUTO_ARMAIOLO");
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo(frase, getCoordinateFumetto()));
     }
 
@@ -43,8 +44,8 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
     @Override
     String fraseDopoLaVendita() {
         return negozio == TipoNegozio.VENDITORE_DI_PERGAMENE
-                ? "Ottime pergamene: le rivenderò a qualche mago di passaggio!"
-                : "Con il materiale che mi hai fornito, farò altre meravigliose creazioni!";
+                ? TestiDellaUI.get("COMMERCIANTE_DOPO_VENDITA_PERGAMENE")
+                : TestiDellaUI.get("COMMERCIANTE_DOPO_VENDITA_ARMAIOLO");
     }
 
     /**
@@ -66,18 +67,18 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
 
     @Override
     protected String aiutoDoppioClickSinistra() {
-        return "Doppio click: vendi";
+        return TestiDellaUI.get("AIUTO_DOPPIO_CLICK_VENDI");
     }
 
     @Override
     protected String aiutoDoppioClickDestra() {
-        return "Doppio click: compra";
+        return TestiDellaUI.get("AIUTO_DOPPIO_CLICK_COMPRA");
     }
 
     @Override
     public void disegnaIntestazioniInventario(Graphics2D graphics) {
-        disegnaIntestazioniInventarioImpl(graphics, "Inventario gruppo",
-                negozio == TipoNegozio.VENDITORE_DI_PERGAMENE ? "Inventario venditore" : "Inventario armaiolo");
+        disegnaIntestazioniInventarioImpl(graphics, TestiDellaUI.get("INVENTARIO_GRUPPO"),
+                TestiDellaUI.get(negozio == TipoNegozio.VENDITORE_DI_PERGAMENE ? "INVENTARIO_VENDITORE" : "INVENTARIO_ARMAIOLO"));
     }
 
     /**
@@ -102,7 +103,7 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
         graphics.drawImage(immaginePersonaggio, (width - immaginePersonaggio.getWidth()) / 2, y - immaginePersonaggio.getHeight(), null);
         y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
-        Image i = ImageCache.get("Monete", coloreTestata);
+        Image i = ImageCache.get(TestiDellaUI.get("MONETE"), coloreTestata);
         graphics.drawImage(i, xMinimaZonaCentrale, y, null);
         i = ImageCache.get(vistaPartita.getCassa().getMonete(), font, coloreTestata);
         graphics.drawImage(i, xMassimaZonaCentrale - i.getWidth(null), y, null);

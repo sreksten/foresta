@@ -23,6 +23,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * La schermata dell'alchimista: elenca le offerte di pozioni e altri consumabili e permette di comprarle per il personaggio scelto.
@@ -48,7 +49,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
     }
 
     private void gestisciEventoApprovazioneAcquistoConsumabile(NotificaApprovazioneAcquistoConsumabile notificaApprovazioneAcquistoConsumabile) {
-        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie per l'acquisto!", getCoordinateFumetto()));
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo(TestiDellaUI.get("CONSUMABILI_GRAZIE_ACQUISTO"), getCoordinateFumetto()));
 
         ComandoAcquistoConsumabile comando = notificaApprovazioneAcquistoConsumabile.getEventoRichiestaAcquistoConsumabile();
 
@@ -57,7 +58,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
         if (comando.getTipoConsumabile() == TipoConsumabile.INCANTESIMO) {
             TipoIncantesimo classe = comando.getClasseIncantesimo();
-            String descrizione = "Incantesimo acquistato: " + classe.getNomeSingolare();
+            String descrizione = TestiDellaUI.get("INCANTESIMO_ACQUISTATO", classe.getNomeSingolare());
             Point posizione = posizioneIncantesimoNellElencoSinistro(classe);
             if (posizione != null) {
                 aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteIncantesimi[classe.ordinal()], 1, font,
@@ -88,12 +89,12 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
     }
 
     private void gestisciEventoRifiutoAcquistoConsumabile(NotificaRifiutoAcquistoConsumabile notificaRifiutoAcquistoConsumabile) {
-        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Non hai abbastanza monete per comprare questo oggetto.", getCoordinateFumetto()));
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo(TestiDellaUI.get("CONSUMABILI_NON_ABBASTANZA_MONETE"), getCoordinateFumetto()));
     }
 
     @Override
     public void disegnaIntestazioniInventario(Graphics2D graphics) {
-        disegnaIntestazioniInventarioImpl(graphics, "Inventario gruppo", "Inventario alchimista");
+        disegnaIntestazioniInventarioImpl(graphics, TestiDellaUI.get("INVENTARIO_GRUPPO"), TestiDellaUI.get("INVENTARIO_ALCHIMISTA"));
     }
 
     @Override
@@ -103,7 +104,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
     @Override
     public String getEtichettaMestiere() {
-        return "Alchimista";
+        return TestiDellaUI.get("MESTIERE_ALCHIMISTA");
     }
 
     /**
@@ -126,7 +127,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         graphics.drawImage(immaginePersonaggio, (width - immaginePersonaggio.getWidth()) / 2, y - immaginePersonaggio.getHeight(), null);
         y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
-        Image i = ImageCache.get("Monete", coloreTestata);
+        Image i = ImageCache.get(TestiDellaUI.get("MONETE"), coloreTestata);
         graphics.drawImage(i, xMinimaZonaCentrale, y, null);
         i = ImageCache.get(vistaPartita.getCassa().getMonete(), font, coloreTestata);
         graphics.drawImage(i, xMassimaZonaCentrale - i.getWidth(null), y, null);
@@ -169,15 +170,15 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
             List<Consumabile> gruppo = getElencoGruppo();
             Consumabile consumabile = trovaConsumabile(gruppo, xMinimaZonaSinistra, offsetYZonaSinistra, mouseX, mouseY, false);
             if (consumabile != null) {
-                righe.add(Cartiglio.aiutoClick(statoDi(consumabile).isFigliVisibili(), "descrizione"));
+                righe.add(Cartiglio.aiutoClick(statoDi(consumabile).isFigliVisibili(), TestiDellaUI.get("COSA_DESCRIZIONE")));
             }
             aggiungiAiutoRotella(righe, gruppo, false);
         } else if (dentroElenco(xMinimaZonaDestra, mouseX, mouseY)) {
             List<Consumabile> venditore = getElencoVenditore();
             Consumabile consumabile = trovaConsumabile(venditore, xMinimaZonaDestra, offsetYZonaDestra, mouseX, mouseY, true);
             if (consumabile != null) {
-                righe.add(Cartiglio.aiutoClick(statoDi(consumabile).isFigliVisibili(), "descrizione"));
-                righe.add("Doppio click: acquista");
+                righe.add(Cartiglio.aiutoClick(statoDi(consumabile).isFigliVisibili(), TestiDellaUI.get("COSA_DESCRIZIONE")));
+                righe.add(TestiDellaUI.get("AIUTO_DOPPIO_CLICK_ACQUISTA"));
             }
             aggiungiAiutoRotella(righe, venditore, true);
         }

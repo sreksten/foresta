@@ -34,6 +34,7 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * Il canvas grafico del gioco: sa quale schermata è quella corrente (in gioco, mappa, inventario, negozi, intermezzo, intro e fine partita...) e la disegna, e fa da
@@ -395,7 +396,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	// Eventi globali
 
 	private void gestisciEventoAumentoLivelloMondo(NotificaAumentoLivelloMondo evento) {
-		notifica("LEVEL UP! Ora il mondo è al livello " + evento.getLivello() + "!");
+		notifica(TestiDellaUI.get("LEVEL_UP_MONDO", evento.getLivello()));
 	}
 
 	private void gestisciEventoCreazioneSpriteAnnuncioGlobale(InternoCreazioneSpriteAnnuncioGlobale evento) {
@@ -428,8 +429,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	private void gestisciEventoAumentoLivelloPersonaggio(NotificaAumentoLivelloPersonaggio evento) {
 		VistaPersonaggio personaggio = evento.getPersonaggio();
-		notificaAnnuncioGlobale("LEVEL UP!", personaggio.getNome() + " A LIVELLO " + personaggio.getLivello() + "!");
-		notifica("LEVEL UP! Ora " + personaggio.getNome() + " è al livello " + personaggio.getLivello() + "!");
+		notificaAnnuncioGlobale(TestiDellaUI.get("LEVEL_UP_TITOLO"), TestiDellaUI.get("LEVEL_UP_ANNUNCIO", personaggio.getNome(), personaggio.getLivello()));
+		notifica(TestiDellaUI.get("LEVEL_UP_PERSONAGGIO", personaggio.getNome(), personaggio.getLivello()));
 		// La notifica come iconcina è fatta dal riquadro del gruppo
 		primoPiano(TipoFinestra.STATO);
 		riquadroGruppo.gestisciEventoAumentoLivelloPersonaggio(evento);
@@ -565,7 +566,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * vedere l'ultima mano, e poi si dissolve lasciando leggere la mappa.
 	 */
 	void dissolviLaSfida() {
-		aggiungiSprite(new SpriteInDissolvenza("Sfida a carta, forbici e sasso", riquadroSfida.inUnImmagine(),
+		aggiungiSprite(new SpriteInDissolvenza(TestiDellaUI.get("SFIDA_TITOLO"), riquadroSfida.inUnImmagine(),
 				riquadroSfida.getX(), riquadroSfida.getY(), SECONDI_DI_ATTESA_DELLA_SFIDA, SECONDI_DI_DISSOLVENZA_DELLA_SFIDA));
 		riquadroSfida.setVisibile(false);
 	}
@@ -1110,7 +1111,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 */
 	public void commerciante() {
 		cambiaStato(StatoDisplayableCanvas.STATO_COMMERCIANTE);
-		notificaFumetto("Come posso aiutarvi?", commerciante.getCoordinateFumetto());
+		notificaFumetto(TestiDellaUI.get("COMMERCIANTE_SALUTO"), commerciante.getCoordinateFumetto());
 		repaint();
 	}
 
@@ -1156,7 +1157,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 */
 	public void alchimista() {
 		cambiaStato(StatoDisplayableCanvas.STATO_ALCHIMISTA);
-		notificaFumetto("Cosa posso fare per voi?", alchimista.getCoordinateFumetto());
+		notificaFumetto(TestiDellaUI.get("ALCHIMISTA_SALUTO"), alchimista.getCoordinateFumetto());
 		repaint();
 	}
 

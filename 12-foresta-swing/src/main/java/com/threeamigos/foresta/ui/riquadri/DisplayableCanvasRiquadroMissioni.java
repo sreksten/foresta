@@ -13,6 +13,7 @@ import com.threeamigos.foresta.ui.testo.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * Il riquadro con le missioni attive.
@@ -60,7 +61,7 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 	 */
 	public void disegnaMissioni(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
-		IntestazioneRiquadro.disegna(graphics, "Missioni", topLeftX, topLeftY, ImageCache.corniceGrande.getWidth());
+		IntestazioneRiquadro.disegna(graphics, TestiDellaUI.get("RIQUADRO_MISSIONI"), topLeftX, topLeftY, ImageCache.corniceGrande.getWidth());
 
 		ComponenteScorrevole<VistaMissione> componenteScorrevole = costruisciComponenteScorrevole();
 		// L'elenco può essere cambiato dall'ultimo scorrimento: l'offset va rimesso nei limiti
@@ -184,7 +185,7 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 		List<String> righe = new ArrayList<>();
 		VistaMissione missione = componenteScorrevole.riferimentoTitoloAllaQuota(yInterno + offsetY);
 		if (missione != null) {
-			righe.add(Cartiglio.aiutoClick(missione.isDescrizioneVisibile(), "descrizione"));
+			righe.add(Cartiglio.aiutoClick(missione.isDescrizioneVisibile(), TestiDellaUI.get("COSA_DESCRIZIONE")));
 		}
 		if (componenteScorrevole.isScorrevole(innerHeight)) {
 			righe.add(Cartiglio.AIUTO_ROTELLA);

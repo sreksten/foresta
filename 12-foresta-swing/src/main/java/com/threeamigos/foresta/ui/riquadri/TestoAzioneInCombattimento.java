@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui.riquadri;
 
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoAzione;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * Che cosa scrive il riquadro del combattimento sotto il personaggio che agisce: "Attacca la viverna 2", "Intona il Canto di Valore"...
@@ -15,64 +16,72 @@ final class TestoAzioneInCombattimento {
 	 * L'azione scelta con la tattica. Il bersaglio può mancare (un'azione sul gruppo, o senza un bersaglio solo).
 	 */
 	static String di(TipoAzione azione, VistaPersonaggio attore, VistaPersonaggio bersaglio) {
-		String su = bersaglio == null ? "" : " " + nome(bersaglio);
+		String su = bersaglio == null ? null : nome(bersaglio);
 		switch (azione) {
 			case ATTACCO_FISICO:
-				return bersaglio == null ? "Attacca" : "Attacca" + su;
+				return conBersaglio("AZIONE_ATTACCO", su);
 			case INCANTESIMO_DI_DANNO:
 			case INCANTESIMO_DEL_REPERTORIO:
-				return bersaglio == null ? "Lancia un incantesimo" : "Lancia un incantesimo contro" + su;
+				return conBersaglio("AZIONE_INCANTESIMO", su);
 			case DARDO_ARCANO:
-				return bersaglio == null ? "Lancia il Dardo Arcano" : "Lancia il Dardo Arcano contro" + su;
+				return conBersaglio("AZIONE_DARDO_ARCANO", su);
 			case MARTELLO_SACRO:
-				return bersaglio == null ? "Abbatte il Martello sacro" : "Abbatte il Martello sacro su" + su;
+				return conBersaglio("AZIONE_MARTELLO_SACRO", su);
 			case ATTACCO_ALLE_SPALLE:
-				return bersaglio == null ? "Attacca alle spalle" : "Attacca alle spalle" + su;
+				return conBersaglio("AZIONE_ATTACCO_ALLE_SPALLE", su);
 			case RESURREZIONE:
-				return bersaglio == null ? "Lancia la Resurrezione" : "Resuscita" + su;
+				return conBersaglio("AZIONE_RESURREZIONE", su);
 			case ALBA_SACRA:
-				return "Invoca l'Alba Sacra";
+				return TestiDellaUI.get("AZIONE_ALBA_SACRA");
 			case LUCE_DIVINA:
-				return bersaglio == null ? "Invoca la Luce Divina" : "Invoca la Luce Divina contro" + su;
+				return conBersaglio("AZIONE_LUCE_DIVINA", su);
 			case CANTO_CURATIVO:
-				return bersaglio == null ? "Intona il Canto Curativo" : "Intona il Canto Curativo per" + su;
+				return conBersaglio("AZIONE_CANTO_CURATIVO", su);
 			case CANTO_IPNOTICO:
-				return "Intona il Canto Ipnotico";
+				return TestiDellaUI.get("AZIONE_CANTO_IPNOTICO");
 			case CANTO_DI_VALORE:
-				return "Intona il Canto di Valore";
+				return TestiDellaUI.get("AZIONE_CANTO_DI_VALORE");
 			case URLO_DELLA_BANSHEE:
-				return "Lancia l'Urlo della Banshee";
+				return TestiDellaUI.get("AZIONE_URLO_DELLA_BANSHEE");
 			case SCACCIARE_I_NON_MORTI:
-				return "Scaccia i non morti";
+				return TestiDellaUI.get("AZIONE_SCACCIARE_I_NON_MORTI");
 			case IMPOSIZIONE_DELLE_MANI:
-				return bersaglio == null ? "Impone le mani" : "Impone le mani su" + su;
+				return conBersaglio("AZIONE_IMPOSIZIONE_DELLE_MANI", su);
 			case RADICI:
-				return "Fa spuntare le radici";
+				return TestiDellaUI.get("AZIONE_RADICI");
 			case SCIAME:
-				return "Evoca lo sciame";
+				return TestiDellaUI.get("AZIONE_SCIAME");
 			case PELLE_DI_CORTECCIA:
-				return "Evoca la pelle di corteccia";
+				return TestiDellaUI.get("AZIONE_PELLE_DI_CORTECCIA");
 			case RIGENERAZIONE:
-				return bersaglio == null ? "Invoca la rigenerazione" : "Fa rigenerare" + su;
+				return conBersaglio("AZIONE_RIGENERAZIONE", su);
 			case POZIONE_SALUTE:
 			case POZIONE_SALUTE_GRANDE:
 			case POZIONE_MAGIA:
 			case POZIONE_MAGIA_GRANDE:
 			case POZIONE_PANACEA:
-				return (bersaglio == null || bersaglio == attore ? "Beve una " : "Dà a" + su + " una ") + azione.getDescrizione();
+				return bersaglio == null || bersaglio == attore
+						? TestiDellaUI.get("AZIONE_BEVE_POZIONE", azione.getDescrizione())
+						: TestiDellaUI.get("AZIONE_DA_POZIONE", su, azione.getDescrizione());
 			case CAMBIA_ARMA:
-				return "Cambia arma";
+				return TestiDellaUI.get("AZIONE_CAMBIA_ARMA");
 			default:
 				// Gli incantesimi di una classe precisa: "Lancia Fulmine contro la viverna"
-				return "Lancia " + azione.getDescrizione() + (bersaglio == null ? "" : " contro" + su);
+				return bersaglio == null ? TestiDellaUI.get("AZIONE_LANCIA", azione.getDescrizione())
+						: TestiDellaUI.get("AZIONE_LANCIA_SU", azione.getDescrizione(), su);
 		}
+	}
+
+	// La frase di quell'azione: con il bersaglio ({0}, già con l'articolo) se c'è, senza altrimenti (chiave con _SU)
+	private static String conBersaglio(String chiave, String bersaglio) {
+		return bersaglio == null ? TestiDellaUI.get(chiave) : TestiDellaUI.get(chiave + "_SU", bersaglio);
 	}
 
 	/**
 	 * Quando non c'è una decisione della tattica (un'azione fuori dalla tattica): attacca il bersaglio, se c'è.
 	 */
 	static String predefinito(VistaPersonaggio bersaglio) {
-		return bersaglio == null ? "Agisce" : "Attacca " + nome(bersaglio);
+		return bersaglio == null ? TestiDellaUI.get("AZIONE_AGISCE") : TestiDellaUI.get("AZIONE_ATTACCO_SU", nome(bersaglio));
 	}
 
 	private static String nome(VistaPersonaggio personaggio) {

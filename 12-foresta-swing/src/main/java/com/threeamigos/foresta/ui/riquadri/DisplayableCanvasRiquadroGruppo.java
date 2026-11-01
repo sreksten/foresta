@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * Il riquadro con lo stato dei personaggi del gruppo: nome, salute, magia e le altre statistiche. Si aggiorna ascoltando gli eventi di variazione.
@@ -115,7 +116,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 	 */
 	public void disegnaStatus(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
-		IntestazioneRiquadro.disegna(graphics, "Gruppo", topLeftX, topLeftY, ImageCache.corniceGrande.getWidth());
+		IntestazioneRiquadro.disegna(graphics, TestiDellaUI.get("RIQUADRO_GRUPPO"), topLeftX, topLeftY, ImageCache.corniceGrande.getWidth());
 
 		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
 		int locXOffset = areaLista.x;
@@ -208,9 +209,9 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 			if (!ospite.isVivo()) {
 				stato = ospite.getCausaTrapasso();
 			} else if (g.isOspiteVulnerabile(ospite)) {
-				stato = "Ospite, salute " + ospite.getSalute() + "/" + ospite.getSaluteMassima();
+				stato = TestiDellaUI.get("OSPITE_SALUTE", ospite.getSalute(), ospite.getSaluteMassima());
 			} else {
-				stato = "Ospite del gruppo";
+				stato = TestiDellaUI.get("OSPITE_DEL_GRUPPO");
 			}
 			graphics.drawImage(ImageCache.get(stato, fontMedium, DoomdarkColorModel.Color.DARK_GRAY, innerWidth), locXOffset, locYOffset, null);
 		}
