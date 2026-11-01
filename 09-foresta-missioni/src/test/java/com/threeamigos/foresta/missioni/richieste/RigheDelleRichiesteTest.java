@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class RigheDelleRichiesteTest {
 
-    private static final class Formato {
+    static final class Formato {
         final Supplier<String> riga;
         final Function<String, Object> lettore;
 
@@ -34,7 +34,7 @@ class RigheDelleRichiesteTest {
         return () -> ProduttoreDiMissioniCasuale.rigaDiMissioni(nome);
     }
 
-    private static Map<String, Formato> formati() {
+    static Map<String, Formato> formati() {
         Map<String, Formato> formati = new LinkedHashMap<>();
         formati.put("INCARICO_DI_COMBATTIMENTO", new Formato(produzione("INCARICO_DI_COMBATTIMENTO"), CombattimentoRichiesto::da));
         formati.put("COLPO", new Formato(produzione("COLPO"), ColpoRichiesto::da));
