@@ -69,13 +69,13 @@ Ogni passo compila e ha i test verdi; la dimensione è S (qualche ora), M (una s
    - [ ] chi traduce: io propongo una bozza per ogni file e tu rivedi, oppure l'inverso;
    - [ ] conferma del disegno a tre strati e della lingua legata alla partita.
 1. **Infrastruttura** (S/M)
-   - [ ] `Testi` cerca per catena di lingue (`en-GB` → `en` → `it`) e non solo per lingua e italiano; oggi `impostaLingua` mette tutto in minuscolo e conosce un solo livello;
-   - [ ] argomento `LINGUA=<codice>` in `Main` (e `Locale.getDefault()` come predefinito sul telefono); la lingua è un campo di `ForestaUI`, non uno statico mutabile qua e là;
-   - [ ] `Testi.formatta(file, chiave, valori…)`: sostituzione di `{0}`, `{1}` senza `MessageFormat` (che dipende dal `Locale`), usata anche da `TestiDellaUI` e `TestoTattica`, che oggi la rifanno a mano;
-   - [ ] estensione di JUnit che blocca la lingua su "it" (e la ripristina) per i test che aspettano frasi italiane;
-   - [ ] test di completezza: ogni chiave di ogni `_it.properties` ha la sua in `_en` e gli stessi segnaposto; ogni grammatica si carica e produce un testo;
-   - [ ] `TestiConSoloCaratteriDelFontTest` esteso ai file in inglese;
-   - [ ] **test del contatore** `ConvenzioniDiLocalizzazioneTest` (come `ConvenzioniDiPortabilitaTest`): conta le stringhe italiane nel codice con la scansione di cui sopra e confronta con un numero scritto in un file; chi ne toglie, abbassa il numero.
+   - [x] `Testi` cerca per catena di lingue (`en-GB` → `en` → `it`; file `_en_GB`, `_en`, `_it`); `impostaLingua` accetta `en-GB`, `en_gb`, `EN`; test in `TestiTest`;
+   - [x] argomento `LINGUA=<codice>` in `Main` (sul desktop il predefinito resta l'italiano; sul telefono la piattaforma passerà la lingua del dispositivo). Resta lo statico di `Testi`: la lingua legata alla partita è il passo 11;
+   - [x] `Testi.formatta(file, chiave, valori…)` e `Testi.sostituisci(modello, valori…)`: sostituzione di `{0}`, `{1}` senza `MessageFormat` (che dipende dal `Locale` e vuole gli apostrofi raddoppiati), ora usata da `TestiDellaUI` e `TestoTattica`;
+   - [ ] estensione di JUnit che blocca la lingua su "it" (e la ripristina) per i test che aspettano frasi italiane — rimandata: oggi i test non cambiano la lingua se non per ripristinarla, serve quando i primi file `_en` esistono e un test lascia la lingua impostata;
+   - [x] test di completezza (`ConvenzioniDiLocalizzazioneTest`): un file di un'altra lingua non ha chiavi che l'italiano non ha e porta gli stessi segnaposto. Ancora da fare, a fine lavoro (passo 12): ogni chiave italiana ha la sua traduzione; ogni grammatica si carica e produce un testo;
+   - [x] `TestiConSoloCaratteriDelFontTest` legge già ogni `.properties` e `.txt` di ogni modulo, quindi copre da solo i file in qualunque lingua;
+   - [x] **test del contatore** (stesso `ConvenzioniDiLocalizzazioneTest`): conta per modulo le stringhe italiane in `src/main` (almeno due parole italiane comuni o una lettera accentata; esclusi commenti, `Logger.log`, eccezioni, `assert` e gli strumenti di sviluppo) e le confronta con `localizzazione_baseline.properties` (13-foresta-app-swing, test). Misura più severa di quella della prima analisi: **circa 900 stringhe** (`09-foresta-missioni` 447, `12-foresta-motore` 104, `12-foresta-swing` 85, `08-foresta-tattiche` 72, `05-foresta-personaggi` 35, `07-foresta-intermezzi` 33, `07-foresta-poteri` 28, …); chi ne sposta nei file abbassa il numero.
 2. **Tradurre ciò che è già in file** (M) — il primo risultato visibile
    - [ ] i 29 `_it.properties` hanno il loro `_en`;
    - [ ] la UI già in `ui_it` e `testo_tattica`;
@@ -105,6 +105,15 @@ Ogni passo compila e ha i test verdi; la dimensione è S (qualche ora), M (una s
     - [ ] la lingua nella testata, ripristinata al caricamento, scelta alla nuova partita; test.
 12. **Passata finale** (M)
     - [ ] partita completa in inglese, controllo degli spazi (le righe inglesi sono più corte, ma i nomi delle classi no), ortografia, e togliere il ripiego sull'italiano dal test di completezza.
+
+#### File da ricontrollare
+
+Fatti in autonomia il 2026-11-01 (passo 1 e storia); nessun testo è stato tradotto.
+- `01-foresta-testi/.../testi/Testi.java`: la catena di lingue (`catena`, `impostaLingua`), `formatta` e `sostituisci`; con `TestiTest` e i file di prova `testi_di_prova_zz*.properties`. Da guardare: `impostaLingua("zz_gb")` dà `zz-GB` e i file si chiamano `_zz_GB`.
+- `13-foresta-app-swing/.../ConvenzioniDiLocalizzazioneTest.java` e `localizzazione_baseline.properties`: il riconoscitore di stringhe italiane è euristico (elenco di parole comuni in `PAROLE`); se conta troppo o troppo poco si ritocca lì.
+- `13-foresta-app-swing/.../Main.java`: argomento `LINGUA=`.
+- `12-foresta-swing/.../TestiDellaUI.java` e `08-foresta-tattiche/.../TestoTattica.java`: ora delegano a `Testi.formatta` (comportamento invariato).
+- `12-foresta-motore/.../Racconto.java` e `storia_it.properties` (già committati): la storia.
 
 **Rischi.** L'articolo inglese "a/an" dipende dal suono ("a unicorn", "an hour"): serve una regola con un elenco di eccezioni nel file dei testi. Il passo 3 tocca più di cento file: è meglio farlo a moduli, con l'italiano invariato a ogni commit. Le grammatiche scherzose in italiano ("Il Cinghiale Vegano", i nani che protestano) non si traducono parola per parola: si adattano.
 

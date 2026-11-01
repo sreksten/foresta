@@ -18,10 +18,6 @@ public final class TestiDellaUI {
 	 * l'errore si nota subito.
 	 */
 	public static String get(String chiave, Object... valori) {
-		String testo = Testi.get(FILE, chiave).orElse(chiave);
-		for (int i = 0; i < valori.length; i++) {
-			testo = testo.replace("{" + i + "}", String.valueOf(valori[i]));
-		}
-		return testo;
+		return Testi.formatta(FILE, chiave, valori);
 	}
 }

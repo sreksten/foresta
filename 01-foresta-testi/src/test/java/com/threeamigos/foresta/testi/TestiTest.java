@@ -108,4 +108,23 @@ class TestiTest {
 		assertTrue(errore.getMessage().contains("note_rotte"), errore.getMessage());
 		assertTrue(errore.getCause() instanceof IOException);
 	}
+
+	@Test
+	void laRegioneRipiegaSullaLinguaPoiSuItaliano() {
+		Testi.impostaLingua("zz_gb");
+		assertEquals("zz-GB", Testi.getLingua());
+		assertEquals("Colour", Testi.get("testi_di_prova", "COLORE").get());
+		assertEquals("Hello", Testi.get("testi_di_prova", "SALUTO").get());
+		assertEquals("Solo italiano", Testi.get("testi_di_prova", "SOLO_IN_ITALIANO").get());
+		Testi.impostaLingua("zz");
+		assertEquals("Color", Testi.get("testi_di_prova", "COLORE").get());
+	}
+
+	@Test
+	void formattaSostituisceISegnapostoSenzaMessageFormat() {
+		Testi.impostaLingua("zz");
+		assertEquals("Ciao Ugo, hai 7 monete", Testi.formatta("testi_di_prova", "SALUTO_A", "Ugo", 7));
+		assertEquals("l'oro di Ugo", Testi.formatta("testi_di_prova", "APOSTROFO", "Ugo"));
+		assertEquals("CHIAVE.MANCANTE", Testi.formatta("testi_di_prova", "CHIAVE.MANCANTE", "x"));
+	}
 }

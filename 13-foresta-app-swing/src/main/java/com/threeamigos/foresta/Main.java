@@ -9,6 +9,7 @@ import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.strumenti.ModalitaDiProva;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.salvataggi.GestoreBestiarioSuFile;
 import com.threeamigos.foresta.salvataggi.GestorePunteggiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreSalvataggiSuFile;
@@ -34,7 +35,7 @@ import java.util.Locale;
  * la finestra e li lascia dialogare solo tramite eventi.
  * <p>
  * Argomenti riconosciuti (senza distinzione fra maiuscole e minuscole): {@code ORIZZONTALE}, {@code VERTICALE},
- * {@code TUTTOSCHERMO}, {@code SALTALOGO}, {@code BARRACLASSICA}, {@code JOYSTICK_VIRTUALE}, {@code ZOOM=<numero>}, {@code MODALITA_DI_PROVA}.
+ * {@code TUTTOSCHERMO}, {@code SALTALOGO}, {@code BARRACLASSICA}, {@code JOYSTICK_VIRTUALE}, {@code LINGUA=<codice>} ({@code it}, {@code en}, {@code en-GB}), {@code ZOOM=<numero>}, {@code MODALITA_DI_PROVA}.
  */
 public class Main {
 
@@ -66,6 +67,8 @@ public class Main {
                 barraDock = false;
             } else if (arg.equalsIgnoreCase("JOYSTICK_VIRTUALE")) {
                 joystickVirtuale = true;
+            } else if (arg.toUpperCase(Locale.ROOT).startsWith("LINGUA=")) {
+                Testi.impostaLingua(arg.substring("LINGUA=".length()));
             } else if (arg.toUpperCase(Locale.ROOT).startsWith("ZOOM=")) {
                 try {
                     LivelloDiZoom.imposta(Double.parseDouble(arg.substring("ZOOM=".length())));

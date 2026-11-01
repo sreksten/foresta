@@ -27,11 +27,7 @@ public final class TestoTattica {
 	 * Il testo con quella chiave, con i valori al posto di {0}, {1}...; se la chiave manca, la chiave stessa, così l'errore si nota subito.
 	 */
 	public static String testo(String chiave, Object... valori) {
-		String testo = Testi.get(FILE, chiave).orElse(chiave);
-		for (int i = 0; i < valori.length; i++) {
-			testo = testo.replace("{" + i + "}", String.valueOf(valori[i]));
-		}
-		return testo;
+		return Testi.formatta(FILE, chiave, valori);
 	}
 
 	// Il testo di un valore di un enumerato: la chiave è il gruppo e il nome della costante (spiega.rosa.SE_STESSO)

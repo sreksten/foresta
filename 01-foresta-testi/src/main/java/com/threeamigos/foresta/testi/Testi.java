@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Properties;
@@ -23,9 +25,10 @@ import java.util.concurrent.ConcurrentMap;
  * ({@code tipo_attributo_it.properties}), e la chiave è {@code COSTANTE.VOCE} ({@code FORZA.NOME}). Così un'enum non ha
  * nel codice nessun testo da tradurre.</li>
  * </ul>
- * La lingua è l'italiano finché la piattaforma non ne sceglie un'altra con {@link #impostaLingua(String)}. Un testo che
- * manca nella lingua scelta si cerca in italiano, la lingua in cui il gioco è scritto; in questo modo una traduzione
- * incompleta non lascia buchi.
+ * La lingua è l'italiano finché la piattaforma non ne sceglie un'altra con {@link #impostaLingua(String)}. Può avere una
+ * regione ({@code en-GB}): il testo si cerca allora nel file della regione ({@code _en_GB}), poi in quello della lingua
+ * ({@code _en}) e infine in italiano, la lingua in cui il gioco è scritto; così il file di una regione contiene solo ciò
+ * che differisce dalla lingua ("armour", "colour"), e una traduzione incompleta non lascia buchi.
  *
  * @author Stefano Reksten
  */
@@ -36,8 +39,10 @@ public final class Testi {
 	 */
 	public static final String LINGUA_PREDEFINITA = "it";
 
-	// La lingua scelta dalla piattaforma; volatile perché si legge da più thread
+	// La lingua scelta dalla piattaforma, come "en-GB"; volatile perché si legge da più thread
 	private static volatile String lingua = LINGUA_PREDEFINITA;
+	// I suffissi dei file da cercare, dal più specifico al più generico ("en_GB", "en", "it"); si ricalcola con la lingua
+	private static volatile String[] catena = {LINGUA_PREDEFINITA};
 
 	// Per nome del file e lingua; una lingua senza file vale un elenco vuoto
 	private static final ConcurrentMap<String, Properties> CACHE = new ConcurrentHashMap<>();
@@ -47,14 +52,35 @@ public final class Testi {
 	private static final ConcurrentMap<Class<?>, ConcurrentMap<String, Properties>> CACHE_DELLE_ENUM = new ConcurrentHashMap<>();
 
 	/**
-	 * Sceglie la lingua dei testi, con il suo codice a due lettere ("it", "en"); con null o vuoto torna l'italiano.
+	 * Sceglie la lingua dei testi, con il suo codice a due lettere ("it", "en") e, se serve, la regione ("en-GB", "en_gb"
+	 * vale lo stesso); con null o vuoto torna l'italiano.
 	 */
 	public static void impostaLingua(String codice) {
-		lingua = codice == null || codice.trim().isEmpty() ? LINGUA_PREDEFINITA : codice.trim().toLowerCase(Locale.ROOT);
+		String pulito = codice == null ? "" : codice.trim().replace('_', '-');
+		if (pulito.isEmpty()) {
+			lingua = LINGUA_PREDEFINITA;
+			catena = new String[] {LINGUA_PREDEFINITA};
+			return;
+		}
+		String[] parti = pulito.split("-", 2);
+		String soloLingua = parti[0].toLowerCase(Locale.ROOT);
+		List<String> suffissi = new ArrayList<>();
+		if (parti.length > 1 && !parti[1].isEmpty()) {
+			String regione = parti[1].toUpperCase(Locale.ROOT);
+			suffissi.add(soloLingua + "_" + regione);
+			lingua = soloLingua + "-" + regione;
+		} else {
+			lingua = soloLingua;
+		}
+		suffissi.add(soloLingua);
+		if (!LINGUA_PREDEFINITA.equals(soloLingua)) {
+			suffissi.add(LINGUA_PREDEFINITA);
+		}
+		catena = suffissi.toArray(new String[0]);
 	}
 
 	/**
-	 * Il codice della lingua in uso ("it" finché la piattaforma non ne sceglie un'altra).
+	 * Il codice della lingua in uso ("it" finché la piattaforma non ne sceglie un'altra), con la regione se c'è ("en-GB").
 	 */
 	public static String getLingua() {
 		return lingua;
@@ -65,11 +91,33 @@ public final class Testi {
 	 * in italiano.
 	 */
 	public static Optional<String> get(String file, String chiave) {
-		String testo = carica(file, lingua).getProperty(chiave);
-		if (testo == null && !LINGUA_PREDEFINITA.equals(lingua)) {
-			testo = carica(file, LINGUA_PREDEFINITA).getProperty(chiave);
+		for (String suffisso : catena) {
+			String testo = carica(file, suffisso).getProperty(chiave);
+			if (testo != null) {
+				return Optional.of(testo);
+			}
 		}
-		return Optional.ofNullable(testo);
+		return Optional.empty();
+	}
+
+	/**
+	 * Come {@link #get(String, String)}, con i valori al posto di {@code {0}}, {@code {1}}... Non usa {@code MessageFormat},
+	 * che dipende dal {@code Locale} del dispositivo e chiede di raddoppiare gli apostrofi (in italiano e in francese sono
+	 * ovunque). Se la chiave manca, la chiave stessa, così l'errore si nota subito.
+	 */
+	public static String formatta(String file, String chiave, Object... valori) {
+		return sostituisci(get(file, chiave).orElse(chiave), valori);
+	}
+
+	/**
+	 * Il modello con {@code {0}}, {@code {1}}... sostituiti dai valori; un segnaposto senza valore resta com'è.
+	 */
+	public static String sostituisci(String modello, Object... valori) {
+		String testo = modello;
+		for (int i = 0; i < valori.length; i++) {
+			testo = testo.replace("{" + i + "}", String.valueOf(valori[i]));
+		}
+		return testo;
 	}
 
 	/**
@@ -81,12 +129,13 @@ public final class Testi {
 		Class<?> classe = costante.getDeclaringClass();
 		ConcurrentMap<String, Properties> perLingua = CACHE_DELLE_ENUM.computeIfAbsent(classe, k -> new ConcurrentHashMap<>());
 		String chiave = costante.name() + '.' + voce;
-		String codice = lingua;
-		String testo = proprietaDellEnum(perLingua, classe, codice).getProperty(chiave);
-		if (testo == null && !LINGUA_PREDEFINITA.equals(codice)) {
-			testo = proprietaDellEnum(perLingua, classe, LINGUA_PREDEFINITA).getProperty(chiave);
+		for (String suffisso : catena) {
+			String testo = proprietaDellEnum(perLingua, classe, suffisso).getProperty(chiave);
+			if (testo != null) {
+				return Optional.of(testo);
+			}
 		}
-		return Optional.ofNullable(testo);
+		return Optional.empty();
 	}
 
 	/**
