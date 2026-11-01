@@ -6,6 +6,7 @@ import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoDanno;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'abilità innata di Chierico e Chierica: un colpo di martello benedetto su un solo avversario, di danno SACRO (il doppio contro i non morti, per regola di
@@ -42,7 +43,8 @@ public class MartelloSacro extends AbilitaDiDanno {
 	}
 
 	@Override
-	protected String getAnnuncio(List<Personaggio> bersagli) {
-		return "abbatte il martello sacro su " + bersagli.get(0).getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + ".";
+	protected String getAnnuncio(Personaggio utilizzatore, List<Personaggio> bersagli) {
+		return Testi.formatta("messaggi_poteri", "MartelloSacro.annuncio", chi(utilizzatore),
+				bersagli.get(0).getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 	}
 }

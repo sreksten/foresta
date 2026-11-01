@@ -13,6 +13,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 
 import java.util.Optional;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'abilità del Druido che fa rigenerare un alleato: gli dà RIGENERAZIONE per ABILITA_RIGENERAZIONE_DURATA turni, e a ogni turno guarisce di
@@ -56,7 +57,7 @@ public class Rigenerazione implements Abilita {
 		String nome = utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		if (!ferito.isPresent()) {
-			BusEventi.pubblica(new NotificaTestoFrase(nome + " invoca la rigenerazione, ma nessuno ne ha bisogno."));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Rigenerazione.1", nome)));
 			return false;
 		}
 		Personaggio bersaglio = ferito.get();

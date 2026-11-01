@@ -6,6 +6,7 @@ import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'abilità del Druido che fa spuntare radici contro gli avversari: danno di Terra, che immobilizza o acceca (vedi TipoDanno.TERRA) (vedi {@link AbilitaDiDanno}): danni e costo in ABILITA_RADICI_*.
@@ -37,7 +38,7 @@ public class Radici extends AbilitaDiDanno {
 	}
 
 	@Override
-	protected String getAnnuncio(List<Personaggio> bersagli) {
-		return "fa spuntare delle radici contro gli avversari.";
+	protected String getAnnuncio(Personaggio utilizzatore, List<Personaggio> bersagli) {
+		return Testi.formatta("messaggi_poteri", "Radici.annuncio", chi(utilizzatore));
 	}
 }

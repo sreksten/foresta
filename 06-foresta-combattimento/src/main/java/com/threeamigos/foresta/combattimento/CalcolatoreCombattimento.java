@@ -29,6 +29,7 @@ import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Le regole del combattimento: se un colpo va a segno, quanto danno fa e quali stati alterati provoca, e le stime che le tattiche usano per
@@ -399,7 +400,7 @@ public class CalcolatoreCombattimento {
         boolean immuneATipoDannoBase = difensore.isImmuneATipoDanno(tipoDanno);
         dannoRisultante.addReazioneDiClasse(tipoDanno, difensore.getMoltiplicatoreDannoSubito(tipoDanno));
         if (immuneATipoDannoBase) {
-            BusEventi.pubblica(new InternoMessaggio(difensore.getNome() + " è immune al tipo di danno " + tipoDanno));
+            BusEventi.pubblica(new InternoMessaggio(Testi.formatta("messaggi_combattimento", "IMMUNE_AL_DANNO", difensore.getNome(), tipoDanno.getNome())));
         }
 
         // 1. CALCOLO STATISTICHE EFFETTIVE

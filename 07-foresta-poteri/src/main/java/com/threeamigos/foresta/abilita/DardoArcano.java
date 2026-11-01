@@ -7,6 +7,7 @@ import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'abilità innata di Mago ed Elfo: un dardo di energia ARCANA su un solo bersaglio, che costa Magia ma non consuma pergamene, così chi vive di
@@ -59,8 +60,8 @@ public class DardoArcano extends AbilitaDiDanno {
 	}
 
 	@Override
-	protected String getAnnuncio(List<Personaggio> bersagli) {
-		return "scaglia un dardo arcano contro "
-				+ bersagli.get(0).getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + ".";
+	protected String getAnnuncio(Personaggio utilizzatore, List<Personaggio> bersagli) {
+		return Testi.formatta("messaggi_poteri", "DardoArcano.annuncio", chi(utilizzatore),
+				bersagli.get(0).getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 	}
 }

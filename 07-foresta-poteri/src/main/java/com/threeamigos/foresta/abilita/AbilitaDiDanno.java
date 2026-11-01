@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Un'abilità innata che fa danno (le radici e lo sciame del Druido, il dardo arcano di Mago ed Elfo): è essa stessa l'attacco magico, un
@@ -60,11 +61,18 @@ public abstract class AbilitaDiDanno implements Abilita, Arma {
 	}
 
 	/**
-	 * La frase che annuncia l'abilità, dopo il nome di chi la usa.
+	 * La frase che annuncia l'abilità (da {@code messaggi_poteri_<lingua>.properties}), col nome di chi la usa all'inizio.
 	 *
 	 * @param bersagli gli avversari che colpirà, almeno uno
 	 */
-	protected abstract String getAnnuncio(List<Personaggio> bersagli);
+	protected abstract String getAnnuncio(Personaggio utilizzatore, List<Personaggio> bersagli);
+
+	/**
+	 * Il nome con l'articolo e l'iniziale maiuscola, per aprire una frase.
+	 */
+	protected static String chi(Personaggio personaggio) {
+		return personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+	}
 
 	@Override
 	public int getLivello() {
@@ -112,8 +120,7 @@ public abstract class AbilitaDiDanno implements Abilita, Arma {
 			bersagli = bersagli.subList(0, massimo);
 		}
 		AnnuncioDellAzione.azione(utilizzatore, bersagli.size() == 1 ? bersagli.get(0) : null, getTipo().getTipoAzione());
-		BusEventi.pubblica(new NotificaTestoFrase(utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " " + getAnnuncio(bersagli)));
+		BusEventi.pubblica(new NotificaTestoFrase(getAnnuncio(utilizzatore, bersagli)));
 		// Il danno si ripartisce per posizione, come per gli incantesimi a più bersagli
 		for (int posizione = 0; posizione < bersagli.size(); posizione++) {
 			colpisci(utilizzatore, bersagli.get(posizione), CalcolatoreCombattimento.quotaDelDannoPerPosizione(posizione));

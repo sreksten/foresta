@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * I modificatori di attributo di un personaggio (benedizioni, pozioni, effetti delle armi...): li aggiunge, li fa scorrere a turni e a ore, li
@@ -145,9 +146,7 @@ final class ModificatoriTemporanei {
 			BusEventi.pubblica(new NotificaTestoFrase(nome + ": " + effetto + " " + TestoDeiModificatori.durata(modificatore) + "."));
 		} else if (tipo == NotificaVariazioneModificatorePersonaggio.TipoVariazione.RIMOZIONE) {
 			// "Per il guerriero" ma "Per Aldo": l'iniziale minuscola è solo dell'articolo, un nome proprio resta com'è
-			BusEventi.pubblica(new NotificaTestoFrase("Per "
-					+ p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
-					+ " non vale più: " + effetto + "."));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "MODIFICATORE_FINITO", p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE), effetto)));
 		}
 	}
 

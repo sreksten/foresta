@@ -16,6 +16,7 @@ import com.threeamigos.foresta.tipi.TipoCanto;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il canto ipnotico potenziato (vedi {@link CantoIpnotico}), che il bardo della locanda insegna al gruppo dopo il viaggio
@@ -54,8 +55,8 @@ public class UrloDellaBanshee implements Canto {
 
 		AnnuncioDellAzione.azione(cantore, bersagli.size() == 1 ? bersagli.get(0) : null, TipoAzione.URLO_DELLA_BANSHEE);
 		cantore.subMagia(getCostoLancio());
-		BusEventi.pubblica(new NotificaTestoFrase(cantore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " lancia l'Urlo della Banshee."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "UrloDellaBanshee.1", cantore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		for (Personaggio avversario : bersagli) {
 			if (Dado.tira(100) <= probabilitaDiCedere(cantore, avversario)) {
 				for (TipoEffettoDiStato effetto : new TipoEffettoDiStato[]{TipoEffettoDiStato.SPAVENTATO, TipoEffettoDiStato.CONFUSO}) {

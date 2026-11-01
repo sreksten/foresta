@@ -9,6 +9,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * La resurrezione: un incantesimo benefico su un solo personaggio del gruppo. Se è caduto, risorge; se è ancora vivo, la sua salute torna al massimo e
@@ -37,19 +38,16 @@ public class Resurrezione implements Incantesimo {
 		String nome = personaggioBersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 
-		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " formula un " + getClasse().getNomeSingolare() +
-				" su " + nome + "."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Resurrezione.1", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA), getClasse().getNomeSingolare(), nome)));
 
 		if (personaggioBersaglio.isVivo()) {
-            String notifica = nome + " era già viv" + personaggioBersaglio.getLetteraFinaleAttributo() +
-                    ", per cui la sua salute è stata completamente reintegrata.";
+            String notifica = Testi.formatta("messaggi_poteri", personaggioBersaglio.getSesso() == Personaggio.Sesso.MASCHIO ? "Resurrezione.giaVivo.M" : "Resurrezione.giaVivo.F", nome);
 			BusEventi.pubblica(new NotificaTestoFrase(notifica));
 			personaggioBersaglio.addSalute(personaggioBersaglio.getSaluteMassima());
 			personaggioBersaglio.subStanchezza(CostantiPersonaggi.MAX_STANCHEZZA);
 		} else {
-            String notifica = nome + " è risort" + personaggioBersaglio.getLetteraFinaleAttributo() +
-                    " dalle proprie ceneri.";
+            String notifica = Testi.formatta("messaggi_poteri", personaggioBersaglio.getSesso() == Personaggio.Sesso.MASCHIO ? "Resurrezione.risorto.M" : "Resurrezione.risorto.F", nome);
 			BusEventi.pubblica(new NotificaTestoFrase(notifica));
 			personaggioBersaglio.resuscita();
 		}

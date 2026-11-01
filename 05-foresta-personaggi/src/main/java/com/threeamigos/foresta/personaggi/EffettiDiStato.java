@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Gli effetti di stato di un personaggio (veleno, sonno, berserk, rigenerazione...) e le ricariche delle sue abilità: li aggiunge e li rinforza,
@@ -49,8 +50,7 @@ final class EffettiDiStato {
 			// Il bestiario si ricorda dell'immunità, se è della classe (non quella di un solo personaggio)
 			BusEventi.pubblica(new InternoCaratteristicaOsservata(p.getClasse(), CaratteristicaDiClasse.Genere.EFFETTO, tipoEffettoDiStato));
 			BusEventi.pubblica(new InternoMessaggio(
-					p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-							" è immune a " + tipoEffettoDiStato.getDescrizione() + "."));
+					Testi.formatta("messaggi_personaggi", "IMMUNE_ALL_EFFETTO", p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA), tipoEffettoDiStato.getDescrizione())));
 			return;
 		}
 		if (durata <= 0) {

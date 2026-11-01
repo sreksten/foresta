@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.modificatori;
 
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.BersaglioModificatore;
 
 import java.util.Locale;
@@ -29,7 +30,7 @@ public final class TestoDeiModificatori {
 				testo = String.format(Locale.ROOT, "%+d%%", valore);
 				break;
 			default:
-				testo = "porta a " + valore;
+				testo = testo("PORTA_A", valore);
 				break;
 		}
 		return modificatore.getTipoAttributo().getNome() + " " + testo;
@@ -47,7 +48,7 @@ public final class TestoDeiModificatori {
 			case VARIAZIONE_PERCENTUALE:
 				return String.format(Locale.ROOT, "%s %+d%%", nome, valore);
 			default:
-				return nome + " a " + valore;
+				return testo("BREVE_A", nome, valore);
 		}
 	}
 
@@ -58,12 +59,32 @@ public final class TestoDeiModificatori {
 		int durata = modificatore.getDurata();
 		switch (modificatore.getUnitaDurata()) {
 			case TURNI:
-				return "per " + durata + (durata == 1 ? " turno" : " turni");
+				return testo(durata == 1 ? "DURATA_TURNO" : "DURATA_TURNI", durata);
 			case LOCAZIONI:
-				return "per " + durata + (durata == 1 ? " locazione" : " locazioni");
+				return testo(durata == 1 ? "DURATA_LOCAZIONE" : "DURATA_LOCAZIONI", durata);
 			default:
 				return "";
 		}
+	}
+
+	/**
+	 * Quanto manca alla fine, per esempio "ancora 3 turni"; vuota se il modificatore è permanente.
+	 */
+	public static String durataResidua(ModificatoreAttributoMD modificatore) {
+		int durata = modificatore.getDurata();
+		switch (modificatore.getUnitaDurata()) {
+			case TURNI:
+				return testo(durata == 1 ? "RESIDUO_TURNO" : "RESIDUO_TURNI", durata);
+			case LOCAZIONI:
+				return testo(durata == 1 ? "RESIDUO_LOCAZIONE" : "RESIDUO_LOCAZIONI", durata);
+			default:
+				return "";
+		}
+	}
+
+	// Le parole stanno in testo_modificatori_<lingua>.properties
+	private static String testo(String chiave, Object... valori) {
+		return Testi.formatta("testo_modificatori", chiave, valori);
 	}
 
 	/**
@@ -72,7 +93,7 @@ public final class TestoDeiModificatori {
 	public static String completo(ModificatoreAttributoMD modificatore) {
 		StringBuilder sb = new StringBuilder(effetto(modificatore));
 		if (modificatore.getBersaglio() == BersaglioModificatore.BERSAGLIO) {
-			sb.append(" sul bersaglio");
+			sb.append(' ').append(testo("SUL_BERSAGLIO"));
 		}
 		if (modificatore.isTemporaneo()) {
 			sb.append(' ').append(durata(modificatore));

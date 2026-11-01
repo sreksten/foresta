@@ -16,6 +16,7 @@ import com.threeamigos.foresta.tipi.TipoCanto;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il canto che scuote il morale degli avversari: a caso {@code SPAVENTATO} o {@code CONFUSO} (lo stesso per tutti
@@ -68,14 +69,14 @@ public class CantoIpnotico implements Canto {
 
 		AnnuncioDellAzione.azione(cantore, bersagli.size() == 1 ? bersagli.get(0) : null, TipoAzione.CANTO_IPNOTICO);
 		cantore.subMagia(getCostoLancio());
-		BusEventi.pubblica(new NotificaTestoFrase(cantore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " intona un canto ipnotico."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "CantoIpnotico.1", cantore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		for (Personaggio avversario : bersagli) {
 			if (Dado.tira(100) <= probabilitaDiCedere(cantore, avversario)) {
 				avversario.addEffettoDiStato(effetto, CalcolatoreCombattimento.calcolaDurataStato(avversario, effetto), 0);
 			} else {
-				BusEventi.pubblica(new NotificaTestoFrase(avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-						Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " resiste al canto."));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "CantoIpnotico.2", avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+						Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 			}
 		}
 		return true;

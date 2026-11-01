@@ -16,6 +16,7 @@ import com.threeamigos.foresta.tipi.TipoAbilita;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'abilità del Chierico che spaventa i non morti: fino a NUMERO_BERSAGLI avversari non morti vivi (e non già spaventati) scelti a caso. Ognuno
@@ -62,8 +63,8 @@ public class ScacciareINonMorti implements Abilita {
 
 		AnnuncioDellAzione.azione(utilizzatore, bersagli.size() == 1 ? bersagli.get(0) : null, TipoAzione.SCACCIARE_I_NON_MORTI);
 		utilizzatore.subMagia(getCostoLancio());
-		BusEventi.pubblica(new NotificaTestoFrase(utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " leva il simbolo sacro contro i non morti."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "ScacciareINonMorti.1", utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		for (Personaggio avversario : bersagli) {
 			if (Dado.tira(100) <= probabilitaDiCedere(utilizzatore, avversario)) {
 				avversario.addEffettoDiStato(TipoEffettoDiStato.SPAVENTATO,

@@ -8,6 +8,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Spegne la magia di tutti gli avversari (incantesimo GLOBALE): a ognuno toglie punti di POTERE_MAGICO (INCANTESIMO_NEGA_MAGIA_POTERE_MAGICO)
@@ -40,12 +41,11 @@ public class NegaMagia extends IncantesimoMaleficoImpl implements IncantesimoGlo
 
 	@Override
 	protected void formulaGlobale(Personaggio formulante, Gruppo gruppoAvversario) {
-		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " spegne la magia del campo di battaglia: gli incantesimi degli avversari saranno più deboli."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "NegaMagia.1", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		for (Personaggio avversario : gruppoAvversario.getPersonaggiVivi()) {
 			if (avversario.isImmuneAIncantesimo(getClasse())) {
-				BusEventi.pubblica(new NotificaTestoFrase("La nega magia non ha effetto su "
-						+ avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + "."));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "NegaMagia.2", avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))));
 				continue;
 			}
 			avversario.addModificatore(new ModificatoreAttributoMD(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_FISSA,

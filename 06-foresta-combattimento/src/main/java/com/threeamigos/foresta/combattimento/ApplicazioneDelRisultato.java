@@ -21,6 +21,7 @@ import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
 
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Quel che succede a chi riceve il risultato di un colpo ({@link DannoRisultante}): gli si toglie la salute, gli si aggiungono gli stati
@@ -131,7 +132,7 @@ public final class ApplicazioneDelRisultato {
 			// A gruppo pieno il minion muore lo stesso, ma lo scheletro non ha posto
 			boolean cePosto = GruppoGiocatore.getIstanza().getNumeroPersonaggi() < CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_TOTALE;
 			if (bersaglio.isVivo()) {
-				bersaglio.muore(cePosto ? "è stato mietuto e si è risvegliato come scheletro" : "è stato mietuto");
+				bersaglio.muore(Testi.formatta("messaggi_combattimento", cePosto ? "MIETUTO_E_SCHELETRO" : "MIETUTO"));
 			}
 			GruppoAvversario.getIstanza().rimuoviPersonaggio(bersaglio);
 			if (cePosto) {

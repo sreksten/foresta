@@ -13,6 +13,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.EsitoAzione;
 import com.threeamigos.foresta.tipi.TipoAzione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il colpo di grazia: se va a segno su un bersaglio sotto un quarto della salute massima ({@link #puoUccidere}) gli toglie tutta la
@@ -66,13 +67,13 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 		String nomeBersaglio = bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 		StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
 		if (bersaglio.isImmuneAIncantesimo(getClasse())) {
-			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo non ha effetto su " + nomeBersaglio + "."));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Morte.1", nomeBersaglio)));
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.MORTE, EsitoAzione.IMMUNE);
 			return;
 		}
 		if (puoUccidere(bersaglio) && CalcolatoreCombattimento.colpisce(formulante, bersaglio, getTipoDanno().getCategoriaDanno())) {
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.MORTE, EsitoAzione.RIUSCITA);
-			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo ha ucciso " + nomeBersaglio + "."));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Morte.2", nomeBersaglio)));
 			// Tutta la salute rimasta: la morte passa da subSalute come per ogni altro colpo (causa, immortali)
 			bersaglio.subSalute(bersaglio.getSalute(), formulante, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
 		} else {
@@ -80,7 +81,7 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.MORTE, EsitoAzione.MANCATA);
 			BusEventi.pubblica(new NotificaColpoMancato(bersaglio));
 			String s = formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo non ha avuto successo e si è ritorto contro " + s + "."));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Morte.3", s)));
 			formulante.subSalute(formulante.getSalute() / 4, bersaglio, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
 		}
 	}

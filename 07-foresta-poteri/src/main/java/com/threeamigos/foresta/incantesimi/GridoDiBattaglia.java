@@ -14,6 +14,7 @@ import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Un grido di battaglia (incantesimo GLOBALE benefico): a ogni personaggio vivo del gruppo di chi lo lancia dà due modificatori temporanei,
@@ -61,8 +62,8 @@ public class GridoDiBattaglia implements IncantesimoGlobale {
 	 */
 	@Override
 	public void formula(Personaggio formulante, Personaggio personaggioBersaglio, Gruppo gruppoBersaglio) {
-		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " lancia un grido di battaglia: il gruppo si sente più coraggioso e valoroso."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "GridoDiBattaglia.1", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		for (Personaggio personaggio : gruppoBersaglio.getPersonaggiVivi()) {
 			personaggio.addModificatore(modificatore(TipoAttributo.CORAGGIO, getPuntiCoraggio()));
 			personaggio.addModificatore(modificatore(TipoAttributo.VALORE, getPuntiValore()));

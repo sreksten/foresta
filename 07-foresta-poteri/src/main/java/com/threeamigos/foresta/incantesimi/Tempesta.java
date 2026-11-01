@@ -12,6 +12,7 @@ import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Una tempesta di fulmini su tutto il campo di battaglia (incantesimo GLOBALE): un danno di Fulmine (INCANTESIMO_TEMPESTA_DANNI) a tutti gli avversari
@@ -39,8 +40,8 @@ public class Tempesta extends IncantesimoMaleficoImpl implements IncantesimoGlob
 
 	@Override
 	protected void formulaGlobale(Personaggio formulante, Gruppo gruppoAvversario) {
-		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " scatena una tempesta di fulmini: nessuno sul campo ne è al riparo."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Tempesta.1", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		// Si guardano gli elenchi com'erano all'inizio: chi cade per un fulmine non conta più
 		List<Personaggio> colpiti = new ArrayList<>(gruppoAvversario.getPersonaggiVivi());
 		colpiti.addAll(compagniDi(formulante));

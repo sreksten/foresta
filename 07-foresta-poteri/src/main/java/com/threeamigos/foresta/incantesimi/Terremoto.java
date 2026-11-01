@@ -13,6 +13,7 @@ import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il terreno trema sotto tutti gli avversari (incantesimo GLOBALE): un danno di Terra leggero (INCANTESIMO_TERREMOTO_DANNI) a ognuno, ciascuno con
@@ -40,8 +41,8 @@ public class Terremoto extends IncantesimoMaleficoImpl implements IncantesimoGlo
 
 	@Override
 	protected void formulaGlobale(Personaggio formulante, Gruppo gruppoAvversario) {
-		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " scuote il terreno: la terra trema sotto gli avversari."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Terremoto.1", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		// Si guarda l'elenco com'era all'inizio: chi cade per il colpo non conta più
 		List<Personaggio> colpiti = new ArrayList<>(gruppoAvversario.getPersonaggiVivi());
 		for (Personaggio avversario : colpiti) {

@@ -268,7 +268,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         fissaggio.ifPresent(f -> {
             ModificatoreAttributoMD modificatore = f.getModificatore();
             String da = f.getFonte().isEmpty() ? "" : TestiDellaUI.get("FONTE_DA", f.getFonte());
-            String durata = modificatore.isTemporaneo() ? " (" + TestoDeiModificatori.durata(modificatore).replaceFirst("^per ", "ancora ") + ")" : "";
+            String durata = modificatore.isTemporaneo() ? " (" + TestoDeiModificatori.durataResidua(modificatore) + ")" : "";
             nodo.creaNodo(
                     TestiDellaUI.get("FISSATO_A", (int) modificatore.getQuantita()), fontSmall, coloreCausa,
                     null, null, null,

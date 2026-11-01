@@ -12,6 +12,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 
 import java.util.Optional;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'abilità del Chierico che cura il personaggio più ferito del gruppo (il chierico compreso): circa ABILITA_IMPOSIZIONE_DELLE_MANI_BASE × √livello,
@@ -55,7 +56,7 @@ public class ImposizioneDelleMani implements Abilita {
 		String nome = utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		if (!ferito.isPresent()) {
-			BusEventi.pubblica(new NotificaTestoFrase(nome + " impone le mani, ma nessuno ha bisogno di cure."));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "ImposizioneDelleMani.1", nome)));
 			return false;
 		}
 		Personaggio bersaglio = ferito.get();
@@ -63,9 +64,7 @@ public class ImposizioneDelleMani implements Abilita {
 		int saluteInizio = bersaglio.getSalute();
 		bersaglio.addSalute(getCura());
 		utilizzatore.subMagia(getCostoLancio());
-		BusEventi.pubblica(new NotificaTestoFrase(nome + " impone le mani su "
-				+ bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
-				+ ": guarisce di " + (bersaglio.getSalute() - saluteInizio) + "."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "ImposizioneDelleMani.2", nome, bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE), (bersaglio.getSalute() - saluteInizio))));
 		return true;
 	}
 }

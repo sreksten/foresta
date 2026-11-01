@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * La vita e la magia di un personaggio che cambiano durante il gioco: le ferite (con la resa, il berserk e il racconto della morte), la morte e
@@ -58,8 +59,7 @@ final class SaluteEMorte {
 		md().set(TipoAttributo.SALUTE, 1);
 		p.setInPanchina(true);
 		String nome = p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		BusEventi.pubblica(new NotificaTestoFrase(nome + (p.appartieneAlGruppoDelGiocatore()
-				? " ammette la sconfitta e si fa da parte." : " abbassa le armi e si arrende.")));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", p.appartieneAlGruppoDelGiocatore() ? "RESA_DEL_GIOCATORE" : "RESA", nome)));
 		BusEventi.pubblica(new InternoPersonaggioArreso(p));
 	}
 
@@ -111,8 +111,7 @@ final class SaluteEMorte {
 		}
 		if (quantita <= 0) {
 			if (notificaFerite == Personaggio.NotificaFerite.SI) {
-				String sb = p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-						" non ha riportato danni dall'attacco " + avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) + '.';
+				String sb = Testi.formatta("messaggi_personaggi", "NESSUN_DANNO", p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA), avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA));
 				BusEventi.pubblica(new NotificaTestoFrase(sb));
 			}
 			return;
@@ -154,24 +153,20 @@ final class SaluteEMorte {
 					} else {
 						sb.append(md().getNome());
 					}
-					sb.append(" è mort");
-					sb.append(p.getLetteraFinaleAttributo());
-					sb.append(" per le ferite riportate.");
-					BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
+					BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", p.getSesso() == Personaggio.Sesso.MASCHIO ? "MORTO_PER_LE_FERITE.M" : "MORTO_PER_LE_FERITE.F", sb.toString())));
 				}
 				if (avversario != null) {
-					md().setCausaTrapasso("Uccis" + p.getLetteraFinaleAttributo() + " " + avversario.getDa() + avversario.getNomeSingolare() + ".");
+					md().setCausaTrapasso(Testi.formatta("messaggi_personaggi", p.getSesso() == Personaggio.Sesso.MASCHIO ? "UCCISO.M" : "UCCISO.F", avversario.getDa() + avversario.getNomeSingolare()));
 				} else {
 					// Senza un attaccante il danno viene dagli effetti di stato (veleno, sanguinamento...)
-					md().setCausaTrapasso("Mort" + p.getLetteraFinaleAttributo() + " per i danni nel tempo.");
+					md().setCausaTrapasso(Testi.formatta("messaggi_personaggi", p.getSesso() == Personaggio.Sesso.MASCHIO ? "MORTO_DANNI_NEL_TEMPO.M" : "MORTO_DANNI_NEL_TEMPO.F"));
 				}
 				p.muore(md().getCausaTrapasso());
 			}
 		} else {
 			if (notificaFerite == Personaggio.NotificaFerite.SI) {
 				String nome = p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-				String notifica = nome + " ha ancora " + (int)salute + " punt" + (salute == 1 ? 'o' : 'i') +
-						" ferita su " + (int)p.calcolaSaluteMassima() + '.';
+				String notifica = Testi.formatta("messaggi_personaggi", salute == 1 ? "FERITE_RIMASTE_UNA" : "FERITE_RIMASTE", nome, (int) salute, (int) p.calcolaSaluteMassima());
 				BusEventi.pubblica(new NotificaTestoFrase(notifica));
 			}
 		}

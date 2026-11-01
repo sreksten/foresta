@@ -14,6 +14,7 @@ import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Una nebbia fitta su tutto il campo di battaglia (incantesimo GLOBALE): a ogni avversario vivo toglie una percentuale di PRECISIONE
@@ -46,12 +47,11 @@ public class Nebbia extends IncantesimoMaleficoImpl implements IncantesimoGlobal
 
 	@Override
 	protected void formulaGlobale(Personaggio formulante, Gruppo gruppoAvversario) {
-		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " evoca una nebbia fitta: gli avversari faticano a prendere la mira."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Nebbia.1", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		for (Personaggio avversario : gruppoAvversario.getPersonaggiVivi()) {
 			if (avversario.isImmuneAIncantesimo(getClasse())) {
-				BusEventi.pubblica(new NotificaTestoFrase("La nebbia non ha effetto su "
-						+ avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + "."));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Nebbia.2", avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))));
 				continue;
 			}
 			avversario.addModificatore(new ModificatoreAttributoMD(TipoAttributo.PRECISIONE, TipoModificatore.VARIAZIONE_PERCENTUALE,

@@ -15,6 +15,7 @@ import com.threeamigos.foresta.tipi.EsitoAzione;
 import com.threeamigos.foresta.tipi.TipoAzione;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /*
  * Incantesimi originali su ZX Spectrum:
@@ -84,14 +85,13 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 	 * @param gruppoAvversario il gruppo avversario di chi formula (chi lo lancia non lo sceglie: è la locazione); può essere null
 	 */
 	protected void formulaGlobale(Personaggio formulante, Gruppo gruppoAvversario) {
-		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " formula un " + getClasse().getNomeSingolare() + "."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "IncantesimoMaleficoImpl.1", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA), getClasse().getNomeSingolare())));
 	}
 
 	private void annuncia(Personaggio formulante, String nomeBersaglio) {
-		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " formula un " + getClasse().getNomeSingolare() + " contro " +
-				nomeBersaglio + "."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "IncantesimoMaleficoImpl.2", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA), getClasse().getNomeSingolare(), nomeBersaglio)));
 	}
 
 	/**

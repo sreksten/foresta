@@ -23,6 +23,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Un insieme di personaggi guidati da un giocatore
@@ -148,8 +149,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		if (vulnerabile) {
 			md.aggiungiOspiteVulnerabile(ospite.getModelloDati().getUuid());
 		}
-		BusEventi.pubblica(new NotificaTestoFrase(ospite.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " viaggia con il gruppo."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "OSPITE_VIAGGIA", ospite.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 	}
 
 	public final boolean isOspiteVulnerabile(Personaggio ospite) {
@@ -182,8 +183,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		ospiti.remove(ospite);
 		md.togliOspite(ospite.getModelloDati());
 		md.togliOspiteVulnerabile(ospite.getModelloDati().getUuid());
-		BusEventi.pubblica(new NotificaTestoFrase(ospite.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " si separa dal gruppo."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "OSPITE_SI_SEPARA", ospite.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 	}
 
 	private GruppoGiocatoreMD md = getGruppoGiocatoreMDInCorso();
@@ -227,8 +228,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		diventaMembro(personaggio);
 		String nome = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		boolean volentieri = personaggio.getMotivoNelGruppo().isEntraVolentieri();
-		BusEventi.pubblica(new NotificaTestoFrase(nome + (volentieri ? " è felice di poter far parte del gruppo."
-				: " entra a far parte del gruppo.")));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", volentieri ? "ENTRA_VOLENTIERI" : "ENTRA_NEL_GRUPPO", nome)));
 		md.addPersonaggioMD(personaggio.getModelloDati());
 		allineaIndiceCapo();
 	}
@@ -318,10 +318,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		if (p.getMotivoNelGruppo() == TipoMotivoNelGruppo.MIETITURA) {
 			// Non se ne va: o è caduto, e non c'è un'altra morte da raccontare, o è finito l'effetto della Mietitura che lo teneva in piedi
 			BusEventi.pubblica(new NotificaTestoFrase(p.isVivo()
-					? nome + " torna alla polvere: l'effetto della Mietitura è finito."
-					: nome + " torna ad essere polvere."));
+					? Testi.formatta("messaggi_personaggi", "POLVERE_FINE_EFFETTO", nome)
+					: Testi.formatta("messaggi_personaggi", "POLVERE", nome)));
 		} else {
-			BusEventi.pubblica(new NotificaTestoFrase(nome + " lascia il gruppo."));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "LASCIA_IL_GRUPPO", nome)));
 		}
 	}
 
@@ -381,8 +381,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	 * perdono): pergamene e pozioni. Gli artefatti restano; le monete e i preziosi li perde la cassa (vedi economia.Cassa).
 	 */
 	public final void fugge() {
-		BusEventi.pubblica(new NotificaTestoFrase(chiMaiuscolo() + ", in preda al panico, cerca la salvezza nella fuga!" +
-				" Sfortunatamente riceve delle ferite e perde una parte delle cose in suo possesso!"));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "FUGA", chiMaiuscolo())));
 
 		Function<Integer, Integer> calcolaPerdita = m -> m * CostantiPersonaggi.FUGA_PERDITA_CONSUMABILI_PERCENTUALE / 100;
 

@@ -9,6 +9,7 @@ import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'abilità innata di Sacerdote e Sacerdotessa: una luce sacra che brucia i non morti (il SACRO fa il doppio dei danni a chi è di categoria
@@ -39,10 +40,11 @@ public class LuceDivina extends AbilitaDiDanno {
 	}
 
 	@Override
-	protected String getAnnuncio(List<Personaggio> bersagli) {
+	protected String getAnnuncio(Personaggio utilizzatore, List<Personaggio> bersagli) {
 		return bersagli.size() == 1
-				? "invoca la luce divina contro " + bersagli.get(0).getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + "."
-				: "invoca la luce divina contro gli avversari.";
+				? Testi.formatta("messaggi_poteri", "LuceDivina.annuncio", chi(utilizzatore),
+						bersagli.get(0).getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))
+				: Testi.formatta("messaggi_poteri", "LuceDivina.annuncioTutti", chi(utilizzatore));
 	}
 
 	/**
@@ -56,8 +58,7 @@ public class LuceDivina extends AbilitaDiDanno {
 		}
 		for (Personaggio alleato : gruppoGiocatore.getPersonaggiVivi()) {
 			if (!alleato.isCurabile()) {
-				BusEventi.pubblica(new NotificaTestoFrase("La luce divina investe anche "
-						+ alleato.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + "."));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "LuceDivina.1", alleato.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))));
 				colpisci(utilizzatore, alleato, 1.0d);
 			}
 		}

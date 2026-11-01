@@ -12,6 +12,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoCanto;
 
 import java.util.Optional;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il canto che cura il personaggio più ferito del gruppo (la quota di salute più bassa, il cantore compreso): circa
@@ -55,7 +56,7 @@ public class CantoCurativo implements Canto {
 		String nomeCantore = cantore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		if (!ferito.isPresent()) {
-			BusEventi.pubblica(new NotificaTestoFrase(nomeCantore + " intona un canto curativo, ma nessuno ha bisogno di cure."));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "CantoCurativo.1", nomeCantore)));
 			return false;
 		}
 		Personaggio bersaglio = ferito.get();
@@ -63,9 +64,7 @@ public class CantoCurativo implements Canto {
 		int saluteInizio = bersaglio.getSalute();
 		bersaglio.addSalute(getCura());
 		cantore.subMagia(getCostoLancio());
-		BusEventi.pubblica(new NotificaTestoFrase(nomeCantore + " canta per "
-				+ bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
-				+ ": guarisce di " + (bersaglio.getSalute() - saluteInizio) + "."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "CantoCurativo.2", nomeCantore, bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE), (bersaglio.getSalute() - saluteInizio))));
 		return true;
 	}
 }

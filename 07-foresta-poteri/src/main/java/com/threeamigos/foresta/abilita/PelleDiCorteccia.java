@@ -14,6 +14,7 @@ import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoAbilita;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'abilità del Druido che rafforza la difesa di tutto il gruppo: a ogni personaggio vivo dà due modificatori temporanei, parata e resistenza magica
@@ -57,8 +58,8 @@ public class PelleDiCorteccia implements Abilita {
 	public boolean usa(Personaggio utilizzatore, Gruppo gruppo, Gruppo gruppoAvversario) {
 		AnnuncioDellAzione.azione(utilizzatore, null, TipoAzione.PELLE_DI_CORTECCIA);
 		utilizzatore.subMagia(getCostoLancio());
-		BusEventi.pubblica(new NotificaTestoFrase(utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ricopre il gruppo di una pelle di corteccia."));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "PelleDiCorteccia.1", utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
 			personaggio.addModificatore(modificatore(TipoAttributo.PARATA, getPuntiParata()));
 			personaggio.addModificatore(modificatore(TipoAttributo.RESISTENZA_MAGICA, getPuntiResistenzaMagica()));

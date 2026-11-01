@@ -105,10 +105,9 @@ public abstract class Gruppo implements VistaGruppo {
 	public final void consumaPozioneSalute(Personaggio personaggio) {
 		subPozioniSalute(1);
 		personaggio.addSalute(CostantiPersonaggi.RECUPERO_DA_POZIONE_SALUTE);
-		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "POZIONE_SALUTE", personaggio.getNome(
 				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" ha bevuto una pozione che fa riacquistare salute."));
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 	}
 
 	public final int getPozioniSaluteGrande() {
@@ -141,10 +140,9 @@ public abstract class Gruppo implements VistaGruppo {
 		subPozioniSaluteGrande(1);
 		personaggio.addSaluteMassima(CostantiPersonaggi.AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE, "POZIONE_SALUTE_GRANDE");
 		personaggio.addSalute(CostantiPersonaggi.RECUPERO_DA_POZIONE_SALUTE_GRANDE);
-		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "POZIONE_SALUTE_GRANDE", personaggio.getNome(
 				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" ha bevuto una pozione che recupera e fa aumentare la salute massima!"));
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 	}
 
 	public final int getPozioniMagia() {
@@ -176,10 +174,9 @@ public abstract class Gruppo implements VistaGruppo {
 	public final void consumaPozioneMagia(Personaggio personaggio) {
 		subPozioniMagia(1);
 		personaggio.addMagia(CostantiPersonaggi.RECUPERO_DA_POZIONE_MAGIA);
-		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "POZIONE_MAGIA", personaggio.getNome(
 				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" ha bevuto una pozione che fa riacquistare magia."));
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 	}
 
 	public final int getPozioniMagiaGrande() {
@@ -212,10 +209,9 @@ public abstract class Gruppo implements VistaGruppo {
 		subPozioniMagiaGrande(1);
 		personaggio.addMagiaMassima(CostantiPersonaggi.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "POZIONE_MAGIA_GRANDE");
 		personaggio.addMagia(CostantiPersonaggi.RECUPERO_DA_POZIONE_MAGIA_GRANDE);
-		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "POZIONE_MAGIA_GRANDE", personaggio.getNome(
 				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" ha bevuto una pozione che recupera e fa aumentare la magia massima!"));
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 	}
 
 	public final int getPozioniPanacea() {
@@ -248,10 +244,9 @@ public abstract class Gruppo implements VistaGruppo {
 	public final void consumaPozionePanacea(Personaggio personaggio) {
 		subPozioniPanacea(1);
 		personaggio.rimuoviGliEffettiDiStatoNegativi();
-		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "PANACEA", personaggio.getNome(
 				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" ha bevuto una panacea che toglie gli effetti di stato negativi."));
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 	}
 
 	public final int getPozioniAumentoLivello() {
@@ -295,12 +290,12 @@ public abstract class Gruppo implements VistaGruppo {
 				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		if (personaggio.isAlLivelloMassimo()) {
-			BusEventi.pubblica(new NotificaTestoFrase(chi + " è già al livello massimo: la pozione non avrebbe effetto."));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "POZIONE_LIVELLO_MASSIMO", chi)));
 			return;
 		}
 		subPozioniAumentoLivello(1);
 		personaggio.addPuntiEsperienza(GestoreProgressione.getXpPerAumentoDiLivello(personaggio.getLivello(), personaggio.getEsperienza()));
-		BusEventi.pubblica(new NotificaTestoFrase(chi + " ha bevuto una pozione che fa salire di livello!"));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "POZIONE_LIVELLO", chi)));
 	}
 
 	/**
