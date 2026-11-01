@@ -15,10 +15,4 @@ public class Uomo extends PersonaggioNonCombattente {
 	public Uomo(String nome, int livello) {
 		super(nome, TipoPersonaggio.UOMO, livello);
 	}
-
-	@Override
-	public String getNomeSingolare() { return "Uomo"; }
-
-	@Override
-	public String getNomePlurale() { return "Uomini"; }
 }

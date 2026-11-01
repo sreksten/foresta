@@ -15,10 +15,4 @@ public class CapitanoDelleGuardie extends Guerriero {
 	public CapitanoDelleGuardie(String nome, int livello) {
 		super(nome, TipoPersonaggio.CAPITANO_DELLE_GUARDIE, livello);
 	}
-
-	@Override
-	public String getNomeSingolare() { return "Capitano delle guardie"; }
-
-	@Override
-	public String getNomePlurale() { return "Capitani delle guardie"; }
 }

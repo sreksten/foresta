@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.testi.Articoli;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
@@ -15,17 +14,4 @@ public class Locandiere extends PersonaggioNonCombattente {
 	public Locandiere(String nome, int livello) {
 		super(nome, TipoPersonaggio.LOCANDIERE, livello);
 	}
-
-	@Override
-	public String getNomeSingolare() { return "Locandiere"; }
-
-	@Override
-	public String getNomePlurale() { return "Locandieri"; }
-
-	@Override public String getAIS() { return Articoli.UN; }
-	@Override public String getADS() { return Articoli.IL; }
-	@Override public String getAIP() { return Articoli.ALCUNI; }
-	@Override public String getADP() { return Articoli.I; }
-	@Override public String getDeS() { return Articoli.DEL; }
-	@Override public String getDeP() { return Articoli.DEI; }
 }

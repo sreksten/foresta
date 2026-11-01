@@ -81,9 +81,11 @@ Ogni passo compila e ha i test verdi; la dimensione è S (qualche ora), M (una s
    - [x] la UI già in `ui_it` e `testo_tattica`;
    - [ ] (da provare avviando con `LINGUA=en`: i file sono scritti e i test passano, ma il gioco non è stato aperto in inglese) a fine passo il gioco è in inglese nei nomi, nelle descrizioni, nei comandi e nelle scritte della UI, e in italiano nel resto.
 3. **Regole della lingua** (L) — il passo che cambia la forma del codice, da concordare prima
-   - [ ] `RegoleDellaLingua`, `LinguaItaliana` (stesso comportamento di oggi, verificato dai test esistenti di `Articoli` e `Numeri`), `LinguaInglese`;
-   - [ ] genere, plurale e suono iniziale dei nomi nei file (`tipo_personaggio`, tipi di artefatto, tipi di locazione…);
-   - [ ] le 52 classi dei personaggi perdono gli articoli scritti a mano;
+   - [x] `RegoleDellaLingua` (articoli, preposizioni articolate, `daAgente`, cardinali e ordinali, elenchi, suono iniziale), `LinguaItaliana` (usa `Articoli` e `Numeri`), `LinguaInglese`, `Lingue.corrente()`; `Nome` (singolare, plurale, genere, suono, pronome, agente determinato), `Genere`, `Suono`, `Preposizione`; test `RegoleDellaLinguaTest`;
+   - [x] genere, plurale, pronome, suono e agente determinato dei personaggi nei file `tipo_personaggio_<lingua>` (voci `NOME_SINGOLARE`, `NOME_PLURALE`, `GENERE`, `PRONOME`, `SUONO`, `AGENTE_DETERMINATO`);
+   - [ ] lo stesso per i tipi di artefatto, i tipi di locazione e il bottino (`OggettoConArticoli`);
+   - [x] le 52 classi dei personaggi perdono gli articoli scritti a mano (506 metodi tolti): li dà `PersonaggioBase` con le regole della lingua. Una sola differenza in italiano: «il Uomo» (errore) ora è «l'Uomo»;
+   - [x] `NomeEDescrizione` (descrizione della scheda) legge `descrizione_personaggio_<lingua>`; la preposizione «di» davanti al nome proprio passa dalle regole;
    - [ ] `Articoli.` e `Numeri.` nei 97 e 25 file passano alle regole (a gruppi di moduli, dal basso: artefatti, personaggi, poteri, …).
 4. **Enum e costanti con testo** (S)
    - [ ] `FUGA_IGNOMINIA_NOTA` (è nel salvataggio: decidere se confrontarla per chiave), `NegozioInScena`, `Mandante` (frasi mescolate a identificativi: da separare), `DovePartono`, `ContestoLancio`, `Direzioni`, le ore a parole di `LineaTemporale`.

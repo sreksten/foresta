@@ -78,6 +78,8 @@ class ConvenzioniDiLocalizzazioneTest {
 				continue;
 			}
 			Set<String> chiavi = new TreeSet<>(leggi(file).stringPropertyNames());
+			// Genere e suono iniziale dipendono dalla lingua: l'inglese li dichiara solo se fanno eccezione
+			chiavi.removeIf(k -> k.endsWith(".GENERE") || k.endsWith(".SUONO"));
 			chiavi.removeAll(leggi(inglese).stringPropertyNames());
 			if (!chiavi.isEmpty()) {
 				mancanti.add(inglese.getFileName() + ": mancano " + chiavi);
@@ -127,7 +129,9 @@ class ConvenzioniDiLocalizzazioneTest {
 	private static final Pattern LITERAL = Pattern.compile("\"((?:[^\"\\\\\\n]|\\\\.)*)\"");
 	// Messaggi per lo sviluppatore: non si traducono
 	private static final Pattern RIGA_INTERNA = Pattern.compile("Logger\\.log|new \\w*Exception\\(|assert|@SuppressWarnings|@Deprecated");
-	private static final String[] PERCORSI_INTERNI = {"/ui/sviluppo/", "StrumentiDiSviluppo", "DotazioneDiProva", "TrucchiDiSviluppo"};
+	// Le regole dell'italiano sono italiano per natura; quel che è di un'altra lingua sta nella sua classe
+	private static final String[] PERCORSI_INTERNI = {"/ui/sviluppo/", "StrumentiDiSviluppo", "DotazioneDiProva", "TrucchiDiSviluppo",
+			"/testi/LinguaItaliana.java", "/testi/Articoli.java", "/testi/Numeri.java"};
 
 	static boolean italiana(String testo) {
 		if (LETTERA_ACCENTATA.matcher(testo.toLowerCase(java.util.Locale.ROOT)).find()) {

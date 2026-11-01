@@ -15,10 +15,4 @@ public class BardoLocanda extends Bardo {
 	public BardoLocanda(String nome, int livello) {
 		super(nome, TipoPersonaggio.BARDO_DELLE_LOCANDE, livello);
 	}
-
-	@Override
-	public String getNomeSingolare() { return "Bardo della locanda"; }
-
-	@Override
-	public String getNomePlurale() { return "Bardi della locanda"; }
 }

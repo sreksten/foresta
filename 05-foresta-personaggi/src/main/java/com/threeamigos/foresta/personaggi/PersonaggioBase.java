@@ -13,6 +13,9 @@ import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.modificatori.ModificatoreAttivo;
 import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Nome;
+import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
@@ -482,6 +485,62 @@ public abstract class PersonaggioBase implements Personaggio {
 	// Statistiche del personaggio
 
 	// CLASSE
+	// Il nome della classe con quel che serve per articolarlo, nella lingua in uso: viene dai file dei testi della classe
+	// (NOME_SINGOLARE, NOME_PLURALE, GENERE, PRONOME...) e le regole sono della lingua (vedi RegoleDellaLingua)
+	private Nome nomeGrammaticale() {
+		return Nome.di(getClasse());
+	}
+
+	@Override
+	public String getNomeSingolare() {
+		return nomeGrammaticale().getSingolare();
+	}
+
+	@Override
+	public String getNomePlurale() {
+		return nomeGrammaticale().getPlurale();
+	}
+
+	@Override
+	public String getADS() {
+		return Lingue.corrente().articoloDeterminativo(nomeGrammaticale(), false);
+	}
+
+	@Override
+	public String getADP() {
+		return Lingue.corrente().articoloDeterminativo(nomeGrammaticale(), true);
+	}
+
+	@Override
+	public String getAIS() {
+		return Lingue.corrente().articoloIndeterminativo(nomeGrammaticale(), false);
+	}
+
+	@Override
+	public String getAIP() {
+		return Lingue.corrente().articoloIndeterminativo(nomeGrammaticale(), true);
+	}
+
+	@Override
+	public String getDeS() {
+		return Lingue.corrente().preposizioneArticolata(Preposizione.DI, nomeGrammaticale(), false);
+	}
+
+	@Override
+	public String getDeP() {
+		return Lingue.corrente().preposizioneArticolata(Preposizione.DI, nomeGrammaticale(), true);
+	}
+
+	@Override
+	public String getDa() {
+		return Lingue.corrente().daAgente(nomeGrammaticale());
+	}
+
+	@Override
+	public String getPronome() {
+		return nomeGrammaticale().getPronome().orElse("");
+	}
+
 	@Override
 	public TipoPersonaggio getClasse() {
 		return md.getClasse();

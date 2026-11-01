@@ -14,10 +14,4 @@ public class Borgomastro extends PersonaggioNonCombattente {
 	public Borgomastro(String nome, int livello) {
 		super(nome, TipoPersonaggio.BORGOMASTRO, livello);
 	}
-
-	@Override
-	public String getNomeSingolare() { return "Borgomastro"; }
-
-	@Override
-	public String getNomePlurale() { return "Borgomastri"; }
 }

@@ -4,6 +4,7 @@ import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
 import com.threeamigos.foresta.gruppi.DatiDiProva;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoModificatore;
@@ -95,6 +96,21 @@ class NomeEDescrizioneTest {
         Personaggio strega = FabbricaPersonaggi.crea(TipoPersonaggio.STREGA, 1);
         strega.getModelloDati().set(TipoAttributo.SALUTE, 500);
         assertTrue(strega.getDescrizione().contains("è sana come un pesce, "), strega.getDescrizione());
+    }
+
+    @Test
+    void laDescrizioneInInglese() {
+        Testi.impostaLingua("en");
+        try {
+            String descrizione = conSalute(10).getDescrizione();
+            assertTrue(descrizione.startsWith("Arsenio is very weak, "), descrizione);
+            assertTrue(descrizione.endsWith("."), descrizione);
+            assertTrue(conSalute(500).getDescrizione().contains("is fit as a fiddle, "));
+            Personaggio goblin = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1);
+            assertTrue(goblin.getDescrizione().startsWith("The Goblin "), goblin.getDescrizione());
+        } finally {
+            Testi.impostaLingua(null);
+        }
     }
 
     private static Personaggio conFissi(TipoAttributo attributo, int valore) {

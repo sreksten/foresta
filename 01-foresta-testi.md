@@ -16,6 +16,10 @@ Dipende da `00-foresta-strumenti` per il caso (`GrammarBean` sceglie le alternat
 
 ## Funzionamento
 
+### Le regole della lingua
+
+`RegoleDellaLingua` è la grammatica di una lingua: articoli (`articoloDeterminativo`, `articoloIndeterminativo`, già col loro separatore: "il ", "l'", "the "), `preposizioneArticolata`, `daAgente` ("da un goblin", "dal Drago"), `conPreposizione` su un nome già composto, cardinali e ordinali, `elenco` ("A, B e C", "A, B, and C"), `inizialeMaiuscola`. Le classi sono `LinguaItaliana` (su `Articoli` e `Numeri`) e `LinguaInglese`; `Lingue.corrente()` dà quella della lingua scelta con `Testi.impostaLingua` (una lingua senza regole proprie usa quelle dell'italiano). È la sola parte del gioco che ha una classe per lingua. `Nome` porta i dati per articolare un nome (singolare, plurale, `Genere`, `Suono` iniziale, pronome, agente determinato) e si legge dai file dei testi di una costante di enum (`Nome.di(costante)`: voci `NOME_SINGOLARE`, `NOME_PLURALE`, `GENERE`, `SUONO`, `PRONOME`, `AGENTE_DETERMINATO`); il suono si dichiara solo se fa eccezione alla regola della lingua ("l'Hobgoblin"). I personaggi li usano così (`PersonaggioBase.getADS()` ecc.).
+
 ### `Testi`: i file per lingua
 
 I testi stanno in file `<nome>_<lingua>.properties` (UTF-8: il `ResourceBundle` di Java 8 li leggerebbe in ISO-8859-1) e si leggono una volta sola, poi restano in cache. Due modi d'uso:

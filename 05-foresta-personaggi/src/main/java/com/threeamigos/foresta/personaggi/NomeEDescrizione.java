@@ -3,6 +3,10 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.RegoleDellaLingua;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 
 import java.util.Collection;
@@ -12,9 +16,12 @@ import java.util.stream.Collectors;
 /**
  * Come un personaggio si presenta a parole: il nome (proprio, o quello della specie con l'articolo, la preposizione e il numero che lo distingue
  * dagli altri dello stesso gruppo) e la descrizione che ne dà la scheda. Lo tiene {@link PersonaggioBase}, che ne inoltra i metodi di
- * {@link Personaggio}; gli articoli e i nomi della specie li danno le classi concrete.
+ * {@link Personaggio}; gli articoli e i nomi della specie vengono dai file dei testi della classe e dalle regole della lingua, le frasi da
+ * {@code descrizione_personaggio_<lingua>.properties}.
  */
 final class NomeEDescrizione {
+
+	private static final String FILE_DEI_TESTI = "descrizione_personaggio";
 
 	private final PersonaggioBase p;
 
@@ -27,71 +34,48 @@ final class NomeEDescrizione {
 	}
 
 	String getDescrizione() {
-		StringBuilder sb = new StringBuilder();
-		if (md().getNome() != null) {
-			sb.append(md().getNome());
-		} else {
-			String s = p.getADS();
-			sb.append(Character.toUpperCase(s.charAt(0)));
-			sb.append(s.substring(1));
-			sb.append(p.getNomeSingolare());
-		}
-		sb.append(' ');
-		int salute = p.getSalute();
-		if (salute < 20) {
-			sb.append("è molto debole");
-		} else if (salute < 40) {
-			sb.append("è debole");
-		} else if (salute < 80) {
-			sb.append("non è molto in salute");
-		} else if (salute < 100) {
-			sb.append("è in salute");
-		} else if (salute < 200) {
-			sb.append("è assolutamente in salute");
-		} else if (salute < 400) {
-			sb.append("è davvero in salute");
-		} else {
-			sb.append("è san").append(p.getLetteraFinaleAttributo()).append(" come un pesce");
-		}
-		sb.append(", ");
+		RegoleDellaLingua lingua = Lingue.corrente();
+		String chi = md().getNome() != null ? md().getNome() : lingua.inizialeMaiuscola(p.getADS() + p.getNomeSingolare());
+		String salute = testo(livelloDellaSalute(p.getSalute()));
 		int coraggio = p.get(TipoAttributo.CORAGGIO);
-		if (coraggio < 30) {
-			sb.append("non ha molto coraggio");
-		} else if (coraggio < 60) {
-			sb.append("ha coraggio");
-		} else {
-			sb.append("ha coraggio da vendere");
-		}
-		sb.append(", nei combattimenti ");
 		int valore = p.get(TipoAttributo.VALORE);
-		if (valore < 30) {
-			sb.append("non e' che se la cavi egregiamente");
-		} else if (valore < 60) {
-			sb.append("se la cava bene");
-		} else {
-			sb.append("puo' arrecare gravi danni");
-		}
-		sb.append(" e ");
 		int carisma = (int) md().get(TipoAttributo.CARISMA);
-		if (carisma < 3) {
-			sb.append("non ha molto carisma");
-		} else if (carisma < 6) {
-			sb.append("ha abbastanza carisma");
-		} else {
-			sb.append("ha molto carisma");
-		}
-		sb.append('.');
+		StringBuilder sb = new StringBuilder(testo("FRASE", chi,
+				salute,
+				testo(coraggio < 30 ? "CORAGGIO.BASSO" : coraggio < 60 ? "CORAGGIO.MEDIO" : "CORAGGIO.ALTO"),
+				testo(valore < 30 ? "VALORE.BASSO" : valore < 60 ? "VALORE.MEDIO" : "VALORE.ALTO"),
+				testo(carisma < 3 ? "CARISMA.BASSO" : carisma < 6 ? "CARISMA.MEDIO" : "CARISMA.ALTO")));
 		Collection<ArtefattoMD> artefatti = md().getArtefatti();
 		if (!artefatti.isEmpty()) {
-			sb.append(' ');
-			sb.append(p.getPronome());
-			sb.append(' ');
-			sb.append(artefatti.stream()
+			sb.append(' ').append(testo("ARTEFATTI", p.getPronome(), artefatti.stream()
 					.map(a -> a.getTipo().getUtilizzo() + ' ' + a.getNomeCompleto())
-					.collect(Collectors.joining(", ")));
-			sb.append('.');
+					.collect(Collectors.joining(", "))));
 		}
 		return sb.toString();
+	}
+
+	// La chiave della salute, per fasce
+	private String livelloDellaSalute(int salute) {
+		if (salute < 20) {
+			return "SALUTE.MOLTO_DEBOLE";
+		} else if (salute < 40) {
+			return "SALUTE.DEBOLE";
+		} else if (salute < 80) {
+			return "SALUTE.POCA";
+		} else if (salute < 100) {
+			return "SALUTE.BUONA";
+		} else if (salute < 200) {
+			return "SALUTE.OTTIMA";
+		} else if (salute < 400) {
+			return "SALUTE.DAVVERO_BUONA";
+		}
+		// Il «sano come un pesce» si accorda al sesso
+		return p.getSesso() == Personaggio.Sesso.MASCHIO ? "SALUTE.COME_UN_PESCE.M" : "SALUTE.COME_UN_PESCE.F";
+	}
+
+	// Le parole stanno in descrizione_personaggio_<lingua>.properties
+	private static String testo(String chiave, Object... valori) {
+		return Testi.formatta(FILE_DEI_TESTI, chiave, valori);
 	}
 
 	String getNome(Personaggio.OpzioniGetNome... opzioni) {
@@ -112,7 +96,7 @@ final class NomeEDescrizione {
 		}
 		String nome = md().getNome();
 		if (nome != null) {
-			return includiPreposizioneArticolata ? "di " + nome : nome;
+			return includiPreposizioneArticolata ? Lingue.corrente().conPreposizione(Preposizione.DI, nome) : nome;
 		} else if (!p.isPNG()) {
 			throw new IllegalStateException("Personaggio giocante senza nome!");
 		}
