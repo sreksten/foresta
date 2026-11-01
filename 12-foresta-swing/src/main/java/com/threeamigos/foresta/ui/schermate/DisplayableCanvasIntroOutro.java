@@ -444,7 +444,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 			for (int posizione = 0; posizione < righe; posizione++) {
 				Punteggio punteggio = gestorePunteggi.getPunteggio(posizione);
 				int y = posizione * RIGA_CLASSIFICA;
-				TestoGrande.disegnaRiga(g, TestoGrande.normalizza(punteggio.getNome()), MARGINE, y);
+				TestoGrande.disegnaRiga(g, punteggio.getNome(), MARGINE, y);
 				String valore = String.valueOf(punteggio.getPunteggio());
 				TestoGrande.disegnaRiga(g, valore, width - MARGINE - TestoGrande.larghezza(valore), y);
 			}

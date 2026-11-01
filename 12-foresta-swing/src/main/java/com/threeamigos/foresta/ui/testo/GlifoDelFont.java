@@ -6,7 +6,7 @@ package com.threeamigos.foresta.ui.testo;
  * <b>livello</b> da 0 a 255, quanto il pixel copre lo sfondo: 0 è trasparente, 255 è il colore pieno del testo, in mezzo
  * il colore sfuma su quello che c'è dietro (è l'alfa del colore: il colore resta lo stesso, non si scurisce).
  */
-public final class GlifoDelFont {
+public final class GlifoDelFont implements GlifoDiAtlante {
 
 	private final int larghezza;
 	private final int altezza;
@@ -24,10 +24,12 @@ public final class GlifoDelFont {
 		this.livelli = livelli;
 	}
 
+	@Override
 	public int getLarghezza() {
 		return larghezza;
 	}
 
+	@Override
 	public int getAltezza() {
 		return altezza;
 	}

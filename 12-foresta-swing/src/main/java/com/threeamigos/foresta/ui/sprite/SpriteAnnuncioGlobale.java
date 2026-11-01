@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.StringTokenizer;
 
 /**
@@ -76,9 +75,7 @@ public class SpriteAnnuncioGlobale extends SpriteBase {
 
 	private List<String> righe(String testo) {
 		int larghezzaMassima = larghezzaSchermo / 2;
-		// Il font non supporta i caratteri minuscoli né le accentate: prima si normalizzano le accentate
-		// nella forma vocale+apostrofo (vedi TestoGrande.normalizza), poi si va in maiuscolo
-		return spezzaInRighe(TestoGrande.normalizza(testo).toUpperCase(Locale.ROOT), larghezzaMassima);
+		return spezzaInRighe(testo, larghezzaMassima);
 	}
 
 	private static List<String> spezzaInRighe(String testo, int larghezzaMassima) {
@@ -130,25 +127,7 @@ public class SpriteAnnuncioGlobale extends SpriteBase {
 	}
 
 	private static BufferedImage glifo(char c) {
-		if (c >= 'A' && c <= 'Z') {
-			return ImageCache.lettere[c - 'A'];
-		}
-		if (c >= '0' && c <= '9') {
-			return ImageCache.cifre[c - '0'];
-		}
-		if (c == '\'') {
-			return ImageCache.apostrofo;
-		}
-		if (c == ',') {
-			return ImageCache.virgola;
-		}
-		if (c == '.') {
-			return ImageCache.punto;
-		}
-		if (c == '?') {
-			return ImageCache.puntodd;
-		}
-		return null;
+		return ImageCache.glifoGrande(c);
 	}
 
 	private static BufferedImage costruisciImmagine(List<String> righeEtichetta, List<String> righeNome) {
@@ -156,13 +135,15 @@ public class SpriteAnnuncioGlobale extends SpriteBase {
 		tutteLeRighe.addAll(righeEtichetta);
 		tutteLeRighe.addAll(righeNome);
 
-		int altezzaRiga = altezzaMassimaGlifi(tutteLeRighe) + DIVARIO_RIGHE;
+		int altezzaRiga = TestoGrande.ALTEZZA_GLIFO + DIVARIO_RIGHE;
 
 		int larghezzaTesto = 0;
 		for (String riga : tutteLeRighe) {
 			larghezzaTesto = Math.max(larghezzaTesto, larghezzaParola(riga));
 		}
-		int altezzaTesto = righeEtichetta.size() * altezzaRiga + DIVARIO_GRUPPI + righeNome.size() * altezzaRiga;
+		// L'ultima riga ha in più lo spazio di accenti e cediglie
+		int altezzaTesto = righeEtichetta.size() * altezzaRiga + DIVARIO_GRUPPI + righeNome.size() * altezzaRiga
+				+ TestoGrande.altezzaConAccenti() - TestoGrande.ALTEZZA_GLIFO;
 
 		BufferedImage testo = new BufferedImage(larghezzaTesto, altezzaTesto, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D gTesto = testo.createGraphics();
@@ -179,19 +160,6 @@ public class SpriteAnnuncioGlobale extends SpriteBase {
 		gTesto.dispose();
 
 		return testo;
-	}
-
-	private static int altezzaMassimaGlifi(List<String> righe) {
-		int altezza = 0;
-		for (String riga : righe) {
-			for (int i = 0; i < riga.length(); i++) {
-				BufferedImage glifo = glifo(riga.charAt(i));
-				if (glifo != null) {
-					altezza = Math.max(altezza, glifo.getHeight());
-				}
-			}
-		}
-		return altezza;
 	}
 
 	private static void disegnaRigaCentrata(Graphics2D g, String riga, int larghezzaTotale, int y) {

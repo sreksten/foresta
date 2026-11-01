@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.ui.componenti;
 
-import com.threeamigos.foresta.ui.testo.TestoGrande;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -56,11 +55,6 @@ class ScorrimentoVerticaleTest {
         corta.scorri(50);
         assertEquals(100 + 100, corta.getFondo());
         assertFalse(corta.haAltroSopra() || corta.haAltroSotto());
-    }
-
-    @Test
-    void ilTestoGrandeScriveLeVocaliAccentateConLApostrofo() {
-        assertEquals("perche' piu' citta' e' cosi' lo'", TestoGrande.normalizza("Perché più città È così lò"));
     }
 
     private static BufferedImage immagine(int altezza) {

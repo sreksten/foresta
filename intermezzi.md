@@ -152,7 +152,7 @@ Qualche misura per orientarsi, con la finestra normale in orizzontale (area di 1
 
 ### Due alfabeti diversi
 
-- Il **testo in alto** usa l'alfabeto grande: solo lettere, cifre e `' , . ?`. Le lettere accentate si scrivono con l'apostrofo (`e'`, `perche'`). I due punti, il punto esclamativo e le virgolette non compaiono.
+- Il **testo in alto** usa l'alfabeto grande, che scrive tutto in maiuscolo: lettere (anche accentate), cifre e la punteggiatura dell'atlante `img/font/alfabeto_grande.gif`.
 - I **fumetti** usano un font più completo: anche `à è é ì ò ù`, `! : ; " ( ) - / % +`. Lì si scrive italiano normale. Se un fumetto contiene un carattere non supportato non viene disegnato, e l'anteprima stampa l'errore.
 
 ---

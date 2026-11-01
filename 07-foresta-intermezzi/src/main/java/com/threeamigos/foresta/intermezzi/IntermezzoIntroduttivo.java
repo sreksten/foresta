@@ -36,8 +36,7 @@ public class IntermezzoIntroduttivo implements Intermezzo {
 		// Senza nome proprio l'eroe si chiama con la sua classe ("il guerriero")
 		String eroe = capo.getNomeProprio()
 				.orElseGet(() -> capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
-		// Il protagonista al centro, a due terzi dell'altezza, sotto il testo. L'alfabeto
-		// grande ha solo lettere, cifre e ' , . ? : niente accenti (si scrive e') né due punti.
+		// Il protagonista al centro, a due terzi dell'altezza, sotto il testo.
 		TipoPersonaggio classeEroe = capo.getClasse();
 		List<PaginaIntermezzo> pagineIntermezzo = new ArrayList<>();
 		pagineIntermezzo.add(new PaginaIntermezzo("La Foresta e' silenziosa, e " + eroe + " si inoltra fra gli alberi.")

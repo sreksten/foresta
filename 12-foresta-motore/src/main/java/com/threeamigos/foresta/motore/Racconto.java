@@ -17,16 +17,16 @@ public final class Racconto {
 			"un gruppo di eroi venne riunito per liberarlo dalla minaccia dei draghi.",
 			"questi, invece di comportarsi da bravi ragazzi, presto cominciarono a degenerare",
 			"andando per locande a sbevazzare e a cercare compagne di sbornie e avventure",
-			"finche' un giorno il piu' scoppiato di tutti sbaglio' strada e si ritrovo' in un postaccio conosciuto come"
+			"finché un giorno il più scoppiato di tutti sbagliò strada e si ritrovò in un postaccio conosciuto come"
 	};
 
 	private static final String[] PERSO = {
-			"con la morte del cacciatore, il drago ha finalmente via libera... la foresta e' perduta!",
+			"con la morte del cacciatore, il drago ha finalmente via libera... la foresta è perduta!",
 	};
 
 	private static final String[] VINTO = {
 			"congratulazioni!",
-			"la foresta e' stata liberata",
+			"la foresta è stata liberata",
 			"i tuoi amici sono venuti per offrirti doni come loro salvatore",
 			"possa la pace oggi conquistata durare a lungo!",
 			""

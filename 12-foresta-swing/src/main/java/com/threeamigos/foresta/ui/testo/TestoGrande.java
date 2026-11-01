@@ -11,9 +11,9 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Il testo nell'alfabeto grande, quello della storia: solo lettere minuscole senza accento, cifre e ' , . ? (vedi
- * ImageCache.lettere). Le vocali accentate si scrivono, come d'uso con questo alfabeto, con la vocale e l'apostrofo
- * ("è" diventa "e'"); le maiuscole diventano minuscole; gli altri caratteri restano uno spazietto.
+ * Il testo nell'alfabeto grande, quello della storia: i glifi sono quelli dell'atlante (vedi ImageCache.glifoGrande),
+ * che ha le maiuscole, anche accentate, le cifre e la punteggiatura; le minuscole si scrivono con le maiuscole, e i
+ * caratteri che l'atlante non ha restano uno spazietto.
  */
 public final class TestoGrande {
 
@@ -43,58 +43,19 @@ public final class TestoGrande {
 	}
 
 	/**
-	 * Il testo come lo scrive questo alfabeto: minuscolo, con le vocali accentate scritte con l'apostrofo.
+	 * Il glifo del carattere, o null se l'alfabeto non ce l'ha. L'atlante ha le maiuscole, accentate comprese: le
+	 * minuscole si scrivono con quelle. È alto quanto un riquadro dell'atlante: {@link #ALTEZZA_GLIFO} sono le lettere, il
+	 * resto è lo spazio per accenti e cediglie.
 	 */
-	public static String normalizza(String testo) {
-		StringBuilder normalizzato = new StringBuilder();
-		for (char c : testo.toLowerCase(Locale.ROOT).toCharArray()) {
-			switch (c) {
-				case 'à':
-				case 'á':
-					normalizzato.append("a'");
-					break;
-				case 'è':
-				case 'é':
-					normalizzato.append("e'");
-					break;
-				case 'ì':
-				case 'í':
-					normalizzato.append("i'");
-					break;
-				case 'ò':
-				case 'ó':
-					normalizzato.append("o'");
-					break;
-				case 'ù':
-				case 'ú':
-					normalizzato.append("u'");
-					break;
-				default:
-					normalizzato.append(c);
-					break;
-			}
-		}
-		return normalizzato.toString();
+	static BufferedImage glifo(char c) {
+		return ImageCache.glifoGrande(Character.toUpperCase(c));
 	}
 
 	/**
-	 * Il glifo del carattere (già normalizzato), o null se l'alfabeto non ce l'ha.
+	 * L'altezza dell'immagine di una riga: quella di un riquadro dell'atlante, accenti e cediglie compresi.
 	 */
-	static BufferedImage glifo(char c) {
-		if (c >= 'a' && c <= 'z') {
-			return ImageCache.lettere[c - 'a'];
-		} else if (c >= '0' && c <= '9') {
-			return ImageCache.cifre[c - '0'];
-		} else if (c == '\'') {
-			return ImageCache.apostrofo;
-		} else if (c == ',') {
-			return ImageCache.virgola;
-		} else if (c == '.') {
-			return ImageCache.punto;
-		} else if (c == '?') {
-			return ImageCache.puntodd;
-		}
-		return null;
+	public static int altezzaConAccenti() {
+		return ImageCache.glifoGrande('A').getHeight();
 	}
 
 	static int larghezzaCarattere(char c) {
@@ -106,7 +67,7 @@ public final class TestoGrande {
 	}
 
 	/**
-	 * Quanto è largo il testo (già normalizzato), su una riga.
+	 * Quanto è largo il testo, su una riga.
 	 */
 	public static int larghezza(String testo) {
 		int larghezza = 0;
@@ -122,7 +83,7 @@ public final class TestoGrande {
 	public static List<String> righe(String testo, int larghezzaMassima) {
 		List<String> righe = new ArrayList<>();
 		StringBuilder riga = new StringBuilder();
-		StringTokenizer parole = new StringTokenizer(normalizza(testo), " ");
+		StringTokenizer parole = new StringTokenizer(testo, " ");
 		while (parole.hasMoreTokens()) {
 			String parola = parole.nextToken();
 			String conParola = riga.length() == 0 ? parola : riga + " " + parola;
@@ -140,7 +101,7 @@ public final class TestoGrande {
 	}
 
 	/**
-	 * Disegna una riga (già normalizzata) a partire da x, y.
+	 * Disegna una riga a partire da x, y.
 	 */
 	public static void disegnaRiga(Graphics2D graphics, String riga, int x, int y) {
 		for (char c : riga.toCharArray()) {
@@ -168,7 +129,7 @@ public final class TestoGrande {
 		List<String> righe = righe(testo, larghezzaMassima);
 		int passo = ALTEZZA_RIGA + interlinea;
 		BufferedImage immagine = new BufferedImage(Math.max(1, larghezzaMassima),
-				Math.max(1, (righe.size() - 1) * passo + ALTEZZA_GLIFO), BufferedImage.TYPE_INT_ARGB);
+				Math.max(1, (righe.size() - 1) * passo + altezzaConAccenti()), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = immagine.createGraphics();
 		try {
 			for (int i = 0; i < righe.size(); i++) {

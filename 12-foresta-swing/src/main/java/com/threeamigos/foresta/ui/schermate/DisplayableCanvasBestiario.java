@@ -86,7 +86,7 @@ public class DisplayableCanvasBestiario implements Finestra {
 		graphics.drawImage(ImageCache.ombraDelDrago, (width - ImageCache.ombraDelDrago.getWidth()) >> 1,
 				(height - ImageCache.ombraDelDrago.getHeight()) >> 1, null);
 		graphics.setComposite(normale);
-		String titolo = TestoGrande.normalizza("bestiario");
+		String titolo = "bestiario";
 		TestoGrande.disegnaRiga(graphics, titolo, (width - TestoGrande.larghezza(titolo)) >> 1, QUOTA_TITOLO);
 		long sbloccate = voci.stream().filter(vistaPartita::isVoceDelBestiarioSbloccata).count();
 		Image quante = ImageCache.get(sbloccate + "/" + voci.size(), DoomdarkFont.medio(), DoomdarkColorModel.Color.MEDIUM_GRAY);

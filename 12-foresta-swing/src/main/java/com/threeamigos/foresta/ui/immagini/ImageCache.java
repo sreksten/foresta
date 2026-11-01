@@ -82,10 +82,6 @@ public class ImageCache {
 	public static BufferedImage separatoreNinnoli;
 	public static BufferedImage segnalino;
 	public static BufferedImage indicatore;
-	public static BufferedImage punto;
-	public static BufferedImage virgola;
-	public static BufferedImage apostrofo;
-	public static BufferedImage puntodd;
 	public static Map<TipoLocazione, BufferedImage> locazioni;
 	public static Map<TipoLocazione, BufferedImage> mappa;
 	// Le immagini alternative del bosco sulla mappa (indice 0 = Foresta.gif), vedi
@@ -94,8 +90,10 @@ public class ImageCache {
 			"mappa/Foresta.gif", "mappa/Foresta2.gif", "mappa/Foresta3.gif", "mappa/Foresta4.gif"
 	};
 	static BufferedImage[] mappaVariantiBosco;
-	public static BufferedImage[] lettere;
-	public static BufferedImage[] cifre;
+	/**
+	 * I glifi dell'alfabeto grande (maiuscole, cifre e ' , . ?), già ingranditi, presi dall'atlante {@code img/font/alfabeto_grande.gif}
+	 */
+	private static Map<Character, BufferedImage> alfabetoGrande;
 
 	public static BufferedImage[] spriteIncantesimi;
 	public static BufferedImage spriteAmicizia;
@@ -235,50 +233,7 @@ public class ImageCache {
 		segnalino = BufferedImageBuilder.buildBufferedImage("mappa/Segnalino.gif", zoom);
 		indicatore = BufferedImageBuilder.buildBufferedImage("mappa/Indicatore.gif", zoom);
 
-		lettere = new BufferedImage[26];
-		lettere[0] = BufferedImageBuilder.buildBufferedImage("alfabeto/A.gif", zoom);
-		lettere[1] = BufferedImageBuilder.buildBufferedImage("alfabeto/B.gif", zoom);
-		lettere[2] = BufferedImageBuilder.buildBufferedImage("alfabeto/C.gif", zoom);
-		lettere[3] = BufferedImageBuilder.buildBufferedImage("alfabeto/D.gif", zoom);
-		lettere[4] = BufferedImageBuilder.buildBufferedImage("alfabeto/E.gif", zoom);
-		lettere[5] = BufferedImageBuilder.buildBufferedImage("alfabeto/F.gif", zoom);
-		lettere[6] = BufferedImageBuilder.buildBufferedImage("alfabeto/G.gif", zoom);
-		lettere[7] = BufferedImageBuilder.buildBufferedImage("alfabeto/H.gif", zoom);
-		lettere[8] = BufferedImageBuilder.buildBufferedImage("alfabeto/I.gif", zoom);
-		lettere[9] = BufferedImageBuilder.buildBufferedImage("alfabeto/J.gif", zoom);
-		lettere[10] = BufferedImageBuilder.buildBufferedImage("alfabeto/K.gif", zoom);
-		lettere[11] = BufferedImageBuilder.buildBufferedImage("alfabeto/L.gif", zoom);
-		lettere[12] = BufferedImageBuilder.buildBufferedImage("alfabeto/M.gif", zoom);
-		lettere[13] = BufferedImageBuilder.buildBufferedImage("alfabeto/N.gif", zoom);
-		lettere[14] = BufferedImageBuilder.buildBufferedImage("alfabeto/O.gif", zoom);
-		lettere[15] = BufferedImageBuilder.buildBufferedImage("alfabeto/P.gif", zoom);
-		lettere[16] = BufferedImageBuilder.buildBufferedImage("alfabeto/Q.gif", zoom);
-		lettere[17] = BufferedImageBuilder.buildBufferedImage("alfabeto/R.gif", zoom);
-		lettere[18] = BufferedImageBuilder.buildBufferedImage("alfabeto/S.gif", zoom);
-		lettere[19] = BufferedImageBuilder.buildBufferedImage("alfabeto/T.gif", zoom);
-		lettere[20] = BufferedImageBuilder.buildBufferedImage("alfabeto/U.gif", zoom);
-		lettere[21] = BufferedImageBuilder.buildBufferedImage("alfabeto/V.gif", zoom);
-		lettere[22] = BufferedImageBuilder.buildBufferedImage("alfabeto/W.gif", zoom);
-		lettere[23] = BufferedImageBuilder.buildBufferedImage("alfabeto/X.gif", zoom);
-		lettere[24] = BufferedImageBuilder.buildBufferedImage("alfabeto/Y.gif", zoom);
-		lettere[25] = BufferedImageBuilder.buildBufferedImage("alfabeto/Z.gif", zoom);
-
-		cifre = new BufferedImage[10];
-		cifre[0] = BufferedImageBuilder.buildBufferedImage("alfabeto/0.gif", zoom);
-		cifre[1] = BufferedImageBuilder.buildBufferedImage("alfabeto/1.gif", zoom);
-		cifre[2] = BufferedImageBuilder.buildBufferedImage("alfabeto/2.gif", zoom);
-		cifre[3] = BufferedImageBuilder.buildBufferedImage("alfabeto/3.gif", zoom);
-		cifre[4] = BufferedImageBuilder.buildBufferedImage("alfabeto/4.gif", zoom);
-		cifre[5] = BufferedImageBuilder.buildBufferedImage("alfabeto/5.gif", zoom);
-		cifre[6] = BufferedImageBuilder.buildBufferedImage("alfabeto/6.gif", zoom);
-		cifre[7] = BufferedImageBuilder.buildBufferedImage("alfabeto/7.gif", zoom);
-		cifre[8] = BufferedImageBuilder.buildBufferedImage("alfabeto/8.gif", zoom);
-		cifre[9] = BufferedImageBuilder.buildBufferedImage("alfabeto/9.gif", zoom);
-
-		punto = BufferedImageBuilder.buildBufferedImage("alfabeto/Punto.gif", zoom);
-		virgola = BufferedImageBuilder.buildBufferedImage("alfabeto/Virgola.gif", zoom);
-		puntodd = BufferedImageBuilder.buildBufferedImage("alfabeto/PuntoDiDomanda.gif", zoom);
-		apostrofo = BufferedImageBuilder.buildBufferedImage("alfabeto/Apostrofo.gif", zoom);
+		alfabetoGrande = costruisciAlfabetoGrande(zoom);
 		
 		spriteIncantesimi = new BufferedImage[TipoIncantesimo.values().length];
 		spriteIncantesimi[TipoIncantesimo.ARIA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Aria.gif");
@@ -324,6 +279,40 @@ public class ImageCache {
 
 		// Avvia il reaper in background ogni minuto: è un thread daemon, finisce da solo con la JVM
 		avviaReaper(1, TimeUnit.MINUTES);
+	}
+
+	private static final String RISORSA_ALFABETO_GRANDE = "/com/threeamigos/foresta/img/font/alfabeto_grande.gif";
+	private static final int ALFABETO_GRANDE_LARGHEZZA_DELLO_SPAZIO = 5;
+
+	/**
+	 * I glifi dell'atlante dell'alfabeto grande, in maiuscolo (la riga delle minuscole è vuota), già ingranditi. Hanno
+	 * l'altezza dell'intero riquadro: le righe in più in cima servono agli accenti, quelle in fondo alle cediglie.
+	 */
+	private static Map<Character, BufferedImage> costruisciAlfabetoGrande(double zoom) {
+		ImmagineDelFontAColori atlante = ImmagineDelFontAColori.carica(RISORSA_ALFABETO_GRANDE, ALFABETO_GRANDE_LARGHEZZA_DELLO_SPAZIO);
+		Map<Character, BufferedImage> glifi = new HashMap<>();
+		for (Map.Entry<Character, GlifoAColori> voce : atlante.getGlifi().entrySet()) {
+			if (voce.getKey() == ' ') {
+				continue; // lo spazio lo misura chi scrive il testo
+			}
+			GlifoAColori glifo = voce.getValue();
+			BufferedImage immagine = new BufferedImage(glifo.getLarghezza(), glifo.getAltezza(), BufferedImage.TYPE_INT_ARGB);
+			for (int y = 0; y < glifo.getAltezza(); y++) {
+				for (int x = 0; x < glifo.getLarghezza(); x++) {
+					immagine.setRGB(x, y, glifo.getPixel(x, y));
+				}
+			}
+			glifi.put(voce.getKey(), BufferedImageBuilder.ingrandisci(immagine, zoom));
+		}
+		return glifi;
+	}
+
+	/**
+	 * Il glifo dell'alfabeto grande (in maiuscolo: lettere, anche accentate, cifre e punteggiatura), o null se l'alfabeto
+	 * non ha quel carattere. È alto quanto un riquadro dell'atlante, con lo spazio per accenti e cediglie.
+	 */
+	public static BufferedImage glifoGrande(char c) {
+		return alfabetoGrande.get(c);
 	}
 
 	/**

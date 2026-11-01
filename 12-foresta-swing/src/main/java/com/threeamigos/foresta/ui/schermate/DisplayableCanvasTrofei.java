@@ -54,7 +54,7 @@ public class DisplayableCanvasTrofei implements Finestra {
 	public void disegna(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.ombraDelDrago, (width - ImageCache.ombraDelDrago.getWidth()) >> 1,
 				(height - ImageCache.ombraDelDrago.getHeight()) >> 1, null);
-		String titolo = TestoGrande.normalizza("trofei");
+		String titolo = "trofei";
 		TestoGrande.disegnaRiga(graphics, titolo, (width - TestoGrande.larghezza(titolo)) >> 1, QUOTA_TITOLO);
 		if (scorrimento != null) {
 			scorrimento.disegna(graphics, 1);
