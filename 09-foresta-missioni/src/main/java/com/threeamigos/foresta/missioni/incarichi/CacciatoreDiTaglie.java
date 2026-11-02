@@ -97,7 +97,7 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 						.esegui(() -> {
 							String direzione = Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), getCovo());
 							aggiungiProprieta(DIREZIONE, direzione);
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "CacciatoreDiTaglie.s1", getRicercato(), direzione)));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "CacciatoreDiTaglie.s1", getRicercato(), direzione.replaceAll("\\.$", ""))));
 						})
 						.poi(CACCIA);
 			case CACCIA:

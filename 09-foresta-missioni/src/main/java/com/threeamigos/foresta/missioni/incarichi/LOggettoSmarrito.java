@@ -211,7 +211,7 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 	@Override
 	protected String testoConsegna() {
 		OggettoSmarrito smarrito = getSmarrito();
-		return Lingue.corrente().inizialeMaiuscola(smarrito.getOggettoConArticolo()) + " torna " + Lingue.corrente().conPreposizione(Preposizione.A, smarrito.getProprietario()) + ".";
+		return Testi.formatta("missioni", "LOggettoSmarrito.torna", Lingue.corrente().inizialeMaiuscola(smarrito.getOggettoConArticolo()), Lingue.corrente().conPreposizione(Preposizione.A, smarrito.getProprietario()));
 	}
 
 	@Override

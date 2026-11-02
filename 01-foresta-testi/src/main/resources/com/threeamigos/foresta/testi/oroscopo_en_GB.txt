@@ -17,7 +17,7 @@ SEGNO
 	Sign of a break-in at your front door
 	Bad sign
 	Sign that you should have stayed home
-	Virgo - if any are left -
+	Virgo (if any are left)
 	[TEMA=MS:the keyboard]Sign of the coffee on the keyboard
 	Sign of the technician who never shows up
 	[TEMA=MS:the printer]Sign of the jammed printer
@@ -60,7 +60,7 @@ QUALCOSA_SINGOLARE
 	[TEMA=MS:the router]the router upstairs
 	the colleague who replies to all
 	[TEMA=MS:the network printer]the network printer
-	the holiday schedule | the company canteen | the employee parking lot
+	the holiday schedule | the company canteen | the staff car park
 	[TEMA=MP:the sysadmins]the sysadmins' holiday period
 	[TEMA=MS:the CD-ROM drive]the CD-ROM drive
 	[TEMA=MS:the domain server]the domain server
@@ -207,7 +207,7 @@ SUGGERIMENTO
 LOCALITA_SPREGEVOLE
 	the county jail
 	the town dump
-	the emergency room
+	A&E
 	the cemetery
 	the complaints office
 	[TEMA=MS:the machine room]the machine room without air conditioning

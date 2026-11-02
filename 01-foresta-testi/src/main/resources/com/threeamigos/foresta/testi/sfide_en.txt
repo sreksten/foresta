@@ -10,7 +10,7 @@ SFIDA
 
 GIOCATORE_VINCE
     Well, I never! I've never met a player as good as you!
-    Well, I never! You are the first one to beat me at this game!
+    Well, I never! You're the first one to beat me at this game!
     Incredible! Nobody had ever beaten me like that!
 
 GIOCATORE_PERDE
@@ -19,9 +19,9 @@ GIOCATORE_PERDE
     Ha ha! I'm always the champion!
 
 TORNEO
-    You should really take part in the tournament that is about to be held.
+    You should really take part in the tournament that's about to be held.
     You absolutely must take part in the tournament that is about to begin!
-    There is a tournament about to begin: the champions are waiting for you.
+    There's a tournament about to begin: the champions are waiting for you.
 
 NOME_LEGGENDARIO_DEI_CAMPIONI
     the Trophy of the First Rock

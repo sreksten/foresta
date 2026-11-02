@@ -30,7 +30,7 @@ SALUTO_ARMAIOLO
     Step inside, but don't touch the merchandise with dirty gloves. I buy and sell every kind of weapon and armor.
 
 SALUTO_ALCHIMISTA
-    Welcome to my Alchemist's shop! I can sell you spells, potions, maps, or increase your magic power.
+    Welcome to my alchemist's shop! I can sell you spells, potions, maps, or increase your magic power.
     Come in, come in, but don't touch anything! I have spells, potions and maps, and I can also increase your magic power.
     Welcome to my shop! Potions, spells, maps and, for those who want more, a nice magical upgrade.
     Ah, customers! Mind where you step: some potions are still being tested. I sell spells, potions and maps, and I increase magic power.

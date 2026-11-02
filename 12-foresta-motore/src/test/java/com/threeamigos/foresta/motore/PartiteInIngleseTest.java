@@ -24,8 +24,8 @@ class PartiteInIngleseTest {
 	private static final int PASSI = 3000;
 	static final Set<String> NOTE_SALVATE = new HashSet<>(Arrays.asList("la lealtà", "Ignominia della fuga", "Pelle di corteccia", "Grido di battaglia", "Nebbia", "Negazione della Magia"));
 
-	// Parole italiane che in inglese non esistono
-	private static final Pattern ITALIANO = Pattern.compile("(?<![-\\w])(attacca|attaccano|colpisce|colpiscono|muore|muoiono|cade|cadono|lancia|lanciano|beve|bevono|prende|prendono|trova|trovano|perde|perdono|guadagna|guadagnano|ottiene|ottengono|entra|entrano|esce|escono|dorme|dormono|riposa|riposano|scappa|scappano|fugge|fuggono|evoca|canta|cantano|parla|parlano|chiede|chiedono|risponde|rispondono|vince|vincono|sconfigge|sconfiggono|ferisce|feriscono|manca|mancano|schiva|schivano|resiste|resistono|subisce|subiscono|recupera|recuperano|rimane|rimangono|riceve|ricevono|viene|vengono|diventa|diventano|colpito|colpita|sconfitto|sconfitta|il|gli|della|dello|delle|degli|dei|del|che|non|sono|nel|nella|nei|nelle|una|uno|voi|più|anche|dove|questo|questa|hanno|poi|giorno|ora|della|alla|alle|allo|agli|dal|dalla|dalle|sul|sulla|sulle|suo|sua|suoi|sue|mio|mia|nostro|nostra|vostro|vostra|perché|però|quando|molto|tutto|tutti|ancora|sempre|dopo|prima|ogni|fra|tra|di|e|volta|volte|stanno|guidati|ricercato|rimaste|invoca|rovine|custodivano|prosegue|comincia|aspetta|passa)(?![-\\w])|\\bè\\b|\\bsi è\\b");
+	// Parole italiane che in inglese non esistono (la "e" dopo una & non conta: "A&E"); il nome del file invisibile ".normally-hidden-sword" ha un punto dopo uno spazio e non è un errore di spaziatura
+	private static final Pattern ITALIANO = Pattern.compile("(?<![-\\w&])(attacca|attaccano|colpisce|colpiscono|muore|muoiono|cade|cadono|lancia|lanciano|beve|bevono|prende|prendono|trova|trovano|perde|perdono|guadagna|guadagnano|ottiene|ottengono|entra|entrano|esce|escono|dorme|dormono|riposa|riposano|scappa|scappano|fugge|fuggono|evoca|canta|cantano|parla|parlano|chiede|chiedono|risponde|rispondono|vince|vincono|sconfigge|sconfiggono|ferisce|feriscono|manca|mancano|schiva|schivano|resiste|resistono|subisce|subiscono|recupera|recuperano|rimane|rimangono|riceve|ricevono|viene|vengono|diventa|diventano|colpito|colpita|sconfitto|sconfitta|il|gli|della|dello|delle|degli|dei|del|che|non|sono|nel|nella|nei|nelle|una|uno|voi|più|anche|dove|questo|questa|hanno|poi|giorno|ora|della|alla|alle|allo|agli|dal|dalla|dalle|sul|sulla|sulle|suo|sua|suoi|sue|mio|mia|nostro|nostra|vostro|vostra|perché|però|quando|molto|tutto|tutti|ancora|sempre|dopo|prima|ogni|fra|tra|di|e|volta|volte|stanno|guidati|ricercato|rimaste|invoca|rovine|custodivano|prosegue|comincia|aspetta|passa)(?![-\\w])|\\bè\\b|\\bsi è\\b");
 
 	@AfterEach
 	void tornaAllItaliano() {
@@ -45,7 +45,7 @@ class PartiteInIngleseTest {
 				Matcher m = ITALIANO.matcher(testo.toLowerCase(Locale.ROOT));
 				if (m.find()) {
 					problemi.putIfAbsent(testo, "parola italiana «" + m.group() + "»");
-				} else if (testo.contains("  ") || testo.matches("(?s).*\\s[,.;:!?].*")) {
+				} else if (testo.contains("  ") || testo.replace(".normally-hidden-sword", "file").matches("(?s).*\\s[,.;:!?].*")) {
 					problemi.putIfAbsent(testo, "spaziatura");
 				}
 			}

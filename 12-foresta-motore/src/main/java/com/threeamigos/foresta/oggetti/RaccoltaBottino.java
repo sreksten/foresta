@@ -289,7 +289,10 @@ public final class RaccoltaBottino {
 	 */
 	private static String comeSoggetto(Artefatto artefatto) {
 		String nome = artefatto.getNomeCompleto();
-		nome = nome.substring(0, 1).toUpperCase(Locale.ROOT) + nome.substring(1);
+		// In inglese l'oggetto sta a metà frase ("The party stores the bone spear..."): niente maiuscola
+		if (Boolean.parseBoolean(Testi.formatta("messaggi_motore", "RaccoltaBottino.nomeInizioFrase"))) {
+			nome = nome.substring(0, 1).toUpperCase(Locale.ROOT) + nome.substring(1);
+		}
 		return nome.contains(", ") ? nome + ',' : nome;
 	}
 

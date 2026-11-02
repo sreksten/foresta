@@ -30,7 +30,7 @@ SALUTO_ARMAIOLO
     Step inside, but don't touch the merchandise with dirty gloves. I buy and sell every kind of weapon and armour.
 
 SALUTO_ALCHIMISTA
-    Welcome to my Alchemist's shop! I can sell you spells, potions, maps, or increase your magic power.
+    Welcome to my alchemist's shop! I can sell you spells, potions, maps, or increase your magic power.
     Come in, come in, but don't touch anything! I have spells, potions and maps, and I can also increase your magic power.
     Welcome to my shop! Potions, spells, maps and, for those who want more, a nice magical upgrade.
     Ah, customers! Mind where you step: some potions are still being tested. I sell spells, potions and maps, and I increase magic power.
@@ -41,9 +41,9 @@ SALUTO_INCANTATORE
     Hello there! Enchantments are the house specialty: I can improve your weapons with a touch of magic.
 
 SALUTO_VENDITORE
-    Welcome to my shop of Scrolls, Amulets, Knickknacks and Trinkets! These are the basic ingredients needed to improve your weapons.
-    Welcome! Scrolls, amulets, knickknacks and trinkets: everything you need to improve your weapons, right at hand.
-    Step right up! Trinkets and knickknacks of every sort, plus the basic ingredients to upgrade your weapons.
+    Welcome to my shop of Scrolls, Amulets, Knick-knacks and Trinkets! These are the basic ingredients needed to improve your weapons.
+    Welcome! Scrolls, amulets, knick-knacks and trinkets: everything you need to improve your weapons, right at hand.
+    Step right up! Trinkets and knick-knacks of every sort, plus the basic ingredients to upgrade your weapons.
 
 // The night scene in the shops: the leader asks whether they ever close and the shopkeeper answers. Question and answer are
 // drawn at random, independently. NEGOZIANTI (the plural of the trade, "the armourers") is fixed by the code before producing;

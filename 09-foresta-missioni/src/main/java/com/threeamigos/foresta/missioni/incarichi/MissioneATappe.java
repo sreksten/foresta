@@ -422,7 +422,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		}
 		StringBuilder descrizione = new StringBuilder(mandanteEChiesto(richiesta));
 		for (int tappa = 1; tappa < corrente && tappa <= richiesta.getTappe().size(); tappa++) {
-			descrizione.append(" Informazione ").append(tappa).append(": ")
+			descrizione.append(' ').append(Testi.formatta("missioni", "MissioneATappe.informazione", tappa)).append(' ')
 					.append(testo(richiesta.getTappe().get(tappa - 1).getInformazione(), tappa + 1));
 		}
 		if (richiesta.getBivio().isPresent() && corrente == tappe + 1 && coordinateDelPosto(tappe + 2) != null) {

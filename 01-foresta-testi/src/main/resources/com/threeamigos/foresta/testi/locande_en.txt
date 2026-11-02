@@ -97,7 +97,7 @@ BIVIO_SBAGLIATO$
 RIPARO_DAL_DM$
     [IDENTIFICATIVO=RIPARO_DAL_DM]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
-    [DIALOGO=Welcome to Shelter from the DM! [MI_CHIAMO] Relax, in here there are no saving throws, no trapdoors in the floor and no ancient dragons. Only beer and a temporary immunity to the sadistic whims of fate. What can I pour you?]\
+    [DIALOGO=Welcome to Shelter from the DM! [MI_CHIAMO] Relax: in here there are no saving throws, no trapdoors in the floor and no ancient dragons. Only beer and a temporary immunity to the sadistic whims of fate. What can I pour you?]\
     [RECENSIONE=This is a safe haven where the innkeeper doesn't make you roll a Constitution saving throw before touching the food.]\
     [NOME_LOCANDA=Shelter from the DM]\
     [#NOME_LOCANDA]
@@ -139,7 +139,7 @@ FRASCA_DEL_LUPO_ASTEMIO$
 TRONCO_CAVO$
     [IDENTIFICATIVO=TRONCO_CAVO]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
-    [DIALOGO=Welcome to the Hollow Trunk, travelers. [MI_CHIAMO] You are inside three hundred tons of ancient oak. I only ask you to follow three simple rules: no fire spells, no sticking your daggers in the wall to look cool, and no asking for firewood. If you're thirsty, try our bark beer. It tastes a little earthy, but I guarantee it will leave you with your roots firmly planted in the ground.]\
+    [DIALOGO=Welcome to the Hollow Trunk, travelers. [MI_CHIAMO] You're inside three hundred tons of ancient oak. I only ask you to follow three simple rules: no fire spells, no sticking your daggers in the wall to look cool, and no asking for firewood. If you're thirsty, try our bark beer. It tastes a little earthy, but I guarantee it will leave you with your roots firmly planted in the ground.]\
     [RECENSIONE=The Hollow Trunk is literally built inside a hollowed-out ancient tree.]\
     [NOME_LOCANDA=The Hollow Trunk]\
     [#NOME_LOCANDA]
@@ -202,7 +202,7 @@ CACCIATORE_MANCINO$
 FUEGO_DEL_FUORILEGGE$
     [IDENTIFICATIVO=FUEGO_DEL_FUORILEGGE]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
-    [DIALOGO=Psst! Come in and keep your head down! Welcome to the Outlaw's Hearth. [MI_CHIAMO] If the city guards asked you where you were going, I hope you came up with a good excuse. In here we don't ask for names, we don't keep records and we accept gold coins from any realm, even the blatantly counterfeit ones. Sit down and try not to be noticed.]\
+    [DIALOGO=Psst! Come in and keep your head down! Welcome to the Outlaw's Hearth. [MI_CHIAMO] If the city guards ask you where you're going, I hope you've come up with a good excuse. In here we don't ask for names, we don't keep records and we accept gold coins from any realm, even the blatantly counterfeit ones. Sit down and try not to be noticed.]\
     [RECENSIONE=The Outlaw's Hearth is extremely well hidden in the bushes!]\
     [NOME_LOCANDA=The Outlaw's Hearth]\
     [#NOME_LOCANDA]
@@ -217,7 +217,7 @@ CAVALLO_CHE_PARLA$
     [IDENTIFICATIVO=CAVALLO_CHE_PARLA]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [DIALOGO=Welcome to the Talking Horse! [MI_CHIAMO] Go on, ask Lightning your question, he'll answer you! See? It's a miracle of nature! Now stop asking the animal questions and buy some beer, because keeping this quackish quadruped costs me a fortune.]\
-    [RECENSIONE=Don't be fooled, the horse doesn't talk, but the innkeeper can imitate a whinny.]\
+    [RECENSIONE=Don't be fooled: the horse doesn't talk, but the innkeeper can imitate a whinny.]\
     [NOME_LOCANDA=The Talking Horse]\
     [#NOME_LOCANDA]
 ANONIMA_ALCOLISTI$
@@ -313,7 +313,7 @@ NOTIZIE_MAGO_SENZA_TRUCCO
     MST1-Mental Hygiene Complaints - The innkeeper of the Trickless Wizard, NOME_LOCANDIERE, reports the disappearance of the inn's black cat, last seen while EROE was trying to use it as an emergency magic toupee.
     MST2-Optical Illusions - One glass too many at the Trickless Wizard drives EROE to challenge a chair to a duel, convinced it was an ancient Hydra disguised as furniture.
     MST3-Tricks Exposed - Uproar at the Trickless Wizard: MAGO showed that the innkeeper's top-hat trick was only a cardboard false bottom, shattering the childhood dreams of those present.
-    MST4-Vine Potions - The local alchemist protests against the Trickless Wizard after EROE tried to treat a cut by pouring a whole goblet of barrel-aged wine onto their arm.
+    MST4-Wine Potions - The local alchemist protests against the Trickless Wizard after EROE tried to treat a cut by pouring a whole goblet of barrel-aged wine onto their arm.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_ULTIMO_BICCHIERE
@@ -333,7 +333,7 @@ NOTIZIE_ORSO_BALLERINO
 NOTIZIE_ULTIMA_SPERANZA
     US1-Capital Flight - The innkeeper of the Inn of Last Hope, NOME_LOCANDIERE, declares bankruptcy: EROE drank on credit, promising to pay with the Dragon's treasure.
     US2-Living Customers - Panic at the Inn of Last Hope: the arrival of EROE in the flesh terrified the resident ghosts, who abandoned the fireplace complaining about the lack of respect for the dead.
-    US3-Fire Out - A botched Air spell puts out the hearth of the Inn of Last Hope; twelve ghost customers faded away in the cold, leaving the innkeeper to mop the floor of ectoplasm.
+    US3-Fire Out - A botched Air spell puts out the hearth of the Inn of Last Hope; twelve ghost customers fade away in the cold, leaving the innkeeper to mop the floor of ectoplasm.
     US4-Patient Wolves - The wolves outside the Inn of Last Hope thank EROE for throwing the leftover stew out of the window, calling it “more tender than lost hunters”.
     [NOTIZIE_LOCANDA]
 
@@ -417,7 +417,7 @@ NOTIZIE_TRONCO_CAVO
 
 NOTIZIE_DRAGO_VOMITANTE
     DV1-Cleaning Accident - The Vomiting Dragon closes for three days: EROE knocked over a barrel of the alchemist's acid while trying to clean a gravy stain.
-    DV2-Smell of Acid - EROE faints at the entrance of the Vomiting Dragon, brought down by the corrosive fumes of the floor that wiped out their Constitution saving throws.
+    DV2-Smell of Acid - EROE faints at the entrance to the Vomiting Dragon, brought down by the corrosive fumes of the floor that wiped out their Constitution saving throws.
     DV3-Back of the Dragon - LADRO is caught behind the Vomiting Dragon using leftover fire mead to make clandestine smoke bombs against the guards.
     DV4-The Necromancer's Rag - The innkeeper of the Vomiting Dragon, NOME_LOCANDIERE, uses his legendary black rag against EROE, inflicting the Infected status for staggering too close to the flowerpots.
     [NOTIZIE_LOCANDA]
@@ -465,7 +465,7 @@ NOTIZIE_DRAGO_SPENNATO
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_CACCIATORE_MANCINO
-    CM1-Missed Deer - EROE spends the night fasting at the Left-Handed Hunter, waiting for the archer owner to hit his first prey in the dense forest with his crooked bow.
+    CM1-Missed Deer - EROE spends the night fasting at the Left-Handed Hunter, waiting for the owner, an archer, to hit his first prey in the dense forest with his crooked bow.
     CM2-Wine Aim - A show at the Left-Handed Hunter. The archer innkeeper NOME_LOCANDIERE tries to pour wine into EROE's tankard from ten feet away, completely soaking GUERRIERO's armor.
     CM3-Old Eyes - MAGO gives a pair of magic glasses to the owner of the Left-Handed Hunter, NOME_LOCANDIERE, who mistakes the object for an elemental explosive trap.
     CM4-Empty Archer - EROE leaves a review of the Left-Handed Hunter: “Excellent wine, but if you wait for the innkeeper to catch a deer you'll starve before reaching level 2”.
@@ -531,7 +531,7 @@ NOTIZIE_RE_FINTO
 NOTIZIE_LOCANDA
     LG1-Legendary Brawl - NOME_LOCANDA was devastated by a theological dispute over the sex of sprites. EROE used a dwarf chair as their main argument.
     LG2-Innkeeper's Complaints - The owner of NOME_LOCANDA, NOME_LOCANDIERE, expresses deep outrage at “these Sunday heroes” who order a single broth between four of them and steal the linen napkins.
-    LG3-Serious Artistic Accident - A local bard, a patron of NOME_LOCANDA, suffered a lute fracture on his head after trying to strike up a celebratory ballad about EROE's armpits.
+    LG3-Serious Artistic Accident - A local bard, a patron of NOME_LOCANDA, had a lute broken over his head after trying to strike up a celebratory ballad about EROE's armpits.
     LG4-Bar Brawl - A commotion broke out at NOME_LOCANDA because of a patron who was looking at the hero's tankard “with the evident intent of belittling its foam”.
     LG5-Unpaid Bill - Manhunt in the county. EROE fled through the back of NOME_LOCANDA passing off three polished copper buttons as ancient coins of the Empire of the Void.
     LG6-Hygiene Disaster - The local alchemist runs out of charcoal after the mysterious stew of NOME_LOCANDA caused a symphonic colic among the patrons.

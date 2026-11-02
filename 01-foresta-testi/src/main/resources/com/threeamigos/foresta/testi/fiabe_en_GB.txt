@@ -256,7 +256,7 @@ LUOGO_PROEMIO
 FATTO_PROEMIO
 	[VIVEVA] [CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA]
 	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], practised skipping meals
-	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], trained for cross-country running against the king's guards for [CRIMINE]
+	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], took up cross-country running to escape the king's guards, who wanted him for [CRIMINE]
 	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], was wanted for [CRIMINE]
 	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], { was in the habit of | made a habit of | was fond of } [ABITUDINE]
 
@@ -278,7 +278,7 @@ CONOSCIUTO_COME
     whom the hangman knew all too well as
 
 ABITUDINE
-	running away from the king's guards for [CRIMINE] | hiding from justice for [CRIMINE]
+	running away from the king's guards, who wanted him for [CRIMINE] | hiding from justice, wanted for [CRIMINE]
 	skinning travellers | trying his luck in taverns and dives
 	trading in weapons and human organs | robbing little old ladies | getting blood out of turnips
 	bullying the weak | making himself scarce for [CRIMINE]
@@ -298,7 +298,7 @@ CRIMINE
 	theft, looting and arson
 	blasphemy in a public place | smuggling smoked herring | illegal possession of a pet dragon
 	public insults to royalty | frequenting dives where music was played without a licence
-	fraud against the treasury | theft of crockery from convents | seduction of wealthy widows
+	fraud against the treasury | theft of crockery from convents | seducing wealthy widows
 	illegal trafficking of false relics | public defamation of illustrious persons
 	failure to pay taxes for three generations | running an illegal gambling den | cowardice in battle
 
@@ -407,7 +407,7 @@ DECISIONE_DOVE
 	in remote countries | in other regions | in the nearby city | in unexplored lands
 	in lands unknown to most | at the South Pole | at the North Pole | where the sun sets
 	where the sun rises | in the West | in the East | far, far away
-	at the edge of the nearest Kingdom | in the mists of the North | where nobody knew his name
+	at the edge of the nearest kingdom | in the mists of the North | where nobody knew his name
 
 RACCONTO_P_2
 	That's how, [RACCONTO_P_2_QUANDO], he set off, [RACCONTO_P_2_FORNITO_DI] [*EQUIPAGGIAMENTO].
@@ -451,14 +451,14 @@ RACCONTO_ECCO_CHE
 	there he met | suddenly he saw | coming towards him was | blocking his path he found | after a few steps there appeared
 	as soon as he left the house there appeared | as soon as he left the village there appeared | right outside the town he saw | as he turned the corner he met
 	after a few steps there came towards him | having turned the corner he saw | at the end of the road there appeared before him
-	right around the corner he bumped into | he had barely time to breathe before he saw
+	right around the corner he bumped into | he had barely had time to breathe before he saw
 
 ANTAGONISTA
 	[ANIMALE] | [PERSONAGGIO]
 
 ANIMALE
 	wolf | kobold | donkey | billy goat | wild dog | pig | toad | boar | bull | chameleon
-	hoot owl | tapir | pigeon | lion | minotaur | snake | lone sparrow | dragon | cerberus | basilisk
+	tawny owl | tapir | pigeon | lion | minotaur | snake | lone sparrow | dragon | Cerberus | basilisk
 	griffin | troll | cyclops
 
 PERSONAGGIO
@@ -494,22 +494,22 @@ ATTRIBUTO_ANTAGONISTA
 	[ATTR_ART=an ][ATTR_PRE=arrogant ][ATTR_POST=]
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, an outcast]
 	[ATTR_ART=a ][ATTR_PRE=decidedly dubious ][ATTR_POST=]
-	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, with a crest]
-	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, with horns]
-	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, with a forked tongue]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST= with a crest]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST= with horns]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST= with a forked tongue]
 	[ATTR_ART=a ][ATTR_PRE=mangy ][ATTR_POST=]
-	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, with pestilential breath]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST= with pestilential breath]
 	[ATTR_ART=a ][ATTR_PRE=patently drunk ][ATTR_POST=]
-	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, with an unreassuring look]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST= with an unreassuring look]
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, visibly suffering from an existential crisis]
 	[ATTR_ART=an ][ATTR_PRE=extraordinarily ordinary ][ATTR_POST=]
 	[ATTR_ART=a ][ATTR_PRE=sadly banal ][ATTR_POST=]
 	[ATTR_ART=a ][ATTR_PRE=ridiculously pompous ][ATTR_POST=]
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, smelling of vinegar and regret]
-	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, with pockets full of money that was not his]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST= with pockets full of money that was not his]
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, looking like someone who has lost an important bet]
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, as dirty as a pan unwashed for years]
-	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, with the air of someone who has just failed an undertaking]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST= with the air of someone who has just failed an undertaking]
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, muttering curses against people dead for centuries]
 
 PENSIERO
@@ -575,14 +575,14 @@ CHI_ERA_L_ANTAGONISTA
 	an expert player of knucklebones | a champion of tavern brawls | the leader of a band of bandits
 	the head of the king's guards | a well-known mercenary captain with his troops in tow | an expert thug
 	the leader of a band of bandits | the local Ju-Jitsu champion | a master at wielding a club
-	a champion in the use of the saber
+	a champion in the use of the sabre
 	the much-decorated veteran of a hundred tavern brawls | a wrestler of { at least regional | national | world } fame
 
 RIDOTTO_COME
-	brought to a more reasonable frame of mind | mercilessly massacred | disintegrated by a hail of blows
+	brought to a more reasonable frame of mind | massacred without mercy | disintegrated by a hail of blows
 	reduced to a bloody mask | reduced to a knot of pain | given a proper beating
 	kicked around like a dog in church
-	{ violently | forcibly | } led to { rethink his plans | a more reasonable frame of mind }
+	led to rethink his plans | led to a more reasonable frame of mind | brought to rethink his plans | pushed into a more reasonable frame of mind | made to see reason
 	reduced to such a { wretched | pitiable } condition that not even [SAMARITANO] could have helped him
 	rushed off to the nearest doctor | reduced to begging forgiveness on his knees
 
@@ -709,8 +709,8 @@ APPARIZIONE_MAGO_CATTIVO
 	Out of nowhere, amid thunder and lightning, there appeared | From a dusty mirror there emerged
 
 MAGO_CATTIVO_APOSTROFA
-	who said to him: | who addressed him thus: | who gave him the following admonition: | who thundered:
-	who addressed him curtly: | who huffed: | who shouted:
+	, who said to him: | , who addressed him thus: | , who gave him the following admonition: | , who thundered:
+	, who addressed him curtly: | , who huffed: | , who shouted:
 
 FRASE_MAGO_CATTIVO
 	“Here your wickedness comes out into the open!”
@@ -752,32 +752,32 @@ FINACCIA
 	reduced to penniless beggars | dragged into exile with their tails between their legs | publicly declared infamous
 
 MORALE
-	[PENSIERO_PROFONDO], [CONCLUSE], [CHIOSA].
+	[PENSIERO_PROFONDO] [CONCLUSE], [CHIOSA].
 
 PENSIERO_PROFONDO
-	“Every cloud has a silver lining”
-	“The cat goes to the lard so often that it leaves its paw there”
-	“They don't make seasons like they used to”
-	“It's raining; blame the government”
-	“Make yourself a sheep and the wolf will eat you”
-	“What a world”
-	“The things one has to do to make a living”
-	“He who laughs last laughs best”
-	“It doesn't end here, you'll see me again”
-	“Blessed are the easily pleased”
-	“A barking dog never bites”
-	“Better an egg today than a hen tomorrow, as long as it isn't stolen”
-	“Life is like an inn: full of drunks and swindles”
-	“Money isn't everything, but nothing is even less”
+	“Every cloud has a silver lining,”
+	“The cat goes to the lard so often that it leaves its paw there,”
+	“They don't make seasons like they used to,”
+	“It's raining; blame the government,”
+	“Make yourself a sheep and the wolf will eat you,”
+	“What a world,”
+	“The things one has to do to make a living,”
+	“He who laughs last laughs best,”
+	“It doesn't end here, you'll see me again,”
+	“Blessed are the easily pleased,”
+	“A barking dog never bites,”
+	“Better an egg today than a hen tomorrow, as long as it isn't stolen,”
+	“Life is like an inn: full of drunks and swindles,”
+	“Money isn't everything, but nothing is even less,”
 	“If you can steal, why work?”
-	“Virtue is the refuge of the mediocre”
-	“Whoever dies paying his debts at least dies consistent”
-	“Honesty is a disease that cures itself with time”
+	“Virtue is the refuge of the mediocre,”
+	“Whoever dies paying his debts at least dies consistent,”
+	“Honesty is a disease that cures itself with time,”
 
 CONCLUSE
 	he thought to himself
 	he concluded
-	he thereby understood
+	he understood at last
 	he observed
 	he sighed
 

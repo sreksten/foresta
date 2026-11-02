@@ -136,9 +136,9 @@ VIANDANTE
     CHIAVE=FOLLETTI_DEL_LATTE;NEMICO=FOLLETTO;NUMERO=2-3;PLURALE=sprites;MONETE=6;RICHIESTA=One moment, wayfarers. Near %CITTA% some sprites milk my cows at night and leave the pail full of little pebbles. I never see the milk again.;BATTUTA=Pebbles, what kind?;RISPOSTA=The kind that rattle in your teeth. Drive them away and come tell me.;ARRIVO=You are at %CITTA%. On the rim of the pail there's a shiny pebble and a note: Thanks for the milk.;RITORNO=The cows sleep, the milk is mine, the pebbles are in the meadow. Take your reward and a glass, if you like.
     CHIAVE=VIVERNA_DEL_FIENILE;NEMICO=VIVERNA;NUMERO=1-2;PLURALE=wyverns;MONETE=8;RICHIESTA=Stop, friends. A wyvern has taken up residence in the barn near %CITTA% and sleeps on the best hay. My animals won't even go in to eat anymore.;BATTUTA=Did the wyvern pay the rent?;RISPOSTA=With a tail to the head, now and then. Defeat it and come report.;ARRIVO=You are at %CITTA%. From the barn comes a long snore and a smell of singed hay.;RITORNO=The barn is mine again, and the hay almost all in one piece. Here's what I owed you.
     CHIAVE=HOBGOBLIN_DEL_DAZIO;NEMICO=HOBGOBLIN;NUMERO=2-3;PLURALE=hobgoblins;MONETE=7;RICHIESTA=Hello, wayfarers. Near %CITTA% some hobgoblins have set up an unauthorized toll on the road, and they even issue a receipt. I'm already at three receipts, and I have no coins left.;BATTUTA=Is the receipt valid?;RISPOSTA=That's not the point. Clear the road and come back, I'll tell you what it's worth.;ARRIVO=You are at %CITTA%. At the side of the road a crooked sign reads: Toll, pay here. The rest is illegible.;RITORNO=Road clear and no receipts! Take your pay, and my receipts too: they make good fuel.
-    CHIAVE=SPETTRI_DELLA_LOCANDA;NEMICO=SPETTRO;NUMERO=2-3;PLURALE=specters;MONETE=9;RICHIESTA=Good day. In the old inn near %CITTA% some specters offer drinks to passersby. The tankard is empty, but the bill is full.;BATTUTA=Whose bill?;RISPOSTA=Whoever accepted. Free them, and do me the courtesy of not tasting anything.;ARRIVO=You are at %CITTA%. From the inn comes a clinking of tankards that nobody is holding.;RITORNO=The inn is quiet and the bill is settled. Luckily you didn't drink there. Here's what you are owed.
+    CHIAVE=SPETTRI_DELLA_LOCANDA;NEMICO=SPETTRO;NUMERO=2-3;PLURALE=specters;MONETE=9;RICHIESTA=Good day. In the old inn near %CITTA% some specters offer drinks to passersby. The tankard is empty, but the bill is full.;BATTUTA=Whose bill?;RISPOSTA=Whoever accepted. Free them, and do me the courtesy of not tasting anything.;ARRIVO=You are at %CITTA%. From the inn comes a clinking of tankards that nobody is holding.;RITORNO=The inn is quiet and the bill is settled. Luckily you didn't drink there. Here's what you're owed.
     CHIAVE=CENTAURI_DELLA_CORSA;NEMICO=CENTAURO;NUMERO=2-3;PLURALE=centaurs;MONETE=8;RICHIESTA=Strangers! Some centaurs near %CITTA% challenge anyone passing to a race, and always win, because they have twice as many legs. Whoever loses pays the stake, and then the road.;BATTUTA=Are the challenges fair, with them?;RISPOSTA=For them, yes. For us, never. Make them stop, and come back to me.;ARRIVO=You are at %CITTA%. In the distance you hear hoofbeats, and a voice shouting: Who accepts?;RITORNO=No more rigged races! Here's your pay, and if you want some advice, never answer the centaurs: All right.
-    CHIAVE=CHIMERA_DEL_MERCATO;NEMICO=CHIMERA;NUMERO=1-2;PLURALE=chimeras;MONETE=10;RICHIESTA=Stop, please. A chimera came down from the woods near %CITTA% and ate the entire cheese stall, and the cheeses weren't even the stall's. The market is in mourning.;BATTUTA=Which head does it eat with?;RISPOSTA=All of them, in turns. Chase it away and come back: the market will be grateful.;ARRIVO=You are at %CITTA%. Among the overturned crates there's a cheese rind and a claw that isn't a chicken's.;RITORNO=The market opens again and the cheeses are safe, the ones that are left. Take your reward and a taste.
+    CHIAVE=CHIMERA_DEL_MERCATO;NEMICO=CHIMERA;NUMERO=1-2;PLURALE=chimeras;MONETE=10;RICHIESTA=Stop, please. A chimera came down from the woods near %CITTA% and ate the entire cheese stall, and the cheeses weren't even the stall's. The market is in mourning.;BATTUTA=Which head does it eat with?;RISPOSTA=All of them, in turn. Chase it away and come back: the market will be grateful.;ARRIVO=You are at %CITTA%. Among the overturned crates there's a cheese rind and a claw that isn't a chicken's.;RITORNO=The market opens again and the cheeses are safe, the ones that are left. Take your reward and a taste.
 
 // ---------------------------------------------------------------------------------------------
 // Spedizioni da una città all'altra (vedi IlCorriere e Spedizione): dieci campi, descritti in missioni.txt
@@ -200,7 +200,7 @@ CONTRABBANDO
 OGGETTO_SMARRITO
     F;wedding ring;the miller;TEMPIO ROVINE;15;I went to pray for a good harvest, and when I came back the ring was gone. My wife hasn't noticed yet.;What if she notices?;Then the quest becomes another one. A much more dangerous one.;There it is! On my finger, quick, before my wife comes back from the market.
     M;leather purse;the cloth merchant;LOCANDA;12;I stopped at an inn to celebrate a deal. A little too much. The purse stayed somewhere around there.;Was it full?;It was. Now, who knows.;It's all still here! So I wasn't that drunk.
-    F;bone pipe;the old hunter;GROTTA ROVINE;10;I took shelter from the rain, and when I resumed my walk the pipe had stayed there. Forty years of pipe.;Can't you buy another one?;Another one doesn't taste of forty years.;Ah, its smell! Sit down, let me have you try it. No? Pity.
+    F;bone pipe;the old hunter;GROTTA ROVINE;10;I took shelter from the rain, and when I resumed my walk the pipe had stayed there. Forty years of pipe.;Can't you buy another one?;Another one doesn't taste of forty years.;Ah, its smell! Sit down, let me give you a taste. No? Pity.
     M;prayer book;the novice;TEMPIO;10;I was on a pilgrimage and it slipped from my satchel. The abbess will make me copy the entire book by hand.;The entire book?;The entire book. Twice. Once to learn, once as penance.;Heaven bless you! And the abbess will never know.
     F;bronze key;the granary keeper;ROVINE GROTTA;12;I chased a thief all the way there, and in the rush I lost the granary key. The thief, instead, I lost sight of.;And now is the granary open?;It's closed. And that's the problem.;At last I can open the granary! The grain was starting to complain.
     M;silver flute;the minstrel;LOCANDA TEMPIO;14;I played all night, and in the morning the flute was gone. Some say I threw it out of the window. I don't remember.;Did you play that badly?;I played wonderfully. It was the others who sang badly.;My flute! I'll play one in your honor. No? All right, all right.
@@ -356,7 +356,7 @@ INCARICO_DI_COMBATTIMENTO
     CHIAVE=SFIDA_DELLA_CAMPIONESSA;TIPO=DUELLO;ASPETTO=CAPITANO;MANDANTE=the captain of the guard;NEMICO=GUERRIERA;\
     NUMERO=1;CAPO=NOME_CAMPIONESSA;RESA=SI;DUELLO=SI;LUOGO=RADURA;MONETE=35;TITOLO=The Challenge of %CAPO%;\
     RICHIESTA=%CAPO% has challenged my guards to a duel, one at a time, in a clearing outside the city. I still have three left standing.;\
-    BATTUTA=And what does she want?;RISPOSTA=She says she is looking for someone worthy of her. My guards, evidently, are not.;\
+    BATTUTA=And what does she want?;RISPOSTA=She says she's looking for someone worthy of her. My guards, evidently, are not.;\
     VITTORIA=%CAPO% lowers her sword and shakes your hand: someone worthy at last.;\
     RINGRAZIAMENTO=My guards can leave the infirmary with their heads held high. More or less.;\
     RICORDO=In this clearing %CAPO% challenged the guards to a duel.
@@ -470,7 +470,7 @@ INCARICO_DI_COMBATTIMENTO
     RICHIESTA=A wizard named %CAPO% sells fake potions from his cave, with my face on the label. I'll pay well for him to stop. For good.;\
     BATTUTA=For good for good?;RISPOSTA=Don't ask questions, and I won't give you receipts.;\
     VITTORIA=%CAPO% will sell no more fake potions. Or real ones.;\
-    RINGRAZIAMENTO=My good name is safe. And we have never met, agreed?;\
+    RINGRAZIAMENTO=My good name is safe. And we've never met, agreed?;\
     RICORDO=In this cave %CAPO% sold fake potions, until someone was paid to stop him.
     [^0.6] [TITOLO_NOBILE=[TITOLO_DELLA_PALUDE]]CHIAVE=TITOLO_DELLA_PALUDE;TIPO=TITOLO_NOBILIARE;ASPETTO=QUALUNQUE;\
     MANDANTE=the king's chamberlain;[NEMICI_DELLA_PALUDE];LUOGO=PALUDE;MONETE=15;TITOLO=A Title for the Swamp;\
@@ -608,7 +608,7 @@ SORVEGLIANZA
     VISITE=3;ORE=16;MONETE=40;TITOLO=The Camp in the Swamp;\
     RICHIESTA=The hobgoblins have set up a camp in a swamp. I want to know how many they are and what they're preparing.;\
     BATTUTA=Spy? Couldn't we just attack them?;RISPOSTA=If you count more than ten, no.;\
-    VEGLIA=Among the reeds you can see the hobgoblins' tents. You count a few, before having to hide.;\
+    VEGLIA=Among the reeds you can see the hobgoblins' tents. You count a few before having to hide.;\
     SCOPERTA=It's clear now: there are about thirty of them, and they're building ladders. For the walls of a city, surely.;\
     RINGRAZIAMENTO=About thirty, and with ladders. I'll double the guards on the walls. Good work.;\
     RICORDO=In this swamp the hobgoblins had their camp.
@@ -694,7 +694,7 @@ SORVEGLIANZA
 SOCCORSO
     CHIAVE=TAGLIALEGNA_E_ARPIE;TIPO=SOCCORSO;ASPETTO=DONNA;MANDANTE=the woodcutter's wife;PERSONA=the woodcutter;\
     NEMICO=ARPIA;NUMERO=3;LUOGO=BOSCO;MONETE=35;TITOLO=The Woodcutter in the Wood;\
-    RICHIESTA=My husband %NOME% went to gather firewood in a wood and has not come back. A hunter saw him up a tree, with a broken leg and three harpies circling him.;\
+    RICHIESTA=My husband %NOME% went to gather firewood in a wood and hasn't come back. A hunter saw him up a tree, with a broken leg and three harpies circling him.;\
     BATTUTA=Up a tree? With a broken leg?;RISPOSTA=Harpies make anyone climb trees. Even with two broken legs.;\
     SOCCORSO=%NOME% climbs down from the tree, and leans on his axe to walk.;\
     RINGRAZIAMENTO=%NOME%! Next time we'll buy the firewood at the market.;\
@@ -726,7 +726,7 @@ SOCCORSO
     RICORDO=Among these ruins two gargoyles held an apprentice prisoner.
     CHIAVE=PASTORE_E_HOBGOBLIN;TIPO=SOCCORSO;ASPETTO=CAPITANO;MANDANTE=the captain of the guard;PERSONA=the shepherd;\
     NEMICO=HOBGOBLIN;NUMERO=3;CAPO=SI;LUOGO=RADURA;MONETE=35;TITOLO=The Shepherd of the Clearing;\
-    RICHIESTA=%CAPO%'s hobgoblins attacked %NOME%'s flock in a clearing. The sheep ran off, he is wounded and can't move.;\
+    RICHIESTA=%CAPO%'s hobgoblins attacked %NOME%'s flock in a clearing. The sheep ran off. He's wounded and can't move.;\
     BATTUTA=And the sheep?;RISPOSTA=The sheep come back on their own. Shepherds, usually, don't.;\
     SOCCORSO=%NOME% gets up with difficulty, leaning on his staff.;\
     RINGRAZIAMENTO=%NOME% is safe. And look at that: the sheep came back too.;\
@@ -755,7 +755,7 @@ SOCCORSO
     SOCCORSO=%NOME% steps out from behind a column, clutching his parchments to his chest.;\
     RINGRAZIAMENTO=%NOME% is safe, and the mayor has granted him asylum. He'll pay me the three beers tomorrow.;\
     LUTTO=Poor %NOME%. His parchments, at least, we'll have everyone read.;\
-    RICORDO=Among these ruins a copyist hid from the thugs of %CAPO%.
+    RICORDO=Among these ruins a copyist hid from %CAPO%'s thugs.
 
 // ---------------------------------------------------------------------------------------------
 // Indagini (vedi LIndagine e IndagineRichiesta): campi descritti in missioni.txt (INDIZIO_n=LUOGO:testo, DOMANDA, SOSPETTI separati da "/", COLPEVOLE...)
@@ -796,7 +796,7 @@ INDAGINE
     INDIZIO_3=TEMPIO:The keeper of the temple knows the guards well: Bruno writes with his right hand and never goes into an inn, Oswald is left-handed but teetotal, Theodolinda is left-handed and helps her baker brother in the evenings.;\
     DOMANDA=Who is the spy?;SOSPETTI=Sergeant Bruno/Guard Theodolinda/Recruit Oswald;\
     COLPEVOLE=2;NEMICO=GUERRIERA;NUMERO=1;CAPO=Theodolinda;RESA=SI;LUOGO=GROTTA;\
-    SMASCHERAMENTO=Left-handed, flour, inn: it's Theodolinda. Found out, she has fled to a cave, and has no intention of surrendering.;\
+    SMASCHERAMENTO=Left-handed, flour, inn: it's Theodolinda. She's been found out and has fled to a cave, and has no intention of surrendering.;\
     ERRORE=You were wrong, and the real spy, warned, vanishes. The captain no longer trusts you.;\
     VITTORIA=Theodolinda, defeated, drops her sword and surrenders.;\
     RINGRAZIAMENTO=Theodolinda is in a cell, and the goblins will know nothing more about my shifts. We'll miss the bread, though.;\
@@ -805,7 +805,7 @@ INDAGINE
     TITOLO=The Dragon of the Swamp;\
     RICHIESTA=A dragon lives in a swamp nearby, and every week demands a sack of coins, or burns the mills. But I've never seen a dragon. Nobody has.;\
     BATTUTA=Then how do you know it exists?;RISPOSTA=There are the footprints, and the letters. Signed The Dragon.;\
-    INDIZIO_1=PALUDE:In the swamp there are enormous dragon footprints. Looking at them closely, they are drawn in the mud with a stick. And beside them are bootprints.;\
+    INDIZIO_1=PALUDE:In the swamp there are enormous dragon footprints. Look closely and you'll see they were drawn in the mud with a stick. And beside them are bootprints.;\
     INDIZIO_2=LOCANDA:The innkeeper says that since the dragon appeared, three well-dressed strangers come to drink every evening and always pay with sacks of coins. And they write very well.;\
     DOMANDA=Who is behind the dragon of the swamp?;SOSPETTI=A real dragon/A wyvern/A band of thieves/A witch;\
     COLPEVOLE=3;NEMICO=LADRO;NUMERO=3;CAPO=NOME_CAMPIONE;LUOGO=PALUDE;\
@@ -845,7 +845,7 @@ INDAGINE
     RICHIESTA=In the warehouses the grain is covered with a mold that, I swear, hums. If this goes on, we'll starve this winter.;\
     BATTUTA=Hums?;RISPOSTA=Softly. But it hums.;\
     INDIZIO_1=RADURA:In the clearing someone has cut down young trees. Thin, colorful ribbons of elven make are tied to the stumps.;\
-    INDIZIO_2=LOCANDA:A farmer boasts of having sold the warehouse the wood of certain beautiful trees, which sang when you cut them.;\
+    INDIZIO_2=LOCANDA:A farmer boasts of having sold the warehouse timber from certain beautiful trees, which sang when you cut them.;\
     INDIZIO_3=TEMPIO:The keeper of the temple has read about an elven curse: whoever cuts a singing tree will have singing grain. And it rots.;\
     DOMANDA=Who cursed the grain?;SOSPETTI=The envious miller/The goblins/An elf of the wood/The farmer;\
     COLPEVOLE=3;NEMICO=ELFA;NUMERO=1;CAPO=NOME_CAMPIONESSA;RESA=SI;LUOGO=BOSCO;\
@@ -1394,7 +1394,7 @@ LEALTA
     RISPOSTA=Still sleeping on my ruins. I want him to wake up, and to dislike the wake-up call.;\
     FAVORE=The Burnt Farm;LUOGO=PALUDE;NEMICO=TROLL;NUMERO=1;CAPO=SI;\
     VITTORIA=%CAPO% will never sleep on anyone's ruins again.;\
-    RINGRAZIAMENTO=Now I can rebuild. A stable, to begin with: I have very precise ideas about stables.;\
+    RINGRAZIAMENTO=Now I can rebuild. A stable, to begin with: I've got very precise ideas about stables.;\
     LEALTA=CORAGGIO VARIAZIONE_FISSA 1;\
     LEALE=%PERSONAGGIO% looks at the swamp without lowering their gaze, and their courage no longer wavers.
     CHIAVE=IL_DUELLO_D_ONORE;\
@@ -1436,14 +1436,14 @@ LEALTA
     CHIAVE=I_GOBLIN_DEL_MERCATO;\
     CONFIDENZA=A band of goblins empties my neighbor's cart every Wednesday. It's been months. I now dread Wednesdays.;\
     BATTUTA=Do they have a leader?;\
-    RISPOSTA=I think so. He's the one who shouts loudest, but I've only seen them from behind and at a run.;\
+    RISPOSTA=I think so. He's the one who shouts loudest, but I've only seen him from behind and at a run.;\
     FAVORE=The Market Goblins;LUOGO=BOSCO;NEMICO=GOBLIN;NUMERO=5;CAPO=SI;\
     VITTORIA=%CAPO% and his goblins will empty no more carts on Wednesdays.;\
     RINGRAZIAMENTO=My neighbor sends you a cake. I, more modestly, send you my gratitude.;\
     LEALTA=FURTIVITA VARIAZIONE_FISSA 1;\
     LEALE=%PERSONAGGIO% moves with a new lightness, almost without a sound.
     CHIAVE=LO_SPIRITO_DEL_POZZO;\
-    CONFIDENZA=In my village's well lives someone who never answers. For years I have listened to it, and I've never understood whether it's angry.;\
+    CONFIDENZA=In my village's well lives someone who never answers. For years I've listened to it, and I've never understood whether it's angry.;\
     BATTUTA=Do you want us to talk to it?;\
     RISPOSTA=The well is among ruins now, and it has grown more restless. I'd like it to find peace.;\
     FAVORE=The Spirit of the Well;LUOGO=ROVINE;NEMICO=SPIRITO;NUMERO=1;\
@@ -1537,7 +1537,7 @@ LEALTA
     BATTUTA=We can keep vigil together.;\
     RISPOSTA=Three evenings, one every now and then. We'll tell him the news, and he'll pretend not to know everything already.;\
     FAVORE=The Old Friend's Vigil;LUOGO=ROVINE;VISITE=3;ORE=14;\
-    VEGLIA=Among the ruins there's a quiet air. %PERSONAGGIO% sits beside the tombstone and tells, in a low voice, the latest news.;\
+    VEGLIA=Among the ruins there's a quiet air. %PERSONAGGIO% sits beside the tombstone and relays the latest news in a low voice.;\
     VITTORIA=The third vigil is over: the old friend will know he has not been forgotten.;\
     RINGRAZIAMENTO=Now the promise is kept. He, I bet, laughed at least once.;\
     LEALTA=PERCEZIONE VARIAZIONE_FISSA 2;\
@@ -1809,7 +1809,7 @@ NEGOZIO_CAUSA
 
 NEGOZIO_EREDITA
     He inherited %ROVINA% from an uncle, but the place is infested with %NEMICI%.
-    He was left %ROVINA% in an inheritance, but the place is infested with %NEMICI%.
+    He inherited %ROVINA%, but the place is infested with %NEMICI%.
     He inherited %ROVINA% from a great-aunt, and unfortunately the place is infested with %NEMICI%.
     He bought %ROVINA% at a bargain price. Now it's clear why: the place is infested with %NEMICI%.
 
@@ -1836,7 +1836,7 @@ NEGOZIO_VITTORIA
 NEGOZIO_RINGRAZIAMENTO
     I already received a message from %NOME%: he says he has never heard so little noise in the forest.
     The place is free, and %NOME% is already putting up the sign. Thank you, travelers.
-    %NOME% wrote to me: the monsters are gone, and the roof stayed almost all in place. Thank you.
+    %NOME% wrote to me: the monsters are gone, and the roof stayed almost entirely in place. Thank you.
 
 NEGOZIO_APERTURA
     %NOME% has opened %BOTTEGA%: you'll find it on the map, where the ruins used to be.

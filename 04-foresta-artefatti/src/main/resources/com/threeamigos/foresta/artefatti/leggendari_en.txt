@@ -184,7 +184,7 @@ VESTE_LEGGENDARIA$
     MOD=RESISTENZA_MAGICA +6;MOD=POTERE_MAGICO +30%;MOD=FURTIVITA +3;INCANTAMENTO=MALEDIZIONE 12 0.15 Perfect Crease;\
     LEGGENDA=A witch spent a hundred years ironing this robe, without ever managing to remove a single crease.;\
     LEGGENDA=In the end she cursed it, and the crease left in fright.;\
-    LEGGENDA=Whoever wears it is no longer afraid of spells: it is the spells that are afraid of them.
+    LEGGENDA=Whoever wears it is no longer afraid of spells: it's the spells that are afraid of them.
 
 SCHINIERI_LEGGENDARI$
     TIPO=SCHINIERI;NOME=the Studded Boots of RomyJona;CHIAVE=SCHINIERI_DI_ROMY_JONA;BREVE=the Studded Boots of RomyJona;SET=ROMY_JONA;\
@@ -287,7 +287,7 @@ INTRODUZIONE_LEGGENDA
     Do you know the legend [*DELL_OGGETTO]?
     Never heard of [*L_OGGETTO]?
     Sit down, and I'll tell you the story [*DELL_OGGETTO].
-    Listen carefully: I'm telling you [*DELL_OGGETTO].
+    Listen carefully, I'll tell you the tale [*DELL_OGGETTO].
 
 DELL_OGGETTO
     of the legendary object
