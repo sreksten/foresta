@@ -144,7 +144,7 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 	@Override
 	public String getDescrizione() {
 		if (RITORNO.equals(getPassoCorrente())) {
-			return Testi.formatta("missioni", "IncaricoDiCombattimento.t1", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getIncarico().getMandante())), getNomeCitta());
+			return Testi.formatta("missioni", "IncaricoDiCombattimento.t1", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(getIncarico().getMandante())), getNomeCitta());
 		}
 		return Testi.formatta("missioni", getNumero() == 1 ? "IncaricoDiCombattimento.descrizioneUno" : "IncaricoDiCombattimento.descrizioneMolti",
 				Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getNomeDeiNemici());

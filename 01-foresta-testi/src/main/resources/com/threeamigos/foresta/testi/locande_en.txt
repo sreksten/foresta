@@ -146,7 +146,7 @@ TRONCO_CAVO$
 DRAGO_VOMITANTE$
     [IDENTIFICATIVO=DRAGO_VOMITANTE]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
-    [DIALOGO=Welcome to the Vomiting Dragon. [MI_CHIAMO] The name is not a poetic metaphor, it's a warning. If you must overdo the fire mead, step out the back or aim for the flowerpots. Whoever makes a mess cleans it up, and I assure you my rag has seen things that would make a necromancer turn pale. What can I bring you, before you lose your appetite?]\
+    [DIALOGO=Welcome to the Vomiting Dragon. [MI_CHIAMO] The name isn't a poetic metaphor, it's a warning. If you must overdo the fire mead, step out the back or aim for the flowerpots. Whoever makes a mess cleans it up, and I assure you my rag has seen things that would make a necromancer turn pale. What can I bring you, before you lose your appetite?]\
     [RECENSIONE=Here at the Vomiting Dragon the fire beer is excellent, but the smell of acid on the floor takes away the will to live before you even order the stew.]\
     [NOME_LOCANDA=The Vomiting Dragon]\
     [#NOME_LOCANDA]

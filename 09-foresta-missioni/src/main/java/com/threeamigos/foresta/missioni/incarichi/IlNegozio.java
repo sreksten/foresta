@@ -251,7 +251,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 			return Testi.formatta("missioni", "IlNegozio.t1", Lingue.corrente().inizialeMaiuscola(mandante));
 		}
 		if (RITORNO.equals(getPassoCorrente())) {
-			return Testi.formatta("missioni", "IlNegozio.t2", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(mandante)), getNomeCitta());
+			return Testi.formatta("missioni", "IlNegozio.t2", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(mandante)), getNomeCitta());
 		}
 		return Testi.formatta("missioni", "IlNegozio.t3", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getParametro(NOME_ROVINA), getParametro(NOME_BOTTEGA));
 	}

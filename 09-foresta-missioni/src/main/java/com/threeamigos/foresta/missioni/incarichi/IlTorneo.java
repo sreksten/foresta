@@ -174,7 +174,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 		TorneoRichiesto torneo = getTorneo();
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return Testi.formatta("missioni", "IlTorneo.t2", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(torneo.getMandante())), getNomeCitta());
+			return Testi.formatta("missioni", "IlTorneo.t2", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(torneo.getMandante())), getNomeCitta());
 		}
 		String chi;
 		String turno;

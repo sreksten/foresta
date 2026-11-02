@@ -288,7 +288,7 @@ PERIODO_DI_TEMPO
 	an hour | a day | a week | a month | a quarter | a term | a year
 DOMANDA_MS
 	Pardon my ignorance, but what is [#TEMA]? A sort of dragon?
-	We have never seen [#TEMA] in the Forest. Does it bite?
+	We've never seen [#TEMA] in the Forest. Does it bite?
 	Wait: do you fight [#TEMA] with a sword or with magic?
 	^[#TEMA]? Never heard of it. Can you eat it?
 	And where can [#TEMA] be found? Is it far from here?
@@ -299,7 +299,7 @@ DOMANDA_MS
 	Our mage has never mentioned [#TEMA]. Are you sure it exists?
 DOMANDA_FS
 	Pardon my ignorance, but what is [#TEMA]? A sort of witch?
-	We have never seen [#TEMA] in the Forest. Does it bite?
+	We've never seen [#TEMA] in the Forest. Does it bite?
 	Wait: do you fight [#TEMA] with a sword or with magic?
 	^[#TEMA]? Never heard of it. Can you eat it?
 	Is [#TEMA] a curse?
@@ -310,7 +310,7 @@ DOMANDA_FS
 	Our mage has never mentioned [#TEMA]. Are you sure it exists?
 DOMANDA_MP
 	Pardon my ignorance, but what are [#TEMA]? A sort of dragons?
-	We have never seen [#TEMA] in the Forest. Do they bite?
+	We've never seen [#TEMA] in the Forest. Do they bite?
 	Wait: do you fight [#TEMA] with a sword or with magic?
 	^[#TEMA]? Never heard of them. Can you eat them?
 	Should I fear [#TEMA]? How many are there? Are they armed?
@@ -321,7 +321,7 @@ DOMANDA_MP
 	Our mage has never mentioned [#TEMA]. Are you sure they exist?
 DOMANDA_FP
 	Pardon my ignorance, but what are [#TEMA]? A sort of witches?
-	We have never seen [#TEMA] in the Forest. Do they bite?
+	We've never seen [#TEMA] in the Forest. Do they bite?
 	Are [#TEMA] fairies? Witches?
 	Wait: do you fight [#TEMA] with a sword or with magic?
 	^[#TEMA]? Never heard of them. Can you eat them?

@@ -146,7 +146,7 @@ public class LaForgia extends IncaricoInCitta {
 				return Testi.formatta("missioni", "LaForgia.t3", metallo.getPluraleConArticolo(), trofeo.getPluraleConArticolo(), Lingue.corrente().conPreposizione(Preposizione.A, mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome())), getCosto());
 			case SALUTO:
 			case RAFFREDDAMENTO:
-				return Testi.formatta("missioni", "LaForgia.t4", arma.getNomeBreve(), Lingue.corrente().conPreposizione(Preposizione.DA, mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome())));
+				return Testi.formatta("missioni", "LaForgia.t4", arma.getNomeBreve(), Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandanteDiCitta(MANDANTE.getNome())));
 			case RITORNO:
 				return Testi.formatta("missioni", "LaForgia.t5", arma.getNomeBreve(), Lingue.corrente().conPreposizione(Preposizione.DA, mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome())));
 			default:
@@ -173,7 +173,7 @@ public class LaForgia extends IncaricoInCitta {
 						.poi(RACCOLTA_TROFEO);
 			case RACCOLTA_TROFEO:
 				return raccogli(MomentoControllo.POST_LOCAZIONE, trofei)
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaForgia.s1", mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome())))))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaForgia.s1", mandanteDiCitta(MANDANTE.getNome())))))
 						.poi(FORGIATURA);
 			case FORGIATURA:
 				return costruisci(MomentoControllo.IN_LOCAZIONE, this::nellaCitta,
@@ -185,7 +185,7 @@ public class LaForgia extends IncaricoInCitta {
 			case RAFFREDDAMENTO:
 				return attendiOre(MomentoControllo.POST_LOCAZIONE, CostantiMissioni.FORGIA_ORE_DI_ATTESA)
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(
-								Testi.formatta("missioni", "LaForgia.s2", mandanteDiCittaSenzaVirgolaFinale(MANDANTE.getNome())))))
+								Testi.formatta("missioni", "LaForgia.s2", mandanteDiCitta(MANDANTE.getNome())))))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -193,11 +193,11 @@ public class LaForgia extends IncaricoInCitta {
 	}
 
 	private String testoForgiatura() {
-		return Testi.formatta("missioni", "LaForgia.t7", Lingue.corrente().inizialeMaiuscola(mandanteSenzaVirgolaFinale(MANDANTE.getNome())), Lingue.corrente().cardinale(CostantiMissioni.FORGIA_ORE_DI_LAVORO, Genere.MASCHILE), getCosto());
+		return Testi.formatta("missioni", "LaForgia.t7", Lingue.corrente().inizialeMaiuscola(mandante(MANDANTE.getNome())), Lingue.corrente().cardinale(CostantiMissioni.FORGIA_ORE_DI_LAVORO, Genere.MASCHILE), getCosto());
 	}
 
 	private String testoSaluto() {
-		return Testi.formatta("missioni", "LaForgia.t8", Lingue.corrente().inizialeMaiuscola(mandanteSenzaVirgolaFinale(MANDANTE.getNome())), Lingue.corrente().inizialeMaiuscola(getArma().getNomeBreve()));
+		return Testi.formatta("missioni", "LaForgia.t8", Lingue.corrente().inizialeMaiuscola(mandante(MANDANTE.getNome())), Lingue.corrente().inizialeMaiuscola(getArma().getNomeBreve()));
 	}
 
 	@Override

@@ -156,10 +156,10 @@ public class LIndagine extends IncaricoInCitta {
 		IndagineRichiesta indagine = getIndagine();
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return Testi.formatta("missioni", "LIndagine.t2", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(indagine.getMandante())), getNomeCitta());
+			return Testi.formatta("missioni", "LIndagine.t2", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(indagine.getMandante())), getNomeCitta());
 		}
 		if (NASCONDIGLIO.equals(passo) || CATTURA.equals(passo)) {
-			return Testi.formatta("missioni", "LIndagine.t3", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(indagine.getMandante())), getNomeCitta());
+			return Testi.formatta("missioni", "LIndagine.t3", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(indagine.getMandante())), getNomeCitta());
 		}
 		StringBuilder descrizione = new StringBuilder();
 		int trovati = getIndiziTrovati();

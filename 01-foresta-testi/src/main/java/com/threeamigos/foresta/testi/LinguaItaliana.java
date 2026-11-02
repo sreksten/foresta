@@ -67,6 +67,9 @@ public final class LinguaItaliana implements RegoleDellaLingua {
 		if (preposizione == Preposizione.ARRIVO || preposizione == Preposizione.VICINO) {
 			return "a";
 		}
+		if (preposizione == Preposizione.PRESSO) {
+			return "da";
+		}
 		return preposizione.name().toLowerCase(Locale.ROOT);
 	}
 

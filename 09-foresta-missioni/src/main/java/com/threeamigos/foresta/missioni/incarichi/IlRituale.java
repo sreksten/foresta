@@ -163,7 +163,7 @@ public class IlRituale extends IncaricoInCitta {
 		MaterialeRichiesto ingrediente = rituale.getIngrediente();
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return Testi.formatta("missioni", "IlRituale.t2", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(rituale.getMandante())), getNomeCitta());
+			return Testi.formatta("missioni", "IlRituale.t2", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(rituale.getMandante())), getNomeCitta());
 		}
 		if (GUARDIANO.equals(passo)) {
 			return Testi.formatta("missioni", "IlRituale.t3");

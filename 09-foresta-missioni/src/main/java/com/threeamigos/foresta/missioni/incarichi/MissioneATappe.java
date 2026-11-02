@@ -388,7 +388,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 	}
 
 	private String testoDelRitorno(TappeRichieste richiesta) {
-		return Testi.formatta("missioni", "MissioneATappe.t5", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(richiesta.getMandante())), getNomeCitta());
+		return Testi.formatta("missioni", "MissioneATappe.t5", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(richiesta.getMandante())), getNomeCitta());
 	}
 
 	@Override

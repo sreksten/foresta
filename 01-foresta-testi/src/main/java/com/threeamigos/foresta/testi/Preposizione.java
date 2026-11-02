@@ -13,5 +13,9 @@ public enum Preposizione {
 	/**
 	 * Vicino a un luogo ("vicino alle Rovine", "near the Ruins"): in italiano resta «a» dopo «vicino», in inglese non vuole preposizione.
 	 */
-	VICINO
+	VICINO,
+	/**
+	 * Presso una persona, dove si va a trovarla ("torna dal fabbro", "go back to the smith"): in italiano è «da», in inglese «to».
+	 */
+	PRESSO
 }

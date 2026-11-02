@@ -66,6 +66,7 @@ public final class LinguaInglese implements RegoleDellaLingua {
 			case DI:
 				return "of";
 			case A:
+			case PRESSO:
 				return "to";
 			case DA:
 				return "from";

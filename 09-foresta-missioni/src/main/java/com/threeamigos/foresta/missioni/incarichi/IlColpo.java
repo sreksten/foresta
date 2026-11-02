@@ -109,7 +109,7 @@ public class IlColpo extends IncaricoInCitta {
 	@Override
 	public String getDescrizione() {
 		if (RITORNO.equals(getPassoCorrente())) {
-			return Testi.formatta("missioni", "IlColpo.t1", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getColpo().getMandante())), getNomeCitta());
+			return Testi.formatta("missioni", "IlColpo.t1", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(getColpo().getMandante())), getNomeCitta());
 		}
 		return Testi.formatta("missioni", "IlColpo.t2", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getNomeDelleGuardie());
 	}

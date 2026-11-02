@@ -146,10 +146,10 @@ public class LaSorveglianza extends IncaricoInCitta {
 	public String getDescrizione() {
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return Testi.formatta("missioni", "LaSorveglianza.t3", Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getSorveglianza().getMandante())), getNomeCitta());
+			return Testi.formatta("missioni", "LaSorveglianza.t3", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(getSorveglianza().getMandante())), getNomeCitta());
 		}
 		if (AGGUATO.equals(passo)) {
-			return Testi.formatta("missioni", "LaSorveglianza.t4", getNomeDeiNemici(), Lingue.corrente().conPreposizione(Preposizione.DA, mandante(getSorveglianza().getMandante())), getNomeCitta());
+			return Testi.formatta("missioni", "LaSorveglianza.t4", getNomeDeiNemici(), Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(getSorveglianza().getMandante())), getNomeCitta());
 		}
 		String descrizione =Testi.formatta("missioni", "LaSorveglianza.s2", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()));
 		if (SORVEGLIA.equals(passo) && getVisiteNelPassoCorrente() > 0) {
