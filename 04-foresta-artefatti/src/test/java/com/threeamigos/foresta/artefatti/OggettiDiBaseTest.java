@@ -176,7 +176,7 @@ class OggettiDiBaseTest {
     void laSpadaNormalmenteNascostaSeguiIlLivello() {
         SpadaNormalmenteNascosta spada = SpadaNormalmenteNascosta.costruisci(new GeneratoreArtefattiTabelle(new Random(1)), 5);
         assertTrue(SpadaNormalmenteNascosta.isQuesta(spada.getModelloDati()));
-        assertEquals(".spada normalmente nascosta", spada.getNome().substring(3));
+        assertEquals(".spada-normalmente-nascosta", spada.getNome().substring(3));
         assertEquals(5, spada.getLivello());
         int danniNati = spada.getDanni();
         assertEquals(danniNati, spada.getModelloDati().getDanni());

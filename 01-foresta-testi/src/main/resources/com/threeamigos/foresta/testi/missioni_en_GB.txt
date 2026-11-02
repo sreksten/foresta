@@ -137,7 +137,7 @@ VIANDANTE
     CHIAVE=VIVERNA_DEL_FIENILE;NEMICO=VIVERNA;NUMERO=1-2;PLURALE=wyverns;MONETE=8;RICHIESTA=Stop, friends. A wyvern has taken up residence in the barn near %CITTA% and sleeps on the best hay. My animals won't even go in to eat anymore.;BATTUTA=Did the wyvern pay the rent?;RISPOSTA=With a tail to the head, now and then. Defeat it and come report.;ARRIVO=You are at %CITTA%. From the barn comes a long snore and a smell of singed hay.;RITORNO=The barn is mine again, and the hay almost all in one piece. Here's what I owed you.
     CHIAVE=HOBGOBLIN_DEL_DAZIO;NEMICO=HOBGOBLIN;NUMERO=2-3;PLURALE=hobgoblins;MONETE=7;RICHIESTA=Hello, wayfarers. Near %CITTA% some hobgoblins have set up an unauthorised toll on the road, and they even issue a receipt. I'm already at three receipts, and I have no coins left.;BATTUTA=Is the receipt valid?;RISPOSTA=That's not the point. Clear the road and come back, I'll tell you what it's worth.;ARRIVO=You are at %CITTA%. At the side of the road a crooked sign reads: Toll, pay here. The rest is illegible.;RITORNO=Road clear and no receipts! Take your pay, and my receipts too: they make good fuel.
     CHIAVE=SPETTRI_DELLA_LOCANDA;NEMICO=SPETTRO;NUMERO=2-3;PLURALE=spectres;MONETE=9;RICHIESTA=Good day. In the old inn near %CITTA% some spectres offer drinks to passersby. The tankard is empty, but the bill is full.;BATTUTA=Whose bill?;RISPOSTA=Whoever accepted. Free them, and do me the courtesy of not tasting anything.;ARRIVO=You are at %CITTA%. From the inn comes a clinking of tankards that nobody is holding.;RITORNO=The inn is quiet and the bill is settled. Luckily you didn't drink there. Here's what you are owed.
-    CHIAVE=CENTAURI_DELLA_CORSA;NEMICO=CENTAURO;NUMERO=2-3;PLURALE=centaurs;MONETE=8;RICHIESTA=Strangers! Some centaurs near %CITTA% challenge anyone passing to a race, and always win, because they have twice the legs. Whoever loses pays the stake, and then the road.;BATTUTA=Are the challenges fair, with them?;RISPOSTA=For them, yes. For us, never. Make them stop, and come back to me.;ARRIVO=You are at %CITTA%. In the distance you hear hoofbeats, and a voice shouting: Who accepts?;RITORNO=No more rigged races! Here's your pay, and if you want some advice, never answer the centaurs: All right.
+    CHIAVE=CENTAURI_DELLA_CORSA;NEMICO=CENTAURO;NUMERO=2-3;PLURALE=centaurs;MONETE=8;RICHIESTA=Strangers! Some centaurs near %CITTA% challenge anyone passing to a race, and always win, because they have twice as many legs. Whoever loses pays the stake, and then the road.;BATTUTA=Are the challenges fair, with them?;RISPOSTA=For them, yes. For us, never. Make them stop, and come back to me.;ARRIVO=You are at %CITTA%. In the distance you hear hoofbeats, and a voice shouting: Who accepts?;RITORNO=No more rigged races! Here's your pay, and if you want some advice, never answer the centaurs: All right.
     CHIAVE=CHIMERA_DEL_MERCATO;NEMICO=CHIMERA;NUMERO=1-2;PLURALE=chimeras;MONETE=10;RICHIESTA=Stop, please. A chimera came down from the woods near %CITTA% and ate the entire cheese stall, and the cheeses weren't even the stall's. The market is in mourning.;BATTUTA=Which head does it eat with?;RISPOSTA=All of them, in turns. Chase it away and come back: the market will be grateful.;ARRIVO=You are at %CITTA%. Among the overturned crates there's a cheese rind and a claw that isn't a chicken's.;RITORNO=The market opens again and the cheeses are safe, the ones that are left. Take your reward and a taste.
 
 // ---------------------------------------------------------------------------------------------
@@ -181,7 +181,7 @@ CONTRABBANDO
     F;box of stolen potions;the fence;the hedge-witch;URGENTE;24;These potions fell off a cart. The owner of the cart is looking for them, and so are the guards.;Fell off a cart? By themselves?;With a little help. Leave now, before they look for them here.;Ah, the cart's potions. I don't ask, I don't tell.
     M;trunk of Eastern silks;the merchant;the court seamstress;CON_CALMA;20;Eastern silks pay a duty that would make a tax collector cry. Luckily tax collectors don't cry, and don't look in trunks.;What if they open it?;On top there are also some underpants. Nobody looks under the underpants.;How wonderful! The court ladies will never know where they come from.
     F;cage of sprites;the poacher;the collector;URGENTE;26;Catching sprites is forbidden, selling them even more so. But the collector pays well, and sprites in a cage don't last long.;Isn't that a bit cruel?;Yes. That's why I pay you well too.;Ah, splendid! I know, I know, I shouldn't. But look at those colours.
-    M;book of forbidden spells;the librarian;the court wizard;CON_CALMA;24;This book was in the closed section of the library, and now it's gone. The court wizard wants to read it before anyone notices.;What spells are inside?;I don't know. And don't open it to find out, the last one who opened it's now a toad.;Here it is! Thank you. And how is the toad?
+    M;book of forbidden spells;the librarian;the court wizard;CON_CALMA;24;This book was in the closed section of the library, and now it's gone. The court wizard wants to read it before anyone notices.;What spells are inside?;I don't know. And don't open it to find out, the last one who opened it is now a toad.;Here it is! Thank you. And how is the toad?
     F;crate of wyvern eggs;the fence;the beast breeder;URGENTE;26;Wyvern eggs, sold on the black market. Whoever buys them hatches them and sells the pups to the lords. They're warm, but not for long.;What if they hatch on the way?;Then run. A lot. Newborn wyverns are hungry.;Still warm! The lords will pay triple. Don't ask what for.
     M;sack of dirty coins;the fence;the moneychanger;URGENTE;24;These coins come from a theft, and still bear the owner's mark. The moneychanger melts them and gives them back to me clean. More or less clean.;What if someone recognises the mark?;Then you're very unlucky couriers. And I've never seen you.;Marked coins, eh? In an hour they'll be ingots. And in two, brand-new coins.
     M;bag of coins;the grain merchant;the tax collector;CON_CALMA;22;The tax collector taxes my grain twice as much as everyone else's. This bag will convince him to tax it half. But nobody must see me bringing it to him.;What if someone sees it?;Then it's a birthday present. The tax collector has birthdays often.;A gift? For me? How kind. The merchant's grain will weigh half from now on.
@@ -1197,10 +1197,10 @@ RITUALE
     DOMANDA=The altar is ready, and the lilies are fragrant. Do you lay them down and call the harvest goddess?;\
     MONETE=35;TITOLO=An Audience with the Goddess;\
     RICHIESTA=Once a year someone must speak with the harvest goddess, to ask her for a good year. Usually I do it, but last year we quarrelled.;\
-    BATTUTA=Quarrelled with a goddess?;RISPOSTA=Over zucchini. She says they're a noble vegetable. I don't.;\
-    RITO=A golden light fills the temple, and a kind voice promises a good harvest. Then, more softly, it adds: “And tell that one that zucchini are noble.”;\
-    RINGRAZIAMENTO=A good harvest! And fine, fine: zucchini are noble. But don't tell anyone.;\
-    RICORDO=In this temple a goddess promised a good harvest, and defended the honour of zucchini.
+    BATTUTA=Quarrelled with a goddess?;RISPOSTA=Over courgettes. She says they're a noble vegetable. I don't.;\
+    RITO=A golden light fills the temple, and a kind voice promises a good harvest. Then, more softly, it adds: “And tell that one that courgettes are noble.”;\
+    RINGRAZIAMENTO=A good harvest! And fine, fine: courgettes are noble. But don't tell anyone.;\
+    RICORDO=In this temple a goddess promised a good harvest, and defended the honour of courgettes.
     CHIAVE=TRANCE_DI_FRATELLO_ANSELMO;TIPO=TRANCE;ASPETTO=SACERDOTE;MANDANTE=the prior;LUOGO=RADURA;\
     GENERE=F;INGREDIENTE=valerian root;INGREDIENTI=valerian roots;DOVE=LUOGHI RADURA BOSCO;QUANTITA=3;\
     DOMANDA=Brother Anselm meditates cross-legged in the middle of the clearing. How do you bring him back?;\
@@ -1420,7 +1420,7 @@ LEALTA
     BATTUTA=Did you ask for a refund?;\
     RISPOSTA=She answered with a spell. A small one, but I still feel it every time it rains.;\
     FAVORE=The Wrong Potion;LUOGO=ROVINE;NEMICO=MAGA;NUMERO=1;\
-    VITTORIA=The sorceress returns the refund, with a bow and a flurry of sparks.;\
+    VITTORIA=The sorceress hands back the refund, with a bow and a flurry of sparks.;\
     RINGRAZIAMENTO=Refunded, and with interest. My head is clearer than ever.;\
     LEALTA=INTELLIGENZA VARIAZIONE_FISSA 2;\
     LEALE=Something in the mind of %PERSONAGGIO% clears, and ideas fall back into line.
@@ -1826,7 +1826,7 @@ NEGOZIO_BATTUTA
 NEGOZIO_RISPOSTA
     You are my salvation. And his wallet's.
     Thank you, travellers. Now he can open in peace, at least as long as the roof tiles hold.
-    I knew you could be trusted. I'll mark the place on your map.
+    I knew you could be trusted.
 
 NEGOZIO_VITTORIA
     Done: %ROVINA% now has a single master, %NOME%, with room for a shop and for a few sweeps of the broom.

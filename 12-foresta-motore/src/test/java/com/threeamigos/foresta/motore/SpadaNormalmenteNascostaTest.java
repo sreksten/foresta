@@ -71,7 +71,7 @@ class SpadaNormalmenteNascostaTest {
 					.filter(artefatto -> artefatto.getAspetto() == AspettoArtefatto.SPADA_NORMALMENTE_NASCOSTA)
 					.findFirst().orElseThrow(() -> new AssertionError("la spada deve finire nell'inventario del gruppo"));
 			assertEquals(TipoArtefatto.SPADA, spada.getTipo());
-			assertTrue(spada.getNomeCompleto().contains(".spada normalmente nascosta"), spada.getNomeCompleto());
+			assertTrue(spada.getNomeCompleto().contains(".spada-normalmente-nascosta"), spada.getNomeCompleto());
 
 			// Alla visita successiva scatta l'oroscopo, e la spada non si ripete
 			RegistroIntermezzi.nuovoMomento();

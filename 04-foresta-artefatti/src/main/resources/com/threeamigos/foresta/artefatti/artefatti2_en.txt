@@ -387,7 +387,7 @@ COMPLEMENTO_ELEMENTALE_SCHINIERI
 
 // Dopo il nome, come "the sword that belonged to Grandpa": in inglese il cosmetico è un complemento (o una relativa: un participio da solo dopo il nome, "the sword rusted over", non è inglese)
 COSMETICO
-    for regulation use | which belonged to Grandpa | for collectors | for the kitchen | for display
+    for regulation use | that belonged to Grandpa | for collectors | for the kitchen | for display
     on special offer | made at home | bought at the market | for souvenirs | for training
     with the tag still attached | still in its box | for ceremonies | used just once
     on loan | of no great merit | from the junk dealer | kept in reserve
@@ -397,7 +397,7 @@ COSMETICO_METALLO
     of soft iron
 
 COSMETICO_STOFFA
-    with faded colors | which has been mended | full of moth holes | of raw wool | which is badly ironed | with a sauce stain | washed at ninety degrees
+    with faded colors | that has been mended | full of moth holes | of raw wool | that is badly ironed | with a sauce stain | washed at ninety degrees
 
 // ---------------------------------------------------------------------------------------------
 // Parti con un modificatore di attributo. Una parola compare una volta sola, sempre con lo stesso effetto, così dal nome si capisce
@@ -1211,7 +1211,7 @@ DESCRIZIONE_VUOTO_PROTEZIONE_PLURALE
 
 // MALEDIZIONE
 AGGETTIVO_MALEDIZIONE
-    cursed | wretched | baleful | ill-omened | damned | jinxing | malefic | hapless | ill-fated | unlucky-charmed
+    cursed | wretched | baleful | ill-omened | damned | jinxing | malefic | hapless | ill-fated | jinxed
 
 COMPLEMENTO_MALEDIZIONE
     of the Evil Eye | of Misfortune | of the Jinx | of the Ill-Omened | of the Sentence | of the Black Cat | of Friday the 17th | of Bad Luck | of the Bad-Luck Bringer
@@ -1235,7 +1235,7 @@ DESCRIZIONE_MALEDIZIONE_PROTEZIONE
     which wards off the evil eye | which averts curses | which makes horns at bad luck
 
 DESCRIZIONE_MALEDIZIONE_PROTEZIONE_PLURALE
-    which ward off the evil eye | which avert curses | which make horns at bad luck
+    which ward off the evil eye | which avert curses | which make the sign of the horns at bad luck
 
 NOME_AGGIORNAMENTO
     the Scroll of the Latest Fashion

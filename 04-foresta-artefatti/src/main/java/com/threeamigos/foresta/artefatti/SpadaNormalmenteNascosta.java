@@ -1,13 +1,14 @@
 package com.threeamigos.foresta.artefatti;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.AspettoArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 
 import java.util.function.IntSupplier;
 
 /**
- * La .spada normalmente nascosta: una spada con attributi a caso, come gli altri artefatti, che il gruppo ottiene solo con
+ * La .spada-normalmente-nascosta (il nome di un file invisibile: i suoi testi stanno in generatore_artefatti): una spada con attributi a caso, come gli altri artefatti, che il gruppo ottiene solo con
  * l'intermezzo dell'alchimista (vedi IntermezzoSpadaNascosta) dopo aver trovato il Manuale di Unix System V. Ha l'aspetto di
  * {@link AspettoArtefatto#SPADA_NORMALMENTE_NASCOSTA} e, a differenza di ogni altro artefatto, segue un livello che cambia: il livello
  * e i danni base si ricalcolano da quello di adesso ogni volta che li si chiede, senza toccare i dati salvati. Da dove viene quel
@@ -17,10 +18,8 @@ import java.util.function.IntSupplier;
  */
 public class SpadaNormalmenteNascosta extends ArmaFisica {
 
-	private static final String NOME = ".spada normalmente nascosta";
 	// Da dove prende il livello di adesso; null finché nessuno lo dice, e allora resta quello con cui è nata
 	private static volatile IntSupplier fonteDelLivello;
-	private static final String DESCRIZIONE = "che ls non mostra";
 
 	/**
 	 * La spada sui dati dati (vedi {@link #isQuesta}).
@@ -52,8 +51,8 @@ public class SpadaNormalmenteNascosta extends ArmaFisica {
 	public static SpadaNormalmenteNascosta costruisci(GeneratoreArtefatti generatore, int livello) {
 		ArtefattoMD md = generatore.generaArtefatto(TipoArtefatto.SPADA, livello).getModelloDati();
 		md.setNomeProprio(null);
-		md.setNome("la " + NOME);
-		md.setDescrizione(DESCRIZIONE);
+		md.setNome(Testi.formatta("generatore_artefatti", "SPADA_NASCOSTA.NOME"));
+		md.setDescrizione(Testi.formatta("generatore_artefatti", "SPADA_NASCOSTA.DESCRIZIONE"));
 		md.setAspetto(AspettoArtefatto.SPADA_NORMALMENTE_NASCOSTA);
 		return new SpadaNormalmenteNascosta(md);
 	}

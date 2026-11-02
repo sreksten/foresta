@@ -209,7 +209,7 @@ FUEGO_DEL_FUORILEGGE$
 RADURA_DEL_MAL_DI_PANCIA$
     [IDENTIFICATIVO=RADURA_DEL_MAL_DI_PANCIA]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
-    [DIALOGO=Greetings! Welcome to the Stomachache Glade! [MI_CHIAMO] The secret of our cooking is bear lard, we even use it in the desserts! It will leave an indelible memory in your stomach for the next three days. But fear not: our mead is so strong and pure that it disinfects everything before you can regret it. Whoever orders the house special gets a digestif herb for free!]\
+    [DIALOGO=Greetings! Welcome to the Stomachache Glade! [MI_CHIAMO] The secret of our cooking is bear lard, we even use it in the desserts! It will leave an indelible memory in your stomach for the next three days. But fear not: our mead is so strong and pure that it disinfects everything before you can regret it. Whoever orders the house special gets a digestive herb for free!]\
     [RECENSIONE=The cooking here at the Stomachache Glade is a bit heavy, but the mead is excellent.]\
     [NOME_LOCANDA=The Stomachache Glade]\
     [#NOME_LOCANDA]
@@ -270,7 +270,7 @@ MI_CHIAMO
     Call me [#NOME_LOCANDIERE], and don't ask questions about the soup.
     I'm [#NOME_LOCANDIERE], and this is my home. Make yourselves at home, but don't overdo it.
     If you're looking for the innkeeper, I'm [#NOME_LOCANDIERE]. If you're looking for trouble, you've come to the right place anyway.
-    They say the innkeeper is called [#NOME_LOCANDIERE]. They say well.
+    They say the innkeeper is called [#NOME_LOCANDIERE]. They're not wrong.
     Allow me to introduce myself: [#NOME_LOCANDIERE], full-time innkeeper and cook out of desperation.
     Permit me to introduce myself: [#NOME_LOCANDIERE], at your service. If I serve you badly, it's all the suppliers' fault.
     I'm [#NOME_LOCANDIERE], the master of the house. For any complaint, speak to the wall.
@@ -333,7 +333,7 @@ NOTIZIE_ORSO_BALLERINO
 NOTIZIE_ULTIMA_SPERANZA
     US1-Capital Flight - The innkeeper of the Inn of Last Hope, NOME_LOCANDIERE, declares bankruptcy: EROE drank on credit, promising to pay with the Dragon's treasure.
     US2-Living Customers - Panic at the Inn of Last Hope: the arrival of EROE in the flesh terrified the resident ghosts, who abandoned the fireplace complaining about the lack of respect for the dead.
-    US3-Fire Out - A botched Air spell puts out the hearth of the Inn of Last Hope; twelve ghost customers melted from the cold, leaving the innkeeper to mop the floor of ectoplasm.
+    US3-Fire Out - A botched Air spell puts out the hearth of the Inn of Last Hope; twelve ghost customers faded away in the cold, leaving the innkeeper to mop the floor of ectoplasm.
     US4-Patient Wolves - The wolves outside the Inn of Last Hope thank EROE for throwing the leftover stew out of the window, calling it “more tender than lost hunters”.
     [NOTIZIE_LOCANDA]
 

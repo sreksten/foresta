@@ -111,7 +111,7 @@ RELAZIONE
 	in a criminal conspiracy with [QUALCOSA_SINGOLARE] and [QUALCOSA_PLURALE]
 	in opposition to [QUALCOSA]
 	retrograde with respect to [QUALCOSA]
-	in permanent meeting with [QUALCOSA]
+	in a permanent meeting with [QUALCOSA]
 	in a version conflict with [QUALCOSA]
 
 CARDINALE

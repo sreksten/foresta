@@ -12,7 +12,7 @@ TEMPO_PROEMIO
 TEMPO_PROEMIO_EPICO_FANTASTICO
     [QUANDO] { [QUANDO_AVVENIMENTO_EPICO_FANTASTICO] | [QUANDO_AVVENIMENTO_EPICO_FANTASTICO] and [QUANDO_AVVENIMENTO_EPICO_FANTASTICO] }
     [PRIMA_CHE] { [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO] | [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO] and [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO] }
-    { at dawn | in the night } of time
+    { at the dawn | in the night } of time
     in an age forgotten { by men | by everyone | by the world | by history | by time | }
     in the age of iron and fire
     at the edge of time
@@ -261,7 +261,7 @@ FATTO_PROEMIO
 	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], { was in the habit of | made a habit of | was fond of } [ABITUDINE]
 
 VIVEVA
-    there lived | there dwelled | there lurked | there skulked | there hid | there laid low
+    there lived | there dwelled | there lurked | there skulked | there hid | there lay low
     there scraped by | there made a not entirely honest living | there bivouacked
 
 CONOSCIUTO_COME
@@ -291,10 +291,10 @@ ABITUDINE
 	harassing the village women with vulgar jokes | stealing laundry from the neighbours' clotheslines
 
 CRIMINE
-	parking violations | poaching chickens | nighttime disturbances | unseemly behaviour
-	drunk and disorderly conduct | aggravated fraud against the villagers
+	parking violations | poaching chickens | night-time disturbances | unseemly behaviour
+	drunk and disorderly behaviour | aggravated fraud against the villagers
 	having bedded other men's wives | having bedded other women's husbands | having bedded other people's animals
-	stealing the church offerings | his { dreadful | nefarious | } habit of collecting other people's things
+	stealing the church offerings | his { dreadful | nefarious | } penchant for collecting other people's things
 	theft, looting and arson
 	blasphemy in a public place | smuggling smoked herring | illegal possession of a pet dragon
 	public insults to royalty | frequenting dives where music was played without a licence
@@ -381,11 +381,11 @@ DECISIONE_1
 	clear out in a great hurry | cut and run | vanish like a carnival magician
 
 DECISIONE_2
-	go off to [DELINQUERE] | go off looking for [QUALCOSA]
+	set out to [DELINQUERE] | set out looking for [QUALCOSA]
 	go hunting the king's deer | go hunting for glory
 	seek glory | try his luck | defy adversity
 	go and throw punches for sport | enter the service of some disreputable lordling
-	try to redeem his reputation (a hopeless task) | defy fate and lose his bones
+	try to redeem his reputation (a hopeless task) | defy fate and risk his bones
 
 DELINQUERE
     commit crimes | steal [OGGETTI_DA_RUBARE] | swindle [VITTIME] | scratch other people's car doors
@@ -393,7 +393,7 @@ DELINQUERE
 	sell fake relics to naive pilgrims | forge documents in inheritance disputes
 
 OGGETTI_DA_RUBARE
-	cars | gold | horses | head of cattle | clothing | money and stocks | chickens | precious embroideries | sacred relics
+	cars | gold | horses | cattle | clothing | money and stocks | chickens | precious embroideries | sacred relics
 
 VITTIME
 	unlucky souls | little old ladies | poor wretches | suckers | orphans | beggars | pilgrims | tax collectors
@@ -406,7 +406,7 @@ DECISIONE_DOVE
 	elsewhere | somewhere else | in other places | in other lands | abroad | to the ends of the earth
 	in remote countries | in other regions | in the nearby city | in unexplored lands
 	in lands unknown to most | at the South Pole | at the North Pole | where the sun sets
-	where the sun rises | to the West | to the East | to hell and gone
+	where the sun rises | in the West | in the East | far, far away
 	at the edge of the nearest Kingdom | in the mists of the North | where nobody knew his name
 
 RACCONTO_P_2
@@ -477,7 +477,7 @@ ATTRIBUTO_ANTAGONISTA
 	[ATTR_ART=a ][ATTR_PRE=shady ][ATTR_POST=]
 	[ATTR_ART=a ][ATTR_PRE=wicked ][ATTR_POST=]
 	[ATTR_ART=a ][ATTR_PRE=tired ][ATTR_POST=]
-	[ATTR_ART=a ][ATTR_PRE=worn out ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=worn-out ][ATTR_POST=]
 	[ATTR_ART=an ][ATTR_PRE=absolutely furious ][ATTR_POST=]
 	[ATTR_ART=a ][ATTR_PRE=happy ][ATTR_POST=]
 	[ATTR_ART=a ][ATTR_PRE=content ][ATTR_POST=]
@@ -513,15 +513,15 @@ ATTRIBUTO_ANTAGONISTA
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, muttering curses against people dead for centuries]
 
 PENSIERO
-	“It will be hard to get rid of this [*ANTAGONISTA]”
+	“It will be hard to get rid of this [*ANTAGONISTA],”
 	“What a lucky encounter!”
-	“What unexpected luck”
-	“This is the icing on the cake, no, a [*ANTAGONISTA] [POSIZIONE_DISDICEVOLE]”
+	“What unexpected luck,”
+	“This is the icing on the cake, no, a [*ANTAGONISTA] [POSIZIONE_DISDICEVOLE],”
 	“Just what I was waiting for!”
 	“What a stroke of luck!”
-	“Fortune smiles upon me”
-	“Fortune is against me”
-	“What a sad fate”
+	“Fortune smiles upon me,”
+	“Fortune is against me,”
+	“What a sad fate,”
 	“What an unexpected encounter!”
 	“What fair wind brings him here?”
 	“Here is my chance for glory!”
@@ -540,14 +540,14 @@ POSIZIONE_DISDICEVOLE
 	with his rear exposed to public ridicule | now good only to be made into a rug
 
 RACCONTO_P_3_DISSE
-    , he said to himself,
-    , he muttered,
-    , was his first impression,
-    , immediately came to his mind,
-    , he reasoned to himself,
-    , he imagined,
-    , he thought at first glance,
-    , he declared without hesitation,
+    he said to himself,
+    he muttered,
+    was his first impression,
+    was his immediate thought,
+    he reasoned to himself,
+    he imagined,
+    he thought at first glance,
+    he declared without hesitation,
 
 RACCONTO_P_3_PENSANDO
 	thinking of practising his marksmanship on
@@ -582,8 +582,8 @@ RIDOTTO_COME
 	brought to a more reasonable frame of mind | mercilessly massacred | disintegrated by a hail of blows
 	reduced to a bloody mask | reduced to a knot of pain | given a proper beating
 	kicked around like a dog in church
-	{ violently | abruptly | forcibly | } led to { rethink his plans | a more reasonable frame of mind }
-	reduced to such { wretched | pitiable } condition that not even [SAMARITANO] could have helped him
+	{ violently | forcibly | } led to { rethink his plans | a more reasonable frame of mind }
+	reduced to such a { wretched | pitiable } condition that not even [SAMARITANO] could have helped him
 	rushed off to the nearest doctor | reduced to begging forgiveness on his knees
 
 SAMARITANO
@@ -686,18 +686,18 @@ MI_VEDRAI_TORNARE
 	the { curse | spell } will { end | vanish } and I'll be once more
 
 REAZIONE_PROTAGONISTA
-	[PENSIERO_PROTAGONISTA], thought [*PROTAGONISTA], and did the good deed. [LIETO_FINE]
-	[PENSIERO_PROTAGONISTA], thought [*PROTAGONISTA]; but that answer was taken as a refusal by the [*ANIMALE], so \
+	[PENSIERO_PROTAGONISTA] thought [*PROTAGONISTA], and did the good deed. [LIETO_FINE]
+	[PENSIERO_PROTAGONISTA] thought [*PROTAGONISTA]; but that answer was taken as a refusal by the [*ANIMALE], so \
 	    [*PROTAGONISTA] was [RIDOTTO_COME].
-	[PENSIERO_PROTAGONISTA], said [*PROTAGONISTA], and consented. [LIETO_FINE]
-	[PENSIERO_PROTAGONISTA], replied [*PROTAGONISTA]. [APPARIZIONE_MAGO_CATTIVO] \
-	    [CREAZIONE_MAGO_CATTIVO][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO_AGGETTIVO][#MAGO_CATTIVO] [MAGO_CATTIVO_APOSTROFA] [FRASE_MAGO_CATTIVO], and \
+	[PENSIERO_PROTAGONISTA] said [*PROTAGONISTA], and consented. [LIETO_FINE]
+	[PENSIERO_PROTAGONISTA] replied [*PROTAGONISTA]. [APPARIZIONE_MAGO_CATTIVO] \
+	    [CREAZIONE_MAGO_CATTIVO][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO_AGGETTIVO][#MAGO_CATTIVO] [MAGO_CATTIVO_APOSTROFA] [FRASE_MAGO_CATTIVO] and \
 	    [*PROTAGONISTA] was in turn turned into [ATTRIBUTO_ANTAGONISTA][#ATTR_ART][#ATTR_PRE][ANIMALE][#ATTR_POST].
-	[PENSIERO_PROTAGONISTA], replied [*PROTAGONISTA]. But the [*ANIMALE] said to him: [FRASE_MAGO_CATTIVO], and our man \
+	[PENSIERO_PROTAGONISTA] replied [*PROTAGONISTA]. But the [*ANIMALE] said to him: [FRASE_MAGO_CATTIVO] and our man \
 	    was [RIDOTTO_COME].
 
 PENSIERO_PROTAGONISTA
-	“Sounds like a good deal” | “No way” | “I've been waiting my whole life for an opportunity like this”
+	“Sounds like a good deal,” | “No way,” | “I've been waiting my whole life for an opportunity like this,”
 	“Sure, why not?”
 	“But of course!” | “It's always been my dream!” | “I'll do it right away!” | “It's the dream of my life!”
 	“I couldn't wait!” | “Just what I was waiting for!”
@@ -816,7 +816,7 @@ NOTIZIA
 
 ATTRIBUTO_PRINCIPESSA
 	very thin | quite obese | truly ugly but filthy rich | unpleasant
-	ugly as death | as likeable as taxes | truly gorgeous | melancholy
+	ugly as sin | as likeable as taxes | truly gorgeous | melancholy
 	charming | bald
 	clumsy | touchy | blessed with a legendary bad temper
 
@@ -839,7 +839,7 @@ LUOGO_1
 	dark alleys | rocky gorges | heaths | bogs
 
 LUOGO_2
-	seas | plains | peat bogs | villages | cities | castles | bridges | inns | dives | dumps | seedy ports
+	seas | plains | peat bogs | villages | cities | castles | bridges | inns | dives | rubbish tips | seedy ports
 	village fairs
 
 LUOGO_3

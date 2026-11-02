@@ -300,7 +300,7 @@ L_OGGETTO
 // ---------------------------------------------------------------------------------------------
 
 LIBRO_TECNICO$
-    CHIAVE=MANUALE_UNIX_SYSTEM_V;NOME=the Unix System V Manual;DESCRIZIONE=that explains everything, except how to exit the editor;DANNI_MAGICI=2;\
+    CHIAVE=MANUALE_UNIX_SYSTEM_V;NOME=the Unix System V Manual;DESCRIZIONE=which explains everything, except how to exit the editor;DANNI_MAGICI=2;\
     BATTUTA=It says here that everything is a file. Am I a file too?;\
     BATTUTA=There's a whole chapter on how to kill processes. Without even a sword.;\
     BATTUTA=A two-letter spell, ls, that shows everything you own. Handy, for the inventory.
