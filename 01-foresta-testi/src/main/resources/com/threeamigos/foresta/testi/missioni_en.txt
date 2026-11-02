@@ -131,14 +131,14 @@ VIANDANTE
     CHIAVE=ARPIE_DEL_BUCATO;NEMICO=ARPIA;NUMERO=2-4;PLURALE=harpies;MONETE=6;RICHIESTA=Hello there! The harpies near %CITTA% stole all my laundry, and the sheets weren't even mine. I'll pay well if you make them stop.;BATTUTA=The sheets or the harpies?;RISPOSTA=The harpies. Sheets can be bought again. Then come back here to report.;ARRIVO=You are at %CITTA%. Scraps of cloth drift through the air, along with a shrill, satisfied note.;RITORNO=No more harpies, no more flying sheets. I owe you a lot, and I'll pay you too.
     CHIAVE=GOBLIN_DEL_POLLAIO;NEMICO=GOBLIN;NUMERO=3-4;PLURALE=goblins;MONETE=5;RICHIESTA=Friends! Near %CITTA% some goblins take my hens every night. I can't take any more eggs scrambled by fright.;BATTUTA=Are the hens sure they want to be saved?;RISPOSTA=They're hens, they don't ask many questions. Defeat them and come back to me.;ARRIVO=You are at %CITTA%. An empty henhouse and a footprint that looks like a goblin's paw: you've understood everything.;RITORNO=The hens are singing again. I thank you on my behalf and on behalf of the eggs.
     CHIAVE=SCHELETRI_DEL_CIMITERO;NEMICO=SCHELETRO;NUMERO=2-4;PLURALE=skeletons;MONETE=7;RICHIESTA=Good day, strangers. In the old cemetery near %CITTA% the skeletons no longer stay in their place and wander around greeting people. Nobody sleeps anymore.;BATTUTA=Greeting? Do they still have something to say?;RISPOSTA=Only hello. But repeated all night. Put them back to rest and come tell me.;ARRIVO=You are at %CITTA%. The cemetery is nearby. From there comes a faint sound of bones lining up.;RITORNO=Silence, at last. The skeletons rest and so do I. Here, you earned it.
-    CHIAVE=MINOTAURO_DEL_LABIRINTO;NEMICO=MINOTAURO;NUMERO=1-2;PLURALE=minotaurs;MONETE=12;RICHIESTA=Wait a moment, travelers! Near %CITTA% a minotaur has taken possession of a hedge maze and lets nobody out anymore. Not even the gardeners.;BATTUTA=And we are supposed to go in?;RISPOSTA=You should get him out, in a way. Then come back here.;ARRIVO=You are at %CITTA%. The hedge maze can be seen from afar. The gardeners, on the other hand, cannot.;RITORNO=The maze is just a maze again. What good news. Here's your share.
+    CHIAVE=MINOTAURO_DEL_LABIRINTO;NEMICO=MINOTAURO;NUMERO=1-2;PLURALE=minotaurs;MONETE=12;RICHIESTA=Wait a moment, travelers! Near %CITTA% a minotaur has taken possession of a hedge maze and lets nobody out anymore. Not even the gardeners.;BATTUTA=And we're supposed to go in?;RISPOSTA=You should get him out, in a way. Then come back here.;ARRIVO=You are at %CITTA%. The hedge maze can be seen from afar. The gardeners, on the other hand, can't.;RITORNO=The maze is just a maze again. What good news. Here's your share.
     CHIAVE=FANTASMI_DEL_MULINO;NEMICO=FANTASMA;NUMERO=2-3;PLURALE=ghosts;MONETE=9;RICHIESTA=Stop, please! Near %CITTA% some ghosts have occupied a mill and move the flour sacks during the night. The miller has given up counting them.;BATTUTA=Ghosts moving flour? And then?;RISPOSTA=And then nothing. That's exactly what drives the miller mad. Drive them away and come back here.;ARRIVO=You are at %CITTA%. The mill, white with flour, can be seen from afar, and the blades turn without wind.;RITORNO=The miller sleeps and the sacks stay where he put them. I truly owe you a reward.
-    CHIAVE=FOLLETTI_DEL_LATTE;NEMICO=FOLLETTO;NUMERO=2-3;PLURALE=sprites;MONETE=6;RICHIESTA=One moment, wayfarers. Near %CITTA% some sprites milk my cows at night and leave the pail full of little pebbles. I never see the milk again.;BATTUTA=Pebbles, what kind?;RISPOSTA=The kind that rattle in your teeth. Drive them away and come tell me.;ARRIVO=You are at %CITTA%. On the rim of the pail there is a shiny pebble and a note: Thanks for the milk.;RITORNO=The cows sleep, the milk is mine, the pebbles are in the meadow. Take your reward and a glass, if you like.
+    CHIAVE=FOLLETTI_DEL_LATTE;NEMICO=FOLLETTO;NUMERO=2-3;PLURALE=sprites;MONETE=6;RICHIESTA=One moment, wayfarers. Near %CITTA% some sprites milk my cows at night and leave the pail full of little pebbles. I never see the milk again.;BATTUTA=Pebbles, what kind?;RISPOSTA=The kind that rattle in your teeth. Drive them away and come tell me.;ARRIVO=You are at %CITTA%. On the rim of the pail there's a shiny pebble and a note: Thanks for the milk.;RITORNO=The cows sleep, the milk is mine, the pebbles are in the meadow. Take your reward and a glass, if you like.
     CHIAVE=VIVERNA_DEL_FIENILE;NEMICO=VIVERNA;NUMERO=1-2;PLURALE=wyverns;MONETE=8;RICHIESTA=Stop, friends. A wyvern has taken up residence in the barn near %CITTA% and sleeps on the best hay. My animals won't even go in to eat anymore.;BATTUTA=Did the wyvern pay the rent?;RISPOSTA=With a tail to the head, now and then. Defeat it and come report.;ARRIVO=You are at %CITTA%. From the barn comes a long snore and a smell of singed hay.;RITORNO=The barn is mine again, and the hay almost all in one piece. Here's what I owed you.
     CHIAVE=HOBGOBLIN_DEL_DAZIO;NEMICO=HOBGOBLIN;NUMERO=2-3;PLURALE=hobgoblins;MONETE=7;RICHIESTA=Hello, wayfarers. Near %CITTA% some hobgoblins have set up an unauthorized toll on the road, and they even issue a receipt. I'm already at three receipts, and I have no coins left.;BATTUTA=Is the receipt valid?;RISPOSTA=That's not the point. Clear the road and come back, I'll tell you what it's worth.;ARRIVO=You are at %CITTA%. At the side of the road a crooked sign reads: Toll, pay here. The rest is illegible.;RITORNO=Road clear and no receipts! Take your pay, and my receipts too: they make good fuel.
     CHIAVE=SPETTRI_DELLA_LOCANDA;NEMICO=SPETTRO;NUMERO=2-3;PLURALE=specters;MONETE=9;RICHIESTA=Good day. In the old inn near %CITTA% some specters offer drinks to passersby. The tankard is empty, but the bill is full.;BATTUTA=Whose bill?;RISPOSTA=Whoever accepted. Free them, and do me the courtesy of not tasting anything.;ARRIVO=You are at %CITTA%. From the inn comes a clinking of tankards that nobody is holding.;RITORNO=The inn is quiet and the bill is settled. Luckily you didn't drink there. Here's what you are owed.
     CHIAVE=CENTAURI_DELLA_CORSA;NEMICO=CENTAURO;NUMERO=2-3;PLURALE=centaurs;MONETE=8;RICHIESTA=Strangers! Some centaurs near %CITTA% challenge anyone passing to a race, and always win, because they have twice the legs. Whoever loses pays the stake, and then the road.;BATTUTA=Are the challenges fair, with them?;RISPOSTA=For them, yes. For us, never. Make them stop, and come back to me.;ARRIVO=You are at %CITTA%. In the distance you hear hoofbeats, and a voice shouting: Who accepts?;RITORNO=No more rigged races! Here's your pay, and if you want some advice, never answer the centaurs: All right.
-    CHIAVE=CHIMERA_DEL_MERCATO;NEMICO=CHIMERA;NUMERO=1-2;PLURALE=chimeras;MONETE=10;RICHIESTA=Stop, please. A chimera came down from the woods near %CITTA% and ate the entire cheese stall, and the cheeses weren't even the stall's. The market is in mourning.;BATTUTA=Which head does it eat with?;RISPOSTA=All of them, in turns. Chase it away and come back: the market will be grateful.;ARRIVO=You are at %CITTA%. Among the overturned crates there is a cheese rind and a claw that isn't a chicken's.;RITORNO=The market opens again and the cheeses are safe, the ones that are left. Take your reward and a taste.
+    CHIAVE=CHIMERA_DEL_MERCATO;NEMICO=CHIMERA;NUMERO=1-2;PLURALE=chimeras;MONETE=10;RICHIESTA=Stop, please. A chimera came down from the woods near %CITTA% and ate the entire cheese stall, and the cheeses weren't even the stall's. The market is in mourning.;BATTUTA=Which head does it eat with?;RISPOSTA=All of them, in turns. Chase it away and come back: the market will be grateful.;ARRIVO=You are at %CITTA%. Among the overturned crates there's a cheese rind and a claw that isn't a chicken's.;RITORNO=The market opens again and the cheeses are safe, the ones that are left. Take your reward and a taste.
 
 // ---------------------------------------------------------------------------------------------
 // Spedizioni da una città all'altra (vedi IlCorriere e Spedizione): dieci campi, descritti in missioni.txt
@@ -181,7 +181,7 @@ CONTRABBANDO
     F;box of stolen potions;the fence;the hedge-witch;URGENTE;24;These potions fell off a cart. The owner of the cart is looking for them, and so are the guards.;Fell off a cart? By themselves?;With a little help. Leave now, before they look for them here.;Ah, the cart's potions. I don't ask, I don't tell.
     M;trunk of Eastern silks;the merchant;the court seamstress;CON_CALMA;20;Eastern silks pay a duty that would make a tax collector cry. Luckily tax collectors don't cry, and don't look in trunks.;What if they open it?;On top there are also some underpants. Nobody looks under the underpants.;How wonderful! The court ladies will never know where they come from.
     F;cage of sprites;the poacher;the collector;URGENTE;26;Catching sprites is forbidden, selling them even more so. But the collector pays well, and sprites in a cage don't last long.;Isn't that a bit cruel?;Yes. That's why I pay you well too.;Ah, splendid! I know, I know, I shouldn't. But look at those colors.
-    M;book of forbidden spells;the librarian;the court wizard;CON_CALMA;24;This book was in the closed section of the library, and now it's gone. The court wizard wants to read it before anyone notices.;What spells are inside?;I don't know. And don't open it to find out, the last one who opened it is now a toad.;Here it is! Thank you. And how is the toad?
+    M;book of forbidden spells;the librarian;the court wizard;CON_CALMA;24;This book was in the closed section of the library, and now it's gone. The court wizard wants to read it before anyone notices.;What spells are inside?;I don't know. And don't open it to find out, the last one who opened it's now a toad.;Here it is! Thank you. And how is the toad?
     F;crate of wyvern eggs;the fence;the beast breeder;URGENTE;26;Wyvern eggs, sold on the black market. Whoever buys them hatches them and sells the pups to the lords. They're warm, but not for long.;What if they hatch on the way?;Then run. A lot. Newborn wyverns are hungry.;Still warm! The lords will pay triple. Don't ask what for.
     M;sack of dirty coins;the fence;the moneychanger;URGENTE;24;These coins come from a theft, and still bear the owner's mark. The moneychanger melts them and gives them back to me clean. More or less clean.;What if someone recognizes the mark?;Then you're very unlucky couriers. And I've never seen you.;Marked coins, eh? In an hour they'll be ingots. And in two, brand-new coins.
     M;bag of coins;the grain merchant;the tax collector;CON_CALMA;22;The tax collector taxes my grain twice as much as everyone else's. This bag will convince him to tax it half. But nobody must see me bringing it to him.;What if someone sees it?;Then it's a birthday present. The tax collector has birthdays often.;A gift? For me? How kind. The merchant's grain will weigh half from now on.
@@ -481,7 +481,7 @@ INCARICO_DI_COMBATTIMENTO
     RICORDO=This swamp belongs to a [#TITOLO_NOBILE]. The frogs don't know it.
     [^0.6] [TITOLO_NOBILE=[TITOLO_DELLE_ROVINE]]CHIAVE=TITOLO_DELLE_ROVINE;TIPO=TITOLO_NOBILIARE;ASPETTO=QUALUNQUE;\
     MANDANTE=the king's chamberlain;[NEMICI_DELLE_ROVINE];LUOGO=ROVINE;MONETE=15;TITOLO=A Title Among the Ruins;\
-    RICHIESTA=Among some ruins there used to be a castle of His Majesty's. Now there is only half a roof, and certain creatures live there. Drive them off, and His Majesty will make you [#TITOLO_NOBILE].;\
+    RICHIESTA=Among some ruins there used to be a castle of His Majesty's. Now there's only half a roof, and certain creatures live there. Drive them off, and His Majesty will make you [#TITOLO_NOBILE].;\
     BATTUTA=And the castle?;RISPOSTA=The castle is part of the title. What's left of it, at least. What will be left after you've freed it, I mean.;\
     VITTORIA=The ruins are free. They're not much, but soon they'll be yours.;\
     RINGRAZIAMENTO=Kneel. There: by the will of His Majesty, from today you are [#TITOLO_NOBILE]. The ermine cloak will arrive when we find the ermine.;\
@@ -571,7 +571,7 @@ NEMICI_DELLE_ROVINE
 SORVEGLIANZA
     CHIAVE=CERCHIO_DI_PIETRE;TIPO=VIGILIA;ASPETTO=SACERDOTE;MANDANTE=the priest;LUOGO=RADURA;VISITE=3;ORE=20;\
     NEMICO=FANTASMA;NUMERO=2;MONETE=35;TITOLO=The Vigil of the Stones;\
-    RICHIESTA=In a clearing there is a circle of ancient stones. Every hundred years someone must keep vigil over it for three nights. This year it's your turn.;\
+    RICHIESTA=In a clearing there's a circle of ancient stones. Every hundred years someone must keep vigil over it for three nights. This year it's your turn.;\
     BATTUTA=And if nobody keeps vigil?;RISPOSTA=I don't know. The last time it happened nobody survived to tell the tale.;\
     VEGLIA=The stones of the circle are cold and silent.;\
     SCOPERTA=On the third night, two ghosts rise from the stones of the circle.;\
@@ -630,7 +630,7 @@ SORVEGLIANZA
     SCOPERTA=On the third watch %CAPO%'s goblins arrive, with sacks for the hens.;\
     VITTORIA=%CAPO%'s goblins are all defeated, even those of the henhouse: the hens are safe.;\
     RINGRAZIAMENTO=The hens have started laying eggs again. From the fright, I think.;\
-    RICORDO=In this clearing there is a farm that was defended from %CAPO%'s goblins.
+    RICORDO=In this clearing there's a farm that was defended from %CAPO%'s goblins.
     CHIAVE=TORRE_ASSEDIATA;TIPO=ASSEDIO_DIFESA;ASPETTO=CAPITANO;MANDANTE=the captain of the guard;LUOGO=ROVINE;VISITE=3;\
     ORE=16;NEMICO=HOBGOBLIN;NUMERO=4;CAPO=SI;MONETE=60;TITOLO=The Besieged Tower;\
     ONDATA_2=GOBLIN 5;ARRIVO_2=With the first assault repelled, five goblins come out of the brush with a ladder. Too short, but they try.;\
@@ -651,7 +651,7 @@ SORVEGLIANZA
     SCOPERTA=The two trolls arrive at the ford, and find the trench. And you behind it.;\
     VITTORIA=Trolls and hobgoblins are defeated: the ford remains everyone's.;\
     RINGRAZIAMENTO=The ford is free, and I'll be the one charging the toll. Just kidding! For you it's free.;\
-    RICORDO=In this swamp there is a ford that was held against two trolls.
+    RICORDO=In this swamp there's a ford that was held against two trolls.
     CHIAVE=GROTTA_MURATA;TIPO=CONTENIMENTO;ASPETTO=SACERDOTE;MANDANTE=the priest;LUOGO=GROTTA;VISITE=3;ORE=12;\
     NEMICO=SCHELETRO;NUMERO=3;MONETE=40;TITOLO=The Walled-Up Cave;\
     RICHIESTA=A long time ago we walled up a cave full of skeletons. Now the wall is creaking. Go and check it, several times, and if it gives way stop whoever comes out.;\
@@ -660,7 +660,7 @@ SORVEGLIANZA
     SCOPERTA=The wall gives way, and three skeletons come out of the cave.;\
     VITTORIA=The skeletons go back to being bones, and the bones go back behind the wall.;\
     RINGRAZIAMENTO=The wall has been rebuilt. By a living mason, this time.;\
-    RICORDO=In this cave, behind a wall, rest skeletons who do not want to rest.
+    RICORDO=In this cave, behind a wall, rest skeletons who don't want to rest.
     CHIAVE=CAPANNA_DEI_RAFFREDDATI;TIPO=QUARANTENA;ASPETTO=ALCHIMISTA;MANDANTE=the alchemist;LUOGO=BOSCO;VISITE=3;ORE=24;\
     MONETE=30;TITOLO=The Quarantine Hut;\
     RICHIESTA=Three woodcutters have caught toad fever, and I've shut them in a hut in the wood until it passes. Stop by and make sure nobody comes out: whoever comes out croaks, and then everyone croaks.;\
@@ -668,7 +668,7 @@ SORVEGLIANZA
     VEGLIA=From the hut comes a chorus of coughs and croaks. The door stays shut.;\
     SCOPERTA=The croaking has stopped: the woodcutters come out of the hut pale but cured, with a great craving for flies. It will pass.;\
     RINGRAZIAMENTO=No contagion in the city! And the woodcutters have almost stopped hopping.;\
-    RICORDO=In this wood there is a hut where three woodcutters sat out toad fever.
+    RICORDO=In this wood there's a hut where three woodcutters sat out toad fever.
     CHIAVE=RAPE_GIGANTI;TIPO=AGRICOLTURA;ASPETTO=QUALUNQUE;MANDANTE=the gardener;LUOGO=RADURA;VISITE=3;ORE=24;\
     NEMICO=FOLLETTO;NUMERO=3;MONETE=35;TITOLO=The Giant Turnips;\
     RICHIESTA=I planted giant turnips in a clearing, but they need checking. Go by three times, a day apart. At harvest, beware of sprites: they love giant turnips.;\
@@ -895,7 +895,7 @@ INDAGINE
     RICHIESTA=This morning on the city gate there were runes carved, enormous ones. Nobody can read them, and nobody knows who carved them.;\
     BATTUTA=How enormous?;RISPOSTA=You have to climb a ladder to see them all. That alone worries me.;\
     INDIZIO_1=ROVINE:On a column among the ruins there are the same runes, carved at the height of three men, with beside them the drawing of a hand as big as a cart.;\
-    INDIZIO_2=TEMPIO:The keeper of the temple reads the runes: We will come for your sheep. He says it is the ancient language, the one no goblin or elf uses anymore, but which the greatest of all have never forgotten.;\
+    INDIZIO_2=TEMPIO:The keeper of the temple reads the runes: We will come for your sheep. He says it's the ancient language, the one no goblin or elf uses anymore, but which the greatest of all have never forgotten.;\
     DOMANDA=Who carved the runes?;SOSPETTI=The goblins/The elves/The giants;\
     COLPEVOLE=3;NEMICO=GIGANTE;NUMERO=1;LUOGO=GROTTA;\
     SMASCHERAMENTO=Runes carved up high, a hand as big as a cart, the ancient language: it's a giant, and he has settled in a cave.;\
@@ -906,8 +906,8 @@ INDAGINE
     CHIAVE=TOMBA_DEL_RE;TIPO=DECIFRAZIONE;ASPETTO=QUALUNQUE;MANDANTE=the historian;MONETE=40;TITOLO=The Tomb of the Ancient King;\
     RICHIESTA=The inscriptions of an ancient civilization tell where its last king was buried, with his iron crown. They are scattered, and must be put together.;\
     BATTUTA=And the crown?;RISPOSTA=I want it for the city museum. Which doesn't exist yet, but with an ancient crown it would start well.;\
-    INDIZIO_1=ROVINE:An inscription among the ruins says: The king sleeps where the sun does not reach.;\
-    INDIZIO_2=RADURA:On a boulder in the clearing another inscription says: The king sleeps where the water does not flow but drips.;\
+    INDIZIO_1=ROVINE:An inscription among the ruins says: The king sleeps where the sun doesn't reach.;\
+    INDIZIO_2=RADURA:On a boulder in the clearing another inscription says: The king sleeps where the water doesn't flow but drips.;\
     INDIZIO_3=TEMPIO:The keeper of the temple translates the last inscription, copied by a traveler: The king sleeps with his guards, who have no flesh left but have not stopped watching.;\
     DOMANDA=Where was the ancient king buried?;SOSPETTI=In a swamp/In a cave/In a wood/In a clearing;\
     COLPEVOLE=2;NEMICO=SCHELETRO;NUMERO=4;LUOGO=GROTTA;\
@@ -983,11 +983,11 @@ RITUALE
     GENERE=M;INGREDIENTE=white lily;INGREDIENTI=white lilies;DOVE=LUOGHI RADURA BOSCO;QUANTITA=3;\
     DOMANDA=The spring gurgles softly. Do you throw the lilies into the water and bless it?;\
     MONETE=25;TITOLO=The Newborns' Spring;\
-    RICHIESTA=In a clearing there is a spring: newborns are washed with its water, and it is traditional to bless it once a year with white lilies.;\
+    RICHIESTA=In a clearing there's a spring: newborns are washed with its water, and it's traditional to bless it once a year with white lilies.;\
     BATTUTA=Shouldn't a priest do it?;RISPOSTA=The priest is allergic to lilies. He sneezes the whole blessing.;\
-    RITO=The lilies float on the water and the spring turns clear as crystal. It is blessed.;\
+    RITO=The lilies float on the water and the spring turns clear as crystal. It's blessed.;\
     RINGRAZIAMENTO=This year's babies will be born healthy and strong. And clean.;\
-    RICORDO=In this clearing there is a spring, blessed with white lilies.
+    RICORDO=In this clearing there's a spring, blessed with white lilies.
     CHIAVE=SPIRITO_DELLA_PALUDE;TIPO=SPEZZATURA;ASPETTO=QUALUNQUE;MANDANTE=the fisherman;LUOGO=PALUDE;\
     GENERE=F;INGREDIENTE=owl feather;INGREDIENTI=owl feathers;DOVE=LUOGHI BOSCO ROVINE;QUANTITA=3;\
     DOMANDA=The spirit watches you from the fog. Do you break the curse with the owl feathers?;\
@@ -1012,9 +1012,9 @@ RITUALE
     GENERE=F;INGREDIENTE=valerian root;INGREDIENTI=valerian roots;DOVE=LUOGHI RADURA BOSCO;QUANTITA=3;\
     DOMANDA=The shepherd writhes and growls. How do you free him?;\
     METODI=You recite the formula backwards/You make him breathe the smoke of burnt valerian/You sprinkle him with salt;\
-    METODO=2;ERRORE=The spirit laughs at you, and the shepherd, still possessed, runs off into the forest. His wife will not forgive you.;\
+    METODO=2;ERRORE=The spirit laughs at you, and the shepherd, still possessed, runs off into the forest. His wife won't forgive you.;\
     NEMICO=FANTASMA;NUMERO=1;MONETE=40;TITOLO=The Possessed Shepherd;\
-    RICHIESTA=My husband breathed the smoke of a will-o'-the-wisp, and ever since he has spoken with a voice that is not his. I brought him to the temple, but the keeper is afraid.;\
+    RICHIESTA=My husband breathed the smoke of a will-o'-the-wisp, and ever since he has spoken with a voice that's not his. I brought him to the temple, but the keeper is afraid.;\
     BATTUTA=And what can we do?;RISPOSTA=The keeper's book says the spirit that entered with the smoke must leave with the smoke. The rest I leave to you.;\
     RITO=The valerian smoke fills the temple, and the spirit leaves the shepherd, coughing. But, once out, it has no intention of leaving.;\
     VITTORIA=The ghost vanishes, and the shepherd wakes up asking what he is doing in a temple.;\
@@ -1053,7 +1053,7 @@ RITUALE
     GENERE=M;INGREDIENTE=white stone;INGREDIENTI=white stones;DOVE=LUOGHI RADURA PALUDE;QUANTITA=5;\
     DOMANDA=In the wood there's the right spot, in the shade of an oak. Do you lay out the stones and consecrate the sanctuary?;\
     MONETE=30;TITOLO=The Travelers' Sanctuary;\
-    RICHIESTA=I would like a small sanctuary in the wood, where travelers can stop and feel safe. A circle of white stones, consecrated, is enough.;\
+    RICHIESTA=I'd like a small sanctuary in the wood, where travelers can stop and feel safe. A circle of white stones, consecrated, is enough.;\
     BATTUTA=Safe from what?;RISPOSTA=From almost everything. The almost is the part that concerns you.;\
     RITO=The white stones form a perfect circle, and under the oak a peace descends that you can feel on your skin. The sanctuary is consecrated.;\
     RINGRAZIAMENTO=A traveler has already come to say thanks: he slept in the sanctuary, and nobody ate him. It's a good start.;\
@@ -1071,7 +1071,7 @@ RITUALE
     GENERE=M;INGREDIENTE=night jasmine petal;INGREDIENTI=night jasmine petals;DOVE=LUOGHI RADURA;QUANTITA=3;\
     DOMANDA=The sky above the clearing is clear, the stars are all in place. Do you burn the petals and read the stars?;\
     MONETE=30;TITOLO=The Conjunction of the Stars;\
-    RICHIESTA=Tonight there is a conjunction that happens once every hundred years. It must be observed from a clearing, far from the city lights, with the scent of night jasmine.;\
+    RICHIESTA=Tonight there's a conjunction that happens once every hundred years. It must be observed from a clearing, far from the city lights, with the scent of night jasmine.;\
     BATTUTA=And from your tower?;RISPOSTA=From my tower you can see the neighbor's tower. He watches the stars, I watch him.;\
     RITO=In the scent of jasmine the stars align, and for a moment draw a sword in the sky. A sign of war, or of an excellent harvest: stars are never precise.;\
     RINGRAZIAMENTO=A sword? War or harvest, then. I'll write down both, so I'm sure to get it right.;\
@@ -1163,7 +1163,7 @@ RITUALE
     BATTUTA=And what if it leaves?;RISPOSTA=Where would it go? It has a pole instead of legs.;\
     RITO=The scarecrow blinks its button eyes, waves its straw arms, and the crows flee cawing. Then it waves at you.;\
     RINGRAZIAMENTO=There isn't a crow left in the whole valley. The scarecrow, though, now wants to be paid.;\
-    RICORDO=In this clearing there is a scarecrow that waves at passersby.
+    RICORDO=In this clearing there's a scarecrow that waves at passersby.
     CHIAVE=DRAGO_CHE_NON_C_E;TIPO=ILLUSIONE;ASPETTO=BORGOMASTRO;MANDANTE=the mayor;LUOGO=BOSCO;\
     GENERE=M;INGREDIENTE=monkshood flower;INGREDIENTI=monkshood flowers;DOVE=LUOGHI RADURA;QUANTITA=4;\
     DOMANDA=This is the wood where the brigands hide. Do you burn the monkshood and conjure the illusion?;\
@@ -1191,7 +1191,7 @@ RITUALE
     BATTUTA=More or less?;RISPOSTA=Last time the blacksmith's pots lit up too. But the lamps worked.;\
     RITO=The crystals light up one after another, and a thread of light runs from the cave toward the city. Somewhere, a pot begins to glow.;\
     RINGRAZIAMENTO=The lamps are lit! And so are the blacksmith's pots, but he says it makes him cook better.;\
-    RICORDO=In this cave there is a vein of energy that lights the city's lamps.
+    RICORDO=In this cave there's a vein of energy that lights the city's lamps.
     CHIAVE=DEA_DEL_RACCOLTO;TIPO=COMUNIONE;ASPETTO=SACERDOTESSA;MANDANTE=the priestess;LUOGO=TEMPIO;\
     GENERE=M;INGREDIENTE=white lily;INGREDIENTI=white lilies;DOVE=LUOGHI RADURA BOSCO;QUANTITA=4;\
     DOMANDA=The altar is ready, and the lilies are fragrant. Do you lay them down and call the harvest goddess?;\
@@ -1226,11 +1226,11 @@ RITUALE
     GENERE=M;INGREDIENTE=black lily bulb;INGREDIENTI=black lily bulbs;DOVE=LUOGHI BOSCO;QUANTITA=3;\
     DOMANDA=The water of the pond is still as a mirror. Do you throw in the bulbs and look into tomorrow?;\
     MONETE=35;TITOLO=The Pond of Tomorrow;\
-    RICHIESTA=In a swamp there is a pond that, with black lily bulbs, shows tomorrow. I want to know whether the price of grain will rise. Only that: don't ask it anything else, it takes offense.;\
+    RICHIESTA=In a swamp there's a pond that, with black lily bulbs, shows tomorrow. I want to know whether the price of grain will rise. Only that: don't ask it anything else, it takes offense.;\
     BATTUTA=What happens if it takes offense?;RISPOSTA=It shows you your own tomorrow. And it's usually not pretty.;\
     RITO=The pond ripples and shows a market, with a very high price on the grain stall. Then, for a moment, it also shows one of your feet in a puddle. Better not to pay attention.;\
     RINGRAZIAMENTO=The grain will rise! I'm buying everything today. And you, tomorrow, watch where you put your feet.;\
-    RICORDO=In this swamp there is a pond that shows tomorrow to those who ask politely.
+    RICORDO=In this swamp there's a pond that shows tomorrow to those who ask politely.
     CHIAVE=PERDONO_DEL_FRATELLO;TIPO=PERDONO;ASPETTO=LOCANDIERE;MANDANTE=the innkeeper;LUOGO=TEMPIO;\
     GENERE=M;INGREDIENTE=wild rose petal;INGREDIENTI=wild rose petals;DOVE=LUOGHI RADURA;QUANTITA=5;\
     DOMANDA=Before the altar of the temple, do you scatter the petals and ask forgiveness on behalf of the innkeeper?;\
@@ -1287,7 +1287,7 @@ BENEDIZIONE
     BENEDIZIONE=SAGGEZZA VARIAZIONE_FISSA 2;\
     RICHIESTA=The stars told me you would come. They also told me you would order the soup, and so you did.;\
     BATTUTA=And what else do the stars say?;\
-    RISPOSTA=That in a chapel among some ruins two specters disturb those who pray. And that you will drive them away.;\
+    RISPOSTA=That in a chapel among some ruins two specters disturb those who pray. And that you'll drive them away.;\
     FAVORE=The Chapel of the Specters;LUOGO=ROVINE;NEMICO=SPETTRO;NUMERO=2;\
     VITTORIA=The specters leave the chapel, and silence returns among the ruins.;\
     BENEDETTO=The priestess traces a constellation in the air, and the stars are mirrored for a moment in the eyes of %PERSONAGGIO%.
@@ -1383,7 +1383,7 @@ LEALTA
     BATTUTA=And do you want to go back?;\
     RISPOSTA=I want to look at them until they no longer scare me. Twice, with you, and calmly.;\
     FAVORE=The Lights in the Swamp;LUOGO=PALUDE;VISITE=2;ORE=20;\
-    VEGLIA=The lights dance on the water. %PERSONAGGIO% watches them, and does not look away.;\
+    VEGLIA=The lights dance on the water. %PERSONAGGIO% watches them, and doesn't look away.;\
     VITTORIA=The lights are only lights. They're even a little funny, if you look closely.;\
     RINGRAZIAMENTO=Tonight I'll sleep. Truly, this time.;\
     LEALTA=PERCEZIONE VARIAZIONE_FISSA 2;\
@@ -1402,7 +1402,7 @@ LEALTA
     BATTUTA=And what do you want to do?;\
     RISPOSTA=Ask him to repeat it, but with a sword in hand. In a clearing, with no audience: honor doesn't need spectators.;\
     FAVORE=The Duel of Honor;LUOGO=RADURA;NEMICO=GUERRIERO;NUMERO=1;CAPO=NOME_CAMPIONE;\
-    VITTORIA=%CAPO% lowers his sword and admits his wrong: the word coward will not be spoken again.;\
+    VITTORIA=%CAPO% lowers his sword and admits his wrong: the word coward won't be spoken again.;\
     RINGRAZIAMENTO=Honor is settled. The rest of my reputation I'll fix myself, calmly.;\
     LEALTA=VALORE VARIAZIONE_FISSA 1;\
     LEALE=%PERSONAGGIO% walks with head held high, and valor shows in every step.
@@ -1483,7 +1483,7 @@ LEALTA
     BATTUTA=How many do we need?;\
     RISPOSTA=Four bunches, fresh. Bitter herb is hard to find, but it has a smell you don't forget.;\
     FAVORE=Herbs for Grandfather;GENERE=F;INGREDIENTE=bitter herb;INGREDIENTI=bitter herbs;DOVE=LUOGHI BOSCO;QUANTITA=4;\
-    VITTORIA=Four bunches of bitter herb, fresh and fragrant: grandfather's cough has its days numbered.;\
+    VITTORIA=Four bunches of bitter herb, fresh and fragrant: grandfather's cough's days are numbered.;\
     RINGRAZIAMENTO=I'll prepare him an infusion right away. He'll say it's too bitter, and that will be the proof it works.;\
     LEALTA=RIGENERAZIONE_SALUTE VARIAZIONE_PERCENTUALE 10;\
     LEALE=The wounds of %PERSONAGGIO% close a little faster than before.
@@ -1537,7 +1537,7 @@ LEALTA
     BATTUTA=We can keep vigil together.;\
     RISPOSTA=Three evenings, one every now and then. We'll tell him the news, and he'll pretend not to know everything already.;\
     FAVORE=The Old Friend's Vigil;LUOGO=ROVINE;VISITE=3;ORE=14;\
-    VEGLIA=Among the ruins there is a quiet air. %PERSONAGGIO% sits beside the tombstone and tells, in a low voice, the latest news.;\
+    VEGLIA=Among the ruins there's a quiet air. %PERSONAGGIO% sits beside the tombstone and tells, in a low voice, the latest news.;\
     VITTORIA=The third vigil is over: the old friend will know he has not been forgotten.;\
     RINGRAZIAMENTO=Now the promise is kept. He, I bet, laughed at least once.;\
     LEALTA=PERCEZIONE VARIAZIONE_FISSA 2;\
@@ -1565,7 +1565,7 @@ LEALTA
     CHIAVE=LA_NOTTE_DELLE_LUCCIOLE;\
     CONFIDENZA=When I was little, in the clearing near home the fireflies danced every summer. Now they're no longer seen, and I miss them.;\
     BATTUTA=What would bring them back?;\
-    RISPOSTA=Someone sitting in the clearing and waiting for them, two evenings, patiently. They say fireflies return where there is company.;\
+    RISPOSTA=Someone sitting in the clearing and waiting for them, two evenings, patiently. They say fireflies return where there's company.;\
     FAVORE=The Night of the Fireflies;LUOGO=RADURA;VISITE=2;ORE=18;\
     VEGLIA=The clearing is dark and silent. %PERSONAGGIO% waits patiently, and for a moment a light flickers in the grass.;\
     VITTORIA=The fireflies are back in the clearing, and dance as if they had never left.;\
@@ -1573,7 +1573,7 @@ LEALTA
     LEALTA=CARISMA VARIAZIONE_FISSA 2;\
     LEALE=%PERSONAGGIO% smiles with a new light, and whoever watches smiles back.
     CHIAVE=IL_PATTO_CON_LA_PALUDE;\
-    CONFIDENZA=Years ago I promised the swamp, in a low voice, that I would return to thank it for letting me pass. I never kept the promise.;\
+    CONFIDENZA=Years ago I promised the swamp, in a low voice, that I'd return to thank it for letting me pass. I never kept the promise.;\
     BATTUTA=Thank a swamp?;\
     RISPOSTA=Swamps are touchy. Two visits, with a long rest in between, and a bit of silence. It asks nothing more.;\
     FAVORE=The Pact with the Swamp;LUOGO=PALUDE;VISITE=2;ORE=20;\
@@ -1603,7 +1603,7 @@ TORNEO
     BATTUTA=But we aren't wizards.;RISPOSTA=Neither was the winner last time. He threw a stone. It was a fine throw.;\
     PRIMO_TURNO=The sorceress yields with a bow and a little puff of violet smoke.;\
     SECONDO_TURNO=The wizard yields, and from the excitement turns into an owl for a moment. Then he returns to normal. Almost.;\
-    FINALE=%CAMPIONE% yields, takes off the pointed hat and hands it to you: it is the highest sign of respect among spellcasters. Then takes it back.;\
+    FINALE=%CAMPIONE% yields, takes off the pointed hat and hands it to you: it's the highest sign of respect among spellcasters. Then takes it back.;\
     RINGRAZIAMENTO=What a joust! The academy will talk about it for years. Also because the ruins are a bit more ruined now.;\
     RICORDO=Among these ruins the Spellcasters' Joust is held.
     CHIAVE=BOCCALE_ROVESCIATO;ASPETTO=LOCANDIERE;MANDANTE=the innkeeper;TITOLO=The Tournament of the Upturned Tankard;LUOGO=BOSCO;\
@@ -1643,20 +1643,20 @@ DOCUMENTAZIONE
     RICHIESTA=I'm writing the history of the ancient kingdom, but its inscriptions are scattered across the forest. They must be copied before the moss eats them.;\
     BATTUTA=Copy them how?;RISPOSTA=With charcoal, on these parchments. And carefully, please: the last one who tried mistook a crown for a cabbage.;\
     REPERTO_1=ROVINE:On a lintel it says: Here reigned Otto the Wise, who built a hundred bridges. Copy carefully, cabbage included.;\
-    REPERTO_2=GROTTA:On the walls of the cave there is the same crown, and a date: the year of the great winter.;\
+    REPERTO_2=GROTTA:On the walls of the cave there's the same crown, and a date: the year of the great winter.;\
     REPERTO_3=TEMPIO:On the altar of the temple the name of Otto is engraved, beside that of a queen of whom nobody remembers anything.;\
     RINGRAZIAMENTO=A forgotten queen! That changes everything. That is, it changes the third chapter. But it's something.
     CHIAVE=AFFRESCHI_DEI_TEMPLI;ASPETTO=QUALUNQUE;MANDANTE=the court painter;MONETE=30;TITOLO=The Temple Frescoes;\
     RICHIESTA=I have to paint the mayor's chapel like the ancient temples of the forest, but I don't go into the forest. You describe them to me.;\
     BATTUTA=We aren't painters.;RISPOSTA=No need. Tell me the colors and the figures, I'll take care of the rest. And if you get it wrong, I'll say it's modern art.;\
-    REPERTO_1=TEMPIO:On the walls of the temple there is a blue sky full of golden stars, and a red dragon chasing them.;\
+    REPERTO_1=TEMPIO:On the walls of the temple there's a blue sky full of golden stars, and a red dragon chasing them.;\
     REPERTO_2=TEMPIO:In this other temple the frescoes are almost erased: all you can see is a green knight sleeping under a tree.;\
     RINGRAZIAMENTO=Golden stars, a red dragon, a sleeping knight. The mayor will be pleased. The knight I'll paint awake, though.
     CHIAVE=ERBARIO_DEL_MEDICO;ASPETTO=ALCHIMISTA;MANDANTE=the alchemist;MONETE=30;TITOLO=The Herbarium;\
     RICHIESTA=I'm compiling a herbarium of all the plants of the forest. I'm missing the ones that grow where I don't have the courage to go.;\
     BATTUTA=Meaning where?;RISPOSTA=In a swamp, in a cave and in a clearing where, they say, there are witches. Describe the plants to me, no need to pick them.;\
     REPERTO_1=PALUDE:Among the reeds grows a black flower with hand-shaped petals, which closes when someone approaches.;\
-    REPERTO_2=GROTTA:On the walls of the cave there is a blue moss that glows in the dark, and smells of mint.;\
+    REPERTO_2=GROTTA:On the walls of the cave there's a blue moss that glows in the dark, and smells of mint.;\
     REPERTO_3=RADURA:In the clearing grows a silvery grass, arranged in a perfect circle. Of witches, no trace. Luckily.;\
     RINGRAZIAMENTO=A flower that closes, a moss that glows, a circle of silver grass. My herbarium will be the finest in the realm.
     CHIAVE=LOCANDE_DELLA_FORESTA;ASPETTO=LOCANDIERE;MANDANTE=the innkeeper;MONETE=25;TITOLO=The Inn Guide;\
@@ -1733,7 +1733,7 @@ COLPO
     CHIAVE=CAPANNA_DELLA_GUARITRICE;TIPO=VIOLAZIONE_DOMICILIO;ASPETTO=ALCHIMISTA;MANDANTE=the alchemist;LUOGO=PALUDE;\
     NEMICO=GARGOYLE;NUMERO=2;MONETE=35;TITOLO=The Healer's Hut;\
     RICHIESTA=The healer of the swamp hasn't answered for three days. She has put two gargoyles to guard the hut, and they let nobody in.;\
-    BATTUTA=And we are supposed to go in anyway?;RISPOSTA=Secretly, yes. If you wake the gargoyles, they'll defend her from you, and then who helps her?;\
+    BATTUTA=And we're supposed to go in anyway?;RISPOSTA=Secretly, yes. If you wake the gargoyles, they'll defend her from you, and then who helps her?;\
     COLPO=You enter the hut: the healer sleeps under a spell. You leave the alchemist's antidote beside her, and tiptoe out.;\
     SCOPERTI=The gargoyles discovered you, and from now on they will let no one approach. The heist has failed.;\
     RINGRAZIAMENTO=The healer woke up, and sent me a note: Thank you, and next time knock.;\
@@ -1768,7 +1768,7 @@ COLPO
     BATTUTA=Desecrate an idol? Doesn't that bring bad luck?;RISPOSTA=To goblins, yes. That's exactly the point.;\
     COLPO=While %CAPO%'s goblins sleep, you paint whiskers on the idol and put a bucket on its head. On waking, no goblin will dare look at it.;\
     SCOPERTI=%CAPO%'s goblins caught you in front of the idol: now they guard it day and night. The heist has failed.;\
-    RINGRAZIAMENTO=The goblins no longer leave the cave: they believe their god is offended. I would be too, with those whiskers.;\
+    RINGRAZIAMENTO=The goblins no longer leave the cave: they believe their god is offended. I'd be too, with those whiskers.;\
     RICORDO=In this cave there was a goblin idol, with whiskers and a bucket on its head.
     CHIAVE=CARTELLO_DEL_PEDAGGIO;TIPO=INGANNO;ASPETTO=QUALUNQUE;MANDANTE=the farmer;LUOGO=ROVINE;NEMICO=HOBGOBLIN;NUMERO=2;\
     MONETE=35;TITOLO=The Toll Sign;\
@@ -1840,7 +1840,7 @@ NEGOZIO_RINGRAZIAMENTO
 
 NEGOZIO_APERTURA
     %NOME% has opened %BOTTEGA%: you'll find it on the map, where the ruins used to be.
-    Where the ruins were there is now %BOTTEGA%, and %NOME% awaits you behind the counter.
+    Where the ruins were there's now %BOTTEGA%, and %NOME% awaits you behind the counter.
     %BOTTEGA% is open: %NOME% has put up the sign, and a bell against monsters.
 
 NEGOZIO_NEMICI

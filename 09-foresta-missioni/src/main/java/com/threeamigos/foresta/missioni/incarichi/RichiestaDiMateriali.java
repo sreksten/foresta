@@ -145,7 +145,7 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 		MaterialeRichiesto materiale = getMateriale();
 		return mandante.nuovaScena()
 				.parlaIlMandante(mandante.getApertura(nomeDelMandante(mandante.getNome())))
-				.parlaIlMandante(Testi.formatta("missioni", "RichiestaDiMateriali.1", materiale.quanti(getQuantita()), Lingue.corrente().inizialeMaiuscola(materiale.getDaDoveViene())))
+				.parlaIlMandante(Testi.formatta("missioni", "RichiestaDiMateriali.1", materiale.quanti(getQuantita()), Lingue.corrente().inizialeMaiuscola(materiale.getDaDoveVieneComeFrase())))
 				.parlaIlCapo(materiale.getBattutaDelCapo())
 				.parlaIlMandante(Testi.formatta("missioni", "RichiestaDiMateriali.2", materiale.getRispostaDelMandante(), materiale.getPronome(), getRicompensa()))
 				.parlaIlCapo(Testi.formatta("missioni", "RichiestaDiMateriali.3"));

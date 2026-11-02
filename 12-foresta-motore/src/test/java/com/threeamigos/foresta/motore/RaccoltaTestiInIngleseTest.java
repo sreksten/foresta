@@ -68,7 +68,7 @@ class RaccoltaTestiInIngleseTest {
 		for (long seme = 400; seme < 400 + semi; seme++) {
 			Set<String> testi = RaccoglitoreDeiTestiVisibili.gioca(lingua, seme, passi);
 			for (String testo : testi) {
-				if (testo == null || testo.trim().isEmpty() || testo.contains("CHIAVE=") || PartiteInIngleseTest.NOTE_SALVATE.contains(testo)
+				if (testo == null || testo.trim().isEmpty() || RaccoglitoreDeiTestiVisibili.eDatoGrezzo(testo) || PartiteInIngleseTest.NOTE_SALVATE.contains(testo)
 						|| IDENTIFICATORE.matcher(testo).matches()) {
 					continue;
 				}

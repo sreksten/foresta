@@ -849,7 +849,7 @@ public abstract class LocazioneBase implements Locazione {
 					String descrizione = subisciUnoSpregio(p);
 					String tentativo = Testi.formatta("messaggi_motore", "LocazioneBase.corruzioneFallita", p.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA));
 					if (descrizione != null) {
-						BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.4", tentativo, descrizione)));
+						BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.4", tentativo, descrizione, p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))));
 						// Non sapendo cosa andiamo a perdere rinfreschiamo tutto
 						BusEventi.pubblica(new InternoRichiestaRefreshUI());
 					} else {

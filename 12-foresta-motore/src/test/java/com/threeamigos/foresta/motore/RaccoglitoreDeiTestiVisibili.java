@@ -28,6 +28,14 @@ final class RaccoglitoreDeiTestiVisibili {
 	private RaccoglitoreDeiTestiVisibili() {
 	}
 
+	/**
+	 * Le righe grezze dei registri delle missioni (la vista le dà come stanno salvate: {@code CHIAVE=...;TIPO=...} e le righe
+	 * {@code F;nome;plurale;LUOGHI BOSCO;...}) sono dati e non testo mostrato.
+	 */
+	static boolean eDatoGrezzo(String testo) {
+		return testo.contains("CHIAVE=") || testo.matches("(?s)[MF/]+;[^;\\n]*;[^;\\n]*;.*");
+	}
+
 	static void paragrafi(PaginaIntermezzo pagina, Set<String> testi) {
 		if (pagina.getTesto() != null) {
 			testi.add(pagina.getTesto());

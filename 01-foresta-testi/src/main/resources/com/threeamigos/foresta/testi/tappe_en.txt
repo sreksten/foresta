@@ -76,7 +76,7 @@ PERSONA_E_MANDANTE
 	[MOTIVO=A healer doesn't leave the sick without telling anyone, and yet she said nothing.]\
 	[PRIMA_PISTA=Hortensia bought her herbs from a merchant, and she must have told someone where she was going.]\
 	[RINGRAZIA=Hortensia is back, tired and full of new herbs. The sick thank you, and so do I.]\
-	[RICORDO_PERSONA=Here the healer Hortensia was looking for an herb that did not exist.]
+	[RICORDO_PERSONA=Here the healer Hortensia was looking for an herb that didn't exist.]
 	[MASPETTO=CAPITANO][MD=the captain of the guard][PM=Anselm][PP=he][PPU=He][PQ=him][PX=his][PF=The city mapmaker, Anselm,][PA=has disappeared][PS=sitting][PT=lying][PC=looked for][PG=held prisoner][PO=the compass]\
 	[MOTIVO=He has the maps of the safe paths, and without them I'm not sending anyone into the woods.]\
 	[PRIMA_PISTA=The last time he was seen he was taking notes, and whoever takes notes always leaves a trace.]\
@@ -96,7 +96,7 @@ PERSONA_E_MANDANTE
 	[MOTIVO=She left me a cauldron that has been boiling for three days and a note that says only: back soon.]\
 	[PRIMA_PISTA=Cleo was looking for an ingredient nobody sells: she must have gone looking for it somewhere.]\
 	[RINGRAZIA=Cleo is back with the ingredient. The cauldron let off a small and very happy explosion.]\
-	[RICORDO_PERSONA=Here the apprentice Cleo looked for an ingredient that cannot be bought.]
+	[RICORDO_PERSONA=Here the apprentice Cleo looked for an ingredient that can't be bought.]
 	[MASPETTO=GUERRIERO][MD=the weapons master][PM=Roger][PP=he][PPU=He][PQ=him][PX=his][PF=My old master, Roger,][PA=has left][PS=sitting][PT=lying][PC=looked for][PG=held prisoner][PO=the walking stick]\
 	[MOTIVO=He says he's too old for weapons, and yet I'm sure he went to put them to the test.]\
 	[PRIMA_PISTA=A weapons master doesn't disappear without a reason: he must have left a sign for his pupils.]\
@@ -106,7 +106,7 @@ PERSONA_E_MANDANTE
 	[MOTIVO=He had just finished copying a very precious text, and both the text and he are missing from the desk.]\
 	[PRIMA_PISTA=A copyist leaves ink stains wherever he goes: someone must have noticed them.]\
 	[RINGRAZIA=Elpidius is back, and so is the text. He has an ink stain on his nose too.]\
-	[RICORDO_PERSONA=Here the scribe Elpidius copied a text that did not want to be read.]
+	[RICORDO_PERSONA=Here the scribe Elpidius copied a text that didn't want to be read.]
 
 BATTUTA_DEL_CAPO
 	Where do we start?
@@ -151,41 +151,41 @@ PERCORSO_PERSONA
 CLUE_PERSONA_CITTA
 	An {innkeeper|merchant|shopkeeper} remembers [#PM] well: there was a lot of talk about it, and about an inn in the woods where [#PP] would have spent the night. The place is %PROSSIMO%.
 	A guard who knew [#PM] claims to have seen someone leave the walls at dawn with [#PX] walk, headed toward %PROSSIMO%.
-	Among [#PM]'s papers there is still a note with the name of %PROSSIMO%, underlined twice. Then, in pencil: don't tell anyone.
-	In a shop there is still [#PO] of [#PM], left as a pledge: whoever took it into safekeeping remembers that [#PM] said [#PP] wanted to go %A_PROSSIMO%.
+	Among [#PM]'s papers there's still a note with the name of %PROSSIMO%, underlined twice. Then, in pencil: don't tell anyone.
+	In a shop there's still [#PO] of [#PM], left as a pledge: whoever took it into safekeeping remembers that [#PM] said [#PP] wanted to go %A_PROSSIMO%.
 
 CLUE_PERSONA_LOCANDA
 	The innkeeper remembers [#PM] well: [#PP] paid for the room with an unusual coin and asked the way to %PROSSIMO%.
 	A maid says [#PM] spent the night writing, and in the morning left on the table a sheet with the name of %PROSSIMO%.
 	A patron swears to have heard [#PM] talking in [#PX] sleep: [#PP] kept repeating the name of %PROSSIMO%, always the same.
-	In the room [#PM] had taken there is still [#PO], forgotten. The innkeeper says [#PM] asked how to get %A_PROSSIMO%.
+	In the room [#PM] had taken there's still [#PO], forgotten. The innkeeper says [#PM] asked how to get %A_PROSSIMO%.
 
 CLUE_PERSONA_ROVINE
 	In the dust there are fresh footprints leading out of the ruin, and beside them a handkerchief with [#PM]'s initials. The tracks head toward %PROSSIMO%.
 	An arrow is carved on a wall, and below it a single word: %PROSSIMO%. The handwriting is [#PM]'s, the same as on the note.
 	The fire went out recently: [#PM] left here a bunch of herbs tied with a ribbon. The footprints point toward %PROSSIMO%.
-	Under a fallen arch there is [#PO] of [#PM], carefully set down. Someone drew a rough map in the ashes: the road leads %A_PROSSIMO%.
+	Under a fallen arch there's [#PO] of [#PM], carefully set down. Someone drew a rough map in the ashes: the road leads %A_PROSSIMO%.
 
 CLUE_PERSONA_TEMPIO
 	The keeper of the temple remembers [#PM] praying all night long. At dawn [#PP] asked the way to %PROSSIMO%, and left the temple.
-	On the altar there is an offering left by [#PM] and a note folded in four: it says only %PROSSIMO%.
+	On the altar there's an offering left by [#PM] and a note folded in four: it says only %PROSSIMO%.
 	A priest swears that [#PM] asked for a blessing for a short journey, and got it. Then [#PP] took the road to %PROSSIMO%.
 	The temple's visitors' book bears [#PM]'s signature, with a single word beside it: %PROSSIMO%.
 
 CLUE_PERSONA_GROTTA
-	At the back of the cave there is a small bed still warm, and writing on the wall: [#PM] slept here. A piece of charcoal points the direction of %PROSSIMO%.
+	At the back of the cave there's a small bed still warm, and writing on the wall: [#PM] slept here. A piece of charcoal points the direction of %PROSSIMO%.
 	An awake bat tries to say something, but what makes itself understood is the mark left in the mud: tracks leading toward %PROSSIMO%.
-	Among the rocks there is a note held down by a stone. It says that [#PM] is fine and is going %A_PROSSIMO%.
+	Among the rocks there's a note held down by a stone. It says that [#PM] is fine and is going %A_PROSSIMO%.
 
 CLUE_PERSONA_BOSCO
 	A fresh arrow is carved on a trunk, and under the branches there are footprints that [#PM] would recognize. They lead toward %PROSSIMO%.
 	A woodcutter remembers meeting [#PM] on the path: [#PP] was asking the way to %PROSSIMO%, and seemed to be in a hurry.
-	A pine cone painted red shows the way: it is a signal that [#PM] used as a boy. It leads toward %PROSSIMO%.
+	A pine cone painted red shows the way: it's a signal that [#PM] used as a boy. It leads toward %PROSSIMO%.
 
 CLUE_PERSONA_PALUDE
 	A frog fisherman remembers [#PM] on the bank, staring at the water. Then [#PP] left toward %PROSSIMO%, at a brisk pace.
-	Among the reeds there is [#PO] of [#PM], soaked. The footprints in the mud lead toward %PROSSIMO%.
-	Someone has tied a ribbon to the post of a ford. A farmer says it is a message for whoever is looking for [#PM]: the road goes %A_PROSSIMO%.
+	Among the reeds there's [#PO] of [#PM], soaked. The footprints in the mud lead toward %PROSSIMO%.
+	Someone has tied a ribbon to the post of a ford. A farmer says it's a message for whoever is looking for [#PM]: the road goes %A_PROSSIMO%.
 
 CLUE_PERSONA_RADURA
 	The grass is flattened where someone lay down to look at the sky. [#PM] left a stone with an arrow: the direction is %PROSSIMO%.
@@ -214,7 +214,7 @@ ARRIVO_PRIGIONIERA
 // Le scene d'arrivo: narrazione, battuta del capo, battuta di un compagno (facoltativa)
 SCENA_CITTA
 	In the alleys of the city the party asks around, and someone remembers./Someone here must have seen something./Let's ask at the shop too.
-	The party stops in the square to watch the comings and goings: somewhere there is a clue./Let's look closely, nobody is entirely invisible./I can hear the gossip.
+	The party stops in the square to watch the comings and goings: somewhere there's a clue./Let's look closely, nobody is entirely invisible./I can hear the gossip.
 	The market is crowded, and among the voices is the one you were looking for: an old seller has a story to tell./How much do you want for the story?/A coin, and a little respect.
 
 SCENA_LOCANDA
@@ -223,13 +223,13 @@ SCENA_LOCANDA
 	The innkeeper polishes a glass and looks at the party with the face of someone who has a story to sell./How much does the story cost?/Not much, usually.
 
 SCENA_ROVINE
-	The party moves among the fallen walls. The wind makes noises that sound like words./Look at the ground, someone has passed through./There is something behind that column.
+	The party moves among the fallen walls. The wind makes noises that sound like words./Look at the ground, someone has passed through./There's something behind that column.
 	Grass grows among the stones, and under the grass are marks that someone removed in a hurry./They were looking for something here, and didn't find it./Or they found it, and wiped out the tracks.
 	The sun filters through a fallen arch and lights up a wall covered in graffiti. The party stops to look./Someone has written recently./Let's find the meaning, and we'll find the way.
 
 SCENA_TEMPIO
 	In the silence of the temple every step sounds like a question. The party looks around with respect./Let's search with care./Let's not touch anything without asking.
-	The light from the stained glass falls on the altar in colored patches. The party stops, and for a moment nobody speaks./There is something here that wants to be found./Or that wants to be left in peace.
+	The light from the stained glass falls on the altar in colored patches. The party stops, and for a moment nobody speaks./There's something here that wants to be found./Or that wants to be left in peace.
 	A candle is still lit at one side of the altar. The party approaches on tiptoe./Someone passed through recently./And left something behind.
 
 SCENA_GROTTA
@@ -268,7 +268,7 @@ ARCO_OGGETTO
 
 NARRATORE
 	[NCH=LEGGENDA_DEL_BARDO][NASPETTO=LOCANDIERE][ND=the innkeeper][OGG_TITOLO=The trail of an ancient weapon][NRACCONTO=My grandfather used to say that the tale %DI_OGGETTO% was sung all over the forest, and that the story was never truly lost: someone covered its tracks.]\
-	[NPRIMA_PISTA=The last traces were lost in a place whose name almost nobody remembers.][NRINGRAZIA=So it was true. My grandfather was right, and I will never admit it in front of him.]
+	[NPRIMA_PISTA=The last traces were lost in a place whose name almost nobody remembers.][NRINGRAZIA=So it was true. My grandfather was right, and I'll never admit it in front of him.]
 	[NCH=LA_VOCE_DELL_EREMITA][NASPETTO=SACERDOTE][ND=the priest][OGG_TITOLO=The trail of a sacred object][NRACCONTO=The books speak %DI_OGGETTO%, which the monks hid when the war came. They say they left clues, for whoever was worthy.]\
 	[NPRIMA_PISTA=The monks passed through a place and left the first clue there.][NRINGRAZIA=The monks were right to leave the clues: whoever found them was worthy.]
 	[NCH=IL_VECCHIO_ARMAIOLO][NASPETTO=ARMAIOLO][ND=the armorer][OGG_TITOLO=The trail of a master's work][NRACCONTO=The master who forged %OGGETTO% never traded it: he covered its tracks, and left his pupils clues to find again what he had forged.]\
@@ -277,7 +277,7 @@ NARRATORE
 	[NPRIMA_PISTA=The first name on the edge of the map is a place I barely know.][NRINGRAZIA=The piece of map is complete, and so is the object. For a moment I felt the book say thank you.]
 	[NCH=IL_DIARIO_DEL_SOLDATO][NASPETTO=GUERRIERO][ND=the old soldier][OGG_TITOLO=The soldier's diary][NRACCONTO=My father, a soldier, wrote in a diary that he had seen %OGGETTO% with his own eyes. He didn't write where, but he wrote where he had set out from, and who he had spoken with.]\
 	[NPRIMA_PISTA=The diary names the first place where he stopped to ask.][NRINGRAZIA=My father wasn't lying. I felt a little guilty for thinking him mad.]
-	[NCH=LA_FILASTROCCA_DEL_PASTORE][NASPETTO=QUALUNQUE][ND=a shepherd][OGG_TITOLO=The shepherd's rhyme][NRACCONTO=As a child I sang a rhyme that spoke %DI_OGGETTO%, and nobody understood it was a map. Now that I have understood it, I am too old to follow it.]\
+	[NCH=LA_FILASTROCCA_DEL_PASTORE][NASPETTO=QUALUNQUE][ND=a shepherd][OGG_TITOLO=The shepherd's rhyme][NRACCONTO=As a child I sang a rhyme that spoke %DI_OGGETTO%, and nobody understood it was a map. Now that I have understood it, I'm too old to follow it.]\
 	[NPRIMA_PISTA=The rhyme begins with a place that can still be found.][NRINGRAZIA=The rhyme was true, and I sing it even louder than before.]
 
 BATTUTA_OGGETTO
@@ -317,11 +317,11 @@ CLUE_OGGETTO_CITTA
 CLUE_OGGETTO_LOCANDA
 	The innkeeper knows the song %DI_OGGETTO% and sings the last verse, which speaks %DI_PROSSIMO%.
 	An old patron says he heard the story %DI_OGGETTO% as a child: it ended somewhere around %PROSSIMO%.
-	On the wall of the inn there is an old coat of arms showing %OGGETTO% and, beneath it, a faded inscription: %PROSSIMO%.
+	On the wall of the inn there's an old coat of arms showing %OGGETTO% and, beneath it, a faded inscription: %PROSSIMO%.
 
 CLUE_OGGETTO_ROVINE
 	A faded inscription on a stone tells of who brought %OGGETTO% this way, and of the road taken afterward: %PROSSIMO%.
-	Among the rubble there is an empty scabbard, engraved with the same symbol %DI_OGGETTO%. Below it, an arrow: %PROSSIMO%.
+	Among the rubble there's an empty scabbard, engraved with the same symbol %DI_OGGETTO%. Below it, an arrow: %PROSSIMO%.
 	A bas-relief shows a man hiding something, and behind him a place the party recognizes: %PROSSIMO%.
 	The floor has an almost erased mosaic: it depicts %OGGETTO% and a road leading %A_PROSSIMO%.
 
@@ -331,8 +331,8 @@ CLUE_OGGETTO_TEMPIO
 	In the sacristy an old ledger records the release %DI_OGGETTO%: destination, %PROSSIMO%.
 
 CLUE_OGGETTO_GROTTA
-	At the back of the cave there is an engraving showing %OGGETTO% and a path: the path goes toward %PROSSIMO%.
-	A pile of stones forms an arrow, and beside it is the symbol %DI_OGGETTO%. It points to %PROSSIMO%.
+	At the back of the cave there's an engraving showing %OGGETTO% and a path: the path goes toward %PROSSIMO%.
+	A pile of stones forms an arrow, and beside it's the symbol %DI_OGGETTO%. It points to %PROSSIMO%.
 	A hermit who has lived here for years says he saw someone pass by looking for %OGGETTO%. Before leaving, that person asked the way to %PROSSIMO%.
 
 CLUE_OGGETTO_BOSCO
@@ -343,17 +343,17 @@ CLUE_OGGETTO_BOSCO
 CLUE_OGGETTO_PALUDE
 	A crooked pole has a ribbon tied to its top, the same color as the coat of arms %DI_OGGETTO%. The wind makes it point toward %PROSSIMO%.
 	An old fisherman says his grandparents used to speak %DI_OGGETTO%: they said its trail led %A_PROSSIMO%, far from everyone's eyes.
-	Among the reeds there is a half-sunken tombstone with the name %DI_OGGETTO%. Below it, scrawled with effort: %PROSSIMO%.
+	Among the reeds there's a half-sunken tombstone with the name %DI_OGGETTO%. Below it, scrawled with effort: %PROSSIMO%.
 
 CLUE_OGGETTO_RADURA
-	In the middle of the clearing there is a circle of stones. Inside, a small engraving %DI_OGGETTO% and an arrow toward %PROSSIMO%.
+	In the middle of the clearing there's a circle of stones. Inside, a small engraving %DI_OGGETTO% and an arrow toward %PROSSIMO%.
 	A shepherd says his grandmother used to sing a lullaby %DI_OGGETTO%. The last verse said: go %A_PROSSIMO%.
 	An old menhir bears a worn mark: the symbol %DI_OGGETTO%, and below it the road toward %PROSSIMO%.
 
 ARRIVO_OGGETTO
 	[^2] ROVINE:The room at the back is closed by a slab, and behind the slab you find what you were looking for: %OGGETTO%. The guardians have not waited for you gladly.
 	[^2] TEMPIO:A staircase opens behind the altar, and at the bottom of the stairs you find what you were looking for: %OGGETTO%. The guardians are here too.
-	[^2] GROTTA:In a dry cave, on a pedestal of rock, you find what you were looking for: %OGGETTO%. The guardians do not seem happy to see you.
+	[^2] GROTTA:In a dry cave, on a pedestal of rock, you find what you were looking for: %OGGETTO%. The guardians don't seem happy to see you.
 	[^1] PALUDE:On an island of solid ground in the middle of the swamp you find what you were looking for: %OGGETTO%. The guardians have not waited for you gladly.
 	[^1] BOSCO:In the heart of the woods, among giant roots, you find what you were looking for: %OGGETTO%. The guardians have not noticed you yet.
 
@@ -377,13 +377,13 @@ ARCO_CHIAVI
 
 NARRATORE_CHIAVI
 	[KCH=LE_TRE_CHIAVI_DELLA_VOLTA][KASPETTO=MAGO][KD=the wizard][KTITOLO=The three keys of an ancient vault][KRACCONTO=An ancient vault guards %OGGETTO%, but it opens only with three keys, and the three keys have not been together since the death of whoever forged them.]\
-	[KPRIMA_PISTA=In the place where the keysmith lived there is a register that says who they went to.][KRINGRAZIA=The three keys together again, after so long! I would never have believed it possible.]
+	[KPRIMA_PISTA=In the place where the keysmith lived there's a register that says who they went to.][KRINGRAZIA=The three keys together again, after so long! I'd never have believed it possible.]
 	[KCH=I_TRE_SIGILLI][KASPETTO=SACERDOTESSA][KD=the priestess][KTITOLO=The three seals of the chest][KRACCONTO=A sacred chest guards %OGGETTO%. It opens with three seals, which the monks entrusted to three different people, so as not to trust too much in just one.]\
-	[KPRIMA_PISTA=In their old refuge there is the book where they noted who the seals went to.][KRINGRAZIA=The three seals reunited, the chest open. The monks would never have trusted you, and yet here we are.]
+	[KPRIMA_PISTA=In their old refuge there's the book where they noted who the seals went to.][KRINGRAZIA=The three seals reunited, the chest open. The monks would never have trusted you, and yet here we are.]
 	[KCH=LA_PORTA_DELLA_TORRE][KASPETTO=ARMAIOLO][KD=the armorer][KTITOLO=The door of the tower][KRACCONTO=My grandfather forged the lock of a tower that guards %OGGETTO%. It takes three keys, and he gave them to three men who couldn't stand each other.]\
-	[KPRIMA_PISTA=In his old workshop there is the customer book, with the names of the three.][KRINGRAZIA=The three keys are together, and my grandfather's lock still holds. He would have been very pleased.]
-	[KCH=IL_LIBRO_SIGILLATO][KASPETTO=MAGA][KD=the sorceress][KTITOLO=The sealed book][KRACCONTO=A sealed book hides the place where what everyone is looking for lies: %OGGETTO%. It opens with three seals, and each is guarded by someone who does not want to give it up.]\
-	[KPRIMA_PISTA=On the cover there is an address to which the book was last sent.][KRINGRAZIA=The book opened, and the rest we saw together. I will not forget it.]
+	[KPRIMA_PISTA=In his old workshop there's the customer book, with the names of the three.][KRINGRAZIA=The three keys are together, and my grandfather's lock still holds. He would have been very pleased.]
+	[KCH=IL_LIBRO_SIGILLATO][KASPETTO=MAGA][KD=the sorceress][KTITOLO=The sealed book][KRACCONTO=A sealed book hides the place where what everyone is looking for lies: %OGGETTO%. It opens with three seals, and each is guarded by someone who doesn't want to give it up.]\
+	[KPRIMA_PISTA=On the cover there's an address to which the book was last sent.][KRINGRAZIA=The book opened, and the rest we saw together. I'll not forget it.]
 
 PRIMA_TAPPA_CHIAVI
 	[^2] TAPPA_1=[LUOGO_ROVINE]:[CLUE_CHIAVI_ROVINE];SCENA_1=[SCENA_ROVINE]
@@ -398,7 +398,7 @@ CLUE_CHIAVI_ROVINE
 
 CLUE_CHIAVI_TEMPIO
 	The keeper of the temple has a register of bequests. Three pages speak of three keys, and of three places: %POSTO_1%, %POSTO_2% and %POSTO_3%.
-	Under the altar there is a drawer with three notes. Each one gives a place: %POSTO_1%, %POSTO_2% and %POSTO_3%.
+	Under the altar there's a drawer with three notes. Each one gives a place: %POSTO_1%, %POSTO_2% and %POSTO_3%.
 
 CLUE_CHIAVI_CITTA
 	A notary has on file the deed that divided the keys. It lists three keepers, and their places: %POSTO_1%, %POSTO_2% and %POSTO_3%.
@@ -429,7 +429,7 @@ CUSTODE_DATI$
 	PALUDE TROLL 1 SI:A troll named %CAPO% sleeps on top of the key, and only notices when asked.
 	ROVINE SCHELETRO 4 NO:Among the bones of a crypt lies the key, guarded by skeletons that never sleep.
 	RADURA GUERRIERO 1 SI:A knight named %CAPO% swore to guard the key and not to give it up except to whoever beats him in a duel.
-	ROVINE MAGO 1 SI:A wizard named %CAPO% has enchanted the key so that it cannot be taken by anyone who doesn't know how to deserve it.
+	ROVINE MAGO 1 SI:A wizard named %CAPO% has enchanted the key so that it can't be taken by anyone who doesn't know how to deserve it.
 	BOSCO FOLLETTO 3 NO:Some sprites have taken the key to play with, and bounce it among the branches.
 	GROTTA HOBGOBLIN 3 SI:A hobgoblin named %CAPO% keeps the key in a box, and sleeps on that box.
 
@@ -497,7 +497,7 @@ CLUE_BIVIO_OGGETTO_CITTA
 CLUE_BIVIO_OGGETTO_LOCANDA
 	The innkeeper sings the song %DI_OGGETTO% with two endings: one speaks %DI_PISTA_A%, the other %DI_PISTA_B%. He admits he doesn't remember which one he was taught.
 	Two old men sitting by the fire argue over where the traces %DI_OGGETTO% lead: one says %A_PISTA_A%, the other %A_PISTA_B%.
-	On the menu there is a half-erased riddle that speaks %DI_OGGETTO%. It says the right place is %PISTA_A% or %PISTA_B%, but not which.
+	On the menu there's a half-erased riddle that speaks %DI_OGGETTO%. It says the right place is %PISTA_A% or %PISTA_B%, but not which.
 
 COPPIA_PISTE_PERSONA
 	[^1] PISTA_A=[LUOGO_ROVINE]:[CLUE_PERSONA_ROVINE];SCENA_A=[SCENA_ROVINE];PISTA_B=[LUOGO_BOSCO]:[FALSA_PISTA_BOSCO];SCENA_B=[SCENA_BOSCO];GIUSTA=A;
@@ -552,19 +552,19 @@ COPPIA_PISTE_OGGETTO
 	[^1] PISTA_A=[LUOGO_TEMPIO]:[FALSA_PISTA_TEMPIO];SCENA_A=[SCENA_TEMPIO];PISTA_B=[LUOGO_RADURA]:[CLUE_OGGETTO_RADURA];SCENA_B=[SCENA_RADURA];GIUSTA=B;
 
 FALSA_PISTA_ROVINE
-	Among this rubble there is nothing of what you seek: the footprints are old and the writing is about something else. Whoever pointed to this place was mistaken. A graffito jokes: “wrong, go %A_ALTRA%”.
+	Among this rubble there's nothing of what you seek: the footprints are old and the writing is about something else. Whoever pointed to this place was mistaken. A graffito jokes: “wrong, go %A_ALTRA%”.
 	The place has been ransacked from top to bottom, and long ago. No trace remains of what you seek, but on the wall someone has written in charcoal: “it was elsewhere, go %A_ALTRA%”.
-	Under a fallen arch there is only a swallows' nest. On the edge of a stone, an ironic hand has carved: “not here, go %A_ALTRA%”.
+	Under a fallen arch there's only a swallows' nest. On the edge of a stone, an ironic hand has carved: “not here, go %A_ALTRA%”.
 
 FALSA_PISTA_TEMPIO
 	The keeper, surprised, admits he has seen nobody pass by. He adds that whoever pointed to this place got their ideas mixed up: the right road leads %A_ALTRA%.
 	The name you seek is not in the visitors' book. A priest, with the patience of one who has seen it all, tells you to head %A_ALTRA%.
-	There is a fresh offering on the altar, but it is not from the one you seek. A nun smiles and tactfully suggests that you head %A_ALTRA%.
+	There's a fresh offering on the altar, but it's not from the one you seek. A nun smiles and tactfully suggests that you head %A_ALTRA%.
 
 FALSA_PISTA_GROTTA
 	The cave is empty. No bed, no fire, no trace of anyone. A bat looks at you with an air of pity: the right road leads %A_ALTRA%.
 	A blind tunnel ends in a rock wall, and on the wall someone has drawn an arrow pointing back: you must go %A_ALTRA%.
-	At the back of the cave there is only a pile of stones, and an ironic message among the stones: “well done, you followed the wrong trail. Head %A_ALTRA%”.
+	At the back of the cave there's only a pile of stones, and an ironic message among the stones: “well done, you followed the wrong trail. Head %A_ALTRA%”.
 
 FALSA_PISTA_BOSCO
 	The path gets lost in a tangle of brambles, and someone has tied to a branch a rag reading: “wrong”. A passing hunter advises you to head %A_ALTRA%.
@@ -572,13 +572,13 @@ FALSA_PISTA_BOSCO
 	On the trunk of an oak there are two carved arrows, one scratched out with a knife. The one that remains leads %A_ALTRA%.
 
 FALSA_PISTA_PALUDE
-	The fog is thick, the mud rises to your knees, and there is no trace of what you seek. A frog fisherman tells you whoever gave this direction was drunk: the right way leads %A_ALTRA%.
-	Among the reeds there is a pole with a ribbon tied halfway: the wind carried off the rest. On the pole, in pencil: “not here, go %A_ALTRA%”.
+	The fog is thick, the mud rises to your knees, and there's no trace of what you seek. A frog fisherman tells you whoever gave this direction was drunk: the right way leads %A_ALTRA%.
+	Among the reeds there's a pole with a ribbon tied halfway: the wind carried off the rest. On the pole, in pencil: “not here, go %A_ALTRA%”.
 	The islet they pointed out to you is a floating log. A frog that seems to know a lot croaks in one precise direction, the one that leads %A_ALTRA%.
 
 FALSA_PISTA_RADURA
 	The clearing is empty, the grass untouched, and nobody has left anything. A shepherd, with the calm of one who is in no hurry, sends you %A_ALTRA%.
-	In the middle of the clearing there is a circle of stones with a note inside: “you took the wrong road. Go %A_ALTRA%”.
+	In the middle of the clearing there's a circle of stones with a note inside: “you took the wrong road. Go %A_ALTRA%”.
 	A stream crosses the clearing, and on the bank is the outline of someone who lay down to look at the sky, but days ago. The one you seek went %A_ALTRA%.
 
 // =============================================================================================
@@ -647,14 +647,14 @@ SGARBO_E_COSA
 	[STITOLO=The stuck elevator][SGARBO=In a dream he stepped on my foot in the elevator.][DOMANDA_COSA=What is an elevator?]\
 	[RISPOSTA_COSA=A room that goes up. In the dream it never went up, and he kept pressing.]\
 	[FRING=The foot is better, and he doesn't press anything anymore. Thank you, even for the rooms that go up.]
-	[STITOLO=The suspicious greeting][SGARBO=Yesterday he greeted me with too much conviction.][DOMANDA_COSA=That is not an offense.]\
+	[STITOLO=The suspicious greeting][SGARBO=Yesterday he greeted me with too much conviction.][DOMANDA_COSA=That's not an offense.]\
 	[RISPOSTA_COSA=It is, if you had seen how he did it. He even smiled.]\
 	[FRING=You say he doesn't smile anymore? Then all is well. Here are the coins.]
 	[STITOLO=The sideways look][SGARBO=He gave me a sideways look three times in a row.][DOMANDA_COSA=Maybe he had a tic.]\
 	[RISPOSTA_COSA=A malicious tic, if you ask me. Three times, and always from the same side.]\
 	[FRING=Now he looks straight, they tell me. Whether from fear or respect, I don't care.]
 	[STITOLO=The rooster's name][SGARBO=In a dream he called me by my rooster's name.][DOMANDA_COSA=Do you have a rooster?]\
-	[RISPOSTA_COSA=Not anymore, and that is exactly why it bothered me.]\
+	[RISPOSTA_COSA=Not anymore, and that's exactly why it bothered me.]\
 	[FRING=The rooster is gone, but his name is now safe. Thank you, and forgive the emotion.]
 
 // Recuperi: il tizio ha preso qualcosa che non si può prendere
@@ -701,7 +701,7 @@ CLUE_FARSA_CITTA
 CLUE_FARSA_LOCANDA
 	The innkeeper remembers [#TIZIO]: he asked for lukewarm water, and left word that he would go %A_PROSSIMO%, in a tone that brooks no reply.
 	A patron swears he heard [#TIZIO] say to an empty table: “they'll know soon”. Then he paid and left toward %PROSSIMO%.
-	On the back of the bill there is a drawing by [#TIZIO] with the words “I am innocent”. Below, a direction: %PROSSIMO%.
+	On the back of the bill there's a drawing by [#TIZIO] with the words “I'm innocent”. Below, a direction: %PROSSIMO%.
 
 ARRIVO_FARSA
 	[^2] ROVINE:[#TIZIO] is here, with a scroll in hand. When you explain the reason to him, he bulges his eyes: “Me? But I did nothing”. Then, after a moment: “All right, I apologize. To whom, though?”

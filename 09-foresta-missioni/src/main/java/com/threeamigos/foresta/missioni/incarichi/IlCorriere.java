@@ -228,7 +228,7 @@ public class IlCorriere extends IncaricoInCitta {
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nellaCittaDelRitorno)
 						.segnala(this::coordinateDellaCittaDelRitorno)
 						.falliscoSe(this::isInRitardo, () -> Testi.formatta("missioni", "IlCorriere.s3", spedizione.getOggettoConArticolo(), Lingue.corrente().conPreposizione(Preposizione.A, getDestinatarioDiCitta())))
-						.falliscoSe(() -> isDiNascosto() && haCombattutoNelPassoCorrente(), () -> Testi.formatta("missioni", "IlCorriere.s4", mandanteIn(spedizione.getDestinatario(), getDestinazione()), Lingue.corrente().conPreposizione(Preposizione.DI, spedizione.getOggettoConArticolo()), mandante(spedizione.getMittente())))
+						.falliscoSe(() -> isDiNascosto() && haCombattutoNelPassoCorrente(), () -> Testi.formatta("missioni", "IlCorriere.s4", mandanteIn(spedizione.getDestinatario(), getDestinazione()), Lingue.corrente().conPreposizione(Preposizione.DI, spedizione.getOggettoConArticolo()), mandante(spedizione.getMittente()), spedizione.getOggettoConArticolo()))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);

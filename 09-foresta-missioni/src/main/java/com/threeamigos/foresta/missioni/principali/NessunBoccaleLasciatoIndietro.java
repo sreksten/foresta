@@ -49,7 +49,7 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 		if (mancanti == LOCANDE_DA_VISITARE) {
 			return descrizioneBase() + ".";
 		} else {
-			return Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.t4", descrizioneBase(), Lingue.corrente().inizialeMaiuscola(Lingue.corrente().cardinale(mancanti, Genere.MASCHILE)), '.');
+			return Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.t4", descrizioneBase(), Lingue.corrente().cardinale(mancanti, Genere.MASCHILE), '.');
 		}
 	}
 

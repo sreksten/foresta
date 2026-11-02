@@ -48,7 +48,7 @@ MAGO_SENZA_TRUCCO$
 ULTIMO_BICCHIERE$
     [IDENTIFICATIVO=ULTIMO_BICCHIERE]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
-    [DIALOGO=Welcome to the Last Glass (Promise)! [MI_CHIAMO] Remember the house rule: there is no such thing as the second-to-last glass, you always go straight to the last one. Again.]\
+    [DIALOGO=Welcome to the Last Glass (Promise)! [MI_CHIAMO] Remember the house rule: there's no such thing as the second-to-last glass, you always go straight to the last one. Again.]\
     [RECENSIONE=“The Last Glass (Promise)”: the biggest lie in the history of the realm!]\
     [NOME_LOCANDA=The Last Glass (Promise)]\
     [#NOME_LOCANDA]
@@ -105,7 +105,7 @@ VEDI_TU$
     [IDENTIFICATIVO=VEDI_TU]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [DIALOGO=You're at Suit Yourself! [MI_CHIAMO] Don't ask me what's on the menu, because I don't know either. Sit down, I'll bring you something, you give me gold and let's hope nobody gets a stomachache.]\
-    [RECENSIONE=There is no menu here at Suit Yourself, the innkeeper decides.]\
+    [RECENSIONE=There's no menu here at Suit Yourself, the innkeeper decides.]\
     [NOME_LOCANDA=The Suit Yourself Inn]\
     [#NOME_LOCANDA]
 TOPO_SAGGIO$
@@ -174,7 +174,7 @@ GOBLIN_ASTEMIO$
 ULTIMO_AVAMPOSTO$
     [IDENTIFICATIVO=ULTIMO_AVAMPOSTO]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
-    [DIALOGO=Welcome, welcome! [MI_CHIAMO] Come right in to the Last Outpost Before the Abyss... and please, don't all make sudden movements on the east side. We are literally hanging over the cliff. Drink something to find your courage, because if you suffer from vertigo, the only way to get out of this forest alive is to do it drunk. What can I get you?]\
+    [DIALOGO=Welcome, welcome! [MI_CHIAMO] Come right in to the Last Outpost Before the Abyss... and please, don't all make sudden movements on the east side. We're literally hanging over the cliff. Drink something to find your courage, because if you suffer from vertigo, the only way to get out of this forest alive is to do it drunk. What can I get you?]\
     [RECENSIONE=At the Last Outpost Before the Abyss the mead is the only thing that keeps you from fainting when you look out of the window.]\
     [NOME_LOCANDA=The Last Outpost Before the Abyss]\
     [#NOME_LOCANDA]
@@ -230,7 +230,7 @@ ANONIMA_ALCOLISTI$
 FORZIERE_VUOTO$
     [IDENTIFICATIVO=FORZIERE_VUOTO]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
-    [DIALOGO=Welcome to the Empty Chest! [MI_CHIAMO] You can leave your bags on the table, pickpockets don't even come in here: they know that whoever frequents this place has already spent their last copper before crossing the threshold. We are the inn of the desperate and the proudly penniless! If you have gold, spend it right away, so you won't have the worry of getting it stolen!]\
+    [DIALOGO=Welcome to the Empty Chest! [MI_CHIAMO] You can leave your bags on the table, pickpockets don't even come in here: they know that whoever frequents this place has already spent their last copper before crossing the threshold. We're the inn of the desperate and the proudly penniless! If you have gold, spend it right away, so you won't have the worry of getting it stolen!]\
     [RECENSIONE=The Empty Chest inn is great for keeping pickpockets away.]\
     [NOME_LOCANDA=The Empty Chest]\
     [#NOME_LOCANDA]
@@ -264,17 +264,17 @@ ATTRIBUTO
     [ATTRIBUTO_POSITIVO] | [ATTRIBUTO_NEGATIVO]
 
 MI_CHIAMO
-    I am [#NOME_LOCANDIERE] and I will be your host for tonight.
-    [FORMULA_NOME] [#NOME_LOCANDIERE], and around here I am the innkeeper.
+    I'm [#NOME_LOCANDIERE] and I'll be your host for tonight.
+    [FORMULA_NOME] [#NOME_LOCANDIERE], and around here I'm the innkeeper.
     [FORMULA_NOME] [#NOME_LOCANDIERE]: remember it when the bill arrives.
     Call me [#NOME_LOCANDIERE], and don't ask questions about the soup.
-    I am [#NOME_LOCANDIERE], and this is my home. Make yourselves at home, but don't overdo it.
+    I'm [#NOME_LOCANDIERE], and this is my home. Make yourselves at home, but don't overdo it.
     If you're looking for the innkeeper, I'm [#NOME_LOCANDIERE]. If you're looking for trouble, you've come to the right place anyway.
     They say the innkeeper is called [#NOME_LOCANDIERE]. They say well.
     Allow me to introduce myself: [#NOME_LOCANDIERE], full-time innkeeper and cook out of desperation.
     Permit me to introduce myself: [#NOME_LOCANDIERE], at your service. If I serve you badly, it's all the suppliers' fault.
-    I am [#NOME_LOCANDIERE], the master of the house. For any complaint, speak to the wall.
-    To you I am [#NOME_LOCANDIERE], to my creditors I am nowhere to be found.
+    I'm [#NOME_LOCANDIERE], the master of the house. For any complaint, speak to the wall.
+    To you I'm [#NOME_LOCANDIERE], to my creditors I'm nowhere to be found.
 
 GESTORE_NOTE
     Known for his refined manners and chilly premises
@@ -317,7 +317,7 @@ NOTIZIE_MAGO_SENZA_TRUCCO
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_ULTIMO_BICCHIERE
-    UB1-The Supreme Lie - The Forest Institute of Time accuses the Last Glass (Promise!) inn of altering space-time: EROE has been stuck at the counter for three days on the twenty-second "last goblet".
+    UB1-The Supreme Lie - The Forest Institute of Time accuses the Last Glass (Promise!) inn of altering space-time: EROE has been stuck at the counter for three days on the twenty-second “last goblet”.
     UB2-The Second-to-Last Bandit - Furious brawl at the Last Glass (Promise!): LADRO tried to order a “second-to-last sip”, violating the sacred house rule and being hit with a pitcher by the innkeeper, NOME_LOCANDIERE.
     UB3-Broken Promises - EROE tried to sign an IOU at the Last Glass (Promise!) writing “I'll pay on the last round”, forcing the management to change the sign to “The Last Glass (Forget It)”.
     UB4-Endless Barrels - MAGO cast a Water spell inside the barrel of the Last Glass (Promise!), turning the dark beer into endless mead that flooded the cellar.
@@ -325,7 +325,7 @@ NOTIZIE_ULTIMO_BICCHIERE
 
 NOTIZIE_ORSO_BALLERINO
     OB1-Kitchen Horror - The county inspection fines the innkeeper of the Dancing Bear. EROE proved that the “mysterious house stew” contained troubling percentages of minced leather boots.
-    OB2-Hairs in the Soup - A customer of the Dancing Bear finds an entire paw in the soup; the druid owner, NOME_LOCANDIERE, defends himself by claiming it is only a big lump of chestnut flour.
+    OB2-Hairs in the Soup - A customer of the Dancing Bear finds an entire paw in the soup; the druid owner, NOME_LOCANDIERE, defends himself by claiming it's only a big lump of chestnut flour.
     OB3-Gastronomic Lycanthropy - BARDO starts roaring after eating the stew at the Dancing Bear, forcing the local alchemist into an emergency treatment based on catnip.
     OB4-Crooked Dance - EROE tried to teach a military dance to the druid in the form of a Dancing Bear, causing the dwarves' table to collapse because of an off-beat paw swipe.
     [NOTIZIE_LOCANDA]
@@ -468,7 +468,7 @@ NOTIZIE_CACCIATORE_MANCINO
     CM1-Missed Deer - EROE spends the night fasting at the Left-Handed Hunter, waiting for the archer owner to hit his first prey in the dense forest with his crooked bow.
     CM2-Wine Aim - A show at the Left-Handed Hunter. The archer innkeeper NOME_LOCANDIERE tries to pour wine into EROE's tankard from ten feet away, completely soaking GUERRIERO's armour.
     CM3-Old Eyes - MAGO gives a pair of magic glasses to the owner of the Left-Handed Hunter, NOME_LOCANDIERE, who mistakes the object for an elemental explosive trap.
-    CM4-Empty Archer - EROE leaves a review of the Left-Handed Hunter: “Excellent wine, but if you wait for the innkeeper to catch a deer you will starve before reaching level 2”.
+    CM4-Empty Archer - EROE leaves a review of the Left-Handed Hunter: “Excellent wine, but if you wait for the innkeeper to catch a deer you'll starve before reaching level 2”.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_FUEGO_DEL_FUORILEGGE
@@ -488,7 +488,7 @@ NOTIZIE_RADURA_DEL_MAL_DI_PANCIA
 NOTIZIE_CAVALLO_CHE_PARLA
     CCP1-Brawl Over Trifles - A brawl erupts, with [VOLANO] flying, after EROE accused a half-orc of making an “asymmetrical whinny” while imitating the Talking Horse.
     CCP2-Brawl Among Spectators - A brawl erupts among the customers, with [VOLANO] flying, after EROE bet a hundred coins that the Talking Horse could recite a sonnet in perfect Elvish.
-    CCP3-Brawl Over a Bet - Total clash after EROE bet twenty coins that the Talking Horse could solve a linear equation better than the vicar of the realm.
+    CCP3-Brawl Over a Bet - A full-blown clash after EROE bet twenty coins that the Talking Horse could solve a linear equation better than the vicar of the realm.
     CCP4-Quackish Quadruped - EROE discovers the innkeeper of the Talking Horse, NOME_LOCANDIERE, hidden behind the straw with a brass megaphone, causing panic among the gullible of the tavern.
     [NOTIZIE_LOCANDA]
 
@@ -516,7 +516,7 @@ NOTIZIE_PANE_E_SPADA
 NOTIZIE_ORCO_SENSIBILE
     OS1-Poetry Contest Gone Wrong - The Sensitive Orc burst into tears and punched the wall after EROE made a rhyming couplet using the word “custard”.
     OS2-Brawl for Plagiarism - A scuffle broke out after BARDO tried to pass off a love poem by the Sensitive Orc as his own, changing only the rhymes to “lard”.
-    OS3-Brawl Over a Bet - Total clash after EROE bet a hundred coins that the Sensitive Orc would cry while listening to a cooking recipe read in a dramatic tone.
+    OS3-Brawl Over a Bet - A full-blown clash after EROE bet a hundred coins that the Sensitive Orc would cry while listening to a cooking recipe read in a dramatic tone.
     OS4-Poetry Contest - GUERRIERO challenges the Sensitive Orc to a contest of martial sonnets, ending up punching him in the face with great melancholy because of a failed metaphor about the parry.
     [NOTIZIE_LOCANDA]
 
@@ -538,12 +538,12 @@ NOTIZIE_LOCANDA
     LG7-Kitchen Horror - A lock of bear hair was found in the soup; the innkeeper of NOME_LOCANDA tried to pass it off as “high-resistance dietary fibre”.
     LG8-Collateral Damage - A Fire spell cast to light a pipe accidentally charred the eyebrows of every dwarf within ten feet at NOME_LOCANDA.
     LG9-National Complaints - The dwarf miners' unions officially protest against EROE for occupying the only table near the fireplace for six hours without ordering anything at NOME_LOCANDA.
-    LG10-Brawl on the Timer - Total clash between the patrons of NOME_LOCANDA and EROE, guilty of having “blocked the conversation timer” while trying to decide whether to order cider or water.
+    LG10-Brawl on the Timer - A full-blown clash between the patrons of NOME_LOCANDA and EROE, guilty of having “blocked the conversation timer” while trying to decide whether to order cider or water.
     LG11-News Leak - The city guards investigate a suspicious spike in thefts of soup spoons right after LADRO left NOME_LOCANDA.
     LG12-Sunday Curse - MAGO answered a cordial greeting from the innkeeper of NOME_LOCANDA by accidentally casting an arcane anathema, tuning the innkeeper's voice to the frequencies of a harpy.
     LG13-Brawl of Jealousy - Chaos broke out when LADRO tried to pick the pocket of the owner of NOME_LOCANDA, discovering that his pockets were full of mousetraps.
     LG14-Bad Review - The innkeeper of NOME_LOCANDA tells the local press: “The hero of the prophecy has the elegance of a troll in an alchemist's vial shop. Don't come back”.
-    LG15-State of Emergency - The sale of fire mead is banned at NOME_LOCANDA after EROE, in the throes of a hangover, tried to mistake the Dragon's castle for a gigantic two-storey inn.
+    LG15-State of Emergency - The sale of fire mead is banned at NOME_LOCANDA after EROE, in the throes of a hangover, mistook the Dragon's castle for a gigantic two-storey inn.
     LG16-Hygiene Complaints - The city inspection seals the kitchen of NOME_LOCANDA. EROE pointed out that the “primordial broth” had been boiling uninterruptedly since the distant previous empire.
     LG17-Financial Panic - A gang of counterfeiters was dismantled at NOME_LOCANDA. EROE tried to pay for a night's stay using Wyvern scales painted with the alchemist's fake gold.
     LG18-Brawl Over Trifles - Tables were torn up at NOME_LOCANDA after MAGO used a sideshow trick to make a veteran's dentures disappear, then forgot where he had hidden them.
@@ -551,11 +551,11 @@ NOTIZIE_LOCANDA
     LG20-Magic Horror - An Air spell cast inside NOME_LOCANDA reversed the gravity of the toupees of all the fallen nobles present.
     LG21-Absurd Scam - EROE is wanted for selling a patron of NOME_LOCANDA a “Scroll of Supreme Knowledge” that contained only the secret recipe for bear lard.
     LG22-Union Protest - The innkeepers of the Forest sign a petition to ban EROE from entering, described as “a scourge on the supply of salted peanuts”.
-    LG23-Brawl of Pride - Total clash broke out at NOME_LOCANDA when EROE dared to call the house mead “an honest disinfectant for Centaur hooves”.
+    LG23-Brawl of Pride - A full-blown clash broke out at NOME_LOCANDA when EROE dared to call the house mead “an honest disinfectant for Centaur hooves”.
     LG24-Curse of the Inn - A clumsy anathema hurled by MAGO at NOME_LOCANDA fused together the stools of three patrons, forcing them to move in sync like a bizarre six-legged monster.
     LG25-Service Complaints - EROE leaves a terrible review on the wooden door of NOME_LOCANDA: “The innkeeper has a grim stare and the soup looked like it wanted to bite me. One star”.
     LG26-Brawl Over Poor Hygiene - The common room of NOME_LOCANDA was devastated after GUERRIERO used his shield as a serving dish, accusing the innkeeper of washing the trays only in leap years.
-    LG27-Alchemical Accident - EROE mistook a vial of concentrated fertilizer from the Alchemist for maple syrup, causing the instant growth of lush moss on the tongue of the bard of NOME_LOCANDA.
+    LG27-Alchemical Accident - EROE mistook a vial of concentrated fertiliser from the Alchemist for maple syrup, causing the instant growth of lush moss on the tongue of the bard of NOME_LOCANDA.
     LG28-Brawl Over Trifles - A brawl erupts, with [VOLANO] flying, at NOME_LOCANDA after LADRO claimed that the house beer was actually rainwater filtered through a Centaur's used socks.
     LG29-Brawl of Pride - A violent clash set off by MAGO, who tried to pay the bill at NOME_LOCANDA by mathematically proving that the gold demanded by the innkeeper was an optical illusion created by the kitchen smoke.
     LG30-Brawl as Entertainment - A brawl erupts among the patrons at NOME_LOCANDA, with [VOLANO] flying, when EROE, bored by the local ballads, paid a sprite to trip the official bard in the middle of the final high note.
@@ -575,7 +575,7 @@ NOTIZIE_LOCANDA
     LG44-Menu Complaints - At NOME_LOCANDA EROE returns the stew complaining about the presence of an “unidentified biological claw trying to parry against his spoon”.
     LG45-Structural Curse - A clumsy anathema reversed the polarity of the doors of NOME_LOCANDA. Now they only open if heavily insulted in Orcish, exasperating the clientele.
     LG46-Brawl of Envy - A brawl erupts, with [VOLANO] flying, at NOME_LOCANDA after LADRO flaunted a fake royal ring bought from a charlatan, demanding that the innkeeper serve him cider on his knees.
-    LG47-Brawl Over Bad Timing - Total clash in the common room of NOME_LOCANDA after LADRO tried to steal a paladin's shoelaces on the second-by-second sprint timer.
+    LG47-Brawl Over Bad Timing - A full-blown clash in the common room of NOME_LOCANDA after LADRO tried to steal a paladin's shoelaces on the second-by-second sprint timer.
     LG48-Brawl Over Trifles - A brawl erupts, with [VOLANO] flying, at NOME_LOCANDA after GUERRIERO claimed that the house venison stew was actually sewer rat marinated in flat cider.
     LG49-Brawl of Martial Pride - A violent clash at NOME_LOCANDA set off by GUERRIERO, who occupied the only table near the fireplace, claiming that his Constitution score gave him absolute priority over body warmth.
 

@@ -121,10 +121,10 @@ GIORNO_SETTIMANALE
 AZIONE
 	will cause [DANNO] | will bring about [DANNO] | will result in [DANNO]
 	will make you impatient [INSOFFERENZA] | will make you feel unwell at least until [GIORNO_SETTIMANALE]
-	will give you trouble related to [QUALCOSA] until [GIORNO_SETTIMANALE]
+	will give you trouble with [QUALCOSA] until [GIORNO_SETTIMANALE]
 	suggests that you [SUGGERIMENTO]
 	will make sure that [QUALCOSA_SINGOLARE] gives you trouble from [GIORNO_SETTIMANALE] for [PERIODO_DI_TEMPO]
-	will make sure that [QUALCOSA_PLURALE] give you trouble for [PERIODO_DI_TEMPO] starting from [GIORNO_SETTIMANALE]
+	will make sure that [QUALCOSA_PLURALE] give you trouble for [PERIODO_DI_TEMPO] starting on [GIORNO_SETTIMANALE]
 DANNO
 	[TEMA=MS:the hard disk]a loss of data on your hard disk
 	[TEMA=MP:the crackers]an intrusion by unknown crackers
@@ -143,7 +143,7 @@ DANNO
 	a pay cut
 	a staff cut
 	a transfer to [LOCALITA_SPREGEVOLE]
-	an update that cannot be undone
+	an update that can't be undone
 	[TEMA=MS:the blue screen]a blue screen at the worst possible time
 	an extraordinary meeting on Friday at six in the evening
 	a password forgotten right now
@@ -152,31 +152,31 @@ DANNO
 	an unexpected reboot halfway through your work
 	[TEMA=MS:the audit]a surprise audit
 INSOFFERENZA
-	to your colleague's toothache
-	to sugary drinks
-	[TEMA=MS:the network]to the traffic on the network
-	to Christmas lights
-	to the morning of [GIORNO_SETTIMANALE]
-	to group projects
-	to water sports
-	to felines
-	to night moths
-	[TEMA=MP:the hi-tech gadgets]to hi-tech gadgets
-	[TEMA=MP:the mobile phones]to mobile phones
-	to bellyaches
-	[TEMA=MS:the website]to your company's website
-	[TEMA=MP:the videoconferences]to videoconferences with the microphone on
-	[TEMA=MP:the updates]to mandatory updates
-	to colleagues who say "it works on my machine"
-	to emails that start with "as per our agreement"
-	to the noise of the laptop fan
-	to the in-between seasons, even though they no longer exist
-	to miniskirts
-	[TEMA=MS:the ADSL line]to the ADSL line
+	with your colleague's toothache
+	with sugary drinks
+	[TEMA=MS:the network]with the traffic on the network
+	with Christmas lights
+	with the morning of [GIORNO_SETTIMANALE]
+	with group projects
+	with water sports
+	with felines
+	with night moths
+	[TEMA=MP:the hi-tech gadgets]with hi-tech gadgets
+	[TEMA=MP:the mobile phones]with mobile phones
+	with bellyaches
+	[TEMA=MS:the website]with your company's website
+	[TEMA=MP:the videoconferences]with videoconferences with the microphone on
+	[TEMA=MP:the updates]with mandatory updates
+	with colleagues who say “it works on my machine”
+	with emails that start with “as per our agreement”
+	with the noise of the laptop fan
+	with the in-between seasons, even though they no longer exist
+	with miniskirts
+	[TEMA=MS:the ADSL line]with the ADSL line
 SUGGERIMENTO
 	document the code you have developed
 	give up on that trip you were longing for, changing destination: [LOCALITA_SPREGEVOLE]
-	go and visit your relatives while there is still time
+	go and visit your relatives while there's still time
 	make a backup copy of all your data
 	get your passport and luggage ready for a quick getaway
 	spend more time with your partner
@@ -196,7 +196,7 @@ SUGGERIMENTO
 	take a digestif
 	turn it off and on again, and not just the computer
 	change your password, and this time write it down somewhere
-	not reply to all
+	don't reply to all
 	read the manual, at least the index
 	close all the open tickets before they reopen by themselves
 	avoid saving only on the desktop
@@ -218,9 +218,9 @@ LOCALITA_SPREGEVOLE
 	Alcatraz
 	a religious school in Afghanistan
 CHIOSA
-	For those born in the first ten days [ATTENZIONE].
-	For those born in the second ten days [ATTENZIONE].
-	For those born in the third ten days [ATTENZIONE].
+	For those born in the first ten days, [ATTENZIONE].
+	For those born in the second ten days, [ATTENZIONE].
+	For those born in the third ten days, [ATTENZIONE].
 	Caution is never too much.
 	A bird in the hand is worth two in the bush.
 	A penny saved is a penny earned.
@@ -230,7 +230,7 @@ CHIOSA
 	Give up in advance on whatever you had planned.
 	Caution advises: [SUGGERIMENTO].
 	What goes around comes around.
-	[TEMA=MS:the plug]If it does not work, unplug it and plug it back in.
+	[TEMA=MS:the plug]If it doesn't work, unplug it and plug it back in.
 	[TEMA=MS:the backup]Always make a backup, even of the horoscope.
 	Monday, unfortunately, always comes back.
 	He who finds a helpful colleague finds a treasure.
@@ -247,11 +247,11 @@ ATTENZIONE
 	avoid tipsy brutes
 	watch out for the bodyguards
 	watch the pen
-	do not believe in horoscopes
+	don't believe in horoscopes
 	avoid stopped escalators
 	[TEMA=MS:the keyboard]keep liquids away from the keyboard
-	[TEMA=MP:the attachments]do not open attachments you were not expecting
-	distrust anyone who asks you "got a minute?"
+	[TEMA=MP:the attachments]don't open attachments you were not expecting
+	distrust anyone who asks you “got a minute?”
 	[TEMA=MS:the copyright law]respect the copyright law
 SPREGIO
 	[SPREGIO_CHIOSA]
@@ -292,7 +292,7 @@ DOMANDA_MS
 	Wait: do you fight [#TEMA] with a sword or with magic?
 	^[#TEMA]? Never heard of it. Can you eat it?
 	And where can [#TEMA] be found? Is it far from here?
-	I did not understand a word. Is [#TEMA] a spell?
+	I didn't understand a word. Is [#TEMA] a spell?
 	Excuse me, but is [#TEMA] a friend or a foe?
 	Did I hear right? ^[#TEMA]? And is that dangerous?
 	How much is [#TEMA]? Can it be found at the market?
@@ -315,7 +315,7 @@ DOMANDA_MP
 	^[#TEMA]? Never heard of them. Can you eat them?
 	Should I fear [#TEMA]? How many are there? Are they armed?
 	And where can [#TEMA] be found? Are they far from here?
-	I did not understand a word. Are [#TEMA] a guild? A gang of bandits?
+	I didn't understand a word. Are [#TEMA] a guild? A gang of bandits?
 	Excuse me, but are [#TEMA] friends or foes?
 	How much are [#TEMA]? Can they be found at the market?
 	Our mage has never mentioned [#TEMA]. Are you sure they exist?
@@ -332,28 +332,28 @@ DOMANDA_FP
 	Our mage has never mentioned [#TEMA]. Are you sure they exist?
 DOMANDA_GENERICA
 	Do you really read the stars, or do you make them up?
-	I did not understand a word. Is it a good thing or a bad thing?
+	I didn't understand a word. Is it a good thing or a bad thing?
 	Excuse me, but what language do your stars speak?
 	And is this a good day to go goblin hunting, or not?
 RISPOSTA_SULL_OROSCOPO
     [INIZIO_RISPOSTA] [CHIOSA_RISPOSTA]
 INIZIO_RISPOSTA
 	Technical terms of the astrological art: the stars speak in riddles, and I translate.
-	Let us say it is easier to understand after { the third potion | the third mug of Sglord }.
+	Let's say it's easier to understand after { the third potion | the third mug of Sglord }.
 	The stars are not explained, they are interpreted. And I interpret them for a fee.
-	It is a long story, and time is money. Yours, preferably.
-	You will understand in due time. Or never, which may be even better.
+	It's a long story, and time is money. Yours, preferably.
+	You'll understand in due time. Or never, which may be even better.
 	Stuff from faraway lands, very rare around here. { Fortunately. | }
 	My grandfather knew it. Sadly he died before telling me. { But I live well anyway. | }
 	Forget it: even the stars say silly things now and then.
-	It is sysadmin stuff. No, do not ask me what a sysadmin is.
+	It's sysadmin stuff. No, don't ask me what a sysadmin is.
 	Ah, what questions! Better to move on.
 	The less you know about [#TEMA? | these things], the better you sleep.
-	If I explained it to you, I would have to turn you into { toads | salamanders | snails }. Better not.
+	If I explained it to you, I'd have to turn you into { toads | salamanders | snails }. Better not.
 CHIOSA_RISPOSTA
-	But let us talk about you.
-    But let us talk business.
-    But let us get down to it.
-    But let us get to the reason for your visit.
+	But let's talk about you.
+    But let's talk business.
+    But let's get down to it.
+    But let's get to the reason for your visit.
     Anyway, look at the nice potions I have today.
 	But enough of that, back to the two of us.

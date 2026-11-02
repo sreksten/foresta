@@ -114,6 +114,8 @@ nome di un residente: è accettato.
 
 ## 7. Osservazioni
 
+- **Le persone reali non si traducono, in nessuna lingua.** Nelle fiabe i protagonisti con nome e cognome sono persone vere: Luca Viola, Massimo Capanni, Massimiliano Falchi, Andrea Stoppioni (con la lista dei cognomi `COGNOME_STOPPIONI`: Stoppioni, Scoppioni, Scorpioni, Scarponi), Romy Jona (e i suoi oggetti, "RomyJona"). Nelle grammatiche di ogni altra lingua (`fiabe_en.txt`, `nomi_en.txt`, e quelle che verranno: francese, tedesco...) restano com'erano nella versione italiana: non si adattano né si rendono con un cognome parlante (era successo: "Luke Violet", "Andrew Stumble"). **L'unica eccezione è il soprannome "il Vox"**, che in inglese è "the Vox" (e in un'altra lingua si traduce l'articolo, non il nome). I nomi inventati (i residenti, gli osti, i campioni) si traducono o si inventano di nuovo come serve.
+
 - Un solo `NOME_MASTRO` per quattro mestieri consuma quattro nomi per città: è voluto, sono persone diverse.
 - Le sezioni statiche sono stato globale: i test che creano una partita devono azzerarle; e la sequenza dei dadi cambia con chi
   pesca, quindi i test con seme fisso vanno riverificati a ogni modifica ai nomi (è già successo con `BugMappaReimpostataTest`

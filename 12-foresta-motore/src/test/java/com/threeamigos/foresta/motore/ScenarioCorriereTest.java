@@ -170,8 +170,8 @@ class ScenarioCorriereTest {
             corriere.controllaPostLocazione();
             assertTrue(contrabbando.isFallita());
             assertFalse(corriere.isFallita());
-            assertTrue(partita.testi().contains("La voce del combattimento si è sparsa: il taverniere non vorrà più saperne della botte "
-                    + "di vino, e l'oste nemmeno di voi."), String.valueOf(partita.testi()));
+            assertTrue(partita.testi().contains("La voce del combattimento si è sparsa: il taverniere non vorrà più avere a che fare con la botte "
+                    + "di vino, e l'oste nemmeno con voi."), String.valueOf(partita.testi()));
         }
     }
 

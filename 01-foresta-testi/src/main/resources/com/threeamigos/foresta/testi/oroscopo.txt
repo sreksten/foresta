@@ -172,8 +172,8 @@ INSOFFERENZA
 	[TEMA=FS:la ADSL]alla ADSL
 	[TEMA=FP:le videoconferenze]alle videoconferenze col microfono acceso
 	[TEMA=MP:gli aggiornamenti]agli aggiornamenti obbligatori
-	ai colleghi che dicono "da me funziona"
-	alle mail che cominciano con "come da accordi"
+	ai colleghi che dicono “da me funziona”
+	alle mail che cominciano con “come da accordi”
 	al rumore della ventola del portatile
 SUGGERIMENTO
 	documentare il codice sviluppato
@@ -254,7 +254,7 @@ ATTENZIONE
 	evitate le scale mobili ferme
 	[TEMA=FS:la tastiera]tenete lontani i liquidi dalla tastiera
 	[TEMA=MP:gli allegati]non aprite gli allegati che non aspettavate
-	diffidate di chi vi chiede "hai un minuto?"
+	diffidate di chi vi chiede “hai un minuto?”
 SPREGIO
 	[SPREGIO_CHIOSA]
 	grazie ad una breccia nella sicurezza [SPREGIO_CHIOSA]

@@ -46,7 +46,7 @@ QUANDO_AVVENIMENTO_EPICO_FANTASTICO$
     dragons still slept in the caves
     the gods walked among men
     the forests still whispered ancient secrets
-    the sea did not yet have a name
+    the sea didn't yet have a name
     the fairies lived in the woods
     the giants forged the mountains
     the rivers flowed backwards
@@ -220,7 +220,7 @@ TEMPO_PROEMIO_SURREALISTA
 ISTANTE_PRECISO_SURREALISTA
     in a moment of extreme confusion
     in a second of pure absurdity
-    on a day the calendar did not remember
+    on a day the calendar didn't remember
     [NELL_ATTIMO_IN_CUI] his tea was still hot
     [NELL_ATTIMO_IN_CUI] his socks vanished into another dimension
     [NELL_ATTIMO_IN_CUI] time tied itself in a knot
@@ -231,7 +231,7 @@ ISTANTE_PRECISO_SURREALISTA
     [NELL_ATTIMO_IN_CUI] a penguin disguised itself as a flamingo
 
 NELL_ATTIMO_IN_CUI
-    at the { precise | } moment when | just as | the instant that
+    at the { precise | } moment when | just as | the instant
 
 GIORNO_DELLA_SETTIMANA
     Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday
@@ -246,7 +246,7 @@ LUOGO_PROEMIO
 	in a crumbling castle | in an ill-famed dive | in a den | in a lair fit for witches
 	next to the municipal incinerator | in a godforsaken place
 	in a galaxy far, far away | under a manhole | in an enchanted wood
-	in a { bog | marsh } { bewitched | cursed | } | in an ammunition depot | inside a sewer
+	in a { bewitched | cursed | } { bog | marsh } | in an ammunition depot | inside a sewer
 	in the far South | in the cold North | in the mysterious East | in the West | in the Land of Toys
 	in the Land of Plenty | in the criminal asylum | behind the football pitch
 	in a stinking cave inhabited by spineless bandits | inside an abandoned prison
@@ -305,13 +305,14 @@ CRIMINE
 ANIMALE_DA_COMPAGNIA
 	cat | hamster | goldfish | canary | dog | donkey | mule | ferret | parrot | hedgehog
 
+// I protagonisti con nome e cognome sono persone reali: restano com'è nella versione italiana, in ogni lingua (vedi nomi.md §7). L'unica eccezione è il soprannome "il Vox", che diventa "the Vox".
 CREAZIONE_PROTAGONISTA
 	[*NOME_PROTAGONISTA] [*COGNOME_PROTAGONISTA]
-	[COGNOME_PROTAGONISTA=Romy] [NOME_PROTAGONISTA=Jonah] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
-	[NOME_PROTAGONISTA=Luke] [COGNOME_PROTAGONISTA=Violet] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
-	[NOME_PROTAGONISTA=Max] [COGNOME_PROTAGONISTA=Capper] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
-	[NOME_PROTAGONISTA=Maximilian] [COGNOME_PROTAGONISTA=Falconer] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
-	[NOME_PROTAGONISTA=Andrew] [#NOME_PROTAGONISTA] [COGNOME_STOPPIONI]
+	[COGNOME_PROTAGONISTA=Romy] [NOME_PROTAGONISTA=Jona] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
+	[NOME_PROTAGONISTA=Luca] [COGNOME_PROTAGONISTA=Viola] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
+	[NOME_PROTAGONISTA=Massimo] [COGNOME_PROTAGONISTA=Capanni] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
+	[NOME_PROTAGONISTA=Massimiliano] [COGNOME_PROTAGONISTA=Falchi] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
+	[NOME_PROTAGONISTA=Andrea] [#NOME_PROTAGONISTA] [COGNOME_STOPPIONI]
     [NOME_PROTAGONISTA=the Vox] [#NOME_PROTAGONISTA]
 
 PROTAGONISTA
@@ -369,7 +370,7 @@ MOTIVAZIONE
     , because he had been seized by an irrepressible urge to cause a ruckus
     , convinced he had been betrayed by an imaginary friend
     , because a sparrow had screamed an incomprehensible prophecy at him
-    , tired of pretending to have a dignity he did not possess
+    , tired of pretending to have a dignity he didn't possess
     , to escape the only three friends who still tolerated him
 // Il carattere pipe sopra indica una motivazione vuota
 
@@ -409,7 +410,7 @@ DECISIONE_DOVE
 	at the edge of the nearest Kingdom | in the mists of the North | where nobody knew his name
 
 RACCONTO_P_2
-	That is how, [RACCONTO_P_2_QUANDO], he set off, [RACCONTO_P_2_FORNITO_DI] [*EQUIPAGGIAMENTO].
+	That's how, [RACCONTO_P_2_QUANDO], he set off, [RACCONTO_P_2_FORNITO_DI] [*EQUIPAGGIAMENTO].
 
 RACCONTO_P_2_QUANDO
 	as soon as the sun rose | at dawn | at noon | at sunset | at the beginning of spring | at the beginning of summer
@@ -430,7 +431,7 @@ EQUIPAGGIAMENTO_CIBO
 
 EQUIPAGGIAMENTO_ANIMALE
     a guard duck | a sheepdog | a capercaillie to eat for breakfast | a dyslexic chick | a pet wolf
-    a learned donkey | a three-humped camel | a black cat | a trained raven | a draft horse
+    a learned donkey | a three-humped camel | a black cat | a trained raven | a draught horse
 
 EQUIPAGGIAMENTO_ARMA
 	a blunt dagger | a kitchen knife | [EQUIPAGGIAMENTO_FUCILE]
@@ -440,11 +441,11 @@ EQUIPAGGIAMENTO_FUCILE
 
 EQUIPAGGIAMENTO_ALTRO
     a remote-controlled magic device | a threadbare cloak | a grimoire he had never read | a sack of manure | a heap of tin
-    a cartload of fertilizer | a checkered handkerchief | a kilo of snot
+    a cartload of fertiliser | a checkered handkerchief | a kilo of snot
 
-// Gli antagonisti cominciano tutti per consonante: davanti compare "a" (mai "an")
+// L'articolo dell'antagonista lo porta l'attributo ([#ATTR_ART]: "a" o "an", a seconda dell'aggettivo che viene prima del nome)
 RACCONTO_P_3
-	^[RACCONTO_ECCO_CHE] a [*ANTAGONISTA], [*ATTRIBUTO_ANTAGONISTA]. [PENSIERO] [RACCONTO_P_3_DISSE] [RACCONTO_P_3_PENSANDO] the [TAPINO].
+	^[RACCONTO_ECCO_CHE] [*ATTRIBUTO_ANTAGONISTA][#ATTR_ART][#ATTR_PRE][*ANTAGONISTA][#ATTR_POST]. [PENSIERO] [RACCONTO_P_3_DISSE] [RACCONTO_P_3_PENSANDO] the [TAPINO].
 
 RACCONTO_ECCO_CHE
 	there he met | suddenly he saw | coming towards him was | blocking his path he found | after a few steps there appeared
@@ -465,18 +466,51 @@ PERSONAGGIO
 	fisherman | blacksmith | wayfarer | passerby | necromancer | fishmonger | peasant
 	weaver | knight | warlord | sea captain | judge
 	nanny | thug | thief | pirate | buccaneer | smuggler
-	hedge-witch | peddler of rubber ducks | town crier | charlatan | landlord
+	hedge-witch | pedlar of rubber ducks | town crier | charlatan | landlord
 
 ATTRIBUTO_ANTAGONISTA
-	a werewolf | fat and bald | as annoying as a stomachache | smiling | stinking | shady
-	wicked | tired | worn out | absolutely furious | happy | content | sad | slothful
-	suspicious | calm | raging | joyful | sweaty | overheated | thirsty | furious | arrogant
-	an outcast | at the very least dubious | with a crest | with horns | with a forked tongue
-	mangy | with pestilential breath | patently drunk | with an unreassuring look
-	visibly suffering from an existential crisis | extraordinarily ordinary | sadly banal
-	ridiculously pompous | smelling of vinegar and regret | with pockets full of money that was not his
-	looking like someone who has lost an important bet | as dirty as a pan unwashed for years
-	with the air of someone who has just failed an undertaking | muttering curses against people dead for centuries
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, a werewolf]
+	[ATTR_ART=a ][ATTR_PRE=fat and bald ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, as annoying as a stomachache]
+	[ATTR_ART=a ][ATTR_PRE=smiling ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=stinking ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=shady ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=wicked ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=tired ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=worn out ][ATTR_POST=]
+	[ATTR_ART=an ][ATTR_PRE=absolutely furious ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=happy ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=content ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=sad ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=slothful ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=suspicious ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=calm ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=raging ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=joyful ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=sweaty ][ATTR_POST=]
+	[ATTR_ART=an ][ATTR_PRE=overheated ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=thirsty ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=furious ][ATTR_POST=]
+	[ATTR_ART=an ][ATTR_PRE=arrogant ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, an outcast]
+	[ATTR_ART=a ][ATTR_PRE=decidedly dubious ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, with a crest]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, with horns]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, with a forked tongue]
+	[ATTR_ART=a ][ATTR_PRE=mangy ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, with pestilential breath]
+	[ATTR_ART=a ][ATTR_PRE=patently drunk ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, with an unreassuring look]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, visibly suffering from an existential crisis]
+	[ATTR_ART=an ][ATTR_PRE=extraordinarily ordinary ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=sadly banal ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=ridiculously pompous ][ATTR_POST=]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, smelling of vinegar and regret]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, with pockets full of money that was not his]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, looking like someone who has lost an important bet]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, as dirty as a pan unwashed for years]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, with the air of someone who has just failed an undertaking]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, muttering curses against people dead for centuries]
 
 PENSIERO
 	“It will be hard to get rid of this [*ANTAGONISTA]”
@@ -557,7 +591,7 @@ SAMARITANO
 	the Genie of the Lamp | the best of doctors
 
 RACCONTO_P_5
-	That is how he had to give up [*EQUIPAGGIAMENTO? | his bundle], lost [VINTO_COME], getting in return [OGGETTO_SPREGEVOLE].
+	That's how he had to give up [*EQUIPAGGIAMENTO? | his bundle], lost [VINTO_COME], getting in return [OGGETTO_SPREGEVOLE].
 
 OTTENUTO
 	won [VINTO_COME] | stolen from the soldiers of the nearby fort | stolen from an old lady
@@ -578,15 +612,14 @@ OGGETTO_SPREGEVOLE
 	a crumpled rag that promised riches | a lone boot of the wrong size
 	a (fake) gold tooth | a book on meditation never opened | a pair of odd socks from other dimensions
 	a canvas bag containing only rags and promises | a treasure map that leads to a sewer
-	a key that opens every door except the one that is needed | a coin that changes value every day
+	a key that opens every door except the one that's needed | a coin that changes value every day
 
 RACCONTO_P_6
-	^[RACCONTO_ECCO_CHE] a [*ANIMALE], [*ATTRIBUTO_ANTAGONISTA]. [BACIAMI] [REAZIONE_PROTAGONISTA]
+	^[RACCONTO_ECCO_CHE] [*ATTRIBUTO_ANTAGONISTA][#ATTR_ART][#ATTR_PRE][*ANIMALE][#ATTR_POST]. [BACIAMI] [REAZIONE_PROTAGONISTA]
 
 BACIAMI
 	“I was turned into a [*ANIMALE] by [CREAZIONE_MAGO_CATTIVO][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO_AGGETTIVO][#MAGO_CATTIVO] \
-	    because [MOTIVAZIONE_TRASFORMAZIONE], but if [BUONA_AZIONE], [MI_VEDRAI_TORNARE] a certain [PERSONAGGIO], \
-	    [ATTRIBUTO_ANTAGONISTA].”
+	    because [MOTIVAZIONE_TRASFORMAZIONE], but if [BUONA_AZIONE], [MI_VEDRAI_TORNARE] a certain [ATTRIBUTO_ANTAGONISTA][#ATTR_PRE][PERSONAGGIO][#ATTR_POST].”
 
 CREAZIONE_MAGO_CATTIVO
 	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Merlin the Wizard][MAGO_CATTIVO_AGGETTIVO=]
@@ -649,8 +682,8 @@ BUONA_AZIONE
 	you tell me a decent joke (a Herculean task) | you bring me breakfast in bed for a month
 
 MI_VEDRAI_TORNARE
-	I will be able to become again | I will be able to be again | you will see me return as | I will turn back into
-	the { curse | spell } will { end | vanish } and I will be once more
+	I'll be able to become again | I'll be able to be again | you'll see me return as | I'll turn back into
+	the { curse | spell } will { end | vanish } and I'll be once more
 
 REAZIONE_PROTAGONISTA
 	[PENSIERO_PROTAGONISTA], thought [*PROTAGONISTA], and did the good deed. [LIETO_FINE]
@@ -659,7 +692,7 @@ REAZIONE_PROTAGONISTA
 	[PENSIERO_PROTAGONISTA], said [*PROTAGONISTA], and consented. [LIETO_FINE]
 	[PENSIERO_PROTAGONISTA], replied [*PROTAGONISTA]. [APPARIZIONE_MAGO_CATTIVO] \
 	    [CREAZIONE_MAGO_CATTIVO][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO_AGGETTIVO][#MAGO_CATTIVO] [MAGO_CATTIVO_APOSTROFA] [FRASE_MAGO_CATTIVO], and \
-	    [*PROTAGONISTA] was in turn turned into a [ANIMALE], [ATTRIBUTO_ANTAGONISTA].
+	    [*PROTAGONISTA] was in turn turned into [ATTRIBUTO_ANTAGONISTA][#ATTR_ART][#ATTR_PRE][ANIMALE][#ATTR_POST].
 	[PENSIERO_PROTAGONISTA], replied [*PROTAGONISTA]. But the [*ANIMALE] said to him: [FRASE_MAGO_CATTIVO], and our man \
 	    was [RIDOTTO_COME].
 
@@ -683,12 +716,12 @@ FRASE_MAGO_CATTIVO
 	“Here your wickedness comes out into the open!”
 	“Are you really so insensitive to the misfortunes of others?”
 	“You are truly a slacker!”
-	“You are a scoundrel and you will be punished!”
+	“You are a scoundrel and you'll be punished!”
 	“How can you speak like this!”
 	“You are the sum of all the evil in the world!”
 	“You are the most despicable person I have ever seen!”
 	“You are truly a terrible person!”
-	“You will learn respect, sooner or later!”
+	“You'll learn respect, sooner or later!”
 
 LIETO_FINE
 	The two married and lived happily ever after.
@@ -783,7 +816,7 @@ NOTIZIA
 
 ATTRIBUTO_PRINCIPESSA
 	very thin | quite obese | truly ugly but filthy rich | unpleasant
-	ugly as death | as likable as taxes | truly gorgeous | melancholy
+	ugly as death | as likeable as taxes | truly gorgeous | melancholy
 	charming | bald
 	clumsy | touchy | blessed with a legendary bad temper
 
@@ -819,8 +852,7 @@ TENUTA_IN_CATTIVITA
 SVOLGIMENTO_PRINCIPESSA_2
 	After striking a deal with [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO] for [30_DENARI], [*PROTAGONISTA] went home \
 	    to [ATTIVITA_CRIMINOSE], leaving [*NOME_PRINCIPESSA] to her sad fate.
-	After fighting [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO], [*PROTAGONISTA] was turned into a \
-	    [*ANIMALE], [*ATTRIBUTO_ANTAGONISTA].
+	After fighting [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO], [*PROTAGONISTA] was turned into [*ATTRIBUTO_ANTAGONISTA][#ATTR_ART][#ATTR_PRE][*ANIMALE][#ATTR_POST].
 	After bribing [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO], [*PROTAGONISTA] married Princess \
 	    [*NOME_PRINCIPESSA]. [LIETO_FINE]
 	After getting a good look at [*NOME_PRINCIPESSA]'s face, [*PROTAGONISTA] preferred to marry [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO].

@@ -103,7 +103,7 @@ class NomeEDescrizioneTest {
         Testi.impostaLingua("en");
         try {
             String descrizione = conSalute(10).getDescrizione();
-            assertTrue(descrizione.startsWith("Arsenio is very weak, "), descrizione);
+            assertTrue(descrizione.startsWith("Arsenio is barely hanging on, "), descrizione);
             assertTrue(descrizione.endsWith("."), descrizione);
             assertTrue(conSalute(500).getDescrizione().contains("is fit as a fiddle, "));
             Personaggio goblin = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1);

@@ -17,7 +17,7 @@ FORMULA_NOME
     My name is | I'm | Name's
 
 SCOPO_EROE
-    I am looking for the Dragon.
+    I'm looking for the Dragon.
     Dragon hunter.
     I'm {chasing|hunting} the Dragon.
 

@@ -75,7 +75,7 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 		}
 		String direzione = ottieniProprieta(DIREZIONE);
 		return direzione == null ? Testi.formatta("missioni", "CacciatoreDiTaglie.descrizione", getRicercato())
-				: Testi.formatta("missioni", "CacciatoreDiTaglie.descrizioneConDirezione", getRicercato(), direzione, getNomeCitta());
+				: Testi.formatta("missioni", "CacciatoreDiTaglie.descrizioneConDirezione", getRicercato(), direzione.replaceAll("\\.$", ""), getNomeCitta());
 	}
 
 	@Override

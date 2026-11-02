@@ -173,7 +173,7 @@ NOME_COMPARSA
 // ---------------------------------------------------------------------------------------------
 
 COGNOME_STOPPIONI
-    Stubble | Stumble | Scorpion | Sandal
+    Stoppioni | Scoppioni | Scorpioni | Scarponi
 
 SOPRANNOME_PROTAGONISTA
 	the paper-ripper | the Grim | the Shady | the Porky Prince | the Master Maker | the fence
@@ -272,5 +272,5 @@ SOPRANNOME_GOBLIN
     the Smelly
     Half-Ear
     the Chicken Thief
-    the Terrible, or almost
+    the Nearly Terrible
     Soft-Belly

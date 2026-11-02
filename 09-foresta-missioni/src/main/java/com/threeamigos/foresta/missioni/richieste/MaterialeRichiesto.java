@@ -219,13 +219,25 @@ public final class MaterialeRichiesto {
 	 * Da dove viene, per i testi: "si trovano nelle radure e nei boschi", "si prendono sconfiggendo le Viverne".
 	 */
 	public String getDaDoveViene() {
+		return daDoveViene("");
+	}
+
+	/**
+	 * Come {@link #getDaDoveViene()}, ma come frase a sé ("Si trovano nelle radure.", "You'll find them in the clearings."): in
+	 * inglese la forma dopo "which" ("which are found in the clearings") non regge da sola.
+	 */
+	public String getDaDoveVieneComeFrase() {
+		return daDoveViene(".frase");
+	}
+
+	private String daDoveViene(String suffisso) {
 		List<String> parti = new ArrayList<>();
 		if (isTrofeo()) {
 			for (TipoPersonaggio nemico : nemici) {
 				Personaggio modello = FabbricaPersonaggi.modello(nemico);
 				parti.add(modello.getADP() + modello.getNomePlurale());
 			}
-			return Testi.formatta("missioni", "MaterialeRichiesto.t1", elenco(parti));
+			return Testi.formatta("missioni", "MaterialeRichiesto.t1" + suffisso, elenco(parti));
 		}
 		for (TipoLocazione luogo : luoghi) {
 			switch (luogo) {
@@ -249,7 +261,7 @@ public final class MaterialeRichiesto {
 					break;
 			}
 		}
-		return Testi.formatta("missioni", "MaterialeRichiesto.t2", elenco(parti));
+		return Testi.formatta("missioni", "MaterialeRichiesto.t2" + suffisso, elenco(parti));
 	}
 
 	private static String elenco(List<String> parti) {

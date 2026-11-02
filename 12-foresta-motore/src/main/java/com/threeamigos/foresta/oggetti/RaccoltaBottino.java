@@ -125,7 +125,8 @@ public final class RaccoltaBottino {
 			boolean cofanoOForziere = Dado.tira(2) == 1;
 			sb.append(Testi.formatta("messaggi_motore", (cofano.getQuantita() > 1 ? "RaccoltaBottino.apre.n." : "RaccoltaBottino.apre.") + (cofanoOForziere ? "cofano" : "forziere"),
 					Lingue.corrente().ordinale(i + 1, Genere.MASCHILE, false)));
-			if (i == 0) {
+			// In italiano il soggetto si dice una volta ("Aprendo il cofano, il gruppo trova... Aprendo il secondo, trova..."); in inglese ogni volta
+			if (i == 0 || Boolean.parseBoolean(Testi.formatta("messaggi_motore", "RaccoltaBottino.soggettoOgniVolta"))) {
 				sb.append(gruppo.chi()).append(' ');
 			}
 			if (trovato != null) {

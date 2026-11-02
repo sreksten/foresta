@@ -385,19 +385,19 @@ AGGETTIVO_ELEMENTALE_SCHINIERI
 COMPLEMENTO_ELEMENTALE_SCHINIERI
     [COMPLEMENTO_ELEMENTALE_PROTEZIONE_PLURALE]
 
-// Dopo il nome, come "the sword of Grandpa's": in inglese il cosmetico è un complemento
+// Dopo il nome, come "the sword that belonged to Grandpa": in inglese il cosmetico è un complemento (o una relativa: un participio da solo dopo il nome, "the sword rusted over", non è inglese)
 COSMETICO
-    for regulation use | of Grandpa's | for collectors | for the kitchen | for display
+    for regulation use | which belonged to Grandpa | for collectors | for the kitchen | for display
     on special offer | made at home | bought at the market | for souvenirs | for training
     with the tag still attached | still in its box | for ceremonies | used just once
     on loan | of no great merit | from the junk dealer | kept in reserve
 
 COSMETICO_METALLO
-    covered in rust | rusted over | made of tin
+    covered in rust | with a coat of rust | made of tin
     of soft iron
 
 COSMETICO_STOFFA
-    with faded colors | mended | full of moth holes | of raw wool | badly ironed | with a sauce stain | washed at ninety degrees
+    with faded colors | which has been mended | full of moth holes | of raw wool | which is badly ironed | with a sauce stain | washed at ninety degrees
 
 // ---------------------------------------------------------------------------------------------
 // Parti con un modificatore di attributo. Una parola compare una volta sola, sempre con lo stesso effetto, così dal nome si capisce
@@ -837,13 +837,13 @@ SOPRANNOME_ARIA
     Fan | Hair Dryer | Tramontana | Little Breeze | Flapper | Draft | Pinwheel | Whirligig | Kite | Dandelion
 
 DESCRIZIONE_ARIA
-    that lifts enemies like dry leaves | that tousles everyone's hair | that whistles at every swing
+    which lifts enemies like dry leaves | which tousles everyone's hair | which whistles at every swing
 
 DESCRIZIONE_ARIA_PROTEZIONE
-    that stops the gusts of wind | that no storm can ruffle | that whistles when the wind blows
+    which stops the gusts of wind | which no storm can ruffle | which whistles when the wind blows
 
 DESCRIZIONE_ARIA_PROTEZIONE_PLURALE
-    that stop the gusts of wind | that no storm can ruffle | that whistle when the wind blows
+    which stop the gusts of wind | which no storm can ruffle | which whistle when the wind blows
 
 // ACQUA
 AGGETTIVO_ACQUA
@@ -865,13 +865,13 @@ SOPRANNOME_ACQUA
     Flush | Puddle | Downpour | Water Balloon | Sponge | Watering Can | Little Tap | Hydrant | Splash | Double Boiler
 
 DESCRIZIONE_ACQUA
-    that leaves enemies soaked | that always drips on the carpet | that never dries
+    which leaves enemies soaked | which always drips on the carpet | which never dries
 
 DESCRIZIONE_ACQUA_PROTEZIONE
-    that keeps you dry even in a deluge | that lets not a drop through | that makes the waves slide away
+    which keeps you dry even in a deluge | which lets not a drop through | which makes the waves slide away
 
 DESCRIZIONE_ACQUA_PROTEZIONE_PLURALE
-    that keep you dry even in a deluge | that let not a drop through | that make the waves slide away
+    which keep you dry even in a deluge | which let not a drop through | which make the waves slide away
 
 // TERRA
 AGGETTIVO_TERRA
@@ -893,13 +893,13 @@ SOPRANNOME_TERRA
     Brick | Clod | Groundbreaker | Trowel | Cement Mixer | Landslide | Pebble | Gravel | Boulder | Surveyor
 
 DESCRIZIONE_TERRA
-    that shakes the ground | that leaves soil and pebbles everywhere | that enters the enemy like a plowed field
+    which shakes the ground | which leaves soil and pebbles everywhere | which enters the enemy like a plowed field
 
 DESCRIZIONE_TERRA_PROTEZIONE
-    that fears neither landslides nor stones | that shakes off the mud | that holds the weight of a mountain
+    which fears neither landslides nor stones | which shakes off the mud | which holds the weight of a mountain
 
 DESCRIZIONE_TERRA_PROTEZIONE_PLURALE
-    that fear neither landslides nor stones | that shake off the mud | that hold the weight of a mountain
+    which fear neither landslides nor stones | which shake off the mud | which hold the weight of a mountain
 
 // FUOCO
 AGGETTIVO_FUOCO
@@ -921,13 +921,13 @@ SOPRANNOME_FUOCO
     Firelighter | Match | Barbecue | Lighter | Roasted Chestnut | Stove | Lantern | Ember | Salamander | Chop | Mixed Grill | Fire Stick | Firebrand
 
 DESCRIZIONE_FUOCO
-    that burns enemies | that smells of barbecue | that scorches even the scabbard | that lights the fireplace with one swing
+    which burns enemies | which smells of barbecue | which scorches even the scabbard | which lights the fireplace with one swing
 
 DESCRIZIONE_FUOCO_PROTEZIONE
-    that repels the flames | that does not fear the dragon's breath | that keeps burns away
+    which repels the flames | which does not fear the dragon's breath | which keeps burns away
 
 DESCRIZIONE_FUOCO_PROTEZIONE_PLURALE
-    that repel the flames | that do not fear the dragon's breath | that keep burns away
+    which repel the flames | which do not fear the dragon's breath | which keep burns away
 
 // FULMINE
 AGGETTIVO_FULMINE
@@ -949,13 +949,13 @@ SOPRANNOME_FULMINE
     Deep Fryer | Dynamo | Phase Tester | Light Bulb | Battery | Bolt | Shock | Short Circuit | Electroshock | Extension Cord | Surge Protector
 
 DESCRIZIONE_FULMINE
-    that strikes down enemies | that makes hair stand on end | that shocks even whoever wields it
+    which strikes down enemies | which makes hair stand on end | which shocks even whoever wields it
 
 DESCRIZIONE_FULMINE_PROTEZIONE
-    that discharges lightning into the ground | that acts as a lightning rod | that takes no shock
+    which discharges lightning into the ground | which acts as a lightning rod | which takes no shock
 
 DESCRIZIONE_FULMINE_PROTEZIONE_PLURALE
-    that discharge lightning into the ground | that act as lightning rods | that take no shock
+    which discharge lightning into the ground | which act as lightning rods | which take no shock
 
 // GELO
 AGGETTIVO_GELO
@@ -977,13 +977,13 @@ SOPRANNOME_GELO
     Ice Pop | Refrigerator | Sorbet | Slush | Popsicle | Penguin | Ice Chest | Ice Cube | Shiver | Cold Bite | Frozen Dinner | Snowman
 
 DESCRIZIONE_GELO
-    that freezes enemies | that keeps the beer cool | that gives people chilblains
+    which freezes enemies | which keeps the beer cool | which gives people chilblains
 
 DESCRIZIONE_GELO_PROTEZIONE
-    that keeps you warm even among the ice | that fears no frost | that wards off chilblains
+    which keeps you warm even among the ice | which fears no frost | which wards off chilblains
 
 DESCRIZIONE_GELO_PROTEZIONE_PLURALE
-    that keep you warm even among the ice | that fear no frost | that ward off chilblains
+    which keep you warm even among the ice | which fear no frost | which ward off chilblains
 
 // ACIDO
 AGGETTIVO_ACIDO
@@ -1005,13 +1005,13 @@ SOPRANNOME_ACIDO
     Pickle | Lemoncello | Bleach | Drain Cleaner | Vinegar | Descaler | Lye | Antacid | Giardiniera
 
 DESCRIZIONE_ACIDO
-    that corrodes armor | that dissolves rust and enemies | that stinks of vinegar
+    which corrodes armor | which dissolves rust and enemies | which stinks of vinegar
 
 DESCRIZIONE_ACIDO_PROTEZIONE
-    that will not be corroded | that resists acid and vinegar | that repels corrosive splashes
+    which will not be corroded | which resists acid and vinegar | which repels corrosive splashes
 
 DESCRIZIONE_ACIDO_PROTEZIONE_PLURALE
-    that will not be corroded | that resist acid and vinegar | that repel corrosive splashes
+    which will not be corroded | which resist acid and vinegar | which repel corrosive splashes
 
 // SONICO
 AGGETTIVO_SONICO
@@ -1033,13 +1033,13 @@ SOPRANNOME_SONICO
     Racket | Megaphone | Horn | Drill | Loudspeaker | Whistle | Little Trumpet | Bass Drum | Vuvuzela | Alarm Clock | Ultrasound
 
 DESCRIZIONE_SONICO
-    that deafens enemies | that booms like a bell | that makes every dog in the neighborhood bark
+    which deafens enemies | which booms like a bell | which makes every dog in the neighborhood bark
 
 DESCRIZIONE_SONICO_PROTEZIONE
-    that muffles screams and booms | that acts as an earplug | that dampens every rumble
+    which muffles screams and booms | which acts as an earplug | which dampens every rumble
 
 DESCRIZIONE_SONICO_PROTEZIONE_PLURALE
-    that muffle screams and booms | that act as earplugs | that dampen every rumble
+    which muffle screams and booms | which act as earplugs | which dampen every rumble
 
 // VELENO
 AGGETTIVO_VELENO
@@ -1061,13 +1061,13 @@ SOPRANNOME_VELENO
     Mother-in-Law | Gorgonzola | Stinger | Viper | Black Widow | Hemlock | Tarantula | Nettle | Amanita | Mamba
 
 DESCRIZIONE_VELENO
-    that poisons enemies | that leaves a bitter aftertaste | that must be handled with gloves
+    which poisons enemies | which leaves a bitter aftertaste | which must be handled with gloves
 
 DESCRIZIONE_VELENO_PROTEZIONE
-    that repels poisons | that acts as an antidote | that keeps snake bites away
+    which repels poisons | which acts as an antidote | which keeps snake bites away
 
 DESCRIZIONE_VELENO_PROTEZIONE_PLURALE
-    that repel poisons | that act as antidotes | that keep snake bites away
+    which repel poisons | which act as antidotes | which keep snake bites away
 
 // NECROTICO
 AGGETTIVO_NECROTICO
@@ -1089,13 +1089,13 @@ SOPRANNOME_NECROTICO
     Little Specter | Votive Candle | Gravefiller | Undertaker | Ossobuco | Zombie | Tombstone | Chrysanthemum | Myrtle | Little Skull
 
 DESCRIZIONE_NECROTICO
-    that withers the flesh | that smells of a closed cellar | that wakes the neighbors from the cemetery
+    which withers the flesh | which smells of a closed cellar | which wakes the neighbors from the cemetery
 
 DESCRIZIONE_NECROTICO_PROTEZIONE
-    that keeps the undead away | that shelters from the touch of death | that drives off the worms of the sepulcher
+    which keeps the undead away | which shelters from the touch of death | which drives off the worms of the sepulcher
 
 DESCRIZIONE_NECROTICO_PROTEZIONE_PLURALE
-    that keep the undead away | that shelter from the touch of death | that drive off the worms of the sepulcher
+    which keep the undead away | which shelter from the touch of death | which drive off the worms of the sepulcher
 
 // SACRO
 AGGETTIVO_SACRO
@@ -1117,13 +1117,13 @@ SOPRANNOME_SACRO
     Bell Tower | Altar Girl | Sacristan | Halo | Holy Water | Censer | Bigot | Votive | Holy Card | Housekeeper
 
 DESCRIZIONE_SACRO
-    that drives off the undead | that sings in Latin on moonlit nights | that shines with divine light
+    which drives off the undead | which sings in Latin on moonlit nights | which shines with divine light
 
 DESCRIZIONE_SACRO_PROTEZIONE
-    that will not be blinded by holy light | that shelters from heavenly punishments | that withstands sermons
+    which will not be blinded by holy light | which shelters from heavenly punishments | which withstands sermons
 
 DESCRIZIONE_SACRO_PROTEZIONE_PLURALE
-    that will not be blinded by holy light | that shelter from heavenly punishments | that withstand sermons
+    which will not be blinded by holy light | which shelter from heavenly punishments | which withstand sermons
 
 // PSICHICO
 AGGETTIVO_PSICHICO
@@ -1145,13 +1145,13 @@ SOPRANNOME_PSICHICO
     Migraine | Nervous Breakdown | Mood | Woodworm | Fixation | Little Thought | Moody | Nightmare | Headache | Obsession
 
 DESCRIZIONE_PSICHICO
-    that confuses enemies | that whispers strange things at night | that gives a headache to whoever looks at it
+    which confuses enemies | which whispers strange things at night | which gives a headache to whoever looks at it
 
 DESCRIZIONE_PSICHICO_PROTEZIONE
-    that protects the mind | that keeps out other people's thoughts | that works as a tinfoil hat
+    which protects the mind | which keeps out other people's thoughts | which works as a tinfoil hat
 
 DESCRIZIONE_PSICHICO_PROTEZIONE_PLURALE
-    that protect the mind | that keep out other people's thoughts | that work as tinfoil hats
+    which protect the mind | which keep out other people's thoughts | which work as tinfoil hats
 
 // ARCANO
 AGGETTIVO_ARCANO
@@ -1173,13 +1173,13 @@ SOPRANNOME_ARCANO
     Abracadabra | Little Spark | Wand | Top Hat | Little Rabbit | Zurlina | Sim Sala Bim | Sleight of Hand | Mandrake | Fortune Teller
 
 DESCRIZIONE_ARCANO
-    that crackles with arcane energy | that pulls rabbits out of the scabbard | that smells of sulfur and stardust
+    which crackles with arcane energy | which pulls rabbits out of the scabbard | which smells of sulfur and stardust
 
 DESCRIZIONE_ARCANO_PROTEZIONE
-    that absorbs spells | that bounces magic back | that puts out arcane sparks
+    which absorbs spells | which bounces magic back | which puts out arcane sparks
 
 DESCRIZIONE_ARCANO_PROTEZIONE_PLURALE
-    that absorb spells | that bounce magic back | that put out arcane sparks
+    which absorb spells | which bounce magic back | which put out arcane sparks
 
 // VUOTO
 AGGETTIVO_VUOTO
@@ -1201,13 +1201,13 @@ SOPRANNOME_VUOTO
     Hot Air | Black Hole | Astronaut | Nonentity | Comet | Galaxy | Monday Morning | Returnable Empty | Meteorite | Odd Sock
 
 DESCRIZIONE_VUOTO
-    that sucks up the light | that weighs less than nothing | that makes enemies and socks disappear
+    which sucks up the light | which weighs less than nothing | which makes enemies and socks disappear
 
 DESCRIZIONE_VUOTO_PROTEZIONE
-    that resists the call of the void | that will not be sucked in | that holds together what nothingness undoes
+    which resists the call of the void | which will not be sucked in | which holds together what nothingness undoes
 
 DESCRIZIONE_VUOTO_PROTEZIONE_PLURALE
-    that resist the call of the void | that will not be sucked in | that hold together what nothingness undoes
+    which resist the call of the void | which will not be sucked in | which hold together what nothingness undoes
 
 // MALEDIZIONE
 AGGETTIVO_MALEDIZIONE
@@ -1229,13 +1229,13 @@ SOPRANNOME_MALEDIZIONE
     Bad-Luck Bringer | Ill Omen | Black Cat | Friday the Seventeenth | Jinx | Owl | Broken Mirror | Open Ladder | Hoodoo | Little Horn
 
 DESCRIZIONE_MALEDIZIONE
-    that brings bad luck to whoever it strikes | that no one wants to borrow | that makes the bread fall butter side down
+    which brings bad luck to whoever it strikes | which no one wants to borrow | which makes the bread fall butter side down
 
 DESCRIZIONE_MALEDIZIONE_PROTEZIONE
-    that wards off the evil eye | that averts curses | that makes horns at bad luck
+    which wards off the evil eye | which averts curses | which makes horns at bad luck
 
 DESCRIZIONE_MALEDIZIONE_PROTEZIONE_PLURALE
-    that ward off the evil eye | that avert curses | that make horns at bad luck
+    which ward off the evil eye | which avert curses | which make horns at bad luck
 
 NOME_AGGIORNAMENTO
     the Scroll of the Latest Fashion

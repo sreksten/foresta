@@ -39,7 +39,7 @@ class PartiteInIngleseTest {
 			for (String testo : testi) {
 				// Le righe grezze delle missioni (CHIAVE=...) sono dati, non testo mostrato
 				// (e le note dei modificatori: la vista le dà come stanno salvate, in italiano, e la UI le traduce con TestoDeiModificatori.nota)
-				if (testo == null || testo.contains("CHIAVE=") || NOTE_SALVATE.contains(testo)) {
+				if (testo == null || RaccoglitoreDeiTestiVisibili.eDatoGrezzo(testo) || NOTE_SALVATE.contains(testo)) {
 					continue;
 				}
 				Matcher m = ITALIANO.matcher(testo.toLowerCase(Locale.ROOT));

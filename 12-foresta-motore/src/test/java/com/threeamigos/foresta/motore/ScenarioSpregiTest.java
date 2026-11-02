@@ -109,7 +109,7 @@ class ScenarioSpregiTest {
             Dado.trucca(1, 3, 2);
             partita.comando(Comando.CORRUZIONE);
             assertEquals(monete - 2, Cassa.getMonete());
-            assertTrue(partita.testi().stream().anyMatch(t -> t.contains("non ha avuto successo, e in una breve colluttazione perde alcune monete")),
+            assertTrue(partita.testi().stream().anyMatch(t -> t.contains("non ha avuto successo, e in una breve colluttazione") && t.contains("perde alcune monete")),
                     String.valueOf(partita.testi()));
         }
     }

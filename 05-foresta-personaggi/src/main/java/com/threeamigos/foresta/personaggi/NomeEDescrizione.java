@@ -49,7 +49,7 @@ final class NomeEDescrizione {
 		if (!artefatti.isEmpty()) {
 			sb.append(' ').append(testo("ARTEFATTI", p.getPronome(), artefatti.stream()
 					.map(a -> a.getTipo().getUtilizzo() + ' ' + a.getNomeCompleto())
-					.collect(Collectors.joining(", "))));
+					.collect(Collectors.joining(testo("ARTEFATTI.SEPARATORE")))));
 		}
 		return sb.toString();
 	}

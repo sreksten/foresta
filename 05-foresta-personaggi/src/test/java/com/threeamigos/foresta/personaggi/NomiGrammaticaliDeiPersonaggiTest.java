@@ -88,7 +88,7 @@ class NomiGrammaticaliDeiPersonaggiTest {
 		assertEquals("a ", goblin.getAIS());
 		assertEquals("by a ", goblin.getDa());
 		assertEquals("It", goblin.getPronome());
-		assertEquals("Goblins", goblin.getNomePlurale());
+		assertEquals("goblins", goblin.getNomePlurale());
 	}
 
 	@Test

@@ -161,7 +161,7 @@ public class Locanda extends LocazioneBase {
 			md.aggiungiProprieta(Locande.LOCANDA_DIALOGO_LETTO, LocazioneMD.AFFERMATIVO);
 			String dialogo = md.ottieniProprieta(Locande.LOCANDA_DIALOGO);
 			if (dialogo != null && !dialogo.isEmpty()) {
-				return '“' + dialogo + '"';
+				return '“' + dialogo + '”';
 			}
 		}
 		if (md.ottieniProprieta(Locande.LOCANDA_RECENSIONE_LETTA) == null) {
@@ -295,7 +295,7 @@ public class Locanda extends LocazioneBase {
             String sb = Testi.formatta("messaggi_motore", personaggioDisponibile.getSesso() == Personaggio.Sesso.MASCHIO ? "Locanda.vecchiaAmicizia.M" : "Locanda.vecchiaAmicizia.F",
                     capo.getNome(), Lingue.corrente().inizialeMaiuscola(capo.getPronome()),
                     personaggioDisponibile.getNomeProprio().map(nome -> nome + ", ").orElse(""),
-                    personaggioDisponibile.getAIS() + personaggioDisponibile.getNomeSingolare(), personaggioDisponibile.getDescrizione(),
+                    personaggioDisponibile.getAIS() + personaggioDisponibile.getNomeSingolare().toLowerCase(java.util.Locale.ROOT), personaggioDisponibile.getDescrizione(),
                     capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
 			BusEventi.pubblica(new NotificaTestoParagrafo(sb));
 			BusEventi.pubblica(new InternoMostraFinestraStato());
