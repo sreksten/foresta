@@ -27,11 +27,12 @@ NOME_FEMMINILE$
     Josephine | Lally | Windilda | Pawlina | Ballasta | Chiselda | Nibbilda
 
 NOME_SACERDOTE$
-    Abbot Addled | Pastor Dripping | Deacon Destructo | Brother Broken | Pastor Thunder
+    Abbot Addled | Deacon Destructo | Pastor Thunder
+    Bro' Coli | Bro' Adsword | Bro' Chure | Bro' Ken | Bro' Kerage | Bronchitis | Bro' Thel
 
 NOME_SACERDOTESSA$
     Sister Clemency | Sister Chaste | Sister Mercy | Sister Smiley | Sister Regal | Sister Sally | Sister Clueless
-    Sister Vigil | Sister Prayer
+    Sister Vigil | Sister Prayer | Sis' Tine | Sis' Kin | Sis' Tole | Sis' Tematic
 
 // ---------------------------------------------------------------------------------------------
 // Cognomi, in ordine alfabetico: la somma dei cognomi dei locandieri e dei protagonisti delle fiabe

@@ -115,9 +115,9 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 			case DONNA:
 				return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t4");
 			case ARMAIOLO:
-				return "l'armaiolo";
+				return Testi.formatta("missioni", "Ruolo.armaiolo");
 			case ALCHIMISTA:
-				return "l'alchimista";
+				return Testi.formatta("missioni", "Ruolo.alchimista");
 			case LOCANDIERE:
 				return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t5");
 			case VENDITORE_DI_PERGAMENE:

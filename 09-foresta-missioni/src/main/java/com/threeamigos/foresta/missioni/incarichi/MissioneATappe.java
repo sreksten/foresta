@@ -313,7 +313,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 				return nomeDellaCitta(cittaDelPosto(indice));
 			case LOCANDA:
 				String nomeDellaLocanda = Foresta.getLocazioneMD(coordinate).getNome();
-				return nomeDellaLocanda == null ? Testi.formatta("missioni", "MissioneATappe.s1") : "la locanda " + nomeDellaLocanda;
+				return nomeDellaLocanda == null ? Testi.formatta("missioni", "MissioneATappe.s1") : Testi.formatta("missioni", "MissioneATappe.laLocanda", nomeDellaLocanda);
 			case ROVINE:
 				return Foresta.nomeDelleRovine(Foresta.getLocazioneMD(coordinate));
 			case TEMPIO:

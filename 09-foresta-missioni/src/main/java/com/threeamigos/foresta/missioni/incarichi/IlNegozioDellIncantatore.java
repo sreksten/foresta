@@ -13,6 +13,6 @@ public class IlNegozioDellIncantatore extends IlNegozio {
 
 	public IlNegozioDellIncantatore() {
 		super(MissionePredefinita.IL_NEGOZIO_DELL_INCANTATORE, Testi.formatta("missioni", "IlNegozioDellIncantatore.s1"), TipoLocazione.INCANTATORE, PersonaggioNoto.INCANTATORE_DELLA_FORESTA, AspettoDelMandante.INCANTATORE,
-				"l'incantatore");
+				Testi.formatta("missioni", "Ruolo.incantatore"));
 	}
 }

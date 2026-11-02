@@ -127,7 +127,7 @@ public class LaForgia extends IncaricoInCitta {
 	@Override
 	public String getNome() {
 		ForgiaRichiesta arma = armaSeScelta();
-		return Lingue.corrente().inizialeMaiuscola(MANDANTE.getNome()) + " e " + (arma == null ? "la forgia" : arma.getNomeBreve());
+		return Lingue.corrente().inizialeMaiuscola(MANDANTE.getNome()) + " e " + (arma == null ? Testi.formatta("missioni", "LaForgia.laForgia") : arma.getNomeBreve());
 	}
 
 	@Override

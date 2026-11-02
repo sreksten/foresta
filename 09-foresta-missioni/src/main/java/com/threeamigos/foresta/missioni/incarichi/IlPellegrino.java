@@ -77,7 +77,7 @@ public class IlPellegrino extends IncaricoInCitta {
 	 * Il nome del tempio della meta, con l'articolo; "il tempio" finché la missione non l'ha trovato.
 	 */
 	private String getNomeDelTempio() {
-		return getTempio() == null ? "il tempio" : Foresta.nomeDelTempio(getTempio());
+		return getTempio() == null ? Testi.formatta("missioni", "IlPellegrino.ilTempio") : Foresta.nomeDelTempio(getTempio());
 	}
 
 	private boolean nelTempio() {

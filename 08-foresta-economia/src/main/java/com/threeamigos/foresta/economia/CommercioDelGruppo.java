@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.economia;
 
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.economia.OfferteAlchimista;
 import com.threeamigos.foresta.economia.OffertaConsumabile;
 import com.threeamigos.foresta.economia.RegoleContrattazione;
@@ -95,9 +96,8 @@ public final class CommercioDelGruppo {
 			if (gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == TipoPersonaggio.LADRA || p.getClasse() == TipoPersonaggio.LADRO)) {
 				quantita += Dado.tiraAncheAUnaFaccia(preziosi) * valore;
 			}
-			String notifica = gruppo.chiMaiuscolo() +
-					" ha venduto i preziosi raccolti, ricavandone " +
-					(quantita == 1 ? " una moneta." : (quantita + " monete."));
+			String notifica = Testi.formatta("messaggi_economia", "VenditaPreziosi.1", gruppo.chiMaiuscolo(),
+					quantita == 1 ? Testi.formatta("messaggi_economia", "VenditaPreziosi.unaMoneta") : Testi.formatta("messaggi_economia", "VenditaPreziosi.monete", quantita));
 			BusEventi.pubblica(new NotificaTestoFrase(notifica));
 			Cassa.vendiPreziosiPer(quantita);
 		}

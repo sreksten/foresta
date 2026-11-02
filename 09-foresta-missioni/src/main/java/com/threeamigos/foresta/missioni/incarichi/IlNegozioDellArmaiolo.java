@@ -13,6 +13,6 @@ public class IlNegozioDellArmaiolo extends IlNegozio {
 
 	public IlNegozioDellArmaiolo() {
 		super(MissionePredefinita.IL_NEGOZIO_DELL_ARMAIOLO, Testi.formatta("missioni", "IlNegozioDellArmaiolo.s1"), TipoLocazione.ARMAIOLO, PersonaggioNoto.ARMAIOLO_DELLA_FORESTA, AspettoDelMandante.ARMAIOLO,
-				"l'armaiolo");
+				Testi.formatta("missioni", "Ruolo.armaiolo"));
 	}
 }
