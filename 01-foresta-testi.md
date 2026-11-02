@@ -59,6 +59,7 @@ Ogni produttore legge le sue grammatiche e offre testi pronti:
 | `ProduttoreDiOroscopiCasuale` | `oroscopo.txt` | gli oroscopi dell'alchimista e il dialogo che ne nasce |
 | `ProduttoreDiLuoghiCasuale` | `rovine.txt`, `templi.txt` | i nomi dei luoghi della foresta |
 | `ProduttoreDiSfideCasuale` | `sfide.txt` | le frasi della sfida a carta, forbici e sasso |
+| `ProduttoreDiFrasiDelMondoCasuale` | `mondo.txt` | le frasi dei personaggi nei fumetti (per ora la presentazione del protagonista); `FORMULA_NOME` ("Sono", "Mi chiamo", "Il mio nome è" / "My name is", "I'm", "Name's") sta in un punto solo e `locande*.txt` la includono con `#include <mondo.txt>` (`mondo_en.txt` per l'inglese) |
 | `ProduttoreDiMissioniCasuale` | `missioni.txt`, `nomi.txt`, `tappe.txt` | i testi delle missioni e i personaggi del mondo (vedi [`nomi.md`](nomi.md)); `rigaDiTappe(farsa)` dà una riga di missione a tappe (vedi [`missione_a_tappe.md`](missione_a_tappe.md)) da `tappe.txt`, che è a parte perché le sue produzioni a esaurimento si ripristinano a ogni riga |
 | `ProduttoreDiLocandeCasuale` | `locande.txt` (e i nomi di `nomi.txt`) | i dati a caso delle locande del mondo: nome, locandiere, dialoghi |
 

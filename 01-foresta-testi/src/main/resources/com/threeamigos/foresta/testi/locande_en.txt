@@ -258,14 +258,15 @@ RE_FINTO$
 
 NOME_CASUALE
     [NOME_MASCHILE] [COGNOME] | [NOME_MASCHILE] [ATTRIBUTO] | [TITOLO] [NOME_MASCHILE] [COGNOME] | [TITOLO] [NOME_MASCHILE] [DEGLI_LOCANDE]
+    [^3] Ishmael
 
 ATTRIBUTO
     [ATTRIBUTO_POSITIVO] | [ATTRIBUTO_NEGATIVO]
 
 MI_CHIAMO
     I am [#NOME_LOCANDIERE] and I will be your host for tonight.
-    My name is [#NOME_LOCANDIERE], and around here I am the innkeeper.
-    My name is [#NOME_LOCANDIERE]: remember it when the bill arrives.
+    [FORMULA_NOME] [#NOME_LOCANDIERE], and around here I am the innkeeper.
+    [FORMULA_NOME] [#NOME_LOCANDIERE]: remember it when the bill arrives.
     Call me [#NOME_LOCANDIERE], and don't ask questions about the soup.
     I am [#NOME_LOCANDIERE], and this is my home. Make yourselves at home, but don't overdo it.
     If you're looking for the innkeeper, I'm [#NOME_LOCANDIERE]. If you're looking for trouble, you've come to the right place anyway.
@@ -683,3 +684,4 @@ NOTIZIE_CITTA
     CG12-Brawl Among Spectators - Fists and bites among the dwarves after BARDO interrupted a solemn military ballad to strike up a commercial jingle about the Alchemist's health potions.
 
 #include_static <nomi_en.txt>
+#include <mondo_en.txt>

@@ -258,21 +258,22 @@ RE_FINTO$
 
 NOME_CASUALE
     [NOME_MASCHILE] [COGNOME] | [NOME_MASCHILE] [ATTRIBUTO] | [TITOLO] [NOME_MASCHILE] [COGNOME] | [TITOLO] [NOME_MASCHILE] [DEGLI_LOCANDE]
+    [^3] Ismaele
 
 ATTRIBUTO
     [ATTRIBUTO_POSITIVO] | [ATTRIBUTO_NEGATIVO]
 
 MI_CHIAMO
-    Sono [#NOME_LOCANDIERE] e sarò il vostro ospite per stasera.
-    Mi chiamo [#NOME_LOCANDIERE], e da queste parti l'oste sono io.
-    Il mio nome è [#NOME_LOCANDIERE]: ricordatelo, quando arriverà il conto.
+    [FORMULA_NOME] [#NOME_LOCANDIERE] e sarò il vostro ospite per stasera.
+    [FORMULA_NOME] [#NOME_LOCANDIERE], e da queste parti l'oste sono io.
+    [FORMULA_NOME] [#NOME_LOCANDIERE]: ricordatelo, quando arriverà il conto.
     Chiamatemi [#NOME_LOCANDIERE], e non fate domande sulla zuppa.
     Io sono [#NOME_LOCANDIERE], e questa è casa mia. Comportatevi come in casa vostra, ma senza esagerare.
     Se cercate l'oste, sono [#NOME_LOCANDIERE]. Se cercate guai, siete nel posto giusto lo stesso.
     Dicono che il locandiere si chiami [#NOME_LOCANDIERE]. Dicono bene.
     Mi presento: [#NOME_LOCANDIERE], oste a tempo pieno e cuoco per disperazione.
     Permettete che mi presenti: [#NOME_LOCANDIERE], per servirvi. Se vi servo male, è tutta colpa dei fornitori.
-    Sono [#NOME_LOCANDIERE], il padrone di casa. Per ogni reclamo, rivolgetevi al muro.
+    [FORMULA_NOME] [#NOME_LOCANDIERE], il padrone di casa. Per ogni reclamo, rivolgetevi al muro.
     Per voi sono [#NOME_LOCANDIERE], per i creditori sono introvabile.
 
 GESTORE_NOTE
@@ -683,3 +684,4 @@ NOTIZIE_CITTA
     CG12-Rissa da Spettatori - Pugni e morsi tra i nani dopo che BARDO ha interrotto una solenne ballata militare per intonare un jingle commerciale sulle pozioni di salute dell'Alchimista.
 
 #include_static <nomi.txt>
+#include <mondo.txt>

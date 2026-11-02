@@ -2,7 +2,7 @@ package com.threeamigos.foresta.testi;
 
 /**
  * Il ciclo di vita dei produttori di testi a caso di questo modulo: li carica insieme e li azzera quando comincia una partita
- * nuova. I produttori sono {@link ProduttoreDiFiabeCasuale}, {@link ProduttoreDiLocandeCasuale}, {@link ProduttoreDiLuoghiCasuale},
+ * nuova. I produttori sono {@link ProduttoreDiFiabeCasuale}, {@link ProduttoreDiFrasiDelMondoCasuale}, {@link ProduttoreDiLocandeCasuale}, {@link ProduttoreDiLuoghiCasuale},
  * {@link ProduttoreDiMissioniCasuale}, {@link ProduttoreDiOroscopiCasuale} e {@link ProduttoreDiSfideCasuale}; ciascuno legge le sue
  * grammatiche una volta sola, la prima volta che si usa. Vedi GrammarBean.md e nomi.md.
  */
@@ -18,6 +18,7 @@ public final class ProduttoriDiTesti {
 	 */
 	public static void precarica() {
 		ProduttoreDiFiabeCasuale.precarica();
+		ProduttoreDiFrasiDelMondoCasuale.precarica();
 		ProduttoreDiLocandeCasuale.precarica();
 		ProduttoreDiLuoghiCasuale.precarica();
 		ProduttoreDiMissioniCasuale.precarica();

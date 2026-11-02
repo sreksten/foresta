@@ -30,6 +30,15 @@ class ProduttoriDiTestiTest {
 	}
 
 	@Test
+	void laPresentazioneDelProtagonistaHaIlNomeEUnoScopo() {
+		for (int i = 0; i < 200; i++) {
+			String frase = ProduttoreDiFrasiDelMondoCasuale.presentazioneDelProtagonista("Bruto");
+			assertTrue(frase.matches("(Sono|Mi chiamo|Il mio nome è) Bruto\\. (?i).*drag.*"), frase);
+			assertFalse(frase.matches("(?s).*[\\[\\]{}|].*"), frase);
+		}
+	}
+
+	@Test
 	void leFrasiDellaSfidaNonSonoVuote() {
 		assertNonVuoto(ProduttoreDiSfideCasuale.fraseDiSfida(), "sfida");
 		assertNonVuoto(ProduttoreDiSfideCasuale.fraseSeIlGiocatoreVince(), "vince");

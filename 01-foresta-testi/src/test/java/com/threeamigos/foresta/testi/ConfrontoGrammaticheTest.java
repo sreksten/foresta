@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ConfrontoGrammaticheTest {
 
 	private static final String PERCORSO = "/com/threeamigos/foresta/testi/";
-	private static final String[] GRAMMATICHE = {"fiabe", "locande", "missioni", "nomi", "oroscopo", "rovine", "sfide", "tappe", "templi"};
+	private static final String[] GRAMMATICHE = {"fiabe", "locande", "missioni", "mondo", "nomi", "oroscopo", "rovine", "sfide", "tappe", "templi"};
 
 	/** La tolleranza: la traduzione adatta le battute e può unire o spezzare qualche alternativa. */
 	private static final double TOLLERANZA = 0.03;

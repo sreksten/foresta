@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 class VariantiBritannicheDelleGrammaticheTest {
 
 	private static final String PERCORSO = "/com/threeamigos/foresta/testi/";
-	private static final String[] GRAMMATICHE = {"fiabe", "locande", "missioni", "nomi", "oroscopo", "rovine", "sfide", "tappe", "templi"};
+	private static final String[] GRAMMATICHE = {"fiabe", "locande", "missioni", "mondo", "nomi", "oroscopo", "rovine", "sfide", "tappe", "templi"};
 
 	private static final Pattern AMERICANE = Pattern.compile("\\b(toward|travelers?|traveled|armor(?:ed|er|ers)?|colors?|colored|honor(?:s|ed)?|neighbors?|favors?|centers?|defenses?|artifacts?|organize[sd]?|recognize[sd]?)\\b",
 			Pattern.CASE_INSENSITIVE);

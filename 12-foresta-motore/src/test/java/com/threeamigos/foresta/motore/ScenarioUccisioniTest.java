@@ -35,13 +35,14 @@ class ScenarioUccisioniTest {
 
     @Test
     void chiCadeInQualunqueModoVieneContatoUnaVoltaSolaPerEsperienzaBestiarioETrofei() {
-        for (int seme = 600; seme < 606; seme++) {
+        for (int seme = 600; seme < 630; seme++) {
             try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(seme)) {
                 partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
                 // Il gruppo regge: lo scontro non si decide sui dadi
                 partita.gruppo().getCapo().getModelloDati().set(TipoAttributo.SALUTE, 1_000_000);
                 List<Personaggio> avversari = avversariAllIngresso(partita);
-                if (avversari.isEmpty()) {
+                // Con un solo avversario il primo che se ne va lascia il gruppo vuoto e lo scontro non comincia: ne servono almeno due
+                if (avversari.size() < 2) {
                     continue;
                 }
                 partita.eventi().ascolta(InternoAvversarioSconfitto.class, NotificaVariazionePuntiEsperienzaPersonaggio.class);

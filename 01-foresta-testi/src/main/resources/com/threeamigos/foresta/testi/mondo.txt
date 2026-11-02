@@ -1,0 +1,22 @@
+// Le frasi che i personaggi del mondo dicono nei fumetti e nei dialoghi, con qualche variazione. La versione inglese è
+// mondo_en.txt (stesse produzioni). Chi le usa: ProduttoreDiFrasiDelMondoCasuale e, con #include, le
+// grammatiche che hanno bisogno di una formula comune (per esempio quella con cui un locandiere dice il suo nome).
+//
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+
+// Il protagonista si presenta all'eremita (intermezzo introduttivo). NOME_EROE lo passa chi produce (addFixedProduction).
+PRESENTAZIONE_EROE
+    [FORMULA_NOME] [*NOME_EROE]. [SCOPO_EROE]
+
+// NOME_EROE lo fissa il codice prima di produrre; il valore scritto qui serve solo a far esistere la produzione.
+NOME_EROE
+    l'eroe
+
+// Come ci si presenta: seguita dal nome.
+FORMULA_NOME
+    Sono | Mi chiamo | Il mio nome è
+
+SCOPO_EROE
+    Sto cercando il Drago.
+    Cacciatore di draghi.
+    Sono {sulle tracce|a caccia} del Drago.

@@ -1,0 +1,22 @@
+// The phrases the characters of the world speak in the comic bubbles and in dialogues, with some variety. Same productions as
+// mondo.txt, the Italian base. Used by ProduttoreDiFrasiDelMondoCasuale and, with #include, by the grammars that need a shared
+// formula (for example the one an innkeeper uses to say his name).
+//
+// Characters not to use in the texts: [ ] { } | " (GrammarBean syntax).
+
+// The hero introduces himself to the hermit (introductory intermezzo). NOME_EROE is passed by whoever produces (addFixedProduction).
+PRESENTAZIONE_EROE
+    [FORMULA_NOME] [*NOME_EROE]. [SCOPO_EROE]
+
+// NOME_EROE is fixed by the code before producing; the value written here only makes the production exist.
+NOME_EROE
+    the hero
+
+// How people introduce themselves: followed by the name.
+FORMULA_NOME
+    My name is | I'm | Name's
+
+SCOPO_EROE
+    I am looking for the Dragon.
+    Dragon hunter.
+    I'm {chasing|hunting} the Dragon.

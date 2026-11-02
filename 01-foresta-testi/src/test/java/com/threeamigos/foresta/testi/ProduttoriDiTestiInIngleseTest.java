@@ -37,6 +37,18 @@ class ProduttoriDiTestiInIngleseTest {
 	}
 
 	@Test
+	void presentazioneDelProtagonista() {
+		controlla("presentazione", () -> ProduttoreDiFrasiDelMondoCasuale.presentazioneDelProtagonista("Bruto"));
+		java.util.Set<String> formule = new java.util.HashSet<>();
+		for (int i = 0; i < GIRI; i++) {
+			String frase = ProduttoreDiFrasiDelMondoCasuale.presentazioneDelProtagonista("Bruto");
+			assertTrue(frase.matches("(My name is|I'm|Name's) Bruto\\. .*Dragon.*"), frase);
+			formule.add(frase.substring(0, frase.indexOf(" Bruto")));
+		}
+		assertEquals(3, formule.size(), "escono tutte e tre le formule: " + formule);
+	}
+
+	@Test
 	void sfide() {
 		controlla("sfida", ProduttoreDiSfideCasuale::fraseDiSfida);
 		controlla("vince", ProduttoreDiSfideCasuale::fraseSeIlGiocatoreVince);

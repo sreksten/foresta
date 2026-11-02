@@ -294,7 +294,7 @@ class StatiDiLuogoTest {
             for (int y = 0; y < MondoDiProva.LATO; y++) {
                 TipoLocazione tipo = Foresta.getLocazione(x, y);
                 if (tipo.getCategoriaLocazione() != CategoriaLocazione.CITTA && tipo.getCategoriaLocazione() != CategoriaLocazione.CASTELLO) {
-                    Foresta.impostaLocazione(new CoordinateMD(x, y), TipoLocazione.LOCANDA);
+                    Foresta.impostaLocazione(new CoordinateMD(x, y), TipoLocazione.RADURA);
                 }
             }
         }
