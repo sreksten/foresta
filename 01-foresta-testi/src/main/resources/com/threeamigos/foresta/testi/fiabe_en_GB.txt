@@ -1,0 +1,833 @@
+FIABA
+	[PROEMIO] [RACCONTO]
+//	[RACCONTO_BREVE]
+
+PROEMIO
+	^[TEMPO_PROEMIO], [LUOGO_PROEMIO], [FATTO_PROEMIO].
+	^[LUOGO_PROEMIO], [TEMPO_PROEMIO], [FATTO_PROEMIO].
+
+TEMPO_PROEMIO
+	[TEMPO_PROEMIO_EPICO_FANTASTICO] | [TEMPO_PROEMIO_STORICO_CRONOLOGICO] | [TEMPO_PROEMIO_SURREALISTA]
+
+TEMPO_PROEMIO_EPICO_FANTASTICO
+    [QUANDO] { [QUANDO_AVVENIMENTO_EPICO_FANTASTICO] | [QUANDO_AVVENIMENTO_EPICO_FANTASTICO] and [QUANDO_AVVENIMENTO_EPICO_FANTASTICO] }
+    [PRIMA_CHE] { [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO] | [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO] and [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO] }
+    { at dawn | in the night } of time
+    in an age forgotten { by men | by everyone | by the world | by history | by time | }
+    in the age of iron and fire
+    at the edge of time
+    long { , long | } ago
+    many { , many | } years ago
+    on { full-moon | new-moon } nights
+    at the dawn of the world
+    in { a spring | a summer | an autumn | a winter } that never ended
+    at the dawn of a world without borders
+    in the age of the crownless kings
+    in the age of the pacts between men and spirits
+    in the age of the great migrations of dragons
+    in the age of the seven suns
+    in the age of the shaman-kings
+    in the days of the great alliances between elves and men
+
+QUANDO
+    when | { in a time | in the age | in the days | in the era } when
+
+QUANDO_AVVENIMENTO_EPICO_FANTASTICO$
+// Il carattere $ dopo il nome di QUANDO_AVVENIMENTO è un one-shot-marker.
+// Significa che ogni alternativa scelta viene rimossa dal pool finché non si chiama reset():
+// una espansione non potrà mai generare due volte lo stesso risultato, ma il pool si esaurisce nel tempo.
+    the stars were still close to the earth
+    iron was still as soft as clay
+    silence reigned over the world
+    the mountains were still hills
+    destiny was still written in stone
+    Adam delved and Eve span
+    the world was still young
+    dragons still slept in the caves
+    the gods walked among men
+    the forests still whispered ancient secrets
+    the sea did not yet have a name
+    the fairies lived in the woods
+    the giants forged the mountains
+    the rivers flowed backwards
+    the swords spoke to their masters
+    the wolves spoke the language of men
+    the stones guarded { memories | secrets }
+    the forests walked at night
+    the wind carried prophecies
+    the ravens knew the future
+    kingdoms floated among the clouds
+    the roots of the trees touched the centre of the earth
+    mirrors showed other worlds
+    the rivers led to the kingdom of the dead
+    the stars fell like rain
+    knights-errant knew no fear
+    witches still lived in the villages
+    unicorns grazed in the sacred valleys
+    oaths had the power to bend destiny
+    phoenixes were reborn every century
+    the towers touched the sky with their tips
+    dreams were visible to the naked eye
+    the woods guarded doors to other { realms | worlds }
+    the wells led to other worlds
+    the giants slept under the mountains
+    the harps played by themselves at dusk
+    the thrones were carved from eternal ice
+    comets announced the birth of heroes
+    secret names gave power
+    the sirens still sang in the fjords
+    the stone circles enclosed spells
+    the dragons guarded treasures
+    the forests chose their guardians
+    the swords were forged in the heart of the stars
+    { the glaciers | the mountains | the rivers | the hills } sang age-old lullabies
+    the ritual masks came alive at night
+    the borders of the kingdom were marked by runes
+    the werewolves served as guardians of the villages
+    the ivory towers housed blind oracles
+    the seasons obeyed the will of the sorcerers
+    the autumn leaves whispered secrets to the shamans
+    the kingdoms were protected by stone giants
+    the { sword | magic } was the only law
+
+PRIMA_CHE
+    { before | long before | well before }
+
+PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO$
+    { the first sun | the first moon } { rose | peeped into the sky }
+    the silence was broken
+    the first word was spoken
+    the names of things were chosen
+    time learned to flow
+    the first maps were drawn { on the stars | }
+    night and day were separated
+    the oracles learned to lie
+    the first castle was raised
+
+TEMPO_PROEMIO_STORICO_CRONOLOGICO
+    in the twilight of an empire
+    shortly before the fall of the empire
+    during the reign of a long-extinct dynasty
+    under the rule of a long-forgotten sovereign
+    during the siege of a vanished city
+    while the great cities { were rising | were being built | were being raised }
+    { in the years | in the wake } of the great { famine | war | depression | plague }
+    during the Black Death
+    during the years of reconstruction
+    when carriages still ploughed the roads
+    in the last year of a remote century
+    in an age of dust and smoke
+    before the maps were drawn
+    during the age of the great discoveries
+    in the Early Middle Ages
+    in the Late Middle Ages
+    during the Renaissance
+    last century
+    in the year One Thousand
+    a hundred years ago
+    some time ago
+    several years ago
+    in an age of revolutions
+    many decades before the grandparents were born
+    during the gold rush
+    in the age of the pioneers
+    in the age of the great navigators
+    at the time of the Crusades
+    in the age of the great cathedrals
+    in the age of geographical discoveries
+    in the age of the great colonial empires
+    at the time of the great migrations to the new world
+    during the years of the Great Depression
+    in the age of the great councils
+    at the time of the barbarian invasions
+    at the time of the great caravans along the trade routes
+    at the time of the first universities
+    during the age of the great libraries
+    at the time of the guilds
+    at the time of the polar expeditions
+    during the period of the great dams and canals
+    in the age of the first alphabets
+    in the age of the first mechanical clocks
+    in the age of the first peace treaties between nations
+    in the cracks of space-time
+
+
+ISTANTE_PRECISO
+    on an ordinary Monday morning
+    shortly after the Monday alarm clock
+    on a Tuesday like many others
+    on a Wednesday evening like many others
+    at dinner time on some Sunday or other
+    during some winter evening or other
+    during a rainy weekend
+    during a rainy afternoon
+    during some rainy morning or other
+    on a late autumn afternoon
+    during a summer storm
+    while the rain beat against the windowpanes
+    just as the world seemed to stand still
+    a few moments before the disaster
+    a few moments before sunset
+    during a sudden eclipse
+    while the town was still asleep
+    in a moment of absolute calm
+    no later than last week
+    last month
+    during the lunch break
+    at rush hour
+    shortly before going to sleep
+    the day after his birthday
+    while waiting his turn at the doctor's
+    shortly after the coffee break
+    while tidying up the cellar
+    during a dinner among friends that ended badly
+    shortly before the shops closed
+    during an improvised move
+    while doing the weekly shopping
+    during a day trip out of town
+    during an afternoon of school homework
+    while waiting for the water to boil
+    during a walk in the park
+    shortly after returning from holiday
+    while jogging around the neighbourhood
+    during a family lunch
+    shortly after a quarrel with the neighbour
+    while looking for the house keys
+    while waiting for the coffee to be ready
+    while parking his bicycle
+    shortly before turning off the light to sleep
+    while waiting for a message that never came
+    while sitting on the toilet reading a magazine
+    during some sleepless night or other
+    while picking up the pieces of a broken cup
+    in the middle of a sneeze
+    while realising that one of his socks was missing
+    shortly after waking up with a crazy idea
+    while handling a notice of unpaid taxes
+    in a moment of absolute financial despair
+
+TEMPO_PROEMIO_SURREALISTA
+    when the mills were white
+    when the clouds were made of cotton candy
+    when the clouds started doing somersaults
+    when his chickens staged a revolt
+    when the clouds came in little flocks
+    as the moon played hide-and-seek with the clouds
+    one ordinary day
+    just as the world seemed to stand still
+    on a late autumn afternoon
+
+ISTANTE_PRECISO_SURREALISTA
+    in a moment of extreme confusion
+    in a second of pure absurdity
+    on a day the calendar did not remember
+    [NELL_ATTIMO_IN_CUI] his tea was still hot
+    [NELL_ATTIMO_IN_CUI] his socks vanished into another dimension
+    [NELL_ATTIMO_IN_CUI] time tied itself in a knot
+    [NELL_ATTIMO_IN_CUI] two plus two made five
+    [NELL_ATTIMO_IN_CUI] the moon grew tired of being round
+    [NELL_ATTIMO_IN_CUI] the sun decided to take a day off
+    [NELL_ATTIMO_IN_CUI] the wind stopped blowing
+    [NELL_ATTIMO_IN_CUI] a penguin disguised itself as a flamingo
+
+NELL_ATTIMO_IN_CUI
+    at the { precise | } moment when | just as | the instant that
+
+GIORNO_DELLA_SETTIMANA
+    Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday
+
+LUOGO_PROEMIO
+	in a faraway, faraway land | in a place so far out in the middle of nowhere that nobody remembers it
+	in Nowheresville, back when they still shod the geese | at the end of the world | on top of Mount Doom
+	on the slopes of the most active volcano in the world | in the Bog of Eternal Stench
+	in an enchanted land | in a land whose name only the old folk remember
+	in a little village in the mountains | in a village by the sea | beside a lake
+	in a cave | in a hole in the ground | on the ridge of a hill | behind the municipal dump
+	in a crumbling castle | in an ill-famed dive | in a den | in a lair fit for witches
+	next to the municipal incinerator | in a godforsaken place
+	in a galaxy far, far away | under a manhole | in an enchanted wood
+	in a { bog | marsh } { bewitched | cursed | } | in an ammunition depot | inside a sewer
+	in the far South | in the cold North | in the mysterious East | in the West | in the Land of Toys
+	in the Land of Plenty | in the criminal asylum | behind the soccer field
+	in a stinking cave inhabited by spineless bandits | inside an abandoned prison
+	in the sewers of a city that no longer had a name | in a deconsecrated convent full of ghosts
+	under the foundations of a church | in an inn where the wine was always bad
+
+FATTO_PROEMIO
+	[VIVEVA] [CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA]
+	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], practised skipping meals
+	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], trained for cross-country running against the king's guards for [CRIMINE]
+	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], was wanted for [CRIMINE]
+	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], { was in the habit of | made a habit of | was fond of } [ABITUDINE]
+
+VIVEVA
+    there lived | there dwelled | there lurked | there skulked | there hid | there laid low
+    there scraped by | there made a not entirely honest living | there bivouacked
+
+CONOSCIUTO_COME
+    called
+    also known as
+    otherwise known as
+    otherwise called
+    whom his enemies called
+    whom the whole country knew as
+    whom his friends named
+    whom everybody knew as
+    whose name was by now forgotten since everybody called him
+    to his friends simply
+    whom the hangman knew all too well as
+
+ABITUDINE
+	running away from the king's guards for [CRIMINE] | hiding from justice for [CRIMINE]
+	skinning travellers | trying his luck in taverns and dives
+	trading in weapons and human organs | robbing little old ladies | getting blood out of turnips
+	bullying the weak | making himself scarce for [CRIMINE]
+	playing chess and losing to his [ANIMALE_DA_COMPAGNIA]
+	chasing maidens without success, being uglier than his [ANIMALE_DA_COMPAGNIA]
+	telling tall tales at the market in exchange for a crust of bread | betting his soul at dice in an ill-famed dive
+	quarrelling furiously with mirrors | shouting insults at cats from the window of his hovel
+	pilfering coins from public fountains | feigning blindness to beg at crossroads
+	belching and farting in public without shame | running up gambling debts with no hope of paying
+	harassing the village women with vulgar jokes | stealing laundry from the neighbours' clotheslines
+
+CRIMINE
+	parking violations | poaching chickens | nighttime disturbances | unseemly behaviour
+	drunk and disorderly conduct | aggravated fraud against the villagers
+	having bedded other men's wives | having bedded other women's husbands | having bedded other people's animals
+	stealing the church offerings | his { dreadful | nefarious | } habit of collecting other people's things
+	theft, looting and arson
+	blasphemy in a public place | smuggling smoked herring | illegal possession of a pet dragon
+	public insults to royalty | frequenting dives where music was played without a licence
+	fraud against the treasury | theft of crockery from convents | seduction of wealthy widows
+	illegal trafficking of false relics | public defamation of illustrious persons
+	failure to pay taxes for three generations | running an illegal gambling den | cowardice in battle
+
+ANIMALE_DA_COMPAGNIA
+	cat | hamster | goldfish | canary | dog | donkey | mule | ferret | parrot | hedgehog
+
+CREAZIONE_PROTAGONISTA
+	[*NOME_PROTAGONISTA] [*COGNOME_PROTAGONISTA]
+	[COGNOME_PROTAGONISTA=Romy] [NOME_PROTAGONISTA=Jonah] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
+	[NOME_PROTAGONISTA=Luke] [COGNOME_PROTAGONISTA=Violet] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
+	[NOME_PROTAGONISTA=Max] [COGNOME_PROTAGONISTA=Capper] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
+	[NOME_PROTAGONISTA=Maximilian] [COGNOME_PROTAGONISTA=Falconer] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
+	[NOME_PROTAGONISTA=Andrew] [#NOME_PROTAGONISTA] [COGNOME_STOPPIONI]
+    [NOME_PROTAGONISTA=the Vox] [#NOME_PROTAGONISTA]
+
+PROTAGONISTA
+	[*NOME_PROTAGONISTA] | [*SOPRANNOME_PROTAGONISTA]
+
+NOME_PROTAGONISTA
+	[NOME_MASCHILE]
+
+COGNOME_PROTAGONISTA
+	[COGNOME]
+
+RACCONTO
+	^[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_3] [RACCONTO_P_4] [RACCONTO_P_5] [MORALE]
+	^[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_6]
+	^[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_7]
+
+RACCONTO_BREVE
+    { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] \
+        [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] { he | [#NOME_PROTAGONISTA] } decided to [DECISIONE_1] and [DECISIONE_2] [DECISIONE_DOVE]. \
+        [RACCONTO_P_2] [RACCONTO_P_3] [RACCONTO_P_4] [RACCONTO_P_5] [MORALE]
+    { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] \
+        [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] { he | [#NOME_PROTAGONISTA] } decided to [DECISIONE_1] and [DECISIONE_2] [DECISIONE_DOVE]. \
+        [RACCONTO_P_2] [RACCONTO_P_6]
+    { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] \
+        [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] { he | [#NOME_PROTAGONISTA] } decided to [DECISIONE_1] and [DECISIONE_2] [DECISIONE_DOVE]. [RACCONTO_P_7]
+
+RACCONTO_P_1
+	{ [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] | One day }[MOTIVAZIONE], { he | [#NOME_PROTAGONISTA] } decided to [DECISIONE_1] and [DECISIONE_2] [DECISIONE_DOVE].
+
+MOTIVAZIONE
+    , enlightened on the road to Damascus
+    , having had a mystical revelation
+    , fed up with the { constant | } bullying { by { the neighbours | his friends } | that his beasts put him through }
+    , fed up with the { jokes | rumours | slander | nasty things that were said } about him
+    , tired of the financial hardship he was in
+    , for no apparent reason
+    , { apparently | probably } because of { the spring | the summer heat | a sunstroke }
+    , because of an extremely high testosterone level
+    , because of some business deals gone wrong
+    , to escape the creditors who were hunting him
+    , to do something different from the usual
+    , to improve his social relations
+    , to feel the thrill of the unexpected
+    , since his brain had definitively shut down
+    , since his { dog | cat | parrot | canary | goldfish } had run away
+    , tired of never winning the { bridge | whist | cribbage | poker } tournaments
+    , fed up with the shade that { the pines | the oaks | the trees | the firs | the poplars } cast on his house
+    , exasperated by yet another quarrel with his mother-in-law
+    , in the grip of a particularly violent midlife crisis
+    , convinced that elsewhere the grass was greener (and the chickens fatter)
+    , after consulting a decidedly dismal horoscope |
+    , fed up with being ignored even by stray dogs
+    , with the absolute certainty that the world owed something to his mediocrity
+    , suspecting that the neighbours were plotting against him
+    , because he had been seized by an irrepressible urge to cause a ruckus
+    , convinced he had been betrayed by an imaginary friend
+    , because a sparrow had screamed an incomprehensible prophecy at him
+    , tired of pretending to have a dignity he did not possess
+    , to escape the only three friends who still tolerated him
+// Il carattere pipe sopra indica una motivazione vuota
+
+DECISIONE_1
+	tell everyone to get lost | clear off | get out of everybody's sight | pack up his things
+	pack his bundle | move house | vanish | cover his tracks | disappear like Keyser Soze
+	move on | vanish into thin air | change residence | leave | evaporate | disappear
+	clear out in a great hurry | cut and run | vanish like a carnival magician
+
+DECISIONE_2
+	go off to [DELINQUERE] | go off looking for [QUALCOSA]
+	go hunting the king's deer | go hunting for glory
+	seek glory | try his luck | defy adversity
+	go and throw punches for sport | enter the service of some disreputable lordling
+	try to redeem his reputation (a hopeless task) | defy fate and lose his bones
+
+DELINQUERE
+    commit crimes | steal [OGGETTI_DA_RUBARE] | swindle [VITTIME] | scratch other people's car doors
+	commit his crimes | rob [VITTIME] | hoodwink [VITTIME] | fleece the gullible | organise clandestine gambling dens
+	sell fake relics to naive pilgrims | forge documents in inheritance disputes
+
+OGGETTI_DA_RUBARE
+	cars | gold | horses | head of cattle | clothing | money and stocks | chickens | precious embroideries | sacred relics
+
+VITTIME
+	unlucky souls | little old ladies | poor wretches | suckers | orphans | beggars | pilgrims | tax collectors
+
+QUALCOSA
+	fortune | a wife | money and fame | innocent victims | glory and riches | something to eat
+	enormous riches | mountains of jewels | a hot meal | a little respect
+
+DECISIONE_DOVE
+	elsewhere | somewhere else | in other places | in other lands | abroad | to the ends of the earth
+	in remote countries | in other regions | in the nearby city | in unexplored lands
+	in lands unknown to most | at the South Pole | at the North Pole | where the sun sets
+	where the sun rises | to the West | to the East | to hell and gone
+	at the edge of the nearest Kingdom | in the mists of the North | where nobody knew his name
+
+RACCONTO_P_2
+	That is how, [RACCONTO_P_2_QUANDO], he set off, [RACCONTO_P_2_FORNITO_DI] [*EQUIPAGGIAMENTO].
+
+RACCONTO_P_2_QUANDO
+	as soon as the sun rose | at dawn | at noon | at sunset | at the beginning of spring | at the beginning of summer
+	in the first days of autumn | in the middle of winter | with the first warm days | on the Feast of the Assumption | on the Ides of March
+	around midnight | after the changing of the guard | at the first government crisis | right after lunch | after he had digested
+	at half past eleven | at the changing of the guard | as soon as it was possible | as soon as the moment was favorable | the next day
+
+RACCONTO_P_2_FORNITO_DI
+	{ having with him | provided with | kitted out with | having procured | dragging along | equipped with } \
+	    [EQUIPAGGIAMENTO={ [EQUIPAGGIAMENTO_CIBO] | [EQUIPAGGIAMENTO_ANIMALE] | [EQUIPAGGIAMENTO_ARMA] | [EQUIPAGGIAMENTO_FUCILE] | [EQUIPAGGIAMENTO_ALTRO] }]
+	shouldering [EQUIPAGGIAMENTO=[EQUIPAGGIAMENTO_FUCILE]]
+	armed with [EQUIPAGGIAMENTO=[EQUIPAGGIAMENTO_ARMA]]
+	accompanied by [EQUIPAGGIAMENTO=[EQUIPAGGIAMENTO_ANIMALE]]
+
+EQUIPAGGIAMENTO_CIBO
+	a flask of wine | a flask of Chianti | a piece of cheese | a kilo of coffee | a hundred grams of butter | a sack of walnuts
+	a wineskin of { watered-down | } wine
+
+EQUIPAGGIAMENTO_ANIMALE
+    a guard duck | a sheepdog | a capercaillie to eat for breakfast | a dyslexic chick | a pet wolf
+    a learned donkey | a three-humped camel | a black cat | a trained raven | a draft horse
+
+EQUIPAGGIAMENTO_ARMA
+	a blunt dagger | a kitchen knife | [EQUIPAGGIAMENTO_FUCILE]
+
+EQUIPAGGIAMENTO_FUCILE
+    { a | a rusty | an old | an old rusty } { rifle | musket }
+
+EQUIPAGGIAMENTO_ALTRO
+    a remote-controlled magic device | a threadbare cloak | a grimoire he had never read | a sack of manure | a heap of tin
+    a cartload of fertilizer | a checkered handkerchief | a kilo of snot
+
+// Gli antagonisti cominciano tutti per consonante: davanti compare "a" (mai "an")
+RACCONTO_P_3
+	^[RACCONTO_ECCO_CHE] a [*ANTAGONISTA], [*ATTRIBUTO_ANTAGONISTA]. [PENSIERO] [RACCONTO_P_3_DISSE] [RACCONTO_P_3_PENSANDO] the [TAPINO].
+
+RACCONTO_ECCO_CHE
+	there he met | suddenly he saw | coming towards him was | blocking his path he found | after a few steps there appeared
+	as soon as he left the house there appeared | as soon as he left the village there appeared | right outside the town he saw | as he turned the corner he met
+	after a few steps there came towards him | having turned the corner he saw | at the end of the road there appeared before him
+	right around the corner he bumped into | he had barely time to breathe before he saw
+
+ANTAGONISTA
+	[ANIMALE] | [PERSONAGGIO]
+
+ANIMALE
+	wolf | kobold | donkey | billy goat | wild dog | pig | toad | boar | bull | chameleon
+	hoot owl | tapir | pigeon | lion | minotaur | snake | lone sparrow | dragon | cerberus | basilisk
+	griffin | troll | cyclops
+
+PERSONAGGIO
+	soldier | wizard | merchant | sailor | musician | perfume salesman
+	fisherman | blacksmith | wayfarer | passerby | necromancer | fishmonger | peasant
+	weaver | knight | warlord | sea captain | judge
+	nanny | thug | thief | pirate | buccaneer | smuggler
+	hedge-witch | peddler of rubber ducks | town crier | charlatan | landlord
+
+ATTRIBUTO_ANTAGONISTA
+	a werewolf | fat and bald | as annoying as a stomachache | smiling | stinking | shady
+	wicked | tired | worn out | absolutely furious | happy | content | sad | slothful
+	suspicious | calm | raging | joyful | sweaty | overheated | thirsty | furious | arrogant
+	an outcast | at the very least dubious | with a crest | with horns | with a forked tongue
+	mangy | with pestilential breath | patently drunk | with an unreassuring look
+	visibly suffering from an existential crisis | extraordinarily ordinary | sadly banal
+	ridiculously pompous | smelling of vinegar and regret | with pockets full of money that was not his
+	looking like someone who has lost an important bet | as dirty as a pan unwashed for years
+	with the air of someone who has just failed an undertaking | muttering curses against people dead for centuries
+
+PENSIERO
+	“It will be hard to get rid of this [*ANTAGONISTA]”
+	“What a lucky encounter!”
+	“What unexpected luck”
+	“This is the icing on the cake, no, a [*ANTAGONISTA] [POSIZIONE_DISDICEVOLE]”
+	“Just what I was waiting for!”
+	“What a stroke of luck!”
+	“Fortune smiles upon me”
+	“Fortune is against me”
+	“What a sad fate”
+	“What an unexpected encounter!”
+	“What fair wind brings him here?”
+	“Here is my chance for glory!”
+	“This bad luck again!”
+	“A filthy individual, just the way I like them!”
+	“If I can swindle him, I'll gamble it all at dice!”
+	“At last, someone unluckier than me!”
+	“What a fine subject to exploit!”
+	“He looks terribly like me, we're probably related!”
+	“Now fortune is looking at me from the right side!”
+
+POSIZIONE_DISDICEVOLE
+	in the embers | with his face under my shoes | with the marks of my hands on his snout
+	ready to be plucked | offering himself as a sacrificial victim | serving as a scapegoat
+	{ destined | ready } to suffer the { cruelties of destiny | slings of fortune }
+	with his rear exposed to public ridicule | now good only to be made into a rug
+
+RACCONTO_P_3_DISSE
+    , he said to himself,
+    , he muttered,
+    , was his first impression,
+    , immediately came to his mind,
+    , he reasoned to himself,
+    , he imagined,
+    , he thought at first glance,
+    , he declared without hesitation,
+
+RACCONTO_P_3_PENSANDO
+	thinking of practising his marksmanship on
+	thinking of swindling – no, of striking some profitable deal with
+	planning to massacre without restraint, for the clear purpose of robbery,
+	pondering whether to let pass or to kill
+	hoping to make friends with
+	planning to team up with
+	wondering whether to ignore, rough up or swindle
+	figuring he could trick
+	hoping to wheedle a few coins out of
+	wondering whether it was wiser to flee from or to face
+
+TAPINO
+	poor devil | poor wretch | unfortunate | hapless fellow | wretch | poor soul | poor thing | poor fool | luckless one | [*ANTAGONISTA]
+
+RACCONTO_P_4
+	^[IN_REALTA] [*PROTAGONISTA] discovered that the [*ANTAGONISTA] was [CHI_ERA_L_ANTAGONISTA], he was promptly [RIDOTTO_COME].
+
+IN_REALTA
+	in fact, as soon as | to tell the truth, as soon as | but as soon as | however, as soon as | nevertheless, when
+
+CHI_ERA_L_ANTAGONISTA
+	the national karate champion | the national boxing champion | the national champion of slaps in the face
+	an expert player of knucklebones | a champion of tavern brawls | the leader of a band of bandits
+	the head of the king's guards | a well-known mercenary captain with his troops in tow | an expert thug
+	the leader of a band of bandits | the local Ju-Jitsu champion | a master at wielding a club
+	a champion in the use of the saber
+	the much-decorated veteran of a hundred tavern brawls | a wrestler of { at least regional | national | world } fame
+
+RIDOTTO_COME
+	brought to a more reasonable frame of mind | mercilessly massacred | disintegrated by a hail of blows
+	reduced to a bloody mask | reduced to a knot of pain | given a proper beating
+	kicked around like a dog in church
+	{ violently | abruptly | forcibly | } led to { rethink his plans | a more reasonable frame of mind }
+	reduced to such { wretched | pitiable } condition that not even [SAMARITANO] could have helped him
+	rushed off to the nearest doctor | reduced to begging forgiveness on his knees
+
+SAMARITANO
+	the Good Samaritan | the Fairy with Turquoise Hair | Santa Claus | Merlin the Wizard | the Tooth Fairy
+	the Genie of the Lamp | the best of doctors
+
+RACCONTO_P_5
+	That is how he had to give up [*EQUIPAGGIAMENTO? | his bundle], lost [VINTO_COME], getting in return [OGGETTO_SPREGEVOLE].
+
+OTTENUTO
+	won [VINTO_COME] | stolen from the soldiers of the nearby fort | stolen from an old lady
+	stolen from a poor man | snatched through the window of the neighbours' house
+
+VINTO_COME
+	playing cards | playing darts | running away from the soldiers of the nearby fort
+	playing dice | playing morra | playing knucklebones | betting on horses
+	at the dog races | in the national lottery | playing in an ill-famed tavern
+	on a coin toss | at rock-paper-scissors | betting on the outcome of a race between { snails | tortoises }
+
+OGGETTO_SPREGEVOLE
+	a magic duck that could predict when it would end up in the pan
+	a pedal-powered shuttlecock | an electronic bottle opener | a battery-powered moped | a battering ram
+	a used condom | a piece of iron | a rusty nail | an empty chest
+	a rusty cap | a chocolate bunny | an anti-pigeon device
+	an umbrella blown inside out by the wind | a broken mirror (seven years of bad luck included)
+	a crumpled rag that promised riches | a lone boot of the wrong size
+	a (fake) gold tooth | a book on meditation never opened | a pair of odd socks from other dimensions
+	a canvas bag containing only rags and promises | a treasure map that leads to a sewer
+	a key that opens every door except the one that is needed | a coin that changes value every day
+
+RACCONTO_P_6
+	^[RACCONTO_ECCO_CHE] a [*ANIMALE], [*ATTRIBUTO_ANTAGONISTA]. [BACIAMI] [REAZIONE_PROTAGONISTA]
+
+BACIAMI
+	“I was turned into a [*ANIMALE] by [CREAZIONE_MAGO_CATTIVO][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO_AGGETTIVO][#MAGO_CATTIVO] \
+	    because [MOTIVAZIONE_TRASFORMAZIONE], but if [BUONA_AZIONE], [MI_VEDRAI_TORNARE] a certain [PERSONAGGIO], \
+	    [ATTRIBUTO_ANTAGONISTA].”
+
+CREAZIONE_MAGO_CATTIVO
+	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Merlin the Wizard][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Madame Magoo][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=the ][MAGO_CATTIVO_ARTINDET=a ][MAGO_CATTIVO=fairy][MAGO_CATTIVO_AGGETTIVO=very touchy ]
+	[MAGO_CATTIVO_ARTDET=the ][MAGO_CATTIVO_ARTINDET=a ][MAGO_CATTIVO=fairy][MAGO_CATTIVO_AGGETTIVO=despicable ]
+	[MAGO_CATTIVO_ARTDET=the ][MAGO_CATTIVO_ARTINDET=a ][MAGO_CATTIVO=wizard][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=the ][MAGO_CATTIVO_ARTINDET=a ][MAGO_CATTIVO=necromancer][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=the ][MAGO_CATTIVO_ARTINDET=a ][MAGO_CATTIVO=sprite][MAGO_CATTIVO_AGGETTIVO=mischievous ]
+	[MAGO_CATTIVO_ARTDET=the ][MAGO_CATTIVO_ARTINDET=an ][MAGO_CATTIVO=sorcerer][MAGO_CATTIVO_AGGETTIVO=evil ]
+	[MAGO_CATTIVO_ARTDET=the ][MAGO_CATTIVO_ARTINDET=a ][MAGO_CATTIVO=occultist][MAGO_CATTIVO_AGGETTIVO=furious ]
+	[MAGO_CATTIVO_ARTDET=the ][MAGO_CATTIVO_ARTINDET=a ][MAGO_CATTIVO=conjuring wizard][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=the ][MAGO_CATTIVO_ARTINDET=an ][MAGO_CATTIVO=alien from the fifth dimension][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=the ][MAGO_CATTIVO_ARTINDET=a ][MAGO_CATTIVO=witch][MAGO_CATTIVO_AGGETTIVO=hook-nosed ]
+	[MAGO_CATTIVO_ARTDET=the ][MAGO_CATTIVO_ARTINDET=a ][MAGO_CATTIVO=wise old man][MAGO_CATTIVO_AGGETTIVO=foul-tempered ]
+	[MAGO_CATTIVO_ARTDET=the ][MAGO_CATTIVO_ARTINDET=a ][MAGO_CATTIVO=gnome][MAGO_CATTIVO_AGGETTIVO=touchy ]
+
+MOTIVAZIONE_TRASFORMAZIONE
+	I had { drunk | guzzled } { all of the [SOSTANZA_ALCOOLICA_MASCHILE] | all of the [SOSTANZA_ALCOOLICA_FEMMINILE] } in the cellar
+	I had eaten all of the [FRUTTA] in the orchard
+	I had stolen all the [POSSEDIMENTI] on the estate
+	I had made fun of them behind their back
+	I had had an intimate relationship with [PARENTE_MAGO_CATTIVO]
+	I amused myself playing the bass drum under their windows
+	I had rung their doorbell out of spite
+	I had broken a window with a football
+	I had slashed the tyres of their car
+	I had copied their arithmetic homework
+	I had sneaked into their garden to steal pumpkins
+	I had told them lies about their origins | I had spread gossip about their family
+	I had shouted insults at them in the square | I had ruined their reputation
+	I had stolen their sweetheart and then abandoned them | I had fed spoiled food to their horse
+	I had taught their child terrible swear words | I had convinced their spouse that they had someone else
+
+SOSTANZA_ALCOOLICA_MASCHILE
+	cordial | gin | vermouth | cognac | wine | whiskey | rum | schnapps | bitters | cider
+
+SOSTANZA_ALCOOLICA_FEMMINILE
+    grappa | beer
+
+FRUTTA
+	apples | pears | cherries | watermelons | nectarines | walnuts | bananas | apricots | plums
+
+POSSEDIMENTI
+	cows | sheep | goats | hens | concubines | geese
+
+PARENTE_MAGO_CATTIVO
+	their daughter | their son | their mother | their father | their sister | their brother | their grandmother | their grandfather | their aunt
+	their uncle | their cousin | their brother-in-law | the cousin of the brother of their father's roommate
+
+BUONA_AZIONE
+	you kiss me | you lick my paws | you lick my back | you wash me | you make me do three somersaults
+	you pick off the fleas and ticks that infest me | you can stand my smell
+	you beat me in a belching contest | you beat me at arm wrestling | you take off these magic slippers
+	you shave me completely | you badmouth me to your friends | you scream into my ears | you treat my hemorrhoids
+	you let yourself be skinned | you let yourself be kissed | you throw yourself off that cliff | you let yourself be robbed
+	you let yourself be used as a means of transport | you let yourself be sodomised | you let yourself be shaved bald | you let your ears be cut off
+	you act as lookout for my next robberies | you act as an accomplice in my crimes | you take pity on me
+	you fight [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO]
+	you tell me a decent joke (a Herculean task) | you bring me breakfast in bed for a month
+
+MI_VEDRAI_TORNARE
+	I will be able to become again | I will be able to be again | you will see me return as | I will turn back into
+	the { curse | spell } will { end | vanish } and I will be once more
+
+REAZIONE_PROTAGONISTA
+	[PENSIERO_PROTAGONISTA], thought [*PROTAGONISTA], and did the good deed. [LIETO_FINE]
+	[PENSIERO_PROTAGONISTA], thought [*PROTAGONISTA]; but that answer was taken as a refusal by the [*ANIMALE], so \
+	    [*PROTAGONISTA] was [RIDOTTO_COME].
+	[PENSIERO_PROTAGONISTA], said [*PROTAGONISTA], and consented. [LIETO_FINE]
+	[PENSIERO_PROTAGONISTA], replied [*PROTAGONISTA]. [APPARIZIONE_MAGO_CATTIVO] \
+	    [CREAZIONE_MAGO_CATTIVO][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO_AGGETTIVO][#MAGO_CATTIVO] [MAGO_CATTIVO_APOSTROFA] [FRASE_MAGO_CATTIVO], and \
+	    [*PROTAGONISTA] was in turn turned into a [ANIMALE], [ATTRIBUTO_ANTAGONISTA].
+	[PENSIERO_PROTAGONISTA], replied [*PROTAGONISTA]. But the [*ANIMALE] said to him: [FRASE_MAGO_CATTIVO], and our man \
+	    was [RIDOTTO_COME].
+
+PENSIERO_PROTAGONISTA
+	“Sounds like a good deal” | “No way” | “I've been waiting my whole life for an opportunity like this”
+	“Sure, why not?”
+	“But of course!” | “It's always been my dream!” | “I'll do it right away!” | “It's the dream of my life!”
+	“I couldn't wait!” | “Just what I was waiting for!”
+	“Who would have thought it!” | “Better than nothing!”
+
+APPARIZIONE_MAGO_CATTIVO
+	At which point there materialised | And lo, there appeared | From under a { boulder | manhole | tree } there came
+	Out of a cloud of smoke there burst | There appeared, however, | There teleported in, however, | He was, however, spotted by
+	Out of nowhere, amid thunder and lightning, there appeared | From a dusty mirror there emerged
+
+MAGO_CATTIVO_APOSTROFA
+	who said to him: | who addressed him thus: | who gave him the following admonition: | who thundered:
+	who addressed him curtly: | who huffed: | who shouted:
+
+FRASE_MAGO_CATTIVO
+	“Here your wickedness comes out into the open!”
+	“Are you really so insensitive to the misfortunes of others?”
+	“You are truly a slacker!”
+	“You are a scoundrel and you will be punished!”
+	“How can you speak like this!”
+	“You are the sum of all the evil in the world!”
+	“You are the most despicable person I have ever seen!”
+	“You are truly a terrible person!”
+	“You will learn respect, sooner or later!”
+
+LIETO_FINE
+	The two married and lived happily ever after.
+	The two became the best friends ever seen.
+	The two parted as good friends, [VINTO_COME].
+	The two became friends and started to [ATTIVITA_CRIMINOSE] together until they were [FINACCIA] for [CRIMINE].
+	The two opened a { dive | tavern | brothel } together and lived, all things considered, happily.
+
+ATTIVITA_CRIMINOSE
+	commit robberies, thefts and muggings
+	park the cart in a no-parking zone
+	massacre defenseless peasants
+	steal like there's no tomorrow
+	kidnap innocent virgins
+	steal the tyres from the neighbours' cars
+	hunt squirrels
+	mistreat the poor
+	pluck other people's chickens under cover of darkness
+	organise rigged card tournaments
+	circulate fake coins at the market | pass off water as wine in disreputable taverns
+	run pyramid schemes promising easy riches | teach children the art of pickpocketing
+	desecrate cemeteries in search of gold rings | extort money with dirty blackmail
+	smuggle sacred relics across the borders of other kingdoms | seduce widows to plunder their inheritances
+
+FINACCIA
+	arrested | taken to the gallows | exiled | jailed | found guilty | crucified | impaled
+	sentenced | banished | put in the stocks | tarred and feathered | garroted
+	reduced to penniless beggars | dragged into exile with their tails between their legs | publicly declared infamous
+
+MORALE
+	[PENSIERO_PROFONDO], [CONCLUSE], [CHIOSA].
+
+PENSIERO_PROFONDO
+	“Every cloud has a silver lining”
+	“The cat goes to the lard so often that it leaves its paw there”
+	“They don't make seasons like they used to”
+	“It's raining; blame the government”
+	“Make yourself a sheep and the wolf will eat you”
+	“What a world”
+	“The things one has to do to make a living”
+	“He who laughs last laughs best”
+	“It doesn't end here, you'll see me again”
+	“Blessed are the easily pleased”
+	“A barking dog never bites”
+	“Better an egg today than a hen tomorrow, as long as it isn't stolen”
+	“Life is like an inn: full of drunks and swindles”
+	“Money isn't everything, but nothing is even less”
+	“If you can steal, why work?”
+	“Virtue is the refuge of the mediocre”
+	“Whoever dies paying his debts at least dies consistent”
+	“Honesty is a disease that cures itself with time”
+
+CONCLUSE
+	he thought to himself
+	he concluded
+	he thereby understood
+	he observed
+	he sighed
+
+CHIOSA
+	returning where he had come from
+	setting off towards other adventures
+	sailing off to seek his fortune
+	running away from his creditors
+	fleeing from an enraged { crowd | multitude }
+	muttering assorted curses
+	vowing never to change his vices | continuing to lie as if there were no tomorrow
+	quarrelling with his personal ghosts
+	trying to forget in an even seedier dive | hoping nobody would recognise him
+	planning new swindles from here to eternity | trusting in chance and desperation
+
+RACCONTO_P_7
+	One day, while [ATTIVITA_SPREGEVOLE], he heard that [NOTIZIA]
+
+ATTIVITA_SPREGEVOLE
+	skinning ducks | plucking chickens | robbing travellers
+	drinking { like a fish | without restraint | as if there were no tomorrow } in a disreputable { dive | tavern }
+	robbing passersby | killing flies | scavenging for food in other people's gardens
+	minding his own business | strolling through crossroads and alleys | trying to storm a stranded ship
+	planning to attack a caravan | planning the heist of the century | holding up a stagecoach
+	scratching car doors | smashing shop windows | slashing car tyres | double-parking
+	shearing sheep that weren't his | selling fake tickets for the village show
+	betting everything at dice in an underground dive | insulting passersby from the balcony of a seedy little room
+	trying to seduce nuns with promises of marriage | spreading gossip for money in the squares
+	piling up debts with no hope of paying them | pretending to be rich to squeeze loans out of suckers
+	rigging competitions with his livestock | teaching children how to make money dishonestly
+
+NOTIZIA
+	the king had asked for help to save his daughter [*CREA_NOME_PRINCIPESSA], a princess who was [*ATTRIBUTO_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
+	an ogre had kidnapped the king's daughter, [*NOME_PRINCIPESSA], a princess who was [*ATTRIBUTO_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
+	a villain had carried off the heir to the throne in the night, Princess [CREA_NOME_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
+
+ATTRIBUTO_PRINCIPESSA
+	very thin | quite obese | truly ugly but filthy rich | unpleasant
+	ugly as death | as likable as taxes | truly gorgeous | melancholy
+	charming | bald
+	clumsy | touchy | blessed with a legendary bad temper
+
+CREA_NOME_PRINCIPESSA
+	[*NOME_PRINCIPESSA] | [*NOME_PRINCIPESSA] [NOME_FEMMINILE]
+
+NOME_PRINCIPESSA
+    [NOME_FEMMINILE]
+
+SVOLGIMENTO_PRINCIPESSA
+	[*NOME_PROTAGONISTA], of course, couldn't care less, and the poor girl came to a { sorry end | sad end | miserable end }.
+	After countless adventures [*NOME_PROTAGONISTA] { managed to save | saved } \
+	    { [#NOME_PRINCIPESSA? | the princess] | the princess, who was [*ATTRIBUTO_PRINCIPESSA] }. [LIETO_FINE]
+	[*NOME_PROTAGONISTA] set off, crossing [LUOGO_1] and [LUOGO_2], until he reached [LUOGO_3] \
+	    where the princess, who was [*ATTRIBUTO_PRINCIPESSA], was [TENUTA_IN_CATTIVITA] by \
+	    [CREAZIONE_MAGO_CATTIVO][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO_AGGETTIVO][#MAGO_CATTIVO]. [SVOLGIMENTO_PRINCIPESSA_2]
+
+LUOGO_1
+	hills | mountains | marshes | woods | canals | rivers | lakes | caves | pastures | meadows | seedy suburbs
+	dark alleys | rocky gorges | heaths | bogs
+
+LUOGO_2
+	seas | plains | peat bogs | villages | cities | castles | bridges | inns | dives | dumps | seedy ports
+	village fairs
+
+LUOGO_3
+	a castle | a fort | a cave | a lair | a hut | a village | a hovel | a ruined tower
+	a den of bandits
+
+TENUTA_IN_CATTIVITA
+	held prisoner | kept as a lady-in-waiting | kept as a scullery maid | kept as a scapegoat | locked up in a keep | forced to wash { the dishes | the floors | dishes and floors } | kept on bread and water | kept on short rations
+
+SVOLGIMENTO_PRINCIPESSA_2
+	After striking a deal with [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO] for [30_DENARI], [*PROTAGONISTA] went home \
+	    to [ATTIVITA_CRIMINOSE], leaving [*NOME_PRINCIPESSA] to her sad fate.
+	After fighting [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO], [*PROTAGONISTA] was turned into a \
+	    [*ANIMALE], [*ATTRIBUTO_ANTAGONISTA].
+	After bribing [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO], [*PROTAGONISTA] married Princess \
+	    [*NOME_PRINCIPESSA]. [LIETO_FINE]
+	After getting a good look at [*NOME_PRINCIPESSA]'s face, [*PROTAGONISTA] preferred to marry [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO].
+
+30_DENARI
+	30 denarii | a wheel of cheese | a crust of bread | a considerable sum of money | a herd of oxen
+	a bag of coins | a lifetime supply of { [SOSTANZA_ALCOOLICA_MASCHILE] | [SOSTANZA_ALCOOLICA_FEMMINILE] }
+	a piece of bread | a holed coin | a case of excellent wine | an IOU never honoured
+
+#include <nomi_en.txt>

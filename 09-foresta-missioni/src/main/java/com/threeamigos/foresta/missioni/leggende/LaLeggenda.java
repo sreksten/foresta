@@ -186,7 +186,8 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 	@Override
 	public String getNome() {
 		OggettoLeggendario leggendario = getLeggendario();
-		return leggendario == null ? "Una leggenda" : "Recupera " + leggendario.getNomeBreve();
+		return leggendario == null ? Testi.formatta("missioni", "LaLeggenda.nomeSenzaOggetto")
+				: Testi.formatta("missioni", "LaLeggenda.nomeRecupera", leggendario.getNomeBreve());
 	}
 
 	@Override
@@ -276,7 +277,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 		String breve = leggendario.getNomeBreve();
 		boolean plurale = breve.startsWith("gli ") || breve.startsWith("i ") || breve.startsWith("le ");
 		return racconto
-				.narra(Testi.formatta("missioni", "LaLeggenda.s3", (plurale ? "riposano" : "riposa"), getNomeDeiGuardiani()))
+				.narra(Testi.formatta("missioni", "LaLeggenda.s3", Testi.formatta("missioni", plurale ? "LaLeggenda.verboRiposano" : "LaLeggenda.verboRiposa"), getNomeDeiGuardiani()))
 				.parlaIlCapo(Testi.formatta("missioni", "LaLeggenda.1", breve))
 				.narra(Testi.formatta("missioni", "LaLeggenda.s4"))
 				.parlaIlCapo(Testi.formatta("missioni", "LaLeggenda.2"))

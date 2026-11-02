@@ -2,6 +2,7 @@ package com.threeamigos.foresta.combattimento;
 
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.eventi.interni.InternoAzioneInCombattimento;
 import com.threeamigos.foresta.eventi.notifiche.NotificaColpoMancato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
@@ -43,8 +44,9 @@ public final class AttaccoConLeArmi {
 	private static void annunciaEAttacca(Personaggio attaccante, Personaggio bersaglio) {
 		Logger.log(() -> attaccante.getNome() + " attacca " + bersaglio.getNome());
 		// Gli avversari della stessa specie si distinguono per il numero ("La viverna 2"), quindi sempre l'articolo determinativo
-		String messaggio = attaccante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" attacca " + bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.';
+		String messaggio = Testi.formatta("messaggi_combattimento", "ATTACCO",
+				attaccante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA),
+				bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 		BusEventi.pubblica(new NotificaTestoFrase(messaggio));
 		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(attaccante, bersaglio)) {
 			if (bersaglio.isFuoriCombattimento()) {

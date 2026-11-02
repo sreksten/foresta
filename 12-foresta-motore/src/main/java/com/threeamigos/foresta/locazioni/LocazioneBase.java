@@ -833,7 +833,7 @@ public abstract class LocazioneBase implements Locazione {
 						if (offerta.isGratuita(gruppo, gruppoAvversario)) {
 							offerta.accetta(gruppo, gruppoAvversario);
 						} else {
-							BusEventi.pubblica(new NotificaTestoFrase("Accetta?"));
+							BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.accetta")));
 							BusEventi.pubblica(new RichiestaSelezioneSiNo());
 							statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
 							return Stato.IN_LOCAZIONE;
@@ -1999,7 +1999,7 @@ public abstract class LocazioneBase implements Locazione {
 			if (offerta.isGratuita(gruppo, gruppoAvversario)) {
 				offerta.accetta(gruppo, gruppoAvversario);
 			} else {
-				BusEventi.pubblica(new NotificaTestoFrase("Accetta?"));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.accetta")));
 				BusEventi.pubblica(new RichiestaSelezioneSiNo());
 				statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
 				return Stato.IN_LOCAZIONE;

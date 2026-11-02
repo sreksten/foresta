@@ -155,38 +155,38 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 				graphics.drawImage(doomdark, locXOffset, locYOffset, null);
 
 				locYOffset += fontMedium.getHeight();
-				graphics.drawImage(ImageCache.get("Sl:", fontMedium, color), leftXOffsetLabelSalute, locYOffset, null);
+				graphics.drawImage(ImageCache.get(TestiDellaUI.get("SIGLA_SALUTE"), fontMedium, color), leftXOffsetLabelSalute, locYOffset, null);
 				doomdark = ImageCache.get(p.getSalute(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetSalute - doomdark.getWidth(null), locYOffset, null);
 				graphics.drawImage(ImageCache.get("/", fontMedium, color), leftXOffsetSeparatoreSalute, locYOffset, null);
 				doomdark = ImageCache.get(p.getSaluteMassima(), fontMedium, colorePerAttributo(p, TipoAttributo.SALUTE, color));
 				graphics.drawImage(doomdark, rightXOffsetSaluteMassima - doomdark.getWidth(null), locYOffset, null);
 
-				graphics.drawImage(ImageCache.get("Mg:", fontMedium, color), leftXOffsetLabelMagia, locYOffset, null);
+				graphics.drawImage(ImageCache.get(TestiDellaUI.get("SIGLA_MAGIA"), fontMedium, color), leftXOffsetLabelMagia, locYOffset, null);
 				doomdark = ImageCache.get(p.getMagia(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetMagia - doomdark.getWidth(null), locYOffset, null);
 				graphics.drawImage(ImageCache.get("/", fontMedium, color), leftXOffsetSeparatoreMagia, locYOffset, null);
 				doomdark = ImageCache.get(p.getMagiaMassima(), fontMedium, colorePerAttributo(p, TipoAttributo.MAGIA, color));
 				graphics.drawImage(doomdark, rightXOffsetMagiaMassima - doomdark.getWidth(null), locYOffset, null);
 
-				graphics.drawImage(ImageCache.get("Lv:", fontMedium, color), leftXOffsetLabelLivello, locYOffset, null);
+				graphics.drawImage(ImageCache.get(TestiDellaUI.get("SIGLA_LIVELLO"), fontMedium, color), leftXOffsetLabelLivello, locYOffset, null);
 				doomdark = ImageCache.get(p.getLivello(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetLivello - doomdark.getWidth(null), locYOffset, null);
 
 				locYOffset += fontMedium.getHeight();
-				graphics.drawImage(ImageCache.get("Cr:", fontMedium, color), leftXOffsetLabelCoraggio, locYOffset, null);
+				graphics.drawImage(ImageCache.get(TestiDellaUI.get("SIGLA_CORAGGIO"), fontMedium, color), leftXOffsetLabelCoraggio, locYOffset, null);
 				doomdark = ImageCache.get(p.get(TipoAttributo.CORAGGIO), fontMedium, colorePerAttributo(p, TipoAttributo.CORAGGIO, color));
 				graphics.drawImage(doomdark, rightXOffsetCoraggio - doomdark.getWidth(null), locYOffset, null);
 
-				graphics.drawImage(ImageCache.get("Vl:", fontMedium, color), leftXOffsetLabelValore, locYOffset, null);
+				graphics.drawImage(ImageCache.get(TestiDellaUI.get("SIGLA_VALORE"), fontMedium, color), leftXOffsetLabelValore, locYOffset, null);
 				doomdark = ImageCache.get(p.get(TipoAttributo.VALORE), fontMedium, colorePerAttributo(p, TipoAttributo.VALORE, color));
 				graphics.drawImage(doomdark, rightXOffsetValore - doomdark.getWidth(null), locYOffset, null);
 
-				graphics.drawImage(ImageCache.get("St:", fontMedium, color), leftXOffsetLabelStanchezza, locYOffset, null);
+				graphics.drawImage(ImageCache.get(TestiDellaUI.get("SIGLA_STANCHEZZA"), fontMedium, color), leftXOffsetLabelStanchezza, locYOffset, null);
 				doomdark = ImageCache.get(p.get(TipoAttributo.STANCHEZZA), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetStanchezza - doomdark.getWidth(null), locYOffset, null);
 
-				graphics.drawImage(ImageCache.get("Ca:", fontMedium, color), leftXOffsetLabelCarisma, locYOffset, null);
+				graphics.drawImage(ImageCache.get(TestiDellaUI.get("SIGLA_CARISMA"), fontMedium, color), leftXOffsetLabelCarisma, locYOffset, null);
 				doomdark = ImageCache.get(p.get(TipoAttributo.CARISMA), fontMedium, colorePerAttributo(p, TipoAttributo.CARISMA, color));
 				graphics.drawImage(doomdark, rightXOffsetCarisma - doomdark.getWidth(null), locYOffset, null);
 

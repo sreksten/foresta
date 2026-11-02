@@ -126,8 +126,9 @@ public class SpriteAnnuncioGlobale extends SpriteBase {
 		return 1;
 	}
 
+	// L'alfabeto grande ha solo le maiuscole (come in TestoGrande.glifo): un nome come "Defeat the Dragon" non deve perdere le minuscole
 	private static BufferedImage glifo(char c) {
-		return ImageCache.glifoGrande(c);
+		return ImageCache.glifoGrande(Character.toUpperCase(c));
 	}
 
 	private static BufferedImage costruisciImmagine(List<String> righeEtichetta, List<String> righeNome) {

@@ -25,7 +25,11 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 
 	private static final int EREMITI_DA_INCONTRARE = 10;
 
-	private static final String DESCRIZIONE_BASE = "Angustia " + Lingue.corrente().cardinale(EREMITI_DA_INCONTRARE, Genere.MASCHILE) + " Eremiti";
+	// Si legge a ogni uso, non una volta sola: la lingua può cambiare fra una partita e l'altra
+	private static String descrizioneBase() {
+		return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.descrizioneBase", Lingue.corrente().cardinale(EREMITI_DA_INCONTRARE, Genere.MASCHILE));
+	}
+
 	// Gli identificativi degli eremiti già contati, separati da virgole
 	private static final String EREMITI_CONTATI = "EREMITI_CONTATI";
 
@@ -41,16 +45,16 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 	@Override
 	public String getDescrizione() {
 		if (isCompleta()) {
-			return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t2", DESCRIZIONE_BASE);
+			return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t2", descrizioneBase());
 		}
 		int mancanti = EREMITI_DA_INCONTRARE - getEremitiIncontrati();
 		if (mancanti == 1) {
-			return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t3", DESCRIZIONE_BASE);
+			return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t3", descrizioneBase());
 		}
 		if (mancanti == 10) {
-			return DESCRIZIONE_BASE + ".";
+			return descrizioneBase() + ".";
 		}
-		return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t4", DESCRIZIONE_BASE, Lingue.corrente().cardinale(mancanti, Genere.MASCHILE));
+		return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t4", descrizioneBase(), Lingue.corrente().cardinale(mancanti, Genere.MASCHILE));
 	}
 
 	@Override
@@ -76,7 +80,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 			return;
 		}
 		if (!isAttiva()) {
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.s1", DESCRIZIONE_BASE)));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.s1", descrizioneBase())));
 			attivaMissione();
 		}
 		// Si conta l'incontro, non il suo esito: qui la locazione è appena stata

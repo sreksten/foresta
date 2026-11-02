@@ -27,10 +27,10 @@ NOME_FEMMINILE$
     Josephine | Lally | Windilda | Pawlina | Ballasta | Chiselda | Nibbilda
 
 NOME_SACERDOTE$
-    Friar Dazed | Friar Soaked | Friar Chest | Friar Flung | Friar Tuckin
+    Abbot Addled | Pastor Dripping | Deacon Destructo | Brother Broken | Pastor Thunder
 
 NOME_SACERDOTESSA$
-    Sister Clemency | Sister Chaste | Sister Mercy | Sister Smiley | Sister Regal | Sister Tita | Sister Tattle
+    Sister Clemency | Sister Chaste | Sister Mercy | Sister Smiley | Sister Regal | Sister Sally | Sister Clueless
     Sister Vigil | Sister Prayer
 
 // ---------------------------------------------------------------------------------------------

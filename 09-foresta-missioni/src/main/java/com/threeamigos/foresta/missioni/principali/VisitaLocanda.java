@@ -40,7 +40,7 @@ public class VisitaLocanda extends MissioneBase {
 
 	@Override
 	public String getNome() {
-		return "Visita '" + getNomeLocanda() + '\'';
+		return Testi.formatta("missioni", "VisitaLocanda.nome", getNomeLocanda());
 	}
 
 	@Override

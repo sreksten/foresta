@@ -6,6 +6,7 @@ import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 import com.threeamigos.foresta.ui.testo.TestoGrande;
 
 import java.awt.*;
@@ -45,7 +46,7 @@ final class ImmagineTrofei {
 		int altezza = 0;
 		BufferedImage titolo = null;
 		if (conTitolo) {
-			titolo = TestoGrande.immagine("trofei", larghezza, true);
+			titolo = TestoGrande.immagine(TestiDellaUI.get("TITOLO_TROFEI"), larghezza, true);
 			altezza += titolo.getHeight() + SPAZIO_DOPO_IL_TITOLO;
 		}
 		for (TipoTrofeo tipo : TipoTrofeo.perTipologia()) {

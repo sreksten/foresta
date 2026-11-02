@@ -97,7 +97,7 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 		if (mancanti == 1) {
 			return Testi.formatta("missioni", "IlGiroDelleSetteChiese.t4", descrizione);
 		}
-		return descrizione + " Ne mancano " + Lingue.corrente().cardinale(mancanti, Genere.MASCHILE) + ".";
+		return Testi.formatta("missioni", "IlGiroDelleSetteChiese.mancano", descrizione, Lingue.corrente().cardinale(mancanti, Genere.MASCHILE));
 	}
 
 	/**
@@ -207,7 +207,7 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 	}
 
 	private List<PaginaIntermezzo> getPagineDelRingraziamento() {
-		return Collections.singletonList(scenaNelTempio("Sette templi liberi.")
+		return Collections.singletonList(scenaNelTempio(Testi.formatta("missioni", "IlGiroDelleSetteChiese.titoloRingraziamento"))
 				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.6")).daSecondo(2))
 				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.7", elencoDeiDoni())))
 				.conBattuta(BattutaIntermezzo.di(ID_EROE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.8"))));

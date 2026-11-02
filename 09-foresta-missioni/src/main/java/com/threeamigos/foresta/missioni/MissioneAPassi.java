@@ -918,7 +918,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 		super.fallisciMissione();
 		if (eraInCorso && !isDiClassePredefinita()) {
 			// Per le missioni predefinite l'avviso lo dà già MissioneBase
-			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "MISSIONE FALLITA", getNome()));
+			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, Testi.formatta("missioni", "Missione.FALLITA"), getNome()));
 		}
 		lasciaUnaMissioneNuova();
 	}

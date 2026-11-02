@@ -1,0 +1,120 @@
+// Names and effects of the magic ingredients sold by the scroll seller and fused onto artefacts by the enchanter (English
+// version of ingredienti.txt; same roots and markers, see artefatti2_en.txt). Each ingredient has its specialty:
+//   scroll  the primary traits      gem  the elemental enchantments     jewel  the magic enchantments
+//   trinket the offensive secondaries      seal  the defensive secondaries
+// Roots: <TYPE>_<n>, n from 1 to 3 effects, all different (EFFETTO_<TYPE>$ is one-shot).
+//
+// Characters not to use in the texts: [ ] { } | " (GrammarBean syntax) and < > @ (markers).
+
+PERGAMENA_1
+    the scroll [EFFETTO_PERGAMENA]
+PERGAMENA_2
+    the scroll [EFFETTO_PERGAMENA] and [EFFETTO_PERGAMENA]
+PERGAMENA_3
+    the scroll [EFFETTO_PERGAMENA], [EFFETTO_PERGAMENA] and [EFFETTO_PERGAMENA]
+GEMMA_1
+    the gem [EFFETTO_GEMMA]
+GEMMA_2
+    the gem [EFFETTO_GEMMA] and [EFFETTO_GEMMA]
+GEMMA_3
+    the gem [EFFETTO_GEMMA], [EFFETTO_GEMMA] and [EFFETTO_GEMMA]
+MONILE_1
+    the jewel [EFFETTO_MONILE]
+MONILE_2
+    the jewel [EFFETTO_MONILE] and [EFFETTO_MONILE]
+MONILE_3
+    the jewel [EFFETTO_MONILE], [EFFETTO_MONILE] and [EFFETTO_MONILE]
+GINGILLO_1
+    the trinket [EFFETTO_GINGILLO]
+GINGILLO_2
+    the trinket [EFFETTO_GINGILLO] and [EFFETTO_GINGILLO]
+GINGILLO_3
+    the trinket [EFFETTO_GINGILLO], [EFFETTO_GINGILLO] and [EFFETTO_GINGILLO]
+SIGILLO_1
+    the seal [EFFETTO_SIGILLO]
+SIGILLO_2
+    the seal [EFFETTO_SIGILLO] and [EFFETTO_SIGILLO]
+SIGILLO_3
+    the seal [EFFETTO_SIGILLO], [EFFETTO_SIGILLO] and [EFFETTO_SIGILLO]
+
+EFFETTO_PERGAMENA$
+    [FORZA] | [DESTREZZA] | [COSTITUZIONE] | [INTELLIGENZA] | [SAGGEZZA] | [CARISMA] | [FORTUNA]
+EFFETTO_GEMMA$
+    [ARIA] | [ACQUA] | [TERRA] | [FUOCO] | [FULMINE] | [GELO] | [ACIDO] | [SONICO] | [VELENO]
+EFFETTO_MONILE$
+    [NECROTICO] | [SACRO] | [PSICHICO] | [ARCANO] | [VUOTO] | [MALEDIZIONE]
+EFFETTO_GINGILLO$
+    [CRITICO] | [PRECISIONE] | [VELOCITA] | [FURTIVITA] | [PERCEZIONE] | [FURIA] | [SOGGEZIONE]
+EFFETTO_SIGILLO$
+    [PARATA] | [RESISTENZA_MAGICA] | [CORAGGIO] | [VALORE] | [CARICO_MASSIMO] | [POTERE_MAGICO]
+
+FORZA
+    { of the Bear | of the Bull | of the Dockworker | of the Refrigerator Mover | of the Musk Ox | of the Left-Handed Smith }<mod:FORZA+1>
+DESTREZZA
+    { of the Fox | of the Squirrel | of the Pickpocket | of the Absent-Minded Juggler | of the Cat on the Ledge | of the Conjurer }<mod:DESTREZZA+1>
+COSTITUZIONE
+    { of the Oak | of the Tortoise | of the Walrus | of the Hundred-Year-Old Grandmother | of the Boar | of the Iron Stomach }<mod:COSTITUZIONE+1>
+INTELLIGENZA
+    { of the Owl | of the Professor | of the Bookworm | of the Finished Crossword | of the Engineer | of the Swot }<mod:INTELLIGENZA+1>
+SAGGEZZA
+    { of the Little Owl | of the Hermit | of the Wise Grandfather | of the Herbal Tea | of the Old Monk | of the Proverb }<mod:SAGGEZZA+1>
+CARISMA
+    { of the Peacock | of the Bard | of the Carpet Seller | of the Piano Bar Singer | of the Dazzling Smile | of the Rebellious Quiff }<mod:CARISMA+1>
+FORTUNA
+    { of the Four-Leaf Clover | of the Horseshoe | of the Ladybug | of the Winning Ticket | of the Red Horn | of the White Cat }<mod:FORTUNA+1>
+ARIA
+    { of the North Wind | of the Whirlwind | of the Kite | of the Draft | of the Fan | of the Dandelion }<danno:ARIA>
+ACQUA
+    { of the Spring | of the Water Balloon | of the Downpour | of the Dolphin | of the Deep Puddle | of the Flush }<danno:ACQUA>
+TERRA
+    { of the Mountain | of the Landslide | of the Earthworm | of the Mole | of the Pebble in the Shoe | of the Cement Mixer }<danno:TERRA>
+FUOCO
+    { of the Dragon | of the Phoenix | of the Salamander | of the Chili Pepper | of the Ember | of the Sunday Barbecue }<danno:FUOCO>
+FULMINE
+    { of the Thunderstorm | of the Bolt | of the Electric Eel | of the Power Strip | of the Wool Jumper | of the Extension Cord }<danno:FULMINE>
+GELO
+    { of the Glacier | of the Penguin | of the Popsicle | of the Freezer | of the Russian Winter | of the Snowman }<danno:GELO>
+ACIDO
+    { of the Lemon | of the Balsamic Vinegar | of the Swamp | of the Descaler | of the Acid Snail | of the Expired Yogurt }<danno:ACIDO>
+SONICO
+    { of the Thunder | of the Gong | of the Screaming Mother-in-Law | of the Village Band | of the Car Horn | of the Vuvuzela }<danno:SONICO>
+VELENO
+    { of the Snake | of the Viper | of the Scorpion | of the Suspicious Mushroom | of the Jellyfish | of the Dinner at the Cousin's }<danno:VELENO>
+NECROTICO
+    { of the Necromancer | of the Crypt | of the Dancing Skeleton | of the Mummy | of the Gravedigger | of the Vegetarian Zombie }<danno:NECROTICO>
+SACRO
+    { of the Angel | of the Patron Saint | of the Votive Candle | of the Angelic Choir | of the Halo | of the Altar Boy }<danno:SACRO>
+PSICHICO
+    { of the Nightmare | of the Hypnotist | of the Headache | of the Fortune Teller | of the Fixed Idea | of the Monday Morning }<danno:PSICHICO>
+ARCANO
+    { of the Absent-Minded Archmage | of the Runes | of the Pointed Hat | of the Wand | of the Rabbit in the Hat | of the Abracadabra }<danno:ARCANO>
+VUOTO
+    { of the Supermassive Black Hole | of the Cosmic Void | of the Dying Star | of the Odd Sock | of the Lost Astronaut | of the Empty Fridge }<danno:VUOTO>
+MALEDIZIONE
+    { of the Black Cat | of the Broken Mirror | of the Evil Eye | of the Friday the 13th | of the Open Ladder | of the Jinx }<danno:MALEDIZIONE>
+CRITICO
+    { of the Butcher | of the Guillotine | of the Low Blow | of the Pin | of the Little Toe Against the Table Corner | of the Weak Spot }<mod:CRITICO+1>
+PRECISIONE
+    { of the Eagle | of the Sniper | of the Archer | of the Watchmaker | of the Dart at the Pub | of the Surveyor }<mod:PRECISIONE+1>
+VELOCITA
+    { of the Hare | of the Cheetah | of the Courier | of the Flash | of the Double Espresso | of the End-of-Season Sale }<mod:VELOCITA+1>
+FURTIVITA
+    { of the Shadow | of the Ninja | of the Chicken Thief | of the Flat Burglar | of the Felt Slippers | of the Cat in Ambush }<mod:FURTIVITA+1>
+PERCEZIONE
+    { of the Lynx | of the Bat | of the Concierge | of the Bloodhound | of the Hawk Eye | of the Nosy Neighbour }<mod:PERCEZIONE+1>
+FURIA
+    { of the Angry Bull | of the Rage | of the Traffic Jam | of the Queue at the Post Office | of the Stubbed Toe | of the Slammed Door }<mod:FURIA+1>
+SOGGEZIONE
+    { of the Dread Lord | of the Black Banner | of the Thunderclap | of the Stern Look | of the Headmaster | of the Tax Auditor }<mod:SOGGEZIONE+1>
+PARATA
+    { of the Tortoise Shell | of the Palisade | of the Bouncer | of the Airbag | of the Safe | of the Traffic Warden }<mod:PARATA+1>
+RESISTENZA_MAGICA
+    { of the Warding Rune | of the Iron Will | of the Mage Slayer | of the Null Zone | of the Thick Skin | of the Deaf Ear }<mod:RESISTENZA_MAGICA+1>
+CORAGGIO
+    { of the Lion | of the Hero | of the Brave | of the Avenger | of the Volunteer | of the Firefighter }<mod:CORAGGIO+1>
+VALORE
+    { of the Paladin | of the Honest Soldier | of the Good Samaritan | of the Standard Bearer | of the Medal | of the Hero of Legend }<mod:VALORE+1>
+CARICO_MASSIMO
+    { of the Mule | of the Porter | of the Backpack | of the Moving Van | of the Bottomless Bag | of the Stevedore }<mod:CARICO_MASSIMO+1>
+POTERE_MAGICO
+    { of the Grand Grimoire | of the Wizard's Tower | of the Crystal Ball | of the Lightning Staff | of the Cauldron | of the Spellbook }<mod:POTERE_MAGICO+1>

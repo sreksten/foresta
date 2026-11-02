@@ -73,7 +73,7 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 		aggiungiProprieta(LEGGENDARIO, scegliIlLeggendario().getRiga());
 		RegistroMissioni.aggiungiMissioneSecondaria(this);
 		attivaMissione();
-		BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "NUOVA MISSIONE", getNome()));
+		BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, Testi.formatta("missioni", "Missione.NUOVA"), getNome()));
 		// Non si aspetta il prossimo controllo: i campioni si affidano subito e ognuno trova e segna subito il suo posto,
 		// così la notifica c'è e i quattro segnalini sono già sulla mappa
 		controllaPostLocazione();

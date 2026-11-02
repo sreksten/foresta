@@ -63,8 +63,8 @@ public class UrloDellaBanshee implements Canto {
 					avversario.addEffettoDiStato(effetto, CalcolatoreCombattimento.calcolaDurataStato(avversario, effetto), 0);
 				}
 			} else {
-				BusEventi.pubblica(new NotificaTestoFrase(avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-						Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " resiste all'urlo."));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "UrloDellaBanshee.2", avversario.getNome(
+						Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 			}
 		}
 		return true;

@@ -187,9 +187,9 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 						.poi(RICERCA);
 			case RICERCA:
 				return raccogli(MomentoControllo.POST_LOCAZIONE, getOggettoDaCercare())
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Ecco " + smarrito.getOggettoConArticolo() + " "
-								+ Lingue.corrente().conPreposizione(Preposizione.DI, smarrito.getProprietario()) + "! " + Lingue.corrente().inizialeMaiuscola(smarrito.getProprietario())
-								+ " " + smarrito.getPronome() + " aspetta a " + getNomeCitta() + ".")))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LOggettoSmarrito.ecco",
+								smarrito.getOggettoConArticolo(), Lingue.corrente().conPreposizione(Preposizione.DI, smarrito.getProprietario()),
+								Lingue.corrente().inizialeMaiuscola(smarrito.getProprietario()), smarrito.getPronome(), getNomeCitta()))))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);

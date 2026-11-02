@@ -83,7 +83,7 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 			completaMissione();
 			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.s2")));
 		} else {
-			BusEventi.pubblica(new NotificaTestoParagrafo("Locanda numero " + Lingue.corrente().cardinale(visitate, Genere.MASCHILE) + " debitamente censita."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.censita", Lingue.corrente().cardinale(visitate, Genere.MASCHILE))));
 		}
 	}
 
