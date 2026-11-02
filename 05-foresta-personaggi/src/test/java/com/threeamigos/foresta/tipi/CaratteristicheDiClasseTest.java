@@ -161,6 +161,18 @@ class CaratteristicheDiClasseTest {
 	}
 
 	@Test
+	void ilNomeDellaVoceInInglesePuoAvereUnNomeSoloOUnaCongiunzioneInglese() {
+		Testi.impostaLingua("en");
+		try {
+			assertEquals("Elf", TipoPersonaggio.ELFA.getNomeDellaVoce(), "elfo ed elfa hanno lo stesso nome: ne basta uno");
+			assertEquals("Wizard and Sorceress", TipoPersonaggio.MAGA.getNomeDellaVoce());
+			assertEquals("Goblin", TipoPersonaggio.GOBLIN.getNomeDellaVoce());
+		} finally {
+			Testi.impostaLingua(null);
+		}
+	}
+
+	@Test
 	void ogniVoceHaLaSuaDescrizioneEPerLaFormaFemminileEQuellaDelMaschile() {
 		for (TipoPersonaggio voce : TipoPersonaggio.getVociDelBestiario()) {
 			assertTrue(Testi.testo(voce, "DESCRIZIONE").isPresent(), "manca la descrizione di " + voce);

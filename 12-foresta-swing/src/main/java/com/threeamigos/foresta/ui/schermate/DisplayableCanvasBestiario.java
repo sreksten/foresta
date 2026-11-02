@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Finestra;
@@ -86,7 +87,7 @@ public class DisplayableCanvasBestiario implements Finestra {
 		graphics.drawImage(ImageCache.ombraDelDrago, (width - ImageCache.ombraDelDrago.getWidth()) >> 1,
 				(height - ImageCache.ombraDelDrago.getHeight()) >> 1, null);
 		graphics.setComposite(normale);
-		String titolo = "bestiario";
+		String titolo = TestiDellaUI.get("TITOLO_BESTIARIO");
 		TestoGrande.disegnaRiga(graphics, titolo, (width - TestoGrande.larghezza(titolo)) >> 1, QUOTA_TITOLO);
 		long sbloccate = voci.stream().filter(vistaPartita::isVoceDelBestiarioSbloccata).count();
 		Image quante = ImageCache.get(sbloccate + "/" + voci.size(), DoomdarkFont.medio(), DoomdarkColorModel.Color.MEDIUM_GRAY);

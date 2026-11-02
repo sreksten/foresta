@@ -841,7 +841,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 				voce.filtri.clear();
 				voce.filtri.addAll(nuova);
 			}
-		}, 1, i, "con");
+		}, 1, i, TestiDellaUI.get("TATTICHE_CON"));
 
 		// Le condizioni
 		for (int c = 0; c < voce.condizioni.size(); c++) {
@@ -1038,7 +1038,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 				public void set(List<FiltroMD> nuova) {
 					voce.condizioni.set(c, BozzaTattica.conFiltri(voce.condizioni.get(c), nuova));
 				}
-			}, 2, indiceVoce, "con");
+			}, 2, indiceVoce, TestiDellaUI.get("TATTICHE_CON"));
 		}
 	}
 

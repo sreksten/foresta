@@ -18,13 +18,14 @@ NOME_MASCHILE$
     Wystan | Zachary | Zephyrin | Adelmar | Burchard | Dorian | Evander | Fitzwilliam | Gideon | Humphrey
 
 NOME_FEMMINILE$
-    Ada | Agatha | Amabel | Aurelia | Beatrix | Bertha | Bridget | Brunhild | Clementine | Clotilde
-    Demetria | Electra | Ermintrude | Eulalia | Eustacia | Fausta | Philippa | Gertrude | Genevieve | Gisela
-    Griselda | Guinevere | Hildegard | Irene | Isolde | Lavinia | Lydia | Mafalda | Matilda | Millicent
-    Honoria | Hortensia | Petunia | Prudence | Rowena | Sabina | Serafina | Sigrid | Theodolinda | Tullia
-    Vincentia | Winifred | Zelda | Zita | Noticeboard | Padlock | Sardine | Slipper | Chewilda | Pinchilda
-    Ruffilda | Grunta | Gristle | Dumplina | Scrapilda | Ladlena | Tankarda | Flapdoodle | Mudwina | Hobnailia
-    Josephine | Lally | Windilda | Pawlina | Ballasta | Chiselda | Nibbilda
+    Ada | Agatha | Aurelia | Beatrix | Bertha | Bridget | Clementine | Cordelia | Theodora | Elvira
+    Eleanor | Felicity | Flora | Genevieve | Gertrude | Griselda | Guinevere | Hildegard | Imogen | Irene
+    Isadora | Yolanda | Lavinia | Lydia | Mabel | Marjorie | Millicent | Ophelia | Petunia | Philippa
+    Prudence | Rowena | Sabina | Sigrid | Wanda | Wilhelmina | Winifred | Annabel | Seraphina | Eudora
+    Eugenia | Fenella | Emmeline | Hester | Mildred | Octavia | Jemima | Elspeth | Gwendolyn | Ermintrude
+    Eustacia | Theodolinda | Vincentia | Honoria | Hortensia | Serafina | Amabel | Mafalda | Tullia | Zita
+    Chewilda | Pinchilda | Grunta | Dumplina | Scrapilda | Grumbella | Snorella | Fidgetta | Mudwina | Ruffilda
+    Clumsilda | Bumbelina | Tattletta | Wobbelina | Sniffilda | Hobbleda | Crumbella | Gabbilda | Chiselda
 
 NOME_SACERDOTE$
     Abbot Addled | Deacon Destructo | Pastor Thunder

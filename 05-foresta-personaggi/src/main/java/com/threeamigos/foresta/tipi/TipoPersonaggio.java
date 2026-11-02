@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Testi;
 
 import java.util.*;
@@ -372,12 +373,16 @@ public enum TipoPersonaggio {
 	}
 
 	/**
-	 * Il nome della voce del bestiario: quello della classe, e se il ruolo ha due forme anche quello della femminile ("Mago e Maga")
+	 * Il nome della voce del bestiario: quello della classe, e se il ruolo ha due forme anche quello della femminile ("Mago e Maga",
+	 * "Wizard and Sorceress"); se le due forme hanno lo stesso nome in quella lingua ("Elf") ne basta uno.
 	 */
 	public String getNomeDellaVoce() {
 		TipoPersonaggio ruolo = getRuolo();
 		TipoPersonaggio femminile = ruolo.getFormaFemminile();
-		return femminile == null ? ruolo.getNome() : ruolo.getNome() + " e " + femminile.getNome();
+		if (femminile == null || ruolo.getNome().equals(femminile.getNome())) {
+			return ruolo.getNome();
+		}
+		return Lingue.corrente().elenco(Arrays.asList(ruolo.getNome(), femminile.getNome()));
 	}
 
 	/**

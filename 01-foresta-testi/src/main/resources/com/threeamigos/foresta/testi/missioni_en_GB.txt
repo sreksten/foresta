@@ -198,7 +198,7 @@ CONTRABBANDO
 // ---------------------------------------------------------------------------------------------
 
 OGGETTO_SMARRITO
-    F;wedding ring;the miller;TEMPIO ROVINE;15;I went to pray for a good harvest, and when I came back the ring was gone. My wife hasn't noticed yet.;What if she notices?;Then the mission becomes another one. A much more dangerous one.;There it is! On my finger, quick, before my wife comes back from the market.
+    F;wedding ring;the miller;TEMPIO ROVINE;15;I went to pray for a good harvest, and when I came back the ring was gone. My wife hasn't noticed yet.;What if she notices?;Then the quest becomes another one. A much more dangerous one.;There it is! On my finger, quick, before my wife comes back from the market.
     M;leather purse;the cloth merchant;LOCANDA;12;I stopped at an inn to celebrate a deal. A little too much. The purse stayed somewhere around there.;Was it full?;It was. Now, who knows.;It's all still here! So I wasn't that drunk.
     F;bone pipe;the old hunter;GROTTA ROVINE;10;I took shelter from the rain, and when I resumed my walk the pipe had stayed there. Forty years of pipe.;Can't you buy another one?;Another one doesn't taste of forty years.;Ah, its smell! Sit down, let me have you try it. No? Pity.
     M;prayer book;the novice;TEMPIO;10;I was on a pilgrimage and it slipped from my satchel. The abbess will make me copy the entire book by hand.;The entire book?;The entire book. Twice. Once to learn, once as penance.;Heaven bless you! And the abbess will never know.
