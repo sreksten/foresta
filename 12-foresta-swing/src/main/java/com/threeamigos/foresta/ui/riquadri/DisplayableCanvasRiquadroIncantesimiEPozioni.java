@@ -7,6 +7,7 @@ import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.ui.Finestra;
+import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorAlternante;
@@ -56,8 +57,8 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	private final int totaleX;
 	private final Rectangle areaLista;
 
-	// Di quanti pixel è scrollata la lista
-	private int offsetY = 0;
+	// Quanto la lista è scorsa: con la rotella e trascinandola (anche col dito, e prosegue per inerzia)
+	private final ScorrimentoSuUnAsse scorrimento = new ScorrimentoSuUnAsse(System::nanoTime);
 
 	private final VistaPartita vistaPartita;
 
@@ -104,6 +105,40 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		return Math.max(0, righe.size() * altezzaRiga - altezzaVisibile);
 	}
 
+	/**
+	 * Di quanti pixel la lista è scorsa
+	 */
+	private int offsetY() {
+		return (int) Math.round(scorrimento.getScorrimento());
+	}
+
+	/**
+	 * Il gesto che comincia sul riquadro prosegue anche se il puntatore ne esce, finché non si lascia
+	 */
+	@Override
+	public boolean catturaIlTrascinamento() {
+		return true;
+	}
+
+	@Override
+	public void processaPressione(int x, int y, Tasto tasto) {
+		if (tasto == Tasto.SINISTRO) {
+			scorrimento.premi(y, true);
+		}
+	}
+
+	@Override
+	public void processaTrascinamento(int x, int y) {
+		scorrimento.trascina(y);
+	}
+
+	@Override
+	public void processaRilascio(int x, int y, Tasto tasto) {
+		if (tasto == Tasto.SINISTRO) {
+			scorrimento.rilascia();
+		}
+	}
+
 	@Override
 	public int passiPerScattoDellaRotella() {
 		return PASSI_PER_SCATTO_DELLE_LISTE;
@@ -111,9 +146,8 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 
 	@Override
 	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
-		int spostamento = numeroRotazioni * PASSO_SCORRIMENTO;
-		offsetY = movimentoRotella == MovimentoRotella.SU ? offsetY - spostamento : offsetY + spostamento;
-		offsetY = Math.max(0, Math.min(offsetMassimo(), offsetY));
+		int pixel = numeroRotazioni * PASSO_SCORRIMENTO;
+		scorrimento.scorriDi(movimentoRotella == MovimentoRotella.SU ? -pixel : pixel);
 	}
 
 	/**
@@ -122,6 +156,10 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	public void disegnaIncantesimi(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
 		IntestazioneRiquadro.disegna(graphics, TestiDellaUI.get("RIQUADRO_INCANTESIMI_E_POZIONI"), topLeftX, topLeftY, ImageCache.corniceGrande.getWidth());
+
+		// L'elenco può essere cambiato dall'ultimo scorrimento: il limite va aggiornato e lo scorrimento rimesso dentro
+		scorrimento.imposta(offsetMassimo() > 0, offsetMassimo());
+		scorrimento.aggiorna();
 
 		Shape clipOriginale = graphics.getClip();
 		graphics.setClip(areaLista);
@@ -144,7 +182,7 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	}
 
 	private int yDellaRiga(int indice) {
-		return areaLista.y + indice * altezzaRiga - offsetY;
+		return areaLista.y + indice * altezzaRiga - offsetY();
 	}
 
 	private void disegnaRiga(Graphics2D graphics, DoomdarkFont fontMedium, int y, Riga riga, int quantita, DoomdarkColorModel.Color color) {
@@ -164,11 +202,11 @@ public class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	private void disegnaFrecce(Graphics2D graphics) {
 		Image frecciaSu = ImageCache.componenteScorrevoleFrecciaSu;
 		Image frecciaGiu = ImageCache.componenteScorrevoleFrecciaGiu;
-		if (offsetY > 0) {
+		if (offsetY() > 0) {
 			graphics.drawImage(frecciaSu, areaLista.x + areaLista.width - frecciaSu.getWidth(null) - ImageCache.SPACING,
 					areaLista.y + ImageCache.SPACING, null);
 		}
-		if (offsetY < offsetMassimo()) {
+		if (offsetY() < offsetMassimo()) {
 			graphics.drawImage(frecciaGiu, areaLista.x + areaLista.width - frecciaGiu.getWidth(null) - ImageCache.SPACING,
 					areaLista.y + altezzaVisibile - ImageCache.SPACING - frecciaGiu.getHeight(null), null);
 		}

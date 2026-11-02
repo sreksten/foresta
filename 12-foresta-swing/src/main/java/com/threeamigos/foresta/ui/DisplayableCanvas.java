@@ -543,7 +543,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 					|| stato == StatoDisplayableCanvas.STATO_INCANTATORE
 					|| stato == StatoDisplayableCanvas.STATO_INTERMEZZO
 					|| annuncioGlobaleAttivo != null || !codaAnnunciGlobali.isEmpty()
-					|| barraIcone.inTransizione()) {
+					|| barraIcone.inTransizione()
+					|| paginaTrofei.inTransizione() || bestiario.inTransizione()) {
 				repaint();
 			}
 			prossimoFotogramma += periodoNanos;

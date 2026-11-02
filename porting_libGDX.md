@@ -111,7 +111,7 @@ La finestra di prova (`FinestraDiProva`) non si porta: resta del desktop.
 
 ## 9. Fase 6: layout per telefono
 
-Il gioco resta orizzontale. Prima prova, **fatta in Swing** (argomento `VERTICALE`): la barra icone passa da orizzontale in fondo a verticale sul lato destro, e scorre in pixel fra due frecce fisse (anche col trascinamento e l'inerzia). Restano da fare il layout a tile (mappa come tile, testo ridotto) e la scelta dell'altezza target. Con le misure di lavoro (zoom 2,0) la barra tiene 64 + 4 px di spaziatura:
+Il gioco resta orizzontale. Prima prova, **fatta in Swing** (argomento `VERTICALE`): la barra icone passa da orizzontale in fondo a verticale sul lato destro, e scorre in pixel su tutta la lunghezza (con rotella, trascinamento, inerzia ed elastico), con due freccine blu sovrapposte che segnalano dove c'è altro. Restano da fare il layout a tile (mappa come tile, testo ridotto) e la scelta dell'altezza target. Con le misure di lavoro (zoom 2,0) la barra tiene 64 + 4 px di spaziatura:
 
 | | Barra in fondo | Barra a destra |
 | :--- | :---: | :---: |

@@ -60,4 +60,49 @@ class ScorrimentoVerticaleTest {
     private static BufferedImage immagine(int altezza) {
         return new BufferedImage(200, altezza, BufferedImage.TYPE_INT_ARGB);
     }
+
+    @Test
+    void trascinandoLImmagineSegueIlPuntatoreEIlClickCheSegueNonVale() {
+        ScorrimentoVerticale scorrimento = new ScorrimentoVerticale(immagine(1000), AREA);
+        scorrimento.scorri(0);
+        scorrimento.premi(300);
+        // Sotto la soglia è un tocco
+        scorrimento.trascina(297);
+        assertEquals(0, scorrimento.getScorrimento());
+        scorrimento.rilascia();
+        assertFalse(scorrimento.isGestoTrascinato());
+        // Oltre la soglia l'immagine segue il puntatore (verso l'alto: scorre verso il basso)
+        scorrimento.premi(300);
+        scorrimento.trascina(290);
+        scorrimento.trascina(250);
+        assertEquals(40, scorrimento.getScorrimento());
+        scorrimento.rilascia();
+        assertTrue(scorrimento.isGestoTrascinato());
+        // Una nuova pressione azzera il ricordo del trascinamento
+        scorrimento.premi(300);
+        assertFalse(scorrimento.isGestoTrascinato());
+    }
+
+    @Test
+    void trascinandoOltreLaCimaSiTiraEPoiTorna() {
+        ScorrimentoVerticale scorrimento = new ScorrimentoVerticale(immagine(1000), AREA);
+        scorrimento.premi(300);
+        scorrimento.trascina(310);
+        scorrimento.trascina(380);
+        // Oltre la cima: l'immagine è tirata verso il basso, poco
+        assertTrue(scorrimento.getScorrimento() < 0);
+        assertTrue(scorrimento.getScorrimento() >= -(int) ScorrimentoSuUnAsse.MASSIMO_ELASTICO);
+        scorrimento.rilascia();
+        assertTrue(scorrimento.isInMovimento());
+    }
+
+    @Test
+    void lAutomaticoNonSiTrascina() {
+        ScorrimentoVerticale scorrimento = ScorrimentoVerticale.dalBasso(immagine(1000), AREA, 40);
+        scorrimento.premi(300);
+        scorrimento.trascina(100);
+        scorrimento.rilascia();
+        assertFalse(scorrimento.isGestoTrascinato());
+        assertFalse(scorrimento.isInMovimento());
+    }
 }

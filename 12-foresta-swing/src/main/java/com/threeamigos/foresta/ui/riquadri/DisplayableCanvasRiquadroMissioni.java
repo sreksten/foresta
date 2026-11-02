@@ -7,6 +7,7 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
+import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.*;
 
@@ -33,7 +34,8 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 	private final int innerWidth;
 	private final int innerHeight;
 
-	int offsetY = 0;
+	// Quanto la lista è scorsa: con la rotella e trascinandola (anche col dito, e le prosegue per inerzia)
+	private final ScorrimentoSuUnAsse scorrimento = new ScorrimentoSuUnAsse(System::nanoTime);
 
 	// Dove sta il mouse, relativo al riquadro, per l'aiuto (-1 fuori)
 	private int mouseX = -1;
@@ -64,9 +66,9 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 		IntestazioneRiquadro.disegna(graphics, TestiDellaUI.get("RIQUADRO_MISSIONI"), topLeftX, topLeftY, ImageCache.corniceGrande.getWidth());
 
 		ComponenteScorrevole<VistaMissione> componenteScorrevole = costruisciComponenteScorrevole();
-		// L'elenco può essere cambiato dall'ultimo scorrimento: l'offset va rimesso nei limiti
-		offsetY = componenteScorrevole.limitaOffset(innerHeight, offsetY);
-		Image image = componenteScorrevole.produci(innerHeight, offsetY);
+		scorrimento.aggiorna();
+		// L'elenco può essere cambiato dall'ultimo scorrimento: produci rimette l'offset nei limiti
+		Image image = componenteScorrevole.produci(innerHeight, scorrimento);
 		graphics.drawImage(image, topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE  + SPACING,
 				topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING, null);
 	}
@@ -134,9 +136,44 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 		}
 	}
 
+	/**
+	 * Di quanti pixel la lista è scorsa, come l'ha disegnata produci
+	 */
+	private int offsetY() {
+		return (int) Math.round(scorrimento.getScorrimento());
+	}
+
+	/**
+	 * Il gesto che comincia sul riquadro prosegue anche se il puntatore ne esce, finché non si lascia
+	 */
+	@Override
+	public boolean catturaIlTrascinamento() {
+		return true;
+	}
+
+	@Override
+	public void processaPressione(int x, int y, Tasto tasto) {
+		if (tasto == Tasto.SINISTRO) {
+			scorrimento.premi(y, true);
+		}
+	}
+
+	@Override
+	public void processaTrascinamento(int x, int y) {
+		scorrimento.trascina(y);
+	}
+
+	@Override
+	public void processaRilascio(int x, int y, Tasto tasto) {
+		if (tasto == Tasto.SINISTRO) {
+			scorrimento.rilascia();
+		}
+	}
+
 	@Override
 	public void processaClick(int x, int y, Tasto tasto) {
-		if (tasto != Tasto.SINISTRO) {
+		// Il rilascio di un trascinamento non è un click sul nome di una missione
+		if (tasto != Tasto.SINISTRO || scorrimento.isGestoTrascinato()) {
 			return;
 		}
 		int bordo = DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING;
@@ -147,7 +184,7 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 			return;
 		}
 		// La quota va espressa in coordinate della lista, non della finestra visibile
-		VistaMissione missione = costruisciComponenteScorrevole().riferimentoTitoloAllaQuota(yInterno + offsetY);
+		VistaMissione missione = costruisciComponenteScorrevole().riferimentoTitoloAllaQuota(yInterno + offsetY());
 		if (missione == null) {
 			return;
 		}
@@ -183,7 +220,7 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 		}
 		ComponenteScorrevole<VistaMissione> componenteScorrevole = costruisciComponenteScorrevole();
 		List<String> righe = new ArrayList<>();
-		VistaMissione missione = componenteScorrevole.riferimentoTitoloAllaQuota(yInterno + offsetY);
+		VistaMissione missione = componenteScorrevole.riferimentoTitoloAllaQuota(yInterno + offsetY());
 		if (missione != null) {
 			righe.add(Cartiglio.aiutoClick(missione.isDescrizioneVisibile(), TestiDellaUI.get("COSA_DESCRIZIONE")));
 		}
@@ -200,11 +237,8 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 
 	@Override
 	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
-		if (movimentoRotella == MovimentoRotella.SU) {
-			offsetY = Math.max(0, offsetY - numeroRotazioni * PASSO_SCORRIMENTO);
-		} else if (movimentoRotella == MovimentoRotella.GIU) {
-			offsetY += numeroRotazioni * PASSO_SCORRIMENTO;
-		}
+		int pixel = numeroRotazioni * PASSO_SCORRIMENTO;
+		scorrimento.scorriDi(movimentoRotella == MovimentoRotella.SU ? -pixel : pixel);
 	}
 
 	private Image getIcona(VistaMissione missione) {

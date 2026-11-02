@@ -20,6 +20,7 @@ import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
+import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
@@ -126,9 +127,9 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
 
         disegnaColonnaPersonaggio(graphics);
 
-        offsetYZonaSinistra = disegnaElenco(graphics, new ArrayList<>(scambio.getInventarioParteAttiva()), xMinimaZonaSinistra,
-                offsetYZonaSinistra, true);
-        offsetYZonaDestra = disegnaElenco(graphics, scambio.getInventarioParteRemota(), xMinimaZonaDestra, offsetYZonaDestra,
+        disegnaElenco(graphics, new ArrayList<>(scambio.getInventarioParteAttiva()), xMinimaZonaSinistra,
+                scorrimentoSinistra, true);
+        disegnaElenco(graphics, scambio.getInventarioParteRemota(), xMinimaZonaDestra, scorrimentoDestra,
                 false);
 
         disegnaIntestazioniInventario(graphics);
@@ -171,13 +172,13 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
             elenco = new ArrayList<>(scambio.getInventarioParteAttiva());
             parteAttiva = true;
             boxX = xMinimaZonaSinistra;
-            offset = offsetYZonaSinistra;
+            offset = offsetYZonaSinistra();
             doppioClick = aiutoDoppioClickSinistra();
         } else if (dentroElenco(xMinimaZonaDestra, mouseX, mouseY)) {
             elenco = scambio.getInventarioParteRemota();
             parteAttiva = false;
             boxX = xMinimaZonaDestra;
-            offset = offsetYZonaDestra;
+            offset = offsetYZonaDestra();
             doppioClick = aiutoDoppioClickDestra();
         } else {
             return righeAiutoColonnaPersonaggio();
@@ -246,17 +247,16 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
         });
     }
 
-    private int disegnaElenco(Graphics2D graphics, Collection<? extends VistaArtefatto> artefatti, int x, int offset,
-                              boolean parteAttiva) {
+    private void disegnaElenco(Graphics2D graphics, Collection<? extends VistaArtefatto> artefatti, int x,
+                               ScorrimentoSuUnAsse scorrimento, boolean parteAttiva) {
 
+        scorrimento.aggiorna();
+        int offset = (int) Math.round(scorrimento.getScorrimento());
         VistaArtefatto evidenziato = trovaArtefatto(artefatti, x, offset, mouseX, mouseY, parteAttiva);
         ComponenteScorrevole<VistaArtefatto> componenteScorrevole = costruisciComponenteScorrevoleArtefatti(artefatti, evidenziato, parteAttiva);
 
-        int nuovoOffset = componenteScorrevole.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offset);
-        Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, nuovoOffset);
+        Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, scorrimento);
         graphics.drawImage(image, x + SPACING, DIMENSIONE_BORDO_INTERNO + 2 * SPACING, null);
-
-        return nuovoOffset;
     }
 
     /**
@@ -443,16 +443,16 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
 
     @Override
     public void processaClick(int x, int y, Tasto tasto) {
-        if (tasto != Tasto.SINISTRO || scambio == null) {
+        if (tasto != Tasto.SINISTRO || scambio == null || isGestoTrascinato()) {
             return;
         }
         if (processaClickPersonaggio(x, y, tasto)) {
             return;
         }
         java.util.List<VistaArtefatto> inventarioPersonaggio = new ArrayList<>(scambio.getInventarioParteAttiva());
-        VistaArtefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra, x, y, true);
+        VistaArtefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra(), x, y, true);
         if (artefatto == null) {
-            artefatto = trovaArtefatto(scambio.getInventarioParteRemota(), xMinimaZonaDestra, offsetYZonaDestra, x, y, false);
+            artefatto = trovaArtefatto(scambio.getInventarioParteRemota(), xMinimaZonaDestra, offsetYZonaDestra(), x, y, false);
         }
         if (artefatto == null) {
             return;
@@ -468,20 +468,20 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
     @Override
     public void processaDoppioClick(int x, int y, Tasto tasto) {
         // Come il click singolo, solo con il tasto sinistro: un doppio click destro o centrale non compra, non vende e non spende punti
-        if (tasto != Tasto.SINISTRO || scambio == null) {
+        if (tasto != Tasto.SINISTRO || scambio == null || isGestoTrascinato()) {
             return;
         }
         if (processaDoppioClickPersonaggio(x, y, tasto)) {
             return;
         }
         List<VistaArtefatto> inventarioPersonaggio = new ArrayList<>(scambio.getInventarioParteAttiva());
-        VistaArtefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra, x, y, true);
+        VistaArtefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra(), x, y, true);
         if (artefatto != null) {
             BusEventi.pubblica(new ComandoScambioArtefatto(scambio.getId(), ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto.getUuid()));
             return;
         }
         Collection<? extends VistaArtefatto> disponibili = scambio.getInventarioParteRemota();
-        artefatto = trovaArtefatto(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y, false);
+        artefatto = trovaArtefatto(disponibili, xMinimaZonaDestra, offsetYZonaDestra(), x, y, false);
         if (artefatto != null) {
             BusEventi.pubblica(new ComandoScambioArtefatto(scambio.getId(), ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA, artefatto.getUuid()));
         }

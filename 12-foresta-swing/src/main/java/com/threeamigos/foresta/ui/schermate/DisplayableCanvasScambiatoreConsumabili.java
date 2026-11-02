@@ -14,6 +14,7 @@ import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
+import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
@@ -81,7 +82,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         if (posizione == null) {
             return null;
         }
-        int relativo = posizione.y - offsetYZonaSinistra;
+        int relativo = posizione.y - offsetYZonaSinistra();
         if (relativo < 0 || relativo >= ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO) {
             return null;
         }
@@ -148,9 +149,9 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         disegnaColonnaPersonaggio(graphics);
 
         // Inventario personaggio
-        offsetYZonaSinistra = disegnaElencoSinistro(graphics, xMinimaZonaSinistra, offsetYZonaSinistra);
+        disegnaElencoSinistro(graphics, xMinimaZonaSinistra, scorrimentoSinistra);
         // Inventario gruppo
-        offsetYZonaDestra = disegnaElencoDestro(graphics, xMinimaZonaDestra, offsetYZonaDestra);
+        disegnaElencoDestro(graphics, xMinimaZonaDestra, scorrimentoDestra);
 
         disegnaIntestazioniInventario(graphics);
 
@@ -168,14 +169,14 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         List<String> righe = new ArrayList<>();
         if (dentroElenco(xMinimaZonaSinistra, mouseX, mouseY)) {
             List<Consumabile> gruppo = getElencoGruppo();
-            Consumabile consumabile = trovaConsumabile(gruppo, xMinimaZonaSinistra, offsetYZonaSinistra, mouseX, mouseY, false);
+            Consumabile consumabile = trovaConsumabile(gruppo, xMinimaZonaSinistra, offsetYZonaSinistra(), mouseX, mouseY, false);
             if (consumabile != null) {
                 righe.add(Cartiglio.aiutoClick(statoDi(consumabile).isFigliVisibili(), TestiDellaUI.get("COSA_DESCRIZIONE")));
             }
             aggiungiAiutoRotella(righe, gruppo, false);
         } else if (dentroElenco(xMinimaZonaDestra, mouseX, mouseY)) {
             List<Consumabile> venditore = getElencoVenditore();
-            Consumabile consumabile = trovaConsumabile(venditore, xMinimaZonaDestra, offsetYZonaDestra, mouseX, mouseY, true);
+            Consumabile consumabile = trovaConsumabile(venditore, xMinimaZonaDestra, offsetYZonaDestra(), mouseX, mouseY, true);
             if (consumabile != null) {
                 righe.add(Cartiglio.aiutoClick(statoDi(consumabile).isFigliVisibili(), TestiDellaUI.get("COSA_DESCRIZIONE")));
                 righe.add(TestiDellaUI.get("AIUTO_DOPPIO_CLICK_ACQUISTA"));
@@ -191,30 +192,28 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         }
     }
 
-    private int disegnaElencoSinistro(Graphics2D graphics, int x, int offset) {
+    private void disegnaElencoSinistro(Graphics2D graphics, int x, ScorrimentoSuUnAsse scorrimento) {
+        scorrimento.aggiorna();
+        int offset = (int) Math.round(scorrimento.getScorrimento());
 
         List<Consumabile> consumabili = getElencoGruppo();
         Consumabile evidenziato = trovaConsumabile(consumabili, x, offset, mouseX, mouseY, false);
         ComponenteScorrevole<Consumabile> componenteScorrevole = costruisciComponenteScorrevoleConsumabili(consumabili, evidenziato, false);
 
-        int nuovoOffset = componenteScorrevole.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offset);
-        Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, nuovoOffset);
+        Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, scorrimento);
         graphics.drawImage(image, x + SPACING, DIMENSIONE_BORDO_INTERNO + 2 * SPACING, null);
-
-        return nuovoOffset;
     }
 
-    private int disegnaElencoDestro(Graphics2D graphics, int x, int offset) {
+    private void disegnaElencoDestro(Graphics2D graphics, int x, ScorrimentoSuUnAsse scorrimento) {
+        scorrimento.aggiorna();
+        int offset = (int) Math.round(scorrimento.getScorrimento());
 
         List<Consumabile> consumabili = getElencoVenditore();
         Consumabile evidenziato = trovaConsumabile(consumabili, x, offset, mouseX, mouseY, true);
         ComponenteScorrevole<Consumabile> componenteScorrevole = costruisciComponenteScorrevoleConsumabili(consumabili, evidenziato, true);
 
-        int nuovoOffset = componenteScorrevole.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offset);
-        Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, nuovoOffset);
+        Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, scorrimento);
         graphics.drawImage(image, x + SPACING, DIMENSIONE_BORDO_INTERNO + 2 * SPACING, null);
-
-        return nuovoOffset;
     }
 
     /**
@@ -277,12 +276,12 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
     @Override
     public void processaClick(int x, int y, Tasto tasto) {
-        if (tasto != Tasto.SINISTRO) {
+        if (tasto != Tasto.SINISTRO || isGestoTrascinato()) {
             return;
         }
-        Consumabile consumabile = trovaConsumabile(getElencoGruppo(), xMinimaZonaSinistra, offsetYZonaSinistra, x, y, false);
+        Consumabile consumabile = trovaConsumabile(getElencoGruppo(), xMinimaZonaSinistra, offsetYZonaSinistra(), x, y, false);
         if (consumabile == null) {
-            consumabile = trovaConsumabile(getElencoVenditore(), xMinimaZonaDestra, offsetYZonaDestra, x, y, true);
+            consumabile = trovaConsumabile(getElencoVenditore(), xMinimaZonaDestra, offsetYZonaDestra(), x, y, true);
         }
         if (consumabile == null) {
             return;
@@ -298,11 +297,11 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
     @Override
     public void processaDoppioClick(int x, int y, Tasto tasto) {
         // Come il click singolo, solo con il tasto sinistro: un doppio click destro o centrale non compra
-        if (tasto != Tasto.SINISTRO) {
+        if (tasto != Tasto.SINISTRO || isGestoTrascinato()) {
             return;
         }
         Collection<Consumabile> disponibili = getElencoVenditore();
-        Consumabile consumabile = trovaConsumabile(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y, true);
+        Consumabile consumabile = trovaConsumabile(disponibili, xMinimaZonaDestra, offsetYZonaDestra(), x, y, true);
         if (consumabile != null) {
             BusEventi.pubblica(new ComandoAcquistoConsumabile(consumabile.tipo, consumabile.tipoIncantesimo,
                     consumabile.personaggio == null ? null : consumabile.personaggio.getUuid()));

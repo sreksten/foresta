@@ -10,6 +10,7 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
+import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
@@ -60,7 +61,8 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 	// Pixel di scorrimento per ogni scatto della rotella, come per le missioni
 	private static final int PASSO_SCORRIMENTO = 2;
 	// Di quanti pixel è scrollata la lista
-	private int offsetY = 0;
+	// Quanto la lista è scorsa: con la rotella e trascinandola (anche col dito, e prosegue per inerzia)
+	private final ScorrimentoSuUnAsse scorrimento = new ScorrimentoSuUnAsse(System::nanoTime);
 
 	// Dove sta il mouse, relativo al riquadro, per l'aiuto (-1 fuori)
 	private int mouseX = -1;
@@ -124,7 +126,8 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 		int l = g.getNumeroPersonaggi();
 		List<? extends VistaPersonaggio> ospiti = g.getOspiti();
 		// L'elenco può essere cambiato dall'ultimo scorrimento: l'offset va rimesso nei limiti
-		offsetY = Math.min(offsetY, offsetMassimo());
+		scorrimento.imposta(offsetMassimo() > 0, offsetMassimo());
+		scorrimento.aggiorna();
 		Shape clipOriginale = graphics.getClip();
 		graphics.setClip(areaLista);
 		VistaPersonaggio p;
@@ -256,7 +259,7 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 	 */
 	private int yDelBlocco(int indice) {
 		// Il corpo del testo parte dove partiva: le righe in più per gli accenti salgono sopra
-		return areaLista.y + indice * altezzaBlocco - offsetY - fontMedium.getRigheInCima();
+		return areaLista.y + indice * altezzaBlocco - offsetY() - fontMedium.getRigheInCima();
 	}
 
 	private boolean bloccoVisibile(int indice) {
@@ -271,11 +274,11 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 	private void disegnaFrecce(Graphics2D graphics) {
 		Image frecciaSu = ImageCache.componenteScorrevoleFrecciaSu;
 		Image frecciaGiu = ImageCache.componenteScorrevoleFrecciaGiu;
-		if (offsetY > 0) {
+		if (offsetY() > 0) {
 			graphics.drawImage(frecciaSu, areaLista.x + areaLista.width - frecciaSu.getWidth(null) - ImageCache.SPACING,
 					areaLista.y + ImageCache.SPACING, null);
 		}
-		if (offsetY < offsetMassimo()) {
+		if (offsetY() < offsetMassimo()) {
 			graphics.drawImage(frecciaGiu, areaLista.x + areaLista.width - frecciaGiu.getWidth(null) - ImageCache.SPACING,
 					areaLista.y + areaLista.height - ImageCache.SPACING - frecciaGiu.getHeight(null), null);
 		}
@@ -339,6 +342,40 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 	}
 
+	/**
+	 * Di quanti pixel la lista è scorsa
+	 */
+	private int offsetY() {
+		return (int) Math.round(scorrimento.getScorrimento());
+	}
+
+	/**
+	 * Il gesto che comincia sul riquadro prosegue anche se il puntatore ne esce, finché non si lascia
+	 */
+	@Override
+	public boolean catturaIlTrascinamento() {
+		return true;
+	}
+
+	@Override
+	public void processaPressione(int x, int y, Tasto tasto) {
+		if (tasto == Tasto.SINISTRO) {
+			scorrimento.premi(y, true);
+		}
+	}
+
+	@Override
+	public void processaTrascinamento(int x, int y) {
+		scorrimento.trascina(y);
+	}
+
+	@Override
+	public void processaRilascio(int x, int y, Tasto tasto) {
+		if (tasto == Tasto.SINISTRO) {
+			scorrimento.rilascia();
+		}
+	}
+
 	@Override
 	public int passiPerScattoDellaRotella() {
 		return PASSI_PER_SCATTO_DELLE_LISTE;
@@ -346,9 +383,8 @@ public class DisplayableCanvasRiquadroGruppo implements Finestra {
 
 	@Override
 	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
-		int spostamento = numeroRotazioni * PASSO_SCORRIMENTO;
-		offsetY = movimentoRotella == MovimentoRotella.SU ? offsetY - spostamento : offsetY + spostamento;
-		offsetY = Math.max(0, Math.min(offsetMassimo(), offsetY));
+		int pixel = numeroRotazioni * PASSO_SCORRIMENTO;
+		scorrimento.scorriDi(movimentoRotella == MovimentoRotella.SU ? -pixel : pixel);
 	}
 
 	/**

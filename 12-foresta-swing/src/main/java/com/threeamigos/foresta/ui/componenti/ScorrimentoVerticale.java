@@ -13,8 +13,9 @@ import java.awt.image.BufferedImage;
  * alta {@code fascia} pixel, sfuma, così compare e scompare in dissolvenza. Così scorrono la storia, la classifica e
  * i trofei dell'intro;</li>
  * <li>manuale ({@link #scorri}): l'immagine parte con la cima in cima all'area e si sposta di quanto chiede chi la usa
- * (la rotella del mouse, le frecce), senza uscire dall'area più del necessario. Le frecce ({@link #disegnaFrecce})
- * dicono se c'è altro sopra o sotto. Così scorre la pagina dei trofei.</li>
+ * (la rotella del mouse, le frecce) o trascinandola ({@link #premi}, {@link #trascina}, {@link #rilascia}: col mouse o
+ * col dito, con inerzia ed elastico, vedi {@link ScorrimentoSuUnAsse}), senza uscire dall'area più del necessario. Le
+ * frecce ({@link #disegnaFrecce}) dicono se c'è altro sopra o sotto. Così scorre la pagina dei trofei.</li>
  * </ul>
  * L'immagine si disegna centrata in orizzontale nell'area.
  */
@@ -30,15 +31,18 @@ public final class ScorrimentoVerticale {
 	private Integer quotaDiArrivo;
 	// Riusata a ogni disegno: ci si compone l'immagine con le sue dissolvenze
 	private BufferedImage tela;
+	// Lo scorrimento manuale (null in quello automatico): decide dov'è l'immagine, con inerzia ed elastico
+	private final ScorrimentoSuUnAsse motore;
 
 	/**
 	 * Lo scorrimento manuale: l'immagine parte con la cima in cima all'area, senza dissolvenze.
 	 */
 	public ScorrimentoVerticale(BufferedImage contenuto, Rectangle area) {
-		this(contenuto, area, 0, 0);
+		this(contenuto, area, 0, 0, new ScorrimentoSuUnAsse(System::nanoTime));
 	}
 
-	private ScorrimentoVerticale(BufferedImage contenuto, Rectangle area, int fascia, double y) {
+	private ScorrimentoVerticale(BufferedImage contenuto, Rectangle area, int fascia, double y, ScorrimentoSuUnAsse motore) {
+		this.motore = motore;
 		this.contenuto = contenuto;
 		this.area = new Rectangle(area);
 		this.fascia = fascia;
@@ -49,7 +53,7 @@ public final class ScorrimentoVerticale {
 	 * Lo scorrimento automatico: l'immagine parte appena sotto l'area e sale, sfumando nella fascia ai bordi.
 	 */
 	public static ScorrimentoVerticale dalBasso(BufferedImage contenuto, Rectangle area, int fascia) {
-		return new ScorrimentoVerticale(contenuto, area, fascia, area.height);
+		return new ScorrimentoVerticale(contenuto, area, fascia, area.height, null);
 	}
 
 	/**
@@ -96,7 +100,77 @@ public final class ScorrimentoVerticale {
 	 * dell'area né il fondo dal fondo.
 	 */
 	public void scorri(int pixel) {
+		if (motore != null) {
+			sincronizzaLimite();
+			motore.scorriDi(pixel);
+			y = -motore.getScorrimento();
+			return;
+		}
 		y = Math.max(Math.min(0, area.height - contenuto.getHeight()), Math.min(0, y - pixel));
+	}
+
+	/**
+	 * Dice allo scorrimento manuale di quanto l'immagine può scorrere nell'area
+	 */
+	private void sincronizzaLimite() {
+		double massimo = Math.max(0, contenuto.getHeight() - area.height);
+		motore.imposta(massimo > 0, massimo);
+	}
+
+	/**
+	 * Fa avanzare l'inerzia di un trascinamento fino a adesso (solo scorrimento manuale): lo fa disegna a ogni fotogramma
+	 */
+	private void aggiorna() {
+		if (motore != null) {
+			sincronizzaLimite();
+			motore.aggiorna();
+			y = -motore.getScorrimento();
+		}
+	}
+
+	/**
+	 * Il puntatore si preme sull'immagine, a quella quota (nelle coordinate di chi disegna): comincia un possibile
+	 * trascinamento. Solo scorrimento manuale.
+	 */
+	public void premi(int quota) {
+		if (motore != null) {
+			sincronizzaLimite();
+			motore.premi(quota, true);
+		}
+	}
+
+	/**
+	 * Il puntatore si sposta, premuto: oltre la soglia l'immagine lo segue
+	 */
+	public void trascina(int quota) {
+		if (motore != null) {
+			motore.trascina(quota);
+			y = -motore.getScorrimento();
+		}
+	}
+
+	/**
+	 * Il puntatore si lascia: se si trascinava con una certa velocità l'immagine prosegue per inerzia
+	 */
+	public void rilascia() {
+		if (motore != null) {
+			motore.rilascia();
+		}
+	}
+
+	/**
+	 * Se l'ultimo gesto è stato un trascinamento: il click che segue il rilascio non vale
+	 */
+	public boolean isGestoTrascinato() {
+		return motore != null && motore.isGestoTrascinato();
+	}
+
+	/**
+	 * Se l'immagine si muove da sola (inerzia di un trascinamento, o ritorno dall'elastico): chi la mostra deve
+	 * ridisegnare a ogni fotogramma
+	 */
+	public boolean isInMovimento() {
+		return motore != null && motore.isInMovimento();
 	}
 
 	/**
@@ -139,6 +213,7 @@ public final class ScorrimentoVerticale {
 	 * Disegna la parte dell'immagine che sta nell'area, con le dissolvenze ai bordi e quell'opacità (da 0 a 1).
 	 */
 	public void disegna(Graphics2D graphics, float opacita) {
+		aggiorna();
 		if (opacita <= 0f || area.width <= 0 || area.height <= 0) {
 			return;
 		}

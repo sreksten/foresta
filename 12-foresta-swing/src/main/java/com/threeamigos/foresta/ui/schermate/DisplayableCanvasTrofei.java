@@ -70,9 +70,46 @@ public class DisplayableCanvasTrofei implements Finestra {
 		}
 	}
 
+	/**
+	 * Se la pagina si muove da sola (l'inerzia dopo un trascinamento): va ridisegnata a ogni fotogramma
+	 */
+	public boolean inTransizione() {
+		return scorrimento != null && scorrimento.isInMovimento();
+	}
+
+	/**
+	 * Il gesto che comincia sulla pagina prosegue finché non si lascia il tasto, anche fuori da essa
+	 */
+	@Override
+	public boolean catturaIlTrascinamento() {
+		return true;
+	}
+
+	@Override
+	public void processaPressione(int x, int y, Tasto tasto) {
+		if (scorrimento != null && tasto == Tasto.SINISTRO) {
+			scorrimento.premi(y);
+		}
+	}
+
+	@Override
+	public void processaTrascinamento(int x, int y) {
+		if (scorrimento != null) {
+			scorrimento.trascina(y);
+		}
+	}
+
+	@Override
+	public void processaRilascio(int x, int y, Tasto tasto) {
+		if (scorrimento != null && tasto == Tasto.SINISTRO) {
+			scorrimento.rilascia();
+		}
+	}
+
 	@Override
 	public void processaClick(int x, int y, Tasto tasto) {
-		if (scorrimento == null) {
+		// Il rilascio di un trascinamento non è un click (sulle frecce, per esempio)
+		if (scorrimento == null || scorrimento.isGestoTrascinato()) {
 			return;
 		}
 		if (scorrimento.isSullaFrecciaSu(x, y)) {

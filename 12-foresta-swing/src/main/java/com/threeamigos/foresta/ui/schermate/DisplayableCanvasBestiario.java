@@ -47,6 +47,8 @@ public class DisplayableCanvasBestiario implements Finestra {
 	private int scelta;
 	private ScorrimentoVerticale elenco;
 	private ScorrimentoVerticale scheda;
+	// Quello dei due che si sta trascinando: l'ultimo su cui è stato premuto il tasto
+	private ScorrimentoVerticale premuto;
 
 	public DisplayableCanvasBestiario(int width, int height, VistaPartita vistaPartita) {
 		this.vistaPartita = vistaPartita;
@@ -118,9 +120,50 @@ public class DisplayableCanvasBestiario implements Finestra {
 		}
 	}
 
+	/**
+	 * Se una delle due colonne si muove da sola (l'inerzia dopo un trascinamento): va ridisegnato a ogni fotogramma
+	 */
+	public boolean inTransizione() {
+		return (elenco != null && elenco.isInMovimento()) || (scheda != null && scheda.isInMovimento());
+	}
+
+	/**
+	 * Il gesto che comincia sul bestiario prosegue finché non si lascia il tasto, anche fuori da esso
+	 */
+	@Override
+	public boolean catturaIlTrascinamento() {
+		return true;
+	}
+
+	@Override
+	public void processaPressione(int x, int y, Tasto tasto) {
+		if (tasto != Tasto.SINISTRO) {
+			return;
+		}
+		premuto = x < areaScheda.x - SPAZIO_FRA_I_PANNELLI / 2 ? elenco : scheda;
+		if (premuto != null) {
+			premuto.premi(y);
+		}
+	}
+
+	@Override
+	public void processaTrascinamento(int x, int y) {
+		if (premuto != null) {
+			premuto.trascina(y);
+		}
+	}
+
+	@Override
+	public void processaRilascio(int x, int y, Tasto tasto) {
+		if (tasto == Tasto.SINISTRO && premuto != null) {
+			premuto.rilascia();
+		}
+	}
+
 	@Override
 	public void processaClick(int x, int y, Tasto tasto) {
-		if (elenco == null || scheda == null) {
+		// Il rilascio di un trascinamento non è un click
+		if (elenco == null || scheda == null || (premuto != null && premuto.isGestoTrascinato())) {
 			return;
 		}
 		if (elenco.isSullaFrecciaSu(x, y)) {

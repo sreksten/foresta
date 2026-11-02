@@ -88,6 +88,55 @@ class DoomdarkTextRectangleTest {
     }
 
     @Test
+    void siScorreAPixelEIlTestoSiSpostaDiPixelInteri() throws InterruptedException {
+        int larghezza = 300;
+        int altezza = 200;
+        DoomdarkTextRectangle2x rettangolo = new DoomdarkTextRectangle2x(larghezza, altezza);
+        DoomdarkFont font = DoomdarkFont.medio();
+        rettangolo.addString("Foresta");
+        int corpo = altezza - font.getHeight() + font.getRigheInCima();
+        assertTrue(rigaAccesa(pixel(rettangolo.getImageSource(), larghezza, altezza), larghezza, corpo));
+        // Indietro di 5 pixel: il testo scende di 5, senza passare per righe intere
+        int versione = rettangolo.getVersione();
+        rettangolo.impostaOffset(5);
+        assertTrue(rettangolo.getVersione() > versione);
+        int[] pixel = pixel(rettangolo.getImageSource(), larghezza, altezza);
+        assertFalse(rigaAccesa(pixel, larghezza, corpo + 4), "la prima riga del corpo non sta più dov'era");
+        assertTrue(rigaAccesa(pixel, larghezza, corpo + 5));
+        // Lo stesso offset non cambia niente
+        versione = rettangolo.getVersione();
+        rettangolo.impostaOffset(5);
+        assertEquals(versione, rettangolo.getVersione());
+    }
+
+    @Test
+    void ilMassimoDiScorrimentoEInPixelEUnOffsetFuoriDaiLimitiNonDaErrori() throws InterruptedException {
+        int larghezza = 120;
+        int altezza = 120;
+        DoomdarkTextRectangle2x rettangolo = new DoomdarkTextRectangle2x(larghezza, altezza);
+        int passo = DoomdarkFont.medio().getHeight() + 1;
+        for (int i = 0; i < 12; i++) {
+            rettangolo.addString("Una frase abbastanza lunga da andare a capo più di una volta " + i);
+        }
+        int massimo = rettangolo.getScorrimentoMassimo();
+        assertTrue(massimo > 0);
+        assertEquals(0, massimo % passo, "il massimo è un numero intero di righe");
+        // Fuori dai limiti, come quando si tira oltre un capo, si disegna senza errori
+        rettangolo.impostaOffset(-40);
+        pixel(rettangolo.getImageSource(), larghezza, altezza);
+        rettangolo.impostaOffset(massimo + 40);
+        pixel(rettangolo.getImageSource(), larghezza, altezza);
+        assertFalse(rettangolo.isScorribileSu());
+        // Le righe intere di scorri() restano limitate allo storico
+        rettangolo.impostaOffset(0);
+        rettangolo.scorri(1000);
+        assertEquals(massimo, rettangolo.getScorrimentoMassimo());
+        assertFalse(rettangolo.isScorribileSu(), "in cima allo storico");
+        rettangolo.scorri(-1000);
+        assertFalse(rettangolo.isScorribileGiu(), "di nuovo in fondo");
+    }
+
+    @Test
     void unCarattereCheNonCeNonDaErroriNeColonne() throws InterruptedException {
         DoomdarkTextRectangle2x rettangolo = new DoomdarkTextRectangle2x(200, 100);
         // La "_" non c'è nel font: si salta

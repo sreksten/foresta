@@ -102,11 +102,18 @@ public class ComponenteScorrevole<T> {
     }
 
     /**
+     * Di quanti pixel si può scorrere al massimo la lista in uno spazio alto altezzaMassima: 0 se ci sta tutta.
+     */
+    public int getMassimoScorrimento(int altezzaMassima) {
+        return Math.max(0, calcolaAltezzaMassimaNodi() - altezzaMassima);
+    }
+
+    /**
      * Se la lista è più alta dello spazio in cui la si disegna, e quindi si scorre (con le frecce su e giù che lo
      * segnalano, vedi produci)
      */
     public boolean isScorrevole(int altezzaMassima) {
-        return calcolaAltezzaMassimaNodi() > altezzaMassima;
+        return getMassimoScorrimento(altezzaMassima) > 0;
     }
 
     /**
@@ -114,11 +121,32 @@ public class ComponenteScorrevole<T> {
      * sopra la prima riga né oltre l'ultima.
      */
     public int limitaOffset(int altezzaMassima, int offset) {
-        return limitaOffset(calcolaAltezzaMassimaNodi(), altezzaMassima, offset);
+        return Math.max(0, Math.min(offset, getMassimoScorrimento(altezzaMassima)));
     }
 
-    private int limitaOffset(int altezzaImmagine, int altezzaMassima, int offset) {
-        return Math.max(0, Math.min(offset, altezzaImmagine - altezzaMassima));
+    /**
+     * Disegna la porzione dell'elenco che sta nello spazio alto altezzaMassima, scorsa di quanto dice lo scorrimento.
+     * Prima gli dice di quanto la lista può scorrere, così lo scorrimento resta nei limiti anche se l'elenco è
+     * cambiato dall'ultima volta (più corto, o senza più niente da scorrere).
+     */
+    public Image produci(int altezzaMassima, ScorrimentoSuUnAsse scorrimento) {
+        int massimo = getMassimoScorrimento(altezzaMassima);
+        scorrimento.imposta(massimo > 0, massimo);
+        int offset = (int) Math.round(scorrimento.getScorrimento());
+        int dentro = limitaOffset(altezzaMassima, offset);
+        Image porzione = produci(altezzaMassima, dentro);
+        if (dentro == offset) {
+            return porzione;
+        }
+        // Tirata oltre un capo (vedi ScorrimentoSuUnAsse): la porzione si sposta di quanto è oltre, e resta vuoto il resto
+        BufferedImage tirata = BufferedImageBuilder.creaCompatibile(Math.max(1, larghezza), Math.max(1, altezzaMassima), Transparency.TRANSLUCENT);
+        Graphics2D g2d = tirata.createGraphics();
+        try {
+            g2d.drawImage(porzione, 0, dentro - offset, null);
+        } finally {
+            g2d.dispose();
+        }
+        return tirata;
     }
 
     /**
@@ -132,7 +160,7 @@ public class ComponenteScorrevole<T> {
         List<Nodo> contenuto = espandiNodi();
 
         int altezzaImmagine = Math.max(calcolaAltezzaMassimaNodi(), altezzaMassima);
-        offset = limitaOffset(altezzaImmagine, altezzaMassima, offset);
+        offset = limitaOffset(altezzaMassima, offset);
 
         // I nodi sono nuovi a ogni fotogramma, ma le loro immagini sono quelle in cache: se non è cambiato niente
         // (stesse immagini, stesse posizioni, stesso scorrimento) la porzione di prima è ancora giusta

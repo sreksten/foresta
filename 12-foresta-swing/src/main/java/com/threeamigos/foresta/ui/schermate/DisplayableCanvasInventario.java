@@ -157,12 +157,12 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
 
         // Attributi personaggio
         yAttributi = y;
+        scorrimentoCentrale.aggiorna();
         Object riferimentoSottoIlMouse = trovaRiferimento(personaggio, mouseX, mouseY);
         TipoAttributo attributoEvidenziato = riferimentoSottoIlMouse instanceof TipoAttributo ? (TipoAttributo) riferimentoSottoIlMouse : null;
         ComponenteScorrevole<Object> componenteScorrevole = costruisciComponenteScorrevoleAttributi(personaggio, attributoEvidenziato);
 
-        offsetYZonaCentrale = componenteScorrevole.limitaOffset(height - y, offsetYZonaCentrale);
-        Image image = componenteScorrevole.produci(height - y, offsetYZonaCentrale);
+        Image image = componenteScorrevole.produci(height - y, scorrimentoCentrale);
         graphics.drawImage(image, corniceInventarioWidth + 2 * SPACING, y, null);
 
     }
@@ -288,7 +288,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         if (xInterno < 0 || xInterno >= larghezzaAttributi || y < yAttributi || y >= height) {
             return null;
         }
-        int yInterno = y - yAttributi + offsetYZonaCentrale;
+        int yInterno = y - yAttributi + offsetYZonaCentrale();
         return costruisciComponenteScorrevoleAttributi(p, null).riferimentoTitoloAllaQuota(yInterno);
     }
 

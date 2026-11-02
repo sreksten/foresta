@@ -13,7 +13,8 @@ import java.util.List;
  * Un rettangolo con i glifi del font a immagine ({@link DoomdarkFont}):
  * rettangolo di testo scorrevole in cui le righe già spezzate alla larghezza del rettangolo vengono conservate in uno
  * storico, e il raster viene ridisegnato a partire da quello: è ciò che permette di tornare indietro con la rotella
- * invece di limitarsi a far scorrere via il testo vecchio. Lo storico condivide il limite con quanto ricordato da
+ * invece di limitarsi a far scorrere via il testo vecchio. Si scorre a pixel, non a righe: la prima e l'ultima riga
+ * visibili possono essere tagliate dal bordo. Lo storico condivide il limite con quanto ricordato da
  * {@code motore.Notizie} (vedi {@link NotizieMD#MASSIMO_MESSAGGI_RICORDATI}), così che dopo un ricaricamento il pannello
  * possa essere ripopolato per intero.
  * <p>
@@ -42,8 +43,9 @@ public class DoomdarkTextRectangle2x {
 	private final int passoRiga = fontHeight + INTERLINEA;
 	private final int righeVisibili;
 
-	// Quante righe si è tornati indietro rispetto alla più recente
-	private int offsetRighe;
+	// Di quanti pixel si è tornati indietro rispetto alla più recente (0: la più recente in fondo); fuori dai limiti
+	// di getScorrimentoMassimo di poco, per l'elastico di chi trascina
+	private int offsetPixel;
 	// Il raster va ricostruito solo quando il testo o lo scorrimento sono cambiati
 	private boolean daRidisegnare = true;
 	// Cresce a ogni cambiamento: chi conserva un'immagine del testo sa quando rifarla
@@ -74,7 +76,7 @@ public class DoomdarkTextRectangle2x {
 		}
 	}
 
-	// scrive una stringa alla quota indicata
+	// scrive una stringa alla quota indicata: le righe del glifo che cadono fuori dal rettangolo non si scrivono
 	private void render(String resource, int quota) {
 		int colonna = charPadding;
 		for (int charIndex = 0; charIndex < resource.length(); charIndex++) {
@@ -89,7 +91,7 @@ public class DoomdarkTextRectangle2x {
 				if (colonna >= width - charPadding) {
 					return;
 				}
-				for (int riga = 0; riga < fontHeight; riga++) {
+				for (int riga = Math.max(0, -quota); riga < fontHeight && quota + riga < height; riga++) {
 					textData[(quota + riga) * width + colonna] = DoomdarkTextProducer.pixel(BIANCO, font.getLivello(carattere, x, riga));
 				}
 				colonna++;
@@ -99,19 +101,21 @@ public class DoomdarkTextRectangle2x {
 	}
 
 	/**
-	 * Ridisegna il raster con la finestra di righe che lo scorrimento corrente inquadra:
-	 * la più recente in basso, le precedenti a salire.
+	 * Ridisegna il raster con le righe che lo scorrimento corrente inquadra: la più recente in basso, spostata
+	 * dell'offset, le precedenti a salire.
 	 */
 	private void ridisegna() {
 		Arrays.fill(textData, TRASPARENTE);
-		// Indice della riga che va in fondo al rettangolo
-		int indiceUltimaRiga = righe.size() - 1 - offsetRighe;
-		for (int i = 0; i < righeVisibili; i++) {
-			int indiceRiga = indiceUltimaRiga - i;
-			if (indiceRiga < 0) {
-				break;
+		// La riga i, contando dalla più recente, sta a height - fontHeight - i * passoRiga + offsetPixel: si scrivono
+		// solo quelle che ne vedono almeno una parte
+		int da = Math.max(0, Math.floorDiv(offsetPixel - fontHeight, passoRiga));
+		int fine = Math.min(righe.size() - 1, Math.floorDiv(height + offsetPixel, passoRiga) + 1);
+		for (int i = da; i <= fine; i++) {
+			int quota = height - fontHeight - i * passoRiga + offsetPixel;
+			if (quota + fontHeight <= 0 || quota >= height) {
+				continue;
 			}
-			render(righe.get(indiceRiga), height - fontHeight - i * passoRiga);
+			render(righe.get(righe.size() - 1 - i), quota);
 		}
 		daRidisegnare = false;
 	}
@@ -130,7 +134,7 @@ public class DoomdarkTextRectangle2x {
 		}
 		// Un messaggio nuovo riporta in fondo: nel mezzo di una partita non deve poter
 		// passare inosservato perché si stava rileggendo il testo vecchio
-		offsetRighe = 0;
+		offsetPixel = 0;
 		segnaCambiato();
 	}
 
@@ -140,24 +144,37 @@ public class DoomdarkTextRectangle2x {
 	public final synchronized void clear() {
 		righe.clear();
 		imbottisci();
-		offsetRighe = 0;
+		offsetPixel = 0;
 		segnaCambiato();
 	}
 
 	/**
-	 * Sposta indietro (o avanti) la finestra di righe inquadrata, senza uscire dallo
-	 * storico disponibile.
+	 * Di quanti pixel si può tornare indietro al massimo: fino a che la riga più vecchia arriva in cima.
+	 */
+	public final synchronized int getScorrimentoMassimo() {
+		return Math.max(0, righe.size() - righeVisibili) * passoRiga;
+	}
+
+	/**
+	 * Mette il testo a quell'offset, in pixel indietro rispetto alla riga più recente (0: la più recente in fondo).
+	 * Non lo limita: chi trascina può tirare di poco oltre i capi (elastico) e riportarlo dentro.
+	 */
+	public final synchronized void impostaOffset(int pixel) {
+		if (pixel != offsetPixel) {
+			offsetPixel = pixel;
+			segnaCambiato();
+		}
+	}
+
+	/**
+	 * Sposta indietro (o avanti) di righe intere, senza uscire dallo storico disponibile.
 	 *
 	 * @param righeIndietro positivo per tornare al testo più vecchio
 	 */
 	public final synchronized void scorri(int righeIndietro) {
-		int nuovoOffset = offsetRighe + righeIndietro;
-		int offsetMassimo = Math.max(0, righe.size() - righeVisibili);
-		nuovoOffset = Math.max(0, Math.min(nuovoOffset, offsetMassimo));
-		if (nuovoOffset != offsetRighe) {
-			offsetRighe = nuovoOffset;
-			segnaCambiato();
-		}
+		int nuovoOffset = offsetPixel + righeIndietro * passoRiga;
+		nuovoOffset = Math.max(0, Math.min(nuovoOffset, getScorrimentoMassimo()));
+		impostaOffset(nuovoOffset);
 	}
 
 	private void segnaCambiato() {
@@ -169,14 +186,14 @@ public class DoomdarkTextRectangle2x {
 	 * Se si può ancora scorrere all'indietro verso i messaggi più vecchi (freccia su).
 	 */
 	public synchronized boolean isScorribileSu() {
-		return offsetRighe < Math.max(0, righe.size() - righeVisibili);
+		return offsetPixel < getScorrimentoMassimo();
 	}
 
 	/**
 	 * Se si è già scorsi all'indietro e si può tornare verso i messaggi più recenti (freccia giù).
 	 */
 	public synchronized boolean isScorribileGiu() {
-		return offsetRighe > 0;
+		return offsetPixel > 0;
 	}
 
 	/**

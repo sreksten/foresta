@@ -133,8 +133,7 @@ public class DisplayableCanvasBarraIconeDock extends DisplayableCanvasBarraIcone
 	 * (quelle della barra classica), non su quelle ingrandite, altrimenti ogni movimento cambierebbe le distanze che
 	 * lo determinano. La fila allargata si distribuisce attorno al cursore in proporzione a dove cade nella fila di
 	 * base, così l'icona sotto il cursore gli resta sotto; le icone poggiano sul fondo e crescono verso l'alto.
-	 * Gli intervalli fra le icone di base (zero, tranne la prima della fascia che scorre, che può stare sotto la freccia)
-	 * si conservano. Se le icone scorrono, le frecce ai capi non si ingrandiscono e la fila non si tiene dentro la
+	 * Gli intervalli fra le icone di base si conservano. Se le icone scorrono la fila non si tiene dentro la
 	 * barra: sporge ai lati e la ritaglia il disegno.
 	 */
 	private void ricalcola() {
@@ -147,16 +146,10 @@ public class DisplayableCanvasBarraIconeDock extends DisplayableCanvasBarraIcone
 		int cursoreX = cursoreDentro ? mouseX : ultimoMouseX;
 		double intensita = intensita();
 		boolean attivo = cursoreX >= 0 && intensita > 0.0d;
-		boolean conFrecce = isScorrevole();
-		// Le icone che si ingrandiscono: tutte, o quelle fra le due frecce
-		int da = conFrecce ? 1 : 0;
-		int fine = conFrecce ? quante - 1 : quante;
-		if (fine <= da) {
-			for (IconaVisibile icona : iconeVisibili) {
-				rettangoli.add(new Rectangle(icona.rettangolo));
-			}
-			return;
-		}
+		boolean scorre = isScorrevole();
+		// Tutte le icone visibili si ingrandiscono
+		int da = 0;
+		int fine = quante;
 		double[] scale = new double[quante];
 		double larghezzaTotale = 0.0d;
 		for (int i = da; i < fine; i++) {
@@ -170,8 +163,8 @@ public class DisplayableCanvasBarraIconeDock extends DisplayableCanvasBarraIcone
 		double larghezzaBase = ultimo.x + ultimo.width - inizioBase;
 		double quota = attivo ? Math.max(0.0d, Math.min(1.0d, (cursoreX - inizioBase) / larghezzaBase)) : 0.5d;
 		double x = inizioBase - (larghezzaTotale - larghezzaBase) * quota;
-		if (!conFrecce) {
-			x = Math.max(0.0d, Math.min(larghezza - larghezzaTotale, x));
+		if (!scorre) {
+			x = Math.max(0.0d, Math.min(lunghezzaUtile() - larghezzaTotale, x));
 		}
 		for (int i = 0; i < quante; i++) {
 			Rectangle base = iconeVisibili.get(i).rettangolo;
@@ -214,7 +207,7 @@ public class DisplayableCanvasBarraIconeDock extends DisplayableCanvasBarraIcone
 		}
 		ricalcola();
 		for (int i = 0; i < rettangoli.size(); i++) {
-			if (rettangoli.get(i).contains(x, y) && (isFreccia(i) || nellaFascia(x, y))) {
+			if (rettangoli.get(i).contains(x, y) && nellaFascia(x, y)) {
 				return true;
 			}
 		}

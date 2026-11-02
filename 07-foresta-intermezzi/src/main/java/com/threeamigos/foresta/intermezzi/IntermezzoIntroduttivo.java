@@ -12,6 +12,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import java.util.ArrayList;
 import java.util.List;
 import com.threeamigos.foresta.testi.Testi;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 
 /**
  * Intermezzo di prova: scatta all'arrivo nella prima locazione della partita. Le prime
@@ -61,7 +62,7 @@ public class IntermezzoIntroduttivo implements Intermezzo {
 								.guarda(Verso.SINISTRA)
 								.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
 						.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoIntroduttivo.3")).daSecondo(2))
-						.conBattuta(BattutaIntermezzo.di("eroe", Testi.formatta("intermezzi", "IntermezzoIntroduttivo.4", eroe)));
+						.conBattuta(BattutaIntermezzo.di("eroe", Testi.formatta("intermezzi", Dado.tira(2) == 1 ? "IntermezzoIntroduttivo.4" : "IntermezzoIntroduttivo.4b", eroe)));
 		finale.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoIntroduttivo.5")).perSecondi(4));
 		if (GruppoGiocatore.getIstanza().getCapo().getClasse() == TipoPersonaggio.OMBRAFIAMMA) {
 			finale.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoIntroduttivo.6")));

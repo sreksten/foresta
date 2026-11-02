@@ -10,6 +10,7 @@ import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.ui.DisplayableCanvas;
 import com.threeamigos.foresta.ui.Finestra;
+import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
@@ -27,12 +28,15 @@ import java.util.List;
  * DisplayableCanvas (vedi DisplayableCanvas.run). In orizzontale sta in fondo allo schermo, in verticale a destra:
  * l'asse lungo la barra è la larghezza nel primo caso, l'altezza nel secondo.
  * <p>
- * Se le icone non ci stanno tutte, le due frecce (SINISTRA e DESTRA, o SU e GIU) restano ancorate ai due estremi e le
- * altre scorrono fra loro in modo fluido, in pixel: si disegnano con uno scostamento e si ritagliano sulla fascia
- * di mezzo. Si scorre trascinando (mouse o dito), e lasciando andare con una certa velocità le icone proseguono per
- * inerzia e rallentano; le frecce fanno scorrere di una pagina, con una breve animazione, e si spengono ai capi.
- * Una pressione che non supera SOGLIA_TRASCINAMENTO e viene lasciata sulla stessa icona è un tocco: esegue il
- * comando. Per ricevere il trascinamento anche fuori dalla fascia la barra se lo fa catturare (vedi
+ * Se le icone non ci stanno tutte scorrono in modo fluido, in pixel: si disegnano con uno scostamento e si ritagliano
+ * sulla lunghezza utile della barra. Si scorre trascinando (mouse o dito), con la rotella (di un'icona per scatto, con
+ * una breve animazione) e, lasciando andare con una certa velocità, le icone proseguono per inerzia e rallentano;
+ * oltre i capi si tirano con un po' di elastico e tornano. Due freccine blu (a sinistra e a destra, o in alto e in
+ * basso) segnalano che da quella parte c'è altro, si sovrappongono alle icone e non si toccano: stanno in basso nella
+ * barra orizzontale, a destra in quella verticale, e quella verso la fine si ferma prima della riserva a fine asse
+ * (vedi setRiservaAFineAsse), lo spazio che ha preso il joystick virtuale.
+ * Una pressione che non supera la soglia di trascinamento e viene lasciata sulla stessa icona è un tocco: esegue il
+ * comando. Per ricevere il trascinamento anche fuori dalla barra se lo fa catturare (vedi
  * catturaIlTrascinamento).
  * <p>
  * In fondo ai comandi la barra aggiunge da sola l'interruttore dell'aiuto, che il gioco non vede: AIUTO quando
@@ -56,39 +60,6 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 	 * La distanza fra il cartiglio dell'aiuto e l'icona a cui si riferisce
 	 */
 	private static final int DISTANZA_CARTIGLIO = 4;
-	/**
-	 * Di quanti pixel va spostato il puntatore, premuto, perché il gesto sia un trascinamento e non un tocco
-	 */
-	static final int SOGLIA_TRASCINAMENTO = 8;
-	/**
-	 * Lasciando la barra a meno di questa velocità (pixel al secondo) le icone si fermano; a più, proseguono per inerzia
-	 */
-	static final double VELOCITA_MINIMA_INERZIA = 200.0d;
-	/**
-	 * Sotto questa velocità l'inerzia è finita
-	 */
-	private static final double VELOCITA_DI_ARRESTO = 20.0d;
-	/**
-	 * Il tempo, in secondi, in cui la velocità dell'inerzia si riduce di un fattore e (circa 37%)
-	 */
-	private static final double COSTANTE_DI_ATTRITO = 0.35d;
-	/**
-	 * Come COSTANTE_DI_ATTRITO, per l'animazione che segue il click su una freccia
-	 */
-	private static final double COSTANTE_DELLE_FRECCE = 0.08d;
-	/**
-	 * Se il puntatore è fermo da più di così quando si lascia la barra, non c'è inerzia
-	 */
-	private static final long ETA_MASSIMA_DEL_CAMPIONE_NANOS = 100_000_000L;
-	/**
-	 * Un fotogramma in ritardo (il sistema era sospeso) non fa scattare lo scorrimento: il tempo trascorso si limita a questo
-	 */
-	private static final double PASSO_MASSIMO_SECONDI = 0.05d;
-	/**
-	 * Quanto è opaca una freccia spenta (a fine corsa)
-	 */
-	private static final float OPACITA_FRECCIA_SPENTA = 0.3f;
-
 	public static class IconaVisibile {
 		public final Rectangle rettangolo;
 		public final Comando comando;
@@ -117,10 +88,11 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 	 */
 	private final int posizioneTrasversale;
 
-	private final Comando comandoPrecedente;
-	private final BufferedImage iconaPrecedente;
-	private final Comando comandoSuccessivo;
-	private final BufferedImage iconaSuccessivo;
+	/**
+	 * Quanti pixel, a fine asse, la barra lascia ad altro (il joystick virtuale): le icone e la freccia verso la fine
+	 * stanno prima
+	 */
+	private int riservaAFineAsse = 0;
 
 	private final Image[] copyrightImages = new Image[3];
 	private final int[] copyrightImagesXOffset = new int[3];
@@ -134,10 +106,10 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 	 */
 	private boolean scorrevole = false;
 	/**
-	 * Di quanti pixel le icone sono spostate verso l'inizio della barra (0 le mostra dalla prima), fino a scorrimentoMassimo
+	 * Lo scorrimento delle icone: di quanti pixel sono spostate verso l'inizio della barra (0 le mostra dalla prima),
+	 * fino al massimo, con trascinamento, inerzia e animazione delle frecce
 	 */
-	private double scorrimento = 0.0d;
-	private double scorrimentoMassimo = 0.0d;
+	private final ScorrimentoSuUnAsse scorrimento = new ScorrimentoSuUnAsse(this::adesso);
 
 	public final List<IconaVisibile> iconeVisibili = new ArrayList<>();
 
@@ -145,26 +117,9 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 	int mouseY = -1;
 	boolean mousePremuto = false;
 
-	// Il gesto in corso: da dove è iniziato, se ha superato la soglia e la velocità con cui il puntatore si muove
-	private boolean premutoValido = false;
-	private boolean puoTrascinare = false;
-	private boolean trascinando = false;
+	// Il gesto in corso: se la pressione ha fermato le icone in movimento (e allora non è un tocco) e l'icona premuta
 	private boolean fermatoInMovimento = false;
 	private Comando comandoPremuto = null;
-	private int premutoAsse;
-	private double scorrimentoAllaPressione;
-	private int ultimoAsse;
-	private long istanteUltimoCampione;
-	private double velocitaStimata;
-
-	// Il movimento che prosegue da solo: l'inerzia, oppure lo scorrimento verso la destinazione di una freccia
-	private boolean inerzia = false;
-	private double velocita;
-	private boolean haDestinazione = false;
-	private double destinazione;
-	private long istanteAggiornamento;
-	// Letto dal thread di animazione (vedi inTransizione)
-	private volatile boolean inMovimento = false;
 
 	private final VistaPartita vistaPartita;
 
@@ -179,18 +134,6 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 		this.lunghezzaAsse = orizzontale ? larghezza : altezza;
 		this.latoIcona = orizzontale ? ICONA_WIDTH : ICONA_HEIGHT;
 		this.posizioneTrasversale = orizzontale ? (altezza - ICONA_HEIGHT) >> 1 : (larghezza - ICONA_WIDTH) >> 1;
-
-		if (orizzontale) {
-			comandoPrecedente = Comando.SINISTRA;
-			iconaPrecedente = TipoIcona.SINISTRA.getIcona();
-			comandoSuccessivo = Comando.DESTRA;
-			iconaSuccessivo = TipoIcona.DESTRA.getIcona();
-		} else {
-			comandoPrecedente = Comando.SU;
-			iconaPrecedente = TipoIcona.SU.getIcona();
-			comandoSuccessivo = Comando.GIU;
-			iconaSuccessivo = TipoIcona.GIU.getIcona();
-		}
 
 		DoomdarkFont fontSmall = DoomdarkFont.piccolo();
 		DoomdarkColorModel.Color color = DoomdarkColorModel.Color.VERY_DARK_GRAY;
@@ -223,8 +166,7 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 			comandi[i] = comando;
 			icone[i] = getIcona(comando);
 		}
-		scorrimento = 0.0d;
-		ferma();
+		scorrimento.reimposta();
 		ricalcolaGeometria();
 	}
 
@@ -289,19 +231,31 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 	 */
 	private void ricalcolaGeometria() {
 		int quanteScelte = comandi.length;
-		int iconePossibili = lunghezzaAsse / (latoIcona + MARGINE_ICONA);
+		int iconePossibili = lunghezzaUtile() / (latoIcona + MARGINE_ICONA);
 		scorrevole = quanteScelte > iconePossibili;
-		scorrimentoMassimo = scorrevole ? Math.max(0, quanteScelte * latoIcona - (lunghezzaAsse - 2 * latoIcona)) : 0.0d;
-		scorrimento = Math.max(0.0d, Math.min(scorrimento, scorrimentoMassimo));
-		if (haDestinazione) {
-			destinazione = Math.max(0.0d, Math.min(destinazione, scorrimentoMassimo));
-		}
+		scorrimento.imposta(scorrevole, scorrevole ? Math.max(0, quanteScelte * latoIcona - lunghezzaUtile()) : 0.0d);
 		ricostruisciIconeVisibili();
 	}
 
 	/**
-	 * Le icone che si vedono, anche solo in parte, nell'ordine della barra: la freccia precedente, le icone della
-	 * fascia di mezzo (la prima e l'ultima possono uscirne a metà: le ritaglia il disegno) e la freccia successiva.
+	 * La lunghezza della barra, lungo il suo asse, che è delle icone: tutta, meno la riserva a fine asse
+	 */
+	int lunghezzaUtile() {
+		return Math.max(0, lunghezzaAsse - riservaAFineAsse);
+	}
+
+	/**
+	 * Lascia in fondo alla barra (a destra in orizzontale, in basso in verticale) questi pixel: le icone si
+	 * dispongono prima, e la freccia verso la fine si ferma prima. Serve a non finire sotto il joystick virtuale.
+	 */
+	public void setRiservaAFineAsse(int pixel) {
+		riservaAFineAsse = Math.max(0, pixel);
+		ricalcolaGeometria();
+	}
+
+	/**
+	 * Le icone che si vedono, anche solo in parte, nell'ordine della barra (la prima e l'ultima possono uscire dalla
+	 * barra a metà: le ritaglia il disegno).
 	 */
 	private void ricostruisciIconeVisibili() {
 		iconeVisibili.clear();
@@ -310,21 +264,19 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 			return;
 		}
 		if (!scorrevole) {
-			int posizione = (lunghezzaAsse - quanteScelte * latoIcona) >> 1;
+			int posizione = (lunghezzaUtile() - quanteScelte * latoIcona) >> 1;
 			for (int i = 0; i < quanteScelte; i++) {
 				aggiungiIcona(posizione + i * latoIcona, comandi[i], icone[i]);
 			}
 			return;
 		}
-		aggiungiIcona(0, comandoPrecedente, iconaPrecedente);
-		int origine = latoIcona - (int) Math.round(scorrimento);
+		int origine = -(int) Math.round(scorrimento.getScorrimento());
 		for (int i = 0; i < quanteScelte; i++) {
 			int posizione = origine + i * latoIcona;
-			if (posizione + latoIcona > latoIcona && posizione < lunghezzaAsse - latoIcona) {
+			if (posizione + latoIcona > 0 && posizione < lunghezzaUtile()) {
 				aggiungiIcona(posizione, comandi[i], icone[i]);
 			}
 		}
-		aggiungiIcona(lunghezzaAsse - latoIcona, comandoSuccessivo, iconaSuccessivo);
 	}
 
 	private void aggiungiIcona(int posizioneSuAsse, Comando comando, BufferedImage icona) {
@@ -334,25 +286,16 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 		iconeVisibili.add(new IconaVisibile(rettangolo, comando, icona));
 	}
 
-	/**
-	 * Quanto, in pixel, scorrono le frecce a ogni click: le icone che stanno nella fascia di mezzo meno una, così
-	 * l'ultima vista resta in vista come riferimento.
-	 */
-	private int pagina() {
-		int nellaFascia = (lunghezzaAsse - 2 * latoIcona) / latoIcona;
-		return Math.max(1, nellaFascia - 1) * latoIcona;
-	}
-
 	public double getScorrimento() {
-		return scorrimento;
+		return scorrimento.getScorrimento();
 	}
 
 	public double getScorrimentoMassimo() {
-		return scorrimentoMassimo;
+		return scorrimento.getMassimo();
 	}
 
 	/**
-	 * Se le icone scorrono (non ci stanno tutte) e quindi le frecce stanno ai capi
+	 * Se le icone scorrono (non ci stanno tutte)
 	 */
 	public boolean isScorrevole() {
 		return scorrevole;
@@ -366,52 +309,13 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 	}
 
 	/**
-	 * Ferma qualunque movimento in corso, trascinamento compreso
-	 */
-	private void ferma() {
-		trascinando = false;
-		premutoValido = false;
-		inerzia = false;
-		velocita = 0.0d;
-		haDestinazione = false;
-		inMovimento = false;
-	}
-
-	/**
 	 * Fa avanzare l'inerzia o l'animazione di una freccia fino a questo istante: va chiamato a ogni disegno, prima di
 	 * disegnare. Durante un trascinamento lo scorrimento lo decide il puntatore.
 	 */
 	protected void aggiornaScorrimento() {
-		long ora = adesso();
-		double passo = Math.min((ora - istanteAggiornamento) / 1_000_000_000.0d, PASSO_MASSIMO_SECONDI);
-		istanteAggiornamento = ora;
-		if (trascinando || !scorrevole || passo <= 0.0d) {
-			return;
-		}
-		if (inerzia) {
-			scorrimento += velocita * passo;
-			velocita *= Math.exp(-passo / COSTANTE_DI_ATTRITO);
-			if (scorrimento < 0.0d || scorrimento > scorrimentoMassimo) {
-				// Arrivata a un capo l'inerzia finisce: niente rimbalzo
-				scorrimento = Math.max(0.0d, Math.min(scorrimento, scorrimentoMassimo));
-				inerzia = false;
-				velocita = 0.0d;
-			} else if (Math.abs(velocita) < VELOCITA_DI_ARRESTO) {
-				inerzia = false;
-				velocita = 0.0d;
-			}
-			ricostruisciIconeVisibili();
-		} else if (haDestinazione) {
-			double distanza = destinazione - scorrimento;
-			if (Math.abs(distanza) < 0.5d) {
-				scorrimento = destinazione;
-				haDestinazione = false;
-			} else {
-				scorrimento += distanza * (1.0d - Math.exp(-passo / COSTANTE_DELLE_FRECCE));
-			}
+		if (scorrimento.aggiorna()) {
 			ricostruisciIconeVisibili();
 		}
-		inMovimento = inerzia || haDestinazione;
 	}
 
 	/**
@@ -422,30 +326,13 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 	}
 
 	/**
-	 * La fascia in cui le icone scorrono, in coordinate dello schermo, che si estende oltre la barra sull'altro asse
+	 * La fascia in cui le icone si vedono, in coordinate dello schermo, che si estende oltre la barra sull'altro asse
 	 * perché le icone ingrandite del Dock possano uscirne.
 	 */
 	Rectangle fasciaDiRitaglio() {
 		return orizzontale
-				? new Rectangle(offsetX + latoIcona, offsetY - ICONA_HEIGHT, lunghezzaAsse - 2 * latoIcona, altezza + ICONA_HEIGHT)
-				: new Rectangle(offsetX - ICONA_WIDTH, offsetY + latoIcona, larghezza + ICONA_WIDTH, lunghezzaAsse - 2 * latoIcona);
-	}
-
-	/**
-	 * Se l'icona con questo indice, fra le visibili, è una delle due frecce
-	 */
-	boolean isFreccia(int indice) {
-		return scorrevole && (indice == 0 || indice == iconeVisibili.size() - 1);
-	}
-
-	/**
-	 * Una freccia a fine corsa: si vede, ma spenta, e non fa niente
-	 */
-	private boolean isFrecciaSpenta(int indice) {
-		if (!isFreccia(indice)) {
-			return false;
-		}
-		return indice == 0 ? scorrimento <= 0.5d : scorrimento >= scorrimentoMassimo - 0.5d;
+				? new Rectangle(offsetX, offsetY - ICONA_HEIGHT, lunghezzaUtile(), altezza + ICONA_HEIGHT)
+				: new Rectangle(offsetX - ICONA_WIDTH, offsetY, larghezza + ICONA_WIDTH, lunghezzaUtile());
 	}
 
 	private int asse(int x, int y) {
@@ -453,24 +340,25 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 	}
 
 	/**
-	 * Se il punto (relativo alla barra) cade nella fascia di mezzo, quella in cui le icone scorrono e si ritagliano
+	 * Se il punto (relativo alla barra) cade nella lunghezza utile della barra, quella in cui le icone si vedono e si
+	 * toccano: se le icone scorrono, la parte che esce non si tocca
 	 */
 	boolean nellaFascia(int x, int y) {
 		if (!scorrevole) {
 			return true;
 		}
 		int posizione = asse(x, y);
-		return posizione >= latoIcona && posizione < lunghezzaAsse - latoIcona;
+		return posizione >= 0 && posizione < lunghezzaUtile();
 	}
 
 	/**
 	 * L'indice, fra le icone visibili, di quella che copre il punto (relativo alla barra), o -1. Un'icona che esce
-	 * dalla fascia di mezzo non si tocca nella parte che esce.
+	 * dalla barra non si tocca nella parte che esce.
 	 */
 	int indiceSotto(int x, int y) {
 		preparaGeometria();
 		for (int i = 0; i < iconeVisibili.size(); i++) {
-			if (rettangoloDisegnato(i).contains(x, y) && (isFreccia(i) || nellaFascia(x, y))) {
+			if (rettangoloDisegnato(i).contains(x, y) && nellaFascia(x, y)) {
 				return i;
 			}
 		}
@@ -497,23 +385,41 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 					ritagliato.clipRect(fascia.x, fascia.y, fascia.width, fascia.height);
 				}
 				for (int i = 0; i < iconeVisibili.size(); i++) {
-					if (!isFreccia(i)) {
-						disegnaIcona(ritagliato, i);
-					}
+					disegnaIcona(ritagliato, i);
 				}
 			} finally {
 				ritagliato.dispose();
 			}
-			// Le frecce stanno ai capi e sopra le icone che scorrono
-			for (int i = 0; i < iconeVisibili.size(); i++) {
-				if (isFreccia(i)) {
-					disegnaIcona(icone, i);
-				}
-			}
 		} finally {
 			icone.dispose();
 		}
+		disegnaIndicatoriDiScorrimento(graphics);
 		copyright(graphics);
+	}
+
+	/**
+	 * Le due freccine blu sopra le icone: quella verso l'inizio se le icone sono scorse, quella verso la fine se ce ne
+	 * sono ancora. Stanno in basso in orizzontale e a destra in verticale, con un po' di spazio dal bordo (come le
+	 * frecce degli altri elenchi scorrevoli); quella verso la fine si ferma prima della riserva a fine asse.
+	 */
+	private void disegnaIndicatoriDiScorrimento(Graphics2D graphics) {
+		if (!scorrevole) {
+			return;
+		}
+		boolean altroPrima = scorrimento.getScorrimento() > 0.5d;
+		boolean altroDopo = scorrimento.getScorrimento() < scorrimento.getMassimo() - 0.5d;
+		Image prima = orizzontale ? ImageCache.componenteScorrevoleFrecciaSinistra : ImageCache.componenteScorrevoleFrecciaSu;
+		Image dopo = orizzontale ? ImageCache.componenteScorrevoleFrecciaDestra : ImageCache.componenteScorrevoleFrecciaGiu;
+		int spazio = ImageCache.SPACING;
+		if (altroPrima) {
+			graphics.drawImage(prima, offsetX + (orizzontale ? spazio : larghezza - prima.getWidth(null) - spazio),
+					offsetY + (orizzontale ? altezza - prima.getHeight(null) - spazio : spazio), null);
+		}
+		if (altroDopo) {
+			graphics.drawImage(dopo,
+					offsetX + (orizzontale ? lunghezzaUtile() - dopo.getWidth(null) - spazio : larghezza - dopo.getWidth(null) - spazio),
+					offsetY + (orizzontale ? altezza - dopo.getHeight(null) - spazio : lunghezzaUtile() - dopo.getHeight(null) - spazio), null);
+		}
 	}
 
 	private void disegnaIcona(Graphics2D graphics, int indice) {
@@ -521,13 +427,6 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 		Rectangle r = rettangoloDisegnato(indice);
 		int x = offsetX + r.x;
 		int y = offsetY + r.y;
-		if (isFrecciaSpenta(indice)) {
-			Composite precedente = graphics.getComposite();
-			graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, OPACITA_FRECCIA_SPENTA));
-			graphics.drawImage(iconaVisibile.icona, x, y, r.width, r.height, null);
-			graphics.setComposite(precedente);
-			return;
-		}
 		graphics.drawImage(iconaVisibile.icona, x, y, r.width, r.height, null);
 		// Un comando in ricarica non si può dare: sotto il cursore non si evidenzia
 		if (ComandiPossibili.getRicarica(iconaVisibile.comando) == null && isSottoIlCursore(indice, r)) {
@@ -540,7 +439,7 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 	 * Se il cursore sta su questa icona (durante un trascinamento non sta su nessuna)
 	 */
 	private boolean isSottoIlCursore(int indice, Rectangle disegnato) {
-		return !trascinando && mouseX >= 0 && disegnato.contains(mouseX, mouseY) && (isFreccia(indice) || nellaFascia(mouseX, mouseY));
+		return !scorrimento.isTrascinando() && mouseX >= 0 && disegnato.contains(mouseX, mouseY) && nellaFascia(mouseX, mouseY);
 	}
 
 	/**
@@ -558,8 +457,8 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 		if (!vistaPartita.isAiutoAbilitato() || mouseX < 0) {
 			return;
 		}
-		int i = trascinando ? -1 : indiceSotto(mouseX, mouseY);
-		if (i < 0 || isFrecciaSpenta(i)) {
+		int i = scorrimento.isTrascinando() ? -1 : indiceSotto(mouseX, mouseY);
+		if (i < 0) {
 			return;
 		}
 		Rectangle r = rettangoloDisegnato(i);
@@ -634,7 +533,7 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 	 * di una freccia): allora DisplayableCanvas la ridisegna a ogni fotogramma.
 	 */
 	public boolean inTransizione() {
-		return inMovimento;
+		return scorrimento.isInMovimento();
 	}
 
 	/**
@@ -666,57 +565,20 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 		mouseX = x;
 		mouseY = y;
 		mousePremuto = true;
-		// Toccare le icone mentre scorrono le ferma; e quel tocco non vale come tocco su un'icona
-		fermatoInMovimento = inerzia || haDestinazione;
-		inerzia = false;
-		velocita = 0.0d;
-		haDestinazione = false;
-		inMovimento = false;
-		premutoValido = true;
-		trascinando = false;
 		int sotto = indiceSotto(x, y);
 		comandoPremuto = sotto >= 0 ? iconeVisibili.get(sotto).comando : null;
-		// Solo da un punto della fascia di mezzo si trascina: le frecce non si trascinano
-		puoTrascinare = scorrevole && scorrimentoMassimo > 0.0d && nellaFascia(x, y) && (sotto < 0 || !isFreccia(sotto));
-		premutoAsse = asse(x, y);
-		scorrimentoAllaPressione = scorrimento;
-		ultimoAsse = premutoAsse;
-		istanteUltimoCampione = adesso();
-		velocitaStimata = 0.0d;
+		// Toccare le icone mentre scorrono le ferma; e quel tocco non vale come tocco su un'icona.
+		fermatoInMovimento = scorrimento.premi(asse(x, y), nellaFascia(x, y));
 	}
 
 	@Override
 	public void processaTrascinamento(int x, int y) {
 		mouseX = x;
 		mouseY = y;
-		if (!premutoValido) {
-			return;
+		scorrimento.trascina(asse(x, y));
+		if (scorrimento.isTrascinando()) {
+			ricostruisciIconeVisibili();
 		}
-		int posizione = asse(x, y);
-		if (!trascinando) {
-			if (!puoTrascinare || Math.abs(posizione - premutoAsse) < SOGLIA_TRASCINAMENTO) {
-				return;
-			}
-			// Da qui le icone seguono il puntatore: si parte da dove è adesso, senza lo scatto della soglia
-			trascinando = true;
-			premutoAsse = posizione;
-			scorrimentoAllaPressione = scorrimento;
-			ultimoAsse = posizione;
-			istanteUltimoCampione = adesso();
-			velocitaStimata = 0.0d;
-			return;
-		}
-		long ora = adesso();
-		double secondi = (ora - istanteUltimoCampione) / 1_000_000_000.0d;
-		if (secondi > 0.001d) {
-			// Il puntatore va verso l'inizio della barra quando le icone scorrono verso la fine
-			double istantanea = -(posizione - ultimoAsse) / secondi;
-			velocitaStimata = 0.5d * velocitaStimata + 0.5d * istantanea;
-			ultimoAsse = posizione;
-			istanteUltimoCampione = ora;
-		}
-		scorrimento = Math.max(0.0d, Math.min(scorrimentoAllaPressione - (posizione - premutoAsse), scorrimentoMassimo));
-		ricostruisciIconeVisibili();
 	}
 
 	/**
@@ -731,27 +593,30 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 		mousePremuto = false;
 		mouseX = x;
 		mouseY = y;
-		boolean eraTrascinamento = trascinando;
-		boolean eraPremuto = premutoValido;
-		trascinando = false;
-		premutoValido = false;
-		if (eraTrascinamento) {
-			boolean fermo = adesso() - istanteUltimoCampione > ETA_MASSIMA_DEL_CAMPIONE_NANOS;
-			if (!fermo && Math.abs(velocitaStimata) >= VELOCITA_MINIMA_INERZIA) {
-				velocita = velocitaStimata;
-				inerzia = true;
-				istanteAggiornamento = adesso();
-				inMovimento = true;
-			}
-			return;
-		}
-		if (!eraPremuto || fermatoInMovimento || comandoPremuto == null) {
+		boolean eraTrascinamento = scorrimento.isTrascinando();
+		boolean eraPremuto = scorrimento.isPremuto();
+		scorrimento.rilascia();
+		if (eraTrascinamento || !eraPremuto || fermatoInMovimento || comandoPremuto == null) {
 			return;
 		}
 		int sotto = indiceSotto(x, y);
 		if (sotto >= 0 && iconeVisibili.get(sotto).comando == comandoPremuto) {
 			esegui(comandoPremuto);
 		}
+	}
+
+	/**
+	 * La rotella fa scorrere le icone di una per scatto, con la stessa breve animazione delle frecce: su verso l'inizio
+	 * della barra (a sinistra in orizzontale, in alto in verticale), giù verso la fine.
+	 */
+	@Override
+	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
+		if (!scorrevole) {
+			return;
+		}
+		double spostamento = (double) numeroRotazioni * latoIcona;
+		scorrimento.scorriFinoA(scorrimento.getPosizioneDiArrivo() + (movimentoRotella == MovimentoRotella.SU ? -spostamento : spostamento),
+				latoIcona / 2.0d);
 	}
 
 	/**
@@ -762,30 +627,7 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 	}
 
 	/**
-	 * Fa scorrere le icone fino a questa posizione (in pixel, dentro i limiti) con una breve animazione.
-	 */
-	private void scorriFinoA(double posizione) {
-		double limitata = Math.max(0.0d, Math.min(posizione, scorrimentoMassimo));
-		// Vicino a un capo si arriva fino al capo: niente avanzi di mezza icona
-		if (limitata < latoIcona / 2.0d) {
-			limitata = 0.0d;
-		} else if (limitata > scorrimentoMassimo - latoIcona / 2.0d) {
-			limitata = scorrimentoMassimo;
-		}
-		if (Math.abs(limitata - scorrimento) < 0.5d) {
-			return;
-		}
-		inerzia = false;
-		velocita = 0.0d;
-		destinazione = limitata;
-		haDestinazione = true;
-		istanteAggiornamento = adesso();
-		inMovimento = true;
-	}
-
-	/**
-	 * Il click su un'icona: le frecce fanno scorrere le scelte di una pagina, l'interruttore accende e spegne l'aiuto,
-	 * le altre mandano il comando al gioco.
+	 * Il click su un'icona: l'interruttore accende e spegne l'aiuto, le altre mandano il comando al gioco.
 	 */
 	public void esegui(Comando azione) {
 		if (ComandiPossibili.getRicarica(azione) != null) {
@@ -794,10 +636,6 @@ public class DisplayableCanvasBarraIcone implements Finestra {
 		}
 		if (isInterruttoreAiuto(azione)) {
 			commutaAiuto(azione);
-		} else if (scorrevole && azione == comandoPrecedente) {
-			scorriFinoA((haDestinazione ? destinazione : scorrimento) - pagina());
-		} else if (scorrevole && azione == comandoSuccessivo) {
-			scorriFinoA((haDestinazione ? destinazione : scorrimento) + pagina());
 		} else {
 			BusEventi.pubblica(new ComandoDiGioco(azione));
 		}

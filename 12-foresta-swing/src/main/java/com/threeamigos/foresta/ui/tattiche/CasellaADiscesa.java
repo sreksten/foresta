@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui.tattiche;
 
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
+import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
@@ -58,7 +59,8 @@ final class CasellaADiscesa<T> {
 	private final int y;
 	private final int larghezza;
 	private final int altezza;
-	private int offset;
+	// Quanto la lista è scorsa: con la rotella, le frecce e trascinandola (anche col dito, con inerzia)
+	private final ScorrimentoSuUnAsse scorrimento = new ScorrimentoSuUnAsse(System::nanoTime);
 	private boolean aperta = true;
 
 	/**
@@ -97,7 +99,8 @@ final class CasellaADiscesa<T> {
 		int altezzaScelta1 = font.getHeight() + 2 * INTERLINEA;
 		for (int i = 0; i < scelte.size(); i++) {
 			if (scelte.get(i).valore.equals(corrente)) {
-				offset = costruisci(null).limitaOffset(altezzaInterna(), i * altezzaScelta1 - (altezzaInterna() - altezzaScelta1) / 2);
+				sincronizzaLimite();
+				scorrimento.scorriDi(i * altezzaScelta1 - (altezzaInterna() - altezzaScelta1) / 2);
 				break;
 			}
 		}
@@ -140,7 +143,7 @@ final class CasellaADiscesa<T> {
 		if (xi < 0 || xi >= larghezzaInterna() || yi < 0 || yi >= altezzaInterna()) {
 			return null;
 		}
-		return costruisci(null).riferimentoTitoloAllaQuota(yi + offset);
+		return costruisci(null).riferimentoTitoloAllaQuota(yi + (int) Math.round(scorrimento.getScorrimento()));
 	}
 
 	/**
@@ -172,8 +175,8 @@ final class CasellaADiscesa<T> {
 		graphics.setColor(BORDO);
 		graphics.drawRect(x, y, larghezza - 1, altezza - 1);
 		ComponenteScorrevole<T> componente = costruisci(sceltaAlla(mouseX, mouseY));
-		offset = componente.limitaOffset(altezzaInterna(), offset);
-		Image immagine = componente.produci(altezzaInterna(), offset);
+		scorrimento.aggiorna();
+		Image immagine = componente.produci(altezzaInterna(), scorrimento);
 		graphics.drawImage(immagine, x + MARGINE, y + MARGINE, null);
 	}
 
@@ -210,6 +213,40 @@ final class CasellaADiscesa<T> {
 	}
 
 	private void scorri(int pixel) {
-		offset = costruisci(null).limitaOffset(altezzaInterna(), offset + pixel);
+		sincronizzaLimite();
+		scorrimento.scorriDi(pixel);
+	}
+
+	/**
+	 * Dice allo scorrimento di quanto la lista può scorrere nello spazio del menu
+	 */
+	private void sincronizzaLimite() {
+		int massimo = costruisci(null).getMassimoScorrimento(altezzaInterna());
+		scorrimento.imposta(massimo > 0, massimo);
+	}
+
+	/**
+	 * Il tasto si preme: da un punto dentro il menu comincia un possibile trascinamento della lista
+	 */
+	void premi(int px, int py) {
+		if (aperta) {
+			sincronizzaLimite();
+			scorrimento.premi(py, dentro(px, py));
+		}
+	}
+
+	void trascina(int py) {
+		scorrimento.trascina(py);
+	}
+
+	void rilascia() {
+		scorrimento.rilascia();
+	}
+
+	/**
+	 * Se l'ultimo gesto è stato un trascinamento: il click che segue il rilascio non vale
+	 */
+	boolean isGestoTrascinato() {
+		return scorrimento.isGestoTrascinato();
 	}
 }

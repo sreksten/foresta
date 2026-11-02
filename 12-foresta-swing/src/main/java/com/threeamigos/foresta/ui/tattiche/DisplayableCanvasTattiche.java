@@ -267,7 +267,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 			}
 			BozzaLasciata lasciata = bozzeLasciate.remove(nuovo.getUuid());
 			bozza = lasciata != null && lasciata.applicata.equals(tattica) ? lasciata.bozza : BozzaTattica.da(tattica);
-			offsetYZonaSinistra = 0;
+			scorrimentoSinistra.reimposta();
 		}
 		personaggio = nuovo;
 		applicata = tattica;
@@ -295,11 +295,11 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 			return;
 		}
 		disegnaColonnaPersonaggio(graphics);
+		scorrimentoSinistra.aggiorna();
 		List<Riga> righe = costruisciRighe();
 		Hover hover = menu != null ? Hover.NESSUNO : trovaHover(righe, mouseX, mouseY);
 		ComponenteScorrevole<Riga> elenco = costruisciElenco(righe, hover);
-		offsetYZonaSinistra = elenco.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offsetYZonaSinistra);
-		graphics.drawImage(elenco.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offsetYZonaSinistra),
+		graphics.drawImage(elenco.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, scorrimentoSinistra),
 				xMinimaZonaSinistra + SPACING, DIMENSIONE_BORDO_INTERNO + 2 * SPACING, null);
 		int voceSpiegata = hover.riga != null ? hover.riga.voce : -1;
 		String titoloElemento = null;
@@ -534,12 +534,12 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 			return Hover.NESSUNO;
 		}
 		ComponenteScorrevole<Riga> elenco = costruisciElenco(righe, Hover.NESSUNO);
-		Riga riga = elenco.riferimentoTitoloAllaQuota(yi + offsetYZonaSinistra);
+		Riga riga = elenco.riferimentoTitoloAllaQuota(yi + offsetYZonaSinistra());
 		if (riga == null) {
 			return Hover.NESSUNO;
 		}
 		java.awt.Point posizione = elenco.posizioneTitolo(r -> r == riga);
-		int linea = posizione == null ? 0 : Math.min(riga.linee - 1, (yi + offsetYZonaSinistra - posizione.y) / altezzaRiga);
+		int linea = posizione == null ? 0 : Math.min(riga.linee - 1, (yi + offsetYZonaSinistra() - posizione.y) / altezzaRiga);
 		for (Token token : riga.pezzi) {
 			if (token.linea == linea && xi >= token.x && xi < token.x + token.larghezza) {
 				return new Hover(riga, token);
@@ -1105,16 +1105,63 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		super.processaRotella(x, y, numeroRotazioni, movimentoRotella);
 	}
 
+	/**
+	 * Con il menu a discesa aperto la pressione è per il menu: la lista sotto non si trascina
+	 */
+	@Override
+	protected boolean puoScorrere() {
+		return menu == null || !menu.isAperta();
+	}
+
+	@Override
+	public void processaPressione(int x, int y, Tasto tasto) {
+		if (menu != null && menu.isAperta()) {
+			if (tasto == Tasto.SINISTRO) {
+				menu.premi(x, y);
+			}
+			return;
+		}
+		super.processaPressione(x, y, tasto);
+	}
+
+	@Override
+	public void processaTrascinamento(int x, int y) {
+		if (menu != null && menu.isAperta()) {
+			menu.trascina(y);
+			return;
+		}
+		super.processaTrascinamento(x, y);
+	}
+
+	@Override
+	public void processaRilascio(int x, int y, Tasto tasto) {
+		if (menu != null && menu.isAperta()) {
+			if (tasto == Tasto.SINISTRO) {
+				menu.rilascia();
+			}
+			return;
+		}
+		super.processaRilascio(x, y, tasto);
+	}
+
 	@Override
 	public void processaClick(int x, int y, Tasto tasto) {
 		if (tasto != Tasto.SINISTRO || personaggio == null) {
 			return;
 		}
 		if (menu != null && menu.isAperta()) {
+			// Il rilascio di un trascinamento del menu non sceglie niente
+			if (menu.isGestoTrascinato()) {
+				return;
+			}
 			menu.click(x, y);
 			if (!menu.isAperta()) {
 				menu = null;
 			}
+			return;
+		}
+		// Il rilascio di un trascinamento della lista non è un click
+		if (isGestoTrascinato()) {
 			return;
 		}
 		menu = null;
@@ -1129,7 +1176,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 		// Dove si apre un menu: sotto la riga cliccata (o sopra), allineato al pezzo
 		ComponenteScorrevole<Riga> elenco = costruisciElenco(righe, Hover.NESSUNO);
 		java.awt.Point posizione = elenco.posizioneTitolo(r -> r == hover.riga);
-		int yRiga = DIMENSIONE_BORDO_INTERNO + 2 * SPACING + (posizione == null ? 0 : posizione.y) - offsetYZonaSinistra;
+		int yRiga = DIMENSIONE_BORDO_INTERNO + 2 * SPACING + (posizione == null ? 0 : posizione.y) - offsetYZonaSinistra();
 		int yLinea = yRiga + hover.token.linea * altezzaRiga;
 		hover.token.azione.accept(new Ancora(xMinimaZonaSinistra + SPACING + hover.token.x, yLinea + altezzaRiga, yLinea, hover.riga.voce));
 	}

@@ -7,8 +7,10 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoIcona;
+import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.Finestra.Tasto;
 import com.threeamigos.foresta.ui.barra.ComandiPossibili;
+import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIcone;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIcone.IconaVisibile;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIconeDock;
@@ -146,21 +148,58 @@ class BarraIconeScorrimentoTest {
     }
 
     @Test
-    void seNonCiStannoLeFrecceRestanoAiDueCapi() {
+    void seNonCiStannoLeIconeScorronoSuTuttaLaLunghezzaSenzaBottoniAiCapi() {
         // Given
         BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, LARGHEZZA, ALTEZZA);
         // When
         imposta(barra, 8);
         // Then
         assertTrue(barra.isScorrevole());
-        IconaVisibile prima = barra.iconeVisibili.get(0);
+        for (IconaVisibile icona : barra.iconeVisibili) {
+            assertNotEquals(Comando.SINISTRA, icona.comando);
+            assertNotEquals(Comando.DESTRA, icona.comando);
+        }
+        // La prima icona sta a inizio barra e l'ultima visibile esce dalla fine (la ritaglia il disegno)
+        assertEquals(0, barra.iconeVisibili.get(0).rettangolo.x);
         IconaVisibile ultima = barra.iconeVisibili.get(barra.iconeVisibili.size() - 1);
-        assertEquals(Comando.SINISTRA, prima.comando);
-        assertEquals(0, prima.rettangolo.x);
-        assertEquals(Comando.DESTRA, ultima.comando);
-        assertEquals(LARGHEZZA - LATO, ultima.rettangolo.x);
-        // 9 icone con l'aiuto; la fascia di mezzo è larga 300 - 2 * 64 = 172
-        assertEquals(9 * LATO - (LARGHEZZA - 2 * LATO), barra.getScorrimentoMassimo(), 0.001d);
+        assertTrue(ultima.rettangolo.x < LARGHEZZA);
+        assertTrue(ultima.rettangolo.x + ultima.rettangolo.width > LARGHEZZA);
+        // 9 icone con l'aiuto, su tutta la lunghezza
+        assertEquals(9 * LATO - LARGHEZZA, barra.getScorrimentoMassimo(), 0.001d);
+    }
+
+    @Test
+    void laRiservaAFineAsseAccorciaLaBarraDelleIcone() {
+        // Given: 4 icone ci stanno in 300 pixel
+        BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, LARGHEZZA, ALTEZZA);
+        imposta(barra, 3);
+        assertFalse(barra.isScorrevole());
+        // When: il joystick prende 100 pixel a destra
+        barra.setRiservaAFineAsse(100);
+        // Then: non ci stanno più, e scorrono nei 200 rimasti
+        assertTrue(barra.isScorrevole());
+        assertEquals(4 * LATO - 200, barra.getScorrimentoMassimo(), 0.001d);
+        for (IconaVisibile icona : barra.iconeVisibili) {
+            assertTrue(icona.rettangolo.x < 200, "" + icona.rettangolo);
+        }
+        // When: la riserva sparisce
+        barra.setRiservaAFineAsse(0);
+        assertFalse(barra.isScorrevole());
+    }
+
+    @Test
+    void nellaRiservaAFineAsseNonSiTocca() {
+        BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, LARGHEZZA, ALTEZZA);
+        imposta(barra, 8);
+        barra.setRiservaAFineAsse(100);
+        // Dentro la lunghezza utile si tocca
+        barra.processaPressione(150, 35, Tasto.SINISTRO);
+        barra.processaRilascio(150, 35, Tasto.SINISTRO);
+        assertEquals(1, comandiMandati.size());
+        // Nella riserva no: lì c'è il joystick
+        barra.processaPressione(250, 35, Tasto.SINISTRO);
+        barra.processaRilascio(250, 35, Tasto.SINISTRO);
+        assertEquals(1, comandiMandati.size(), "" + comandiMandati);
     }
 
     @Test
@@ -185,8 +224,16 @@ class BarraIconeScorrimentoTest {
         barra.processaPressione(150, 35, Tasto.SINISTRO);
         barra.processaTrascinamento(300, 35);
         barra.processaTrascinamento(1000, 35);
-        // Then: lo scorrimento non esce dai limiti
+        // Then: le icone si tirano oltre il capo, ma poco (elastico)
+        assertTrue(barra.getScorrimento() < 0.0d, "" + barra.getScorrimento());
+        assertTrue(barra.getScorrimento() >= -ScorrimentoSuUnAsse.MASSIMO_ELASTICO, "" + barra.getScorrimento());
+        // When: si lascia: tornano al capo con un'animazione
+        barra.processaRilascio(1000, 35, Tasto.SINISTRO);
+        assertTrue(barra.inTransizione());
+        lasciaPassare(barra, 2000);
         assertEquals(0.0d, barra.getScorrimento(), 0.001d);
+        assertFalse(barra.inTransizione());
+        assertTrue(comandiMandati.isEmpty(), "trascinare non è toccare: " + comandiMandati);
     }
 
     @Test
@@ -309,78 +356,81 @@ class BarraIconeScorrimentoTest {
     }
 
     @Test
-    void leFrecceScorronoDiUnaPaginaConUnaBreveAnimazione() {
-        // Given: la fascia di mezzo tiene due icone, quindi la pagina è di una sola icona
+    void laRotellaScorreDiUnIconaPerScattoVersoLaFineEVersoLInizio() {
+        // Given
         BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, LARGHEZZA, ALTEZZA);
         imposta(barra, 8);
-        // When: a inizio corsa la freccia indietro è spenta e non fa niente
-        barra.esegui(Comando.SINISTRA);
-        assertFalse(barra.inTransizione());
-        // When
-        barra.esegui(Comando.DESTRA);
+        // When: giù, un scatto
+        barra.processaRotella(150, 35, 1, Finestra.MovimentoRotella.GIU);
         // Then
         assertTrue(barra.inTransizione());
-        assertEquals(0.0d, barra.getScorrimento(), 0.001d);
         lasciaPassare(barra, 1000);
         assertEquals(LATO, barra.getScorrimento(), 0.001d);
-        assertFalse(barra.inTransizione());
-        // When
-        barra.esegui(Comando.SINISTRA);
+        // When: due scatti insieme
+        barra.processaRotella(150, 35, 2, Finestra.MovimentoRotella.GIU);
         lasciaPassare(barra, 1000);
-        // Then
+        assertEquals(3 * LATO, barra.getScorrimento(), 0.001d);
+        // When: su
+        barra.processaRotella(150, 35, 3, Finestra.MovimentoRotella.SU);
+        lasciaPassare(barra, 1000);
         assertEquals(0.0d, barra.getScorrimento(), 0.001d);
-        assertTrue(comandiMandati.isEmpty(), "le frecce non vanno al gioco: " + comandiMandati);
+        assertTrue(comandiMandati.isEmpty(), "la rotella non va al gioco: " + comandiMandati);
     }
 
     @Test
-    void leFrecceArrivanoFinoAlCapoEsattamente() {
+    void laRotellaNonFaNienteSeLeIconeCiStannoTutte() {
+        BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, LARGHEZZA, ALTEZZA);
+        imposta(barra, 2);
+        barra.processaRotella(150, 35, 1, Finestra.MovimentoRotella.GIU);
+        assertFalse(barra.inTransizione());
+        assertEquals(0.0d, barra.getScorrimento(), 0.001d);
+    }
+
+    @Test
+    void laRotellaArrivaFinoAlCapoEsattamente() {
         BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, LARGHEZZA, ALTEZZA);
         imposta(barra, 8);
         for (int i = 0; i < 12; i++) {
-            barra.esegui(Comando.DESTRA);
+            barra.processaRotella(150, 35, 1, Finestra.MovimentoRotella.GIU);
             lasciaPassare(barra, 1000);
         }
         assertEquals(barra.getScorrimentoMassimo(), barra.getScorrimento(), 0.001d);
     }
 
     @Test
-    void ilToccoSuUnaFrecciaLaFaScorrere() {
+    void ilToccoVicinoAllaFineEseguiLIconaCheCiStaSotto() {
         BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, LARGHEZZA, ALTEZZA);
         imposta(barra, 8);
+        Comando atteso = comandoNellaPosizione(barra, LARGHEZZA - 10, 35);
+        assertNotNull(atteso);
         barra.processaPressione(LARGHEZZA - 10, 35, Tasto.SINISTRO);
         barra.processaRilascio(LARGHEZZA - 10, 35, Tasto.SINISTRO);
-        lasciaPassare(barra, 1000);
-        assertEquals(LATO, barra.getScorrimento(), 0.001d);
-        assertTrue(comandiMandati.isEmpty());
+        assertEquals(0.0d, barra.getScorrimento(), 0.001d);
+        assertEquals(1, comandiMandati.size());
+        assertEquals(atteso, comandiMandati.get(0).getComando());
     }
 
     @Test
-    void ilTrascinamentoNonParteDaUnaFreccia() {
+    void siTrascinaDaQualunquePuntoDellaBarraAncheDallaFine() {
         BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, LARGHEZZA, ALTEZZA);
         imposta(barra, 8);
         barra.processaPressione(LARGHEZZA - 10, 35, Tasto.SINISTRO);
         barra.processaTrascinamento(LARGHEZZA - 60, 35);
         barra.processaTrascinamento(LARGHEZZA - 100, 35);
-        assertEquals(0.0d, barra.getScorrimento(), 0.001d);
+        assertEquals(40.0d, barra.getScorrimento(), 0.001d);
     }
 
     @Test
-    void lePartiDelleIconeFuoriDallaFasciaDiMezzoNonSiToccano() {
+    void lePartiDelleIconeFuoriDallaBarraNonSiToccano() {
         BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, LARGHEZZA, ALTEZZA);
         imposta(barra, 8);
-        // Si scorre di un'icona: una icona esce a destra, in parte sotto la freccia
-        barra.esegui(Comando.DESTRA);
-        lasciaPassare(barra, 1000);
-        int x = LARGHEZZA - LATO + 14;
-        Comando sotto = comandoNellaPosizione(barra, x, 35);
-        assertNotNull(sotto);
-        // When: si tocca dove l'icona che esce e la freccia si sovrappongono
+        barra.setRiservaAFineAsse(100);
+        // Un'icona sta a cavallo della fine della lunghezza utile (200): vi esce a destra
+        int x = 250;
+        assertNotNull(comandoNellaPosizione(barra, x, 35));
         barra.processaPressione(x, 35, Tasto.SINISTRO);
         barra.processaRilascio(x, 35, Tasto.SINISTRO);
-        // Then: vince la freccia, che ha fatto scorrere; l'icona non ha ricevuto il tocco
         assertTrue(comandiMandati.isEmpty(), "" + comandiMandati);
-        lasciaPassare(barra, 1000);
-        assertEquals(2.0d * LATO, barra.getScorrimento(), 0.001d);
     }
 
     @Test
@@ -398,15 +448,14 @@ class BarraIconeScorrimentoTest {
             assertEquals(latoVerticale, b.y - a.y, "icone adiacenti, senza sovrapposizioni");
             assertEquals((larghezzaBarra - LATO) / 2, a.x, "centrate nella colonna");
         }
-        // Troppe: le frecce SU e GIU stanno ai capi
+        // Troppe: scorrono, senza bottoni SU e GIU ai capi
         imposta(barra, 14);
         assertTrue(barra.isScorrevole());
-        IconaVisibile prima = barra.iconeVisibili.get(0);
-        IconaVisibile ultima = barra.iconeVisibili.get(barra.iconeVisibili.size() - 1);
-        assertEquals(Comando.SU, prima.comando);
-        assertEquals(0, prima.rettangolo.y);
-        assertEquals(Comando.GIU, ultima.comando);
-        assertEquals(altezzaBarra - latoVerticale, ultima.rettangolo.y);
+        for (IconaVisibile icona : barra.iconeVisibili) {
+            assertNotEquals(Comando.SU, icona.comando);
+            assertNotEquals(Comando.GIU, icona.comando);
+        }
+        assertEquals(0, barra.iconeVisibili.get(0).rettangolo.y);
     }
 
     @Test
@@ -447,9 +496,8 @@ class BarraIconeScorrimentoTest {
         assertEquals(30.0d, dock.getScorrimento(), 0.001d);
         dock.processaRilascio(110, 35, Tasto.SINISTRO);
         assertTrue(comandiMandati.isEmpty());
-        // Una freccia
-        dock.processaPressione(LARGHEZZA - 10, 35, Tasto.SINISTRO);
-        dock.processaRilascio(LARGHEZZA - 10, 35, Tasto.SINISTRO);
+        // La rotella
+        dock.processaRotella(150, 35, 1, Finestra.MovimentoRotella.GIU);
         lasciaPassare(dock, 1000);
         assertEquals(30.0d + LATO, dock.getScorrimento(), 0.001d);
     }

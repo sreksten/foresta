@@ -120,6 +120,8 @@ public class ImageCache {
 	public static BufferedImage missioneGallo;
 	public static BufferedImage componenteScorrevoleFrecciaSu;
 	public static BufferedImage componenteScorrevoleFrecciaGiu;
+	public static BufferedImage componenteScorrevoleFrecciaSinistra;
+	public static BufferedImage componenteScorrevoleFrecciaDestra;
 	public static BufferedImage frecciaGiuPersonaggioAttivo;
 
 	// Utilizziamo una mappa thread-safe che ospita riferimenti deboli alle immagini,
@@ -280,6 +282,8 @@ public class ImageCache {
 
 		componenteScorrevoleFrecciaSu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaSu.gif");
 		componenteScorrevoleFrecciaGiu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaGiu.gif");
+		componenteScorrevoleFrecciaSinistra = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaSinistra.gif");
+		componenteScorrevoleFrecciaDestra = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaDestra.gif");
 		frecciaGiuPersonaggioAttivo = BufferedImageBuilder.buildBufferedImage("icone/Giu.gif");
 
 		// Avvia il reaper in background ogni minuto: è un thread daemon, finisce da solo con la JVM

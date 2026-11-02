@@ -5,6 +5,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
+import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.CoordinateFumetto;
 import com.threeamigos.foresta.ui.sprite.SpriteInterface;
@@ -120,9 +121,25 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     /**
      * Scroll verso l'alto o il basso per ciascuna zona
      */
-    protected int offsetYZonaSinistra = 0;
-    protected int offsetYZonaCentrale = 0;
-    protected int offsetYZonaDestra = 0;
+    protected final ScorrimentoSuUnAsse scorrimentoSinistra = new ScorrimentoSuUnAsse(System::nanoTime);
+    protected final ScorrimentoSuUnAsse scorrimentoCentrale = new ScorrimentoSuUnAsse(System::nanoTime);
+    protected final ScorrimentoSuUnAsse scorrimentoDestra = new ScorrimentoSuUnAsse(System::nanoTime);
+    /**
+     * Lo scorrimento della zona su cui è stato premuto il tasto, per il trascinamento (null se la pressione è caduta fuori)
+     */
+    private ScorrimentoSuUnAsse scorrimentoPremuto;
+
+    protected int offsetYZonaSinistra() {
+        return (int) Math.round(scorrimentoSinistra.getScorrimento());
+    }
+
+    protected int offsetYZonaCentrale() {
+        return (int) Math.round(scorrimentoCentrale.getScorrimento());
+    }
+
+    protected int offsetYZonaDestra() {
+        return (int) Math.round(scorrimentoDestra.getScorrimento());
+    }
 
     /**
      * Posizione del mouse, per evidenziare in bianco l'artefatto sotto il cursore.
@@ -143,9 +160,10 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
      * Chiamato quando la schermata si apre: le liste ripartono dall'alto e gli sprite della volta scorsa, anche se non finiti, non ricompaiono.
      */
     public void apri() {
-        offsetYZonaSinistra = 0;
-        offsetYZonaCentrale = 0;
-        offsetYZonaDestra = 0;
+        scorrimentoSinistra.reimposta();
+        scorrimentoCentrale.reimposta();
+        scorrimentoDestra.reimposta();
+        scorrimentoPremuto = null;
         spriteLocali.clear();
     }
 
@@ -357,25 +375,76 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     	return PASSI_PER_SCATTO_DELLE_LISTE;
     }
 
+    /**
+     * Lo scorrimento della zona che contiene quella x, o null se non cade in nessuna
+     */
+    private ScorrimentoSuUnAsse scorrimentoDellaZona(int x) {
+        if (x >= xMinimaZonaSinistra && x < xMassimaZonaSinistra) {
+            return scorrimentoSinistra;
+        } else if (x >= xMinimaZonaCentrale && x < xMassimaZonaCentrale) {
+            return scorrimentoCentrale;
+        } else if (x >= xMinimaZonaDestra && x < xMassimaZonaDestra) {
+            return scorrimentoDestra;
+        }
+        return null;
+    }
+
     @Override
     public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
-        if (movimentoRotella == MovimentoRotella.SU) {
-            if (x >= xMinimaZonaSinistra && x < xMassimaZonaSinistra) {
-                offsetYZonaSinistra = Math.max(0, offsetYZonaSinistra - numeroRotazioni * PASSO_SCORRIMENTO);
-            } else if (x >= xMinimaZonaCentrale && x < xMassimaZonaCentrale) {
-                offsetYZonaCentrale = Math.max(0, offsetYZonaCentrale - numeroRotazioni * PASSO_SCORRIMENTO);
-            } else if (x >= xMinimaZonaDestra && x < xMassimaZonaDestra) {
-                offsetYZonaDestra = Math.max(0, offsetYZonaDestra - numeroRotazioni * PASSO_SCORRIMENTO);
-            }
-        } else if (movimentoRotella == MovimentoRotella.GIU) {
-            if (x >= xMinimaZonaSinistra && x < xMassimaZonaSinistra) {
-                offsetYZonaSinistra += numeroRotazioni * PASSO_SCORRIMENTO;
-            } else if (x >= xMinimaZonaCentrale && x < xMassimaZonaCentrale) {
-                offsetYZonaCentrale += numeroRotazioni * PASSO_SCORRIMENTO;
-            } else if (x >= xMinimaZonaDestra && x < xMassimaZonaDestra) {
-                offsetYZonaDestra += numeroRotazioni * PASSO_SCORRIMENTO;
-            }
+        ScorrimentoSuUnAsse scorrimento = scorrimentoDellaZona(x);
+        if (scorrimento != null) {
+            int pixel = numeroRotazioni * PASSO_SCORRIMENTO;
+            scorrimento.scorriDi(movimentoRotella == MovimentoRotella.SU ? -pixel : pixel);
         }
+    }
+
+    /**
+     * Se, ora, premendo su una zona la si può trascinare. Le sottoclassi con qualcosa sopra le liste (un menu aperto)
+     * dicono di no.
+     */
+    protected boolean puoScorrere() {
+        return true;
+    }
+
+    /**
+     * Il gesto che comincia sulla schermata prosegue finché non si lascia il tasto, anche fuori da essa
+     */
+    @Override
+    public boolean catturaIlTrascinamento() {
+        return true;
+    }
+
+    @Override
+    public void processaPressione(int x, int y, Tasto tasto) {
+        if (tasto != Tasto.SINISTRO) {
+            return;
+        }
+        scorrimentoPremuto = puoScorrere() ? scorrimentoDellaZona(x) : null;
+        if (scorrimentoPremuto != null) {
+            scorrimentoPremuto.premi(y, true);
+        }
+    }
+
+    @Override
+    public void processaTrascinamento(int x, int y) {
+        if (scorrimentoPremuto != null) {
+            scorrimentoPremuto.trascina(y);
+        }
+    }
+
+    @Override
+    public void processaRilascio(int x, int y, Tasto tasto) {
+        if (tasto == Tasto.SINISTRO && scorrimentoPremuto != null) {
+            scorrimentoPremuto.rilascia();
+        }
+    }
+
+    /**
+     * Se l'ultimo gesto è stato un trascinamento di una lista: il click che segue il rilascio non vale, perché non
+     * era un tocco
+     */
+    protected boolean isGestoTrascinato() {
+        return scorrimentoPremuto != null && scorrimentoPremuto.isGestoTrascinato();
     }
 
 }
