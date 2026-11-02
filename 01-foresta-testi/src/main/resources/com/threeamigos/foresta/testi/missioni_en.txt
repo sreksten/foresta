@@ -1795,7 +1795,7 @@ COLPO
 NEGOZIO_PARENTE
     my brother
     my cousin
-    a friend of mine
+    my friend
     my nephew
     my brother-in-law
 

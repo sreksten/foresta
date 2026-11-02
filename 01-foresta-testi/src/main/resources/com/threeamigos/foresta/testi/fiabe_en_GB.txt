@@ -248,7 +248,7 @@ LUOGO_PROEMIO
 	in a galaxy far, far away | under a manhole | in an enchanted wood
 	in a { bog | marsh } { bewitched | cursed | } | in an ammunition depot | inside a sewer
 	in the far South | in the cold North | in the mysterious East | in the West | in the Land of Toys
-	in the Land of Plenty | in the criminal asylum | behind the soccer field
+	in the Land of Plenty | in the criminal asylum | behind the football pitch
 	in a stinking cave inhabited by spineless bandits | inside an abandoned prison
 	in the sewers of a city that no longer had a name | in a deconsecrated convent full of ghosts
 	under the foundations of a church | in an inn where the wine was always bad
@@ -830,4 +830,4 @@ SVOLGIMENTO_PRINCIPESSA_2
 	a bag of coins | a lifetime supply of { [SOSTANZA_ALCOOLICA_MASCHILE] | [SOSTANZA_ALCOOLICA_FEMMINILE] }
 	a piece of bread | a holed coin | a case of excellent wine | an IOU never honoured
 
-#include <nomi_en.txt>
+#include <nomi_en_GB.txt>

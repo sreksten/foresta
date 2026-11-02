@@ -65,7 +65,7 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 
 	@Override
 	public String getNome() {
-		return "Ricercato: " + getRicercato();
+		return Testi.formatta("missioni", "CacciatoreDiTaglie.nome", getRicercato());
 	}
 
 	@Override

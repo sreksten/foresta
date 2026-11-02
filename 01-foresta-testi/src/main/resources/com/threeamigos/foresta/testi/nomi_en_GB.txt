@@ -176,9 +176,9 @@ COGNOME_STOPPIONI
     Stubble | Stumble | Scorpion | Sandal
 
 SOPRANNOME_PROTAGONISTA
-	the paper-ripper | the grim | the shady | the Porky Prince | the Master Maker | the fence
-	the straw-beater | the teacher of doormattery | the professor of thievery | the foul | the one-eyed | the lame
-	the pig-mincer | the mule-slayer | the cat-quartering | the chicken thief | the duck-botherer | the sparrow-scarer
+	the paper-ripper | the Grim | the Shady | the Porky Prince | the Master Maker | the fence
+	the straw-beater | the teacher of doormattery | the professor of thievery | the Foul | the One-Eyed | the Lame
+	the pig-mincer | the mule-slayer | the cat-quarterer | the chicken thief | the duck-botherer | the sparrow-scarer
 	the rascal | the leg-tripper | the champion of ugliness | the Lord of Wind | the Lord of Evil
 	the self-proclaimed Galactic Emperor | the stinker | Bruiser of Norwich
 	the [TITOLO_NOBILIARE] { of the Dirty Feet | of Small Change | of the Hangover | of Nowhere }

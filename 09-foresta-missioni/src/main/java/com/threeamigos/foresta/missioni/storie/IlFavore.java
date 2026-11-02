@@ -143,7 +143,7 @@ public class IlFavore extends MissioneAPassi {
 			return favore.isConCapo() ? getCapo() + ", " + nemico : nemico;
 		}
 		String nemici = Lingue.corrente().cardinale(favore.getNumero(), Genere.MASCHILE) + " " + modello.getNomePlurale();
-		return favore.isConCapo() ? nemici + " guidati da " + getCapo() : nemici;
+		return favore.isConCapo() ? Testi.formatta("missioni", "Nemici.guidatiDa", nemici, getCapo()) : nemici;
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class IlFavore extends MissioneAPassi {
 	@Override
 	public String getDescrizione() {
 		FavoreRichiesto favore = getFavore();
-		String per = "Per " + getMandante() + ": ";
+		String per = Testi.formatta("missioni", "IlFavore.per", getMandante()) + " ";
 		switch (favore.getTipo()) {
 			case RACCOLTA:
 				MaterialeRichiesto ingrediente = favore.getIngrediente();
@@ -179,7 +179,7 @@ public class IlFavore extends MissioneAPassi {
 		}
 		aggiungiProprieta(VEGLIE, String.valueOf(visite));
 		int mancanti = favore.getVisite() - visite;
-		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlFavore.s1", testo(favore.getVeglia()), Lingue.corrente().cardinale(mancanti, Genere.FEMMINILE), (mancanti == 1 ? " volta" : " volte"), favore.getOre())));
+		BusEventi.pubblica(new NotificaTestoParagrafo(mancanti == 1 ? Testi.formatta("missioni", "IlFavore.s1.una", testo(favore.getVeglia()), favore.getOre()) : Testi.formatta("missioni", "IlFavore.s1.piu", testo(favore.getVeglia()), Lingue.corrente().cardinale(mancanti, Genere.FEMMINILE), favore.getOre())));
 	}
 
 	@Override

@@ -119,7 +119,7 @@ public class LaDocumentazione extends IncaricoInCitta {
 			return cercaLocazione(MomentoControllo.IN_LOCAZIONE, reperto.getLuogo())
 					.esegui(() -> {
 						Foresta.setLocazioneConosciuta(getPosto());
-						BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaDocumentazione.s5", (numero == 1 ? "Si comincia " : "Si prosegue "), TestiDeiLuoghi.dentro(reperto.getLuogo()))));
+						BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", numero == 1 ? "LaDocumentazione.s5.comincia" : "LaDocumentazione.s5.prosegue", TestiDeiLuoghi.dentro(reperto.getLuogo()))));
 					})
 					.poi(REPERTO + numero);
 		}

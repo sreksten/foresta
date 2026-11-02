@@ -60,7 +60,7 @@ public class IntermezzoUrloDellaBanshee implements Intermezzo {
 		String moglie = RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome();
 		TipoLocazione arrivo = getViaggioCompletato()
 				.map(viaggio -> viaggio.ottieniProprieta(ProprietaDiMissione.CITTA_DI_ARRIVO)).map(TipoLocazione::valueOf).orElse(null);
-		String dove = arrivo == null ? Testi.formatta("missioni", "IntermezzoUrloDellaBanshee.s1") : Lingue.corrente().conPreposizione(Preposizione.A, arrivo.getNomeProprio());
+		String dove = arrivo == null ? Testi.formatta("missioni", "IntermezzoUrloDellaBanshee.s1") : Lingue.corrente().conPreposizione(Preposizione.ARRIVO, arrivo.getNomeProprio());
 		return ScenaInLocanda.conBardo()
 				.parlaIlBardo(Testi.formatta("missioni", "IntermezzoUrloDellaBanshee.1", moglie, dove))
 				.parlaIlCapo(Testi.formatta("missioni", "IntermezzoUrloDellaBanshee.2"))

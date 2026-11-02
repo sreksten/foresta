@@ -253,10 +253,7 @@ public final class MaterialeRichiesto {
 	}
 
 	private static String elenco(List<String> parti) {
-		if (parti.size() == 1) {
-			return parti.get(0);
-		}
-		return String.join(", ", parti.subList(0, parti.size() - 1)) + " e " + parti.get(parti.size() - 1);
+		return Lingue.corrente().elenco(parti);
 	}
 
 	public String getBattutaDelCapo() {

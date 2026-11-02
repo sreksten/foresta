@@ -145,4 +145,16 @@ class RegoleDellaLinguaTest {
 		assertEquals("A and B", EN.elenco(Arrays.asList("A", "B")));
 		assertEquals("The goblin", EN.inizialeMaiuscola("the goblin"));
 	}
+
+	@Test
+	void arrivoEVicinoSiDiconoComeServeInOgniLingua() {
+		// Dove si arriva: in italiano «a», in inglese «in»
+		assertEquals("a Fleena", IT.conPreposizione(Preposizione.ARRIVO, "Fleena"));
+		assertEquals("alle Rovine", IT.conPreposizione(Preposizione.ARRIVO, "le Rovine"));
+		assertEquals("in the city of Fleena", EN.conPreposizione(Preposizione.ARRIVO, "the city of Fleena"));
+		// Vicino a un luogo: in italiano resta «a» (dopo «vicino»), in inglese non vuole preposizione ("near the Ruins")
+		assertEquals("alle Rovine", IT.conPreposizione(Preposizione.VICINO, "le Rovine"));
+		assertEquals("the Ruins", EN.conPreposizione(Preposizione.VICINO, "the Ruins"));
+		assertEquals("the ", EN.preposizioneArticolata(Preposizione.VICINO, m("tempio"), false));
+	}
 }

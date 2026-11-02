@@ -115,7 +115,7 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 			return incarico.isConCapo() ? getCapo() + ", " + nemico : nemico;
 		}
 		String nemici = Lingue.corrente().cardinale(getNumero(), Genere.MASCHILE) + " " + modello.getNomePlurale();
-		return incarico.isConCapo() ? nemici + " guidati da " + getCapo() : nemici;
+		return incarico.isConCapo() ? Testi.formatta("missioni", "Nemici.guidatiDa", nemici, getCapo()) : nemici;
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 			case CACCIA:
 				return combatti(this::getCovo, getNemici())
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testo(incarico.getVittoria()) + " "
-								+ Lingue.corrente().inizialeMaiuscola(mandante(incarico.getMandante())) + " aspetta a " + getNomeCitta() + ".")))
+								+ Testi.formatta("missioni", "Incarico.aspettaA", Lingue.corrente().inizialeMaiuscola(mandante(incarico.getMandante())), getNomeCitta()))))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -186,7 +186,7 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 		CombattimentoRichiesto incarico = getIncarico();
 		return incarico.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(incarico.getRichiesta()))
-				.parlaIlMandante(Testi.formatta("missioni", "IncaricoDiCombattimento.1", (getNumero() == 1 ? "Sta " : "Stanno "), TestiDeiLuoghi.dentro(incarico.getLuogo()), getRicompensa()))
+				.parlaIlMandante(Testi.formatta("missioni", getNumero() == 1 ? "IncaricoDiCombattimento.1.uno" : "IncaricoDiCombattimento.1.molti", TestiDeiLuoghi.dentro(incarico.getLuogo()), getRicompensa()))
 				.parlaIlCapo(testo(incarico.getBattutaDelCapo()))
 				.parlaIlMandante(testo(incarico.getRisposta()));
 	}

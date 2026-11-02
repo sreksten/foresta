@@ -203,7 +203,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 	@Override
 	public String getRicordoDellaLocazione() {
 		OggettoLeggendario leggendario = getLeggendario();
-		return leggendario == null ? null : "Qui " + getNomeDeiGuardiani() + " custodivano " + leggendario.getNomeBreve() + ".";
+		return leggendario == null ? null : Testi.formatta("missioni", "LaLeggenda.qui", getNomeDeiGuardiani(), leggendario.getNomeBreve());
 	}
 
 	@Override

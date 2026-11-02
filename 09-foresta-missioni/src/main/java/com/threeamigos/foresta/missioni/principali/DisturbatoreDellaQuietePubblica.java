@@ -54,7 +54,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 		if (mancanti == 10) {
 			return descrizioneBase() + ".";
 		}
-		return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t4", descrizioneBase(), Lingue.corrente().cardinale(mancanti, Genere.MASCHILE));
+		return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t4", descrizioneBase(), Lingue.corrente().inizialeMaiuscola(Lingue.corrente().cardinale(mancanti, Genere.MASCHILE)));
 	}
 
 	@Override

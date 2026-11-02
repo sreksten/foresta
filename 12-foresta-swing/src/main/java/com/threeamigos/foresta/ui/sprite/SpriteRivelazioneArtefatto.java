@@ -509,7 +509,7 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 			parti.add(String.format(Locale.ROOT, "%+.0f%%", incantamento.getCoefficienteScala() * 100));
 		}
 		if (!parti.isEmpty()) {
-			sb.append(' ').append(String.join(" e ", parti));
+			sb.append(' ').append(com.threeamigos.foresta.testi.Lingue.corrente().elenco(parti));
 		}
 		return sb.toString();
 	}

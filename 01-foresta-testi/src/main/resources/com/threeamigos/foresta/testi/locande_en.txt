@@ -209,7 +209,7 @@ FUEGO_DEL_FUORILEGGE$
 RADURA_DEL_MAL_DI_PANCIA$
     [IDENTIFICATIVO=RADURA_DEL_MAL_DI_PANCIA]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
-    [DIALOGO=Greetings! Welcome to the Stomachache Glade! [MI_CHIAMO] The secret of our cooking is bear lard, we even use it in the desserts! It will leave an indelible memory in your stomach for the next three days. But fear not: our mead is so strong and pure that it disinfects everything before you can regret it. Whoever orders the house special gets a digestive herb for free!]\
+    [DIALOGO=Greetings! Welcome to the Stomachache Glade! [MI_CHIAMO] The secret of our cooking is bear lard, we even use it in the desserts! It will leave an indelible memory in your stomach for the next three days. But fear not: our mead is so strong and pure that it disinfects everything before you can regret it. Whoever orders the house special gets a digestif herb for free!]\
     [RECENSIONE=The cooking here at the Stomachache Glade is a bit heavy, but the mead is excellent.]\
     [NOME_LOCANDA=The Stomachache Glade]\
     [#NOME_LOCANDA]
@@ -529,55 +529,55 @@ NOTIZIE_RE_FINTO
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_LOCANDA
-    LG1-Legendary Brawl - The inn NOME_LOCANDA was devastated by a theological dispute over the sex of sprites. EROE used a dwarf chair as their main argument.
-    LG2-Innkeeper's Complaints - The owner of the inn NOME_LOCANDA, NOME_LOCANDIERE, expresses deep outrage at “these Sunday heroes” who order a single broth between four of them and steal the linen napkins.
-    LG3-Serious Artistic Accident - A local bard, a patron of the inn NOME_LOCANDA, suffered a lute fracture on his head after trying to strike up a celebratory ballad about EROE's armpits.
-    LG4-Bar Brawl - A commotion broke out at the inn NOME_LOCANDA because of a patron who was looking at the hero's tankard “with the evident intent of belittling its foam”.
-    LG5-Unpaid Bill - Manhunt in the county. EROE fled through the back of the inn NOME_LOCANDA passing off three polished copper buttons as ancient coins of the Empire of the Void.
-    LG6-Hygiene Disaster - The local alchemist runs out of charcoal after the mysterious stew of the inn NOME_LOCANDA caused a symphonic colic among the patrons.
-    LG7-Kitchen Horror - A lock of bear hair was found in the soup; the innkeeper of the inn NOME_LOCANDA tried to pass it off as “high-resistance dietary fiber”.
-    LG8-Collateral Damage - A Fire spell cast to light a pipe accidentally charred the eyebrows of every dwarf within ten feet at the inn NOME_LOCANDA.
-    LG9-National Complaints - The dwarf miners' unions officially protest against EROE for occupying the only table near the fireplace for six hours without ordering anything at the inn NOME_LOCANDA.
-    LG10-Brawl on the Timer - Total clash between the patrons of the inn NOME_LOCANDA and EROE, guilty of having “blocked the conversation timer” while trying to decide whether to order cider or water.
-    LG11-News Leak - The city guards investigate a suspicious spike in thefts of soup spoons right after LADRO left the inn NOME_LOCANDA.
-    LG12-Sunday Curse - MAGO answered a cordial greeting from the innkeeper of the inn NOME_LOCANDA by accidentally casting an arcane anathema, tuning the innkeeper's voice to the frequencies of a harpy.
-    LG13-Brawl of Jealousy - Chaos broke out when LADRO tried to pick the pocket of the owner of the inn NOME_LOCANDA, discovering that his pockets were full of mousetraps.
-    LG14-Bad Review - The innkeeper of the inn NOME_LOCANDA tells the local press: “The hero of the prophecy has the elegance of a troll in an alchemist's vial shop. Don't come back”.
-    LG15-State of Emergency - The sale of fire mead is banned at the inn NOME_LOCANDA after EROE, in the throes of a hangover, tried to mistake the Dragon's castle for a gigantic two-story inn.
-    LG16-Hygiene Complaints - The city inspection seals the kitchen of the inn NOME_LOCANDA. EROE pointed out that the “primordial broth” had been boiling uninterruptedly since the distant previous empire.
-    LG17-Financial Panic - A gang of counterfeiters was dismantled at the inn NOME_LOCANDA. EROE tried to pay for a night's stay using Wyvern scales painted with the alchemist's fake gold.
-    LG18-Brawl Over Trifles - Tables were torn up at the inn NOME_LOCANDA after MAGO used a sideshow trick to make a veteran's dentures disappear, then forgot where he had hidden them.
-    LG19-Brawl of Initiative - A mega brawl broke out at the inn NOME_LOCANDA because LADRO stole a Barbarian's chair on the second-by-second timer, claiming to have a higher Speed value.
-    LG20-Magic Horror - An Air spell cast inside the inn NOME_LOCANDA reversed the gravity of the toupees of all the fallen nobles present.
-    LG21-Absurd Scam - EROE is wanted for selling a patron of the inn NOME_LOCANDA a “Scroll of Supreme Knowledge” that contained only the secret recipe for bear lard.
+    LG1-Legendary Brawl - NOME_LOCANDA was devastated by a theological dispute over the sex of sprites. EROE used a dwarf chair as their main argument.
+    LG2-Innkeeper's Complaints - The owner of NOME_LOCANDA, NOME_LOCANDIERE, expresses deep outrage at “these Sunday heroes” who order a single broth between four of them and steal the linen napkins.
+    LG3-Serious Artistic Accident - A local bard, a patron of NOME_LOCANDA, suffered a lute fracture on his head after trying to strike up a celebratory ballad about EROE's armpits.
+    LG4-Bar Brawl - A commotion broke out at NOME_LOCANDA because of a patron who was looking at the hero's tankard “with the evident intent of belittling its foam”.
+    LG5-Unpaid Bill - Manhunt in the county. EROE fled through the back of NOME_LOCANDA passing off three polished copper buttons as ancient coins of the Empire of the Void.
+    LG6-Hygiene Disaster - The local alchemist runs out of charcoal after the mysterious stew of NOME_LOCANDA caused a symphonic colic among the patrons.
+    LG7-Kitchen Horror - A lock of bear hair was found in the soup; the innkeeper of NOME_LOCANDA tried to pass it off as “high-resistance dietary fiber”.
+    LG8-Collateral Damage - A Fire spell cast to light a pipe accidentally charred the eyebrows of every dwarf within ten feet at NOME_LOCANDA.
+    LG9-National Complaints - The dwarf miners' unions officially protest against EROE for occupying the only table near the fireplace for six hours without ordering anything at NOME_LOCANDA.
+    LG10-Brawl on the Timer - Total clash between the patrons of NOME_LOCANDA and EROE, guilty of having “blocked the conversation timer” while trying to decide whether to order cider or water.
+    LG11-News Leak - The city guards investigate a suspicious spike in thefts of soup spoons right after LADRO left NOME_LOCANDA.
+    LG12-Sunday Curse - MAGO answered a cordial greeting from the innkeeper of NOME_LOCANDA by accidentally casting an arcane anathema, tuning the innkeeper's voice to the frequencies of a harpy.
+    LG13-Brawl of Jealousy - Chaos broke out when LADRO tried to pick the pocket of the owner of NOME_LOCANDA, discovering that his pockets were full of mousetraps.
+    LG14-Bad Review - The innkeeper of NOME_LOCANDA tells the local press: “The hero of the prophecy has the elegance of a troll in an alchemist's vial shop. Don't come back”.
+    LG15-State of Emergency - The sale of fire mead is banned at NOME_LOCANDA after EROE, in the throes of a hangover, tried to mistake the Dragon's castle for a gigantic two-story inn.
+    LG16-Hygiene Complaints - The city inspection seals the kitchen of NOME_LOCANDA. EROE pointed out that the “primordial broth” had been boiling uninterruptedly since the distant previous empire.
+    LG17-Financial Panic - A gang of counterfeiters was dismantled at NOME_LOCANDA. EROE tried to pay for a night's stay using Wyvern scales painted with the alchemist's fake gold.
+    LG18-Brawl Over Trifles - Tables were torn up at NOME_LOCANDA after MAGO used a sideshow trick to make a veteran's dentures disappear, then forgot where he had hidden them.
+    LG19-Brawl of Initiative - A mega brawl broke out at NOME_LOCANDA because LADRO stole a Barbarian's chair on the second-by-second timer, claiming to have a higher Speed value.
+    LG20-Magic Horror - An Air spell cast inside NOME_LOCANDA reversed the gravity of the toupees of all the fallen nobles present.
+    LG21-Absurd Scam - EROE is wanted for selling a patron of NOME_LOCANDA a “Scroll of Supreme Knowledge” that contained only the secret recipe for bear lard.
     LG22-Union Protest - The innkeepers of the Forest sign a petition to ban EROE from entering, described as “a scourge on the supply of salted peanuts”.
-    LG23-Brawl of Pride - Total clash broke out at the inn NOME_LOCANDA when EROE dared to call the house mead “an honest disinfectant for Centaur hooves”.
-    LG24-Curse of the Inn - A clumsy anathema hurled by MAGO at the inn NOME_LOCANDA fused together the stools of three patrons, forcing them to move in sync like a bizarre six-legged monster.
-    LG25-Service Complaints - EROE leaves a terrible review on the wooden door of the inn NOME_LOCANDA: “The innkeeper has a grim stare and the soup looked like it wanted to bite me. One star”.
-    LG26-Brawl Over Poor Hygiene - The common room of the inn NOME_LOCANDA was devastated after GUERRIERO used his shield as a serving dish, accusing the innkeeper of washing the trays only in leap years.
-    LG27-Alchemical Accident - EROE mistook a vial of concentrated fertilizer from the Alchemist for maple syrup, causing the instant growth of lush moss on the tongue of the bard of the inn NOME_LOCANDA.
-    LG28-Brawl Over Trifles - A brawl erupts, with [VOLANO] flying, at the inn NOME_LOCANDA after LADRO claimed that the house beer was actually rainwater filtered through a Centaur's used socks.
-    LG29-Brawl of Pride - A violent clash set off by MAGO, who tried to pay the bill at the inn NOME_LOCANDA by mathematically proving that the gold demanded by the innkeeper was an optical illusion created by the kitchen smoke.
-    LG30-Brawl as Entertainment - A brawl erupts among the patrons at the inn NOME_LOCANDA, with [VOLANO] flying, when EROE, bored by the local ballads, paid a sprite to trip the official bard in the middle of the final high note.
+    LG23-Brawl of Pride - Total clash broke out at NOME_LOCANDA when EROE dared to call the house mead “an honest disinfectant for Centaur hooves”.
+    LG24-Curse of the Inn - A clumsy anathema hurled by MAGO at NOME_LOCANDA fused together the stools of three patrons, forcing them to move in sync like a bizarre six-legged monster.
+    LG25-Service Complaints - EROE leaves a terrible review on the wooden door of NOME_LOCANDA: “The innkeeper has a grim stare and the soup looked like it wanted to bite me. One star”.
+    LG26-Brawl Over Poor Hygiene - The common room of NOME_LOCANDA was devastated after GUERRIERO used his shield as a serving dish, accusing the innkeeper of washing the trays only in leap years.
+    LG27-Alchemical Accident - EROE mistook a vial of concentrated fertilizer from the Alchemist for maple syrup, causing the instant growth of lush moss on the tongue of the bard of NOME_LOCANDA.
+    LG28-Brawl Over Trifles - A brawl erupts, with [VOLANO] flying, at NOME_LOCANDA after LADRO claimed that the house beer was actually rainwater filtered through a Centaur's used socks.
+    LG29-Brawl of Pride - A violent clash set off by MAGO, who tried to pay the bill at NOME_LOCANDA by mathematically proving that the gold demanded by the innkeeper was an optical illusion created by the kitchen smoke.
+    LG30-Brawl as Entertainment - A brawl erupts among the patrons at NOME_LOCANDA, with [VOLANO] flying, when EROE, bored by the local ballads, paid a sprite to trip the official bard in the middle of the final high note.
     LG31-National Complaints - The association of left-handed hunters expresses deep outrage at EROE, who used their spare arrows as skewers to roast giant lizards in the yard.
-    LG32-Transmutation Accident - A clumsy Frost spell turned the entire laundry hung out behind the inn NOME_LOCANDA into a series of sharp ice sculptures, wounding the innkeeper's dog.
-    LG33-Transmutation Accident - A clumsy Water spell turned the entire parquet floor of the inn NOME_LOCANDA into a slippery swamp, bruising the pride of three knights.
-    LG34-Menu Complaints - EROE returns the stew of the day to the inn NOME_LOCANDA complaining that “the vegetables inside are clearly trying to organize a labor coalition against my stomach”.
-    LG35-Brawl Over Lack of Respect - A brawl erupts, with [VOLANO] flying, at the inn NOME_LOCANDA after EROE accused a peaceful traveling bard of using an “unepic typeface” on the tip sign.
-    LG36-Transmutation Accident - A clumsy Earth spell turned the mead in the tankards of all the customers of the inn NOME_LOCANDA into a compact block of mud, breaking the teeth of a Barbarian who was drinking down to the last drop.
-    LG37-Structural Curse - A clumsy anathema made all the tankards of the inn NOME_LOCANDA stick magnetically to the customers' hands, forcing twelve patrons to live in symbiosis with their beer.
-    LG38-Brawl of Tactical Envy - A brawl erupts, with [VOLANO] flying, at the inn NOME_LOCANDA after LADRO flaunted a fake title of Archduke of the Diapers bought from a charlatan, demanding the imperial table.
-    LG39-Brawl Over a Misunderstanding - Total chaos broke out because EROE mistook the cat of the inn NOME_LOCANDA for a very rare demonic minion, attempting an exorcism with a tankard of cider blessed on the spot.
-    LG40-Menu Complaints - EROE tried to return the stew of the day to the inn NOME_LOCANDA complaining that “the meat was moving at a rhythm incompatible with the laws of physics and good taste”.
-    LG41-Brawl Over Trifles - A commotion broke out when MAGO put out the fireplace in the common room of the inn NOME_LOCANDA with a Water spell, claiming that the sparks were threatening the integrity of his synthetic silk cloak.
-    LG42-Brawl of Initiative - A violent clash set off by LADRO, who occupied three stools at the counter of the inn NOME_LOCANDA at the same time, claiming that his high Speed allowed him to sit anywhere before the others.
-    LG43-Brawl Over a Misunderstanding - A mega brawl broke out because EROE mistook the decorative armor in the hall of the inn NOME_LOCANDA for a stone monster, hitting it with chairs before the innkeeper could explain the mistake.
-    LG44-Menu Complaints - At the inn NOME_LOCANDA EROE returns the stew complaining about the presence of an “unidentified biological claw trying to parry against his spoon”.
-    LG45-Structural Curse - A clumsy anathema reversed the polarity of the doors of the inn NOME_LOCANDA. Now they only open if heavily insulted in Orcish, exasperating the clientele.
-    LG46-Brawl of Envy - A brawl erupts, with [VOLANO] flying, at the inn NOME_LOCANDA after LADRO flaunted a fake royal ring bought from a charlatan, demanding that the innkeeper serve him cider on his knees.
-    LG47-Brawl Over Bad Timing - Total clash in the common room of the inn NOME_LOCANDA after LADRO tried to steal a paladin's shoelaces on the second-by-second sprint timer.
-    LG48-Brawl Over Trifles - A brawl erupts, with [VOLANO] flying, at the inn NOME_LOCANDA after GUERRIERO claimed that the house venison stew was actually sewer rat marinated in flat cider.
-    LG49-Brawl of Martial Pride - A violent clash at the inn NOME_LOCANDA set off by GUERRIERO, who occupied the only table near the fireplace, claiming that his Constitution score gave him absolute priority over body warmth.
+    LG32-Transmutation Accident - A clumsy Frost spell turned the entire laundry hung out behind NOME_LOCANDA into a series of sharp ice sculptures, wounding the innkeeper's dog.
+    LG33-Transmutation Accident - A clumsy Water spell turned the entire parquet floor of NOME_LOCANDA into a slippery swamp, bruising the pride of three knights.
+    LG34-Menu Complaints - EROE returns the stew of the day to NOME_LOCANDA complaining that “the vegetables inside are clearly trying to organize a labor coalition against my stomach”.
+    LG35-Brawl Over Lack of Respect - A brawl erupts, with [VOLANO] flying, at NOME_LOCANDA after EROE accused a peaceful traveling bard of using an “unepic typeface” on the tip sign.
+    LG36-Transmutation Accident - A clumsy Earth spell turned the mead in the tankards of all the customers of NOME_LOCANDA into a compact block of mud, breaking the teeth of a Barbarian who was drinking down to the last drop.
+    LG37-Structural Curse - A clumsy anathema made all the tankards of NOME_LOCANDA stick magnetically to the customers' hands, forcing twelve patrons to live in symbiosis with their beer.
+    LG38-Brawl of Tactical Envy - A brawl erupts, with [VOLANO] flying, at NOME_LOCANDA after LADRO flaunted a fake title of Archduke of the Diapers bought from a charlatan, demanding the imperial table.
+    LG39-Brawl Over a Misunderstanding - Total chaos broke out because EROE mistook the cat of NOME_LOCANDA for a very rare demonic minion, attempting an exorcism with a tankard of cider blessed on the spot.
+    LG40-Menu Complaints - EROE tried to return the stew of the day to NOME_LOCANDA complaining that “the meat was moving at a rhythm incompatible with the laws of physics and good taste”.
+    LG41-Brawl Over Trifles - A commotion broke out when MAGO put out the fireplace in the common room of NOME_LOCANDA with a Water spell, claiming that the sparks were threatening the integrity of his synthetic silk cloak.
+    LG42-Brawl of Initiative - A violent clash set off by LADRO, who occupied three stools at the counter of NOME_LOCANDA at the same time, claiming that his high Speed allowed him to sit anywhere before the others.
+    LG43-Brawl Over a Misunderstanding - A mega brawl broke out because EROE mistook the decorative armor in the hall of NOME_LOCANDA for a stone monster, hitting it with chairs before the innkeeper could explain the mistake.
+    LG44-Menu Complaints - At NOME_LOCANDA EROE returns the stew complaining about the presence of an “unidentified biological claw trying to parry against his spoon”.
+    LG45-Structural Curse - A clumsy anathema reversed the polarity of the doors of NOME_LOCANDA. Now they only open if heavily insulted in Orcish, exasperating the clientele.
+    LG46-Brawl of Envy - A brawl erupts, with [VOLANO] flying, at NOME_LOCANDA after LADRO flaunted a fake royal ring bought from a charlatan, demanding that the innkeeper serve him cider on his knees.
+    LG47-Brawl Over Bad Timing - Total clash in the common room of NOME_LOCANDA after LADRO tried to steal a paladin's shoelaces on the second-by-second sprint timer.
+    LG48-Brawl Over Trifles - A brawl erupts, with [VOLANO] flying, at NOME_LOCANDA after GUERRIERO claimed that the house venison stew was actually sewer rat marinated in flat cider.
+    LG49-Brawl of Martial Pride - A violent clash at NOME_LOCANDA set off by GUERRIERO, who occupied the only table near the fireplace, claiming that his Constitution score gave him absolute priority over body warmth.
 
 VOLANO
     [VOLANO_PUGNI] | [VOLANO_OGGETTI] | [VOLANO_OGGETTO]

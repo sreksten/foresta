@@ -55,7 +55,7 @@ public abstract class Citta extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-        BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "Citta.1", g.chiMaiuscolo(), Lingue.corrente().conPreposizione(Preposizione.A, getNome()))));
+        BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "Citta.1", g.chiMaiuscolo(), Lingue.corrente().conPreposizione(Preposizione.ARRIVO, getNome()))));
 		if (Cassa.getPreziosi() > 0) {
 			CommercioDelGruppo.vendePreziosi(g);
 			BusEventi.pubblica(new InternoMostraFinestraStatistiche());

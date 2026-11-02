@@ -56,7 +56,7 @@ public class IlPellegrino extends IncaricoInCitta {
 	public String getDescrizione() {
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return Testi.formatta("missioni", "IlPellegrino.t2", getPellegrino(), Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelTempio()), getNomeCitta());
+			return Testi.formatta("missioni", "IlPellegrino.t2", getPellegrino(), Lingue.corrente().conPreposizione(Preposizione.ARRIVO, getNomeDelTempio()), getNomeCitta());
 		}
 		return Testi.formatta("missioni", "IlPellegrino.t3", getPellegrino(), Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelTempio()));
 	}
@@ -108,7 +108,7 @@ public class IlPellegrino extends IncaricoInCitta {
 								RegistroMissioni.sopprimiContenutoLocazione(getTempio());
 							}
 						})
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlPellegrino.s2", Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelTempio()), getPellegrino(), getNomeCitta()))))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlPellegrino.s2", Lingue.corrente().conPreposizione(Preposizione.ARRIVO, getNomeDelTempio()), getPellegrino(), getNomeCitta()))))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -127,7 +127,7 @@ public class IlPellegrino extends IncaricoInCitta {
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante(Testi.formatta("missioni", "IlPellegrino.5", getPellegrino(), Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelTempio())))
+				.parlaIlMandante(Testi.formatta("missioni", "IlPellegrino.5", getPellegrino(), Lingue.corrente().conPreposizione(Preposizione.ARRIVO, getNomeDelTempio())))
 				.parlaIlMandante(Testi.formatta("missioni", "IlPellegrino.6", getRicompensa()))
 				.parlaIlCapo(Testi.formatta("missioni", "IlPellegrino.7"));
 	}

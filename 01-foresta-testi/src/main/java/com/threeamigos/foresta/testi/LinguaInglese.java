@@ -48,7 +48,7 @@ public final class LinguaInglese implements RegoleDellaLingua {
 
 	@Override
 	public String preposizioneArticolata(Preposizione preposizione, Nome nome, boolean plurale) {
-		return preposizione(preposizione) + " the ";
+		return preposizione == Preposizione.VICINO ? "the " : preposizione(preposizione) + " the ";
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public final class LinguaInglese implements RegoleDellaLingua {
 
 	@Override
 	public String conPreposizione(Preposizione preposizione, String nomeConArticolo) {
-		return preposizione(preposizione) + " " + nomeConArticolo;
+		return preposizione == Preposizione.VICINO ? nomeConArticolo : preposizione(preposizione) + " " + nomeConArticolo;
 	}
 
 	private static String preposizione(Preposizione preposizione) {
@@ -69,6 +69,8 @@ public final class LinguaInglese implements RegoleDellaLingua {
 				return "to";
 			case DA:
 				return "from";
+			case ARRIVO:
+				return "in";
 			default:
 				return "in";
 		}

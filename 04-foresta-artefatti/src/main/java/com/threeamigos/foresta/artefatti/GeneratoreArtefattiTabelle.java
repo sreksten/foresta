@@ -301,7 +301,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 			costo += Math.signum(modificatore.getIntensita()) * ListinoPergamene.prezzo(aggiunto);
 		}
 		for (TipoDanno tipoDanno : risultato.getDanni()) {
-			IncantamentoMD incantamento = new IncantamentoMD(tipoDanno.getNome() + ' ' + grado.getNome(), tipoDanno,
+			IncantamentoMD incantamento = new IncantamentoMD(testo("NOME_INCANTAMENTO", tipoDanno.getNome(), grado.getNome()), tipoDanno,
 					grado.getBonusFisso(), grado.getCoefficiente());
 			md.addIncantamento(incantamento);
 			costo += ListinoPergamene.prezzo(incantamento, livello);

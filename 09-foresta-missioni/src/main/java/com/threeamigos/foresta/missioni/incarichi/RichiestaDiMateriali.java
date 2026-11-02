@@ -98,7 +98,7 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 
 	@Override
 	public String getNome() {
-		return Lingue.corrente().inizialeMaiuscola(mandante.getNome()) + " e " + getMateriale().getPluraleConArticolo();
+		return Lingue.corrente().elenco(java.util.Arrays.asList(Lingue.corrente().inizialeMaiuscola(mandante.getNome()), getMateriale().getPluraleConArticolo()));
 	}
 
 	@Override

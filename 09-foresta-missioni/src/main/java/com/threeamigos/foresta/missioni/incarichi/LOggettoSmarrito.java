@@ -140,7 +140,7 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 	}
 
 	private String getProprietarioDiCitta() {
-		return getSmarrito().getProprietario() + " di " + getNomeCitta();
+		return getSmarrito().getProprietario() + " " + Lingue.corrente().conPreposizione(Preposizione.DI, getNomeCitta());
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 		if (RITORNO.equals(getPassoCorrente())) {
 			return Testi.formatta("missioni", "LOggettoSmarrito.t1", smarrito.getOggettoConArticolo(), smarrito.getPronome(), Lingue.corrente().conPreposizione(Preposizione.A, getProprietarioDiCitta()));
 		}
-		return Testi.formatta("missioni", "LOggettoSmarrito.t2", smarrito.getOggettoConArticolo(), getProprietarioDiCitta(), Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelPosto()), Lingue.corrente().cardinale(RAGGIO, Genere.MASCHILE));
+		return Testi.formatta("missioni", "LOggettoSmarrito.t2", smarrito.getOggettoConArticolo(), getProprietarioDiCitta(), Lingue.corrente().conPreposizione(Preposizione.VICINO, getNomeDelPosto()), Lingue.corrente().cardinale(RAGGIO, Genere.MASCHILE));
 	}
 
 	@Override
@@ -219,7 +219,7 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 		OggettoSmarrito smarrito = getSmarrito();
 		return ScenaInCitta.conMandante()
 				.parlaIlMandante(smarrito.getRacconto())
-				.parlaIlMandante(Testi.formatta("missioni", "LOggettoSmarrito.1", smarrito.getPerso(), Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelPosto()), Lingue.corrente().cardinale(RAGGIO, Genere.MASCHILE), (smarrito.isFemminile() ? "a" : "o"), getRicompensa()))
+				.parlaIlMandante(Testi.formatta("missioni", "LOggettoSmarrito.1", smarrito.getPerso(), Lingue.corrente().conPreposizione(Preposizione.VICINO, getNomeDelPosto()), Lingue.corrente().cardinale(RAGGIO, Genere.MASCHILE), (smarrito.isFemminile() ? "a" : "o"), getRicompensa()))
 				.parlaIlCapo(smarrito.getBattutaDelCapo())
 				.parlaIlMandante(smarrito.getRisposta());
 	}
@@ -234,7 +234,7 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 	@Override
 	protected String testoAccettazione() {
 		OggettoSmarrito smarrito = getSmarrito();
-		return Testi.formatta("missioni", "LOggettoSmarrito.t4", Lingue.corrente().inizialeMaiuscola(getProprietarioDiCitta()), getRicompensa(), smarrito.getOggettoConArticolo(), Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelPosto()));
+		return Testi.formatta("missioni", "LOggettoSmarrito.t4", Lingue.corrente().inizialeMaiuscola(getProprietarioDiCitta()), getRicompensa(), smarrito.getOggettoConArticolo(), Lingue.corrente().conPreposizione(Preposizione.VICINO, getNomeDelPosto()));
 	}
 
 	@Override

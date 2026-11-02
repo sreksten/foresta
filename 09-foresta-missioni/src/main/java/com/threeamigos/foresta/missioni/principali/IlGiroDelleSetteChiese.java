@@ -25,6 +25,7 @@ import java.util.List;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
 import com.threeamigos.foresta.testi.Testi;
+import com.threeamigos.foresta.testi.Nome;
 
 /**
  * Sette templi liberati dai mostri che li infestano. La missione parte quando il gruppo ripulisce il primo tempio: a
@@ -170,14 +171,11 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 	 * "un incantesimo dell'Aria, un incantesimo dell'Acqua e un incantesimo del Fulmine"
 	 */
 	private static String elencoDeiDoni() {
-		StringBuilder elenco = new StringBuilder();
-		for (int i = 0; i < INCANTESIMI_IN_DONO.length; i++) {
-			if (i > 0) {
-				elenco.append(i == INCANTESIMI_IN_DONO.length - 1 ? " e " : ", ");
-			}
-			elenco.append("un ").append(INCANTESIMI_IN_DONO[i].getNomeSingolare());
+		java.util.List<String> doni = new java.util.ArrayList<>();
+		for (TipoIncantesimo incantesimo : INCANTESIMI_IN_DONO) {
+			doni.add(Lingue.corrente().articoloIndeterminativo(Nome.di(incantesimo), false) + incantesimo.getNomeSingolare());
 		}
-		return elenco.toString();
+		return Lingue.corrente().elenco(doni);
 	}
 
 	/**

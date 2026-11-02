@@ -193,7 +193,7 @@ SUGGERIMENTO
 	split hairs
 	look for a needle in a haystack
 	get everything off your chest
-	take a digestive
+	take a digestif
 	turn it off and on again, and not just the computer
 	change your password, and this time write it down somewhere
 	not reply to all
@@ -285,7 +285,7 @@ PERSONA$
 	[TEMA=MS:the outside consultant]the outside consultant
 	the director's secretary
 PERIODO_DI_TEMPO
-	an hour | a day | a week | a month | a quarter | a semester | a year
+	an hour | a day | a week | a month | a quarter | a term | a year
 DOMANDA_MS
 	Pardon my ignorance, but what is [#TEMA]? A sort of dragon?
 	We have never seen [#TEMA] in the Forest. Does it bite?

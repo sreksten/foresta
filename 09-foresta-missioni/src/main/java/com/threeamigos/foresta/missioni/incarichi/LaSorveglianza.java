@@ -169,7 +169,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 			return sorveglianza.isConCapo() ? getCapo() + ", " + nemico : nemico;
 		}
 		String nemici = Lingue.corrente().cardinale(sorveglianza.getNumero(), Genere.MASCHILE) + " " + modello.getNomePlurale();
-		return sorveglianza.isConCapo() ? nemici + " guidati da " + getCapo() : nemici;
+		return sorveglianza.isConCapo() ? Testi.formatta("missioni", "Nemici.guidatiDa", nemici, getCapo()) : nemici;
 	}
 
 	@Override

@@ -431,7 +431,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 			if (isPistaFalsaVista()) {
 				descrizione.append(nomeDelPosto(giusto));
 			} else {
-				descrizione.append(nomeDelPosto(tappe + 1)).append(" e ").append(nomeDelPosto(tappe + 2));
+				descrizione.append(Lingue.corrente().elenco(java.util.Arrays.asList(nomeDelPosto(tappe + 1), nomeDelPosto(tappe + 2))));
 			}
 			descrizione.append(Testi.formatta("missioni", "MissioneATappe.s4"));
 		} else if (coordinateDelPosto(corrente) != null) {

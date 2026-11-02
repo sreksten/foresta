@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
+import com.threeamigos.foresta.testi.Testi;
 
 /**
  * La mappa della Foresta di questa partita: una griglia di caselle, ciascuna con il suo tipo di locazione, il suo nome e le sue proprietà.
@@ -186,7 +187,7 @@ public class Foresta {
 			md.rimuoviLocazioneUnica(tipoLocazione);
 			if (nuovoTipoLocazione == TipoLocazione.ROVINE) {
 				// Le rovine di un castello o di una città prendono il nome da quello che c'era
-				getLocazioneMD(coordinate).setNome("le Rovine " + Lingue.corrente().conPreposizione(Preposizione.DI, tipoLocazione.getNomeProprio()));
+				getLocazioneMD(coordinate).setNome(Testi.formatta("mappa", "Rovine.nome", Lingue.corrente().conPreposizione(Preposizione.DI, tipoLocazione.getNomeProprio())));
 			}
 		}
 	}

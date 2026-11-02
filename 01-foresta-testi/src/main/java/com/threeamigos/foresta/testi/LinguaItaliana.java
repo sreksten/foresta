@@ -64,6 +64,9 @@ public final class LinguaItaliana implements RegoleDellaLingua {
 	}
 
 	private static String preposizione(Preposizione preposizione) {
+		if (preposizione == Preposizione.ARRIVO || preposizione == Preposizione.VICINO) {
+			return "a";
+		}
 		return preposizione.name().toLowerCase(Locale.ROOT);
 	}
 

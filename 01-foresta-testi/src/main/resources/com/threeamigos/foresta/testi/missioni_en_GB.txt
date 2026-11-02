@@ -81,7 +81,7 @@ RICHIESTA_CAPITANO
     F;harpy feather;harpy feathers;NEMICI ARPIA;3-4;6;Don't they fly away?;Harpies do. The feathers, if you hold them tight, don't.
     M;troll tooth;troll teeth;NEMICI TROLL;3-4;7;Trolls have plenty of them.;One apiece. Don't be picky.
     M;centaur hoof;centaur hooves;NEMICI CENTAURO;2-3;8;Do they let you take their hooves off?;Not while alive. But you know how to manage.
-    M;goblin dagger;goblin daggers;NEMICI GOBLIN;3-4;6;Don't they use them anymore?;They still do, which is why I want them here, in the armory.
+    M;goblin dagger;goblin daggers;NEMICI GOBLIN;3-4;6;Don't they use them anymore?;They still do, which is why I want them here, in the armoury.
     M;chimera tuft;chimera tufts;NEMICI CHIMERA;2-3;9;Which of the heads?;The hairiest. You can tell at a glance.
 
 RICHIESTA_LOCANDIERE
@@ -191,7 +191,7 @@ CONTRABBANDO
     M;load of untaxed salt;the salt-maker;the innkeeper;CON_CALMA;20;Salt has a duty that would make a rock cry. My duty-free salt is just salt.;Then why in secret?;Because the guards are very fond of the duty.;What a taste! The real one, without taxes. Nobody will talk about it, except the soup.
     F;cage of talking parrots;the spice merchant;the noblewoman;CON_CALMA;22;These parrots were trained to repeat everything. Even things they shouldn't repeat.;For example?;A secret, two addresses and the mayor's name. Cover the cage with a cloth.;What sweet little birds! I'll keep the cloth, I'll listen to the secrets. In private.
     M;roll of treasure maps;the junk dealer;the cartographer;CON_CALMA;21;These maps don't exist, and if they stop you, say exactly that.;What do you mean, they don't exist?;They're of a treasure the king has already declared he doesn't have.;The maps of the treasure that isn't there! Perfect: I'll copy them and return them, and this conversation never happened.
-    F;crate of fireworks;the pyrotechnist;the festival organizer;CON_CALMA;24;Fireworks in the city are forbidden, because last time the barn caught fire. Two barns, actually.;So they're safe?;Almost. Avoid candles and reasoning.;What bangs! The real ones, the forbidden ones. Now the festival makes sense.
+    F;crate of fireworks;the pyrotechnist;the festival organiser;CON_CALMA;24;Fireworks in the city are forbidden, because last time the barn caught fire. Two barns, actually.;So they're safe?;Almost. Avoid candles and reasoning.;What bangs! The real ones, the forbidden ones. Now the festival makes sense.
 
 // ---------------------------------------------------------------------------------------------
 // Oggetti smarriti nella foresta (vedi LOggettoSmarrito e OggettoSmarrito): nove campi, descritti in missioni.txt
@@ -1795,7 +1795,7 @@ COLPO
 NEGOZIO_PARENTE
     my brother
     my cousin
-    a friend of mine
+    my friend
     my nephew
     my brother-in-law
 
@@ -1860,7 +1860,7 @@ NEGOZIO_NOME_ALCHIMISTA
 
 NEGOZIO_NOME_ARMAIOLO
     the Smithy of %NOME%
-    the Armory of %NOME%
+    the Armoury of %NOME%
     the Forge of %NOME%
 
 NEGOZIO_NOME_VENDITORE_DI_PERGAMENE
@@ -1873,4 +1873,4 @@ NEGOZIO_NOME_INCANTATORE
     the Shop of Spells of %NOME%
     the Arcane Atelier of %NOME%
 
-#include_static <nomi_en.txt>
+#include_static <nomi_en_GB.txt>

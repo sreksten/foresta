@@ -181,7 +181,7 @@ public class IlCorriere extends IncaricoInCitta {
 	 * Il destinatario e la sua città: "il fabbro di Ruuna".
 	 */
 	private String getDestinatarioDiCitta() {
-		return getSpedizione().getDestinatario() + " di " + getNomeDestinazione();
+		return getSpedizione().getDestinatario() + " " + Lingue.corrente().conPreposizione(Preposizione.DI, getNomeDestinazione());
 	}
 
 	@Override
@@ -201,7 +201,7 @@ public class IlCorriere extends IncaricoInCitta {
 		Spedizione spedizione = getSpedizione();
 		String descrizione = Testi.formatta("missioni", "IlCorriere.s1", spedizione.getOggettoConArticolo(), Lingue.corrente().conPreposizione(Preposizione.A, getDestinatarioDiCitta()), getRicompensa());
 		if (spedizione.isUrgente()) {
-			descrizione += " Ore rimaste: " + Math.max(0, getOreRimaste()) + ".";
+			descrizione += " " + Testi.formatta("missioni", "IlCorriere.oreRimaste", Math.max(0, getOreRimaste()));
 		}
 		return descrizione;
 	}
@@ -243,7 +243,7 @@ public class IlCorriere extends IncaricoInCitta {
 	@Override
 	protected String testoConsegna() {
 		Spedizione spedizione = getSpedizione();
-		return Lingue.corrente().inizialeMaiuscola(spedizione.getOggettoConArticolo()) + " passa " + Lingue.corrente().conPreposizione(Preposizione.A, mandanteInSenzaVirgolaFinale(spedizione.getDestinatario(), getDestinazione())) + ".";
+		return Testi.formatta("missioni", "IlCorriere.passaA", Lingue.corrente().inizialeMaiuscola(spedizione.getOggettoConArticolo()), Lingue.corrente().conPreposizione(Preposizione.A, mandanteInSenzaVirgolaFinale(spedizione.getDestinatario(), getDestinazione())));
 	}
 
 	@Override

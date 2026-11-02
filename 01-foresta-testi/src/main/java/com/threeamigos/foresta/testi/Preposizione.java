@@ -5,5 +5,13 @@ package com.threeamigos.foresta.testi;
  * (l'inglese) restano staccate: "of the".
  */
 public enum Preposizione {
-	A, DI, DA, IN
+	A, DI, DA, IN,
+	/**
+	 * Dove si arriva ("arriva a Fleena", "arrives in Fleena"): in italiano è «a», in inglese «in».
+	 */
+	ARRIVO,
+	/**
+	 * Vicino a un luogo ("vicino alle Rovine", "near the Ruins"): in italiano resta «a» dopo «vicino», in inglese non vuole preposizione.
+	 */
+	VICINO
 }

@@ -40,7 +40,7 @@ public abstract class Bottega extends LocazioneBase {
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
 		String negoziante = RegistroPersonaggi.getNegoziante(getModelloDati());
 		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", negoziante == null ? "Bottega.arriva" : "Bottega.arrivaEAspetta",
-				g.chiMaiuscolo(), Lingue.corrente().conPreposizione(Preposizione.A, getNome()), negoziante == null ? "" : Lingue.corrente().inizialeMaiuscola(negoziante))));
+				g.chiMaiuscolo(), Lingue.corrente().conPreposizione(Preposizione.ARRIVO, getNome()), negoziante == null ? "" : Lingue.corrente().inizialeMaiuscola(negoziante))));
 	}
 
 	@Override
